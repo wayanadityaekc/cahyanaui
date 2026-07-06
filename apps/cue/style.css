@@ -239,12 +239,36 @@ body {
   line-height: 1.7;
   color: #46453f;
 }
-.about__image {
-  min-height: 280px;
+.about__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.25rem;
   border-radius: 10px;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
+  background-color: var(--color-cream);
+}
+
+.about__boxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.about__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  color: var(--color-green);
+  background-color: rgba(201, 164, 92, 0.2);
+}
+.about__icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Experience & Tour cards */
@@ -1396,7 +1420,7 @@ body {
   .about__title {
     font-size: 1.8rem;
   }
-  .about__image {
+  .about__boxes {
     min-height: 200px;
   }
   .villas__grid {

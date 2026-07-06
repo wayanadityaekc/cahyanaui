@@ -15,7 +15,6 @@ async function loadPartials() {
   const partials = [
     { id: "navbar-placeholder", file: "partials/navbar.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
-    { id: "why-placeholder", file: "partials/why.html" },
     { id: "footer-placeholder", file: "partials/footer.html" }
   ];
   for (const part of partials) {

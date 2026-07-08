@@ -22,6 +22,36 @@ body {
   background-color: #ffffff;
 }
 
+.about__text p,
+.experience__desc,
+.villa__desc,
+.subhero__text,
+.highlight__desc,
+.slider__caption p,
+.why__desc,
+.contact__lead,
+.info__list li,
+.plan__note,
+.activities__desc,
+.transfer__note {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Judul card & slider — 1 gaya, ngikut font judul card */
+.experience__name,
+.villa__name,
+.plan__name,
+.slider__caption h3,
+.title {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
 .price-usd {
   font-size: 1.05rem;
   font-weight: 700;
@@ -34,6 +64,7 @@ body {
 }
 
 .section__title {
+  position: relative;
   margin-bottom: 1.5rem;
   font-family: var(--font-body);
   font-size: 1.2rem;
@@ -42,7 +73,18 @@ body {
   color: var(--color-gold);
 }
 
-/* Navbar */
+.section__title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #c8a85d, transparent);
+  margin-top: 0.1rem;
+}
+
 .navbar {
   position: absolute;
   left: 0;
@@ -148,10 +190,6 @@ body {
 }
 .hero__text {
   margin-top: 1rem;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.6;
   color: var(--color-cream);
 }
 
@@ -159,8 +197,9 @@ body {
 .booking {
   position: relative;
   z-index: 10;
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
 }
+
 .booking--overlap {
   margin-top: -10rem;
   padding-top: 0;
@@ -237,7 +276,6 @@ body {
 
 /* About (homepage) */
 .about {
-  margin-top: -6rem;
   padding: 3rem 1.5rem;
 }
 .about__container {
@@ -262,10 +300,6 @@ body {
   line-height: 1.6;
 }
 .about__text p {
-  font-size: 0.9rem;
-  font-family: var(--font-body);
-  font-weight: 400;
-  line-height: 1.6;
   color: var(--color-green);
 }
 .about__content {
@@ -297,10 +331,6 @@ body {
 }
 
 .title {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 400;
-  line-height: 1.6;
   text-align: center;
 }
 
@@ -313,9 +343,8 @@ body {
 
 /* Experience & Tour cards */
 .experience {
-  padding: 10rem 1.5rem;
+  padding: 3rem 1.5rem;
   background-color: #ffffff;
-  margin-top: -10rem;
 }
 .experience--alt {
   background-color: #ffffff;
@@ -360,14 +389,8 @@ body {
 }
 .experience__name {
   margin-bottom: 0.4rem;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.6;
 }
 .experience__desc {
-  font-size: 0.85rem;
-  line-height: 1.5;
   color: #6b6559;
 }
 .experience__footer {
@@ -400,12 +423,17 @@ body {
 /* Villas (homepage) */
 .villas {
   padding: 3rem 1.5rem;
+  background-color: var(--color-cream);
+  border-radius: 24px;
+  overflow: hidden;
+  margin: 20px auto 0;
+  width: calc(100% - 10px);
 }
 .villas__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  max-width: 1100px;
+  gap: 1.5rem;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .villa__card {
@@ -430,12 +458,8 @@ body {
 }
 .villa__name {
   margin-bottom: 0.5rem;
-  font-family: var(--font-body);
-  font-size: 1.4rem;
 }
 .villa__desc {
-  font-size: 0.95rem;
-  line-height: 1.6;
   color: #6b6559;
 }
 .villa__footer {
@@ -503,14 +527,8 @@ body {
   color: var(--color-cream);
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
 }
-.slider__caption h3 {
-  font-family: var(--font-body);
-  font-size: 1.4rem;
-}
 .slider__caption p {
   margin-top: 0.3rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
 }
 .slider__btn {
   position: absolute;
@@ -553,24 +571,23 @@ body {
 }
 .activities__heading {
   margin-bottom: 1rem;
-  font-family: var(--font-body);
-  font-size: 1.8rem;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: var(--color-gold);
 }
-.activities__text p {
-  font-size: 1.05rem;
-  line-height: 1.7;
+.activities__desc {
   color: #46453f;
 }
 
 /* Route & Transfer accordion */
 .transfer {
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
   background-color: #ffffff;
 }
 .transfer__note {
   margin: -1rem auto 2rem;
   max-width: 900px;
-  font-size: 0.85rem;
   text-align: center;
   color: #7a7466;
 }
@@ -620,53 +637,6 @@ body {
 .route__item.active .route__price {
   max-height: 60px;
   padding: 0 0.25rem 1rem;
-}
-
-/* Why Choose Us */
-.why {
-  padding: 3rem 1.5rem;
-}
-.why__grid {
-  display: grid;
-  /* auto-fit: card otomatis wrap ngikut lebar layar (min 220px per card) */
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.why__card {
-  padding: 2rem 1.5rem;
-  text-align: center;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-}
-.why__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 1.25rem;
-  border-radius: 50%;
-  color: var(--color-green);
-  background-color: rgba(201, 164, 92, 0.2);
-}
-.why__icon svg {
-  width: 28px;
-  height: 28px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.why__name {
-  margin-bottom: 0.6rem;
-  font-family: var(--font-body);
-  font-size: 1.2rem;
-}
-.why__desc {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: #6b6559;
 }
 
 /* Footer */
@@ -1009,14 +979,12 @@ body {
 }
 .subhero__text {
   margin-top: 1rem;
-  font-size: 1.05rem;
-  line-height: 1.6;
   color: var(--color-cream);
 }
 
 /* Featured highlight: split image / content */
 .highlight {
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
 }
 .highlight__container {
   display: grid;
@@ -1052,8 +1020,6 @@ body {
 }
 .highlight__desc {
   margin-bottom: 1.25rem;
-  font-size: 1rem;
-  line-height: 1.7;
   color: #46453f;
 }
 .highlight__meta {
@@ -1081,17 +1047,17 @@ body {
   border-radius: 6px;
   font-weight: 600;
   text-decoration: none;
-  color: var(--color-green);
-  background-color: var(--color-gold);
+  color: var(--color-cream);
+  background-color: var(--color-green);
 }
 .highlight__btn:hover {
-  background-color: var(--color-green);
-  color: var(--color-cream);
+  background-color: var(--color-gold);
+  color: var(--color-green);
 }
 
 /* Details: quick facts + included / excluded */
 .info {
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
   background-color: #fff;
 }
 .info__container {
@@ -1138,8 +1104,6 @@ body {
 .info__list li {
   position: relative;
   padding: 0.5rem 0 0.5rem 1.75rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
   color: #46453f;
 }
 .info__list--yes li::before {
@@ -1163,7 +1127,7 @@ body {
 
 /* Rental plan cards (scooter) */
 .plans {
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
 }
 .plans__grid {
   display: grid;
@@ -1185,8 +1149,6 @@ body {
 }
 .plan__name {
   margin-bottom: 0.75rem;
-  font-family: var(--font-body);
-  font-size: 1.3rem;
 }
 .plan__price {
   font-family: var(--font-body);
@@ -1203,7 +1165,6 @@ body {
 }
 .plan__note {
   margin-top: 0.75rem;
-  font-size: 0.85rem;
   color: #6b6559;
 }
 .plan--featured .plan__note {
@@ -1213,7 +1174,7 @@ body {
 
 /* Call-to-action band (used where there is no booking form) */
 .cta {
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
   text-align: center;
   color: var(--color-cream);
   background-color: var(--color-green);
@@ -1245,7 +1206,7 @@ body {
 
 /* Contact page */
 .contact {
-  padding: 4rem 1.5rem;
+  padding: 3rem 1.5rem;
 }
 .contact__container {
   display: grid;
@@ -1261,8 +1222,6 @@ body {
 }
 .contact__lead {
   margin-bottom: 1.5rem;
-  font-size: 1rem;
-  line-height: 1.6;
   color: #46453f;
 }
 .contact__wa {
@@ -1407,16 +1366,12 @@ body {
     padding: 1rem 1.5rem;
     background-color: #ffffff;
   }
-  /*.navbar__logo {
-    height: 10px;
-    width: auto;
-    display: block;
-  }*/
+
   .navbar__menu.active {
     display: flex;
   }
   .hero__title {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
   .hero__subtitle {
     font-size: 1rem;
@@ -1456,7 +1411,7 @@ body {
     margin-top: -10rem;
   }
   .about {
-    margin-top: -6rem;
+    margin-top: -1rem;
   }
   .about__container {
     grid-template-columns: 1fr;

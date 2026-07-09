@@ -8,6 +8,7 @@ async function initPage() {
   initSlider();
   initAccordion();
   initContact();
+  initItinerary();
 }
 
 // Inject each shared partial into its placeholder, if present on this page
@@ -298,4 +299,279 @@ function initContact() {
     form.style.display = "none";
     success.style.display = "block";
   });
+}
+// Custom itinerary builder (runs only where the itinerary partial is present)
+function initItinerary() {
+  const wrap = document.getElementById("itn-days");
+  if (!wrap) return;
+
+  // Activities grouped by time slot; guests may pick max 2 per day, different slots
+  const itnSlots = {
+    early: ["Jeep Sunrise", "Mount Batur Trekking"],
+    day: ["ATV", "Rafting", "Swing", "Barong Dance", "Cooking Class"],
+    evening: ["Kecak Dance"]
+  };
+  const actPrices = { ...prices.experience, ...prices.performance };
+  const MAX_DAYS = 7;
+
+  // One state object per day
+  let days = [];
+
+  const fmt = (n) => n.toLocaleString("id-ID");
+  const priceHTML = (usd, idr) => `<span class="price-usd">USD ${usd}</span><span class="price-idr">/ IDR ${fmt(idr)}</span>`;
+
+  // Day 1 opens on Tour, Day 2 on Activities, alternating onward
+  function newDay(i) {
+    return { date: "", guests: "", plan: i % 2 === 0 ? "tour" : "activities", tour: "", kecakAddon: false, acts: [], transfers: [] };
+  }
+
+  // Per-car price doubles above 5 guests
+  function carPrice(base, guests) {
+    const mult = guests > 5 ? 2 : 1;
+    return { usd: base.usd * mult, idr: base.idr * mult };
+  }
+
+  function dayPrice(d) {
+    let usd = 0, idr = 0;
+    const g = parseInt(d.guests) || 0;
+    if (!g) return { usd, idr };
+    if (d.plan === "tour" && d.tour) {
+      const p = carPrice(prices.tour[d.tour], g);
+      usd += p.usd; idr += p.idr;
+      if (d.kecakAddon) { usd += actPrices["Kecak Dance"].usd * g; idr += actPrices["Kecak Dance"].idr * g; }
+    }
+    if (d.plan === "activities") {
+      d.acts.forEach((a) => {
+        const t = transport[a] || { usd: 0, idr: 0 };
+        usd += actPrices[a].usd * g + t.usd;
+        idr += actPrices[a].idr * g + t.idr;
+      });
+    }
+    d.transfers.forEach((r) => {
+      const p = carPrice(prices.transfer[r], g);
+      usd += p.usd; idr += p.idr;
+    });
+    return { usd, idr };
+  }
+
+  // A day is complete when date + guests + a main plan are chosen
+  function dayComplete(d) {
+    const g = parseInt(d.guests) || 0;
+    if (!d.date || !g) return false;
+    if (d.plan === "tour") return !!d.tour;
+    return d.acts.length >= 1;
+  }
+
+  function slotOf(name) {
+    for (const s in itnSlots) if (itnSlots[s].includes(name)) return s;
+    return null;
+  }
+
+  function render() {
+    wrap.innerHTML = "";
+    days.forEach((d, i) => wrap.appendChild(renderDay(d, i)));
+    renderSummary();
+  }
+
+  function renderDay(d, i) {
+    const isLast = i === days.length - 1;
+    const card = document.createElement("div");
+    card.className = "day";
+    const done = dayComplete(d);
+    const p = dayPrice(d);
+
+    let guestOpts = '<option value="" disabled ' + (d.guests ? "" : "selected") + '>Select guests</option>';
+    for (let n = 1; n <= 10; n++) guestOpts += `<option value="${n}" ${d.guests == n ? "selected" : ""}>${n}</option>`;
+
+    let tourOpts = '<option value="" disabled ' + (d.tour ? "" : "selected") + '>Choose a tour</option>';
+    Object.keys(prices.tour).forEach((t) => { tourOpts += `<option ${d.tour === t ? "selected" : ""}>${t}</option>`; });
+
+    const usedSlots = d.acts.map(slotOf);
+    const chipsHTML = Object.entries(itnSlots).map(([slot, list]) => {
+      const chips = list.map((a) => {
+        const sel = d.acts.includes(a);
+        const blocked = !sel && (d.acts.length >= 2 || usedSlots.includes(slot));
+        return `<button class="chip ${sel ? "selected" : ""}" data-act="${a}" ${blocked ? "disabled" : ""}>${a}</button>`;
+      }).join("");
+      const label = slot === "early" ? "Early Morning" : slot === "day" ? "Daytime" : "Evening";
+      return `<div class="slot"><div class="slot__name">${label}</div><div class="chips">${chips}</div></div>`;
+    }).join("");
+
+    let trOpts = '<option value="" disabled selected>Add a transfer (optional)</option>';
+    Object.keys(prices.transfer).forEach((r) => { trOpts += `<option>${r}</option>`; });
+
+    card.innerHTML = `
+      <div class="day__head">
+        <h3 class="day__title">Day ${i + 1}</h3>
+        <span class="day__status ${done ? "done" : ""}">${done ? "\u2713 Complete" : "Incomplete"}</span>
+      </div>
+      ${i > 0 && isLast ? '<button class="day__remove" title="Remove this day">\u2715 remove</button>' : ""}
+
+      <div class="field">
+        <label>Date</label>
+        <input type="date" class="f-date" value="${d.date}" />
+      </div>
+      <div class="field">
+        <label>Guests</label>
+        <select class="f-guests">${guestOpts}</select>
+      </div>
+
+      <div class="plantabs">
+        <button class="plantab ${d.plan === "tour" ? "active" : ""}" data-plan="tour">Tour Program</button>
+        <button class="plantab ${d.plan === "activities" ? "active" : ""}" data-plan="activities">Activities &amp; Performances</button>
+      </div>
+
+      ${d.plan === "tour" ? `
+        <div class="field">
+          <label>Select Tour</label>
+          <select class="f-tour">${tourOpts}</select>
+        </div>
+        <div class="addon">
+          <input type="checkbox" id="itn-kecak-${i}" class="f-kecak" ${d.kecakAddon ? "checked" : ""} />
+          <label for="itn-kecak-${i}">Add Kecak Dance in the evening <small>+ USD 10 / IDR 150.000 per person</small></label>
+        </div>
+      ` : `
+        ${chipsHTML}
+        <p class="hint">Pick up to 2 activities \u2014 each must be in a different time slot.</p>
+      `}
+
+      <div class="field" style="margin-top:1.1rem;">
+        <label>Route Transfer</label>
+        <div class="transferadd">
+          <select class="f-transfer">${trOpts}</select>
+          <button class="f-transfer-add">Add</button>
+        </div>
+      </div>
+
+      <div class="day__price">
+        <span>Day ${i + 1} price</span>
+        <span class="amount">${priceHTML(p.usd, p.idr)}</span>
+      </div>
+    `;
+
+    card.querySelector(".f-date").addEventListener("change", (e) => { d.date = e.target.value; render(); });
+    card.querySelector(".f-guests").addEventListener("change", (e) => { d.guests = e.target.value; render(); });
+    card.querySelectorAll(".plantab").forEach((b) => b.addEventListener("click", () => {
+      d.plan = b.dataset.plan;
+      d.tour = ""; d.kecakAddon = false; d.acts = [];
+      render();
+    }));
+    const tourSel = card.querySelector(".f-tour");
+    if (tourSel) tourSel.addEventListener("change", (e) => { d.tour = e.target.value; render(); });
+    const kecak = card.querySelector(".f-kecak");
+    if (kecak) kecak.addEventListener("change", (e) => { d.kecakAddon = e.target.checked; render(); });
+    card.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
+      const a = c.dataset.act;
+      if (d.acts.includes(a)) d.acts = d.acts.filter((x) => x !== a);
+      else d.acts.push(a);
+      render();
+    }));
+    card.querySelector(".f-transfer-add").addEventListener("click", () => {
+      const sel = card.querySelector(".f-transfer");
+      if (!sel.value) return;
+      d.transfers.push(sel.value);
+      render();
+    });
+    const rm = card.querySelector(".day__remove");
+    if (rm) rm.addEventListener("click", () => { days.pop(); render(); });
+
+    return card;
+  }
+
+  function renderSummary() {
+    const n = days.length;
+    const allDone = days.every(dayComplete);
+    const lastDone = dayComplete(days[n - 1]);
+
+    const tl = document.getElementById("itn-transfers");
+    tl.innerHTML = "";
+    days.forEach((d, i) => {
+      const g = parseInt(d.guests) || 1;
+      d.transfers.forEach((r, j) => {
+        const p = carPrice(prices.transfer[r], g);
+        const li = document.createElement("li");
+        li.innerHTML = `<span>Day ${i + 1} \u00b7 ${r}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span><button data-day="${i}" data-idx="${j}">\u2715</button>`;
+        li.querySelector("button").addEventListener("click", (e) => {
+          days[+e.target.dataset.day].transfers.splice(+e.target.dataset.idx, 1);
+          render();
+        });
+        tl.appendChild(li);
+      });
+    });
+
+    let usd = 0, idr = 0;
+    days.forEach((d) => { const p = dayPrice(d); usd += p.usd; idr += p.idr; });
+    document.getElementById("itn-title").textContent = `Itinerary \u2014 ${n} Day${n > 1 ? "s" : ""} Price`;
+    document.getElementById("itn-total-label").textContent = `Total (${n} day${n > 1 ? "s" : ""})`;
+    document.getElementById("itn-total").innerHTML = priceHTML(usd, idr);
+
+    document.getElementById("itn-book").disabled = !allDone;
+    const addBtn = document.getElementById("itn-addday");
+    addBtn.disabled = !lastDone || n >= MAX_DAYS;
+    addBtn.textContent = n >= MAX_DAYS ? "Maximum 7 days reached" : "+ Add More Day";
+  }
+
+  document.getElementById("itn-addday").addEventListener("click", () => {
+    if (days.length < MAX_DAYS) { days.push(newDay(days.length)); render(); }
+  });
+
+  // --- Itinerary modal ---
+  const modal = document.getElementById("itn-modal");
+  const modalForm = document.getElementById("itn-form");
+  const modalSuccess = document.getElementById("itn-success");
+
+  // Build the one-line description of a day used in the summary and the sheet
+  function dayLine(d) {
+    let items = d.plan === "tour"
+      ? d.tour + (d.kecakAddon ? " + Kecak Dance" : "")
+      : d.acts.join(" + ");
+    if (d.transfers.length) items += " \u00b7 " + d.transfers.join(", ");
+    return items;
+  }
+
+  document.getElementById("itn-book").addEventListener("click", () => {
+    const box = document.getElementById("itn-summary");
+    box.innerHTML = "";
+    let usd = 0, idr = 0;
+    days.forEach((d, i) => {
+      const p = dayPrice(d); usd += p.usd; idr += p.idr;
+      box.innerHTML += `<div class="modal__row"><span>Day ${i + 1} \u00b7 ${d.date} (${d.guests} pax)</span><span>${dayLine(d)}</span></div>`;
+    });
+    box.innerHTML += `<div class="modal__row"><span>Total</span><span>${priceHTML(usd, idr)}</span></div>`;
+    modal.classList.add("active");
+  });
+
+  function resetModal() { modal.classList.remove("active"); modalForm.style.display = "block"; modalSuccess.style.display = "none"; }
+  document.getElementById("itn-close").addEventListener("click", resetModal);
+  document.getElementById("itn-done").addEventListener("click", resetModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) resetModal(); });
+
+  document.getElementById("itn-submit").addEventListener("click", () => {
+    const name = document.getElementById("itn-name"), phone = document.getElementById("itn-phone"),
+          email = document.getElementById("itn-email"), pickup = document.getElementById("itn-pickup");
+    if (!name.value.trim()) { alert("Please enter your name."); return; }
+    if (!phone.value.trim()) { alert("Please enter your phone number."); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) { alert("Please enter a valid email address."); return; }
+    if (!pickup.value.trim()) { alert("Please enter your pick-up location."); return; }
+
+    let usd = 0, idr = 0;
+    days.forEach((d) => { const p = dayPrice(d); usd += p.usd; idr += p.idr; });
+    const detail = days.map((d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`).join(" | ");
+
+    const data = new URLSearchParams({
+      type: "itinerary",
+      name: name.value, phone: phone.value, email: email.value, pickup: pickup.value,
+      service: detail,
+      guests: days.map((d) => d.guests).join(","),
+      date: days.map((d) => d.date).join(","),
+      price: `USD ${usd} / IDR ${idr.toLocaleString("id-ID")}`
+    });
+    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
+
+    modalForm.style.display = "none";
+    modalSuccess.style.display = "block";
+  });
+
+  days.push(newDay(0));
+  render();
 }

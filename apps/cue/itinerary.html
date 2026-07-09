@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build Your Own Bali Itinerary | Multi-Day Custom Trip Planner — Cahyana Ubud Experience</title>
+  <meta name="description" content="Plan a custom multi-day Bali itinerary from Ubud — combine private tours, activities, cultural performances, and transfers for up to 7 days. Live pricing, book now pay after." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <section class="subhero">
+    <div class="subhero__content">
+      <h1 class="subhero__title">Build Your Own Bali Itinerary</h1>
+      <p class="subhero__text">Combine tours, activities, performances, and transfers into your perfect multi-day trip — up to 7 days, with live pricing as you plan. Book now, pay after.</p>
+    </div>
+  </section>
+
+  <section class="itinerary-builder" id="itinerary">
+    <h2 class="section__title">Build Your Own Bali Itinerary</h2>
+    <p class="builder__intro">Plan up to 7 days of tours, activities, and transfers — see your total price as you build. Book now, pay after.</p>
+    <div class="builder">
+      <div id="itn-days"></div>
+  
+      <section class="summary">
+        <h3 class="summary__title" id="itn-title">Itinerary — 1 Day Price</h3>
+        <ul class="tlist" id="itn-transfers"></ul>
+        <div class="summary__total">
+          <span id="itn-total-label">Total (1 day)</span>
+          <span class="amount" id="itn-total"><span class="price-usd">USD 0</span><span class="price-idr">/ IDR 0</span></span>
+        </div>
+        <button class="btn-book" id="itn-book" disabled>Book This Itinerary</button>
+        <button class="btn-addday" id="itn-addday" disabled>+ Add More Day</button>
+      </section>
+    </div>
+  </section>
+  
+  <div class="modal" id="itn-modal">
+    <div class="modal__box">
+      <button class="modal__close" id="itn-close" aria-label="Close">&times;</button>
+      <div id="itn-form">
+        <h3 class="modal__title">Confirm Your Itinerary</h3>
+        <div class="modal__group"><label for="itn-name">Your Name</label><input type="text" id="itn-name" placeholder="Enter your name" /></div>
+        <div class="modal__group"><label for="itn-phone">Phone Number</label><input type="tel" id="itn-phone" placeholder="e.g. +61 412 345 678" /></div>
+        <div class="modal__group"><label for="itn-email">Email</label><input type="email" id="itn-email" placeholder="you@email.com" /></div>
+        <div class="modal__group"><label for="itn-pickup">Pick-up Location</label><input type="text" id="itn-pickup" placeholder="Hotel / villa name or area" /></div>
+        <div class="modal__summary" id="itn-summary"></div>
+        <button class="modal__btn" id="itn-submit">Book Now</button>
+      </div>
+      <div class="modal__success" id="itn-success">
+        <div class="modal__success-icon">&check;</div>
+        <h3 class="modal__title">Itinerary Received!</h3>
+        <p>Thank you. We will email you shortly to confirm your custom itinerary.</p>
+        <button class="modal__btn" id="itn-done">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

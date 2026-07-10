@@ -982,7 +982,10 @@ body {
   text-align: center;
   background-color: var(--color-green);
   background-size: cover;
-  background-position: center;
+  background-position: top;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
+    url("assets/images/subpage_hero.webp");
 }
 .subhero::before {
   content: "";

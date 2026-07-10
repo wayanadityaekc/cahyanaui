@@ -1,4 +1,4 @@
-// Load shared partials first, then wire up whatever exists on this page
+
 document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
@@ -11,7 +11,6 @@ async function initPage() {
   initItinerary();
 }
 
-// Inject each shared partial into its placeholder, if present on this page
 async function loadPartials() {
   const partials = [
     { id: "navbar-placeholder", file: "partials/navbar.html" },
@@ -26,7 +25,6 @@ async function loadPartials() {
   }
 }
 
-// Navbar: hamburger toggle plus active-link highlight for the current page
 function initNavbar() {
   const hamburger = document.getElementById("hamburger");
   const navMenu = document.getElementById("nav-menu");
@@ -39,15 +37,6 @@ function initNavbar() {
     if (link.getAttribute("href") === current) link.classList.add("active");
   });
 }
-
-// --- Shared booking data ---
-
-const services = {
-  tour: ["Ubud Tour", "East Bali Tour", "West Bali Tour", "South Bali Tour", "North Bali Tour"],
-  experience: ["ATV", "Rafting", "Swing", "Jeep Sunrise", "Mount Batur Trekking", "Cooking Class"],
-  performance: ["Kecak Dance", "Barong Dance"],
-  transfer: ["Airport – Ubud", "Denpasar Area – Ubud", "Tanah Lot Area – Ubud", "Canggu Area – Ubud", "Amed Area – Ubud", "Buleleng Area – Ubud", "Candidasa Area – Ubud", "Kintamani Area – Ubud", "Besakih Area – Ubud"]
-};
 
 const prices = {
   tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
@@ -77,10 +66,12 @@ const experienceDetails = [
 ];
 
 const REFERRAL_CODE = "ridewithcahyana";
-const WHATSAPP_NUMBER = "62XXXXXXXXXX"; // replace with your real number: 62 + digits, no + and no leading 0
-const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL"; // replace with your deployed Apps Script web app URL
+const WHATSAPP_NUMBER = "62XXXXXXXXXX"; 
+const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL"; 
 
-// Booking form + popup (runs only on pages that include the booking form)
+// Format harga jadi HTML (dipakai booking & itinerary)
+const priceHTML = (usd, idr) => `<span class="price-usd">USD ${usd}</span><span class="price-idr">/ IDR ${idr.toLocaleString("id-ID")}</span>`;
+
 function initBooking() {
   const bookNowBtn = document.getElementById("book-now");
   if (!bookNowBtn) return;
@@ -118,7 +109,7 @@ function initBooking() {
   let currentPrice = null, finalPrice = null, discountApplied = false;
 
   function renderPrice(el, usd, idr) {
-    el.innerHTML = `<span class="price-usd">USD ${usd}</span><span class="price-idr">/ IDR ${idr.toLocaleString("id-ID")}</span>`;
+    el.innerHTML = priceHTML(usd, idr);
   }
 
   function calculatePrice() {
@@ -163,7 +154,7 @@ function initBooking() {
 
   serviceSelect.addEventListener("change", () => {
     serviceItemSelect.innerHTML = "";
-    services[serviceSelect.value].forEach((item) => {
+    Object.keys(prices[serviceSelect.value]).forEach((item) => {
       const option = document.createElement("option");
       option.value = item; option.textContent = item;
       serviceItemSelect.appendChild(option);
@@ -231,7 +222,6 @@ function initBooking() {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
   });
 
-  // Apply the homepage overlap style, then pre-select the category for this page
   const holder = document.getElementById("booking-placeholder");
   const section = document.getElementById("booking");
   if (holder && holder.dataset.overlap === "true" && section) section.classList.add("booking--overlap");
@@ -239,7 +229,7 @@ function initBooking() {
   if (def) { serviceSelect.value = def; serviceSelect.dispatchEvent(new Event("change")); }
 }
 
-// Activities slider (runs only where a slider exists)
+
 function initSlider() {
   const slider = document.getElementById("slider");
   if (!slider) return;
@@ -264,14 +254,12 @@ function initSlider() {
   setInterval(() => show((current + 1) % slides.length), 5000);
 }
 
-// Route accordion (runs only where routes exist)
 function initAccordion() {
   const routeHeads = document.querySelectorAll(".route__head");
   if (!routeHeads.length) return;
   routeHeads.forEach((head) => head.addEventListener("click", () => head.parentElement.classList.toggle("active")));
 }
 
-// Contact form (runs only on the contact page)
 function initContact() {
   const sendBtn = document.getElementById("c-send");
   if (!sendBtn) return;
@@ -300,12 +288,11 @@ function initContact() {
     success.style.display = "block";
   });
 }
-// Custom itinerary builder (runs only where the itinerary partial is present)
+
 function initItinerary() {
   const wrap = document.getElementById("itn-days");
   if (!wrap) return;
 
-  // Activities grouped by time slot; guests may pick max 2 per day, different slots
   const itnSlots = {
     early: ["Jeep Sunrise", "Mount Batur Trekking"],
     day: ["ATV", "Rafting", "Swing", "Barong Dance", "Cooking Class"],
@@ -314,18 +301,12 @@ function initItinerary() {
   const actPrices = { ...prices.experience, ...prices.performance };
   const MAX_DAYS = 7;
 
-  // One state object per day
   let days = [];
 
-  const fmt = (n) => n.toLocaleString("id-ID");
-  const priceHTML = (usd, idr) => `<span class="price-usd">USD ${usd}</span><span class="price-idr">/ IDR ${fmt(idr)}</span>`;
-
-  // Day 1 opens on Tour, Day 2 on Activities, alternating onward
   function newDay(i) {
     return { date: "", guests: "", plan: i % 2 === 0 ? "tour" : "activities", tour: "", kecakAddon: false, acts: [], transfers: [] };
   }
 
-  // Per-car price doubles above 5 guests
   function carPrice(base, guests) {
     const mult = guests > 5 ? 2 : 1;
     return { usd: base.usd * mult, idr: base.idr * mult };
@@ -354,7 +335,6 @@ function initItinerary() {
     return { usd, idr };
   }
 
-  // A day is complete when date + guests + a main plan are chosen
   function dayComplete(d) {
     const g = parseInt(d.guests) || 0;
     if (!d.date || !g) return false;
@@ -515,12 +495,10 @@ function initItinerary() {
     if (days.length < MAX_DAYS) { days.push(newDay(days.length)); render(); }
   });
 
-  // --- Itinerary modal ---
   const modal = document.getElementById("itn-modal");
   const modalForm = document.getElementById("itn-form");
   const modalSuccess = document.getElementById("itn-success");
 
-  // Build the one-line description of a day used in the summary and the sheet
   function dayLine(d) {
     let items = d.plan === "tour"
       ? d.tour + (d.kecakAddon ? " + Kecak Dance" : "")

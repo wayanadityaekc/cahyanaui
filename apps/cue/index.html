@@ -1,134 +1,628 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cahyana Ubud Experience | Private Tours, Transfers & Villas in Bali</title>
-  <meta name="description" content="Explore Bali the local way — private tours, authentic activities, trusted route transfers, scooter rental, and villas in Ubud with Cahyana Ubud Experience." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3" />
-</head>
-<body>
-  <div id="navbar-placeholder"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Cahyana Ubud Experience | Private Tours, Transfers & Villas in Bali
+    </title>
+    <meta
+      name="description"
+      content="Explore Bali the local way — private tours, authentic activities, trusted route transfers, and villas in Ubud with Cahyana Ubud Experience."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=4" />
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
 
-  <section class="hero" id="hero">
-    <div class="hero__content">
-      <h2 class="hero__subtitle">Private Tours, Authentic Experiences & Trusted Transfers in Ubud</h2>
-      <h1 class="hero__title">Discover Bali the Local Way</h1>
-      <p class="hero__text">Whether you're already in Bali or still planning your trip, we help you explore the island with comfort, flexibility, and honest prices.</p>
-    </div>
-  </section>
-
-  <div id="booking-placeholder" data-overlap="true"></div>
-
-  <section class="experience" id="experiences">
-    <h2 class="section__title">Top Experiences</h2>
-    <div class="experience__grid">
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/kecak.webp');"></div><div class="experience__body"><h3 class="experience__name">Kecak Dance</h3><p class="experience__desc">Witness Bali's hypnotic fire-and-chant ritual performed at sunset.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 10</span><span class="price-idr">/ IDR 150.000</span></div><a href="activities.html" class="experience__arrow" aria-label="View Kecak Dance">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/riceterrace.webp');"></div><div class="experience__body"><h3 class="experience__name">Ubud Tour</h3><p class="experience__desc">Rice terraces, temples, and monkey forest in one unforgettable day.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 45</span><span class="price-idr">/ IDR 700.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View Ubud Tour">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/atv.webp');"></div><div class="experience__body"><h3 class="experience__name">ATV Ride</h3><p class="experience__desc">Ride jungle trails, rivers, and tunnels on a powerful quad bike.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 40</span><span class="price-idr">/ IDR 620.000</span></div><a href="activities.html" class="experience__arrow" aria-label="View ATV Ride">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/rafting.webp');"></div><div class="experience__body"><h3 class="experience__name">Rafting</h3><p class="experience__desc">Paddle the Ayung River through rainforest and gentle rapids.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 35</span><span class="price-idr">/ IDR 550.000</span></div><a href="activities.html" class="experience__arrow" aria-label="View Rafting">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/uluwatu1.webp');"></div><div class="experience__body"><h3 class="experience__name">South Bali Tour</h3><p class="experience__desc">Cliff temples, beaches, and sunset views along the southern coast.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 50</span><span class="price-idr">/ IDR 800.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View South Bali Tour">&rarr;</a></div></div></article>
-    </div>
-  </section>
-
-  <section class="about" id="about">
-    <div class="about__container">
-      <div class="about__text">
-        <h2 class="about__title">Bali, through local eyes</h2>
-        <p>We're a local team from Ubud who knows the island beyond the postcards. From hidden waterfalls to the right time to beat the crowds, we plan every detail around you, flexible itineraries, honest prices, and no hidden fees. Just real Bali, made easy.</p>
+    <section class="hero" id="hero">
+      <div class="hero__content">
+        <h2 class="hero__subtitle">
+          Private Tours, Authentic Experiences & Trusted Transfers in Ubud
+        </h2>
+        <h1 class="hero__title">Discover Bali the Local Way</h1>
+        <p class="hero__text">
+          Whether you're already in Bali or still planning your trip, we help
+          you explore the island with comfort, flexibility, and honest prices.
+        </p>
       </div>
-      <div class="about__boxes">
-        <div class="about__content">
-          <div class="about__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-          <h3 class="title">Local Expert</h3>
+    </section>
+
+    <div id="booking-placeholder" data-overlap="true"></div>
+
+    <section class="experience" id="experiences">
+      <h2 class="section__title">Top Experiences</h2>
+      <div class="experience__grid">
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="background-image: url(&quot;assets/images/kecak.webp&quot;)"
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Kecak Dance</h3>
+            <p class="experience__desc">
+              Witness Bali's hypnotic fire-and-chant ritual performed at sunset.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 10</span
+                ><span class="price-idr">/ IDR 150.000</span>
+              </div>
+              <a
+                href="kecak-dance.html"
+                class="experience__arrow"
+                aria-label="View Kecak Dance"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="
+              background-image: url(&quot;assets/images/riceterrace.webp&quot;);
+            "
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Ubud Tour</h3>
+            <p class="experience__desc">
+              Rice terraces, temples, and monkey forest in one unforgettable
+              day.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 45</span
+                ><span class="price-idr">/ IDR 700.000</span>
+              </div>
+              <a
+                href="ubud-tour.html"
+                class="experience__arrow"
+                aria-label="View Ubud Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="background-image: url(&quot;assets/images/atv.webp&quot;)"
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">ATV Ride</h3>
+            <p class="experience__desc">
+              Ride jungle trails, rivers, and tunnels on a powerful quad bike.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 40</span
+                ><span class="price-idr">/ IDR 620.000</span>
+              </div>
+              <a
+                href="atv-ride.html"
+                class="experience__arrow"
+                aria-label="View ATV Ride"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="
+              background-image: url(&quot;assets/images/rafting.webp&quot;);
+            "
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Rafting</h3>
+            <p class="experience__desc">
+              Paddle the Ayung River through rainforest and gentle rapids.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 35</span
+                ><span class="price-idr">/ IDR 550.000</span>
+              </div>
+              <a
+                href="rafting.html"
+                class="experience__arrow"
+                aria-label="View Rafting"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="
+              background-image: url(&quot;assets/images/uluwatu1.webp&quot;);
+            "
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">South Bali Tour</h3>
+            <p class="experience__desc">
+              Cliff temples, beaches, and sunset views along the southern coast.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 50</span
+                ><span class="price-idr">/ IDR 800.000</span>
+              </div>
+              <a
+                href="south-bali-tour.html"
+                class="experience__arrow"
+                aria-label="View South Bali Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about__container">
+        <div class="about__text">
+          <h2 class="about__title">Bali, through local eyes</h2>
+          <p>
+            We're a local team from Ubud who knows the island beyond the
+            postcards. From hidden waterfalls to the right time to beat the
+            crowds, we plan every detail around you, flexible itineraries,
+            honest prices, and no hidden fees. Just real Bali, made easy.
+          </p>
         </div>
-        <div class="about__content">
-          <div class="about__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4"/></svg></div>
-          <h3 class="title">Flexible Itineraries</h3>
+        <div class="about__boxes">
+          <div class="about__content">
+            <div class="about__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+            </div>
+            <h3 class="title">Local Expert</h3>
+          </div>
+          <div class="about__content">
+            <div class="about__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" />
+              </svg>
+            </div>
+            <h3 class="title">Flexible Itineraries</h3>
+          </div>
+          <div class="about__content">
+            <div class="about__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M20 12l-8 8-8-8 8-8z" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
+            <h3 class="title">Authentic Experiences</h3>
+          </div>
+          <div class="about__content">
+            <div class="about__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" />
+                <path d="M9.5 12l1.8 1.8L15 10" />
+              </svg>
+            </div>
+            <h3 class="title">Personalized Service</h3>
+          </div>
         </div>
-        <div class="about__content">
-          <div class="about__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12l-8 8-8-8 8-8z"/><circle cx="12" cy="12" r="2"/></svg></div>
-          <h3 class="title">Authentic Experiences</h3>
+      </div>
+    </section>
+
+    <section class="trust">
+      <p class="trust__label">Featured On</p>
+      <div class="trust__logos">
+        <img src="assets/images/viator.webp" alt="Viator" />
+        <img src="assets/images/getyourguide.webp" alt="GetYourGuide" />
+        <img src="assets/images/klook.webp" alt="Klook" />
+        <img src="assets/images/tripadvisor.webp" alt="Tripadvisor" />
+      </div>
+    </section>
+
+    <section class="experience experience--alt" id="tours">
+      <h2 class="section__title">Tour Programs</h2>
+      <div class="experience__grid">
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="
+              background-image: url(&quot;assets/images/riceterrace.webp&quot;);
+            "
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Ubud Tour</h3>
+            <p class="experience__desc">
+              Rice terraces, sacred temples, and the monkey forest in one full
+              day.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 45</span
+                ><span class="price-idr">/ IDR 700.000</span>
+              </div>
+              <a
+                href="ubud-tour.html"
+                class="experience__arrow"
+                aria-label="View Ubud Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="
+              background-image: url(&quot;assets/images/lempuyang-edited.webp&quot;);
+            "
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">East Bali Tour</h3>
+            <p class="experience__desc">
+              Water palaces, bamboo forests, and the dramatic gates of
+              Lempuyang.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 55</span
+                ><span class="price-idr">/ IDR 850.000</span>
+              </div>
+              <a
+                href="east-bali-tour.html"
+                class="experience__arrow"
+                aria-label="View East Bali Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="background-image: url(assets/images/tanah-lot.webp)"
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">West Bali Tour</h3>
+            <p class="experience__desc">
+              Lakeside temples, mountain views, and the iconic Tanah Lot sunset.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 60</span
+                ><span class="price-idr">/ IDR 950.000</span>
+              </div>
+              <a
+                href="west-bali-tour.html"
+                class="experience__arrow"
+                aria-label="View West Bali Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="
+              background-image: url(&quot;assets/images/uluwatu1.webp&quot;);
+            "
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">South Bali Tour</h3>
+            <p class="experience__desc">
+              Cliff temples, white-sand beaches, and golden sunsets on the
+              coast.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 50</span
+                ><span class="price-idr">/ IDR 800.000</span>
+              </div>
+              <a
+                href="south-bali-tour.html"
+                class="experience__arrow"
+                aria-label="View South Bali Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div
+            class="experience__image"
+            style="background-image: url(assets/images/tibumana.webp)"
+          ></div>
+          <div class="experience__body">
+            <h3 class="experience__name">North Bali Tour</h3>
+            <p class="experience__desc">
+              Twin lakes, hidden waterfalls, and dolphins off the northern
+              shore.
+            </p>
+            <div class="experience__footer">
+              <div class="experience__price">
+                <span class="price-usd">USD 65</span
+                ><span class="price-idr">/ IDR 1.000.000</span>
+              </div>
+              <a
+                href="north-bali-tour.html"
+                class="experience__arrow"
+                aria-label="View North Bali Tour"
+                >&rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="villas" id="villas">
+      <h2 class="section__title">Our Villas - ubudprivatevillas.com</h2>
+      <div class="villas__grid">
+        <article class="villa__card">
+          <div
+            class="villa__image"
+            style="background-image: url(assets/images/cahyana-tibuah.webp)"
+          ></div>
+          <div class="villa__body">
+            <h3 class="villa__name">Cahyana Tibuah</h3>
+            <p class="villa__desc">
+              A peaceful private villa surrounded by rice fields, perfect for a
+              quiet Ubud escape with pool and full privacy.
+            </p>
+            <div class="villa__footer">
+              <div class="villa__price">
+                <span class="price-usd">USD 80</span
+                ><span class="price-idr">/ IDR 1.250.000 per night</span>
+              </div>
+              <a href="#" class="villa__btn" target="_blank" rel="noopener"
+                >View Villa &rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="villa__card">
+          <div
+            class="villa__image"
+            style="
+              background-image: url(&quot;assets/images/cahyana-house.webp&quot;);
+            "
+          ></div>
+          <div class="villa__body">
+            <h3 class="villa__name">Cahyana House</h3>
+            <p class="villa__desc">
+              A spacious family-friendly home close to central Ubud, blending
+              modern comfort with traditional Balinese charm.
+            </p>
+            <div class="villa__footer">
+              <div class="villa__price">
+                <span class="price-usd">USD 95</span
+                ><span class="price-idr">/ IDR 1.480.000 per night</span>
+              </div>
+              <a href="#" class="villa__btn" target="_blank" rel="noopener"
+                >View Villa &rarr;</a
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="activities" id="activities">
+      <h2 class="section__title">Activities &amp; Performances</h2>
+      <div class="activities__container">
+        <div class="slider" id="slider">
+          <div
+            class="slider__slide active"
+            data-img="kecak"
+            style="background-image: url(&quot;assets/images/kecak.webp&quot;)"
+          >
+            <div class="slider__caption"><h3>Kecak Dance</h3></div>
+          </div>
+          <div
+            class="slider__slide"
+            data-img="barong"
+            style="
+              background-image: url(&quot;assets/images/barong-dance-bali.webp&quot;);
+            "
+          >
+            <div class="slider__caption"><h3>Barong Dance</h3></div>
+          </div>
+          <div
+            class="slider__slide"
+            data-img="atv"
+            style="background-image: url(assets/images/atv.webp)"
+          >
+            <div class="slider__caption"><h3>ATV Ride</h3></div>
+          </div>
+          <div
+            class="slider__slide"
+            data-img="rafting"
+            style="
+              background-image: url(&quot;assets/images/rafting.webp&quot;);
+            "
+          >
+            <div class="slider__caption"><h3>Rafting</h3></div>
+          </div>
+          <div class="slider__slide" data-img="cooking">
+            <div class="slider__caption"><h3>Cooking Class</h3></div>
+          </div>
+          <button
+            class="slider__btn slider__btn--prev"
+            id="slider-prev"
+            aria-label="Previous"
+          >
+            &larr;
+          </button>
+          <button
+            class="slider__btn slider__btn--next"
+            id="slider-next"
+            aria-label="Next"
+          >
+            &rarr;
+          </button>
+          <div class="slider__dots">
+            <button class="slider__dot active" aria-label="Slide 1"></button>
+            <button class="slider__dot" aria-label="Slide 2"></button>
+            <button class="slider__dot" aria-label="Slide 3"></button>
+            <button class="slider__dot" aria-label="Slide 4"></button>
+            <button class="slider__dot" aria-label="Slide 5"></button>
+          </div>
         </div>
-        <div class="about__content">
-          <div class="about__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9.5 12l1.8 1.8L15 10"/></svg></div>
-          <h3 class="title">Personalized Service</h3>
+        <div class="activities__text">
+          <h3 class="activities__heading">More Than Sightseeing</h3>
+          <p class="activities__desc">
+            Bali isn't just somewhere you visit, it's something you feel. From
+            the trance of a sunset Kecak to the rush of a jungle ATV trail, our
+            activities and performances bring you closer to the island's living
+            culture and wild landscapes. Every experience is led by locals who
+            know how to make it real, safe, and unforgettable.
+          </p>
+          <a
+            href="activities.html"
+            class="highlight__btn"
+            style="margin-top: 1.5rem"
+            >Explore Activities</a
+          >
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="experience experience--alt" id="tours">
-    <h2 class="section__title">Tour Programs</h2>
-    <div class="experience__grid">
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/riceterrace.webp');"></div><div class="experience__body"><h3 class="experience__name">Ubud Tour</h3><p class="experience__desc">Rice terraces, sacred temples, and the monkey forest in one full day.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 45</span><span class="price-idr">/ IDR 700.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View Ubud Tour">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/lempuyang-edited.webp');"></div><div class="experience__body"><h3 class="experience__name">East Bali Tour</h3><p class="experience__desc">Water palaces, bamboo forests, and the dramatic gates of Lempuyang.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 55</span><span class="price-idr">/ IDR 850.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View East Bali Tour">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url(assets/images/tanah-lot.webp);"></div><div class="experience__body"><h3 class="experience__name">West Bali Tour</h3><p class="experience__desc">Lakeside temples, mountain views, and the iconic Tanah Lot sunset.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 60</span><span class="price-idr">/ IDR 950.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View West Bali Tour">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url('assets/images/uluwatu1.webp');"></div><div class="experience__body"><h3 class="experience__name">South Bali Tour</h3><p class="experience__desc">Cliff temples, white-sand beaches, and golden sunsets on the coast.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 50</span><span class="price-idr">/ IDR 800.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View South Bali Tour">&rarr;</a></div></div></article>
-      <article class="experience__card"><div class="experience__image" style="background-image: url(assets/images/tibumana.webp);"></div><div class="experience__body"><h3 class="experience__name">North Bali Tour</h3><p class="experience__desc">Twin lakes, hidden waterfalls, and dolphins off the northern shore.</p><div class="experience__footer"><div class="experience__price"><span class="price-usd">USD 65</span><span class="price-idr">/ IDR 1.000.000</span></div><a href="tour.html" class="experience__arrow" aria-label="View North Bali Tour">&rarr;</a></div></div></article>
-    </div>
-  </section>
-
-  <section class="villas" id="villas">
-    <h2 class="section__title">Our Villas - ubudprivatevillas.com</h2>
-    <div class="villas__grid">
-      <article class="villa__card"><div class="villa__image" style="background-image: url(assets/images/cahyana-tibuah.webp);"></div><div class="villa__body"><h3 class="villa__name">Cahyana Tibuah</h3><p class="villa__desc">A peaceful private villa surrounded by rice fields, perfect for a quiet Ubud escape with pool and full privacy.</p><div class="villa__footer"><div class="villa__price"><span class="price-usd">USD 80</span><span class="price-idr">/ IDR 1.250.000 per night</span></div><a href="#" class="villa__btn" target="_blank" rel="noopener">View Villa &rarr;</a></div></div></article>
-      <article class="villa__card"><div class="villa__image" style="background-image: url('assets/images/cahyana-house.webp');"></div><div class="villa__body"><h3 class="villa__name">Cahyana House</h3><p class="villa__desc">A spacious family-friendly home close to central Ubud, blending modern comfort with traditional Balinese charm.</p><div class="villa__footer"><div class="villa__price"><span class="price-usd">USD 95</span><span class="price-idr">/ IDR 1.480.000 per night</span></div><a href="#" class="villa__btn" target="_blank" rel="noopener">View Villa &rarr;</a></div></div></article>
-    </div>
-  </section>
-
-  <section class="activities" id="activities">
-    <h2 class="section__title">Activities &amp; Performances</h2>
-    <div class="activities__container">
-      <div class="slider" id="slider">
-        <div class="slider__slide active" data-img="kecak" style="background-image: url('assets/images/kecak.webp');"><div class="slider__caption"><h3>Kecak Dance</h3></div></div>
-        <div class="slider__slide" data-img="barong"><div class="slider__caption"><h3>Barong Dance</h3></div></div>
-        <div class="slider__slide" data-img="atv" style="background-image: url(assets/images/atv.webp);"><div class="slider__caption"><h3>ATV Ride</h3></div></div>
-        <div class="slider__slide" data-img="rafting" style="background-image: url('assets/images/rafting.webp');"><div class="slider__caption"><h3>Rafting</h3></div></div>
-        <div class="slider__slide" data-img="cooking"><div class="slider__caption"><h3>Cooking Class</h3></div></div>
-        <button class="slider__btn slider__btn--prev" id="slider-prev" aria-label="Previous">&larr;</button>
-        <button class="slider__btn slider__btn--next" id="slider-next" aria-label="Next">&rarr;</button>
-        <div class="slider__dots">
-          <button class="slider__dot active" aria-label="Slide 1"></button>
-          <button class="slider__dot" aria-label="Slide 2"></button>
-          <button class="slider__dot" aria-label="Slide 3"></button>
-          <button class="slider__dot" aria-label="Slide 4"></button>
-          <button class="slider__dot" aria-label="Slide 5"></button>
+    <section class="transfer" id="transfer">
+      <h2 class="section__title">Route &amp; Transfer</h2>
+      <p class="transfer__note">
+        All transfer prices are per car · max 5 passengers
+      </p>
+      <div class="transfer__columns">
+        <div class="transfer__col">
+          <div class="route__item">
+            <button class="route__head">
+              <span>Airport &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 20</span
+              ><span class="price-idr">/ IDR 300.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Denpasar Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 20</span
+              ><span class="price-idr">/ IDR 300.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Tanah Lot Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 30</span
+              ><span class="price-idr">/ IDR 450.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Canggu Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 28</span
+              ><span class="price-idr">/ IDR 430.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Amed Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 45</span
+              ><span class="price-idr">/ IDR 700.000</span>
+            </div>
+          </div>
+        </div>
+        <div class="transfer__col">
+          <div class="route__item">
+            <button class="route__head">
+              <span>Buleleng Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 50</span
+              ><span class="price-idr">/ IDR 780.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Candidasa Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 38</span
+              ><span class="price-idr">/ IDR 580.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Kintamani Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 30</span
+              ><span class="price-idr">/ IDR 450.000</span>
+            </div>
+          </div>
+          <div class="route__item">
+            <button class="route__head">
+              <span>Besakih Area &ndash; Ubud</span
+              ><span class="route__icon">+</span>
+            </button>
+            <div class="route__price">
+              <span class="price-usd">USD 35</span
+              ><span class="price-idr">/ IDR 550.000</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="activities__text">
-        <h3 class="activities__heading">More Than Sightseeing</h3>
-        <p class="activities__desc">Bali isn't just somewhere you visit, it's something you feel. From the trance of a sunset Kecak to the rush of a jungle ATV trail, our activities and performances bring you closer to the island's living culture and wild landscapes. Every experience is led by locals who know how to make it real, safe, and unforgettable.</p>
-        <a href="activities.html" class="highlight__btn" style="margin-top:1.5rem;">Explore Activities</a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="transfer" id="transfer">
-    <h2 class="section__title">Route &amp; Transfer</h2>
-    <p class="transfer__note">All transfer prices are per car · max 5 passengers</p>
-    <div class="transfer__columns">
-      <div class="transfer__col">
-        <div class="route__item"><button class="route__head"><span>Airport &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 20</span><span class="price-idr">/ IDR 300.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Denpasar Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 20</span><span class="price-idr">/ IDR 300.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Tanah Lot Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 30</span><span class="price-idr">/ IDR 450.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Canggu Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 28</span><span class="price-idr">/ IDR 430.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Amed Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 45</span><span class="price-idr">/ IDR 700.000</span></div></div>
-      </div>
-      <div class="transfer__col">
-        <div class="route__item"><button class="route__head"><span>Buleleng Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 50</span><span class="price-idr">/ IDR 780.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Candidasa Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 38</span><span class="price-idr">/ IDR 580.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Kintamani Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 30</span><span class="price-idr">/ IDR 450.000</span></div></div>
-        <div class="route__item"><button class="route__head"><span>Besakih Area &ndash; Ubud</span><span class="route__icon">+</span></button><div class="route__price"><span class="price-usd">USD 35</span><span class="price-idr">/ IDR 550.000</span></div></div>
-      </div>
-    </div>
-  </section>
+    <div id="footer-placeholder"></div>
 
-  <div id="footer-placeholder"></div>
-
-  <script src="script.js?v=3"></script>
-</body>
+    <script src="script.js?v=4"></script>
+  </body>
 </html>

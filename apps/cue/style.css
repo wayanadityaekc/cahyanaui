@@ -31,8 +31,8 @@ body {
 .why__desc,
 .contact__lead,
 .info__list li,
-.plan__note,
 .activities__desc,
+.stop__desc,
 .transfer__note {
   font-family: var(--font-body);
   font-size: 0.85rem;
@@ -43,7 +43,6 @@ body {
 /* Judul card & slider — 1 gaya, ngikut font judul card */
 .experience__name,
 .villa__name,
-.plan__name,
 .slider__caption h3,
 .title {
   font-family: var(--font-body);
@@ -77,12 +76,12 @@ body {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -8px;
+  bottom: -10px;
   transform: translateX(-50%);
-  width: 150px;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, #c8a85d, transparent);
-  margin-top: 0.1rem;
+  width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--color-gold);
 }
 
 .navbar {
@@ -362,6 +361,43 @@ body {
   height: 22px;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.trust {
+  max-width: 1100px;
+  margin: 0 auto 1.5rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #e0ddd4;
+}
+.trust__label {
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7a7466;
+}
+.trust__logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem 2.75rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.trust__logos img {
+  height: 30px;
+  width: auto;
+  opacity: 0.55;
+  filter: grayscale(1);
+  transition:
+    opacity 0.2s,
+    filter 0.2s;
+}
+.trust__logos img:hover {
+  opacity: 1;
+  filter: grayscale(0);
 }
 
 /* Experience & Tour cards */
@@ -711,6 +747,11 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+.footer__socials a img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
 .footer__socials a:hover {
   color: var(--color-green);
   background-color: var(--color-gold);
@@ -756,6 +797,11 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1rem 2.5rem;
+}
+.footer__logos img {
+  height: 26px;
+  width: auto;
+  opacity: 0.85;
 }
 .footer__logos span {
   font-family: var(--font-body);
@@ -1082,6 +1128,46 @@ body {
   color: var(--color-green);
 }
 
+/* Tour stops / detail rows — foto kiri, deskripsi kanan */
+.stops {
+  padding: 3rem 1.5rem;
+}
+.stop {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 2.5rem;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  border-bottom: 1px solid #e0ddd4;
+}
+.stop:last-child {
+  border-bottom: none;
+}
+.stop__image {
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background-color: var(--color-green);
+  background-size: cover;
+  background-position: center;
+}
+.stop__num {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.stop__name {
+  margin-bottom: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
 /* Details: quick facts + included / excluded */
 .info {
   padding: 3rem 1.5rem;
@@ -1150,85 +1236,6 @@ body {
 /* Wrapping grid for pages with many cards (activities) */
 .experience__grid--auto {
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-}
-
-/* Rental plan cards (scooter) */
-.plans {
-  padding: 3rem 1.5rem;
-}
-.plans__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-.plan {
-  padding: 2rem 1.5rem;
-  text-align: center;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-}
-.plan--featured {
-  background-color: var(--color-green);
-  color: var(--color-cream);
-}
-.plan__name {
-  margin-bottom: 0.75rem;
-}
-.plan__price {
-  font-family: var(--font-body);
-  font-size: 1.9rem;
-  color: var(--color-gold);
-}
-.plan__price small {
-  display: block;
-  margin-top: 0.2rem;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 500;
-  opacity: 0.85;
-}
-.plan__note {
-  margin-top: 0.75rem;
-  color: #6b6559;
-}
-.plan--featured .plan__note {
-  color: var(--color-cream);
-  opacity: 0.85;
-}
-
-/* Call-to-action band (used where there is no booking form) */
-.cta {
-  padding: 3rem 1.5rem;
-  text-align: center;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-}
-.cta__title {
-  margin-bottom: 0.75rem;
-  font-family: var(--font-body);
-  font-size: 2rem;
-  color: var(--color-cream);
-}
-.cta__text {
-  max-width: 560px;
-  margin: 0 auto 1.75rem;
-  line-height: 1.6;
-  opacity: 0.9;
-}
-.cta__btn {
-  display: inline-block;
-  padding: 0.85rem 1.75rem;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--color-green);
-  background-color: var(--color-gold);
-}
-.cta__btn:hover {
-  background-color: var(--color-cream);
 }
 
 /* Contact page */
@@ -1770,6 +1777,10 @@ body {
   .highlight__container {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+  .stop {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
   .info__lists {
     grid-template-columns: 1fr;

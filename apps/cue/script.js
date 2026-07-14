@@ -9,12 +9,15 @@ async function initPage() {
   initAccordion();
   initContact();
   initItinerary();
+  initReviews();
 }
 
 async function loadPartials() {
   const partials = [
     { id: "navbar-placeholder", file: "partials/navbar.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
+    { id: "reviews-placeholder", file: "partials/reviews.html" },
+    { id: "faq-placeholder", file: "partials/faq.html" },
     { id: "footer-placeholder", file: "partials/footer.html" }
   ];
   for (const part of partials) {
@@ -282,6 +285,50 @@ function initContact() {
       message: messageField.value
     });
 
+    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
+
+    form.style.display = "none";
+    success.style.display = "block";
+  });
+}
+
+// Guest review form (runs only where the reviews partial is present)
+function initReviews() {
+  const sendBtn = document.getElementById("rv-send");
+  if (!sendBtn) return;
+
+  const form = document.getElementById("review-form");
+  const success = document.getElementById("review-success");
+  const nameField = document.getElementById("rv-name");
+  const emailField = document.getElementById("rv-email");
+  const serviceField = document.getElementById("rv-service");
+  const messageField = document.getElementById("rv-message");
+  const stars = document.querySelectorAll("#rv-rating .rating__star");
+
+  let rating = 0;
+
+  stars.forEach((star) => {
+    star.addEventListener("click", () => {
+      rating = parseInt(star.dataset.value);
+      stars.forEach((s) => s.classList.toggle("active", parseInt(s.dataset.value) <= rating));
+    });
+  });
+
+  sendBtn.addEventListener("click", () => {
+    if (!nameField.value.trim()) { alert("Please enter your name."); return; }
+    if (!/^\S+@\S+\.\S+$/.test(emailField.value.trim())) { alert("Please enter a valid email address."); return; }
+    if (!serviceField.value) { alert("Please select which service you used."); return; }
+    if (!rating) { alert("Please give a star rating."); return; }
+    if (!messageField.value.trim()) { alert("Please write your review."); return; }
+
+    const data = new URLSearchParams({
+      type: "review",
+      name: nameField.value,
+      email: emailField.value,
+      service: serviceField.value,
+      rating: String(rating),
+      message: messageField.value
+    });
     fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
 
     form.style.display = "none";

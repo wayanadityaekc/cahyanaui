@@ -33,6 +33,9 @@ body {
 .info__list li,
 .activities__desc,
 .stop__desc,
+.review__text,
+.reviews__intro,
+.faq__a p,
 .transfer__note {
   font-family: var(--font-body);
   font-size: 0.85rem;
@@ -64,7 +67,7 @@ body {
 
 .section__title {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   font-family: var(--font-body);
   font-size: 1.2rem;
   font-weight: 600;
@@ -401,6 +404,10 @@ body {
 }
 
 /* Experience & Tour cards */
+#experiences {
+  margin-top: 0.5rem;
+}
+
 .experience {
   padding: 3rem 1.5rem;
   background-color: #ffffff;
@@ -482,11 +489,12 @@ body {
 /* Villas (homepage) */
 .villas {
   padding: 3rem 1.5rem;
-  background-color: var(--color-cream);
-  border-radius: 24px;
   overflow: hidden;
   margin: 20px auto 0;
   width: calc(100% - 10px);
+  max-width: 1100px;
+  border-bottom: 1px solid #e0ddd4;
+  border-top: 1px solid #e0ddd4;
 }
 .villas__grid {
   display: grid;
@@ -551,6 +559,10 @@ body {
 /* Activities slider */
 .activities {
   padding: 3rem 1.5rem;
+  margin: 0 auto;
+  width: calc(100% - 10px);
+  max-width: 1100px;
+  border-bottom: 1px solid #e0ddd4;
 }
 .activities__container {
   display: grid;
@@ -632,12 +644,13 @@ body {
 .activities__heading {
   margin-bottom: 1rem;
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-size: 2rem;
   line-height: 1.15;
   color: var(--color-gold);
 }
 .activities__desc {
   color: #46453f;
+  line-height: 2;
 }
 
 /* Route & Transfer accordion */
@@ -699,6 +712,227 @@ body {
   padding: 0 0.25rem 1rem;
 }
 
+/* Guest reviews */
+.reviews {
+  padding: 3rem 1.5rem;
+}
+.reviews__intro {
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  color: #6b6559;
+}
+.reviews__container {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.reviews__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.reviews__empty {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  border: 1px dashed #d8d2c4;
+  border-radius: 12px;
+  color: #7a7466;
+}
+.review {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+.review__stars {
+  margin-bottom: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--color-gold);
+}
+.review__author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.review__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-weight: 600;
+  color: var(--color-green);
+  background-color: rgba(201, 164, 92, 0.2);
+}
+.review__name {
+  display: block;
+  font-size: 0.9rem;
+}
+.review__meta {
+  font-size: 0.75rem;
+  color: #7a7466;
+}
+
+/* Review form (diisi tamu) */
+.review-form {
+  padding: 1.75rem;
+  border-radius: 12px;
+  background-color: var(--color-cream);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+.review-form__title {
+  margin-bottom: 1.25rem;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.review-form__group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.review-form__group label {
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.review-form__group input,
+.review-form__group select,
+.review-form__group textarea {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--color-green);
+  background-color: #fff;
+}
+.review-form__group input,
+.review-form__group select {
+  height: 2.9rem;
+}
+.review-form__group textarea {
+  resize: vertical;
+}
+.rating {
+  display: flex;
+  gap: 0.3rem;
+}
+.rating__star {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: #d8d2c4;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.rating__star.active {
+  color: var(--color-gold);
+}
+.review-form__btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-cream);
+  background-color: var(--color-green);
+  cursor: pointer;
+}
+.review-form__btn:hover {
+  background-color: var(--color-gold);
+  color: var(--color-green);
+}
+.review-form__note {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #7a7466;
+}
+.review-form__success {
+  display: none;
+  padding: 2.5rem 1.75rem;
+  text-align: center;
+  border-radius: 12px;
+  background-color: var(--color-cream);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+.review-form__success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  color: var(--color-cream);
+  background-color: var(--color-green);
+}
+
+/* FAQ accordion */
+.faq {
+  padding: 3rem 1.5rem;
+}
+.faq__list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq__item {
+  margin-bottom: 0.75rem;
+  border: 1px solid #e0ddd4;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+}
+.faq__q {
+  position: relative;
+  padding: 1.1rem 3rem 1.1rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+  list-style: none;
+}
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+.faq__q::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  right: 1.25rem;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-gold);
+}
+.faq__item[open] .faq__q {
+  color: var(--color-gold);
+}
+.faq__item[open] .faq__q::after {
+  content: "\2212";
+}
+.faq__a {
+  padding: 0 1.25rem 1.25rem;
+}
+
 /* Footer */
 .footer {
   padding: 3.5rem 1.5rem 1.5rem;
@@ -748,9 +982,10 @@ body {
   stroke-linejoin: round;
 }
 .footer__socials a img {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
+  width: 100%; /* isi penuh lingkaran */
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .footer__socials a:hover {
   color: var(--color-green);
@@ -1781,6 +2016,10 @@ body {
   .stop {
     grid-template-columns: 1fr;
     gap: 1.25rem;
+  }
+  .reviews__container {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
   .info__lists {
     grid-template-columns: 1fr;

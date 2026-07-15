@@ -23,7 +23,9 @@ async function loadPartials() {
   for (const part of partials) {
     const holder = document.getElementById(part.id);
     if (!holder) continue;
-    const res = await fetch(part.file);
+    // halaman boleh override file lewat data-src (misal FAQ beda per halaman)
+    const file = holder.dataset.src || part.file;
+    const res = await fetch(file);
     holder.innerHTML = await res.text();
   }
 }

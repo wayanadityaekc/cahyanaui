@@ -2,79 +2,76 @@
   <h2 class="section__title">Guest Reviews</h2>
   <p class="reviews__intro">Travelled with us? We'd love to hear how it went — your words help other travellers decide.</p>
 
-  <div class="reviews__container">
+  <!-- Kartu review asli (kosong dulu). Copy blok <article> & isi review ASLI tiap ada yang baru. -->
+  <div class="reviews-cards" id="reviews-cards">
+    <article class="review-card review-card--empty">
+      <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg></span>
+      <div class="review-card__stars">☆☆☆☆☆</div>
+      <p class="review-card__text">Your review will appear here.</p>
+      <span class="review-card__name">— Awaiting our first guests</span>
+    </article>
+    <article class="review-card review-card--empty">
+      <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg></span>
+      <div class="review-card__stars">☆☆☆☆☆</div>
+      <p class="review-card__text">Your review will appear here.</p>
+      <span class="review-card__name">— Awaiting our first guests</span>
+    </article>
+    <article class="review-card review-card--empty">
+      <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg></span>
+      <div class="review-card__stars">☆☆☆☆☆</div>
+      <p class="review-card__text">Your review will appear here.</p>
+      <span class="review-card__name">— Awaiting our first guests</span>
+    </article>
+  </div>
 
-    <!-- KIRI: daftar review asli.
-         Kosong dulu sampai ada review beneran dari tamu.
-         Cara nambah: copy blok <article class="review"> di bawah, isi datanya, hapus komentarnya. -->
-    <div class="reviews__list" id="reviews-list">
-      <p class="reviews__empty">No reviews published yet — be the first to share your experience.</p>
+  <!-- Form buat tamu nulis review -->
+  <div class="review-form" id="review-form">
+    <h3 class="review-form__title">Leave a Review</h3>
 
-      <!-- TEMPLATE review asli (copy & isi, jangan dipakai kalau belum ada review beneran):
-      <article class="review">
-        <div class="review__stars">★★★★★</div>
-        <p class="review__text">(tulis review asli dari tamu di sini)</p>
-        <div class="review__author">
-          <span class="review__avatar">S</span>
-          <div>
-            <strong class="review__name">(nama tamu)</strong>
-            <span class="review__meta">(negara · layanan yang diambil)</span>
-          </div>
-        </div>
-      </article>
-      -->
+    <div class="review-form__group">
+      <label for="rv-name">Your Name</label>
+      <input type="text" id="rv-name" placeholder="Enter your name" />
     </div>
 
-    <!-- KANAN: form buat tamu nulis review -->
-    <div class="review-form" id="review-form">
-      <h3 class="review-form__title">Leave a Review</h3>
-
-      <div class="review-form__group">
-        <label for="rv-name">Your Name</label>
-        <input type="text" id="rv-name" placeholder="Enter your name" />
-      </div>
-
-      <div class="review-form__group">
-        <label for="rv-email">Email</label>
-        <input type="email" id="rv-email" placeholder="you@email.com" />
-      </div>
-
-      <div class="review-form__group">
-        <label for="rv-service">Which service?</label>
-        <select id="rv-service">
-          <option value="" disabled selected>Select a service</option>
-          <option value="Tour Program">Tour Program</option>
-          <option value="Activity / Performance">Activity / Performance</option>
-          <option value="Route Transfer">Route Transfer</option>
-          <option value="Custom Itinerary">Custom Itinerary</option>
-        </select>
-      </div>
-
-      <div class="review-form__group">
-        <label>Your Rating</label>
-        <div class="rating" id="rv-rating">
-          <button type="button" class="rating__star" data-value="1" aria-label="1 star">★</button>
-          <button type="button" class="rating__star" data-value="2" aria-label="2 stars">★</button>
-          <button type="button" class="rating__star" data-value="3" aria-label="3 stars">★</button>
-          <button type="button" class="rating__star" data-value="4" aria-label="4 stars">★</button>
-          <button type="button" class="rating__star" data-value="5" aria-label="5 stars">★</button>
-        </div>
-      </div>
-
-      <div class="review-form__group">
-        <label for="rv-message">Your Review</label>
-        <textarea id="rv-message" rows="4" placeholder="Tell us about your experience..."></textarea>
-      </div>
-
-      <button class="review-form__btn" id="rv-send">Submit Review</button>
-      <small class="review-form__note">We read every review. Published reviews are added manually after we verify the booking.</small>
+    <div class="review-form__group">
+      <label for="rv-email">Email</label>
+      <input type="email" id="rv-email" placeholder="you@email.com" />
     </div>
 
-    <div class="review-form__success" id="review-success">
-      <div class="review-form__success-icon">&check;</div>
-      <h3 class="review-form__title">Thank You!</h3>
-      <p>Your review has been sent. We really appreciate you taking the time.</p>
+    <div class="review-form__group">
+      <label for="rv-service">Which service?</label>
+      <select id="rv-service">
+        <option value="" disabled selected>Select a service</option>
+        <option value="Tour Program">Tour Program</option>
+        <option value="Activity / Performance">Activity / Performance</option>
+        <option value="Route Transfer">Route Transfer</option>
+        <option value="Custom Itinerary">Custom Itinerary</option>
+      </select>
     </div>
 
+    <div class="review-form__group">
+      <label>Your Rating</label>
+      <div class="rating" id="rv-rating">
+        <button type="button" class="rating__star" data-value="1" aria-label="1 star">★</button>
+        <button type="button" class="rating__star" data-value="2" aria-label="2 stars">★</button>
+        <button type="button" class="rating__star" data-value="3" aria-label="3 stars">★</button>
+        <button type="button" class="rating__star" data-value="4" aria-label="4 stars">★</button>
+        <button type="button" class="rating__star" data-value="5" aria-label="5 stars">★</button>
+      </div>
+    </div>
+
+    <div class="review-form__group">
+      <label for="rv-message">Your Review</label>
+      <textarea id="rv-message" rows="4" placeholder="Tell us about your experience..."></textarea>
+    </div>
+
+    <button class="review-form__btn" id="rv-send">Submit Review</button>
+    <small class="review-form__note">We read every review. Published reviews are added manually after we verify the booking.</small>
+  </div>
+
+  <div class="review-form__success" id="review-success">
+    <div class="review-form__success-icon">&check;</div>
+    <h3 class="review-form__title">Thank You!</h3>
+    <p>Your review has been sent. We really appreciate you taking the time.</p>
   </div>
 </section>

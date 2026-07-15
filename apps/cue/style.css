@@ -782,6 +782,8 @@ body {
 
 /* Review form (diisi tamu) */
 .review-form {
+  max-width: 620px;
+  margin: 2.5rem auto 0;
   padding: 1.75rem;
   border-radius: 12px;
   background-color: var(--color-cream);
@@ -883,6 +885,74 @@ body {
   font-size: 1.6rem;
   color: var(--color-cream);
   background-color: var(--color-green);
+}
+
+/* Review display cards (icon orang) — gaya beda dari card halaman */
+.reviews-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.review-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border: 1px solid #ece8dd;
+  border-radius: 16px;
+  background-color: var(--color-cream);
+}
+.review-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  color: var(--color-green);
+  background-color: rgba(201, 164, 92, 0.18);
+}
+.review-card__avatar svg {
+  width: 30px;
+  height: 30px;
+}
+.review-card__stars {
+  margin-bottom: 0.75rem;
+  letter-spacing: 3px;
+  color: var(--color-gold);
+}
+.review-card__text {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: #46453f;
+}
+.review-card__name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.review-card--empty {
+  border-style: dashed;
+  background-color: #fcfbf7;
+}
+.review-card--empty .review-card__stars,
+.review-card--empty .review-card__text,
+.review-card--empty .review-card__name {
+  opacity: 0.45;
+}
+
+/* Garis pembatas tipis antar section */
+.section-divider {
+  max-width: 1100px;
+  height: 1px;
+  margin: 0.5rem auto;
+  border: none;
+  background-color: #e0ddd4;
 }
 
 /* FAQ accordion */
@@ -1419,6 +1489,11 @@ body {
   margin-bottom: 2.5rem;
 }
 .info__fact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px; /* tinggi seragam antar halaman walau teks beda panjang */
   padding: 1.25rem;
   text-align: center;
   border-radius: 10px;

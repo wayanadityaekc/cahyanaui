@@ -9,13 +9,17 @@ async function initPage() {
   initAccordion();
   initContact();
   initItinerary();
+  initModals();
   initReviews();
+  initDrivers();
+  initWhatsApp();
 }
 
 async function loadPartials() {
   const partials = [
     { id: "navbar-placeholder", file: "partials/navbar.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
+    { id: "drivers-placeholder", file: "partials/drivers.html" },
     { id: "reviews-placeholder", file: "partials/reviews.html" },
     { id: "faq-placeholder", file: "partials/faq.html" },
     { id: "footer-placeholder", file: "partials/footer.html" }
@@ -60,14 +64,14 @@ const tourDetails = [
   "Price includes car, driver, and petrol",
   "Entrance tickets are not included",
   "Free cold water on board",
-  "Flexible stops — no extra charge for stops under 1 hour",
-  "Book now, pay after — no upfront payment"
+  "Flexible stops - no extra charge for stops under 1 hour",
+  "Book now, pay after - no upfront payment"
 ];
 const experienceDetails = [
   "Price is per person (entrance ticket)",
   "Free mineral water",
-  "Includes transport — driver takes you there, waits, and drives you home",
-  "Book now, pay after — no upfront payment"
+  "Includes transport - driver takes you there, waits, and drives you home",
+  "Book now, pay after - no upfront payment"
 ];
 
 const REFERRAL_CODE = "ridewithcahyana";
@@ -197,7 +201,7 @@ function initBooking() {
     }
     finalPrice = { usd: Math.round(currentPrice.usd * 0.9), idr: Math.round(currentPrice.idr * 0.9), category: currentPrice.category };
     discountApplied = true; renderPrice(sumPrice, finalPrice.usd, finalPrice.idr);
-    referralMsg.textContent = "Referral applied — 10% off!"; referralMsg.className = "modal__referral-msg success";
+    referralMsg.textContent = "Referral applied - 10% off!"; referralMsg.className = "modal__referral-msg success";
   });
 
   detailsToggle.addEventListener("click", () => modalDetails.classList.toggle("active"));
@@ -294,7 +298,31 @@ function initContact() {
   });
 }
 
-// Guest review form (runs only where the reviews partial is present)
+// Isi semua link [data-wa] dengan nomor WhatsApp (satu sumber: WHATSAPP_NUMBER)
+function initWhatsApp() {
+  const num = String(WHATSAPP_NUMBER).replace(/[^0-9]/g, "");
+  const msg = encodeURIComponent("Hi Cahyana, I have a question about your tours.");
+  document.querySelectorAll("[data-wa]").forEach((a) => {
+    a.href = "https://wa.me/" + num + "?text=" + msg;
+  });
+}
+
+// Generic popup handling: [data-open="id"] opens, .modal__close / [data-close] / backdrop closes
+function initModals() {
+  document.querySelectorAll("[data-open]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const m = document.getElementById(btn.dataset.open);
+      if (m) m.classList.add("active");
+    });
+  });
+  document.querySelectorAll(".modal").forEach((modal) => {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal || e.target.closest("[data-close]")) modal.classList.remove("active");
+    });
+  });
+}
+
+// Guest review form (inside the write-review popup)
 function initReviews() {
   const sendBtn = document.getElementById("rv-send");
   if (!sendBtn) return;
@@ -304,6 +332,7 @@ function initReviews() {
   const nameField = document.getElementById("rv-name");
   const emailField = document.getElementById("rv-email");
   const serviceField = document.getElementById("rv-service");
+  const driverField = document.getElementById("rv-driver");
   const messageField = document.getElementById("rv-message");
   const stars = document.querySelectorAll("#rv-rating .rating__star");
 
@@ -328,6 +357,7 @@ function initReviews() {
       name: nameField.value,
       email: emailField.value,
       service: serviceField.value,
+      driver: driverField ? driverField.value : "",
       rating: String(rating),
       message: messageField.value
     });
@@ -335,6 +365,32 @@ function initReviews() {
 
     form.style.display = "none";
     success.style.display = "block";
+  });
+}
+
+// Driver cards: click a card to open its profile popup (description + its reviews)
+function initDrivers() {
+  const cards = document.querySelectorAll(".driver-card");
+  if (!cards.length) return;
+
+  const modal = document.getElementById("driver-modal");
+  if (!modal) return;
+  const mName = document.getElementById("driver-modal-name");
+  const mTagline = document.getElementById("driver-modal-tagline");
+  const mRating = document.getElementById("driver-modal-rating");
+  const mDesc = document.getElementById("driver-modal-desc");
+  const mReviews = document.getElementById("driver-modal-reviews");
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const detail = card.querySelector(".driver-card__detail");
+      mName.textContent = card.dataset.name || "";
+      mTagline.textContent = card.dataset.tagline || "";
+      mRating.innerHTML = card.querySelector(".driver-card__rating").innerHTML;
+      mDesc.textContent = detail ? (detail.dataset.desc || "") : "";
+      mReviews.innerHTML = detail ? detail.querySelector(".driver-detail__reviews").innerHTML : "";
+      modal.classList.add("active");
+    });
   });
 }
 

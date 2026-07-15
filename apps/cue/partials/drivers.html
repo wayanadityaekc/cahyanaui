@@ -1,0 +1,146 @@
+<section class="drivers" id="drivers">
+  <h2 class="section__title">Meet Our Drivers</h2>
+  <p class="reviews__intro">
+    The local guides behind every trip. Tap a card to see their profile and
+    guest reviews.
+  </p>
+
+  <div class="drivers-grid">
+    <!-- ================= CARA EDIT DRIVER =================
+         Ganti data-name / data-tagline / data-desc dan .driver-card__rating dengan data driver ASLI.
+         Tambah review asli driver ke dalam .driver-detail__reviews (copy blok review-card).
+         Kalau belum ada rating, biarkan "New".
+    ==================================================== -->
+
+    <button
+      class="driver-card"
+      type="button"
+      data-name="Wayan"
+      data-tagline="Founder &amp; host"
+    >
+      <span class="driver-card__avatar"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg
+      ></span>
+      <strong class="driver-card__name">Wayan</strong>
+      <span class="driver-card__tagline">Founder &amp; host</span>
+      <span class="driver-card__rating"><span class="stars">★</span> New</span>
+      <span class="driver-card__more">View profile &rsaquo;</span>
+      <div
+        class="driver-card__detail"
+        hidden
+        data-desc="Wayan is the person behind Cahyana Ubud Experience, and usually the one who replies to your messages and builder of this website. Born and raised in Ubud, he studied in Australia, speaks English. When he's not running the business he's out on the road, showing guests the island he grew up on."
+      >
+        <div class="driver-detail__reviews">
+          <p class="reviews__empty">
+            No reviews for this driver yet - be the first to share your
+            experience.
+          </p>
+        </div>
+      </div>
+    </button>
+
+    <button
+      class="driver-card"
+      type="button"
+      data-name="Made"
+      data-tagline="Villa host &amp; driver since 2010"
+    >
+      <span class="driver-card__avatar"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg
+      ></span>
+      <strong class="driver-card__name">Made</strong>
+      <span class="driver-card__tagline"
+        >Villa host &amp; driver since 2010</span
+      >
+      <span class="driver-card__rating"><span class="stars">★</span> New</span>
+      <span class="driver-card__more">View profile &rsaquo;</span>
+      <div
+        class="driver-card__detail"
+        hidden
+        data-desc="Made has been driving guests around Bali since 2010 and hosts his own villa on Airbnb, so he knows exactly what travellers need. Calm, reliable, and endlessly patient, he speaks good English and knows every back road, quiet temple hour, and honest warung on the island."
+      >
+        <div class="driver-detail__reviews">
+          <p class="reviews__empty">
+            No reviews for this driver yet - be the first to share your
+            experience.
+          </p>
+        </div>
+      </div>
+    </button>
+
+    <button
+      class="driver-card"
+      type="button"
+      data-name="Nyoman"
+      data-tagline="Ubud local · Driver-guide"
+    >
+      <span class="driver-card__avatar"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg
+      ></span>
+      <strong class="driver-card__name">Nyoman</strong>
+      <span class="driver-card__tagline">Ubud local · Driver-guide</span>
+      <span class="driver-card__rating"><span class="stars">★</span> New</span>
+      <span class="driver-card__more">View profile &rsaquo;</span>
+      <div
+        class="driver-card__detail"
+        hidden
+        data-desc="(PLACEHOLDER) Short description of the driver. Replace with real info."
+      >
+        <div class="driver-detail__reviews">
+          <p class="reviews__empty">
+            No reviews for this driver yet - be the first to share your
+            experience.
+          </p>
+        </div>
+      </div>
+    </button>
+  </div>
+</section>
+
+<!-- POPUP: driver profile (diisi otomatis oleh JS saat kartu diklik) -->
+<div class="modal" id="driver-modal">
+  <div class="modal__box modal__box--wide">
+    <button class="modal__close" data-close aria-label="Close">&times;</button>
+    <div class="driver-modal__head">
+      <span class="driver-card__avatar"
+        ><svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+        >
+          <circle cx="12" cy="8" r="4" />
+          <path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg
+      ></span>
+      <div>
+        <h3 class="driver-modal__name" id="driver-modal-name"></h3>
+        <span class="driver-modal__tagline" id="driver-modal-tagline"></span>
+        <div class="driver-modal__rating" id="driver-modal-rating"></div>
+      </div>
+    </div>
+    <p class="driver-modal__desc" id="driver-modal-desc"></p>
+    <h4 class="driver-modal__subtitle">Guest Reviews</h4>
+    <div class="driver-modal__reviews" id="driver-modal-reviews"></div>
+  </div>
+</div>

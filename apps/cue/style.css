@@ -946,6 +946,158 @@ body {
   opacity: 0.45;
 }
 
+/* Review section action buttons */
+.reviews__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.btn-review {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-green);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-cream);
+  background-color: var(--color-green);
+  cursor: pointer;
+}
+.btn-review--alt {
+  color: var(--color-green);
+  background-color: transparent;
+}
+.btn-review:hover {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-green);
+}
+
+/* Wide popup + all-reviews grid (2 kolom) */
+.modal__box--wide {
+  max-width: 720px;
+}
+.all-reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+/* Driver cards */
+.drivers {
+  padding: 3rem 1.5rem;
+}
+.drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.driver-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.75rem 1.25rem;
+  border: 1px solid #ece8dd;
+  border-radius: 16px;
+  background-color: var(--color-cream);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.driver-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+.driver-card__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0.9rem;
+  border-radius: 50%;
+  color: var(--color-green);
+  background-color: rgba(201, 164, 92, 0.18);
+}
+.driver-card__avatar svg {
+  width: 32px;
+  height: 32px;
+}
+.driver-card__name {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.driver-card__tagline {
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: #7a7466;
+}
+.driver-card__rating {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.driver-card__rating .stars {
+  letter-spacing: 1px;
+}
+.driver-card__more {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-green);
+  opacity: 0.7;
+}
+.driver-card__detail {
+  display: none;
+}
+
+/* Driver profile popup */
+.driver-modal__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.driver-modal__name {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.driver-modal__tagline {
+  display: block;
+  font-size: 0.8rem;
+  color: #7a7466;
+}
+.driver-modal__rating {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.driver-modal__desc {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: #46453f;
+}
+.driver-modal__subtitle {
+  margin-bottom: 1rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.driver-modal__reviews {
+  display: grid;
+  gap: 1rem;
+}
+
 /* Garis pembatas tipis antar section */
 .section-divider {
   max-width: 1100px;
@@ -959,9 +1111,63 @@ body {
 .faq {
   padding: 3rem 1.5rem;
 }
-.faq__list {
-  max-width: 800px;
+.faq__container {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 2rem;
+  max-width: 1000px;
   margin: 0 auto;
+  align-items: start;
+}
+.faq__list {
+  min-width: 0;
+}
+/* Kolom chat WhatsApp di samping FAQ */
+.faq__chat {
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  text-align: center;
+  color: var(--color-cream);
+  background-color: var(--color-green);
+}
+.faq__chat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  color: var(--color-green);
+  background-color: var(--color-gold);
+}
+.faq__chat-icon svg {
+  width: 30px;
+  height: 30px;
+}
+.faq__chat-title {
+  margin-bottom: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.faq__chat-text {
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+.faq__chat-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-green);
+  background-color: var(--color-gold);
+}
+.faq__chat-btn:hover {
+  background-color: var(--color-cream);
 }
 .faq__item {
   margin-bottom: 0.75rem;
@@ -2095,6 +2301,12 @@ body {
   .reviews__container {
     grid-template-columns: 1fr;
     gap: 1.75rem;
+  }
+  .all-reviews-grid {
+    grid-template-columns: 1fr;
+  }
+  .faq__container {
+    grid-template-columns: 1fr;
   }
   .info__lists {
     grid-template-columns: 1fr;

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <!-- Cahyana favicon -->
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=12" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/itinerary.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -33,28 +33,39 @@
 <body>
   <div id="navbar-placeholder"></div>
 
-  <section class="subhero">
+  <section class="subhero subhero--overlap">
     <div class="subhero__content">
       <h1 class="subhero__title">Build Your Own Bali Itinerary</h1>
       <p class="subhero__text">Combine tours, activities, performances, and transfers into your perfect multi-day trip - up to 7 days, with live pricing as you plan. Only a 10% deposit to book.</p>
     </div>
   </section>
 
-  <section class="itinerary-builder" id="itinerary">
+  <section class="itn" id="itinerary">
     <h2 class="section__title">Build Your Own Bali Itinerary</h2>
-    <p class="builder__intro">Plan up to 7 days of tours, activities, and transfers - see your total price as you build. Only a 10% deposit to book.</p>
-    <div class="builder">
-      <div id="itn-days"></div>
-  
+    <p class="builder__intro">Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a 10% deposit to book.</p>
+
+    <div class="itn2">
+      <div class="itn2__panel">
+        <div class="itn__panel-head">
+          <h3 class="itn__subtitle">Your Days</h3>
+          <button class="itn__ghostbtn" id="itn-clear" type="button">Clear all</button>
+        </div>
+        <div id="itn-days"></div>
+      </div>
+
+      <div class="itn2__panel">
+        <h3 class="itn__subtitle">Transfers</h3>
+        <div id="itn-transfers-list"></div>
+      </div>
+
+      <button class="itn2__add" id="itn-add" type="button">+ Add to your trip</button>
+
       <section class="summary">
-        <h3 class="summary__title" id="itn-title">Itinerary - 1 Day Price</h3>
-        <ul class="tlist" id="itn-transfers"></ul>
         <div class="summary__total">
-          <span id="itn-total-label">Total (1 day)</span>
+          <span id="itn-total-label">Total - 0 days</span>
           <span class="amount" id="itn-total"><span class="price-usd">USD 0</span><span class="price-idr">/ IDR 0</span></span>
         </div>
         <button class="btn-book" id="itn-book" disabled>Book This Itinerary</button>
-        <button class="btn-addday" id="itn-addday" disabled>+ Add More Day</button>
       </section>
     </div>
   </section>
@@ -67,7 +78,6 @@
         <div class="modal__group"><label for="itn-name">Your Name</label><input type="text" id="itn-name" placeholder="Enter your name" /></div>
         <div class="modal__group"><label for="itn-phone">Phone Number</label><input type="tel" id="itn-phone" placeholder="e.g. +61 412 345 678" /></div>
         <div class="modal__group"><label for="itn-email">Email</label><input type="email" id="itn-email" placeholder="you@email.com" /></div>
-        <div class="modal__group"><label for="itn-pickup">Pick-up Location</label><input type="text" id="itn-pickup" placeholder="Hotel / villa name or area" /></div>
         <div class="modal__summary" id="itn-summary"></div>
         <button class="modal__btn" id="itn-submit">Book Now</button>
       </div>
@@ -80,10 +90,24 @@
     </div>
   </div>
 
+  <!-- Popup: pilih kategori buat ditambah -->
+  <div class="modal" id="itn-pick-modal">
+    <div class="modal__box modal__box--sm">
+      <button class="modal__close" data-close aria-label="Close">&times;</button>
+      <h3 class="modal__title">Add to your trip</h3>
+      <p class="modal__sub">Pick a category, choose on the next page, and it comes right back here.</p>
+      <div class="pick-cats">
+        <a href="tour.html" class="pick-cat">Tour Programs</a>
+        <a href="activities.html" class="pick-cat">Activities &amp; Performances</a>
+        <a href="transfer.html" class="pick-cat">Transfers</a>
+      </div>
+    </div>
+  </div>
+
   <hr class="section-divider" />
   <div id="faq-placeholder" data-src="partials/faq-itinerary.html"></div>
   <div id="footer-placeholder"></div>
 
-  <script src="script.js?v=9"></script>
+  <script src="script.js?v=12"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 
+/* ==================== SECTION: APP ENTRY - jalanin semua init pas halaman siap ==================== */
+
 document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
@@ -13,7 +15,183 @@ async function initPage() {
   initReviews();
   initDrivers();
   initWhatsApp();
+  initReveal();
+  itnUpdateBadge();
+  initItineraryButtons();
 }
+
+/* ==================== SECTION: ADD-TO-ITINERARY BUTTONS (kartu semua halaman + popup Go/Continue) ==================== */
+
+// Peta halaman detail -> nama program di itinerary (biar tombol Add di card
+// mana pun tau program apa yang ditambahin, walau teks card beda)
+const PAGE_ITEM = {
+  "ubud-tour.html": "Ubud Tour",
+  "east-bali-tour.html": "East Bali Tour",
+  "west-bali-tour.html": "West Bali Tour",
+  "south-bali-tour.html": "South Bali Tour",
+  "north-bali-tour.html": "North Bali Tour",
+  "atv-ride.html": "ATV",
+  "rafting.html": "Rafting",
+  "jungle-swing.html": "Swing",
+  "jeep-sunrise.html": "Jeep Sunrise",
+  "mount-batur-trekking.html": "Mount Batur Trekking",
+  "cooking-class.html": "Cooking Class",
+  "kecak-dance.html": "Kecak Dance",
+  "barong-dance.html": "Barong Dance"
+};
+
+// Tiap card (a) badan card bisa diklik -> halaman detail,
+// (b) ada tombol "Add to itinerary" yang nambah program ke store.
+/* ==================== SECTION: ITINERARY PAGE - bangun hari + transfer + booking ==================== */
+
+function initItineraryButtons() {
+  document.querySelectorAll(".experience__card").forEach((card) => {
+    const link = card.querySelector("a[href]");
+    if (!link) return;
+    const href = link.getAttribute("href");
+    const item = PAGE_ITEM[href];
+    if (!item) return;
+    link.remove(); // buang tombol arrow - badan card udah bisa diklik
+
+    // (a) badan card clickable ke halaman detail
+    card.classList.add("card-clickable");
+    card.addEventListener("click", (e) => {
+      if (e.target.closest(".card-add")) return;
+      window.location.href = href;
+    });
+
+    // (b) tombol Add to itinerary
+    const body = card.querySelector(".experience__body") || card;
+    if (!body.querySelector(".card-add")) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "card-add";
+      btn.textContent = "+ Add to itinerary";
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (itnAddItem(item)) showAddedPopup();
+      });
+      body.appendChild(btn);
+    }
+  });
+
+  // Tombol Add to itinerary eksplisit (highlight card, dsb.)
+  document.querySelectorAll("[data-add-item]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (itnAddItem(btn.dataset.addItem)) showAddedPopup();
+    });
+  });
+  document.querySelectorAll("[data-add-transfer]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (itnAddTransfer(btn.dataset.addTransfer)) showAddedPopup();
+    });
+  });
+
+  // transfer.html: tombol "Add to itinerary" di DALAM accordion (bawah harga)
+  document.querySelectorAll(".route__item").forEach((item) => {
+    const priceBox = item.querySelector(".route__price");
+    if (!priceBox || priceBox.querySelector(".route__add")) return;
+    const label = item.querySelector(".route__head span");
+    if (!label) return;
+    const route = label.textContent.trim();
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "route__add";
+    btn.textContent = "+ Add to itinerary";
+    btn.addEventListener("click", () => {
+      if (itnAddTransfer(route)) showAddedPopup();
+    });
+    priceBox.appendChild(btn);
+  });
+}
+
+// Popup setelah nambah program: Go to itinerary / Continue exploring
+function showAddedPopup() {
+  let m = document.getElementById("itn-added-modal");
+  if (!m) {
+    m = document.createElement("div");
+    m.className = "modal";
+    m.id = "itn-added-modal";
+    m.innerHTML =
+      '<div class="modal__box modal__box--sm">' +
+      '<div class="modal__success-icon">&check;</div>' +
+      '<h3 class="modal__title">Added to your itinerary</h3>' +
+      '<p class="modal__sub">What would you like to do next?</p>' +
+      '<button class="modal__btn" id="itn-added-go">Go to itinerary</button>' +
+      '<button class="modal__btn modal__btn--ghost" id="itn-added-continue">Continue exploring</button>' +
+      "</div>";
+    document.body.appendChild(m);
+    m.addEventListener("click", (e) => {
+      if (e.target === m) m.classList.remove("active");
+    });
+    m.querySelector("#itn-added-go").addEventListener(
+      "click",
+      () => (window.location.href = "itinerary.html")
+    );
+    m.querySelector("#itn-added-continue").addEventListener("click", () =>
+      m.classList.remove("active")
+    );
+  }
+  m.classList.add("active");
+}
+
+/* ==================== SECTION: SCROLL REVEAL - animasi masuk card & judul ==================== */
+
+// Card & judul muncul (fade + naik) pas ke-scroll masuk layar.
+// Class ditambah dari sini, jadi kalau JS mati semua elemen tetap tampil.
+function initReveal() {
+  const selectors = [
+    ".experience__card",
+    ".villa__card",
+    ".review-card",
+    ".driver-card",
+    ".stop",
+    ".info__fact",
+    ".about__content",
+    ".faq__item",
+    ".section__title"
+  ];
+  const els = document.querySelectorAll(selectors.join(","));
+  if (!els.length || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add("is-visible");
+        observer.unobserve(el);
+        // Buang lagi class reveal setelah animasi kelar, biar hover
+        // pakai transisi milik card-nya sendiri (bukan transisi reveal).
+        setTimeout(() => {
+          el.classList.remove("reveal", "is-visible");
+          el.style.transitionDelay = "";
+        }, 900);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  // Stagger: elemen sebaris/segrup muncul berurutan, bukan barengan.
+  const groupCount = new Map();
+  els.forEach((el) => {
+    if (el.closest(".modal")) return; // lewati isi popup (biar nggak ke-stuck hidden)
+    const parent = el.parentElement;
+    const idx = groupCount.get(parent) || 0;
+    groupCount.set(parent, idx + 1);
+    el.style.transitionDelay = Math.min(idx, 5) * 0.07 + "s";
+    el.classList.add("reveal");
+    observer.observe(el);
+  });
+}
+
+/* ==================== SECTION: PARTIALS LOADER - navbar/booking/footer/dll + cache-busting ==================== */
+
+// Naikin angka ini tiap kali isi file di folder partials/ diubah,
+// biar browser narik versi baru dan bukan yang nyangkut di cache.
+const PARTIALS_VERSION = 13;
 
 async function loadPartials() {
   const partials = [
@@ -29,10 +207,12 @@ async function loadPartials() {
     if (!holder) continue;
     // halaman boleh override file lewat data-src (misal FAQ beda per halaman)
     const file = holder.dataset.src || part.file;
-    const res = await fetch(file);
+    const res = await fetch(`${file}?v=${PARTIALS_VERSION}`);
     holder.innerHTML = await res.text();
   }
 }
+
+/* ==================== SECTION: NAVBAR - hamburger + active link ==================== */
 
 function initNavbar() {
   const hamburger = document.getElementById("hamburger");
@@ -46,6 +226,8 @@ function initNavbar() {
     if (link.getAttribute("href") === current) link.classList.add("active");
   });
 }
+
+/* ==================== SECTION: DATA - harga, transport & konfigurasi ==================== */
 
 const prices = {
   tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
@@ -80,6 +262,116 @@ const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL";
 
 // Format harga jadi HTML (dipakai booking & itinerary)
 const priceHTML = (usd, idr) => `<span class="price-usd">USD ${usd}</span><span class="price-idr">/ IDR ${idr.toLocaleString("id-ID")}</span>`;
+
+// ================= ITINERARY STORE (localStorage, dipakai lintas halaman) =================
+/* ==================== SECTION: ITINERARY STORE - localStorage, dipakai lintas halaman ==================== */
+
+const ITN_KEY = "cue_itinerary_v1";
+
+// Slot waktu yang dipakai tiap program. Satu hari max 1 item per slot,
+// jadi item bisa digabung dalam 1 hari kalau slot waktunya beda.
+const ITEM_SLOTS = {
+  "Ubud Tour": ["morning", "day"],
+  "East Bali Tour": ["morning", "day", "evening"],
+  "West Bali Tour": ["morning", "day", "evening"],
+  "South Bali Tour": ["morning", "day", "evening"],
+  "North Bali Tour": ["morning", "day", "evening"],
+  "Jeep Sunrise": ["morning"],
+  "Mount Batur Trekking": ["morning"],
+  ATV: ["day"],
+  Rafting: ["day"],
+  Swing: ["day"],
+  "Cooking Class": ["day"],
+  "Barong Dance": ["day"],
+  "Kecak Dance": ["evening"]
+};
+const SLOT_LABEL = { morning: "Morning", day: "Daytime", evening: "Evening" };
+
+function carPrice(base, guests) {
+  const mult = guests > 5 ? 2 : 1;
+  return { usd: base.usd * mult, idr: base.idr * mult };
+}
+// cari kategori & harga sebuah program dari struktur prices
+function itemInfo(name) {
+  for (const cat of ["tour", "experience", "performance"]) {
+    if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
+  }
+  return null;
+}
+
+function itnLoad() {
+  try {
+    const s = JSON.parse(localStorage.getItem(ITN_KEY));
+    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) return s;
+  } catch (e) {}
+  return { days: [], transfers: [] };
+}
+function itnSave(state) {
+  localStorage.setItem(ITN_KEY, JSON.stringify(state));
+  itnUpdateBadge(state);
+}
+function itnCount(state) {
+  const st = state || itnLoad();
+  let n = 0;
+  st.days.forEach((d) => (n += d.items.length));
+  return n + st.transfers.length;
+}
+function itnUpdateBadge(state) {
+  const n = itnCount(state);
+  document.querySelectorAll("[data-itn-badge]").forEach((b) => {
+    b.textContent = n;
+    b.hidden = n === 0;
+  });
+}
+function daySlotsUsed(d) {
+  const set = new Set();
+  d.items.forEach((n) => (ITEM_SLOTS[n] || []).forEach((s) => set.add(s)));
+  return set;
+}
+function fitsDay(d, name) {
+  const used = daySlotsUsed(d);
+  return (ITEM_SLOTS[name] || []).every((s) => !used.has(s));
+}
+function newItnDay() {
+  return { items: [], date: "", guests: "", pickup: "", dropoff: "" };
+}
+// Tambah 1 program ke store. Masuk ke hari terakhir kalau slotnya cukup,
+// kalau nggak muat -> bikin hari baru. Return true kalau berhasil.
+function itnAddItem(name) {
+  if (!ITEM_SLOTS[name]) return false;
+  const st = itnLoad();
+  const last = st.days[st.days.length - 1];
+  let target;
+  if (last && fitsDay(last, name)) target = last;
+  else {
+    target = newItnDay();
+    st.days.push(target);
+  }
+  target.items.push(name);
+  itnSave(st);
+  return true;
+}
+// Tambah 1 transfer/journey ke store. Toleran beda tanda hubung (- vs –).
+function itnAddTransfer(route) {
+  let key = prices.transfer[route] ? route : null;
+  if (!key) {
+    const norm = (s) => s.replace(/[–—-]/g, "-");
+    key = Object.keys(prices.transfer).find((k) => norm(k) === norm(route)) || null;
+  }
+  if (!key) return false;
+  const st = itnLoad();
+  st.transfers.push({
+    route: key,
+    direction: "to",
+    pickup: "",
+    dropoff: "",
+    date: "",
+    guests: ""
+  });
+  itnSave(st);
+  return true;
+}
+/* ==================== SECTION: BOOKING FORM - pilih service, harga live, popup konfirmasi ==================== */
 
 function initBooking() {
   const bookNowBtn = document.getElementById("book-now");
@@ -236,8 +528,13 @@ function initBooking() {
   if (holder && holder.dataset.overlap === "true" && section) section.classList.add("booking--overlap");
   const def = (holder && holder.dataset.default) || (section && section.dataset.default) || "";
   if (def) { serviceSelect.value = def; serviceSelect.dispatchEvent(new Event("change")); }
+  // Preset program spesifik (dipakai di halaman program: tombol Book -> popup booking)
+  const presetItem = holder && holder.dataset.item;
+  if (presetItem) { serviceItemSelect.value = presetItem; serviceItemSelect.dispatchEvent(new Event("change")); }
 }
 
+
+/* ==================== SECTION: ACTIVITIES SLIDER - homepage ==================== */
 
 function initSlider() {
   const slider = document.getElementById("slider");
@@ -263,11 +560,15 @@ function initSlider() {
   setInterval(() => show((current + 1) % slides.length), 5000);
 }
 
+/* ==================== SECTION: ACCORDION - route transfer / FAQ ==================== */
+
 function initAccordion() {
   const routeHeads = document.querySelectorAll(".route__head");
   if (!routeHeads.length) return;
   routeHeads.forEach((head) => head.addEventListener("click", () => head.parentElement.classList.toggle("active")));
 }
+
+/* ==================== SECTION: CONTACT FORM ==================== */
 
 function initContact() {
   const sendBtn = document.getElementById("c-send");
@@ -299,15 +600,38 @@ function initContact() {
 }
 
 // Isi semua link [data-wa] dengan nomor WhatsApp (satu sumber: WHATSAPP_NUMBER)
+/* ==================== SECTION: WHATSAPP - isi link + tombol ngambang Talk with Wayan ==================== */
+
 function initWhatsApp() {
   const num = String(WHATSAPP_NUMBER).replace(/[^0-9]/g, "");
   const msg = encodeURIComponent("Hi Cahyana, I have a question about your tours.");
   document.querySelectorAll("[data-wa]").forEach((a) => {
     a.href = "https://wa.me/" + num + "?text=" + msg;
   });
+
+  // Tombol WhatsApp ngambang di pojok kanan bawah (semua halaman KECUALI
+  // halaman itinerary, biar nggak numpuk sama katalog floating di mobile)
+  const onItinerary = !!document.getElementById("itn-days");
+  if (!onItinerary && !document.querySelector(".wa-float")) {
+    const wa = document.createElement("a");
+    wa.className = "wa-float";
+    wa.href =
+      "https://wa.me/" +
+      num +
+      "?text=" +
+      encodeURIComponent("Hi Wayan, I'd like to plan a trip.");
+    wa.target = "_blank";
+    wa.rel = "noopener";
+    wa.setAttribute("aria-label", "Talk with Wayan on WhatsApp");
+    wa.innerHTML =
+      '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.1 7.9L.5 31.5l7.8-2c2.3 1.3 5 1.9 7.7 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.9-.7-7-1.9l-.5-.3-4.6 1.2 1.2-4.5-.3-.5C3.6 20.6 2.9 18.3 2.9 16 2.9 8.8 8.8 2.9 16 2.9c7.2 0 13.1 5.9 13.1 13.1S23.2 28.8 16 28.8zm7.2-9.6c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.7h-.7c-.2 0-.6.1-.9.5-.3.4-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.2 2.4 3.7 5.8 5.1.8.3 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-1 2.3-1.9.3-.9.3-1.7.2-1.9-.1-.1-.3-.2-.7-.4z"/></svg><span class="wa-float__text">Talk with Wayan</span>';
+    document.body.appendChild(wa);
+  }
 }
 
 // Generic popup handling: [data-open="id"] opens, .modal__close / [data-close] / backdrop closes
+/* ==================== SECTION: MODAL / POPUP generic (data-open / data-close) ==================== */
+
 function initModals() {
   document.querySelectorAll("[data-open]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -323,6 +647,8 @@ function initModals() {
 }
 
 // Guest review form (inside the write-review popup)
+/* ==================== SECTION: REVIEWS - form kirim review ==================== */
+
 function initReviews() {
   const sendBtn = document.getElementById("rv-send");
   if (!sendBtn) return;
@@ -369,6 +695,8 @@ function initReviews() {
 }
 
 // Driver cards: click a card to open its profile popup (description + its reviews)
+/* ==================== SECTION: DRIVERS - popup profil driver ==================== */
+
 function initDrivers() {
   const cards = document.querySelectorAll(".driver-card");
   if (!cards.length) return;
@@ -395,266 +723,348 @@ function initDrivers() {
 }
 
 function initItinerary() {
-  const wrap = document.getElementById("itn-days");
-  if (!wrap) return;
+  const daysWrap = document.getElementById("itn-days");
+  if (!daysWrap) return;
 
-  const itnSlots = {
-    early: ["Jeep Sunrise", "Mount Batur Trekking"],
-    day: ["ATV", "Rafting", "Swing", "Barong Dance", "Cooking Class"],
-    evening: ["Kecak Dance"]
-  };
-  const actPrices = { ...prices.experience, ...prices.performance };
-  const MAX_DAYS = 7;
+  let state = itnLoad();
+  const save = () => itnSave(state);
+  const slotLabel = (name) =>
+    (ITEM_SLOTS[name] || []).map((s) => SLOT_LABEL[s]).join(" + ");
 
-  let days = [];
-
-  function newDay(i) {
-    return { date: "", guests: "", plan: i % 2 === 0 ? "tour" : "activities", tour: "", kecakAddon: false, acts: [], transfers: [] };
-  }
-
-  function carPrice(base, guests) {
-    const mult = guests > 5 ? 2 : 1;
-    return { usd: base.usd * mult, idr: base.idr * mult };
-  }
-
+  // ---------- pricing ----------
   function dayPrice(d) {
-    let usd = 0, idr = 0;
+    let usd = 0,
+      idr = 0;
     const g = parseInt(d.guests) || 0;
     if (!g) return { usd, idr };
-    if (d.plan === "tour" && d.tour) {
-      const p = carPrice(prices.tour[d.tour], g);
-      usd += p.usd; idr += p.idr;
-      if (d.kecakAddon) { usd += actPrices["Kecak Dance"].usd * g; idr += actPrices["Kecak Dance"].idr * g; }
-    }
-    if (d.plan === "activities") {
-      d.acts.forEach((a) => {
-        const t = transport[a] || { usd: 0, idr: 0 };
-        usd += actPrices[a].usd * g + t.usd;
-        idr += actPrices[a].idr * g + t.idr;
-      });
-    }
-    d.transfers.forEach((r) => {
-      const p = carPrice(prices.transfer[r], g);
-      usd += p.usd; idr += p.idr;
+    d.items.forEach((name) => {
+      const info = itemInfo(name);
+      if (!info) return;
+      if (info.cat === "tour") {
+        const p = carPrice(info.price, g);
+        usd += p.usd;
+        idr += p.idr;
+      } else {
+        const t = transport[name] || { usd: 0, idr: 0 };
+        usd += info.price.usd * g + t.usd;
+        idr += info.price.idr * g + t.idr;
+      }
     });
     return { usd, idr };
   }
+  function transferPrice(tr) {
+    const g = parseInt(tr.guests) || 0;
+    if (!g || !prices.transfer[tr.route]) return { usd: 0, idr: 0 };
+    return carPrice(prices.transfer[tr.route], g);
+  }
+  const dayComplete = (d) =>
+    d.items.length > 0 && !!d.date && (parseInt(d.guests) || 0) > 0;
+  const transferComplete = (tr) =>
+    !!tr.route && !!tr.date && (parseInt(tr.guests) || 0) > 0;
 
-  function dayComplete(d) {
-    const g = parseInt(d.guests) || 0;
-    if (!d.date || !g) return false;
-    if (d.plan === "tour") return !!d.tour;
-    return d.acts.length >= 1;
+  function guestOptions(val) {
+    let o = `<option value="" disabled ${val ? "" : "selected"}>Guests</option>`;
+    for (let n = 1; n <= 10; n++)
+      o += `<option value="${n}" ${val == n ? "selected" : ""}>${n}</option>`;
+    return o;
   }
 
-  function slotOf(name) {
-    for (const s in itnSlots) if (itnSlots[s].includes(name)) return s;
-    return null;
+  // ---------- render hari ----------
+  function renderDays() {
+    daysWrap.innerHTML = "";
+    if (!state.days.length) {
+      daysWrap.innerHTML = `<p class="itn__empty">No days yet. Tap "Add to your trip", pick a category, choose on the next page - it comes right back here.</p>`;
+      return;
+    }
+    state.days.forEach((d, i) => daysWrap.appendChild(renderDayCard(d, i)));
   }
 
-  function render() {
-    wrap.innerHTML = "";
-    days.forEach((d, i) => wrap.appendChild(renderDay(d, i)));
-    renderSummary();
-  }
-
-  function renderDay(d, i) {
-    const isLast = i === days.length - 1;
+  function renderDayCard(d, i) {
     const card = document.createElement("div");
-    card.className = "day";
-    const done = dayComplete(d);
+    card.className = "itn-day";
     const p = dayPrice(d);
-
-    let guestOpts = '<option value="" disabled ' + (d.guests ? "" : "selected") + '>Select guests</option>';
-    for (let n = 1; n <= 10; n++) guestOpts += `<option value="${n}" ${d.guests == n ? "selected" : ""}>${n}</option>`;
-
-    let tourOpts = '<option value="" disabled ' + (d.tour ? "" : "selected") + '>Choose a tour</option>';
-    Object.keys(prices.tour).forEach((t) => { tourOpts += `<option ${d.tour === t ? "selected" : ""}>${t}</option>`; });
-
-    const usedSlots = d.acts.map(slotOf);
-    const chipsHTML = Object.entries(itnSlots).map(([slot, list]) => {
-      const chips = list.map((a) => {
-        const sel = d.acts.includes(a);
-        const blocked = !sel && (d.acts.length >= 2 || usedSlots.includes(slot));
-        return `<button class="chip ${sel ? "selected" : ""}" data-act="${a}" ${blocked ? "disabled" : ""}>${a}</button>`;
-      }).join("");
-      const label = slot === "early" ? "Early Morning" : slot === "day" ? "Daytime" : "Evening";
-      return `<div class="slot"><div class="slot__name">${label}</div><div class="chips">${chips}</div></div>`;
-    }).join("");
-
-    let trOpts = '<option value="" disabled selected>Add a transfer (optional)</option>';
-    Object.keys(prices.transfer).forEach((r) => { trOpts += `<option>${r}</option>`; });
-
+    const done = dayComplete(d);
+    const itemsHTML = d.items.length
+      ? d.items
+          .map(
+            (name, idx) => `<li class="itn-day__item">
+              <span class="itn-day__item-slot">${slotLabel(name)}</span>
+              <span class="itn-day__item-name">${name}</span>
+              <button class="itn-day__item-rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
+            </li>`
+          )
+          .join("")
+      : `<li class="itn-day__empty">Empty day.</li>`;
     card.innerHTML = `
-      <div class="day__head">
-        <h3 class="day__title">Day ${i + 1}</h3>
-        <span class="day__status ${done ? "done" : ""}">${done ? "\u2713 Complete" : "Incomplete"}</span>
+      <div class="itn-day__head">
+        <h4 class="itn-day__title">Day ${i + 1}</h4>
+        <span class="itn-day__status ${done ? "done" : ""}">${done ? "Complete" : "Incomplete"}</span>
+        <button class="itn-day__remove" type="button" data-rmday="${i}">Remove</button>
       </div>
-      ${i > 0 && isLast ? '<button class="day__remove" title="Remove this day">\u2715 remove</button>' : ""}
-
-      <div class="field">
-        <label>Date</label>
-        <input type="date" class="f-date" value="${d.date}" />
+      <ul class="itn-day__items">${itemsHTML}</ul>
+      <div class="itn-day__fields">
+        <div class="field"><label>Date</label><input type="date" class="f-date" value="${d.date}" /></div>
+        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
+        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
+        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
       </div>
-      <div class="field">
-        <label>Guests</label>
-        <select class="f-guests">${guestOpts}</select>
-      </div>
-
-      <div class="plantabs">
-        <button class="plantab ${d.plan === "tour" ? "active" : ""}" data-plan="tour">Tour Program</button>
-        <button class="plantab ${d.plan === "activities" ? "active" : ""}" data-plan="activities">Activities &amp; Performances</button>
-      </div>
-
-      ${d.plan === "tour" ? `
-        <div class="field">
-          <label>Select Tour</label>
-          <select class="f-tour">${tourOpts}</select>
-        </div>
-        <div class="addon">
-          <input type="checkbox" id="itn-kecak-${i}" class="f-kecak" ${d.kecakAddon ? "checked" : ""} />
-          <label for="itn-kecak-${i}">Add Kecak Dance in the evening <small>+ USD 10 / IDR 150.000 per person</small></label>
-        </div>
-      ` : `
-        ${chipsHTML}
-        <p class="hint">Pick up to 2 activities \u2014 each must be in a different time slot.</p>
-      `}
-
-      <div class="field" style="margin-top:1.1rem;">
-        <label>Route Transfer</label>
-        <div class="transferadd">
-          <select class="f-transfer">${trOpts}</select>
-          <button class="f-transfer-add">Add</button>
-        </div>
-      </div>
-
-      <div class="day__price">
-        <span>Day ${i + 1} price</span>
-        <span class="amount">${priceHTML(p.usd, p.idr)}</span>
-      </div>
+      <div class="itn-day__price"><span>Day ${i + 1} price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
     `;
-
-    card.querySelector(".f-date").addEventListener("change", (e) => { d.date = e.target.value; render(); });
-    card.querySelector(".f-guests").addEventListener("change", (e) => { d.guests = e.target.value; render(); });
-    card.querySelectorAll(".plantab").forEach((b) => b.addEventListener("click", () => {
-      d.plan = b.dataset.plan;
-      d.tour = ""; d.kecakAddon = false; d.acts = [];
-      render();
-    }));
-    const tourSel = card.querySelector(".f-tour");
-    if (tourSel) tourSel.addEventListener("change", (e) => { d.tour = e.target.value; render(); });
-    const kecak = card.querySelector(".f-kecak");
-    if (kecak) kecak.addEventListener("change", (e) => { d.kecakAddon = e.target.checked; render(); });
-    card.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
-      const a = c.dataset.act;
-      if (d.acts.includes(a)) d.acts = d.acts.filter((x) => x !== a);
-      else d.acts.push(a);
-      render();
-    }));
-    card.querySelector(".f-transfer-add").addEventListener("click", () => {
-      const sel = card.querySelector(".f-transfer");
-      if (!sel.value) return;
-      d.transfers.push(sel.value);
-      render();
+    card.querySelectorAll("[data-rmitem]").forEach((b) =>
+      b.addEventListener("click", () => {
+        d.items.splice(+b.dataset.rmitem, 1);
+        if (!d.items.length) state.days.splice(i, 1);
+        save();
+        rerender();
+      })
+    );
+    card.querySelector("[data-rmday]").addEventListener("click", () => {
+      state.days.splice(i, 1);
+      save();
+      rerender();
     });
-    const rm = card.querySelector(".day__remove");
-    if (rm) rm.addEventListener("click", () => { days.pop(); render(); });
-
+    card.querySelector(".f-date").addEventListener("change", (e) => {
+      d.date = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-guests").addEventListener("change", (e) => {
+      d.guests = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-pickup").addEventListener("input", (e) => {
+      d.pickup = e.target.value;
+      save();
+    });
+    card.querySelector(".f-dropoff").addEventListener("input", (e) => {
+      d.dropoff = e.target.value;
+      save();
+    });
     return card;
   }
 
-  function renderSummary() {
-    const n = days.length;
-    const allDone = days.every(dayComplete);
-    const lastDone = dayComplete(days[n - 1]);
-
-    const tl = document.getElementById("itn-transfers");
-    tl.innerHTML = "";
-    days.forEach((d, i) => {
-      const g = parseInt(d.guests) || 1;
-      d.transfers.forEach((r, j) => {
-        const p = carPrice(prices.transfer[r], g);
-        const li = document.createElement("li");
-        li.innerHTML = `<span>Day ${i + 1} \u00b7 ${r}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span><button data-day="${i}" data-idx="${j}">\u2715</button>`;
-        li.querySelector("button").addEventListener("click", (e) => {
-          days[+e.target.dataset.day].transfers.splice(+e.target.dataset.idx, 1);
-          render();
-        });
-        tl.appendChild(li);
-      });
-    });
-
-    let usd = 0, idr = 0;
-    days.forEach((d) => { const p = dayPrice(d); usd += p.usd; idr += p.idr; });
-    document.getElementById("itn-title").textContent = `Itinerary \u2014 ${n} Day${n > 1 ? "s" : ""} Price`;
-    document.getElementById("itn-total-label").textContent = `Total (${n} day${n > 1 ? "s" : ""})`;
-    document.getElementById("itn-total").innerHTML = priceHTML(usd, idr);
-
-    document.getElementById("itn-book").disabled = !allDone;
-    const addBtn = document.getElementById("itn-addday");
-    addBtn.disabled = !lastDone || n >= MAX_DAYS;
-    addBtn.textContent = n >= MAX_DAYS ? "Maximum 7 days reached" : "+ Add More Day";
+  // ---------- render transfer ----------
+  function renderTransfers() {
+    const box = document.getElementById("itn-transfers-list");
+    if (!box) return;
+    box.innerHTML = "";
+    if (!state.transfers.length) {
+      box.innerHTML = `<p class="itn__empty">No transfers yet.</p>`;
+      return;
+    }
+    state.transfers.forEach((tr, i) => box.appendChild(renderTransferCard(tr, i)));
   }
 
-  document.getElementById("itn-addday").addEventListener("click", () => {
-    if (days.length < MAX_DAYS) { days.push(newDay(days.length)); render(); }
-  });
+  function renderTransferCard(tr, i) {
+    const card = document.createElement("div");
+    card.className = "itn-day itn-transfer";
+    const p = transferPrice(tr);
+    const area = tr.route.replace(" – Ubud", "");
+    const toActive = tr.direction !== "from";
+    card.innerHTML = `
+      <div class="itn-day__head">
+        <h4 class="itn-day__title">${toActive ? area + " → Ubud" : "Ubud → " + area}</h4>
+        <button class="itn-day__remove" type="button" data-rmtransfer="${i}">Remove</button>
+      </div>
+      <div class="itn-transfer__dir">
+        <button class="dirbtn ${toActive ? "active" : ""}" type="button" data-dir="to">${area} → Ubud</button>
+        <button class="dirbtn ${!toActive ? "active" : ""}" type="button" data-dir="from">Ubud → ${area}</button>
+      </div>
+      <div class="itn-day__fields">
+        <div class="field"><label>Date</label><input type="date" class="f-date" value="${tr.date}" /></div>
+        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(tr.guests)}</select></div>
+        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${tr.pickup || ""}" /></div>
+        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${tr.dropoff || ""}" /></div>
+      </div>
+      <div class="itn-day__price"><span>Transfer price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
+    `;
+    card.querySelectorAll("[data-dir]").forEach((b) =>
+      b.addEventListener("click", () => {
+        tr.direction = b.dataset.dir;
+        save();
+        rerender();
+      })
+    );
+    card.querySelector("[data-rmtransfer]").addEventListener("click", () => {
+      state.transfers.splice(i, 1);
+      save();
+      rerender();
+    });
+    card.querySelector(".f-date").addEventListener("change", (e) => {
+      tr.date = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-guests").addEventListener("change", (e) => {
+      tr.guests = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-pickup").addEventListener("input", (e) => {
+      tr.pickup = e.target.value;
+      save();
+    });
+    card.querySelector(".f-dropoff").addEventListener("input", (e) => {
+      tr.dropoff = e.target.value;
+      save();
+    });
+    return card;
+  }
 
+  // ---------- ringkasan ----------
+  function renderSummary() {
+    let usd = 0,
+      idr = 0;
+    state.days.forEach((d) => {
+      const p = dayPrice(d);
+      usd += p.usd;
+      idr += p.idr;
+    });
+    state.transfers.forEach((tr) => {
+      const p = transferPrice(tr);
+      usd += p.usd;
+      idr += p.idr;
+    });
+    document.getElementById("itn-total").innerHTML = priceHTML(usd, idr);
+    const nDays = state.days.length,
+      nTr = state.transfers.length;
+    let label = `Total - ${nDays} day${nDays === 1 ? "" : "s"}`;
+    if (nTr) label += ` + ${nTr} transfer${nTr === 1 ? "" : "s"}`;
+    document.getElementById("itn-total-label").textContent = label;
+    const allDone =
+      state.days.every(dayComplete) && state.transfers.every(transferComplete);
+    document.getElementById("itn-book").disabled = !(nDays || nTr) || !allDone;
+  }
+
+  function rerender() {
+    renderDays();
+    renderTransfers();
+    renderSummary();
+  }
+
+  // ---------- tombol Add -> popup pilih kategori ----------
+  const pickModal = document.getElementById("itn-pick-modal");
+  const addBtn = document.getElementById("itn-add");
+  if (addBtn && pickModal) {
+    addBtn.addEventListener("click", () => pickModal.classList.add("active"));
+    pickModal.addEventListener("click", (e) => {
+      if (e.target === pickModal || e.target.closest("[data-close]"))
+        pickModal.classList.remove("active");
+    });
+  }
+
+  const clearBtn = document.getElementById("itn-clear");
+  if (clearBtn)
+    clearBtn.addEventListener("click", () => {
+      if (!itnCount(state)) return;
+      if (!confirm("Clear the whole itinerary?")) return;
+      state = { days: [], transfers: [] };
+      save();
+      rerender();
+    });
+
+  // ---------- popup booking ----------
   const modal = document.getElementById("itn-modal");
   const modalForm = document.getElementById("itn-form");
   const modalSuccess = document.getElementById("itn-success");
 
   function dayLine(d) {
-    let items = d.plan === "tour"
-      ? d.tour + (d.kecakAddon ? " + Kecak Dance" : "")
-      : d.acts.join(" + ");
-    if (d.transfers.length) items += " \u00b7 " + d.transfers.join(", ");
-    return items;
+    let s = d.items.join(" + ");
+    const loc = [d.pickup, d.dropoff].filter(Boolean);
+    if (loc.length) s += ` (${loc.join(" → ")})`;
+    return s;
+  }
+  function transferLine(tr) {
+    const area = tr.route.replace(" – Ubud", "");
+    return tr.direction === "from" ? `Ubud → ${area}` : `${area} → Ubud`;
   }
 
   document.getElementById("itn-book").addEventListener("click", () => {
     const box = document.getElementById("itn-summary");
     box.innerHTML = "";
-    let usd = 0, idr = 0;
-    days.forEach((d, i) => {
-      const p = dayPrice(d); usd += p.usd; idr += p.idr;
-      box.innerHTML += `<div class="modal__row"><span>Day ${i + 1} \u00b7 ${d.date} (${d.guests} pax)</span><span>${dayLine(d)}</span></div>`;
+    let usd = 0,
+      idr = 0;
+    state.days.forEach((d, i) => {
+      const p = dayPrice(d);
+      usd += p.usd;
+      idr += p.idr;
+      box.innerHTML += `<div class="modal__row"><span>Day ${i + 1} · ${d.date} (${d.guests} pax)</span><span>${dayLine(d)}</span></div>`;
+    });
+    state.transfers.forEach((tr) => {
+      const p = transferPrice(tr);
+      usd += p.usd;
+      idr += p.idr;
+      box.innerHTML += `<div class="modal__row"><span>Transfer · ${tr.date} (${tr.guests} pax)</span><span>${transferLine(tr)}</span></div>`;
     });
     box.innerHTML += `<div class="modal__row"><span>Total</span><span>${priceHTML(usd, idr)}</span></div>`;
     modal.classList.add("active");
   });
 
-  function resetModal() { modal.classList.remove("active"); modalForm.style.display = "block"; modalSuccess.style.display = "none"; }
+  function resetModal() {
+    modal.classList.remove("active");
+    modalForm.style.display = "block";
+    modalSuccess.style.display = "none";
+  }
   document.getElementById("itn-close").addEventListener("click", resetModal);
-  document.getElementById("itn-done").addEventListener("click", resetModal);
-  modal.addEventListener("click", (e) => { if (e.target === modal) resetModal(); });
+  document.getElementById("itn-done").addEventListener("click", () => {
+    resetModal();
+    state = { days: [], transfers: [] };
+    save();
+    rerender();
+  });
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) resetModal();
+  });
 
   document.getElementById("itn-submit").addEventListener("click", () => {
-    const name = document.getElementById("itn-name"), phone = document.getElementById("itn-phone"),
-          email = document.getElementById("itn-email"), pickup = document.getElementById("itn-pickup");
-    if (!name.value.trim()) { alert("Please enter your name."); return; }
-    if (!phone.value.trim()) { alert("Please enter your phone number."); return; }
-    if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) { alert("Please enter a valid email address."); return; }
-    if (!pickup.value.trim()) { alert("Please enter your pick-up location."); return; }
-
-    let usd = 0, idr = 0;
-    days.forEach((d) => { const p = dayPrice(d); usd += p.usd; idr += p.idr; });
-    const detail = days.map((d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`).join(" | ");
-
+    const name = document.getElementById("itn-name"),
+      phone = document.getElementById("itn-phone"),
+      email = document.getElementById("itn-email");
+    if (!name.value.trim()) {
+      alert("Please enter your name.");
+      return;
+    }
+    if (!phone.value.trim()) {
+      alert("Please enter your phone number.");
+      return;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    let usd = 0,
+      idr = 0;
+    state.days.forEach((d) => {
+      const p = dayPrice(d);
+      usd += p.usd;
+      idr += p.idr;
+    });
+    state.transfers.forEach((tr) => {
+      const p = transferPrice(tr);
+      usd += p.usd;
+      idr += p.idr;
+    });
+    const detail = [
+      ...state.days.map(
+        (d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`
+      ),
+      ...state.transfers.map(
+        (tr) => `Transfer (${tr.date}, ${tr.guests} pax): ${transferLine(tr)} [pickup: ${tr.pickup}, dropoff: ${tr.dropoff}]`
+      )
+    ].join(" | ");
     const data = new URLSearchParams({
       type: "itinerary",
-      name: name.value, phone: phone.value, email: email.value, pickup: pickup.value,
+      name: name.value,
+      phone: phone.value,
+      email: email.value,
       service: detail,
-      guests: days.map((d) => d.guests).join(","),
-      date: days.map((d) => d.date).join(","),
       price: `USD ${usd} / IDR ${idr.toLocaleString("id-ID")}`
     });
     fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-
     modalForm.style.display = "none";
     modalSuccess.style.display = "block";
   });
 
-  days.push(newDay(0));
-  render();
+  rerender();
 }

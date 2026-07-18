@@ -14,26 +14,25 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   font-family: var(--font-body);
   color: var(--color-green);
   background-color: #ffffff;
+  overflow-x: hidden;
 }
-
 .about__text p,
 .experience__desc,
 .villa__desc,
 .subhero__text,
 .highlight__desc,
 .slider__caption p,
-.why__desc,
 .contact__lead,
 .info__list li,
 .activities__desc,
 .stop__desc,
-.review__text,
 .reviews__intro,
 .faq__a p,
 .transfer__note {
@@ -43,7 +42,7 @@ body {
   font-weight: 400;
 }
 
-/* Judul card & slider — 1 gaya, ngikut font judul card */
+/* Judul card & slider - 1 gaya, ngikut font judul card */
 .experience__name,
 .villa__name,
 .slider__caption h3,
@@ -69,7 +68,7 @@ body {
   position: relative;
   margin-bottom: 2rem;
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 600;
   text-align: center;
   color: var(--color-gold);
@@ -139,6 +138,7 @@ body {
   color: var(--color-green) !important;
 }
 .navbar__toggle {
+  position: relative;
   display: none;
   flex-direction: column;
   gap: 5px;
@@ -147,7 +147,7 @@ body {
   border: none;
   cursor: pointer;
 }
-.navbar__toggle span {
+.navbar__toggle span:not(.itn-badge) {
   width: 100%;
   height: 2px;
   background-color: var(--color-gold);
@@ -159,7 +159,7 @@ body {
   display: flex;
   align-items: center;
   min-height: 90vh;
-  padding: 2rem 1.5rem 9rem;
+  padding: 7rem 1.5rem 4rem;
   background-image: url("assets/images/homepage_hero.webp");
   background-color: var(--color-green);
   background-size: cover;
@@ -169,18 +169,57 @@ body {
     url("assets/images/homepage_hero.webp");
 }
 
-.hero__content {
-  max-width: 720px;
+.hero__inner {
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  text-align: left;
+}
+.hero__content,
+.hero__inner .subhero__content {
+  flex: 1;
+  min-width: 0;
+}
+.hero__booking {
+  flex-shrink: 0;
+  width: 420px;
+}
+/* Booking box di dalam hero/subhero - kunci layout box 2 kolom,
+   override strip 5 kolom & overlap yang dipakai versi standalone */
+.hero__booking .booking {
+  position: static;
+  padding: 0;
+}
+.hero__booking .booking__card {
+  max-width: 100%;
+  margin: 0;
+  padding: 1.75rem;
+}
+.hero__booking .booking__title {
+  margin-bottom: 1.25rem;
   text-align: center;
 }
+.hero__booking .booking__fields {
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.hero__booking .booking__group--price {
+  grid-column: 1 / -1;
+  /* ruang di bawah price buat note biar nggak nempel ke tombol */
+  margin-bottom: 0.85rem;
+}
+.hero__booking .booking__note {
+  position: static;
+}
 .hero__title {
-  font-family: var(--font-heading);
-  font-weight: 400;
-  font-size: clamp(3rem, 6vw, 3.5rem);
-  line-height: 1.1;
+  font-family: var(--font-body);
+  font-size: 2.6rem;
+  line-height: 1.15;
   color: var(--color-gold);
-  line-height: 1.6;
   margin-top: 1rem;
 }
 .hero__subtitle {
@@ -201,11 +240,6 @@ body {
   z-index: 10;
   padding: 3rem 1.5rem;
 }
-
-.booking--overlap {
-  margin-top: -10rem;
-  padding-top: 0;
-}
 .booking__card {
   max-width: 900px;
   margin: 0 auto;
@@ -217,7 +251,7 @@ body {
 .booking__title {
   margin-bottom: 1.5rem;
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   text-align: center;
   color: var(--color-gold);
@@ -230,6 +264,7 @@ body {
 .booking__group {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 .booking__group label {
   margin-bottom: 0.4rem;
@@ -239,6 +274,8 @@ body {
 .booking__group select,
 .booking__group input,
 .booking__price {
+  width: 100%;
+  min-width: 0;
   padding: 0.7rem 0.8rem;
   border: 1px solid #d8d2c4;
   border-radius: 6px;
@@ -248,6 +285,20 @@ body {
   height: 2.9rem;
   color: var(--color-green);
   background-color: #fff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.booking__group select:focus,
+.booking__group input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.18);
+}
+/* Samain tinggi date dengan select (native date picker suka lebih tinggi) */
+.booking__group input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
 }
 .booking__price {
   display: flex;
@@ -256,7 +307,9 @@ body {
 }
 .booking__note {
   margin-top: 0.35rem;
+  min-height: 2.5em;
   font-size: 0.75rem;
+  line-height: 1.25;
   color: #7a7466;
 }
 .booking__actions {
@@ -283,12 +336,17 @@ body {
   color: var(--color-cream);
   background-color: var(--color-green);
   cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.15s ease;
 }
 .booking__btn:hover {
   background-color: var(--color-gold);
   color: var(--color-green);
+  transform: translateY(-2px);
 }
-/* Tombol kedua (Custom Itinerary) — gaya outline biar beda dari Book Now */
+/* Tombol kedua (Custom Itinerary) - gaya outline biar beda dari Book Now */
 .booking__btn--alt {
   color: var(--color-green);
   background-color: transparent;
@@ -700,6 +758,7 @@ body {
 .route__price {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   max-height: 0;
   overflow: hidden;
   color: var(--color-gold);
@@ -707,8 +766,12 @@ body {
     max-height 0.3s ease,
     padding 0.3s ease;
 }
+.route__price .route__add {
+  flex-basis: 100%;
+  margin-top: 0.6rem;
+}
 .route__item.active .route__price {
-  max-height: 60px;
+  max-height: 140px;
   padding: 0 0.25rem 1rem;
 }
 
@@ -721,19 +784,6 @@ body {
   margin: 0 auto 2.5rem;
   text-align: center;
   color: #6b6559;
-}
-.reviews__container {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 2.5rem;
-  align-items: start;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.reviews__list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
 }
 .reviews__empty {
   padding: 2.5rem 1.5rem;
@@ -748,37 +798,6 @@ body {
   background-color: #fff;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
 }
-.review__stars {
-  margin-bottom: 0.6rem;
-  letter-spacing: 2px;
-  color: var(--color-gold);
-}
-.review__author {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-.review__avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  font-weight: 600;
-  color: var(--color-green);
-  background-color: rgba(201, 164, 92, 0.2);
-}
-.review__name {
-  display: block;
-  font-size: 0.9rem;
-}
-.review__meta {
-  font-size: 0.75rem;
-  color: #7a7466;
-}
 
 /* Review form (diisi tamu) */
 .review-form {
@@ -788,13 +807,6 @@ body {
   border-radius: 12px;
   background-color: var(--color-cream);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
-}
-.review-form__title {
-  margin-bottom: 1.25rem;
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-gold);
 }
 .review-form__group {
   display: flex;
@@ -887,7 +899,7 @@ body {
   background-color: var(--color-green);
 }
 
-/* Review display cards (icon orang) — gaya beda dari card halaman */
+/* Review display cards (icon orang) - gaya beda dari card halaman */
 .reviews-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1007,7 +1019,9 @@ body {
   border-radius: 16px;
   background-color: var(--color-cream);
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 .driver-card:hover {
   transform: translateY(-4px);
@@ -1534,36 +1548,41 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 42vh;
-  padding: 8rem 1.5rem;
+  min-height: 60vh;
+  padding: 7rem 1.5rem 4rem;
   text-align: center;
   background-color: var(--color-green);
   background-size: cover;
-  background-position: top;
+  background-position: center;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
-    url("assets/images/subpage_hero.webp");
-}
-.subhero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(31, 61, 43, 0.55);
+    url("assets/images/homepage_hero.webp");
 }
 .subhero__content {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 720px;
 }
 .subhero__title {
   font-family: var(--font-body);
   font-size: 2.6rem;
   line-height: 1.15;
-  color: var(--color-cream);
+  color: var(--color-gold);
 }
 .subhero__text {
   margin-top: 1rem;
   color: var(--color-cream);
+}
+
+/* Section pertama numpuk ke subhero (cuma dipakai di about & itinerary) */
+.subhero--overlap + section {
+  position: relative;
+  z-index: 2;
+  margin-top: -5rem;
+  border-radius: 24px 24px 0 0;
+  background-color: #fff;
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 
 /* Featured highlight: split image / content */
@@ -1625,21 +1644,48 @@ body {
   font-size: 1.1rem;
   color: var(--color-gold);
 }
+.highlight__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
 .highlight__btn {
   display: inline-block;
   padding: 0.85rem 1.75rem;
+  border: 1.5px solid transparent;
   border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   color: var(--color-cream);
   background-color: var(--color-green);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.highlight__btn--add {
+  color: var(--color-green);
+  background-color: transparent;
+  border-color: var(--color-green);
+  cursor: pointer;
+}
+.highlight__btn--add:hover {
+  background-color: var(--color-green);
+  color: var(--color-cream);
+}
+.highlight__btn--add.added {
+  background-color: #2f8f4e;
+  border-color: #2f8f4e;
+  color: #fff;
 }
 .highlight__btn:hover {
   background-color: var(--color-gold);
   color: var(--color-green);
 }
 
-/* Tour stops / detail rows — foto kiri, deskripsi kanan */
+/* Tour stops / detail rows - foto kiri, deskripsi kanan */
 .stops {
   padding: 3rem 1.5rem;
 }
@@ -1877,14 +1923,6 @@ body {
   border: none;
   display: block;
 }
-
-.itinerary-builder {
-  padding: 4rem 1.5rem;
-}
-.builder {
-  max-width: 820px;
-  margin: 0 auto;
-}
 .builder__intro {
   max-width: 640px;
   margin: -1rem auto 2rem;
@@ -1892,49 +1930,6 @@ body {
   line-height: 1.6;
   text-align: center;
   color: #6b6559;
-}
-
-.day {
-  position: relative;
-  margin-bottom: 1.5rem;
-  padding: 1.75rem;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-}
-.day__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-}
-.day__title {
-  font-family: var(--font-body);
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-.day__status {
-  padding: 0.25rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #7a7466;
-  background-color: #f1ede2;
-}
-.day__status.done {
-  color: #1f7a3d;
-  background-color: rgba(31, 122, 61, 0.12);
-}
-.day__remove {
-  position: absolute;
-  top: 1rem;
-  right: 1.25rem;
-  border: none;
-  background: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #b3261e;
-  cursor: pointer;
 }
 
 .field {
@@ -1962,128 +1957,8 @@ body {
   appearance: none;
 }
 
-.plantabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.1rem;
-}
-.plantab {
-  flex: 1;
-  padding: 0.65rem;
-  border: 1.5px solid #d8d2c4;
-  border-radius: 8px;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #7a7466;
-  background: #fff;
-  cursor: pointer;
-}
-.plantab.active {
-  border-color: var(--color-gold);
-  color: var(--color-green);
-  background-color: rgba(201, 164, 92, 0.12);
-}
-
 .slot {
   margin-bottom: 0.9rem;
-}
-.slot__name {
-  margin-bottom: 0.45rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #7a7466;
-}
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.chip {
-  padding: 0.5rem 0.9rem;
-  border: 1.5px solid #d8d2c4;
-  border-radius: 20px;
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--color-green);
-  background: #fff;
-  cursor: pointer;
-}
-.chip.selected {
-  border-color: var(--color-green);
-  background-color: var(--color-green);
-  color: var(--color-cream);
-}
-.chip:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.hint {
-  margin-top: 0.4rem;
-  font-size: 0.75rem;
-  color: #7a7466;
-}
-
-.addon {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.9rem;
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
-  background-color: var(--color-cream);
-}
-.addon input {
-  width: 17px;
-  height: 17px;
-  accent-color: var(--color-green);
-}
-.addon label {
-  font-size: 0.88rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-.addon label small {
-  display: block;
-  font-weight: 600;
-  color: var(--color-gold);
-}
-
-.transferadd {
-  display: flex;
-  gap: 0.5rem;
-}
-.transferadd select {
-  flex: 1;
-}
-.transferadd button {
-  padding: 0 1.1rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-  cursor: pointer;
-}
-
-.day__price {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-top: 1.1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
-}
-.day__price span:first-child {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #7a7466;
-}
-.day__price .amount {
-  color: var(--color-gold);
 }
 
 .summary {
@@ -2091,41 +1966,6 @@ body {
   border-radius: 12px;
   color: var(--color-cream);
   background-color: var(--color-green);
-}
-.summary__title {
-  margin-bottom: 1rem;
-  font-family: var(--font-body);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--color-cream);
-}
-.tlist {
-  list-style: none;
-  margin-bottom: 1.25rem;
-}
-.tlist:empty {
-  display: none;
-}
-.tlist li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid rgba(247, 243, 234, 0.15);
-  font-size: 0.9rem;
-}
-.tlist li .amount {
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--color-gold);
-}
-.tlist li button {
-  border: none;
-  background: none;
-  font-size: 1rem;
-  color: #e88;
-  cursor: pointer;
 }
 .summary__total {
   display: flex;
@@ -2158,22 +1998,6 @@ body {
 }
 .btn-book:disabled {
   opacity: 0.45;
-  cursor: not-allowed;
-}
-.btn-addday {
-  width: 100%;
-  margin-top: 0.75rem;
-  padding: 0.85rem;
-  border: 1.5px dashed rgba(247, 243, 234, 0.5);
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-cream);
-  background: none;
-  cursor: pointer;
-}
-.btn-addday:disabled {
-  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -2216,6 +2040,14 @@ body {
   .navbar__menu.active {
     display: flex;
   }
+  .hero__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+  }
+  .hero__booking {
+    width: 100%;
+  }
   .hero__title {
     font-size: 2rem;
   }
@@ -2223,7 +2055,7 @@ body {
     font-size: 1rem;
   }
   .hero__text {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   .experience__grid {
     display: flex;
@@ -2251,10 +2083,7 @@ body {
     grid-template-columns: 1fr;
   }
   .hero {
-    padding-bottom: 7rem;
-  }
-  .booking--overlap {
-    margin-top: -10rem;
+    padding-bottom: 3rem;
   }
   .about {
     margin-top: -1rem;
@@ -2298,10 +2127,6 @@ body {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
-  .reviews__container {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-  }
   .all-reviews-grid {
     grid-template-columns: 1fr;
   }
@@ -2322,18 +2147,6 @@ body {
   .experience__card {
     flex: 0 0 80%;
   }
-
-  .day {
-    padding: 1.25rem;
-  }
-  .plantabs {
-    flex-direction: column;
-  }
-  .day__price {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
   .summary {
     padding: 1.25rem;
   }
@@ -2342,7 +2155,649 @@ body {
     align-items: flex-start;
     gap: 0.25rem;
   }
-  .tlist li {
-    flex-wrap: wrap;
+}
+
+/* Layar HP kecil - kecilin field booking biar 2 kolom tetap muat rapi */
+@media (max-width: 480px) {
+  .hero__booking .booking__fields {
+    gap: 0.75rem;
   }
+  .hero__booking .booking__group label {
+    font-size: 0.8rem;
+  }
+  .hero__booking .booking__group select,
+  .hero__booking .booking__group input,
+  .hero__booking .booking__price {
+    height: 2.7rem;
+    padding: 0.55rem 0.6rem;
+    font-size: 0.82rem;
+  }
+}
+
+/* Animasi masuk hero + box booking (fade + naik dikit) */
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero__content,
+.subhero__content {
+  animation: heroFadeUp 0.7s ease both;
+}
+.hero__booking .booking__card {
+  animation: heroFadeUp 0.7s ease 0.12s both;
+}
+/* Hover lift halus buat card (naik dikit + shadow lembut) */
+.experience__card,
+.villa__card,
+.review-card,
+.about__content,
+.info__fact {
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+.experience__card:hover,
+.villa__card:hover,
+.review-card:hover,
+.about__content:hover,
+.info__fact:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
+}
+
+/* Tombol WhatsApp ngambang (Talk with Wayan) */
+.wa-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.15rem 0.7rem 0.85rem;
+  border-radius: 999px;
+  background-color: #25d366;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.wa-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+}
+.wa-float svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+@media (max-width: 480px) {
+  .wa-float {
+    right: 14px;
+    bottom: 14px;
+    padding: 0.8rem;
+  }
+  .wa-float__text {
+    display: none;
+  }
+}
+
+/* Scroll reveal - card & judul muncul (fade + naik) pas masuk layar.
+   Class 'reveal' ditambah lewat JS, jadi tanpa JS semua tetap kelihatan. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hormatin user yang matiin animasi (aksesibilitas) */
+@media (prefers-reduced-motion: reduce) {
+  .hero__content,
+  .subhero__content,
+  .hero__booking .booking__card {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .experience__card:hover,
+  .villa__card:hover,
+  .review-card:hover,
+  .about__content:hover,
+  .info__fact:hover,
+  .booking__btn:hover {
+    transform: none;
+  }
+}
+
+/* =================== ITINERARY BUILDER (2 kolom) =================== */
+.itn {
+  padding: 3rem 1.5rem;
+}
+.itn__panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.itn__subtitle {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.itn__ghostbtn {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.itn__ghostbtn:hover {
+  background-color: #efe9db;
+}
+.itn__empty {
+  padding: 1.25rem;
+  border: 1px dashed #cfc7b5;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: #7a7466;
+  text-align: center;
+}
+
+/* day / transfer card di kiri */
+.itn-day {
+  padding: 1.1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e6dfce;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.itn-day:last-child {
+  margin-bottom: 0;
+}
+.itn-day__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+.itn-day__title {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.itn-day__status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #f0ede4;
+  color: #9a9382;
+}
+.itn-day__status.done {
+  background: #e2f0e6;
+  color: #2f8f4e;
+}
+.itn-day__remove {
+  margin-left: auto;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: #b45b4d;
+  cursor: pointer;
+}
+.itn-day__items {
+  list-style: none;
+  margin-bottom: 0.9rem;
+}
+.itn-day__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  margin-bottom: 0.4rem;
+  border-radius: 8px;
+  background: var(--color-cream);
+}
+.itn-day__item-slot {
+  flex-shrink: 0;
+  min-width: 74px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-gold);
+}
+.itn-day__item-name {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.itn-day__item-rm {
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: #b45b4d;
+  cursor: pointer;
+}
+.itn-day__empty {
+  padding: 0.5rem 0.2rem;
+  font-size: 0.82rem;
+  color: #9a9382;
+}
+.itn-day__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+}
+.itn-day__fields .field {
+  margin-bottom: 0;
+}
+.itn-day__fields .field input,
+.itn-day__fields .field select {
+  width: 100%;
+  height: 2.7rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-green);
+  background: #fff;
+}
+.itn-day__price {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 0.7rem;
+  border-top: 1px solid #eee6d5;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.itn-transfer__dir {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+.dirbtn {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1.5px solid #d8d2c4;
+  border-radius: 8px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #7a7466;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.dirbtn.active {
+  border-color: var(--color-green);
+  background: var(--color-green);
+  color: #fff;
+}
+
+/* tombol Add to itinerary di card biasa + card jadi clickable */
+.card-clickable {
+  cursor: pointer;
+}
+.card-add {
+  display: block;
+  width: 100%;
+  margin-top: 0.9rem;
+  padding: 0.6rem;
+  border: 1.5px solid var(--color-green);
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.card-add:hover {
+  background: var(--color-green);
+  color: #fff;
+}
+.card-add.added {
+  background: #2f8f4e;
+  border-color: #2f8f4e;
+  color: #fff;
+}
+
+/* badge hijau di menu Itinerary */
+.nav-itn {
+  position: relative;
+}
+.itn-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background-color: #2f8f4e;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.itn-badge[hidden] {
+  display: none;
+}
+/* badge di tombol hamburger (kelihatan di mobile walau menu ketutup) */
+.itn-badge--hamburger {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  margin-left: 0;
+  border: 2px solid #fff;
+}
+/* ---- itinerary responsive: katalog jadi bar floating di bawah ---- */
+/* Trip bar mobile (baris ringkas). Default disembunyiin {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 190;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem 1rem;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.16);
+  transition: transform 0.28s ease;
+}
+.modal__group select {
+  width: 100%;
+  height: 2.9rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-green);
+  background: #fff;
+}
+.modal__btn--ghost {
+  margin-top: 0.6rem;
+  background: transparent;
+  border: 1.5px solid #d8d2c4;
+  color: var(--color-green);
+}
+
+/* itinerary mobile: katalog jadi konten utama, panel kiri disembunyiin */
+@media (max-width: 768px) {
+  .itn__layout {
+    grid-template-columns: 1fr;
+  }
+  .itn__left {
+    display: none;
+  }
+  .itn__right {
+    position: static;
+    min-width: 0;
+    padding: 0;
+    padding-bottom: 32vh;
+    background: transparent;
+  }
+  .catrow,
+  .catrow__cards {
+    min-width: 0;
+  }
+  /* card katalog di HP = ukuran card normal homepage (slider) */
+  .itn__right .experience__card {
+    width: 74vw;
+    max-width: 320px;
+  }
+  .itn__right .itn-pick--transfer {
+    width: 60vw;
+    max-width: 260px;
+  }
+  .itn-mbar:not([hidden]) {
+    display: flex;
+  }
+}
+
+/* ============ ITINERARY v2 (satu kolom, card teks, add via popup) ============ */
+.itn2 {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.itn2__panel {
+  padding: 1.25rem;
+  border-radius: 12px;
+  background-color: var(--color-cream);
+}
+.itn2__add {
+  padding: 0.95rem;
+  border: 1.5px dashed var(--color-green);
+  border-radius: 10px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.itn2__add:hover {
+  background: var(--color-green);
+  color: #fff;
+}
+.modal__box--sm {
+  max-width: 430px;
+  text-align: center;
+}
+.modal__sub {
+  margin-bottom: 1.1rem;
+  font-size: 0.9rem;
+  color: #7a7466;
+}
+.pick-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.pick-cat {
+  display: block;
+  padding: 0.95rem 1rem;
+  border: 1px solid #e6dfce;
+  border-radius: 10px;
+  background: var(--color-cream);
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-green);
+  text-decoration: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.pick-cat:hover {
+  border-color: var(--color-gold);
+  background: #efe9db;
+}
+.route__add {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border: 1.5px solid var(--color-green);
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.route__add:hover {
+  background: var(--color-green);
+  color: #fff;
+}
+
+/* ====== Aturan slider: geser samping doang, nggak bisa atas-bawah ====== */
+@media (max-width: 992px) {
+  .experience__grid:not(.experience__grid--auto) {
+    overflow-y: hidden;
+    touch-action: pan-x;
+  }
+}
+
+/* Card driver & review jadi slider di HP */
+@media (max-width: 768px) {
+  .drivers-grid,
+  .reviews-cards {
+    display: flex;
+    gap: 1rem;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.5rem;
+  }
+  .drivers-grid > *,
+  .reviews-cards > * {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+}
+
+/* ====== Samain body text yang kebaca ke 0.85rem (ikut homepage) ======
+   Title/heading/harga/stat/tag TIDAK diubah - cuma teks paragraf/deskripsi. */
+.builder__intro,
+.driver-card__tagline,
+.driver-card__desc,
+.driver-modal__tagline,
+.driver-modal__desc,
+.review-card__text,
+.modal__sub,
+.modal__success p,
+.modal__row,
+.contact__item span,
+.faq__q {
+  font-size: 0.85rem;
+}
+
+/* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */
+.subhero--tour {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
+    url("assets/images/hero.webp");
+}
+.subhero--exp {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
+    url("assets/images/kecak-night.webp");
+}
+
+/* ==================== Tombol Book / Add to itinerary di halaman program ==================== */
+.program-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.5rem 1.5rem 3.5rem;
+}
+.program-cta__btn {
+  min-width: 210px;
+  padding: 0.95rem 1.75rem;
+  border: 1.5px solid var(--color-green);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.program-cta__btn--book {
+  background: var(--color-green);
+  color: var(--color-cream);
+}
+.program-cta__btn--book:hover {
+  background: var(--color-gold);
+  color: var(--color-green);
+  border-color: var(--color-gold);
+}
+.program-cta__btn--add {
+  background: transparent;
+  color: var(--color-green);
+}
+.program-cta__btn--add:hover {
+  background: var(--color-green);
+  color: #fff;
+}
+
+/* ==================== Booking form di dalam popup (halaman program) ==================== */
+#book-modal .modal__box {
+  max-width: 560px;
+}
+#book-modal .booking {
+  position: static;
+  padding: 0;
+}
+#book-modal .booking__card {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+}
+#book-modal .booking__fields {
+  grid-template-columns: 1fr 1fr;
+}
+#book-modal .booking__group--price {
+  grid-column: 1 / -1;
+}
+#book-modal .booking__note {
+  position: static;
 }

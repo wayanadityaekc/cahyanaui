@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <!-- Cahyana favicon -->
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=12" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/south-bali-tour.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -33,12 +33,12 @@
 <body>
   <div id="navbar-placeholder"></div>
 
-  <section class="subhero" style="background-image: url(assets/images/uluwatu1.webp);">
-    <div class="subhero__content">
+  <section class="subhero subhero--overlap subhero--tour">
+      <div class="subhero__content">
       <h1 class="subhero__title">South Bali Tour</h1>
       <p class="subhero__text">Limestone cliffs, white-sand beaches, and a temple hanging over the Indian Ocean. The day builds toward a fire dance at sunset and dinner with your feet in the sand at Jimbaran Bay.</p>
     </div>
-  </section>
+    </section>
 
   <section class="stops" id="stops">
     <h2 class="section__title">What You'll Visit</h2>
@@ -141,9 +141,20 @@
     </div>
   </section>
 
-  <div id="booking-placeholder" data-default="tour"></div>
-  <div id="footer-placeholder"></div>
+    <section class="program-cta">
+      <button class="program-cta__btn program-cta__btn--book" type="button" data-open="book-modal">Book Now</button>
+      <button class="program-cta__btn program-cta__btn--add" type="button" data-add-item="South Bali Tour">Add to itinerary</button>
+    </section>
 
-  <script src="script.js?v=9"></script>
+    <div class="modal" id="book-modal">
+      <div class="modal__box modal__box--wide">
+        <button class="modal__close" data-close aria-label="Close">&times;</button>
+        <div id="booking-placeholder" data-default="tour" data-item="South Bali Tour"></div>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+  <script src="script.js?v=12"></script>
 </body>
 </html>

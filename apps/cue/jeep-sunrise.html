@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <!-- Cahyana favicon -->
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=12" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/jeep-sunrise.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -33,12 +33,12 @@
 <body>
   <div id="navbar-placeholder"></div>
 
-  <section class="subhero" style="background-image: url(assets/images/mount-batur-sunrise.webp);">
-    <div class="subhero__content">
+  <section class="subhero subhero--overlap subhero--exp">
+      <div class="subhero__content">
       <h1 class="subhero__title">Mount Batur Jeep Sunrise</h1>
       <p class="subhero__text">The sunrise everyone comes to Bali for - without the two-hour climb in the dark. A 4x4 takes you up the volcano's black lava field to the viewpoint, and you watch the sun come up over the caldera with a coffee in hand.</p>
     </div>
-  </section>
+    </section>
 
   <section class="stops" id="experience">
     <h2 class="section__title">The Experience</h2>
@@ -62,7 +62,7 @@
     </article>
 
     <article class="stop">
-      <div class="stop__image" style="background-image: url(assets/images/D2A79F7B-11CE-4FC6-883E-49A15B99C522.webp);"></div>
+      <div class="stop__image" style="background-image: url(assets/images/mount-batur-sunrise.webp);"></div>
       <div class="stop__body">
         <span class="stop__num">Good to Know</span>
         <h3 class="stop__name">What to Wear &amp; What Comes After</h3>
@@ -105,9 +105,20 @@
     </div>
   </section>
 
-  <div id="booking-placeholder" data-default="experience"></div>
-  <div id="footer-placeholder"></div>
+    <section class="program-cta">
+      <button class="program-cta__btn program-cta__btn--book" type="button" data-open="book-modal">Book Now</button>
+      <button class="program-cta__btn program-cta__btn--add" type="button" data-add-item="Jeep Sunrise">Add to itinerary</button>
+    </section>
 
-  <script src="script.js?v=9"></script>
+    <div class="modal" id="book-modal">
+      <div class="modal__box modal__box--wide">
+        <button class="modal__close" data-close aria-label="Close">&times;</button>
+        <div id="booking-placeholder" data-default="experience" data-item="Jeep Sunrise"></div>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+  <script src="script.js?v=12"></script>
 </body>
 </html>

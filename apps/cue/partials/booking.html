@@ -1,18 +1,31 @@
 <section class="booking" id="booking">
   <div class="booking__card">
-    <h2 class="booking__title">Book Your Bali Experience</h2>
+    <h2 class="booking__title">Build Your Trip</h2>
     <div class="booking__fields">
       <div class="booking__group">
         <label for="guest">Guests</label>
         <select id="guest">
-          <option value="" disabled selected>Select guests</option>
-          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+          <option value="" disabled selected>Guests</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
         </select>
+      </div>
+      <div class="booking__group">
+        <label for="date">Date</label>
+        <input type="date" id="date" />
       </div>
       <div class="booking__group">
         <label for="service">Service</label>
         <select id="service">
-          <option value="" disabled selected>Select a service</option>
+          <option value="" disabled selected>Service</option>
           <option value="tour">Tour Program</option>
           <option value="experience">Experience</option>
           <option value="performance">Performance</option>
@@ -21,20 +34,20 @@
       </div>
       <div class="booking__group">
         <label for="service-item">Select Service</label>
-        <select id="service-item"><option value="" disabled selected>Choose a service first</option></select>
+        <select id="service-item">
+          <option value="" disabled selected>Choose</option>
+        </select>
       </div>
-      <div class="booking__group">
-        <label for="date">Date</label>
-        <input type="date" id="date" />
-      </div>
-      <div class="booking__group">
+      <div class="booking__group booking__group--price">
         <label for="price">Price</label>
         <div class="booking__price" id="price">-</div>
         <small class="booking__note" id="price-note"></small>
       </div>
       <div class="booking__actions">
         <button class="booking__btn" id="book-now">Book Now</button>
-        <a class="booking__btn booking__btn--alt" href="itinerary.html">Custom Itinerary</a>
+        <a class="booking__btn booking__btn--alt" href="itinerary.html"
+          >Custom Itinerary</a
+        >
       </div>
     </div>
   </div>
@@ -42,30 +55,72 @@
 
 <div class="modal" id="booking-modal">
   <div class="modal__box">
-    <button class="modal__close" id="modal-close" aria-label="Close">&times;</button>
+    <button class="modal__close" id="modal-close" aria-label="Close">
+      &times;
+    </button>
     <div id="modal-form">
       <h3 class="modal__title">Confirm Your Booking</h3>
-      <div class="modal__group"><label for="booker-name">Your Name</label><input type="text" id="booker-name" placeholder="Enter your name" /></div>
-      <div class="modal__group"><label for="booker-phone">Phone Number</label><input type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" /></div>
-      <div class="modal__group"><label for="booker-email">Email</label><input type="email" id="booker-email" placeholder="you@email.com" /></div>
-      <div class="modal__group"><label for="pickup" id="pickup-label">Pick-up Location</label><input type="text" id="pickup" placeholder="Hotel / villa name or area" /></div>
+      <div class="modal__group">
+        <label for="booker-name">Your Name</label
+        ><input type="text" id="booker-name" placeholder="Enter your name" />
+      </div>
+      <div class="modal__group">
+        <label for="booker-phone">Phone Number</label
+        ><input
+          type="tel"
+          id="booker-phone"
+          placeholder="e.g. +61 412 345 678"
+        />
+      </div>
+      <div class="modal__group">
+        <label for="booker-email">Email</label
+        ><input type="email" id="booker-email" placeholder="you@email.com" />
+      </div>
+      <div class="modal__group">
+        <label for="pickup" id="pickup-label">Pick-up Location</label
+        ><input
+          type="text"
+          id="pickup"
+          placeholder="Hotel / villa name or area"
+        />
+      </div>
       <div class="modal__group">
         <label for="referral">Referral Code (optional)</label>
-        <div class="modal__referral"><input type="text" id="referral" placeholder="Enter code" /><button type="button" id="apply-referral">Apply</button></div>
+        <div class="modal__referral">
+          <input type="text" id="referral" placeholder="Enter code" /><button
+            type="button"
+            id="apply-referral"
+          >
+            Apply
+          </button>
+        </div>
         <small class="modal__referral-msg" id="referral-msg"></small>
       </div>
       <div class="modal__summary">
-        <div class="modal__row"><span>Guests</span><span id="sum-guest">-</span></div>
-        <div class="modal__row"><span>Service</span><span id="sum-service">-</span></div>
-        <div class="modal__row"><span>Date</span><span id="sum-date">-</span></div>
-        <div class="modal__row"><span>Price</span><span id="sum-price">-</span></div>
+        <div class="modal__row">
+          <span>Guests</span><span id="sum-guest">-</span>
+        </div>
+        <div class="modal__row">
+          <span>Service</span><span id="sum-service">-</span>
+        </div>
+        <div class="modal__row">
+          <span>Date</span><span id="sum-date">-</span>
+        </div>
+        <div class="modal__row">
+          <span>Price</span><span id="sum-price">-</span>
+        </div>
       </div>
       <div class="modal__details" id="modal-details">
-        <button type="button" class="modal__details-toggle" id="details-toggle"><span>What's included</span><span class="modal__details-arrow">&rsaquo;</span></button>
+        <button type="button" class="modal__details-toggle" id="details-toggle">
+          <span>What's included</span
+          ><span class="modal__details-arrow">&rsaquo;</span>
+        </button>
         <ul class="modal__details-list" id="details-list"></ul>
       </div>
       <button class="modal__btn" id="book-submit">Book Now</button>
-      <button class="modal__btn modal__btn--wa" id="discuss-wa">Discuss via WhatsApp</button>
+      <button class="modal__btn modal__btn--wa" id="discuss-wa">
+        Discuss via WhatsApp
+      </button>
     </div>
     <div class="modal__success" id="modal-success">
       <div class="modal__success-icon">&check;</div>

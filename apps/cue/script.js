@@ -80,7 +80,11 @@ const PAGE_ITEM = {
   "mount-batur-trekking.html": "Mount Batur Trekking",
   "cooking-class.html": "Cooking Class",
   "kecak-dance.html": "Kecak Dance",
-  "barong-dance.html": "Barong Dance"
+  "barong-dance.html": "Barong Dance",
+  "ubud-culture-day.html": "Ubud Culture Day",
+  "south-coast-sunset-kecak.html": "South Coast & Sunset Kecak",
+  "batur-sunrise-adrenaline.html": "Batur Sunrise & Adrenaline",
+  "taste-of-ubud.html": "Taste of Ubud"
 };
 
 // -- itinerary store key

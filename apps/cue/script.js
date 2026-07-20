@@ -1,27 +1,70 @@
+/* ==================== 1. CONFIG & DATA ==================== */
 
-/* ==================== SECTION: APP ENTRY - jalanin semua init pas halaman siap ==================== */
+// -- site config
+// Naikin angka ini tiap kali isi file di folder partials/ diubah,
+// biar browser narik versi baru dan bukan yang nyangkut di cache.
+const PARTIALS_VERSION = 16;
 
-document.addEventListener("DOMContentLoaded", initPage);
+const WHATSAPP_NUMBER = "61401657862";
 
-async function initPage() {
-  await loadPartials();
-  initNavbar();
-  initBooking();
-  initSlider();
-  initAccordion();
-  initContact();
-  initItinerary();
-  initModals();
-  initReviews();
-  initDrivers();
-  initWhatsApp();
-  initReveal();
-  itnUpdateBadge();
-  initItineraryButtons();
-}
+const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL";
 
-/* ==================== SECTION: ADD-TO-ITINERARY BUTTONS (kartu semua halaman + popup Go/Continue) ==================== */
+const REFERRAL_CODE = "gowithcahyana";
 
+// -- pricing data
+const prices = {
+  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
+  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 } },
+  performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
+  transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Besakih Area – Ubud": { usd: 35, idr: 550000 } },
+  villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
+  // Program combo (harga & isi placeholder - silakan diubah)
+  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Coast & Sunset Kecak": { usd: 65, idr: 1000000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Taste of Ubud": { usd: 50, idr: 780000 } }
+};
+
+// Charter mobil (harga PLACEHOLDER - silakan diubah). Half/Full day = harga dasar,
+// extended = full day + jam tambahan, + surcharge kalau pickup di luar Ubud.
+const CHARTER = {
+  half: { usd: 35, idr: 500000 },
+  full: { usd: 60, idr: 900000 },
+  extHourUsd: 4,
+  extHourIdr: 60000,
+  surchargeUsd: 7,
+  surchargeIdr: 100000
+};
+
+const transport = {
+  "ATV": { usd: 3, idr: 50000 }, "Rafting": { usd: 3, idr: 50000 }, "Swing": { usd: 3, idr: 50000 },
+  "Jeep Sunrise": { usd: 7, idr: 100000 }, "Mount Batur Trekking": { usd: 7, idr: 100000 },
+  "Cooking Class": { usd: 0, idr: 0 }, "Kecak Dance": { usd: 0, idr: 0 }, "Barong Dance": { usd: 0, idr: 0 }
+};
+
+const tourDetails = [
+  "Price includes car, driver, and petrol",
+  "Entrance tickets are not included",
+  "Free cold water on board",
+  "Flexible stops - no extra charge for stops under 1 hour",
+  "Book now, pay after - no upfront payment"
+];
+
+const experienceDetails = [
+  "Price is per person (entrance ticket)",
+  "Free mineral water",
+  "Includes transport - driver takes you there, waits, and drives you home",
+  "Book now, pay after - no upfront payment"
+];
+
+// -- currency
+// Kurs STATIS relatif ke USD (1 USD = X). Update di sini kalau perlu.
+// IDR pakai harga rupiah tersimpan (bukan hasil konversi) biar tetap angka bulat rapi.
+const CURRENCIES = ["USD", "IDR", "AUD", "EUR", "GBP"];
+
+const CUR_RATE = { USD: 1, AUD: 1.53, EUR: 0.92, GBP: 0.79 };
+
+let currentCurrency = localStorage.getItem("cue_currency") || "USD";
+if (!CURRENCIES.includes(currentCurrency)) currentCurrency = "USD";
+
+// -- page -> itinerary program map
 // Peta halaman detail -> nama program di itinerary (biar tombol Add di card
 // mana pun tau program apa yang ditambahin, walau teks card beda)
 const PAGE_ITEM = {
@@ -40,73 +83,138 @@ const PAGE_ITEM = {
   "barong-dance.html": "Barong Dance"
 };
 
-// Tiap card (a) badan card bisa diklik -> halaman detail,
-// (b) ada tombol "Add to itinerary" yang nambah program ke store.
-/* ==================== SECTION: ITINERARY PAGE - bangun hari + transfer + booking ==================== */
+// -- itinerary store key
+const ITN_KEY = "cue_itinerary_v1";
 
-function initItineraryButtons() {
-  document.querySelectorAll(".experience__card").forEach((card) => {
-    const link = card.querySelector("a[href]");
-    if (!link) return;
-    const href = link.getAttribute("href");
-    const item = PAGE_ITEM[href];
-    if (!item) return;
-    link.remove(); // buang tombol arrow - badan card udah bisa diklik
+/* ==================== 2. HELPER FUNCTIONS ==================== */
 
-    // (a) badan card clickable ke halaman detail
-    card.classList.add("card-clickable");
-    card.addEventListener("click", (e) => {
-      if (e.target.closest(".card-add")) return;
-      window.location.href = href;
-    });
+// -- currency & price formatting
+// Bulatin hasil: IDR ke 1.000 terdekat, currency lain ke bilangan bulat.
+function roundCur(v, cur) {
+  return cur === "IDR" ? Math.round(v / 1000) * 1000 : Math.round(v);
+}
 
-    // (b) tombol Add to itinerary
-    const body = card.querySelector(".experience__body") || card;
-    if (!body.querySelector(".card-add")) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "card-add";
-      btn.textContent = "+ Add to itinerary";
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (itnAddItem(item)) showAddedPopup();
-      });
-      body.appendChild(btn);
-    }
-  });
+// Konversi { usd, idr } ke currency aktif -> angka
+function toCurrency(usd, idr, cur) {
+  cur = cur || currentCurrency;
+  const raw = cur === "IDR" ? idr : usd * (CUR_RATE[cur] || 1);
+  return roundCur(raw, cur);
+}
 
-  // Tombol Add to itinerary eksplisit (highlight card, dsb.)
-  document.querySelectorAll("[data-add-item]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (itnAddItem(btn.dataset.addItem)) showAddedPopup();
-    });
-  });
-  document.querySelectorAll("[data-add-transfer]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (itnAddTransfer(btn.dataset.addTransfer)) showAddedPopup();
-    });
-  });
+// Format jadi teks: "USD 45" / "IDR 700.000" / "AUD 69"
+function fmtMoney(usd, idr, cur) {
+  cur = cur || currentCurrency;
+  const v = toCurrency(usd, idr, cur);
+  return cur + " " + v.toLocaleString(cur === "IDR" ? "id-ID" : "en-US");
+}
 
-  // transfer.html: tombol "Add to itinerary" di DALAM accordion (bawah harga)
-  document.querySelectorAll(".route__item").forEach((item) => {
-    const priceBox = item.querySelector(".route__price");
-    if (!priceBox || priceBox.querySelector(".route__add")) return;
-    const label = item.querySelector(".route__head span");
-    if (!label) return;
-    const route = label.textContent.trim();
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "route__add";
-    btn.textContent = "+ Add to itinerary";
-    btn.addEventListener("click", () => {
-      if (itnAddTransfer(route)) showAddedPopup();
-    });
-    priceBox.appendChild(btn);
+// Dipakai booking & itinerary (sekarang tampil 1 currency aktif)
+const priceHTML = (usd, idr) => `<span class="price-cur">${fmtMoney(usd, idr)}</span>`;
+
+// Isi semua <span class="price" data-price="Nama"> dari data pusat + currency aktif
+function renderPrices() {
+  document.querySelectorAll("[data-price]").forEach((el) => {
+    const name = el.dataset.price;
+    const info = itemInfo(name);
+    const base = info ? info.price : prices.transfer[name];
+    if (base) el.textContent = fmtMoney(base.usd, base.idr);
   });
 }
 
+// Ganti currency: simpan + render ulang semua harga (static + booking + itinerary)
+function setCurrency(cur) {
+  if (!CURRENCIES.includes(cur)) return;
+  currentCurrency = cur;
+  localStorage.setItem("cue_currency", cur);
+  renderPrices();
+  const svc = document.getElementById("service-item");
+  if (svc && svc.value) svc.dispatchEvent(new Event("change"));
+  if (window.__itnRerender) window.__itnRerender();
+  if (window.__chRefresh) window.__chRefresh();
+}
+
+// -- itinerary store
+function carPrice(base, guests) {
+  const mult = guests > 5 ? 2 : 1;
+  return { usd: base.usd * mult, idr: base.idr * mult };
+}
+
+// cari kategori & harga sebuah program dari struktur prices
+function itemInfo(name) {
+  for (const cat of ["tour", "experience", "performance", "villa", "combo"]) {
+    if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
+  }
+  return null;
+}
+
+function itnLoad() {
+  try {
+    const s = JSON.parse(localStorage.getItem(ITN_KEY));
+    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) return s;
+  } catch (e) {}
+  return { days: [], transfers: [] };
+}
+
+function itnSave(state) {
+  localStorage.setItem(ITN_KEY, JSON.stringify(state));
+  itnUpdateBadge(state);
+}
+
+function itnCount(state) {
+  const st = state || itnLoad();
+  let n = 0;
+  st.days.forEach((d) => (n += d.items.length));
+  return n + st.transfers.length;
+}
+
+function itnUpdateBadge(state) {
+  const n = itnCount(state);
+  document.querySelectorAll("[data-itn-badge]").forEach((b) => {
+    b.textContent = n;
+    b.hidden = n === 0;
+  });
+}
+
+function newItnDay() {
+  return { items: [], date: "", guests: "", pickup: "", dropoff: "" };
+}
+
+// Tambah 1 program ke store. Masuk ke hari terakhir kalau slotnya cukup,
+// kalau nggak muat -> bikin hari baru. Return true kalau berhasil.
+// Tanpa slot: tiap program yang ditambah = 1 hari baru (add bebas).
+function itnAddItem(name) {
+  const info = itemInfo(name);
+  if (!info || info.cat === "villa") return false; // cuma tour/experience/performance/combo
+  const st = itnLoad();
+  const d = newItnDay();
+  d.items.push(name);
+  st.days.push(d);
+  itnSave(st);
+  return true;
+}
+
+// Tambah 1 transfer/journey ke store. Toleran beda tanda hubung (- vs –).
+function itnAddTransfer(route) {
+  let key = prices.transfer[route] ? route : null;
+  if (!key) {
+    const norm = (s) => s.replace(/[–—-]/g, "-");
+    key = Object.keys(prices.transfer).find((k) => norm(k) === norm(route)) || null;
+  }
+  if (!key) return false;
+  const st = itnLoad();
+  st.transfers.push({
+    route: key,
+    direction: "to",
+    pickup: "",
+    dropoff: "",
+    date: "",
+    guests: ""
+  });
+  itnSave(st);
+  return true;
+}
+
+// -- ui popup
 // Popup setelah nambah program: Go to itinerary / Continue exploring
 function showAddedPopup() {
   let m = document.getElementById("itn-added-modal");
@@ -137,61 +245,7 @@ function showAddedPopup() {
   m.classList.add("active");
 }
 
-/* ==================== SECTION: SCROLL REVEAL - animasi masuk card & judul ==================== */
-
-// Card & judul muncul (fade + naik) pas ke-scroll masuk layar.
-// Class ditambah dari sini, jadi kalau JS mati semua elemen tetap tampil.
-function initReveal() {
-  const selectors = [
-    ".experience__card",
-    ".villa__card",
-    ".review-card",
-    ".driver-card",
-    ".stop",
-    ".info__fact",
-    ".about__content",
-    ".faq__item",
-    ".section__title"
-  ];
-  const els = document.querySelectorAll(selectors.join(","));
-  if (!els.length || !("IntersectionObserver" in window)) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.classList.add("is-visible");
-        observer.unobserve(el);
-        // Buang lagi class reveal setelah animasi kelar, biar hover
-        // pakai transisi milik card-nya sendiri (bukan transisi reveal).
-        setTimeout(() => {
-          el.classList.remove("reveal", "is-visible");
-          el.style.transitionDelay = "";
-        }, 900);
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-  );
-
-  // Stagger: elemen sebaris/segrup muncul berurutan, bukan barengan.
-  const groupCount = new Map();
-  els.forEach((el) => {
-    if (el.closest(".modal")) return; // lewati isi popup (biar nggak ke-stuck hidden)
-    const parent = el.parentElement;
-    const idx = groupCount.get(parent) || 0;
-    groupCount.set(parent, idx + 1);
-    el.style.transitionDelay = Math.min(idx, 5) * 0.07 + "s";
-    el.classList.add("reveal");
-    observer.observe(el);
-  });
-}
-
-/* ==================== SECTION: PARTIALS LOADER - navbar/booking/footer/dll + cache-busting ==================== */
-
-// Naikin angka ini tiap kali isi file di folder partials/ diubah,
-// biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 13;
+/* ==================== 3. PARTIALS LOADER ==================== */
 
 async function loadPartials() {
   const partials = [
@@ -212,7 +266,7 @@ async function loadPartials() {
   }
 }
 
-/* ==================== SECTION: NAVBAR - hamburger + active link ==================== */
+/* ==================== 4. INIT (per fitur, dipanggil dari initPage) ==================== */
 
 function initNavbar() {
   const hamburger = document.getElementById("hamburger");
@@ -221,157 +275,26 @@ function initNavbar() {
 
   hamburger.addEventListener("click", () => navMenu.classList.toggle("active"));
 
+  // Dropdown "Program" (tap/klik buat toggle, di desktop juga jalan via hover)
+  const drop = navMenu.querySelector(".navbar__has-drop");
+  const dropToggle = navMenu.querySelector(".navbar__droptoggle");
+  if (drop && dropToggle) {
+    dropToggle.addEventListener("click", () => {
+      const open = drop.classList.toggle("open");
+      dropToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    // Di mobile submenu Program dibuka default biar langsung keliatan
+    if (window.matchMedia("(max-width: 992px)").matches) {
+      drop.classList.add("open");
+      dropToggle.setAttribute("aria-expanded", "true");
+    }
+  }
+
   const current = location.pathname.split("/").pop() || "index.html";
   navMenu.querySelectorAll("a").forEach((link) => {
     if (link.getAttribute("href") === current) link.classList.add("active");
   });
 }
-
-/* ==================== SECTION: DATA - harga, transport & konfigurasi ==================== */
-
-const prices = {
-  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
-  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 } },
-  performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
-  transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Besakih Area – Ubud": { usd: 35, idr: 550000 } }
-};
-
-const transport = {
-  "ATV": { usd: 3, idr: 50000 }, "Rafting": { usd: 3, idr: 50000 }, "Swing": { usd: 3, idr: 50000 },
-  "Jeep Sunrise": { usd: 7, idr: 100000 }, "Mount Batur Trekking": { usd: 7, idr: 100000 },
-  "Cooking Class": { usd: 0, idr: 0 }, "Kecak Dance": { usd: 0, idr: 0 }, "Barong Dance": { usd: 0, idr: 0 }
-};
-
-const tourDetails = [
-  "Price includes car, driver, and petrol",
-  "Entrance tickets are not included",
-  "Free cold water on board",
-  "Flexible stops - no extra charge for stops under 1 hour",
-  "Book now, pay after - no upfront payment"
-];
-const experienceDetails = [
-  "Price is per person (entrance ticket)",
-  "Free mineral water",
-  "Includes transport - driver takes you there, waits, and drives you home",
-  "Book now, pay after - no upfront payment"
-];
-
-const REFERRAL_CODE = "ridewithcahyana";
-const WHATSAPP_NUMBER = "62XXXXXXXXXX"; 
-const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL"; 
-
-// Format harga jadi HTML (dipakai booking & itinerary)
-const priceHTML = (usd, idr) => `<span class="price-usd">USD ${usd}</span><span class="price-idr">/ IDR ${idr.toLocaleString("id-ID")}</span>`;
-
-// ================= ITINERARY STORE (localStorage, dipakai lintas halaman) =================
-/* ==================== SECTION: ITINERARY STORE - localStorage, dipakai lintas halaman ==================== */
-
-const ITN_KEY = "cue_itinerary_v1";
-
-// Slot waktu yang dipakai tiap program. Satu hari max 1 item per slot,
-// jadi item bisa digabung dalam 1 hari kalau slot waktunya beda.
-const ITEM_SLOTS = {
-  "Ubud Tour": ["morning", "day"],
-  "East Bali Tour": ["morning", "day", "evening"],
-  "West Bali Tour": ["morning", "day", "evening"],
-  "South Bali Tour": ["morning", "day", "evening"],
-  "North Bali Tour": ["morning", "day", "evening"],
-  "Jeep Sunrise": ["morning"],
-  "Mount Batur Trekking": ["morning"],
-  ATV: ["day"],
-  Rafting: ["day"],
-  Swing: ["day"],
-  "Cooking Class": ["day"],
-  "Barong Dance": ["day"],
-  "Kecak Dance": ["evening"]
-};
-const SLOT_LABEL = { morning: "Morning", day: "Daytime", evening: "Evening" };
-
-function carPrice(base, guests) {
-  const mult = guests > 5 ? 2 : 1;
-  return { usd: base.usd * mult, idr: base.idr * mult };
-}
-// cari kategori & harga sebuah program dari struktur prices
-function itemInfo(name) {
-  for (const cat of ["tour", "experience", "performance"]) {
-    if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
-  }
-  return null;
-}
-
-function itnLoad() {
-  try {
-    const s = JSON.parse(localStorage.getItem(ITN_KEY));
-    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) return s;
-  } catch (e) {}
-  return { days: [], transfers: [] };
-}
-function itnSave(state) {
-  localStorage.setItem(ITN_KEY, JSON.stringify(state));
-  itnUpdateBadge(state);
-}
-function itnCount(state) {
-  const st = state || itnLoad();
-  let n = 0;
-  st.days.forEach((d) => (n += d.items.length));
-  return n + st.transfers.length;
-}
-function itnUpdateBadge(state) {
-  const n = itnCount(state);
-  document.querySelectorAll("[data-itn-badge]").forEach((b) => {
-    b.textContent = n;
-    b.hidden = n === 0;
-  });
-}
-function daySlotsUsed(d) {
-  const set = new Set();
-  d.items.forEach((n) => (ITEM_SLOTS[n] || []).forEach((s) => set.add(s)));
-  return set;
-}
-function fitsDay(d, name) {
-  const used = daySlotsUsed(d);
-  return (ITEM_SLOTS[name] || []).every((s) => !used.has(s));
-}
-function newItnDay() {
-  return { items: [], date: "", guests: "", pickup: "", dropoff: "" };
-}
-// Tambah 1 program ke store. Masuk ke hari terakhir kalau slotnya cukup,
-// kalau nggak muat -> bikin hari baru. Return true kalau berhasil.
-function itnAddItem(name) {
-  if (!ITEM_SLOTS[name]) return false;
-  const st = itnLoad();
-  const last = st.days[st.days.length - 1];
-  let target;
-  if (last && fitsDay(last, name)) target = last;
-  else {
-    target = newItnDay();
-    st.days.push(target);
-  }
-  target.items.push(name);
-  itnSave(st);
-  return true;
-}
-// Tambah 1 transfer/journey ke store. Toleran beda tanda hubung (- vs –).
-function itnAddTransfer(route) {
-  let key = prices.transfer[route] ? route : null;
-  if (!key) {
-    const norm = (s) => s.replace(/[–—-]/g, "-");
-    key = Object.keys(prices.transfer).find((k) => norm(k) === norm(route)) || null;
-  }
-  if (!key) return false;
-  const st = itnLoad();
-  st.transfers.push({
-    route: key,
-    direction: "to",
-    pickup: "",
-    dropoff: "",
-    date: "",
-    guests: ""
-  });
-  itnSave(st);
-  return true;
-}
-/* ==================== SECTION: BOOKING FORM - pilih service, harga live, popup konfirmasi ==================== */
 
 function initBooking() {
   const bookNowBtn = document.getElementById("book-now");
@@ -533,9 +456,6 @@ function initBooking() {
   if (presetItem) { serviceItemSelect.value = presetItem; serviceItemSelect.dispatchEvent(new Event("change")); }
 }
 
-
-/* ==================== SECTION: ACTIVITIES SLIDER - homepage ==================== */
-
 function initSlider() {
   const slider = document.getElementById("slider");
   if (!slider) return;
@@ -560,15 +480,37 @@ function initSlider() {
   setInterval(() => show((current + 1) % slides.length), 5000);
 }
 
-/* ==================== SECTION: ACCORDION - route transfer / FAQ ==================== */
+// Panah kiri/kanan buat slider Tour Programs (muncul pas hover, desktop)
+function initTourSlider() {
+  document.querySelectorAll(".experience__grid--slider").forEach((slider) => {
+    if (slider.parentElement.classList.contains("slider-holder")) return;
+    const holder = document.createElement("div");
+    holder.className = "slider-holder";
+    slider.parentNode.insertBefore(holder, slider);
+    holder.appendChild(slider);
+
+    const makeArrow = (dir, label, glyph) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "slider-arrow slider-arrow--" + dir;
+      b.setAttribute("aria-label", label);
+      b.innerHTML = glyph;
+      b.addEventListener("click", () => {
+        const dist = slider.clientWidth * 0.8;
+        slider.scrollBy({ left: dir === "prev" ? -dist : dist, behavior: "smooth" });
+      });
+      return b;
+    };
+    holder.appendChild(makeArrow("prev", "Previous", "&lsaquo;"));
+    holder.appendChild(makeArrow("next", "Next", "&rsaquo;"));
+  });
+}
 
 function initAccordion() {
   const routeHeads = document.querySelectorAll(".route__head");
   if (!routeHeads.length) return;
   routeHeads.forEach((head) => head.addEventListener("click", () => head.parentElement.classList.toggle("active")));
 }
-
-/* ==================== SECTION: CONTACT FORM ==================== */
 
 function initContact() {
   const sendBtn = document.getElementById("c-send");
@@ -599,137 +541,12 @@ function initContact() {
   });
 }
 
-// Isi semua link [data-wa] dengan nomor WhatsApp (satu sumber: WHATSAPP_NUMBER)
-/* ==================== SECTION: WHATSAPP - isi link + tombol ngambang Talk with Wayan ==================== */
-
-function initWhatsApp() {
-  const num = String(WHATSAPP_NUMBER).replace(/[^0-9]/g, "");
-  const msg = encodeURIComponent("Hi Cahyana, I have a question about your tours.");
-  document.querySelectorAll("[data-wa]").forEach((a) => {
-    a.href = "https://wa.me/" + num + "?text=" + msg;
-  });
-
-  // Tombol WhatsApp ngambang di pojok kanan bawah (semua halaman KECUALI
-  // halaman itinerary, biar nggak numpuk sama katalog floating di mobile)
-  const onItinerary = !!document.getElementById("itn-days");
-  if (!onItinerary && !document.querySelector(".wa-float")) {
-    const wa = document.createElement("a");
-    wa.className = "wa-float";
-    wa.href =
-      "https://wa.me/" +
-      num +
-      "?text=" +
-      encodeURIComponent("Hi Wayan, I'd like to plan a trip.");
-    wa.target = "_blank";
-    wa.rel = "noopener";
-    wa.setAttribute("aria-label", "Talk with Wayan on WhatsApp");
-    wa.innerHTML =
-      '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.1 7.9L.5 31.5l7.8-2c2.3 1.3 5 1.9 7.7 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.9-.7-7-1.9l-.5-.3-4.6 1.2 1.2-4.5-.3-.5C3.6 20.6 2.9 18.3 2.9 16 2.9 8.8 8.8 2.9 16 2.9c7.2 0 13.1 5.9 13.1 13.1S23.2 28.8 16 28.8zm7.2-9.6c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.7h-.7c-.2 0-.6.1-.9.5-.3.4-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.2 2.4 3.7 5.8 5.1.8.3 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-1 2.3-1.9.3-.9.3-1.7.2-1.9-.1-.1-.3-.2-.7-.4z"/></svg><span class="wa-float__text">Talk with Wayan</span>';
-    document.body.appendChild(wa);
-  }
-}
-
-// Generic popup handling: [data-open="id"] opens, .modal__close / [data-close] / backdrop closes
-/* ==================== SECTION: MODAL / POPUP generic (data-open / data-close) ==================== */
-
-function initModals() {
-  document.querySelectorAll("[data-open]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const m = document.getElementById(btn.dataset.open);
-      if (m) m.classList.add("active");
-    });
-  });
-  document.querySelectorAll(".modal").forEach((modal) => {
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal || e.target.closest("[data-close]")) modal.classList.remove("active");
-    });
-  });
-}
-
-// Guest review form (inside the write-review popup)
-/* ==================== SECTION: REVIEWS - form kirim review ==================== */
-
-function initReviews() {
-  const sendBtn = document.getElementById("rv-send");
-  if (!sendBtn) return;
-
-  const form = document.getElementById("review-form");
-  const success = document.getElementById("review-success");
-  const nameField = document.getElementById("rv-name");
-  const emailField = document.getElementById("rv-email");
-  const serviceField = document.getElementById("rv-service");
-  const driverField = document.getElementById("rv-driver");
-  const messageField = document.getElementById("rv-message");
-  const stars = document.querySelectorAll("#rv-rating .rating__star");
-
-  let rating = 0;
-
-  stars.forEach((star) => {
-    star.addEventListener("click", () => {
-      rating = parseInt(star.dataset.value);
-      stars.forEach((s) => s.classList.toggle("active", parseInt(s.dataset.value) <= rating));
-    });
-  });
-
-  sendBtn.addEventListener("click", () => {
-    if (!nameField.value.trim()) { alert("Please enter your name."); return; }
-    if (!/^\S+@\S+\.\S+$/.test(emailField.value.trim())) { alert("Please enter a valid email address."); return; }
-    if (!serviceField.value) { alert("Please select which service you used."); return; }
-    if (!rating) { alert("Please give a star rating."); return; }
-    if (!messageField.value.trim()) { alert("Please write your review."); return; }
-
-    const data = new URLSearchParams({
-      type: "review",
-      name: nameField.value,
-      email: emailField.value,
-      service: serviceField.value,
-      driver: driverField ? driverField.value : "",
-      rating: String(rating),
-      message: messageField.value
-    });
-    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-
-    form.style.display = "none";
-    success.style.display = "block";
-  });
-}
-
-// Driver cards: click a card to open its profile popup (description + its reviews)
-/* ==================== SECTION: DRIVERS - popup profil driver ==================== */
-
-function initDrivers() {
-  const cards = document.querySelectorAll(".driver-card");
-  if (!cards.length) return;
-
-  const modal = document.getElementById("driver-modal");
-  if (!modal) return;
-  const mName = document.getElementById("driver-modal-name");
-  const mTagline = document.getElementById("driver-modal-tagline");
-  const mRating = document.getElementById("driver-modal-rating");
-  const mDesc = document.getElementById("driver-modal-desc");
-  const mReviews = document.getElementById("driver-modal-reviews");
-
-  cards.forEach((card) => {
-    card.addEventListener("click", () => {
-      const detail = card.querySelector(".driver-card__detail");
-      mName.textContent = card.dataset.name || "";
-      mTagline.textContent = card.dataset.tagline || "";
-      mRating.innerHTML = card.querySelector(".driver-card__rating").innerHTML;
-      mDesc.textContent = detail ? (detail.dataset.desc || "") : "";
-      mReviews.innerHTML = detail ? detail.querySelector(".driver-detail__reviews").innerHTML : "";
-      modal.classList.add("active");
-    });
-  });
-}
-
 function initItinerary() {
   const daysWrap = document.getElementById("itn-days");
   if (!daysWrap) return;
 
   let state = itnLoad();
   const save = () => itnSave(state);
-  const slotLabel = (name) =>
-    (ITEM_SLOTS[name] || []).map((s) => SLOT_LABEL[s]).join(" + ");
 
   // ---------- pricing ----------
   function dayPrice(d) {
@@ -788,7 +605,6 @@ function initItinerary() {
       ? d.items
           .map(
             (name, idx) => `<li class="itn-day__item">
-              <span class="itn-day__item-slot">${slotLabel(name)}</span>
               <span class="itn-day__item-name">${name}</span>
               <button class="itn-day__item-rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
             </li>`
@@ -942,6 +758,7 @@ function initItinerary() {
     renderTransfers();
     renderSummary();
   }
+  window.__itnRerender = rerender; // biar ganti currency bisa re-render itinerary
 
   // ---------- tombol Add -> popup pilih kategori ----------
   const pickModal = document.getElementById("itn-pick-modal");
@@ -1068,3 +885,397 @@ function initItinerary() {
 
   rerender();
 }
+
+// Generic popup handling: [data-open="id"] opens, .modal__close / [data-close] / backdrop closes
+function initModals() {
+  document.querySelectorAll("[data-open]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const m = document.getElementById(btn.dataset.open);
+      if (m) m.classList.add("active");
+    });
+  });
+  document.querySelectorAll(".modal").forEach((modal) => {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal || e.target.closest("[data-close]")) modal.classList.remove("active");
+    });
+  });
+}
+
+// Guest review form (inside the write-review popup)
+function initReviews() {
+  const sendBtn = document.getElementById("rv-send");
+  if (!sendBtn) return;
+
+  const form = document.getElementById("review-form");
+  const success = document.getElementById("review-success");
+  const nameField = document.getElementById("rv-name");
+  const emailField = document.getElementById("rv-email");
+  const serviceField = document.getElementById("rv-service");
+  const driverField = document.getElementById("rv-driver");
+  const messageField = document.getElementById("rv-message");
+  const stars = document.querySelectorAll("#rv-rating .rating__star");
+
+  let rating = 0;
+
+  stars.forEach((star) => {
+    star.addEventListener("click", () => {
+      rating = parseInt(star.dataset.value);
+      stars.forEach((s) => s.classList.toggle("active", parseInt(s.dataset.value) <= rating));
+    });
+  });
+
+  sendBtn.addEventListener("click", () => {
+    if (!nameField.value.trim()) { alert("Please enter your name."); return; }
+    if (!/^\S+@\S+\.\S+$/.test(emailField.value.trim())) { alert("Please enter a valid email address."); return; }
+    if (!serviceField.value) { alert("Please select which service you used."); return; }
+    if (!rating) { alert("Please give a star rating."); return; }
+    if (!messageField.value.trim()) { alert("Please write your review."); return; }
+
+    const data = new URLSearchParams({
+      type: "review",
+      name: nameField.value,
+      email: emailField.value,
+      service: serviceField.value,
+      driver: driverField ? driverField.value : "",
+      rating: String(rating),
+      message: messageField.value
+    });
+    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
+
+    form.style.display = "none";
+    success.style.display = "block";
+  });
+}
+
+// Driver cards: click a card to open its profile popup (description + its reviews)
+function initDrivers() {
+  const cards = document.querySelectorAll(".driver-card");
+  if (!cards.length) return;
+
+  const modal = document.getElementById("driver-modal");
+  if (!modal) return;
+  const mName = document.getElementById("driver-modal-name");
+  const mTagline = document.getElementById("driver-modal-tagline");
+  const mRating = document.getElementById("driver-modal-rating");
+  const mDesc = document.getElementById("driver-modal-desc");
+  const mReviews = document.getElementById("driver-modal-reviews");
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const detail = card.querySelector(".driver-card__detail");
+      mName.textContent = card.dataset.name || "";
+      mTagline.textContent = card.dataset.tagline || "";
+      mRating.innerHTML = card.querySelector(".driver-card__rating").innerHTML;
+      mDesc.textContent = detail ? (detail.dataset.desc || "") : "";
+      mReviews.innerHTML = detail ? detail.querySelector(".driver-detail__reviews").innerHTML : "";
+      modal.classList.add("active");
+    });
+  });
+}
+
+// Isi semua link [data-wa] dengan nomor WhatsApp (satu sumber: WHATSAPP_NUMBER)
+function initWhatsApp() {
+  const num = String(WHATSAPP_NUMBER).replace(/[^0-9]/g, "");
+  const msg = encodeURIComponent("Hi Cahyana, I have a question about your tours.");
+  document.querySelectorAll("[data-wa]").forEach((a) => {
+    a.href = "https://wa.me/" + num + "?text=" + msg;
+  });
+
+  // Tombol WhatsApp ngambang di pojok kanan bawah (semua halaman KECUALI
+  // halaman itinerary, biar nggak numpuk sama katalog floating di mobile)
+  const onItinerary = !!document.getElementById("itn-days");
+  if (!onItinerary && !document.querySelector(".wa-float")) {
+    const wa = document.createElement("a");
+    wa.className = "wa-float";
+    wa.href =
+      "https://wa.me/" +
+      num +
+      "?text=" +
+      encodeURIComponent("Hi Wayan, I'd like to plan a trip.");
+    wa.target = "_blank";
+    wa.rel = "noopener";
+    wa.setAttribute("aria-label", "Talk with Wayan on WhatsApp");
+    wa.innerHTML =
+      '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.1 7.9L.5 31.5l7.8-2c2.3 1.3 5 1.9 7.7 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.9-.7-7-1.9l-.5-.3-4.6 1.2 1.2-4.5-.3-.5C3.6 20.6 2.9 18.3 2.9 16 2.9 8.8 8.8 2.9 16 2.9c7.2 0 13.1 5.9 13.1 13.1S23.2 28.8 16 28.8zm7.2-9.6c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.7h-.7c-.2 0-.6.1-.9.5-.3.4-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.2 2.4 3.7 5.8 5.1.8.3 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-1 2.3-1.9.3-.9.3-1.7.2-1.9-.1-.1-.3-.2-.7-.4z"/></svg><span class="wa-float__text">Talk with Wayan</span>';
+    document.body.appendChild(wa);
+  }
+}
+
+// Card & judul muncul (fade + naik) pas ke-scroll masuk layar.
+// Class ditambah dari sini, jadi kalau JS mati semua elemen tetap tampil.
+function initReveal() {
+  const selectors = [
+    ".experience__card",
+    ".villa__card",
+    ".review-card",
+    ".driver-card",
+    ".stop",
+    ".info__fact",
+    ".about__content",
+    ".faq__item",
+    ".section__title"
+  ];
+  const els = document.querySelectorAll(selectors.join(","));
+  if (!els.length || !("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add("is-visible");
+        observer.unobserve(el);
+        // Buang lagi class reveal setelah animasi kelar, biar hover
+        // pakai transisi milik card-nya sendiri (bukan transisi reveal).
+        setTimeout(() => {
+          el.classList.remove("reveal", "is-visible");
+          el.style.transitionDelay = "";
+        }, 900);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  // Stagger: elemen sebaris/segrup muncul berurutan, bukan barengan.
+  const groupCount = new Map();
+  els.forEach((el) => {
+    if (el.closest(".modal")) return; // lewati isi popup (biar nggak ke-stuck hidden)
+    const parent = el.parentElement;
+    const idx = groupCount.get(parent) || 0;
+    groupCount.set(parent, idx + 1);
+    el.style.transitionDelay = Math.min(idx, 5) * 0.07 + "s";
+    el.classList.add("reveal");
+    observer.observe(el);
+  });
+}
+
+// Tiap card (a) badan card bisa diklik -> halaman detail,
+// (b) ada tombol "Add to itinerary" yang nambah program ke store.
+function initItineraryButtons() {
+  document.querySelectorAll(".experience__card").forEach((card) => {
+    const link = card.querySelector("a[href]");
+    const href = link ? link.getAttribute("href") : null;
+    const hasPage = href && PAGE_ITEM[href];
+    // item dari halaman detail (via arrow) ATAU dari data-program (combo tanpa detail)
+    const item = hasPage ? PAGE_ITEM[href] : card.dataset.program;
+    if (!item) return;
+
+    // (a) kalau punya halaman detail: badan card clickable, arrow dibuang
+    if (hasPage) {
+      link.remove();
+      card.classList.add("card-clickable");
+      card.addEventListener("click", (e) => {
+        if (e.target.closest(".card-add")) return;
+        window.location.href = href;
+      });
+    }
+
+    // (b) tombol Add to itinerary
+    const body = card.querySelector(".experience__body") || card;
+    if (!body.querySelector(".card-add")) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "card-add";
+      btn.textContent = "+ Add to itinerary";
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (itnAddItem(item)) showAddedPopup();
+      });
+      body.appendChild(btn);
+    }
+  });
+
+  // Tombol Add to itinerary eksplisit (highlight card, dsb.)
+  document.querySelectorAll("[data-add-item]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (itnAddItem(btn.dataset.addItem)) showAddedPopup();
+    });
+  });
+  document.querySelectorAll("[data-add-transfer]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (itnAddTransfer(btn.dataset.addTransfer)) showAddedPopup();
+    });
+  });
+
+  // transfer.html: tombol "Add to itinerary" di DALAM accordion (bawah harga)
+  document.querySelectorAll(".route__item").forEach((item) => {
+    const priceBox = item.querySelector(".route__price");
+    if (!priceBox || priceBox.querySelector(".route__add")) return;
+    const label = item.querySelector(".route__head span");
+    if (!label) return;
+    const route = label.textContent.trim();
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "route__add";
+    btn.textContent = "+ Add to itinerary";
+    btn.addEventListener("click", () => {
+      if (itnAddTransfer(route)) showAddedPopup();
+    });
+    priceBox.appendChild(btn);
+  });
+}
+
+function initCharter() {
+  const pickup = document.getElementById("ch-pickup");
+  if (!pickup) return; // bukan halaman charter
+
+  // isi pickup: Ubud (tanpa surcharge) + area transfer (luar Ubud)
+  ["Ubud", ...Object.keys(prices.transfer).map((r) => r.replace(" – Ubud", ""))].forEach(
+    (a) => pickup.add(new Option(a, a))
+  );
+  const guestsEl = document.getElementById("ch-guests");
+  for (let n = 1; n <= 10; n++) guestsEl.add(new Option(n, n));
+
+  const durBtns = document.querySelectorAll(".chdur");
+  const extraWrap = document.getElementById("ch-extra-wrap");
+  const extraInput = document.getElementById("ch-extra");
+  const dateEl = document.getElementById("ch-date");
+  const bookBtn = document.getElementById("ch-book");
+  const st = { dur: "" };
+
+  const outside = () => pickup.value && pickup.value !== "Ubud";
+  function base(key) {
+    if (key === "half") return { usd: CHARTER.half.usd, idr: CHARTER.half.idr };
+    if (key === "full") return { usd: CHARTER.full.usd, idr: CHARTER.full.idr };
+    const e = parseInt(extraInput.value) || 1;
+    return {
+      usd: CHARTER.full.usd + e * CHARTER.extHourUsd,
+      idr: CHARTER.full.idr + e * CHARTER.extHourIdr
+    };
+  }
+  const withSurcharge = (b) =>
+    outside()
+      ? { usd: b.usd + CHARTER.surchargeUsd, idr: b.idr + CHARTER.surchargeIdr }
+      : b;
+
+  function renderCharter() {
+    document.querySelectorAll("[data-ch]").forEach((el) => {
+      const p = withSurcharge(base(el.dataset.ch));
+      el.textContent = fmtMoney(p.usd, p.idr);
+    });
+    const totalBox = document.getElementById("ch-total");
+    if (st.dur) {
+      const p = withSurcharge(base(st.dur));
+      totalBox.innerHTML = priceHTML(p.usd, p.idr);
+    } else {
+      totalBox.innerHTML = '<span class="price-cur">-</span>';
+    }
+    bookBtn.disabled = !(pickup.value && st.dur && dateEl.value && guestsEl.value);
+  }
+  window.__chRefresh = renderCharter; // ikut update pas ganti currency
+
+  pickup.addEventListener("change", () => {
+    durBtns.forEach((b) => (b.disabled = false));
+    renderCharter();
+  });
+  durBtns.forEach((b) =>
+    b.addEventListener("click", () => {
+      if (b.disabled) return;
+      st.dur = b.dataset.dur;
+      durBtns.forEach((x) => x.classList.toggle("active", x === b));
+      extraWrap.hidden = st.dur !== "extended";
+      renderCharter();
+    })
+  );
+  extraInput.addEventListener("input", renderCharter);
+  dateEl.addEventListener("change", renderCharter);
+  guestsEl.addEventListener("change", renderCharter);
+
+  // popup konfirmasi + booking
+  const modal = document.getElementById("ch-modal");
+  const form = document.getElementById("ch-form");
+  const success = document.getElementById("ch-success");
+  bookBtn.addEventListener("click", () => {
+    const p = withSurcharge(base(st.dur));
+    const label =
+      st.dur === "half"
+        ? "Half Day (5h)"
+        : st.dur === "full"
+          ? "Full Day (10h)"
+          : `Extended (10h + ${parseInt(extraInput.value) || 1}h)`;
+    document.getElementById("ch-summary").innerHTML =
+      `<div class="modal__row"><span>Charter</span><span>${label}</span></div>` +
+      `<div class="modal__row"><span>Pick-up</span><span>${pickup.value}</span></div>` +
+      `<div class="modal__row"><span>Date</span><span>${dateEl.value}</span></div>` +
+      `<div class="modal__row"><span>Guests</span><span>${guestsEl.value} pax</span></div>` +
+      `<div class="modal__row"><span>Total</span><span>${fmtMoney(p.usd, p.idr)}</span></div>`;
+    modal.classList.add("active");
+  });
+  const reset = () => {
+    modal.classList.remove("active");
+    form.style.display = "block";
+    success.style.display = "none";
+  };
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest("[data-close]")) reset();
+  });
+  document.getElementById("ch-done").addEventListener("click", reset);
+  document.getElementById("ch-submit").addEventListener("click", () => {
+    const name = document.getElementById("ch-name"),
+      phone = document.getElementById("ch-phone"),
+      email = document.getElementById("ch-email");
+    if (!name.value.trim()) return alert("Please enter your name.");
+    if (!phone.value.trim()) return alert("Please enter your phone number.");
+    if (!/^\S+@\S+\.\S+$/.test(email.value.trim()))
+      return alert("Please enter a valid email address.");
+    const p = withSurcharge(base(st.dur));
+    const data = new URLSearchParams({
+      type: "charter",
+      name: name.value,
+      phone: phone.value,
+      email: email.value,
+      pickup: pickup.value,
+      dropoff: document.getElementById("ch-drop").value,
+      date: dateEl.value,
+      guests: guestsEl.value,
+      service: "Charter " + st.dur,
+      price: `USD ${p.usd} / IDR ${p.idr.toLocaleString("id-ID")}`
+    });
+    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
+    form.style.display = "none";
+    success.style.display = "block";
+  });
+
+  renderCharter();
+}
+
+// Wiring selector currency (navbar desktop + mobile) + render harga awal
+function initCurrency() {
+  const sels = document.querySelectorAll("[data-cur-select]");
+  sels.forEach((sel) => {
+    sel.value = currentCurrency;
+    sel.addEventListener("change", () => {
+      setCurrency(sel.value);
+      document
+        .querySelectorAll("[data-cur-select]")
+        .forEach((s) => (s.value = currentCurrency));
+    });
+  });
+  renderPrices();
+}
+
+/* ==================== 5. APP ENTRY ==================== */
+
+async function initPage() {
+  await loadPartials();
+  initNavbar();
+  initBooking();
+  initSlider();
+  initTourSlider();
+  initAccordion();
+  initContact();
+  initItinerary();
+  initModals();
+  initReviews();
+  initDrivers();
+  initWhatsApp();
+  initReveal();
+  itnUpdateBadge();
+  initItineraryButtons();
+  initCharter();
+  initCurrency();
+}
+
+document.addEventListener("DOMContentLoaded", initPage);

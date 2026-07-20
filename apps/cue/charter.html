@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
+    <title>Private Car Charter in Bali from Ubud | Half & Full Day - Cahyana Ubud Experience</title>
+    <meta name="description" content="Charter a private car with driver in Bali from Ubud - half day (5 hours) or full day (10 hours), extend by the hour, petrol included. Pick-up from anywhere on the island." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=17" />
+    <link rel="canonical" href="https://cahyanaubudexperience.com/charter.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cahyana Ubud Experience" />
+    <meta property="og:title" content="Private Car Charter in Bali from Ubud - Cahyana Ubud Experience" />
+    <meta property="og:description" content="Charter a private car with driver in Bali - half or full day, extend by the hour, petrol included." />
+    <meta property="og:url" content="https://cahyanaubudexperience.com/charter.html" />
+    <meta property="og:image" content="https://cahyanaubudexperience.com/assets/icons/preview.png" />
+    <meta property="og:image:width" content="1000" />
+    <meta property="og:image:height" content="420" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <section class="subhero subhero--overlap subhero--tour">
+      <div class="subhero__content">
+        <h1 class="subhero__title">Private Car Charter</h1>
+        <p class="subhero__text">
+          Your own car and local driver for the day - go anywhere, stop anywhere,
+          at your own pace. Choose a half or full day, extend by the hour, petrol
+          included.
+        </p>
+      </div>
+    </section>
+
+    <section class="charter" id="charter">
+      <h2 class="section__title">Build Your Charter</h2>
+      <p class="builder__intro">
+        Pick your pick-up area first, then choose how long you need the car.
+        Live pricing, only a 10% deposit to book.
+      </p>
+
+      <div class="charter__box">
+        <!-- Step 1: pickup -->
+        <div class="charter__step">
+          <label class="charter__label" for="ch-pickup">1. Pick-up area</label>
+          <select class="charter__select" id="ch-pickup">
+            <option value="" disabled selected>Select your pick-up area</option>
+          </select>
+          <p class="charter__hint" id="ch-pickup-hint">
+            Pick-up outside Ubud adds a small surcharge.
+          </p>
+        </div>
+
+        <!-- Step 2: duration cards (locked until pickup chosen) -->
+        <div class="charter__step">
+          <label class="charter__label">2. How long do you need the car?</label>
+          <div class="charter__durations" id="ch-durations">
+            <button class="chdur" type="button" data-dur="half" disabled>
+              <span class="chdur__name">Half Day</span>
+              <span class="chdur__sub">5 hours</span>
+              <span class="chdur__price price" data-ch="half"></span>
+            </button>
+            <button class="chdur" type="button" data-dur="full" disabled>
+              <span class="chdur__name">Full Day</span>
+              <span class="chdur__sub">10 hours</span>
+              <span class="chdur__price price" data-ch="full"></span>
+            </button>
+            <button class="chdur" type="button" data-dur="extended" disabled>
+              <span class="chdur__name">Extended</span>
+              <span class="chdur__sub">Full day + extra hours</span>
+              <span class="chdur__price price" data-ch="extended"></span>
+            </button>
+          </div>
+          <div class="charter__extra" id="ch-extra-wrap" hidden>
+            <label class="charter__label" for="ch-extra">Extra hours after 10</label>
+            <input type="number" class="charter__select" id="ch-extra" min="1" max="6" value="1" />
+          </div>
+        </div>
+
+        <!-- Step 3: date + guests -->
+        <div class="charter__step charter__fields">
+          <div class="field">
+            <label class="charter__label" for="ch-date">Date</label>
+            <input type="date" class="charter__select" id="ch-date" />
+          </div>
+          <div class="field">
+            <label class="charter__label" for="ch-guests">Guests</label>
+            <select class="charter__select" id="ch-guests">
+              <option value="" disabled selected>Guests</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- total + book -->
+        <div class="charter__total">
+          <span>Total</span>
+          <span class="amount" id="ch-total"><span class="price-cur">-</span></span>
+        </div>
+        <button class="btn-book" id="ch-book" disabled>Book This Charter</button>
+      </div>
+
+      <!-- info notes -->
+      <div class="charter__notes">
+        <h3 class="itn__subtitle">Good to know</h3>
+        <ul class="info__list info__list--yes">
+          <li>Petrol, driver, and parking all included</li>
+          <li>Price is per car - up to 5 passengers</li>
+          <li>Half day covers roughly a 60 km range, full day roughly 120 km</li>
+          <li>Entrance tickets and meals are not included</li>
+          <li>Extend on the day if you need more time - just pay the hourly rate</li>
+          <li>Book now, pay after - only a 10% deposit to confirm</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Popup: konfirmasi + booking -->
+    <div class="modal" id="ch-modal">
+      <div class="modal__box">
+        <button class="modal__close" data-close aria-label="Close">&times;</button>
+        <div id="ch-form">
+          <h3 class="modal__title">Confirm Your Charter</h3>
+          <div class="modal__summary" id="ch-summary"></div>
+          <div class="modal__group"><label for="ch-name">Your Name</label><input type="text" id="ch-name" placeholder="Enter your name" /></div>
+          <div class="modal__group"><label for="ch-phone">Phone Number</label><input type="tel" id="ch-phone" placeholder="e.g. +61 412 345 678" /></div>
+          <div class="modal__group"><label for="ch-email">Email</label><input type="email" id="ch-email" placeholder="you@email.com" /></div>
+          <div class="modal__group"><label for="ch-drop">Where to?</label><input type="text" id="ch-drop" placeholder="Where do you want to go? (optional)" /></div>
+          <button class="modal__btn" id="ch-submit">Book Now</button>
+          <button class="modal__btn modal__btn--wa" id="ch-wa" data-wa>Discuss via WhatsApp</button>
+        </div>
+        <div class="modal__success" id="ch-success">
+          <div class="modal__success-icon">&check;</div>
+          <h3 class="modal__title">Charter Received!</h3>
+          <p>Thank you. We will email you shortly to confirm your charter.</p>
+          <button class="modal__btn" id="ch-done">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="script.js?v=17"></script>
+  </body>
+</html>

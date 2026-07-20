@@ -3,16 +3,27 @@
     <a href="index.html" class="navbar__logo">
       <img src="assets/images/logo.webp" alt="The Cahyana Logo" />
     </a>
+    <select class="cur-select" data-cur-select aria-label="Currency">
+      <option value="USD">USD</option>
+      <option value="IDR">IDR</option>
+      <option value="AUD">AUD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+    </select>
     <nav>
       <ul class="navbar__menu" id="nav-menu">
         <li><a href="index.html">Home</a></li>
         <li><a href="itinerary.html" class="nav-itn">Itinerary<span class="itn-badge" data-itn-badge hidden>0</span></a></li>
-        <li><a href="tour.html">Tours</a></li>
-        <li><a href="activities.html">Experiences</a></li>
-        <li><a href="transfer.html">Transfer</a></li>
+        <li class="navbar__has-drop">
+          <button type="button" class="navbar__droptoggle" aria-expanded="false">Program<span class="navbar__caret">&rsaquo;</span></button>
+          <ul class="navbar__drop">
+            <li><a href="tour.html">Tours</a></li>
+            <li><a href="activities.html">Experiences</a></li>
+            <li><a href="transfer.html">Transfer</a></li>
+            <li><a href="charter.html">Charter</a></li>
+          </ul>
+        </li>
         <li><a href="about-us.html">About</a></li>
-        <!--<li><a href="contact.html">Contact</a></li>-->
-        <!--<li><a href="tour.html#booking" class="navbar__book">Book Now</a></li>-->
       </ul>
     </nav>
     <button class="navbar__toggle" id="hamburger" aria-label="Open menu">

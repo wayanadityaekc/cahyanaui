@@ -339,6 +339,30 @@ function showSameDayWa(guests, service, date) {
   m.classList.add("active");
 }
 
+// Popup tanggal lampau (booking & itinerary) - pengganti alert
+function showPastDate() {
+  let m = document.getElementById("past-date-modal");
+  if (!m) {
+    m = document.createElement("div");
+    m.className = "modal";
+    m.id = "past-date-modal";
+    m.innerHTML =
+      '<div class="modal__box modal__box--sm">' +
+      '<h3 class="modal__title">Pick an upcoming date</h3>' +
+      '<p class="modal__sub">That date has already passed. Please choose a date from today onwards.</p>' +
+      '<button class="modal__btn" id="past-date-ok">OK</button>' +
+      "</div>";
+    document.body.appendChild(m);
+    m.addEventListener("click", (e) => {
+      if (e.target === m) m.classList.remove("active");
+    });
+    m.querySelector("#past-date-ok").addEventListener("click", () =>
+      m.classList.remove("active")
+    );
+  }
+  m.classList.add("active");
+}
+
 /* ==================== 3. PARTIALS LOADER ==================== */
 
 async function loadPartials() {
@@ -487,7 +511,7 @@ function initBooking() {
   bookNowBtn.addEventListener("click", () => {
     if (!guestField.value || !serviceItemSelect.value || !dateField.value) { alert("Please choose guests, a service, and a date first."); return; }
     const today = todayStr();
-    if (dateField.value < today) { alert("Please choose a date from today onwards."); return; }
+    if (dateField.value < today) { showPastDate(); return; }
     if (dateField.value === today) { showSameDayWa(guestField.value, serviceItemSelect.value, dateField.value); return; }
     sumGuest.textContent = guestField.value;
     sumService.textContent = serviceItemSelect.value;
@@ -717,7 +741,7 @@ function initItinerary() {
       </div>
       <ul class="itn-day__items">${itemsHTML}</ul>
       <div class="itn-day__fields">
-        <div class="field"><label>Date</label><input type="date" class="f-date" value="${d.date}" /></div>
+        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${d.date}" /></div>
         <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
         <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
         <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
@@ -738,6 +762,11 @@ function initItinerary() {
       rerender();
     });
     card.querySelector(".f-date").addEventListener("change", (e) => {
+      if (e.target.value && e.target.value < todayStr()) {
+        showPastDate();
+        e.target.value = d.date || ""; // balikin ke nilai valid sebelumnya
+        return;
+      }
       d.date = e.target.value;
       save();
       rerender();
@@ -786,7 +815,7 @@ function initItinerary() {
         <button class="dirbtn ${!toActive ? "active" : ""}" type="button" data-dir="from">Ubud → ${area}</button>
       </div>
       <div class="itn-day__fields">
-        <div class="field"><label>Date</label><input type="date" class="f-date" value="${tr.date}" /></div>
+        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${tr.date}" /></div>
         <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(tr.guests)}</select></div>
         <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${tr.pickup || ""}" /></div>
         <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${tr.dropoff || ""}" /></div>
@@ -806,6 +835,11 @@ function initItinerary() {
       rerender();
     });
     card.querySelector(".f-date").addEventListener("change", (e) => {
+      if (e.target.value && e.target.value < todayStr()) {
+        showPastDate();
+        e.target.value = tr.date || ""; // balikin ke nilai valid sebelumnya
+        return;
+      }
       tr.date = e.target.value;
       save();
       rerender();

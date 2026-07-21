@@ -249,6 +249,96 @@ function showAddedPopup() {
   m.classList.add("active");
 }
 
+// Hari ini format YYYY-MM-DD (waktu lokal, bukan UTC - hindari geser hari di Bali)
+function todayStr() {
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+// Popup konfirmasi kalau program yang sama udah pernah ditambah ke itinerary
+function showConfirmDuplicate(name, onConfirm) {
+  let m = document.getElementById("itn-dup-modal");
+  if (!m) {
+    m = document.createElement("div");
+    m.className = "modal";
+    m.id = "itn-dup-modal";
+    m.innerHTML =
+      '<div class="modal__box modal__box--sm">' +
+      '<h3 class="modal__title">Add this again?</h3>' +
+      '<p class="modal__sub" id="itn-dup-text"></p>' +
+      '<button class="modal__btn" id="itn-dup-yes">Add again</button>' +
+      '<button class="modal__btn modal__btn--ghost" id="itn-dup-no">Cancel</button>' +
+      "</div>";
+    document.body.appendChild(m);
+    m.addEventListener("click", (e) => {
+      if (e.target === m) m.classList.remove("active");
+    });
+    m.querySelector("#itn-dup-no").addEventListener("click", () =>
+      m.classList.remove("active")
+    );
+  }
+  m.querySelector("#itn-dup-text").textContent =
+    "You've already added " + name + " to your itinerary. Add it again anyway?";
+  // pasang ulang handler tiap tampil biar callback-nya selalu yang terbaru
+  m.querySelector("#itn-dup-yes").onclick = () => {
+    m.classList.remove("active");
+    onConfirm();
+  };
+  m.classList.add("active");
+}
+
+// Wrapper add: cek duplikat dulu, baru tambah + popup sukses
+function tryAddItem(name) {
+  const st = itnLoad();
+  if (st.days.some((d) => d.items.includes(name))) {
+    showConfirmDuplicate(name, () => {
+      if (itnAddItem(name)) showAddedPopup();
+    });
+    return;
+  }
+  if (itnAddItem(name)) showAddedPopup();
+}
+
+// Popup booking hari-ini: arahin ke WhatsApp biar konfirmasi lebih cepat
+function showSameDayWa(guests, service, date) {
+  let m = document.getElementById("same-day-modal");
+  if (!m) {
+    m = document.createElement("div");
+    m.className = "modal";
+    m.id = "same-day-modal";
+    m.innerHTML =
+      '<div class="modal__box modal__box--sm">' +
+      '<h3 class="modal__title">Booking for today?</h3>' +
+      '<p class="modal__sub">For same-day trips, please chat with us on WhatsApp so we can confirm faster.</p>' +
+      '<button class="modal__btn" id="same-day-wa">Chat via WhatsApp</button>' +
+      '<button class="modal__btn modal__btn--ghost" id="same-day-cancel">Cancel</button>' +
+      "</div>";
+    document.body.appendChild(m);
+    m.addEventListener("click", (e) => {
+      if (e.target === m) m.classList.remove("active");
+    });
+    m.querySelector("#same-day-cancel").addEventListener("click", () =>
+      m.classList.remove("active")
+    );
+  }
+  m.querySelector("#same-day-wa").onclick = () => {
+    const message =
+      "Hello, I'd like to book for today:\n" +
+      "Guests: " + guests + "\n" +
+      "Service: " + service + "\n" +
+      "Date: " + date + "\n" +
+      "Could we arrange this quickly?";
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+    m.classList.remove("active");
+  };
+  m.classList.add("active");
+}
+
 /* ==================== 3. PARTIALS LOADER ==================== */
 
 async function loadPartials() {
@@ -308,6 +398,7 @@ function initBooking() {
   const serviceSelect = document.getElementById("service");
   const serviceItemSelect = document.getElementById("service-item");
   const dateField = document.getElementById("date");
+  dateField.min = todayStr(); // blokir tanggal lampau di date picker
   const priceField = document.getElementById("price");
   const priceNote = document.getElementById("price-note");
 
@@ -395,6 +486,9 @@ function initBooking() {
 
   bookNowBtn.addEventListener("click", () => {
     if (!guestField.value || !serviceItemSelect.value || !dateField.value) { alert("Please choose guests, a service, and a date first."); return; }
+    const today = todayStr();
+    if (dateField.value < today) { alert("Please choose a date from today onwards."); return; }
+    if (dateField.value === today) { showSameDayWa(guestField.value, serviceItemSelect.value, dateField.value); return; }
     sumGuest.textContent = guestField.value;
     sumService.textContent = serviceItemSelect.value;
     sumDate.textContent = dateField.value;
@@ -1083,7 +1177,7 @@ function initItineraryButtons() {
       btn.textContent = "+ Add to itinerary";
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        if (itnAddItem(item)) showAddedPopup();
+        tryAddItem(item);
       });
       body.appendChild(btn);
     }
@@ -1093,7 +1187,7 @@ function initItineraryButtons() {
   document.querySelectorAll("[data-add-item]").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      if (itnAddItem(btn.dataset.addItem)) showAddedPopup();
+      tryAddItem(btn.dataset.addItem);
     });
   });
   document.querySelectorAll("[data-add-transfer]").forEach((btn) => {

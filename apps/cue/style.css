@@ -1535,16 +1535,8 @@ section + section::before,
   color: var(--color-gold);
 }
 .modal__pay {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ece7db;
+  margin: 1.1rem 0 1.35rem;
   text-align: center;
-}
-.modal__pay-note {
-  margin: 0 0 0.7rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
-  color: #6b6559;
 }
 .modal__pay-logos {
   display: flex;

@@ -1948,56 +1948,6 @@ section + section::before,
 .guide-panel.active {
   display: block;
 }
-.guide-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.guide-card {
-  display: block;
-  border: 1px solid #ece7db;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #fff;
-  text-decoration: none;
-  color: inherit;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-}
-.guide-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
-}
-.guide-card__img {
-  display: block;
-  aspect-ratio: 16 / 10;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-}
-.guide-card__body {
-  display: block;
-  padding: 0.9rem 1rem 1.1rem;
-}
-.guide-card__body h3 {
-  margin: 0 0 0.3rem;
-  font-family: var(--font-body);
-  font-size: 1.05rem;
-}
-.guide-card__body p {
-  margin: 0 0 0.6rem;
-  font-size: 0.82rem;
-  color: #7a7466;
-  line-height: 1.5;
-}
-.guide-card__more {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--color-gold);
-}
 /* Halaman artikel guide */
 .guide-article {
   max-width: 720px;

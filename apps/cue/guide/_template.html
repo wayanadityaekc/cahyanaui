@@ -4,8 +4,8 @@
   Cara nambah artikel baru:
   1. Copy file ini -> rename jadi guide/<slug>.html (contoh: guide/nusa-penida.html)
   2. Ganti semua yang di [ ... ] di bawah (judul, deskripsi, isi).
-  3. Buka bali-guide.html -> tambah 1 kartu <a class="guide-card"> di panel kategori
-     yang sesuai, href="guide/<slug>.html".
+  3. Buka bali-guide.html -> tambah 1 baris <a class="stop stop--link"> di panel
+     kategori yang sesuai (tiru struktur stop yang udah ada), href="guide/<slug>.html".
   Jangan lupa <base href="/"> tetap ada (biar path relatif ngitung dari root).
 -->
 <html lang="en">
@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css?v=25" />
+    <link rel="stylesheet" href="style.css?v=26" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/guide/[SLUG].html" />
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="Cahyana Ubud Experience" />
@@ -73,6 +73,6 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="script.js?v=25"></script>
+    <script src="script.js?v=26"></script>
   </body>
 </html>

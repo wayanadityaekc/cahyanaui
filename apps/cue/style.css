@@ -1866,6 +1866,34 @@ section + section::before,
   color: #b3261e;
 }
 
+/* Halaman attraction (stop): foto besar + teks di bagian About */
+.attraction-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 460px;
+  margin: 0 auto 1.75rem;
+  border-radius: 12px;
+  background-color: var(--color-green);
+  background-size: cover;
+  background-position: center;
+}
+.attraction-about {
+  max-width: 680px;
+  margin: 0 auto 1.1rem;
+  text-align: center;
+  line-height: 1.75;
+  color: #46453f;
+}
+/* Stop yang bisa diklik ke halaman attraction-nya */
+.stop--link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease;
+}
+.stop--link:hover {
+  transform: translateY(-3px);
+}
+
 /* Wrapping grid for pages with many cards (activities) */
 .experience__grid--auto {
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));

@@ -3,11 +3,13 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 19;
+const PARTIALS_VERSION = 21;
 
 const WHATSAPP_NUMBER = "61401657862";
 
 const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL";
+
+const API_ENDPOINT = "https://cahyana-api-production.up.railway.app/api/inquiry";
 
 const REFERRAL_CODE = "gowithcahyana";
 
@@ -369,6 +371,7 @@ async function loadPartials() {
   const partials = [
     { id: "navbar-placeholder", file: "partials/navbar.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
+    { id: "book-confirm-placeholder", file: "partials/book-confirm.html" },
     { id: "drivers-placeholder", file: "partials/drivers.html" },
     { id: "reviews-placeholder", file: "partials/reviews.html" },
     { id: "faq-placeholder", file: "partials/faq.html" },
@@ -414,6 +417,134 @@ function initNavbar() {
   });
 }
 
+// Modal konfirmasi booking - SATU buat semua flow (tour/experience/transfer/charter/itinerary).
+// Diisi & dibuka lewat window.__openBooking(opts); submit -> JSON ke backend (API_ENDPOINT).
+function initBookingConfirm() {
+  const modal = document.getElementById("booking-modal");
+  if (!modal) return;
+
+  const el = (id) => document.getElementById(id);
+  const modalForm = el("modal-form"), modalSuccess = el("modal-success");
+  const nameI = el("booker-name"), phoneI = el("booker-phone"), emailI = el("booker-email");
+  const pickupI = el("pickup"), pickupLabel = el("pickup-label");
+  const dropoffI = el("dropoff"), dropoffLabel = el("dropoff-label");
+  const referralI = el("referral"), applyRef = el("apply-referral"), refMsg = el("referral-msg");
+  const sumGuest = el("sum-guest"), sumService = el("sum-service"), sumDate = el("sum-date"), sumPrice = el("sum-price");
+  const modalDetails = el("modal-details"), detailsToggle = el("details-toggle"), detailsList = el("details-list");
+  const bookSubmit = el("book-submit"), discussWa = el("discuss-wa");
+  const modalClose = el("modal-close"), successClose = el("success-close");
+
+  let ctx = null; // konteks booking yang lagi dikonfirmasi
+
+  const renderInto = (elx, usd, idr) => { elx.innerHTML = priceHTML(usd, idr); };
+
+  // opts: { type, service, guests, date, price:{usd,idr}, pickup, pickupOptional,
+  //         dropoffRequired, referralEligible, detailLines, items }
+  window.__openBooking = function (o) {
+    ctx = { ...o, base: { ...o.price }, final: { ...o.price }, discount: false };
+    sumGuest.textContent = o.guests || "-";
+    sumService.textContent = o.service;
+    sumDate.textContent = o.date || "-";
+    renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+    nameI.value = ""; phoneI.value = ""; emailI.value = "";
+    pickupI.value = o.pickup || "";
+    dropoffI.value = "";
+    referralI.value = ""; refMsg.textContent = ""; refMsg.className = "modal__referral-msg";
+    pickupLabel.textContent = o.pickupOptional ? "Pick-up Location (optional)" : "Pick-up Location";
+    dropoffLabel.textContent = o.dropoffRequired ? "Drop-off Location" : "Drop-off Location (optional)";
+    if (o.detailLines && o.detailLines.length) {
+      detailsList.innerHTML = "";
+      o.detailLines.forEach((line) => {
+        const li = document.createElement("li");
+        li.textContent = line;
+        detailsList.appendChild(li);
+      });
+      modalDetails.style.display = "";
+    } else {
+      modalDetails.style.display = "none";
+    }
+    modalDetails.classList.remove("active");
+    modalForm.style.display = "block";
+    modalSuccess.style.display = "none";
+    modal.classList.add("active");
+  };
+
+  applyRef.addEventListener("click", () => {
+    if (!ctx) return;
+    const code = referralI.value.trim().toLowerCase();
+    const noDiscount = (msg) => {
+      ctx.final = { ...ctx.base }; ctx.discount = false;
+      renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+      refMsg.textContent = msg; refMsg.className = "modal__referral-msg error";
+    };
+    if (code !== REFERRAL_CODE) return noDiscount("Invalid referral code.");
+    if (!ctx.referralEligible) return noDiscount("Referral only valid for tours & transfers.");
+    ctx.final = { usd: Math.round(ctx.base.usd * 0.9), idr: Math.round(ctx.base.idr * 0.9) };
+    ctx.discount = true;
+    renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+    refMsg.textContent = "Referral applied - 10% off!"; refMsg.className = "modal__referral-msg success";
+  });
+
+  function priceText() { return `USD ${ctx.final.usd} / IDR ${ctx.final.idr.toLocaleString("id-ID")}`; }
+
+  function validate() {
+    if (!nameI.value.trim()) { alert("Please enter your name."); return false; }
+    if (!phoneI.value.trim()) { alert("Please enter your phone number."); return false; }
+    if (!/^\S+@\S+\.\S+$/.test(emailI.value.trim())) { alert("Please enter a valid email address."); return false; }
+    if (!ctx.pickupOptional && !pickupI.value.trim()) { alert("Please enter your pick-up location."); return false; }
+    if (ctx.dropoffRequired && !dropoffI.value.trim()) { alert("Please enter your drop-off location."); return false; }
+    return true;
+  }
+
+  function payload() {
+    return {
+      type: ctx.type,
+      name: nameI.value,
+      phone: phoneI.value,
+      email: emailI.value,
+      pickup: pickupI.value,
+      dropoff: dropoffI.value,
+      referral: ctx.discount ? referralI.value : "",
+      guests: String(ctx.guests || ""),
+      service: ctx.service,
+      date: ctx.date || "",
+      price: priceText(),
+      items: ctx.items || ""
+    };
+  }
+
+  bookSubmit.addEventListener("click", () => {
+    if (!ctx || !validate()) return;
+    fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload())
+    });
+    if (typeof ctx.onSuccess === "function") ctx.onSuccess();
+    modalForm.style.display = "none";
+    modalSuccess.style.display = "block";
+  });
+
+  discussWa.addEventListener("click", () => {
+    if (!ctx || !validate()) return;
+    const p = payload();
+    const msg =
+      `Hello, I'd like to book:\n` +
+      `Service: ${p.service}\n` + `Name: ${p.name}\n` + `Phone: ${p.phone}\n` + `Email: ${p.email}\n` +
+      `Pick-up: ${p.pickup || "-"}\n` + `Drop-off: ${p.dropoff || "-"}\n` + `Referral: ${p.referral || "-"}\n` +
+      `Guests: ${p.guests || "-"}\n` + `Date: ${p.date || "-"}\n` + `Price: ${p.price}` +
+      (p.items ? `\nItinerary: ${p.items}` : "");
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+  });
+
+  const reset = () => { modal.classList.remove("active"); modalForm.style.display = "block"; modalSuccess.style.display = "none"; };
+  detailsToggle.addEventListener("click", () => modalDetails.classList.toggle("active"));
+  modalClose.addEventListener("click", reset);
+  successClose.addEventListener("click", reset);
+  modal.addEventListener("click", (e) => { if (e.target === modal) reset(); });
+}
+
+// Form "Build Your Trip" (hero / modal program): hitung harga live, lalu buka modal konfirmasi.
 function initBooking() {
   const bookNowBtn = document.getElementById("book-now");
   if (!bookNowBtn) return;
@@ -426,41 +557,13 @@ function initBooking() {
   const priceField = document.getElementById("price");
   const priceNote = document.getElementById("price-note");
 
-  const modal = document.getElementById("booking-modal");
-  const modalClose = document.getElementById("modal-close");
-  const modalForm = document.getElementById("modal-form");
-  const modalSuccess = document.getElementById("modal-success");
-  const bookerName = document.getElementById("booker-name");
-  const bookerPhone = document.getElementById("booker-phone");
-  const bookerEmail = document.getElementById("booker-email");
-  const pickupInput = document.getElementById("pickup");
-  const pickupLabel = document.getElementById("pickup-label");
-  const referralInput = document.getElementById("referral");
-  const applyReferralBtn = document.getElementById("apply-referral");
-  const referralMsg = document.getElementById("referral-msg");
-  const sumGuest = document.getElementById("sum-guest");
-  const sumService = document.getElementById("sum-service");
-  const sumDate = document.getElementById("sum-date");
-  const sumPrice = document.getElementById("sum-price");
-  const modalDetails = document.getElementById("modal-details");
-  const detailsToggle = document.getElementById("details-toggle");
-  const detailsList = document.getElementById("details-list");
-  const bookSubmit = document.getElementById("book-submit");
-  const discussWa = document.getElementById("discuss-wa");
-  const successClose = document.getElementById("success-close");
-
-  let currentPrice = null, finalPrice = null, discountApplied = false;
-
-  function renderPrice(el, usd, idr) {
-    el.innerHTML = priceHTML(usd, idr);
-  }
+  let currentPrice = null;
 
   function calculatePrice() {
     const category = serviceSelect.value, item = serviceItemSelect.value, guests = parseInt(guestField.value);
     if (!category || !item || !guests) return;
     const base = prices[category][item];
     if (!base) return;
-
     let usd, idr, note;
     if (category === "tour" || category === "transfer") {
       usd = base.usd; idr = base.idr; note = "Price per car · max 5 pax";
@@ -471,29 +574,9 @@ function initBooking() {
       note = t.idr > 0 ? `Ticket per person + transport IDR ${t.idr.toLocaleString("id-ID")}` : "Ticket per person · free transport";
     }
     currentPrice = { usd, idr, category };
-    renderPrice(priceField, usd, idr);
+    priceField.innerHTML = priceHTML(usd, idr);
     priceNote.textContent = note;
   }
-
-  function fillDetails(category) {
-    const lines = (category === "tour" || category === "transfer") ? tourDetails : experienceDetails;
-    detailsList.innerHTML = "";
-    lines.forEach((line) => { const li = document.createElement("li"); li.textContent = line; detailsList.appendChild(li); });
-  }
-
-  function pickupIsOptional() { return sumService.textContent === "Kecak Dance"; }
-
-  function validateBooking() {
-    if (!bookerName.value.trim()) { alert("Please enter your name."); return false; }
-    if (!bookerPhone.value.trim()) { alert("Please enter your phone number."); return false; }
-    if (!/^\S+@\S+\.\S+$/.test(bookerEmail.value.trim())) { alert("Please enter a valid email address."); return false; }
-    if (!pickupIsOptional() && !pickupInput.value.trim()) { alert("Please enter your pick-up location."); return false; }
-    return true;
-  }
-
-  function priceText() { return `USD ${finalPrice.usd} / IDR ${finalPrice.idr.toLocaleString("id-ID")}`; }
-
-  function resetModal() { modal.classList.remove("active"); modalForm.style.display = "block"; modalSuccess.style.display = "none"; }
 
   serviceSelect.addEventListener("change", () => {
     serviceItemSelect.innerHTML = "";
@@ -504,76 +587,38 @@ function initBooking() {
     });
     calculatePrice();
   });
-
   guestField.addEventListener("change", calculatePrice);
   serviceItemSelect.addEventListener("change", calculatePrice);
 
   bookNowBtn.addEventListener("click", () => {
-    if (!guestField.value || !serviceItemSelect.value || !dateField.value) { alert("Please choose guests, a service, and a date first."); return; }
+    if (!guestField.value || !serviceItemSelect.value || !dateField.value) {
+      alert("Please choose guests, a service, and a date first."); return;
+    }
     const today = todayStr();
     if (dateField.value < today) { showPastDate(); return; }
     if (dateField.value === today) { showSameDayWa(guestField.value, serviceItemSelect.value, dateField.value); return; }
-    sumGuest.textContent = guestField.value;
-    sumService.textContent = serviceItemSelect.value;
-    sumDate.textContent = dateField.value;
-    finalPrice = { ...currentPrice }; discountApplied = false;
-    referralInput.value = ""; referralMsg.textContent = ""; referralMsg.className = "modal__referral-msg";
-    renderPrice(sumPrice, finalPrice.usd, finalPrice.idr);
-    pickupInput.value = "";
-    pickupLabel.textContent = pickupIsOptional() ? "Pick-up Location (optional)" : "Pick-up Location";
-    fillDetails(currentPrice.category);
-    modalDetails.classList.remove("active");
-    modal.classList.add("active");
-  });
-
-  applyReferralBtn.addEventListener("click", () => {
-    const code = referralInput.value.trim().toLowerCase();
-    if (code !== REFERRAL_CODE) {
-      finalPrice = { ...currentPrice }; discountApplied = false; renderPrice(sumPrice, finalPrice.usd, finalPrice.idr);
-      referralMsg.textContent = "Invalid referral code."; referralMsg.className = "modal__referral-msg error"; return;
-    }
-    if (currentPrice.category !== "tour" && currentPrice.category !== "transfer") {
-      finalPrice = { ...currentPrice }; discountApplied = false; renderPrice(sumPrice, finalPrice.usd, finalPrice.idr);
-      referralMsg.textContent = "Referral only valid for tours & transfers."; referralMsg.className = "modal__referral-msg error"; return;
-    }
-    finalPrice = { usd: Math.round(currentPrice.usd * 0.9), idr: Math.round(currentPrice.idr * 0.9), category: currentPrice.category };
-    discountApplied = true; renderPrice(sumPrice, finalPrice.usd, finalPrice.idr);
-    referralMsg.textContent = "Referral applied - 10% off!"; referralMsg.className = "modal__referral-msg success";
-  });
-
-  detailsToggle.addEventListener("click", () => modalDetails.classList.toggle("active"));
-  modalClose.addEventListener("click", resetModal);
-  successClose.addEventListener("click", resetModal);
-  modal.addEventListener("click", (e) => { if (e.target === modal) resetModal(); });
-
-  bookSubmit.addEventListener("click", () => {
-    if (!validateBooking()) return;
-    const data = new URLSearchParams({
-      name: bookerName.value, phone: bookerPhone.value, email: bookerEmail.value, pickup: pickupInput.value,
-      referral: discountApplied ? referralInput.value : "", guests: sumGuest.textContent,
-      service: sumService.textContent, date: sumDate.textContent, price: priceText()
+    if (!currentPrice || !window.__openBooking) return;
+    const category = currentPrice.category;
+    window.__openBooking({
+      type: category,
+      service: serviceItemSelect.value,
+      guests: guestField.value,
+      date: dateField.value,
+      price: { usd: currentPrice.usd, idr: currentPrice.idr },
+      pickup: "",
+      pickupOptional: category === "performance",
+      dropoffRequired: category === "transfer",
+      referralEligible: category === "tour" || category === "transfer",
+      detailLines: (category === "tour" || category === "transfer") ? tourDetails : experienceDetails
     });
-    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-    modalForm.style.display = "none"; modalSuccess.style.display = "block";
   });
 
-  discussWa.addEventListener("click", () => {
-    if (!validateBooking()) return;
-    const message =
-      `Hello, I'd like to book:\n` +
-      `Name: ${bookerName.value}\n` + `Phone: ${bookerPhone.value}\n` + `Email: ${bookerEmail.value}\n` +
-      `Pick-up: ${pickupInput.value || "-"}\n` + `Referral: ${discountApplied ? referralInput.value : "-"}\n` +
-      `Guests: ${sumGuest.textContent}\n` + `Service: ${sumService.textContent}\n` +
-      `Date: ${sumDate.textContent}\n` + `Price: ${priceText()}`;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
-  });
-
+  // Overlap + preset service/item dari halaman program (data-default / data-item)
   const holder = document.getElementById("booking-placeholder");
   const section = document.getElementById("booking");
   if (holder && holder.dataset.overlap === "true" && section) section.classList.add("booking--overlap");
   const def = (holder && holder.dataset.default) || (section && section.dataset.default) || "";
   if (def) { serviceSelect.value = def; serviceSelect.dispatchEvent(new Event("change")); }
-  // Preset program spesifik (dipakai di halaman program: tombol Book -> popup booking)
   const presetItem = holder && holder.dataset.item;
   if (presetItem) { serviceItemSelect.value = presetItem; serviceItemSelect.dispatchEvent(new Event("change")); }
 }
@@ -913,11 +958,7 @@ function initItinerary() {
       rerender();
     });
 
-  // ---------- popup booking ----------
-  const modal = document.getElementById("itn-modal");
-  const modalForm = document.getElementById("itn-form");
-  const modalSuccess = document.getElementById("itn-success");
-
+  // ---------- Book -> modal konfirmasi bersama (window.__openBooking) ----------
   function dayLine(d) {
     let s = d.items.join(" + ");
     const loc = [d.pickup, d.dropoff].filter(Boolean);
@@ -930,58 +971,7 @@ function initItinerary() {
   }
 
   document.getElementById("itn-book").addEventListener("click", () => {
-    const box = document.getElementById("itn-summary");
-    box.innerHTML = "";
-    let usd = 0,
-      idr = 0;
-    state.days.forEach((d, i) => {
-      const p = dayPrice(d);
-      usd += p.usd;
-      idr += p.idr;
-      box.innerHTML += `<div class="modal__row"><span>Day ${i + 1} · ${d.date} (${d.guests} pax)</span><span>${dayLine(d)}</span></div>`;
-    });
-    state.transfers.forEach((tr) => {
-      const p = transferPrice(tr);
-      usd += p.usd;
-      idr += p.idr;
-      box.innerHTML += `<div class="modal__row"><span>Transfer · ${tr.date} (${tr.guests} pax)</span><span>${transferLine(tr)}</span></div>`;
-    });
-    box.innerHTML += `<div class="modal__row"><span>Total</span><span>${priceHTML(usd, idr)}</span></div>`;
-    modal.classList.add("active");
-  });
-
-  function resetModal() {
-    modal.classList.remove("active");
-    modalForm.style.display = "block";
-    modalSuccess.style.display = "none";
-  }
-  document.getElementById("itn-close").addEventListener("click", resetModal);
-  document.getElementById("itn-done").addEventListener("click", () => {
-    resetModal();
-    state = { days: [], transfers: [] };
-    save();
-    rerender();
-  });
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) resetModal();
-  });
-
-  document.getElementById("itn-submit").addEventListener("click", () => {
-    const name = document.getElementById("itn-name"),
-      phone = document.getElementById("itn-phone"),
-      email = document.getElementById("itn-email");
-    if (!name.value.trim()) {
-      alert("Please enter your name.");
-      return;
-    }
-    if (!phone.value.trim()) {
-      alert("Please enter your phone number.");
-      return;
-    }
-    if (!/^\S+@\S+\.\S+$/.test(email.value.trim())) {
-      alert("Please enter a valid email address.");
-      return;
-    }
+    if (!window.__openBooking) return;
     let usd = 0,
       idr = 0;
     state.days.forEach((d) => {
@@ -994,7 +984,8 @@ function initItinerary() {
       usd += p.usd;
       idr += p.idr;
     });
-    const detail = [
+    // rincian per hari + transfer -> dikirim ke backend lewat field `items`
+    const items = [
       ...state.days.map(
         (d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`
       ),
@@ -1002,17 +993,28 @@ function initItinerary() {
         (tr) => `Transfer (${tr.date}, ${tr.guests} pax): ${transferLine(tr)} [pickup: ${tr.pickup}, dropoff: ${tr.dropoff}]`
       )
     ].join(" | ");
-    const data = new URLSearchParams({
+    const nDays = state.days.length, nTr = state.transfers.length;
+    const parts = [];
+    if (nDays) parts.push(`${nDays} day${nDays > 1 ? "s" : ""}`);
+    if (nTr) parts.push(`${nTr} transfer${nTr > 1 ? "s" : ""}`);
+    window.__openBooking({
       type: "itinerary",
-      name: name.value,
-      phone: phone.value,
-      email: email.value,
-      service: detail,
-      price: `USD ${usd} / IDR ${idr.toLocaleString("id-ID")}`
+      service: `Custom Itinerary (${parts.join(" + ")})`,
+      guests: "",
+      date: "",
+      price: { usd, idr },
+      pickup: "",
+      pickupOptional: true,
+      dropoffRequired: false,
+      referralEligible: false,
+      detailLines: null,
+      items: items,
+      onSuccess: () => {
+        state = { days: [], transfers: [] };
+        save();
+        rerender();
+      }
     });
-    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-    modalForm.style.display = "none";
-    modalSuccess.style.display = "block";
   });
 
   rerender();
@@ -1315,11 +1317,9 @@ function initCharter() {
   dateEl.addEventListener("change", renderCharter);
   guestsEl.addEventListener("change", renderCharter);
 
-  // popup konfirmasi + booking
-  const modal = document.getElementById("ch-modal");
-  const form = document.getElementById("ch-form");
-  const success = document.getElementById("ch-success");
+  // Book -> buka modal konfirmasi bersama (pickup udah keisi dari builder, dropoff wajib)
   bookBtn.addEventListener("click", () => {
+    if (!window.__openBooking) return;
     const p = withSurcharge(base(st.dur));
     const label =
       st.dur === "half"
@@ -1327,47 +1327,18 @@ function initCharter() {
         : st.dur === "full"
           ? "Full Day (10h)"
           : `Extended (10h + ${parseInt(extraInput.value) || 1}h)`;
-    document.getElementById("ch-summary").innerHTML =
-      `<div class="modal__row"><span>Charter</span><span>${label}</span></div>` +
-      `<div class="modal__row"><span>Pick-up</span><span>${pickup.value}</span></div>` +
-      `<div class="modal__row"><span>Date</span><span>${dateEl.value}</span></div>` +
-      `<div class="modal__row"><span>Guests</span><span>${guestsEl.value} pax</span></div>` +
-      `<div class="modal__row"><span>Total</span><span>${fmtMoney(p.usd, p.idr)}</span></div>`;
-    modal.classList.add("active");
-  });
-  const reset = () => {
-    modal.classList.remove("active");
-    form.style.display = "block";
-    success.style.display = "none";
-  };
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal || e.target.closest("[data-close]")) reset();
-  });
-  document.getElementById("ch-done").addEventListener("click", reset);
-  document.getElementById("ch-submit").addEventListener("click", () => {
-    const name = document.getElementById("ch-name"),
-      phone = document.getElementById("ch-phone"),
-      email = document.getElementById("ch-email");
-    if (!name.value.trim()) return alert("Please enter your name.");
-    if (!phone.value.trim()) return alert("Please enter your phone number.");
-    if (!/^\S+@\S+\.\S+$/.test(email.value.trim()))
-      return alert("Please enter a valid email address.");
-    const p = withSurcharge(base(st.dur));
-    const data = new URLSearchParams({
+    window.__openBooking({
       type: "charter",
-      name: name.value,
-      phone: phone.value,
-      email: email.value,
-      pickup: pickup.value,
-      dropoff: document.getElementById("ch-drop").value,
-      date: dateEl.value,
+      service: "Charter — " + label,
       guests: guestsEl.value,
-      service: "Charter " + st.dur,
-      price: `USD ${p.usd} / IDR ${p.idr.toLocaleString("id-ID")}`
+      date: dateEl.value,
+      price: { usd: p.usd, idr: p.idr },
+      pickup: pickup.value,
+      pickupOptional: false,
+      dropoffRequired: true,
+      referralEligible: false,
+      detailLines: null
     });
-    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-    form.style.display = "none";
-    success.style.display = "block";
   });
 
   renderCharter();
@@ -1408,6 +1379,7 @@ function initHighlightLink() {
 async function initPage() {
   await loadPartials();
   initNavbar();
+  initBookingConfirm();
   initBooking();
   initSlider();
   initTourSlider();

@@ -74,6 +74,10 @@ body {
   border-radius: 2px;
   background-color: var(--color-gold);
 }
+/* Judul section ke-2 dst dalam satu blok (jarak atas) - gantiin inline margin-top */
+.section__title--sub {
+  margin-top: 2.75rem;
+}
 
 .navbar {
   position: absolute;

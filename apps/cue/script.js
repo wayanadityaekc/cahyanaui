@@ -1388,6 +1388,21 @@ function initCurrency() {
   renderPrices();
 }
 
+// Badan card highlight bisa diklik -> ke halaman programnya.
+// Tombol/link di dalamnya (Book, Add to itinerary) tetap jalan sendiri.
+function initHighlightLink() {
+  document.querySelectorAll(".highlight__container").forEach((box) => {
+    const link = box.querySelector(".highlight__btn[href]");
+    const href = link && link.getAttribute("href");
+    if (!href || href.startsWith("#")) return; // anchor doang, bukan halaman
+    box.classList.add("is-clickable");
+    box.addEventListener("click", (e) => {
+      if (e.target.closest("a, button")) return;
+      window.location.href = href;
+    });
+  });
+}
+
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
@@ -1408,6 +1423,7 @@ async function initPage() {
   initItineraryButtons();
   initCharter();
   initCurrency();
+  initHighlightLink();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

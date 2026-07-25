@@ -35,7 +35,8 @@ body {
 .stop__desc,
 .reviews__intro,
 .faq__a p,
-.transfer__note {
+.transfer__note,
+.welcome__text {
   font-family: var(--font-body);
   font-size: 0.85rem;
   line-height: 1.5;
@@ -190,11 +191,19 @@ body {
 }
 .hero__booking .booking__group--price {
   grid-column: 1 / -1;
-  /* ruang di bawah price buat note biar nggak nempel ke tombol */
-  margin-bottom: 0.85rem;
+  /* ruang tipis di bawah price buat note biar nggak nempel ke tombol */
+  margin-bottom: 0.3rem;
 }
 .hero__booking .booking__note {
   position: static;
+}
+/* Hero yg berisi booking form: rapetin jarak bawah biar seimbang sama atas.
+   Padding atas 7rem sebagian ketutup navbar absolute (~5.4rem) → visual atas ≈ 2rem,
+   jadi bawah disamain ke 2rem. (Halaman detail yg overlap nggak kena karena
+   nggak punya .hero__inner.) */
+.hero,
+.subhero:has(.hero__inner) {
+  padding-bottom: 2rem;
 }
 .hero__title {
   font-family: var(--font-body);
@@ -266,7 +275,8 @@ body {
 .field input[type="date"],
 .itn-day__fields .field input,
 .itn-day__fields .field select,
-.charter__select {
+.charter__select,
+.welcome__field select {
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   font-family: var(--font-body);
@@ -304,8 +314,8 @@ body {
   color: var(--color-gold);
 }
 .booking__note {
-  margin-top: 0.35rem;
-  min-height: 2.5em;
+  margin-top: 0.25rem;
+  min-height: 1.4em;
   font-size: 0.75rem;
   line-height: 1.25;
   color: #7a7466;
@@ -2298,9 +2308,6 @@ section + section::before,
   .booking__fields {
     grid-template-columns: 1fr;
   }
-  .hero {
-    padding-bottom: 3rem;
-  }
   .about {
     margin-top: -1rem;
   }
@@ -2597,8 +2604,9 @@ section + section::before,
 }
 .itn-day__item {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem 0.6rem;
   padding: 0.5rem 0.6rem;
   margin-bottom: 0.4rem;
   border-radius: 8px;
@@ -2606,6 +2614,7 @@ section + section::before,
 }
 .itn-day__item-name {
   flex: 1;
+  min-width: 8rem;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -3301,4 +3310,139 @@ section + section::before,
 .charter-cta__desc {
   margin: 1rem auto 1.5rem;
   max-width: 560px;
+}
+
+/* ==================== Tour type toggle (Standard / Exclusive) ==================== */
+/* Di-inject via initTourType() di card tour & halaman detail. */
+.tour-type {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.7rem;
+}
+.tour-type--card {
+  margin-top: 0.75rem;
+}
+.tour-type--detail {
+  margin-bottom: 1.25rem;
+}
+.tour-type__toggle {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  border-radius: 999px;
+  background-color: rgba(201, 164, 92, 0.08);
+}
+.tour-type__btn {
+  padding: 0.3rem 0.85rem;
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-green);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.tour-type__btn.is-active {
+  color: #fff;
+  background-color: var(--color-gold);
+}
+.tour-type__note {
+  font-size: 0.7rem;
+  color: #6b6559;
+}
+
+/* ==================== Welcome popup (jumlah orang) ==================== */
+.welcome__box {
+  text-align: center;
+  max-width: 400px;
+}
+.welcome__title {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-green);
+  margin-bottom: 0.6rem;
+}
+.welcome__text {
+  color: #6b6559;
+  margin-bottom: 1.25rem;
+}
+.welcome__field {
+  text-align: left;
+  margin-bottom: 1.25rem;
+}
+.welcome__field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.welcome__field select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.85rem;
+  background-color: #fff;
+}
+
+/* ==================== Toggle Standard/Exclusive di booking form ==================== */
+.booking__type {
+  display: flex;
+  padding: 3px;
+  margin-bottom: 0.4rem;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  border-radius: 999px;
+  background-color: rgba(201, 164, 92, 0.08);
+}
+/* Non-tour (experience/transfer): toggle tetap tampil tapi redup & nggak bisa diklik */
+.booking__type.is-disabled {
+  opacity: 0.4;
+}
+.booking__type-btn:disabled {
+  cursor: not-allowed;
+}
+.booking__type-btn {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-green);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.booking__type-btn.is-active {
+  color: #fff;
+  background-color: var(--color-gold);
+}
+
+/* ==================== Toggle Standard/Exclusive per item di itinerary ==================== */
+.itn-item-type {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  border-radius: 999px;
+  background-color: rgba(201, 164, 92, 0.08);
+}
+.itn-item-type__btn {
+  padding: 0.2rem 0.6rem;
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--color-green);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.itn-item-type__btn.is-active {
+  color: #fff;
+  background-color: var(--color-gold);
 }

@@ -86,7 +86,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N` & `script.js?v=N` on **every** HTML page.
-  Any CSS/JS change → bump `N` on all pages. *(current: v17, PARTIALS 16)*
+  Any CSS/JS change → bump `N` on all pages. *(current: v33, PARTIALS 21)*
 - **Multi-currency**: single source `prices` (USD+IDR per item) + static `CUR_RATE`.
   `[data-price="Name"]` spans are filled by `renderPrices()`. Supports USD/IDR/AUD/EUR/GBP,
   results are rounded, saved in localStorage `cue_currency`.
@@ -97,6 +97,9 @@ Order **must be kept** (declarations first, run last):
 - `WHATSAPP_NUMBER`, `SHEET_ENDPOINT` in script.js.
 - Charter/combo prices, surcharge (IDR 100k), `CUR_RATE` rates — still approximate;
   Wayan finalizes them.
+- `tourExclusive` — suplemen tiket **per orang** buat versi Exclusive tiap tour/combo
+  (Standard = driver only, Exclusive = Standard + suplemen × jumlah orang). Angka masih
+  PLACEHOLDER — Wayan isi harga asli.
 
 ## Before calling it "done" (checklist)
 1. `node --check script.js` passes.

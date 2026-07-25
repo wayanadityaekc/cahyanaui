@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 21;
+const PARTIALS_VERSION = 24;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -41,9 +41,34 @@ const transport = {
   "Cooking Class": { usd: 0, idr: 0 }, "Kecak Dance": { usd: 0, idr: 0 }, "Barong Dance": { usd: 0, idr: 0 }
 };
 
+// Exclusive tour: SUPLEMEN TIKET PER ORANG (angka PLACEHOLDER - Wayan isi harga asli).
+// Standard = jasa driver aja, tiket TIDAK termasuk (= harga di `prices`, per mobil).
+// Exclusive = harga standard (per mobil) + suplemen ini × jumlah orang.
+// Nama key HARUS sama persis dg key di `prices.tour` / `prices.combo`.
+const tourExclusive = {
+  "Ubud Tour": { usd: 20, idr: 300000 },
+  "East Bali Tour": { usd: 22, idr: 340000 },
+  "West Bali Tour": { usd: 24, idr: 370000 },
+  "South Bali Tour": { usd: 20, idr: 300000 },
+  "North Bali Tour": { usd: 26, idr: 400000 },
+  "Ubud Culture Day": { usd: 18, idr: 280000 },
+  "South Coast & Sunset Kecak": { usd: 22, idr: 340000 },
+  "Batur Sunrise & Adrenaline": { usd: 40, idr: 620000 },
+  "Taste of Ubud": { usd: 15, idr: 230000 }
+};
+
 const tourDetails = [
   "Price includes car, driver, and petrol",
   "Entrance tickets are not included",
+  "Free cold water on board",
+  "Flexible stops - no extra charge for stops under 1 hour",
+  "Book now, pay after - no upfront payment"
+];
+
+// Versi Exclusive: tiket sudah termasuk (dipakai kalau user pilih Exclusive)
+const tourDetailsExclusive = [
+  "Price includes car, driver, and petrol",
+  "Entrance tickets included for the listed attractions",
   "Free cold water on board",
   "Flexible stops - no extra charge for stops under 1 hour",
   "Book now, pay after - no upfront payment"
@@ -65,6 +90,12 @@ const CUR_RATE = { USD: 1, AUD: 1.53, EUR: 0.92, GBP: 0.79 };
 
 let currentCurrency = localStorage.getItem("cue_currency") || "USD";
 if (!CURRENCIES.includes(currentCurrency)) currentCurrency = "USD";
+
+// -- jumlah orang global (dipakai buat harga Exclusive & sinkron booking form)
+// 0 = user belum pilih. Kalau belum dipilih, harga Exclusive di card ditampilin
+// pakai DISPLAY_GUESTS sebagai perkiraan (+ catatan "for N pax").
+const DISPLAY_GUESTS = 2;
+let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
 
 // -- page -> itinerary program map
 // Peta halaman detail -> nama program di itinerary (biar tombol Add di card
@@ -117,10 +148,16 @@ function fmtMoney(usd, idr, cur) {
 // Dipakai booking & itinerary (sekarang tampil 1 currency aktif)
 const priceHTML = (usd, idr) => `<span class="price-cur">${fmtMoney(usd, idr)}</span>`;
 
-// Isi semua <span class="price" data-price="Nama"> dari data pusat + currency aktif
+// Isi semua <span class="price" data-price="Nama"> dari data pusat + currency aktif.
+// Kalau span-nya lagi mode Exclusive (data-mode="exclusive"), tampilin harga
+// standard + suplemen tiket × jumlah orang (lihat exclusivePrice).
 function renderPrices() {
   document.querySelectorAll("[data-price]").forEach((el) => {
     const name = el.dataset.price;
+    if (el.dataset.mode === "exclusive") {
+      const ex = exclusivePrice(name);
+      if (ex) { el.textContent = fmtMoney(ex.usd, ex.idr); return; }
+    }
     const info = itemInfo(name);
     const base = info ? info.price : prices.transfer[name];
     if (base) el.textContent = fmtMoney(base.usd, base.idr);
@@ -139,6 +176,22 @@ function setCurrency(cur) {
   if (window.__chRefresh) window.__chRefresh();
 }
 
+// Set jumlah orang global: simpan, render ulang harga Exclusive + catatan toggle,
+// dan sinkron ke field Guests di booking form (dua arah, tanpa loop).
+function setGuests(n) {
+  n = parseInt(n, 10) || 0;
+  if (n < 1) return;
+  currentGuests = n;
+  localStorage.setItem("cue_guests", String(n));
+  renderPrices();
+  if (window.__ttypeRefresh) window.__ttypeRefresh();
+  const gf = document.getElementById("guest");
+  if (gf && parseInt(gf.value, 10) !== n) {
+    gf.value = String(n);
+    if (window.__bookingRefresh) window.__bookingRefresh();
+  }
+}
+
 // -- itinerary store
 function carPrice(base, guests) {
   const mult = guests > 5 ? 2 : 1;
@@ -151,6 +204,17 @@ function itemInfo(name) {
     if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
   }
   return null;
+}
+
+// Harga Exclusive buat N orang = harga standard (per mobil, ×2 kalau >5)
+// + suplemen tiket per orang × N. Return null kalau program nggak punya versi Exclusive.
+function exclusivePrice(name, guests) {
+  const info = itemInfo(name);
+  const sup = tourExclusive[name];
+  if (!info || !sup) return null;
+  const g = guests || currentGuests || DISPLAY_GUESTS;
+  const car = carPrice(info.price, g);
+  return { usd: car.usd + sup.usd * g, idr: car.idr + sup.idr * g };
 }
 
 function itnLoad() {
@@ -558,37 +622,97 @@ function initBooking() {
   const priceNote = document.getElementById("price-note");
 
   let currentPrice = null;
+  let bookingMode = "standard"; // Standard / Exclusive (cuma buat tour & combo)
+
+  const bookingType = document.getElementById("booking-type");
+  const typeBtns = bookingType ? bookingType.querySelectorAll(".booking__type-btn") : [];
+
+  function setBookingMode(mode, recalc) {
+    bookingMode = mode === "exclusive" ? "exclusive" : "standard";
+    typeBtns.forEach((b) => b.classList.toggle("is-active", b.dataset.mode === bookingMode));
+    if (recalc) calculatePrice();
+  }
+  window.__setBookingMode = setBookingMode; // dipanggil dari toggle di halaman detail
 
   function calculatePrice() {
     const category = serviceSelect.value, item = serviceItemSelect.value, guests = parseInt(guestField.value);
+    // Toggle Standard/Exclusive selalu tampil (biar tinggi form konsisten), tapi
+    // di-nonaktifin (redup) kalau service-nya bukan tour/combo yg punya Exclusive.
+    const hasExclusive = category === "tour" && !!tourExclusive[item];
+    if (bookingType) {
+      bookingType.classList.toggle("is-disabled", !hasExclusive);
+      typeBtns.forEach((b) => (b.disabled = !hasExclusive));
+    }
+    if (!hasExclusive && bookingMode !== "standard") setBookingMode("standard", false);
     if (!category || !item || !guests) return;
-    const base = prices[category][item];
-    if (!base) return;
     let usd, idr, note;
-    if (category === "tour" || category === "transfer") {
-      usd = base.usd; idr = base.idr; note = "Price per car · max 5 pax";
-      if (guests > 5) { usd *= 2; idr *= 2; note = "2 cars needed for more than 5 pax"; }
+    if (category === "tour") {
+      // tour wilayah ATAU combo - dua-duanya per mobil, bisa Standard / Exclusive
+      const info = itemInfo(item);
+      if (!info) return;
+      if (bookingMode === "exclusive" && tourExclusive[item]) {
+        const ex = exclusivePrice(item, guests);
+        usd = ex.usd; idr = ex.idr;
+        note = "Exclusive · entrance tickets included · " + guests + " pax";
+      } else {
+        const p = carPrice(info.price, guests);
+        usd = p.usd; idr = p.idr;
+        note = guests > 5 ? "2 cars needed for more than 5 pax"
+          : (hasExclusive ? "Standard · driver only · max 5 pax" : "Price per car · max 5 pax");
+      }
+    } else if (category === "transfer") {
+      const base = prices.transfer[item];
+      if (!base) return;
+      const p = carPrice(base, guests);
+      usd = p.usd; idr = p.idr;
+      note = guests > 5 ? "2 cars needed for more than 5 pax" : "Price per car · max 5 pax";
     } else {
+      const base = prices[category][item];
+      if (!base) return;
       const t = transport[item] || { usd: 0, idr: 0 };
       usd = base.usd * guests + t.usd; idr = base.idr * guests + t.idr;
       note = t.idr > 0 ? `Ticket per person + transport IDR ${t.idr.toLocaleString("id-ID")}` : "Ticket per person · free transport";
     }
-    currentPrice = { usd, idr, category };
+    currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive };
     priceField.innerHTML = priceHTML(usd, idr);
     priceNote.textContent = note;
   }
+  window.__bookingRefresh = calculatePrice; // biar setGuests bisa refresh harga booking
+
+  typeBtns.forEach((b) => b.addEventListener("click", () => setBookingMode(b.dataset.mode, true)));
 
   serviceSelect.addEventListener("change", () => {
     serviceItemSelect.innerHTML = "";
-    Object.keys(prices[serviceSelect.value]).forEach((item) => {
+    // "Tour Program" = tour wilayah + combo (dua-duanya per mobil)
+    const items = serviceSelect.value === "tour"
+      ? [...Object.keys(prices.tour), ...Object.keys(prices.combo)]
+      : Object.keys(prices[serviceSelect.value] || {});
+    items.forEach((item) => {
       const option = document.createElement("option");
       option.value = item; option.textContent = item;
       serviceItemSelect.appendChild(option);
     });
+    setBookingMode("standard", false);
     calculatePrice();
   });
-  guestField.addEventListener("change", calculatePrice);
-  serviceItemSelect.addEventListener("change", calculatePrice);
+  // Ganti Guests di booking = update jumlah orang global (harga Exclusive di card
+  // ikut nyesuain), lalu hitung ulang harga booking.
+  // Opsi "Reset": hapus jumlah orang tersimpan + flag welcome, reload -> popup muncul lagi.
+  guestField.addEventListener("change", () => {
+    if (guestField.value === "reset") {
+      localStorage.removeItem("cue_welcomed");
+      localStorage.removeItem("cue_guests");
+      location.reload();
+      return;
+    }
+    setGuests(guestField.value);
+    calculatePrice();
+  });
+  serviceItemSelect.addEventListener("change", () => { setBookingMode("standard", false); calculatePrice(); });
+
+  // Kalau user sudah pilih jumlah orang (dari popup / kunjungan sebelumnya),
+  // isi field Guests otomatis biar sinkron.
+  if (currentGuests) guestField.value = String(currentGuests);
 
   bookNowBtn.addEventListener("click", () => {
     if (!guestField.value || !serviceItemSelect.value || !dateField.value) {
@@ -599,9 +723,15 @@ function initBooking() {
     if (dateField.value === today) { showSameDayWa(guestField.value, serviceItemSelect.value, dateField.value); return; }
     if (!currentPrice || !window.__openBooking) return;
     const category = currentPrice.category;
+    const item = serviceItemSelect.value;
+    const isExcl = currentPrice.exclusive;
+    // Tour/combo ditandai (Standard)/(Exclusive) biar jelas di konfirmasi & WhatsApp
+    const label = (category === "tour" && tourExclusive[item])
+      ? `${item} (${isExcl ? "Exclusive" : "Standard"})`
+      : item;
     window.__openBooking({
       type: category,
-      service: serviceItemSelect.value,
+      service: label,
       guests: guestField.value,
       date: dateField.value,
       price: { usd: currentPrice.usd, idr: currentPrice.idr },
@@ -609,7 +739,9 @@ function initBooking() {
       pickupOptional: category === "performance",
       dropoffRequired: category === "transfer",
       referralEligible: category === "tour" || category === "transfer",
-      detailLines: (category === "tour" || category === "transfer") ? tourDetails : experienceDetails
+      detailLines: (category === "tour" || category === "transfer")
+        ? (isExcl ? tourDetailsExclusive : tourDetails)
+        : experienceDetails
     });
   });
 
@@ -715,17 +847,24 @@ function initItinerary() {
   let state = itnLoad();
   const save = () => itnSave(state);
 
+  // Mode Standard/Exclusive per item dalam satu hari (default Standard).
+  // Disimpan di d.itemModes[idx] - sejajar sama d.items (string tetap dipakai).
+  const itemMode = (d, idx) => (d.itemModes && d.itemModes[idx]) || "standard";
+
   // ---------- pricing ----------
   function dayPrice(d) {
     let usd = 0,
       idr = 0;
     const g = parseInt(d.guests) || 0;
     if (!g) return { usd, idr };
-    d.items.forEach((name) => {
+    d.items.forEach((name, idx) => {
       const info = itemInfo(name);
       if (!info) return;
-      if (info.cat === "tour") {
-        const p = carPrice(info.price, g);
+      if (info.cat === "tour" || info.cat === "combo") {
+        // per mobil (×2 kalau >5). Exclusive = + tiket per orang.
+        const p = itemMode(d, idx) === "exclusive" && tourExclusive[name]
+          ? exclusivePrice(name, g)
+          : carPrice(info.price, g);
         usd += p.usd;
         idr += p.idr;
       } else {
@@ -770,12 +909,21 @@ function initItinerary() {
     const done = dayComplete(d);
     const itemsHTML = d.items.length
       ? d.items
-          .map(
-            (name, idx) => `<li class="itn-day__item">
+          .map((name, idx) => {
+            // Toggle Standard/Exclusive per item, cuma buat tour/combo yg punya versi Exclusive
+            const mode = itemMode(d, idx);
+            const typeHTML = tourExclusive[name]
+              ? `<div class="itn-item-type" data-idx="${idx}">
+                   <button type="button" class="itn-item-type__btn ${mode === "standard" ? "is-active" : ""}" data-mode="standard">Standard</button>
+                   <button type="button" class="itn-item-type__btn ${mode === "exclusive" ? "is-active" : ""}" data-mode="exclusive">Exclusive</button>
+                 </div>`
+              : "";
+            return `<li class="itn-day__item">
               <span class="itn-day__item-name">${name}</span>
+              ${typeHTML}
               <button class="itn-day__item-rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
-            </li>`
-          )
+            </li>`;
+          })
           .join("")
       : `<li class="itn-day__empty">Empty day.</li>`;
     card.innerHTML = `
@@ -795,12 +943,26 @@ function initItinerary() {
     `;
     card.querySelectorAll("[data-rmitem]").forEach((b) =>
       b.addEventListener("click", () => {
-        d.items.splice(+b.dataset.rmitem, 1);
+        const idx = +b.dataset.rmitem;
+        d.items.splice(idx, 1);
+        if (d.itemModes) d.itemModes.splice(idx, 1); // buang mode item yang sama
         if (!d.items.length) state.days.splice(i, 1);
         save();
         rerender();
       })
     );
+    // Toggle Standard/Exclusive tiap item
+    card.querySelectorAll(".itn-item-type").forEach((box) => {
+      const idx = +box.dataset.idx;
+      box.querySelectorAll(".itn-item-type__btn").forEach((b) =>
+        b.addEventListener("click", () => {
+          if (!d.itemModes) d.itemModes = [];
+          d.itemModes[idx] = b.dataset.mode;
+          save();
+          rerender();
+        })
+      );
+    });
     card.querySelector("[data-rmday]").addEventListener("click", () => {
       state.days.splice(i, 1);
       save();
@@ -960,7 +1122,9 @@ function initItinerary() {
 
   // ---------- Book -> modal konfirmasi bersama (window.__openBooking) ----------
   function dayLine(d) {
-    let s = d.items.join(" + ");
+    let s = d.items
+      .map((name, idx) => name + (itemMode(d, idx) === "exclusive" ? " (Exclusive)" : ""))
+      .join(" + ");
     const loc = [d.pickup, d.dropoff].filter(Boolean);
     if (loc.length) s += ` (${loc.join(" → ")})`;
     return s;
@@ -1374,6 +1538,112 @@ function initHighlightLink() {
   });
 }
 
+// Toggle Standard / Exclusive. Di-INJECT otomatis (bukan ditulis di tiap HTML):
+// - di tiap card tour (setelah deskripsi, di atas harga)
+// - di halaman detail (di atas "Tour Details")
+// Standard = harga driver-only. Exclusive = harga standard + tiket per orang.
+function initTourType() {
+  const holders = [];
+
+  function build(name, priceEl, mount, place, variant) {
+    if (!name || !priceEl || !tourExclusive[name]) return;
+    const wrap = document.createElement("div");
+    wrap.className = "tour-type tour-type--" + variant;
+    wrap.innerHTML =
+      '<div class="tour-type__toggle" role="tablist" aria-label="Tour type">' +
+        '<button type="button" class="tour-type__btn is-active" role="tab" data-mode="standard">Standard</button>' +
+        '<button type="button" class="tour-type__btn" role="tab" data-mode="exclusive">Exclusive</button>' +
+      '</div>' +
+      '<small class="tour-type__note"></small>';
+    if (place === "after") mount.insertAdjacentElement("afterend", wrap);
+    else mount.insertBefore(wrap, mount.firstElementChild);
+    // Di card, seluruh area toggle nggak boleh nge-trigger navigasi card (cuma foto/badan)
+    if (variant === "card") wrap.addEventListener("click", (e) => e.stopPropagation());
+
+    const note = wrap.querySelector(".tour-type__note");
+    const btns = wrap.querySelectorAll(".tour-type__btn");
+
+    function updateNote(mode) {
+      note.textContent = mode === "exclusive"
+        ? "Includes entrance tickets · price for " + (currentGuests || DISPLAY_GUESTS) + " pax"
+        : "Driver only · entrance tickets not included";
+    }
+    function apply(mode, render) {
+      btns.forEach((b) => b.classList.toggle("is-active", b.dataset.mode === mode));
+      priceEl.dataset.mode = mode;
+      updateNote(mode);
+      if (render) renderPrices();
+    }
+    btns.forEach((b) => b.addEventListener("click", (e) => {
+      // Jangan sampai klik toggle ikut nge-trigger navigasi card (badan card
+      // clickable di initItineraryButtons). Cuma foto/badan card yang navigasi.
+      e.stopPropagation();
+      apply(b.dataset.mode, true);
+      // Di halaman detail: sinkron pilihan ke booking form (biar Book Now match)
+      if (variant === "detail" && window.__setBookingMode) window.__setBookingMode(b.dataset.mode, true);
+    }));
+    apply("standard", false); // default: Standard (harga diisi renderPrices di initCurrency)
+    holders.push(() => updateNote(priceEl.dataset.mode));
+  }
+
+  // Card di homepage & tour.html + card highlight (setelah deskripsi)
+  document.querySelectorAll(".experience__card, .highlight__container").forEach((card) => {
+    const priceEl = card.querySelector("[data-price]");
+    const desc = card.querySelector(".experience__desc, .highlight__desc");
+    if (priceEl && desc) build(priceEl.dataset.price, priceEl, desc, "after", "card");
+  });
+
+  // Halaman detail: di atas judul "Tour Details"
+  document.querySelectorAll(".info__container").forEach((box) => {
+    const priceEl = box.querySelector("[data-price]");
+    if (priceEl) build(priceEl.dataset.price, priceEl, box, "prepend", "detail");
+  });
+
+  // Dipanggil pas jumlah orang ganti -> perbarui catatan "for N pax"
+  // (harga-nya sendiri sudah di-refresh lewat renderPrices di setGuests).
+  window.__ttypeRefresh = function () { holders.forEach((fn) => fn()); };
+}
+
+// Popup selamat datang (muncul sekali, di kunjungan pertama). Minta jumlah orang
+// biar harga Exclusive akurat. "Skip" = tutup tanpa set (sistem jalan pakai
+// jumlah orang dari booking form). Pilihan tersimpan di localStorage.
+function initWelcome() {
+  if (localStorage.getItem("cue_welcomed")) return;
+
+  const pre = currentGuests || DISPLAY_GUESTS;
+  let opts = "";
+  for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
+
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "welcome-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
+      '<p class="welcome__text">How many people are traveling? We’ll show you accurate prices for your group — including our <strong>Exclusive</strong> tours where entrance tickets are already bundled in.</p>' +
+      '<div class="welcome__field">' +
+        '<label for="welcome-guests">Number of guests</label>' +
+        '<select id="welcome-guests">' + opts + "</select>" +
+      "</div>" +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="welcome-confirm">See my prices</button>' +
+        '<button type="button" class="modal__btn modal__btn--ghost" data-close>Skip for now</button>' +
+      "</div>" +
+    "</div>";
+  document.body.appendChild(modal);
+
+  const close = () => { modal.classList.remove("active"); localStorage.setItem("cue_welcomed", "1"); };
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest("[data-close]")) close();
+  });
+  modal.querySelector("#welcome-confirm").addEventListener("click", () => {
+    setGuests(modal.querySelector("#welcome-guests").value);
+    close();
+  });
+  requestAnimationFrame(() => modal.classList.add("active"));
+}
+
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
@@ -1394,8 +1664,10 @@ async function initPage() {
   itnUpdateBadge();
   initItineraryButtons();
   initCharter();
+  initTourType();
   initCurrency();
   initHighlightLink();
+  initWelcome();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

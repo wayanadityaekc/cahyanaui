@@ -16,6 +16,7 @@
           <option value="8">8</option>
           <option value="9">9</option>
           <option value="10">10</option>
+          <option value="reset">↺ Reset (choose again)</option>
         </select>
       </div>
       <div class="booking__group">
@@ -40,6 +41,10 @@
       </div>
       <div class="booking__group booking__group--price">
         <label for="price">Price</label>
+        <div class="booking__type" id="booking-type">
+          <button type="button" class="booking__type-btn is-active" data-mode="standard">Standard</button>
+          <button type="button" class="booking__type-btn" data-mode="exclusive">Exclusive</button>
+        </div>
         <div class="booking__price" id="price">-</div>
         <small class="booking__note" id="price-note"></small>
       </div>

@@ -1311,6 +1311,7 @@ function initReveal() {
     ".info__fact",
     ".about__content",
     ".faq__item",
+    ".quicknav__card",
     ".section__title"
   ];
   const els = document.querySelectorAll(selectors.join(","));

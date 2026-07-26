@@ -431,6 +431,132 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Homepage About = blok hijau (scoped ke #about; about-us pakai #values, gak kena) */
+#about .about__container {
+  background-color: var(--color-green);
+}
+#about .about__text p {
+  color: var(--color-cream);
+}
+/* Deskripsi kecil di bawah judul tiap box About */
+.about__desc {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6b6559;
+}
+/* Homepage About boxes = kotak (persegi) kecil, ketengah di dalam box hijau */
+#about .about__content {
+  aspect-ratio: 1 / 1;
+  justify-content: center;
+  width: 100%;
+  max-width: 160px;
+  justify-self: center;
+  align-self: center;
+  padding: 1rem;
+}
+/* Kunci disc icon biar gak disusutin flexbox di box kotak (tetap bulat 44x44) */
+#about .about__icon {
+  flex-shrink: 0;
+}
+
+/* ==================== Quick nav (shortcut ke page utama, di bawah hero) ==================== */
+.quicknav {
+  padding: 2.5rem 1.5rem;
+  background-color: var(--color-cream);
+}
+.quicknav__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.quicknav__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.6rem 0.75rem;
+  border-radius: 5px;
+  background-color: #fff;
+  text-decoration: none;
+  color: var(--color-green);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+/* Frame foto bulat - placeholder sekarang, nanti diisi <img class="quicknav__img"> */
+.quicknav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  color: var(--color-gold);
+  background-color: rgba(201, 164, 92, 0.14);
+  border: 1.5px dashed rgba(201, 164, 92, 0.7);
+  transition:
+    background-color 0.28s ease,
+    border-color 0.28s ease,
+    color 0.28s ease;
+}
+.quicknav__icon svg {
+  width: 26px;
+  height: 26px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.quicknav__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.quicknav__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+.quicknav__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+.quicknav__sub {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #8a8172;
+  text-align: center;
+}
+/* Hover desktop: membesar + disc keisi emas */
+.quicknav__card:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+.quicknav__card:hover .quicknav__icon {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-cream);
+}
+/* Tap HP: efek tekan (pengganti hover) */
+.quicknav__card:active {
+  transform: scale(0.96);
+}
+.quicknav__card:active .quicknav__icon {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-cream);
+}
+.quicknav__card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
 
 .trust {
   max-width: 1100px;
@@ -1130,11 +1256,12 @@ section + section::before,
   height: 1px;
   background: rgba(201, 164, 92, 0.4);
 }
-/* Jangan kasih garis di hero / booking / tepat setelah subhero */
+/* Jangan kasih garis di hero / booking / tepat setelah subhero / quicknav (nempel hero) */
 .hero::before,
 .subhero::before,
 .booking::before,
-.subhero + section::before {
+.subhero + section::before,
+.quicknav::before {
   content: none;
 }
 
@@ -2329,6 +2456,10 @@ section + section::before,
   .booking__fields {
     grid-template-columns: 1fr;
   }
+  /* Quick nav: 4 kolom -> grid 2x2 di HP */
+  .quicknav__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .about {
     margin-top: -1rem;
   }
@@ -2528,7 +2659,9 @@ section + section::before,
   .review-card:hover,
   .about__content:hover,
   .info__fact:hover,
-  .booking__btn:hover {
+  .booking__btn:hover,
+  .quicknav__card:hover,
+  .quicknav__card:active {
     transform: none;
   }
 }

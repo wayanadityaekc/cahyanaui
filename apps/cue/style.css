@@ -453,6 +453,7 @@ body {
   width: 100%;
   max-width: 160px;
   justify-self: center;
+  align-self: center;
   padding: 1rem;
 }
 /* Kunci disc icon biar gak disusutin flexbox di box kotak (tetap bulat 44x44) */

@@ -455,6 +455,10 @@ body {
   justify-self: center;
   padding: 1rem;
 }
+/* Kunci disc icon biar gak disusutin flexbox di box kotak (tetap bulat 44x44) */
+#about .about__icon {
+  flex-shrink: 0;
+}
 
 /* ==================== Quick nav (shortcut ke page utama, di bawah hero) ==================== */
 .quicknav {

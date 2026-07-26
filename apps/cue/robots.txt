@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /guide/_template.html
+
+Sitemap: https://cahyanaubudexperience.com/sitemap.xml

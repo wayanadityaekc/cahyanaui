@@ -1621,8 +1621,8 @@ function initWelcome() {
     '<div class="modal__box welcome__box">' +
       '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
       '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" />' +
-      '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">How many people are traveling? We’ll show you accurate prices for your group — including our <strong>Exclusive</strong> tours where entrance tickets are already bundled in.</p>' +
+      '<h2 class="welcome__title">Welcome</h2>' +
+      '<p class="welcome__text">Tell us your group size and every price becomes your exact total — tours, transfers, and activities, all <strong>upfront</strong>. No surprises.</p>' +
       '<div class="welcome__field">' +
         '<label for="welcome-guests">Number of guests</label>' +
         '<select id="welcome-guests">' + opts + "</select>" +

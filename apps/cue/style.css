@@ -1428,6 +1428,12 @@ section + section::before,
   border: none;
   cursor: pointer;
 }
+.modal__logo {
+  display: block;
+  height: 38px;
+  width: auto;
+  margin: 0 auto 1.1rem;
+}
 .modal__title {
   margin-bottom: 1.25rem;
   font-family: var(--font-body);
@@ -1585,14 +1591,25 @@ section + section::before,
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-green);
-  background-color: var(--color-gold);
+  color: var(--color-cream);
+  background-color: var(--color-green);
   cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+.modal__btn:hover {
+  background-color: var(--color-gold);
+  color: var(--color-green);
 }
 .modal__btn--wa {
   margin-top: 0.75rem;
   color: #fff;
   background-color: #25d366;
+}
+.modal__btn--wa:hover {
+  background-color: #1fb457;
+  color: #fff;
 }
 .modal__success {
   display: none;
@@ -1609,6 +1626,10 @@ section + section::before,
   font-size: 1.6rem;
   color: #fff;
   background-color: #25d366;
+}
+/* Checkmark khusus "Added to itinerary" = emas (booking success tetap ijo) */
+#itn-added-modal .modal__success-icon {
+  background-color: var(--color-gold);
 }
 .modal__success p {
   margin-bottom: 1.5rem;
@@ -2772,6 +2793,11 @@ section + section::before,
   border: 1.5px solid #d8d2c4;
   color: var(--color-green);
 }
+.modal__btn--ghost:hover {
+  background: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--color-cream);
+}
 /* Popup "Added to itinerary" (dibuat di showAddedPopup): jarak antar tombol */
 #itn-added-modal .modal__btn + .modal__btn {
   margin-top: 0.85rem;
@@ -3383,8 +3409,9 @@ section + section::before,
 }
 .welcome__field select {
   width: 100%;
+  height: 2.9rem;
   padding: 0.7rem 0.8rem;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   background-color: #fff;
 }
 

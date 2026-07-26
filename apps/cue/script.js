@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 24;
+const PARTIALS_VERSION = 25;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -1621,15 +1621,15 @@ function initWelcome() {
   modal.innerHTML =
     '<div class="modal__box welcome__box">' +
       '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" />' +
       '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">How many people are traveling? We’ll show you accurate prices for your group — including our <strong>Exclusive</strong> tours where entrance tickets are already bundled in.</p>' +
+      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> — upfront, always.</p>' +
       '<div class="welcome__field">' +
         '<label for="welcome-guests">Number of guests</label>' +
         '<select id="welcome-guests">' + opts + "</select>" +
       "</div>" +
       '<div class="welcome__actions">' +
-        '<button type="button" class="modal__btn" id="welcome-confirm">See my prices</button>' +
-        '<button type="button" class="modal__btn modal__btn--ghost" data-close>Skip for now</button>' +
+        '<button type="button" class="modal__btn" id="welcome-confirm">Explore</button>' +
       "</div>" +
     "</div>";
   document.body.appendChild(modal);
@@ -1645,6 +1645,33 @@ function initWelcome() {
   requestAnimationFrame(() => modal.classList.add("active"));
 }
 
+// UX modal global: tutup pakai Escape + lock scroll background pas ada modal kebuka.
+// Berlaku ke SEMUA modal (.modal.active), termasuk yang di-inject via JS.
+function initModalUX() {
+  // Escape -> tutup semua modal yang lagi kebuka.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll(".modal.active").forEach((m) => {
+      m.classList.remove("active");
+      // Welcome popup: tandain udah diliat biar nggak muncul lagi.
+      if (m.id === "welcome-modal") localStorage.setItem("cue_welcomed", "1");
+    });
+  });
+
+  // Scroll-lock: ada modal kebuka -> kunci scroll body; nggak ada -> lepas lagi.
+  const syncScrollLock = () => {
+    document.body.style.overflow = document.querySelector(".modal.active")
+      ? "hidden"
+      : "";
+  };
+  new MutationObserver(syncScrollLock).observe(document.body, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ["class"]
+  });
+}
+
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
@@ -1658,6 +1685,7 @@ async function initPage() {
   initContact();
   initItinerary();
   initModals();
+  initModalUX();
   initReviews();
   initDrivers();
   initWhatsApp();

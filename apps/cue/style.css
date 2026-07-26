@@ -446,10 +446,14 @@ body {
   line-height: 1.5;
   color: #6b6559;
 }
-/* Homepage About boxes = kotak (persegi), isi ketengah vertikal */
+/* Homepage About boxes = kotak (persegi) kecil, ketengah di dalam box hijau */
 #about .about__content {
   aspect-ratio: 1 / 1;
   justify-content: center;
+  width: 100%;
+  max-width: 160px;
+  justify-self: center;
+  padding: 1rem;
 }
 
 /* ==================== Quick nav (shortcut ke page utama, di bawah hero) ==================== */

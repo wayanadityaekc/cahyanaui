@@ -148,7 +148,7 @@ body {
   background-position: center;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
-    url("assets/images/ricefield-top.jpg");
+    url("assets/images/ricefield-top.jpg?v=2");
 }
 
 .hero__inner {

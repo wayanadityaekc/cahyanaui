@@ -1397,15 +1397,6 @@ section + section::before,
   line-height: 1.6;
   opacity: 0.85;
 }
-/* Blok gabungan sosmed + "Featured On" di kolom brand (di bawah tagline) */
-.footer__connect {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.25rem 2.25rem;
-  margin-top: 1.5rem;
-}
 .footer__socials {
   display: flex;
   gap: 0.75rem;
@@ -1457,8 +1448,9 @@ section + section::before,
 .footer__col a:hover {
   color: var(--color-gold);
 }
-/* "Featured On" sekarang nempel di kolom brand (bukan section full-width lagi) */
+/* "Featured On" nempel di kolom brand (bawah tagline); sosmed jadi item di list logo */
 .footer__featured {
+  margin-top: 1.5rem;
   text-align: left;
 }
 .footer__featured-label {

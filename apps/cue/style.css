@@ -275,6 +275,7 @@ body {
 .field input[type="date"],
 .itn-day__fields .field input,
 .itn-day__fields .field select,
+.itn-charter__field input,
 .charter__select,
 .welcome__field select {
   border: 1px solid #d8d2c4;
@@ -2924,10 +2925,24 @@ section + section::before,
   font-size: 0.85rem;
   font-weight: 600;
 }
-.itn-transfer__dir {
+.itn-transfer__dir,
+.itn-charter__dur {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.9rem;
+}
+/* Field tunggal charter (area pickup / extra jam) - full width, sizing sama input builder */
+.itn-charter__field {
+  margin-bottom: 0.9rem;
+}
+.itn-charter__field select,
+.itn-charter__field input {
+  width: 100%;
+  min-width: 0;
+  height: 2.7rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.85rem;
+  background: #fff;
 }
 .dirbtn {
   flex: 1;
@@ -3147,6 +3162,13 @@ section + section::before,
 .pick-cat:hover {
   border-color: var(--color-gold);
   background: #efe9db;
+}
+/* Charter dipilih inline (bukan navigasi) -> pakai <button>, samain tampilannya dg <a> */
+button.pick-cat {
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  cursor: pointer;
 }
 .route__add {
   display: inline-block;

@@ -228,12 +228,36 @@ function exclusivePrice(name, guests) {
   return { usd: car.usd + sup.usd * g, idr: car.idr + sup.idr * g };
 }
 
+// Harga charter (per mobil, TIDAK tergantung jumlah orang): base durasi
+// (half / full / extended + extra jam) + surcharge kalau pickup di luar Ubud.
+// dur "" -> 0. Dipakai bareng charter.html & builder itinerary (DRY).
+function charterPrice(area, dur, extra) {
+  let b;
+  if (dur === "half") b = { usd: CHARTER.half.usd, idr: CHARTER.half.idr };
+  else if (dur === "full") b = { usd: CHARTER.full.usd, idr: CHARTER.full.idr };
+  else if (dur === "extended") {
+    const e = parseInt(extra) || 1;
+    b = {
+      usd: CHARTER.full.usd + e * CHARTER.extHourUsd,
+      idr: CHARTER.full.idr + e * CHARTER.extHourIdr
+    };
+  } else return { usd: 0, idr: 0 };
+  if (area && area !== "Ubud") {
+    b.usd += CHARTER.surchargeUsd;
+    b.idr += CHARTER.surchargeIdr;
+  }
+  return b;
+}
+
 function itnLoad() {
   try {
     const s = JSON.parse(localStorage.getItem(ITN_KEY));
-    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) return s;
+    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) {
+      if (!Array.isArray(s.charters)) s.charters = []; // kompat state lama (sebelum charter)
+      return s;
+    }
   } catch (e) {}
-  return { days: [], transfers: [] };
+  return { days: [], transfers: [], charters: [] };
 }
 
 function itnSave(state) {
@@ -245,7 +269,7 @@ function itnCount(state) {
   const st = state || itnLoad();
   let n = 0;
   st.days.forEach((d) => (n += d.items.length));
-  return n + st.transfers.length;
+  return n + st.transfers.length + (st.charters ? st.charters.length : 0);
 }
 
 function itnUpdateBadge(state) {
@@ -276,7 +300,7 @@ function suggestState(nDays, guests) {
     { route: PKG_AIRPORT, direction: "to", pickup: PKG_AIRPORT_PLACE, dropoff: "", date: "", guests: g },
     { route: PKG_AIRPORT, direction: "from", pickup: "", dropoff: PKG_AIRPORT_PLACE, date: "", guests: g }
   ];
-  return { days, transfers };
+  return { days, transfers, charters: [] };
 }
 
 // "YYYY-MM-DD" + n hari (UTC biar nggak kena timezone). "" kalau input kosong.
@@ -917,6 +941,9 @@ function initItinerary() {
       const hotelField = tr.direction === "from" ? "pickup" : "dropoff";
       if (!tr[hotelField]) tr[hotelField] = val;
     });
+    (state.charters || []).forEach((ch) => {
+      if (!ch.pickup) ch.pickup = val; // drop-off charter = tujuan, jangan diisi hotel
+    });
   }
   // Pilih Standard/Exclusive di hari ke-fromIdx -> hari berikutnya ikut (bisa diubah).
   function cascadeModes(fromIdx, mode) {
@@ -960,11 +987,23 @@ function initItinerary() {
     d.items.length > 0 && !!d.date && (parseInt(d.guests) || 0) > 0;
   const transferComplete = (tr) =>
     !!tr.route && !!tr.date && (parseInt(tr.guests) || 0) > 0;
+  const charterComplete = (ch) =>
+    !!ch.area && !!ch.dur && !!ch.date && (parseInt(ch.guests) || 0) > 0;
 
   function guestOptions(val) {
     let o = `<option value="" disabled ${val ? "" : "selected"}>Guests</option>`;
     for (let n = 1; n <= 10; n++)
       o += `<option value="${n}" ${val == n ? "selected" : ""}>${n}</option>`;
+    return o;
+  }
+
+  // Pilihan area pickup charter: Ubud (tanpa surcharge) + area transfer (luar Ubud).
+  const CH_AREAS = ["Ubud", ...Object.keys(prices.transfer).map((r) => r.replace(" – Ubud", ""))];
+  function charterAreaOptions(sel) {
+    let o = `<option value="" disabled ${sel ? "" : "selected"}>Pick-up area</option>`;
+    CH_AREAS.forEach((a) => {
+      o += `<option value="${a}" ${sel === a ? "selected" : ""}>${a}</option>`;
+    });
     return o;
   }
 
@@ -1083,11 +1122,13 @@ function initItinerary() {
     const box = document.getElementById("itn-transfers-list");
     if (!box) return;
     box.innerHTML = "";
-    if (!state.transfers.length) {
-      box.innerHTML = `<p class="itn__empty">No transfers yet.</p>`;
+    const chs = state.charters || [];
+    if (!state.transfers.length && !chs.length) {
+      box.innerHTML = `<p class="itn__empty">No transfers or charter yet.</p>`;
       return;
     }
     state.transfers.forEach((tr, i) => box.appendChild(renderTransferCard(tr, i)));
+    chs.forEach((ch, i) => box.appendChild(renderCharterCard(ch, i)));
   }
 
   function renderTransferCard(tr, i) {
@@ -1151,6 +1192,85 @@ function initItinerary() {
     return card;
   }
 
+  // Kartu charter (di panel Transfers & Charter). Field kerja inline kayak transfer,
+  // tapi charter punya: area pickup (dropdown), durasi (half/full/extended), extra jam.
+  function renderCharterCard(ch, i) {
+    const card = document.createElement("div");
+    card.className = "itn-day itn-transfer itn-charter";
+    const p = charterPrice(ch.area, ch.dur, ch.extra);
+    card.innerHTML = `
+      <div class="itn-day__head">
+        <h4 class="itn-day__title">Private Car Charter</h4>
+        <button class="itn-day__remove" type="button" data-rmcharter="${i}" aria-label="Remove charter">&times;</button>
+      </div>
+      <div class="itn-charter__field field">
+        <label>Pick-up area</label>
+        <select class="f-area">${charterAreaOptions(ch.area)}</select>
+      </div>
+      <div class="itn-charter__dur">
+        <button class="dirbtn ${ch.dur === "half" ? "active" : ""}" type="button" data-dur="half">Half Day</button>
+        <button class="dirbtn ${ch.dur === "full" ? "active" : ""}" type="button" data-dur="full">Full Day</button>
+        <button class="dirbtn ${ch.dur === "extended" ? "active" : ""}" type="button" data-dur="extended">Extended</button>
+      </div>
+      ${ch.dur === "extended"
+        ? `<div class="itn-charter__field field"><label>Extra hours after 10</label><input type="number" class="f-extra" min="1" max="6" value="${ch.extra || 1}" /></div>`
+        : ""}
+      <div class="itn-day__fields">
+        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${ch.date}" /></div>
+        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(ch.guests)}</select></div>
+        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa" value="${ch.pickup || ""}" /></div>
+        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Where to (optional)" value="${ch.dropoff || ""}" /></div>
+      </div>
+      <div class="itn-day__price"><span>Charter price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
+    `;
+    card.querySelector("[data-rmcharter]").addEventListener("click", () => {
+      state.charters.splice(i, 1);
+      save();
+      rerender();
+    });
+    card.querySelector(".f-area").addEventListener("change", (e) => {
+      ch.area = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelectorAll("[data-dur]").forEach((b) =>
+      b.addEventListener("click", () => {
+        ch.dur = b.dataset.dur;
+        if (ch.dur === "extended" && !ch.extra) ch.extra = 1;
+        save();
+        rerender();
+      })
+    );
+    const extraEl = card.querySelector(".f-extra");
+    if (extraEl)
+      extraEl.addEventListener("input", (e) => {
+        ch.extra = parseInt(e.target.value) || 1;
+        save();
+        rerender();
+      });
+    card.querySelector(".f-date").addEventListener("change", (e) => {
+      if (e.target.value && e.target.value < todayStr()) {
+        showPastDate();
+        e.target.value = ch.date || "";
+        return;
+      }
+      ch.date = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-guests").addEventListener("change", (e) => {
+      ch.guests = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-pickup").addEventListener("input", (e) => { ch.pickup = e.target.value; save(); });
+    card.querySelector(".f-pickup").addEventListener("change", (e) => {
+      ch.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
+    });
+    card.querySelector(".f-dropoff").addEventListener("input", (e) => { ch.dropoff = e.target.value; save(); });
+    return card;
+  }
+
   // ---------- ringkasan ----------
   function renderSummary() {
     let usd = 0,
@@ -1165,15 +1285,25 @@ function initItinerary() {
       usd += p.usd;
       idr += p.idr;
     });
+    const chs = state.charters || [];
+    chs.forEach((ch) => {
+      const p = charterPrice(ch.area, ch.dur, ch.extra);
+      usd += p.usd;
+      idr += p.idr;
+    });
     document.getElementById("itn-total").innerHTML = priceHTML(usd, idr);
     const nDays = state.days.length,
-      nTr = state.transfers.length;
+      nTr = state.transfers.length,
+      nCh = chs.length;
     let label = `Total - ${nDays} day${nDays === 1 ? "" : "s"}`;
     if (nTr) label += ` + ${nTr} transfer${nTr === 1 ? "" : "s"}`;
+    if (nCh) label += ` + ${nCh} charter`;
     document.getElementById("itn-total-label").textContent = label;
     const allDone =
-      state.days.every(dayComplete) && state.transfers.every(transferComplete);
-    document.getElementById("itn-book").disabled = !(nDays || nTr) || !allDone;
+      state.days.every(dayComplete) &&
+      state.transfers.every(transferComplete) &&
+      chs.every(charterComplete);
+    document.getElementById("itn-book").disabled = !(nDays || nTr || nCh) || !allDone;
   }
 
   function rerender() {
@@ -1201,12 +1331,23 @@ function initItinerary() {
     });
   }
 
+  // Charter beda dari kategori lain: nggak "pilih yang mana", tapi 1 kartu yang
+  // dikonfigurasi. Jadi langsung tambah kartu charter kosong ke builder (inline).
+  const pickCharter = document.getElementById("pick-charter");
+  if (pickCharter)
+    pickCharter.addEventListener("click", () => {
+      state.charters.push({ area: "", dur: "", extra: 1, date: "", guests: "", pickup: "", dropoff: "" });
+      save();
+      rerender();
+      if (pickModal) pickModal.classList.remove("active");
+    });
+
   const clearBtn = document.getElementById("itn-clear");
   if (clearBtn)
     clearBtn.addEventListener("click", () => {
       if (!itnCount(state)) return;
       if (!confirm("Clear the whole itinerary?")) return;
-      state = { days: [], transfers: [] };
+      state = { days: [], transfers: [], charters: [] };
       save();
       rerender();
     });
@@ -1224,6 +1365,12 @@ function initItinerary() {
     const area = tr.route.replace(" – Ubud", "");
     return tr.direction === "from" ? `Ubud → ${area}` : `${area} → Ubud`;
   }
+  function charterDurLabel(ch) {
+    if (ch.dur === "half") return "Half Day (5h)";
+    if (ch.dur === "full") return "Full Day (10h)";
+    if (ch.dur === "extended") return `Extended (10h + ${parseInt(ch.extra) || 1}h)`;
+    return "";
+  }
 
   document.getElementById("itn-book").addEventListener("click", () => {
     if (!window.__openBooking) return;
@@ -1239,19 +1386,29 @@ function initItinerary() {
       usd += p.usd;
       idr += p.idr;
     });
-    // rincian per hari + transfer -> dikirim ke backend lewat field `items`
+    const chs = state.charters || [];
+    chs.forEach((ch) => {
+      const p = charterPrice(ch.area, ch.dur, ch.extra);
+      usd += p.usd;
+      idr += p.idr;
+    });
+    // rincian per hari + transfer + charter -> dikirim ke backend lewat field `items`
     const items = [
       ...state.days.map(
         (d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`
       ),
       ...state.transfers.map(
         (tr) => `Transfer (${tr.date}, ${tr.guests} pax): ${transferLine(tr)} [pickup: ${tr.pickup}, dropoff: ${tr.dropoff}]`
+      ),
+      ...chs.map(
+        (ch) => `Charter (${ch.date}, ${ch.guests} pax): ${charterDurLabel(ch)} from ${ch.area}${ch.pickup ? ` [pickup: ${ch.pickup}]` : ""}${ch.dropoff ? ` [to: ${ch.dropoff}]` : ""}`
       )
     ].join(" | ");
-    const nDays = state.days.length, nTr = state.transfers.length;
+    const nDays = state.days.length, nTr = state.transfers.length, nCh = chs.length;
     const parts = [];
     if (nDays) parts.push(`${nDays} day${nDays > 1 ? "s" : ""}`);
     if (nTr) parts.push(`${nTr} transfer${nTr > 1 ? "s" : ""}`);
+    if (nCh) parts.push(`${nCh} charter`);
     window.__openBooking({
       type: "itinerary",
       service: `Custom Itinerary (${parts.join(" + ")})`,
@@ -1265,7 +1422,7 @@ function initItinerary() {
       detailLines: null,
       items: items,
       onSuccess: () => {
-        state = { days: [], transfers: [] };
+        state = { days: [], transfers: [], charters: [] };
         save();
         rerender();
       }
@@ -1555,29 +1712,17 @@ function initCharter() {
   const bookBtn = document.getElementById("ch-book");
   const st = { dur: "" };
 
-  const outside = () => pickup.value && pickup.value !== "Ubud";
-  function base(key) {
-    if (key === "half") return { usd: CHARTER.half.usd, idr: CHARTER.half.idr };
-    if (key === "full") return { usd: CHARTER.full.usd, idr: CHARTER.full.idr };
-    const e = parseInt(extraInput.value) || 1;
-    return {
-      usd: CHARTER.full.usd + e * CHARTER.extHourUsd,
-      idr: CHARTER.full.idr + e * CHARTER.extHourIdr
-    };
-  }
-  const withSurcharge = (b) =>
-    outside()
-      ? { usd: b.usd + CHARTER.surchargeUsd, idr: b.idr + CHARTER.surchargeIdr }
-      : b;
+  // harga tiap durasi (incl. surcharge kalau area di luar Ubud) via helper bersama
+  const priceFor = (dur) => charterPrice(pickup.value, dur, extraInput.value);
 
   function renderCharter() {
     document.querySelectorAll("[data-ch]").forEach((el) => {
-      const p = withSurcharge(base(el.dataset.ch));
+      const p = priceFor(el.dataset.ch);
       el.textContent = fmtMoney(p.usd, p.idr);
     });
     const totalBox = document.getElementById("ch-total");
     if (st.dur) {
-      const p = withSurcharge(base(st.dur));
+      const p = priceFor(st.dur);
       totalBox.innerHTML = priceHTML(p.usd, p.idr);
     } else {
       totalBox.innerHTML = '<span class="price-cur">-</span>';
@@ -1606,7 +1751,7 @@ function initCharter() {
   // Book -> buka modal konfirmasi bersama (pickup udah keisi dari builder, dropoff wajib)
   bookBtn.addEventListener("click", () => {
     if (!window.__openBooking) return;
-    const p = withSurcharge(base(st.dur));
+    const p = priceFor(st.dur);
     const label =
       st.dur === "half"
         ? "Half Day (5h)"

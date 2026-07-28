@@ -2300,6 +2300,127 @@ section + section::before,
   color: #6b6559;
 }
 
+/* ==================== Ready-made packages ==================== */
+.pkg-section {
+  padding: 3rem 1.5rem;
+}
+.pkg-section__intro {
+  max-width: 640px;
+  margin: -1rem auto 2rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  text-align: center;
+  color: #6b6559;
+}
+.pkg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.pkg-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(31, 61, 43, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.pkg-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+}
+.pkg-card__head {
+  padding: 1rem 1.15rem;
+  color: var(--color-cream);
+  background: linear-gradient(135deg, var(--color-green), #2e5a40);
+}
+.pkg-card__badge {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-green);
+  background-color: var(--color-gold);
+  border-radius: 999px;
+}
+.pkg-card__name {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.pkg-card__days {
+  list-style: none;
+  padding: 0.5rem 1.15rem 0;
+}
+.pkg-card__day {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed rgba(31, 61, 43, 0.12);
+  font-size: 0.9rem;
+  color: #46453f;
+}
+.pkg-card__day:last-child {
+  border-bottom: none;
+}
+.pkg-card__n {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-green);
+  background-color: rgba(201, 164, 92, 0.2);
+  border-radius: 50%;
+}
+.pkg-card__extra {
+  margin: 0.5rem 1.15rem 0;
+  padding-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #7a7466;
+}
+.pkg-card__extra::before {
+  content: "\2713";
+  margin-right: 0.4rem;
+  font-weight: 700;
+  color: #1f7a3d;
+}
+.pkg-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding: 1rem 1.15rem;
+  border-top: 1px solid rgba(31, 61, 43, 0.1);
+}
+.pkg-card__price {
+  font-size: 0.78rem;
+  color: #7a7466;
+}
+.pkg-card__price b {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+.pkg-card__btn {
+  padding: 0.55rem 1rem;
+  font-size: 0.8rem;
+}
+
 .field {
   margin-bottom: 1.1rem;
 }

@@ -123,6 +123,22 @@ const PAGE_ITEM = {
 // -- itinerary store key
 const ITN_KEY = "cue_itinerary_v1";
 
+// -- paket itinerary siap-pakai (ready-made packages)
+// Dihitung dari jumlah HARI TOUR. Tiap paket OTOMATIS + jemput & antar airport
+// (2 transfer). Contoh: "1 Day in Ubud" = 1 tour + pickup + drop = 3 program.
+// Nama tour HARUS sama persis dg key di prices.tour / prices.combo. Harga = live sum.
+// Isi tour boleh digeser bebas (cuma data). PKG_AIRPORT = route buat pickup & drop.
+const PKG_AIRPORT = "Airport – Ubud";
+const PACKAGES = [
+  { id: "ubud-1d", name: "1 Day in Ubud", days: 1, tours: ["Ubud Tour"] },
+  { id: "bali-2d", name: "2 Days in Bali", days: 2, tours: ["Ubud Tour", "Ubud Culture Day"] },
+  { id: "bali-3d", name: "3 Days in Bali", days: 3, tours: ["Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline"] },
+  { id: "bali-4d", name: "4 Days in Bali", days: 4, tours: ["Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour"] },
+  { id: "bali-5d", name: "5 Days in Bali", days: 5, tours: ["Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour", "South Coast & Sunset Kecak"] },
+  { id: "bali-6d", name: "6 Days in Bali", days: 6, tours: ["Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour", "South Coast & Sunset Kecak", "West Bali Tour"] },
+  { id: "bali-7d", name: "7 Days in Bali", days: 7, tours: ["Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour", "South Coast & Sunset Kecak", "West Bali Tour", "North Bali Tour"] }
+];
+
 /* ==================== 2. HELPER FUNCTIONS ==================== */
 
 // -- currency & price formatting
@@ -174,6 +190,7 @@ function setCurrency(cur) {
   if (svc && svc.value) svc.dispatchEvent(new Event("change"));
   if (window.__itnRerender) window.__itnRerender();
   if (window.__chRefresh) window.__chRefresh();
+  if (window.__pkgRefresh) window.__pkgRefresh();
 }
 
 // Set jumlah orang global: simpan, render ulang harga Exclusive + catatan toggle,
@@ -247,6 +264,34 @@ function itnUpdateBadge(state) {
 
 function newItnDay() {
   return { items: [], date: "", guests: "", pickup: "", dropoff: "" };
+}
+
+// Bangun state itinerary dari sebuah paket: tiap tour = 1 hari, + 2 transfer airport
+// (jemput = Airport→Ubud "to", antar = Ubud→Airport "from"). Date/guests dikosongin
+// biar user isi sendiri sebelum booking (sama kayak add manual).
+function packageState(pkg) {
+  const days = pkg.tours.map((name) => {
+    const d = newItnDay();
+    d.items.push(name);
+    return d;
+  });
+  const transfers = [
+    { route: PKG_AIRPORT, direction: "to", pickup: "", dropoff: "", date: "", guests: "" },
+    { route: PKG_AIRPORT, direction: "from", pickup: "", dropoff: "", date: "", guests: "" }
+  ];
+  return { days, transfers };
+}
+
+// Harga "from" paket buat kartu: jumlah harga dasar tiap tour + 2× transfer airport.
+function packagePrice(pkg) {
+  let usd = 0, idr = 0;
+  pkg.tours.forEach((name) => {
+    const info = itemInfo(name);
+    if (info) { usd += info.price.usd; idr += info.price.idr; }
+  });
+  const t = prices.transfer[PKG_AIRPORT];
+  if (t) { usd += 2 * t.usd; idr += 2 * t.idr; }
+  return { usd, idr };
 }
 
 // Tambah 1 program ke store. Masuk ke hari terakhir kalau slotnya cukup,
@@ -1098,6 +1143,13 @@ function initItinerary() {
     renderSummary();
   }
   window.__itnRerender = rerender; // biar ganti currency bisa re-render itinerary
+  // Ganti seluruh isi itinerary (dipakai "Use this package"). Set state closure +
+  // simpan + render, biar builder langsung update tanpa reload halaman.
+  window.__itnReplaceState = function (st) {
+    state = st;
+    save();
+    rerender();
+  };
 
   // ---------- tombol Add -> popup pilih kategori ----------
   const pickModal = document.getElementById("itn-pick-modal");
@@ -1346,6 +1398,66 @@ function initReveal() {
     el.classList.add("reveal");
     observer.observe(el);
   });
+}
+
+// Kartu paket ready-made (di itinerary.html & homepage). Di-render ke tiap
+// [data-packages]. Klik "Use this package" -> isi builder pakai paket (+ airport),
+// terus user bisa lanjut edit/booking. Harga live ikut renderPrices.
+function initPackages() {
+  const mounts = document.querySelectorAll("[data-packages]");
+  if (!mounts.length) return;
+
+  function cardHTML(pkg) {
+    const daysHTML = pkg.tours
+      .map((name, i) => `<li class="pkg-card__day"><span class="pkg-card__n">${i + 1}</span><span>${name}</span></li>`)
+      .join("");
+    const pr = packagePrice(pkg);
+    return `<article class="pkg-card">
+        <div class="pkg-card__head">
+          <span class="pkg-card__badge">${pkg.days} Day${pkg.days > 1 ? "s" : ""}</span>
+          <h3 class="pkg-card__name">${pkg.name}</h3>
+        </div>
+        <ul class="pkg-card__days">${daysHTML}</ul>
+        <p class="pkg-card__extra">Airport pickup &amp; drop-off included</p>
+        <div class="pkg-card__foot">
+          <span class="pkg-card__price">from <b>${fmtMoney(pr.usd, pr.idr)}</b></span>
+          <button type="button" class="btn-book pkg-card__btn" data-pkg="${pkg.id}">Use this package</button>
+        </div>
+      </article>`;
+  }
+
+  function render() {
+    const html = PACKAGES.map(cardHTML).join("");
+    mounts.forEach((m) => {
+      m.innerHTML = html;
+      m.querySelectorAll("[data-pkg]").forEach((b) =>
+        b.addEventListener("click", () => {
+          const pkg = PACKAGES.find((p) => p.id === b.dataset.pkg);
+          if (pkg) usePackage(pkg);
+        })
+      );
+    });
+  }
+  render();
+  window.__pkgRefresh = render; // re-render harga kartu pas currency ganti
+}
+
+// Pakai paket: kalau builder udah ada isi -> konfirmasi (pola sama kayak Clear all).
+// Set store dari paket. Di halaman itinerary -> update builder + scroll ke sana;
+// di halaman lain (homepage) -> lompat ke itinerary.html.
+function usePackage(pkg) {
+  const cur = itnLoad();
+  if ((cur.days.length || cur.transfers.length) &&
+      !confirm(`This replaces your current itinerary with the "${pkg.name}" package. Continue?`)) return;
+  const st = packageState(pkg);
+  itnSave(st);
+  if (window.__itnReplaceState) {
+    window.__itnReplaceState(st);
+    const target = document.getElementById("itinerary");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else {
+    location.href = "itinerary.html#itinerary";
+  }
 }
 
 // Tiap card (a) badan card bisa diklik -> halaman detail,
@@ -1684,6 +1796,7 @@ async function initPage() {
   initAccordion();
   initContact();
   initItinerary();
+  initPackages();
   initModals();
   initModalUX();
   initReviews();

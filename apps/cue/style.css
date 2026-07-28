@@ -2026,6 +2026,18 @@ section + section::before,
   left: 0;
   color: #b3261e;
 }
+/* Item yang cuma tampil di salah satu mode (Standard / Exclusive). Default =
+   Standard, jadi item exclusive-only disembunyiin dulu (nggak ada flash). Class
+   .is-exclusive di .info__container (di-set toggle) yang nge-swap barisan tiket. */
+.info__list li[data-only="exclusive"] {
+  display: none;
+}
+.info__container.is-exclusive .info__list li[data-only="exclusive"] {
+  display: list-item;
+}
+.info__container.is-exclusive .info__list li[data-only="standard"] {
+  display: none;
+}
 
 /* Halaman attraction (stop): foto besar + teks di bagian About */
 .attraction-photo {
@@ -3483,7 +3495,9 @@ section + section::before,
   margin-top: 0.75rem;
 }
 .tour-type--detail {
-  margin-bottom: 1.25rem;
+  justify-content: center;
+  margin-top: -0.75rem; /* judul udah punya margin-bottom 2rem, rapetin dikit */
+  margin-bottom: 2rem;
 }
 .tour-type__toggle {
   display: inline-flex;

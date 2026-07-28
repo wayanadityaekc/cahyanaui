@@ -1561,6 +1561,10 @@ function initTourType() {
     // Di card, seluruh area toggle nggak boleh nge-trigger navigasi card (cuma foto/badan)
     if (variant === "card") wrap.addEventListener("click", (e) => e.stopPropagation());
 
+    // Di halaman detail: kontainer "Tour Details" yang list Included/Excluded-nya
+    // ikut berubah (baris tiket pindah Excluded <-> Included) lewat class .is-exclusive.
+    const infoBox = variant === "detail" ? wrap.closest(".info__container") : null;
+
     const note = wrap.querySelector(".tour-type__note");
     const btns = wrap.querySelectorAll(".tour-type__btn");
 
@@ -1572,6 +1576,7 @@ function initTourType() {
     function apply(mode, render) {
       btns.forEach((b) => b.classList.toggle("is-active", b.dataset.mode === mode));
       priceEl.dataset.mode = mode;
+      if (infoBox) infoBox.classList.toggle("is-exclusive", mode === "exclusive");
       updateNote(mode);
       if (render) renderPrices();
     }
@@ -1594,10 +1599,11 @@ function initTourType() {
     if (priceEl && desc) build(priceEl.dataset.price, priceEl, desc, "after", "card");
   });
 
-  // Halaman detail: di atas judul "Tour Details"
+  // Halaman detail: tepat di bawah judul "Tour Details"
   document.querySelectorAll(".info__container").forEach((box) => {
     const priceEl = box.querySelector("[data-price]");
-    if (priceEl) build(priceEl.dataset.price, priceEl, box, "prepend", "detail");
+    const title = box.querySelector(".section__title");
+    if (priceEl && title) build(priceEl.dataset.price, priceEl, title, "after", "detail");
   });
 
   // Dipanggil pas jumlah orang ganti -> perbarui catatan "for N pax"

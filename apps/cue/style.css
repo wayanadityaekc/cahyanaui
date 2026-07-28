@@ -1400,8 +1400,10 @@ section + section::before,
 /* Blok gabungan sosmed + "Featured On" di kolom brand (di bawah tagline) */
 .footer__connect {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 2.25rem;
   margin-top: 1.5rem;
 }
 .footer__socials {

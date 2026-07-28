@@ -1405,8 +1405,8 @@ section + section::before,
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   color: var(--color-cream);
   background-color: rgba(247, 243, 234, 0.12);

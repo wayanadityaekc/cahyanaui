@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=41" />
+  <link rel="stylesheet" href="style.css?v=42" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/itinerary.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -47,6 +47,16 @@
     <h2 class="section__title">Build Your Own Bali Itinerary</h2>
     <p class="builder__intro">Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a 10% deposit to book.</p>
 
+    <div class="itn-suggest" id="suggested">
+      <p class="itn-suggest__t">Don't know where to start?</p>
+      <p class="itn-suggest__s">Pick a length and group size - we'll build a suggested plan you can tweak, then book.</p>
+      <div class="itn-suggest__row">
+        <label class="itn-suggest__f">Days<select id="sg-days"></select></label>
+        <label class="itn-suggest__f">Guests<select id="sg-guests"></select></label>
+        <button class="btn-book itn-suggest__btn" id="sg-build" type="button">Build my itinerary</button>
+      </div>
+    </div>
+
     <div class="itn2">
       <div class="itn2__panel">
         <div class="itn__panel-head">
@@ -57,11 +67,11 @@
       </div>
 
       <div class="itn2__panel">
-        <h3 class="itn__subtitle">Transfers</h3>
+        <h3 class="itn__subtitle">Transfers &amp; Charter</h3>
         <div id="itn-transfers-list"></div>
       </div>
 
-      <button class="itn2__add" id="itn-add" type="button">+ Add to your trip</button>
+      <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
 
       <section class="summary">
         <div class="summary__total">
@@ -80,11 +90,12 @@
     <div class="modal__box modal__box--sm">
       <button class="modal__close" data-close aria-label="Close">&times;</button>
       <h3 class="modal__title">Add to your trip</h3>
-      <p class="modal__sub">Pick a category, choose on the next page, and it comes right back here.</p>
+      <p class="modal__sub">Pick a category to add to your trip.</p>
       <div class="pick-cats">
         <a href="tour.html" class="pick-cat">Tour Programs</a>
-        <a href="activities.html" class="pick-cat">Activities &amp; Performances</a>
         <a href="transfer.html" class="pick-cat">Transfers</a>
+        <button type="button" class="pick-cat" id="pick-charter">Private Car Charter</button>
+        <a href="activities.html" class="pick-cat">Activities &amp; Performances</a>
       </div>
     </div>
   </div>
@@ -93,6 +104,6 @@
   <div id="book-confirm-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-  <script src="script.js?v=41"></script>
+  <script src="script.js?v=42"></script>
 </body>
 </html>

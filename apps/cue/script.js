@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 25;
+const PARTIALS_VERSION = 28;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -123,6 +123,17 @@ const PAGE_ITEM = {
 // -- itinerary store key
 const ITN_KEY = "cue_itinerary_v1";
 
+// -- "Suggested plan" (boks "Don't know where to start?" di itinerary)
+// User pilih jumlah HARI + jumlah orang -> builder auto-keisi: tour ke-i buat hari ke-i
+// (dari SUGGEST) + jemput & antar airport. Nama HARUS sama persis dg key prices.tour/combo.
+// Urutan tour boleh digeser bebas (cuma data). PKG_AIRPORT = route jemput/antar.
+const PKG_AIRPORT = "Airport – Ubud";
+const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
+const SUGGEST = [
+  "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour",
+  "South Coast & Sunset Kecak", "West Bali Tour", "North Bali Tour"
+];
+
 /* ==================== 2. HELPER FUNCTIONS ==================== */
 
 // -- currency & price formatting
@@ -217,12 +228,36 @@ function exclusivePrice(name, guests) {
   return { usd: car.usd + sup.usd * g, idr: car.idr + sup.idr * g };
 }
 
+// Harga charter (per mobil, TIDAK tergantung jumlah orang): base durasi
+// (half / full / extended + extra jam) + surcharge kalau pickup di luar Ubud.
+// dur "" -> 0. Dipakai bareng charter.html & builder itinerary (DRY).
+function charterPrice(area, dur, extra) {
+  let b;
+  if (dur === "half") b = { usd: CHARTER.half.usd, idr: CHARTER.half.idr };
+  else if (dur === "full") b = { usd: CHARTER.full.usd, idr: CHARTER.full.idr };
+  else if (dur === "extended") {
+    const e = parseInt(extra) || 1;
+    b = {
+      usd: CHARTER.full.usd + e * CHARTER.extHourUsd,
+      idr: CHARTER.full.idr + e * CHARTER.extHourIdr
+    };
+  } else return { usd: 0, idr: 0 };
+  if (area && area !== "Ubud") {
+    b.usd += CHARTER.surchargeUsd;
+    b.idr += CHARTER.surchargeIdr;
+  }
+  return b;
+}
+
 function itnLoad() {
   try {
     const s = JSON.parse(localStorage.getItem(ITN_KEY));
-    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) return s;
+    if (s && Array.isArray(s.days) && Array.isArray(s.transfers)) {
+      if (!Array.isArray(s.charters)) s.charters = []; // kompat state lama (sebelum charter)
+      return s;
+    }
   } catch (e) {}
-  return { days: [], transfers: [] };
+  return { days: [], transfers: [], charters: [] };
 }
 
 function itnSave(state) {
@@ -234,7 +269,7 @@ function itnCount(state) {
   const st = state || itnLoad();
   let n = 0;
   st.days.forEach((d) => (n += d.items.length));
-  return n + st.transfers.length;
+  return n + st.transfers.length + (st.charters ? st.charters.length : 0);
 }
 
 function itnUpdateBadge(state) {
@@ -248,6 +283,41 @@ function itnUpdateBadge(state) {
 function newItnDay() {
   return { items: [], date: "", guests: "", pickup: "", dropoff: "" };
 }
+
+// Bangun state itinerary dari "suggested plan": nDays tour pertama dari SUGGEST jadi
+// 1 hari masing-masing, + 2 transfer airport (jemput "to" & antar "from"). Guests keisi
+// semua (diisi sekali di boks). Sisi airport pickup/drop-off di-prefill; sisi hotel kosong
+// biar user isi (nanti auto-nyebar). Tanggal kosong -> user isi (baris pertama auto-cascade).
+function suggestState(nDays, guests) {
+  const g = guests || "";
+  const days = SUGGEST.slice(0, nDays).map((name) => {
+    const d = newItnDay();
+    d.items.push(name);
+    d.guests = g;
+    return d;
+  });
+  const transfers = [
+    { route: PKG_AIRPORT, direction: "to", pickup: PKG_AIRPORT_PLACE, dropoff: "", date: "", guests: g },
+    { route: PKG_AIRPORT, direction: "from", pickup: "", dropoff: PKG_AIRPORT_PLACE, date: "", guests: g }
+  ];
+  return { days, transfers, charters: [] };
+}
+
+// "YYYY-MM-DD" + n hari (UTC biar nggak kena timezone). "" kalau input kosong.
+function addDaysStr(ds, n) {
+  if (!ds) return "";
+  const p = ds.split("-");
+  const dt = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
+  dt.setUTCDate(dt.getUTCDate() + n);
+  const z = (x) => ("0" + x).slice(-2);
+  return dt.getUTCFullYear() + "-" + z(dt.getUTCMonth() + 1) + "-" + z(dt.getUTCDate());
+}
+
+// Peta nama program -> halaman detailnya (kebalikan PAGE_ITEM), buat tombol "View details".
+const ITEM_URL = Object.keys(PAGE_ITEM).reduce((m, page) => {
+  m[PAGE_ITEM[page]] = page;
+  return m;
+}, {});
 
 // Tambah 1 program ke store. Masuk ke hari terakhir kalau slotnya cukup,
 // kalau nggak muat -> bikin hari baru. Return true kalau berhasil.
@@ -851,6 +921,39 @@ function initItinerary() {
   // Disimpan di d.itemModes[idx] - sejajar sama d.items (string tetap dipakai).
   const itemMode = (d, idx) => (d.itemModes && d.itemModes[idx]) || "standard";
 
+  // ---------- auto-fill helper (suggested plan & manual) ----------
+  // Isi tanggal di hari ke-fromIdx -> hari berikutnya +1 berturut (bisa diubah lagi).
+  function cascadeDates(fromIdx) {
+    const base = state.days[fromIdx].date;
+    if (!base) return;
+    for (let j = fromIdx + 1; j < state.days.length; j++)
+      state.days[j].date = addDaysStr(base, j - fromIdx);
+  }
+  // Input hotel pertama -> nyebar ke semua slot pickup/drop-off yang masih kosong.
+  // Sisi airport (pickup transfer "to" / drop-off transfer "from") nggak disentuh.
+  function propagateLocation(val) {
+    if (!val) return;
+    state.days.forEach((d) => {
+      if (!d.pickup) d.pickup = val;
+      if (!d.dropoff) d.dropoff = val;
+    });
+    state.transfers.forEach((tr) => {
+      const hotelField = tr.direction === "from" ? "pickup" : "dropoff";
+      if (!tr[hotelField]) tr[hotelField] = val;
+    });
+    (state.charters || []).forEach((ch) => {
+      if (!ch.pickup) ch.pickup = val; // drop-off charter = tujuan, jangan diisi hotel
+    });
+  }
+  // Pilih Standard/Exclusive di hari ke-fromIdx -> hari berikutnya ikut (bisa diubah).
+  function cascadeModes(fromIdx, mode) {
+    for (let j = fromIdx + 1; j < state.days.length; j++) {
+      const d = state.days[j];
+      if (!d.itemModes) d.itemModes = [];
+      d.items.forEach((name, idx) => { if (tourExclusive[name]) d.itemModes[idx] = mode; });
+    }
+  }
+
   // ---------- pricing ----------
   function dayPrice(d) {
     let usd = 0,
@@ -884,11 +987,23 @@ function initItinerary() {
     d.items.length > 0 && !!d.date && (parseInt(d.guests) || 0) > 0;
   const transferComplete = (tr) =>
     !!tr.route && !!tr.date && (parseInt(tr.guests) || 0) > 0;
+  const charterComplete = (ch) =>
+    !!ch.area && !!ch.dur && !!ch.date && (parseInt(ch.guests) || 0) > 0;
 
   function guestOptions(val) {
     let o = `<option value="" disabled ${val ? "" : "selected"}>Guests</option>`;
     for (let n = 1; n <= 10; n++)
       o += `<option value="${n}" ${val == n ? "selected" : ""}>${n}</option>`;
+    return o;
+  }
+
+  // Pilihan area pickup charter: Ubud (tanpa surcharge) + area transfer (luar Ubud).
+  const CH_AREAS = ["Ubud", ...Object.keys(prices.transfer).map((r) => r.replace(" – Ubud", ""))];
+  function charterAreaOptions(sel) {
+    let o = `<option value="" disabled ${sel ? "" : "selected"}>Pick-up area</option>`;
+    CH_AREAS.forEach((a) => {
+      o += `<option value="${a}" ${sel === a ? "selected" : ""}>${a}</option>`;
+    });
     return o;
   }
 
@@ -907,6 +1022,12 @@ function initItinerary() {
     card.className = "itn-day";
     const p = dayPrice(d);
     const done = dayComplete(d);
+    // Link "View details" ke halaman program (paling bawah kartu)
+    const viewsHTML = d.items
+      .map((name) => ITEM_URL[name]
+        ? `<a class="itn-day__view" href="${ITEM_URL[name]}" target="_blank" rel="noopener">${d.items.length > 1 ? name + " - " : ""}View details &rsaquo;</a>`
+        : "")
+      .filter(Boolean).join("");
     const itemsHTML = d.items.length
       ? d.items
           .map((name, idx) => {
@@ -930,7 +1051,7 @@ function initItinerary() {
       <div class="itn-day__head">
         <h4 class="itn-day__title">Day ${i + 1}</h4>
         <span class="itn-day__status ${done ? "done" : ""}">${done ? "Complete" : "Incomplete"}</span>
-        <button class="itn-day__remove" type="button" data-rmday="${i}">Remove</button>
+        <button class="itn-day__remove" type="button" data-rmday="${i}" aria-label="Remove day">&times;</button>
       </div>
       <ul class="itn-day__items">${itemsHTML}</ul>
       <div class="itn-day__fields">
@@ -939,7 +1060,7 @@ function initItinerary() {
         <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
         <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
       </div>
-      <div class="itn-day__price"><span>Day ${i + 1} price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
+      <div class="itn-day__price"><span class="itn-day__views">${viewsHTML}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
     `;
     card.querySelectorAll("[data-rmitem]").forEach((b) =>
       b.addEventListener("click", () => {
@@ -958,6 +1079,7 @@ function initItinerary() {
         b.addEventListener("click", () => {
           if (!d.itemModes) d.itemModes = [];
           d.itemModes[idx] = b.dataset.mode;
+          cascadeModes(i, b.dataset.mode);
           save();
           rerender();
         })
@@ -975,6 +1097,7 @@ function initItinerary() {
         return;
       }
       d.date = e.target.value;
+      cascadeDates(i); // hari pertama diisi -> hari berikutnya auto +1
       save();
       rerender();
     });
@@ -983,13 +1106,13 @@ function initItinerary() {
       save();
       rerender();
     });
-    card.querySelector(".f-pickup").addEventListener("input", (e) => {
-      d.pickup = e.target.value;
-      save();
+    card.querySelector(".f-pickup").addEventListener("input", (e) => { d.pickup = e.target.value; save(); });
+    card.querySelector(".f-pickup").addEventListener("change", (e) => {
+      d.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
     });
-    card.querySelector(".f-dropoff").addEventListener("input", (e) => {
-      d.dropoff = e.target.value;
-      save();
+    card.querySelector(".f-dropoff").addEventListener("input", (e) => { d.dropoff = e.target.value; save(); });
+    card.querySelector(".f-dropoff").addEventListener("change", (e) => {
+      d.dropoff = e.target.value; propagateLocation(e.target.value); save(); rerender();
     });
     return card;
   }
@@ -999,11 +1122,13 @@ function initItinerary() {
     const box = document.getElementById("itn-transfers-list");
     if (!box) return;
     box.innerHTML = "";
-    if (!state.transfers.length) {
-      box.innerHTML = `<p class="itn__empty">No transfers yet.</p>`;
+    const chs = state.charters || [];
+    if (!state.transfers.length && !chs.length) {
+      box.innerHTML = `<p class="itn__empty">No transfers or charter yet.</p>`;
       return;
     }
     state.transfers.forEach((tr, i) => box.appendChild(renderTransferCard(tr, i)));
+    chs.forEach((ch, i) => box.appendChild(renderCharterCard(ch, i)));
   }
 
   function renderTransferCard(tr, i) {
@@ -1015,7 +1140,7 @@ function initItinerary() {
     card.innerHTML = `
       <div class="itn-day__head">
         <h4 class="itn-day__title">${toActive ? area + " → Ubud" : "Ubud → " + area}</h4>
-        <button class="itn-day__remove" type="button" data-rmtransfer="${i}">Remove</button>
+        <button class="itn-day__remove" type="button" data-rmtransfer="${i}" aria-label="Remove transfer">&times;</button>
       </div>
       <div class="itn-transfer__dir">
         <button class="dirbtn ${toActive ? "active" : ""}" type="button" data-dir="to">${area} → Ubud</button>
@@ -1056,14 +1181,93 @@ function initItinerary() {
       save();
       rerender();
     });
-    card.querySelector(".f-pickup").addEventListener("input", (e) => {
-      tr.pickup = e.target.value;
-      save();
+    card.querySelector(".f-pickup").addEventListener("input", (e) => { tr.pickup = e.target.value; save(); });
+    card.querySelector(".f-pickup").addEventListener("change", (e) => {
+      tr.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
     });
-    card.querySelector(".f-dropoff").addEventListener("input", (e) => {
-      tr.dropoff = e.target.value;
-      save();
+    card.querySelector(".f-dropoff").addEventListener("input", (e) => { tr.dropoff = e.target.value; save(); });
+    card.querySelector(".f-dropoff").addEventListener("change", (e) => {
+      tr.dropoff = e.target.value; propagateLocation(e.target.value); save(); rerender();
     });
+    return card;
+  }
+
+  // Kartu charter (di panel Transfers & Charter). Field kerja inline kayak transfer,
+  // tapi charter punya: area pickup (dropdown), durasi (half/full/extended), extra jam.
+  function renderCharterCard(ch, i) {
+    const card = document.createElement("div");
+    card.className = "itn-day itn-transfer itn-charter";
+    const p = charterPrice(ch.area, ch.dur, ch.extra);
+    card.innerHTML = `
+      <div class="itn-day__head">
+        <h4 class="itn-day__title">Private Car Charter</h4>
+        <button class="itn-day__remove" type="button" data-rmcharter="${i}" aria-label="Remove charter">&times;</button>
+      </div>
+      <div class="itn-charter__field field">
+        <label>Pick-up area</label>
+        <select class="f-area">${charterAreaOptions(ch.area)}</select>
+      </div>
+      <div class="itn-charter__dur">
+        <button class="dirbtn ${ch.dur === "half" ? "active" : ""}" type="button" data-dur="half">Half Day</button>
+        <button class="dirbtn ${ch.dur === "full" ? "active" : ""}" type="button" data-dur="full">Full Day</button>
+        <button class="dirbtn ${ch.dur === "extended" ? "active" : ""}" type="button" data-dur="extended">Extended</button>
+      </div>
+      ${ch.dur === "extended"
+        ? `<div class="itn-charter__field field"><label>Extra hours after 10</label><input type="number" class="f-extra" min="1" max="6" value="${ch.extra || 1}" /></div>`
+        : ""}
+      <div class="itn-day__fields">
+        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${ch.date}" /></div>
+        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(ch.guests)}</select></div>
+        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa" value="${ch.pickup || ""}" /></div>
+        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Where to (optional)" value="${ch.dropoff || ""}" /></div>
+      </div>
+      <div class="itn-day__price"><span>Charter price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
+    `;
+    card.querySelector("[data-rmcharter]").addEventListener("click", () => {
+      state.charters.splice(i, 1);
+      save();
+      rerender();
+    });
+    card.querySelector(".f-area").addEventListener("change", (e) => {
+      ch.area = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelectorAll("[data-dur]").forEach((b) =>
+      b.addEventListener("click", () => {
+        ch.dur = b.dataset.dur;
+        if (ch.dur === "extended" && !ch.extra) ch.extra = 1;
+        save();
+        rerender();
+      })
+    );
+    const extraEl = card.querySelector(".f-extra");
+    if (extraEl)
+      extraEl.addEventListener("input", (e) => {
+        ch.extra = parseInt(e.target.value) || 1;
+        save();
+        rerender();
+      });
+    card.querySelector(".f-date").addEventListener("change", (e) => {
+      if (e.target.value && e.target.value < todayStr()) {
+        showPastDate();
+        e.target.value = ch.date || "";
+        return;
+      }
+      ch.date = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-guests").addEventListener("change", (e) => {
+      ch.guests = e.target.value;
+      save();
+      rerender();
+    });
+    card.querySelector(".f-pickup").addEventListener("input", (e) => { ch.pickup = e.target.value; save(); });
+    card.querySelector(".f-pickup").addEventListener("change", (e) => {
+      ch.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
+    });
+    card.querySelector(".f-dropoff").addEventListener("input", (e) => { ch.dropoff = e.target.value; save(); });
     return card;
   }
 
@@ -1081,15 +1285,25 @@ function initItinerary() {
       usd += p.usd;
       idr += p.idr;
     });
+    const chs = state.charters || [];
+    chs.forEach((ch) => {
+      const p = charterPrice(ch.area, ch.dur, ch.extra);
+      usd += p.usd;
+      idr += p.idr;
+    });
     document.getElementById("itn-total").innerHTML = priceHTML(usd, idr);
     const nDays = state.days.length,
-      nTr = state.transfers.length;
+      nTr = state.transfers.length,
+      nCh = chs.length;
     let label = `Total - ${nDays} day${nDays === 1 ? "" : "s"}`;
     if (nTr) label += ` + ${nTr} transfer${nTr === 1 ? "" : "s"}`;
+    if (nCh) label += ` + ${nCh} charter`;
     document.getElementById("itn-total-label").textContent = label;
     const allDone =
-      state.days.every(dayComplete) && state.transfers.every(transferComplete);
-    document.getElementById("itn-book").disabled = !(nDays || nTr) || !allDone;
+      state.days.every(dayComplete) &&
+      state.transfers.every(transferComplete) &&
+      chs.every(charterComplete);
+    document.getElementById("itn-book").disabled = !(nDays || nTr || nCh) || !allDone;
   }
 
   function rerender() {
@@ -1098,6 +1312,13 @@ function initItinerary() {
     renderSummary();
   }
   window.__itnRerender = rerender; // biar ganti currency bisa re-render itinerary
+  // Ganti seluruh isi itinerary (dipakai "Use this package"). Set state closure +
+  // simpan + render, biar builder langsung update tanpa reload halaman.
+  window.__itnReplaceState = function (st) {
+    state = st;
+    save();
+    rerender();
+  };
 
   // ---------- tombol Add -> popup pilih kategori ----------
   const pickModal = document.getElementById("itn-pick-modal");
@@ -1110,12 +1331,23 @@ function initItinerary() {
     });
   }
 
+  // Charter beda dari kategori lain: nggak "pilih yang mana", tapi 1 kartu yang
+  // dikonfigurasi. Jadi langsung tambah kartu charter kosong ke builder (inline).
+  const pickCharter = document.getElementById("pick-charter");
+  if (pickCharter)
+    pickCharter.addEventListener("click", () => {
+      state.charters.push({ area: "", dur: "", extra: 1, date: "", guests: "", pickup: "", dropoff: "" });
+      save();
+      rerender();
+      if (pickModal) pickModal.classList.remove("active");
+    });
+
   const clearBtn = document.getElementById("itn-clear");
   if (clearBtn)
     clearBtn.addEventListener("click", () => {
       if (!itnCount(state)) return;
       if (!confirm("Clear the whole itinerary?")) return;
-      state = { days: [], transfers: [] };
+      state = { days: [], transfers: [], charters: [] };
       save();
       rerender();
     });
@@ -1133,6 +1365,12 @@ function initItinerary() {
     const area = tr.route.replace(" – Ubud", "");
     return tr.direction === "from" ? `Ubud → ${area}` : `${area} → Ubud`;
   }
+  function charterDurLabel(ch) {
+    if (ch.dur === "half") return "Half Day (5h)";
+    if (ch.dur === "full") return "Full Day (10h)";
+    if (ch.dur === "extended") return `Extended (10h + ${parseInt(ch.extra) || 1}h)`;
+    return "";
+  }
 
   document.getElementById("itn-book").addEventListener("click", () => {
     if (!window.__openBooking) return;
@@ -1148,19 +1386,29 @@ function initItinerary() {
       usd += p.usd;
       idr += p.idr;
     });
-    // rincian per hari + transfer -> dikirim ke backend lewat field `items`
+    const chs = state.charters || [];
+    chs.forEach((ch) => {
+      const p = charterPrice(ch.area, ch.dur, ch.extra);
+      usd += p.usd;
+      idr += p.idr;
+    });
+    // rincian per hari + transfer + charter -> dikirim ke backend lewat field `items`
     const items = [
       ...state.days.map(
         (d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`
       ),
       ...state.transfers.map(
         (tr) => `Transfer (${tr.date}, ${tr.guests} pax): ${transferLine(tr)} [pickup: ${tr.pickup}, dropoff: ${tr.dropoff}]`
+      ),
+      ...chs.map(
+        (ch) => `Charter (${ch.date}, ${ch.guests} pax): ${charterDurLabel(ch)} from ${ch.area}${ch.pickup ? ` [pickup: ${ch.pickup}]` : ""}${ch.dropoff ? ` [to: ${ch.dropoff}]` : ""}`
       )
     ].join(" | ");
-    const nDays = state.days.length, nTr = state.transfers.length;
+    const nDays = state.days.length, nTr = state.transfers.length, nCh = chs.length;
     const parts = [];
     if (nDays) parts.push(`${nDays} day${nDays > 1 ? "s" : ""}`);
     if (nTr) parts.push(`${nTr} transfer${nTr > 1 ? "s" : ""}`);
+    if (nCh) parts.push(`${nCh} charter`);
     window.__openBooking({
       type: "itinerary",
       service: `Custom Itinerary (${parts.join(" + ")})`,
@@ -1174,7 +1422,7 @@ function initItinerary() {
       detailLines: null,
       items: items,
       onSuccess: () => {
-        state = { days: [], transfers: [] };
+        state = { days: [], transfers: [], charters: [] };
         save();
         rerender();
       }
@@ -1348,6 +1596,36 @@ function initReveal() {
   });
 }
 
+// Boks "Don't know where to start?" (Days + Guests + Build) di atas builder itinerary.
+// Generate "suggested plan" ke builder yang udah ada (reuse initItinerary + __itnReplaceState).
+// Homepage cuma punya CTA <a> ke itinerary.html (nggak ada boks), jadi ini early-return di situ.
+function initSuggested() {
+  const daysSel = document.getElementById("sg-days");
+  const guestsSel = document.getElementById("sg-guests");
+  const buildBtn = document.getElementById("sg-build");
+  if (!daysSel || !guestsSel || !buildBtn) return;
+
+  for (let i = 1; i <= 7; i++)
+    daysSel.insertAdjacentHTML("beforeend", `<option value="${i}"${i === 3 ? " selected" : ""}>${i} day${i > 1 ? "s" : ""}</option>`);
+  guestsSel.insertAdjacentHTML("beforeend", `<option value="" selected disabled>Guests</option>`);
+  for (let n = 1; n <= 10; n++)
+    guestsSel.insertAdjacentHTML("beforeend", `<option value="${n}">${n}</option>`);
+
+  buildBtn.addEventListener("click", () => {
+    const nDays = parseInt(daysSel.value) || 1;
+    const g = guestsSel.value;
+    if (!g) { alert("Please choose the number of guests first."); return; }
+    const cur = itnLoad();
+    if ((cur.days.length || cur.transfers.length) &&
+        !confirm("This replaces your current itinerary with a suggested plan. Continue?")) return;
+    const st = suggestState(nDays, g);
+    itnSave(st);
+    if (window.__itnReplaceState) window.__itnReplaceState(st);
+    const target = document.getElementById("itinerary");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
 // Tiap card (a) badan card bisa diklik -> halaman detail,
 // (b) ada tombol "Add to itinerary" yang nambah program ke store.
 function initItineraryButtons() {
@@ -1434,29 +1712,17 @@ function initCharter() {
   const bookBtn = document.getElementById("ch-book");
   const st = { dur: "" };
 
-  const outside = () => pickup.value && pickup.value !== "Ubud";
-  function base(key) {
-    if (key === "half") return { usd: CHARTER.half.usd, idr: CHARTER.half.idr };
-    if (key === "full") return { usd: CHARTER.full.usd, idr: CHARTER.full.idr };
-    const e = parseInt(extraInput.value) || 1;
-    return {
-      usd: CHARTER.full.usd + e * CHARTER.extHourUsd,
-      idr: CHARTER.full.idr + e * CHARTER.extHourIdr
-    };
-  }
-  const withSurcharge = (b) =>
-    outside()
-      ? { usd: b.usd + CHARTER.surchargeUsd, idr: b.idr + CHARTER.surchargeIdr }
-      : b;
+  // harga tiap durasi (incl. surcharge kalau area di luar Ubud) via helper bersama
+  const priceFor = (dur) => charterPrice(pickup.value, dur, extraInput.value);
 
   function renderCharter() {
     document.querySelectorAll("[data-ch]").forEach((el) => {
-      const p = withSurcharge(base(el.dataset.ch));
+      const p = priceFor(el.dataset.ch);
       el.textContent = fmtMoney(p.usd, p.idr);
     });
     const totalBox = document.getElementById("ch-total");
     if (st.dur) {
-      const p = withSurcharge(base(st.dur));
+      const p = priceFor(st.dur);
       totalBox.innerHTML = priceHTML(p.usd, p.idr);
     } else {
       totalBox.innerHTML = '<span class="price-cur">-</span>';
@@ -1485,7 +1751,7 @@ function initCharter() {
   // Book -> buka modal konfirmasi bersama (pickup udah keisi dari builder, dropoff wajib)
   bookBtn.addEventListener("click", () => {
     if (!window.__openBooking) return;
-    const p = withSurcharge(base(st.dur));
+    const p = priceFor(st.dur);
     const label =
       st.dur === "half"
         ? "Half Day (5h)"
@@ -1561,6 +1827,10 @@ function initTourType() {
     // Di card, seluruh area toggle nggak boleh nge-trigger navigasi card (cuma foto/badan)
     if (variant === "card") wrap.addEventListener("click", (e) => e.stopPropagation());
 
+    // Di halaman detail: kontainer "Tour Details" yang list Included/Excluded-nya
+    // ikut berubah (baris tiket pindah Excluded <-> Included) lewat class .is-exclusive.
+    const infoBox = variant === "detail" ? wrap.closest(".info__container") : null;
+
     const note = wrap.querySelector(".tour-type__note");
     const btns = wrap.querySelectorAll(".tour-type__btn");
 
@@ -1572,6 +1842,7 @@ function initTourType() {
     function apply(mode, render) {
       btns.forEach((b) => b.classList.toggle("is-active", b.dataset.mode === mode));
       priceEl.dataset.mode = mode;
+      if (infoBox) infoBox.classList.toggle("is-exclusive", mode === "exclusive");
       updateNote(mode);
       if (render) renderPrices();
     }
@@ -1594,10 +1865,11 @@ function initTourType() {
     if (priceEl && desc) build(priceEl.dataset.price, priceEl, desc, "after", "card");
   });
 
-  // Halaman detail: di atas judul "Tour Details"
+  // Halaman detail: tepat di bawah judul "Tour Details"
   document.querySelectorAll(".info__container").forEach((box) => {
     const priceEl = box.querySelector("[data-price]");
-    if (priceEl) build(priceEl.dataset.price, priceEl, box, "prepend", "detail");
+    const title = box.querySelector(".section__title");
+    if (priceEl && title) build(priceEl.dataset.price, priceEl, title, "after", "detail");
   });
 
   // Dipanggil pas jumlah orang ganti -> perbarui catatan "for N pax"
@@ -1684,6 +1956,7 @@ async function initPage() {
   initAccordion();
   initContact();
   initItinerary();
+  initSuggested();
   initModals();
   initModalUX();
   initReviews();

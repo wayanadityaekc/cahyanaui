@@ -275,6 +275,7 @@ body {
 .field input[type="date"],
 .itn-day__fields .field input,
 .itn-day__fields .field select,
+.itn-charter__field input,
 .charter__select,
 .welcome__field select {
   border: 1px solid #d8d2c4;
@@ -1381,11 +1382,14 @@ section + section::before,
   margin: 0 auto;
 }
 .footer__logo {
-  font-family: var(--font-body);
-  font-size: 1.3rem;
-  font-weight: 700;
+  display: inline-block;
   text-decoration: none;
   color: var(--color-cream);
+}
+.footer__logo img {
+  display: block;
+  height: 48px;
+  width: auto;
 }
 .footer__tagline {
   margin-top: 0.75rem;
@@ -1396,15 +1400,14 @@ section + section::before,
 }
 .footer__socials {
   display: flex;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
+  gap: 1.25rem;
 }
 .footer__socials a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   color: var(--color-cream);
   background-color: rgba(247, 243, 234, 0.12);
@@ -1446,16 +1449,14 @@ section + section::before,
 .footer__col a:hover {
   color: var(--color-gold);
 }
+/* "Featured On" nempel di kolom brand (bawah tagline); sosmed jadi item di list logo */
 .footer__featured {
-  max-width: 1100px;
-  margin: 2.5rem auto 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(247, 243, 234, 0.15);
-  text-align: center;
+  margin-top: 1.5rem;
+  text-align: left;
 }
 .footer__featured-label {
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.7;
@@ -1464,11 +1465,10 @@ section + section::before,
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 1rem 2.5rem;
+  gap: 1.25rem;
 }
 .footer__logos img {
-  height: 26px;
+  height: 24px;
   width: auto;
   opacity: 0.85;
 }
@@ -1480,7 +1480,9 @@ section + section::before,
 }
 .footer__payments {
   max-width: 1100px;
-  margin: 2rem auto 0;
+  margin: 2.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(247, 243, 234, 0.15);
   text-align: center;
 }
 .footer__pay-logos {
@@ -2026,6 +2028,18 @@ section + section::before,
   left: 0;
   color: #b3261e;
 }
+/* Item yang cuma tampil di salah satu mode (Standard / Exclusive). Default =
+   Standard, jadi item exclusive-only disembunyiin dulu (nggak ada flash). Class
+   .is-exclusive di .info__container (di-set toggle) yang nge-swap barisan tiket. */
+.info__list li[data-only="exclusive"] {
+  display: none;
+}
+.info__container.is-exclusive .info__list li[data-only="exclusive"] {
+  display: list-item;
+}
+.info__container.is-exclusive .info__list li[data-only="standard"] {
+  display: none;
+}
 
 /* Halaman attraction (stop): foto besar + teks di bagian About */
 .attraction-photo {
@@ -2298,6 +2312,102 @@ section + section::before,
   line-height: 1.6;
   text-align: center;
   color: #6b6559;
+}
+
+/* ==================== Suggested-plan box + homepage CTA ==================== */
+.itn-suggest {
+  max-width: 720px;
+  margin: 0 auto 2rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid rgba(201, 164, 92, 0.4);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(31, 61, 43, 0.05), rgba(201, 164, 92, 0.1));
+}
+.itn-suggest__t {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.itn-suggest__s {
+  margin: 0.25rem 0 1rem;
+  font-size: 0.85rem;
+  color: #6b6559;
+}
+.itn-suggest__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.7rem;
+}
+.itn-suggest__f {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #7a7466;
+}
+.itn-suggest__f select {
+  min-width: 120px;
+  height: 2.7rem;
+  padding: 0.4rem 0.6rem;
+}
+.itn-suggest__btn {
+  height: 2.7rem;
+  padding: 0 1.3rem;
+  font-size: 0.85rem;
+}
+
+/* "View details" link (paling bawah kartu day) */
+.itn-day__views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+}
+.itn-day__view {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.itn-day__view:hover {
+  text-decoration: underline;
+}
+
+/* CTA homepage "Don't know where to start?" -> itinerary suggested box */
+.pkg-cta {
+  padding: 3rem 1.5rem;
+}
+.pkg-cta__box {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.75rem;
+  text-align: center;
+  border: 1px solid rgba(201, 164, 92, 0.4);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(31, 61, 43, 0.05), rgba(201, 164, 92, 0.1));
+}
+.pkg-cta__title {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.pkg-cta__text {
+  max-width: 46ch;
+  margin: 0.6rem auto 1.4rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #6b6559;
+}
+.pkg-cta__btn {
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  text-decoration: none;
 }
 
 .field {
@@ -2710,6 +2820,7 @@ section + section::before,
 
 /* day / transfer card di kiri */
 .itn-day {
+  position: relative;
   padding: 1.1rem;
   margin-bottom: 1rem;
   border: 1px solid #e6dfce;
@@ -2724,6 +2835,7 @@ section + section::before,
   align-items: center;
   gap: 0.6rem;
   margin-bottom: 0.8rem;
+  padding-right: 1.8rem;
 }
 .itn-day__title {
   font-family: var(--font-body);
@@ -2744,13 +2856,26 @@ section + section::before,
   color: #2f8f4e;
 }
 .itn-day__remove {
-  margin-left: auto;
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  background: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 1.25rem;
+  line-height: 1;
   color: #b45b4d;
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+.itn-day__remove:hover {
+  background: rgba(180, 91, 77, 0.14);
 }
 .itn-day__items {
   list-style: none;
@@ -2787,16 +2912,18 @@ section + section::before,
 }
 .itn-day__fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.8rem;
   margin-bottom: 0.9rem;
 }
 .itn-day__fields .field {
   margin-bottom: 0;
+  min-width: 0;
 }
 .itn-day__fields .field input,
 .itn-day__fields .field select {
   width: 100%;
+  min-width: 0;
   height: 2.7rem;
   padding: 0.55rem 0.65rem;
   font-size: 0.85rem;
@@ -2811,10 +2938,24 @@ section + section::before,
   font-size: 0.85rem;
   font-weight: 600;
 }
-.itn-transfer__dir {
+.itn-transfer__dir,
+.itn-charter__dur {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.9rem;
+}
+/* Field tunggal charter (area pickup / extra jam) - full width, sizing sama input builder */
+.itn-charter__field {
+  margin-bottom: 0.9rem;
+}
+.itn-charter__field select,
+.itn-charter__field input {
+  width: 100%;
+  min-width: 0;
+  height: 2.7rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.85rem;
+  background: #fff;
 }
 .dirbtn {
   flex: 1;
@@ -3034,6 +3175,13 @@ section + section::before,
 .pick-cat:hover {
   border-color: var(--color-gold);
   background: #efe9db;
+}
+/* Charter dipilih inline (bukan navigasi) -> pakai <button>, samain tampilannya dg <a> */
+button.pick-cat {
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  cursor: pointer;
 }
 .route__add {
   display: inline-block;
@@ -3483,7 +3631,9 @@ section + section::before,
   margin-top: 0.75rem;
 }
 .tour-type--detail {
-  margin-bottom: 1.25rem;
+  justify-content: center;
+  margin-top: -0.75rem; /* judul udah punya margin-bottom 2rem, rapetin dikit */
+  margin-bottom: 2rem;
 }
 .tour-type__toggle {
   display: inline-flex;

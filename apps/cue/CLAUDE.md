@@ -86,7 +86,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N` & `script.js?v=N` on **every** HTML page.
-  Any CSS/JS change → bump `N` on all pages. *(current: v33, PARTIALS 21)*
+  Any CSS/JS change → bump `N` on all pages. *(current: v37, PARTIALS 21)*
 - **Multi-currency**: single source `prices` (USD+IDR per item) + static `CUR_RATE`.
   `[data-price="Name"]` spans are filled by `renderPrices()`. Supports USD/IDR/AUD/EUR/GBP,
   results are rounded, saved in localStorage `cue_currency`.

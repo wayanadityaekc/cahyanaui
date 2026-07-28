@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=37" />
+  <link rel="stylesheet" href="style.css?v=38" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/itinerary.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -43,15 +43,19 @@
     </div>
   </section>
 
-  <section class="pkg-section" id="packages">
-    <h2 class="section__title">Ready-Made Packages</h2>
-    <p class="pkg-section__intro">Prefer a plan that's ready to go? Pick a package and we'll drop it straight into your builder below - airport pickup &amp; drop-off included. Adjust anything before you book.</p>
-    <div class="pkg-grid" data-packages></div>
-  </section>
-
   <section class="itn" id="itinerary">
     <h2 class="section__title">Build Your Own Bali Itinerary</h2>
     <p class="builder__intro">Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a 10% deposit to book.</p>
+
+    <div class="itn-suggest" id="suggested">
+      <p class="itn-suggest__t">Don't know where to start?</p>
+      <p class="itn-suggest__s">Pick a length and group size - we'll build a suggested plan you can tweak, then book.</p>
+      <div class="itn-suggest__row">
+        <label class="itn-suggest__f">Days<select id="sg-days"></select></label>
+        <label class="itn-suggest__f">Guests<select id="sg-guests"></select></label>
+        <button class="btn-book itn-suggest__btn" id="sg-build" type="button">Build my itinerary</button>
+      </div>
+    </div>
 
     <div class="itn2">
       <div class="itn2__panel">
@@ -67,7 +71,7 @@
         <div id="itn-transfers-list"></div>
       </div>
 
-      <button class="itn2__add" id="itn-add" type="button">+ Add to your trip</button>
+      <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
 
       <section class="summary">
         <div class="summary__total">
@@ -99,6 +103,6 @@
   <div id="book-confirm-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-  <script src="script.js?v=37"></script>
+  <script src="script.js?v=38"></script>
 </body>
 </html>

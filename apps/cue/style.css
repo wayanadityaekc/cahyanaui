@@ -679,6 +679,15 @@ body {
   margin: 0 auto 1.5rem;
   padding: 2rem 1.5rem;
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem 4.5rem;
+}
+/* "Featured On" & "Follow Us" bersebelahan dalam satu baris (numpuk di layar sempit) */
+.trust__group {
+  flex: 0 1 auto;
 }
 .trust__label {
   margin-bottom: 1.5rem;
@@ -699,20 +708,12 @@ body {
 .trust__logos img {
   height: 30px;
   width: auto;
-  opacity: 0.55;
-  filter: grayscale(1);
-  transition:
-    opacity 0.2s,
-    filter 0.2s;
+  transition: transform 0.2s ease;
 }
 .trust__logos img:hover {
-  opacity: 1;
-  filter: grayscale(0);
+  transform: translateY(-2px);
 }
 /* Baris social media di section "Featured On" (logo sama kaya footer) */
-.trust__label--social {
-  margin-top: 2.25rem;
-}
 .trust__socials {
   display: flex;
   align-items: center;

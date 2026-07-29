@@ -88,6 +88,10 @@ const CURRENCIES = ["USD", "IDR", "AUD", "EUR", "GBP"];
 
 const CUR_RATE = { USD: 1, AUD: 1.53, EUR: 0.92, GBP: 0.79 };
 
+// Simbol per currency buat tampilan harga (AUD = A$ biar beda dari USD).
+// Dropdown currency TETAP pakai kode (USD/IDR/...) - ini cuma buat harga.
+const CUR_SYMBOL = { USD: "$", IDR: "Rp", AUD: "A$", EUR: "€", GBP: "£" };
+
 let currentCurrency = localStorage.getItem("cue_currency") || "USD";
 if (!CURRENCIES.includes(currentCurrency)) currentCurrency = "USD";
 
@@ -171,11 +175,11 @@ function toCurrency(usd, idr, cur) {
   return roundCur(raw, cur);
 }
 
-// Format jadi teks: "USD 45" / "IDR 700.000" / "AUD 69"
+// Format jadi teks pakai simbol: "$45" / "Rp700.000" / "A$69"
 function fmtMoney(usd, idr, cur) {
   cur = cur || currentCurrency;
   const v = toCurrency(usd, idr, cur);
-  return cur + " " + v.toLocaleString(cur === "IDR" ? "id-ID" : "en-US");
+  return (CUR_SYMBOL[cur] || cur + " ") + v.toLocaleString(cur === "IDR" ? "id-ID" : "en-US");
 }
 
 // Dipakai booking & itinerary (sekarang tampil 1 currency aktif)
@@ -641,7 +645,7 @@ function initBookingConfirm() {
     refMsg.textContent = "Referral applied - 10% off!"; refMsg.className = "modal__referral-msg success";
   });
 
-  function priceText() { return `USD ${ctx.final.usd} / IDR ${ctx.final.idr.toLocaleString("id-ID")}`; }
+  function priceText() { return `${CUR_SYMBOL.USD}${ctx.final.usd} / ${CUR_SYMBOL.IDR}${ctx.final.idr.toLocaleString("id-ID")}`; }
 
   function validate() {
     if (!nameI.value.trim()) { alert("Please enter your name."); return false; }
@@ -763,7 +767,7 @@ function initBooking() {
       if (!base) return;
       const t = transport[item] || { usd: 0, idr: 0 };
       usd = base.usd * guests + t.usd; idr = base.idr * guests + t.idr;
-      note = t.idr > 0 ? `Ticket per person + transport IDR ${t.idr.toLocaleString("id-ID")}` : "Ticket per person · free transport";
+      note = t.idr > 0 ? `Ticket per person + transport ${CUR_SYMBOL.IDR}${t.idr.toLocaleString("id-ID")}` : "Ticket per person · free transport";
     }
     currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive };
     priceField.innerHTML = priceHTML(usd, idr);

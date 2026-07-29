@@ -4,6 +4,21 @@
   --color-cream: #f7f3ea;
   --font-heading: "Great Vibes", cursive;
   --font-body: "Montserrat", sans-serif;
+  /* ---- Type scale (DRY) ---- */
+  --fs-display: clamp(1.9rem, 5vw, 2.2rem);
+  --fs-h2: 1.5rem;
+  --fs-h3: 1.15rem;
+  --fs-strong: 1rem;
+  --fs-body: 0.85rem;
+  --fs-small: 0.78rem;
+  --fs-label: 0.72rem;
+  --lh-body: 1.6;
+  --lh-heading: 1.2;
+  /* ---- Spacing scale ---- */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
 }
 
 * {
@@ -38,8 +53,8 @@ body {
 .transfer__note,
 .welcome__text {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   font-weight: 400;
 }
 
@@ -58,10 +73,11 @@ body {
   position: relative;
   margin-bottom: 2rem;
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: var(--fs-h2);
   font-weight: 600;
   text-align: center;
   color: var(--color-gold);
+  line-height: var(--lh-heading);
 }
 
 .section__title::after {
@@ -78,6 +94,7 @@ body {
 /* Judul section ke-2 dst dalam satu blok (jarak atas) - gantiin inline margin-top */
 .section__title--sub {
   margin-top: 2.75rem;
+  font-size: var(--fs-h3);
 }
 
 .navbar {
@@ -111,7 +128,7 @@ body {
   list-style: none;
 }
 .navbar__menu a {
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
   font-weight: 500;
   text-decoration: none;
   color: var(--color-gold);
@@ -207,8 +224,8 @@ body {
 }
 .hero__title {
   font-family: var(--font-body);
-  font-size: 2.6rem;
-  line-height: 1.15;
+  font-size: var(--fs-display);
+  line-height: var(--lh-heading);
   color: var(--color-gold);
   margin-top: 1rem;
 }
@@ -258,7 +275,7 @@ body {
 }
 .booking__group label {
   margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 /* ==================== Shared form-field base (DRY) ==================== */
@@ -290,7 +307,7 @@ body {
   width: 100%;
   min-width: 0;
   padding: 0.7rem 0.8rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   line-height: 1.4;
   height: 2.9rem;
   background-color: #fff;
@@ -317,7 +334,7 @@ body {
 .booking__note {
   margin-top: 0.25rem;
   min-height: 1.4em;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   line-height: 1.25;
   color: #7a7466;
 }
@@ -386,10 +403,9 @@ body {
   margin-bottom: 1rem;
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: clamp(3rem, 6vw, 3.5rem);
-  line-height: 1.1;
+  font-size: var(--fs-display);
+  line-height: var(--lh-heading);
   color: var(--color-gold);
-  line-height: 1.6;
 }
 .about__text p {
   color: var(--color-green);
@@ -442,9 +458,9 @@ body {
 /* Deskripsi kecil di bawah judul tiap box About */
 .about__desc {
   text-align: center;
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: var(--lh-body);
   color: #6b6559;
 }
 /* Homepage About boxes = kotak (persegi) kecil, ketengah di dalam box hijau */
@@ -525,12 +541,12 @@ body {
   gap: 0.15rem;
 }
 .quicknav__label {
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   text-align: center;
 }
 .quicknav__sub {
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   font-weight: 400;
   color: #8a8172;
   text-align: center;
@@ -567,7 +583,7 @@ body {
 }
 .trust__label {
   margin-bottom: 1.5rem;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #7a7466;
@@ -739,7 +755,7 @@ body {
 .villa__btn {
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   text-decoration: none;
   color: var(--color-cream);
@@ -837,13 +853,13 @@ body {
 .activities__heading {
   margin-bottom: 1rem;
   font-family: var(--font-heading);
-  font-size: 2rem;
-  line-height: 1.15;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
   color: var(--color-gold);
 }
 .activities__desc {
   color: #46453f;
-  line-height: 2;
+  line-height: var(--lh-body);
 }
 
 /* Route & Transfer accordion */
@@ -950,14 +966,14 @@ body {
 }
 .review-form__group label {
   margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 .review-form__group input,
 .review-form__group select,
 .review-form__group textarea {
   padding: 0.7rem 0.8rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   line-height: 1.4;
   background-color: #fff;
 }
@@ -1005,7 +1021,7 @@ body {
 .review-form__note {
   display: block;
   margin-top: 0.75rem;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   text-align: center;
   color: #7a7466;
 }
@@ -1075,7 +1091,7 @@ body {
   color: #46453f;
 }
 .review-card__name {
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
 }
@@ -1102,7 +1118,7 @@ body {
   border: 1px solid var(--color-green);
   border-radius: 6px;
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-cream);
   background-color: var(--color-green);
@@ -1175,17 +1191,17 @@ body {
 }
 .driver-card__name {
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
 }
 .driver-card__tagline {
   margin-top: 0.2rem;
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   color: #7a7466;
 }
 .driver-card__rating {
   margin-top: 0.75rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-gold);
 }
@@ -1194,7 +1210,7 @@ body {
 }
 .driver-card__more {
   margin-top: 0.6rem;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--color-green);
   opacity: 0.7;
@@ -1212,17 +1228,17 @@ body {
 }
 .driver-modal__name {
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
 }
 .driver-modal__tagline {
   display: block;
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   color: #7a7466;
 }
 .driver-modal__rating {
   margin-top: 0.3rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-gold);
 }
@@ -1317,12 +1333,12 @@ section + section::before,
 .faq__chat-title {
   margin-bottom: 0.6rem;
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
 }
 .faq__chat-text {
   margin-bottom: 1.5rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   line-height: 1.6;
   opacity: 0.9;
 }
@@ -1349,7 +1365,6 @@ section + section::before,
   position: relative;
   padding: 1.1rem 3rem 1.1rem 1.25rem;
   font-family: var(--font-body);
-  font-size: 0.95rem;
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -1404,7 +1419,7 @@ section + section::before,
 .footer__tagline {
   margin-top: 0.75rem;
   max-width: 320px;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   line-height: 1.6;
   opacity: 0.85;
 }
@@ -1441,7 +1456,7 @@ section + section::before,
 .footer__heading {
   margin-bottom: 1rem;
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: var(--fs-h3);
   color: var(--color-gold);
 }
 .footer__col ul {
@@ -1449,7 +1464,7 @@ section + section::before,
 }
 .footer__col li {
   margin-bottom: 0.6rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   opacity: 0.85;
 }
 .footer__col a {
@@ -1466,7 +1481,7 @@ section + section::before,
 }
 .footer__featured-label {
   margin-bottom: 0.75rem;
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   opacity: 0.7;
@@ -1527,7 +1542,7 @@ section + section::before,
   margin: 2.5rem auto 0;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(247, 243, 234, 0.15);
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   text-align: center;
   opacity: 0.7;
 }
@@ -1576,7 +1591,7 @@ section + section::before,
 .modal__title {
   margin-bottom: 1.25rem;
   font-family: var(--font-body);
-  font-size: 1.4rem;
+  font-size: var(--fs-h3);
   text-align: center;
 }
 .modal__group {
@@ -1586,12 +1601,12 @@ section + section::before,
 }
 .modal__group label {
   margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 .modal__group input {
   padding: 0.7rem 0.8rem;
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
 }
 .modal__referral {
   display: flex;
@@ -1603,7 +1618,7 @@ section + section::before,
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
   color: var(--color-green);
 }
 .modal__referral button {
@@ -1618,7 +1633,7 @@ section + section::before,
 .modal__referral-msg {
   display: block;
   margin-top: 0.4rem;
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
 }
 .modal__referral-msg.success {
   color: #1f7a3d;
@@ -1635,7 +1650,7 @@ section + section::before,
   justify-content: space-between;
   padding: 0.65rem 0;
   border-bottom: 1px solid #eee;
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
 }
 .modal__row span:first-child {
   font-weight: 600;
@@ -1655,7 +1670,7 @@ section + section::before,
   width: 100%;
   padding: 0.85rem 0;
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
   background: none;
@@ -1682,8 +1697,8 @@ section + section::before,
 .modal__details-list li {
   position: relative;
   padding: 0.4rem 0 0.4rem 1.25rem;
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   color: #6b6559;
 }
 .modal__details-list li::before {
@@ -1772,8 +1787,8 @@ section + section::before,
 }
 .modal__success p {
   margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
 }
 
 /* ---------- Subpage styles ---------- */
@@ -1802,8 +1817,8 @@ section + section::before,
 }
 .subhero__title {
   font-family: var(--font-body);
-  font-size: 2.6rem;
-  line-height: 1.15;
+  font-size: var(--fs-display);
+  line-height: var(--lh-heading);
   color: var(--color-gold);
 }
 .subhero__text {
@@ -1853,7 +1868,7 @@ section + section::before,
   margin-bottom: 0.75rem;
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1863,7 +1878,7 @@ section + section::before,
 .highlight__title {
   margin-bottom: 0.75rem;
   font-family: var(--font-body);
-  font-size: 2rem;
+  font-size: var(--fs-h2);
 }
 .highlight__desc {
   margin-bottom: 1.25rem;
@@ -1876,7 +1891,7 @@ section + section::before,
   margin-bottom: 1.75rem;
 }
 .highlight__meta-item span {
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #7a7466;
@@ -1885,7 +1900,7 @@ section + section::before,
   display: block;
   margin-top: 0.2rem;
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: var(--fs-strong);
   color: var(--color-gold);
 }
 .highlight__actions {
@@ -1956,7 +1971,7 @@ section + section::before,
 .stop__num {
   display: inline-block;
   margin-bottom: 0.6rem;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1965,7 +1980,7 @@ section + section::before,
 .stop__name {
   margin-bottom: 0.6rem;
   font-family: var(--font-body);
-  font-size: 1.3rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
 }
 
@@ -2011,7 +2026,7 @@ section + section::before,
     linear-gradient(150deg, var(--color-gold) 0%, rgba(201, 164, 92, 0.25) 100%) border-box;
 }
 .info__fact span {
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #7a7466;
@@ -2020,7 +2035,7 @@ section + section::before,
   display: block;
   margin-top: 0.3rem;
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: var(--fs-strong);
 }
 .info__lists {
   display: grid;
@@ -2030,7 +2045,7 @@ section + section::before,
 .info__col h3 {
   margin-bottom: 1rem;
   font-family: var(--font-body);
-  font-size: 1.3rem;
+  font-size: var(--fs-h3);
 }
 .info__list {
   list-style: none;
@@ -2116,8 +2131,9 @@ section + section::before,
   max-width: 680px;
   margin: 0 auto 1.1rem;
   text-align: center;
-  line-height: 1.75;
+  line-height: var(--lh-body);
   color: #46453f;
+  font-size: var(--fs-body);
 }
 /* Stop yang bisa diklik ke halaman attraction-nya */
 .stop--link {
@@ -2136,7 +2152,7 @@ section + section::before,
   padding: 1.25rem 1.5rem;
   text-align: center;
   border-top: 1px solid #e0ddd4;
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   color: #7a7466;
 }
 .crumb a {
@@ -2177,7 +2193,7 @@ section + section::before,
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-green);
   background: transparent;
@@ -2212,12 +2228,13 @@ section + section::before,
   text-align: left;
 }
 .guide-article p {
-  line-height: 1.8;
+  line-height: var(--lh-body);
   margin: 0 0 1rem;
   color: #46453f;
+  font-size: var(--fs-body);
 }
 .guide-crumb {
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   color: #7a7466;
   margin-bottom: 1.25rem;
 }
@@ -2259,7 +2276,7 @@ section + section::before,
 .contact__heading {
   margin-bottom: 0.75rem;
   font-family: var(--font-body);
-  font-size: 1.8rem;
+  font-size: var(--fs-h2);
 }
 .contact__lead {
   margin-bottom: 1.5rem;
@@ -2284,7 +2301,7 @@ section + section::before,
   margin-bottom: 1.25rem;
 }
 .contact__item span {
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #7a7466;
@@ -2312,13 +2329,13 @@ section + section::before,
 }
 .contact__group label {
   margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 .contact__group input,
 .contact__group textarea {
   padding: 0.7rem 0.8rem;
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
 }
 .contact__group textarea {
   min-height: 130px;
@@ -2367,7 +2384,7 @@ section + section::before,
 .builder__intro {
   max-width: 640px;
   margin: -1rem auto 2rem;
-  font-size: 0.98rem;
+  font-size: var(--fs-body);
   line-height: 1.6;
   text-align: center;
   color: #6b6559;
@@ -2384,13 +2401,13 @@ section + section::before,
 }
 .itn-suggest__t {
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-green);
 }
 .itn-suggest__s {
   margin: 0.25rem 0 1rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   color: #6b6559;
 }
 .itn-suggest__row {
@@ -2403,7 +2420,7 @@ section + section::before,
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -2417,7 +2434,7 @@ section + section::before,
 .itn-suggest__btn {
   height: 2.7rem;
   padding: 0 1.3rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
 }
 
 /* "View details" link (paling bawah kartu day) */
@@ -2427,7 +2444,7 @@ section + section::before,
   gap: 0.3rem 1rem;
 }
 .itn-day__view {
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-gold);
   text-decoration: none;
@@ -2452,14 +2469,14 @@ section + section::before,
 }
 .pkg-cta__title {
   font-family: var(--font-body);
-  font-size: 1.3rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-green);
 }
 .pkg-cta__text {
   max-width: 46ch;
   margin: 0.6rem auto 1.4rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   line-height: 1.6;
   color: #6b6559;
 }
@@ -2475,7 +2492,7 @@ section + section::before,
 .field label {
   display: block;
   margin-bottom: 0.4rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 .field select,
@@ -2483,7 +2500,7 @@ section + section::before,
   width: 100%;
   height: 2.9rem;
   padding: 0.7rem 0.8rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   line-height: 1.4;
   background-color: #fff;
   -webkit-appearance: none;
@@ -2507,7 +2524,7 @@ section + section::before,
   padding-top: 0.75rem;
 }
 .summary__total span:first-child {
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   opacity: 0.85;
 }
@@ -2591,14 +2608,11 @@ section + section::before,
   .hero__booking {
     width: 100%;
   }
-  .hero__title {
-    font-size: 2rem;
-  }
   .hero__subtitle {
     font-size: 1rem;
   }
   .hero__text {
-    font-size: 0.85rem;
+    font-size: var(--fs-body);
   }
   .experience__grid {
     display: flex;
@@ -2637,7 +2651,6 @@ section + section::before,
     gap: 1.5rem;
   }
   .about__title {
-    font-size: 1.8rem;
     align-self: center;
   }
   .about__boxes {
@@ -2659,9 +2672,6 @@ section + section::before,
   }
   .footer__brand {
     grid-column: 1 / -1;
-  }
-  .subhero__title {
-    font-size: 2rem;
   }
   .highlight__container {
     grid-template-columns: 1fr;
@@ -2710,14 +2720,14 @@ section + section::before,
     gap: 0.75rem;
   }
   .hero__booking .booking__group label {
-    font-size: 0.8rem;
+    font-size: var(--fs-small);
   }
   .hero__booking .booking__group select,
   .hero__booking .booking__group input,
   .hero__booking .booking__price {
     height: 2.7rem;
     padding: 0.55rem 0.6rem;
-    font-size: 0.82rem;
+    font-size: var(--fs-small);
   }
 }
 
@@ -2772,7 +2782,7 @@ section + section::before,
   background-color: #25d366;
   color: #fff;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   text-decoration: none;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
@@ -2852,7 +2862,7 @@ section + section::before,
 }
 .itn__subtitle {
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-green);
 }
@@ -2862,7 +2872,7 @@ section + section::before,
   border-radius: 6px;
   background: #fff;
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -2875,7 +2885,7 @@ section + section::before,
   padding: 1.25rem;
   border: 1px dashed #cfc7b5;
   border-radius: 10px;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   color: #7a7466;
   text-align: center;
 }
@@ -2906,7 +2916,7 @@ section + section::before,
   color: var(--color-green);
 }
 .itn-day__status {
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
@@ -2989,7 +2999,7 @@ section + section::before,
 .itn-type__name {
   flex: 1;
   min-width: 0;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 500;
   color: var(--color-green);
 }
@@ -2999,13 +3009,13 @@ section + section::before,
   gap: 0.6rem;
   padding: 0.5rem 0.2rem;
   margin-bottom: 1rem;
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   color: #9a9382;
 }
 .itn-day__emptyrm {
   border: none;
   background: none;
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: #b45b4d;
   cursor: pointer;
@@ -3040,7 +3050,7 @@ section + section::before,
   min-width: 0;
   height: 2.7rem;
   padding: 0.55rem 0.65rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   background: #fff;
 }
 .itn-day__price {
@@ -3049,7 +3059,7 @@ section + section::before,
   justify-content: space-between;
   padding-top: 0.7rem;
   border-top: 1px solid #eee6d5;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 .itn-transfer__dir,
@@ -3068,7 +3078,7 @@ section + section::before,
   min-width: 0;
   height: 2.7rem;
   padding: 0.55rem 0.65rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   background: #fff;
 }
 .dirbtn {
@@ -3078,7 +3088,7 @@ section + section::before,
   border-radius: 8px;
   background: #fff;
   font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: #7a7466;
   cursor: pointer;
@@ -3103,7 +3113,7 @@ section + section::before,
   border-radius: 6px;
   background: transparent;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -3137,7 +3147,7 @@ section + section::before,
   border-radius: 999px;
   background-color: #2f8f4e;
   color: #fff;
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   font-weight: 700;
   line-height: 1;
 }
@@ -3172,7 +3182,7 @@ section + section::before,
   width: 100%;
   height: 2.9rem;
   padding: 0.6rem 0.7rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   background: #fff;
 }
 .modal__btn--ghost {
@@ -3264,7 +3274,7 @@ section + section::before,
 }
 .modal__sub {
   margin-bottom: 1.1rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   color: #7a7466;
 }
 .pick-cats {
@@ -3305,7 +3315,7 @@ button.pick-cat {
   border-radius: 6px;
   background: transparent;
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -3357,7 +3367,7 @@ button.pick-cat {
 .modal__row,
 .contact__item span,
 .faq__q {
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
 }
 
 /* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */
@@ -3447,7 +3457,7 @@ button.pick-cat {
   border-radius: 6px;
   background: #fff;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -3476,7 +3486,7 @@ button.pick-cat {
 .charter__label {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
 }
@@ -3484,12 +3494,12 @@ button.pick-cat {
   width: 100%;
   height: 2.9rem;
   padding: 0.6rem 0.8rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   background: #fff;
 }
 .charter__hint {
   margin-top: 0.4rem;
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   color: #7a7466;
 }
 .charter__durations {
@@ -3528,11 +3538,11 @@ button.pick-cat {
   color: var(--color-green);
 }
 .chdur__sub {
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   color: #7a7466;
 }
 .chdur__price {
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
 }
 .charter__extra {
   margin-top: 1rem;
@@ -3550,7 +3560,7 @@ button.pick-cat {
   align-items: baseline;
   justify-content: space-between;
   margin: 1.25rem 0 1rem;
-  font-size: 1.1rem;
+  font-size: var(--fs-strong);
   font-weight: 600;
 }
 .charter__notes {
@@ -3578,7 +3588,7 @@ button.pick-cat {
   border: none;
   background: none;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
   font-weight: 500;
   color: var(--color-gold);
   cursor: pointer;
@@ -3761,7 +3771,7 @@ button.pick-cat {
   border: none;
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--color-green);
@@ -3774,7 +3784,7 @@ button.pick-cat {
   background-color: var(--color-gold);
 }
 .tour-type__note {
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   color: #6b6559;
 }
 
@@ -3785,7 +3795,7 @@ button.pick-cat {
 }
 .welcome__title {
   font-family: var(--font-body);
-  font-size: 1.15rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-green);
   margin-bottom: 0.6rem;
@@ -3800,7 +3810,7 @@ button.pick-cat {
 }
 .welcome__field label {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   margin-bottom: 0.4rem;
 }
@@ -3808,7 +3818,7 @@ button.pick-cat {
   width: 100%;
   height: 2.9rem;
   padding: 0.7rem 0.8rem;
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
   background-color: #fff;
 }
 
@@ -3834,7 +3844,7 @@ button.pick-cat {
   border: none;
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--color-green);
   background-color: transparent;
@@ -3859,7 +3869,7 @@ button.pick-cat {
   border: none;
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: 0.66rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--color-green);
   background-color: transparent;

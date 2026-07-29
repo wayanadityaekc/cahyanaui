@@ -1269,6 +1269,12 @@ section + section::before,
 .quicknav::before {
   content: none;
 }
+/* Panel villa udah punya border gold sendiri → buang divider di atas panel & di section
+   tepat setelahnya (drivers) biar garisnya nggak dobel. */
+.villas::before,
+#villas + [id$="-placeholder"] > section::before {
+  content: none;
+}
 
 /* FAQ accordion */
 .faq {

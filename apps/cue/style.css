@@ -448,12 +448,43 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Homepage About = blok hijau (scoped ke #about; about-us pakai #values, gak kena) */
+/* Homepage About = panel cream + border gold gradasi, isinya kotak putih + border gold
+   gradasi (konsep tour-details). Scoped #about; about-us pakai #values, gak kena. */
 #about .about__container {
-  background-color: var(--color-green);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background:
+    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
 }
 #about .about__text p {
-  color: var(--color-cream);
+  color: var(--color-green);
+}
+#about .about__content {
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  box-shadow: none;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
+}
+/* Ikon: buang lingkaran, garisnya gold gradasi (def #aboutGold di index.html) */
+#about .about__icon {
+  width: auto;
+  height: auto;
+  margin-bottom: 0.55rem;
+  background: none;
+  border-radius: 0;
+}
+#about .about__icon svg {
+  width: 34px;
+  height: 34px;
+  stroke: url(#aboutGold);
+}
+/* Panel About udah punya border sendiri -> buang divider di atas panel & section setelahnya */
+#about::before,
+#about + section::before {
+  content: none;
 }
 /* Deskripsi kecil di bawah judul tiap box About */
 .about__desc {
@@ -2493,38 +2524,6 @@ section + section::before,
 }
 .itn-day__view:hover {
   text-decoration: underline;
-}
-
-/* CTA homepage "Don't know where to start?" -> itinerary suggested box */
-.pkg-cta {
-  padding: 3rem 1.5rem;
-}
-.pkg-cta__box {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2rem 1.75rem;
-  text-align: center;
-  border: 1px solid rgba(201, 164, 92, 0.4);
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(31, 61, 43, 0.05), rgba(201, 164, 92, 0.1));
-}
-.pkg-cta__title {
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  color: var(--color-green);
-}
-.pkg-cta__text {
-  max-width: 46ch;
-  margin: 0.6rem auto 1.4rem;
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  color: #6b6559;
-}
-.pkg-cta__btn {
-  display: inline-block;
-  padding: 0.7rem 1.5rem;
-  text-decoration: none;
 }
 
 .field {

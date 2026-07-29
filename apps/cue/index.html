@@ -39,7 +39,7 @@
       href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=51" />
+    <link rel="stylesheet" href="style.css?v=59" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -460,9 +460,16 @@
       </div>
     </section>
 
-    <section class="about" id="about">
+    <section class="about about--panel" id="about">
       <!-- gradasi emas buat garis ikon di kotak About -->
-      <svg width="0" height="0" style="position: absolute" aria-hidden="true"><defs><linearGradient id="aboutGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9a45c" /><stop offset="1" stop-color="#e6cf97" /></linearGradient></defs></svg>
+      <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+        <defs>
+          <linearGradient id="aboutGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#c9a45c" />
+            <stop offset="1" stop-color="#e6cf97" />
+          </linearGradient>
+        </defs>
+      </svg>
       <div class="about__container">
         <div class="about__text">
           <h2 class="about__title">Your whole trip, one local team</h2>
@@ -541,86 +548,69 @@
 
     <section class="activities" id="activities">
       <h2 class="section__title">Activities &amp; Performances</h2>
-      <div class="activities__container">
-        <div class="slider" id="slider">
-          <div
-            class="slider__slide active"
-            data-img="kecak"
-            style="background-image: url(&quot;assets/images/kecak.jpg&quot;)"
-          >
-            <div class="slider__caption"><h3>Kecak Dance</h3></div>
-          </div>
-          <div
-            class="slider__slide"
-            data-img="barong"
-            style="background-image: url(&quot;assets/images/barong.jpg&quot;)"
-          >
-            <div class="slider__caption"><h3>Barong Dance</h3></div>
-          </div>
-          <div
-            class="slider__slide"
-            data-img="atv"
-            style="background-image: url(assets/images/atv.jpg)"
-          >
-            <div class="slider__caption"><h3>ATV Ride</h3></div>
-          </div>
-          <div
-            class="slider__slide"
-            data-img="rafting"
-            style="background-image: url(&quot;assets/images/rafting.jpg&quot;)"
-          >
-            <div class="slider__caption"><h3>Rafting</h3></div>
-          </div>
-          <div
-            class="slider__slide"
-            data-img="cooking"
-            style="background-image: url(assets/images/cooking-class.jpg)"
-          >
-            <div class="slider__caption"><h3>Cooking Class</h3></div>
-          </div>
-          <button
-            class="slider__btn slider__btn--prev"
-            id="slider-prev"
-            aria-label="Previous"
-          >
-            &larr;
-          </button>
-          <button
-            class="slider__btn slider__btn--next"
-            id="slider-next"
-            aria-label="Next"
-          >
-            &rarr;
-          </button>
-          <div class="slider__dots">
-            <button class="slider__dot active" aria-label="Slide 1"></button>
-            <button class="slider__dot" aria-label="Slide 2"></button>
-            <button class="slider__dot" aria-label="Slide 3"></button>
-            <button class="slider__dot" aria-label="Slide 4"></button>
-            <button class="slider__dot" aria-label="Slide 5"></button>
+      <div class="activities__sliders">
+        <!-- Kiri: Activities -->
+        <div class="activities__slider-col">
+          <h3 class="activities__slider-label">Activities</h3>
+          <div class="slider">
+            <div class="slider__slide active" style="background-image: url(assets/images/atv.jpg)">
+              <div class="slider__caption"><h3>ATV Ride</h3></div>
+            </div>
+            <div class="slider__slide" style="background-image: url(assets/images/rafting.jpg)">
+              <div class="slider__caption"><h3>Rafting</h3></div>
+            </div>
+            <div class="slider__slide" style="background-image: url(assets/images/cooking-class.jpg)">
+              <div class="slider__caption"><h3>Cooking Class</h3></div>
+            </div>
+            <button class="slider__btn slider__btn--prev" aria-label="Previous">&larr;</button>
+            <button class="slider__btn slider__btn--next" aria-label="Next">&rarr;</button>
+            <div class="slider__dots">
+              <button class="slider__dot active" aria-label="Slide 1"></button>
+              <button class="slider__dot" aria-label="Slide 2"></button>
+              <button class="slider__dot" aria-label="Slide 3"></button>
+            </div>
           </div>
         </div>
-        <div class="activities__text">
-          <h3 class="activities__heading">More Than Sightseeing</h3>
-          <p class="activities__desc">
-            Bali isn't just somewhere you visit, it's something you feel. From
-            the trance of a sunset Kecak to the rush of a jungle ATV trail, our
-            activities and performances bring you closer to the island's living
-            culture and wild landscapes. Every experience is led by locals who
-            know how to make it real, safe, and unforgettable.
-          </p>
-          <a
-            href="activities.html"
-            class="highlight__btn"
-            style="margin-top: 1.5rem"
-            >Explore Activities</a
-          >
+        <!-- Kanan: Performances -->
+        <div class="activities__slider-col">
+          <h3 class="activities__slider-label">Performances</h3>
+          <div class="slider">
+            <div class="slider__slide active" style="background-image: url(assets/images/kecak.jpg)">
+              <div class="slider__caption"><h3>Kecak Dance</h3></div>
+            </div>
+            <div class="slider__slide" style="background-image: url(assets/images/barong.jpg)">
+              <div class="slider__caption"><h3>Barong Dance</h3></div>
+            </div>
+            <button class="slider__btn slider__btn--prev" aria-label="Previous">&larr;</button>
+            <button class="slider__btn slider__btn--next" aria-label="Next">&rarr;</button>
+            <div class="slider__dots">
+              <button class="slider__dot active" aria-label="Slide 1"></button>
+              <button class="slider__dot" aria-label="Slide 2"></button>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="activities__text">
+        <h3 class="activities__heading">More Than Sightseeing</h3>
+        <p class="activities__desc">
+          Bali isn't just somewhere you visit, it's something you feel. From the
+          trance of a sunset Kecak to the rush of a jungle ATV trail, our
+          activities and performances bring you closer to the island's living
+          culture and wild landscapes. Every experience is led by locals who
+          know how to make it real, safe, and unforgettable.
+        </p>
+        <a href="activities.html" class="highlight__btn" style="margin-top: 1.5rem"
+          >Explore Activities</a
+        >
       </div>
     </section>
 
     <section class="villas" id="villas">
-      <h2 class="section__title">Our Villas in Ubud<small class="villas__sub">ubudprivatevillas.com</small></h2>
+      <h2 class="section__title">
+        Our Villas in Ubud<small class="villas__sub"
+          >ubudprivatevillas.com</small
+        >
+      </h2>
       <div class="villas__grid">
         <article class="villa__card">
           <div
@@ -628,7 +618,17 @@
             style="background-image: url(assets/images/cahyana-tibuah.webp)"
           >
             <div class="villa__rating">
-              <span class="villa__score"><svg class="villa__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.9l-5.9 3.1 1.12-6.57L2.45 9.78l6.6-.96z" /></svg>4.96</span>
+              <span class="villa__score"
+                ><svg
+                  class="villa__star"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 2.4l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.9l-5.9 3.1 1.12-6.57L2.45 9.78l6.6-.96z"
+                  /></svg
+                >4.96</span
+              >
               <span class="villa__ratesrc">rating via Airbnb</span>
             </div>
           </div>
@@ -657,7 +657,17 @@
             "
           >
             <div class="villa__rating">
-              <span class="villa__score"><svg class="villa__star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.9l-5.9 3.1 1.12-6.57L2.45 9.78l6.6-.96z" /></svg>4.96</span>
+              <span class="villa__score"
+                ><svg
+                  class="villa__star"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 2.4l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.9l-5.9 3.1 1.12-6.57L2.45 9.78l6.6-.96z"
+                  /></svg
+                >4.96</span
+              >
               <span class="villa__ratesrc">rating via Airbnb</span>
             </div>
           </div>
@@ -690,6 +700,12 @@
         <!-- <img src="assets/images/klook.webp" alt="Klook" /> -->
         <img src="assets/images/tripadvisor.webp" alt="Tripadvisor" />
       </div>
+      <p class="trust__label trust__label--social">Follow Us</p>
+      <div class="trust__socials">
+        <a href="#" aria-label="Instagram"><img src="assets/images/instagram-transparent.webp" alt="Instagram" /></a>
+        <a href="#" aria-label="WhatsApp"><img src="assets/images/whatsapp.webp" alt="WhatsApp" /></a>
+        <a href="#" aria-label="Facebook"><img src="assets/images/facebook.webp" alt="Facebook" /></a>
+      </div>
     </section>
 
     <div id="reviews-placeholder"></div>
@@ -698,6 +714,6 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="script.js?v=51"></script>
+    <script src="script.js?v=59"></script>
   </body>
 </html>

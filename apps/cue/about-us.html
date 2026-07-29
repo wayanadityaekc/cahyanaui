@@ -36,7 +36,7 @@
       href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=51" />
+    <link rel="stylesheet" href="style.css?v=59" />
     <link
       rel="canonical"
       href="https://cahyanaubudexperience.com/about-us.html"
@@ -161,7 +161,16 @@
       </article>
     </section>
 
-    <section class="about" id="values">
+    <section class="about about--panel" id="values">
+      <!-- Gradient def buat stroke ikon panel About (dipakai .about--panel .about__icon svg) -->
+      <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+        <defs>
+          <linearGradient id="aboutGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#c9a45c" />
+            <stop offset="1" stop-color="#e6cf97" />
+          </linearGradient>
+        </defs>
+      </svg>
       <div class="about__container">
         <div class="about__text">
           <h2 class="about__title">Why travel with us</h2>
@@ -238,6 +247,6 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="script.js?v=51"></script>
+    <script src="script.js?v=59"></script>
   </body>
 </html>

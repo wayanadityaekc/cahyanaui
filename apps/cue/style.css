@@ -448,42 +448,45 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Homepage About = panel cream + border gold gradasi, isinya kotak putih + border gold
-   gradasi (konsep tour-details). Scoped #about; about-us pakai #values, gak kena. */
-#about .about__container {
+/* Panel About = cream + border gold gradasi, isinya kotak putih + border gold gradasi
+   (konsep tour-details). Class .about--panel dipakai di homepage (#about) & about-us (#values).
+   Butuh SVG def #aboutGold di halaman itu buat stroke ikonnya. */
+.about--panel .about__container {
   border: 1px solid transparent;
   border-radius: 14px;
   background:
     linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
-    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25))
+      border-box;
 }
-#about .about__text p {
+.about--panel .about__text p {
   color: var(--color-green);
 }
-#about .about__content {
+.about--panel .about__content {
   border: 1.5px solid transparent;
   border-radius: 10px;
   box-shadow: none;
   background:
     linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25))
+      border-box;
 }
 /* Ikon: buang lingkaran, garisnya gold gradasi (def #aboutGold di index.html) */
-#about .about__icon {
+.about--panel .about__icon {
   width: auto;
   height: auto;
   margin-bottom: 0.55rem;
   background: none;
   border-radius: 0;
 }
-#about .about__icon svg {
+.about--panel .about__icon svg {
   width: 34px;
   height: 34px;
   stroke: url(#aboutGold);
 }
 /* Panel About udah punya border sendiri -> buang divider di atas panel & section setelahnya */
-#about::before,
-#about + section::before {
+.about--panel::before,
+.about--panel + section::before {
   content: none;
 }
 /* Deskripsi kecil di bawah judul tiap box About */
@@ -495,7 +498,7 @@ body {
   color: #6b6559;
 }
 /* Homepage About boxes = kotak (persegi) kecil, ketengah di dalam box hijau */
-#about .about__content {
+.about--panel .about__content {
   aspect-ratio: 1 / 1;
   justify-content: center;
   width: 100%;
@@ -505,7 +508,7 @@ body {
   padding: 1rem;
 }
 /* Kunci disc icon biar gak disusutin flexbox di box kotak (tetap bulat 44x44) */
-#about .about__icon {
+.about--panel .about__icon {
   flex-shrink: 0;
 }
 
@@ -550,8 +553,10 @@ body {
   /* garis border tipis gradasi emas (bukan putus-putus): putih di padding-box, gradasi di border-box */
   border: 1.5px solid transparent;
   background:
-    linear-gradient(rgba(201, 164, 92, 0.14), rgba(201, 164, 92, 0.14)) padding-box,
-    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.3)) border-box;
+    linear-gradient(rgba(201, 164, 92, 0.14), rgba(201, 164, 92, 0.14))
+      padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.3))
+      border-box;
   transition:
     border-color 0.28s ease,
     color 0.28s ease;
@@ -623,14 +628,30 @@ body {
    Kartu fade-up-nya dari sistem .reveal; di HP ditambah lingkaran emas nyapu + ikon pop
    pas kartu dapet .is-visible. Durasi + delay < 0.9s (sebelum .reveal dilepas JS). */
 @keyframes qnavSweep {
-  0% { transform: scale(0); opacity: 0.9; }
-  55% { transform: scale(1.06); opacity: 0.9; }
-  100% { transform: scale(1.18); opacity: 0; }
+  0% {
+    transform: scale(0);
+    opacity: 0.9;
+  }
+  55% {
+    transform: scale(1.06);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
 }
 @keyframes qnavPop {
-  0%, 30% { transform: scale(0.7); }
-  68% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0%,
+  30% {
+    transform: scale(0.7);
+  }
+  68% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 @media (max-width: 640px) {
   .quicknav__card.is-visible .quicknav__icon::after {
@@ -640,11 +661,17 @@ body {
     animation: qnavPop 0.6s ease both;
   }
   .quicknav__card.is-visible:nth-child(2) .quicknav__icon::after,
-  .quicknav__card.is-visible:nth-child(2) .quicknav__img { animation-delay: 0.08s; }
+  .quicknav__card.is-visible:nth-child(2) .quicknav__img {
+    animation-delay: 0.08s;
+  }
   .quicknav__card.is-visible:nth-child(3) .quicknav__icon::after,
-  .quicknav__card.is-visible:nth-child(3) .quicknav__img { animation-delay: 0.16s; }
+  .quicknav__card.is-visible:nth-child(3) .quicknav__img {
+    animation-delay: 0.16s;
+  }
   .quicknav__card.is-visible:nth-child(4) .quicknav__icon::after,
-  .quicknav__card.is-visible:nth-child(4) .quicknav__img { animation-delay: 0.24s; }
+  .quicknav__card.is-visible:nth-child(4) .quicknav__img {
+    animation-delay: 0.24s;
+  }
 }
 
 .trust {
@@ -681,6 +708,24 @@ body {
 .trust__logos img:hover {
   opacity: 1;
   filter: grayscale(0);
+}
+/* Baris social media di section "Featured On" (logo sama kaya footer) */
+.trust__label--social {
+  margin-top: 2.25rem;
+}
+.trust__socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.trust__socials img {
+  height: 30px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+.trust__socials a:hover img {
+  transform: translateY(-2px);
 }
 
 /* Experience & Tour cards */
@@ -778,7 +823,8 @@ body {
   border-radius: 16px;
   background:
     linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
-    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25))
+      border-box;
 }
 .villas__grid {
   display: grid;
@@ -797,7 +843,8 @@ body {
   margin-top: 1.5rem;
   background:
     linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25))
+      border-box;
 }
 .villa__image {
   position: relative;
@@ -892,15 +939,25 @@ body {
   padding: 3rem 1.5rem;
   margin: 0 auto;
   width: calc(100% - 10px);
-  max-width: 1100px;
+  max-width: 1200px;
 }
-.activities__container {
+/* Dua slider bersebelahan (Activities | Performances) biar seimbang & penuh di desktop */
+.activities__sliders {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 2.5rem;
-  align-items: center;
-  max-width: 1100px;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
   margin: 0 auto;
+}
+.activities__slider-label {
+  margin-bottom: 1.1rem;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-gold);
 }
 .slider {
   position: relative;
@@ -932,6 +989,10 @@ body {
 .slider__caption p {
   margin-top: 0.3rem;
 }
+.slider__caption h3 {
+  font-size: var(--fs-h3);
+  line-height: var(--lh-heading);
+}
 .slider__btn {
   position: absolute;
   top: 50%;
@@ -950,6 +1011,16 @@ body {
 }
 .slider__btn--next {
   right: 1rem;
+}
+/* Panah slider cuma muncul pas hover (desktop). Di touch tetap kelihatan. */
+@media (hover: hover) {
+  .slider .slider__btn {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .slider:hover .slider__btn {
+    opacity: 1;
+  }
 }
 .slider__dots {
   position: absolute;
@@ -970,6 +1041,12 @@ body {
 }
 .slider__dot.active {
   background-color: var(--color-gold);
+}
+/* Teks "More Than Sightseeing" pindah ke bawah dua slider, ketengah & full width */
+.activities__text {
+  max-width: 760px;
+  margin: 2.5rem auto 0;
+  text-align: center;
 }
 .activities__heading {
   margin-bottom: 1rem;
@@ -2144,7 +2221,8 @@ section + section::before,
   border: 1.5px solid transparent;
   background:
     linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(150deg, var(--color-gold) 0%, rgba(201, 164, 92, 0.25) 100%) border-box;
+    linear-gradient(150deg, var(--color-gold) 0%, rgba(201, 164, 92, 0.25) 100%)
+      border-box;
 }
 .info__fact span {
   font-size: var(--fs-label);
@@ -2204,7 +2282,11 @@ section + section::before,
 }
 .info__container:not(.guide-article) .info__list--yes li::before {
   border: 1.5px solid var(--color-green);
-  background: radial-gradient(circle at center, var(--color-green) 0 3.5px, transparent 4px);
+  background: radial-gradient(
+    circle at center,
+    var(--color-green) 0 3.5px,
+    transparent 4px
+  );
 }
 .info__container:not(.guide-article) .info__list--no li::before {
   border: 1.5px solid #cfc9ba;
@@ -2378,9 +2460,10 @@ section + section::before,
   text-decoration: none;
 }
 
-/* Wrapping grid for pages with many cards (activities) */
+/* Wrapping grid for pages with many cards (tour & activities).
+   minmax 260px -> ~4 kartu per baris di desktop (biar segede homepage), auto turun di layar kecil. */
 .experience__grid--auto {
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 /* Contact page */
@@ -2518,7 +2601,11 @@ section + section::before,
   padding: 1.25rem 1.35rem;
   border: 1px solid rgba(201, 164, 92, 0.4);
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(31, 61, 43, 0.05), rgba(201, 164, 92, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(31, 61, 43, 0.05),
+    rgba(201, 164, 92, 0.1)
+  );
 }
 .itn-suggest__t {
   font-family: var(--font-body);
@@ -2748,7 +2835,7 @@ section + section::before,
   .villas__grid {
     grid-template-columns: 1fr;
   }
-  .activities__container {
+  .activities__sliders {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
@@ -3471,7 +3558,7 @@ button.pick-cat {
 .subhero--tour {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
-    url("assets/images/hero.webp");
+    url("assets/images/tour-hero.jpg");
 }
 .subhero--exp {
   background-image:
@@ -3874,7 +3961,9 @@ button.pick-cat {
   color: var(--color-green);
   background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 .tour-type__btn.is-active {
   color: #fff;
@@ -3882,6 +3971,19 @@ button.pick-cat {
 }
 .tour-type__note {
   font-size: var(--fs-label);
+  color: #6b6559;
+}
+/* Blok gold "Experience/Performance" di card experience = toggle STATIS (disabled):
+   tampil sama kayak toggle tour tapi nggak bisa diklik. */
+.tour-type__toggle--static .tour-type__btn:disabled {
+  cursor: default;
+  opacity: 1; /* jangan diredupin browser - biar warnanya sama kayak toggle tour */
+}
+/* Unit di sebelah harga card: "per car" (tour) atau "per person" (experience). */
+.price-unit {
+  margin-left: 0.3rem;
+  font-size: var(--fs-label);
+  font-weight: 500;
   color: #6b6559;
 }
 
@@ -3946,7 +4048,9 @@ button.pick-cat {
   color: var(--color-green);
   background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 .booking__type-btn.is-active {
   color: #fff;
@@ -3971,7 +4075,9 @@ button.pick-cat {
   color: var(--color-green);
   background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 .itn-item-type__btn.is-active {
   color: #fff;

@@ -16,9 +16,9 @@ const REFERRAL_CODE = "gowithcahyana";
 // -- pricing data
 const prices = {
   tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
-  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 } },
+  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 } },
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
-  transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Besakih Area – Ubud": { usd: 35, idr: 550000 } },
+  transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
   villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
   // Program combo (harga & isi placeholder - silakan diubah)
   combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Coast & Sunset Kecak": { usd: 65, idr: 1000000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Taste of Ubud": { usd: 50, idr: 780000 } }
@@ -38,7 +38,8 @@ const CHARTER = {
 const transport = {
   "ATV": { usd: 3, idr: 50000 }, "Rafting": { usd: 3, idr: 50000 }, "Swing": { usd: 3, idr: 50000 },
   "Jeep Sunrise": { usd: 7, idr: 100000 }, "Mount Batur Trekking": { usd: 7, idr: 100000 },
-  "Cooking Class": { usd: 0, idr: 0 }, "Kecak Dance": { usd: 0, idr: 0 }, "Barong Dance": { usd: 0, idr: 0 }
+  "Cooking Class": { usd: 0, idr: 0 }, "Kecak Dance": { usd: 0, idr: 0 }, "Barong Dance": { usd: 0, idr: 0 },
+  "Watersport": { usd: 0, idr: 0 } // PLACEHOLDER - transport Watersport (Tanjung Benoa jauh dari Ubud), Wayan isi
 };
 
 // Exclusive tour: SUPLEMEN TIKET PER ORANG (angka PLACEHOLDER - Wayan isi harga asli).
@@ -116,6 +117,7 @@ const PAGE_ITEM = {
   "attractions/jeep-sunrise.html": "Jeep Sunrise",
   "attractions/mount-batur-trekking.html": "Mount Batur Trekking",
   "attractions/cooking-class.html": "Cooking Class",
+  "attractions/watersport.html": "Watersport",
   "attractions/kecak-dance.html": "Kecak Dance",
   "attractions/barong-dance.html": "Barong Dance",
   "ubud-culture-day.html": "Ubud Culture Day",
@@ -142,6 +144,7 @@ const ITEM_CARD = {
   "Jeep Sunrise": { img: "mount-batur-sunrise.webp", desc: "A sunrise 4x4 adventure to the Mount Batur viewpoints." },
   "Mount Batur Trekking": { img: "mount-batur.webp", desc: "A dawn hike to the summit of an active volcano." },
   "Cooking Class": { img: "cooking-class.jpg", desc: "Cook authentic Balinese dishes with a local family." },
+  "Watersport": { img: "watersport.jpg", desc: "Jet ski, banana boat, and parasailing off Bali's southern coast." },
   "Kecak Dance": { img: "kecak.jpg", desc: "Bali's hypnotic fire-and-chant ritual, performed at sunset." },
   "Barong Dance": { img: "barong.jpg", desc: "The ancient dance-drama of good versus evil." }
 };
@@ -851,28 +854,30 @@ function initBooking() {
   if (presetItem) { serviceItemSelect.value = presetItem; serviceItemSelect.dispatchEvent(new Event("change")); }
 }
 
+// Slideshow .slider (bisa lebih dari satu: Activities & Performances). Tiap slider
+// self-contained - tombol prev/next & dots dicari di dalam slider itu sendiri.
 function initSlider() {
-  const slider = document.getElementById("slider");
-  if (!slider) return;
+  document.querySelectorAll(".slider").forEach((slider) => {
+    const slides = slider.querySelectorAll(".slider__slide");
+    if (!slides.length) return;
+    const dots = slider.querySelectorAll(".slider__dot");
+    const prev = slider.querySelector(".slider__btn--prev");
+    const next = slider.querySelector(".slider__btn--next");
+    let current = 0;
 
-  const slides = slider.querySelectorAll(".slider__slide");
-  const dots = slider.querySelectorAll(".slider__dot");
-  const prev = document.getElementById("slider-prev");
-  const next = document.getElementById("slider-next");
-  let current = 0;
+    function show(index) {
+      slides.forEach((s) => s.classList.remove("active"));
+      dots.forEach((d) => d.classList.remove("active"));
+      slides[index].classList.add("active");
+      if (dots[index]) dots[index].classList.add("active");
+      current = index;
+    }
 
-  function show(index) {
-    slides.forEach((s) => s.classList.remove("active"));
-    dots.forEach((d) => d.classList.remove("active"));
-    slides[index].classList.add("active");
-    dots[index].classList.add("active");
-    current = index;
-  }
-
-  next.addEventListener("click", () => show((current + 1) % slides.length));
-  prev.addEventListener("click", () => show((current - 1 + slides.length) % slides.length));
-  dots.forEach((dot, index) => dot.addEventListener("click", () => show(index)));
-  setInterval(() => show((current + 1) % slides.length), 5000);
+    if (next) next.addEventListener("click", () => show((current + 1) % slides.length));
+    if (prev) prev.addEventListener("click", () => show((current - 1 + slides.length) % slides.length));
+    dots.forEach((dot, index) => dot.addEventListener("click", () => show(index)));
+    setInterval(() => show((current + 1) % slides.length), 5000);
+  });
 }
 
 // Panah kiri/kanan buat slider Tour Programs (muncul pas hover, desktop)
@@ -1917,11 +1922,47 @@ function initTourType() {
     holders.push(() => updateNote(priceEl.dataset.mode));
   }
 
-  // Card di homepage & tour.html + card highlight (setelah deskripsi)
+  // Blok gold 2-segmen "Experience / Performance" buat card experience & performance.
+  // Bentuknya sama kayak toggle Standard/Exclusive tapi STATIS (disabled, nggak bisa diklik):
+  // Performance aktif utk kecak/barong, Experience utk lainnya.
+  function buildTag(name, mount) {
+    const info = itemInfo(name);
+    if (!info || (info.cat !== "experience" && info.cat !== "performance")) return;
+    const isPerf = info.cat === "performance";
+    const wrap = document.createElement("div");
+    wrap.className = "tour-type tour-type--card";
+    wrap.innerHTML =
+      '<div class="tour-type__toggle tour-type__toggle--static" role="group" aria-label="Type">' +
+        '<button type="button" class="tour-type__btn' + (isPerf ? "" : " is-active") + '" disabled>Experience</button>' +
+        '<button type="button" class="tour-type__btn' + (isPerf ? " is-active" : "") + '" disabled>Performance</button>' +
+      "</div>";
+    mount.insertAdjacentElement("afterend", wrap);
+    wrap.addEventListener("click", (e) => e.stopPropagation()); // jgn ikut navigasi card
+  }
+
+  // Unit harga di card: tour/combo = "/car", experience/performance = "/person".
+  // Ditaruh sebagai sibling <span> di sebelah harga -> nggak ketimpa renderPrices.
+  function addPriceUnit(priceEl, cat) {
+    const unit = cat === "tour" || cat === "combo" ? "per car"
+      : cat === "experience" || cat === "performance" ? "per person" : "";
+    if (!unit || priceEl.parentElement.querySelector(".price-unit")) return;
+    const u = document.createElement("span");
+    u.className = "price-unit";
+    u.textContent = unit;
+    priceEl.insertAdjacentElement("afterend", u);
+  }
+
+  // Card di homepage & tour.html + card highlight (setelah deskripsi):
+  // tour -> toggle Standard/Exclusive; experience/performance -> blok gold statis. Semua -> unit harga.
   document.querySelectorAll(".experience__card, .highlight__container").forEach((card) => {
     const priceEl = card.querySelector("[data-price]");
     const desc = card.querySelector(".experience__desc, .highlight__desc");
-    if (priceEl && desc) build(priceEl.dataset.price, priceEl, desc, "after", "card");
+    if (!priceEl || !desc) return;
+    const name = priceEl.dataset.price;
+    const info = itemInfo(name);
+    if (info) addPriceUnit(priceEl, info.cat);
+    if (tourExclusive[name]) build(name, priceEl, desc, "after", "card");
+    else buildTag(name, desc);
   });
 
   // Halaman detail: tepat di bawah judul "Tour Details"

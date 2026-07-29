@@ -1617,7 +1617,9 @@ function initReveal() {
     ".about__content",
     ".faq__item",
     ".quicknav__card",
-    ".section__title"
+    ".section__title",
+    ".guide-article p",
+    ".guide-article ul"
   ];
   const els = document.querySelectorAll(selectors.join(","));
   if (!els.length || !("IntersectionObserver" in window)) return;

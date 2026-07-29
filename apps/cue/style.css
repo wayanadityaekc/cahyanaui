@@ -507,6 +507,7 @@ body {
 }
 /* Frame foto bulat - placeholder sekarang, nanti diisi <img class="quicknav__img"> */
 .quicknav__icon {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -515,10 +516,12 @@ body {
   border-radius: 50%;
   overflow: hidden;
   color: var(--color-gold);
-  background-color: rgba(201, 164, 92, 0.14);
-  border: 1.5px dashed rgba(201, 164, 92, 0.7);
+  /* garis border tipis gradasi emas (bukan putus-putus): putih di padding-box, gradasi di border-box */
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(rgba(201, 164, 92, 0.14), rgba(201, 164, 92, 0.14)) padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.3)) border-box;
   transition:
-    background-color 0.28s ease,
     border-color 0.28s ease,
     color 0.28s ease;
 }
@@ -533,6 +536,17 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+/* Overlay emas buat animasi "sweep" pas kartu masuk layar (dipakai di mobile) */
+.quicknav__icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color-gold);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
 }
 .quicknav__text {
   display: flex;
@@ -573,6 +587,33 @@ body {
 .quicknav__card:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 3px;
+}
+/* === Quick nav MOBILE entrance: gold-disc sweep (desktop nggak diubah) ===
+   Kartu fade-up-nya dari sistem .reveal; di HP ditambah lingkaran emas nyapu + ikon pop
+   pas kartu dapet .is-visible. Durasi + delay < 0.9s (sebelum .reveal dilepas JS). */
+@keyframes qnavSweep {
+  0% { transform: scale(0); opacity: 0.9; }
+  55% { transform: scale(1.06); opacity: 0.9; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
+@keyframes qnavPop {
+  0%, 30% { transform: scale(0.7); }
+  68% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+@media (max-width: 640px) {
+  .quicknav__card.is-visible .quicknav__icon::after {
+    animation: qnavSweep 0.6s ease both;
+  }
+  .quicknav__card.is-visible .quicknav__img {
+    animation: qnavPop 0.6s ease both;
+  }
+  .quicknav__card.is-visible:nth-child(2) .quicknav__icon::after,
+  .quicknav__card.is-visible:nth-child(2) .quicknav__img { animation-delay: 0.08s; }
+  .quicknav__card.is-visible:nth-child(3) .quicknav__icon::after,
+  .quicknav__card.is-visible:nth-child(3) .quicknav__img { animation-delay: 0.16s; }
+  .quicknav__card.is-visible:nth-child(4) .quicknav__icon::after,
+  .quicknav__card.is-visible:nth-child(4) .quicknav__img { animation-delay: 0.24s; }
 }
 
 .trust {
@@ -2823,6 +2864,10 @@ section + section::before,
   opacity: 1;
   transform: none;
 }
+/* Teks prosa halaman legal/guide: fade HALUS aja (tanpa gerak naik) */
+.guide-article .reveal {
+  transform: none;
+}
 
 /* Hormatin user yang matiin animasi (aksesibilitas) */
 @media (prefers-reduced-motion: reduce) {
@@ -2835,6 +2880,10 @@ section + section::before,
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .quicknav__icon::after,
+  .quicknav__img {
+    animation: none;
   }
   .experience__card:hover,
   .villa__card:hover,

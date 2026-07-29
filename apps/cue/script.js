@@ -120,6 +120,28 @@ const PAGE_ITEM = {
   "taste-of-ubud.html": "Taste of Ubud"
 };
 
+// -- Kartu visual per program di builder itinerary: foto (sama kaya homepage) + 1 kalimat desc.
+// Key HARUS sama persis dg nama di `prices`. Dipakai renderDayCard buat render .experience__card.
+const ITEM_CARD = {
+  "Ubud Tour": { img: "riceterrace-tgll.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
+  "East Bali Tour": { img: "lempuyang.jpg", desc: "Water palaces, bamboo forests, and the dramatic gates of Lempuyang." },
+  "West Bali Tour": { img: "tanah-lot.jpg", desc: "Tanah Lot, Jatiluwih rice terraces, and Bali's temple-dotted west." },
+  "South Bali Tour": { img: "uluwatu-temple.jpg", desc: "Cliff temples, white-sand beaches, and golden sunsets on the coast." },
+  "North Bali Tour": { img: "tamblingan.jpg", desc: "Waterfalls, twin lakes, and quiet temples across Bali's north." },
+  "Ubud Culture Day": { img: "rahwana.jpg", desc: "Temples, rice terraces, a royal palace, and a traditional dance." },
+  "South Coast & Sunset Kecak": { img: "uluwatu.jpg", desc: "Cliff temples and southern beaches, ending with the sunset Kecak fire dance." },
+  "Batur Sunrise & Adrenaline": { img: "man-batur-sunrise.jpg", desc: "Sunrise at Mount Batur, then a jungle ATV ride — the ultimate adventure." },
+  "Taste of Ubud": { img: "cooking-class.jpg", desc: "Morning market, coffee tasting, and a hands-on Balinese cooking class." },
+  "ATV": { img: "atv.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
+  "Rafting": { img: "rafting.jpg", desc: "White-water rafting down the scenic Ayung River." },
+  "Swing": { img: "swing.jpg", desc: "Soar over the jungle on Bali's famous swing." },
+  "Jeep Sunrise": { img: "mount-batur-sunrise.webp", desc: "A sunrise 4x4 adventure to the Mount Batur viewpoints." },
+  "Mount Batur Trekking": { img: "mount-batur.webp", desc: "A dawn hike to the summit of an active volcano." },
+  "Cooking Class": { img: "cooking-class.jpg", desc: "Cook authentic Balinese dishes with a local family." },
+  "Kecak Dance": { img: "kecak.jpg", desc: "Bali's hypnotic fire-and-chant ritual, performed at sunset." },
+  "Barong Dance": { img: "barong.jpg", desc: "The ancient dance-drama of good versus evil." }
+};
+
 // -- itinerary store key
 const ITN_KEY = "cue_itinerary_v1";
 
@@ -945,6 +967,13 @@ function initItinerary() {
       if (!ch.pickup) ch.pickup = val; // drop-off charter = tujuan, jangan diisi hotel
     });
   }
+  // Jumlah tamu diisi sekali -> nyebar ke hari/transfer/charter lain yang masih kosong.
+  function propagateGuests(val) {
+    if (!val) return;
+    state.days.forEach((d) => { if (!d.guests) d.guests = val; });
+    state.transfers.forEach((tr) => { if (!tr.guests) tr.guests = val; });
+    (state.charters || []).forEach((ch) => { if (!ch.guests) ch.guests = val; });
+  }
   // Pilih Standard/Exclusive di hari ke-fromIdx -> hari berikutnya ikut (bisa diubah).
   function cascadeModes(fromIdx, mode) {
     for (let j = fromIdx + 1; j < state.days.length; j++) {
@@ -1022,45 +1051,67 @@ function initItinerary() {
     card.className = "itn-day";
     const p = dayPrice(d);
     const done = dayComplete(d);
-    // Link "View details" ke halaman program (paling bawah kartu)
+
+    // Kartu program = .experience__card homepage (foto + nama + desc) + tombol × hapus.
+    // 1 hari = 1 program (dukung >1 buat state lama: dirender grid).
+    const cardsHTML = d.items.length
+      ? d.items
+          .map((name, idx) => {
+            const info = ITEM_CARD[name] || {};
+            const bg = info.img ? `background-image:url('assets/images/${info.img}')` : "";
+            const desc = info.desc || "";
+            return `<article class="experience__card itn-prog">
+              <div class="experience__image" style="${bg}">
+                <button class="itn-prog__rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
+              </div>
+              <div class="experience__body">
+                <h3 class="experience__name">${name}</h3>
+                ${desc ? `<p class="experience__desc">${desc}</p>` : ""}
+              </div>
+            </article>`;
+          })
+          .join("")
+      : `<div class="itn-day__empty">Empty day. <button class="itn-day__emptyrm" type="button" data-rmday="${i}">Remove</button></div>`;
+
+    // Baris Standard/Exclusive per program yang punya versi Exclusive (di area form).
+    const typesHTML = d.items
+      .map((name, idx) => {
+        if (!tourExclusive[name]) return "";
+        const mode = itemMode(d, idx);
+        const nameLbl = d.items.length > 1 ? `<span class="itn-type__name">${name}</span>` : "";
+        return `<div class="itn-type" data-idx="${idx}">
+          ${nameLbl}
+          <span class="itn-item-type">
+            <button type="button" class="itn-item-type__btn ${mode === "standard" ? "is-active" : ""}" data-mode="standard">Standard</button>
+            <button type="button" class="itn-item-type__btn ${mode === "exclusive" ? "is-active" : ""}" data-mode="exclusive">Exclusive</button>
+          </span>
+        </div>`;
+      })
+      .filter(Boolean).join("");
+
+    // Link "View details" ke halaman program (pojok kiri baris harga)
     const viewsHTML = d.items
       .map((name) => ITEM_URL[name]
         ? `<a class="itn-day__view" href="${ITEM_URL[name]}" target="_blank" rel="noopener">${d.items.length > 1 ? name + " - " : ""}View details &rsaquo;</a>`
         : "")
       .filter(Boolean).join("");
-    const itemsHTML = d.items.length
-      ? d.items
-          .map((name, idx) => {
-            // Toggle Standard/Exclusive per item, cuma buat tour/combo yg punya versi Exclusive
-            const mode = itemMode(d, idx);
-            const typeHTML = tourExclusive[name]
-              ? `<div class="itn-item-type" data-idx="${idx}">
-                   <button type="button" class="itn-item-type__btn ${mode === "standard" ? "is-active" : ""}" data-mode="standard">Standard</button>
-                   <button type="button" class="itn-item-type__btn ${mode === "exclusive" ? "is-active" : ""}" data-mode="exclusive">Exclusive</button>
-                 </div>`
-              : "";
-            return `<li class="itn-day__item">
-              <span class="itn-day__item-name">${name}</span>
-              ${typeHTML}
-              <button class="itn-day__item-rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
-            </li>`;
-          })
-          .join("")
-      : `<li class="itn-day__empty">Empty day.</li>`;
+
     card.innerHTML = `
       <div class="itn-day__head">
         <h4 class="itn-day__title">Day ${i + 1}</h4>
         <span class="itn-day__status ${done ? "done" : ""}">${done ? "Complete" : "Incomplete"}</span>
-        <button class="itn-day__remove" type="button" data-rmday="${i}" aria-label="Remove day">&times;</button>
       </div>
-      <ul class="itn-day__items">${itemsHTML}</ul>
-      <div class="itn-day__fields">
-        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${d.date}" /></div>
-        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
-        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
-        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
+      <div class="itn-day__cards">${cardsHTML}</div>
+      <div class="itn-day__form">
+        ${typesHTML ? `<div class="itn-day__types">${typesHTML}</div>` : ""}
+        <div class="itn-day__fields">
+          <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${d.date}" /></div>
+          <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
+          <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
+          <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
+        </div>
+        <div class="itn-day__price"><span class="itn-day__views">${viewsHTML}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
       </div>
-      <div class="itn-day__price"><span class="itn-day__views">${viewsHTML}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
     `;
     card.querySelectorAll("[data-rmitem]").forEach((b) =>
       b.addEventListener("click", () => {
@@ -1072,8 +1123,8 @@ function initItinerary() {
         rerender();
       })
     );
-    // Toggle Standard/Exclusive tiap item
-    card.querySelectorAll(".itn-item-type").forEach((box) => {
+    // Toggle Standard/Exclusive tiap program
+    card.querySelectorAll(".itn-type").forEach((box) => {
       const idx = +box.dataset.idx;
       box.querySelectorAll(".itn-item-type__btn").forEach((b) =>
         b.addEventListener("click", () => {
@@ -1085,7 +1136,8 @@ function initItinerary() {
         })
       );
     });
-    card.querySelector("[data-rmday]").addEventListener("click", () => {
+    const rmDayBtn = card.querySelector("[data-rmday]"); // cuma ada di hari kosong
+    if (rmDayBtn) rmDayBtn.addEventListener("click", () => {
       state.days.splice(i, 1);
       save();
       rerender();
@@ -1103,6 +1155,7 @@ function initItinerary() {
     });
     card.querySelector(".f-guests").addEventListener("change", (e) => {
       d.guests = e.target.value;
+      propagateGuests(e.target.value); // isi sekali -> nyebar ke hari/transfer/charter kosong
       save();
       rerender();
     });

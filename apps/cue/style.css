@@ -2877,44 +2877,96 @@ section + section::before,
 .itn-day__remove:hover {
   background: rgba(180, 91, 77, 0.14);
 }
-.itn-day__items {
-  list-style: none;
-  margin-bottom: 0.9rem;
+/* Kartu program (foto homepage .experience__card) + form di bawahnya */
+.itn-day__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 260px));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
 }
-.itn-day__item {
+.itn-prog .experience__image {
+  position: relative;
+}
+.itn-prog__rm {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 26px;
+  height: 26px;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 0.6rem;
-  padding: 0.5rem 0.6rem;
-  margin-bottom: 0.4rem;
-  border-radius: 8px;
-  background: var(--color-cream);
-}
-.itn-day__item-name {
-  flex: 1;
-  min-width: 8rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-.itn-day__item-rm {
+  justify-content: center;
   border: none;
-  background: none;
-  font-size: 1.1rem;
-  line-height: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
   color: #b45b4d;
+  font-size: 1.15rem;
+  line-height: 1;
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+.itn-prog__rm:hover {
+  background: #fff;
+}
+.itn-day__form {
+  border-top: 1px dashed #e6dfce;
+  padding-top: 0.9rem;
+}
+.itn-day__types {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+.itn-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.itn-type__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-green);
 }
 .itn-day__empty {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   padding: 0.5rem 0.2rem;
+  margin-bottom: 1rem;
   font-size: 0.82rem;
   color: #9a9382;
+}
+.itn-day__emptyrm {
+  border: none;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b45b4d;
+  cursor: pointer;
 }
 .itn-day__fields {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.8rem;
   margin-bottom: 0.9rem;
+}
+/* Di kartu hari (program), field jadi 4 kolom di desktop; transfer/charter tetap 2 kolom */
+.itn-day__form .itn-day__fields {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 640px) {
+  .itn-day__form .itn-day__fields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+@media (max-width: 430px) {
+  .itn-day__form .itn-day__fields {
+    grid-template-columns: 1fr;
+  }
 }
 .itn-day__fields .field {
   margin-bottom: 0;

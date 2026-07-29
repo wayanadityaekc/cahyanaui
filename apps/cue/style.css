@@ -773,10 +773,12 @@ body {
   margin: 20px auto 0;
   width: calc(100% - 10px);
   max-width: 1100px;
-  /* panel cream + border gold tipis (kartu villa putih ngangkat di atasnya) */
-  background-color: var(--color-cream);
-  border: 1px solid var(--color-gold);
+  /* panel cream + border gold GRADASI (senada tour-details/About) */
+  border: 1px solid transparent;
   border-radius: 16px;
+  background:
+    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
 }
 .villas__grid {
   display: grid;
@@ -788,17 +790,64 @@ body {
 .villa__card {
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
   overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.1);
+  box-shadow: 0 6px 16px rgba(31, 61, 43, 0.06);
   margin-top: 1.5rem;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25)) border-box;
 }
 .villa__image {
-  aspect-ratio: 4 / 3;
+  position: relative;
+  aspect-ratio: 16 / 10;
   background-color: var(--color-green);
   background-size: cover;
   background-position: center;
+}
+/* Sub-label URL di bawah judul villa */
+.villas__sub {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #8a8172;
+}
+/* Badge rating (pojok kanan atas foto) */
+.villa__rating {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.12rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+}
+.villa__score {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-green);
+}
+.villa__star {
+  width: 14px;
+  height: 14px;
+  fill: var(--color-gold);
+}
+.villa__ratesrc {
+  font-size: var(--fs-label);
+  font-weight: 500;
+  line-height: 1;
+  color: #8a8172;
 }
 .villa__body {
   display: flex;

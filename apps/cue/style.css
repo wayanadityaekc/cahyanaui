@@ -1968,9 +1968,20 @@ section + section::before,
   max-width: 1000px;
   margin: 0 auto;
 }
+/* Detail page: section cream (lapis belakang) + container kartu putih (lapis depan).
+   Legal/guide (.guide-article) di-exclude → tetap kolom baca putih polos. */
+.info:has(> .info__container:not(.guide-article)) {
+  background-color: var(--color-cream);
+}
+.info__container:not(.guide-article) {
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.06);
+}
 .info__facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* 2x2 (samain kaya live) */
   gap: 1.25rem;
   margin-bottom: 2.5rem;
 }
@@ -1983,7 +1994,11 @@ section + section::before,
   padding: 1.25rem;
   text-align: center;
   border-radius: 10px;
-  background-color: var(--color-cream);
+  /* isi putih + border gradasi gold (putih di padding-box, gradasi di border-box) */
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(150deg, var(--color-gold) 0%, rgba(201, 164, 92, 0.25) 100%) border-box;
 }
 .info__fact span {
   font-size: 0.75rem;
@@ -2027,6 +2042,40 @@ section + section::before,
   position: absolute;
   left: 0;
   color: #b3261e;
+}
+/* Detail page: ganti glyph ✓/✕ jadi marker radio (Included = keisi hijau,
+   Excluded = kosong abu). Scope :not(.guide-article) → halaman legal tetap pakai ✓/✕. */
+.info__container:not(.guide-article) .info__list li {
+  padding-left: 1.95rem;
+}
+.info__container:not(.guide-article) .info__list li::before {
+  content: "";
+  top: 0.7rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.info__container:not(.guide-article) .info__list--yes li::before {
+  border: 1.5px solid var(--color-green);
+  background: radial-gradient(circle at center, var(--color-green) 0 3.5px, transparent 4px);
+}
+.info__container:not(.guide-article) .info__list--no li::before {
+  border: 1.5px solid #cfc9ba;
+  background: transparent;
+}
+.info__container:not(.guide-article) .info__list--no li {
+  color: #8a8578;
+}
+/* CTA (Book / Add) di dalam kartu detail */
+.info__cta {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.25rem;
+  padding-top: 1.9rem;
+  border-top: 1px solid #efe9db;
 }
 /* Item yang cuma tampil di salah satu mode (Standard / Exclusive). Default =
    Standard, jadi item exclusive-only disembunyiin dulu (nggak ada flash). Class
@@ -2631,6 +2680,9 @@ section + section::before,
 @media (max-width: 576px) {
   .experience__card {
     flex: 0 0 80%;
+  }
+  .info__container:not(.guide-article) {
+    padding: 1.75rem 1.25rem; /* kartu detail nggak kesempitan di HP */
   }
   .summary {
     padding: 1.25rem;

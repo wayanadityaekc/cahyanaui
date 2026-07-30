@@ -1345,25 +1345,37 @@ body {
 }
 
 /* Driver cards */
+/* Drivers = gaya About Us: section cream full-width + garis emas atas-bawah,
+   kartu putih + border gold gradasi (mirror .about--panel .about__content). */
 .drivers {
   padding: 3rem 1.5rem;
+  background: var(--color-cream);
+  border-top: 1px solid rgba(201, 164, 92, 0.4);
+  border-bottom: 1px solid rgba(201, 164, 92, 0.4);
 }
-.drivers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+.drivers__inner {
   max-width: 1000px;
   margin: 0 auto;
 }
+.drivers-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
 .driver-card {
   display: flex;
+  flex: 0 0 215px;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 1.75rem 1.25rem;
-  border: 1px solid #ece8dd;
+  border: 1.5px solid transparent;
   border-radius: 16px;
-  background-color: var(--color-cream);
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25))
+      border-box;
   cursor: pointer;
   transition:
     transform 0.15s,
@@ -1371,7 +1383,7 @@ body {
 }
 .driver-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 22px rgba(31, 61, 43, 0.1);
 }
 .driver-card__avatar {
   display: flex;
@@ -1490,9 +1502,10 @@ section + section::before,
 #villas + [id$="-placeholder"] > section::before {
   content: none;
 }
-/* Section guide-home udah punya border gold sendiri (atas & bawah) → buang
-   divider inset di atasnya & di section (reviews) tepat setelahnya. */
-#guides + [id$="-placeholder"] > section::before {
+/* Section Drivers (cream) udah punya border gold sendiri (atas & bawah) → buang
+   divider inset di atasnya & di section (reviews) tepat setelahnya biar nggak dobel. */
+#drivers-placeholder > section::before,
+#drivers-placeholder + [id$="-placeholder"] > section::before {
   content: none;
 }
 
@@ -2448,12 +2461,6 @@ section + section::before,
    (.experience__grid--slider + initTourSlider). Di HP menu jadi baris atas. */
 .guide-home {
   padding: 3rem 1.5rem;
-  background: var(--color-cream);
-  border-top: 1px solid rgba(201, 164, 92, 0.4);
-  border-bottom: 1px solid rgba(201, 164, 92, 0.4);
-}
-.guide-home::before {
-  content: none; /* pake border sendiri, jangan dobel sama divider inset */
 }
 .guide-home__inner {
   max-width: 1200px;
@@ -2507,14 +2514,13 @@ section + section::before,
   flex-shrink: 0;
 }
 .ghmenu__item:hover {
-  background: #fff;
+  background: var(--color-cream);
   color: var(--color-green);
 }
 .ghmenu__item.active {
-  background: #fff;
+  background: var(--color-cream);
   color: var(--color-green);
   border-left-color: var(--color-gold);
-  box-shadow: 0 2px 8px rgba(31, 61, 43, 0.05);
 }
 .ghpanel {
   display: none;
@@ -3686,6 +3692,7 @@ button.pick-cat {
   .drivers-grid,
   .reviews-cards {
     display: flex;
+    flex-wrap: nowrap;
     gap: 1rem;
     max-width: 100%;
     overflow-x: auto;

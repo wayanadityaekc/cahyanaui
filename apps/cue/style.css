@@ -2572,16 +2572,20 @@ section + section::before,
   background-color: var(--color-gold);
   color: var(--color-green);
 }
-@media (max-width: 768px) {
+/* Tablet & HP: menu kategori jadi 1 baris ke samping (scroll), di atas slider.
+   Breakpoint 992px biar HP lebar/landscape nggak kena layout desktop (numpuk). */
+@media (max-width: 992px) {
   .guide-home__layout {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   .guide-home__menu {
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 0.4rem;
     overflow-x: auto;
-    padding-bottom: 0.2rem;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.3rem;
     scrollbar-width: none;
   }
   .guide-home__menu::-webkit-scrollbar {

@@ -1490,6 +1490,11 @@ section + section::before,
 #villas + [id$="-placeholder"] > section::before {
   content: none;
 }
+/* Section guide-home udah punya border gold sendiri (atas & bawah) → buang
+   divider inset di atasnya & di section (reviews) tepat setelahnya. */
+#guides + [id$="-placeholder"] > section::before {
+  content: none;
+}
 
 /* FAQ accordion */
 .faq {
@@ -2393,29 +2398,39 @@ section + section::before,
   display: none;
 }
 .guide-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
   flex: 0 0 auto;
-  padding: 0.5rem 0.9rem;
-  border-radius: 999px;
+  padding: 0.7rem 0.9rem;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 8px 8px 0 0;
   font-family: var(--font-body);
-  font-size: var(--fs-small);
+  font-size: var(--fs-body);
   font-weight: 600;
-  color: var(--color-green);
+  color: #6b6559;
   background: transparent;
-  border: 1px solid #e2ddd0;
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.guide-tab svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 .guide-tab:hover {
-  border-color: var(--color-gold);
+  background: var(--color-cream);
+  color: var(--color-green);
 }
 .guide-tab.active {
-  background: var(--color-green);
-  color: var(--color-cream);
-  border-color: var(--color-green);
+  background: var(--color-cream);
+  color: var(--color-green);
+  border-bottom-color: var(--color-gold);
 }
 .guide-section {
   padding: 2.5rem 1.5rem 3rem;
@@ -2426,6 +2441,151 @@ section + section::before,
 .guide-panel.active {
   display: block;
 }
+
+/* ==================== Guides & Information (homepage) ====================
+   Menu kategori vertikal (kiri) + slider kartu (kanan). Ikon Set 1 (thematic).
+   Kartu reuse .experience__card (foto homepage). Slider pakai mesin yang sama
+   (.experience__grid--slider + initTourSlider). Di HP menu jadi baris atas. */
+.guide-home {
+  padding: 3rem 1.5rem;
+  background: var(--color-cream);
+  border-top: 1px solid rgba(201, 164, 92, 0.4);
+  border-bottom: 1px solid rgba(201, 164, 92, 0.4);
+}
+.guide-home::before {
+  content: none; /* pake border sendiri, jangan dobel sama divider inset */
+}
+.guide-home__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.guide-home__head {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.guide-home__sub {
+  max-width: 620px;
+  margin: 0.6rem auto 0;
+  color: #6b6559;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+.guide-home__layout {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.guide-home__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.ghmenu__item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.8rem;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  background: none;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: #6b6559;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.ghmenu__item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.ghmenu__item:hover {
+  background: #fff;
+  color: var(--color-green);
+}
+.ghmenu__item.active {
+  background: #fff;
+  color: var(--color-green);
+  border-left-color: var(--color-gold);
+  box-shadow: 0 2px 8px rgba(31, 61, 43, 0.05);
+}
+.ghpanel {
+  display: none;
+}
+.ghpanel.active {
+  display: block;
+}
+/* kartu guide: foto lebih landscape + label kategori emas */
+.guide-home__card {
+  text-decoration: none;
+  color: var(--color-green);
+}
+.guide-home__card .experience__image {
+  aspect-ratio: 16 / 10;
+}
+.guide-home__tag {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.guide-home__all {
+  margin-top: 2rem;
+  text-align: center;
+}
+.guide-home__all a {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  color: var(--color-cream);
+  background-color: var(--color-green);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.guide-home__all a:hover {
+  background-color: var(--color-gold);
+  color: var(--color-green);
+}
+@media (max-width: 768px) {
+  .guide-home__layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .guide-home__menu {
+    flex-direction: row;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+    scrollbar-width: none;
+  }
+  .guide-home__menu::-webkit-scrollbar {
+    display: none;
+  }
+  .ghmenu__item {
+    flex: 0 0 auto;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 8px 8px 0 0;
+    white-space: nowrap;
+  }
+  .ghmenu__item.active {
+    border-left: none;
+    border-bottom-color: var(--color-gold);
+  }
+}
+
 /* Halaman artikel guide */
 .guide-article {
   max-width: 720px;

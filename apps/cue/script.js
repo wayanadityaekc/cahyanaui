@@ -906,6 +906,25 @@ function initTourSlider() {
   });
 }
 
+// Section "Guides & Information" (homepage): menu kategori samping ganti panel slider.
+function initGuideHome() {
+  const menu = document.querySelector(".guide-home__menu");
+  if (!menu) return;
+  const items = menu.querySelectorAll(".ghmenu__item");
+  const panels = document.querySelectorAll(".guide-home__panels .ghpanel");
+  items.forEach((item) => {
+    item.addEventListener("click", () => {
+      const cat = item.dataset.cat;
+      items.forEach((x) => {
+        const on = x === item;
+        x.classList.toggle("active", on);
+        x.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      panels.forEach((p) => p.classList.toggle("active", p.dataset.cat === cat));
+    });
+  });
+}
+
 function initAccordion() {
   const routeHeads = document.querySelectorAll(".route__head");
   if (!routeHeads.length) return;
@@ -2053,6 +2072,7 @@ async function initPage() {
   initBooking();
   initSlider();
   initTourSlider();
+  initGuideHome();
   initAccordion();
   initContact();
   initItinerary();

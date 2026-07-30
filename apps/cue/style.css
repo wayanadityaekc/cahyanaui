@@ -2482,16 +2482,19 @@ section + section::before,
   font-size: var(--fs-body);
   line-height: var(--lh-body);
 }
+/* Desktop disamain kayak mobile: menu navigasi horizontal di atas, slider full width di bawah. */
 .guide-home__layout {
   display: grid;
-  grid-template-columns: 210px 1fr;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   align-items: start;
 }
 .guide-home__menu {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
 }
 .ghmenu__item {
   display: flex;
@@ -2499,8 +2502,8 @@ section + section::before,
   gap: 0.65rem;
   padding: 0.7rem 0.8rem;
   border: none;
-  border-left: 3px solid transparent;
-  border-radius: 8px;
+  border-bottom: 3px solid transparent;
+  border-radius: 8px 8px 0 0;
   background: none;
   text-align: left;
   font-family: var(--font-body);
@@ -2525,7 +2528,7 @@ section + section::before,
 .ghmenu__item.active {
   background: var(--color-cream);
   color: var(--color-green);
-  border-left-color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
 }
 .ghpanel {
   display: none;
@@ -4020,6 +4023,10 @@ button.pick-cat {
     flex: 0 0 300px;
     scroll-snap-align: start;
   }
+  /* Guide slider (desktop): 3 card mengisi penuh lebar section (gap 1.5rem = 3rem total) */
+  .guide-home__slider .experience__card {
+    flex-basis: calc((100% - 3rem) / 3);
+  }
 }
 
 /* ==================== Slider arrows (muncul pas hover, desktop) ==================== */
@@ -4158,6 +4165,14 @@ button.pick-cat {
   font-size: var(--fs-label);
   font-weight: 500;
   color: #6b6559;
+}
+/* Box "Price" di Tour Details / Good to Know: nilai seukuran fakta lain (--fs-strong),
+   unit "per car / per person" dibikin sedikit lebih kebaca. */
+.info__fact .price {
+  font-size: var(--fs-strong);
+}
+.info__fact .price-unit {
+  font-size: var(--fs-small);
 }
 
 /* ==================== Welcome popup (jumlah orang) ==================== */

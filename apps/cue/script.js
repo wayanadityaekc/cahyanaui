@@ -1984,11 +1984,15 @@ function initTourType() {
     else buildTag(name, desc);
   });
 
-  // Halaman detail: tepat di bawah judul "Tour Details"
+  // Halaman detail: box "Price" di Tour Details / Good to Know -> tambah unit (per car/person),
+  // lalu (kalau tour/combo) inject toggle Standard/Exclusive tepat di bawah judul.
   document.querySelectorAll(".info__container").forEach((box) => {
     const priceEl = box.querySelector("[data-price]");
     const title = box.querySelector(".section__title");
-    if (priceEl && title) build(priceEl.dataset.price, priceEl, title, "after", "detail");
+    if (!priceEl) return;
+    const info = itemInfo(priceEl.dataset.price);
+    if (info) addPriceUnit(priceEl, info.cat);
+    if (title) build(priceEl.dataset.price, priceEl, title, "after", "detail");
   });
 
   // Dipanggil pas jumlah orang ganti -> perbarui catatan "for N pax"

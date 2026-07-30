@@ -1057,6 +1057,7 @@ body {
   color: var(--color-gold);
 }
 .activities__desc {
+  text-align: left;
   color: #46453f;
   line-height: var(--lh-body);
 }
@@ -2357,7 +2358,7 @@ section + section::before,
 .attraction-about {
   max-width: 680px;
   margin: 0 auto 1.1rem;
-  text-align: center;
+  text-align: left;
   line-height: var(--lh-body);
   color: #46453f;
   font-size: var(--fs-body);

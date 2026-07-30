@@ -1493,7 +1493,8 @@ section + section::before,
 .subhero::before,
 .booking::before,
 .subhero + section::before,
-.quicknav::before {
+.quicknav::before,
+.trust::before {
   content: none;
 }
 /* Panel villa udah punya border gold sendiri → buang divider di atas panel & di section

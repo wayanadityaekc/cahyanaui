@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 31;
+const PARTIALS_VERSION = 32;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -235,6 +235,22 @@ function setGuests(n) {
     gf.value = String(n);
     if (window.__bookingRefresh) window.__bookingRefresh();
   }
+}
+
+// Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang + flag popup yang
+// tersimpan, balikin semua field ke default, lalu tampilkan popup lagi biar user
+// pilih ulang.
+function resetGuests() {
+  currentGuests = 0;
+  localStorage.removeItem("cue_guests");
+  localStorage.removeItem("cue_welcomed");
+  document.querySelectorAll("[data-guest-select]").forEach((s) => { s.value = String(DISPLAY_GUESTS); });
+  const gf = document.getElementById("guest");
+  if (gf) gf.value = "";
+  renderPrices();
+  if (window.__ttypeRefresh) window.__ttypeRefresh();
+  if (window.__bookingRefresh) window.__bookingRefresh();
+  showWelcome();
 }
 
 // -- itinerary store
@@ -811,14 +827,8 @@ function initBooking() {
     calculatePrice();
   });
   // Ganti Guests di booking = update jumlah orang global (harga Exclusive di card
-  // ikut nyesuain), lalu hitung ulang harga booking.
-  // Opsi "Reset": hapus jumlah orang tersimpan, lalu reload.
+  // ikut nyesuain), lalu hitung ulang harga booking. (Reset dilakukan dari navbar.)
   guestField.addEventListener("change", () => {
-    if (guestField.value === "reset") {
-      localStorage.removeItem("cue_guests");
-      location.reload();
-      return;
-    }
     setGuests(guestField.value);
     calculatePrice();
   });
@@ -1896,14 +1906,25 @@ function initGuestPicker() {
   const val = currentGuests || DISPLAY_GUESTS;
   sels.forEach((sel) => {
     sel.value = String(val);
-    sel.addEventListener("change", () => setGuests(sel.value));
+    sel.addEventListener("change", () => {
+      if (sel.value === "reset") { resetGuests(); return; }
+      setGuests(sel.value);
+    });
   });
 }
 
-// Popup selamat datang (muncul sekali di kunjungan pertama). Minta jumlah orang biar
-// harga Exclusive akurat. "Skip" = tutup tanpa set. Pilihan tersimpan di localStorage.
+// Popup selamat datang: muncul sekali di kunjungan pertama (kalau belum "welcomed").
 function initWelcome() {
   if (localStorage.getItem("cue_welcomed")) return;
+  showWelcome();
+}
+
+// Bangun + tampilkan popup selamat datang. Minta jumlah orang biar harga Exclusive
+// akurat. "Skip" = tutup tanpa set. Dipakai initWelcome (kunjungan pertama) & tombol
+// Reset di navbar. Pilihan tersimpan di localStorage.
+function showWelcome() {
+  const existing = document.getElementById("welcome-modal");
+  if (existing) existing.remove();
   const pre = currentGuests || DISPLAY_GUESTS;
   let opts = "";
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";

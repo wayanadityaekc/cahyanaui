@@ -807,10 +807,9 @@ function initBooking() {
   });
   // Ganti Guests di booking = update jumlah orang global (harga Exclusive di card
   // ikut nyesuain), lalu hitung ulang harga booking.
-  // Opsi "Reset": hapus jumlah orang tersimpan + flag welcome, reload -> popup muncul lagi.
+  // Opsi "Reset": hapus jumlah orang tersimpan, lalu reload.
   guestField.addEventListener("change", () => {
     if (guestField.value === "reset") {
-      localStorage.removeItem("cue_welcomed");
       localStorage.removeItem("cue_guests");
       location.reload();
       return;
@@ -2015,8 +2014,8 @@ function initTourType() {
 // biar harga Exclusive akurat. "Skip" = tutup tanpa set (sistem jalan pakai
 // jumlah orang dari booking form). Pilihan tersimpan di localStorage.
 function initWelcome() {
-  if (localStorage.getItem("cue_welcomed")) return;
-
+  // Popup muncul TIAP masuk/refresh. Jumlah orang yg dipilih tetap inget
+  // (dari cue_guests) -> dropdown-nya ke-pre-select otomatis.
   const pre = currentGuests || DISPLAY_GUESTS;
   let opts = "";
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
@@ -2040,7 +2039,7 @@ function initWelcome() {
     "</div>";
   document.body.appendChild(modal);
 
-  const close = () => { modal.classList.remove("active"); localStorage.setItem("cue_welcomed", "1"); };
+  const close = () => modal.classList.remove("active");
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();
   });
@@ -2057,11 +2056,7 @@ function initModalUX() {
   // Escape -> tutup semua modal yang lagi kebuka.
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
-    document.querySelectorAll(".modal.active").forEach((m) => {
-      m.classList.remove("active");
-      // Welcome popup: tandain udah diliat biar nggak muncul lagi.
-      if (m.id === "welcome-modal") localStorage.setItem("cue_welcomed", "1");
-    });
+    document.querySelectorAll(".modal.active").forEach((m) => m.classList.remove("active"));
   });
 
   // Scroll-lock: ada modal kebuka -> kunci scroll body; nggak ada -> lepas lagi.

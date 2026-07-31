@@ -2914,6 +2914,11 @@ section + section::before,
   .navbar__toggle {
     display: flex;
   }
+  /* Mobile: logo dikecilin dikit + digeser kiri dikit (desktop tetap 55px) */
+  .navbar__logo img {
+    height: 46px;
+    margin-left: -0.25rem;
+  }
   .navbar__menu {
     position: absolute;
     top: 100%;

@@ -2479,6 +2479,7 @@ section + section::before,
 .guide-home__sub {
   max-width: 620px;
   margin: 0.6rem auto 0;
+  text-align: left;
   color: #6b6559;
   font-size: var(--fs-body);
   line-height: var(--lh-body);

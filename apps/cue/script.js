@@ -2010,46 +2010,6 @@ function initTourType() {
   window.__ttypeRefresh = function () { holders.forEach((fn) => fn()); };
 }
 
-// Popup selamat datang (muncul sekali, di kunjungan pertama). Minta jumlah orang
-// biar harga Exclusive akurat. "Skip" = tutup tanpa set (sistem jalan pakai
-// jumlah orang dari booking form). Pilihan tersimpan di localStorage.
-function initWelcome() {
-  // Popup muncul TIAP masuk/refresh. Jumlah orang yg dipilih tetap inget
-  // (dari cue_guests) -> dropdown-nya ke-pre-select otomatis.
-  const pre = currentGuests || DISPLAY_GUESTS;
-  let opts = "";
-  for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
-
-  const modal = document.createElement("div");
-  modal.className = "modal welcome-modal";
-  modal.id = "welcome-modal";
-  modal.innerHTML =
-    '<div class="modal__box welcome__box">' +
-      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
-      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" />' +
-      '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> — upfront, always.</p>' +
-      '<div class="welcome__field">' +
-        '<label for="welcome-guests">Number of guests</label>' +
-        '<select id="welcome-guests">' + opts + "</select>" +
-      "</div>" +
-      '<div class="welcome__actions">' +
-        '<button type="button" class="modal__btn" id="welcome-confirm">Explore</button>' +
-      "</div>" +
-    "</div>";
-  document.body.appendChild(modal);
-
-  const close = () => modal.classList.remove("active");
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal || e.target.closest("[data-close]")) close();
-  });
-  modal.querySelector("#welcome-confirm").addEventListener("click", () => {
-    setGuests(modal.querySelector("#welcome-guests").value);
-    close();
-  });
-  requestAnimationFrame(() => modal.classList.add("active"));
-}
-
 // UX modal global: tutup pakai Escape + lock scroll background pas ada modal kebuka.
 // Berlaku ke SEMUA modal (.modal.active), termasuk yang di-inject via JS.
 function initModalUX() {
@@ -2099,7 +2059,6 @@ async function initPage() {
   initTourType();
   initCurrency();
   initHighlightLink();
-  initWelcome();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

@@ -1133,7 +1133,7 @@ body {
 .reviews__intro {
   max-width: 620px;
   margin: 0 auto 2.5rem;
-  text-align: center;
+  text-align: left;
   color: #6b6559;
 }
 .reviews__empty {

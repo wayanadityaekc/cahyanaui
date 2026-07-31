@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 32;
+const PARTIALS_VERSION = 33;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -1935,15 +1935,15 @@ function showWelcome() {
   modal.innerHTML =
     '<div class="modal__box welcome__box">' +
       '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" />' +
       '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">How many people are traveling? We’ll show you accurate prices for your group — including our <strong>Exclusive</strong> tours where entrance tickets are already bundled in.</p>' +
+      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> — upfront, always.</p>' +
       '<div class="welcome__field">' +
         '<label for="welcome-guests">Number of guests</label>' +
         '<select id="welcome-guests">' + opts + "</select>" +
       "</div>" +
       '<div class="welcome__actions">' +
-        '<button type="button" class="modal__btn" id="welcome-confirm">See my prices</button>' +
-        '<button type="button" class="modal__btn modal__btn--ghost" data-close>Skip for now</button>' +
+        '<button type="button" class="modal__btn" id="welcome-confirm">Explore</button>' +
       "</div>" +
     "</div>";
   document.body.appendChild(modal);

@@ -56,8 +56,7 @@ body {
 .stop__desc,
 .reviews__intro,
 .faq__a p,
-.transfer__note,
-.welcome__text {
+.transfer__note {
   font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -299,8 +298,7 @@ body {
 .itn-day__fields .field input,
 .itn-day__fields .field select,
 .itn-charter__field input,
-.charter__select,
-.welcome__field select {
+.charter__select {
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   font-family: var(--font-body);
@@ -4110,40 +4108,6 @@ button.pick-cat {
 }
 .info__fact .price-unit {
   font-size: var(--fs-small);
-}
-
-/* ==================== Welcome popup (jumlah orang) ==================== */
-.welcome__box {
-  text-align: center;
-  max-width: 400px;
-}
-.welcome__title {
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  color: var(--color-green);
-  margin-bottom: 0.6rem;
-}
-.welcome__text {
-  color: var(--color-muted-2);
-  margin-bottom: 1.25rem;
-}
-.welcome__field {
-  text-align: left;
-  margin-bottom: 1.25rem;
-}
-.welcome__field label {
-  display: block;
-  font-size: var(--fs-label);
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-}
-.welcome__field select {
-  width: 100%;
-  height: 2.9rem;
-  padding: 0.7rem 0.8rem;
-  font-size: var(--fs-body);
-  background-color: #fff;
 }
 
 /* ==================== Toggle Standard/Exclusive di booking form ==================== */

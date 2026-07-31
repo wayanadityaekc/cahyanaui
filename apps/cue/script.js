@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 29;
+const PARTIALS_VERSION = 30;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -533,6 +533,9 @@ function showPastDate() {
 async function loadPartials() {
   const partials = [
     { id: "navbar-placeholder", file: "partials/navbar.html" },
+    // book-modal HARUS sebelum booking-placeholder: dia inject wrapper modal
+    // yang di dalamnya ada #booking-placeholder, baru booking.html masuk situ.
+    { id: "book-modal-placeholder", file: "partials/book-modal.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
     { id: "book-confirm-placeholder", file: "partials/book-confirm.html" },
     { id: "drivers-placeholder", file: "partials/drivers.html" },
@@ -547,6 +550,14 @@ async function loadPartials() {
     const file = holder.dataset.src || part.file;
     const res = await fetch(`${file}?v=${PARTIALS_VERSION}`);
     holder.innerHTML = await res.text();
+    // book-modal: turunin data-default/data-item halaman ke #booking-placeholder di dalamnya
+    if (part.id === "book-modal-placeholder") {
+      const inner = holder.querySelector("#booking-placeholder");
+      if (inner) {
+        if (holder.dataset.default) inner.dataset.default = holder.dataset.default;
+        if (holder.dataset.item) inner.dataset.item = holder.dataset.item;
+      }
+    }
   }
 }
 

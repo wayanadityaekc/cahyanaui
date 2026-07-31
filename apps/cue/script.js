@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 30;
+const PARTIALS_VERSION = 31;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -24,7 +24,7 @@ const prices = {
   combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Coast & Sunset Kecak": { usd: 65, idr: 1000000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Taste of Ubud": { usd: 50, idr: 780000 } }
 };
 
-// Charter mobil (harga PLACEHOLDER - silakan diubah). Half/Full day = harga dasar,
+// Charter mobil 
 // extended = full day + jam tambahan, + surcharge kalau pickup di luar Ubud.
 const CHARTER = {
   half: { usd: 35, idr: 500000 },
@@ -225,6 +225,11 @@ function setGuests(n) {
   localStorage.setItem("cue_guests", String(n));
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
+  // sinkron ke guest-select di navbar
+  document.querySelectorAll("[data-guest-select]").forEach((s) => {
+    if (parseInt(s.value, 10) !== n) s.value = String(n);
+  });
+  // sinkron ke field Guests di booking form
   const gf = document.getElementById("guest");
   if (gf && parseInt(gf.value, 10) !== n) {
     gf.value = String(n);
@@ -1883,6 +1888,56 @@ function initCurrency() {
   renderPrices();
 }
 
+// Guest picker di navbar (desktop + mobile). Set jumlah orang global -> harga Exclusive
+// & booking form ikut update. Nilai awal = pilihan tersimpan, atau DISPLAY_GUESTS (perkiraan).
+function initGuestPicker() {
+  const sels = document.querySelectorAll("[data-guest-select]");
+  if (!sels.length) return;
+  const val = currentGuests || DISPLAY_GUESTS;
+  sels.forEach((sel) => {
+    sel.value = String(val);
+    sel.addEventListener("change", () => setGuests(sel.value));
+  });
+}
+
+// Popup selamat datang (muncul sekali di kunjungan pertama). Minta jumlah orang biar
+// harga Exclusive akurat. "Skip" = tutup tanpa set. Pilihan tersimpan di localStorage.
+function initWelcome() {
+  if (localStorage.getItem("cue_welcomed")) return;
+  const pre = currentGuests || DISPLAY_GUESTS;
+  let opts = "";
+  for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
+
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "welcome-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
+      '<p class="welcome__text">How many people are traveling? We’ll show you accurate prices for your group — including our <strong>Exclusive</strong> tours where entrance tickets are already bundled in.</p>' +
+      '<div class="welcome__field">' +
+        '<label for="welcome-guests">Number of guests</label>' +
+        '<select id="welcome-guests">' + opts + "</select>" +
+      "</div>" +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="welcome-confirm">See my prices</button>' +
+        '<button type="button" class="modal__btn modal__btn--ghost" data-close>Skip for now</button>' +
+      "</div>" +
+    "</div>";
+  document.body.appendChild(modal);
+
+  const close = () => { modal.classList.remove("active"); localStorage.setItem("cue_welcomed", "1"); };
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest("[data-close]")) close();
+  });
+  modal.querySelector("#welcome-confirm").addEventListener("click", () => {
+    setGuests(modal.querySelector("#welcome-guests").value);
+    close();
+  });
+  requestAnimationFrame(() => modal.classList.add("active"));
+}
+
 // Badan card highlight bisa diklik -> ke halaman programnya.
 // Tombol/link di dalamnya (Book, Add to itinerary) tetap jalan sendiri.
 function initHighlightLink() {
@@ -2058,7 +2113,9 @@ async function initPage() {
   initCharter();
   initTourType();
   initCurrency();
+  initGuestPicker();
   initHighlightLink();
+  initWelcome();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

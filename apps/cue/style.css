@@ -3779,6 +3779,115 @@ button.pick-cat {
   color: var(--color-green);
   cursor: pointer;
 }
+/* Guest picker di navbar (ikon orang + select angka), gaya sama kaya currency */
+.guest-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-right: 0.85rem;
+  padding: 0.32rem 0.45rem 0.32rem 0.55rem;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+  background: #fff;
+}
+.guest-select__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-green);
+  flex-shrink: 0;
+}
+.guest-select select {
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+/* ==================== Welcome popup (jumlah orang, muncul sekali) ==================== */
+.welcome__box {
+  text-align: center;
+  max-width: 400px;
+}
+.welcome__title {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-green);
+  margin-bottom: 0.6rem;
+}
+.welcome__text {
+  color: #6b6559;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  margin-bottom: 1.25rem;
+}
+.welcome__field {
+  text-align: left;
+  margin-bottom: 1.25rem;
+}
+.welcome__field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.welcome__field select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font-size: var(--fs-body);
+  font-family: var(--font-body);
+  color: var(--color-green);
+  background: #fff;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+}
+
+/* Mobile: guest / currency / hamburger dibikin SAMA LEBAR bertiga (rapi sejajar) */
+@media (max-width: 992px) {
+  .guest-select,
+  .cur-select {
+    width: 3rem;
+    height: 2.2rem;
+    margin: 0 0 0 0.45rem;
+    padding: 0;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  .cur-select {
+    font-size: 0.68rem;
+    text-align: center;
+    text-align-last: center;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .guest-select {
+    gap: 0.15rem;
+  }
+  .guest-select__icon {
+    width: 14px;
+    height: 14px;
+  }
+  .guest-select select {
+    font-size: 0.8rem;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .navbar__toggle {
+    width: 3rem;
+    height: 2.2rem;
+    margin-left: 0.45rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .navbar__toggle span:not(.itn-badge) {
+    width: 22px;
+  }
+}
 /* harga hasil render dari JS (currency aktif) */
 .price,
 .price-cur {

@@ -3057,6 +3057,18 @@ section + section::before,
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  /* Mobile: meta From/Duration/Type kasih napas + nilai nggak mepet ke label,
+     harga digedein biar kebaca. */
+  .highlight__meta {
+    margin-top: 0.5rem;
+    gap: 1.25rem 1.75rem;
+  }
+  .highlight__meta-item strong {
+    margin-top: 0.4rem;
+  }
+  .highlight__meta-item .price {
+    font-size: 1.2rem;
+  }
   .stop {
     grid-template-columns: 1fr;
     gap: 1.25rem;

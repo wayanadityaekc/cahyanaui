@@ -882,8 +882,6 @@ function initSlider() {
     const slides = slider.querySelectorAll(".slider__slide");
     if (!slides.length) return;
     const dots = slider.querySelectorAll(".slider__dot");
-    const prev = slider.querySelector(".slider__btn--prev");
-    const next = slider.querySelector(".slider__btn--next");
     let current = 0;
 
     function show(index) {
@@ -893,11 +891,22 @@ function initSlider() {
       if (dots[index]) dots[index].classList.add("active");
       current = index;
     }
+    const nextSlide = () => show((current + 1) % slides.length);
+    const prevSlide = () => show((current - 1 + slides.length) % slides.length);
 
-    if (next) next.addEventListener("click", () => show((current + 1) % slides.length));
-    if (prev) prev.addEventListener("click", () => show((current - 1 + slides.length) % slides.length));
     dots.forEach((dot, index) => dot.addEventListener("click", () => show(index)));
-    setInterval(() => show((current + 1) % slides.length), 5000);
+
+    // Ganti panah: geser (swipe/drag) kiri-kanan buat pindah slide.
+    let sx = null;
+    slider.addEventListener("pointerdown", (e) => { sx = e.clientX; });
+    slider.addEventListener("pointerup", (e) => {
+      if (sx === null) return;
+      const dx = e.clientX - sx;
+      sx = null;
+      if (Math.abs(dx) > 40) (dx < 0 ? nextSlide : prevSlide)();
+    });
+
+    setInterval(nextSlide, 5000);
   });
 }
 
@@ -2030,13 +2039,14 @@ function initTourType() {
   function buildTag(name, mount) {
     const info = itemInfo(name);
     if (!info || (info.cat !== "experience" && info.cat !== "performance")) return;
-    const isPerf = info.cat === "performance";
     const wrap = document.createElement("div");
     wrap.className = "tour-type tour-type--card";
+    // Experience & performance: toggle Standard/Exclusive tapi STATIS (disabled) -
+    // dikunci di Exclusive (semua udah all-inclusive), nggak bisa diubah.
     wrap.innerHTML =
       '<div class="tour-type__toggle tour-type__toggle--static" role="group" aria-label="Type">' +
-        '<button type="button" class="tour-type__btn' + (isPerf ? "" : " is-active") + '" disabled>Experience</button>' +
-        '<button type="button" class="tour-type__btn' + (isPerf ? " is-active" : "") + '" disabled>Performance</button>' +
+        '<button type="button" class="tour-type__btn" disabled>Standard</button>' +
+        '<button type="button" class="tour-type__btn is-active" disabled>Exclusive</button>' +
       "</div>";
     mount.insertAdjacentElement("afterend", wrap);
     wrap.addEventListener("click", (e) => e.stopPropagation()); // jgn ikut navigasi card
@@ -2106,6 +2116,19 @@ function initModalUX() {
   });
 }
 
+// Tiap harga transfer (data-price yg ada di prices.transfer) dikasih unit "per car"
+// di belakangnya - biar jelas harga per mobil, konsisten di semua tampilan transfer.
+function initTransferUnits() {
+  document.querySelectorAll("[data-price]").forEach((el) => {
+    if (!prices.transfer[el.dataset.price]) return;
+    if (el.parentElement.querySelector(".price-unit")) return;
+    const u = document.createElement("span");
+    u.className = "price-unit";
+    u.textContent = "per car";
+    el.insertAdjacentElement("afterend", u);
+  });
+}
+
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
@@ -2134,6 +2157,7 @@ async function initPage() {
   initGuestPicker();
   initHighlightLink();
   initWelcome();
+  initTransferUnits();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

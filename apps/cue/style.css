@@ -788,6 +788,13 @@ body {
 }
 .experience__desc {
   color: var(--color-muted-2);
+  /* Konsisten 2-3 baris biar tinggi card seragam (potong yang kepanjangan,
+     tahan tinggi min 2 baris buat yang pendek). */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(1.6em * 2);
 }
 .experience__footer {
   display: flex;

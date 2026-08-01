@@ -2613,6 +2613,35 @@ section + section::before,
   text-decoration: none;
   font-weight: 600;
 }
+/* Foto utama di atas artikel guide (SEO + biar pembaca dapet bayangan tempatnya) */
+.guide-lead {
+  margin: 0 0 1.5rem;
+}
+.guide-lead img,
+.guide-lead__ph {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(31, 61, 43, 0.1);
+  display: block;
+}
+.guide-lead__ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86));
+}
+.guide-lead figcaption {
+  margin-top: 0.5rem;
+  font-size: var(--fs-label);
+  font-style: italic;
+  text-align: center;
+  color: var(--color-muted);
+}
 .guide-related {
   margin-top: 2rem;
   padding-top: 1.5rem;

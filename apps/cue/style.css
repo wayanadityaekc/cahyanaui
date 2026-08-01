@@ -4238,6 +4238,12 @@ button.pick-cat {
 .tour-type--card {
   margin-top: 0.75rem;
 }
+/* Detail page: toggle di tengah (di bawah judul) + kasih jarak ke facts/teks bawahnya */
+.tour-type--detail {
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 2.25rem;
+}
 .tour-type__toggle {
   display: inline-flex;
   padding: 3px;

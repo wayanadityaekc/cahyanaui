@@ -2469,6 +2469,10 @@ section + section::before,
   font-size: var(--fs-body);
   line-height: var(--lh-body);
 }
+/* Kalau intro dipecah jadi 2 paragraf, kasih jarak yang nyaman antar keduanya */
+.guide-home__sub + .guide-home__sub {
+  margin-top: 1rem;
+}
 /* Desktop disamain kayak mobile: menu navigasi horizontal di atas, slider full width di bawah. */
 .guide-home__layout {
   display: grid;

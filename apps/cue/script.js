@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 33;
+const PARTIALS_VERSION = 34;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -136,7 +136,7 @@ const ITEM_CARD = {
   "North Bali Tour": { img: "tamblingan.jpg", desc: "Waterfalls, twin lakes, and quiet temples across Bali's north." },
   "Ubud Culture Day": { img: "rahwana.jpg", desc: "Temples, rice terraces, a royal palace, and a traditional dance." },
   "South Coast & Sunset Kecak": { img: "uluwatu.jpg", desc: "Cliff temples and southern beaches, ending with the sunset Kecak fire dance." },
-  "Batur Sunrise & Adrenaline": { img: "man-batur-sunrise.jpg", desc: "Sunrise at Mount Batur, then a jungle ATV ride — the ultimate adventure." },
+  "Batur Sunrise & Adrenaline": { img: "man-batur-sunrise.jpg", desc: "Sunrise at Mount Batur, then a jungle ATV ride - the ultimate adventure." },
   "Taste of Ubud": { img: "cooking-class.jpg", desc: "Morning market, coffee tasting, and a hands-on Balinese cooking class." },
   "ATV": { img: "atv.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
   "Rafting": { img: "rafting.jpg", desc: "White-water rafting down the scenic Ayung River." },
@@ -1874,7 +1874,7 @@ function initCharter() {
           : `Extended (10h + ${parseInt(extraInput.value) || 1}h)`;
     window.__openBooking({
       type: "charter",
-      service: "Charter — " + label,
+      service: "Charter - " + label,
       guests: guestsEl.value,
       date: dateEl.value,
       price: { usd: p.usd, idr: p.idr },
@@ -1943,7 +1943,7 @@ function showWelcome() {
       '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
       '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" />' +
       '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> — upfront, always.</p>' +
+      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> - upfront, always.</p>' +
       '<div class="welcome__field">' +
         '<label for="welcome-guests">Number of guests</label>' +
         '<select id="welcome-guests">' + opts + "</select>" +

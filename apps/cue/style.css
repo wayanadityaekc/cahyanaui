@@ -786,12 +786,37 @@ body {
 .experience__name {
   margin-bottom: 0.4rem;
 }
+/* Judul di DALAM foto (dipindah via initCardTitleOverlay) + gradient gelap
+   dari bawah biar teks putihnya kebaca. Berlaku card tour & experience. */
+.experience__image--titled {
+  display: flex;
+  align-items: flex-end;
+}
+.experience__image--titled::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.32) 42%,
+    transparent 68%
+  );
+}
+.experience__image--titled .experience__name {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0 0.9rem 0.85rem;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
 .experience__desc {
   color: var(--color-muted-2);
-  /* Konsisten 2-3 baris biar tinggi card seragam (potong yang kepanjangan,
-     tahan tinggi min 2 baris buat yang pendek). */
+  /* Konsisten 2 baris biar tinggi card seragam (potong yang kepanjangan,
+     tahan tinggi 2 baris buat yang pendek). */
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: calc(1.6em * 2);

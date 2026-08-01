@@ -3750,11 +3750,20 @@ button.pick-cat {
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
     border-color 0.2s ease;
+}
+/* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
+.btn-book,
+.btn-review,
+.modal__btn,
+.dirbtn,
+.pkg-cta__btn {
+  text-decoration: none;
 }
 .program-cta__btn--book {
   background: var(--color-green);

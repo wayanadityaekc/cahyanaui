@@ -59,8 +59,9 @@ When unsure, ask first (keep it short).
 - Order: **[currency] · Home · Itinerary (badge) · Program▾ · About**.
   Program dropdown holds: Tours / Experiences / Transfer / Charter.
 - Currency picker sits to the **left of Home** (after the logo).
-- Desktop: dropdown shows on hover/click. Mobile: Program dropdown is **open by default**,
-  the menu has a **bottom shadow** + separator border, and items are more spacious.
+- Desktop: dropdown shows on hover/click. Mobile: Program dropdown is **closed by default**
+  (tap "Program" to expand), the menu has a **bottom shadow** + separator border, and items
+  are more spacious.
 
 ## Code structure — script.js
 Order **must be kept** (declarations first, run last):

@@ -599,11 +599,7 @@ function initNavbar() {
       const open = drop.classList.toggle("open");
       dropToggle.setAttribute("aria-expanded", open ? "true" : "false");
     });
-    // Di mobile submenu Program dibuka default biar langsung keliatan
-    if (window.matchMedia("(max-width: 992px)").matches) {
-      drop.classList.add("open");
-      dropToggle.setAttribute("aria-expanded", "true");
-    }
+    // Mobile: submenu Program tertutup default, kebuka pas tombol Program diklik.
   }
 
   const current = location.pathname.split("/").pop() || "index.html";

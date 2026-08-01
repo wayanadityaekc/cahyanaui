@@ -998,35 +998,6 @@ body {
   font-size: var(--fs-h3);
   line-height: var(--lh-heading);
 }
-.slider__btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  font-size: 1.1rem;
-  color: var(--color-green);
-  background-color: rgba(247, 243, 234, 0.85);
-  cursor: pointer;
-}
-.slider__btn--prev {
-  left: 1rem;
-}
-.slider__btn--next {
-  right: 1rem;
-}
-/* Panah slider cuma muncul pas hover (desktop). Di touch tetap kelihatan. */
-@media (hover: hover) {
-  .slider .slider__btn {
-    opacity: 0;
-    transition: opacity 0.25s ease;
-  }
-  .slider:hover .slider__btn {
-    opacity: 1;
-  }
-}
 .slider__dots {
   position: absolute;
   bottom: 0.8rem;

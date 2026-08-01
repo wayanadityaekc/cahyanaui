@@ -2130,6 +2130,19 @@ function initTransferUnits() {
   });
 }
 
+// Pindahin judul card ke DALAM foto (overlay bawah). Cuma card tour & experience
+// (guide card di-skip biar layout-nya tetap). CSS .experience__image--titled yg
+// nata gradient + teks putih.
+function initCardTitleOverlay() {
+  document.querySelectorAll(".experience__card:not(.guide-home__card)").forEach((card) => {
+    const img = card.querySelector(".experience__image");
+    const name = card.querySelector(".experience__name");
+    if (!img || !name || img.contains(name)) return;
+    img.appendChild(name);
+    img.classList.add("experience__image--titled");
+  });
+}
+
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
@@ -2159,6 +2172,7 @@ async function initPage() {
   initHighlightLink();
   initWelcome();
   initTransferUnits();
+  initCardTitleOverlay();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

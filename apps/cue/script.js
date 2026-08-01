@@ -834,9 +834,9 @@ function initBooking() {
   });
   serviceItemSelect.addEventListener("change", () => { setBookingMode("standard", false); calculatePrice(); });
 
-  // Kalau user sudah pilih jumlah orang (dari popup / kunjungan sebelumnya),
-  // isi field Guests otomatis biar sinkron.
-  if (currentGuests) guestField.value = String(currentGuests);
+  // Samain nilai awal Guests booking dgn guest-select navbar (default DISPLAY_GUESTS
+  // kalau belum pilih) -> dua-duanya selalu match sejak load.
+  guestField.value = String(currentGuests || DISPLAY_GUESTS);
 
   bookNowBtn.addEventListener("click", () => {
     if (!guestField.value || !serviceItemSelect.value || !dateField.value) {

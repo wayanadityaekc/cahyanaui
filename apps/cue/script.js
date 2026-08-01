@@ -1667,6 +1667,7 @@ function initReveal() {
     ".faq__item",
     ".quicknav__card",
     ".section__title",
+    ".guide-lead",
     ".guide-article p",
     ".guide-article ul"
   ];

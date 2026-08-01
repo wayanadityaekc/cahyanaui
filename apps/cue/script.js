@@ -2130,17 +2130,22 @@ function initTransferUnits() {
   });
 }
 
-// Pindahin judul card ke DALAM foto (overlay bawah). Cuma card tour & experience
-// (guide card di-skip biar layout-nya tetap). CSS .experience__image--titled yg
-// nata gradient + teks putih.
+// Pindahin judul ke DALAM foto (overlay bawah + gradient). Berlaku card tour &
+// experience (guide di-skip), card villa, dan highlight tour/experience/transfer.
+// CSS .photo-titled yg nata gradient + teks putih.
 function initCardTitleOverlay() {
-  document.querySelectorAll(".experience__card:not(.guide-home__card)").forEach((card) => {
-    const img = card.querySelector(".experience__image");
-    const name = card.querySelector(".experience__name");
-    if (!img || !name || img.contains(name)) return;
-    img.appendChild(name);
-    img.classList.add("experience__image--titled");
-  });
+  const move = (cardSel, imgSel, titleSel) => {
+    document.querySelectorAll(cardSel).forEach((card) => {
+      const img = card.querySelector(imgSel);
+      const title = card.querySelector(titleSel);
+      if (!img || !title || img.contains(title)) return;
+      img.appendChild(title);
+      img.classList.add("photo-titled");
+    });
+  };
+  move(".experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
+  move(".villa__card", ".villa__image", ".villa__name");
+  move(".highlight__container", ".highlight__image", ".highlight__title");
 }
 
 /* ==================== 5. APP ENTRY ==================== */

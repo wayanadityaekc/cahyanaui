@@ -787,12 +787,14 @@ body {
   margin-bottom: 0.4rem;
 }
 /* Judul di DALAM foto (dipindah via initCardTitleOverlay) + gradient gelap
-   dari bawah biar teks putihnya kebaca. Berlaku card tour & experience. */
-.experience__image--titled {
+   dari bawah biar teks putihnya kebaca. Berlaku card tour/experience, villa,
+   dan highlight tour/experience/transfer. */
+.photo-titled {
+  position: relative;
   display: flex;
   align-items: flex-end;
 }
-.experience__image--titled::after {
+.photo-titled::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -803,7 +805,9 @@ body {
     transparent 68%
   );
 }
-.experience__image--titled .experience__name {
+.photo-titled .experience__name,
+.photo-titled .villa__name,
+.photo-titled .highlight__title {
   position: relative;
   z-index: 1;
   margin: 0;

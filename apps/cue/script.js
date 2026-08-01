@@ -2047,7 +2047,8 @@ function initTourType() {
       '<div class="tour-type__toggle tour-type__toggle--static" role="group" aria-label="Type">' +
         '<button type="button" class="tour-type__btn" disabled>Standard</button>' +
         '<button type="button" class="tour-type__btn is-active" disabled>Exclusive</button>' +
-      "</div>";
+      "</div>" +
+      '<small class="tour-type__note">Exclusive only &middot; all-inclusive</small>';
     mount.insertAdjacentElement("afterend", wrap);
     wrap.addEventListener("click", (e) => e.stopPropagation()); // jgn ikut navigasi card
   }

@@ -16,7 +16,7 @@ const REFERRAL_CODE = "gowithcahyana";
 // -- pricing data
 const prices = {
   tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
-  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 } },
+  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 }, "Bali Zoo": { usd: 40, idr: 600000 }, "Bali Bird Park": { usd: 28, idr: 430000 } },
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
   villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
@@ -120,6 +120,8 @@ const PAGE_ITEM = {
   "attractions/watersport.html": "Watersport",
   "attractions/kecak-dance.html": "Kecak Dance",
   "attractions/barong-dance.html": "Barong Dance",
+  "attractions/bali-zoo.html": "Bali Zoo",
+  "attractions/bali-bird-park.html": "Bali Bird Park",
   "ubud-culture-day.html": "Ubud Culture Day",
   "south-coast-sunset-kecak.html": "South Coast & Sunset Kecak",
   "batur-sunrise-adrenaline.html": "Batur Sunrise & Adrenaline",
@@ -146,7 +148,9 @@ const ITEM_CARD = {
   "Cooking Class": { img: "cooking-class.jpg", desc: "Cook authentic Balinese dishes with a local family." },
   "Watersport": { img: "watersport.jpg", desc: "Jet ski, banana boat, and parasailing off Bali's southern coast." },
   "Kecak Dance": { img: "kecak.jpg", desc: "Bali's hypnotic fire-and-chant ritual, performed at sunset." },
-  "Barong Dance": { img: "barong.jpg", desc: "The ancient dance-drama of good versus evil." }
+  "Barong Dance": { img: "barong.jpg", desc: "The ancient dance-drama of good versus evil." },
+  "Bali Zoo": { img: "", desc: "Elephants, orangutans, and jungle wildlife just south of Ubud." },
+  "Bali Bird Park": { img: "", desc: "Over 1,000 birds, aviaries, and free-flight shows near Ubud." }
 };
 
 // -- itinerary store key

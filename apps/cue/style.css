@@ -1507,8 +1507,9 @@ section + section::before,
   content: none;
 }
 /* Panel villa udah punya border gold sendiri → buang divider di atas panel & di section
-   tepat setelahnya (drivers) biar garisnya nggak dobel. */
+   tepat setelahnya (guides / drivers) biar garisnya nggak dobel. */
 .villas::before,
+#villas + section::before,
 #villas + [id$="-placeholder"] > section::before {
   content: none;
 }

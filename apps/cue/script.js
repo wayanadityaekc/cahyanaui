@@ -134,7 +134,7 @@ const ITEM_CARD = {
   "West Bali Tour": { img: "tanah-lot.jpg", desc: "Tanah Lot, Jatiluwih rice terraces, and Bali's temple-dotted west." },
   "South Bali Tour": { img: "uluwatu-temple.jpg", desc: "Cliff temples, white-sand beaches, and golden sunsets on the coast." },
   "North Bali Tour": { img: "tamblingan.jpg", desc: "Waterfalls, twin lakes, and quiet temples across Bali's north." },
-  "Ubud Culture Day": { img: "rahwana.jpg", desc: "Temples, rice terraces, a royal palace, and a traditional dance." },
+  "Ubud Culture Day": { img: "rahwana.jpg", desc: "Silversmiths, batik, the royal palace, and a Kecak fire dance." },
   "South Coast & Sunset Kecak": { img: "uluwatu.jpg", desc: "Cliff temples and southern beaches, ending with the sunset Kecak fire dance." },
   "Batur Sunrise & Adrenaline": { img: "man-batur-sunrise.jpg", desc: "Sunrise at Mount Batur, then a jungle ATV ride - the ultimate adventure." },
   "Taste of Ubud": { img: "cooking-class.jpg", desc: "Morning market, coffee tasting, and a hands-on Balinese cooking class." },

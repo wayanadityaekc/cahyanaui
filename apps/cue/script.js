@@ -21,7 +21,7 @@ const prices = {
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
   villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
   // Program combo (harga & isi placeholder - silakan diubah)
-  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Coast & Sunset Kecak": { usd: 65, idr: 1000000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Taste of Ubud": { usd: 50, idr: 780000 } }
+  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Coast & Sunset Kecak": { usd: 65, idr: 1000000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Taste of Ubud": { usd: 50, idr: 780000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Ubud Jeep Sunrise & Sights": { usd: 85, idr: 1300000 }, "Ubud Cooking & Market": { usd: 60, idr: 950000 } }
 };
 
 // Charter mobil 
@@ -55,7 +55,11 @@ const tourExclusive = {
   "Ubud Culture Day": { usd: 18, idr: 280000 },
   "South Coast & Sunset Kecak": { usd: 22, idr: 340000 },
   "Batur Sunrise & Adrenaline": { usd: 40, idr: 620000 },
-  "Taste of Ubud": { usd: 15, idr: 230000 }
+  "Taste of Ubud": { usd: 15, idr: 230000 },
+  "Ubud Rafting Adventure": { usd: 35, idr: 550000 },
+  "Ubud ATV Adventure": { usd: 40, idr: 620000 },
+  "Ubud Jeep Sunrise & Sights": { usd: 50, idr: 780000 },
+  "Ubud Cooking & Market": { usd: 20, idr: 300000 }
 };
 
 const tourDetails = [
@@ -125,7 +129,11 @@ const PAGE_ITEM = {
   "ubud-culture-day.html": "Ubud Culture Day",
   "south-coast-sunset-kecak.html": "South Coast & Sunset Kecak",
   "batur-sunrise-adrenaline.html": "Batur Sunrise & Adrenaline",
-  "taste-of-ubud.html": "Taste of Ubud"
+  "taste-of-ubud.html": "Taste of Ubud",
+  "ubud-rafting-adventure.html": "Ubud Rafting Adventure",
+  "ubud-atv-adventure.html": "Ubud ATV Adventure",
+  "ubud-jeep-sunrise.html": "Ubud Jeep Sunrise & Sights",
+  "ubud-cooking-market.html": "Ubud Cooking & Market"
 };
 
 // -- Kartu visual per program di builder itinerary: foto (sama kaya homepage) + 1 kalimat desc.
@@ -136,10 +144,14 @@ const ITEM_CARD = {
   "West Bali Tour": { img: "tanah-lot.jpg", desc: "Tanah Lot, Jatiluwih rice terraces, and Bali's temple-dotted west." },
   "South Bali Tour": { img: "uluwatu-temple.jpg", desc: "Cliff temples, white-sand beaches, and golden sunsets on the coast." },
   "North Bali Tour": { img: "tamblingan.jpg", desc: "Waterfalls, twin lakes, and quiet temples across Bali's north." },
-  "Ubud Culture Day": { img: "rahwana.jpg", desc: "Silversmiths, batik, the royal palace, and a Kecak fire dance." },
+  "Ubud Culture Day": { img: "rahwana.jpg", desc: "Morning Barong, silversmiths, batik, and an evening Kecak dance." },
   "South Coast & Sunset Kecak": { img: "uluwatu.jpg", desc: "Cliff temples and southern beaches, ending with the sunset Kecak fire dance." },
   "Batur Sunrise & Adrenaline": { img: "man-batur-sunrise.jpg", desc: "Sunrise at Mount Batur, then a jungle ATV ride - the ultimate adventure." },
   "Taste of Ubud": { img: "cooking-class.jpg", desc: "Morning market, coffee tasting, and a hands-on Balinese cooking class." },
+  "Ubud Rafting Adventure": { img: "rafting.jpg", desc: "Ayung river rafting, rice terraces, luwak coffee, and a waterfall." },
+  "Ubud ATV Adventure": { img: "atv.jpg", desc: "An ATV jungle ride, Tegenungan waterfall, rice terraces, and coffee." },
+  "Ubud Jeep Sunrise & Sights": { img: "mount-batur-sunrise.webp", desc: "A 4x4 Batur sunrise, then temples and rice terraces back to Ubud." },
+  "Ubud Cooking & Market": { img: "cooking-class.jpg", desc: "Ubud's market, a hands-on cooking class, and Tegenungan waterfall." },
   "ATV": { img: "atv.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
   "Rafting": { img: "rafting.jpg", desc: "White-water rafting down the scenic Ayung River." },
   "Swing": { img: "swing.jpg", desc: "Soar over the jungle on Bali's famous swing." },

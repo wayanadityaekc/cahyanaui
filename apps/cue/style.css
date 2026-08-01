@@ -2129,7 +2129,7 @@ section + section::before,
   margin-top: 0.2rem;
   font-family: var(--font-body);
   font-size: var(--fs-strong);
-  color: var(--color-gold);
+  color: var(--color-green);
 }
 .highlight__actions {
   display: flex;

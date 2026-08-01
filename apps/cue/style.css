@@ -800,9 +800,9 @@ body {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.78) 0%,
-    rgba(0, 0, 0, 0.32) 42%,
-    transparent 68%
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.22) 40%,
+    transparent 60%
   );
 }
 .photo-titled .experience__name,

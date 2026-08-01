@@ -4236,6 +4236,7 @@ button.pick-cat {
   background-color: var(--color-gold);
 }
 .tour-type__note {
+  flex-basis: 100%;
   font-size: var(--fs-label);
   color: var(--color-muted-2);
 }

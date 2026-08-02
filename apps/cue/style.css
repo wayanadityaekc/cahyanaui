@@ -746,9 +746,7 @@ body {
   background-color: #fff;
 }
 
-/* Homepage tours slider (#tours): gap antar-card tipis + full-bleed ke pinggir
-   layar di mobile, plus tombol "See all tours" (hijau) di bawah. Scoped ke #tours
-   biar slider guide (guide-home__slider) nggak keubah. */
+/* Homepage tours slider (#tours): gap antar-card tipis + tombol "See all tours". */
 #tours .experience__grid--slider {
   gap: 0.5rem;
 }
@@ -756,8 +754,20 @@ body {
   text-align: center;
   margin-top: 1.75rem;
 }
+/* Full-bleed: pangkas pinggir SEMUA slider card di mobile (nempel ke pinggir layar).
+   Section-section ini sama-sama padding samping 1.5rem, jadi -1.5rem pas ke pinggir,
+   plus lead 1rem biar card pertama nggak nempel banget. */
 @media (max-width: 992px) {
-  #tours .experience__grid--slider {
+  .experience__grid--slider {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1rem;
+    scroll-padding-left: 1rem;
+  }
+}
+@media (max-width: 768px) {
+  .drivers-grid,
+  .reviews-cards {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     padding-left: 1rem;

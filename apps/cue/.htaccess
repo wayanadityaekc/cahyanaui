@@ -4,6 +4,8 @@
 
 # --- Redirect URL lama -> baru (301 permanen, jaga SEO) ---
 Redirect 301 /ubud-jeep-sunrise.html /kintamani-sunrise-penglipuran.html
+Redirect 301 /taste-of-ubud.html /attractions/cooking-class.html
+Redirect 301 /ubud-cooking-market.html /attractions/cooking-class.html
 
 # --- GZIP: kompres file teks di server (hemat ~70-80% ukuran transfer) ---
 # Pengganti "minify" tanpa ngerusak file sumber yang rapi/berkomentar.

@@ -758,7 +758,7 @@ body {
    Section-section ini sama-sama padding samping 1.5rem, jadi -1.5rem pas ke pinggir,
    plus lead 1rem biar card pertama nggak nempel banget. */
 @media (max-width: 992px) {
-  .experience__grid--slider {
+  .experience__grid.experience__grid--slider {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     padding-left: 1rem;
@@ -766,8 +766,8 @@ body {
   }
 }
 @media (max-width: 768px) {
-  .drivers-grid,
-  .reviews-cards {
+  .drivers .drivers-grid,
+  .reviews .reviews-cards {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     padding-left: 1rem;

@@ -745,6 +745,25 @@ body {
 .experience--alt {
   background-color: #fff;
 }
+
+/* Homepage tours slider (#tours): gap antar-card tipis + full-bleed ke pinggir
+   layar di mobile, plus tombol "See all tours" (hijau) di bawah. Scoped ke #tours
+   biar slider guide (guide-home__slider) nggak keubah. */
+#tours .experience__grid--slider {
+  gap: 0.5rem;
+}
+#tours .tours-cta {
+  text-align: center;
+  margin-top: 1.75rem;
+}
+@media (max-width: 992px) {
+  #tours .experience__grid--slider {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1rem;
+    scroll-padding-left: 1rem;
+  }
+}
 .experience__grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

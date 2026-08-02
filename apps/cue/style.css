@@ -768,9 +768,11 @@ body {
 @media (max-width: 768px) {
   .drivers .drivers-grid,
   .reviews .reviews-cards {
+    max-width: none; /* base-nya max-width:100% -> ngepatok lebar, sisa margin di kanan */
     margin-left: -1.5rem;
     margin-right: -1.5rem;
     padding-left: 1rem;
+    padding-right: 1rem;
     scroll-padding-left: 1rem;
   }
 }

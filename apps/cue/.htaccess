@@ -2,6 +2,9 @@
 #  Cahyana Ubud Experience — performance (cache + kompres)
 # ============================================================
 
+# --- Redirect URL lama -> baru (301 permanen, jaga SEO) ---
+Redirect 301 /ubud-jeep-sunrise.html /kintamani-sunrise-penglipuran.html
+
 # --- GZIP: kompres file teks di server (hemat ~70-80% ukuran transfer) ---
 # Pengganti "minify" tanpa ngerusak file sumber yang rapi/berkomentar.
 <IfModule mod_deflate.c>

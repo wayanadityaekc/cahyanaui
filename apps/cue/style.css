@@ -3507,33 +3507,19 @@ section + section::before,
 .itn-prog__rm:hover {
   background: #fff;
 }
-/* ===== Kartu hari program: slider (mobile) / kartu + form sebelahan (desktop) ===== */
-.itn-day__slide {
-  overflow: hidden;
+/* ===== Kartu hari program (builder itinerary) =====
+   Kartu tour polos (tanpa panel box) + chip ringkasan dari Trip Details +
+   form override per-hari. Mobile: kartu di tengah; desktop: grid 2 kolom. */
+.itn-day--prog {
+  padding: 0;
+  border: none;
+  background: transparent;
 }
-.itn-day__track {
-  display: flex;
-  align-items: stretch;
-}
-.itn-day__panel {
-  min-width: 0;
-}
-.itn-day__panel--cards {
-  flex: 0 0 220px;
-}
-.itn-day__panel--cards .itn-day__cards {
+.itn-day--prog .itn-day__cards {
   margin-bottom: 0;
+  grid-template-columns: 1fr;
 }
-.itn-day__panel--form {
-  flex: 1;
-  margin-left: 1.2rem;
-  padding-left: 1.2rem;
-  border-left: 1px dashed #e6dfce;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-/* Kartu program bisa diklik ke halaman tour; × & footer (toggle kiri + Set date) di luar link */
+/* Kartu program bisa diklik ke halaman tour; × & footer (toggle kiri) di luar link */
 .itn-prog {
   position: relative;
 }
@@ -3564,83 +3550,75 @@ section + section::before,
 .itn-prog__price {
   font-size: 1rem;
 }
-/* Tombol geser (mobile). Desktop: sembunyi, form udah sebelahan. */
-.itn-day__setdate,
-.itn-day__back {
-  display: none;
+/* Chip ringkasan hari (keisi otomatis dari Trip Details) */
+.itn-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #e4ddcb;
+  border-radius: 9px;
+  background-color: var(--color-cream);
 }
-@media (max-width: 640px) {
-  /* Hari program: panel putih dibuang + slider swipe kayak slider tour homepage
-     (card 1 = tour, card 2 = form; snap, scrollbar disembunyiin). Transfer/charter
-     (.itn-day tanpa --prog) tetap panel biasa. */
-  .itn-day--prog {
-    padding: 0;
-    border: none;
-    background: transparent;
-  }
-  .itn-day--prog .itn-day__slide {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    touch-action: pan-x pan-y;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    /* Full-bleed kayak slider homepage (section .itn padding 1.5rem) ->
-       lebar card = 80% layar, sama persis card tour homepage */
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    scroll-padding-left: 1rem;
-  }
-  .itn-day--prog .itn-day__slide::-webkit-scrollbar {
-    display: none;
-  }
-  .itn-day--prog .itn-day__track {
-    gap: 0.5rem;
-  }
-  .itn-day__panel--cards,
-  .itn-day__panel--form {
-    flex: 0 0 80%;
-    scroll-snap-align: start;
-  }
-  /* Panel form = kartu putih sendiri (sejajar kartu tour di slider) */
-  .itn-day__panel--form {
-    margin-left: 0;
-    padding: 1rem;
-    border-left: none;
-    border-radius: 5px;
-    background: #fff;
-    box-shadow: var(--shadow-card);
-    justify-content: flex-start;
-  }
-  /* Geometri tombol = .card-add homepage (padding 0.6rem, radius 6) */
-  .itn-day__setdate,
-  .itn-day__back {
-    display: block;
-    width: 100%;
-    padding: 0.6rem;
-    border-radius: 6px;
-    font-family: var(--font-body);
-    font-size: var(--fs-body);
-    font-weight: 600;
-    text-align: center;
-    cursor: pointer;
-  }
-  .itn-day__setdate {
-    border: 1.5px solid var(--color-green);
-    background: transparent;
-    color: var(--color-green);
-  }
-  .itn-day__back {
-    margin-top: 0.85rem;
-    border: 1.5px solid #e6dfce;
-    background: #fff;
-    color: #6c7566;
-  }
+.itn-chip__ic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: rgba(201, 164, 92, 0.18);
+  color: var(--color-green);
+  flex: none;
 }
-.itn-day__form {
+.itn-chip__ic svg {
+  width: 15px;
+  height: 15px;
+}
+.itn-chip__txt {
+  flex: 1;
   min-width: 0;
+  font-size: var(--fs-small);
+  color: var(--color-muted-2);
+}
+.itn-chip__txt b {
+  color: var(--color-green);
+}
+.itn-chip__edit {
+  border: none;
+  background: none;
+  padding: 0.2rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--color-gold);
+  cursor: pointer;
+}
+/* Form override per-hari (kebuka via Edit) */
+.itn-ovr {
+  display: none;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border: 1px dashed rgba(201, 164, 92, 0.55);
+  border-radius: 9px;
+  background: #fff;
+}
+.itn-ovr.open {
+  display: block;
+}
+.itn-ovr__note {
+  margin: 0.55rem 0 0;
+  font-size: var(--fs-label);
+  color: var(--color-muted-2);
+}
+@media (max-width: 992px) {
+  /* Mobile/tablet: kartu hari di tengah, lebar senada card homepage */
+  .itn-day--prog {
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 .itn-type {
   display: flex;
@@ -3671,9 +3649,12 @@ section + section::before,
   gap: 0.8rem;
   margin-bottom: 0.9rem;
 }
-/* Kartu hari (program): field menurun (1 kolom). Transfer/charter tetap 2 kolom. */
-.itn-day__form .itn-day__fields {
+/* Form override hari: field menurun (1 kolom). Transfer/charter tetap 2 kolom. */
+.itn-ovr .itn-day__fields {
   grid-template-columns: 1fr;
+}
+.field--full {
+  grid-column: 1 / -1;
 }
 .itn-day__fields .field {
   margin-bottom: 0;
@@ -3851,7 +3832,75 @@ section + section::before,
   padding: 0;
   background-color: transparent;
 }
+.itn2__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+/* Boks Trip Details: isi sekali -> semua hari ngikut (panel cream + border gold gradasi) */
+.itn-trip {
+  padding: 1rem 1.1rem 1.2rem;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  background:
+    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
+    var(--gold-edge)
+      border-box;
+}
+.itn-trip__t {
+  margin: 0 0 0.15rem;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--color-green);
+}
+.itn-trip__s {
+  margin: 0 0 0.8rem;
+  font-size: var(--fs-label);
+  color: var(--color-muted-2);
+}
+.itn-trip__fields {
+  margin-bottom: 0;
+}
+/* Desktop: 2 kolom - kiri form Trip Details + total, kanan kartu hari (grid 2)
+   dengan transfer/charter di bawahnya */
+@media (min-width: 993px) {
+  .itn2 {
+    max-width: 1080px;
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "trip main"
+      "sum main";
+    align-items: start;
+  }
+  .itn-trip {
+    grid-area: trip;
+  }
+  .itn2__main {
+    grid-area: main;
+  }
+  .itn2 > .summary {
+    grid-area: sum;
+  }
+  #itn-days {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  #itn-days .itn-day--prog {
+    margin-bottom: 0;
+  }
+  #itn-days + .itn2__add {
+    margin-top: 1.25rem;
+    width: 100%;
+  }
+}
 .itn2__add {
+  display: block;
+  width: 100%;
+  margin-top: 1.25rem;
   padding: 0.95rem;
   border: 1.5px dashed var(--color-green);
   border-radius: 10px;

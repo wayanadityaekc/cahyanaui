@@ -376,6 +376,14 @@ function addDaysStr(ds, n) {
   return dt.getUTCFullYear() + "-" + z(dt.getUTCMonth() + 1) + "-" + z(dt.getUTCDate());
 }
 
+// "YYYY-MM-DD" -> "Tue, 12 Aug" (buat chip ringkasan hari di builder itinerary)
+function fmtDayDate(ds) {
+  if (!ds) return "";
+  const dt = new Date(ds + "T00:00:00");
+  if (isNaN(dt)) return ds;
+  return dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
 // Peta nama program -> halaman detailnya (kebalikan PAGE_ITEM), buat tombol "View details".
 const ITEM_URL = Object.keys(PAGE_ITEM).reduce((m, page) => {
   m[PAGE_ITEM[page]] = page;
@@ -1180,7 +1188,6 @@ function initItinerary() {
                 ${toggleHTML}
                 ${noteHTML}
                 ${priceCardHTML}
-                <button class="itn-day__setdate" type="button">Set date</button>
               </div>
             </article>`;
           })
@@ -1192,44 +1199,31 @@ function initItinerary() {
         <h4 class="itn-day__title">Day ${i + 1}</h4>
         <span class="itn-day__status ${done ? "done" : ""}">${done ? "Complete" : "Incomplete"}</span>
       </div>`;
-    const fieldsHTML = `
-        <div class="itn-day__fields">
-          <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${d.date}" /></div>
-          <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
-          <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
-          <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
-        </div>`;
     if (d.items.length) {
-      // Kartu (depan) + form (samping): mobile = slider swipe (kayak slider tour
-      // homepage, panel putih dibuang via .itn-day--prog), desktop = sebelahan.
+      // Kartu + chip ringkasan (keisi otomatis dari Trip Details) + form override
+      // per-hari (kebuka via tombol Edit, state di openDays biar tahan rerender).
       card.classList.add("itn-day--prog");
-      card.innerHTML = `${headHTML}
-      <div class="itn-day__slide">
-        <div class="itn-day__track">
-          <div class="itn-day__panel itn-day__panel--cards">
-            <div class="itn-day__cards">${cardsHTML}</div>
-          </div>
-          <div class="itn-day__panel itn-day__panel--form">
-            <div class="itn-day__form">${fieldsHTML}
-              <button class="itn-day__back" type="button">Back</button>
-            </div>
-          </div>
-        </div>
-      </div>`;
-      if (openDays.has(i)) {
-        card.classList.add("is-form");
-        // Mobile: balikin posisi swipe ke panel form setelah rerender
-        requestAnimationFrame(() => {
-          const s = card.querySelector(".itn-day__slide");
-          const f = card.querySelector(".itn-day__panel--form");
-          const c0 = card.querySelector(".itn-day__panel--cards");
-          if (s && f && c0) s.scrollTo({ left: f.offsetLeft - c0.offsetLeft });
-        });
-      }
-    } else {
+      const chipTxt = done
+        ? `<b>${fmtDayDate(d.date)}</b> &middot; ${d.guests} guest${d.guests > 1 ? "s" : ""}${d.pickup ? " &middot; " + d.pickup : ""}`
+        : `Fill <b>Trip details</b> above - this day follows automatically`;
       card.innerHTML = `${headHTML}
       <div class="itn-day__cards">${cardsHTML}</div>
-      <div class="itn-day__form">${fieldsHTML}</div>`;
+      <div class="itn-chip">
+        <span class="itn-chip__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span>
+        <span class="itn-chip__txt">${chipTxt}</span>
+        <button class="itn-chip__edit" type="button">Edit</button>
+      </div>
+      <div class="itn-ovr${openDays.has(i) ? " open" : ""}">
+        <div class="itn-day__fields">
+          <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${d.date}" /></div>
+          <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
+          <div class="field field--full"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
+        </div>
+        <p class="itn-ovr__note">Only this day changes - other days keep following Trip Details.</p>
+      </div>`;
+    } else {
+      card.innerHTML = `${headHTML}
+      <div class="itn-day__cards">${cardsHTML}</div>`;
     }
     card.querySelectorAll("[data-rmitem]").forEach((b) =>
       b.addEventListener("click", () => {
@@ -1260,49 +1254,36 @@ function initItinerary() {
       save();
       rerender();
     });
-    // Slider mobile (swipe / tombol): geser ke form atau balik ke kartu.
-    // State ditahan di openDays biar tahan rerender.
-    const slideEl = card.querySelector(".itn-day__slide");
-    const panelForm = card.querySelector(".itn-day__panel--form");
-    const panelCards = card.querySelector(".itn-day__panel--cards");
-    const setBtn = card.querySelector(".itn-day__setdate");
-    if (setBtn) setBtn.addEventListener("click", () => {
-      openDays.add(i);
-      card.classList.add("is-form");
-      if (slideEl && panelForm && panelCards)
-        slideEl.scrollTo({ left: panelForm.offsetLeft - panelCards.offsetLeft, behavior: "smooth" });
+    // Tombol Edit: buka/tutup form override hari ini (state di openDays)
+    const editBtn = card.querySelector(".itn-chip__edit");
+    if (editBtn) editBtn.addEventListener("click", () => {
+      const ovr = card.querySelector(".itn-ovr");
+      if (openDays.has(i)) { openDays.delete(i); ovr.classList.remove("open"); }
+      else { openDays.add(i); ovr.classList.add("open"); }
     });
-    const backBtn = card.querySelector(".itn-day__back");
-    if (backBtn) backBtn.addEventListener("click", () => {
-      openDays.delete(i);
-      card.classList.remove("is-form");
-      if (slideEl) slideEl.scrollTo({ left: 0, behavior: "smooth" });
-    });
-    card.querySelector(".f-date").addEventListener("change", (e) => {
+    // Form override: cuma ubah hari ini (tanggal tetap cascade ke hari setelahnya)
+    const fDate = card.querySelector(".f-date");
+    if (fDate) fDate.addEventListener("change", (e) => {
       if (e.target.value && e.target.value < todayStr()) {
         showPastDate();
         e.target.value = d.date || ""; // balikin ke nilai valid sebelumnya
         return;
       }
       d.date = e.target.value;
-      cascadeDates(i); // hari pertama diisi -> hari berikutnya auto +1
+      cascadeDates(i); // hari berikutnya auto +1 dari sini
       save();
       rerender();
     });
-    card.querySelector(".f-guests").addEventListener("change", (e) => {
-      d.guests = e.target.value;
-      propagateGuests(e.target.value); // isi sekali -> nyebar ke hari/transfer/charter kosong
-      save();
-      rerender();
-    });
-    card.querySelector(".f-pickup").addEventListener("input", (e) => { d.pickup = e.target.value; save(); });
-    card.querySelector(".f-pickup").addEventListener("change", (e) => {
-      d.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
-    });
-    card.querySelector(".f-dropoff").addEventListener("input", (e) => { d.dropoff = e.target.value; save(); });
-    card.querySelector(".f-dropoff").addEventListener("change", (e) => {
-      d.dropoff = e.target.value; propagateLocation(e.target.value); save(); rerender();
-    });
+    const fPickup = card.querySelector(".f-pickup");
+    if (fPickup) {
+      fPickup.addEventListener("input", (e) => { d.pickup = e.target.value; save(); });
+      fPickup.addEventListener("change", (e) => { d.pickup = e.target.value; save(); rerender(); });
+    }
+    const fDropoff = card.querySelector(".f-dropoff");
+    if (fDropoff) {
+      fDropoff.addEventListener("input", (e) => { d.dropoff = e.target.value; save(); });
+      fDropoff.addEventListener("change", (e) => { d.dropoff = e.target.value; save(); rerender(); });
+    }
     return card;
   }
 
@@ -1504,7 +1485,9 @@ function initItinerary() {
   // Ganti seluruh isi itinerary (dipakai "Use this package"). Set state closure +
   // simpan + render, biar builder langsung update tanpa reload halaman.
   window.__itnReplaceState = function (st) {
+    st.trip = st.trip || state.trip; // pertahanin Trip Details yang udah keisi
     state = st;
+    applyTrip(false); // hari baru langsung keisi dari Trip Details
     save();
     rerender();
   };
@@ -1617,6 +1600,50 @@ function initItinerary() {
       }
     });
   });
+
+  // ---------- Trip Details (isi sekali di atas -> semua hari ngikut) ----------
+  // force=false: cuma isi slot kosong (dipanggil pas load, biar override per-hari
+  // nggak ketimpa). force=true: timpa semua hari (dipanggil pas form diubah).
+  state.trip = state.trip || { start: "", guests: "", hotel: "" };
+  function applyTrip(force) {
+    const t = state.trip;
+    state.days.forEach((d, idx) => {
+      if (t.start && (force || !d.date)) d.date = addDaysStr(t.start, idx);
+      if (t.guests && (force || !d.guests)) d.guests = t.guests;
+      if (t.hotel) {
+        if (force || !d.pickup) d.pickup = t.hotel;
+        if (force || !d.dropoff) d.dropoff = t.hotel;
+      }
+    });
+    // Transfer/charter: isi slot kosong aja (sisi airport nggak disentuh)
+    if (t.guests) propagateGuests(t.guests);
+    if (t.hotel) propagateLocation(t.hotel);
+  }
+  const tripStart = document.getElementById("trip-start");
+  const tripGuests = document.getElementById("trip-guests");
+  const tripHotel = document.getElementById("trip-hotel");
+  if (tripStart && tripGuests && tripHotel) {
+    tripStart.min = todayStr();
+    tripStart.value = state.trip.start || "";
+    tripGuests.innerHTML = guestOptions(state.trip.guests);
+    tripHotel.value = state.trip.hotel || "";
+    const onTripChange = () => {
+      if (tripStart.value && tripStart.value < todayStr()) {
+        showPastDate();
+        tripStart.value = state.trip.start || "";
+        return;
+      }
+      state.trip = { start: tripStart.value, guests: tripGuests.value, hotel: tripHotel.value.trim() };
+      applyTrip(true);
+      save();
+      rerender();
+    };
+    tripStart.addEventListener("change", onTripChange);
+    tripGuests.addEventListener("change", onTripChange);
+    tripHotel.addEventListener("change", onTripChange);
+    applyTrip(false); // hari yang baru ditambah dari halaman lain langsung keisi
+    save();
+  }
 
   rerender();
 }

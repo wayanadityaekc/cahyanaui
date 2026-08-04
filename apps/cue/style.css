@@ -996,17 +996,7 @@ body {
 /* Villas (homepage) */
 .villas {
   padding: 2.5rem 1.75rem 3rem;
-  overflow: hidden;
-  margin: 20px auto 0;
-  width: calc(100% - 10px);
-  max-width: 1100px;
-  /* panel cream + border gold GRADASI (senada tour-details/About) */
-  border: 1px solid transparent;
-  border-radius: 16px;
-  background:
-    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
-    var(--gold-edge)
-      border-box;
+  background-color: var(--color-cream);
 }
 .villas__grid {
   display: grid;

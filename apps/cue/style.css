@@ -997,6 +997,8 @@ body {
 .villas {
   padding: 2.5rem 1.75rem 3rem;
   background-color: var(--color-cream);
+  border-top: 1px solid rgba(201, 164, 92, 0.4);
+  border-bottom: 1px solid rgba(201, 164, 92, 0.4);
 }
 .villas__grid {
   display: grid;

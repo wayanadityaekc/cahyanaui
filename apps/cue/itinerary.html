@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=119" />
+  <link rel="stylesheet" href="style.css?v=120" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/itinerary.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -56,20 +56,35 @@
     </div>
 
     <div class="itn2">
-      <div class="itn2__panel">
-        <div class="itn__panel-head">
-          <h3 class="itn__subtitle">Your Days</h3>
-          <button class="itn__ghostbtn" id="itn-clear" type="button">Clear all</button>
+      <!-- Trip details: isi sekali, semua hari otomatis ngikut (Day 1 = start, +1, dst) -->
+      <div class="itn-trip" id="itn-trip">
+        <p class="itn-trip__t">Trip details</p>
+        <p class="itn-trip__s">Fill once - every day follows automatically.</p>
+        <div class="itn-day__fields itn-trip__fields">
+          <div class="field"><label>Start date</label><input type="date" id="trip-start" /></div>
+          <div class="field"><label>Guests</label><select id="trip-guests"></select></div>
+          <div class="field field--full">
+            <label>Hotel / villa (pick-up &amp; drop-off)</label>
+            <input type="text" id="trip-hotel" placeholder="Hotel / villa / area" />
+          </div>
         </div>
-        <div id="itn-days"></div>
       </div>
 
-      <div class="itn2__panel">
-        <h3 class="itn__subtitle">Transfers &amp; Charter</h3>
-        <div id="itn-transfers-list"></div>
-      </div>
+      <div class="itn2__main">
+        <div class="itn2__panel">
+          <div class="itn__panel-head">
+            <h3 class="itn__subtitle">Your Days</h3>
+            <button class="itn__ghostbtn" id="itn-clear" type="button">Clear all</button>
+          </div>
+          <div id="itn-days"></div>
+          <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
+        </div>
 
-      <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
+        <div class="itn2__panel">
+          <h3 class="itn__subtitle">Transfers &amp; Charter</h3>
+          <div id="itn-transfers-list"></div>
+        </div>
+      </div>
 
       <section class="summary">
         <div class="summary__total">
@@ -102,6 +117,6 @@
   <div id="book-confirm-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-  <script src="script.js?v=119"></script>
+  <script src="script.js?v=120"></script>
 </body>
 </html>

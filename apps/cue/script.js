@@ -1200,7 +1200,9 @@ function initItinerary() {
           <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
         </div>`;
     if (d.items.length) {
-      // Kartu (depan) + form (samping): mobile = slider (Set date/Back), desktop = sebelahan.
+      // Kartu (depan) + form (samping): mobile = slider swipe (kayak slider tour
+      // homepage, panel putih dibuang via .itn-day--prog), desktop = sebelahan.
+      card.classList.add("itn-day--prog");
       card.innerHTML = `${headHTML}
       <div class="itn-day__slide">
         <div class="itn-day__track">
@@ -1214,7 +1216,16 @@ function initItinerary() {
           </div>
         </div>
       </div>`;
-      if (openDays.has(i)) card.classList.add("is-form");
+      if (openDays.has(i)) {
+        card.classList.add("is-form");
+        // Mobile: balikin posisi swipe ke panel form setelah rerender
+        requestAnimationFrame(() => {
+          const s = card.querySelector(".itn-day__slide");
+          const f = card.querySelector(".itn-day__panel--form");
+          const c0 = card.querySelector(".itn-day__panel--cards");
+          if (s && f && c0) s.scrollTo({ left: f.offsetLeft - c0.offsetLeft });
+        });
+      }
     } else {
       card.innerHTML = `${headHTML}
       <div class="itn-day__cards">${cardsHTML}</div>
@@ -1249,16 +1260,23 @@ function initItinerary() {
       save();
       rerender();
     });
-    // Slider mobile: buka form / balik ke kartu (state ditahan biar tahan rerender)
+    // Slider mobile (swipe / tombol): geser ke form atau balik ke kartu.
+    // State ditahan di openDays biar tahan rerender.
+    const slideEl = card.querySelector(".itn-day__slide");
+    const panelForm = card.querySelector(".itn-day__panel--form");
+    const panelCards = card.querySelector(".itn-day__panel--cards");
     const setBtn = card.querySelector(".itn-day__setdate");
     if (setBtn) setBtn.addEventListener("click", () => {
       openDays.add(i);
       card.classList.add("is-form");
+      if (slideEl && panelForm && panelCards)
+        slideEl.scrollTo({ left: panelForm.offsetLeft - panelCards.offsetLeft, behavior: "smooth" });
     });
     const backBtn = card.querySelector(".itn-day__back");
     if (backBtn) backBtn.addEventListener("click", () => {
       openDays.delete(i);
       card.classList.remove("is-form");
+      if (slideEl) slideEl.scrollTo({ left: 0, behavior: "smooth" });
     });
     card.querySelector(".f-date").addEventListener("change", (e) => {
       if (e.target.value && e.target.value < todayStr()) {

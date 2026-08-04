@@ -3565,22 +3565,42 @@ section + section::before,
   display: none;
 }
 @media (max-width: 640px) {
-  .itn-day__track {
-    width: 200%;
-    transition: transform 0.32s cubic-bezier(0.5, 0.05, 0.2, 1);
+  /* Hari program: panel putih dibuang + slider swipe kayak slider tour homepage
+     (card 1 = tour, card 2 = form; snap, scrollbar disembunyiin). Transfer/charter
+     (.itn-day tanpa --prog) tetap panel biasa. */
+  .itn-day--prog {
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  .itn-day--prog .itn-day__slide {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    touch-action: pan-x pan-y;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .itn-day--prog .itn-day__slide::-webkit-scrollbar {
+    display: none;
+  }
+  .itn-day--prog .itn-day__track {
+    gap: 0.8rem;
   }
   .itn-day__panel--cards,
   .itn-day__panel--form {
-    flex: 0 0 50%;
+    flex: 0 0 80%;
+    scroll-snap-align: start;
   }
+  /* Panel form = kartu putih sendiri (sejajar kartu tour di slider) */
   .itn-day__panel--form {
     margin-left: 0;
-    padding-left: 0;
+    padding: 1rem;
     border-left: none;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: var(--shadow-card);
     justify-content: flex-start;
-  }
-  .itn-day.is-form .itn-day__track {
-    transform: translateX(-50%);
   }
   .itn-day__setdate,
   .itn-day__back {

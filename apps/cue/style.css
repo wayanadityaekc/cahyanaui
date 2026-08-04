@@ -3523,28 +3523,96 @@ section + section::before,
 .itn-prog__rm:hover {
   background: #fff;
 }
-.itn-day__form {
-  border-top: 1px dashed #e6dfce;
-  padding-top: 0.9rem;
+/* ===== Kartu hari program: slider (mobile) / kartu + form sebelahan (desktop) ===== */
+.itn-day__slide {
+  overflow: hidden;
 }
-.itn-day__types {
+.itn-day__track {
+  display: flex;
+  align-items: stretch;
+}
+.itn-day__panel {
+  min-width: 0;
+}
+.itn-day__panel--cards {
+  flex: 0 0 220px;
+}
+.itn-day__panel--cards .itn-day__cards {
+  margin-bottom: 0;
+}
+.itn-day__panel--form {
+  flex: 1;
+  margin-left: 1.2rem;
+  padding-left: 1.2rem;
+  border-left: 1px dashed #e6dfce;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.85rem;
+  justify-content: center;
+}
+.itn-day__setdate,
+.itn-day__back {
+  display: none;
+}
+/* Toggle Standard/Exclusive di badan kartu */
+.itn-prog .experience__body .itn-type {
+  margin-top: 0.7rem;
+  justify-content: center;
+}
+@media (max-width: 640px) {
+  .itn-day__track {
+    width: 200%;
+    transition: transform 0.32s cubic-bezier(0.5, 0.05, 0.2, 1);
+  }
+  .itn-day__panel--cards,
+  .itn-day__panel--form {
+    flex: 0 0 50%;
+  }
+  .itn-day__panel--form {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    justify-content: flex-start;
+  }
+  .itn-day.is-form .itn-day__track {
+    transform: translateX(-50%);
+  }
+  .itn-day__setdate,
+  .itn-day__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    margin-top: 0.85rem;
+    padding: 0.65rem;
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .itn-day__setdate {
+    border: 1px solid var(--color-gold);
+    background: rgba(201, 164, 92, 0.1);
+    color: var(--color-green);
+  }
+  .itn-day__setdate span {
+    color: var(--color-gold);
+  }
+  .itn-day__back {
+    border: 1px solid #e6dfce;
+    background: #fff;
+    color: #6c7566;
+  }
+}
+.itn-day__form {
+  min-width: 0;
 }
 .itn-type {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-}
-.itn-type__name {
-  flex: 1;
-  min-width: 0;
-  font-size: var(--fs-body);
-  font-weight: 500;
-  color: var(--color-green);
 }
 .itn-day__empty {
   display: flex;
@@ -3569,19 +3637,9 @@ section + section::before,
   gap: 0.8rem;
   margin-bottom: 0.9rem;
 }
-/* Di kartu hari (program), field jadi 4 kolom di desktop; transfer/charter tetap 2 kolom */
+/* Kartu hari (program): field menurun (1 kolom). Transfer/charter tetap 2 kolom. */
 .itn-day__form .itn-day__fields {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-@media (max-width: 640px) {
-  .itn-day__form .itn-day__fields {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-}
-@media (max-width: 430px) {
-  .itn-day__form .itn-day__fields {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1fr;
 }
 .itn-day__fields .field {
   margin-bottom: 0;

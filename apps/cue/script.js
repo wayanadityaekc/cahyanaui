@@ -1469,12 +1469,14 @@ function initItinerary() {
       }
       q(".sv-price").innerHTML = priceHTML(p.usd, p.idr);
     }
-    svcBody.addEventListener("change", () => {
+    // onchange (bukan addEventListener) biar listener popup sebelumnya ketimpa,
+    // nggak numpuk tiap kali popup dibuka
+    svcBody.onchange = () => {
       const durEl = q(".sv-dur");
       const wrap = q(".sv-extra-wrap");
       if (durEl && wrap) wrap.style.display = durEl.value === "extended" ? "" : "none";
       livePrice();
-    });
+    };
     livePrice();
 
     q(".svc__save").addEventListener("click", () => {
@@ -1593,7 +1595,9 @@ function initItinerary() {
     clearBtn.addEventListener("click", () => {
       if (!itnCount(state)) return;
       if (!confirm("Clear the whole itinerary?")) return;
-      state = { days: [], transfers: [], charters: [] };
+      state = { days: [], transfers: [], charters: [], trip: { start: "", guests: "", hotel: "" } };
+      openDays.clear();
+      syncTripInputs(); // form Trip Details ikut kosong
       save();
       rerender();
     });
@@ -1668,7 +1672,9 @@ function initItinerary() {
       detailLines: null,
       items: items,
       onSuccess: () => {
-        state = { days: [], transfers: [], charters: [] };
+        state = { days: [], transfers: [], charters: [], trip: { start: "", guests: "", hotel: "" } };
+        openDays.clear();
+        syncTripInputs();
         save();
         rerender();
       }
@@ -1696,11 +1702,16 @@ function initItinerary() {
   const tripStart = document.getElementById("trip-start");
   const tripGuests = document.getElementById("trip-guests");
   const tripHotel = document.getElementById("trip-hotel");
-  if (tripStart && tripGuests && tripHotel) {
-    tripStart.min = todayStr();
+  // Sinkron isi form Trip Details dari state (dipakai init + Clear all + habis booking)
+  function syncTripInputs() {
+    if (!tripStart || !tripGuests || !tripHotel) return;
     tripStart.value = state.trip.start || "";
     tripGuests.innerHTML = guestOptions(state.trip.guests);
     tripHotel.value = state.trip.hotel || "";
+  }
+  if (tripStart && tripGuests && tripHotel) {
+    tripStart.min = todayStr();
+    syncTripInputs();
     const onTripChange = () => {
       if (tripStart.value && tripStart.value < todayStr()) {
         showPastDate();

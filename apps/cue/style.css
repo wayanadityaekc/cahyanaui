@@ -3973,7 +3973,14 @@ section + section::before,
   width: 10px;
   height: 10px;
 }
-/* Isi popup form transfer/charter */
+/* Judul panel polos (Transfers & Charter, tanpa .itn__panel-head) -> kasih jarak ke konten */
+.itn2__panel > .itn__subtitle {
+  margin-bottom: 1rem;
+}
+/* Isi popup form transfer/charter (modal--sm default center -> rata kiri) */
+#itn-svc-modal .modal__box {
+  text-align: left;
+}
 .svc__t {
   display: flex;
   align-items: center;

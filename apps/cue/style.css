@@ -2937,28 +2937,41 @@ section + section::before,
 }
 
 /* ==================== Suggested-plan box + homepage CTA ==================== */
+/* Foto band mini (rice terrace + overlay gelap) - senada teaser "Plan Your Trip" homepage */
 .itn-suggest {
+  position: relative;
+  overflow: hidden;
   max-width: 720px;
   margin: 0 auto 2rem;
   padding: 1.25rem 1.35rem;
-  border: 1px solid rgba(201, 164, 92, 0.4);
   border-radius: 14px;
+  background-image: url(assets/images/riceterrace-tgll.jpg);
+  background-size: cover;
+  background-position: center;
+}
+.itn-suggest::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
-    135deg,
-    rgba(31, 61, 43, 0.05),
-    rgba(201, 164, 92, 0.1)
+    180deg,
+    rgba(18, 32, 22, 0.68),
+    rgba(18, 32, 22, 0.8)
   );
+}
+.itn-suggest > * {
+  position: relative;
 }
 .itn-suggest__t {
   font-family: var(--font-body);
   font-size: var(--fs-h3);
   font-weight: 600;
-  color: var(--color-green);
+  color: #fff;
 }
 .itn-suggest__s {
   margin: 0.25rem 0 1rem;
   font-size: var(--fs-body);
-  color: var(--color-muted-2);
+  color: rgba(247, 243, 234, 0.85);
 }
 .itn-suggest__row {
   display: flex;
@@ -2974,7 +2987,7 @@ section + section::before,
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: rgba(247, 243, 234, 0.8);
 }
 .itn-suggest__f select {
   min-width: 120px;
@@ -3388,10 +3401,23 @@ section + section::before,
   margin-bottom: 1rem;
 }
 .itn__subtitle {
+  position: relative;
+  padding-bottom: 0.45rem;
   font-family: var(--font-body);
   font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-green);
+}
+/* Underline gold pendek - senada judul section homepage */
+.itn__subtitle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 44px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--color-gold);
 }
 .itn__ghostbtn {
   padding: 0.45rem 0.8rem;

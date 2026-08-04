@@ -1499,13 +1499,11 @@ body {
 }
 
 /* Driver cards */
-/* Drivers = gaya About Us: section cream full-width + garis emas atas-bawah,
-   kartu putih + border gold gradasi (mirror .about--panel .about__content). */
+/* Drivers = section putih + garis emas atas, kartu cream + border gold gradasi. */
 .drivers {
   padding: 3rem 1.5rem;
   background: #fff;
   border-top: 1px solid rgba(201, 164, 92, 0.4);
-  border-bottom: 1px solid rgba(201, 164, 92, 0.4);
 }
 .drivers__inner {
   max-width: 1000px;
@@ -1527,7 +1525,7 @@ body {
   border: 1.5px solid transparent;
   border-radius: 16px;
   background:
-    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
     var(--gold-edge)
       border-box;
   cursor: pointer;

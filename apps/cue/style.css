@@ -2987,21 +2987,11 @@ section + section::before,
   font-size: var(--fs-body);
 }
 
-/* "View details" link (paling bawah kartu day) */
-.itn-day__views {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem 1rem;
-}
-.itn-day__view {
+/* Label kecil "Day price" di kiri baris harga kartu day */
+.itn-day__pricelabel {
   font-size: var(--fs-small);
   font-weight: 600;
-  color: var(--color-gold);
-  text-decoration: none;
-  white-space: nowrap;
-}
-.itn-day__view:hover {
-  text-decoration: underline;
+  color: var(--color-muted-2);
 }
 
 .field {
@@ -3549,14 +3539,29 @@ section + section::before,
   flex-direction: column;
   justify-content: center;
 }
+/* Kartu program bisa diklik ke halaman tour; × & footer (toggle kiri + Set date) di luar link */
+.itn-prog {
+  position: relative;
+}
+.itn-prog__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.itn-prog__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem 1rem;
+}
+.itn-prog__foot .itn-type {
+  justify-content: flex-start;
+}
+/* Tombol geser (mobile). Desktop: sembunyi, form udah sebelahan. */
 .itn-day__setdate,
 .itn-day__back {
   display: none;
-}
-/* Toggle Standard/Exclusive di badan kartu */
-.itn-prog .experience__body .itn-type {
-  margin-top: 0.7rem;
-  justify-content: center;
 }
 @media (max-width: 640px) {
   .itn-day__track {
@@ -3578,29 +3583,24 @@ section + section::before,
   }
   .itn-day__setdate,
   .itn-day__back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
+    display: block;
     width: 100%;
-    margin-top: 0.85rem;
-    padding: 0.65rem;
+    padding: 0.7rem;
+    border-radius: 8px;
     font-family: var(--font-body);
     font-size: var(--fs-body);
     font-weight: 600;
-    border-radius: 8px;
+    text-align: center;
     cursor: pointer;
   }
   .itn-day__setdate {
-    border: 1px solid var(--color-gold);
-    background: rgba(201, 164, 92, 0.1);
+    border: 1.5px solid var(--color-green);
+    background: transparent;
     color: var(--color-green);
   }
-  .itn-day__setdate span {
-    color: var(--color-gold);
-  }
   .itn-day__back {
-    border: 1px solid #e6dfce;
+    margin-top: 0.85rem;
+    border: 1.5px solid #e6dfce;
     background: #fff;
     color: #6c7566;
   }
@@ -3814,9 +3814,8 @@ section + section::before,
   gap: 1.5rem;
 }
 .itn2__panel {
-  padding: 1.25rem;
-  border-radius: 12px;
-  background-color: var(--color-cream);
+  padding: 0;
+  background-color: transparent;
 }
 .itn2__add {
   padding: 0.95rem;

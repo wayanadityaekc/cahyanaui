@@ -883,18 +883,40 @@ body {
   color: var(--color-green);
 }
 
-/* ===== Plan Your Trip (itinerary showcase, homepage) ===== */
+/* ===== Plan Your Trip (itinerary teaser, homepage) ===== */
 .plan {
-  padding: 3rem 1.5rem;
-  background-color: var(--color-cream);
+  padding: 0;
 }
-.plan__container {
-  max-width: 1000px;
+.plan::before {
+  content: none;
+} /* photo band = pemisah sendiri, buang divider gold di atasnya */
+.plan__link {
+  position: relative;
+  display: block;
+  padding: 2.8rem 2rem;
+  text-align: center;
+  text-decoration: none;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.15s ease;
+}
+.plan__link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 32, 22, 0.72),
+    rgba(18, 32, 22, 0.82)
+  );
+}
+.plan__link:hover {
+  transform: translateY(-2px);
+}
+.plan__inner {
+  position: relative;
+  max-width: 660px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  align-items: center;
 }
 .plan__eyebrow {
   display: block;
@@ -902,95 +924,72 @@ body {
   letter-spacing: 0.14em;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--color-gold);
-  margin-bottom: 0.6rem;
+  color: #e6cf97;
+  margin-bottom: 0.5rem;
 }
 .plan__title {
-  font-size: 1.5rem;
-  color: var(--color-green);
-  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+  color: #fff;
+  margin: 0 0 0.4rem;
 }
-.plan__desc {
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--color-green);
-  margin: 0 0 1.5rem;
-  max-width: 42ch;
+.plan__lead {
+  font-size: 0.86rem;
+  color: rgba(247, 243, 234, 0.86);
+  margin: 0 auto 1.8rem;
+  max-width: 44ch;
 }
-.plan__preview {
-  background-color: #fff;
-  border-radius: 14px;
-  padding: 1.1rem;
-  box-shadow: 0 12px 30px rgba(31, 61, 43, 0.08);
-}
-.plan__day {
+.plan__steps {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.55rem;
-  border-radius: 10px;
-  margin-bottom: 0.55rem;
-  background-color: var(--color-cream);
+  gap: 1rem;
+  justify-content: center;
+  margin: 0 auto 1.8rem;
+  max-width: 660px;
 }
-.plan__thumb {
-  width: 52px;
-  height: 52px;
-  border-radius: 9px;
-  flex: none;
-  background-size: cover;
-  background-position: center;
+.plan__step {
+  flex: 1;
+  max-width: 190px;
 }
-.plan__thumb--icon {
-  background: linear-gradient(135deg, var(--color-green), #2e5a40);
+.plan__step-ic {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 0.55rem;
+  border-radius: 13px;
+  background: rgba(201, 164, 92, 0.22);
+  border: 1px solid rgba(230, 207, 151, 0.35);
   color: #e6cf97;
 }
-.plan__thumb--icon svg {
-  width: 24px;
-  height: 24px;
+.plan__step-ic svg {
+  width: 22px;
+  height: 22px;
 }
-.plan__day-body {
-  flex: 1;
-  min-width: 0;
+.plan__step h3 {
+  font-size: 0.85rem;
+  color: #fff;
+  margin: 0 0 0.2rem;
 }
-.plan__day-num {
-  display: block;
-  font-size: 0.66rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #6c7566;
+.plan__step p {
+  font-size: 0.74rem;
+  color: rgba(247, 243, 234, 0.72);
+  margin: 0;
+}
+.plan__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.83rem;
   font-weight: 600;
+  padding: 0.72rem 1.4rem;
+  border-radius: 6px;
+  background-color: var(--color-gold);
+  color: #3a2c10;
 }
-.plan__day-name {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-green);
-}
-.plan__day-price {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--color-gold);
-  white-space: nowrap;
-}
-.plan__more {
-  display: block;
-  text-align: center;
-  font-size: 0.75rem;
-  color: #6c7566;
-  text-decoration: none;
-  padding-top: 0.7rem;
-  margin-top: 0.3rem;
-  border-top: 1px dashed rgba(201, 164, 92, 0.5);
-}
-.plan__more:hover {
-  color: var(--color-gold);
-}
-@media (max-width: 760px) {
-  .plan__container {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+@media (max-width: 620px) {
+  .plan__steps {
+    flex-direction: column;
+    align-items: center;
   }
 }
 

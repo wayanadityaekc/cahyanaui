@@ -2987,12 +2987,6 @@ section + section::before,
   font-size: var(--fs-body);
 }
 
-/* Label kecil "Day price" di kiri baris harga kartu day */
-.itn-day__pricelabel {
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--color-muted-2);
-}
 
 .field {
   margin-bottom: 1.1rem;
@@ -3557,6 +3551,13 @@ section + section::before,
 }
 .itn-prog__foot .itn-type {
   justify-content: flex-start;
+}
+.itn-prog__note {
+  font-size: var(--fs-label);
+  color: var(--color-muted-2);
+}
+.itn-prog__price {
+  font-size: 1rem;
 }
 /* Tombol geser (mobile). Desktop: sembunyi, form udah sebelahan. */
 .itn-day__setdate,

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=124" />
+  <link rel="stylesheet" href="style.css?v=125" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/itinerary.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -45,29 +45,39 @@
     <h2 class="section__title">Build Your Own Bali Itinerary</h2>
     <p class="builder__intro">Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a 10% deposit to book.</p>
 
-    <div class="itn-suggest" id="suggested">
-      <p class="itn-suggest__t">Don't know where to start?</p>
-      <p class="itn-suggest__s">Pick a length and group size - we'll build a suggested plan you can tweak, then book.</p>
-      <div class="itn-suggest__row">
-        <label class="itn-suggest__f">Days<select id="sg-days"></select></label>
-        <label class="itn-suggest__f">Guests<select id="sg-guests"></select></label>
-        <button class="btn-book itn-suggest__btn" id="sg-build" type="button">Build my itinerary</button>
-      </div>
-    </div>
-
     <div class="itn2">
-      <!-- Trip details: isi sekali, semua hari otomatis ngikut (Day 1 = start, +1, dst) -->
+      <!-- Sidebar kiri (desktop): suggest -> trip details -> total -> add day -->
+      <div class="itn-suggest" id="suggested">
+        <p class="itn-suggest__t">Don't know where to start?</p>
+        <p class="itn-suggest__s">Pick a length and group size - we'll build a suggested plan you can tweak, then book.</p>
+        <div class="itn-suggest__row">
+          <label class="itn-suggest__f">Days<select id="sg-days"></select></label>
+          <label class="itn-suggest__f">Guests<select id="sg-guests"></select></label>
+          <button class="btn-book itn-suggest__btn" id="sg-build" type="button">Build my itinerary</button>
+        </div>
+      </div>
+
+      <!-- Trip details: isi sekali, semua hari otomatis ngikut (Day 1 = start, +1, dst).
+           Guests nggak ada field-nya: ngikut picker di navbar. -->
       <div class="itn-trip" id="itn-trip">
         <p class="itn-trip__t">Trip details</p>
         <p class="itn-trip__s">Fill once - every day follows automatically.</p>
         <div class="itn-day__fields itn-trip__fields">
           <div class="field"><label>Start date</label><input type="date" id="trip-start" /></div>
-          <div class="field"><label>Guests</label><select id="trip-guests"></select></div>
           <div class="field field--full">
             <label>Hotel / villa (pick-up &amp; drop-off)</label>
             <input type="text" id="trip-hotel" placeholder="Hotel / villa / area" />
           </div>
         </div>
+        <p class="itn-trip__guests">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <circle cx="9" cy="8" r="3.2" />
+            <path d="M3.5 19c.6-3 2.9-4.6 5.5-4.6s4.9 1.6 5.5 4.6" />
+            <circle cx="16.5" cy="9" r="2.4" />
+            <path d="M15.5 14.7c2.3.2 4.2 1.6 4.9 4.3" />
+          </svg>
+          Guests: <b id="trip-guests-n">-</b>&nbsp;- follows the navbar picker
+        </p>
       </div>
 
       <div class="itn2__main">
@@ -88,10 +98,10 @@
       <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
 
       <section class="summary">
-        <div class="summary__total">
-          <span id="itn-total-label">Total - 0 days</span>
-          <span class="amount" id="itn-total"><span class="price-cur">$0</span></span>
-        </div>
+        <span class="summary__label">Trip total</span>
+        <div class="summary__amt"><span class="amount" id="itn-total"><span class="price-cur">$0</span></span></div>
+        <span class="summary__sub" id="itn-total-label">0 days</span>
+        <div class="summary__dep">Only <b>10% deposit</b> to book - pay the rest in Bali</div>
         <button class="btn-book" id="itn-book" disabled>Book This Itinerary</button>
       </section>
     </div>
@@ -126,6 +136,6 @@
   <div id="book-confirm-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-  <script src="script.js?v=124"></script>
+  <script src="script.js?v=125"></script>
 </body>
 </html>

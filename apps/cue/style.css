@@ -2936,12 +2936,11 @@ section + section::before,
 }
 
 /* ==================== Suggested-plan box + homepage CTA ==================== */
-/* Foto band mini (rice terrace + overlay gelap) - senada teaser "Plan Your Trip" homepage */
+/* Foto band mini (rice terrace + overlay gelap) - senada teaser "Plan Your Trip" homepage.
+   Sekarang di DALAM .itn2 (sidebar kiri di desktop). */
 .itn-suggest {
   position: relative;
   overflow: hidden;
-  max-width: 720px;
-  margin: 0 auto 2rem;
   padding: 1.25rem 1.35rem;
   border-radius: 14px;
   background-image: url(assets/images/riceterrace-tgll.jpg);
@@ -3025,29 +3024,47 @@ section + section::before,
   margin-bottom: 0.9rem;
 }
 
+/* Total price "Opsi A": panel hijau, angka gold gede, note deposit 10% */
 .summary {
-  padding: 1.75rem;
+  padding: 1.5rem 1.5rem 1.4rem;
   border-radius: 12px;
+  text-align: center;
   color: var(--color-cream);
   background-color: var(--color-green);
 }
-.summary__total {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-top: 0.75rem;
+.summary__label {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #e6cf97;
 }
-.summary__total span:first-child {
-  font-size: var(--fs-body);
-  font-weight: 600;
-  opacity: 0.85;
+.summary__amt {
+  margin: 0.15rem 0 0.1rem;
+  font-size: 2rem;
+  line-height: 1.15;
 }
-.summary__total .amount {
+.summary__amt .price-cur {
   color: var(--color-gold);
+}
+.summary__sub {
+  font-size: var(--fs-small);
+  color: rgba(247, 243, 234, 0.75);
+}
+.summary__dep {
+  margin: 0.8rem 0 0.2rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 7px;
+  background: rgba(201, 164, 92, 0.16);
+  font-size: var(--fs-label);
+  color: rgba(247, 243, 234, 0.9);
+}
+.summary__dep b {
+  color: #e6cf97;
 }
 .btn-book {
   width: 100%;
-  margin-top: 1.25rem;
+  margin-top: 1rem;
   padding: 0.9rem;
   border: none;
   border-radius: 8px;
@@ -3834,19 +3851,41 @@ section + section::before,
 .itn-trip__fields {
   margin-bottom: 0;
 }
-/* Desktop: 2 kolom - kiri form Trip Details + total, kanan kartu hari (grid 2)
-   dengan transfer/charter di bawahnya */
+/* Baris "Guests: N - follows the navbar picker" (nggak ada field guests sendiri) */
+.itn-trip__guests {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.7rem 0 0;
+  font-size: var(--fs-label);
+  color: var(--color-muted-2);
+}
+.itn-trip__guests svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-gold);
+  flex: none;
+}
+.itn-trip__guests b {
+  color: var(--color-green);
+}
+/* Desktop: sidebar kiri (suggest -> trip -> total -> add day) + kartu di kanan.
+   Kolom kartu OTOMATIS (2 di laptop, 3 di monitor gede) - lebar card tetap 300px. */
 @media (min-width: 993px) {
   .itn2 {
-    max-width: 1080px;
+    max-width: 1320px;
     display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    grid-template-rows: auto auto 1fr;
+    grid-template-columns: 340px minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
     grid-template-areas:
+      "sg   main"
       "trip main"
-      "add main"
-      "sum main";
+      "sum  main"
+      "add  main";
     align-items: start;
+  }
+  .itn2 > .itn-suggest {
+    grid-area: sg;
   }
   .itn-trip {
     grid-area: trip;
@@ -3854,25 +3893,50 @@ section + section::before,
   .itn2__main {
     grid-area: main;
   }
+  .itn2 > .summary {
+    grid-area: sum;
+  }
   .itn2 > .itn2__add {
     grid-area: add;
     margin-top: 0;
   }
-  .itn2 > .summary {
-    grid-area: sum;
-  }
   #itn-days {
     display: grid;
-    /* 300px = lebar card slider tour homepage di desktop (flex 0 0 300px) */
-    grid-template-columns: repeat(2, minmax(0, 300px));
+    /* 300px = lebar card slider tour homepage; jumlah kolom ngikut ruang, grid di-center */
+    grid-template-columns: repeat(auto-fill, 300px);
+    justify-content: center;
     gap: 1.25rem;
   }
   #itn-days .itn-day--prog {
     margin-bottom: 0;
   }
-  /* Mini card transfer/charter di kolom kanan: sebaris-4 (setengah lebar card tour) */
+  /* Mini card transfer/charter di kolom kanan: setengah lebar card tour */
   .itn-minis {
     grid-template-columns: repeat(auto-fill, minmax(140px, 150px));
+  }
+}
+
+/* Fade-up halus buat konten builder yang dirender dinamis (sekali, pas load) */
+@keyframes itnFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.itn-day.itn-enter {
+  animation: itnFadeUp 0.4s ease both;
+}
+.itn-minis.itn-enter .itn-mini {
+  animation: itnFadeUp 0.4s ease both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .itn-day.itn-enter,
+  .itn-minis.itn-enter .itn-mini {
+    animation: none;
   }
 }
 

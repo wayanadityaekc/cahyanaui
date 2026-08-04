@@ -238,6 +238,7 @@ function setGuests(n) {
   localStorage.setItem("cue_guests", String(n));
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
+  if (window.__itnGuestsSync) window.__itnGuestsSync(n); // sinkron ke builder itinerary
   // sinkron ke guest-select di navbar
   document.querySelectorAll("[data-guest-select]").forEach((s) => {
     if (parseInt(s.value, 10) !== n) s.value = String(n);
@@ -1116,8 +1117,10 @@ function initItinerary() {
   }
 
   // ---------- render hari ----------
-  // State sisi kartu vs form (mobile slider). Disimpan biar tahan rerender.
+  // State form override per-hari (kebuka via Edit). Disimpan biar tahan rerender.
   const openDays = new Set();
+  // Animasi fade-up cuma di render PERTAMA (biar nggak kedip tiap edit/rerender)
+  let itnEntered = false;
   function renderDays() {
     daysWrap.innerHTML = "";
     if (!state.days.length) {
@@ -1130,6 +1133,10 @@ function initItinerary() {
   function renderDayCard(d, i) {
     const card = document.createElement("div");
     card.className = "itn-day";
+    if (!itnEntered) {
+      card.classList.add("itn-enter");
+      card.style.animationDelay = Math.min(i, 5) * 0.07 + "s";
+    }
     const done = dayComplete(d);
 
     // Kartu program = .experience__card homepage (foto 1:1 + judul di foto + desc)
@@ -1320,6 +1327,7 @@ function initItinerary() {
     box.innerHTML = "";
     const grid = document.createElement("div");
     grid.className = "itn-minis";
+    if (!itnEntered) grid.classList.add("itn-enter");
 
     // Slot airport: pickup (bandara -> Ubud) & drop-off (Ubud -> bandara) SELALU tampil
     let puIdx = -1, doIdx = -1;
@@ -1541,9 +1549,9 @@ function initItinerary() {
     const nDays = state.days.length,
       nTr = state.transfers.length,
       nCh = chs.length;
-    let label = `Total - ${nDays} day${nDays === 1 ? "" : "s"}`;
-    if (nTr) label += ` + ${nTr} transfer${nTr === 1 ? "" : "s"}`;
-    if (nCh) label += ` + ${nCh} charter`;
+    let label = `${nDays} day${nDays === 1 ? "" : "s"}`;
+    if (nTr) label += ` \u00B7 ${nTr} transfer${nTr === 1 ? "" : "s"}`;
+    if (nCh) label += ` \u00B7 ${nCh} charter`;
     document.getElementById("itn-total-label").textContent = label;
     const allDone =
       state.days.every(dayComplete) &&
@@ -1556,6 +1564,7 @@ function initItinerary() {
     renderDays();
     renderTransfers();
     renderSummary();
+    itnEntered = true; // render berikutnya tanpa animasi masuk
   }
   window.__itnRerender = rerender; // biar ganti currency bisa re-render itinerary
   // Ganti seluruh isi itinerary (dipakai "Use this package"). Set state closure +
@@ -1595,7 +1604,7 @@ function initItinerary() {
     clearBtn.addEventListener("click", () => {
       if (!itnCount(state)) return;
       if (!confirm("Clear the whole itinerary?")) return;
-      state = { days: [], transfers: [], charters: [], trip: { start: "", guests: "", hotel: "" } };
+      state = { days: [], transfers: [], charters: [], trip: { start: "", guests: currentGuests ? String(currentGuests) : "", hotel: "" } };
       openDays.clear();
       syncTripInputs(); // form Trip Details ikut kosong
       save();
@@ -1672,7 +1681,7 @@ function initItinerary() {
       detailLines: null,
       items: items,
       onSuccess: () => {
-        state = { days: [], transfers: [], charters: [], trip: { start: "", guests: "", hotel: "" } };
+        state = { days: [], transfers: [], charters: [], trip: { start: "", guests: currentGuests ? String(currentGuests) : "", hotel: "" } };
         openDays.clear();
         syncTripInputs();
         save();
@@ -1700,17 +1709,19 @@ function initItinerary() {
     if (t.hotel) propagateLocation(t.hotel);
   }
   const tripStart = document.getElementById("trip-start");
-  const tripGuests = document.getElementById("trip-guests");
   const tripHotel = document.getElementById("trip-hotel");
+  const tripGuestsN = document.getElementById("trip-guests-n");
   // Sinkron isi form Trip Details dari state (dipakai init + Clear all + habis booking)
   function syncTripInputs() {
-    if (!tripStart || !tripGuests || !tripHotel) return;
+    if (!tripStart || !tripHotel) return;
     tripStart.value = state.trip.start || "";
-    tripGuests.innerHTML = guestOptions(state.trip.guests);
     tripHotel.value = state.trip.hotel || "";
+    if (tripGuestsN) tripGuestsN.textContent = state.trip.guests || "-";
   }
-  if (tripStart && tripGuests && tripHotel) {
+  if (tripStart && tripHotel) {
     tripStart.min = todayStr();
+    // Guests nggak punya field di Trip Details: sumbernya picker navbar (cue_guests)
+    if (currentGuests) state.trip.guests = String(currentGuests);
     syncTripInputs();
     const onTripChange = () => {
       if (tripStart.value && tripStart.value < todayStr()) {
@@ -1718,17 +1729,27 @@ function initItinerary() {
         tripStart.value = state.trip.start || "";
         return;
       }
-      state.trip = { start: tripStart.value, guests: tripGuests.value, hotel: tripHotel.value.trim() };
+      state.trip = { start: tripStart.value, guests: state.trip.guests || "", hotel: tripHotel.value.trim() };
       applyTrip(true);
       save();
       rerender();
     };
     tripStart.addEventListener("change", onTripChange);
-    tripGuests.addEventListener("change", onTripChange);
     tripHotel.addEventListener("change", onTripChange);
     applyTrip(false); // hari yang baru ditambah dari halaman lain langsung keisi
     save();
   }
+  // Guests navbar ganti -> sebar ke trip + semua hari (transfer/charter isi yang kosong)
+  window.__itnGuestsSync = function (n) {
+    state.trip.guests = String(n);
+    state.days.forEach((d) => { d.guests = state.trip.guests; });
+    propagateGuests(state.trip.guests);
+    save();
+    rerender();
+    syncTripInputs();
+    const sg = document.getElementById("sg-guests");
+    if (sg) sg.value = String(n);
+  };
 
   rerender();
 }
@@ -1862,6 +1883,9 @@ function initReveal() {
     ".faq__item",
     ".quicknav__card",
     ".section__title",
+    ".itn-suggest",
+    ".itn-trip",
+    ".summary",
     ".guide-lead",
     ".guide-article p",
     ".guide-article ul"
@@ -1914,6 +1938,9 @@ function initSuggested() {
   guestsSel.insertAdjacentHTML("beforeend", `<option value="" selected disabled>Guests</option>`);
   for (let n = 1; n <= 10; n++)
     guestsSel.insertAdjacentHTML("beforeend", `<option value="${n}">${n}</option>`);
+  // Selaras sama picker guests di navbar (dua arah)
+  if (currentGuests) guestsSel.value = String(currentGuests);
+  guestsSel.addEventListener("change", () => setGuests(guestsSel.value));
 
   buildBtn.addEventListener("click", () => {
     const nDays = parseInt(daysSel.value) || 1;

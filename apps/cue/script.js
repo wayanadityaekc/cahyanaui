@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 34;
+const PARTIALS_VERSION = 35;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -672,6 +672,10 @@ function initBookingConfirm() {
         li.textContent = line;
         detailsList.appendChild(li);
       });
+      // Judul accordion ngikut jenis booking (default "What's included";
+      // itinerary pakai "Trip details"). Default ketutup - klik buat buka.
+      const dt = document.getElementById("details-title");
+      if (dt) dt.textContent = o.detailsTitle || "What's included";
       modalDetails.style.display = "";
     } else {
       modalDetails.style.display = "none";
@@ -1670,17 +1674,29 @@ function initItinerary() {
     if (nDays) parts.push(`${nDays} day${nDays > 1 ? "s" : ""}`);
     if (nTr) parts.push(`${nTr} transfer${nTr > 1 ? "s" : ""}`);
     if (nCh) parts.push(`${nCh} charter`);
+    // Ringkasan buat popup: guests dari trip, date = rentang hari pertama-terakhir,
+    // rincian per hari/transfer/charter masuk accordion "Trip details" (bisa dibuka-tutup)
+    const dayDates = state.days.map((d) => d.date).filter(Boolean);
+    const dateRange = dayDates.length
+      ? fmtDayDate(dayDates[0]) + (dayDates.length > 1 ? " - " + fmtDayDate(dayDates[dayDates.length - 1]) : "")
+      : "";
+    const detailLines = [
+      ...state.days.map((d, i) => `Day ${i + 1} · ${d.date ? fmtDayDate(d.date) : "date TBD"} · ${dayLine(d)}`),
+      ...state.transfers.map((tr) => `Transfer · ${tr.date ? fmtDayDate(tr.date) : "date TBD"} · ${transferLine(tr)}`),
+      ...chs.map((ch) => `Charter · ${ch.date ? fmtDayDate(ch.date) : "date TBD"} · ${charterDurLabel(ch)} from ${ch.area}`)
+    ];
     window.__openBooking({
       type: "itinerary",
       service: `Custom Itinerary (${parts.join(" + ")})`,
-      guests: "",
-      date: "",
+      guests: state.trip.guests || "",
+      date: dateRange,
       price: { usd, idr },
-      pickup: "",
+      pickup: state.trip.hotel || "",
       pickupOptional: true,
       dropoffRequired: false,
       referralEligible: false,
-      detailLines: null,
+      detailLines: detailLines,
+      detailsTitle: "Trip details",
       items: items,
       onSuccess: () => {
         state = { days: [], transfers: [], charters: [], trip: { start: "", guests: currentGuests ? String(currentGuests) : "", hotel: "" } };
@@ -2325,10 +2341,27 @@ function initModalUX() {
   });
 
   // Scroll-lock: ada modal kebuka -> kunci scroll body; nggak ada -> lepas lagi.
+  // position:fixed (bukan cuma overflow:hidden) biar background beneran ke-lock
+  // juga di iOS Safari; posisi scroll disimpen & dibalikin pas modal ketutup.
+  let lockScrollY = 0;
   const syncScrollLock = () => {
-    document.body.style.overflow = document.querySelector(".modal.active")
-      ? "hidden"
-      : "";
+    const anyOpen = !!document.querySelector(".modal.active");
+    const locked = document.body.style.position === "fixed";
+    if (anyOpen && !locked) {
+      lockScrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${lockScrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.overflow = "hidden";
+    } else if (!anyOpen && locked) {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, lockScrollY);
+    }
   };
   new MutationObserver(syncScrollLock).observe(document.body, {
     subtree: true,

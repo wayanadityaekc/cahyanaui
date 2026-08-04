@@ -1933,9 +1933,15 @@ section + section::before,
   max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
+  /* scrollbar disembunyiin (tetap bisa discroll, nggak ada track di samping) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 2rem;
   border-radius: 10px;
   background-color: #fff;
+}
+.modal__box::-webkit-scrollbar {
+  display: none;
 }
 .modal__close {
   position: absolute;
@@ -2014,6 +2020,7 @@ section + section::before,
 .modal__row {
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
   padding: 0.65rem 0;
   border-bottom: 1px solid #eee;
   font-size: var(--fs-body);
@@ -2022,6 +2029,7 @@ section + section::before,
   font-weight: 600;
 }
 .modal__row span:last-child {
+  text-align: right;
   color: var(--color-gold);
   font-weight: 600;
 }
@@ -2103,6 +2111,10 @@ section + section::before,
   display: block;
   height: 16px;
   width: auto;
+}
+/* Tombol modal yang numpuk selalu ada jarak (Add again/Cancel, dll) */
+.modal__btn + .modal__btn {
+  margin-top: 0.6rem;
 }
 .modal__btn {
   width: 100%;
@@ -4227,7 +4239,9 @@ section + section::before,
 }
 .pick-cat {
   display: block;
+  width: 100%;
   padding: 0.95rem 1rem;
+  text-align: center;
   border: 1px solid #e6dfce;
   border-radius: 10px;
   background: var(--color-cream);

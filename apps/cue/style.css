@@ -4268,7 +4268,6 @@ section + section::before,
 /* Charter dipilih inline (bukan navigasi) -> pakai <button>, samain tampilannya dg <a> */
 button.pick-cat {
   width: 100%;
-  text-align: left;
   font-size: inherit;
   cursor: pointer;
 }

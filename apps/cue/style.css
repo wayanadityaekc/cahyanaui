@@ -3051,17 +3051,6 @@ section + section::before,
   font-size: var(--fs-small);
   color: rgba(247, 243, 234, 0.75);
 }
-.summary__dep {
-  margin: 0.8rem 0 0.2rem;
-  padding: 0.5rem 0.65rem;
-  border-radius: 7px;
-  background: rgba(201, 164, 92, 0.16);
-  font-size: var(--fs-label);
-  color: rgba(247, 243, 234, 0.9);
-}
-.summary__dep b {
-  color: #e6cf97;
-}
 .btn-book {
   width: 100%;
   margin-top: 1rem;
@@ -3817,6 +3806,16 @@ section + section::before,
   flex-direction: column;
   gap: 1.5rem;
 }
+/* Mobile: aside sidebar transparan (anak-anaknya jadi flex item .itn2 langsung),
+   urutan lama dijaga pakai order: suggest -> trip -> days -> add -> total. */
+.itn2__side {
+  display: contents;
+}
+.itn2__side > .itn-suggest { order: 1; }
+.itn2__side > .itn-trip { order: 2; }
+.itn2 > .itn2__main { order: 3; }
+.itn2__side > .itn2__add { order: 4; }
+.itn2__side > .summary { order: 5; }
 .itn2__panel {
   padding: 0;
   background-color: transparent;
@@ -3869,51 +3868,93 @@ section + section::before,
 .itn-trip__guests b {
   color: var(--color-green);
 }
-/* Desktop: sidebar kiri (suggest -> trip -> total -> add day) + kartu di kanan.
-   Kolom kartu OTOMATIS (2 di laptop, 3 di monitor gede) - lebar card tetap 300px. */
+/* Desktop: sidebar kiri = SATU kartu (suggest -> trip -> price -> add day),
+   konten kanan = slider hari (1 baris) + boks transfer/charter di bawahnya. */
 @media (min-width: 993px) {
   .itn2 {
     max-width: 1320px;
     display: grid;
-    grid-template-columns: 340px minmax(0, 1fr);
-    grid-template-rows: auto auto auto 1fr;
-    grid-template-areas:
-      "sg   main"
-      "trip main"
-      "sum  main"
-      "add  main";
+    grid-template-columns: 380px minmax(0, 1fr);
     align-items: start;
   }
-  .itn2 > .itn-suggest {
-    grid-area: sg;
-  }
-  .itn-trip {
-    grid-area: trip;
-  }
-  .itn2__main {
-    grid-area: main;
-  }
-  .itn2 > .summary {
-    grid-area: sum;
-  }
-  .itn2 > .itn2__add {
-    grid-area: add;
-    margin-top: 0;
-  }
-  #itn-days {
-    display: grid;
-    /* 300px = lebar card slider tour homepage; jumlah kolom ngikut ruang, grid di-center */
-    grid-template-columns: repeat(auto-fill, 300px);
-    justify-content: center;
+  /* Sidebar: kartu-kartu TERPISAH (suggest / trip / price / add day),
+     semua otomatis sama lebar karena satu kolom grid 380px. */
+  .itn2__side {
+    display: flex;
+    flex-direction: column;
     gap: 1.25rem;
   }
-  #itn-days .itn-day--prog {
+  .itn2__side > * {
+    order: 0; /* balikin urutan DOM (order mobile nggak berlaku) */
+  }
+  .itn2__side > .itn2__add {
+    margin-top: 0; /* jarak antar kartu udah dari gap */
+  }
+  /* Judul tiap seksi sidebar: garis bawah tipis biar kerasa kepisah + font nggak kegedean */
+  .itn2__side .itn-suggest__t {
+    font-size: var(--fs-body);
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(247, 243, 234, 0.35);
+  }
+  .itn2__side .itn-suggest__s {
+    font-size: var(--fs-small);
+  }
+  .itn2__side .itn-trip__t {
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(201, 164, 92, 0.4);
+  }
+  .itn2__side .summary__label {
+    display: block;
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(247, 243, 234, 0.25);
+  }
+  .itn2__side .summary__amt {
+    font-size: 1.6rem;
+  }
+  /* Kolom input sidebar sejajar lebarnya: 2 kolom = bagi dua rata, sisanya full width */
+  .itn2__side .itn-suggest__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    align-items: end;
+  }
+  .itn2__side .itn-suggest__f select {
+    width: 100%;
+    min-width: 0;
+  }
+  .itn2__side .itn-suggest__btn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  .itn2__side .itn-trip__fields {
+    grid-template-columns: 1fr;
+  }
+  /* Konten: hari-hari jadi slider 1 baris (card lebih kecil dari card tour 300px),
+     scrollbar disembunyiin - navigasi via panah hover / swipe trackpad. */
+  #itn-days {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    touch-action: pan-x pan-y;
+    padding-bottom: 0.75rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  #itn-days::-webkit-scrollbar {
+    display: none;
+  }
+  #itn-days > .itn-day {
+    flex: 0 0 300px; /* samain persis sama card slider homepage (300px) */
+    scroll-snap-align: start;
     margin-bottom: 0;
   }
-  /* Mini card transfer/charter di kolom kanan: setengah lebar card tour */
-  .itn-minis {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 150px));
-  }
+  /* (styling mini card transfer/charter desktop ada di bawah, SETELAH rule
+     base .itn-minis - biar nggak kalah urutan cascade) */
 }
 
 /* Fade-up halus buat konten builder yang dirender dinamis (sekali, pas load) */
@@ -3956,6 +3997,39 @@ section + section::before,
 @media (max-width: 576px) {
   .itn-minis {
     width: 80vw;
+  }
+}
+/* Desktop: mini card SEBARIS ke samping - pas 4 kotak selebar kolom.
+   Lebih dari 4 -> geser ke samping (slider, scrollbar disembunyiin, snap). */
+@media (min-width: 993px) {
+  .itn-minis {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    touch-action: pan-x pan-y;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .itn-minis::-webkit-scrollbar {
+    display: none;
+  }
+  .itn-minis .itn-mini {
+    flex: 0 0 calc((100% - 2.1rem) / 4); /* 4 kotak per baris (3 gap × 0.7rem) */
+    scroll-snap-align: start;
+    aspect-ratio: auto;
+    /* padding atas lebih gede -> isi (icon+teks) yang ke-center turun dikit */
+    padding: 1.2rem 0.5rem 0.85rem;
+  }
+  .itn-minis .itn-mini__ic {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+  }
+  .itn-minis .itn-mini__ic svg {
+    width: 16px;
+    height: 16px;
   }
 }
 .itn-mini {

@@ -934,7 +934,9 @@ function initSlider() {
 
 // Panah kiri/kanan buat slider Tour Programs (muncul pas hover, desktop)
 function initTourSlider() {
-  document.querySelectorAll(".experience__grid--slider").forEach((slider) => {
+  // #itn-days ikut: di desktop dia slider horizontal (panah muncul pas hover;
+  // di mobile tetap numpuk vertikal & panahnya emang ke-hide via CSS hover).
+  document.querySelectorAll(".experience__grid--slider, #itn-days").forEach((slider) => {
     if (slider.parentElement.classList.contains("slider-holder")) return;
     const holder = document.createElement("div");
     holder.className = "slider-holder";

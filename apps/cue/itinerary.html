@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=125" />
+  <link rel="stylesheet" href="style.css?v=131" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/itinerary.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -46,7 +46,9 @@
     <p class="builder__intro">Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a 10% deposit to book.</p>
 
     <div class="itn2">
-      <!-- Sidebar kiri (desktop): suggest -> trip details -> total -> add day -->
+      <!-- Sidebar kiri (desktop): SATU kartu berisi suggest -> trip details -> price -> add day.
+           Di mobile aside ini transparan (display:contents) & urutan lama dijaga via CSS order. -->
+      <aside class="itn2__side">
       <div class="itn-suggest" id="suggested">
         <p class="itn-suggest__t">Don't know where to start?</p>
         <p class="itn-suggest__s">Pick a length and group size - we'll build a suggested plan you can tweak, then book.</p>
@@ -80,6 +82,16 @@
         </p>
       </div>
 
+      <section class="summary">
+        <span class="summary__label">Trip total</span>
+        <div class="summary__amt"><span class="amount" id="itn-total"><span class="price-cur">$0</span></span></div>
+        <span class="summary__sub" id="itn-total-label">0 days</span>
+        <button class="btn-book" id="itn-book" disabled>Book This Itinerary</button>
+      </section>
+
+      <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
+      </aside>
+
       <div class="itn2__main">
         <div class="itn2__panel">
           <div class="itn__panel-head">
@@ -94,16 +106,6 @@
           <div id="itn-transfers-list"></div>
         </div>
       </div>
-
-      <button class="itn2__add" id="itn-add" type="button">+ Add more day</button>
-
-      <section class="summary">
-        <span class="summary__label">Trip total</span>
-        <div class="summary__amt"><span class="amount" id="itn-total"><span class="price-cur">$0</span></span></div>
-        <span class="summary__sub" id="itn-total-label">0 days</span>
-        <div class="summary__dep">Only <b>10% deposit</b> to book - pay the rest in Bali</div>
-        <button class="btn-book" id="itn-book" disabled>Book This Itinerary</button>
-      </section>
     </div>
   </section>
   
@@ -136,6 +138,6 @@
   <div id="book-confirm-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-  <script src="script.js?v=125"></script>
+  <script src="script.js?v=131"></script>
 </body>
 </html>

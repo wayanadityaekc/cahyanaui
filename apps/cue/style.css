@@ -2028,6 +2028,11 @@ section + section::before,
 .modal__row span:first-child {
   font-weight: 600;
 }
+/* Baris terakhir (Price) tanpa border bawah - separator berikutnya udah
+   dipegang border-top .modal__details, biar nggak dobel garis */
+.modal__row:last-child {
+  border-bottom: none;
+}
 .modal__row span:last-child {
   text-align: right;
   color: var(--color-gold);
@@ -3791,13 +3796,16 @@ section + section::before,
   font-size: var(--fs-body);
   background: #fff;
 }
-.modal__btn--ghost {
+/* Tombol sekunder popup: putih + border hijau (senada .program-cta__btn--add /
+   .card-add) biar kebedain dari tombol utama yang hijau solid.
+   Double class = specificity menang dari .modal__btn apapun urutannya. */
+.modal__btn.modal__btn--ghost {
   margin-top: 0.6rem;
-  background: transparent;
-  border: 1.5px solid #d8d2c4;
+  background: #fff;
+  border: 1.5px solid var(--color-green);
   color: var(--color-green);
 }
-.modal__btn--ghost:hover {
+.modal__btn.modal__btn--ghost:hover {
   background: var(--color-green);
   border-color: var(--color-green);
   color: var(--color-cream);

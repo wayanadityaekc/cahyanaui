@@ -3491,9 +3491,9 @@ section + section::before,
   color: var(--color-green);
 }
 .itn-day__status {
-  font-size: var(--fs-label);
+  font-size: 0.62rem;
   font-weight: 600;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.42rem;
   border-radius: 999px;
   background: #f0ede4;
   color: #9a9382;
@@ -3514,10 +3514,10 @@ section + section::before,
 }
 .itn-prog__rm {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 26px;
-  height: 26px;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 21px;
+  height: 21px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3525,7 +3525,7 @@ section + section::before,
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   color: #b45b4d;
-  font-size: 1.15rem;
+  font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;
   transition: background 0.15s ease;

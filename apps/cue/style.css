@@ -297,7 +297,6 @@ body {
 .field input[type="date"],
 .itn-day__fields .field input,
 .itn-day__fields .field select,
-.itn-charter__field input,
 .charter__select {
   border: 1px solid #d8d2c4;
   border-radius: 6px;
@@ -3480,28 +3479,6 @@ section + section::before,
   background: #e2f0e6;
   color: #2f8f4e;
 }
-.itn-day__remove {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.05);
-  font-family: var(--font-body);
-  font-size: 1.25rem;
-  line-height: 1;
-  color: #b45b4d;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-.itn-day__remove:hover {
-  background: rgba(180, 91, 77, 0.14);
-}
 /* Kartu program (foto homepage .experience__card) + form di bawahnya */
 .itn-day__cards {
   display: grid;
@@ -3710,43 +3687,6 @@ section + section::before,
   font-size: var(--fs-body);
   font-weight: 600;
 }
-.itn-transfer__dir,
-.itn-charter__dur {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.9rem;
-}
-/* Field tunggal charter (area pickup / extra jam) - full width, sizing sama input builder */
-.itn-charter__field {
-  margin-bottom: 0.9rem;
-}
-.itn-charter__field select,
-.itn-charter__field input {
-  width: 100%;
-  min-width: 0;
-  height: 2.7rem;
-  padding: 0.55rem 0.65rem;
-  font-size: var(--fs-body);
-  background: #fff;
-}
-.dirbtn {
-  flex: 1;
-  padding: 0.5rem;
-  border: 1.5px solid #d8d2c4;
-  border-radius: 8px;
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--color-muted);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.dirbtn.active {
-  border-color: var(--color-green);
-  background: var(--color-green);
-  color: #fff;
-}
 
 /* tombol Add to itinerary di card biasa + card jadi clickable */
 .card-clickable {
@@ -3901,9 +3841,10 @@ section + section::before,
     max-width: 1080px;
     display: grid;
     grid-template-columns: 320px minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas:
       "trip main"
+      "add main"
       "sum main";
     align-items: start;
   }
@@ -3912,6 +3853,10 @@ section + section::before,
   }
   .itn2__main {
     grid-area: main;
+  }
+  .itn2 > .itn2__add {
+    grid-area: add;
+    margin-top: 0;
   }
   .itn2 > .summary {
     grid-area: sum;
@@ -3925,10 +3870,180 @@ section + section::before,
   #itn-days .itn-day--prog {
     margin-bottom: 0;
   }
-  #itn-days + .itn2__add {
-    margin-top: 1.25rem;
-    width: 100%;
+  /* Mini card transfer/charter di kolom kanan: sebaris-4 (setengah lebar card tour) */
+  .itn-minis {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 150px));
   }
+}
+
+/* ===== Mini card transfer & charter (2 kolom, setengah card tour) ===== */
+.itn-minis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+@media (max-width: 992px) {
+  /* Selebar kartu hari (yang ngikut lebar card slider homepage), di tengah */
+  .itn-minis {
+    width: 70vw;
+    margin: 0 auto;
+  }
+}
+@media (max-width: 576px) {
+  .itn-minis {
+    width: 80vw;
+  }
+}
+.itn-mini {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.itn-mini:hover {
+  transform: translateY(-2px);
+}
+.itn-mini--filled {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    var(--gold-edge)
+      border-box;
+  box-shadow: var(--shadow-card);
+}
+.itn-mini--empty {
+  border: 1.5px dashed rgba(31, 61, 43, 0.35);
+  background: transparent;
+}
+.itn-mini__ic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(201, 164, 92, 0.16);
+  color: var(--color-green);
+}
+.itn-mini--empty .itn-mini__ic {
+  background: rgba(31, 61, 43, 0.06);
+  color: var(--color-muted-2);
+}
+.itn-mini__ic svg {
+  width: 23px;
+  height: 23px;
+}
+.itn-mini__t {
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--color-green);
+  line-height: 1.25;
+}
+.itn-mini__s {
+  font-size: var(--fs-label);
+  color: var(--color-muted-2);
+  line-height: 1.3;
+}
+.itn-mini__s b {
+  color: var(--color-gold);
+}
+.itn-mini__check {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2e7d4f;
+  color: #fff;
+}
+.itn-mini__check svg {
+  width: 10px;
+  height: 10px;
+}
+/* Isi popup form transfer/charter */
+.svc__t {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.2rem;
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--color-green);
+}
+.svc__t .itn-mini__ic {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+}
+.svc__t .itn-mini__ic svg {
+  width: 18px;
+  height: 18px;
+}
+.svc__s {
+  margin: 0 0 1rem;
+  font-size: var(--fs-small);
+  color: var(--color-muted-2);
+}
+.svc__fields {
+  margin-bottom: 0;
+}
+.svc__price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.9rem 0;
+  padding-top: 0.7rem;
+  border-top: 1px dashed rgba(201, 164, 92, 0.5);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--color-muted-2);
+}
+.svc__price b {
+  font-size: 1rem;
+  color: var(--color-gold);
+}
+.svc__save {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-green);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  cursor: pointer;
+}
+.svc__save:hover {
+  background: var(--color-gold);
+  color: var(--color-green);
+}
+.svc__rm {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: #b45b4d;
+  cursor: pointer;
 }
 .itn2__add {
   display: block;
@@ -4093,7 +4208,6 @@ button.pick-cat {
 .btn-book,
 .btn-review,
 .modal__btn,
-.dirbtn,
 .pkg-cta__btn {
   text-decoration: none;
 }

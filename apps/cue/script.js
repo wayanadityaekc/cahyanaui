@@ -1287,158 +1287,232 @@ function initItinerary() {
     return card;
   }
 
-  // ---------- render transfer ----------
+  // ---------- render transfer & charter: mini cards (2 kolom) + popup form ----------
+  const AIRPORT_ROUTE = "Airport – Ubud";
+  function svcIcon(kind) {
+    if (kind === "pickup")
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 19h19"/><path d="M21 14.6l-8.5-3.2L8 5.8l-1.9.7 2.1 6-4.3-1.6-1.4.5 3 3.4 15-.2z" fill="currentColor" stroke="none" opacity=".85"/></svg>';
+    if (kind === "dropoff")
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 5.6l8.4 3.5L16 3.9l1.9.7-2.2 5.9 4.4-1.5 1.4.6-3.1 3.3-15-.3z" fill="currentColor" stroke="none" opacity=".7"/><path d="M2.5 19h19"/></svg>';
+    if (kind === "charter")
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 13l2-5a2 2 0 0 1 1.9-1.3h10.2A2 2 0 0 1 19 8l2 5"/><path d="M3 13h18v4H3z"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg>';
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5v14M5 12h14"/></svg>';
+  }
+
+  function miniCard(opt) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "itn-mini " + (opt.filled ? "itn-mini--filled" : "itn-mini--empty");
+    b.innerHTML =
+      (opt.complete
+        ? '<span class="itn-mini__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M20 6L9 17l-5-5"/></svg></span>'
+        : "") +
+      '<span class="itn-mini__ic">' + svcIcon(opt.kind) + "</span>" +
+      '<span class="itn-mini__t">' + opt.title + "</span>" +
+      '<span class="itn-mini__s">' + opt.sub + "</span>";
+    b.addEventListener("click", opt.onClick);
+    return b;
+  }
+
   function renderTransfers() {
     const box = document.getElementById("itn-transfers-list");
     if (!box) return;
     box.innerHTML = "";
+    const grid = document.createElement("div");
+    grid.className = "itn-minis";
+
+    // Slot airport: pickup (bandara -> Ubud) & drop-off (Ubud -> bandara) SELALU tampil
+    let puIdx = -1, doIdx = -1;
+    state.transfers.forEach((tr, i) => {
+      if (tr.route !== AIRPORT_ROUTE) return;
+      if (tr.direction !== "from" && puIdx < 0) puIdx = i;
+      else if (tr.direction === "from" && doIdx < 0) doIdx = i;
+    });
+    const trSub = (tr) =>
+      !tr ? "" : transferComplete(tr) ? "<b>" + fmtDayDate(tr.date) + "</b>" : "Tap to complete";
+
+    grid.appendChild(miniCard({
+      kind: "pickup", title: "Airport Pickup",
+      sub: puIdx < 0 ? "Airport &rarr; your hotel" : trSub(state.transfers[puIdx]),
+      filled: puIdx >= 0,
+      complete: puIdx >= 0 && transferComplete(state.transfers[puIdx]),
+      onClick: () => openSvcModal("pickup", puIdx)
+    }));
+    grid.appendChild(miniCard({
+      kind: "dropoff", title: "Airport Drop-off",
+      sub: doIdx < 0 ? "Your hotel &rarr; airport" : trSub(state.transfers[doIdx]),
+      filled: doIdx >= 0,
+      complete: doIdx >= 0 && transferComplete(state.transfers[doIdx]),
+      onClick: () => openSvcModal("dropoff", doIdx)
+    }));
+
+    // Charter: slot pertama selalu tampil; charter tambahan dapet kartu sendiri
     const chs = state.charters || [];
-    if (!state.transfers.length && !chs.length) {
-      box.innerHTML = `<p class="itn__empty">No transfers or charter yet.</p>`;
-      return;
+    const chSub = (ch) =>
+      !ch ? "Car + driver, your route" : charterComplete(ch) ? "<b>" + fmtDayDate(ch.date) + "</b>" : "Tap to complete";
+    grid.appendChild(miniCard({
+      kind: "charter", title: "Private Charter",
+      sub: chSub(chs[0]), filled: !!chs[0],
+      complete: !!chs[0] && charterComplete(chs[0]),
+      onClick: () => openSvcModal("charter", chs.length ? 0 : -1)
+    }));
+    chs.slice(1).forEach((ch, k) => grid.appendChild(miniCard({
+      kind: "charter", title: "Private Charter",
+      sub: chSub(ch), filled: true, complete: charterComplete(ch),
+      onClick: () => openSvcModal("charter", k + 1)
+    })));
+
+    // Transfer non-airport yang udah ada + slot "Other Transfer" buat nambah
+    state.transfers.forEach((tr, i) => {
+      if (i === puIdx || i === doIdx) return;
+      const area = tr.route.replace(" – Ubud", "");
+      grid.appendChild(miniCard({
+        kind: "other",
+        title: tr.direction === "from" ? "Ubud &rarr; " + area : area + " &rarr; Ubud",
+        sub: trSub(tr), filled: true, complete: transferComplete(tr),
+        onClick: () => openSvcModal("other", i)
+      }));
+    });
+    grid.appendChild(miniCard({
+      kind: "other", title: "Other Transfer", sub: "Canggu, Kuta, Amed...",
+      filled: false, complete: false,
+      onClick: () => openSvcModal("other", -1)
+    }));
+
+    box.appendChild(grid);
+  }
+
+  // Popup form transfer/charter (satu modal, diisi dinamis per jenis slot)
+  const svcModal = document.getElementById("itn-svc-modal");
+  const svcBody = document.getElementById("itn-svc-body");
+  if (svcModal)
+    svcModal.addEventListener("click", (e) => {
+      if (e.target === svcModal || e.target.closest("[data-close]"))
+        svcModal.classList.remove("active");
+    });
+
+  function svcRouteOptions(sel) {
+    let o = "";
+    Object.keys(prices.transfer).forEach((r) => {
+      if (r === AIRPORT_ROUTE) return; // airport punya slot sendiri
+      o += '<option value="' + r + '" ' + (sel === r ? "selected" : "") + ">" + r.replace(" – Ubud", "") + "</option>";
+    });
+    return o;
+  }
+
+  function openSvcModal(kind, idx) {
+    if (!svcModal || !svcBody) return;
+    const isCharter = kind === "charter";
+    const tr = !isCharter && idx >= 0 ? state.transfers[idx] : null;
+    const ch = isCharter && idx >= 0 ? state.charters[idx] : null;
+    const t = state.trip || {};
+    const cur = tr || ch;
+    const guests = (cur && cur.guests) || t.guests || "";
+    const date = (cur && cur.date) || "";
+    // Sisi hotel: pickup transfer "to" = drop-off, "from" = pick-up; charter = pick-up
+    const hotel =
+      (tr && (tr.direction === "from" ? tr.pickup : tr.dropoff)) ||
+      (ch && ch.pickup) || t.hotel || "";
+
+    const titles = {
+      pickup: ["Airport Pickup", "Ngurah Rai Airport &rarr; your hotel in Ubud."],
+      dropoff: ["Airport Drop-off", "Your hotel in Ubud &rarr; Ngurah Rai Airport."],
+      other: ["Transfer", "Private door-to-door transfer."],
+      charter: ["Private Charter", "Your own car &amp; driver - go anywhere, your schedule."]
+    };
+    const hotelLabel = kind === "pickup" ? "Drop-off (hotel / villa)" : "Pick-up (hotel / villa)";
+
+    let fieldsHTML = "";
+    if (kind === "other") {
+      fieldsHTML +=
+        '<div class="field"><label>Area</label><select class="sv-route">' + svcRouteOptions(tr ? tr.route : "") + "</select></div>" +
+        '<div class="field"><label>Direction</label><select class="sv-dir">' +
+        '<option value="to" ' + (!tr || tr.direction !== "from" ? "selected" : "") + ">To Ubud</option>" +
+        '<option value="from" ' + (tr && tr.direction === "from" ? "selected" : "") + ">From Ubud</option>" +
+        "</select></div>";
     }
-    state.transfers.forEach((tr, i) => box.appendChild(renderTransferCard(tr, i)));
-    chs.forEach((ch, i) => box.appendChild(renderCharterCard(ch, i)));
-  }
+    if (isCharter) {
+      fieldsHTML +=
+        '<div class="field"><label>Pick-up area</label><select class="sv-area">' + charterAreaOptions(ch ? ch.area : "") + "</select></div>" +
+        '<div class="field"><label>Duration</label><select class="sv-dur">' +
+        '<option value="" disabled ' + (ch && ch.dur ? "" : "selected") + ">Duration</option>" +
+        '<option value="half" ' + (ch && ch.dur === "half" ? "selected" : "") + ">Half day (5 hrs)</option>" +
+        '<option value="full" ' + (ch && ch.dur === "full" ? "selected" : "") + ">Full day (10 hrs)</option>" +
+        '<option value="extended" ' + (ch && ch.dur === "extended" ? "selected" : "") + ">Extended (10+ hrs)</option>" +
+        "</select></div>" +
+        '<div class="field sv-extra-wrap" style="' + (ch && ch.dur === "extended" ? "" : "display:none") + '"><label>Extra hours after 10</label><input type="number" class="sv-extra" min="1" max="6" value="' + ((ch && ch.extra) || 1) + '" /></div>';
+    }
+    fieldsHTML +=
+      '<div class="field"><label>Date</label><input type="date" class="sv-date" min="' + todayStr() + '" value="' + date + '" /></div>' +
+      '<div class="field"><label>Guests</label><select class="sv-guests">' + guestOptions(guests) + "</select></div>" +
+      '<div class="field field--full"><label>' + hotelLabel + '</label><input type="text" class="sv-hotel" placeholder="Hotel / villa / area" value="' + hotel.replace(/"/g, "&quot;") + '" /></div>';
 
-  function renderTransferCard(tr, i) {
-    const card = document.createElement("div");
-    card.className = "itn-day itn-transfer";
-    const p = transferPrice(tr);
-    const area = tr.route.replace(" – Ubud", "");
-    const toActive = tr.direction !== "from";
-    card.innerHTML = `
-      <div class="itn-day__head">
-        <h4 class="itn-day__title">${toActive ? area + " → Ubud" : "Ubud → " + area}</h4>
-        <button class="itn-day__remove" type="button" data-rmtransfer="${i}" aria-label="Remove transfer">&times;</button>
-      </div>
-      <div class="itn-transfer__dir">
-        <button class="dirbtn ${toActive ? "active" : ""}" type="button" data-dir="to">${area} → Ubud</button>
-        <button class="dirbtn ${!toActive ? "active" : ""}" type="button" data-dir="from">Ubud → ${area}</button>
-      </div>
-      <div class="itn-day__fields">
-        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${tr.date}" /></div>
-        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(tr.guests)}</select></div>
-        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${tr.pickup || ""}" /></div>
-        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${tr.dropoff || ""}" /></div>
-      </div>
-      <div class="itn-day__price"><span>Transfer price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
-    `;
-    card.querySelectorAll("[data-dir]").forEach((b) =>
-      b.addEventListener("click", () => {
-        tr.direction = b.dataset.dir;
-        save();
-        rerender();
-      })
-    );
-    card.querySelector("[data-rmtransfer]").addEventListener("click", () => {
-      state.transfers.splice(i, 1);
-      save();
-      rerender();
-    });
-    card.querySelector(".f-date").addEventListener("change", (e) => {
-      if (e.target.value && e.target.value < todayStr()) {
-        showPastDate();
-        e.target.value = tr.date || ""; // balikin ke nilai valid sebelumnya
-        return;
-      }
-      tr.date = e.target.value;
-      save();
-      rerender();
-    });
-    card.querySelector(".f-guests").addEventListener("change", (e) => {
-      tr.guests = e.target.value;
-      save();
-      rerender();
-    });
-    card.querySelector(".f-pickup").addEventListener("input", (e) => { tr.pickup = e.target.value; save(); });
-    card.querySelector(".f-pickup").addEventListener("change", (e) => {
-      tr.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
-    });
-    card.querySelector(".f-dropoff").addEventListener("input", (e) => { tr.dropoff = e.target.value; save(); });
-    card.querySelector(".f-dropoff").addEventListener("change", (e) => {
-      tr.dropoff = e.target.value; propagateLocation(e.target.value); save(); rerender();
-    });
-    return card;
-  }
+    svcBody.innerHTML =
+      '<p class="svc__t"><span class="itn-mini__ic">' + svcIcon(kind) + "</span>" + titles[kind][0] + "</p>" +
+      '<p class="svc__s">' + titles[kind][1] + "</p>" +
+      '<div class="itn-day__fields svc__fields">' + fieldsHTML + "</div>" +
+      '<div class="svc__price"><span>Price</span><b class="sv-price"></b></div>' +
+      '<button class="svc__save" type="button">Save</button>' +
+      (idx >= 0 ? '<button class="svc__rm" type="button">Remove from trip</button>' : "");
 
-  // Kartu charter (di panel Transfers & Charter). Field kerja inline kayak transfer,
-  // tapi charter punya: area pickup (dropdown), durasi (half/full/extended), extra jam.
-  function renderCharterCard(ch, i) {
-    const card = document.createElement("div");
-    card.className = "itn-day itn-transfer itn-charter";
-    const p = charterPrice(ch.area, ch.dur, ch.extra);
-    card.innerHTML = `
-      <div class="itn-day__head">
-        <h4 class="itn-day__title">Private Car Charter</h4>
-        <button class="itn-day__remove" type="button" data-rmcharter="${i}" aria-label="Remove charter">&times;</button>
-      </div>
-      <div class="itn-charter__field field">
-        <label>Pick-up area</label>
-        <select class="f-area">${charterAreaOptions(ch.area)}</select>
-      </div>
-      <div class="itn-charter__dur">
-        <button class="dirbtn ${ch.dur === "half" ? "active" : ""}" type="button" data-dur="half">Half Day</button>
-        <button class="dirbtn ${ch.dur === "full" ? "active" : ""}" type="button" data-dur="full">Full Day</button>
-        <button class="dirbtn ${ch.dur === "extended" ? "active" : ""}" type="button" data-dur="extended">Extended</button>
-      </div>
-      ${ch.dur === "extended"
-        ? `<div class="itn-charter__field field"><label>Extra hours after 10</label><input type="number" class="f-extra" min="1" max="6" value="${ch.extra || 1}" /></div>`
-        : ""}
-      <div class="itn-day__fields">
-        <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${ch.date}" /></div>
-        <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(ch.guests)}</select></div>
-        <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa" value="${ch.pickup || ""}" /></div>
-        <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Where to (optional)" value="${ch.dropoff || ""}" /></div>
-      </div>
-      <div class="itn-day__price"><span>Charter price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
-    `;
-    card.querySelector("[data-rmcharter]").addEventListener("click", () => {
-      state.charters.splice(i, 1);
-      save();
-      rerender();
-    });
-    card.querySelector(".f-area").addEventListener("change", (e) => {
-      ch.area = e.target.value;
-      save();
-      rerender();
-    });
-    card.querySelectorAll("[data-dur]").forEach((b) =>
-      b.addEventListener("click", () => {
-        ch.dur = b.dataset.dur;
-        if (ch.dur === "extended" && !ch.extra) ch.extra = 1;
-        save();
-        rerender();
-      })
-    );
-    const extraEl = card.querySelector(".f-extra");
-    if (extraEl)
-      extraEl.addEventListener("input", (e) => {
-        ch.extra = parseInt(e.target.value) || 1;
-        save();
-        rerender();
-      });
-    card.querySelector(".f-date").addEventListener("change", (e) => {
-      if (e.target.value && e.target.value < todayStr()) {
-        showPastDate();
-        e.target.value = ch.date || "";
-        return;
+    // Harga live di popup (ngikut isian route/dur/guests)
+    const q = (sel) => svcBody.querySelector(sel);
+    function livePrice() {
+      const g = q(".sv-guests").value;
+      let p = { usd: 0, idr: 0 };
+      if (isCharter) {
+        const dur = q(".sv-dur").value;
+        if (dur) p = charterPrice(q(".sv-area").value, dur, parseInt(q(".sv-extra") ? q(".sv-extra").value : 1) || 1);
+      } else {
+        const route = kind === "other" ? q(".sv-route").value : AIRPORT_ROUTE;
+        p = transferPrice({ route: route, guests: g || DISPLAY_GUESTS });
       }
-      ch.date = e.target.value;
+      q(".sv-price").innerHTML = priceHTML(p.usd, p.idr);
+    }
+    svcBody.addEventListener("change", () => {
+      const durEl = q(".sv-dur");
+      const wrap = q(".sv-extra-wrap");
+      if (durEl && wrap) wrap.style.display = durEl.value === "extended" ? "" : "none";
+      livePrice();
+    });
+    livePrice();
+
+    q(".svc__save").addEventListener("click", () => {
+      const dv = q(".sv-date").value;
+      if (dv && dv < todayStr()) { showPastDate(); return; }
+      const gv = q(".sv-guests").value;
+      const hv = q(".sv-hotel").value.trim();
+      if (isCharter) {
+        const entry = ch || { area: "", dur: "", extra: 1, date: "", guests: "", pickup: "", dropoff: "" };
+        entry.area = q(".sv-area").value;
+        entry.dur = q(".sv-dur").value;
+        entry.extra = parseInt(q(".sv-extra").value) || 1;
+        entry.date = dv; entry.guests = gv; entry.pickup = hv;
+        if (!ch) state.charters.push(entry);
+      } else {
+        const dir = kind === "pickup" ? "to" : kind === "dropoff" ? "from" : q(".sv-dir").value;
+        const route = kind === "other" ? q(".sv-route").value : AIRPORT_ROUTE;
+        const area = route === AIRPORT_ROUTE ? "Ngurah Rai Airport" : route.replace(" – Ubud", "");
+        const entry = tr || { route: "", direction: "to", date: "", guests: "", pickup: "", dropoff: "" };
+        entry.route = route; entry.direction = dir; entry.date = dv; entry.guests = gv;
+        if (dir === "from") { entry.pickup = hv; entry.dropoff = area; }
+        else { entry.pickup = area; entry.dropoff = hv; }
+        if (!tr) state.transfers.push(entry);
+      }
       save();
       rerender();
+      svcModal.classList.remove("active");
     });
-    card.querySelector(".f-guests").addEventListener("change", (e) => {
-      ch.guests = e.target.value;
+    const rmBtn = q(".svc__rm");
+    if (rmBtn) rmBtn.addEventListener("click", () => {
+      if (isCharter) state.charters.splice(idx, 1);
+      else state.transfers.splice(idx, 1);
       save();
       rerender();
+      svcModal.classList.remove("active");
     });
-    card.querySelector(".f-pickup").addEventListener("input", (e) => { ch.pickup = e.target.value; save(); });
-    card.querySelector(".f-pickup").addEventListener("change", (e) => {
-      ch.pickup = e.target.value; propagateLocation(e.target.value); save(); rerender();
-    });
-    card.querySelector(".f-dropoff").addEventListener("input", (e) => { ch.dropoff = e.target.value; save(); });
-    return card;
+
+    svcModal.classList.add("active");
   }
 
   // ---------- ringkasan ----------

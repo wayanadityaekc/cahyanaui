@@ -3542,12 +3542,17 @@ section + section::before,
   text-decoration: none;
   color: inherit;
 }
+/* Footer nyambung ke body (body-nya padding-bottom 0) biar spacing-nya
+   satu alur kayak card homepage - nggak dobel padding di tengah card */
+.itn-prog .experience__body {
+  padding-bottom: 0;
+}
 .itn-prog__foot {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.7rem;
-  padding: 0.85rem 1rem 1rem;
+  padding: 0.7rem 1rem 1rem;
 }
 .itn-prog__foot .itn-type {
   justify-content: flex-start;
@@ -3580,12 +3585,19 @@ section + section::before,
     touch-action: pan-x pan-y;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* Full-bleed kayak slider homepage (section .itn padding 1.5rem) ->
+       lebar card = 80% layar, sama persis card tour homepage */
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    scroll-padding-left: 1rem;
   }
   .itn-day--prog .itn-day__slide::-webkit-scrollbar {
     display: none;
   }
   .itn-day--prog .itn-day__track {
-    gap: 0.8rem;
+    gap: 0.5rem;
   }
   .itn-day__panel--cards,
   .itn-day__panel--form {
@@ -3602,12 +3614,13 @@ section + section::before,
     box-shadow: var(--shadow-card);
     justify-content: flex-start;
   }
+  /* Geometri tombol = .card-add homepage (padding 0.6rem, radius 6) */
   .itn-day__setdate,
   .itn-day__back {
     display: block;
     width: 100%;
-    padding: 0.7rem;
-    border-radius: 8px;
+    padding: 0.6rem;
+    border-radius: 6px;
     font-family: var(--font-body);
     font-size: var(--fs-body);
     font-weight: 600;

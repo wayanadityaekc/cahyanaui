@@ -3613,11 +3613,17 @@ section + section::before,
   color: var(--color-muted-2);
 }
 @media (max-width: 992px) {
-  /* Mobile/tablet: kartu hari di tengah, lebar senada card homepage */
+  /* Mobile/tablet: kartu hari di tengah, lebar SAMA kayak card slider homepage
+     (70% viewport; 80% di <=576px - lihat rule .experience__card di media query) */
   .itn-day--prog {
-    max-width: 340px;
+    width: 70vw;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+@media (max-width: 576px) {
+  .itn-day--prog {
+    width: 80vw;
   }
 }
 .itn-type {
@@ -3886,7 +3892,8 @@ section + section::before,
   }
   #itn-days {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* 300px = lebar card slider tour homepage di desktop (flex 0 0 300px) */
+    grid-template-columns: repeat(2, minmax(0, 300px));
     gap: 1.25rem;
   }
   #itn-days .itn-day--prog {

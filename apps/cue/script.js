@@ -1134,6 +1134,7 @@ function initItinerary() {
             const info = ITEM_CARD[name] || {};
             const bg = info.img ? `background-image:url('assets/images/${info.img}')` : "";
             const desc = info.desc || "";
+            const url = ITEM_URL[name] || "";
             const mode = itemMode(d, idx);
             const toggleHTML = tourExclusive[name]
               ? `<div class="itn-type" data-idx="${idx}">
@@ -1143,26 +1144,25 @@ function initItinerary() {
                   </span>
                 </div>`
               : "";
+            // Kartu bisa diklik ke halaman program (ganti "View details"). × & footer di luar link.
+            const open = url ? `<a class="itn-prog__link" href="${url}" target="_blank" rel="noopener">` : `<div class="itn-prog__link">`;
+            const close = url ? `</a>` : `</div>`;
             return `<article class="experience__card itn-prog">
-              <div class="experience__image photo-titled" style="${bg}">
-                <button class="itn-prog__rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
-                <h3 class="experience__name">${name}</h3>
-              </div>
-              <div class="experience__body">
-                ${desc ? `<p class="experience__desc">${desc}</p>` : ""}
+              ${open}
+                <div class="experience__image photo-titled" style="${bg}">
+                  <h3 class="experience__name">${name}</h3>
+                </div>
+                ${desc ? `<div class="experience__body"><p class="experience__desc">${desc}</p></div>` : ""}
+              ${close}
+              <button class="itn-prog__rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
+              <div class="itn-prog__foot">
                 ${toggleHTML}
+                <button class="itn-day__setdate" type="button">Set date</button>
               </div>
             </article>`;
           })
           .join("")
       : `<div class="itn-day__empty">Empty day. <button class="itn-day__emptyrm" type="button" data-rmday="${i}">Remove</button></div>`;
-
-    // Link "View details" ke halaman program (pojok kiri baris harga)
-    const viewsHTML = d.items
-      .map((name) => ITEM_URL[name]
-        ? `<a class="itn-day__view" href="${ITEM_URL[name]}" target="_blank" rel="noopener">${d.items.length > 1 ? name + " - " : ""}View details &rsaquo;</a>`
-        : "")
-      .filter(Boolean).join("");
 
     const headHTML = `
       <div class="itn-day__head">
@@ -1176,7 +1176,7 @@ function initItinerary() {
           <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
           <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
         </div>
-        <div class="itn-day__price"><span class="itn-day__views">${viewsHTML}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>`;
+        <div class="itn-day__price"><span class="itn-day__pricelabel">Day price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>`;
     if (d.items.length) {
       // Kartu (depan) + form (samping): mobile = slider (Set date/Back), desktop = sebelahan.
       card.innerHTML = `${headHTML}
@@ -1184,7 +1184,6 @@ function initItinerary() {
         <div class="itn-day__track">
           <div class="itn-day__panel itn-day__panel--cards">
             <div class="itn-day__cards">${cardsHTML}</div>
-            <button class="itn-day__setdate" type="button">Set date <span aria-hidden="true">&rarr;</span></button>
           </div>
           <div class="itn-day__panel itn-day__panel--form">
             <div class="itn-day__form">${fieldsHTML}

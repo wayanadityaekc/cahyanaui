@@ -1122,7 +1122,6 @@ function initItinerary() {
   function renderDayCard(d, i) {
     const card = document.createElement("div");
     card.className = "itn-day";
-    const p = dayPrice(d);
     const done = dayComplete(d);
 
     // Kartu program = .experience__card homepage (foto 1:1 + judul di foto + desc)
@@ -1136,6 +1135,28 @@ function initItinerary() {
             const desc = info.desc || "";
             const url = ITEM_URL[name] || "";
             const mode = itemMode(d, idx);
+            const pinfo = itemInfo(name);
+            const g = parseInt(d.guests) || DISPLAY_GUESTS;
+            // Harga + unit + note per program (biar card sama persis kayak card tour).
+            let ip = null, unit = "";
+            if (pinfo) {
+              if (pinfo.cat === "tour" || pinfo.cat === "combo") {
+                ip = mode === "exclusive" && tourExclusive[name] ? exclusivePrice(name, g) : carPrice(pinfo.price, g);
+                unit = "per car";
+              } else {
+                const t = transport[name] || { usd: 0, idr: 0 };
+                ip = { usd: pinfo.price.usd * g + t.usd, idr: pinfo.price.idr * g + t.idr };
+                unit = "per person";
+              }
+            }
+            const noteHTML = tourExclusive[name]
+              ? `<small class="itn-prog__note">${mode === "exclusive"
+                  ? "Includes entrance tickets &middot; price for " + g + " pax"
+                  : "Driver only &middot; entrance tickets not included"}</small>`
+              : "";
+            const priceCardHTML = ip
+              ? `<div class="itn-prog__price">${priceHTML(ip.usd, ip.idr)}<span class="price-unit">${unit}</span></div>`
+              : "";
             const toggleHTML = tourExclusive[name]
               ? `<div class="itn-type" data-idx="${idx}">
                   <span class="itn-item-type">
@@ -1157,6 +1178,8 @@ function initItinerary() {
               <button class="itn-prog__rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
               <div class="itn-prog__foot">
                 ${toggleHTML}
+                ${noteHTML}
+                ${priceCardHTML}
                 <button class="itn-day__setdate" type="button">Set date</button>
               </div>
             </article>`;
@@ -1175,8 +1198,7 @@ function initItinerary() {
           <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
           <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
           <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
-        </div>
-        <div class="itn-day__price"><span class="itn-day__pricelabel">Day price</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>`;
+        </div>`;
     if (d.items.length) {
       // Kartu (depan) + form (samping): mobile = slider (Set date/Back), desktop = sebelahan.
       card.innerHTML = `${headHTML}
@@ -1781,7 +1803,9 @@ function initSuggested() {
 // Tiap card (a) badan card bisa diklik -> halaman detail,
 // (b) ada tombol "Add to itinerary" yang nambah program ke store.
 function initItineraryButtons() {
-  document.querySelectorAll(".experience__card").forEach((card) => {
+  // :not(.itn-prog) -> jangan sentuh kartu di builder itinerary (punya link foto +
+  // tombol Set date sendiri). Kalau kena, link foto ke-remove + nambah tombol nyasar.
+  document.querySelectorAll(".experience__card:not(.itn-prog)").forEach((card) => {
     const link = card.querySelector("a[href]");
     const href = link ? link.getAttribute("href") : null;
     const hasPage = href && PAGE_ITEM[href];
@@ -2105,7 +2129,7 @@ function initTourType() {
 
   // Card di homepage & tour.html + card highlight (setelah deskripsi):
   // tour -> toggle Standard/Exclusive; experience/performance -> blok gold statis. Semua -> unit harga.
-  document.querySelectorAll(".experience__card, .highlight__container").forEach((card) => {
+  document.querySelectorAll(".experience__card:not(.itn-prog), .highlight__container").forEach((card) => {
     const priceEl = card.querySelector("[data-price]");
     const desc = card.querySelector(".experience__desc, .highlight__desc");
     if (!priceEl || !desc) return;

@@ -1503,7 +1503,7 @@ body {
    kartu putih + border gold gradasi (mirror .about--panel .about__content). */
 .drivers {
   padding: 3rem 1.5rem;
-  background: var(--color-cream);
+  background: #fff;
   border-top: 1px solid rgba(201, 164, 92, 0.4);
   border-bottom: 1px solid rgba(201, 164, 92, 0.4);
 }

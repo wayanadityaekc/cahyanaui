@@ -883,6 +883,117 @@ body {
   color: var(--color-green);
 }
 
+/* ===== Plan Your Trip (itinerary showcase, homepage) ===== */
+.plan {
+  padding: 3rem 1.5rem;
+  background-color: var(--color-cream);
+}
+.plan__container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+.plan__eyebrow {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-bottom: 0.6rem;
+}
+.plan__title {
+  font-size: 1.5rem;
+  color: var(--color-green);
+  margin: 0 0 0.75rem;
+}
+.plan__desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-green);
+  margin: 0 0 1.5rem;
+  max-width: 42ch;
+}
+.plan__preview {
+  background-color: #fff;
+  border-radius: 14px;
+  padding: 1.1rem;
+  box-shadow: 0 12px 30px rgba(31, 61, 43, 0.08);
+}
+.plan__day {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem;
+  border-radius: 10px;
+  margin-bottom: 0.55rem;
+  background-color: var(--color-cream);
+}
+.plan__thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 9px;
+  flex: none;
+  background-size: cover;
+  background-position: center;
+}
+.plan__thumb--icon {
+  background: linear-gradient(135deg, var(--color-green), #2e5a40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e6cf97;
+}
+.plan__thumb--icon svg {
+  width: 24px;
+  height: 24px;
+}
+.plan__day-body {
+  flex: 1;
+  min-width: 0;
+}
+.plan__day-num {
+  display: block;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6c7566;
+  font-weight: 600;
+}
+.plan__day-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.plan__day-price {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  white-space: nowrap;
+}
+.plan__more {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6c7566;
+  text-decoration: none;
+  padding-top: 0.7rem;
+  margin-top: 0.3rem;
+  border-top: 1px dashed rgba(201, 164, 92, 0.5);
+}
+.plan__more:hover {
+  color: var(--color-gold);
+}
+@media (max-width: 760px) {
+  .plan__container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
 /* Villas (homepage) */
 .villas {
   padding: 2.5rem 1.75rem 3rem;

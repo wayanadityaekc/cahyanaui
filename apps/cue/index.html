@@ -27,7 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=108" />
+    <link rel="stylesheet" href="style.css?v=109" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -397,6 +397,137 @@
       </div>
     </section>
 
+    <!-- Plan Your Trip: showcase itinerary builder (core value prop) -->
+    <section class="plan" id="plan">
+      <div class="plan__container">
+        <div class="plan__text">
+          <span class="plan__eyebrow">Trip Planner</span>
+          <h2 class="plan__title">Build your trip, day by day</h2>
+          <p class="plan__desc">
+            Add tours, transfers, and activities into one plan and watch the
+            total add up as you go - every price shown upfront, no surprises.
+            Book the whole trip in one go.
+          </p>
+          <div class="plan__actions">
+            <a href="itinerary.html" class="highlight__btn">Build your itinerary</a>
+          </div>
+        </div>
+        <div class="plan__preview" aria-hidden="true">
+          <div class="plan__day">
+            <div
+              class="plan__thumb"
+              style="background-image: url(assets/images/riceterrace-tgll.jpg)"
+            ></div>
+            <div class="plan__day-body">
+              <span class="plan__day-num">Day 1</span>
+              <span class="plan__day-name">Ubud Tour</span>
+            </div>
+            <span class="price plan__day-price" data-price="Ubud Tour"></span>
+          </div>
+          <div class="plan__day">
+            <div
+              class="plan__thumb"
+              style="background-image: url(assets/images/mount-batur-sunrise.webp)"
+            ></div>
+            <div class="plan__day-body">
+              <span class="plan__day-num">Day 2</span>
+              <span class="plan__day-name">Batur Sunrise &amp; Adrenaline</span>
+            </div>
+            <span
+              class="price plan__day-price"
+              data-price="Batur Sunrise &amp; Adrenaline"
+            ></span>
+          </div>
+          <div class="plan__day">
+            <div class="plan__thumb plan__thumb--icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+              >
+                <rect x="3" y="6" width="18" height="12" rx="2" />
+                <path d="M3 10h18" />
+              </svg>
+            </div>
+            <div class="plan__day-body">
+              <span class="plan__day-num">Day 3</span>
+              <span class="plan__day-name">Airport Transfer</span>
+            </div>
+            <span class="price plan__day-price" data-price="Airport – Ubud"></span>
+          </div>
+          <a href="itinerary.html" class="plan__more"
+            >+ Add more days in the planner</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <section class="activities" id="activities">
+      <h2 class="section__title">Activities &amp; Performances</h2>
+      <div class="activities__sliders">
+        <!-- Kiri: Activities -->
+        <div class="activities__slider-col">
+          <h3 class="activities__slider-label">Activities</h3>
+          <div class="slider">
+            <div class="slider__slide active" style="background-image: url(assets/images/atv.jpg)">
+              <div class="slider__caption"><h3>ATV Ride</h3></div>
+            </div>
+            <div class="slider__slide" style="background-image: url(assets/images/rafting.jpg)">
+              <div class="slider__caption"><h3>Rafting</h3></div>
+            </div>
+            <div class="slider__slide" style="background-image: url(assets/images/cooking-class.jpg)">
+              <div class="slider__caption"><h3>Cooking Class</h3></div>
+            </div>
+            <!-- TODO: foto asli Bali Zoo -->
+            <div class="slider__slide" style="background-image: linear-gradient(135deg, rgba(31,61,43,0.92), rgba(46,90,64,0.86))">
+              <div class="slider__caption"><h3>Bali Zoo</h3></div>
+            </div>
+            <!-- TODO: foto asli Bali Bird Park -->
+            <div class="slider__slide" style="background-image: linear-gradient(135deg, rgba(31,61,43,0.92), rgba(46,90,64,0.86))">
+              <div class="slider__caption"><h3>Bali Bird Park</h3></div>
+            </div>
+            <div class="slider__dots">
+              <button class="slider__dot active" aria-label="Slide 1"></button>
+              <button class="slider__dot" aria-label="Slide 2"></button>
+              <button class="slider__dot" aria-label="Slide 3"></button>
+              <button class="slider__dot" aria-label="Slide 4"></button>
+              <button class="slider__dot" aria-label="Slide 5"></button>
+            </div>
+          </div>
+        </div>
+        <!-- Kanan: Performances -->
+        <div class="activities__slider-col">
+          <h3 class="activities__slider-label">Performances</h3>
+          <div class="slider">
+            <div class="slider__slide active" style="background-image: url(assets/images/kecak.jpg)">
+              <div class="slider__caption"><h3>Kecak Dance</h3></div>
+            </div>
+            <div class="slider__slide" style="background-image: url(assets/images/barong.jpg)">
+              <div class="slider__caption"><h3>Barong Dance</h3></div>
+            </div>
+            <div class="slider__dots">
+              <button class="slider__dot active" aria-label="Slide 1"></button>
+              <button class="slider__dot" aria-label="Slide 2"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="activities__text">
+        <h3 class="activities__heading">More Than Sightseeing</h3>
+        <p class="activities__desc">
+          Bali isn't just somewhere you visit, it's something you feel. From the
+          trance of a sunset Kecak to the rush of a jungle ATV trail, our
+          activities and performances bring you closer to the island's living
+          culture and wild landscapes. Every experience is led by locals who
+          know how to make it real, safe, and unforgettable.
+        </p>
+        <a href="activities.html" class="highlight__btn" style="margin-top: 1.5rem"
+          >Explore Activities</a
+        >
+      </div>
+    </section>
+
     <section class="about about--panel" id="about">
       <!-- gradasi emas buat garis ikon di kotak About -->
       <svg width="0" height="0" style="position: absolute" aria-hidden="true">
@@ -480,71 +611,6 @@
             <p class="about__desc">Every price upfront, no surprises.</p>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="activities" id="activities">
-      <h2 class="section__title">Activities &amp; Performances</h2>
-      <div class="activities__sliders">
-        <!-- Kiri: Activities -->
-        <div class="activities__slider-col">
-          <h3 class="activities__slider-label">Activities</h3>
-          <div class="slider">
-            <div class="slider__slide active" style="background-image: url(assets/images/atv.jpg)">
-              <div class="slider__caption"><h3>ATV Ride</h3></div>
-            </div>
-            <div class="slider__slide" style="background-image: url(assets/images/rafting.jpg)">
-              <div class="slider__caption"><h3>Rafting</h3></div>
-            </div>
-            <div class="slider__slide" style="background-image: url(assets/images/cooking-class.jpg)">
-              <div class="slider__caption"><h3>Cooking Class</h3></div>
-            </div>
-            <!-- TODO: foto asli Bali Zoo -->
-            <div class="slider__slide" style="background-image: linear-gradient(135deg, rgba(31,61,43,0.92), rgba(46,90,64,0.86))">
-              <div class="slider__caption"><h3>Bali Zoo</h3></div>
-            </div>
-            <!-- TODO: foto asli Bali Bird Park -->
-            <div class="slider__slide" style="background-image: linear-gradient(135deg, rgba(31,61,43,0.92), rgba(46,90,64,0.86))">
-              <div class="slider__caption"><h3>Bali Bird Park</h3></div>
-            </div>
-            <div class="slider__dots">
-              <button class="slider__dot active" aria-label="Slide 1"></button>
-              <button class="slider__dot" aria-label="Slide 2"></button>
-              <button class="slider__dot" aria-label="Slide 3"></button>
-              <button class="slider__dot" aria-label="Slide 4"></button>
-              <button class="slider__dot" aria-label="Slide 5"></button>
-            </div>
-          </div>
-        </div>
-        <!-- Kanan: Performances -->
-        <div class="activities__slider-col">
-          <h3 class="activities__slider-label">Performances</h3>
-          <div class="slider">
-            <div class="slider__slide active" style="background-image: url(assets/images/kecak.jpg)">
-              <div class="slider__caption"><h3>Kecak Dance</h3></div>
-            </div>
-            <div class="slider__slide" style="background-image: url(assets/images/barong.jpg)">
-              <div class="slider__caption"><h3>Barong Dance</h3></div>
-            </div>
-            <div class="slider__dots">
-              <button class="slider__dot active" aria-label="Slide 1"></button>
-              <button class="slider__dot" aria-label="Slide 2"></button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="activities__text">
-        <h3 class="activities__heading">More Than Sightseeing</h3>
-        <p class="activities__desc">
-          Bali isn't just somewhere you visit, it's something you feel. From the
-          trance of a sunset Kecak to the rush of a jungle ATV trail, our
-          activities and performances bring you closer to the island's living
-          culture and wild landscapes. Every experience is led by locals who
-          know how to make it real, safe, and unforgettable.
-        </p>
-        <a href="activities.html" class="highlight__btn" style="margin-top: 1.5rem"
-          >Explore Activities</a
-        >
       </div>
     </section>
 
@@ -829,6 +895,6 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="script.js?v=108"></script>
+    <script src="script.js?v=109"></script>
   </body>
 </html>

@@ -1108,6 +1108,8 @@ function initItinerary() {
   }
 
   // ---------- render hari ----------
+  // State sisi kartu vs form (mobile slider). Disimpan biar tahan rerender.
+  const openDays = new Set();
   function renderDays() {
     daysWrap.innerHTML = "";
     if (!state.days.length) {
@@ -1123,7 +1125,8 @@ function initItinerary() {
     const p = dayPrice(d);
     const done = dayComplete(d);
 
-    // Kartu program = .experience__card homepage (foto + nama + desc) + tombol × hapus.
+    // Kartu program = .experience__card homepage (foto 1:1 + judul di foto + desc)
+    // + toggle Standard/Exclusive di badan kartu + tombol × hapus.
     // 1 hari = 1 program (dukung >1 buat state lama: dirender grid).
     const cardsHTML = d.items.length
       ? d.items
@@ -1131,34 +1134,28 @@ function initItinerary() {
             const info = ITEM_CARD[name] || {};
             const bg = info.img ? `background-image:url('assets/images/${info.img}')` : "";
             const desc = info.desc || "";
+            const mode = itemMode(d, idx);
+            const toggleHTML = tourExclusive[name]
+              ? `<div class="itn-type" data-idx="${idx}">
+                  <span class="itn-item-type">
+                    <button type="button" class="itn-item-type__btn ${mode === "standard" ? "is-active" : ""}" data-mode="standard">Standard</button>
+                    <button type="button" class="itn-item-type__btn ${mode === "exclusive" ? "is-active" : ""}" data-mode="exclusive">Exclusive</button>
+                  </span>
+                </div>`
+              : "";
             return `<article class="experience__card itn-prog">
-              <div class="experience__image" style="${bg}">
+              <div class="experience__image photo-titled" style="${bg}">
                 <button class="itn-prog__rm" type="button" data-rmitem="${idx}" aria-label="Remove ${name}">&times;</button>
+                <h3 class="experience__name">${name}</h3>
               </div>
               <div class="experience__body">
-                <h3 class="experience__name">${name}</h3>
                 ${desc ? `<p class="experience__desc">${desc}</p>` : ""}
+                ${toggleHTML}
               </div>
             </article>`;
           })
           .join("")
       : `<div class="itn-day__empty">Empty day. <button class="itn-day__emptyrm" type="button" data-rmday="${i}">Remove</button></div>`;
-
-    // Baris Standard/Exclusive per program yang punya versi Exclusive (di area form).
-    const typesHTML = d.items
-      .map((name, idx) => {
-        if (!tourExclusive[name]) return "";
-        const mode = itemMode(d, idx);
-        const nameLbl = d.items.length > 1 ? `<span class="itn-type__name">${name}</span>` : "";
-        return `<div class="itn-type" data-idx="${idx}">
-          ${nameLbl}
-          <span class="itn-item-type">
-            <button type="button" class="itn-item-type__btn ${mode === "standard" ? "is-active" : ""}" data-mode="standard">Standard</button>
-            <button type="button" class="itn-item-type__btn ${mode === "exclusive" ? "is-active" : ""}" data-mode="exclusive">Exclusive</button>
-          </span>
-        </div>`;
-      })
-      .filter(Boolean).join("");
 
     // Link "View details" ke halaman program (pojok kiri baris harga)
     const viewsHTML = d.items
@@ -1167,23 +1164,41 @@ function initItinerary() {
         : "")
       .filter(Boolean).join("");
 
-    card.innerHTML = `
+    const headHTML = `
       <div class="itn-day__head">
         <h4 class="itn-day__title">Day ${i + 1}</h4>
         <span class="itn-day__status ${done ? "done" : ""}">${done ? "Complete" : "Incomplete"}</span>
-      </div>
-      <div class="itn-day__cards">${cardsHTML}</div>
-      <div class="itn-day__form">
-        ${typesHTML ? `<div class="itn-day__types">${typesHTML}</div>` : ""}
+      </div>`;
+    const fieldsHTML = `
         <div class="itn-day__fields">
           <div class="field"><label>Date</label><input type="date" class="f-date" min="${todayStr()}" value="${d.date}" /></div>
           <div class="field"><label>Guests</label><select class="f-guests">${guestOptions(d.guests)}</select></div>
           <div class="field"><label>Pick-up</label><input type="text" class="f-pickup" placeholder="Hotel / villa / area" value="${d.pickup || ""}" /></div>
           <div class="field"><label>Drop-off</label><input type="text" class="f-dropoff" placeholder="Hotel / villa / area" value="${d.dropoff || ""}" /></div>
         </div>
-        <div class="itn-day__price"><span class="itn-day__views">${viewsHTML}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>
-      </div>
-    `;
+        <div class="itn-day__price"><span class="itn-day__views">${viewsHTML}</span><span class="amount">${priceHTML(p.usd, p.idr)}</span></div>`;
+    if (d.items.length) {
+      // Kartu (depan) + form (samping): mobile = slider (Set date/Back), desktop = sebelahan.
+      card.innerHTML = `${headHTML}
+      <div class="itn-day__slide">
+        <div class="itn-day__track">
+          <div class="itn-day__panel itn-day__panel--cards">
+            <div class="itn-day__cards">${cardsHTML}</div>
+            <button class="itn-day__setdate" type="button">Set date <span aria-hidden="true">&rarr;</span></button>
+          </div>
+          <div class="itn-day__panel itn-day__panel--form">
+            <div class="itn-day__form">${fieldsHTML}
+              <button class="itn-day__back" type="button">Back</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      if (openDays.has(i)) card.classList.add("is-form");
+    } else {
+      card.innerHTML = `${headHTML}
+      <div class="itn-day__cards">${cardsHTML}</div>
+      <div class="itn-day__form">${fieldsHTML}</div>`;
+    }
     card.querySelectorAll("[data-rmitem]").forEach((b) =>
       b.addEventListener("click", () => {
         const idx = +b.dataset.rmitem;
@@ -1212,6 +1227,17 @@ function initItinerary() {
       state.days.splice(i, 1);
       save();
       rerender();
+    });
+    // Slider mobile: buka form / balik ke kartu (state ditahan biar tahan rerender)
+    const setBtn = card.querySelector(".itn-day__setdate");
+    if (setBtn) setBtn.addEventListener("click", () => {
+      openDays.add(i);
+      card.classList.add("is-form");
+    });
+    const backBtn = card.querySelector(".itn-day__back");
+    if (backBtn) backBtn.addEventListener("click", () => {
+      openDays.delete(i);
+      card.classList.remove("is-form");
     });
     card.querySelector(".f-date").addEventListener("change", (e) => {
       if (e.target.value && e.target.value < todayStr()) {

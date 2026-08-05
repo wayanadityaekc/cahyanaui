@@ -106,5 +106,7 @@ Order **must be kept** (declarations first, run last):
 1. `node --check script.js` passes.
 2. CSS `{}` braces balanced.
 3. Changed CSS/JS → bump `?v=` on all pages. Changed `partials/` → bump `PARTIALS_VERSION`.
-4. Check: no dead code, no double lines, no dead classes.
-5. Hand off to Wayan to review live & decide on the push.
+4. Changed any price in `prices` (script.js) → run `node tools/sync-prices.js`
+   (rewrites static fallback prices + JSON-LD Product schema in HTML).
+5. Check: no dead code, no double lines, no dead classes.
+6. Hand off to Wayan to review live & decide on the push.

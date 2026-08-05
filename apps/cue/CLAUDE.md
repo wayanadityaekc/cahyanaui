@@ -48,6 +48,22 @@ When unsure, ask first (keep it short).
 - Hover lift: keep it subtle, not harsh.
 - Icons: SVG, **no emoji**.
 
+## Subhero & FAQ (standar per halaman)
+- **H1 maks ±40 karakter** (biar tetap 2 baris di HP — lebih dari itu teks hero bisa
+  ketutup panel overlap). **Teks intro hero 25–40 kata.**
+- Label section pertama: halaman tour = **"What You'll Do"**, attraction = **"The Experience"**.
+- **FAQ**: halaman listing pakai partial (`partials/faq-*.html`); halaman tour/charter/itinerary
+  pakai FAQ **inline** = 3 pertanyaan inti (harga per mobil · tiket Std/Exc · booking+bayar)
+  + 3–4 pertanyaan spesifik halaman itu, **selalu ditutup card `.faq__chat`** ("Still have
+  questions?" → WhatsApp). Jangan ngarang fakta — yang belum pasti dijawab "message us on WhatsApp".
+- Habis ubah FAQ/meta description → jalanin `node tools/sync-schema.js` (regenerate FAQPage dkk).
+
+## SEO on-page (standar per halaman)
+- **Title ≤65 karakter**, keyword di depan; suffix brand cuma di halaman root utama.
+- **Meta description 110–170 karakter**, unik per halaman; `og:description` disamain.
+- `og:image` = foto card/hero halaman itu (bukan preview.jpg) kalau ada.
+- Halaman baru → tambah ke `sitemap.xml` + punya canonical + BreadcrumbList.
+
 ## Sliders (horizontal card sliders)
 - Desktop: left/right arrows appear on **hover** (`.slider-arrow`, created in
   `initTourSlider()`; the slider is wrapped in `.slider-holder`).

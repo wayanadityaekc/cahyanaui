@@ -58,6 +58,20 @@ When unsure, ask first (keep it short).
   questions?" → WhatsApp). Jangan ngarang fakta — yang belum pasti dijawab "message us on WhatsApp".
 - Habis ubah FAQ/meta description → jalanin `node tools/sync-schema.js` (regenerate FAQPage dkk).
 
+## Gaya bahasa copy (English, semua halaman)
+- **Lugas & bermanfaat, bukan puitis.** Kalimat pendek, info konkret yang kepake
+  (jarak, timing, tips, trade-off jujur). Jawab pertanyaan tamu, jangan jualan kata.
+- **Dilarang** (kata glorify): mesmerizing/mesmerising, spellbinding, breathtaking,
+  stunning, magical/pure magic, hypnotic, jaw-dropping, unforgettable, electrifying,
+  world-class, bucket-list, paradise, epic (adj), majestic, timeless, postcard-perfect,
+  awe-inspiring, "ablaze", dan sejenisnya.
+- **Boleh** (deskriptif wajar, jangan berlebihan): famous, beautiful, dramatic, iconic,
+  popular, well-known — atau lebih baik: sebut faktanya ("often called Bali's most
+  beautiful waterfall", "70 metres above the surf").
+- Klaim reputasi ditulis sebagai fakta reputasi, bukan hiperbola sendiri.
+- Jujur soal minus: antrian, tangga, jam pulang malam, "nggak bisa dijamin" — itu yang
+  bikin dipercaya.
+
 ## SEO on-page (standar per halaman)
 - **Title ≤65 karakter**, keyword di depan; suffix brand cuma di halaman root utama.
 - **Meta description 110–170 karakter**, unik per halaman; `og:description` disamain.

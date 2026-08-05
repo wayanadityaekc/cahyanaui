@@ -9,6 +9,9 @@
    2. TouristAttraction (id="schema-attraction") - halaman tempat wisata di attractions/
       yang bukan halaman program (nggak ada di PAGE_ITEM).
    3. Event (id="schema-event") - Kecak Ubud: Selasa & Minggu 19:00 (konfirmasi Wayan).
+   4. Event (id="schema-event") - Kecak Uluwatu: tiap hari pas sunset. startTime sengaja
+      nggak diisi (jam pasti belum dikonfirmasi Wayan) - tambahin kalau udah ada.
+      Offers juga nggak diisi (harga tiket masih [ISI WAYAN]).
    HTML-only: nggak perlu bump ?v= / PARTIALS_VERSION. */
 
 const fs = require("fs");
@@ -125,4 +128,33 @@ fs.readdirSync(path.join(ROOT, "attractions"))
   });
 }
 
-console.log(`sync-schema: ${nFaq} FAQPage, ${nAttr} TouristAttraction, 1 Event (Kecak Ubud)`);
+// ---------- 4. Event: Kecak Uluwatu (tiap hari pas sunset, jam pasti belum ada) ----------
+{
+  const rel = "attractions/uluwatu-kecak.html";
+  const s = read(rel);
+  put(rel, "schema-event", {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Uluwatu Kecak Fire Dance",
+    "description": meta(s, "description"),
+    "image": BASE + "assets/images/kecak-fire-dance.webp",
+    "eventSchedule": {
+      "@type": "Schedule",
+      "byDay": [
+        "https://schema.org/Monday", "https://schema.org/Tuesday", "https://schema.org/Wednesday",
+        "https://schema.org/Thursday", "https://schema.org/Friday", "https://schema.org/Saturday",
+        "https://schema.org/Sunday"
+      ],
+      "scheduleTimezone": "Asia/Makassar"
+    },
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": "Place",
+      "name": "Uluwatu Temple, Bali",
+      "address": { "@type": "PostalAddress", "addressLocality": "Uluwatu", "addressRegion": "Bali", "addressCountry": "ID" }
+    },
+    "organizer": { "@type": "Organization", "name": "Cahyana Ubud Experience", "url": BASE }
+  });
+}
+
+console.log(`sync-schema: ${nFaq} FAQPage, ${nAttr} TouristAttraction, 2 Event (Kecak Ubud + Uluwatu)`);

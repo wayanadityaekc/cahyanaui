@@ -73,6 +73,26 @@ Object.entries(FAQ_PAGES).forEach(([page, partial]) => {
   nFaq++;
 });
 
+// ---------- 1b. FAQPage dari FAQ INLINE (halaman tour & charter nulis FAQ
+//              langsung di HTML-nya, bukan lewat partial) ----------
+let nFaqInline = 0;
+fs.readdirSync(ROOT).filter((f) => f.endsWith(".html") && !FAQ_PAGES[f]).forEach((page) => {
+  const s = read(page);
+  const items = [];
+  const re = /<summary class="faq__q">([\s\S]*?)<\/summary>\s*<div class="faq__a">([\s\S]*?)<\/div>/g;
+  let m;
+  while ((m = re.exec(s))) {
+    items.push({
+      "@type": "Question",
+      "name": strip(m[1]),
+      "acceptedAnswer": { "@type": "Answer", "text": strip(m[2]) }
+    });
+  }
+  if (!items.length) return;
+  put(page, "schema-faq", { "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": items });
+  nFaqInline++;
+});
+
 // ---------- 2. TouristAttraction (halaman tempat, bukan program) ----------
 let nAttr = 0;
 fs.readdirSync(path.join(ROOT, "attractions"))
@@ -157,4 +177,4 @@ fs.readdirSync(path.join(ROOT, "attractions"))
   });
 }
 
-console.log(`sync-schema: ${nFaq} FAQPage, ${nAttr} TouristAttraction, 2 Event (Kecak Ubud + Uluwatu)`);
+console.log(`sync-schema: ${nFaq} FAQPage (partial) + ${nFaqInline} FAQPage (inline), ${nAttr} TouristAttraction, 2 Event (Kecak Ubud + Uluwatu)`);

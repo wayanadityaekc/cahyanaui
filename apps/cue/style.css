@@ -2962,7 +2962,7 @@ section.faq::before,
   overflow: hidden;
   padding: 1.25rem 1.35rem;
   border-radius: 14px;
-  background-image: url(assets/images/riceterrace-tgll.jpg);
+  background-image: url(assets/images/ubud-tour-card.jpg);
   background-size: cover;
   background-position: center;
 }
@@ -4346,7 +4346,7 @@ button.pick-cat {
 .subhero--exp {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
-    url("assets/images/kecak-night.webp");
+    url("assets/images/experience-hero.webp");
 }
 
 /* ==================== Tombol Book / Add to itinerary di halaman program ==================== */

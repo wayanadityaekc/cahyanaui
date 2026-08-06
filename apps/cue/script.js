@@ -46,20 +46,80 @@ const transport = {
 // Standard = jasa driver aja, tiket TIDAK termasuk (= harga di `prices`, per mobil).
 // Exclusive = harga standard (per mobil) + suplemen ini × jumlah orang.
 // Nama key HARUS sama persis dg key di `prices.tour` / `prices.combo`.
-const tourExclusive = {
-  "Ubud Tour": { usd: 20, idr: 300000 },
-  "East Bali Tour": { usd: 22, idr: 340000 },
-  "West Bali Tour": { usd: 24, idr: 370000 },
-  "South Bali Tour": { usd: 20, idr: 300000 },
-  "North Bali Tour": { usd: 26, idr: 400000 },
-  "Ubud Culture Day": { usd: 18, idr: 280000 },
-  "South Coast & Sunset Kecak": { usd: 22, idr: 340000 },
-  "Batur Sunrise & Adrenaline": { usd: 40, idr: 620000 },
-  "Ubud Rafting Adventure": { usd: 35, idr: 550000 },
-  "Ubud ATV Adventure": { usd: 40, idr: 620000 },
-  "Kintamani Sunrise & Penglipuran": { usd: 50, idr: 780000 },
-  "Lovina Dolphin & Sekumpul Waterfall": { usd: 55, idr: 850000 }
+// -- Harga tiket masuk PER ORANG (IDR, turis asing) - riset awal 2026, Wayan koreksi.
+//    Sumber tunggal buat suplemen Exclusive; fact chip di halaman attraction ikut angka ini.
+const TICKETS = {
+  "Tegalalang": 25000,
+  "Tirta Empul": 75000,
+  "Gunung Kawi": 50000,
+  "Goa Gajah": 50000,
+  "Tegenungan": 20000,
+  "Monkey Forest": 80000,           // weekend 100k - dihitung pakai weekday
+  "Lempuyang": 100000,              // incl. shuttle
+  "Tirta Gangga": 75000,
+  "Taman Ujung": 75000,
+  "Besakih": 150000,                // incl. shuttle + sarong
+  "Taman Ayun": 30000,
+  "Sangeh": 30000,
+  "Ulun Danu Beratan": 75000,
+  "Handara Gate": 50000,
+  "Jatiluwih": 50000,
+  "Tanah Lot": 75000,
+  "Watersport Package": 300000,     // paket dasar Tanjung Benoa - CEK WAYAN
+  "GWK": 125000,
+  "Pandawa": 25000,
+  "Melasti": 10000,
+  "Twin Lakes Viewpoint": 25000,
+  "Banyumala": 50000,
+  "Munduk Waterfall": 20000,
+  "Gitgit": 20000,
+  "Barong Batubulan": 100000,
+  "Pura Batuan": 15000,             // donasi
+  "Kecak Ubud": 100000,
+  "Padang Padang": 15000,
+  "Uluwatu Temple": 50000,
+  "Kecak Uluwatu": 150000,
+  "Batur Trek + Breakfast": 400000, // guide + sarapan - CEK WAYAN
+  "Batur Hot Spring": 200000,
+  "Ayung Rafting": 350000,          // harga operator dalam tur - CEK WAYAN
+  "ATV Ride": 450000,               // CEK WAYAN
+  "Bali Zoo": 400000,               // gate rate - CEK WAYAN
+  "Bali Bird Park": 385000,         // CEK WAYAN
+  "Jeep Sunrise": 400000,           // per orang, share jeep - CEK WAYAN
+  "Penglipuran": 50000,
+  "Lovina Boat": 150000,
+  "Banjar Hot Spring": 40000,
+  "Sekumpul Trek": 200000
 };
+
+// -- Tiket apa aja yang ke-cover versi Exclusive tiap tur (stop gratis nggak masuk).
+//    Catatan: swing di Ubud Tour & dinner Jimbaran = opsional, sengaja di luar.
+const TOUR_TICKETS = {
+  "Ubud Tour": ["Tegalalang", "Tirta Empul", "Gunung Kawi", "Goa Gajah", "Tegenungan", "Monkey Forest"],
+  "East Bali Tour": ["Lempuyang", "Tirta Gangga", "Taman Ujung", "Besakih"],
+  "West Bali Tour": ["Taman Ayun", "Sangeh", "Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
+  "South Bali Tour": ["Watersport Package", "GWK", "Pandawa", "Melasti"],
+  "North Bali Tour": ["Twin Lakes Viewpoint", "Banyumala", "Munduk Waterfall", "Gitgit"],
+  "Ubud Culture Day": ["Barong Batubulan", "Pura Batuan", "Kecak Ubud"],
+  "South Coast & Sunset Kecak": ["Padang Padang", "Uluwatu Temple", "Kecak Uluwatu"],
+  "Batur Sunrise & Adrenaline": ["Batur Trek + Breakfast", "Batur Hot Spring"],
+  "Ubud Rafting Adventure": ["Ayung Rafting", "Tegalalang", "Tegenungan"],
+  "Ubud ATV Adventure": ["ATV Ride", "Bali Zoo", "Bali Bird Park", "Tegenungan"],
+  "Kintamani Sunrise & Penglipuran": ["Jeep Sunrise", "Penglipuran", "Tirta Empul", "Tegalalang"],
+  "Lovina Dolphin & Sekumpul Waterfall": ["Lovina Boat", "Banjar Hot Spring", "Sekumpul Trek"]
+};
+
+// -- Fee internal Exclusive (JANGAN pernah ditampilkan ke user) & kurs tiket IDR->USD.
+const EXCLUSIVE_FEE = 0.10;
+const TICKET_IDR_PER_USD = 15500;
+
+// -- Suplemen Exclusive per orang, DITURUNKAN dari TICKETS (bukan angka lepas lagi).
+//    Key = penanda tur mana yang punya toggle Standard/Exclusive.
+const tourExclusive = {};
+Object.keys(TOUR_TICKETS).forEach(function (tour) {
+  const idr = TOUR_TICKETS[tour].reduce(function (sum, t) { return sum + (TICKETS[t] || 0); }, 0);
+  tourExclusive[tour] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
+});
 
 const tourDetails = [
   "Price includes car, driver, and petrol",
@@ -289,7 +349,11 @@ function exclusivePrice(name, guests) {
   if (!info || !sup) return null;
   const g = guests || currentGuests || DISPLAY_GUESTS;
   const car = carPrice(info.price, g);
-  return { usd: car.usd + sup.usd * g, idr: car.idr + sup.idr * g };
+  // total = (base per mobil + tiket x jumlah tamu) + fee internal, bulatkan KE ATAS
+  // (USD ke dolar utuh, IDR ke 10 ribu). Fee jangan pernah muncul di UI.
+  const usd = Math.ceil((car.usd + sup.usd * g) * (1 + EXCLUSIVE_FEE));
+  const idr = Math.ceil(((car.idr + sup.idr * g) * (1 + EXCLUSIVE_FEE)) / 10000) * 10000;
+  return { usd: usd, idr: idr };
 }
 
 // Harga charter (per mobil, TIDAK tergantung jumlah orang): base durasi

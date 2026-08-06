@@ -1615,11 +1615,13 @@ body {
 
 /* ==================== Divider gold tipis antar section (inset, ada pinggir) ==================== */
 section + section,
+section.faq,
 [id$="-placeholder"] > section,
 [id$="-placeholder"] + section {
   position: relative;
 }
 section + section::before,
+section.faq::before,
 [id$="-placeholder"] > section::before,
 [id$="-placeholder"] + section::before {
   content: "";

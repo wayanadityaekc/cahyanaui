@@ -128,13 +128,14 @@ Order **must be kept** (declarations first, run last):
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
 - **Charter**: `CHARTER` config, live pricing.
 
-## Placeholders Wayan must fill
-- `WHATSAPP_NUMBER`, `SHEET_ENDPOINT` in script.js.
-- Charter/combo prices, surcharge (IDR 100k), `CUR_RATE` rates — still approximate;
-  Wayan finalizes them.
-- `tourExclusive` — suplemen tiket **per orang** buat versi Exclusive tiap tour/combo
-  (Standard = driver only, Exclusive = Standard + suplemen × jumlah orang). Angka masih
-  PLACEHOLDER — Wayan isi harga asli.
+## Yang masih nunggu Wayan (update terakhir: Agu 2026)
+- Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,
+  ATV, rafting, Zoo, Bird Park) — angka riset, Wayan koreksi.
+- `SHEET_ENDPOINT` (script.js) masih placeholder — cuma kepakai 2 form sekunder;
+  booking utama udah ke API_ENDPOINT (Railway).
+- Review asli buat section Guest Reviews; link villa & sosmed (`href="#"`).
+- Foto: og:image 43 halaman masih preview.jpg + slot foto placeholder (gradient).
+- Google Search Console: submit sitemap (belum pernah).
 
 ## Before calling it "done" (checklist)
 1. `node --check script.js` passes.

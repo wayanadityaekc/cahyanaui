@@ -11,7 +11,6 @@
    3. Event (id="schema-event") - Kecak Ubud: Selasa & Minggu 19:00 (konfirmasi Wayan).
    4. Event (id="schema-event") - Kecak Uluwatu: tiap hari pas sunset. startTime sengaja
       nggak diisi (jam pasti belum dikonfirmasi Wayan) - tambahin kalau udah ada.
-      Offers juga nggak diisi (harga tiket masih [ISI WAYAN]).
    HTML-only: nggak perlu bump ?v= / PARTIALS_VERSION. */
 
 const fs = require("fs");
@@ -172,6 +171,13 @@ fs.readdirSync(path.join(ROOT, "attractions"))
       "@type": "Place",
       "name": "Uluwatu Temple, Bali",
       "address": { "@type": "PostalAddress", "addressLocality": "Uluwatu", "addressRegion": "Bali", "addressCountry": "ID" }
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "150000",
+      "priceCurrency": "IDR",
+      "availability": "https://schema.org/InStock",
+      "url": canonical(s, BASE + rel)
     },
     "organizer": { "@type": "Organization", "name": "Cahyana Ubud Experience", "url": BASE }
   });

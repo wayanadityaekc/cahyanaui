@@ -2351,11 +2351,24 @@ section.faq::before,
   border-bottom: none;
 }
 .stop__image {
+  position: relative;
+  overflow: hidden;
   aspect-ratio: 4 / 3;
   border-radius: 12px;
   background-color: var(--color-green);
   background-size: cover;
   background-position: center;
+}
+/* Slot foto pakai <img> (SEO + lazy-load) - ngisi wrapper persis kayak background cover.
+   Wrapper tetap pegang rasio/radius; overlay ::after card tetap di atas foto. */
+.stop__image > img,
+.experience__image > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 .stop__num {
   display: inline-block;

@@ -48,6 +48,24 @@ When unsure, ask first (keep it short).
 - Hover lift: keep it subtle, not harsh.
 - Icons: SVG, **no emoji**.
 
+## Foto & gambar (standar)
+- **Nama file = subjek + slot**, semua lowercase-hyphen. Pola:
+  `<slug-halaman>-card.jpg` (kartu) · `<slug-halaman>-hero.jpg` (subhero/banner) ·
+  nama subjek buat foto konten (`goa-gajah-bathing-pools.jpg`, `ubud-batik-workshop.jpg`).
+  **Dilarang**: nomor urut (`-content-2`), nama kamera (`IMG_1234`), nama generik (`foto1`).
+- **Ukuran**: card 600×600 ≤200KB · foto stop 1200×900 (4:3) ≤200KB · hero ~1920px ≤400KB.
+  Resize dulu ke ukuran target, baru export (JPG ~80% / WebP ~75%).
+- **Slot foto stop & card pakai `<img>`**, BUKAN background:
+  `<div class="stop__image"><img src="..." alt="..." loading="lazy" /></div>` —
+  wrapper div yang pegang rasio/radius (CSS `.stop__image > img` / `.experience__image > img`
+  udah ada). **Alt wajib** deskriptif (subjek foto, bukan keyword stuffing); `&` ditulis `&amp;`.
+- **Tetap background** (jangan diubah ke `<img>`/lazy): hero & subhero (above the fold),
+  banner highlight, slider homepage, card villa. Slot kosong = placeholder gradient + komentar
+  `<!-- TODO: foto ... -->`.
+- **Ganti/rename foto** → ganti SEMUA referensi: HTML (og:image + JSON-LD ikut), style.css,
+  `ITEM_CARD` di script.js (nama **tanpa** prefix `images/` — gampang kelewat pas grep!),
+  dan path hardcoded di `tools/sync-schema.js`. Habis itu grep nama lama = harus 0.
+
 ## Subhero & FAQ (standar per halaman)
 - **H1 maks ±40 karakter** (biar tetap 2 baris di HP — lebih dari itu teks hero bisa
   ketutup panel overlap). **Teks intro hero 25–40 kata.**
@@ -134,7 +152,11 @@ Order **must be kept** (declarations first, run last):
 - `SHEET_ENDPOINT` (script.js) masih placeholder — cuma kepakai 2 form sekunder;
   booking utama udah ke API_ENDPOINT (Railway).
 - Review asli buat section Guest Reviews; link villa & sosmed (`href="#"`).
-- Foto: og:image 43 halaman masih preview.jpg + slot foto placeholder (gradient).
+- Foto: og:image 43 halaman masih preview.jpg + ±93 slot placeholder (gradient) di 39 halaman.
+- Kompres 10 foto >400KB (paling parah `rafting.webp` 2.6MB & `homepage_hero.webp` 725KB —
+  resize ke ~1600–1920px) + 12 foto 250–400KB; habis diganti, rename ikut standar foto.
+- Foto nganggur: 13 duplikat/sisa lama (hapus?) + stok belum kepasang (`ubud-palace.jpg` dkk
+  buat slot TODO) — keputusan Wayan.
 - Google Search Console: submit sitemap (belum pernah).
 
 ## Before calling it "done" (checklist)

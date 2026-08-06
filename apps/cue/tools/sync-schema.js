@@ -156,7 +156,7 @@ fs.readdirSync(path.join(ROOT, "attractions"))
     "@type": "Event",
     "name": "Uluwatu Kecak Fire Dance",
     "description": meta(s, "description"),
-    "image": BASE + "assets/images/kecak-fire-dance.webp",
+    "image": BASE + "assets/images/kecak-dance-hero.webp",
     "eventSchedule": {
       "@type": "Schedule",
       "byDay": [

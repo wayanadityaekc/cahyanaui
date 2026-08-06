@@ -110,7 +110,7 @@ const TOUR_TICKETS = {
 };
 
 // -- Fee internal Exclusive (JANGAN pernah ditampilkan ke user) & kurs tiket IDR->USD.
-const EXCLUSIVE_FEE = 0.15;
+const EXCLUSIVE_FEE = 0.10;
 const TICKET_IDR_PER_USD = 15500;
 
 // -- Suplemen Exclusive per orang, DITURUNKAN dari TICKETS (bukan angka lepas lagi).

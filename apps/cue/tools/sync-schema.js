@@ -19,7 +19,7 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const BASE = "https://cahyanaubudexperience.com/";
 
-const src = fs.readFileSync(path.join(ROOT, "script.js"), "utf8");
+const src = fs.readFileSync(path.join(ROOT, "data.js"), "utf8") + fs.readFileSync(path.join(ROOT, "script.js"), "utf8");
 const PAGE_ITEM = eval("(" + src.match(/const PAGE_ITEM = (\{[\s\S]*?\n\});/)[1] + ")");
 
 const read = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");

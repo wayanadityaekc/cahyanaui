@@ -13,7 +13,7 @@
 const fs = require("fs");
 const path = require("path");
 const ROOT = path.join(__dirname, "..");
-const src = fs.readFileSync(path.join(ROOT, "script.js"), "utf8");
+const src = fs.readFileSync(path.join(ROOT, "data.js"), "utf8") + fs.readFileSync(path.join(ROOT, "script.js"), "utf8");
 
 // Ambil object literal dari script.js (prices / PAGE_ITEM / ITEM_CARD)
 function grab(name) {

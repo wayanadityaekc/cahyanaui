@@ -93,9 +93,10 @@ When unsure, ask first (keep it short).
   (tap "Program" to expand), the menu has a **bottom shadow** + separator border, and items
   are more spacious.
 
-## Code structure — script.js
+## Code structure — script.js (+ data.js)
+- **data.js** = semua data harga/tarif/kurs (dimuat duluan). **script.js** = logika.
 Order **must be kept** (declarations first, run last):
-1. **CONFIG & DATA** — all `const` (prices, CHARTER, transport, CURRENCIES, PAGE_ITEM, ITN_KEY, ...)
+1. **CONFIG & DATA** — const non-harga (PAGE_ITEM, ITEM_CARD, ITN_KEY, endpoint, ...)
 2. **HELPER FUNCTIONS** — small functions (fmtMoney, itemInfo, itnSave, ...)
 3. **PARTIALS LOADER** — `loadPartials`
 4. **INIT (per feature)** — `initNavbar`, `initBooking`, ... one function per feature
@@ -116,9 +117,12 @@ Order **must be kept** (declarations first, run last):
 ## Key mechanics
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
-- **File cache-busting**: `style.css?v=N` & `script.js?v=N` on **every** HTML page.
-  Any CSS/JS change → bump `N` on all pages. *(current: v37, PARTIALS 21)*
-- **Multi-currency**: single source `prices` (USD+IDR per item) + static `CUR_RATE`.
+- **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v37, PARTIALS 21)*
+- **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
+  transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
+  Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.
+- **Multi-currency**: single source `prices` di data.js (USD+IDR per item) + static `CUR_RATE`.
   `[data-price="Name"]` spans are filled by `renderPrices()`. Supports USD/IDR/AUD/EUR/GBP,
   results are rounded, saved in localStorage `cue_currency`.
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
@@ -136,7 +140,7 @@ Order **must be kept** (declarations first, run last):
 1. `node --check script.js` passes.
 2. CSS `{}` braces balanced.
 3. Changed CSS/JS → bump `?v=` on all pages. Changed `partials/` → bump `PARTIALS_VERSION`.
-4. Changed any price in `prices` (script.js) → run `node tools/sync-prices.js`
+4. Changed any price/ticket in `data.js` → run `node tools/sync-prices.js`
    (rewrites static fallback prices + JSON-LD Product schema in HTML).
 5. Check: no dead code, no double lines, no dead classes.
 6. Hand off to Wayan to review live & decide on the push.

@@ -3276,11 +3276,6 @@ section.faq::before,
   .summary {
     padding: 1.25rem;
   }
-  .summary__total {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
 }
 
 /* Layar HP kecil - kecilin field booking biar 2 kolom tetap muat rapi */
@@ -3715,15 +3710,6 @@ section.faq::before,
   padding: 0.55rem 0.65rem;
   font-size: var(--fs-body);
   background: #fff;
-}
-.itn-day__price {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding-top: 0.7rem;
-  border-top: 1px solid #eee6d5;
-  font-size: var(--fs-body);
-  font-weight: 600;
 }
 
 /* tombol Add to itinerary di card biasa + card jadi clickable */
@@ -4388,8 +4374,7 @@ button.pick-cat {
 /* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
 .btn-book,
 .btn-review,
-.modal__btn,
-.pkg-cta__btn {
+.modal__btn {
   text-decoration: none;
 }
 .program-cta__btn--book {

@@ -27,7 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=145" />
+    <link rel="stylesheet" href="style.css?v=146" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -96,8 +96,55 @@
         ]
       }
     </script>
-    <script type="application/ld+json" id="schema-faq">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I book?","acceptedAnswer":{"@type":"Answer","text":"Pick a tour, activity, or transfer, choose your date, and send us a message on WhatsApp - or use the booking form on any page. We reply fast, confirm your driver and time, and that's it. No account, no long forms."}},{"@type":"Question","name":"How does payment work?","acceptedAnswer":{"@type":"Answer","text":"A 10% deposit confirms your booking - you pay the remaining balance in cash or by transfer at the end of your tour. Guests staying at one of our villas enjoy a special privilege: no upfront payment at all , you simply settle everything afterwards."}},{"@type":"Question","name":"Can I build my own multi-day itinerary?","acceptedAnswer":{"@type":"Answer","text":"Yes - that's exactly what our itinerary builder is for. Combine tours, activities, performances, and transfers across up to 7 days and watch the total price update as you plan. Prefer us to plan it for you? Just tell us what you like and we'll shape a route around it."}},{"@type":"Question","name":"Are prices per person or per car?","acceptedAnswer":{"@type":"Answer","text":"Tours and route transfers are priced per car (up to 5 passengers), so bringing more people lowers the cost per head. Activities and performances are per person , since each guest needs their own entrance ticket."}},{"@type":"Question","name":"Where do you pick up from?","acceptedAnswer":{"@type":"Answer","text":"Free pick-up from any hotel or villa in Ubud and the surrounding area. Staying further out - Canggu, Seminyak, Sanur? Tell us where and we'll quote you honestly, with no surprise fees on the day."}}]}</script>
-</head>
+    <script type="application/ld+json" id="schema-faq">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do I book?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Pick a tour, activity, or transfer, choose your date, and send us a message on WhatsApp - or use the booking form on any page. We reply fast, confirm your driver and time, and that's it. No account, no long forms."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does payment work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A 10% deposit confirms your booking - you pay the remaining balance in cash or by transfer at the end of your tour. Guests staying at one of our villas enjoy a special privilege: no upfront payment at all , you simply settle everything afterwards."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I build my own multi-day itinerary?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes - that's exactly what our itinerary builder is for. Combine tours, activities, performances, and transfers across up to 7 days and watch the total price update as you plan. Prefer us to plan it for you? Just tell us what you like and we'll shape a route around it."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are prices per person or per car?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tours and route transfers are priced per car (up to 5 passengers), so bringing more people lowers the cost per head. Activities and performances are per person , since each guest needs their own entrance ticket."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where do you pick up from?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Free pick-up from any hotel or villa in Ubud and the surrounding area. Staying further out - Canggu, Seminyak, Sanur? Tell us where and we'll quote you honestly, with no surprise fees on the day."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
   <body>
     <div id="navbar-placeholder"></div>
 
@@ -210,11 +257,18 @@
       <h2 class="section__title">Tour Programs from Ubud</h2>
       <div class="experience__grid experience__grid--slider">
         <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/ubud-tour-card.jpg" alt="Ubud Tour - private tour from Ubud, Bali" loading="lazy" /></div>
+          <div class="experience__image">
+            <img
+              src="assets/images/ubud-tour-card.jpg"
+              alt="Ubud Tour - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Tour</h3>
             <p class="experience__desc">
-              Rice terraces, sacred temples, and the monkey forest in one full day.
+              Rice terraces, sacred temples, and the monkey forest in one full
+              day.
             </p>
             <div class="experience__footer">
               <div class="experience__price">
@@ -230,7 +284,13 @@
           </div>
         </article>
         <article class="experience__card" data-program="Ubud Culture Day">
-          <div class="experience__image"><img src="assets/images/ubud-culture-day-card.jpg" alt="Ubud Culture Day - private tour from Ubud, Bali" loading="lazy" /></div>
+          <div class="experience__image">
+            <img
+              src="assets/images/ubud-culture-day-card.jpg"
+              alt="Ubud Culture Day - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Culture Day</h3>
             <p class="experience__desc">
@@ -250,16 +310,35 @@
             </div>
           </div>
         </article>
-        <article class="experience__card" data-program="Kintamani Sunrise & Penglipuran">
-          <div class="experience__image"><img src="assets/images/mount-batur-sunrise.webp" alt="Kintamani Sunrise &amp; Penglipuran - private tour from Ubud, Bali" loading="lazy" /></div>
+        <article
+          class="experience__card"
+          data-program="Kintamani Sunrise & Penglipuran"
+        >
+          <div class="experience__image">
+            <img
+              src="assets/images/jeep-card.jpg"
+              alt="Kintamani Sunrise &amp; Penglipuran - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">Kintamani Sunrise & Penglipuran</h3>
             <p class="experience__desc">
-              A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud.
+              A 4x4 Batur sunrise, Penglipuran village, and temples back to
+              Ubud.
             </p>
             <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Kintamani Sunrise & Penglipuran">$85</span></div>
-              <a href="kintamani-sunrise-penglipuran.html" class="experience__arrow" aria-label="View Kintamani Sunrise &amp; Penglipuran">&rarr;</a>
+              <div class="experience__price">
+                <span class="price" data-price="Kintamani Sunrise & Penglipuran"
+                  >$85</span
+                >
+              </div>
+              <a
+                href="kintamani-sunrise-penglipuran.html"
+                class="experience__arrow"
+                aria-label="View Kintamani Sunrise &amp; Penglipuran"
+                >&rarr;</a
+              >
             </div>
           </div>
         </article>
@@ -267,18 +346,24 @@
           class="experience__card"
           data-program="Batur Sunrise & Adrenaline"
         >
-          <div class="experience__image"><img src="assets/images/batur-sunrise-adrenaline-card.jpg" alt="Batur Sunrise &amp; Adrenaline - private tour from Ubud, Bali" loading="lazy" /></div>
+          <div class="experience__image">
+            <img
+              src="assets/images/batur-sunrise-adrenaline-card.jpg"
+              alt="Batur Sunrise &amp; Adrenaline - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">Batur Sunrise & Adrenaline</h3>
             <p class="experience__desc">
-              A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak.
+              A Mount Batur sunrise trek, a volcano breakfast, and a hot spring
+              soak.
             </p>
             <div class="experience__footer">
               <div class="experience__price">
-                <span
-                  class="price"
-                  data-price="Batur Sunrise & Adrenaline"
-                >$85</span>
+                <span class="price" data-price="Batur Sunrise & Adrenaline"
+                  >$85</span
+                >
               </div>
               <a
                 href="batur-sunrise-adrenaline.html"
@@ -290,7 +375,13 @@
           </div>
         </article>
         <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/east-bali-tour-card.jpg" alt="East Bali Tour - private tour from Ubud, Bali" loading="lazy" /></div>
+          <div class="experience__image">
+            <img
+              src="assets/images/east-bali-tour-card.jpg"
+              alt="East Bali Tour - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">East Bali Tour</h3>
             <p class="experience__desc">
@@ -310,7 +401,13 @@
           </div>
         </article>
         <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/west-bali-tour-card.jpg" alt="West Bali Tour - private tour from Ubud, Bali" loading="lazy" /></div>
+          <div class="experience__image">
+            <img
+              src="assets/images/west-bali-tour-card.jpg"
+              alt="West Bali Tour - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">West Bali Tour</h3>
             <p class="experience__desc">
@@ -333,7 +430,13 @@
           class="experience__card"
           data-program="South Coast & Sunset Kecak"
         >
-          <div class="experience__image"><img src="assets/images/south-coast-sunset-kecak-card.jpg" alt="South Coast &amp; Sunset Kecak - private tour from Ubud, Bali" loading="lazy" /></div>
+          <div class="experience__image">
+            <img
+              src="assets/images/south-coast-sunset-kecak-card.jpg"
+              alt="South Coast &amp; Sunset Kecak - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
             <h3 class="experience__name">South Coast & Sunset Kecak</h3>
             <p class="experience__desc">
@@ -341,10 +444,9 @@
             </p>
             <div class="experience__footer">
               <div class="experience__price">
-                <span
-                  class="price"
-                  data-price="South Coast & Sunset Kecak"
-                >$65</span>
+                <span class="price" data-price="South Coast & Sunset Kecak"
+                  >$65</span
+                >
               </div>
               <a
                 href="south-coast-sunset-kecak.html"
@@ -355,16 +457,39 @@
             </div>
           </div>
         </article>
-        <article class="experience__card" data-program="Lovina Dolphin & Sekumpul Waterfall">
-          <div class="experience__image"><img src="assets/images/lovina-dolphin-sekumpul-card.jpg" alt="Lovina Dolphin &amp; Sekumpul Waterfall - private tour from Ubud, Bali" loading="lazy" /></div>
+        <article
+          class="experience__card"
+          data-program="Lovina Dolphin & Sekumpul Waterfall"
+        >
+          <div class="experience__image">
+            <img
+              src="assets/images/lovina-dolphin-sekumpul-card.jpg"
+              alt="Lovina Dolphin &amp; Sekumpul Waterfall - private tour from Ubud, Bali"
+              loading="lazy"
+            />
+          </div>
           <div class="experience__body">
-            <h3 class="experience__name">Lovina Dolphin & Sekumpul Waterfall</h3>
+            <h3 class="experience__name">
+              Lovina Dolphin & Sekumpul Waterfall
+            </h3>
             <p class="experience__desc">
-              A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul waterfall.
+              A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul
+              waterfall.
             </p>
             <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Lovina Dolphin & Sekumpul Waterfall">$95</span></div>
-              <a href="lovina-dolphin-sekumpul.html" class="experience__arrow" aria-label="View Lovina Dolphin &amp; Sekumpul Waterfall">&rarr;</a>
+              <div class="experience__price">
+                <span
+                  class="price"
+                  data-price="Lovina Dolphin & Sekumpul Waterfall"
+                  >$95</span
+                >
+              </div>
+              <a
+                href="lovina-dolphin-sekumpul.html"
+                class="experience__arrow"
+                aria-label="View Lovina Dolphin &amp; Sekumpul Waterfall"
+                >&rarr;</a
+              >
             </div>
           </div>
         </article>
@@ -446,21 +571,54 @@
         <div class="activities__slider-col">
           <h3 class="activities__slider-label">Activities</h3>
           <div class="slider">
-            <div class="slider__slide active" style="background-image: url(assets/images/ubud-atv-adventure-card.jpg)">
+            <div
+              class="slider__slide active"
+              style="
+                background-image: url(assets/images/ubud-atv-adventure-card.jpg);
+              "
+            >
               <div class="slider__caption"><h3>ATV Ride</h3></div>
             </div>
-            <div class="slider__slide" style="background-image: url(assets/images/ubud-rafting-adventure-card.jpg)">
+            <div
+              class="slider__slide"
+              style="
+                background-image: url(assets/images/ubud-rafting-adventure-card.jpg);
+              "
+            >
               <div class="slider__caption"><h3>Rafting</h3></div>
             </div>
-            <div class="slider__slide" style="background-image: url(assets/images/cooking-class-ubud.jpg)">
+            <div
+              class="slider__slide"
+              style="
+                background-image: url(assets/images/cooking-class-ubud.jpg);
+              "
+            >
               <div class="slider__caption"><h3>Cooking Class</h3></div>
             </div>
             <!-- TODO: foto asli Bali Zoo -->
-            <div class="slider__slide" style="background-image: linear-gradient(135deg, rgba(31,61,43,0.92), rgba(46,90,64,0.86))">
+            <div
+              class="slider__slide"
+              style="
+                background-image: linear-gradient(
+                  135deg,
+                  rgba(31, 61, 43, 0.92),
+                  rgba(46, 90, 64, 0.86)
+                );
+              "
+            >
               <div class="slider__caption"><h3>Bali Zoo</h3></div>
             </div>
             <!-- TODO: foto asli Bali Bird Park -->
-            <div class="slider__slide" style="background-image: linear-gradient(135deg, rgba(31,61,43,0.92), rgba(46,90,64,0.86))">
+            <div
+              class="slider__slide"
+              style="
+                background-image: linear-gradient(
+                  135deg,
+                  rgba(31, 61, 43, 0.92),
+                  rgba(46, 90, 64, 0.86)
+                );
+              "
+            >
               <div class="slider__caption"><h3>Bali Bird Park</h3></div>
             </div>
             <div class="slider__dots">
@@ -476,10 +634,18 @@
         <div class="activities__slider-col">
           <h3 class="activities__slider-label">Performances</h3>
           <div class="slider">
-            <div class="slider__slide active" style="background-image: url(assets/images/kecak.jpg)">
+            <div
+              class="slider__slide active"
+              style="background-image: url(assets/images/kecak.jpg)"
+            >
               <div class="slider__caption"><h3>Kecak Dance</h3></div>
             </div>
-            <div class="slider__slide" style="background-image: url(assets/images/barong-dance-performance.jpg)">
+            <div
+              class="slider__slide"
+              style="
+                background-image: url(assets/images/barong-dance-performance.jpg);
+              "
+            >
               <div class="slider__caption"><h3>Barong Dance</h3></div>
             </div>
             <div class="slider__dots">
@@ -498,7 +664,10 @@
           culture and wild landscapes. Every experience is led by locals who
           know how to make it safe, smooth, and genuinely local.
         </p>
-        <a href="activities.html" class="highlight__btn" style="margin-top: 1.5rem"
+        <a
+          href="activities.html"
+          class="highlight__btn"
+          style="margin-top: 1.5rem"
           >Explore Activities</a
         >
       </div>
@@ -578,7 +747,8 @@
             </p>
             <div class="villa__footer">
               <div class="villa__price">
-                <span class="price" data-price="Cahyana House">$95</span> per night
+                <span class="price" data-price="Cahyana House">$95</span> per
+                night
               </div>
               <a href="#" class="villa__btn" target="_blank" rel="noopener"
                 >View Villa</a
@@ -592,168 +762,488 @@
     <!-- GUIDES & INFORMATION (menu kategori samping + slider kartu) -->
     <section class="guide-home" id="guides" aria-labelledby="guide-home-title">
       <div class="guide-home__inner">
-      <div class="guide-home__head">
-        <h2 class="section__title" id="guide-home-title">Guides &amp; Information</h2>
-        <p class="guide-home__sub">Planning your first trip to Bali - or your fifth? Our free local guides break the island down by topic: its regions and where to base yourself, the culture and customs, and the nature.</p>
-        <p class="guide-home__sub">You'll also find the best things to do and the practical bits, like when to visit and how to get around. Read up before you go, so nothing catches you by surprise.</p>
-      </div>
-      <div class="guide-home__layout">
-        <div class="guide-home__menu" role="tablist" aria-label="Guide categories">
-        <button class="ghmenu__item active" type="button" data-cat="island" role="tab" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="6.5" r="2"/><path d="M3 20h18M5 20l4.5-6 3 4 2-3 4.5 5"/></svg><span>About the Island</span></button>
-        <button class="ghmenu__item" type="button" data-cat="culture" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v5a7 7 0 0 1-14 0z"/><path d="M9 8.5h.01M15 8.5h.01M9.5 12c1.2 1 4 1 5 0"/></svg><span>People &amp; Culture</span></button>
-        <button class="ghmenu__item" type="button" data-cat="nature" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14z"/><path d="M6 18C10 14 13 11 16 9"/></svg><span>Nature</span></button>
-        <button class="ghmenu__item" type="button" data-cat="do" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8z"/></svg><span>What to Do</span></button>
-        <button class="ghmenu__item" type="button" data-cat="know" role="tab" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5M12 7.7h.01"/></svg><span>Good to Know</span></button>
+        <div class="guide-home__head">
+          <h2 class="section__title" id="guide-home-title">
+            Guides &amp; Information
+          </h2>
+          <p class="guide-home__sub">
+            Planning your first trip to Bali - or your fifth? Our free local
+            guides break the island down by topic: its regions and where to base
+            yourself, the culture and customs, and the nature.
+          </p>
+          <p class="guide-home__sub">
+            You'll also find the best things to do and the practical bits, like
+            when to visit and how to get around. Read up before you go, so
+            nothing catches you by surprise.
+          </p>
         </div>
-        <div class="guide-home__panels">
-        <div class="ghpanel active" data-cat="island" role="tabpanel">
-          <div class="experience__grid experience__grid--slider guide-home__slider">
-          <a class="experience__card guide-home__card" href="guide/ubud.html">
-            <div class="experience__image"><img src="assets/images/ubud-market-hero.jpg" alt="Bali travel guide - Ubud" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Cultural hub</span>
-              <h3 class="experience__name">Ubud</h3>
-              <p class="experience__desc">Bali&rsquo;s cultural heart in the cool green interior - temples, rice terraces, and art.</p>
+        <div class="guide-home__layout">
+          <div
+            class="guide-home__menu"
+            role="tablist"
+            aria-label="Guide categories"
+          >
+            <button
+              class="ghmenu__item active"
+              type="button"
+              data-cat="island"
+              role="tab"
+              aria-selected="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="17" cy="6.5" r="2" />
+                <path d="M3 20h18M5 20l4.5-6 3 4 2-3 4.5 5" /></svg
+              ><span>About the Island</span>
+            </button>
+            <button
+              class="ghmenu__item"
+              type="button"
+              data-cat="culture"
+              role="tab"
+              aria-selected="false"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 4h14v5a7 7 0 0 1-14 0z" />
+                <path d="M9 8.5h.01M15 8.5h.01M9.5 12c1.2 1 4 1 5 0" /></svg
+              ><span>People &amp; Culture</span>
+            </button>
+            <button
+              class="ghmenu__item"
+              type="button"
+              data-cat="nature"
+              role="tab"
+              aria-selected="false"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 19C5 11 11 5 19 5c0 8-6 14-14 14z" />
+                <path d="M6 18C10 14 13 11 16 9" /></svg
+              ><span>Nature</span>
+            </button>
+            <button
+              class="ghmenu__item"
+              type="button"
+              data-cat="do"
+              role="tab"
+              aria-selected="false"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8z" /></svg
+              ><span>What to Do</span>
+            </button>
+            <button
+              class="ghmenu__item"
+              type="button"
+              data-cat="know"
+              role="tab"
+              aria-selected="false"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 11.5v5M12 7.7h.01" /></svg
+              ><span>Good to Know</span>
+            </button>
+          </div>
+          <div class="guide-home__panels">
+            <div class="ghpanel active" data-cat="island" role="tabpanel">
+              <div
+                class="experience__grid experience__grid--slider guide-home__slider"
+              >
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/ubud.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/ubud-market-hero.jpg"
+                      alt="Bali travel guide - Ubud"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Cultural hub</span>
+                    <h3 class="experience__name">Ubud</h3>
+                    <p class="experience__desc">
+                      Bali&rsquo;s cultural heart in the cool green interior -
+                      temples, rice terraces, and art.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/canggu.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/melasti-beach.jpg"
+                      alt="Bali travel guide - Canggu"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Surf &amp; cafes</span>
+                    <h3 class="experience__name">Canggu</h3>
+                    <p class="experience__desc">
+                      A laid-back coastal district of surf breaks, black-sand
+                      beaches, and a buzzing cafe scene.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/uluwatu-bukit.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/south-coast-sunset-kecak-card.jpg"
+                      alt="Bali travel guide - Uluwatu &amp; the Bukit"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Clifftop south</span>
+                    <h3 class="experience__name">Uluwatu &amp; the Bukit</h3>
+                    <p class="experience__desc">
+                      Limestone cliffs, famous surf breaks, and a clifftop
+                      sunset temple.
+                    </p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/canggu.html">
-            <div class="experience__image"><img src="assets/images/melasti-beach.jpg" alt="Bali travel guide - Canggu" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Surf &amp; cafes</span>
-              <h3 class="experience__name">Canggu</h3>
-              <p class="experience__desc">A laid-back coastal district of surf breaks, black-sand beaches, and a buzzing cafe scene.</p>
+            <div class="ghpanel" data-cat="culture" role="tabpanel">
+              <div
+                class="experience__grid experience__grid--slider guide-home__slider"
+              >
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/balinese-hinduism.html"
+                >
+                  <!-- TODO: foto asli -->
+                  <div
+                    class="experience__image"
+                    style="
+                      background-image: linear-gradient(
+                        135deg,
+                        rgba(31, 61, 43, 0.92),
+                        rgba(46, 90, 64, 0.86)
+                      );
+                    "
+                  ></div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Beliefs</span>
+                    <h3 class="experience__name">Balinese Hinduism</h3>
+                    <p class="experience__desc">
+                      The philosophy of harmony behind Bali&rsquo;s temples,
+                      ceremonies, and daily offerings.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/temple-etiquette.html"
+                >
+                  <!-- TODO: foto asli -->
+                  <div
+                    class="experience__image"
+                    style="
+                      background-image: linear-gradient(
+                        135deg,
+                        rgba(31, 61, 43, 0.92),
+                        rgba(46, 90, 64, 0.86)
+                      );
+                    "
+                  ></div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Etiquette</span>
+                    <h3 class="experience__name">
+                      Temple Etiquette &amp; Dress
+                    </h3>
+                    <p class="experience__desc">
+                      How to visit Bali&rsquo;s temples respectfully - sarongs,
+                      sashes, and simple customs.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/balinese-dance.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/kecak.jpg"
+                      alt="Bali travel guide - Traditional Dance"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Performing arts</span>
+                    <h3 class="experience__name">Traditional Dance</h3>
+                    <p class="experience__desc">
+                      The island&rsquo;s traditional performances - the fire-lit
+                      Kecak and theatrical Barong.
+                    </p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/uluwatu-bukit.html">
-            <div class="experience__image"><img src="assets/images/south-coast-sunset-kecak-card.jpg" alt="Bali travel guide - Uluwatu &amp; the Bukit" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Clifftop south</span>
-              <h3 class="experience__name">Uluwatu &amp; the Bukit</h3>
-              <p class="experience__desc">Limestone cliffs, famous surf breaks, and a clifftop sunset temple.</p>
+            <div class="ghpanel" data-cat="nature" role="tabpanel">
+              <div
+                class="experience__grid experience__grid--slider guide-home__slider"
+              >
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-volcanoes.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/mount-batur-volcano.webp"
+                      alt="Bali travel guide - Volcanoes: Agung &amp; Batur"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Mountains</span>
+                    <h3 class="experience__name">
+                      Volcanoes: Agung &amp; Batur
+                    </h3>
+                    <p class="experience__desc">
+                      Sacred Mount Agung and the popular Mount Batur sunrise
+                      trek over its crater lake.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-rice-terraces.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/ubud-tour-card.jpg"
+                      alt="Bali travel guide - Rice Terraces &amp; Subak"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Landscapes</span>
+                    <h3 class="experience__name">Rice Terraces &amp; Subak</h3>
+                    <p class="experience__desc">
+                      Sculpted green terraces fed by the thousand-year-old subak
+                      irrigation system.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-waterfalls.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/tegenungan.webp"
+                      alt="Bali travel guide - Waterfalls of Bali"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Waterfalls</span>
+                    <h3 class="experience__name">Waterfalls of Bali</h3>
+                    <p class="experience__desc">
+                      From the easy-access Tegenungan near Ubud to the wild,
+                      multi-tiered Sekumpul.
+                    </p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </a>
+            <div class="ghpanel" data-cat="do" role="tabpanel">
+              <div
+                class="experience__grid experience__grid--slider guide-home__slider"
+              >
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-day-tours.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/tour-hero.jpg"
+                      alt="Bali travel guide - Guided Day Tours"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Tours</span>
+                    <h3 class="experience__name">Guided Day Tours</h3>
+                    <p class="experience__desc">
+                      See the highlights the easy way with a local driver-guide,
+                      on themed routes across Bali.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-adventure-activities.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/ubud-atv-adventure-card.jpg"
+                      alt="Bali travel guide - Adventure Activities"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Adventure</span>
+                    <h3 class="experience__name">Adventure Activities</h3>
+                    <p class="experience__desc">
+                      ATV rides, white-water rafting, jungle swings, and sunrise
+                      volcano treks near Ubud.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-beaches-surf.html"
+                >
+                  <div class="experience__image">
+                    <img
+                      src="assets/images/kelingking-beach.jpg"
+                      alt="Bali travel guide - Beaches &amp; Surf"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Coast</span>
+                    <h3 class="experience__name">Beaches &amp; Surf</h3>
+                    <p class="experience__desc">
+                      Where to swim, surf, and catch the sunset - white sand
+                      south, black sand north.
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="ghpanel" data-cat="know" role="tabpanel">
+              <div
+                class="experience__grid experience__grid--slider guide-home__slider"
+              >
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/best-time-to-visit-bali.html"
+                >
+                  <!-- TODO: foto asli -->
+                  <div
+                    class="experience__image"
+                    style="
+                      background-image: linear-gradient(
+                        135deg,
+                        rgba(31, 61, 43, 0.92),
+                        rgba(46, 90, 64, 0.86)
+                      );
+                    "
+                  ></div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Timing</span>
+                    <h3 class="experience__name">Best Time to Visit</h3>
+                    <p class="experience__desc">
+                      Dry vs wet season, crowds, and prices - what to expect
+                      month to month.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/getting-around-bali.html"
+                >
+                  <!-- TODO: foto asli -->
+                  <div
+                    class="experience__image"
+                    style="
+                      background-image: linear-gradient(
+                        135deg,
+                        rgba(31, 61, 43, 0.92),
+                        rgba(46, 90, 64, 0.86)
+                      );
+                    "
+                  ></div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Transport</span>
+                    <h3 class="experience__name">Getting Around Bali</h3>
+                    <p class="experience__desc">
+                      Private drivers, car charters, and scooters - and why it
+                      pays to plan realistic days.
+                    </p>
+                  </div>
+                </a>
+                <a
+                  class="experience__card guide-home__card"
+                  href="guide/bali-money-sim-visa.html"
+                >
+                  <!-- TODO: foto asli -->
+                  <div
+                    class="experience__image"
+                    style="
+                      background-image: linear-gradient(
+                        135deg,
+                        rgba(31, 61, 43, 0.92),
+                        rgba(46, 90, 64, 0.86)
+                      );
+                    "
+                  ></div>
+                  <div class="experience__body">
+                    <span class="guide-home__tag">Essentials</span>
+                    <h3 class="experience__name">Money, SIM &amp; Visas</h3>
+                    <p class="experience__desc">
+                      Currency and cash vs cards, cheap local SIMs, and where to
+                      check current visa rules.
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="ghpanel" data-cat="culture" role="tabpanel">
-          <div class="experience__grid experience__grid--slider guide-home__slider">
-          <a class="experience__card guide-home__card" href="guide/balinese-hinduism.html">
-            <!-- TODO: foto asli -->
-            <div class="experience__image" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86));"></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Beliefs</span>
-              <h3 class="experience__name">Balinese Hinduism</h3>
-              <p class="experience__desc">The philosophy of harmony behind Bali&rsquo;s temples, ceremonies, and daily offerings.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/temple-etiquette.html">
-            <!-- TODO: foto asli -->
-            <div class="experience__image" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86));"></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Etiquette</span>
-              <h3 class="experience__name">Temple Etiquette &amp; Dress</h3>
-              <p class="experience__desc">How to visit Bali&rsquo;s temples respectfully - sarongs, sashes, and simple customs.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/balinese-dance.html">
-            <div class="experience__image"><img src="assets/images/kecak.jpg" alt="Bali travel guide - Traditional Dance" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Performing arts</span>
-              <h3 class="experience__name">Traditional Dance</h3>
-              <p class="experience__desc">The island&rsquo;s traditional performances - the fire-lit Kecak and theatrical Barong.</p>
-            </div>
-          </a>
-          </div>
+        <div class="guide-home__all">
+          <a href="bali-guide.html">See all Bali guides &rsaquo;</a>
         </div>
-        <div class="ghpanel" data-cat="nature" role="tabpanel">
-          <div class="experience__grid experience__grid--slider guide-home__slider">
-          <a class="experience__card guide-home__card" href="guide/bali-volcanoes.html">
-            <div class="experience__image"><img src="assets/images/mount-batur-volcano.webp" alt="Bali travel guide - Volcanoes: Agung &amp; Batur" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Mountains</span>
-              <h3 class="experience__name">Volcanoes: Agung &amp; Batur</h3>
-              <p class="experience__desc">Sacred Mount Agung and the popular Mount Batur sunrise trek over its crater lake.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/bali-rice-terraces.html">
-            <div class="experience__image"><img src="assets/images/ubud-tour-card.jpg" alt="Bali travel guide - Rice Terraces &amp; Subak" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Landscapes</span>
-              <h3 class="experience__name">Rice Terraces &amp; Subak</h3>
-              <p class="experience__desc">Sculpted green terraces fed by the thousand-year-old subak irrigation system.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/bali-waterfalls.html">
-            <div class="experience__image"><img src="assets/images/tegenungan.webp" alt="Bali travel guide - Waterfalls of Bali" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Waterfalls</span>
-              <h3 class="experience__name">Waterfalls of Bali</h3>
-              <p class="experience__desc">From the easy-access Tegenungan near Ubud to the wild, multi-tiered Sekumpul.</p>
-            </div>
-          </a>
-          </div>
-        </div>
-        <div class="ghpanel" data-cat="do" role="tabpanel">
-          <div class="experience__grid experience__grid--slider guide-home__slider">
-          <a class="experience__card guide-home__card" href="guide/bali-day-tours.html">
-            <div class="experience__image"><img src="assets/images/tour-hero.jpg" alt="Bali travel guide - Guided Day Tours" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Tours</span>
-              <h3 class="experience__name">Guided Day Tours</h3>
-              <p class="experience__desc">See the highlights the easy way with a local driver-guide, on themed routes across Bali.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/bali-adventure-activities.html">
-            <div class="experience__image"><img src="assets/images/ubud-atv-adventure-card.jpg" alt="Bali travel guide - Adventure Activities" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Adventure</span>
-              <h3 class="experience__name">Adventure Activities</h3>
-              <p class="experience__desc">ATV rides, white-water rafting, jungle swings, and sunrise volcano treks near Ubud.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/bali-beaches-surf.html">
-            <div class="experience__image"><img src="assets/images/kelingking-beach.jpg" alt="Bali travel guide - Beaches &amp; Surf" loading="lazy" /></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Coast</span>
-              <h3 class="experience__name">Beaches &amp; Surf</h3>
-              <p class="experience__desc">Where to swim, surf, and catch the sunset - white sand south, black sand north.</p>
-            </div>
-          </a>
-          </div>
-        </div>
-        <div class="ghpanel" data-cat="know" role="tabpanel">
-          <div class="experience__grid experience__grid--slider guide-home__slider">
-          <a class="experience__card guide-home__card" href="guide/best-time-to-visit-bali.html">
-            <!-- TODO: foto asli -->
-            <div class="experience__image" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86));"></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Timing</span>
-              <h3 class="experience__name">Best Time to Visit</h3>
-              <p class="experience__desc">Dry vs wet season, crowds, and prices - what to expect month to month.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/getting-around-bali.html">
-            <!-- TODO: foto asli -->
-            <div class="experience__image" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86));"></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Transport</span>
-              <h3 class="experience__name">Getting Around Bali</h3>
-              <p class="experience__desc">Private drivers, car charters, and scooters - and why it pays to plan realistic days.</p>
-            </div>
-          </a>
-          <a class="experience__card guide-home__card" href="guide/bali-money-sim-visa.html">
-            <!-- TODO: foto asli -->
-            <div class="experience__image" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86));"></div>
-            <div class="experience__body">
-              <span class="guide-home__tag">Essentials</span>
-              <h3 class="experience__name">Money, SIM &amp; Visas</h3>
-              <p class="experience__desc">Currency and cash vs cards, cheap local SIMs, and where to check current visa rules.</p>
-            </div>
-          </a>
-          </div>
-        </div>
-        </div>
-      </div>
-      <div class="guide-home__all"><a href="bali-guide.html">See all Bali guides &rsaquo;</a></div>
       </div>
     </section>
     <section class="about about--panel" id="about">
@@ -855,15 +1345,22 @@
       <div class="trust__group">
         <p class="trust__label">Follow Us</p>
         <div class="trust__socials">
-          <a href="#" aria-label="Instagram"><img src="assets/images/instagram-transparent.webp" alt="Instagram" /></a>
-          <a href="#" aria-label="WhatsApp"><img src="assets/images/whatsapp.webp" alt="WhatsApp" /></a>
-          <a href="#" aria-label="Facebook"><img src="assets/images/facebook.webp" alt="Facebook" /></a>
+          <a href="#" aria-label="Instagram"
+            ><img
+              src="assets/images/instagram-transparent.webp"
+              alt="Instagram"
+          /></a>
+          <a href="#" aria-label="WhatsApp"
+            ><img src="assets/images/whatsapp.webp" alt="WhatsApp"
+          /></a>
+          <a href="#" aria-label="Facebook"
+            ><img src="assets/images/facebook.webp" alt="Facebook"
+          /></a>
         </div>
       </div>
     </section>
 
     <div id="drivers-placeholder"></div>
-
 
     <div id="reviews-placeholder"></div>
 
@@ -871,7 +1368,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=145"></script>
-    <script src="script.js?v=145"></script>
+    <script src="data.js?v=146"></script>
+    <script src="script.js?v=146"></script>
   </body>
 </html>

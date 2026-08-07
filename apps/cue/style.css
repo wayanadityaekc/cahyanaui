@@ -1792,11 +1792,13 @@ section.faq::before,
 /* ==================== Anti-CLS: reserve tempat partial yang di-inject JS ====================
    Booking form & footer masuk lewat fetch -> tanpa reserve, konten loncat pas partial nongol
    (CLS). Angka = tinggi rendered hasil ukur headless Chromium (font Montserrat ke-load):
-   booking 448px (<576) / 455px, footer 688px (<=768) / 487px.
+   booking 464px (<576) / 455px, footer 688px (<=768) / 487px.
    NB: kalau isi partial booking/footer berubah, UKUR ULANG & update angka ini.
-   Navbar nggak perlu: position absolute, nggak dorong konten. */
+   Navbar nggak perlu: position absolute, nggak dorong konten.
+   PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 462px di <576).
+   Kalau kurang, hero melar pas form masuk -> background cover ke-rescale -> foto "zoom". */
 #booking-placeholder {
-  min-height: 448px;
+  min-height: 464px;
 }
 @media (min-width: 576px) {
   #booking-placeholder {
@@ -3345,23 +3347,20 @@ section.faq::before,
   }
 }
 
-/* Animasi masuk hero + box booking (fade + naik dikit) */
-@keyframes heroFadeUp {
+/* Animasi masuk hero + box booking: FADE aja (tanpa gerak) - form booking di-inject
+   via JS, gerakan naik + selisih tinggi bikin kesan "zoom"/goyang. Fade murni = mulus. */
+@keyframes heroFadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
-/* Gerakan kecil + timing seragam (form booking di-inject via JS, tanpa delay biar
-   nggak kerasa dua-fase sama teks hero). */
 .hero__content,
 .subhero__content,
 .hero__booking .booking__card {
-  animation: heroFadeUp 0.6s ease both;
+  animation: heroFadeIn 0.6s ease both;
 }
 /* Hover lift halus buat card (naik dikit + shadow lembut) */
 .experience__card,

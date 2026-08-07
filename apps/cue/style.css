@@ -172,6 +172,14 @@ body {
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
     url("assets/images/ricefield-top.jpg?v=2");
 }
+/* Mobile: foto hero versi potret (foto landscape kepotong banget di layar sempit) */
+@media (max-width: 992px) {
+  .hero {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
+      url("assets/images/rice-terrace-mobile-hero.webp");
+  }
+}
 
 .hero__inner {
   width: 100%;

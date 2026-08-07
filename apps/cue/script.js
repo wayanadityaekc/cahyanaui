@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 38;
+const PARTIALS_VERSION = 39;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2103,7 +2103,7 @@ function showWelcome() {
   modal.innerHTML =
     '<div class="modal__box welcome__box">' +
       '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
-      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" />' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
       '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
       '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> - upfront, always.</p>' +
       '<div class="welcome__field">' +

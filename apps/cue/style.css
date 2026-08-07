@@ -1,3 +1,13 @@
+/* Self-hosted Montserrat (variable font, subset latin) - nggak perlu request ke Google.
+   1 file nutupin weight 300-600. Ganti/rename -> update preload di semua HTML juga. */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url("assets/fonts/montserrat-latin.woff2") format("woff2");
+}
+
 :root {
   --color-green: #1f3d2b;
   --color-gold: #c9a45c;

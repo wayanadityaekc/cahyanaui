@@ -2,7 +2,6 @@
   --color-green: #1f3d2b;
   --color-gold: #c9a45c;
   --color-cream: #f7f3ea;
-  --font-heading: "Great Vibes", cursive;
   --font-body: "Montserrat", sans-serif;
   /* ---- Type scale (DRY) ---- */
   --fs-display: clamp(1.9rem, 5vw, 2.2rem);
@@ -412,7 +411,7 @@ body {
 }
 .about__title {
   margin-bottom: 1rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-weight: 400;
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
@@ -1203,7 +1202,7 @@ body {
 }
 .activities__heading {
   margin-bottom: 1rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-body);
   font-size: var(--fs-h2);
   line-height: var(--lh-heading);
   color: var(--color-gold);

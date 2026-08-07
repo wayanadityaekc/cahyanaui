@@ -28,7 +28,8 @@ When unsure, ask first (keep it short).
 - `--color-green` #1f3d2b · `--color-gold` #c9a45c · `--color-cream` #f7f3ea
 
 **Fonts:**
-- `--font-body` Montserrat (used everywhere). `--font-heading` Great Vibes (barely used).
+- `--font-body` Montserrat — satu-satunya font (dipakai semua elemen termasuk heading).
+  (Great Vibes udah dibuang buat perf — dulu cuma buat 2 heading hiasan.)
 
 **Text:**
 - Body/paragraph = `0.85rem`, uniform across all pages.

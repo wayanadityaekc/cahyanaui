@@ -432,8 +432,8 @@ body {
 .about__title {
   margin-bottom: 1rem;
   font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--fs-display);
+  font-weight: 600;
+  font-size: var(--fs-h2);
   line-height: var(--lh-heading);
   color: var(--color-gold);
 }

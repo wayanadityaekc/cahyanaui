@@ -1762,6 +1762,29 @@ section.faq::before,
 }
 
 /* Footer */
+/* ==================== Anti-CLS: reserve tempat partial yang di-inject JS ====================
+   Booking form & footer masuk lewat fetch -> tanpa reserve, konten loncat pas partial nongol
+   (CLS). Angka = tinggi rendered hasil ukur headless Chromium (font Montserrat ke-load):
+   booking 448px (<576) / 455px, footer 688px (<=768) / 487px.
+   NB: kalau isi partial booking/footer berubah, UKUR ULANG & update angka ini.
+   Navbar nggak perlu: position absolute, nggak dorong konten. */
+#booking-placeholder {
+  min-height: 448px;
+}
+@media (min-width: 576px) {
+  #booking-placeholder {
+    min-height: 455px;
+  }
+}
+#footer-placeholder {
+  min-height: 487px;
+}
+@media (max-width: 768px) {
+  #footer-placeholder {
+    min-height: 688px;
+  }
+}
+
 .footer {
   padding: 3.5rem 1.5rem 1.5rem;
   color: var(--color-cream);

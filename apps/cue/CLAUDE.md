@@ -18,8 +18,9 @@ When unsure, ask first (keep it short).
 - Homework files (`homework-*.js`, etc.): **give CLUES only, never write the fix**.
 - **No Python** for editing this project — use Node/JS.
 - **No fake content**: reviews and driver bios must be real. Prefer an empty state over invented data.
-- Don't rely on screenshots/headless to verify (they time out here). Use structural
-  checks: `node --check`, CSS `{}` brace balance, `grep`.
+- Verifikasi utama = structural checks: `node --check`, CSS `{}` brace balance, `grep`.
+  Headless Chromium BISA dipakai buat ukur layout/screenshot (playwright-core di scratchpad +
+  browser di `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`, serve lokal via `node http`).
 - Don't delete without asking: `REFERRAL_CODE`, the Nyoman placeholder.
 
 ## Design system (keep consistent)
@@ -133,6 +134,9 @@ Order **must be kept** (declarations first, run last):
 - Don't leave dead classes behind.
 
 ## Key mechanics
+- **Anti-CLS**: `#booking-placeholder` & `#footer-placeholder` punya `min-height` di style.css
+  (booking 448/455px, footer 688/487px — hasil ukur headless). **Ubah isi partial booking/footer
+  → ukur ulang & update angkanya** (navbar nggak perlu: position absolute).
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML

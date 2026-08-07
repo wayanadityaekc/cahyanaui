@@ -3349,19 +3349,19 @@ section.faq::before,
 @keyframes heroFadeUp {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+/* Gerakan kecil + timing seragam (form booking di-inject via JS, tanpa delay biar
+   nggak kerasa dua-fase sama teks hero). */
 .hero__content,
-.subhero__content {
-  animation: heroFadeUp 0.7s ease both;
-}
+.subhero__content,
 .hero__booking .booking__card {
-  animation: heroFadeUp 0.7s ease 0.12s both;
+  animation: heroFadeUp 0.6s ease both;
 }
 /* Hover lift halus buat card (naik dikit + shadow lembut) */
 .experience__card,

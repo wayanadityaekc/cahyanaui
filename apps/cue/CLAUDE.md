@@ -136,7 +136,7 @@ Order **must be kept** (declarations first, run last):
 
 ## Key mechanics
 - **Anti-CLS**: `#booking-placeholder` & `#footer-placeholder` punya `min-height` di style.css
-  (booking 448/455px, footer 688/487px — hasil ukur headless). **Ubah isi partial booking/footer
+  (booking 464/455px, footer 688/487px — hasil ukur headless; mobile WAJIB ≥ tinggi form asli, kalau kurang hero melar & foto "zoom"). **Ubah isi partial booking/footer
   → ukur ulang & update angkanya** (navbar nggak perlu: position absolute).
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.

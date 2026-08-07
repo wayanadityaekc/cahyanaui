@@ -23,10 +23,12 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Preload hero (LCP) - URL harus match CSS persis biar nggak dobel-download.
+         Mobile <=992px pakai foto potret kecil, desktop pakai landscape. -->
+    <link rel="preload" as="image" href="assets/images/rice-terrace-mobile-hero.webp" media="(max-width: 992px)" />
+    <link rel="preload" as="image" href="assets/images/ricefield-top.jpg?v=2" media="(min-width: 993px)" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" /></noscript>
     <link rel="stylesheet" href="style.css?v=149" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->

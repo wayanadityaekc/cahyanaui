@@ -511,13 +511,23 @@ async function loadPartials() {
     { id: "faq-placeholder", file: "partials/faq.html" },
     { id: "footer-placeholder", file: "partials/footer.html" }
   ];
-  for (const part of partials) {
+  // Fetch semua partial PARALEL (dulu sekuensial -> 8 round-trip berurutan, lambat di HP:
+  // form booking di hero baru nongol setelah navbar+book-modal selesai). Sekarang network
+  // serempak, tapi INJEKSI tetap berurutan (book-modal harus masuk sebelum booking, karena
+  // #booking-placeholder-nya ada di dalam wrapper yang di-inject book-modal).
+  const texts = await Promise.all(
+    partials.map((part) => {
+      const holder = document.getElementById(part.id);
+      const file = (holder && holder.dataset.src) || part.file;
+      return fetch(`${file}?v=${PARTIALS_VERSION}`)
+        .then((res) => res.text())
+        .catch(() => "");
+    })
+  );
+  partials.forEach((part, i) => {
     const holder = document.getElementById(part.id);
-    if (!holder) continue;
-    // halaman boleh override file lewat data-src (misal FAQ beda per halaman)
-    const file = holder.dataset.src || part.file;
-    const res = await fetch(`${file}?v=${PARTIALS_VERSION}`);
-    holder.innerHTML = await res.text();
+    if (!holder) return;
+    holder.innerHTML = texts[i];
     // book-modal: turunin data-default/data-item halaman ke #booking-placeholder di dalamnya
     if (part.id === "book-modal-placeholder") {
       const inner = holder.querySelector("#booking-placeholder");
@@ -526,7 +536,7 @@ async function loadPartials() {
         if (holder.dataset.item) inner.dataset.item = holder.dataset.item;
       }
     }
-  }
+  });
 }
 
 /* ==================== 4. INIT (per fitur, dipanggil dari initPage) ==================== */

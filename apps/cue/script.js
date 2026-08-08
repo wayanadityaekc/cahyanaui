@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 39;
+const PARTIALS_VERSION = 40;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -507,6 +507,7 @@ async function loadPartials() {
     { id: "booking-placeholder", file: "partials/booking.html" },
     { id: "book-confirm-placeholder", file: "partials/book-confirm.html" },
     { id: "drivers-placeholder", file: "partials/drivers.html" },
+    { id: "guest-gallery-placeholder", file: "partials/guest-gallery.html" },
     { id: "reviews-placeholder", file: "partials/reviews.html" },
     { id: "faq-placeholder", file: "partials/faq.html" },
     { id: "footer-placeholder", file: "partials/footer.html" }

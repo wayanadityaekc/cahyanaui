@@ -1523,6 +1523,65 @@ body {
   background: #fff;
   border-top: 1px solid rgba(201, 164, 92, 0.4);
 }
+
+/* ==================== Galeri foto tamu (marquee auto-scroll) ====================
+   Band putih di antara Drivers & Reviews. Foto = thumbnail kecil (foto tamu low-res
+   sengaja ditampilin kecil biar nggak pecah). Sengaja TERUS jalan (nggak pause on hover)
+   biar keliatan sepintas. Divider emas atas/bawah dari sistem [id$="-placeholder"] > section. */
+.guest-gallery {
+  padding: 3rem 1.5rem 3.2rem;
+  background: #fff;
+}
+.guest-gallery__label {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--color-gold);
+  text-align: center;
+}
+.guest-gallery .section__title {
+  margin-bottom: 1.5rem;
+}
+.guest-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.guest-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, 128px);
+  grid-auto-columns: 128px;
+  gap: 6px;
+  width: max-content;
+  animation: guestScroll 35s linear infinite;
+}
+@keyframes guestScroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.guest-track figure {
+  margin: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid var(--color-gold);
+}
+.guest-track img {
+  width: 128px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .guest-track {
+    animation: none;
+  }
+  .guest-marquee {
+    overflow-x: auto;
+  }
+}
 .drivers__inner {
   max-width: 1000px;
   margin: 0 auto;

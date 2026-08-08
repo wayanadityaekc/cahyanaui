@@ -71,14 +71,14 @@ const ITEM_CARD = {
   "Kintamani Sunrise & Penglipuran": { img: "jeep-card.jpg", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
   "Lovina Dolphin & Sekumpul Waterfall": { img: "lovina-dolphin-sekumpul-card.jpg", desc: "A Lovina dolphin sunrise, the Banjar hot springs, and the Sekumpul waterfall." },
   "ATV": { img: "ubud-atv-adventure-card.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
-  "Rafting": { img: "ubud-rafting-adventure-card.jpg", desc: "White-water rafting down the scenic Ayung River." },
+  "Rafting": { img: "rafting.webp", desc: "White-water rafting down the scenic Ayung River." },
   "Swing": { img: "jungle-swing-card.jpg", desc: "Soar over the jungle on Bali's famous swing." },
   "Jeep Sunrise": { img: "mount-batur-sunrise.webp", desc: "A sunrise 4x4 adventure to the Mount Batur viewpoints." },
-  "Mount Batur Trekking": { img: "mount-batur-volcano.webp", desc: "A dawn hike to the summit of an active volcano." },
-  "Cooking Class": { img: "cooking-class-ubud.jpg", desc: "A market visit, a hands-on cooking class, and coffee with a local family." },
+  "Mount Batur Trekking": { img: "mount-batur-sunrise.webp", desc: "A dawn hike to the summit of an active volcano." },
+  "Cooking Class": { img: "cooking-class-card.webp", desc: "A market visit, a hands-on cooking class, and coffee with a local family." },
   "Watersport": { img: "watersport-card.jpg", desc: "Jet ski, banana boat, and parasailing off Bali's southern coast." },
   "Kecak Dance": { img: "kecak.jpg", desc: "Bali's famous fire-and-chant ritual, performed at sunset." },
-  "Barong Dance": { img: "barong-dance-performance.jpg", desc: "The ancient dance-drama of good versus evil." },
+  "Barong Dance": { img: "barong-dance-card.webp", desc: "The ancient dance-drama of good versus evil." },
   "Bali Zoo": { img: "", desc: "Elephants, orangutans, and jungle wildlife just south of Ubud." },
   "Bali Bird Park": { img: "", desc: "Over 1,000 birds, aviaries, and free-flight shows near Ubud." }
 };

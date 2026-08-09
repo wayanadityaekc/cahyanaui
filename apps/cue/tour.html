@@ -17,7 +17,7 @@
       content="Private, customizable Bali day tours from Ubud - rice terraces, temples, waterfalls, and beaches with local guides. Only a 10% deposit to book."
     />
     <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="style.css?v=165" />
+    <link rel="stylesheet" href="style.css?v=166" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/tour.html" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -284,7 +284,9 @@
     </section>
 
     <section class="info">
-      <div class="info__container">
+      <!-- data-tour-type="generic": halaman listing nggak punya satu harga, jadi toggle-nya
+           cuma nge-swap baris tiket Included/Excluded (penjelas Standard vs Exclusive). -->
+      <div class="info__container" data-tour-type="generic">
         <h2 class="section__title">Tour Details</h2>
         <div class="info__facts">
           <div class="info__fact">
@@ -309,12 +311,15 @@
               <li>Hotel or villa pick-up and drop-off</li>
               <li>Free cold water on board</li>
               <li>Flexible, fully customizable itinerary</li>
+              <li data-only="exclusive">
+                Exclusive option: Entrance tickets for the listed attractions
+              </li>
             </ul>
           </div>
           <div class="info__col">
             <h3>What's Excluded</h3>
             <ul class="info__list info__list--no">
-              <li>Entrance tickets</li>
+              <li data-only="standard">Standard option: Entrance tickets to attractions</li>
               <li>Meals and drinks</li>
               <li>Personal expenses</li>
               <li>Tips and gratuities (optional)</li>
@@ -327,7 +332,7 @@
     <div id="faq-placeholder" data-src="partials/faq-tour.html"></div>
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=165"></script>
-    <script src="script.js?v=165"></script>
+    <script src="data.js?v=166"></script>
+    <script src="script.js?v=166"></script>
   </body>
 </html>

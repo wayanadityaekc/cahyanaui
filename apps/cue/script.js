@@ -2206,6 +2206,32 @@ function initTourType() {
     holders.push(() => updateNote(priceEl.dataset.mode));
   }
 
+  // Toggle generik buat halaman listing (tour.html): nggak nyentuh harga sama sekali,
+  // cuma nge-swap baris tiket Included/Excluded biar user paham beda Standard vs Exclusive.
+  function buildGeneric(box, mount) {
+    const wrap = document.createElement("div");
+    wrap.className = "tour-type tour-type--detail";
+    wrap.innerHTML =
+      '<div class="tour-type__toggle" role="tablist" aria-label="Tour type">' +
+        '<button type="button" class="tour-type__btn is-active" role="tab" data-mode="standard">Standard</button>' +
+        '<button type="button" class="tour-type__btn" role="tab" data-mode="exclusive">Exclusive</button>' +
+      "</div>" +
+      '<small class="tour-type__note"></small>';
+    mount.insertAdjacentElement("afterend", wrap);
+
+    const note = wrap.querySelector(".tour-type__note");
+    const btns = wrap.querySelectorAll(".tour-type__btn");
+    function apply(mode) {
+      btns.forEach((b) => b.classList.toggle("is-active", b.dataset.mode === mode));
+      box.classList.toggle("is-exclusive", mode === "exclusive");
+      note.textContent = mode === "exclusive"
+        ? "Entrance tickets included - see each tour for the price"
+        : "Driver only - entrance tickets paid at each site";
+    }
+    btns.forEach((b) => b.addEventListener("click", () => apply(b.dataset.mode)));
+    apply("standard");
+  }
+
   // Blok gold 2-segmen "Experience / Performance" buat card experience & performance.
   // Bentuknya sama kayak toggle Standard/Exclusive tapi STATIS (disabled, nggak bisa diklik):
   // Performance aktif utk kecak/barong, Experience utk lainnya.
@@ -2256,7 +2282,12 @@ function initTourType() {
   document.querySelectorAll(".info__container").forEach((box) => {
     const priceEl = box.querySelector("[data-price]");
     const title = box.querySelector(".section__title");
-    if (!priceEl) return;
+    // Halaman listing (tour.html): nggak ada harga tunggal -> toggle generik yang
+    // cuma nge-swap baris tiket Included/Excluded lewat class .is-exclusive.
+    if (!priceEl) {
+      if (box.dataset.tourType === "generic" && title) buildGeneric(box, title);
+      return;
+    }
     const info = itemInfo(priceEl.dataset.price);
     if (info) addPriceUnit(priceEl, info.cat);
     if (title) build(priceEl.dataset.price, priceEl, title, "after", "detail");

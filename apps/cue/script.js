@@ -33,7 +33,7 @@ const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
   "east-bali-tour.html": "East Bali Tour",
   "west-bali-tour.html": "West Bali Tour",
-  "south-bali-tour.html": "South Bali Tour",
+  "south-bali-tour.html": "Bali Hidden Beaches and Cliffs",
   "north-bali-tour.html": "North Bali Tour",
   "attractions/atv-ride.html": "ATV",
   "attractions/rafting.html": "Rafting",
@@ -47,7 +47,7 @@ const PAGE_ITEM = {
   "attractions/bali-zoo.html": "Bali Zoo",
   "attractions/bali-bird-park.html": "Bali Bird Park",
   "ubud-culture-day.html": "Ubud Culture Day",
-  "south-coast-sunset-kecak.html": "South Coast & Sunset Kecak",
+  "south-coast-sunset-kecak.html": "South Bali & Sunset Kecak",
   "batur-sunrise-adrenaline.html": "Batur Sunrise & Adrenaline",
   "ubud-rafting-adventure.html": "Ubud Rafting Adventure",
   "ubud-atv-adventure.html": "Ubud ATV Adventure",
@@ -61,10 +61,10 @@ const ITEM_CARD = {
   "Ubud Tour": { img: "ubud-tour-card.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
   "East Bali Tour": { img: "east-bali-tour-card.jpg", desc: "Royal water palaces, bamboo forests, and the gates of Lempuyang." },
   "West Bali Tour": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
-  "South Bali Tour": { img: "south-bali-tour-card.jpg", desc: "Watersports at Tanjung Benoa, the GWK statue, and the Bukit's best beaches." },
+  "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
   "North Bali Tour": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
   "Ubud Culture Day": { img: "ubud-culture-day-card.jpg", desc: "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance." },
-  "South Coast & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Cliff temples, beaches, and the sunset Kecak dance at Uluwatu." },
+  "South Bali & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak dance at Uluwatu." },
   "Batur Sunrise & Adrenaline": { img: "batur-sunrise-adrenaline-card.jpg", desc: "A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak." },
   "Ubud Rafting Adventure": { img: "ubud-rafting-adventure-card.jpg", desc: "Ayung river rafting, rice terraces, luwak coffee, and a waterfall." },
   "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.jpg", desc: "A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
@@ -94,7 +94,7 @@ const PKG_AIRPORT = "Airport – Ubud";
 const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
 const SUGGEST = [
   "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour",
-  "South Coast & Sunset Kecak", "West Bali Tour", "North Bali Tour"
+  "South Bali & Sunset Kecak", "West Bali Tour", "North Bali Tour"
 ];
 
 /* ==================== 2. HELPER FUNCTIONS ==================== */

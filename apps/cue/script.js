@@ -32,7 +32,7 @@ let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
 const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
   "lempuyang-tirta-gangga.html": "Lempuyang & Tirta Gangga",
-  "ulun-danu-tanah-lot.html": "Ulun Danu, Jatiluwih & Tanah Lot",
+  "ulun-danu-tanah-lot.html": "Ulun Danu Beratan & Tanah Lot Temple",
   "south-bali-tour.html": "Bali Hidden Beaches and Cliffs",
   "munduk-twin-lakes.html": "Munduk Waterfalls & Twin Lakes",
   "attractions/atv-ride.html": "ATV",
@@ -60,7 +60,7 @@ const PAGE_ITEM = {
 const ITEM_CARD = {
   "Ubud Tour": { img: "ubud-tour-card.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
   "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Royal water palaces, bamboo forests, and the gates of Lempuyang." },
-  "Ulun Danu, Jatiluwih & Tanah Lot": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
+  "Ulun Danu Beratan & Tanah Lot Temple": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
   "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
   "Ubud Culture Day": { img: "ubud-culture-day-card.jpg", desc: "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance." },
@@ -94,7 +94,7 @@ const PKG_AIRPORT = "Airport – Ubud";
 const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
 const SUGGEST = [
   "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "Lempuyang & Tirta Gangga",
-  "South Bali & Sunset Kecak", "Ulun Danu, Jatiluwih & Tanah Lot", "Munduk Waterfalls & Twin Lakes"
+  "South Bali & Sunset Kecak", "Ulun Danu Beratan & Tanah Lot Temple", "Munduk Waterfalls & Twin Lakes"
 ];
 
 /* ==================== 2. HELPER FUNCTIONS ==================== */

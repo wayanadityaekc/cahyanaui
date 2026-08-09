@@ -16,7 +16,7 @@
 
 // -- pricing data
 const prices = {
-  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Ulun Danu, Jatiluwih & Tanah Lot": { usd: 60, idr: 950000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000 }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
+  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Ulun Danu Beratan & Tanah Lot Temple": { usd: 60, idr: 950000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000 }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
   experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 }, "Bali Zoo": { usd: 40, idr: 600000 }, "Bali Bird Park": { usd: 28, idr: 430000 } },
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
@@ -101,7 +101,7 @@ const TICKETS = {
 const TOUR_TICKETS = {
   "Ubud Tour": ["Tegalalang", "Tirta Empul", "Gunung Kawi", "Goa Gajah", "Tegenungan", "Monkey Forest"],
   "Lempuyang & Tirta Gangga": ["Lempuyang", "Tirta Gangga", "Taman Ujung", "Besakih"],
-  "Ulun Danu, Jatiluwih & Tanah Lot": ["Taman Ayun", "Sangeh", "Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
+  "Ulun Danu Beratan & Tanah Lot Temple": ["Taman Ayun", "Sangeh", "Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
   "Bali Hidden Beaches and Cliffs": ["Tegal Wangi", "Green Bowl", "Balangan", "Bingin"],
   "Munduk Waterfalls & Twin Lakes": ["Twin Lakes Viewpoint", "Banyumala", "Munduk Waterfall", "Gitgit"],
   "Ubud Culture Day": ["Barong Batubulan", "Pura Batuan", "Kecak Ubud"],

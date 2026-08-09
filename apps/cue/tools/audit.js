@@ -44,28 +44,39 @@ const broken = refs.filter((r) => !fs.existsSync(R(r.split("?")[0])) && !["asset
 broken.length ? bad("foto broken (dipanggil tapi file hilang): " + broken.map((b) => b.replace("assets/images/", "")).join(", "))
   : ok("referensi foto: 0 broken (" + refs.length + " foto dipakai)");
 
-// 4. card sync (homepage / listing / itinerary)
+// 4. card sync (homepage / listing / itinerary) - FOTO & DESKRIPSI
+//    Tiap program muncul sbg card di beberapa tempat; foto & teks-nya harus sama semua.
+const clean = (t) => (t || "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&#39;|&rsquo;/g, "'").replace(/\s+/g, " ").trim();
 function cards(file) {
   const s = read(file), out = {};
   s.split(/class="experience__card/).slice(1).forEach((part) => {
     if (/guide-home__card/.test(part.slice(0, 80))) return;
-    const chunk = part.slice(0, 1200);
+    const chunk = part.slice(0, 1400);
     const img = (chunk.match(/assets\/images\/([A-Za-z0-9._-]+)/) || [])[1];
     const nm = (chunk.match(/experience__name">\s*([\s\S]*?)\s*<\/h3>/) || [])[1];
-    if (img && nm) out[nm.replace(/\s+/g, " ").replace(/&amp;/g, "&").trim()] = img;
+    const desc = (chunk.match(/experience__desc">\s*([\s\S]*?)\s*<\/p>/) || [])[1];
+    if (img && nm) out[clean(nm)] = { img, desc: clean(desc) };
   });
   return out;
 }
 const home = cards("index.html"), listing = { ...cards("tour.html"), ...cards("activities.html") };
-const item = {};
-[...read("script.js").matchAll(/"([^"]+)":\s*\{\s*img:\s*"([^"]*)"/g)].forEach((m) => { if (m[2]) item[m[1].replace(/&amp;/g, "&")] = m[2]; });
-const cardMiss = [];
-[...new Set([...Object.keys(home), ...Object.keys(listing), ...Object.keys(item)])].forEach((n) => {
-  const vals = [home[n], listing[n], item[n]].filter(Boolean);
-  if (new Set(vals).size > 1) cardMiss.push(n);
-});
-cardMiss.length ? bad("card foto NGGAK sync (homepage/listing/itinerary beda): " + cardMiss.join(", "))
+const item = {}; // ITEM_CARD di script.js: nama -> {img, desc}
+[...read("script.js").matchAll(/"([^"]+)":\s*\{\s*img:\s*"([^"]*)",\s*desc:\s*"([^"]*)"/g)]
+  .forEach((m) => { item[m[1].replace(/&amp;/g, "&")] = { img: m[2], desc: clean(m[3]) }; });
+// bandingin field tertentu (img / desc) antar sumber; flag yang beda
+function cardDiff(field) {
+  const miss = [];
+  [...new Set([...Object.keys(home), ...Object.keys(listing), ...Object.keys(item)])].forEach((n) => {
+    const vals = [home[n], listing[n], item[n]].filter(Boolean).map((o) => o[field]).filter(Boolean);
+    if (new Set(vals).size > 1) miss.push(n);
+  });
+  return miss;
+}
+const imgMiss = cardDiff("img"), descMiss = cardDiff("desc");
+imgMiss.length ? bad("card FOTO nggak sync (homepage/listing/itinerary beda): " + imgMiss.join(", "))
   : ok("card foto sync di homepage/listing/itinerary");
+descMiss.length ? bad("card DESKRIPSI nggak sync (homepage/listing/itinerary beda): " + descMiss.join(", "))
+  : ok("card deskripsi sync di homepage/listing/itinerary");
 
 // 5. price span coverage - tiap [data-price="X"] harus ada key-nya di `prices`
 const priceKeys = [...read("data.js").matchAll(/"([^"]+)":\s*\{\s*usd:/g)].map((m) => m[1]);

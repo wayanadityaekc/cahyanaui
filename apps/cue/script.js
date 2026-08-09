@@ -31,10 +31,10 @@ let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
 // mana pun tau program apa yang ditambahin, walau teks card beda)
 const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
-  "east-bali-tour.html": "East Bali Tour",
-  "west-bali-tour.html": "West Bali Tour",
+  "lempuyang-tirta-gangga.html": "Lempuyang & Tirta Gangga",
+  "ulun-danu-tanah-lot.html": "Ulun Danu, Jatiluwih & Tanah Lot",
   "south-bali-tour.html": "Bali Hidden Beaches and Cliffs",
-  "north-bali-tour.html": "North Bali Tour",
+  "munduk-twin-lakes.html": "Munduk Waterfalls & Twin Lakes",
   "attractions/atv-ride.html": "ATV",
   "attractions/rafting.html": "Rafting",
   "attractions/jungle-swing.html": "Swing",
@@ -59,10 +59,10 @@ const PAGE_ITEM = {
 // Key HARUS sama persis dg nama di `prices`. Dipakai renderDayCard buat render .experience__card.
 const ITEM_CARD = {
   "Ubud Tour": { img: "ubud-tour-card.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
-  "East Bali Tour": { img: "east-bali-tour-card.jpg", desc: "Royal water palaces, bamboo forests, and the gates of Lempuyang." },
-  "West Bali Tour": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
+  "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Royal water palaces, bamboo forests, and the gates of Lempuyang." },
+  "Ulun Danu, Jatiluwih & Tanah Lot": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
-  "North Bali Tour": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
+  "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
   "Ubud Culture Day": { img: "ubud-culture-day-card.jpg", desc: "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance." },
   "South Bali & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak dance at Uluwatu." },
   "Batur Sunrise & Adrenaline": { img: "batur-sunrise-adrenaline-card.jpg", desc: "A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak." },
@@ -93,8 +93,8 @@ const ITN_KEY = "cue_itinerary_v1";
 const PKG_AIRPORT = "Airport – Ubud";
 const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
 const SUGGEST = [
-  "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour",
-  "South Bali & Sunset Kecak", "West Bali Tour", "North Bali Tour"
+  "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "Lempuyang & Tirta Gangga",
+  "South Bali & Sunset Kecak", "Ulun Danu, Jatiluwih & Tanah Lot", "Munduk Waterfalls & Twin Lakes"
 ];
 
 /* ==================== 2. HELPER FUNCTIONS ==================== */

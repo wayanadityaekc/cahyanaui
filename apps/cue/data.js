@@ -16,12 +16,12 @@
 
 // -- pricing data
 const prices = {
-  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "East Bali Tour": { usd: 55, idr: 850000 }, "West Bali Tour": { usd: 60, idr: 950000 }, "South Bali Tour": { usd: 50, idr: 800000 }, "North Bali Tour": { usd: 65, idr: 1000000 } },
+  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Ulun Danu Beratan & Tanah Lot Temple": { usd: 60, idr: 950000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000 }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
   experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 }, "Bali Zoo": { usd: 40, idr: 600000 }, "Bali Bird Park": { usd: 28, idr: 430000 } },
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
   villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
-  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Coast & Sunset Kecak": { usd: 65, idr: 1000000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 } }
+  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Bali & Sunset Kecak": { usd: 85, idr: 1300000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 } }
 };
 
 // Charter mobil 
@@ -69,6 +69,10 @@ const TICKETS = {
   "GWK": 125000,
   "Pandawa": 25000,
   "Melasti": 10000,
+  "Tegal Wangi": 10000,             // parkir/retribusi lokal - CEK WAYAN
+  "Green Bowl": 15000,              // parkir + akses tangga - CEK WAYAN
+  "Balangan": 10000,                // parkir/retribusi - CEK WAYAN
+  "Bingin": 15000,                  // retribusi lokal - CEK WAYAN
   "Twin Lakes Viewpoint": 25000,
   "Banyumala": 50000,
   "Munduk Waterfall": 20000,
@@ -96,12 +100,12 @@ const TICKETS = {
 //    Catatan: swing di Ubud Tour & dinner Jimbaran = opsional, sengaja di luar.
 const TOUR_TICKETS = {
   "Ubud Tour": ["Tegalalang", "Tirta Empul", "Gunung Kawi", "Goa Gajah", "Tegenungan", "Monkey Forest"],
-  "East Bali Tour": ["Lempuyang", "Tirta Gangga", "Taman Ujung", "Besakih"],
-  "West Bali Tour": ["Taman Ayun", "Sangeh", "Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
-  "South Bali Tour": ["Watersport Package", "GWK", "Pandawa", "Melasti"],
-  "North Bali Tour": ["Twin Lakes Viewpoint", "Banyumala", "Munduk Waterfall", "Gitgit"],
+  "Lempuyang & Tirta Gangga": ["Lempuyang", "Tirta Gangga", "Taman Ujung", "Besakih"],
+  "Ulun Danu Beratan & Tanah Lot Temple": ["Taman Ayun", "Sangeh", "Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
+  "Bali Hidden Beaches and Cliffs": ["Tegal Wangi", "Green Bowl", "Balangan", "Bingin"],
+  "Munduk Waterfalls & Twin Lakes": ["Twin Lakes Viewpoint", "Banyumala", "Munduk Waterfall", "Gitgit"],
   "Ubud Culture Day": ["Barong Batubulan", "Pura Batuan", "Kecak Ubud"],
-  "South Coast & Sunset Kecak": ["Padang Padang", "Uluwatu Temple", "Kecak Uluwatu"],
+  "South Bali & Sunset Kecak": ["Watersport Package", "GWK", "Pandawa", "Uluwatu Temple", "Kecak Uluwatu"],
   "Batur Sunrise & Adrenaline": ["Batur Trek + Breakfast", "Batur Hot Spring"],
   "Ubud Rafting Adventure": ["Ayung Rafting", "Tegalalang", "Tegenungan"],
   "Ubud ATV Adventure": ["ATV Ride", "Bali Zoo", "Bali Bird Park", "Tegenungan"],

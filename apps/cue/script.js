@@ -31,10 +31,10 @@ let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
 // mana pun tau program apa yang ditambahin, walau teks card beda)
 const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
-  "east-bali-tour.html": "East Bali Tour",
-  "west-bali-tour.html": "West Bali Tour",
-  "south-bali-tour.html": "South Bali Tour",
-  "north-bali-tour.html": "North Bali Tour",
+  "lempuyang-tirta-gangga.html": "Lempuyang & Tirta Gangga",
+  "ulun-danu-tanah-lot.html": "Ulun Danu Beratan & Tanah Lot Temple",
+  "south-bali-tour.html": "Bali Hidden Beaches and Cliffs",
+  "munduk-twin-lakes.html": "Munduk Waterfalls & Twin Lakes",
   "attractions/atv-ride.html": "ATV",
   "attractions/rafting.html": "Rafting",
   "attractions/jungle-swing.html": "Swing",
@@ -47,7 +47,7 @@ const PAGE_ITEM = {
   "attractions/bali-zoo.html": "Bali Zoo",
   "attractions/bali-bird-park.html": "Bali Bird Park",
   "ubud-culture-day.html": "Ubud Culture Day",
-  "south-coast-sunset-kecak.html": "South Coast & Sunset Kecak",
+  "south-coast-sunset-kecak.html": "South Bali & Sunset Kecak",
   "batur-sunrise-adrenaline.html": "Batur Sunrise & Adrenaline",
   "ubud-rafting-adventure.html": "Ubud Rafting Adventure",
   "ubud-atv-adventure.html": "Ubud ATV Adventure",
@@ -59,26 +59,26 @@ const PAGE_ITEM = {
 // Key HARUS sama persis dg nama di `prices`. Dipakai renderDayCard buat render .experience__card.
 const ITEM_CARD = {
   "Ubud Tour": { img: "ubud-tour-card.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
-  "East Bali Tour": { img: "east-bali-tour-card.jpg", desc: "Water palaces, bamboo forests, and the dramatic gates of Lempuyang." },
-  "West Bali Tour": { img: "west-bali-tour-card.jpg", desc: "Tanah Lot, Jatiluwih rice terraces, and Bali's temple-dotted west." },
-  "South Bali Tour": { img: "south-bali-tour-card.jpg", desc: "Cliff temples, white-sand beaches, and golden sunsets on the coast." },
-  "North Bali Tour": { img: "north-bali-tour-card.jpg", desc: "Waterfalls, twin lakes, and quiet temples across Bali's north." },
+  "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Royal water palaces, bamboo forests, and the gates of Lempuyang." },
+  "Ulun Danu Beratan & Tanah Lot Temple": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
+  "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
+  "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
   "Ubud Culture Day": { img: "ubud-culture-day-card.jpg", desc: "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance." },
-  "South Coast & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Cliff temples and southern beaches, ending with the sunset Kecak fire dance." },
+  "South Bali & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak dance at Uluwatu." },
   "Batur Sunrise & Adrenaline": { img: "batur-sunrise-adrenaline-card.jpg", desc: "A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak." },
   "Ubud Rafting Adventure": { img: "ubud-rafting-adventure-card.jpg", desc: "Ayung river rafting, rice terraces, luwak coffee, and a waterfall." },
-  "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.jpg", desc: "An ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
+  "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.jpg", desc: "A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
   "Kintamani Sunrise & Penglipuran": { img: "jeep-card.jpg", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
-  "Lovina Dolphin & Sekumpul Waterfall": { img: "lovina-dolphin-sekumpul-card.jpg", desc: "A Lovina dolphin sunrise, the Banjar hot springs, and the Sekumpul waterfall." },
+  "Lovina Dolphin & Sekumpul Waterfall": { img: "lovina-dolphin-sekumpul-card.jpg", desc: "A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul waterfall." },
   "ATV": { img: "ubud-atv-adventure-card.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
-  "Rafting": { img: "ubud-rafting-adventure-card.jpg", desc: "White-water rafting down the scenic Ayung River." },
+  "Rafting": { img: "rafting.webp", desc: "White-water rafting down the scenic Ayung River gorge." },
   "Swing": { img: "jungle-swing-card.jpg", desc: "Soar over the jungle on Bali's famous swing." },
-  "Jeep Sunrise": { img: "mount-batur-sunrise.webp", desc: "A sunrise 4x4 adventure to the Mount Batur viewpoints." },
-  "Mount Batur Trekking": { img: "mount-batur-volcano.webp", desc: "A dawn hike to the summit of an active volcano." },
-  "Cooking Class": { img: "cooking-class-ubud.jpg", desc: "A market visit, a hands-on cooking class, and coffee with a local family." },
-  "Watersport": { img: "watersport-card.jpg", desc: "Jet ski, banana boat, and parasailing off Bali's southern coast." },
+  "Jeep Sunrise": { img: "mount-batur-sunrise.webp", desc: "A sunrise 4x4 across Mount Batur's black-lava fields." },
+  "Mount Batur Trekking": { img: "mount-batur-sunrise.webp", desc: "A pre-dawn hike to the summit of an active volcano." },
+  "Cooking Class": { img: "cooking-class-card.webp", desc: "Cook authentic Balinese dishes with a local family." },
+  "Watersport": { img: "watersport-card.jpg", desc: "Jet ski, banana boat, and parasailing off the south coast." },
   "Kecak Dance": { img: "kecak.jpg", desc: "Bali's famous fire-and-chant ritual, performed at sunset." },
-  "Barong Dance": { img: "barong-dance-performance.jpg", desc: "The ancient dance-drama of good versus evil." },
+  "Barong Dance": { img: "barong-dance-card.webp", desc: "The ancient dance-drama of good versus evil, in ornate masks." },
   "Bali Zoo": { img: "", desc: "Elephants, orangutans, and jungle wildlife just south of Ubud." },
   "Bali Bird Park": { img: "", desc: "Over 1,000 birds, aviaries, and free-flight shows near Ubud." }
 };
@@ -93,8 +93,8 @@ const ITN_KEY = "cue_itinerary_v1";
 const PKG_AIRPORT = "Airport – Ubud";
 const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
 const SUGGEST = [
-  "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "East Bali Tour",
-  "South Coast & Sunset Kecak", "West Bali Tour", "North Bali Tour"
+  "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "Lempuyang & Tirta Gangga",
+  "South Bali & Sunset Kecak", "Ulun Danu Beratan & Tanah Lot Temple", "Munduk Waterfalls & Twin Lakes"
 ];
 
 /* ==================== 2. HELPER FUNCTIONS ==================== */

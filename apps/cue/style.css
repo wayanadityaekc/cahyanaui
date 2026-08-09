@@ -1529,8 +1529,14 @@ body {
    sengaja ditampilin kecil biar nggak pecah). Sengaja TERUS jalan (nggak pause on hover)
    biar keliatan sepintas. Divider emas atas/bawah dari sistem [id$="-placeholder"] > section. */
 .guest-gallery {
-  padding: 3rem 1.5rem 3.2rem;
+  padding: 3rem 0 3.2rem;
   background: #fff;
+}
+/* Heading tetap punya breathing room; marquee-nya full-width (edge to edge). */
+.guest-gallery__label,
+.guest-gallery .section__title {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 .guest-gallery__label {
   text-transform: uppercase;
@@ -1545,8 +1551,9 @@ body {
 }
 .guest-marquee {
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  /* Fade tipis di pinggir (2%) biar foto masuk/keluar halus tanpa kepotong tegas. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
 }
 .guest-track {
   display: grid;

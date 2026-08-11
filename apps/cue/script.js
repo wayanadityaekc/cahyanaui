@@ -136,6 +136,20 @@ function renderPrices() {
     const base = info ? info.price : prices.transfer[name];
     if (base) el.textContent = fmtMoney(base.usd, base.idr);
   });
+  renderFees();
+}
+
+// Isi <span class="fee" data-idr="N"> (tiket masuk di halaman attraction) ke
+// currency aktif. Fee aslinya IDR; buat currency lain dikonversi lewat kurs tiket
+// & dikasih "~" (perkiraan, karena bayarnya tetap cash IDR di gerbang).
+function renderFees() {
+  document.querySelectorAll("span.fee[data-idr]").forEach((el) => {
+    const idr = parseInt(el.dataset.idr, 10);
+    if (!idr) return;
+    const cur = currentCurrency;
+    const txt = fmtMoney(idr / TICKET_IDR_PER_USD, idr, cur);
+    el.textContent = cur === "IDR" ? txt : "~" + txt;
+  });
 }
 
 // Ganti currency: simpan + render ulang semua harga (static + booking + itinerary)

@@ -68,7 +68,7 @@ const ITEM_CARD = {
   "Batur Sunrise & Adrenaline": { img: "batur-sunrise-adrenaline-card.jpg", desc: "A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak." },
   "Ubud Rafting Adventure": { img: "ubud-rafting-adventure-card.jpg", desc: "Ayung river rafting, rice terraces, luwak coffee, and a waterfall." },
   "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.jpg", desc: "A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
-  "Kintamani Sunrise & Penglipuran": { img: "jeep-card.jpg", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
+  "Kintamani Sunrise & Penglipuran": { img: "jeep-batur-card.webp", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
   "Lovina Dolphin & Sekumpul Waterfall": { img: "lovina-dolphin-sekumpul-card.jpg", desc: "A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul waterfall." },
   "ATV": { img: "ubud-atv-adventure-card.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
   "Rafting": { img: "rafting.webp", desc: "White-water rafting down the scenic Ayung River gorge." },

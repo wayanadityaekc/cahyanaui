@@ -101,7 +101,7 @@ const TICKETS = {
 const TOUR_TICKETS = {
   "Ubud Tour": ["Tegalalang", "Tirta Empul", "Gunung Kawi", "Goa Gajah", "Tegenungan", "Monkey Forest"],
   "Lempuyang & Tirta Gangga": ["Lempuyang", "Tirta Gangga", "Taman Ujung", "Besakih"],
-  "Ulun Danu Beratan & Tanah Lot Temple": ["Taman Ayun", "Sangeh", "Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
+  "Ulun Danu Beratan & Tanah Lot Temple": ["Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
   "Bali Hidden Beaches and Cliffs": ["Tegal Wangi", "Green Bowl", "Balangan", "Bingin"],
   "Munduk Waterfalls & Twin Lakes": ["Twin Lakes Viewpoint", "Banyumala", "Munduk Waterfall", "Gitgit"],
   "Ubud Culture Day": ["Barong Batubulan", "Pura Batuan", "Kecak Ubud"],

@@ -587,14 +587,43 @@ function initBookingConfirm() {
 
   const renderInto = (elx, usd, idr) => { elx.innerHTML = priceHTML(usd, idr); };
 
-  // opts: { type, service, guests, date, price:{usd,idr}, pickup, pickupOptional,
-  //         dropoffRequired, referralEligible, detailLines, items }
+  // opts direct/charter: { type, service, guests, date, price:{usd,idr}, pickup,
+  //   pickupOptional, dropoffRequired, referralEligible, detailLines }
+  // opts itinerary: { ..., lines:[{type,service,date,guests,pickup,dropoff,usd,idr,day_no,eligible}] }
+  // Total semua line (final = setelah diskon, base = harga asli).
+  function recalcTotal() {
+    ctx.final = ctx.lines.reduce(
+      (a, l) => ({ usd: a.usd + l.final.usd, idr: a.idr + l.final.idr }),
+      { usd: 0, idr: 0 },
+    );
+    renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+  }
+
   window.__openBooking = function (o) {
-    ctx = { ...o, base: { ...o.price }, final: { ...o.price }, discount: false };
+    ctx = { ...o, discount: false };
+    // Susun line: itinerary = banyak baris (o.lines); direct/charter = 1 baris.
+    // Tiap line pegang harga base + final sendiri + flag `eligible` buat referral.
+    if (Array.isArray(o.lines) && o.lines.length) {
+      ctx.structured = true;
+      ctx.lines = o.lines.map((l) => ({
+        type: l.type, service: l.service, date: l.date || "", guests: l.guests,
+        pickup: l.pickup || "", dropoff: l.dropoff || "",
+        day_no: l.day_no != null ? l.day_no : null, eligible: !!l.eligible,
+        base: { usd: l.usd, idr: l.idr }, final: { usd: l.usd, idr: l.idr },
+      }));
+    } else {
+      ctx.structured = false;
+      ctx.lines = [{
+        type: o.type, service: o.service, date: o.date || "", guests: o.guests,
+        pickup: "", dropoff: "", day_no: null, eligible: !!o.referralEligible,
+        base: { usd: o.price.usd, idr: o.price.idr }, final: { usd: o.price.usd, idr: o.price.idr },
+      }];
+    }
+    ctx.anyEligible = ctx.lines.some((l) => l.eligible);
     sumGuest.textContent = o.guests || "-";
     sumService.textContent = o.service;
     sumDate.textContent = o.date || "-";
-    renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+    recalcTotal();
     nameI.value = ""; phoneI.value = ""; emailI.value = "";
     pickupI.value = o.pickup || "";
     dropoffI.value = "";
@@ -626,15 +655,19 @@ function initBookingConfirm() {
     if (!ctx) return;
     const code = referralI.value.trim().toLowerCase();
     const noDiscount = (msg) => {
-      ctx.final = { ...ctx.base }; ctx.discount = false;
-      renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+      ctx.lines.forEach((l) => { l.final = { ...l.base }; });
+      ctx.discount = false; recalcTotal();
       refMsg.textContent = msg; refMsg.className = "modal__referral-msg error";
     };
     if (code !== REFERRAL_CODE) return noDiscount("Invalid referral code.");
-    if (!ctx.referralEligible) return noDiscount("Referral only valid for tours & transfers.");
-    ctx.final = { usd: Math.round(ctx.base.usd * 0.9), idr: Math.round(ctx.base.idr * 0.9) };
-    ctx.discount = true;
-    renderInto(sumPrice, ctx.final.usd, ctx.final.idr);
+    if (!ctx.anyEligible) return noDiscount("Referral only valid for tours & transfers.");
+    // Diskon 10% cuma di line eligible (tour & transfer); charter tetap harga asli.
+    ctx.lines.forEach((l) => {
+      l.final = l.eligible
+        ? { usd: Math.round(l.base.usd * 0.9), idr: Math.round(l.base.idr * 0.9) }
+        : { ...l.base };
+    });
+    ctx.discount = true; recalcTotal();
     refMsg.textContent = "Referral applied - 10% off!"; refMsg.className = "modal__referral-msg success";
   });
 
@@ -650,19 +683,27 @@ function initBookingConfirm() {
   }
 
   function payload() {
+    // Tiap line -> baris sendiri di DB. Direct/charter pickup+dropoff dari input modal;
+    // itinerary tiap line bawa pickup/dropoff sendiri (kosong -> pakai hotel di modal).
+    const lines = ctx.lines.map((l) => ({
+      type: l.type,
+      service: l.service,
+      date: l.date || "",
+      guests: String(l.guests || ""),
+      pickup: ctx.structured ? l.pickup || pickupI.value : pickupI.value,
+      dropoff: ctx.structured ? l.dropoff : dropoffI.value,
+      price_usd: l.final.usd,
+      price_idr: l.final.idr,
+      day_no: l.day_no != null ? l.day_no : null,
+    }));
     return {
       type: ctx.type,
+      service: ctx.service,
       name: nameI.value,
       phone: phoneI.value,
       email: emailI.value,
-      pickup: pickupI.value,
-      dropoff: dropoffI.value,
       referral: ctx.discount ? referralI.value : "",
-      guests: String(ctx.guests || ""),
-      service: ctx.service,
-      date: ctx.date || "",
-      price: priceText(),
-      items: ctx.items || ""
+      lines: lines,
     };
   }
 
@@ -680,13 +721,21 @@ function initBookingConfirm() {
 
   discussWa.addEventListener("click", () => {
     if (!ctx || !validate()) return;
-    const p = payload();
-    const msg =
+    let msg =
       `Hello, I'd like to book:\n` +
-      `Service: ${p.service}\n` + `Name: ${p.name}\n` + `Phone: ${p.phone}\n` + `Email: ${p.email}\n` +
-      `Pick-up: ${p.pickup || "-"}\n` + `Drop-off: ${p.dropoff || "-"}\n` + `Referral: ${p.referral || "-"}\n` +
-      `Guests: ${p.guests || "-"}\n` + `Date: ${p.date || "-"}\n` + `Price: ${p.price}` +
-      (p.items ? `\nItinerary: ${p.items}` : "");
+      `Service: ${ctx.service}\n` +
+      `Name: ${nameI.value}\n` + `Phone: ${phoneI.value}\n` + `Email: ${emailI.value}\n`;
+    if (ctx.structured) {
+      msg +=
+        ctx.lines
+          .map((l) => `- ${l.day_no ? "Day " + l.day_no + " · " : ""}${l.date || "TBD"} · ${l.service} · ${l.guests || "-"} pax`)
+          .join("\n") + "\n" + `Pick-up: ${pickupI.value || "-"}\n`;
+    } else {
+      msg += `Pick-up: ${pickupI.value || "-"}\n` + `Drop-off: ${dropoffI.value || "-"}\n`;
+    }
+    msg +=
+      `Referral: ${ctx.discount ? referralI.value : "-"}\n` +
+      `Guests: ${ctx.guests || "-"}\n` + `Date: ${ctx.date || "-"}\n` + `Price: ${priceText()}`;
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
   });
 
@@ -1554,10 +1603,13 @@ function initItinerary() {
     });
 
   // ---------- Book -> modal konfirmasi bersama (window.__openBooking) ----------
-  function dayLine(d) {
-    let s = d.items
+  function dayServiceName(d) {
+    return d.items
       .map((name, idx) => name + (itemMode(d, idx) === "exclusive" ? " (Exclusive)" : ""))
       .join(" + ");
+  }
+  function dayLine(d) {
+    let s = dayServiceName(d);
     const loc = [d.pickup, d.dropoff].filter(Boolean);
     if (loc.length) s += ` (${loc.join(" → ")})`;
     return s;
@@ -1593,18 +1645,26 @@ function initItinerary() {
       usd += p.usd;
       idr += p.idr;
     });
-    // rincian per hari + transfer + charter -> dikirim ke backend lewat field `items`
-    const items = [
-      ...state.days.map(
-        (d, i) => `Day ${i + 1} (${d.date}, ${d.guests} pax): ${dayLine(d)}`
-      ),
-      ...state.transfers.map(
-        (tr) => `Transfer (${tr.date}, ${tr.guests} pax): ${transferLine(tr)} [pickup: ${tr.pickup}, dropoff: ${tr.dropoff}]`
-      ),
-      ...chs.map(
-        (ch) => `Charter (${ch.date}, ${ch.guests} pax): ${charterDurLabel(ch)} from ${ch.area}${ch.pickup ? ` [pickup: ${ch.pickup}]` : ""}${ch.dropoff ? ` [to: ${ch.dropoff}]` : ""}`
-      )
-    ].join(" | ");
+    // Tiap hari/transfer/charter -> 1 line (dikirim ke backend sebagai array `lines`).
+    // day_no cuma buat hari; transfer/charter null tapi tetap 1 order (booking_ref sama).
+    // eligible: tour & transfer kena referral, charter nggak (sama kayak booking langsung).
+    const lines = [
+      ...state.days.map((d, i) => {
+        const p = dayPrice(d);
+        return { type: "tour", service: dayServiceName(d), date: d.date, guests: d.guests,
+          pickup: d.pickup || "", dropoff: d.dropoff || "", usd: p.usd, idr: p.idr, day_no: i + 1, eligible: true };
+      }),
+      ...state.transfers.map((tr) => {
+        const p = transferPrice(tr);
+        return { type: "transfer", service: transferLine(tr), date: tr.date, guests: tr.guests,
+          pickup: tr.pickup || "", dropoff: tr.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: true };
+      }),
+      ...chs.map((ch) => {
+        const p = charterPrice(ch.area, ch.dur, ch.extra);
+        return { type: "charter", service: `${charterDurLabel(ch)} from ${ch.area}`, date: ch.date, guests: ch.guests,
+          pickup: ch.pickup || "", dropoff: ch.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: false };
+      }),
+    ];
     const nDays = state.days.length, nTr = state.transfers.length, nCh = chs.length;
     const parts = [];
     if (nDays) parts.push(`${nDays} day${nDays > 1 ? "s" : ""}`);
@@ -1630,10 +1690,9 @@ function initItinerary() {
       pickup: state.trip.hotel || "",
       pickupOptional: true,
       dropoffRequired: false,
-      referralEligible: false,
       detailLines: detailLines,
       detailsTitle: "Trip details",
-      items: items,
+      lines: lines,
       onSuccess: () => {
         state = { days: [], transfers: [], charters: [], trip: { start: "", guests: currentGuests ? String(currentGuests) : "", hotel: "" } };
         openDays.clear();

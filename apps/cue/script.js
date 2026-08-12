@@ -67,13 +67,13 @@ const ITEM_CARD = {
   "South Bali & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak dance at Uluwatu." },
   "Batur Sunrise & Adrenaline": { img: "batur-sunrise-adrenaline-card.jpg", desc: "A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak." },
   "Ubud Rafting Adventure": { img: "ubud-rafting-adventure-card.jpg", desc: "Ayung river rafting, rice terraces, luwak coffee, and a waterfall." },
-  "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.jpg", desc: "A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
-  "Kintamani Sunrise & Penglipuran": { img: "jeep-card.jpg", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
+  "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.webp", desc: "A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
+  "Kintamani Sunrise & Penglipuran": { img: "jeep-batur-card.webp", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
   "Lovina Dolphin & Sekumpul Waterfall": { img: "lovina-dolphin-sekumpul-card.jpg", desc: "A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul waterfall." },
-  "ATV": { img: "ubud-atv-adventure-card.jpg", desc: "Quad-bike through jungle trails, mud, and tunnels." },
+  "ATV": { img: "ubud-atv-adventure-card.webp", desc: "Quad-bike through jungle trails, mud, and tunnels." },
   "Rafting": { img: "rafting.webp", desc: "White-water rafting down the scenic Ayung River gorge." },
   "Swing": { img: "jungle-swing-card.jpg", desc: "Soar over the jungle on Bali's famous swing." },
-  "Jeep Sunrise": { img: "mount-batur-sunrise.webp", desc: "A sunrise 4x4 across Mount Batur's black-lava fields." },
+  "Jeep Sunrise": { img: "jeep-batur-card.webp", desc: "A sunrise 4x4 across Mount Batur's black-lava fields." },
   "Mount Batur Trekking": { img: "mount-batur-sunrise.webp", desc: "A pre-dawn hike to the summit of an active volcano." },
   "Cooking Class": { img: "cooking-class-card.webp", desc: "Cook authentic Balinese dishes with a local family." },
   "Watersport": { img: "watersport-card.jpg", desc: "Jet ski, banana boat, and parasailing off the south coast." },
@@ -135,6 +135,20 @@ function renderPrices() {
     const info = itemInfo(name);
     const base = info ? info.price : prices.transfer[name];
     if (base) el.textContent = fmtMoney(base.usd, base.idr);
+  });
+  renderFees();
+}
+
+// Isi <span class="fee" data-idr="N"> (tiket masuk di halaman attraction) ke
+// currency aktif. Fee aslinya IDR; buat currency lain dikonversi lewat kurs tiket
+// & dikasih "~" (perkiraan, karena bayarnya tetap cash IDR di gerbang).
+function renderFees() {
+  document.querySelectorAll("span.fee[data-idr]").forEach((el) => {
+    const idr = parseInt(el.dataset.idr, 10);
+    if (!idr) return;
+    const cur = currentCurrency;
+    const txt = fmtMoney(idr / TICKET_IDR_PER_USD, idr, cur);
+    el.textContent = cur === "IDR" ? txt : "~" + txt;
   });
 }
 

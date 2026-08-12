@@ -79,8 +79,8 @@ const ITEM_CARD = {
   "Watersport": { img: "watersport-card.jpg", desc: "Jet ski, banana boat, and parasailing off the south coast." },
   "Kecak Dance": { img: "kecak.jpg", desc: "Bali's famous fire-and-chant ritual, performed at sunset." },
   "Barong Dance": { img: "barong-dance-card.webp", desc: "The ancient dance-drama of good versus evil, in ornate masks." },
-  "Bali Zoo": { img: "", desc: "Elephants, orangutans, and jungle wildlife just south of Ubud." },
-  "Bali Bird Park": { img: "", desc: "Over 1,000 birds, aviaries, and free-flight shows near Ubud." }
+  "Bali Zoo": { img: "bali-zoo-card.webp", desc: "Elephants, orangutans, and jungle wildlife just south of Ubud." },
+  "Bali Bird Park": { img: "bali-bird-park-card.webp", desc: "Over 1,000 birds, aviaries, and free-flight shows near Ubud." }
 };
 
 // -- itinerary store key

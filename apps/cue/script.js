@@ -241,27 +241,53 @@ function itemInfo(name) {
   return null;
 }
 
-// ---- Pickup surcharge (stay-area based) ----
-// Zona item dari ITEM_ZONE (data.js). Surcharge cuma kena kalau stay tamu != Ubud
-// DAN != zona item. Stay kosong dianggap Ubud (aman: no surcharge).
+// ---- Pickup surcharge (diturunkan dari harga transfer) ----
 function itemZone(name) { return (typeof ITEM_ZONE !== "undefined" && ITEM_ZONE[name]) || null; }
-function surchargeFor(name) {
-  const z = itemZone(name);
-  const stay = currentStay || "ubud";
-  return (z && stay !== "ubud" && stay !== z)
-    ? { usd: PICKUP_SURCHARGE.usd, idr: PICKUP_SURCHARGE.idr }
-    : { usd: 0, idr: 0 };
+// Zona area pickup (key transfer) atau "ubud". null kalau belum ke-map.
+function pickupZoneOf(pk) {
+  if (!pk || pk === "ubud") return "ubud";
+  return (typeof TRANSFER_ZONE !== "undefined" && TRANSFER_ZONE[pk]) || null;
+}
+// Label area pickup buat UI (nama tanpa " Area – Ubud").
+function pickupLabelOf(pk) {
+  if (!pk || pk === "ubud") return "Ubud & nearby";
+  return pk.replace(/\s*–\s*Ubud$/, "").replace(/\s*Area$/, "");
+}
+// Opsi dropdown pickup = SEMUA destinasi di prices.transfer + Ubud (base). Nggak ada list baru.
+function pickupOptionsHTML(selected) {
+  let html = '<option value="ubud">Ubud &amp; nearby</option>';
+  Object.keys(prices.transfer).forEach((k) => {
+    html += '<option value="' + k + '"' + (k === selected ? " selected" : "") + ">" + pickupLabelOf(k) + "</option>";
+  });
+  return html;
+}
+// Surcharge = 60% transfer one-way (Ubud->pickup) × jumlah mobil, cuma kalau pickup != Ubud
+// DAN zona pickup != zona item. Transfer sendiri nggak kena. Angka cuma dipakai di konfirmasi.
+function surchargeFor(name, guests) {
+  const pk = currentStay || "ubud";
+  if (pk === "ubud") return { usd: 0, idr: 0 };
+  if (prices.transfer && prices.transfer[name]) return { usd: 0, idr: 0 };
+  const pz = pickupZoneOf(pk), iz = itemZone(name) || "ubud";
+  if (pz && pz === iz) return { usd: 0, idr: 0 };
+  const t = prices.transfer[pk];
+  if (!t) return { usd: 0, idr: 0 };
+  const cars = (guests || currentGuests || DISPLAY_GUESTS) > 5 ? 2 : 1;
+  return {
+    usd: Math.round(t.usd * SURCHARGE_FACTOR) * cars,
+    idr: Math.round((t.idr * SURCHARGE_FACTOR) / 1000) * 1000 * cars,
+  };
 }
 function surchargeLabel(name) {
-  const z = itemZone(name);
-  const stay = currentStay || "ubud";
-  if (z && stay !== "ubud" && stay !== z) return { has: true, txt: "Pickup surcharge applied" };
-  if (stay === "ubud") return { has: false, txt: "No surcharge - pickup from Ubud" };
-  return { has: false, txt: "No surcharge - you're in the tour area" };
+  const pk = currentStay || "ubud";
+  if (pk === "ubud") return { has: false, txt: "No surcharge - pickup from Ubud" };
+  if (prices.transfer && prices.transfer[name]) return { has: false, txt: "" };
+  const pz = pickupZoneOf(pk), iz = itemZone(name) || "ubud";
+  if (pz && pz === iz) return { has: false, txt: "No surcharge - you're in the tour area" };
+  return { has: true, txt: "Pickup surcharge applied" };
 }
-// Set stay-area global: simpan + render ulang semua harga + sinkron semua kontrol.
-function setStay(z) {
-  currentStay = z && z !== "ubud" ? z : (z === "ubud" ? "ubud" : "");
+// Set area pickup global (value = key transfer atau "ubud"): simpan + render ulang + sinkron.
+function setStay(pk) {
+  currentStay = pk && pk !== "ubud" ? pk : "";
   if (currentStay) localStorage.setItem("cue_stay", currentStay);
   else localStorage.removeItem("cue_stay");
   renderPrices();
@@ -894,7 +920,7 @@ function initBooking() {
     }
     // Pickup surcharge (stay-area) baked into the FINAL price shown. Angka surcharge-nya
     // sendiri cuma muncul di modal konfirmasi (lihat __openBooking), nggak di sini.
-    const sc = surchargeFor(item);
+    const sc = surchargeFor(item, guests);
     usd += sc.usd; idr += sc.idr;
     currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive, surcharge: sc };
     priceField.innerHTML = priceHTML(usd, idr);
@@ -956,7 +982,7 @@ function initBooking() {
       guests: guestField.value,
       date: dateField.value,
       price: { usd: currentPrice.usd, idr: currentPrice.idr },
-      pickup: (STAY_ZONES.find((z) => z.id === (currentStay || "ubud")) || {}).label || "",
+      pickup: currentStay ? pickupLabelOf(currentStay) : "",
       surcharge: currentPrice.surcharge,
       pickupOptional: category === "performance",
       dropoffRequired: category === "transfer",
@@ -2249,6 +2275,7 @@ function initAccountMenu() {
   document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(g); });
   const staySel = currentStay || "ubud";
   document.querySelectorAll("[data-stay-select]").forEach((s) => {
+    s.innerHTML = pickupOptionsHTML(staySel);
     s.value = staySel;
     s.addEventListener("change", () => setStay(s.value));
   });
@@ -2299,8 +2326,7 @@ function showWelcome() {
   let opts = "";
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
   const staySel = currentStay || "ubud";
-  let stayOpts = "";
-  STAY_ZONES.forEach((z) => { stayOpts += '<option value="' + z.id + '"' + (z.id === staySel ? " selected" : "") + ">" + z.label + "</option>"; });
+  const stayOpts = pickupOptionsHTML(staySel);
 
   const modal = document.createElement("div");
   modal.className = "modal welcome-modal";

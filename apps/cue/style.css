@@ -381,7 +381,8 @@ body {
   justify-content: center;
   flex: 1;
   max-width: 240px;
-  padding: 0.85rem;
+  height: 2.9rem;
+  padding: 0 0.85rem;
   border: none;
   border-radius: 6px;
   font-family: var(--font-body);
@@ -4578,6 +4579,116 @@ button.pick-cat {
   cursor: pointer;
   padding: 0;
   outline: none;
+}
+
+/* ==================== Account menu (navbar: guests + stay area) ==================== */
+.acct {
+  position: relative;
+  margin-right: 0.85rem;
+}
+.acct__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #d8d2c4;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-green);
+  cursor: pointer;
+}
+.acct__icon {
+  width: 18px;
+  height: 18px;
+}
+.acct__badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--color-gold);
+  color: var(--color-green);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  border: 1.5px solid #fff;
+}
+.acct__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 220px;
+  background: #fff;
+  border: 1px solid #e9e1cf;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px rgba(31, 61, 43, 0.16);
+  padding: 0.9rem;
+  z-index: 200;
+}
+.acct__panel[hidden] {
+  display: none;
+}
+.acct__title {
+  margin: 0 0 0.7rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+.acct__label {
+  display: block;
+  margin: 0 0 0.3rem;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--color-muted);
+}
+.acct__panel select {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--color-green);
+  cursor: pointer;
+}
+.acct__panel select:last-of-type {
+  margin-bottom: 0;
+}
+
+/* ==================== Pickup surcharge (form + card labels) ==================== */
+.booking__group--full {
+  grid-column: 1 / -1;
+}
+.booking__surcharge {
+  margin-top: 0.15rem;
+  font-size: var(--fs-label);
+  line-height: 1.25;
+  color: #2e7d54;
+}
+.experience__pricewrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.experience__note {
+  font-size: var(--fs-label);
+  line-height: 1.2;
+  color: #2e7d54;
+}
+.price-note--surcharge {
+  color: #8a6d2e;
 }
 
 /* ==================== Welcome popup (jumlah orang, muncul sekali) ==================== */

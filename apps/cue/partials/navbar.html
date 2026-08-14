@@ -3,21 +3,35 @@
     <a href="index.html" class="navbar__logo">
       <img src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
     </a>
-    <div class="guest-select" title="Guests - set your group size for accurate pricing">
-      <svg class="guest-select__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 6.2a3 3 0 0 1 0 5.6M17.5 14c2.4.3 4 2.2 4 5"/></svg>
-      <select data-guest-select aria-label="Number of guests">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-        <option value="reset">↺</option>
-      </select>
+    <div class="acct" data-acct>
+      <button type="button" class="acct__btn" data-acct-toggle aria-label="Your trip - guests & stay area" aria-expanded="false">
+        <svg class="acct__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/></svg>
+        <span class="acct__badge" data-guest-badge>2</span>
+      </button>
+      <div class="acct__panel" data-acct-panel hidden>
+        <p class="acct__title">Your trip</p>
+        <label class="acct__label" for="acct-guests">Guests</label>
+        <select id="acct-guests" data-guest-select aria-label="Number of guests">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="reset">↺ Reset</option>
+        </select>
+        <label class="acct__label" for="acct-stay">Stay area</label>
+        <select id="acct-stay" data-stay-select aria-label="Stay area">
+          <option value="ubud">Ubud &amp; nearby</option>
+          <option value="south">South Bali</option>
+          <option value="east">East Bali</option>
+          <option value="north">North Bali</option>
+        </select>
+      </div>
     </div>
     <select class="cur-select" data-cur-select aria-label="Currency">
       <option value="USD">USD</option>

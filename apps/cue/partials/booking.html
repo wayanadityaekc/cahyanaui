@@ -38,6 +38,15 @@
           <option value="" disabled selected>Choose</option>
         </select>
       </div>
+      <div class="booking__group booking__group--full">
+        <label for="stay-area">Pickup Area</label>
+        <select id="stay-area" data-stay-select aria-label="Pickup area">
+          <option value="ubud">Ubud &amp; nearby</option>
+          <option value="south">South Bali</option>
+          <option value="east">East Bali</option>
+          <option value="north">North Bali</option>
+        </select>
+      </div>
       <div class="booking__group booking__group--price">
         <label for="price">Price</label>
         <div class="booking__type" id="booking-type">
@@ -46,6 +55,7 @@
         </div>
         <div class="booking__price" id="price">-</div>
         <small class="booking__note" id="price-note"></small>
+        <small class="booking__surcharge" id="price-surcharge"></small>
       </div>
       <div class="booking__actions">
         <button class="booking__btn" id="book-now">Book Now</button>

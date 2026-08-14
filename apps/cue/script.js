@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 42;
+const PARTIALS_VERSION = 43;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -25,6 +25,8 @@ if (!CURRENCIES.includes(currentCurrency)) currentCurrency = "USD";
 // pakai DISPLAY_GUESTS sebagai perkiraan (+ catatan "for N pax").
 const DISPLAY_GUESTS = 2;
 let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
+// Stay-area tamu (buat pickup surcharge). "" = belum pilih -> default Ubud (no surcharge).
+let currentStay = localStorage.getItem("cue_stay") || "";
 
 // -- page -> itinerary program map
 // Peta halaman detail -> nama program di itinerary (biar tombol Add di card
@@ -128,15 +130,33 @@ const priceHTML = (usd, idr) => `<span class="price-cur">${fmtMoney(usd, idr)}</
 function renderPrices() {
   document.querySelectorAll("[data-price]").forEach((el) => {
     const name = el.dataset.price;
+    let usd = null, idr = null;
     if (el.dataset.mode === "exclusive") {
       const ex = exclusivePrice(name);
-      if (ex) { el.textContent = fmtMoney(ex.usd, ex.idr); return; }
+      if (ex) { usd = ex.usd; idr = ex.idr; }
     }
-    const info = itemInfo(name);
-    const base = info ? info.price : prices.transfer[name];
-    if (base) el.textContent = fmtMoney(base.usd, base.idr);
+    if (usd == null) {
+      const info = itemInfo(name);
+      const base = info ? info.price : prices.transfer[name];
+      if (base) { usd = base.usd; idr = base.idr; }
+    }
+    if (usd == null) return;
+    // FINAL price = base (+ tiket exclusive) + pickup surcharge. Surcharge di-bake in;
+    // angkanya sendiri nggak pernah ditampilin di card/form (cuma di konfirmasi).
+    const s = surchargeFor(name);
+    el.textContent = fmtMoney(usd + s.usd, idr + s.idr);
   });
+  renderPriceLabels();
   renderFees();
+}
+
+// Label kecil di bawah harga (card/form): "Pickup surcharge applied" / "No surcharge ...".
+function renderPriceLabels() {
+  document.querySelectorAll("[data-price-label]").forEach((el) => {
+    const l = surchargeLabel(el.dataset.priceLabel);
+    el.textContent = l.txt;
+    el.classList.toggle("price-note--surcharge", l.has);
+  });
 }
 
 // Isi <span class="fee" data-idr="N"> (tiket masuk di halaman attraction) ke
@@ -174,10 +194,11 @@ function setGuests(n) {
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__itnGuestsSync) window.__itnGuestsSync(n); // sinkron ke builder itinerary
-  // sinkron ke guest-select di navbar
+  // sinkron ke guest-select di navbar + badge ikon akun
   document.querySelectorAll("[data-guest-select]").forEach((s) => {
     if (parseInt(s.value, 10) !== n) s.value = String(n);
   });
+  document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(n); });
   // sinkron ke field Guests di booking form
   const gf = document.getElementById("guest");
   if (gf && parseInt(gf.value, 10) !== n) {
@@ -194,6 +215,10 @@ function resetGuests() {
   localStorage.removeItem("cue_guests");
   localStorage.removeItem("cue_welcomed");
   document.querySelectorAll("[data-guest-select]").forEach((s) => { s.value = String(DISPLAY_GUESTS); });
+  document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(DISPLAY_GUESTS); });
+  currentStay = "";
+  localStorage.removeItem("cue_stay");
+  document.querySelectorAll("[data-stay-select]").forEach((s) => { s.value = "ubud"; });
   const gf = document.getElementById("guest");
   if (gf) gf.value = "";
   renderPrices();
@@ -210,10 +235,41 @@ function carPrice(base, guests) {
 
 // cari kategori & harga sebuah program dari struktur prices
 function itemInfo(name) {
-  for (const cat of ["tour", "experience", "performance", "villa", "combo"]) {
+  for (const cat of ["tour", "experience", "performance", "villa", "combo", "place"]) {
     if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
   }
   return null;
+}
+
+// ---- Pickup surcharge (stay-area based) ----
+// Zona item dari ITEM_ZONE (data.js). Surcharge cuma kena kalau stay tamu != Ubud
+// DAN != zona item. Stay kosong dianggap Ubud (aman: no surcharge).
+function itemZone(name) { return (typeof ITEM_ZONE !== "undefined" && ITEM_ZONE[name]) || null; }
+function surchargeFor(name) {
+  const z = itemZone(name);
+  const stay = currentStay || "ubud";
+  return (z && stay !== "ubud" && stay !== z)
+    ? { usd: PICKUP_SURCHARGE.usd, idr: PICKUP_SURCHARGE.idr }
+    : { usd: 0, idr: 0 };
+}
+function surchargeLabel(name) {
+  const z = itemZone(name);
+  const stay = currentStay || "ubud";
+  if (z && stay !== "ubud" && stay !== z) return { has: true, txt: "Pickup surcharge applied" };
+  if (stay === "ubud") return { has: false, txt: "No surcharge - pickup from Ubud" };
+  return { has: false, txt: "No surcharge - you're in the tour area" };
+}
+// Set stay-area global: simpan + render ulang semua harga + sinkron semua kontrol.
+function setStay(z) {
+  currentStay = z && z !== "ubud" ? z : (z === "ubud" ? "ubud" : "");
+  if (currentStay) localStorage.setItem("cue_stay", currentStay);
+  else localStorage.removeItem("cue_stay");
+  renderPrices();
+  document.querySelectorAll("[data-stay-select]").forEach((s) => {
+    const v = currentStay || "ubud";
+    if (s.value !== v) s.value = v;
+  });
+  if (window.__bookingRefresh) window.__bookingRefresh();
 }
 
 // Harga Exclusive buat N orang = harga standard (per mobil, ×2 kalau >5)
@@ -593,6 +649,7 @@ function initBookingConfirm() {
   const dropoffI = el("dropoff"), dropoffLabel = el("dropoff-label");
   const referralI = el("referral"), applyRef = el("apply-referral"), refMsg = el("referral-msg");
   const sumGuest = el("sum-guest"), sumService = el("sum-service"), sumDate = el("sum-date"), sumPrice = el("sum-price");
+  const sumSurcharge = el("sum-surcharge"), rowSurcharge = el("row-surcharge");
   const modalDetails = el("modal-details"), detailsToggle = el("details-toggle"), detailsList = el("details-list");
   const bookSubmit = el("book-submit"), discussWa = el("discuss-wa");
   const modalClose = el("modal-close"), successClose = el("success-close");
@@ -637,6 +694,15 @@ function initBookingConfirm() {
     sumGuest.textContent = o.guests || "-";
     sumService.textContent = o.service;
     sumDate.textContent = o.date || "-";
+    // Pickup surcharge = SATU-satunya tempat angka surcharge muncul (brief §7).
+    if (rowSurcharge) {
+      if (o.surcharge && o.surcharge.idr > 0) {
+        sumSurcharge.textContent = fmtMoney(o.surcharge.usd, o.surcharge.idr);
+        rowSurcharge.hidden = false;
+      } else {
+        rowSurcharge.hidden = true;
+      }
+    }
     recalcTotal();
     nameI.value = ""; phoneI.value = ""; emailI.value = "";
     pickupI.value = o.pickup || "";
@@ -772,6 +838,7 @@ function initBooking() {
   dateField.min = todayStr(); // blokir tanggal lampau di date picker
   const priceField = document.getElementById("price");
   const priceNote = document.getElementById("price-note");
+  const priceSurcharge = document.getElementById("price-surcharge");
 
   let currentPrice = null;
   let bookingMode = "standard"; // Standard / Exclusive (cuma buat tour & combo)
@@ -825,9 +892,18 @@ function initBooking() {
       usd = base.usd * guests + t.usd; idr = base.idr * guests + t.idr;
       note = t.idr > 0 ? `Ticket per person + transport ${CUR_SYMBOL.IDR}${t.idr.toLocaleString("id-ID")}` : "Ticket per person · free transport";
     }
-    currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive };
+    // Pickup surcharge (stay-area) baked into the FINAL price shown. Angka surcharge-nya
+    // sendiri cuma muncul di modal konfirmasi (lihat __openBooking), nggak di sini.
+    const sc = surchargeFor(item);
+    usd += sc.usd; idr += sc.idr;
+    currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive, surcharge: sc };
     priceField.innerHTML = priceHTML(usd, idr);
     priceNote.textContent = note;
+    if (priceSurcharge) {
+      const sl = surchargeLabel(item);
+      priceSurcharge.textContent = sl.txt;
+      priceSurcharge.classList.toggle("price-note--surcharge", sl.has);
+    }
   }
   window.__bookingRefresh = calculatePrice; // biar setGuests bisa refresh harga booking
 
@@ -880,7 +956,8 @@ function initBooking() {
       guests: guestField.value,
       date: dateField.value,
       price: { usd: currentPrice.usd, idr: currentPrice.idr },
-      pickup: "",
+      pickup: (STAY_ZONES.find((z) => z.id === (currentStay || "ubud")) || {}).label || "",
+      surcharge: currentPrice.surcharge,
       pickupOptional: category === "performance",
       dropoffRequired: category === "transfer",
       referralEligible: category === "tour" || category === "transfer",
@@ -2165,6 +2242,47 @@ function initGuestPicker() {
   });
 }
 
+// Ikon akun di navbar: dropdown berisi Guests + Stay area. Badge = jumlah guests.
+// Toggle buka/tutup panel + tutup pas klik di luar. Stay-select nyetir pickup surcharge.
+function initAccountMenu() {
+  const g = currentGuests || DISPLAY_GUESTS;
+  document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(g); });
+  const staySel = currentStay || "ubud";
+  document.querySelectorAll("[data-stay-select]").forEach((s) => {
+    s.value = staySel;
+    s.addEventListener("change", () => setStay(s.value));
+  });
+  const closeAll = (except) => {
+    document.querySelectorAll("[data-acct]").forEach((acct) => {
+      if (acct === except) return;
+      const panel = acct.querySelector("[data-acct-panel]");
+      const btn = acct.querySelector("[data-acct-toggle]");
+      if (panel && !panel.hidden) { panel.hidden = true; if (btn) btn.setAttribute("aria-expanded", "false"); }
+    });
+  };
+  document.querySelectorAll("[data-acct]").forEach((acct) => {
+    const btn = acct.querySelector("[data-acct-toggle]");
+    const panel = acct.querySelector("[data-acct-panel]");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = panel.hidden;
+      closeAll(acct);
+      panel.hidden = !open;
+      btn.setAttribute("aria-expanded", String(open));
+    });
+  });
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll("[data-acct]").forEach((acct) => {
+      if (!acct.contains(e.target)) {
+        const panel = acct.querySelector("[data-acct-panel]");
+        const btn = acct.querySelector("[data-acct-toggle]");
+        if (panel && !panel.hidden) { panel.hidden = true; if (btn) btn.setAttribute("aria-expanded", "false"); }
+      }
+    });
+  });
+}
+
 // Popup selamat datang: muncul sekali di kunjungan pertama (kalau belum "welcomed").
 function initWelcome() {
   if (localStorage.getItem("cue_welcomed")) return;
@@ -2180,6 +2298,9 @@ function showWelcome() {
   const pre = currentGuests || DISPLAY_GUESTS;
   let opts = "";
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
+  const staySel = currentStay || "ubud";
+  let stayOpts = "";
+  STAY_ZONES.forEach((z) => { stayOpts += '<option value="' + z.id + '"' + (z.id === staySel ? " selected" : "") + ">" + z.label + "</option>"; });
 
   const modal = document.createElement("div");
   modal.className = "modal welcome-modal";
@@ -2194,6 +2315,10 @@ function showWelcome() {
         '<label for="welcome-guests">Number of guests</label>' +
         '<select id="welcome-guests">' + opts + "</select>" +
       "</div>" +
+      '<div class="welcome__field">' +
+        '<label for="welcome-stay">Where are you staying?</label>' +
+        '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
+      "</div>" +
       '<div class="welcome__actions">' +
         '<button type="button" class="modal__btn" id="welcome-confirm">Explore</button>' +
       "</div>" +
@@ -2206,6 +2331,7 @@ function showWelcome() {
   });
   modal.querySelector("#welcome-confirm").addEventListener("click", () => {
     setGuests(modal.querySelector("#welcome-guests").value);
+    setStay(modal.querySelector("#welcome-stay").value);
     close();
   });
   requestAnimationFrame(() => modal.classList.add("active"));
@@ -2468,6 +2594,7 @@ async function initPage() {
   initTourType();
   initCurrency();
   initGuestPicker();
+  initAccountMenu();
   initHighlightLink();
   initWelcome();
   initTransferUnits();

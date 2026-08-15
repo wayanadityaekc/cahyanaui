@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 45;
+const PARTIALS_VERSION = 46;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -205,12 +205,8 @@ function setGuests(n) {
     if (parseInt(s.value, 10) !== n) s.value = String(n);
   });
   document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(n); });
-  // sinkron ke field Guests di booking form
-  const gf = document.getElementById("guest");
-  if (gf && parseInt(gf.value, 10) !== n) {
-    gf.value = String(n);
-    if (window.__bookingRefresh) window.__bookingRefresh();
-  }
+  // Booking form gak punya kolom Guests lagi -> cukup refresh harga booking.
+  if (window.__bookingRefresh) window.__bookingRefresh();
 }
 
 // Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang + flag popup yang
@@ -225,8 +221,6 @@ function resetGuests() {
   currentStay = "";
   localStorage.removeItem("cue_stay");
   document.querySelectorAll("[data-stay-select]").forEach((s) => { s.value = "ubud"; });
-  const gf = document.getElementById("guest");
-  if (gf) gf.value = "";
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__bookingRefresh) window.__bookingRefresh();
@@ -942,7 +936,8 @@ function initBooking() {
   const bookNowBtn = document.getElementById("book-now");
   if (!bookNowBtn) return;
 
-  const guestField = document.getElementById("guest");
+  // Guests gak lagi jadi kolom di form — diambil dari pilihan global (navbar/welcome).
+  const guestCount = () => currentGuests || DISPLAY_GUESTS;
   const serviceSelect = document.getElementById("service");
   const serviceItemSelect = document.getElementById("service-item");
   const dateField = document.getElementById("date");
@@ -965,7 +960,7 @@ function initBooking() {
   window.__setBookingMode = setBookingMode; // dipanggil dari toggle di halaman detail
 
   function calculatePrice() {
-    const category = serviceSelect.value, item = serviceItemSelect.value, guests = parseInt(guestField.value);
+    const category = serviceSelect.value, item = serviceItemSelect.value, guests = guestCount();
     // Toggle Standard/Exclusive selalu tampil (biar tinggi form konsisten), tapi
     // di-nonaktifin (redup) kalau service-nya bukan tour/combo yg punya Exclusive.
     const hasExclusive = category === "tour" && !!tourExclusive[item];
@@ -1034,25 +1029,15 @@ function initBooking() {
     setBookingMode("standard", false);
     calculatePrice();
   });
-  // Ganti Guests di booking = update jumlah orang global (harga Exclusive di card
-  // ikut nyesuain), lalu hitung ulang harga booking. (Reset dilakukan dari navbar.)
-  guestField.addEventListener("change", () => {
-    setGuests(guestField.value);
-    calculatePrice();
-  });
   serviceItemSelect.addEventListener("change", () => { setBookingMode("standard", false); calculatePrice(); });
 
-  // Samain nilai awal Guests booking dgn guest-select navbar (default DISPLAY_GUESTS
-  // kalau belum pilih) -> dua-duanya selalu match sejak load.
-  guestField.value = String(currentGuests || DISPLAY_GUESTS);
-
   bookNowBtn.addEventListener("click", () => {
-    if (!guestField.value || !serviceItemSelect.value || !dateField.value) {
-      alert("Please choose guests, a service, and a date first."); return;
+    if (!serviceItemSelect.value || !dateField.value) {
+      alert("Please choose a service and a date first."); return;
     }
     const today = todayStr();
     if (dateField.value < today) { showPastDate(); return; }
-    if (dateField.value === today) { showSameDayWa(guestField.value, serviceItemSelect.value, dateField.value); return; }
+    if (dateField.value === today) { showSameDayWa(guestCount(), serviceItemSelect.value, dateField.value); return; }
     if (!currentPrice || !window.__openBooking) return;
     const category = currentPrice.category;
     const item = serviceItemSelect.value;
@@ -1064,7 +1049,7 @@ function initBooking() {
     window.__openBooking({
       type: category,
       service: label,
-      guests: guestField.value,
+      guests: String(guestCount()),
       date: dateField.value,
       price: { usd: currentPrice.usd, idr: currentPrice.idr },
       pickup: currentStay ? pickupLabelOf(currentStay) : "",

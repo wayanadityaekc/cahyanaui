@@ -1877,14 +1877,14 @@ section.faq::before,
    booking 464px (<576) / 455px, footer 688px (<=768) / 487px.
    NB: kalau isi partial booking/footer berubah, UKUR ULANG & update angka ini.
    Navbar nggak perlu: position absolute, nggak dorong konten.
-   PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 462px di <576).
+   PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 463px, tanpa kolom Guests).
    Kalau kurang, hero melar pas form masuk -> background cover ke-rescale -> foto "zoom". */
 #booking-placeholder {
   min-height: 464px;
 }
 @media (min-width: 576px) {
   #booking-placeholder {
-    min-height: 455px;
+    min-height: 464px;
   }
 }
 #footer-placeholder {

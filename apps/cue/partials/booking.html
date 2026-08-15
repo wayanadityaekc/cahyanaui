@@ -3,19 +3,9 @@
     <h2 class="booking__title">Build Your Trip</h2>
     <div class="booking__fields">
       <div class="booking__group">
-        <label for="guest">Guests</label>
-        <select id="guest">
-          <option value="" disabled selected>Guests</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
+        <label for="stay-area">Pickup Area</label>
+        <select id="stay-area" data-stay-select aria-label="Pickup area">
+          <option value="ubud">Ubud &amp; nearby</option>
         </select>
       </div>
       <div class="booking__group">
@@ -36,12 +26,6 @@
         <label for="service-item">Select Service</label>
         <select id="service-item">
           <option value="" disabled selected>Choose</option>
-        </select>
-      </div>
-      <div class="booking__group booking__group--full">
-        <label for="stay-area">Pickup Area</label>
-        <select id="stay-area" data-stay-select aria-label="Pickup area">
-          <option value="ubud">Ubud &amp; nearby</option>
         </select>
       </div>
       <div class="booking__group booking__group--price">

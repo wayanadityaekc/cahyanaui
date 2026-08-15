@@ -4542,7 +4542,7 @@ button.pick-cat {
 }
 .cur-select {
   padding: 0.4rem 0.5rem;
-  margin-right: 0.85rem;
+  margin-right: 0.35rem;
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   background: #fff;
@@ -4584,7 +4584,7 @@ button.pick-cat {
 /* ==================== Account menu (navbar: guests + stay area) ==================== */
 .acct {
   position: relative;
-  margin-right: 0.85rem;
+  margin-right: 0.3rem;
 }
 /* Ikon akun gaya Nike: line-icon polos, tanpa lingkaran/border/badge. */
 .acct__btn {
@@ -4598,8 +4598,8 @@ button.pick-cat {
   cursor: pointer;
 }
 .acct__icon {
-  width: 24px;
-  height: 24px;
+  width: 21px;
+  height: 21px;
 }
 .acct__panel {
   position: absolute;
@@ -4739,7 +4739,7 @@ button.pick-cat {
   .cur-select {
     width: 3rem;
     height: 2.2rem;
-    margin: 0 0 0 0.45rem;
+    margin: 0 0 0 0.3rem;
     padding: 0;
     justify-content: center;
     box-sizing: border-box;

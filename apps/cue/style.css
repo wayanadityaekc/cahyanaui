@@ -4690,6 +4690,28 @@ button.pick-cat {
 .price-note--surcharge {
   color: #8a6d2e;
 }
+/* Destinations card: tombol "Visit this destination" (gaya outline sama .card-add) */
+.experience__visit {
+  display: block;
+  width: 100%;
+  margin-top: 0.9rem;
+  padding: 0.6rem;
+  border: 1.5px solid var(--color-green);
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  color: var(--color-green);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.experience__visit:hover {
+  background-color: var(--color-green);
+  color: var(--color-cream);
+}
 
 /* ==================== Welcome popup (jumlah orang, muncul sekali) ==================== */
 .welcome__box {

@@ -137,6 +137,31 @@ Object.keys(TOUR_TICKETS).forEach(function (tour) {
   tourExclusive[tour] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
 });
 
+// Standalone place (halaman Destinations): Standard = mobil aja, Exclusive = + tiket masuk
+// tempat itu (per orang, dari TICKETS). Peta place -> key TICKETS. Yang gratis = 0 (toggle
+// tetap tampil, harga sama). Angka tiket PLACEHOLDER dari riset - CEK WAYAN.
+const PLACE_TICKET = {
+  "Uluwatu Cliff Temple": "Uluwatu Temple", "Tanah Lot Sunset Temple": "Tanah Lot",
+  "Besakih - The Mother Temple": "Besakih", "Tirta Empul Holy Water Temple": "Tirta Empul",
+  "Goa Gajah - The Elephant Cave": "Goa Gajah", "Gunung Kawi Temple": "Gunung Kawi",
+  "Lempuyang Temple - Gates of Heaven": "Lempuyang", "Ulun Danu Beratan Lake Temple": "Ulun Danu Beratan",
+  "Taman Ayun Royal Temple": "Taman Ayun", "Pura Batuan Temple": "Pura Batuan",
+  "Garuda Wisnu Kencana (GWK)": "GWK", "Penglipuran Village": "Penglipuran",
+  "Handara Gate": "Handara Gate", "Tirta Gangga Water Palace": "Tirta Gangga",
+  "Taman Ujung Water Palace": "Taman Ujung", "Tegalalang Rice Terrace": "Tegalalang",
+  "Jatiluwih Rice Terraces": "Jatiluwih", "Tegenungan Waterfall": "Tegenungan",
+  "Git Git Waterfall": "Gitgit", "Sekumpul Waterfall": "Sekumpul Trek",
+  "Banyumala Twin Waterfall": "Banyumala", "Munduk Coffee Highlands": "Munduk Waterfall",
+  "Buyan & Tamblingan Twin Lakes": "Twin Lakes Viewpoint", "Pandawa Beach": "Pandawa",
+  "Balangan Beach": "Balangan", "Bingin Beach": "Bingin", "Green Bowl Beach": "Green Bowl",
+  "Tegal Wangi Beach": "Tegal Wangi", "Sacred Monkey Forest Sanctuary": "Monkey Forest",
+  "Sangeh Monkey Forest": "Sangeh"
+};
+Object.keys(prices.place).forEach(function (place) {
+  const idr = TICKETS[PLACE_TICKET[place]] || 0;
+  tourExclusive[place] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
+});
+
 const tourDetails = [
   "Price includes car, driver, and petrol",
   "Entrance tickets are not included",

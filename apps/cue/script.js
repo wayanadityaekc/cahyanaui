@@ -2157,6 +2157,20 @@ function initItineraryButtons() {
   });
 }
 
+// Card di halaman Destinations: badan card clickable + tombol "Visit this destination"
+// -> halaman attraction masing-masing. (Navigasi, bukan booking - beda dari card tour.)
+function initDestinationCards() {
+  document.querySelectorAll(".destination-card[data-visit]").forEach((card) => {
+    const href = card.dataset.visit;
+    if (!href) return;
+    card.classList.add("card-clickable");
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a, button, .tour-type")) return;
+      window.location.href = href;
+    });
+  });
+}
+
 function initCharter() {
   const pickup = document.getElementById("ch-pickup");
   if (!pickup) return; // bukan halaman charter
@@ -2480,7 +2494,7 @@ function initTourType() {
   // Unit harga di card: tour/combo = "/car", experience/performance = "/person".
   // Ditaruh sebagai sibling <span> di sebelah harga -> nggak ketimpa renderPrices.
   function addPriceUnit(priceEl, cat) {
-    const unit = cat === "tour" || cat === "combo" ? "per car"
+    const unit = cat === "tour" || cat === "combo" || cat === "place" ? "per car"
       : cat === "experience" || cat === "performance" ? "per person" : "";
     if (!unit || priceEl.parentElement.querySelector(".price-unit")) return;
     const u = document.createElement("span");
@@ -2616,6 +2630,7 @@ async function initPage() {
   initReveal();
   itnUpdateBadge();
   initItineraryButtons();
+  initDestinationCards();
   initCharter();
   initTourType();
   initCurrency();

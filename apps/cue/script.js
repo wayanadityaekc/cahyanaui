@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 48;
+const PARTIALS_VERSION = 49;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -184,14 +184,26 @@ function setCurrency(cur) {
   currentCurrency = cur;
   localStorage.setItem("cue_currency", cur);
   renderPrices();
-  // sinkron nilai select currency di dropdown akun
-  document.querySelectorAll("[data-cur-select]").forEach((s) => {
-    if (s.value !== cur) s.value = cur;
-  });
+  // sinkron tampilan custom dropdown currency (tombol + list) di dropdown akun
+  document.querySelectorAll("[data-cur]").forEach((wrap) => syncCurBtn(wrap, cur));
   const svc = document.getElementById("service-item");
   if (svc && svc.value) svc.dispatchEvent(new Event("change"));
   if (window.__itnRerender) window.__itnRerender();
   if (window.__chRefresh) window.__chRefresh();
+}
+
+// Sinkron tampilan 1 custom dropdown currency: bendera + kode di tombol, highlight
+// opsi aktif di list. Dipakai setCurrency + initCurrency.
+function syncCurBtn(wrap, cur) {
+  const use = wrap.querySelector("[data-cur-flag] use");
+  if (use) use.setAttribute("href", "#flag-" + cur.toLowerCase());
+  const label = wrap.querySelector("[data-cur-label]");
+  if (label) label.textContent = cur;
+  wrap.querySelectorAll("[data-cur-opt]").forEach((o) => {
+    const on = o.dataset.curOpt === cur;
+    o.classList.toggle("is-active", on);
+    o.setAttribute("aria-selected", String(on));
+  });
 }
 
 // Set jumlah orang global: simpan, render ulang harga Exclusive + catatan toggle,
@@ -2326,11 +2338,35 @@ function initCharter() {
   renderCharter();
 }
 
-// Wiring select currency (di dalam dropdown akun) + render harga awal
+// Wiring custom dropdown currency (tombol + list bendera) di dropdown akun + render awal
 function initCurrency() {
-  document.querySelectorAll("[data-cur-select]").forEach((sel) => {
-    sel.value = currentCurrency;
-    sel.addEventListener("change", () => setCurrency(sel.value));
+  document.querySelectorAll("[data-cur]").forEach((wrap) => {
+    const btn = wrap.querySelector("[data-cur-toggle]");
+    const list = wrap.querySelector("[data-cur-list]");
+    if (!btn || !list) return;
+    syncCurBtn(wrap, currentCurrency);
+    // buka/tutup list
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = list.hidden;
+      list.hidden = !open;
+      btn.setAttribute("aria-expanded", String(open));
+    });
+    // pilih currency
+    list.querySelectorAll("[data-cur-opt]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        setCurrency(opt.dataset.curOpt);
+        list.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      });
+    });
+    // tutup pas klik di luar
+    document.addEventListener("click", (e) => {
+      if (!wrap.contains(e.target) && !list.hidden) {
+        list.hidden = true;
+        btn.setAttribute("aria-expanded", "false");
+      }
+    });
   });
   renderPrices();
 }

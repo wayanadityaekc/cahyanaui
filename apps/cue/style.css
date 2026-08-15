@@ -4648,6 +4648,96 @@ button.pick-cat {
   margin-bottom: 0;
 }
 
+/* Titik hijau: ada booking mendatang (di ikon akun + hamburger) */
+.acct__btn {
+  position: relative;
+}
+.acct__dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3fae5a;
+  border: 2px solid #fff;
+}
+.acct__dot[hidden] {
+  display: none;
+}
+.acct__dot--ham {
+  top: -2px;
+  right: -2px;
+}
+
+/* Header dropdown akun (greeting + email) */
+.acct__head {
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid #eee4cf;
+}
+.acct__greeting {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-green);
+}
+.acct__name {
+  color: var(--color-gold);
+}
+.acct__email {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.acct__email.is-placeholder {
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Tombol aksi dropdown (My Trips / Settings / Create-Log out) */
+.acct__actions {
+  margin-top: 0.85rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid #eee4cf;
+  display: flex;
+  flex-direction: column;
+}
+.acct__link {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.6rem 0.2rem;
+  border: 0;
+  background: none;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--color-green);
+  text-decoration: none;
+  cursor: pointer;
+}
+.acct__link + .acct__link {
+  border-top: 1px solid #f0e8d6;
+}
+.acct__link svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-gold);
+  flex: 0 0 auto;
+}
+.acct__link--auth[data-mode="logout"] {
+  color: #9a4a3f;
+}
+.acct__link--auth[data-mode="logout"] svg {
+  color: #9a4a3f;
+}
+
 /* ==================== Pickup surcharge (form + card labels) ==================== */
 .booking__group--full {
   grid-column: 1 / -1;
@@ -4750,6 +4840,141 @@ button.pick-cat {
 }
 .welcome__msg.error {
   color: #9a4a3f;
+}
+.welcome__msg.success {
+  color: #2f6b3d;
+}
+
+/* ==================== Halaman akun (My Trips / Settings) ==================== */
+.account-page {
+  max-width: 640px;
+}
+.acctpage__gate {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+.acctpage__gate h2 {
+  margin: 0 0 0.5rem;
+  color: var(--color-green);
+}
+.acctpage__gate p {
+  margin: 0 auto 1.2rem;
+  max-width: 42ch;
+  color: var(--color-muted);
+}
+.acctpage__empty {
+  color: var(--color-muted);
+  padding: 1.5rem 0;
+  text-align: center;
+}
+/* My Trips toggle */
+.mytrips__toggle {
+  display: inline-flex;
+  background: var(--color-cream);
+  border: 1px solid #e9e1cf;
+  border-radius: 999px;
+  padding: 3px;
+  margin-bottom: 1.2rem;
+}
+.mytrips__tab {
+  border: 0;
+  background: none;
+  padding: 0.5rem 1.3rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--color-muted);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.mytrips__tab.is-on {
+  background: var(--color-green);
+  color: #efe7d3;
+}
+/* Trip card */
+.trip {
+  display: flex;
+  border: 1px solid #e9e1cf;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  margin-bottom: 0.9rem;
+}
+.trip__stripe {
+  width: 5px;
+  background: var(--color-gold);
+  flex: 0 0 auto;
+}
+.trip__body {
+  padding: 0.9rem 1.1rem;
+  flex: 1;
+}
+.trip__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.trip__name {
+  font-weight: 700;
+}
+.trip__meta {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  margin-top: 0.15rem;
+}
+.trip__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.7rem;
+}
+.trip__price {
+  color: var(--color-gold);
+  font-weight: 700;
+}
+.trip__ref {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+}
+.pill {
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pill-ok {
+  background: #e2efe3;
+  color: #2f6b3d;
+}
+.pill-done {
+  background: #ece7db;
+  color: #7a7362;
+}
+/* Settings form */
+.acctform {
+  display: flex;
+  flex-direction: column;
+}
+.acctform__label {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--color-muted);
+  margin: 0.8rem 0 0.3rem;
+}
+.acctform__inp {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font-size: var(--fs-body);
+  font-family: var(--font-body);
+  color: var(--color-green);
+  background: #fff;
+  border: 1px solid #d8d2c4;
+  border-radius: 6px;
+}
+.acctform .modal__btn {
+  margin-top: 1.3rem;
 }
 
 /* Mobile: guest / currency / hamburger dibikin SAMA LEBAR bertiga (rapi sejajar) */

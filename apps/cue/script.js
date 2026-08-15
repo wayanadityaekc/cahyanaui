@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 44;
+const PARTIALS_VERSION = 45;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2516,6 +2516,135 @@ async function initAccount() {
   renderAccount();
 }
 
+// Escape teks buat innerHTML (aman dari karakter HTML).
+function escHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+// Pesan "belum punya akun" + tombol Create Account (dipakai My Trips & Settings).
+function accountGate(title, text) {
+  return (
+    '<div class="acctpage__gate">' +
+      "<h2>" + escHtml(title) + "</h2>" +
+      "<p>" + escHtml(text) + "</p>" +
+      '<button type="button" class="modal__btn" data-gate-create>Create Account</button>' +
+    "</div>"
+  );
+}
+function wireGate(root) {
+  const b = root.querySelector("[data-gate-create]");
+  if (b) b.addEventListener("click", showCreateAccount);
+}
+
+// Satu kartu trip di My Trips.
+function tripCard(t) {
+  const pillClass = t.upcoming ? "pill-ok" : "pill-done";
+  const pillText = t.upcoming ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "New") : "Completed";
+  const dateStr = t.end_date && t.end_date !== t.start_date ? t.start_date + " – " + t.end_date : t.start_date || "-";
+  return (
+    '<div class="trip"><div class="trip__stripe"></div><div class="trip__body">' +
+      '<div class="trip__top"><div><div class="trip__name">' + escHtml(t.name) + "</div>" +
+      '<div class="trip__meta">' + escHtml(dateStr) + " · " + escHtml(String(t.guests || "-")) + " pax</div></div>" +
+      '<span class="pill ' + pillClass + '">' + escHtml(pillText) + "</span></div>" +
+      '<div class="trip__foot"><div class="trip__price">' + priceHTML(t.price_usd, t.price_idr) + "</div>" +
+      '<span class="trip__ref">' + escHtml(t.ref) + "</span></div>" +
+    "</div></div>"
+  );
+}
+
+// Halaman My Trips: toggle Upcoming/History + kartu dari /api/bookings/mine.
+async function initMyTrips() {
+  const root = document.querySelector("[data-my-trips]");
+  if (!root) return;
+  await acctFetchSession();
+  if (!currentAccount) {
+    root.innerHTML = accountGate("Sign in to see your trips", "Create an account or make a booking to view your upcoming and past trips.");
+    wireGate(root);
+    return;
+  }
+  root.innerHTML = '<p class="acctpage__empty">Loading your trips…</p>';
+  let data = { upcoming: [], history: [] };
+  try {
+    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (r.ok) data = await r.json();
+  } catch (e) {}
+  const up = data.upcoming || [], hist = data.history || [];
+  hasUpcoming = up.length > 0; renderAccount();
+  root.innerHTML =
+    '<div class="mytrips__toggle" role="tablist">' +
+      '<button type="button" class="mytrips__tab is-on" data-tab="upcoming">Upcoming</button>' +
+      '<button type="button" class="mytrips__tab" data-tab="history">History</button>' +
+    "</div><div data-trips-list></div>";
+  const list = root.querySelector("[data-trips-list]");
+  const render = (which) => {
+    const arr = which === "history" ? hist : up;
+    list.innerHTML = arr.length
+      ? arr.map(tripCard).join("")
+      : '<p class="acctpage__empty">' + (which === "history" ? "No past trips yet." : "No upcoming trips yet — time to plan one!") + "</p>";
+  };
+  root.querySelectorAll(".mytrips__tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      root.querySelectorAll(".mytrips__tab").forEach((x) => x.classList.toggle("is-on", x === tab));
+      render(tab.dataset.tab);
+    });
+  });
+  render("upcoming");
+}
+
+// Halaman Settings: edit nama/email/phone + prefs -> PATCH /api/account.
+async function initSettings() {
+  const root = document.querySelector("[data-settings]");
+  if (!root) return;
+  await acctFetchSession();
+  if (!currentAccount) {
+    root.innerHTML = accountGate("Create your account", "You don't have an account yet. Create one to manage your details and trip preferences.");
+    wireGate(root);
+    return;
+  }
+  const a = currentAccount;
+  let gopts = "";
+  for (let n = 1; n <= 10; n++) gopts += '<option value="' + n + '"' + (String(a.guest_count_pref) === String(n) ? " selected" : "") + ">" + n + "</option>";
+  root.innerHTML =
+    '<form class="acctform" id="settings-form">' +
+      '<label class="acctform__label" for="set-name">Name</label><input class="acctform__inp" id="set-name" type="text" value="' + escHtml(a.name) + '" />' +
+      '<label class="acctform__label" for="set-email">Email</label><input class="acctform__inp" id="set-email" type="email" value="' + escHtml(a.email) + '" />' +
+      '<label class="acctform__label" for="set-phone">Phone</label><input class="acctform__inp" id="set-phone" type="tel" value="' + escHtml(a.phone) + '" />' +
+      '<label class="acctform__label" for="set-guests">Saved guest count</label><select class="acctform__inp" id="set-guests">' + gopts + "</select>" +
+      '<label class="acctform__label" for="set-stay">Saved stay area</label><select class="acctform__inp" id="set-stay">' + pickupOptionsHTML(a.stay_area_pref || "ubud") + "</select>" +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<button type="submit" class="modal__btn" id="set-save">Save Changes</button>' +
+    "</form>";
+  const form = root.querySelector("#settings-form");
+  const msg = root.querySelector("[data-msg]");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = {
+      name: root.querySelector("#set-name").value.trim(),
+      email: root.querySelector("#set-email").value.trim(),
+      phone: root.querySelector("#set-phone").value.trim(),
+      guest_count_pref: root.querySelector("#set-guests").value,
+      stay_area_pref: root.querySelector("#set-stay").value === "ubud" ? "" : root.querySelector("#set-stay").value,
+    };
+    const btn = root.querySelector("#set-save");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try {
+      const r = await fetch(`${API_BASE}/account`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify(body),
+      });
+      const d = await r.json();
+      if (r.ok && d.account) {
+        currentAccount = d.account; renderAccount();
+        msg.textContent = "Saved!"; msg.hidden = false; msg.className = "welcome__msg success";
+      } else { throw new Error(); }
+    } catch (err) {
+      msg.textContent = "Couldn't save right now. Please try again later."; msg.hidden = false; msg.className = "welcome__msg error";
+    }
+    btn.disabled = false; btn.textContent = "Save Changes";
+  });
+}
+
 // Badan card highlight bisa diklik -> ke halaman programnya.
 // Tombol/link di dalamnya (Book, Add to itinerary) tetap jalan sendiri.
 function initHighlightLink() {
@@ -2776,6 +2905,8 @@ async function initPage() {
   initGuestPicker();
   initAccountMenu();
   initAccount();
+  initMyTrips();
+  initSettings();
   initHighlightLink();
   initWelcome();
   initTransferUnits();

@@ -4722,7 +4722,8 @@ button.pick-cat {
   font-weight: 600;
   margin-bottom: 0.4rem;
 }
-.welcome__field select {
+.welcome__field select,
+.welcome__field input {
   width: 100%;
   padding: 0.7rem 0.8rem;
   font-size: var(--fs-body);
@@ -4731,6 +4732,24 @@ button.pick-cat {
   background: #fff;
   border: 1px solid #d8d2c4;
   border-radius: 6px;
+}
+
+/* Welcome: dua tombol sejajar (Explore as Guest / Create Account) */
+.welcome__actions--dual {
+  display: flex;
+  gap: 0.6rem;
+}
+.welcome__actions--dual .modal__btn {
+  flex: 1;
+}
+/* Pesan error di form create account */
+.welcome__msg {
+  margin: 0 0 0.9rem;
+  font-size: 0.78rem;
+  text-align: left;
+}
+.welcome__msg.error {
+  color: #9a4a3f;
 }
 
 /* Mobile: guest / currency / hamburger dibikin SAMA LEBAR bertiga (rapi sejajar) */

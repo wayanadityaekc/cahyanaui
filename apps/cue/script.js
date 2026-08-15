@@ -2409,6 +2409,9 @@ function showWelcome() {
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
   const staySel = currentStay || "ubud";
   const stayOpts = pickupOptionsHTML(staySel);
+  const curSel = currentCurrency || "USD";
+  let curOpts = "";
+  CURRENCIES.forEach((c) => { curOpts += '<option value="' + c + '"' + (c === curSel ? " selected" : "") + ">" + c + "</option>"; });
 
   const modal = document.createElement("div");
   modal.className = "modal welcome-modal";
@@ -2427,6 +2430,10 @@ function showWelcome() {
         '<label for="welcome-stay">Where are you staying?</label>' +
         '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
       "</div>" +
+      '<div class="welcome__field">' +
+        '<label for="welcome-cur">Show prices in</label>' +
+        '<select id="welcome-cur">' + curOpts + "</select>" +
+      "</div>" +
       '<div class="welcome__actions welcome__actions--dual">' +
         '<button type="button" class="modal__btn modal__btn--ghost" id="welcome-guest">Explore as Guest</button>' +
         '<button type="button" class="modal__btn" id="welcome-create">Create Account</button>' +
@@ -2438,6 +2445,7 @@ function showWelcome() {
   const savePrefs = () => {
     setGuests(modal.querySelector("#welcome-guests").value);
     setStay(modal.querySelector("#welcome-stay").value);
+    setCurrency(modal.querySelector("#welcome-cur").value);
   };
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();

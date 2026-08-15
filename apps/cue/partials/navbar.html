@@ -4,10 +4,15 @@
       <img src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
     </a>
     <div class="acct" data-acct>
-      <button type="button" class="acct__btn" data-acct-toggle aria-label="Your trip - guests & stay area" aria-expanded="false">
+      <button type="button" class="acct__btn" data-acct-toggle aria-label="Account & trip" aria-expanded="false">
         <svg class="acct__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/></svg>
+        <span class="acct__dot" data-acct-dot hidden></span>
       </button>
       <div class="acct__panel" data-acct-panel hidden>
+        <div class="acct__head">
+          <p class="acct__greeting"><span data-acct-greet>Welcome,</span> <span class="acct__name" data-acct-name>Guest</span></p>
+          <p class="acct__email" data-acct-email>guest@gmail.com</p>
+        </div>
         <p class="acct__title">Your trip</p>
         <label class="acct__label" for="acct-guests">Guests</label>
         <select id="acct-guests" data-guest-select aria-label="Number of guests">
@@ -27,6 +32,18 @@
         <select id="acct-stay" data-stay-select aria-label="Stay area">
           <option value="ubud">Ubud &amp; nearby</option>
         </select>
+        <div class="acct__actions">
+          <a href="my-trips.html" class="acct__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h12"/></svg>My Trips
+          </a>
+          <a href="settings.html" class="acct__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2"/></svg>Settings
+          </a>
+          <button type="button" class="acct__link acct__link--auth" data-acct-auth data-mode="create">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/><path d="M19 7v4M21 9h-4"/></svg>
+            <span data-acct-auth-label>Create Account</span>
+          </button>
+        </div>
       </div>
     </div>
     <select class="cur-select" data-cur-select aria-label="Currency">
@@ -57,6 +74,7 @@
     <button class="navbar__toggle" id="hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
       <span class="itn-badge itn-badge--hamburger" data-itn-badge hidden>0</span>
+      <span class="acct__dot acct__dot--ham" data-acct-dot hidden></span>
     </button>
   </div>
 </header>

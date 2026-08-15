@@ -3,13 +3,19 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 44;
+const PARTIALS_VERSION = 45;
 
 const WHATSAPP_NUMBER = "61401657862";
 
 const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL";
 
 const API_ENDPOINT = "https://cahyana-api-production.up.railway.app/api/inquiry";
+
+// -- Sistem akun (passwordless). Base API + kunci token sesi di localStorage.
+const API_BASE = "https://cahyana-api-production.up.railway.app/api";
+const TOKEN_KEY = "cue_token";
+let currentAccount = null; // null = belum login (guest)
+let hasUpcoming = false; // buat titik hijau navbar (ada booking mendatang)
 
 const REFERRAL_CODE = "gowithcahyana";
 
@@ -296,6 +302,74 @@ function setStay(pk) {
     if (s.value !== v) s.value = v;
   });
   if (window.__bookingRefresh) window.__bookingRefresh();
+}
+
+/* ---- Akun (passwordless) — token sesi + state ---- */
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
+function setToken(t) { if (t) localStorage.setItem(TOKEN_KEY, t); }
+function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+// Magic link dari email ("My Trips"): kalau URL bawa ?token=, simpan (auto-login)
+// lalu bersihin URL biar token gak keliatan/kebagikan.
+function captureMagicToken() {
+  try {
+    const t = new URLSearchParams(location.search).get("token");
+    if (t) { setToken(t); history.replaceState({}, "", location.pathname); }
+  } catch (e) {}
+}
+
+// Ambil sesi dari token (kalau ada) -> isi currentAccount. Fail-soft (API belum siap = tetap guest).
+async function acctFetchSession() {
+  const t = getToken();
+  if (!t) { currentAccount = null; return; }
+  try {
+    const r = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${t}` } });
+    if (r.ok) { const d = await r.json(); currentAccount = d.account || null; }
+    else if (r.status === 401) { clearToken(); currentAccount = null; } // token basi
+  } catch (e) { /* API down -> diem, tetap guest */ }
+}
+
+// Cek ada booking mendatang (buat titik hijau navbar). Fail-soft.
+async function acctRefreshUpcoming() {
+  hasUpcoming = false;
+  if (!getToken() || !currentAccount) return;
+  try {
+    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (r.ok) { const d = await r.json(); hasUpcoming = Array.isArray(d.upcoming) && d.upcoming.length > 0; }
+  } catch (e) {}
+}
+
+// Buat akun dari form -> simpan token + login. Return true kalau sukses.
+async function acctCreate({ name, email, phone }) {
+  try {
+    const r = await fetch(`${API_BASE}/account`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name, email, phone,
+        guest_count_pref: currentGuests ? String(currentGuests) : "",
+        stay_area_pref: currentStay || "",
+      }),
+    });
+    const d = await r.json();
+    if (r.ok && d.token) { setToken(d.token); currentAccount = d.account || null; renderAccount(); return true; }
+    return false;
+  } catch (e) { return false; }
+}
+
+function acctLogout() { clearToken(); currentAccount = null; hasUpcoming = false; renderAccount(); }
+
+// Isi navbar sesuai state login (1 template, beda parameter). Aman kalau elemen belum ada.
+function renderAccount() {
+  const loggedIn = !!currentAccount;
+  const nameFirst = loggedIn ? ((currentAccount.name || "").trim().split(" ")[0] || "there") : "Guest";
+  const email = loggedIn ? (currentAccount.email || "") : "guest@gmail.com";
+  document.querySelectorAll("[data-acct-greet]").forEach((el) => { el.textContent = loggedIn ? "Welcome back," : "Welcome,"; });
+  document.querySelectorAll("[data-acct-name]").forEach((el) => { el.textContent = nameFirst; });
+  document.querySelectorAll("[data-acct-email]").forEach((el) => { el.textContent = email; el.classList.toggle("is-placeholder", !loggedIn); });
+  document.querySelectorAll("[data-acct-dot]").forEach((el) => { el.hidden = !(loggedIn && hasUpcoming); });
+  document.querySelectorAll("[data-acct-auth]").forEach((el) => { el.dataset.mode = loggedIn ? "logout" : "create"; });
+  document.querySelectorAll("[data-acct-auth-label]").forEach((el) => { el.textContent = loggedIn ? "Log out" : "Create Account"; });
 }
 
 // Harga Exclusive buat N orang = harga standard (per mobil, ×2 kalau >5)
@@ -819,7 +893,18 @@ function initBookingConfirm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload())
-    });
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        // Auto-login habis booking: simpan token kalau belum login. Fail-soft.
+        if (d && d.token && !getToken()) {
+          setToken(d.token);
+          currentAccount = d.account || null;
+          hasUpcoming = true; // baru booking -> ada trip mendatang
+          renderAccount();
+        }
+      })
+      .catch(() => {});
     if (typeof ctx.onSuccess === "function") ctx.onSuccess();
     modalForm.style.display = "none";
     modalSuccess.style.display = "block";
@@ -2359,22 +2444,232 @@ function showWelcome() {
         '<label for="welcome-stay">Where are you staying?</label>' +
         '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
       "</div>" +
-      '<div class="welcome__actions">' +
-        '<button type="button" class="modal__btn" id="welcome-confirm">Explore</button>' +
+      '<div class="welcome__actions welcome__actions--dual">' +
+        '<button type="button" class="modal__btn modal__btn--ghost" id="welcome-guest">Explore as Guest</button>' +
+        '<button type="button" class="modal__btn" id="welcome-create">Create Account</button>' +
       "</div>" +
     "</div>";
   document.body.appendChild(modal);
 
   const close = () => { modal.classList.remove("active"); localStorage.setItem("cue_welcomed", "1"); };
+  const savePrefs = () => {
+    setGuests(modal.querySelector("#welcome-guests").value);
+    setStay(modal.querySelector("#welcome-stay").value);
+  };
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();
   });
-  modal.querySelector("#welcome-confirm").addEventListener("click", () => {
-    setGuests(modal.querySelector("#welcome-guests").value);
-    setStay(modal.querySelector("#welcome-stay").value);
-    close();
+  // "Explore as Guest" = simpan prefs, tutup (belum bikin akun; akun auto pas booking).
+  modal.querySelector("#welcome-guest").addEventListener("click", () => { savePrefs(); close(); });
+  // "Create Account" = simpan prefs, tutup welcome, buka form create akun.
+  modal.querySelector("#welcome-create").addEventListener("click", () => { savePrefs(); close(); showCreateAccount(); });
+  requestAnimationFrame(() => modal.classList.add("active"));
+}
+
+// Popup form create account (dari welcome & tombol navbar). No password — 3 field.
+function showCreateAccount() {
+  const existing = document.getElementById("create-modal");
+  if (existing) existing.remove();
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "create-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
+      '<h2 class="welcome__title">Create your account</h2>' +
+      '<p class="welcome__text">No password - we\'ll recognise you by email &amp; phone. Same details as your booking.</p>' +
+      '<div class="welcome__field"><label for="acct-name">Name</label><input id="acct-name" type="text" autocomplete="name" /></div>' +
+      '<div class="welcome__field"><label for="acct-email">Email</label><input id="acct-email" type="email" autocomplete="email" /></div>' +
+      '<div class="welcome__field"><label for="acct-phone">Phone</label><input id="acct-phone" type="tel" autocomplete="tel" /></div>' +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="acct-create-btn">Create Account</button>' +
+      "</div>" +
+    "</div>";
+  document.body.appendChild(modal);
+  const close = () => modal.classList.remove("active");
+  const msg = modal.querySelector("[data-msg]");
+  const showErr = (t) => { msg.textContent = t; msg.hidden = false; msg.className = "welcome__msg error"; };
+  modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest("[data-close]")) close(); });
+  const btn = modal.querySelector("#acct-create-btn");
+  btn.addEventListener("click", async () => {
+    const name = modal.querySelector("#acct-name").value.trim();
+    const email = modal.querySelector("#acct-email").value.trim();
+    const phone = modal.querySelector("#acct-phone").value.trim();
+    if (!name) return showErr("Please enter your name.");
+    if (!/^\S+@\S+\.\S+$/.test(email)) return showErr("Please enter a valid email address.");
+    if (!phone) return showErr("Please enter your phone number.");
+    btn.disabled = true; btn.textContent = "Creating...";
+    const ok = await acctCreate({ name, email, phone });
+    btn.disabled = false; btn.textContent = "Create Account";
+    if (ok) close();
+    else showErr("Couldn't create account right now. Please try again later.");
   });
   requestAnimationFrame(() => modal.classList.add("active"));
+}
+
+// Init akun: render state awal + wire tombol auth (Create Account / Log out) via delegation,
+// lalu cek sesi dari token (async, fail-soft) & render ulang.
+async function initAccount() {
+  renderAccount();
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-acct-auth]");
+    if (!btn) return;
+    e.preventDefault();
+    if (btn.dataset.mode === "logout") acctLogout();
+    else showCreateAccount();
+  });
+  await acctFetchSession();
+  await acctRefreshUpcoming();
+  renderAccount();
+}
+
+// Escape teks buat innerHTML (aman dari karakter HTML).
+function escHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+// Pesan "belum punya akun" + tombol Create Account (dipakai My Trips & Settings).
+function accountGate(title, text) {
+  return (
+    '<div class="acctpage__gate">' +
+      "<h2>" + escHtml(title) + "</h2>" +
+      "<p>" + escHtml(text) + "</p>" +
+      '<button type="button" class="modal__btn" data-gate-create>Create Account</button>' +
+    "</div>"
+  );
+}
+function wireGate(root) {
+  const b = root.querySelector("[data-gate-create]");
+  if (b) b.addEventListener("click", showCreateAccount);
+}
+
+// Satu kartu trip di My Trips.
+function tripCard(t) {
+  const pillClass = t.upcoming ? "pill-ok" : "pill-done";
+  const pillText = t.upcoming ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "New") : "Completed";
+  const dateStr = t.end_date && t.end_date !== t.start_date ? t.start_date + " – " + t.end_date : t.start_date || "-";
+  return (
+    '<div class="trip"><div class="trip__stripe"></div><div class="trip__body">' +
+      '<div class="trip__top"><div><div class="trip__name">' + escHtml(t.name) + "</div>" +
+      '<div class="trip__meta">' + escHtml(dateStr) + " · " + escHtml(String(t.guests || "-")) + " pax</div></div>" +
+      '<span class="pill ' + pillClass + '">' + escHtml(pillText) + "</span></div>" +
+      '<div class="trip__foot"><div class="trip__price">' + priceHTML(t.price_usd, t.price_idr) + "</div>" +
+      '<span class="trip__ref">' + escHtml(t.ref) + "</span></div>" +
+    "</div></div>"
+  );
+}
+
+// Halaman My Trips: toggle Upcoming/History + kartu dari /api/bookings/mine.
+async function initMyTrips() {
+  const root = document.querySelector("[data-my-trips]");
+  if (!root) return;
+  await acctFetchSession();
+  if (!currentAccount) {
+    root.innerHTML = accountGate("Sign in to see your trips", "Create an account or make a booking to view your upcoming and past trips.");
+    wireGate(root);
+    return;
+  }
+  root.innerHTML = '<p class="acctpage__empty">Loading your trips…</p>';
+  let data = { upcoming: [], history: [] };
+  try {
+    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (r.ok) data = await r.json();
+  } catch (e) {}
+  const up = data.upcoming || [], hist = data.history || [];
+  hasUpcoming = up.length > 0; renderAccount();
+  root.innerHTML =
+    '<div class="mytrips__toggle" role="tablist">' +
+      '<button type="button" class="mytrips__tab is-on" data-tab="upcoming">Upcoming</button>' +
+      '<button type="button" class="mytrips__tab" data-tab="history">History</button>' +
+    "</div><div data-trips-list></div>";
+  const list = root.querySelector("[data-trips-list]");
+  const render = (which) => {
+    const arr = which === "history" ? hist : up;
+    list.innerHTML = arr.length
+      ? arr.map(tripCard).join("")
+      : '<p class="acctpage__empty">' + (which === "history" ? "No past trips yet." : "No upcoming trips yet — time to plan one!") + "</p>";
+  };
+  root.querySelectorAll(".mytrips__tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      root.querySelectorAll(".mytrips__tab").forEach((x) => x.classList.toggle("is-on", x === tab));
+      render(tab.dataset.tab);
+    });
+  });
+  render("upcoming");
+}
+
+// Halaman Settings: edit nama/email/phone + prefs -> PATCH /api/account.
+async function initSettings() {
+  const root = document.querySelector("[data-settings]");
+  if (!root) return;
+  await acctFetchSession();
+  if (!currentAccount) {
+    root.innerHTML = accountGate("Create your account", "You don't have an account yet. Create one to manage your details and trip preferences.");
+    wireGate(root);
+    return;
+  }
+  const a = currentAccount;
+  let gopts = "";
+  for (let n = 1; n <= 10; n++) gopts += '<option value="' + n + '"' + (String(a.guest_count_pref) === String(n) ? " selected" : "") + ">" + n + "</option>";
+  root.innerHTML =
+    '<form class="acctform" id="settings-form">' +
+      '<label class="acctform__label" for="set-name">Name</label><input class="acctform__inp" id="set-name" type="text" value="' + escHtml(a.name) + '" />' +
+      '<label class="acctform__label" for="set-email">Email</label><input class="acctform__inp" id="set-email" type="email" value="' + escHtml(a.email) + '" />' +
+      '<label class="acctform__label" for="set-phone">Phone</label><input class="acctform__inp" id="set-phone" type="tel" value="' + escHtml(a.phone) + '" />' +
+      '<label class="acctform__label" for="set-guests">Saved guest count</label><select class="acctform__inp" id="set-guests">' + gopts + "</select>" +
+      '<label class="acctform__label" for="set-stay">Saved stay area</label><select class="acctform__inp" id="set-stay">' + pickupOptionsHTML(a.stay_area_pref || "ubud") + "</select>" +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<button type="submit" class="modal__btn" id="set-save">Save Changes</button>' +
+    "</form>";
+  const form = root.querySelector("#settings-form");
+  const msg = root.querySelector("[data-msg]");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = {
+      name: root.querySelector("#set-name").value.trim(),
+      email: root.querySelector("#set-email").value.trim(),
+      phone: root.querySelector("#set-phone").value.trim(),
+      guest_count_pref: root.querySelector("#set-guests").value,
+      stay_area_pref: root.querySelector("#set-stay").value === "ubud" ? "" : root.querySelector("#set-stay").value,
+    };
+    const btn = root.querySelector("#set-save");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try {
+      const r = await fetch(`${API_BASE}/account`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify(body),
+      });
+      const d = await r.json();
+      if (r.ok && d.account) {
+        currentAccount = d.account; renderAccount();
+        msg.textContent = "Saved!"; msg.hidden = false; msg.className = "welcome__msg success";
+      } else { throw new Error(); }
+    } catch (err) {
+      msg.textContent = "Couldn't save right now. Please try again later."; msg.hidden = false; msg.className = "welcome__msg error";
+    }
+    btn.disabled = false; btn.textContent = "Save Changes";
+  });
+}
+
+// Trust stat homepage: jumlah akun yang pernah dibuat. Sembunyi kalau 0 / API down
+// (no fake). Fail-soft.
+async function initTrustStat() {
+  const el = document.querySelector("[data-trust-stat]");
+  if (!el) return;
+  try {
+    const r = await fetch(`${API_BASE}/accounts/count`);
+    if (!r.ok) return;
+    const d = await r.json();
+    const n = Number(d.count) || 0;
+    if (n > 0) {
+      const num = el.querySelector("[data-accounts-count]");
+      if (num) num.textContent = String(n);
+      el.hidden = false;
+    }
+  } catch (e) {}
 }
 
 // Badan card highlight bisa diklik -> ke halaman programnya.
@@ -2611,6 +2906,7 @@ function initCardTitleOverlay() {
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
+  captureMagicToken();
   await loadPartials();
   initNavbar();
   initBookingConfirm();
@@ -2636,6 +2932,10 @@ async function initPage() {
   initCurrency();
   initGuestPicker();
   initAccountMenu();
+  initAccount();
+  initMyTrips();
+  initSettings();
+  initTrustStat();
   initHighlightLink();
   initWelcome();
   initTransferUnits();

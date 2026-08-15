@@ -716,6 +716,21 @@ body {
   justify-content: center;
   gap: 2rem 4.5rem;
 }
+/* Trust stat (jumlah akun) — 1 baris penuh di atas logo/sosmed */
+.trust__stat {
+  flex: 0 0 100%;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-green);
+}
+.trust__stat[hidden] {
+  display: none;
+}
+.trust__stat strong {
+  color: var(--color-gold);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
 /* "Featured On" & "Follow Us" bersebelahan dalam satu baris (numpuk di layar sempit) */
 .trust__group {
   flex: 0 1 auto;

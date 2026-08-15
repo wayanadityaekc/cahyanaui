@@ -309,6 +309,15 @@ function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
 function setToken(t) { if (t) localStorage.setItem(TOKEN_KEY, t); }
 function clearToken() { localStorage.removeItem(TOKEN_KEY); }
 
+// Magic link dari email ("My Trips"): kalau URL bawa ?token=, simpan (auto-login)
+// lalu bersihin URL biar token gak keliatan/kebagikan.
+function captureMagicToken() {
+  try {
+    const t = new URLSearchParams(location.search).get("token");
+    if (t) { setToken(t); history.replaceState({}, "", location.pathname); }
+  } catch (e) {}
+}
+
 // Ambil sesi dari token (kalau ada) -> isi currentAccount. Fail-soft (API belum siap = tetap guest).
 async function acctFetchSession() {
   const t = getToken();
@@ -2645,6 +2654,24 @@ async function initSettings() {
   });
 }
 
+// Trust stat homepage: jumlah akun yang pernah dibuat. Sembunyi kalau 0 / API down
+// (no fake). Fail-soft.
+async function initTrustStat() {
+  const el = document.querySelector("[data-trust-stat]");
+  if (!el) return;
+  try {
+    const r = await fetch(`${API_BASE}/accounts/count`);
+    if (!r.ok) return;
+    const d = await r.json();
+    const n = Number(d.count) || 0;
+    if (n > 0) {
+      const num = el.querySelector("[data-accounts-count]");
+      if (num) num.textContent = String(n);
+      el.hidden = false;
+    }
+  } catch (e) {}
+}
+
 // Badan card highlight bisa diklik -> ke halaman programnya.
 // Tombol/link di dalamnya (Book, Add to itinerary) tetap jalan sendiri.
 function initHighlightLink() {
@@ -2879,6 +2906,7 @@ function initCardTitleOverlay() {
 /* ==================== 5. APP ENTRY ==================== */
 
 async function initPage() {
+  captureMagicToken();
   await loadPartials();
   initNavbar();
   initBookingConfirm();
@@ -2907,6 +2935,7 @@ async function initPage() {
   initAccount();
   initMyTrips();
   initSettings();
+  initTrustStat();
   initHighlightLink();
   initWelcome();
   initTransferUnits();

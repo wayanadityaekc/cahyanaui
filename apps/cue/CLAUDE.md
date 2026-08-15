@@ -108,8 +108,8 @@ When unsure, ask first (keep it short).
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter.
-- **Currency picker** ada **di dalam dropdown account** (chip bendera SVG `.acct__curchip`,
-  `data-cur-chip`), bukan di bar navbar. Guest & Stay area juga di dropdown itu.
+- **Currency picker** ada **di dalam dropdown account** = `<select data-cur-select>`
+  (gaya sama kaya Guests & Stay area), bukan di bar navbar.
 - Desktop: dropdown shows on hover/click. Mobile: Program dropdown is **closed by default**
   (tap "Program" to expand), the menu has a **bottom shadow** + separator border, and items
   are more spacious.

@@ -4647,43 +4647,8 @@ button.pick-cat {
   color: var(--color-green);
   cursor: pointer;
 }
-/* Currency chips (bendera SVG) di dalam dropdown akun */
-.acct__cur {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.4rem;
-}
-.acct__curchip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  padding: 0.34rem 0.3rem;
-  border: 1px solid #e4dcc8;
-  border-radius: 7px;
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-green);
-  cursor: pointer;
-}
-.acct__curchip.is-active {
-  border-color: var(--color-gold);
-  background: rgba(201, 164, 92, 0.14);
-}
-.acct__flag {
-  width: 18px;
-  height: 13px;
-  border-radius: 2px;
-  overflow: hidden;
-  flex: 0 0 auto;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
-}
-.acct__flag svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+.acct__panel select:last-of-type {
+  margin-bottom: 0;
 }
 
 /* Titik hijau: ada booking mendatang (di ikon akun + hamburger) */

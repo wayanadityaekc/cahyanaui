@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 46;
+const PARTIALS_VERSION = 47;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -184,6 +184,12 @@ function setCurrency(cur) {
   currentCurrency = cur;
   localStorage.setItem("cue_currency", cur);
   renderPrices();
+  // sinkron highlight chip currency di dropdown akun
+  document.querySelectorAll("[data-cur-chip]").forEach((b) => {
+    const on = b.dataset.curChip === cur;
+    b.classList.toggle("is-active", on);
+    b.setAttribute("aria-pressed", String(on));
+  });
   const svc = document.getElementById("service-item");
   if (svc && svc.value) svc.dispatchEvent(new Event("change"));
   if (window.__itnRerender) window.__itnRerender();
@@ -2322,17 +2328,13 @@ function initCharter() {
   renderCharter();
 }
 
-// Wiring selector currency (navbar desktop + mobile) + render harga awal
+// Wiring chip currency (di dalam dropdown akun) + render harga awal
 function initCurrency() {
-  const sels = document.querySelectorAll("[data-cur-select]");
-  sels.forEach((sel) => {
-    sel.value = currentCurrency;
-    sel.addEventListener("change", () => {
-      setCurrency(sel.value);
-      document
-        .querySelectorAll("[data-cur-select]")
-        .forEach((s) => (s.value = currentCurrency));
-    });
+  document.querySelectorAll("[data-cur-chip]").forEach((chip) => {
+    const on = chip.dataset.curChip === currentCurrency;
+    chip.classList.toggle("is-active", on);
+    chip.setAttribute("aria-pressed", String(on));
+    chip.addEventListener("click", () => setCurrency(chip.dataset.curChip));
   });
   renderPrices();
 }

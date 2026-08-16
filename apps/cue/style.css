@@ -3462,14 +3462,14 @@ section.faq::before,
     gap: 0.75rem;
   }
   .hero__booking .booking__group label {
-    font-size: var(--fs-small);
+    font-size: var(--fs-body);
   }
   .hero__booking .booking__group select,
   .hero__booking .booking__group input,
   .hero__booking .booking__price {
     height: 2.7rem;
     padding: 0.55rem 0.6rem;
-    font-size: var(--fs-small);
+    font-size: var(--fs-body);
   }
 }
 

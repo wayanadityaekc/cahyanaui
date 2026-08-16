@@ -620,31 +620,34 @@ body {
 }
 
 /* ==================== Quick nav (shortcut ke page utama, di bawah hero) ==================== */
+/* Quick nav sekarang hidup DI DALAM hero (bawah kartu program), di atas foto gelap
+   -> chip glassy, teks putih (bukan lagi section cream). Homepage-only. */
 .quicknav {
-  padding: 2.5rem 1.5rem;
-  background-color: var(--color-cream);
+  margin-top: 1.8rem;
 }
 .quicknav__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-  max-width: 900px;
-  margin: 0 auto;
+  gap: 0.9rem;
+  max-width: 720px;
 }
 .quicknav__card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.85rem;
-  padding: 1.6rem 0.75rem;
-  border-radius: 5px;
-  background-color: #fff;
+  gap: 0.6rem;
+  padding: 1rem 0.6rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(201, 164, 92, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   text-decoration: none;
-  color: var(--color-green);
-  box-shadow: var(--shadow-card);
+  color: #fff;
   transition:
     transform 0.28s ease,
-    box-shadow 0.28s ease;
+    box-shadow 0.28s ease,
+    background-color 0.28s ease;
 }
 /* Frame foto bulat - placeholder sekarang, nanti diisi <img class="quicknav__img"> */
 .quicknav__icon {
@@ -701,17 +704,17 @@ body {
   font-size: var(--fs-body);
   font-weight: 600;
   text-align: center;
+  color: #fff;
 }
+/* sub-teks di-hide (chip di hero dibikin ringkas) */
 .quicknav__sub {
-  font-size: var(--fs-label);
-  font-weight: 400;
-  color: #8a8172;
-  text-align: center;
+  display: none;
 }
 /* Hover desktop: membesar + disc keisi emas */
 .quicknav__card:hover {
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+  background-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
 }
 .quicknav__card:hover .quicknav__icon {
   background-color: var(--color-gold);

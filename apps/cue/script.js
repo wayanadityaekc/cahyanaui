@@ -2553,7 +2553,8 @@ function showWelcome() {
   modal.querySelector("#welcome-guest").addEventListener("click", () => { savePrefs(); close(); });
   // "Create Account" = simpan prefs, tutup welcome, buka form create akun.
   modal.querySelector("#welcome-create").addEventListener("click", () => { savePrefs(); close(); showCreateAccount(); });
-  requestAnimationFrame(() => modal.classList.add("active"));
+  // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
 }
 
 // Popup form create account (dari welcome & tombol navbar). No password — 3 field.
@@ -2598,7 +2599,8 @@ function showCreateAccount() {
     if (ok) close();
     else showErr("Couldn't create account right now. Please try again later.");
   });
-  requestAnimationFrame(() => modal.classList.add("active"));
+  // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
 }
 
 // Popup Sign in (magic link): user isi email -> backend kirim link sign-in ke email.
@@ -2643,7 +2645,8 @@ function showSignIn() {
       showMsg("Couldn't send right now. Please try again later.", false);
     }
   });
-  requestAnimationFrame(() => modal.classList.add("active"));
+  // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
 }
 
 // Init akun: render state awal + wire tombol auth (Sign in/up / Log out) via delegation,

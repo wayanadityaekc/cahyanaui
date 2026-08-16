@@ -2054,14 +2054,23 @@ section.faq::before,
   position: fixed;
   inset: 0;
   z-index: 200;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
   background-color: rgba(0, 0, 0, 0.55);
+  /* Fade backdrop halus (entry + exit) */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 .modal.active {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .modal__box {
   position: relative;
@@ -2075,6 +2084,16 @@ section.faq::before,
   padding: 2rem;
   border-radius: 10px;
   background-color: #fff;
+  /* Box muncul dgn slide + scale halus (Apple-style) */
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+  transition:
+    opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal.active .modal__box {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 .modal__box::-webkit-scrollbar {
   display: none;
@@ -4647,7 +4666,9 @@ button.pick-cat {
 /* Hormati setelan "kurangi gerak" */
 @media (prefers-reduced-motion: reduce) {
   .acct__panel,
-  .navbar__menu {
+  .navbar__menu,
+  .modal,
+  .modal__box {
     transition: none;
   }
 }

@@ -2457,15 +2457,28 @@ function initAccountMenu() {
   });
 }
 
-// Popup selamat datang: muncul tiap tamu (belum punya akun) mendarat di HOME.
-// Halaman lain gak diganggu — jadi kalau browser buka halaman terakhir mereka,
-// popup gak nongol; baru muncul pas balik/mulai lagi dari home. Penanda "punya
-// akun" = ada token sesi.
+// Popup selamat datang buat tamu (belum punya akun), cuma di HOME, dan cuma pas
+// "mulai fresh": refresh home, atau masuk langsung/dari luar situs. Kalau pindah
+// ke home DARI halaman lain di situs ini (user udah di dalam), popup gak muncul.
+// Penanda "punya akun" = ada token sesi.
 function initWelcome() {
   if (getToken()) return;
   const path = location.pathname;
   const isHome = path === "/" || path.endsWith("/index.html");
   if (!isHome) return;
+
+  const nav = performance.getEntriesByType("navigation")[0];
+  const navType = nav ? nav.type : "";
+  if (navType === "reload") { showWelcome(); return; }   // refresh home -> munculin
+  if (navType === "back_forward") return;                // balik masuk situs -> jangan
+
+  // Navigasi biasa: kalau datang dari halaman lain di situs ini -> user udah di
+  // dalam, jangan ganggu. Kalau langsung/bookmark/dari luar -> welcome.
+  let internal = false;
+  if (document.referrer) {
+    try { internal = new URL(document.referrer).origin === location.origin; } catch (e) {}
+  }
+  if (internal) return;
   showWelcome();
 }
 

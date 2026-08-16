@@ -231,7 +231,6 @@ function setGuests(n) {
 function resetGuests() {
   currentGuests = 0;
   localStorage.removeItem("cue_guests");
-  localStorage.removeItem("cue_welcomed");
   document.querySelectorAll("[data-guest-select]").forEach((s) => { s.value = String(DISPLAY_GUESTS); });
   document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(DISPLAY_GUESTS); });
   currentStay = "";
@@ -977,6 +976,7 @@ function initBooking() {
 
   function calculatePrice() {
     const category = serviceSelect.value, item = serviceItemSelect.value, guests = guestCount();
+    const paxTxt = guests + " pax";
     // Toggle Standard/Exclusive selalu tampil (biar tinggi form konsisten), tapi
     // di-nonaktifin (redup) kalau service-nya bukan tour/combo yg punya Exclusive.
     const hasExclusive = category === "tour" && !!tourExclusive[item];
@@ -985,7 +985,16 @@ function initBooking() {
       typeBtns.forEach((b) => (b.disabled = !hasExclusive));
     }
     if (!hasExclusive && bookingMode !== "standard") setBookingMode("standard", false);
-    if (!category || !item || !guests) return;
+    // Belum lengkap pilih service: harga tetap "-", tapi PAX tetap tampil biar user
+    // inget udah milih berapa orang.
+    if (!category || !item || !guests) {
+      priceNote.textContent = paxTxt;
+      if (priceSurcharge) {
+        priceSurcharge.textContent = "";
+        priceSurcharge.classList.remove("price-note--surcharge");
+      }
+      return;
+    }
     let usd, idr, note;
     if (category === "tour") {
       // tour wilayah ATAU combo - dua-duanya per mobil, bisa Standard / Exclusive
@@ -994,19 +1003,19 @@ function initBooking() {
       if (bookingMode === "exclusive" && tourExclusive[item]) {
         const ex = exclusivePrice(item, guests);
         usd = ex.usd; idr = ex.idr;
-        note = "Exclusive · entrance tickets included · " + guests + " pax";
+        note = "Exclusive · entrance tickets included";
       } else {
         const p = carPrice(info.price, guests);
         usd = p.usd; idr = p.idr;
-        note = guests > 5 ? "2 cars needed for more than 5 pax"
-          : (hasExclusive ? "Standard · driver only · max 5 pax" : "Price per car · max 5 pax");
+        note = guests > 5 ? "2 cars needed (large group)"
+          : (hasExclusive ? "Standard · driver only" : "Price per car");
       }
     } else if (category === "transfer") {
       const base = prices.transfer[item];
       if (!base) return;
       const p = carPrice(base, guests);
       usd = p.usd; idr = p.idr;
-      note = guests > 5 ? "2 cars needed for more than 5 pax" : "Price per car · max 5 pax";
+      note = guests > 5 ? "2 cars needed (large group)" : "Price per car";
     } else {
       const base = prices[category][item];
       if (!base) return;
@@ -1020,7 +1029,7 @@ function initBooking() {
     usd += sc.usd; idr += sc.idr;
     currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive, surcharge: sc };
     priceField.innerHTML = priceHTML(usd, idr);
-    priceNote.textContent = note;
+    priceNote.textContent = note + " · " + paxTxt;
     if (priceSurcharge) {
       const sl = surchargeLabel(item);
       priceSurcharge.textContent = sl.txt;
@@ -1087,6 +1096,7 @@ function initBooking() {
   if (def) { serviceSelect.value = def; serviceSelect.dispatchEvent(new Event("change")); }
   const presetItem = holder && holder.dataset.item;
   if (presetItem) { serviceItemSelect.value = presetItem; serviceItemSelect.dispatchEvent(new Event("change")); }
+  calculatePrice(); // render awal: minimal PAX langsung tampil walau belum pilih service
 }
 
 // Slideshow .slider (bisa lebih dari satu: Activities & Performances). Tiap slider
@@ -2428,9 +2438,10 @@ function initAccountMenu() {
   });
 }
 
-// Popup selamat datang: muncul sekali di kunjungan pertama (kalau belum "welcomed").
+// Popup selamat datang: muncul tiap buka halaman SELAMA user belum punya akun
+// (dipakai penanda: ada token sesi). Yang udah punya akun gak diganggu.
 function initWelcome() {
-  if (localStorage.getItem("cue_welcomed")) return;
+  if (getToken()) return;
   showWelcome();
 }
 
@@ -2477,7 +2488,7 @@ function showWelcome() {
     "</div>";
   document.body.appendChild(modal);
 
-  const close = () => { modal.classList.remove("active"); localStorage.setItem("cue_welcomed", "1"); };
+  const close = () => modal.classList.remove("active");
   const savePrefs = () => {
     setGuests(modal.querySelector("#welcome-guests").value);
     setStay(modal.querySelector("#welcome-stay").value);

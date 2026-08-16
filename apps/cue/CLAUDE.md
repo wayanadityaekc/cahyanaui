@@ -164,6 +164,11 @@ Order **must be kept** (declarations first, run last):
 - Foto nganggur: 13 duplikat/sisa lama (hapus?) + stok belum kepasang (`ubud-palace.jpg` dkk
   buat slot TODO) — keputusan Wayan.
 - Google Search Console: submit sitemap (belum pernah).
+- **Broadcast/newsletter promo + update Bali** (DITUNDA — Wayan mau lanjut nanti):
+  pakai **Resend Audiences + Broadcasts** (Cara A). Rencana: auto-daftarin email
+  akun baru ke Audience Resend (1 fungsi di `cahyana-api` POST /api/account), terus
+  Wayan nulis & kirim broadcast dari dashboard Resend (unsubscribe + analytics
+  otomatis). Email welcome akun udah janjiin "deals & Bali updates" → ini follow-up-nya.
 
 ## Before calling it "done" (checklist)
 1. `node --check script.js` passes.

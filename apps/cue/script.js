@@ -379,7 +379,10 @@ async function acctRequestLogin(email) {
   } catch (e) { return false; }
 }
 
-function acctLogout() { clearToken(); currentAccount = null; hasUpcoming = false; renderAccount(); }
+function acctLogout() {
+  clearToken(); currentAccount = null; hasUpcoming = false; renderAccount();
+  showWelcome(); // balik jadi guest -> tampilin welcome popup lagi
+}
 
 // Isi navbar sesuai state login (1 template, beda parameter). Aman kalau elemen belum ada.
 function renderAccount() {

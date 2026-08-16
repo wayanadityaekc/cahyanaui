@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 49;
+const PARTIALS_VERSION = 50;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -366,6 +366,19 @@ async function acctCreate({ name, email, phone }) {
   } catch (e) { return false; }
 }
 
+// Sign in via email (magic link): minta backend kirim link sign-in ke email.
+// Selalu anggap sukses kalau request-nya jalan (backend gak bocorin apakah email terdaftar).
+async function acctRequestLogin(email) {
+  try {
+    const r = await fetch(`${API_BASE}/account/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
 function acctLogout() { clearToken(); currentAccount = null; hasUpcoming = false; renderAccount(); }
 
 // Isi navbar sesuai state login (1 template, beda parameter). Aman kalau elemen belum ada.
@@ -378,7 +391,7 @@ function renderAccount() {
   document.querySelectorAll("[data-acct-email]").forEach((el) => { el.textContent = email; el.classList.toggle("is-placeholder", !loggedIn); });
   document.querySelectorAll("[data-acct-dot]").forEach((el) => { el.hidden = !(loggedIn && hasUpcoming); });
   document.querySelectorAll("[data-acct-auth]").forEach((el) => { el.dataset.mode = loggedIn ? "logout" : "create"; });
-  document.querySelectorAll("[data-acct-auth-label]").forEach((el) => { el.textContent = loggedIn ? "Log out" : "Create Account"; });
+  document.querySelectorAll("[data-acct-auth-label]").forEach((el) => { el.textContent = loggedIn ? "Log out" : "Sign in / Sign up"; });
 }
 
 // Harga Exclusive buat N orang = harga standard (per mobil, ×2 kalau >5)
@@ -2560,12 +2573,14 @@ function showCreateAccount() {
       '<div class="welcome__actions">' +
         '<button type="button" class="modal__btn" id="acct-create-btn">Create Account</button>' +
       "</div>" +
+      '<p class="welcome__alt">Already have an account? <button type="button" class="linklike" id="create-to-signin">Sign in</button></p>' +
     "</div>";
   document.body.appendChild(modal);
   const close = () => modal.classList.remove("active");
   const msg = modal.querySelector("[data-msg]");
   const showErr = (t) => { msg.textContent = t; msg.hidden = false; msg.className = "welcome__msg error"; };
   modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest("[data-close]")) close(); });
+  modal.querySelector("#create-to-signin").addEventListener("click", () => { close(); showSignIn(); });
   const btn = modal.querySelector("#acct-create-btn");
   btn.addEventListener("click", async () => {
     const name = modal.querySelector("#acct-name").value.trim();
@@ -2583,7 +2598,52 @@ function showCreateAccount() {
   requestAnimationFrame(() => modal.classList.add("active"));
 }
 
-// Init akun: render state awal + wire tombol auth (Create Account / Log out) via delegation,
+// Popup Sign in (magic link): user isi email -> backend kirim link sign-in ke email.
+// Di bawah ada link ke form Create Account (buat yang belum punya akun).
+function showSignIn() {
+  const existing = document.getElementById("signin-modal");
+  if (existing) existing.remove();
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "signin-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
+      '<h2 class="welcome__title">Sign in</h2>' +
+      "<p class=\"welcome__text\">Enter your email and we'll send you a secure sign-in link. No password needed.</p>" +
+      '<div class="welcome__field"><label for="signin-email">Email</label><input id="signin-email" type="email" autocomplete="email" /></div>' +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="signin-btn">Email me a sign-in link</button>' +
+      "</div>" +
+      '<p class="welcome__alt">New here? <button type="button" class="linklike" id="signin-to-create">Create an account</button></p>' +
+    "</div>";
+  document.body.appendChild(modal);
+  const close = () => modal.classList.remove("active");
+  const msg = modal.querySelector("[data-msg]");
+  const showMsg = (t, ok) => { msg.textContent = t; msg.hidden = false; msg.className = "welcome__msg " + (ok ? "success" : "error"); };
+  modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest("[data-close]")) close(); });
+  modal.querySelector("#signin-to-create").addEventListener("click", () => { close(); showCreateAccount(); });
+  const btn = modal.querySelector("#signin-btn");
+  btn.addEventListener("click", async () => {
+    const email = modal.querySelector("#signin-email").value.trim();
+    if (!/^\S+@\S+\.\S+$/.test(email)) return showMsg("Please enter a valid email address.", false);
+    btn.disabled = true; btn.textContent = "Sending...";
+    const ok = await acctRequestLogin(email);
+    btn.disabled = false; btn.textContent = "Email me a sign-in link";
+    if (ok) {
+      showMsg("Check your email for a sign-in link. If you have an account with us, it's on the way.", true);
+      modal.querySelector("#signin-email").disabled = true;
+      btn.disabled = true;
+    } else {
+      showMsg("Couldn't send right now. Please try again later.", false);
+    }
+  });
+  requestAnimationFrame(() => modal.classList.add("active"));
+}
+
+// Init akun: render state awal + wire tombol auth (Sign in/up / Log out) via delegation,
 // lalu cek sesi dari token (async, fail-soft) & render ulang.
 async function initAccount() {
   renderAccount();
@@ -2592,7 +2652,7 @@ async function initAccount() {
     if (!btn) return;
     e.preventDefault();
     if (btn.dataset.mode === "logout") acctLogout();
-    else showCreateAccount();
+    else showSignIn();
   });
   await acctFetchSession();
   await acctRefreshUpcoming();

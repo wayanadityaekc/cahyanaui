@@ -28,10 +28,9 @@
       type="font/woff2"
       crossorigin
     />
-    <!-- Preload hero (LCP) - URL harus match CSS persis biar nggak dobel-download.
-         Satu foto (tour-hero) buat desktop & mobile. -->
-    <link rel="preload" as="image" href="assets/images/tour-hero.jpg" />
-    <link rel="stylesheet" href="style.css?v=211" />
+    <!-- Preload foto tile pertama (LCP hero-tiles) -->
+    <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
+    <link rel="stylesheet" href="style.css?v=212" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -105,41 +104,46 @@
   <body>
     <div id="navbar-placeholder"></div>
 
-    <section class="hero" id="hero">
-      <div class="hero__inner">
-        <div class="hero__content">
-          <h1 class="hero__title">
-            Your Bali Trip Planner. Price shown upfront.
-          </h1>
-          <h2 class="hero__subtitle">
-            Tours, Transfers, Experiences & Villas. Build your trip day by day
-            and watch the total add up as you go.
-          </h2>
-          <!--<p class="hero__text">
-            Build your trip day by day and watch the total add up as you go.
-          </p>-->
-          <div class="hero__programs">
-            <p class="hero__programs-label">Popular Programs</p>
-            <div class="hero__programs-row">
-              <a class="hero-pcard" href="ubud-tour.html">
-                <div class="hero-pcard__img"><img src="assets/images/ubud-tour-card.jpg" alt="Ubud Tour" loading="lazy" width="600" height="600" /><h3 class="hero-pcard__t">Ubud Tour</h3></div>
-              </a>
-              <a class="hero-pcard" href="ubud-culture-day.html">
-                <div class="hero-pcard__img"><img src="assets/images/ubud-culture-day-card.jpg" alt="Ubud Culture Day" loading="lazy" width="600" height="600" /><h3 class="hero-pcard__t">Ubud Culture Day</h3></div>
-              </a>
-              <a class="hero-pcard" href="ubud-atv-adventure.html">
-                <div class="hero-pcard__img"><img src="assets/images/ubud-atv-adventure-card.jpg" alt="Ubud ATV Adventure" loading="lazy" width="600" height="600" /><h3 class="hero-pcard__t">Ubud ATV Adventure</h3></div>
-              </a>
-            </div>
+    <section class="hero-tiles" id="hero">
+      <div class="hero-tiles__head">
+        <p class="hero-tiles__eyebrow">Popular in Ubud</p>
+        <h1 class="hero-tiles__title">Pick your experience.</h1>
+        <p class="hero-tiles__sub">
+          Real programs, priced upfront. Build a full trip in minutes.
+        </p>
+      </div>
+      <div class="hero-tiles__row">
+        <a class="ptile" href="ubud-tour.html">
+          <img src="assets/images/ubud-tour-card.jpg" alt="Ubud Tour" width="600" height="600" />
+          <div class="ptile__info">
+            <h3 class="ptile__name">Ubud Tour</h3>
+            <p class="ptile__from">from <span class="price" data-price="Ubud Tour">$45</span></p>
+            <span class="ptile__go">Book &rarr;</span>
           </div>
-          <a class="hero__cta" href="tour.html">See all tours</a>
-        </div>
-        <div id="booking-placeholder" class="hero__booking"></div>
+        </a>
+        <a class="ptile" href="ubud-culture-day.html">
+          <img src="assets/images/ubud-culture-day-card.jpg" alt="Ubud Culture Day" width="600" height="600" />
+          <div class="ptile__info">
+            <h3 class="ptile__name">Ubud Culture Day</h3>
+            <p class="ptile__from">from <span class="price" data-price="Ubud Culture Day">$55</span></p>
+            <span class="ptile__go">Book &rarr;</span>
+          </div>
+        </a>
+        <a class="ptile" href="ubud-atv-adventure.html">
+          <img src="assets/images/ubud-atv-adventure-card.jpg" alt="Ubud ATV Adventure" width="600" height="600" />
+          <div class="ptile__info">
+            <h3 class="ptile__name">Ubud ATV Adventure</h3>
+            <p class="ptile__from">from <span class="price" data-price="Ubud ATV Adventure">$80</span></p>
+            <span class="ptile__go">Book &rarr;</span>
+          </div>
+        </a>
       </div>
     </section>
 
-    <!-- Booking form (mobile): keluar hero, di posisi quick nav dulu; desktop tetap di dalam hero (dipindah via JS) -->
-    <section class="booking-host" id="booking-host" aria-label="Build your trip"></section>
+    <!-- Booking form: section di bawah tiles (Build Your Trip) -->
+    <section class="booking-host" id="booking-host" aria-label="Build your trip">
+      <div id="booking-placeholder" class="hero__booking"></div>
+    </section>
 
     <section class="experience experience--alt" id="tours">
       <h2 class="section__title">Tour Programs from Ubud</h2>
@@ -1328,7 +1332,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=211"></script>
-    <script src="script.js?v=211"></script>
+    <script src="data.js?v=212"></script>
+    <script src="script.js?v=212"></script>
   </body>
 </html>

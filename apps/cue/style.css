@@ -4830,6 +4830,7 @@ button.pick-cat {
 }
 .booking__surcharge {
   margin-top: 0.15rem;
+  min-height: 1.4em; /* reserve 1 baris walau kosong -> form gak loncat */
   font-size: var(--fs-label);
   line-height: 1.25;
   color: #2e7d54;

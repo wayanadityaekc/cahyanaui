@@ -985,12 +985,12 @@ function initBooking() {
       typeBtns.forEach((b) => (b.disabled = !hasExclusive));
     }
     if (!hasExclusive && bookingMode !== "standard") setBookingMode("standard", false);
-    // Belum lengkap pilih service: harga tetap "-", tapi PAX tetap tampil biar user
-    // inget udah milih berapa orang.
+    // Belum lengkap pilih service: harga tetap "-", tapi 2 baris teks tetap diisi
+    // (placeholder) biar tinggi form stabil (gak loncat) + PAX tetap keliatan.
     if (!category || !item || !guests) {
-      priceNote.textContent = paxTxt;
+      priceNote.textContent = "Price shows here once you choose a service";
       if (priceSurcharge) {
-        priceSurcharge.textContent = "";
+        priceSurcharge.textContent = "Pickup surcharge added if it applies · " + paxTxt;
         priceSurcharge.classList.remove("price-note--surcharge");
       }
       return;

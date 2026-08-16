@@ -11,9 +11,9 @@
 }
 
 :root {
-  --color-green: #1f3d2b;
+  --color-green: #1a1a1a;
   --color-gold: #c9a45c;
-  --color-cream: #f7f3ea;
+  --color-cream: #f2f2f2;
   --font-body: "Montserrat", sans-serif;
   /* ---- Type scale (DRY) ---- */
   --fs-display: clamp(1.9rem, 5vw, 2.2rem);

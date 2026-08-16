@@ -5577,3 +5577,64 @@ button.pick-cat {
   color: #fff;
   background-color: var(--color-gold);
 }
+
+/* ==================== EKSPERIMEN LAYOUT (revertible) ====================
+   - no border-radius: card, foto konten, slider, villa
+   - slider activities/performance: judul di foto dihapus (cukup slider-label), full + margin tipis
+   - villa card full-bleed, gold edge dibuang, margin mepet, 1 kolom di HP
+   - semua garis gold antar section dihapus (divider ::before + border section) */
+.experience__card,
+.experience__image,
+.stop__image,
+.slider,
+.villa__card,
+.villa__image {
+  border-radius: 0;
+}
+/* garis gold antar section OFF */
+section + section::before,
+section.faq::before,
+[id$="-placeholder"] > section::before,
+[id$="-placeholder"] + section::before,
+.highlight + section::before {
+  content: none;
+}
+.villas {
+  border-top: none;
+  border-bottom: none;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.drivers {
+  border-top: none;
+}
+/* slider activities/performance: caption judul OFF + full + margin tipis */
+.slider__caption {
+  display: none;
+}
+.slider {
+  box-shadow: none;
+}
+.activities {
+  width: 100%;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.activities__sliders {
+  gap: 10px;
+}
+/* villa card: full-bleed, flat, gold edge dibuang, mepet */
+.villa__card {
+  border: none;
+  background: #fff;
+  box-shadow: none;
+  margin-top: 0;
+}
+.villas__grid {
+  gap: 10px;
+}
+@media (max-width: 992px) {
+  .villas__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -114,12 +114,15 @@ body {
 }
 
 .navbar {
-  position: absolute;
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
   z-index: 100;
   width: 100%;
   background-color: #fff;
+  /* Nempel di atas pas scroll; shadow tipis biar kepisah dari konten di bawahnya. */
+  box-shadow: 0 2px 12px rgba(31, 61, 43, 0.07);
   /* Navbar di-inject via JS -> tanpa ini dia "pop" mendadak. FADE aja (tanpa slide)
      biar seragam sama hero & nol pergerakan posisi. */
   animation: navbarIn 0.4s ease-out;

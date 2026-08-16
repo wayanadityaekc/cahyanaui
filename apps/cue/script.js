@@ -190,6 +190,7 @@ function setCurrency(cur) {
   if (svc && svc.value) svc.dispatchEvent(new Event("change"));
   if (window.__itnRerender) window.__itnRerender();
   if (window.__chRefresh) window.__chRefresh();
+  if (window.__exploreRefresh) window.__exploreRefresh();
 }
 
 // Sinkron tampilan 1 custom dropdown currency: bendera + kode di tombol, highlight
@@ -3061,6 +3062,107 @@ function initCardTitleOverlay() {
 
 /* ==================== 5. APP ENTRY ==================== */
 
+/* Homepage hero = "search bar" buat mulai explore Bali.
+   - toggle Standard/Exclusive (Exclusive naikin range ~EXCLUSIVE_FEE)
+   - dropdown kategori (icon + nama kiri, price range rata kanan, currency-aware)
+   - date opsional, tombol Explore -> ke halaman kategori.
+   Booking beneran tetep di halaman program (nggak diubah). */
+function initHeroSearch() {
+  const root = document.getElementById("hero-search");
+  if (!root) return;
+  const ddBtn = root.querySelector("[data-explore-btn]");
+  const ddLabel = root.querySelector("[data-explore-label]");
+  const goBtn = root.querySelector("[data-explore-go]");
+  const dateInp = root.querySelector("[data-explore-date]");
+  const tierBtns = root.querySelectorAll("[data-tier]");
+  let selectedHref = null;
+  let tier = localStorage.getItem("cue_tier") === "exclusive" ? "exclusive" : "standard";
+
+  // Kumpulan harga {usd,idr} per kategori (dari data.js). null = tanpa harga (itinerary).
+  function catPrices(cat) {
+    switch (cat) {
+      case "tour": return [...Object.values(prices.tour), ...Object.values(prices.combo)];
+      case "transfer": return Object.values(prices.transfer);
+      case "experience": return Object.values(prices.experience);
+      case "charter": return [CHARTER.half, CHARTER.full];
+      case "destination": return Object.values(prices.place);
+      default: return null; // itinerary
+    }
+  }
+  function rangeText(cat) {
+    const arr = catPrices(cat);
+    if (!arr || !arr.length) return "Build your own";
+    const m = tier === "exclusive" ? 1 + EXCLUSIVE_FEE : 1;
+    const usd = arr.map((p) => p.usd * m);
+    const idr = arr.map((p) => p.idr * m);
+    const loUsd = Math.min(...usd), hiUsd = Math.max(...usd);
+    const lo = fmtMoney(loUsd, Math.min(...idr));
+    if (loUsd === hiUsd) return "from " + lo;
+    const hiNum = toCurrency(hiUsd, Math.max(...idr));
+    return lo + "–" + hiNum.toLocaleString(currentCurrency === "IDR" ? "id-ID" : "en-US");
+  }
+  function updateRanges() {
+    root.querySelectorAll("[data-explore-pr]").forEach((el) => {
+      el.textContent = rangeText(el.dataset.explorePr);
+    });
+  }
+  window.__exploreRefresh = updateRanges;
+
+  // Sinkron toggle tier + isi range
+  function applyTier() {
+    tierBtns.forEach((b) => b.classList.toggle("on", b.dataset.tier === tier));
+    updateRanges();
+  }
+  tierBtns.forEach((b) =>
+    b.addEventListener("click", () => {
+      tier = b.dataset.tier;
+      localStorage.setItem("cue_tier", tier);
+      applyTier();
+    })
+  );
+  applyTier();
+
+  // Dropdown buka/tutup
+  ddBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = root.classList.toggle("dd-open");
+    ddBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", (e) => {
+    if (!root.contains(e.target)) {
+      root.classList.remove("dd-open");
+      ddBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  // Pilih kategori
+  root.querySelectorAll("[data-explore-opt]").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      selectedHref = opt.dataset.href;
+      ddLabel.textContent = opt.dataset.name;
+      root.classList.remove("dd-open");
+      ddBtn.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  // Simpan date (dipakai booking di halaman tujuan nanti)
+  if (dateInp) {
+    const savedDate = localStorage.getItem("cue_date");
+    if (savedDate) dateInp.value = savedDate;
+    dateInp.addEventListener("change", () => localStorage.setItem("cue_date", dateInp.value));
+  }
+
+  // Explore -> ke halaman kategori (kalau belum pilih, buka dropdown)
+  goBtn.addEventListener("click", () => {
+    if (selectedHref) {
+      window.location.href = selectedHref;
+    } else {
+      root.classList.add("dd-open");
+      ddBtn.setAttribute("aria-expanded", "true");
+    }
+  });
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -3085,6 +3187,7 @@ async function initPage() {
   initDestinationCards();
   initCharter();
   initTourType();
+  initHeroSearch();
   initCurrency();
   initGuestPicker();
   initAccountMenu();

@@ -2438,10 +2438,15 @@ function initAccountMenu() {
   });
 }
 
-// Popup selamat datang: muncul tiap buka halaman SELAMA user belum punya akun
-// (dipakai penanda: ada token sesi). Yang udah punya akun gak diganggu.
+// Popup selamat datang: muncul tiap tamu (belum punya akun) mendarat di HOME.
+// Halaman lain gak diganggu — jadi kalau browser buka halaman terakhir mereka,
+// popup gak nongol; baru muncul pas balik/mulai lagi dari home. Penanda "punya
+// akun" = ada token sesi.
 function initWelcome() {
   if (getToken()) return;
+  const path = location.pathname;
+  const isHome = path === "/" || path.endsWith("/index.html");
+  if (!isHome) return;
   showWelcome();
 }
 

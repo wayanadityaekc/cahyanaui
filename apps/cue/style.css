@@ -276,6 +276,69 @@ body {
   color: var(--color-cream);
 }
 
+/* Hero: kartu "Popular Programs" (judul-only, swipe) di kolom kiri hero */
+.hero__programs {
+  margin-top: 1.6rem;
+}
+.hero__programs-label {
+  margin: 0 0 0.7rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+.hero__programs-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+}
+.hero__programs-row::-webkit-scrollbar {
+  display: none;
+}
+.hero-pcard {
+  flex: 0 0 200px;
+  text-decoration: none;
+}
+.hero-pcard__img {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.hero-pcard__img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-pcard:hover .hero-pcard__img img {
+  transform: scale(1.05);
+}
+.hero-pcard__img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 55%);
+}
+.hero-pcard__t {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0 0.7rem 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 /* Booking form */
 .booking {
   position: relative;
@@ -3342,6 +3405,9 @@ section.faq::before,
   }
   .hero__booking {
     width: 100%;
+  }
+  .hero-pcard {
+    flex-basis: 62%;
   }
   .hero__subtitle {
     font-size: 1rem;

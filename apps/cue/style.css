@@ -3440,9 +3440,30 @@ section.faq::before,
   .booking__fields {
     grid-template-columns: 1fr;
   }
-  /* Quick nav: 4 kolom -> grid 2x2 di HP */
+  /* Quick nav: tetap 4 kolom di HP (kartu ringkas biar muat) */
   .quicknav__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+  .quicknav__card {
+    padding: 1rem 0.35rem;
+    gap: 0.55rem;
+  }
+  .quicknav__icon {
+    width: 46px;
+    height: 46px;
+  }
+  .quicknav__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  .quicknav__label {
+    font-size: var(--fs-label);
+    line-height: 1.2;
+  }
+  /* sub-teks ke-hide di HP 4-kolom (terlalu sempit) */
+  .quicknav__sub {
+    display: none;
   }
   .about {
     margin-top: -1rem;

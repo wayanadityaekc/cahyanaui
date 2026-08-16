@@ -136,10 +136,10 @@ body {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 1.5rem;
+  padding: 0.55rem 1.5rem;
 }
 .navbar__logo img {
-  height: 55px;
+  height: 40px;
   width: auto;
   display: block;
   margin-right: 1rem;
@@ -329,6 +329,16 @@ body {
   border-radius: 6px;
   font-family: var(--font-body);
   color: var(--color-green);
+}
+
+/* iOS: field dengan font <16px bikin Safari auto-zoom pas fokus (jelek). Paksa
+   >=16px di layar sentuh/mobile biar gak nge-zoom. Pinch-zoom manual tetap jalan. */
+@media (max-width: 992px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 .booking__group select,
@@ -3278,9 +3288,9 @@ section.faq::before,
   .navbar__toggle {
     display: flex;
   }
-  /* Mobile: logo dikecilin dikit + digeser kiri dikit (desktop tetap 55px) */
+  /* Mobile: logo dikecilin dikit + digeser kiri dikit (desktop 40px) */
   .navbar__logo img {
-    height: 46px;
+    height: 34px;
     margin-left: -0.25rem;
   }
   .navbar__menu {

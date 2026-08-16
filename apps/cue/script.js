@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 50;
+const PARTIALS_VERSION = 51;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2447,7 +2447,7 @@ function initAccountMenu() {
       if (acct === except) return;
       const panel = acct.querySelector("[data-acct-panel]");
       const btn = acct.querySelector("[data-acct-toggle]");
-      if (panel && !panel.hidden) { panel.hidden = true; if (btn) btn.setAttribute("aria-expanded", "false"); }
+      if (panel && panel.classList.contains("is-open")) { panel.classList.remove("is-open"); if (btn) btn.setAttribute("aria-expanded", "false"); }
     });
   };
   document.querySelectorAll("[data-acct]").forEach((acct) => {
@@ -2456,10 +2456,10 @@ function initAccountMenu() {
     if (!btn || !panel) return;
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const open = panel.hidden;
+      const willOpen = !panel.classList.contains("is-open");
       closeAll(acct);
-      panel.hidden = !open;
-      btn.setAttribute("aria-expanded", String(open));
+      panel.classList.toggle("is-open", willOpen);
+      btn.setAttribute("aria-expanded", String(willOpen));
     });
   });
   document.addEventListener("click", (e) => {
@@ -2467,7 +2467,7 @@ function initAccountMenu() {
       if (!acct.contains(e.target)) {
         const panel = acct.querySelector("[data-acct-panel]");
         const btn = acct.querySelector("[data-acct-toggle]");
-        if (panel && !panel.hidden) { panel.hidden = true; if (btn) btn.setAttribute("aria-expanded", "false"); }
+        if (panel && panel.classList.contains("is-open")) { panel.classList.remove("is-open"); if (btn) btn.setAttribute("aria-expanded", "false"); }
       }
     });
   });

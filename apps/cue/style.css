@@ -3268,7 +3268,7 @@ section.faq::before,
     position: absolute;
     top: 100%;
     left: 0;
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 0.3rem;
     width: 100%;
@@ -3276,6 +3276,15 @@ section.faq::before,
     background-color: #fff;
     border-top: 1px solid rgba(201, 164, 92, 0.25);
     box-shadow: 0 14px 20px rgba(0, 0, 0, 0.13);
+    /* Animasi buka/tutup halus (Apple-style: fade + slide) */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition:
+      opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0.28s;
+    pointer-events: none;
   }
   .navbar__menu > li > a {
     display: block;
@@ -3289,7 +3298,10 @@ section.faq::before,
   }
 
   .navbar__menu.active {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
   }
   .hero__inner {
     flex-direction: column;
@@ -4615,9 +4627,29 @@ button.pick-cat {
   box-shadow: 0 14px 34px rgba(31, 61, 43, 0.16);
   padding: 0.9rem;
   z-index: 200;
+  /* Animasi buka/tutup halus (Apple-style: fade + slide + sedikit skala) */
+  transform-origin: top right;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transition:
+    opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.26s;
+  pointer-events: none;
 }
-.acct__panel[hidden] {
-  display: none;
+.acct__panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+/* Hormati setelan "kurangi gerak" */
+@media (prefers-reduced-motion: reduce) {
+  .acct__panel,
+  .navbar__menu {
+    transition: none;
+  }
 }
 .acct__title {
   margin: 0 0 0.7rem;

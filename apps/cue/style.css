@@ -5577,37 +5577,3 @@ button.pick-cat {
   color: #fff;
   background-color: var(--color-gold);
 }
-
-/* ==================== CARD REDESIGN (flat, tanpa desc, no radius, 2 kolom) ====================
-   Blok terpisah biar gampang di-revert. Judul tetap di atas foto (via initCardTitleOverlay).
-   Isi card: toggle Standard/Exclusive + keterangan + harga + Add to itinerary. */
-.experience__card {
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
-}
-.experience__desc {
-  display: none;
-}
-.experience__arrow {
-  display: none;
-}
-.experience__body {
-  padding: 0.6rem 0 0;
-}
-.stop__image {
-  border-radius: 0;
-}
-/* Mobile: card grid jadi 2 kolom rata (carousel homepage --slider dibiarin). */
-@media (max-width: 992px) {
-  .experience__grid:not(.experience__grid--slider) {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px 10px;
-    overflow: visible;
-    padding-bottom: 0;
-  }
-  .experience__grid:not(.experience__grid--slider) .experience__card {
-    flex: none;
-  }
-}

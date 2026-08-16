@@ -188,15 +188,26 @@ body {
   min-height: 90vh;
   padding: 7rem 1.5rem 4rem;
   background-color: var(--color-green);
+  overflow: hidden;
+}
+/* Foto hero di pseudo-element ::after yang di-BLUR (biar konten di atasnya lebih jelas);
+   overlay gelap tetap. Pakai ::after karena ::before dipakai sistem divider section.
+   inset negatif + overflow hidden = tepi blur nggak nampak. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  z-index: 0;
   background-size: cover;
   background-position: center;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
     url("assets/images/ricefield-top.jpg?v=2");
+  filter: blur(4px);
 }
 /* Mobile: foto hero versi potret (foto landscape kepotong banget di layar sempit) */
 @media (max-width: 992px) {
-  .hero {
+  .hero::after {
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
       url("assets/images/rice-terrace-mobile-hero.webp");
@@ -204,6 +215,8 @@ body {
 }
 
 .hero__inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -1695,7 +1708,8 @@ section.faq::before,
 .highlight + section::before {
   width: min(1100px, 90%);
 }
-/* Jangan kasih garis di hero / booking / tepat setelah subhero */
+/* Jangan kasih garis di hero / booking / tepat setelah subhero
+   (hero didahului navbar-placeholder -> ke-target divider; foto blur-nya pakai ::after) */
 .hero::before,
 .subhero::before,
 .booking::before,

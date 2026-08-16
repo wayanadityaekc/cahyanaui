@@ -742,7 +742,19 @@ function initNavbar() {
   const navMenu = document.getElementById("nav-menu");
   if (!hamburger || !navMenu) return;
 
-  hamburger.addEventListener("click", () => navMenu.classList.toggle("active"));
+  hamburger.addEventListener("click", () => {
+    const opening = !navMenu.classList.contains("active");
+    // Buka menu -> tutup dropdown akun biar gak numpuk (bergantian).
+    if (opening) {
+      document.querySelectorAll("[data-acct-panel].is-open").forEach((panel) => {
+        panel.classList.remove("is-open");
+        const acct = panel.closest("[data-acct]");
+        const b = acct && acct.querySelector("[data-acct-toggle]");
+        if (b) b.setAttribute("aria-expanded", "false");
+      });
+    }
+    navMenu.classList.toggle("active");
+  });
 
   // Dropdown "Program" (tap/klik buat toggle, di desktop juga jalan via hover)
   const drop = navMenu.querySelector(".navbar__has-drop");
@@ -2458,6 +2470,11 @@ function initAccountMenu() {
       e.stopPropagation();
       const willOpen = !panel.classList.contains("is-open");
       closeAll(acct);
+      // Buka akun -> tutup menu hamburger biar gak numpuk (bergantian).
+      if (willOpen) {
+        const nm = document.getElementById("nav-menu");
+        if (nm) nm.classList.remove("active");
+      }
       panel.classList.toggle("is-open", willOpen);
       btn.setAttribute("aria-expanded", String(willOpen));
     });

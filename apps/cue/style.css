@@ -338,6 +338,41 @@ body {
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
+/* CTA hero -> halaman Tour (tombol gold, tanpa panah) */
+.hero__cta {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding: 0.9rem 2rem;
+  border-radius: 6px;
+  background-color: var(--color-gold);
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.hero__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+/* Booking form di luar hero (MOBILE): section sendiri di bawah hero.
+   Di desktop kosong & disembunyiin (booking tetap di dalam hero). */
+.booking-host {
+  display: none;
+}
+.booking-host.is-active {
+  display: block;
+  padding: 2.5rem 1.5rem;
+  background-color: var(--color-cream);
+}
+.booking-host .hero__booking {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
 
 /* Booking form */
 .booking {
@@ -617,171 +652,6 @@ body {
 /* Kunci disc icon biar gak disusutin flexbox di box kotak (tetap bulat 44x44) */
 .about--panel .about__icon {
   flex-shrink: 0;
-}
-
-/* ==================== Quick nav (shortcut ke page utama, di bawah hero) ==================== */
-/* Quick nav sekarang hidup DI DALAM hero (bawah kartu program), di atas foto gelap
-   -> chip glassy, teks putih (bukan lagi section cream). Homepage-only. */
-.quicknav {
-  margin-top: 1.8rem;
-}
-.quicknav__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.9rem;
-  max-width: 720px;
-}
-.quicknav__card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1rem 0.6rem;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(201, 164, 92, 0.45);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  text-decoration: none;
-  color: #fff;
-  transition:
-    transform 0.28s ease,
-    box-shadow 0.28s ease,
-    background-color 0.28s ease;
-}
-/* Frame foto bulat - placeholder sekarang, nanti diisi <img class="quicknav__img"> */
-.quicknav__icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  overflow: hidden;
-  color: var(--color-gold);
-  /* garis border tipis gradasi emas (bukan putus-putus): putih di padding-box, gradasi di border-box */
-  border: 1.5px solid transparent;
-  background:
-    linear-gradient(rgba(201, 164, 92, 0.14), rgba(201, 164, 92, 0.14))
-      padding-box,
-    linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.3))
-      border-box;
-  transition:
-    border-color 0.28s ease,
-    color 0.28s ease;
-}
-.quicknav__icon svg {
-  width: 26px;
-  height: 26px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.quicknav__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-/* Overlay emas buat animasi "sweep" pas kartu masuk layar (dipakai di mobile) */
-.quicknav__icon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--color-gold);
-  transform: scale(0);
-  opacity: 0;
-  pointer-events: none;
-}
-.quicknav__text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-}
-.quicknav__label {
-  font-size: var(--fs-body);
-  font-weight: 600;
-  text-align: center;
-  color: #fff;
-}
-/* sub-teks di-hide (chip di hero dibikin ringkas) */
-.quicknav__sub {
-  display: none;
-}
-/* Hover desktop: membesar + disc keisi emas */
-.quicknav__card:hover {
-  transform: translateY(-4px) scale(1.05);
-  background-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
-}
-.quicknav__card:hover .quicknav__icon {
-  background-color: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-cream);
-}
-/* Tap HP: efek tekan (pengganti hover) */
-.quicknav__card:active {
-  transform: scale(0.96);
-}
-.quicknav__card:active .quicknav__icon {
-  background-color: var(--color-gold);
-  border-color: var(--color-gold);
-  color: var(--color-cream);
-}
-.quicknav__card:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 3px;
-}
-/* === Quick nav MOBILE entrance: gold-disc sweep (desktop nggak diubah) ===
-   Kartu fade-up-nya dari sistem .reveal; di HP ditambah lingkaran emas nyapu + ikon pop
-   pas kartu dapet .is-visible. Durasi + delay < 0.9s (sebelum .reveal dilepas JS). */
-@keyframes qnavSweep {
-  0% {
-    transform: scale(0);
-    opacity: 0.9;
-  }
-  55% {
-    transform: scale(1.06);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1.18);
-    opacity: 0;
-  }
-}
-@keyframes qnavPop {
-  0%,
-  30% {
-    transform: scale(0.7);
-  }
-  68% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@media (max-width: 640px) {
-  .quicknav__card.is-visible .quicknav__icon::after {
-    animation: qnavSweep 0.6s ease both;
-  }
-  .quicknav__card.is-visible .quicknav__img {
-    animation: qnavPop 0.6s ease both;
-  }
-  .quicknav__card.is-visible:nth-child(2) .quicknav__icon::after,
-  .quicknav__card.is-visible:nth-child(2) .quicknav__img {
-    animation-delay: 0.08s;
-  }
-  .quicknav__card.is-visible:nth-child(3) .quicknav__icon::after,
-  .quicknav__card.is-visible:nth-child(3) .quicknav__img {
-    animation-delay: 0.16s;
-  }
-  .quicknav__card.is-visible:nth-child(4) .quicknav__icon::after,
-  .quicknav__card.is-visible:nth-child(4) .quicknav__img {
-    animation-delay: 0.24s;
-  }
 }
 
 .trust {
@@ -1825,12 +1695,11 @@ section.faq::before,
 .highlight + section::before {
   width: min(1100px, 90%);
 }
-/* Jangan kasih garis di hero / booking / tepat setelah subhero / quicknav (nempel hero) */
+/* Jangan kasih garis di hero / booking / tepat setelah subhero */
 .hero::before,
 .subhero::before,
 .booking::before,
 .subhero + section::before,
-.quicknav::before,
 .trust::before {
   content: none;
 }
@@ -3443,31 +3312,6 @@ section.faq::before,
   .booking__fields {
     grid-template-columns: 1fr;
   }
-  /* Quick nav: tetap 4 kolom di HP (kartu ringkas biar muat) */
-  .quicknav__grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-  }
-  .quicknav__card {
-    padding: 1rem 0.35rem;
-    gap: 0.55rem;
-  }
-  .quicknav__icon {
-    width: 46px;
-    height: 46px;
-  }
-  .quicknav__icon svg {
-    width: 20px;
-    height: 20px;
-  }
-  .quicknav__label {
-    font-size: var(--fs-label);
-    line-height: 1.2;
-  }
-  /* sub-teks ke-hide di HP 4-kolom (terlalu sempit) */
-  .quicknav__sub {
-    display: none;
-  }
   .about {
     margin-top: -1rem;
   }
@@ -3670,18 +3514,12 @@ section.faq::before,
     transform: none;
     transition: none;
   }
-  .quicknav__icon::after,
-  .quicknav__img {
-    animation: none;
-  }
   .experience__card:hover,
   .villa__card:hover,
   .review-card:hover,
   .about__content:hover,
   .info__fact:hover,
-  .booking__btn:hover,
-  .quicknav__card:hover,
-  .quicknav__card:active {
+  .booking__btn:hover {
     transform: none;
   }
 }

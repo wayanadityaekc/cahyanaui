@@ -2135,7 +2135,6 @@ function initReveal() {
     ".info__fact",
     ".about__content",
     ".faq__item",
-    ".quicknav__card",
     ".section__title",
     ".itn-suggest",
     ".itn-trip",
@@ -3062,8 +3061,32 @@ function initCardTitleOverlay() {
 
 /* ==================== 5. APP ENTRY ==================== */
 
+/* Booking form: di DESKTOP tetap di dalam hero (kolom kanan), di MOBILE (<=992px)
+   dipindah keluar hero ke section #booking-host (posisi quick nav dulu).
+   Dipanggil SEBELUM loadPartials biar placeholder kosong udah di tempat yang benar
+   (partial masuk ke lokasi final -> nggak ada layout shift). Homepage-only. */
+function initBookingPlacement() {
+  const bp = document.getElementById("booking-placeholder");
+  const host = document.getElementById("booking-host");
+  const heroSlot = document.querySelector(".hero__inner");
+  if (!bp || !host || !heroSlot) return;
+  const mq = window.matchMedia("(max-width: 992px)");
+  const apply = () => {
+    if (mq.matches) {
+      if (bp.parentElement !== host) host.appendChild(bp);
+      host.classList.add("is-active");
+    } else {
+      if (bp.parentElement !== heroSlot) heroSlot.appendChild(bp);
+      host.classList.remove("is-active");
+    }
+  };
+  apply();
+  mq.addEventListener("change", apply);
+}
+
 async function initPage() {
   captureMagicToken();
+  initBookingPlacement();
   await loadPartials();
   initNavbar();
   initBookingConfirm();

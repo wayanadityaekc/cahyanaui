@@ -986,11 +986,11 @@ function initBooking() {
     }
     if (!hasExclusive && bookingMode !== "standard") setBookingMode("standard", false);
     // Belum lengkap pilih service: harga tetap "-", tapi 2 baris teks tetap diisi
-    // (placeholder) biar tinggi form stabil (gak loncat) + PAX tetap keliatan.
+    // (placeholder) biar tinggi form stabil (gak loncat). PAX di baris 1 paling depan.
     if (!category || !item || !guests) {
-      priceNote.textContent = "Price shows here once you choose a service";
+      priceNote.textContent = paxTxt;
       if (priceSurcharge) {
-        priceSurcharge.textContent = "Pickup surcharge added if it applies · " + paxTxt;
+        priceSurcharge.textContent = "Price & surcharge shown once you choose";
         priceSurcharge.classList.remove("price-note--surcharge");
       }
       return;
@@ -1029,7 +1029,7 @@ function initBooking() {
     usd += sc.usd; idr += sc.idr;
     currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive, surcharge: sc };
     priceField.innerHTML = priceHTML(usd, idr);
-    priceNote.textContent = note + " · " + paxTxt;
+    priceNote.textContent = paxTxt + " · " + note;
     if (priceSurcharge) {
       const sl = surchargeLabel(item);
       priceSurcharge.textContent = sl.txt;
@@ -2348,36 +2348,55 @@ function initCharter() {
   renderCharter();
 }
 
-// Wiring custom dropdown currency (tombol + list bendera) di dropdown akun + render awal
-function initCurrency() {
-  document.querySelectorAll("[data-cur]").forEach((wrap) => {
-    const btn = wrap.querySelector("[data-cur-toggle]");
-    const list = wrap.querySelector("[data-cur-list]");
-    if (!btn || !list) return;
-    syncCurBtn(wrap, currentCurrency);
-    // buka/tutup list
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const open = list.hidden;
-      list.hidden = !open;
-      btn.setAttribute("aria-expanded", String(open));
-    });
-    // pilih currency
-    list.querySelectorAll("[data-cur-opt]").forEach((opt) => {
-      opt.addEventListener("click", () => {
-        setCurrency(opt.dataset.curOpt);
-        list.hidden = true;
-        btn.setAttribute("aria-expanded", "false");
-      });
-    });
-    // tutup pas klik di luar
-    document.addEventListener("click", (e) => {
-      if (!wrap.contains(e.target) && !list.hidden) {
-        list.hidden = true;
-        btn.setAttribute("aria-expanded", "false");
-      }
+// Wiring 1 custom dropdown currency (tombol + list bendera). Dipakai di dropdown
+// akun (navbar) & popup welcome. Pilih -> setCurrency (langsung sync semua).
+function wireCurDropdown(wrap) {
+  const btn = wrap.querySelector("[data-cur-toggle]");
+  const list = wrap.querySelector("[data-cur-list]");
+  if (!btn || !list) return;
+  syncCurBtn(wrap, currentCurrency);
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = list.hidden;
+    list.hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  list.querySelectorAll("[data-cur-opt]").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      setCurrency(opt.dataset.curOpt);
+      list.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
     });
   });
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target) && !list.hidden) {
+      list.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+// HTML custom dropdown currency (button + list bendera SVG). Bendera pakai
+// <use href="#flag-xxx"> yang symbol-nya udah ada di partial navbar.
+function curDropdownHTML() {
+  let opts = "";
+  CURRENCIES.forEach((c) => {
+    opts += '<li class="acct__curopt" role="option" data-cur-opt="' + c + '">' +
+      '<span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-' + c.toLowerCase() + '"/></svg></span>' + c + "</li>";
+  });
+  return '<div class="acct__cur" data-cur>' +
+    '<button type="button" class="acct__curbtn" data-cur-toggle aria-haspopup="listbox" aria-expanded="false">' +
+      '<span class="acct__flag" data-cur-flag><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-usd"/></svg></span>' +
+      '<span class="acct__curcode" data-cur-label>USD</span>' +
+      '<svg class="acct__curcaret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    "</button>" +
+    '<ul class="acct__curlist" data-cur-list role="listbox" aria-label="Currency" hidden>' + opts + "</ul>" +
+  "</div>";
+}
+
+// Wiring custom dropdown currency yang udah ada di HTML (navbar) + render awal
+function initCurrency() {
+  document.querySelectorAll("[data-cur]").forEach(wireCurDropdown);
   renderPrices();
 }
 
@@ -2461,9 +2480,6 @@ function showWelcome() {
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
   const staySel = currentStay || "ubud";
   const stayOpts = pickupOptionsHTML(staySel);
-  const curSel = currentCurrency || "USD";
-  let curOpts = "";
-  CURRENCIES.forEach((c) => { curOpts += '<option value="' + c + '"' + (c === curSel ? " selected" : "") + ">" + c + "</option>"; });
 
   const modal = document.createElement("div");
   modal.className = "modal welcome-modal";
@@ -2483,8 +2499,8 @@ function showWelcome() {
         '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
       "</div>" +
       '<div class="welcome__field">' +
-        '<label for="welcome-cur">Show prices in</label>' +
-        '<select id="welcome-cur">' + curOpts + "</select>" +
+        "<label>Show prices in</label>" +
+        curDropdownHTML() +
       "</div>" +
       '<div class="welcome__actions welcome__actions--dual">' +
         '<button type="button" class="modal__btn modal__btn--ghost" id="welcome-guest">Explore as Guest</button>' +
@@ -2492,12 +2508,14 @@ function showWelcome() {
       "</div>" +
     "</div>";
   document.body.appendChild(modal);
+  // currency = custom dropdown berbendera (sama kaya di dropdown akun); apply live pas dipilih
+  const curWrap = modal.querySelector("[data-cur]");
+  if (curWrap) wireCurDropdown(curWrap);
 
   const close = () => modal.classList.remove("active");
   const savePrefs = () => {
     setGuests(modal.querySelector("#welcome-guests").value);
     setStay(modal.querySelector("#welcome-stay").value);
-    setCurrency(modal.querySelector("#welcome-cur").value);
   };
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();

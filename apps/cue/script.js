@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 54;
+const PARTIALS_VERSION = 55;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -3223,16 +3223,9 @@ function initHeroSearch() {
   }
   window.__exploreRefresh = updateRanges;
 
-  // Keterangan singkat tiap tier (biar user paham Standard vs Exclusive)
-  const TIER_NOTE = {
-    standard: "Standard: entrance tickets paid at each site - pay only for what you enter.",
-    exclusive: "Exclusive: entrance tickets prepaid - the whole day sorted upfront.",
-  };
-  const tierNote = root.querySelector("[data-tier-note]");
-  // Sinkron toggle tier + isi range + keterangan
+  // Sinkron toggle tier + isi range (penjelasan Standard/Exclusive ada di info popover)
   function applyTier() {
     tierBtns.forEach((b) => b.classList.toggle("on", b.dataset.tier === tier));
-    if (tierNote) tierNote.textContent = TIER_NOTE[tier] || "";
     updateRanges();
   }
   tierBtns.forEach((b) =>
@@ -3340,6 +3333,39 @@ function initTripBar() {
   bar.addEventListener("click", showTripDetails);
 }
 
+// Info popover "Standard vs Exclusive" (icon "i" di booking & search form).
+// Klik icon = buka/tutup; klik di luar / Escape = tutup. Cuma 1 popover kebuka.
+function initInfoPopovers() {
+  const btns = document.querySelectorAll("[data-binfo]");
+  if (!btns.length) return;
+  function closeAll(except) {
+    document.querySelectorAll(".binfo__pop.open").forEach((pop) => {
+      if (pop === except) return;
+      pop.classList.remove("open");
+      const b = pop.parentElement.querySelector("[data-binfo]");
+      if (b) b.setAttribute("aria-expanded", "false");
+    });
+  }
+  btns.forEach((btn) => {
+    const pop = btn.parentElement.querySelector(".binfo__pop");
+    if (!pop) return;
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const willOpen = !pop.classList.contains("open");
+      closeAll(pop);
+      pop.classList.toggle("open", willOpen);
+      btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".binfo")) closeAll(null);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeAll(null);
+  });
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -3365,6 +3391,7 @@ async function initPage() {
   initCharter();
   initTourType();
   initHeroSearch();
+  initInfoPopovers();
   initTripBar();
   initCurrency();
   initGuestPicker();

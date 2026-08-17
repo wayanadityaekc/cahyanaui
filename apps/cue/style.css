@@ -260,6 +260,17 @@ body {
   color: var(--color-gold);
   margin-bottom: 1rem;
 }
+/* baris toggle + info icon (icon nempel kanan toggle) */
+.hsearch__tierrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+.hsearch__tierrow .hsearch__toggle {
+  flex: 1;
+  margin-bottom: 0;
+}
 /* toggle Standard/Exclusive - ikutin style booking form (.booking__type): pill gold */
 .hsearch__toggle {
   display: flex;
@@ -286,13 +297,104 @@ body {
   background-color: var(--color-gold);
   color: #fff;
 }
-/* keterangan singkat di bawah toggle (Standard vs Exclusive) */
-.hsearch__tiernote {
-  margin: -0.35rem 0 0.9rem;
-  font-size: var(--fs-label);
-  line-height: 1.35;
-  color: #8a8172;
+/* ===== Info popover "Standard vs Exclusive" (dipakai booking + search form) ===== */
+.binfo {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+.binfo__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-gold);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.binfo__btn:hover,
+.binfo__btn[aria-expanded="true"] {
+  color: var(--color-green);
+  background: rgba(201, 164, 92, 0.15);
+}
+.binfo__btn svg {
+  width: 15px;
+  height: 15px;
+}
+.binfo__pop {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  width: min(272px, 82vw);
+  padding: 0.85rem 0.9rem;
+  background: #fff;
+  border: 1px solid #ece6d8;
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
   text-align: left;
+  display: none;
+}
+.binfo__pop.open {
+  display: block;
+}
+.binfo__pop::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -5px;
+  width: 11px;
+  height: 11px;
+  background: #fff;
+  border-left: 1px solid #ece6d8;
+  border-top: 1px solid #ece6d8;
+  transform: rotate(45deg);
+}
+/* varian icon nempel kanan (search form): popover buka ke kiri biar gak kepotong */
+.binfo--right .binfo__pop {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+.binfo--right .binfo__pop::before {
+  left: auto;
+  right: 15px;
+  margin-left: 0;
+}
+.binfo__row + .binfo__row {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #f2efe7;
+}
+.binfo__tag {
+  display: inline-block;
+  margin-bottom: 0.3rem;
+  padding: 2px 8px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-green);
+  background: #f0ece2;
+  border-radius: 999px;
+}
+.binfo__tag--gold {
+  background: var(--color-gold);
+  color: #fff;
+}
+.binfo__pop p {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  font-weight: 400;
+  color: #6b6456;
 }
 .hsearch__field {
   margin-bottom: 0.8rem;

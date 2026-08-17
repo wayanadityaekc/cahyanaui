@@ -255,7 +255,7 @@ body {
   color: var(--color-green);
 }
 .hsearch__title {
-  font-size: 1.15rem;
+  font-size: var(--fs-h3);
   text-align: center;
   color: var(--color-gold);
   margin-bottom: 1rem;
@@ -299,12 +299,10 @@ body {
 }
 .hsearch__field > label {
   display: block;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #999;
-  margin-bottom: 0.3rem;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--color-green);
+  margin-bottom: 0.4rem;
 }
 /* dropdown */
 .hsearch__dd {
@@ -320,7 +318,7 @@ body {
   padding: 0.75rem 0.85rem;
   background: #fff;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -386,18 +384,18 @@ body {
 }
 .hsearch__nm {
   flex: 1;
-  font-size: 0.92rem;
+  font-size: var(--fs-body);
   font-weight: 600;
 }
 .hsearch__nm small {
   display: block;
   font-weight: 400;
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   color: #999;
 }
 .hsearch__pr {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   color: var(--color-gold);
   white-space: nowrap;
 }
@@ -420,7 +418,7 @@ body {
   border-radius: 8px;
   padding: 0.72rem 0.85rem;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   color: var(--color-green);
   background: #fff;
 }
@@ -447,7 +445,7 @@ body {
   padding: 0.9rem;
   font-family: inherit;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: var(--fs-strong);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -5065,7 +5063,7 @@ button.pick-cat {
 }
 .welcome__field label {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   margin-bottom: 0.4rem;
 }

@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 56;
+const PARTIALS_VERSION = 57;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -3186,12 +3186,15 @@ function initHeroSearch() {
   if (!root) return;
   const ddBtn = root.querySelector("[data-explore-btn]");
   const ddLabel = root.querySelector("[data-explore-label]");
+  const ddPanel = root.querySelector("[data-explore-panel]");
+  const dateBtn = root.querySelector("[data-date-btn]");
+  const dateLabel = root.querySelector("[data-date-label]");
+  const datePanel = root.querySelector("[data-date-panel]");
+  const calBody = root.querySelector("[data-cal-body]");
+  const calHint = root.querySelector("[data-cal-hint]");
+  const calApply = root.querySelector("[data-cal-apply]");
   const goBtn = root.querySelector("[data-explore-go]");
-  const fromInp = root.querySelector("[data-explore-from]");
-  const toInp = root.querySelector("[data-explore-to]");
-  const tierBtns = root.querySelectorAll("[data-tier]");
   let selectedHref = null;
-  let tier = localStorage.getItem("cue_tier") === "exclusive" ? "exclusive" : "standard";
 
   // Kumpulan harga {usd,idr} per kategori (dari data.js). null = tanpa harga (itinerary).
   function catPrices(cat) {
@@ -3207,9 +3210,8 @@ function initHeroSearch() {
   function rangeText(cat) {
     const arr = catPrices(cat);
     if (!arr || !arr.length) return "Build your own";
-    const m = tier === "exclusive" ? 1 + EXCLUSIVE_FEE : 1;
-    const usd = arr.map((p) => p.usd * m);
-    const idr = arr.map((p) => p.idr * m);
+    const usd = arr.map((p) => p.usd);
+    const idr = arr.map((p) => p.idr);
     const loUsd = Math.min(...usd), hiUsd = Math.max(...usd);
     const lo = fmtMoney(loUsd, Math.min(...idr));
     if (loUsd === hiUsd) return "from " + lo;
@@ -3221,64 +3223,158 @@ function initHeroSearch() {
       el.textContent = rangeText(el.dataset.explorePr);
     });
   }
+  updateRanges();
   window.__exploreRefresh = updateRanges;
 
-  // Sinkron toggle tier + isi range (penjelasan Standard/Exclusive ada di info popover)
-  function applyTier() {
-    tierBtns.forEach((b) => b.classList.toggle("on", b.dataset.tier === tier));
-    updateRanges();
+  // ---- Panel / bottom-sheet (dropdown & kalender pakai mekanisme sama) ----
+  let overlay = document.querySelector(".hs-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "hs-overlay";
+    document.body.appendChild(overlay);
   }
-  tierBtns.forEach((b) =>
-    b.addEventListener("click", () => {
-      tier = b.dataset.tier;
-      localStorage.setItem("cue_tier", tier);
-      applyTier();
-    })
-  );
-  applyTier();
-
-  // Dropdown buka/tutup
-  ddBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const open = root.classList.toggle("dd-open");
-    ddBtn.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-  document.addEventListener("click", (e) => {
-    if (!root.contains(e.target)) {
-      root.classList.remove("dd-open");
-      ddBtn.setAttribute("aria-expanded", "false");
+  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  // Sheet HP: panel di-portal ke <body> biar lolos dari stacking-context hero
+  // (kalau nggak, overlay body-level nutupin panel). Desktop: balik ke field-nya.
+  const anchors = new Map();
+  function restore(panel) {
+    const a = anchors.get(panel);
+    if (a && panel.parentElement === document.body) a.parent.insertBefore(panel, a.next);
+  }
+  let openPanelEl = null, openControlEl = null;
+  function closePanels() {
+    if (openPanelEl) {
+      openPanelEl.classList.remove("open");
+      restore(openPanelEl);
+      openPanelEl = null;
     }
-  });
+    if (openControlEl) { openControlEl.classList.remove("is-open"); openControlEl.setAttribute("aria-expanded", "false"); openControlEl = null; }
+    overlay.classList.remove("open");
+  }
+  function openPanel(panel, control) {
+    if (openPanelEl === panel) { closePanels(); return; }
+    closePanels();
+    if (isMobile()) {
+      if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
+      document.body.appendChild(panel);
+      overlay.classList.add("open");
+    } else {
+      restore(panel);
+    }
+    panel.classList.add("open");
+    control.classList.add("is-open");
+    control.setAttribute("aria-expanded", "true");
+    openPanelEl = panel;
+    openControlEl = control;
+  }
+  window.addEventListener("resize", closePanels);
 
-  // Pilih kategori
+  // ---- Dropdown kategori ----
+  ddBtn.addEventListener("click", (e) => { e.stopPropagation(); openPanel(ddPanel, ddBtn); });
   root.querySelectorAll("[data-explore-opt]").forEach((opt) => {
-    opt.addEventListener("click", () => {
+    opt.addEventListener("click", (e) => {
+      e.stopPropagation();
       selectedHref = opt.dataset.href;
       ddLabel.textContent = opt.dataset.name;
-      root.classList.remove("dd-open");
-      ddBtn.setAttribute("aria-expanded", "false");
+      ddLabel.classList.remove("placeholder");
+      root.querySelectorAll("[data-explore-opt]").forEach((o) => o.classList.remove("is-sel"));
+      opt.classList.add("is-sel");
+      closePanels();
     });
   });
 
-  // Range tanggal (from-to): prefill dari state + simpan pas ganti. "to" minimal = "from".
-  if (fromInp) fromInp.value = currentDateFrom || "";
-  if (toInp) toInp.value = currentDateTo || "";
-  const syncDates = () => {
-    if (fromInp && toInp) toInp.min = fromInp.value || "";
-    setDateRange(fromInp ? fromInp.value : "", toInp ? toInp.value : "");
-    if (toInp) toInp.value = currentDateTo || "";
-  };
-  if (fromInp) fromInp.addEventListener("change", syncDates);
-  if (toInp) toInp.addEventListener("change", syncDates);
+  // ---- Kalender range tanggal (klik 1 = mulai, klik 2 = selesai) ----
+  const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+  const pad = (n) => String(n).padStart(2, "0");
+  const toStr = (o) => o.y + "-" + pad(o.m + 1) + "-" + pad(o.d);
+  const parseD = (s) => { const p = (s || "").split("-"); return p.length === 3 ? { y: +p[0], m: +p[1] - 1, d: +p[2] } : null; };
+  const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+  const now = new Date();
+  const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+  let rangeStart = parseD(currentDateFrom);
+  let rangeEnd = parseD(currentDateTo);
+  if (rangeStart && rangeEnd && keyOf(rangeEnd) === keyOf(rangeStart)) rangeEnd = null;
 
-  // Explore -> ke halaman kategori (kalau belum pilih, buka dropdown)
-  goBtn.addEventListener("click", () => {
-    if (selectedHref) {
-      window.location.href = selectedHref;
-    } else {
-      root.classList.add("dd-open");
-      ddBtn.setAttribute("aria-expanded", "true");
+  function monthEl(y, m) {
+    const el = document.createElement("div");
+    el.className = "hs-cal__m";
+    const cap = document.createElement("div");
+    cap.className = "hs-cal__cap";
+    cap.textContent = MON[m] + " " + y;
+    el.appendChild(cap);
+    const g = document.createElement("div");
+    g.className = "hs-cal__grid";
+    DOW.forEach((d) => { const h = document.createElement("div"); h.className = "hs-cal__dow"; h.textContent = d; g.appendChild(h); });
+    const first = new Date(y, m, 1).getDay();
+    const days = new Date(y, m + 1, 0).getDate();
+    for (let i = 0; i < first; i++) { const o = document.createElement("div"); o.className = "hs-cal__d is-off"; g.appendChild(o); }
+    for (let d = 1; d <= days; d++) {
+      const cell = { y: y, m: m, d: d };
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "hs-cal__d";
+      b.textContent = d;
+      const past = keyOf(cell) < keyOf(TODAY);
+      if (past) b.classList.add("is-off");
+      if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
+      if (rangeStart && rangeEnd) {
+        if (keyOf(cell) === keyOf(rangeStart) && keyOf(cell) === keyOf(rangeEnd)) b.classList.add("pt-solo");
+        else if (keyOf(cell) === keyOf(rangeStart)) b.classList.add("pt-start");
+        else if (keyOf(cell) === keyOf(rangeEnd)) b.classList.add("pt-end");
+        else if (keyOf(cell) > keyOf(rangeStart) && keyOf(cell) < keyOf(rangeEnd)) b.classList.add("in-range");
+      } else if (rangeStart && keyOf(cell) === keyOf(rangeStart)) b.classList.add("pt-solo");
+      if (!past) b.addEventListener("click", (e) => { e.stopPropagation(); pickDate(cell); });
+      g.appendChild(b);
     }
+    el.appendChild(g);
+    return el;
+  }
+  function renderCal() {
+    calBody.innerHTML = "";
+    const wrap = document.createElement("div");
+    wrap.className = "hs-cal__months";
+    for (let k = 0; k < 2; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+    calBody.appendChild(wrap);
+    updateHint();
+  }
+  function updateHint() {
+    if (!rangeStart) { calHint.textContent = "Add your start date"; return; }
+    if (!rangeEnd) { calHint.textContent = "Now add your end date"; return; }
+    calHint.textContent = fmtDateRange(toStr(rangeStart), toStr(rangeEnd));
+  }
+  function pickDate(cell) {
+    if (!rangeStart || (rangeStart && rangeEnd)) { rangeStart = cell; rangeEnd = null; }
+    else if (keyOf(cell) < keyOf(rangeStart)) { rangeStart = cell; }
+    else { rangeEnd = cell; }
+    renderCal();
+  }
+  function refreshDateLabel() {
+    const dr = fmtDateRange(currentDateFrom, currentDateTo);
+    if (dr) { dateLabel.textContent = dr; dateLabel.classList.remove("placeholder"); }
+    else { dateLabel.textContent = "Add dates"; dateLabel.classList.add("placeholder"); }
+  }
+  refreshDateLabel();
+  dateBtn.addEventListener("click", (e) => { e.stopPropagation(); renderCal(); openPanel(datePanel, dateBtn); });
+  calApply.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setDateRange(rangeStart ? toStr(rangeStart) : "", rangeEnd ? toStr(rangeEnd) : "");
+    refreshDateLabel();
+    closePanels();
+  });
+
+  // ---- Tutup: tombol close (sheet), overlay, klik luar, Escape ----
+  root.querySelectorAll("[data-hs-close]").forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); closePanels(); }));
+  overlay.addEventListener("click", closePanels);
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closePanels();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePanels(); });
+
+  // ---- Explore -> ke halaman kategori (kalau belum pilih, buka dropdown) ----
+  goBtn.addEventListener("click", () => {
+    if (selectedHref) window.location.href = selectedHref;
+    else openPanel(ddPanel, ddBtn);
   });
 }
 

@@ -368,6 +368,25 @@ body {
   right: 15px;
   margin-left: 0;
 }
+/* booking form: label "Price" rata kiri -> popover di-anchor ke tepi kiri kolom
+   (buka ke kanan) biar gak kepotong; panah tetap nunjuk ke icon. */
+.booking__group--price {
+  position: relative;
+}
+.booking__group--price .binfo {
+  position: static;
+}
+.booking__group--price .binfo__pop {
+  top: 1.95rem;
+  left: 0;
+  right: auto;
+  transform: none;
+}
+.booking__group--price .binfo__pop::before {
+  left: 40px;
+  right: auto;
+  margin-left: 0;
+}
 .binfo__row + .binfo__row {
   margin-top: 0.6rem;
   padding-top: 0.6rem;
@@ -699,6 +718,8 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  /* isi kolom rata kiri; cuma judul form (.booking__title) yang rata tengah */
+  text-align: left;
 }
 .booking__group label {
   margin-bottom: 0.4rem;

@@ -3369,7 +3369,7 @@ function initHeroSearch() {
     calBody.innerHTML = "";
     const wrap = document.createElement("div");
     wrap.className = "hs-cal__months";
-    for (let k = 0; k < 2; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+    for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
     calBody.appendChild(wrap);
     updateHint();
   }
@@ -3670,7 +3670,7 @@ function initBookingCustomControls() {
     function render() {
       calBody.innerHTML = "";
       const wrap = document.createElement("div"); wrap.className = "hs-cal__months";
-      for (let k = 0; k < 2; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+      for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
       calBody.appendChild(wrap);
       hint.textContent = sel ? MONS[sel.m] + " " + sel.d : "Pick a date";
     }

@@ -557,9 +557,13 @@ body {
 /* ===== Calendar (date range) ===== */
 .hs-cal {
   padding: 16px 16px 6px;
+  max-height: 340px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .hs-cal__months {
   display: flex;
+  flex-wrap: wrap;
   gap: 22px;
   justify-content: center;
 }
@@ -679,6 +683,10 @@ body.hs-locked {
   width: 100%;
   overflow: hidden;
 }
+/* sembunyiin tombol WhatsApp (z-index tinggi) pas sheet kebuka biar gak nutupin Apply */
+body.hs-locked .wa-float {
+  display: none;
+}
 /* scroll di dalem panel gak nembus ke background */
 .hs-panel {
   overscroll-behavior: contain;
@@ -735,8 +743,19 @@ body.hs-locked {
   .hs-panel__body {
     max-height: none;
   }
+  /* di sheet: kalender ngalir (seluruh sheet yg scroll), header & Apply tetep keliatan */
+  .hs-cal {
+    max-height: none;
+    overflow: visible;
+  }
+  .hs-cal__foot {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+  }
   .hs-cal__months {
     flex-direction: column;
+    flex-wrap: nowrap;
     gap: 20px;
   }
   .hs-cal__m {
@@ -1028,6 +1047,7 @@ body.hs-locked {
 /* date booking: 2 bulan ditumpuk (panel selebar kolom, jd sempit) */
 .bk-cal .hs-cal__months {
   flex-direction: column;
+  flex-wrap: nowrap;
   gap: 16px;
 }
 .bk-cal .hs-cal__m {

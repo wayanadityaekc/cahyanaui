@@ -23,7 +23,9 @@
   --color-cream: #f8f8f8;
   --line: #e7e4dd;
   --font-body: "Inter", system-ui, sans-serif;
-  --font-head: "Playfair Display", Georgia, serif;
+  /* EXPERIMENT: satu font aja (Inter) buat heading juga. Balikin ke Playfair =
+     ganti nilai ini ke "Playfair Display", Georgia, serif. */
+  --font-head: "Inter", system-ui, sans-serif;
   /* ---- Type scale (DRY) ---- */
   --fs-display: clamp(1.9rem, 5vw, 2.2rem);
   --fs-h2: 1.5rem;
@@ -6084,7 +6086,8 @@ section.faq::before,
   font-weight: 600;
   letter-spacing: 0;
 }
-/* Field label: Inter medium, sedikit tracking, uppercase (kesan small-caps) */
+/* Field label: Inter medium, normal case (EXPERIMENT — dulu uppercase small-caps).
+   Balikin uppercase = set text-transform: uppercase + letter-spacing: 0.07em. */
 .booking__group label,
 .welcome__field label,
 .modal__group label,
@@ -6096,7 +6099,7 @@ section.faq::before,
 .summary__label,
 .hsearch__field > label {
   font-family: var(--font-body);
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
 }

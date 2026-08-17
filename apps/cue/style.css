@@ -225,7 +225,7 @@ body {
   color: #fff;
 }
 .hero__eyebrow {
-  font-size: 0.74rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 700;
@@ -256,7 +256,7 @@ body {
 }
 .hsearch__title {
   font-size: var(--fs-h3);
-  text-align: center;
+  text-align: left;
   color: var(--color-gold);
   margin-bottom: 1rem;
 }
@@ -292,7 +292,7 @@ body {
   font-size: var(--fs-label);
   line-height: 1.35;
   color: #8a8172;
-  text-align: center;
+  text-align: left;
 }
 .hsearch__field {
   margin-bottom: 0.8rem;
@@ -600,7 +600,7 @@ body {
 }
 .booking__group label {
   margin-bottom: 0.4rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
 }
 /* ==================== Shared form-field base (DRY) ==================== */
@@ -1105,7 +1105,7 @@ body {
   display: block;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: #e6cf97;
   margin-bottom: 0.5rem;
@@ -1116,7 +1116,7 @@ body {
   margin: 0 0 0.4rem;
 }
 .plan__lead {
-  font-size: 0.86rem;
+  font-size: var(--fs-body);
   color: rgba(247, 243, 234, 0.86);
   margin: 0 auto 1.8rem;
   max-width: 44ch;
@@ -1149,12 +1149,12 @@ body {
   height: 22px;
 }
 .plan__step h3 {
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   color: #fff;
   margin: 0 0 0.2rem;
 }
 .plan__step p {
-  font-size: 0.74rem;
+  font-size: var(--fs-label);
   color: rgba(247, 243, 234, 0.72);
   margin: 0;
 }
@@ -1162,7 +1162,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.83rem;
+  font-size: var(--fs-body);
   font-weight: 600;
   padding: 0.72rem 1.4rem;
   border-radius: 6px;
@@ -1494,7 +1494,7 @@ body {
 }
 .review-form__group label {
   margin-bottom: 0.4rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
 }
 .review-form__group input,
@@ -2269,7 +2269,7 @@ section.faq::before,
 }
 .modal__group label {
   margin-bottom: 0.4rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
 }
 .modal__group input {
@@ -3200,7 +3200,7 @@ section.faq::before,
 }
 .contact__group label {
   margin-bottom: 0.4rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
 }
 .contact__group input,
@@ -3331,7 +3331,7 @@ section.faq::before,
 .field label {
   display: block;
   margin-bottom: 0.4rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
 }
 .field select,
@@ -3359,7 +3359,7 @@ section.faq::before,
   background-color: var(--color-green);
 }
 .summary__label {
-  font-size: var(--fs-label);
+  font-size: var(--fs-small);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-weight: 700;
@@ -3779,7 +3779,7 @@ section.faq::before,
   color: var(--color-green);
 }
 .itn-day__status {
-  font-size: 0.62rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   padding: 0.1rem 0.42rem;
   border-radius: 999px;
@@ -4932,7 +4932,7 @@ button.pick-cat {
 }
 .acct__greeting {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: var(--color-green);
 }
@@ -4941,7 +4941,7 @@ button.pick-cat {
 }
 .acct__email {
   margin: 0.15rem 0 0;
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   color: var(--color-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -5063,7 +5063,7 @@ button.pick-cat {
 }
 .welcome__field label {
   display: block;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
   margin-bottom: 0.4rem;
 }
@@ -5090,7 +5090,7 @@ button.pick-cat {
 /* Pesan error di form create account */
 .welcome__msg {
   margin: 0 0 0.9rem;
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   text-align: left;
 }
 .welcome__msg.error {
@@ -5102,7 +5102,7 @@ button.pick-cat {
 /* Baris "New here? Create account" / "Already have an account? Sign in" */
 .welcome__alt {
   margin: 0.9rem 0 0;
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   color: #6b6559;
 }
 .linklike {
@@ -5190,7 +5190,7 @@ button.pick-cat {
   font-weight: 700;
 }
 .trip__meta {
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
   color: var(--color-muted);
   margin-top: 0.15rem;
 }
@@ -5205,11 +5205,11 @@ button.pick-cat {
   font-weight: 700;
 }
 .trip__ref {
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   color: var(--color-muted);
 }
 .pill {
-  font-size: 0.66rem;
+  font-size: var(--fs-label);
   font-weight: 700;
   padding: 3px 9px;
   border-radius: 999px;
@@ -5229,7 +5229,7 @@ button.pick-cat {
   flex-direction: column;
 }
 .acctform__label {
-  font-size: var(--fs-label);
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-muted);
   margin: 0.8rem 0 0.3rem;
@@ -5303,7 +5303,7 @@ button.pick-cat {
 .charter__label {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-green);
 }

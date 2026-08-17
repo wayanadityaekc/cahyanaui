@@ -403,7 +403,6 @@ body {
 }
 .hsearch__date {
   width: 100%;
-  max-width: 190px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 0.72rem 0.85rem;

@@ -328,10 +328,16 @@ body {
   text-align: left;
   text-transform: none;
   letter-spacing: normal;
-  display: none;
+  /* fade halus (transform dipakai buat posisi, jadi cuma opacity yg dianimasiin) */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.18s;
+  pointer-events: none;
 }
 .binfo__pop.open {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .binfo__pop::before {
   content: "";
@@ -493,10 +499,21 @@ body {
   border-radius: 16px;
   box-shadow: 0 20px 50px rgba(26, 26, 26, 0.16);
   overflow: hidden;
-  display: none;
+  /* buka/tutup halus (fade + slide), se-smooth drawer */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0.24s;
+  pointer-events: none;
 }
 .hs-panel.open {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 .hs-panel__head {
   display: none;
@@ -708,6 +725,10 @@ body.hs-locked {
 body.hs-locked .wa-float {
   display: none;
 }
+/* sembunyiin tripbar pas bottom-sheet kebuka (HP) biar gak nutupin atas kalender/panel */
+body.hs-locked .tripbar {
+  display: none;
+}
 /* scroll di dalem panel gak nembus ke background */
 .hs-panel {
   overscroll-behavior: contain;
@@ -723,6 +744,9 @@ body.hs-locked .wa-float {
     border-radius: 22px 22px 0 0;
     max-height: 88vh;
     overflow-y: auto;
+    /* HP: slide dari bawah (transform aja) — selalu visible biar exit-nya ikut smooth */
+    opacity: 1;
+    visibility: visible;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 -12px 48px rgba(26, 26, 26, 0.28);
@@ -5259,6 +5283,9 @@ button.pick-cat {
 @media (prefers-reduced-motion: reduce) {
   .acct__panel,
   .navbar__menu,
+  .navbar__drop,
+  .hs-panel,
+  .binfo__pop,
   .modal,
   .modal__box {
     transition: none;
@@ -5909,17 +5936,28 @@ button.pick-cat {
     position: absolute;
     top: 100%;
     left: 0;
-    display: none;
     min-width: 160px;
     padding: 0.5rem 0;
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     z-index: 120;
+    /* buka/tutup halus (fade + slide), se-smooth panel lain */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0.2s;
+    pointer-events: none;
   }
   .navbar__has-drop:hover .navbar__drop,
   .navbar__has-drop.open .navbar__drop {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
   }
   .navbar__drop a {
     padding: 0.5rem 1.1rem;

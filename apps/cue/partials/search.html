@@ -1,0 +1,52 @@
+<div class="hero__search" id="hero-search">
+  <h2 class="hsearch__title">Explore Bali</h2>
+  <div class="hsearch__toggle" role="group" aria-label="Price tier">
+    <button type="button" class="on" data-tier="standard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Standard</button>
+    <button type="button" data-tier="exclusive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.6 6.3 6.9.5-5.3 4.4 1.7 6.6L12 17.2 6.1 20.8l1.7-6.6L2.5 9.8l6.9-.5z"/></svg>Exclusive</button>
+  </div>
+  <p class="hsearch__tiernote" data-tier-note></p>
+  <div class="hsearch__field hsearch__dd">
+    <label>How do you want to explore?</label>
+    <button type="button" class="hsearch__ddbtn" data-explore-btn aria-haspopup="listbox" aria-expanded="false">
+      <span data-explore-label>Choose an experience</span>
+      <svg class="hsearch__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <ul class="hsearch__ddlist" role="listbox" data-explore-list>
+      <li class="hsearch__opt" role="option" data-explore-opt data-href="tour.html" data-name="Tour programs">
+        <span class="hsearch__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l2-6h14l2 6M5 13h14v4H5zM3 13h18"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg></span>
+        <span class="hsearch__nm">Tour programs<small>Full-day private tours</small></span>
+        <span class="hsearch__pr" data-explore-pr="tour"></span>
+      </li>
+      <li class="hsearch__opt" role="option" data-explore-opt data-href="transfer.html" data-name="Transfers">
+        <span class="hsearch__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="9" rx="2"/><circle cx="7.5" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/></svg></span>
+        <span class="hsearch__nm">Transfers<small>Airport &amp; area routes</small></span>
+        <span class="hsearch__pr" data-explore-pr="transfer"></span>
+      </li>
+      <li class="hsearch__opt" role="option" data-explore-opt data-href="activities.html" data-name="Experiences">
+        <span class="hsearch__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 8c3 0 5 2 7 4 2-2 4-4 7-4"/></svg></span>
+        <span class="hsearch__nm">Experiences<small>ATV, rafting, swing &amp; more</small></span>
+        <span class="hsearch__pr" data-explore-pr="experience"></span>
+      </li>
+      <li class="hsearch__opt" role="option" data-explore-opt data-href="charter.html" data-name="Charter">
+        <span class="hsearch__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l2-9h12l2 9M2 17h20M9 8V5h6v3"/></svg></span>
+        <span class="hsearch__nm">Charter<small>Car + driver, your route</small></span>
+        <span class="hsearch__pr" data-explore-pr="charter"></span>
+      </li>
+      <li class="hsearch__opt" role="option" data-explore-opt data-href="itinerary.html" data-name="Itinerary">
+        <span class="hsearch__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
+        <span class="hsearch__nm">Itinerary<small>Build your trip day by day</small></span>
+        <span class="hsearch__pr" data-explore-pr="itinerary"></span>
+      </li>
+      <li class="hsearch__opt" role="option" data-explore-opt data-href="destinations.html" data-name="Destinations">
+        <span class="hsearch__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+        <span class="hsearch__nm">Destinations<small>Temples, beaches &amp; rice terraces</small></span>
+        <span class="hsearch__pr" data-explore-pr="destination"></span>
+      </li>
+    </ul>
+  </div>
+  <div class="hsearch__field">
+    <label>When</label>
+    <input type="date" class="hsearch__date" data-explore-date aria-label="Trip date" />
+  </div>
+  <button type="button" class="hsearch__go" data-explore-go>Explore</button>
+</div>

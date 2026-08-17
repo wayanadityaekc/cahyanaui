@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 51;
+const PARTIALS_VERSION = 52;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -720,6 +720,8 @@ async function loadPartials() {
     // yang di dalamnya ada #booking-placeholder, baru booking.html masuk situ.
     { id: "book-modal-placeholder", file: "partials/book-modal.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
+    // Search form homepage (partial terpisah; booking.html tetap utuh buat halaman kategori)
+    { id: "search-placeholder", file: "partials/search.html" },
     { id: "book-confirm-placeholder", file: "partials/book-confirm.html" },
     { id: "drivers-placeholder", file: "partials/drivers.html" },
     { id: "guest-gallery-placeholder", file: "partials/guest-gallery.html" },
@@ -3173,9 +3175,16 @@ function initHeroSearch() {
   }
   window.__exploreRefresh = updateRanges;
 
-  // Sinkron toggle tier + isi range
+  // Keterangan singkat tiap tier (biar user paham Standard vs Exclusive)
+  const TIER_NOTE = {
+    standard: "Standard: entrance tickets paid at each site - pay only for what you enter.",
+    exclusive: "Exclusive: entrance tickets prepaid - the whole day sorted upfront.",
+  };
+  const tierNote = root.querySelector("[data-tier-note]");
+  // Sinkron toggle tier + isi range + keterangan
   function applyTier() {
     tierBtns.forEach((b) => b.classList.toggle("on", b.dataset.tier === tier));
+    if (tierNote) tierNote.textContent = TIER_NOTE[tier] || "";
     updateRanges();
   }
   tierBtns.forEach((b) =>

@@ -294,6 +294,14 @@ body {
   width: 15px;
   height: 15px;
 }
+/* keterangan singkat di bawah toggle (Standard vs Exclusive) */
+.hsearch__tiernote {
+  margin: -0.35rem 0 0.9rem;
+  font-size: var(--fs-label);
+  line-height: 1.35;
+  color: #8a8172;
+  text-align: center;
+}
 .hsearch__field {
   margin-bottom: 0.8rem;
 }

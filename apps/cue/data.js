@@ -203,8 +203,8 @@ const CUR_SYMBOL = { USD: "$", IDR: "Rp", AUD: "A$", EUR: "€", GBP: "£" };
 // Cara pakai: set active: true, isi text (wajib). cta + href opsional (kalau diisi
 // dua-duanya, bar jadi link). Kosongin text atau active:false = bar gak muncul.
 const PROMO = {
-  active: false,
-  text: "",   // contoh: "Galungan holiday coming up, book your driver early"
-  cta: "",    // contoh: "Ask us" (kosong = gak ada tombol)
-  href: "",   // contoh: "contact.html" atau "https://wa.me/62..."
+  active: true,
+  text: "Kecak dance: every Sunday and Tuesday",
+  cta: "See details",
+  href: "attractions/kecak-dance.html",
 };

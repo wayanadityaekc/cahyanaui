@@ -1027,8 +1027,9 @@ a.tripbar--promo {
   flex-shrink: 0;
   color: var(--color-gold);
 }
+/* Teks tripbar (guests/pickup & promo) SEMUA gak bold — normal weight. */
 .tripbar b {
-  font-weight: 700;
+  font-weight: 400;
 }
 .tripbar__sep {
   margin: 0 0.15rem;
@@ -1037,12 +1038,12 @@ a.tripbar--promo {
 }
 .tripbar__muted {
   color: #8a8172;
-  font-weight: 600;
+  font-weight: 400;
 }
 .tripbar__edit {
   margin-left: 0.5rem;
   color: var(--color-gold);
-  font-weight: 700;
+  font-weight: 400;
   text-decoration: underline;
 }
 @media (max-width: 560px) {

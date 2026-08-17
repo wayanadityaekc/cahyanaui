@@ -1,34 +1,35 @@
 <div class="hero__search" id="hero-search">
   <h2 class="hsearch__title">Explore Bali</h2>
-  <div class="hsearch__tierrow">
-    <div class="hsearch__toggle" role="group" aria-label="Price tier">
-      <button type="button" class="on" data-tier="standard">Standard</button>
-      <button type="button" data-tier="exclusive">Exclusive</button>
-    </div>
-    <span class="binfo binfo--right">
-      <button
-        type="button"
-        class="binfo__btn"
-        data-binfo
-        aria-expanded="false"
-        aria-label="What's the difference between Standard and Exclusive?"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><line x1="12" y1="11" x2="12" y2="16" /><circle cx="12" cy="7.6" r="0.7" fill="currentColor" stroke="none" /></svg>
-      </button>
-      <div class="binfo__pop" role="tooltip">
-        <div class="binfo__row">
-          <span class="binfo__tag">Standard</span>
-          <p>You pay entrance tickets yourself at each stop — only for the places you actually go in.</p>
-        </div>
-        <div class="binfo__row">
-          <span class="binfo__tag binfo__tag--gold">Exclusive</span>
-          <p>All entrance tickets are prepaid. The whole day is sorted upfront, no cash needed at each site.</p>
-        </div>
-      </div>
-    </span>
+  <div class="hsearch__toggle" role="group" aria-label="Price tier">
+    <button type="button" class="on" data-tier="standard">Standard</button>
+    <button type="button" data-tier="exclusive">Exclusive</button>
   </div>
   <div class="hsearch__field hsearch__dd">
-    <label>How do you want to explore?</label>
+    <label
+      >How do you want to explore?
+      <span class="binfo">
+        <button
+          type="button"
+          class="binfo__btn"
+          data-binfo
+          aria-expanded="false"
+          aria-label="How to use this form"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><line x1="12" y1="11" x2="12" y2="16" /><circle cx="12" cy="7.6" r="0.7" fill="currentColor" stroke="none" /></svg>
+        </button>
+        <div class="binfo__pop" role="tooltip">
+          <p class="binfo__lead">Set a price type, choose what you want to do, pick your dates, then tap Explore to see options and prices.</p>
+          <div class="binfo__row">
+            <span class="binfo__tag">Standard</span>
+            <p>You pay entrance tickets at each place, only for the spots you actually enter.</p>
+          </div>
+          <div class="binfo__row">
+            <span class="binfo__tag binfo__tag--gold">Exclusive</span>
+            <p>All entrance tickets are prepaid, so the whole day is sorted upfront with no cash needed.</p>
+          </div>
+        </div>
+      </span>
+    </label>
     <button type="button" class="hsearch__ddbtn" data-explore-btn aria-haspopup="listbox" aria-expanded="false">
       <span data-explore-label>Choose an experience</span>
       <svg class="hsearch__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>

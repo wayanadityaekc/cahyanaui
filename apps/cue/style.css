@@ -260,17 +260,6 @@ body {
   color: var(--color-gold);
   margin-bottom: 1rem;
 }
-/* baris toggle + info icon (icon nempel kanan toggle) */
-.hsearch__tierrow {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.9rem;
-}
-.hsearch__tierrow .hsearch__toggle {
-  flex: 1;
-  margin-bottom: 0;
-}
 /* toggle Standard/Exclusive - ikutin style booking form (.booking__type): pill gold */
 .hsearch__toggle {
   display: flex;
@@ -357,15 +346,20 @@ body {
   border-top: 1px solid #ece6d8;
   transform: rotate(45deg);
 }
-/* varian icon nempel kanan (search form): popover buka ke kiri biar gak kepotong */
-.binfo--right .binfo__pop {
-  left: auto;
-  right: 0;
+/* search form: icon di label "How do you want to explore?" -> popover di-anchor
+   ke tepi kiri field (buka ke kanan) biar gak kepotong; panah nunjuk ke icon. */
+.hsearch__dd .binfo {
+  position: static;
+}
+.hsearch__dd .binfo__pop {
+  top: 2.1rem;
+  left: 0;
+  right: auto;
   transform: none;
 }
-.binfo--right .binfo__pop::before {
-  left: auto;
-  right: 15px;
+.hsearch__dd .binfo__pop::before {
+  left: 194px;
+  right: auto;
   margin-left: 0;
 }
 /* booking form: label "Price" rata kiri -> popover di-anchor ke tepi kiri kolom
@@ -414,6 +408,16 @@ body {
   line-height: 1.45;
   font-weight: 400;
   color: #6b6456;
+}
+/* baris pengantar "cara pakai form" di atas Standard/Exclusive */
+.binfo__pop .binfo__lead {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #f2efe7;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--color-green);
 }
 .hsearch__field {
   margin-bottom: 0.8rem;

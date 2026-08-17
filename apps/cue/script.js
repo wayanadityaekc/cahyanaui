@@ -3462,6 +3462,187 @@ function initInfoPopovers() {
   });
 }
 
+// Booking form: dropdown & date "full custom" (panel desktop / bottom-sheet HP),
+// SAMA kaya search form. Teknik "enhance native": UI custom cuma nyetir <select> /
+// <input date> asli (sumber kebenaran), jadi logika harga initBooking utuh.
+function initBookingCustomControls() {
+  const selService = document.getElementById("service");
+  if (!selService) return; // bukan halaman booking
+  const selItem = document.getElementById("service-item");
+  const selStay = document.getElementById("stay-area");
+  const dateInp = document.getElementById("date");
+
+  // overlay + kontrol panel (dipakai bareng; booking gak barengan sama search di 1 halaman)
+  let overlay = document.querySelector(".hs-overlay");
+  if (!overlay) { overlay = document.createElement("div"); overlay.className = "hs-overlay"; document.body.appendChild(overlay); }
+  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  const anchors = new Map();
+  let openPanelEl = null, openCtrlEl = null;
+  const restore = (p) => { const a = anchors.get(p); if (a && p.parentElement === document.body) a.parent.insertBefore(p, a.next); };
+  function closeAll() {
+    if (openPanelEl) { openPanelEl.classList.remove("open"); restore(openPanelEl); openPanelEl = null; }
+    if (openCtrlEl) { openCtrlEl.classList.remove("is-open"); openCtrlEl.setAttribute("aria-expanded", "false"); openCtrlEl = null; }
+    overlay.classList.remove("open");
+  }
+  function openPanel(panel, ctrl) {
+    if (openPanelEl === panel) { closeAll(); return; }
+    closeAll();
+    if (isMobile()) {
+      if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
+      document.body.appendChild(panel); overlay.classList.add("open");
+    } else restore(panel);
+    panel.classList.add("open");
+    ctrl.classList.add("is-open"); ctrl.setAttribute("aria-expanded", "true");
+    openPanelEl = panel; openCtrlEl = ctrl;
+  }
+
+  const refreshers = [];
+  const refreshAll = () => refreshers.forEach((fn) => fn());
+  const CHEV = '<svg class="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+  function makePanel(title) {
+    const panel = document.createElement("div");
+    panel.className = "hs-panel bk-panel";
+    panel.innerHTML = '<div class="hs-panel__head"><h3>' + title + '</h3><button type="button" class="hs-panel__close" aria-label="Close">&times;</button></div>';
+    panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); closeAll(); });
+    return panel;
+  }
+
+  function enhanceSelect(sel, title) {
+    if (!sel) return;
+    const group = sel.closest(".booking__group");
+    if (!group) return;
+    group.classList.add("bk-enh");
+    sel.classList.add("bk-native");
+    const ctrl = document.createElement("button");
+    ctrl.type = "button";
+    ctrl.className = "hs-control bk-control";
+    ctrl.setAttribute("aria-haspopup", "listbox");
+    ctrl.setAttribute("aria-expanded", "false");
+    ctrl.innerHTML = '<span class="hs-control__val" data-val></span>' + CHEV;
+    const panel = makePanel(title);
+    const body = document.createElement("div");
+    body.className = "hs-panel__body";
+    panel.appendChild(body);
+    sel.after(ctrl); ctrl.after(panel);
+    const valEl = ctrl.querySelector("[data-val]");
+    function refresh() {
+      const opt = sel.options[sel.selectedIndex];
+      const ph = !sel.value || (opt && opt.disabled);
+      valEl.textContent = opt ? opt.textContent : "";
+      valEl.classList.toggle("placeholder", !!ph);
+    }
+    function build() {
+      body.innerHTML = "";
+      Array.from(sel.options).forEach((o) => {
+        if (o.disabled && o.value === "") return; // skip placeholder
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "hs-opt bk-opt" + (o.value === sel.value ? " is-sel" : "");
+        btn.innerHTML = '<span class="hs-opt__nm">' + o.textContent + "</span>";
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          sel.value = o.value;
+          sel.dispatchEvent(new Event("change"));
+          refresh(); refreshAll(); closeAll();
+        });
+        body.appendChild(btn);
+      });
+    }
+    ctrl.addEventListener("click", (e) => { e.stopPropagation(); build(); openPanel(panel, ctrl); });
+    sel.addEventListener("change", refresh);
+    refreshers.push(refresh);
+    refresh();
+  }
+
+  function enhanceDate(inp, title) {
+    if (!inp) return;
+    const group = inp.closest(".booking__group");
+    if (!group) return;
+    group.classList.add("bk-enh");
+    inp.classList.add("bk-native");
+    const ctrl = document.createElement("button");
+    ctrl.type = "button";
+    ctrl.className = "hs-control bk-control";
+    ctrl.setAttribute("aria-expanded", "false");
+    ctrl.innerHTML = '<span class="hs-control__val placeholder" data-val>Select date</span>' +
+      '<svg class="hs-chev hs-chev--cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>';
+    const panel = makePanel(title);
+    panel.classList.add("bk-panel--cal");
+    const calBody = document.createElement("div");
+    calBody.className = "hs-cal bk-cal";
+    const foot = document.createElement("div");
+    foot.className = "hs-cal__foot";
+    foot.innerHTML = '<span class="hs-cal__hint" data-hint>Pick a date</span><button type="button" class="hs-cal__apply" data-apply>Apply</button>';
+    panel.appendChild(calBody); panel.appendChild(foot);
+    inp.after(ctrl); ctrl.after(panel);
+    const valEl = ctrl.querySelector("[data-val]");
+    const hint = foot.querySelector("[data-hint]");
+    const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const MONS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    const pad = (n) => String(n).padStart(2, "0");
+    const parseD = (s) => { const p = (s || "").split("-"); return p.length === 3 ? { y: +p[0], m: +p[1] - 1, d: +p[2] } : null; };
+    const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+    const now = new Date();
+    const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+    let sel = parseD(inp.value);
+    function refresh() {
+      const s = parseD(inp.value);
+      if (s) { valEl.textContent = MONS[s.m] + " " + s.d + ", " + s.y; valEl.classList.remove("placeholder"); }
+      else { valEl.textContent = "Select date"; valEl.classList.add("placeholder"); }
+    }
+    function monthEl(y, m) {
+      const el = document.createElement("div");
+      el.className = "hs-cal__m";
+      const cap = document.createElement("div");
+      cap.className = "hs-cal__cap"; cap.textContent = MON[m] + " " + y; el.appendChild(cap);
+      const g = document.createElement("div"); g.className = "hs-cal__grid";
+      DOW.forEach((d) => { const h = document.createElement("div"); h.className = "hs-cal__dow"; h.textContent = d; g.appendChild(h); });
+      const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate();
+      for (let i = 0; i < first; i++) { const o = document.createElement("div"); o.className = "hs-cal__d is-off"; g.appendChild(o); }
+      for (let d = 1; d <= days; d++) {
+        const cell = { y: y, m: m, d: d };
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "hs-cal__d"; b.textContent = d;
+        const past = keyOf(cell) < keyOf(TODAY);
+        if (past) b.classList.add("is-off");
+        if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
+        if (sel && keyOf(cell) === keyOf(sel)) b.classList.add("sel");
+        if (!past) b.addEventListener("click", (e) => { e.stopPropagation(); sel = cell; render(); hint.textContent = MONS[sel.m] + " " + sel.d; });
+        g.appendChild(b);
+      }
+      el.appendChild(g); return el;
+    }
+    function render() {
+      calBody.innerHTML = "";
+      const wrap = document.createElement("div"); wrap.className = "hs-cal__months";
+      for (let k = 0; k < 2; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+      calBody.appendChild(wrap);
+      hint.textContent = sel ? MONS[sel.m] + " " + sel.d : "Pick a date";
+    }
+    foot.querySelector("[data-apply]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (sel) { inp.value = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); inp.dispatchEvent(new Event("change")); refresh(); }
+      closeAll();
+    });
+    ctrl.addEventListener("click", (e) => { e.stopPropagation(); sel = parseD(inp.value); render(); openPanel(panel, ctrl); });
+    inp.addEventListener("change", () => { sel = parseD(inp.value); refresh(); });
+    refreshers.push(refresh);
+    refresh();
+  }
+
+  enhanceSelect(selStay, "Pickup area");
+  enhanceSelect(selService, "Service");
+  enhanceSelect(selItem, "Select service");
+  enhanceDate(dateInp, "Select date");
+
+  overlay.addEventListener("click", closeAll);
+  document.addEventListener("click", (e) => { if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closeAll(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+  window.addEventListener("resize", closeAll);
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -3500,6 +3681,7 @@ async function initPage() {
   initWelcome();
   initTransferUnits();
   initCardTitleOverlay();
+  initBookingCustomControls();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

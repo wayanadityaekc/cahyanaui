@@ -969,10 +969,47 @@ body {
   background-position: right 0.9rem center;
   background-size: 16px;
 }
-/* icon kalender native disenadain (muted) */
+/* icon kalender native disenadain (muted) — dipakai kalau custom control gak aktif */
 .booking__group input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0.55;
   cursor: pointer;
+}
+/* ===== Booking form: dropdown & date FULL CUSTOM (enhance native) =====
+   UI custom (.bk-control + .hs-panel) nyetir <select>/<input date> asli yg disembunyiin.
+   Tinggi control = 2.9rem (sama kaya field native) -> anti-CLS aman. */
+.booking__group.bk-enh {
+  position: relative;
+}
+.bk-native {
+  display: none !important;
+}
+.bk-control {
+  height: 2.9rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-weight: 400;
+}
+.bk-panel .hs-panel__body {
+  max-height: 300px;
+}
+.bk-opt {
+  padding: 12px 16px;
+}
+.bk-opt .hs-opt__nm {
+  font-weight: 500;
+}
+/* date booking: 2 bulan ditumpuk (panel selebar kolom, jd sempit) */
+.bk-cal .hs-cal__months {
+  flex-direction: column;
+  gap: 16px;
+}
+.bk-cal .hs-cal__m {
+  max-width: none;
+}
+.hs-cal__d.sel {
+  background: var(--color-green);
+  color: #fff;
+  border-radius: 9px;
 }
 .booking__price {
   display: flex;
@@ -2333,14 +2370,15 @@ section.faq::before,
    booking 464px (<576) / 455px, footer 688px (<=768) / 487px.
    NB: kalau isi partial booking/footer berubah, UKUR ULANG & update angka ini.
    Navbar nggak perlu: position absolute, nggak dorong konten.
-   PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 463px, tanpa kolom Guests).
-   Kalau kurang, hero melar pas form masuk -> background cover ke-rescale -> foto "zoom". */
+   PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 480px setelah
+   dropdown/date jadi full-custom). Kalau kurang, hero melar pas form masuk -> background
+   cover ke-rescale -> foto "zoom". */
 #booking-placeholder {
-  min-height: 464px;
+  min-height: 480px;
 }
 @media (min-width: 576px) {
   #booking-placeholder {
-    min-height: 464px;
+    min-height: 480px;
   }
 }
 #footer-placeholder {

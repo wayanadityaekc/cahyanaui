@@ -141,12 +141,12 @@ Order **must be kept** (declarations first, run last):
 
 ## Key mechanics
 - **Anti-CLS**: `#booking-placeholder` & `#footer-placeholder` punya `min-height` di style.css
-  (booking 464/455px, footer 688/487px — hasil ukur headless; mobile WAJIB ≥ tinggi form asli, kalau kurang hero melar & foto "zoom"). **Ubah isi partial booking/footer
+  (booking 480px, footer 688/487px — hasil ukur headless; mobile WAJIB ≥ tinggi form asli, kalau kurang hero melar & foto "zoom"). **Ubah isi partial booking/footer
   → ukur ulang & update angkanya** (navbar nggak perlu: position absolute).
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v232, PARTIALS 57)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v235, PARTIALS 57)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

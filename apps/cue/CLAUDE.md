@@ -25,11 +25,15 @@ When unsure, ask first (keep it short).
 
 ## Design system (keep consistent)
 **Colors** (CSS vars):
-- `--color-green` #1f3d2b · `--color-gold` #c9a45c · `--color-cream` #f7f3ea
+- `--color-green` #1a1a1a (hitam) · `--color-gold` #c9a45c · `--color-gold-d` #b08d43 ·
+  `--color-cream` #f8f8f8 · `--line` #e7e4dd (border field/panel). Palet = hitam · abu terang · emas.
 
-**Fonts:**
-- `--font-body` Montserrat — satu-satunya font (dipakai semua elemen termasuk heading).
-  (Great Vibes udah dibuang buat perf — dulu cuma buat 2 heading hiasan.)
+**Fonts** (self-host, `assets/fonts/`, preload di tiap HTML):
+- `--font-body` **Inter** (variable 300–700) — body & semua UI.
+- `--font-head` **Playfair Display** (variable 500–800) — heading/judul (blok "TYPOGRAPHY SYSTEM"
+  di akhir style.css nge-override font-family heading lama).
+- **Bobot konsisten (jangan bold berat sembarangan):** body 400 · label 500 (tracked + uppercase,
+  kesan small-caps) · harga & tombol 600 · heading Playfair 600.
 
 **Text:**
 - Body/paragraph = `0.85rem`, uniform across all pages.
@@ -142,7 +146,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v37, PARTIALS 21)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v232, PARTIALS 57)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

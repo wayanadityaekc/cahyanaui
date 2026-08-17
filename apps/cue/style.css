@@ -505,6 +505,20 @@ body {
 .hs-opt.is-sel {
   background: rgba(201, 164, 92, 0.14);
 }
+/* Navigasi keyboard: pilihan yg lagi disorot pakai ↑↓ (beda dari hover mouse) */
+.hs-opt.is-kbd {
+  background: rgba(201, 164, 92, 0.14);
+  box-shadow: inset 3px 0 0 var(--color-gold);
+}
+/* Focus ring pas control di-Tab */
+.hs-control:focus-visible {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+}
+.hs-opt:focus-visible {
+  outline: none;
+}
 .hs-opt__ic {
   flex-shrink: 0;
   width: 38px;
@@ -655,6 +669,19 @@ body {
 }
 .hs-overlay.open {
   display: block;
+}
+/* Lock scroll background pas bottom-sheet kebuka (HP): body dikunci di posisinya
+   biar halaman di belakang gak ikut gerak & sheet gak nutup pas user coba scroll. */
+body.hs-locked {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
+/* scroll di dalem panel gak nembus ke background */
+.hs-panel {
+  overscroll-behavior: contain;
 }
 /* HP: panel jadi bottom-sheet naik dari bawah */
 @media (max-width: 768px) {

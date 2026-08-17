@@ -3181,6 +3181,23 @@ function initCardTitleOverlay() {
    - dropdown kategori (icon + nama kiri, price range rata kanan, currency-aware)
    - date opsional, tombol Explore -> ke halaman kategori.
    Booking beneran tetep di halaman program (nggak diubah). */
+// Kunci scroll body pas bottom-sheet kebuka (HP) + balikin posisi pas nutup.
+// Pakai position:fixed biar reliable di iOS (overflow:hidden aja suka bocor).
+let __hsScrollY = 0;
+function hsScrollLock(on) {
+  const b = document.body;
+  if (on) {
+    if (b.classList.contains("hs-locked")) return;
+    __hsScrollY = window.scrollY || window.pageYOffset || 0;
+    b.style.top = -__hsScrollY + "px";
+    b.classList.add("hs-locked");
+  } else if (b.classList.contains("hs-locked")) {
+    b.classList.remove("hs-locked");
+    b.style.top = "";
+    window.scrollTo(0, __hsScrollY);
+  }
+}
+
 function initHeroSearch() {
   const root = document.getElementById("hero-search");
   if (!root) return;
@@ -3250,6 +3267,7 @@ function initHeroSearch() {
     }
     if (openControlEl) { openControlEl.classList.remove("is-open"); openControlEl.setAttribute("aria-expanded", "false"); openControlEl = null; }
     overlay.classList.remove("open");
+    hsScrollLock(false);
   }
   function openPanel(panel, control) {
     if (openPanelEl === panel) { closePanels(); return; }
@@ -3258,6 +3276,7 @@ function initHeroSearch() {
       if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
       document.body.appendChild(panel);
       overlay.classList.add("open");
+      hsScrollLock(true);
     } else {
       restore(panel);
     }
@@ -3281,6 +3300,22 @@ function initHeroSearch() {
       opt.classList.add("is-sel");
       closePanels();
     });
+  });
+  // Navigasi keyboard: Enter/↓ buka, ↑↓ sorot, Enter pilih, Esc tutup
+  const ddOpts = Array.from(root.querySelectorAll("[data-explore-opt]"));
+  let ddKbd = -1;
+  const ddPaint = () => { ddOpts.forEach((o, i) => o.classList.toggle("is-kbd", i === ddKbd)); if (ddOpts[ddKbd]) ddOpts[ddKbd].scrollIntoView({ block: "nearest" }); };
+  ddBtn.addEventListener("keydown", (e) => {
+    const open = ddPanel.classList.contains("open");
+    if (!open && (e.key === "Enter" || e.key === " " || e.key === "ArrowDown")) {
+      e.preventDefault(); openPanel(ddPanel, ddBtn);
+      ddKbd = Math.max(0, ddOpts.findIndex((o) => o.classList.contains("is-sel"))); ddPaint(); return;
+    }
+    if (!open) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); ddKbd = Math.min(ddOpts.length - 1, ddKbd + 1); ddPaint(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); ddKbd = Math.max(0, ddKbd - 1); ddPaint(); }
+    else if (e.key === "Enter") { e.preventDefault(); if (ddOpts[ddKbd]) { ddOpts[ddKbd].click(); ddBtn.focus(); } }
+    else if (e.key === "Escape") { e.preventDefault(); closePanels(); ddBtn.focus(); }
   });
 
   // ---- Kalender range tanggal (klik 1 = mulai, klik 2 = selesai) ----
@@ -3483,13 +3518,14 @@ function initBookingCustomControls() {
     if (openPanelEl) { openPanelEl.classList.remove("open"); restore(openPanelEl); openPanelEl = null; }
     if (openCtrlEl) { openCtrlEl.classList.remove("is-open"); openCtrlEl.setAttribute("aria-expanded", "false"); openCtrlEl = null; }
     overlay.classList.remove("open");
+    hsScrollLock(false);
   }
   function openPanel(panel, ctrl) {
     if (openPanelEl === panel) { closeAll(); return; }
     closeAll();
     if (isMobile()) {
       if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
-      document.body.appendChild(panel); overlay.classList.add("open");
+      document.body.appendChild(panel); overlay.classList.add("open"); hsScrollLock(true);
     } else restore(panel);
     panel.classList.add("open");
     ctrl.classList.add("is-open"); ctrl.setAttribute("aria-expanded", "true");
@@ -3550,6 +3586,23 @@ function initBookingCustomControls() {
       });
     }
     ctrl.addEventListener("click", (e) => { e.stopPropagation(); build(); openPanel(panel, ctrl); });
+    // Navigasi keyboard: Enter/↓ buka, ↑↓ sorot, Enter pilih, Esc tutup
+    let kbd = -1;
+    const kOpts = () => Array.from(body.querySelectorAll(".bk-opt"));
+    const kPaint = () => { const os = kOpts(); os.forEach((o, i) => o.classList.toggle("is-kbd", i === kbd)); if (os[kbd]) os[kbd].scrollIntoView({ block: "nearest" }); };
+    ctrl.addEventListener("keydown", (e) => {
+      const open = panel.classList.contains("open");
+      if (!open && (e.key === "Enter" || e.key === " " || e.key === "ArrowDown")) {
+        e.preventDefault(); build(); openPanel(panel, ctrl);
+        const os = kOpts(); kbd = Math.max(0, os.findIndex((o) => o.classList.contains("is-sel"))); kPaint(); return;
+      }
+      if (!open) return;
+      const os = kOpts();
+      if (e.key === "ArrowDown") { e.preventDefault(); kbd = Math.min(os.length - 1, kbd + 1); kPaint(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); kbd = Math.max(0, kbd - 1); kPaint(); }
+      else if (e.key === "Enter") { e.preventDefault(); if (os[kbd]) { os[kbd].click(); ctrl.focus(); } }
+      else if (e.key === "Escape") { e.preventDefault(); closeAll(); ctrl.focus(); }
+    });
     sel.addEventListener("change", refresh);
     refreshers.push(refresh);
     refresh();

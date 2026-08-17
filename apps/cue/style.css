@@ -1,19 +1,12 @@
-/* Self-hosted, subset latin - nggak perlu request ke Google. Ganti/rename -> update
-   preload di semua HTML juga. font-display: swap (font di-preload+lokal jadi cepet).
-   Inter (variable 300-700) = body/UI. Playfair Display (variable 500-800) = heading. */
+/* Self-hosted Inter (variable 300-700, subset latin) - satu-satunya font, dipakai
+   body & heading. Nggak request ke Google. Ganti/rename -> update preload di semua HTML.
+   font-display: swap (font di-preload+lokal jadi cepet). */
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 300 700;
   font-display: swap;
   src: url("assets/fonts/inter-latin.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Playfair Display";
-  font-style: normal;
-  font-weight: 500 800;
-  font-display: swap;
-  src: url("assets/fonts/playfair-latin.woff2") format("woff2");
 }
 
 :root {
@@ -23,8 +16,7 @@
   --color-cream: #f8f8f8;
   --line: #e7e4dd;
   --font-body: "Inter", system-ui, sans-serif;
-  /* EXPERIMENT: satu font aja (Inter) buat heading juga. Balikin ke Playfair =
-     ganti nilai ini ke "Playfair Display", Georgia, serif. */
+  /* Satu font: Inter buat body & heading (Playfair udah dibuang). */
   --font-head: "Inter", system-ui, sans-serif;
   /* ---- Type scale (DRY) ---- */
   --fs-display: clamp(1.9rem, 5vw, 2.2rem);
@@ -965,6 +957,22 @@ body {
 .booking__group input[type="date"] {
   -webkit-appearance: none;
   appearance: none;
+}
+/* Select booking disamain look-nya sama search control: chevron custom (bukan
+   panah native OS). Native dropdown pas dibuka tetep dipakai (UX HP paling enak). */
+.booking__group select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 2.2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b877d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 16px;
+}
+/* icon kalender native disenadain (muted) */
+.booking__group input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.55;
+  cursor: pointer;
 }
 .booking__price {
   display: flex;
@@ -6049,9 +6057,9 @@ section.faq::before,
 }
 
 /* ============================================================
-   TYPOGRAPHY SYSTEM — Playfair Display (heading) + Inter (body)
+   TYPOGRAPHY SYSTEM — satu font (Inter) buat body & heading
    Ditaruh di akhir: override font-family lama tiap heading (source-order menang).
-   Bobot: body 400 · label 500 (tracked/uppercase) · harga & tombol 600 · heading Playfair 600.
+   Bobot: body 400 · label 500-600 · harga & tombol 600 · heading 600 (var --font-head).
    ============================================================ */
 .section__title,
 .section__title--sub,

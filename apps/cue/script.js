@@ -788,6 +788,44 @@ function initNavbar() {
   const navMenu = document.getElementById("nav-menu");
   if (!hamburger || !navMenu) return;
 
+  const isMobileNav = () => window.matchMedia("(max-width: 992px)").matches;
+  const acctPanel = document.querySelector("[data-acct-panel]");
+
+  // Scrim (dim) buat drawer di HP
+  let scrim = document.querySelector(".navbar__scrim");
+  if (!scrim) { scrim = document.createElement("div"); scrim.className = "navbar__scrim"; document.body.appendChild(scrim); }
+
+  // Inject header (judul + tombol close) ke tiap drawer; tampil cuma di mobile (CSS).
+  function addDrawerHead(container, title, tag) {
+    if (!container || container.querySelector(".navbar__drawerhead")) return;
+    const head = document.createElement(tag);
+    head.className = "navbar__drawerhead";
+    head.innerHTML = '<span class="navbar__drawertitle">' + title + '</span><button type="button" class="navbar__drawerclose" aria-label="Close">&times;</button>';
+    container.insertBefore(head, container.firstChild);
+    head.querySelector(".navbar__drawerclose").addEventListener("click", (e) => { e.stopPropagation(); closeNavDrawers(); });
+  }
+  addDrawerHead(navMenu, "Menu", "li");
+  addDrawerHead(acctPanel, "Account", "div");
+
+  const anyDrawerOpen = () => navMenu.classList.contains("active") || !!document.querySelector("[data-acct-panel].is-open");
+  function syncNavDrawer() {
+    const open = isMobileNav() && anyDrawerOpen();
+    scrim.classList.toggle("open", open);
+    hsScrollLock(open);
+  }
+  function closeNavDrawers() {
+    navMenu.classList.remove("active");
+    document.querySelectorAll("[data-acct-panel].is-open").forEach((p) => {
+      p.classList.remove("is-open");
+      const acct = p.closest("[data-acct]");
+      const b = acct && acct.querySelector("[data-acct-toggle]");
+      if (b) b.setAttribute("aria-expanded", "false");
+    });
+    syncNavDrawer();
+  }
+  window.__navDrawerSync = syncNavDrawer;
+  window.__navDrawerClose = closeNavDrawers;
+
   hamburger.addEventListener("click", () => {
     const opening = !navMenu.classList.contains("active");
     // Buka menu -> tutup dropdown akun biar gak numpuk (bergantian).
@@ -800,7 +838,11 @@ function initNavbar() {
       });
     }
     navMenu.classList.toggle("active");
+    syncNavDrawer();
   });
+  scrim.addEventListener("click", closeNavDrawers);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeNavDrawers(); });
+  window.addEventListener("resize", () => { if (!isMobileNav()) closeNavDrawers(); else syncNavDrawer(); });
 
   // Dropdown "Program" (tap/klik buat toggle, di desktop juga jalan via hover)
   const drop = navMenu.querySelector(".navbar__has-drop");
@@ -2541,16 +2583,19 @@ function initAccountMenu() {
       }
       panel.classList.toggle("is-open", willOpen);
       btn.setAttribute("aria-expanded", String(willOpen));
+      if (window.__navDrawerSync) window.__navDrawerSync();
     });
   });
   document.addEventListener("click", (e) => {
+    let changed = false;
     document.querySelectorAll("[data-acct]").forEach((acct) => {
       if (!acct.contains(e.target)) {
         const panel = acct.querySelector("[data-acct-panel]");
         const btn = acct.querySelector("[data-acct-toggle]");
-        if (panel && panel.classList.contains("is-open")) { panel.classList.remove("is-open"); if (btn) btn.setAttribute("aria-expanded", "false"); }
+        if (panel && panel.classList.contains("is-open")) { panel.classList.remove("is-open"); if (btn) btn.setAttribute("aria-expanded", "false"); changed = true; }
       }
     });
+    if (changed && window.__navDrawerSync) window.__navDrawerSync();
   });
 }
 
@@ -3260,6 +3305,7 @@ function initHeroSearch() {
   }
   let openPanelEl = null, openControlEl = null;
   function closePanels() {
+    const had = !!openPanelEl; // cuma lepas lock kalau MEMANG ada panel search kebuka
     if (openPanelEl) {
       openPanelEl.classList.remove("open");
       restore(openPanelEl);
@@ -3267,7 +3313,7 @@ function initHeroSearch() {
     }
     if (openControlEl) { openControlEl.classList.remove("is-open"); openControlEl.setAttribute("aria-expanded", "false"); openControlEl = null; }
     overlay.classList.remove("open");
-    hsScrollLock(false);
+    if (had) hsScrollLock(false);
   }
   function openPanel(panel, control) {
     if (openPanelEl === panel) { closePanels(); return; }
@@ -3515,10 +3561,11 @@ function initBookingCustomControls() {
   let openPanelEl = null, openCtrlEl = null;
   const restore = (p) => { const a = anchors.get(p); if (a && p.parentElement === document.body) a.parent.insertBefore(p, a.next); };
   function closeAll() {
+    const had = !!openPanelEl; // cuma lepas lock kalau memang ada panel booking kebuka
     if (openPanelEl) { openPanelEl.classList.remove("open"); restore(openPanelEl); openPanelEl = null; }
     if (openCtrlEl) { openCtrlEl.classList.remove("is-open"); openCtrlEl.setAttribute("aria-expanded", "false"); openCtrlEl = null; }
     overlay.classList.remove("open");
-    hsScrollLock(false);
+    if (had) hsScrollLock(false);
   }
   function openPanel(panel, ctrl) {
     if (openPanelEl === panel) { closeAll(); return; }

@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 53;
+const PARTIALS_VERSION = 54;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -33,8 +33,10 @@ const DISPLAY_GUESTS = 2;
 let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
 // Stay-area tamu (buat pickup surcharge). "" = belum pilih -> default Ubud (no surcharge).
 let currentStay = localStorage.getItem("cue_stay") || "";
-// Tanggal trip (opsional) - dipilih di search bar / popup trip details. "" = belum diisi.
-let currentDate = localStorage.getItem("cue_date") || "";
+// Tanggal trip (range) - dipilih di search bar / popup. "" = belum diisi.
+// Booking form per-item tetap 1 tanggal (field sendiri); range ini buat itinerary.
+let currentDateFrom = localStorage.getItem("cue_date_from") || "";
+let currentDateTo = localStorage.getItem("cue_date_to") || "";
 
 // -- page -> itinerary program map
 // Peta halaman detail -> nama program di itinerary (biar tombol Add di card
@@ -318,11 +320,15 @@ function setStay(pk) {
   if (window.__tripbarRefresh) window.__tripbarRefresh();
 }
 
-// Set tanggal trip global (opsional): simpan + refresh tripbar.
-function setDate(v) {
-  currentDate = v || "";
-  if (currentDate) localStorage.setItem("cue_date", currentDate);
-  else localStorage.removeItem("cue_date");
+// Set range tanggal trip: simpan + refresh tripbar. Kalau "to" < "from", disamain.
+function setDateRange(from, to) {
+  from = from || "";
+  to = to || "";
+  if (from && to && to < from) to = from;
+  currentDateFrom = from;
+  currentDateTo = to;
+  if (from) localStorage.setItem("cue_date_from", from); else localStorage.removeItem("cue_date_from");
+  if (to) localStorage.setItem("cue_date_to", to); else localStorage.removeItem("cue_date_to");
   if (window.__tripbarRefresh) window.__tripbarRefresh();
 }
 // "2026-08-12" -> "12 Aug"
@@ -331,6 +337,24 @@ function fmtDateShort(v) {
   if (p.length !== 3) return v || "";
   const mo = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(p[1], 10) - 1] || "";
   return parseInt(p[2], 10) + " " + mo;
+}
+// Range -> teks singkat: "12 Aug", "12–16 Aug", "28 Aug – 2 Sep", atau "".
+function fmtDateRange(from, to) {
+  if (!from && !to) return "";
+  if (from && !to) return fmtDateShort(from);
+  if (from === to) return fmtDateShort(from);
+  const a = fmtDateShort(from), b = fmtDateShort(to);
+  const am = a.split(" ")[1], bm = b.split(" ")[1];
+  return am === bm ? a.split(" ")[0] + "–" + b : a + " – " + b;
+}
+// Jumlah hari dalam range (inklusif). 0 kalau kosong.
+function rangeDays(from, to) {
+  if (!from) return 0;
+  if (!to || to === from) return 1;
+  const pa = from.split("-"), pb = to.split("-");
+  const da = Date.UTC(+pa[0], +pa[1] - 1, +pa[2]);
+  const db = Date.UTC(+pb[0], +pb[1] - 1, +pb[2]);
+  return Math.max(1, Math.round((db - da) / 86400000) + 1);
 }
 
 /* ---- Akun (passwordless) — token sesi + state ---- */
@@ -2544,8 +2568,11 @@ function tripFieldsHTML(includeDate) {
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
   const stayOpts = pickupOptionsHTML(currentStay || "ubud");
   const dateField = includeDate
-    ? '<div class="welcome__field"><label for="trip-date">Date (optional)</label>' +
-      '<input id="trip-date" type="date" value="' + (currentDate || "") + '" /></div>'
+    ? '<div class="welcome__field"><label>When</label>' +
+      '<div class="welcome__daterow">' +
+        '<input id="trip-date-from" type="date" aria-label="Start date" value="' + (currentDateFrom || "") + '" />' +
+        '<input id="trip-date-to" type="date" aria-label="End date" value="' + (currentDateTo || "") + '" />' +
+      "</div></div>"
     : "";
   return (
     dateField +
@@ -2567,8 +2594,9 @@ function tripFieldsHTML(includeDate) {
 function saveTripPrefs(modal) {
   setGuests(modal.querySelector("#welcome-guests").value);
   setStay(modal.querySelector("#welcome-stay").value);
-  const d = modal.querySelector("#trip-date");
-  if (d) setDate(d.value);
+  const df = modal.querySelector("#trip-date-from");
+  const dt = modal.querySelector("#trip-date-to");
+  if (df || dt) setDateRange(df ? df.value : "", dt ? dt.value : "");
 }
 
 // Bangun + tampilkan popup selamat datang. Minta jumlah orang biar harga Exclusive
@@ -3140,7 +3168,8 @@ function initHeroSearch() {
   const ddBtn = root.querySelector("[data-explore-btn]");
   const ddLabel = root.querySelector("[data-explore-label]");
   const goBtn = root.querySelector("[data-explore-go]");
-  const dateInp = root.querySelector("[data-explore-date]");
+  const fromInp = root.querySelector("[data-explore-from]");
+  const toInp = root.querySelector("[data-explore-to]");
   const tierBtns = root.querySelectorAll("[data-tier]");
   let selectedHref = null;
   let tier = localStorage.getItem("cue_tier") === "exclusive" ? "exclusive" : "standard";
@@ -3219,12 +3248,16 @@ function initHeroSearch() {
     });
   });
 
-  // Simpan date (dipakai booking di halaman tujuan nanti)
-  if (dateInp) {
-    const savedDate = localStorage.getItem("cue_date");
-    if (savedDate) dateInp.value = savedDate;
-    dateInp.addEventListener("change", () => localStorage.setItem("cue_date", dateInp.value));
-  }
+  // Range tanggal (from-to): prefill dari state + simpan pas ganti. "to" minimal = "from".
+  if (fromInp) fromInp.value = currentDateFrom || "";
+  if (toInp) toInp.value = currentDateTo || "";
+  const syncDates = () => {
+    if (fromInp && toInp) toInp.min = fromInp.value || "";
+    setDateRange(fromInp ? fromInp.value : "", toInp ? toInp.value : "");
+    if (toInp) toInp.value = currentDateTo || "";
+  };
+  if (fromInp) fromInp.addEventListener("change", syncDates);
+  if (toInp) toInp.addEventListener("change", syncDates);
 
   // Explore -> ke halaman kategori (kalau belum pilih, buka dropdown)
   goBtn.addEventListener("click", () => {
@@ -3268,13 +3301,14 @@ function initTripBar() {
   function render() {
     const txt = bar.querySelector("[data-tripbar-text]");
     const cta = bar.querySelector("[data-tripbar-cta]");
-    if (currentGuests > 0 || currentStay || currentDate) {
+    if (currentGuests > 0 || currentStay || currentDateFrom) {
       const g = currentGuests || DISPLAY_GUESTS;
       const parts = [
         "<b>" + g + " guest" + (g > 1 ? "s" : "") + "</b>",
         "<b>" + (currentStay ? pickupLabelOf(currentStay) : "Ubud &amp; nearby") + "</b>",
       ];
-      if (currentDate) parts.push("<b>" + fmtDateShort(currentDate) + "</b>");
+      const dr = fmtDateRange(currentDateFrom, currentDateTo);
+      if (dr) parts.push("<b>" + dr + "</b>");
       txt.innerHTML = parts.join('<span class="tripbar__sep">·</span>');
       cta.textContent = "Edit";
     } else {

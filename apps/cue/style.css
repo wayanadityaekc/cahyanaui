@@ -401,8 +401,21 @@ body {
   color: var(--color-gold);
   white-space: nowrap;
 }
+.hsearch__hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #b0a892;
+}
+.hsearch__daterow {
+  display: flex;
+  gap: 0.5rem;
+}
 .hsearch__date {
   width: 100%;
+  min-width: 0; /* biar input date nggak maksa lebar & lewat ke kanan (iOS) */
+  -webkit-appearance: none;
+  appearance: none;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 0.72rem 0.85rem;
@@ -410,6 +423,19 @@ body {
   font-size: 0.9rem;
   color: var(--color-green);
   background: #fff;
+}
+.hsearch__daterow .hsearch__date {
+  flex: 1;
+}
+/* popup: range tanggal (From/To) sejajar + input date rapi */
+.welcome__daterow {
+  display: flex;
+  gap: 0.5rem;
+}
+.welcome__daterow input {
+  min-width: 0;
+  -webkit-appearance: none;
+  appearance: none;
 }
 .hsearch__go {
   width: 100%;

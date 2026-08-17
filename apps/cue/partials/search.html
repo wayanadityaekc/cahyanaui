@@ -45,8 +45,11 @@
     </ul>
   </div>
   <div class="hsearch__field">
-    <label>When</label>
-    <input type="date" class="hsearch__date" data-explore-date aria-label="Trip date" />
+    <label>When <span class="hsearch__hint">(pick a range for multi-day)</span></label>
+    <div class="hsearch__daterow">
+      <input type="date" class="hsearch__date" data-explore-from aria-label="Start date" />
+      <input type="date" class="hsearch__date" data-explore-to aria-label="End date" />
+    </div>
   </div>
   <button type="button" class="hsearch__go" data-explore-go>Explore</button>
 </div>

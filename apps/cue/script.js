@@ -3398,21 +3398,21 @@ function initHeroSearch() {
    Keisi = tampil nilai, kosong = ajakan isi. Diklik -> popup Your trip details.
    Fixed di bawah navbar (nggak ganggu flow -> no CLS). */
 function initTripBar() {
-  const path = location.pathname;
-  const isHome = path === "/" || path.endsWith("/index.html");
-  if (isHome) return;
-  // cuma halaman yang punya sistem booking
-  if (!document.getElementById("booking-placeholder") && !document.getElementById("book-modal-placeholder")) return;
+  // Halaman booking (punya form booking) -> bar Guests/Pickup (klik = editor trip).
+  // Halaman NON-booking (home, guide, listing, dll) -> bar promo/event dari PROMO
+  //   (data.js), cuma muncul kalau PROMO.active && PROMO.text keisi.
+  const hasBooking = document.getElementById("booking-placeholder") || document.getElementById("book-modal-placeholder");
+  const promoOn = typeof PROMO !== "undefined" && PROMO && PROMO.active && PROMO.text;
+  if (!hasBooking && !promoOn) return;
+  const promoMode = !hasBooking;
+  const asLink = promoMode && !!PROMO.href;
 
-  const bar = document.createElement("button");
-  bar.type = "button";
-  bar.className = "tripbar";
+  const bar = document.createElement(promoMode ? (asLink ? "a" : "div") : "button");
+  bar.className = "tripbar" + (promoMode ? " tripbar--promo" : "");
   bar.id = "tripbar";
-  bar.setAttribute("aria-label", "Set trip details");
-  bar.innerHTML =
-    '<svg class="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>' +
-    '<span data-tripbar-text></span>' +
-    '<span class="tripbar__edit" data-tripbar-cta></span>';
+  if (!promoMode) { bar.type = "button"; bar.setAttribute("aria-label", "Set trip details"); }
+  if (asLink) bar.href = PROMO.href;
+
   const navPh = document.getElementById("navbar-placeholder");
   document.body.insertBefore(bar, navPh ? navPh.nextSibling : document.body.firstChild);
 
@@ -3426,6 +3426,19 @@ function initTripBar() {
   };
   setTop();
   window.addEventListener("resize", setTop);
+
+  if (promoMode) {
+    const cta = PROMO.cta ? '<span class="tripbar__edit">' + PROMO.cta + "</span>" : "";
+    bar.innerHTML =
+      '<svg class="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>' +
+      "<span>" + PROMO.text + "</span>" + cta;
+    return;
+  }
+
+  bar.innerHTML =
+    '<svg class="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>' +
+    '<span data-tripbar-text></span>' +
+    '<span class="tripbar__edit" data-tripbar-cta></span>';
 
   function render() {
     const txt = bar.querySelector("[data-tripbar-text]");

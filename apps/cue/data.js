@@ -196,3 +196,15 @@ const CUR_RATE = { USD: 1, AUD: 1.53, EUR: 0.92, GBP: 0.79 };
 // Simbol per currency buat tampilan harga (AUD = A$ biar beda dari USD).
 // Dropdown currency TETAP pakai kode (USD/IDR/...) - ini cuma buat harga.
 const CUR_SYMBOL = { USD: "$", IDR: "Rp", AUD: "A$", EUR: "€", GBP: "£" };
+
+// ===== Promo / event bar (tripbar di bawah navbar, halaman NON-booking) =====
+// Halaman booking (tour/transfer/dll) tetap nampilin Guests + Pickup, JANGAN diisi promo.
+// Halaman lain (home, guide, listing, dll) nampilin promo ini KALAU active + text ada.
+// Cara pakai: set active: true, isi text (wajib). cta + href opsional (kalau diisi
+// dua-duanya, bar jadi link). Kosongin text atau active:false = bar gak muncul.
+const PROMO = {
+  active: false,
+  text: "",   // contoh: "Galungan holiday coming up, book your driver early"
+  cta: "",    // contoh: "Ask us" (kosong = gak ada tombol)
+  href: "",   // contoh: "contact.html" atau "https://wa.me/62..."
+};

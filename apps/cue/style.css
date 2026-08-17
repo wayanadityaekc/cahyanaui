@@ -893,8 +893,14 @@ body.hs-locked .tripbar {
 .hero__booking .booking__note {
   position: static;
 }
+/* Subhero yg punya booking form (tour/transfer/activities/destinations/charter):
+   samain sama .hero homepage -> teks rata kiri + tinggi 88vh biar hero & subhero
+   yang isinya form keliatan setinggi & sekonsisten. (Subhero polos tanpa form
+   tetep center + 60vh dari rule dasar .subhero.) */
 .subhero:has(.hero__inner) {
+  min-height: 88vh;
   padding-bottom: 2rem;
+  text-align: left;
 }
 
 /* Tripbar: bar "Guests · Pickup · Date" fixed di bawah navbar (halaman kategori/detail).

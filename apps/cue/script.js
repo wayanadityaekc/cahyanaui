@@ -3481,9 +3481,14 @@ function initTripBar() {
   const navPh = document.getElementById("navbar-placeholder");
   document.body.insertBefore(bar, navPh ? navPh.nextSibling : document.body.firstChild);
 
-  // taruh tepat di bawah navbar (tinggi navbar diukur langsung)
+  // taruh tepat di bawah navbar. offsetHeight dibuletin ke atas -> bisa nyisa
+  // celah sub-pixel (navbar 57.6px, offsetHeight 58) yang bikin konten scroll
+  // keliatan naik di sela-selanya. Pake bottom asli + floor biar nempel (overlap
+  // <1px ketutup navbar yg z-index-nya lebih tinggi) = nol celah.
   const nav = document.querySelector(".navbar");
-  const setTop = () => { bar.style.top = (nav ? nav.offsetHeight : 58) + "px"; };
+  const setTop = () => {
+    bar.style.top = (nav ? Math.floor(nav.getBoundingClientRect().bottom) : 58) + "px";
+  };
   setTop();
   window.addEventListener("resize", setTop);
 

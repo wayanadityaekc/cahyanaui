@@ -458,7 +458,12 @@ body {
 }
 .hero__booking {
   flex-shrink: 0;
-  width: 420px;
+}
+/* lebar tetap cuma di desktop; mobile (<=992) full-width dari media di atas */
+@media (min-width: 993px) {
+  .hero__booking {
+    width: 420px;
+  }
 }
 .hero__booking .booking {
   position: static;

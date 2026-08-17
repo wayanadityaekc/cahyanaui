@@ -188,13 +188,12 @@ body {
   min-height: 88vh;
   padding: 7rem 1.5rem 3rem;
   background-color: var(--color-green);
-  overflow: hidden;
 }
 /* Foto hero di ::after yang di-blur tipis (konten tetap tajam) */
 .hero::after {
   content: "";
   position: absolute;
-  inset: -12px;
+  inset: 0;
   z-index: 0;
   background-size: cover;
   background-position: center;
@@ -404,6 +403,7 @@ body {
 }
 .hsearch__date {
   width: 100%;
+  max-width: 190px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 0.72rem 0.85rem;

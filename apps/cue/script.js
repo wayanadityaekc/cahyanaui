@@ -33,6 +33,8 @@ const DISPLAY_GUESTS = 2;
 let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
 // Stay-area tamu (buat pickup surcharge). "" = belum pilih -> default Ubud (no surcharge).
 let currentStay = localStorage.getItem("cue_stay") || "";
+// Tanggal trip (opsional) - dipilih di search bar / popup trip details. "" = belum diisi.
+let currentDate = localStorage.getItem("cue_date") || "";
 
 // -- page -> itinerary program map
 // Peta halaman detail -> nama program di itinerary (biar tombol Add di card
@@ -224,6 +226,7 @@ function setGuests(n) {
   document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(n); });
   // Booking form gak punya kolom Guests lagi -> cukup refresh harga booking.
   if (window.__bookingRefresh) window.__bookingRefresh();
+  if (window.__tripbarRefresh) window.__tripbarRefresh();
 }
 
 // Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang + flag popup yang
@@ -312,6 +315,22 @@ function setStay(pk) {
     if (s.value !== v) s.value = v;
   });
   if (window.__bookingRefresh) window.__bookingRefresh();
+  if (window.__tripbarRefresh) window.__tripbarRefresh();
+}
+
+// Set tanggal trip global (opsional): simpan + refresh tripbar.
+function setDate(v) {
+  currentDate = v || "";
+  if (currentDate) localStorage.setItem("cue_date", currentDate);
+  else localStorage.removeItem("cue_date");
+  if (window.__tripbarRefresh) window.__tripbarRefresh();
+}
+// "2026-08-12" -> "12 Aug"
+function fmtDateShort(v) {
+  const p = (v || "").split("-");
+  if (p.length !== 3) return v || "";
+  const mo = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(p[1], 10) - 1] || "";
+  return parseInt(p[2], 10) + " " + mo;
 }
 
 /* ---- Akun (passwordless) — token sesi + state ---- */
@@ -2515,17 +2534,47 @@ function initWelcome() {
   showWelcome();
 }
 
+// Field bersama popup welcome & "Your trip details": guests + pickup + currency
+// (+ date opsional). Dipakai biar 1 sumber, gak dobel markup.
+function tripFieldsHTML(includeDate) {
+  const pre = currentGuests || DISPLAY_GUESTS;
+  let opts = "";
+  for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
+  const stayOpts = pickupOptionsHTML(currentStay || "ubud");
+  const dateField = includeDate
+    ? '<div class="welcome__field"><label for="trip-date">Date (optional)</label>' +
+      '<input id="trip-date" type="date" value="' + (currentDate || "") + '" /></div>'
+    : "";
+  return (
+    dateField +
+    '<div class="welcome__field">' +
+      '<label for="welcome-guests">Number of guests</label>' +
+      '<select id="welcome-guests">' + opts + "</select>" +
+    "</div>" +
+    '<div class="welcome__field">' +
+      '<label for="welcome-stay">Where are you staying? (pickup)</label>' +
+      '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
+    "</div>" +
+    '<div class="welcome__field">' +
+      "<label>Show prices in</label>" +
+      curDropdownHTML() +
+    "</div>"
+  );
+}
+// Simpan pilihan dari popup (guests + pickup + date kalau ada) ke state global.
+function saveTripPrefs(modal) {
+  setGuests(modal.querySelector("#welcome-guests").value);
+  setStay(modal.querySelector("#welcome-stay").value);
+  const d = modal.querySelector("#trip-date");
+  if (d) setDate(d.value);
+}
+
 // Bangun + tampilkan popup selamat datang. Minta jumlah orang biar harga Exclusive
 // akurat. "Skip" = tutup tanpa set. Dipakai initWelcome (kunjungan pertama) & tombol
 // Reset di navbar. Pilihan tersimpan di localStorage.
 function showWelcome() {
   const existing = document.getElementById("welcome-modal");
   if (existing) existing.remove();
-  const pre = currentGuests || DISPLAY_GUESTS;
-  let opts = "";
-  for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
-  const staySel = currentStay || "ubud";
-  const stayOpts = pickupOptionsHTML(staySel);
 
   const modal = document.createElement("div");
   modal.className = "modal welcome-modal";
@@ -2536,18 +2585,7 @@ function showWelcome() {
       '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
       '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
       '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> - upfront, always.</p>' +
-      '<div class="welcome__field">' +
-        '<label for="welcome-guests">Number of guests</label>' +
-        '<select id="welcome-guests">' + opts + "</select>" +
-      "</div>" +
-      '<div class="welcome__field">' +
-        '<label for="welcome-stay">Where are you staying?</label>' +
-        '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
-      "</div>" +
-      '<div class="welcome__field">' +
-        "<label>Show prices in</label>" +
-        curDropdownHTML() +
-      "</div>" +
+      tripFieldsHTML(true) +
       '<div class="welcome__actions welcome__actions--dual">' +
         '<button type="button" class="modal__btn modal__btn--ghost" id="welcome-guest">Explore as Guest</button>' +
         '<button type="button" class="modal__btn" id="welcome-create">Create Account</button>' +
@@ -2559,10 +2597,7 @@ function showWelcome() {
   if (curWrap) wireCurDropdown(curWrap);
 
   const close = () => modal.classList.remove("active");
-  const savePrefs = () => {
-    setGuests(modal.querySelector("#welcome-guests").value);
-    setStay(modal.querySelector("#welcome-stay").value);
-  };
+  const savePrefs = () => saveTripPrefs(modal);
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();
   });
@@ -2571,6 +2606,36 @@ function showWelcome() {
   // "Create Account" = simpan prefs, tutup welcome, buka form create akun.
   modal.querySelector("#welcome-create").addEventListener("click", () => { savePrefs(); close(); showCreateAccount(); });
   // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
+}
+
+// Popup "Your trip details" (dari tripbar) = welcome popup di-retitle + tombol Save.
+// Isi field sama (date + guests + pickup + currency).
+function showTripDetails() {
+  const existing = document.getElementById("tripdetails-modal");
+  if (existing) existing.remove();
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "tripdetails-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
+      '<h2 class="welcome__title">Your trip details</h2>' +
+      '<p class="welcome__text">Set your group size, pickup, and date - we\'ll use it across your booking.</p>' +
+      tripFieldsHTML(true) +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="trip-save">Save</button>' +
+      "</div>" +
+    "</div>";
+  document.body.appendChild(modal);
+  const curWrap = modal.querySelector("[data-cur]");
+  if (curWrap) wireCurDropdown(curWrap);
+  const close = () => modal.classList.remove("active");
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest("[data-close]")) close();
+  });
+  modal.querySelector("#trip-save").addEventListener("click", () => { saveTripPrefs(modal); close(); });
   requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
 }
 
@@ -3163,6 +3228,56 @@ function initHeroSearch() {
   });
 }
 
+/* Bar "Guests · Pickup · Date" di halaman kategori/detail (bukan homepage).
+   Keisi = tampil nilai, kosong = ajakan isi. Diklik -> popup Your trip details.
+   Fixed di bawah navbar (nggak ganggu flow -> no CLS). */
+function initTripBar() {
+  const path = location.pathname;
+  const isHome = path === "/" || path.endsWith("/index.html");
+  if (isHome) return;
+  // cuma halaman yang punya sistem booking
+  if (!document.getElementById("booking-placeholder") && !document.getElementById("book-modal-placeholder")) return;
+
+  const bar = document.createElement("button");
+  bar.type = "button";
+  bar.className = "tripbar";
+  bar.id = "tripbar";
+  bar.setAttribute("aria-label", "Set trip details");
+  bar.innerHTML =
+    '<svg class="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>' +
+    '<span data-tripbar-text></span>' +
+    '<span class="tripbar__edit" data-tripbar-cta></span>';
+  const navPh = document.getElementById("navbar-placeholder");
+  document.body.insertBefore(bar, navPh ? navPh.nextSibling : document.body.firstChild);
+
+  // taruh tepat di bawah navbar (tinggi navbar diukur langsung)
+  const nav = document.querySelector(".navbar");
+  const setTop = () => { bar.style.top = (nav ? nav.offsetHeight : 58) + "px"; };
+  setTop();
+  window.addEventListener("resize", setTop);
+
+  function render() {
+    const txt = bar.querySelector("[data-tripbar-text]");
+    const cta = bar.querySelector("[data-tripbar-cta]");
+    if (currentGuests > 0 || currentStay || currentDate) {
+      const g = currentGuests || DISPLAY_GUESTS;
+      const parts = [
+        "<b>" + g + " guest" + (g > 1 ? "s" : "") + "</b>",
+        "<b>" + (currentStay ? pickupLabelOf(currentStay) : "Ubud &amp; nearby") + "</b>",
+      ];
+      if (currentDate) parts.push("<b>" + fmtDateShort(currentDate) + "</b>");
+      txt.innerHTML = parts.join('<span class="tripbar__sep">·</span>');
+      cta.textContent = "Edit";
+    } else {
+      txt.innerHTML = '<span class="tripbar__muted">Add guests</span><span class="tripbar__sep">·</span><span class="tripbar__muted">Add pickup location</span>';
+      cta.textContent = "Set now";
+    }
+  }
+  render();
+  window.__tripbarRefresh = render;
+  bar.addEventListener("click", showTripDetails);
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -3188,6 +3303,7 @@ async function initPage() {
   initCharter();
   initTourType();
   initHeroSearch();
+  initTripBar();
   initCurrency();
   initGuestPicker();
   initAccountMenu();

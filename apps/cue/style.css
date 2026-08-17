@@ -315,7 +315,7 @@ body {
   justify-content: space-between;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 0.75rem 0.85rem;
+  padding: 0.5rem 0.65rem;
   background: #fff;
   font-family: inherit;
   font-size: var(--fs-body);
@@ -416,7 +416,7 @@ body {
   appearance: none;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 0.72rem 0.85rem;
+  padding: 0.5rem 0.65rem;
   font-family: inherit;
   font-size: var(--fs-body);
   color: var(--color-green);
@@ -639,7 +639,7 @@ body {
 .booking__price {
   width: 100%;
   min-width: 0;
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
   line-height: 1.4;
   height: 2.9rem;
@@ -1500,7 +1500,7 @@ body {
 .review-form__group input,
 .review-form__group select,
 .review-form__group textarea {
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
   line-height: 1.4;
   background-color: #fff;
@@ -2273,7 +2273,7 @@ section.faq::before,
   font-weight: 600;
 }
 .modal__group input {
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
 }
 .modal__referral {
@@ -2282,7 +2282,7 @@ section.faq::before,
 }
 .modal__referral input {
   flex: 1;
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   font-family: var(--font-body);
@@ -3205,7 +3205,7 @@ section.faq::before,
 }
 .contact__group input,
 .contact__group textarea {
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
 }
 .contact__group textarea {
@@ -3338,7 +3338,7 @@ section.faq::before,
 .field input[type="date"] {
   width: 100%;
   height: 2.9rem;
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
   line-height: 1.4;
   background-color: #fff;
@@ -4805,7 +4805,7 @@ button.pick-cat {
 .acct__panel select {
   width: 100%;
   margin-bottom: 0.75rem;
-  padding: 0.5rem 0.55rem;
+  padding: 0.5rem 0.65rem;
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   background: #fff;
@@ -4830,7 +4830,7 @@ button.pick-cat {
   align-items: center;
   gap: 0.45rem;
   width: 100%;
-  padding: 0.5rem 0.55rem;
+  padding: 0.5rem 0.65rem;
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   background: #fff;
@@ -5070,7 +5070,7 @@ button.pick-cat {
 .welcome__field select,
 .welcome__field input {
   width: 100%;
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
   font-family: var(--font-body);
   color: var(--color-green);
@@ -5236,7 +5236,7 @@ button.pick-cat {
 }
 .acctform__inp {
   width: 100%;
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.65rem;
   font-size: var(--fs-body);
   font-family: var(--font-body);
   color: var(--color-green);

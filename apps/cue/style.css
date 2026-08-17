@@ -267,6 +267,25 @@ body {
   color: var(--color-cream);
   max-width: 52ch;
 }
+/* Entry halus teks hero (eyebrow -> title -> subtitle) pas load, di-stagger dikit
+   biar se-smooth kartu search. backwards = animasi masuk doang, gak nyisa transform. */
+.hero__eyebrow,
+.hero__title,
+.hero__subtitle {
+  animation: heroTextIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+.hero__title {
+  animation-delay: 0.08s;
+}
+.hero__subtitle {
+  animation-delay: 0.18s;
+}
+@keyframes heroTextIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
 
 /* ---- Search card ---- */
 .hero__search {
@@ -299,7 +318,10 @@ body {
   min-height: 470px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero__search {
+  .hero__search,
+  .hero__eyebrow,
+  .hero__title,
+  .hero__subtitle {
     animation: none;
   }
 }

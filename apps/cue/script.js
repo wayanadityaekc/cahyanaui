@@ -1297,6 +1297,25 @@ function initItinerary() {
   let state = itnLoad();
   const save = () => itnSave(state);
 
+  // Sync range tanggal dari search bar / popup -> itinerary: samain jumlah hari
+  // (tambah hari kosong kalau kurang) + set tanggal mulai lalu cascade. Cuma di-apply
+  // SEKALI per nilai range (disimpan di cue_itn_synced) biar edit manual tanggal/hari
+  // di itinerary nggak ke-reset tiap buka. Nggak pernah hapus hari/item user.
+  (function syncRangeToItn() {
+    const from = currentDateFrom;
+    if (!from) return;
+    const key = from + "|" + (currentDateTo || "");
+    if (localStorage.getItem("cue_itn_synced") === key) return;
+    const n = rangeDays(from, currentDateTo);
+    while (state.days.length < n) state.days.push(newItnDay());
+    if (state.days.length) {
+      state.days[0].date = from;
+      cascadeDates(0);
+    }
+    localStorage.setItem("cue_itn_synced", key);
+    save();
+  })();
+
   // Mode Standard/Exclusive per item dalam satu hari (default Standard).
   // Disimpan di d.itemModes[idx] - sejajar sama d.items (string tetap dipakai).
   const itemMode = (d, idx) => (d.itemModes && d.itemModes[idx]) || "standard";

@@ -112,8 +112,14 @@ When unsure, ask first (keep it short).
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter.
-- **Currency picker** ada **di dalam dropdown account** = `<select data-cur-select>`
-  (gaya sama kaya Guests & Stay area), bukan di bar navbar.
+- **Currency picker** ada **di dalam dropdown account** (custom dropdown berbendera,
+  `[data-cur]`), bukan di bar navbar. Currency + Guests + Pickup + Date **juga inline
+  di search form homepage** (`partials/search.html`) — semua nyetir state global via
+  hook yang sama (`[data-guest-select]` / `[data-stay-select]` / `[data-cur]`), di-wire
+  otomatis sama `initGuestPicker` / `initAccountMenu` / `initCurrency`.
+- **Welcome popup DIHAPUS** (Agu 2026): field trip pindah ke search form homepage.
+  Editor "Your trip details" (`showTripDetails`) tetep ada buat tripbar **Edit** di
+  halaman kategori + navbar **Reset**. `showWelcome`/`initWelcome` udah dibuang.
 - Desktop: dropdown shows on hover/click. Mobile: Program dropdown is **closed by default**
   (tap "Program" to expand), the menu has a **bottom shadow** + separator border, and items
   are more spacious.
@@ -146,7 +152,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v241, PARTIALS 57)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v242, PARTIALS 58)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

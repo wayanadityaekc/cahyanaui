@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 57;
+const PARTIALS_VERSION = 58;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -231,9 +231,9 @@ function setGuests(n) {
   if (window.__tripbarRefresh) window.__tripbarRefresh();
 }
 
-// Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang + flag popup yang
-// tersimpan, balikin semua field ke default, lalu tampilkan popup lagi biar user
-// pilih ulang.
+// Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang tersimpan,
+// balikin semua field ke default, lalu buka editor "Your trip details" biar user
+// pilih ulang (welcome popup udah dimatiin — editor ini field-nya sama).
 function resetGuests() {
   currentGuests = 0;
   localStorage.removeItem("cue_guests");
@@ -245,7 +245,7 @@ function resetGuests() {
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__bookingRefresh) window.__bookingRefresh();
-  showWelcome();
+  showTripDetails();
 }
 
 // -- itinerary store
@@ -425,7 +425,7 @@ async function acctRequestLogin(email) {
 
 function acctLogout() {
   clearToken(); currentAccount = null; hasUpcoming = false; renderAccount();
-  showWelcome(); // balik jadi guest -> tampilin welcome popup lagi
+  // balik jadi guest tanpa popup — trip prefs bisa diedit dari search form / tripbar.
 }
 
 // Isi navbar sesuai state login (1 template, beda parameter). Aman kalau elemen belum ada.
@@ -2599,31 +2599,6 @@ function initAccountMenu() {
   });
 }
 
-// Popup selamat datang buat tamu (belum punya akun), cuma di HOME, dan cuma pas
-// "mulai fresh": refresh home, atau masuk langsung/dari luar situs. Kalau pindah
-// ke home DARI halaman lain di situs ini (user udah di dalam), popup gak muncul.
-// Penanda "punya akun" = ada token sesi.
-function initWelcome() {
-  if (getToken()) return;
-  const path = location.pathname;
-  const isHome = path === "/" || path.endsWith("/index.html");
-  if (!isHome) return;
-
-  const nav = performance.getEntriesByType("navigation")[0];
-  const navType = nav ? nav.type : "";
-  if (navType === "reload") { showWelcome(); return; }   // refresh home -> munculin
-  if (navType === "back_forward") return;                // balik masuk situs -> jangan
-
-  // Navigasi biasa: kalau datang dari halaman lain di situs ini -> user udah di
-  // dalam, jangan ganggu. Kalau langsung/bookmark/dari luar -> welcome.
-  let internal = false;
-  if (document.referrer) {
-    try { internal = new URL(document.referrer).origin === location.origin; } catch (e) {}
-  }
-  if (internal) return;
-  showWelcome();
-}
-
 // Field bersama popup welcome & "Your trip details": guests + pickup + currency
 // (+ date opsional). Dipakai biar 1 sumber, gak dobel markup.
 function tripFieldsHTML(includeDate) {
@@ -2663,48 +2638,8 @@ function saveTripPrefs(modal) {
   if (df || dt) setDateRange(df ? df.value : "", dt ? dt.value : "");
 }
 
-// Bangun + tampilkan popup selamat datang. Minta jumlah orang biar harga Exclusive
-// akurat. "Skip" = tutup tanpa set. Dipakai initWelcome (kunjungan pertama) & tombol
-// Reset di navbar. Pilihan tersimpan di localStorage.
-function showWelcome() {
-  const existing = document.getElementById("welcome-modal");
-  if (existing) existing.remove();
-
-  const modal = document.createElement("div");
-  modal.className = "modal welcome-modal";
-  modal.id = "welcome-modal";
-  modal.innerHTML =
-    '<div class="modal__box welcome__box">' +
-      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
-      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
-      '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> - upfront, always.</p>' +
-      tripFieldsHTML(true) +
-      '<div class="welcome__actions welcome__actions--dual">' +
-        '<button type="button" class="modal__btn modal__btn--ghost" id="welcome-guest">Explore as Guest</button>' +
-        '<button type="button" class="modal__btn" id="welcome-create">Create Account</button>' +
-      "</div>" +
-    "</div>";
-  document.body.appendChild(modal);
-  // currency = custom dropdown berbendera (sama kaya di dropdown akun); apply live pas dipilih
-  const curWrap = modal.querySelector("[data-cur]");
-  if (curWrap) wireCurDropdown(curWrap);
-
-  const close = () => modal.classList.remove("active");
-  const savePrefs = () => saveTripPrefs(modal);
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal || e.target.closest("[data-close]")) close();
-  });
-  // "Explore as Guest" = simpan prefs, tutup (belum bikin akun; akun auto pas booking).
-  modal.querySelector("#welcome-guest").addEventListener("click", () => { savePrefs(); close(); });
-  // "Create Account" = simpan prefs, tutup welcome, buka form create akun.
-  modal.querySelector("#welcome-create").addEventListener("click", () => { savePrefs(); close(); showCreateAccount(); });
-  // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
-  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
-}
-
-// Popup "Your trip details" (dari tripbar) = welcome popup di-retitle + tombol Save.
-// Isi field sama (date + guests + pickup + currency).
+// Popup "Your trip details" (dari tripbar Edit + navbar Reset). Field-nya sama kaya
+// yang sekarang inline di search form homepage (date + guests + pickup + currency).
 function showTripDetails() {
   const existing = document.getElementById("tripdetails-modal");
   if (existing) existing.remove();
@@ -3783,7 +3718,6 @@ async function initPage() {
   initSettings();
   initTrustStat();
   initHighlightLink();
-  initWelcome();
   initTransferUnits();
   initCardTitleOverlay();
   initBookingCustomControls();

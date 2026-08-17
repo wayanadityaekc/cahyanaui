@@ -282,7 +282,65 @@ body {
   font-size: var(--fs-h3);
   text-align: center;
   color: var(--color-gold);
-  margin-bottom: 1rem;
+  margin-bottom: 0.35rem;
+}
+/* Microcopy di bawah judul search form (pindahan value-prop dari welcome popup) */
+.hsearch__sub {
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  margin: 0 0 1.1rem;
+}
+/* Baris 2 kolom (Guests + Pickup) di search form */
+.hsearch__row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+/* Native select (Guests/Pickup) disamain look-nya sama .hs-control: chevron custom,
+   tinggi & border seragam. Native dropdown pas dibuka tetep dipakai (UX HP paling enak). */
+.hsearch__select {
+  width: 100%;
+  border: 1px solid var(--line, #e7e4dd);
+  border-radius: 11px;
+  padding: 0.72rem 2.2rem 0.72rem 0.85rem;
+  background-color: #fff;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  color: var(--color-green);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b877d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.hsearch__select:hover {
+  border-color: var(--color-gold);
+}
+.hsearch__select:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+}
+/* Currency di dalam search form: bikin tombol dropdown seukuran field lain */
+.hsearch__cur .acct__curbtn {
+  padding: 0.72rem 0.85rem;
+  border-color: var(--line, #e7e4dd);
+  border-radius: 11px;
+  font-weight: 400;
+}
+.hsearch__cur .acct__curbtn:hover {
+  border-color: var(--color-gold);
+}
+.hsearch__cur .acct__curlist {
+  border-radius: 11px;
 }
 /* ===== Info popover "Standard vs Exclusive" (dipakai booking + search form) ===== */
 .binfo {
@@ -5589,14 +5647,6 @@ button.pick-cat {
   border-radius: 6px;
 }
 
-/* Welcome: dua tombol sejajar (Explore as Guest / Create Account) */
-.welcome__actions--dual {
-  display: flex;
-  gap: 0.6rem;
-}
-.welcome__actions--dual .modal__btn {
-  flex: 1;
-}
 /* Pesan error di form create account */
 .welcome__msg {
   margin: 0 0 0.9rem;

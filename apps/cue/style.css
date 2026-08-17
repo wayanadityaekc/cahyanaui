@@ -256,7 +256,7 @@ body {
 }
 .hsearch__title {
   font-size: var(--fs-h3);
-  text-align: left;
+  text-align: center;
   color: var(--color-gold);
   margin-bottom: 1rem;
 }
@@ -299,7 +299,7 @@ body {
 }
 .hsearch__field > label {
   display: block;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-green);
   margin-bottom: 0.4rem;

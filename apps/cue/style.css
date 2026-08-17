@@ -1,20 +1,28 @@
-/* Self-hosted Montserrat (variable font, subset latin) - nggak perlu request ke Google.
-   1 file nutupin weight 300-600. Ganti/rename -> update preload di semua HTML juga.
-   font-display: optional -> font di-preload+lokal jadi hampir selalu siap sebelum render;
-   teks langsung tampil Montserrat TANPA tuker font (nggak ada loncatan/FOUT reflow). */
+/* Self-hosted, subset latin - nggak perlu request ke Google. Ganti/rename -> update
+   preload di semua HTML juga. font-display: swap (font di-preload+lokal jadi cepet).
+   Inter (variable 300-700) = body/UI. Playfair Display (variable 500-800) = heading. */
 @font-face {
-  font-family: "Montserrat";
+  font-family: "Inter";
   font-style: normal;
-  font-weight: 300 600;
-  font-display: optional;
-  src: url("assets/fonts/montserrat-latin.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("assets/fonts/inter-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url("assets/fonts/playfair-latin.woff2") format("woff2");
 }
 
 :root {
   --color-green: #1a1a1a;
   --color-gold: #c9a45c;
+  --color-gold-d: #b08d43;
   --color-cream: #f8f8f8;
-  --font-body: "Montserrat", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-head: "Playfair Display", Georgia, serif;
   /* ---- Type scale (DRY) ---- */
   --fs-display: clamp(1.9rem, 5vw, 2.2rem);
   --fs-h2: 1.5rem;
@@ -5867,4 +5875,59 @@ section.faq::before,
   .villas__grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================================================
+   TYPOGRAPHY SYSTEM — Playfair Display (heading) + Inter (body)
+   Ditaruh di akhir: override font-family lama tiap heading (source-order menang).
+   Bobot: body 400 · label 500 (tracked/uppercase) · harga & tombol 600 · heading Playfair 600.
+   ============================================================ */
+.section__title,
+.section__title--sub,
+.hero__title,
+.hsearch__title,
+.booking__title,
+.about__title,
+.plan__title,
+.activities__heading,
+.review-card__name,
+.driver-card__name,
+.driver-modal__name,
+.faq__chat-title,
+.footer__heading,
+.modal__title,
+.subhero__title,
+.highlight__title,
+.stop__name,
+.contact__heading,
+.itn__subtitle,
+.itn-day__title,
+.acct__title,
+.acct__name,
+.welcome__title,
+.trip__name,
+.chdur__name,
+.experience__name,
+.villa__name,
+.slider__caption h3,
+.title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+/* Field label: Inter medium, sedikit tracking, uppercase (kesan small-caps) */
+.booking__group label,
+.welcome__field label,
+.modal__group label,
+.contact__group label,
+.field label,
+.review-form__group label,
+.charter__label,
+.acctform__label,
+.summary__label,
+.hsearch__field > label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }

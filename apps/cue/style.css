@@ -3892,11 +3892,11 @@ section.faq::before,
     padding: 0.9rem 0;
     font-size: 1rem;
     text-align: left;
-    color: var(--color-green);
+    color: var(--color-gold);
   }
   .navbar__menu a:hover,
   .navbar__menu a.active {
-    color: var(--color-gold);
+    color: var(--color-gold-d);
   }
   .navbar__menu > li:not(.navbar__drawerhead) {
     border-bottom: 1px solid var(--line);
@@ -5223,33 +5223,37 @@ button.pick-cat {
   width: 21px;
   height: 21px;
 }
-.acct__panel {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  width: 220px;
-  background: #fff;
-  border: 1px solid #e9e1cf;
-  border-radius: 10px;
-  box-shadow: 0 14px 34px rgba(31, 61, 43, 0.16);
-  padding: 0.9rem;
-  z-index: 200;
-  /* Animasi buka/tutup halus (Apple-style: fade + slide + sedikit skala) */
-  transform-origin: top right;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px) scale(0.98);
-  transition:
-    opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.26s;
-  pointer-events: none;
-}
-.acct__panel.is-open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
+/* Desktop: account panel = dropdown kecil di bawah ikon. Di HP (<=992px) jadi
+   drawer kanan (lihat blok drawer di media query atas). Di-scope ke desktop biar
+   gak nge-override style drawer mobile. */
+@media (min-width: 993px) {
+  .acct__panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background: #fff;
+    border: 1px solid #e9e1cf;
+    border-radius: 10px;
+    box-shadow: 0 14px 34px rgba(31, 61, 43, 0.16);
+    padding: 0.9rem;
+    z-index: 200;
+    transform-origin: top right;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.98);
+    transition:
+      opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0.26s;
+    pointer-events: none;
+  }
+  .acct__panel.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
 }
 /* Hormati setelan "kurangi gerak" */
 @media (prefers-reduced-motion: reduce) {

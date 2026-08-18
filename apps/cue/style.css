@@ -3308,10 +3308,16 @@ a.footer__contact-item:hover {
   padding: 2.5rem 2rem;
   box-shadow: 0 10px 30px rgba(31, 61, 43, 0.06);
 }
+/* Spec strip: satu strip rapi, tiap stat dipisah garis tipis (gap 1px yg nembus
+   warna --line dari background). Ringkas & seragam dgn strip di kartu highlight. */
 .info__facts {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2x2 (samain kaya live) */
-  gap: 1.25rem;
+  grid-template-columns: repeat(4, 1fr); /* desktop: 1 baris 4 stat */
+  gap: 1px; /* garis pemisah tipis antar stat */
+  background: var(--line); /* warna garis keliatan lewat gap */
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
   margin-bottom: 2.5rem;
 }
 .info__fact {
@@ -3319,16 +3325,10 @@ a.footer__contact-item:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 96px; /* tinggi seragam antar halaman walau teks beda panjang */
-  padding: 1.25rem;
+  min-height: 84px; /* tinggi seragam antar halaman walau teks beda panjang */
+  padding: 1.05rem 1rem;
   text-align: center;
-  border-radius: 10px;
-  /* isi putih + border gradasi gold (putih di padding-box, gradasi di border-box) */
-  border: 1.5px solid transparent;
-  background:
-    linear-gradient(#fff, #fff) padding-box,
-    var(--gold-edge)
-      border-box;
+  background: #fdfcfa;
 }
 .info__fact span {
   font-size: var(--fs-label);
@@ -4184,6 +4184,9 @@ a.footer__contact-item:hover {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  .info__facts {
+    grid-template-columns: repeat(2, 1fr); /* HP: 2x2, divider tetep rapi via gap */
+  }
   .contact__container {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -4237,8 +4240,7 @@ a.footer__contact-item:hover {
 .experience__card,
 .villa__card,
 .review-card,
-.about__content,
-.info__fact {
+.about__content {
   transition:
     transform 0.28s ease,
     box-shadow 0.28s ease;
@@ -4246,8 +4248,7 @@ a.footer__contact-item:hover {
 .experience__card:hover,
 .villa__card:hover,
 .review-card:hover,
-.about__content:hover,
-.info__fact:hover {
+.about__content:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
 }
@@ -4328,7 +4329,6 @@ a.footer__contact-item:hover {
   .villa__card:hover,
   .review-card:hover,
   .about__content:hover,
-  .info__fact:hover,
   .booking__btn:hover {
     transform: none;
   }

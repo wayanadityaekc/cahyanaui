@@ -1971,12 +1971,36 @@ a.tripbar--promo {
     max-height 0.3s ease,
     padding 0.3s ease;
 }
-.route__price .route__add {
+/* Dua tombol (Book + Add) di dalam route yang kebuka */
+.route__actions {
   flex-basis: 100%;
-  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+.route__actions .route__add {
+  margin-top: 0;
+}
+.route__book {
+  padding: 0.4rem 0.95rem;
+  border: 1.5px solid var(--color-gold);
+  border-radius: 6px;
+  background: var(--color-gold);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.route__book:hover {
+  background: var(--color-gold-d);
+  border-color: var(--color-gold-d);
 }
 .route__item.active .route__price {
-  max-height: 140px;
+  max-height: 180px;
   padding: 0 0.25rem 1rem;
 }
 

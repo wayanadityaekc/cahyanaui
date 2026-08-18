@@ -2369,22 +2369,52 @@ function initItineraryButtons() {
     });
   });
 
-  // transfer.html: tombol "Add to itinerary" di DALAM accordion (bawah harga)
+  // transfer.html: 2 tombol di DALAM accordion (bawah harga) - Book + Add to itinerary
   document.querySelectorAll(".route__item").forEach((item) => {
     const priceBox = item.querySelector(".route__price");
-    if (!priceBox || priceBox.querySelector(".route__add")) return;
+    if (!priceBox || priceBox.querySelector(".route__actions")) return;
     const label = item.querySelector(".route__head span");
     if (!label) return;
     const route = label.textContent.trim();
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "route__add";
-    btn.textContent = "+ Add to itinerary";
-    btn.addEventListener("click", () => {
+    const actions = document.createElement("div");
+    actions.className = "route__actions";
+
+    const book = document.createElement("button");
+    book.type = "button";
+    book.className = "route__book";
+    book.textContent = "Book";
+    book.addEventListener("click", () => bookTransferRoute(route));
+
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "route__add";
+    add.textContent = "+ Add to itinerary";
+    add.addEventListener("click", () => {
       if (itnAddTransfer(route)) showAddedPopup();
     });
-    priceBox.appendChild(btn);
+
+    actions.appendChild(book);
+    actions.appendChild(add);
+    priceBox.appendChild(actions);
   });
+}
+
+// Preset booking form ke Route Transfer + route ini, lalu scroll ke form (#booking).
+function bookTransferRoute(route) {
+  const svc = document.getElementById("service");
+  const item = document.getElementById("service-item");
+  if (!svc || !item) return;
+  svc.value = "transfer";
+  svc.dispatchEvent(new Event("change"));
+  // cocokin value option (samain dash & case) biar aman kalau format beda tipis
+  const n = (s) => s.replace(/[–—-]/g, "-").trim().toLowerCase();
+  const opt = [...item.options].find((o) => n(o.value) === n(route));
+  if (opt) {
+    item.value = opt.value;
+    item.dispatchEvent(new Event("change"));
+  }
+  const booking = document.getElementById("booking");
+  if (booking) booking.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 // Card di halaman Destinations: badan card clickable + tombol "Visit this destination"

@@ -541,6 +541,21 @@ body {
 .hsearch__dt {
   position: relative;
 }
+/* Custom dropdown Guests/Pickup: opsi teks polos + panel bisa scroll kalau panjang */
+.hs-panel--menu .hs-panel__body {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.hs-opt--menu {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  color: var(--color-green);
+}
+.hs-opt--menu.is-sel {
+  font-weight: 600;
+  color: var(--color-gold);
+}
 /* ===== Control (tombol yang keliatan kaya input) ===== */
 .hs-control {
   width: 100%;

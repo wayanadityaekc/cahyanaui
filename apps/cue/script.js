@@ -3298,6 +3298,67 @@ function initHeroSearch() {
   }
   window.addEventListener("resize", closePanels);
 
+  // ---- Guests & Pickup: custom dropdown (styling sama kaya Explore) di atas <select>
+  //      asli. Select tetap sumber state (di-wire initGuestPicker/initAccountMenu);
+  //      di sini cuma layer visual + nyetir value select-nya. ----
+  function enhanceSelect(sel, title) {
+    if (!sel || sel.dataset.enhanced) return;
+    sel.dataset.enhanced = "1";
+    sel.style.display = "none";
+    const field = sel.closest(".hsearch__field");
+    if (field) field.classList.add("hsearch__dd");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "hs-control";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML =
+      '<span class="hs-control__val"></span>' +
+      '<svg class="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>';
+    const val = btn.querySelector(".hs-control__val");
+    const panel = document.createElement("div");
+    panel.className = "hs-panel hs-panel--menu";
+    panel.innerHTML =
+      '<div class="hs-panel__head"><h3>' + title + "</h3>" +
+      '<button type="button" class="hs-panel__close" aria-label="Close">&times;</button></div>' +
+      '<div class="hs-panel__body"></div>';
+    const body = panel.querySelector(".hs-panel__body");
+    sel.insertAdjacentElement("beforebegin", btn);
+    btn.insertAdjacentElement("afterend", panel);
+
+    const syncLabel = () => {
+      const o = sel.options[sel.selectedIndex];
+      val.textContent = o ? o.textContent.trim() : "";
+    };
+    const rebuild = () => {
+      body.innerHTML = "";
+      [...sel.options].forEach((o) => {
+        if (o.value === "reset") return;
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "hs-opt hs-opt--menu";
+        b.textContent = o.textContent.trim();
+        if (o.selected) b.classList.add("is-sel");
+        b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (sel.value !== o.value) {
+            sel.value = o.value;
+            sel.dispatchEvent(new Event("change"));
+          }
+          syncLabel();
+          closePanels();
+        });
+        body.appendChild(b);
+      });
+    };
+    btn.addEventListener("click", (e) => { e.stopPropagation(); rebuild(); openPanel(panel, btn); });
+    panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); closePanels(); });
+    sel.addEventListener("change", syncLabel);
+    syncLabel();
+  }
+  enhanceSelect(root.querySelector("[data-guest-select]"), "Guests");
+  enhanceSelect(root.querySelector("[data-stay-select]"), "Pickup area");
+
   // ---- Dropdown kategori ----
   ddBtn.addEventListener("click", (e) => { e.stopPropagation(); openPanel(ddPanel, ddBtn); });
   root.querySelectorAll("[data-explore-opt]").forEach((opt) => {
@@ -3749,12 +3810,13 @@ async function initPage() {
   initDestinationCards();
   initCharter();
   initTourType();
-  initHeroSearch();
   initInfoPopovers();
   initTripBar();
   initCurrency();
   initGuestPicker();
   initAccountMenu();
+  // setelah guest/pickup select terisi nilainya, baru bangun custom dropdown search
+  initHeroSearch();
   initAccount();
   initMyTrips();
   initSettings();

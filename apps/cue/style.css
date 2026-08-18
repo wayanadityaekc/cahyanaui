@@ -1812,12 +1812,6 @@ a.tripbar--promo {
   max-width: 1200px;
   margin: 0 auto;
 }
-/* Satu tombol villa (ganti "View Villa" per-card) - kiri, sejajar grid */
-.villas__cta {
-  max-width: 1200px;
-  margin: 0 auto 1.75rem;
-  text-align: left;
-}
 .villa__card {
   display: flex;
   flex-direction: column;
@@ -1903,6 +1897,20 @@ a.tripbar--promo {
 }
 .villa__price {
   color: var(--color-gold);
+}
+.villa__btn {
+  display: block;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: var(--color-gold);
+}
+.villa__btn:hover {
+  background-color: var(--color-gold-d);
 }
 
 

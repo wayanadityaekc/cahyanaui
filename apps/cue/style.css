@@ -1028,11 +1028,8 @@ body.hs-locked .tripbar {
 
 /* Tripbar: bar "Guests · Pickup · Date" fixed di bawah navbar (halaman kategori/detail).
    z-index < navbar (100) biar dropdown navbar tetap di atas. */
+/* Tripbar nyatu di dalam navbar (bukan fixed sendiri lagi) - nempel di bawah bar navbar */
 .tripbar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 90;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1040,7 +1037,7 @@ body.hs-locked .tripbar {
   width: 100%;
   padding: 0.6rem 1.25rem;
   border: none;
-  border-bottom: 1px solid #ececec;
+  border-top: 1px solid #ececec;
   background: var(--color-cream);
   font-family: inherit;
   font-size: 0.85rem;

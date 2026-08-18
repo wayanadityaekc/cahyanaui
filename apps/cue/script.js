@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 62;
+const PARTIALS_VERSION = 63;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -3503,19 +3503,16 @@ function initTripBar() {
   if (!promoMode) { bar.type = "button"; bar.setAttribute("aria-label", "Set trip details"); }
   if (asLink) bar.href = PROMO.href;
 
-  const navPh = document.getElementById("navbar-placeholder");
-  document.body.insertBefore(bar, navPh ? navPh.nextSibling : document.body.firstChild);
-
-  // taruh tepat di bawah navbar. offsetHeight dibuletin ke atas -> bisa nyisa
-  // celah sub-pixel (navbar 57.6px, offsetHeight 58) yang bikin konten scroll
-  // keliatan naik di sela-selanya. Pake bottom asli + floor biar nempel (overlap
-  // <1px ketutup navbar yg z-index-nya lebih tinggi) = nol celah.
-  const nav = document.querySelector(".navbar");
-  const setTop = () => {
-    bar.style.top = (nav ? Math.floor(nav.getBoundingClientRect().bottom) : 58) + "px";
-  };
-  setTop();
-  window.addEventListener("resize", setTop);
+  // Tripbar nyatu di dalam navbar (host di partial navbar). Nempel di bawah bar navbar
+  // secara natural -> nggak perlu hitung top manual lagi. Fallback ke body kalau host
+  // belum ada (jaga-jaga).
+  const host = document.getElementById("tripbar-host");
+  if (host) {
+    host.appendChild(bar);
+  } else {
+    const navPh = document.getElementById("navbar-placeholder");
+    document.body.insertBefore(bar, navPh ? navPh.nextSibling : document.body.firstChild);
+  }
 
   if (promoMode) {
     const cta = PROMO.cta ? '<span class="tripbar__edit">' + PROMO.cta + "</span>" : "";

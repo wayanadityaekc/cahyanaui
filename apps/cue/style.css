@@ -6459,3 +6459,29 @@ section.faq::before,
   letter-spacing: normal;
   text-transform: none;
 }
+
+/* ==== Palet final: tombol CTA gold + teks putih (putih · gold · light grey · dark grey) ==== */
+/* Primary buttons: gold fill, white text */
+.hsearch__go, .hs-cal__apply, .booking__btn, .modal__btn, .review-form__btn,
+.btn-review, .highlight__btn, .villa__btn, .svc__save, .program-cta__btn--book,
+.guide-home__all a, .btn-book, .faq__chat-btn, .faq__chat-icon, .contact__btn {
+  background: var(--color-gold);
+  color: #fff;
+}
+/* Primary button hover: deeper gold, text stays white */
+.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:hover, .modal__btn:hover,
+.review-form__btn:hover, .btn-review:hover, .highlight__btn:hover, .villa__btn:hover,
+.svc__save:hover, .program-cta__btn--book:hover, .guide-home__all a:hover,
+.faq__chat-btn:hover, .contact__btn:hover {
+  background: var(--color-gold-d);
+  color: #fff;
+  border-color: var(--color-gold-d);
+}
+/* Selected calendar dates = gold + white */
+.hs-cal__d.sel, .hs-cal__d.pt-start, .hs-cal__d.pt-end, .hs-cal__d.pt-solo {
+  background: var(--color-gold);
+  color: #fff;
+}
+/* WhatsApp action keeps its brand green (not gold) */
+.modal__btn.modal__btn--wa { background: #25d366; color: #fff; }
+.modal__btn.modal__btn--wa:hover { background: #1fb457; color: #fff; }

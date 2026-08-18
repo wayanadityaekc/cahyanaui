@@ -2625,10 +2625,23 @@ section.faq::before,
   text-decoration: none;
   color: var(--color-cream);
 }
-.footer__logo img {
+/* Wordmark teks (ganti logo gambar) — non-bold, ukuran sedang */
+.footer__wordmark {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--color-cream);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.footer__wordmark-sub {
   display: block;
-  height: 40px;
-  width: auto;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-top: 6px;
 }
 .footer__tagline {
   margin-top: 0.75rem;

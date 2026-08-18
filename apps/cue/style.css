@@ -829,13 +829,11 @@ body {
 .hs-overlay.open {
   display: block;
 }
-/* Lock scroll background pas bottom-sheet kebuka (HP): body dikunci di posisinya
-   biar halaman di belakang gak ikut gerak & sheet gak nutup pas user coba scroll. */
+/* Lock scroll background pas bottom-sheet kebuka (HP): cukup overflow:hidden.
+   JANGAN position:fixed + reposisi body -> itu yang bikin layar "loncat/ke-scroll"
+   pas dropdown dibuka (apalagi kalau udah scroll ke bawah dulu). Sheet-nya sendiri
+   udah position:fixed jadi tetep nempel walau background di belakang kebuka. */
 body.hs-locked {
-  position: fixed;
-  left: 0;
-  right: 0;
-  width: 100%;
   overflow: hidden;
 }
 /* sembunyiin tombol WhatsApp (z-index tinggi) pas sheet kebuka biar gak nutupin Apply */

@@ -3123,27 +3123,12 @@ function initModalUX() {
   });
 
   // Scroll-lock: ada modal kebuka -> kunci scroll body; nggak ada -> lepas lagi.
-  // position:fixed (bukan cuma overflow:hidden) biar background beneran ke-lock
-  // juga di iOS Safari; posisi scroll disimpen & dibalikin pas modal ketutup.
-  let lockScrollY = 0;
+  // Cukup overflow:hidden. JANGAN reposisi body (position:fixed + top:-scrollY) ->
+  // itu yang bikin layar "loncat/ke-scroll" pas modal/dropdown dibuka (apalagi
+  // kalau udah scroll ke bawah dulu). Modal-nya udah position:fixed jadi tetep nempel.
   const syncScrollLock = () => {
     const anyOpen = !!document.querySelector(".modal.active");
-    const locked = document.body.style.position === "fixed";
-    if (anyOpen && !locked) {
-      lockScrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${lockScrollY}px`;
-      document.body.style.left = "0";
-      document.body.style.right = "0";
-      document.body.style.overflow = "hidden";
-    } else if (!anyOpen && locked) {
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.overflow = "";
-      window.scrollTo(0, lockScrollY);
-    }
+    document.body.style.overflow = anyOpen ? "hidden" : "";
   };
   new MutationObserver(syncScrollLock).observe(document.body, {
     subtree: true,
@@ -3192,19 +3177,11 @@ function initCardTitleOverlay() {
    Booking beneran tetep di halaman program (nggak diubah). */
 // Kunci scroll body pas bottom-sheet kebuka (HP) + balikin posisi pas nutup.
 // Pakai position:fixed biar reliable di iOS (overflow:hidden aja suka bocor).
-let __hsScrollY = 0;
 function hsScrollLock(on) {
-  const b = document.body;
-  if (on) {
-    if (b.classList.contains("hs-locked")) return;
-    __hsScrollY = window.scrollY || window.pageYOffset || 0;
-    b.style.top = -__hsScrollY + "px";
-    b.classList.add("hs-locked");
-  } else if (b.classList.contains("hs-locked")) {
-    b.classList.remove("hs-locked");
-    b.style.top = "";
-    window.scrollTo(0, __hsScrollY);
-  }
+  // Cukup overflow:hidden (di CSS .hs-locked). JANGAN reposisi body (position:fixed +
+  // top:-scrollY) -> itu yang bikin layar "loncat/gerak" pas dropdown dibuka di HP.
+  // Bottom-sheet-nya udah position:fixed jadi tetap nempel walau background kebuka.
+  document.body.classList.toggle("hs-locked", !!on);
 }
 
 function initHeroSearch() {

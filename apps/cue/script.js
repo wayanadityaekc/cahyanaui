@@ -3151,7 +3151,6 @@ function initCardTitleOverlay() {
   };
   move(".experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
   move(".villa__card", ".villa__image", ".villa__name");
-  move(".highlight__container", ".highlight__image", ".highlight__title");
 }
 
 /* ==================== 5. APP ENTRY ==================== */

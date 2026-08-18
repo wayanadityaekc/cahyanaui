@@ -1760,6 +1760,12 @@ a.tripbar--promo {
   max-width: 1200px;
   margin: 0 auto;
 }
+/* Satu tombol villa (ganti "View Villa" per-card) - kiri, sejajar grid */
+.villas__cta {
+  max-width: 1200px;
+  margin: 0 auto 1.75rem;
+  text-align: left;
+}
 .villa__card {
   display: flex;
   flex-direction: column;

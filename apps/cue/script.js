@@ -3,13 +3,19 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 41;
+const PARTIALS_VERSION = 63;
 
 const WHATSAPP_NUMBER = "61401657862";
 
 const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL";
 
 const API_ENDPOINT = "https://cahyana-api-production.up.railway.app/api/inquiry";
+
+// -- Sistem akun (passwordless). Base API + kunci token sesi di localStorage.
+const API_BASE = "https://cahyana-api-production.up.railway.app/api";
+const TOKEN_KEY = "cue_token";
+let currentAccount = null; // null = belum login (guest)
+let hasUpcoming = false; // buat titik hijau navbar (ada booking mendatang)
 
 const REFERRAL_CODE = "gowithcahyana";
 
@@ -25,6 +31,12 @@ if (!CURRENCIES.includes(currentCurrency)) currentCurrency = "USD";
 // pakai DISPLAY_GUESTS sebagai perkiraan (+ catatan "for N pax").
 const DISPLAY_GUESTS = 2;
 let currentGuests = parseInt(localStorage.getItem("cue_guests"), 10) || 0;
+// Stay-area tamu (buat pickup surcharge). "" = belum pilih -> default Ubud (no surcharge).
+let currentStay = localStorage.getItem("cue_stay") || "";
+// Tanggal trip (range) - dipilih di search bar / popup. "" = belum diisi.
+// Booking form per-item tetap 1 tanggal (field sendiri); range ini buat itinerary.
+let currentDateFrom = localStorage.getItem("cue_date_from") || "";
+let currentDateTo = localStorage.getItem("cue_date_to") || "";
 
 // -- page -> itinerary program map
 // Peta halaman detail -> nama program di itinerary (biar tombol Add di card
@@ -128,15 +140,33 @@ const priceHTML = (usd, idr) => `<span class="price-cur">${fmtMoney(usd, idr)}</
 function renderPrices() {
   document.querySelectorAll("[data-price]").forEach((el) => {
     const name = el.dataset.price;
+    let usd = null, idr = null;
     if (el.dataset.mode === "exclusive") {
       const ex = exclusivePrice(name);
-      if (ex) { el.textContent = fmtMoney(ex.usd, ex.idr); return; }
+      if (ex) { usd = ex.usd; idr = ex.idr; }
     }
-    const info = itemInfo(name);
-    const base = info ? info.price : prices.transfer[name];
-    if (base) el.textContent = fmtMoney(base.usd, base.idr);
+    if (usd == null) {
+      const info = itemInfo(name);
+      const base = info ? info.price : prices.transfer[name];
+      if (base) { usd = base.usd; idr = base.idr; }
+    }
+    if (usd == null) return;
+    // FINAL price = base (+ tiket exclusive) + pickup surcharge. Surcharge di-bake in;
+    // angkanya sendiri nggak pernah ditampilin di card/form (cuma di konfirmasi).
+    const s = surchargeFor(name);
+    el.textContent = fmtMoney(usd + s.usd, idr + s.idr);
   });
+  renderPriceLabels();
   renderFees();
+}
+
+// Label kecil di bawah harga (card/form): "Pickup surcharge applied" / "No surcharge ...".
+function renderPriceLabels() {
+  document.querySelectorAll("[data-price-label]").forEach((el) => {
+    const l = surchargeLabel(el.dataset.priceLabel);
+    el.textContent = l.txt;
+    el.classList.toggle("price-note--surcharge", l.has);
+  });
 }
 
 // Isi <span class="fee" data-idr="N"> (tiket masuk di halaman attraction) ke
@@ -158,10 +188,27 @@ function setCurrency(cur) {
   currentCurrency = cur;
   localStorage.setItem("cue_currency", cur);
   renderPrices();
+  // sinkron tampilan custom dropdown currency (tombol + list) di dropdown akun
+  document.querySelectorAll("[data-cur]").forEach((wrap) => syncCurBtn(wrap, cur));
   const svc = document.getElementById("service-item");
   if (svc && svc.value) svc.dispatchEvent(new Event("change"));
   if (window.__itnRerender) window.__itnRerender();
   if (window.__chRefresh) window.__chRefresh();
+  if (window.__exploreRefresh) window.__exploreRefresh();
+}
+
+// Sinkron tampilan 1 custom dropdown currency: bendera + kode di tombol, highlight
+// opsi aktif di list. Dipakai setCurrency + initCurrency.
+function syncCurBtn(wrap, cur) {
+  const use = wrap.querySelector("[data-cur-flag] use");
+  if (use) use.setAttribute("href", "#flag-" + cur.toLowerCase());
+  const label = wrap.querySelector("[data-cur-label]");
+  if (label) label.textContent = cur;
+  wrap.querySelectorAll("[data-cur-opt]").forEach((o) => {
+    const on = o.dataset.curOpt === cur;
+    o.classList.toggle("is-active", on);
+    o.setAttribute("aria-selected", String(on));
+  });
 }
 
 // Set jumlah orang global: simpan, render ulang harga Exclusive + catatan toggle,
@@ -174,32 +221,31 @@ function setGuests(n) {
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__itnGuestsSync) window.__itnGuestsSync(n); // sinkron ke builder itinerary
-  // sinkron ke guest-select di navbar
+  // sinkron ke guest-select di navbar + badge ikon akun
   document.querySelectorAll("[data-guest-select]").forEach((s) => {
     if (parseInt(s.value, 10) !== n) s.value = String(n);
   });
-  // sinkron ke field Guests di booking form
-  const gf = document.getElementById("guest");
-  if (gf && parseInt(gf.value, 10) !== n) {
-    gf.value = String(n);
-    if (window.__bookingRefresh) window.__bookingRefresh();
-  }
+  document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(n); });
+  // Booking form gak punya kolom Guests lagi -> cukup refresh harga booking.
+  if (window.__bookingRefresh) window.__bookingRefresh();
+  if (window.__tripbarRefresh) window.__tripbarRefresh();
 }
 
-// Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang + flag popup yang
-// tersimpan, balikin semua field ke default, lalu tampilkan popup lagi biar user
-// pilih ulang.
+// Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang tersimpan,
+// balikin semua field ke default, lalu buka editor "Your trip details" biar user
+// pilih ulang (welcome popup udah dimatiin — editor ini field-nya sama).
 function resetGuests() {
   currentGuests = 0;
   localStorage.removeItem("cue_guests");
-  localStorage.removeItem("cue_welcomed");
   document.querySelectorAll("[data-guest-select]").forEach((s) => { s.value = String(DISPLAY_GUESTS); });
-  const gf = document.getElementById("guest");
-  if (gf) gf.value = "";
+  document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(DISPLAY_GUESTS); });
+  currentStay = "";
+  localStorage.removeItem("cue_stay");
+  document.querySelectorAll("[data-stay-select]").forEach((s) => { s.value = "ubud"; });
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__bookingRefresh) window.__bookingRefresh();
-  showWelcome();
+  showTripDetails();
 }
 
 // -- itinerary store
@@ -210,10 +256,189 @@ function carPrice(base, guests) {
 
 // cari kategori & harga sebuah program dari struktur prices
 function itemInfo(name) {
-  for (const cat of ["tour", "experience", "performance", "villa", "combo"]) {
+  for (const cat of ["tour", "experience", "performance", "villa", "combo", "place"]) {
     if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
   }
   return null;
+}
+
+// ---- Pickup surcharge (diturunkan dari harga transfer) ----
+function itemZone(name) { return (typeof ITEM_ZONE !== "undefined" && ITEM_ZONE[name]) || null; }
+// Zona area pickup (key transfer) atau "ubud". null kalau belum ke-map.
+function pickupZoneOf(pk) {
+  if (!pk || pk === "ubud") return "ubud";
+  return (typeof TRANSFER_ZONE !== "undefined" && TRANSFER_ZONE[pk]) || null;
+}
+// Label area pickup buat UI (nama tanpa " Area – Ubud").
+function pickupLabelOf(pk) {
+  if (!pk || pk === "ubud") return "Ubud & nearby";
+  return pk.replace(/\s*–\s*Ubud$/, "").replace(/\s*Area$/, "");
+}
+// Opsi dropdown pickup = SEMUA destinasi di prices.transfer + Ubud (base). Nggak ada list baru.
+function pickupOptionsHTML(selected) {
+  let html = '<option value="ubud">Ubud &amp; nearby</option>';
+  Object.keys(prices.transfer).forEach((k) => {
+    html += '<option value="' + k + '"' + (k === selected ? " selected" : "") + ">" + pickupLabelOf(k) + "</option>";
+  });
+  return html;
+}
+// Surcharge = 60% transfer one-way (Ubud->pickup) × jumlah mobil, cuma kalau pickup != Ubud
+// DAN zona pickup != zona item. Transfer sendiri nggak kena. Angka cuma dipakai di konfirmasi.
+function surchargeFor(name, guests) {
+  const pk = currentStay || "ubud";
+  if (pk === "ubud") return { usd: 0, idr: 0 };
+  if (prices.transfer && prices.transfer[name]) return { usd: 0, idr: 0 };
+  const pz = pickupZoneOf(pk), iz = itemZone(name) || "ubud";
+  if (pz && pz === iz) return { usd: 0, idr: 0 };
+  const t = prices.transfer[pk];
+  if (!t) return { usd: 0, idr: 0 };
+  const cars = (guests || currentGuests || DISPLAY_GUESTS) > 5 ? 2 : 1;
+  return {
+    usd: Math.round(t.usd * SURCHARGE_FACTOR) * cars,
+    idr: Math.round((t.idr * SURCHARGE_FACTOR) / 1000) * 1000 * cars,
+  };
+}
+function surchargeLabel(name) {
+  const pk = currentStay || "ubud";
+  if (pk === "ubud") return { has: false, txt: "No surcharge - pickup from Ubud" };
+  if (prices.transfer && prices.transfer[name]) return { has: false, txt: "" };
+  const pz = pickupZoneOf(pk), iz = itemZone(name) || "ubud";
+  if (pz && pz === iz) return { has: false, txt: "No surcharge - you're in the tour area" };
+  return { has: true, txt: "Pickup surcharge applied" };
+}
+// Set area pickup global (value = key transfer atau "ubud"): simpan + render ulang + sinkron.
+function setStay(pk) {
+  currentStay = pk && pk !== "ubud" ? pk : "";
+  if (currentStay) localStorage.setItem("cue_stay", currentStay);
+  else localStorage.removeItem("cue_stay");
+  renderPrices();
+  document.querySelectorAll("[data-stay-select]").forEach((s) => {
+    const v = currentStay || "ubud";
+    if (s.value !== v) s.value = v;
+  });
+  if (window.__bookingRefresh) window.__bookingRefresh();
+  if (window.__tripbarRefresh) window.__tripbarRefresh();
+}
+
+// Set range tanggal trip: simpan + refresh tripbar. Kalau "to" < "from", disamain.
+function setDateRange(from, to) {
+  from = from || "";
+  to = to || "";
+  if (from && to && to < from) to = from;
+  currentDateFrom = from;
+  currentDateTo = to;
+  if (from) localStorage.setItem("cue_date_from", from); else localStorage.removeItem("cue_date_from");
+  if (to) localStorage.setItem("cue_date_to", to); else localStorage.removeItem("cue_date_to");
+  if (window.__tripbarRefresh) window.__tripbarRefresh();
+}
+// "2026-08-12" -> "12 Aug"
+function fmtDateShort(v) {
+  const p = (v || "").split("-");
+  if (p.length !== 3) return v || "";
+  const mo = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(p[1], 10) - 1] || "";
+  return parseInt(p[2], 10) + " " + mo;
+}
+// Range -> teks singkat: "12 Aug", "12–16 Aug", "28 Aug – 2 Sep", atau "".
+function fmtDateRange(from, to) {
+  if (!from && !to) return "";
+  if (from && !to) return fmtDateShort(from);
+  if (from === to) return fmtDateShort(from);
+  const a = fmtDateShort(from), b = fmtDateShort(to);
+  const am = a.split(" ")[1], bm = b.split(" ")[1];
+  return am === bm ? a.split(" ")[0] + "–" + b : a + " – " + b;
+}
+// Jumlah hari dalam range (inklusif). 0 kalau kosong.
+function rangeDays(from, to) {
+  if (!from) return 0;
+  if (!to || to === from) return 1;
+  const pa = from.split("-"), pb = to.split("-");
+  const da = Date.UTC(+pa[0], +pa[1] - 1, +pa[2]);
+  const db = Date.UTC(+pb[0], +pb[1] - 1, +pb[2]);
+  return Math.max(1, Math.round((db - da) / 86400000) + 1);
+}
+
+/* ---- Akun (passwordless) — token sesi + state ---- */
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ""; }
+function setToken(t) { if (t) localStorage.setItem(TOKEN_KEY, t); }
+function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+// Magic link dari email ("My Trips"): kalau URL bawa ?token=, simpan (auto-login)
+// lalu bersihin URL biar token gak keliatan/kebagikan.
+function captureMagicToken() {
+  try {
+    const t = new URLSearchParams(location.search).get("token");
+    if (t) { setToken(t); history.replaceState({}, "", location.pathname); }
+  } catch (e) {}
+}
+
+// Ambil sesi dari token (kalau ada) -> isi currentAccount. Fail-soft (API belum siap = tetap guest).
+async function acctFetchSession() {
+  const t = getToken();
+  if (!t) { currentAccount = null; return; }
+  try {
+    const r = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${t}` } });
+    if (r.ok) { const d = await r.json(); currentAccount = d.account || null; }
+    else if (r.status === 401) { clearToken(); currentAccount = null; } // token basi
+  } catch (e) { /* API down -> diem, tetap guest */ }
+}
+
+// Cek ada booking mendatang (buat titik hijau navbar). Fail-soft.
+async function acctRefreshUpcoming() {
+  hasUpcoming = false;
+  if (!getToken() || !currentAccount) return;
+  try {
+    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (r.ok) { const d = await r.json(); hasUpcoming = Array.isArray(d.upcoming) && d.upcoming.length > 0; }
+  } catch (e) {}
+}
+
+// Buat akun dari form -> simpan token + login. Return true kalau sukses.
+async function acctCreate({ name, email, phone }) {
+  try {
+    const r = await fetch(`${API_BASE}/account`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name, email, phone,
+        guest_count_pref: currentGuests ? String(currentGuests) : "",
+        stay_area_pref: currentStay || "",
+      }),
+    });
+    const d = await r.json();
+    if (r.ok && d.token) { setToken(d.token); currentAccount = d.account || null; renderAccount(); return true; }
+    return false;
+  } catch (e) { return false; }
+}
+
+// Sign in via email (magic link): minta backend kirim link sign-in ke email.
+// Selalu anggap sukses kalau request-nya jalan (backend gak bocorin apakah email terdaftar).
+async function acctRequestLogin(email) {
+  try {
+    const r = await fetch(`${API_BASE}/account/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+function acctLogout() {
+  clearToken(); currentAccount = null; hasUpcoming = false; renderAccount();
+  // balik jadi guest tanpa popup — trip prefs bisa diedit dari search form / tripbar.
+}
+
+// Isi navbar sesuai state login (1 template, beda parameter). Aman kalau elemen belum ada.
+function renderAccount() {
+  const loggedIn = !!currentAccount;
+  const nameFirst = loggedIn ? ((currentAccount.name || "").trim().split(" ")[0] || "there") : "Guest";
+  const email = loggedIn ? (currentAccount.email || "") : "guest@gmail.com";
+  document.querySelectorAll("[data-acct-greet]").forEach((el) => { el.textContent = loggedIn ? "Welcome back," : "Welcome,"; });
+  document.querySelectorAll("[data-acct-name]").forEach((el) => { el.textContent = nameFirst; });
+  document.querySelectorAll("[data-acct-email]").forEach((el) => { el.textContent = email; el.classList.toggle("is-placeholder", !loggedIn); });
+  document.querySelectorAll("[data-acct-dot]").forEach((el) => { el.hidden = !(loggedIn && hasUpcoming); });
+  document.querySelectorAll("[data-acct-auth]").forEach((el) => { el.dataset.mode = loggedIn ? "logout" : "create"; });
+  document.querySelectorAll("[data-acct-auth-label]").forEach((el) => { el.textContent = loggedIn ? "Log out" : "Sign in / Sign up"; });
 }
 
 // Harga Exclusive buat N orang = harga standard (per mobil, ×2 kalau >5)
@@ -519,6 +744,8 @@ async function loadPartials() {
     // yang di dalamnya ada #booking-placeholder, baru booking.html masuk situ.
     { id: "book-modal-placeholder", file: "partials/book-modal.html" },
     { id: "booking-placeholder", file: "partials/booking.html" },
+    // Search form homepage (partial terpisah; booking.html tetap utuh buat halaman kategori)
+    { id: "search-placeholder", file: "partials/search.html" },
     { id: "book-confirm-placeholder", file: "partials/book-confirm.html" },
     { id: "drivers-placeholder", file: "partials/drivers.html" },
     { id: "guest-gallery-placeholder", file: "partials/guest-gallery.html" },
@@ -561,7 +788,61 @@ function initNavbar() {
   const navMenu = document.getElementById("nav-menu");
   if (!hamburger || !navMenu) return;
 
-  hamburger.addEventListener("click", () => navMenu.classList.toggle("active"));
+  const isMobileNav = () => window.matchMedia("(max-width: 992px)").matches;
+  const acctPanel = document.querySelector("[data-acct-panel]");
+
+  // Scrim (dim) buat drawer di HP
+  let scrim = document.querySelector(".navbar__scrim");
+  if (!scrim) { scrim = document.createElement("div"); scrim.className = "navbar__scrim"; document.body.appendChild(scrim); }
+
+  // Inject header (judul + tombol close) ke tiap drawer; tampil cuma di mobile (CSS).
+  function addDrawerHead(container, title, tag) {
+    if (!container || container.querySelector(".navbar__drawerhead")) return;
+    const head = document.createElement(tag);
+    head.className = "navbar__drawerhead";
+    head.innerHTML = '<span class="navbar__drawertitle">' + title + '</span><button type="button" class="navbar__drawerclose" aria-label="Close">&times;</button>';
+    container.insertBefore(head, container.firstChild);
+    head.querySelector(".navbar__drawerclose").addEventListener("click", (e) => { e.stopPropagation(); closeNavDrawers(); });
+  }
+  addDrawerHead(navMenu, "Menu", "li");
+  addDrawerHead(acctPanel, "Account", "div");
+
+  const anyDrawerOpen = () => navMenu.classList.contains("active") || !!document.querySelector("[data-acct-panel].is-open");
+  function syncNavDrawer() {
+    const open = isMobileNav() && anyDrawerOpen();
+    scrim.classList.toggle("open", open);
+    hsScrollLock(open);
+  }
+  function closeNavDrawers() {
+    navMenu.classList.remove("active");
+    document.querySelectorAll("[data-acct-panel].is-open").forEach((p) => {
+      p.classList.remove("is-open");
+      const acct = p.closest("[data-acct]");
+      const b = acct && acct.querySelector("[data-acct-toggle]");
+      if (b) b.setAttribute("aria-expanded", "false");
+    });
+    syncNavDrawer();
+  }
+  window.__navDrawerSync = syncNavDrawer;
+  window.__navDrawerClose = closeNavDrawers;
+
+  hamburger.addEventListener("click", () => {
+    const opening = !navMenu.classList.contains("active");
+    // Buka menu -> tutup dropdown akun biar gak numpuk (bergantian).
+    if (opening) {
+      document.querySelectorAll("[data-acct-panel].is-open").forEach((panel) => {
+        panel.classList.remove("is-open");
+        const acct = panel.closest("[data-acct]");
+        const b = acct && acct.querySelector("[data-acct-toggle]");
+        if (b) b.setAttribute("aria-expanded", "false");
+      });
+    }
+    navMenu.classList.toggle("active");
+    syncNavDrawer();
+  });
+  scrim.addEventListener("click", closeNavDrawers);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeNavDrawers(); });
+  window.addEventListener("resize", () => { if (!isMobileNav()) closeNavDrawers(); else syncNavDrawer(); });
 
   // Dropdown "Program" (tap/klik buat toggle, di desktop juga jalan via hover)
   const drop = navMenu.querySelector(".navbar__has-drop");
@@ -593,6 +874,7 @@ function initBookingConfirm() {
   const dropoffI = el("dropoff"), dropoffLabel = el("dropoff-label");
   const referralI = el("referral"), applyRef = el("apply-referral"), refMsg = el("referral-msg");
   const sumGuest = el("sum-guest"), sumService = el("sum-service"), sumDate = el("sum-date"), sumPrice = el("sum-price");
+  const sumSurcharge = el("sum-surcharge"), rowSurcharge = el("row-surcharge");
   const modalDetails = el("modal-details"), detailsToggle = el("details-toggle"), detailsList = el("details-list");
   const bookSubmit = el("book-submit"), discussWa = el("discuss-wa");
   const modalClose = el("modal-close"), successClose = el("success-close");
@@ -637,6 +919,15 @@ function initBookingConfirm() {
     sumGuest.textContent = o.guests || "-";
     sumService.textContent = o.service;
     sumDate.textContent = o.date || "-";
+    // Pickup surcharge = SATU-satunya tempat angka surcharge muncul (brief §7).
+    if (rowSurcharge) {
+      if (o.surcharge && o.surcharge.idr > 0) {
+        sumSurcharge.textContent = fmtMoney(o.surcharge.usd, o.surcharge.idr);
+        rowSurcharge.hidden = false;
+      } else {
+        rowSurcharge.hidden = true;
+      }
+    }
     recalcTotal();
     nameI.value = ""; phoneI.value = ""; emailI.value = "";
     pickupI.value = o.pickup || "";
@@ -727,7 +1018,18 @@ function initBookingConfirm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload())
-    });
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        // Auto-login habis booking: simpan token kalau belum login. Fail-soft.
+        if (d && d.token && !getToken()) {
+          setToken(d.token);
+          currentAccount = d.account || null;
+          hasUpcoming = true; // baru booking -> ada trip mendatang
+          renderAccount();
+        }
+      })
+      .catch(() => {});
     if (typeof ctx.onSuccess === "function") ctx.onSuccess();
     modalForm.style.display = "none";
     modalSuccess.style.display = "block";
@@ -765,13 +1067,15 @@ function initBooking() {
   const bookNowBtn = document.getElementById("book-now");
   if (!bookNowBtn) return;
 
-  const guestField = document.getElementById("guest");
+  // Guests gak lagi jadi kolom di form — diambil dari pilihan global (navbar/welcome).
+  const guestCount = () => currentGuests || DISPLAY_GUESTS;
   const serviceSelect = document.getElementById("service");
   const serviceItemSelect = document.getElementById("service-item");
   const dateField = document.getElementById("date");
   dateField.min = todayStr(); // blokir tanggal lampau di date picker
   const priceField = document.getElementById("price");
   const priceNote = document.getElementById("price-note");
+  const priceSurcharge = document.getElementById("price-surcharge");
 
   let currentPrice = null;
   let bookingMode = "standard"; // Standard / Exclusive (cuma buat tour & combo)
@@ -787,7 +1091,8 @@ function initBooking() {
   window.__setBookingMode = setBookingMode; // dipanggil dari toggle di halaman detail
 
   function calculatePrice() {
-    const category = serviceSelect.value, item = serviceItemSelect.value, guests = parseInt(guestField.value);
+    const category = serviceSelect.value, item = serviceItemSelect.value, guests = guestCount();
+    const paxTxt = guests + " pax";
     // Toggle Standard/Exclusive selalu tampil (biar tinggi form konsisten), tapi
     // di-nonaktifin (redup) kalau service-nya bukan tour/combo yg punya Exclusive.
     const hasExclusive = category === "tour" && !!tourExclusive[item];
@@ -796,7 +1101,16 @@ function initBooking() {
       typeBtns.forEach((b) => (b.disabled = !hasExclusive));
     }
     if (!hasExclusive && bookingMode !== "standard") setBookingMode("standard", false);
-    if (!category || !item || !guests) return;
+    // Belum lengkap pilih service: harga tetap "-", tapi 2 baris teks tetap diisi
+    // (placeholder) biar tinggi form stabil (gak loncat). PAX di baris 1 paling depan.
+    if (!category || !item || !guests) {
+      priceNote.textContent = paxTxt;
+      if (priceSurcharge) {
+        priceSurcharge.textContent = "Price & surcharge shown once you choose";
+        priceSurcharge.classList.remove("price-note--surcharge");
+      }
+      return;
+    }
     let usd, idr, note;
     if (category === "tour") {
       // tour wilayah ATAU combo - dua-duanya per mobil, bisa Standard / Exclusive
@@ -805,19 +1119,19 @@ function initBooking() {
       if (bookingMode === "exclusive" && tourExclusive[item]) {
         const ex = exclusivePrice(item, guests);
         usd = ex.usd; idr = ex.idr;
-        note = "Exclusive · entrance tickets included · " + guests + " pax";
+        note = "Exclusive · entrance tickets included";
       } else {
         const p = carPrice(info.price, guests);
         usd = p.usd; idr = p.idr;
-        note = guests > 5 ? "2 cars needed for more than 5 pax"
-          : (hasExclusive ? "Standard · driver only · max 5 pax" : "Price per car · max 5 pax");
+        note = guests > 5 ? "2 cars needed (large group)"
+          : (hasExclusive ? "Standard · driver only" : "Price per car");
       }
     } else if (category === "transfer") {
       const base = prices.transfer[item];
       if (!base) return;
       const p = carPrice(base, guests);
       usd = p.usd; idr = p.idr;
-      note = guests > 5 ? "2 cars needed for more than 5 pax" : "Price per car · max 5 pax";
+      note = guests > 5 ? "2 cars needed (large group)" : "Price per car";
     } else {
       const base = prices[category][item];
       if (!base) return;
@@ -825,9 +1139,18 @@ function initBooking() {
       usd = base.usd * guests + t.usd; idr = base.idr * guests + t.idr;
       note = t.idr > 0 ? `Ticket per person + transport ${CUR_SYMBOL.IDR}${t.idr.toLocaleString("id-ID")}` : "Ticket per person · free transport";
     }
-    currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive };
+    // Pickup surcharge (stay-area) baked into the FINAL price shown. Angka surcharge-nya
+    // sendiri cuma muncul di modal konfirmasi (lihat __openBooking), nggak di sini.
+    const sc = surchargeFor(item, guests);
+    usd += sc.usd; idr += sc.idr;
+    currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive, surcharge: sc };
     priceField.innerHTML = priceHTML(usd, idr);
-    priceNote.textContent = note;
+    priceNote.textContent = paxTxt + " · " + note;
+    if (priceSurcharge) {
+      const sl = surchargeLabel(item);
+      priceSurcharge.textContent = sl.txt;
+      priceSurcharge.classList.toggle("price-note--surcharge", sl.has);
+    }
   }
   window.__bookingRefresh = calculatePrice; // biar setGuests bisa refresh harga booking
 
@@ -847,25 +1170,15 @@ function initBooking() {
     setBookingMode("standard", false);
     calculatePrice();
   });
-  // Ganti Guests di booking = update jumlah orang global (harga Exclusive di card
-  // ikut nyesuain), lalu hitung ulang harga booking. (Reset dilakukan dari navbar.)
-  guestField.addEventListener("change", () => {
-    setGuests(guestField.value);
-    calculatePrice();
-  });
   serviceItemSelect.addEventListener("change", () => { setBookingMode("standard", false); calculatePrice(); });
 
-  // Samain nilai awal Guests booking dgn guest-select navbar (default DISPLAY_GUESTS
-  // kalau belum pilih) -> dua-duanya selalu match sejak load.
-  guestField.value = String(currentGuests || DISPLAY_GUESTS);
-
   bookNowBtn.addEventListener("click", () => {
-    if (!guestField.value || !serviceItemSelect.value || !dateField.value) {
-      alert("Please choose guests, a service, and a date first."); return;
+    if (!serviceItemSelect.value || !dateField.value) {
+      alert("Please choose a service and a date first."); return;
     }
     const today = todayStr();
     if (dateField.value < today) { showPastDate(); return; }
-    if (dateField.value === today) { showSameDayWa(guestField.value, serviceItemSelect.value, dateField.value); return; }
+    if (dateField.value === today) { showSameDayWa(guestCount(), serviceItemSelect.value, dateField.value); return; }
     if (!currentPrice || !window.__openBooking) return;
     const category = currentPrice.category;
     const item = serviceItemSelect.value;
@@ -877,10 +1190,11 @@ function initBooking() {
     window.__openBooking({
       type: category,
       service: label,
-      guests: guestField.value,
+      guests: String(guestCount()),
       date: dateField.value,
       price: { usd: currentPrice.usd, idr: currentPrice.idr },
-      pickup: "",
+      pickup: currentStay ? pickupLabelOf(currentStay) : "",
+      surcharge: currentPrice.surcharge,
       pickupOptional: category === "performance",
       dropoffRequired: category === "transfer",
       referralEligible: category === "tour" || category === "transfer",
@@ -898,6 +1212,7 @@ function initBooking() {
   if (def) { serviceSelect.value = def; serviceSelect.dispatchEvent(new Event("change")); }
   const presetItem = holder && holder.dataset.item;
   if (presetItem) { serviceItemSelect.value = presetItem; serviceItemSelect.dispatchEvent(new Event("change")); }
+  calculatePrice(); // render awal: minimal PAX langsung tampil walau belum pilih service
 }
 
 // Slideshow .slider (bisa lebih dari satu: Activities & Performances). Tiap slider
@@ -1023,6 +1338,25 @@ function initItinerary() {
 
   let state = itnLoad();
   const save = () => itnSave(state);
+
+  // Sync range tanggal dari search bar / popup -> itinerary: samain jumlah hari
+  // (tambah hari kosong kalau kurang) + set tanggal mulai lalu cascade. Cuma di-apply
+  // SEKALI per nilai range (disimpan di cue_itn_synced) biar edit manual tanggal/hari
+  // di itinerary nggak ke-reset tiap buka. Nggak pernah hapus hari/item user.
+  (function syncRangeToItn() {
+    const from = currentDateFrom;
+    if (!from) return;
+    const key = from + "|" + (currentDateTo || "");
+    if (localStorage.getItem("cue_itn_synced") === key) return;
+    const n = rangeDays(from, currentDateTo);
+    while (state.days.length < n) state.days.push(newItnDay());
+    if (state.days.length) {
+      state.days[0].date = from;
+      cascadeDates(0);
+    }
+    localStorage.setItem("cue_itn_synced", key);
+    save();
+  })();
 
   // Mode Standard/Exclusive per item dalam satu hari (default Standard).
   // Disimpan di d.itemModes[idx] - sejajar sama d.items (string tetap dipakai).
@@ -1908,7 +2242,6 @@ function initReveal() {
     ".info__fact",
     ".about__content",
     ".faq__item",
-    ".quicknav__card",
     ".section__title",
     ".itn-suggest",
     ".itn-trip",
@@ -2036,21 +2369,65 @@ function initItineraryButtons() {
     });
   });
 
-  // transfer.html: tombol "Add to itinerary" di DALAM accordion (bawah harga)
+  // transfer.html: 2 tombol di DALAM accordion (bawah harga) - Book + Add to itinerary
   document.querySelectorAll(".route__item").forEach((item) => {
     const priceBox = item.querySelector(".route__price");
-    if (!priceBox || priceBox.querySelector(".route__add")) return;
+    if (!priceBox || priceBox.querySelector(".route__actions")) return;
     const label = item.querySelector(".route__head span");
     if (!label) return;
     const route = label.textContent.trim();
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "route__add";
-    btn.textContent = "+ Add to itinerary";
-    btn.addEventListener("click", () => {
+    const actions = document.createElement("div");
+    actions.className = "route__actions";
+
+    const book = document.createElement("button");
+    book.type = "button";
+    book.className = "route__book";
+    book.textContent = "Book";
+    book.addEventListener("click", () => bookTransferRoute(route));
+
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "route__add";
+    add.textContent = "+ Add to itinerary";
+    add.addEventListener("click", () => {
       if (itnAddTransfer(route)) showAddedPopup();
     });
-    priceBox.appendChild(btn);
+
+    actions.appendChild(book);
+    actions.appendChild(add);
+    priceBox.appendChild(actions);
+  });
+}
+
+// Preset booking form ke Route Transfer + route ini, lalu scroll ke form (#booking).
+function bookTransferRoute(route) {
+  const svc = document.getElementById("service");
+  const item = document.getElementById("service-item");
+  if (!svc || !item) return;
+  svc.value = "transfer";
+  svc.dispatchEvent(new Event("change"));
+  // cocokin value option (samain dash & case) biar aman kalau format beda tipis
+  const n = (s) => s.replace(/[–—-]/g, "-").trim().toLowerCase();
+  const opt = [...item.options].find((o) => n(o.value) === n(route));
+  if (opt) {
+    item.value = opt.value;
+    item.dispatchEvent(new Event("change"));
+  }
+  const booking = document.getElementById("booking");
+  if (booking) booking.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// Card di halaman Destinations: badan card clickable + tombol "Visit this destination"
+// -> halaman attraction masing-masing. (Navigasi, bukan booking - beda dari card tour.)
+function initDestinationCards() {
+  document.querySelectorAll(".destination-card[data-visit]").forEach((card) => {
+    const href = card.dataset.visit;
+    if (!href) return;
+    card.classList.add("card-clickable");
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a, button, .tour-type")) return;
+      window.location.href = href;
+    });
   });
 }
 
@@ -2135,18 +2512,55 @@ function initCharter() {
   renderCharter();
 }
 
-// Wiring selector currency (navbar desktop + mobile) + render harga awal
-function initCurrency() {
-  const sels = document.querySelectorAll("[data-cur-select]");
-  sels.forEach((sel) => {
-    sel.value = currentCurrency;
-    sel.addEventListener("change", () => {
-      setCurrency(sel.value);
-      document
-        .querySelectorAll("[data-cur-select]")
-        .forEach((s) => (s.value = currentCurrency));
+// Wiring 1 custom dropdown currency (tombol + list bendera). Dipakai di dropdown
+// akun (navbar) & popup welcome. Pilih -> setCurrency (langsung sync semua).
+function wireCurDropdown(wrap) {
+  const btn = wrap.querySelector("[data-cur-toggle]");
+  const list = wrap.querySelector("[data-cur-list]");
+  if (!btn || !list) return;
+  syncCurBtn(wrap, currentCurrency);
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = list.hidden;
+    list.hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  list.querySelectorAll("[data-cur-opt]").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      setCurrency(opt.dataset.curOpt);
+      list.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
     });
   });
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target) && !list.hidden) {
+      list.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+// HTML custom dropdown currency (button + list bendera SVG). Bendera pakai
+// <use href="#flag-xxx"> yang symbol-nya udah ada di partial navbar.
+function curDropdownHTML() {
+  let opts = "";
+  CURRENCIES.forEach((c) => {
+    opts += '<li class="acct__curopt" role="option" data-cur-opt="' + c + '">' +
+      '<span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-' + c.toLowerCase() + '"/></svg></span>' + c + "</li>";
+  });
+  return '<div class="acct__cur" data-cur>' +
+    '<button type="button" class="acct__curbtn" data-cur-toggle aria-haspopup="listbox" aria-expanded="false">' +
+      '<span class="acct__flag" data-cur-flag><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-usd"/></svg></span>' +
+      '<span class="acct__curcode" data-cur-label>USD</span>' +
+      '<svg class="acct__curcaret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+    "</button>" +
+    '<ul class="acct__curlist" data-cur-list role="listbox" aria-label="Currency" hidden>' + opts + "</ul>" +
+  "</div>";
+}
+
+// Wiring custom dropdown currency yang udah ada di HTML (navbar) + render awal
+function initCurrency() {
+  document.querySelectorAll("[data-cur]").forEach(wireCurDropdown);
   renderPrices();
 }
 
@@ -2165,50 +2579,378 @@ function initGuestPicker() {
   });
 }
 
-// Popup selamat datang: muncul sekali di kunjungan pertama (kalau belum "welcomed").
-function initWelcome() {
-  if (localStorage.getItem("cue_welcomed")) return;
-  showWelcome();
+// Ikon akun di navbar: dropdown berisi Guests + Stay area. Badge = jumlah guests.
+// Toggle buka/tutup panel + tutup pas klik di luar. Stay-select nyetir pickup surcharge.
+function initAccountMenu() {
+  const g = currentGuests || DISPLAY_GUESTS;
+  document.querySelectorAll("[data-guest-badge]").forEach((b) => { b.textContent = String(g); });
+  const staySel = currentStay || "ubud";
+  document.querySelectorAll("[data-stay-select]").forEach((s) => {
+    s.innerHTML = pickupOptionsHTML(staySel);
+    s.value = staySel;
+    s.addEventListener("change", () => setStay(s.value));
+  });
+  const closeAll = (except) => {
+    document.querySelectorAll("[data-acct]").forEach((acct) => {
+      if (acct === except) return;
+      const panel = acct.querySelector("[data-acct-panel]");
+      const btn = acct.querySelector("[data-acct-toggle]");
+      if (panel && panel.classList.contains("is-open")) { panel.classList.remove("is-open"); if (btn) btn.setAttribute("aria-expanded", "false"); }
+    });
+  };
+  document.querySelectorAll("[data-acct]").forEach((acct) => {
+    const btn = acct.querySelector("[data-acct-toggle]");
+    const panel = acct.querySelector("[data-acct-panel]");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !panel.classList.contains("is-open");
+      closeAll(acct);
+      // Buka akun -> tutup menu hamburger biar gak numpuk (bergantian).
+      if (willOpen) {
+        const nm = document.getElementById("nav-menu");
+        if (nm) nm.classList.remove("active");
+      }
+      panel.classList.toggle("is-open", willOpen);
+      btn.setAttribute("aria-expanded", String(willOpen));
+      if (window.__navDrawerSync) window.__navDrawerSync();
+    });
+  });
+  document.addEventListener("click", (e) => {
+    let changed = false;
+    document.querySelectorAll("[data-acct]").forEach((acct) => {
+      if (!acct.contains(e.target)) {
+        const panel = acct.querySelector("[data-acct-panel]");
+        const btn = acct.querySelector("[data-acct-toggle]");
+        if (panel && panel.classList.contains("is-open")) { panel.classList.remove("is-open"); if (btn) btn.setAttribute("aria-expanded", "false"); changed = true; }
+      }
+    });
+    if (changed && window.__navDrawerSync) window.__navDrawerSync();
+  });
 }
 
-// Bangun + tampilkan popup selamat datang. Minta jumlah orang biar harga Exclusive
-// akurat. "Skip" = tutup tanpa set. Dipakai initWelcome (kunjungan pertama) & tombol
-// Reset di navbar. Pilihan tersimpan di localStorage.
-function showWelcome() {
-  const existing = document.getElementById("welcome-modal");
-  if (existing) existing.remove();
+// Field bersama popup welcome & "Your trip details": guests + pickup + currency
+// (+ date opsional). Dipakai biar 1 sumber, gak dobel markup.
+function tripFieldsHTML(includeDate) {
   const pre = currentGuests || DISPLAY_GUESTS;
   let opts = "";
   for (let n = 1; n <= 10; n++) opts += '<option value="' + n + '"' + (n === pre ? " selected" : "") + ">" + n + "</option>";
+  const stayOpts = pickupOptionsHTML(currentStay || "ubud");
+  const dateField = includeDate
+    ? '<div class="welcome__field"><label>When</label>' +
+      '<div class="welcome__daterow">' +
+        '<input id="trip-date-from" type="date" aria-label="Start date" value="' + (currentDateFrom || "") + '" />' +
+        '<input id="trip-date-to" type="date" aria-label="End date" value="' + (currentDateTo || "") + '" />' +
+      "</div></div>"
+    : "";
+  return (
+    dateField +
+    '<div class="welcome__field">' +
+      '<label for="welcome-guests">Number of guests</label>' +
+      '<select id="welcome-guests">' + opts + "</select>" +
+    "</div>" +
+    '<div class="welcome__field">' +
+      '<label for="welcome-stay">Where are you staying? (pickup)</label>' +
+      '<select id="welcome-stay" data-stay-select>' + stayOpts + "</select>" +
+    "</div>" +
+    '<div class="welcome__field">' +
+      "<label>Show prices in</label>" +
+      curDropdownHTML() +
+    "</div>"
+  );
+}
+// Simpan pilihan dari popup (guests + pickup + date kalau ada) ke state global.
+function saveTripPrefs(modal) {
+  setGuests(modal.querySelector("#welcome-guests").value);
+  setStay(modal.querySelector("#welcome-stay").value);
+  const df = modal.querySelector("#trip-date-from");
+  const dt = modal.querySelector("#trip-date-to");
+  if (df || dt) setDateRange(df ? df.value : "", dt ? dt.value : "");
+}
 
+// Popup "Your trip details" (dari tripbar Edit + navbar Reset). Field-nya sama kaya
+// yang sekarang inline di search form homepage (date + guests + pickup + currency).
+function showTripDetails() {
+  const existing = document.getElementById("tripdetails-modal");
+  if (existing) existing.remove();
   const modal = document.createElement("div");
   modal.className = "modal welcome-modal";
-  modal.id = "welcome-modal";
+  modal.id = "tripdetails-modal";
   modal.innerHTML =
     '<div class="modal__box welcome__box">' +
       '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
       '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
-      '<h2 class="welcome__title">Welcome to Cahyana Ubud Experience</h2>' +
-      '<p class="welcome__text">See exactly what your trip costs. Tell us your group size and every tour, transfer, and activity shows your <strong>real total</strong> - upfront, always.</p>' +
-      '<div class="welcome__field">' +
-        '<label for="welcome-guests">Number of guests</label>' +
-        '<select id="welcome-guests">' + opts + "</select>" +
-      "</div>" +
+      '<h2 class="welcome__title">Your trip details</h2>' +
+      '<p class="welcome__text">Set your group size, pickup, and date - we\'ll use it across your booking.</p>' +
+      tripFieldsHTML(true) +
       '<div class="welcome__actions">' +
-        '<button type="button" class="modal__btn" id="welcome-confirm">Explore</button>' +
+        '<button type="button" class="modal__btn" id="trip-save">Save</button>' +
       "</div>" +
     "</div>";
   document.body.appendChild(modal);
-
-  const close = () => { modal.classList.remove("active"); localStorage.setItem("cue_welcomed", "1"); };
+  const curWrap = modal.querySelector("[data-cur]");
+  if (curWrap) wireCurDropdown(curWrap);
+  const close = () => modal.classList.remove("active");
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();
   });
-  modal.querySelector("#welcome-confirm").addEventListener("click", () => {
-    setGuests(modal.querySelector("#welcome-guests").value);
-    close();
+  modal.querySelector("#trip-save").addEventListener("click", () => { saveTripPrefs(modal); close(); });
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
+}
+
+// Popup form create account (dari welcome & tombol navbar). No password — 3 field.
+function showCreateAccount() {
+  const existing = document.getElementById("create-modal");
+  if (existing) existing.remove();
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "create-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
+      '<h2 class="welcome__title">Create your account</h2>' +
+      '<p class="welcome__text">No password - we\'ll recognise you by email &amp; phone. Same details as your booking.</p>' +
+      '<div class="welcome__field"><label for="acct-name">Name</label><input id="acct-name" type="text" autocomplete="name" /></div>' +
+      '<div class="welcome__field"><label for="acct-email">Email</label><input id="acct-email" type="email" autocomplete="email" /></div>' +
+      '<div class="welcome__field"><label for="acct-phone">Phone</label><input id="acct-phone" type="tel" autocomplete="tel" /></div>' +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="acct-create-btn">Create Account</button>' +
+      "</div>" +
+      '<p class="welcome__alt">Already have an account? <button type="button" class="linklike" id="create-to-signin">Sign in</button></p>' +
+    "</div>";
+  document.body.appendChild(modal);
+  const close = () => modal.classList.remove("active");
+  const msg = modal.querySelector("[data-msg]");
+  const showErr = (t) => { msg.textContent = t; msg.hidden = false; msg.className = "welcome__msg error"; };
+  modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest("[data-close]")) close(); });
+  modal.querySelector("#create-to-signin").addEventListener("click", () => { close(); showSignIn(); });
+  const btn = modal.querySelector("#acct-create-btn");
+  btn.addEventListener("click", async () => {
+    const name = modal.querySelector("#acct-name").value.trim();
+    const email = modal.querySelector("#acct-email").value.trim();
+    const phone = modal.querySelector("#acct-phone").value.trim();
+    if (!name) return showErr("Please enter your name.");
+    if (!/^\S+@\S+\.\S+$/.test(email)) return showErr("Please enter a valid email address.");
+    if (!phone) return showErr("Please enter your phone number.");
+    btn.disabled = true; btn.textContent = "Creating...";
+    const ok = await acctCreate({ name, email, phone });
+    btn.disabled = false; btn.textContent = "Create Account";
+    if (ok) close();
+    else showErr("Couldn't create account right now. Please try again later.");
   });
-  requestAnimationFrame(() => modal.classList.add("active"));
+  // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
+}
+
+// Popup Sign in (magic link): user isi email -> backend kirim link sign-in ke email.
+// Di bawah ada link ke form Create Account (buat yang belum punya akun).
+function showSignIn() {
+  const existing = document.getElementById("signin-modal");
+  if (existing) existing.remove();
+  const modal = document.createElement("div");
+  modal.className = "modal welcome-modal";
+  modal.id = "signin-modal";
+  modal.innerHTML =
+    '<div class="modal__box welcome__box">' +
+      '<button class="modal__close" data-close aria-label="Close">&times;</button>' +
+      '<img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />' +
+      '<h2 class="welcome__title">Sign in</h2>' +
+      "<p class=\"welcome__text\">Enter your email and we'll send you a secure sign-in link. No password needed.</p>" +
+      '<div class="welcome__field"><label for="signin-email">Email</label><input id="signin-email" type="email" autocomplete="email" /></div>' +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<div class="welcome__actions">' +
+        '<button type="button" class="modal__btn" id="signin-btn">Email me a sign-in link</button>' +
+      "</div>" +
+      '<p class="welcome__alt">New here? <button type="button" class="linklike" id="signin-to-create">Create an account</button></p>' +
+    "</div>";
+  document.body.appendChild(modal);
+  const close = () => modal.classList.remove("active");
+  const msg = modal.querySelector("[data-msg]");
+  const showMsg = (t, ok) => { msg.textContent = t; msg.hidden = false; msg.className = "welcome__msg " + (ok ? "success" : "error"); };
+  modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest("[data-close]")) close(); });
+  modal.querySelector("#signin-to-create").addEventListener("click", () => { close(); showCreateAccount(); });
+  const btn = modal.querySelector("#signin-btn");
+  btn.addEventListener("click", async () => {
+    const email = modal.querySelector("#signin-email").value.trim();
+    if (!/^\S+@\S+\.\S+$/.test(email)) return showMsg("Please enter a valid email address.", false);
+    btn.disabled = true; btn.textContent = "Sending...";
+    const ok = await acctRequestLogin(email);
+    btn.disabled = false; btn.textContent = "Email me a sign-in link";
+    if (ok) {
+      showMsg("Check your email for a sign-in link. If you have an account with us, it's on the way.", true);
+      modal.querySelector("#signin-email").disabled = true;
+      btn.disabled = true;
+    } else {
+      showMsg("Couldn't send right now. Please try again later.", false);
+    }
+  });
+  // double rAF: pastiin base state (opacity 0) ke-paint dulu -> transisi entry jalan
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add("active")));
+}
+
+// Init akun: render state awal + wire tombol auth (Sign in/up / Log out) via delegation,
+// lalu cek sesi dari token (async, fail-soft) & render ulang.
+async function initAccount() {
+  renderAccount();
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-acct-auth]");
+    if (!btn) return;
+    e.preventDefault();
+    if (btn.dataset.mode === "logout") acctLogout();
+    else showSignIn();
+  });
+  await acctFetchSession();
+  await acctRefreshUpcoming();
+  renderAccount();
+}
+
+// Escape teks buat innerHTML (aman dari karakter HTML).
+function escHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+// Pesan "belum punya akun" + tombol Create Account (dipakai My Trips & Settings).
+function accountGate(title, text) {
+  return (
+    '<div class="acctpage__gate">' +
+      "<h2>" + escHtml(title) + "</h2>" +
+      "<p>" + escHtml(text) + "</p>" +
+      '<button type="button" class="modal__btn" data-gate-create>Create Account</button>' +
+    "</div>"
+  );
+}
+function wireGate(root) {
+  const b = root.querySelector("[data-gate-create]");
+  if (b) b.addEventListener("click", showCreateAccount);
+}
+
+// Satu kartu trip di My Trips.
+function tripCard(t) {
+  const pillClass = t.upcoming ? "pill-ok" : "pill-done";
+  const pillText = t.upcoming ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "New") : "Completed";
+  const dateStr = t.end_date && t.end_date !== t.start_date ? t.start_date + " – " + t.end_date : t.start_date || "-";
+  return (
+    '<div class="trip"><div class="trip__stripe"></div><div class="trip__body">' +
+      '<div class="trip__top"><div><div class="trip__name">' + escHtml(t.name) + "</div>" +
+      '<div class="trip__meta">' + escHtml(dateStr) + " · " + escHtml(String(t.guests || "-")) + " pax</div></div>" +
+      '<span class="pill ' + pillClass + '">' + escHtml(pillText) + "</span></div>" +
+      '<div class="trip__foot"><div class="trip__price">' + priceHTML(t.price_usd, t.price_idr) + "</div>" +
+      '<span class="trip__ref">' + escHtml(t.ref) + "</span></div>" +
+    "</div></div>"
+  );
+}
+
+// Halaman My Trips: toggle Upcoming/History + kartu dari /api/bookings/mine.
+async function initMyTrips() {
+  const root = document.querySelector("[data-my-trips]");
+  if (!root) return;
+  await acctFetchSession();
+  if (!currentAccount) {
+    root.innerHTML = accountGate("Sign in to see your trips", "Create an account or make a booking to view your upcoming and past trips.");
+    wireGate(root);
+    return;
+  }
+  root.innerHTML = '<p class="acctpage__empty">Loading your trips…</p>';
+  let data = { upcoming: [], history: [] };
+  try {
+    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (r.ok) data = await r.json();
+  } catch (e) {}
+  const up = data.upcoming || [], hist = data.history || [];
+  hasUpcoming = up.length > 0; renderAccount();
+  root.innerHTML =
+    '<div class="mytrips__toggle" role="tablist">' +
+      '<button type="button" class="mytrips__tab is-on" data-tab="upcoming">Upcoming</button>' +
+      '<button type="button" class="mytrips__tab" data-tab="history">History</button>' +
+    "</div><div data-trips-list></div>";
+  const list = root.querySelector("[data-trips-list]");
+  const render = (which) => {
+    const arr = which === "history" ? hist : up;
+    list.innerHTML = arr.length
+      ? arr.map(tripCard).join("")
+      : '<p class="acctpage__empty">' + (which === "history" ? "No past trips yet." : "No upcoming trips yet — time to plan one!") + "</p>";
+  };
+  root.querySelectorAll(".mytrips__tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      root.querySelectorAll(".mytrips__tab").forEach((x) => x.classList.toggle("is-on", x === tab));
+      render(tab.dataset.tab);
+    });
+  });
+  render("upcoming");
+}
+
+// Halaman Settings: edit nama/email/phone + prefs -> PATCH /api/account.
+async function initSettings() {
+  const root = document.querySelector("[data-settings]");
+  if (!root) return;
+  await acctFetchSession();
+  if (!currentAccount) {
+    root.innerHTML = accountGate("Create your account", "You don't have an account yet. Create one to manage your details and trip preferences.");
+    wireGate(root);
+    return;
+  }
+  const a = currentAccount;
+  let gopts = "";
+  for (let n = 1; n <= 10; n++) gopts += '<option value="' + n + '"' + (String(a.guest_count_pref) === String(n) ? " selected" : "") + ">" + n + "</option>";
+  root.innerHTML =
+    '<form class="acctform" id="settings-form">' +
+      '<label class="acctform__label" for="set-name">Name</label><input class="acctform__inp" id="set-name" type="text" value="' + escHtml(a.name) + '" />' +
+      '<label class="acctform__label" for="set-email">Email</label><input class="acctform__inp" id="set-email" type="email" value="' + escHtml(a.email) + '" />' +
+      '<label class="acctform__label" for="set-phone">Phone</label><input class="acctform__inp" id="set-phone" type="tel" value="' + escHtml(a.phone) + '" />' +
+      '<label class="acctform__label" for="set-guests">Saved guest count</label><select class="acctform__inp" id="set-guests">' + gopts + "</select>" +
+      '<label class="acctform__label" for="set-stay">Saved stay area</label><select class="acctform__inp" id="set-stay">' + pickupOptionsHTML(a.stay_area_pref || "ubud") + "</select>" +
+      '<p class="welcome__msg" data-msg hidden></p>' +
+      '<button type="submit" class="modal__btn" id="set-save">Save Changes</button>' +
+    "</form>";
+  const form = root.querySelector("#settings-form");
+  const msg = root.querySelector("[data-msg]");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = {
+      name: root.querySelector("#set-name").value.trim(),
+      email: root.querySelector("#set-email").value.trim(),
+      phone: root.querySelector("#set-phone").value.trim(),
+      guest_count_pref: root.querySelector("#set-guests").value,
+      stay_area_pref: root.querySelector("#set-stay").value === "ubud" ? "" : root.querySelector("#set-stay").value,
+    };
+    const btn = root.querySelector("#set-save");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try {
+      const r = await fetch(`${API_BASE}/account`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify(body),
+      });
+      const d = await r.json();
+      if (r.ok && d.account) {
+        currentAccount = d.account; renderAccount();
+        msg.textContent = "Saved!"; msg.hidden = false; msg.className = "welcome__msg success";
+      } else { throw new Error(); }
+    } catch (err) {
+      msg.textContent = "Couldn't save right now. Please try again later."; msg.hidden = false; msg.className = "welcome__msg error";
+    }
+    btn.disabled = false; btn.textContent = "Save Changes";
+  });
+}
+
+// Trust stat homepage: jumlah akun yang pernah dibuat. Sembunyi kalau 0 / API down
+// (no fake). Fail-soft.
+async function initTrustStat() {
+  const el = document.querySelector("[data-trust-stat]");
+  if (!el) return;
+  try {
+    const r = await fetch(`${API_BASE}/accounts/count`);
+    if (!r.ok) return;
+    const d = await r.json();
+    const n = Number(d.count) || 0;
+    if (n > 0) {
+      const num = el.querySelector("[data-accounts-count]");
+      if (num) num.textContent = String(n);
+      el.hidden = false;
+    }
+  } catch (e) {}
 }
 
 // Badan card highlight bisa diklik -> ke halaman programnya.
@@ -2328,7 +3070,7 @@ function initTourType() {
   // Unit harga di card: tour/combo = "/car", experience/performance = "/person".
   // Ditaruh sebagai sibling <span> di sebelah harga -> nggak ketimpa renderPrices.
   function addPriceUnit(priceEl, cat) {
-    const unit = cat === "tour" || cat === "combo" ? "per car"
+    const unit = cat === "tour" || cat === "combo" || cat === "place" ? "per car"
       : cat === "experience" || cat === "performance" ? "per person" : "";
     if (!unit || priceEl.parentElement.querySelector(".price-unit")) return;
     const u = document.createElement("span");
@@ -2439,12 +3181,610 @@ function initCardTitleOverlay() {
   };
   move(".experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
   move(".villa__card", ".villa__image", ".villa__name");
-  move(".highlight__container", ".highlight__image", ".highlight__title");
 }
 
 /* ==================== 5. APP ENTRY ==================== */
 
+/* Homepage hero = "search bar" buat mulai explore Bali.
+   - toggle Standard/Exclusive (Exclusive naikin range ~EXCLUSIVE_FEE)
+   - dropdown kategori (icon + nama kiri, price range rata kanan, currency-aware)
+   - date opsional, tombol Explore -> ke halaman kategori.
+   Booking beneran tetep di halaman program (nggak diubah). */
+// Kunci scroll body pas bottom-sheet kebuka (HP) + balikin posisi pas nutup.
+// Pakai position:fixed biar reliable di iOS (overflow:hidden aja suka bocor).
+let __hsScrollY = 0;
+function hsScrollLock(on) {
+  const b = document.body;
+  if (on) {
+    if (b.classList.contains("hs-locked")) return;
+    __hsScrollY = window.scrollY || window.pageYOffset || 0;
+    b.style.top = -__hsScrollY + "px";
+    b.classList.add("hs-locked");
+  } else if (b.classList.contains("hs-locked")) {
+    b.classList.remove("hs-locked");
+    b.style.top = "";
+    window.scrollTo(0, __hsScrollY);
+  }
+}
+
+function initHeroSearch() {
+  const root = document.getElementById("hero-search");
+  if (!root) return;
+  const ddBtn = root.querySelector("[data-explore-btn]");
+  const ddLabel = root.querySelector("[data-explore-label]");
+  const ddPanel = root.querySelector("[data-explore-panel]");
+  const dateBtn = root.querySelector("[data-date-btn]");
+  const dateLabel = root.querySelector("[data-date-label]");
+  const datePanel = root.querySelector("[data-date-panel]");
+  const calBody = root.querySelector("[data-cal-body]");
+  const calHint = root.querySelector("[data-cal-hint]");
+  const calApply = root.querySelector("[data-cal-apply]");
+  const goBtn = root.querySelector("[data-explore-go]");
+  let selectedHref = null;
+
+  // Kumpulan harga {usd,idr} per kategori (dari data.js). null = tanpa harga (itinerary).
+  function catPrices(cat) {
+    switch (cat) {
+      case "tour": return [...Object.values(prices.tour), ...Object.values(prices.combo)];
+      case "transfer": return Object.values(prices.transfer);
+      case "experience": return Object.values(prices.experience);
+      case "charter": return [CHARTER.half, CHARTER.full];
+      case "destination": return Object.values(prices.place);
+      default: return null; // itinerary
+    }
+  }
+  function rangeText(cat) {
+    const arr = catPrices(cat);
+    if (!arr || !arr.length) return "Build your own";
+    const usd = arr.map((p) => p.usd);
+    const idr = arr.map((p) => p.idr);
+    const loUsd = Math.min(...usd), hiUsd = Math.max(...usd);
+    const lo = fmtMoney(loUsd, Math.min(...idr));
+    if (loUsd === hiUsd) return "from " + lo;
+    const hiNum = toCurrency(hiUsd, Math.max(...idr));
+    return lo + "–" + hiNum.toLocaleString(currentCurrency === "IDR" ? "id-ID" : "en-US");
+  }
+  function updateRanges() {
+    root.querySelectorAll("[data-explore-pr]").forEach((el) => {
+      el.textContent = rangeText(el.dataset.explorePr);
+    });
+  }
+  updateRanges();
+  window.__exploreRefresh = updateRanges;
+
+  // ---- Panel / bottom-sheet (dropdown & kalender pakai mekanisme sama) ----
+  let overlay = document.querySelector(".hs-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "hs-overlay";
+    document.body.appendChild(overlay);
+  }
+  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  // Sheet HP: panel di-portal ke <body> biar lolos dari stacking-context hero
+  // (kalau nggak, overlay body-level nutupin panel). Desktop: balik ke field-nya.
+  const anchors = new Map();
+  function restore(panel) {
+    const a = anchors.get(panel);
+    if (a && panel.parentElement === document.body) a.parent.insertBefore(panel, a.next);
+  }
+  let openPanelEl = null, openControlEl = null;
+  function closePanels() {
+    const had = !!openPanelEl; // cuma lepas lock kalau MEMANG ada panel search kebuka
+    if (openPanelEl) {
+      openPanelEl.classList.remove("open");
+      restore(openPanelEl);
+      openPanelEl = null;
+    }
+    if (openControlEl) { openControlEl.classList.remove("is-open"); openControlEl.setAttribute("aria-expanded", "false"); openControlEl = null; }
+    overlay.classList.remove("open");
+    if (had) hsScrollLock(false);
+  }
+  function openPanel(panel, control) {
+    if (openPanelEl === panel) { closePanels(); return; }
+    closePanels();
+    if (isMobile()) {
+      if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
+      document.body.appendChild(panel);
+      overlay.classList.add("open");
+      hsScrollLock(true);
+    } else {
+      restore(panel);
+    }
+    panel.classList.add("open");
+    control.classList.add("is-open");
+    control.setAttribute("aria-expanded", "true");
+    openPanelEl = panel;
+    openControlEl = control;
+  }
+  window.addEventListener("resize", closePanels);
+
+  // ---- Guests & Pickup: custom dropdown (styling sama kaya Explore) di atas <select>
+  //      asli. Select tetap sumber state (di-wire initGuestPicker/initAccountMenu);
+  //      di sini cuma layer visual + nyetir value select-nya. ----
+  function enhanceSelect(sel, title) {
+    if (!sel || sel.dataset.enhanced) return;
+    sel.dataset.enhanced = "1";
+    sel.style.display = "none";
+    const field = sel.closest(".hsearch__field");
+    if (field) field.classList.add("hsearch__dd");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "hs-control";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    btn.innerHTML =
+      '<span class="hs-control__val"></span>' +
+      '<svg class="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>';
+    const val = btn.querySelector(".hs-control__val");
+    const panel = document.createElement("div");
+    panel.className = "hs-panel hs-panel--menu";
+    panel.innerHTML =
+      '<div class="hs-panel__head"><h3>' + title + "</h3>" +
+      '<button type="button" class="hs-panel__close" aria-label="Close">&times;</button></div>' +
+      '<div class="hs-panel__body"></div>';
+    const body = panel.querySelector(".hs-panel__body");
+    sel.insertAdjacentElement("beforebegin", btn);
+    btn.insertAdjacentElement("afterend", panel);
+
+    const syncLabel = () => {
+      const o = sel.options[sel.selectedIndex];
+      val.textContent = o ? o.textContent.trim() : "";
+    };
+    const rebuild = () => {
+      body.innerHTML = "";
+      [...sel.options].forEach((o) => {
+        if (o.value === "reset") return;
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "hs-opt hs-opt--menu";
+        b.textContent = o.textContent.trim();
+        if (o.selected) b.classList.add("is-sel");
+        b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (sel.value !== o.value) {
+            sel.value = o.value;
+            sel.dispatchEvent(new Event("change"));
+          }
+          syncLabel();
+          closePanels();
+        });
+        body.appendChild(b);
+      });
+    };
+    btn.addEventListener("click", (e) => { e.stopPropagation(); rebuild(); openPanel(panel, btn); });
+    panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); closePanels(); });
+    sel.addEventListener("change", syncLabel);
+    syncLabel();
+  }
+  enhanceSelect(root.querySelector("[data-guest-select]"), "Guests");
+  enhanceSelect(root.querySelector("[data-stay-select]"), "Pickup area");
+
+  // ---- Dropdown kategori ----
+  ddBtn.addEventListener("click", (e) => { e.stopPropagation(); openPanel(ddPanel, ddBtn); });
+  root.querySelectorAll("[data-explore-opt]").forEach((opt) => {
+    opt.addEventListener("click", (e) => {
+      e.stopPropagation();
+      selectedHref = opt.dataset.href;
+      ddLabel.textContent = opt.dataset.name;
+      ddLabel.classList.remove("placeholder");
+      root.querySelectorAll("[data-explore-opt]").forEach((o) => o.classList.remove("is-sel"));
+      opt.classList.add("is-sel");
+      closePanels();
+    });
+  });
+  // Navigasi keyboard: Enter/↓ buka, ↑↓ sorot, Enter pilih, Esc tutup
+  const ddOpts = Array.from(root.querySelectorAll("[data-explore-opt]"));
+  let ddKbd = -1;
+  const ddPaint = () => { ddOpts.forEach((o, i) => o.classList.toggle("is-kbd", i === ddKbd)); if (ddOpts[ddKbd]) ddOpts[ddKbd].scrollIntoView({ block: "nearest" }); };
+  ddBtn.addEventListener("keydown", (e) => {
+    const open = ddPanel.classList.contains("open");
+    if (!open && (e.key === "Enter" || e.key === " " || e.key === "ArrowDown")) {
+      e.preventDefault(); openPanel(ddPanel, ddBtn);
+      ddKbd = Math.max(0, ddOpts.findIndex((o) => o.classList.contains("is-sel"))); ddPaint(); return;
+    }
+    if (!open) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); ddKbd = Math.min(ddOpts.length - 1, ddKbd + 1); ddPaint(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); ddKbd = Math.max(0, ddKbd - 1); ddPaint(); }
+    else if (e.key === "Enter") { e.preventDefault(); if (ddOpts[ddKbd]) { ddOpts[ddKbd].click(); ddBtn.focus(); } }
+    else if (e.key === "Escape") { e.preventDefault(); closePanels(); ddBtn.focus(); }
+  });
+
+  // ---- Kalender range tanggal (klik 1 = mulai, klik 2 = selesai) ----
+  const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+  const pad = (n) => String(n).padStart(2, "0");
+  const toStr = (o) => o.y + "-" + pad(o.m + 1) + "-" + pad(o.d);
+  const parseD = (s) => { const p = (s || "").split("-"); return p.length === 3 ? { y: +p[0], m: +p[1] - 1, d: +p[2] } : null; };
+  const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+  const now = new Date();
+  const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+  let rangeStart = parseD(currentDateFrom);
+  let rangeEnd = parseD(currentDateTo);
+  if (rangeStart && rangeEnd && keyOf(rangeEnd) === keyOf(rangeStart)) rangeEnd = null;
+
+  function monthEl(y, m) {
+    const el = document.createElement("div");
+    el.className = "hs-cal__m";
+    const cap = document.createElement("div");
+    cap.className = "hs-cal__cap";
+    cap.textContent = MON[m] + " " + y;
+    el.appendChild(cap);
+    const g = document.createElement("div");
+    g.className = "hs-cal__grid";
+    DOW.forEach((d) => { const h = document.createElement("div"); h.className = "hs-cal__dow"; h.textContent = d; g.appendChild(h); });
+    const first = new Date(y, m, 1).getDay();
+    const days = new Date(y, m + 1, 0).getDate();
+    for (let i = 0; i < first; i++) { const o = document.createElement("div"); o.className = "hs-cal__d is-off"; g.appendChild(o); }
+    for (let d = 1; d <= days; d++) {
+      const cell = { y: y, m: m, d: d };
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "hs-cal__d";
+      b.textContent = d;
+      const past = keyOf(cell) < keyOf(TODAY);
+      if (past) b.classList.add("is-off");
+      if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
+      if (rangeStart && rangeEnd) {
+        if (keyOf(cell) === keyOf(rangeStart) && keyOf(cell) === keyOf(rangeEnd)) b.classList.add("pt-solo");
+        else if (keyOf(cell) === keyOf(rangeStart)) b.classList.add("pt-start");
+        else if (keyOf(cell) === keyOf(rangeEnd)) b.classList.add("pt-end");
+        else if (keyOf(cell) > keyOf(rangeStart) && keyOf(cell) < keyOf(rangeEnd)) b.classList.add("in-range");
+      } else if (rangeStart && keyOf(cell) === keyOf(rangeStart)) b.classList.add("pt-solo");
+      if (!past) b.addEventListener("click", (e) => { e.stopPropagation(); pickDate(cell); });
+      g.appendChild(b);
+    }
+    el.appendChild(g);
+    return el;
+  }
+  function renderCal() {
+    calBody.innerHTML = "";
+    const wrap = document.createElement("div");
+    wrap.className = "hs-cal__months";
+    for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+    calBody.appendChild(wrap);
+    updateHint();
+  }
+  function updateHint() {
+    if (!rangeStart) { calHint.textContent = "Add your start date"; return; }
+    if (!rangeEnd) { calHint.textContent = "Now add your end date"; return; }
+    calHint.textContent = fmtDateRange(toStr(rangeStart), toStr(rangeEnd));
+  }
+  function pickDate(cell) {
+    if (!rangeStart || (rangeStart && rangeEnd)) { rangeStart = cell; rangeEnd = null; }
+    else if (keyOf(cell) < keyOf(rangeStart)) { rangeStart = cell; }
+    else { rangeEnd = cell; }
+    renderCal();
+  }
+  function refreshDateLabel() {
+    const dr = fmtDateRange(currentDateFrom, currentDateTo);
+    if (dr) { dateLabel.textContent = dr; dateLabel.classList.remove("placeholder"); }
+    else { dateLabel.textContent = "Add dates"; dateLabel.classList.add("placeholder"); }
+  }
+  refreshDateLabel();
+  dateBtn.addEventListener("click", (e) => { e.stopPropagation(); renderCal(); openPanel(datePanel, dateBtn); });
+  calApply.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setDateRange(rangeStart ? toStr(rangeStart) : "", rangeEnd ? toStr(rangeEnd) : "");
+    refreshDateLabel();
+    closePanels();
+  });
+
+  // ---- Tutup: tombol close (sheet), overlay, klik luar, Escape ----
+  root.querySelectorAll("[data-hs-close]").forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); closePanels(); }));
+  overlay.addEventListener("click", closePanels);
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closePanels();
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePanels(); });
+
+  // ---- Explore -> ke halaman kategori (kalau belum pilih, buka dropdown) ----
+  goBtn.addEventListener("click", () => {
+    if (selectedHref) window.location.href = selectedHref;
+    else openPanel(ddPanel, ddBtn);
+  });
+}
+
+/* Bar "Guests · Pickup · Date" di halaman kategori/detail (bukan homepage).
+   Keisi = tampil nilai, kosong = ajakan isi. Diklik -> popup Your trip details.
+   Fixed di bawah navbar (nggak ganggu flow -> no CLS). */
+function initTripBar() {
+  // Halaman booking (punya form booking) -> bar Guests/Pickup (klik = editor trip).
+  // Halaman NON-booking (home, guide, listing, dll) -> bar promo/event dari PROMO
+  //   (data.js), cuma muncul kalau PROMO.active && PROMO.text keisi.
+  const hasBooking = document.getElementById("booking-placeholder") || document.getElementById("book-modal-placeholder");
+  const promoOn = typeof PROMO !== "undefined" && PROMO && PROMO.active && PROMO.text;
+  if (!hasBooking && !promoOn) return;
+  const promoMode = !hasBooking;
+  const asLink = promoMode && !!PROMO.href;
+
+  const bar = document.createElement(promoMode ? (asLink ? "a" : "div") : "button");
+  bar.className = "tripbar" + (promoMode ? " tripbar--promo" : "");
+  bar.id = "tripbar";
+  if (!promoMode) { bar.type = "button"; bar.setAttribute("aria-label", "Set trip details"); }
+  if (asLink) bar.href = PROMO.href;
+
+  // Tripbar nyatu di dalam navbar (host di partial navbar). Nempel di bawah bar navbar
+  // secara natural -> nggak perlu hitung top manual lagi. Fallback ke body kalau host
+  // belum ada (jaga-jaga).
+  const host = document.getElementById("tripbar-host");
+  if (host) {
+    host.appendChild(bar);
+  } else {
+    const navPh = document.getElementById("navbar-placeholder");
+    document.body.insertBefore(bar, navPh ? navPh.nextSibling : document.body.firstChild);
+  }
+
+  if (promoMode) {
+    const cta = PROMO.cta ? '<span class="tripbar__edit">' + PROMO.cta + "</span>" : "";
+    bar.innerHTML =
+      '<svg class="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>' +
+      "<span>" + PROMO.text + "</span>" + cta;
+    return;
+  }
+
+  bar.innerHTML =
+    '<svg class="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>' +
+    '<span data-tripbar-text></span>' +
+    '<span class="tripbar__edit" data-tripbar-cta></span>';
+
+  function render() {
+    const txt = bar.querySelector("[data-tripbar-text]");
+    const cta = bar.querySelector("[data-tripbar-cta]");
+    if (currentGuests > 0 || currentStay || currentDateFrom) {
+      const g = currentGuests || DISPLAY_GUESTS;
+      const parts = [
+        "<b>" + g + " guest" + (g > 1 ? "s" : "") + "</b>",
+        "<b>" + (currentStay ? pickupLabelOf(currentStay) : "Ubud &amp; nearby") + "</b>",
+      ];
+      const dr = fmtDateRange(currentDateFrom, currentDateTo);
+      if (dr) parts.push("<b>" + dr + "</b>");
+      txt.innerHTML = parts.join('<span class="tripbar__sep">·</span>');
+      cta.textContent = "Edit";
+    } else {
+      txt.innerHTML = '<span class="tripbar__muted">Add guests</span><span class="tripbar__sep">·</span><span class="tripbar__muted">Add pickup location</span>';
+      cta.textContent = "Set now";
+    }
+  }
+  render();
+  window.__tripbarRefresh = render;
+  bar.addEventListener("click", showTripDetails);
+}
+
+// Info popover "Standard vs Exclusive" (icon "i" di booking & search form).
+// Klik icon = buka/tutup; klik di luar / Escape = tutup. Cuma 1 popover kebuka.
+function initInfoPopovers() {
+  const btns = document.querySelectorAll("[data-binfo]");
+  if (!btns.length) return;
+  function closeAll(except) {
+    document.querySelectorAll(".binfo__pop.open").forEach((pop) => {
+      if (pop === except) return;
+      pop.classList.remove("open");
+      const b = pop.parentElement.querySelector("[data-binfo]");
+      if (b) b.setAttribute("aria-expanded", "false");
+    });
+  }
+  btns.forEach((btn) => {
+    const pop = btn.parentElement.querySelector(".binfo__pop");
+    if (!pop) return;
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const willOpen = !pop.classList.contains("open");
+      closeAll(pop);
+      pop.classList.toggle("open", willOpen);
+      btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".binfo")) closeAll(null);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeAll(null);
+  });
+}
+
+// Booking form: dropdown & date "full custom" (panel desktop / bottom-sheet HP),
+// SAMA kaya search form. Teknik "enhance native": UI custom cuma nyetir <select> /
+// <input date> asli (sumber kebenaran), jadi logika harga initBooking utuh.
+function initBookingCustomControls() {
+  const selService = document.getElementById("service");
+  if (!selService) return; // bukan halaman booking
+  const selItem = document.getElementById("service-item");
+  const selStay = document.getElementById("stay-area");
+  const dateInp = document.getElementById("date");
+
+  // overlay + kontrol panel (dipakai bareng; booking gak barengan sama search di 1 halaman)
+  let overlay = document.querySelector(".hs-overlay");
+  if (!overlay) { overlay = document.createElement("div"); overlay.className = "hs-overlay"; document.body.appendChild(overlay); }
+  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  const anchors = new Map();
+  let openPanelEl = null, openCtrlEl = null;
+  const restore = (p) => { const a = anchors.get(p); if (a && p.parentElement === document.body) a.parent.insertBefore(p, a.next); };
+  function closeAll() {
+    const had = !!openPanelEl; // cuma lepas lock kalau memang ada panel booking kebuka
+    if (openPanelEl) { openPanelEl.classList.remove("open"); restore(openPanelEl); openPanelEl = null; }
+    if (openCtrlEl) { openCtrlEl.classList.remove("is-open"); openCtrlEl.setAttribute("aria-expanded", "false"); openCtrlEl = null; }
+    overlay.classList.remove("open");
+    if (had) hsScrollLock(false);
+  }
+  function openPanel(panel, ctrl) {
+    if (openPanelEl === panel) { closeAll(); return; }
+    closeAll();
+    if (isMobile()) {
+      if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
+      document.body.appendChild(panel); overlay.classList.add("open"); hsScrollLock(true);
+    } else restore(panel);
+    panel.classList.add("open");
+    ctrl.classList.add("is-open"); ctrl.setAttribute("aria-expanded", "true");
+    openPanelEl = panel; openCtrlEl = ctrl;
+  }
+
+  const refreshers = [];
+  const refreshAll = () => refreshers.forEach((fn) => fn());
+  const CHEV = '<svg class="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+  function makePanel(title) {
+    const panel = document.createElement("div");
+    panel.className = "hs-panel bk-panel";
+    panel.innerHTML = '<div class="hs-panel__head"><h3>' + title + '</h3><button type="button" class="hs-panel__close" aria-label="Close">&times;</button></div>';
+    panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); closeAll(); });
+    return panel;
+  }
+
+  function enhanceSelect(sel, title) {
+    if (!sel) return;
+    const group = sel.closest(".booking__group");
+    if (!group) return;
+    group.classList.add("bk-enh");
+    sel.classList.add("bk-native");
+    const ctrl = document.createElement("button");
+    ctrl.type = "button";
+    ctrl.className = "hs-control bk-control";
+    ctrl.setAttribute("aria-haspopup", "listbox");
+    ctrl.setAttribute("aria-expanded", "false");
+    ctrl.innerHTML = '<span class="hs-control__val" data-val></span>' + CHEV;
+    const panel = makePanel(title);
+    const body = document.createElement("div");
+    body.className = "hs-panel__body";
+    panel.appendChild(body);
+    sel.after(ctrl); ctrl.after(panel);
+    const valEl = ctrl.querySelector("[data-val]");
+    function refresh() {
+      const opt = sel.options[sel.selectedIndex];
+      const ph = !sel.value || (opt && opt.disabled);
+      valEl.textContent = opt ? opt.textContent : "";
+      valEl.classList.toggle("placeholder", !!ph);
+    }
+    function build() {
+      body.innerHTML = "";
+      Array.from(sel.options).forEach((o) => {
+        if (o.disabled && o.value === "") return; // skip placeholder
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "hs-opt bk-opt" + (o.value === sel.value ? " is-sel" : "");
+        btn.innerHTML = '<span class="hs-opt__nm">' + o.textContent + "</span>";
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          sel.value = o.value;
+          sel.dispatchEvent(new Event("change"));
+          refresh(); refreshAll(); closeAll();
+        });
+        body.appendChild(btn);
+      });
+    }
+    ctrl.addEventListener("click", (e) => { e.stopPropagation(); build(); openPanel(panel, ctrl); });
+    // Navigasi keyboard: Enter/↓ buka, ↑↓ sorot, Enter pilih, Esc tutup
+    let kbd = -1;
+    const kOpts = () => Array.from(body.querySelectorAll(".bk-opt"));
+    const kPaint = () => { const os = kOpts(); os.forEach((o, i) => o.classList.toggle("is-kbd", i === kbd)); if (os[kbd]) os[kbd].scrollIntoView({ block: "nearest" }); };
+    ctrl.addEventListener("keydown", (e) => {
+      const open = panel.classList.contains("open");
+      if (!open && (e.key === "Enter" || e.key === " " || e.key === "ArrowDown")) {
+        e.preventDefault(); build(); openPanel(panel, ctrl);
+        const os = kOpts(); kbd = Math.max(0, os.findIndex((o) => o.classList.contains("is-sel"))); kPaint(); return;
+      }
+      if (!open) return;
+      const os = kOpts();
+      if (e.key === "ArrowDown") { e.preventDefault(); kbd = Math.min(os.length - 1, kbd + 1); kPaint(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); kbd = Math.max(0, kbd - 1); kPaint(); }
+      else if (e.key === "Enter") { e.preventDefault(); if (os[kbd]) { os[kbd].click(); ctrl.focus(); } }
+      else if (e.key === "Escape") { e.preventDefault(); closeAll(); ctrl.focus(); }
+    });
+    sel.addEventListener("change", refresh);
+    refreshers.push(refresh);
+    refresh();
+  }
+
+  function enhanceDate(inp, title) {
+    if (!inp) return;
+    const group = inp.closest(".booking__group");
+    if (!group) return;
+    group.classList.add("bk-enh");
+    inp.classList.add("bk-native");
+    const ctrl = document.createElement("button");
+    ctrl.type = "button";
+    ctrl.className = "hs-control bk-control";
+    ctrl.setAttribute("aria-expanded", "false");
+    ctrl.innerHTML = '<span class="hs-control__val placeholder" data-val>Select date</span>' +
+      '<svg class="hs-chev hs-chev--cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>';
+    const panel = makePanel(title);
+    panel.classList.add("bk-panel--cal");
+    const calBody = document.createElement("div");
+    calBody.className = "hs-cal bk-cal";
+    const foot = document.createElement("div");
+    foot.className = "hs-cal__foot";
+    foot.innerHTML = '<span class="hs-cal__hint" data-hint>Pick a date</span><button type="button" class="hs-cal__apply" data-apply>Apply</button>';
+    panel.appendChild(calBody); panel.appendChild(foot);
+    inp.after(ctrl); ctrl.after(panel);
+    const valEl = ctrl.querySelector("[data-val]");
+    const hint = foot.querySelector("[data-hint]");
+    const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const MONS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    const pad = (n) => String(n).padStart(2, "0");
+    const parseD = (s) => { const p = (s || "").split("-"); return p.length === 3 ? { y: +p[0], m: +p[1] - 1, d: +p[2] } : null; };
+    const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+    const now = new Date();
+    const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+    let sel = parseD(inp.value);
+    function refresh() {
+      const s = parseD(inp.value);
+      if (s) { valEl.textContent = MONS[s.m] + " " + s.d + ", " + s.y; valEl.classList.remove("placeholder"); }
+      else { valEl.textContent = "Select date"; valEl.classList.add("placeholder"); }
+    }
+    function monthEl(y, m) {
+      const el = document.createElement("div");
+      el.className = "hs-cal__m";
+      const cap = document.createElement("div");
+      cap.className = "hs-cal__cap"; cap.textContent = MON[m] + " " + y; el.appendChild(cap);
+      const g = document.createElement("div"); g.className = "hs-cal__grid";
+      DOW.forEach((d) => { const h = document.createElement("div"); h.className = "hs-cal__dow"; h.textContent = d; g.appendChild(h); });
+      const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate();
+      for (let i = 0; i < first; i++) { const o = document.createElement("div"); o.className = "hs-cal__d is-off"; g.appendChild(o); }
+      for (let d = 1; d <= days; d++) {
+        const cell = { y: y, m: m, d: d };
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "hs-cal__d"; b.textContent = d;
+        const past = keyOf(cell) < keyOf(TODAY);
+        if (past) b.classList.add("is-off");
+        if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
+        if (sel && keyOf(cell) === keyOf(sel)) b.classList.add("sel");
+        if (!past) b.addEventListener("click", (e) => { e.stopPropagation(); sel = cell; render(); hint.textContent = MONS[sel.m] + " " + sel.d; });
+        g.appendChild(b);
+      }
+      el.appendChild(g); return el;
+    }
+    function render() {
+      calBody.innerHTML = "";
+      const wrap = document.createElement("div"); wrap.className = "hs-cal__months";
+      for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+      calBody.appendChild(wrap);
+      hint.textContent = sel ? MONS[sel.m] + " " + sel.d : "Pick a date";
+    }
+    foot.querySelector("[data-apply]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (sel) { inp.value = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); inp.dispatchEvent(new Event("change")); refresh(); }
+      closeAll();
+    });
+    ctrl.addEventListener("click", (e) => { e.stopPropagation(); sel = parseD(inp.value); render(); openPanel(panel, ctrl); });
+    inp.addEventListener("change", () => { sel = parseD(inp.value); refresh(); });
+    refreshers.push(refresh);
+    refresh();
+  }
+
+  enhanceSelect(selStay, "Pickup area");
+  enhanceSelect(selService, "Service");
+  enhanceSelect(selItem, "Select service");
+  enhanceDate(dateInp, "Select date");
+
+  overlay.addEventListener("click", closeAll);
+  document.addEventListener("click", (e) => { if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closeAll(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+  window.addEventListener("resize", closeAll);
+}
+
 async function initPage() {
+  captureMagicToken();
   await loadPartials();
   initNavbar();
   initBookingConfirm();
@@ -2464,14 +3804,24 @@ async function initPage() {
   initReveal();
   itnUpdateBadge();
   initItineraryButtons();
+  initDestinationCards();
   initCharter();
   initTourType();
+  initInfoPopovers();
+  initTripBar();
   initCurrency();
   initGuestPicker();
+  initAccountMenu();
+  // setelah guest/pickup select terisi nilainya, baru bangun custom dropdown search
+  initHeroSearch();
+  initAccount();
+  initMyTrips();
+  initSettings();
+  initTrustStat();
   initHighlightLink();
-  initWelcome();
   initTransferUnits();
   initCardTitleOverlay();
+  initBookingCustomControls();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

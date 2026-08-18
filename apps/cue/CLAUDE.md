@@ -25,11 +25,16 @@ When unsure, ask first (keep it short).
 
 ## Design system (keep consistent)
 **Colors** (CSS vars):
-- `--color-green` #1f3d2b · `--color-gold` #c9a45c · `--color-cream` #f7f3ea
+- `--color-green` #5c5c5c (medium grey — dulu hitam #1a1a1a) · `--color-gold` #c9a45c ·
+  `--color-gold-d` #b08d43 · `--color-cream` #f8f8f8 · `--line` #e7e4dd (border field/panel).
+  Palet = abu (teks/tombol) · abu terang · emas.
 
-**Fonts:**
-- `--font-body` Montserrat — satu-satunya font (dipakai semua elemen termasuk heading).
-  (Great Vibes udah dibuang buat perf — dulu cuma buat 2 heading hiasan.)
+**Fonts** (self-host, `assets/fonts/`, preload di tiap HTML):
+- `--font-body` **Inter** (variable 300–700) — body & semua UI.
+- `--font-head` **Playfair Display** (variable 500–800) — heading/judul (blok "TYPOGRAPHY SYSTEM"
+  di akhir style.css nge-override font-family heading lama).
+- **Bobot konsisten (jangan bold berat sembarangan):** body 400 · label 500 (tracked + uppercase,
+  kesan small-caps) · harga & tombol 600 · heading Playfair 600.
 
 **Text:**
 - Body/paragraph = `0.85rem`, uniform across all pages.
@@ -106,9 +111,16 @@ When unsure, ask first (keep it short).
   scrolls the page (don't revert to `pan-x` only — it makes scroll stick on mobile).
 
 ## Navbar
-- Order: **[currency] · Home · Itinerary (badge) · Program▾ · About**.
+- Order: **Home · Itinerary (badge) · Program▾ · About** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter.
-- Currency picker sits to the **left of Home** (after the logo).
+- **Currency picker** ada **di dalam dropdown account** (custom dropdown berbendera,
+  `[data-cur]`), bukan di bar navbar. Currency + Guests + Pickup + Date **juga inline
+  di search form homepage** (`partials/search.html`) — semua nyetir state global via
+  hook yang sama (`[data-guest-select]` / `[data-stay-select]` / `[data-cur]`), di-wire
+  otomatis sama `initGuestPicker` / `initAccountMenu` / `initCurrency`.
+- **Welcome popup DIHAPUS** (Agu 2026): field trip pindah ke search form homepage.
+  Editor "Your trip details" (`showTripDetails`) tetep ada buat tripbar **Edit** di
+  halaman kategori + navbar **Reset**. `showWelcome`/`initWelcome` udah dibuang.
 - Desktop: dropdown shows on hover/click. Mobile: Program dropdown is **closed by default**
   (tap "Program" to expand), the menu has a **bottom shadow** + separator border, and items
   are more spacious.
@@ -135,13 +147,20 @@ Order **must be kept** (declarations first, run last):
 - Don't leave dead classes behind.
 
 ## Key mechanics
-- **Anti-CLS**: `#booking-placeholder` & `#footer-placeholder` punya `min-height` di style.css
-  (booking 464/455px, footer 688/487px — hasil ukur headless; mobile WAJIB ≥ tinggi form asli, kalau kurang hero melar & foto "zoom"). **Ubah isi partial booking/footer
-  → ukur ulang & update angkanya** (navbar nggak perlu: position absolute).
+- **Anti-CLS**: `#booking-placeholder`, `#footer-placeholder` & `#search-placeholder` punya
+  `min-height` di style.css (booking 480px, footer 688/487px, search 470px — hasil ukur
+  headless; navbar 57.6px desktop / 52.8px HP; mobile WAJIB ≥ tinggi form asli, kalau kurang
+  hero melar & foto "zoom"). **Ubah isi partial booking/footer/search → ukur ulang & update
+  angkanya** (navbar nggak perlu: position fixed). Search form juga fade+slide masuk
+  (`@keyframes heroCardIn`) — placeholder yang nahan ruangnya jadi nol shift.
+- **Tripbar (bar di bawah navbar)**: `initTripBar` jalan di SEMUA halaman. Halaman booking →
+  bar Guests/Pickup (klik = editor trip). Halaman non-booking → bar **promo/event** dari
+  `PROMO` di data.js (`{active, text, cta, href}`) — cuma muncul kalau `active:true` &
+  `text` keisi (default off, no fake content). Isi PROMO = tampil di semua halaman non-booking.
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v37, PARTIALS 21)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v264, PARTIALS 63)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.
@@ -163,6 +182,11 @@ Order **must be kept** (declarations first, run last):
 - Foto nganggur: 13 duplikat/sisa lama (hapus?) + stok belum kepasang (`ubud-palace.jpg` dkk
   buat slot TODO) — keputusan Wayan.
 - Google Search Console: submit sitemap (belum pernah).
+- **Broadcast/newsletter promo + update Bali** (DITUNDA — Wayan mau lanjut nanti):
+  pakai **Resend Audiences + Broadcasts** (Cara A). Rencana: auto-daftarin email
+  akun baru ke Audience Resend (1 fungsi di `cahyana-api` POST /api/account), terus
+  Wayan nulis & kirim broadcast dari dashboard Resend (unsubscribe + analytics
+  otomatis). Email welcome akun udah janjiin "deals & Bali updates" → ini follow-up-nya.
 
 ## Before calling it "done" (checklist)
 1. `node --check script.js` passes.

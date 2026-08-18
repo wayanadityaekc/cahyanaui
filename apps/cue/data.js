@@ -21,8 +21,20 @@ const prices = {
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
   villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
-  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Bali & Sunset Kecak": { usd: 85, idr: 1300000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 } }
+  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "South Bali & Sunset Kecak": { usd: 85, idr: 1300000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 } },
+  // Standalone destinations (halaman Destinations). Harga PLACEHOLDER - CEK WAYAN.
+  place: { "Uluwatu Cliff Temple": { usd: 45, idr: 700000 }, "Tanah Lot Sunset Temple": { usd: 45, idr: 700000 }, "Besakih - The Mother Temple": { usd: 45, idr: 700000 }, "Tirta Empul Holy Water Temple": { usd: 45, idr: 700000 }, "Goa Gajah - The Elephant Cave": { usd: 45, idr: 700000 }, "Gunung Kawi Temple": { usd: 45, idr: 700000 }, "Lempuyang Temple - Gates of Heaven": { usd: 45, idr: 700000 }, "Ulun Danu Beratan Lake Temple": { usd: 45, idr: 700000 }, "Taman Ayun Royal Temple": { usd: 45, idr: 700000 }, "Pura Batuan Temple": { usd: 45, idr: 700000 }, "Garuda Wisnu Kencana (GWK)": { usd: 45, idr: 700000 }, "Ubud Royal Palace & Art Market": { usd: 45, idr: 700000 }, "Penglipuran Village": { usd: 45, idr: 700000 }, "Handara Gate": { usd: 45, idr: 700000 }, "Tirta Gangga Water Palace": { usd: 45, idr: 700000 }, "Taman Ujung Water Palace": { usd: 45, idr: 700000 }, "Tegalalang Rice Terrace": { usd: 45, idr: 700000 }, "Jatiluwih Rice Terraces": { usd: 45, idr: 700000 }, "Tegenungan Waterfall": { usd: 45, idr: 700000 }, "Git Git Waterfall": { usd: 45, idr: 700000 }, "Sekumpul Waterfall": { usd: 45, idr: 700000 }, "Banyumala Twin Waterfall": { usd: 45, idr: 700000 }, "Munduk Coffee Highlands": { usd: 45, idr: 700000 }, "Buyan & Tamblingan Twin Lakes": { usd: 45, idr: 700000 }, "Pandawa Beach": { usd: 45, idr: 700000 }, "Balangan Beach": { usd: 45, idr: 700000 }, "Bingin Beach": { usd: 45, idr: 700000 }, "Green Bowl Beach": { usd: 45, idr: 700000 }, "Tegal Wangi Beach": { usd: 45, idr: 700000 }, "Sacred Monkey Forest Sanctuary": { usd: 45, idr: 700000 }, "Sangeh Monkey Forest": { usd: 45, idr: 700000 }, "Ubud Traditional Market": { usd: 45, idr: 700000 }, "Ubud Arts & Crafts": { usd: 45, idr: 700000 } }
 };
+
+// ===== Pickup surcharge (diturunkan dari harga transfer) - CEK WAYAN =====
+// Opsi pickup = destinasi yang ADA di prices.transfer (nggak bikin list baru).
+// Surcharge = 60% harga transfer one-way (Ubud->area), PER MOBIL, cuma dikenakan kalau
+// pickup != Ubud DAN zona pickup != zona item. Angkanya nggak pernah tampil di UI
+// (cuma di popup konfirmasi). Ganti 0.6 di sini buat tune di satu tempat.
+const SURCHARGE_FACTOR = 0.6;
+// Zona tiap area pickup (buat cek "pickup area == tour area"). Key = key di prices.transfer.
+const TRANSFER_ZONE = { "Airport – Ubud": "south", "Denpasar Area – Ubud": "south", "Seminyak Area – Ubud": "south", "Kuta Area – Ubud": "south", "Canggu Area – Ubud": "south", "Tanah Lot Area – Ubud": "west", "Kintamani Area – Ubud": "kintamani", "Buleleng Area – Ubud": "north", "Amed Area – Ubud": "east", "Candidasa Area – Ubud": "east" };
+const ITEM_ZONE = { "Uluwatu Cliff Temple": "south", "Tanah Lot Sunset Temple": "west", "Besakih - The Mother Temple": "east", "Tirta Empul Holy Water Temple": "ubud", "Goa Gajah - The Elephant Cave": "ubud", "Gunung Kawi Temple": "ubud", "Lempuyang Temple - Gates of Heaven": "east", "Ulun Danu Beratan Lake Temple": "west", "Taman Ayun Royal Temple": "west", "Pura Batuan Temple": "ubud", "Garuda Wisnu Kencana (GWK)": "south", "Ubud Royal Palace & Art Market": "ubud", "Penglipuran Village": "ubud", "Handara Gate": "west", "Tirta Gangga Water Palace": "east", "Taman Ujung Water Palace": "east", "Tegalalang Rice Terrace": "ubud", "Jatiluwih Rice Terraces": "west", "Tegenungan Waterfall": "ubud", "Git Git Waterfall": "north", "Sekumpul Waterfall": "north", "Banyumala Twin Waterfall": "north", "Munduk Coffee Highlands": "north", "Buyan & Tamblingan Twin Lakes": "west", "Pandawa Beach": "south", "Balangan Beach": "south", "Bingin Beach": "south", "Green Bowl Beach": "south", "Tegal Wangi Beach": "south", "Sacred Monkey Forest Sanctuary": "ubud", "Sangeh Monkey Forest": "ubud", "Ubud Traditional Market": "ubud", "Ubud Arts & Crafts": "ubud", "Ubud Tour": "ubud", "Lempuyang & Tirta Gangga": "east", "Ulun Danu Beratan & Tanah Lot Temple": "west", "Bali Hidden Beaches and Cliffs": "south", "Munduk Waterfalls & Twin Lakes": "west", "Ubud Culture Day": "ubud", "South Bali & Sunset Kecak": "south", "Batur Sunrise & Adrenaline": "kintamani", "Ubud Rafting Adventure": "ubud", "Ubud ATV Adventure": "ubud", "Kintamani Sunrise & Penglipuran": "kintamani", "Lovina Dolphin & Sekumpul Waterfall": "north" };
 
 // Charter mobil 
 // extended = full day + jam tambahan, + surcharge kalau pickup di luar Ubud.
@@ -125,6 +137,31 @@ Object.keys(TOUR_TICKETS).forEach(function (tour) {
   tourExclusive[tour] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
 });
 
+// Standalone place (halaman Destinations): Standard = mobil aja, Exclusive = + tiket masuk
+// tempat itu (per orang, dari TICKETS). Peta place -> key TICKETS. Yang gratis = 0 (toggle
+// tetap tampil, harga sama). Angka tiket PLACEHOLDER dari riset - CEK WAYAN.
+const PLACE_TICKET = {
+  "Uluwatu Cliff Temple": "Uluwatu Temple", "Tanah Lot Sunset Temple": "Tanah Lot",
+  "Besakih - The Mother Temple": "Besakih", "Tirta Empul Holy Water Temple": "Tirta Empul",
+  "Goa Gajah - The Elephant Cave": "Goa Gajah", "Gunung Kawi Temple": "Gunung Kawi",
+  "Lempuyang Temple - Gates of Heaven": "Lempuyang", "Ulun Danu Beratan Lake Temple": "Ulun Danu Beratan",
+  "Taman Ayun Royal Temple": "Taman Ayun", "Pura Batuan Temple": "Pura Batuan",
+  "Garuda Wisnu Kencana (GWK)": "GWK", "Penglipuran Village": "Penglipuran",
+  "Handara Gate": "Handara Gate", "Tirta Gangga Water Palace": "Tirta Gangga",
+  "Taman Ujung Water Palace": "Taman Ujung", "Tegalalang Rice Terrace": "Tegalalang",
+  "Jatiluwih Rice Terraces": "Jatiluwih", "Tegenungan Waterfall": "Tegenungan",
+  "Git Git Waterfall": "Gitgit", "Sekumpul Waterfall": "Sekumpul Trek",
+  "Banyumala Twin Waterfall": "Banyumala", "Munduk Coffee Highlands": "Munduk Waterfall",
+  "Buyan & Tamblingan Twin Lakes": "Twin Lakes Viewpoint", "Pandawa Beach": "Pandawa",
+  "Balangan Beach": "Balangan", "Bingin Beach": "Bingin", "Green Bowl Beach": "Green Bowl",
+  "Tegal Wangi Beach": "Tegal Wangi", "Sacred Monkey Forest Sanctuary": "Monkey Forest",
+  "Sangeh Monkey Forest": "Sangeh"
+};
+Object.keys(prices.place).forEach(function (place) {
+  const idr = TICKETS[PLACE_TICKET[place]] || 0;
+  tourExclusive[place] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
+});
+
 const tourDetails = [
   "Price includes car, driver, and petrol",
   "Entrance tickets are not included",
@@ -159,3 +196,15 @@ const CUR_RATE = { USD: 1, AUD: 1.53, EUR: 0.92, GBP: 0.79 };
 // Simbol per currency buat tampilan harga (AUD = A$ biar beda dari USD).
 // Dropdown currency TETAP pakai kode (USD/IDR/...) - ini cuma buat harga.
 const CUR_SYMBOL = { USD: "$", IDR: "Rp", AUD: "A$", EUR: "€", GBP: "£" };
+
+// ===== Promo / event bar (tripbar di bawah navbar, halaman NON-booking) =====
+// Halaman booking (tour/transfer/dll) tetap nampilin Guests + Pickup, JANGAN diisi promo.
+// Halaman lain (home, guide, listing, dll) nampilin promo ini KALAU active + text ada.
+// Cara pakai: set active: true, isi text (wajib). cta + href opsional (kalau diisi
+// dua-duanya, bar jadi link). Kosongin text atau active:false = bar gak muncul.
+const PROMO = {
+  active: true,
+  text: "Kecak dance: every Sunday and Tuesday",
+  cta: "See details",
+  href: "attractions/kecak-dance.html",
+};

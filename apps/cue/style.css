@@ -66,7 +66,6 @@ body {
 .slider__caption p,
 .contact__lead,
 .info__list li,
-.activities__desc,
 .stop__desc,
 .reviews__intro,
 .faq__a p,
@@ -1986,22 +1985,22 @@ a.tripbar--promo {
 .slider__dot.active {
   background-color: var(--color-gold);
 }
-/* Teks "More Than Sightseeing" pindah ke bawah dua slider, ketengah & full width */
-.activities__text {
-  max-width: 760px;
-  margin: 2.5rem auto 0;
-  text-align: center;
-}
-.activities__heading {
-  margin-bottom: 1rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h2);
-  line-height: var(--lh-heading);
-  color: var(--color-gold);
-}
-.activities__desc {
+/* Header block Activities: judul kiri + deskripsi singkat + tombol, di atas slider */
+.activities__head {
+  margin-bottom: 2rem;
   text-align: left;
-  color: var(--color-ink);
+}
+#activities .section__title {
+  text-align: left;
+}
+#activities .section__title::after {
+  left: 0;
+  transform: none;
+}
+.activities__intro {
+  max-width: 720px;
+  margin: 0.85rem 0 1.4rem;
+  color: var(--color-muted-2);
   line-height: var(--lh-body);
 }
 
@@ -6440,7 +6439,6 @@ section.faq::before,
 .booking__title,
 .about__title,
 .plan__title,
-.activities__heading,
 .review-card__name,
 .driver-card__name,
 .driver-modal__name,
@@ -6485,21 +6483,32 @@ section.faq::before,
 }
 
 /* ==== Palet final: tombol CTA gold + teks putih (putih · gold · light grey · dark grey) ==== */
-/* Primary buttons: gold fill, white text */
-.hsearch__go, .hs-cal__apply, .booking__btn, .modal__btn, .review-form__btn,
-.btn-review, .highlight__btn, .svc__save, .program-cta__btn--book,
+/* Primary buttons: gold fill, white text.
+   NOTE: exclude the outline/secondary variants (--alt / --add) that share a
+   base class - those stay white bg + dark border + dark text (see below). */
+.hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .modal__btn,
+.review-form__btn, .btn-review:not(.btn-review--alt),
+.highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book,
 .btn-book, .faq__chat-btn, .faq__chat-icon, .contact__btn {
   background: var(--color-gold);
   color: #fff;
+  border-color: var(--color-gold);
 }
 /* Primary button hover: deeper gold, text stays white */
-.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:hover, .modal__btn:hover,
-.review-form__btn:hover, .btn-review:hover, .highlight__btn:hover,
+.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover,
+.modal__btn:hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover,
+.highlight__btn:not(.highlight__btn--add):hover,
 .svc__save:hover, .program-cta__btn--book:hover,
 .faq__chat-btn:hover, .contact__btn:hover {
   background: var(--color-gold-d);
   color: #fff;
   border-color: var(--color-gold-d);
+}
+/* Outline/secondary buttons: white bg + dark border + dark text (NOT gold) */
+.booking__btn--alt, .highlight__btn--add, .btn-review--alt {
+  background: #fff;
+  color: var(--color-green);
+  border: 1px solid var(--color-green);
 }
 /* Selected calendar dates = gold + white */
 .hs-cal__d.sel, .hs-cal__d.pt-start, .hs-cal__d.pt-end, .hs-cal__d.pt-solo {

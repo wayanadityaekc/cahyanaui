@@ -1503,10 +1503,6 @@ a.tripbar--promo {
 #tours .experience__grid--slider {
   gap: 0.5rem;
 }
-#tours .tours-cta {
-  text-align: center;
-  margin-top: 1.75rem;
-}
 /* Full-bleed: pangkas pinggir SEMUA slider card di mobile (nempel ke pinggir layar).
    Section-section ini sama-sama padding samping 1.5rem, jadi -1.5rem pas ke pinggir,
    plus lead 1rem biar card pertama nggak nempel banget. */
@@ -1569,6 +1565,64 @@ a.tripbar--promo {
 }
 .experience__name {
   margin-bottom: 0.4rem;
+}
+/* "See more" card di ujung baris slider (ganti tombol See All yang ngambang).
+   Kartu foto gelap + panah, ukuran ikut kartu tetangga (stretch full tinggi). */
+.experience__card--more {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  text-decoration: none;
+  color: #fff;
+  background-color: var(--color-green);
+  background-size: cover;
+  background-position: center;
+}
+.experience__card--more::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(40, 36, 30, 0.55),
+    rgba(40, 36, 30, 0.72)
+  );
+}
+.experience__more-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 2rem;
+  text-align: center;
+}
+.experience__more-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.experience__card--more:hover .experience__more-arrow {
+  background: #fff;
+  color: var(--color-green);
+}
+.experience__more-title {
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+.experience__more-sub {
+  font-size: 0.82rem;
+  opacity: 0.9;
 }
 /* Judul di DALAM foto (dipindah via initCardTitleOverlay) + gradient gelap
    dari bawah biar teks putihnya kebaca. Berlaku card tour/experience, villa,
@@ -1851,21 +1905,6 @@ a.tripbar--promo {
 }
 .villa__price {
   color: var(--color-gold);
-}
-.villa__btn {
-  display: block;
-  padding: 0.7rem 1.2rem;
-  border-radius: 6px;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-}
-.villa__btn:hover {
-  background-color: var(--color-gold);
-  color: var(--color-green);
 }
 
 /* Activities slider */
@@ -3616,27 +3655,6 @@ a.footer__contact-item:hover {
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--color-gold);
-}
-.guide-home__all {
-  margin-top: 2rem;
-  text-align: center;
-}
-.guide-home__all a {
-  display: inline-block;
-  padding: 0.6rem 1.4rem;
-  border-radius: 6px;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-  font-size: var(--fs-body);
-  font-weight: 600;
-  text-decoration: none;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-.guide-home__all a:hover {
-  background-color: var(--color-gold);
-  color: var(--color-green);
 }
 /* Tablet & HP: menu kategori jadi 1 baris ke samping (scroll), di atas slider.
    Breakpoint 992px biar HP lebar/landscape nggak kena layout desktop (numpuk). */
@@ -6469,15 +6487,15 @@ section.faq::before,
 /* ==== Palet final: tombol CTA gold + teks putih (putih · gold · light grey · dark grey) ==== */
 /* Primary buttons: gold fill, white text */
 .hsearch__go, .hs-cal__apply, .booking__btn, .modal__btn, .review-form__btn,
-.btn-review, .highlight__btn, .villa__btn, .svc__save, .program-cta__btn--book,
-.guide-home__all a, .btn-book, .faq__chat-btn, .faq__chat-icon, .contact__btn {
+.btn-review, .highlight__btn, .svc__save, .program-cta__btn--book,
+.btn-book, .faq__chat-btn, .faq__chat-icon, .contact__btn {
   background: var(--color-gold);
   color: #fff;
 }
 /* Primary button hover: deeper gold, text stays white */
 .hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:hover, .modal__btn:hover,
-.review-form__btn:hover, .btn-review:hover, .highlight__btn:hover, .villa__btn:hover,
-.svc__save:hover, .program-cta__btn--book:hover, .guide-home__all a:hover,
+.review-form__btn:hover, .btn-review:hover, .highlight__btn:hover,
+.svc__save:hover, .program-cta__btn--book:hover,
 .faq__chat-btn:hover, .contact__btn:hover {
   background: var(--color-gold-d);
   color: #fff;

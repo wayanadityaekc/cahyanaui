@@ -2625,23 +2625,40 @@ section.faq::before,
   text-decoration: none;
   color: var(--color-cream);
 }
-/* Wordmark teks (ganti logo gambar) — non-bold, ukuran sedang */
+/* Wordmark teks (ganti logo gambar) — ukuran sedang, gak kegedean */
 .footer__wordmark {
   font-family: var(--font-body);
   font-size: 1.2rem;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--color-cream);
   letter-spacing: 0.01em;
-  line-height: 1;
+  line-height: 1.2;
 }
-.footer__wordmark-sub {
-  display: block;
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
+/* Blok kontak footer: WhatsApp / email / lokasi */
+.footer__contact {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.footer__contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--fs-body);
+  color: var(--color-cream);
+  opacity: 0.9;
+  text-decoration: none;
+}
+.footer__contact-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
   color: var(--color-gold);
-  margin-top: 6px;
+}
+a.footer__contact-item:hover {
+  opacity: 1;
+  color: var(--color-gold);
 }
 .footer__tagline {
   margin-top: 0.75rem;

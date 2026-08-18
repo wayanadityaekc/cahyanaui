@@ -2610,8 +2610,8 @@ section.faq::before,
 
 .footer {
   padding: 3.5rem 1.5rem 1.5rem;
-  color: var(--color-cream);
-  background-color: var(--color-green);
+  color: var(--color-green);
+  background-color: #ebe8e2;
 }
 .footer__top {
   display: grid;
@@ -2623,14 +2623,14 @@ section.faq::before,
 .footer__logo {
   display: inline-block;
   text-decoration: none;
-  color: var(--color-cream);
+  color: var(--color-green);
 }
 /* Wordmark teks (ganti logo gambar) — ukuran sedang, gak kegedean */
 .footer__wordmark {
   font-family: var(--font-body);
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--color-cream);
+  color: var(--color-green);
   letter-spacing: 0.01em;
   line-height: 1.2;
 }
@@ -2646,7 +2646,7 @@ section.faq::before,
   align-items: center;
   gap: 0.55rem;
   font-size: var(--fs-body);
-  color: var(--color-cream);
+  color: var(--color-green);
   opacity: 0.9;
   text-decoration: none;
 }
@@ -2678,8 +2678,8 @@ a.footer__contact-item:hover {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  color: var(--color-cream);
-  background-color: rgba(247, 243, 234, 0.12);
+  color: var(--color-green);
+  background-color: rgba(0, 0, 0, 0.06);
 }
 .footer__socials svg {
   width: 18px;
@@ -2713,7 +2713,7 @@ a.footer__contact-item:hover {
 }
 .footer__col a {
   text-decoration: none;
-  color: var(--color-cream);
+  color: var(--color-green);
 }
 .footer__col a:hover {
   color: var(--color-gold);
@@ -2751,7 +2751,7 @@ a.footer__contact-item:hover {
   max-width: 1100px;
   margin: 2.5rem auto 0;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(247, 243, 234, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
   text-align: center;
 }
 .footer__pay-logos {
@@ -2785,7 +2785,7 @@ a.footer__contact-item:hover {
   max-width: 1100px;
   margin: 2.5rem auto 0;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(247, 243, 234, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
   font-size: var(--fs-small);
   text-align: center;
   opacity: 0.7;

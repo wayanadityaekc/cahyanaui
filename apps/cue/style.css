@@ -3330,7 +3330,9 @@ a.footer__contact-item:hover {
   text-align: center;
   background: #fdfcfa;
 }
-.info__fact span {
+/* label = direct child span aja (biar value fee/.price yg span-nya nested di
+   dalam <strong> nggak ikut ke-muted & bisa gold) */
+.info__fact > span {
   font-size: var(--fs-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -5914,9 +5916,10 @@ button.pick-cat {
     width: 22px;
   }
 }
-/* harga hasil render dari JS (currency aktif) */
+/* harga hasil render dari JS (currency aktif) + tiket masuk (.fee) - semua gold biar konsisten */
 .price,
-.price-cur {
+.price-cur,
+.fee {
   color: var(--color-gold);
   font-weight: 700;
 }

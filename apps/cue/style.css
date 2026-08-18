@@ -842,10 +842,9 @@ body.hs-locked {
 body.hs-locked .wa-float {
   display: none;
 }
-/* sembunyiin tripbar pas bottom-sheet kebuka (HP) biar gak nutupin atas kalender/panel */
-body.hs-locked .tripbar {
-  display: none;
-}
+/* Tripbar sekarang nyatu di navbar (bukan fixed sendiri). JANGAN di-hide pas sheet
+   kebuka -> dulu display:none bikin navbar nyusut & konten "loncat". Bottom-sheet
+   naik dari bawah + overlay, tripbar di atas nggak nutupin apa-apa. */
 /* scroll di dalem panel gak nembus ke background */
 .hs-panel {
   overscroll-behavior: contain;

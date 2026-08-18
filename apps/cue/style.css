@@ -63,7 +63,6 @@ body {
 .villa__desc,
 .subhero__text,
 .highlight__desc,
-.slider__caption p,
 .contact__lead,
 .info__list li,
 .stop__desc,
@@ -79,7 +78,6 @@ body {
 /* Judul card & slider - 1 gaya, ngikut font judul card */
 .experience__name,
 .villa__name,
-.slider__caption h3,
 .title {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -1498,8 +1496,9 @@ a.tripbar--promo {
   background-color: #fff;
 }
 
-/* Homepage tours slider (#tours): gap antar-card tipis + tombol "See all tours". */
-#tours .experience__grid--slider {
+/* Homepage card sliders (#tours + #activities): gap antar-card tipis. */
+#tours .experience__grid--slider,
+#activities .experience__grid--slider {
   gap: 0.5rem;
 }
 /* Full-bleed: pangkas pinggir SEMUA slider card di mobile (nempel ke pinggir layar).
@@ -1906,103 +1905,6 @@ a.tripbar--promo {
   color: var(--color-gold);
 }
 
-/* Activities slider */
-.activities {
-  padding: 3rem 1.5rem;
-  margin: 0 auto;
-  width: calc(100% - 10px);
-  max-width: 1200px;
-}
-/* Dua slider bersebelahan (Activities | Performances) biar seimbang & penuh di desktop */
-.activities__sliders {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.activities__slider-label {
-  margin-bottom: 1.1rem;
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-gold);
-}
-.slider {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-}
-.slider__slide {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-}
-.slider__slide.active {
-  opacity: 1;
-}
-.slider__caption {
-  width: 100%;
-  padding: 2rem 1.5rem 1.5rem;
-  color: var(--color-cream);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-}
-.slider__caption p {
-  margin-top: 0.3rem;
-}
-.slider__caption h3 {
-  font-size: var(--fs-h3);
-  line-height: var(--lh-heading);
-}
-.slider__dots {
-  position: absolute;
-  bottom: 0.8rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.5rem;
-}
-.slider__dot {
-  width: 9px;
-  height: 9px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background-color: rgba(247, 243, 234, 0.5);
-  cursor: pointer;
-}
-.slider__dot.active {
-  background-color: var(--color-gold);
-}
-/* Header block Activities: judul kiri + deskripsi singkat + tombol, di atas slider */
-.activities__head {
-  margin-bottom: 2rem;
-  text-align: left;
-}
-#activities .section__title {
-  text-align: left;
-}
-#activities .section__title::after {
-  left: 0;
-  transform: none;
-}
-.activities__intro {
-  max-width: 720px;
-  margin: 0.85rem 0 1.4rem;
-  color: var(--color-muted-2);
-  line-height: var(--lh-body);
-}
 
 /* Route & Transfer accordion */
 .transfer {
@@ -4179,10 +4081,6 @@ a.footer__contact-item:hover {
   }
   .villas__grid {
     grid-template-columns: 1fr;
-  }
-  .activities__sliders {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
   .transfer__columns {
     grid-template-columns: 1fr;
@@ -6374,7 +6272,6 @@ button.pick-cat {
 .experience__card,
 .experience__image,
 .stop__image,
-.slider,
 .villa__card,
 .villa__image {
   border-radius: 0;
@@ -6395,21 +6292,6 @@ section.faq::before,
 }
 .drivers {
   border-top: none;
-}
-/* slider activities/performance: caption judul OFF + full + margin tipis */
-.slider__caption {
-  display: none;
-}
-.slider {
-  box-shadow: none;
-}
-.activities {
-  width: 100%;
-  padding-left: 6px;
-  padding-right: 6px;
-}
-.activities__sliders {
-  gap: 10px;
 }
 /* villa card: full-bleed, flat, gold edge dibuang, mepet */
 .villa__card {
@@ -6458,7 +6340,6 @@ section.faq::before,
 .chdur__name,
 .experience__name,
 .villa__name,
-.slider__caption h3,
 .title {
   font-family: var(--font-head);
   font-weight: 600;

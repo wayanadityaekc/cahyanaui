@@ -655,6 +655,9 @@ function cartConfirm(title, text, yesLabel, onYes) {
 }
 
 // Popup pilih tanggal standalone (reuse gaya kalender .hs-cal). onPick(YYYY-MM-DD).
+// Popup pilih tanggal (Book Now / + My Trips). Pakai chrome + kalender yg SAMA
+// PERSIS dg date picker booking form (.hs-panel bk-panel--cal + .hs-cal bk-cal) biar
+// konsisten: bottom-sheet di HP, kartu ke-center di desktop (via .bookdate-panel).
 function bookDatePopup(title, onPick) {
   const now = new Date();
   const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
@@ -664,21 +667,25 @@ function bookDatePopup(title, onPick) {
   const pad = (n) => String(n).padStart(2, "0");
   const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
   let sel = null;
-  const m = document.createElement("div");
-  m.className = "modal active bookdate";
-  m.innerHTML =
-    '<div class="modal__box bookdate__box">' +
-    '<button class="bookdate__close" aria-label="Close">&times;</button>' +
-    '<h3 class="modal__title">' + title + "</h3>" +
-    '<p class="modal__sub">Pick your date</p>' +
-    '<div class="hs-cal bookdate__cal"></div>' +
-    '<div class="bookdate__foot"><span class="bookdate__hint">Choose a day</span>' +
-    '<button class="modal__btn bookdate__apply" disabled>Add to My Trips</button></div></div>';
-  document.body.appendChild(m);
-  const calBody = m.querySelector(".bookdate__cal");
-  const hint = m.querySelector(".bookdate__hint");
-  const applyBtn = m.querySelector(".bookdate__apply");
-  const close = () => m.remove();
+
+  const overlay = document.createElement("div");
+  overlay.className = "hs-overlay open";
+  const panel = document.createElement("div");
+  panel.className = "hs-panel bk-panel bk-panel--cal bookdate-panel open";
+  panel.innerHTML =
+    '<div class="hs-panel__head"><h3>Select date</h3>' +
+    '<button type="button" class="hs-panel__close" aria-label="Close">&times;</button></div>' +
+    '<div class="hs-cal bk-cal"></div>' +
+    '<div class="hs-cal__foot"><span class="hs-cal__hint">Pick a date</span>' +
+    '<button type="button" class="hs-cal__apply" disabled>Apply</button></div>';
+  document.body.appendChild(overlay);
+  document.body.appendChild(panel);
+  hsScrollLock(true);
+
+  const calBody = panel.querySelector(".bk-cal");
+  const hint = panel.querySelector(".hs-cal__hint");
+  const applyBtn = panel.querySelector(".hs-cal__apply");
+  const close = () => { panel.remove(); overlay.remove(); hsScrollLock(false); };
   function monthEl(y, mo) {
     const el = document.createElement("div");
     el.className = "hs-cal__m";
@@ -699,7 +706,7 @@ function bookDatePopup(title, onPick) {
       if (past) b.classList.add("is-off");
       if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
       if (sel && keyOf(cell) === keyOf(sel)) b.classList.add("sel");
-      if (!past) b.addEventListener("click", () => { sel = cell; render(); hint.textContent = MONS[sel.m] + " " + sel.d; applyBtn.disabled = false; });
+      if (!past) b.addEventListener("click", (e) => { e.stopPropagation(); sel = cell; render(); hint.textContent = MONS[sel.m] + " " + sel.d; applyBtn.disabled = false; });
       g.appendChild(b);
     }
     el.appendChild(g);
@@ -713,9 +720,9 @@ function bookDatePopup(title, onPick) {
     calBody.appendChild(wrap);
   }
   render();
-  applyBtn.addEventListener("click", () => { if (!sel) return; const ds = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); close(); onPick(ds); });
-  m.querySelector(".bookdate__close").addEventListener("click", close);
-  m.addEventListener("click", (e) => { if (e.target === m) close(); });
+  applyBtn.addEventListener("click", (e) => { e.stopPropagation(); if (!sel) return; const ds = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); close(); onPick(ds); });
+  panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); close(); });
+  overlay.addEventListener("click", close);
 }
 
 // full-day? (tour/combo dianggap seharian -> buat cek bentrok tanggal)

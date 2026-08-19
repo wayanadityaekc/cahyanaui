@@ -1235,88 +1235,61 @@ a.tripbar--promo {
   color: #fff;
   border-radius: 9px;
 }
-/* Popup pilih tanggal (Book Now universal) */
-/* Date popup: box = flex column yg NGE-CLIP; header + footer nempel,
-   cuma kalender yg scroll (hindari double-scroll & spill di iOS). */
-.bookdate__box {
-  max-width: 420px;
-  width: 92%;
-  max-height: 86vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 1.5rem 1.3rem 1.3rem;
-  text-align: left;
-  position: relative;
-}
-.bookdate__box .modal__title,
-.bookdate__box .modal__sub {
-  flex: 0 0 auto;
-  text-align: left;
-  margin-bottom: 0.3rem;
-}
-.bookdate__box .modal__title { margin-bottom: 0.15rem; padding-right: 1.8rem; }
-.bookdate__close {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  border: none;
-  background: none;
-  font-size: 1.7rem;
-  line-height: 1;
-  color: var(--color-muted);
-  cursor: pointer;
-  z-index: 1;
-}
-.bookdate .bookdate__cal {
-  flex: 1 1 auto;
-  min-height: 0;
-  margin-top: 0.6rem;
-  padding: 12px 12px 4px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  max-height: none;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-.bookdate .bookdate__cal .hs-cal__months {
-  flex-direction: column;
-  flex-wrap: nowrap;
-  gap: 18px;
-}
-.bookdate .bookdate__cal .hs-cal__m {
-  max-width: none;
-  width: 100%;
-}
-.bookdate__foot {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  margin-top: 0.9rem;
-}
-.bookdate .bookdate__hint {
-  font-size: 0.82rem;
-  color: var(--color-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 0 0 auto;
-  width: 34%;
-}
-/* Ukuran tombol TETAP (pakai width %, bukan min-*), biar nggak berubah
-   pas hint ganti "Choose a day" <-> "Aug 21". Prefix .bookdate biar menang
-   specificity lawan .modal__btn { width:100% }. */
-.bookdate .bookdate__apply {
-  margin: 0;
-  flex: 0 0 auto;
-  width: 60%;
-}
-.bookdate__apply:disabled {
+/* Popup pilih tanggal (Book Now / + My Trips) = standalone-nya date picker booking form.
+   HP: otomatis jadi bottom-sheet dari aturan .hs-panel @media(max-width:768px).
+   Desktop: .hs-panel default position:absolute (butuh anchor) -> override jadi kartu
+   ke-center + munculin head (yg di desktop di-hide buat booking form). */
+.bookdate-panel .hs-cal__apply:disabled {
   opacity: 0.5;
   cursor: default;
+}
+@media (min-width: 769px) {
+  .bookdate-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    width: min(430px, 92vw);
+    max-height: 86vh;
+    overflow-y: auto;
+    transform: translate(-50%, -48%);
+  }
+  .bookdate-panel.open {
+    transform: translate(-50%, -50%);
+  }
+  .bookdate-panel .hs-panel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    border-bottom: 1px solid #f2efe7;
+    z-index: 1;
+  }
+  .bookdate-panel .hs-panel__head h3 {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--color-green);
+  }
+  .bookdate-panel .hs-panel__close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line, #e7e4dd);
+    background: #fff;
+    color: var(--color-green);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .bookdate-panel .hs-cal__foot {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+  }
 }
 /* Toast "Added to My Trips" */
 .cart-toast {

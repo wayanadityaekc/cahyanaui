@@ -3495,6 +3495,80 @@ a.footer__contact-item:hover {
   font-family: var(--font-body);
   font-size: var(--fs-strong);
 }
+
+/* ===== Glance dengan harga bookable: harga jadi HERO + fakta lain jadi box ===== */
+.info__facts--hero {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+.info__facts--hero .info__fact {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fdfcfa;
+  min-height: 72px;
+  padding: 0.85rem 0.6rem;
+}
+/* harga = hero: full width, di atas, tengah, tanpa border */
+.info__fact--price {
+  order: -1;
+  grid-column: 1 / -1;
+  border: none !important;
+  background: transparent !important;
+  min-height: 0 !important;
+  position: relative;
+  padding: 0.2rem 0 1rem !important;
+}
+.info__fact--price > span:not(.glance-save) {
+  display: none; /* label "Price" disembunyiin (tapi jangan pill save) */
+}
+.info__fact--price > strong {
+  margin-top: 0;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 2.4rem;
+  line-height: 1.05;
+  color: var(--color-gold);
+}
+.info__facts--hero .info__fact--price .price,
+.info__facts--hero .info__fact--price .price-now {
+  color: var(--color-gold);
+  font-size: inherit; /* ikut ukuran hero (2.4rem), lawan .info__fact .price */
+}
+/* harga asli dicoret = kecil di pojok kiri atas */
+.info__fact--price .price-was {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin: 0;
+}
+.info__facts--hero .info__fact--price .price-unit {
+  margin-left: 0.15rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--color-green);
+}
+.glance-save[hidden] {
+  display: none;
+}
+.glance-save {
+  display: inline-block;
+  margin-top: 0.75rem;
+  background: #f4ecd8;
+  color: var(--color-gold-d);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  padding: 3px 11px;
+  border-radius: 999px;
+}
 .info__lists {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -4414,6 +4488,15 @@ a.footer__contact-item:hover {
   }
   .info__facts {
     grid-template-columns: repeat(2, 1fr); /* HP: 2x2, divider tetep rapi via gap */
+  }
+  .info__facts--hero {
+    grid-template-columns: repeat(3, 1fr); /* hero: 3 box sejajar tetep di HP */
+  }
+  .info__facts--hero .info__fact {
+    padding: 0.7rem 0.4rem;
+  }
+  .info__fact--price > strong {
+    font-size: 2.1rem;
   }
   .contact__container {
     grid-template-columns: 1fr;

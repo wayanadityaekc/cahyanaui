@@ -169,6 +169,16 @@ function renderPrices() {
   });
   renderPriceLabels();
   renderFees();
+  updateGlanceSave();
+}
+
+// "You save X%" pill di hero harga (glance) - muncul kalau referral aktif.
+function updateGlanceSave() {
+  const pct = refDiscountPct();
+  document.querySelectorAll("[data-glance-save]").forEach((s) => {
+    if (pct) { s.textContent = "You save " + pct + "%"; s.hidden = false; }
+    else { s.hidden = true; s.textContent = ""; }
+  });
 }
 
 // Label kecil di bawah harga (card/form): "Pickup surcharge applied" / "No surcharge ...".
@@ -4412,6 +4422,45 @@ function initBookingCustomControls() {
   window.addEventListener("resize", closeAll);
 }
 
+// Glance redesign: kalau section "At a Glance / Tour Details" punya harga bookable
+// (.price[data-price]), harga itu jadi HERO (gede, di tengah, coret kecil pojok kiri +
+// unit /car//person + pill save) & fakta lain jadi 3 box di bawahnya. Halaman attraction
+// (cuma "Entrance" fee, tanpa .price) nggak kesentuh.
+function initGlanceHero() {
+  document.querySelectorAll(".info__facts").forEach((facts) => {
+    const priceFact = [...facts.children].find((f) => f.querySelector(".price[data-price]"));
+    if (!priceFact) return;
+    facts.classList.add("info__facts--hero");
+    priceFact.classList.add("info__fact--price");
+    const priceEl = priceFact.querySelector(".price[data-price]");
+    // unit "/car" atau "/person" (dari kategori). Reuse .price-unit yg udah ada
+    // (dari addPriceUnit) biar nggak dobel; format diubah jadi slash.
+    const info = itemInfo(priceEl.dataset.price);
+    const cat = info ? info.cat : "";
+    const unit = (cat === "tour" || cat === "combo" || cat === "place") ? "/car"
+      : (cat === "experience" || cat === "performance") ? "/person" : "";
+    if (unit) {
+      let unitEl = priceFact.querySelector(".price-unit");
+      if (!unitEl) {
+        unitEl = document.createElement("span");
+        unitEl.className = "price-unit";
+        priceEl.insertAdjacentElement("afterend", unitEl);
+      }
+      unitEl.textContent = unit;
+    }
+    // pill "You save X%" (diisi/di-hide updateGlanceSave)
+    const strong = priceFact.querySelector("strong");
+    if (strong && !priceFact.querySelector("[data-glance-save]")) {
+      const s = document.createElement("span");
+      s.className = "glance-save";
+      s.setAttribute("data-glance-save", "");
+      s.hidden = true;
+      strong.insertAdjacentElement("afterend", s);
+    }
+  });
+  updateGlanceSave();
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -4454,6 +4503,7 @@ async function initPage() {
   initTransferUnits();
   initCardTitleOverlay();
   initBookingCustomControls();
+  initGlanceHero();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

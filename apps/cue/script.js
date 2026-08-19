@@ -4489,6 +4489,56 @@ function initTourSidebar() {
   });
 }
 
+/* DESKTOP listing pages (tour/activities/transfer/charter): konten kiri lebar +
+   sidebar kanan sticky. Charter -> form jadi sidebar; sisanya -> info jadi sidebar.
+   Eksperimen, desktop-only (JS gate >=993px + semua CSS di media query). */
+function initListingSidebar() {
+  if (!window.matchMedia("(min-width: 993px)").matches) return; // desktop saja
+  const subhero = document.querySelector("section.subhero");
+  if (!subhero) return;
+  const info = document.querySelector("section.info");
+  // halaman detail bookable diurus initTourSidebar -> jangan disentuh di sini
+  if (info && info.querySelector(".info__cta")) return;
+  const charter = document.querySelector("section.charter");
+  const cards = document.querySelector("section.experience--alt"); // tour/activities
+  const highlight = document.querySelector("section.highlight");
+  const faq = document.querySelector("section.faq"); // partial FAQ udah ke-inject
+
+  const mk = (cls) => { const d = document.createElement("div"); d.className = cls; return d; };
+
+  // MODE tour/activities: highlight tetap full-width di atas, sidebar mulai DI BAWAH
+  // highlight, dan info + FAQ disatuin jadi satu kolom kanan.
+  if (cards && info && highlight && !charter) {
+    const layout = mk("listing-layout listing-layout--cards");
+    const main = mk("listing-layout__main");
+    const side = mk("listing-layout__side");
+    layout.append(main, side);
+    highlight.after(layout); // split dimulai setelah highlight card
+    main.appendChild(cards);
+    side.appendChild(info);
+    if (faq) side.appendChild(faq); // satuin FAQ di bawah info
+    return;
+  }
+
+  // MODE default (charter/transfer): sidebar = charter form / info umum.
+  const sideSection = charter || info;
+  if (!sideSection) return;
+  // kumpulin section berturut setelah subhero sampai ketemu non-section
+  const sections = [];
+  let n = subhero.nextElementSibling;
+  while (n && n.tagName === "SECTION") { sections.push(n); n = n.nextElementSibling; }
+  if (sections.indexOf(sideSection) === -1 || sections.length < 2) return;
+  const layout = mk("listing-layout");
+  const main = mk("listing-layout__main");
+  const side = mk("listing-layout__side");
+  layout.append(main, side);
+  subhero.after(layout);
+  // sidebar = sideSection; sisanya (highlight/cards/routes/faq) = konten kiri
+  sections.forEach((s) => {
+    (s === sideSection ? side : main).appendChild(s);
+  });
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -4533,6 +4583,7 @@ async function initPage() {
   initBookingCustomControls();
   initGlanceHero();
   initTourSidebar();
+  initListingSidebar();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

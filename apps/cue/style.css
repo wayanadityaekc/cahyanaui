@@ -3517,12 +3517,14 @@ a.footer__contact-item:hover {
   background: transparent !important;
   min-height: 0 !important;
   position: relative;
-  padding: 0.2rem 0 1rem !important;
+  padding: 1.1rem 0 1rem !important;
 }
 .info__fact--price > span:not(.glance-save) {
   display: none; /* label "Price" disembunyiin (tapi jangan pill save) */
 }
 .info__fact--price > strong {
+  display: inline-block; /* nyusut ke lebar angka -> coret bisa nempel di atas-kirinya */
+  position: relative;
   margin-top: 0;
   font-family: var(--font-head);
   font-weight: 600;
@@ -3538,7 +3540,7 @@ a.footer__contact-item:hover {
 /* harga asli dicoret = kecil di pojok kiri atas */
 .info__fact--price .price-was {
   position: absolute;
-  top: 0;
+  top: -0.75em; /* nempel tepat di atas-kiri angka besar */
   left: 0;
   font-size: 0.85rem;
   font-weight: 400;

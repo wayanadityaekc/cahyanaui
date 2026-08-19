@@ -1280,21 +1280,78 @@ function initTourSlider() {
 
 // Section "Guides & Information" (homepage): menu kategori samping ganti panel slider.
 function initGuideHome() {
-  const menu = document.querySelector(".guide-home__menu");
-  if (!menu) return;
-  const items = menu.querySelectorAll(".ghmenu__item");
-  const panels = document.querySelectorAll(".guide-home__panels .ghpanel");
-  items.forEach((item) => {
-    item.addEventListener("click", () => {
-      const cat = item.dataset.cat;
-      items.forEach((x) => {
-        const on = x === item;
+  const root = document.querySelector(".guide-home");
+  if (!root) return;
+  const grid = root.querySelector("[data-guide-grid]");
+  const cards = Array.from(grid.querySelectorAll(".guide-home__card:not([data-more])"));
+  const moreCard = grid.querySelector("[data-more]");
+  const chips = Array.from(root.querySelectorAll(".guide-chip"));
+  const input = root.querySelector("[data-guide-search]");
+  const sug = root.querySelector(".gsearch__sug");
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // ---- FILTER grid by kategori ----
+  // "all" = tampil kartu featured aja (default ~8) + kartu "See all guides".
+  // Kategori tertentu = tampil semua guide kategori itu, more-card disembunyiin.
+  let activeCat = "all";
+  function applyFilter() {
+    cards.forEach((c) => {
+      const show = activeCat === "all" ? c.hasAttribute("data-featured") : c.dataset.cat === activeCat;
+      c.hidden = !show;
+    });
+    if (moreCard) moreCard.hidden = activeCat !== "all";
+  }
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      activeCat = chip.dataset.cat;
+      chips.forEach((x) => {
+        const on = x === chip;
         x.classList.toggle("active", on);
         x.setAttribute("aria-selected", on ? "true" : "false");
       });
-      panels.forEach((p) => p.classList.toggle("active", p.dataset.cat === cat));
+      applyFilter();
     });
   });
+  applyFilter();
+
+  // ---- SEARCH typeahead (guide aja: judul + keyword) ----
+  const CATLABEL = { island: "About the Island", culture: "People & Culture", nature: "Nature", do: "What to Do", know: "Good to Know" };
+  const index = cards.map((c) => {
+    const img = c.querySelector("img");
+    return {
+      title: c.querySelector(".experience__name").textContent.trim(),
+      catLabel: CATLABEL[c.dataset.cat] || "",
+      kw: (c.dataset.kw || "").toLowerCase(),
+      href: c.getAttribute("href"),
+      img: img ? img.getAttribute("src") : ""
+    };
+  });
+  function closeSug() { sug.hidden = true; sug.innerHTML = ""; }
+  function renderSug(raw) {
+    const q = raw.trim().toLowerCase();
+    if (!q) return closeSug();
+    const hits = index
+      .filter((g) => g.title.toLowerCase().includes(q) || g.kw.includes(q))
+      .slice(0, 6);
+    if (!hits.length) {
+      sug.innerHTML = '<div class="gsearch__empty">No guides match &ldquo;' + esc(raw.trim()) + '&rdquo; - try a place or topic.</div>';
+      sug.hidden = false;
+      return;
+    }
+    sug.innerHTML =
+      '<div class="gsearch__head">Guides matching &ldquo;' + esc(raw.trim()) + '&rdquo;</div>' +
+      hits.map((g) =>
+        '<a class="gsearch__opt" href="' + g.href + '">' +
+        '<span class="gsearch__th"' + (g.img ? ' style="background-image:url(' + g.img + ')"' : "") + '></span>' +
+        '<span class="gsearch__meta"><span class="gsearch__cat">' + esc(g.catLabel) + '</span>' +
+        '<span class="gsearch__ttl">' + esc(g.title) + '</span></span></a>'
+      ).join("");
+    sug.hidden = false;
+  }
+  input.addEventListener("input", () => renderSug(input.value));
+  input.addEventListener("focus", () => { if (input.value.trim()) renderSug(input.value); });
+  input.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeSug(); input.blur(); } });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".gsearch")) closeSug(); });
 }
 
 function initAccordion() {

@@ -3540,43 +3540,127 @@ a.footer__contact-item:hover {
   margin-bottom: 1.75rem;
 }
 .guide-home__sub {
-  max-width: 620px;
+  max-width: 600px;
   margin: 0.6rem auto 0;
-  text-align: left;
+  text-align: center;
   color: var(--color-muted-2);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
 }
-/* Kalau intro dipecah jadi 2 paragraf, kasih jarak yang nyaman antar keduanya */
-.guide-home__sub + .guide-home__sub {
-  margin-top: 1rem;
+/* ---- Search guide (typeahead) ---- */
+.gsearch {
+  position: relative;
+  max-width: 560px;
+  margin: 1.5rem auto 0;
 }
-/* Desktop disamain kayak mobile: menu navigasi horizontal di atas, slider full width di bawah. */
-.guide-home__layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-.guide-home__menu {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem;
-}
-.ghmenu__item {
+.gsearch__box {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.7rem 0.8rem;
+  gap: 0.7rem;
+  padding: 0.85rem 1.1rem;
+  border: 1.5px solid var(--color-gold);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(201, 164, 92, 0.12);
+}
+.gsearch__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--color-gold-d);
+}
+.gsearch__input {
+  flex: 1;
   border: none;
-  border-bottom: 3px solid transparent;
-  border-radius: 8px 8px 0 0;
+  outline: none;
   background: none;
-  text-align: left;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 0.95rem;
+  color: var(--color-green);
+}
+.gsearch__input::placeholder {
+  color: var(--color-muted);
+}
+/* dropdown saran */
+.gsearch__sug {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(31, 61, 43, 0.14);
+  overflow: hidden;
+  z-index: 6;
+}
+.gsearch__sug[hidden] {
+  display: none;
+}
+.gsearch__head,
+.gsearch__empty {
+  padding: 0.6rem 1.1rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  background: var(--color-cream);
+}
+.gsearch__empty {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--fs-small);
+  background: #fff;
+}
+.gsearch__opt {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  text-decoration: none;
+  color: var(--color-green);
+  border-top: 1px solid var(--line);
+}
+.gsearch__opt:hover {
+  background: rgba(201, 164, 92, 0.08);
+}
+.gsearch__th {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--color-cream) center / cover no-repeat;
+  flex-shrink: 0;
+}
+.gsearch__cat {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-gold-d);
+}
+.gsearch__ttl {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+/* ---- Chips kategori ---- */
+.guide-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.4rem;
+}
+.guide-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--color-muted-2);
   cursor: pointer;
@@ -3585,25 +3669,35 @@ a.footer__contact-item:hover {
     color 0.2s ease,
     border-color 0.2s ease;
 }
-.ghmenu__item svg {
-  width: 20px;
-  height: 20px;
+.guide-chip svg {
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
 }
-.ghmenu__item:hover {
-  background: var(--color-cream);
+.guide-chip:hover {
+  border-color: var(--color-gold);
   color: var(--color-green);
 }
-.ghmenu__item.active {
-  background: var(--color-cream);
-  color: var(--color-green);
-  border-bottom-color: var(--color-gold);
+.guide-chip.active {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: #fff;
 }
-.ghpanel {
+/* ---- Grid guide (bukan slider) ---- */
+.guide-grid {
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 1.7rem;
+}
+/* min-width:0 -> grid item boleh nyusut di bawah lebar konten (foto), biar kolom
+   1fr beneran sama rata & nggak overflow (foto belum tentu punya max-width). */
+.guide-grid .guide-home__card {
+  min-width: 0;
+}
+.guide-grid .guide-home__card img {
+  max-width: 100%;
+}
+.guide-grid .guide-home__card[hidden] {
   display: none;
-}
-.ghpanel.active {
-  display: block;
 }
 /* kartu guide: foto lebih landscape + label kategori emas */
 .guide-home__card {
@@ -3620,35 +3714,24 @@ a.footer__contact-item:hover {
   text-transform: uppercase;
   color: var(--color-gold);
 }
-/* Tablet & HP: menu kategori jadi 1 baris ke samping (scroll), di atas slider.
-   Breakpoint 992px biar HP lebar/landscape nggak kena layout desktop (numpuk). */
+/* Tablet: 3 kolom. NOTE: di HP semua .experience__grid dikonversi jadi slider
+   (display:flex) - guide grid HARUS tetep grid, jadi override balik pakai
+   selektor gabungan (.guide-grid.experience__grid, specificity lebih tinggi). */
 @media (max-width: 992px) {
-  .guide-home__layout {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .guide-grid.experience__grid {
+    display: grid;
+    overflow: visible;
+    grid-template-columns: repeat(3, 1fr);
   }
-  .guide-home__menu {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 0.4rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.3rem;
-    scrollbar-width: none;
+}
+/* HP: 2 kolom, chips wrap (semua kategori keliatan, gak ada yg ke-clip) */
+@media (max-width: 640px) {
+  .guide-grid.experience__grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .guide-home__menu::-webkit-scrollbar {
-    display: none;
-  }
-  .ghmenu__item {
-    flex: 0 0 auto;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-    border-radius: 8px 8px 0 0;
-    white-space: nowrap;
-  }
-  .ghmenu__item.active {
-    border-left: none;
-    border-bottom-color: var(--color-gold);
+  .guide-chip {
+    font-size: 0.76rem;
+    padding: 0.5rem 0.8rem;
   }
 }
 
@@ -6128,10 +6211,6 @@ button.pick-cat {
   .experience__grid--slider .experience__card {
     flex: 0 0 300px;
     scroll-snap-align: start;
-  }
-  /* Guide slider (desktop): 3 card mengisi penuh lebar section (gap 1.5rem = 3rem total) */
-  .guide-home__slider .experience__card {
-    flex-basis: calc((100% - 3rem) / 3);
   }
 }
 

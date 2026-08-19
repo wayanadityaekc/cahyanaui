@@ -1279,48 +1279,21 @@ function initTourSlider() {
 }
 
 // Section "Guides & Information" (homepage): menu kategori samping ganti panel slider.
-function initGuideHome() {
-  const root = document.querySelector(".guide-home");
-  if (!root) return;
-  const grid = root.querySelector("[data-guide-grid]");
-  const cards = Array.from(grid.querySelectorAll(".guide-home__card:not([data-more])"));
-  const moreCard = grid.querySelector("[data-more]");
-  const chips = Array.from(root.querySelectorAll(".guide-chip"));
+// Search typeahead guide (dipakai homepage teaser & halaman bali-guide).
+// Cari di SEMUA kartu .guide-home__card di dalam root (judul + keyword), termasuk
+// yang lagi hidden (di homepage cuma featured yg tampil, tapi search tetap nemu semua).
+const GUIDE_CATLABEL = { island: "About the Island", culture: "People & Culture", nature: "Nature", do: "What to Do", know: "Good to Know" };
+function guideTypeahead(root) {
   const input = root.querySelector("[data-guide-search]");
   const sug = root.querySelector(".gsearch__sug");
+  if (!input || !sug) return;
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  // ---- FILTER grid by kategori ----
-  // "all" = tampil kartu featured aja (default ~8) + kartu "See all guides".
-  // Kategori tertentu = tampil semua guide kategori itu, more-card disembunyiin.
-  let activeCat = "all";
-  function applyFilter() {
-    cards.forEach((c) => {
-      const show = activeCat === "all" ? c.hasAttribute("data-featured") : c.dataset.cat === activeCat;
-      c.hidden = !show;
-    });
-    if (moreCard) moreCard.hidden = activeCat !== "all";
-  }
-  chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      activeCat = chip.dataset.cat;
-      chips.forEach((x) => {
-        const on = x === chip;
-        x.classList.toggle("active", on);
-        x.setAttribute("aria-selected", on ? "true" : "false");
-      });
-      applyFilter();
-    });
-  });
-  applyFilter();
-
-  // ---- SEARCH typeahead (guide aja: judul + keyword) ----
-  const CATLABEL = { island: "About the Island", culture: "People & Culture", nature: "Nature", do: "What to Do", know: "Good to Know" };
+  const cards = Array.from(root.querySelectorAll(".guide-home__card:not([data-more])"));
   const index = cards.map((c) => {
     const img = c.querySelector("img");
     return {
       title: c.querySelector(".experience__name").textContent.trim(),
-      catLabel: CATLABEL[c.dataset.cat] || "",
+      catLabel: GUIDE_CATLABEL[c.dataset.cat] || "",
       kw: (c.dataset.kw || "").toLowerCase(),
       href: c.getAttribute("href"),
       img: img ? img.getAttribute("src") : ""
@@ -1352,6 +1325,40 @@ function initGuideHome() {
   input.addEventListener("focus", () => { if (input.value.trim()) renderSug(input.value); });
   input.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeSug(); input.blur(); } });
   document.addEventListener("click", (e) => { if (!e.target.closest(".gsearch")) closeSug(); });
+}
+
+// Homepage: teaser slider (slider di-handle initTourSlider) + search typeahead.
+function initGuideHome() {
+  const root = document.querySelector(".guide-home");
+  if (!root) return;
+  guideTypeahead(root);
+}
+
+// Halaman bali-guide: search typeahead + tombol "Categories" (dropdown -> loncat
+// scroll ke slider kategori). Semua kategori tetep tampil, toggle cuma navigasi.
+function initGuidePage() {
+  const root = document.querySelector(".guide-page");
+  if (!root) return;
+  guideTypeahead(root);
+
+  const toggle = root.querySelector("[data-cat-toggle]");
+  const menu = root.querySelector("[data-cat-menu]");
+  if (!toggle || !menu) return;
+  const setOpen = (on) => {
+    menu.hidden = !on;
+    toggle.setAttribute("aria-expanded", on ? "true" : "false");
+  };
+  toggle.addEventListener("click", (e) => { e.stopPropagation(); setOpen(menu.hidden); });
+  menu.querySelectorAll("a[href^='#']").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.getElementById(a.getAttribute("href").slice(1));
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setOpen(false);
+    });
+  });
+  document.addEventListener("click", (e) => { if (!e.target.closest("[data-cat-menu]") && !e.target.closest("[data-cat-toggle]")) setOpen(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
 }
 
 function initAccordion() {
@@ -3828,6 +3835,7 @@ async function initPage() {
   initSlider();
   initTourSlider();
   initGuideHome();
+  initGuidePage();
   initAccordion();
   initContact();
   initItinerary();

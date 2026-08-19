@@ -3459,69 +3459,124 @@ a.footer__contact-item:hover {
   opacity: 0.55;
 }
 
-/* ==================== Bali Guide (hub + artikel) ==================== */
-.guide-tabs {
-  position: sticky;
-  top: 0;
-  z-index: 90;
-  background: #fff;
-  border-bottom: 1px solid #ece7db;
-}
-.guide-tabs__inner {
-  display: flex;
-  gap: 0.4rem;
-  max-width: 1100px;
+/* ==================== Bali Guide page (search + toggle + slider/kategori) ==== */
+.guide-page {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0.6rem 1rem;
-  overflow-x: auto;
-  scrollbar-width: none;
+  padding: 2.5rem 1.5rem 3rem;
 }
-.guide-tabs__inner::-webkit-scrollbar {
-  display: none;
+/* Bar atas: search (kiri, lebar) + tombol Categories (kanan) */
+.guide-page__bar {
+  display: flex;
+  gap: 0.7rem;
+  align-items: stretch;
+  margin-bottom: 0.5rem;
 }
-.guide-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
+.guide-page__search {
+  flex: 1;
+  max-width: none;
+  margin: 0;
+}
+.guide-cat-nav {
+  position: relative;
   flex: 0 0 auto;
-  padding: 0.7rem 0.9rem;
-  border: none;
-  border-bottom: 3px solid transparent;
-  border-radius: 8px 8px 0 0;
+}
+.guide-cat-toggle {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
   font-family: var(--font-body);
   font-size: var(--fs-body);
   font-weight: 600;
-  color: var(--color-muted-2);
-  background: transparent;
-  white-space: nowrap;
+  color: var(--color-green);
   cursor: pointer;
+  white-space: nowrap;
   transition:
-    background-color 0.2s ease,
     border-color 0.2s ease,
-    color 0.2s ease;
+    background-color 0.2s ease;
 }
-.guide-tab svg {
+.guide-cat-toggle:hover {
+  border-color: var(--color-gold);
+}
+.guide-cat-toggle .gcat-icon {
   width: 18px;
   height: 18px;
-  flex-shrink: 0;
 }
-.guide-tab:hover {
-  background: var(--color-cream);
-  color: var(--color-green);
+.guide-cat-toggle .hs-chev {
+  width: 16px;
+  height: 16px;
+  color: var(--color-muted);
+  transition: transform 0.2s ease;
 }
-.guide-tab.active {
-  background: var(--color-cream);
-  color: var(--color-green);
-  border-bottom-color: var(--color-gold);
+.guide-cat-toggle[aria-expanded="true"] .hs-chev {
+  transform: rotate(180deg);
 }
-.guide-section {
-  padding: 2.5rem 1.5rem 3rem;
+.guide-cat-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(31, 61, 43, 0.14);
+  overflow: hidden;
+  z-index: 20;
 }
-.guide-panel {
+.guide-cat-menu[hidden] {
   display: none;
 }
-.guide-panel.active {
-  display: block;
+.guide-cat-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  color: var(--color-green);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+.guide-cat-menu a:first-child {
+  border-top: none;
+}
+.guide-cat-menu a:hover {
+  background: rgba(201, 164, 92, 0.08);
+}
+.guide-cat-menu a svg {
+  width: 17px;
+  height: 17px;
+  color: var(--color-gold-d);
+  flex-shrink: 0;
+}
+/* Section per kategori */
+.guide-cat {
+  margin-top: 2.4rem;
+  scroll-margin-top: 80px; /* biar pas loncat gak ketutup navbar fixed */
+}
+.guide-cat__title {
+  text-align: left;
+  margin-bottom: 1.1rem;
+}
+.guide-cat__title::after {
+  margin-left: 0;
+}
+/* HP: bar jadi 2 baris (search penuh, toggle di bawah rata kanan) */
+@media (max-width: 560px) {
+  .guide-page__bar {
+    flex-wrap: wrap;
+  }
+  .guide-page__search {
+    flex: 1 1 100%;
+  }
+  .guide-cat-nav {
+    margin-left: auto;
+  }
 }
 
 /* ==================== Guides & Information (homepage) ====================
@@ -3643,62 +3698,6 @@ a.footer__contact-item:hover {
   font-weight: 600;
   font-size: 0.9rem;
 }
-/* ---- Chips kategori ---- */
-.guide-chips {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1.4rem;
-}
-.guide-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-muted-2);
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-.guide-chip svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-.guide-chip:hover {
-  border-color: var(--color-gold);
-  color: var(--color-green);
-}
-.guide-chip.active {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-  color: #fff;
-}
-/* ---- Grid guide (bukan slider) ---- */
-.guide-grid {
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 1.7rem;
-}
-/* min-width:0 -> grid item boleh nyusut di bawah lebar konten (foto), biar kolom
-   1fr beneran sama rata & nggak overflow (foto belum tentu punya max-width). */
-.guide-grid .guide-home__card {
-  min-width: 0;
-}
-.guide-grid .guide-home__card img {
-  max-width: 100%;
-}
-.guide-grid .guide-home__card[hidden] {
-  display: none;
-}
 /* kartu guide: foto lebih landscape + label kategori emas */
 .guide-home__card {
   text-decoration: none;
@@ -3714,27 +3713,6 @@ a.footer__contact-item:hover {
   text-transform: uppercase;
   color: var(--color-gold);
 }
-/* Tablet: 3 kolom. NOTE: di HP semua .experience__grid dikonversi jadi slider
-   (display:flex) - guide grid HARUS tetep grid, jadi override balik pakai
-   selektor gabungan (.guide-grid.experience__grid, specificity lebih tinggi). */
-@media (max-width: 992px) {
-  .guide-grid.experience__grid {
-    display: grid;
-    overflow: visible;
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-/* HP: 2 kolom, chips wrap (semua kategori keliatan, gak ada yg ke-clip) */
-@media (max-width: 640px) {
-  .guide-grid.experience__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .guide-chip {
-    font-size: 0.76rem;
-    padding: 0.5rem 0.8rem;
-  }
-}
-
 /* Halaman artikel guide */
 .guide-article {
   max-width: 720px;

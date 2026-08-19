@@ -3537,11 +3537,14 @@ a.footer__contact-item:hover {
   color: var(--color-gold);
   font-size: inherit; /* ikut ukuran hero (2.4rem), lawan .info__fact .price */
 }
+.info__facts--hero .info__fact--price .price {
+  position: relative; /* anchor buat coret (di pojok ANGKA, bukan termasuk /car) */
+}
 /* harga asli dicoret = kecil di pojok kiri atas */
 .info__fact--price .price-was {
   position: absolute;
-  top: -0.35em; /* nempel di pojok kiri-atas angka harga */
-  left: -0.15em;
+  top: -0.35em; /* nempel di pojok kanan-atas angka harga (opsi B) */
+  right: -0.15em;
   font-size: 0.8rem;
   margin: 0;
 }

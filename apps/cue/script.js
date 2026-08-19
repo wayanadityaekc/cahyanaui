@@ -4481,7 +4481,12 @@ function initTourSidebar() {
   const side = document.createElement("div"); side.className = "tour-layout__side";
   layout.append(main, side);
   subhero.after(layout);
-  sections.forEach((s) => (s === info ? side : main).appendChild(s));
+  // kanan (sidebar) = Tour Details + FAQ (di bawahnya) biar tinggi kolom seimbang;
+  // kiri = sisa konten (What You'll Do / About, dll).
+  sections.forEach((s) => {
+    const toSide = s === info || s.classList.contains("faq");
+    (toSide ? side : main).appendChild(s);
+  });
 }
 
 async function initPage() {

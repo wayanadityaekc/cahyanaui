@@ -3256,55 +3256,58 @@ a.footer__contact-item:hover {
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 
-/* ===== DESKTOP: Tour Details jadi sidebar kanan (2 kolom). Mobile nggak kena. ===== */
+/* ===== DESKTOP: Tour Details + FAQ jadi kolom kanan, SATU kartu sama konten kiri.
+       Mobile nggak kena (JS cuma jalan >=993px + semua di media ini). ===== */
 @media (min-width: 993px) {
+  /* SATU kartu putih (nyatu) yg overlap hero, isinya 2 kolom */
   .tour-layout {
     display: flex;
-    align-items: flex-start;
-    gap: 1.8rem;
+    align-items: stretch; /* tinggi kolom kiri & kanan disamain */
     width: min(1180px, 92%);
-    margin: -5rem auto 0; /* naik ke atas nutup hero, kaya overlap lama */
+    margin: -5rem auto 0;
     position: relative;
     z-index: 2;
-  }
-  /* konten utama = kartu putih membulat (ganti efek overlap yg dulu di .stops) */
-  .tour-layout__main {
-    flex: 1 1 auto;
-    min-width: 0;
     background: #fff;
     border-radius: 24px 24px 0 0;
     box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
     overflow: hidden;
   }
-  .tour-layout__main > section {
-    margin-top: 0 !important; /* section di dalam main jangan ada pull-up sendiri */
+  .tour-layout__main {
+    flex: 1 1 auto;
+    min-width: 0;
   }
-  /* sidebar Tour Details: sticky, sempit -> memanjang vertikal kaya HP */
+  /* kolom kanan = Tour Details + FAQ, dipisah garis tipis (bukan kartu terpisah) */
   .tour-layout__side {
-    flex: 0 0 22%;
-    position: sticky;
-    top: 78px;
+    flex: 0 0 36%;
+    border-left: 1px solid var(--line);
   }
-  .tour-layout__side .info {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: 0 10px 34px rgba(31, 61, 43, 0.08);
+  .tour-layout__main > section,
+  .tour-layout__side > section {
+    margin-top: 0 !important;
+  }
+  /* .info & .faq di kolom kanan: transparan biar NYATU sama bg kartu */
+  .tour-layout__side .info,
+  .tour-layout__side .faq {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .tour-layout__side .faq {
+    border-top: 1px solid var(--line); /* pemisah tipis Tour Details <-> FAQ */
   }
   .tour-layout__side .info__container {
     max-width: none;
     width: auto;
-    padding: 1.5rem 1.3rem;
+    padding: 1.6rem 1.5rem;
   }
   .tour-layout__side .section__title {
     font-size: 1.25rem;
     margin-bottom: 1.1rem;
   }
-  /* kolom sempit: grid fakta (halaman attraction) jadi 2x2, jangan 4 sejajar */
+  /* kolom lebih sempit: attraction fact grid 2x2, Included/Excluded 1 kolom */
   .tour-layout__side .info__facts {
     grid-template-columns: repeat(2, 1fr);
   }
-  /* kolom sempit -> Included/Excluded jadi 1 kolom (numpuk) */
   .tour-layout__side .info__lists {
     grid-template-columns: 1fr;
     gap: 1.3rem;
@@ -3318,6 +3321,15 @@ a.footer__contact-item:hover {
   }
   .tour-layout__side .info__cta .program-cta__btn {
     width: 100%;
+  }
+  /* FAQ di kolom sempit: accordion + kartu chat numpuk (bukan 2 kolom) */
+  .tour-layout__side .faq__container,
+  .tour-layout__side .faq__grid {
+    grid-template-columns: 1fr;
+    display: block;
+  }
+  .tour-layout__side .faq {
+    padding: 1.6rem 1.5rem;
   }
 }
 

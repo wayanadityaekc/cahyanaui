@@ -4461,6 +4461,29 @@ function initGlanceHero() {
   updateGlanceSave();
 }
 
+// DESKTOP ONLY: halaman "Tour Details" -> layout 2 kolom. Konten (stops/faq) di kiri,
+// section .info (Tour Details: harga + included/excluded + Book) jadi sidebar sticky
+// ~22% di kanan (memanjang vertikal kaya di HP). Mobile NGGAK disentuh (gate width).
+function initTourSidebar() {
+  if (!window.matchMedia("(min-width: 993px)").matches) return; // desktop saja
+  const info = document.querySelector("section.info");
+  if (!info || !info.querySelector(".info__cta")) return; // cuma halaman detail bookable
+  const subhero = document.querySelector("section.subhero");
+  if (!subhero) return;
+  // kumpulin section berturut setelah subhero (stops, info, faq, ...) sampai ketemu non-section
+  const sections = [];
+  let n = subhero.nextElementSibling;
+  while (n && n.tagName === "SECTION") { sections.push(n); n = n.nextElementSibling; }
+  if (sections.indexOf(info) === -1) return;
+  const layout = document.createElement("div");
+  layout.className = "tour-layout";
+  const main = document.createElement("div"); main.className = "tour-layout__main";
+  const side = document.createElement("div"); side.className = "tour-layout__side";
+  layout.append(main, side);
+  subhero.after(layout);
+  sections.forEach((s) => (s === info ? side : main).appendChild(s));
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -4504,6 +4527,7 @@ async function initPage() {
   initCardTitleOverlay();
   initBookingCustomControls();
   initGlanceHero();
+  initTourSidebar();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

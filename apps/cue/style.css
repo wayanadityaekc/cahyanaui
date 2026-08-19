@@ -3256,6 +3256,71 @@ a.footer__contact-item:hover {
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 
+/* ===== DESKTOP: Tour Details jadi sidebar kanan (2 kolom). Mobile nggak kena. ===== */
+@media (min-width: 993px) {
+  .tour-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.8rem;
+    width: min(1180px, 92%);
+    margin: -5rem auto 0; /* naik ke atas nutup hero, kaya overlap lama */
+    position: relative;
+    z-index: 2;
+  }
+  /* konten utama = kartu putih membulat (ganti efek overlap yg dulu di .stops) */
+  .tour-layout__main {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+  }
+  .tour-layout__main > section {
+    margin-top: 0 !important; /* section di dalam main jangan ada pull-up sendiri */
+  }
+  /* sidebar Tour Details: sticky, sempit -> memanjang vertikal kaya HP */
+  .tour-layout__side {
+    flex: 0 0 22%;
+    position: sticky;
+    top: 78px;
+  }
+  .tour-layout__side .info {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 10px 34px rgba(31, 61, 43, 0.08);
+  }
+  .tour-layout__side .info__container {
+    max-width: none;
+    width: auto;
+    padding: 1.5rem 1.3rem;
+  }
+  .tour-layout__side .section__title {
+    font-size: 1.25rem;
+    margin-bottom: 1.1rem;
+  }
+  /* kolom sempit: grid fakta (halaman attraction) jadi 2x2, jangan 4 sejajar */
+  .tour-layout__side .info__facts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* kolom sempit -> Included/Excluded jadi 1 kolom (numpuk) */
+  .tour-layout__side .info__lists {
+    grid-template-columns: 1fr;
+    gap: 1.3rem;
+    margin-top: 1.4rem;
+  }
+  .tour-layout__side .info__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1.4rem;
+  }
+  .tour-layout__side .info__cta .program-cta__btn {
+    width: 100%;
+  }
+}
+
 /* Featured highlight: split image / content */
 .highlight {
   padding: 3rem 1.5rem;

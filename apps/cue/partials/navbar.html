@@ -55,9 +55,6 @@
           </ul>
         </div>
         <div class="acct__actions">
-          <a href="my-trips.html" class="acct__link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h12"/></svg>My Trips
-          </a>
           <a href="settings.html" class="acct__link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2"/></svg>Settings
           </a>
@@ -68,10 +65,13 @@
         </div>
       </div>
     </div>
+    <a href="my-trips.html" class="navbar__cart" aria-label="My Trips">
+      <svg class="navbar__cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="itn-badge navbar__cart-badge" data-itn-badge hidden>0</span>
+    </a>
     <nav>
       <ul class="navbar__menu" id="nav-menu">
         <li><a href="index.html">Home</a></li>
-        <li><a href="itinerary.html" class="nav-itn">Itinerary<span class="itn-badge" data-itn-badge hidden>0</span></a></li>
         <li class="navbar__has-drop">
           <button type="button" class="navbar__droptoggle" aria-expanded="false">Program<span class="navbar__caret">&rsaquo;</span></button>
           <ul class="navbar__drop">
@@ -88,7 +88,6 @@
     </nav>
     <button class="navbar__toggle" id="hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
-      <span class="itn-badge itn-badge--hamburger" data-itn-badge hidden>0</span>
       <span class="acct__dot acct__dot--ham" data-acct-dot hidden></span>
     </button>
   </div>

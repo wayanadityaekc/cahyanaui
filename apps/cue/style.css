@@ -5448,6 +5448,29 @@ button.pick-cat {
   position: relative;
   margin-right: 0.3rem;
 }
+/* Nav cart icon "My Trips" (sebelah icon akun) + badge jumlah item */
+.navbar__cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-green);
+  margin-right: 0.85rem;
+  transition: color 0.2s ease;
+}
+.navbar__cart:hover {
+  color: var(--color-gold-d);
+}
+.navbar__cart-icon {
+  width: 23px;
+  height: 23px;
+}
+.navbar__cart-badge {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  margin-left: 0;
+  background-color: var(--color-gold);
+}
 /* Ikon akun gaya Nike: line-icon polos, tanpa lingkaran/border/badge. */
 .acct__btn {
   display: inline-flex;

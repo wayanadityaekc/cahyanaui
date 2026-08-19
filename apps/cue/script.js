@@ -2251,37 +2251,39 @@ function initReveal() {
     ".guide-article ul"
   ];
   const els = document.querySelectorAll(selectors.join(","));
-  if (!els.length || !("IntersectionObserver" in window)) return;
+  if (!els.length) return;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.classList.add("is-visible");
-        observer.unobserve(el);
-        // Buang lagi class reveal setelah animasi kelar, biar hover
-        // pakai transisi milik card-nya sendiri (bukan transisi reveal).
-        setTimeout(() => {
-          el.classList.remove("reveal", "is-visible");
-          el.style.transitionDelay = "";
-        }, 900);
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-  );
-
-  // Stagger: elemen sebaris/segrup muncul berurutan, bukan barengan.
+  // Cuma animasikan elemen yang KELIHATAN di layar awal (above the fold) pas
+  // halaman kebuka. Yang di bawah (harus scroll) dibiarin langsung siap - TANPA
+  // reveal-on-scroll (dulu semua konten muncul pas di-scroll = kebanyakan gerak).
+  const vh = window.innerHeight || document.documentElement.clientHeight;
   const groupCount = new Map();
+  const revealed = [];
   els.forEach((el) => {
-    if (el.closest(".modal")) return; // lewati isi popup (biar nggak ke-stuck hidden)
+    if (el.closest(".modal")) return; // lewati isi popup
+    const top = el.getBoundingClientRect().top;
+    if (top < 0 || top >= vh) return; // di luar layar awal -> biarin, no anim
     const parent = el.parentElement;
     const idx = groupCount.get(parent) || 0;
     groupCount.set(parent, idx + 1);
     el.style.transitionDelay = Math.min(idx, 5) * 0.07 + "s";
     el.classList.add("reveal");
-    observer.observe(el);
+    revealed.push(el);
   });
+  if (!revealed.length) return;
+
+  // Trigger fade-in di frame berikutnya (biar transisi jalan dari opacity 0).
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => revealed.forEach((el) => el.classList.add("is-visible")))
+  );
+  // Buang class reveal setelah animasi kelar, biar hover pakai transisi milik
+  // card-nya sendiri (bukan transisi reveal).
+  setTimeout(() => {
+    revealed.forEach((el) => {
+      el.classList.remove("reveal", "is-visible");
+      el.style.transitionDelay = "";
+    });
+  }, 1300);
 }
 
 // Boks "Don't know where to start?" (Days + Guests + Build) di atas builder itinerary.

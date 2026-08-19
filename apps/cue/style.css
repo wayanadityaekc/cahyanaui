@@ -3505,12 +3505,9 @@ a.footer__contact-item:hover {
   border-radius: 0;
   overflow: visible;
 }
-.info__facts--hero .info__fact {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fdfcfa;
-  min-height: 72px;
-  padding: 0.85rem 0.6rem;
+/* Cuma harga (hero) yang tampil - 3 box detail disembunyiin */
+.info__facts--hero .info__fact:not(.info__fact--price) {
+  display: none;
 }
 /* harga = hero: full width, di atas, tengah, tanpa border */
 .info__fact--price {
@@ -6306,6 +6303,7 @@ button.pick-cat {
 /* strikethrough original when referral active */
 .price-was {
   color: var(--color-muted);
+  opacity: 0.45; /* dicoret = warna transparan/pudar */
   text-decoration: line-through;
   font-weight: 400;
   font-size: 0.75em;

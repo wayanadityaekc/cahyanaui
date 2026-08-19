@@ -3523,6 +3523,8 @@ a.footer__contact-item:hover {
   display: none; /* label "Price" disembunyiin (tapi jangan pill save) */
 }
 .info__fact--price > strong {
+  display: inline-block; /* nyusut ke lebar angka -> anchor buat coret di pojoknya */
+  position: relative;
   margin-top: 0;
   font-family: var(--font-head);
   font-weight: 600;
@@ -3538,9 +3540,9 @@ a.footer__contact-item:hover {
 /* harga asli dicoret = kecil di pojok kiri atas */
 .info__fact--price .price-was {
   position: absolute;
-  top: 0; /* pojok kiri atas kartu */
-  left: 0;
-  font-size: 0.85rem;
+  top: -0.35em; /* nempel di pojok kiri-atas angka harga */
+  left: -0.15em;
+  font-size: 0.8rem;
   margin: 0;
 }
 .info__facts--hero .info__fact--price .price-unit {

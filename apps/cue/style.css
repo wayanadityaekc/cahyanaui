@@ -3331,6 +3331,10 @@ a.footer__contact-item:hover {
   .tour-layout__side .faq {
     padding: 1.6rem 1.5rem;
   }
+  /* Hapus card "Still have questions?" di layout desktop (mobile tetap ada) */
+  .tour-layout__side .faq__chat {
+    display: none;
+  }
 }
 
 /* Featured highlight: split image / content */

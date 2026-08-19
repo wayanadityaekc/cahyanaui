@@ -3467,49 +3467,63 @@ a.footer__contact-item:hover {
 }
 /* Search bar di dalam hero (bawah deskripsi): toggle Categories (kiri) + search
    (kanan, lebar), sejajar 1 baris. */
+/* Search + kategori = SATU bar: search ~90% kiri, kategori (icon) ~10% kanan.
+   Border/background dipegang container biar keliatan 1 kontrol, bukan 2 kotak. */
 .guide-hero-search {
   display: flex;
-  gap: 0.7rem;
-  align-items: center;
+  align-items: stretch;
   max-width: 640px;
   margin: 1.5rem auto 0;
+  border: 1.5px solid var(--color-gold);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(201, 164, 92, 0.12);
 }
 .guide-hero-search__field {
   flex: 1;
   max-width: none;
   margin: 0;
 }
-/* kotak search di hero: tinggi disamain sama tombol Categories */
+/* kotak search di dalam bar: buang border/bg/shadow sendiri (udah dipegang bar) */
 .guide-hero-search__field .gsearch__box {
   min-height: 3.15rem;
   box-sizing: border-box;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .guide-cat-nav {
   position: relative;
   flex: 0 0 auto;
+  display: flex;
+  order: 2; /* kategori di KANAN, search di kiri (search ~90% / kategori ~10%) */
+  border-left: 1px solid var(--line); /* pemisah tipis: search | kategori */
 }
 .guide-cat-toggle {
-  min-height: 3.15rem; /* samain tinggi sama kotak search */
+  min-height: 3.15rem;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0 1.1rem;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
+  gap: 0.35rem;
+  padding: 0 0.95rem;
+  border: none;
+  border-radius: 0 12px 12px 0;
+  background: transparent;
   font-family: var(--font-body);
   font-size: var(--fs-body);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
   white-space: nowrap;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+/* label "Categories" disembunyiin -> icon + chevron aja (kategori ringkas ~10%) */
+.guide-cat-toggle span {
+  display: none;
 }
 .guide-cat-toggle:hover {
-  border-color: var(--color-gold);
+  background: rgba(201, 164, 92, 0.08);
 }
 .guide-cat-toggle .gcat-icon {
   width: 18px;
@@ -3526,7 +3540,7 @@ a.footer__contact-item:hover {
 }
 .guide-cat-menu {
   position: absolute;
-  left: 0;
+  right: 0;
   top: calc(100% + 6px);
   min-width: 220px;
   background: #fff;
@@ -3573,18 +3587,6 @@ a.footer__contact-item:hover {
 }
 .guide-cat__title::after {
   margin-left: 0;
-}
-/* HP: tetep sejajar 1 baris. Toggle jadi compact (ikon aja) biar muat. */
-@media (max-width: 560px) {
-  .guide-hero-search {
-    gap: 0.5rem;
-  }
-  .guide-cat-toggle span {
-    display: none;
-  }
-  .guide-cat-toggle {
-    padding: 0.85rem 0.9rem;
-  }
 }
 
 /* ==================== Guides & Information (homepage) ====================

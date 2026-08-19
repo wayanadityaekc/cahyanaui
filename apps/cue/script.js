@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 65;
+const PARTIALS_VERSION = 66;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2961,24 +2961,24 @@ function curDropdownHTML() {
 // Search form: input kode referral + Apply (ganti field tanggal). Kode aktif disimpan
 // di localStorage cue_referral; diskon dipasang site-wide via renderPrices + cartPriceTag.
 function initReferral() {
+  // Strict: kode valid -> keapply (input kekunci + tombol "Remove"). Kode salah ->
+  // NGGAK diterima (border merah sekejap, input balik kosong). Nggak ada teks pesan.
   function refreshFields() {
     const active = activeReferral();
     document.querySelectorAll("[data-referral-field]").forEach((field) => {
       const inp = field.querySelector("[data-ref-input]");
       const btn = field.querySelector("[data-ref-apply]");
-      const msg = field.querySelector("[data-ref-msg]");
       if (!inp || !btn) return;
+      inp.classList.remove("is-err");
       if (active) {
         inp.value = active.code;
         inp.disabled = true;
         btn.textContent = "Remove";
         btn.classList.add("is-active");
-        if (msg) { msg.hidden = false; msg.textContent = "Code " + active.code + " applied · " + active.pct + "% off"; msg.className = "hsearch__refmsg is-ok"; }
       } else {
         inp.disabled = false;
         btn.textContent = "Apply";
         btn.classList.remove("is-active");
-        if (msg) { msg.hidden = true; msg.textContent = ""; msg.className = "hsearch__refmsg"; }
       }
     });
   }
@@ -2987,16 +2987,18 @@ function initReferral() {
   document.querySelectorAll("[data-referral-field]").forEach((field) => {
     const inp = field.querySelector("[data-ref-input]");
     const btn = field.querySelector("[data-ref-apply]");
-    const msg = field.querySelector("[data-ref-msg]");
     if (!inp || !btn) return;
     const doApply = () => {
       if (activeReferral()) { saveReferral(null); return; } // tombol lagi "Remove"
       const entry = referralLookup(inp.value);
-      if (entry) saveReferral(entry); // sukses -> refreshFields via saveReferral
-      else if (msg) { msg.hidden = false; msg.textContent = "That code isn't valid."; msg.className = "hsearch__refmsg is-err"; }
+      if (entry) { saveReferral(entry); return; } // sukses -> refreshFields via saveReferral
+      // strict reject: flash merah + kosongin, tanpa teks
+      inp.classList.add("is-err");
+      inp.value = "";
     };
     btn.addEventListener("click", doApply);
     inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doApply(); } });
+    inp.addEventListener("input", () => inp.classList.remove("is-err"));
   });
 
   refreshFields();

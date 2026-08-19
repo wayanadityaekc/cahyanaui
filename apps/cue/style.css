@@ -439,15 +439,10 @@ body {
 .hsearch__refbtn.is-active {
   background: var(--color-muted);
 }
-.hsearch__refmsg {
-  margin: 0.4rem 0 0;
-  font-size: var(--fs-small);
-}
-.hsearch__refmsg.is-ok {
-  color: var(--color-gold-d);
-}
-.hsearch__refmsg.is-err {
-  color: #b5443b;
+/* strict: kode salah -> border merah sekejap (tanpa teks pesan) */
+.hsearch__refinp.is-err {
+  border-color: #d17067;
+  box-shadow: 0 0 0 3px rgba(200, 80, 70, 0.14);
 }
 /* harga diskon referral (dipasang renderPrices di card/form) */
 .price-now {
@@ -6230,7 +6225,9 @@ button.pick-cat {
   color: var(--color-muted);
   text-decoration: line-through;
   font-weight: 400;
-  margin-right: 0.25rem;
+  font-size: 0.75em;
+  margin-right: 0.2rem;
+  vertical-align: middle;
 }
 /* total */
 .mtc-total {

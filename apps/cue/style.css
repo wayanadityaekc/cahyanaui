@@ -386,6 +386,74 @@ body {
 .hsearch__cur .acct__curlist {
   border-radius: 11px;
 }
+/* ===== Referral field di search form (ganti field tanggal) ===== */
+.hsearch__refrow {
+  display: flex;
+  gap: 0.5rem;
+}
+.hsearch__refinp {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid var(--line, #e7e4dd);
+  border-radius: 11px;
+  padding: 0.72rem 0.85rem;
+  background-color: #fff;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-body);
+  color: var(--color-green);
+  text-transform: uppercase;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.hsearch__refinp::placeholder {
+  color: var(--color-muted);
+  text-transform: none;
+  font-weight: 400;
+}
+.hsearch__refinp:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+}
+.hsearch__refinp:disabled {
+  background: var(--color-cream);
+  color: var(--color-gold-d);
+  border-color: rgba(201, 164, 92, 0.5);
+}
+.hsearch__refbtn {
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 11px;
+  padding: 0.72rem 1.15rem;
+  background: var(--color-gold);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.hsearch__refbtn:hover {
+  background: var(--color-gold-d);
+}
+.hsearch__refbtn.is-active {
+  background: var(--color-muted);
+}
+.hsearch__refmsg {
+  margin: 0.4rem 0 0;
+  font-size: var(--fs-small);
+}
+.hsearch__refmsg.is-ok {
+  color: var(--color-gold-d);
+}
+.hsearch__refmsg.is-err {
+  color: #b5443b;
+}
+/* harga diskon referral (dipasang renderPrices di card/form) */
+.price-now {
+  color: var(--color-gold);
+  font-weight: 600;
+}
 /* ===== Info popover "Standard vs Exclusive" (dipakai booking + search form) ===== */
 .binfo {
   position: relative;

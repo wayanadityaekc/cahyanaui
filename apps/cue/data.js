@@ -162,6 +162,15 @@ Object.keys(prices.place).forEach(function (place) {
   tourExclusive[place] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
 });
 
+// -- Kode referral: kode (UPPERCASE) -> persen diskon. Dipakai di search form homepage
+//    (input + Apply) & My Trips. Diskon dipasang ke semua harga (coret + harga baru).
+//    ANGKA & KODE placeholder - CEK WAYAN (ganti/isi kode asli + persen-nya).
+const REFERRAL = {
+  "GOWITHCAHYANA": 10, // kode lama (checkout) - dipertahanin, jangan hapus
+  "CAHYANA10": 10,
+  "UBUD5": 5
+};
+
 const tourDetails = [
   "Price includes car, driver, and petrol",
   "Entrance tickets are not included",

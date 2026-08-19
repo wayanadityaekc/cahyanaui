@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 64;
+const PARTIALS_VERSION = 65;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -17,6 +17,8 @@ const TOKEN_KEY = "cue_token";
 let currentAccount = null; // null = belum login (guest)
 let hasUpcoming = false; // buat titik hijau navbar (ada booking mendatang)
 
+// Kode referral lama (single code). Sekarang semua kode + persen hidup di REFERRAL
+// (data.js) & divalidasi lewat referralLookup; const ini dipertahanin (jangan hapus).
 const REFERRAL_CODE = "gowithcahyana";
 
 // -- SEMUA data harga & kurs pindah ke data.js (dimuat sebelum file ini).
@@ -154,7 +156,16 @@ function renderPrices() {
     // FINAL price = base (+ tiket exclusive) + pickup surcharge. Surcharge di-bake in;
     // angkanya sendiri nggak pernah ditampilin di card/form (cuma di konfirmasi).
     const s = surchargeFor(name);
-    el.textContent = fmtMoney(usd + s.usd, idr + s.idr);
+    const fUsd = usd + s.usd, fIdr = idr + s.idr;
+    // Referral aktif -> harga asli dicoret + harga diskon. Nggak aktif -> teks biasa.
+    const pct = refDiscountPct();
+    if (pct) {
+      const d = applyReferral(fUsd, fIdr);
+      el.innerHTML = '<span class="price-was">' + fmtMoney(fUsd, fIdr) + "</span> " +
+        '<span class="price-now">' + fmtMoney(d.usd, d.idr) + "</span>";
+    } else {
+      el.textContent = fmtMoney(fUsd, fIdr);
+    }
   });
   renderPriceLabels();
   renderFees();
@@ -912,6 +923,37 @@ function cartPriceTag(usd, idr) {
     '<span class="price-cur">' + fmtMoney(d.usd, d.idr) + "</span>";
 }
 
+// Tag harga TOTAL dari banyak baris: dijumlah PER-BARIS di currency tampilan (biar
+// total == jumlah angka yg keliatan di tiap kartu, & nyamain checkout yg round per-line).
+function cartPriceTagSum(rows) {
+  const cur = currentCurrency;
+  const fmt = (v) => (CUR_SYMBOL[cur] || cur + " ") + v.toLocaleString(cur === "IDR" ? "id-ID" : "en-US");
+  let wasV = 0, nowV = 0;
+  rows.forEach((r) => {
+    wasV += toCurrency(r.usd, r.idr);
+    const d = applyReferral(r.usd, r.idr);
+    nowV += toCurrency(d.usd, d.idr);
+  });
+  if (!refDiscountPct()) return '<span class="price-cur">' + fmt(wasV) + "</span>";
+  return '<span class="price-was">' + fmt(wasV) + "</span> " +
+    '<span class="price-cur">' + fmt(nowV) + "</span>";
+}
+
+// Validasi kode -> simpan {code, pct} di localStorage. Return pct (0 kalau invalid).
+// REFERRAL (data.js) = { KODE: persen }. Kode di-uppercase & di-trim.
+function referralLookup(code) {
+  const k = String(code || "").trim().toUpperCase();
+  return (typeof REFERRAL !== "undefined" && REFERRAL[k]) ? { code: k, pct: REFERRAL[k] } : null;
+}
+function saveReferral(entry) {
+  if (entry) localStorage.setItem("cue_referral", JSON.stringify(entry));
+  else localStorage.removeItem("cue_referral");
+  // update semua harga + tampilan referral + My Trips (kalau lagi kebuka)
+  renderPrices();
+  if (window.__referralRefresh) window.__referralRefresh();
+  if (window.__myTripsRefresh) window.__myTripsRefresh();
+}
+
 // Hari ini format YYYY-MM-DD (waktu lokal, bukan UTC - hindari geser hari di Bali)
 function todayStr() {
   const d = new Date();
@@ -1223,7 +1265,16 @@ function initBookingConfirm() {
     nameI.value = ""; phoneI.value = ""; emailI.value = "";
     pickupI.value = o.pickup || "";
     dropoffI.value = "";
-    referralI.value = ""; refMsg.textContent = ""; refMsg.className = "modal__referral-msg";
+    // Auto-apply referral yang udah dipasang sesi ini (search form) -> total checkout
+    // langsung nyamain harga yg ditampilin di kartu/My Trips. Masih bisa diubah manual.
+    const ar = activeReferral();
+    if (ar && ctx.anyEligible) {
+      referralI.value = ar.code;
+      setModalDiscount(ar.pct);
+      refMsg.textContent = "Referral applied - " + ar.pct + "% off!"; refMsg.className = "modal__referral-msg success";
+    } else {
+      referralI.value = ""; refMsg.textContent = ""; refMsg.className = "modal__referral-msg";
+    }
     pickupLabel.textContent = o.pickupOptional ? "Pick-up Location (optional)" : "Pick-up Location";
     dropoffLabel.textContent = o.dropoffRequired ? "Drop-off Location" : "Drop-off Location (optional)";
     if (o.detailLines && o.detailLines.length) {
@@ -1247,24 +1298,30 @@ function initBookingConfirm() {
     modal.classList.add("active");
   };
 
-  applyRef.addEventListener("click", () => {
-    if (!ctx) return;
-    const code = referralI.value.trim().toLowerCase();
-    const noDiscount = (msg) => {
-      ctx.lines.forEach((l) => { l.final = { ...l.base }; });
-      ctx.discount = false; recalcTotal();
-      refMsg.textContent = msg; refMsg.className = "modal__referral-msg error";
-    };
-    if (code !== REFERRAL_CODE) return noDiscount("Invalid referral code.");
-    if (!ctx.anyEligible) return noDiscount("Referral only valid for tours & transfers.");
-    // Diskon 10% cuma di line eligible (tour & transfer); charter tetap harga asli.
+  // Pasang diskon pct% ke line eligible (tour & transfer); charter tetap harga asli.
+  function setModalDiscount(pct) {
     ctx.lines.forEach((l) => {
       l.final = l.eligible
-        ? { usd: Math.round(l.base.usd * 0.9), idr: Math.round(l.base.idr * 0.9) }
+        ? { usd: Math.round(l.base.usd * (1 - pct / 100)), idr: Math.round(l.base.idr * (1 - pct / 100)) }
         : { ...l.base };
     });
-    ctx.discount = true; recalcTotal();
-    refMsg.textContent = "Referral applied - 10% off!"; refMsg.className = "modal__referral-msg success";
+    ctx.discount = pct > 0; ctx.discountPct = pct; recalcTotal();
+  }
+  function clearModalDiscount() {
+    ctx.lines.forEach((l) => { l.final = { ...l.base }; });
+    ctx.discount = false; ctx.discountPct = 0; recalcTotal();
+  }
+  applyRef.addEventListener("click", () => {
+    if (!ctx) return;
+    const noDiscount = (msg) => {
+      clearModalDiscount();
+      refMsg.textContent = msg; refMsg.className = "modal__referral-msg error";
+    };
+    const entry = referralLookup(referralI.value);
+    if (!entry) return noDiscount("Invalid referral code.");
+    if (!ctx.anyEligible) return noDiscount("Referral only valid for tours & transfers.");
+    setModalDiscount(entry.pct);
+    refMsg.textContent = "Referral applied - " + entry.pct + "% off!"; refMsg.className = "modal__referral-msg success";
   });
 
   function priceText() { return `${CUR_SYMBOL.USD}${ctx.final.usd} / ${CUR_SYMBOL.IDR}${ctx.final.idr.toLocaleString("id-ID")}`; }
@@ -1435,7 +1492,7 @@ function initBooking() {
     const sc = surchargeFor(item, guests);
     usd += sc.usd; idr += sc.idr;
     currentPrice = { usd, idr, category, exclusive: bookingMode === "exclusive" && hasExclusive, surcharge: sc };
-    priceField.innerHTML = priceHTML(usd, idr);
+    priceField.innerHTML = cartPriceTag(usd, idr);
     priceNote.textContent = paxTxt + " · " + note;
     if (priceSurcharge) {
       const sl = surchargeLabel(item);
@@ -2901,6 +2958,50 @@ function curDropdownHTML() {
   "</div>";
 }
 
+// Search form: input kode referral + Apply (ganti field tanggal). Kode aktif disimpan
+// di localStorage cue_referral; diskon dipasang site-wide via renderPrices + cartPriceTag.
+function initReferral() {
+  function refreshFields() {
+    const active = activeReferral();
+    document.querySelectorAll("[data-referral-field]").forEach((field) => {
+      const inp = field.querySelector("[data-ref-input]");
+      const btn = field.querySelector("[data-ref-apply]");
+      const msg = field.querySelector("[data-ref-msg]");
+      if (!inp || !btn) return;
+      if (active) {
+        inp.value = active.code;
+        inp.disabled = true;
+        btn.textContent = "Remove";
+        btn.classList.add("is-active");
+        if (msg) { msg.hidden = false; msg.textContent = "Code " + active.code + " applied · " + active.pct + "% off"; msg.className = "hsearch__refmsg is-ok"; }
+      } else {
+        inp.disabled = false;
+        btn.textContent = "Apply";
+        btn.classList.remove("is-active");
+        if (msg) { msg.hidden = true; msg.textContent = ""; msg.className = "hsearch__refmsg"; }
+      }
+    });
+  }
+  window.__referralRefresh = refreshFields;
+
+  document.querySelectorAll("[data-referral-field]").forEach((field) => {
+    const inp = field.querySelector("[data-ref-input]");
+    const btn = field.querySelector("[data-ref-apply]");
+    const msg = field.querySelector("[data-ref-msg]");
+    if (!inp || !btn) return;
+    const doApply = () => {
+      if (activeReferral()) { saveReferral(null); return; } // tombol lagi "Remove"
+      const entry = referralLookup(inp.value);
+      if (entry) saveReferral(entry); // sukses -> refreshFields via saveReferral
+      else if (msg) { msg.hidden = false; msg.textContent = "That code isn't valid."; msg.className = "hsearch__refmsg is-err"; }
+    };
+    btn.addEventListener("click", doApply);
+    inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doApply(); } });
+  });
+
+  refreshFields();
+}
+
 // Wiring custom dropdown currency yang udah ada di HTML (navbar) + render awal
 function initCurrency() {
   document.querySelectorAll("[data-cur]").forEach(wireCurDropdown);
@@ -3292,19 +3393,15 @@ function initMyTripsCart() {
   };
 
   const totalHTML = (rows) => {
-    const usd = rows.reduce((s, r) => s + r.usd, 0);
-    const idr = rows.reduce((s, r) => s + r.idr, 0);
     return '<div class="mtc-total"><span class="mtc-total__label">Total</span>' +
-      '<span class="mtc-total__val">' + cartPriceTag(usd, idr) + "</span></div>";
+      '<span class="mtc-total__val">' + cartPriceTagSum(rows) + "</span></div>";
   };
 
   const packageCardHTML = (pkg) => {
     const rows = cartFlatten(cartPackageState(pkg));
-    const usd = rows.reduce((s, r) => s + r.usd, 0);
-    const idr = rows.reduce((s, r) => s + r.idr, 0);
     return '<div class="mtc-pkg">' +
       '<div class="mtc-pkg__head"><p class="mtc-pkg__title">' + escHtml(pkg.title) + "</p>" +
-      '<span class="mtc-pkg__price">' + cartPriceTag(usd, idr) + "</span></div>" +
+      '<span class="mtc-pkg__price">' + cartPriceTagSum(rows) + "</span></div>" +
       '<p class="mtc-pkg__blurb">' + escHtml(pkg.blurb) + "</p>" +
       '<button type="button" class="modal__btn mtc-pkg__use" data-use-pkg="' + pkg.id + '">Use this plan</button>' +
       "</div>";
@@ -3372,6 +3469,7 @@ function initMyTripsCart() {
     if (pay) pay.addEventListener("click", () => cartCheckout(render));
   }
 
+  window.__myTripsRefresh = render; // dipanggil pas referral di-apply/clear
   render();
 }
 
@@ -3923,6 +4021,9 @@ function initHeroSearch() {
   const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
   const now = new Date();
   const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+  // Field tanggal search form udah diganti referral (booking per-item). Wiring kalender
+  // ini cuma jalan kalau elemennya masih ada.
+  if (dateBtn && datePanel && calBody && calApply) {
   let rangeStart = parseD(currentDateFrom);
   let rangeEnd = parseD(currentDateTo);
   if (rangeStart && rangeEnd && keyOf(rangeEnd) === keyOf(rangeStart)) rangeEnd = null;
@@ -3993,6 +4094,7 @@ function initHeroSearch() {
     refreshDateLabel();
     closePanels();
   });
+  } // end if(dateBtn) date-panel wiring
 
   // ---- Tutup: tombol close (sheet), overlay, klik luar, Escape ----
   root.querySelectorAll("[data-hs-close]").forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); closePanels(); }));
@@ -4340,6 +4442,7 @@ async function initPage() {
   initAccountMenu();
   // setelah guest/pickup select terisi nilainya, baru bangun custom dropdown search
   initHeroSearch();
+  initReferral();
   initAccount();
   initMyTripsCart();
   initMyTrips();

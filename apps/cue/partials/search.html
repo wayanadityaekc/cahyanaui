@@ -62,20 +62,15 @@
     </div>
   </div>
 
-  <div class="hsearch__field hsearch__dt">
-    <label>When</label>
-    <button type="button" class="hs-control" data-date-btn aria-expanded="false">
-      <span class="hs-control__val placeholder" data-date-label>Add dates</span>
-      <svg class="hs-chev hs-chev--cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5" /><path d="M3 9h18M8 2.5v4M16 2.5v4" /></svg>
-    </button>
-    <div class="hs-panel hs-panel--cal" data-date-panel>
-      <div class="hs-panel__head"><h3>Select dates</h3><button type="button" class="hs-panel__close" data-hs-close aria-label="Close">&times;</button></div>
-      <div class="hs-cal" data-cal-body></div>
-      <div class="hs-cal__foot">
-        <span class="hs-cal__hint" data-cal-hint>Add your start date</span>
-        <button type="button" class="hs-cal__apply" data-cal-apply>Apply</button>
-      </div>
+  <!-- Referral code: gantiin field tanggal (booking sekarang per-item, tanggal dipilih
+       pas Book/+ My Trips). Apply -> diskon dipasang ke semua harga sesi ini. -->
+  <div class="hsearch__field hsearch__ref" data-referral-field>
+    <label for="hs-referral">Referral code</label>
+    <div class="hsearch__refrow">
+      <input type="text" id="hs-referral" class="hsearch__refinp" data-ref-input placeholder="Have a code?" autocomplete="off" spellcheck="false" />
+      <button type="button" class="hsearch__refbtn" data-ref-apply>Apply</button>
     </div>
+    <p class="hsearch__refmsg" data-ref-msg hidden></p>
   </div>
 
   <!-- Guests + Pickup: nyetir state trip global (guests -> harga Exclusive; pickup ->

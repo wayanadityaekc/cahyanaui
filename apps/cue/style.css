@@ -1236,16 +1236,29 @@ a.tripbar--promo {
   border-radius: 9px;
 }
 /* Popup pilih tanggal (Book Now universal) */
+/* Date popup: box = flex column yg NGE-CLIP; header + footer nempel,
+   cuma kalender yg scroll (hindari double-scroll & spill di iOS). */
 .bookdate__box {
-  max-width: 440px;
+  max-width: 420px;
   width: 92%;
-  padding: 1.6rem 1.4rem 1.4rem;
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.5rem 1.3rem 1.3rem;
   text-align: left;
   position: relative;
 }
+.bookdate__box .modal__title,
+.bookdate__box .modal__sub {
+  flex: 0 0 auto;
+  text-align: left;
+  margin-bottom: 0.3rem;
+}
+.bookdate__box .modal__title { margin-bottom: 0.15rem; padding-right: 1.8rem; }
 .bookdate__close {
   position: absolute;
-  top: 8px;
+  top: 10px;
   right: 14px;
   border: none;
   background: none;
@@ -1253,22 +1266,31 @@ a.tripbar--promo {
   line-height: 1;
   color: var(--color-muted);
   cursor: pointer;
+  z-index: 1;
 }
 .bookdate .bookdate__cal {
+  flex: 1 1 auto;
+  min-height: 0;
   margin-top: 0.6rem;
+  padding: 12px 12px 4px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  max-height: 300px;
+  max-height: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .bookdate .bookdate__cal .hs-cal__months {
   flex-direction: column;
   flex-wrap: nowrap;
-  gap: 14px;
+  gap: 18px;
 }
 .bookdate .bookdate__cal .hs-cal__m {
   max-width: none;
+  width: 100%;
 }
 .bookdate__foot {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6044,6 +6066,213 @@ button.pick-cat {
   background: #ece7db;
   color: #7a7362;
 }
+
+/* ===== My Trips cart page (Fase C) ===== */
+.mytrips {
+  padding: calc(var(--nav-h, 57.6px) + 2.2rem) 0 3.5rem;
+}
+.mytrips__container {
+  width: min(760px, 92%);
+  margin: 0 auto;
+}
+.mytrips__title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 2rem;
+  color: var(--color-green);
+  margin: 0 0 1.2rem;
+}
+/* referral applied banner */
+.mtc-ref {
+  background: #f4ecd8;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  color: var(--color-gold-d);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: var(--fs-small);
+  margin-bottom: 1rem;
+}
+.mtc-ref strong { color: var(--color-gold-d); }
+/* tabs */
+.mtc-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.4rem;
+}
+.mtc-tab {
+  border: 0;
+  background: none;
+  padding: 0.6rem 0.35rem;
+  margin-right: 0.6rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.mtc-tab.is-on {
+  color: var(--color-green);
+  border-bottom-color: var(--color-gold);
+}
+/* day group */
+.mtc-daygroup { margin-bottom: 1.3rem; }
+.mtc-daygroup__date {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 0.6rem;
+}
+/* item card */
+.mtc-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem 0.95rem;
+  margin-bottom: 0.6rem;
+}
+.mtc-item__icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--color-cream);
+  color: var(--color-gold-d);
+}
+.mtc-item__icon svg { width: 22px; height: 22px; }
+.mtc-item__body { flex: 1 1 auto; min-width: 0; }
+.mtc-item__title {
+  font-weight: 600;
+  color: var(--color-green);
+  margin: 0;
+}
+.mtc-item__desc {
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  margin: 0.15rem 0 0;
+}
+.mtc-item__price {
+  flex: 0 0 auto;
+  text-align: right;
+  white-space: nowrap;
+}
+.mtc-item__del {
+  flex: 0 0 auto;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.15rem;
+}
+.mtc-item__del:hover { color: #b5443b; }
+/* strikethrough original when referral active */
+.price-was {
+  color: var(--color-muted);
+  text-decoration: line-through;
+  font-weight: 400;
+  margin-right: 0.25rem;
+}
+/* total */
+.mtc-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+  margin-top: 0.4rem;
+}
+.mtc-total__label {
+  font-weight: 600;
+  color: var(--color-green);
+}
+.mtc-total__val {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.mtc-total__val .price-cur { color: var(--color-gold); }
+/* buttons + notes */
+.mtc-pay { width: 100%; margin-top: 1.2rem; }
+.mtc-note {
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  text-align: center;
+  margin: 0.7rem auto 0;
+  max-width: 46ch;
+}
+.mtc-pkgintro {
+  color: var(--color-muted);
+  margin: 0 0 1.2rem;
+}
+/* empty state + suggested packages */
+.mtc-empty { text-align: center; padding: 0.5rem 0 0; }
+.mtc-empty__lead {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--color-green);
+  margin: 0 0 0.4rem;
+}
+.mtc-empty__sub {
+  color: var(--color-muted);
+  max-width: 44ch;
+  margin: 0 auto 1.8rem;
+}
+.mtc-pkgs {
+  display: grid;
+  gap: 0.9rem;
+  text-align: left;
+}
+.mtc-pkg {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 1.1rem 1.2rem;
+}
+.mtc-pkg__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.mtc-pkg__title {
+  font-weight: 600;
+  color: var(--color-green);
+  margin: 0;
+}
+.mtc-pkg__price { white-space: nowrap; }
+.mtc-pkg__price .price-cur { color: var(--color-gold); font-weight: 600; }
+.mtc-pkg__blurb {
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  margin: 0.5rem 0 1rem;
+}
+.mtc-pkg__use { width: 100%; }
+/* booked & paid (secondary) */
+.mytrips-booked {
+  margin-top: 2.6rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--line);
+}
+.mytrips-booked__title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--color-green);
+  margin: 0 0 1.1rem;
+}
+
 /* Settings form */
 .acctform {
   display: flex;

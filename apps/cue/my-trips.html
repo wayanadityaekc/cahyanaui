@@ -17,27 +17,29 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=277" />
+    <link rel="stylesheet" href="style.css?v=278" />
   </head>
   <body>
     <div id="navbar-placeholder"></div>
 
-    <section class="subhero subhero--overlap" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));">
-      <div class="subhero__content">
-        <h1 class="subhero__title">My Trips</h1>
-        <p class="subhero__text">Your upcoming and past bookings, all in one place.</p>
+    <section class="mytrips">
+      <div class="mytrips__container">
+        <h1 class="mytrips__title">My Trips</h1>
+        <div data-mytrips-cart></div>
+
+        <section class="mytrips-booked" data-booked-wrap hidden>
+          <h2 class="mytrips-booked__title">Booked &amp; paid</h2>
+          <div id="trips-root" data-my-trips></div>
+        </section>
       </div>
     </section>
 
-    <section class="info">
-      <div class="info__container account-page">
-        <div id="trips-root" data-my-trips></div>
-      </div>
-    </section>
+    <!-- Contact + payment modal (Make Payment): dibuka lewat window.__openBooking -->
+    <div id="book-confirm-placeholder"></div>
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=277"></script>
-    <script src="script.js?v=277"></script>
+    <script src="data.js?v=278"></script>
+    <script src="script.js?v=278"></script>
   </body>
 </html>

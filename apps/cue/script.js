@@ -771,6 +771,133 @@ function bookNow(type, name, mode) {
   bookDatePopup(name, (date) => cartAddChecked(type, name, date, mode));
 }
 
+/* ---------- My Trips cart: pricing + flatten (mirror global dari closure initItinerary) ----------
+   Item cart (Book Now) nyimpen day/transfer dgn guests kosong -> default ke jumlah tamu
+   global (currentGuests) atau 2. Semua harga pakai helper global yg sama dg builder lama. */
+function cartGuestsOf(row) {
+  return parseInt(row && row.guests) || currentGuests || DISPLAY_GUESTS;
+}
+function cartItemMode(d, idx) { return (d.itemModes && d.itemModes[idx]) || "standard"; }
+function cartDayPrice(d) {
+  let usd = 0, idr = 0;
+  const g = cartGuestsOf(d);
+  (d.items || []).forEach((name, idx) => {
+    const info = itemInfo(name);
+    if (!info) return;
+    if (info.cat === "tour" || info.cat === "combo") {
+      const p = cartItemMode(d, idx) === "exclusive" && tourExclusive[name]
+        ? exclusivePrice(name, g) : carPrice(info.price, g);
+      usd += p.usd; idr += p.idr;
+    } else {
+      const t = transport[name] || { usd: 0, idr: 0 };
+      usd += info.price.usd * g + t.usd;
+      idr += info.price.idr * g + t.idr;
+    }
+  });
+  return { usd, idr };
+}
+function cartTransferPrice(tr) {
+  if (!prices.transfer[tr.route]) return { usd: 0, idr: 0 };
+  return carPrice(prices.transfer[tr.route], cartGuestsOf(tr));
+}
+function cartCharterPrice(ch) { return charterPrice(ch.area, ch.dur, ch.extra); }
+
+// Ikon kecil per jenis item (SVG, no emoji) buat kartu My Trips.
+function cartIcon(kind) {
+  const P = {
+    tour: '<path d="M9 3 3 5.5v15.5L9 18.5l6 2.5 6-2.5V5.5L15 8 9 5.5z"/><path d="M9 5.5v13M15 8v13"/>',
+    experience: '<path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8L12 21.3 6.8 19l1-5.8-4.3-4.1 5.9-.8z"/>',
+    transfer: '<path d="M4 16.5h16M5.5 16.5V11l1.7-4h9.6l1.7 4v5.5"/><circle cx="8" cy="16.5" r="1.6"/><circle cx="16" cy="16.5" r="1.6"/>',
+    charter: '<rect x="3" y="8" width="18" height="8.5" rx="2"/><path d="M7 8V5.5h10V8"/><circle cx="8" cy="18" r="1.4"/><circle cx="16" cy="18" r="1.4"/>',
+    place: '<path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/>'
+  };
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[kind] || P.tour) + '</svg>';
+}
+
+// deskripsi singkat per kategori (di bawah judul kartu)
+const CART_CAT_DESC = {
+  tour: "Private day tour", combo: "Combo day tour", experience: "Guided experience",
+  performance: "Cultural show", place: "Destination visit", villa: "Villa stay"
+};
+
+function cartDayTitle(d) {
+  return (d.items || []).map((n, i) => n + (cartItemMode(d, i) === "exclusive" ? " (Exclusive)" : "")).join(" + ");
+}
+function cartTransferTitle(tr) {
+  const area = tr.route.replace(" – Ubud", "");
+  return tr.direction === "from" ? "Ubud → " + area : area + " → Ubud";
+}
+function cartCharterTitle(ch) {
+  const dur = ch.dur === "half" ? "Half Day (5h)" : ch.dur === "full" ? "Full Day (10h)"
+    : ch.dur === "extended" ? "Extended (10h + " + (parseInt(ch.extra) || 1) + "h)" : "";
+  return (dur ? dur + " " : "") + "charter from " + ch.area;
+}
+
+// Ratakan state itinerary -> daftar baris kartu {ref,kind,title,desc,date,usd,idr}.
+function cartFlatten(state) {
+  const rows = [];
+  (state.days || []).forEach((d, idx) => {
+    if (!d.items || !d.items.length) return;
+    const info = itemInfo(d.items[0]);
+    const cat = info ? info.cat : "tour";
+    const kind = cat === "combo" ? "tour" : (cat === "performance" ? "experience" : cat);
+    const p = cartDayPrice(d);
+    rows.push({ ref: { type: "day", idx }, kind, title: cartDayTitle(d),
+      desc: (CART_CAT_DESC[cat] || "Experience") + " · " + cartGuestsOf(d) + " guests",
+      date: d.date || "", usd: p.usd, idr: p.idr });
+  });
+  (state.transfers || []).forEach((tr, idx) => {
+    const p = cartTransferPrice(tr);
+    rows.push({ ref: { type: "transfer", idx }, kind: "transfer", title: cartTransferTitle(tr),
+      desc: "Private transfer · " + cartGuestsOf(tr) + " guests",
+      date: tr.date || "", usd: p.usd, idr: p.idr });
+  });
+  (state.charters || []).forEach((ch, idx) => {
+    const p = cartCharterPrice(ch);
+    rows.push({ ref: { type: "charter", idx }, kind: "charter", title: cartCharterTitle(ch),
+      desc: "Private charter · " + cartGuestsOf(ch) + " guests",
+      date: ch.date || "", usd: p.usd, idr: p.idr });
+  });
+  return rows;
+}
+
+// Hapus 1 baris cart lewat ref-nya (dipakai tombol × kartu My Trips).
+function cartRemove(type, idx) {
+  const st = itnLoad();
+  if (type === "day") st.days.splice(idx, 1);
+  else if (type === "transfer") st.transfers.splice(idx, 1);
+  else if (type === "charter") (st.charters || []).splice(idx, 1);
+  itnSave(st);
+}
+
+// "YYYY-MM-DD" -> "19 August" (header grup tanggal). Kosong -> "Date to be set".
+function fmtGroupDate(ds) {
+  if (!ds) return "Date to be set";
+  const dt = new Date(ds + "T00:00:00");
+  if (isNaN(dt)) return ds;
+  return dt.toLocaleDateString("en-GB", { day: "numeric", month: "long" });
+}
+
+/* ---------- Referral discount (Fase D isi datanya; di sini cuma pembaca) ----------
+   Disimpan di localStorage cue_referral = {code, pct}. Belum ada -> null (no discount). */
+function activeReferral() {
+  try { return JSON.parse(localStorage.getItem("cue_referral")) || null; } catch (e) { return null; }
+}
+function refDiscountPct() { const r = activeReferral(); return (r && r.pct) ? r.pct : 0; }
+function applyReferral(usd, idr) {
+  const pct = refDiscountPct();
+  if (!pct) return { usd, idr };
+  return { usd: usd * (1 - pct / 100), idr: idr * (1 - pct / 100) };
+}
+// Harga tampil: kalau ada referral -> harga asli dicoret + harga diskon (emas).
+function cartPriceTag(usd, idr) {
+  const pct = refDiscountPct();
+  if (!pct) return '<span class="price-cur">' + fmtMoney(usd, idr) + "</span>";
+  const d = applyReferral(usd, idr);
+  return '<span class="price-was">' + fmtMoney(usd, idr) + "</span> " +
+    '<span class="price-cur">' + fmtMoney(d.usd, d.idr) + "</span>";
+}
+
 // Hari ini format YYYY-MM-DD (waktu lokal, bukan UTC - hindari geser hari di Bali)
 function todayStr() {
   const d = new Date();
@@ -3028,6 +3155,212 @@ function wireGate(root) {
   if (b) b.addEventListener("click", showCreateAccount);
 }
 
+/* ==================== My Trips cart page (Fase C) ==================== */
+// Paket suggested siap-pakai (tab + empty-state). Preview di-generate dari suggestState.
+const CART_PACKAGES = [
+  { id: "p2", days: 2, label: "2-Day", title: "2-Day Ubud Highlights",
+    blurb: "Ubud's culture, rice terraces and a Batur sunrise — the essentials in two days." },
+  { id: "p3", days: 3, label: "3-Day", title: "3-Day Bali Explorer",
+    blurb: "Ubud plus east Bali temples and a sunset Kecak — a fuller taste of the island." },
+  { id: "p4", days: 4, label: "4-Day", title: "4-Day Grand Bali",
+    blurb: "Ubud, east Bali, the south coast and the northern lakes & waterfalls." }
+];
+
+// State paket suggested dgn tanggal terisi: mulai dari trip start (search bar) atau hari ini,
+// tiap hari +1; transfer datang di hari-1, transfer pulang di hari terakhir.
+function cartPackageState(pkg) {
+  const g = String(currentGuests || DISPLAY_GUESTS);
+  const start = currentDateFrom || todayStr();
+  const st = suggestState(pkg.days, g);
+  st.days.forEach((d, i) => { d.date = addDaysStr(start, i); });
+  if (st.transfers[0]) st.transfers[0].date = start;                       // arrival (to Ubud)
+  if (st.transfers[1]) st.transfers[1].date = addDaysStr(start, pkg.days - 1); // departure
+  return st;
+}
+
+// Build lines + buka checkout dari state cart (isi guests default). Fase E ganti ke Xendit.
+function cartCheckout(rerender) {
+  if (!window.__openBooking) return;
+  const st = itnLoad();
+  const days = st.days || [], transfers = st.transfers || [], chs = st.charters || [];
+  if (!days.length && !transfers.length && !chs.length) return;
+  let usd = 0, idr = 0;
+  const lines = [
+    ...days.map((d, i) => {
+      const p = cartDayPrice(d); usd += p.usd; idr += p.idr;
+      return { type: "tour", service: cartDayTitle(d), date: d.date || "", guests: cartGuestsOf(d),
+        pickup: d.pickup || "", dropoff: d.dropoff || "", usd: p.usd, idr: p.idr, day_no: i + 1, eligible: true };
+    }),
+    ...transfers.map((tr) => {
+      const p = cartTransferPrice(tr); usd += p.usd; idr += p.idr;
+      return { type: "transfer", service: cartTransferTitle(tr), date: tr.date || "", guests: cartGuestsOf(tr),
+        pickup: tr.pickup || "", dropoff: tr.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: true };
+    }),
+    ...chs.map((ch) => {
+      const p = cartCharterPrice(ch); usd += p.usd; idr += p.idr;
+      return { type: "charter", service: cartCharterTitle(ch), date: ch.date || "", guests: cartGuestsOf(ch),
+        pickup: ch.pickup || "", dropoff: ch.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: false };
+    })
+  ];
+  const nD = days.length, nT = transfers.length, nC = chs.length;
+  const parts = [];
+  if (nD) parts.push(nD + " day" + (nD > 1 ? "s" : ""));
+  if (nT) parts.push(nT + " transfer" + (nT > 1 ? "s" : ""));
+  if (nC) parts.push(nC + " charter");
+  const dayDates = days.map((d) => d.date).filter(Boolean);
+  const dateRange = dayDates.length
+    ? fmtDayDate(dayDates[0]) + (dayDates.length > 1 ? " - " + fmtDayDate(dayDates[dayDates.length - 1]) : "")
+    : "";
+  const detailLines = [
+    ...days.map((d, i) => "Day " + (i + 1) + " · " + (d.date ? fmtDayDate(d.date) : "date TBD") + " · " + cartDayTitle(d)),
+    ...transfers.map((tr) => "Transfer · " + (tr.date ? fmtDayDate(tr.date) : "date TBD") + " · " + cartTransferTitle(tr)),
+    ...chs.map((ch) => "Charter · " + (ch.date ? fmtDayDate(ch.date) : "date TBD") + " · " + cartCharterTitle(ch))
+  ];
+  const ref = activeReferral();
+  window.__openBooking({
+    type: "itinerary",
+    service: "My Trip (" + parts.join(" + ") + ")",
+    guests: String(currentGuests || DISPLAY_GUESTS),
+    date: dateRange,
+    price: { usd, idr },
+    pickup: "",
+    pickupOptional: true,
+    dropoffRequired: false,
+    detailLines: detailLines,
+    detailsTitle: "Trip details",
+    lines: lines,
+    referral: ref ? ref.code : "",
+    onSuccess: () => {
+      itnSave({ days: [], transfers: [], charters: [] });
+      if (rerender) rerender();
+    }
+  });
+}
+
+// Halaman My Trips (cart): tabs [My Custom Trip + paket suggested], item per tanggal, total, Make Payment.
+function initMyTripsCart() {
+  const root = document.querySelector("[data-mytrips-cart]");
+  if (!root) return;
+  let activeTab = "custom";
+
+  const groupByDate = (rows) => {
+    const map = new Map();
+    rows.forEach((r) => {
+      const k = r.date || "";
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(r);
+    });
+    // tanggal keisi diurut naik, "Date to be set" (kosong) di paling bawah
+    return [...map.entries()].sort((a, b) => {
+      if (!a[0]) return 1;
+      if (!b[0]) return -1;
+      return a[0] < b[0] ? -1 : 1;
+    });
+  };
+
+  const rowCardHTML = (r, removable) => {
+    return '<div class="mtc-item">' +
+      '<span class="mtc-item__icon">' + cartIcon(r.kind) + "</span>" +
+      '<div class="mtc-item__body">' +
+        '<p class="mtc-item__title">' + escHtml(r.title) + "</p>" +
+        '<p class="mtc-item__desc">' + escHtml(r.desc) + "</p>" +
+      "</div>" +
+      '<div class="mtc-item__price">' + cartPriceTag(r.usd, r.idr) + "</div>" +
+      (removable ? '<button type="button" class="mtc-item__del" data-del-type="' + r.ref.type + '" data-del-idx="' + r.ref.idx + '" aria-label="Remove">&times;</button>' : "") +
+      "</div>";
+  };
+
+  const listHTML = (rows, removable) => {
+    return groupByDate(rows).map(([date, items]) =>
+      '<div class="mtc-daygroup"><p class="mtc-daygroup__date">' + escHtml(fmtGroupDate(date)) + "</p>" +
+      items.map((r) => rowCardHTML(r, removable)).join("") + "</div>"
+    ).join("");
+  };
+
+  const totalHTML = (rows) => {
+    const usd = rows.reduce((s, r) => s + r.usd, 0);
+    const idr = rows.reduce((s, r) => s + r.idr, 0);
+    return '<div class="mtc-total"><span class="mtc-total__label">Total</span>' +
+      '<span class="mtc-total__val">' + cartPriceTag(usd, idr) + "</span></div>";
+  };
+
+  const packageCardHTML = (pkg) => {
+    const rows = cartFlatten(cartPackageState(pkg));
+    const usd = rows.reduce((s, r) => s + r.usd, 0);
+    const idr = rows.reduce((s, r) => s + r.idr, 0);
+    return '<div class="mtc-pkg">' +
+      '<div class="mtc-pkg__head"><p class="mtc-pkg__title">' + escHtml(pkg.title) + "</p>" +
+      '<span class="mtc-pkg__price">' + cartPriceTag(usd, idr) + "</span></div>" +
+      '<p class="mtc-pkg__blurb">' + escHtml(pkg.blurb) + "</p>" +
+      '<button type="button" class="modal__btn mtc-pkg__use" data-use-pkg="' + pkg.id + '">Use this plan</button>' +
+      "</div>";
+  };
+
+  const usePackage = (pkg) => {
+    const apply = () => {
+      itnSave(cartPackageState(pkg));
+      activeTab = "custom";
+      render();
+      cartToast(pkg.label + " plan added");
+    };
+    if (cartFlatten(itnLoad()).length > 0) {
+      cartConfirm("Replace your trip?",
+        "This replaces the items you've added with the " + pkg.title + " package.", "Replace", apply);
+    } else apply();
+  };
+
+  const panelHTML = () => {
+    if (activeTab === "custom") {
+      const rows = cartFlatten(itnLoad());
+      if (!rows.length) {
+        return '<div class="mtc-empty">' +
+          '<p class="mtc-empty__lead">Nothing added yet.</p>' +
+          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start your trip — or pick a ready-made plan below.</p>' +
+          '<div class="mtc-pkgs">' + CART_PACKAGES.map(packageCardHTML).join("") + "</div></div>";
+      }
+      return '<div class="mtc-list" data-removable>' + listHTML(rows, true) + "</div>" +
+        totalHTML(rows) +
+        '<button type="button" class="modal__btn mtc-pay" data-pay>Make Payment</button>' +
+        '<p class="mtc-note">You\'ll add your name &amp; contact details at payment — that also creates your account so you can log in later with the same email.</p>';
+    }
+    // tab paket
+    const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
+    const rows = cartFlatten(cartPackageState(pkg));
+    return '<p class="mtc-pkgintro">' + escHtml(pkg.blurb) + "</p>" +
+      '<div class="mtc-list">' + listHTML(rows, false) + "</div>" +
+      totalHTML(rows) +
+      '<button type="button" class="modal__btn mtc-pay" data-use-pkg="' + pkg.id + '">Use this plan</button>' +
+      '<p class="mtc-note">Adds this package to your trip so you can adjust dates, then Make Payment.</p>';
+  };
+
+  function render() {
+    const tabs = [{ id: "custom", label: "My Custom Trip" }]
+      .concat(CART_PACKAGES.map((p) => ({ id: p.id, label: p.label + " Suggested" })));
+    const ref = activeReferral();
+    root.innerHTML =
+      (ref ? '<div class="mtc-ref">Referral code <strong>' + escHtml(ref.code) + "</strong> applied.</div>" : "") +
+      '<div class="mtc-tabs" role="tablist">' +
+        tabs.map((t) => '<button type="button" class="mtc-tab' + (t.id === activeTab ? " is-on" : "") +
+          '" data-tab="' + t.id + '" role="tab">' + escHtml(t.label) + "</button>").join("") +
+      "</div>" +
+      '<div class="mtc-panel">' + panelHTML() + "</div>";
+
+    root.querySelectorAll(".mtc-tab").forEach((tab) => {
+      tab.addEventListener("click", () => { activeTab = tab.dataset.tab; render(); });
+    });
+    root.querySelectorAll("[data-use-pkg]").forEach((b) => {
+      b.addEventListener("click", () => { const p = CART_PACKAGES.find((x) => x.id === b.dataset.usePkg); if (p) usePackage(p); });
+    });
+    root.querySelectorAll("[data-del-type]").forEach((b) => {
+      b.addEventListener("click", () => { cartRemove(b.dataset.delType, parseInt(b.dataset.delIdx)); render(); });
+    });
+    const pay = root.querySelector("[data-pay]");
+    if (pay) pay.addEventListener("click", () => cartCheckout(render));
+  }
+
+  render();
+}
+
 // Satu kartu trip di My Trips.
 function tripCard(t) {
   const pillClass = t.upcoming ? "pill-ok" : "pill-done";
@@ -3044,17 +3377,14 @@ function tripCard(t) {
   );
 }
 
-// Halaman My Trips: toggle Upcoming/History + kartu dari /api/bookings/mine.
+// Booked & paid trips (sekunder, di bawah cart): kartu dari /api/bookings/mine.
+// Bukan gate — kalau belum login / belum ada booking, section-nya disembunyiin aja.
 async function initMyTrips() {
   const root = document.querySelector("[data-my-trips]");
   if (!root) return;
+  const wrap = root.closest("[data-booked-wrap]") || root;
   await acctFetchSession();
-  if (!currentAccount) {
-    root.innerHTML = accountGate("Sign in to see your trips", "Create an account or make a booking to view your upcoming and past trips.");
-    wireGate(root);
-    return;
-  }
-  root.innerHTML = '<p class="acctpage__empty">Loading your trips…</p>';
+  if (!currentAccount) { wrap.hidden = true; return; }
   let data = { upcoming: [], history: [] };
   try {
     const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
@@ -3062,6 +3392,8 @@ async function initMyTrips() {
   } catch (e) {}
   const up = data.upcoming || [], hist = data.history || [];
   hasUpcoming = up.length > 0; renderAccount();
+  if (!up.length && !hist.length) { wrap.hidden = true; return; }
+  wrap.hidden = false;
   root.innerHTML =
     '<div class="mytrips__toggle" role="tablist">' +
       '<button type="button" class="mytrips__tab is-on" data-tab="upcoming">Upcoming</button>' +
@@ -3995,6 +4327,7 @@ async function initPage() {
   // setelah guest/pickup select terisi nilainya, baru bangun custom dropdown search
   initHeroSearch();
   initAccount();
+  initMyTripsCart();
   initMyTrips();
   initSettings();
   initTrustStat();

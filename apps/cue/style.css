@@ -3263,7 +3263,7 @@ a.footer__contact-item:hover {
   .tour-layout {
     display: flex;
     align-items: stretch; /* tinggi kolom kiri & kanan disamain */
-    width: min(1180px, 92%);
+    width: min(1500px, 95%); /* lebih full-width */
     margin: -5rem auto 0;
     position: relative;
     z-index: 2;
@@ -3276,21 +3276,23 @@ a.footer__contact-item:hover {
     flex: 1 1 auto;
     min-width: 0;
   }
-  /* kolom kanan = Tour Details + FAQ, dipisah garis tipis (bukan kartu terpisah) */
+  /* kolom kanan = Tour Details + FAQ (tanpa garis pemisah dari konten) */
   .tour-layout__side {
     flex: 0 0 36%;
-    border-left: 1px solid var(--line);
   }
   .tour-layout__main > section,
   .tour-layout__side > section {
     margin-top: 0 !important;
   }
-  /* .info & .faq di kolom kanan: transparan biar NYATU sama bg kartu */
-  .tour-layout__side .info,
-  .tour-layout__side .faq {
-    background: transparent;
+  /* .info + container + .faq di kolom kanan: transparan & tanpa shadow/radius biar
+     NYATU sama bg kartu (spesifisitas dinaikin biar lawan .info:has() & .info__container global) */
+  .tour-layout .tour-layout__side .info,
+  .tour-layout .tour-layout__side .info__container,
+  .tour-layout .tour-layout__side .faq {
+    background: transparent !important; /* lawan .info:has() cream (specificity nyaris sama) */
     border: none;
     box-shadow: none;
+    border-radius: 0;
   }
   .tour-layout__side .faq {
     border-top: 1px solid var(--line); /* pemisah tipis Tour Details <-> FAQ */

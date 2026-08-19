@@ -771,6 +771,13 @@ function bookNow(type, name, mode) {
   bookDatePopup(name, (date) => cartAddChecked(type, name, date, mode));
 }
 
+// Add sebuah program (tour/experience/place) ke My Trips lewat popup tanggal.
+// Type dari kategori aslinya (cuma "transfer" yg dibedain di cartAddDated).
+function bookItem(name) {
+  const info = itemInfo(name);
+  bookNow(info ? info.cat : "tour", name);
+}
+
 /* ---------- My Trips cart: pricing + flatten (mirror global dari closure initItinerary) ----------
    Item cart (Book Now) nyimpen day/transfer dgn guests kosong -> default ke jumlah tamu
    global (currentGuests) atau 2. Semua harga pakai helper global yg sama dg builder lama. */
@@ -2682,32 +2689,34 @@ function initItineraryButtons() {
       });
     }
 
-    // (b) tombol Add to itinerary
+    // (b) tombol + My Trips -> buka popup tanggal (sama kayak Book Now)
     const body = card.querySelector(".experience__body") || card;
     if (!body.querySelector(".card-add")) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "card-add";
-      btn.textContent = "+ Add to itinerary";
+      btn.textContent = "+ My Trips";
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        tryAddItem(item);
+        bookItem(item);
       });
       body.appendChild(btn);
     }
   });
 
-  // Tombol Add to itinerary eksplisit (highlight card, dsb.)
+  // Tombol + My Trips eksplisit (halaman detail, highlight card, dsb.) -> popup tanggal
   document.querySelectorAll("[data-add-item]").forEach((btn) => {
+    btn.textContent = "+ My Trips";
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      tryAddItem(btn.dataset.addItem);
+      bookItem(btn.dataset.addItem);
     });
   });
   document.querySelectorAll("[data-add-transfer]").forEach((btn) => {
+    btn.textContent = "+ My Trips";
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      if (itnAddTransfer(btn.dataset.addTransfer)) showAddedPopup();
+      bookNow("transfer", btn.dataset.addTransfer);
     });
   });
 
@@ -2730,10 +2739,8 @@ function initItineraryButtons() {
     const add = document.createElement("button");
     add.type = "button";
     add.className = "route__add";
-    add.textContent = "+ Add to itinerary";
-    add.addEventListener("click", () => {
-      if (itnAddTransfer(route)) showAddedPopup();
-    });
+    add.textContent = "+ My Trips";
+    add.addEventListener("click", () => bookNow("transfer", route));
 
     actions.appendChild(book);
     actions.appendChild(add);

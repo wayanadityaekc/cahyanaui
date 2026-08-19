@@ -1301,11 +1301,13 @@ a.tripbar--promo {
   font-size: 0.82rem;
   color: var(--color-muted);
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 .bookdate__apply {
   margin: 0;
   width: auto;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .bookdate__apply:disabled {
   opacity: 0.5;

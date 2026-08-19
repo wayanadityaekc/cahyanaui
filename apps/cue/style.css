@@ -3523,8 +3523,6 @@ a.footer__contact-item:hover {
   display: none; /* label "Price" disembunyiin (tapi jangan pill save) */
 }
 .info__fact--price > strong {
-  display: inline-block; /* nyusut ke lebar angka -> coret bisa nempel di atas-kirinya */
-  position: relative;
   margin-top: 0;
   font-family: var(--font-head);
   font-weight: 600;
@@ -3540,10 +3538,9 @@ a.footer__contact-item:hover {
 /* harga asli dicoret = kecil di pojok kiri atas */
 .info__fact--price .price-was {
   position: absolute;
-  top: -0.75em; /* nempel tepat di atas-kiri angka besar */
+  top: 0; /* pojok kiri atas kartu */
   left: 0;
   font-size: 0.85rem;
-  font-weight: 400;
   margin: 0;
 }
 .info__facts--hero .info__fact--price .price-unit {
@@ -6307,7 +6304,7 @@ button.pick-cat {
   color: var(--color-muted);
   opacity: 0.45; /* dicoret = warna transparan/pudar */
   text-decoration: line-through;
-  font-weight: 400;
+  font-weight: 300; /* tipis */
   font-size: 0.75em;
   margin-right: 0.2rem;
   vertical-align: middle;

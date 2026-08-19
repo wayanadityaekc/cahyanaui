@@ -1297,17 +1297,22 @@ a.tripbar--promo {
   gap: 0.8rem;
   margin-top: 0.9rem;
 }
-.bookdate__hint {
+.bookdate .bookdate__hint {
   font-size: 0.82rem;
   color: var(--color-muted);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   flex: 0 0 auto;
+  width: 34%;
 }
-.bookdate__apply {
+/* Ukuran tombol TETAP (pakai width %, bukan min-*), biar nggak berubah
+   pas hint ganti "Choose a day" <-> "Aug 21". Prefix .bookdate biar menang
+   specificity lawan .modal__btn { width:100% }. */
+.bookdate .bookdate__apply {
   margin: 0;
-  width: auto;
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
+  width: 60%;
 }
 .bookdate__apply:disabled {
   opacity: 0.5;

@@ -3284,22 +3284,25 @@ a.footer__contact-item:hover {
   .tour-layout__side > section {
     margin-top: 0 !important;
   }
-  /* .info + container + .faq di kolom kanan: transparan & tanpa shadow/radius biar
-     NYATU sama bg kartu (spesifisitas dinaikin biar lawan .info:has() & .info__container global) */
+  /* wrapper .info & .faq transparan (nyatu sama kartu) */
   .tour-layout .tour-layout__side .info,
-  .tour-layout .tour-layout__side .info__container,
   .tour-layout .tour-layout__side .faq {
-    background: transparent !important; /* lawan .info:has() cream (specificity nyaris sama) */
+    background: transparent !important; /* lawan .info:has() cream */
     border: none;
     box-shadow: none;
     border-radius: 0;
   }
-  .tour-layout__side .faq {
-    border-top: 1px solid var(--line); /* pemisah tipis Tour Details <-> FAQ */
+  .tour-layout__side .info {
+    padding: 1.4rem 1.3rem 0.4rem; /* ruang biar shadow panel napas */
   }
-  .tour-layout__side .info__container {
+  /* Tour Details = panel putih halus + shadow tipis di sekelilingnya */
+  .tour-layout .tour-layout__side .info__container {
     max-width: none;
     width: auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 6px 22px rgba(31, 61, 43, 0.08);
     padding: 1.6rem 1.5rem;
   }
   .tour-layout__side .section__title {

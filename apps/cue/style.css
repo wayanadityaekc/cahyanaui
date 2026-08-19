@@ -3465,14 +3465,16 @@ a.footer__contact-item:hover {
   margin: 0 auto;
   padding: 2.5rem 1.5rem 3rem;
 }
-/* Bar atas: search (kiri, lebar) + tombol Categories (kanan) */
-.guide-page__bar {
+/* Search bar di dalam hero (bawah deskripsi): toggle Categories (kiri) + search
+   (kanan, lebar), sejajar 1 baris. */
+.guide-hero-search {
   display: flex;
   gap: 0.7rem;
   align-items: stretch;
-  margin-bottom: 0.5rem;
+  max-width: 640px;
+  margin: 1.5rem auto 0;
 }
-.guide-page__search {
+.guide-hero-search__field {
   flex: 1;
   max-width: none;
   margin: 0;
@@ -3518,7 +3520,7 @@ a.footer__contact-item:hover {
 }
 .guide-cat-menu {
   position: absolute;
-  right: 0;
+  left: 0;
   top: calc(100% + 6px);
   min-width: 220px;
   background: #fff;
@@ -3566,16 +3568,16 @@ a.footer__contact-item:hover {
 .guide-cat__title::after {
   margin-left: 0;
 }
-/* HP: bar jadi 2 baris (search penuh, toggle di bawah rata kanan) */
+/* HP: tetep sejajar 1 baris. Toggle jadi compact (ikon aja) biar muat. */
 @media (max-width: 560px) {
-  .guide-page__bar {
-    flex-wrap: wrap;
+  .guide-hero-search {
+    gap: 0.5rem;
   }
-  .guide-page__search {
-    flex: 1 1 100%;
+  .guide-cat-toggle span {
+    display: none;
   }
-  .guide-cat-nav {
-    margin-left: auto;
+  .guide-cat-toggle {
+    padding: 0.85rem 0.9rem;
   }
 }
 
@@ -3607,6 +3609,10 @@ a.footer__contact-item:hover {
   position: relative;
   max-width: 560px;
   margin: 1.5rem auto 0;
+}
+/* Homepage: kasih jarak antara search & slider di bawahnya (biar gak nempel) */
+.guide-home .gsearch {
+  margin-bottom: 1.7rem;
 }
 .gsearch__box {
   display: flex;

@@ -1283,12 +1283,13 @@ function initTourSlider() {
 // Cari di SEMUA kartu .guide-home__card di dalam root (judul + keyword), termasuk
 // yang lagi hidden (di homepage cuma featured yg tampil, tapi search tetap nemu semua).
 const GUIDE_CATLABEL = { island: "About the Island", culture: "People & Culture", nature: "Nature", do: "What to Do", know: "Good to Know" };
-function guideTypeahead(root) {
-  const input = root.querySelector("[data-guide-search]");
-  const sug = root.querySelector(".gsearch__sug");
+function guideTypeahead(searchRoot, cardsRoot) {
+  cardsRoot = cardsRoot || searchRoot; // search & kartu bisa beda scope (guide page: search di hero, kartu di .guide-page)
+  const input = searchRoot.querySelector("[data-guide-search]");
+  const sug = searchRoot.querySelector(".gsearch__sug");
   if (!input || !sug) return;
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const cards = Array.from(root.querySelectorAll(".guide-home__card:not([data-more])"));
+  const cards = Array.from(cardsRoot.querySelectorAll(".guide-home__card:not([data-more])"));
   const index = cards.map((c) => {
     const img = c.querySelector("img");
     return {
@@ -1339,10 +1340,12 @@ function initGuideHome() {
 function initGuidePage() {
   const root = document.querySelector(".guide-page");
   if (!root) return;
-  guideTypeahead(root);
+  // Search bar-nya ada di hero (.guide-hero-search), kartu di .guide-page.
+  const searchBar = document.querySelector(".guide-hero-search");
+  if (searchBar) guideTypeahead(searchBar, root);
 
-  const toggle = root.querySelector("[data-cat-toggle]");
-  const menu = root.querySelector("[data-cat-menu]");
+  const toggle = document.querySelector("[data-cat-toggle]");
+  const menu = document.querySelector("[data-cat-menu]");
   if (!toggle || !menu) return;
   const setOpen = (on) => {
     menu.hidden = !on;

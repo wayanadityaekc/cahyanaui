@@ -4433,12 +4433,12 @@ function initGlanceHero() {
     facts.classList.add("info__facts--hero");
     priceFact.classList.add("info__fact--price");
     const priceEl = priceFact.querySelector(".price[data-price]");
-    // unit "/car" atau "/person" (dari kategori). Reuse .price-unit yg udah ada
-    // (dari addPriceUnit) biar nggak dobel; format diubah jadi slash.
+    // unit "per car"/"per person" (format SAMA kaya card). Reuse .price-unit yg
+    // udah ada (dari addPriceUnit) biar nggak dobel.
     const info = itemInfo(priceEl.dataset.price);
     const cat = info ? info.cat : "";
-    const unit = (cat === "tour" || cat === "combo" || cat === "place") ? "/car"
-      : (cat === "experience" || cat === "performance") ? "/person" : "";
+    const unit = (cat === "tour" || cat === "combo" || cat === "place") ? "per car"
+      : (cat === "experience" || cat === "performance") ? "per person" : "";
     if (unit) {
       let unitEl = priceFact.querySelector(".price-unit");
       if (!unitEl) {

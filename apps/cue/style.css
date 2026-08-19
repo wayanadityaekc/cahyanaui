@@ -3516,43 +3516,31 @@ a.footer__contact-item:hover {
   border: none !important;
   background: transparent !important;
   min-height: 0 !important;
-  position: relative;
-  padding: 1.1rem 0 1rem !important;
+  padding: 0.3rem 0 1rem !important;
 }
 .info__fact--price > span:not(.glance-save) {
   display: none; /* label "Price" disembunyiin (tapi jangan pill save) */
 }
+/* Format harga = SAMA kaya card (coret inline + harga emas + "per car"),
+   cuma ukurannya lebih gede dikit (section details beda size dari card). */
 .info__fact--price > strong {
-  display: inline-block; /* nyusut ke lebar angka -> anchor buat coret di pojoknya */
-  position: relative;
   margin-top: 0;
-  font-family: var(--font-head);
-  font-weight: 600;
-  font-size: 2.4rem;
-  line-height: 1.05;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.15;
   color: var(--color-gold);
 }
 .info__facts--hero .info__fact--price .price,
 .info__facts--hero .info__fact--price .price-now {
   color: var(--color-gold);
-  font-size: inherit; /* ikut ukuran hero (2.4rem), lawan .info__fact .price */
-}
-.info__facts--hero .info__fact--price .price {
-  position: relative; /* anchor buat coret (di pojok ANGKA, bukan termasuk /car) */
-}
-/* harga asli dicoret = kecil di pojok kiri atas */
-.info__fact--price .price-was {
-  position: absolute;
-  top: -0.35em; /* nempel di pojok kanan-atas angka harga (opsi B) */
-  right: -0.15em;
-  font-size: 0.8rem;
-  margin: 0;
+  font-size: inherit; /* ikut ukuran hero, lawan .info__fact .price */
 }
 .info__facts--hero .info__fact--price .price-unit {
-  margin-left: 0.15rem;
+  margin-left: 0.3rem;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 0.62em;
   color: var(--color-green);
 }
 .glance-save[hidden] {
@@ -4497,7 +4485,7 @@ a.footer__contact-item:hover {
     padding: 0.7rem 0.4rem;
   }
   .info__fact--price > strong {
-    font-size: 2.1rem;
+    font-size: 1.5rem;
   }
   .contact__container {
     grid-template-columns: 1fr;

@@ -1235,6 +1235,92 @@ a.tripbar--promo {
   color: #fff;
   border-radius: 9px;
 }
+/* Popup pilih tanggal (Book Now universal) */
+.bookdate__box {
+  max-width: 440px;
+  width: 92%;
+  padding: 1.6rem 1.4rem 1.4rem;
+  text-align: left;
+  position: relative;
+}
+.bookdate__close {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  border: none;
+  background: none;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.bookdate .bookdate__cal {
+  margin-top: 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  max-height: 300px;
+}
+.bookdate .bookdate__cal .hs-cal__months {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 14px;
+}
+.bookdate .bookdate__cal .hs-cal__m {
+  max-width: none;
+}
+.bookdate__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: 0.9rem;
+}
+.bookdate__hint {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.bookdate__apply {
+  margin: 0;
+  width: auto;
+  flex: 0 0 auto;
+}
+.bookdate__apply:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+/* Toast "Added to My Trips" */
+.cart-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(20px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-green);
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  z-index: 300;
+}
+.cart-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.cart-toast svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-gold);
+}
 .booking__price {
   display: flex;
   align-items: baseline;

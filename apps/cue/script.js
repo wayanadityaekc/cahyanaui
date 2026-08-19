@@ -601,9 +601,9 @@ function showAddedPopup() {
     m.innerHTML =
       '<div class="modal__box modal__box--sm">' +
       '<div class="modal__success-icon">&check;</div>' +
-      '<h3 class="modal__title">Added to your itinerary</h3>' +
+      '<h3 class="modal__title">Added to My Trips</h3>' +
       '<p class="modal__sub">What would you like to do next?</p>' +
-      '<button class="modal__btn" id="itn-added-go">Go to itinerary</button>' +
+      '<button class="modal__btn" id="itn-added-go">Go to My Trips</button>' +
       '<button class="modal__btn modal__btn--ghost" id="itn-added-continue">Continue exploring</button>' +
       "</div>";
     document.body.appendChild(m);
@@ -612,13 +612,163 @@ function showAddedPopup() {
     });
     m.querySelector("#itn-added-go").addEventListener(
       "click",
-      () => (window.location.href = "itinerary.html")
+      () => (window.location.href = "my-trips.html")
     );
     m.querySelector("#itn-added-continue").addEventListener("click", () =>
       m.classList.remove("active")
     );
   }
   m.classList.add("active");
+}
+
+// ===== Book Now universal: popup tanggal -> tambah ke cart (My Trips) =====
+// Toast kecil di bawah layar.
+function cartToast(msg) {
+  let t = document.getElementById("cart-toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "cart-toast";
+    t.className = "cart-toast";
+    document.body.appendChild(t);
+  }
+  t.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>' + msg + "</span>";
+  t.classList.add("show");
+  clearTimeout(t.__h);
+  t.__h = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+// Popup konfirmasi generik (Confirm / Cancel), gaya modal situs.
+function cartConfirm(title, text, yesLabel, onYes) {
+  const m = document.createElement("div");
+  m.className = "modal active";
+  m.innerHTML =
+    '<div class="modal__box modal__box--sm">' +
+    '<h3 class="modal__title">' + title + "</h3>" +
+    '<p class="modal__sub">' + text + "</p>" +
+    '<button class="modal__btn" data-yes>' + yesLabel + "</button>" +
+    '<button class="modal__btn modal__btn--ghost" data-no>Cancel</button></div>';
+  document.body.appendChild(m);
+  const close = () => m.remove();
+  m.addEventListener("click", (e) => { if (e.target === m) close(); });
+  m.querySelector("[data-no]").addEventListener("click", close);
+  m.querySelector("[data-yes]").addEventListener("click", () => { close(); onYes(); });
+}
+
+// Popup pilih tanggal standalone (reuse gaya kalender .hs-cal). onPick(YYYY-MM-DD).
+function bookDatePopup(title, onPick) {
+  const now = new Date();
+  const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+  const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const MONS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+  const pad = (n) => String(n).padStart(2, "0");
+  const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+  let sel = null;
+  const m = document.createElement("div");
+  m.className = "modal active bookdate";
+  m.innerHTML =
+    '<div class="modal__box bookdate__box">' +
+    '<button class="bookdate__close" aria-label="Close">&times;</button>' +
+    '<h3 class="modal__title">' + title + "</h3>" +
+    '<p class="modal__sub">Pick your date</p>' +
+    '<div class="hs-cal bookdate__cal"></div>' +
+    '<div class="bookdate__foot"><span class="bookdate__hint">Choose a day</span>' +
+    '<button class="modal__btn bookdate__apply" disabled>Add to My Trips</button></div></div>';
+  document.body.appendChild(m);
+  const calBody = m.querySelector(".bookdate__cal");
+  const hint = m.querySelector(".bookdate__hint");
+  const applyBtn = m.querySelector(".bookdate__apply");
+  const close = () => m.remove();
+  function monthEl(y, mo) {
+    const el = document.createElement("div");
+    el.className = "hs-cal__m";
+    const cap = document.createElement("div");
+    cap.className = "hs-cal__cap";
+    cap.textContent = MON[mo] + " " + y;
+    el.appendChild(cap);
+    const g = document.createElement("div");
+    g.className = "hs-cal__grid";
+    DOW.forEach((d) => { const h = document.createElement("div"); h.className = "hs-cal__dow"; h.textContent = d; g.appendChild(h); });
+    const first = new Date(y, mo, 1).getDay(), days = new Date(y, mo + 1, 0).getDate();
+    for (let i = 0; i < first; i++) { const o = document.createElement("div"); o.className = "hs-cal__d is-off"; g.appendChild(o); }
+    for (let d = 1; d <= days; d++) {
+      const cell = { y: y, m: mo, d: d };
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "hs-cal__d"; b.textContent = d;
+      const past = keyOf(cell) < keyOf(TODAY);
+      if (past) b.classList.add("is-off");
+      if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
+      if (sel && keyOf(cell) === keyOf(sel)) b.classList.add("sel");
+      if (!past) b.addEventListener("click", () => { sel = cell; render(); hint.textContent = MONS[sel.m] + " " + sel.d; applyBtn.disabled = false; });
+      g.appendChild(b);
+    }
+    el.appendChild(g);
+    return el;
+  }
+  function render() {
+    calBody.innerHTML = "";
+    const wrap = document.createElement("div");
+    wrap.className = "hs-cal__months";
+    for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+    calBody.appendChild(wrap);
+  }
+  render();
+  applyBtn.addEventListener("click", () => { if (!sel) return; const ds = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); close(); onPick(ds); });
+  m.querySelector(".bookdate__close").addEventListener("click", close);
+  m.addEventListener("click", (e) => { if (e.target === m) close(); });
+}
+
+// full-day? (tour/combo dianggap seharian -> buat cek bentrok tanggal)
+function isFullDay(name) {
+  const i = itemInfo(name);
+  return !!i && (i.cat === "tour" || i.cat === "combo");
+}
+
+// Tambah item ber-tanggal ke cart (cue_itinerary_v1). type: tour/experience/performance/transfer.
+function cartAddDated(type, name, date, mode) {
+  if (type === "transfer") {
+    const norm = (s) => String(s).replace(/[–—-]/g, "-");
+    const key = prices.transfer[name] ? name : Object.keys(prices.transfer).find((k) => norm(k) === norm(name));
+    if (!key) return false;
+    const st = itnLoad();
+    st.transfers.push({ route: key, direction: "to", pickup: "", dropoff: "", date: date, guests: "" });
+    itnSave(st);
+  } else {
+    const info = itemInfo(name);
+    if (!info || info.cat === "villa") return false;
+    const st = itnLoad();
+    const d = newItnDay();
+    d.items.push(name);
+    if (mode) d.itemModes = [mode];
+    d.date = date;
+    st.days.push(d);
+    itnSave(st);
+  }
+  cartToast("Added to My Trips");
+  return true;
+}
+
+// Add + cek bentrok (2 full-day tour tanggal sama -> konfirmasi, bukan blokir).
+function cartAddChecked(type, name, date, mode) {
+  if (type !== "transfer" && isFullDay(name)) {
+    const st = itnLoad();
+    const clash = st.days.some((dd) => dd.date === date && (dd.items || []).some((it) => isFullDay(it)));
+    if (clash) {
+      cartConfirm(
+        "Two full-day tours?",
+        "You already have a full-day tour on that date. Add another anyway?",
+        "Add anyway",
+        () => cartAddDated(type, name, date, mode)
+      );
+      return;
+    }
+  }
+  cartAddDated(type, name, date, mode);
+}
+
+// Book Now universal: buka popup tanggal -> add (dgn cek bentrok).
+function bookNow(type, name, mode) {
+  bookDatePopup(name, (date) => cartAddChecked(type, name, date, mode));
 }
 
 // Hari ini format YYYY-MM-DD (waktu lokal, bukan UTC - hindari geser hari di Bali)
@@ -1179,29 +1329,17 @@ function initBooking() {
     const today = todayStr();
     if (dateField.value < today) { showPastDate(); return; }
     if (dateField.value === today) { showSameDayWa(guestCount(), serviceItemSelect.value, dateField.value); return; }
-    if (!currentPrice || !window.__openBooking) return;
+    if (!currentPrice) return;
     const category = currentPrice.category;
     const item = serviceItemSelect.value;
     const isExcl = currentPrice.exclusive;
-    // Tour/combo ditandai (Standard)/(Exclusive) biar jelas di konfirmasi & WhatsApp
-    const label = (category === "tour" && tourExclusive[item])
-      ? `${item} (${isExcl ? "Exclusive" : "Standard"})`
-      : item;
-    window.__openBooking({
-      type: category,
-      service: label,
-      guests: String(guestCount()),
-      date: dateField.value,
-      price: { usd: currentPrice.usd, idr: currentPrice.idr },
-      pickup: currentStay ? pickupLabelOf(currentStay) : "",
-      surcharge: currentPrice.surcharge,
-      pickupOptional: category === "performance",
-      dropoffRequired: category === "transfer",
-      referralEligible: category === "tour" || category === "transfer",
-      detailLines: (category === "tour" || category === "transfer")
-        ? (isExcl ? tourDetailsExclusive : tourDetails)
-        : experienceDetails
-    });
+    // Book Now = tambah ke cart (My Trips) pakai tanggal yg dipilih di form.
+    // Checkout pindah ke tombol "Make Payment" di My Trips.
+    const mode = (category === "tour" && tourExclusive[item]) ? (isExcl ? "exclusive" : "standard") : null;
+    cartAddChecked(category, item, dateField.value, mode);
+    // kalau form ini lagi di dalam modal (dibuka dari kartu), tutup modalnya
+    const bm = document.getElementById("book-modal");
+    if (bm) bm.classList.remove("active");
   });
 
   // Overlap + preset service/item dari halaman program (data-default / data-item)
@@ -2186,6 +2324,14 @@ function initItinerary() {
 function initModals() {
   document.querySelectorAll("[data-open]").forEach((btn) => {
     btn.addEventListener("click", () => {
+      // Book Now dari kartu tour / halaman destinasi: skip form modal, langsung
+      // popup tanggal -> tambah ke cart (My Trips). Item & tipe dibaca dari placeholder.
+      if (btn.dataset.open === "book-modal") {
+        const ph = document.getElementById("book-modal-placeholder");
+        const type = (ph && ph.dataset.default) || "tour";
+        const name = (ph && ph.dataset.item) || "";
+        if (name) { bookNow(type, name); return; }
+      }
       const m = document.getElementById(btn.dataset.open);
       if (m) m.classList.add("active");
     });
@@ -2468,22 +2614,9 @@ function initItineraryButtons() {
   });
 }
 
-// Preset booking form ke Route Transfer + route ini, lalu scroll ke form (#booking).
+// Book Now sebuah route transfer: popup tanggal -> tambah ke cart (My Trips).
 function bookTransferRoute(route) {
-  const svc = document.getElementById("service");
-  const item = document.getElementById("service-item");
-  if (!svc || !item) return;
-  svc.value = "transfer";
-  svc.dispatchEvent(new Event("change"));
-  // cocokin value option (samain dash & case) biar aman kalau format beda tipis
-  const n = (s) => s.replace(/[–—-]/g, "-").trim().toLowerCase();
-  const opt = [...item.options].find((o) => n(o.value) === n(route));
-  if (opt) {
-    item.value = opt.value;
-    item.dispatchEvent(new Event("change"));
-  }
-  const booking = document.getElementById("booking");
-  if (booking) booking.scrollIntoView({ behavior: "smooth", block: "start" });
+  bookNow("transfer", route);
 }
 
 // Card di halaman Destinations: badan card clickable + tombol "Visit this destination"

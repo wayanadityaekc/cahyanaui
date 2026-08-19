@@ -3419,11 +3419,15 @@ a.footer__contact-item:hover {
   .listing-layout--cards {
     margin-top: 0;
   }
+  /* tour/activities: paksa 3 kartu ke samping (kartu lebih kecil) */
+  .listing-layout--cards .experience__grid--auto {
+    grid-template-columns: repeat(3, 1fr);
+  }
   /* FAQ disatuin di kolom kanan (di bawah info): buang chrome section + 1 kolom */
   .listing-layout__side .faq {
     background: transparent !important;
-    padding: 1.4rem 0 0;
-    margin-top: 0.2rem;
+    padding: 0;
+    margin-top: 2.2rem; /* jarak dari Tour Details ke FAQ */
   }
   .listing-layout__side .faq__container,
   .listing-layout__side .faq__grid {

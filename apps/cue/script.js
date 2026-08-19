@@ -4489,6 +4489,23 @@ function initTourSidebar() {
   });
 }
 
+/* DESKTOP listing (tour/activities/transfer): Tour Details + FAQ digabung jadi
+   satu card 2 kolom di bawah kartu — Details kiri, FAQ kanan, garis pemisah
+   di tengah. Desktop-only (JS gate >=993px + semua CSS di media query). */
+function initDetailsFaqRow() {
+  if (!window.matchMedia("(min-width: 993px)").matches) return; // desktop saja
+  const info = document.querySelector("section.info");
+  if (!info || info.querySelector(".info__cta")) return; // listing saja (skip detail)
+  if (!info.querySelector(".info__facts")) return; // butuh Tour Details gaya facts (skip charter prose)
+  const faq = document.querySelector("section.faq"); // partial FAQ udah ke-inject
+  if (!faq) return;
+  const row = document.createElement("div");
+  row.className = "detailsfaq";
+  info.before(row);
+  row.appendChild(info); // pane kiri = Tour Details / Good to Know
+  row.appendChild(faq); // pane kanan = FAQ
+}
+
 async function initPage() {
   captureMagicToken();
   await loadPartials();
@@ -4533,6 +4550,7 @@ async function initPage() {
   initBookingCustomControls();
   initGlanceHero();
   initTourSidebar();
+  initDetailsFaqRow();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

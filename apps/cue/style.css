@@ -3342,6 +3342,59 @@ a.footer__contact-item:hover {
   }
 }
 
+/* ===== DESKTOP (tour/activities/transfer): Tour Details + FAQ digabung jadi satu
+       card 2 kolom — Details kiri, FAQ kanan, garis pemisah di tengah. Di bawah
+       kartu, BUKAN sidebar. Mobile nggak kena (JS >=993px + semua di media ini). ===== */
+@media (min-width: 993px) {
+  .detailsfaq {
+    width: min(1100px, 92%);
+    margin: 3rem auto;
+    display: grid;
+    grid-template-columns: 58fr 42fr;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(31, 61, 43, 0.06);
+    overflow: hidden;
+  }
+  /* dua section jadi pane, nyatu ke card gabungan */
+  .detailsfaq > .info,
+  .detailsfaq > .faq {
+    background: transparent !important; /* lawan .info:has() cream */
+    padding: 1.9rem;
+    margin: 0 !important;
+  }
+  .detailsfaq > .faq {
+    border-left: 1px solid var(--line); /* garis pemisah di tengah */
+  }
+  /* matiin divider emas ::before biar nggak ada garis nyasar di dalam card */
+  .detailsfaq > .info::before,
+  .detailsfaq > .faq::before {
+    content: none;
+  }
+  /* Tour Details: buang styling kartu container (udah di dalam card gabungan) */
+  .detailsfaq .info__container {
+    max-width: none;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+  /* facts 2 kolom di pane sempit + jarak dikecilin */
+  .detailsfaq .info__facts {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 1.6rem;
+  }
+  /* FAQ: cuma accordion 1 kolom, kartu WhatsApp disembunyiin */
+  .detailsfaq .faq__container {
+    display: block;
+    max-width: none;
+  }
+  .detailsfaq .faq__chat {
+    display: none;
+  }
+}
+
 /* Featured highlight: split image / content */
 .highlight {
   padding: 3rem 1.5rem;

@@ -2625,63 +2625,13 @@ section.faq::before,
   padding: 3rem 1.5rem;
 }
 .faq__container {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 2rem;
   max-width: 1000px;
   margin: 0 auto;
-  align-items: start;
 }
 .faq__list {
   min-width: 0;
 }
 /* Kolom chat WhatsApp di samping FAQ */
-.faq__chat {
-  padding: 2rem 1.5rem;
-  border-radius: 16px;
-  text-align: center;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-}
-.faq__chat-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 1rem;
-  border-radius: 50%;
-  color: var(--color-green);
-  background-color: var(--color-gold);
-}
-.faq__chat-icon svg {
-  width: 30px;
-  height: 30px;
-}
-.faq__chat-title {
-  margin-bottom: 0.6rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-}
-.faq__chat-text {
-  margin-bottom: 1.5rem;
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  opacity: 0.9;
-}
-.faq__chat-btn {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--color-green);
-  background-color: var(--color-gold);
-}
-.faq__chat-btn:hover {
-  background-color: var(--color-cream);
-}
 .faq__item {
   margin-bottom: 0.75rem;
   border: 1px solid #e0ddd4;
@@ -3336,10 +3286,6 @@ a.footer__contact-item:hover {
   .tour-layout__side .faq {
     padding: 1.6rem 1.5rem;
   }
-  /* Hapus card "Still have questions?" di layout desktop (mobile tetap ada) */
-  .tour-layout__side .faq__chat {
-    display: none;
-  }
 }
 
 /* ===== DESKTOP (tour/activities/transfer): Tour Details + FAQ digabung jadi satu
@@ -3389,9 +3335,6 @@ a.footer__contact-item:hover {
   .detailsfaq .faq__container {
     display: block;
     max-width: none;
-  }
-  .detailsfaq .faq__chat {
-    display: none;
   }
 }
 
@@ -7055,7 +6998,6 @@ section.faq::before,
 .review-card__name,
 .driver-card__name,
 .driver-modal__name,
-.faq__chat-title,
 .footer__heading,
 .modal__title,
 .subhero__title,
@@ -7101,7 +7043,7 @@ section.faq::before,
 .hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .modal__btn,
 .review-form__btn, .btn-review:not(.btn-review--alt),
 .highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book,
-.btn-book, .faq__chat-btn, .faq__chat-icon, .contact__btn {
+.btn-book, .contact__btn {
   background: var(--color-gold);
   color: #fff;
   border-color: var(--color-gold);
@@ -7111,7 +7053,7 @@ section.faq::before,
 .modal__btn:hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover,
 .highlight__btn:not(.highlight__btn--add):hover,
 .svc__save:hover, .program-cta__btn--book:hover,
-.faq__chat-btn:hover, .contact__btn:hover {
+.contact__btn:hover {
   background: var(--color-gold-d);
   color: #fff;
   border-color: var(--color-gold-d);

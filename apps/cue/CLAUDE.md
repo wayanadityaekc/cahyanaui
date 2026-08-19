@@ -79,8 +79,9 @@ When unsure, ask first (keep it short).
 - Label section pertama: halaman tour = **"What You'll Do"**, attraction = **"The Experience"**.
 - **FAQ**: halaman listing pakai partial (`partials/faq-*.html`); halaman tour/charter/itinerary
   pakai FAQ **inline** = 3 pertanyaan inti (harga per mobil · tiket Std/Exc · booking+bayar)
-  + 3–4 pertanyaan spesifik halaman itu, **selalu ditutup card `.faq__chat`** ("Still have
-  questions?" → WhatsApp). Jangan ngarang fakta — yang belum pasti dijawab "message us on WhatsApp".
+  + 3–4 pertanyaan spesifik halaman itu. Jangan ngarang fakta — yang belum pasti dijawab
+  "message us on WhatsApp". (Card "Still have questions?" `.faq__chat` udah DIHAPUS dari semua
+  halaman — jangan ditambahin lagi.)
 - Habis ubah FAQ/meta description → jalanin `node tools/sync-schema.js` (regenerate FAQPage dkk).
 
 ## Gaya bahasa copy (English, semua halaman)
@@ -160,7 +161,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v299, PARTIALS 66)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v300, PARTIALS 67)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

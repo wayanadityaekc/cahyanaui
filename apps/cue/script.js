@@ -47,7 +47,7 @@ const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
   "lempuyang-tirta-gangga.html": "Lempuyang & Tirta Gangga",
   "ulun-danu-tanah-lot.html": "Ulun Danu Beratan & Tanah Lot Temple",
-  "south-bali-tour.html": "Bali Hidden Beaches and Cliffs",
+  "hidden-beaches-cliffs.html": "Bali Hidden Beaches and Cliffs",
   "munduk-twin-lakes.html": "Munduk Waterfalls & Twin Lakes",
   "attractions/atv-ride.html": "ATV",
   "attractions/rafting.html": "Rafting",
@@ -73,7 +73,7 @@ const PAGE_ITEM = {
 // Key HARUS sama persis dg nama di `prices`. Dipakai renderDayCard buat render .experience__card.
 const ITEM_CARD = {
   "Ubud Tour": { img: "ubud-tour-card.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
-  "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Royal water palaces, bamboo forests, and the gates of Lempuyang." },
+  "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Water gardens, a royal palace, and the gates of Lempuyang." },
   "Ulun Danu Beratan & Tanah Lot Temple": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
   "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
@@ -4506,9 +4506,44 @@ function initDetailsFaqRow() {
   row.appendChild(faq); // pane kanan = FAQ
 }
 
+/* ---------- Booking-link dinamis (konteks tour induk) ----------
+   Stop di halaman tour nge-link ke halaman attraction pakai ?from=<nama tour>.
+   Halaman attraction baca ?from -> override item yang di-book + Add to trip + label,
+   biar attraction yang muncul di >1 tour nge-book tour yang bener. Tanpa param =
+   fallback ke data-item default halaman (behavior lama). */
+function tourContextFrom() {
+  const from = new URLSearchParams(location.search).get("from");
+  return from && Object.values(PAGE_ITEM).includes(from) ? from : "";
+}
+function applyTourContext() {
+  const from = tourContextFrom();
+  if (!from) return;
+  const holder = document.getElementById("book-modal-placeholder");
+  const prev = holder && holder.dataset.item;
+  if (holder) holder.dataset.item = from;
+  document.querySelectorAll('[data-open="book-modal"]').forEach((btn) => {
+    if (prev && btn.textContent.trim() === "Book " + prev) btn.textContent = "Book " + from;
+  });
+  document.querySelectorAll("[data-add-item]").forEach((btn) => {
+    if (!prev || btn.dataset.addItem === prev) btn.dataset.addItem = from;
+  });
+}
+function initStopContext() {
+  const page = location.pathname.split("/").pop() || "index.html";
+  const item = PAGE_ITEM[page];
+  if (!item) return; // cuma jalan di halaman program (tour landing)
+  document.querySelectorAll("a.stop--link[href]").forEach((a) => {
+    const href = a.getAttribute("href");
+    if (!href || !/\.html$/.test(href) || href.indexOf("?") !== -1) return;
+    a.setAttribute("href", href + "?from=" + encodeURIComponent(item));
+  });
+}
+
 async function initPage() {
   captureMagicToken();
+  applyTourContext(); // override data-item dari ?from SEBELUM loadPartials nyalin ke modal
   await loadPartials();
+  initStopContext();
   initNavbar();
   initBookingConfirm();
   initBooking();

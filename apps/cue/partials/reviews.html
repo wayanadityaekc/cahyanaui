@@ -1,126 +1,47 @@
 <section class="reviews" id="reviews">
   <h2 class="section__title">Guest Reviews</h2>
-  <p class="reviews__intro">Real words from real travellers. Been on a tour with us? We'd love to hear how it went.</p>
 
-  <!-- Preview kartu review (kosong dulu). Isi review ASLI belakangan. -->
-  <div class="reviews-cards" id="reviews-cards">
-    <article class="review-card review-card--empty">
-      <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-      <div class="review-card__stars">☆☆☆☆☆</div>
-      <p class="review-card__text">Your review will appear here.</p>
-      <span class="review-card__name">- Awaiting our first guests</span>
+  <!-- ================= PLACEHOLDER / DEV MODE =================
+       Dummy sample reviews for layout only. Replace each .rev with a REAL
+       verified review (name, rating, 1-2 lines, and the platform it came from).
+       ========================================================== -->
+  <div class="reviews-strip">
+    <article class="rev">
+      <div class="rev__stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="rev__text">
+        "Driver picked us up on time and the whole day was perfectly planned.
+        Prices were exactly what we saw upfront."
+      </p>
+      <div class="rev__foot">
+        <span class="rev__name">Sample Guest</span>
+        <img class="rev__logo" src="assets/images/tripadvisor.webp" alt="Tripadvisor" width="280" height="176" loading="lazy" />
+      </div>
     </article>
-    <article class="review-card review-card--empty">
-      <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-      <div class="review-card__stars">☆☆☆☆☆</div>
-      <p class="review-card__text">Your review will appear here.</p>
-      <span class="review-card__name">- Awaiting our first guests</span>
+
+    <article class="rev">
+      <div class="rev__stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="rev__text">
+        "Easy to book over WhatsApp and no hidden costs. Our guide knew all the
+        quiet spots away from the crowds."
+      </p>
+      <div class="rev__foot">
+        <span class="rev__name">Sample Guest</span>
+        <img class="rev__logo" src="assets/images/viator.webp" alt="Viator" width="245" height="256" loading="lazy" />
+      </div>
     </article>
-    <article class="review-card review-card--empty">
-      <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-      <div class="review-card__stars">☆☆☆☆☆</div>
-      <p class="review-card__text">Your review will appear here.</p>
-      <span class="review-card__name">- Awaiting our first guests</span>
+
+    <article class="rev">
+      <div class="rev__stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="rev__text">
+        "One team handled our tours, transfer and villa. Made the whole trip
+        stress-free from start to finish."
+      </p>
+      <div class="rev__foot">
+        <span class="rev__name">Sample Guest</span>
+        <img class="rev__logo" src="assets/images/tripadvisor.webp" alt="Tripadvisor" width="280" height="176" loading="lazy" />
+      </div>
     </article>
   </div>
 
-  <div class="reviews__actions">
-    <button class="btn-review" type="button" data-open="all-reviews-modal">View All Reviews</button>
-    <button class="btn-review btn-review--alt" type="button" data-open="write-review-modal">Write a Review</button>
-  </div>
+  <a class="reviews__seeall" href="#" target="_blank" rel="noopener">See all reviews &rsaquo;</a>
 </section>
-
-<!-- POPUP: semua review (grid 2 kolom) -->
-<div class="modal" id="all-reviews-modal">
-  <div class="modal__box modal__box--wide">
-    <button class="modal__close" data-close aria-label="Close">&times;</button>
-    <img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
-    <h3 class="modal__title">All Guest Reviews</h3>
-    <div class="all-reviews-grid" id="all-reviews-grid">
-
-      <!-- Semua review ASLI ditaruh di sini (copy blok, hapus review-card--empty, isi data asli). -->
-      <article class="review-card review-card--empty">
-        <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-        <div class="review-card__stars">☆☆☆☆☆</div>
-        <p class="review-card__text">Your review will appear here.</p>
-        <span class="review-card__name">- Awaiting our first guests</span>
-      </article>
-      <article class="review-card review-card--empty">
-        <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-        <div class="review-card__stars">☆☆☆☆☆</div>
-        <p class="review-card__text">Your review will appear here.</p>
-        <span class="review-card__name">- Awaiting our first guests</span>
-      </article>
-      <article class="review-card review-card--empty">
-        <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-        <div class="review-card__stars">☆☆☆☆☆</div>
-        <p class="review-card__text">Your review will appear here.</p>
-        <span class="review-card__name">- Awaiting our first guests</span>
-      </article>
-      <article class="review-card review-card--empty">
-        <span class="review-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-3.8-.8L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg></span>
-        <div class="review-card__stars">☆☆☆☆☆</div>
-        <p class="review-card__text">Your review will appear here.</p>
-        <span class="review-card__name">- Awaiting our first guests</span>
-      </article>
-
-    </div>
-  </div>
-</div>
-
-<!-- POPUP: tulis review (form) -->
-<div class="modal" id="write-review-modal">
-  <div class="modal__box">
-    <button class="modal__close" data-close aria-label="Close">&times;</button>
-    <img class="modal__logo" src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
-    <div id="review-form">
-      <h3 class="modal__title">Leave a Review</h3>
-
-      <div class="review-form__group">
-        <label for="rv-name">Your Name</label>
-        <input type="text" id="rv-name" placeholder="Enter your name" />
-      </div>
-      <div class="review-form__group">
-        <label for="rv-email">Email</label>
-        <input type="email" id="rv-email" placeholder="you@email.com" />
-      </div>
-      <div class="review-form__group">
-        <label for="rv-service">Which service?</label>
-        <select id="rv-service">
-          <option value="" disabled selected>Select a service</option>
-          <option value="Tour Program">Tour Program</option>
-          <option value="Activity / Performance">Activity / Performance</option>
-          <option value="Route Transfer">Route Transfer</option>
-          <option value="Custom Itinerary">Custom Itinerary</option>
-        </select>
-      </div>
-      <div class="review-form__group">
-        <label for="rv-driver">Your Driver (optional)</label>
-        <input type="text" id="rv-driver" placeholder="Name of your driver-guide" />
-      </div>
-      <div class="review-form__group">
-        <label>Your Rating</label>
-        <div class="rating" id="rv-rating">
-          <button type="button" class="rating__star" data-value="1" aria-label="1 star">★</button>
-          <button type="button" class="rating__star" data-value="2" aria-label="2 stars">★</button>
-          <button type="button" class="rating__star" data-value="3" aria-label="3 stars">★</button>
-          <button type="button" class="rating__star" data-value="4" aria-label="4 stars">★</button>
-          <button type="button" class="rating__star" data-value="5" aria-label="5 stars">★</button>
-        </div>
-      </div>
-      <div class="review-form__group">
-        <label for="rv-message">Your Review</label>
-        <textarea id="rv-message" rows="4" placeholder="Tell us about your experience..."></textarea>
-      </div>
-
-      <button class="review-form__btn" id="rv-send">Submit Review</button>
-      <small class="review-form__note">We read every review. Published reviews are added after we verify the booking.</small>
-    </div>
-
-    <div class="review-form__success" id="review-success">
-      <div class="review-form__success-icon">&check;</div>
-      <h3 class="modal__title">Thank You!</h3>
-      <p>Your review has been sent. We really appreciate you taking the time.</p>
-    </div>
-  </div>
-</div>

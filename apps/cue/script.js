@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 67;
+const PARTIALS_VERSION = 68;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -3822,7 +3822,8 @@ function initCardTitleOverlay() {
       img.classList.add("photo-titled");
     });
   };
-  move(".experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
+  // Homepage cards keep the title BELOW the photo (card style A), so skip overlay there.
+  move("body:not(.home) .experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
   move(".villa__card", ".villa__image", ".villa__name");
 }
 

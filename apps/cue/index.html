@@ -30,7 +30,7 @@
     />
     <!-- Preload foto tile pertama (LCP hero-tiles) -->
     <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
-    <link rel="stylesheet" href="style.css?v=301" />
+    <link rel="stylesheet" href="style.css?v=302" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -99,9 +99,8 @@
         ]
       }
     </script>
-    <script type="application/ld+json" id="schema-faq">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I book?","acceptedAnswer":{"@type":"Answer","text":"Pick a tour, activity, or transfer, choose your date, and send us a message on WhatsApp - or use the booking form on any page. We reply fast, confirm your driver and time, and that's it. No account, no long forms."}},{"@type":"Question","name":"How does payment work?","acceptedAnswer":{"@type":"Answer","text":"A 10% deposit confirms your booking - you pay the remaining balance in cash or by transfer at the end of your tour. Guests staying at one of our villas enjoy a special privilege: no upfront payment at all , you simply settle everything afterwards."}},{"@type":"Question","name":"Can I build my own multi-day itinerary?","acceptedAnswer":{"@type":"Answer","text":"Yes - that's exactly what our My Trips planner is for. Add tours, activities, performances, and transfers, pick a date for each, and watch the total update as you plan. Prefer us to plan it for you? Just tell us what you like and we'll shape a route around it."}},{"@type":"Question","name":"Are prices per person or per car?","acceptedAnswer":{"@type":"Answer","text":"Tours and route transfers are priced per car (up to 5 passengers), so bringing more people lowers the cost per head. Activities and performances are per person , since each guest needs their own entrance ticket."}},{"@type":"Question","name":"Where do you pick up from?","acceptedAnswer":{"@type":"Answer","text":"Free pick-up from any hotel or villa in Ubud and the surrounding area. Staying further out - Canggu, Seminyak, Sanur? Tell us where and we'll quote you honestly, with no surprise fees on the day."}}]}</script>
   </head>
-  <body>
+  <body class="home">
     <div id="navbar-placeholder"></div>
 
     <section class="hero" id="hero">
@@ -119,36 +118,7 @@
 
     <section class="experience experience--alt" id="tours">
       <h2 class="section__title">Tour Programs from Ubud</h2>
-      <div class="experience__grid experience__grid--slider">
-        <article class="experience__card">
-          <div class="experience__image">
-            <img
-              src="assets/images/ubud-tour-card.jpg"
-              alt="Ubud Tour - private tour from Ubud, Bali"
-              loading="lazy"
-              width="600"
-              height="600"
-            />
-          </div>
-          <div class="experience__body">
-            <h3 class="experience__name">Ubud Tour</h3>
-            <p class="experience__desc">
-              Rice terraces, sacred temples, and the monkey forest in one full
-              day.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price">
-                <span class="price" data-price="Ubud Tour">$45</span>
-              </div>
-              <a
-                href="ubud-tour.html"
-                class="experience__arrow"
-                aria-label="View Ubud Tour"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
+      <div class="experience__grid experience__grid--home4">
         <article class="experience__card" data-program="Ubud Culture Day">
           <div class="experience__image">
             <img
@@ -160,7 +130,8 @@
             />
           </div>
           <div class="experience__body">
-            <h3 class="experience__name">Ubud Culture Day</h3>
+            <h3 class="experience__name">Ubud Culture</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>6&ndash;8 hours</span></div>
             <p class="experience__desc">
               Morning Barong, Ubud crafts, the Batuan temple, and an evening
               Kecak dance.
@@ -192,7 +163,8 @@
             />
           </div>
           <div class="experience__body">
-            <h3 class="experience__name">Kintamani Sunrise & Penglipuran</h3>
+            <h3 class="experience__name">Kintamani Sunrise</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>10&ndash;11 hours</span></div>
             <p class="experience__desc">
               A 4x4 Batur sunrise, Penglipuran village, and temples back to
               Ubud.
@@ -226,7 +198,8 @@
             />
           </div>
           <div class="experience__body">
-            <h3 class="experience__name">Batur Sunrise & Adrenaline</h3>
+            <h3 class="experience__name">Batur Sunrise</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>8&ndash;10 hours</span></div>
             <p class="experience__desc">
               A Mount Batur sunrise trek, a volcano breakfast, and a hot spring
               soak.
@@ -257,7 +230,8 @@
             />
           </div>
           <div class="experience__body">
-            <h3 class="experience__name">Lempuyang &amp; Tirta Gangga</h3>
+            <h3 class="experience__name">Lempuyang Gate</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>8&ndash;10 hours</span></div>
             <p class="experience__desc">
               Water gardens, a royal palace, and the gates of Lempuyang.
             </p>
@@ -276,127 +250,9 @@
             </div>
           </div>
         </article>
-        <article class="experience__card">
-          <div class="experience__image">
-            <img
-              src="assets/images/west-bali-tour-card.jpg"
-              alt="Ulun Danu Beratan &amp; Tanah Lot Temple - private tour from Ubud, Bali"
-              loading="lazy"
-              width="600"
-              height="600"
-            />
-          </div>
-          <div class="experience__body">
-            <h3 class="experience__name">
-              Ulun Danu Beratan &amp; Tanah Lot Temple
-            </h3>
-            <p class="experience__desc">
-              Lakeside temples, mountain views, and the Tanah Lot sunset.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price">
-                <span
-                  class="price"
-                  data-price="Ulun Danu Beratan &amp; Tanah Lot Temple"
-                  >$60</span
-                >
-              </div>
-              <a
-                href="ulun-danu-tanah-lot.html"
-                class="experience__arrow"
-                aria-label="View Ulun Danu Beratan &amp; Tanah Lot Temple"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <article
-          class="experience__card"
-          data-program="South Bali &amp; Sunset Kecak"
-        >
-          <div class="experience__image">
-            <img
-              src="assets/images/south-coast-sunset-kecak-card.jpg"
-              alt="South Bali &amp; Sunset Kecak - private tour from Ubud, Bali"
-              loading="lazy"
-              width="600"
-              height="600"
-            />
-          </div>
-          <div class="experience__body">
-            <h3 class="experience__name">South Bali & Sunset Kecak</h3>
-            <p class="experience__desc">
-              Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak
-              dance at Uluwatu.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price">
-                <span class="price" data-price="South Bali &amp; Sunset Kecak"
-                  >$85</span
-                >
-              </div>
-              <a
-                href="south-coast-sunset-kecak.html"
-                class="experience__arrow"
-                aria-label="View South Bali &amp; Sunset Kecak"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <!-- NONAKTIF (tour belum siap): Lovina Dolphin & Sekumpul Waterfall
-        <article
-          class="experience__card"
-          data-program="Lovina Dolphin & Sekumpul Waterfall"
-        >
-          <div class="experience__image">
-            <img
-              src="assets/images/lovina-dolphin-sekumpul-card.jpg"
-              alt="Lovina Dolphin &amp; Sekumpul Waterfall - private tour from Ubud, Bali"
-              loading="lazy"
-              width="1200"
-              height="800"
-            />
-          </div>
-          <div class="experience__body">
-            <h3 class="experience__name">
-              Lovina Dolphin & Sekumpul Waterfall
-            </h3>
-            <p class="experience__desc">
-              A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul
-              waterfall.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price">
-                <span
-                  class="price"
-                  data-price="Lovina Dolphin & Sekumpul Waterfall"
-                  >$95</span
-                >
-              </div>
-              <a
-                href="lovina-dolphin-sekumpul.html"
-                class="experience__arrow"
-                aria-label="View Lovina Dolphin &amp; Sekumpul Waterfall"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        -->
-        <
-          href="tour.html"
-          class="experience__card experience__card--more"
-          style="background-image: url(assets/images/south-bali-tour-card.jpg)"
-          aria-label="See all tours"
-        >
-          <span class="experience__more-inner">
-            <span class="experience__more-arrow" aria-hidden="true">&rarr;</span>
-            <span class="experience__more-title">See all tours</span>
-            <span class="experience__more-sub">Every program &amp; price</span>
-          </span>
-        </a>
       </div>
+
+      <a href="tour.html" class="btn-seeall">See all tours</a>
     </section>
 
     <!-- Plan Your Trip: showcase itinerary builder (core value prop) -->
@@ -466,11 +322,12 @@
 
     <section class="experience experience--alt" id="activities">
       <h2 class="section__title">Activities &amp; Performances</h2>
-      <div class="experience__grid experience__grid--slider">
+      <div class="experience__grid experience__grid--home4">
         <article class="experience__card">
           <div class="experience__image"><img src="assets/images/barong-dance-card.webp" alt="Barong Dance - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="862" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Barong Dance</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~1 hour</span></div>
             <p class="experience__desc">
               The ancient dance-drama of good versus evil, in ornate masks.
             </p>
@@ -489,6 +346,7 @@
           <div class="experience__image"><img src="assets/images/ubud-atv-adventure-card.webp" alt="ATV Ride - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">ATV Ride</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~2 hours</span></div>
             <p class="experience__desc">
               Quad-bike through jungle trails, mud, and a cave tunnel.
             </p>
@@ -507,6 +365,7 @@
           <div class="experience__image"><img src="assets/images/rafting.webp" alt="Rafting - Bali activity with Ubud pick-up" loading="lazy" width="5609" height="3739" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Rafting</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~2 hours</span></div>
             <p class="experience__desc">
               White-water rafting down the scenic Ayung River gorge.
             </p>
@@ -525,6 +384,7 @@
           <div class="experience__image"><img src="assets/images/jungle-swing-card.jpg" alt="Jungle Swing - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="1158" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Jungle Swing</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~1&ndash;2 hours</span></div>
             <p class="experience__desc">
               Soar over a rice-terrace valley on Bali's jungle swings.
             </p>
@@ -539,127 +399,9 @@
             </div>
           </div>
         </article>
-        <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/jeep-batur-card.webp" alt="Jeep Sunrise - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Jeep Sunrise</h3>
-            <p class="experience__desc">
-              A sunrise 4x4 across Mount Batur's black-lava fields.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Jeep Sunrise">$50</span></div>
-              <a
-                href="attractions/jeep-sunrise.html"
-                class="experience__arrow"
-                aria-label="Book Jeep Sunrise"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/mount-batur-sunrise.webp" alt="Mount Batur Trekking - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="1025" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Mount Batur Trekking</h3>
-            <p class="experience__desc">
-              A pre-dawn hike to the summit of an active volcano.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Mount Batur Trekking">$55</span></div>
-              <a
-                href="attractions/mount-batur-trekking.html"
-                class="experience__arrow"
-                aria-label="Book Mount Batur Trekking"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/cooking-class-card.webp" alt="Cooking Class - Bali activity with Ubud pick-up" loading="lazy" width="1920" height="1280" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Cooking Class</h3>
-            <p class="experience__desc">
-              Cook authentic Balinese dishes with a local family.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Cooking Class">$35</span></div>
-              <a
-                href="attractions/cooking-class.html"
-                class="experience__arrow"
-                aria-label="Book Cooking Class"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/watersport-card.jpg" alt="Watersport - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="908" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Watersport</h3>
-            <p class="experience__desc">
-              Jet ski, banana boat, and parasailing off the south coast.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Watersport">$45</span></div>
-              <a
-                href="attractions/watersport.html"
-                class="experience__arrow"
-                aria-label="Book Watersport"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/bali-zoo-card.webp" alt="Bali Zoo - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Bali Zoo</h3>
-            <p class="experience__desc">
-              Elephants, orangutans, and jungle wildlife just south of Ubud.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Bali Zoo">$40</span></div>
-              <a
-                href="attractions/bali-zoo.html"
-                class="experience__arrow"
-                aria-label="Book Bali Zoo"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="experience__card">
-          <div class="experience__image"><img src="assets/images/bali-bird-park-card.webp" alt="Bali Bird Park - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Bali Bird Park</h3>
-            <p class="experience__desc">
-              Over 1,000 birds, aviaries, and free-flight shows near Ubud.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Bali Bird Park">$28</span></div>
-              <a
-                href="attractions/bali-bird-park.html"
-                class="experience__arrow"
-                aria-label="Book Bali Bird Park"
-                >&rarr;</a
-              >
-            </div>
-          </div>
-        </article>
-        <a
-          href="activities.html"
-          class="experience__card experience__card--more"
-          style="background-image: url(assets/images/kecak.jpg)"
-          aria-label="See all activities and performances"
-        >
-          <span class="experience__more-inner">
-            <span class="experience__more-arrow" aria-hidden="true">&rarr;</span>
-            <span class="experience__more-title">See all activities</span>
-            <span class="experience__more-sub">Performances &amp; experiences</span>
-          </span>
-        </a>
       </div>
+
+      <a href="activities.html" class="btn-seeall">See all activities</a>
     </section>
 
     <section class="villas" id="villas">
@@ -792,7 +534,7 @@
           </linearGradient>
         </defs>
       </svg>
-      <div class="about__container">
+      <div class="about__container about__container--team">
         <div class="about__text">
           <h2 class="about__title">Your whole trip, one local team</h2>
           <p>
@@ -804,7 +546,46 @@
             own home at ubudprivatevillas.com, run by the same team.
           </p>
         </div>
-        <div class="about__boxes">
+        <div class="about__drivers">
+          <h3 class="about__drivers-title">Meet our drivers</h3>
+          <p class="about__drivers-sub">
+            The local guides behind every trip. Tap a card to see their profile.
+          </p>
+          <div class="drivers-grid">
+            <button class="driver-card" type="button" data-name="Wayan" data-tagline="Founder &amp; host">
+              <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
+              <strong class="driver-card__name">Wayan</strong>
+              <span class="driver-card__tagline">Founder &amp; host</span>
+              <span class="driver-card__rating"><span class="stars">★</span> New</span>
+              <span class="driver-card__more">View profile &rsaquo;</span>
+              <div class="driver-card__detail" hidden data-desc="Wayan is the person behind Cahyana Ubud Experience, and usually the one who replies to your messages and builder of this website. Born and raised in Ubud, he studied in Australia, speaks English. When he's not running the business he's out on the road, showing guests the island he grew up on.">
+                <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
+              </div>
+            </button>
+            <button class="driver-card" type="button" data-name="Made" data-tagline="Villa host &amp; driver since 2010">
+              <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
+              <strong class="driver-card__name">Made</strong>
+              <span class="driver-card__tagline">Villa host &amp; driver since 2010</span>
+              <span class="driver-card__rating"><span class="stars">★</span> New</span>
+              <span class="driver-card__more">View profile &rsaquo;</span>
+              <div class="driver-card__detail" hidden data-desc="Made has been driving guests around Bali since 2010 and hosts his own villa on Airbnb, so he knows exactly what travellers need. Calm, reliable, and endlessly patient, he speaks good English and knows every back road, quiet temple hour, and honest warung on the island.">
+                <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
+              </div>
+            </button>
+            <button class="driver-card" type="button" data-name="Nyoman" data-tagline="Ubud local &middot; Driver-guide">
+              <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
+              <strong class="driver-card__name">Nyoman</strong>
+              <span class="driver-card__tagline">Ubud local &middot; Driver-guide</span>
+              <span class="driver-card__rating"><span class="stars">★</span> New</span>
+              <span class="driver-card__more">View profile &rsaquo;</span>
+              <div class="driver-card__detail" hidden data-desc="(PLACEHOLDER) Short description of the driver. Replace with real info.">
+                <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="about__boxes">
           <div class="about__content">
             <div class="about__icon">
               <svg
@@ -865,7 +646,6 @@
             <p class="about__desc">Every price upfront, no surprises.</p>
           </div>
         </div>
-      </div>
     </section>
 
     <section class="trust">
@@ -891,35 +671,6 @@
           />
         </div>
       </div>
-      <div class="trust__group">
-        <p class="trust__label">Follow Us</p>
-        <div class="trust__socials">
-          <a href="#" aria-label="Instagram"
-            ><img
-              src="assets/images/instagram-transparent.webp"
-              alt="Instagram"
-              width="256"
-              height="256"
-              loading="lazy"
-          /></a>
-          <a href="#" aria-label="WhatsApp"
-            ><img
-              src="assets/images/whatsapp.webp"
-              alt="WhatsApp"
-              width="256"
-              height="256"
-              loading="lazy"
-          /></a>
-          <a href="#" aria-label="Facebook"
-            ><img
-              src="assets/images/facebook.webp"
-              alt="Facebook"
-              width="256"
-              height="256"
-              loading="lazy"
-          /></a>
-        </div>
-      </div>
     </section>
 
     <div id="drivers-placeholder"></div>
@@ -927,11 +678,9 @@
     <div id="guest-gallery-placeholder"></div>
     <div id="reviews-placeholder"></div>
 
-    <div id="faq-placeholder" data-src="partials/faq-home.html"></div>
-
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=301"></script>
-    <script src="script.js?v=301"></script>
+    <script src="data.js?v=302"></script>
+    <script src="script.js?v=302"></script>
   </body>
 </html>

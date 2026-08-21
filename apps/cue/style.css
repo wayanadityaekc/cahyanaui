@@ -7305,3 +7305,192 @@ section.faq::before,
     grid-template-columns: 1fr;
   }
 }
+
+/* =====================================================================
+   TOUR PROGRAMS PAGE (Steps 3 & 4) — directory layout + minimal cards
+   ===================================================================== */
+
+/* "from" price prefix (home + tour cards) */
+.price-from {
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+/* Half-height page header (no booking form) */
+.page-header--tour {
+  min-height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(rgba(28, 28, 28, 0.5), rgba(28, 28, 28, 0.5)),
+    url(assets/images/tour-hero.jpg) center / cover no-repeat;
+}
+.page-header__content {
+  max-width: 680px;
+}
+.page-header__title {
+  font-family: var(--font-head);
+  font-size: var(--fs-display);
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+.page-header__text {
+  color: #fff;
+  margin: 0;
+  opacity: 0.95;
+}
+
+/* Featured block: cap height */
+.highlight--tourprog .highlight__image {
+  min-height: 260px;
+  max-height: 340px;
+}
+
+/* Zone filter chips */
+.zone-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 1200px;
+  margin: 0 auto 1.6rem;
+}
+.zone-chip {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--color-green);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.zone-chip:hover {
+  border-color: var(--color-gold);
+}
+.zone-chip.is-active {
+  background: var(--color-gold);
+  color: #fff;
+  border-color: var(--color-gold);
+}
+
+/* Minimal cards (style A) on the tour programs page */
+.tourprog .experience__card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.tourprog .experience__image {
+  aspect-ratio: 1 / 1;
+}
+.tourprog .experience__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tourprog .experience__desc,
+.tourprog .tour-type--card,
+.tourprog .card-add,
+.tourprog .experience__arrow,
+.tourprog .experience__price .price-unit {
+  display: none;
+}
+.tourprog .experience__body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "title price" "meta meta";
+  align-items: baseline;
+  column-gap: 0.6rem;
+  row-gap: 0.35rem;
+  padding: 0.6rem 0.9rem 0.85rem;
+}
+.tourprog .experience__name {
+  grid-area: title;
+  margin: 0;
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tourprog .experience__footer {
+  grid-area: price;
+  margin: 0;
+  padding: 0;
+}
+.tourprog .experience__meta {
+  grid-area: meta;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+.tourprog .experience__meta svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: var(--color-gold-d);
+}
+
+/* Closing band */
+.closing-band {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--color-cream);
+}
+.closing-band__text {
+  margin: 0 auto 1.3rem;
+  max-width: 640px;
+  color: var(--color-green);
+}
+.closing-band__actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.closing-band__btn {
+  display: inline-block;
+  padding: 0.8rem 1.4rem;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--color-green);
+  color: var(--color-green);
+  background: #fff;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.closing-band__btn:hover {
+  background: var(--color-green);
+  color: #fff;
+}
+.closing-band__btn--primary {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: #fff;
+}
+.closing-band__btn--primary:hover {
+  background: var(--color-gold-d);
+  border-color: var(--color-gold-d);
+}
+
+@media (max-width: 992px) {
+  .tourprog .experience__name {
+    font-size: var(--fs-small);
+  }
+  .tourprog .experience__price .price {
+    font-size: var(--fs-small);
+  }
+  .tourprog .experience__meta {
+    font-size: var(--fs-label);
+  }
+}

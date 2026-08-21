@@ -23,7 +23,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=302" />
+    <link rel="stylesheet" href="style.css?v=303" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/tour.html" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -61,40 +61,36 @@
       content="https://cahyanaubudexperience.com/assets/icons/preview.jpg"
     />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://cahyanaubudexperience.com/"},{"@type":"ListItem","position":2,"name":"Tours","item":"https://cahyanaubudexperience.com/tour.html"}]}</script>
-
-    <script type="application/ld+json" id="schema-faq">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Are entrance tickets included in the price?","acceptedAnswer":{"@type":"Answer","text":"That's your choice - every tour comes in two versions. On the Standard version, entrance tickets are paid directly at each site, so you only pay for the places you actually enter. The Exclusive version adds the entrance tickets for the listed stops to the price, so the whole day is prepaid. Toggle between the two on any tour page to compare."}},{"@type":"Question","name":"How long does a full-day tour take?","acceptedAnswer":{"@type":"Answer","text":"Most day tours run 8 to 12 hours, depending on how far the region is and how long you linger. We'll give you a realistic time estimate when you book, and pick-up time is always your call."}},{"@type":"Question","name":"Is the tour priced per person or per car?","acceptedAnswer":{"@type":"Answer","text":"Per car - up to 5 passengers for one flat price, and every tour is 100% private: you never share the car with strangers. Bring more people and the cost per person drops. For groups above 5 we simply arrange a second car so everyone travels comfortably."}},{"@type":"Question","name":"What happens if it rains?","acceptedAnswer":{"@type":"Answer","text":"Bali showers usually pass within an hour, so we just reorder the stops to work around the weather. Most tours run rain or shine. If conditions make a stop genuinely unsafe, we'll swap it for something else at no extra charge."}},{"@type":"Question","name":"What happens if I visit during Nyepi?","acceptedAnswer":{"@type":"Answer","text":"Nyepi is Bali's day of silence (in March; the date shifts each year): for one full day the entire island stops - no traffic, no outings, even the airport closes. Tours can't run that day, but the days around it are fascinating, with the ogoh-ogoh parades the evening before. Tell us your dates and we'll plan around it."}}]}</script>
 </head>
-  <body>
+  <body class="tourprog">
     <div id="navbar-placeholder"></div>
 
-    <section class="subhero subhero--tour">
-      <div class="hero__inner">
-        <div class="subhero__content">
-        <h1 class="subhero__title">Bali Tour Programs</h1>
-        <p class="subhero__text">
-          Discover Bali with private, fully customizable day tours led by local
-          drivers. From Ubud's rice terraces to hidden temples, waterfalls, and
-          beaches across the island.
+    <!-- Half-height page header (no booking form) -->
+    <section class="page-header page-header--tour">
+      <div class="page-header__content">
+        <h1 class="page-header__title">Bali Tour Programs</h1>
+        <p class="page-header__text">
+          Private, fully customizable day tours from Ubud - rice terraces,
+          temples, waterfalls, and beaches across the island.
         </p>
-      </div>
-        <div id="booking-placeholder" class="hero__booking" data-default="tour"></div>
       </div>
     </section>
 
-    <section class="highlight">
+    <!-- Featured: Most Popular Tour -->
+    <section class="highlight highlight--tourprog">
       <div class="highlight__container">
         <div
           class="highlight__image"
           style="background-image: url(assets/images/ubud-tour-card.jpg)"
         >
-          <span class="highlight__tag">Most Popular</span>
+          <span class="highlight__tag">Most Popular Tour</span>
         </div>
         <div class="highlight__body">
           <h2 class="highlight__title">Ubud Tour</h2>
           <p class="highlight__desc">
-            Bali's cultural heart in a single day. Rice terraces,
-            sacred temples, the monkey forest, and local artisan villages, all
-            at your own pace with a private car and local driver.
+            Bali's cultural heart in a single day - rice terraces, sacred
+            temples, the monkey forest, and local artisan villages, all at your
+            own pace with a private car and local driver.
           </p>
           <div class="highlight__meta">
             <div class="highlight__meta-item">
@@ -108,7 +104,7 @@
             </div>
           </div>
           <div class="highlight__actions">
-            <a href="ubud-tour.html" class="highlight__btn">Book</a>
+            <a href="ubud-tour.html" class="highlight__btn">View tour</a>
             <button
               type="button"
               class="highlight__btn highlight__btn--add"
@@ -121,229 +117,135 @@
       </div>
     </section>
 
+    <!-- All tours: zone filter + grid -->
     <section class="experience experience--alt" id="tours">
       <h2 class="section__title">All Bali Tours</h2>
-      <div class="experience__grid experience__grid--auto">
-        <article class="experience__card" data-program="Ubud Culture Day">
+
+      <div class="zone-filter" role="tablist" aria-label="Filter tours by area">
+        <button type="button" class="zone-chip is-active" data-zone="all">All</button>
+        <button type="button" class="zone-chip" data-zone="ubud">Ubud</button>
+        <button type="button" class="zone-chip" data-zone="south">South</button>
+        <button type="button" class="zone-chip" data-zone="east">East</button>
+        <button type="button" class="zone-chip" data-zone="west">West</button>
+        <button type="button" class="zone-chip" data-zone="kintamani">Kintamani</button>
+        <button type="button" class="zone-chip" data-zone="north">North</button>
+      </div>
+
+      <div class="experience__grid experience__grid--home4">
+        <a class="experience__card" href="ubud-tour.html" data-zone="ubud">
+          <div class="experience__image"><img src="assets/images/ubud-tour-card.jpg" alt="Ubud Tour - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Ubud Tour</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>6&ndash;8 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ubud Tour">$45</span></div></div>
+          </div>
+        </a>
+        <a class="experience__card" href="ubud-culture-day.html" data-zone="ubud">
           <div class="experience__image"><img src="assets/images/ubud-culture-day-card.jpg" alt="Ubud Culture Day - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Culture Day</h3>
-            <p class="experience__desc">
-              Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Ubud Culture Day">$55</span></div>
-              <a href="ubud-culture-day.html" class="experience__arrow" aria-label="View Ubud Culture Day">&rarr;</a>
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>6&ndash;8 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ubud Culture Day">$55</span></div></div>
           </div>
-        </article>
-        <article class="experience__card" data-program="South Bali &amp; Sunset Kecak">
-          <div class="experience__image"><img src="assets/images/south-coast-sunset-kecak-card.jpg" alt="South Bali &amp; Sunset Kecak - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
+        </a>
+        <a class="experience__card" href="kintamani-sunrise-penglipuran.html" data-zone="kintamani">
+          <div class="experience__image"><img src="assets/images/jeep-batur-card.webp" alt="Kintamani Sunrise &amp; Penglipuran - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
-            <h3 class="experience__name">South Bali & Sunset Kecak</h3>
-            <p class="experience__desc">
-              Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak dance at Uluwatu.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="South Bali &amp; Sunset Kecak">$85</span></div>
-              <a href="south-coast-sunset-kecak.html" class="experience__arrow" aria-label="View South Bali &amp; Sunset Kecak">&rarr;</a>
-            </div>
+            <h3 class="experience__name">Kintamani Sunrise &amp; Penglipuran</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>10&ndash;11 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Kintamani Sunrise &amp; Penglipuran">$85</span></div></div>
           </div>
-        </article>
-        <article class="experience__card" data-program="Batur Sunrise & Adrenaline">
+        </a>
+        <a class="experience__card" href="batur-sunrise-adrenaline.html" data-zone="kintamani">
           <div class="experience__image"><img src="assets/images/batur-sunrise-adrenaline-card.jpg" alt="Batur Sunrise &amp; Adrenaline - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
-            <h3 class="experience__name">Batur Sunrise & Adrenaline</h3>
-            <p class="experience__desc">
-              A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Batur Sunrise & Adrenaline">$85</span></div>
-              <a href="batur-sunrise-adrenaline.html" class="experience__arrow" aria-label="View Batur Sunrise &amp; Adrenaline">&rarr;</a>
-            </div>
+            <h3 class="experience__name">Batur Sunrise &amp; Adrenaline</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>8&ndash;10 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Batur Sunrise &amp; Adrenaline">$85</span></div></div>
           </div>
-        </article>
-        <article class="experience__card" data-program="Ubud Rafting Adventure">
+        </a>
+        <a class="experience__card" href="ubud-rafting-adventure.html" data-zone="ubud">
           <div class="experience__image"><img src="assets/images/ubud-rafting-adventure-card.jpg" alt="Ubud Rafting Adventure - private tour from Ubud, Bali" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Rafting Adventure</h3>
-            <p class="experience__desc">
-              Ayung river rafting, rice terraces, luwak coffee, and a waterfall.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Ubud Rafting Adventure">$75</span></div>
-              <a href="ubud-rafting-adventure.html" class="experience__arrow" aria-label="View Ubud Rafting Adventure">&rarr;</a>
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>6&ndash;8 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ubud Rafting Adventure">$75</span></div></div>
           </div>
-        </article>
-        <article class="experience__card" data-program="Ubud ATV Adventure">
+        </a>
+        <a class="experience__card" href="ubud-atv-adventure.html" data-zone="ubud">
           <div class="experience__image"><img src="assets/images/ubud-atv-adventure-card.webp" alt="Ubud ATV Adventure - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud ATV Adventure</h3>
-            <p class="experience__desc">
-              A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Ubud ATV Adventure">$80</span></div>
-              <a href="ubud-atv-adventure.html" class="experience__arrow" aria-label="View Ubud ATV Adventure">&rarr;</a>
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>6&ndash;8 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ubud ATV Adventure">$80</span></div></div>
           </div>
-        </article>
-        <article class="experience__card" data-program="Kintamani Sunrise & Penglipuran">
-          <div class="experience__image"><img src="assets/images/jeep-batur-card.webp" alt="Kintamani Sunrise &amp; Penglipuran - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
+        </a>
+        <a class="experience__card" href="south-coast-sunset-kecak.html" data-zone="south">
+          <div class="experience__image"><img src="assets/images/south-coast-sunset-kecak-card.jpg" alt="South Bali &amp; Sunset Kecak - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
-            <h3 class="experience__name">Kintamani Sunrise & Penglipuran</h3>
-            <p class="experience__desc">
-              A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Kintamani Sunrise & Penglipuran">$85</span></div>
-              <a href="kintamani-sunrise-penglipuran.html" class="experience__arrow" aria-label="View Kintamani Sunrise &amp; Penglipuran">&rarr;</a>
-            </div>
+            <h3 class="experience__name">South Bali &amp; Sunset Kecak</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>9&ndash;11 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="South Bali &amp; Sunset Kecak">$85</span></div></div>
           </div>
-        </article>
-        <!-- NONAKTIF (tour belum siap): Lovina Dolphin & Sekumpul Waterfall
-        <article class="experience__card" data-program="Lovina Dolphin & Sekumpul Waterfall">
-          <div class="experience__image"><img src="assets/images/lovina-dolphin-sekumpul-card.jpg" alt="Lovina Dolphin &amp; Sekumpul Waterfall - private tour from Ubud, Bali" loading="lazy" width="1200" height="800" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Lovina Dolphin & Sekumpul Waterfall</h3>
-            <p class="experience__desc">
-              A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul waterfall.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Lovina Dolphin & Sekumpul Waterfall">$95</span></div>
-              <a href="lovina-dolphin-sekumpul.html" class="experience__arrow" aria-label="View Lovina Dolphin &amp; Sekumpul Waterfall">&rarr;</a>
-            </div>
-          </div>
-        </article>
-        -->
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="lempuyang-tirta-gangga.html" data-zone="east">
           <div class="experience__image"><img src="assets/images/east-bali-tour-card.jpg" alt="Lempuyang &amp; Tirta Gangga - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Lempuyang &amp; Tirta Gangga</h3>
-            <p class="experience__desc">
-              Water gardens, a royal palace, and the gates of Lempuyang.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Lempuyang &amp; Tirta Gangga">$55</span></div>
-              <a
-                href="lempuyang-tirta-gangga.html"
-                class="experience__arrow"
-                aria-label="Book Lempuyang &amp; Tirta Gangga"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>8&ndash;10 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Lempuyang &amp; Tirta Gangga">$55</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="ulun-danu-tanah-lot.html" data-zone="west">
           <div class="experience__image"><img src="assets/images/west-bali-tour-card.jpg" alt="Ulun Danu Beratan &amp; Tanah Lot Temple - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ulun Danu Beratan &amp; Tanah Lot Temple</h3>
-            <p class="experience__desc">
-              Lakeside temples, mountain views, and the Tanah Lot sunset.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Ulun Danu Beratan &amp; Tanah Lot Temple">$60</span></div>
-              <a
-                href="ulun-danu-tanah-lot.html"
-                class="experience__arrow"
-                aria-label="Book Ulun Danu Beratan &amp; Tanah Lot Temple"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>7&ndash;9 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ulun Danu Beratan &amp; Tanah Lot Temple">$60</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="hidden-beaches-cliffs.html" data-zone="south">
           <div class="experience__image"><img src="assets/images/south-bali-tour-card.jpg" alt="Bali Hidden Beaches and Cliffs - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Bali Hidden Beaches and Cliffs</h3>
-            <p class="experience__desc">
-              Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Bali Hidden Beaches and Cliffs">$45</span></div>
-              <a
-                href="hidden-beaches-cliffs.html"
-                class="experience__arrow"
-                aria-label="View Bali Hidden Beaches and Cliffs"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>7&ndash;9 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Bali Hidden Beaches and Cliffs">$45</span></div></div>
           </div>
-        </article>
-        <!-- NONAKTIF (tour belum siap): Munduk Waterfalls & Twin Lakes
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="munduk-twin-lakes.html" data-zone="west">
           <div class="experience__image"><img src="assets/images/north-bali-tour-card.jpg" alt="Munduk Waterfalls &amp; Twin Lakes - private tour from Ubud, Bali" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Munduk Waterfalls &amp; Twin Lakes</h3>
-            <p class="experience__desc">
-              Twin lakes and a trail of hidden jungle waterfalls in Bali's green north.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Munduk Waterfalls &amp; Twin Lakes">$65</span></div>
-              <a
-                href="munduk-twin-lakes.html"
-                class="experience__arrow"
-                aria-label="Book Munduk Waterfalls &amp; Twin Lakes"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>10&ndash;12 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Munduk Waterfalls &amp; Twin Lakes">$65</span></div></div>
           </div>
-        </article>
-        -->
+        </a>
+        <a class="experience__card" href="lovina-dolphin-sekumpul.html" data-zone="north">
+          <div class="experience__image"><img src="assets/images/lovina-dolphin-sekumpul-card.jpg" alt="Lovina Dolphin &amp; Sekumpul Waterfall - private tour from Ubud, Bali" loading="lazy" width="1200" height="800" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Lovina Dolphin &amp; Sekumpul Waterfall</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>11&ndash;12 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Lovina Dolphin &amp; Sekumpul Waterfall">$95</span></div></div>
+          </div>
+        </a>
       </div>
     </section>
 
-    <section class="info">
-      <!-- data-tour-type="generic": halaman listing nggak punya satu harga, jadi toggle-nya
-           cuma nge-swap baris tiket Included/Excluded (penjelas Standard vs Exclusive). -->
-      <div class="info__container" data-tour-type="generic">
-        <h2 class="section__title">Tour Details</h2>
-        <div class="info__facts">
-          <div class="info__fact">
-            <span>Duration</span><strong>6&ndash;8 hours</strong>
-          </div>
-          <div class="info__fact">
-            <span>Availability</span><strong>Daily</strong>
-          </div>
-          <div class="info__fact">
-            <span>Pick-up</span><strong>Ubud &amp; nearby</strong>
-          </div>
-          <div class="info__fact">
-            <span>Language</span><strong>English</strong>
-          </div>
-        </div>
-        <div class="info__lists">
-          <div class="info__col">
-            <h3>What's Included</h3>
-            <ul class="info__list info__list--yes">
-              <li>Private air-conditioned car and fuel</li>
-              <li>Friendly English-speaking driver</li>
-              <li>Hotel or villa pick-up and drop-off</li>
-              <li>Free cold water on board</li>
-              <li>Flexible, fully customizable itinerary</li>
-              <li data-only="exclusive">
-                Exclusive option: Entrance tickets for the listed attractions
-              </li>
-            </ul>
-          </div>
-          <div class="info__col">
-            <h3>What's Excluded</h3>
-            <ul class="info__list info__list--no">
-              <li data-only="standard">Standard option: Entrance tickets to attractions</li>
-              <li>Meals and drinks</li>
-              <li>Personal expenses</li>
-              <li>Tips and gratuities (optional)</li>
-            </ul>
-          </div>
-        </div>
+    <!-- Closing band -->
+    <section class="closing-band">
+      <p class="closing-band__text">
+        Rather build your own route? Plan your trip day by day, or explore Bali
+        by area first.
+      </p>
+      <div class="closing-band__actions">
+        <a href="my-trips.html" class="closing-band__btn closing-band__btn--primary">Build your own itinerary</a>
+        <a href="destinations.html" class="closing-band__btn">Browse destinations</a>
       </div>
     </section>
 
-    <div id="faq-placeholder" data-src="partials/faq-tour.html"></div>
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=302"></script>
-    <script src="script.js?v=302"></script>
+    <script src="data.js?v=303"></script>
+    <script src="script.js?v=303"></script>
   </body>
 </html>

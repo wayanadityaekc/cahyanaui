@@ -3822,8 +3822,8 @@ function initCardTitleOverlay() {
       img.classList.add("photo-titled");
     });
   };
-  // Homepage cards keep the title BELOW the photo (card style A), so skip overlay there.
-  move("body:not(.home) .experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
+  // Homepage & tour-programs cards keep the title BELOW the photo (card style A).
+  move("body:not(.home):not(.tourprog) .experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
   move(".villa__card", ".villa__image", ".villa__name");
 }
 
@@ -4540,6 +4540,22 @@ function initStopContext() {
   });
 }
 
+// Tour programs page: zona filter chips (client-side, semua card tetap di HTML buat SEO).
+function initTourZoneFilter() {
+  const wrap = document.querySelector(".zone-filter");
+  if (!wrap) return;
+  const cards = Array.from(document.querySelectorAll("#tours .experience__card"));
+  wrap.addEventListener("click", (e) => {
+    const chip = e.target.closest(".zone-chip");
+    if (!chip) return;
+    const zone = chip.dataset.zone;
+    wrap.querySelectorAll(".zone-chip").forEach((c) => c.classList.toggle("is-active", c === chip));
+    cards.forEach((card) => {
+      card.style.display = zone === "all" || card.dataset.zone === zone ? "" : "none";
+    });
+  });
+}
+
 async function initPage() {
   captureMagicToken();
   applyTourContext(); // override data-item dari ?from SEBELUM loadPartials nyalin ke modal
@@ -4587,6 +4603,7 @@ async function initPage() {
   initGlanceHero();
   initTourSidebar();
   initDetailsFaqRow();
+  initTourZoneFilter();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

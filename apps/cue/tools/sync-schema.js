@@ -48,7 +48,6 @@ function put(file, id, obj) {
 
 // ---------- 1. FAQPage dari partial FAQ ----------
 const FAQ_PAGES = {
-  "tour.html": "partials/faq-tour.html",
   "transfer.html": "partials/faq-transfer.html",
   "activities.html": "partials/faq-activities.html",
   "about-us.html": "partials/faq.html"

@@ -3206,85 +3206,168 @@ a.footer__contact-item:hover {
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 
-/* ===== DESKTOP: Tour Details + FAQ jadi kolom kanan, SATU kartu sama konten kiri.
-       Mobile nggak kena (JS cuma jalan >=993px + semua di media ini). ===== */
+/* ===== KARTU BOOKING SIDEBAR (halaman detail): form "Build Your Trip" + checklist
+       Included/Excluded + Ask jadi SATU kartu. Desktop = 2 kolom (kartu sticky kanan),
+       Mobile = 1 kolom, kartu di paling bawah setelah konten. ===== */
+/* Sheet putih konten "naik" dikit ke hero (sudut atas melengkung) — overlap
+   halus, sama kaya about/itinerary. Full-width, isinya di-center max 1200px. */
+.tour-layout--book {
+  position: relative;
+  z-index: 2;
+  margin: -3rem 0 0;
+  padding: 2.5rem max(1.25rem, calc((100% - 1280px) / 2)) 3rem;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
+}
+.booksidebar {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.08);
+  overflow: hidden;
+}
+/* form nyatu ke dalam kartu (buang box + min-height-nya sendiri) */
+.booksidebar .booking,
+.booksidebar #booking-placeholder {
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+.booksidebar .booking__card {
+  max-width: none;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.5rem 1.4rem;
+}
+/* field numpuk 1 kolom, spacing konsisten (0.9rem antar field) */
+.booksidebar .booking__fields {
+  display: block;
+}
+.booksidebar .booking__group {
+  margin-bottom: 0.9rem;
+}
+.booksidebar .booking__group label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.bk-hide {
+  display: none !important;
+}
+/* Blok harga: buang label + baris pax/surcharge; angka besar & tengah (fs-display) */
+.booksidebar .booking__group--price {
+  margin-bottom: 0;
+}
+.booksidebar .booking__group--price > label {
+  display: none;
+}
+.booksidebar #price-note,
+.booksidebar #price-surcharge {
+  display: none;
+}
+.booksidebar .booking__type {
+  margin: 1.2rem 0 0;
+}
+.booksidebar .booking__price {
+  display: block;
+  height: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: center;
+  font-size: var(--fs-display);
+  line-height: 1.1;
+  margin: 1.2rem 0 0;
+}
+.booksidebar .price-unit {
+  display: block;
+  text-align: center;
+  margin-top: 0.2rem;
+}
+/* Book Now (gold, default btn) + Ask (ghost, --alt), numpuk full-width */
+.booksidebar .booking__actions {
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 1.2rem 0;
+}
+.booksidebar .booking__btn {
+  flex: none;
+  width: 100%;
+  max-width: none;
+}
+/* Spec list (durasi / kapasitas / pickup) — persis Step-1 */
+.booksidebar__specs {
+  list-style: none;
+  margin: 0 1.4rem;
+  padding: 0;
+}
+.booksidebar__specs li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  font-size: var(--fs-body);
+  color: var(--color-green);
+}
+.booksidebar__specs svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  color: var(--color-muted);
+}
+/* Divider emas tipis + What's included (centang pakai warna teks, bukan hijau) */
+.booksidebar__incl {
+  margin: 1.2rem 1.4rem 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(201, 164, 92, 0.4);
+}
+.booksidebar__incl-title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  color: var(--color-green);
+}
+.booksidebar__incl .info__list {
+  margin: 0;
+}
+.booksidebar__incl .info__list li {
+  padding: 0.45rem 0 0.45rem 1.75rem;
+}
+.booksidebar__incl .info__list--yes li::before {
+  color: var(--color-green);
+}
+.booksidebar__incl .info__list li[data-only="exclusive"] {
+  display: none;
+}
+.booksidebar__incl.is-exclusive .info__list li[data-only="exclusive"] {
+  display: list-item;
+}
+
 @media (min-width: 993px) {
-  /* SATU kartu putih (nyatu) yg overlap hero, isinya 2 kolom */
-  .tour-layout {
+  .tour-layout--book {
     display: flex;
-    align-items: stretch; /* tinggi kolom kiri & kanan disamain */
-    width: min(1500px, 95%); /* lebih full-width */
-    margin: -5rem auto 0;
-    position: relative;
-    z-index: 2;
-    background: #fff;
-    border-radius: 24px 24px 0 0;
-    box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
+    align-items: flex-start;
+    gap: 2.2rem;
   }
-  .tour-layout__main {
+  .tour-layout--book .tour-layout__main {
     flex: 1 1 auto;
     min-width: 0;
   }
-  /* kolom kanan = Tour Details + FAQ (tanpa garis pemisah dari konten) */
-  .tour-layout__side {
-    flex: 0 0 36%;
+  .tour-layout--book .tour-layout__side {
+    flex: 0 0 34%;
+    max-width: 380px;
+    position: sticky;
+    top: 80px;
   }
-  .tour-layout__main > section,
-  .tour-layout__side > section {
-    margin-top: 0 !important;
-  }
-  /* wrapper .info & .faq transparan (nyatu sama kartu) */
-  .tour-layout .tour-layout__side .info,
-  .tour-layout .tour-layout__side .faq {
-    background: transparent !important; /* lawan .info:has() cream */
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-  }
-  .tour-layout__side .info {
-    padding: 1.4rem 1.3rem 0.4rem; /* ruang biar shadow panel napas */
-  }
-  /* Tour Details = panel putih halus + shadow tipis di sekelilingnya */
-  .tour-layout .tour-layout__side .info__container {
-    max-width: none;
-    width: auto;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: 0 6px 22px rgba(31, 61, 43, 0.08);
-    padding: 1.6rem 1.5rem;
-  }
-  .tour-layout__side .section__title {
-    font-size: 1.25rem;
-    margin-bottom: 1.1rem;
-  }
-  /* kolom lebih sempit: attraction fact grid 2x2, Included/Excluded 1 kolom */
-  .tour-layout__side .info__facts {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .tour-layout__side .info__lists {
-    grid-template-columns: 1fr;
-    gap: 1.3rem;
-    margin-top: 1.4rem;
-  }
-  .tour-layout__side .info__cta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    margin-top: 1.4rem;
-  }
-  .tour-layout__side .info__cta .program-cta__btn {
-    width: 100%;
-  }
-  /* FAQ di kolom sempit: accordion + kartu chat numpuk (bukan 2 kolom) */
-  .tour-layout__side .faq__container,
-  .tour-layout__side .faq__grid {
-    grid-template-columns: 1fr;
-    display: block;
-  }
-  .tour-layout__side .faq {
-    padding: 1.6rem 1.5rem;
+}
+@media (max-width: 992px) {
+  /* mobile: kartu turun ke bawah konten */
+  .tour-layout--book .tour-layout__side {
+    margin-top: 2.2rem;
   }
 }
 
@@ -5637,6 +5720,26 @@ button.pick-cat {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
     url("assets/images/tour-hero.jpg");
+}
+/* Halaman detail (hero overlap + foto): hero lebih pendek dari default 60vh,
+   tapi teks-nya diperbesar biar tetep berasa "hero". */
+.subhero--overlap.subhero--tour {
+  min-height: 46vh;
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+}
+/* Teks hero diperbesar HANYA di desktop; mobile tetap seperti semula */
+@media (min-width: 769px) {
+  .subhero--overlap.subhero--tour .subhero__title {
+    font-size: clamp(2.3rem, 5.5vw, 3rem);
+  }
+  .subhero--overlap.subhero--tour .subhero__text {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 .subhero--exp {
   background-image:

@@ -1444,6 +1444,8 @@ function initBooking() {
   function setBookingMode(mode, recalc) {
     bookingMode = mode === "exclusive" ? "exclusive" : "standard";
     typeBtns.forEach((b) => b.classList.toggle("is-active", b.dataset.mode === bookingMode));
+    // sinkron checklist Included/Excluded di kartu sidebar (kalau ada)
+    if (window.__bookListsSync) window.__bookListsSync(bookingMode);
     if (recalc) calculatePrice();
   }
   window.__setBookingMode = setBookingMode; // dipanggil dari toggle di halaman detail
@@ -4462,32 +4464,130 @@ function initGlanceHero() {
   updateGlanceSave();
 }
 
-// DESKTOP ONLY: halaman "Tour Details" -> layout 2 kolom. Konten (stops/faq) di kiri,
-// section .info (Tour Details: harga + included/excluded + Book) jadi sidebar sticky
-// ~22% di kanan (memanjang vertikal kaya di HP). Mobile NGGAK disentuh (gate width).
-function initTourSidebar() {
-  if (!window.matchMedia("(min-width: 993px)").matches) return; // desktop saja
+// Halaman detail bookable: gabung form "Build Your Trip" + checklist Included/Excluded
+// + Ask jadi SATU kartu sidebar. Desktop = 2 kolom (kartu sticky kanan). Mobile = satu
+// kolom, kartu di paling bawah setelah konten. Form-nya dipindah keluar dari modal;
+// presets (data-item/default) udah keburu dibaca initBooking sebelum fungsi ini jalan.
+function initBookSidebar() {
   const info = document.querySelector("section.info");
   if (!info || !info.querySelector(".info__cta")) return; // cuma halaman detail bookable
   const subhero = document.querySelector("section.subhero");
-  if (!subhero) return;
-  // kumpulin section berturut setelah subhero (stops, info, faq, ...) sampai ketemu non-section
-  const sections = [];
-  let n = subhero.nextElementSibling;
-  while (n && n.tagName === "SECTION") { sections.push(n); n = n.nextElementSibling; }
-  if (sections.indexOf(info) === -1) return;
+  const bookingPh = document.getElementById("booking-placeholder");
+  if (!subhero || !bookingPh) return;
+
+  // --- Ambil data fakta dari .info SEBELUM dibongkar (buat glance list) ---
+  const factVal = (prefix) => {
+    const f = [...info.querySelectorAll(".info__fact")].find((el) => {
+      const s = el.querySelector("span");
+      return s && s.textContent.trim().toLowerCase().startsWith(prefix);
+    });
+    return f && f.querySelector("strong") ? f.querySelector("strong").textContent.trim() : "";
+  };
+  const duration = factVal("duration");
+  const pickup = factVal("pick");
+  const itemName = bookingPh.dataset.item || "";
+  const info0 = typeof itemInfo === "function" ? itemInfo(itemName) : null;
+  const cat = info0 ? info0.cat : "tour";
+  const perPerson = cat === "experience" || cat === "performance";
+  const capacity = perPerson ? "Per person ticket" : "Private · up to 5 pax";
+
+  // --- Layout 2 kolom setelah subhero ---
   const layout = document.createElement("div");
-  layout.className = "tour-layout";
+  layout.className = "tour-layout tour-layout--book";
   const main = document.createElement("div"); main.className = "tour-layout__main";
   const side = document.createElement("div"); side.className = "tour-layout__side";
   layout.append(main, side);
   subhero.after(layout);
-  // kanan (sidebar) = Tour Details + FAQ (di bawahnya) biar tinggi kolom seimbang;
-  // kiri = sisa konten (What You'll Do / About, dll).
-  sections.forEach((s) => {
-    const toSide = s === info || s.classList.contains("faq");
-    (toSide ? side : main).appendChild(s);
-  });
+
+  // Section konten setelah layout -> kolom kiri (kecuali .info yg mau dibongkar)
+  const sections = [];
+  let n = layout.nextElementSibling;
+  while (n && n.tagName === "SECTION") { const next = n.nextElementSibling; sections.push(n); n = next; }
+  sections.forEach((s) => { if (s !== info) main.appendChild(s); });
+
+  // --- Kartu booking gabungan ---
+  const card = document.createElement("div");
+  card.className = "booksidebar";
+  side.appendChild(card);
+
+  // 1) Form booking (pindahin placeholder-nya; presets + wiring ikut node)
+  card.appendChild(bookingPh);
+  const bookingSection = document.getElementById("booking");
+  if (bookingSection) bookingSection.classList.add("booking--sidebar");
+
+  // Urutan field ikut referensi: Pickup, Program, Select program, Date
+  // (form asli: Pickup, Date, Program, Select -> pindah Date ke setelah Select)
+  const dateGroup = document.getElementById("date") && document.getElementById("date").closest(".booking__group");
+  const itemGroup = document.getElementById("service-item") && document.getElementById("service-item").closest(".booking__group");
+  if (dateGroup && itemGroup) itemGroup.after(dateGroup);
+  // Label ikut referensi: "Service" -> "Program", "Select Service" -> "Select program"
+  const relabel = (id, txt) => {
+    const el = document.getElementById(id);
+    const lb = el && el.closest(".booking__group") && el.closest(".booking__group").querySelector("label");
+    if (lb) lb.textContent = txt;
+  };
+  relabel("stay-area", "Pickup area");
+  relabel("service", "Program");
+  relabel("service-item", "Select program");
+
+  // Harga besar di tengah + unit "per car"/"per person" di bawah angka
+  const priceEl = document.getElementById("price");
+  if (priceEl && priceEl.parentElement && !priceEl.parentElement.querySelector(".price-unit")) {
+    const unit = perPerson ? "per person" : "per car";
+    const u = document.createElement("div");
+    u.className = "price-unit";
+    u.textContent = unit;
+    priceEl.after(u);
+  }
+
+  // Tombol: Book Now (ada) + Ask a question (baru). My Trips disembunyiin.
+  const actions = bookingSection && bookingSection.querySelector(".booking__actions");
+  if (actions) {
+    const myTrips = actions.querySelector(".booking__btn--alt");
+    if (myTrips) myTrips.classList.add("bk-hide");
+    if (!actions.querySelector(".booksidebar__ask")) {
+      const ask = document.createElement("a");
+      ask.className = "booking__btn booking__btn--alt booksidebar__ask";
+      ask.href = "https://wa.me/" + WHATSAPP_NUMBER;
+      ask.target = "_blank";
+      ask.rel = "noopener";
+      ask.textContent = "Ask a question";
+      actions.appendChild(ask);
+    }
+  }
+
+  // 2) Spec list (durasi / kapasitas / pickup) — data asli halaman + ikon (SVG Step-1)
+  const CLK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  const PPL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3.1-5 7-5s7 1.7 7 5"/><path d="M17 8a3 3 0 0 1 0 6"/><path d="M22 20c0-2.5-1.6-4.1-4-4.7"/></svg>';
+  const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  const rows = [];
+  if (duration) rows.push([CLK, duration]);
+  rows.push([PPL, capacity]);
+  if (pickup) rows.push([PIN, pickup + " pick-up"]);
+  const specs = document.createElement("ul");
+  specs.className = "booksidebar__specs";
+  specs.innerHTML = rows.map(([ic, tx]) => "<li>" + ic + tx + "</li>").join("");
+  card.appendChild(specs);
+
+  // 3) Divider tipis emas + "What's included" (cuma Included, ikut referensi Step-1)
+  const yes = info.querySelector(".info__list--yes");
+  if (yes) {
+    const inclWrap = document.createElement("div");
+    inclWrap.className = "booksidebar__incl";
+    const t = document.createElement("p");
+    t.className = "booksidebar__incl-title";
+    t.textContent = "What's included";
+    inclWrap.append(t, yes);
+    card.appendChild(inclWrap);
+    window.__bookListsSync = (mode) =>
+      inclWrap.classList.toggle("is-exclusive", mode === "exclusive");
+    window.__bookListsSync("standard");
+  }
+
+  // Buang .info lama + wrapper modal (form udah pindah ke kartu)
+  info.remove();
+  const bm = document.getElementById("book-modal-placeholder");
+  if (bm) bm.remove();
 }
 
 /* DESKTOP listing (tour/activities/transfer): Tour Details + FAQ digabung jadi
@@ -4564,6 +4664,7 @@ async function initPage() {
   initNavbar();
   initBookingConfirm();
   initBooking();
+  initBookSidebar(); // pindah form booking ke kartu sidebar SEBELUM init lain sentuh .info
   initSlider();
   initTourSlider();
   initGuideHome();
@@ -4601,7 +4702,6 @@ async function initPage() {
   initCardTitleOverlay();
   initBookingCustomControls();
   initGlanceHero();
-  initTourSidebar();
   initDetailsFaqRow();
   initTourZoneFilter();
 }

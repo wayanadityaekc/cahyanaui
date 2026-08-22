@@ -49,14 +49,15 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  /* clip (bukan hidden) biar nyegah scroll horizontal TAPI position:sticky tetap jalan */
+  overflow-x: clip;
 }
 
 body {
   font-family: var(--font-body);
   color: var(--color-green);
   background-color: #fff;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 .about__text p,
 .experience__desc,
@@ -3221,6 +3222,7 @@ a.footer__contact-item:hover {
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 .booksidebar {
+  position: relative; /* anchor buat panel What's included slide-over */
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -3243,12 +3245,20 @@ a.footer__contact-item:hover {
   box-shadow: none;
   padding: 1.5rem 1.4rem;
 }
-/* field numpuk 1 kolom, spacing konsisten (0.9rem antar field) */
+/* field: Pickup / Date / Price full-width, TAPI Program + Select program sebelahan
+   (2 kolom) biar hemat 1 baris. spacing lewat gap (margin-bottom dimatiin). */
 .booksidebar .booking__fields {
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.8rem;
+  row-gap: 0.9rem;
 }
-.booksidebar .booking__group {
-  margin-bottom: 0.9rem;
+.booksidebar .booking__fields .booking__group {
+  margin-bottom: 0;
+}
+/* cuma blok harga yang full-width; Pickup|Date & Program|Select masing2 2 kolom */
+.booksidebar .booking__group--price {
+  grid-column: 1 / -1;
 }
 .booksidebar .booking__group label {
   display: block;
@@ -3319,32 +3329,120 @@ a.footer__contact-item:hover {
   color: var(--color-muted);
 }
 /* Divider emas tipis + What's included (centang pakai warna teks, bukan hijau) */
-.booksidebar__incl {
+/* "What's included" trigger (bar bawah kartu) + panah */
+.booksidebar__incl-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 2.8rem);
   margin: 1.2rem 1.4rem 1.5rem;
-  padding-top: 1.2rem;
+  padding: 1.2rem 0 0;
+  border: none;
   border-top: 1px solid rgba(201, 164, 92, 0.4);
-}
-.booksidebar__incl-title {
-  margin: 0 0 0.6rem;
+  background: none;
+  cursor: pointer;
   font-family: var(--font-body);
   font-size: var(--fs-strong);
   font-weight: 600;
   color: var(--color-green);
 }
-.booksidebar__incl .info__list {
-  margin: 0;
+.booksidebar__chev {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border-right: 2px solid var(--color-muted);
+  border-bottom: 2px solid var(--color-muted);
+  transform: rotate(-135deg); /* panah ke atas: "buka ke atas" */
+  transition: transform 0.2s ease;
 }
-.booksidebar__incl .info__list li {
-  padding: 0.45rem 0 0.45rem 1.75rem;
+.booksidebar.incl-open .booksidebar__chev {
+  transform: rotate(45deg);
 }
-.booksidebar__incl .info__list--yes li::before {
+/* Panel slide-over: nutupin form pas dibuka (kartu tinggi tetap) */
+.booksidebar__panel {
+  position: absolute;
+  inset: 0;
+  z-index: 20; /* di atas form (.booking--sidebar z-index:10) biar nutupin penuh */
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.4rem;
+  background: #fff;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+.booksidebar.incl-open .booksidebar__panel {
+  transform: translateY(0);
+}
+.booksidebar__panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-strong);
+  font-weight: 600;
   color: var(--color-green);
 }
-.booksidebar__incl .info__list li[data-only="exclusive"] {
+.booksidebar__panel-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-muted);
+  padding: 0 0.2rem;
+}
+.booksidebar__panel .info__list li {
+  padding: 0.45rem 0 0.45rem 1.75rem;
+}
+.booksidebar__panel .info__list--yes li::before {
+  color: var(--color-green);
+}
+.booksidebar__panel .info__list li[data-only="exclusive"] {
   display: none;
 }
-.booksidebar__incl.is-exclusive .info__list li[data-only="exclusive"] {
+.booksidebar__panel.is-exclusive .info__list li[data-only="exclusive"] {
   display: list-item;
+}
+
+/* Charter: kalkulator "Build Your Charter" jadi isi kartu sidebar */
+.chartersidebar {
+  padding: 1.5rem 1.4rem;
+}
+.chartersidebar .section__title {
+  font-size: 1.25rem;
+  text-align: center;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+.chartersidebar .builder__intro {
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  margin: 0 auto 1.3rem;
+  max-width: none;
+}
+.chartersidebar .charter__box {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+/* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
+   pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */
+.tour-layout--book .tour-layout__main section.info {
+  background: transparent;
+  padding: 0;
+}
+.tour-layout--book .tour-layout__main section.info .info__container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 @media (min-width: 993px) {
@@ -3361,7 +3459,10 @@ a.footer__contact-item:hover {
     flex: 0 0 34%;
     max-width: 380px;
     position: sticky;
-    top: 80px;
+    /* clear navbar+tripbar fixed (96px) biar atas kartu gak ketutup */
+    top: 104px;
+    /* turun biar sejajar foto pertama konten (di-set JS alignSideToFirstPhoto) */
+    margin-top: var(--side-offset, 0);
   }
 }
 @media (max-width: 992px) {

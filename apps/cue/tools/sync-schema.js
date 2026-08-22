@@ -47,11 +47,9 @@ function put(file, id, obj) {
 }
 
 // ---------- 1. FAQPage dari partial FAQ ----------
-const FAQ_PAGES = {
-  "transfer.html": "partials/faq-transfer.html",
-  "activities.html": "partials/faq-activities.html",
-  "about-us.html": "partials/faq.html"
-};
+// FAQ dipusatin ke faq.html doang (halaman lain FAQ-nya udah dihapus). Section 1b
+// di bawah otomatis regen schema-faq buat halaman yang masih punya FAQ inline (= faq.html).
+const FAQ_PAGES = {};
 let nFaq = 0;
 Object.entries(FAQ_PAGES).forEach(([page, partial]) => {
   const p = read(partial);

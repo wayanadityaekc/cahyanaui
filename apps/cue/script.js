@@ -1093,7 +1093,6 @@ async function loadPartials() {
     { id: "drivers-placeholder", file: "partials/drivers.html" },
     { id: "guest-gallery-placeholder", file: "partials/guest-gallery.html" },
     { id: "reviews-placeholder", file: "partials/reviews.html" },
-    { id: "faq-placeholder", file: "partials/faq.html" },
     { id: "footer-placeholder", file: "partials/footer.html" }
   ];
   // Fetch semua partial PARALEL (dulu sekuensial -> 8 round-trip berurutan, lambat di HP:
@@ -4464,6 +4463,17 @@ function initGlanceHero() {
   updateGlanceSave();
 }
 
+// Desktop: turunin sidebar biar sejajar sama FOTO pertama di konten (bukan sama
+// title section). Diukur sekali (offset dari atas layout ke foto pertama), disimpen
+// di CSS var --side-offset yang cuma kepakai di media desktop (mobile aman).
+function alignSideToFirstPhoto(layout, main, side) {
+  if (!window.matchMedia("(min-width: 993px)").matches) return;
+  const photo = main.querySelector(".stop__image, .experience__image, .stop img, img");
+  if (!photo) return;
+  const off = Math.round(photo.getBoundingClientRect().top - side.getBoundingClientRect().top);
+  if (off > 0) layout.style.setProperty("--side-offset", off + "px");
+}
+
 // Halaman detail bookable: gabung form "Build Your Trip" + checklist Included/Excluded
 // + Ask jadi SATU kartu sidebar. Desktop = 2 kolom (kartu sticky kanan). Mobile = satu
 // kolom, kartu di paling bawah setelah konten. Form-nya dipindah keluar dari modal;
@@ -4515,11 +4525,11 @@ function initBookSidebar() {
   const bookingSection = document.getElementById("booking");
   if (bookingSection) bookingSection.classList.add("booking--sidebar");
 
-  // Urutan field ikut referensi: Pickup, Program, Select program, Date
-  // (form asli: Pickup, Date, Program, Select -> pindah Date ke setelah Select)
+  // Urutan field: Pickup, Date, Program, Select program -> di grid 2 kolom jadi
+  // baris1 Pickup|Date, baris2 Program|Select program. Date dipindah ke sebelah Pickup.
   const dateGroup = document.getElementById("date") && document.getElementById("date").closest(".booking__group");
-  const itemGroup = document.getElementById("service-item") && document.getElementById("service-item").closest(".booking__group");
-  if (dateGroup && itemGroup) itemGroup.after(dateGroup);
+  const pickupGroup = document.getElementById("stay-area") && document.getElementById("stay-area").closest(".booking__group");
+  if (dateGroup && pickupGroup) pickupGroup.after(dateGroup);
   // Label ikut referensi: "Service" -> "Program", "Select Service" -> "Select program"
   const relabel = (id, txt) => {
     const el = document.getElementById(id);
@@ -4569,18 +4579,35 @@ function initBookSidebar() {
   specs.innerHTML = rows.map(([ic, tx]) => "<li>" + ic + tx + "</li>").join("");
   card.appendChild(specs);
 
-  // 3) Divider tipis emas + "What's included" (cuma Included, ikut referensi Step-1)
+  // 3) "What's included" = panel slide-over yang NUTUPIN form (kartu tinggi tetap,
+  //    nggak nambah panjang). Trigger di bawah; klik -> panel naik nutupin form,
+  //    klik lagi / tombol tutup -> panel turun. Konten tetap di HTML (SEO aman).
   const yes = info.querySelector(".info__list--yes");
   if (yes) {
-    const inclWrap = document.createElement("div");
-    inclWrap.className = "booksidebar__incl";
-    const t = document.createElement("p");
-    t.className = "booksidebar__incl-title";
-    t.textContent = "What's included";
-    inclWrap.append(t, yes);
-    card.appendChild(inclWrap);
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "booksidebar__incl-trigger";
+    trigger.innerHTML = "<span>What&apos;s included</span><span class=\"booksidebar__chev\"></span>";
+    card.appendChild(trigger);
+
+    const panel = document.createElement("div");
+    panel.className = "booksidebar__panel";
+    const head = document.createElement("div");
+    head.className = "booksidebar__panel-head";
+    head.innerHTML = "<span>What&apos;s included</span>";
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "booksidebar__panel-close";
+    close.setAttribute("aria-label", "Close");
+    close.innerHTML = "&times;";
+    head.appendChild(close);
+    panel.append(head, yes);
+    card.appendChild(panel);
+
+    trigger.addEventListener("click", () => card.classList.toggle("incl-open"));
+    close.addEventListener("click", () => card.classList.remove("incl-open"));
     window.__bookListsSync = (mode) =>
-      inclWrap.classList.toggle("is-exclusive", mode === "exclusive");
+      panel.classList.toggle("is-exclusive", mode === "exclusive");
     window.__bookListsSync("standard");
   }
 
@@ -4588,6 +4615,55 @@ function initBookSidebar() {
   info.remove();
   const bm = document.getElementById("book-modal-placeholder");
   if (bm) bm.remove();
+
+  // sejajarin sidebar sama foto pertama (stop 1), bukan sama title
+  alignSideToFirstPhoto(layout, main, side);
+}
+
+// Halaman charter: bungkus kalkulator "Build Your Charter" jadi kartu sidebar
+// (kanan sticky di desktop, bawah konten di mobile) — layout sama kaya halaman
+// detail. Konten (How a Charter Day Works + Good to know + FAQ) di kolom kiri.
+function initCharterSidebar() {
+  const charter = document.getElementById("charter");
+  const box = charter && charter.querySelector(".charter__box");
+  const subhero = document.querySelector("section.subhero");
+  if (!charter || !box || !subhero) return;
+
+  const layout = document.createElement("div");
+  layout.className = "tour-layout tour-layout--book";
+  const main = document.createElement("div"); main.className = "tour-layout__main";
+  const side = document.createElement("div"); side.className = "tour-layout__side";
+  layout.append(main, side);
+  subhero.after(layout);
+
+  // section berturut setelah layout (charter, info, faq)
+  const sections = [];
+  let n = layout.nextElementSibling;
+  while (n && n.tagName === "SECTION") { const next = n.nextElementSibling; sections.push(n); n = next; }
+
+  // sidebar kanan = kartu berisi judul + intro + kalkulator
+  const card = document.createElement("div");
+  card.className = "booksidebar chartersidebar";
+  const heading = charter.querySelector(".section__title");
+  const intro = charter.querySelector(".builder__intro");
+  if (heading) card.appendChild(heading);
+  if (intro) card.appendChild(intro);
+  card.appendChild(box);
+  side.appendChild(card);
+
+  // kiri = konten: How a Charter Day Works -> Good to know -> FAQ
+  const notes = charter.querySelector(".charter__notes");
+  const info = sections.find((s) => s.classList.contains("info"));
+  const faq = sections.find((s) => s.classList.contains("faq"));
+  if (info) main.appendChild(info);
+  if (notes) main.appendChild(notes);
+  if (faq) main.appendChild(faq);
+
+  charter.remove(); // section .charter udah kosong
+
+  // sejajarin sidebar sama foto pertama di konten (kalau ada); charter kontennya
+  // teks (no foto) -> helper no-op, kartu tetap di atas konten.
+  alignSideToFirstPhoto(layout, main, side);
 }
 
 /* DESKTOP listing (tour/activities/transfer): Tour Details + FAQ digabung jadi
@@ -4683,6 +4759,7 @@ async function initPage() {
   initItineraryButtons();
   initDestinationCards();
   initCharter();
+  initCharterSidebar();
   initTourType();
   initInfoPopovers();
   initTripBar();

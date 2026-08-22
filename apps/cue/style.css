@@ -7521,33 +7521,6 @@ section.faq::before,
   font-weight: 400;
 }
 
-/* Half-height page header (no booking form) */
-.page-header--tour {
-  min-height: 210px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2.5rem 1.5rem;
-  background: linear-gradient(rgba(28, 28, 28, 0.5), rgba(28, 28, 28, 0.5)),
-    url(assets/images/tour-hero.jpg) center / cover no-repeat;
-}
-.page-header__content {
-  max-width: 680px;
-}
-.page-header__title {
-  font-family: var(--font-head);
-  font-size: var(--fs-display);
-  font-weight: 600;
-  color: #fff;
-  margin: 0 0 0.5rem;
-}
-.page-header__text {
-  color: #fff;
-  margin: 0;
-  opacity: 0.95;
-}
-
 /* Featured block: cap height */
 .highlight--tourprog .highlight__image {
   min-height: 260px;

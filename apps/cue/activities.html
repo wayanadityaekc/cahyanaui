@@ -26,7 +26,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=312" />
+    <link rel="stylesheet" href="style.css?v=313" />
     <link
       rel="canonical"
       href="https://cahyanaubudexperience.com/activities.html"
@@ -69,36 +69,32 @@
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://cahyanaubudexperience.com/"},{"@type":"ListItem","position":2,"name":"Experiences","item":"https://cahyanaubudexperience.com/activities.html"}]}</script>
 
 </head>
-  <body>
+  <body class="tourprog">
     <div id="navbar-placeholder"></div>
 
-    <section class="subhero subhero--exp">
-      <div class="hero__inner">
-        <div class="subhero__content">
-          <h1 class="subhero__title">
-            Bali Activities &amp; Cultural Performances
-          </h1>
-          <p class="subhero__text">
-            From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and
-            performances in and around Ubud - all with local drivers and honest
-            prices.
-          </p>
-        </div>
-        <div
-          id="booking-placeholder"
-          class="hero__booking"
-          data-default="experience"
-        ></div>
+    <!-- Half-height sub-hero (reuse Ubud Tour reference classes; --exp keeps the
+         experience hero image, overrides --tour's background) -->
+    <section class="subhero subhero--overlap subhero--tour subhero--exp">
+      <div class="subhero__content">
+        <h1 class="subhero__title">
+          Bali Activities &amp; Cultural Performances
+        </h1>
+        <p class="subhero__text">
+          From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and
+          performances in and around Ubud - all with local drivers and honest
+          prices.
+        </p>
       </div>
     </section>
 
-    <section class="highlight">
+    <!-- Featured: Most Popular Experience (reuse tours featured block) -->
+    <section class="highlight highlight--tourprog">
       <div class="highlight__container">
         <div
           class="highlight__image"
           style="background-image: url(assets/images/kecak.jpg)"
         >
-          <span class="highlight__tag">Must See</span>
+          <span class="highlight__tag">Most Popular</span>
         </div>
         <div class="highlight__body">
           <h2 class="highlight__title">Kecak Dance</h2>
@@ -134,187 +130,86 @@
 
     <section class="experience experience--alt" id="activities">
       <h2 class="section__title">All Activities &amp; Performances</h2>
-      <div class="experience__grid experience__grid--auto">
-        <article class="experience__card">
+      <div class="experience__grid experience__grid--home4">
+        <a class="experience__card" href="attractions/barong-dance.html">
           <div class="experience__image"><img src="assets/images/barong-dance-card.webp" alt="Barong Dance - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="862" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Barong Dance</h3>
-            <p class="experience__desc">
-              The ancient dance-drama of good versus evil, in ornate masks.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Barong Dance">$10</span></div>
-              <a
-                href="attractions/barong-dance.html"
-                class="experience__arrow"
-                aria-label="Book Barong Dance"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~1 hour</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Barong Dance">$10</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/atv-ride.html">
           <div class="experience__image"><img src="assets/images/ubud-atv-adventure-card.webp" alt="ATV Ride - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">ATV Ride</h3>
-            <p class="experience__desc">
-              Quad-bike through jungle trails, mud, and a cave tunnel.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="ATV">$40</span></div>
-              <a
-                href="attractions/atv-ride.html"
-                class="experience__arrow"
-                aria-label="Book ATV Ride"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~2 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="ATV">$40</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/rafting.html">
           <div class="experience__image"><img src="assets/images/rafting.webp" alt="Rafting - Bali activity with Ubud pick-up" loading="lazy" width="5609" height="3739" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Rafting</h3>
-            <p class="experience__desc">
-              White-water rafting down the scenic Ayung River gorge.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Rafting">$35</span></div>
-              <a
-                href="attractions/rafting.html"
-                class="experience__arrow"
-                aria-label="Book Rafting"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~2 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Rafting">$35</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/jungle-swing.html">
           <div class="experience__image"><img src="assets/images/jungle-swing-card.jpg" alt="Jungle Swing - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="1158" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Jungle Swing</h3>
-            <p class="experience__desc">
-              Soar over a rice-terrace valley on Bali's jungle swings.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Swing">$25</span></div>
-              <a
-                href="attractions/jungle-swing.html"
-                class="experience__arrow"
-                aria-label="Book Swing"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~1&ndash;2 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Swing">$25</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/jeep-sunrise.html">
           <div class="experience__image"><img src="assets/images/jeep-batur-card.webp" alt="Jeep Sunrise - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Jeep Sunrise</h3>
-            <p class="experience__desc">
-              A sunrise 4x4 across Mount Batur's black-lava fields.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Jeep Sunrise">$50</span></div>
-              <a
-                href="attractions/jeep-sunrise.html"
-                class="experience__arrow"
-                aria-label="Book Jeep Sunrise"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~7 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Jeep Sunrise">$50</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/mount-batur-trekking.html">
           <div class="experience__image"><img src="assets/images/mount-batur-sunrise.webp" alt="Mount Batur Trekking - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="1025" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Mount Batur Trekking</h3>
-            <p class="experience__desc">
-              A pre-dawn hike to the summit of an active volcano.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Mount Batur Trekking">$55</span></div>
-              <a
-                href="attractions/mount-batur-trekking.html"
-                class="experience__arrow"
-                aria-label="Book Mount Batur Trekking"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~8 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Mount Batur Trekking">$55</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/cooking-class.html">
           <div class="experience__image"><img src="assets/images/cooking-class-card.webp" alt="Cooking Class - Bali activity with Ubud pick-up" loading="lazy" width="1920" height="1280" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Cooking Class</h3>
-            <p class="experience__desc">
-              Cook authentic Balinese dishes with a local family.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Cooking Class">$35</span></div>
-              <a
-                href="attractions/cooking-class.html"
-                class="experience__arrow"
-                aria-label="Book Cooking Class"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~5 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Cooking Class">$35</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/watersport.html">
           <div class="experience__image"><img src="assets/images/watersport-card.jpg" alt="Watersport - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="908" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Watersport</h3>
-            <p class="experience__desc">
-              Jet ski, banana boat, and parasailing off the south coast.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Watersport">$45</span></div>
-              <a
-                href="attractions/watersport.html"
-                class="experience__arrow"
-                aria-label="Book Watersport"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Watersport">$45</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/bali-zoo.html">
           <div class="experience__image"><img src="assets/images/bali-zoo-card.webp" alt="Bali Zoo - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Bali Zoo</h3>
-            <p class="experience__desc">
-              Elephants, orangutans, and jungle wildlife just south of Ubud.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Bali Zoo">$40</span></div>
-              <a
-                href="attractions/bali-zoo.html"
-                class="experience__arrow"
-                aria-label="Book Bali Zoo"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~2&ndash;3 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Bali Zoo">$40</span></div></div>
           </div>
-        </article>
-        <article class="experience__card">
+        </a>
+        <a class="experience__card" href="attractions/bali-bird-park.html">
           <div class="experience__image"><img src="assets/images/bali-bird-park-card.webp" alt="Bali Bird Park - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Bali Bird Park</h3>
-            <p class="experience__desc">
-              Over 1,000 birds, aviaries, and free-flight shows near Ubud.
-            </p>
-            <div class="experience__footer">
-              <div class="experience__price"><span class="price" data-price="Bali Bird Park">$28</span></div>
-              <a
-                href="attractions/bali-bird-park.html"
-                class="experience__arrow"
-                aria-label="Book Bali Bird Park"
-                >&rarr;</a
-              >
-            </div>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~2&ndash;3 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Bali Bird Park">$28</span></div></div>
           </div>
-        </article>
+        </a>
       </div>
     </section>
 
@@ -364,7 +259,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=312"></script>
-    <script src="script.js?v=312"></script>
+    <script src="data.js?v=313"></script>
+    <script src="script.js?v=313"></script>
   </body>
 </html>

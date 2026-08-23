@@ -4679,14 +4679,17 @@ function initTourHeroSlider() {
   go(0);
   box.querySelector(".hero-slider__arrow--prev").addEventListener("click", () => go(cur - 1));
   box.querySelector(".hero-slider__arrow--next").addEventListener("click", () => go(cur + 1));
-  // swipe (HP)
-  let x0 = null;
-  box.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  // swipe (HP): cuma reaksi kalau gesture DOMINAN horizontal (biar geser samping
+  // nggak ke-baca scroll turun). touch-action:pan-y di CSS nahan scroll vertikal tetap jalan.
+  let x0 = null, y0 = null;
+  box.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
   box.addEventListener("touchend", (e) => {
     if (x0 === null) return;
     const dx = e.changedTouches[0].clientX - x0;
-    if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+    const dy = e.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.8) go(cur + (dx < 0 ? 1 : -1));
     x0 = null;
+    y0 = null;
   });
 }
 

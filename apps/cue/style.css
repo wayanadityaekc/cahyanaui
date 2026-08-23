@@ -5950,6 +5950,7 @@ button.pick-cat {
 .tour-hero__image.hero-slider {
   position: relative;
   overflow: hidden;
+  touch-action: pan-y; /* geser samping = ganti foto (JS), geser vertikal = scroll biasa */
 }
 .hero-slide {
   position: absolute;

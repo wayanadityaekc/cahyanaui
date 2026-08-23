@@ -5946,6 +5946,65 @@ button.pick-cat {
     box-shadow: 0 0 0 0 rgba(201, 164, 92, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
 }
+/* Bar harga + tombol nempel bawah (MOBILE). Slide naik pas .is-show. Desktop: off. */
+.book-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 95;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  background: #fff;
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(110%);
+  transition: transform 0.28s ease;
+}
+.book-bar__price {
+  font-size: 0.9rem;
+  color: var(--color-green);
+}
+.book-bar__from {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+.book-bar .price {
+  color: var(--color-gold);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.book-bar__unit {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+.book-bar__btn {
+  padding: 0.7rem 1.7rem;
+  border-radius: 12px;
+  background: var(--color-gold);
+  color: var(--color-green);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.book-bar__btn:hover {
+  background: var(--color-gold-d);
+}
+@media (max-width: 768px) {
+  .book-bar {
+    display: flex;
+  }
+  .book-bar.is-show {
+    transform: translateY(0);
+  }
+  /* WA float naik pas bar muncul biar nggak ketiban */
+  body.book-bar-open .wa-float {
+    bottom: 4.8rem;
+  }
+}
 /* Hero slider manual: foto konten (stops) program, fade antar slide + judul kecil */
 .tour-hero__image.hero-slider {
   position: relative;

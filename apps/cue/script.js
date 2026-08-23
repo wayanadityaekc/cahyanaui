@@ -4693,6 +4693,56 @@ function initTourHeroSlider() {
   });
 }
 
+// Bar harga + tombol nempel di bawah (MOBILE, halaman hero baru). Aturan: JANGAN
+// ada 2 tombol book barengan -> bar cuma muncul kalau CTA hero UDAH lewat DAN form
+// booking BELUM keliatan. Pas salah satunya keliatan -> bar sembunyi.
+function initBookBar() {
+  if (!document.querySelector(".tour-hero")) return; // cuma halaman hero baru
+  const card = document.querySelector(".booksidebar");
+  const form = document.getElementById("booking");
+  const ph = document.getElementById("booking-placeholder");
+  const item = ph && ph.dataset.item;
+  if (!card || !form || !item) return;
+  const cta = document.querySelector(".tour-hero__cta");
+  const unit = (document.querySelector(".booksidebar .price-unit") || {}).textContent || "";
+
+  const bar = document.createElement("div");
+  bar.className = "book-bar";
+  bar.innerHTML =
+    `<div class="book-bar__price"><span class="book-bar__from">from</span> ` +
+    `<span class="price" data-price="${item}"></span>` +
+    (unit ? ` <span class="book-bar__unit">${unit.trim()}</span>` : "") +
+    `</div><a href="#booking" class="book-bar__btn">Book now</a>`;
+  document.body.appendChild(bar);
+  if (typeof renderPrices === "function") renderPrices(); // isi harga di bar
+
+  // klik = scroll ke form + glow kartu (sama kaya CTA hero)
+  bar.querySelector(".book-bar__btn").addEventListener("click", () => {
+    card.classList.remove("booksidebar--glow");
+    void card.offsetWidth;
+    card.classList.add("booksidebar--glow");
+    setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
+  });
+
+  // muncul cuma kalau CTA hero & form dua-duanya nggak keliatan
+  let ctaOn = false, formOn = false;
+  const sync = () => {
+    const show = !ctaOn && !formOn;
+    bar.classList.toggle("is-show", show);
+    document.body.classList.toggle("book-bar-open", show);
+  };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.target === cta) ctaOn = e.isIntersecting;
+      else formOn = e.isIntersecting;
+    });
+    sync();
+  });
+  if (cta) io.observe(cta);
+  io.observe(form);
+  sync();
+}
+
 // Halaman charter: bungkus kalkulator "Build Your Charter" jadi kartu sidebar
 // (kanan sticky di desktop, bawah konten di mobile) — layout sama kaya halaman
 // detail. Konten (How a Charter Day Works + Good to know + FAQ) di kolom kiri.
@@ -4815,6 +4865,7 @@ async function initPage() {
   initBooking();
   initBookSidebar(); // pindah form booking ke kartu sidebar SEBELUM init lain sentuh .info
   initTourHeroSlider(); // hero jadi slider foto konten (stops) - setelah stops di DOM
+  initBookBar(); // bar harga+tombol nempel bawah (mobile) - setelah sidebar kebangun
   initSlider();
   initTourSlider();
   initGuideHome();

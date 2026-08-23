@@ -170,6 +170,7 @@ function renderPrices() {
   renderPriceLabels();
   renderFees();
   updateGlanceSave();
+  if (window.__transferRefresh) window.__transferRefresh(); // picker transfer ikut kurs/referral
 }
 
 // "You save X%" pill di hero harga (glance) - muncul kalau referral aktif.
@@ -833,7 +834,10 @@ function cartDayPrice(d) {
 }
 function cartTransferPrice(tr) {
   if (!prices.transfer[tr.route]) return { usd: 0, idr: 0 };
-  return carPrice(prices.transfer[tr.route], cartGuestsOf(tr));
+  const base = carPrice(prices.transfer[tr.route], cartGuestsOf(tr));
+  // Return trip = 2 arah, diskon 10%.
+  if (tr.return) return { usd: Math.round(base.usd * 2 * 0.9), idr: Math.round(base.idr * 2 * 0.9) };
+  return base;
 }
 function cartCharterPrice(ch) { return charterPrice(ch.area, ch.dur, ch.extra); }
 
@@ -860,7 +864,8 @@ function cartDayTitle(d) {
 }
 function cartTransferTitle(tr) {
   const area = tr.route.replace(" – Ubud", "");
-  return tr.direction === "from" ? "Ubud → " + area : area + " → Ubud";
+  const base = tr.direction === "from" ? "Ubud → " + area : area + " → Ubud";
+  return tr.return ? base + " (return)" : base;
 }
 function cartCharterTitle(ch) {
   const dur = ch.dur === "half" ? "Half Day (5h)" : ch.dur === "full" ? "Full Day (10h)"
@@ -1722,12 +1727,6 @@ function initGuidePage() {
   });
   document.addEventListener("click", (e) => { if (!e.target.closest("[data-cat-menu]") && !e.target.closest("[data-cat-toggle]")) setOpen(false); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
-}
-
-function initAccordion() {
-  const routeHeads = document.querySelectorAll(".route__head");
-  if (!routeHeads.length) return;
-  routeHeads.forEach((head) => head.addEventListener("click", () => head.parentElement.classList.toggle("active")));
 }
 
 function initContact() {
@@ -2800,45 +2799,100 @@ function initItineraryButtons() {
       bookItem(btn.dataset.addItem);
     });
   });
-  document.querySelectorAll("[data-add-transfer]").forEach((btn) => {
-    btn.textContent = "+ My Trips";
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      bookNow("transfer", btn.dataset.addTransfer);
+}
+
+// ===== Transfer route picker (halaman transfer) =====
+// Rute simetris Ubud <-> area; harga per mobil dari prices.transfer. Klik "From"/"To"
+// (salah satu wajib Ubud) -> harga fix langsung tampil. Return trip = 2 arah, diskon 10%.
+// Perkiraan jam tempuh dari/ke Ubud - CEK WAYAN.
+const TRANSFER_HOURS = {
+  "Airport": "~1.5 hrs", "Denpasar Area": "~1 hr", "Tanah Lot Area": "~1.5 hrs",
+  "Canggu Area": "~1.25 hrs", "Kuta Area": "~1.25 hrs", "Amed Area": "~2.5 hrs",
+  "Buleleng Area": "~2.5 hrs", "Candidasa Area": "~1.5 hrs", "Kintamani Area": "~1 hr",
+  "Seminyak Area": "~1.25 hrs"
+};
+const TRANSFER_LABEL = { "Airport": "Ngurah Rai Airport" }; // sisanya pakai nama area apa adanya
+function initTransferPicker() {
+  const box = document.querySelector("[data-transfer-picker]");
+  if (!box) return;
+  const fromSel = box.querySelector("[data-tp-from]");
+  const toSel = box.querySelector("[data-tp-to]");
+  const priceEl = box.querySelector("[data-tp-price]");
+  const unitEl = box.querySelector("[data-tp-unit]");
+  const retEl = box.querySelector("[data-tp-return]");
+  const naEl = box.querySelector("[data-tp-na]");
+  const bookBtn = box.querySelector("[data-tp-book]");
+  const addBtn = box.querySelector("[data-tp-add]");
+  if (!fromSel || !toSel) return;
+
+  const areas = Object.keys(prices.transfer).map((k) => k.replace(" – Ubud", ""));
+  const labelOf = (a) => (a === "Ubud" ? "Ubud" : (TRANSFER_LABEL[a] || a));
+  const opts = ["Ubud", ...areas].map((a) => `<option value="${a}">${labelOf(a)}</option>`).join("");
+  fromSel.innerHTML = opts; toSel.innerHTML = opts;
+  fromSel.value = areas[0] || "Ubud"; toSel.value = "Ubud"; // default: Airport -> Ubud
+
+  // Quote rute: cari area (sisi yg bukan Ubud), ambil harga fix, itung return kalau dicentang.
+  const quote = () => {
+    const from = fromSel.value, to = toSel.value;
+    if (from === to) return null;
+    const area = from === "Ubud" ? to : (to === "Ubud" ? from : null);
+    if (!area) return null; // dua-duanya bukan Ubud -> nggak ada harga fix
+    const base = prices.transfer[area + " – Ubud"];
+    if (!base) return null;
+    const direction = from === "Ubud" ? "from" : "to";
+    const ret = !!(retEl && retEl.checked);
+    const total = ret ? { usd: Math.round(base.usd * 2 * 0.9), idr: Math.round(base.idr * 2 * 0.9) } : base;
+    return { area, direction, ret, total, hours: TRANSFER_HOURS[area] || "" };
+  };
+
+  const render = () => {
+    const q = quote();
+    if (!q) {
+      priceEl.textContent = "—"; unitEl.textContent = "";
+      if (naEl) naEl.hidden = false;
+      bookBtn.disabled = true; addBtn.disabled = true;
+      return;
+    }
+    if (naEl) naEl.hidden = true;
+    bookBtn.disabled = false; addBtn.disabled = false;
+    priceEl.textContent = fmtMoney(q.total.usd, q.total.idr);
+    unitEl.textContent = "total per car" + (q.hours ? " · " + q.hours : "") + (q.ret ? " · return" : "");
+  };
+  window.__transferRefresh = render; // dipanggil renderPrices pas kurs/referral berubah
+
+  const addToCart = () => {
+    const q = quote();
+    if (!q) return false;
+    const st = itnLoad();
+    st.transfers.push({ route: q.area + " – Ubud", direction: q.direction, return: q.ret, pickup: "", dropoff: "", date: "", guests: "" });
+    itnSave(st);
+    return true;
+  };
+
+  // Jaga salah satu sisi selalu Ubud (rute cuma Ubud<->area).
+  fromSel.addEventListener("change", () => { if (fromSel.value !== "Ubud" && toSel.value !== "Ubud") toSel.value = "Ubud"; render(); });
+  toSel.addEventListener("change", () => { if (fromSel.value !== "Ubud" && toSel.value !== "Ubud") fromSel.value = "Ubud"; render(); });
+  if (retEl) retEl.addEventListener("change", render);
+  const swap = box.querySelector("[data-tp-swap]");
+  if (swap) swap.addEventListener("click", () => { const f = fromSel.value; fromSel.value = toSel.value; toSel.value = f; render(); });
+
+  // Book Now -> tambah ke My Trips lalu pindah ke halaman My Trips. Add -> tetap (toast).
+  bookBtn.addEventListener("click", () => { if (addToCart()) window.location.href = "my-trips.html"; });
+  addBtn.addEventListener("click", () => { if (addToCart()) cartToast("Added to My Trips"); });
+
+  // Popular routes: klik baris -> isi picker (area -> Ubud) + scroll ke picker + glow.
+  document.querySelectorAll("[data-tp-route]").forEach((row) => {
+    row.addEventListener("click", () => {
+      fromSel.value = row.dataset.tpRoute; toSel.value = "Ubud";
+      if (retEl) retEl.checked = false;
+      render();
+      box.scrollIntoView({ behavior: "smooth", block: "center" });
+      box.classList.remove("tpick--glow"); void box.offsetWidth; box.classList.add("tpick--glow");
+      setTimeout(() => box.classList.remove("tpick--glow"), 2000);
     });
   });
 
-  // transfer.html: 2 tombol di DALAM accordion (bawah harga) - Book + Add to itinerary
-  document.querySelectorAll(".route__item").forEach((item) => {
-    const priceBox = item.querySelector(".route__price");
-    if (!priceBox || priceBox.querySelector(".route__actions")) return;
-    const label = item.querySelector(".route__head span");
-    if (!label) return;
-    const route = label.textContent.trim();
-    const actions = document.createElement("div");
-    actions.className = "route__actions";
-
-    const book = document.createElement("button");
-    book.type = "button";
-    book.className = "route__book";
-    book.textContent = "Book";
-    book.addEventListener("click", () => bookTransferRoute(route));
-
-    const add = document.createElement("button");
-    add.type = "button";
-    add.className = "route__add";
-    add.textContent = "+ My Trips";
-    add.addEventListener("click", () => bookNow("transfer", route));
-
-    actions.appendChild(book);
-    actions.appendChild(add);
-    priceBox.appendChild(actions);
-  });
-}
-
-// Book Now sebuah route transfer: popup tanggal -> tambah ke cart (My Trips).
-function bookTransferRoute(route) {
-  bookNow("transfer", route);
+  render();
 }
 
 function initCharter() {
@@ -4892,7 +4946,7 @@ async function initPage() {
   initTourSlider();
   initGuideHome();
   initGuidePage();
-  initAccordion();
+  initTransferPicker();
   initContact();
   initItinerary();
   initSuggested();

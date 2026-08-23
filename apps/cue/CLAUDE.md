@@ -52,8 +52,13 @@ When unsure, ask first (keep it short).
 
 **Misc:**
 - Buttons: gold primary (`.btn-book`, `.modal__btn`), ghost variant (`.modal__btn--ghost`).
+  Semua tombol aksi = **pill** (border-radius 999px). Chip logo bayar & toggle nggak.
 - Hover lift: keep it subtle, not harsh.
 - Icons: SVG, **no emoji**.
+- **Checklist bullet (Included/Excluded)**: SATU format di seluruh web — marker **radio**
+  di `.info__list--yes/--no li::before`: included = lingkaran keisi (dot `--color-green` di dalam ring),
+  excluded = lingkaran kosong (border `#cfc9ba`) + teks di-mute (`#8a8578`). Ukuran nyesuain konteks.
+  Bullet generik lain (mis. `.modal__details-list` = `•` emas) beda.
 
 ## Foto & gambar (standar)
 - **Nama file = subjek + slot**, semua lowercase-hyphen. Pola:
@@ -161,7 +166,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v320, PARTIALS 69)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v321, PARTIALS 69)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

@@ -4624,16 +4624,34 @@ function initTourHeroSlider() {
   const box = document.querySelector(".tour-hero__image");
   if (!box) return;
   const imgs = [...document.querySelectorAll(".stop__image img, .experience__image img")];
-  // judul dipendekin: buang embel "& ..."/"- ..." + cap panjang biar gak numpuk sama "(…)"
-  const shortTitle = (t) => {
-    let s = t.split(/\s+[-–—&]\s+/)[0].trim();
-    if (s.length > 30) s = s.slice(0, 28).replace(/\s+\S*$/, "").trim();
-    return s;
+  // caption slider = nama tempat singkat, BUKAN deskripsi.
+  // - halaman attraction (experience/destination): semua foto subjeknya sama -> pakai nama halaman dari slug file.
+  // - halaman tour (multi-stop): pakai nama stop, dibersihin (buang "(...)", potong ekor koma/" - "/" & ...").
+  const isAttraction = /\/attractions\//.test(location.pathname);
+  const slugName = () =>
+    (location.pathname.split("/").pop() || "")
+      .replace(/\.html$/, "")
+      .split("-")
+      .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+      .join(" ");
+  const cleanStop = (t) => {
+    let s = t.replace(/\s+/g, " ").trim();
+    s = s.replace(/\s*\([^)]*\)/g, "");        // buang "(...)"
+    s = s.split(/\s*[,:]\s*/)[0];              // potong di koma / titik dua
+    s = s.split(/\s+[-–—]\s+/)[0];             // potong ekor setelah " - "
+    // potong ekor " & ..." cuma kalau kedua sisi >= 2 kata (biar "Barong & Keris Dance" tetap utuh)
+    const amp = s.split(/\s+&\s+/);
+    if (amp.length > 1 && amp[0].trim().split(" ").length >= 2 && amp.slice(1).join(" ").trim().split(" ").length >= 2) s = amp[0];
+    s = s.trim().split(" ").slice(0, 5).join(" "); // maks 5 kata
+    return s.replace(/\s*[&\-–—]$/, "").trim();    // rapihin ekor
   };
+  const subject = isAttraction ? slugName() : "";
   const slides = imgs
     .map((img) => ({
       src: img.getAttribute("src"),
-      title: shortTitle((img.closest(".stop, .experience__card")?.querySelector(".stop__name, .experience__name")?.textContent || "").replace(/\s+/g, " ").trim()),
+      title: isAttraction
+        ? subject
+        : cleanStop(img.closest(".stop, .experience__card")?.querySelector(".stop__name, .experience__name")?.textContent || ""),
     }))
     .filter((s) => s.src);
   if (slides.length < 2) return; // butuh minimal 2 foto buat slider

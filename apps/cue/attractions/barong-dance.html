@@ -27,7 +27,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=313" />
+    <link rel="stylesheet" href="style.css?v=319" />
     <link
       rel="canonical"
       href="https://cahyanaubudexperience.com/attractions/barong-dance.html"
@@ -96,15 +96,31 @@
   <body>
     <div id="navbar-placeholder"></div>
 
-    <section class="subhero subhero--overlap subhero--exp">
-      <div class="subhero__content">
+        <!-- Hero: foto besar (slider foto konten), desktop bg putih dibagi 2. -->
+    <!-- TODO Wayan: cek isi hook (Area/Group auto) -->
+    <section class="tour-hero">
+      <div
+        class="tour-hero__image"
+        style="background-image: url(assets/images/barong-dance-card.webp)"
+      ></div>
+      <div class="tour-hero__body">
         <h1 class="subhero__title">Barong Dance</h1>
-        <p class="subhero__text">
-          The Barong is one of Bali's oldest dance-dramas, staging the endless
-          struggle between the lion-like protector Barong and the witch Rangda.
-          Performances run about an hour with live gamelan music and hand-carved
-          sacred masks.
-        </p>
+        <p class="tour-hero__desc">The Barong is one of Bali's oldest dance-dramas, staging the endless struggle between the lion-like protector Barong and the witch Rangda. Performances run about an hour with live gamelan music and hand-carved sacred masks.</p>
+        <ul class="tour-hook">
+          <li>
+            <span class="tour-hook__label">Duration</span>
+            <span class="tour-hook__value">~1 hour</span>
+          </li>
+          <li>
+            <span class="tour-hook__label">Area</span>
+            <span class="tour-hook__value">Ubud</span>
+          </li>
+          <li>
+            <span class="tour-hook__label">Group</span>
+            <span class="tour-hook__value">Per person</span>
+          </li>
+        </ul>
+        <a href="#booking" class="tour-hero__cta">Book this program</a>
       </div>
     </section>
 
@@ -237,7 +253,7 @@
     </nav>
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=313"></script>
-    <script src="script.js?v=313"></script>
+    <script src="data.js?v=319"></script>
+    <script src="script.js?v=319"></script>
   </body>
 </html>

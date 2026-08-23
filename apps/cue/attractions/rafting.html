@@ -17,7 +17,7 @@
       type="font/woff2"
       crossorigin
     />
-  <link rel="stylesheet" href="style.css?v=313" />
+  <link rel="stylesheet" href="style.css?v=319" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/attractions/rafting.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -37,11 +37,32 @@
 <body>
   <div id="navbar-placeholder"></div>
 
-  <section class="subhero subhero--overlap subhero--exp">
-      <div class="subhero__content">
-      <h1 class="subhero__title">Ayung River Rafting</h1>
-      <p class="subhero__text">About two hours down the Ayung, Bali's longest river, through a rainforest gorge near Ubud - class II-III rapids that are fine for first-timers, with hand-carved stone reliefs and waterfalls along the banks.</p>
-    </div>
+      <!-- Hero: foto besar (slider foto konten), desktop bg putih dibagi 2. -->
+    <!-- TODO Wayan: cek isi hook (Area/Group auto) -->
+    <section class="tour-hero">
+      <div
+        class="tour-hero__image"
+        style="background-image: url(assets/images/rafting.webp)"
+      ></div>
+      <div class="tour-hero__body">
+        <h1 class="subhero__title">Ayung River Rafting</h1>
+        <p class="tour-hero__desc">About two hours down the Ayung, Bali's longest river, through a rainforest gorge near Ubud - class II-III rapids that are fine for first-timers, with hand-carved stone reliefs and waterfalls along the banks.</p>
+        <ul class="tour-hook">
+          <li>
+            <span class="tour-hook__label">Duration</span>
+            <span class="tour-hook__value">~2 hours on water</span>
+          </li>
+          <li>
+            <span class="tour-hook__label">Area</span>
+            <span class="tour-hook__value">Ubud</span>
+          </li>
+          <li>
+            <span class="tour-hook__label">Group</span>
+            <span class="tour-hook__value">Per person</span>
+          </li>
+        </ul>
+        <a href="#booking" class="tour-hero__cta">Book this program</a>
+      </div>
     </section>
 
   <section class="stops" id="experience">
@@ -124,7 +145,7 @@
     </nav>
     <div id="footer-placeholder"></div>
 
-  <script src="data.js?v=313"></script>
-  <script src="script.js?v=313"></script>
+  <script src="data.js?v=319"></script>
+  <script src="script.js?v=319"></script>
 </body>
 </html>

@@ -17,7 +17,7 @@
       type="font/woff2"
       crossorigin
     />
-  <link rel="stylesheet" href="style.css?v=313" />
+  <link rel="stylesheet" href="style.css?v=319" />
   <link rel="canonical" href="https://cahyanaubudexperience.com/attractions/watersport.html" />
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
@@ -37,13 +37,32 @@
 <body>
   <div id="navbar-placeholder"></div>
 
-  <section class="subhero subhero--overlap subhero--exp" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)), url(assets/images/watersport-card.jpg);">
-      <div class="subhero__content">
-      <h1 class="subhero__title">Watersport</h1>
-      <p class="subhero__text">
-          Tanjung Benoa, on Bali's southern peninsula, is the island's main watersports beach. From its calm bay you can ride a jet ski, go up on a parasail, or take a banana boat, picking what you like on the day.
-        </p>
-    </div>
+      <!-- Hero: foto besar (slider foto konten), desktop bg putih dibagi 2. -->
+    <!-- TODO Wayan: cek isi hook (Area/Group auto) -->
+    <section class="tour-hero">
+      <div
+        class="tour-hero__image"
+        style="background-image: url(assets/images/watersport-jetski.webp)"
+      ></div>
+      <div class="tour-hero__body">
+        <h1 class="subhero__title">Watersport</h1>
+        <p class="tour-hero__desc">Tanjung Benoa, on Bali's southern peninsula, is the island's main watersports beach. From its calm bay you can ride a jet ski, go up on a parasail, or take a banana boat, picking what you like on the day.</p>
+        <ul class="tour-hook">
+          <li>
+            <span class="tour-hook__label">Duration</span>
+            <span class="tour-hook__value">Flexible</span>
+          </li>
+          <li>
+            <span class="tour-hook__label">Area</span>
+            <span class="tour-hook__value">South Bali</span>
+          </li>
+          <li>
+            <span class="tour-hook__label">Group</span>
+            <span class="tour-hook__value">Per person</span>
+          </li>
+        </ul>
+        <a href="#booking" class="tour-hero__cta">Book this program</a>
+      </div>
     </section>
 
   <section class="stops" id="experience">
@@ -126,7 +145,7 @@
     </nav>
     <div id="footer-placeholder"></div>
 
-  <script src="data.js?v=313"></script>
-  <script src="script.js?v=313"></script>
+  <script src="data.js?v=319"></script>
+  <script src="script.js?v=319"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 68;
+const PARTIALS_VERSION = 69;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -1531,25 +1531,38 @@ function initBooking() {
   });
   serviceItemSelect.addEventListener("change", () => { setBookingMode("standard", false); calculatePrice(); });
 
-  bookNowBtn.addEventListener("click", () => {
+  // Tambah program (tour/experience/place) yg dipilih di form ke cart (My Trips).
+  // `checked`=true -> lewat cek bentrok tanggal (buat "Add to My Trip", user tetap di halaman).
+  // false -> langsung tambah tanpa modal (buat "Book Now" yg abis itu pindah ke My Trips).
+  // return true kalau berhasil nambah (dipakai Book Now buat mutusin redirect).
+  const addFromForm = (checked) => {
     if (!serviceItemSelect.value || !dateField.value) {
-      alert("Please choose a service and a date first."); return;
+      alert("Please choose a service and a date first."); return false;
     }
     const today = todayStr();
-    if (dateField.value < today) { showPastDate(); return; }
-    if (dateField.value === today) { showSameDayWa(guestCount(), serviceItemSelect.value, dateField.value); return; }
-    if (!currentPrice) return;
+    if (dateField.value < today) { showPastDate(); return false; }
+    if (dateField.value === today) { showSameDayWa(guestCount(), serviceItemSelect.value, dateField.value); return false; }
+    if (!currentPrice) return false;
     const category = currentPrice.category;
     const item = serviceItemSelect.value;
     const isExcl = currentPrice.exclusive;
-    // Book Now = tambah ke cart (My Trips) pakai tanggal yg dipilih di form.
-    // Checkout pindah ke tombol "Make Payment" di My Trips.
     const mode = (category === "tour" && tourExclusive[item]) ? (isExcl ? "exclusive" : "standard") : null;
-    cartAddChecked(category, item, dateField.value, mode);
+    if (checked) cartAddChecked(category, item, dateField.value, mode);
+    else cartAddDated(category, item, dateField.value, mode);
     // kalau form ini lagi di dalam modal (dibuka dari kartu), tutup modalnya
     const bm = document.getElementById("book-modal");
     if (bm) bm.classList.remove("active");
+    return true;
+  };
+
+  // Book Now = tambah ke My Trips lalu pindah ke halaman My Trips (user pilih mau bayar yg mana).
+  bookNowBtn.addEventListener("click", () => {
+    if (addFromForm(false)) window.location.href = "my-trips.html";
   });
+
+  // Add to My Trip = tambah ke My Trips + cek bentrok tanggal, user tetap di halaman (toast).
+  const addTripBtn = document.getElementById("add-trip");
+  if (addTripBtn) addTripBtn.addEventListener("click", () => addFromForm(true));
 
   // Overlap + preset service/item dari halaman program (data-default / data-item)
   const holder = document.getElementById("booking-placeholder");
@@ -4537,21 +4550,7 @@ function initBookSidebar() {
     priceEl.after(u);
   }
 
-  // Tombol: Book Now (ada) + Ask a question (baru). My Trips disembunyiin.
-  const actions = bookingSection && bookingSection.querySelector(".booking__actions");
-  if (actions) {
-    const myTrips = actions.querySelector(".booking__btn--alt");
-    if (myTrips) myTrips.classList.add("bk-hide");
-    if (!actions.querySelector(".booksidebar__ask")) {
-      const ask = document.createElement("a");
-      ask.className = "booking__btn booking__btn--alt booksidebar__ask";
-      ask.href = "https://wa.me/" + WHATSAPP_NUMBER;
-      ask.target = "_blank";
-      ask.rel = "noopener";
-      ask.textContent = "Ask a question";
-      actions.appendChild(ask);
-    }
-  }
+  // Tombol: Book Now (-> My Trips) + Add to My Trip (nambah, tetap di halaman). Dua-duanya dari partial.
 
   // 2) Spec list (durasi / kapasitas / pickup) — data asli halaman + ikon (SVG Step-1)
   const CLK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
@@ -4724,13 +4723,18 @@ function initBookBar() {
   const cta = document.querySelector(".tour-hero__cta");
   const unit = (document.querySelector(".booksidebar .price-unit") || {}).textContent || "";
 
+  const WA_ICON = '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.1 7.9L.5 31.5l7.8-2c2.3 1.3 5 1.9 7.7 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.9-.7-7-1.9l-.5-.3-4.6 1.2 1.2-4.5-.3-.5C3.6 20.6 2.9 18.3 2.9 16 2.9 8.8 8.8 2.9 16 2.9c7.2 0 13.1 5.9 13.1 13.1S23.2 28.8 16 28.8zm7.2-9.6c-.4-.2-2.3-1.1-2.7-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.2-2.1-2.6-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.3 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.7h-.7c-.2 0-.6.1-.9.5-.3.4-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.2 2.4 3.7 5.8 5.1.8.3 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 2-1 2.3-1.9.3-.9.3-1.7.2-1.9-.1-.1-.3-.2-.7-.4z"/></svg>';
   const bar = document.createElement("div");
   bar.className = "book-bar";
   bar.innerHTML =
     `<div class="book-bar__price"><span class="book-bar__from">from</span> ` +
     `<span class="price" data-price="${item}"></span>` +
     (unit ? ` <span class="book-bar__unit">${unit.trim()}</span>` : "") +
-    `</div><a href="#booking" class="book-bar__btn">Book now</a>`;
+    `</div>` +
+    `<div class="book-bar__actions">` +
+    `<a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" rel="noopener" class="book-bar__wa" aria-label="Chat on WhatsApp">${WA_ICON}</a>` +
+    `<a href="#booking" class="book-bar__btn">Book now</a>` +
+    `</div>`;
   document.body.appendChild(bar);
   if (typeof renderPrices === "function") renderPrices(); // isi harga di bar
 

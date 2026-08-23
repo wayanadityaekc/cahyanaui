@@ -26,7 +26,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=321" />
+    <link rel="stylesheet" href="style.css?v=322" />
     <link
       rel="canonical"
       href="https://cahyanaubudexperience.com/activities.html"
@@ -74,55 +74,27 @@
 
     <!-- Half-height sub-hero (reuse Ubud Tour reference classes; --exp keeps the
          experience hero image, overrides --tour's background) -->
-    <section class="subhero subhero--overlap subhero--tour subhero--exp">
-      <div class="subhero__content">
-        <h1 class="subhero__title">
-          Bali Activities &amp; Cultural Performances
-        </h1>
-        <p class="subhero__text">
-          From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and
-          performances in and around Ubud - all with local drivers and honest
-          prices.
-        </p>
-      </div>
-    </section>
-
-    <!-- Featured: Most Popular Experience (reuse tours featured block) -->
-    <section class="highlight highlight--tourprog">
-      <div class="highlight__container">
-        <div
-          class="highlight__image"
-          style="background-image: url(assets/images/kecak.jpg)"
-        >
-          <span class="highlight__tag">Most Popular</span>
-        </div>
-        <div class="highlight__body">
-          <h2 class="highlight__title">Kecak Dance</h2>
-          <p class="highlight__desc">
-            Bali's iconic fire-and-chant ritual, performed by a circle of over
-            fifty voices - a performance that stays with you long after the
-            flames die down. Performed every Tuesday &amp; Sunday evening.
-          </p>
-          <div class="highlight__meta">
-            <div class="highlight__meta-item">
-              <span>From</span><strong><span class="price" data-price="Kecak Dance">$10</span></strong>
-            </div>
-            <div class="highlight__meta-item">
-              <span>Duration</span><strong>~1 hour</strong>
-            </div>
-            <div class="highlight__meta-item">
-              <span>Days</span><strong>Tue &amp; Sun</strong>
-            </div>
+    <!-- Listing hero: background + featured "Most Popular" box -->
+    <section class="lhero" style="background-image: url(assets/images/jungle-swing-card.jpg)">
+      <div class="lhero__inner">
+        <h1 class="lhero__title">Bali Activities &amp; Cultural Performances</h1>
+        <p class="lhero__sub">From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and performances in and around Ubud - all with local drivers and honest prices.</p>
+        <div class="lbox">
+          <div class="lbox__img" style="background-image: url(assets/images/kecak.jpg)">
+            <span class="lbox__tag">Most Popular</span>
           </div>
-          <div class="highlight__actions">
-            <a href="attractions/kecak-dance.html" class="highlight__btn">Book</a>
-            <button
-              type="button"
-              class="highlight__btn highlight__btn--add"
-              data-add-item="Kecak Dance"
-            >
-              + My Trips
-            </button>
+          <div class="lbox__body">
+            <h2 class="lbox__title">Kecak Dance</h2>
+            <p class="lbox__desc">Bali's iconic fire-and-chant ritual, performed by a circle of over fifty voices - a performance that stays with you long after the flames die down. Performed every Tuesday &amp; Sunday evening.</p>
+            <div class="lbox__facts">
+              <div class="lbox__fact"><span>From</span><strong class="price" data-price="Kecak Dance">$10</strong></div>
+              <div class="lbox__fact"><span>Duration</span><strong>~1 hour</strong></div>
+              <div class="lbox__fact"><span>Days</span><strong>Tue &amp; Sun</strong></div>
+            </div>
+            <div class="lbox__actions">
+            <a href="attractions/kecak-dance.html" class="lbox__btn lbox__btn--go">Book</a>
+            <button type="button" class="lbox__btn lbox__btn--add" data-add-item="Kecak Dance">+ My Trips</button>
+            </div>
           </div>
         </div>
       </div>
@@ -259,7 +231,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=321"></script>
-    <script src="script.js?v=321"></script>
+    <script src="data.js?v=322"></script>
+    <script src="script.js?v=322"></script>
   </body>
 </html>

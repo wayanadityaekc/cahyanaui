@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mock V2</title><link rel="stylesheet" href="style.css"/>
+<style>
+  body{background:#fff;}
+  .lhero{position:relative;min-height:560px;display:flex;align-items:center;justify-content:center;
+    background:url(assets/images/north-bali-tour-card.jpg) center/cover;padding:3rem 1.3rem;}
+  .lhero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.68));}
+  .lhero__inner{position:relative;z-index:2;width:100%;max-width:840px;text-align:center;}
+  .lhero__title{font-family:var(--font-head);font-size:2.1rem;color:#fff;margin:0 0 .4rem;}
+  .lhero__sub{color:rgba(255,255,255,.9);font-size:.9rem;margin:0 auto 1.6rem;max-width:460px;}
+
+  /* box + FRAME putih sekeliling foto */
+  .fbox{background:#fff;border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.28);
+    display:grid;grid-template-columns:42% 58%;gap:0;padding:.7rem;text-align:left;}
+  .fbox__img{border-radius:16px;background:url(assets/images/ubud-tour-card.jpg) center/cover;position:relative;min-height:290px;}
+  .fbox__tag{position:absolute;top:.7rem;left:.7rem;font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--color-green);background:#fff;border-radius:999px;padding:.32rem .7rem;}
+  .fbox__pad{padding:1rem 1.1rem 1rem 1.4rem;display:flex;flex-direction:column;justify-content:center;}
+  .fbox__title{font-family:var(--font-head);font-size:1.3rem;color:var(--color-green);margin:0 0 .35rem;}
+  .fbox__desc{font-size:.84rem;color:var(--color-ink);line-height:1.5;margin:0 0 1rem;}
+  .fbox__facts{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:1.1rem;}
+  .fbox__fact{flex:1;text-align:center;padding:.55rem .4rem;border-right:1px solid var(--line);}
+  .fbox__fact:last-child{border-right:none;}
+  .fbox__fact span{display:block;font-size:12px;color:#a6a6a6;}
+  .fbox__fact strong{display:block;margin-top:.15rem;font-size:15px;font-weight:500;color:#1f1f1f;}
+  .fbox__fact .price{color:var(--color-gold);font-weight:600;}
+  .fbox__actions{display:flex;flex-direction:column;gap:.55rem;}
+  .fbox__btn{padding:.75rem;border-radius:999px;font-weight:600;font-size:.88rem;text-align:center;border:1px solid var(--color-gold);}
+  .fbox__btn--go{background:var(--color-gold);color:#fff;}
+  .fbox__btn--add{background:#fff;color:var(--color-green);}
+  @media(max-width:768px){ .fbox{grid-template-columns:1fr;} .fbox__img{min-height:180px;} .fbox__actions{flex-direction:row;} }
+</style></head>
+<body class="tourprog">
+  <section class="lhero">
+    <div class="lhero__inner">
+      <h1 class="lhero__title">Bali Tour Programs</h1>
+      <p class="lhero__sub">Private, fully customizable day tours from Ubud - rice terraces, temples, waterfalls & more.</p>
+      <div class="fbox">
+        <div class="fbox__img"><span class="fbox__tag">Most Popular Tour</span></div>
+        <div class="fbox__pad">
+          <h2 class="fbox__title">Ubud Tour</h2>
+          <p class="fbox__desc">Bali's cultural heart in one day - rice terraces, sacred temples, the monkey forest, and local artisan villages, all at your own pace with a private car and local driver.</p>
+          <div class="fbox__facts">
+            <div class="fbox__fact"><span>From</span><strong class="price">$45</strong></div>
+            <div class="fbox__fact"><span>Duration</span><strong>6-8 hrs</strong></div>
+            <div class="fbox__fact"><span>Group</span><strong>Up to 6</strong></div>
+          </div>
+          <div class="fbox__actions">
+            <div class="fbox__btn fbox__btn--go">View tour</div>
+            <div class="fbox__btn fbox__btn--add">+ My Trips</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body></html>

@@ -6052,11 +6052,6 @@ button.pick-cat {
     display: none;
   }
 }
-.subhero--exp {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
-    url("assets/images/experience-hero.webp");
-}
 
 /* ==================== Tombol Book / Add to itinerary di halaman program ==================== */
 .program-cta {
@@ -7731,12 +7726,6 @@ section.faq::before,
   font-weight: 400;
 }
 
-/* Featured block: cap height */
-.highlight--tourprog .highlight__image {
-  min-height: 260px;
-  max-height: 340px;
-}
-
 /* Zone filter chips */
 .zone-filter {
   display: flex;
@@ -8115,4 +8104,137 @@ section.faq::before,
 }
 @media (max-width: 768px) {
   .tinfo__cols { grid-template-columns: 1fr; gap: 1.3rem; }
+}
+
+/* ==================== Listing hero (tour/experience/destination): bg + featured box ==================== */
+.lhero {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  /* padding-top clears fixed navbar (+ tripbar); padding sits under the solid header */
+  padding: 7rem 1.3rem 3rem;
+}
+.lhero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.66));
+}
+.lhero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 840px;
+  text-align: center;
+}
+.lhero__title {
+  font-family: var(--font-head);
+  font-size: var(--fs-display);
+  color: #fff;
+  margin: 0 0 0.4rem;
+}
+.lhero__sub {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 auto 1.6rem;
+  max-width: 480px;
+}
+/* Featured box: foto ke-inset (frame putih) di kiri, konten di kanan */
+.lbox {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  display: grid;
+  grid-template-columns: 42% 58%;
+  padding: 0.7rem;
+  text-align: left;
+}
+.lbox__img {
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 290px;
+}
+.lbox__tag {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-green);
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.32rem 0.7rem;
+}
+.lbox__body {
+  padding: 1rem 1.1rem 1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.lbox__title {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  color: var(--color-green);
+  margin: 0 0 0.35rem;
+}
+.lbox__desc {
+  font-size: 0.84rem;
+  color: var(--color-ink);
+  line-height: 1.5;
+  margin: 0 0 1rem;
+}
+.lbox__facts {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.1rem;
+}
+.lbox__fact {
+  flex: 1;
+  text-align: center;
+  padding: 0.55rem 0.4rem;
+  border-right: 1px solid var(--line);
+}
+.lbox__fact:last-child { border-right: none; }
+.lbox__fact span { display: block; font-size: 12px; color: #a6a6a6; }
+.lbox__fact strong {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f1f1f;
+}
+.lbox__fact .price { color: var(--color-gold); font-weight: 600; }
+.lbox__actions { display: flex; flex-direction: column; gap: 0.55rem; }
+.lbox__btn {
+  display: block;
+  padding: 0.75rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid var(--color-gold);
+  cursor: pointer;
+}
+.lbox__btn--go { background: var(--color-gold); color: #fff; }
+.lbox__btn--go:hover { background: var(--color-gold-d); }
+.lbox__btn--add { background: #fff; color: var(--color-green); }
+@media (max-width: 768px) {
+  .lbox { grid-template-columns: 1fr; }
+  .lbox__img { min-height: 180px; }
+  .lbox__body { padding: 1rem; }
+  .lbox__actions { flex-direction: row; }
 }

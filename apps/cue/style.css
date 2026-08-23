@@ -6149,6 +6149,12 @@ button.pick-cat {
     white-space: nowrap;
   }
 }
+/* Mobile: buang tombol di bawah hook - booking pakai bar bawah aja (book-bar) */
+@media (max-width: 768px) {
+  .tour-hero__cta {
+    display: none;
+  }
+}
 .subhero--exp {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),

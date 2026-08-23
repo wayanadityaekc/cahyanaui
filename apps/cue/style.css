@@ -5842,6 +5842,253 @@ button.pick-cat {
     margin-right: auto;
   }
 }
+/* Tour hero. MOBILE (base) = numpuk ala Airbnb: foto lebar atas + sheet putih
+   membulat naik, teks di tengah. DESKTOP = background putih dibagi 2:
+   teks (judul+deskripsi rata kiri) kiri | foto kanan. Tanpa gradasi. */
+.tour-hero__image {
+  min-height: 48vh;
+  background-color: var(--color-green);
+  background-size: cover;
+  background-position: center;
+}
+.tour-hero__body {
+  position: relative;
+  z-index: 1;
+  margin-top: -1.75rem;
+  padding: 2.25rem 1.5rem 1.5rem;
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.tour-hero__body .subhero__title {
+  margin-bottom: 0.75rem;
+}
+.tour-hero__desc {
+  max-width: 460px;
+  margin: 0;
+  color: #3d3d3d;
+}
+/* Konten di bawah hero: matiin efek "sheet naik" bawaan tour-layout */
+.tour-hero + .tour-layout--book {
+  margin-top: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
+   nggak terlalu bold. */
+.tour-hook {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+.tour-hook li {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+.tour-hook li + li {
+  border-left: 1px solid #e6e6e6;
+}
+.tour-hook__label {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #a6a6a6;
+}
+.tour-hook__value {
+  margin-top: 0.2rem;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f1f1f;
+}
+/* CTA di bawah hook (scroll ke form booking) */
+.tour-hero__cta {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding: 0.8rem 2rem;
+  border-radius: 12px;
+  background: var(--color-gold);
+  color: var(--color-green);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+.tour-hero__cta:hover {
+  background: var(--color-gold-d);
+}
+/* Glow di kartu booking pas CTA hero diklik - kedip halus 3 detik, nggak terlalu terang */
+.booksidebar--glow {
+  animation: booksidebarGlow 3s ease-in-out;
+}
+@keyframes booksidebarGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(201, 164, 92, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
+  }
+  20% {
+    box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
+  }
+  40% {
+    box-shadow: 0 0 0 1px rgba(201, 164, 92, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
+  }
+  60% {
+    box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
+  }
+  80% {
+    box-shadow: 0 0 0 1px rgba(201, 164, 92, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 164, 92, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
+  }
+}
+/* Hero slider manual: foto konten (stops) program, fade antar slide + judul kecil */
+.tour-hero__image.hero-slider {
+  position: relative;
+  overflow: hidden;
+}
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.hero-slide.is-active {
+  opacity: 1;
+}
+.hero-slider__cap {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  max-width: 62%;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.42);
+  color: #fff;
+  font-size: 0.78rem;
+}
+.hero-slider__title {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Panah kecil "‹ ›" - DESKTOP ONLY, di pojok kanan BAWAH (seberang judul) */
+.hero-slider__arrows {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  z-index: 2;
+  display: none;
+  gap: 6px;
+}
+.hero-slider__arrow {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0;
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.hero-slider__arrow:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+/* Dots: max 5, cuma indikator geser (non-klik). Aktif lebih besar, tepi mengecil. */
+.hero-slider__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.hero-slider__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+.hero-slider__dot.is-active {
+  width: 7px;
+  height: 7px;
+  background: #fff;
+}
+.hero-slider__dot.is-edge {
+  width: 3px;
+  height: 3px;
+  opacity: 0.7;
+}
+/* Panah cuma tampil di desktop */
+@media (min-width: 769px) {
+  .hero-slider__arrows {
+    display: flex;
+  }
+}
+/* Mobile: naikin caption + dots biar nggak ketutup sheet putih; dots ke KANAN
+   biar nggak numpuk sama judul foto (kiri) */
+@media (max-width: 768px) {
+  .hero-slider__cap {
+    bottom: 2.6rem;
+  }
+  .hero-slider__dots {
+    left: auto;
+    right: 14px;
+    bottom: 2.6rem;
+    justify-content: flex-end;
+  }
+}
+/* DESKTOP: bg putih dibagi 2 - teks kiri (45%) | foto kanan (55%), tanpa gradasi */
+@media (min-width: 769px) {
+  .tour-hero {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    align-items: stretch;
+    min-height: 62vh;
+  }
+  .tour-hero__image {
+    order: 1; /* foto ke kanan */
+    min-height: 0;
+  }
+  .tour-hero__body {
+    margin-top: 0;
+    padding: 3rem 3rem 3rem max(1.5rem, calc((100vw - 1280px) / 2));
+    background: transparent;
+    border-radius: 0;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .tour-hero__desc {
+    max-width: 460px;
+  }
+  .tour-hook li {
+    padding: 0 22px;
+  }
+  .tour-hook__value {
+    font-size: 15px;
+    white-space: nowrap;
+  }
+}
 .subhero--exp {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),

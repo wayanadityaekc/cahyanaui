@@ -4467,7 +4467,8 @@ function alignSideToFirstPhoto(layout, main, side) {
 function initBookSidebar() {
   const info = document.querySelector("section.info");
   if (!info || !info.querySelector(".info__cta")) return; // cuma halaman detail bookable
-  const subhero = document.querySelector("section.subhero");
+  // hero = subhero (default) atau tour-hero split 50:50 (halaman yg pakai layout baru)
+  const subhero = document.querySelector("section.tour-hero, section.subhero");
   const bookingPh = document.getElementById("booking-placeholder");
   if (!subhero || !bookingPh) return;
 
@@ -4602,8 +4603,91 @@ function initBookSidebar() {
   const bm = document.getElementById("book-modal-placeholder");
   if (bm) bm.remove();
 
+  // CTA hero "Book this program" -> scroll ke form + kasih glow di kartu sbentar
+  const heroCta = document.querySelector(".tour-hero__cta");
+  if (heroCta) {
+    heroCta.addEventListener("click", () => {
+      card.classList.remove("booksidebar--glow");
+      void card.offsetWidth; // reflow: restart animasi tiap klik
+      card.classList.add("booksidebar--glow");
+      setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
+    });
+  }
+
   // sejajarin sidebar sama foto pertama (stop 1), bukan sama title
   alignSideToFirstPhoto(layout, main, side);
+}
+
+// Slider manual di foto hero: pakai foto-foto KONTEN (stop) program itu. Tiap slide
+// ada judul kecil + "(…)" biar user tau fotonya ada lanjutannya. Nav: panah, dot, swipe.
+function initTourHeroSlider() {
+  const box = document.querySelector(".tour-hero__image");
+  if (!box) return;
+  const imgs = [...document.querySelectorAll(".stop__image img, .experience__image img")];
+  // judul dipendekin: buang embel "& ..."/"- ..." + cap panjang biar gak numpuk sama "(…)"
+  const shortTitle = (t) => {
+    let s = t.split(/\s+[-–—&]\s+/)[0].trim();
+    if (s.length > 30) s = s.slice(0, 28).replace(/\s+\S*$/, "").trim();
+    return s;
+  };
+  const slides = imgs
+    .map((img) => ({
+      src: img.getAttribute("src"),
+      title: shortTitle((img.closest(".stop, .experience__card")?.querySelector(".stop__name, .experience__name")?.textContent || "").replace(/\s+/g, " ").trim()),
+    }))
+    .filter((s) => s.src);
+  if (slides.length < 2) return; // butuh minimal 2 foto buat slider
+
+  box.classList.add("hero-slider");
+  box.style.backgroundImage = "";
+  box.innerHTML =
+    slides
+      .map((s, i) => `<div class="hero-slide${i === 0 ? " is-active" : ""}" style="background-image:url(${s.src})"></div>`)
+      .join("") +
+    '<div class="hero-slider__cap"><span class="hero-slider__title"></span></div>' +
+    '<div class="hero-slider__arrows">' +
+    '<button type="button" class="hero-slider__arrow hero-slider__arrow--prev" aria-label="Previous photo">&lsaquo;</button>' +
+    '<button type="button" class="hero-slider__arrow hero-slider__arrow--next" aria-label="Next photo">&rsaquo;</button>' +
+    "</div>" +
+    '<div class="hero-slider__dots"></div>';
+
+  const slideEls = [...box.querySelectorAll(".hero-slide")];
+  const titleEl = box.querySelector(".hero-slider__title");
+  const dotsWrap = box.querySelector(".hero-slider__dots");
+  const DOT_MAX = 5; // max 5 titik: cuma indikator geser, aktif lebih besar, tepi mengecil
+  let cur = 0;
+  const renderDots = () => {
+    const total = slides.length;
+    const count = Math.min(DOT_MAX, total);
+    const start = total > DOT_MAX ? Math.min(Math.max(cur - 2, 0), total - DOT_MAX) : 0;
+    let html = "";
+    for (let j = 0; j < count; j++) {
+      const idx = start + j;
+      let cls = "hero-slider__dot";
+      if (idx === cur) cls += " is-active";
+      else if (total > DOT_MAX && ((j === 0 && start > 0) || (j === count - 1 && start + count < total))) cls += " is-edge";
+      html += `<span class="${cls}"></span>`;
+    }
+    dotsWrap.innerHTML = html;
+  };
+  const go = (n) => {
+    cur = (n + slides.length) % slides.length;
+    slideEls.forEach((el, i) => el.classList.toggle("is-active", i === cur));
+    if (titleEl) titleEl.textContent = slides[cur].title;
+    renderDots();
+  };
+  go(0);
+  box.querySelector(".hero-slider__arrow--prev").addEventListener("click", () => go(cur - 1));
+  box.querySelector(".hero-slider__arrow--next").addEventListener("click", () => go(cur + 1));
+  // swipe (HP)
+  let x0 = null;
+  box.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener("touchend", (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
 }
 
 // Halaman charter: bungkus kalkulator "Build Your Charter" jadi kartu sidebar
@@ -4727,6 +4811,7 @@ async function initPage() {
   initBookingConfirm();
   initBooking();
   initBookSidebar(); // pindah form booking ke kartu sidebar SEBELUM init lain sentuh .info
+  initTourHeroSlider(); // hero jadi slider foto konten (stops) - setelah stops di DOM
   initSlider();
   initTourSlider();
   initGuideHome();

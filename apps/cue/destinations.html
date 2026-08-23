@@ -15,7 +15,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=322" />
+    <link rel="stylesheet" href="style.css?v=323" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/destinations.html" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Cahyana Ubud Experience" />
@@ -61,232 +61,241 @@
 
     <section class="experience experience--alt" id="destinations">
       <h2 class="section__title">All Destinations</h2>
+      <div class="zone-filter" role="tablist" aria-label="Filter destinations by type">
+        <button type="button" class="zone-chip is-active" data-zone="all">All</button>
+        <button type="button" class="zone-chip" data-zone="temple">Temples</button>
+        <button type="button" class="zone-chip" data-zone="waterfall">Waterfalls</button>
+        <button type="button" class="zone-chip" data-zone="beach">Beaches</button>
+        <button type="button" class="zone-chip" data-zone="rice">Rice terraces</button>
+        <button type="button" class="zone-chip" data-zone="nature">Nature &amp; villages</button>
+      </div>
+
       <div class="experience__grid experience__grid--home4">
-        <a class="experience__card" href="attractions/uluwatu-temple.html">
+        <a class="experience__card" data-zone="temple" href="attractions/uluwatu-temple.html">
           <div class="experience__image"><img src="assets/images/uluwatu-temple-top.webp" alt="Uluwatu Cliff Temple - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Uluwatu Cliff Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/tanah-lot.html">
+        <a class="experience__card" data-zone="temple" href="attractions/tanah-lot.html">
           <div class="experience__image"><img src="assets/images/tanah-lot.webp" alt="Tanah Lot Sunset Temple - Bali attraction near Ubud" loading="lazy" width="1152" height="1536" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Tanah Lot Sunset Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>West Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/besakih.html">
+        <a class="experience__card" data-zone="temple" href="attractions/besakih.html">
           <div class="experience__image"><img src="assets/images/besakih-temple-bali.webp" alt="Besakih - The Mother Temple - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Besakih - The Mother Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>East Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/tirta-empul.html">
+        <a class="experience__card" data-zone="temple" href="attractions/tirta-empul.html">
           <div class="experience__image"><img src="assets/images/tirta-empul-hero.jpg" alt="Tirta Empul Holy Water Temple - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Tirta Empul Holy Water Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Near Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/goa-gajah.html">
+        <a class="experience__card" data-zone="temple" href="attractions/goa-gajah.html">
           <div class="experience__image"><img src="assets/images/goa-gajah-hero.jpg" alt="Goa Gajah - The Elephant Cave - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Goa Gajah - The Elephant Cave</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Near Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/gunung-kawi.html">
+        <a class="experience__card" data-zone="temple" href="attractions/gunung-kawi.html">
           <div class="experience__image"><img src="assets/images/gunung-kawi-hero.jpg" alt="Gunung Kawi Temple - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Gunung Kawi Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Near Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/lempuyang-temple.html">
+        <a class="experience__card" data-zone="temple" href="attractions/lempuyang-temple.html">
           <div class="experience__image"><img src="assets/images/lempuyang.webp" alt="Lempuyang Temple - Gates of Heaven - Bali attraction near Ubud" loading="lazy" width="2000" height="3000" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Lempuyang Temple - Gates of Heaven</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>East Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/ulun-danu-beratan.html">
+        <a class="experience__card" data-zone="temple" href="attractions/ulun-danu-beratan.html">
           <div class="experience__image"><img src="assets/images/ulun-danu-beratan-hero.webp" alt="Ulun Danu Beratan Lake Temple - Bali attraction near Ubud" loading="lazy" width="1920" height="1237" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ulun Danu Beratan Lake Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Central Highlands</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/taman-ayun.html">
+        <a class="experience__card" data-zone="temple" href="attractions/taman-ayun.html">
           <div class="experience__image"><img src="assets/images/taman-ayun-hero.jpg" alt="Taman Ayun Royal Temple - Bali attraction near Ubud" loading="lazy" width="1200" height="1365" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Taman Ayun Royal Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>West Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/pura-batuan.html">
+        <a class="experience__card" data-zone="temple" href="attractions/pura-batuan.html">
           <div class="experience__image"><img src="assets/images/pura-batuan-temple.jpg" alt="Pura Batuan Temple - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Pura Batuan Temple</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Near Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/garuda-wisnu-kencana.html">
+        <a class="experience__card" data-zone="nature" href="attractions/garuda-wisnu-kencana.html">
           <div class="experience__image"><img src="assets/images/gwk-statue-bali.webp" alt="Garuda Wisnu Kencana (GWK) - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Garuda Wisnu Kencana (GWK)</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/ubud-royal-palace.html">
+        <a class="experience__card" data-zone="nature" href="attractions/ubud-royal-palace.html">
           <div class="experience__image"><img src="assets/images/ubud-saraswati-temple.jpg" alt="Ubud Royal Palace &amp; Art Market - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Royal Palace &amp; Art Market</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Central Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/penglipuran.html">
+        <a class="experience__card" data-zone="nature" href="attractions/penglipuran.html">
           <div class="experience__image"><img src="assets/images/penglipuran-village-view.jpg" alt="Penglipuran Village - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Penglipuran Village</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Kintamani</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/handara-gate.html">
+        <a class="experience__card" data-zone="nature" href="attractions/handara-gate.html">
           <div class="experience__image"><img src="assets/images/handara-gate.webp" alt="Handara Gate - Bali attraction near Ubud" loading="lazy" width="1920" height="1280" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Handara Gate</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>North Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/tirta-gangga.html">
+        <a class="experience__card" data-zone="nature" href="attractions/tirta-gangga.html">
           <div class="experience__image"><img src="assets/images/tirtagangga.jpg" alt="Tirta Gangga Water Garden - Bali attraction near Ubud" loading="lazy" width="1200" height="800" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Tirta Gangga Water Garden</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>East Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/taman-ujung.html">
+        <a class="experience__card" data-zone="nature" href="attractions/taman-ujung.html">
           <div class="experience__image"><img src="assets/images/ujung-water-palace-lake-bali.webp" alt="Taman Ujung Water Palace - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Taman Ujung Water Palace</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>East Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/tegalalang-rice-terrace.html">
+        <a class="experience__card" data-zone="rice" href="attractions/tegalalang-rice-terrace.html">
           <div class="experience__image"><img src="assets/images/tegalalang-rice-terrace-hero.jpg" alt="Tegalalang Rice Terrace - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Tegalalang Rice Terrace</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Near Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/jatiluwih-rice-terrace.html">
+        <a class="experience__card" data-zone="rice" href="attractions/jatiluwih-rice-terrace.html">
           <div class="experience__image"><img src="assets/images/jatiluwih.webp" alt="Jatiluwih Rice Terraces - Bali attraction near Ubud" loading="lazy" width="1920" height="1279" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Jatiluwih Rice Terraces</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>West Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/tegenungan-waterfall.html">
+        <a class="experience__card" data-zone="waterfall" href="attractions/tegenungan-waterfall.html">
           <div class="experience__image"><img src="assets/images/tegenungan-waterfall-hero.jpg" alt="Tegenungan Waterfall - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Tegenungan Waterfall</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Near Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/gitgit-waterfall.html">
+        <a class="experience__card" data-zone="waterfall" href="attractions/gitgit-waterfall.html">
           <div class="experience__image"><img src="assets/images/waterfall.webp" alt="Git Git Waterfall - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Git Git Waterfall</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>North Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/sekumpul-waterfall.html">
+        <a class="experience__card" data-zone="waterfall" href="attractions/sekumpul-waterfall.html">
           <div class="experience__image"><img src="assets/images/lovina-dolphin-sekumpul-card.jpg" alt="Sekumpul Waterfall - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Sekumpul Waterfall</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>North Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/banyumala-waterfall.html">
+        <a class="experience__card" data-zone="waterfall" href="attractions/banyumala-waterfall.html">
           <div class="experience__image"><img src="assets/images/waterfall.jpg" alt="Banyumala Twin Waterfall - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Banyumala Twin Waterfall</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>North Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/munduk.html">
+        <a class="experience__card" data-zone="waterfall" href="attractions/munduk.html">
           <div class="experience__image"><img src="assets/images/tibumana.webp" alt="Munduk Waterfalls - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Munduk Waterfalls</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>North Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/twin-lakes.html">
+        <a class="experience__card" data-zone="nature" href="attractions/twin-lakes.html">
           <div class="experience__image"><img src="assets/images/batur-lake.webp" alt="Buyan &amp; Tamblingan Twin Lakes - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Buyan &amp; Tamblingan Twin Lakes</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>North Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/pandawa-beach.html">
+        <a class="experience__card" data-zone="beach" href="attractions/pandawa-beach.html">
           <div class="experience__image"><img src="assets/images/green-cliff-coast-bali.webp" alt="Pandawa Beach - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Pandawa Beach</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/balangan-beach.html">
+        <a class="experience__card" data-zone="beach" href="attractions/balangan-beach.html">
           <div class="experience__image"><img src="assets/images/surfers-beach.webp" alt="Balangan Beach - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Balangan Beach</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/bingin-beach.html">
+        <a class="experience__card" data-zone="beach" href="attractions/bingin-beach.html">
           <div class="experience__image"><img src="assets/images/kelingking-beach.jpg" alt="Bingin Beach - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Bingin Beach</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/green-bowl-beach.html">
+        <a class="experience__card" data-zone="beach" href="attractions/green-bowl-beach.html">
           <div class="experience__image"><img src="assets/images/cliff-beach.webp" alt="Green Bowl Beach - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Green Bowl Beach</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/tegal-wangi-beach.html">
+        <a class="experience__card" data-zone="beach" href="attractions/tegal-wangi-beach.html">
           <div class="experience__image"><img src="assets/images/kelingking-beach.jpg" alt="Tegal Wangi Beach - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Tegal Wangi Beach</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>South Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/monkey-forest.html">
+        <a class="experience__card" data-zone="nature" href="attractions/monkey-forest.html">
           <div class="experience__image"><img src="assets/images/monkey-forest-hero.jpg" alt="Sacred Monkey Forest Sanctuary - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Sacred Monkey Forest Sanctuary</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Central Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/sangeh-monkey-forest.html">
+        <a class="experience__card" data-zone="nature" href="attractions/sangeh-monkey-forest.html">
           <div class="experience__image"><img src="assets/images/monkey.jpg" alt="Sangeh Monkey Forest - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Sangeh Monkey Forest</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>West Bali</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/ubud-market.html">
+        <a class="experience__card" data-zone="nature" href="attractions/ubud-market.html">
           <div class="experience__image"><img src="assets/images/ubud-market-hero.jpg" alt="Ubud Traditional Market - Bali attraction near Ubud" loading="lazy" width="1200" height="1157" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Traditional Market</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-5.5 7-12a7 7 0 0 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Central Ubud</span></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/ubud-arts-crafts.html">
+        <a class="experience__card" data-zone="nature" href="attractions/ubud-arts-crafts.html">
           <div class="experience__image"><img src="assets/images/ubud-arts-crafts-hero.jpg" alt="Ubud Arts & Crafts - Bali attraction near Ubud" loading="lazy" width="1200" height="900" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Ubud Arts & Crafts</h3>
@@ -298,7 +307,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=322"></script>
-    <script src="script.js?v=322"></script>
+    <script src="data.js?v=323"></script>
+    <script src="script.js?v=323"></script>
   </body>
 </html>

@@ -26,7 +26,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=322" />
+    <link rel="stylesheet" href="style.css?v=323" />
     <link
       rel="canonical"
       href="https://cahyanaubudexperience.com/activities.html"
@@ -102,8 +102,15 @@
 
     <section class="experience experience--alt" id="activities">
       <h2 class="section__title">All Activities &amp; Performances</h2>
+      <div class="zone-filter" role="tablist" aria-label="Filter activities by type">
+        <button type="button" class="zone-chip is-active" data-zone="all">All</button>
+        <button type="button" class="zone-chip" data-zone="adventure">Adventure</button>
+        <button type="button" class="zone-chip" data-zone="culture">Culture</button>
+        <button type="button" class="zone-chip" data-zone="wildlife">Wildlife</button>
+      </div>
+
       <div class="experience__grid experience__grid--home4">
-        <a class="experience__card" href="attractions/barong-dance.html">
+        <a class="experience__card" data-zone="culture" href="attractions/barong-dance.html">
           <div class="experience__image"><img src="assets/images/barong-dance-card.webp" alt="Barong Dance - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="862" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Barong Dance</h3>
@@ -111,7 +118,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Barong Dance">$10</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/atv-ride.html">
+        <a class="experience__card" data-zone="adventure" href="attractions/atv-ride.html">
           <div class="experience__image"><img src="assets/images/ubud-atv-adventure-card.webp" alt="ATV Ride - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">ATV Ride</h3>
@@ -119,7 +126,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="ATV">$40</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/rafting.html">
+        <a class="experience__card" data-zone="adventure" href="attractions/rafting.html">
           <div class="experience__image"><img src="assets/images/rafting.webp" alt="Rafting - Bali activity with Ubud pick-up" loading="lazy" width="5609" height="3739" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Rafting</h3>
@@ -127,7 +134,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Rafting">$35</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/jungle-swing.html">
+        <a class="experience__card" data-zone="adventure" href="attractions/jungle-swing.html">
           <div class="experience__image"><img src="assets/images/jungle-swing-card.jpg" alt="Jungle Swing - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="1158" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Jungle Swing</h3>
@@ -135,7 +142,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Swing">$25</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/jeep-sunrise.html">
+        <a class="experience__card" data-zone="adventure" href="attractions/jeep-sunrise.html">
           <div class="experience__image"><img src="assets/images/jeep-batur-card.webp" alt="Jeep Sunrise - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Jeep Sunrise</h3>
@@ -143,7 +150,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Jeep Sunrise">$50</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/mount-batur-trekking.html">
+        <a class="experience__card" data-zone="adventure" href="attractions/mount-batur-trekking.html">
           <div class="experience__image"><img src="assets/images/mount-batur-sunrise.webp" alt="Mount Batur Trekking - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="1025" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Mount Batur Trekking</h3>
@@ -151,7 +158,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Mount Batur Trekking">$55</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/cooking-class.html">
+        <a class="experience__card" data-zone="culture" href="attractions/cooking-class.html">
           <div class="experience__image"><img src="assets/images/cooking-class-card.webp" alt="Cooking Class - Bali activity with Ubud pick-up" loading="lazy" width="1920" height="1280" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Cooking Class</h3>
@@ -159,14 +166,14 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Cooking Class">$35</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/watersport.html">
+        <a class="experience__card" data-zone="adventure" href="attractions/watersport.html">
           <div class="experience__image"><img src="assets/images/watersport-card.jpg" alt="Watersport - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="908" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Watersport</h3>
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Watersport">$45</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/bali-zoo.html">
+        <a class="experience__card" data-zone="wildlife" href="attractions/bali-zoo.html">
           <div class="experience__image"><img src="assets/images/bali-zoo-card.webp" alt="Bali Zoo - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Bali Zoo</h3>
@@ -174,7 +181,7 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Bali Zoo">$40</span></div></div>
           </div>
         </a>
-        <a class="experience__card" href="attractions/bali-bird-park.html">
+        <a class="experience__card" data-zone="wildlife" href="attractions/bali-bird-park.html">
           <div class="experience__image"><img src="assets/images/bali-bird-park-card.webp" alt="Bali Bird Park - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Bali Bird Park</h3>
@@ -231,7 +238,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=322"></script>
-    <script src="script.js?v=322"></script>
+    <script src="data.js?v=323"></script>
+    <script src="script.js?v=323"></script>
   </body>
 </html>

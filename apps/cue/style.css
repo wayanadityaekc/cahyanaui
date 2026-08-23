@@ -7726,34 +7726,47 @@ section.faq::before,
   font-weight: 400;
 }
 
-/* Zone filter chips */
+/* Zone/category filter: tab garis bawah, 1 baris (geser samping di HP) */
 .zone-filter {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 0.5rem;
-  max-width: 1200px;
+  gap: 1.6rem;
+  max-width: 1000px;
   margin: 0 auto 1.6rem;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.zone-filter::-webkit-scrollbar { display: none; }
 .zone-chip {
   font-family: var(--font-body);
   font-size: var(--fs-small);
   font-weight: 600;
-  color: var(--color-green);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.4rem 1rem;
+  color: var(--color-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.6rem 0.15rem;
+  margin-bottom: -1px;
+  white-space: nowrap;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 .zone-chip:hover {
-  border-color: var(--color-gold);
+  color: var(--color-green);
 }
 .zone-chip.is-active {
-  background: var(--color-gold);
-  color: #fff;
-  border-color: var(--color-gold);
+  color: var(--color-green);
+  border-bottom-color: var(--color-gold);
+}
+/* HP: rata kiri + geser (biar tab pertama nggak kepotong pas overflow) */
+@media (max-width: 768px) {
+  .zone-filter {
+    justify-content: flex-start;
+    gap: 1.4rem;
+    padding: 0 1rem;
+  }
 }
 
 /* Minimal cards (style A) on the tour programs page */

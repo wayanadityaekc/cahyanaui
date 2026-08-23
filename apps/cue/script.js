@@ -4915,11 +4915,12 @@ function initStopContext() {
   });
 }
 
-// Tour programs page: zona filter chips (client-side, semua card tetap di HTML buat SEO).
+// Listing pages (tour/experience/destination): filter kategori (client-side, semua card
+// tetap di HTML buat SEO). Card di-filter lewat data-zone; "all" = tampilin semua.
 function initTourZoneFilter() {
   const wrap = document.querySelector(".zone-filter");
   if (!wrap) return;
-  const cards = Array.from(document.querySelectorAll("#tours .experience__card"));
+  const cards = Array.from(document.querySelectorAll(".experience__card[data-zone]"));
   wrap.addEventListener("click", (e) => {
     const chip = e.target.closest(".zone-chip");
     if (!chip) return;

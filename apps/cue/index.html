@@ -30,7 +30,7 @@
     />
     <!-- Preload foto tile pertama (LCP hero-tiles) -->
     <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
-    <link rel="stylesheet" href="style.css?v=325" />
+    <link rel="stylesheet" href="style.css?v=326" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -524,128 +524,54 @@
         </div>
       </div>
     </section>
-    <section class="about about--panel" id="about">
-      <!-- gradasi emas buat garis ikon di kotak About -->
-      <svg width="0" height="0" style="position: absolute" aria-hidden="true">
-        <defs>
-          <linearGradient id="aboutGold" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#c9a45c" />
-            <stop offset="1" stop-color="#e6cf97" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="about__container about__container--team">
-        <div class="about__text">
-          <h2 class="about__title">Your whole trip, one local team</h2>
-          <p>
-            Planning Bali usually means chasing five different vendors for five
-            different quotes, then hoping the price holds. We do it the other
-            way round. Your tours, your driver, your activities, and your villa
-            all come from one team in Ubud - so you plan it once, ask one
-            person, and see every price before you commit. Our villas have their
-            own home at ubudprivatevillas.com, run by the same team.
-          </p>
-        </div>
-        <div class="about__drivers">
-          <h3 class="about__drivers-title">Meet our drivers</h3>
-          <p class="about__drivers-sub">
-            The local guides behind every trip. Tap a card to see their profile.
-          </p>
-          <div class="drivers-grid">
-            <button class="driver-card" type="button" data-name="Wayan" data-tagline="Founder &amp; host">
-              <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
-              <strong class="driver-card__name">Wayan</strong>
-              <span class="driver-card__tagline">Founder &amp; host</span>
-              <span class="driver-card__rating"><span class="stars">★</span> New</span>
-              <span class="driver-card__more">View profile &rsaquo;</span>
-              <div class="driver-card__detail" hidden data-desc="Wayan is the person behind Cahyana Ubud Experience, and usually the one who replies to your messages and builder of this website. Born and raised in Ubud, he studied in Australia, speaks English. When he's not running the business he's out on the road, showing guests the island he grew up on.">
-                <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
-              </div>
-            </button>
-            <button class="driver-card" type="button" data-name="Made" data-tagline="Villa host &amp; driver since 2010">
-              <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
-              <strong class="driver-card__name">Made</strong>
-              <span class="driver-card__tagline">Villa host &amp; driver since 2010</span>
-              <span class="driver-card__rating"><span class="stars">★</span> New</span>
-              <span class="driver-card__more">View profile &rsaquo;</span>
-              <div class="driver-card__detail" hidden data-desc="Made has been driving guests around Bali since 2010 and hosts his own villa on Airbnb, so he knows exactly what travellers need. Calm, reliable, and endlessly patient, he speaks good English and knows every back road, quiet temple hour, and honest warung on the island.">
-                <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
-              </div>
-            </button>
-            <button class="driver-card" type="button" data-name="Nyoman" data-tagline="Ubud local &middot; Driver-guide">
-              <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
-              <strong class="driver-card__name">Nyoman</strong>
-              <span class="driver-card__tagline">Ubud local &middot; Driver-guide</span>
-              <span class="driver-card__rating"><span class="stars">★</span> New</span>
-              <span class="driver-card__more">View profile &rsaquo;</span>
-              <div class="driver-card__detail" hidden data-desc="(PLACEHOLDER) Short description of the driver. Replace with real info.">
-                <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
-              </div>
-            </button>
-          </div>
-        </div>
+    <!-- About (Opsi C): photo band + overlay, lalu strip driver di cream -->
+    <section class="habout" id="about" style="background-image: url(assets/images/tegalalang-rice-terrace-hero.jpg)">
+      <div class="habout__in">
+        <span class="habout__k">About Cahyana</span>
+        <h2 class="habout__t">One local family, your whole trip</h2>
+        <p class="habout__lead">
+          Tours, driver, activities and villa from one team in Ubud - plan it
+          once, ask one person, and see every price before you commit.
+        </p>
+        <a class="habout__btn" href="about-us.html">Read our story</a>
       </div>
-      <div class="about__boxes">
-          <div class="about__content">
-            <div class="about__icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
-              </svg>
-            </div>
-            <h3 class="title">Ubud Locals</h3>
-            <p class="about__desc">One local Ubud family.</p>
+    </section>
+
+    <section class="habout-people">
+      <span class="habout-people__k">Meet the drivers</span>
+      <p class="habout-people__sub">The local guides behind every trip. Tap a card to see their profile.</p>
+      <div class="drivers-grid">
+        <button class="driver-card" type="button" data-name="Wayan" data-tagline="Founder &amp; host">
+          <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
+          <strong class="driver-card__name">Wayan</strong>
+          <span class="driver-card__tagline">Founder &amp; host</span>
+          <span class="driver-card__rating"><span class="stars">★</span> New</span>
+          <span class="driver-card__more">View profile &rsaquo;</span>
+          <div class="driver-card__detail" hidden data-desc="Wayan is the person behind Cahyana Ubud Experience, and usually the one who replies to your messages and builder of this website. Born and raised in Ubud, he studied in Australia, speaks English. When he's not running the business he's out on the road, showing guests the island he grew up on.">
+            <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
           </div>
-          <div class="about__content">
-            <div class="about__icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" />
-              </svg>
-            </div>
-            <h3 class="title">Your Way</h3>
-            <p class="about__desc">Plan your trip, day by day.</p>
+        </button>
+        <button class="driver-card" type="button" data-name="Made" data-tagline="Villa host &amp; driver since 2010">
+          <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
+          <strong class="driver-card__name">Made</strong>
+          <span class="driver-card__tagline">Villa host &amp; driver since 2010</span>
+          <span class="driver-card__rating"><span class="stars">★</span> New</span>
+          <span class="driver-card__more">View profile &rsaquo;</span>
+          <div class="driver-card__detail" hidden data-desc="Made has been driving guests around Bali since 2010 and hosts his own villa on Airbnb, so he knows exactly what travellers need. Calm, reliable, and endlessly patient, he speaks good English and knows every back road, quiet temple hour, and honest warung on the island.">
+            <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
           </div>
-          <div class="about__content">
-            <div class="about__icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path d="M20 12l-8 8-8-8 8-8z" />
-                <circle cx="12" cy="12" r="2" />
-              </svg>
-            </div>
-            <h3 class="title">All-in-One</h3>
-            <p class="about__desc">Tours to villas, one team.</p>
+        </button>
+        <button class="driver-card" type="button" data-name="Nyoman" data-tagline="Ubud local &middot; Driver-guide">
+          <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
+          <strong class="driver-card__name">Nyoman</strong>
+          <span class="driver-card__tagline">Ubud local &middot; Driver-guide</span>
+          <span class="driver-card__rating"><span class="stars">★</span> New</span>
+          <span class="driver-card__more">View profile &rsaquo;</span>
+          <div class="driver-card__detail" hidden data-desc="(PLACEHOLDER) Short description of the driver. Replace with real info.">
+            <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
           </div>
-          <div class="about__content">
-            <div class="about__icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" />
-                <path d="M9.5 12l1.8 1.8L15 10" />
-              </svg>
-            </div>
-            <h3 class="title">Clear Price</h3>
-            <p class="about__desc">Every price upfront, no surprises.</p>
-          </div>
-        </div>
+        </button>
+      </div>
     </section>
 
     <section class="trust">
@@ -680,7 +606,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=325"></script>
-    <script src="script.js?v=325"></script>
+    <script src="data.js?v=326"></script>
+    <script src="script.js?v=326"></script>
   </body>
 </html>

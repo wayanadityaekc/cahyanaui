@@ -8299,3 +8299,223 @@ section.faq::before,
   .lbox__body { padding: 1rem; }
   .lbox__actions { flex-direction: row; }
 }
+
+/* ============================================================
+   ABOUT PAGE — layout editorial (judul kiri sticky, isi kanan).
+   Pakai design system: lhero (hero foto), font-head Playfair,
+   emas/cream. Kartu intro di hero + baris editorial + list.
+   ============================================================ */
+/* Kartu intro putih di dalam hero (di bawah judul) */
+.ahero-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  padding: 1.4rem 1.3rem;
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: left;
+}
+.ahero-card p {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+}
+/* .lbox__facts di dalam kartu intro dapat style dari blok listing */
+
+/* Baris editorial: label kiri (sticky) + isi kanan */
+.arows {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.arow {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  padding: 3rem 0;
+}
+.arow + .arow {
+  border-top: 1px solid var(--line);
+}
+/* baris editorial punya border sendiri -> matikan divider emas otomatis */
+.arow::before {
+  content: none;
+}
+.arow__lab {
+  position: sticky;
+  top: 6.5rem; /* clear fixed navbar */
+}
+.arow__k {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-gold-d);
+}
+.arow__h {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  line-height: var(--lh-heading);
+  color: var(--color-green);
+}
+.arow__body > p {
+  margin: 0 0 1rem;
+  max-width: 62ch;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--color-ink);
+}
+.arow__body > p:last-child {
+  margin-bottom: 0;
+}
+.arow__body .drivers-grid {
+  justify-content: flex-start;
+}
+
+/* List bernomor vertikal (How it works) */
+.anl {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.anl li {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.anl li + li {
+  border-top: 1px solid var(--line);
+}
+.anl__n {
+  display: flex;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-cream);
+  border: 1px solid var(--line);
+  font-family: var(--font-head);
+  font-weight: 600;
+  color: var(--color-gold-d);
+}
+.anl b {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-green);
+}
+.anl p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+@media (max-width: 768px) {
+  .arow {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 2.2rem 0;
+  }
+  .arow__lab {
+    position: static;
+  }
+  .arow__body .drivers-grid {
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   HOMEPAGE — section About (Opsi C): photo band + overlay,
+   lalu strip "Meet the drivers" di cream. Senada hero halaman.
+   ============================================================ */
+.habout {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 360px;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+}
+.habout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.62));
+}
+.habout__in {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+.habout__k {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #e6cf97;
+}
+.habout__t {
+  margin: 0 0 0.8rem;
+  font-family: var(--font-head);
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  line-height: var(--lh-heading);
+  color: #fff;
+}
+.habout__lead {
+  margin: 0 auto 1.4rem;
+  max-width: 520px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+.habout__btn {
+  display: inline-block;
+  padding: 0.8rem 1.7rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  color: #fff;
+  background: var(--color-gold);
+  border: 1px solid var(--color-gold);
+}
+.habout__btn:hover {
+  background: var(--color-gold-d);
+}
+/* Strip driver di bawah band */
+.habout-people {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background: var(--color-cream);
+}
+.habout-people__k {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-gold-d);
+}
+.habout-people__sub {
+  margin: 0 auto 1.6rem;
+  max-width: 440px;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}

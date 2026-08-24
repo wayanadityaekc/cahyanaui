@@ -7582,7 +7582,7 @@ section.faq::before,
 .home .experience__body {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-areas: "title price" "meta meta";
+  grid-template-areas: "title price";
   align-items: baseline;
   column-gap: 0.6rem;
   row-gap: 0.3rem;
@@ -7865,7 +7865,7 @@ section.faq::before,
 .tourprog .experience__body {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-areas: "title price" "meta meta";
+  grid-template-areas: "title price";
   align-items: baseline;
   column-gap: 0.6rem;
   row-gap: 0.35rem;
@@ -8612,4 +8612,77 @@ section.faq::before,
   .xtabs { justify-content: flex-start; gap: 1.1rem; margin: 1.4rem 0 1.8rem; }
   .xplore .experience__grid--home4 { gap: 0.9rem; }
   .xplore__more { margin-top: 2rem; }
+}
+
+/* EXPERIMENT: judul DI DALAM foto (overlay bawah) + durasi & harga DI BAWAH foto.
+   Berlaku homepage (.home) + listing (.tourprog): tour/experience/destination. */
+.home .experience__image::after,
+.tourprog .experience__image::after {
+  background: linear-gradient(to bottom, transparent 42%, rgba(0, 0, 0, 0.6));
+}
+/* judul melayang di atas body = di bagian bawah foto */
+.home .experience__body,
+.tourprog .experience__body {
+  position: relative;
+  display: flex;
+  flex-direction: row; /* durasi kiri, harga kanan (base-nya column) */
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem 0.75rem;
+}
+.home .experience__name,
+.tourprog .experience__name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  display: block;
+  margin: 0;
+  padding: 0 0.85rem 0.6rem;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: left;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* baris bawah foto: durasi kiri, harga nempel kanan */
+.home .experience__meta,
+.tourprog .experience__meta { text-align: left; }
+.home .experience__footer,
+.tourprog .experience__footer { margin-left: auto; text-align: right; }
+/* mobile: judul di foto lebih kecil */
+@media (max-width: 768px) {
+  .home .experience__name,
+  .tourprog .experience__name {
+    font-size: var(--fs-small);
+    padding: 0 0.7rem 0.5rem;
+  }
+}
+/* durasi (meta) tampil lagi, di baris bawah kiri */
+.home .experience__meta,
+.tourprog .experience__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+.home .experience__meta svg,
+.tourprog .experience__meta svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  color: var(--color-gold-d);
+}
+.home .experience__footer,
+.tourprog .experience__footer {
+  margin: 0;
+  padding: 0;
 }

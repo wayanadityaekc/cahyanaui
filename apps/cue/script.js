@@ -4819,51 +4819,6 @@ function initBookBar() {
   sync();
 }
 
-// Halaman charter: bungkus kalkulator "Build Your Charter" jadi kartu sidebar
-// (kanan sticky di desktop, bawah konten di mobile) — layout sama kaya halaman
-// detail. Konten (How a Charter Day Works + Good to know + FAQ) di kolom kiri.
-function initCharterSidebar() {
-  const charter = document.getElementById("charter");
-  const box = charter && charter.querySelector(".charter__box");
-  const subhero = document.querySelector("section.subhero");
-  if (!charter || !box || !subhero) return;
-
-  const layout = document.createElement("div");
-  layout.className = "tour-layout tour-layout--book";
-  const main = document.createElement("div"); main.className = "tour-layout__main";
-  const side = document.createElement("div"); side.className = "tour-layout__side";
-  layout.append(main, side);
-  subhero.after(layout);
-
-  // section berturut setelah layout (charter, info, faq)
-  const sections = [];
-  let n = layout.nextElementSibling;
-  while (n && n.tagName === "SECTION") { const next = n.nextElementSibling; sections.push(n); n = next; }
-
-  // sidebar kanan = kartu berisi judul + intro + kalkulator
-  const card = document.createElement("div");
-  card.className = "booksidebar chartersidebar";
-  const heading = charter.querySelector(".section__title");
-  const intro = charter.querySelector(".builder__intro");
-  if (heading) card.appendChild(heading);
-  if (intro) card.appendChild(intro);
-  card.appendChild(box);
-  side.appendChild(card);
-
-  // kiri = konten: How a Charter Day Works -> Good to know -> FAQ
-  const notes = charter.querySelector(".charter__notes");
-  const info = sections.find((s) => s.classList.contains("info"));
-  const faq = sections.find((s) => s.classList.contains("faq"));
-  if (info) main.appendChild(info);
-  if (notes) main.appendChild(notes);
-  if (faq) main.appendChild(faq);
-
-  charter.remove(); // section .charter udah kosong
-
-  // sejajarin sidebar sama foto pertama di konten (kalau ada); charter kontennya
-  // teks (no foto) -> helper no-op, kartu tetap di atas konten.
-  alignSideToFirstPhoto(layout, main, side);
-}
 
 /* DESKTOP listing (tour/activities/transfer): Tour Details + FAQ digabung jadi
    satu card 2 kolom di bawah kartu — Details kiri, FAQ kanan, garis pemisah
@@ -4960,7 +4915,6 @@ async function initPage() {
   itnUpdateBadge();
   initItineraryButtons();
   initCharter();
-  initCharterSidebar();
   initTourType();
   initInfoPopovers();
   initTripBar();

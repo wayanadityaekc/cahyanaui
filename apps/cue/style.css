@@ -210,7 +210,7 @@ body {
   padding: 7rem 1.5rem 3rem;
   background-color: var(--color-green);
 }
-/* Foto hero di ::after yang di-blur tipis (konten tetap tajam) */
+/* Foto hero (tajam, tanpa blur) + overlay gelap - senada hero halaman lain */
 .hero::after {
   content: "";
   position: absolute;
@@ -219,9 +219,8 @@ body {
   background-size: cover;
   background-position: center;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.55)),
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.6)),
     url("assets/images/ricefield-girl-hero.webp");
-  filter: blur(2px);
 }
 @media (max-width: 992px) {
   .hero::after {
@@ -252,12 +251,12 @@ body {
   font-weight: 700;
   color: var(--color-gold);
 }
-/* Teks hero ikutin style subhero: judul gold --fs-display, teks cream */
+/* Teks hero senada hero halaman lain: judul putih, font heading (Playfair) */
 .hero__title {
-  font-family: var(--font-body);
+  font-family: var(--font-head);
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
-  color: var(--color-gold);
+  color: #fff;
 }
 .hero__subtitle {
   margin-top: 1rem;
@@ -3314,30 +3313,6 @@ a.footer__contact-item:hover {
   display: list-item;
 }
 
-/* Charter: kalkulator "Build Your Charter" jadi isi kartu sidebar */
-.chartersidebar {
-  padding: 1.5rem 1.4rem;
-}
-.chartersidebar .section__title {
-  font-size: 1.25rem;
-  text-align: center;
-  color: var(--color-gold);
-  margin-bottom: 0.5rem;
-}
-.chartersidebar .builder__intro {
-  text-align: center;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  margin: 0 auto 1.3rem;
-  max-width: none;
-}
-.chartersidebar .charter__box {
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-}
 /* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
    pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */
 .tour-layout--book .tour-layout__main section.info {
@@ -6947,18 +6922,59 @@ button.pick-cat {
 }
 
 /* ==================== Charter page ==================== */
-.charter {
-  padding: 3rem 1.5rem;
+/* Charter hero: background + kalkulator di box (gaya transfer) */
+.charter-hero {
+  position: relative;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url(assets/images/north-bali-tour-card.jpg) center / cover;
+  /* TODO Wayan: ganti background ke foto mobil/perjalanan charter */
+  padding: 7rem 1.3rem 3rem;
+}
+.charter-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.64));
+}
+.charter-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+.charter-hero__title {
+  font-family: var(--font-head);
+  font-size: var(--fs-display);
+  color: #fff;
+  margin: 0 0 0.4rem;
+}
+.charter-hero__sub {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 auto 1.6rem;
+  max-width: 460px;
 }
 .charter__box {
-  max-width: 720px;
-  margin: 0 auto 2rem;
-  padding: 1.5rem;
-  border-radius: 12px;
-  background: var(--color-cream);
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+  padding: 1.5rem 1.4rem 1.6rem;
+  text-align: left;
+}
+.charter__box-title {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  color: var(--color-green);
+  text-align: center;
+  margin: 0 0 1.1rem;
 }
 .charter__step {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.3rem;
 }
 .charter__label {
   display: block;
@@ -6979,47 +6995,77 @@ button.pick-cat {
   font-size: var(--fs-small);
   color: var(--color-muted);
 }
+/* Duration cards - dibikin gede & menonjol */
 .charter__durations {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
+  gap: 0.7rem;
 }
 .chdur {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding: 1rem 0.8rem;
-  border: 1.5px solid #d8d2c4;
-  border-radius: 10px;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 1.15rem 0.6rem 1.1rem;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
   background: #fff;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
+    transform 0.2s ease,
     opacity 0.2s ease;
 }
 .chdur:hover:not([disabled]) {
   border-color: var(--color-gold);
 }
 .chdur.active {
-  border-color: var(--color-green);
-  box-shadow: 0 0 0 2px rgba(31, 61, 43, 0.15);
+  border-color: var(--color-gold);
+  box-shadow: 0 6px 18px rgba(201, 164, 92, 0.22);
+  transform: translateY(-2px);
 }
 .chdur[disabled] {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
 }
+.chdur__badge {
+  position: absolute;
+  top: -0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-gold);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+}
 .chdur__name {
+  font-family: var(--font-head);
   font-weight: 600;
+  font-size: 1.15rem;
   color: var(--color-green);
 }
 .chdur__sub {
-  font-size: var(--fs-small);
+  font-size: 0.74rem;
   color: var(--color-muted);
+  margin-bottom: 0.5rem;
 }
 .chdur__price {
-  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--color-gold);
+  font-size: 1.2rem;
+}
+.chdur__from {
+  font-size: 0.66rem;
+  font-weight: 400;
+  color: var(--color-muted);
 }
 .charter__extra {
   margin-top: 1rem;
@@ -7036,21 +7082,19 @@ button.pick-cat {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
   margin: 1.25rem 0 1rem;
   font-size: var(--fs-strong);
   font-weight: 600;
 }
+/* Good to know di bawah hero */
+.charter-notes-sec {
+  padding: 2.5rem 1.3rem 0;
+}
 .charter__notes {
   max-width: 720px;
   margin: 0 auto;
-}
-@media (max-width: 600px) {
-  .charter__durations {
-    grid-template-columns: 1fr;
-  }
-  .charter__fields {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ==================== Navbar Program dropdown ==================== */

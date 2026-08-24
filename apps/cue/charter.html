@@ -15,7 +15,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=323" />
+    <link rel="stylesheet" href="style.css?v=324" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/charter.html" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Cahyana Ubud Experience" />
@@ -32,85 +32,82 @@
   <body>
     <div id="navbar-placeholder"></div>
 
-    <section class="subhero subhero--overlap subhero--tour">
-      <div class="subhero__content">
-        <h1 class="subhero__title">Private Car Charter in Bali</h1>
-        <p class="subhero__text">
+    <!-- Hero: background + kalkulator charter di box (gaya transfer) -->
+    <section class="charter-hero">
+      <div class="charter-hero__inner">
+        <h1 class="charter-hero__title">Private Car Charter in Bali</h1>
+        <p class="charter-hero__sub">
           Your own car and local driver for the day - go anywhere, stop anywhere,
-          at your own pace. Choose a half or full day, extend by the hour, petrol
-          included.
+          at your own pace. Half or full day, petrol included, only a 10% deposit to book.
         </p>
+
+        <div class="charter__box" id="charter">
+          <h2 class="charter__box-title">Build your charter</h2>
+
+          <!-- Step 1: pickup -->
+          <div class="charter__step">
+            <label class="charter__label" for="ch-pickup">1. Pick-up area</label>
+            <select class="charter__select" id="ch-pickup">
+              <option value="" disabled selected>Select your pick-up area</option>
+            </select>
+            <p class="charter__hint" id="ch-pickup-hint">
+              Pick-up outside Ubud adds a small surcharge.
+            </p>
+          </div>
+
+          <!-- Step 2: duration cards (locked until pickup chosen) -->
+          <div class="charter__step">
+            <label class="charter__label">2. How long do you need the car?</label>
+            <div class="charter__durations" id="ch-durations">
+              <button class="chdur" type="button" data-dur="half" disabled>
+                <span class="chdur__name">Half Day</span>
+                <span class="chdur__sub">5 hours</span>
+                <span class="chdur__price"><span class="chdur__from">from </span><span class="price" data-ch="half"></span></span>
+              </button>
+              <button class="chdur" type="button" data-dur="full" disabled>
+                <span class="chdur__badge">Popular</span>
+                <span class="chdur__name">Full Day</span>
+                <span class="chdur__sub">10 hours</span>
+                <span class="chdur__price"><span class="chdur__from">from </span><span class="price" data-ch="full"></span></span>
+              </button>
+              <button class="chdur" type="button" data-dur="extended" disabled>
+                <span class="chdur__name">Extended</span>
+                <span class="chdur__sub">10h + extra</span>
+                <span class="chdur__price"><span class="chdur__from">from </span><span class="price" data-ch="extended"></span></span>
+              </button>
+            </div>
+            <div class="charter__extra" id="ch-extra-wrap" hidden>
+              <label class="charter__label" for="ch-extra">Extra hours after 10</label>
+              <input type="number" class="charter__select" id="ch-extra" min="1" max="6" value="1" />
+            </div>
+          </div>
+
+          <!-- Step 3: date + guests -->
+          <div class="charter__step charter__fields">
+            <div class="field">
+              <label class="charter__label" for="ch-date">Date</label>
+              <input type="date" class="charter__select" id="ch-date" />
+            </div>
+            <div class="field">
+              <label class="charter__label" for="ch-guests">Guests</label>
+              <select class="charter__select" id="ch-guests">
+                <option value="" disabled selected>Guests</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- total + book -->
+          <div class="charter__total">
+            <span>Total</span>
+            <span class="amount" id="ch-total"><span class="price-cur">-</span></span>
+          </div>
+          <button class="btn-book" id="ch-book" disabled>Book This Charter</button>
+        </div>
       </div>
     </section>
 
-    <section class="charter" id="charter">
-      <h2 class="section__title">Build Your Charter</h2>
-      <p class="builder__intro">
-        Pick your pick-up area first, then choose how long you need the car.
-        Live pricing, only a 10% deposit to book.
-      </p>
-
-      <div class="charter__box">
-        <!-- Step 1: pickup -->
-        <div class="charter__step">
-          <label class="charter__label" for="ch-pickup">1. Pick-up area</label>
-          <select class="charter__select" id="ch-pickup">
-            <option value="" disabled selected>Select your pick-up area</option>
-          </select>
-          <p class="charter__hint" id="ch-pickup-hint">
-            Pick-up outside Ubud adds a small surcharge.
-          </p>
-        </div>
-
-        <!-- Step 2: duration cards (locked until pickup chosen) -->
-        <div class="charter__step">
-          <label class="charter__label">2. How long do you need the car?</label>
-          <div class="charter__durations" id="ch-durations">
-            <button class="chdur" type="button" data-dur="half" disabled>
-              <span class="chdur__name">Half Day</span>
-              <span class="chdur__sub">5 hours</span>
-              <span class="chdur__price price" data-ch="half"></span>
-            </button>
-            <button class="chdur" type="button" data-dur="full" disabled>
-              <span class="chdur__name">Full Day</span>
-              <span class="chdur__sub">10 hours</span>
-              <span class="chdur__price price" data-ch="full"></span>
-            </button>
-            <button class="chdur" type="button" data-dur="extended" disabled>
-              <span class="chdur__name">Extended</span>
-              <span class="chdur__sub">Full day + extra hours</span>
-              <span class="chdur__price price" data-ch="extended"></span>
-            </button>
-          </div>
-          <div class="charter__extra" id="ch-extra-wrap" hidden>
-            <label class="charter__label" for="ch-extra">Extra hours after 10</label>
-            <input type="number" class="charter__select" id="ch-extra" min="1" max="6" value="1" />
-          </div>
-        </div>
-
-        <!-- Step 3: date + guests -->
-        <div class="charter__step charter__fields">
-          <div class="field">
-            <label class="charter__label" for="ch-date">Date</label>
-            <input type="date" class="charter__select" id="ch-date" />
-          </div>
-          <div class="field">
-            <label class="charter__label" for="ch-guests">Guests</label>
-            <select class="charter__select" id="ch-guests">
-              <option value="" disabled selected>Guests</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- total + book -->
-        <div class="charter__total">
-          <span>Total</span>
-          <span class="amount" id="ch-total"><span class="price-cur">-</span></span>
-        </div>
-        <button class="btn-book" id="ch-book" disabled>Book This Charter</button>
-      </div>
-
-      <!-- info notes -->
+    <!-- Good to know (di bawah hero) -->
+    <section class="charter-notes-sec">
       <div class="charter__notes">
         <h3 class="itn__subtitle">Good to know</h3>
         <ul class="info__list info__list--yes">
@@ -177,7 +174,7 @@
 
     <div id="book-confirm-placeholder"></div>
     <div id="footer-placeholder"></div>
-    <script src="data.js?v=323"></script>
-    <script src="script.js?v=323"></script>
+    <script src="data.js?v=324"></script>
+    <script src="script.js?v=324"></script>
   </body>
 </html>

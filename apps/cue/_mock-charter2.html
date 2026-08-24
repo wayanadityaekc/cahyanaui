@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mock Charter 2</title><link rel="stylesheet" href="style.css"/>
+<style>
+  body{background:#fff;}
+  .chero{position:relative;min-height:640px;display:flex;align-items:center;justify-content:center;
+    background:url(assets/images/north-bali-tour-card.jpg) center/cover;padding:5rem 1.3rem 3rem;}
+  .chero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.64));}
+  .chero__inner{position:relative;z-index:2;width:100%;max-width:600px;text-align:center;}
+  .chero__title{font-family:var(--font-head);font-size:2.1rem;color:#fff;margin:0 0 .4rem;}
+  .chero__sub{color:rgba(255,255,255,.9);font-size:.9rem;margin:0 auto 1.6rem;max-width:450px;}
+
+  .cbox{background:#fff;border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.24);padding:1.5rem 1.4rem 1.6rem;text-align:left;}
+  .cbox__title{font-family:var(--font-head);font-size:1.15rem;color:var(--color-green);text-align:center;margin:0 0 1.1rem;}
+  .clab{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--color-muted);font-weight:600;margin:0 0 .5rem;}
+  .csel{width:100%;appearance:none;border:1px solid var(--line);border-radius:12px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a7466' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right .85rem center;padding:.7rem 1.9rem .7rem .85rem;font-family:var(--font-body);font-size:.88rem;color:var(--color-green);margin-bottom:1.2rem;}
+
+  /* DURASI card lebih gede + menonjol */
+  .cdurs{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1.3rem;}
+  .cdur{position:relative;border:1.5px solid var(--line);border-radius:16px;padding:1.15rem .6rem 1.1rem;text-align:center;cursor:pointer;transition:border-color .15s, box-shadow .15s, transform .15s;background:#fff;}
+  .cdur:hover{border-color:var(--color-gold);}
+  .cdur.on{border-color:var(--color-gold);box-shadow:0 6px 18px rgba(201,164,92,.22);transform:translateY(-2px);}
+  .cdur__name{display:block;font-family:var(--font-head);font-weight:600;font-size:1.15rem;color:var(--color-green);}
+  .cdur__sub{display:block;font-size:.74rem;color:var(--color-muted);margin:.25rem 0 .6rem;}
+  .cdur__price{display:block;font-weight:600;color:var(--color-gold);font-size:1.25rem;}
+  .cdur__from{font-size:.66rem;color:var(--color-muted);}
+  .cdur__badge{position:absolute;top:-.6rem;left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--color-gold);border-radius:999px;padding:.2rem .6rem;white-space:nowrap;}
+
+  .crow{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem;}
+  .cin{width:100%;border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem;font-family:var(--font-body);font-size:.88rem;color:var(--color-green);}
+  .ctotal{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:.9rem;margin-bottom:1rem;}
+  .ctotal span{color:var(--color-muted);font-size:.85rem;}
+  .ctotal strong{font-family:var(--font-head);font-size:1.7rem;color:var(--color-gold);}
+  .cbtn{display:block;width:100%;padding:.85rem;border-radius:999px;background:var(--color-gold);color:#fff;font-weight:600;font-size:.92rem;text-align:center;border:1px solid var(--color-gold);cursor:pointer;}
+  @media(max-width:768px){ .cdur__name{font-size:1.05rem;} .cdur__price{font-size:1.1rem;} }
+</style></head>
+<body class="tourprog">
+  <section class="chero">
+    <div class="chero__inner">
+      <h1 class="chero__title">Private Car Charter in Bali</h1>
+      <p class="chero__sub">Your own car and driver by the half or full day - build your own route, we handle the driving.</p>
+      <div class="cbox">
+        <h2 class="cbox__title">Build your charter</h2>
+        <label class="clab">Pick-up area</label>
+        <select class="csel"><option>Ubud &amp; nearby</option></select>
+        <label class="clab">How long do you need the car?</label>
+        <div class="cdurs">
+          <div class="cdur on"><span class="cdur__name">Half Day</span><span class="cdur__sub">5 hours</span><span class="cdur__price"><span class="cdur__from">from </span>$40</span></div>
+          <div class="cdur"><span class="cdur__badge">Popular</span><span class="cdur__name">Full Day</span><span class="cdur__sub">10 hours</span><span class="cdur__price"><span class="cdur__from">from </span>$60</span></div>
+          <div class="cdur"><span class="cdur__name">Extended</span><span class="cdur__sub">10h + extra</span><span class="cdur__price"><span class="cdur__from">from </span>$70</span></div>
+        </div>
+        <div class="crow">
+          <div><label class="clab">Date</label><input class="cin" type="text" placeholder="Select date" /></div>
+          <div><label class="clab">Guests</label><select class="cin"><option>2</option></select></div>
+        </div>
+        <div class="ctotal"><span>Total</span><strong>$40</strong></div>
+        <button class="cbtn">Book This Charter</button>
+      </div>
+    </div>
+  </section>
+</body></html>

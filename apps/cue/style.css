@@ -8592,10 +8592,8 @@ section.faq::before,
   margin-bottom: -1px;
   padding: 0 0 0.9rem;
   font-family: var(--font-body);
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--color-muted);
   cursor: pointer;
 }
@@ -8656,14 +8654,9 @@ section.faq::before,
 .tourprog .experience__meta { text-align: left; }
 .home .experience__footer,
 .tourprog .experience__footer { margin-left: auto; text-align: right; }
-/* mobile: judul di foto lebih kecil */
-@media (max-width: 768px) {
-  .home .experience__name,
-  .tourprog .experience__name {
-    font-size: var(--fs-small);
-    padding: 0 0.7rem 0.5rem;
-  }
-}
+/* panah bulat dibuang — seluruh badan kartu udah clickable (initExperienceCards) */
+.home .experience__arrow,
+.tourprog .experience__arrow { display: none; }
 /* durasi (meta) tampil lagi, di baris bawah kiri */
 .home .experience__meta,
 .tourprog .experience__meta {
@@ -8685,4 +8678,48 @@ section.faq::before,
 .tourprog .experience__footer {
   margin: 0;
   padding: 0;
+}
+
+/* mobile: judul di foto lebih kecil + durasi disembunyiin (cukup harga di kiri).
+   HARUS di paling bawah biar menang atas base .experience__meta{display:flex}. */
+@media (max-width: 768px) {
+  .home .experience__name,
+  .tourprog .experience__name {
+    font-size: var(--fs-small);
+    padding: 0 0.7rem 0.5rem;
+  }
+  .home .experience__meta,
+  .tourprog .experience__meta { display: none; }
+  .home .experience__footer,
+  .tourprog .experience__footer { margin-left: 0; text-align: left; }
+}
+
+/* Guide cards (Guides & Information): judul DI DALAM foto + tag di bawah.
+   Bikin bali-guide.html (body tanpa .home) konsisten sama homepage. */
+.guide-home__card .experience__image::after {
+  background: linear-gradient(to bottom, transparent 42%, rgba(0, 0, 0, 0.6));
+}
+.guide-home__card .experience__body {
+  position: relative;
+  padding: 0.6rem 0.9rem 0.75rem;
+}
+.guide-home__card .experience__desc { display: none; }
+.guide-home__card .experience__name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  display: block;
+  margin: 0;
+  padding: 0 0.85rem 0.6rem;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: left;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

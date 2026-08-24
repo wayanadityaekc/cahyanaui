@@ -2765,10 +2765,10 @@ function initItineraryButtons() {
     const hasPage = href && PAGE_ITEM[href];
     // item dari halaman detail (via arrow) ATAU dari data-program (combo tanpa detail)
     const item = hasPage ? PAGE_ITEM[href] : card.dataset.program;
-    if (!item) return;
 
-    // (a) kalau punya halaman detail: badan card clickable, arrow dibuang
-    if (hasPage) {
+    // (a) kartu apapun yang punya link -> SELURUH badan card clickable, panah dibuang
+    // (kartu tanpa item bookable — mis. Destinations — tetap bisa dibuka ke halamannya).
+    if (href) {
       link.remove();
       card.classList.add("card-clickable");
       card.addEventListener("click", (e) => {
@@ -2776,6 +2776,8 @@ function initItineraryButtons() {
         window.location.href = href;
       });
     }
+
+    if (!item) return; // nggak ada item bookable -> stop di sini (nggak nambah + My Trips)
 
     // (b) tombol + My Trips -> buka popup tanggal (sama kayak Book Now)
     const body = card.querySelector(".experience__body") || card;

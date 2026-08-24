@@ -4076,7 +4076,7 @@ a.footer__contact-item:hover {
   color: var(--color-green);
 }
 .guide-home__card .experience__image {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1; /* samain sama card lain (square) */
 }
 .guide-home__tag {
   font-size: var(--fs-label);

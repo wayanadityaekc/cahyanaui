@@ -1692,7 +1692,9 @@ a.tripbar--promo {
 .experience__card {
   display: flex;
   flex-direction: column;
-  border-radius: 5px;
+  border-radius: 16px;
+  /* frame putih tipis di sekeliling foto (foto ke-inset + membulat di dalam card) */
+  padding: 5px;
   overflow: hidden;
   background-color: #fff;
   box-shadow: var(--shadow-card);
@@ -1700,6 +1702,8 @@ a.tripbar--promo {
 .experience__image {
   position: relative;
   aspect-ratio: 1 / 1;
+  border-radius: 11px;
+  overflow: hidden;
   background-color: var(--color-green);
   background-size: cover;
   background-position: center;
@@ -1975,7 +1979,9 @@ a.tripbar--promo {
   display: flex;
   flex-direction: column;
   border: 1.5px solid transparent;
-  border-radius: 12px;
+  border-radius: 16px;
+  /* frame putih tipis di sekeliling foto (senada .experience__card) */
+  padding: 5px;
   overflow: hidden;
   box-shadow: 0 6px 16px rgba(31, 61, 43, 0.06);
   margin-top: 1.5rem;
@@ -1987,6 +1993,8 @@ a.tripbar--promo {
 .villa__image {
   position: relative;
   aspect-ratio: 16 / 10;
+  border-radius: 11px;
+  overflow: hidden;
   background-color: var(--color-green);
   background-size: cover;
   background-position: center;
@@ -7396,11 +7404,7 @@ button.pick-cat {
    - slider activities/performance: judul di foto dihapus (cukup slider-label), full + margin tipis
    - villa card full-bleed, gold edge dibuang, margin mepet, 1 kolom di HP
    - semua garis gold antar section dihapus (divider ::before + border section) */
-.experience__card,
-.experience__image,
-.stop__image,
-.villa__card,
-.villa__image {
+.stop__image {
   border-radius: 0;
 }
 /* garis gold antar section OFF */

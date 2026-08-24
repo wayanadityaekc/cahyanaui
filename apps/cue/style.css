@@ -6661,13 +6661,15 @@ button.pick-cat {
   padding: calc(var(--nav-h, 57.6px) + 2.2rem) 0 3.5rem;
 }
 .mytrips__container {
-  width: min(760px, 92%);
+  width: min(960px, 92%);
   margin: 0 auto;
 }
 .mytrips__title {
-  font-family: var(--font-head);
-  font-weight: 600;
-  font-size: 2rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 4vw, 2.4rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   color: var(--color-green);
   margin: 0 0 1.2rem;
 }
@@ -6696,8 +6698,10 @@ button.pick-cat {
   padding: 0.6rem 0.35rem;
   margin-right: 0.6rem;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
-  font-weight: 600;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--color-muted);
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -6711,10 +6715,10 @@ button.pick-cat {
 .mtc-daygroup { margin-bottom: 1.3rem; }
 .mtc-daygroup__date {
   font-size: var(--fs-label);
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--color-gold-d);
   margin: 0 0 0.6rem;
 }
 /* item card */
@@ -6739,6 +6743,15 @@ button.pick-cat {
   color: var(--color-gold-d);
 }
 .mtc-item__icon svg { width: 22px; height: 22px; }
+/* thumbnail foto card (day items) — gantiin ikon SVG kalau ada gambar */
+.mtc-item__icon--photo {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background-color: var(--color-cream);
+  background-size: cover;
+  background-position: center;
+}
 .mtc-item__body { flex: 1 1 auto; min-width: 0; }
 .mtc-item__title {
   font-weight: 600;
@@ -6754,6 +6767,8 @@ button.pick-cat {
   flex: 0 0 auto;
   text-align: right;
   white-space: nowrap;
+  font-weight: 700;
+  color: var(--color-gold-d);
 }
 .mtc-item__del {
   flex: 0 0 auto;
@@ -6780,22 +6795,33 @@ button.pick-cat {
 .mtc-total {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  border-top: 1px solid var(--line);
-  padding-top: 1rem;
-  margin-top: 0.4rem;
+  align-items: center;
+  background: var(--color-cream);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  margin-top: 0.8rem;
 }
 .mtc-total__label {
-  font-weight: 600;
+  font-weight: 800;
+  font-size: var(--fs-small);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--color-green);
 }
 .mtc-total__val {
-  font-size: 1.15rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-gold-d);
 }
 .mtc-total__val .price-cur { color: var(--color-gold); }
 /* buttons + notes */
-.mtc-pay { width: 100%; margin-top: 1.2rem; }
+.mtc-pay {
+  width: 100%;
+  margin-top: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+}
 .mtc-note {
   font-size: var(--fs-small);
   color: var(--color-muted);
@@ -7605,24 +7631,22 @@ section.faq::before,
 }
 
 /* --- "See all" button beneath the grid (grid width, tight above, room below) --- */
-.btn-seeall {
-  display: block;
-  width: min(1200px, 100%);
-  margin: 1rem auto 0;
-  padding: 0.9rem 1rem;
-  text-align: center;
-  border: 1px solid var(--color-green);
+/* Pill "View all …" — inline (nggak full-width), dipakai di section Explore */
+.btn-pill {
+  display: inline-block;
+  padding: 0.85rem 1.9rem;
   border-radius: 999px;
+  border: 1px solid var(--color-gold);
   background: #fff;
-  color: var(--color-green);
+  color: var(--color-gold-d);
   font-family: var(--font-body);
-  font-size: var(--fs-strong);
   font-weight: 600;
+  font-size: 0.85rem;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-.btn-seeall:hover {
-  background: var(--color-green);
+.btn-pill:hover {
+  background: var(--color-gold);
   color: #fff;
 }
 
@@ -7778,7 +7802,7 @@ section.faq::before,
 .zone-filter {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: center;
+  justify-content: flex-end; /* tab kategori rata kanan (desktop) */
   gap: 1.6rem;
   max-width: 1000px;
   margin: 0 auto 1.6rem;
@@ -8518,4 +8542,74 @@ section.faq::before,
   max-width: 440px;
   font-size: var(--fs-small);
   color: var(--color-muted);
+}
+
+/* ============================================================
+   HOMEPAGE — section "Explore" bertab (Tours/Experiences/
+   Transfers/Charter). Gantiin 2 section lama; breathing room.
+   ============================================================ */
+.xplore {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4.5rem 1.3rem;
+  text-align: center;
+}
+.xplore__k {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-gold-d);
+}
+.xplore__t {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: var(--fs-h2);
+  color: var(--color-green);
+  margin: 0.6rem 0 0;
+}
+.xplore__sub {
+  margin: 0.7rem auto 0;
+  max-width: 460px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+/* tabs */
+.xtabs {
+  display: flex;
+  justify-content: flex-end; /* tab kategori rata kanan (desktop) */
+  flex-wrap: wrap;
+  gap: 1.8rem;
+  margin: 2rem 0 2.6rem;
+  border-bottom: 1px solid var(--line);
+}
+.xtab {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0 0 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.xtab.is-on {
+  color: var(--color-green);
+  border-bottom-color: var(--color-gold);
+}
+.xpanel[hidden] { display: none; }
+/* kartu di panel: napas lebih longgar dari default */
+.xplore .experience__grid--home4 { gap: 1.4rem; }
+.xplore__more { margin-top: 2.8rem; }
+@media (max-width: 768px) {
+  .xplore { padding: 3.2rem 1.1rem; }
+  .xtabs { justify-content: flex-start; gap: 1.1rem; margin: 1.4rem 0 1.8rem; }
+  .xplore .experience__grid--home4 { gap: 0.9rem; }
+  .xplore__more { margin-top: 2rem; }
 }

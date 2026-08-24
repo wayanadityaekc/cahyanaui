@@ -884,6 +884,7 @@ function cartFlatten(state) {
     const p = cartDayPrice(d);
     rows.push({ ref: { type: "day", idx }, kind, title: cartDayTitle(d),
       desc: (CART_CAT_DESC[cat] || "Experience") + " · " + cartGuestsOf(d) + " guests",
+      img: (ITEM_CARD[d.items[0]] || {}).img || "",
       date: d.date || "", usd: p.usd, idr: p.idr });
   });
   (state.transfers || []).forEach((tr, idx) => {
@@ -3440,8 +3441,11 @@ function initMyTripsCart() {
   };
 
   const rowCardHTML = (r, removable) => {
+    const iconHTML = r.img
+      ? '<span class="mtc-item__icon mtc-item__icon--photo" style="background-image:url(assets/images/' + r.img + ')"></span>'
+      : '<span class="mtc-item__icon">' + cartIcon(r.kind) + "</span>";
     return '<div class="mtc-item">' +
-      '<span class="mtc-item__icon">' + cartIcon(r.kind) + "</span>" +
+      iconHTML +
       '<div class="mtc-item__body">' +
         '<p class="mtc-item__title">' + escHtml(r.title) + "</p>" +
         '<p class="mtc-item__desc">' + escHtml(r.desc) + "</p>" +
@@ -4887,6 +4891,23 @@ function initTourZoneFilter() {
   });
 }
 
+// Homepage "Explore" section: tab kategori (Tours/Experiences/Transfers/Charter)
+// -> tampilin satu panel, sembunyiin sisanya. Kartu di panel tersembunyi tetap
+// ke-wire (booking/harga) karena querySelector-nya global, cuma di-hidden aja.
+function initExploreTabs() {
+  const sec = document.querySelector("#explore");
+  if (!sec) return;
+  const tabs = sec.querySelectorAll(".xtab");
+  const panels = sec.querySelectorAll(".xpanel");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.toggle("is-on", t === tab));
+      const key = tab.dataset.xtab;
+      panels.forEach((pnl) => { pnl.hidden = pnl.dataset.xpanel !== key; });
+    });
+  });
+}
+
 async function initPage() {
   captureMagicToken();
   applyTourContext(); // override data-item dari ?from SEBELUM loadPartials nyalin ke modal
@@ -4900,6 +4921,7 @@ async function initPage() {
   initBookBar(); // bar harga+tombol nempel bawah (mobile) - setelah sidebar kebangun
   initSlider();
   initTourSlider();
+  initExploreTabs();
   initGuideHome();
   initGuidePage();
   initTransferPicker();

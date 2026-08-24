@@ -2086,7 +2086,7 @@ a.tripbar--promo {
 /* Route & Transfer accordion */
 /* Guest reviews */
 .reviews {
-  padding: 3rem 1.5rem;
+  padding: 4rem 1.5rem;
 }
 .reviews__intro {
   max-width: 620px;
@@ -3952,7 +3952,7 @@ a.footer__contact-item:hover {
    Kartu reuse .experience__card (foto homepage). Slider pakai mesin yang sama
    (.experience__grid--slider + initTourSlider). Di HP menu jadi baris atas. */
 .guide-home {
-  padding: 3rem 1.5rem;
+  padding: 4rem 1.5rem;
 }
 .guide-home__inner {
   max-width: 1200px;
@@ -6150,7 +6150,7 @@ button.pick-cat {
   position: relative;
   display: inline-flex;
   align-items: center;
-  color: var(--color-green);
+  color: var(--color-gold);
   margin-right: 0.85rem;
   transition: color 0.2s ease;
 }
@@ -6158,8 +6158,8 @@ button.pick-cat {
   color: var(--color-gold-d);
 }
 .navbar__cart-icon {
-  width: 23px;
-  height: 23px;
+  width: 21px;
+  height: 21px;
 }
 .navbar__cart-badge {
   position: absolute;
@@ -7444,21 +7444,17 @@ section.faq::before,
 .villas {
   border-top: none;
   border-bottom: none;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding: 4rem 1.75rem; /* contained + napas (dulu full-bleed mepet) */
 }
 .drivers {
   border-top: none;
 }
-/* villa card: full-bleed, flat, gold edge dibuang, mepet */
+/* villa card: pakai frame gold-edge bawaan (base), cuma matiin margin-top grid */
 .villa__card {
-  border: none;
-  background: #fff;
-  box-shadow: none;
   margin-top: 0;
 }
 .villas__grid {
-  gap: 10px;
+  gap: 1.5rem;
 }
 @media (max-width: 992px) {
   .villas__grid {

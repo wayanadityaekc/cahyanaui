@@ -26,7 +26,14 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=334" />
+    <link
+      rel="preload"
+      href="assets/fonts/playfair-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="style.css?v=338" />
     <link
       rel="canonical"
       href="https://cahyanaubudexperience.com/activities.html"
@@ -103,23 +110,16 @@
     <section class="experience experience--alt" id="activities">
       <div class="lhead">
         <h2 class="section__title">All Activities &amp; Performances</h2>
-        <div class="zone-filter" role="tablist" aria-label="Filter activities by type">
-        <button type="button" class="zone-chip is-active" data-zone="all">All</button>
-        <button type="button" class="zone-chip" data-zone="adventure">Adventure</button>
-        <button type="button" class="zone-chip" data-zone="culture">Culture</button>
-        <button type="button" class="zone-chip" data-zone="wildlife">Wildlife</button>
-      </div>
+        <div class="zone-filter" aria-label="Jump to activity category">
+          <a class="zone-chip" href="#cat-adventure">Adventure</a>
+          <a class="zone-chip" href="#cat-culture">Culture & Wildlife</a>
+        </div>
       </div>
 
-      <div class="experience__grid experience__grid--home4">
-        <a class="experience__card" data-zone="culture" href="attractions/barong-dance.html">
-          <div class="experience__image"><img src="assets/images/barong-dance-card.webp" alt="Barong Dance - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="862" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Barong Dance</h3>
-            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~1 hour</span></div>
-            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Barong Dance">$10</span></div></div>
-          </div>
-        </a>
+      <section class="catsec" id="cat-adventure">
+        <h2 class="catsec__title">Adventure</h2>
+        <p class="catsec__desc">Rafting, ATV trails, jungle swings, watersports, and sunrise treks - half-day adrenaline within reach of Ubud, transport included.</p>
+        <div class="experience__grid experience__grid--home4">
         <a class="experience__card" data-zone="adventure" href="attractions/atv-ride.html">
           <div class="experience__image"><img src="assets/images/ubud-atv-adventure-card.webp" alt="ATV Ride - Bali activity with Ubud pick-up" loading="lazy" width="600" height="600" /></div>
           <div class="experience__body">
@@ -160,19 +160,34 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Mount Batur Trekking">$55</span></div></div>
           </div>
         </a>
+        <a class="experience__card" data-zone="adventure" href="attractions/watersport.html">
+          <div class="experience__image"><img src="assets/images/watersport-card.jpg" alt="Watersport - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="908" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Watersport</h3>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Watersport">$45</span></div></div>
+          </div>
+        </a>
+      </div>
+      </section>
+
+      <section class="catsec" id="cat-culture">
+        <h2 class="catsec__title">Culture & Wildlife</h2>
+        <p class="catsec__desc">Traditional dance, a hands-on cooking class, and Bali's zoo and bird park - easy half-days that work for any age.</p>
+        <div class="experience__grid experience__grid--home4">
+        <a class="experience__card" data-zone="culture" href="attractions/barong-dance.html">
+          <div class="experience__image"><img src="assets/images/barong-dance-card.webp" alt="Barong Dance - Bali activity with Ubud pick-up" loading="lazy" width="1536" height="862" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Barong Dance</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~1 hour</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Barong Dance">$10</span></div></div>
+          </div>
+        </a>
         <a class="experience__card" data-zone="culture" href="attractions/cooking-class.html">
           <div class="experience__image"><img src="assets/images/cooking-class-card.webp" alt="Cooking Class - Bali activity with Ubud pick-up" loading="lazy" width="1920" height="1280" /></div>
           <div class="experience__body">
             <h3 class="experience__name">Cooking Class</h3>
             <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>~5 hours</span></div>
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Cooking Class">$35</span></div></div>
-          </div>
-        </a>
-        <a class="experience__card" data-zone="adventure" href="attractions/watersport.html">
-          <div class="experience__image"><img src="assets/images/watersport-card.jpg" alt="Watersport - Bali activity with Ubud pick-up" loading="lazy" width="1200" height="908" /></div>
-          <div class="experience__body">
-            <h3 class="experience__name">Watersport</h3>
-            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Watersport">$45</span></div></div>
           </div>
         </a>
         <a class="experience__card" data-zone="wildlife" href="attractions/bali-zoo.html">
@@ -192,6 +207,7 @@
           </div>
         </a>
       </div>
+      </section>
     </section>
 
     <section class="info">
@@ -240,7 +256,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=334"></script>
-    <script src="script.js?v=334"></script>
+    <script src="data.js?v=338"></script>
+    <script src="script.js?v=338"></script>
   </body>
 </html>

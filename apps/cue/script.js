@@ -97,6 +97,74 @@ const ITEM_CARD = {
   "Bali Bird Park": { img: "bali-bird-park-card.webp", desc: "Over 1,000 birds, aviaries, and free-flight shows near Ubud." }
 };
 
+// Peta item buat section "You might also like" di halaman detail (initRelated).
+// Digenerate dari kartu listing: zone = section kategori, p = harga USD statis
+// (0 = tanpa harga, mis. destinations -> kartu tampil tanpa baris harga).
+const RELATED_ITEMS = [
+  { href: "ubud-tour.html", type: "tour", zone: "ubud", name: "Ubud Tour", img: "ubud-tour-card.jpg", meta: "6&ndash;8 hours", p: 45, priceName: "Ubud Tour" },
+  { href: "ubud-culture-day.html", type: "tour", zone: "ubud", name: "Ubud Culture Day", img: "ubud-culture-day-card.jpg", meta: "6&ndash;8 hours", p: 55, priceName: "Ubud Culture Day" },
+  { href: "ubud-rafting-adventure.html", type: "tour", zone: "ubud", name: "Ubud Rafting Adventure", img: "ubud-rafting-adventure-card.jpg", meta: "6&ndash;8 hours", p: 75, priceName: "Ubud Rafting Adventure" },
+  { href: "ubud-atv-adventure.html", type: "tour", zone: "ubud", name: "Ubud ATV Adventure", img: "ubud-atv-adventure-card.webp", meta: "6&ndash;8 hours", p: 80, priceName: "Ubud ATV Adventure" },
+  { href: "south-coast-sunset-kecak.html", type: "tour", zone: "south", name: "South Bali &amp; Sunset Kecak", img: "south-coast-sunset-kecak-card.jpg", meta: "9&ndash;11 hours", p: 85, priceName: "South Bali &amp; Sunset Kecak" },
+  { href: "hidden-beaches-cliffs.html", type: "tour", zone: "south", name: "Bali Hidden Beaches and Cliffs", img: "south-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 45, priceName: "Bali Hidden Beaches and Cliffs" },
+  { href: "lempuyang-tirta-gangga.html", type: "tour", zone: "east", name: "Lempuyang &amp; Tirta Gangga", img: "east-bali-tour-card.jpg", meta: "8&ndash;10 hours", p: 55, priceName: "Lempuyang &amp; Tirta Gangga" },
+  { href: "kintamani-sunrise-penglipuran.html", type: "tour", zone: "kintamani", name: "Kintamani Sunrise &amp; Penglipuran", img: "jeep-batur-card.webp", meta: "10&ndash;11 hours", p: 85, priceName: "Kintamani Sunrise &amp; Penglipuran" },
+  { href: "batur-sunrise-adrenaline.html", type: "tour", zone: "kintamani", name: "Batur Sunrise &amp; Adrenaline", img: "batur-sunrise-adrenaline-card.jpg", meta: "8&ndash;10 hours", p: 85, priceName: "Batur Sunrise &amp; Adrenaline" },
+  { href: "ulun-danu-tanah-lot.html", type: "tour", zone: "west", name: "Ulun Danu Beratan &amp; Tanah Lot Temple", img: "west-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 60, priceName: "Ulun Danu Beratan &amp; Tanah Lot Temple" },
+  { href: "munduk-twin-lakes.html", type: "tour", zone: "west", name: "Munduk Waterfalls &amp; Twin Lakes", img: "north-bali-tour-card.jpg", meta: "10&ndash;12 hours", p: 65, priceName: "Munduk Waterfalls &amp; Twin Lakes" },
+  { href: "lovina-dolphin-sekumpul.html", type: "tour", zone: "north", name: "Lovina Dolphin &amp; Sekumpul Waterfall", img: "lovina-dolphin-sekumpul-card.jpg", meta: "11&ndash;12 hours", p: 95, priceName: "Lovina Dolphin &amp; Sekumpul Waterfall" },
+  { href: "attractions/atv-ride.html", type: "activity", zone: "adventure", name: "ATV Ride", img: "ubud-atv-adventure-card.webp", meta: "~2 hours", p: 40, priceName: "ATV" },
+  { href: "attractions/rafting.html", type: "activity", zone: "adventure", name: "Rafting", img: "rafting.webp", meta: "~2 hours", p: 35, priceName: "Rafting" },
+  { href: "attractions/jungle-swing.html", type: "activity", zone: "adventure", name: "Jungle Swing", img: "jungle-swing-card.jpg", meta: "~1&ndash;2 hours", p: 25, priceName: "Swing" },
+  { href: "attractions/jeep-sunrise.html", type: "activity", zone: "adventure", name: "Jeep Sunrise", img: "jeep-batur-card.webp", meta: "~7 hours", p: 50, priceName: "Jeep Sunrise" },
+  { href: "attractions/mount-batur-trekking.html", type: "activity", zone: "adventure", name: "Mount Batur Trekking", img: "mount-batur-sunrise.webp", meta: "~8 hours", p: 55, priceName: "Mount Batur Trekking" },
+  { href: "attractions/watersport.html", type: "activity", zone: "adventure", name: "Watersport", img: "watersport-card.jpg", meta: "", p: 45, priceName: "Watersport" },
+  { href: "attractions/barong-dance.html", type: "activity", zone: "culture", name: "Barong Dance", img: "barong-dance-card.webp", meta: "~1 hour", p: 10, priceName: "Barong Dance" },
+  { href: "attractions/cooking-class.html", type: "activity", zone: "culture", name: "Cooking Class", img: "cooking-class-card.webp", meta: "~5 hours", p: 35, priceName: "Cooking Class" },
+  { href: "attractions/bali-zoo.html", type: "activity", zone: "wildlife", name: "Bali Zoo", img: "bali-zoo-card.webp", meta: "~2&ndash;3 hours", p: 40, priceName: "Bali Zoo" },
+  { href: "attractions/bali-bird-park.html", type: "activity", zone: "wildlife", name: "Bali Bird Park", img: "bali-bird-park-card.webp", meta: "~2&ndash;3 hours", p: 28, priceName: "Bali Bird Park" },
+  { href: "attractions/uluwatu-temple.html", type: "destination", zone: "temple", name: "Uluwatu Cliff Temple", img: "uluwatu-temple-top.webp", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/tanah-lot.html", type: "destination", zone: "temple", name: "Tanah Lot Sunset Temple", img: "tanah-lot.webp", meta: "West Bali", p: 0, priceName: "" },
+  { href: "attractions/besakih.html", type: "destination", zone: "temple", name: "Besakih - The Mother Temple", img: "besakih-temple-bali.webp", meta: "East Bali", p: 0, priceName: "" },
+  { href: "attractions/tirta-empul.html", type: "destination", zone: "temple", name: "Tirta Empul Holy Water Temple", img: "tirta-empul-hero.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+  { href: "attractions/goa-gajah.html", type: "destination", zone: "temple", name: "Goa Gajah - The Elephant Cave", img: "goa-gajah-hero.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+  { href: "attractions/gunung-kawi.html", type: "destination", zone: "temple", name: "Gunung Kawi Temple", img: "gunung-kawi-hero.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+  { href: "attractions/lempuyang-temple.html", type: "destination", zone: "temple", name: "Lempuyang Temple - Gates of Heaven", img: "lempuyang.webp", meta: "East Bali", p: 0, priceName: "" },
+  { href: "attractions/ulun-danu-beratan.html", type: "destination", zone: "temple", name: "Ulun Danu Beratan Lake Temple", img: "ulun-danu-beratan-hero.webp", meta: "Central Highlands", p: 0, priceName: "" },
+  { href: "attractions/taman-ayun.html", type: "destination", zone: "temple", name: "Taman Ayun Royal Temple", img: "taman-ayun-hero.jpg", meta: "West Bali", p: 0, priceName: "" },
+  { href: "attractions/pura-batuan.html", type: "destination", zone: "temple", name: "Pura Batuan Temple", img: "pura-batuan-temple.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+  { href: "attractions/tegenungan-waterfall.html", type: "destination", zone: "waterfall", name: "Tegenungan Waterfall", img: "tegenungan-waterfall-hero.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+  { href: "attractions/gitgit-waterfall.html", type: "destination", zone: "waterfall", name: "Git Git Waterfall", img: "waterfall.webp", meta: "North Bali", p: 0, priceName: "" },
+  { href: "attractions/sekumpul-waterfall.html", type: "destination", zone: "waterfall", name: "Sekumpul Waterfall", img: "lovina-dolphin-sekumpul-card.jpg", meta: "North Bali", p: 0, priceName: "" },
+  { href: "attractions/banyumala-waterfall.html", type: "destination", zone: "waterfall", name: "Banyumala Twin Waterfall", img: "waterfall.jpg", meta: "North Bali", p: 0, priceName: "" },
+  { href: "attractions/munduk.html", type: "destination", zone: "waterfall", name: "Munduk Waterfalls", img: "tibumana.webp", meta: "North Bali", p: 0, priceName: "" },
+  { href: "attractions/pandawa-beach.html", type: "destination", zone: "beach", name: "Pandawa Beach", img: "green-cliff-coast-bali.webp", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/balangan-beach.html", type: "destination", zone: "beach", name: "Balangan Beach", img: "surfers-beach.webp", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/bingin-beach.html", type: "destination", zone: "beach", name: "Bingin Beach", img: "kelingking-beach.jpg", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/green-bowl-beach.html", type: "destination", zone: "beach", name: "Green Bowl Beach", img: "cliff-beach.webp", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/tegal-wangi-beach.html", type: "destination", zone: "beach", name: "Tegal Wangi Beach", img: "kelingking-beach.jpg", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/tegalalang-rice-terrace.html", type: "destination", zone: "rice", name: "Tegalalang Rice Terrace", img: "tegalalang-rice-terrace-hero.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+  { href: "attractions/jatiluwih-rice-terrace.html", type: "destination", zone: "rice", name: "Jatiluwih Rice Terraces", img: "jatiluwih.webp", meta: "West Bali", p: 0, priceName: "" },
+  { href: "attractions/garuda-wisnu-kencana.html", type: "destination", zone: "nature", name: "Garuda Wisnu Kencana (GWK)", img: "gwk-statue-bali.webp", meta: "South Bali", p: 0, priceName: "" },
+  { href: "attractions/ubud-royal-palace.html", type: "destination", zone: "nature", name: "Ubud Royal Palace &amp; Art Market", img: "ubud-saraswati-temple.jpg", meta: "Central Ubud", p: 0, priceName: "" },
+  { href: "attractions/penglipuran.html", type: "destination", zone: "nature", name: "Penglipuran Village", img: "penglipuran-village-view.jpg", meta: "Kintamani", p: 0, priceName: "" },
+  { href: "attractions/handara-gate.html", type: "destination", zone: "nature", name: "Handara Gate", img: "handara-gate.webp", meta: "North Bali", p: 0, priceName: "" },
+  { href: "attractions/tirta-gangga.html", type: "destination", zone: "nature", name: "Tirta Gangga Water Garden", img: "tirtagangga.jpg", meta: "East Bali", p: 0, priceName: "" },
+  { href: "attractions/taman-ujung.html", type: "destination", zone: "nature", name: "Taman Ujung Water Palace", img: "ujung-water-palace-lake-bali.webp", meta: "East Bali", p: 0, priceName: "" },
+  { href: "attractions/twin-lakes.html", type: "destination", zone: "nature", name: "Buyan &amp; Tamblingan Twin Lakes", img: "batur-lake.webp", meta: "North Bali", p: 0, priceName: "" },
+  { href: "attractions/monkey-forest.html", type: "destination", zone: "nature", name: "Sacred Monkey Forest Sanctuary", img: "monkey-forest-hero.jpg", meta: "Central Ubud", p: 0, priceName: "" },
+  { href: "attractions/sangeh-monkey-forest.html", type: "destination", zone: "nature", name: "Sangeh Monkey Forest", img: "monkey.jpg", meta: "West Bali", p: 0, priceName: "" },
+  { href: "attractions/ubud-market.html", type: "destination", zone: "nature", name: "Ubud Traditional Market", img: "ubud-market-hero.jpg", meta: "Central Ubud", p: 0, priceName: "" },
+  { href: "attractions/ubud-arts-crafts.html", type: "destination", zone: "nature", name: "Ubud Arts & Crafts", img: "ubud-arts-crafts-hero.jpg", meta: "Near Ubud", p: 0, priceName: "" },
+];
+const RELATED_ALL = {
+  tour: ["tour.html", "Explore all tours"],
+  activity: ["activities.html", "Explore all activities"],
+  destination: ["destinations.html", "Explore all destinations"]
+};
+
+
+
 // -- itinerary store key
 const ITN_KEY = "cue_itinerary_v1";
 
@@ -4883,19 +4951,113 @@ function initStopContext() {
 
 // Listing pages (tour/experience/destination): filter kategori (client-side, semua card
 // tetap di HTML buat SEO). Card di-filter lewat data-zone; "all" = tampilin semua.
-function initTourZoneFilter() {
+// Halaman detail: section "You might also like" (4 kartu terkait) sebelum footer.
+// Terkait = zone sama duluan, sisa slot diisi harga terdekat dari tipe yang sama.
+function initRelated() {
+  const file = location.pathname.split("/").pop();
+  const me = RELATED_ITEMS.find((it) => it.href.split("/").pop() === file);
+  if (!me) return; // bukan halaman detail yang kemap
+  const mount = document.getElementById("footer-placeholder");
+  if (!mount) return;
+  const pool = RELATED_ITEMS.filter((it) => it.type === me.type && it !== me);
+  const sameZone = pool.filter((it) => it.zone === me.zone);
+  const rest = pool
+    .filter((it) => it.zone !== me.zone)
+    .sort((a, b) => Math.abs(a.p - me.p) - Math.abs(b.p - me.p));
+  const picks = sameZone.concat(rest).slice(0, 4);
+  if (picks.length < 4) return;
+  // halaman attraction hidup di /attractions/ -> link & foto butuh prefix naik satu level
+  const pre = location.pathname.indexOf("/attractions/") !== -1 ? "../" : "";
+  const all = RELATED_ALL[me.type];
+  const cards = picks.map((it) => {
+    const price = it.p
+      ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
+      : "";
+    return '<a class="experience__card' + (it.p ? '' : ' related__card--noprice') + '" href="' + pre + it.href + '">' +
+      '<div class="experience__image"><img src="' + pre + "assets/images/" + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
+      '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
+      '<div class="experience__meta"><span>' + it.meta + "</span></div>" + price + "</div></a>";
+  }).join("");
+  const sec = document.createElement("section");
+  sec.className = "related";
+  sec.innerHTML =
+    '<h2 class="related__title">You might also like</h2>' +
+    '<div class="experience__grid experience__grid--home4">' + cards + "</div>" +
+    '<p class="related__all"><a href="' + pre + all[0] + '">' + all[1] + " &rsaquo;</a></p>";
+  mount.parentNode.insertBefore(sec, mount);
+}
+
+// Listing pages: balikin posisi scroll pas user balik (Back) dari halaman detail.
+// Restore bawaan browser sering meleset di sini karena partial (navbar/footer)
+// di-inject telat — tinggi halaman berubah setelah restore-nya jalan.
+function initScrollRestore() {
+  if (!document.querySelector(".catsec")) return; // cuma listing pages
+  const key = "cue_scroll_" + location.pathname;
+  // simpan posisi terakhir tiap ninggalin halaman (klik kartu = navigasi pergi)
+  window.addEventListener("pagehide", () => {
+    try { sessionStorage.setItem(key, String(window.scrollY)); } catch (e) {}
+  });
+  // restore CUMA kalau datengnya lewat tombol Back/Forward
+  const navEntry = performance.getEntriesByType("navigation")[0];
+  if (!navEntry || navEntry.type !== "back_forward") return;
+  let y = 0;
+  try { y = parseInt(sessionStorage.getItem(key)) || 0; } catch (e) {}
+  if (!y) return;
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  // layout masih gerak (partial/foto) -> ulang beberapa kali sampe stabil
+  const go = () => window.scrollTo(0, y);
+  go();
+  requestAnimationFrame(go);
+  window.addEventListener("load", () => { go(); setTimeout(go, 250); });
+}
+
+// Listing pages (tour/activities/destinations): tab kategori = anchor link.
+// Bar-nya sticky di bawah navbar, klik = smooth scroll ke section-nya, dan
+// tab aktif ngikutin section yang lagi keliatan (scrollspy). Nggak nge-filter.
+function initZoneAnchors() {
+  const bar = document.querySelector(".lhead");
   const wrap = document.querySelector(".zone-filter");
-  if (!wrap) return;
-  const cards = Array.from(document.querySelectorAll(".experience__card[data-zone]"));
-  wrap.addEventListener("click", (e) => {
-    const chip = e.target.closest(".zone-chip");
-    if (!chip) return;
-    const zone = chip.dataset.zone;
-    wrap.querySelectorAll(".zone-chip").forEach((c) => c.classList.toggle("is-active", c === chip));
-    cards.forEach((card) => {
-      card.style.display = zone === "all" || card.dataset.zone === zone ? "" : "none";
+  if (!bar || !wrap) return;
+  const links = Array.from(wrap.querySelectorAll('a.zone-chip[href^="#"]'));
+  if (!links.length) return;
+  const secs = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  if (!secs.length) return;
+
+  // Posisi sticky = tinggi navbar fixed beneran (termasuk tripbar di dalamnya),
+  // biar tetep pas walau promo bar lagi off.
+  const nav = document.querySelector(".navbar");
+  const navH = () => (nav ? nav.offsetHeight : 96);
+  const setOffsets = () => {
+    bar.style.top = navH() + "px";
+    const jump = navH() + bar.offsetHeight + 10;
+    secs.forEach((s) => { s.style.scrollMarginTop = jump + "px"; });
+  };
+  setOffsets();
+  window.addEventListener("resize", setOffsets);
+  // Tripbar di-inject SETELAH init ini jalan -> ukur ulang pas semuanya kelar
+  window.addEventListener("load", setOffsets);
+  setTimeout(setOffsets, 400);
+
+  // Klik tab -> smooth scroll ke section (URL hash ikut keupdate tanpa lompat)
+  links.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const sec = document.querySelector(a.getAttribute("href"));
+      if (!sec) return;
+      e.preventDefault();
+      sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", a.getAttribute("href"));
     });
   });
+
+  // Scrollspy: tab aktif = section terakhir yang udah lewat garis probe
+  const spy = () => {
+    const probe = window.scrollY + navH() + bar.offsetHeight + 40;
+    let cur = secs[0];
+    secs.forEach((s) => { if (s.offsetTop <= probe) cur = s; });
+    links.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === "#" + cur.id));
+  };
+  window.addEventListener("scroll", spy, { passive: true });
+  spy();
 }
 
 // Homepage "Explore" section: tab kategori (Tours/Experiences/Transfers/Charter)
@@ -4929,6 +5091,9 @@ async function initPage() {
   initSlider();
   initTourSlider();
   initExploreTabs();
+  initZoneAnchors();
+  initScrollRestore();
+  initRelated();
   initGuideHome();
   initGuidePage();
   initTransferPicker();
@@ -4964,7 +5129,6 @@ async function initPage() {
   initBookingCustomControls();
   initGlanceHero();
   initDetailsFaqRow();
-  initTourZoneFilter();
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

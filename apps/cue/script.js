@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 69;
+const PARTIALS_VERSION = 70;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2624,11 +2624,16 @@ function initDrivers() {
   const mDesc = document.getElementById("driver-modal-desc");
   const mReviews = document.getElementById("driver-modal-reviews");
 
+  const mAvatar = modal.querySelector(".driver-card__avatar");
   cards.forEach((card) => {
+    // Avatar inisial: huruf depan nama gantiin ikon placeholder (sampai foto asli ada)
+    const av = card.querySelector(".driver-card__avatar");
+    if (av && card.dataset.name) av.textContent = card.dataset.name.charAt(0);
     card.addEventListener("click", () => {
       const detail = card.querySelector(".driver-card__detail");
       mName.textContent = card.dataset.name || "";
       mTagline.textContent = card.dataset.tagline || "";
+      if (mAvatar) mAvatar.textContent = (card.dataset.name || "").charAt(0);
       mRating.innerHTML = card.querySelector(".driver-card__rating").innerHTML;
       mDesc.textContent = detail ? (detail.dataset.desc || "") : "";
       mReviews.innerHTML = detail ? detail.querySelector(".driver-detail__reviews").innerHTML : "";

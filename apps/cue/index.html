@@ -30,7 +30,7 @@
     />
     <!-- Preload foto tile pertama (LCP hero-tiles) -->
     <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
-    <link rel="stylesheet" href="style.css?v=332" />
+    <link rel="stylesheet" href="style.css?v=333" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -118,14 +118,18 @@
 
         <!-- Explore: satu section bertab (Tours / Experiences / Transfers / Charter) -->
     <section class="xplore" id="explore">
-      <span class="xplore__k">Plan your days</span>
-      <h2 class="xplore__t">Explore Bali</h2>
-      <p class="xplore__sub">Pick a category - private tours, guided experiences, or the best destinations near Ubud. Tap a card for details.</p>
-
-      <div class="xtabs" role="tablist">
-        <button type="button" class="xtab is-on" data-xtab="tours" role="tab">Tours</button>
-        <button type="button" class="xtab" data-xtab="exp" role="tab">Experiences</button>
-        <button type="button" class="xtab" data-xtab="destinations" role="tab">Destinations</button>
+      <!-- Header row (V1): judul kiri, tab kategori kanan sebaris -->
+      <div class="xplore__head">
+        <div class="xplore__intro">
+          <span class="xplore__k">Plan your days</span>
+          <h2 class="xplore__t">Explore Bali</h2>
+          <p class="xplore__sub">Pick a category - private tours, guided experiences, or the best destinations near Ubud. Tap a card for details.</p>
+        </div>
+        <div class="xtabs" role="tablist">
+          <button type="button" class="xtab is-on" data-xtab="tours" role="tab">Tours</button>
+          <button type="button" class="xtab" data-xtab="exp" role="tab">Experiences</button>
+          <button type="button" class="xtab" data-xtab="destinations" role="tab">Destinations</button>
+        </div>
       </div>
 
       <div class="xpanel" data-xpanel="tours">
@@ -454,89 +458,24 @@
       </a>
     </section>
 
-    <section class="villas" id="villas">
-      <h2 class="section__title">
-        Our Villas in Ubud<small class="villas__sub"
-          >ubudprivatevillas.com</small
-        >
-      </h2>
-      <div class="villas__grid">
-        <article class="villa__card">
-          <div
-            class="villa__image"
-            style="background-image: url(assets/images/cahyana-tibuah.webp)"
-          >
-            <div class="villa__rating">
-              <span class="villa__score"
-                ><svg
-                  class="villa__star"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M12 2.4l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.9l-5.9 3.1 1.12-6.57L2.45 9.78l6.6-.96z"
-                  /></svg
-                >4.96</span
-              >
-              <span class="villa__ratesrc">rating via Airbnb</span>
-            </div>
-          </div>
-          <div class="villa__body">
-            <h3 class="villa__name">Cahyana Tibuah</h3>
-            <p class="villa__desc">
-              A peaceful private villa surrounded by rice fields, perfect for a
-              quiet Ubud escape with pool and full privacy.
-            </p>
-            <div class="villa__footer">
-              <div class="villa__price">
-                <span class="price" data-price="Cahyana Tibuah">$80</span> per
-                night
-              </div>
-              <a href="#" class="villa__btn" target="_blank" rel="noopener"
-                >View Villa</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="villa__card">
-          <div
-            class="villa__image"
-            style="
-              background-image: url(&quot;assets/images/cahyana-house.webp&quot;);
-            "
-          >
-            <div class="villa__rating">
-              <span class="villa__score"
-                ><svg
-                  class="villa__star"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M12 2.4l2.95 5.98 6.6.96-4.77 4.65 1.13 6.57L12 17.9l-5.9 3.1 1.12-6.57L2.45 9.78l6.6-.96z"
-                  /></svg
-                >4.96</span
-              >
-              <span class="villa__ratesrc">rating via Airbnb</span>
-            </div>
-          </div>
-          <div class="villa__body">
-            <h3 class="villa__name">Cahyana House</h3>
-            <p class="villa__desc">
-              A spacious family-friendly home close to central Ubud, blending
-              modern comfort with traditional Balinese charm.
-            </p>
-            <div class="villa__footer">
-              <div class="villa__price">
-                <span class="price" data-price="Cahyana House">$95</span> per
-                night
-              </div>
-              <a href="#" class="villa__btn" target="_blank" rel="noopener"
-                >View Villa</a
-              >
-            </div>
-          </div>
-        </article>
+    <!-- Villa promo band (Opsi C): 2 foto villa jadi background + overlay,
+         satu CTA keluar ke ubudprivatevillas.com. Tanpa harga/tombol per villa. -->
+    <section class="vpromo" id="villas">
+      <div class="vpromo__bg" aria-hidden="true">
+        <div style="background-image: url(assets/images/cahyana-house.webp)"></div>
+        <div style="background-image: url(assets/images/cahyana-tibuah.webp)"></div>
+      </div>
+      <div class="vpromo__inner">
+        <span class="vpromo__kick">Stay with us in Ubud</span>
+        <h2 class="vpromo__title">Ubud Private Villas</h2>
+        <p class="vpromo__desc">
+          Two private pool villas - Cahyana House and Cahyana Tibuah - hosted by
+          the same family behind your tours. Ask about tour + stay perks.
+        </p>
+        <a class="vpromo__cta" href="https://ubudprivatevillas.com" target="_blank" rel="noopener">
+          Visit ubudprivatevillas.com
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
       </div>
     </section>
 
@@ -656,7 +595,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=332"></script>
-    <script src="script.js?v=332"></script>
+    <script src="data.js?v=333"></script>
+    <script src="script.js?v=333"></script>
   </body>
 </html>

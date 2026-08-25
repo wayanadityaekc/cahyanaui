@@ -61,7 +61,6 @@ body {
 }
 .about__text p,
 .experience__desc,
-.villa__desc,
 .subhero__text,
 .highlight__desc,
 .contact__lead,
@@ -77,7 +76,6 @@ body {
 
 /* Judul card & slider - 1 gaya, ngikut font judul card */
 .experience__name,
-.villa__name,
 .title {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -1805,7 +1803,6 @@ a.tripbar--promo {
   );
 }
 .photo-titled .experience__name,
-.photo-titled .villa__name,
 .photo-titled .highlight__title {
   position: relative;
   z-index: 1;
@@ -1961,126 +1958,6 @@ a.tripbar--promo {
   }
 }
 
-/* Villas (homepage) */
-.villas {
-  padding: 2.5rem 1.75rem 3rem;
-  background-color: var(--color-cream);
-  border-top: 1px solid rgba(201, 164, 92, 0.4);
-  border-bottom: 1px solid rgba(201, 164, 92, 0.4);
-}
-.villas__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.villa__card {
-  display: flex;
-  flex-direction: column;
-  border: 1.5px solid transparent;
-  border-radius: 16px;
-  /* frame putih tipis di sekeliling foto (senada .experience__card) */
-  padding: 5px;
-  overflow: hidden;
-  box-shadow: 0 6px 16px rgba(31, 61, 43, 0.06);
-  margin-top: 1.5rem;
-  background:
-    linear-gradient(#fff, #fff) padding-box,
-    var(--gold-edge)
-      border-box;
-}
-.villa__image {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  border-radius: 11px;
-  overflow: hidden;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-}
-/* Sub-label URL di bawah judul villa */
-.villas__sub {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: #8a8172;
-}
-/* Badge rating (pojok kanan atas foto) */
-.villa__rating {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.12rem;
-  padding: 0.35rem 0.55rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.93);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
-}
-.villa__score {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: var(--fs-body);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--color-green);
-}
-.villa__star {
-  width: 14px;
-  height: 14px;
-  fill: var(--color-gold);
-}
-.villa__ratesrc {
-  font-size: var(--fs-label);
-  font-weight: 500;
-  line-height: 1;
-  color: #8a8172;
-}
-.villa__body {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 1.5rem;
-}
-.villa__name {
-  margin-bottom: 0.5rem;
-}
-.villa__desc {
-  color: var(--color-muted-2);
-}
-.villa__footer {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.9rem;
-  margin-top: auto;
-  padding-top: 1.5rem;
-}
-.villa__price {
-  color: var(--color-gold);
-}
-.villa__btn {
-  display: block;
-  padding: 0.7rem 1.2rem;
-  border-radius: 999px;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  color: var(--color-green);
-  background-color: #fff;
-  border: 1px solid var(--color-green);
-}
-.villa__btn:hover {
-  background-color: var(--color-green);
-  color: #fff;
-}
 
 
 /* Route & Transfer accordion */
@@ -2416,8 +2293,12 @@ a.tripbar--promo {
   height: 60px;
   margin-bottom: 0.9rem;
   border-radius: 50%;
-  color: var(--color-green);
-  background-color: rgba(201, 164, 92, 0.18);
+  /* Avatar inisial (Opsi C): huruf depan nama, gradasi emas — diisi initDrivers */
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #fff;
+  background: linear-gradient(135deg, #c9a45c, #e6cf97);
 }
 .driver-card__avatar svg {
   width: 32px;
@@ -2526,13 +2407,6 @@ section.faq::before,
 .transfer-hero::before,
 .transfer-hero + section::before,
 .trust::before {
-  content: none;
-}
-/* Panel villa udah punya border gold sendiri → buang divider di atas panel & di section
-   tepat setelahnya (guides / drivers) biar garisnya nggak dobel. */
-.villas::before,
-#villas + section::before,
-#villas + [id$="-placeholder"] > section::before {
   content: none;
 }
 /* Section Drivers (cream) udah punya border gold sendiri (atas & bawah) → buang
@@ -3959,13 +3833,13 @@ a.footer__contact-item:hover {
   margin: 0 auto;
 }
 .guide-home__head {
-  text-align: center;
+  text-align: left;
   margin-bottom: 1.75rem;
 }
 .guide-home__sub {
   max-width: 600px;
-  margin: 0.6rem auto 0;
-  text-align: center;
+  margin: 0.6rem 0 0;
+  text-align: left;
   color: var(--color-muted-2);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -4575,9 +4449,6 @@ a.footer__contact-item:hover {
   .about__boxes {
     min-height: 200px;
   }
-  .villas__grid {
-    grid-template-columns: 1fr;
-  }
   .footer__top {
     grid-template-columns: 1fr 1fr;
   }
@@ -4678,7 +4549,6 @@ a.footer__contact-item:hover {
 }
 /* Hover lift halus buat card (naik dikit + shadow lembut) */
 .experience__card,
-.villa__card,
 .review-card,
 .about__content {
   transition:
@@ -4686,7 +4556,6 @@ a.footer__contact-item:hover {
     box-shadow 0.28s ease;
 }
 .experience__card:hover,
-.villa__card:hover,
 .review-card:hover,
 .about__content:hover {
   transform: translateY(-4px);
@@ -4766,7 +4635,6 @@ a.footer__contact-item:hover {
     transition: none;
   }
   .experience__card:hover,
-  .villa__card:hover,
   .review-card:hover,
   .about__content:hover,
   .booking__btn:hover {
@@ -7441,25 +7309,8 @@ section.faq::before,
 .highlight + section::before {
   content: none;
 }
-.villas {
-  border-top: none;
-  border-bottom: none;
-  padding: 4rem 1.75rem; /* contained + napas (dulu full-bleed mepet) */
-}
 .drivers {
   border-top: none;
-}
-/* villa card: pakai frame gold-edge bawaan (base), cuma matiin margin-top grid */
-.villa__card {
-  margin-top: 0;
-}
-.villas__grid {
-  gap: 1.5rem;
-}
-@media (max-width: 992px) {
-  .villas__grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* ============================================================
@@ -7491,7 +7342,6 @@ section.faq::before,
 .trip__name,
 .chdur__name,
 .experience__name,
-.villa__name,
 .title {
   font-family: var(--font-head);
   font-weight: 600;
@@ -8548,7 +8398,16 @@ section.faq::before,
   max-width: 1200px;
   margin: 0 auto;
   padding: 4.5rem 1.3rem;
-  text-align: center;
+  text-align: left; /* aturan V1: konten grid rata kiri */
+}
+/* Header row V1: intro (kick+judul+sub) kiri, tab kanan sebaris */
+.xplore__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.2rem;
 }
 .xplore__k {
   display: block;
@@ -8563,23 +8422,19 @@ section.faq::before,
   font-weight: 600;
   font-size: var(--fs-h2);
   color: var(--color-green);
-  margin: 0.6rem 0 0;
+  margin: 0.45rem 0 0;
 }
 .xplore__sub {
-  margin: 0.7rem auto 0;
-  max-width: 460px;
+  margin: 0.7rem 0 0;
+  max-width: 52ch;
   font-size: 0.9rem;
   line-height: 1.6;
   color: var(--color-muted);
 }
-/* tabs */
+/* tabs (di dalam header row; garis cuma di tab aktif) */
 .xtabs {
   display: flex;
-  justify-content: flex-end; /* tab kategori rata kanan (desktop) */
-  flex-wrap: wrap;
   gap: 1.8rem;
-  margin: 2rem 0 2.6rem;
-  border-bottom: 1px solid var(--line);
 }
 .xtab {
   background: none;
@@ -8600,12 +8455,22 @@ section.faq::before,
 .xpanel[hidden] { display: none; }
 /* kartu di panel: napas lebih longgar dari default */
 .xplore .experience__grid--home4 { gap: 1.4rem; }
-.xplore__more { margin-top: 2.8rem; }
+.xplore__more { margin-top: 2rem; text-align: right; }
 @media (max-width: 768px) {
   .xplore { padding: 3.2rem 1.1rem; }
-  .xtabs { justify-content: flex-start; gap: 1.1rem; margin: 1.4rem 0 1.8rem; }
+  /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
+  .xplore__head { margin-bottom: 1.6rem; }
+  .xtabs {
+    width: 100%;
+    gap: 1.1rem;
+    margin-top: 0.4rem;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .xtabs::-webkit-scrollbar { display: none; }
   .xplore .experience__grid--home4 { gap: 0.9rem; }
-  .xplore__more { margin-top: 2rem; }
+  .xplore__more { margin-top: 1.6rem; }
 }
 
 /* EXPERIMENT: judul DI DALAM foto (overlay bawah) + durasi & harga DI BAWAH foto.
@@ -8718,4 +8583,166 @@ section.faq::before,
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ============================================================
+   VILLA PROMO BAND (homepage #villas) — Ubud Private Villas.
+   2 foto villa jadi background belah-dua + overlay gelap, teks
+   putih ketengah, SATU CTA keluar (external-link icon).
+   ============================================================ */
+.vpromo {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+}
+.vpromo__bg {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.vpromo__bg div {
+  background-size: cover;
+  background-position: center;
+}
+.vpromo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 28, 23, 0.55), rgba(20, 28, 23, 0.72));
+}
+.vpromo__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 580px;
+}
+.vpromo__kick {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #e6cf97;
+}
+.vpromo__title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 2.1rem;
+  color: #fff;
+  margin: 0.5rem 0 0.8rem;
+}
+.vpromo__desc {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0 0 1.6rem;
+}
+.vpromo__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.7rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  background: #fff;
+  color: var(--color-green);
+}
+.vpromo__cta:hover {
+  background: var(--color-gold);
+  color: #fff;
+}
+.vpromo__cta svg {
+  width: 15px;
+  height: 15px;
+}
+@media (max-width: 768px) {
+  .vpromo {
+    min-height: 380px;
+  }
+  /* HP: 2 foto jadi tumpukan atas-bawah biar tiap villa tetep kebaca */
+  .vpromo__bg {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .vpromo__title {
+    font-size: 1.7rem;
+  }
+}
+
+/* ============================================================
+   ALIGNMENT V1 (Job 2) — judul section rata kiri di section
+   ber-grid: Explore (styles sendiri), Guides, Reviews, listing
+   (.lhead). Utility (tab/See all) kanan sebaris sama judul.
+   Yang simetris tetap center: search guides, band CTA/villa.
+   ============================================================ */
+.guide-home .section__title,
+.reviews .section__title,
+.lhead .section__title {
+  text-align: left;
+}
+.guide-home .section__title::after,
+.reviews .section__title::after,
+.lhead .section__title::after {
+  left: 0;
+  transform: none;
+}
+
+/* Header row listing: judul kiri + zone-filter kanan sebaris */
+.lhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+  max-width: 1200px; /* ngunci ke lebar grid kartu */
+  margin: 0 auto 1.6rem;
+  padding-bottom: 0.8rem; /* ruang buat garis emas ::after judul */
+}
+.lhead .section__title {
+  margin-bottom: 0;
+}
+.lhead .zone-filter {
+  max-width: none;
+  margin: 0;
+  border-bottom: none; /* garis cuma di chip aktif */
+}
+
+/* Header row reviews: judul kiri + link kanan */
+.reviews__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  max-width: 1100px; /* ngunci ke lebar reviews-strip */
+  margin: 0 auto 1.6rem;
+  padding-bottom: 0.8rem;
+}
+.reviews__head .section__title {
+  margin-bottom: 0;
+}
+.reviews__head .reviews__seeall {
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  /* HP: header numpuk, tab balik jadi baris scroll di bawah judul */
+  .lhead {
+    align-items: flex-start;
+    gap: 1.1rem;
+    margin-bottom: 1.2rem;
+  }
+  .lhead .zone-filter {
+    width: 100%;
+    justify-content: flex-start;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+  }
 }

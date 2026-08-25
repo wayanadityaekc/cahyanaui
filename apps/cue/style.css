@@ -8415,13 +8415,13 @@ section.faq::before,
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--color-gold-d);
+  color: var(--color-green);
 }
 .xplore__t {
   font-family: var(--font-head);
   font-weight: 600;
   font-size: var(--fs-h2);
-  color: var(--color-green);
+  color: var(--color-gold); /* samain warna judul section lain */
   margin: 0.45rem 0 0;
 }
 .xplore__sub {

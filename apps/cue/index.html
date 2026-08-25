@@ -30,7 +30,7 @@
     />
     <!-- Preload foto tile pertama (LCP hero-tiles) -->
     <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
-    <link rel="stylesheet" href="style.css?v=342" />
+    <link rel="stylesheet" href="style.css?v=346" />
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
     <meta property="og:type" content="website" />
@@ -460,25 +460,6 @@
 
     <!-- Villa promo band (Opsi C): 2 foto villa jadi background + overlay,
          satu CTA keluar ke ubudprivatevillas.com. Tanpa harga/tombol per villa. -->
-    <section class="vpromo" id="villas">
-      <div class="vpromo__bg" aria-hidden="true">
-        <div style="background-image: url(assets/images/cahyana-house.webp)"></div>
-        <div style="background-image: url(assets/images/cahyana-tibuah.webp)"></div>
-      </div>
-      <div class="vpromo__inner">
-        <span class="vpromo__kick">Stay with us in Ubud</span>
-        <h2 class="vpromo__title">Ubud Private Villas</h2>
-        <p class="vpromo__desc">
-          Two private pool villas - Cahyana House and Cahyana Tibuah - hosted by
-          the same family behind your tours. Ask about tour + stay perks.
-        </p>
-        <a class="vpromo__cta" href="https://ubudprivatevillas.com" target="_blank" rel="noopener">
-          Visit ubudprivatevillas.com
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </a>
-      </div>
-    </section>
-
     <!-- GUIDES & INFORMATION (menu kategori samping + slider kartu) -->
     <section class="guide-home" id="guides" aria-labelledby="guide-home-title">
       <div class="guide-home__inner">
@@ -513,6 +494,9 @@
         </div>
       </div>
     </section>
+
+    <!-- Villa promo: dipindah ke sini (dulu langsung nempel setelah Trip Planner,
+         dua-duanya band foto gelap jadi kayak nabrak) - sekarang gelap-terang-gelap-terang. -->
     <!-- About (Opsi C): photo band + overlay, lalu strip driver di cream -->
     <section class="habout" id="about" style="background-image: url(assets/images/tegalalang-rice-terrace-hero.jpg)">
       <div class="habout__in">
@@ -563,6 +547,28 @@
       </div>
     </section>
 
+    <!-- Villa promo: dipindah ke sini (dulu langsung nempel setelah Trip Planner,
+         dua-duanya band foto gelap jadi kayak nabrak) - sekarang diapit terang
+         di dua sisi (habout-people sebelum, trust sesudah). -->
+    <section class="vpromo" id="villas">
+      <div class="vpromo__bg" aria-hidden="true">
+        <div style="background-image: url(assets/images/cahyana-house.webp)"></div>
+        <div style="background-image: url(assets/images/cahyana-tibuah.webp)"></div>
+      </div>
+      <div class="vpromo__inner">
+        <span class="vpromo__kick">Stay with us in Ubud</span>
+        <h2 class="vpromo__title">Ubud Private Villas</h2>
+        <p class="vpromo__desc">
+          Two private pool villas - Cahyana House and Cahyana Tibuah - hosted by
+          the same family behind your tours. Ask about tour + stay perks.
+        </p>
+        <a class="vpromo__cta" href="https://ubudprivatevillas.com" target="_blank" rel="noopener">
+          Visit ubudprivatevillas.com
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+    </section>
+
     <section class="trust">
       <p class="trust__stat" data-trust-stat hidden><strong data-accounts-count>0</strong> travelers have joined Cahyana</p>
       <div class="trust__group">
@@ -595,7 +601,7 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=342"></script>
-    <script src="script.js?v=342"></script>
+    <script src="data.js?v=346"></script>
+    <script src="script.js?v=346"></script>
   </body>
 </html>

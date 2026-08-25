@@ -1,19 +1,12 @@
-/* Self-hosted fonts (subset latin) - nggak request ke Google.
-   Inter (variable 300-700) = body & UI. Playfair Display (variable 500-800) = H1/H2.
-   Ganti/rename -> update preload di semua HTML. font-display: swap. */
+/* Self-hosted Inter (variable 300-700, subset latin) - satu-satunya font, dipakai
+   body & heading (Playfair dicoba lalu dibuang - kerasa lebay). Nggak request ke
+   Google. Ganti/rename -> update preload di semua HTML. font-display: swap. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 300 700;
   font-display: swap;
   src: url("assets/fonts/inter-latin.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Playfair Display";
-  font-style: normal;
-  font-weight: 500 800;
-  font-display: swap;
-  src: url("assets/fonts/playfair-latin.woff2") format("woff2");
 }
 
 :root {
@@ -23,11 +16,13 @@
   --color-cream: #f8f8f8;
   --line: #e7e4dd;
   --font-body: "Inter", system-ui, sans-serif;
-  /* Font display: Playfair buat H1 & H2 doang - card title/UI tetap Inter. */
-  --font-head: "Playfair Display", Georgia, serif;
-  /* ---- Type scale (DRY): base 16px, ratio 1.25 -> 16/20/25/31/39 ---- */
-  --fs-display: clamp(1.9375rem, 5vw, 2.4375rem);
-  --fs-h2: 1.5625rem;
+  /* Satu font: Inter buat body & heading (Playfair udah dibuang). */
+  --font-head: "Inter", system-ui, sans-serif;
+  /* ---- Type scale (DRY): base 16px, ratio 1.25 -> 16/20/25/31/39 ----
+     Display/h2 sengaja diturunin dari step formal (31-39 / 25) - lebih kecil
+     & bobot lebih ringan kerasa lebih tenang buat heading sans satu font. */
+  --fs-display: clamp(1.75rem, 4vw, 2.125rem);
+  --fs-h2: 1.375rem;
   --fs-h3: 1.25rem;
   --fs-strong: 1rem;
   --fs-body: 1rem;
@@ -6546,7 +6541,8 @@ button.pick-cat {
 }
 .mytrips__title {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
   color: var(--color-green);
@@ -6717,7 +6713,8 @@ button.pick-cat {
 .mtc-empty { text-align: center; padding: 0.5rem 0 0; }
 .mtc-empty__lead {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: 1.25rem;
   color: var(--color-green);
   margin: 0 0 0.4rem;
@@ -6765,7 +6762,8 @@ button.pick-cat {
 }
 .mytrips-booked__title {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: 1.3rem;
   color: var(--color-green);
   margin: 0 0 1.1rem;
@@ -6862,6 +6860,8 @@ button.pick-cat {
 }
 .charter-hero__title {
   font-family: var(--font-head);
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
   color: #fff;
@@ -7331,7 +7331,9 @@ section.faq::before,
    Ditaruh di akhir: override font-family lama tiap heading (source-order menang).
    Bobot: body 400 · label 500-600 · harga & tombol 600 · heading 600 (var --font-head).
    ============================================================ */
-/* Tier display (Playfair): H1 hero + H2 section doang */
+/* Tier display (Inter): H1 hero + H2 section doang - bobot lebih ringan +
+   tracking dikit dari card/UI tier di bawah, biar tetep kerasa beda kelas
+   walau satu font sama body. */
 .section__title,
 .section__title--sub,
 .hero__title,
@@ -7344,8 +7346,8 @@ section.faq::before,
 .contact__heading,
 .title {
   font-family: var(--font-head);
-  font-weight: 600;
-  letter-spacing: 0;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   line-height: var(--lh-heading);
 }
 /* Tier UI (Inter): judul kartu, modal, nama, dst */
@@ -7852,6 +7854,8 @@ strong {
 }
 .transfer-hero__title {
   font-family: var(--font-head);
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
   color: #fff;
@@ -8089,6 +8093,8 @@ strong {
 }
 .lhero__title {
   font-family: var(--font-head);
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
   color: #fff;
@@ -8256,7 +8262,8 @@ strong {
   margin: 0;
   font-family: var(--font-head);
   font-size: var(--fs-h2);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   line-height: var(--lh-heading);
   color: var(--color-green);
 }
@@ -8368,7 +8375,8 @@ strong {
   margin: 0 0 0.8rem;
   font-family: var(--font-head);
   font-size: var(--fs-h2);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   line-height: var(--lh-heading);
   color: #fff;
 }
@@ -8445,7 +8453,8 @@ strong {
 }
 .xplore__t {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: var(--fs-h2);
   line-height: var(--lh-heading);
   color: var(--color-gold); /* samain warna judul section lain */
@@ -8658,7 +8667,8 @@ strong {
 }
 .vpromo__title {
   font-family: var(--font-head);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   font-size: 2.1rem;
   line-height: var(--lh-heading);
   color: #fff;

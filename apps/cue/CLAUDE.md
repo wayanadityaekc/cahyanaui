@@ -32,11 +32,14 @@ When unsure, ask first (keep it short).
   Palet = abu (teks/tombol) · abu terang · emas.
 
 **Fonts** (self-host, `assets/fonts/`, preload di tiap HTML):
-- `--font-body` **Inter** (variable 300–700) — body & semua UI.
-- `--font-head` **Playfair Display** (variable 500–800) — **H1 hero + H2 section doang**; judul card/modal/nama = Inter (blok "TYPOGRAPHY SYSTEM"
-  di akhir style.css nge-override font-family heading lama).
+- `--font-body` = `--font-head` = **Inter** (variable 300–700) — satu font doang.
+  Playfair Display dicoba (Agu 2026) terus dibuang lagi — Wayan bilang kerasa lebay.
+- H1 hero + H2 section (blok "Tier display" di akhir style.css) sengaja dibedain dari
+  body/UI: bobot **500** + `letter-spacing: -0.01em` (bukan 600) + ukuran diturunin dikit
+  dari step formal (`--fs-display` 28–34px, `--fs-h2` 22px) — biar kerasa lebih tenang/
+  elegan tanpa perlu font kedua.
 - **Bobot konsisten (jangan bold berat sembarangan):** body 400 · label 500 (tracked + uppercase,
-  kesan small-caps) · harga & tombol 600 · heading Playfair 600.
+  kesan small-caps) · harga & tombol 600 · heading (H1/H2) 500.
 
 **Text:**
 - Body/paragraph = `0.9rem` (`--fs-body`), uniform across all pages.
@@ -168,7 +171,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v340, PARTIALS 70)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v341, PARTIALS 70)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

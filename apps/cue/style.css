@@ -7483,17 +7483,28 @@ strong {
   color: var(--color-gold-d);
 }
 
-/* --- Homepage 4-up card grid (replaces the sliders) --- */
+/* --- Card slider (dulu grid 4-up yang numpuk kalau lebih dari 4 kartu -
+   sekarang mesin yang sama kayak Guides & Information: 1 baris, geser
+   samping, kartu ~300px). Dipakai homepage Explore, kategori listing
+   (tour/activities/destinations), dan related cards. --- */
 .experience__grid--home4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
   max-width: 1200px;
   margin: 0 auto;
-  overflow: visible;
 }
-.experience__grid--home4 .experience__card {
-  flex: none;
+@media (min-width: 993px) {
+  .experience__grid--home4 {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    touch-action: pan-x pan-y;
+    padding-bottom: 1rem;
+  }
+  .experience__grid--home4 .experience__card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+  }
 }
 
 /* --- "See all" button beneath the grid (grid width, tight above, room below) --- */
@@ -7613,16 +7624,9 @@ strong {
   background-color: var(--color-cream);
 }
 
-/* --- Mobile: 2x2 card grid + stacked reviews/about --- */
+/* --- Mobile: stacked reviews/about (kartu sekarang ikut slider mesin
+   yang sama kayak Guides - lihat .experience__grid base rule) --- */
 @media (max-width: 992px) {
-  .experience__grid.experience__grid--home4 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-    overflow: visible;
-    margin-left: 0;
-    margin-right: 0;
-  }
   /* mobile: smaller card text + title on its own full-width line (1 line) */
   .home .experience__body {
     grid-template-areas: "title title" "meta price";

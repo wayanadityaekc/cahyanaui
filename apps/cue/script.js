@@ -1688,7 +1688,7 @@ function initSlider() {
 function initTourSlider() {
   // #itn-days ikut: di desktop dia slider horizontal (panah muncul pas hover;
   // di mobile tetap numpuk vertikal & panahnya emang ke-hide via CSS hover).
-  document.querySelectorAll(".experience__grid--slider, #itn-days").forEach((slider) => {
+  document.querySelectorAll(".experience__grid--slider, .experience__grid--home4, #itn-days").forEach((slider) => {
     if (slider.parentElement.classList.contains("slider-holder")) return;
     const holder = document.createElement("div");
     holder.className = "slider-holder";

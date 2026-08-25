@@ -42,7 +42,9 @@ When unsure, ask first (keep it short).
   kesan small-caps) · harga & tombol 600 · heading (H1/H2) 500.
 
 **Text:**
-- Body/paragraph = `0.9rem` (`--fs-body`), uniform across all pages.
+- Body/paragraph = `1rem` (`--fs-body`), uniform across all pages.
+- Form field (input/select/textarea) = `0.875rem` (`--fs-field`) — sengaja lebih kecil
+  dari body, semua field pakai token ini (jangan hardcode `--fs-body` di form lagi).
 - Prices = gold + bold (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
 
 **Section dividers:**
@@ -171,7 +173,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v341, PARTIALS 70)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v342, PARTIALS 70)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

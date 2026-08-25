@@ -26,6 +26,7 @@
   --fs-h3: 1.25rem;
   --fs-strong: 1rem;
   --fs-body: 1rem;
+  --fs-field: 0.875rem; /* teks input/select/textarea - lebih kecil dari body */
   --fs-small: 0.8rem;
   --fs-label: 0.64rem;
   --lh-body: 1.6;
@@ -354,7 +355,7 @@ body {
   background-color: #fff;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   color: var(--color-green);
   cursor: pointer;
   -webkit-appearance: none;
@@ -403,7 +404,7 @@ body {
   background-color: #fff;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   color: var(--color-green);
   text-transform: uppercase;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -1208,6 +1209,7 @@ a.tripbar--promo {
   border: 1px solid var(--line);
   border-radius: 11px;
   font-family: var(--font-body);
+  font-size: var(--fs-field);
   color: var(--color-green);
 }
 
@@ -1218,7 +1220,7 @@ a.tripbar--promo {
   input,
   select,
   textarea {
-    font-size: var(--fs-body) !important;
+    font-size: var(--fs-field) !important;
   }
 }
 
@@ -1228,7 +1230,7 @@ a.tripbar--promo {
   width: 100%;
   min-width: 0;
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   line-height: 1.4;
   height: 2.9rem;
   background-color: #fff;
@@ -2014,7 +2016,7 @@ a.tripbar--promo {
 .review-form__group select,
 .review-form__group textarea {
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   line-height: 1.4;
   background-color: #fff;
 }
@@ -2768,7 +2770,7 @@ a.footer__contact-item:hover {
 }
 .modal__group input {
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
 }
 .modal__referral {
   display: flex;
@@ -2780,7 +2782,7 @@ a.footer__contact-item:hover {
   border: 1px solid #d8d2c4;
   border-radius: 6px;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   color: var(--color-green);
 }
 .modal__referral button {
@@ -4108,7 +4110,7 @@ a.footer__contact-item:hover {
 .contact__group input,
 .contact__group textarea {
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
 }
 .contact__group textarea {
   min-height: 130px;
@@ -4241,7 +4243,7 @@ a.footer__contact-item:hover {
   width: 100%;
   height: 2.9rem;
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   line-height: 1.4;
   background-color: #fff;
   -webkit-appearance: none;
@@ -4535,7 +4537,7 @@ a.footer__contact-item:hover {
   .hero__booking .booking__price {
     height: 2.7rem;
     padding: 0.55rem 0.6rem;
-    font-size: var(--fs-body);
+    font-size: var(--fs-field);
   }
 }
 
@@ -4936,7 +4938,7 @@ a.footer__contact-item:hover {
   min-width: 0;
   height: 2.7rem;
   padding: 0.55rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   background: #fff;
 }
 
@@ -5022,7 +5024,7 @@ a.footer__contact-item:hover {
   width: 100%;
   height: 2.9rem;
   padding: 0.6rem 0.7rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   background: #fff;
 }
 /* Tombol sekunder popup: putih + border hijau (senada .program-cta__btn--add /
@@ -6006,7 +6008,7 @@ button.pick-cat {
   border: none;
   background: transparent;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -6124,7 +6126,7 @@ button.pick-cat {
   border-radius: 6px;
   background: #fff;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -6149,7 +6151,7 @@ button.pick-cat {
   border-radius: 999px;
   background: #fff;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -6385,7 +6387,7 @@ button.pick-cat {
 .welcome__field input {
   width: 100%;
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   font-family: var(--font-body);
   color: var(--color-green);
   background: #fff;
@@ -6783,7 +6785,7 @@ button.pick-cat {
 .acctform__inp {
   width: 100%;
   padding: 0.5rem 0.65rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   font-family: var(--font-body);
   color: var(--color-green);
   background: #fff;
@@ -6902,7 +6904,7 @@ button.pick-cat {
   width: 100%;
   height: 2.9rem;
   padding: 0.6rem 0.8rem;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   background: #fff;
 }
 .charter__hint {
@@ -7901,7 +7903,7 @@ strong {
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a7466' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.85rem center;
   padding: 0.72rem 1.9rem 0.72rem 0.85rem;
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: var(--fs-field);
   color: var(--color-green);
 }
 .tpick__swap {

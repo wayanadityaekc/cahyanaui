@@ -9037,9 +9037,6 @@ strong {
   .catsec__title {
     font-size: 1.15rem;
   }
-  .catsec__desc {
-    font-size: 0.85rem;
-  }
   .catsec .experience__grid--home4 {
     margin-top: 1.1rem;
   }
@@ -9047,7 +9044,8 @@ strong {
 
 /* ============================================================
    CATEGORY SECTIONS (listing pages) — tab filter diganti section
-   bertumpuk per kategori: judul + deskripsi 2 baris + grid.
+   bertumpuk per kategori: judul + grid (deskripsi dihapus, Sep 2026 -
+   Wayan minta section lebih ringkas).
    Pemisah antar section = garis emas inset (standar divider).
    Tab .zone-chip skarang jadi anchor link (sticky+scrollspy = Job 2).
    ============================================================ */
@@ -9085,13 +9083,6 @@ strong {
   border-radius: 2px;
   background: var(--color-gold);
   margin-top: 0.5rem;
-}
-.catsec__desc {
-  margin: 0.8rem 0 0;
-  max-width: 62ch;
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  color: var(--color-muted);
 }
 .catsec .experience__grid--home4 {
   margin-top: 1.6rem;

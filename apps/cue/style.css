@@ -7437,6 +7437,13 @@ strong {
 .home .experience__price .price-unit {
   display: none;
 }
+/* Keep the WHOLE card at its original footprint (was 300x342 = square photo +
+   thin body). The photo shrinks to 4:3, and the freed vertical space becomes
+   extra white-body height — card box stays identical at any width. */
+.home .experience__card,
+.tourprog .experience__card {
+  aspect-ratio: 300 / 342;
+}
 /* landscape 4:3 photo */
 .home .experience__image {
   aspect-ratio: 4 / 3;
@@ -7455,6 +7462,7 @@ strong {
     "title  rating"
     "meta   price";
   align-items: baseline;
+  align-content: space-between; /* title pinned top, price pinned bottom */
   column-gap: 0.55rem;
   row-gap: 0.4rem;
   padding: 0.6rem 0.9rem 0.8rem; /* judul lebih nempel ke atas */
@@ -7744,6 +7752,7 @@ strong {
     "title  rating"
     "meta   price";
   align-items: baseline;
+  align-content: space-between; /* title pinned top, price pinned bottom */
   column-gap: 0.55rem;
   row-gap: 0.4rem;
   padding: 0.6rem 0.9rem 0.8rem;

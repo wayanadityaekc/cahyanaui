@@ -11,8 +11,8 @@
 
 :root {
   --color-green: #5c5c5c;
-  --color-gold: #c9a45c;
-  --color-gold-d: #b08d43;
+  --color-gold: #22201c;
+  --color-gold-d: #16140f;
   --color-cream: #f8f8f8;
   --line: #e7e4dd;
   --font-body: "Inter", system-ui, sans-serif;
@@ -40,12 +40,12 @@
   --space-6: 4rem;
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
-  --color-gold-l: #e6cf97; /* kicker/label di atas foto gelap */
+  --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */
   --color-ok: #2e7d54; /* status sukses/booked */
   --color-err: #9a4a3f; /* error/warning/hapus */
   --color-ink: #46453f;
   --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.07);
-  --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(201, 164, 92, 0.25));
+  --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(34, 32, 28, 0.25));
 }
 
 * {
@@ -368,7 +368,7 @@ body {
 .hsearch__select:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.15);
 }
 /* Currency di dalam search form: bikin tombol dropdown seukuran field lain */
 .hsearch__cur .acct__curbtn {
@@ -410,12 +410,12 @@ body {
 .hsearch__refinp:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.15);
 }
 .hsearch__refinp:disabled {
   background: var(--color-cream);
   color: var(--color-gold-d);
-  border-color: rgba(201, 164, 92, 0.5);
+  border-color: rgba(34, 32, 28, 0.5);
 }
 .hsearch__refbtn {
   flex: 0 0 auto;
@@ -469,7 +469,7 @@ body {
 .binfo__btn:hover,
 .binfo__btn[aria-expanded="true"] {
   color: var(--color-green);
-  background: rgba(201, 164, 92, 0.15);
+  background: rgba(34, 32, 28, 0.15);
 }
 .binfo__btn svg {
   width: 15px;
@@ -640,7 +640,7 @@ body {
 }
 .hs-control.is-open {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.15);
 }
 .hs-control__val.placeholder {
   color: var(--color-muted);
@@ -718,18 +718,18 @@ body {
   background: #faf8f3;
 }
 .hs-opt.is-sel {
-  background: rgba(201, 164, 92, 0.14);
+  background: rgba(34, 32, 28, 0.14);
 }
 /* Navigasi keyboard: pilihan yg lagi disorot pakai ↑↓ (beda dari hover mouse) */
 .hs-opt.is-kbd {
-  background: rgba(201, 164, 92, 0.14);
+  background: rgba(34, 32, 28, 0.14);
   box-shadow: inset 3px 0 0 var(--color-gold);
 }
 /* Focus ring pas control di-Tab */
 .hs-control:focus-visible {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.15);
 }
 .hs-opt:focus-visible {
   outline: none;
@@ -835,7 +835,7 @@ body {
   color: var(--color-gold-d);
 }
 .hs-cal__d.in-range {
-  background: rgba(201, 164, 92, 0.14);
+  background: rgba(34, 32, 28, 0.14);
   border-radius: 0;
 }
 .hs-cal__d.pt-start {
@@ -1235,7 +1235,7 @@ a.tripbar--promo {
 .booking__group input:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.18);
+  box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.18);
 }
 /* Samain tinggi date dengan select (native date picker suka lebih tinggi) */
 .booking__group input[type="date"] {
@@ -1428,7 +1428,7 @@ a.tripbar--promo {
 }
 .booking__btn:hover {
   background-color: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
   transform: translateY(-2px);
 }
 /* Tombol kedua (Custom Itinerary) - gaya outline biar beda dari Book Now */
@@ -1494,7 +1494,7 @@ a.tripbar--promo {
   margin-bottom: 0.75rem;
   border-radius: 50%;
   color: var(--color-green);
-  background-color: rgba(201, 164, 92, 0.2);
+  background-color: rgba(34, 32, 28, 0.2);
 }
 
 .title {
@@ -1847,7 +1847,7 @@ a.tripbar--promo {
 }
 .experience__arrow:hover {
   background-color: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
 }
 
 /* ===== Plan Your Trip (itinerary teaser, homepage) ===== */
@@ -1924,7 +1924,7 @@ a.tripbar--promo {
   height: 46px;
   margin: 0 auto 0.55rem;
   border-radius: 13px;
-  background: rgba(201, 164, 92, 0.22);
+  background: rgba(34, 32, 28, 0.22);
   border: 1px solid rgba(230, 207, 151, 0.35);
   color: var(--color-gold-l);
 }
@@ -1951,7 +1951,7 @@ a.tripbar--promo {
   padding: 0.72rem 1.4rem;
   border-radius: 999px;
   background-color: var(--color-gold);
-  color: #3a2c10;
+  color: #fff;
 }
 @media (max-width: 620px) {
   .plan__steps {
@@ -2053,7 +2053,7 @@ a.tripbar--promo {
 }
 .review-form__btn:hover {
   background-color: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
 }
 .review-form__note {
   display: block;
@@ -2110,7 +2110,7 @@ a.tripbar--promo {
   margin-bottom: 1rem;
   border-radius: 50%;
   color: var(--color-green);
-  background-color: rgba(201, 164, 92, 0.18);
+  background-color: rgba(34, 32, 28, 0.18);
 }
 .review-card__avatar svg {
   width: 30px;
@@ -2168,7 +2168,7 @@ a.tripbar--promo {
 .btn-review:hover {
   background-color: var(--color-gold);
   border-color: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
 }
 
 /* Wide popup + all-reviews grid (2 kolom) */
@@ -2187,7 +2187,7 @@ a.tripbar--promo {
 .drivers {
   padding: var(--space-5) var(--space-3);
   background: #fff;
-  border-top: 1px solid rgba(201, 164, 92, 0.4);
+  border-top: 1px solid rgba(34, 32, 28, 0.4);
 }
 
 /* ==================== Galeri foto tamu (marquee auto-scroll) ====================
@@ -2302,7 +2302,7 @@ a.tripbar--promo {
   font-weight: 600;
   font-size: 1.5rem;
   color: #fff;
-  background: linear-gradient(135deg, #c9a45c, var(--color-gold-l));
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-l));
 }
 .driver-card__avatar svg {
   width: 32px;
@@ -2396,7 +2396,7 @@ section.faq::before,
   transform: translateX(-50%);
   width: 100%;
   height: 1px;
-  background: rgba(201, 164, 92, 0.4);
+  background: rgba(34, 32, 28, 0.4);
 }
 /* Kecuali: garis di bawah section .highlight (featured tour) tetap pendek/inset */
 .highlight + section::before {
@@ -2583,7 +2583,7 @@ a.footer__contact-item:hover {
   object-fit: cover;
 }
 .footer__socials a:hover {
-  color: var(--color-green);
+  color: #fff;
   background-color: var(--color-gold);
 }
 .footer__heading {
@@ -2923,7 +2923,7 @@ a.footer__contact-item:hover {
 }
 .modal__btn:hover {
   background-color: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
 }
 .modal__btn--wa {
   margin-top: 0.75rem;
@@ -3133,7 +3133,7 @@ a.footer__contact-item:hover {
   margin: 1.2rem 1.4rem 1.5rem;
   padding: 1.2rem 0 0;
   border: none;
-  border-top: 1px solid rgba(201, 164, 92, 0.4);
+  border-top: 1px solid rgba(34, 32, 28, 0.4);
   background: none;
   cursor: pointer;
   font-family: var(--font-body);
@@ -3417,7 +3417,7 @@ a.footer__contact-item:hover {
 }
 .highlight__btn:hover {
   background-color: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
 }
 
 /* Tour stops / detail rows - foto kiri, deskripsi kanan */
@@ -3711,7 +3711,7 @@ a.footer__contact-item:hover {
   border: 1.5px solid var(--color-gold);
   border-radius: 14px;
   background: #fff;
-  box-shadow: 0 6px 18px rgba(201, 164, 92, 0.12);
+  box-shadow: 0 6px 18px rgba(34, 32, 28, 0.12);
 }
 .guide-hero-search__field {
   flex: 1;
@@ -3757,7 +3757,7 @@ a.footer__contact-item:hover {
   display: none;
 }
 .guide-cat-toggle:hover {
-  background: rgba(201, 164, 92, 0.08);
+  background: rgba(34, 32, 28, 0.08);
 }
 .guide-cat-toggle .gcat-icon {
   width: 18px;
@@ -3802,7 +3802,7 @@ a.footer__contact-item:hover {
   border-top: none;
 }
 .guide-cat-menu a:hover {
-  background: rgba(201, 164, 92, 0.08);
+  background: rgba(34, 32, 28, 0.08);
 }
 .guide-cat-menu a svg {
   width: 17px;
@@ -3864,7 +3864,7 @@ a.footer__contact-item:hover {
   border: 1.5px solid var(--color-gold);
   border-radius: 14px;
   background: #fff;
-  box-shadow: 0 6px 18px rgba(201, 164, 92, 0.12);
+  box-shadow: 0 6px 18px rgba(34, 32, 28, 0.12);
 }
 .gsearch__icon {
   width: 20px;
@@ -3925,7 +3925,7 @@ a.footer__contact-item:hover {
   border-top: 1px solid var(--line);
 }
 .gsearch__opt:hover {
-  background: rgba(201, 164, 92, 0.08);
+  background: rgba(34, 32, 28, 0.08);
 }
 .gsearch__th {
   width: 38px;
@@ -4828,7 +4828,7 @@ a.footer__contact-item:hover {
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  background: rgba(201, 164, 92, 0.18);
+  background: rgba(34, 32, 28, 0.18);
   color: var(--color-green);
   flex: none;
 }
@@ -4860,7 +4860,7 @@ a.footer__contact-item:hover {
   display: none;
   margin-top: 0.5rem;
   padding: 0.75rem;
-  border: 1px dashed rgba(201, 164, 92, 0.55);
+  border: 1px dashed rgba(34, 32, 28, 0.55);
   border-radius: 9px;
   background: #fff;
 }
@@ -5148,7 +5148,7 @@ a.footer__contact-item:hover {
   .itn2__side .itn-trip__t {
     padding-bottom: 0.55rem;
     margin-bottom: 0.6rem;
-    border-bottom: 1px solid rgba(201, 164, 92, 0.4);
+    border-bottom: 1px solid rgba(34, 32, 28, 0.4);
   }
   .itn2__side .summary__label {
     display: block;
@@ -5314,7 +5314,7 @@ a.footer__contact-item:hover {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: rgba(201, 164, 92, 0.16);
+  background: rgba(34, 32, 28, 0.16);
   color: var(--color-green);
 }
 .itn-mini--empty .itn-mini__ic {
@@ -5396,7 +5396,7 @@ a.footer__contact-item:hover {
   align-items: center;
   margin: 0.9rem 0;
   padding-top: 0.7rem;
-  border-top: 1px dashed rgba(201, 164, 92, 0.5);
+  border-top: 1px dashed rgba(34, 32, 28, 0.5);
   font-size: var(--fs-small);
   font-weight: 600;
   color: var(--color-muted);
@@ -5420,7 +5420,7 @@ a.footer__contact-item:hover {
 }
 .svc__save:hover {
   background: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
 }
 .svc__rm {
   display: block;
@@ -5637,7 +5637,7 @@ button.pick-cat {
   padding: 0.8rem 2rem;
   border-radius: 999px;
   background: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
   font-weight: 600;
   text-decoration: none;
   transition: background-color 0.2s ease;
@@ -5651,22 +5651,22 @@ button.pick-cat {
 }
 @keyframes booksidebarGlow {
   0% {
-    box-shadow: 0 0 0 0 rgba(201, 164, 92, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
+    box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
   20% {
-    box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
+    box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
   }
   40% {
-    box-shadow: 0 0 0 1px rgba(201, 164, 92, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
+    box-shadow: 0 0 0 1px rgba(34, 32, 28, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
   60% {
-    box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
+    box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
   }
   80% {
-    box-shadow: 0 0 0 1px rgba(201, 164, 92, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
+    box-shadow: 0 0 0 1px rgba(34, 32, 28, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(201, 164, 92, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
+    box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
 }
 /* Bar harga + tombol nempel bawah (MOBILE). Slide naik pas .is-show. Desktop: off. */
@@ -5732,7 +5732,7 @@ button.pick-cat {
   padding: 0.7rem 1.7rem;
   border-radius: 999px;
   background: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -5941,7 +5941,7 @@ button.pick-cat {
 }
 .program-cta__btn--book:hover {
   background: var(--color-gold);
-  color: var(--color-green);
+  color: #fff;
   border-color: var(--color-gold);
 }
 .program-cta__btn--add {
@@ -6195,7 +6195,7 @@ button.pick-cat {
   background: var(--color-cream);
 }
 .acct__curopt.is-active {
-  background: rgba(201, 164, 92, 0.16);
+  background: rgba(34, 32, 28, 0.16);
 }
 .acct__flag {
   display: inline-block;
@@ -6547,7 +6547,7 @@ button.pick-cat {
 /* referral applied banner */
 .mtc-ref {
   background: #f4ecd8;
-  border: 1px solid rgba(201, 164, 92, 0.5);
+  border: 1px solid rgba(34, 32, 28, 0.5);
   color: var(--color-gold-d);
   border-radius: 10px;
   padding: 0.6rem 0.9rem;
@@ -6935,7 +6935,7 @@ button.pick-cat {
 }
 .chdur.active {
   border-color: var(--color-gold);
-  box-shadow: 0 6px 18px rgba(201, 164, 92, 0.22);
+  box-shadow: 0 6px 18px rgba(34, 32, 28, 0.22);
   transform: translateY(-2px);
 }
 .chdur[disabled] {
@@ -7081,7 +7081,7 @@ button.pick-cat {
     display: none;
     margin: 0.1rem 0 0.2rem 0.35rem;
     padding: 0.2rem 0 0.2rem 0.9rem;
-    border-left: 2px solid rgba(201, 164, 92, 0.35);
+    border-left: 2px solid rgba(34, 32, 28, 0.35);
   }
   .navbar__has-drop.open .navbar__drop {
     display: block;
@@ -7189,9 +7189,9 @@ button.pick-cat {
 .tour-type__toggle {
   display: inline-flex;
   padding: 3px;
-  border: 1px solid rgba(201, 164, 92, 0.5);
+  border: 1px solid rgba(34, 32, 28, 0.5);
   border-radius: 999px;
-  background-color: rgba(201, 164, 92, 0.08);
+  background-color: rgba(34, 32, 28, 0.08);
 }
 .tour-type__btn {
   padding: 0.3rem 0.85rem;
@@ -7244,9 +7244,9 @@ button.pick-cat {
   display: flex;
   padding: 3px;
   margin-bottom: 0.4rem;
-  border: 1px solid rgba(201, 164, 92, 0.5);
+  border: 1px solid rgba(34, 32, 28, 0.5);
   border-radius: 999px;
-  background-color: rgba(201, 164, 92, 0.08);
+  background-color: rgba(34, 32, 28, 0.08);
 }
 /* Non-tour (experience/transfer): toggle tetap tampil tapi redup & nggak bisa diklik */
 .booking__type.is-disabled {
@@ -7279,9 +7279,9 @@ button.pick-cat {
 .itn-item-type {
   display: inline-flex;
   padding: 2px;
-  border: 1px solid rgba(201, 164, 92, 0.5);
+  border: 1px solid rgba(34, 32, 28, 0.5);
   border-radius: 999px;
-  background-color: rgba(201, 164, 92, 0.08);
+  background-color: rgba(34, 32, 28, 0.08);
 }
 .itn-item-type__btn {
   padding: 0.2rem 0.6rem;
@@ -8875,7 +8875,7 @@ strong {
   transform: translateX(-50%);
   width: min(1100px, 90%);
   height: 1px;
-  background: rgba(201, 164, 92, 0.4);
+  background: rgba(34, 32, 28, 0.4);
 }
 .catsec__title {
   font-family: var(--font-body);
@@ -8930,7 +8930,7 @@ strong {
   transform: translateX(-50%);
   width: min(1100px, 90%);
   height: 1px;
-  background: rgba(201, 164, 92, 0.4);
+  background: rgba(34, 32, 28, 0.4);
 }
 .related__title {
   font-family: var(--font-body);

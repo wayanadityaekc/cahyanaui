@@ -1689,6 +1689,7 @@ a.tripbar--promo {
   margin: 0 auto;
 }
 .experience__card {
+  position: relative; /* anchor for the heart badge on grid cards */
   display: flex;
   flex-direction: column;
   border-radius: 16px;
@@ -7426,33 +7427,37 @@ strong {
    STEP 2 — HOMEPAGE REDESIGN (layout only; reuses existing type/colours)
    ===================================================================== */
 
-/* --- Homepage cards: style A (1:1 photo, title + price, duration meta only) ---
-   Hide the description, Standard/Exclusive toggle, + My Trips button, and the
-   price unit. Scoped to the homepage; the whole card stays clickable. --- */
+/* --- Homepage cards: style A (4:3 photo, heart badge on photo, 2-row body:
+   title + rating on row 1, duration/stops meta + price on row 2). Hide the
+   description, Standard/Exclusive toggle, and price unit. The + My Trips button
+   is NOT hidden here — it's restyled into the heart badge (see "Card heart
+   badge" block below). Scoped to the homepage; the whole card stays clickable. --- */
 .home .experience__card .experience__desc,
 .home .experience__card .tour-type--card,
-.home .experience__card .card-add,
 .home .experience__price .price-unit {
   display: none;
 }
-/* square photo */
+/* landscape 4:3 photo */
 .home .experience__image {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
 }
 .home .experience__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* body: title (left) + price (right) on one row, duration meta below */
+/* body: 2 rows — title|rating (top), meta|price (bottom).
+   rating & stops slots stay empty until real data exists (filled by JS). */
 .home .experience__body {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-areas: "title price";
+  grid-template-areas:
+    "title  rating"
+    "meta   price";
   align-items: baseline;
-  column-gap: 0.6rem;
-  row-gap: 0.3rem;
-  padding: 0.6rem 0.9rem 0.85rem; /* judul lebih nempel ke atas */
+  column-gap: 0.55rem;
+  row-gap: 0.4rem;
+  padding: 0.6rem 0.9rem 0.8rem; /* judul lebih nempel ke atas */
 }
 .home .experience__name {
   grid-area: title;
@@ -7627,9 +7632,8 @@ strong {
 /* --- Mobile: stacked reviews/about (kartu sekarang ikut slider mesin
    yang sama kayak Guides - lihat .experience__grid base rule) --- */
 @media (max-width: 992px) {
-  /* mobile: smaller card text + title on its own full-width line (1 line) */
+  /* mobile: smaller card text, same 2-row option-A layout */
   .home .experience__body {
-    grid-template-areas: "title title" "meta price";
     row-gap: 0.25rem;
   }
   .home .experience__footer {
@@ -7719,16 +7723,16 @@ strong {
   color: inherit;
 }
 .tourprog .experience__image {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
 }
 .tourprog .experience__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+/* .card-add NOT hidden — restyled into the heart badge (see block below). */
 .tourprog .experience__desc,
 .tourprog .tour-type--card,
-.tourprog .card-add,
 .tourprog .experience__arrow,
 .tourprog .experience__price .price-unit {
   display: none;
@@ -7736,11 +7740,13 @@ strong {
 .tourprog .experience__body {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-areas: "title price";
+  grid-template-areas:
+    "title  rating"
+    "meta   price";
   align-items: baseline;
-  column-gap: 0.6rem;
-  row-gap: 0.35rem;
-  padding: 0.6rem 0.9rem 0.85rem;
+  column-gap: 0.55rem;
+  row-gap: 0.4rem;
+  padding: 0.6rem 0.9rem 0.8rem;
 }
 .tourprog .experience__name {
   grid-area: title;
@@ -7770,6 +7776,102 @@ strong {
   height: 15px;
   flex: 0 0 auto;
   color: var(--color-gold-d);
+}
+
+/* ===== Card heart badge (grid cards only) =====
+   Reuses the existing "+ My Trips" button (.card-add) — same click = add to
+   trip. On grid cards it's restyled into a translucent circular heart pinned
+   to the top-right of the photo; the button text is hidden and a heart icon is
+   drawn via mask-image (inherits --color-green). Detail-page .card-add buttons
+   are untouched (they keep the full-width outline style). */
+.home .experience__card .card-add,
+.tourprog .experience__card .card-add {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.16);
+  font-size: 0; /* hide "+ My Trips" text, keep it for a11y/label */
+  z-index: 2;
+}
+.home .experience__card .card-add::before,
+.tourprog .experience__card .card-add::before {
+  content: "";
+  width: 17px;
+  height: 17px;
+  background: var(--color-green);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+/* saved state: gold fill + white heart */
+.home .experience__card .card-add.added,
+.tourprog .experience__card .card-add.added {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+}
+.home .experience__card .card-add.added::before,
+.tourprog .experience__card .card-add.added::before {
+  background: #fff;
+}
+
+/* ===== Card rating slot (grid cards) =====
+   Right of the title. Structurally ready; only rendered by JS when a real
+   rating exists (no data = no element = clean card, never "0 reviews").
+   Contract for the render function:
+     <div class="experience__rating">
+       <svg viewBox="0 0 24 24">…star…</svg><b>4.9</b><span>(23)</span>
+     </div> */
+.home .experience__rating,
+.tourprog .experience__rating {
+  grid-area: rating;
+  display: flex;
+  align-items: center;
+  gap: 0.22rem;
+  font-size: var(--fs-small);
+  white-space: nowrap;
+}
+.home .experience__rating svg,
+.tourprog .experience__rating svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  fill: var(--color-gold);
+  stroke: none;
+}
+.home .experience__rating b,
+.tourprog .experience__rating b {
+  font-weight: 600;
+  color: var(--color-green);
+}
+.home .experience__rating span,
+.tourprog .experience__rating span {
+  color: var(--color-muted);
+}
+
+/* ===== Card stops slot (grid cards) =====
+   A second meta item next to duration. JS appends it inside .experience__meta
+   only when the tour has a real stop count. Contract:
+     <span class="experience__stops"><svg …pin…/>7 stops</span> */
+.home .experience__stops,
+.tourprog .experience__stops {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  margin-left: 0.35rem; /* separate the stops group from duration */
+  white-space: nowrap;
 }
 
 /* Closing band */
@@ -8509,86 +8611,15 @@ strong {
   .xplore__more { margin-top: 1.6rem; }
 }
 
-/* EXPERIMENT: judul DI DALAM foto (overlay bawah) + durasi & harga DI BAWAH foto.
-   Berlaku homepage (.home) + listing (.tourprog): tour/experience/destination. */
-.home .experience__image::after,
-.tourprog .experience__image::after {
-  background: linear-gradient(to bottom, transparent 42%, rgba(0, 0, 0, 0.6));
-}
-/* judul melayang di atas body = di bagian bawah foto */
-.home .experience__body,
-.tourprog .experience__body {
-  position: relative;
-  display: flex;
-  flex-direction: row; /* durasi kiri, harga kanan (base-nya column) */
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  padding: 0.6rem 0.9rem 0.75rem;
-}
-.home .experience__name,
-.tourprog .experience__name {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 100%;
-  display: block;
-  margin: 0;
-  padding: 0 0.85rem 0.6rem;
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  line-height: 1.2;
-  text-align: left;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* baris bawah foto: durasi kiri, harga nempel kanan */
-.home .experience__meta,
-.tourprog .experience__meta { text-align: left; }
-.home .experience__footer,
-.tourprog .experience__footer { margin-left: auto; text-align: right; }
-/* panah bulat dibuang — seluruh badan kartu udah clickable (initExperienceCards) */
+/* Card layout (homepage .home + listing .tourprog) = "style A":
+   title + rating in the white body (NOT on the photo), duration/stops + price
+   below. The rules live in the ".home"/".tourprog experience__body" grid blocks
+   above + the "Card heart / rating / stops" blocks. The old title-on-photo
+   EXPERIMENT was removed here so the body grid wins. The arrow is hidden (whole
+   card is clickable via initExperienceCards). */
 .home .experience__arrow,
-.tourprog .experience__arrow { display: none; }
-/* durasi (meta) tampil lagi, di baris bawah kiri */
-.home .experience__meta,
-.tourprog .experience__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin: 0;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.home .experience__meta svg,
-.tourprog .experience__meta svg {
-  width: 14px;
-  height: 14px;
-  flex: 0 0 auto;
-  color: var(--color-gold-d);
-}
-.home .experience__footer,
-.tourprog .experience__footer {
-  margin: 0;
-  padding: 0;
-}
-
-/* mobile: judul di foto lebih kecil + durasi disembunyiin (cukup harga di kiri).
-   HARUS di paling bawah biar menang atas base .experience__meta{display:flex}. */
-@media (max-width: 768px) {
-  .home .experience__name,
-  .tourprog .experience__name {
-    font-size: var(--fs-small);
-    padding: 0 0.7rem 0.5rem;
-  }
-  .home .experience__meta,
-  .tourprog .experience__meta { display: none; }
-  .home .experience__footer,
-  .tourprog .experience__footer { margin-left: 0; text-align: left; }
+.tourprog .experience__arrow {
+  display: none;
 }
 
 /* Guide cards (Guides & Information): judul DI DALAM foto + tag di bawah.

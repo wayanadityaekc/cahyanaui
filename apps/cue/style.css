@@ -31,7 +31,9 @@
   --fs-h2: 1.125rem; /* was 1.375rem - Wayan, trim step B */
   --fs-h3: 1rem; /* was 1.25rem - Wayan, trim step B */
   --fs-strong: 1rem;
-  --fs-body: 1rem;
+  --fs-body: 0.8rem; /* Sep 2026, Wayan: semua teks paragraf/deskripsi/label/meta
+    dikecilin ke 0.8rem - H1/H2/H3, harga, dan tombol TIDAK ikut (masing-masing
+    unhooked ke nilai eksplisit sendiri biar gak ke-drag token ini). */
   --fs-field: 0.875rem; /* teks input/select/textarea - lebih kecil dari body */
   --fs-small: 0.8rem;
   --fs-label: 0.64rem;
@@ -166,7 +168,7 @@ body {
   list-style: none;
 }
 .navbar__menu a {
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
   color: var(--color-gold);
@@ -432,7 +434,7 @@ body {
   color: #fff;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: var(--fs-body);
+  font-size: 1rem;
   cursor: pointer;
   transition: background 0.15s ease;
 }
@@ -614,7 +616,7 @@ body {
 }
 .hs-opt--menu {
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 400;
   color: var(--color-green);
 }
@@ -765,7 +767,7 @@ body {
   flex: 1;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: var(--fs-body);
+  font-size: 1rem;
   color: var(--color-green);
 }
 .hs-opt__nm small {
@@ -1378,7 +1380,7 @@ a.tripbar--promo {
   color: #fff;
   padding: 0.7rem 1.2rem;
   border-radius: 999px;
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   opacity: 0;
@@ -1946,7 +1948,7 @@ a.tripbar--promo {
   height: 22px;
 }
 .plan__step h3 {
-  font-size: var(--fs-body);
+  font-size: 1rem;
   color: #fff;
   margin: 0 0 0.2rem;
 }
@@ -1959,7 +1961,7 @@ a.tripbar--promo {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   padding: 0.72rem 1.4rem;
   border-radius: 999px;
@@ -2168,7 +2170,7 @@ a.tripbar--promo {
   border: 1px solid var(--color-green);
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-cream);
   background-color: var(--color-green);
@@ -2848,7 +2850,7 @@ a.footer__contact-item:hover {
   width: 100%;
   padding: 0.85rem 0;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
   background: none;
@@ -3767,7 +3769,7 @@ a.footer__contact-item:hover {
   border-radius: 0 12px 12px 0;
   background: transparent;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -3966,7 +3968,7 @@ a.footer__contact-item:hover {
 }
 .gsearch__ttl {
   font-weight: 500;
-  font-size: var(--fs-body);
+  font-size: 1rem;
 }
 /* kartu guide: foto lebih landscape + label kategori emas */
 .guide-home__card {
@@ -4241,7 +4243,7 @@ a.footer__contact-item:hover {
 .itn-suggest__btn {
   height: 2.7rem;
   padding: 0 1.3rem;
-  font-size: var(--fs-body);
+  font-size: 1rem;
 }
 
 
@@ -4546,7 +4548,7 @@ a.footer__contact-item:hover {
     gap: 0.75rem;
   }
   .hero__booking .booking__group label {
-    font-size: var(--fs-body);
+    font-size: 1rem;
   }
   .hero__booking .booking__group select,
   .hero__booking .booking__group input,
@@ -4604,7 +4606,7 @@ a.footer__contact-item:hover {
   background-color: #25d366;
   color: #fff;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
@@ -4975,7 +4977,7 @@ a.footer__contact-item:hover {
   border-radius: 6px;
   background: transparent;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -5440,7 +5442,7 @@ a.footer__contact-item:hover {
   background: var(--color-green);
   color: var(--color-cream);
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -5560,9 +5562,13 @@ button.pick-cat {
 .modal__sub,
 .modal__success p,
 .modal__row,
-.contact__item span,
-.faq__q {
+.contact__item span {
   font-size: var(--fs-body);
+}
+/* faq__q = pertanyaan yang jadi trigger accordion (klik buat expand/collapse),
+   bukan teks statis - biarin di ukuran sekarang, jangan ikut nyusut --fs-body. */
+.faq__q {
+  font-size: 1rem;
 }
 
 /* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */
@@ -5714,7 +5720,7 @@ button.pick-cat {
   transition: transform 0.28s ease;
 }
 .book-bar__price {
-  font-size: var(--fs-body);
+  font-size: 1rem;
   color: var(--color-green);
 }
 .book-bar__from {
@@ -6212,7 +6218,7 @@ button.pick-cat {
   gap: 0.45rem;
   padding: 0.45rem 0.4rem;
   border-radius: 6px;
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
@@ -6306,7 +6312,7 @@ button.pick-cat {
   background: none;
   text-align: left;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 500;
   color: var(--color-green);
   text-decoration: none;
@@ -6362,7 +6368,7 @@ button.pick-cat {
   border-radius: 6px;
   background: transparent;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 600;
   text-align: center;
   text-decoration: none;
@@ -6480,7 +6486,7 @@ button.pick-cat {
   background: none;
   padding: 0.5rem 1.3rem;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 500;
   color: var(--color-muted);
   border-radius: 999px;
@@ -7195,7 +7201,7 @@ button.pick-cat {
   border: none;
   background: none;
   font-family: var(--font-body);
-  font-size: var(--fs-body);
+  font-size: 1rem;
   font-weight: 500;
   color: var(--color-gold);
   cursor: pointer;
@@ -7774,6 +7780,7 @@ strong {
 }
 .rev__text {
   margin: 0;
+  font-size: var(--fs-body);
   color: var(--color-green);
 }
 .rev__foot {
@@ -7846,14 +7853,8 @@ strong {
   .reviews-strip {
     grid-template-columns: 1fr;
   }
-  .rev__text {
-    font-size: 0.85rem;
-  }
   .rev__stars {
     font-size: 0.85rem;
-  }
-  .rev__name {
-    font-size: 0.8rem;
   }
 }
 
@@ -8272,7 +8273,7 @@ strong {
   padding: 0.8rem;
   border-radius: 999px;
   font-weight: 600;
-  font-size: var(--fs-body);
+  font-size: 1rem;
   text-align: center;
   border: 1px solid var(--color-gold);
   cursor: pointer;
@@ -8951,9 +8952,6 @@ strong {
   }
   .vpromo__title {
     font-size: 1.7rem;
-  }
-  .vpromo__desc {
-    font-size: 0.85rem;
   }
 }
 

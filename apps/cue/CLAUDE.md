@@ -51,7 +51,10 @@ When unsure, ask first (keep it short).
 - Footer (`.footer__contact-item`/`.footer__tagline`/`.footer__col li`) PUNYA UKURAN SENDIRI
   sekarang (nggak numpang `--fs-body` lagi) — **16px → 12.8px**, biar nggak ikut nyusutin
   body/paragraph di halaman lain. `.footer__heading` ikut token `--fs-h3` (jadi 16px juga).
-- Body/paragraph = `1rem` (`--fs-body`), uniform across all pages.
+- Body/paragraph = `0.8rem` (`--fs-body`, Sep 2026 - was 1rem, Wayan minta dikecilin),
+  uniform across all pages. Headings, prices, buttons, nav, and interactive controls
+  (tabs, toggles, dropdown options, FAQ question triggers) do NOT use this token -
+  each was unhooked to its own explicit size so they don't shrink with body text.
 - Form field (input/select/textarea) = `0.875rem` (`--fs-field`) — sengaja lebih kecil
   dari body, semua field pakai token ini (jangan hardcode `--fs-body` di form lagi).
 - Prices = gold + bold (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
@@ -233,7 +236,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v363, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v364, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

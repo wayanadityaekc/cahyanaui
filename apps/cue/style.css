@@ -22,8 +22,8 @@
      Display/h2 sengaja diturunin dari step formal (31-39 / 25) - lebih kecil
      & bobot lebih ringan kerasa lebih tenang buat heading sans satu font. */
   --fs-display: clamp(1.75rem, 4vw, 2.5rem);
-  --fs-h2: 1.375rem;
-  --fs-h3: 1.25rem;
+  --fs-h2: 1.125rem; /* was 1.375rem - Wayan, trim step B */
+  --fs-h3: 1rem; /* was 1.25rem - Wayan, trim step B */
   --fs-strong: 1rem;
   --fs-body: 1rem;
   --fs-field: 0.875rem; /* teks input/select/textarea - lebih kecil dari body */
@@ -2535,7 +2535,7 @@ section.faq::before,
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  font-size: var(--fs-body);
+  font-size: 0.8rem; /* was var(--fs-body) 1rem - Wayan, footer body lebih kecil (step B) */
   color: var(--color-green);
   opacity: 0.9;
   text-decoration: none;
@@ -2553,7 +2553,7 @@ a.footer__contact-item:hover {
 .footer__tagline {
   margin-top: 0.75rem;
   max-width: 320px;
-  font-size: var(--fs-body);
+  font-size: 0.8rem; /* was var(--fs-body) 1rem - Wayan, footer body lebih kecil (step B) */
   line-height: 1.6;
   opacity: 0.85;
 }
@@ -2598,7 +2598,7 @@ a.footer__contact-item:hover {
 }
 .footer__col li {
   margin-bottom: 0.6rem;
-  font-size: var(--fs-body);
+  font-size: 0.8rem; /* was var(--fs-body) 1rem - Wayan, footer body lebih kecil (step B) */
   opacity: 0.85;
 }
 .footer__col a {
@@ -7478,22 +7478,30 @@ section.faq::before,
    Ditaruh di akhir: override font-family lama tiap heading (source-order menang).
    Bobot: body 400 · label 500-600 · harga & tombol 600 · heading 600 (var --font-head).
    ============================================================ */
-/* Tier display (Inter): H1 hero + H2 section doang - bobot lebih ringan +
-   tracking dikit dari card/UI tier di bawah, biar tetep kerasa beda kelas
-   walau satu font sama body. */
+/* Tier display (Inter): H2 section - bobot lebih ringan + tracking dikit dari
+   card/UI tier di bawah, biar tetep kerasa beda kelas walau satu font sama
+   body. H1 (.hero__title/.subhero__title/.lhero__title) DIPISAH ke bawah -
+   Wayan minta H1 lebih tebal (700), H2 section tetep 500. */
 .section__title,
 .section__title--sub,
-.hero__title,
 .hsearch__title,
 .booking__title,
 .about__title,
 .plan__title,
-.subhero__title,
 .highlight__title,
 .contact__heading,
 .title {
   font-family: var(--font-head);
   font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: var(--lh-heading);
+}
+/* Tier display H1 (semua halaman): hero__title (homepage), subhero__title
+   (halaman detail), lhero__title (halaman listing) - satu bobot konsisten. */
+.hero__title,
+.subhero__title {
+  font-family: var(--font-head);
+  font-weight: 700;
   letter-spacing: -0.01em;
   line-height: var(--lh-heading);
 }
@@ -8356,7 +8364,7 @@ strong {
 }
 .lhero__title {
   font-family: var(--font-head);
-  font-weight: 500;
+  font-weight: 700; /* was 500 - Wayan, H1 dipertebal (opsi B) */
   letter-spacing: -0.01em;
   font-size: var(--fs-display);
   line-height: var(--lh-heading);

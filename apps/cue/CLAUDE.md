@@ -34,14 +34,23 @@ When unsure, ask first (keep it short).
 **Fonts** (self-host, `assets/fonts/`, preload di tiap HTML):
 - `--font-body` = `--font-head` = **Inter** (variable 300–700) — satu font doang.
   Playfair Display dicoba (Agu 2026) terus dibuang lagi — Wayan bilang kerasa lebay.
-- H1 hero + H2 section (blok "Tier display" di akhir style.css) sengaja dibedain dari
-  body/UI: bobot **500** + `letter-spacing: -0.01em` (bukan 600) + ukuran diturunin dikit
-  dari step formal (`--fs-display` 28–34px, `--fs-h2` 22px) — biar kerasa lebih tenang/
-  elegan tanpa perlu font kedua.
+- H1 (blok "Tier display H1" di akhir style.css — `.hero__title`/`.subhero__title`/
+  `.lhero__title`, semua halaman) sengaja **bobot 700** (Sep 2026, Wayan minta dipertebal —
+  dulu 500 "biar tenang", udah dibalik) + `letter-spacing: -0.01em`.
+  H2 section (`.section__title` dkk, blok "Tier display" terpisah) TETEP bobot 500 —
+  cuma H1 yang ditebalin, H2 nggak.
 - **Bobot konsisten (jangan bold berat sembarangan):** body 400 · label 500 (tracked + uppercase,
-  kesan small-caps) · harga & tombol 600 · heading (H1/H2) 500.
+  kesan small-caps) · harga & tombol 600 · H1 700 · H2 500.
 
-**Text:**
+**Text — type scale (Sep 2026, ditrim — "kerasa kegedean" per Wayan):**
+- `--fs-display` (H1) tetep `clamp(1.75rem,4vw,2.5rem)` (28–40px) — cuma bobotnya yang naik,
+  ukuran nggak diubah.
+- `--fs-h2` (judul section body, mis. "What You'll Do") **22px → 18px**.
+- `--fs-h3` (Tier UI: judul kartu/stop/footer heading/modal/driver name, weight 600 tetep)
+  **20px → 16px**.
+- Footer (`.footer__contact-item`/`.footer__tagline`/`.footer__col li`) PUNYA UKURAN SENDIRI
+  sekarang (nggak numpang `--fs-body` lagi) — **16px → 12.8px**, biar nggak ikut nyusutin
+  body/paragraph di halaman lain. `.footer__heading` ikut token `--fs-h3` (jadi 16px juga).
 - Body/paragraph = `1rem` (`--fs-body`), uniform across all pages.
 - Form field (input/select/textarea) = `0.875rem` (`--fs-field`) — sengaja lebih kecil
   dari body, semua field pakai token ini (jangan hardcode `--fs-body` di form lagi).
@@ -173,7 +182,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v351, PARTIALS 71)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v359, PARTIALS 71)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

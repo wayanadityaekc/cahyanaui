@@ -3648,8 +3648,15 @@ function initMyTripsCart() {
         '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
         '<div class="experience__meta"><span>' + it.meta + "</span></div>" + priceHtml + "</div></a>";
     }).join("");
-    return '<section class="related mtc-related">' +
-      '<h2 class="related__title">You might also like</h2>' +
+    // "tourprog" = class scope kartu Atelier (.tourprog .experience__card: 4:3 photo,
+    // body 2-baris title/rating + meta/price) - reuse scope yang udah dipakai
+    // tour.html/activities.html/destinations.html, bukan nulis rule visual baru.
+    // Grid DITARUH DI LUAR ".related": .related punya rule kartu lama sendiri
+    // (foto square + title-overlay-di-foto, buat konteks initRelated di halaman
+    // detail) yang bentrok kalau kartu yang sama juga kena ".tourprog". ".related"
+    // di sini cuma buat judul + garis pembatas gold-nya, gak nyentuh grid.
+    return '<section class="mtc-related tourprog">' +
+      '<div class="related"><h2 class="related__title">You might also like</h2></div>' +
       '<div class="experience__grid experience__grid--home4">' + cards + "</div>" +
     "</section>";
   }

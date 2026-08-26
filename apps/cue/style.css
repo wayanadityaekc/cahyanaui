@@ -6796,6 +6796,12 @@ button.pick-cat {
   margin: var(--space-4) 0 0;
   padding: var(--space-4) 0 0;
 }
+/* .related di sini cuma bungkus judul (grid ditaruh di luar - lihat komentar
+   relatedUpsellHTML) - buang padding bawahnya (dimaksud buat ngasih jarak abis
+   grid, giliran grid-nya udah di luar) + gantiin margin-top grid yang tadinya
+   dari ".related .experience__grid--home4" (gak kena lagi karena grid-nya di luar). */
+.mtc-related .related { padding-bottom: 0; }
+.mtc-related .experience__grid--home4 { margin-top: 1.6rem; }
 .mtc-pkgintro {
   color: var(--color-muted);
   margin: 0 0 1.2rem;

@@ -6685,12 +6685,28 @@ button.pick-cat {
    date input bawaan browser. Border/radius/font/warna ikut base rule field di atas;
    di sini cuma yang khas tombol. */
 .mtc-item__datebtn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   margin: 0.35rem 0 0;
   padding: 0.3rem 0.6rem;
   background-color: #fff;
   text-align: left;
   cursor: pointer;
+}
+/* Ikon kalender (opsi A) - biar keliatan ini tombol buka kalender, bukan
+   field ketik biasa. Pure CSS (mask-image), gak nambah markup JS. */
+.mtc-item__datebtn::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M8 3v4M16 3v4M3 10h18'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M8 3v4M16 3v4M3 10h18'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  opacity: 0.7;
 }
 .mtc-item__datebtn.is-empty { color: var(--color-muted); }
 /* tanggal teks (tab paket suggested — di sana tanggalnya bawaan paket, bukan input) */

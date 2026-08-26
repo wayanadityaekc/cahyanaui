@@ -46,17 +46,24 @@ When unsure, ask first (keep it short).
 - `--fs-display` (H1) tetep `clamp(1.75rem,4vw,2.5rem)` (28–40px) — cuma bobotnya yang naik,
   ukuran nggak diubah.
 - `--fs-h2` (judul section body, mis. "What You'll Do") **22px → 18px**.
-- `--fs-h3` (Tier UI: judul kartu/stop/footer heading/modal/driver name, weight 600 tetep)
-  **20px → 16px**.
+- `--fs-h3` **20px → 16px → 14px** (Tier UI: judul kartu/stop/footer heading/modal/driver
+  name, weight 600 tetep) — disamain ke `--fs-strong` (dulu 2 token beda nilai, sekarang
+  berdua 14px, biar gak ada 2 "ukuran judul kecil" yang mirip tapi beda dikit).
 - Footer (`.footer__contact-item`/`.footer__tagline`/`.footer__col li`) PUNYA UKURAN SENDIRI
-  sekarang (nggak numpang `--fs-body` lagi) — **16px → 12.8px**, biar nggak ikut nyusutin
-  body/paragraph di halaman lain. `.footer__heading` ikut token `--fs-h3` (jadi 16px juga).
+  sekarang (nggak numpang `--fs-body` lagi) — **16px → 12.8px**. `.footer__heading` ikut
+  token `--fs-h3` (jadi 14px).
 - Body/paragraph = `0.8rem` (`--fs-body`, Sep 2026 - was 1rem, Wayan minta dikecilin),
   uniform across all pages. Headings, prices, buttons, nav, and interactive controls
   (tabs, toggles, dropdown options, FAQ question triggers) do NOT use this token -
   each was unhooked to its own explicit size so they don't shrink with body text.
-- Form field (input/select/textarea) = `0.875rem` (`--fs-field`) — sengaja lebih kecil
-  dari body, semua field pakai token ini (jangan hardcode `--fs-body` di form lagi).
+- Form field (input/select/textarea) = `0.8rem` (`--fs-field`, was 0.875rem — disamain ke
+  `--fs-body`/`--fs-small`), semua field pakai token ini (jangan hardcode ukuran di form lagi).
+- **Konsolidasi (Sep 2026)**: puluhan `font-size` yang di-hardcode langsung (bukan token) —
+  hasil nambahin fitur satu-satu dari waktu ke waktu — di-sapu & di-snap ke token terdekat
+  (`--fs-label`/`--fs-small`/`--fs-h3`/`1rem`/`--fs-h2`). YANG SENGAJA DIBIARIN beda-beda
+  (jangan ikut disamain kalau nemu lagi): ikon/glyph (panah slider, tombol close ×, bintang
+  rating — font-size di situ = ukuran ikon, bukan teks bacaan), harga (`.price`/`.summary__amt`/
+  dkk), dan judul besar level-halaman (`.subhero__title` var overlap, `.vpromo__title`).
 - Prices = gold + bold (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
 
 **Section dividers:**
@@ -236,7 +243,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v364, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v365, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

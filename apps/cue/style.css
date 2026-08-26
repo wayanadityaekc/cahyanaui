@@ -29,12 +29,12 @@
      & bobot lebih ringan kerasa lebih tenang buat heading sans satu font. */
   --fs-display: clamp(1.75rem, 4vw, 2.5rem);
   --fs-h2: 1.125rem; /* was 1.375rem - Wayan, trim step B */
-  --fs-h3: 1rem; /* was 1.25rem - Wayan, trim step B */
-  --fs-strong: 1rem;
+  --fs-h3: 0.875rem; /* was 1rem - Wayan, samain sama --fs-strong */
+  --fs-strong: 0.875rem; /* was 1rem - Wayan, samain sama --fs-h3 */
   --fs-body: 0.8rem; /* Sep 2026, Wayan: semua teks paragraf/deskripsi/label/meta
     dikecilin ke 0.8rem - H1/H2/H3, harga, dan tombol TIDAK ikut (masing-masing
     unhooked ke nilai eksplisit sendiri biar gak ke-drag token ini). */
-  --fs-field: 0.875rem; /* teks input/select/textarea - lebih kecil dari body */
+  --fs-field: 0.8rem; /* was 0.875rem - Wayan, samain sama --fs-body/--fs-small */
   --fs-small: 0.8rem;
   --fs-label: 0.64rem;
   --lh-body: 1.6;
@@ -566,7 +566,7 @@ body {
   display: inline-block;
   margin-bottom: 0.3rem;
   padding: 2px 8px;
-  font-size: 0.62rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -580,7 +580,7 @@ body {
 }
 .binfo__pop p {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: var(--fs-small);
   line-height: 1.45;
   font-weight: 400;
   color: #6b6456;
@@ -590,7 +590,7 @@ body {
   margin: 0 0 0.6rem;
   padding-bottom: 0.6rem;
   border-bottom: 1px solid #f2efe7;
-  font-size: 0.72rem;
+  font-size: var(--fs-small);
   line-height: 1.45;
   font-weight: 600;
   color: var(--color-green);
@@ -816,7 +816,7 @@ body {
 .hs-cal__dow {
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 0.6rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-muted);
@@ -830,7 +830,7 @@ body {
   justify-content: center;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   color: var(--color-ink);
   cursor: pointer;
   border: none;
@@ -965,7 +965,7 @@ body.hs-locked .wa-float {
   .hs-panel__head h3 {
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--color-green);
   }
   .hs-panel__close {
@@ -1111,7 +1111,7 @@ body.hs-locked .wa-float {
   border-top: 1px solid #ececec;
   background: var(--color-cream);
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: var(--fs-h3);
   color: var(--color-green);
   cursor: pointer;
   text-decoration: none;
@@ -1150,7 +1150,7 @@ a.tripbar--promo {
 }
 @media (max-width: 560px) {
   .tripbar {
-    font-size: 0.78rem;
+    font-size: var(--fs-small);
     gap: 0.35rem;
     padding: 0.55rem 0.9rem;
   }
@@ -1347,7 +1347,7 @@ a.tripbar--promo {
   .bookdate-panel .hs-panel__head h3 {
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--color-green);
   }
   .bookdate-panel .hs-panel__close {
@@ -1601,7 +1601,7 @@ a.tripbar--promo {
 .trust__stat {
   flex: 0 0 100%;
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--color-green);
 }
 .trust__stat[hidden] {
@@ -1609,7 +1609,7 @@ a.tripbar--promo {
 }
 .trust__stat strong {
   color: var(--color-gold);
-  font-size: 1.2rem;
+  font-size: var(--fs-h2);
   font-weight: 600;
 }
 /* "Featured On" & "Follow Us" bersebelahan dalam satu baris (numpuk di layar sempit) */
@@ -1794,10 +1794,10 @@ a.tripbar--promo {
 }
 .experience__more-title {
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: var(--fs-h2);
 }
 .experience__more-sub {
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   opacity: 0.9;
 }
 /* Judul di DALAM foto (dipindah via initCardTitleOverlay) + gradient gelap
@@ -3393,7 +3393,7 @@ a.footer__contact-item:hover {
   display: block;
   margin-top: 0.25rem;
   font-family: var(--font-body);
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--color-green);
 }
 /* Harga tetap gold (menang atas .highlight__meta-item span yg bikin muted) */
@@ -3611,7 +3611,7 @@ a.footer__contact-item:hover {
   color: var(--color-gold-d);
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.68rem;
+  font-size: var(--fs-label);
   padding: 3px 11px;
   border-radius: 999px;
 }
@@ -3819,7 +3819,7 @@ a.footer__contact-item:hover {
   text-decoration: none;
   color: var(--color-green);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: var(--fs-h3);
   border-top: 1px solid var(--line);
 }
 .guide-cat-menu a:first-child {
@@ -3902,7 +3902,7 @@ a.footer__contact-item:hover {
   outline: none;
   background: none;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: var(--fs-field);
   color: var(--color-green);
 }
 .gsearch__input::placeholder {
@@ -4422,7 +4422,7 @@ a.footer__contact-item:hover {
   .navbar__drawertitle {
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--color-green);
   }
   .navbar__drawerclose {
@@ -4787,7 +4787,7 @@ a.footer__contact-item:hover {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.9);
   color: var(--color-err);
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -5590,7 +5590,7 @@ button.pick-cat {
     font-size: clamp(2.3rem, 5.5vw, 3rem);
   }
   .subhero--overlap.subhero--tour .subhero__text {
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.55;
     max-width: 640px;
     margin-left: auto;
@@ -5650,7 +5650,7 @@ button.pick-cat {
   border-left: 1px solid #e6e6e6;
 }
 .tour-hook__label {
-  font-size: 12px;
+  font-size: var(--fs-small);
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
@@ -5658,7 +5658,7 @@ button.pick-cat {
 }
 .tour-hook__value {
   margin-top: 0.2rem;
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 500;
   color: var(--color-ink);
 }
@@ -5725,7 +5725,7 @@ button.pick-cat {
 }
 .book-bar__from {
   color: var(--color-muted);
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
 }
 .book-bar .price {
   color: var(--color-gold);
@@ -5734,7 +5734,7 @@ button.pick-cat {
 }
 .book-bar__unit {
   color: var(--color-muted);
-  font-size: 0.75rem;
+  font-size: var(--fs-small);
 }
 .book-bar__actions {
   display: flex;
@@ -5811,7 +5811,7 @@ button.pick-cat {
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.42);
   color: #fff;
-  font-size: 0.78rem;
+  font-size: var(--fs-small);
 }
 .hero-slider__title {
   display: block;
@@ -5927,7 +5927,7 @@ button.pick-cat {
     padding: 0 22px;
   }
   .tour-hook__value {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     white-space: nowrap;
   }
 }
@@ -7128,7 +7128,7 @@ button.pick-cat {
   top: -0.6rem;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.6rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 500;
@@ -7145,7 +7145,7 @@ button.pick-cat {
   color: var(--color-green);
 }
 .chdur__sub {
-  font-size: 0.74rem;
+  font-size: var(--fs-small);
   color: var(--color-muted);
   margin-bottom: 0.5rem;
 }
@@ -7155,7 +7155,7 @@ button.pick-cat {
   font-size: 1.2rem;
 }
 .chdur__from {
-  font-size: 0.66rem;
+  font-size: var(--fs-label);
   font-weight: 400;
   color: var(--color-muted);
 }
@@ -7716,7 +7716,7 @@ strong {
   color: var(--color-gold-d);
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: var(--fs-h3);
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -8169,7 +8169,7 @@ strong {
 }
 .transfer-hero__desc {
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   margin: 0 auto 1.6rem;
   max-width: 440px;
 }
@@ -8192,7 +8192,7 @@ strong {
 }
 .tpick__field label {
   display: block;
-  font-size: 0.7rem;
+  font-size: var(--fs-small);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--color-muted);
@@ -8231,7 +8231,7 @@ strong {
 .tpick__unit {
   display: block;
   color: var(--color-muted);
-  font-size: 0.76rem;
+  font-size: var(--fs-small);
   margin-top: 0.1rem;
 }
 .tpick__return {
@@ -8241,7 +8241,7 @@ strong {
   gap: 0.5rem;
   margin: 0.9rem 0 1.1rem;
   color: var(--color-green);
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   cursor: pointer;
 }
 .tpick__return input { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -8314,8 +8314,8 @@ strong {
   flex-shrink: 0;
 }
 .troute__info { display: flex; flex-direction: column; }
-.troute__name { font-weight: 600; color: var(--color-green); font-size: 0.86rem; }
-.troute__meta { color: var(--color-muted); font-size: 0.75rem; margin-top: 0.1rem; }
+.troute__name { font-weight: 600; color: var(--color-green); font-size: var(--fs-h3); }
+.troute__meta { color: var(--color-muted); font-size: var(--fs-small); margin-top: 0.1rem; }
 .troute__pr { margin-left: auto; color: var(--color-gold); font-weight: 600; }
 @media (max-width: 768px) {
   .troutes__list { grid-template-columns: 1fr; }
@@ -8340,12 +8340,12 @@ strong {
   border-right: 1px solid var(--line);
 }
 .tinfo__fact:last-child { border-right: none; }
-.tinfo__fact span { display: block; font-size: 12px; font-weight: 400; color: var(--color-muted); }
+.tinfo__fact span { display: block; font-size: var(--fs-small); font-weight: 400; color: var(--color-muted); }
 .tinfo__fact strong {
   display: block;
   margin-top: 0.2rem;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 500;
   color: var(--color-ink);
 }
@@ -8366,7 +8366,7 @@ strong {
   margin: 0 0 0.8rem;
 }
 @media (min-width: 769px) {
-  .tinfo__fact strong { font-size: 15px; }
+  .tinfo__fact strong { font-size: var(--fs-h3); }
 }
 @media (max-width: 768px) {
   .tinfo__cols { grid-template-columns: 1fr; gap: 1.3rem; }
@@ -8434,7 +8434,7 @@ strong {
   position: absolute;
   top: 0.7rem;
   left: 0.7rem;
-  font-size: 0.66rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 500;
@@ -8456,7 +8456,7 @@ strong {
   margin: 0 0 0.35rem;
 }
 .lbox__desc {
-  font-size: 0.84rem;
+  font-size: var(--fs-small);
   color: var(--color-ink);
   line-height: 1.5;
   margin: 0 0 1rem;
@@ -8475,12 +8475,12 @@ strong {
   border-right: 1px solid var(--line);
 }
 .lbox__fact:last-child { border-right: none; }
-.lbox__fact span { display: block; font-size: 12px; color: var(--color-muted); }
+.lbox__fact span { display: block; font-size: var(--fs-small); color: var(--color-muted); }
 .lbox__fact strong {
   display: block;
   margin-top: 0.15rem;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: var(--fs-h3);
   font-weight: 500;
   color: var(--color-ink);
 }
@@ -8492,7 +8492,7 @@ strong {
   border-radius: 999px;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: var(--fs-h3);
   text-align: center;
   text-decoration: none;
   border: 1px solid var(--color-gold);
@@ -8617,13 +8617,13 @@ strong {
 .anl b {
   display: block;
   margin-bottom: 0.15rem;
-  font-size: 0.92rem;
+  font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-green);
 }
 .anl p {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   line-height: 1.5;
   color: var(--color-muted);
 }
@@ -8699,7 +8699,7 @@ strong {
   border-radius: 999px;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: var(--fs-h3);
   text-decoration: none;
   color: #fff;
   background: var(--color-cta);
@@ -8928,7 +8928,7 @@ strong {
   border-radius: 999px;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: var(--fs-h3);
   text-decoration: none;
   background: #fff;
   color: var(--color-green);
@@ -9205,7 +9205,7 @@ strong {
 .related__all a {
   color: var(--color-gold-d);
   font-weight: 500;
-  font-size: 0.88rem;
+  font-size: var(--fs-h3);
   text-decoration: none;
 }
 .related__all a:hover {

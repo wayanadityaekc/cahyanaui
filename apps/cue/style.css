@@ -7980,6 +7980,14 @@ strong {
 .tourprog .experience__card .card-add.added::before {
   background: #fff;
 }
+/* TEMP OFF (Wayan, masih mikirin lagi soal heart badge di kartu grid) —
+   CSS-only hide, ditaruh PALING AKHIR blok biar menang di cascade (rule di
+   atas declare display:flex juga). Styling di atas dibiarin utuh, tinggal
+   hapus rule ini buat nyalain lagi. */
+.home .experience__card .card-add,
+.tourprog .experience__card .card-add {
+  display: none;
+}
 
 /* ===== Card rating slot (grid cards) =====
    Right of the title. Structurally ready; only rendered by JS when a real

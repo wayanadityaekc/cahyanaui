@@ -648,6 +648,12 @@ body {
   border-color: var(--color-gold);
   box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.15);
 }
+/* "Choose" (explore-type field, search form homepage): disamain ke ukuran
+   label di atasnya (0.8rem) - field ini doang, .hs-control lain (currency,
+   dropdown booking) tetep --fs-field biar konsisten sama field lain. */
+[data-explore-btn].hs-control {
+  font-size: 0.8rem;
+}
 .hs-control__val.placeholder {
   color: var(--color-muted);
 }

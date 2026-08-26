@@ -6591,6 +6591,35 @@ button.pick-cat {
   color: var(--color-green);
   border-bottom-color: var(--color-gold);
 }
+/* Job 5 - layout kartu (main) vs total/receipt/policy/bayar (side).
+   Mobile (base): numpuk, main dulu baru side (urutan DOM). */
+.mtc-layout__main,
+.mtc-layout__side {
+  min-width: 0;
+}
+.mtc-layout__side {
+  margin-top: var(--space-4);
+}
+@media (min-width: 993px) {
+  /* Desktop: main|side jadi 2 kolom, side nempel (sticky) - kartu jalan normal
+     di kolom kiri, total/receipt/policy/bayar tetep keliatan pas discroll. */
+  .mtc-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .mtc-layout__main {
+    flex: 1 1 auto;
+  }
+  .mtc-layout__side {
+    flex: 0 0 320px;
+    margin-top: 0;
+    position: sticky;
+    /* 6.5rem = angka clearance navbar+tripbar yg udah dipakai di tempat lain
+       (.tour-hero desktop) - bukan angka baru, reuse yg udah ada. */
+    top: 6.5rem;
+  }
+}
 /* item card */
 .mtc-item {
   display: flex;

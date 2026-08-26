@@ -3724,13 +3724,19 @@ function initMyTripsCart() {
       // jangan duplikat isi policy-nya di sini.
       const policyLine = '<p class="mtc-note mtc-policy">By clicking <strong>Make Payment</strong>, you agree to our ' +
         '<a href="cancellation-policy.html">cancellation policy</a> and <a href="terms-conditions.html">terms</a>.</p>';
-      return '<div class="mtc-list" data-removable>' + listHTML(rows, { removable: true }) + "</div>" +
-        receiptHTML(rows, receiptOpen) +
+      // Job 5: kartu (main) + total/receipt/policy/bayar (side) dipisah jadi 2 blok.
+      // Mobile: numpuk (main dulu, side belakangan - urutan DOM ini apa adanya).
+      // Desktop: .mtc-layout jadi row, .mtc-layout__side sticky (lihat CSS).
+      const sideHTML = receiptHTML(rows, receiptOpen) +
         totalHTML(rows) +
         policyLine +
         '<button type="button" class="modal__btn mtc-pay" data-pay' + (undated ? " disabled" : "") + ">Make Payment</button>" +
         (undated ? '<p class="mtc-note mtc-note--warn">' + undated + (undated > 1 ? " items still need" : " item still needs") + " a date.</p>" : "") +
         '<p class="mtc-note">' + "You'll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email." + "</p>";
+      return '<div class="mtc-layout">' +
+        '<div class="mtc-layout__main"><div class="mtc-list" data-removable>' + listHTML(rows, { removable: true }) + "</div></div>" +
+        '<aside class="mtc-layout__side">' + sideHTML + "</aside>" +
+      "</div>";
     }
     // Tab paket: browse. Tiap baris punya hati; gak ada tombol "use this plan" lagi.
     const pkg = CART_PACKAGES.find((p) => p.id === activeTab);

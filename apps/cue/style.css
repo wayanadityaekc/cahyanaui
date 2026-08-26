@@ -6766,9 +6766,6 @@ button.pick-cat {
 .mtc-pay {
   width: 100%;
   margin-top: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-weight: 600;
 }
 /* Make Payment ke-lock selama masih ada kartu yang belum ada tanggalnya */
 .mtc-pay:disabled {

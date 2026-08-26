@@ -1000,12 +1000,26 @@ function cartRowAt(state, ref) {
 // Tanggal cart = CASCADE. Set tanggal baris ke-pos, terus kartu di BAWAHNYA nyusul
 // berurutan (+1 hari tiap kartu, atas ke bawah). Kartu di ATASNYA gak disentuh.
 // pos = posisi di urutan tampil (cartFlatten: days -> transfers -> charters).
+//
+// TRANSFER DIKECUALIIN: dia antar-jemput, bukan "hari kegiatan" — tanggalnya
+// berdiri sendiri, gak ikut kegeser, dan gak makan jatah hari buat kartu di
+// bawahnya. Charter TETAP ikut cascade (itu sewa mobil seharian = 1 hari).
 // Ngedit langsung ke object state — pemanggil yang nentuin kapan itnSave.
 function cartCascadeFrom(state, pos, date) {
   const order = cartFlatten(state).map((r) => r.ref);
+  const target = order[pos];
+  if (!target) return;
+  if (target.type === "transfer") {
+    const row = cartRowAt(state, target);
+    if (row) row.date = date;
+    return;
+  }
+  let step = 0;
   for (let i = pos; i < order.length; i++) {
+    if (order[i].type === "transfer") continue;
     const row = cartRowAt(state, order[i]);
-    if (row) row.date = addDaysStr(date, i - pos);
+    if (row) row.date = addDaysStr(date, step);
+    step++;
   }
 }
 
@@ -3571,6 +3585,7 @@ function initMyTripsCart() {
   const root = document.querySelector("[data-mytrips-cart]");
   if (!root) return;
   let activeTab = "custom";
+  let receiptOpen = false; // rincian harga: default ketutup
 
   // Satu kartu item. opts.removable = tombol x (tab cart); opts.heart = toggle (tab paket).
   const rowCardHTML = (r, opts, pos) => {
@@ -3605,6 +3620,22 @@ function initMyTripsCart() {
 
   // Flat list: gak ada header grup tanggal, tanggal nempel di kartunya masing-masing.
   const listHTML = (rows, opts) => rows.map((r, i) => rowCardHTML(r, opts, i)).join("");
+
+  // Rincian harga per item (1 baris = 1 item). Ketutup default; kebuka lewat toggle.
+  // Harga per baris pakai cartPriceTag yang sama kayak kartu — jadi kalau ada
+  // referral, coretan harga aslinya ikut kebawa & angkanya konsisten sama total.
+  const receiptHTML = (rows, open) =>
+    '<div class="mtc-receipt">' +
+      '<button type="button" class="mtc-receipt__toggle" data-receipt aria-expanded="' + (open ? "true" : "false") + '">' +
+        '<span>Price breakdown</span>' +
+        '<svg class="mtc-receipt__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
+      "</button>" +
+      (open
+        ? '<ul class="mtc-receipt__list">' + rows.map((r) =>
+            '<li class="mtc-receipt__line"><span class="mtc-receipt__name">' + escHtml(r.title) + "</span>" +
+            '<span class="mtc-receipt__amt">' + cartPriceTag(r.usd, r.idr) + "</span></li>").join("") + "</ul>"
+        : "") +
+    "</div>";
 
   const totalHTML = (rows, label) =>
     '<div class="mtc-total"><span class="mtc-total__label">' + escHtml(label || "Total") + "</span>" +
@@ -3642,6 +3673,7 @@ function initMyTripsCart() {
       }
       const undated = rows.filter((r) => !r.date).length;
       return '<div class="mtc-list" data-removable>' + listHTML(rows, { removable: true }) + "</div>" +
+        receiptHTML(rows, receiptOpen) +
         totalHTML(rows) +
         '<button type="button" class="modal__btn mtc-pay" data-pay' + (undated ? " disabled" : "") + ">Make Payment</button>" +
         (undated ? '<p class="mtc-note mtc-note--warn">' + undated + (undated > 1 ? " items still need" : " item still needs") + " a date.</p>" : "") +
@@ -3708,6 +3740,10 @@ function initMyTripsCart() {
         render();
       });
     });
+    const rec = root.querySelector("[data-receipt]");
+    if (rec) rec.addEventListener("click", () => { receiptOpen = !receiptOpen; render(); });
+    const pay = root.querySelector("[data-pay]");
+    if (pay) pay.addEventListener("click", () => cartCheckout(render));
     // Tab aktif ketarik ke view tanpa nge-scroll halaman (innerHTML reset scrollLeft).
     const tabsEl = root.querySelector(".mtc-tabs");
     const onTab = root.querySelector(".mtc-tab.is-on");

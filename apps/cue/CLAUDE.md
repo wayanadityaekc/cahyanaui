@@ -136,6 +136,44 @@ When unsure, ask first (keep it short).
 - Scrollbar is **hidden** (navigate via arrows / swipe).
 - `touch-action: pan-x pan-y` → horizontal swipe moves cards, vertical swipe still
   scrolls the page (don't revert to `pan-x` only — it makes scroll stick on mobile).
+- **Card grid split (Sep 2026)**: `initTourSlider()` still unconditionally wraps any
+  `.experience__grid--home4`/`--slider` in `.slider-holder` + injects arrows (JS doesn't
+  check viewport/overflow) — sliding vs. wrapping is purely CSS. Reused the old
+  `.experience__grid--auto` grid-wrap pattern (`repeat(auto-fit, minmax(260px,1fr))`),
+  scoped per context, and hide `.slider-arrow` where it no longer applies:
+  - `.xplore .experience__grid--home4` (homepage Explore/Destinations): **desktop** = grid
+    wrap, all cards visible, no slide (>4 cards wrap to a new row, e.g. Destinations' 6
+    cards). **Mobile** = still slides (unchanged) — homepage-only mobile behavior.
+  - `.catsec .experience__grid--home4` (listing pages tour/activities/destinations): grid
+    wrap at **every** breakpoint — desktop ~4/row + wraps if more, mobile = normal
+    vertical scroll, no slide at all.
+  - Everywhere else (`.related`, `.mtc-related` cart upsell, Guides & Info) still slides —
+    untouched.
+  - Note: this reverses an earlier documented decision (grid-wrap once caused a "cards
+    stack into rows" bug, which is why it got unified to slider everywhere). Re-tested
+    both contexts after the change; watch for regressions if touching this again.
+
+## Listing page category tabs (`.zone-chip`, tour/activities/destinations)
+- Anchor links + scrollspy (`initZoneAnchors()` in script.js) — tab aktif ngikutin
+  section yang lagi keliatan pas scroll, no filtering.
+- **Fix (Sep 2026)**: scrollspy dulu pakai `s.offsetTop`, yang keliru kalau section
+  punya positioned ancestor (mis. `.experience--alt` kalau `position` bukan `static`)
+  — offsetTop jadi relatif ke ancestor itu, bukan ke dokumen, jadi tab pertama
+  ("Temples" dkk) ke-aktif dari awal walau user masih di hero. Sekarang pakai
+  `getBoundingClientRect().top + scrollY` (posisi beneran relatif dokumen), dan
+  `cur` mulai dari `null` (bukan section pertama) biar gak ada tab aktif kalau
+  probe belum nyampe section manapun.
+
+## Booking sidebar layout (`.tour-layout--book`, halaman detail bookable)
+- `initBookSidebar()` (script.js) inject 2 kolom via JS setelah subhero: `.tour-layout__main`
+  (konten, flex 1 1 auto) + `.tour-layout__side` (kartu "Build Your Trip", sticky, flex
+  0 0 34% / max-width 380px). Lebar sidebar campuran %+max-width jadi offset kolom kiri
+  dari tepi layar gak bisa dihitung lewat CSS calc() biasa.
+- **Judul section di kolom kiri** (mis. "What You'll Do") sengaja digeser ke tengah LAYAR
+  penuh (bukan cuma tengah kolom kiri yang lebih sempit) — via `transform: translateX(var(--title-shift))`,
+  `--title-shift` diukur & di-set JS (`centerBreakoutTitles()`, sama pola kayak
+  `alignSideToFirstPhoto()`/`--side-offset` di atasnya). Berlaku ke SEMUA `.section__title`
+  yang landing di `.tour-layout__main`, bukan cuma "What You'll Do" doang (biar konsisten).
 
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
@@ -195,7 +233,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v360, PARTIALS 72)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v361, PARTIALS 72)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

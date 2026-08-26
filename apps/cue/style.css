@@ -3220,6 +3220,15 @@ a.footer__contact-item:hover {
   box-shadow: none;
 }
 
+/* Judul section di kolom kiri (mis. "What You'll Do") - geser ke tengah LAYAR
+   penuh, bukan cuma tengah kolom konten (kolom kiri lebih sempit karena ada
+   sidebar "Build Your Trip" di kanan, lebar sidebar-nya campuran %/max-width
+   jadi gak bisa dihitung offset-nya lewat CSS calc() biasa - --title-shift
+   diukur & di-set JS, liat centerBreakoutTitles() di script.js). */
+.tour-layout__main .section__title {
+  transform: translateX(var(--title-shift, 0px));
+}
+
 @media (min-width: 993px) {
   .tour-layout--book {
     display: flex;
@@ -8762,6 +8771,23 @@ strong {
 .xpanel[hidden] { display: none; }
 /* kartu di panel: napas lebih longgar dari default */
 .xplore .experience__grid--home4 { gap: 1.4rem; }
+/* Desktop: Explore & Destinations (homepage) tampilin SEMUA kartu tanpa geser -
+   wrap ke grid (>4 kartu = row baru, liat section Destinations). Mobile TETAP
+   slider (base .experience__grid mobile rule, sengaja gak disentuh - khusus
+   homepage aja yang boleh geser di HP, listing page lain nggak - liat .catsec). */
+@media (min-width: 993px) {
+  .xplore .experience__grid--home4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    overflow: visible;
+  }
+  .xplore .experience__grid--home4 .experience__card {
+    flex: none;
+  }
+}
+.xplore .slider-arrow {
+  display: none !important;
+}
 .xplore__more { margin-top: 2rem; text-align: right; }
 @media (max-width: 768px) {
   .xplore { padding: 3.2rem 1.1rem; }
@@ -9069,6 +9095,18 @@ strong {
 }
 .catsec .experience__grid--home4 {
   margin-top: 1.6rem;
+  /* Listing page (tour/activities/destinations): tanpa slider di SEMUA breakpoint -
+     grid wrap (4-an per baris desktop, row baru kalau >4; HP jadi scroll ke bawah biasa). */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  overflow: visible;
+  touch-action: auto;
+}
+.catsec .experience__grid--home4 .experience__card {
+  flex: none;
+}
+.catsec .slider-arrow {
+  display: none !important;
 }
 /* zone-chip skarang <a> (bukan button) */
 .zone-chip {

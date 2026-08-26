@@ -4811,6 +4811,28 @@ function alignSideToFirstPhoto(layout, main, side) {
   if (off > 0) layout.style.setProperty("--side-offset", off + "px");
 }
 
+// Judul section di kolom kiri (mis. "What You'll Do") harus ke tengah LAYAR
+// penuh, bukan cuma tengah kolom konten (kolom kiri lebih sempit karena ada
+// sidebar "Build Your Trip" di kanan, lebarnya nggak proporsional/nggak bisa
+// dihitung lewat CSS % biasa - lebar sidebar campuran 34% & max-width 380px).
+// Diukur & digeser pakai transform, sama kayak alignSideToFirstPhoto di atas.
+function centerBreakoutTitles(main) {
+  const titles = main.querySelectorAll(".section__title");
+  const apply = () => {
+    if (!window.matchMedia("(min-width: 993px)").matches) {
+      titles.forEach((el) => el.style.removeProperty("--title-shift"));
+      return;
+    }
+    titles.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      const shift = Math.round(window.innerWidth / 2 - (r.left + r.width / 2));
+      el.style.setProperty("--title-shift", shift + "px");
+    });
+  };
+  apply();
+  window.addEventListener("resize", apply);
+}
+
 // Halaman detail bookable: gabung form "Build Your Trip" + checklist Included/Excluded
 // + Ask jadi SATU kartu sidebar. Desktop = 2 kolom (kartu sticky kanan). Mobile = satu
 // kolom, kartu di paling bawah setelah konten. Form-nya dipindah keluar dari modal;
@@ -4953,6 +4975,7 @@ function initBookSidebar() {
 
   // sejajarin sidebar sama foto pertama (stop 1), bukan sama title
   alignSideToFirstPhoto(layout, main, side);
+  centerBreakoutTitles(main);
 }
 
 // Slider manual di foto hero: pakai foto-foto KONTEN (stop) program itu. Tiap slide
@@ -5254,12 +5277,21 @@ function initZoneAnchors() {
     });
   });
 
-  // Scrollspy: tab aktif = section terakhir yang udah lewat garis probe
+  // Scrollspy: tab aktif = section terakhir yang udah lewat garis probe.
+  // Posisi section dihitung pakai getBoundingClientRect() (relatif viewport + scrollY),
+  // BUKAN s.offsetTop - offsetTop relatif ke offsetParent terdekat yang position-nya
+  // non-static (mis. section.experience--alt), bukan ke dokumen, jadi kalau ada
+  // ancestor kebetulan positioned, angkanya salah total & chip pertama ke-aktif
+  // dari awal walau masih di hero. cur mulai null: kalau probe belum nyampe section
+  // pertama, jangan ada chip yang ke-highlight duluan.
   const spy = () => {
     const probe = window.scrollY + navH() + bar.offsetHeight + 40;
-    let cur = secs[0];
-    secs.forEach((s) => { if (s.offsetTop <= probe) cur = s; });
-    links.forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === "#" + cur.id));
+    let cur = null;
+    secs.forEach((s) => {
+      const top = s.getBoundingClientRect().top + window.scrollY;
+      if (top <= probe) cur = s;
+    });
+    links.forEach((a) => a.classList.toggle("is-active", !!cur && a.getAttribute("href") === "#" + cur.id));
   };
   window.addEventListener("scroll", spy, { passive: true });
   spy();

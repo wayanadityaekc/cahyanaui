@@ -67,7 +67,12 @@ When unsure, ask first (keep it short).
   with this divider.
 
 **Misc:**
-- Buttons: gold primary (`.btn-book`, `.modal__btn`), ghost variant (`.modal__btn--ghost`).
+- Buttons: primary CTA (Book Now, Book this program, Apply, Make Payment, dll) pakai
+  token terpisah **`--color-cta` #3d5c46 / `--color-cta-d` #2f4737** (hover) — hijau,
+  BUKAN `--color-gold` (Sep 2026, Wayan minta tombol lebih "manggil mata", gold/soft-black
+  tetep dipake buat harga & aksen lain, sengaja dipisah biar peran warna nggak numpuk).
+  Ghost/secondary variant (`.modal__btn--ghost`, `.btn-pill` "View all …") TETEP di
+  gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
   Semua tombol aksi = **pill** (border-radius 999px). Chip logo bayar & toggle nggak.
 - Hover lift: keep it subtle, not harsh.
 - Icons: SVG, **no emoji**.
@@ -133,8 +138,16 @@ When unsure, ask first (keep it short).
   scrolls the page (don't revert to `pan-x` only — it makes scroll stick on mobile).
 
 ## Navbar
-- Order: **Home · Itinerary (badge) · Program▾ · About** + account icon.
-  Program dropdown holds: Tours / Experiences / Transfer / Charter.
+- Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
+  Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**
+  (Sep 2026) ditambah di navbar (link ke `contact.html`) — gantiin floating WhatsApp
+  button yang di-hide (`.wa-float { display:none!important }` di style.css; JS-nya
+  di `initWhatsApp()` masih bikin elemennya, cuma CSS-hide, gampang dinyalain lagi).
+  WA tetep bisa dari link footer.
+- **Spacing icon kluster kanan** (akun/cart/menu): `.acct` margin-right 0.9rem,
+  `.navbar__cart` margin-right 1.3rem (Sep 2026, dulu 0.3rem/0.85rem — kerasa mepet).
+  Gap besar logo↔kluster (`.navbar__logo{margin-right:auto}`) itu disengaja (standar
+  logo-kiri-menu-kanan), jangan diutak-atik.
 - **Currency picker** ada **di dalam dropdown account** (custom dropdown berbendera,
   `[data-cur]`), bukan di bar navbar. Currency + Guests + Pickup + Date **juga inline
   di search form homepage** (`partials/search.html`) — semua nyetir state global via
@@ -182,7 +195,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v359, PARTIALS 71)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v360, PARTIALS 72)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

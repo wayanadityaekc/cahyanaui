@@ -13,6 +13,12 @@
   --color-green: #5c5c5c;
   --color-gold: #22201c;
   --color-gold-d: #16140f;
+  /* Primary button color (Sep 2026, Wayan opsi B) - terpisah dari --color-gold
+     dengan sengaja: gold/soft-black masih dipakai buat harga & aksen lain,
+     hijau ini KHUSUS tombol aksi utama biar lebih "manggil mata" tanpa
+     nyampur peran sama warna harga. */
+  --color-cta: #3d5c46;
+  --color-cta-d: #2f4737;
   --color-cream: #f8f8f8;
   --line: #e7e4dd;
   --font-body: "Inter", system-ui, sans-serif;
@@ -422,7 +428,7 @@ body {
   border: none;
   border-radius: 999px;
   padding: 0.72rem 1.15rem;
-  background: var(--color-gold);
+  background: var(--color-cta);
   color: #fff;
   font-family: var(--font-body);
   font-weight: 600;
@@ -431,7 +437,7 @@ body {
   transition: background 0.15s ease;
 }
 .hsearch__refbtn:hover {
-  background: var(--color-gold-d);
+  background: var(--color-cta-d);
 }
 .hsearch__refbtn.is-active {
   background: var(--color-muted);
@@ -1951,7 +1957,7 @@ a.tripbar--promo {
   font-weight: 600;
   padding: 0.72rem 1.4rem;
   border-radius: 999px;
-  background-color: var(--color-gold);
+  background-color: var(--color-cta);
   color: #fff;
 }
 @media (max-width: 620px) {
@@ -4567,6 +4573,10 @@ a.footer__contact-item:hover {
 
 /* Tombol WhatsApp ngambang (Talk with Wayan) */
 .wa-float {
+  /* TEMP OFF (Wayan, Sep 2026): diganti "Contact Us" di navbar. WA masih
+     bisa dari situ + footer. Styling di bawah dibiarin utuh (JS-nya, di
+     script.js initWhatsApp, masih bikin elemennya - CSS-only hide di sini). */
+  display: none !important;
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -5637,14 +5647,14 @@ button.pick-cat {
   margin-top: 1.6rem;
   padding: 0.8rem 2rem;
   border-radius: 999px;
-  background: var(--color-gold);
+  background: var(--color-cta);
   color: #fff;
   font-weight: 600;
   text-decoration: none;
   transition: background-color 0.2s ease;
 }
 .tour-hero__cta:hover {
-  background: var(--color-gold-d);
+  background: var(--color-cta-d);
 }
 /* Glow di kartu booking pas CTA hero diklik - kedip halus 3 detik, nggak terlalu terang */
 .booksidebar--glow {
@@ -5732,14 +5742,14 @@ button.pick-cat {
 .book-bar__btn {
   padding: 0.7rem 1.7rem;
   border-radius: 999px;
-  background: var(--color-gold);
+  background: var(--color-cta);
   color: #fff;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
 }
 .book-bar__btn:hover {
-  background: var(--color-gold-d);
+  background: var(--color-cta-d);
 }
 @media (max-width: 768px) {
   .book-bar {
@@ -6014,7 +6024,7 @@ button.pick-cat {
 /* ==================== Account menu (navbar: guests + stay area) ==================== */
 .acct {
   position: relative;
-  margin-right: 0.3rem;
+  margin-right: 0.9rem; /* was 0.3rem - Wayan, kerasa mepet ke cart icon */
 }
 /* Nav cart icon "My Trips" (sebelah icon akun) + badge jumlah item */
 .navbar__cart {
@@ -6022,7 +6032,7 @@ button.pick-cat {
   display: inline-flex;
   align-items: center;
   color: var(--color-gold);
-  margin-right: 0.85rem;
+  margin-right: 1.3rem; /* was 0.85rem - Wayan, kasih jarak lebih ke menu */
   transition: color 0.2s ease;
 }
 .navbar__cart:hover {
@@ -7546,26 +7556,27 @@ strong {
 }
 
 /* ==== Palet final: tombol CTA gold + teks putih (putih · gold · light grey · dark grey) ==== */
-/* Primary buttons: gold fill, white text.
+/* Primary buttons: green fill (--color-cta), white text (Sep 2026, Wayan opsi B -
+   dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
 .hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .modal__btn,
 .review-form__btn, .btn-review:not(.btn-review--alt),
 .highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book,
 .btn-book, .contact__btn {
-  background: var(--color-gold);
+  background: var(--color-cta);
   color: #fff;
-  border-color: var(--color-gold);
+  border-color: var(--color-cta);
 }
-/* Primary button hover: deeper gold, text stays white */
+/* Primary button hover: deeper green, text stays white */
 .hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover,
 .modal__btn:hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover,
 .highlight__btn:not(.highlight__btn--add):hover,
 .svc__save:hover, .program-cta__btn--book:hover,
 .contact__btn:hover {
-  background: var(--color-gold-d);
+  background: var(--color-cta-d);
   color: #fff;
-  border-color: var(--color-gold-d);
+  border-color: var(--color-cta-d);
 }
 /* Outline/secondary buttons: white bg + dark border + dark text (NOT gold) */
 .booking__btn--alt, .highlight__btn--add, .btn-review--alt {
@@ -8078,13 +8089,13 @@ strong {
   color: #fff;
 }
 .closing-band__btn--primary {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
+  background: var(--color-cta);
+  border-color: var(--color-cta);
   color: #fff;
 }
 .closing-band__btn--primary:hover {
-  background: var(--color-gold-d);
-  border-color: var(--color-gold-d);
+  background: var(--color-cta-d);
+  border-color: var(--color-cta-d);
 }
 
 @media (max-width: 992px) {
@@ -8244,8 +8255,8 @@ strong {
   cursor: pointer;
   font-family: var(--font-body);
 }
-.tpick__btn--book { background: var(--color-gold); color: #fff; }
-.tpick__btn--book:hover { background: var(--color-gold-d); }
+.tpick__btn--book { background: var(--color-cta); color: #fff; }
+.tpick__btn--book:hover { background: var(--color-cta-d); }
 .tpick__btn--add { background: #fff; color: var(--color-green); }
 .tpick__btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .tpick__na { text-align: center; font-size: 0.8rem; color: var(--color-muted); margin: 0.8rem 0 0; }
@@ -8463,8 +8474,8 @@ strong {
   border: 1px solid var(--color-gold);
   cursor: pointer;
 }
-.lbox__btn--go { background: var(--color-gold); color: #fff; }
-.lbox__btn--go:hover { background: var(--color-gold-d); }
+.lbox__btn--go { background: var(--color-cta); color: #fff; }
+.lbox__btn--go:hover { background: var(--color-cta-d); }
 .lbox__btn--add { background: #fff; color: var(--color-green); }
 @media (max-width: 768px) {
   .lbox { grid-template-columns: 1fr; }
@@ -8667,11 +8678,11 @@ strong {
   font-size: 0.88rem;
   text-decoration: none;
   color: #fff;
-  background: var(--color-gold);
-  border: 1px solid var(--color-gold);
+  background: var(--color-cta);
+  border: 1px solid var(--color-cta);
 }
 .habout__btn:hover {
-  background: var(--color-gold-d);
+  background: var(--color-cta-d);
 }
 /* Strip driver di bawah band */
 .habout-people {
@@ -8714,14 +8725,9 @@ strong {
   flex-wrap: wrap;
   margin-bottom: 2.2rem;
 }
-.xplore__k {
-  display: block;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-muted);
-}
+/* .xplore__k / .xplore__sub (kicker + description) DIHAPUS - Wayan minta
+   dibuang, cuma H2 title yang tinggal. Kalau nanti butuh lagi, ada di git
+   history. */
 .xplore__t {
   font-family: var(--font-head);
   font-weight: 500;
@@ -8729,14 +8735,7 @@ strong {
   font-size: var(--fs-h2);
   line-height: var(--lh-heading);
   color: var(--color-gold); /* samain warna judul section lain */
-  margin: 0.45rem 0 0;
-}
-.xplore__sub {
-  margin: 0.7rem 0 0;
-  max-width: 52ch;
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  color: var(--color-muted);
+  margin: 0;
 }
 /* tabs (di dalam header row; garis cuma di tab aktif) */
 .xtabs {
@@ -8894,7 +8893,7 @@ strong {
   color: var(--color-green);
 }
 .vpromo__cta:hover {
-  background: var(--color-gold);
+  background: var(--color-cta);
   color: #fff;
 }
 .vpromo__cta svg {

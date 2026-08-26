@@ -6782,6 +6782,19 @@ button.pick-cat {
 /* peringatan "masih ada kartu tanpa tanggal" - harus SETELAH .mtc-note,
    specificity-nya sama (1 class) jadi yang belakangan yang menang */
 .mtc-note--warn { color: var(--color-err); }
+/* Policy line (Job 4) - link ke halaman policy yg udah ada, pola sama kayak .crumb a */
+.mtc-policy a {
+  color: var(--color-gold-d);
+  text-decoration: underline;
+}
+/* Upsell "You might also like" abis bayar - .related dipakai apa adanya (reuse),
+   cuma jarak atasnya disesuain karena di sini dia nempel di dalam kartu cart,
+   bukan section halaman penuh kayak initRelated. */
+.mtc-related {
+  max-width: none;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4) 0 0;
+}
 .mtc-pkgintro {
   color: var(--color-muted);
   margin: 0 0 1.2rem;

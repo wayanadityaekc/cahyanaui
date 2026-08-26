@@ -3586,6 +3586,8 @@ function initMyTripsCart() {
   if (!root) return;
   let activeTab = "custom";
   let receiptOpen = false; // rincian harga: default ketutup
+  let justPaid = false;    // true abis submit booking - ganti empty-state jadi upsell
+  let bookedNames = [];    // nama item yg baru dipesan (dikecualiin dari rekomendasi)
 
   // Satu kartu item. opts.removable = tombol x (tab cart); opts.heart = toggle (tab paket).
   const rowCardHTML = (r, opts, pos) => {
@@ -3620,6 +3622,37 @@ function initMyTripsCart() {
 
   // Flat list: gak ada header grup tanggal, tanggal nempel di kartunya masing-masing.
   const listHTML = (rows, opts) => rows.map((r, i) => rowCardHTML(r, opts, i)).join("");
+
+  // Upsell "You might also like" abis booking selesai - reuse pool RELATED_ITEMS +
+  // style .related yang udah dipakai di halaman detail (initRelated), biar konsisten,
+  // bukan bikin section/data baru. excludeNames = item yg baru aja dipesan.
+  // Utamain zone yg BEDA dari yg baru dipesan (variasi), baru isi sisanya.
+  function relatedUpsellHTML(excludeNames) {
+    const norm = (n) => String(n).replace(/&amp;/g, "&");
+    const excluded = new Set(excludeNames.map(norm));
+    const booked = RELATED_ITEMS.filter((it) => excluded.has(norm(it.name)));
+    const bookedZones = new Set(booked.map((it) => it.zone));
+    const pool = RELATED_ITEMS.filter((it) => !excluded.has(norm(it.name)));
+    const otherZone = pool.filter((it) => !bookedZones.has(it.zone));
+    const rest = pool.filter((it) => bookedZones.has(it.zone));
+    const picks = otherZone.concat(rest).slice(0, 4);
+    if (!picks.length) return "";
+    const cards = picks.map((it) => {
+      // "$" + it.p = fallback statis doang (pola sama kayak initRelated) - data-price
+      // bikin renderPrices() nimpa ini pas dipanggil abis section ini kesisip ke DOM.
+      const priceHtml = it.p
+        ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
+        : "";
+      return '<a class="experience__card' + (it.p ? "" : " related__card--noprice") + '" href="' + it.href + '">' +
+        '<div class="experience__image"><img src="assets/images/' + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
+        '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
+        '<div class="experience__meta"><span>' + it.meta + "</span></div>" + priceHtml + "</div></a>";
+    }).join("");
+    return '<section class="related mtc-related">' +
+      '<h2 class="related__title">You might also like</h2>' +
+      '<div class="experience__grid experience__grid--home4">' + cards + "</div>" +
+    "</section>";
+  }
 
   // Rincian harga per item (1 baris = 1 item). Ketutup default; kebuka lewat toggle.
   // Harga per baris pakai cartPriceTag yang sama kayak kartu — jadi kalau ada
@@ -3665,6 +3698,14 @@ function initMyTripsCart() {
   const panelHTML = () => {
     if (activeTab === "custom") {
       const rows = cartFlatten(itnLoad());
+      if (!rows.length && justPaid) {
+        // Abis submit booking: cart dikosongin (cartCheckout onSuccess). Upsell doang di
+        // sini, BUKAN bagian transaksi (beda dari policy line yg nempel di tombol bayar).
+        return '<div class="mtc-empty">' +
+          '<p class="mtc-empty__lead">Booking submitted.</p>' +
+          '<p class="mtc-empty__sub">We will email you shortly to confirm.</p>' +
+        "</div>" + relatedUpsellHTML(bookedNames);
+      }
       if (!rows.length) {
         return '<div class="mtc-empty">' +
           '<p class="mtc-empty__lead">Nothing added yet.</p>' +
@@ -3672,9 +3713,14 @@ function initMyTripsCart() {
           '<div class="mtc-pkgs">' + CART_PACKAGES.map(packageCardHTML).join("") + "</div></div>";
       }
       const undated = rows.filter((r) => !r.date).length;
+      // Policy line: satu baris, link ke halaman policy yg UDAH ADA di footer -
+      // jangan duplikat isi policy-nya di sini.
+      const policyLine = '<p class="mtc-note mtc-policy">By clicking <strong>Make Payment</strong>, you agree to our ' +
+        '<a href="cancellation-policy.html">cancellation policy</a> and <a href="terms-conditions.html">terms</a>.</p>';
       return '<div class="mtc-list" data-removable>' + listHTML(rows, { removable: true }) + "</div>" +
         receiptHTML(rows, receiptOpen) +
         totalHTML(rows) +
+        policyLine +
         '<button type="button" class="modal__btn mtc-pay" data-pay' + (undated ? " disabled" : "") + ">Make Payment</button>" +
         (undated ? '<p class="mtc-note mtc-note--warn">' + undated + (undated > 1 ? " items still need" : " item still needs") + " a date.</p>" : "") +
         '<p class="mtc-note">' + "You'll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email." + "</p>";
@@ -3743,11 +3789,21 @@ function initMyTripsCart() {
     const rec = root.querySelector("[data-receipt]");
     if (rec) rec.addEventListener("click", () => { receiptOpen = !receiptOpen; render(); });
     const pay = root.querySelector("[data-pay]");
-    if (pay) pay.addEventListener("click", () => cartCheckout(render));
+    if (pay) pay.addEventListener("click", () => {
+      bookedNames = (itnLoad().days || []).flatMap((d) => d.items || []);
+      cartCheckout(() => { justPaid = true; render(); });
+    });
     // Tab aktif ketarik ke view tanpa nge-scroll halaman (innerHTML reset scrollLeft).
     const tabsEl = root.querySelector(".mtc-tabs");
     const onTab = root.querySelector(".mtc-tab.is-on");
     if (tabsEl && onTab) tabsEl.scrollLeft = Math.max(0, onTab.offsetLeft - 12);
+    // Upsell abis bayar pakai data-price span (pola initRelated) - isi harganya di sini
+    // karena section ini disisip belakangan, bukan pas initPage() (renderPrices udah lewat).
+    if (root.querySelector(".mtc-related")) renderPrices();
+    // Grid rekomendasi baru = .experience__grid--home4 yg belum pernah kena wiring
+    // slider (initTourSlider skip yg udah ke-wrap .slider-holder) - panggil ulang biar
+    // gak jadi CSS grid rigid (aturan: semua card grid pakai satu mekanisme slider).
+    initTourSlider();
   }
 
   window.__myTripsRefresh = render; // dipanggil pas referral di-apply/clear

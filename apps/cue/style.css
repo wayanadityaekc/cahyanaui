@@ -6726,7 +6726,12 @@ button.pick-cat {
 }
 /* total */
 /* Rincian harga (Job 3) — toggle di ATAS total, ketutup default */
-.mtc-receipt { margin-top: 0.9rem; }
+/* Dibuang (Wayan, Job 5 polish): breakdown-nya cuma ngulang persis nama+harga
+   yang udah keliatan di tiap kartu kiri, nol info baru. Sisain Total doang.
+   Elemen + toggle-nya masih di-render JS (script.js ~line 3668) - CSS-only
+   hide di sini, biar aman nggak nyentuh punya Engine. Kalau mau bener-bener
+   beres (JS-nya berhenti nge-build elemen ini), itu punya Engine. */
+.mtc-receipt { display: none; }
 .mtc-receipt__toggle {
   display: flex;
   align-items: center;

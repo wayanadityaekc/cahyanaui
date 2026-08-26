@@ -1196,6 +1196,7 @@ a.tripbar--promo {
 .contact__group textarea,
 .field select,
 .field input[type="date"],
+.mtc-item__datein,
 .itn-day__fields .field input,
 .itn-day__fields .field select,
 .charter__select {
@@ -6650,6 +6651,16 @@ button.pick-cat {
 }
 .mtc-item__del:hover { color: var(--color-err); }
 /* tanggal per kartu — gantiin header grup tanggal (cart sekarang flat) */
+/* picker tanggal per kartu cart — tiap baris punya tanggalnya sendiri.
+   Border/radius/font/warna ikut base rule field di atas; di sini cuma ukuran. */
+.mtc-item__datein {
+  margin: 0.35rem 0 0;
+  padding: 0.3rem 0.5rem;
+  background-color: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+}
+/* tanggal teks (tab paket suggested — di sana tanggalnya bawaan paket, bukan input) */
 .mtc-item__date {
   font-size: var(--fs-label);
   font-weight: 500;

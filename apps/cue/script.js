@@ -728,7 +728,7 @@ function cartToast(msg) {
 }
 
 // Popup konfirmasi generik (Confirm / Cancel), gaya modal situs.
-function cartConfirm(title, text, yesLabel, onYes) {
+function cartConfirm(title, text, yesLabel, onYes, onNo) {
   const m = document.createElement("div");
   m.className = "modal active";
   m.innerHTML =
@@ -739,8 +739,9 @@ function cartConfirm(title, text, yesLabel, onYes) {
     '<button class="modal__btn modal__btn--ghost" data-no>Cancel</button></div>';
   document.body.appendChild(m);
   const close = () => m.remove();
-  m.addEventListener("click", (e) => { if (e.target === m) close(); });
-  m.querySelector("[data-no]").addEventListener("click", close);
+  const cancel = () => { close(); if (onNo) onNo(); };
+  m.addEventListener("click", (e) => { if (e.target === m) cancel(); });
+  m.querySelector("[data-no]").addEventListener("click", cancel);
   m.querySelector("[data-yes]").addEventListener("click", () => { close(); onYes(); });
 }
 
@@ -977,6 +978,27 @@ function cartRemove(type, idx) {
   else if (type === "transfer") st.transfers.splice(idx, 1);
   else if (type === "charter") (st.charters || []).splice(idx, 1);
   itnSave(st);
+}
+
+// Ganti tanggal SATU baris cart (picker per kartu di My Trips). Tiap baris berdiri
+// sendiri — ganti tanggal di sini gak nyentuh baris lain.
+function cartSetDate(type, idx, date) {
+  const st = itnLoad();
+  const list = type === "day" ? st.days : type === "transfer" ? st.transfers : st.charters;
+  const row = (list || [])[idx];
+  if (!row) return;
+  row.date = date;
+  itnSave(st);
+}
+
+// Bentrok? 2 tour seharian di tanggal yang sama. Baris yang lagi diedit gak ngitung
+// dirinya sendiri. Aturannya sama kayak pas nambah item (cartAddChecked).
+function cartDateClash(idx, date) {
+  if (!date) return false;
+  const st = itnLoad();
+  const me = (st.days || [])[idx];
+  if (!me || !(me.items || []).some(isFullDay)) return false;
+  return (st.days || []).some((d, i) => i !== idx && d.date === date && (d.items || []).some(isFullDay));
 }
 
 // Ikon hati (toggle "ada di trip"): keisi = udah masuk cart, kosong = belum.
@@ -3549,7 +3571,11 @@ function initMyTripsCart() {
       '<div class="mtc-item__body">' +
         '<p class="mtc-item__title">' + escHtml(r.title) + "</p>" +
         '<p class="mtc-item__desc">' + escHtml(r.desc) + "</p>" +
-        '<p class="mtc-item__date">' + escHtml(fmtGroupDate(r.date)) + "</p>" +
+        (o.removable
+          ? '<input type="date" class="mtc-item__datein" min="' + todayStr() + '" value="' + escHtml(r.date) +
+            '" data-date-type="' + r.ref.type + '" data-date-idx="' + r.ref.idx +
+            '" aria-label="Date for ' + escHtml(r.title) + '" />'
+          : '<p class="mtc-item__date">' + escHtml(fmtGroupDate(r.date)) + "</p>") +
       "</div>" +
       '<div class="mtc-item__price">' + cartPriceTag(r.usd, r.idr) + "</div>" +
       action + "</div>";
@@ -3626,6 +3652,22 @@ function initMyTripsCart() {
     });
     root.querySelectorAll("[data-del-type]").forEach((b) => {
       b.addEventListener("click", () => { cartRemove(b.dataset.delType, parseInt(b.dataset.delIdx)); render(); });
+    });
+    root.querySelectorAll("[data-date-type]").forEach((inp) => {
+      inp.addEventListener("change", () => {
+        const type = inp.dataset.dateType;
+        const idx = parseInt(inp.dataset.dateIdx, 10);
+        const prev = inp.defaultValue;
+        const next = inp.value;
+        const commit = () => { cartSetDate(type, idx, next); inp.defaultValue = next; };
+        if (type === "day" && cartDateClash(idx, next)) {
+          cartConfirm("Two full-day tours?",
+            "You already have a full-day tour on that date. Keep both?",
+            "Keep both", commit, () => { inp.value = prev; });
+          return;
+        }
+        commit();
+      });
     });
     root.querySelectorAll("[data-heart-type]").forEach((b) => {
       b.addEventListener("click", () => {

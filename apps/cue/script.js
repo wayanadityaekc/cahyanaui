@@ -749,7 +749,7 @@ function cartConfirm(title, text, yesLabel, onYes, onNo) {
 // Popup pilih tanggal (Book Now / + My Trips). Pakai chrome + kalender yg SAMA
 // PERSIS dg date picker booking form (.hs-panel bk-panel--cal + .hs-cal bk-cal) biar
 // konsisten: bottom-sheet di HP, kartu ke-center di desktop (via .bookdate-panel).
-function bookDatePopup(title, onPick) {
+function bookDatePopup(title, onPick, initial) {
   const now = new Date();
   const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
   const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -757,7 +757,12 @@ function bookDatePopup(title, onPick) {
   const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const pad = (n) => String(n).padStart(2, "0");
   const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+  // initial "YYYY-MM-DD" (opsional) -> kalender kebuka dgn tanggal itu udah kepilih.
   let sel = null;
+  if (initial) {
+    const ip = String(initial).split("-");
+    if (ip.length === 3) sel = { y: +ip[0], m: +ip[1] - 1, d: +ip[2] };
+  }
 
   const overlay = document.createElement("div");
   overlay.className = "hs-overlay open";
@@ -776,6 +781,7 @@ function bookDatePopup(title, onPick) {
   const calBody = panel.querySelector(".bk-cal");
   const hint = panel.querySelector(".hs-cal__hint");
   const applyBtn = panel.querySelector(".hs-cal__apply");
+  if (sel) { hint.textContent = MONS[sel.m] + " " + sel.d; applyBtn.disabled = false; }
   const close = () => { panel.remove(); overlay.remove(); hsScrollLock(false); };
   function monthEl(y, mo) {
     const el = document.createElement("div");
@@ -811,6 +817,11 @@ function bookDatePopup(title, onPick) {
     calBody.appendChild(wrap);
   }
   render();
+  // Gulung ke bulan yang lagi kepilih (kalender nampilin 13 bulan ke depan).
+  if (sel) {
+    const selEl = calBody.querySelector(".hs-cal__d.sel");
+    if (selEl) calBody.scrollTop += selEl.getBoundingClientRect().top - calBody.getBoundingClientRect().top - calBody.clientHeight / 2;
+  }
   applyBtn.addEventListener("click", (e) => { e.stopPropagation(); if (!sel) return; const ds = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); close(); onPick(ds); });
   panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); close(); });
   overlay.addEventListener("click", close);
@@ -980,25 +991,34 @@ function cartRemove(type, idx) {
   itnSave(st);
 }
 
-// Ganti tanggal SATU baris cart (picker per kartu di My Trips). Tiap baris berdiri
-// sendiri — ganti tanggal di sini gak nyentuh baris lain.
-function cartSetDate(type, idx, date) {
-  const st = itnLoad();
-  const list = type === "day" ? st.days : type === "transfer" ? st.transfers : st.charters;
-  const row = (list || [])[idx];
-  if (!row) return;
-  row.date = date;
-  itnSave(st);
+// Ambil objek baris cart dari ref-nya {type, idx}.
+function cartRowAt(state, ref) {
+  const list = ref.type === "day" ? state.days : ref.type === "transfer" ? state.transfers : state.charters;
+  return (list || [])[ref.idx];
 }
 
-// Bentrok? 2 tour seharian di tanggal yang sama. Baris yang lagi diedit gak ngitung
-// dirinya sendiri. Aturannya sama kayak pas nambah item (cartAddChecked).
-function cartDateClash(idx, date) {
-  if (!date) return false;
-  const st = itnLoad();
-  const me = (st.days || [])[idx];
-  if (!me || !(me.items || []).some(isFullDay)) return false;
-  return (st.days || []).some((d, i) => i !== idx && d.date === date && (d.items || []).some(isFullDay));
+// Tanggal cart = CASCADE. Set tanggal baris ke-pos, terus kartu di BAWAHNYA nyusul
+// berurutan (+1 hari tiap kartu, atas ke bawah). Kartu di ATASNYA gak disentuh.
+// pos = posisi di urutan tampil (cartFlatten: days -> transfers -> charters).
+// Ngedit langsung ke object state — pemanggil yang nentuin kapan itnSave.
+function cartCascadeFrom(state, pos, date) {
+  const order = cartFlatten(state).map((r) => r.ref);
+  for (let i = pos; i < order.length; i++) {
+    const row = cartRowAt(state, order[i]);
+    if (row) row.date = addDaysStr(date, i - pos);
+  }
+}
+
+// Bentrok? 2 tour seharian di tanggal yang sama — dicek dari hasil cascade, bukan
+// dari 1 baris doang. Aturannya sama kayak pas nambah item (cartAddChecked).
+function cartHasClash(state) {
+  const seen = {};
+  return (state.days || []).some((d) => {
+    if (!d.date || !(d.items || []).some(isFullDay)) return false;
+    if (seen[d.date]) return true;
+    seen[d.date] = true;
+    return false;
+  });
 }
 
 // Ikon hati (toggle "ada di trip"): keisi = udah masuk cart, kosong = belum.
@@ -3490,6 +3510,8 @@ function cartCheckout(rerender) {
   const st = itnLoad();
   const days = st.days || [], transfers = st.transfers || [], chs = st.charters || [];
   if (!days.length && !transfers.length && !chs.length) return;
+  // Semua baris WAJIB ada tanggal (tombol Make Payment juga di-disable — ini jaring kedua).
+  if (days.concat(transfers, chs).some((r) => !r.date)) return;
   let usd = 0, idr = 0;
   const lines = [
     ...days.map((d, i) => {
@@ -3551,7 +3573,7 @@ function initMyTripsCart() {
   let activeTab = "custom";
 
   // Satu kartu item. opts.removable = tombol x (tab cart); opts.heart = toggle (tab paket).
-  const rowCardHTML = (r, opts) => {
+  const rowCardHTML = (r, opts, pos) => {
     const o = opts || {};
     const iconHTML = r.img
       ? '<span class="mtc-item__icon mtc-item__icon--photo" style="background-image:url(assets/images/' + r.img + ')"></span>'
@@ -3572,9 +3594,9 @@ function initMyTripsCart() {
         '<p class="mtc-item__title">' + escHtml(r.title) + "</p>" +
         '<p class="mtc-item__desc">' + escHtml(r.desc) + "</p>" +
         (o.removable
-          ? '<input type="date" class="mtc-item__datein" min="' + todayStr() + '" value="' + escHtml(r.date) +
-            '" data-date-type="' + r.ref.type + '" data-date-idx="' + r.ref.idx +
-            '" aria-label="Date for ' + escHtml(r.title) + '" />'
+          ? '<button type="button" class="mtc-item__datebtn' + (r.date ? "" : " is-empty") +
+            '" data-date-pos="' + pos + '" aria-label="' + (r.date ? "Change date for " : "Set date for ") +
+            escHtml(r.title) + '">' + escHtml(r.date ? fmtGroupDate(r.date) : "Set date") + "</button>"
           : '<p class="mtc-item__date">' + escHtml(fmtGroupDate(r.date)) + "</p>") +
       "</div>" +
       '<div class="mtc-item__price">' + cartPriceTag(r.usd, r.idr) + "</div>" +
@@ -3582,7 +3604,7 @@ function initMyTripsCart() {
   };
 
   // Flat list: gak ada header grup tanggal, tanggal nempel di kartunya masing-masing.
-  const listHTML = (rows, opts) => rows.map((r) => rowCardHTML(r, opts)).join("");
+  const listHTML = (rows, opts) => rows.map((r, i) => rowCardHTML(r, opts, i)).join("");
 
   const totalHTML = (rows, label) =>
     '<div class="mtc-total"><span class="mtc-total__label">' + escHtml(label || "Total") + "</span>" +
@@ -3618,9 +3640,11 @@ function initMyTripsCart() {
           '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start your trip - or open a suggested plan and add the parts you want.</p>' +
           '<div class="mtc-pkgs">' + CART_PACKAGES.map(packageCardHTML).join("") + "</div></div>";
       }
+      const undated = rows.filter((r) => !r.date).length;
       return '<div class="mtc-list" data-removable>' + listHTML(rows, { removable: true }) + "</div>" +
         totalHTML(rows) +
-        '<button type="button" class="modal__btn mtc-pay" data-pay>Make Payment</button>' +
+        '<button type="button" class="modal__btn mtc-pay" data-pay' + (undated ? " disabled" : "") + ">Make Payment</button>" +
+        (undated ? '<p class="mtc-note mtc-note--warn">' + undated + (undated > 1 ? " items still need" : " item still needs") + " a date.</p>" : "") +
         '<p class="mtc-note">' + "You'll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email." + "</p>";
     }
     // Tab paket: browse. Tiap baris punya hati; gak ada tombol "use this plan" lagi.
@@ -3653,20 +3677,22 @@ function initMyTripsCart() {
     root.querySelectorAll("[data-del-type]").forEach((b) => {
       b.addEventListener("click", () => { cartRemove(b.dataset.delType, parseInt(b.dataset.delIdx)); render(); });
     });
-    root.querySelectorAll("[data-date-type]").forEach((inp) => {
-      inp.addEventListener("change", () => {
-        const type = inp.dataset.dateType;
-        const idx = parseInt(inp.dataset.dateIdx, 10);
-        const prev = inp.defaultValue;
-        const next = inp.value;
-        const commit = () => { cartSetDate(type, idx, next); inp.defaultValue = next; };
-        if (type === "day" && cartDateClash(idx, next)) {
-          cartConfirm("Two full-day tours?",
-            "You already have a full-day tour on that date. Keep both?",
-            "Keep both", commit, () => { inp.value = prev; });
-          return;
-        }
-        commit();
+    root.querySelectorAll("[data-date-pos]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const pos = parseInt(btn.dataset.datePos, 10);
+        const cur = cartFlatten(itnLoad())[pos];
+        if (!cur) return;
+        bookDatePopup(cur.title, (date) => {
+          const st = itnLoad();
+          cartCascadeFrom(st, pos, date);
+          const save = () => { itnSave(st); render(); };
+          if (cartHasClash(st)) {
+            cartConfirm("Two full-day tours?",
+              "That puts two full-day tours on the same date. Keep both?", "Keep both", save);
+            return;
+          }
+          save();
+        }, cur.date);
       });
     });
     root.querySelectorAll("[data-heart-type]").forEach((b) => {

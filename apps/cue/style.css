@@ -1196,7 +1196,7 @@ a.tripbar--promo {
 .contact__group textarea,
 .field select,
 .field input[type="date"],
-.mtc-item__datein,
+.mtc-item__datebtn,
 .itn-day__fields .field input,
 .itn-day__fields .field select,
 .charter__select {
@@ -6651,15 +6651,18 @@ button.pick-cat {
 }
 .mtc-item__del:hover { color: var(--color-err); }
 /* tanggal per kartu — gantiin header grup tanggal (cart sekarang flat) */
-/* picker tanggal per kartu cart — tiap baris punya tanggalnya sendiri.
-   Border/radius/font/warna ikut base rule field di atas; di sini cuma ukuran. */
-.mtc-item__datein {
+/* Tombol tanggal per kartu cart — buka kalender custom (bookDatePopup), BUKAN
+   date input bawaan browser. Border/radius/font/warna ikut base rule field di atas;
+   di sini cuma yang khas tombol. */
+.mtc-item__datebtn {
+  display: inline-block;
   margin: 0.35rem 0 0;
-  padding: 0.3rem 0.5rem;
+  padding: 0.3rem 0.6rem;
   background-color: #fff;
-  -webkit-appearance: none;
-  appearance: none;
+  text-align: left;
+  cursor: pointer;
 }
+.mtc-item__datebtn.is-empty { color: var(--color-muted); }
 /* tanggal teks (tab paket suggested — di sana tanggalnya bawaan paket, bukan input) */
 .mtc-item__date {
   font-size: var(--fs-label);
@@ -6722,6 +6725,11 @@ button.pick-cat {
   letter-spacing: 0.14em;
   font-weight: 600;
 }
+/* Make Payment ke-lock selama masih ada kartu yang belum ada tanggalnya */
+.mtc-pay:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 .mtc-note {
   font-size: var(--fs-small);
   color: var(--color-muted);
@@ -6729,6 +6737,9 @@ button.pick-cat {
   margin: 0.7rem auto 0;
   max-width: 46ch;
 }
+/* peringatan "masih ada kartu tanpa tanggal" - harus SETELAH .mtc-note,
+   specificity-nya sama (1 class) jadi yang belakangan yang menang */
+.mtc-note--warn { color: var(--color-err); }
 .mtc-pkgintro {
   color: var(--color-muted);
   margin: 0 0 1.2rem;

@@ -1196,6 +1196,7 @@ a.tripbar--promo {
 .contact__group textarea,
 .field select,
 .field input[type="date"],
+.mtc-item__datebtn,
 .itn-day__fields .field input,
 .itn-day__fields .field select,
 .charter__select {
@@ -6558,12 +6559,19 @@ button.pick-cat {
 /* tabs */
 .mtc-tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x pan-y;
   border-bottom: 1px solid var(--line);
   margin-bottom: 1.4rem;
 }
+.mtc-tabs::-webkit-scrollbar { display: none; }
 .mtc-tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
   border: 0;
   background: none;
   padding: 0.6rem 0.35rem;
@@ -6583,15 +6591,34 @@ button.pick-cat {
   color: var(--color-green);
   border-bottom-color: var(--color-gold);
 }
-/* day group */
-.mtc-daygroup { margin-bottom: 1.3rem; }
-.mtc-daygroup__date {
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin: 0 0 0.6rem;
+/* Job 5 - layout kartu (main) vs total/receipt/policy/bayar (side).
+   Mobile (base): numpuk, main dulu baru side (urutan DOM). */
+.mtc-layout__main,
+.mtc-layout__side {
+  min-width: 0;
+}
+.mtc-layout__side {
+  margin-top: var(--space-4);
+}
+@media (min-width: 993px) {
+  /* Desktop: main|side jadi 2 kolom, side nempel (sticky) - kartu jalan normal
+     di kolom kiri, total/receipt/policy/bayar tetep keliatan pas discroll. */
+  .mtc-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .mtc-layout__main {
+    flex: 1 1 auto;
+  }
+  .mtc-layout__side {
+    flex: 0 0 320px;
+    margin-top: 0;
+    position: sticky;
+    /* 6.5rem = angka clearance navbar+tripbar yg udah dipakai di tempat lain
+       (.tour-hero desktop) - bukan angka baru, reuse yg udah ada. */
+    top: 6.5rem;
+  }
 }
 /* item card */
 .mtc-item {
@@ -6653,6 +6680,40 @@ button.pick-cat {
   padding: 0 0.15rem;
 }
 .mtc-item__del:hover { color: var(--color-err); }
+/* tanggal per kartu — gantiin header grup tanggal (cart sekarang flat) */
+/* Tombol tanggal per kartu cart — buka kalender custom (bookDatePopup), BUKAN
+   date input bawaan browser. Border/radius/font/warna ikut base rule field di atas;
+   di sini cuma yang khas tombol. */
+.mtc-item__datebtn {
+  display: inline-block;
+  margin: 0.35rem 0 0;
+  padding: 0.3rem 0.6rem;
+  background-color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+.mtc-item__datebtn.is-empty { color: var(--color-muted); }
+/* tanggal teks (tab paket suggested — di sana tanggalnya bawaan paket, bukan input) */
+.mtc-item__date {
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0.3rem 0 0;
+}
+/* toggle "ada di trip" di tab paket suggested */
+.mtc-item__heart {
+  flex: 0 0 auto;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 0 0.15rem;
+  line-height: 0;
+}
+.mtc-item__heart svg { width: 20px; height: 20px; }
+.mtc-item__heart.is-on { color: var(--color-gold-d); }
 /* strikethrough original when referral active */
 .price-was {
   color: var(--color-muted);
@@ -6664,6 +6725,51 @@ button.pick-cat {
   vertical-align: middle;
 }
 /* total */
+/* Rincian harga (Job 3) — toggle di ATAS total, ketutup default */
+.mtc-receipt { margin-top: 0.9rem; }
+.mtc-receipt__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 0.35rem 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.mtc-receipt__chev {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.18s ease;
+}
+.mtc-receipt__toggle[aria-expanded="true"] .mtc-receipt__chev { transform: rotate(180deg); }
+.mtc-receipt__list {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding: 0;
+}
+.mtc-receipt__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+  font-size: var(--fs-small);
+}
+.mtc-receipt__name {
+  color: var(--color-muted);
+  min-width: 0;
+}
+.mtc-receipt__amt {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--color-gold-d);
+}
 .mtc-total {
   display: flex;
   justify-content: space-between;
@@ -6690,9 +6796,11 @@ button.pick-cat {
 .mtc-pay {
   width: 100%;
   margin-top: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-weight: 600;
+}
+/* Make Payment ke-lock selama masih ada kartu yang belum ada tanggalnya */
+.mtc-pay:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 .mtc-note {
   font-size: var(--fs-small);
@@ -6701,6 +6809,28 @@ button.pick-cat {
   margin: 0.7rem auto 0;
   max-width: 46ch;
 }
+/* peringatan "masih ada kartu tanpa tanggal" - harus SETELAH .mtc-note,
+   specificity-nya sama (1 class) jadi yang belakangan yang menang */
+.mtc-note--warn { color: var(--color-err); }
+/* Policy line (Job 4) - link ke halaman policy yg udah ada, pola sama kayak .crumb a */
+.mtc-policy a {
+  color: var(--color-gold-d);
+  text-decoration: underline;
+}
+/* Upsell "You might also like" abis bayar - .related dipakai apa adanya (reuse),
+   cuma jarak atasnya disesuain karena di sini dia nempel di dalam kartu cart,
+   bukan section halaman penuh kayak initRelated. */
+.mtc-related {
+  max-width: none;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4) 0 0;
+}
+/* .related di sini cuma bungkus judul (grid ditaruh di luar - lihat komentar
+   relatedUpsellHTML) - buang padding bawahnya (dimaksud buat ngasih jarak abis
+   grid, giliran grid-nya udah di luar) + gantiin margin-top grid yang tadinya
+   dari ".related .experience__grid--home4" (gak kena lagi karena grid-nya di luar). */
+.mtc-related .related { padding-bottom: 0; }
+.mtc-related .experience__grid--home4 { margin-top: 1.6rem; }
 .mtc-pkgintro {
   color: var(--color-muted);
   margin: 0 0 1.2rem;

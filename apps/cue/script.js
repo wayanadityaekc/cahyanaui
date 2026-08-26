@@ -728,7 +728,7 @@ function cartToast(msg) {
 }
 
 // Popup konfirmasi generik (Confirm / Cancel), gaya modal situs.
-function cartConfirm(title, text, yesLabel, onYes) {
+function cartConfirm(title, text, yesLabel, onYes, onNo) {
   const m = document.createElement("div");
   m.className = "modal active";
   m.innerHTML =
@@ -739,8 +739,9 @@ function cartConfirm(title, text, yesLabel, onYes) {
     '<button class="modal__btn modal__btn--ghost" data-no>Cancel</button></div>';
   document.body.appendChild(m);
   const close = () => m.remove();
-  m.addEventListener("click", (e) => { if (e.target === m) close(); });
-  m.querySelector("[data-no]").addEventListener("click", close);
+  const cancel = () => { close(); if (onNo) onNo(); };
+  m.addEventListener("click", (e) => { if (e.target === m) cancel(); });
+  m.querySelector("[data-no]").addEventListener("click", cancel);
   m.querySelector("[data-yes]").addEventListener("click", () => { close(); onYes(); });
 }
 
@@ -748,7 +749,7 @@ function cartConfirm(title, text, yesLabel, onYes) {
 // Popup pilih tanggal (Book Now / + My Trips). Pakai chrome + kalender yg SAMA
 // PERSIS dg date picker booking form (.hs-panel bk-panel--cal + .hs-cal bk-cal) biar
 // konsisten: bottom-sheet di HP, kartu ke-center di desktop (via .bookdate-panel).
-function bookDatePopup(title, onPick) {
+function bookDatePopup(title, onPick, initial) {
   const now = new Date();
   const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
   const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -756,7 +757,12 @@ function bookDatePopup(title, onPick) {
   const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const pad = (n) => String(n).padStart(2, "0");
   const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+  // initial "YYYY-MM-DD" (opsional) -> kalender kebuka dgn tanggal itu udah kepilih.
   let sel = null;
+  if (initial) {
+    const ip = String(initial).split("-");
+    if (ip.length === 3) sel = { y: +ip[0], m: +ip[1] - 1, d: +ip[2] };
+  }
 
   const overlay = document.createElement("div");
   overlay.className = "hs-overlay open";
@@ -775,6 +781,7 @@ function bookDatePopup(title, onPick) {
   const calBody = panel.querySelector(".bk-cal");
   const hint = panel.querySelector(".hs-cal__hint");
   const applyBtn = panel.querySelector(".hs-cal__apply");
+  if (sel) { hint.textContent = MONS[sel.m] + " " + sel.d; applyBtn.disabled = false; }
   const close = () => { panel.remove(); overlay.remove(); hsScrollLock(false); };
   function monthEl(y, mo) {
     const el = document.createElement("div");
@@ -810,6 +817,11 @@ function bookDatePopup(title, onPick) {
     calBody.appendChild(wrap);
   }
   render();
+  // Gulung ke bulan yang lagi kepilih (kalender nampilin 13 bulan ke depan).
+  if (sel) {
+    const selEl = calBody.querySelector(".hs-cal__d.sel");
+    if (selEl) calBody.scrollTop += selEl.getBoundingClientRect().top - calBody.getBoundingClientRect().top - calBody.clientHeight / 2;
+  }
   applyBtn.addEventListener("click", (e) => { e.stopPropagation(); if (!sel) return; const ds = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); close(); onPick(ds); });
   panel.querySelector(".hs-panel__close").addEventListener("click", (e) => { e.stopPropagation(); close(); });
   overlay.addEventListener("click", close);
@@ -979,7 +991,78 @@ function cartRemove(type, idx) {
   itnSave(st);
 }
 
-// "YYYY-MM-DD" -> "19 August" (header grup tanggal). Kosong -> "Date to be set".
+// Ambil objek baris cart dari ref-nya {type, idx}.
+function cartRowAt(state, ref) {
+  const list = ref.type === "day" ? state.days : ref.type === "transfer" ? state.transfers : state.charters;
+  return (list || [])[ref.idx];
+}
+
+// Tanggal cart = CASCADE. Set tanggal baris ke-pos, terus kartu di BAWAHNYA nyusul
+// berurutan (+1 hari tiap kartu, atas ke bawah). Kartu di ATASNYA gak disentuh.
+// pos = posisi di urutan tampil (cartFlatten: days -> transfers -> charters).
+//
+// TRANSFER DIKECUALIIN: dia antar-jemput, bukan "hari kegiatan" — tanggalnya
+// berdiri sendiri, gak ikut kegeser, dan gak makan jatah hari buat kartu di
+// bawahnya. Charter TETAP ikut cascade (itu sewa mobil seharian = 1 hari).
+// Ngedit langsung ke object state — pemanggil yang nentuin kapan itnSave.
+function cartCascadeFrom(state, pos, date) {
+  const order = cartFlatten(state).map((r) => r.ref);
+  const target = order[pos];
+  if (!target) return;
+  if (target.type === "transfer") {
+    const row = cartRowAt(state, target);
+    if (row) row.date = date;
+    return;
+  }
+  let step = 0;
+  for (let i = pos; i < order.length; i++) {
+    if (order[i].type === "transfer") continue;
+    const row = cartRowAt(state, order[i]);
+    if (row) row.date = addDaysStr(date, step);
+    step++;
+  }
+}
+
+// Bentrok? 2 tour seharian di tanggal yang sama — dicek dari hasil cascade, bukan
+// dari 1 baris doang. Aturannya sama kayak pas nambah item (cartAddChecked).
+function cartHasClash(state) {
+  const seen = {};
+  return (state.days || []).some((d) => {
+    if (!d.date || !(d.items || []).some(isFullDay)) return false;
+    if (seen[d.date]) return true;
+    seen[d.date] = true;
+    return false;
+  });
+}
+
+// Ikon hati (toggle "ada di trip"): keisi = udah masuk cart, kosong = belum.
+function cartHeartIcon(on) {
+  return '<svg viewBox="0 0 24 24" fill="' + (on ? "currentColor" : "none") +
+    '" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M12 20.3 4.7 13a4.6 4.6 0 0 1 6.5-6.5l.8.8.8-.8A4.6 4.6 0 0 1 19.3 13z"/></svg>';
+}
+
+// Cari index entry cart yang "sama" dengan 1 entry paket suggested (buat toggle heart).
+// day = nama item pertama sama; transfer = rute + arah sama. -1 = belum ada di cart.
+function cartMatchIndex(state, type, entry) {
+  if (type === "day") return (state.days || []).findIndex((d) => (d.items || [])[0] === (entry.items || [])[0]);
+  if (type === "transfer") return (state.transfers || []).findIndex((t) => t.route === entry.route && t.direction === entry.direction);
+  return -1;
+}
+
+// Toggle 1 entry paket suggested ke/dari cart. Return true kalau hasilnya masuk cart.
+// Di-copy (bukan referensi) biar edit di cart gak nyeret state paket.
+function cartToggleEntry(type, entry) {
+  const st = itnLoad();
+  const list = type === "day" ? st.days : st.transfers;
+  const i = cartMatchIndex(st, type, entry);
+  if (i > -1) { list.splice(i, 1); itnSave(st); return false; }
+  list.push(JSON.parse(JSON.stringify(entry)));
+  itnSave(st);
+  return true;
+}
+
+// "YYYY-MM-DD" -> "19 August" (tanggal di kartu). Kosong -> "Date to be set".
 function fmtGroupDate(ds) {
   if (!ds) return "Date to be set";
   const dt = new Date(ds + "T00:00:00");
@@ -3441,6 +3524,8 @@ function cartCheckout(rerender) {
   const st = itnLoad();
   const days = st.days || [], transfers = st.transfers || [], chs = st.charters || [];
   if (!days.length && !transfers.length && !chs.length) return;
+  // Semua baris WAJIB ada tanggal (tombol Make Payment juga di-disable — ini jaring kedua).
+  if (days.concat(transfers, chs).some((r) => !r.date)) return;
   let usd = 0, idr = 0;
   const lines = [
     ...days.map((d, i) => {
@@ -3494,103 +3579,176 @@ function cartCheckout(rerender) {
   });
 }
 
-// Halaman My Trips (cart): tabs [My Custom Trip + paket suggested], item per tanggal, total, Make Payment.
+// Halaman My Trips (cart): tab slider [Your Trip + paket suggested], kartu flat per item,
+// total, Make Payment. Tab paket = browse doang; tiap barisnya bisa di-heart masuk/keluar cart.
 function initMyTripsCart() {
   const root = document.querySelector("[data-mytrips-cart]");
   if (!root) return;
   let activeTab = "custom";
+  let receiptOpen = false; // rincian harga: default ketutup
+  let justPaid = false;    // true abis submit booking - ganti empty-state jadi upsell
+  let bookedNames = [];    // nama item yg baru dipesan (dikecualiin dari rekomendasi)
 
-  const groupByDate = (rows) => {
-    const map = new Map();
-    rows.forEach((r) => {
-      const k = r.date || "";
-      if (!map.has(k)) map.set(k, []);
-      map.get(k).push(r);
-    });
-    // tanggal keisi diurut naik, "Date to be set" (kosong) di paling bawah
-    return [...map.entries()].sort((a, b) => {
-      if (!a[0]) return 1;
-      if (!b[0]) return -1;
-      return a[0] < b[0] ? -1 : 1;
-    });
-  };
-
-  const rowCardHTML = (r, removable) => {
+  // Satu kartu item. opts.removable = tombol x (tab cart); opts.heart = toggle (tab paket).
+  const rowCardHTML = (r, opts, pos) => {
+    const o = opts || {};
     const iconHTML = r.img
       ? '<span class="mtc-item__icon mtc-item__icon--photo" style="background-image:url(assets/images/' + r.img + ')"></span>'
       : '<span class="mtc-item__icon">' + cartIcon(r.kind) + "</span>";
-    return '<div class="mtc-item">' +
-      iconHTML +
+    let action = "";
+    if (o.removable) {
+      action = '<button type="button" class="mtc-item__del" data-del-type="' + r.ref.type +
+        '" data-del-idx="' + r.ref.idx + '" aria-label="Remove">&times;</button>';
+    } else if (o.heart) {
+      action = '<button type="button" class="mtc-item__heart' + (r.inCart ? " is-on" : "") +
+        '" data-heart-type="' + r.ref.type + '" data-heart-idx="' + r.ref.idx +
+        '" aria-pressed="' + (r.inCart ? "true" : "false") +
+        '" aria-label="' + (r.inCart ? "Remove from your trip" : "Add to your trip") + '">' +
+        cartHeartIcon(r.inCart) + "</button>";
+    }
+    return '<div class="mtc-item">' + iconHTML +
       '<div class="mtc-item__body">' +
         '<p class="mtc-item__title">' + escHtml(r.title) + "</p>" +
         '<p class="mtc-item__desc">' + escHtml(r.desc) + "</p>" +
+        (o.removable
+          ? '<button type="button" class="mtc-item__datebtn' + (r.date ? "" : " is-empty") +
+            '" data-date-pos="' + pos + '" aria-label="' + (r.date ? "Change date for " : "Set date for ") +
+            escHtml(r.title) + '">' + escHtml(r.date ? fmtGroupDate(r.date) : "Set date") + "</button>"
+          : '<p class="mtc-item__date">' + escHtml(fmtGroupDate(r.date)) + "</p>") +
       "</div>" +
       '<div class="mtc-item__price">' + cartPriceTag(r.usd, r.idr) + "</div>" +
-      (removable ? '<button type="button" class="mtc-item__del" data-del-type="' + r.ref.type + '" data-del-idx="' + r.ref.idx + '" aria-label="Remove">&times;</button>' : "") +
-      "</div>";
+      action + "</div>";
   };
 
-  const listHTML = (rows, removable) => {
-    return groupByDate(rows).map(([date, items]) =>
-      '<div class="mtc-daygroup"><p class="mtc-daygroup__date">' + escHtml(fmtGroupDate(date)) + "</p>" +
-      items.map((r) => rowCardHTML(r, removable)).join("") + "</div>"
-    ).join("");
-  };
+  // Flat list: gak ada header grup tanggal, tanggal nempel di kartunya masing-masing.
+  const listHTML = (rows, opts) => rows.map((r, i) => rowCardHTML(r, opts, i)).join("");
 
-  const totalHTML = (rows) => {
-    return '<div class="mtc-total"><span class="mtc-total__label">Total</span>' +
-      '<span class="mtc-total__val">' + cartPriceTagSum(rows) + "</span></div>";
-  };
+  // Upsell "You might also like" abis booking selesai - reuse pool RELATED_ITEMS +
+  // style .related yang udah dipakai di halaman detail (initRelated), biar konsisten,
+  // bukan bikin section/data baru. excludeNames = item yg baru aja dipesan.
+  // Utamain zone yg BEDA dari yg baru dipesan (variasi), baru isi sisanya.
+  function relatedUpsellHTML(excludeNames) {
+    const norm = (n) => String(n).replace(/&amp;/g, "&");
+    const excluded = new Set(excludeNames.map(norm));
+    const booked = RELATED_ITEMS.filter((it) => excluded.has(norm(it.name)));
+    const bookedZones = new Set(booked.map((it) => it.zone));
+    const pool = RELATED_ITEMS.filter((it) => !excluded.has(norm(it.name)));
+    const otherZone = pool.filter((it) => !bookedZones.has(it.zone));
+    const rest = pool.filter((it) => bookedZones.has(it.zone));
+    const picks = otherZone.concat(rest).slice(0, 4);
+    if (!picks.length) return "";
+    const cards = picks.map((it) => {
+      // "$" + it.p = fallback statis doang (pola sama kayak initRelated) - data-price
+      // bikin renderPrices() nimpa ini pas dipanggil abis section ini kesisip ke DOM.
+      const priceHtml = it.p
+        ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
+        : "";
+      return '<a class="experience__card' + (it.p ? "" : " related__card--noprice") + '" href="' + it.href + '">' +
+        '<div class="experience__image"><img src="assets/images/' + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
+        '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
+        '<div class="experience__meta"><span>' + it.meta + "</span></div>" + priceHtml + "</div></a>";
+    }).join("");
+    // "tourprog" = class scope kartu Atelier (.tourprog .experience__card: 4:3 photo,
+    // body 2-baris title/rating + meta/price) - reuse scope yang udah dipakai
+    // tour.html/activities.html/destinations.html, bukan nulis rule visual baru.
+    // Grid DITARUH DI LUAR ".related": .related punya rule kartu lama sendiri
+    // (foto square + title-overlay-di-foto, buat konteks initRelated di halaman
+    // detail) yang bentrok kalau kartu yang sama juga kena ".tourprog". ".related"
+    // di sini cuma buat judul + garis pembatas gold-nya, gak nyentuh grid.
+    return '<section class="mtc-related tourprog">' +
+      '<div class="related"><h2 class="related__title">You might also like</h2></div>' +
+      '<div class="experience__grid experience__grid--home4">' + cards + "</div>" +
+    "</section>";
+  }
 
+  // Rincian harga per item (1 baris = 1 item). Ketutup default; kebuka lewat toggle.
+  // Harga per baris pakai cartPriceTag yang sama kayak kartu — jadi kalau ada
+  // referral, coretan harga aslinya ikut kebawa & angkanya konsisten sama total.
+  const receiptHTML = (rows, open) =>
+    '<div class="mtc-receipt">' +
+      '<button type="button" class="mtc-receipt__toggle" data-receipt aria-expanded="' + (open ? "true" : "false") + '">' +
+        '<span>Price breakdown</span>' +
+        '<svg class="mtc-receipt__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
+      "</button>" +
+      (open
+        ? '<ul class="mtc-receipt__list">' + rows.map((r) =>
+            '<li class="mtc-receipt__line"><span class="mtc-receipt__name">' + escHtml(r.title) + "</span>" +
+            '<span class="mtc-receipt__amt">' + cartPriceTag(r.usd, r.idr) + "</span></li>").join("") + "</ul>"
+        : "") +
+    "</div>";
+
+  const totalHTML = (rows, label) =>
+    '<div class="mtc-total"><span class="mtc-total__label">' + escHtml(label || "Total") + "</span>" +
+    '<span class="mtc-total__val">' + cartPriceTagSum(rows) + "</span></div>";
+
+  // Kartu teaser paket di empty state -> cuma pindah tab (bukan lagi "use this plan").
   const packageCardHTML = (pkg) => {
     const rows = cartFlatten(cartPackageState(pkg));
     return '<div class="mtc-pkg">' +
       '<div class="mtc-pkg__head"><p class="mtc-pkg__title">' + escHtml(pkg.title) + "</p>" +
       '<span class="mtc-pkg__price">' + cartPriceTagSum(rows) + "</span></div>" +
       '<p class="mtc-pkg__blurb">' + escHtml(pkg.blurb) + "</p>" +
-      '<button type="button" class="modal__btn mtc-pkg__use" data-use-pkg="' + pkg.id + '">Use this plan</button>' +
+      '<button type="button" class="modal__btn modal__btn--ghost mtc-pkg__use" data-go-tab="' + pkg.id + '">See the plan</button>' +
       "</div>";
   };
 
-  const usePackage = (pkg) => {
-    const apply = () => {
-      itnSave(cartPackageState(pkg));
-      activeTab = "custom";
-      render();
-      cartToast(pkg.label + " plan added");
-    };
-    if (cartFlatten(itnLoad()).length > 0) {
-      cartConfirm("Replace your trip?",
-        "This replaces the items you've added with the " + pkg.title + " package.", "Replace", apply);
-    } else apply();
+  // Baris paket + flag inCart (buat status hati). Entry aslinya diambil dari state paket.
+  const packageRows = (pkg) => {
+    const st = itnLoad();
+    const pkgState = cartPackageState(pkg);
+    return cartFlatten(pkgState).map((r) => {
+      const entry = r.ref.type === "day" ? pkgState.days[r.ref.idx] : pkgState.transfers[r.ref.idx];
+      return Object.assign({}, r, { inCart: entry ? cartMatchIndex(st, r.ref.type, entry) > -1 : false });
+    });
   };
 
   const panelHTML = () => {
     if (activeTab === "custom") {
       const rows = cartFlatten(itnLoad());
+      if (!rows.length && justPaid) {
+        // Abis submit booking: cart dikosongin (cartCheckout onSuccess). Upsell doang di
+        // sini, BUKAN bagian transaksi (beda dari policy line yg nempel di tombol bayar).
+        return '<div class="mtc-empty">' +
+          '<p class="mtc-empty__lead">Booking submitted.</p>' +
+          '<p class="mtc-empty__sub">We will email you shortly to confirm.</p>' +
+        "</div>" + relatedUpsellHTML(bookedNames);
+      }
       if (!rows.length) {
         return '<div class="mtc-empty">' +
           '<p class="mtc-empty__lead">Nothing added yet.</p>' +
-          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start your trip — or pick a ready-made plan below.</p>' +
+          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start your trip - or open a suggested plan and add the parts you want.</p>' +
           '<div class="mtc-pkgs">' + CART_PACKAGES.map(packageCardHTML).join("") + "</div></div>";
       }
-      return '<div class="mtc-list" data-removable>' + listHTML(rows, true) + "</div>" +
+      const undated = rows.filter((r) => !r.date).length;
+      // Policy line: satu baris, link ke halaman policy yg UDAH ADA di footer -
+      // jangan duplikat isi policy-nya di sini.
+      const policyLine = '<p class="mtc-note mtc-policy">By clicking <strong>Make Payment</strong>, you agree to our ' +
+        '<a href="cancellation-policy.html">cancellation policy</a> and <a href="terms-conditions.html">terms</a>.</p>';
+      // Job 5: kartu (main) + total/receipt/policy/bayar (side) dipisah jadi 2 blok.
+      // Mobile: numpuk (main dulu, side belakangan - urutan DOM ini apa adanya).
+      // Desktop: .mtc-layout jadi row, .mtc-layout__side sticky (lihat CSS).
+      const sideHTML = receiptHTML(rows, receiptOpen) +
         totalHTML(rows) +
-        '<button type="button" class="modal__btn mtc-pay" data-pay>Make Payment</button>' +
-        '<p class="mtc-note">You\'ll add your name &amp; contact details at payment — that also creates your account so you can log in later with the same email.</p>';
+        policyLine +
+        '<button type="button" class="modal__btn mtc-pay" data-pay' + (undated ? " disabled" : "") + ">Make Payment</button>" +
+        (undated ? '<p class="mtc-note mtc-note--warn">' + undated + (undated > 1 ? " items still need" : " item still needs") + " a date.</p>" : "") +
+        '<p class="mtc-note">' + "You'll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email." + "</p>";
+      return '<div class="mtc-layout">' +
+        '<div class="mtc-layout__main"><div class="mtc-list" data-removable>' + listHTML(rows, { removable: true }) + "</div></div>" +
+        '<aside class="mtc-layout__side">' + sideHTML + "</aside>" +
+      "</div>";
     }
-    // tab paket
+    // Tab paket: browse. Tiap baris punya hati; gak ada tombol "use this plan" lagi.
     const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
-    const rows = cartFlatten(cartPackageState(pkg));
+    const rows = packageRows(pkg);
     return '<p class="mtc-pkgintro">' + escHtml(pkg.blurb) + "</p>" +
-      '<div class="mtc-list">' + listHTML(rows, false) + "</div>" +
-      totalHTML(rows) +
-      '<button type="button" class="modal__btn mtc-pay" data-use-pkg="' + pkg.id + '">Use this plan</button>' +
-      '<p class="mtc-note">Adds this package to your trip so you can adjust dates, then Make Payment.</p>';
+      '<div class="mtc-list">' + listHTML(rows, { heart: true }) + "</div>" +
+      totalHTML(rows, "Full plan") +
+      '<p class="mtc-note">Tap the heart on any item to add it to your trip.</p>';
   };
 
   function render() {
-    const tabs = [{ id: "custom", label: "My Custom Trip" }]
+    const tabs = [{ id: "custom", label: "Your Trip" }]
       .concat(CART_PACKAGES.map((p) => ({ id: p.id, label: p.label + " Suggested" })));
     const ref = activeReferral();
     root.innerHTML =
@@ -3604,14 +3762,61 @@ function initMyTripsCart() {
     root.querySelectorAll(".mtc-tab").forEach((tab) => {
       tab.addEventListener("click", () => { activeTab = tab.dataset.tab; render(); });
     });
-    root.querySelectorAll("[data-use-pkg]").forEach((b) => {
-      b.addEventListener("click", () => { const p = CART_PACKAGES.find((x) => x.id === b.dataset.usePkg); if (p) usePackage(p); });
+    root.querySelectorAll("[data-go-tab]").forEach((b) => {
+      b.addEventListener("click", () => { activeTab = b.dataset.goTab; render(); });
     });
     root.querySelectorAll("[data-del-type]").forEach((b) => {
       b.addEventListener("click", () => { cartRemove(b.dataset.delType, parseInt(b.dataset.delIdx)); render(); });
     });
+    root.querySelectorAll("[data-date-pos]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const pos = parseInt(btn.dataset.datePos, 10);
+        const cur = cartFlatten(itnLoad())[pos];
+        if (!cur) return;
+        bookDatePopup(cur.title, (date) => {
+          const st = itnLoad();
+          cartCascadeFrom(st, pos, date);
+          const save = () => { itnSave(st); render(); };
+          if (cartHasClash(st)) {
+            cartConfirm("Two full-day tours?",
+              "That puts two full-day tours on the same date. Keep both?", "Keep both", save);
+            return;
+          }
+          save();
+        }, cur.date);
+      });
+    });
+    root.querySelectorAll("[data-heart-type]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
+        if (!pkg) return;
+        const pkgState = cartPackageState(pkg);
+        const type = b.dataset.heartType;
+        const idx = parseInt(b.dataset.heartIdx, 10);
+        const entry = type === "day" ? pkgState.days[idx] : pkgState.transfers[idx];
+        if (!entry) return;
+        cartToast(cartToggleEntry(type, entry) ? "Added to your trip" : "Removed from your trip");
+        render();
+      });
+    });
+    const rec = root.querySelector("[data-receipt]");
+    if (rec) rec.addEventListener("click", () => { receiptOpen = !receiptOpen; render(); });
     const pay = root.querySelector("[data-pay]");
-    if (pay) pay.addEventListener("click", () => cartCheckout(render));
+    if (pay) pay.addEventListener("click", () => {
+      bookedNames = (itnLoad().days || []).flatMap((d) => d.items || []);
+      cartCheckout(() => { justPaid = true; render(); });
+    });
+    // Tab aktif ketarik ke view tanpa nge-scroll halaman (innerHTML reset scrollLeft).
+    const tabsEl = root.querySelector(".mtc-tabs");
+    const onTab = root.querySelector(".mtc-tab.is-on");
+    if (tabsEl && onTab) tabsEl.scrollLeft = Math.max(0, onTab.offsetLeft - 12);
+    // Upsell abis bayar pakai data-price span (pola initRelated) - isi harganya di sini
+    // karena section ini disisip belakangan, bukan pas initPage() (renderPrices udah lewat).
+    if (root.querySelector(".mtc-related")) renderPrices();
+    // Grid rekomendasi baru = .experience__grid--home4 yg belum pernah kena wiring
+    // slider (initTourSlider skip yg udah ke-wrap .slider-holder) - panggil ulang biar
+    // gak jadi CSS grid rigid (aturan: semua card grid pakai satu mekanisme slider).
+    initTourSlider();
   }
 
   window.__myTripsRefresh = render; // dipanggil pas referral di-apply/clear

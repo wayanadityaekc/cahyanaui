@@ -635,7 +635,7 @@ body {
   background: #fff;
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: var(--fs-body);
+  font-size: var(--fs-field);
   color: var(--color-green);
   text-align: left;
   cursor: pointer;
@@ -6598,8 +6598,6 @@ button.pick-cat {
   font-family: var(--font-body);
   font-size: var(--fs-small);
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--color-muted);
   cursor: pointer;
   border-bottom: 2px solid transparent;
@@ -6881,7 +6879,7 @@ button.pick-cat {
   font-family: var(--font-head);
   font-weight: 500;
   letter-spacing: -0.01em;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--color-green);
   margin: 0 0 0.4rem;
 }
@@ -6890,10 +6888,11 @@ button.pick-cat {
   max-width: 44ch;
   margin: 0 auto 1.8rem;
 }
+/* Kartu teaser "2-Day/3-Day..." di empty state dihapus (Sep 2026, Wayan minta -
+   redundan sama tab bar di atas yang udah bisa dipake buka paket suggested yang
+   sama). Tab bar TETAP ada; markup/data paket di JS gak disentuh, cuma disembunyiin. */
 .mtc-pkgs {
-  display: grid;
-  gap: 0.9rem;
-  text-align: left;
+  display: none;
 }
 .mtc-pkg {
   border: 1px solid var(--line);
@@ -7840,6 +7839,15 @@ strong {
   }
   .reviews-strip {
     grid-template-columns: 1fr;
+  }
+  .rev__text {
+    font-size: 0.85rem;
+  }
+  .rev__stars {
+    font-size: 0.85rem;
+  }
+  .rev__name {
+    font-size: 0.8rem;
   }
 }
 
@@ -8937,6 +8945,9 @@ strong {
   }
   .vpromo__title {
     font-size: 1.7rem;
+  }
+  .vpromo__desc {
+    font-size: 0.85rem;
   }
 }
 

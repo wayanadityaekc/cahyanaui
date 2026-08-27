@@ -420,7 +420,8 @@ body {
   width: 100%;
   border: 1px solid var(--line, #e7e4dd);
   border-radius: var(--r-md);
-  padding: 0.72rem 2.2rem 0.72rem 0.85rem;
+  padding: 0 2.2rem 0 0.85rem;
+  height: var(--field-h);
   background-color: #fff;
   font-family: var(--font-body);
   font-weight: 400;
@@ -448,7 +449,8 @@ body {
 }
 /* Currency di dalam search form: bikin tombol dropdown seukuran field lain */
 .hsearch__cur .acct__curbtn {
-  padding: 0.72rem 0.85rem;
+  padding: 0 0.85rem;
+  height: var(--field-h);
   border-color: var(--line, #e7e4dd);
   border-radius: var(--r-md);
   font-weight: 400;
@@ -469,7 +471,8 @@ body {
   min-width: 0;
   border: 1px solid var(--line, #e7e4dd);
   border-radius: var(--r-md);
-  padding: 0.72rem 0.85rem;
+  padding: 0 0.85rem;
+  height: var(--field-h);
   background-color: #fff;
   font-family: var(--font-body);
   font-weight: 500;
@@ -701,7 +704,8 @@ body {
   gap: 10px;
   border: 1px solid var(--line, #e7e4dd);
   border-radius: var(--r-md);
-  padding: 0.72rem 0.85rem;
+  padding: 0 0.85rem;
+  height: var(--field-h);
   background: #fff;
   font-family: var(--font-body);
   font-weight: 400;
@@ -3813,7 +3817,7 @@ a.footer__contact-item:hover {
 }
 /* kotak search di dalam bar: buang border/bg/shadow sendiri (udah dipegang bar) */
 .guide-hero-search__field .gsearch__box {
-  min-height: 3.15rem;
+  min-height: var(--field-h);
   box-sizing: border-box;
   border: none;
   border-radius: 0;

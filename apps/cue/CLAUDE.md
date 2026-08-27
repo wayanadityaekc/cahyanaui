@@ -143,6 +143,11 @@ When unsure, ask first (keep it short).
   = 5 kategori asli dari `bali-guide.html` (`#gcat-island/culture/nature/do/know`), link-nya
   ke situ (anchor), BUKAN scrollspy di halaman guide itu sendiri. `<body>` tiap halaman guide
   udah dikasih class `is-active` statis di kategori yang sesuai (bukan JS-driven).
+- **`.guide-page .lhero`** dipendekin (`min-height: 320px`, was 560px standar) - guide article
+  halaman sekunder, bukan halaman utama, jangan makan layar sebanyak listing page.
+- **`.guide-cattab`** (tab kategori sticky HP) disamain ke gaya `.zone-chip` (tour/activities/
+  destinations) - underline tab polos, BUKAN pill isi/border. `.guide-tag` (tag di atas foto
+  hero: "Culture"/"Ubud"/dst) TETAP pill - beda konteks, itu label bukan navigasi.
 - **Link relatif halaman guide**: semua halaman pakai `<base href="/" />`, jadi href SELALU
   relatif ke ROOT, bukan ke folder `guide/` — link ke sesama halaman guide WAJIB prefix
   `guide/` (`href="guide/canggu.html"`), link ke halaman root (`ubud-tour.html` dkk) TANPA
@@ -286,7 +291,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v369, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v370, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

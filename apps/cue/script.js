@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 73;
+const PARTIALS_VERSION = 74;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2725,49 +2725,162 @@ function initModals() {
   });
 }
 
-// Guest review form (inside the write-review popup)
-function initReviews() {
-  const sendBtn = document.getElementById("rv-send");
-  if (!sendBtn) return;
+// Guest Reviews strip (homepage dkk) — tarik yang UDAH DI-APPROVE dari
+// GET /api/reviews. Kosong / fetch gagal -> section disembunyiin, BUKAN
+// pasang dummy (no fake content).
+async function initReviews() {
+  const section = document.getElementById("reviews");
+  const strip = document.querySelector(".reviews-strip");
+  if (!section || !strip) return;
+  try {
+    const rows = await fetch(`${API_BASE}/reviews`).then((r) => r.json());
+    if (!Array.isArray(rows) || !rows.length) { section.hidden = true; return; }
+    strip.innerHTML = rows.map((r) => {
+      const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
+      const stars = "&#9733;".repeat(n) + "&#9734;".repeat(5 - n);
+      return '<article class="rev">' +
+        '<div class="rev__stars" aria-label="' + n + ' out of 5">' + stars + "</div>" +
+        '<p class="rev__text">' + escHtml(r.message) + "</p>" +
+        '<div class="rev__foot"><span class="rev__name">' + escHtml(r.name) +
+          (r.service ? " &middot; " + escHtml(r.service) : "") + "</span></div>" +
+      "</article>";
+    }).join("");
+  } catch (e) {
+    section.hidden = true;
+  }
+}
 
-  const form = document.getElementById("review-form");
-  const success = document.getElementById("review-success");
-  const nameField = document.getElementById("rv-name");
-  const emailField = document.getElementById("rv-email");
-  const serviceField = document.getElementById("rv-service");
-  const driverField = document.getElementById("rv-driver");
-  const messageField = document.getElementById("rv-message");
-  const stars = document.querySelectorAll("#rv-rating .rating__star");
+/* ===== Review submission — gate: booking_ref + email/phone kudu cocok sama
+   satu booking asli DAN tanggal tripnya udah lewat (dicek ULANG di server,
+   endpoint /api/reviews/verify di sini cuma buat UX). ===== */
 
-  let rating = 0;
+// Tombol "Leave a review" di paling bawah halaman — CUMA di halaman yang
+// bisa di-book (aturan Wayan: "kalau bisa di-book berarti bisa di-review").
+// Dicek dari placeholder yang sama kayak initTripBar pakai buat mode booking.
+function initReviewCta() {
+  const hasBooking = document.getElementById("booking-placeholder") || document.getElementById("book-modal-placeholder");
+  const mount = document.getElementById("footer-placeholder");
+  if (!hasBooking || !mount || document.querySelector(".review-cta")) return;
+  const wrap = document.createElement("div");
+  wrap.className = "review-cta";
+  wrap.innerHTML = '<button type="button" class="btn-pill">Leave a review</button>';
+  mount.parentNode.insertBefore(wrap, mount);
+  wrap.querySelector("button").addEventListener("click", openReviewModal);
+}
 
+let reviewModalPromise = null; // fetch partial cuma sekali, dipake ulang tiap kebuka
+
+async function openReviewModal() {
+  if (!reviewModalPromise) {
+    const host = document.createElement("div");
+    document.body.appendChild(host);
+    reviewModalPromise = fetch(`partials/review-modal.html?v=${PARTIALS_VERSION}`)
+      .then((r) => r.text())
+      .then((html) => {
+        host.innerHTML = html;
+        const modal = host.querySelector(".modal");
+        wireReviewModal(modal);
+        return modal;
+      });
+  }
+  const modal = await reviewModalPromise;
+  resetReviewModal(modal);
+  modal.classList.add("active");
+}
+
+function resetReviewModal(modal) {
+  modal.querySelector('[data-step="verify"]').hidden = false;
+  modal.querySelector('[data-step="write"]').hidden = true;
+  // .modal__success punya CSS "display:none" bawaan (dipake book-confirm.html juga,
+  // di-toggle lewat style.display, BUKAN attribute hidden) - ikutin pola yang sama.
+  modal.querySelector("#rvm-success").style.display = "none";
+  modal.querySelector("#rvm-ref").value = "";
+  modal.querySelector("#rvm-contact").value = "";
+  modal.querySelector("#rvm-message").value = "";
+  modal.querySelectorAll(".rating__star").forEach((s) => s.classList.remove("active"));
+  modal.dataset.rating = "0";
+  const vErr = modal.querySelector("#rvm-verify-error"); vErr.hidden = true; vErr.textContent = "";
+  const sErr = modal.querySelector("#rvm-submit-error"); sErr.hidden = true; sErr.textContent = "";
+}
+
+function wireReviewModal(modal) {
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest("[data-close]")) modal.classList.remove("active");
+  });
+
+  const verifyBtn = modal.querySelector("#rvm-verify-btn");
+  const verifyErr = modal.querySelector("#rvm-verify-error");
+  verifyBtn.addEventListener("click", async () => {
+    const ref = modal.querySelector("#rvm-ref").value.trim();
+    const contact = modal.querySelector("#rvm-contact").value.trim();
+    verifyErr.hidden = true;
+    if (!ref || !contact) {
+      verifyErr.textContent = "Please enter your booking reference and email or phone.";
+      verifyErr.hidden = false;
+      return;
+    }
+    verifyBtn.disabled = true;
+    try {
+      const data = await fetch(`${API_BASE}/reviews/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_ref: ref, contact }),
+      }).then((r) => r.json());
+      if (!data.ok) {
+        verifyErr.textContent = data.reason || "We couldn't verify that booking.";
+        verifyErr.hidden = false;
+        return;
+      }
+      modal.dataset.ref = ref;
+      modal.dataset.contact = contact;
+      modal.querySelector("#rvm-name").textContent = data.name || "";
+      modal.querySelector("#rvm-service").textContent = data.service || "";
+      modal.querySelector('[data-step="verify"]').hidden = true;
+      modal.querySelector('[data-step="write"]').hidden = false;
+    } catch (e) {
+      verifyErr.textContent = "Something went wrong. Please try again.";
+      verifyErr.hidden = false;
+    } finally {
+      verifyBtn.disabled = false;
+    }
+  });
+
+  const stars = modal.querySelectorAll(".rating__star");
   stars.forEach((star) => {
     star.addEventListener("click", () => {
-      rating = parseInt(star.dataset.value);
-      stars.forEach((s) => s.classList.toggle("active", parseInt(s.dataset.value) <= rating));
+      modal.dataset.rating = star.dataset.value;
+      stars.forEach((s) => s.classList.toggle("active", parseInt(s.dataset.value, 10) <= parseInt(star.dataset.value, 10)));
     });
   });
 
-  sendBtn.addEventListener("click", () => {
-    if (!nameField.value.trim()) { alert("Please enter your name."); return; }
-    if (!/^\S+@\S+\.\S+$/.test(emailField.value.trim())) { alert("Please enter a valid email address."); return; }
-    if (!serviceField.value) { alert("Please select which service you used."); return; }
-    if (!rating) { alert("Please give a star rating."); return; }
-    if (!messageField.value.trim()) { alert("Please write your review."); return; }
-
-    const data = new URLSearchParams({
-      type: "review",
-      name: nameField.value,
-      email: emailField.value,
-      service: serviceField.value,
-      driver: driverField ? driverField.value : "",
-      rating: String(rating),
-      message: messageField.value
-    });
-    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-
-    form.style.display = "none";
-    success.style.display = "block";
+  const submitBtn = modal.querySelector("#rvm-submit-btn");
+  const submitErr = modal.querySelector("#rvm-submit-error");
+  submitBtn.addEventListener("click", async () => {
+    const rating = parseInt(modal.dataset.rating || "0", 10);
+    const message = modal.querySelector("#rvm-message").value.trim();
+    submitErr.hidden = true;
+    if (!rating) { submitErr.textContent = "Please give a star rating."; submitErr.hidden = false; return; }
+    if (!message) { submitErr.textContent = "Please write your review."; submitErr.hidden = false; return; }
+    submitBtn.disabled = true;
+    try {
+      const data = await fetch(`${API_BASE}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_ref: modal.dataset.ref, contact: modal.dataset.contact, rating, message }),
+      }).then((r) => r.json());
+      if (!data.ok) {
+        submitErr.textContent = data.reason || "Something went wrong. Please try again.";
+        submitErr.hidden = false;
+        return;
+      }
+      modal.querySelector('[data-step="write"]').hidden = true;
+      modal.querySelector("#rvm-success").style.display = "block";
+    } catch (e) {
+      submitErr.textContent = "Something went wrong. Please try again.";
+      submitErr.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 }
 
@@ -2782,7 +2895,6 @@ function initDrivers() {
   const mTagline = document.getElementById("driver-modal-tagline");
   const mRating = document.getElementById("driver-modal-rating");
   const mDesc = document.getElementById("driver-modal-desc");
-  const mReviews = document.getElementById("driver-modal-reviews");
 
   const mAvatar = modal.querySelector(".driver-card__avatar");
   cards.forEach((card) => {
@@ -2796,7 +2908,6 @@ function initDrivers() {
       if (mAvatar) mAvatar.textContent = (card.dataset.name || "").charAt(0);
       mRating.innerHTML = card.querySelector(".driver-card__rating").innerHTML;
       mDesc.textContent = detail ? (detail.dataset.desc || "") : "";
-      mReviews.innerHTML = detail ? detail.querySelector(".driver-detail__reviews").innerHTML : "";
       modal.classList.add("active");
     });
   });
@@ -5349,6 +5460,7 @@ async function initPage() {
   initModals();
   initModalUX();
   initReviews();
+  initReviewCta();
   initDrivers();
   initWhatsApp();
   initReveal();

@@ -1,0 +1,48 @@
+<!-- Review submission popup, dibuka dari tombol "Leave a review" (initReviewCta,
+     halaman manapun yang bisa di-book). 2 tahap: verifikasi booking dulu (step
+     "verify"), baru form rating+pesan kalau lolos (step "write"), lalu sukses.
+     Semua wiring di initReviewCta/openReviewModal/wireReviewModal (script.js). -->
+<div class="modal" id="review-modal">
+  <div class="modal__box">
+    <button class="modal__close" data-close aria-label="Close">&times;</button>
+    <h3 class="modal__title">Leave a Review</h3>
+
+    <div data-step="verify">
+      <p class="modal__sub">Only guests with a completed booking can leave a review - enter your booking reference and the email or phone you used.</p>
+      <div class="modal__group">
+        <label for="rvm-ref">Booking reference</label>
+        <input type="text" id="rvm-ref" placeholder="CUE-001" />
+      </div>
+      <div class="modal__group">
+        <label for="rvm-contact">Email or phone</label>
+        <input type="text" id="rvm-contact" />
+      </div>
+      <p class="review-modal__error" id="rvm-verify-error" hidden></p>
+      <button type="button" class="modal__btn" id="rvm-verify-btn">Continue</button>
+    </div>
+
+    <div data-step="write" hidden>
+      <p class="modal__sub">Reviewing as <strong id="rvm-name"></strong> &middot; <span id="rvm-service"></span></p>
+      <div class="rating" id="rvm-rating">
+        <button type="button" class="rating__star" data-value="1" aria-label="1 star">&#9733;</button>
+        <button type="button" class="rating__star" data-value="2" aria-label="2 stars">&#9733;</button>
+        <button type="button" class="rating__star" data-value="3" aria-label="3 stars">&#9733;</button>
+        <button type="button" class="rating__star" data-value="4" aria-label="4 stars">&#9733;</button>
+        <button type="button" class="rating__star" data-value="5" aria-label="5 stars">&#9733;</button>
+      </div>
+      <div class="modal__group">
+        <label for="rvm-message">Your review</label>
+        <textarea id="rvm-message" rows="4"></textarea>
+      </div>
+      <p class="review-modal__error" id="rvm-submit-error" hidden></p>
+      <button type="button" class="modal__btn" id="rvm-submit-btn">Submit review</button>
+    </div>
+
+    <div class="modal__success" id="rvm-success">
+      <div class="modal__success-icon">&check;</div>
+      <h3 class="modal__title">Thank you!</h3>
+      <p>Your review has been submitted and will appear once approved.</p>
+      <button type="button" class="modal__btn" data-close>Done</button>
+    </div>
+  </div>
+</div>

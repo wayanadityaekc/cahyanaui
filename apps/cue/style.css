@@ -1206,6 +1206,7 @@ a.tripbar--promo {
 .review-form__group textarea,
 .modal__group input,
 .modal__group select,
+.modal__group textarea,
 .contact__group input,
 .contact__group textarea,
 .field select,
@@ -2381,18 +2382,6 @@ a.tripbar--promo {
   line-height: 1.6;
   color: var(--color-ink);
 }
-.driver-modal__subtitle {
-  margin-bottom: 1rem;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-gold);
-}
-.driver-modal__reviews {
-  display: grid;
-  gap: 1rem;
-}
-
 /* ==================== Divider gold tipis antar section (inset, ada pinggir) ==================== */
 section + section,
 section.faq,
@@ -2781,6 +2770,13 @@ a.footer__contact-item:hover {
   padding: 0.5rem 0.65rem;
   font-size: var(--fs-field);
 }
+.modal__group textarea {
+  padding: 0.5rem 0.65rem;
+  font-size: var(--fs-field);
+  min-height: 110px;
+  resize: vertical;
+  background-color: #fff;
+}
 .modal__referral {
   display: flex;
   gap: 0.5rem;
@@ -2948,6 +2944,19 @@ a.footer__contact-item:hover {
 .modal__btn--wa:hover {
   background-color: #1fb457;
   color: #fff;
+}
+/* Tombol "Leave a review" di paling bawah halaman bookable (initReviewCta) */
+.review-cta {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+}
+/* Pesan error inline di form review (verify gagal / rating & pesan kosong) */
+.review-modal__error {
+  margin: -0.4rem 0 1rem;
+  font-size: var(--fs-small);
+  color: var(--color-err);
 }
 .modal__success {
   display: none;

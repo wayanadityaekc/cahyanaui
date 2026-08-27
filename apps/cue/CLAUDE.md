@@ -148,11 +148,16 @@ When unsure, ask first (keep it short).
   di `guide/ubud.html` ada 2 titik: satu di "What to Do in Town", satu lagi di "Around Ubud".
 - **Template lengkap** (`.lhero` + `.guide-hero-tags`, sidebar `.guide-layout__side` kanan
   desktop / `.guide-cattabs` sticky HP, `.guide-more` "You might also like" + "See our
-  tours") — **udah di-build ke `guide/ubud.html`** sebagai contoh pertama (Sep 2026).
-  BELUM di-rollout ke 14 halaman guide lainnya - tunggu Wayan review dulu. Kategori sidebar/tab
-  = 5 kategori asli dari `bali-guide.html` (`#gcat-island/culture/nature/do/know`), link-nya
-  ke situ (anchor), BUKAN scrollspy di halaman guide itu sendiri. `<body>` tiap halaman guide
-  udah dikasih class `is-active` statis di kategori yang sesuai (bukan JS-driven).
+  tours") — **udah di-rollout ke SEMUA 15 halaman guide** (Agu 2026, dari `guide/ubud.html`
+  sebagai contoh pertama). Kategori tiap halaman di-set dari crumb-nya (island/culture/nature/
+  do/know) — `is-active` kepasang di `.guide-cattab` + `.guide-sidebar` item yang sesuai.
+  Kategori sidebar/tab = 5 kategori asli dari `bali-guide.html`
+  (`#gcat-island/culture/nature/do/know`), link-nya ke situ (anchor), BUKAN scrollspy di
+  halaman guide itu sendiri. "You might also like" = kartu guide se-kategori + anchor
+  (ubud/canggu/best-time/getting-around), gambar reuse dari kartu guide-home di `bali-guide.html`.
+  "See our tours" = Ubud Tour + Ubud Culture Day (flagship, sama di semua halaman — Wayan bisa
+  kustomin per halaman nanti). Hero pakai gradient/foto yang udah ada per halaman (no fake foto);
+  placeholder "Photo coming soon" + blok `.guide-related`/`.program-cta` lama udah dibuang.
 - **`.guide-article-page .lhero`** dipendekin (`min-height: 320px`, was 560px standar) - guide article
   halaman sekunder, bukan halaman utama, jangan makan layar sebanyak listing page.
 - **`.guide-cattab`** (tab kategori sticky HP) disamain ke gaya `.zone-chip` (tour/activities/

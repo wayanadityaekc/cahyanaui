@@ -34,13 +34,27 @@
 
     <!-- Ganti foto hero: di style bawah, ganti gradient jadi:
          linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.55)), url("assets/images/xxx.webp") -->
-    <section class="subhero subhero--overlap" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));">
-      <div class="subhero__content">
-        <h1 class="subhero__title">Bali's Rice Terraces &amp; the Subak System</h1>
-        <p class="subhero__text">Sculpted green landscapes farmed the same way for a thousand years.</p>
+    <section class="lhero" style="background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));">
+      <div class="lhero__inner">
+        <h1 class="lhero__title">Bali's Rice Terraces &amp; the Subak System</h1>
+        <p class="lhero__sub">Sculpted green landscapes farmed the same way for a thousand years.</p>
+        <div class="guide-hero-tags">
+          <span class="guide-tag">Nature</span>
+          <span class="guide-tag">Landscapes</span>
+        </div>
       </div>
     </section>
 
+    <nav class="guide-cattabs">
+      <a class="guide-cattab" href="bali-guide.html#gcat-island">About the Island</a>
+      <a class="guide-cattab" href="bali-guide.html#gcat-culture">People &amp; Culture</a>
+      <a class="guide-cattab is-active" href="bali-guide.html#gcat-nature">Nature</a>
+      <a class="guide-cattab" href="bali-guide.html#gcat-do">What to Do</a>
+      <a class="guide-cattab" href="bali-guide.html#gcat-know">Good to Know</a>
+    </nav>
+
+    <div class="guide-layout">
+      <div class="guide-layout__main">
     <section class="info">
       <div class="info__container guide-article">
         <p class="guide-crumb"><a href="bali-guide.html">Bali Guide</a> &rsaquo; Nature</p>
@@ -76,21 +90,67 @@
 
         <h2 class="section__title section__title--sub">The Coffee Stop Next Door</h2>
         <p>Terrace visits around Tegalalang usually come paired with a coffee plantation stop, and it deserves an honest note. The tasting flights - a dozen little cups of coffees, cocoas, and spiced teas - are genuinely enjoyable and usually free or nearly so; the famous <b>luwak coffee</b> (brewed from beans passed through a civet) costs extra and divides opinion on both taste and animal-welfare grounds, so feel free to skip it without apology. Nobody obliges you to buy at the shop on the way out, and "just the tasting, thank you" is a complete sentence. Treat it as what it is: a pleasant porch with a valley view between terraces and temples.</p>
-
-
-        <div class="guide-related">
-          <strong>Related</strong><br />
-        <a href="guide/balinese-hinduism.html">Balinese Hinduism &amp; Tri Hita Karana &rsaquo;</a>
-        <a href="attractions/tegalalang-rice-terrace.html">Tegalalang Rice Terrace &rsaquo;</a>
-        <a href="attractions/jatiluwih-rice-terrace.html">Jatiluwih Rice Terraces &rsaquo;</a>
-        </div>
         <p style="margin-top:2rem;"><a href="bali-guide.html" class="guide-crumb-back">&lsaquo; Back to the Bali Guide</a></p>
       </div>
     </section>
+      </div>
 
-    <section class="program-cta">
-      <a class="program-cta__btn program-cta__btn--book" href="tour.html">Plan your trip - see our tours</a>
-      <a class="program-cta__btn program-cta__btn--add" href="my-trips.html">Build an itinerary</a>
+      <aside class="guide-layout__side">
+        <div class="guide-sidebar">
+          <p class="guide-sidebar__title">Categories</p>
+          <ul class="guide-sidebar__list">
+            <li><a href="bali-guide.html#gcat-island">About the Island</a></li>
+            <li><a href="bali-guide.html#gcat-culture">People &amp; Culture</a></li>
+            <li><a class="is-active" href="bali-guide.html#gcat-nature">Nature</a></li>
+            <li><a href="bali-guide.html#gcat-do">What to Do</a></li>
+            <li><a href="bali-guide.html#gcat-know">Good to Know</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+        <section class="guide-more">
+      <h2 class="guide-more__title">You might also like</h2>
+      <div class="experience__grid experience__grid--auto">
+        <a class="experience__card guide-home__card" href="guide/bali-volcanoes.html">
+          <div class="experience__image"><img src="assets/images/mount-batur-volcano.webp" alt="Mount Batur's volcanic slopes, Bali" loading="lazy" width="1200" height="900" /></div>
+          <div class="experience__body"><span class="guide-home__tag">Mountains</span><h3 class="experience__name">Volcanoes: Agung &amp; Batur</h3></div>
+        </a>
+        <a class="experience__card guide-home__card" href="guide/bali-waterfalls.html">
+          <div class="experience__image"><img src="assets/images/tegenungan-waterfall-hero.jpg" alt="Tegenungan waterfall near Ubud" loading="lazy" width="1200" height="900" /></div>
+          <div class="experience__body"><span class="guide-home__tag">Waterfalls</span><h3 class="experience__name">Waterfalls of Bali</h3></div>
+        </a>
+        <a class="experience__card guide-home__card" href="guide/ubud.html">
+          <div class="experience__image"><img src="assets/images/campuhan-ridge.jpg" alt="The Campuhan Ridge walking trail near Ubud" loading="lazy" width="1200" height="900" /></div>
+          <div class="experience__body"><span class="guide-home__tag">Cultural hub</span><h3 class="experience__name">Ubud</h3></div>
+        </a>
+        <a class="experience__card guide-home__card" href="guide/canggu.html">
+          <div class="experience__image"><img src="assets/images/becah-south.jpg" alt="A surf beach on Bali's south coast" loading="lazy" width="1200" height="900" /></div>
+          <div class="experience__body"><span class="guide-home__tag">Surf &amp; cafes</span><h3 class="experience__name">Canggu</h3></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="guide-more tourprog">
+      <h2 class="guide-more__title">See our tours</h2>
+      <div class="experience__grid experience__grid--auto">
+        <a class="experience__card" href="ubud-tour.html">
+          <div class="experience__image"><img src="assets/images/tour-hero.jpg" alt="Ubud Tour" loading="lazy" width="600" height="600" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Ubud Tour</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg><span>Approx. 10 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ubud Tour">$45</span></div></div>
+          </div>
+        </a>
+        <a class="experience__card" href="ubud-culture-day.html">
+          <div class="experience__image"><img src="assets/images/ubud-culture-day-card.jpg" alt="Ubud Culture Day" loading="lazy" width="600" height="600" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Ubud Culture Day</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg><span>6-8 hours</span></div>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Ubud Culture Day">$55</span></div></div>
+          </div>
+        </a>
+      </div>
     </section>
 
     <div id="footer-placeholder"></div>

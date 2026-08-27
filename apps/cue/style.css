@@ -4052,7 +4052,9 @@ a.footer__contact-item:hover {
 /* Wrapping grid for pages with many cards (tour & activities).
    minmax 260px -> ~4 kartu per baris di desktop (biar segede homepage), auto turun di layar kecil. */
 .experience__grid--auto {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  /* auto-fill (bukan auto-fit): kalau kartu kurang dari yang muat 1 baris, sisa
+     kolom TETAP kosong (bukan ke-stretch ngisi lebar penuh) - Sep 2026, Wayan. */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
 /* Contact page */
@@ -8793,7 +8795,8 @@ strong {
 @media (min-width: 993px) {
   .xplore .experience__grid--home4 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    /* auto-fill: kartu kurang dari 1 baris penuh -> sisa kolom kosong, bukan stretch */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     overflow: visible;
   }
   .xplore .experience__grid--home4 .experience__card {
@@ -9102,9 +9105,12 @@ strong {
 .catsec .experience__grid--home4 {
   margin-top: 1.6rem;
   /* Listing page (tour/activities/destinations): tanpa slider di SEMUA breakpoint -
-     grid wrap (4-an per baris desktop, row baru kalau >4; HP jadi scroll ke bawah biasa). */
+     grid wrap (4-an per baris desktop, row baru kalau >4; HP jadi scroll ke bawah biasa).
+     auto-fill (bukan auto-fit): kategori yang kartunya kurang dari 1 baris penuh
+     (mis. "South & East Bali" cuma 3 kartu) sisa kolomnya kosong, BUKAN kartu
+     yang ada ke-stretch ngisi lebar penuh - Sep 2026, Wayan. */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   overflow: visible;
   touch-action: auto;
 }

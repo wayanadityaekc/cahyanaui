@@ -4070,6 +4070,144 @@ a.footer__contact-item:hover {
   text-decoration: none;
 }
 
+/* ============================================================
+   GUIDE ARTICLE TEMPLATE (Sep 2026) - hero tags, category sidebar
+   (desktop) / sticky tabs (mobile), bottom "You might also like" +
+   "See our tours". Applies only on .guide-page (guide/*.html).
+   ============================================================ */
+.guide-hero-tags {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.6rem 0 0;
+}
+.guide-tag {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Layout: artikel (main) + kategori (side, sticky, kanan) - desktop */
+.guide-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3);
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+.guide-layout__main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.guide-layout__side {
+  flex: 0 0 260px;
+  position: sticky;
+  top: 6.5rem;
+}
+.guide-sidebar {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.2rem 1.1rem;
+  background: #fff;
+}
+.guide-sidebar__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  color: var(--color-green);
+  margin: 0 0 0.8rem;
+}
+.guide-sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.guide-sidebar__list li + li {
+  margin-top: 0.35rem;
+}
+.guide-sidebar__list a {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-green);
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+.guide-sidebar__list a.is-active {
+  background: var(--color-cream);
+  color: var(--color-amber);
+  font-weight: 600;
+}
+
+/* Mobile: sidebar ilang, diganti tab kategori sticky horizontal */
+.guide-cattabs {
+  display: none;
+}
+@media (max-width: 992px) {
+  .guide-layout {
+    flex-direction: column;
+  }
+  .guide-layout__side {
+    display: none;
+  }
+  .guide-cattabs {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 52.8px; /* clear navbar HP - sama kayak tripbar/anchor lain */
+    z-index: 20;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    padding: 0.7rem 1.3rem;
+    margin: 0 -1.3rem 1.5rem;
+  }
+  .guide-cattabs::-webkit-scrollbar {
+    display: none;
+  }
+}
+.guide-cattab {
+  flex: 0 0 auto;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--color-muted);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.guide-cattab.is-active {
+  background: var(--color-green);
+  color: #fff;
+  border-color: var(--color-green);
+}
+
+/* "You might also like" (guide lain) + "See our tours" (upsell) di bawah artikel */
+.guide-more {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3);
+}
+.guide-more__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  color: var(--color-green);
+  margin: 0 0 1.2rem;
+}
+
 /* Wrapping grid for pages with many cards (tour & activities).
    minmax 260px -> ~4 kartu per baris di desktop (biar segede homepage), auto turun di layar kecil. */
 .experience__grid--auto {

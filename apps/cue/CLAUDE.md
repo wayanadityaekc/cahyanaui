@@ -136,9 +136,17 @@ When unsure, ask first (keep it short).
   numpang `.guide-article` (Terms dkk) TETAP center, jangan ikut diubah.
 - Foto lead (`.guide-lead`, di atas + inline dalam section) = **4:3**, disamain sama foto
   konten tour (`.stop__image`) biar selaras — bukan 16:9 lagi.
-- Template lengkap (sidebar kategori kanan + tags hero + "You might also like" + "See our
-  tours") masih tahap desain/approval Wayan, BELUM di-build ke halaman guide beneran -
-  cek histori chat sebelum nganggep ini udah jadi.
+- **Template lengkap** (`.lhero` + `.guide-hero-tags`, sidebar `.guide-layout__side` kanan
+  desktop / `.guide-cattabs` sticky HP, `.guide-more` "You might also like" + "See our
+  tours") — **udah di-build ke `guide/ubud.html`** sebagai contoh pertama (Sep 2026).
+  BELUM di-rollout ke 14 halaman guide lainnya - tunggu Wayan review dulu. Kategori sidebar/tab
+  = 5 kategori asli dari `bali-guide.html` (`#gcat-island/culture/nature/do/know`), link-nya
+  ke situ (anchor), BUKAN scrollspy di halaman guide itu sendiri. `<body>` tiap halaman guide
+  udah dikasih class `is-active` statis di kategori yang sesuai (bukan JS-driven).
+- **Link relatif halaman guide**: semua halaman pakai `<base href="/" />`, jadi href SELALU
+  relatif ke ROOT, bukan ke folder `guide/` — link ke sesama halaman guide WAJIB prefix
+  `guide/` (`href="guide/canggu.html"`), link ke halaman root (`ubud-tour.html` dkk) TANPA
+  prefix apa pun (jangan `../ubud-tour.html` — itu attribut path, bukan filesystem path).
 
 ## Subhero & FAQ (standar per halaman)
 - **H1 maks ±40 karakter** (biar tetap 2 baris di HP — lebih dari itu teks hero bisa
@@ -278,7 +286,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v368, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v369, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

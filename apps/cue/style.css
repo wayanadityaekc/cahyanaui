@@ -9514,16 +9514,19 @@ strong {
 }
 
 
-/* ---- Halaman listing + marketing (body.sp36): ritme section selaras homepage ----
-   Snap padding vertikal section konten ke --section-gap (36px). Di-scope ke .sp36
-   doang (tour/activities/destinations/about/contact/faq) biar halaman baca yang
-   share class (.info di detail attraction dll) TIDAK ikut keubah (Sep 2026, Wayan). */
-.sp36 .experience,
-.sp36 .info,
-.sp36 .closing-band,
-.sp36 .faq,
-.sp36 .contact,
-.sp36 .trust {
+/* ---- Ritme section SEMUA halaman selaras homepage (Sep 2026, Wayan) ----
+   Snap padding vertikal section konten ke --section-gap (36px) di seluruh web.
+   Semua section konten (listing/detail/legal/guide/about) dulu 48px, disamain ke
+   36px biar jarak antar-section satu ritme sama homepage. */
+.experience,
+.info,
+.closing-band,
+.faq,
+.contact,
+.trust,
+.stops,
+.arow,
+.guide-more {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
 }

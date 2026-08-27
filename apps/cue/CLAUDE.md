@@ -263,6 +263,10 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
   `.home .guide-home`) padding vertikalnya di-**nol**-in biar padding gak dobel jadi gap. **Band**
   (bg warna/foto: airport/whyus/vpromo/habout/trust-cream/charter-panel) padding-nya TETAP = napas
   DALAM band (bukan gap). Jadi jangan set padding vertikal gede lagi di section putih homepage.
+  **Halaman lain (Sep 2026, Wayan minta ke semua)**: section konten di-snap padding vertikalnya ke
+  `--section-gap` (36px) lewat rule GLOBAL — `.experience, .info, .closing-band, .faq, .contact,
+  .trust, .stops, .arow, .guide-more` (dulu 48px). Jadi kalau bikin section konten baru & mau ikut
+  ritme, pakai salah satu class itu atau tambahin ke daftar; jangan hardcode padding vertikal beda.
 - **3 section baru** (semua pakai token, `.airport__*` / `.whyus__*` / `.charter-home__*` + `.chcard__*`):
   - **Airport** = **full-bleed** dark band (pola `.habout`: bg + `::after` overlay di `<section>`,
     konten di `.airport__inner` = container). Foto `transfer-hero.webp`. Jarak ke Tours/Destinations
@@ -392,7 +396,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v384, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v385, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

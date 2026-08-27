@@ -3087,7 +3087,7 @@ a.footer__contact-item:hover {
   position: relative;
   z-index: 2;
   margin: -3rem 0 0;
-  padding: 1.6rem max(0.9rem, calc((100% - 1280px) / 2)) 3rem;
+  padding: 1.6rem max(var(--container-x), calc((100% - 1280px) / 2)) 3rem;
   background: #fff;
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
@@ -9022,7 +9022,7 @@ strong {
 }
 .xplore__more { margin-top: 2rem; text-align: right; }
 @media (max-width: 768px) {
-  .xplore { padding: 3.2rem 1.1rem; }
+  .xplore { padding: 3.2rem var(--container-x); }
   /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
   .xplore__head { margin-bottom: 1.6rem; }
   .xtabs {

@@ -63,6 +63,16 @@
   --container-mid: 1080px;
   --container-read: 720px;
   --container-x: var(--space-3);
+  /* ---- Border radius scale (Agu 2026, Wayan): 5 tingkat resmi biar sudut konsisten.
+     Dulu berserakan 5/6/7/8/9/10/11/12/13/14/16/20/22px - hasil nambah komponen dari
+     waktu ke waktu, beda tipis gak kebedaan di mata. Semua di-snap ke tangga terdekat
+     (geser maks ~2px). YANG DIBIARIN: `50%` (bulat/avatar), `2px`/`3px` (bar tipis mis.
+     underline judul - sengaja kecil, jangan ikut dibulatin), `0` (no-radius eksplisit). */
+  --r-sm: 8px;   /* chip, tag, pay-chip, field kecil, kalender */
+  --r-md: 12px;  /* field, kartu kecil, faq item, modal box, booking card */
+  --r-lg: 16px;  /* kartu (experience/review/driver), panel, container kartu */
+  --r-xl: 22px;  /* modal besar, hero card, box charter, sudut atas sheet */
+  --r-pill: 999px; /* tombol, chip pill, toggle */
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
   --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */
@@ -330,7 +340,7 @@ body {
   flex-shrink: 0;
   width: 420px;
   background: #fff;
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
   padding: 1.5rem;
   color: var(--color-green);
@@ -380,7 +390,7 @@ body {
 .hsearch__select {
   width: 100%;
   border: 1px solid var(--line, #e7e4dd);
-  border-radius: 11px;
+  border-radius: var(--r-md);
   padding: 0.72rem 2.2rem 0.72rem 0.85rem;
   background-color: #fff;
   font-family: var(--font-body);
@@ -411,14 +421,14 @@ body {
 .hsearch__cur .acct__curbtn {
   padding: 0.72rem 0.85rem;
   border-color: var(--line, #e7e4dd);
-  border-radius: 11px;
+  border-radius: var(--r-md);
   font-weight: 400;
 }
 .hsearch__cur .acct__curbtn:hover {
   border-color: var(--color-gold);
 }
 .hsearch__cur .acct__curlist {
-  border-radius: 11px;
+  border-radius: var(--r-md);
 }
 /* ===== Referral field di search form (ganti field tanggal) ===== */
 .hsearch__refrow {
@@ -429,7 +439,7 @@ body {
   flex: 1 1 auto;
   min-width: 0;
   border: 1px solid var(--line, #e7e4dd);
-  border-radius: 11px;
+  border-radius: var(--r-md);
   padding: 0.72rem 0.85rem;
   background-color: #fff;
   font-family: var(--font-body);
@@ -457,7 +467,7 @@ body {
 .hsearch__refbtn {
   flex: 0 0 auto;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 0.72rem 1.15rem;
   background: var(--color-cta);
   color: #fff;
@@ -522,7 +532,7 @@ body {
   padding: 0.85rem 0.9rem;
   background: #fff;
   border: 1px solid #ece6d8;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
   text-align: left;
   text-transform: none;
@@ -601,7 +611,7 @@ body {
   text-transform: uppercase;
   color: var(--color-green);
   background: #f0ece2;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
 }
 .binfo__tag--gold {
   background: var(--color-amber);
@@ -661,7 +671,7 @@ body {
   justify-content: space-between;
   gap: 10px;
   border: 1px solid var(--line, #e7e4dd);
-  border-radius: 11px;
+  border-radius: var(--r-md);
   padding: 0.72rem 0.85rem;
   background: #fff;
   font-family: var(--font-body);
@@ -716,7 +726,7 @@ body {
   z-index: 60;
   background: #fff;
   border: 1px solid var(--line, #e7e4dd);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   box-shadow: 0 20px 50px rgba(26, 26, 26, 0.16);
   overflow: hidden;
   /* buka/tutup halus (fade + slide), se-smooth drawer */
@@ -864,7 +874,7 @@ body {
   cursor: pointer;
   border: none;
   background: none;
-  border-radius: 9px;
+  border-radius: var(--r-sm);
 }
 .hs-cal__d:hover:not(.is-off) {
   background: #f1efe9;
@@ -884,17 +894,17 @@ body {
 .hs-cal__d.pt-start {
   background: var(--color-green);
   color: #fff;
-  border-radius: 9px 0 0 9px;
+  border-radius: var(--r-sm) 0 0 var(--r-sm);
 }
 .hs-cal__d.pt-end {
   background: var(--color-green);
   color: #fff;
-  border-radius: 0 9px 9px 0;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
 }
 .hs-cal__d.pt-solo {
   background: var(--color-green);
   color: #fff;
-  border-radius: 9px;
+  border-radius: var(--r-sm);
 }
 .hs-cal__foot {
   display: flex;
@@ -917,7 +927,7 @@ body {
   background: var(--color-green);
   color: #fff;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 9px 20px;
   cursor: pointer;
 }
@@ -958,7 +968,7 @@ body.hs-locked .wa-float {
     right: 0;
     bottom: 0;
     top: auto;
-    border-radius: 22px 22px 0 0;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
     max-height: 88vh;
     overflow-y: auto;
     /* HP: slide dari bawah. Panel tertutup = visibility:hidden biar GAK ngintip di
@@ -1051,7 +1061,7 @@ body.hs-locked .wa-float {
   background: var(--color-green);
   color: #fff;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 0.9rem;
   font-family: inherit;
   font-weight: 600;
@@ -1198,7 +1208,7 @@ a.tripbar--promo {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background-color: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
@@ -1244,7 +1254,7 @@ a.tripbar--promo {
 .itn-day__fields .field select,
 .charter__select {
   border: 1px solid var(--line);
-  border-radius: 11px;
+  border-radius: var(--r-md);
   font-family: var(--font-body);
   font-size: var(--fs-field);
   color: var(--color-green);
@@ -1338,7 +1348,7 @@ a.tripbar--promo {
 .hs-cal__d.sel {
   background: var(--color-green);
   color: #fff;
-  border-radius: 9px;
+  border-radius: var(--r-sm);
 }
 /* Popup pilih tanggal (Book Now / + My Trips) = standalone-nya date picker booking form.
    HP: otomatis jadi bottom-sheet dari aturan .hs-panel @media(max-width:768px).
@@ -1408,7 +1418,7 @@ a.tripbar--promo {
   background: var(--color-green);
   color: #fff;
   padding: 0.7rem 1.2rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 1rem;
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
@@ -1456,7 +1466,7 @@ a.tripbar--promo {
   height: 2.9rem;
   padding: 0 0.85rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
@@ -1493,7 +1503,7 @@ a.tripbar--promo {
 .about__container {
   background-color: var(--color-cream);
   box-shadow: var(--shadow-card);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   padding: 2.5rem 1.5rem;
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -1518,7 +1528,7 @@ a.tripbar--promo {
   flex-direction: column;
   gap: 0.4rem;
   padding: 1.25rem;
-  border-radius: 5px;
+  border-radius: var(--r-sm);
   background-color: var(--color-cream);
   box-shadow: var(--shadow-card);
 }
@@ -1556,7 +1566,7 @@ a.tripbar--promo {
    Butuh SVG def #aboutGold di halaman itu buat stroke ikonnya. */
 .about--panel .about__container {
   border: 1px solid transparent;
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   background:
     linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
     var(--gold-edge)
@@ -1567,7 +1577,7 @@ a.tripbar--promo {
 }
 .about--panel .about__content {
   border: 1.5px solid transparent;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   box-shadow: none;
   background:
     linear-gradient(#fff, #fff) padding-box,
@@ -1736,7 +1746,7 @@ a.tripbar--promo {
   position: relative; /* anchor for the heart badge on grid cards */
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   /* frame putih tipis di sekeliling foto (foto ke-inset + membulat di dalam card) */
   padding: 5px;
   overflow: hidden;
@@ -1746,7 +1756,7 @@ a.tripbar--promo {
 .experience__image {
   position: relative;
   aspect-ratio: 1 / 1;
-  border-radius: 11px;
+  border-radius: var(--r-md);
   overflow: hidden;
   background-color: var(--color-green);
   background-size: cover;
@@ -1967,7 +1977,7 @@ a.tripbar--promo {
   width: 46px;
   height: 46px;
   margin: 0 auto 0.55rem;
-  border-radius: 13px;
+  border-radius: var(--r-md);
   background: rgba(34, 32, 28, 0.22);
   border: 1px solid rgba(230, 207, 151, 0.35);
   color: var(--color-gold-l);
@@ -1993,7 +2003,7 @@ a.tripbar--promo {
   font-size: 1rem;
   font-weight: 600;
   padding: 0.72rem 1.4rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background-color: var(--color-cta);
   color: #fff;
 }
@@ -2021,12 +2031,12 @@ a.tripbar--promo {
   padding: 2.5rem 1.5rem;
   text-align: center;
   border: 1px dashed #d8d2c4;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   color: var(--color-muted);
 }
 .review {
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background-color: #fff;
   box-shadow: var(--shadow-card);
 }
@@ -2036,7 +2046,7 @@ a.tripbar--promo {
   max-width: 620px;
   margin: 2.5rem auto 0;
   padding: 1.75rem;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background-color: var(--color-cream);
   box-shadow: var(--shadow-card);
 }
@@ -2087,7 +2097,7 @@ a.tripbar--promo {
   margin-top: 0.5rem;
   padding: 0.85rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
@@ -2110,7 +2120,7 @@ a.tripbar--promo {
   display: none;
   padding: 2.5rem 1.75rem;
   text-align: center;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background-color: var(--color-cream);
   box-shadow: var(--shadow-card);
 }
@@ -2142,7 +2152,7 @@ a.tripbar--promo {
   text-align: center;
   padding: 2rem 1.5rem;
   border: 1px solid #ece8dd;
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background-color: var(--color-cream);
 }
 .review-card__avatar {
@@ -2197,7 +2207,7 @@ a.tripbar--promo {
 .btn-review {
   padding: 0.75rem 1.5rem;
   border: 1px solid var(--color-green);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
@@ -2281,7 +2291,7 @@ a.tripbar--promo {
 }
 .guest-track figure {
   margin: 0;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   overflow: hidden;
   border: 2px solid var(--color-gold);
 }
@@ -2319,7 +2329,7 @@ a.tripbar--promo {
   text-align: center;
   padding: 1.75rem 1.25rem;
   border: 1.5px solid transparent;
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background:
     linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
     var(--gold-edge)
@@ -2479,7 +2489,7 @@ section.faq::before,
 .faq__item {
   margin-bottom: 0.75rem;
   border: 1px solid #e0ddd4;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background-color: #fff;
   overflow: hidden;
 }
@@ -2702,7 +2712,7 @@ a.footer__contact-item:hover {
   min-width: 52px;
   padding: 0 0.7rem;
   background: #fff;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   transition: transform 0.15s ease;
 }
@@ -2757,7 +2767,7 @@ a.footer__contact-item:hover {
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background-color: #fff;
   /* Box muncul dgn slide + scale halus (Apple-style) */
   opacity: 0;
@@ -2818,7 +2828,7 @@ a.footer__contact-item:hover {
   flex: 1;
   padding: 0.5rem 0.65rem;
   border: 1px solid #d8d2c4;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   font-family: var(--font-body);
   font-size: var(--fs-field);
   color: var(--color-green);
@@ -2826,7 +2836,7 @@ a.footer__contact-item:hover {
 .modal__referral button {
   padding: 0 1.1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   font-weight: 600;
   color: var(--color-cream);
   background-color: var(--color-green);
@@ -2936,7 +2946,7 @@ a.footer__contact-item:hover {
   padding: 0 0.55rem;
   background: #fff;
   border: 1px solid #e2ddd0;
-  border-radius: 5px;
+  border-radius: var(--r-sm);
   transition: transform 0.15s ease;
 }
 .modal__pay-chip:hover {
@@ -2955,7 +2965,7 @@ a.footer__contact-item:hover {
   width: 100%;
   padding: 0.85rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-cream);
@@ -3044,7 +3054,7 @@ a.footer__contact-item:hover {
   position: relative;
   z-index: 2;
   margin-top: -5rem;
-  border-radius: 24px 24px 0 0;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
   background-color: #fff;
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
@@ -3060,14 +3070,14 @@ a.footer__contact-item:hover {
   margin: -3rem 0 0;
   padding: 1.6rem max(0.9rem, calc((100% - 1280px) / 2)) 3rem;
   background: #fff;
-  border-radius: 24px 24px 0 0;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 .booksidebar {
   position: relative; /* anchor buat panel What's included slide-over */
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   box-shadow: 0 10px 30px rgba(31, 61, 43, 0.08);
   overflow: hidden;
 }
@@ -3304,7 +3314,7 @@ a.footer__contact-item:hover {
     grid-template-columns: 58fr 42fr;
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: 16px;
+    border-radius: var(--r-lg);
     box-shadow: 0 6px 20px rgba(31, 61, 43, 0.06);
     overflow: hidden;
   }
@@ -3366,7 +3376,7 @@ a.footer__contact-item:hover {
 .highlight__image {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background-color: var(--color-green);
   background-size: cover;
   background-position: center;
@@ -3378,7 +3388,7 @@ a.footer__contact-item:hover {
   left: 1rem;
   z-index: 1;
   padding: 0.4rem 0.85rem;
-  border-radius: 20px;
+  border-radius: var(--r-xl);
   font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -3401,7 +3411,7 @@ a.footer__contact-item:hover {
   display: flex;
   margin-bottom: 1.6rem;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   overflow: hidden;
   background-color: #fff;
 }
@@ -3441,7 +3451,7 @@ a.footer__contact-item:hover {
   display: inline-block;
   padding: 0.85rem 1.75rem;
   border: 1.5px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
@@ -3494,7 +3504,7 @@ a.footer__contact-item:hover {
   position: relative;
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background-color: var(--color-green);
   background-size: cover;
   background-position: center;
@@ -3542,7 +3552,7 @@ a.footer__contact-item:hover {
 }
 .info__container:not(.guide-article) {
   background-color: #fff;
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   padding: 2.5rem 2rem;
   box-shadow: 0 10px 30px rgba(31, 61, 43, 0.06);
 }
@@ -3554,7 +3564,7 @@ a.footer__contact-item:hover {
   gap: 1px; /* garis pemisah tipis antar stat */
   background: var(--line); /* warna garis keliatan lewat gap */
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   overflow: hidden;
   margin-bottom: 2.5rem;
 }
@@ -3642,7 +3652,7 @@ a.footer__contact-item:hover {
   font-weight: 600;
   font-size: var(--fs-label);
   padding: 3px 11px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
 }
 .info__lists {
   display: grid;
@@ -3762,7 +3772,7 @@ a.footer__contact-item:hover {
   max-width: 640px;
   margin: 1.5rem auto 0;
   border: 1.5px solid var(--color-gold);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   background: #fff;
   box-shadow: 0 6px 18px rgba(34, 32, 28, 0.12);
 }
@@ -3795,7 +3805,7 @@ a.footer__contact-item:hover {
   gap: 0.35rem;
   padding: 0 0.95rem;
   border: none;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--r-md) var(--r-md) 0;
   background: transparent;
   font-family: var(--font-body);
   font-size: 1rem;
@@ -3832,7 +3842,7 @@ a.footer__contact-item:hover {
   min-width: 220px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   box-shadow: 0 16px 40px rgba(31, 61, 43, 0.14);
   overflow: hidden;
   z-index: 20;
@@ -3915,7 +3925,7 @@ a.footer__contact-item:hover {
   gap: 0.7rem;
   padding: 0.85rem 1.1rem;
   border: 1.5px solid var(--color-gold);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   background: #fff;
   box-shadow: 0 6px 18px rgba(34, 32, 28, 0.12);
 }
@@ -3945,7 +3955,7 @@ a.footer__contact-item:hover {
   top: calc(100% + 8px);
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   box-shadow: 0 16px 40px rgba(31, 61, 43, 0.14);
   overflow: hidden;
   z-index: 6;
@@ -3983,7 +3993,7 @@ a.footer__contact-item:hover {
 .gsearch__th {
   width: 38px;
   height: 38px;
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   background: var(--color-cream) center / cover no-repeat;
   flex-shrink: 0;
 }
@@ -4048,7 +4058,7 @@ a.footer__contact-item:hover {
     atas aspect-ratio CSS (presentational hint), foto jadi ikut rasio file asli */
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   box-shadow: 0 8px 24px rgba(31, 61, 43, 0.1);
   display: block;
 }
@@ -4103,7 +4113,7 @@ a.footer__contact-item:hover {
 .guide-tag {
   display: inline-block;
   padding: 0.3rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -4133,7 +4143,7 @@ a.footer__contact-item:hover {
 }
 .guide-sidebar {
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   padding: 1.2rem 1.1rem;
   background: #fff;
 }
@@ -4155,7 +4165,7 @@ a.footer__contact-item:hover {
 .guide-sidebar__list a {
   display: block;
   padding: 0.5rem 0.6rem;
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   text-decoration: none;
   color: var(--color-green);
   font-size: var(--fs-small);
@@ -4268,7 +4278,7 @@ a.footer__contact-item:hover {
   gap: 0.5rem;
   margin-bottom: 2rem;
   padding: 0.85rem 1.5rem;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   font-weight: 600;
   text-decoration: none;
   color: #fff;
@@ -4298,7 +4308,7 @@ a.footer__contact-item:hover {
 }
 .contact__form {
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background-color: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
 }
@@ -4325,7 +4335,7 @@ a.footer__contact-item:hover {
   width: 100%;
   padding: 0.85rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
@@ -4336,7 +4346,7 @@ a.footer__contact-item:hover {
   display: none;
   padding: 2rem;
   text-align: center;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   color: var(--color-green);
   background-color: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
@@ -4377,7 +4387,7 @@ a.footer__contact-item:hover {
   position: relative;
   overflow: hidden;
   padding: 1.25rem 1.35rem;
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   background-image: url(assets/images/ubud-tour-card.jpg);
   background-size: cover;
   background-position: center;
@@ -4462,7 +4472,7 @@ a.footer__contact-item:hover {
 /* Total price "Opsi A": panel hijau, angka gold gede, note deposit 10% */
 .summary {
   padding: 1.5rem 1.5rem 1.4rem;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   text-align: center;
   color: var(--color-cream);
   background-color: var(--color-green);
@@ -4491,7 +4501,7 @@ a.footer__contact-item:hover {
   margin-top: 1rem;
   padding: 0.9rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
@@ -4789,7 +4799,7 @@ a.footer__contact-item:hover {
   align-items: center;
   gap: 0.6rem;
   padding: 0.7rem 1.15rem 0.7rem 0.85rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background-color: #25d366;
   color: #fff;
   font-family: var(--font-body);
@@ -4893,7 +4903,7 @@ a.footer__contact-item:hover {
 .itn__ghostbtn {
   padding: 0.45rem 0.8rem;
   border: 1px solid #d8d2c4;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: #fff;
   font-family: var(--font-body);
   font-size: var(--fs-small);
@@ -4908,7 +4918,7 @@ a.footer__contact-item:hover {
 .itn__empty {
   padding: 1.25rem;
   border: 1px dashed #cfc7b5;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   font-size: var(--fs-body);
   color: var(--color-muted);
   text-align: center;
@@ -4920,7 +4930,7 @@ a.footer__contact-item:hover {
   padding: 1.1rem;
   margin-bottom: 1rem;
   border: 1px solid #e6dfce;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background-color: #fff;
 }
 .itn-day:last-child {
@@ -4943,7 +4953,7 @@ a.footer__contact-item:hover {
   font-size: var(--fs-label);
   font-weight: 600;
   padding: 0.1rem 0.42rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: #f0ede4;
   color: #9a9382;
 }
@@ -5033,7 +5043,7 @@ a.footer__contact-item:hover {
   margin-top: 0.6rem;
   padding: 0.55rem 0.7rem;
   border: 1px solid #e4ddcb;
-  border-radius: 9px;
+  border-radius: var(--r-sm);
   background-color: var(--color-cream);
 }
 .itn-chip__ic {
@@ -5042,7 +5052,7 @@ a.footer__contact-item:hover {
   justify-content: center;
   width: 26px;
   height: 26px;
-  border-radius: 7px;
+  border-radius: var(--r-sm);
   background: rgba(34, 32, 28, 0.18);
   color: var(--color-green);
   flex: none;
@@ -5076,7 +5086,7 @@ a.footer__contact-item:hover {
   margin-top: 0.5rem;
   padding: 0.75rem;
   border: 1px dashed rgba(34, 32, 28, 0.55);
-  border-radius: 9px;
+  border-radius: var(--r-sm);
   background: #fff;
 }
 .itn-ovr.open {
@@ -5161,7 +5171,7 @@ a.footer__contact-item:hover {
   margin-top: 0.9rem;
   padding: 0.6rem;
   border: 1.5px solid var(--color-green);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   background: transparent;
   font-family: var(--font-body);
   font-size: 1rem;
@@ -5195,7 +5205,7 @@ a.footer__contact-item:hover {
   height: 18px;
   margin-left: 5px;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background-color: var(--color-ok);
   color: #fff;
   font-size: var(--fs-label);
@@ -5225,7 +5235,7 @@ a.footer__contact-item:hover {
   gap: 0.55rem;
   padding: 0.7rem 1rem 1rem;
   background: #fff;
-  border-radius: 16px 16px 0 0;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.16);
   transition: transform 0.28s ease;
 }
@@ -5290,7 +5300,7 @@ a.footer__contact-item:hover {
 .itn-trip {
   padding: 1rem 1.1rem 1.2rem;
   border: 1.5px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background:
     linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
     var(--gold-edge)
@@ -5485,7 +5495,7 @@ a.footer__contact-item:hover {
   .itn-minis .itn-mini__ic {
     width: 30px;
     height: 30px;
-    border-radius: 8px;
+    border-radius: var(--r-sm);
   }
   .itn-minis .itn-mini__ic svg {
     width: 16px;
@@ -5502,7 +5512,7 @@ a.footer__contact-item:hover {
   gap: 0.45rem;
   padding: 0.7rem 0.5rem;
   text-align: center;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   font-family: var(--font-body);
   cursor: pointer;
   transition: transform 0.12s ease;
@@ -5528,7 +5538,7 @@ a.footer__contact-item:hover {
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background: rgba(34, 32, 28, 0.16);
   color: var(--color-green);
 }
@@ -5591,7 +5601,7 @@ a.footer__contact-item:hover {
 .svc__t .itn-mini__ic {
   width: 34px;
   height: 34px;
-  border-radius: 9px;
+  border-radius: var(--r-sm);
 }
 .svc__t .itn-mini__ic svg {
   width: 18px;
@@ -5625,7 +5635,7 @@ a.footer__contact-item:hover {
   width: 100%;
   padding: 0.8rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--color-green);
   color: var(--color-cream);
   font-family: var(--font-body);
@@ -5656,7 +5666,7 @@ a.footer__contact-item:hover {
   margin-top: 1.25rem;
   padding: 0.95rem;
   border: 1.5px dashed var(--color-green);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: #fff;
   font-family: var(--font-body);
   font-size: 1rem;
@@ -5691,7 +5701,7 @@ a.footer__contact-item:hover {
   padding: 0.95rem 1rem;
   text-align: center;
   border: 1px solid #e6dfce;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--color-cream);
   font-family: var(--font-body);
   font-weight: 600;
@@ -5799,7 +5809,7 @@ button.pick-cat {
   margin-top: -1.75rem;
   padding: 2.25rem 1.5rem 0.75rem;
   background: #fff;
-  border-radius: 22px 22px 0 0;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -5854,7 +5864,7 @@ button.pick-cat {
   display: inline-block;
   margin-top: 1.6rem;
   padding: 0.8rem 2rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--color-cta);
   color: #fff;
   font-weight: 600;
@@ -5935,7 +5945,7 @@ button.pick-cat {
   width: 44px;
   height: 44px;
   flex-shrink: 0;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: #25d366;
   color: #fff;
   text-decoration: none;
@@ -5949,7 +5959,7 @@ button.pick-cat {
 }
 .book-bar__btn {
   padding: 0.7rem 1.7rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--color-cta);
   color: #fff;
   font-weight: 600;
@@ -5995,7 +6005,7 @@ button.pick-cat {
   z-index: 2;
   max-width: 62%;
   padding: 5px 12px;
-  border-radius: 20px;
+  border-radius: var(--r-xl);
   background: rgba(0, 0, 0, 0.42);
   color: #fff;
   font-size: var(--fs-small);
@@ -6137,7 +6147,7 @@ button.pick-cat {
   min-width: 210px;
   padding: 0.95rem 1.75rem;
   border: 1.5px solid var(--color-green);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
@@ -6208,7 +6218,7 @@ button.pick-cat {
   margin-right: 0.85rem;
   padding: 0.32rem 0.45rem 0.32rem 0.55rem;
   border: 1px solid #d8d2c4;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   background: #fff;
 }
 .guest-select__icon {
@@ -6283,7 +6293,7 @@ button.pick-cat {
     width: 220px;
     background: #fff;
     border: 1px solid #e9e1cf;
-    border-radius: 10px;
+    border-radius: var(--r-md);
     box-shadow: 0 14px 34px rgba(31, 61, 43, 0.16);
     padding: 0.9rem;
     z-index: 200;
@@ -6336,7 +6346,7 @@ button.pick-cat {
   margin-bottom: 0.75rem;
   padding: 0.5rem 0.65rem;
   border: 1px solid #d8d2c4;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   background: #fff;
   font-family: var(--font-body);
   font-size: var(--fs-field);
@@ -6361,7 +6371,7 @@ button.pick-cat {
   width: 100%;
   padding: 0.5rem 0.65rem;
   border: 1px solid #d8d2c4;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: #fff;
   font-family: var(--font-body);
   font-size: var(--fs-field);
@@ -6392,7 +6402,7 @@ button.pick-cat {
   list-style: none;
   background: #fff;
   border: 1px solid #e4dcc8;
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   box-shadow: 0 10px 24px rgba(31, 61, 43, 0.16);
   z-index: 10;
 }
@@ -6404,7 +6414,7 @@ button.pick-cat {
   align-items: center;
   gap: 0.45rem;
   padding: 0.45rem 0.4rem;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-green);
@@ -6552,7 +6562,7 @@ button.pick-cat {
   margin-top: 0.9rem;
   padding: 0.6rem;
   border: 1.5px solid var(--color-green);
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   background: transparent;
   font-family: var(--font-body);
   font-size: 1rem;
@@ -6605,7 +6615,7 @@ button.pick-cat {
   color: var(--color-green);
   background: #fff;
   border: 1px solid #d8d2c4;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
 }
 
 /* Pesan error di form create account */
@@ -6664,7 +6674,7 @@ button.pick-cat {
   display: inline-flex;
   background: var(--color-cream);
   border: 1px solid #e9e1cf;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 3px;
   margin-bottom: 1.2rem;
 }
@@ -6676,7 +6686,7 @@ button.pick-cat {
   font-size: 1rem;
   font-weight: 500;
   color: var(--color-muted);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   cursor: pointer;
 }
 .mytrips__tab.is-on {
@@ -6688,7 +6698,7 @@ button.pick-cat {
 .trip {
   display: flex;
   border: 1px solid #e9e1cf;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   overflow: hidden;
   background: #fff;
   margin-bottom: 0.9rem;
@@ -6734,7 +6744,7 @@ button.pick-cat {
   font-size: var(--fs-label);
   font-weight: 600;
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   white-space: nowrap;
 }
 .pill-ok {
@@ -6768,7 +6778,7 @@ button.pick-cat {
   background: #f4ecd8;
   border: 1px solid rgba(34, 32, 28, 0.5);
   color: var(--color-gold-d);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   padding: 0.6rem 0.9rem;
   font-size: var(--fs-small);
   margin-bottom: 1rem;
@@ -6843,7 +6853,7 @@ button.pick-cat {
   gap: 0.85rem;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   padding: 0.8rem 0.95rem;
   margin-bottom: 0.6rem;
 }
@@ -6853,7 +6863,7 @@ button.pick-cat {
   height: 40px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--color-cream);
   color: var(--color-gold-d);
 }
@@ -6862,7 +6872,7 @@ button.pick-cat {
 .mtc-item__icon--photo {
   width: 56px;
   height: 56px;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background-color: var(--color-cream);
   background-size: cover;
   background-position: center;
@@ -7012,7 +7022,7 @@ button.pick-cat {
   justify-content: space-between;
   align-items: center;
   background: var(--color-cream);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   padding: 1rem 1.2rem;
   margin-top: 0.8rem;
 }
@@ -7095,7 +7105,7 @@ button.pick-cat {
 }
 .mtc-pkg {
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background: #fff;
   padding: 1.1rem 1.2rem;
 }
@@ -7152,7 +7162,7 @@ button.pick-cat {
   color: var(--color-green);
   background: #fff;
   border: 1px solid #d8d2c4;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
 }
 .acctform .modal__btn {
   margin-top: 1.3rem;
@@ -7240,7 +7250,7 @@ button.pick-cat {
 }
 .charter__box {
   background: #fff;
-  border-radius: 22px;
+  border-radius: var(--r-xl);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
   padding: 1.5rem 1.4rem 1.6rem;
   text-align: left;
@@ -7288,7 +7298,7 @@ button.pick-cat {
   gap: 0.15rem;
   padding: 1.15rem 0.6rem 1.1rem;
   border: 1.5px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background: #fff;
   text-align: center;
   cursor: pointer;
@@ -7321,7 +7331,7 @@ button.pick-cat {
   font-weight: 500;
   color: #fff;
   background: var(--color-amber);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 0.2rem 0.6rem;
   white-space: nowrap;
 }
@@ -7417,7 +7427,7 @@ button.pick-cat {
     left: 0;
     min-width: 160px;
     padding: 0.5rem 0;
-    border-radius: 8px;
+    border-radius: var(--r-sm);
     background: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     z-index: 120;
@@ -7558,13 +7568,13 @@ button.pick-cat {
   display: inline-flex;
   padding: 3px;
   border: 1px solid rgba(34, 32, 28, 0.5);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background-color: rgba(34, 32, 28, 0.08);
 }
 .tour-type__btn {
   padding: 0.3rem 0.85rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: var(--fs-label);
   font-weight: 500;
@@ -7613,7 +7623,7 @@ button.pick-cat {
   padding: 3px;
   margin-bottom: 0.4rem;
   border: 1px solid rgba(34, 32, 28, 0.5);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background-color: rgba(34, 32, 28, 0.08);
 }
 /* Non-tour (experience/transfer): toggle tetap tampil tapi redup & nggak bisa diklik */
@@ -7627,7 +7637,7 @@ button.pick-cat {
   flex: 1;
   padding: 0.35rem 0.5rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: var(--fs-label);
   font-weight: 600;
@@ -7648,13 +7658,13 @@ button.pick-cat {
   display: inline-flex;
   padding: 2px;
   border: 1px solid rgba(34, 32, 28, 0.5);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background-color: rgba(34, 32, 28, 0.08);
 }
 .itn-item-type__btn {
   padding: 0.2rem 0.6rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: var(--fs-label);
   font-weight: 600;
@@ -7897,7 +7907,7 @@ strong {
 .btn-pill {
   display: inline-block;
   padding: 0.85rem 1.9rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   border: 1px solid var(--color-gold);
   background: #fff;
   color: var(--color-gold-d);
@@ -7957,7 +7967,7 @@ strong {
   gap: 0.6rem;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   box-shadow: 0 6px 20px rgba(31, 61, 43, 0.06);
   padding: 1.4rem 1.3rem;
 }
@@ -8286,7 +8296,7 @@ strong {
 .closing-band__btn {
   display: inline-block;
   padding: 0.8rem 1.4rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-weight: 600;
   text-decoration: none;
@@ -8365,7 +8375,7 @@ strong {
 .tpick {
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: var(--r-xl);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
   padding: 1.5rem 1.4rem 1.6rem;
   text-align: left;
@@ -8390,7 +8400,7 @@ strong {
   width: 100%;
   appearance: none;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a7466' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.85rem center;
   padding: 0.72rem 1.9rem 0.72rem 0.85rem;
   font-family: var(--font-body);
@@ -8400,7 +8410,7 @@ strong {
 .tpick__swap {
   width: 36px;
   height: 36px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   border: 1px solid var(--line);
   background: #fff;
   color: var(--color-gold-d);
@@ -8435,7 +8445,7 @@ strong {
 .tpick__switch {
   width: 40px;
   height: 23px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--line);
   position: relative;
   flex-shrink: 0;
@@ -8458,7 +8468,7 @@ strong {
 .tpick__actions { display: flex; flex-direction: column; gap: 0.55rem; }
 .tpick__btn {
   padding: 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-weight: 600;
   font-size: 1rem;
   text-align: center;
@@ -8482,7 +8492,7 @@ strong {
   align-items: center;
   gap: 0.75rem;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   padding: 0.55rem 0.85rem;
   background: #fff;
   cursor: pointer;
@@ -8495,7 +8505,7 @@ strong {
 .troute__th {
   width: 46px;
   height: 46px;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background-size: cover;
   background-position: center;
   flex-shrink: 0;
@@ -8514,7 +8524,7 @@ strong {
   display: flex;
   flex-wrap: wrap;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-lg);
   overflow: hidden;
   max-width: 720px;
   margin: 0.4rem auto 2.2rem;
@@ -8603,7 +8613,7 @@ strong {
 /* Featured box: foto ke-inset (frame putih) di kiri, konten di kanan */
 .lbox {
   background: #fff;
-  border-radius: 22px;
+  border-radius: var(--r-xl);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
   display: grid;
   grid-template-columns: 42% 58%;
@@ -8611,7 +8621,7 @@ strong {
   text-align: left;
 }
 .lbox__img {
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background-size: cover;
   background-position: center;
   position: relative;
@@ -8627,7 +8637,7 @@ strong {
   font-weight: 500;
   color: var(--color-green);
   background: #fff;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   padding: 0.32rem 0.7rem;
 }
 .lbox__body {
@@ -8651,7 +8661,7 @@ strong {
 .lbox__facts {
   display: flex;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   overflow: hidden;
   margin-bottom: 1.1rem;
 }
@@ -8676,7 +8686,7 @@ strong {
 .lbox__btn {
   display: block;
   padding: 0.75rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--fs-h3);
@@ -8703,7 +8713,7 @@ strong {
 /* Kartu intro putih di dalam hero (di bawah judul) */
 .ahero-card {
   background: #fff;
-  border-radius: 22px;
+  border-radius: var(--r-xl);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
   padding: 1.4rem 1.3rem;
   max-width: 560px;
@@ -8883,7 +8893,7 @@ strong {
 .habout__btn {
   display: inline-block;
   padding: 0.8rem 1.7rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--fs-h3);
@@ -9113,7 +9123,7 @@ strong {
   align-items: center;
   gap: 0.5rem;
   padding: 0.85rem 1.7rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--fs-h3);

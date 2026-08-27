@@ -304,6 +304,14 @@ Order **must be kept** (declarations first, run last):
     max-width-nya `calc(var(--container) - 2*var(--container-x))` (=1152) **tanpa** padding-x
     sendiri — kalau dikasih `--container-x` lagi nanti numpuk jadi 48px di HP. Hasilnya grid-nya
     pas selebar grid homepage (1200−48=1152) & tepi jatuh di 144/24 sama kayak wide lain.
+- **Border radius (token, Agu 2026)**: 5 tingkat resmi biar sudut konsisten (dulu berserakan
+  5/6/7/8/9/10/11/12/13/14/16/20/22px, di-snap ke tangga terdekat, geser maks ±2px):
+  `--r-sm` 8 (chip/tag/field kecil/kalender) · `--r-md` 12 (field/kartu kecil/faq item/modal
+  box/booking card) · `--r-lg` 16 (kartu experience/review/driver, panel, container kartu) ·
+  `--r-xl` 22 (modal besar, hero card, charter box, sudut atas sheet) · `--r-pill` 999
+  (tombol/chip pill/toggle). Sudut satu-sisi (mis. sheet atas) tetep pola-nya, cuma nilainya
+  di-token (`var(--r-xl) var(--r-xl) 0 0`). **DIBIARIN** (jangan ikut di-token): `50%`
+  (bulat/avatar), `2px`/`3px` (bar tipis mis. underline judul `.section__title::after`), `0`.
 
 ## Key mechanics
 - **Anti-CLS**: `#booking-placeholder`, `#footer-placeholder` & `#search-placeholder` punya
@@ -319,7 +327,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v372, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v373, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

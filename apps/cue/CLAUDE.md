@@ -254,10 +254,15 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 → Featured On (`.trust`) → Reviews (`#reviews-placeholder`).
 - **Trip Planner band (`.plan` / `#plan`) DIHAPUS dari homepage** (Wayan: kebanyakan tulisan; hero
   udah "trip planner" sendiri). CSS `.plan*` masih ada (dipakai halaman lain? cek dulu kalau mau buang).
-- **Driver cards DIHAPUS dari homepage** (section `.habout-people` + CSS-nya dibuang) — pindah
-  ke `about-us.html` aja. `#drivers-placeholder` (modal partial) tetap ada tapi idle (no cards
-  to open). Divider gold antar-section udah OFF di homepage (`.home section+section::before {content:none}`),
-  jadi pemisah = **bg + padding**.
+- **Driver cards DIHAPUS dari homepage** (section `.habout-people` + `#drivers-placeholder` +
+  CSS-nya dibuang) — pindah ke `about-us.html` aja. Divider gold antar-section udah OFF di homepage
+  (`.home section+section::before {content:none}`), jadi pemisah = **bg + jarak**.
+- **Jarak antar-section SERAGAM = `--section-gap` (2.25rem/36px)** (Sep 2026, Wayan). Gap murni dari
+  `margin-top` tiap section (`.home > section:not(.hero)`, + `#reviews-placeholder`), `margin-bottom:0`
+  (margins collapse → gap = 36px, dari hero→tour sampe bawah). Section **putih polos** (`.home .xplore`,
+  `.home .guide-home`) padding vertikalnya di-**nol**-in biar padding gak dobel jadi gap. **Band**
+  (bg warna/foto: airport/whyus/vpromo/habout/trust-cream/charter-panel) padding-nya TETAP = napas
+  DALAM band (bukan gap). Jadi jangan set padding vertikal gede lagi di section putih homepage.
 - **3 section baru** (semua pakai token, `.airport__*` / `.whyus__*` / `.charter-home__*` + `.chcard__*`):
   - **Airport** = **full-bleed** dark band (pola `.habout`: bg + `::after` overlay di `<section>`,
     konten di `.airport__inner` = container). Foto `transfer-hero.webp`. Jarak ke Tours/Destinations
@@ -387,7 +392,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v381, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v382, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

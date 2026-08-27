@@ -52,6 +52,9 @@
   --space-4: 2rem;
   --space-5: 3rem;
   --space-6: 4rem;
+  /* Jarak vertikal seragam antar-section homepage (Sep 2026, Wayan): 36px.
+     Sengaja di antara space-4 (32) & space-5 (48) - dipakai sbg MARGIN gap. */
+  --section-gap: 2.25rem;
   /* ---- Container widths (Agu 2026, Wayan): 4 tingkat resmi biar margin kiri/kanan
      antar-halaman selaras. Tiap halaman WAJIB pilih salah satu, jangan bikin lebar
      baru. `--container` wide (listing/homepage/guide hub) · `--container-mid` halaman
@@ -9478,9 +9481,15 @@ strong {
 .airport::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,19,15,.86) 0%, rgba(20,19,15,.62) 55%, rgba(20,19,15,.35) 100%); }
 .airport__inner { position: relative; z-index: 1; max-width: var(--container); margin: 0 auto; padding: 0 var(--container-x); }
 .airport__body { max-width: 560px; }
-/* Rapetin jarak Tours -> Airport -> Destinations (kurangi padding yang ngapit band). */
-#explore { padding-bottom: var(--space-3); }
-#destinations-home { padding-top: var(--space-3); }
+
+/* ---- Homepage: jarak antar-section SERAGAM = --section-gap (36px) ----
+   Gap murni dari margin-top tiap section (margins collapse, bottom 0). Section
+   putih polos di-nol-in padding vertikalnya biar padding gak dobel jadi gap;
+   band (bg warna/foto) padding-nya tetap = napas DALAM band, bukan gap. */
+.home > section:not(.hero),
+.home > #reviews-placeholder { margin-top: var(--section-gap); margin-bottom: 0; }
+.home .xplore,
+.home .guide-home { padding-top: 0; padding-bottom: 0; }
 .airport__k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-label); color: var(--color-gold-l); margin-bottom: 0.6rem; }
 .airport__t { font-family: var(--font-head); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; margin: 0 0 0.7rem; }
 .airport__lead { font-size: var(--fs-body); line-height: 1.6; color: rgba(247,243,234,.85); margin: 0 0 1.3rem; max-width: 46ch; }

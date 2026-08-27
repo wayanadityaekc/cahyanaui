@@ -3660,7 +3660,7 @@ function initMyTripsCart() {
       const priceHtml = it.p
         ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
         : "";
-      return '<a class="experience__card' + (it.p ? "" : " related__card--noprice") + '" href="' + it.href + '">' +
+      return '<a class="experience__card" href="' + it.href + '">' +
         '<div class="experience__image"><img src="assets/images/' + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
         '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
         '<div class="experience__meta"><span>' + it.meta + "</span></div>" + priceHtml + "</div></a>";
@@ -4177,8 +4177,9 @@ function initCardTitleOverlay() {
       img.classList.add("photo-titled");
     });
   };
-  // Homepage & tour-programs cards keep the title BELOW the photo (card style A).
-  move("body:not(.home):not(.tourprog) .experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
+  // Semua .experience__card = SATU style (foto atas + judul di body, card style A).
+  // Overlay judul-di-foto udah dibuang (Wayan: card cuma 1 komponen, DRY). Villa
+  // card TETAP overlay (komponen beda, bukan .experience__card).
   move(".villa__card", ".villa__image", ".villa__name");
 }
 
@@ -5218,7 +5219,7 @@ function initRelated() {
     const price = it.p
       ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
       : "";
-    return '<a class="experience__card' + (it.p ? '' : ' related__card--noprice') + '" href="' + pre + it.href + '">' +
+    return '<a class="experience__card" href="' + pre + it.href + '">' +
       '<div class="experience__image"><img src="' + pre + "assets/images/" + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
       '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
       '<div class="experience__meta"><span>' + it.meta + "</span></div>" + price + "</div></a>";

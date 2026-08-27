@@ -84,6 +84,15 @@
   --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
   --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
   --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
+  /* ---- Motion (Agu 2026): durasi transisi + easing dipusatin biar animasi satu ritme.
+     Cuma buat `transition:` (feedback interaksi: hover/focus/state). DIBIARIN: durasi
+     `animation:` entrance (0.4-0.6s, choreography sengaja), fade lambat 0.5s, dan special
+     (marquee 35s, glow booksidebar 2-3s). Keyword `ease` juga dibiarin (udah konsisten). */
+  --dur-fast: var(--dur-fast); /* hover kecil, state cepet */
+  --dur: 0.2s;       /* default transisi */
+  --dur-slow: 0.3s;  /* transform lebih gede */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);      /* standar (material) */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entrance (expo-out), buat masuk halus */
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
   --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */
@@ -250,7 +259,7 @@ body {
   z-index: 95;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s;
+  transition: opacity var(--dur) ease, visibility var(--dur);
 }
 .navbar__scrim.open {
   opacity: 1;
@@ -330,7 +339,7 @@ body {
 .hero__eyebrow,
 .hero__title,
 .hero__subtitle {
-  animation: heroTextIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  animation: heroTextIn 0.6s var(--ease) backwards;
 }
 .hero__title {
   animation-delay: 0.08s;
@@ -360,7 +369,7 @@ body {
      Fill-mode = backwards (BUKAN both): kalau both, kartu nyimpen status transform
      -> jadi containing-block buat position:fixed panel di dalemnya, bikin bottom-sheet
      salah posisi/ngintip di HP. backwards = animasi masuk doang, gak nyisa transform. */
-  animation: heroCardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  animation: heroCardIn 0.5s var(--ease) backwards;
 }
 @keyframes heroCardIn {
   from {
@@ -417,7 +426,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 .hsearch__select:hover {
   border-color: var(--color-gold);
@@ -457,7 +466,7 @@ body {
   font-size: var(--fs-field);
   color: var(--color-green);
   text-transform: uppercase;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 .hsearch__refinp::placeholder {
   color: var(--color-muted);
@@ -485,7 +494,7 @@ body {
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background var(--dur-fast) ease;
 }
 .hsearch__refbtn:hover {
   background: var(--color-cta-d);
@@ -521,7 +530,7 @@ body {
   color: var(--color-gold);
   cursor: pointer;
   border-radius: 50%;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
 }
 .binfo__btn:hover,
 .binfo__btn[aria-expanded="true"] {
@@ -550,7 +559,7 @@ body {
   /* fade halus (transform dipakai buat posisi, jadi cuma opacity yg dianimasiin) */
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.18s;
+  transition: opacity var(--dur-fast) var(--ease), visibility var(--dur-fast);
   pointer-events: none;
 }
 .binfo__pop.open {
@@ -690,7 +699,7 @@ body {
   color: var(--color-green);
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 .hs-control:hover {
   border-color: var(--color-gold);
@@ -718,7 +727,7 @@ body {
   height: 18px;
   flex-shrink: 0;
   color: var(--color-muted);
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .hs-chev--cal {
   width: 17px;
@@ -744,8 +753,8 @@ body {
   visibility: hidden;
   transform: translateY(-8px);
   transition:
-    opacity 0.24s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.24s var(--ease),
+    transform 0.24s var(--ease),
     visibility 0.24s;
   pointer-events: none;
 }
@@ -989,8 +998,8 @@ body.hs-locked .wa-float {
     visibility: hidden;
     transform: translateY(100%);
     transition:
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      visibility 0.3s;
+      transform var(--dur-slow) var(--ease),
+      visibility var(--dur-slow);
     box-shadow: 0 -12px 48px rgba(26, 26, 26, 0.28);
     display: block;
   }
@@ -1077,7 +1086,7 @@ body.hs-locked .wa-float {
   font-weight: 600;
   font-size: var(--fs-strong);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--dur) ease, box-shadow var(--dur) ease;
 }
 .hsearch__go:hover {
   transform: translateY(-2px);
@@ -1292,8 +1301,8 @@ a.tripbar--promo {
   height: 2.9rem;
   background-color: #fff;
   transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color var(--dur) ease,
+    box-shadow var(--dur) ease;
 }
 .booking__group select:focus,
 .booking__group input:focus {
@@ -1435,8 +1444,8 @@ a.tripbar--promo {
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
+    opacity var(--dur) ease,
+    transform var(--dur) ease;
   z-index: 300;
 }
 .cart-toast.show {
@@ -1486,9 +1495,9 @@ a.tripbar--promo {
   background-color: var(--color-green);
   cursor: pointer;
   transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    transform 0.15s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease,
+    transform var(--dur-fast) ease;
 }
 .booking__btn:hover {
   background-color: var(--color-gold);
@@ -1684,7 +1693,7 @@ a.tripbar--promo {
 .trust__logos img {
   height: 30px;
   width: auto;
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .trust__logos img:hover {
   transform: translateY(-2px);
@@ -1699,7 +1708,7 @@ a.tripbar--promo {
 .trust__socials img {
   height: 30px;
   width: auto;
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .trust__socials a:hover img {
   transform: translateY(-2px);
@@ -1834,8 +1843,8 @@ a.tripbar--promo {
   border-radius: 50%;
   font-size: 1.5rem;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .experience__card--more:hover .experience__more-arrow {
   background: #fff;
@@ -1929,7 +1938,7 @@ a.tripbar--promo {
   text-decoration: none;
   background-size: cover;
   background-position: center;
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .plan__link::before {
   content: "";
@@ -2097,7 +2106,7 @@ a.tripbar--promo {
   line-height: 1;
   color: #d8d2c4;
   cursor: pointer;
-  transition: color 0.15s;
+  transition: color var(--dur-fast);
 }
 .rating__star.active {
   color: var(--color-amber);
@@ -2346,8 +2355,8 @@ a.tripbar--promo {
       border-box;
   cursor: pointer;
   transition:
-    transform 0.15s,
-    box-shadow 0.15s;
+    transform var(--dur-fast),
+    box-shadow var(--dur-fast);
 }
 .driver-card:hover {
   transform: translateY(-4px);
@@ -2724,7 +2733,7 @@ a.footer__contact-item:hover {
   background: #fff;
   border-radius: var(--r-sm);
   box-shadow: var(--shadow-sm);
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .footer__pay-chip:hover {
   transform: translateY(-2px);
@@ -2759,8 +2768,8 @@ a.footer__contact-item:hover {
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
+    opacity var(--dur-slow) ease,
+    visibility var(--dur-slow) ease;
 }
 .modal.active {
   opacity: 1;
@@ -2783,8 +2792,8 @@ a.footer__contact-item:hover {
   opacity: 0;
   transform: translateY(14px) scale(0.96);
   transition:
-    opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.36s var(--ease-out),
+    transform 0.36s var(--ease-out);
 }
 .modal.active .modal__box {
   opacity: 1;
@@ -2909,7 +2918,7 @@ a.footer__contact-item:hover {
 .modal__details-arrow {
   font-size: 1.4rem;
   color: var(--color-gold);
-  transition: transform 0.3s ease;
+  transition: transform var(--dur-slow) ease;
 }
 .modal__details.active .modal__details-arrow {
   transform: rotate(90deg);
@@ -2918,7 +2927,7 @@ a.footer__contact-item:hover {
   list-style: none;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height var(--dur-slow) ease;
 }
 .modal__details.active .modal__details-list {
   max-height: 320px;
@@ -2957,7 +2966,7 @@ a.footer__contact-item:hover {
   background: #fff;
   border: 1px solid #e2ddd0;
   border-radius: var(--r-sm);
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .modal__pay-chip:hover {
   transform: translateY(-2px);
@@ -2982,8 +2991,8 @@ a.footer__contact-item:hover {
   background-color: var(--color-green);
   cursor: pointer;
   transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .modal__btn:hover {
   background-color: var(--color-gold);
@@ -3212,7 +3221,7 @@ a.footer__contact-item:hover {
   border-right: 2px solid var(--color-muted);
   border-bottom: 2px solid var(--color-muted);
   transform: rotate(-135deg); /* panah ke atas: "buka ke atas" */
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .booksidebar.incl-open .booksidebar__chev {
   transform: rotate(45deg);
@@ -3227,7 +3236,7 @@ a.footer__contact-item:hover {
   padding: 1.5rem 1.4rem;
   background: #fff;
   transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--dur-slow) var(--ease);
   overflow-y: auto;
 }
 .booksidebar.incl-open .booksidebar__panel {
@@ -3378,7 +3387,7 @@ a.footer__contact-item:hover {
 /* Card highlight yang nge-link ke halaman program (dipasang initHighlightLink) */
 .highlight__container.is-clickable {
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .highlight__container.is-clickable:hover {
   transform: translateY(-3px);
@@ -3469,9 +3478,9 @@ a.footer__contact-item:hover {
   color: var(--color-cream);
   background-color: var(--color-green);
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease,
+    border-color var(--dur) ease;
 }
 .highlight__btn--add {
   color: var(--color-green);
@@ -3737,7 +3746,7 @@ a.footer__contact-item:hover {
 .stop--link {
   text-decoration: none;
   color: inherit;
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .stop--link:hover {
   transform: translateY(-3px);
@@ -3823,7 +3832,7 @@ a.footer__contact-item:hover {
   color: var(--color-green);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--dur) ease;
 }
 /* label "Categories" disembunyiin -> icon + chevron aja (kategori ringkas ~10%) */
 .guide-cat-toggle span {
@@ -3840,7 +3849,7 @@ a.footer__contact-item:hover {
   width: 16px;
   height: 16px;
   color: var(--color-muted);
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .guide-cat-toggle[aria-expanded="true"] .hs-chev {
   transform: rotate(180deg);
@@ -4229,7 +4238,7 @@ a.footer__contact-item:hover {
   padding: 0.4rem 0.15rem;
   white-space: nowrap;
   text-decoration: none;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
 }
 .guide-cattab:hover {
   color: var(--color-green);
@@ -4572,7 +4581,7 @@ a.footer__contact-item:hover {
     transform: translateX(100%);
     opacity: 1;
     visibility: visible;
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--dur-slow) var(--ease);
     pointer-events: none;
     z-index: 120;
   }
@@ -4785,8 +4794,8 @@ a.footer__contact-item:hover {
 .review-card,
 .about__content {
   transition:
-    transform 0.28s ease,
-    box-shadow 0.28s ease;
+    transform var(--dur-slow) ease,
+    box-shadow var(--dur-slow) ease;
 }
 .experience__card:hover,
 .review-card:hover,
@@ -4818,8 +4827,8 @@ a.footer__contact-item:hover {
   text-decoration: none;
   box-shadow: var(--shadow-md);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform var(--dur) ease,
+    box-shadow var(--dur) ease;
 }
 .wa-float:hover {
   transform: translateY(-2px);
@@ -4920,7 +4929,7 @@ a.footer__contact-item:hover {
   font-weight: 600;
   color: var(--color-green);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--dur) ease;
 }
 .itn__ghostbtn:hover {
   background-color: #efe9db;
@@ -4997,7 +5006,7 @@ a.footer__contact-item:hover {
   font-size: 1rem;
   line-height: 1;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background var(--dur-fast) ease;
 }
 .itn-prog__rm:hover {
   background: #fff;
@@ -5189,9 +5198,9 @@ a.footer__contact-item:hover {
   color: var(--color-green);
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease,
+    border-color var(--dur) ease;
 }
 .card-add:hover {
   background: var(--color-green);
@@ -5247,7 +5256,7 @@ a.footer__contact-item:hover {
   background: #fff;
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.16);
-  transition: transform 0.28s ease;
+  transition: transform var(--dur-slow) ease;
 }
 .modal__group select {
   width: 100%;
@@ -5525,7 +5534,7 @@ a.footer__contact-item:hover {
   border-radius: var(--r-md);
   font-family: var(--font-body);
   cursor: pointer;
-  transition: transform 0.12s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .itn-mini:hover {
   transform: translateY(-2px);
@@ -5684,8 +5693,8 @@ a.footer__contact-item:hover {
   color: var(--color-green);
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .itn2__add:hover {
   background: var(--color-green);
@@ -5718,8 +5727,8 @@ a.footer__contact-item:hover {
   color: var(--color-green);
   text-decoration: none;
   transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
+    border-color var(--dur) ease,
+    background-color var(--dur) ease;
 }
 .pick-cat:hover {
   border-color: var(--color-gold);
@@ -5879,7 +5888,7 @@ button.pick-cat {
   color: #fff;
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--dur) ease;
 }
 .tour-hero__cta:hover {
   background: var(--color-cta-d);
@@ -5924,7 +5933,7 @@ button.pick-cat {
   border-top: 1px solid var(--line);
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
   transform: translateY(110%);
-  transition: transform 0.28s ease;
+  transition: transform var(--dur-slow) ease;
 }
 .book-bar__price {
   font-size: 1rem;
@@ -6072,7 +6081,7 @@ button.pick-cat {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-  transition: all 0.2s ease;
+  transition: all var(--dur) ease;
 }
 .hero-slider__dot.is-active {
   width: 7px;
@@ -6164,9 +6173,9 @@ button.pick-cat {
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease,
+    border-color var(--dur) ease;
 }
 /* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
 .btn-book,
@@ -6261,7 +6270,7 @@ button.pick-cat {
   align-items: center;
   color: var(--color-gold);
   margin-right: 1.3rem; /* was 0.85rem - Wayan, kasih jarak lebih ke menu */
-  transition: color 0.2s ease;
+  transition: color var(--dur) ease;
 }
 .navbar__cart:hover {
   color: var(--color-gold-d);
@@ -6312,8 +6321,8 @@ button.pick-cat {
     visibility: hidden;
     transform: translateY(-8px) scale(0.98);
     transition:
-      opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.26s var(--ease-out),
+      transform 0.26s var(--ease-out),
       visibility 0.26s;
     pointer-events: none;
   }
@@ -6398,7 +6407,7 @@ button.pick-cat {
   height: 14px;
   color: var(--color-muted);
   flex: 0 0 auto;
-  transition: transform 0.15s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .acct__curbtn[aria-expanded="true"] .acct__curcaret {
   transform: rotate(180deg);
@@ -6581,7 +6590,7 @@ button.pick-cat {
   text-decoration: none;
   color: var(--color-green);
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--dur) ease, color var(--dur) ease;
 }
 .experience__visit:hover {
   background-color: var(--color-green);
@@ -7001,7 +7010,7 @@ button.pick-cat {
 .mtc-receipt__chev {
   width: 15px;
   height: 15px;
-  transition: transform 0.18s ease;
+  transition: transform var(--dur-fast) ease;
 }
 .mtc-receipt__toggle[aria-expanded="true"] .mtc-receipt__chev { transform: rotate(180deg); }
 .mtc-receipt__list {
@@ -7313,10 +7322,10 @@ button.pick-cat {
   text-align: center;
   cursor: pointer;
   transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease,
-    opacity 0.2s ease;
+    border-color var(--dur) ease,
+    box-shadow var(--dur) ease,
+    transform var(--dur) ease,
+    opacity var(--dur) ease;
 }
 .chdur:hover:not([disabled]) {
   border-color: var(--color-gold);
@@ -7418,7 +7427,7 @@ button.pick-cat {
 }
 .navbar__caret {
   display: inline-block;
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) ease;
 }
 .navbar__has-drop.open .navbar__caret {
   transform: rotate(90deg);
@@ -7446,9 +7455,9 @@ button.pick-cat {
     visibility: hidden;
     transform: translateY(-6px);
     transition:
-      opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      visibility 0.2s;
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      visibility var(--dur);
     pointer-events: none;
   }
   .navbar__has-drop:hover .navbar__drop,
@@ -7520,9 +7529,9 @@ button.pick-cat {
   cursor: pointer;
   opacity: 0;
   transition:
-    opacity 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
+    opacity var(--dur) ease,
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .slider-arrow--prev {
   left: -6px;
@@ -7592,8 +7601,8 @@ button.pick-cat {
   background-color: transparent;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .tour-type__btn.is-active {
   font-weight: 600;
@@ -7655,8 +7664,8 @@ button.pick-cat {
   background-color: transparent;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .booking__type-btn.is-active {
   color: #fff;
@@ -7682,8 +7691,8 @@ button.pick-cat {
   background-color: transparent;
   cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--dur) ease,
+    color var(--dur) ease;
 }
 .itn-item-type__btn.is-active {
   color: #fff;
@@ -7925,7 +7934,7 @@ strong {
   font-weight: 600;
   font-size: var(--fs-h3);
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--dur) ease, color var(--dur) ease;
 }
 .btn-pill:hover {
   background: var(--color-gold);
@@ -8101,7 +8110,7 @@ strong {
   margin-bottom: -1px;
   white-space: nowrap;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
 }
 .zone-chip:hover {
   color: var(--color-green);
@@ -8313,7 +8322,7 @@ strong {
   border: 1px solid var(--color-green);
   color: var(--color-green);
   background: #fff;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--dur) ease, color var(--dur) ease;
 }
 .closing-band__btn:hover {
   background: var(--color-green);
@@ -8459,7 +8468,7 @@ strong {
   background: var(--line);
   position: relative;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: background var(--dur);
 }
 .tpick__switch::after {
   content: "";
@@ -8470,7 +8479,7 @@ strong {
   height: 17px;
   border-radius: 50%;
   background: #fff;
-  transition: left 0.2s;
+  transition: left var(--dur);
 }
 .tpick__return input:checked + .tpick__switch { background: var(--color-gold); }
 .tpick__return input:checked + .tpick__switch::after { left: 20px; }
@@ -8509,7 +8518,7 @@ strong {
   text-align: left;
   font-family: var(--font-body);
   width: 100%;
-  transition: border-color 0.15s;
+  transition: border-color var(--dur-fast);
 }
 .troute:hover { border-color: var(--color-gold); }
 .troute__th {

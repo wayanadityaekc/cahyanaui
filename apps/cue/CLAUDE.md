@@ -328,6 +328,13 @@ Order **must be kept** (declarations first, run last):
   atas/samping), **animasi glow booksidebar** (`booksidebarGlow` keyframes), **focus-ring
   error** merah, **hairline** `0 0 0 1px`. Sama filosofinya kayak amber/gold: satuin yang
   kebetulan duplikat, jaga yang punya makna.
+- **Motion (token, Agu 2026)**: durasi transisi + easing dipusatin biar animasi satu ritme.
+  `--dur-fast` 0.15s (hover kecil/state cepet) · `--dur` 0.2s (default) · `--dur-slow` 0.3s
+  (transform gede) · `--ease` `cubic-bezier(.4,0,.2,1)` (standar/material) · `--ease-out`
+  `cubic-bezier(.16,1,.3,1)` (entrance expo-out). CUMA dipakai di `transition:` (feedback
+  interaksi). **DIBIARIN** (disengaja): durasi `animation:` entrance (0.4-0.6s, choreography),
+  fade lambat `0.5s`, special (marquee `35s`, glow booksidebar `2-3s`), dan keyword `ease`
+  (udah konsisten). Snap durasi transition: 0.12/0.15/0.18→fast · 0.2/0.25→base · 0.28/0.3→slow.
 
 ## Key mechanics
 - **Anti-CLS**: `#booking-placeholder`, `#footer-placeholder` & `#search-placeholder` punya
@@ -343,7 +350,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v374, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v375, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

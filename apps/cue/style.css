@@ -52,6 +52,17 @@
   --space-4: 2rem;
   --space-5: 3rem;
   --space-6: 4rem;
+  /* ---- Container widths (Agu 2026, Wayan): 4 tingkat resmi biar margin kiri/kanan
+     antar-halaman selaras. Tiap halaman WAJIB pilih salah satu, jangan bikin lebar
+     baru. `--container` wide (listing/homepage/guide hub) · `--container-mid` halaman
+     konten tengah (contact/about/faq/charter) · `--container-read` kolom baca sempit
+     (legal/artikel guide) - sengaja lebih sempit demi panjang baris yang enak dibaca.
+     Booking detail (`.tour-layout--book`, ~1280px) layout khusus, TIDAK ikut token ini.
+     `--container-x` = padding kiri/kanan seragam (juga jaga jarak tepi di tablet). */
+  --container: 1200px;
+  --container-mid: 1080px;
+  --container-read: 720px;
+  --container-x: var(--space-3);
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
   --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */
@@ -2458,7 +2469,7 @@ section.faq::before,
   padding: var(--space-5) var(--space-3);
 }
 .faq__container {
-  max-width: 1000px;
+  max-width: var(--container-mid);
   margin: 0 auto;
 }
 .faq__list {
@@ -3521,7 +3532,7 @@ a.footer__contact-item:hover {
   background-color: #fff;
 }
 .info__container {
-  max-width: 1000px;
+  max-width: var(--container-mid);
   margin: 0 auto;
 }
 /* Detail page: section cream (lapis belakang) + container kartu putih (lapis depan).
@@ -3737,9 +3748,9 @@ a.footer__contact-item:hover {
 
 /* ==================== Bali Guide page (search + toggle + slider/kategori) ==== */
 .guide-page {
-  max-width: 1200px;
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 3rem;
+  padding: 2.5rem var(--container-x) 3rem;
 }
 /* Search bar di dalam hero (bawah deskripsi): toggle Categories (kiri) + search
    (kanan, lebar), sejajar 1 baris. */
@@ -4005,7 +4016,7 @@ a.footer__contact-item:hover {
 }
 /* Halaman artikel guide */
 .guide-article {
-  max-width: 720px;
+  max-width: var(--container-read);
   text-align: left;
 }
 .guide-article p {
@@ -4104,9 +4115,9 @@ a.footer__contact-item:hover {
 
 /* Layout: artikel (main) + kategori (side, sticky, kanan) - desktop */
 .guide-layout {
-  max-width: 1200px;
+  max-width: var(--container);
   margin: 0 auto;
-  padding: var(--space-5) var(--space-3);
+  padding: var(--space-5) var(--container-x);
   display: flex;
   align-items: flex-start;
   gap: 2.5rem;
@@ -4239,7 +4250,7 @@ a.footer__contact-item:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  max-width: 1100px;
+  max-width: var(--container-mid);
   margin: 0 auto;
 }
 .contact__heading {
@@ -8709,9 +8720,9 @@ strong {
 
 /* Baris editorial: label kiri (sticky) + isi kanan */
 .arows {
-  max-width: 1040px;
+  max-width: var(--container-mid);
   margin: 0 auto;
-  padding: 0 var(--space-3);
+  padding: 0 var(--container-x);
 }
 .arow {
   display: grid;
@@ -8911,9 +8922,9 @@ strong {
    Transfers/Charter). Gantiin 2 section lama; breathing room.
    ============================================================ */
 .xplore {
-  max-width: 1200px;
+  max-width: var(--container);
   margin: 0 auto;
-  padding: 4.5rem var(--space-3);
+  padding: 4.5rem var(--container-x);
   text-align: left; /* aturan V1: konten grid rata kiri */
 }
 /* Header row V1: intro (kick+judul+sub) kiri, tab kanan sebaris */
@@ -9243,7 +9254,11 @@ strong {
    ============================================================ */
 .catsec {
   position: relative;
-  max-width: 1200px;
+  /* catsec nested di dalam .experience (padding-x udah 24px), jadi JANGAN nambah
+     padding-x lagi (nanti numpuk -> 48px di HP). Biar tepi konten sejajar sama
+     container wide lain (homepage/guide = 144px desktop / 24px HP), max-width-nya
+     dikurangi 2x --container-x: grid-nya jadi persis selebar grid homepage (1152). */
+  max-width: calc(var(--container) - 2 * var(--container-x));
   margin: 0 auto;
   padding: var(--space-5) 0 var(--space-2);
   text-align: left;

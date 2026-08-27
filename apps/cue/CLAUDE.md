@@ -286,6 +286,24 @@ Order **must be kept** (declarations first, run last):
   Example: all form fields share one base rule for border/radius/font/color.
 - Body text = one style (0.9rem, `--fs-body`).
 - Don't leave dead classes behind.
+- **Container widths (token, Agu 2026)**: 4 tingkat resmi biar margin kiri/kanan antar-halaman
+  selaras — tiap halaman WAJIB pilih salah satu, **jangan bikin lebar konten baru** (dulu
+  berserakan 1000/1040/1100/1200 dst). Token di `:root`:
+  - `--container` **1200px** — wide: listing (`.catsec`), homepage (`.xplore`), guide hub
+    (`.guide-page`), guide article template (`.guide-layout`). Tepi konten 144px @1440 / 24px HP.
+  - `--container-mid` **1080px** — konten tengah: contact (`.contact__container`), about
+    (`.arows`), FAQ (`.faq__container`), charter & detail standalone (`.info__container`).
+  - `--container-read` **720px** — kolom baca sempit: legal + artikel guide (`.guide-article`).
+    Sengaja lebih sempit demi panjang baris enak dibaca (di 12.8px, 720 udah ±105 char — JANGAN
+    dinaikin, malah kepanjangan; kalau kerasa kosong, naikin font body, bukan lebar kolom).
+  - `--container-x` = `var(--space-3)` (1.5rem) — padding kiri/kanan seragam (jaga jarak tepi HP).
+  - **Booking detail** (`.tour-layout--book`, ~1280px, attraction/tour bookable) = layout khusus
+    2-kolom, **TIDAK ikut** token ini (sengaja paling lebar). Info di dalamnya di-override
+    `max-width:none` (line ~3240), jadi ganti base `.info__container` gak ngefek ke sana.
+  - **Gotcha `.catsec`**: dia nested di dalam `.experience` (yang udah padding-x 24px), jadi
+    max-width-nya `calc(var(--container) - 2*var(--container-x))` (=1152) **tanpa** padding-x
+    sendiri — kalau dikasih `--container-x` lagi nanti numpuk jadi 48px di HP. Hasilnya grid-nya
+    pas selebar grid homepage (1200−48=1152) & tepi jatuh di 144/24 sama kayak wide lain.
 
 ## Key mechanics
 - **Anti-CLS**: `#booking-placeholder`, `#footer-placeholder` & `#search-placeholder` punya
@@ -301,7 +319,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v371, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v372, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

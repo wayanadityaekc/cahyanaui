@@ -121,6 +121,24 @@ When unsure, ask first (keep it short).
 - **Ganti/rename foto** → ganti SEMUA referensi: HTML (og:image + JSON-LD ikut), style.css,
   `ITEM_CARD` di script.js (nama **tanpa** prefix `images/` — gampang kelewat pas grep!),
   dan path hardcoded di `tools/sync-schema.js`. Habis itu grep nama lama = harus 0.
+- **Gotcha `aspect-ratio` di `<img>`**: kalau tag `<img>` punya atribut HTML `width`/`height`
+  (biasa ada, buat anti-CLS), CSS `aspect-ratio` doang GAK CUKUP buat maksa rasio - atribut
+  `height` menang duluan (presentational hint) kalau CSS `height` gak di-set eksplisit. WAJIB
+  tambahin `height: auto;` bareng `aspect-ratio` di rule yang sama, atau foto ikut rasio file
+  aslinya (kejadian di `.guide-lead`, Sep 2026).
+
+## Guide article template (`guide/*.html`)
+- Body semua halaman guide punya class **`.guide-page`** (beda dari `.guide-article` yang
+  numpang dipake juga di Terms/Privacy/Cancellation/Charter buat kolom-baca-polos yang sama -
+  jangan scope hal khusus-guide ke `.guide-article`, salah sasaran kena 4 halaman itu juga).
+- Judul sub-section (`.section__title--sub`) di guide article rata **KIRI** (sejajar body
+  text, gampang di-scan) — scoped `.guide-page .section__title--sub`. Di halaman lain yang
+  numpang `.guide-article` (Terms dkk) TETAP center, jangan ikut diubah.
+- Foto lead (`.guide-lead`, di atas + inline dalam section) = **4:3**, disamain sama foto
+  konten tour (`.stop__image`) biar selaras — bukan 16:9 lagi.
+- Template lengkap (sidebar kategori kanan + tags hero + "You might also like" + "See our
+  tours") masih tahap desain/approval Wayan, BELUM di-build ke halaman guide beneran -
+  cek histori chat sebelum nganggep ini udah jadi.
 
 ## Subhero & FAQ (standar per halaman)
 - **H1 maks ±40 karakter** (biar tetap 2 baris di HP — lebih dari itu teks hero bisa
@@ -260,7 +278,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v367, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v368, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

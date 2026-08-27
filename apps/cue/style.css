@@ -131,6 +131,18 @@ body {
   margin-top: 2.75rem;
   font-size: var(--fs-h3);
 }
+/* Guide article doang: judul rata KIRI (sejajar body text, gampang di-scan pas
+   baca artikel panjang). Scope-nya `.guide-page` (body class khusus guide/*.html),
+   BUKAN `.guide-article` - class itu ternyata numpang dipake juga di Terms/Privacy/
+   Cancellation/Charter (kolom baca polos yang sama), yang HARUS tetap center.
+   Sep 2026, Wayan. */
+.guide-page .section__title--sub {
+  text-align: left;
+}
+.guide-page .section__title--sub::after {
+  left: 0;
+  transform: none;
+}
 
 .navbar {
   position: fixed;
@@ -4013,14 +4025,17 @@ a.footer__contact-item:hover {
   text-decoration: none;
   font-weight: 500;
 }
-/* Foto utama di atas artikel guide (SEO + biar pembaca dapet bayangan tempatnya) */
+/* Foto artikel guide (lead di atas + foto inline dalam section) - 4:3, disamain
+   sama foto konten tour (.stop__image) biar selaras di seluruh situs - Sep 2026, Wayan. */
 .guide-lead {
   margin: 0 0 1.5rem;
 }
 .guide-lead img,
 .guide-lead__ph {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: auto; /* wajib eksplisit - kalau nggak, atribut height="" di <img> menang
+    atas aspect-ratio CSS (presentational hint), foto jadi ikut rasio file asli */
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(31, 61, 43, 0.1);

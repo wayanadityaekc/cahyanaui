@@ -1043,10 +1043,19 @@ function cartHeartIcon(on) {
 }
 
 // Cari index entry cart yang "sama" dengan 1 entry paket suggested (buat toggle heart).
-// day = nama item pertama sama; transfer = rute + arah sama. -1 = belum ada di cart.
+// day = nama item pertama SAMA + tanggal SAMA; transfer = rute + arah + tanggal sama.
+// -1 = belum ada di cart.
+//
+// BUG (ditemukan lewat code review, udah kejadian di production): dulu match
+// cuma pakai nama, gak ikut cek tanggal. Akibatnya kalau user punya booking asli
+// "Ubud Tour" tgl 5 Okt (dari Book Now), terus buka tab paket suggested yang
+// "Ubud Tour"-nya kebetulan sama tapi tanggalnya beda, hati di paket itu ke-ON
+// duluan (dikira "udah di cart") - padahal itu entry yang beda. Klik buat unheart
+// = manggil cartToggleEntry -> nge-splice entry booking ASLI yang gak ada hubungannya,
+// bukan yang dimaksud. Booking user ilang tanpa konfirmasi apa-apa.
 function cartMatchIndex(state, type, entry) {
-  if (type === "day") return (state.days || []).findIndex((d) => (d.items || [])[0] === (entry.items || [])[0]);
-  if (type === "transfer") return (state.transfers || []).findIndex((t) => t.route === entry.route && t.direction === entry.direction);
+  if (type === "day") return (state.days || []).findIndex((d) => (d.items || [])[0] === (entry.items || [])[0] && d.date === entry.date);
+  if (type === "transfer") return (state.transfers || []).findIndex((t) => t.route === entry.route && t.direction === entry.direction && t.date === entry.date);
   return -1;
 }
 

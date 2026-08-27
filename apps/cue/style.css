@@ -9551,3 +9551,18 @@ strong {
   .airport::after { background: linear-gradient(180deg, rgba(20,19,15,.72) 0%, rgba(20,19,15,.82) 100%); }
   .charter-home__in { padding: var(--space-4) var(--space-3); }
 }
+
+
+/* ---- Halaman listing + marketing (body.sp36): ritme section selaras homepage ----
+   Snap padding vertikal section konten ke --section-gap (36px). Di-scope ke .sp36
+   doang (tour/activities/destinations/about/contact/faq) biar halaman baca yang
+   share class (.info di detail attraction dll) TIDAK ikut keubah (Sep 2026, Wayan). */
+.sp36 .experience,
+.sp36 .info,
+.sp36 .closing-band,
+.sp36 .faq,
+.sp36 .contact,
+.sp36 .trust {
+  padding-top: var(--section-gap);
+  padding-bottom: var(--section-gap);
+}

@@ -102,7 +102,7 @@
   /* ---- Form control height (Agu 2026): tinggi field/select standar biar semua form
      seragam (dulu contact 33px vs booking/charter 46px). Varian compact 2.7rem (itinerary
      builder, hero mobile) sengaja lebih pendek, dibiarin. */
-  --field-h: 2.9rem; /* ~46px */
+  --field-h: 2.1rem; /* ~33px - form dikecilin nyesuain body text 0.8rem (Wayan) */
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
   --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */
@@ -1492,7 +1492,7 @@ a.tripbar--promo {
   justify-content: center;
   flex: 1;
   max-width: 240px;
-  height: var(--field-h);
+  height: 2.9rem; /* tombol CTA: tetep tinggi normal, TIDAK ikut --field-h (form dikecilin) */
   padding: 0 0.85rem;
   border: none;
   border-radius: var(--r-pill);
@@ -4466,11 +4466,11 @@ a.footer__contact-item:hover {
 }
 .itn-suggest__f select {
   min-width: 120px;
-  height: 2.7rem;
+  height: var(--field-h);
   padding: 0.4rem 0.6rem;
 }
 .itn-suggest__btn {
-  height: 2.7rem;
+  height: var(--field-h);
   padding: 0 1.3rem;
   font-size: 1rem;
 }
@@ -4782,7 +4782,7 @@ a.footer__contact-item:hover {
   .hero__booking .booking__group select,
   .hero__booking .booking__group input,
   .hero__booking .booking__price {
-    height: 2.7rem;
+    height: var(--field-h);
     padding: 0.55rem 0.6rem;
     font-size: var(--fs-field);
   }
@@ -5187,7 +5187,7 @@ a.footer__contact-item:hover {
 .itn-day__fields .field select {
   width: 100%;
   min-width: 0;
-  height: 2.7rem;
+  height: var(--field-h);
   padding: 0.55rem 0.65rem;
   font-size: var(--fs-field);
   background: #fff;

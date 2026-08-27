@@ -70,6 +70,11 @@ When unsure, ask first (keep it short).
   each was unhooked to its own explicit size so they don't shrink with body text.
 - Form field (input/select/textarea) = `0.8rem` (`--fs-field`, was 0.875rem — disamain ke
   `--fs-body`/`--fs-small`), semua field pakai token ini (jangan hardcode ukuran di form lagi).
+- **Tinggi field** = `--field-h` **2.1rem (~33px)** — semua kontrol form (input/select/date/
+  custom-select) pakai token ini biar seragam (Agu 2026, Wayan: dikecilin dari 46px nyesuain
+  body text yang udah 0.8rem — 46 kerasa kegedean). **TOMBOL CTA** (`.booking__btn` dkk) TIDAK
+  ikut token ini — sengaja tetep ~46px (`height: 2.9rem`), CTA boleh lebih tinggi dari field.
+  Textarea (`.contact__group textarea`) pakai `min-height` sendiri, bukan `--field-h`.
 - **Konsolidasi (Sep 2026)**: puluhan `font-size` yang di-hardcode langsung (bukan token) —
   hasil nambahin fitur satu-satu dari waktu ke waktu — di-sapu & di-snap ke token terdekat
   (`--fs-label`/`--fs-small`/`--fs-h3`/`1rem`/`--fs-h2`). YANG SENGAJA DIBIARIN beda-beda

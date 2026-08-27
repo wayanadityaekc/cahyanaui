@@ -9473,11 +9473,14 @@ strong {
    (marker radio) biar centang selaras dengan seluruh web.
    ============================================================ */
 
-/* Airport pickup - dark band, senada .plan */
-.airport { max-width: var(--container); margin: var(--space-5) auto; padding: 0 var(--container-x); }
-.airport__in { position: relative; overflow: hidden; border-radius: var(--r-xl); background-size: cover; background-position: center; padding: var(--space-5); color: #fff; }
-.airport__in::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,19,15,.86) 0%, rgba(20,19,15,.62) 55%, rgba(20,19,15,.35) 100%); }
-.airport__body { position: relative; z-index: 1; max-width: 560px; }
+/* Airport pickup - FULL-BLEED dark band (pola .habout: bg + overlay di section). */
+.airport { position: relative; overflow: hidden; background-size: cover; background-position: center; padding: var(--space-4) 0; color: #fff; }
+.airport::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,19,15,.86) 0%, rgba(20,19,15,.62) 55%, rgba(20,19,15,.35) 100%); }
+.airport__inner { position: relative; z-index: 1; max-width: var(--container); margin: 0 auto; padding: 0 var(--container-x); }
+.airport__body { max-width: 560px; }
+/* Rapetin jarak Tours -> Airport -> Destinations (kurangi padding yang ngapit band). */
+#explore { padding-bottom: var(--space-3); }
+#destinations-home { padding-top: var(--space-3); }
 .airport__k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-label); color: var(--color-gold-l); margin-bottom: 0.6rem; }
 .airport__t { font-family: var(--font-head); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; margin: 0 0 0.7rem; }
 .airport__lead { font-size: var(--fs-body); line-height: 1.6; color: rgba(247,243,234,.85); margin: 0 0 1.3rem; max-width: 46ch; }
@@ -9503,40 +9506,39 @@ strong {
 .whyus__col h3 { font-family: var(--font-body); font-size: var(--fs-strong); font-weight: 600; margin: 0 0 0.35rem; color: var(--color-gold); }
 .whyus__col p { font-size: var(--fs-body); line-height: 1.55; color: var(--color-muted); margin: 0; }
 
-/* Charter promo - white panel, 2 option cards */
+/* Charter promo - satu panel putih, kartu jam yang bisa di-slide (initTourSlider) */
 .charter-home { max-width: var(--container); margin: var(--space-5) auto; padding: 0 var(--container-x); }
 .charter-home__in { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--space-5); box-shadow: var(--shadow-md); }
-.charter-home__head { text-align: center; margin-bottom: var(--space-4); }
+.charter-home__head { text-align: center; margin-bottom: var(--space-3); }
 .charter-home__k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-label); color: var(--color-muted); margin-bottom: 0.4rem; }
 .charter-home__t { font-family: var(--font-head); font-size: var(--fs-h2); font-weight: 500; letter-spacing: -0.01em; margin: 0 0 0.6rem; color: var(--color-gold); }
 .charter-home__lead { font-size: var(--fs-body); line-height: 1.6; color: var(--color-ink); margin: 0 auto; max-width: 60ch; }
-.charter-home__cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: var(--space-4); }
-.chcard { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--space-3); background: #fff; }
+.charter-home__slider { display: flex; gap: var(--space-3); overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; touch-action: pan-x pan-y; margin-top: var(--space-4); padding-bottom: 0.5rem; scrollbar-width: none; }
+.charter-home__slider::-webkit-scrollbar { display: none; }
+.chcard { position: relative; flex: 0 0 220px; scroll-snap-align: start; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--space-3); background: #fff; }
 .chcard--pop { border: 2px solid var(--color-cta); }
-.chcard__badge { position: absolute; top: -0.7rem; right: 1.1rem; background: var(--color-amber); color: var(--color-gold); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--r-pill); padding: 0.2rem 0.7rem; }
-.chcard__name { font-family: var(--font-body); font-size: var(--fs-h3); font-weight: 600; margin: 0 0 0.15rem; color: var(--color-gold); }
-.chcard__dur { font-size: var(--fs-small); color: var(--color-muted); margin: 0 0 0.9rem; }
-.chcard__price { display: flex; align-items: baseline; gap: 0.35rem; margin: 0 0 0.9rem; }
+.chcard__badge { position: absolute; top: 0.8rem; right: 0.8rem; background: var(--color-amber); color: var(--color-gold); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--r-pill); padding: 0.2rem 0.7rem; }
+.chcard__hours { font-family: var(--font-head); font-size: var(--fs-h2); font-weight: 600; letter-spacing: -0.01em; margin: 0 0 0.1rem; color: var(--color-gold); }
+.chcard__label { font-size: var(--fs-small); color: var(--color-muted); margin: 0 0 0.8rem; }
+.chcard__price { display: flex; align-items: baseline; gap: 0.3rem; margin: 0 0 0.7rem; }
 .chcard__from { font-size: var(--fs-small); color: var(--color-muted); }
 .chcard__amt { font-size: 1.6rem; font-weight: 600; color: var(--color-amber); letter-spacing: -0.01em; }
 .chcard__unit { font-size: var(--fs-small); color: var(--color-muted); }
-.chcard__feats { margin: 0 0 1.2rem; }
-.chcard__feats li { font-size: var(--fs-body); padding-top: 0.35rem; padding-bottom: 0.35rem; }
-.chcard__btn { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-pill); height: 2.7rem; font-weight: 600; font-size: var(--fs-strong); text-decoration: none; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.chcard__note { font-size: var(--fs-small); color: var(--color-muted); margin: 0 0 1.1rem; line-height: 1.45; }
+.chcard__btn { margin-top: auto; width: 100%; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-pill); height: 2.7rem; font-weight: 600; font-size: var(--fs-strong); text-decoration: none; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
 .chcard__btn--solid { background: var(--color-cta); color: #fff; }
 .chcard__btn--solid:hover { background: var(--color-cta-d); }
 .chcard__btn--ghost { background: #fff; color: var(--color-gold); border: 1px solid var(--line); }
 .chcard__btn--ghost:hover { border-color: var(--color-gold); }
-.charter-home__foot { text-align: center; margin: var(--space-3) 0 0; font-size: var(--fs-small); color: var(--color-muted); }
+.charter-home__foot { text-align: center; margin: var(--space-4) 0 0; font-size: var(--fs-small); color: var(--color-muted); }
 .charter-home__foot b { color: var(--color-gold); font-weight: 600; }
 
 /* Mobile */
 @media (max-width: 760px) {
   .whyus__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4) var(--space-3); }
-  .charter-home__cards { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  .airport__in { padding: var(--space-4) var(--space-3); }
-  .airport__in::after { background: linear-gradient(180deg, rgba(20,19,15,.72) 0%, rgba(20,19,15,.82) 100%); }
+  .airport { padding: var(--space-4) 0; }
+  .airport::after { background: linear-gradient(180deg, rgba(20,19,15,.72) 0%, rgba(20,19,15,.82) 100%); }
   .charter-home__in { padding: var(--space-4) var(--space-3); }
 }

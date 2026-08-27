@@ -30,7 +30,7 @@
     />
     <!-- Preload foto tile pertama (LCP hero-tiles) -->
     <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
-    <link rel="stylesheet" href="style.css?v=380" />
+    <link rel="stylesheet" href="style.css?v=381" />
 
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
@@ -351,8 +351,8 @@
 
     </section>
 
-    <section class="airport" id="airport-pickup">
-      <div class="airport__in" style="background-image: url(assets/images/transfer-hero.webp)">
+    <section class="airport" id="airport-pickup" style="background-image: url(assets/images/transfer-hero.webp)">
+      <div class="airport__inner">
         <div class="airport__body">
           <span class="airport__k">Airport Pickup</span>
           <h2 class="airport__t">Land in Bali, we're already there</h2>
@@ -486,70 +486,6 @@
       </div>
     </section>
 
-    <section class="plan" id="plan">
-      <a
-        class="plan__link"
-        href="my-trips.html"
-        style="background-image: url(assets/images/ubud-tour-card.jpg)"
-      >
-        <div class="plan__inner">
-          <span class="plan__eyebrow">Trip Planner</span>
-          <h2 class="plan__title">Your whole trip, one plan</h2>
-          <p class="plan__lead">
-            Plan Bali day by day and see every price before you commit.
-          </p>
-          <div class="plan__steps">
-            <div class="plan__step">
-              <span class="plan__step-ic">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                >
-                  <rect x="3" y="5" width="18" height="16" rx="2" />
-                  <path d="M3 9h18M8 3v4M16 3v4" />
-                </svg>
-              </span>
-              <h3>Pick your days</h3>
-              <p>Choose how long you stay.</p>
-            </div>
-            <div class="plan__step">
-              <span class="plan__step-ic">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 8v8M8 12h8" />
-                </svg>
-              </span>
-              <h3>Add tours</h3>
-              <p>Tours, transfers, activities.</p>
-            </div>
-            <div class="plan__step">
-              <span class="plan__step-ic">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h10" />
-                  <circle cx="19" cy="18" r="2.4" />
-                </svg>
-              </span>
-              <h3>See your total</h3>
-              <p>Every price upfront.</p>
-            </div>
-          </div>
-          <span class="plan__btn">Build your itinerary</span>
-        </div>
-      </a>
-    </section>
-
     <section class="guide-home" id="guides" aria-labelledby="guide-home-title">
       <div class="guide-home__inner">
         <div class="guide-home__head">
@@ -610,30 +546,36 @@
           <h2 class="charter-home__t">Charter a car for the whole day</h2>
           <p class="charter-home__lead">Private car and driver, yours for the day. Pick a length, build your own route. Petrol included, pick up anywhere on the island.</p>
         </div>
-        <div class="charter-home__cards">
-          <div class="chcard">
-            <h3 class="chcard__name">Half Day</h3>
-            <p class="chcard__dur">5 hours &middot; around 60 km range</p>
+        <div class="charter-home__slider experience__grid--slider">
+          <article class="chcard">
+            <h3 class="chcard__hours">5 hours</h3>
+            <p class="chcard__label">Half day</p>
             <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="half">$35</span> <span class="chcard__unit">/ car</span></p>
-            <ul class="info__list info__list--yes chcard__feats">
-              <li>Private car and driver</li>
-              <li>Petrol included</li>
-              <li>Build your own route</li>
-            </ul>
-            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose Half Day</a>
-          </div>
-          <div class="chcard chcard--pop">
+            <p class="chcard__note">Petrol included &middot; ~60 km</p>
+            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose</a>
+          </article>
+          <article class="chcard chcard--pop">
             <span class="chcard__badge">Popular</span>
-            <h3 class="chcard__name">Full Day</h3>
-            <p class="chcard__dur">10 hours &middot; around 120 km range</p>
+            <h3 class="chcard__hours">10 hours</h3>
+            <p class="chcard__label">Full day</p>
             <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="full">$60</span> <span class="chcard__unit">/ car</span></p>
-            <ul class="info__list info__list--yes chcard__feats">
-              <li>Private car and driver</li>
-              <li>Petrol included, extend by the hour</li>
-              <li>Reach further, coast to coast</li>
-            </ul>
-            <a class="chcard__btn chcard__btn--solid" href="charter.html">Choose Full Day</a>
-          </div>
+            <p class="chcard__note">Petrol included &middot; ~120 km</p>
+            <a class="chcard__btn chcard__btn--solid" href="charter.html">Choose</a>
+          </article>
+          <article class="chcard">
+            <h3 class="chcard__hours">12 hours</h3>
+            <p class="chcard__label">Full day + 2h</p>
+            <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="full" data-charter-extra="2">$68</span> <span class="chcard__unit">/ car</span></p>
+            <p class="chcard__note">Petrol included &middot; extend by the hour</p>
+            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose</a>
+          </article>
+          <article class="chcard">
+            <h3 class="chcard__hours">14 hours</h3>
+            <p class="chcard__label">Full day + 4h</p>
+            <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="full" data-charter-extra="4">$76</span> <span class="chcard__unit">/ car</span></p>
+            <p class="chcard__note">Petrol included &middot; extend by the hour</p>
+            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose</a>
+          </article>
         </div>
         <p class="charter-home__foot">Only a <b>10% deposit</b> to book &middot; prices per car, pick-up outside Ubud +$7</p>
       </div>
@@ -683,8 +625,8 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=380"></script>
-    <script src="script.js?v=380"></script>
+    <script src="data.js?v=381"></script>
+    <script src="script.js?v=381"></script>
 
   </body>
 </html>

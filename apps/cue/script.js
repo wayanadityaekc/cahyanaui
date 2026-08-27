@@ -277,8 +277,15 @@ function renderFees() {
 // (data.js) ke currency aktif. Dipanggil dari renderPrices biar ikut ganti kurs.
 function renderCharterPromo() {
   document.querySelectorAll("[data-charter]").forEach((el) => {
-    const base = CHARTER[el.dataset.charter];
-    if (base) el.textContent = fmtMoney(base.usd, base.idr);
+    const dur = el.dataset.charter; // "half" | "full"
+    const extra = parseInt(el.dataset.charterExtra || "0", 10); // jam tambahan (full day)
+    let usd, idr;
+    if (dur === "half") { usd = CHARTER.half.usd; idr = CHARTER.half.idr; }
+    else if (dur === "full") {
+      usd = CHARTER.full.usd + extra * CHARTER.extHourUsd;
+      idr = CHARTER.full.idr + extra * CHARTER.extHourIdr;
+    }
+    if (usd != null) el.textContent = fmtMoney(usd, idr);
   });
 }
 

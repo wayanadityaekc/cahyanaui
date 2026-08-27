@@ -2847,6 +2847,7 @@ a.footer__contact-item:hover {
 }
 .modal__group input {
   padding: 0.5rem 0.65rem;
+  height: var(--field-h);
   font-size: var(--fs-field);
 }
 .modal__referral {
@@ -7189,6 +7190,7 @@ button.pick-cat {
 .acctform__inp {
   width: 100%;
   padding: 0.5rem 0.65rem;
+  height: var(--field-h);
   font-size: var(--fs-field);
   font-family: var(--font-body);
   color: var(--color-green);
@@ -8434,7 +8436,8 @@ strong {
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237a7466' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.85rem center;
-  padding: 0.72rem 1.9rem 0.72rem 0.85rem;
+  padding: 0 1.9rem 0 0.85rem;
+  height: var(--field-h);
   font-family: var(--font-body);
   font-size: var(--fs-field);
   color: var(--color-green);

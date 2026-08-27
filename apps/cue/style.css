@@ -8961,27 +8961,6 @@ strong {
 .habout__btn:hover {
   background: var(--color-cta-d);
 }
-/* Strip driver di bawah band */
-.habout-people {
-  padding: var(--space-5) var(--space-3);
-  text-align: center;
-  background: var(--color-cream);
-}
-.habout-people__k {
-  display: block;
-  margin-bottom: 0.35rem;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-muted);
-}
-.habout-people__sub {
-  margin: 0 auto 1.6rem;
-  max-width: 440px;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
 
 /* ============================================================
    HOMEPAGE — section "Explore" bertab (Tours/Experiences/
@@ -9485,4 +9464,79 @@ strong {
     margin-left: 0;
     text-align: left;
   }
+}
+
+
+/* ============================================================
+   HOMEPAGE SECTIONS (Sep 2026): Airport pickup, Why Us, Charter.
+   Pakai token brand. Feature list charter reuse .info__list--yes
+   (marker radio) biar centang selaras dengan seluruh web.
+   ============================================================ */
+
+/* Airport pickup - dark band, senada .plan */
+.airport { max-width: var(--container); margin: var(--space-5) auto; padding: 0 var(--container-x); }
+.airport__in { position: relative; overflow: hidden; border-radius: var(--r-xl); background-size: cover; background-position: center; padding: var(--space-5); color: #fff; }
+.airport__in::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,19,15,.86) 0%, rgba(20,19,15,.62) 55%, rgba(20,19,15,.35) 100%); }
+.airport__body { position: relative; z-index: 1; max-width: 560px; }
+.airport__k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-label); color: var(--color-gold-l); margin-bottom: 0.6rem; }
+.airport__t { font-family: var(--font-head); font-size: 1.6rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; margin: 0 0 0.7rem; }
+.airport__lead { font-size: var(--fs-body); line-height: 1.6; color: rgba(247,243,234,.85); margin: 0 0 1.3rem; max-width: 46ch; }
+.airport__chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem; }
+.airport__chips span { font-size: var(--fs-small); background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: var(--r-pill); padding: 0.35rem 0.85rem; }
+.airport__row { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; }
+.airport__price { font-size: var(--fs-small); color: rgba(247,243,234,.85); }
+.airport__amt { font-size: 1.35rem; font-weight: 600; color: var(--color-amber); }
+.airport__price .price-unit { margin-left: 0.3rem; font-size: var(--fs-small); color: rgba(247,243,234,.72); }
+.airport__btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--color-cta); color: #fff; border-radius: var(--r-pill); padding: 0 1.4rem; height: 2.9rem; font-weight: 600; font-size: var(--fs-strong); text-decoration: none; transition: background var(--dur) var(--ease); }
+.airport__btn:hover { background: var(--color-cta-d); }
+
+/* Why Us - cream band, 4 icon columns */
+.whyus { background: var(--color-cream); }
+.whyus__in { max-width: var(--container); margin: 0 auto; padding: var(--space-5) var(--container-x); }
+.whyus__head { text-align: center; margin-bottom: var(--space-4); }
+.whyus__k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-label); color: var(--color-muted); margin-bottom: 0.4rem; }
+.whyus__t { font-family: var(--font-head); font-size: var(--fs-h2); font-weight: 500; letter-spacing: -0.01em; margin: 0; color: var(--color-gold); }
+.whyus__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+.whyus__col { text-align: center; }
+.whyus__ic { display: inline-flex; align-items: center; justify-content: center; width: 3.25rem; height: 3.25rem; border-radius: 50%; background: #fff; color: var(--color-cta); margin-bottom: 0.8rem; }
+.whyus__ic svg { width: 24px; height: 24px; }
+.whyus__col h3 { font-family: var(--font-body); font-size: var(--fs-strong); font-weight: 600; margin: 0 0 0.35rem; color: var(--color-gold); }
+.whyus__col p { font-size: var(--fs-body); line-height: 1.55; color: var(--color-muted); margin: 0; }
+
+/* Charter promo - white panel, 2 option cards */
+.charter-home { max-width: var(--container); margin: var(--space-5) auto; padding: 0 var(--container-x); }
+.charter-home__in { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--space-5); box-shadow: var(--shadow-md); }
+.charter-home__head { text-align: center; margin-bottom: var(--space-4); }
+.charter-home__k { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--fs-label); color: var(--color-muted); margin-bottom: 0.4rem; }
+.charter-home__t { font-family: var(--font-head); font-size: var(--fs-h2); font-weight: 500; letter-spacing: -0.01em; margin: 0 0 0.6rem; color: var(--color-gold); }
+.charter-home__lead { font-size: var(--fs-body); line-height: 1.6; color: var(--color-ink); margin: 0 auto; max-width: 60ch; }
+.charter-home__cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: var(--space-4); }
+.chcard { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--space-3); background: #fff; }
+.chcard--pop { border: 2px solid var(--color-cta); }
+.chcard__badge { position: absolute; top: -0.7rem; right: 1.1rem; background: var(--color-amber); color: var(--color-gold); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--r-pill); padding: 0.2rem 0.7rem; }
+.chcard__name { font-family: var(--font-body); font-size: var(--fs-h3); font-weight: 600; margin: 0 0 0.15rem; color: var(--color-gold); }
+.chcard__dur { font-size: var(--fs-small); color: var(--color-muted); margin: 0 0 0.9rem; }
+.chcard__price { display: flex; align-items: baseline; gap: 0.35rem; margin: 0 0 0.9rem; }
+.chcard__from { font-size: var(--fs-small); color: var(--color-muted); }
+.chcard__amt { font-size: 1.6rem; font-weight: 600; color: var(--color-amber); letter-spacing: -0.01em; }
+.chcard__unit { font-size: var(--fs-small); color: var(--color-muted); }
+.chcard__feats { margin: 0 0 1.2rem; }
+.chcard__feats li { font-size: var(--fs-body); padding-top: 0.35rem; padding-bottom: 0.35rem; }
+.chcard__btn { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-pill); height: 2.7rem; font-weight: 600; font-size: var(--fs-strong); text-decoration: none; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.chcard__btn--solid { background: var(--color-cta); color: #fff; }
+.chcard__btn--solid:hover { background: var(--color-cta-d); }
+.chcard__btn--ghost { background: #fff; color: var(--color-gold); border: 1px solid var(--line); }
+.chcard__btn--ghost:hover { border-color: var(--color-gold); }
+.charter-home__foot { text-align: center; margin: var(--space-3) 0 0; font-size: var(--fs-small); color: var(--color-muted); }
+.charter-home__foot b { color: var(--color-gold); font-weight: 600; }
+
+/* Mobile */
+@media (max-width: 760px) {
+  .whyus__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4) var(--space-3); }
+  .charter-home__cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .airport__in { padding: var(--space-4) var(--space-3); }
+  .airport__in::after { background: linear-gradient(180deg, rgba(20,19,15,.72) 0%, rgba(20,19,15,.82) 100%); }
+  .charter-home__in { padding: var(--space-4) var(--space-3); }
 }

@@ -247,6 +247,27 @@ When unsure, ask first (keep it short).
   `cur` mulai dari `null` (bukan section pertama) biar gak ada tab aktif kalau
   probe belum nyampe section manapun.
 
+## Homepage section order (Sep 2026)
+Urutan `index.html` (`body.home`): Hero → Explore/Tours (`#explore`) → **Airport pickup**
+(`#airport-pickup`) → Destinations (`#destinations-home`) → **Why Us** (`#why-us`) →
+Trip Planner (`#plan`) → Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`)
+→ About (`#about`) → Featured On (`.trust`) → Reviews (`#reviews-placeholder`).
+- **Driver cards DIHAPUS dari homepage** (section `.habout-people` + CSS-nya dibuang) — pindah
+  ke `about-us.html` aja. `#drivers-placeholder` (modal partial) tetap ada tapi idle (no cards
+  to open). Divider gold antar-section udah OFF di homepage (`.home section+section::before {content:none}`),
+  jadi pemisah = **bg + padding** (Why Us pakai band `--color-cream`, Airport band gelap, Charter panel putih).
+- **3 section baru** (semua pakai token, `.airport__*` / `.whyus__*` / `.charter-home__*` + `.chcard__*`):
+  - **Airport** = dark band senada `.plan` (foto `transfer-hero.webp` + overlay). Harga "from $20"
+    di-wire lewat `data-price="Airport – Ubud"` (ikut kurs/referral via `renderPrices`; `renderPrices`
+    auto-nambahin `<span class="price-unit">per car</span>`, jadi JANGAN nulis "/ car" manual).
+  - **Why Us** = cream band, 4 kolom ikon. Headline "Clear prices, local team, your plan" (sengaja
+    beda dari About "One local family..." biar gak dobel).
+  - **Charter** = panel putih, 2 kartu pilihan (Half/Full), Full Day di-highlight + badge amber "Popular".
+    Feature list pakai **`.info__list--yes`** (marker radio, biar centang selaras). Harga Half/Full
+    di-wire lewat `data-charter="half|full"` → `renderCharterPromo()` (dipanggil dari `renderPrices`,
+    baca `CHARTER` di data.js, ikut kurs).
+- **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
+
 ## Booking sidebar layout (`.tour-layout--book`, halaman detail bookable)
 - `initBookSidebar()` (script.js) inject 2 kolom via JS setelah subhero: `.tour-layout__main`
   (konten, flex 1 1 auto) + `.tour-layout__side` (kartu "Build Your Trip", sticky, flex
@@ -360,7 +381,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v379, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v380, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

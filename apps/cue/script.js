@@ -237,6 +237,7 @@ function renderPrices() {
   });
   renderPriceLabels();
   renderFees();
+  renderCharterPromo();
   updateGlanceSave();
   if (window.__transferRefresh) window.__transferRefresh(); // picker transfer ikut kurs/referral
 }
@@ -269,6 +270,15 @@ function renderFees() {
     const cur = currentCurrency;
     const txt = fmtMoney(idr / TICKET_IDR_PER_USD, idr, cur);
     el.textContent = cur === "IDR" ? txt : "~" + txt;
+  });
+}
+
+// Isi harga kartu Charter di homepage (<span data-charter="half|full">) dari CHARTER
+// (data.js) ke currency aktif. Dipanggil dari renderPrices biar ikut ganti kurs.
+function renderCharterPromo() {
+  document.querySelectorAll("[data-charter]").forEach((el) => {
+    const base = CHARTER[el.dataset.charter];
+    if (base) el.textContent = fmtMoney(base.usd, base.idr);
   });
 }
 

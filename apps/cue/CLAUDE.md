@@ -98,7 +98,12 @@ When unsure, ask first (keep it short).
   gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
   Semua tombol aksi = **pill** (border-radius 999px). Chip logo bayar & toggle nggak.
 - Hover lift: keep it subtle, not harsh.
-- Icons: SVG, **no emoji**.
+- Icons: SVG, **no emoji**. Ukuran ikon inline kecil pakai token (Agu 2026): `--icon-sm` 16px
+  (meta jam/lokasi/pax, kontak, chip, sosmed) · `--icon-md` 20px (nav cart/akun, book-bar,
+  toggle, search) · `--icon-lg` 24px (ikon aksi lebih besar). Dulu berserakan 13-23px, di-snap
+  ke 3 tingkat (geser maks ~3px). **DIBIARIN** (beda peran, bukan ikon inline): ikon besar
+  30-56px (avatar review/driver, lingkaran step "How it works", ikon centang sukses, avatar
+  panel), ikon centang mini 10px, dan logo pembayaran (`width:auto`, cuma tinggi ikut token).
 - **Checklist bullet (Included/Excluded)**: SATU format di seluruh web — marker **radio**
   di `.info__list--yes/--no li::before`: included = lingkaran keisi (dot `--color-green` di dalam ring),
   excluded = lingkaran kosong (border `#cfc9ba`) + teks di-mute (`#8a8578`). Ukuran nyesuain konteks.
@@ -350,7 +355,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v376, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v377, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

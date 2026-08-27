@@ -93,6 +93,12 @@
   --dur-slow: 0.3s;  /* transform lebih gede */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);      /* standar (material) */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entrance (expo-out), buat masuk halus */
+  /* ---- Icon size (Agu 2026): ikon kecil inline dulu berserakan 13-23px (diketik manual
+     per komponen), di-snap ke 3 tingkat (geser maks ~3px). DIBIARIN: ikon besar 30-56px
+     (avatar, lingkaran step, ikon sukses centang) - itu beda peran, bukan ikon inline. */
+  --icon-sm: 16px; /* ikon meta (jam/lokasi/pax), kontak, chip, sosmed */
+  --icon-md: 20px; /* nav cart/akun, book-bar, toggle, search */
+  --icon-lg: 24px; /* ikon aksi lebih besar */
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
   --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */
@@ -538,8 +544,8 @@ body {
   background: rgba(34, 32, 28, 0.15);
 }
 .binfo__btn svg {
-  width: 15px;
-  height: 15px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
 .binfo__pop {
   position: absolute;
@@ -818,8 +824,8 @@ body {
   justify-content: center;
 }
 .hs-opt__ic svg {
-  width: 19px;
-  height: 19px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 .hs-opt__nm {
   flex: 1;
@@ -1182,8 +1188,8 @@ a.tripbar--promo {
   cursor: pointer;
 }
 .tripbar__ic {
-  width: 18px;
-  height: 18px;
+  width: var(--icon-md);
+  height: var(--icon-md);
   flex-shrink: 0;
   color: var(--color-gold);
 }
@@ -1453,8 +1459,8 @@ a.tripbar--promo {
   transform: translateX(-50%) translateY(0);
 }
 .cart-toast svg {
-  width: 18px;
-  height: 18px;
+  width: var(--icon-md);
+  height: var(--icon-md);
   color: var(--color-gold);
 }
 .booking__price {
@@ -1575,8 +1581,8 @@ a.tripbar--promo {
 }
 
 .about__icon svg {
-  width: 22px;
-  height: 22px;
+  width: var(--icon-md);
+  height: var(--icon-md);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -2002,8 +2008,8 @@ a.tripbar--promo {
   color: var(--color-gold-l);
 }
 .plan__step-ic svg {
-  width: 22px;
-  height: 22px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 .plan__step h3 {
   font-size: 1rem;
@@ -2613,8 +2619,8 @@ section.faq::before,
   text-decoration: none;
 }
 .footer__contact-item svg {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   flex-shrink: 0;
   color: var(--color-gold);
 }
@@ -2644,8 +2650,8 @@ a.footer__contact-item:hover {
   background-color: rgba(0, 0, 0, 0.06);
 }
 .footer__socials svg {
-  width: 18px;
-  height: 18px;
+  width: var(--icon-md);
+  height: var(--icon-md);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -2740,7 +2746,7 @@ a.footer__contact-item:hover {
 }
 .footer__pay-svg {
   display: block;
-  height: 18px;
+  height: var(--icon-md);
   width: auto;
 }
 .footer__bottom {
@@ -2973,7 +2979,7 @@ a.footer__contact-item:hover {
 }
 .modal__pay-svg {
   display: block;
-  height: 16px;
+  height: var(--icon-sm);
   width: auto;
 }
 /* Tombol modal yang numpuk selalu ada jarak (Add again/Cancel, dll) */
@@ -3192,8 +3198,8 @@ a.footer__contact-item:hover {
 }
 .booksidebar__specs svg {
   flex: 0 0 auto;
-  width: 17px;
-  height: 17px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   color: var(--color-muted);
 }
 /* Divider emas tipis + What's included (centang pakai warna teks, bukan hijau) */
@@ -3842,8 +3848,8 @@ a.footer__contact-item:hover {
   background: rgba(34, 32, 28, 0.08);
 }
 .guide-cat-toggle .gcat-icon {
-  width: 18px;
-  height: 18px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 .guide-cat-toggle .hs-chev {
   width: 16px;
@@ -3887,8 +3893,8 @@ a.footer__contact-item:hover {
   background: rgba(34, 32, 28, 0.08);
 }
 .guide-cat-menu a svg {
-  width: 17px;
-  height: 17px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   color: var(--color-gold-d);
   flex-shrink: 0;
 }
@@ -3949,8 +3955,8 @@ a.footer__contact-item:hover {
   box-shadow: var(--shadow-md);
 }
 .gsearch__icon {
-  width: 20px;
-  height: 20px;
+  width: var(--icon-md);
+  height: var(--icon-md);
   flex-shrink: 0;
   color: var(--color-gold-d);
 }
@@ -4835,8 +4841,8 @@ a.footer__contact-item:hover {
   box-shadow: var(--shadow-lg);
 }
 .wa-float svg {
-  width: 24px;
-  height: 24px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   flex-shrink: 0;
 }
 @media (max-width: 480px) {
@@ -5069,16 +5075,16 @@ a.footer__contact-item:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
   border-radius: var(--r-sm);
   background: rgba(34, 32, 28, 0.18);
   color: var(--color-green);
   flex: none;
 }
 .itn-chip__ic svg {
-  width: 15px;
-  height: 15px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
 .itn-chip__txt {
   flex: 1;
@@ -5349,8 +5355,8 @@ a.footer__contact-item:hover {
   color: var(--color-muted);
 }
 .itn-trip__guests svg {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   color: var(--color-gold);
   flex: none;
 }
@@ -5517,8 +5523,8 @@ a.footer__contact-item:hover {
     border-radius: var(--r-sm);
   }
   .itn-minis .itn-mini__ic svg {
-    width: 16px;
-    height: 16px;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
   }
 }
 .itn-mini {
@@ -5566,8 +5572,8 @@ a.footer__contact-item:hover {
   color: var(--color-muted);
 }
 .itn-mini__ic svg {
-  width: 23px;
-  height: 23px;
+  width: var(--icon-lg);
+  height: var(--icon-lg);
 }
 .itn-mini__t {
   font-size: var(--fs-small);
@@ -5623,8 +5629,8 @@ a.footer__contact-item:hover {
   border-radius: var(--r-sm);
 }
 .svc__t .itn-mini__ic svg {
-  width: 18px;
-  height: 18px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 .svc__s {
   margin: 0 0 1rem;
@@ -5970,8 +5976,8 @@ button.pick-cat {
   text-decoration: none;
 }
 .book-bar__wa svg {
-  width: 22px;
-  height: 22px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 .book-bar__wa:hover {
   background: #1fb757;
@@ -6241,8 +6247,8 @@ button.pick-cat {
   background: #fff;
 }
 .guest-select__icon {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   color: var(--color-green);
   flex-shrink: 0;
 }
@@ -6276,8 +6282,8 @@ button.pick-cat {
   color: var(--color-gold-d);
 }
 .navbar__cart-icon {
-  width: 21px;
-  height: 21px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 .navbar__cart-badge {
   position: absolute;
@@ -6298,8 +6304,8 @@ button.pick-cat {
   cursor: pointer;
 }
 .acct__icon {
-  width: 21px;
-  height: 21px;
+  width: var(--icon-md);
+  height: var(--icon-md);
 }
 /* Desktop: account panel = dropdown kecil di bawah ikon. Di HP (<=992px) jadi
    drawer kanan (lihat blok drawer di media query atas). Di-scope ke desktop biar
@@ -6538,8 +6544,8 @@ button.pick-cat {
   border-top: 1px solid #f0e8d6;
 }
 .acct__link svg {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   color: var(--color-gold);
   flex: 0 0 auto;
 }
@@ -6886,7 +6892,7 @@ button.pick-cat {
   background: var(--color-cream);
   color: var(--color-gold-d);
 }
-.mtc-item__icon svg { width: 22px; height: 22px; }
+.mtc-item__icon svg { width: var(--icon-md); height: var(--icon-md); }
 /* thumbnail foto card (day items) — gantiin ikon SVG kalau ada gambar */
 .mtc-item__icon--photo {
   width: 56px;
@@ -6973,7 +6979,7 @@ button.pick-cat {
   padding: 0 0.15rem;
   line-height: 0;
 }
-.mtc-item__heart svg { width: 20px; height: 20px; }
+.mtc-item__heart svg { width: var(--icon-md); height: var(--icon-md); }
 .mtc-item__heart.is-on { color: var(--color-gold-d); }
 /* strikethrough original when referral active */
 .price-was {
@@ -7199,8 +7205,8 @@ button.pick-cat {
     gap: 0.15rem;
   }
   .guest-select__icon {
-    width: 14px;
-    height: 14px;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
   }
   .guest-select select {
     font-size: 0.8rem;
@@ -7891,8 +7897,8 @@ strong {
   color: var(--color-muted);
 }
 .home .experience__meta svg {
-  width: 15px;
-  height: 15px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   flex: 0 0 auto;
   color: var(--color-gold-d);
 }
@@ -8059,8 +8065,8 @@ strong {
     font-size: var(--fs-label);
   }
   .home .experience__meta svg {
-    width: 13px;
-    height: 13px;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
   }
   .about__container--team {
     grid-template-columns: 1fr;
@@ -8185,8 +8191,8 @@ strong {
   color: var(--color-muted);
 }
 .tourprog .experience__meta svg {
-  width: 15px;
-  height: 15px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   flex: 0 0 auto;
   color: var(--color-gold-d);
 }
@@ -8266,8 +8272,8 @@ strong {
 }
 .home .experience__rating svg,
 .tourprog .experience__rating svg {
-  width: 13px;
-  height: 13px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
   flex: 0 0 auto;
   fill: var(--color-amber);
   stroke: none;
@@ -9155,8 +9161,8 @@ strong {
   color: #fff;
 }
 .vpromo__cta svg {
-  width: 15px;
-  height: 15px;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
 }
 @media (max-width: 768px) {
   .vpromo {

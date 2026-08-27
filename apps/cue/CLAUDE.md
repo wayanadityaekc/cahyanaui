@@ -25,11 +25,23 @@ When unsure, ask first (keep it short).
 
 ## Design system (keep consistent)
 **Colors** (CSS vars):
-- `--color-green` #5c5c5c (medium grey — dulu hitam #1a1a1a) · `--color-gold` #c9a45c ·
-  `--color-gold-d` #b08d43 · `--color-gold-l` #e6cf97 (kicker di foto gelap) · `--color-cream` #f8f8f8 ·
-  `--line` #e7e4dd (border) · `--color-ok` #2e7d54 (sukses) · `--color-err` #9a4a3f (error).
+- `--color-green` #5c5c5c (medium grey — dulu hitam #1a1a1a) · `--color-gold` #22201c
+  (soft black — Agu 2026, Wayan minta accent gold diganti item; NAMANYA masih "gold"
+  tapi NILAI-nya bukan gold beneran, dipakai buat judul section, divider, nav, state
+  aktif) · `--color-gold-d` #16140f (variant lebih gelap) · `--color-gold-l` #cfc9ba
+  (kicker di foto gelap) · `--color-cream` #f8f8f8 · `--line` #e7e4dd (border) ·
+  `--color-ok` #2e7d54 (sukses) · `--color-err` #9a4a3f (error).
   Abu sekunder = SATU token `--color-muted` (#7a7466; muted-2 udah dilebur).
-  Palet = abu (teks/tombol) · abu terang · emas.
+- **`--color-amber` #c9a45c / `--color-amber-d` #b08d43** (Sep 2026) — gold BENERAN,
+  dipisah dari `--color-gold` (yang soft-black) khusus buat elemen yang gold-nya
+  punya makna konvensi visual: **bintang rating** (`.rating__star.active`,
+  `.review-card__stars`, `.driver-card__rating`/`.driver-modal__rating`, `.rev__stars`,
+  `.tourprog .experience__rating svg`), **harga** (`.price-now`, `.experience__price`,
+  `.booking__price`, `.summary__amt .price-cur`, `.fee`, dkk — SEMUA elemen harga),
+  dan **badge "Popular"/featured** (`.chdur__badge`, `.highlight__tag`,
+  `.binfo__tag--gold`, gradient avatar driver). Selain 3 kategori itu (judul section,
+  nav, divider, hover/active state, tombol, ikon lain) TETAP `--color-gold` (soft-black)
+  — itu keputusan rebrand yang disengaja, jangan ikut disamain ke amber kalau nemu lagi.
 
 **Fonts** (self-host, `assets/fonts/`, preload di tiap HTML):
 - `--font-body` = `--font-head` = **Inter** (variable 300–700) — satu font doang.
@@ -64,7 +76,8 @@ When unsure, ask first (keep it short).
   (jangan ikut disamain kalau nemu lagi): ikon/glyph (panah slider, tombol close ×, bintang
   rating — font-size di situ = ukuran ikon, bukan teks bacaan), harga (`.price`/`.summary__amt`/
   dkk), dan judul besar level-halaman (`.subhero__title` var overlap, `.vpromo__title`).
-- Prices = gold + bold (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
+- Prices = gold (`--color-amber`, gold BENERAN — bukan `--color-gold`) + bold
+  (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
 
 **Section dividers:**
 - Thin gold **inset** line (margin on the sides) — via a `::before` pseudo-element,
@@ -247,7 +260,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v366, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v367, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

@@ -14,11 +14,17 @@
   --color-gold: #22201c;
   --color-gold-d: #16140f;
   /* Primary button color (Sep 2026, Wayan opsi B) - terpisah dari --color-gold
-     dengan sengaja: gold/soft-black masih dipakai buat harga & aksen lain,
-     hijau ini KHUSUS tombol aksi utama biar lebih "manggil mata" tanpa
-     nyampur peran sama warna harga. */
+     dengan sengaja: gold/soft-black masih dipakai buat aksen lain (judul section,
+     divider, nav, state aktif), hijau ini KHUSUS tombol aksi utama biar lebih
+     "manggil mata" tanpa nyampur peran sama warna lain. */
   --color-cta: #3d5c46;
   --color-cta-d: #2f4737;
+  /* Gold BENERAN (Sep 2026, Wayan) - dipisah dari --color-gold (yang sekarang soft-black,
+     bukan gold literal) buat elemen yang gold-nya punya makna konvensi visual, bukan
+     cuma aksen: bintang rating, harga, badge "Popular"/featured. Selain 3 itu TETAP
+     --color-gold (soft-black) - jangan ikut disamain kalau nemu lagi. */
+  --color-amber: #c9a45c;
+  --color-amber-d: #b08d43;
   --color-cream: #f8f8f8;
   --line: #e7e4dd;
   --font-body: "Inter", system-ui, sans-serif;
@@ -451,7 +457,7 @@ body {
 }
 /* harga diskon referral (dipasang renderPrices di card/form) */
 .price-now {
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-weight: 600;
 }
 /* ===== Info popover "Standard vs Exclusive" (dipakai booking + search form) ===== */
@@ -575,7 +581,7 @@ body {
   border-radius: 999px;
 }
 .binfo__tag--gold {
-  background: var(--color-gold);
+  background: var(--color-amber);
   color: #fff;
 }
 .binfo__pop p {
@@ -1402,7 +1408,7 @@ a.tripbar--promo {
 .booking__price {
   display: flex;
   align-items: baseline;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .booking__note {
   margin-top: 0.25rem;
@@ -1846,7 +1852,7 @@ a.tripbar--promo {
   padding-top: 1rem;
 }
 .experience__price {
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .experience__arrow {
   display: flex;
@@ -2051,7 +2057,7 @@ a.tripbar--promo {
   transition: color 0.15s;
 }
 .rating__star.active {
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .review-form__btn {
   width: 100%;
@@ -2134,7 +2140,7 @@ a.tripbar--promo {
 .review-card__stars {
   margin-bottom: 0.75rem;
   letter-spacing: 3px;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .review-card__text {
   flex-grow: 1;
@@ -2317,7 +2323,7 @@ a.tripbar--promo {
   font-weight: 600;
   font-size: 1.5rem;
   color: #fff;
-  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-l));
+  background: linear-gradient(135deg, var(--color-amber), var(--color-amber-d));
 }
 .driver-card__avatar svg {
   width: 32px;
@@ -2337,7 +2343,7 @@ a.tripbar--promo {
   margin-top: 0.75rem;
   font-size: var(--fs-body);
   font-weight: 500;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .driver-card__rating .stars {
   letter-spacing: 1px;
@@ -2374,7 +2380,7 @@ a.tripbar--promo {
   margin-top: 0.3rem;
   font-size: var(--fs-body);
   font-weight: 500;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .driver-modal__desc {
   margin-bottom: 1.5rem;
@@ -3355,7 +3361,7 @@ a.footer__contact-item:hover {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #fff;
-  background-color: var(--color-gold);
+  background-color: var(--color-amber);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 .highlight__title {
@@ -3398,7 +3404,7 @@ a.footer__contact-item:hover {
 }
 /* Harga tetap gold (menang atas .highlight__meta-item span yg bikin muted) */
 .highlight__meta-item .price {
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .highlight__actions {
   display: flex;
@@ -3587,11 +3593,11 @@ a.footer__contact-item:hover {
   font-weight: 400;
   font-size: 1.6rem;
   line-height: 1.15;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .info__facts--hero .info__fact--price .price,
 .info__facts--hero .info__fact--price .price-now {
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-size: inherit; /* ikut ukuran hero, lawan .info__fact .price */
 }
 .info__facts--hero .info__fact--price .price-unit {
@@ -4295,7 +4301,7 @@ a.footer__contact-item:hover {
   line-height: 1.15;
 }
 .summary__amt .price-cur {
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .summary__sub {
   font-size: var(--fs-small);
@@ -5433,7 +5439,7 @@ a.footer__contact-item:hover {
 }
 .svc__price b {
   font-size: 1rem;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .svc__save {
   display: block;
@@ -5730,7 +5736,7 @@ button.pick-cat {
   font-size: var(--fs-small);
 }
 .book-bar .price {
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-weight: 600;
   font-size: 1.1rem;
 }
@@ -6538,7 +6544,7 @@ button.pick-cat {
   margin-top: 0.7rem;
 }
 .trip__price {
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-weight: 600;
 }
 .trip__ref {
@@ -6698,7 +6704,7 @@ button.pick-cat {
   text-align: right;
   white-space: nowrap;
   font-weight: 600;
-  color: var(--color-gold-d);
+  color: var(--color-amber-d);
 }
 .mtc-item__del {
   flex: 0 0 auto;
@@ -6820,7 +6826,7 @@ button.pick-cat {
   flex: 0 0 auto;
   white-space: nowrap;
   font-weight: 600;
-  color: var(--color-gold-d);
+  color: var(--color-amber-d);
 }
 .mtc-total {
   display: flex;
@@ -6841,9 +6847,9 @@ button.pick-cat {
 .mtc-total__val {
   font-size: 1.4rem;
   font-weight: 600;
-  color: var(--color-gold-d);
+  color: var(--color-amber-d);
 }
-.mtc-total__val .price-cur { color: var(--color-gold); }
+.mtc-total__val .price-cur { color: var(--color-amber); }
 /* buttons + notes */
 .mtc-pay {
   width: 100%;
@@ -6926,7 +6932,7 @@ button.pick-cat {
   margin: 0;
 }
 .mtc-pkg__price { white-space: nowrap; }
-.mtc-pkg__price .price-cur { color: var(--color-gold); font-weight: 600; }
+.mtc-pkg__price .price-cur { color: var(--color-amber); font-weight: 600; }
 .mtc-pkg__blurb {
   font-size: var(--fs-small);
   color: var(--color-muted);
@@ -7008,7 +7014,7 @@ button.pick-cat {
 .price,
 .price-cur,
 .fee {
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-weight: 600;
 }
 
@@ -7135,7 +7141,7 @@ button.pick-cat {
   text-transform: uppercase;
   font-weight: 500;
   color: #fff;
-  background: var(--color-gold);
+  background: var(--color-amber);
   border-radius: 999px;
   padding: 0.2rem 0.6rem;
   white-space: nowrap;
@@ -7153,7 +7159,7 @@ button.pick-cat {
 }
 .chdur__price {
   font-weight: 600;
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-size: 1.2rem;
 }
 .chdur__from {
@@ -7777,7 +7783,7 @@ strong {
   padding: 1.4rem 1.3rem;
 }
 .rev__stars {
-  color: var(--color-gold);
+  color: var(--color-amber);
   letter-spacing: 2px;
 }
 .rev__text {
@@ -8055,7 +8061,7 @@ strong {
   width: 13px;
   height: 13px;
   flex: 0 0 auto;
-  fill: var(--color-gold);
+  fill: var(--color-amber);
   stroke: none;
 }
 .home .experience__rating b,
@@ -8227,7 +8233,7 @@ strong {
 .tpick__amt {
   font-family: var(--font-body);
   font-size: 2rem;
-  color: var(--color-gold);
+  color: var(--color-amber);
   font-weight: 600;
 }
 .tpick__unit {
@@ -8318,7 +8324,7 @@ strong {
 .troute__info { display: flex; flex-direction: column; }
 .troute__name { font-weight: 600; color: var(--color-green); font-size: var(--fs-h3); }
 .troute__meta { color: var(--color-muted); font-size: var(--fs-small); margin-top: 0.1rem; }
-.troute__pr { margin-left: auto; color: var(--color-gold); font-weight: 600; }
+.troute__pr { margin-left: auto; color: var(--color-amber); font-weight: 600; }
 @media (max-width: 768px) {
   .troutes__list { grid-template-columns: 1fr; }
 }

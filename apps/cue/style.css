@@ -136,10 +136,10 @@ body {
    BUKAN `.guide-article` - class itu ternyata numpang dipake juga di Terms/Privacy/
    Cancellation/Charter (kolom baca polos yang sama), yang HARUS tetap center.
    Sep 2026, Wayan. */
-.guide-page .section__title--sub {
+.guide-article-page .section__title--sub {
   text-align: left;
 }
-.guide-page .section__title--sub::after {
+.guide-article-page .section__title--sub::after {
   left: 0;
   transform: none;
 }
@@ -4077,7 +4077,7 @@ a.footer__contact-item:hover {
    ============================================================ */
 /* Hero lebih pendek dari .lhero standar (560px) - guide article halaman
    sekunder, bukan halaman utama, jangan makan layar sebanyak listing page. */
-.guide-page .lhero {
+.guide-article-page .lhero {
   min-height: 320px;
   padding-top: 6.5rem;
   padding-bottom: 1.5rem;

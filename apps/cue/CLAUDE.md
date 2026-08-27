@@ -128,14 +128,24 @@ When unsure, ask first (keep it short).
   aslinya (kejadian di `.guide-lead`, Sep 2026).
 
 ## Guide article template (`guide/*.html`)
-- Body semua halaman guide punya class **`.guide-page`** (beda dari `.guide-article` yang
+- Body semua halaman guide punya class **`.guide-article-page`** (beda dari `.guide-article` yang
   numpang dipake juga di Terms/Privacy/Cancellation/Charter buat kolom-baca-polos yang sama -
   jangan scope hal khusus-guide ke `.guide-article`, salah sasaran kena 4 halaman itu juga).
+  **Awalnya namanya `.guide-page`** — ternyata itu udah dipake `bali-guide.html` buat
+  `<section>` wrapper-nya sendiri (`max-width:1200px; margin:auto`, di style.css baris
+  ~3739). Karena kepasang di `<body>` juga, rule lama itu ikut nge-constrain seluruh body
+  jadi 1200px — hero `.lhero` (anak langsung body) jadi nggak full-width. Di-rename ke
+  `.guide-article-page` buat lepas dari collision (rule lama `.guide-page` di bali-guide.html
+  TETEP dibiarin, itu punya dia). **Gotcha buat next time**: sebelum bikin class baru yang
+  scope-nya global (body/section wrapper), `grep -n` dulu namanya di style.css — nama umum
+  kayak "guide-page" gampang banget udah kepake buat hal lain.
 - Judul sub-section (`.section__title--sub`) di guide article rata **KIRI** (sejajar body
-  text, gampang di-scan) — scoped `.guide-page .section__title--sub`. Di halaman lain yang
+  text, gampang di-scan) — scoped `.guide-article-page .section__title--sub`. Di halaman lain yang
   numpang `.guide-article` (Terms dkk) TETAP center, jangan ikut diubah.
-- Foto lead (`.guide-lead`, di atas + inline dalam section) = **4:3**, disamain sama foto
-  konten tour (`.stop__image`) biar selaras — bukan 16:9 lagi.
+- Foto lead (`.guide-lead`, di sela-sela text, BUKAN numpuk di atas) = **4:3**, disamain sama
+  foto konten tour (`.stop__image`) biar selaras — bukan 16:9 lagi. Ditaruh nyelip di antara
+  paragraf (paragraf dipecah di titik yang natural), bukan satu foto besar di awal artikel —
+  di `guide/ubud.html` ada 2 titik: satu di "What to Do in Town", satu lagi di "Around Ubud".
 - **Template lengkap** (`.lhero` + `.guide-hero-tags`, sidebar `.guide-layout__side` kanan
   desktop / `.guide-cattabs` sticky HP, `.guide-more` "You might also like" + "See our
   tours") — **udah di-build ke `guide/ubud.html`** sebagai contoh pertama (Sep 2026).
@@ -143,7 +153,7 @@ When unsure, ask first (keep it short).
   = 5 kategori asli dari `bali-guide.html` (`#gcat-island/culture/nature/do/know`), link-nya
   ke situ (anchor), BUKAN scrollspy di halaman guide itu sendiri. `<body>` tiap halaman guide
   udah dikasih class `is-active` statis di kategori yang sesuai (bukan JS-driven).
-- **`.guide-page .lhero`** dipendekin (`min-height: 320px`, was 560px standar) - guide article
+- **`.guide-article-page .lhero`** dipendekin (`min-height: 320px`, was 560px standar) - guide article
   halaman sekunder, bukan halaman utama, jangan makan layar sebanyak listing page.
 - **`.guide-cattab`** (tab kategori sticky HP) disamain ke gaya `.zone-chip` (tour/activities/
   destinations) - underline tab polos, BUKAN pill isi/border. `.guide-tag` (tag di atas foto
@@ -291,7 +301,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v370, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v371, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

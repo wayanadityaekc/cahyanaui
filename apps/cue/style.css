@@ -306,17 +306,17 @@ body {
   background-position: center top;
   background-image:
     linear-gradient(100deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0.12)),
-    url("assets/images/ubud-saraswati-temple.jpg");
+    url("assets/images/ubud-saraswati-temple-hero.webp");
 }
 @media (max-width: 992px) {
   .hero::after {
-    /* HP: cover biasa -> foto landscape ke-render full-height, jadi candi + kolam teratai
-       kelihatan semua (langit atas dikit, teratai di bawah). Center. */
+    /* HP: foto portrait khusus (900x1400). Frame ke BAWAH (Wayan "posisi pakai yang di
+       bawah aja") -> candi + kolam teratai depan keliatan, langit atas dipotong. */
     background-size: cover;
-    background-position: center;
+    background-position: center bottom;
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
-      url("assets/images/ubud-saraswati-temple.jpg");
+      url("assets/images/ubud-saraswati-temple-hero-mobile.webp");
   }
 }
 .hero__inner {

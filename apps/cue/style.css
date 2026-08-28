@@ -3753,6 +3753,16 @@ a.footer__contact-item:hover {
   padding: 2.5rem 2rem;
   box-shadow: 0 10px 30px rgba(31, 61, 43, 0.06);
 }
+/* Jarak antar-paragraf di kartu info (charter/detail). Reset global `* {margin:0}`
+   bikin <p> beruntun nempel jadi tembok teks - kasih ritme yang sama kayak
+   guide-article/.arow (margin 0 0 1rem), last-child reset biar gak nambah gap. */
+.info__container:not(.guide-article) > p {
+  margin: 0 0 1rem;
+  line-height: var(--lh-body);
+}
+.info__container:not(.guide-article) > p:last-child {
+  margin-bottom: 0;
+}
 /* Spec strip: satu strip rapi, tiap stat dipisah garis tipis (gap 1px yg nembus
    warna --line dari background). Ringkas & seragam dgn strip di kartu highlight. */
 .info__facts {

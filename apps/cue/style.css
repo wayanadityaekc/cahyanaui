@@ -1342,27 +1342,9 @@ body.hs-locked .wa-float {
 /* Bar promo/event (halaman non-booking). Kalau div (tanpa link) -> gak clickable. */
 .tripbar--promo {
   cursor: default;
-  background: #faf6ec; /* cream hangat biar promo agak nonjol dari section putih */
 }
 a.tripbar--promo {
   cursor: pointer;
-}
-/* Aksen promo (Wayan): icon emas + "See details" jadi pill hijau (manggil mata).
-   Scoped ke --promo doang biar tripbar Edit (guests/pickup di halaman booking) gak keubah. */
-.tripbar--promo .tripbar__ic {
-  color: var(--color-amber);
-}
-.tripbar--promo .tripbar__edit {
-  margin-left: 0.6rem;
-  padding: 0.2rem 0.75rem;
-  border-radius: var(--r-pill);
-  background: var(--color-cta);
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-}
-a.tripbar--promo:hover .tripbar__edit {
-  background: var(--color-cta-d);
 }
 .tripbar__ic {
   width: var(--icon-md);

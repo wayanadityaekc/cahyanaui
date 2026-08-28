@@ -3932,11 +3932,11 @@ a.footer__contact-item:hover {
 
 /* Breadcrumb (halaman anak: tour, attraction, aktivitas) - di atas footer */
 .crumb {
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   padding: 1.25rem 1.5rem;
   text-align: center;
-  border-top: 1px solid #e0ddd4;
+  border-bottom: 1px solid #e0ddd4; /* satu garis full-width DI BAWAH breadcrumb (Wayan) */
   font-size: var(--fs-small);
   color: var(--color-muted);
 }
@@ -8043,18 +8043,22 @@ strong {
 /* Compact card: 4:3 photo + tight body (title, duration, price grouped right
    under the photo). Card height = content, so it's shorter than the old square
    version — deliberate (Wayan picked the compact layout). */
-/* landscape 4:3 photo */
-.home .experience__image {
+/* landscape 4:3 photo. Kartu "You might also like" (.related) pakai style compact
+   yang SAMA PERSIS kayak homepage (Wayan) -> selektor di-share .home + .related. */
+.home .experience__image,
+.related .experience__image {
   aspect-ratio: 4 / 3;
 }
-.home .experience__image img {
+.home .experience__image img,
+.related .experience__image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 /* body: 2 rows — title|rating (top), meta|price (bottom).
    rating & stops slots stay empty until real data exists (filled by JS). */
-.home .experience__body {
+.home .experience__body,
+.related .experience__body {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:
@@ -8065,7 +8069,8 @@ strong {
   row-gap: 0.4rem;
   padding: 0.6rem 0.9rem 0.8rem; /* judul lebih nempel ke atas */
 }
-.home .experience__name {
+.home .experience__name,
+.related .experience__name {
   grid-area: title;
   margin: 0;
   font-size: var(--fs-strong);
@@ -8074,12 +8079,14 @@ strong {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.home .experience__footer {
+.home .experience__footer,
+.related .experience__footer {
   grid-area: price;
   margin: 0;
   padding: 0;
 }
-.home .experience__meta {
+.home .experience__meta,
+.related .experience__meta {
   grid-area: meta;
   display: flex;
   align-items: center;
@@ -8087,7 +8094,8 @@ strong {
   font-size: var(--fs-small);
   color: var(--color-muted);
 }
-.home .experience__meta svg {
+.home .experience__meta svg,
+.related .experience__meta svg {
   width: var(--icon-sm);
   height: var(--icon-sm);
   flex: 0 0 auto;
@@ -9558,6 +9566,11 @@ strong {
   width: min(1100px, 90%);
   height: 1px;
   background: rgba(34, 32, 28, 0.4);
+}
+/* Breadcrumb udah kasih garis full-width sendiri (border-bottom) tepat di atas
+   .related -> divider inset ini jadi dobel, matiin kalo related nempel abis crumb. */
+.crumb + .related::before {
+  content: none;
 }
 .related__title {
   font-family: var(--font-body);

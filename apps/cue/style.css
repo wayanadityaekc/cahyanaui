@@ -294,8 +294,8 @@ body {
   padding: 7rem var(--space-3) var(--space-5);
   background-color: var(--color-green);
 }
-/* Foto hero (cewek di sawah) + overlay gelap. Scrim diarahin: desktop = gelap di kiri
-   (tempat teks) fade ke kanan; mobile = vertikal gelap atas+bawah (teks center di situ). */
+/* Foto hero (Ubud Saraswati Temple - kolam teratai + gerbang) + overlay gelap. Scrim diarahin:
+   desktop = gelap di kiri (tempat teks) fade ke kanan; mobile = vertikal (teks center). */
 .hero::after {
   content: "";
   position: absolute;
@@ -305,16 +305,13 @@ body {
   background-position: center;
   background-image:
     linear-gradient(100deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0.12)),
-    url("assets/images/ricefield-girl-hero.webp");
+    url("assets/images/ubud-saraswati-temple.jpg");
 }
 @media (max-width: 992px) {
   .hero::after {
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
-      url("assets/images/ricefield-girl-hero.webp");
-    /* Hero landscape di frame portrait -> makin pendek hero, makin dikit zoom crop-nya,
-       jadi objek (cewek) keliatan lebih JAUH/kecil (Wayan). */
-    background-position: center 32%;
+      url("assets/images/ubud-saraswati-temple.jpg");
   }
 }
 .hero__inner {
@@ -1142,7 +1139,7 @@ body.hs-locked .wa-float {
      Hero gak full-screen lagi; #search-placeholder gak nahan ruang (form-nya jadi sheet
      fixed di luar flow), jadi hero tinggal setinggi konten + napas. Desktop TIDAK kena. */
   .home .hero {
-    min-height: 44vh;
+    min-height: 58vh;
     padding-bottom: var(--space-4);
   }
   /* Teks hero HP rata tengah (ala Viator) - headline, subtitle, tombol semua center */

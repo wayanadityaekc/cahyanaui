@@ -311,7 +311,7 @@ body {
   .hero::after {
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
-      url("assets/images/rice-terrace-girl-hero-mobile.webp");
+      url("assets/images/ricefield-girl-hero.webp");
   }
 }
 .hero__inner {

@@ -310,10 +310,11 @@ body {
 }
 @media (max-width: 992px) {
   .hero::after {
-    /* HP: foto portrait khusus (900x1400). Frame ke BAWAH (Wayan "posisi pakai yang di
-       bawah aja") -> candi + kolam teratai depan keliatan, langit atas dipotong. */
+    /* HP: foto khusus mobile (900x788, bar hitam bawaan file udah dipotong). Cover +
+       center -> candi utuh keliatan (langit atas, candi tengah, teratai bawah), sisi
+       kiri-kanan dikit ke-crop. Foto PENUH, gak ada band abu di atas (Wayan). */
     background-size: cover;
-    background-position: center bottom;
+    background-position: center;
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
       url("assets/images/ubud-saraswati-temple-hero-mobile.webp");

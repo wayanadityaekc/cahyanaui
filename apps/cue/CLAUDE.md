@@ -383,6 +383,21 @@ Order **must be kept** (declarations first, run last):
   (udah konsisten). Snap durasi transition: 0.12/0.15/0.18→fast · 0.2/0.25→base · 0.28/0.3→slow.
 
 ## Key mechanics
+- **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`
+  di-enhance jadi UI custom (`.hs-control` + `.hs-panel`): **desktop = dropdown ngambang, HP =
+  bottom-sheet** (header + overlay). Native disembunyiin (`.bk-native`), custom nyetir value-nya
+  (dispatch `change`). **Satu enhancer reusable**: `makeFieldEnhancer()` (global factory) → dipakai
+  `initBookingCustomControls()` (booking form) + `initCustomSelects()` (navbar akun/charter/transfer/
+  itinerary, jalan PALING akhir di initPage biar opsi udah keisi) + `enhanceFieldsIn(root)` (field di
+  modal yg di-build on-demand, mis. editor "Your trip details"). Home search (`initHeroSearch`) punya
+  enhancer sendiri (`.hs-panel--menu`) — enhancer di skip yg udah `dataset.enhanced`. Grup anchor
+  panel: `.booking__group.bk-enh` (booking) atau `.csel-group` (auto-wrap, field lain). **Value diubah
+  programmatik** (setGuests/setStay/resetGuests, swap From/To transfer) → panggil `cselRefreshAll()`
+  biar label custom ikut update (native `.value=` gak fire change). Nambah select/date baru → otomatis
+  ke-enhance kalau lewat `initCustomSelects` (tambah id/attr-nya) atau `enhanceFieldsIn` (modal).
+  **Date picker = POPUP ke-center di desktop juga** (bukan dropdown nempel field): panel dikasih
+  class `hs-panel--popup` + `bookdate-panel` → `openPanel` reparent ke body + overlay walau desktop
+  (reuse gaya `.bookdate-panel` punya Book Now). Dropdown biasa (select) tetep nempel field di desktop.
 - **Anti-CLS**: `#booking-placeholder`, `#footer-placeholder` & `#search-placeholder` punya
   `min-height` di style.css (booking 480px, footer 688/487px, search 470px — hasil ukur
   headless; navbar 57.6px desktop / 52.8px HP; mobile WAJIB ≥ tinggi form asli, kalau kurang
@@ -396,7 +411,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v386, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v388, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

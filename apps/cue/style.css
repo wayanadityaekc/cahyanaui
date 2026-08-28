@@ -978,6 +978,14 @@ body {
 .hs-overlay.open {
   display: block;
 }
+/* Field yg dibuka dari DALAM modal (.modal z-index 200): overlay + panel WAJIB di atas
+   modal, kalau nggak popup/sheet-nya ke-render di belakang modal (JS nambah class ini). */
+.hs-overlay--elevated {
+  z-index: 300;
+}
+.hs-panel--elevated.open {
+  z-index: 320;
+}
 /* Lock scroll background pas bottom-sheet kebuka (HP): cukup overflow:hidden.
    JANGAN position:fixed + reposisi body -> itu yang bikin layar "loncat/ke-scroll"
    pas dropdown dibuka (apalagi kalau udah scroll ke bawah dulu). Sheet-nya sendiri
@@ -1353,6 +1361,13 @@ a.tripbar--promo {
    Tinggi control = 2.9rem (sama kaya field native) -> anti-CLS aman. */
 .booking__group.bk-enh {
   position: relative;
+}
+/* Wrapper auto buat field non-booking (navbar/charter/transfer/itinerary) yg di-enhance
+   jadi custom dropdown/date -> anchor buat panel desktop (position:absolute). */
+.csel-group {
+  position: relative;
+  display: block;
+  width: 100%;
 }
 .bk-native {
   display: none !important;

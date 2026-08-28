@@ -336,6 +336,7 @@ function setGuests(n) {
   // Booking form gak punya kolom Guests lagi -> cukup refresh harga booking.
   if (window.__bookingRefresh) window.__bookingRefresh();
   if (window.__tripbarRefresh) window.__tripbarRefresh();
+  cselRefreshAll(); // label custom-dropdown ikut ke-update (value diubah programmatik)
 }
 
 // Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang tersimpan,
@@ -352,6 +353,7 @@ function resetGuests() {
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__bookingRefresh) window.__bookingRefresh();
+  cselRefreshAll();
   showTripDetails();
 }
 
@@ -425,6 +427,7 @@ function setStay(pk) {
   });
   if (window.__bookingRefresh) window.__bookingRefresh();
   if (window.__tripbarRefresh) window.__tripbarRefresh();
+  cselRefreshAll();
 }
 
 // Set range tanggal trip: simpan + refresh tripbar. Kalau "to" < "from", disamain.
@@ -3033,6 +3036,7 @@ function initTransferPicker() {
     bookBtn.disabled = false; addBtn.disabled = false;
     priceEl.textContent = fmtMoney(q.total.usd, q.total.idr);
     unitEl.textContent = "total per car" + (q.hours ? " · " + q.hours : "") + (q.ret ? " · return" : "");
+    cselRefreshAll(); // From/To bisa berubah programmatik (jaga-Ubud, swap, rute populer) -> sync label
   };
   window.__transferRefresh = render; // dipanggil renderPrices pas kurs/referral berubah
 
@@ -3376,6 +3380,7 @@ function showTripDetails() {
   document.body.appendChild(modal);
   const curWrap = modal.querySelector("[data-cur]");
   if (curWrap) wireCurDropdown(curWrap);
+  enhanceFieldsIn(modal); // guests/pickup/tanggal di editor ini -> custom dropdown juga
   const close = () => modal.classList.remove("active");
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();
@@ -4212,6 +4217,8 @@ function initHeroSearch() {
   const dateBtn = root.querySelector("[data-date-btn]");
   const dateLabel = root.querySelector("[data-date-label]");
   const datePanel = root.querySelector("[data-date-panel]");
+  // Catatan: search form SENGAJA gak pakai popup date (Wayan) - kalender search (kalau ada)
+  // tetep dropdown nempel field di desktop. Popup date cuma buat booking + field lain.
   const calBody = root.querySelector("[data-cal-body]");
   const calHint = root.querySelector("[data-cal-hint]");
   const calApply = root.querySelector("[data-cal-apply]");
@@ -4278,6 +4285,7 @@ function initHeroSearch() {
   function openPanel(panel, control) {
     if (openPanelEl === panel) { closePanels(); return; }
     closePanels();
+    // Search form: HP = bottom-sheet, desktop = dropdown nempel (SENGAJA gak pakai popup).
     if (isMobile()) {
       if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
       document.body.appendChild(panel);
@@ -4586,13 +4594,28 @@ function initInfoPopovers() {
 // Booking form: dropdown & date "full custom" (panel desktop / bottom-sheet HP),
 // SAMA kaya search form. Teknik "enhance native": UI custom cuma nyetir <select> /
 // <input date> asli (sumber kebenaran), jadi logika harga initBooking utuh.
-function initBookingCustomControls() {
-  const selService = document.getElementById("service");
-  if (!selService) return; // bukan halaman booking
-  const selItem = document.getElementById("service-item");
-  const selStay = document.getElementById("stay-area");
-  const dateInp = document.getElementById("date");
+// ===== Enhancer field reusable (dropdown + date) =====
+// Nyetir <select>/<input date> asli yg disembunyiin, UI custom (.hs-control + .hs-panel):
+// desktop = dropdown ngambang di bawah kontrol, HP = bottom-sheet. Dipakai booking form
+// + semua select/date lain (navbar/charter/transfer/itinerary) biar SATU gaya konsisten.
+// Refreshers global -> label ikut ke-update pas value diubah programmatik (setGuests dll).
+const __cselRefreshers = [];
+function cselRefreshAll() { __cselRefreshers.forEach((fn) => { try { fn(); } catch (e) {} }); }
+// Grup = ancestor yang jadi anchor panel (position:relative). Booking punya .booking__group;
+// field lain di-bungkus otomatis di .csel-group.
+function cselGroupOf(el) {
+  let g = el.closest(".booking__group");
+  if (g) { g.classList.add("bk-enh"); return g; }
+  g = el.closest(".csel-group");
+  if (g) return g;
+  const w = document.createElement("span");
+  w.className = "csel-group";
+  el.parentNode.insertBefore(w, el);
+  w.appendChild(el);
+  return w;
+}
 
+function makeFieldEnhancer() {
   // overlay + kontrol panel (dipakai bareng; booking gak barengan sama search di 1 halaman)
   let overlay = document.querySelector(".hs-overlay");
   if (!overlay) { overlay = document.createElement("div"); overlay.className = "hs-overlay"; document.body.appendChild(overlay); }
@@ -4602,17 +4625,22 @@ function initBookingCustomControls() {
   const restore = (p) => { const a = anchors.get(p); if (a && p.parentElement === document.body) a.parent.insertBefore(p, a.next); };
   function closeAll() {
     const had = !!openPanelEl; // cuma lepas lock kalau memang ada panel booking kebuka
-    if (openPanelEl) { openPanelEl.classList.remove("open"); restore(openPanelEl); openPanelEl = null; }
+    if (openPanelEl) { openPanelEl.classList.remove("open", "hs-panel--elevated"); restore(openPanelEl); openPanelEl = null; }
     if (openCtrlEl) { openCtrlEl.classList.remove("is-open"); openCtrlEl.setAttribute("aria-expanded", "false"); openCtrlEl = null; }
-    overlay.classList.remove("open");
+    overlay.classList.remove("open", "hs-overlay--elevated");
     if (had) hsScrollLock(false);
   }
   function openPanel(panel, ctrl) {
     if (openPanelEl === panel) { closeAll(); return; }
     closeAll();
-    if (isMobile()) {
+    // popup = kalender: di desktop pun tampil sebagai kartu ke-center + overlay (bukan
+    // dropdown nempel di field) - reparent ke body biar position:fixed-nya lepas dari ancestor.
+    const asPopup = panel.classList.contains("hs-panel--popup");
+    if (isMobile() || asPopup) {
       if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
       document.body.appendChild(panel); overlay.classList.add("open"); hsScrollLock(true);
+      // dibuka dari dalam modal (mis. editor trip) -> angkat di atas modal (z-index 200)
+      if (ctrl.closest(".modal")) { panel.classList.add("hs-panel--elevated"); overlay.classList.add("hs-overlay--elevated"); }
     } else restore(panel);
     panel.classList.add("open");
     ctrl.classList.add("is-open"); ctrl.setAttribute("aria-expanded", "true");
@@ -4632,10 +4660,9 @@ function initBookingCustomControls() {
   }
 
   function enhanceSelect(sel, title) {
-    if (!sel) return;
-    const group = sel.closest(".booking__group");
-    if (!group) return;
-    group.classList.add("bk-enh");
+    if (!sel || sel.dataset.enhanced) return;
+    sel.dataset.enhanced = "1";
+    const group = cselGroupOf(sel);
     sel.classList.add("bk-native");
     const ctrl = document.createElement("button");
     ctrl.type = "button";
@@ -4691,15 +4718,14 @@ function initBookingCustomControls() {
       else if (e.key === "Escape") { e.preventDefault(); closeAll(); ctrl.focus(); }
     });
     sel.addEventListener("change", refresh);
-    refreshers.push(refresh);
+    refreshers.push(refresh); __cselRefreshers.push(refresh);
     refresh();
   }
 
   function enhanceDate(inp, title) {
-    if (!inp) return;
-    const group = inp.closest(".booking__group");
-    if (!group) return;
-    group.classList.add("bk-enh");
+    if (!inp || inp.dataset.enhanced) return;
+    inp.dataset.enhanced = "1";
+    const group = cselGroupOf(inp);
     inp.classList.add("bk-native");
     const ctrl = document.createElement("button");
     ctrl.type = "button";
@@ -4708,7 +4734,9 @@ function initBookingCustomControls() {
     ctrl.innerHTML = '<span class="hs-control__val placeholder" data-val>Select date</span>' +
       '<svg class="hs-chev hs-chev--cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>';
     const panel = makePanel(title);
-    panel.classList.add("bk-panel--cal");
+    // Kalender = popup ke-center di desktop juga (bukan dropdown nempel field) - reuse
+    // gaya .bookdate-panel (Book Now). hs-panel--popup = flag buat openPanel.
+    panel.classList.add("bk-panel--cal", "bookdate-panel", "hs-panel--popup");
     const calBody = document.createElement("div");
     calBody.className = "hs-cal bk-cal";
     const foot = document.createElement("div");
@@ -4768,19 +4796,64 @@ function initBookingCustomControls() {
     });
     ctrl.addEventListener("click", (e) => { e.stopPropagation(); sel = parseD(inp.value); render(); openPanel(panel, ctrl); });
     inp.addEventListener("change", () => { sel = parseD(inp.value); refresh(); });
-    refreshers.push(refresh);
+    refreshers.push(refresh); __cselRefreshers.push(refresh);
     refresh();
   }
-
-  enhanceSelect(selStay, "Pickup area");
-  enhanceSelect(selService, "Service");
-  enhanceSelect(selItem, "Select service");
-  enhanceDate(dateInp, "Select date");
 
   overlay.addEventListener("click", closeAll);
   document.addEventListener("click", (e) => { if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closeAll(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   window.addEventListener("resize", closeAll);
+  return { enhanceSelect, enhanceDate, closeAll };
+}
+
+// Booking form (halaman detail bookable): service/item/pickup + tanggal -> custom.
+function initBookingCustomControls() {
+  const selService = document.getElementById("service");
+  if (!selService) return; // bukan halaman booking
+  const fe = makeFieldEnhancer();
+  fe.enhanceSelect(document.getElementById("stay-area"), "Pickup area");
+  fe.enhanceSelect(selService, "Service");
+  fe.enhanceSelect(document.getElementById("service-item"), "Select service");
+  fe.enhanceDate(document.getElementById("date"), "Select date");
+}
+
+// Enhancer global singleton -> dipakai bareng initCustomSelects + field yg muncul belakangan
+// (mis. editor "Your trip details" yg di-build on-demand). Sekali bikin, listener gak numpuk.
+let __globalEnhancer = null;
+function globalEnhancer() { if (!__globalEnhancer) __globalEnhancer = makeFieldEnhancer(); return __globalEnhancer; }
+
+// Semua select/date SISA (navbar akun, charter, transfer, itinerary) -> custom juga,
+// biar gak ada dropdown native yg jelek di manapun (desktop + HP). Dijalankan SETELAH
+// init masing-masing feature (biar opsi select udah keisi). Skip yg udah di-enhance
+// (booking form + search homepage nyetir enhancer-nya sendiri).
+function initCustomSelects() {
+  const targets = [];
+  const add = (el, title, kind) => { if (el && !el.dataset.enhanced) targets.push({ el, title, kind }); };
+  add(document.getElementById("ch-pickup"), "Pick-up area", "sel");
+  add(document.getElementById("ch-guests"), "Guests", "sel");
+  add(document.getElementById("ch-date"), "Select date", "date");
+  add(document.getElementById("sg-days"), "Days", "sel");
+  add(document.getElementById("sg-guests"), "Guests", "sel");
+  add(document.getElementById("trip-start"), "Start date", "date");
+  document.querySelectorAll("[data-tp-from]").forEach((el) => add(el, "From", "sel"));
+  document.querySelectorAll("[data-tp-to]").forEach((el) => add(el, "To", "sel"));
+  document.querySelectorAll("[data-guest-select]").forEach((el) => add(el, "Guests", "sel"));
+  document.querySelectorAll("[data-stay-select]").forEach((el) => add(el, "Pick-up area", "sel"));
+  if (!targets.length) return;
+  const fe = globalEnhancer();
+  targets.forEach((t) => { t.kind === "date" ? fe.enhanceDate(t.el, t.title) : fe.enhanceSelect(t.el, t.title); });
+}
+
+// Field di dalam sebuah root yg di-build on-demand (modal editor trip) -> ikut di-custom-in.
+function enhanceFieldsIn(root) {
+  if (!root) return;
+  const fe = globalEnhancer();
+  root.querySelectorAll('input[type="date"]').forEach((el) => fe.enhanceDate(el, el.id === "trip-date-to" ? "To" : "Select date"));
+  root.querySelectorAll("select").forEach((el) => {
+    const t = el.matches("[data-stay-select]") ? "Pick-up area" : "Guests";
+    fe.enhanceSelect(el, t);
+  });
 }
 
 // Glance redesign: kalau section "At a Glance / Tour Details" punya harga bookable
@@ -5390,6 +5463,7 @@ async function initPage() {
   initTransferUnits();
   initCardTitleOverlay();
   initBookingCustomControls();
+  initCustomSelects(); // sisa select/date (navbar/charter/transfer/itinerary) -> custom; PALING akhir
   initGlanceHero();
   initDetailsFaqRow();
 }

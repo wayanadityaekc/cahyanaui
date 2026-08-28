@@ -312,6 +312,9 @@ body {
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
       url("assets/images/ricefield-girl-hero.webp");
+    /* Hero landscape di frame portrait -> makin pendek hero, makin dikit zoom crop-nya,
+       jadi objek (cewek) keliatan lebih JAUH/kecil (Wayan). */
+    background-position: center 32%;
   }
 }
 .hero__inner {
@@ -1139,7 +1142,7 @@ body.hs-locked .wa-float {
      Hero gak full-screen lagi; #search-placeholder gak nahan ruang (form-nya jadi sheet
      fixed di luar flow), jadi hero tinggal setinggi konten + napas. Desktop TIDAK kena. */
   .home .hero {
-    min-height: 58vh;
+    min-height: 44vh;
     padding-bottom: var(--space-4);
   }
   /* Teks hero HP rata tengah (ala Viator) - headline, subtitle, tombol semua center */

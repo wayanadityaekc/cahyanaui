@@ -306,17 +306,22 @@ body {
   background-position: center top;
   background-image:
     linear-gradient(100deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0.12)),
-    url("assets/images/ubud-saraswati-temple.jpg");
+    url("assets/images/ubud-saraswati-temple-hero.webp");
 }
 @media (max-width: 992px) {
+  /* HP: foto diturunin mulai dari bawah nav bar (top:53px = tinggi nav) biar ada napas
+     LANGIT dikit tepat di bawah tripbar (Wayan). Strip 0-53px keisi bg gelap .hero =
+     ketutup nav bar (opaque) jadi gak keliatan. Foto frame center top -> langit di atas. */
+  .hero {
+    background-color: #12100c;
+  }
   .hero::after {
-    /* HP: skala pakai TINGGI (auto 125%) biar ada ruang crop vertikal -> bisa geser ke atas
-       nunjukin ujung candi. (background-size:cover di frame portrait full-height, gak bisa geser.) */
-    background-size: auto 125%;
+    top: 53px;
+    background-size: cover;
     background-position: center top;
     background-image:
-      linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
-      url("assets/images/ubud-saraswati-temple.jpg");
+      linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.6)),
+      url("assets/images/ubud-saraswati-temple-hero-mobile.webp");
   }
 }
 .hero__inner {
@@ -1126,6 +1131,16 @@ body.hs-locked .wa-float {
 /* Tombol "Plan your trip" (HP only) - desktop pakai form inline, tombol disembunyiin */
 .hero__planbtn {
   display: none;
+}
+
+/* Desktop homepage hero: dibikin lebih tinggi + napas atas lebih gede biar search form
+   ke-tengah (gak mepet ke atas/tripbar). align-items:center udah nangani centering-nya. */
+@media (min-width: 993px) {
+  .home .hero {
+    min-height: 92vh;
+    padding-top: 9rem;
+    padding-bottom: 5rem;
+  }
 }
 
 /* Mobile: hero stack, search full width */
@@ -9244,14 +9259,14 @@ strong {
   bottom: 100%;
   display: block;
   margin: 0;
-  padding: 0 0.85rem 0.6rem;
+  padding: 0 0.9rem 0.85rem; /* left sejajar sama tag di bawah, kasih napas dari seam */
   color: #fff;
   font-family: var(--font-body);
-  font-size: var(--fs-strong);
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.2;
   text-align: left;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

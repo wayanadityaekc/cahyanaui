@@ -3539,7 +3539,11 @@ function cartPackageState(pkg) {
 function cartCheckout(rerender) {
   if (!window.__openBooking) return;
   const st = itnLoad();
-  const days = st.days || [], transfers = st.transfers || [], chs = st.charters || [];
+  // Hari kosong (tanpa item) — sisa slot dari sync rentang tanggal nginep — JANGAN diitung/dikirim.
+  // My Trips nyembunyiin hari kosong (cartFlatten skip), jadi kalau ikut keitung di sini
+  // muncul mismatch: cart keliatan 1 item tapi label bayar "3 days". Filter dulu.
+  const days = (st.days || []).filter((d) => d.items && d.items.length);
+  const transfers = st.transfers || [], chs = st.charters || [];
   if (!days.length && !transfers.length && !chs.length) return;
   // Semua baris WAJIB ada tanggal (tombol Make Payment juga di-disable — ini jaring kedua).
   if (days.concat(transfers, chs).some((r) => !r.date)) return;
@@ -4851,6 +4855,19 @@ function centerBreakoutTitles(main) {
   window.addEventListener("resize", apply);
 }
 
+// Scroll ke kartu booking sidebar + kasih glow. Dipakai CTA hero & book-bar HP.
+// Manual (bukan href="#booking") karena <base href="/"> bikin anchor loncat ke home.
+// Offset navbar fixed (~64px) biar judul kartu nggak ketutup.
+function scrollToBookCard(card) {
+  if (!card) return;
+  const top = card.getBoundingClientRect().top + window.scrollY - 72;
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  card.classList.remove("booksidebar--glow");
+  void card.offsetWidth; // reflow: restart animasi tiap klik
+  card.classList.add("booksidebar--glow");
+  setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
+}
+
 // Halaman detail bookable: gabung form "Build Your Trip" + checklist Included/Excluded
 // + Ask jadi SATU kartu sidebar. Desktop = 2 kolom (kartu sticky kanan). Mobile = satu
 // kolom, kartu di paling bawah setelah konten. Form-nya dipindah keluar dari modal;
@@ -4980,16 +4997,11 @@ function initBookSidebar() {
   const bm = document.getElementById("book-modal-placeholder");
   if (bm) bm.remove();
 
-  // CTA hero "Book this program" -> scroll ke form + kasih glow di kartu sbentar
+  // CTA hero "Book this program" -> scroll ke form + kasih glow di kartu sbentar.
+  // WAJIB preventDefault: link-nya <a href="#booking">, tapi halaman pake <base href="/">
+  // jadi "#booking" ke-resolve ke ROOT situs (= home) -> tanpa ini malah loncat ke homepage.
   const heroCta = document.querySelector(".tour-hero__cta");
-  if (heroCta) {
-    heroCta.addEventListener("click", () => {
-      card.classList.remove("booksidebar--glow");
-      void card.offsetWidth; // reflow: restart animasi tiap klik
-      card.classList.add("booksidebar--glow");
-      setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
-    });
-  }
+  if (heroCta) heroCta.addEventListener("click", (e) => { e.preventDefault(); scrollToBookCard(card); });
 
   // sejajarin sidebar sama foto pertama (stop 1), bukan sama title
   alignSideToFirstPhoto(layout, main, side);
@@ -5117,13 +5129,9 @@ function initBookBar() {
   document.body.appendChild(bar);
   if (typeof renderPrices === "function") renderPrices(); // isi harga di bar
 
-  // klik = scroll ke form + glow kartu (sama kaya CTA hero)
-  bar.querySelector(".book-bar__btn").addEventListener("click", () => {
-    card.classList.remove("booksidebar--glow");
-    void card.offsetWidth;
-    card.classList.add("booksidebar--glow");
-    setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
-  });
+  // klik = scroll ke form + glow kartu (sama kaya CTA hero). preventDefault: sama alasan
+  // kayak hero CTA - <a href="#booking"> + <base href="/"> = loncat ke home kalau gak dicegah.
+  bar.querySelector(".book-bar__btn").addEventListener("click", (e) => { e.preventDefault(); scrollToBookCard(card); });
 
   // muncul cuma kalau CTA hero & form dua-duanya nggak keliatan
   let ctaOn = false, formOn = false;

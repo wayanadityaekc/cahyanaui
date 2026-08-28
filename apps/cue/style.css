@@ -4346,8 +4346,6 @@ a.footer__contact-item:hover {
 }
 .contact__item span {
   font-size: var(--fs-small);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
   color: var(--color-muted);
 }
 .contact__item strong {
@@ -8770,6 +8768,24 @@ strong {
    emas/cream. Kartu intro di hero + baris editorial + list.
    ============================================================ */
 /* Kartu intro putih di dalam hero (di bawah judul) */
+/* About hero dipendekin ala guide (Sep 2026, Wayan) - kartu intro pindah ke bawah,
+   jadi hero cukup muat judul + sub aja. Sejajar sama .guide-article-page .lhero. */
+.about .lhero {
+  min-height: 360px;
+  padding-top: 6.5rem;
+  padding-bottom: 3rem;
+}
+/* Container kartu intro (di bawah hero) - lebar & padding tepi samain sama .arows */
+.about-intro {
+  max-width: var(--container-mid);
+  margin: 0 auto;
+  padding: 0 var(--container-x);
+}
+.about-intro .ahero-card {
+  margin-top: -2.5rem; /* nyembul dikit ke atas, nempel di tepi bawah foto hero */
+  position: relative;
+  z-index: 3;
+}
 .ahero-card {
   background: #fff;
   border-radius: var(--r-xl);
@@ -8814,9 +8830,7 @@ strong {
 .arow__k {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: var(--fs-small);
   font-weight: 500;
   color: var(--color-muted);
 }
@@ -9529,4 +9543,10 @@ strong {
 .guide-more {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
+}
+
+/* Contact = section pertama (nggak ada hero lagi) -> butuh clearance buat navbar+tripbar
+   fixed (~103px), samain sama padding-top hero. Override rule global di atas. */
+.contact {
+  padding-top: 6.5rem;
 }

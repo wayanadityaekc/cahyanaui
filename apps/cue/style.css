@@ -1128,6 +1128,16 @@ body.hs-locked .wa-float {
   display: none;
 }
 
+/* Desktop homepage hero: dibikin lebih tinggi + napas atas lebih gede biar search form
+   ke-tengah (gak mepet ke atas/tripbar). align-items:center udah nangani centering-nya. */
+@media (min-width: 993px) {
+  .home .hero {
+    min-height: 92vh;
+    padding-top: 9rem;
+    padding-bottom: 5rem;
+  }
+}
+
 /* Mobile: hero stack, search full width */
 @media (max-width: 992px) {
   .hero__inner {
@@ -1332,9 +1342,27 @@ body.hs-locked .wa-float {
 /* Bar promo/event (halaman non-booking). Kalau div (tanpa link) -> gak clickable. */
 .tripbar--promo {
   cursor: default;
+  background: #faf6ec; /* cream hangat biar promo agak nonjol dari section putih */
 }
 a.tripbar--promo {
   cursor: pointer;
+}
+/* Aksen promo (Wayan): icon emas + "See details" jadi pill hijau (manggil mata).
+   Scoped ke --promo doang biar tripbar Edit (guests/pickup di halaman booking) gak keubah. */
+.tripbar--promo .tripbar__ic {
+  color: var(--color-amber);
+}
+.tripbar--promo .tripbar__edit {
+  margin-left: 0.6rem;
+  padding: 0.2rem 0.75rem;
+  border-radius: var(--r-pill);
+  background: var(--color-cta);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+a.tripbar--promo:hover .tripbar__edit {
+  background: var(--color-cta-d);
 }
 .tripbar__ic {
   width: var(--icon-md);
@@ -9244,14 +9272,14 @@ strong {
   bottom: 100%;
   display: block;
   margin: 0;
-  padding: 0 0.85rem 0.6rem;
+  padding: 0 0.9rem 0.85rem; /* left sejajar sama tag di bawah, kasih napas dari seam */
   color: #fff;
   font-family: var(--font-body);
-  font-size: var(--fs-strong);
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.2;
   text-align: left;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -1062,26 +1062,6 @@ function cartHeartIcon(on) {
     '<path d="M12 20.3 4.7 13a4.6 4.6 0 0 1 6.5-6.5l.8.8.8-.8A4.6 4.6 0 0 1 19.3 13z"/></svg>';
 }
 
-// Cari index entry cart yang "sama" dengan 1 entry paket suggested (buat toggle heart).
-// day = nama item pertama sama; transfer = rute + arah sama. -1 = belum ada di cart.
-function cartMatchIndex(state, type, entry) {
-  if (type === "day") return (state.days || []).findIndex((d) => (d.items || [])[0] === (entry.items || [])[0]);
-  if (type === "transfer") return (state.transfers || []).findIndex((t) => t.route === entry.route && t.direction === entry.direction);
-  return -1;
-}
-
-// Toggle 1 entry paket suggested ke/dari cart. Return true kalau hasilnya masuk cart.
-// Di-copy (bukan referensi) biar edit di cart gak nyeret state paket.
-function cartToggleEntry(type, entry) {
-  const st = itnLoad();
-  const list = type === "day" ? st.days : st.transfers;
-  const i = cartMatchIndex(st, type, entry);
-  if (i > -1) { list.splice(i, 1); itnSave(st); return false; }
-  list.push(JSON.parse(JSON.stringify(entry)));
-  itnSave(st);
-  return true;
-}
-
 // "YYYY-MM-DD" -> "19 August" (tanggal di kartu). Kosong -> "Date to be set".
 function fmtGroupDate(ds) {
   if (!ds) return "Date to be set";
@@ -1788,6 +1768,27 @@ function initSlider() {
 }
 
 // Panah kiri/kanan buat slider Tour Programs (muncul pas hover, desktop)
+// Galeri foto About (landscape 4:3, scroll-snap). Swipe jalan native; di desktop
+// tambahin panah prev/next yg nge-scroll selebar 1 slide. Cuma jalan kalau >=2 slide.
+function initAboutGallery() {
+  const g = document.querySelector("[data-about-gallery]");
+  if (!g) return;
+  const track = g.querySelector(".about-gallery__track");
+  if (!track || track.children.length < 2) return;
+  [["prev", "‹"], ["next", "›"]].forEach(([dir, glyph]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "about-gallery__arrow about-gallery__arrow--" + dir;
+    btn.setAttribute("aria-label", dir === "prev" ? "Previous photo" : "Next photo");
+    btn.innerHTML = glyph;
+    btn.addEventListener("click", () => {
+      const w = track.clientWidth;
+      track.scrollBy({ left: dir === "prev" ? -w : w, behavior: "smooth" });
+    });
+    g.appendChild(btn);
+  });
+}
+
 function initTourSlider() {
   // #itn-days ikut: di desktop dia slider horizontal (panah muncul pas hover;
   // di mobile tetap numpuk vertikal & panahnya emang ke-hide via CSS hover).
@@ -3518,27 +3519,6 @@ function wireGate(root) {
 }
 
 /* ==================== My Trips cart page (Fase C) ==================== */
-// Paket suggested siap-pakai (tab + empty-state). Preview di-generate dari suggestState.
-const CART_PACKAGES = [
-  { id: "p2", days: 2, label: "2-Day", title: "2-Day Ubud Highlights",
-    blurb: "Ubud's culture, rice terraces and a Batur sunrise — the essentials in two days." },
-  { id: "p3", days: 3, label: "3-Day", title: "3-Day Bali Explorer",
-    blurb: "Ubud plus east Bali temples and a sunset Kecak — a fuller taste of the island." },
-  { id: "p4", days: 4, label: "4-Day", title: "4-Day Grand Bali",
-    blurb: "Ubud, east Bali, the south coast and the northern lakes & waterfalls." }
-];
-
-// State paket suggested dgn tanggal terisi: mulai dari trip start (search bar) atau hari ini,
-// tiap hari +1; transfer datang di hari-1, transfer pulang di hari terakhir.
-function cartPackageState(pkg) {
-  const g = String(currentGuests || DISPLAY_GUESTS);
-  const start = currentDateFrom || todayStr();
-  const st = suggestState(pkg.days, g);
-  st.days.forEach((d, i) => { d.date = addDaysStr(start, i); });
-  if (st.transfers[0]) st.transfers[0].date = start;                       // arrival (to Ubud)
-  if (st.transfers[1]) st.transfers[1].date = addDaysStr(start, pkg.days - 1); // departure
-  return st;
-}
 
 // Build lines + buka checkout dari state cart (isi guests default). Fase E ganti ke Xendit.
 function cartCheckout(rerender) {
@@ -3614,6 +3594,35 @@ function initMyTripsCart() {
   let receiptOpen = false; // rincian harga: default ketutup
   let justPaid = false;    // true abis submit booking - ganti empty-state jadi upsell
   let bookedNames = [];    // nama item yg baru dipesan (dikecualiin dari rekomendasi)
+  // Booked (udah bayar, upcoming) + Past (udah lewat, history) dari /api/bookings/mine.
+  const bookings = { upcoming: [], history: [], loaded: false };
+
+  // Kartu trip booked/past = gaya .mtc-item yg SAMA kayak kartu cart (foto icon + judul +
+  // desc + tanggal + harga), tapi read-only (gak ada tombol hapus/heart). Foto diambil dari
+  // ITEM_CARD by nama; kalau gak ketemu (mis. "Custom Itinerary") -> icon kategori.
+  const bookingCardHTML = (t) => {
+    const firstService = (t.lines && t.lines[0] && t.lines[0].service) || t.name;
+    const card = ITEM_CARD[t.name] || ITEM_CARD[firstService] || {};
+    const iconHTML = card.img
+      ? '<span class="mtc-item__icon mtc-item__icon--photo" style="background-image:url(assets/images/' + card.img + ')"></span>'
+      : '<span class="mtc-item__icon">' + cartIcon("tour") + "</span>";
+    const dateStr = t.start_date
+      ? (t.end_date && t.end_date !== t.start_date
+          ? fmtGroupDate(t.start_date) + " – " + fmtGroupDate(t.end_date)
+          : fmtGroupDate(t.start_date))
+      : "Date TBD";
+    const statusLabel = t.upcoming
+      ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "Booked")
+      : "Completed";
+    return '<div class="mtc-item mtc-item--booked">' + iconHTML +
+      '<div class="mtc-item__body">' +
+        '<p class="mtc-item__title">' + escHtml(t.name) + "</p>" +
+        '<p class="mtc-item__desc">' + escHtml(statusLabel + " · " + (t.guests || "-") + " guests") + "</p>" +
+        '<p class="mtc-item__date">' + escHtml(dateStr) + (t.ref ? " · " + escHtml(t.ref) : "") + "</p>" +
+      "</div>" +
+      '<div class="mtc-item__price">' + cartPriceTag(t.price_usd, t.price_idr) + "</div>" +
+    "</div>";
+  };
 
   // Satu kartu item. opts.removable = tombol x (tab cart); opts.heart = toggle (tab paket).
   const rowCardHTML = (r, opts, pos) => {
@@ -3707,27 +3716,6 @@ function initMyTripsCart() {
     '<div class="mtc-total"><span class="mtc-total__label">' + escHtml(label || "Total") + "</span>" +
     '<span class="mtc-total__val">' + cartPriceTagSum(rows) + "</span></div>";
 
-  // Kartu teaser paket di empty state -> cuma pindah tab (bukan lagi "use this plan").
-  const packageCardHTML = (pkg) => {
-    const rows = cartFlatten(cartPackageState(pkg));
-    return '<div class="mtc-pkg">' +
-      '<div class="mtc-pkg__head"><p class="mtc-pkg__title">' + escHtml(pkg.title) + "</p>" +
-      '<span class="mtc-pkg__price">' + cartPriceTagSum(rows) + "</span></div>" +
-      '<p class="mtc-pkg__blurb">' + escHtml(pkg.blurb) + "</p>" +
-      '<button type="button" class="modal__btn modal__btn--ghost mtc-pkg__use" data-go-tab="' + pkg.id + '">See the plan</button>' +
-      "</div>";
-  };
-
-  // Baris paket + flag inCart (buat status hati). Entry aslinya diambil dari state paket.
-  const packageRows = (pkg) => {
-    const st = itnLoad();
-    const pkgState = cartPackageState(pkg);
-    return cartFlatten(pkgState).map((r) => {
-      const entry = r.ref.type === "day" ? pkgState.days[r.ref.idx] : pkgState.transfers[r.ref.idx];
-      return Object.assign({}, r, { inCart: entry ? cartMatchIndex(st, r.ref.type, entry) > -1 : false });
-    });
-  };
-
   const panelHTML = () => {
     if (activeTab === "custom") {
       const rows = cartFlatten(itnLoad());
@@ -3742,8 +3730,8 @@ function initMyTripsCart() {
       if (!rows.length) {
         return '<div class="mtc-empty">' +
           '<p class="mtc-empty__lead">Nothing added yet.</p>' +
-          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start your trip - or open a suggested plan and add the parts you want.</p>' +
-          '<div class="mtc-pkgs">' + CART_PACKAGES.map(packageCardHTML).join("") + "</div></div>";
+          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start planning your trip.</p>' +
+        "</div>";
       }
       const undated = rows.filter((r) => !r.date).length;
       // Policy line: satu baris, link ke halaman policy yg UDAH ADA di footer -
@@ -3764,18 +3752,44 @@ function initMyTripsCart() {
         '<aside class="mtc-layout__side">' + sideHTML + "</aside>" +
       "</div>";
     }
-    // Tab paket: browse. Tiap baris punya hati; gak ada tombol "use this plan" lagi.
-    const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
-    const rows = packageRows(pkg);
-    return '<p class="mtc-pkgintro">' + escHtml(pkg.blurb) + "</p>" +
-      '<div class="mtc-list">' + listHTML(rows, { heart: true }) + "</div>" +
-      totalHTML(rows, "Full plan") +
-      '<p class="mtc-note">Tap the heart on any item to add it to your trip.</p>';
+    // Tab Booked / Past: trip dari /api/bookings/mine (read-only), kartu gaya .mtc-item.
+    const isPast = activeTab === "past";
+    const arr = isPast ? bookings.history : bookings.upcoming;
+    if (!bookings.loaded) {
+      return '<div class="mtc-empty"><p class="mtc-empty__sub">Loading your trips…</p></div>';
+    }
+    if (!currentAccount) {
+      return '<div class="mtc-empty">' +
+        '<p class="mtc-empty__lead">Sign in to see your trips.</p>' +
+        '<p class="mtc-empty__sub">Open the account menu and sign in with your email - your booked and past trips show up here.</p>' +
+      "</div>";
+    }
+    if (!arr.length) {
+      return '<div class="mtc-empty">' +
+        '<p class="mtc-empty__lead">' + (isPast ? "No past trips yet." : "No booked trips yet.") + "</p>" +
+        '<p class="mtc-empty__sub">' + (isPast
+          ? "Trips you&rsquo;ve already taken will appear here."
+          : "Once you make a payment, your booked trip shows up here.") + "</p>" +
+      "</div>";
+    }
+    const cards = '<div class="mtc-list">' + arr.map(bookingCardHTML).join("") + "</div>";
+    if (!isPast) return cards;
+    // Past tab: kartu + tombol Leave a Review di bawahnya (Wayan).
+    return cards +
+      '<div class="mtc-review">' +
+        '<p class="mtc-review__lead">Enjoyed your trip? Tell other travellers about it.</p>' +
+        // TODO (Wayan): ganti href ke link review ASLI (Google Business Profile / Tripadvisor).
+        '<a href="#" class="modal__btn mtc-review__btn" target="_blank" rel="noopener">Leave a Review</a>' +
+      "</div>";
   };
 
   function render() {
-    const tabs = [{ id: "custom", label: "Your Trip" }]
-      .concat(CART_PACKAGES.map((p) => ({ id: p.id, label: p.label + " Suggested" })));
+    // 3 tab tetap: My Trip (cart blm bayar) / Booked Trip (udah bayar) / Past Trip (udah lewat).
+    const tabs = [
+      { id: "custom", label: "My Trip" },
+      { id: "booked", label: "Booked Trip" },
+      { id: "past", label: "Past Trip" },
+    ];
     const ref = activeReferral();
     root.innerHTML =
       (ref ? '<div class="mtc-ref">Referral code <strong>' + escHtml(ref.code) + "</strong> applied.</div>" : "") +
@@ -3787,9 +3801,6 @@ function initMyTripsCart() {
 
     root.querySelectorAll(".mtc-tab").forEach((tab) => {
       tab.addEventListener("click", () => { activeTab = tab.dataset.tab; render(); });
-    });
-    root.querySelectorAll("[data-go-tab]").forEach((b) => {
-      b.addEventListener("click", () => { activeTab = b.dataset.goTab; render(); });
     });
     root.querySelectorAll("[data-del-type]").forEach((b) => {
       b.addEventListener("click", () => { cartRemove(b.dataset.delType, parseInt(b.dataset.delIdx)); render(); });
@@ -3810,19 +3821,6 @@ function initMyTripsCart() {
           }
           save();
         }, cur.date);
-      });
-    });
-    root.querySelectorAll("[data-heart-type]").forEach((b) => {
-      b.addEventListener("click", () => {
-        const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
-        if (!pkg) return;
-        const pkgState = cartPackageState(pkg);
-        const type = b.dataset.heartType;
-        const idx = parseInt(b.dataset.heartIdx, 10);
-        const entry = type === "day" ? pkgState.days[idx] : pkgState.transfers[idx];
-        if (!entry) return;
-        cartToast(cartToggleEntry(type, entry) ? "Added to your trip" : "Removed from your trip");
-        render();
       });
     });
     const rec = root.querySelector("[data-receipt]");
@@ -3847,53 +3845,21 @@ function initMyTripsCart() {
 
   window.__myTripsRefresh = render; // dipanggil pas referral di-apply/clear
   render();
-}
 
-// Satu kartu trip di My Trips.
-function tripCard(t) {
-  const pillClass = t.upcoming ? "pill-ok" : "pill-done";
-  const pillText = t.upcoming ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "New") : "Completed";
-  const dateStr = t.end_date && t.end_date !== t.start_date ? t.start_date + " – " + t.end_date : t.start_date || "-";
-  return (
-    '<div class="trip"><div class="trip__stripe"></div><div class="trip__body">' +
-      '<div class="trip__top"><div><div class="trip__name">' + escHtml(t.name) + "</div>" +
-      '<div class="trip__meta">' + escHtml(dateStr) + " · " + escHtml(String(t.guests || "-")) + " pax</div></div>" +
-      '<span class="pill ' + pillClass + '">' + escHtml(pillText) + "</span></div>" +
-      '<div class="trip__foot"><div class="trip__price">' + priceHTML(t.price_usd, t.price_idr) + "</div>" +
-      '<span class="trip__ref">' + escHtml(t.ref) + "</span></div>" +
-    "</div></div>"
-  );
-}
-
-// Booked & paid trips (sekunder, di bawah cart): kartu dari /api/bookings/mine.
-// Bukan gate — kalau belum login / belum ada booking, section-nya disembunyiin aja.
-async function initMyTrips() {
-  const root = document.querySelector("[data-my-trips]");
-  if (!root) return;
-  const wrap = root.closest("[data-booked-wrap]") || root;
-  await acctFetchSession();
-  if (!currentAccount) { wrap.hidden = true; return; }
-  let data = { upcoming: [], history: [] };
-  try {
-    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
-    if (r.ok) data = await r.json();
-  } catch (e) {}
-  const up = data.upcoming || [], hist = data.history || [];
-  hasUpcoming = up.length > 0; renderAccount();
-  if (!up.length && !hist.length) { wrap.hidden = true; return; }
-  wrap.hidden = false;
-  // Dua section terpisah & berlabel (bukan toggle lagi): Upcoming + Past Trips (Wayan).
-  // Past Trips = data.history (booking yg tanggal terakhirnya udah lewat, dari /bookings/mine).
-  const groupHTML = (title, arr, emptyMsg, extraClass) =>
-    '<section class="mytrips-group' + (extraClass ? " " + extraClass : "") + '">' +
-      '<h3 class="mytrips-group__title">' + title + "</h3>" +
-      (arr.length
-        ? arr.map(tripCard).join("")
-        : '<p class="acctpage__empty">' + emptyMsg + "</p>") +
-    "</section>";
-  root.innerHTML =
-    groupHTML("Upcoming", up, "No upcoming trips yet — time to plan one!") +
-    groupHTML("Past Trips", hist, "No past trips yet.", "mytrips-group--past");
+  // Booked & Past ditarik async dari /api/bookings/mine, render ulang pas dateng.
+  // (Sama endpoint yg dulu dipakai section "Booked & paid" - sekarang jadi 2 tab.)
+  (async () => {
+    await acctFetchSession();
+    if (currentAccount) {
+      try {
+        const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+        if (r.ok) { const d = await r.json(); bookings.upcoming = d.upcoming || []; bookings.history = d.history || []; }
+      } catch (e) {}
+    }
+    bookings.loaded = true;
+    hasUpcoming = bookings.upcoming.length > 0; renderAccount();
+    render();
+  })();
 }
 
 // Halaman Settings: edit nama/email/phone + prefs -> PATCH /api/account.
@@ -5501,7 +5467,7 @@ async function initPage() {
   initReferral();
   initAccount();
   initMyTripsCart();
-  initMyTrips();
+  initAboutGallery();
   initSettings();
   initTrustStat();
   initHighlightLink();

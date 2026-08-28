@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 74;
+const PARTIALS_VERSION = 75;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2732,9 +2732,12 @@ async function initReviews() {
   const section = document.getElementById("reviews");
   const strip = document.querySelector(".reviews-strip");
   if (!section || !strip) return;
+  const emptyCta = strip.querySelector("[data-review-empty-cta]");
+  if (emptyCta) emptyCta.addEventListener("click", openReviewModal);
   try {
     const rows = await fetch(`${API_BASE}/reviews`).then((r) => r.json());
-    if (!Array.isArray(rows) || !rows.length) { section.hidden = true; return; }
+    // No approved reviews yet - keep the static invite markup already in the partial.
+    if (!Array.isArray(rows) || !rows.length) return;
     strip.innerHTML = rows.map((r) => {
       const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
       const stars = "&#9733;".repeat(n) + "&#9734;".repeat(5 - n);
@@ -2746,7 +2749,7 @@ async function initReviews() {
       "</article>";
     }).join("");
   } catch (e) {
-    section.hidden = true;
+    // fetch failed - leave the static invite markup in place
   }
 }
 

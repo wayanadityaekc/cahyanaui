@@ -5,45 +5,13 @@
     <a class="reviews__seeall" href="#" target="_blank" rel="noopener">See all reviews &rsaquo;</a>
   </div>
 
-  <!-- ================= PLACEHOLDER / DEV MODE =================
-       Dummy sample reviews for layout only. Replace each .rev with a REAL
-       verified review (name, rating, 1-2 lines, and the platform it came from).
-       ========================================================== -->
+  <!-- Default state: no fake reviews (see CLAUDE.md - no fake content). initReviews()
+       (script.js) fetches approved reviews and replaces this markup when at least one
+       exists; on empty/error it's left as-is so the section always shows something real. -->
   <div class="reviews-strip">
-    <article class="rev">
-      <div class="rev__stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p class="rev__text">
-        "Driver picked us up on time and the whole day was perfectly planned.
-        Prices were exactly what we saw upfront."
-      </p>
-      <div class="rev__foot">
-        <span class="rev__name">Sample Guest</span>
-        <img class="rev__logo" src="assets/images/tripadvisor.webp" alt="Tripadvisor" width="280" height="176" loading="lazy" />
-      </div>
-    </article>
-
-    <article class="rev">
-      <div class="rev__stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p class="rev__text">
-        "Easy to book over WhatsApp and no hidden costs. Our guide knew all the
-        quiet spots away from the crowds."
-      </p>
-      <div class="rev__foot">
-        <span class="rev__name">Sample Guest</span>
-        <img class="rev__logo" src="assets/images/viator.webp" alt="Viator" width="245" height="256" loading="lazy" />
-      </div>
-    </article>
-
-    <article class="rev">
-      <div class="rev__stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p class="rev__text">
-        "One team handled our tours, transfer and villa. Made the whole trip
-        stress-free from start to finish."
-      </p>
-      <div class="rev__foot">
-        <span class="rev__name">Sample Guest</span>
-        <img class="rev__logo" src="assets/images/tripadvisor.webp" alt="Tripadvisor" width="280" height="176" loading="lazy" />
-      </div>
-    </article>
+    <div class="reviews__empty">
+      <p>Reviews are on their way - be one of the first to share your trip.</p>
+      <button type="button" class="btn-pill" data-review-empty-cta>Leave a review</button>
+    </div>
   </div>
 </section>

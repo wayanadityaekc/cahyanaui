@@ -309,14 +309,18 @@ body {
     url("assets/images/ubud-saraswati-temple-hero.webp");
 }
 @media (max-width: 992px) {
+  /* HP: foto diturunin mulai dari bawah nav bar (top:53px = tinggi nav) biar ada napas
+     LANGIT dikit tepat di bawah tripbar (Wayan). Strip 0-53px keisi bg gelap .hero =
+     ketutup nav bar (opaque) jadi gak keliatan. Foto frame center top -> langit di atas. */
+  .hero {
+    background-color: #12100c;
+  }
   .hero::after {
-    /* HP: foto khusus mobile (900x788, bar hitam bawaan file udah dipotong). Cover +
-       center -> candi utuh keliatan (langit atas, candi tengah, teratai bawah), sisi
-       kiri-kanan dikit ke-crop. Foto PENUH, gak ada band abu di atas (Wayan). */
+    top: 53px;
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     background-image:
-      linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
+      linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.6)),
       url("assets/images/ubud-saraswati-temple-hero-mobile.webp");
   }
 }

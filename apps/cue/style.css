@@ -6896,29 +6896,38 @@ button.pick-cat {
   text-align: center;
 }
 /* My Trips toggle */
-.mytrips__toggle {
-  display: inline-flex;
-  background: var(--color-cream);
-  border: 1px solid #e9e1cf;
-  border-radius: var(--r-pill);
-  padding: 3px;
-  margin-bottom: 1.2rem;
+/* Booked & paid: 2 section berlabel (Upcoming + Past Trips), bukan toggle lagi (Wayan). */
+.mytrips-group {
+  margin-bottom: 1.6rem;
 }
-.mytrips__tab {
-  border: 0;
-  background: none;
-  padding: 0.5rem 1.3rem;
+.mytrips-group--past {
+  margin-bottom: 0;
+}
+.mytrips-group__title {
   font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--color-muted);
-  border-radius: var(--r-pill);
-  cursor: pointer;
-}
-.mytrips__tab.is-on {
+  font-size: var(--fs-h3);
   font-weight: 600;
-  background: var(--color-green);
-  color: #efe7d3;
+  color: var(--color-green);
+  margin: 0 0 0.8rem;
+}
+/* Write a Review (bawah My Trips) */
+.mytrips-review {
+  margin-top: 2.5rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.mytrips-review__lead {
+  font-size: var(--fs-body);
+  color: var(--color-muted);
+  margin: 0 0 0.9rem;
+}
+.mytrips-review__btn {
+  display: inline-flex;
+  width: auto;
+  margin-top: 0;
+  padding: 0.75rem 1.9rem;
+  text-decoration: none;
 }
 /* Trip card */
 .trip {
@@ -7018,7 +7027,10 @@ button.pick-cat {
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  touch-action: pan-x pan-y;
+  /* Tab strip = swipe HORIZONTAL doang; gesture vertikal di sini dikunci (Wayan).
+     Beda dari card slider (pan-x pan-y) - strip tipis jadi gak perlu scroll halaman
+     dari sini, biar swipe kiri-kanan gak "ketarik" vertikal. */
+  touch-action: pan-x;
   border-bottom: 1px solid var(--line);
   margin-bottom: 1.4rem;
 }
@@ -8622,6 +8634,21 @@ strong {
   align-items: end;
   gap: 0.55rem;
 }
+/* Mobile: From/To ditumpuk vertikal (From atas - panah tengah - To bawah), biar gak
+   sempit kayak 2-kolom. Desktop TETAP 1 baris From|panah|To (Wayan). */
+@media (max-width: 600px) {
+  .tpick__route {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 0.5rem;
+    justify-items: stretch;
+  }
+  .tpick__swap {
+    justify-self: center;
+    margin-bottom: 0;
+    transform: rotate(90deg); /* panah kiri-kanan jadi atas-bawah pas ditumpuk */
+  }
+}
 .tpick__field label {
   display: block;
   font-size: var(--fs-small);
@@ -8950,9 +8977,39 @@ strong {
 /* About hero dipendekin ala guide (Sep 2026, Wayan) - kartu intro pindah ke bawah,
    jadi hero cukup muat judul + sub aja. Sejajar sama .guide-article-page .lhero. */
 .about .lhero {
-  min-height: 360px;
+  min-height: 0;
+  background: none; /* foto hero dihapus (Wayan) - jadi blok teks polos */
   padding-top: 6.5rem;
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
+}
+.about .lhero::before { content: none; } /* buang overlay gelap - gak ada foto lagi */
+/* Tanpa foto gelap di belakang -> teks jadi warna gelap biar kebaca */
+.about .lhero__title { color: var(--color-gold); }
+.about .lhero__sub { color: var(--color-muted); }
+/* Foto asli Wayan: di TENGAH, langsung di bawah judul/tagline */
+.about-portrait {
+  margin: 0.4rem auto 0;
+  max-width: 320px;
+}
+.about-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+}
+/* Placeholder sementara sampai foto asli dipasang (gradient rapi, bukan kotak kosong) */
+.about-portrait__ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--line);
+  background: linear-gradient(160deg, #f3f1ea, #e9e6dd);
+  color: var(--color-muted);
+  font-size: var(--fs-small);
+  letter-spacing: 0.04em;
 }
 /* Container kartu intro (di bawah hero) - lebar & padding tepi samain sama .arows */
 .about-intro {
@@ -8961,7 +9018,7 @@ strong {
   padding: 0 var(--container-x);
 }
 .about-intro .ahero-card {
-  margin-top: -2.5rem; /* nyembul dikit ke atas, nempel di tepi bawah foto hero */
+  margin-top: 0.5rem; /* foto hero dihapus - gak nyembul lagi, jarak normal di bawah hero */
   position: relative;
   z-index: 3;
 }

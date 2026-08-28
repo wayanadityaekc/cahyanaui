@@ -25,7 +25,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=399" />
+    <link rel="stylesheet" href="style.css?v=400" />
 
     <link
       rel="canonical"
@@ -72,8 +72,9 @@
   <body class="about">
     <div id="navbar-placeholder"></div>
 
-    <!-- Hero: foto full-bleed + judul, dipendekin ala guide hero (Sep 2026, Wayan) -->
-    <section class="lhero" style="background-image: url(assets/images/tegalalang-rice-terrace-hero.jpg)">
+    <!-- Hero foto DIHAPUS (Wayan): cuma judul + tagline, terus foto asli Wayan di TENGAH
+         langsung di bawah tagline. -->
+    <section class="lhero lhero--plain">
       <div class="lhero__inner">
         <h1 class="lhero__title">About Us</h1>
         <p class="lhero__sub">
@@ -81,6 +82,12 @@
           driver, the villa - so you plan it once and know the price before you
           say yes.
         </p>
+        <figure class="about-portrait">
+          <!-- TODO: foto asli Wayan. Taruh file di assets/images/wayan-portrait.jpg
+               (potret ~640x800, JPG ~80%, <=200KB), lalu GANTI div placeholder di bawah jadi:
+               <img src="assets/images/wayan-portrait.jpg" alt="Wayan, founder of Cahyana Ubud Experience" width="320" height="400" /> -->
+          <div class="about-portrait__ph" aria-hidden="true"><span>Your photo here</span></div>
+        </figure>
       </div>
     </section>
 
@@ -231,8 +238,8 @@
     <div id="reviews-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=399"></script>
-    <script src="script.js?v=399"></script>
+    <script src="data.js?v=400"></script>
+    <script src="script.js?v=400"></script>
 
   </body>
 </html>

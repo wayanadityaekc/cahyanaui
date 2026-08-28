@@ -3882,25 +3882,18 @@ async function initMyTrips() {
   hasUpcoming = up.length > 0; renderAccount();
   if (!up.length && !hist.length) { wrap.hidden = true; return; }
   wrap.hidden = false;
+  // Dua section terpisah & berlabel (bukan toggle lagi): Upcoming + Past Trips (Wayan).
+  // Past Trips = data.history (booking yg tanggal terakhirnya udah lewat, dari /bookings/mine).
+  const groupHTML = (title, arr, emptyMsg, extraClass) =>
+    '<section class="mytrips-group' + (extraClass ? " " + extraClass : "") + '">' +
+      '<h3 class="mytrips-group__title">' + title + "</h3>" +
+      (arr.length
+        ? arr.map(tripCard).join("")
+        : '<p class="acctpage__empty">' + emptyMsg + "</p>") +
+    "</section>";
   root.innerHTML =
-    '<div class="mytrips__toggle" role="tablist">' +
-      '<button type="button" class="mytrips__tab is-on" data-tab="upcoming">Upcoming</button>' +
-      '<button type="button" class="mytrips__tab" data-tab="history">History</button>' +
-    "</div><div data-trips-list></div>";
-  const list = root.querySelector("[data-trips-list]");
-  const render = (which) => {
-    const arr = which === "history" ? hist : up;
-    list.innerHTML = arr.length
-      ? arr.map(tripCard).join("")
-      : '<p class="acctpage__empty">' + (which === "history" ? "No past trips yet." : "No upcoming trips yet — time to plan one!") + "</p>";
-  };
-  root.querySelectorAll(".mytrips__tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      root.querySelectorAll(".mytrips__tab").forEach((x) => x.classList.toggle("is-on", x === tab));
-      render(tab.dataset.tab);
-    });
-  });
-  render("upcoming");
+    groupHTML("Upcoming", up, "No upcoming trips yet — time to plan one!") +
+    groupHTML("Past Trips", hist, "No past trips yet.", "mytrips-group--past");
 }
 
 // Halaman Settings: edit nama/email/phone + prefs -> PATCH /api/account.

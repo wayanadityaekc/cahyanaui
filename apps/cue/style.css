@@ -294,7 +294,9 @@ body {
   padding: 7rem var(--space-3) var(--space-5);
   background-color: var(--color-green);
 }
-/* Foto hero (tajam, tanpa blur) + overlay gelap - senada hero halaman lain */
+/* Foto hero (pegunungan berkabut) + overlay gelap. Fotonya terang/hazy, jadi scrim-nya
+   DIARAHIN: desktop = gelap di kiri (tempat teks) fade ke kanan (biar gunung keliatan);
+   mobile = vertikal gelap atas+bawah (teks & search card di situ). */
 .hero::after {
   content: "";
   position: absolute;
@@ -303,14 +305,14 @@ body {
   background-size: cover;
   background-position: center;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.6)),
-    url("assets/images/ricefield-girl-hero.webp");
+    linear-gradient(100deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0.12)),
+    url("assets/images/bali-highlands-hero.webp");
 }
 @media (max-width: 992px) {
   .hero::after {
     background-image:
-      linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.55)),
-      url("assets/images/rice-terrace-girl-hero-mobile.webp");
+      linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
+      url("assets/images/bali-highlands-hero-mobile.webp");
   }
 }
 .hero__inner {

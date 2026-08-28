@@ -302,13 +302,18 @@ body {
   inset: 0;
   z-index: 0;
   background-size: cover;
-  background-position: center;
+  /* Frame ke ATAS biar ujung candi/meru keliatan (Wayan) - bukan center */
+  background-position: center top;
   background-image:
     linear-gradient(100deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0.12)),
     url("assets/images/ubud-saraswati-temple.jpg");
 }
 @media (max-width: 992px) {
   .hero::after {
+    /* HP: skala pakai TINGGI (auto 125%) biar ada ruang crop vertikal -> bisa geser ke atas
+       nunjukin ujung candi. (background-size:cover di frame portrait full-height, gak bisa geser.) */
+    background-size: auto 125%;
+    background-position: center top;
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.28) 42%, rgba(0, 0, 0, 0.62)),
       url("assets/images/ubud-saraswati-temple.jpg");

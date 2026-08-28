@@ -1119,6 +1119,11 @@ body.hs-locked .wa-float {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
+/* Tombol "Plan your trip" (HP only) - desktop pakai form inline, tombol disembunyiin */
+.hero__planbtn {
+  display: none;
+}
+
 /* Mobile: hero stack, search full width */
 @media (max-width: 992px) {
   .hero__inner {
@@ -1129,6 +1134,125 @@ body.hs-locked .wa-float {
   .hero__search,
   .hero__booking {
     width: 100%;
+  }
+
+  /* ===== Mobile hero: pendek (foto + headline + 1 tombol), form pindah ke bottom-sheet =====
+     Hero gak full-screen lagi; #search-placeholder gak nahan ruang (form-nya jadi sheet
+     fixed di luar flow), jadi hero tinggal setinggi konten + napas. Desktop TIDAK kena. */
+  .home .hero {
+    min-height: 68vh;
+    padding-bottom: var(--space-4);
+  }
+  .home #search-placeholder {
+    min-height: 0;
+  }
+  /* Tombol trigger = CTA pill hijau, full-width */
+  .hero__planbtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.6rem;
+    width: 100%;
+    height: 2.9rem;
+    border: none;
+    border-radius: var(--r-pill);
+    background: var(--color-cta);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: background var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .hero__planbtn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .hero__planbtn:active {
+    transform: scale(0.99);
+  }
+  .hero__planbtn:hover {
+    background: var(--color-cta-d);
+  }
+
+  /* Search form jadi bottom-sheet: default ketutup (translateY 100%), slide up pas .is-open.
+     z-index 45 SENGAJA di bawah panel field (guests/pickup = .hs-panel z60 + overlay z55)
+     biar sub-dropdown-nya tetep muncul DI ATAS sheet ini pas dibuka. */
+  .home .hero__search {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    width: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    padding-top: 1.9rem;
+    margin: 0;
+    animation: none; /* matiin heroCardIn di HP - transform dipake buat sheet */
+    transform: translateY(100%);
+    visibility: hidden;
+    transition:
+      transform var(--dur-slow) var(--ease),
+      visibility var(--dur-slow);
+    box-shadow: 0 -12px 48px rgba(26, 26, 26, 0.28);
+  }
+  .home .hero__search.is-open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+  /* grab handle di atas sheet */
+  .home .hero__search::before {
+    content: "";
+    position: absolute;
+    top: 0.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: #d9d5cc;
+  }
+  /* tombol close (di-inject JS) */
+  .hero__search-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--color-green);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  /* scrim di belakang sheet */
+  .hero-sheet-ov {
+    position: fixed;
+    inset: 0;
+    z-index: 44;
+    background: rgba(26, 26, 26, 0.42);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--dur) var(--ease), visibility var(--dur);
+  }
+  .hero-sheet-ov.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+/* Desktop: pastiin close button gak pernah nongol (sheet cuma HP) */
+@media (min-width: 993px) {
+  .hero__search-close {
+    display: none;
   }
 }
 

@@ -398,6 +398,15 @@ Order **must be kept** (declarations first, run last):
   **Date picker = POPUP ke-center di desktop juga** (bukan dropdown nempel field): panel dikasih
   class `hs-panel--popup` + `bookdate-panel` → `openPanel` reparent ke body + overlay walau desktop
   (reuse gaya `.bookdate-panel` punya Book Now). Dropdown biasa (select) tetep nempel field di desktop.
+- **Mobile hero = form jadi bottom-sheet** (Sep 2026, Wayan): di HP (≤992px) hero dipendekin
+  (`min-height:68vh`), form search `.hero__search` disembunyiin (jadi sheet `position:fixed`
+  translateY(100%)), diganti tombol **`.hero__planbtn`** ("Plan your trip", `[data-plan-open]`).
+  Tap → `initHeroPlanSheet()` slide up sheet + scrim `.hero-sheet-ov` + swipe-down/×/tap-scrim
+  buat nutup. **Desktop TIDAK kena** (tombol `display:none`, form tetep inline di kanan).
+  **Gotcha z-index**: scrim di-append DALAM `.hero__inner` (yang punya `z-index:1` = stacking
+  context) biar sheet (z45) di atas scrim (z44); kalau di body malah ke-trap ketutup scrim.
+  Sub-panel field (guests/pickup) tetep reparent ke body (z55/60) → di atas sheet, aman dibuka
+  dari dalam. `#search-placeholder` min-height di-nol-in di HP (form gak nahan ruang lagi).
 - **Anti-CLS**: `#booking-placeholder`, `#footer-placeholder` & `#search-placeholder` punya
   `min-height` di style.css (booking 480px, footer 688/487px, search 470px — hasil ukur
   headless; navbar 57.6px desktop / 52.8px HP; mobile WAJIB ≥ tinggi form asli, kalau kurang
@@ -411,7 +420,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v389, PARTIALS 73)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v390, PARTIALS 73)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

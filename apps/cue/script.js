@@ -4208,6 +4208,57 @@ function hsScrollLock(on) {
   document.body.classList.toggle("hs-locked", !!on);
 }
 
+// Mobile hero: form "Plan your trip" disembunyiin, dibuka lewat tombol -> bottom-sheet
+// slide-up. Desktop TIDAK kena (tombol di-hide CSS, form tetep inline di kanan). Field
+// di dalam (guests/pickup) tetep buka sub-sheet-nya sendiri di ATAS sheet ini (z-index).
+function initHeroPlanSheet() {
+  const btn = document.querySelector("[data-plan-open]");
+  const sheet = document.querySelector(".hero__search");
+  if (!btn || !sheet) return;
+  // Scrim ditaruh DI DALAM .hero__inner (yang punya z-index:1 = stacking context) bareng
+  // sheet-nya, biar sheet (z45) nangkring di atas scrim (z44). Kalau di body, sheet ke-trap
+  // di context .hero__inner & malah ketutup scrim. Sub-panel field (guests/pickup) tetep
+  // reparent ke body (z55/60) -> di atas SEMUA ini, jadi tetep bisa dibuka dari dalam sheet.
+  const inner = sheet.closest(".hero__inner") || document.body;
+  let ov = inner.querySelector(":scope > .hero-sheet-ov");
+  if (!ov) { ov = document.createElement("div"); ov.className = "hero-sheet-ov"; inner.appendChild(ov); }
+  const isMobile = () => window.matchMedia("(max-width: 992px)").matches;
+  const closeSheet = () => {
+    sheet.classList.remove("is-open");
+    ov.classList.remove("is-open");
+    hsScrollLock(false);
+  };
+  const openSheet = () => {
+    if (!isMobile()) return;
+    sheet.scrollTop = 0;
+    sheet.classList.add("is-open");
+    ov.classList.add("is-open");
+    hsScrollLock(true);
+  };
+  // Tombol close (× pojok) di-inject sekali; grab handle-nya dari CSS ::before.
+  if (!sheet.querySelector(".hero__search-close")) {
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "hero__search-close";
+    close.setAttribute("aria-label", "Close");
+    close.innerHTML = "&times;";
+    sheet.insertBefore(close, sheet.firstChild);
+    close.addEventListener("click", closeSheet);
+  }
+  btn.addEventListener("click", openSheet);
+  ov.addEventListener("click", closeSheet);
+  // Swipe ke bawah buat nutup (cuma kalau konten sheet udah di paling atas).
+  let startY = null;
+  sheet.addEventListener("touchstart", (e) => { startY = sheet.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+  sheet.addEventListener("touchmove", (e) => {
+    if (startY === null) return;
+    if (e.touches[0].clientY - startY > 70) { closeSheet(); startY = null; }
+  }, { passive: true });
+  sheet.addEventListener("touchend", () => { startY = null; });
+  // Balik ke lebar desktop -> reset (biar form inline gak ke-hide/ke-transform sisa sheet).
+  window.addEventListener("resize", () => { if (!isMobile()) closeSheet(); });
+}
+
 function initHeroSearch() {
   const root = document.getElementById("hero-search");
   if (!root) return;
@@ -5453,6 +5504,7 @@ async function initPage() {
   initAccountMenu();
   // setelah guest/pickup select terisi nilainya, baru bangun custom dropdown search
   initHeroSearch();
+  initHeroPlanSheet(); // HP: form search jadi bottom-sheet lewat tombol "Plan your trip"
   initReferral();
   initAccount();
   initMyTripsCart();

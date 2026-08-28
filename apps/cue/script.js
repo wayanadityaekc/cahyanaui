@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 75;
+const PARTIALS_VERSION = 76;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2725,32 +2725,55 @@ function initModals() {
   });
 }
 
+// Satu kartu review - dipake homepage strip & halaman all-reviews.html.
+function renderReviewCard(r) {
+  const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
+  const stars = "&#9733;".repeat(n) + "&#9734;".repeat(5 - n);
+  return '<article class="rev">' +
+    '<div class="rev__stars" aria-label="' + n + ' out of 5">' + stars + "</div>" +
+    '<p class="rev__text">' + escHtml(r.message) + "</p>" +
+    '<div class="rev__foot"><span class="rev__name">' + escHtml(r.name) +
+      (r.service ? " &middot; " + escHtml(r.service) : "") + "</span></div>" +
+  "</article>";
+}
+
 // Guest Reviews strip (homepage dkk) — tarik yang UDAH DI-APPROVE dari
-// GET /api/reviews. Kosong / fetch gagal -> section disembunyiin, BUKAN
-// pasang dummy (no fake content).
+// GET /api/reviews. Kosong / fetch gagal -> tetep invite markup statis
+// yang udah ada di partial (no fake content), section TETEP keliatan.
 async function initReviews() {
   const section = document.getElementById("reviews");
   const strip = document.querySelector(".reviews-strip");
   if (!section || !strip) return;
-  const emptyCta = strip.querySelector("[data-review-empty-cta]");
-  if (emptyCta) emptyCta.addEventListener("click", openReviewModal);
   try {
     const rows = await fetch(`${API_BASE}/reviews`).then((r) => r.json());
     // No approved reviews yet - keep the static invite markup already in the partial.
     if (!Array.isArray(rows) || !rows.length) return;
-    strip.innerHTML = rows.map((r) => {
-      const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
-      const stars = "&#9733;".repeat(n) + "&#9734;".repeat(5 - n);
-      return '<article class="rev">' +
-        '<div class="rev__stars" aria-label="' + n + ' out of 5">' + stars + "</div>" +
-        '<p class="rev__text">' + escHtml(r.message) + "</p>" +
-        '<div class="rev__foot"><span class="rev__name">' + escHtml(r.name) +
-          (r.service ? " &middot; " + escHtml(r.service) : "") + "</span></div>" +
-      "</article>";
-    }).join("");
+    strip.innerHTML = rows.map(renderReviewCard).join("");
   } catch (e) {
     // fetch failed - leave the static invite markup in place
   }
+}
+
+// Halaman "See all reviews" (all-reviews.html) - list lengkap, endpoint sama,
+// container/empty-state beda dari strip homepage.
+async function initAllReviews() {
+  const list = document.querySelector("[data-all-reviews]");
+  if (!list) return;
+  try {
+    const rows = await fetch(`${API_BASE}/reviews`).then((r) => r.json());
+    if (!Array.isArray(rows) || !rows.length) return; // static empty state udah di HTML
+    list.innerHTML = rows.map(renderReviewCard).join("");
+  } catch (e) {
+    // fetch failed - leave the static empty state in place
+  }
+}
+
+// Tombol mana pun yang buka modal review (empty-state homepage, header
+// all-reviews.html, dll) - wired sekali dari sini, bukan per-halaman.
+function initReviewTriggers() {
+  document.querySelectorAll("[data-open-review]").forEach((btn) => {
+    btn.addEventListener("click", openReviewModal);
+  });
 }
 
 /* ===== Review submission — gate: booking_ref + email/phone kudu cocok sama
@@ -5463,7 +5486,9 @@ async function initPage() {
   initModals();
   initModalUX();
   initReviews();
+  initAllReviews();
   initReviewCta();
+  initReviewTriggers();
   initDrivers();
   initWhatsApp();
   initReveal();

@@ -9667,16 +9667,8 @@ strong {
   text-align: left;
   scroll-margin-top: 120px; /* anchor jump: clear navbar + tripbar + tab sticky nanti */
 }
-.catsec + .catsec::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1100px, 90%);
-  height: 1px;
-  background: rgba(34, 32, 28, 0.4);
-}
+/* Garis pemisah antar-kategori DIHAPUS (Wayan): kategori dipisah pakai jarak +
+   judul kategori aja, tanpa border (tour/activities/destinations). */
 .catsec__title {
   font-family: var(--font-body);
   font-weight: 600;

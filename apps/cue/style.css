@@ -7371,9 +7371,12 @@ button.pick-cat {
     appearance: none;
   }
   .navbar__toggle {
-    width: 3rem;
+    /* Box dulu 3rem (48px) + bar di-tengah -> ada ruang mati ~13px di kiri, jadi jarak
+       VISUAL ke My Trips keliatan lebih jauh dari jarak akun<->My Trips (Wayan). Box
+       dirapetin ke lebar bar + margin-left dibuang biar jaraknya seragam. */
+    width: 1.65rem;
     height: 2.2rem;
-    margin-left: 0.45rem;
+    margin-left: 0.25rem;
     align-items: center;
     justify-content: center;
   }

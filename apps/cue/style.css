@@ -769,6 +769,31 @@ body {
   border-radius: 2px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
+/* Search box di dalam custom dropdown (opt-in, mis. Country) - nempel di atas list */
+/* Opsi ke-filter search: [hidden] harus menang dari .hs-opt{display:flex} */
+.hs-opt[hidden] {
+  display: none;
+}
+.hs-search-wrap {
+  padding: 0.5rem 0.9rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+.hs-search {
+  width: 100%;
+  height: var(--field-h);
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: var(--fs-field);
+  color: var(--color-green);
+}
+.hs-search:focus {
+  outline: none;
+  border-color: var(--color-cta);
+  box-shadow: var(--focus-ring);
+}
 .hs-chev {
   width: 18px;
   height: 18px;

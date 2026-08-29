@@ -1412,7 +1412,7 @@ function initBookingConfirm() {
     if (Array.isArray(o.lines) && o.lines.length) {
       ctx.structured = true;
       ctx.lines = o.lines.map((l) => ({
-        type: l.type, service: l.service, date: l.date || "", guests: l.guests,
+        type: l.type, service: l.service, date: l.date || "", time: l.time || "", guests: l.guests,
         pickup: l.pickup || "", dropoff: l.dropoff || "",
         day_no: l.day_no != null ? l.day_no : null, eligible: !!l.eligible,
         base: { usd: l.usd, idr: l.idr }, final: { usd: l.usd, idr: l.idr },
@@ -1519,6 +1519,7 @@ function initBookingConfirm() {
       type: l.type,
       service: l.service,
       date: l.date || "",
+      time: l.time || "",
       guests: String(l.guests || ""),
       pickup: ctx.structured ? l.pickup || pickupI.value : pickupI.value,
       dropoff: ctx.structured ? l.dropoff : dropoffI.value,
@@ -1569,7 +1570,7 @@ function initBookingConfirm() {
     if (ctx.structured) {
       msg +=
         ctx.lines
-          .map((l) => `- ${l.day_no ? "Day " + l.day_no + " · " : ""}${l.date || "TBD"} · ${l.service} · ${l.guests || "-"} pax`)
+          .map((l) => `- ${l.day_no ? "Day " + l.day_no + " · " : ""}${l.date || "TBD"}${l.time ? " · " + fmtTime(l.time) : ""} · ${l.service} · ${l.guests || "-"} pax`)
           .join("\n") + "\n" + `Pick-up: ${pickupI.value || "-"}\n`;
     } else {
       msg += `Pick-up: ${pickupI.value || "-"}\n` + `Drop-off: ${dropoffI.value || "-"}\n`;

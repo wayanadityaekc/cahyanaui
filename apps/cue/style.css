@@ -7503,8 +7503,7 @@ button.pick-cat {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url(assets/images/north-bali-tour-card.jpg) center / cover;
-  /* TODO Wayan: ganti background ke foto mobil/perjalanan charter */
+  background: url(assets/images/road-ubud.webp) center / cover;
   padding: 7rem 1.3rem 3rem;
 }
 .charter-hero::before {
@@ -8908,7 +8907,7 @@ strong {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.66));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.66));
 }
 .lhero__inner {
   position: relative;
@@ -8924,12 +8923,15 @@ strong {
   font-size: var(--fs-display);
   line-height: var(--lh-heading);
   color: #fff;
+  /* halo gelap tipis biar teks putih tetep kebaca di foto terang (mis. Tanah Lot sunset) */
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
   margin: 0 0 0.4rem;
 }
 .lhero__sub {
   color: rgba(255, 255, 255, 0.9);
   font-size: var(--fs-body);
   line-height: 1.5;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
   margin: 0 auto 1.6rem;
   max-width: 480px;
 }
@@ -9044,8 +9046,8 @@ strong {
 }
 .about .lhero::before { content: none; } /* buang overlay gelap - gak ada foto lagi */
 /* Tanpa foto gelap di belakang -> teks jadi warna gelap biar kebaca */
-.about .lhero__title { color: var(--color-gold); }
-.about .lhero__sub { color: var(--color-muted); }
+.about .lhero__title { color: var(--color-gold); text-shadow: none; }
+.about .lhero__sub { color: var(--color-muted); text-shadow: none; }
 /* Galeri foto About: landscape 4:3, di TENGAH di bawah judul/tagline, bisa di-swipe.
    Desktop dapat panah prev/next (di-inject initAboutGallery). */
 .about-gallery {

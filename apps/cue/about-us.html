@@ -25,7 +25,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=399" />
+    <link rel="stylesheet" href="style.css?v=401" />
 
     <link
       rel="canonical"
@@ -72,8 +72,9 @@
   <body class="about">
     <div id="navbar-placeholder"></div>
 
-    <!-- Hero: foto full-bleed + judul, dipendekin ala guide hero (Sep 2026, Wayan) -->
-    <section class="lhero" style="background-image: url(assets/images/tegalalang-rice-terrace-hero.jpg)">
+    <!-- Hero foto DIHAPUS (Wayan): cuma judul + tagline, terus foto asli Wayan di TENGAH
+         langsung di bawah tagline. -->
+    <section class="lhero lhero--plain">
       <div class="lhero__inner">
         <h1 class="lhero__title">About Us</h1>
         <p class="lhero__sub">
@@ -81,6 +82,18 @@
           driver, the villa - so you plan it once and know the price before you
           say yes.
         </p>
+        <!-- Galeri foto About: LANDSCAPE 4:3, bisa di-swipe/slide (Wayan). -->
+        <div class="about-gallery" data-about-gallery>
+          <div class="about-gallery__track">
+            <!-- TODO (Wayan): ganti tiap .about-gallery__ph jadi
+                 <img src="assets/images/about-1.jpg" alt="..." loading="lazy" />
+                 Foto LANDSCAPE 4:3 (mis. 1200x900, JPG ~80%, <=200KB). Tambah/kurang
+                 <div class="about-gallery__slide"> sesuai jumlah foto. -->
+            <div class="about-gallery__slide"><div class="about-gallery__ph"><span>Photo 1</span></div></div>
+            <div class="about-gallery__slide"><div class="about-gallery__ph"><span>Photo 2</span></div></div>
+            <div class="about-gallery__slide"><div class="about-gallery__ph"><span>Photo 3</span></div></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -231,8 +244,8 @@
     <div id="reviews-placeholder"></div>
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=399"></script>
-    <script src="script.js?v=399"></script>
+    <script src="data.js?v=401"></script>
+    <script src="script.js?v=401"></script>
 
   </body>
 </html>

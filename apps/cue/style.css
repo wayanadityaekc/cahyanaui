@@ -6896,92 +6896,31 @@ button.pick-cat {
   text-align: center;
 }
 /* My Trips toggle */
-.mytrips__toggle {
-  display: inline-flex;
-  background: var(--color-cream);
-  border: 1px solid #e9e1cf;
-  border-radius: var(--r-pill);
-  padding: 3px;
-  margin-bottom: 1.2rem;
+/* Kartu Booked/Past (tab Booked Trip & Past Trip) = read-only: gaya .mtc-item sama
+   kayak kartu cart, cuma cursor default (gak ada tombol hapus/heart). */
+.mtc-item--booked {
+  cursor: default;
 }
-.mytrips__tab {
-  border: 0;
-  background: none;
-  padding: 0.5rem 1.3rem;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
+/* Leave a Review: di bawah kartu Past Trip (Wayan) */
+.mtc-review {
+  margin-top: 1.8rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.mtc-review__lead {
+  font-size: var(--fs-body);
   color: var(--color-muted);
-  border-radius: var(--r-pill);
-  cursor: pointer;
+  margin: 0 0 0.9rem;
 }
-.mytrips__tab.is-on {
-  font-weight: 600;
-  background: var(--color-green);
-  color: #efe7d3;
+.mtc-review__btn {
+  display: inline-flex;
+  width: auto;
+  margin-top: 0;
+  padding: 0.75rem 1.9rem;
+  text-decoration: none;
 }
 /* Trip card */
-.trip {
-  display: flex;
-  border: 1px solid #e9e1cf;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  background: #fff;
-  margin-bottom: 0.9rem;
-}
-.trip__stripe {
-  width: 5px;
-  background: var(--color-gold);
-  flex: 0 0 auto;
-}
-.trip__body {
-  padding: 0.9rem 1.1rem;
-  flex: 1;
-}
-.trip__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.6rem;
-}
-.trip__name {
-  font-weight: 600;
-}
-.trip__meta {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  margin-top: 0.15rem;
-}
-.trip__foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.7rem;
-}
-.trip__price {
-  color: var(--color-amber);
-  font-weight: 600;
-}
-.trip__ref {
-  font-size: var(--fs-label);
-  color: var(--color-muted);
-}
-.pill {
-  font-size: var(--fs-label);
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: var(--r-pill);
-  white-space: nowrap;
-}
-.pill-ok {
-  background: #e2efe3;
-  color: var(--color-ok);
-}
-.pill-done {
-  background: #ece7db;
-  color: #7a7362;
-}
-
 /* ===== My Trips cart page (Fase C) ===== */
 .mytrips {
   padding: calc(var(--nav-h, 57.6px) + 2.2rem) 0 3.5rem;
@@ -7018,7 +6957,10 @@ button.pick-cat {
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  touch-action: pan-x pan-y;
+  /* Tab strip = swipe HORIZONTAL doang; gesture vertikal di sini dikunci (Wayan).
+     Beda dari card slider (pan-x pan-y) - strip tipis jadi gak perlu scroll halaman
+     dari sini, biar swipe kiri-kanan gak "ketarik" vertikal. */
+  touch-action: pan-x;
   border-bottom: 1px solid var(--line);
   margin-bottom: 1.4rem;
 }
@@ -7304,11 +7246,7 @@ button.pick-cat {
    dari ".related .experience__grid--home4" (gak kena lagi karena grid-nya di luar). */
 .mtc-related .related { padding-bottom: 0; }
 .mtc-related .experience__grid--home4 { margin-top: 1.6rem; }
-.mtc-pkgintro {
-  color: var(--color-muted);
-  margin: 0 0 1.2rem;
-}
-/* empty state + suggested packages */
+/* empty state (tab My Trip) */
 .mtc-empty { text-align: center; padding: 0.5rem 0 0; }
 .mtc-empty__lead {
   font-family: var(--font-head);
@@ -7322,51 +7260,6 @@ button.pick-cat {
   color: var(--color-muted);
   max-width: 44ch;
   margin: 0 auto 1.8rem;
-}
-/* Kartu teaser "2-Day/3-Day..." di empty state dihapus (Sep 2026, Wayan minta -
-   redundan sama tab bar di atas yang udah bisa dipake buka paket suggested yang
-   sama). Tab bar TETAP ada; markup/data paket di JS gak disentuh, cuma disembunyiin. */
-.mtc-pkgs {
-  display: none;
-}
-.mtc-pkg {
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: #fff;
-  padding: 1.1rem 1.2rem;
-}
-.mtc-pkg__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.6rem;
-}
-.mtc-pkg__title {
-  font-weight: 600;
-  color: var(--color-green);
-  margin: 0;
-}
-.mtc-pkg__price { white-space: nowrap; }
-.mtc-pkg__price .price-cur { color: var(--color-amber); font-weight: 600; }
-.mtc-pkg__blurb {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  margin: 0.5rem 0 1rem;
-}
-.mtc-pkg__use { width: 100%; }
-/* booked & paid (secondary) */
-.mytrips-booked {
-  margin-top: 2.6rem;
-  padding-top: 1.8rem;
-  border-top: 1px solid var(--line);
-}
-.mytrips-booked__title {
-  font-family: var(--font-head);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: 1.3rem;
-  color: var(--color-green);
-  margin: 0 0 1.1rem;
 }
 
 /* Settings form */
@@ -7970,7 +7863,6 @@ section.faq::before,
 .itn-day__title,
 .acct__name,
 .welcome__title,
-.trip__name,
 .experience__name {
   font-family: var(--font-body);
   font-weight: 600;
@@ -8622,6 +8514,21 @@ strong {
   align-items: end;
   gap: 0.55rem;
 }
+/* Mobile: From/To ditumpuk vertikal (From atas - panah tengah - To bawah), biar gak
+   sempit kayak 2-kolom. Desktop TETAP 1 baris From|panah|To (Wayan). */
+@media (max-width: 600px) {
+  .tpick__route {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 0.5rem;
+    justify-items: stretch;
+  }
+  .tpick__swap {
+    justify-self: center;
+    margin-bottom: 0;
+    transform: rotate(90deg); /* panah kiri-kanan jadi atas-bawah pas ditumpuk */
+  }
+}
 .tpick__field label {
   display: block;
   font-size: var(--fs-small);
@@ -8950,9 +8857,82 @@ strong {
 /* About hero dipendekin ala guide (Sep 2026, Wayan) - kartu intro pindah ke bawah,
    jadi hero cukup muat judul + sub aja. Sejajar sama .guide-article-page .lhero. */
 .about .lhero {
-  min-height: 360px;
+  min-height: 0;
+  background: none; /* foto hero dihapus (Wayan) - jadi blok teks polos */
   padding-top: 6.5rem;
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
+}
+.about .lhero::before { content: none; } /* buang overlay gelap - gak ada foto lagi */
+/* Tanpa foto gelap di belakang -> teks jadi warna gelap biar kebaca */
+.about .lhero__title { color: var(--color-gold); }
+.about .lhero__sub { color: var(--color-muted); }
+/* Galeri foto About: landscape 4:3, di TENGAH di bawah judul/tagline, bisa di-swipe.
+   Desktop dapat panah prev/next (di-inject initAboutGallery). */
+.about-gallery {
+  position: relative;
+  max-width: 640px;
+  margin: 0.6rem auto 0;
+}
+.about-gallery__track {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x pan-y; /* swipe horizontal geser foto, swipe vertikal tetap scroll halaman */
+  border-radius: var(--r-lg);
+}
+.about-gallery__track::-webkit-scrollbar { display: none; }
+.about-gallery__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+}
+.about-gallery__slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--r-lg);
+}
+/* Placeholder sementara sampai foto asli dipasang (gradient rapi, bukan kotak kosong) */
+.about-gallery__ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--line);
+  background: linear-gradient(160deg, #f3f1ea, #e9e6dd);
+  color: var(--color-muted);
+  font-size: var(--fs-small);
+  letter-spacing: 0.04em;
+}
+/* Panah slider (desktop) - muncul pas hover, pola sama kayak .slider-arrow */
+.about-gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--color-gold-d);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+  z-index: 2;
+}
+.about-gallery:hover .about-gallery__arrow { opacity: 1; }
+.about-gallery__arrow--prev { left: 0.5rem; }
+.about-gallery__arrow--next { right: 0.5rem; }
+@media (hover: none) {
+  .about-gallery__arrow { display: none; } /* HP: swipe aja, gak usah panah */
 }
 /* Container kartu intro (di bawah hero) - lebar & padding tepi samain sama .arows */
 .about-intro {
@@ -8961,7 +8941,7 @@ strong {
   padding: 0 var(--container-x);
 }
 .about-intro .ahero-card {
-  margin-top: -2.5rem; /* nyembul dikit ke atas, nempel di tepi bawah foto hero */
+  margin-top: 0.5rem; /* foto hero dihapus - gak nyembul lagi, jarak normal di bawah hero */
   position: relative;
   z-index: 3;
 }

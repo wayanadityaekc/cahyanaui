@@ -5248,7 +5248,7 @@ function makeFieldEnhancer() {
     }
     foot.querySelector("[data-apply]").addEventListener("click", (e) => {
       e.stopPropagation();
-      if (sel) { inp.value = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); inp.dispatchEvent(new Event("change")); refresh(); }
+      if (sel) { inp.value = sel.y + "-" + pad(sel.m + 1) + "-" + pad(sel.d); inp.dispatchEvent(new Event("input", { bubbles: true })); inp.dispatchEvent(new Event("change")); refresh(); }
       closeAll();
     });
     ctrl.addEventListener("click", (e) => { e.stopPropagation(); sel = parseD(inp.value); render(); openPanel(panel, ctrl); });
@@ -5257,11 +5257,110 @@ function makeFieldEnhancer() {
     refresh();
   }
 
+  // Date + TIME (input[type=datetime-local]) -> custom picker kita: kalender + baris slot
+  // jam (pill, tiap 30 menit) di footer sticky. Nulis balik "YYYY-MM-DDTHH:MM" ke input
+  // native + fire input & change (biar validasi tombol yg dengerin "input" ikut jalan).
+  // Dipakai buat Flight date & time di airport-transfer (gantiin picker bawaan browser).
+  function enhanceDateTime(inp, title) {
+    if (!inp || inp.dataset.enhanced) return;
+    inp.dataset.enhanced = "1";
+    const group = cselGroupOf(inp);
+    inp.classList.add("bk-native");
+    const ctrl = document.createElement("button");
+    ctrl.type = "button";
+    ctrl.className = "hs-control bk-control";
+    ctrl.setAttribute("aria-expanded", "false");
+    ctrl.innerHTML = '<span class="hs-control__val placeholder" data-val>Select date &amp; time</span>' +
+      '<svg class="hs-chev hs-chev--cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>';
+    const panel = makePanel(title);
+    panel.classList.add("bk-panel--cal", "bookdate-panel", "hs-panel--popup");
+    const calBody = document.createElement("div");
+    calBody.className = "hs-cal bk-cal";
+    const foot = document.createElement("div");
+    foot.className = "hs-cal__foot dt-foot";
+    foot.innerHTML = '<div class="dt-times" data-times></div>' +
+      '<div class="dt-footrow"><span class="hs-cal__hint" data-hint>Pick date &amp; time</span><button type="button" class="hs-cal__apply" data-apply>Apply</button></div>';
+    panel.appendChild(calBody); panel.appendChild(foot);
+    inp.after(ctrl); ctrl.after(panel);
+    const valEl = ctrl.querySelector("[data-val]");
+    const hint = foot.querySelector("[data-hint]");
+    const timesEl = foot.querySelector("[data-times]");
+    const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const MONS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    const pad = (n) => String(n).padStart(2, "0");
+    const parseDT = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(s || ""); return m ? { y: +m[1], m: +m[2] - 1, d: +m[3], H: +m[4], M: +m[5] } : null; };
+    const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
+    const now = new Date();
+    const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
+    let selD = null, selT = null; // {y,m,d} + {H,M}
+    const tLabel = (t) => fmtTime(pad(t.H) + ":" + pad(t.M));
+    function fromInput() { const p = parseDT(inp.value); if (p) { selD = { y: p.y, m: p.m, d: p.d }; selT = { H: p.H, M: p.M }; } else { selD = null; selT = null; } }
+    function refresh() {
+      const p = parseDT(inp.value);
+      if (p) { valEl.textContent = MONS[p.m] + " " + p.d + ", " + p.y + " · " + fmtTime(pad(p.H) + ":" + pad(p.M)); valEl.classList.remove("placeholder"); }
+      else { valEl.textContent = "Select date & time"; valEl.classList.add("placeholder"); }
+    }
+    function syncHint() { hint.textContent = (selD ? MONS[selD.m] + " " + selD.d : "Pick a date") + (selT ? " · " + tLabel(selT) : " · pick a time"); }
+    function monthEl(y, m) {
+      const el = document.createElement("div");
+      el.className = "hs-cal__m";
+      const cap = document.createElement("div");
+      cap.className = "hs-cal__cap"; cap.textContent = MON[m] + " " + y; el.appendChild(cap);
+      const g = document.createElement("div"); g.className = "hs-cal__grid";
+      DOW.forEach((d) => { const h = document.createElement("div"); h.className = "hs-cal__dow"; h.textContent = d; g.appendChild(h); });
+      const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate();
+      for (let i = 0; i < first; i++) { const o = document.createElement("div"); o.className = "hs-cal__d is-off"; g.appendChild(o); }
+      for (let d = 1; d <= days; d++) {
+        const cell = { y: y, m: m, d: d };
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "hs-cal__d"; b.textContent = d;
+        const past = keyOf(cell) < keyOf(TODAY);
+        if (past) b.classList.add("is-off");
+        if (cell.y === TODAY.y && cell.m === TODAY.m && cell.d === TODAY.d) b.classList.add("today");
+        if (selD && keyOf(cell) === keyOf(selD)) b.classList.add("sel");
+        if (!past) b.addEventListener("click", (e) => { e.stopPropagation(); selD = cell; renderCal(); syncHint(); });
+        g.appendChild(b);
+      }
+      el.appendChild(g); return el;
+    }
+    function renderCal() {
+      calBody.innerHTML = "";
+      const wrap = document.createElement("div"); wrap.className = "hs-cal__months";
+      for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
+      calBody.appendChild(wrap);
+    }
+    function renderTimes() {
+      timesEl.innerHTML = "";
+      for (let h = 0; h < 24; h++) for (let mm = 0; mm < 60; mm += 30) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "dt-time"; b.textContent = fmtTime(pad(h) + ":" + pad(mm));
+        if (selT && selT.H === h && selT.M === mm) b.classList.add("is-sel");
+        b.addEventListener("click", (e) => { e.stopPropagation(); selT = { H: h, M: mm }; renderTimes(); syncHint(); });
+        timesEl.appendChild(b);
+      }
+      const cur = timesEl.querySelector(".is-sel"); if (cur) cur.scrollIntoView({ block: "nearest", inline: "center" });
+    }
+    function renderAll() { renderCal(); renderTimes(); syncHint(); }
+    foot.querySelector("[data-apply]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!selD || !selT) { syncHint(); return; } // wajib dua-duanya
+      inp.value = selD.y + "-" + pad(selD.m + 1) + "-" + pad(selD.d) + "T" + pad(selT.H) + ":" + pad(selT.M);
+      inp.dispatchEvent(new Event("input", { bubbles: true }));
+      inp.dispatchEvent(new Event("change"));
+      refresh(); closeAll();
+    });
+    ctrl.addEventListener("click", (e) => { e.stopPropagation(); fromInput(); renderAll(); openPanel(panel, ctrl); });
+    inp.addEventListener("change", () => { fromInput(); refresh(); });
+    refreshers.push(refresh); __cselRefreshers.push(refresh);
+    refresh();
+  }
+
   overlay.addEventListener("click", closeAll);
   document.addEventListener("click", (e) => { if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closeAll(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   window.addEventListener("resize", closeAll);
-  return { enhanceSelect, enhanceDate, closeAll };
+  return { enhanceSelect, enhanceDate, enhanceDateTime, closeAll };
 }
 
 // Booking form (halaman detail bookable): service/item/pickup + tanggal -> custom.
@@ -5293,6 +5392,7 @@ function initCustomSelects() {
   add(document.getElementById("at-direction"), "Direction", "sel");
   add(document.getElementById("at-guests"), "Guests", "sel");
   add(document.getElementById("at-date"), "Select date", "date");
+  add(document.getElementById("at-flight-time"), "Flight date & time", "datetime");
   add(document.getElementById("sg-days"), "Days", "sel");
   add(document.getElementById("sg-guests"), "Guests", "sel");
   add(document.getElementById("trip-start"), "Start date", "date");
@@ -5302,7 +5402,11 @@ function initCustomSelects() {
   document.querySelectorAll("[data-stay-select]").forEach((el) => add(el, "Pick-up area", "sel"));
   if (!targets.length) return;
   const fe = globalEnhancer();
-  targets.forEach((t) => { t.kind === "date" ? fe.enhanceDate(t.el, t.title) : fe.enhanceSelect(t.el, t.title); });
+  targets.forEach((t) => {
+    if (t.kind === "date") fe.enhanceDate(t.el, t.title);
+    else if (t.kind === "datetime") fe.enhanceDateTime(t.el, t.title);
+    else fe.enhanceSelect(t.el, t.title);
+  });
 }
 
 // Field di dalam sebuah root yg di-build on-demand (modal editor trip, popup service

@@ -1022,6 +1022,46 @@ body {
   padding: 9px 20px;
   cursor: pointer;
 }
+/* Date+time picker (Flight date & time): footer = baris pill jam (scroll) + hint/Apply.
+   Footer sticky (dari .hs-cal__foot) biar jam & Apply selalu keliatan walau kalender scroll. */
+.dt-foot {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.dt-times {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.dt-times::-webkit-scrollbar {
+  display: none;
+}
+.dt-time {
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  border: 1px solid var(--line, #e7e4dd);
+  border-radius: var(--r-pill);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  color: var(--color-ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dt-time.is-sel {
+  background: var(--color-green);
+  color: #fff;
+  border-color: var(--color-green);
+}
+.dt-footrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
 /* overlay (cuma tampil pas bottom-sheet HP) */
 .hs-overlay {
   position: fixed;

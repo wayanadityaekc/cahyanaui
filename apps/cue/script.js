@@ -5278,13 +5278,19 @@ function makeFieldEnhancer() {
     calBody.className = "hs-cal bk-cal";
     const foot = document.createElement("div");
     foot.className = "hs-cal__foot dt-foot";
-    foot.innerHTML = '<div class="dt-times" data-times></div>' +
+    foot.innerHTML = '<div class="dt-cols">' +
+      '<div class="dt-col" data-col="h" aria-label="Hour"></div>' +
+      '<div class="dt-col" data-col="m" aria-label="Minute"></div>' +
+      '<div class="dt-col dt-col--ap" data-col="ap" aria-label="AM/PM"></div>' +
+      '</div>' +
       '<div class="dt-footrow"><span class="hs-cal__hint" data-hint>Pick date &amp; time</span><button type="button" class="hs-cal__apply" data-apply>Apply</button></div>';
     panel.appendChild(calBody); panel.appendChild(foot);
     inp.after(ctrl); ctrl.after(panel);
     const valEl = ctrl.querySelector("[data-val]");
     const hint = foot.querySelector("[data-hint]");
-    const timesEl = foot.querySelector("[data-times]");
+    const colH = foot.querySelector('[data-col="h"]');
+    const colM = foot.querySelector('[data-col="m"]');
+    const colAP = foot.querySelector('[data-col="ap"]');
     const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const MONS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -5293,15 +5299,26 @@ function makeFieldEnhancer() {
     const keyOf = (o) => o.y * 10000 + o.m * 100 + o.d;
     const now = new Date();
     const TODAY = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate() };
-    let selD = null, selT = null; // {y,m,d} + {H,M}
-    const tLabel = (t) => fmtTime(pad(t.H) + ":" + pad(t.M));
-    function fromInput() { const p = parseDT(inp.value); if (p) { selD = { y: p.y, m: p.m, d: p.d }; selT = { H: p.H, M: p.M }; } else { selD = null; selT = null; } }
+    let selD = null;                 // {y,m,d}
+    let selH12 = null, selMin = null, selAP = null; // jam 1-12, menit 0-55, "AM"/"PM"
+    const roundMin = (m) => Math.min(55, Math.round(m / 5) * 5);
+    const timeHM = () => { // gabung 3 kolom -> {H(0-23), M} (null kalau belum lengkap)
+      if (selH12 == null || selMin == null || !selAP) return null;
+      let H = selH12 % 12; if (selAP === "PM") H += 12;
+      return { H: H, M: selMin };
+    };
+    const setTimeFromH = (H, M) => { selAP = H < 12 ? "AM" : "PM"; let h = H % 12; if (h === 0) h = 12; selH12 = h; selMin = roundMin(M); };
+    function fromInput() {
+      const p = parseDT(inp.value);
+      if (p) { selD = { y: p.y, m: p.m, d: p.d }; setTimeFromH(p.H, p.M); }
+      else { selD = null; const nn = new Date(); setTimeFromH(nn.getHours(), nn.getMinutes()); } // default jam = sekarang
+    }
     function refresh() {
       const p = parseDT(inp.value);
       if (p) { valEl.textContent = MONS[p.m] + " " + p.d + ", " + p.y + " · " + fmtTime(pad(p.H) + ":" + pad(p.M)); valEl.classList.remove("placeholder"); }
       else { valEl.textContent = "Select date & time"; valEl.classList.add("placeholder"); }
     }
-    function syncHint() { hint.textContent = (selD ? MONS[selD.m] + " " + selD.d : "Pick a date") + (selT ? " · " + tLabel(selT) : " · pick a time"); }
+    function syncHint() { const t = timeHM(); hint.textContent = (selD ? MONS[selD.m] + " " + selD.d : "Pick a date") + (t ? " · " + fmtTime(pad(t.H) + ":" + pad(t.M)) : ""); }
     function monthEl(y, m) {
       const el = document.createElement("div");
       el.className = "hs-cal__m";
@@ -5330,22 +5347,32 @@ function makeFieldEnhancer() {
       for (let k = 0; k < 13; k++) { let mm = TODAY.m + k, yy = TODAY.y; while (mm > 11) { mm -= 12; yy++; } wrap.appendChild(monthEl(yy, mm)); }
       calBody.appendChild(wrap);
     }
-    function renderTimes() {
-      timesEl.innerHTML = "";
-      for (let h = 0; h < 24; h++) for (let mm = 0; mm < 60; mm += 30) {
+    // Satu kolom angka (jam/menit/AM-PM): tombol ke-scroll, yg kepilih di-highlight.
+    function fillCol(el, items, cur, onPick) {
+      el.innerHTML = "";
+      items.forEach((it) => {
         const b = document.createElement("button");
-        b.type = "button"; b.className = "dt-time"; b.textContent = fmtTime(pad(h) + ":" + pad(mm));
-        if (selT && selT.H === h && selT.M === mm) b.classList.add("is-sel");
-        b.addEventListener("click", (e) => { e.stopPropagation(); selT = { H: h, M: mm }; renderTimes(); syncHint(); });
-        timesEl.appendChild(b);
-      }
-      const cur = timesEl.querySelector(".is-sel"); if (cur) cur.scrollIntoView({ block: "nearest", inline: "center" });
+        b.type = "button"; b.className = "dt-num" + (it.v === cur ? " is-sel" : "");
+        b.textContent = it.label;
+        b.addEventListener("click", (e) => { e.stopPropagation(); onPick(it.v); });
+        el.appendChild(b);
+      });
+      const s = el.querySelector(".is-sel"); if (s) s.scrollIntoView({ block: "center" });
     }
-    function renderAll() { renderCal(); renderTimes(); syncHint(); }
+    function renderTime() {
+      const hours = []; for (let h = 1; h <= 12; h++) hours.push({ v: h, label: String(h) });
+      const mins = []; for (let m = 0; m < 60; m += 5) mins.push({ v: m, label: pad(m) });
+      const aps = [{ v: "AM", label: "AM" }, { v: "PM", label: "PM" }];
+      fillCol(colH, hours, selH12, (v) => { selH12 = v; renderTime(); syncHint(); });
+      fillCol(colM, mins, selMin, (v) => { selMin = v; renderTime(); syncHint(); });
+      fillCol(colAP, aps, selAP, (v) => { selAP = v; renderTime(); syncHint(); });
+    }
+    function renderAll() { renderCal(); renderTime(); syncHint(); }
     foot.querySelector("[data-apply]").addEventListener("click", (e) => {
       e.stopPropagation();
-      if (!selD || !selT) { syncHint(); return; } // wajib dua-duanya
-      inp.value = selD.y + "-" + pad(selD.m + 1) + "-" + pad(selD.d) + "T" + pad(selT.H) + ":" + pad(selT.M);
+      const t = timeHM();
+      if (!selD || !t) { syncHint(); return; } // wajib tanggal + jam lengkap
+      inp.value = selD.y + "-" + pad(selD.m + 1) + "-" + pad(selD.d) + "T" + pad(t.H) + ":" + pad(t.M);
       inp.dispatchEvent(new Event("input", { bubbles: true }));
       inp.dispatchEvent(new Event("change"));
       refresh(); closeAll();

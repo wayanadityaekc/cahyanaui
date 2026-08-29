@@ -17,7 +17,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=370" />
+    <link rel="stylesheet" href="style.css?v=402" />
 
   </head>
   <body class="tourprog">
@@ -26,12 +26,9 @@
     <section class="mytrips">
       <div class="mytrips__container">
         <h1 class="mytrips__title">My Trips</h1>
+        <!-- 3 tab: My Trip (cart blm bayar) / Booked Trip (udah bayar) / Past Trip (udah lewat).
+             Booked & Past ditarik dari /api/bookings/mine, di-render sama initMyTripsCart. -->
         <div data-mytrips-cart></div>
-
-        <section class="mytrips-booked" data-booked-wrap hidden>
-          <h2 class="mytrips-booked__title">Booked &amp; paid</h2>
-          <div id="trips-root" data-my-trips></div>
-        </section>
       </div>
     </section>
 
@@ -40,8 +37,8 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=370"></script>
-    <script src="script.js?v=370"></script>
+    <script src="data.js?v=402"></script>
+    <script src="script.js?v=402"></script>
 
   </body>
 </html>

@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 77;
+const PARTIALS_VERSION = 78;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -237,6 +237,7 @@ function renderPrices() {
   });
   renderPriceLabels();
   renderFees();
+  renderCharterPromo();
   updateGlanceSave();
   if (window.__transferRefresh) window.__transferRefresh(); // picker transfer ikut kurs/referral
 }
@@ -269,6 +270,22 @@ function renderFees() {
     const cur = currentCurrency;
     const txt = fmtMoney(idr / TICKET_IDR_PER_USD, idr, cur);
     el.textContent = cur === "IDR" ? txt : "~" + txt;
+  });
+}
+
+// Isi harga kartu Charter di homepage (<span data-charter="half|full">) dari CHARTER
+// (data.js) ke currency aktif. Dipanggil dari renderPrices biar ikut ganti kurs.
+function renderCharterPromo() {
+  document.querySelectorAll("[data-charter]").forEach((el) => {
+    const dur = el.dataset.charter; // "half" | "full"
+    const extra = parseInt(el.dataset.charterExtra || "0", 10); // jam tambahan (full day)
+    let usd, idr;
+    if (dur === "half") { usd = CHARTER.half.usd; idr = CHARTER.half.idr; }
+    else if (dur === "full") {
+      usd = CHARTER.full.usd + extra * CHARTER.extHourUsd;
+      idr = CHARTER.full.idr + extra * CHARTER.extHourIdr;
+    }
+    if (usd != null) el.textContent = fmtMoney(usd, idr);
   });
 }
 
@@ -319,6 +336,7 @@ function setGuests(n) {
   // Booking form gak punya kolom Guests lagi -> cukup refresh harga booking.
   if (window.__bookingRefresh) window.__bookingRefresh();
   if (window.__tripbarRefresh) window.__tripbarRefresh();
+  cselRefreshAll(); // label custom-dropdown ikut ke-update (value diubah programmatik)
 }
 
 // Reset dari opsi "Reset" di dropdown navbar: hapus jumlah orang tersimpan,
@@ -335,6 +353,7 @@ function resetGuests() {
   renderPrices();
   if (window.__ttypeRefresh) window.__ttypeRefresh();
   if (window.__bookingRefresh) window.__bookingRefresh();
+  cselRefreshAll();
   showTripDetails();
 }
 
@@ -408,6 +427,7 @@ function setStay(pk) {
   });
   if (window.__bookingRefresh) window.__bookingRefresh();
   if (window.__tripbarRefresh) window.__tripbarRefresh();
+  cselRefreshAll();
 }
 
 // Set range tanggal trip: simpan + refresh tripbar. Kalau "to" < "from", disamain.
@@ -1040,35 +1060,6 @@ function cartHeartIcon(on) {
   return '<svg viewBox="0 0 24 24" fill="' + (on ? "currentColor" : "none") +
     '" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<path d="M12 20.3 4.7 13a4.6 4.6 0 0 1 6.5-6.5l.8.8.8-.8A4.6 4.6 0 0 1 19.3 13z"/></svg>';
-}
-
-// Cari index entry cart yang "sama" dengan 1 entry paket suggested (buat toggle heart).
-// day = nama item pertama SAMA + tanggal SAMA; transfer = rute + arah + tanggal sama.
-// -1 = belum ada di cart.
-//
-// BUG (ditemukan lewat code review, udah kejadian di production): dulu match
-// cuma pakai nama, gak ikut cek tanggal. Akibatnya kalau user punya booking asli
-// "Ubud Tour" tgl 5 Okt (dari Book Now), terus buka tab paket suggested yang
-// "Ubud Tour"-nya kebetulan sama tapi tanggalnya beda, hati di paket itu ke-ON
-// duluan (dikira "udah di cart") - padahal itu entry yang beda. Klik buat unheart
-// = manggil cartToggleEntry -> nge-splice entry booking ASLI yang gak ada hubungannya,
-// bukan yang dimaksud. Booking user ilang tanpa konfirmasi apa-apa.
-function cartMatchIndex(state, type, entry) {
-  if (type === "day") return (state.days || []).findIndex((d) => (d.items || [])[0] === (entry.items || [])[0] && d.date === entry.date);
-  if (type === "transfer") return (state.transfers || []).findIndex((t) => t.route === entry.route && t.direction === entry.direction && t.date === entry.date);
-  return -1;
-}
-
-// Toggle 1 entry paket suggested ke/dari cart. Return true kalau hasilnya masuk cart.
-// Di-copy (bukan referensi) biar edit di cart gak nyeret state paket.
-function cartToggleEntry(type, entry) {
-  const st = itnLoad();
-  const list = type === "day" ? st.days : st.transfers;
-  const i = cartMatchIndex(st, type, entry);
-  if (i > -1) { list.splice(i, 1); itnSave(st); return false; }
-  list.push(JSON.parse(JSON.stringify(entry)));
-  itnSave(st);
-  return true;
 }
 
 // "YYYY-MM-DD" -> "19 August" (tanggal di kartu). Kosong -> "Date to be set".
@@ -1777,6 +1768,27 @@ function initSlider() {
 }
 
 // Panah kiri/kanan buat slider Tour Programs (muncul pas hover, desktop)
+// Galeri foto About (landscape 4:3, scroll-snap). Swipe jalan native; di desktop
+// tambahin panah prev/next yg nge-scroll selebar 1 slide. Cuma jalan kalau >=2 slide.
+function initAboutGallery() {
+  const g = document.querySelector("[data-about-gallery]");
+  if (!g) return;
+  const track = g.querySelector(".about-gallery__track");
+  if (!track || track.children.length < 2) return;
+  [["prev", "‹"], ["next", "›"]].forEach(([dir, glyph]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "about-gallery__arrow about-gallery__arrow--" + dir;
+    btn.setAttribute("aria-label", dir === "prev" ? "Previous photo" : "Next photo");
+    btn.innerHTML = glyph;
+    btn.addEventListener("click", () => {
+      const w = track.clientWidth;
+      track.scrollBy({ left: dir === "prev" ? -w : w, behavior: "smooth" });
+    });
+    g.appendChild(btn);
+  });
+}
+
 function initTourSlider() {
   // #itn-days ikut: di desktop dia slider horizontal (panah muncul pas hover;
   // di mobile tetap numpuk vertikal & panahnya emang ke-hide via CSS hover).
@@ -3248,6 +3260,7 @@ function initTransferPicker() {
     bookBtn.disabled = false; addBtn.disabled = false;
     priceEl.textContent = fmtMoney(q.total.usd, q.total.idr);
     unitEl.textContent = "total per car" + (q.hours ? " · " + q.hours : "") + (q.ret ? " · return" : "");
+    cselRefreshAll(); // From/To bisa berubah programmatik (jaga-Ubud, swap, rute populer) -> sync label
   };
   window.__transferRefresh = render; // dipanggil renderPrices pas kurs/referral berubah
 
@@ -3591,6 +3604,7 @@ function showTripDetails() {
   document.body.appendChild(modal);
   const curWrap = modal.querySelector("[data-cur]");
   if (curWrap) wireCurDropdown(curWrap);
+  enhanceFieldsIn(modal); // guests/pickup/tanggal di editor ini -> custom dropdown juga
   const close = () => modal.classList.remove("active");
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) close();
@@ -3728,33 +3742,16 @@ function wireGate(root) {
 }
 
 /* ==================== My Trips cart page (Fase C) ==================== */
-// Paket suggested siap-pakai (tab + empty-state). Preview di-generate dari suggestState.
-const CART_PACKAGES = [
-  { id: "p2", days: 2, label: "2-Day", title: "2-Day Ubud Highlights",
-    blurb: "Ubud's culture, rice terraces and a Batur sunrise — the essentials in two days." },
-  { id: "p3", days: 3, label: "3-Day", title: "3-Day Bali Explorer",
-    blurb: "Ubud plus east Bali temples and a sunset Kecak — a fuller taste of the island." },
-  { id: "p4", days: 4, label: "4-Day", title: "4-Day Grand Bali",
-    blurb: "Ubud, east Bali, the south coast and the northern lakes & waterfalls." }
-];
-
-// State paket suggested dgn tanggal terisi: mulai dari trip start (search bar) atau hari ini,
-// tiap hari +1; transfer datang di hari-1, transfer pulang di hari terakhir.
-function cartPackageState(pkg) {
-  const g = String(currentGuests || DISPLAY_GUESTS);
-  const start = currentDateFrom || todayStr();
-  const st = suggestState(pkg.days, g);
-  st.days.forEach((d, i) => { d.date = addDaysStr(start, i); });
-  if (st.transfers[0]) st.transfers[0].date = start;                       // arrival (to Ubud)
-  if (st.transfers[1]) st.transfers[1].date = addDaysStr(start, pkg.days - 1); // departure
-  return st;
-}
 
 // Build lines + buka checkout dari state cart (isi guests default). Fase E ganti ke Xendit.
 function cartCheckout(rerender) {
   if (!window.__openBooking) return;
   const st = itnLoad();
-  const days = st.days || [], transfers = st.transfers || [], chs = st.charters || [];
+  // Hari kosong (tanpa item) — sisa slot dari sync rentang tanggal nginep — JANGAN diitung/dikirim.
+  // My Trips nyembunyiin hari kosong (cartFlatten skip), jadi kalau ikut keitung di sini
+  // muncul mismatch: cart keliatan 1 item tapi label bayar "3 days". Filter dulu.
+  const days = (st.days || []).filter((d) => d.items && d.items.length);
+  const transfers = st.transfers || [], chs = st.charters || [];
   if (!days.length && !transfers.length && !chs.length) return;
   // Semua baris WAJIB ada tanggal (tombol Make Payment juga di-disable — ini jaring kedua).
   if (days.concat(transfers, chs).some((r) => !r.date)) return;
@@ -3820,6 +3817,45 @@ function initMyTripsCart() {
   let receiptOpen = false; // rincian harga: default ketutup
   let justPaid = false;    // true abis submit booking - ganti empty-state jadi upsell
   let bookedNames = [];    // nama item yg baru dipesan (dikecualiin dari rekomendasi)
+  // Booked (udah bayar, upcoming) + Past (udah lewat, history) dari /api/bookings/mine.
+  const bookings = { upcoming: [], history: [], loaded: false };
+
+  // Kartu trip booked/past = gaya .mtc-item yg SAMA kayak kartu cart (foto icon + judul +
+  // desc + tanggal + harga), tapi read-only (gak ada tombol hapus/heart). Foto diambil dari
+  // ITEM_CARD by nama; kalau gak ketemu (mis. "Custom Itinerary") -> icon kategori.
+  const bookingCardHTML = (t) => {
+    const firstService = (t.lines && t.lines[0] && t.lines[0].service) || t.name;
+    const card = ITEM_CARD[t.name] || ITEM_CARD[firstService] || {};
+    const iconHTML = card.img
+      ? '<span class="mtc-item__icon mtc-item__icon--photo" style="background-image:url(assets/images/' + card.img + ')"></span>'
+      : '<span class="mtc-item__icon">' + cartIcon("tour") + "</span>";
+    const dateStr = t.start_date
+      ? (t.end_date && t.end_date !== t.start_date
+          ? fmtGroupDate(t.start_date) + " – " + fmtGroupDate(t.end_date)
+          : fmtGroupDate(t.start_date))
+      : "Date TBD";
+    const statusLabel = t.upcoming
+      ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "Booked")
+      : "Completed";
+    // Past trip yang masih ada tour belum direview (t.review_items, dari
+    // /api/bookings/mine) dapet tombol per tour - satu booking custom itinerary
+    // (beberapa tour beda) bisa punya beberapa tombol.
+    const reviewItems = t.review_items || [];
+    const reviewHTML = reviewItems.length
+      ? '<div class="mtc-review">' + reviewItems.map((svc) =>
+          '<button type="button" class="modal__btn mtc-review__btn" data-review-btn data-ref="' + escHtml(t.ref) +
+          '" data-service="' + escHtml(svc) + '">Leave a Review' + (reviewItems.length > 1 ? " – " + escHtml(svc) : "") + "</button>",
+        ).join("") + "</div>"
+      : "";
+    return '<div class="mtc-item mtc-item--booked">' + iconHTML +
+      '<div class="mtc-item__body">' +
+        '<p class="mtc-item__title">' + escHtml(t.name) + "</p>" +
+        '<p class="mtc-item__desc">' + escHtml(statusLabel + " · " + (t.guests || "-") + " guests") + "</p>" +
+        '<p class="mtc-item__date">' + escHtml(dateStr) + (t.ref ? " · " + escHtml(t.ref) : "") + "</p>" +
+      "</div>" +
+      '<div class="mtc-item__price">' + cartPriceTag(t.price_usd, t.price_idr) + "</div>" +
+    "</div>" + reviewHTML;
+  };
 
   // Satu kartu item. opts.removable = tombol x (tab cart); opts.heart = toggle (tab paket).
   const rowCardHTML = (r, opts, pos) => {
@@ -3875,7 +3911,7 @@ function initMyTripsCart() {
       const priceHtml = it.p
         ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
         : "";
-      return '<a class="experience__card' + (it.p ? "" : " related__card--noprice") + '" href="' + it.href + '">' +
+      return '<a class="experience__card" href="' + it.href + '">' +
         '<div class="experience__image"><img src="assets/images/' + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
         '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
         '<div class="experience__meta"><span>' + it.meta + "</span></div>" + priceHtml + "</div></a>";
@@ -3913,27 +3949,6 @@ function initMyTripsCart() {
     '<div class="mtc-total"><span class="mtc-total__label">' + escHtml(label || "Total") + "</span>" +
     '<span class="mtc-total__val">' + cartPriceTagSum(rows) + "</span></div>";
 
-  // Kartu teaser paket di empty state -> cuma pindah tab (bukan lagi "use this plan").
-  const packageCardHTML = (pkg) => {
-    const rows = cartFlatten(cartPackageState(pkg));
-    return '<div class="mtc-pkg">' +
-      '<div class="mtc-pkg__head"><p class="mtc-pkg__title">' + escHtml(pkg.title) + "</p>" +
-      '<span class="mtc-pkg__price">' + cartPriceTagSum(rows) + "</span></div>" +
-      '<p class="mtc-pkg__blurb">' + escHtml(pkg.blurb) + "</p>" +
-      '<button type="button" class="modal__btn modal__btn--ghost mtc-pkg__use" data-go-tab="' + pkg.id + '">See the plan</button>' +
-      "</div>";
-  };
-
-  // Baris paket + flag inCart (buat status hati). Entry aslinya diambil dari state paket.
-  const packageRows = (pkg) => {
-    const st = itnLoad();
-    const pkgState = cartPackageState(pkg);
-    return cartFlatten(pkgState).map((r) => {
-      const entry = r.ref.type === "day" ? pkgState.days[r.ref.idx] : pkgState.transfers[r.ref.idx];
-      return Object.assign({}, r, { inCart: entry ? cartMatchIndex(st, r.ref.type, entry) > -1 : false });
-    });
-  };
-
   const panelHTML = () => {
     if (activeTab === "custom") {
       const rows = cartFlatten(itnLoad());
@@ -3948,8 +3963,8 @@ function initMyTripsCart() {
       if (!rows.length) {
         return '<div class="mtc-empty">' +
           '<p class="mtc-empty__lead">Nothing added yet.</p>' +
-          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start your trip - or open a suggested plan and add the parts you want.</p>' +
-          '<div class="mtc-pkgs">' + CART_PACKAGES.map(packageCardHTML).join("") + "</div></div>";
+          '<p class="mtc-empty__sub">Tap <strong>Book</strong> on any tour, experience or destination to start planning your trip.</p>' +
+        "</div>";
       }
       const undated = rows.filter((r) => !r.date).length;
       // Policy line: satu baris, link ke halaman policy yg UDAH ADA di footer -
@@ -3970,18 +3985,39 @@ function initMyTripsCart() {
         '<aside class="mtc-layout__side">' + sideHTML + "</aside>" +
       "</div>";
     }
-    // Tab paket: browse. Tiap baris punya hati; gak ada tombol "use this plan" lagi.
-    const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
-    const rows = packageRows(pkg);
-    return '<p class="mtc-pkgintro">' + escHtml(pkg.blurb) + "</p>" +
-      '<div class="mtc-list">' + listHTML(rows, { heart: true }) + "</div>" +
-      totalHTML(rows, "Full plan") +
-      '<p class="mtc-note">Tap the heart on any item to add it to your trip.</p>';
+    // Tab Booked / Past: trip dari /api/bookings/mine (read-only), kartu gaya .mtc-item.
+    const isPast = activeTab === "past";
+    const arr = isPast ? bookings.history : bookings.upcoming;
+    if (!bookings.loaded) {
+      return '<div class="mtc-empty"><p class="mtc-empty__sub">Loading your trips…</p></div>';
+    }
+    if (!currentAccount) {
+      return '<div class="mtc-empty">' +
+        '<p class="mtc-empty__lead">Sign in to see your trips.</p>' +
+        '<p class="mtc-empty__sub">Open the account menu and sign in with your email - your booked and past trips show up here.</p>' +
+      "</div>";
+    }
+    if (!arr.length) {
+      return '<div class="mtc-empty">' +
+        '<p class="mtc-empty__lead">' + (isPast ? "No past trips yet." : "No booked trips yet.") + "</p>" +
+        '<p class="mtc-empty__sub">' + (isPast
+          ? "Trips you&rsquo;ve already taken will appear here."
+          : "Once you make a payment, your booked trip shows up here.") + "</p>" +
+      "</div>";
+    }
+    // Past tab: tombol "Leave a Review" udah nempel per kartu (bookingCardHTML,
+    // 1 per tour yang belum direview) - bukan 1 tombol umum buat seluruh tab,
+    // karena Past Trip bisa punya beberapa trip/tour berbeda sekaligus.
+    return '<div class="mtc-list">' + arr.map(bookingCardHTML).join("") + "</div>";
   };
 
   function render() {
-    const tabs = [{ id: "custom", label: "Your Trip" }]
-      .concat(CART_PACKAGES.map((p) => ({ id: p.id, label: p.label + " Suggested" })));
+    // 3 tab tetap: My Trip (cart blm bayar) / Booked Trip (udah bayar) / Past Trip (udah lewat).
+    const tabs = [
+      { id: "custom", label: "My Trip" },
+      { id: "booked", label: "Booked Trip" },
+      { id: "past", label: "Past Trip" },
+    ];
     const ref = activeReferral();
     root.innerHTML =
       (ref ? '<div class="mtc-ref">Referral code <strong>' + escHtml(ref.code) + "</strong> applied.</div>" : "") +
@@ -3993,9 +4029,6 @@ function initMyTripsCart() {
 
     root.querySelectorAll(".mtc-tab").forEach((tab) => {
       tab.addEventListener("click", () => { activeTab = tab.dataset.tab; render(); });
-    });
-    root.querySelectorAll("[data-go-tab]").forEach((b) => {
-      b.addEventListener("click", () => { activeTab = b.dataset.goTab; render(); });
     });
     root.querySelectorAll("[data-del-type]").forEach((b) => {
       b.addEventListener("click", () => { cartRemove(b.dataset.delType, parseInt(b.dataset.delIdx)); render(); });
@@ -4018,17 +4051,9 @@ function initMyTripsCart() {
         }, cur.date);
       });
     });
-    root.querySelectorAll("[data-heart-type]").forEach((b) => {
+    root.querySelectorAll("[data-review-btn]").forEach((b) => {
       b.addEventListener("click", () => {
-        const pkg = CART_PACKAGES.find((p) => p.id === activeTab);
-        if (!pkg) return;
-        const pkgState = cartPackageState(pkg);
-        const type = b.dataset.heartType;
-        const idx = parseInt(b.dataset.heartIdx, 10);
-        const entry = type === "day" ? pkgState.days[idx] : pkgState.transfers[idx];
-        if (!entry) return;
-        cartToast(cartToggleEntry(type, entry) ? "Added to your trip" : "Removed from your trip");
-        render();
+        openReviewModal({ ref: b.dataset.ref, service: b.dataset.service, name: currentAccount ? currentAccount.name : "" });
       });
     });
     const rec = root.querySelector("[data-receipt]");
@@ -4053,78 +4078,21 @@ function initMyTripsCart() {
 
   window.__myTripsRefresh = render; // dipanggil pas referral di-apply/clear
   render();
-}
 
-// Satu kartu trip di My Trips. Trip yang udah lewat & masih ada tour belum
-// direview (t.review_items, dari /api/bookings/mine) dapet tombol per tour -
-// satu booking custom itinerary bisa punya beberapa tombol beda.
-function tripCard(t) {
-  const pillClass = t.upcoming ? "pill-ok" : "pill-done";
-  const pillText = t.upcoming ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "New") : "Completed";
-  const dateStr = t.end_date && t.end_date !== t.start_date ? t.start_date + " – " + t.end_date : t.start_date || "-";
-  const items = t.review_items || [];
-  const reviewBtns = items
-    .map(
-      (svc) =>
-        '<button type="button" class="btn-pill" data-review-btn data-ref="' + escHtml(t.ref) + '" data-service="' + escHtml(svc) + '">' +
-        "Leave a Review" + (items.length > 1 ? " – " + escHtml(svc) : "") +
-        "</button>",
-    )
-    .join("");
-  return (
-    '<div class="trip"><div class="trip__stripe"></div><div class="trip__body">' +
-      '<div class="trip__top"><div><div class="trip__name">' + escHtml(t.name) + "</div>" +
-      '<div class="trip__meta">' + escHtml(dateStr) + " · " + escHtml(String(t.guests || "-")) + " pax</div></div>" +
-      '<span class="pill ' + pillClass + '">' + escHtml(pillText) + "</span></div>" +
-      '<div class="trip__foot"><div class="trip__price">' + priceHTML(t.price_usd, t.price_idr) + "</div>" +
-      '<span class="trip__ref">' + escHtml(t.ref) + "</span></div>" +
-      (reviewBtns ? '<div class="trip__reviews">' + reviewBtns + "</div>" : "") +
-    "</div></div>"
-  );
-}
-
-// Booked & paid trips (sekunder, di bawah cart): kartu dari /api/bookings/mine.
-// Bukan gate — kalau belum login / belum ada booking, section-nya disembunyiin aja.
-async function initMyTrips() {
-  const root = document.querySelector("[data-my-trips]");
-  if (!root) return;
-  const wrap = root.closest("[data-booked-wrap]") || root;
-  await acctFetchSession();
-  if (!currentAccount) { wrap.hidden = true; return; }
-  let data = { upcoming: [], history: [] };
-  try {
-    const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
-    if (r.ok) data = await r.json();
-  } catch (e) {}
-  const up = data.upcoming || [], hist = data.history || [];
-  hasUpcoming = up.length > 0; renderAccount();
-  if (!up.length && !hist.length) { wrap.hidden = true; return; }
-  wrap.hidden = false;
-  root.innerHTML =
-    '<div class="mytrips__toggle" role="tablist">' +
-      '<button type="button" class="mytrips__tab is-on" data-tab="upcoming">Upcoming</button>' +
-      '<button type="button" class="mytrips__tab" data-tab="history">History</button>' +
-    "</div><div data-trips-list></div>";
-  const list = root.querySelector("[data-trips-list]");
-  const render = (which) => {
-    const arr = which === "history" ? hist : up;
-    list.innerHTML = arr.length
-      ? arr.map(tripCard).join("")
-      : '<p class="acctpage__empty">' + (which === "history" ? "No past trips yet." : "No upcoming trips yet — time to plan one!") + "</p>";
-  };
-  root.querySelectorAll(".mytrips__tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      root.querySelectorAll(".mytrips__tab").forEach((x) => x.classList.toggle("is-on", x === tab));
-      render(tab.dataset.tab);
-    });
-  });
-  // Delegated - list.innerHTML diganti tiap render(), tombolnya baru tiap kali.
-  list.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-review-btn]");
-    if (!btn) return;
-    openReviewModal({ ref: btn.dataset.ref, service: btn.dataset.service, name: currentAccount ? currentAccount.name : "" });
-  });
-  render("upcoming");
+  // Booked & Past ditarik async dari /api/bookings/mine, render ulang pas dateng.
+  // (Sama endpoint yg dulu dipakai section "Booked & paid" - sekarang jadi 2 tab.)
+  (async () => {
+    await acctFetchSession();
+    if (currentAccount) {
+      try {
+        const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${getToken()}` } });
+        if (r.ok) { const d = await r.json(); bookings.upcoming = d.upcoming || []; bookings.history = d.history || []; }
+      } catch (e) {}
+    }
+    bookings.loaded = true;
+    hasUpcoming = bookings.upcoming.length > 0; renderAccount();
+    render();
+  })();
 }
 
 // Halaman Settings: edit nama/email/phone + prefs -> PATCH /api/account.
@@ -4410,8 +4378,9 @@ function initCardTitleOverlay() {
       img.classList.add("photo-titled");
     });
   };
-  // Homepage & tour-programs cards keep the title BELOW the photo (card style A).
-  move("body:not(.home):not(.tourprog) .experience__card:not(.guide-home__card)", ".experience__image", ".experience__name");
+  // Semua .experience__card = SATU style (foto atas + judul di body, card style A).
+  // Overlay judul-di-foto udah dibuang (Wayan: card cuma 1 komponen, DRY). Villa
+  // card TETAP overlay (komponen beda, bukan .experience__card).
   move(".villa__card", ".villa__image", ".villa__name");
 }
 
@@ -4431,6 +4400,57 @@ function hsScrollLock(on) {
   document.body.classList.toggle("hs-locked", !!on);
 }
 
+// Mobile hero: form "Plan your trip" disembunyiin, dibuka lewat tombol -> bottom-sheet
+// slide-up. Desktop TIDAK kena (tombol di-hide CSS, form tetep inline di kanan). Field
+// di dalam (guests/pickup) tetep buka sub-sheet-nya sendiri di ATAS sheet ini (z-index).
+function initHeroPlanSheet() {
+  const btn = document.querySelector("[data-plan-open]");
+  const sheet = document.querySelector(".hero__search");
+  if (!btn || !sheet) return;
+  // Scrim ditaruh DI DALAM .hero__inner (yang punya z-index:1 = stacking context) bareng
+  // sheet-nya, biar sheet (z45) nangkring di atas scrim (z44). Kalau di body, sheet ke-trap
+  // di context .hero__inner & malah ketutup scrim. Sub-panel field (guests/pickup) tetep
+  // reparent ke body (z55/60) -> di atas SEMUA ini, jadi tetep bisa dibuka dari dalam sheet.
+  const inner = sheet.closest(".hero__inner") || document.body;
+  let ov = inner.querySelector(":scope > .hero-sheet-ov");
+  if (!ov) { ov = document.createElement("div"); ov.className = "hero-sheet-ov"; inner.appendChild(ov); }
+  const isMobile = () => window.matchMedia("(max-width: 992px)").matches;
+  const closeSheet = () => {
+    sheet.classList.remove("is-open");
+    ov.classList.remove("is-open");
+    hsScrollLock(false);
+  };
+  const openSheet = () => {
+    if (!isMobile()) return;
+    sheet.scrollTop = 0;
+    sheet.classList.add("is-open");
+    ov.classList.add("is-open");
+    hsScrollLock(true);
+  };
+  // Tombol close (× pojok) di-inject sekali; grab handle-nya dari CSS ::before.
+  if (!sheet.querySelector(".hero__search-close")) {
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "hero__search-close";
+    close.setAttribute("aria-label", "Close");
+    close.innerHTML = "&times;";
+    sheet.insertBefore(close, sheet.firstChild);
+    close.addEventListener("click", closeSheet);
+  }
+  btn.addEventListener("click", openSheet);
+  ov.addEventListener("click", closeSheet);
+  // Swipe ke bawah buat nutup (cuma kalau konten sheet udah di paling atas).
+  let startY = null;
+  sheet.addEventListener("touchstart", (e) => { startY = sheet.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+  sheet.addEventListener("touchmove", (e) => {
+    if (startY === null) return;
+    if (e.touches[0].clientY - startY > 70) { closeSheet(); startY = null; }
+  }, { passive: true });
+  sheet.addEventListener("touchend", () => { startY = null; });
+  // Balik ke lebar desktop -> reset (biar form inline gak ke-hide/ke-transform sisa sheet).
+  window.addEventListener("resize", () => { if (!isMobile()) closeSheet(); });
+}
+
 function initHeroSearch() {
   const root = document.getElementById("hero-search");
   if (!root) return;
@@ -4440,6 +4460,8 @@ function initHeroSearch() {
   const dateBtn = root.querySelector("[data-date-btn]");
   const dateLabel = root.querySelector("[data-date-label]");
   const datePanel = root.querySelector("[data-date-panel]");
+  // Catatan: search form SENGAJA gak pakai popup date (Wayan) - kalender search (kalau ada)
+  // tetep dropdown nempel field di desktop. Popup date cuma buat booking + field lain.
   const calBody = root.querySelector("[data-cal-body]");
   const calHint = root.querySelector("[data-cal-hint]");
   const calApply = root.querySelector("[data-cal-apply]");
@@ -4506,6 +4528,7 @@ function initHeroSearch() {
   function openPanel(panel, control) {
     if (openPanelEl === panel) { closePanels(); return; }
     closePanels();
+    // Search form: HP = bottom-sheet, desktop = dropdown nempel (SENGAJA gak pakai popup).
     if (isMobile()) {
       if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
       document.body.appendChild(panel);
@@ -4814,13 +4837,28 @@ function initInfoPopovers() {
 // Booking form: dropdown & date "full custom" (panel desktop / bottom-sheet HP),
 // SAMA kaya search form. Teknik "enhance native": UI custom cuma nyetir <select> /
 // <input date> asli (sumber kebenaran), jadi logika harga initBooking utuh.
-function initBookingCustomControls() {
-  const selService = document.getElementById("service");
-  if (!selService) return; // bukan halaman booking
-  const selItem = document.getElementById("service-item");
-  const selStay = document.getElementById("stay-area");
-  const dateInp = document.getElementById("date");
+// ===== Enhancer field reusable (dropdown + date) =====
+// Nyetir <select>/<input date> asli yg disembunyiin, UI custom (.hs-control + .hs-panel):
+// desktop = dropdown ngambang di bawah kontrol, HP = bottom-sheet. Dipakai booking form
+// + semua select/date lain (navbar/charter/transfer/itinerary) biar SATU gaya konsisten.
+// Refreshers global -> label ikut ke-update pas value diubah programmatik (setGuests dll).
+const __cselRefreshers = [];
+function cselRefreshAll() { __cselRefreshers.forEach((fn) => { try { fn(); } catch (e) {} }); }
+// Grup = ancestor yang jadi anchor panel (position:relative). Booking punya .booking__group;
+// field lain di-bungkus otomatis di .csel-group.
+function cselGroupOf(el) {
+  let g = el.closest(".booking__group");
+  if (g) { g.classList.add("bk-enh"); return g; }
+  g = el.closest(".csel-group");
+  if (g) return g;
+  const w = document.createElement("span");
+  w.className = "csel-group";
+  el.parentNode.insertBefore(w, el);
+  w.appendChild(el);
+  return w;
+}
 
+function makeFieldEnhancer() {
   // overlay + kontrol panel (dipakai bareng; booking gak barengan sama search di 1 halaman)
   let overlay = document.querySelector(".hs-overlay");
   if (!overlay) { overlay = document.createElement("div"); overlay.className = "hs-overlay"; document.body.appendChild(overlay); }
@@ -4830,17 +4868,22 @@ function initBookingCustomControls() {
   const restore = (p) => { const a = anchors.get(p); if (a && p.parentElement === document.body) a.parent.insertBefore(p, a.next); };
   function closeAll() {
     const had = !!openPanelEl; // cuma lepas lock kalau memang ada panel booking kebuka
-    if (openPanelEl) { openPanelEl.classList.remove("open"); restore(openPanelEl); openPanelEl = null; }
+    if (openPanelEl) { openPanelEl.classList.remove("open", "hs-panel--elevated"); restore(openPanelEl); openPanelEl = null; }
     if (openCtrlEl) { openCtrlEl.classList.remove("is-open"); openCtrlEl.setAttribute("aria-expanded", "false"); openCtrlEl = null; }
-    overlay.classList.remove("open");
+    overlay.classList.remove("open", "hs-overlay--elevated");
     if (had) hsScrollLock(false);
   }
   function openPanel(panel, ctrl) {
     if (openPanelEl === panel) { closeAll(); return; }
     closeAll();
-    if (isMobile()) {
+    // popup = kalender: di desktop pun tampil sebagai kartu ke-center + overlay (bukan
+    // dropdown nempel di field) - reparent ke body biar position:fixed-nya lepas dari ancestor.
+    const asPopup = panel.classList.contains("hs-panel--popup");
+    if (isMobile() || asPopup) {
       if (!anchors.has(panel)) anchors.set(panel, { parent: panel.parentElement, next: panel.nextSibling });
       document.body.appendChild(panel); overlay.classList.add("open"); hsScrollLock(true);
+      // dibuka dari dalam modal (mis. editor trip) -> angkat di atas modal (z-index 200)
+      if (ctrl.closest(".modal")) { panel.classList.add("hs-panel--elevated"); overlay.classList.add("hs-overlay--elevated"); }
     } else restore(panel);
     panel.classList.add("open");
     ctrl.classList.add("is-open"); ctrl.setAttribute("aria-expanded", "true");
@@ -4860,10 +4903,9 @@ function initBookingCustomControls() {
   }
 
   function enhanceSelect(sel, title) {
-    if (!sel) return;
-    const group = sel.closest(".booking__group");
-    if (!group) return;
-    group.classList.add("bk-enh");
+    if (!sel || sel.dataset.enhanced) return;
+    sel.dataset.enhanced = "1";
+    const group = cselGroupOf(sel);
     sel.classList.add("bk-native");
     const ctrl = document.createElement("button");
     ctrl.type = "button";
@@ -4919,15 +4961,14 @@ function initBookingCustomControls() {
       else if (e.key === "Escape") { e.preventDefault(); closeAll(); ctrl.focus(); }
     });
     sel.addEventListener("change", refresh);
-    refreshers.push(refresh);
+    refreshers.push(refresh); __cselRefreshers.push(refresh);
     refresh();
   }
 
   function enhanceDate(inp, title) {
-    if (!inp) return;
-    const group = inp.closest(".booking__group");
-    if (!group) return;
-    group.classList.add("bk-enh");
+    if (!inp || inp.dataset.enhanced) return;
+    inp.dataset.enhanced = "1";
+    const group = cselGroupOf(inp);
     inp.classList.add("bk-native");
     const ctrl = document.createElement("button");
     ctrl.type = "button";
@@ -4936,7 +4977,9 @@ function initBookingCustomControls() {
     ctrl.innerHTML = '<span class="hs-control__val placeholder" data-val>Select date</span>' +
       '<svg class="hs-chev hs-chev--cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>';
     const panel = makePanel(title);
-    panel.classList.add("bk-panel--cal");
+    // Kalender = popup ke-center di desktop juga (bukan dropdown nempel field) - reuse
+    // gaya .bookdate-panel (Book Now). hs-panel--popup = flag buat openPanel.
+    panel.classList.add("bk-panel--cal", "bookdate-panel", "hs-panel--popup");
     const calBody = document.createElement("div");
     calBody.className = "hs-cal bk-cal";
     const foot = document.createElement("div");
@@ -4996,19 +5039,64 @@ function initBookingCustomControls() {
     });
     ctrl.addEventListener("click", (e) => { e.stopPropagation(); sel = parseD(inp.value); render(); openPanel(panel, ctrl); });
     inp.addEventListener("change", () => { sel = parseD(inp.value); refresh(); });
-    refreshers.push(refresh);
+    refreshers.push(refresh); __cselRefreshers.push(refresh);
     refresh();
   }
-
-  enhanceSelect(selStay, "Pickup area");
-  enhanceSelect(selService, "Service");
-  enhanceSelect(selItem, "Select service");
-  enhanceDate(dateInp, "Select date");
 
   overlay.addEventListener("click", closeAll);
   document.addEventListener("click", (e) => { if (!e.target.closest(".hs-panel") && !e.target.closest(".hs-control")) closeAll(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   window.addEventListener("resize", closeAll);
+  return { enhanceSelect, enhanceDate, closeAll };
+}
+
+// Booking form (halaman detail bookable): service/item/pickup + tanggal -> custom.
+function initBookingCustomControls() {
+  const selService = document.getElementById("service");
+  if (!selService) return; // bukan halaman booking
+  const fe = makeFieldEnhancer();
+  fe.enhanceSelect(document.getElementById("stay-area"), "Pickup area");
+  fe.enhanceSelect(selService, "Service");
+  fe.enhanceSelect(document.getElementById("service-item"), "Select service");
+  fe.enhanceDate(document.getElementById("date"), "Select date");
+}
+
+// Enhancer global singleton -> dipakai bareng initCustomSelects + field yg muncul belakangan
+// (mis. editor "Your trip details" yg di-build on-demand). Sekali bikin, listener gak numpuk.
+let __globalEnhancer = null;
+function globalEnhancer() { if (!__globalEnhancer) __globalEnhancer = makeFieldEnhancer(); return __globalEnhancer; }
+
+// Semua select/date SISA (navbar akun, charter, transfer, itinerary) -> custom juga,
+// biar gak ada dropdown native yg jelek di manapun (desktop + HP). Dijalankan SETELAH
+// init masing-masing feature (biar opsi select udah keisi). Skip yg udah di-enhance
+// (booking form + search homepage nyetir enhancer-nya sendiri).
+function initCustomSelects() {
+  const targets = [];
+  const add = (el, title, kind) => { if (el && !el.dataset.enhanced) targets.push({ el, title, kind }); };
+  add(document.getElementById("ch-pickup"), "Pick-up area", "sel");
+  add(document.getElementById("ch-guests"), "Guests", "sel");
+  add(document.getElementById("ch-date"), "Select date", "date");
+  add(document.getElementById("sg-days"), "Days", "sel");
+  add(document.getElementById("sg-guests"), "Guests", "sel");
+  add(document.getElementById("trip-start"), "Start date", "date");
+  document.querySelectorAll("[data-tp-from]").forEach((el) => add(el, "From", "sel"));
+  document.querySelectorAll("[data-tp-to]").forEach((el) => add(el, "To", "sel"));
+  document.querySelectorAll("[data-guest-select]").forEach((el) => add(el, "Guests", "sel"));
+  document.querySelectorAll("[data-stay-select]").forEach((el) => add(el, "Pick-up area", "sel"));
+  if (!targets.length) return;
+  const fe = globalEnhancer();
+  targets.forEach((t) => { t.kind === "date" ? fe.enhanceDate(t.el, t.title) : fe.enhanceSelect(t.el, t.title); });
+}
+
+// Field di dalam sebuah root yg di-build on-demand (modal editor trip) -> ikut di-custom-in.
+function enhanceFieldsIn(root) {
+  if (!root) return;
+  const fe = globalEnhancer();
+  root.querySelectorAll('input[type="date"]').forEach((el) => fe.enhanceDate(el, el.id === "trip-date-to" ? "To" : "Select date"));
+  root.querySelectorAll("select").forEach((el) => {
+    const t = el.matches("[data-stay-select]") ? "Pick-up area" : "Guests";
+    fe.enhanceSelect(el, t);
+  });
 }
 
 // Glance redesign: kalau section "At a Glance / Tour Details" punya harga bookable
@@ -5081,6 +5169,19 @@ function centerBreakoutTitles(main) {
   };
   apply();
   window.addEventListener("resize", apply);
+}
+
+// Scroll ke kartu booking sidebar + kasih glow. Dipakai CTA hero & book-bar HP.
+// Manual (bukan href="#booking") karena <base href="/"> bikin anchor loncat ke home.
+// Offset navbar fixed (~64px) biar judul kartu nggak ketutup.
+function scrollToBookCard(card) {
+  if (!card) return;
+  const top = card.getBoundingClientRect().top + window.scrollY - 72;
+  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  card.classList.remove("booksidebar--glow");
+  void card.offsetWidth; // reflow: restart animasi tiap klik
+  card.classList.add("booksidebar--glow");
+  setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
 }
 
 // Halaman detail bookable: gabung form "Build Your Trip" + checklist Included/Excluded
@@ -5212,16 +5313,11 @@ function initBookSidebar() {
   const bm = document.getElementById("book-modal-placeholder");
   if (bm) bm.remove();
 
-  // CTA hero "Book this program" -> scroll ke form + kasih glow di kartu sbentar
+  // CTA hero "Book this program" -> scroll ke form + kasih glow di kartu sbentar.
+  // WAJIB preventDefault: link-nya <a href="#booking">, tapi halaman pake <base href="/">
+  // jadi "#booking" ke-resolve ke ROOT situs (= home) -> tanpa ini malah loncat ke homepage.
   const heroCta = document.querySelector(".tour-hero__cta");
-  if (heroCta) {
-    heroCta.addEventListener("click", () => {
-      card.classList.remove("booksidebar--glow");
-      void card.offsetWidth; // reflow: restart animasi tiap klik
-      card.classList.add("booksidebar--glow");
-      setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
-    });
-  }
+  if (heroCta) heroCta.addEventListener("click", (e) => { e.preventDefault(); scrollToBookCard(card); });
 
   // sejajarin sidebar sama foto pertama (stop 1), bukan sama title
   alignSideToFirstPhoto(layout, main, side);
@@ -5349,13 +5445,9 @@ function initBookBar() {
   document.body.appendChild(bar);
   if (typeof renderPrices === "function") renderPrices(); // isi harga di bar
 
-  // klik = scroll ke form + glow kartu (sama kaya CTA hero)
-  bar.querySelector(".book-bar__btn").addEventListener("click", () => {
-    card.classList.remove("booksidebar--glow");
-    void card.offsetWidth;
-    card.classList.add("booksidebar--glow");
-    setTimeout(() => card.classList.remove("booksidebar--glow"), 3000);
-  });
+  // klik = scroll ke form + glow kartu (sama kaya CTA hero). preventDefault: sama alasan
+  // kayak hero CTA - <a href="#booking"> + <base href="/"> = loncat ke home kalau gak dicegah.
+  bar.querySelector(".book-bar__btn").addEventListener("click", (e) => { e.preventDefault(); scrollToBookCard(card); });
 
   // muncul cuma kalau CTA hero & form dua-duanya nggak keliatan
   let ctaOn = false, formOn = false;
@@ -5451,7 +5543,7 @@ function initRelated() {
     const price = it.p
       ? '<div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="' + it.priceName + '">$' + it.p + "</span></div></div>"
       : "";
-    return '<a class="experience__card' + (it.p ? '' : ' related__card--noprice') + '" href="' + pre + it.href + '">' +
+    return '<a class="experience__card" href="' + pre + it.href + '">' +
       '<div class="experience__image"><img src="' + pre + "assets/images/" + it.img + '" alt="' + it.name + '" loading="lazy" width="600" height="600" /></div>' +
       '<div class="experience__body"><h3 class="experience__name">' + it.name + "</h3>" +
       '<div class="experience__meta"><span>' + it.meta + "</span></div>" + price + "</div></a>";
@@ -5608,16 +5700,18 @@ async function initPage() {
   initAccountMenu();
   // setelah guest/pickup select terisi nilainya, baru bangun custom dropdown search
   initHeroSearch();
+  initHeroPlanSheet(); // HP: form search jadi bottom-sheet lewat tombol "Plan your trip"
   initReferral();
   initAccount();
   initMyTripsCart();
-  initMyTrips();
+  initAboutGallery();
   initSettings();
   initTrustStat();
   initHighlightLink();
   initTransferUnits();
   initCardTitleOverlay();
   initBookingCustomControls();
+  initCustomSelects(); // sisa select/date (navbar/charter/transfer/itinerary) -> custom; PALING akhir
   initGlanceHero();
   initDetailsFaqRow();
 }

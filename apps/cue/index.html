@@ -30,7 +30,7 @@
     />
     <!-- Preload foto tile pertama (LCP hero-tiles) -->
     <link rel="preload" as="image" href="assets/images/ubud-tour-card.jpg" />
-    <link rel="stylesheet" href="style.css?v=370" />
+    <link rel="stylesheet" href="style.css?v=402" />
 
     <link rel="canonical" href="https://cahyanaubudexperience.com/" />
     <!-- Open Graph / social share -->
@@ -112,6 +112,8 @@
             Tours, transfers, experiences &amp; villas - build your trip day by
             day, with real prices before you book.
           </p>
+          <!-- Tombol trigger form: cuma muncul di HP (desktop pakai form inline di kanan) -->
+          <button type="button" class="hero__planbtn" data-plan-open>Plan your trip</button>
         </div>
         <div id="search-placeholder"></div>
       </div>
@@ -351,68 +353,23 @@
 
     </section>
 
-<section class="plan" id="plan">
-      <a
-        class="plan__link"
-        href="my-trips.html"
-        style="background-image: url(assets/images/ubud-tour-card.jpg)"
-      >
-        <div class="plan__inner">
-          <span class="plan__eyebrow">Trip Planner</span>
-          <h2 class="plan__title">Your whole trip, one plan</h2>
-          <p class="plan__lead">
-            Plan Bali day by day and see every price before you commit.
-          </p>
-          <div class="plan__steps">
-            <div class="plan__step">
-              <span class="plan__step-ic">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                >
-                  <rect x="3" y="5" width="18" height="16" rx="2" />
-                  <path d="M3 9h18M8 3v4M16 3v4" />
-                </svg>
-              </span>
-              <h3>Pick your days</h3>
-              <p>Choose how long you stay.</p>
-            </div>
-            <div class="plan__step">
-              <span class="plan__step-ic">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 8v8M8 12h8" />
-                </svg>
-              </span>
-              <h3>Add tours</h3>
-              <p>Tours, transfers, activities.</p>
-            </div>
-            <div class="plan__step">
-              <span class="plan__step-ic">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h10" />
-                  <circle cx="19" cy="18" r="2.4" />
-                </svg>
-              </span>
-              <h3>See your total</h3>
-              <p>Every price upfront.</p>
-            </div>
+    <section class="airport" id="airport-pickup" style="background-image: url(assets/images/transfer-hero.webp)">
+      <div class="airport__inner">
+        <div class="airport__body">
+          <span class="airport__k">Airport Pickup</span>
+          <h2 class="airport__t">Land in Bali, we're already there</h2>
+          <p class="airport__lead">Private car from Ngurah Rai (DPS) to your Ubud stay. Fixed price, meet &amp; greet at arrivals, sorted before you even land.</p>
+          <div class="airport__chips">
+            <span>Meet &amp; greet</span>
+            <span>Fixed price per car</span>
+            <span>Local Ubud driver</span>
           </div>
-          <span class="plan__btn">Build your itinerary</span>
+          <div class="airport__row">
+            <span class="airport__price">from <b class="airport__amt" data-price="Airport – Ubud">$20</b></span>
+            <a class="airport__btn" href="transfer.html">Book a transfer &rsaquo;</a>
+          </div>
         </div>
-      </a>
+      </div>
     </section>
 
     <!-- Destinations: dulu tab ke-3 di Explore, sekarang section sendiri (reuse gaya .xplore). -->
@@ -478,32 +435,59 @@
             <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Tegenungan Waterfall">$45</span></div><a href="destinations.html" class="experience__arrow" aria-label="See Tegenungan Waterfall">&rarr;</a></div>
           </div>
         </article>
+        <article class="experience__card">
+          <div class="experience__image"><img src="assets/images/tirta-empul-hero.jpg" alt="Tirta Empul Holy Water Temple - destination near Ubud, Bali" loading="lazy" width="600" height="600" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Tirta Empul</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Near Ubud</span></div>
+            <p class="experience__desc">A holy spring temple used for the melukat water purification ritual.</p>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Tirta Empul Holy Water Temple">$45</span></div><a href="destinations.html" class="experience__arrow" aria-label="See Tirta Empul">&rarr;</a></div>
+          </div>
+        </article>
+        <article class="experience__card">
+          <div class="experience__image"><img src="assets/images/gunung-kawi-hero.jpg" alt="Gunung Kawi Temple - destination near Ubud, Bali" loading="lazy" width="600" height="600" /></div>
+          <div class="experience__body">
+            <h3 class="experience__name">Gunung Kawi</h3>
+            <div class="experience__meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span>Near Ubud</span></div>
+            <p class="experience__desc">Ancient shrines carved into the cliffs of a green river valley.</p>
+            <div class="experience__footer"><div class="experience__price"><span class="price-from">from</span> <span class="price" data-price="Gunung Kawi Temple">$45</span></div><a href="destinations.html" class="experience__arrow" aria-label="See Gunung Kawi">&rarr;</a></div>
+          </div>
+        </article>
       </div>
       <div class="xplore__more"><a href="destinations.html" class="btn-pill">View all destinations</a></div>
     </section>
 
-    <!-- Villa promo band (Opsi C): 2 foto villa jadi background + overlay,
-         satu CTA keluar ke ubudprivatevillas.com. Tanpa harga/tombol per villa. -->
-    <section class="vpromo" id="villas">
-      <div class="vpromo__bg" aria-hidden="true">
-        <div style="background-image: url(assets/images/cahyana-house.webp)"></div>
-        <div style="background-image: url(assets/images/cahyana-tibuah.webp)"></div>
-      </div>
-      <div class="vpromo__inner">
-        <span class="vpromo__kick">Stay with us in Ubud</span>
-        <h2 class="vpromo__title">Ubud Private Villas</h2>
-        <p class="vpromo__desc">
-          Two private pool villas - Cahyana House and Cahyana Tibuah - hosted by
-          the same family behind your tours. Ask about tour + stay perks.
-        </p>
-        <a class="vpromo__cta" href="https://ubudprivatevillas.com" target="_blank" rel="noopener">
-          Visit ubudprivatevillas.com
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
-        </a>
+    <section class="whyus" id="why-us">
+      <div class="whyus__in">
+        <div class="whyus__head">
+          <span class="whyus__k">Why Cahyana</span>
+          <h2 class="whyus__t">Clear prices, local team, your plan</h2>
+        </div>
+        <div class="whyus__grid">
+          <div class="whyus__col">
+            <span class="whyus__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <h3>Prices upfront</h3>
+            <p>Every price before you commit. No hidden fees, no haggling.</p>
+          </div>
+          <div class="whyus__col">
+            <span class="whyus__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="9" cy="7" r="3"/><path d="M16 3.1a3 3 0 0 1 0 5.8M21 21v-2a4 4 0 0 0-3-3.9"/></svg></span>
+            <h3>Local family</h3>
+            <p>One team in Ubud runs your whole trip. Ask one person.</p>
+          </div>
+          <div class="whyus__col">
+            <span class="whyus__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 17h14M6 17l1.5-5A2 2 0 0 1 9.4 10h5.2a2 2 0 0 1 1.9 2L18 17M7 17v2M17 17v2"/><circle cx="8" cy="14" r="1"/><circle cx="16" cy="14" r="1"/></svg></span>
+            <h3>Private driver-guide</h3>
+            <p>Your own car and driver, not a shared bus, not a stranger.</p>
+          </div>
+          <div class="whyus__col">
+            <span class="whyus__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></span>
+            <h3>Build your own trip</h3>
+            <p>Plan Bali day by day, see the total, adjust anytime.</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- GUIDES & INFORMATION (menu kategori samping + slider kartu) -->
     <section class="guide-home" id="guides" aria-labelledby="guide-home-title">
       <div class="guide-home__inner">
         <div class="guide-home__head">
@@ -513,7 +497,7 @@
         <div class="gsearch" data-guide-search-root>
           <div class="gsearch__box">
             <svg class="gsearch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-            <input type="text" class="gsearch__input" placeholder="Search guides - try &quot;Ubud&quot; or &quot;visa&quot;" aria-label="Search guides" autocomplete="off" data-guide-search />
+            <input type="text" class="gsearch__input" placeholder="Search" aria-label="Search guides" autocomplete="off" data-guide-search />
           </div>
           <div class="gsearch__sug" role="listbox" hidden></div>
         </div>
@@ -538,9 +522,67 @@
       </div>
     </section>
 
-    <!-- Villa promo: dipindah ke sini (dulu langsung nempel setelah Trip Planner,
-         dua-duanya band foto gelap jadi kayak nabrak) - sekarang gelap-terang-gelap-terang. -->
-    <!-- About (Opsi C): photo band + overlay, lalu strip driver di cream -->
+    <section class="vpromo" id="villas">
+      <div class="vpromo__bg" aria-hidden="true">
+        <div style="background-image: url(assets/images/cahyana-house.webp)"></div>
+        <div style="background-image: url(assets/images/cahyana-tibuah.webp)"></div>
+      </div>
+      <div class="vpromo__inner">
+        <span class="vpromo__kick">Stay with us in Ubud</span>
+        <h2 class="vpromo__title">Ubud Private Villas</h2>
+        <p class="vpromo__desc">
+          Two private pool villas - Cahyana House and Cahyana Tibuah - hosted by
+          the same family behind your tours. Ask about tour + stay perks.
+        </p>
+        <a class="vpromo__cta" href="https://ubudprivatevillas.com" target="_blank" rel="noopener">
+          Visit ubudprivatevillas.com
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="charter-home" id="charter-promo">
+      <div class="charter-home__in">
+        <div class="charter-home__head">
+          <span class="charter-home__k">One more way to explore</span>
+          <h2 class="charter-home__t">Charter a car for the whole day</h2>
+          <p class="charter-home__lead">Private car and driver, yours for the day. Pick a length, build your own route. Petrol included, pick up anywhere on the island.</p>
+        </div>
+        <div class="charter-home__slider experience__grid--slider">
+          <article class="chcard">
+            <h3 class="chcard__hours">5 hours</h3>
+            <p class="chcard__label">Half day</p>
+            <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="half">$35</span> <span class="chcard__unit">/ car</span></p>
+            <p class="chcard__note">Petrol included &middot; ~60 km</p>
+            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose</a>
+          </article>
+          <article class="chcard chcard--pop">
+            <span class="chcard__badge">Popular</span>
+            <h3 class="chcard__hours">10 hours</h3>
+            <p class="chcard__label">Full day</p>
+            <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="full">$60</span> <span class="chcard__unit">/ car</span></p>
+            <p class="chcard__note">Petrol included &middot; ~120 km</p>
+            <a class="chcard__btn chcard__btn--solid" href="charter.html">Choose</a>
+          </article>
+          <article class="chcard">
+            <h3 class="chcard__hours">12 hours</h3>
+            <p class="chcard__label">Full day + 2h</p>
+            <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="full" data-charter-extra="2">$68</span> <span class="chcard__unit">/ car</span></p>
+            <p class="chcard__note">Petrol included &middot; extend by the hour</p>
+            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose</a>
+          </article>
+          <article class="chcard">
+            <h3 class="chcard__hours">14 hours</h3>
+            <p class="chcard__label">Full day + 4h</p>
+            <p class="chcard__price"><span class="chcard__from">from</span> <span class="chcard__amt" data-charter="full" data-charter-extra="4">$76</span> <span class="chcard__unit">/ car</span></p>
+            <p class="chcard__note">Petrol included &middot; extend by the hour</p>
+            <a class="chcard__btn chcard__btn--ghost" href="charter.html">Choose</a>
+          </article>
+        </div>
+        <p class="charter-home__foot">Only a <b>10% deposit</b> to book &middot; prices per car, pick-up outside Ubud +$7</p>
+      </div>
+    </section>
+
     <section class="habout" id="about" style="background-image: url(assets/images/tegalalang-rice-terrace-hero.jpg)">
       <div class="habout__in">
         <span class="habout__k">About Cahyana</span>
@@ -550,43 +592,6 @@
           once, ask one person, and see every price before you commit.
         </p>
         <a class="habout__btn" href="about-us.html">Read our story</a>
-      </div>
-    </section>
-
-    <section class="habout-people">
-      <span class="habout-people__k">Meet the drivers</span>
-      <p class="habout-people__sub">The local guides behind every trip. Tap a card to see their profile.</p>
-      <div class="drivers-grid">
-        <button class="driver-card" type="button" data-name="Wayan" data-tagline="Founder &amp; host">
-          <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
-          <strong class="driver-card__name">Wayan</strong>
-          <span class="driver-card__tagline">Founder &amp; host</span>
-          <span class="driver-card__rating"><span class="stars">★</span> New</span>
-          <span class="driver-card__more">View profile &rsaquo;</span>
-          <div class="driver-card__detail" hidden data-desc="Wayan is the person behind Cahyana Ubud Experience, and usually the one who replies to your messages and builder of this website. Born and raised in Ubud, he studied in Australia, speaks English. When he's not running the business he's out on the road, showing guests the island he grew up on.">
-            <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
-          </div>
-        </button>
-        <button class="driver-card" type="button" data-name="Made" data-tagline="Villa host &amp; driver since 2010">
-          <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
-          <strong class="driver-card__name">Made</strong>
-          <span class="driver-card__tagline">Villa host &amp; driver since 2010</span>
-          <span class="driver-card__rating"><span class="stars">★</span> New</span>
-          <span class="driver-card__more">View profile &rsaquo;</span>
-          <div class="driver-card__detail" hidden data-desc="Made has been driving guests around Bali since 2010 and hosts his own villa on Airbnb, so he knows exactly what travellers need. Calm, reliable, and endlessly patient, he speaks good English and knows every back road, quiet temple hour, and honest warung on the island.">
-            <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
-          </div>
-        </button>
-        <button class="driver-card" type="button" data-name="Nyoman" data-tagline="Ubud local &middot; Driver-guide">
-          <span class="driver-card__avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
-          <strong class="driver-card__name">Nyoman</strong>
-          <span class="driver-card__tagline">Ubud local &middot; Driver-guide</span>
-          <span class="driver-card__rating"><span class="stars">★</span> New</span>
-          <span class="driver-card__more">View profile &rsaquo;</span>
-          <div class="driver-card__detail" hidden data-desc="(PLACEHOLDER) Short description of the driver. Replace with real info.">
-            <div class="driver-detail__reviews"><p class="reviews__empty">No reviews for this driver yet - be the first to share your experience.</p></div>
-          </div>
-        </button>
       </div>
     </section>
 
@@ -615,15 +620,13 @@
       </div>
     </section>
 
-    <div id="drivers-placeholder"></div>
-
     <!-- Guest gallery dipindah (nanti ditaruh di tempat lain) -->
     <div id="reviews-placeholder"></div>
 
     <div id="footer-placeholder"></div>
 
-    <script src="data.js?v=370"></script>
-    <script src="script.js?v=370"></script>
+    <script src="data.js?v=402"></script>
+    <script src="script.js?v=402"></script>
 
   </body>
 </html>

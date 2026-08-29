@@ -1,35 +1,21 @@
-<!-- Review submission popup. Dibuka 2 cara (openReviewModal, script.js):
-     - Anonim: dari tombol "Leave a review" manapun -> verifikasi booking ref +
-       email/HP dulu (step "verify"), baru tahap "write".
-     - Login: dari tombol "Leave a Review" di My Trips ("Past Trip") -> langsung
-       tahap "write", udah ke-prefill nama dari booking, submit lewat token sesi
-       (bukan booking ref+kontak lagi).
-     Kalau booking-nya punya lebih dari 1 tour beda (custom itinerary), checklist
-     "Which tours" muncul - guest centang tour mana aja yang mau direview, tiap
-     yang dicentang dapet kotak rating+teks SENDIRI (#rvm-checklist/#rvm-blocks,
-     diisi JS di enterWriteStep). Submit kirim satu review per tour yang dicentang
-     (boleh beda-beda isinya), bukan cuma satu review buat semua.
-     Semua wiring di openReviewModal/wireReviewModal (script.js). -->
+<!-- Review submission popup. Login-only (Sep 2026, QA #16 decision) - only ever
+     opened via openReviewModal(prefill) from the "Leave a Review" button on a real
+     booking card in My Trips (logged in). No more anonymous booking-ref+contact
+     path - a real booking under the logged-in account is required, full stop.
+     Straight to the write step, prefilled with name from the booking, submit
+     via session token.
+     If the booking has more than 1 distinct tour (custom itinerary), a "Which
+     tours" checklist appears - guest checks whichever ones they want to review,
+     each checked one gets its OWN rating+text box (#rvm-checklist/#rvm-blocks,
+     filled by JS in enterWriteStep). Submit sends one review per checked tour
+     (can differ per tour), not just one review for everything.
+     All wiring in openReviewModal/wireReviewModal (script.js). -->
 <div class="modal" id="review-modal">
   <div class="modal__box">
     <button class="modal__close" data-close aria-label="Close">&times;</button>
     <h3 class="modal__title">Leave a Review</h3>
 
-    <div data-step="verify">
-      <p class="modal__sub">Only guests with a completed booking can leave a review - enter your booking reference and the email or phone you used.</p>
-      <div class="modal__group">
-        <label for="rvm-ref">Booking reference</label>
-        <input type="text" id="rvm-ref" placeholder="CUE-001" />
-      </div>
-      <div class="modal__group">
-        <label for="rvm-contact">Email or phone</label>
-        <input type="text" id="rvm-contact" />
-      </div>
-      <p class="review-modal__error" id="rvm-verify-error" hidden></p>
-      <button type="button" class="modal__btn" id="rvm-verify-btn">Continue</button>
-    </div>
-
-    <div data-step="write" hidden>
+    <div data-step="write">
       <div class="modal__group">
         <label for="rvm-name">Your name</label>
         <input type="text" id="rvm-name" />

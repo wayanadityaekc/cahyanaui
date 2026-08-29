@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 80;
+const PARTIALS_VERSION = 81;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2834,18 +2834,22 @@ async function initAllReviews() {
 
 // Tombol mana pun yang buka modal review (empty-state homepage, header
 // all-reviews.html, dll) - wired sekali dari sini, bukan per-halaman.
+// Login-only (Sep 2026, QA #16): no more anonymous booking-ref+contact modal -
+// send guests to My Trips, where a real booking shows its own "Leave a Review"
+// checkbox. Not logged in -> My Trips itself prompts sign-in first.
 function initReviewTriggers() {
   document.querySelectorAll("[data-open-review]").forEach((btn) => {
-    btn.addEventListener("click", () => openReviewModal());
+    btn.addEventListener("click", () => { window.location.href = "my-trips.html"; });
   });
 }
 
-/* ===== Review submission — dua cara buktiin booking itu punya kamu:
-   (a) login (token sesi) - dari tombol per-tour di My Trips, langsung ke tahap
-       "write", udah ke-prefill; (b) booking_ref + email/phone (tahap "verify"
-       dulu). Dua-duanya dicek ULANG di server (endpoint verify di sini cuma
-       buat UX). Satu booking bisa punya beberapa tour beda (custom itinerary)
-       -> dropdown "Which tour" kalau lebih dari satu, direview satu-satu. ===== */
+/* ===== Review submission — login-only (Sep 2026, QA #16 decision). Always
+   opened with a prefill from the "Leave a Review" button per booking in My
+   Trips, straight to the "write" step, submit via session token. Re-verified
+   server-side regardless (server matches booking_ref to the logged-in
+   account_id). One booking can have several different tours (custom
+   itinerary) -> "Which tour" checklist if more than one, reviewed one by
+   one. ===== */
 
 // Ambil nama item/tour halaman ini - sumber kebenarannya SAMA kayak yang
 // dipake initBooking buat preset form (data-item di booking-placeholder ATAU
@@ -2890,17 +2894,17 @@ function initReviewCta() {
   wrap.className = "review-cta";
   wrap.innerHTML = '<button type="button" class="btn-pill">Leave a review</button>';
   mount.parentNode.insertBefore(wrap, mount);
-  wrap.querySelector("button").addEventListener("click", () => openReviewModal());
+  wrap.querySelector("button").addEventListener("click", () => { window.location.href = "my-trips.html"; });
 }
 
 let reviewModalPromise = null; // fetch partial cuma sekali, dipake ulang tiap kebuka
 
-// prefill = { ref, items, name } - dikasih dari tombol "Leave a Review" di My
-// Trips (udah login) buat lompat langsung ke tahap "write", skip verifikasi.
-// items = daftar tour yang bisa direview dari booking itu (1 atau lebih -
-// dropdown "Which tour" di step write munculin pilihan kalau lebih dari 1).
-// Kosongin prefill buat alur biasa (verifikasi manual booking ref + kontak dulu).
+// prefill = { ref, items, name } - always given from the "Leave a Review" button
+// on a real booking in My Trips (logged in), straight to the "write" step.
+// items = tours reviewable from that booking (1 or more - "Which tour"
+// checklist in the write step appears if there's more than one).
 async function openReviewModal(prefill) {
+  if (!prefill || !prefill.ref || !prefill.items || !prefill.items.length) return;
   if (!reviewModalPromise) {
     const host = document.createElement("div");
     document.body.appendChild(host);
@@ -2915,26 +2919,19 @@ async function openReviewModal(prefill) {
   }
   const modal = await reviewModalPromise;
   resetReviewModal(modal);
-  if (prefill && prefill.ref && prefill.items && prefill.items.length) {
-    enterWriteStep(modal, { ref: prefill.ref, name: prefill.name || "", items: prefill.items, mode: "account" });
-  }
+  enterWriteStep(modal, { ref: prefill.ref, name: prefill.name || "", items: prefill.items });
   modal.classList.add("active");
 }
 
 function resetReviewModal(modal) {
-  modal.querySelector('[data-step="verify"]').hidden = false;
-  modal.querySelector('[data-step="write"]').hidden = true;
   // .modal__success punya CSS "display:none" bawaan (dipake book-confirm.html juga,
   // di-toggle lewat style.display, BUKAN attribute hidden) - ikutin pola yang sama.
   modal.querySelector("#rvm-success").style.display = "none";
-  modal.querySelector("#rvm-ref").value = "";
-  modal.querySelector("#rvm-contact").value = "";
+  modal.querySelector('[data-step="write"]').hidden = false;
   modal.querySelector("#rvm-name").value = "";
   modal.querySelector("#rvm-country").value = "";
   modal.querySelector("#rvm-checklist").innerHTML = "";
   modal.querySelector("#rvm-blocks").innerHTML = "";
-  modal.dataset.mode = "contact";
-  const vErr = modal.querySelector("#rvm-verify-error"); vErr.hidden = true; vErr.textContent = "";
   const sErr = modal.querySelector("#rvm-submit-error"); sErr.hidden = true; sErr.textContent = "";
 }
 
@@ -2952,15 +2949,13 @@ function reviewBlockHTML(service, idx) {
   "</div>";
 }
 
-// Pindah dari tahap "verify" ke "write" - dipake abis verify sukses ATAU
-// langsung dari prefill (My Trips). items = daftar tour yang bisa direview
-// dari booking itu (server-side, udah difilter yang tripnya udah lewat &
-// belum direview - lihat reviewableItems() di cahyana-api). Lebih dari 1 tour
-// -> munculin checklist, guest centang mana aja yang mau direview (default
-// semua kecentang), satu blok rating+teks per tour yang dicentang.
-function enterWriteStep(modal, { ref, name, items, mode }) {
+// Fills the "write" step from a My Trips prefill. items = tours reviewable
+// from that booking (server-side, already filtered to ones whose trip has
+// passed & haven't been reviewed yet - see reviewableItems() in cahyana-api).
+// More than 1 tour -> shows a checklist, guest checks whichever ones they
+// want to review (all checked by default), one rating+text block per checked tour.
+function enterWriteStep(modal, { ref, name, items }) {
   modal.dataset.ref = ref;
-  modal.dataset.mode = mode;
   modal.querySelector("#rvm-name").value = name || "";
 
   const checklist = modal.querySelector("#rvm-checklist");
@@ -2988,9 +2983,6 @@ function enterWriteStep(modal, { ref, name, items, mode }) {
       });
     });
   });
-
-  modal.querySelector('[data-step="verify"]').hidden = true;
-  modal.querySelector('[data-step="write"]').hidden = false;
 }
 
 function wireReviewModal(modal) {
@@ -3007,39 +2999,6 @@ function wireReviewModal(modal) {
   // Pakai custom dropdown kita (bukan <select> native) - judul panel "Country" +
   // search box (ketik "i" -> India, Indonesia, ... lalu pilih).
   globalEnhancer().enhanceSelect(modal.querySelector("#rvm-country"), "Country", { search: true, searchPlaceholder: "Type a country" });
-
-  const verifyBtn = modal.querySelector("#rvm-verify-btn");
-  const verifyErr = modal.querySelector("#rvm-verify-error");
-  verifyBtn.addEventListener("click", async () => {
-    const ref = modal.querySelector("#rvm-ref").value.trim();
-    const contact = modal.querySelector("#rvm-contact").value.trim();
-    verifyErr.hidden = true;
-    if (!ref || !contact) {
-      verifyErr.textContent = "Please enter your booking reference and email or phone.";
-      verifyErr.hidden = false;
-      return;
-    }
-    verifyBtn.disabled = true;
-    try {
-      const data = await fetch(`${API_BASE}/reviews/verify`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_ref: ref, contact }),
-      }).then((r) => r.json());
-      if (!data.ok) {
-        verifyErr.textContent = data.reason || "We couldn't verify that booking.";
-        verifyErr.hidden = false;
-        return;
-      }
-      modal.dataset.contact = contact;
-      enterWriteStep(modal, { ref, name: data.name, items: data.items, mode: "contact" });
-    } catch (e) {
-      verifyErr.textContent = "Something went wrong. Please try again.";
-      verifyErr.hidden = false;
-    } finally {
-      verifyBtn.disabled = false;
-    }
-  });
 
   const submitBtn = modal.querySelector("#rvm-submit-btn");
   const submitErr = modal.querySelector("#rvm-submit-error");
@@ -3066,9 +3025,7 @@ function wireReviewModal(modal) {
       const results = [];
       for (const it of items) {
         const body = { booking_ref: modal.dataset.ref, service: it.service, rating: it.rating, message: it.message, country, name };
-        const headers = { "Content-Type": "application/json" };
-        if (modal.dataset.mode === "account") headers.Authorization = `Bearer ${getToken()}`;
-        else body.contact = modal.dataset.contact;
+        const headers = { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` };
         const data = await fetch(`${API_BASE}/reviews`, { method: "POST", headers, body: JSON.stringify(body) }).then((r) => r.json());
         results.push({ service: it.service, ok: data.ok, reason: data.reason });
       }

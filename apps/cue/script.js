@@ -72,7 +72,7 @@ const PAGE_ITEM = {
 // -- Kartu visual per program di builder itinerary: foto (sama kaya homepage) + 1 kalimat desc.
 // Key HARUS sama persis dg nama di `prices`. Dipakai renderDayCard buat render .experience__card.
 const ITEM_CARD = {
-  "Ubud Tour": { img: "ubud-tour-card.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
+  "Ubud Tour": { img: "tegallalang-girl.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
   "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Water gardens, a royal palace, and the gates of Lempuyang." },
   "Ulun Danu Beratan & Tanah Lot Temple": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
@@ -85,8 +85,8 @@ const ITEM_CARD = {
   "Kintamani Sunrise & Penglipuran": { img: "jeep-batur-card.webp", desc: "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud." },
   "Lovina Dolphin & Sekumpul Waterfall": { img: "lovina-dolphin-sekumpul-card.jpg", desc: "A Lovina dolphin sunrise, the Banjar hot springs, and Sekumpul waterfall." },
   "ATV": { img: "ubud-atv-adventure-card.webp", desc: "Quad-bike through jungle trails, mud, and tunnels." },
-  "Rafting": { img: "rafting.webp", desc: "White-water rafting down the scenic Ayung River gorge." },
-  "Swing": { img: "jungle-swing-card.jpg", desc: "Soar over the jungle on Bali's famous swing." },
+  "Rafting": { img: "rafting-card.webp", desc: "White-water rafting down the scenic Ayung River gorge." },
+  "Swing": { img: "jungle-swing-valley.jpg", desc: "Soar over the jungle on Bali's famous swing." },
   "Jeep Sunrise": { img: "jeep-batur-card.webp", desc: "A sunrise 4x4 across Mount Batur's black-lava fields." },
   "Mount Batur Trekking": { img: "mount-batur-sunrise.webp", desc: "A pre-dawn hike to the summit of an active volcano." },
   "Cooking Class": { img: "cooking-class-card.webp", desc: "Cook authentic Balinese dishes with a local family." },
@@ -101,7 +101,7 @@ const ITEM_CARD = {
 // Digenerate dari kartu listing: zone = section kategori, p = harga USD statis
 // (0 = tanpa harga, mis. destinations -> kartu tampil tanpa baris harga).
 const RELATED_ITEMS = [
-  { href: "ubud-tour.html", type: "tour", zone: "ubud", name: "Ubud Tour", img: "ubud-tour-card.jpg", meta: "6&ndash;8 hours", p: 45, priceName: "Ubud Tour" },
+  { href: "ubud-tour.html", type: "tour", zone: "ubud", name: "Ubud Tour", img: "tegallalang-girl.jpg", meta: "6&ndash;8 hours", p: 45, priceName: "Ubud Tour" },
   { href: "ubud-culture-day.html", type: "tour", zone: "ubud", name: "Ubud Culture Day", img: "ubud-culture-day-card.jpg", meta: "6&ndash;8 hours", p: 55, priceName: "Ubud Culture Day" },
   { href: "ubud-rafting-adventure.html", type: "tour", zone: "ubud", name: "Ubud Rafting Adventure", img: "ubud-rafting-adventure-card.jpg", meta: "6&ndash;8 hours", p: 75, priceName: "Ubud Rafting Adventure" },
   { href: "ubud-atv-adventure.html", type: "tour", zone: "ubud", name: "Ubud ATV Adventure", img: "ubud-atv-adventure-card.webp", meta: "6&ndash;8 hours", p: 80, priceName: "Ubud ATV Adventure" },
@@ -114,8 +114,8 @@ const RELATED_ITEMS = [
   { href: "munduk-twin-lakes.html", type: "tour", zone: "west", name: "Munduk Waterfalls &amp; Twin Lakes", img: "north-bali-tour-card.jpg", meta: "10&ndash;12 hours", p: 65, priceName: "Munduk Waterfalls &amp; Twin Lakes" },
   { href: "lovina-dolphin-sekumpul.html", type: "tour", zone: "north", name: "Lovina Dolphin &amp; Sekumpul Waterfall", img: "lovina-dolphin-sekumpul-card.jpg", meta: "11&ndash;12 hours", p: 95, priceName: "Lovina Dolphin &amp; Sekumpul Waterfall" },
   { href: "attractions/atv-ride.html", type: "activity", zone: "adventure", name: "ATV Ride", img: "ubud-atv-adventure-card.webp", meta: "~2 hours", p: 40, priceName: "ATV" },
-  { href: "attractions/rafting.html", type: "activity", zone: "adventure", name: "Rafting", img: "rafting.webp", meta: "~2 hours", p: 35, priceName: "Rafting" },
-  { href: "attractions/jungle-swing.html", type: "activity", zone: "adventure", name: "Jungle Swing", img: "jungle-swing-card.jpg", meta: "~1&ndash;2 hours", p: 25, priceName: "Swing" },
+  { href: "attractions/rafting.html", type: "activity", zone: "adventure", name: "Rafting", img: "rafting-card.webp", meta: "~2 hours", p: 35, priceName: "Rafting" },
+  { href: "attractions/jungle-swing.html", type: "activity", zone: "adventure", name: "Jungle Swing", img: "jungle-swing-valley.jpg", meta: "~1&ndash;2 hours", p: 25, priceName: "Swing" },
   { href: "attractions/jeep-sunrise.html", type: "activity", zone: "adventure", name: "Jeep Sunrise", img: "jeep-batur-card.webp", meta: "~7 hours", p: 50, priceName: "Jeep Sunrise" },
   { href: "attractions/mount-batur-trekking.html", type: "activity", zone: "adventure", name: "Mount Batur Trekking", img: "mount-batur-sunrise.webp", meta: "~8 hours", p: 55, priceName: "Mount Batur Trekking" },
   { href: "attractions/watersport.html", type: "activity", zone: "adventure", name: "Watersport", img: "watersport-card.jpg", meta: "", p: 45, priceName: "Watersport" },

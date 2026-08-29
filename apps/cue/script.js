@@ -301,6 +301,7 @@ function setCurrency(cur) {
   if (svc && svc.value) svc.dispatchEvent(new Event("change"));
   if (window.__itnRerender) window.__itnRerender();
   if (window.__chRefresh) window.__chRefresh();
+  if (window.__atRefresh) window.__atRefresh();
   if (window.__exploreRefresh) window.__exploreRefresh();
 }
 
@@ -1404,6 +1405,7 @@ function initBookingConfirm() {
         type: l.type, service: l.service, date: l.date || "", guests: l.guests,
         pickup: l.pickup || "", dropoff: l.dropoff || "",
         day_no: l.day_no != null ? l.day_no : null, eligible: !!l.eligible,
+        flight_number: l.flight_number || "", flight_datetime: l.flight_datetime || "",
         base: { usd: l.usd, idr: l.idr }, final: { usd: l.usd, idr: l.idr },
       }));
     } else {
@@ -1514,6 +1516,8 @@ function initBookingConfirm() {
       price_usd: l.final.usd,
       price_idr: l.final.idr,
       day_no: l.day_no != null ? l.day_no : null,
+      flight_number: l.flight_number || "",
+      flight_datetime: l.flight_datetime || "",
     }));
     return {
       type: ctx.type,
@@ -3322,13 +3326,28 @@ function initTransferPicker() {
   const swap = box.querySelector("[data-tp-swap]");
   if (swap) swap.addEventListener("click", () => { const f = fromSel.value; fromSel.value = toSel.value; toSel.value = f; render(); });
 
+  // Airport butuh flight details -> gak lewat cart transfer biasa, langsung ke page khusus
+  // (dimanapun ada pilihan Airport, tombol book-nya ngarah ke sana - Wayan, Sep 2026).
+  const isAirportSelected = () => {
+    const q = quote();
+    return !!(q && q.area === "Airport");
+  };
+
   // Book Now -> tambah ke My Trips lalu pindah ke halaman My Trips. Add -> tetap (toast).
-  bookBtn.addEventListener("click", () => { if (addToCart()) window.location.href = "my-trips.html"; });
-  addBtn.addEventListener("click", () => { if (addToCart()) cartToast("Added to My Trips"); });
+  bookBtn.addEventListener("click", () => {
+    if (isAirportSelected()) { window.location.href = "airport-transfer.html"; return; }
+    if (addToCart()) window.location.href = "my-trips.html";
+  });
+  addBtn.addEventListener("click", () => {
+    if (isAirportSelected()) { window.location.href = "airport-transfer.html"; return; }
+    if (addToCart()) cartToast("Added to My Trips");
+  });
 
   // Popular routes: klik baris -> isi picker (area -> Ubud) + scroll ke picker + glow.
+  // Airport -> langsung ke page khusus (flight details), gak isi picker.
   document.querySelectorAll("[data-tp-route]").forEach((row) => {
     row.addEventListener("click", () => {
+      if (row.dataset.tpRoute === "Airport") { window.location.href = "airport-transfer.html"; return; }
       fromSel.value = row.dataset.tpRoute; toSel.value = "Ubud";
       if (retEl) retEl.checked = false;
       render();
@@ -3420,6 +3439,82 @@ function initCharter() {
   });
 
   renderCharter();
+}
+
+// Halaman khusus airport-transfer.html — sengaja page terpisah (bukan lewat picker/cart
+// transfer biasa) karena butuh flight number + flight date/time (Wayan: perlu buat driver
+// nunggu di jam yang bener). Harga fix = prices.transfer["Airport – Ubud"] (sama kayak yang
+// dipakai transfer.html/homepage Airport band). Reuse langsung window.__openBooking (pola
+// sama kayak initCharter) lewat `lines` structured 1-item biar pickup/dropoff udah kekunci
+// dari sini, guest gak perlu isi ulang di modal (pickupOptional/dropoffRequired = false).
+function initAirportTransfer() {
+  const dirEl = document.getElementById("at-direction");
+  if (!dirEl) return; // bukan halaman airport transfer
+  const guestsEl = document.getElementById("at-guests");
+  for (let n = 1; n <= 10; n++) guestsEl.add(new Option(n, n));
+  const dateEl = document.getElementById("at-date");
+  const addressEl = document.getElementById("at-address");
+  const addressLabel = document.getElementById("at-address-label");
+  const flightNoEl = document.getElementById("at-flight-number");
+  const flightTimeEl = document.getElementById("at-flight-time");
+  const totalBox = document.getElementById("at-total");
+  const bookBtn = document.getElementById("at-book");
+
+  function renderPrice() {
+    const p = prices.transfer["Airport – Ubud"];
+    if (p && totalBox) totalBox.innerHTML = priceHTML(p.usd, p.idr);
+  }
+  window.__atRefresh = renderPrice; // ikut update pas ganti currency (pola sama kayak __chRefresh)
+
+  function syncLabel() {
+    addressLabel.textContent = dirEl.value === "dropoff"
+      ? "Hotel / villa pick-up address"
+      : "Hotel / villa drop-off address";
+  }
+  dirEl.addEventListener("change", syncLabel);
+  syncLabel();
+
+  function validate() {
+    return !!(dateEl.value && guestsEl.value && addressEl.value.trim() && flightNoEl.value.trim() && flightTimeEl.value);
+  }
+  function updateBtn() { bookBtn.disabled = !validate(); }
+  [dateEl, guestsEl, addressEl, flightNoEl, flightTimeEl].forEach((el) => el.addEventListener("input", updateBtn));
+  updateBtn();
+
+  bookBtn.addEventListener("click", () => {
+    if (!window.__openBooking || !validate()) return;
+    const p = prices.transfer["Airport – Ubud"];
+    const isDropoff = dirEl.value === "dropoff";
+    const address = addressEl.value.trim();
+    const pickup = isDropoff ? address : "Ngurah Rai Airport (DPS)";
+    const dropoff = isDropoff ? "Ngurah Rai Airport (DPS)" : address;
+    const service = "Airport Transfer - " + (isDropoff ? "Drop-off" : "Pickup");
+    const flightNumber = flightNoEl.value.trim();
+    const flightDatetime = flightTimeEl.value;
+    const flightLabel = flightDatetime ? flightDatetime.replace("T", " ") : "";
+    window.__openBooking({
+      type: "transfer",
+      service: service,
+      guests: guestsEl.value,
+      date: dateEl.value,
+      price: { usd: p.usd, idr: p.idr },
+      pickup: "",
+      pickupOptional: true,
+      dropoffRequired: false,
+      detailLines: [
+        "Flight " + flightNumber + (flightLabel ? " · " + flightLabel : ""),
+        pickup + " → " + dropoff
+      ],
+      detailsTitle: "Trip details",
+      lines: [{
+        type: "transfer", service: service, date: dateEl.value, guests: guestsEl.value,
+        pickup: pickup, dropoff: dropoff, usd: p.usd, idr: p.idr, day_no: null, eligible: true,
+        flight_number: flightNumber, flight_datetime: flightDatetime,
+      }],
+    });
+  });
+
+  renderPrice();
 }
 
 // Wiring 1 custom dropdown currency (tombol + list bendera). Dipakai di dropdown
@@ -5117,6 +5212,9 @@ function initCustomSelects() {
   add(document.getElementById("ch-pickup"), "Pick-up area", "sel");
   add(document.getElementById("ch-guests"), "Guests", "sel");
   add(document.getElementById("ch-date"), "Select date", "date");
+  add(document.getElementById("at-direction"), "Direction", "sel");
+  add(document.getElementById("at-guests"), "Guests", "sel");
+  add(document.getElementById("at-date"), "Select date", "date");
   add(document.getElementById("sg-days"), "Days", "sel");
   add(document.getElementById("sg-guests"), "Guests", "sel");
   add(document.getElementById("trip-start"), "Start date", "date");
@@ -5733,6 +5831,7 @@ async function initPage() {
   itnUpdateBadge();
   initItineraryButtons();
   initCharter();
+  initAirportTransfer();
   initTourType();
   initInfoPopovers();
   initTripBar();

@@ -2066,6 +2066,8 @@ function initItinerary() {
       return;
     }
     state.days.forEach((d, i) => daysWrap.appendChild(renderDayCard(d, i)));
+    // Form override per-hari (.f-date) -> custom date picker, bukan native browser.
+    enhanceFieldsIn(daysWrap);
   }
 
   function renderDayCard(d, i) {
@@ -2459,6 +2461,9 @@ function initItinerary() {
       rerender();
       svcModal.classList.remove("active");
     });
+
+    // Date + semua select di popup ini pakai custom picker kita (bukan native browser).
+    enhanceFieldsIn(svcBody);
 
     svcModal.classList.add("active");
   }
@@ -5178,13 +5183,21 @@ function initCustomSelects() {
   targets.forEach((t) => { t.kind === "date" ? fe.enhanceDate(t.el, t.title) : fe.enhanceSelect(t.el, t.title); });
 }
 
-// Field di dalam sebuah root yg di-build on-demand (modal editor trip) -> ikut di-custom-in.
+// Field di dalam sebuah root yg di-build on-demand (modal editor trip, popup service
+// itinerary, form override per-hari) -> ikut di-custom-in biar GAK ada picker native
+// browser (date iOS/select jelek) di manapun. Judul panel diambil dari <label> di
+// pembungkus .field kalau ada (mis. Area/Direction/Duration), fallback ke default.
 function enhanceFieldsIn(root) {
   if (!root) return;
   const fe = globalEnhancer();
+  const labelOf = (el) => {
+    const f = el.closest(".field");
+    const l = f && f.querySelector("label");
+    return l ? l.textContent.trim() : "";
+  };
   root.querySelectorAll('input[type="date"]').forEach((el) => fe.enhanceDate(el, el.id === "trip-date-to" ? "To" : "Select date"));
   root.querySelectorAll("select").forEach((el) => {
-    const t = el.matches("[data-stay-select]") ? "Pick-up area" : "Guests";
+    const t = el.matches("[data-stay-select]") ? "Pick-up area" : (labelOf(el) || "Guests");
     fe.enhanceSelect(el, t);
   });
 }

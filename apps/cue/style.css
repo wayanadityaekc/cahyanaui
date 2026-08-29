@@ -1068,7 +1068,14 @@ body.hs-locked .wa-float {
     bottom: 0;
     top: auto;
     border-radius: var(--r-xl) var(--r-xl) 0 0;
-    max-height: 88vh;
+    /* Sheet naik dari bawah; kalau kontennya tinggi (kalender 13 bulan) dia mentok
+       max-height. 88vh dulu bikin ATAS sheet (header "Select date" + tombol close)
+       nyelip di belakang navbar+tripbar fixed (~96px) di HP pendek -> header ketutup.
+       Pakai calc(100vh - 100px): tepi atas sheet SELALU 100px dari atas layar, jadi
+       header selalu kelihatan di bawah tripbar (konsisten di semua ukuran layar).
+       dvh buat browser modern (hormatin URL bar), vh sbg fallback. */
+    max-height: calc(100vh - 100px);
+    max-height: calc(100dvh - 100px);
     overflow-y: auto;
     /* HP: slide dari bawah. Panel tertutup = visibility:hidden biar GAK ngintip di
        layar (kartu search punya animation -> jadi containing-block buat position:fixed,

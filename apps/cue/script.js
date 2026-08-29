@@ -2968,10 +2968,14 @@ function wireReviewModal(modal) {
   });
 
   // Dropdown negara diisi sekali (partial-nya di-cache, gak perlu diulang tiap buka).
+  // data-flag = kode negara -> custom dropdown render bendera + nama (Wayan).
   modal.querySelector("#rvm-country").insertAdjacentHTML(
     "beforeend",
-    COUNTRIES.map((c) => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join(""),
+    COUNTRIES.map((c) => `<option value="${escHtml(c.name)}" data-flag="${escHtml(c.code)}">${escHtml(c.name)}</option>`).join(""),
   );
+  // Pakai custom dropdown kita (bukan <select> native) - judul panel "Country" +
+  // search box (ketik "i" -> India, Indonesia, ... lalu pilih).
+  globalEnhancer().enhanceSelect(modal.querySelector("#rvm-country"), "Country", { search: true, searchPlaceholder: "Type a country" });
 
   const verifyBtn = modal.querySelector("#rvm-verify-btn");
   const verifyErr = modal.querySelector("#rvm-verify-error");
@@ -5038,8 +5042,9 @@ function makeFieldEnhancer() {
     return panel;
   }
 
-  function enhanceSelect(sel, title) {
+  function enhanceSelect(sel, title, opts) {
     if (!sel || sel.dataset.enhanced) return;
+    opts = opts || {};
     sel.dataset.enhanced = "1";
     const group = cselGroupOf(sel);
     sel.classList.add("bk-native");
@@ -5050,15 +5055,49 @@ function makeFieldEnhancer() {
     ctrl.setAttribute("aria-expanded", "false");
     ctrl.innerHTML = '<span class="hs-control__val" data-val></span>' + CHEV;
     const panel = makePanel(title);
+    // Search box (opt-in, buat dropdown panjang kayak Country): ketik -> filter opsi
+    // per prefix KATA (mis. "i" -> India, Indonesia, Iceland...), pilih -> ke-save (Wayan).
+    let searchInput = null;
+    if (opts.search) {
+      const sw = document.createElement("div");
+      sw.className = "hs-search-wrap";
+      sw.innerHTML = '<input type="text" class="hs-search" placeholder="' + (opts.searchPlaceholder || "Type to search") + '" autocomplete="off" />';
+      panel.appendChild(sw);
+      searchInput = sw.querySelector(".hs-search");
+      searchInput.addEventListener("click", (e) => e.stopPropagation());
+      searchInput.addEventListener("input", () => applyFilter());
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); const first = body.querySelector(".hs-opt:not([hidden])"); if (first) first.click(); }
+        else if (e.key === "Escape") { e.preventDefault(); closeAll(); ctrl.focus(); }
+      });
+    }
     const body = document.createElement("div");
     body.className = "hs-panel__body";
     panel.appendChild(body);
     sel.after(ctrl); ctrl.after(panel);
     const valEl = ctrl.querySelector("[data-val]");
+    function applyFilter() {
+      // Prefix nama negara (Wayan: ketik "i" -> India, Indonesia, Iceland... yg DIAWALI "i",
+      // bukan yg cuma ngandung kata "Island"). Cocok sama cara orang ngetik nama negara.
+      const q = searchInput ? searchInput.value.trim().toLowerCase() : "";
+      body.querySelectorAll(".hs-opt").forEach((btn) => {
+        const nm = (btn.dataset.nm || "").toLowerCase();
+        btn.hidden = !!q && !nm.startsWith(q);
+      });
+    }
     function refresh() {
       const opt = sel.options[sel.selectedIndex];
       const ph = !sel.value || (opt && opt.disabled);
-      valEl.textContent = opt ? opt.textContent : "";
+      const flag = opt && opt.dataset ? opt.dataset.flag : "";
+      // Opsi berbendera (mis. Country) -> tampil bendera + nama; selain itu teks polos.
+      if (flag) {
+        valEl.innerHTML = '<img class="hs-opt__flag" src="assets/flags/' + flag + '.svg" alt="" />' +
+          '<span class="hs-opt__nm">' + escHtml(opt.textContent) + "</span>";
+        valEl.classList.add("hs-control__val--flag");
+      } else {
+        valEl.textContent = opt ? opt.textContent : "";
+        valEl.classList.remove("hs-control__val--flag");
+      }
       valEl.classList.toggle("placeholder", !!ph);
     }
     function build() {
@@ -5068,7 +5107,10 @@ function makeFieldEnhancer() {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "hs-opt bk-opt" + (o.value === sel.value ? " is-sel" : "");
-        btn.innerHTML = '<span class="hs-opt__nm">' + o.textContent + "</span>";
+        btn.dataset.nm = o.textContent; // buat filter search
+        const oFlag = o.dataset ? o.dataset.flag : "";
+        btn.innerHTML = (oFlag ? '<img class="hs-opt__flag" src="assets/flags/' + oFlag + '.svg" alt="" />' : "") +
+          '<span class="hs-opt__nm">' + o.textContent + "</span>";
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
           sel.value = o.value;
@@ -5077,11 +5119,18 @@ function makeFieldEnhancer() {
         });
         body.appendChild(btn);
       });
+      applyFilter(); // hormatin isi search yg lagi diketik (kalau ada)
     }
-    ctrl.addEventListener("click", (e) => { e.stopPropagation(); build(); openPanel(panel, ctrl); });
+    ctrl.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (searchInput) searchInput.value = "";
+      build();
+      openPanel(panel, ctrl);
+      if (searchInput) setTimeout(() => searchInput.focus(), 60);
+    });
     // Navigasi keyboard: Enter/↓ buka, ↑↓ sorot, Enter pilih, Esc tutup
     let kbd = -1;
-    const kOpts = () => Array.from(body.querySelectorAll(".bk-opt"));
+    const kOpts = () => Array.from(body.querySelectorAll(".bk-opt")).filter((o) => !o.hidden);
     const kPaint = () => { const os = kOpts(); os.forEach((o, i) => o.classList.toggle("is-kbd", i === kbd)); if (os[kbd]) os[kbd].scrollIntoView({ block: "nearest" }); };
     ctrl.addEventListener("keydown", (e) => {
       const open = panel.classList.contains("open");

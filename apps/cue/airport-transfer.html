@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <!-- Cahyana favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+    <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/icons/apple-touch-icon.png"
+    />
+    <title>Bali Airport Transfer Booking | Flight Details Form</title>
+    <meta
+      name="description"
+      content="Book your private Bali airport transfer to or from Ubud. Add your flight number and time so your driver tracks delays and is ready when you land or need pickup."
+    />
+    <link
+      rel="preload"
+      href="assets/fonts/inter-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="style.css?v=411" />
+
+    <link
+      rel="canonical"
+      href="https://cahyanaubudexperience.com/airport-transfer.html"
+    />
+    <!-- Open Graph / social share -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cahyana Ubud Experience" />
+    <meta
+      property="og:title"
+      content="Bali Airport Transfer Booking | Flight Details Form"
+    />
+    <meta
+      property="og:description"
+      content="Book your private Bali airport transfer to or from Ubud. Add your flight number and time so your driver tracks delays and is ready when you land or need pickup."
+    />
+    <meta
+      property="og:url"
+      content="https://cahyanaubudexperience.com/airport-transfer.html"
+    />
+    <meta
+      property="og:image"
+      content="https://cahyanaubudexperience.com/assets/images/transfer-hero.webp"
+    />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Bali Airport Transfer Booking | Flight Details Form"
+    />
+    <meta
+      name="twitter:description"
+      content="Book your private Bali airport transfer to or from Ubud. Add your flight number and time so your driver tracks delays and is ready when you land or need pickup."
+    />
+    <meta
+      name="twitter:image"
+      content="https://cahyanaubudexperience.com/assets/images/transfer-hero.webp"
+    />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://cahyanaubudexperience.com/"},{"@type":"ListItem","position":2,"name":"Airport Transfer","item":"https://cahyanaubudexperience.com/airport-transfer.html"}]}</script>
+
+</head>
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <!-- Hero: box builder, sama pola kayak charter.html tapi field-nya buat airport (flight details wajib). -->
+    <section class="charter-hero" style="background-image: url(assets/images/transfer-hero.webp)">
+      <div class="charter-hero__inner">
+        <h1 class="charter-hero__title">Bali Airport Transfer</h1>
+        <p class="charter-hero__sub">
+          Private car to or from Ngurah Rai Airport (DPS), fixed price. Add your
+          flight number and time so your driver knows when to be there.
+        </p>
+
+        <div class="charter__box" id="airport-transfer">
+          <h2 class="charter__box-title">Book Your Airport Transfer</h2>
+
+          <div class="charter__step">
+            <label class="charter__label" for="at-direction">1. Direction</label>
+            <select class="charter__select" id="at-direction">
+              <option value="pickup">Airport pickup (arrival) &rarr; your stay</option>
+              <option value="dropoff">Your stay &rarr; airport drop-off (departure)</option>
+            </select>
+          </div>
+
+          <div class="charter__step charter__fields">
+            <div class="field">
+              <label class="charter__label" for="at-date">Date</label>
+              <input type="date" class="charter__select" id="at-date" />
+            </div>
+            <div class="field">
+              <label class="charter__label" for="at-guests">Guests</label>
+              <select class="charter__select" id="at-guests">
+                <option value="" disabled selected>Guests</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="charter__step">
+            <label class="charter__label" id="at-address-label" for="at-address">Hotel / villa drop-off address</label>
+            <input type="text" class="charter__select" id="at-address" placeholder="Hotel / villa name and area" />
+          </div>
+
+          <div class="charter__step">
+            <label class="charter__label" for="at-flight-number">Flight number</label>
+            <input type="text" class="charter__select" id="at-flight-number" placeholder="e.g. QZ7501" />
+          </div>
+          <div class="charter__step">
+            <label class="charter__label" for="at-flight-time">Flight date &amp; time</label>
+            <input type="datetime-local" class="charter__select" id="at-flight-time" />
+          </div>
+          <p class="charter__hint">
+            Flight details let your driver track delays and time the pickup right - required to book.
+          </p>
+
+          <div class="charter__total">
+            <span>Total</span>
+            <span class="amount" id="at-total"><span class="price-cur">-</span></span>
+          </div>
+          <button class="btn-book" id="at-book" disabled>Book This Transfer</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Good to know: sama pola tinfo di transfer.html (facts + included/excluded). -->
+    <section class="tinfo">
+      <h2 class="section__title">Good to know</h2>
+      <div class="tinfo__facts">
+        <div class="tinfo__fact"><span>Availability</span><strong>24 / 7</strong></div>
+        <div class="tinfo__fact"><span>Capacity</span><strong>Up to 5 pax</strong></div>
+        <div class="tinfo__fact"><span>Meet &amp; greet</span><strong>At arrivals</strong></div>
+        <div class="tinfo__fact"><span>Language</span><strong>English</strong></div>
+      </div>
+      <div class="tinfo__cols">
+        <div class="tinfo__col">
+          <h3>What's included</h3>
+          <ul class="info__list info__list--yes">
+            <li>Private air-conditioned car and fuel</li>
+            <li>Professional English-speaking driver</li>
+            <li>Meet &amp; greet with a name board at arrivals</li>
+            <li>Flight tracking, so your driver adjusts for delays</li>
+            <li>Luggage assistance</li>
+            <li>Free bottled water</li>
+          </ul>
+        </div>
+        <div class="tinfo__col">
+          <h3>What's excluded</h3>
+          <ul class="info__list info__list--no">
+            <li>Extra stops beyond the airport and your address</li>
+            <li>Waiting time beyond a reasonable grace period if flight details are missing or change without notice</li>
+            <li>Meals and personal expenses</li>
+            <li>Tips and gratuities (optional)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="info">
+      <div class="info__container">
+        <h2 class="section__title">Why We Ask for Flight Details</h2>
+        <p>
+          Domestic and international flights land at different terminals, and
+          delays happen. Your flight number and scheduled time let your driver
+          track the actual landing time instead of guessing, so they're waiting
+          when you clear immigration and baggage claim rather than parking and
+          watching the clock.
+        </p>
+        <p>
+          For a departure drop-off, the same details help time the pick-up from
+          your hotel or villa so you reach the airport with enough buffer for
+          check-in and security, without sitting around too early.
+        </p>
+
+        <h2 class="section__title section__title--sub">How It Works</h2>
+        <p>
+          Fill in the direction, date, and guest count, then your hotel or villa
+          address and flight details. Confirm the booking with only a 10%
+          deposit, and the rest is settled directly with your driver. You'll get
+          a booking confirmation by email with everything you entered - if a
+          flight changes, reply to that email or message us on WhatsApp and
+          we'll pass it on to your driver.
+        </p>
+        <p>
+          Need the return leg too? Book it separately closer to your departure
+          date, once your flight is confirmed - the direction picker above
+          covers both pickup and drop-off.
+        </p>
+      </div>
+    </section>
+
+    <div id="book-confirm-placeholder"></div>
+    <div id="footer-placeholder"></div>
+
+    <script src="data.js?v=411"></script>
+    <script src="script.js?v=411"></script>
+
+  </body>
+</html>

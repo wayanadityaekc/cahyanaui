@@ -6559,6 +6559,16 @@ button.pick-cat {
   font-size: var(--fs-label);
   color: var(--color-muted);
 }
+.trip__reviews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+.trip__reviews .btn-pill {
+  padding: 0.45rem 1rem;
+  font-size: var(--fs-small);
+}
 .pill {
   font-size: var(--fs-label);
   font-weight: 600;
@@ -7781,14 +7791,36 @@ strong {
   margin: 1.5rem auto 0;
 }
 .rev {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 14px;
   box-shadow: 0 6px 20px rgba(31, 61, 43, 0.06);
-  padding: 1.4rem 1.3rem;
+  padding: 1.4rem 1.3rem 2.3rem;
+}
+.rev__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.rev__name {
+  font-weight: 600;
+  font-size: var(--fs-small);
+  color: var(--color-green);
+}
+.rev__flag {
+  width: 18px;
+  height: 13px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.rev__service {
+  font-size: var(--fs-label);
+  color: var(--color-muted);
 }
 .rev__stars {
   color: var(--color-gold);
@@ -7799,20 +7831,11 @@ strong {
   font-size: var(--fs-body);
   color: var(--color-green);
 }
-.rev__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  margin-top: auto;
-}
-.rev__name {
-  font-weight: 600;
-  font-size: var(--fs-small);
-  color: var(--color-green);
-}
 .rev__logo {
-  height: 22px;
+  position: absolute;
+  right: 1.3rem;
+  bottom: 1.1rem;
+  height: 18px;
   width: auto;
   object-fit: contain;
 }

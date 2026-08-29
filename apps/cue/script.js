@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 76;
+const PARTIALS_VERSION = 77;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2726,14 +2726,31 @@ function initModals() {
 }
 
 // Satu kartu review - dipake homepage strip & halaman all-reviews.html.
+// Logo sumber review (pojok kanan bawah kartu) - "cahyana" default buat review
+// yang ditulis langsung di web; tiga lainnya buat kalau ada review di-import.
+const REVIEW_SOURCE_LOGO = {
+  cahyana: { src: "assets/images/logo.webp", alt: "Cahyana Ubud Experience" },
+  tripadvisor: { src: "assets/images/tripadvisor.webp", alt: "Tripadvisor" },
+  viator: { src: "assets/images/viator.webp", alt: "Viator" },
+  google: { src: "assets/images/google.svg", alt: "Google" },
+};
+// Nama negara (disimpen di DB) -> kode buat file assets/flags/<code>.svg.
+const COUNTRY_CODE_BY_NAME = Object.fromEntries(COUNTRIES.map((c) => [c.name, c.code]));
+
 function renderReviewCard(r) {
   const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
   const stars = "&#9733;".repeat(n) + "&#9734;".repeat(5 - n);
+  const flagCode = r.country ? COUNTRY_CODE_BY_NAME[r.country] : null;
+  const flag = flagCode
+    ? '<img class="rev__flag" src="assets/flags/' + flagCode + '.svg" alt="' + escHtml(r.country) + '" loading="lazy" />'
+    : "";
+  const src = REVIEW_SOURCE_LOGO[r.source] || REVIEW_SOURCE_LOGO.cahyana;
   return '<article class="rev">' +
+    '<div class="rev__head"><span class="rev__name">' + escHtml(r.name) + "</span>" + flag + "</div>" +
+    (r.service ? '<div class="rev__service">' + escHtml(r.service) + "</div>" : "") +
     '<div class="rev__stars" aria-label="' + n + ' out of 5">' + stars + "</div>" +
     '<p class="rev__text">' + escHtml(r.message) + "</p>" +
-    '<div class="rev__foot"><span class="rev__name">' + escHtml(r.name) +
-      (r.service ? " &middot; " + escHtml(r.service) : "") + "</span></div>" +
+    '<img class="rev__logo" src="' + src.src + '" alt="' + src.alt + '" loading="lazy" />' +
   "</article>";
 }
 
@@ -2772,13 +2789,48 @@ async function initAllReviews() {
 // all-reviews.html, dll) - wired sekali dari sini, bukan per-halaman.
 function initReviewTriggers() {
   document.querySelectorAll("[data-open-review]").forEach((btn) => {
-    btn.addEventListener("click", openReviewModal);
+    btn.addEventListener("click", () => openReviewModal());
   });
 }
 
-/* ===== Review submission — gate: booking_ref + email/phone kudu cocok sama
-   satu booking asli DAN tanggal tripnya udah lewat (dicek ULANG di server,
-   endpoint /api/reviews/verify di sini cuma buat UX). ===== */
+/* ===== Review submission — dua cara buktiin booking itu punya kamu:
+   (a) login (token sesi) - dari tombol per-tour di My Trips, langsung ke tahap
+       "write", udah ke-prefill; (b) booking_ref + email/phone (tahap "verify"
+       dulu). Dua-duanya dicek ULANG di server (endpoint verify di sini cuma
+       buat UX). Satu booking bisa punya beberapa tour beda (custom itinerary)
+       -> dropdown "Which tour" kalau lebih dari satu, direview satu-satu. ===== */
+
+// Ambil nama item/tour halaman ini - sumber kebenarannya SAMA kayak yang
+// dipake initBooking buat preset form (data-item di booking-placeholder ATAU
+// book-modal-placeholder). Dipake juga buat filter review per-tour.
+function pageItemName() {
+  const holder = document.getElementById("booking-placeholder") || document.getElementById("book-modal-placeholder");
+  return (holder && holder.dataset.item) || "";
+}
+
+// Review khusus tour/halaman ini (bukan campur semua kayak homepage) - GET
+// /api/reviews?service=... Kosong -> section gak ditampilin sama sekali (beda
+// dari homepage/all-reviews.html yang punya invite state sendiri; ngulang
+// "be the first" itu di 60+ halaman kerasa berisik, cukup di 2 tempat itu).
+async function initTourReviews() {
+  const service = pageItemName();
+  const mount = document.getElementById("footer-placeholder");
+  if (!service || !mount || document.querySelector(".tour-reviews")) return;
+  let rows = [];
+  try {
+    rows = await fetch(`${API_BASE}/reviews?service=${encodeURIComponent(service)}`).then((r) => r.json());
+    if (!Array.isArray(rows)) rows = [];
+  } catch (e) {
+    rows = [];
+  }
+  if (!rows.length) return;
+  const wrap = document.createElement("section");
+  wrap.className = "reviews tour-reviews";
+  wrap.innerHTML =
+    '<div class="reviews__head"><h2 class="section__title">Guest Reviews</h2></div>' +
+    '<div class="reviews-strip">' + rows.map(renderReviewCard).join("") + "</div>";
+  mount.parentNode.insertBefore(wrap, mount);
+}
 
 // Tombol "Leave a review" di paling bawah halaman — CUMA di halaman yang
 // bisa di-book (aturan Wayan: "kalau bisa di-book berarti bisa di-review").
@@ -2791,12 +2843,15 @@ function initReviewCta() {
   wrap.className = "review-cta";
   wrap.innerHTML = '<button type="button" class="btn-pill">Leave a review</button>';
   mount.parentNode.insertBefore(wrap, mount);
-  wrap.querySelector("button").addEventListener("click", openReviewModal);
+  wrap.querySelector("button").addEventListener("click", () => openReviewModal());
 }
 
 let reviewModalPromise = null; // fetch partial cuma sekali, dipake ulang tiap kebuka
 
-async function openReviewModal() {
+// prefill = { ref, service, name } - dikasih dari tombol per-tour di My Trips
+// (udah login & udah tau tour-nya) buat lompat langsung ke tahap "write",
+// skip tahap verifikasi. Kosongin buat alur biasa (verifikasi manual dulu).
+async function openReviewModal(prefill) {
   if (!reviewModalPromise) {
     const host = document.createElement("div");
     document.body.appendChild(host);
@@ -2811,6 +2866,9 @@ async function openReviewModal() {
   }
   const modal = await reviewModalPromise;
   resetReviewModal(modal);
+  if (prefill && prefill.ref && prefill.service) {
+    enterWriteStep(modal, { ref: prefill.ref, name: prefill.name || "", items: [prefill.service], mode: "account" });
+  }
   modal.classList.add("active");
 }
 
@@ -2822,17 +2880,42 @@ function resetReviewModal(modal) {
   modal.querySelector("#rvm-success").style.display = "none";
   modal.querySelector("#rvm-ref").value = "";
   modal.querySelector("#rvm-contact").value = "";
+  modal.querySelector("#rvm-tour").innerHTML = "";
+  modal.querySelector("#rvm-name").value = "";
+  modal.querySelector("#rvm-country").value = "";
   modal.querySelector("#rvm-message").value = "";
   modal.querySelectorAll(".rating__star").forEach((s) => s.classList.remove("active"));
   modal.dataset.rating = "0";
+  modal.dataset.mode = "contact";
   const vErr = modal.querySelector("#rvm-verify-error"); vErr.hidden = true; vErr.textContent = "";
   const sErr = modal.querySelector("#rvm-submit-error"); sErr.hidden = true; sErr.textContent = "";
+}
+
+// Pindah dari tahap "verify" ke "write" - dipake abis verify sukses ATAU
+// langsung dari prefill (My Trips). items = daftar tour yang bisa direview
+// dari booking itu (server-side, udah difilter yang tripnya udah lewat &
+// belum direview - lihat reviewableItems() di cahyana-api).
+function enterWriteStep(modal, { ref, name, items, mode }) {
+  modal.dataset.ref = ref;
+  modal.dataset.mode = mode;
+  modal.querySelector("#rvm-tour").innerHTML = (items || [])
+    .map((s) => `<option value="${escHtml(s)}">${escHtml(s)}</option>`)
+    .join("");
+  modal.querySelector("#rvm-name").value = name || "";
+  modal.querySelector('[data-step="verify"]').hidden = true;
+  modal.querySelector('[data-step="write"]').hidden = false;
 }
 
 function wireReviewModal(modal) {
   modal.addEventListener("click", (e) => {
     if (e.target === modal || e.target.closest("[data-close]")) modal.classList.remove("active");
   });
+
+  // Dropdown negara diisi sekali (partial-nya di-cache, gak perlu diulang tiap buka).
+  modal.querySelector("#rvm-country").insertAdjacentHTML(
+    "beforeend",
+    COUNTRIES.map((c) => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join(""),
+  );
 
   const verifyBtn = modal.querySelector("#rvm-verify-btn");
   const verifyErr = modal.querySelector("#rvm-verify-error");
@@ -2857,12 +2940,8 @@ function wireReviewModal(modal) {
         verifyErr.hidden = false;
         return;
       }
-      modal.dataset.ref = ref;
       modal.dataset.contact = contact;
-      modal.querySelector("#rvm-name").textContent = data.name || "";
-      modal.querySelector("#rvm-service").textContent = data.service || "";
-      modal.querySelector('[data-step="verify"]').hidden = true;
-      modal.querySelector('[data-step="write"]').hidden = false;
+      enterWriteStep(modal, { ref, name: data.name, items: data.items, mode: "contact" });
     } catch (e) {
       verifyErr.textContent = "Something went wrong. Please try again.";
       verifyErr.hidden = false;
@@ -2882,6 +2961,9 @@ function wireReviewModal(modal) {
   const submitBtn = modal.querySelector("#rvm-submit-btn");
   const submitErr = modal.querySelector("#rvm-submit-error");
   submitBtn.addEventListener("click", async () => {
+    const service = modal.querySelector("#rvm-tour").value;
+    const name = modal.querySelector("#rvm-name").value.trim();
+    const country = modal.querySelector("#rvm-country").value;
     const rating = parseInt(modal.dataset.rating || "0", 10);
     const message = modal.querySelector("#rvm-message").value.trim();
     submitErr.hidden = true;
@@ -2889,10 +2971,14 @@ function wireReviewModal(modal) {
     if (!message) { submitErr.textContent = "Please write your review."; submitErr.hidden = false; return; }
     submitBtn.disabled = true;
     try {
+      const body = { booking_ref: modal.dataset.ref, service, rating, message, country, name };
+      const headers = { "Content-Type": "application/json" };
+      if (modal.dataset.mode === "account") headers.Authorization = `Bearer ${getToken()}`;
+      else body.contact = modal.dataset.contact;
       const data = await fetch(`${API_BASE}/reviews`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_ref: modal.dataset.ref, contact: modal.dataset.contact, rating, message }),
+        headers,
+        body: JSON.stringify(body),
       }).then((r) => r.json());
       if (!data.ok) {
         submitErr.textContent = data.reason || "Something went wrong. Please try again.";
@@ -3969,11 +4055,22 @@ function initMyTripsCart() {
   render();
 }
 
-// Satu kartu trip di My Trips.
+// Satu kartu trip di My Trips. Trip yang udah lewat & masih ada tour belum
+// direview (t.review_items, dari /api/bookings/mine) dapet tombol per tour -
+// satu booking custom itinerary bisa punya beberapa tombol beda.
 function tripCard(t) {
   const pillClass = t.upcoming ? "pill-ok" : "pill-done";
   const pillText = t.upcoming ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "New") : "Completed";
   const dateStr = t.end_date && t.end_date !== t.start_date ? t.start_date + " – " + t.end_date : t.start_date || "-";
+  const items = t.review_items || [];
+  const reviewBtns = items
+    .map(
+      (svc) =>
+        '<button type="button" class="btn-pill" data-review-btn data-ref="' + escHtml(t.ref) + '" data-service="' + escHtml(svc) + '">' +
+        "Leave a Review" + (items.length > 1 ? " – " + escHtml(svc) : "") +
+        "</button>",
+    )
+    .join("");
   return (
     '<div class="trip"><div class="trip__stripe"></div><div class="trip__body">' +
       '<div class="trip__top"><div><div class="trip__name">' + escHtml(t.name) + "</div>" +
@@ -3981,6 +4078,7 @@ function tripCard(t) {
       '<span class="pill ' + pillClass + '">' + escHtml(pillText) + "</span></div>" +
       '<div class="trip__foot"><div class="trip__price">' + priceHTML(t.price_usd, t.price_idr) + "</div>" +
       '<span class="trip__ref">' + escHtml(t.ref) + "</span></div>" +
+      (reviewBtns ? '<div class="trip__reviews">' + reviewBtns + "</div>" : "") +
     "</div></div>"
   );
 }
@@ -4019,6 +4117,12 @@ async function initMyTrips() {
       root.querySelectorAll(".mytrips__tab").forEach((x) => x.classList.toggle("is-on", x === tab));
       render(tab.dataset.tab);
     });
+  });
+  // Delegated - list.innerHTML diganti tiap render(), tombolnya baru tiap kali.
+  list.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-review-btn]");
+    if (!btn) return;
+    openReviewModal({ ref: btn.dataset.ref, service: btn.dataset.service, name: currentAccount ? currentAccount.name : "" });
   });
   render("upcoming");
 }
@@ -5487,6 +5591,7 @@ async function initPage() {
   initModalUX();
   initReviews();
   initAllReviews();
+  initTourReviews();
   initReviewCta();
   initReviewTriggers();
   initDrivers();

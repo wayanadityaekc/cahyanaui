@@ -750,6 +750,25 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Opsi berbendera (Country dropdown): bendera + nama sejajar di control & panel. */
+.hs-control__val--flag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hs-control__val--flag .hs-opt__nm {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hs-opt__flag {
+  width: 20px;
+  height: 14px;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
 .hs-chev {
   width: 18px;
   height: 18px;
@@ -3224,6 +3243,18 @@ a.footer__contact-item:hover {
 .rvm-block:last-of-type {
   border-bottom: none;
   padding-bottom: 0;
+}
+/* Rapihin jarak dalam blok review: nama tour (heading) rapet ke bintang, bintang
+   rapet ke kotak teks (Wayan). */
+.rvm-block .modal__sub {
+  margin: 0 0 0.5rem;
+  color: var(--color-green);
+}
+.rvm-block .rating {
+  margin-bottom: 0.7rem;
+}
+.rvm-block .modal__group {
+  margin-bottom: 0;
 }
 .modal__success {
   display: none;
@@ -6973,7 +7004,7 @@ button.pick-cat {
 .mtc-review {
   display: flex;
   justify-content: flex-end;
-  margin: -0.4rem 0 0.9rem;
+  margin: 0 0 1.1rem; /* tombol 0.6rem di bawah kartunya, 1.1rem ke kartu berikut - ritme rapi (Wayan) */
 }
 .mtc-review__btn {
   display: inline-flex;

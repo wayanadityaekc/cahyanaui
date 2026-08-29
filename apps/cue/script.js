@@ -2964,10 +2964,13 @@ function wireReviewModal(modal) {
   });
 
   // Dropdown negara diisi sekali (partial-nya di-cache, gak perlu diulang tiap buka).
+  // data-flag = kode negara -> custom dropdown render bendera + nama (Wayan).
   modal.querySelector("#rvm-country").insertAdjacentHTML(
     "beforeend",
-    COUNTRIES.map((c) => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join(""),
+    COUNTRIES.map((c) => `<option value="${escHtml(c.name)}" data-flag="${escHtml(c.code)}">${escHtml(c.name)}</option>`).join(""),
   );
+  // Pakai custom dropdown kita (bukan <select> native) - judul panel "Country".
+  globalEnhancer().enhanceSelect(modal.querySelector("#rvm-country"), "Country");
 
   const verifyBtn = modal.querySelector("#rvm-verify-btn");
   const verifyErr = modal.querySelector("#rvm-verify-error");
@@ -4963,7 +4966,16 @@ function makeFieldEnhancer() {
     function refresh() {
       const opt = sel.options[sel.selectedIndex];
       const ph = !sel.value || (opt && opt.disabled);
-      valEl.textContent = opt ? opt.textContent : "";
+      const flag = opt && opt.dataset ? opt.dataset.flag : "";
+      // Opsi berbendera (mis. Country) -> tampil bendera + nama; selain itu teks polos.
+      if (flag) {
+        valEl.innerHTML = '<img class="hs-opt__flag" src="assets/flags/' + flag + '.svg" alt="" />' +
+          '<span class="hs-opt__nm">' + escHtml(opt.textContent) + "</span>";
+        valEl.classList.add("hs-control__val--flag");
+      } else {
+        valEl.textContent = opt ? opt.textContent : "";
+        valEl.classList.remove("hs-control__val--flag");
+      }
       valEl.classList.toggle("placeholder", !!ph);
     }
     function build() {
@@ -4973,7 +4985,9 @@ function makeFieldEnhancer() {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "hs-opt bk-opt" + (o.value === sel.value ? " is-sel" : "");
-        btn.innerHTML = '<span class="hs-opt__nm">' + o.textContent + "</span>";
+        const oFlag = o.dataset ? o.dataset.flag : "";
+        btn.innerHTML = (oFlag ? '<img class="hs-opt__flag" src="assets/flags/' + oFlag + '.svg" alt="" />' : "") +
+          '<span class="hs-opt__nm">' + o.textContent + "</span>";
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
           sel.value = o.value;

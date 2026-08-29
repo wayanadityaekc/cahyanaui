@@ -659,6 +659,17 @@ function fmtDayDate(ds) {
   return dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 }
 
+// Jam "HH:MM" (24h) -> "3:00 pm" (12h) buat tampilan. Kosong -> "".
+function fmtTime(hm) {
+  if (!hm) return "";
+  const p = hm.split(":");
+  if (p.length < 2) return hm;
+  let h = +p[0]; const m = p[1];
+  const ap = h < 12 ? "am" : "pm";
+  h = h % 12; if (h === 0) h = 12;
+  return h + ":" + m + " " + ap;
+}
+
 // Peta nama program -> halaman detailnya (kebalikan PAGE_ITEM), buat tombol "View details".
 const ITEM_URL = Object.keys(PAGE_ITEM).reduce((m, page) => {
   m[PAGE_ITEM[page]] = page;
@@ -2044,6 +2055,17 @@ function initItinerary() {
     return o;
   }
 
+  // Slot jam jemput (tiap 30 menit, 24 jam) - value 24h "HH:MM", label 12h "3:00 pm".
+  function timeOptions(val) {
+    let o = `<option value="" disabled ${val ? "" : "selected"}>Time</option>`;
+    for (let h = 0; h < 24; h++)
+      for (let m = 0; m < 60; m += 30) {
+        const v = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+        o += `<option value="${v}" ${val === v ? "selected" : ""}>${fmtTime(v)}</option>`;
+      }
+    return o;
+  }
+
   // Pilihan area pickup charter: Ubud (tanpa surcharge) + area transfer (luar Ubud).
   const CH_AREAS = ["Ubud", ...Object.keys(prices.transfer).map((r) => r.replace(" – Ubud", ""))];
   function charterAreaOptions(sel) {
@@ -2277,7 +2299,7 @@ function initItinerary() {
       else if (tr.direction === "from" && doIdx < 0) doIdx = i;
     });
     const trSub = (tr) =>
-      !tr ? "" : transferComplete(tr) ? "<b>" + fmtDayDate(tr.date) + "</b>" : "Tap to complete";
+      !tr ? "" : transferComplete(tr) ? "<b>" + fmtDayDate(tr.date) + "</b>" + (tr.time ? " &middot; " + fmtTime(tr.time) : "") : "Tap to complete";
 
     grid.appendChild(miniCard({
       kind: "pickup", title: "Airport Pickup",
@@ -2297,7 +2319,7 @@ function initItinerary() {
     // Charter: slot pertama selalu tampil; charter tambahan dapet kartu sendiri
     const chs = state.charters || [];
     const chSub = (ch) =>
-      !ch ? "Car + driver, your route" : charterComplete(ch) ? "<b>" + fmtDayDate(ch.date) + "</b>" : "Tap to complete";
+      !ch ? "Car + driver, your route" : charterComplete(ch) ? "<b>" + fmtDayDate(ch.date) + "</b>" + (ch.time ? " &middot; " + fmtTime(ch.time) : "") : "Tap to complete";
     grid.appendChild(miniCard({
       kind: "charter", title: "Private Charter",
       sub: chSub(chs[0]), filled: !!chs[0],
@@ -2357,6 +2379,7 @@ function initItinerary() {
     const cur = tr || ch;
     const guests = (cur && cur.guests) || t.guests || "";
     const date = (cur && cur.date) || "";
+    const time = (cur && cur.time) || "";
     // Sisi hotel: pickup transfer "to" = drop-off, "from" = pick-up; charter = pick-up
     const hotel =
       (tr && (tr.direction === "from" ? tr.pickup : tr.dropoff)) ||
@@ -2392,6 +2415,7 @@ function initItinerary() {
     }
     fieldsHTML +=
       '<div class="field"><label>Date</label><input type="date" class="sv-date" min="' + todayStr() + '" value="' + date + '" /></div>' +
+      '<div class="field"><label>Pick-up time</label><select class="sv-time">' + timeOptions(time) + "</select></div>" +
       '<div class="field"><label>Guests</label><select class="sv-guests">' + guestOptions(guests) + "</select></div>" +
       '<div class="field field--full"><label>' + hotelLabel + '</label><input type="text" class="sv-hotel" placeholder="Hotel / villa / area" value="' + hotel.replace(/"/g, "&quot;") + '" /></div>';
 
@@ -2431,20 +2455,21 @@ function initItinerary() {
       const dv = q(".sv-date").value;
       if (dv && dv < todayStr()) { showPastDate(); return; }
       const gv = q(".sv-guests").value;
+      const tv = q(".sv-time").value;
       const hv = q(".sv-hotel").value.trim();
       if (isCharter) {
-        const entry = ch || { area: "", dur: "", extra: 1, date: "", guests: "", pickup: "", dropoff: "" };
+        const entry = ch || { area: "", dur: "", extra: 1, date: "", time: "", guests: "", pickup: "", dropoff: "" };
         entry.area = q(".sv-area").value;
         entry.dur = q(".sv-dur").value;
         entry.extra = parseInt(q(".sv-extra").value) || 1;
-        entry.date = dv; entry.guests = gv; entry.pickup = hv;
+        entry.date = dv; entry.time = tv; entry.guests = gv; entry.pickup = hv;
         if (!ch) state.charters.push(entry);
       } else {
         const dir = kind === "pickup" ? "to" : kind === "dropoff" ? "from" : q(".sv-dir").value;
         const route = kind === "other" ? q(".sv-route").value : AIRPORT_ROUTE;
         const area = route === AIRPORT_ROUTE ? "Ngurah Rai Airport" : route.replace(" – Ubud", "");
-        const entry = tr || { route: "", direction: "to", date: "", guests: "", pickup: "", dropoff: "" };
-        entry.route = route; entry.direction = dir; entry.date = dv; entry.guests = gv;
+        const entry = tr || { route: "", direction: "to", date: "", time: "", guests: "", pickup: "", dropoff: "" };
+        entry.route = route; entry.direction = dir; entry.date = dv; entry.time = tv; entry.guests = gv;
         if (dir === "from") { entry.pickup = hv; entry.dropoff = area; }
         else { entry.pickup = area; entry.dropoff = hv; }
         if (!tr) state.transfers.push(entry);
@@ -2536,7 +2561,7 @@ function initItinerary() {
   const pickCharter = document.getElementById("pick-charter");
   if (pickCharter)
     pickCharter.addEventListener("click", () => {
-      state.charters.push({ area: "", dur: "", extra: 1, date: "", guests: "", pickup: "", dropoff: "" });
+      state.charters.push({ area: "", dur: "", extra: 1, date: "", time: "", guests: "", pickup: "", dropoff: "" });
       save();
       rerender();
       if (pickModal) pickModal.classList.remove("active");
@@ -2608,12 +2633,12 @@ function initItinerary() {
       }),
       ...state.transfers.map((tr) => {
         const p = transferPrice(tr);
-        return { type: "transfer", service: transferLine(tr), date: tr.date, guests: tr.guests,
+        return { type: "transfer", service: transferLine(tr), date: tr.date, time: tr.time || "", guests: tr.guests,
           pickup: tr.pickup || "", dropoff: tr.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: true };
       }),
       ...chs.map((ch) => {
         const p = charterPrice(ch.area, ch.dur, ch.extra);
-        return { type: "charter", service: `${charterDurLabel(ch)} from ${ch.area}`, date: ch.date, guests: ch.guests,
+        return { type: "charter", service: `${charterDurLabel(ch)} from ${ch.area}`, date: ch.date, time: ch.time || "", guests: ch.guests,
           pickup: ch.pickup || "", dropoff: ch.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: false };
       }),
     ];
@@ -2630,8 +2655,8 @@ function initItinerary() {
       : "";
     const detailLines = [
       ...state.days.map((d, i) => `Day ${i + 1} · ${d.date ? fmtDayDate(d.date) : "date TBD"} · ${dayLine(d)}`),
-      ...state.transfers.map((tr) => `Transfer · ${tr.date ? fmtDayDate(tr.date) : "date TBD"} · ${transferLine(tr)}`),
-      ...chs.map((ch) => `Charter · ${ch.date ? fmtDayDate(ch.date) : "date TBD"} · ${charterDurLabel(ch)} from ${ch.area}`)
+      ...state.transfers.map((tr) => `Transfer · ${tr.date ? fmtDayDate(tr.date) : "date TBD"}${tr.time ? " · " + fmtTime(tr.time) : ""} · ${transferLine(tr)}`),
+      ...chs.map((ch) => `Charter · ${ch.date ? fmtDayDate(ch.date) : "date TBD"}${ch.time ? " · " + fmtTime(ch.time) : ""} · ${charterDurLabel(ch)} from ${ch.area}`)
     ];
     window.__openBooking({
       type: "itinerary",
@@ -3319,7 +3344,7 @@ function initTransferPicker() {
     const q = quote();
     if (!q) return false;
     const st = itnLoad();
-    st.transfers.push({ route: q.area + " – Ubud", direction: q.direction, return: q.ret, pickup: "", dropoff: "", date: "", guests: "" });
+    st.transfers.push({ route: q.area + " – Ubud", direction: q.direction, return: q.ret, pickup: "", dropoff: "", date: "", time: "", guests: "" });
     itnSave(st);
     return true;
   };
@@ -3815,12 +3840,12 @@ function cartCheckout(rerender) {
     }),
     ...transfers.map((tr) => {
       const p = cartTransferPrice(tr); usd += p.usd; idr += p.idr;
-      return { type: "transfer", service: cartTransferTitle(tr), date: tr.date || "", guests: cartGuestsOf(tr),
+      return { type: "transfer", service: cartTransferTitle(tr), date: tr.date || "", time: tr.time || "", guests: cartGuestsOf(tr),
         pickup: tr.pickup || "", dropoff: tr.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: true };
     }),
     ...chs.map((ch) => {
       const p = cartCharterPrice(ch); usd += p.usd; idr += p.idr;
-      return { type: "charter", service: cartCharterTitle(ch), date: ch.date || "", guests: cartGuestsOf(ch),
+      return { type: "charter", service: cartCharterTitle(ch), date: ch.date || "", time: ch.time || "", guests: cartGuestsOf(ch),
         pickup: ch.pickup || "", dropoff: ch.dropoff || "", usd: p.usd, idr: p.idr, day_no: null, eligible: false };
     })
   ];
@@ -3835,8 +3860,8 @@ function cartCheckout(rerender) {
     : "";
   const detailLines = [
     ...days.map((d, i) => "Day " + (i + 1) + " · " + (d.date ? fmtDayDate(d.date) : "date TBD") + " · " + cartDayTitle(d)),
-    ...transfers.map((tr) => "Transfer · " + (tr.date ? fmtDayDate(tr.date) : "date TBD") + " · " + cartTransferTitle(tr)),
-    ...chs.map((ch) => "Charter · " + (ch.date ? fmtDayDate(ch.date) : "date TBD") + " · " + cartCharterTitle(ch))
+    ...transfers.map((tr) => "Transfer · " + (tr.date ? fmtDayDate(tr.date) : "date TBD") + (tr.time ? " · " + fmtTime(tr.time) : "") + " · " + cartTransferTitle(tr)),
+    ...chs.map((ch) => "Charter · " + (ch.date ? fmtDayDate(ch.date) : "date TBD") + (ch.time ? " · " + fmtTime(ch.time) : "") + " · " + cartCharterTitle(ch))
   ];
   const ref = activeReferral();
   window.__openBooking({

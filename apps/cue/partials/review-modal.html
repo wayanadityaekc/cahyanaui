@@ -1,11 +1,14 @@
 <!-- Review submission popup. Dibuka 2 cara (openReviewModal, script.js):
      - Anonim: dari tombol "Leave a review" manapun -> verifikasi booking ref +
        email/HP dulu (step "verify"), baru tahap "write".
-     - Login: dari tombol per-tour di My Trips ("Past Trip") -> langsung tahap
-       "write", udah ke-prefill nama+tour dari booking, submit lewat token sesi
+     - Login: dari tombol "Leave a Review" di My Trips ("Past Trip") -> langsung
+       tahap "write", udah ke-prefill nama dari booking, submit lewat token sesi
        (bukan booking ref+kontak lagi).
-     Kalau booking-nya punya lebih dari 1 tour beda (custom itinerary), dropdown
-     "Which tour" munculin pilihan - satu review per tour, bukan per booking.
+     Kalau booking-nya punya lebih dari 1 tour beda (custom itinerary), checklist
+     "Which tours" muncul - guest centang tour mana aja yang mau direview, tiap
+     yang dicentang dapet kotak rating+teks SENDIRI (#rvm-checklist/#rvm-blocks,
+     diisi JS di enterWriteStep). Submit kirim satu review per tour yang dicentang
+     (boleh beda-beda isinya), bukan cuma satu review buat semua.
      Semua wiring di openReviewModal/wireReviewModal (script.js). -->
 <div class="modal" id="review-modal">
   <div class="modal__box">
@@ -28,10 +31,6 @@
 
     <div data-step="write" hidden>
       <div class="modal__group">
-        <label for="rvm-tour">Which tour are you reviewing?</label>
-        <select id="rvm-tour"></select>
-      </div>
-      <div class="modal__group">
         <label for="rvm-name">Your name</label>
         <input type="text" id="rvm-name" />
       </div>
@@ -41,17 +40,8 @@
           <option value="">Select country</option>
         </select>
       </div>
-      <div class="rating" id="rvm-rating">
-        <button type="button" class="rating__star" data-value="1" aria-label="1 star">&#9733;</button>
-        <button type="button" class="rating__star" data-value="2" aria-label="2 stars">&#9733;</button>
-        <button type="button" class="rating__star" data-value="3" aria-label="3 stars">&#9733;</button>
-        <button type="button" class="rating__star" data-value="4" aria-label="4 stars">&#9733;</button>
-        <button type="button" class="rating__star" data-value="5" aria-label="5 stars">&#9733;</button>
-      </div>
-      <div class="modal__group">
-        <label for="rvm-message">Your review</label>
-        <textarea id="rvm-message" rows="4"></textarea>
-      </div>
+      <div id="rvm-checklist"></div>
+      <div id="rvm-blocks"></div>
       <p class="review-modal__error" id="rvm-submit-error" hidden></p>
       <button type="button" class="modal__btn" id="rvm-submit-btn">Submit review</button>
     </div>

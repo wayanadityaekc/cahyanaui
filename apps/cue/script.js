@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 78;
+const PARTIALS_VERSION = 79;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -2894,28 +2894,66 @@ function resetReviewModal(modal) {
   modal.querySelector("#rvm-success").style.display = "none";
   modal.querySelector("#rvm-ref").value = "";
   modal.querySelector("#rvm-contact").value = "";
-  modal.querySelector("#rvm-tour").innerHTML = "";
   modal.querySelector("#rvm-name").value = "";
   modal.querySelector("#rvm-country").value = "";
-  modal.querySelector("#rvm-message").value = "";
-  modal.querySelectorAll(".rating__star").forEach((s) => s.classList.remove("active"));
-  modal.dataset.rating = "0";
+  modal.querySelector("#rvm-checklist").innerHTML = "";
+  modal.querySelector("#rvm-blocks").innerHTML = "";
   modal.dataset.mode = "contact";
   const vErr = modal.querySelector("#rvm-verify-error"); vErr.hidden = true; vErr.textContent = "";
   const sErr = modal.querySelector("#rvm-submit-error"); sErr.hidden = true; sErr.textContent = "";
 }
 
+// Satu blok rating+teks per tour (di-render buat SEMUA item, disembunyiin/
+// dimunculin lewat checkbox - bukan dibikin/dibuang, biar teks yg udah
+// diketik gak ilang kalau guest toggle centangnya).
+function reviewBlockHTML(service, idx) {
+  const stars = [1, 2, 3, 4, 5]
+    .map((n) => '<button type="button" class="rating__star" data-value="' + n + '" aria-label="' + n + " star" + (n > 1 ? "s" : "") + '">&#9733;</button>')
+    .join("");
+  return '<div class="rvm-block" data-review-block data-idx="' + idx + '" data-service="' + escHtml(service) + '" data-rating="0">' +
+    '<p class="modal__sub"><strong>' + escHtml(service) + "</strong></p>" +
+    '<div class="rating">' + stars + "</div>" +
+    '<div class="modal__group"><textarea rows="3" placeholder="Your review for ' + escHtml(service) + '"></textarea></div>' +
+  "</div>";
+}
+
 // Pindah dari tahap "verify" ke "write" - dipake abis verify sukses ATAU
 // langsung dari prefill (My Trips). items = daftar tour yang bisa direview
 // dari booking itu (server-side, udah difilter yang tripnya udah lewat &
-// belum direview - lihat reviewableItems() di cahyana-api).
+// belum direview - lihat reviewableItems() di cahyana-api). Lebih dari 1 tour
+// -> munculin checklist, guest centang mana aja yang mau direview (default
+// semua kecentang), satu blok rating+teks per tour yang dicentang.
 function enterWriteStep(modal, { ref, name, items, mode }) {
   modal.dataset.ref = ref;
   modal.dataset.mode = mode;
-  modal.querySelector("#rvm-tour").innerHTML = (items || [])
-    .map((s) => `<option value="${escHtml(s)}">${escHtml(s)}</option>`)
-    .join("");
   modal.querySelector("#rvm-name").value = name || "";
+
+  const checklist = modal.querySelector("#rvm-checklist");
+  const blocksWrap = modal.querySelector("#rvm-blocks");
+  checklist.innerHTML = items.length > 1
+    ? '<p class="modal__sub">Which tours would you like to review?</p>' +
+      items.map((s, i) =>
+        '<label class="rvm-check"><input type="checkbox" data-review-check data-idx="' + i + '" checked /> ' + escHtml(s) + "</label>",
+      ).join("")
+    : "";
+  blocksWrap.innerHTML = items.map((s, i) => reviewBlockHTML(s, i)).join("");
+
+  checklist.querySelectorAll("[data-review-check]").forEach((cb) => {
+    cb.addEventListener("change", () => {
+      const block = blocksWrap.querySelector('[data-review-block][data-idx="' + cb.dataset.idx + '"]');
+      if (block) block.hidden = !cb.checked;
+    });
+  });
+  blocksWrap.querySelectorAll("[data-review-block]").forEach((block) => {
+    block.querySelectorAll(".rating__star").forEach((star) => {
+      star.addEventListener("click", () => {
+        block.dataset.rating = star.dataset.value;
+        block.querySelectorAll(".rating__star").forEach((s) =>
+          s.classList.toggle("active", parseInt(s.dataset.value, 10) <= parseInt(star.dataset.value, 10)));
+      });
+    });
+  });
+
   modal.querySelector('[data-step="verify"]').hidden = true;
   modal.querySelector('[data-step="write"]').hidden = false;
 }
@@ -2964,38 +3002,40 @@ function wireReviewModal(modal) {
     }
   });
 
-  const stars = modal.querySelectorAll(".rating__star");
-  stars.forEach((star) => {
-    star.addEventListener("click", () => {
-      modal.dataset.rating = star.dataset.value;
-      stars.forEach((s) => s.classList.toggle("active", parseInt(s.dataset.value, 10) <= parseInt(star.dataset.value, 10)));
-    });
-  });
-
   const submitBtn = modal.querySelector("#rvm-submit-btn");
   const submitErr = modal.querySelector("#rvm-submit-error");
   submitBtn.addEventListener("click", async () => {
-    const service = modal.querySelector("#rvm-tour").value;
     const name = modal.querySelector("#rvm-name").value.trim();
     const country = modal.querySelector("#rvm-country").value;
-    const rating = parseInt(modal.dataset.rating || "0", 10);
-    const message = modal.querySelector("#rvm-message").value.trim();
+    const blocks = Array.from(modal.querySelectorAll("[data-review-block]")).filter((b) => !b.hidden);
     submitErr.hidden = true;
-    if (!rating) { submitErr.textContent = "Please give a star rating."; submitErr.hidden = false; return; }
-    if (!message) { submitErr.textContent = "Please write your review."; submitErr.hidden = false; return; }
+    if (!blocks.length) { submitErr.textContent = "Please select at least one tour to review."; submitErr.hidden = false; return; }
+
+    const items = [];
+    for (const block of blocks) {
+      const service = block.dataset.service;
+      const rating = parseInt(block.dataset.rating || "0", 10);
+      const message = block.querySelector("textarea").value.trim();
+      if (!rating) { submitErr.textContent = "Please give a star rating for " + service + "."; submitErr.hidden = false; return; }
+      if (!message) { submitErr.textContent = "Please write a review for " + service + "."; submitErr.hidden = false; return; }
+      items.push({ service, rating, message });
+    }
+
     submitBtn.disabled = true;
     try {
-      const body = { booking_ref: modal.dataset.ref, service, rating, message, country, name };
-      const headers = { "Content-Type": "application/json" };
-      if (modal.dataset.mode === "account") headers.Authorization = `Bearer ${getToken()}`;
-      else body.contact = modal.dataset.contact;
-      const data = await fetch(`${API_BASE}/reviews`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(body),
-      }).then((r) => r.json());
-      if (!data.ok) {
-        submitErr.textContent = data.reason || "Something went wrong. Please try again.";
+      // Satu POST per tour dicentang - boleh isinya beda-beda, submit sekali jalan.
+      const results = [];
+      for (const it of items) {
+        const body = { booking_ref: modal.dataset.ref, service: it.service, rating: it.rating, message: it.message, country, name };
+        const headers = { "Content-Type": "application/json" };
+        if (modal.dataset.mode === "account") headers.Authorization = `Bearer ${getToken()}`;
+        else body.contact = modal.dataset.contact;
+        const data = await fetch(`${API_BASE}/reviews`, { method: "POST", headers, body: JSON.stringify(body) }).then((r) => r.json());
+        results.push({ service: it.service, ok: data.ok, reason: data.reason });
+      }
+      const failed = results.filter((r) => !r.ok);
+      if (failed.length) {
+        submitErr.textContent = failed.map((f) => f.service + ": " + (f.reason || "failed")).join(" · ");
         submitErr.hidden = false;
         return;
       }

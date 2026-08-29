@@ -3201,6 +3201,30 @@ a.footer__contact-item:hover {
   font-size: var(--fs-small);
   color: var(--color-err);
 }
+/* Checklist "Which tours" (>1 tour di booking) + satu blok rating+teks per
+   tour yang dicentang (rvm-blocks) - reuse .modal__group/.rating apa adanya. */
+.rvm-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fs-body);
+  color: var(--color-green);
+  margin-bottom: 0.5rem;
+}
+.rvm-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-cta);
+}
+.rvm-block {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.rvm-block:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
 .modal__success {
   display: none;
   text-align: center;
@@ -6917,12 +6941,12 @@ button.pick-cat {
 .mtc-item--booked {
   cursor: default;
 }
-/* Leave a Review: nempel di bawah tiap kartu Past Trip (1 per tour belum
-   direview - satu booking custom itinerary bisa punya beberapa). */
+/* Leave a Review: satu tombol di pojok kanan bawah tiap kartu Past Trip yang
+   masih ada tour belum direview (modal munculin checklist kalau lebih dari
+   satu tour di booking itu). */
 .mtc-review {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  justify-content: flex-end;
   margin: -0.4rem 0 0.9rem;
 }
 .mtc-review__btn {

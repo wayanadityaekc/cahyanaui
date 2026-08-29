@@ -2860,9 +2860,11 @@ function initReviewCta() {
 
 let reviewModalPromise = null; // fetch partial cuma sekali, dipake ulang tiap kebuka
 
-// prefill = { ref, service, name } - dikasih dari tombol per-tour di My Trips
-// (udah login & udah tau tour-nya) buat lompat langsung ke tahap "write",
-// skip tahap verifikasi. Kosongin buat alur biasa (verifikasi manual dulu).
+// prefill = { ref, items, name } - dikasih dari tombol "Leave a Review" di My
+// Trips (udah login) buat lompat langsung ke tahap "write", skip verifikasi.
+// items = daftar tour yang bisa direview dari booking itu (1 atau lebih -
+// dropdown "Which tour" di step write munculin pilihan kalau lebih dari 1).
+// Kosongin prefill buat alur biasa (verifikasi manual booking ref + kontak dulu).
 async function openReviewModal(prefill) {
   if (!reviewModalPromise) {
     const host = document.createElement("div");
@@ -2878,8 +2880,8 @@ async function openReviewModal(prefill) {
   }
   const modal = await reviewModalPromise;
   resetReviewModal(modal);
-  if (prefill && prefill.ref && prefill.service) {
-    enterWriteStep(modal, { ref: prefill.ref, name: prefill.name || "", items: [prefill.service], mode: "account" });
+  if (prefill && prefill.ref && prefill.items && prefill.items.length) {
+    enterWriteStep(modal, { ref: prefill.ref, name: prefill.name || "", items: prefill.items, mode: "account" });
   }
   modal.classList.add("active");
 }
@@ -3838,14 +3840,13 @@ function initMyTripsCart() {
       ? (t.status ? t.status.charAt(0).toUpperCase() + t.status.slice(1) : "Booked")
       : "Completed";
     // Past trip yang masih ada tour belum direview (t.review_items, dari
-    // /api/bookings/mine) dapet tombol per tour - satu booking custom itinerary
-    // (beberapa tour beda) bisa punya beberapa tombol.
+    // /api/bookings/mine) dapet SATU tombol "Leave a Review" - kalau booking-nya
+    // custom itinerary (beberapa tour beda), modal yang munculin pilihan "review
+    // yang mana" (data-items = daftar tour, dipisah "|").
     const reviewItems = t.review_items || [];
     const reviewHTML = reviewItems.length
-      ? '<div class="mtc-review">' + reviewItems.map((svc) =>
-          '<button type="button" class="modal__btn mtc-review__btn" data-review-btn data-ref="' + escHtml(t.ref) +
-          '" data-service="' + escHtml(svc) + '">Leave a Review' + (reviewItems.length > 1 ? " – " + escHtml(svc) : "") + "</button>",
-        ).join("") + "</div>"
+      ? '<div class="mtc-review"><button type="button" class="modal__btn mtc-review__btn" data-review-btn data-ref="' +
+        escHtml(t.ref) + '" data-items="' + escHtml(reviewItems.join("|")) + '">Leave a Review</button></div>'
       : "";
     return '<div class="mtc-item mtc-item--booked">' + iconHTML +
       '<div class="mtc-item__body">' +
@@ -4053,7 +4054,7 @@ function initMyTripsCart() {
     });
     root.querySelectorAll("[data-review-btn]").forEach((b) => {
       b.addEventListener("click", () => {
-        openReviewModal({ ref: b.dataset.ref, service: b.dataset.service, name: currentAccount ? currentAccount.name : "" });
+        openReviewModal({ ref: b.dataset.ref, items: b.dataset.items.split("|"), name: currentAccount ? currentAccount.name : "" });
       });
     });
     const rec = root.querySelector("[data-receipt]");

@@ -2627,15 +2627,6 @@ a.tripbar--promo {
   font-size: var(--fs-small);
   color: var(--color-muted);
 }
-.driver-card__rating {
-  margin-top: 0.75rem;
-  font-size: var(--fs-body);
-  font-weight: 500;
-  color: var(--color-amber);
-}
-.driver-card__rating .stars {
-  letter-spacing: 1px;
-}
 .driver-card__more {
   margin-top: 0.6rem;
   font-size: var(--fs-label);
@@ -2663,12 +2654,6 @@ a.tripbar--promo {
   display: block;
   font-size: var(--fs-small);
   color: var(--color-muted);
-}
-.driver-modal__rating {
-  margin-top: 0.3rem;
-  font-size: var(--fs-body);
-  font-weight: 500;
-  color: var(--color-amber);
 }
 .driver-modal__desc {
   margin-bottom: 1.5rem;

@@ -35,7 +35,7 @@ When unsure, ask first (keep it short).
 - **`--color-amber` #c9a45c / `--color-amber-d` #b08d43** (Sep 2026) — gold BENERAN,
   dipisah dari `--color-gold` (yang soft-black) khusus buat elemen yang gold-nya
   punya makna konvensi visual: **bintang rating** (`.rating__star.active`,
-  `.review-card__stars`, `.driver-card__rating`/`.driver-modal__rating`, `.rev__stars`,
+  `.review-card__stars`, `.rev__stars`,
   `.tourprog .experience__rating svg`), **harga** (`.price-now`, `.experience__price`,
   `.booking__price`, `.summary__amt .price-cur`, `.fee`, dkk — SEMUA elemen harga),
   dan **badge "Popular"/featured** (`.chdur__badge`, `.highlight__tag`,
@@ -420,7 +420,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v411, PARTIALS 79)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v412, PARTIALS 80)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 79;
+const PARTIALS_VERSION = 80;
 
 const WHATSAPP_NUMBER = "61401657862";
 
@@ -3098,7 +3098,6 @@ function initDrivers() {
   if (!modal) return;
   const mName = document.getElementById("driver-modal-name");
   const mTagline = document.getElementById("driver-modal-tagline");
-  const mRating = document.getElementById("driver-modal-rating");
   const mDesc = document.getElementById("driver-modal-desc");
 
   const mAvatar = modal.querySelector(".driver-card__avatar");
@@ -3111,7 +3110,6 @@ function initDrivers() {
       mName.textContent = card.dataset.name || "";
       mTagline.textContent = card.dataset.tagline || "";
       if (mAvatar) mAvatar.textContent = (card.dataset.name || "").charAt(0);
-      mRating.innerHTML = card.querySelector(".driver-card__rating").innerHTML;
       mDesc.textContent = detail ? (detail.dataset.desc || "") : "";
       modal.classList.add("active");
     });

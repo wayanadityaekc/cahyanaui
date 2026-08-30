@@ -8144,9 +8144,13 @@ strong {
   margin: 0;
   font-size: var(--fs-strong);
   font-weight: 600;
-  white-space: nowrap; /* judul 1 baris */
+  line-height: 1.25;
+  /* 2 baris (Sep 2026, tour restructure - judul baru lebih panjang, 1 baris
+     kepotong kebanyakan) - pola sama kayak .tourprog .experience__name. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 .home .experience__footer,
 .related .experience__footer {

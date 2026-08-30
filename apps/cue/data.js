@@ -15,8 +15,14 @@
    ================================================================== */
 
 // -- pricing data
+// Nyembunyiin sebuah program dari situs (homepage/listing/related/suggested) TANPA hapus
+// datanya: tambahin `active: false` di entry-nya di bawah (pola sama kayak PROMO.active).
+// Default aktif kalau field-nya nggak ada. Balikin ke true (atau hapus field-nya) buat
+// nampilin lagi di semua tempat - nggak perlu ubah apa-apa lagi. Render logic-nya di
+// script.js (isProgramActive + initInactivePrograms, initRelated, relatedUpsellHTML,
+// suggestState). Nggak ngefek ke harga/booking - link langsung ke halamannya tetep jalan.
 const prices = {
-  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Ulun Danu Beratan & Tanah Lot Temple": { usd: 60, idr: 950000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000 }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
+  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Ulun Danu Beratan & Tanah Lot Temple": { usd: 60, idr: 950000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000, active: false }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
   experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 }, "Bali Zoo": { usd: 40, idr: 600000 }, "Bali Bird Park": { usd: 28, idr: 430000 } },
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },

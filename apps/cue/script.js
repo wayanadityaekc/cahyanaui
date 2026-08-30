@@ -101,14 +101,14 @@ const ITEM_CARD = {
 // Digenerate dari kartu listing: zone = section kategori, p = harga USD statis
 // (0 = tanpa harga, mis. destinations -> kartu tampil tanpa baris harga).
 const RELATED_ITEMS = [
-  { href: "ubud-tour.html", type: "tour", zone: "ubud", name: "Ubud Tour", img: "tegallalang-girl.jpg", meta: "6&ndash;8 hours", p: 45, priceName: "Ubud Tour" },
+  { href: "ubud-tour.html", type: "tour", zone: "ubud", name: "Ubud Tour", img: "tegallalang-girl.jpg", meta: "5&ndash;7 hours", p: 45, priceName: "Ubud Tour" },
   { href: "ubud-culture-day.html", type: "tour", zone: "ubud", name: "Ubud Culture Day", img: "ubud-culture-day-card.jpg", meta: "6&ndash;8 hours", p: 55, priceName: "Ubud Culture Day" },
   { href: "ubud-rafting-adventure.html", type: "tour", zone: "ubud", name: "Ubud Rafting Adventure", img: "rafting-card.webp", meta: "6&ndash;8 hours", p: 75, priceName: "Ubud Rafting Adventure" },
   { href: "ubud-atv-adventure.html", type: "tour", zone: "ubud", name: "Ubud ATV Adventure", img: "ubud-atv-adventure-card.webp", meta: "6&ndash;8 hours", p: 80, priceName: "Ubud ATV Adventure" },
   { href: "south-coast-sunset-kecak.html", type: "tour", zone: "south", name: "South Bali &amp; Sunset Kecak", img: "south-coast-sunset-kecak-card.jpg", meta: "9&ndash;11 hours", p: 85, priceName: "South Bali &amp; Sunset Kecak" },
   { href: "hidden-beaches-cliffs.html", type: "tour", zone: "south", name: "Bali Hidden Beaches and Cliffs", img: "south-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 45, priceName: "Bali Hidden Beaches and Cliffs" },
   { href: "lempuyang-tirta-gangga.html", type: "tour", zone: "east", name: "Lempuyang &amp; Tirta Gangga", img: "east-bali-tour-card.jpg", meta: "8&ndash;10 hours", p: 55, priceName: "Lempuyang &amp; Tirta Gangga" },
-  { href: "kintamani-sunrise-penglipuran.html", type: "tour", zone: "kintamani", name: "Kintamani Sunrise &amp; Penglipuran", img: "jeep-batur-card.webp", meta: "10&ndash;11 hours", p: 85, priceName: "Kintamani Sunrise &amp; Penglipuran" },
+  { href: "kintamani-sunrise-penglipuran.html", type: "tour", zone: "kintamani", name: "Kintamani Sunrise &amp; Penglipuran", img: "jeep-batur-card.webp", meta: "9&ndash;10 hours", p: 85, priceName: "Kintamani Sunrise &amp; Penglipuran" },
   { href: "batur-sunrise-adrenaline.html", type: "tour", zone: "kintamani", name: "Batur Sunrise &amp; Adrenaline", img: "batur-sunrise-adrenaline-card.jpg", meta: "8&ndash;10 hours", p: 85, priceName: "Batur Sunrise &amp; Adrenaline" },
   { href: "ulun-danu-tanah-lot.html", type: "tour", zone: "west", name: "Ulun Danu Beratan &amp; Tanah Lot Temple", img: "west-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 60, priceName: "Ulun Danu Beratan &amp; Tanah Lot Temple" },
   { href: "munduk-twin-lakes.html", type: "tour", zone: "west", name: "Munduk Waterfalls &amp; Twin Lakes", img: "north-bali-tour-card.jpg", meta: "10&ndash;12 hours", p: 65, priceName: "Munduk Waterfalls &amp; Twin Lakes" },

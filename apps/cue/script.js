@@ -46,6 +46,7 @@ let currentDateTo = localStorage.getItem("cue_date_to") || "";
 const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
   "lempuyang-tirta-gangga.html": "Lempuyang & Tirta Gangga",
+  "besakih-taman-ujung.html": "Besakih & Taman Ujung",
   "ulun-danu-tanah-lot.html": "Ulun Danu Beratan & Tanah Lot Temple",
   "hidden-beaches-cliffs.html": "Bali Hidden Beaches and Cliffs",
   "munduk-twin-lakes.html": "Munduk Waterfalls & Twin Lakes",
@@ -74,6 +75,7 @@ const PAGE_ITEM = {
 const ITEM_CARD = {
   "Ubud Tour": { img: "tegallalang-girl.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
   "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Water gardens, a royal palace, and the gates of Lempuyang." },
+  "Besakih & Taman Ujung": { img: "besakih-temple.webp", desc: "Bali's holiest mother temple and the royal water palace of Taman Ujung." },
   "Ulun Danu Beratan & Tanah Lot Temple": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
   "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
@@ -107,7 +109,8 @@ const RELATED_ITEMS = [
   { href: "ubud-atv-adventure.html", type: "tour", zone: "ubud", name: "Ubud ATV Adventure", img: "ubud-atv-adventure-card.webp", meta: "6&ndash;8 hours", p: 80, priceName: "Ubud ATV Adventure" },
   { href: "south-coast-sunset-kecak.html", type: "tour", zone: "south", name: "South Bali &amp; Sunset Kecak", img: "south-coast-sunset-kecak-card.jpg", meta: "9&ndash;11 hours", p: 85, priceName: "South Bali &amp; Sunset Kecak" },
   { href: "hidden-beaches-cliffs.html", type: "tour", zone: "south", name: "Bali Hidden Beaches and Cliffs", img: "south-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 45, priceName: "Bali Hidden Beaches and Cliffs" },
-  { href: "lempuyang-tirta-gangga.html", type: "tour", zone: "east", name: "Lempuyang &amp; Tirta Gangga", img: "east-bali-tour-card.jpg", meta: "8&ndash;10 hours", p: 55, priceName: "Lempuyang &amp; Tirta Gangga" },
+  { href: "lempuyang-tirta-gangga.html", type: "tour", zone: "east", name: "Lempuyang &amp; Tirta Gangga", img: "east-bali-tour-card.jpg", meta: "6&ndash;8 hours", p: 55, priceName: "Lempuyang &amp; Tirta Gangga" },
+  { href: "besakih-taman-ujung.html", type: "tour", zone: "east", name: "Besakih &amp; Taman Ujung", img: "besakih-temple.webp", meta: "7&ndash;9 hours", p: 60, priceName: "Besakih &amp; Taman Ujung" },
   { href: "kintamani-sunrise-penglipuran.html", type: "tour", zone: "kintamani", name: "Kintamani Sunrise &amp; Penglipuran", img: "jeep-batur-card.webp", meta: "9&ndash;10 hours", p: 85, priceName: "Kintamani Sunrise &amp; Penglipuran" },
   { href: "batur-sunrise-adrenaline.html", type: "tour", zone: "kintamani", name: "Batur Sunrise &amp; Adrenaline", img: "batur-sunrise-adrenaline-card.jpg", meta: "8&ndash;10 hours", p: 85, priceName: "Batur Sunrise &amp; Adrenaline" },
   { href: "ulun-danu-tanah-lot.html", type: "tour", zone: "west", name: "Ulun Danu Beratan &amp; Tanah Lot Temple", img: "west-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 60, priceName: "Ulun Danu Beratan &amp; Tanah Lot Temple" },

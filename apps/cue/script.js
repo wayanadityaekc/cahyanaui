@@ -372,6 +372,20 @@ function itemInfo(name) {
   return null;
 }
 
+// Program aktif/nggak - flag `active: false` di entry-nya sendiri di `prices` (data.js),
+// default aktif kalau flag-nya nggak diisi. Dipakai buat nyembunyiin sebuah program dari
+// homepage/listing/related/suggested TANPA hapus datanya - tinggal balikin ke true (atau
+// hapus field-nya) buat nampilin lagi di semua tempat itu, nggak perlu ubah apa-apa lagi.
+// Nggak mempengaruhi harga/booking - orang yang punya link langsung masih bisa buka & booking.
+function isProgramActive(name) {
+  const info = itemInfo(name);
+  return !info || info.price.active !== false;
+}
+
+// "Lempuyang &amp; Tirta Gangga" (dari RELATED_ITEMS, ditulis buat innerHTML) -> "Lempuyang
+// & Tirta Gangga" (match persis ke key di `prices`). Pola sama kayak `norm` di relatedUpsellHTML.
+function unescAmp(s) { return String(s || "").replace(/&amp;/g, "&"); }
+
 // ---- Pickup surcharge (diturunkan dari harga transfer) ----
 function itemZone(name) { return (typeof ITEM_ZONE !== "undefined" && ITEM_ZONE[name]) || null; }
 // Zona area pickup (key transfer) atau "ubud". null kalau belum ke-map.
@@ -629,7 +643,7 @@ function newItnDay() {
 // biar user isi (nanti auto-nyebar). Tanggal kosong -> user isi (baris pertama auto-cascade).
 function suggestState(nDays, guests) {
   const g = guests || "";
-  const days = SUGGEST.slice(0, nDays).map((name) => {
+  const days = SUGGEST.filter(isProgramActive).slice(0, nDays).map((name) => {
     const d = newItnDay();
     d.items.push(name);
     d.guests = g;
@@ -1802,6 +1816,22 @@ function initAboutGallery() {
       track.scrollBy({ left: dir === "prev" ? -w : w, behavior: "smooth" });
     });
     g.appendChild(btn);
+  });
+}
+
+// Sembunyiin kartu program yang `active: false` di data.js (prices) dari HOMEPAGE,
+// listing (tour/activities/destinations), dan kartu manapun yang pakai data-price="Nama"
+// - kartunya DIHAPUS dari DOM (bukan cuma display:none) biar grid/slider di bawah ini
+// nggak keitung kartu kosong. Jalan SEBELUM initTourSlider/initZoneAnchors/initExploreTabs.
+// "You might also like" (initRelated, relatedUpsellHTML) & suggested plan (suggestState)
+// nyaring sendiri lewat isProgramActive - card-nya emang nggak pernah ke-generate.
+// Data & halaman detail-nya TETAP utuh - orang dengan link langsung masih bisa buka/booking.
+function initInactivePrograms() {
+  document.querySelectorAll("[data-price]").forEach((el) => {
+    const name = el.dataset.price;
+    if (!name || isProgramActive(name)) return;
+    const card = el.closest(".experience__card");
+    if (card) card.remove();
   });
 }
 
@@ -4026,7 +4056,7 @@ function initMyTripsCart() {
     const excluded = new Set(excludeNames.map(norm));
     const booked = RELATED_ITEMS.filter((it) => excluded.has(norm(it.name)));
     const bookedZones = new Set(booked.map((it) => it.zone));
-    const pool = RELATED_ITEMS.filter((it) => !excluded.has(norm(it.name)));
+    const pool = RELATED_ITEMS.filter((it) => !excluded.has(norm(it.name)) && isProgramActive(norm(it.priceName || it.name)));
     const otherZone = pool.filter((it) => !bookedZones.has(it.zone));
     const rest = pool.filter((it) => bookedZones.has(it.zone));
     const picks = otherZone.concat(rest).slice(0, 4);
@@ -5842,7 +5872,7 @@ function initRelated() {
   if (!me) return; // bukan halaman detail yang kemap
   const mount = document.getElementById("footer-placeholder");
   if (!mount) return;
-  const pool = RELATED_ITEMS.filter((it) => it.type === me.type && it !== me);
+  const pool = RELATED_ITEMS.filter((it) => it.type === me.type && it !== me && isProgramActive(unescAmp(it.priceName || it.name)));
   const sameZone = pool.filter((it) => it.zone === me.zone);
   const rest = pool
     .filter((it) => it.zone !== me.zone)
@@ -5980,6 +6010,7 @@ async function initPage() {
   initBookSidebar(); // pindah form booking ke kartu sidebar SEBELUM init lain sentuh .info
   initTourHeroSlider(); // hero jadi slider foto konten (stops) - setelah stops di DOM
   initBookBar(); // bar harga+tombol nempel bawah (mobile) - setelah sidebar kebangun
+  initInactivePrograms(); // sebelum slider/tab/related - kartu program non-aktif kehapus duluan
   initSlider();
   initTourSlider();
   initExploreTabs();

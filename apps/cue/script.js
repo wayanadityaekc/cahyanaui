@@ -64,7 +64,8 @@ const PAGE_ITEM = {
   "attractions/bali-zoo.html": "Bali Zoo",
   "attractions/bali-bird-park.html": "Bali Bird Park",
   "ubud-culture-day.html": "Ubud Culture Day",
-  "south-coast-sunset-kecak.html": "South Bali & Sunset Kecak",
+  "south-coast-sunset-kecak.html": "Uluwatu & Sunset Kecak",
+  "gwk-pandawa-beach.html": "GWK & Pandawa Beach",
   "batur-sunrise-adrenaline.html": "Batur Sunrise & Adrenaline",
   "ubud-rafting-adventure.html": "Ubud Rafting Adventure",
   "ubud-atv-adventure.html": "Ubud ATV Adventure",
@@ -84,7 +85,8 @@ const ITEM_CARD = {
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
   "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
   "Ubud Culture Day": { img: "ubud-culture-day-card.jpg", desc: "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance." },
-  "South Bali & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "Watersports, the GWK statue, Pandawa Beach, and the sunset Kecak dance at Uluwatu." },
+  "Uluwatu & Sunset Kecak": { img: "south-coast-sunset-kecak-card.jpg", desc: "The clifftop Uluwatu temple and the sunset Kecak fire dance." },
+  "GWK & Pandawa Beach": { img: "gwk-statue-view.webp", desc: "The giant GWK statue and a swim stop at Pandawa Beach." },
   "Batur Sunrise & Adrenaline": { img: "batur-sunrise-adrenaline-card.jpg", desc: "A Mount Batur sunrise trek, a volcano breakfast, and a hot spring soak." },
   "Ubud Rafting Adventure": { img: "rafting-card.webp", desc: "Ayung river rafting, rice terraces, luwak coffee, and a waterfall." },
   "Ubud ATV Adventure": { img: "ubud-atv-adventure-card.webp", desc: "A jungle ATV ride, Bali Zoo, Bali Bird Park, and the Tegenungan waterfall." },
@@ -111,8 +113,9 @@ const RELATED_ITEMS = [
   { href: "ubud-culture-day.html", type: "tour", zone: "ubud", name: "Ubud Culture Day", img: "ubud-culture-day-card.jpg", meta: "6&ndash;8 hours", p: 55, priceName: "Ubud Culture Day" },
   { href: "ubud-rafting-adventure.html", type: "tour", zone: "ubud", name: "Ubud Rafting Adventure", img: "rafting-card.webp", meta: "6&ndash;8 hours", p: 75, priceName: "Ubud Rafting Adventure" },
   { href: "ubud-atv-adventure.html", type: "tour", zone: "ubud", name: "Ubud ATV Adventure", img: "ubud-atv-adventure-card.webp", meta: "6&ndash;8 hours", p: 80, priceName: "Ubud ATV Adventure" },
-  { href: "south-coast-sunset-kecak.html", type: "tour", zone: "south", name: "South Bali &amp; Sunset Kecak", img: "south-coast-sunset-kecak-card.jpg", meta: "9&ndash;11 hours", p: 85, priceName: "South Bali &amp; Sunset Kecak" },
-  { href: "hidden-beaches-cliffs.html", type: "tour", zone: "south", name: "Bali Hidden Beaches and Cliffs", img: "south-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 45, priceName: "Bali Hidden Beaches and Cliffs" },
+  { href: "south-coast-sunset-kecak.html", type: "tour", zone: "south", name: "Uluwatu &amp; Sunset Kecak", img: "south-coast-sunset-kecak-card.jpg", meta: "4&ndash;6 hours", p: 55, priceName: "Uluwatu &amp; Sunset Kecak" },
+  { href: "gwk-pandawa-beach.html", type: "tour", zone: "south", name: "GWK &amp; Pandawa Beach", img: "gwk-statue-view.webp", meta: "4&ndash;6 hours", p: 55, priceName: "GWK &amp; Pandawa Beach" },
+  { href: "hidden-beaches-cliffs.html", type: "tour", zone: "south", name: "Bali Hidden Beaches and Cliffs", img: "south-bali-tour-card.jpg", meta: "6&ndash;8 hours", p: 45, priceName: "Bali Hidden Beaches and Cliffs" },
   { href: "lempuyang-tirta-gangga.html", type: "tour", zone: "east", name: "Lempuyang &amp; Tirta Gangga", img: "east-bali-tour-card.jpg", meta: "6&ndash;8 hours", p: 55, priceName: "Lempuyang &amp; Tirta Gangga" },
   { href: "besakih-taman-ujung.html", type: "tour", zone: "east", name: "Besakih &amp; Taman Ujung", img: "besakih-temple.webp", meta: "7&ndash;9 hours", p: 60, priceName: "Besakih &amp; Taman Ujung" },
   { href: "kintamani-sunrise-penglipuran.html", type: "tour", zone: "kintamani", name: "Kintamani Sunrise &amp; Penglipuran", img: "jeep-batur-card.webp", meta: "9&ndash;10 hours", p: 85, priceName: "Kintamani Sunrise &amp; Penglipuran" },
@@ -185,7 +188,7 @@ const PKG_AIRPORT = "Airport – Ubud";
 const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
 const SUGGEST = [
   "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "Lempuyang & Tirta Gangga",
-  "South Bali & Sunset Kecak", "Ulun Danu Beratan & Handara Gate", "Munduk Waterfalls & Twin Lakes"
+  "Uluwatu & Sunset Kecak", "Ulun Danu Beratan & Handara Gate", "Munduk Waterfalls & Twin Lakes"
 ];
 
 /* ==================== 2. HELPER FUNCTIONS ==================== */

@@ -47,7 +47,9 @@ const PAGE_ITEM = {
   "ubud-tour.html": "Ubud Tour",
   "lempuyang-tirta-gangga.html": "Lempuyang & Tirta Gangga",
   "besakih-taman-ujung.html": "Besakih & Taman Ujung",
-  "ulun-danu-tanah-lot.html": "Ulun Danu Beratan & Tanah Lot Temple",
+  "ulun-danu-tanah-lot.html": "Ulun Danu Beratan & Handara Gate",
+  "tanah-lot-taman-ayun.html": "Tanah Lot & Taman Ayun",
+  "jatiluwih-tour.html": "Jatiluwih Rice Terrace Tour",
   "hidden-beaches-cliffs.html": "Bali Hidden Beaches and Cliffs",
   "munduk-twin-lakes.html": "Munduk Waterfalls & Twin Lakes",
   "attractions/atv-ride.html": "ATV",
@@ -76,7 +78,9 @@ const ITEM_CARD = {
   "Ubud Tour": { img: "tegallalang-girl.jpg", desc: "Rice terraces, sacred temples, and the monkey forest in one full day." },
   "Lempuyang & Tirta Gangga": { img: "east-bali-tour-card.jpg", desc: "Water gardens, a royal palace, and the gates of Lempuyang." },
   "Besakih & Taman Ujung": { img: "besakih-temple.webp", desc: "Bali's holiest mother temple and the royal water palace of Taman Ujung." },
-  "Ulun Danu Beratan & Tanah Lot Temple": { img: "west-bali-tour-card.jpg", desc: "Lakeside temples, mountain views, and the Tanah Lot sunset." },
+  "Ulun Danu Beratan & Handara Gate": { img: "ulun-danu-beratan-hero.webp", desc: "The floating lake temple and the famous Handara gate, back to back." },
+  "Tanah Lot & Taman Ayun": { img: "tanah-lot.webp", desc: "The royal temple of Taman Ayun, then the Tanah Lot sunset on the sea." },
+  "Jatiluwih Rice Terrace Tour": { img: "jatiluwih.webp", desc: "A UNESCO landscape of endless green rice terraces, almost no crowds." },
   "Bali Hidden Beaches and Cliffs": { img: "south-bali-tour-card.jpg", desc: "Quiet Bukit beaches and clifftops — Tegal Wangi, Green Bowl, Balangan, and Bingin." },
   "Munduk Waterfalls & Twin Lakes": { img: "north-bali-tour-card.jpg", desc: "Twin lakes and a trail of hidden jungle waterfalls in Bali's green north." },
   "Ubud Culture Day": { img: "ubud-culture-day-card.jpg", desc: "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance." },
@@ -113,7 +117,9 @@ const RELATED_ITEMS = [
   { href: "besakih-taman-ujung.html", type: "tour", zone: "east", name: "Besakih &amp; Taman Ujung", img: "besakih-temple.webp", meta: "7&ndash;9 hours", p: 60, priceName: "Besakih &amp; Taman Ujung" },
   { href: "kintamani-sunrise-penglipuran.html", type: "tour", zone: "kintamani", name: "Kintamani Sunrise &amp; Penglipuran", img: "jeep-batur-card.webp", meta: "9&ndash;10 hours", p: 85, priceName: "Kintamani Sunrise &amp; Penglipuran" },
   { href: "batur-sunrise-adrenaline.html", type: "tour", zone: "kintamani", name: "Batur Sunrise &amp; Adrenaline", img: "batur-sunrise-adrenaline-card.jpg", meta: "8&ndash;10 hours", p: 85, priceName: "Batur Sunrise &amp; Adrenaline" },
-  { href: "ulun-danu-tanah-lot.html", type: "tour", zone: "west", name: "Ulun Danu Beratan &amp; Tanah Lot Temple", img: "west-bali-tour-card.jpg", meta: "7&ndash;9 hours", p: 60, priceName: "Ulun Danu Beratan &amp; Tanah Lot Temple" },
+  { href: "ulun-danu-tanah-lot.html", type: "tour", zone: "west", name: "Ulun Danu Beratan &amp; Handara Gate", img: "ulun-danu-beratan-hero.webp", meta: "5&ndash;7 hours", p: 60, priceName: "Ulun Danu Beratan &amp; Handara Gate" },
+  { href: "tanah-lot-taman-ayun.html", type: "tour", zone: "west", name: "Tanah Lot &amp; Taman Ayun", img: "tanah-lot.webp", meta: "5&ndash;7 hours", p: 50, priceName: "Tanah Lot &amp; Taman Ayun" },
+  { href: "jatiluwih-tour.html", type: "tour", zone: "west", name: "Jatiluwih Rice Terrace Tour", img: "jatiluwih.webp", meta: "4&ndash;6 hours", p: 45, priceName: "Jatiluwih Rice Terrace Tour" },
   { href: "munduk-twin-lakes.html", type: "tour", zone: "west", name: "Munduk Waterfalls &amp; Twin Lakes", img: "north-bali-tour-card.jpg", meta: "10&ndash;12 hours", p: 65, priceName: "Munduk Waterfalls &amp; Twin Lakes" },
   { href: "lovina-dolphin-sekumpul.html", type: "tour", zone: "north", name: "Lovina Dolphin &amp; Sekumpul Waterfall", img: "lovina-dolphin-sekumpul-card.jpg", meta: "11&ndash;12 hours", p: 95, priceName: "Lovina Dolphin &amp; Sekumpul Waterfall" },
   { href: "attractions/atv-ride.html", type: "activity", zone: "adventure", name: "ATV Ride", img: "ubud-atv-adventure-card.webp", meta: "~2 hours", p: 40, priceName: "ATV" },
@@ -179,7 +185,7 @@ const PKG_AIRPORT = "Airport – Ubud";
 const PKG_AIRPORT_PLACE = "Ngurah Rai Airport (DPS)";
 const SUGGEST = [
   "Ubud Tour", "Ubud Culture Day", "Batur Sunrise & Adrenaline", "Lempuyang & Tirta Gangga",
-  "South Bali & Sunset Kecak", "Ulun Danu Beratan & Tanah Lot Temple", "Munduk Waterfalls & Twin Lakes"
+  "South Bali & Sunset Kecak", "Ulun Danu Beratan & Handara Gate", "Munduk Waterfalls & Twin Lakes"
 ];
 
 /* ==================== 2. HELPER FUNCTIONS ==================== */

@@ -22,7 +22,7 @@
 // script.js (isProgramActive + initInactivePrograms, initRelated, relatedUpsellHTML,
 // suggestState). Nggak ngefek ke harga/booking - link langsung ke halamannya tetep jalan.
 const prices = {
-  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Besakih & Taman Ujung": { usd: 60, idr: 950000 }, "Ulun Danu Beratan & Tanah Lot Temple": { usd: 60, idr: 950000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000, active: false }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
+  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Besakih & Taman Ujung": { usd: 60, idr: 950000 }, "Tanah Lot & Taman Ayun": { usd: 50, idr: 780000 }, "Ulun Danu Beratan & Handara Gate": { usd: 60, idr: 950000 }, "Jatiluwih Rice Terrace Tour": { usd: 45, idr: 700000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000, active: false }, "Munduk Waterfalls & Twin Lakes": { usd: 65, idr: 1000000 } },
   experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 }, "Bali Zoo": { usd: 40, idr: 600000 }, "Bali Bird Park": { usd: 28, idr: 430000 } },
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
@@ -40,7 +40,7 @@ const prices = {
 const SURCHARGE_FACTOR = 0.6;
 // Zona tiap area pickup (buat cek "pickup area == tour area"). Key = key di prices.transfer.
 const TRANSFER_ZONE = { "Airport – Ubud": "south", "Denpasar Area – Ubud": "south", "Seminyak Area – Ubud": "south", "Kuta Area – Ubud": "south", "Canggu Area – Ubud": "south", "Tanah Lot Area – Ubud": "west", "Kintamani Area – Ubud": "kintamani", "Buleleng Area – Ubud": "north", "Amed Area – Ubud": "east", "Candidasa Area – Ubud": "east" };
-const ITEM_ZONE = { "Uluwatu Cliff Temple": "south", "Tanah Lot Sunset Temple": "west", "Besakih - The Mother Temple": "east", "Tirta Empul Holy Water Temple": "ubud", "Goa Gajah - The Elephant Cave": "ubud", "Gunung Kawi Temple": "ubud", "Lempuyang Temple - Gates of Heaven": "east", "Ulun Danu Beratan Lake Temple": "west", "Taman Ayun Royal Temple": "west", "Pura Batuan Temple": "ubud", "Garuda Wisnu Kencana (GWK)": "south", "Ubud Royal Palace & Art Market": "ubud", "Penglipuran Village": "ubud", "Handara Gate": "west", "Tirta Gangga Water Palace": "east", "Taman Ujung Water Palace": "east", "Tegalalang Rice Terrace": "ubud", "Jatiluwih Rice Terraces": "west", "Tegenungan Waterfall": "ubud", "Git Git Waterfall": "north", "Sekumpul Waterfall": "north", "Banyumala Twin Waterfall": "north", "Munduk Coffee Highlands": "north", "Buyan & Tamblingan Twin Lakes": "west", "Pandawa Beach": "south", "Balangan Beach": "south", "Bingin Beach": "south", "Green Bowl Beach": "south", "Tegal Wangi Beach": "south", "Sacred Monkey Forest Sanctuary": "ubud", "Sangeh Monkey Forest": "ubud", "Ubud Traditional Market": "ubud", "Ubud Arts & Crafts": "ubud", "Ubud Tour": "ubud", "Lempuyang & Tirta Gangga": "east", "Besakih & Taman Ujung": "east", "Ulun Danu Beratan & Tanah Lot Temple": "west", "Bali Hidden Beaches and Cliffs": "south", "Munduk Waterfalls & Twin Lakes": "west", "Ubud Culture Day": "ubud", "South Bali & Sunset Kecak": "south", "Batur Sunrise & Adrenaline": "kintamani", "Ubud Rafting Adventure": "ubud", "Ubud ATV Adventure": "ubud", "Kintamani Sunrise & Penglipuran": "kintamani", "Lovina Dolphin & Sekumpul Waterfall": "north" };
+const ITEM_ZONE = { "Uluwatu Cliff Temple": "south", "Tanah Lot Sunset Temple": "west", "Besakih - The Mother Temple": "east", "Tirta Empul Holy Water Temple": "ubud", "Goa Gajah - The Elephant Cave": "ubud", "Gunung Kawi Temple": "ubud", "Lempuyang Temple - Gates of Heaven": "east", "Ulun Danu Beratan Lake Temple": "west", "Taman Ayun Royal Temple": "west", "Pura Batuan Temple": "ubud", "Garuda Wisnu Kencana (GWK)": "south", "Ubud Royal Palace & Art Market": "ubud", "Penglipuran Village": "ubud", "Handara Gate": "west", "Tirta Gangga Water Palace": "east", "Taman Ujung Water Palace": "east", "Tegalalang Rice Terrace": "ubud", "Jatiluwih Rice Terraces": "west", "Tegenungan Waterfall": "ubud", "Git Git Waterfall": "north", "Sekumpul Waterfall": "north", "Banyumala Twin Waterfall": "north", "Munduk Coffee Highlands": "north", "Buyan & Tamblingan Twin Lakes": "west", "Pandawa Beach": "south", "Balangan Beach": "south", "Bingin Beach": "south", "Green Bowl Beach": "south", "Tegal Wangi Beach": "south", "Sacred Monkey Forest Sanctuary": "ubud", "Sangeh Monkey Forest": "ubud", "Ubud Traditional Market": "ubud", "Ubud Arts & Crafts": "ubud", "Ubud Tour": "ubud", "Lempuyang & Tirta Gangga": "east", "Besakih & Taman Ujung": "east", "Tanah Lot & Taman Ayun": "west", "Ulun Danu Beratan & Handara Gate": "west", "Jatiluwih Rice Terrace Tour": "west", "Bali Hidden Beaches and Cliffs": "south", "Munduk Waterfalls & Twin Lakes": "west", "Ubud Culture Day": "ubud", "South Bali & Sunset Kecak": "south", "Batur Sunrise & Adrenaline": "kintamani", "Ubud Rafting Adventure": "ubud", "Ubud ATV Adventure": "ubud", "Kintamani Sunrise & Penglipuran": "kintamani", "Lovina Dolphin & Sekumpul Waterfall": "north" };
 
 // Charter mobil 
 // extended = full day + jam tambahan, + surcharge kalau pickup di luar Ubud.
@@ -117,9 +117,12 @@ const TICKETS = {
 // -- Tiket apa aja yang ke-cover versi Exclusive tiap tur (stop gratis nggak masuk).
 //    Catatan: swing di Ubud Tour & dinner Jimbaran = opsional, sengaja di luar.
 const TOUR_TICKETS = {
-  "Ubud Tour": ["Tegalalang", "Tirta Empul", "Gunung Kawi", "Goa Gajah", "Tegenungan", "Monkey Forest"],
-  "Lempuyang & Tirta Gangga": ["Lempuyang", "Tirta Gangga", "Taman Ujung", "Besakih"],
-  "Ulun Danu Beratan & Tanah Lot Temple": ["Ulun Danu Beratan", "Handara Gate", "Jatiluwih", "Tanah Lot"],
+  "Ubud Tour": ["Tegalalang", "Tirta Empul", "Gunung Kawi", "Goa Gajah", "Monkey Forest"],
+  "Lempuyang & Tirta Gangga": ["Lempuyang", "Tirta Gangga"],
+  "Besakih & Taman Ujung": ["Besakih", "Taman Ujung"],
+  "Tanah Lot & Taman Ayun": ["Tanah Lot", "Taman Ayun"],
+  "Ulun Danu Beratan & Handara Gate": ["Ulun Danu Beratan", "Handara Gate"],
+  "Jatiluwih Rice Terrace Tour": ["Jatiluwih"],
   "Bali Hidden Beaches and Cliffs": ["Tegal Wangi", "Green Bowl", "Balangan", "Bingin"],
   "Munduk Waterfalls & Twin Lakes": ["Twin Lakes Viewpoint", "Banyumala", "Munduk Waterfall", "Gitgit"],
   "Ubud Culture Day": ["Barong Batubulan", "Pura Batuan", "Kecak Ubud"],
@@ -127,7 +130,7 @@ const TOUR_TICKETS = {
   "Batur Sunrise & Adrenaline": ["Batur Trek + Breakfast", "Batur Hot Spring"],
   "Ubud Rafting Adventure": ["Ayung Rafting", "Tegalalang", "Tegenungan"],
   "Ubud ATV Adventure": ["ATV Ride", "Bali Zoo", "Bali Bird Park", "Tegenungan"],
-  "Kintamani Sunrise & Penglipuran": ["Jeep Sunrise", "Penglipuran", "Tirta Empul", "Tegalalang"],
+  "Kintamani Sunrise & Penglipuran": ["Jeep Sunrise", "Penglipuran", "Tirta Empul"],
   "Lovina Dolphin & Sekumpul Waterfall": ["Lovina Boat", "Banjar Hot Spring", "Sekumpul Trek"]
 };
 

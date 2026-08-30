@@ -179,8 +179,14 @@ When unsure, ask first (keep it short).
   prefix apa pun (jangan `../ubud-tour.html` — itu attribut path, bukan filesystem path).
 
 ## Subhero & FAQ (standar per halaman)
-- **H1 maks ±40 karakter** (biar tetap 2 baris di HP — lebih dari itu teks hero bisa
-  ketutup panel overlap). **Teks intro hero 25–40 kata.**
+- **H1 maks ±40 karakter** buat halaman lama/standar (biar tetap 2 baris di HP).
+  **Dikecualikan (Sep 2026, tour restructure 12→18 tour)**: tour dengan nama SEO panjang
+  (mis. "Ulun Danu Beratan & Handara Gate Instagram Tour") sengaja TETAP pakai nama penuh
+  apa adanya di H1 — Wayan pilih ini setelah dites: `.tour-hero__body` (sheet putih di
+  `.subhero__title`) otomatis ngikutin tinggi judul, nggak ada teks kepotong/numpuk walau
+  jadi 3-4 baris di HP (cuma makan scroll lebih, bukan jebol). Jangan potong nama tour
+  panjang buat "muat" ke 40 karakter - itu udah bukan aturannya lagi buat tour-tour ini.
+  **Teks intro hero 25–40 kata.**
 - Label section pertama: halaman tour = **"What You'll Do"**, attraction = **"The Experience"**.
 - **FAQ**: DIPUSATIN ke **`faq.html`** doang (Agu 2026) — semua FAQ inline + partial di
   halaman lain UDAH DIHAPUS (link ke faq.html ada di footer). Jangan tambahin FAQ ke

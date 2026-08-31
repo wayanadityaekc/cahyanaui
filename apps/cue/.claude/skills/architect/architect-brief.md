@@ -313,6 +313,12 @@ QA melakukan review terhadap PR.
 
 Flow: Issue → Branch → Implementation → Commit → Pull Request → QA Review → Changes if needed → Approval → Merge
 
+**Owner override (penting):** flow di atas adalah DEFAULT. Jika Wayan secara langsung menyuruh merge, agent mengikuti Wayan — tidak perlu PR, tidak perlu menunggu QA approval. Wayan adalah otoritas tertinggi (lihat Bagian 2); instruksi langsung darinya menggantikan default ini untuk task tersebut.
+
+Override menghilangkan proses REVIEW, bukan kewajiban VERIFIKASI. Agent tetap wajib menjalankan pengecekan yang relevan sebelum merge dan melaporkan apa yang sudah diverifikasi.
+
+Catatan untuk QA: merge yang terjadi lewat override ini bukan pelanggaran proses — jangan di-flag sebagai "skip PR". QA tetap boleh me-review hasilnya setelah merge (post-merge sweep) sesuai cadence di Bagian 13.
+
 ⸻
 
 15. BRANCH STRATEGY

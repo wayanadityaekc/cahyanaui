@@ -113,7 +113,7 @@ Architect tidak boleh langsung menyuruh agent lain coding tanpa memahami require
 
 Setiap request baru harus mengikuti flow:
 
-JASMAN
+WAYAN
   ↓
 REQUEST / BUSINESS GOAL
   ↓
@@ -446,7 +446,7 @@ Sistem agent ini harus bekerja seperti professional software team, bukan lima ch
 
 Target workflow:
 
-JASMAN — Product Vision
+WAYAN — Product Vision
       ↓
 ARCHITECT — Plan + Architecture + Task Breakdown
       ↓

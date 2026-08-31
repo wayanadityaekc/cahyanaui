@@ -8452,6 +8452,25 @@ strong {
   row-gap: 0.4rem;
   padding: 0.6rem 0.9rem 0.8rem;
 }
+/* Kartu destinasi (Task 2, Sep 2026): baris ke-3 "Included in [Tour]" di bawah
+   meta/price, biar meta+price tetep 1 baris pendek kayak biasa - teks tour
+   nggak numpang di kolom auto (kepanjangan, bikin kolom meta keremes). */
+.tourprog .experience__card--incl .experience__body {
+  grid-template-areas:
+    "title  rating"
+    "meta   price"
+    "incl   incl";
+}
+.experience__incl {
+  grid-area: incl;
+  font-size: var(--fs-label);
+  color: var(--color-muted);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .tourprog .experience__name {
   grid-area: title;
   margin: 0;

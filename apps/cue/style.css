@@ -8452,14 +8452,16 @@ strong {
   row-gap: 0.4rem;
   padding: 0.6rem 0.9rem 0.8rem;
 }
-/* Kartu destinasi (Task 2, Sep 2026): baris ke-3 "Included in [Tour]" di bawah
-   meta/price, biar meta+price tetep 1 baris pendek kayak biasa - teks tour
-   nggak numpang di kolom auto (kepanjangan, bikin kolom meta keremes). */
+/* Kartu destinasi (Task 2, Sep 2026): destinasi udah nggak dijual sendiri-sendiri
+   (harga "$45" generik dihapus, Wayan: "semua masuk ke program") - kartu jadi
+   overview doang, baris terakhir "Included in [Tour]" ngarahin ke program yang
+   nyakup destinasi itu. Nggak ada kolom price lagi -> 1 kolom penuh. */
 .tourprog .experience__card--incl .experience__body {
+  grid-template-columns: 1fr;
   grid-template-areas:
-    "title  rating"
-    "meta   price"
-    "incl   incl";
+    "title"
+    "meta"
+    "incl";
 }
 .experience__incl {
   grid-area: incl;
@@ -8470,6 +8472,10 @@ strong {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+.experience__incl strong {
+  color: var(--color-gold);
+  font-weight: 500;
 }
 .tourprog .experience__name {
   grid-area: title;

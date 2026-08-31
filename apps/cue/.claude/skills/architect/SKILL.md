@@ -34,4 +34,4 @@ Every completion report follows this shape:
 Severity/urgency must be visible immediately, not buried mid-report.
 
 ## Full operating spec
-See `/mnt/user-data/outputs/architect-brief.md` for the complete brief (business context, workflow diagram, engineering standards, QA cadence, escalation paths). Read it in full before generating or updating CLAUDE.md.
+See `.claude/skills/architect/architect-brief.md` for the complete brief (business context, workflow diagram, engineering standards, QA cadence, escalation paths). Read it in full before generating or updating CLAUDE.md.

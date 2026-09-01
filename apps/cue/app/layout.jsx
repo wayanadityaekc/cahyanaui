@@ -3,6 +3,7 @@ import './globals.css';
 import Providers from '@/state/Providers';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import BookConfirmModal from '@/components/booking/BookConfirmModal';
 
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           {children}
           <Footer />
+          <BookConfirmModal />
         </Providers>
       </body>
     </html>

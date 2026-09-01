@@ -1,5 +1,8 @@
 import localFont from 'next/font/local';
 import './globals.css';
+import Providers from '@/state/Providers';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
@@ -17,7 +20,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+      <head>
+        <link rel="stylesheet" href="/style.css" />
+      </head>
+      <body>
+        <Providers>
+          <Navbar />
+          {children}
+          <Footer />
+        </Providers>
+      </body>
     </html>
   );
 }

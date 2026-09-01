@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-green: #5c5c5c;
+  --color-gold: #22201c;
+  --color-gold-d: #16140f;
+  --color-gold-l: #cfc9ba;
+  --color-cta: #3d5c46;
+  --color-cta-d: #2f4737;
+  --color-amber: #c9a45c;
+  --color-amber-d: #b08d43;
+  --color-cream: #f8f8f8;
+  --color-line: #e7e4dd;
+  --color-ok: #2e7d54;
+  --color-err: #9a4a3f;
+  --color-ink: #46453f;
+  --color-muted: #7a7466;
+
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-head: "Inter", system-ui, sans-serif;
+
+  --text-display: clamp(1.75rem, 4vw, 2.5rem);
+  --text-h2: 1.125rem;
+  --text-h3: 0.875rem;
+  --text-strong: 0.875rem;
+  --text-body: 0.8rem;
+  --text-field: 0.8rem;
+  --text-small: 0.8rem;
+  --text-label: 0.64rem;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
+
+  --container-wide: 1200px;
+  --container-mid: 1080px;
+  --container-read: 720px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --fs-display: var(--text-display);
+  --fs-h2: var(--text-h2);
+  --fs-h3: var(--text-h3);
+  --fs-strong: var(--text-strong);
+  --fs-body: var(--text-body);
+  --fs-field: var(--text-field);
+  --fs-small: var(--text-small);
+  --fs-label: var(--text-label);
+
+  --lh-body: 1.6;
+  --lh-heading: 1.15;
+
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-xl: var(--radius-xl);
+  --r-pill: var(--radius-pill);
+
+  --line: var(--color-line);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --section-gap: 2.25rem;
+
+  --container: var(--container-wide);
+  --container-x: var(--space-3);
+
+  --field-h: 2.1rem;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  --dur-fast: 0.15s;
+  --dur: 0.2s;
+  --dur-slow: 0.3s;
+
+  --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
+  --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(34, 32, 28, 0.25));
+}

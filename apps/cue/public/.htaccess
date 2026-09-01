@@ -1,0 +1,24 @@
+# Verified against Apache 2.4.66 WITH mod_rewrite DISABLED - deliberately uses
+# no rewriting at all, so it cannot depend on a module Hostinger might not have.
+# Every directive here is already proven working on the live site today.
+#
+# Goes in public/.htaccess so the Next build copies it into out/.
+# Merge with the existing gzip + cache blocks from the current .htaccess.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<FilesMatch "\.txt$">
+  Require all denied
+</FilesMatch>
+<Files "robots.txt">
+  Require all granted
+</Files>
+
+Redirect 301 /ubud-jeep-sunrise.html /kintamani-sunrise-penglipuran.html
+Redirect 301 /taste-of-ubud.html /attractions/cooking-class.html
+Redirect 301 /ubud-cooking-market.html /attractions/cooking-class.html
+Redirect 301 /attractions/celuk-silver.html /attractions/ubud-arts-crafts.html
+Redirect 301 /attractions/batik.html /attractions/ubud-arts-crafts.html
+Redirect 301 /south-bali-tour.html /hidden-beaches-cliffs.html

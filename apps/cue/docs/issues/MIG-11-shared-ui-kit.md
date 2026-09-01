@@ -34,3 +34,20 @@ Build the reusable primitives every other component depends on. The centrepiece 
 ## Definition of done
 - Components merged with a demo route exercising every variant.
 - Engine states explicitly whether styling is complete or needs Mike/Miki.
+
+---
+
+# RESULT — DONE (2 Sep 2026, Architect)
+
+Built in `components/ui/`: `Select`, `DateField`, `Modal`, `Overlay`, `Slider`, `ZoneTabs`, `Accordion`, `InfoPopover`, `Img`, `useMobile`.
+
+`Select` and `DateField` replace `makeFieldEnhancer` (364 lines). They keep the original class names (`hs-control bk-control`, `hs-panel bk-panel`, `hs-panel__head/__body/__close`, `hs-opt bk-opt`, `hs-overlay`, `csel-group`, `bk-native`) so `style.css` styles them unchanged. Desktop renders the panel inline; at `max-width: 768px` - the same breakpoint the original used - it portals to `document.body` with the overlay. `DateField` always uses the centred popup (`hs-panel--popup bookdate-panel`), matching the current deliberate behaviour.
+
+The hidden native `<select>` / `<input type="date">` is kept so the value stays form-submittable and the custom control drives it, as before.
+
+`Slider` measures overflow and shows the arrows only when there is somewhere to scroll, instead of injecting them unconditionally.
+
+`Img` is a plain `<img>` wrapper - not `next/image`, per the architecture decision - that emits `height: auto` alongside any `aspect-ratio`, fixing the documented `.guide-lead` trap once and centrally.
+
+## Not yet exercised
+`Select`, `DateField`, `Modal`, `InfoPopover`, `Accordion` and `ZoneTabs` compile and follow the original markup, but they have **not been driven by a real form yet** - that happens in MIG-20/21/33. Their visual verification belongs there, not here.

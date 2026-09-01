@@ -2,34 +2,29 @@
 
 import { PROMO } from '@/content/shared/promo';
 
-function TagIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M20.6 13.4 12 22l-9-9V4h9l8.6 8.6a2 2 0 0 1 0 2.8z" />
-      <circle cx="7.5" cy="7.5" r="1.5" />
-    </svg>
-  );
-}
+const TAG_ICON = (
+  <svg className="tripbar__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+    <line x1="7" y1="7" x2="7.01" y2="7" />
+  </svg>
+);
 
 export default function TripBar({ mode = 'promo' }) {
   if (mode !== 'promo') return null;
   if (!PROMO.active || !PROMO.text) return null;
 
+  const asLink = !!PROMO.href;
   const inner = (
     <>
-      <TagIcon />
-      <span className="tripbar__text">{PROMO.text}</span>
-      {PROMO.cta && PROMO.href && <span className="tripbar__cta">{PROMO.cta}</span>}
+      {TAG_ICON}
+      <span>{PROMO.text}</span>
+      {PROMO.cta && <span className="tripbar__edit">{PROMO.cta}</span>}
     </>
   );
 
-  return (
-    <div className="tripbar tripbar--promo">
-      {PROMO.href ? (
-        <a className="tripbar__inner" href={PROMO.href}>{inner}</a>
-      ) : (
-        <div className="tripbar__inner">{inner}</div>
-      )}
-    </div>
+  return asLink ? (
+    <a className="tripbar tripbar--promo" id="tripbar" href={PROMO.href}>{inner}</a>
+  ) : (
+    <div className="tripbar tripbar--promo" id="tripbar">{inner}</div>
   );
 }

@@ -27,3 +27,34 @@ Build the card components. `ExperienceCard` is the most repeated component on th
 
 ## Definition of done
 - PR merged, with the diff run in all card contexts, not just one.
+
+---
+
+# RESULT — component built; one styling decision needs Wayan (2 Sep 2026, Architect)
+
+## Built
+`ExperienceCard`, `GuideCard`, `ReviewCard`, `DriverCard`, `CharterHourCard`, `StopCard`, plus `Price` and a `PricingProvider` that fetches `GET /api/pricing/catalog` and refetches on currency / guests / stay change. Cards take a build-time `priceFallback` and the provider overrides it client-side - the same static-fallback-then-JS pattern the current site uses.
+
+Verified structurally against the real card in `tour.html`: element+class tree, `alt`, `src`, `width`, `height`, `data-zone`, `data-price` and visible text are **all identical**. Rendered screenshot matches the live card.
+
+## FINDING - the card is not one component today, it is three
+
+The Atelier rule says a repeated component must be 100% identical everywhere. The CSS says it currently is not. `.experience__card` and its children are styled by three page-scoped rule sets:
+
+| Rule | `.home` | `.tourprog` | `.related` |
+|---|---|---|---|
+| `.experience__meta` | present | **byte-identical duplicate** | - |
+| `.experience__meta svg` | present | **byte-identical duplicate** | - |
+| `.experience__card` link reset | - | `display:block; text-decoration:none; color:inherit` | `text-decoration:none; color:inherit` |
+| `.experience__name` | `line-height: 1.25` | **no line-height** | - |
+
+Two of these are pure duplication - harmless DRY debt that unscoping removes for free.
+
+**One is a real visual difference:** the card title has `line-height: 1.25` on the homepage and no line-height override on the tour listing page. Same component, two different title line heights, on a two-line clamped title. This is exactly the drift the Atelier rule exists to prevent.
+
+**It was found because the component was built unscoped.** Dropping the `.home` / `.tourprog` / `.related` prefixes is the correct end state, but it would change the tour listing page's title spacing - a visual change, so it is not being made silently.
+
+**Question for Wayan:** unify on the homepage value (`line-height: 1.25` everywhere, tour listing shifts slightly), unify on the tour-listing value (homepage shifts), or keep both as they are and accept the card is not identical across pages? Recommendation: unify on `1.25`, since it was added deliberately in Sep 2026 for the longer restructured tour names and the tour listing has those same long names.
+
+## Note for MIG-92
+`/ui-kit.html` is a development page for rendering components in isolation. It is `noindex`, but **delete it before cutover** - it should not exist on the live site.

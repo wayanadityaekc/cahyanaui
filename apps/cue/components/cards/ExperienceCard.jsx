@@ -28,12 +28,16 @@ export default function ExperienceCard({
   metaIcon = 'clock',
   priceName,
   priceFallback,
+  priceMode = 'standard',
   zone,
   badge,
+  desc,
+  program,
+  variant = 'link',
   children,
 }) {
-  return (
-    <a className="experience__card" href={href} data-zone={zone}>
+  const body = (
+    <>
       <div className="experience__image">
         <Img src={`/assets/images/${img}`} alt={alt || name} width={600} height={600} />
         {badge && <span className="chdur__badge">{badge}</span>}
@@ -46,16 +50,40 @@ export default function ExperienceCard({
             <span>{meta}</span>
           </div>
         )}
-        {priceName && (
+        {desc && <p className="experience__desc">{desc}</p>}
+        {(priceName || variant === 'article') && (
           <div className="experience__footer">
-            <div className="experience__price">
-              <span className="price-from">from</span>{' '}
-              <Price name={priceName} fallback={priceFallback} />
-            </div>
+            {priceName ? (
+              <div className="experience__price">
+                <span className="price-from">from</span>{' '}
+                <Price name={priceName} mode={priceMode} fallback={priceFallback} />
+              </div>
+            ) : (
+              <div className="experience__price" />
+            )}
+            {variant === 'article' && href && (
+              <a href={href} className="experience__arrow" aria-label={`View ${name}`}>
+                &rarr;
+              </a>
+            )}
           </div>
         )}
         {children}
       </div>
+    </>
+  );
+
+  if (variant === 'article') {
+    return (
+      <article className="experience__card" data-program={program} data-zone={zone}>
+        {body}
+      </article>
+    );
+  }
+
+  return (
+    <a className="experience__card" href={href} data-zone={zone}>
+      {body}
     </a>
   );
 }

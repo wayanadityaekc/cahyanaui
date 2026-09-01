@@ -58,3 +58,25 @@ Two of these are pure duplication - harmless DRY debt that unscoping removes for
 
 ## Note for MIG-92
 `/ui-kit.html` is a development page for rendering components in isolation. It is `noindex`, but **delete it before cutover** - it should not exist on the live site.
+
+## FINDING 2 — the two cards differ structurally, not just in CSS (2 Sep 2026)
+
+Finding 1 above was about page-scoped CSS. Porting the homepage turned up something larger: the homepage card and the listing card are **different markup**.
+
+| | homepage (`index.html`) | listing (`tour.html`) |
+|---|---|---|
+| outer tag | `<article>` × 14 | `<a>` × 20 |
+| `experience__desc` paragraph | 31 | **0** |
+| `experience__arrow` link | 16 | **0** |
+| `data-program` | 4 | 0 |
+
+The homepage card is a non-link `<article>` carrying a description and an inner arrow link; the listing card is a whole-card `<a>` with no description. `initItineraryButtons()` then rewrites the homepage shape at runtime - it removes the arrow link and makes the whole card clickable, which is how the two end up *behaving* the same.
+
+`ExperienceCard` now supports both via `variant="link" | "article"`, so both render pixel-identically. **That is deliberately not a fix** - unifying them means either the listing pages gain a description or the homepage loses one, which is a visual and content decision.
+
+**Question for Wayan, alongside the `line-height` one:** should the homepage card keep its description paragraph and the listing cards stay without, or should they converge? Recommendation: keep as-is for the migration, and treat unification as its own Atelier issue after cutover, so a port bug can never be confused with a redesign.
+
+## Checked and dismissed - NOT a bug
+The homepage card for Uluwatu & Sunset Kecak carries `data-program="South Bali & Sunset Kecak"`, a name that no longer exists in `data.js` after the Sep 2026 tour restructure. It looks like a live bug and is not one: `initItineraryButtons` reads `PAGE_ITEM[href]` first and only falls back to `data-program`, and `PAGE_ITEM["south-coast-sunset-kecak.html"]` correctly returns `"Uluwatu & Sunset Kecak"`. The stale attribute is never read.
+
+It is still a trap - anyone who later removes that detail page, or writes new code keyed on `data-program`, gets a silent failure. The ported card uses the correct name.

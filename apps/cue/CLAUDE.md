@@ -426,21 +426,25 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v430, PARTIALS 81)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v431, PARTIALS 81)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.
 - **Multi-currency**: single source `prices` di data.js (USD+IDR per item) + static `CUR_RATE`.
   `[data-price="Name"]` spans are filled by `renderPrices()`. Supports USD/IDR/AUD/EUR/GBP,
   results are rounded, saved in localStorage `cue_currency`.
+- **Form contact** (`contact.html`, `initContact`): POST JSON ke **`${API_BASE}/contact`**
+  (nama/email/pesan — TANPA phone, makanya endpoint sendiri, bukan `/api/inquiry` yang
+  wajib phone). Sukses cuma ditampilin kalau server balas `status:"saved"`; gagal → alert
+  + tombol balik aktif. Dulu nembak `SHEET_ENDPOINT` placeholder pakai `mode:"no-cors"`
+  jadi gagal diem-diem tapi tetep bilang "success" — pesan tamu keilangan. Jangan balikin
+  pola fire-and-forget itu: form apa pun harus nunggu respons sebelum bilang sukses.
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
 - **Charter**: `CHARTER` config, live pricing.
 
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,
   ATV, rafting, Zoo, Bird Park) — angka riset, Wayan koreksi.
-- `SHEET_ENDPOINT` (script.js) masih placeholder — cuma kepakai 2 form sekunder;
-  booking utama udah ke API_ENDPOINT (Railway).
 - Review asli buat section Guest Reviews; link villa & sosmed (`href="#"`).
 - Foto: og:image 43 halaman masih preview.jpg + ±93 slot placeholder (gradient) di 39 halaman.
 - Kompres 10 foto >400KB (paling parah `rafting.webp` 2.6MB & `homepage_hero.webp` 725KB —

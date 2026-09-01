@@ -7,8 +7,6 @@ const PARTIALS_VERSION = 81;
 
 const WHATSAPP_NUMBER = "61401657862";
 
-const SHEET_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_URL";
-
 const API_ENDPOINT = "https://cahyana-api-production.up.railway.app/api/inquiry";
 
 // -- Sistem akun (passwordless). Base API + kunci token sesi di localStorage.
@@ -1987,17 +1985,30 @@ function initContact() {
     if (!/^\S+@\S+\.\S+$/.test(emailField.value.trim())) { alert("Please enter a valid email address."); return; }
     if (!messageField.value.trim()) { alert("Please enter a message."); return; }
 
-    const data = new URLSearchParams({
-      type: "contact",
-      name: nameField.value,
-      email: emailField.value,
-      message: messageField.value
-    });
+    const label = sendBtn.textContent;
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
 
-    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
-
-    form.style.display = "none";
-    success.style.display = "block";
+    fetch(`${API_BASE}/contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: nameField.value.trim(),
+        email: emailField.value.trim(),
+        message: messageField.value.trim()
+      })
+    })
+      .then((r) => r.json().then((d) => ({ ok: r.ok, d })))
+      .then(({ ok, d }) => {
+        if (!ok || !d || d.status !== "saved") throw new Error((d && d.detail) || "");
+        form.style.display = "none";
+        success.style.display = "block";
+      })
+      .catch((e) => {
+        alert(e.message || "Sorry, your message could not be sent. Please try again, or reach us on WhatsApp.");
+        sendBtn.disabled = false;
+        sendBtn.textContent = label;
+      });
   });
 }
 

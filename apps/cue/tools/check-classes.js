@@ -12,6 +12,8 @@ const ALLOWED = {
   'stop__body': 'present in the attraction pages, unstyled there too',
   'xplore__intro': 'present in index.html, unstyled there too',
   'hsearch__ref': 'present in partials/search.html, unstyled there too',
+  'driver-detail__reviews': 'present in about-us.html, unstyled there too',
+  'lhero--plain': 'present in about-us.html, unstyled there too',
   'hs-panel--popup': 'behaviour flag read by JS, never styled',
 };
 

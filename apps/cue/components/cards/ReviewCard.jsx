@@ -1,26 +1,24 @@
-function Stars({ rating }) {
-  return (
-    <div className="review-card__stars" aria-label={`${rating} out of 5`}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <span key={n} className={n <= rating ? 'active' : undefined}>&#9733;</span>
-      ))}
-    </div>
-  );
-}
+const SOURCE_LOGO = {
+  cahyana: { src: '/assets/images/logo.webp', alt: 'Cahyana Ubud Experience' },
+};
 
-export default function ReviewCard({ name, country, rating, message, service }) {
+export default function ReviewCard({ name, country, countryCode, rating, message, service, source = 'cahyana' }) {
+  const n = Math.max(1, Math.min(5, parseInt(rating, 10) || 0));
+  const stars = '★'.repeat(n) + '☆'.repeat(5 - n);
+  const logo = SOURCE_LOGO[source] || SOURCE_LOGO.cahyana;
+
   return (
-    <article className="review-card">
-      <div className="review-card__head">
-        <span className="review-card__avatar" aria-hidden="true">{(name || 'G').charAt(0).toUpperCase()}</span>
-        <div>
-          <p className="review-card__name">{name}</p>
-          {country && <p className="review-card__country">{country}</p>}
-        </div>
+    <article className="rev">
+      <div className="rev__head">
+        <span className="rev__name">{name}</span>
+        {countryCode && (
+          <img className="rev__flag" src={`/assets/flags/${countryCode}.svg`} alt={country || ''} loading="lazy" />
+        )}
       </div>
-      <Stars rating={rating} />
-      <p className="review-card__text">{message}</p>
-      {service && <p className="review-card__service">{service}</p>}
+      {service && <div className="rev__service">{service}</div>}
+      <div className="rev__stars" aria-label={`${n} out of 5`}>{stars}</div>
+      <p className="rev__text">{message}</p>
+      <img className="rev__logo" src={logo.src} alt={logo.alt} loading="lazy" />
     </article>
   );
 }

@@ -51,3 +51,34 @@ The hidden native `<select>` / `<input type="date">` is kept so the value stays 
 
 ## Not yet exercised
 `Select`, `DateField`, `Modal`, `InfoPopover`, `Accordion` and `ZoneTabs` compile and follow the original markup, but they have **not been driven by a real form yet** - that happens in MIG-20/21/33. Their visual verification belongs there, not here.
+
+---
+
+# CSS AUDIT — 2 Sep 2026
+
+After `InfoPopover` was found using classes with zero rules in `style.css`, every class used across `components/`, `app/` and `state/` was extracted and checked against `style.css`.
+
+**36 classes had no rule. 6 remain, and all 6 are legitimate.**
+
+## Broken — components styled with names that do not exist
+
+| Component | Was using | Actually is |
+|---|---|---|
+| `InfoPopover` | `infopop`, `infopop__btn`, `infopop__panel` | `binfo`, `binfo__btn`, `binfo__pop` (+ `binfo__row`, `binfo__tag`) |
+| `ReviewCard` | `review-card__head`, `__country`, `__service` | **`rev`, `rev__head`, `rev__name`, `rev__flag`, `rev__service`, `rev__stars`, `rev__text`, `rev__logo`** |
+| `DriverCard` | `driver`, `driver__avatar`, `__name`, `__role`, `__bio` | **`driver-card`** (a `<button>`), `driver-card__avatar`, `__name`, `__tagline`, `__more`, `__detail` |
+| `StopCard` | `stop__title` | `stop__name` (plus `stop__num`, which was missing) |
+| `ZoneTabs` | `zone-chips` container | `zone-filter` |
+| `CharterHourCard` | `chcard--popular`, `chdur__badge` | `chcard--pop`, `chcard__badge` |
+
+`ReviewCard` is the worst of these: `.review-card*` does have some rules in `style.css`, so it would have looked *partly* styled rather than obviously broken. The live renderer is `renderReviewCard()` in `script.js`, which emits `.rev` markup - a different component entirely. `.review-card*` appears in no HTML file and looks like dead CSS.
+
+`chdur__badge` came from CLAUDE.md, which names it as the charter badge class. **CLAUDE.md is wrong there** - the real class is `chcard__badge`. Worth correcting in the doc.
+
+## The 6 that are fine
+`binfo__note`, `contact__info`, `stop__body` and `xplore__intro` have no rules but do appear in the original HTML - unstyled there too, so carrying them over is faithful. `hs-panel--popup` and `bk-panel--cal` are behaviour flags read by JS, never styled.
+
+## Lesson
+MIG-11 was built from the *behaviour* described in `script.js` without checking each class name against `style.css`. Behaviour was right; names were invented. Nothing looked wrong at build time - only a rendered page or this audit surfaces it.
+
+**This check should run before any component is considered done.** Worth adding to `tools/` as a script so MIG-30..33 cannot reintroduce it.

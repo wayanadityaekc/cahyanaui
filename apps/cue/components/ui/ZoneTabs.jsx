@@ -28,7 +28,7 @@ export default function ZoneTabs({ zones = [] }) {
   }, [zones]);
 
   return (
-    <div className="zone-chips">
+    <div className="zone-filter" aria-label="Jump to category">
       {zones.map((z) => (
         <a key={z.id} href={`#${z.id}`} className={`zone-chip${active === z.id ? ' is-active' : ''}`}>
           {z.label}

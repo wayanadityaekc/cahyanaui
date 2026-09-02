@@ -78,7 +78,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "ATV Quad Bike Ride"
    }
-  ]
+  ],
+  "bookItem": "ATV",
+  "bookDefault": "experience"
  },
  "balangan-beach": {
   "heroBg": "surfers-beach.webp",
@@ -159,7 +161,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Balangan Beach"
    }
-  ]
+  ],
+  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookDefault": "tour"
  },
  "bali-bird-park": {
   "heroBg": "pelican-bali.webp",
@@ -240,7 +244,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Bali Bird Park"
    }
-  ]
+  ],
+  "bookItem": "Bali Bird Park",
+  "bookDefault": "experience"
  },
  "bali-zoo": {
   "heroBg": "elephant-bali-safari.webp",
@@ -321,7 +327,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Bali Zoo"
    }
-  ]
+  ],
+  "bookItem": "Bali Zoo",
+  "bookDefault": "experience"
  },
  "banjar-hot-spring": {
   "heroBg": "guest-hot-spring.jpg",
@@ -402,7 +410,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Banjar Hot Spring"
    }
-  ]
+  ],
+  "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
+  "bookDefault": "tour"
  },
  "banyumala-waterfall": {
   "heroBg": "waterfall.jpg",
@@ -483,7 +493,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Banyumala Twin Waterfall"
    }
-  ]
+  ],
+  "bookItem": "Banyumala & Twin Lakes",
+  "bookDefault": "tour"
  },
  "barong-dance": {
   "heroBg": "barong-dance-card.webp",
@@ -564,7 +576,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Barong Dance"
    }
-  ]
+  ],
+  "bookItem": "Barong Dance",
+  "bookDefault": "performance"
  },
  "batur-breakfast": {
   "heroBg": "batur-breakfast-hero.webp",
@@ -645,7 +659,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Breakfast with a Volcano View"
    }
-  ]
+  ],
+  "bookItem": "Batur Sunrise & Adrenaline",
+  "bookDefault": "tour"
  },
  "batur-hot-spring": {
   "heroBg": "batur-hot-spring-water.webp",
@@ -726,7 +742,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Batur Natural Hot Spring"
    }
-  ]
+  ],
+  "bookItem": "Batur Sunrise & Adrenaline",
+  "bookDefault": "tour"
  },
  "besakih": {
   "heroBg": "besakih-temple-bali.webp",
@@ -807,7 +825,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Besakih - The Mother Temple"
    }
-  ]
+  ],
+  "bookItem": "Besakih & Taman Ujung",
+  "bookDefault": "tour"
  },
  "bingin-beach": {
   "heroBg": "kelingking-beach.jpg",
@@ -888,7 +908,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Bingin Beach"
    }
-  ]
+  ],
+  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookDefault": "tour"
  },
  "coffee-plantation": {
   "heroBg": "coffee-plantation-hero.jpg",
@@ -969,7 +991,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Coffee Plantation & Tasting"
    }
-  ]
+  ],
+  "bookItem": "Ubud Rafting Adventure",
+  "bookDefault": "tour"
  },
  "cooking-class": {
   "heroBg": "cooking-class-card.webp",
@@ -1050,7 +1074,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Balinese Cooking Class"
    }
-  ]
+  ],
+  "bookItem": "Cooking Class",
+  "bookDefault": "experience"
  },
  "garuda-wisnu-kencana": {
   "heroBg": "gwk-statue-bali.webp",
@@ -1131,7 +1157,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Garuda Wisnu Kencana (GWK)"
    }
-  ]
+  ],
+  "bookItem": "GWK & Pandawa Beach",
+  "bookDefault": "tour"
  },
  "gitgit-waterfall": {
   "heroBg": "waterfall.webp",
@@ -1212,7 +1240,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Git Git Waterfall"
    }
-  ]
+  ],
+  "bookItem": "Munduk Waterfall Tour",
+  "bookDefault": "tour"
  },
  "goa-gajah": {
   "heroBg": "goa-gajah-hero.jpg",
@@ -1293,7 +1323,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Goa Gajah - The Elephant Cave"
    }
-  ]
+  ],
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour"
  },
  "green-bowl-beach": {
   "heroBg": "cliff-beach.webp",
@@ -1374,7 +1406,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Green Bowl Beach"
    }
-  ]
+  ],
+  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookDefault": "tour"
  },
  "gunung-kawi": {
   "heroBg": "gunung-kawi-hero.jpg",
@@ -1455,7 +1489,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Gunung Kawi Temple"
    }
-  ]
+  ],
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour"
  },
  "handara-gate": {
   "heroBg": "handara-gate.webp",
@@ -1536,7 +1572,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Handara Gate"
    }
-  ]
+  ],
+  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookDefault": "tour"
  },
  "jatiluwih-rice-terrace": {
   "heroBg": "jatiluwih.webp",
@@ -1617,7 +1655,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Jatiluwih Rice Terraces"
    }
-  ]
+  ],
+  "bookItem": "Jatiluwih Rice Terrace Tour",
+  "bookDefault": "tour"
  },
  "jeep-sunrise": {
   "heroBg": "jeep-sunrise-mount-batur-view.jpg",
@@ -1698,7 +1738,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Mount Batur Jeep Sunrise"
    }
-  ]
+  ],
+  "bookItem": "Jeep Sunrise",
+  "bookDefault": "experience"
  },
  "jungle-swing": {
   "heroBg": "jungle-swing-valley.jpg",
@@ -1779,7 +1821,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Bali Jungle Swing"
    }
-  ]
+  ],
+  "bookItem": "Swing",
+  "bookDefault": "experience"
  },
  "kecak-dance": {
   "heroBg": "kecak-dance.jpg",
@@ -1860,7 +1904,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Kecak Fire Dance"
    }
-  ]
+  ],
+  "bookItem": "Kecak Dance",
+  "bookDefault": "performance"
  },
  "lempuyang-temple": {
   "heroBg": "lempuyang.webp",
@@ -1941,7 +1987,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Lempuyang Temple - Gates of Heaven"
    }
-  ]
+  ],
+  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookDefault": "tour"
  },
  "lovina-dolphin": {
   "heroBg": "lovina-dolphin-sekumpul-card.jpg",
@@ -2022,7 +2070,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Lovina Dolphin Sunrise"
    }
-  ]
+  ],
+  "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
+  "bookDefault": "tour"
  },
  "monkey-forest": {
   "heroBg": "monkey-forest-hero.jpg",
@@ -2103,7 +2153,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Sacred Monkey Forest Sanctuary"
    }
-  ]
+  ],
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour"
  },
  "mount-batur-trekking": {
   "heroBg": "batur-sunrise.webp",
@@ -2184,7 +2236,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Mount Batur Sunrise Trekking"
    }
-  ]
+  ],
+  "bookItem": "Mount Batur Trekking",
+  "bookDefault": "experience"
  },
  "munduk": {
   "heroBg": "tibumana.webp",
@@ -2265,7 +2319,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Munduk Waterfalls"
    }
-  ]
+  ],
+  "bookItem": "Munduk Waterfall Tour",
+  "bookDefault": "tour"
  },
  "pandawa-beach": {
   "heroBg": "green-cliff-coast-bali.webp",
@@ -2346,7 +2402,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Pandawa Beach"
    }
-  ]
+  ],
+  "bookItem": "GWK & Pandawa Beach",
+  "bookDefault": "tour"
  },
  "penglipuran": {
   "heroBg": "penglipuran-village-view.jpg",
@@ -2427,7 +2485,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Penglipuran Village"
    }
-  ]
+  ],
+  "bookItem": "Kintamani Sunrise & Penglipuran",
+  "bookDefault": "tour"
  },
  "pura-batuan": {
   "heroBg": "pura-batuan-temple.jpg",
@@ -2508,7 +2568,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Pura Batuan Temple"
    }
-  ]
+  ],
+  "bookItem": "Ubud Culture Day",
+  "bookDefault": "tour"
  },
  "rafting": {
   "heroBg": "rafting.webp",
@@ -2589,7 +2651,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Ayung River Rafting"
    }
-  ]
+  ],
+  "bookItem": "Rafting",
+  "bookDefault": "experience"
  },
  "sangeh-monkey-forest": {
   "heroBg": "monkey.jpg",
@@ -2670,7 +2734,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Sangeh Monkey Forest"
    }
-  ]
+  ],
+  "bookItem": "Sangeh Monkey Forest & Tanah Lot",
+  "bookDefault": "tour"
  },
  "sekumpul-waterfall": {
   "heroBg": "lovina-dolphin-sekumpul-card.jpg",
@@ -2751,7 +2817,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Sekumpul Waterfall"
    }
-  ]
+  ],
+  "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
+  "bookDefault": "tour"
  },
  "snorkeling-east-bali": {
   "heroBg": "kids-snorkeling.webp",
@@ -2832,7 +2900,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Snorkeling in East Bali"
    }
-  ]
+  ],
+  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookDefault": "tour"
  },
  "taman-ayun": {
   "heroBg": "taman-ayun-hero.jpg",
@@ -2913,7 +2983,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Taman Ayun Royal Temple"
    }
-  ]
+  ],
+  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookDefault": "tour"
  },
  "taman-ujung": {
   "heroBg": "ujung-water-palace-lake-bali.webp",
@@ -2994,7 +3066,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Taman Ujung Water Palace"
    }
-  ]
+  ],
+  "bookItem": "Besakih & Taman Ujung",
+  "bookDefault": "tour"
  },
  "tanah-lot": {
   "heroBg": "tanah-lot.webp",
@@ -3075,7 +3149,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Tanah Lot Sunset Temple"
    }
-  ]
+  ],
+  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookDefault": "tour"
  },
  "tegal-wangi-beach": {
   "heroBg": "kelingking-beach.jpg",
@@ -3156,7 +3232,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Tegal Wangi Beach"
    }
-  ]
+  ],
+  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookDefault": "tour"
  },
  "tegalalang-rice-terrace": {
   "heroBg": "tegalalang-rice-terrace-hero.jpg",
@@ -3237,7 +3315,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Tegalalang Rice Terrace & Coffee Plantation"
    }
-  ]
+  ],
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour"
  },
  "tegenungan-waterfall": {
   "heroBg": "tegenungan-waterfall-hero.jpg",
@@ -3318,7 +3398,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Tegenungan Waterfall"
    }
-  ]
+  ],
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour"
  },
  "tirta-empul": {
   "heroBg": "tirta-empul-hero.jpg",
@@ -3399,7 +3481,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Tirta Empul Holy Water Temple"
    }
-  ]
+  ],
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour"
  },
  "tirta-gangga": {
   "heroBg": "tirtagangga.jpg",
@@ -3480,7 +3564,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Tirta Gangga Water Garden"
    }
-  ]
+  ],
+  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookDefault": "tour"
  },
  "twin-lakes": {
   "heroBg": "batur-lake.webp",
@@ -3561,7 +3647,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Twin Lakes Viewpoint (Buyan & Tamblingan)"
    }
-  ]
+  ],
+  "bookItem": "Banyumala & Twin Lakes",
+  "bookDefault": "tour"
  },
  "ubud-arts-crafts": {
   "heroBg": "ubud-arts-crafts-hero.jpg",
@@ -3642,7 +3730,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Ubud Arts & Crafts"
    }
-  ]
+  ],
+  "bookItem": "Ubud Culture Day",
+  "bookDefault": "tour"
  },
  "ubud-market": {
   "heroBg": "ubud-market-hero.jpg",
@@ -3723,7 +3813,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Ubud Traditional Market"
    }
-  ]
+  ],
+  "bookItem": "Cooking Class",
+  "bookDefault": "experience"
  },
  "ubud-royal-palace": {
   "heroBg": "ubud-saraswati-temple.jpg",
@@ -3804,7 +3896,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Ubud Royal Palace & Art Market"
    }
-  ]
+  ],
+  "bookItem": "Ubud Culture Day",
+  "bookDefault": "tour"
  },
  "ulun-danu-beratan": {
   "heroBg": "ulun-danu-beratan-hero.webp",
@@ -3885,7 +3979,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Ulun Danu Beratan Lake Temple"
    }
-  ]
+  ],
+  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookDefault": "tour"
  },
  "uluwatu-kecak": {
   "heroBg": "kecak-dance-hero.webp",
@@ -3962,7 +4058,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Uluwatu Kecak Fire Dance"
    }
-  ]
+  ],
+  "bookItem": "Uluwatu & Sunset Kecak",
+  "bookDefault": "tour"
  },
  "uluwatu-temple": {
   "heroBg": "uluwatu-temple-top.webp",
@@ -4043,7 +4141,9 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Uluwatu Cliff Temple"
    }
-  ]
+  ],
+  "bookItem": "Uluwatu & Sunset Kecak",
+  "bookDefault": "tour"
  },
  "watersport": {
   "heroBg": "watersport-jetski.webp",
@@ -4124,6 +4224,8 @@ export const ATTRACTION_CONTENT = {
     "type": "text",
     "text": "Watersport"
    }
-  ]
+  ],
+  "bookItem": "Watersport",
+  "bookDefault": "experience"
  }
 };

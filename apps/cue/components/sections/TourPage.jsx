@@ -1,5 +1,6 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
+import BookCta from '@/components/booking/BookCta';
 
 function Stop({ s }) {
   const inner = (
@@ -58,6 +59,7 @@ export default function TourPage({ data }) {
       </section>
 
       <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />
+      <BookCta item={data.bookItem} />
 
       {data.bookItem && (
         <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />

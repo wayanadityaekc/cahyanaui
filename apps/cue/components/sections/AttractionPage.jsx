@@ -1,5 +1,6 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
+import BookCta from '@/components/booking/BookCta';
 
 export default function AttractionPage({ data }) {
   return (
@@ -41,6 +42,7 @@ export default function AttractionPage({ data }) {
       </section>
 
       <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />
+      <BookCta item={data.bookItem} />
 
       {data.crumb && (
         <nav className="crumb" aria-label="Breadcrumb">

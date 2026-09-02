@@ -50,7 +50,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "From Ubud it is a half-day out. Helmet, gloves, boots, and knee guards are provided; you just bring clothes you do not mind ruining and a change for after. Showers, lockers, and a place to eat are at the base. Minimum age is 12 to ride solo, sessions run morning and afternoon, and rides go ahead in light rain, which only adds to the mud."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2 hours riding</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"ATV\">$40</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"ATV\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2 hours riding</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"ATV\">$40</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"ATV\">+ My Trips</button> </div> </div>",
   "metaTitle": "ATV Quad Bike Ride Ubud | Jungle Trails, Mud & Tunnels",
   "metaDesc": "Ride an ATV quad bike through jungle tracks, rice fields, a river crossing, and a cave tunnel near Ubud, with safety gear and transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/atv-ride.html",
@@ -63,7 +63,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -72,7 +72,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -80,7 +80,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "ATV",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~2 hours riding"
+   },
+   {
+    "label": "Price",
+    "value": "$40"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "balangan-beach": {
   "heroBg": "surfers-beach.webp",
@@ -89,7 +114,7 @@ export const ATTRACTION_CONTENT = {
   "hooks": [
    {
     "label": "Area",
-    "value": "South Bali · Pecatu"
+    "value": "South Bali \u00b7 Pecatu"
    },
    {
     "label": "Best time",
@@ -97,7 +122,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -133,7 +158,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Balangan's left-hand reef break is well known among surfers and peels along the reef when the swell is up. Even if you do not surf, it is good to watch from a warung with a drink. The water sits over reef and currents can be strong, so swim with care and keep an eye on the conditions."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali · Pecatu</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Afternoon</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali \u00b7 Pecatu</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Afternoon</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
   "metaTitle": "Balangan Beach | Bali Hidden Beaches and Cliffs",
   "metaDesc": "A long beach beneath limestone cliffs near Pecatu on Bali's Bukit Peninsula, lined with simple warungs and known for its left-hand reef surf break.",
   "canonical": "https://cahyanaubudexperience.com/attractions/balangan-beach.html",
@@ -146,7 +171,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -155,7 +180,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -163,7 +188,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Bali Hidden Beaches and Cliffs",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali \u00b7 Pecatu"
+   },
+   {
+    "label": "Best time",
+    "value": "Afternoon"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free (parking only)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "bali-bird-park": {
   "heroBg": "pelican-bali.webp",
@@ -216,7 +266,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Paths are mostly flat, shaded, and stroller-friendly, so it is comfortable for young children and older visitors alike. Allow around two to three hours, and there is a cafe on site. It sits next door to Bali Zoo, so the two pair easily into a single family day out from Ubud."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2-3 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Bali Bird Park\">$28</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Bird Park\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2-3 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Bali Bird Park\">$28</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Bird Park\">+ My Trips</button> </div> </div>",
   "metaTitle": "Bali Bird Park near Ubud | 1,000+ Birds, Shows & Aviaries",
   "metaDesc": "Bali Bird Park in Singapadu south of Ubud, with over 1,000 birds in walk-in aviaries, daily free-flight shows, and transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/bali-bird-park.html",
@@ -229,7 +279,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -238,7 +288,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -246,7 +296,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Bali Bird Park",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~2-3 hours"
+   },
+   {
+    "label": "Price",
+    "value": "$28"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "bali-zoo": {
   "heroBg": "elephant-bali-safari.webp",
@@ -299,7 +374,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Paths are shady and mostly easy-going, with cafes and rest spots throughout, so it suits all ages. Allow around two to three hours for a day visit. Bali Bird Park is next door, so the two combine easily into a full wildlife day out from Ubud."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2-3 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Bali Zoo\">$40</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Zoo\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2-3 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Bali Zoo\">$40</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Zoo\">+ My Trips</button> </div> </div>",
   "metaTitle": "Bali Zoo near Ubud | Elephants, Orangutans & Family Wildlife",
   "metaDesc": "Bali Zoo in Singapadu south of Ubud, home to elephants, orangutans, and sun bears in jungle grounds, with feeding experiences and transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/bali-zoo.html",
@@ -312,7 +387,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -321,7 +396,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -329,7 +404,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Bali Zoo",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~2-3 hours"
+   },
+   {
+    "label": "Price",
+    "value": "$40"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "banjar-hot-spring": {
   "heroBg": "guest-hot-spring.jpg",
@@ -346,7 +446,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -382,7 +482,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "It slots neatly between the Lovina sunrise dolphins and the Sekumpul trek: a warm-up after the boat and a loosen-up before the climb. Bring swimwear and a towel, though changing rooms and a small cafe are on site. The sulphur can leave a faint scent on swimwear afterward."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Banjar, near Lovina (North Bali)</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Mid-morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"40000\">Rp40.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lovina Dolphin & Sekumpul Waterfall</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Banjar, near Lovina (North Bali)</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Mid-morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"40000\">Rp40.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lovina Dolphin & Sekumpul Waterfall</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\">+ My Trips</button> </div> </div>",
   "metaTitle": "Banjar Hot Spring | Lovina Dolphin & Sekumpul Waterfall",
   "metaDesc": "Sacred hot springs near Lovina in north Bali, where warm sulphur water pours from carved stone dragon spouts into jungle bathing pools.",
   "canonical": "https://cahyanaubudexperience.com/attractions/banjar-hot-spring.html",
@@ -395,7 +495,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -404,7 +504,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -412,7 +512,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Banjar, near Lovina (North Bali)"
+   },
+   {
+    "label": "Best time",
+    "value": "Mid-morning"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp40.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "banyumala-waterfall": {
   "heroBg": "waterfall.jpg",
@@ -429,7 +554,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -465,7 +590,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "At the foot of the falls sits a wide, clear pool, one of the few in Bali calm and shallow enough to swim in comfortably. The water is cool and fresh straight off the mountain, with greenery all around. Bring a swimsuit and a change of clothes, plus good shoes for the trek down."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Banyumala &amp; Twin Lakes</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Banyumala &amp; Twin Lakes\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Banyumala &amp; Twin Lakes</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Banyumala &amp; Twin Lakes\">+ My Trips</button> </div> </div>",
   "metaTitle": "Banyumala Twin Waterfall | Banyumala & Twin Lakes",
   "metaDesc": "A twin waterfall in Bali's northern highlands with a clear pool you can swim in, reached by a short but steep jungle trek that keeps crowds away.",
   "canonical": "https://cahyanaubudexperience.com/attractions/banyumala-waterfall.html",
@@ -478,7 +603,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -487,7 +612,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -495,7 +620,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Banyumala & Twin Lakes",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "North Bali highlands"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "barong-dance": {
   "heroBg": "barong-dance-card.webp",
@@ -548,7 +698,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Unlike the Kecak, the Barong is accompanied by a full gamelan orchestra, bronze gongs and metallophones that shift from delicate to thunderous in moments. Performances run about an hour, seating is covered, and it is family-friendly. A short introduction to the characters usually opens the show, so the story is easy to follow."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~1 hour</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Barong Dance\">$10</span ></strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Barong Dance\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~1 hour</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Barong Dance\">$10</span ></strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Barong Dance\" > + My Trips </button> </div> </div>",
   "metaTitle": "Barong Dance Ubud | Bali's Good-vs-Evil Dance Drama",
   "metaDesc": "Watch the Barong dance in Ubud, Bali's dance-drama of good versus evil, performed with live gamelan and hand-carved masks, ticket and transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/barong-dance.html",
@@ -561,7 +711,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -570,7 +720,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -578,7 +728,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Barong Dance",
-  "bookDefault": "performance"
+  "bookDefault": "performance",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~1 hour"
+   },
+   {
+    "label": "Price",
+    "value": "$10"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "batur-breakfast": {
   "heroBg": "batur-breakfast-hero.webp",
@@ -595,7 +770,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -631,7 +806,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "There's no rush over breakfast. Take your time, photograph the caldera in the early light, and enjoy the quiet before the island wakes up. When you're ready, the walk back down is straightforward and mostly downhill."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Mount Batur, Kintamani</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunrise</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Included</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Batur Sunrise &amp; Adrenaline</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Batur Sunrise &amp; Adrenaline\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Mount Batur, Kintamani</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunrise</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Included</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Batur Sunrise &amp; Adrenaline</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Batur Sunrise &amp; Adrenaline\">+ My Trips</button> </div> </div>",
   "metaTitle": "Breakfast with a Volcano View | Batur Sunrise & Adrenaline",
   "metaDesc": "Breakfast on the Mount Batur caldera rim after the sunrise trek - volcano and lake views and a hot breakfast included with the climb.",
   "canonical": "https://cahyanaubudexperience.com/attractions/batur-breakfast.html",
@@ -644,7 +819,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -653,7 +828,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -661,7 +836,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Batur Sunrise & Adrenaline",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Mount Batur, Kintamani"
+   },
+   {
+    "label": "Best time",
+    "value": "Sunrise"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Included"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "batur-hot-spring": {
   "heroBg": "batur-hot-spring-water.webp",
@@ -678,7 +878,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -714,7 +914,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The site has pools of varying temperature, changing rooms, and a lakeside cafe, so ease into the hotter pools gently. Bring swimwear and a towel, or let us know and we'll arrange a towel for you."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Lake Batur, Kintamani</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>After the sunrise trek</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"200000\">Rp200.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Batur Sunrise & Adrenaline </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Batur Sunrise & Adrenaline\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Lake Batur, Kintamani</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>After the sunrise trek</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"200000\">Rp200.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Batur Sunrise & Adrenaline </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Batur Sunrise & Adrenaline\" > + My Trips </button> </div> </div>",
   "metaTitle": "Batur Natural Hot Spring | Batur Sunrise & Adrenaline",
   "metaDesc": "Natural volcanic hot springs on the shore of Lake Batur, a warm soak to ease tired legs after the Mount Batur sunrise trek.",
   "canonical": "https://cahyanaubudexperience.com/attractions/batur-hot-spring.html",
@@ -727,7 +927,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -736,7 +936,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -744,7 +944,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Batur Sunrise & Adrenaline",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Lake Batur, Kintamani"
+   },
+   {
+    "label": "Best time",
+    "value": "After the sunrise trek"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp200.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "besakih": {
   "heroBg": "besakih-temple-bali.webp",
@@ -761,7 +986,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -797,7 +1022,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The whole complex faces sacred Mount Agung, Bali's highest and holiest volcano, which rises directly behind the upper shrines. On a clear day the mountain is as memorable as the temple itself, but the weather here shifts fast, so the peak is often wrapped in cloud until it lifts."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali, Mount Agung</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"150000\">Rp150.000</span> (incl. shuttle)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Besakih &amp; Taman Ujung</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Besakih &amp; Taman Ujung\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali, Mount Agung</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"150000\">Rp150.000</span> (incl. shuttle)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Besakih &amp; Taman Ujung</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Besakih &amp; Taman Ujung\">+ My Trips</button> </div> </div>",
   "metaTitle": "Besakih - The Mother Temple | Besakih & Taman Ujung",
   "metaDesc": "Pura Besakih, Bali's largest and holiest temple complex, rises in terraces up Mount Agung with over 20 temples, a sarong included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/besakih.html",
@@ -810,7 +1035,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -819,7 +1044,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -827,7 +1052,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Besakih & Taman Ujung",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "East Bali, Mount Agung"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp150.000 (incl. shuttle)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "bingin-beach": {
   "heroBg": "kelingking-beach.jpg",
@@ -836,15 +1086,15 @@ export const ATTRACTION_CONTENT = {
   "hooks": [
    {
     "label": "Area",
-    "value": "South Bali · Pecatu"
+    "value": "South Bali \u00b7 Pecatu"
    },
    {
     "label": "Best time",
-    "value": "Low tide · sunset"
+    "value": "Low tide \u00b7 sunset"
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -880,7 +1130,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Bingin's reef break is a long-standing favourite with surfers, best at mid-to-low tide and easy to watch from the cafes stacked up the cliff. The beach faces west, so it works as a sunset spot too: grab a drink, find a step with a view, and watch the light go. It's one of the more social of the quiet Bukit beaches."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali · Pecatu</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Low tide · sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali \u00b7 Pecatu</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Low tide \u00b7 sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
   "metaTitle": "Bingin Beach | Bali Hidden Beaches and Cliffs",
   "metaDesc": "Bingin Beach near Pecatu on Bali's Bukit peninsula, a tide-dependent cove reached down steep cliffside steps, with a reef break and cliff cafes.",
   "canonical": "https://cahyanaubudexperience.com/attractions/bingin-beach.html",
@@ -893,7 +1143,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -902,7 +1152,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -910,7 +1160,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Bali Hidden Beaches and Cliffs",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali \u00b7 Pecatu"
+   },
+   {
+    "label": "Best time",
+    "value": "Low tide \u00b7 sunset"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free (parking only)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "coffee-plantation": {
   "heroBg": "coffee-plantation-hero.jpg",
@@ -927,7 +1202,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "30–45 min"
+    "value": "30\u201345 min"
    }
   ],
   "cta": "Book this program",
@@ -963,7 +1238,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Settle in for a complimentary tasting flight of local coffees and herbal teas, flavours like ginger coffee, lemongrass tea, and Balinese cocoa lined up to sip and compare. The plantation is also known for kopi luwak, the civet coffee, which costs extra if you'd like to try a cup."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Near Ubud</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Ubud Rafting Adventure</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Rafting Adventure\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Near Ubud</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Ubud Rafting Adventure</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Rafting Adventure\">+ My Trips</button> </div> </div>",
   "metaTitle": "Coffee Plantation & Tasting | Ubud Rafting Adventure",
   "metaDesc": "Walk a working Bali coffee and spice plantation near Ubud and taste a flight of local brews, including kopi luwak, the civet coffee.",
   "canonical": "https://cahyanaubudexperience.com/attractions/coffee-plantation.html",
@@ -976,7 +1251,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -985,7 +1260,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -993,7 +1268,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Rafting Adventure",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Near Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "30\u201345 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "cooking-class": {
   "heroBg": "cooking-class-card.webp",
@@ -1046,7 +1346,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "You cook a full spread, usually sate lilit, lawar, tempeh in sweet soy, a vegetable urab, and a chicken or fish dish, all over an open flame in a family compound kitchen. Then you sit down and eat everything together. Vegetarian and vegan versions are no problem, just tell us when you book."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~5 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Cooking Class\">$35</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Cooking Class\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~5 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Cooking Class\">$35</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Cooking Class\">+ My Trips</button> </div> </div>",
   "metaTitle": "Balinese Cooking Class Ubud | Market Tour & Family Kitchen",
   "metaDesc": "A Balinese cooking class in Ubud that starts at the morning market and ends grinding spice paste and cooking a full meal with a local family.",
   "canonical": "https://cahyanaubudexperience.com/attractions/cooking-class.html",
@@ -1059,7 +1359,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1068,7 +1368,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1076,7 +1376,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Cooking Class",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~5 hours"
+   },
+   {
+    "label": "Price",
+    "value": "$35"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "garuda-wisnu-kencana": {
   "heroBg": "gwk-statue-bali.webp",
@@ -1093,7 +1418,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -1129,7 +1454,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Set high on the Bukit peninsula, the park's viewpoints look out over the dry, rolling south of Bali towards the sea. On a clear day you can see for miles across the peninsula. Whether you come for the mythology or the sheer scale, it makes a solid opening stop for a day in the south."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali, Bukit</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Afternoon</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"125000\">Rp125.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book GWK &amp; Pandawa Beach</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"GWK &amp; Pandawa Beach\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali, Bukit</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Afternoon</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"125000\">Rp125.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book GWK &amp; Pandawa Beach</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"GWK &amp; Pandawa Beach\">+ My Trips</button> </div> </div>",
   "metaTitle": "Garuda Wisnu Kencana (GWK) | GWK & Pandawa Beach",
   "metaDesc": "Garuda Wisnu Kencana (GWK), one of the tallest statues on earth, Vishnu riding the Garuda 121 m above a limestone cultural park in South Bali.",
   "canonical": "https://cahyanaubudexperience.com/attractions/garuda-wisnu-kencana.html",
@@ -1142,7 +1467,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1151,7 +1476,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1159,7 +1484,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "GWK & Pandawa Beach",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali, Bukit"
+   },
+   {
+    "label": "Best time",
+    "value": "Afternoon"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp125.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "gitgit-waterfall": {
   "heroBg": "waterfall.webp",
@@ -1176,7 +1526,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -1212,7 +1562,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "At the foot of the drop the air turns cool and damp and the sound of the water fills the ravine, with rainforest closing in on both sides. It works well as a short stop to cool off and take photos before carrying on along the northern route. The rocks near the pool stay wet and slippery, so footing matters here."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Munduk Waterfall Tour</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Munduk Waterfall Tour\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Munduk Waterfall Tour</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Munduk Waterfall Tour\">+ My Trips</button> </div> </div>",
   "metaTitle": "Git Git Waterfall | Munduk Waterfall Tour",
   "metaDesc": "Git Git Waterfall is a 35-metre single-drop waterfall in North Bali, reached by an easy paved path through coffee and clove plantations.",
   "canonical": "https://cahyanaubudexperience.com/attractions/gitgit-waterfall.html",
@@ -1225,7 +1575,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1234,7 +1584,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1242,7 +1592,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Munduk Waterfall Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "North Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp20.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "goa-gajah": {
   "heroBg": "goa-gajah-hero.jpg",
@@ -1259,7 +1634,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -1295,7 +1670,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Behind the main courtyard, mossy steps drop into a green ravine past streams, rice fields, and weathered carvings half-swallowed by the jungle. It stays shaded and quiet, pleasant even at midday, and shows why the place has drawn pilgrims and visitors for centuries. Walk the loop slowly rather than turning back at the cave."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Near Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Near Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "metaTitle": "Goa Gajah - The Elephant Cave | Ubud Tour",
   "metaDesc": "Goa Gajah, the Elephant Cave, is a 9th-century cave sanctuary near Ubud with a demon-carved entrance, ancient bathing pools and jungle shrines.",
   "canonical": "https://cahyanaubudexperience.com/attractions/goa-gajah.html",
@@ -1308,7 +1683,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1317,7 +1692,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1325,7 +1700,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Near Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "green-bowl-beach": {
   "heroBg": "cliff-beach.webp",
@@ -1334,7 +1734,7 @@ export const ATTRACTION_CONTENT = {
   "hooks": [
    {
     "label": "Area",
-    "value": "South Bali · Ungasan"
+    "value": "South Bali \u00b7 Ungasan"
    },
    {
     "label": "Best time",
@@ -1342,7 +1742,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -1378,7 +1778,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Offshore, Green Bowl has a reef break that draws experienced surfers on the right tide. For everyone else it is a place to watch, wade, and have the sand largely to yourself. Swimming is over reef and rock rather than open sand, so it suits confident swimmers who read the conditions more than families with small children."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali · Ungasan</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Low tide</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali \u00b7 Ungasan</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Low tide</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
   "metaTitle": "Green Bowl Beach | Bali Hidden Beaches and Cliffs",
   "metaDesc": "Green Bowl Beach is a quiet Bukit peninsula beach near Ungasan, reached by a long clifftop staircase, with sea caves at low tide and a reef break.",
   "canonical": "https://cahyanaubudexperience.com/attractions/green-bowl-beach.html",
@@ -1391,7 +1791,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1400,7 +1800,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1408,7 +1808,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Bali Hidden Beaches and Cliffs",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali \u00b7 Ungasan"
+   },
+   {
+    "label": "Best time",
+    "value": "Low tide"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free (parking only)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "gunung-kawi": {
   "heroBg": "gunung-kawi-hero.jpg",
@@ -1425,7 +1850,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -1461,7 +1886,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Gunung Kawi stays far quieter than Bali's better-known temples, which is much of its appeal. Standing at the foot of the carved cliffs with the sacred river running past, the site feels far older than most, and on a good morning you may have the valley almost to yourself."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Tampaksiring, NE of Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;1.5 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Tampaksiring, NE of Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;1.5 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "metaTitle": "Gunung Kawi Temple | Ubud Tour",
   "metaDesc": "Gunung Kawi is an 11th-century shrine complex carved into a river-valley cliff near Ubud, reached by a stairway through terraced rice paddies.",
   "canonical": "https://cahyanaubudexperience.com/attractions/gunung-kawi.html",
@@ -1474,7 +1899,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1483,7 +1908,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1491,7 +1916,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Tampaksiring, NE of Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "handara-gate": {
   "heroBg": "handara-gate.webp",
@@ -1508,7 +1958,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "20–30 min"
+    "value": "20\u201330 min"
    }
   ],
   "cta": "Book this program",
@@ -1544,7 +1994,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "This is a quick photo stop, and timing matters, since the gate is popular and a queue forms fast. We aim for a quieter window so you get your shot without a long wait, then carry on. It is a short but worthwhile pause on the way through the highlands, best folded into the morning before the crowds build."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>20&ndash;30 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span> (photo spot)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Ulun Danu Beratan &amp; Handara Gate</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ulun Danu Beratan &amp; Handara Gate\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>20&ndash;30 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span> (photo spot)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Ulun Danu Beratan &amp; Handara Gate</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ulun Danu Beratan &amp; Handara Gate\">+ My Trips</button> </div> </div>",
   "metaTitle": "Handara Gate | Ulun Danu Beratan & Handara Gate",
   "metaDesc": "Handara Gate is a traditional split gate at a highland golf resort near Bedugul, one of Bali's most recognisable photo spots framed by jungle mountains.",
   "canonical": "https://cahyanaubudexperience.com/attractions/handara-gate.html",
@@ -1557,7 +2007,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1566,7 +2016,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1574,7 +2024,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ulun Danu Beratan & Handara Gate",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "North Bali highlands"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "20\u201330 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000 (photo spot)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "jatiluwih-rice-terrace": {
   "heroBg": "jatiluwih.webp",
@@ -1591,7 +2066,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -1627,7 +2102,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Jatiluwih is still farmed the traditional <em>subak</em> way, Bali's communal irrigation system, in continuous use for over a thousand years and central to its UNESCO listing. Water is shared field to field through hand-cut channels, guided by the temples and the farming calendar. It is a working landscape rather than a manicured attraction, which is much of the point."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>West Bali, Tabanan</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Jatiluwih Rice Terrace Tour</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Jatiluwih Rice Terrace Tour\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>West Bali, Tabanan</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Jatiluwih Rice Terrace Tour</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Jatiluwih Rice Terrace Tour\">+ My Trips</button> </div> </div>",
   "metaTitle": "Jatiluwih Rice Terraces | West Bali Day Tour",
   "metaDesc": "Jatiluwih is a vast UNESCO World Heritage rice terrace in West Bali, still farmed the traditional subak way, with walking trails through the paddies.",
   "canonical": "https://cahyanaubudexperience.com/attractions/jatiluwih-rice-terrace.html",
@@ -1640,7 +2115,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1649,7 +2124,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1657,7 +2132,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Jatiluwih Rice Terrace Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "West Bali, Tabanan"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "jeep-sunrise": {
   "heroBg": "jeep-sunrise-mount-batur-view.jpg",
@@ -1707,10 +2207,10 @@ export const ATTRACTION_CONTENT = {
     "hgt": 900,
     "num": "Warm Layers",
     "name": "Cold at the Top, Then the Descent",
-    "descHtml": "It is genuinely cold up there before dawn, roughly 10 to 15°C, so bring a jacket, long trousers, and closed shoes; most people underestimate it. After sunrise the jeep takes you back across the lava field and down past the lake, and a natural hot spring stop can be added on the way home if you want to warm up."
+    "descHtml": "It is genuinely cold up there before dawn, roughly 10 to 15\u00b0C, so bring a jacket, long trousers, and closed shoes; most people underestimate it. After sunrise the jeep takes you back across the lava field and down past the lake, and a natural hot spring stop can be added on the way home if you want to warm up."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~7 hours (2:30 AM start)</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Jeep Sunrise\">$50</span></strong > </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Jeep Sunrise\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~7 hours (2:30 AM start)</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Jeep Sunrise\">$50</span></strong > </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Jeep Sunrise\" > + My Trips </button> </div> </div>",
   "metaTitle": "Mount Batur Jeep Sunrise Tour | 4x4 Sunrise, No Hiking",
   "metaDesc": "A 4x4 jeep drives you up Mount Batur's lava field for sunrise over the caldera and Lake Batur near Ubud, with no trekking required.",
   "canonical": "https://cahyanaubudexperience.com/attractions/jeep-sunrise.html",
@@ -1723,7 +2223,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1732,7 +2232,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1740,7 +2240,28 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Jeep Sunrise",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~7 hours (2:30 AM start)"
+   },
+   {
+    "label": "Price",
+    "value": "$50 AvailabilityDaily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "jungle-swing": {
   "heroBg": "jungle-swing-valley.jpg",
@@ -1749,7 +2270,7 @@ export const ATTRACTION_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "~1–2 hours"
+    "value": "~1\u20132 hours"
    },
    {
     "label": "Area",
@@ -1793,7 +2314,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Every rider wears a full safety harness clipped to a separate line, so the swing is secure and staff are trained. Wear something that photographs well and won't fly up (long dresses are popular for a reason, but bring shorts underneath). Staff take photos on your phone for free and go slow if you ask, and transport from Ubud is included."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~1–2 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong><span class=\"price\" data-price=\"Swing\">$25</span></strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Swing\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~1\u20132 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong><span class=\"price\" data-price=\"Swing\">$25</span></strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Swing\" > + My Trips </button> </div> </div>",
   "metaTitle": "Bali Jungle Swing Ubud | Rice Terrace Swing & Nests",
   "metaDesc": "Bali jungle swing near Ubud - a harnessed seat that swings out over the rice terraces, with photo nests. Transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/jungle-swing.html",
@@ -1806,7 +2327,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1815,7 +2336,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1823,7 +2344,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Swing",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~1\u20132 hours"
+   },
+   {
+    "label": "Price",
+    "value": "$25"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "kecak-dance": {
   "heroBg": "kecak-dance.jpg",
@@ -1876,7 +2422,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "What separates Kecak from every other Balinese dance is that there is no gamelan and no conductor: the chanters split a single rhythm between them, each group landing on a different beat - the same interlocking pattern a gamelan plays, but sung. They sit bare-chested in poleng, the black-and-white check that stands for the balance of good and evil, and most are villagers rather than professional performers. It runs about an hour at sunset, and arriving early gets you a closer seat."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~1 hour</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Kecak Dance\">$10</span></strong > </div> <div class=\"info__fact\"> <span>Days</span><strong>Tue &amp; Sun</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Kecak Dance\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~1 hour</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Kecak Dance\">$10</span></strong > </div> <div class=\"info__fact\"> <span>Days</span><strong>Tue &amp; Sun</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Kecak Dance\" > + My Trips </button> </div> </div>",
   "metaTitle": "Kecak Fire Dance Ubud | Tuesday & Sunday Evening Show",
   "metaDesc": "The Kecak fire dance in Ubud - 50+ chanting voices tell the Ramayana around a ring of fire, every Tuesday and Sunday evening. Ticket and transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/kecak-dance.html",
@@ -1889,7 +2435,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1898,7 +2444,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1906,7 +2452,28 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Kecak Dance",
-  "bookDefault": "performance"
+  "bookDefault": "performance",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~1 hour"
+   },
+   {
+    "label": "Price",
+    "value": "$10 DaysTue & Sun"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "lempuyang-temple": {
   "heroBg": "lempuyang.webp",
@@ -1923,7 +2490,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -1959,7 +2526,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "We arrive at first light, when the air is cool, the line is short, and Agung is most likely to be clear of cloud. By mid-morning the wait for the gate photo can run to an hour or more, so an early start makes the difference. It is a high, breezy spot reached by a short shuttle up the last stretch, so bring a light layer and hope for a clear sky."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Early morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"100000\">Rp100.000</span> (incl. shuttle)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lempuyang &amp; Tirta Gangga</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Early morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"100000\">Rp100.000</span> (incl. shuttle)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lempuyang &amp; Tirta Gangga</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\">+ My Trips</button> </div> </div>",
   "metaTitle": "Lempuyang Temple - Gates of Heaven | East Bali Day Tour",
   "metaDesc": "Bali's famous split gate framing Mount Agung - the Gates of Heaven at Pura Lempuyang. We handle the ticket, sarong, and mirror photo.",
   "canonical": "https://cahyanaubudexperience.com/attractions/lempuyang-temple.html",
@@ -1972,7 +2539,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -1981,7 +2548,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -1989,7 +2556,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Lempuyang & Tirta Gangga",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "East Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Early morning"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp100.000 (incl. shuttle)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "lovina-dolphin": {
   "heroBg": "lovina-dolphin-sekumpul-card.jpg",
@@ -2006,7 +2598,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "2–3 hours"
+    "value": "2\u20133 hours"
    }
   ],
   "cta": "Book this program",
@@ -2042,7 +2634,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Lovina sits far from the busy south, on a stretch of black volcanic sand backed by mountains. The trip starts before dawn and lies a long way from Ubud, so it works best paired with an overnight stay in the north. Just ask and we'll build the itinerary around it, so you wake up already on the coast."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Lovina, North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunrise</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>2&ndash;3 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"150000\">Rp150.000</span> (boat)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lovina Dolphin & Sekumpul Waterfall</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Lovina, North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunrise</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>2&ndash;3 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"150000\">Rp150.000</span> (boat)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lovina Dolphin & Sekumpul Waterfall</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\">+ My Trips</button> </div> </div>",
   "metaTitle": "Lovina Dolphin Sunrise | Lovina Dolphin & Sekumpul Waterfall",
   "metaDesc": "A sunrise outrigger boat trip from Lovina's black-sand beach to see wild spinner dolphins - an only-in-the-north Bali experience.",
   "canonical": "https://cahyanaubudexperience.com/attractions/lovina-dolphin.html",
@@ -2055,7 +2647,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2064,7 +2656,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2072,7 +2664,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Lovina, North Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Sunrise"
+   },
+   {
+    "label": "Time here",
+    "value": "2\u20133 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp150.000 (boat)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "monkey-forest": {
   "heroBg": "monkey-forest-hero.jpg",
@@ -2089,7 +2706,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -2125,7 +2742,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Towering banyan trees, hanging roots, and a mossy ravine make the forest feel far wilder than its location, a few minutes' walk from Ubud's main street. Shaded stone paths wind past a stream and over little bridges, cool even in the midday heat. Mornings are quieter and the monkeys more active, and the entrance fee is a little higher at weekends."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Central Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"80000\">Rp80.000</span> (weekend higher)</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Central Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"80000\">Rp80.000</span> (weekend higher)</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "metaTitle": "Sacred Monkey Forest Sanctuary | Ubud Tour",
   "metaDesc": "A moss-covered jungle temple in the heart of Ubud, home to 700+ long-tailed macaques, ancient banyan trees, and holy shrines. Visited on the Ubud Tour.",
   "canonical": "https://cahyanaubudexperience.com/attractions/monkey-forest.html",
@@ -2138,7 +2755,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2147,7 +2764,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2155,7 +2772,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Central Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp80.000 (weekend higher)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "mount-batur-trekking": {
   "heroBg": "batur-sunrise.webp",
@@ -2205,10 +2847,10 @@ export const ATTRACTION_CONTENT = {
     "hgt": 1536,
     "num": "Before You Climb",
     "name": "Fitness, Warmth & Volcanic Breakfast",
-    "descHtml": "You need reasonable fitness and closed hiking shoes - this is a real hike, not a stroll. Bring a warm jacket; the summit sits around 10°C before sunrise, so pack a warm layer to make the wait for the light more comfortable."
+    "descHtml": "You need reasonable fitness and closed hiking shoes - this is a real hike, not a stroll. Bring a warm jacket; the summit sits around 10\u00b0C before sunrise, so pack a warm layer to make the wait for the light more comfortable."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~8 hours (2:00 AM start)</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Mount Batur Trekking\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Difficulty</span><strong>Moderate</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Mount Batur Trekking\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>~8 hours (2:00 AM start)</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Mount Batur Trekking\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Difficulty</span><strong>Moderate</strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Mount Batur Trekking\" > + My Trips </button> </div> </div>",
   "metaTitle": "Mount Batur Sunrise Trekking | Volcano Hike from Ubud",
   "metaDesc": "A 2-hour dawn hike to Mount Batur's 1,717 m summit for sunrise over Lake Batur. Guide and transport included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/mount-batur-trekking.html",
@@ -2221,7 +2863,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2230,7 +2872,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2238,7 +2880,28 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Mount Batur Trekking",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~8 hours (2:00 AM start)"
+   },
+   {
+    "label": "Price",
+    "value": "$55 DifficultyModerate"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "munduk": {
   "heroBg": "tibumana.webp",
@@ -2255,7 +2918,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -2291,7 +2954,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The paths to the falls are green and quiet, and the roads up are winding, so a stop here is also a chance to stretch and breathe the cool mountain air. Many people pair the waterfall walk with a small coffee, clove, and cacao tasting at one of the plantations along the way, which is pay-as-you-go with no pressure to buy. Bring a light layer, since the highlands stay noticeably cooler than the coast."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span> per falls</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Munduk Waterfall Tour</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Munduk Waterfall Tour\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span> per falls</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Munduk Waterfall Tour</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Munduk Waterfall Tour\">+ My Trips</button> </div> </div>",
   "metaTitle": "Munduk Waterfalls | North Bali Day Tour",
   "metaDesc": "Munduk is a highland village in north Bali known for its jungle waterfalls, set among coffee, clove, and cacao plantations, with cool mountain air and valley views to the north coast.",
   "canonical": "https://cahyanaubudexperience.com/attractions/munduk.html",
@@ -2304,7 +2967,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2313,7 +2976,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2321,7 +2984,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Munduk Waterfall Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "North Bali highlands"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp20.000 per falls"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "pandawa-beach": {
   "heroBg": "green-cliff-coast-bali.webp",
@@ -2338,7 +3026,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -2374,7 +3062,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Loungers and kayaks rent right on the sand, and the calm conditions make paddling and swimming straightforward. It is a laid-back stretch of coast for a few unhurried hours by the water, less hectic than the south's busier beaches. Bring a swimsuit and towel; a small entrance and parking fee usually applies."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"25000\">Rp25.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book GWK &amp; Pandawa Beach</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"GWK &amp; Pandawa Beach\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;1.5 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"25000\">Rp25.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book GWK &amp; Pandawa Beach</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"GWK &amp; Pandawa Beach\">+ My Trips</button> </div> </div>",
   "metaTitle": "Pandawa Beach | GWK & Pandawa Beach",
   "metaDesc": "Pandawa Beach on Bali's Bukit peninsula is reached through a statue-lined cliff cut, opening onto calm water and wide white sand.",
   "canonical": "https://cahyanaubudexperience.com/attractions/pandawa-beach.html",
@@ -2387,7 +3075,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2396,7 +3084,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2404,7 +3092,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "GWK & Pandawa Beach",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp25.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "penglipuran": {
   "heroBg": "penglipuran-village-view.jpg",
@@ -2421,7 +3134,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -2457,7 +3170,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The walk is flat and easy, about an hour at a gentle pace, and a protected bamboo forest borders the village. Set in the cool highlands, mornings can feel fresh, so a light layer is handy. Penglipuran sits on the route down from a Mount Batur sunrise back toward Ubud, which makes it a natural stop on a Kintamani day."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Bangli (Kintamani highlands)</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Kintamani Sunrise & Penglipuran </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Kintamani Sunrise & Penglipuran\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Bangli (Kintamani highlands)</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Kintamani Sunrise & Penglipuran </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Kintamani Sunrise & Penglipuran\" > + My Trips </button> </div> </div>",
   "metaTitle": "Penglipuran Village | Kintamani Sunrise & Penglipuran",
   "metaDesc": "Penglipuran is a Bali Aga village in the Bangli highlands, regularly rated among the cleanest in the world, with swept lanes and carved traditional gates.",
   "canonical": "https://cahyanaubudexperience.com/attractions/penglipuran.html",
@@ -2470,7 +3183,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2479,7 +3192,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2487,7 +3200,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Kintamani Sunrise & Penglipuran",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Bangli (Kintamani highlands)"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "pura-batuan": {
   "heroBg": "pura-batuan-temple.jpg",
@@ -2504,7 +3242,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "30–45 min"
+    "value": "30\u201345 min"
    }
   ],
   "cta": "Book this program",
@@ -2540,7 +3278,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Batuan sits on the main road between Ubud and the craft villages of Celuk, Mas, and Batubulan, so the temple slots easily into a culture day. It stays cool, shaded, and rarely crowded, and a visit takes around 45 minutes. A sarong is required to enter and we arrange one for you; since it is an active temple, modest dress is appreciated."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Batuan, Gianyar</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>30&ndash;45 min</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong>Donation</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Culture Day </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Batuan, Gianyar</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>30&ndash;45 min</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong>Donation</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Culture Day </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
   "metaTitle": "Pura Batuan Temple | Ubud Culture Day",
   "metaDesc": "Pura Batuan is an 11th-century village temple near Ubud, covered in fine paras-stone carving and tiered shrines in the artists' village of Batuan.",
   "canonical": "https://cahyanaubudexperience.com/attractions/pura-batuan.html",
@@ -2553,7 +3291,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2562,7 +3300,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2570,7 +3308,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Culture Day",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Batuan, Gianyar"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "30\u201345 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Donation"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "rafting": {
   "heroBg": "rafting.webp",
@@ -2601,7 +3364,7 @@ export const ATTRACTION_CONTENT = {
     "w": 5609,
     "hgt": 3739,
     "num": "The River",
-    "name": "Class II–III Rapids, 12 km of Gorge",
+    "name": "Class II\u2013III Rapids, 12 km of Gorge",
     "descHtml": "The Ayung is Bali's longest river, and the Ubud stretch runs about two hours through class II and III rapids - enough to get your heart going and thoroughly soak you, but safe enough that beginners and kids handle it easily. Between the rapids there are long, calm stretches where you just drift and look up."
    },
    {
@@ -2623,7 +3386,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "From Ubud it's a half-day out. A flight of steps leads down to the put-in, then you're on the water for around two hours with a river guide in every boat and all the gear - helmet, life vest, paddle - provided. No swimming ability is needed and the minimum age is seven, which is why it works for families. At the finish there are showers and lockers and a buffet lunch over the gorge before the drive back; bring swimwear, a change of clothes, and strapped sandals."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2 hours on water</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Rafting\">$35</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Rafting\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>~2 hours on water</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Rafting\">$35</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Rafting\">+ My Trips</button> </div> </div>",
   "metaTitle": "Ayung River Rafting Ubud Bali | White-Water Rafting Tour",
   "metaDesc": "Rafting the Ayung, Bali's longest river near Ubud - about two hours of class II-III rapids through a rainforest gorge of carved stone reliefs and waterfalls, fine for beginners.",
   "canonical": "https://cahyanaubudexperience.com/attractions/rafting.html",
@@ -2636,7 +3399,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2645,7 +3408,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2653,7 +3416,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Rafting",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Duration",
+    "value": "~2 hours on water"
+   },
+   {
+    "label": "Price",
+    "value": "$35"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "sangeh-monkey-forest": {
   "heroBg": "monkey.jpg",
@@ -2670,7 +3458,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "30–45 min"
+    "value": "30\u201345 min"
    }
   ],
   "cta": "Book this program",
@@ -2706,7 +3494,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The paths are flat, shaded, and short, so the forest suits all ages and takes around 45 minutes to an hour. Mornings are cooler and the light through the trees is at its best. Sangeh sits on the route up toward Bedugul and Tanah Lot, which makes it an easy addition to a West Bali day rather than a trip on its own."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Sangeh, Badung (West Bali)</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"30000\">Rp30.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Sangeh Monkey Forest &amp; Tanah Lot</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Sangeh Monkey Forest &amp; Tanah Lot\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Sangeh, Badung (West Bali)</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"30000\">Rp30.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Sangeh Monkey Forest &amp; Tanah Lot</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Sangeh Monkey Forest &amp; Tanah Lot\">+ My Trips</button> </div> </div>",
   "metaTitle": "Sangeh Monkey Forest | West Bali Day Tour",
   "metaDesc": "Sangeh Monkey Forest north of Ubud is a sacred nutmeg grove with hundreds of grey macaques and a moss-covered 17th-century temple.",
   "canonical": "https://cahyanaubudexperience.com/attractions/sangeh-monkey-forest.html",
@@ -2719,7 +3507,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2728,7 +3516,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2736,7 +3524,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Sangeh Monkey Forest & Tanah Lot",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Sangeh, Badung (West Bali)"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "30\u201345 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp30.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "sekumpul-waterfall": {
   "heroBg": "lovina-dolphin-sekumpul-card.jpg",
@@ -2753,7 +3566,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "2–3 hours"
+    "value": "2\u20133 hours"
    }
   ],
   "cta": "Book this program",
@@ -2789,7 +3602,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The climb is exactly why Sekumpul stays wilder and less crowded than Bali's roadside falls. Standing at the base among the jungle, mist, and noise of the water is the payoff for the walk. It is a strenuous half-day, so bring water, go in the morning while you are fresh, and allow two to three hours on site."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>2&ndash;3 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span> / trek ~<span class=\"fee\" data-idr=\"200000\">Rp200.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lovina Dolphin & Sekumpul Waterfall</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>2&ndash;3 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span> / trek ~<span class=\"fee\" data-idr=\"200000\">Rp200.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lovina Dolphin & Sekumpul Waterfall</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\">+ My Trips</button> </div> </div>",
   "metaTitle": "Sekumpul Waterfall | Lovina Dolphin & Sekumpul Waterfall",
   "metaDesc": "Sekumpul, often rated Bali's most beautiful waterfall, is a cluster of tall falls in a north Bali jungle valley, reached by a real trek.",
   "canonical": "https://cahyanaubudexperience.com/attractions/sekumpul-waterfall.html",
@@ -2802,7 +3615,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2811,7 +3624,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2819,7 +3632,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "North Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "2\u20133 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp20.000 / trek ~Rp200.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "snorkeling-east-bali": {
   "heroBg": "kids-snorkeling.webp",
@@ -2836,7 +3674,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -2872,7 +3710,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Mask, snorkel, and fins are provided, and the calm shallows work for complete beginners. We read the day's conditions and pick the sheltered spot with the best visibility, since clarity changes with weather and tide. Bring a swimsuit, towel, and a change of clothes, float at your own pace, and dry off in the sun before the drive on."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Midday</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"400000\">Rp400.000</span> (gear &amp; boat)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lempuyang &amp; Tirta Gangga</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Midday</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"400000\">Rp400.000</span> (gear &amp; boat)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lempuyang &amp; Tirta Gangga</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\">+ My Trips</button> </div> </div>",
   "metaTitle": "Snorkeling in East Bali | Lempuyang & Tirta Gangga",
   "metaDesc": "Snorkeling in East Bali offers calm, clear water with coral gardens and reef fish a short swim from shore, with gear provided for beginners.",
   "canonical": "https://cahyanaubudexperience.com/attractions/snorkeling-east-bali.html",
@@ -2885,7 +3723,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2894,7 +3732,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2902,7 +3740,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Lempuyang & Tirta Gangga",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "East Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Midday"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp400.000 (gear & boat)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "taman-ayun": {
   "heroBg": "taman-ayun-hero.jpg",
@@ -2919,7 +3782,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "30–45 min"
+    "value": "30\u201345 min"
    }
   ],
   "cta": "Book this program",
@@ -2955,7 +3818,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Walking is flat and easy on paved paths around the outside of the moat; the inner courtyard is reserved for worship, so you take in the meru from the walkways and across the water. Morning is cooler and quieter, and a sarong is required and provided. Taman Ayun sits in Mengwi about 45 minutes from Ubud, and pairs naturally with Tanah Lot later the same day."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Mengwi, West Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"30000\">Rp30.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Tanah Lot &amp; Taman Ayun</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Tanah Lot &amp; Taman Ayun\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Mengwi, West Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"30000\">Rp30.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Tanah Lot &amp; Taman Ayun</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Tanah Lot &amp; Taman Ayun\">+ My Trips</button> </div> </div>",
   "metaTitle": "Taman Ayun Royal Temple | Tanah Lot & Taman Ayun",
   "metaDesc": "Taman Ayun is the moat-ringed royal temple of the Mengwi kingdom near Ubud, with rows of tiered meru towers and part of Bali's UNESCO subak landscape.",
   "canonical": "https://cahyanaubudexperience.com/attractions/taman-ayun.html",
@@ -2968,7 +3831,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -2977,7 +3840,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -2985,7 +3848,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Tanah Lot & Taman Ayun",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Mengwi, West Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "30\u201345 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp30.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "taman-ujung": {
   "heroBg": "ujung-water-palace-lake-bali.webp",
@@ -3002,7 +3890,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "30–45 min"
+    "value": "30\u201345 min"
    }
   ],
   "cta": "Book this program",
@@ -3038,7 +3926,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Walking is flat around the ponds with some steps up the terraces, and shade is limited, so a hat and water help; allow around 45 minutes. Taman Ujung sits close to Tirta Gangga, and the two royal water palaces of Karangasem pair naturally on an East Bali day."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Karangasem, East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Besakih &amp; Taman Ujung</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Besakih &amp; Taman Ujung\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Karangasem, East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Besakih &amp; Taman Ujung</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Besakih &amp; Taman Ujung\">+ My Trips</button> </div> </div>",
   "metaTitle": "Taman Ujung Water Palace | Besakih & Taman Ujung",
   "metaDesc": "Taman Ujung is the early-1900s water palace of the Karangasem kings in East Bali, with reflecting ponds, bridges, and pavilions below Mount Agung and the sea.",
   "canonical": "https://cahyanaubudexperience.com/attractions/taman-ujung.html",
@@ -3051,7 +3939,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3060,7 +3948,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3068,7 +3956,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Besakih & Taman Ujung",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Karangasem, East Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "30\u201345 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp75.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "tanah-lot": {
   "heroBg": "tanah-lot.webp",
@@ -3085,7 +3998,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3121,7 +4034,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Most visitors arrive for the last hour of light, when the temple stands in silhouette against the sky - which is also when it is busiest, with the paths and the market stalls leading down to it at their fullest. Coming a little earlier leaves time to walk the cliffs first. Tanah Lot sits in Tabanan on Bali's west side, roughly an hour and a half from Ubud, so it usually rounds off a day spent in the western highlands rather than a trip on its own."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>West Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Tanah Lot &amp; Taman Ayun</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Tanah Lot &amp; Taman Ayun\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>West Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Tanah Lot &amp; Taman Ayun</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Tanah Lot &amp; Taman Ayun\">+ My Trips</button> </div> </div>",
   "metaTitle": "Tanah Lot Sunset Temple | West Bali Day Tour",
   "metaDesc": "Tanah Lot is a 16th-century sea temple on a rock off Bali's southwest coast, reached across the sand only at low tide. Its history, the setting, and how to time a visit around the sunset crowds.",
   "canonical": "https://cahyanaubudexperience.com/attractions/tanah-lot.html",
@@ -3134,7 +4047,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3143,7 +4056,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3151,7 +4064,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Tanah Lot & Taman Ayun",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "West Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Sunset"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp75.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "tegal-wangi-beach": {
   "heroBg": "kelingking-beach.jpg",
@@ -3160,15 +4098,15 @@ export const ATTRACTION_CONTENT = {
   "hooks": [
    {
     "label": "Area",
-    "value": "South Bali · Jimbaran"
+    "value": "South Bali \u00b7 Jimbaran"
    },
    {
     "label": "Best time",
-    "value": "Low tide · sunset"
+    "value": "Low tide \u00b7 sunset"
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3204,7 +4142,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The bay faces west between limestone headlands, which makes it a favourite for late-afternoon light and sunset. It is more a place to sit, wade, and take it in than a swimming beach, since the surf can push hard against the rocks. There is almost no natural shade, so bring sun cover and check the tide times before you go."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali · Jimbaran</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Low tide · sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali \u00b7 Jimbaran</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Low tide \u00b7 sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free (parking only)</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Bali Hidden Beaches and Cliffs</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
   "metaTitle": "Tegal Wangi Beach | Bali Hidden Beaches and Cliffs",
   "metaDesc": "Tegal Wangi Beach is a small cliff-backed cove near Jimbaran in south Bali, known for the natural rock pools that form in the volcanic rock at low tide.",
   "canonical": "https://cahyanaubudexperience.com/attractions/tegal-wangi-beach.html",
@@ -3217,7 +4155,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3226,7 +4164,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3234,7 +4172,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Bali Hidden Beaches and Cliffs",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali \u00b7 Jimbaran"
+   },
+   {
+    "label": "Best time",
+    "value": "Low tide \u00b7 sunset"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free (parking only)"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "tegalalang-rice-terrace": {
   "heroBg": "tegalalang-rice-terrace-hero.jpg",
@@ -3251,7 +4214,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -3287,7 +4250,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Beside the fields, a working plantation grows coffee, cacao, and spices. You can walk the shaded grounds, see how beans are roasted by hand, and sit down to a tasting flight of local brews and herbal teas, including <em>kopi luwak</em>, the civet coffee this area is known for. The tasting flight is free; buying a bag of beans afterwards is optional, not expected. A small entrance or donation may apply at some of the terrace viewpoints, and there is an optional swing set at the top of the rice terrace."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Tegalalang, N of Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Early morning</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;1.5 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"25000\">Rp25.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Tegalalang, N of Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Early morning</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;1.5 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"25000\">Rp25.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "metaTitle": "Tegalalang Rice Terrace & Coffee Plantation | Ubud Tour",
   "metaDesc": "Tegalalang is a valley of subak-fed rice terraces north of Ubud, paired with a working coffee plantation where you can taste kopi luwak. On the Ubud Tour.",
   "canonical": "https://cahyanaubudexperience.com/attractions/tegalalang-rice-terrace.html",
@@ -3300,7 +4263,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3309,7 +4272,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3317,7 +4280,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Tegalalang, N of Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Early morning"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp25.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "tegenungan-waterfall": {
   "heroBg": "tegenungan-waterfall-hero.jpg",
@@ -3334,7 +4322,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3370,7 +4358,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "From the top, viewpoints and a small terrace of cafes look straight across the falls, an easy way to take it in before or instead of the walk down. It is the classic Tegenungan photo and a good place to rest with a fresh coconut while others swim below. A small entrance fee usually applies."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>S of Ubud (30 min - 1 hr)</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>S of Ubud (30 min - 1 hr)</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "metaTitle": "Tegenungan Waterfall | Ubud Tour",
   "metaDesc": "Tegenungan is a wide, powerful waterfall with a natural swimming pool a short drive south of Ubud, easy to reach without a trek. On the Ubud Tour.",
   "canonical": "https://cahyanaubudexperience.com/attractions/tegenungan-waterfall.html",
@@ -3383,7 +4371,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3392,7 +4380,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3400,7 +4388,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "S of Ubud (30 min - 1 hr)"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp20.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "tirta-empul": {
   "heroBg": "tirta-empul-hero.jpg",
@@ -3417,7 +4430,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3453,7 +4466,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Beyond the pools, the temple opens into quiet courtyards with koi ponds and finely carved stone shrines and gates. It is an active place of worship, so you will often see local families arriving with offerings. In Balinese belief, many bathe in the melukat spring first to cleanse themselves, then enter the inner temple to pray and leave an offering, receiving the blessing that follows. Mornings are calmer, modest dress is required and a sarong is provided, and it is worth wandering the quieter corners once the ritual is done."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Near Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Near Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Tour </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "metaTitle": "Tirta Empul Holy Water Temple | Ubud Tour",
   "metaDesc": "Tirta Empul is a holy-spring temple near Ubud where Balinese Hindus have performed the melukat purification ritual for over a thousand years. On the Ubud Tour.",
   "canonical": "https://cahyanaubudexperience.com/attractions/tirta-empul.html",
@@ -3466,7 +4479,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3475,7 +4488,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3483,7 +4496,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Tour",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Near Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp75.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "tirta-gangga": {
   "heroBg": "tirtagangga.jpg",
@@ -3500,7 +4538,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3536,7 +4574,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "A row of stepping stones is set into the main pond, letting you pick your way across the water between the koi; it is the shot most people come for. The ponds are full of large, well-fed fish, and food is usually on sale to feed them, a hit with kids. Take the stones slowly, since they can be slick, and morning is the calmest, coolest time to wander."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lempuyang &amp; Tirta Gangga</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>East Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Lempuyang &amp; Tirta Gangga</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\">+ My Trips</button> </div> </div>",
   "metaTitle": "Tirta Gangga Water Garden | East Bali Day Tour",
   "metaDesc": "Tirta Gangga is a former royal water garden in East Bali, with tiered fountains, koi ponds, and stepping stones set across the main pond.",
   "canonical": "https://cahyanaubudexperience.com/attractions/tirta-gangga.html",
@@ -3549,7 +4587,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3558,7 +4596,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3566,7 +4604,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Lempuyang & Tirta Gangga",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "East Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp75.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "twin-lakes": {
   "heroBg": "batur-lake.webp",
@@ -3583,7 +4646,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "20–30 min"
+    "value": "20\u201330 min"
    }
   ],
   "cta": "Book this program",
@@ -3619,7 +4682,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The viewpoint sits right off the road as you climb toward Munduk, so it takes only a short stop rather than a detour. Come early and the view is at its clearest; as the day warms, mist rolls in off the water and softens everything to grey-green. Bring a light layer, and expect a small fee to pull in and park."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>20&ndash;30 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span>&ndash;<span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Banyumala &amp; Twin Lakes</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Banyumala &amp; Twin Lakes\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>North Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Daytime</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>20&ndash;30 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"20000\">Rp20.000</span>&ndash;<span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Banyumala &amp; Twin Lakes</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Banyumala &amp; Twin Lakes\">+ My Trips</button> </div> </div>",
   "metaTitle": "Twin Lakes Viewpoint (Buyan & Tamblingan) | North Bali Day Tour",
   "metaDesc": "Lakes Buyan and Tamblingan, two crater lakes in a volcanic caldera seen from a ridge-top viewpoint in Bali's cool northern highlands.",
   "canonical": "https://cahyanaubudexperience.com/attractions/twin-lakes.html",
@@ -3632,7 +4695,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3641,7 +4704,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3649,7 +4712,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Banyumala & Twin Lakes",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "North Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "20\u201330 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp20.000\u2013Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "ubud-arts-crafts": {
   "heroBg": "ubud-arts-crafts-hero.jpg",
@@ -3666,7 +4754,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3702,7 +4790,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The village of Batuan gave its name to one of Bali's distinctive painting styles: dense, dark, finely detailed scenes of village life and mythology that took shape here in the 1930s. Meet local painters and see how a single canvas, filled almost corner to corner, can take weeks of close brushwork."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Celuk, Batuan &amp; Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong>Free</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Culture Day </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Celuk, Batuan &amp; Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Daytime</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;2 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong>Free</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Culture Day </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
   "metaTitle": "Ubud Arts & Crafts | Ubud Culture Day",
   "metaDesc": "Bali craft villages near Ubud - hand-worked silver in Celuk, wax-and-dye batik you can try, and the detailed Batuan painting style.",
   "canonical": "https://cahyanaubudexperience.com/attractions/ubud-arts-crafts.html",
@@ -3715,7 +4803,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3724,7 +4812,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3732,7 +4820,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Culture Day",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Celuk, Batuan & Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Daytime"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "ubud-market": {
   "heroBg": "ubud-market-hero.jpg",
@@ -3749,7 +4862,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "30–45 min"
+    "value": "30\u201345 min"
    }
   ],
   "cta": "Book this program",
@@ -3785,7 +4898,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Bargaining is part of how the market works, so start friendly, take your time, and enjoy the back-and-forth. Most stalls deal in cash, so bring small notes. More than shopping, it's a lively slice of everyday Ubud with something to catch your eye down every narrow aisle, and it costs nothing to wander even if you buy nothing."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Central Ubud</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Early morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Cooking Class</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Cooking Class\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Central Ubud</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Early morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>30&ndash;45 min</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong>Free</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Cooking Class</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Cooking Class\">+ My Trips</button> </div> </div>",
   "metaTitle": "Ubud Traditional Market | Cooking Class",
   "metaDesc": "Pasar Ubud, the traditional market in the heart of town - fresh produce and offerings by morning, textiles and handicrafts by day.",
   "canonical": "https://cahyanaubudexperience.com/attractions/ubud-market.html",
@@ -3798,7 +4911,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3807,7 +4920,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3815,7 +4928,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Cooking Class",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Central Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Early morning"
+   },
+   {
+    "label": "Time here",
+    "value": "30\u201345 min"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "ubud-royal-palace": {
   "heroBg": "ubud-saraswati-temple.jpg",
@@ -3832,7 +4970,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–1.5 hours"
+    "value": "1\u20131.5 hours"
    }
   ],
   "cta": "Book this program",
@@ -3868,7 +5006,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Directly opposite the palace, Pasar Seni - the Ubud Art Market - is packed with stalls of handwoven textiles, woodcarving, baskets, paintings, and souvenirs, much of it made in the craft villages around Ubud. Early in the morning, before the art stalls open, the same space works as a traditional market where locals buy fresh produce, fruit, and daily groceries. Take your time browsing, and buying direct supports the makers and sellers."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Central Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Late afternoon</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;1.5 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong>Free</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Culture Day </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Area</span><strong>Central Ubud</strong> </div> <div class=\"info__fact\"> <span>Best time</span><strong>Late afternoon</strong> </div> <div class=\"info__fact\"> <span>Time here</span><strong>1&ndash;1.5 hours</strong> </div> <div class=\"info__fact\"> <span>Entrance</span><strong>Free</strong> </div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Ubud Culture Day </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
   "metaTitle": "Ubud Royal Palace & Art Market | Ubud Culture Day",
   "metaDesc": "Three central Ubud landmarks - the Puri Saraswati lotus-pond temple, the Puri Saren royal palace with its nightly Legong dance, and the Ubud art market opposite.",
   "canonical": "https://cahyanaubudexperience.com/attractions/ubud-royal-palace.html",
@@ -3881,7 +5019,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3890,7 +5028,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3898,7 +5036,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ubud Culture Day",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Central Ubud"
+   },
+   {
+    "label": "Best time",
+    "value": "Late afternoon"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20131.5 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Free"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "ulun-danu-beratan": {
   "heroBg": "ulun-danu-beratan-hero.webp",
@@ -3915,7 +5078,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -3951,7 +5114,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Around the temple, neat lakeside gardens open up with lawns, flowering beds, and level paths down to the water - easy walking and the spot for the classic reflection photo. Come early, before the mist burns off and the tour buses arrive, for the stillest water and the smallest crowds. A small entrance fee applies."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Central Highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Ulun Danu Beratan &amp; Handara Gate</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ulun Danu Beratan &amp; Handara Gate\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Central Highlands</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Morning</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"75000\">Rp75.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Ulun Danu Beratan &amp; Handara Gate</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ulun Danu Beratan &amp; Handara Gate\">+ My Trips</button> </div> </div>",
   "metaTitle": "Ulun Danu Beratan Lake Temple | West Bali Day Tour",
   "metaDesc": "Pura Ulun Danu Beratan, the lakeside temple that appears to float on Lake Beratan in Bali's cool central highlands, pictured on the 50,000 rupiah note.",
   "canonical": "https://cahyanaubudexperience.com/attractions/ulun-danu-beratan.html",
@@ -3964,7 +5127,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -3973,7 +5136,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -3981,7 +5144,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Ulun Danu Beratan & Handara Gate",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Central Highlands"
+   },
+   {
+    "label": "Best time",
+    "value": "Morning"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp75.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "uluwatu-kecak": {
   "heroBg": "kecak-dance-hero.webp",
@@ -3994,7 +5182,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -4030,7 +5218,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Unlike the Ubud Kecak, which runs only on certain nights, the Uluwatu show is on every day at sunset, and it's popular, so arriving early gets you the better cliff-side seats. The stage sits in temple grounds where the resident monkeys are known to snatch sunglasses and phones, so keep small items zipped away."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Uluwatu, South Bali</strong></div> <div class=\"info__fact\"><span>Schedule</span><strong>Daily at sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Ticket</span><strong>IDR 150,000</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Uluwatu &amp; Sunset Kecak</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Uluwatu &amp; Sunset Kecak\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Uluwatu, South Bali</strong></div> <div class=\"info__fact\"><span>Schedule</span><strong>Daily at sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Ticket</span><strong>IDR 150,000</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Uluwatu &amp; Sunset Kecak</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Uluwatu &amp; Sunset Kecak\">+ My Trips</button> </div> </div>",
   "metaTitle": "Uluwatu Kecak Fire Dance at Sunset | Daily Show",
   "metaDesc": "The Uluwatu Kecak fire dance - 70+ chanting voices in a clifftop amphitheatre above the ocean, staged every evening at sunset.",
   "canonical": "https://cahyanaubudexperience.com/attractions/uluwatu-kecak.html",
@@ -4043,7 +5231,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -4052,7 +5240,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -4060,7 +5248,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Uluwatu & Sunset Kecak",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Uluwatu, South Bali"
+   },
+   {
+    "label": "Schedule",
+    "value": "Daily at sunset"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Ticket",
+    "value": "IDR 150,000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "uluwatu-temple": {
   "heroBg": "uluwatu-temple-top.webp",
@@ -4077,7 +5290,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "label": "Time here",
-    "value": "1–2 hours"
+    "value": "1\u20132 hours"
    }
   ],
   "cta": "Book this program",
@@ -4113,7 +5326,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Most people time their visit for late afternoon and pair it with the Kecak fire dance staged on the cliff nearby as the sun goes down - a circle of chanting performers telling a Ramayana story against the open ocean. A sarong is required to enter the temple and is provided at the gate. Ask us about timing if you'd like to stay for the show."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Uluwatu &amp; Sunset Kecak</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Uluwatu &amp; Sunset Kecak\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>South Bali</strong></div> <div class=\"info__fact\"><span>Best time</span><strong>Sunset</strong></div> <div class=\"info__fact\"><span>Time here</span><strong>1&ndash;2 hours</strong></div> <div class=\"info__fact\"><span>Entrance</span><strong><span class=\"fee\" data-idr=\"50000\">Rp50.000</span></strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Uluwatu &amp; Sunset Kecak</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Uluwatu &amp; Sunset Kecak\">+ My Trips</button> </div> </div>",
   "metaTitle": "Uluwatu Cliff Temple | Uluwatu & Sunset Kecak",
   "metaDesc": "Pura Luhur Uluwatu, a thousand-year-old sea temple on a cliff 70 m above the ocean in South Bali, with a famous sunset Kecak dance nearby.",
   "canonical": "https://cahyanaubudexperience.com/attractions/uluwatu-temple.html",
@@ -4126,7 +5339,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -4135,7 +5348,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -4143,7 +5356,32 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Uluwatu & Sunset Kecak",
-  "bookDefault": "tour"
+  "bookDefault": "tour",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "South Bali"
+   },
+   {
+    "label": "Best time",
+    "value": "Sunset"
+   },
+   {
+    "label": "Time here",
+    "value": "1\u20132 hours"
+   },
+   {
+    "label": "Entrance",
+    "value": "Rp50.000"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  },
  "watersport": {
   "heroBg": "watersport-jetski.webp",
@@ -4196,7 +5434,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Life jackets are provided and a trained instructor runs each activity, so no experience is needed and most rides suit families. You will get wet, so bring a swimsuit, a towel, and a change of clothes. From Ubud it's a half-day out; your driver takes you down, waits while you're on the water, and drives you straight back."
    }
   ],
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Tanjung Benoa</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Watersport\">$45</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Hotel or villa pick-up and drop-off</li> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Watersport\">+ My Trips</button> </div> </div>",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">At a Glance</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Area</span><strong>Tanjung Benoa</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Watersport\">$45</span></strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> </div> <!-- TODO Wayan: include/exclude ini placeholder generik - sesuaikan per halaman --> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets not included </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Watersport\">+ My Trips</button> </div> </div>",
   "metaTitle": "Bali Watersports Tanjung Benoa | Jet Ski & Parasailing",
   "metaDesc": "Jet ski, parasailing, and banana boat at Tanjung Benoa, Bali's watersport beach near Nusa Dua, with life jackets, instructors, and transport from Ubud.",
   "canonical": "https://cahyanaubudexperience.com/attractions/watersport.html",
@@ -4209,7 +5447,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "link",
@@ -4218,7 +5456,7 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "›"
+    "text": "\u203a"
    },
    {
     "type": "text",
@@ -4226,6 +5464,31 @@ export const ATTRACTION_CONTENT = {
    }
   ],
   "bookItem": "Watersport",
-  "bookDefault": "experience"
+  "bookDefault": "experience",
+  "facts": [
+   {
+    "label": "Area",
+    "value": "Tanjung Benoa"
+   },
+   {
+    "label": "Price",
+    "value": "$45"
+   },
+   {
+    "label": "Availability",
+    "value": "Daily"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
+   }
+  ],
+  "included": [
+   "Hotel or villa pick-up and drop-off",
+   "Private air-conditioned car and fuel",
+   "Friendly English-speaking driver",
+   "Free cold water on board",
+   "Exclusive option: Entrance tickets included"
+  ]
  }
 };

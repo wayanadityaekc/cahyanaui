@@ -1,6 +1,7 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
+import BookSidebar from '@/components/booking/BookSidebar';
 
 function Stop({ s }) {
   const inner = (
@@ -47,6 +48,8 @@ export default function TourPage({ data }) {
         </div>
       </section>
 
+      <div className={data.bookItem ? 'tour-layout tour-layout--book' : undefined}>
+      <div className={data.bookItem ? 'tour-layout__main' : undefined}>
       <section className="stops" id={data.stopsId}>
         <h2 className="section__title">{data.stopsTitle}</h2>
         {data.items.map((it, i) =>
@@ -59,6 +62,13 @@ export default function TourPage({ data }) {
       </section>
 
       <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />
+      </div>
+      {data.bookItem && (
+        <div className="tour-layout__side">
+          <BookSidebar item={data.bookItem} facts={data.facts} included={data.included} />
+        </div>
+      )}
+      </div>
       <BookCta item={data.bookItem} />
 
       {data.bookItem && (

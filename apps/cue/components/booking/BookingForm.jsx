@@ -43,7 +43,9 @@ export default function BookingForm({ presetItem = '', presetType = '' }) {
   }, [catalog, type]);
 
   useEffect(() => {
-    if (item && !itemOptions.some((o) => o.value === item)) setItem('');
+    // Only clear once the catalog has actually loaded - otherwise the preset
+    // item is wiped on first render, when itemOptions is still empty.
+    if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
   }, [itemOptions, item]);
 
   const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;

@@ -7,6 +7,7 @@ import { useAccount } from '@/state/AccountProvider';
 import { useReferral } from '@/state/ReferralProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { quote } from '@/lib/api';
+import ReviewModal from '@/components/reviews/ReviewModal';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 
@@ -25,6 +26,7 @@ export default function MyTripsCart() {
 
   const [priced, setPriced] = useState(null);
   const [trips, setTrips] = useState(null);
+  const [review, setReview] = useState(null);
 
   const rows = useMemo(() => {
     const days = (state.days || []).filter((d) => d.items && d.items.length);
@@ -178,10 +180,23 @@ export default function MyTripsCart() {
                 <p className="mtc-item__title">{t.name}</p>
                 <p className="mtc-item__desc">{t.ref} · {t.start_date || 'date TBD'} · {t.upcoming ? 'Upcoming' : 'Past'}</p>
               </div>
+              {t.review_items && t.review_items.length > 0 && (
+                <div className="mtc-review">
+                  <button
+                    type="button"
+                    className="mtc-review__btn"
+                    onClick={() => setReview({ ref: t.ref, name: t.guest_name || '', items: t.review_items })}
+                  >
+                    Leave a Review
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
       )}
+
+      <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
     </div>
   );
 }

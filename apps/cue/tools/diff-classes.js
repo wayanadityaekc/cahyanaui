@@ -6,7 +6,9 @@ const ROOT = path.join(__dirname, '..');
 
 // Classes the old site injects with JavaScript at runtime, so they never appear
 // in its static HTML. Their absence from the original is expected, not a defect.
-const RUNTIME = /^(navbar|footer|acct|tripbar|slider-|itn-|active|inter_|hs-|wa-|card-|binfo|hero__search|hero-sheet|hsearch|placeholder|modal)/;
+// The old site builds these at runtime with JavaScript, so they never appear in
+// its static HTML. Their absence from the original is expected, not a defect.
+const RUNTIME = /^(navbar|footer|acct|tripbar|slider-|itn-|active|inter_|hs-|wa-|card-|binfo|hero__search|hero-sheet|hsearch|placeholder|modal|tour-layout|booksidebar|price-unit|booking|csel-|bk-|rating|rvm-|mtc-|reviews-strip|rev|guide-cat-|gsearch|zone-|chdur|chcard|tpick|charter__|at-|field|amount|btn-book|summary|itn2|pick-cat|drivers-grid|driver-card|about-gallery|anl|is-sel|is-on)/;
 
 const strip = (html) =>
   html

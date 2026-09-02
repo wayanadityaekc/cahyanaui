@@ -1,6 +1,7 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
+import BookSidebar from '@/components/booking/BookSidebar';
 
 export default function AttractionPage({ data }) {
   return (
@@ -23,6 +24,8 @@ export default function AttractionPage({ data }) {
         </div>
       </section>
 
+      <div className={data.bookItem ? 'tour-layout tour-layout--book' : undefined}>
+      <div className={data.bookItem ? 'tour-layout__main' : undefined}>
       <section className="stops" id={data.stopsId}>
         <h2 className="section__title">{data.stopsTitle}</h2>
         {data.stops.map((s, i) => (
@@ -42,6 +45,13 @@ export default function AttractionPage({ data }) {
       </section>
 
       <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />
+      </div>
+      {data.bookItem && (
+        <div className="tour-layout__side">
+          <BookSidebar item={data.bookItem} facts={data.facts} included={data.included} />
+        </div>
+      )}
+      </div>
       <BookCta item={data.bookItem} />
 
       {data.crumb && (

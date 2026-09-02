@@ -1,5 +1,5 @@
 import { FAQ } from '@/content/shared/faq';
-import { breadcrumb, faqPage, jsonLd } from '@/lib/schema';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
   title: 'FAQ - Booking, Prices & Pick-up | Cahyana Ubud Experience',
@@ -11,16 +11,7 @@ export const metadata = {
 export default function Faq() {
   return (
     <>
-      <script type="application/ld+json" id="schema-faq" dangerouslySetInnerHTML={jsonLd(faqPage(FAQ))} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={jsonLd(
-          breadcrumb([
-            { name: 'Home', path: '/' },
-            { name: 'FAQ', path: '/faq.html' },
-          ]),
-        )}
-      />
+      <JsonLd page="faq" />
       <section className="subhero subhero--overlap">
         <div className="subhero__content">
           <h1 className="subhero__title">Frequently Asked Questions</h1>

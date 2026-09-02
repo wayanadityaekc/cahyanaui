@@ -1,4 +1,5 @@
 import Hero from '@/components/sections/home/Hero';
+import JsonLd from '@/components/JsonLd';
 import Explore from '@/components/sections/home/Explore';
 import Airport from '@/components/sections/home/Airport';
 import Destinations from '@/components/sections/home/Destinations';
@@ -19,6 +20,7 @@ export const metadata = {
 export default function Home() {
   return (
     <div className="home">
+      <JsonLd page="index" />
       <Hero />
       <Explore />
       <Airport />

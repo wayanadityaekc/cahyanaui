@@ -1,4 +1,5 @@
 import TransferPicker from '@/components/sections/TransferPicker';
+import JsonLd from '@/components/JsonLd';
 import Price from '@/components/Price';
 import { TRANSFER } from '@/content/shared/transfer';
 
@@ -12,6 +13,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
+      <JsonLd page="transfer" />
       <section className="transfer-hero">
         <div className="transfer-hero__inner">
           <h1 className="transfer-hero__title">{TRANSFER.title}</h1>

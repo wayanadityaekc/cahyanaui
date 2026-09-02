@@ -1,8 +1,10 @@
 import Img from '@/components/ui/Img';
+import JsonLd from '@/components/JsonLd';
 
 export default function AttractionPage({ data }) {
   return (
     <>
+      <JsonLd page={data.__page} />
       <section className="tour-hero">
         <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${data.heroBg})` }} />
         <div className="tour-hero__body">

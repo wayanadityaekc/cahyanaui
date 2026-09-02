@@ -1,4 +1,5 @@
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
+import JsonLd from '@/components/JsonLd';
 import ReviewCta from '@/components/reviews/ReviewCta';
 
 export const metadata = {
@@ -11,6 +12,7 @@ export const metadata = {
 export default function AllReviews() {
   return (
     <>
+      <JsonLd page="all-reviews" />
       <section className="subhero">
         <div className="subhero__content">
           <h1 className="subhero__title">Guest Reviews</h1>

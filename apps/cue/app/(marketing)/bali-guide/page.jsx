@@ -1,4 +1,5 @@
 import GuideHub from '@/components/sections/GuideHub';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
   title: 'Bali Travel Guide | The Island, People, Nature & Tips',
@@ -8,5 +9,10 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <GuideHub />;
+  return (
+    <>
+      <JsonLd page="bali-guide" />
+      <GuideHub />
+    </>
+  );
 }

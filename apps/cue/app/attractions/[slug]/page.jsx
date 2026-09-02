@@ -22,5 +22,5 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = await params;
-  return <AttractionPage data={ATTRACTION_CONTENT[slug]} />;
+  return <AttractionPage data={{ ...ATTRACTION_CONTENT[slug], __page: `attractions/${slug}` }} />;
 }

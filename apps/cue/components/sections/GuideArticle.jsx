@@ -1,6 +1,8 @@
+import JsonLd from '@/components/JsonLd';
 export default function GuideArticle({ data }) {
   return (
     <div className="guide-article-page">
+      <JsonLd page={data.__page} />
       <section className="lhero" style={{ backgroundImage: data.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}>
         <div className="lhero__inner">
           <h1 className="lhero__title">{data.title}</h1>

@@ -1,4 +1,5 @@
 import ContactForm from './ContactForm';
+import JsonLd from '@/components/JsonLd';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 
 export const metadata = {
@@ -11,6 +12,7 @@ export const metadata = {
 export default function Contact() {
   return (
     <>
+      <JsonLd page="contact" />
       <section className="contact">
         <div className="contact__container">
           <div className="contact__info">

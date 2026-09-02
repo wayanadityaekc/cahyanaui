@@ -1,4 +1,5 @@
 import LegalPage from '@/components/sections/LegalPage';
+import JsonLd from '@/components/JsonLd';
 import { LEGAL } from '@/content/shared/legal';
 
 export const metadata = {
@@ -9,5 +10,10 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <LegalPage data={LEGAL['terms-conditions']} />;
+  return (
+    <>
+      <JsonLd page="terms-conditions" />
+      <LegalPage data={LEGAL['terms-conditions']} />
+    </>
+  );
 }

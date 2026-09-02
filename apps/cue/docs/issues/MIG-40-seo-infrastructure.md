@@ -61,3 +61,29 @@ Only the FAQ schema survived, because it was rebuilt by hand in `lib/schema.js`.
 `tools/check-schema.js` now counts schema types original-vs-built and **fails the build**, so this can never be shipped unnoticed. It is wired into CI ahead of the deploy step.
 
 Remaining work: port the JSON-LD builders for BreadcrumbList, Product+Offer+Brand, TouristAttraction, Organization+PostalAddress, Article, Event, WebSite, TravelAgency into `lib/schema.js` and emit them from the four templates.
+
+---
+
+# RESOLVED — all 176 JSON-LD blocks restored (3 Sep 2026)
+
+All 176 blocks were extracted verbatim from the 104 original pages into
+`content/shared/schema.js` and are emitted by a `JsonLd` component wired into
+every page and template. `tools/check-schema.js` now passes: **18 types, every
+count identical to the original** - BreadcrumbList 100, ListItem 286,
+TouristAttraction 40, Product 31, Offer 33, Brand 31, Organization 32,
+PostalAddress 43, Article 15, Event 2, and the rest.
+
+The FAQ page briefly carried two copies of its schema - the hand-built one from
+the earlier commit plus the extracted block. The hand-built version and its
+`lib/schema.js` imports were removed.
+
+## Deliberate trade-off
+Schema is currently **extracted verbatim**, not generated from `content/`. That
+guarantees byte-identical output today, which is what the blocker demanded, but
+it means Product `offers.price` is frozen at the value it had when extracted.
+The old site kept it fresh with `tools/sync-prices.js`.
+
+**Follow-up before cutover:** regenerate `Product`/`Offer` price from the MIG-00
+catalog at build time, so a price change on the API cannot leave stale money in
+the structured data. The other 17 types carry no volatile data and can stay
+extracted.

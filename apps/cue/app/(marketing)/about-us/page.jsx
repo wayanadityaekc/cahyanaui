@@ -1,4 +1,5 @@
 import AboutPage from '@/components/sections/AboutPage';
+import JsonLd from '@/components/JsonLd';
 import Trust from '@/components/sections/home/Trust';
 
 export const metadata = {
@@ -11,6 +12,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
+      <JsonLd page="about-us" />
       <AboutPage />
       <Trust showStat={false} showSocials />
     </>

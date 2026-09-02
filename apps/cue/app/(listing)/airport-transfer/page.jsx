@@ -1,4 +1,5 @@
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
+import JsonLd from '@/components/JsonLd';
 import { AIRPORT } from '@/content/shared/airport';
 
 export const metadata = {
@@ -11,6 +12,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
+      <JsonLd page="airport-transfer" />
       <section className="charter-hero" style={{ backgroundImage: 'url(/assets/images/transfer-hero.webp)' }}>
         <div className="charter-hero__inner">
           <h1 className="charter-hero__title">{AIRPORT.title}</h1>

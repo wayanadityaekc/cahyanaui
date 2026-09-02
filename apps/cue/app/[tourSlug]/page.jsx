@@ -22,5 +22,5 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { tourSlug } = await params;
-  return <TourPage data={TOUR_CONTENT[tourSlug]} />;
+  return <TourPage data={{ ...TOUR_CONTENT[tourSlug], __page: `${tourSlug}` }} />;
 }

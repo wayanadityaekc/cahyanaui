@@ -1,4 +1,5 @@
 import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
   title: 'Build Your Own Bali Itinerary | Cahyana Ubud Experience',
@@ -10,6 +11,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
+      <JsonLd page="itinerary" />
       <section className="subhero subhero--overlap">
         <div className="subhero__content">
           <h1 className="subhero__title">Build Your Own Bali Itinerary</h1>

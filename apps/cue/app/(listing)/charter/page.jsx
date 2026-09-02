@@ -1,4 +1,5 @@
 import CharterBuilder from '@/components/sections/CharterBuilder';
+import JsonLd from '@/components/JsonLd';
 import { CHARTER } from '@/content/shared/charter';
 
 export const metadata = {
@@ -11,6 +12,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
+      <JsonLd page="charter" />
       <section className="charter-hero">
         <div className="charter-hero__inner">
           <h1 className="charter-hero__title">{CHARTER.title}</h1>

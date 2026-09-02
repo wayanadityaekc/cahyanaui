@@ -1,4 +1,5 @@
 import ListingPage from '@/components/sections/ListingPage';
+import JsonLd from '@/components/JsonLd';
 import { LISTINGS } from '@/content/shared/listings';
 
 export const metadata = {
@@ -9,5 +10,10 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <ListingPage data={LISTINGS.tour} />;
+  return (
+    <>
+      <JsonLd page="tour" />
+      <ListingPage data={LISTINGS.tour} />
+    </>
+  );
 }

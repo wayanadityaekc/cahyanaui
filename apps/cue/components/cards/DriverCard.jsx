@@ -1,11 +1,11 @@
-export default function DriverCard({ name, tagline, desc, onOpen }) {
+export default function DriverCard({ name, tagline, desc, emptyReview, onOpen }) {
   return (
     <button
       className="driver-card"
       type="button"
       data-name={name}
       data-tagline={tagline}
-      onClick={() => onOpen && onOpen({ name, tagline, desc })}
+      onClick={() => onOpen && onOpen({ name, tagline, desc, emptyReview })}
     >
       <span className="driver-card__avatar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -16,7 +16,11 @@ export default function DriverCard({ name, tagline, desc, onOpen }) {
       <strong className="driver-card__name">{name}</strong>
       <span className="driver-card__tagline">{tagline}</span>
       <span className="driver-card__more">View profile &rsaquo;</span>
-      <div className="driver-card__detail" hidden data-desc={desc} />
+      <div className="driver-card__detail" hidden data-desc={desc}>
+        <div className="driver-detail__reviews">
+          <p className="reviews__empty">{emptyReview}</p>
+        </div>
+      </div>
     </button>
   );
 }

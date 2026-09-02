@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 
-export default function Trust() {
+export default function Trust({ showStat = true, showSocials = false }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -21,9 +21,11 @@ export default function Trust() {
 
   return (
     <section className="trust">
-      <p className="trust__stat" hidden={!count}>
-        <strong>{count}</strong> travelers have joined Cahyana
-      </p>
+      {showStat && (
+        <p className="trust__stat" hidden={!count}>
+          <strong>{count}</strong> travelers have joined Cahyana
+        </p>
+      )}
       <div className="trust__group">
         <p className="trust__label">Featured On</p>
         <div className="trust__logos">
@@ -31,6 +33,16 @@ export default function Trust() {
           <img src="/assets/images/tripadvisor.webp" alt="Tripadvisor" width="280" height="176" loading="lazy" />
         </div>
       </div>
+      {showSocials && (
+        <div className="trust__group">
+          <p className="trust__label">Follow Us</p>
+          <div className="trust__socials">
+            <a href="#" aria-label="Instagram"><img src="/assets/images/instagram-transparent.webp" alt="Instagram" width="256" height="256" loading="lazy" /></a>
+            <a href="#" aria-label="WhatsApp"><img src="/assets/images/whatsapp.webp" alt="WhatsApp" width="256" height="256" loading="lazy" /></a>
+            <a href="#" aria-label="Facebook"><img src="/assets/images/facebook.webp" alt="Facebook" width="256" height="256" loading="lazy" /></a>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

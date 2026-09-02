@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "check:classes": "node tools/check-classes.js",
-    "check:urls": "node tools/check-urls.js"
+    "check:urls": "node tools/check-urls.js",
+    "check:diff": "node tools/diff-classes.js index.html tour.html activities.html destinations.html contact.html faq.html about-us.html all-reviews.html terms-conditions.html privacy-policy.html cancellation-policy.html"
   },
   "dependencies": {
     "next": "^16.3.4",

@@ -50,3 +50,30 @@ Also added `lib/schema.js` with `breadcrumb()`, `faqPage()` and `jsonLd()` - the
 
 ## Not done
 `/` (home), the three listing pages, `/about-us.html`, `/charter.html`, `/transfer.html`, `/airport-transfer.html`, `/all-reviews.html`, `/bali-guide.html`, and the three legal pages. Home and the listing pages are the largest - home alone is 11 sections plus the hero search form and its mobile bottom sheet.
+
+## Homepage — assembled (2 Sep 2026)
+
+`app/page.jsx` now composes 10 section components in the order CLAUDE.md fixes:
+Hero → Explore → Airport → Destinations → Why Us → Guides → Villas → Charter → About → Trust → reviews placeholder.
+
+Content was **extracted from `index.html` by script**, not retyped: 4 tour cards, 4 experience cards, 8 destination cards, 16 guide cards (15 + the `experience__card--more` tile), 4 Why Us columns and 4 charter tier cards, all in `content/shared/home.js`.
+
+The page is wrapped in `<div className="home">` rather than setting a body class - `style.css` has no `body.home` rules, and the two selectors that need it (`.home > section:not(.hero)`, `.home > #reviews-placeholder`) work off direct children.
+
+### Verified by class-level diff against the original
+Every `class="..."` token in the built page was counted and compared with `index.html`. **Every homepage content class now matches exactly.** The only remaining differences are navbar, footer, tripbar and slider-arrow classes, which the old site injects with JavaScript at runtime and so never appear in its static HTML - expected, and the point of MIG-10.
+
+That diff caught five real defects before any of them could ship:
+1. Charter cards rendered with no `chcard`, `chcard--pop`, `chcard__badge` or `chcard__btn` classes - a data regeneration had silently failed and left the old shape in place.
+2. Guide slider rendered 8 featured cards instead of all 16.
+3. Guide cards were missing their `guide-home__tag` and `experience__desc`.
+4. The `gsearch__sug` suggestion container was missing.
+5. **A "View all guides" button that does not exist on the real homepage** - invented while writing the section.
+
+Also corrected during the port: the airport CTA reads "Book a transfer ›", not the wording used first, and its price is a `<b class="airport__amt">`, not a `<span>` - `Price` gained an `as` prop for that.
+
+### Applied decision
+`line-height: 1.25` unified across card titles (Wayan, 2 Sep). Written in `app/globals.css`, **not** `style.css`, because `style.css` is still shared with the live site. The selector is deliberately one step more specific than `.tourprog .experience__name` since `style.css` loads later.
+
+### Still missing on the homepage
+The hero **search form** (`partials/search.html`) and its mobile bottom sheet. `#search-placeholder` renders empty, so the hero has no form on desktop. It drives global trip state - guests, pickup area, dates, currency - so it is the next real piece of work.

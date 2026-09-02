@@ -1,9 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import HeroSearch from '@/components/search/HeroSearch';
 
 export default function Hero() {
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  useEffect(() => {
+    if (!sheetOpen) return;
+    document.body.classList.add('hs-locked');
+    const onKey = (e) => e.key === 'Escape' && setSheetOpen(false);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.classList.remove('hs-locked');
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [sheetOpen]);
 
   return (
     <section className="hero" id="hero">
@@ -17,8 +29,15 @@ export default function Hero() {
             Plan your trip
           </button>
         </div>
-        <div id="search-placeholder" />
-        {sheetOpen && <div className="hero-sheet-ov" onClick={() => setSheetOpen(false)} />}
+
+        <div id="search-placeholder">
+          <HeroSearch sheetOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
+        </div>
+
+        <div
+          className={`hero-sheet-ov${sheetOpen ? ' is-open' : ''}`}
+          onClick={() => setSheetOpen(false)}
+        />
       </div>
     </section>
   );

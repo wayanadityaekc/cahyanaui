@@ -107,8 +107,18 @@ export default function BookingForm({ presetItem = '', presetType = '' }) {
           <div className="booking__group booking__group--price">
             <label htmlFor="price">
               Price
-              <InfoPopover label="How to use this form">
-                <span className="binfo__lead">Set your pickup area and date, pick a service, choose a price type, then tap Book Now.</span>
+              <InfoPopover>
+                <p className="binfo__lead">
+                  Set your pickup area and date, pick a service, choose a price type, then tap Book Now.
+                </p>
+                <div className="binfo__row">
+                  <span className="binfo__tag">Standard</span>
+                  <p>You pay entrance tickets at each place, only for the spots you actually enter.</p>
+                </div>
+                <div className="binfo__row">
+                  <span className="binfo__tag binfo__tag--gold">Exclusive</span>
+                  <p>All entrance tickets are prepaid, so the whole day is sorted upfront with no cash needed.</p>
+                </div>
               </InfoPopover>
             </label>
 

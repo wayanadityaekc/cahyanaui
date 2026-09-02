@@ -77,3 +77,23 @@ Also corrected during the port: the airport CTA reads "Book a transfer ›", not
 
 ### Still missing on the homepage
 The hero **search form** (`partials/search.html`) and its mobile bottom sheet. `#search-placeholder` renders empty, so the hero has no form on desktop. It drives global trip state - guests, pickup area, dates, currency - so it is the next real piece of work.
+
+## Hero search form — done (2 Sep 2026)
+
+`components/search/HeroSearch.jsx` ports `partials/search.html`: the "How do you want to explore?" dropdown with six options and live price ranges, referral code + Apply, guests, pickup area, currency, and the Explore button. Options and their icons live in `content/shared/explore-options.js`.
+
+Price ranges are computed from the MIG-00 catalog rather than `data.js`, reproducing the original `rangeText()`: min/max per category, `"from $X"` when they match, `$X–Y` otherwise, and `"Build your own"` for My Trips.
+
+The mobile bottom sheet uses the real mechanism found in `initHeroPlanSheet` - `is-open` on `.hero__search` and on `.hero-sheet-ov`, plus the injected `.hero__search-close` button - not an invented wrapper class.
+
+**Verified: all 36 classes in `partials/search.html` now appear in the built page with matching counts** (currency-picker classes expected twice, since the navbar has one too).
+
+### Defect this caught — `InfoPopover` was styled with classes that do not exist
+
+MIG-11's `InfoPopover` was written with `infopop`, `infopop__btn`, `infopop__panel`. **`style.css` contains zero rules for any of them** - grep returns 0. It would have rendered completely unstyled.
+
+The real component is `.binfo` / `.binfo__btn` / `.binfo__pop` / `.binfo__row` / `.binfo__tag` / `.binfo__tag--gold`, toggled by adding `open` to `.binfo__pop` (see `initInfoPopovers`). `InfoPopover` has been rewritten against those.
+
+This was already wired into **`BookingForm`** from MIG-20, so that form carried the same broken popover. Both are fixed, and `BookingForm`'s popover now carries the original Standard/Exclusive explanation rows instead of the single line written from memory.
+
+It is worth naming why this slipped: MIG-11 built the UI kit from the *behaviour* described in `script.js` without checking each class against `style.css`. The class-count diff is what caught it. The other MIG-11 components should get the same check before they are trusted - `Modal`, `Accordion` and `ZoneTabs` have not been verified this way yet.

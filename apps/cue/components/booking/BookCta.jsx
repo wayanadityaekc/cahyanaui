@@ -1,53 +1,104 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useBooking } from '@/state/BookingProvider';
+import { useEffect, useState } from 'react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
+import { usePricing } from '@/state/PricingProvider';
+import DatePopup from './DatePopup';
+import { clashDates } from '@/lib/cart';
 
-// The info section is injected as raw HTML, so its Book Now / Add to My Trip
-// buttons carry no React handlers. This wires them the way initItineraryButtons
-// and the data-open="book-modal" trigger did, without re-introducing a
-// DOM-scanning init pass over the whole page.
-export default function BookCta({ item, category = 'tour' }) {
-  const { openBooking } = useBooking();
+// Wayan's flow (3 Sep 2026), which differs from the old site:
+//   Add to My Trip -> pick a date, add to the cart, stay on the page.
+//   Book Now       -> pick a date, add to the cart, go to My Trips to pay.
+// The old site kept the guest on the page for both. The date is still asked
+// for first, otherwise the row lands in My Trips undated and Make Payment
+// stays disabled - a dead end.
+export default function BookCta({ item, perPerson = false }) {
   const { displayGuests } = useTripPrefs();
   const { state, save } = useItinerary();
+  const pricing = usePricing();
+
+  const [ask, setAsk] = useState(null); // 'book' | 'add' | null
+  const [toast, setToast] = useState('');
+  const [confirm, setConfirm] = useState(null);
+
+  const isFullDay = (name) => {
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+    return !!c && (c.category === 'tour' || c.category === 'combo');
+  };
 
   useEffect(() => {
     if (!item) return;
     const root = document.querySelector('section.info .info__cta');
     if (!root) return;
-
-    const book = (e) => {
-      e.preventDefault();
-      openBooking({
-        type: category === 'experience' || category === 'performance' ? 'experience' : 'tour',
-        service: item,
-        guests: String(displayGuests),
-        date: '',
-        pickupOptional: false,
-        dropoffRequired: false,
-        lines: [{ type: 'tour', service: item, guests: displayGuests, mode: 'standard' }],
-      });
-    };
-
-    const add = (e) => {
-      e.preventDefault();
-      const days = [...(state.days || [])];
-      days.push({ items: [item], itemModes: ['standard'], date: '' });
-      save({ ...state, days });
-    };
-
     const bookBtn = root.querySelector('.program-cta__btn--book');
     const addBtn = root.querySelector('.program-cta__btn--add');
-    if (bookBtn) bookBtn.addEventListener('click', book);
-    if (addBtn) addBtn.addEventListener('click', add);
+    const onBook = (e) => { e.preventDefault(); setAsk('book'); };
+    const onAdd = (e) => { e.preventDefault(); setAsk('add'); };
+    if (bookBtn) bookBtn.addEventListener('click', onBook);
+    if (addBtn) addBtn.addEventListener('click', onAdd);
     return () => {
-      if (bookBtn) bookBtn.removeEventListener('click', book);
-      if (addBtn) addBtn.removeEventListener('click', add);
+      if (bookBtn) bookBtn.removeEventListener('click', onBook);
+      if (addBtn) addBtn.removeEventListener('click', onAdd);
     };
-  }, [item, category, displayGuests, openBooking, state, save]);
+  }, [item]);
 
-  return null;
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(''), 2600);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  const commit = (date, mode) => {
+    const days = [...(state.days || []), { items: [item], itemModes: [mode || 'standard'], date, guests: '' }];
+    const next = { ...state, days };
+    save(next);
+    if (mode === 'book') return;
+  };
+
+  const pick = (date) => {
+    const goto = ask === 'book';
+    // Same guard the old cartAddChecked used: two full-day programmes on one date.
+    const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
+    if (isFullDay(item) && clashDates(probe, isFullDay).length > 0) {
+      setConfirm({ date, goto });
+      return;
+    }
+    add(date, goto);
+  };
+
+  const add = (date, goto) => {
+    save({ ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date, guests: '' }] });
+    if (goto) window.location.href = '/my-trips.html';
+    else setToast('Added to My Trips');
+  };
+
+  if (!item) return null;
+
+  return (
+    <>
+      <DatePopup
+        open={!!ask}
+        title={item}
+        onPick={pick}
+        onClose={() => setAsk(null)}
+      />
+
+      {confirm && (
+        <div className="modal active" onClick={(e) => e.target === e.currentTarget && setConfirm(null)}>
+          <div className="modal__box modal__box--sm">
+            <button className="modal__close" aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
+            <h3 className="modal__title">Two full-day tours?</h3>
+            <p className="modal__sub">You already have a full-day tour on that date. Add another anyway?</p>
+            <button type="button" className="modal__btn" onClick={() => { const c = confirm; setConfirm(null); add(c.date, c.goto); }}>
+              Add anyway
+            </button>
+            <button type="button" className="modal__btn modal__btn--ghost" onClick={() => setConfirm(null)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {toast && <div className="cart-toast">{toast}</div>}
+    </>
+  );
 }

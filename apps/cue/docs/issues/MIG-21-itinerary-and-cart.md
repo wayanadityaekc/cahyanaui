@@ -111,3 +111,31 @@ something that is not sellable or is flagged inactive.
   read-only; transfers can be created from the suggested plan or the transfer
   page, but not edited in place.
 - No click-through test has been run on any of this in a browser.
+
+---
+
+# FLOW CHANGE — Wayan, 3 Sep 2026
+
+Wayan specified the intended button flow, which is **not** what the old site does.
+Recording it so it is never mistaken for a porting bug:
+
+| Button | Old site | Now |
+|---|---|---|
+| Add to My Trip | date popup, add, stay on page, toast | **same** |
+| Book Now | date popup, add, **stay on page** | date popup, add, **redirect to My Trips to pay** |
+
+The date is still asked for before either action. Skipping it would drop an
+undated row into My Trips, where Make Payment is disabled - a dead end.
+
+The full-day clash guard from `cartAddChecked` is kept: adding a second full-day
+programme to a date that already has one asks "Two full-day tours?" first.
+
+Heart/save is **not** being ported - Wayan confirmed it is gone, replaced by
+Add to My Trip alone.
+
+## My Trips can now add programmes
+Per Wayan's second point: `+ Add a program` in both the empty state and below the
+cart opens the category picker and appends to the trip. Each row's date is now a
+button that reopens the date popup, and days cascade when changed, so an undated
+row can always be fixed in place rather than sending the guest back to the
+detail page.

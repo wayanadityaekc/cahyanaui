@@ -8,6 +8,9 @@ import { useReferral } from '@/state/ReferralProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { quote } from '@/lib/api';
 import ReviewModal from '@/components/reviews/ReviewModal';
+import AddItemPicker from './AddItemPicker';
+import DatePopup from '@/components/booking/DatePopup';
+import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 
@@ -27,6 +30,8 @@ export default function MyTripsCart() {
   const [priced, setPriced] = useState(null);
   const [trips, setTrips] = useState(null);
   const [review, setReview] = useState(null);
+  const [adding, setAdding] = useState(false);
+  const [editDate, setEditDate] = useState(null);
 
   const rows = useMemo(() => {
     const days = (state.days || []).filter((d) => d.items && d.items.length);
@@ -128,6 +133,7 @@ export default function MyTripsCart() {
         <div className="mtc-empty">
           <p className="mtc-empty__lead">Your trip is empty.</p>
           <p className="mtc-empty__sub">Add a tour, transfer, or experience to get started.</p>
+          <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add a program</button>
         </div>
       ) : (
         <>
@@ -139,7 +145,14 @@ export default function MyTripsCart() {
                   <div className="mtc-item__body">
                     <p className="mtc-item__title">{r.service}</p>
                     <p className="mtc-item__desc">
-                      {r.day_no ? `Day ${r.day_no} · ` : ''}{fmtDay(r.date)}
+                      {r.day_no ? `Day ${r.day_no} · ` : ''}
+                      <button
+                        type="button"
+                        className="mtc-item__datebtn"
+                        onClick={() => setEditDate({ row: r, index: i })}
+                      >
+                        {fmtDay(r.date)}
+                      </button>
                       {r.mode === 'exclusive' ? ' · Exclusive' : ''}
                       {r.return ? ' · return' : ''}
                     </p>
@@ -159,6 +172,12 @@ export default function MyTripsCart() {
             <span className="mtc-total__label">Total</span>
             <span className="mtc-total__val"><span className="price-cur">{totalText}</span></span>
           </div>
+
+          <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add another program</button>
+
+          {undated && (
+            <p className="mtc-note mtc-note--warn">Every item needs a date before you can pay. Tap a date to set it.</p>
+          )}
 
           <p className="mtc-note mtc-policy">
             By clicking <strong>Make Payment</strong>, you agree to our{' '}
@@ -197,6 +216,35 @@ export default function MyTripsCart() {
       )}
 
       <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
+
+      <AddItemPicker
+        open={adding}
+        onClose={() => setAdding(false)}
+        onPick={(name) =>
+          save({ ...state, days: [...(state.days || []), { items: [name], itemModes: ['standard'], date: '', guests: '' }] })
+        }
+      />
+
+      <DatePopup
+        open={!!editDate}
+        title={editDate ? editDate.row.service : ''}
+        initial={editDate ? editDate.row.date : ''}
+        onPick={(date) => {
+          if (!editDate) return;
+          const r = editDate.row;
+          if (r.kind === 'day' && r.day_no) {
+            save(cascadeFrom(state, r.day_no - 1, date));
+          } else {
+            const next = JSON.parse(JSON.stringify(state));
+            const list = r.kind === 'transfer' ? next.transfers : next.charters;
+            const idx = r.kind === 'transfer'
+              ? (state.transfers || []).findIndex((t) => t.route === r.service && t.date === r.date)
+              : (state.charters || []).findIndex((c) => c.date === r.date);
+            if (idx >= 0) { list[idx].date = date; save(next); }
+          }
+        }}
+        onClose={() => setEditDate(null)}
+      />
     </div>
   );
 }

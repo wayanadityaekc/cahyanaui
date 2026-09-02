@@ -6,6 +6,8 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useReferral } from '@/state/ReferralProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { quote } from '@/lib/api';
+import { cascadeFrom, clashDates, setItemMode, removeItem, removeDay, addDaysStr as addDays2 } from '@/lib/cart';
+import { usePricing } from '@/state/PricingProvider';
 
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -28,6 +30,12 @@ export default function ItineraryBuilder() {
   const { displayGuests, guests, setGuests, currency, stay, dateFrom, setDateRange } = useTripPrefs();
   const { referral } = useReferral();
   const { openBooking } = useBooking();
+  const pricing = usePricing();
+
+  const isFullDay = (name) => {
+    const cat = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+    return !!cat && (cat.category === 'tour' || cat.category === 'combo');
+  };
 
   const [sgDays, setSgDays] = useState(3);
   const [sgGuests, setSgGuests] = useState(2);
@@ -144,11 +152,17 @@ export default function ItineraryBuilder() {
           </p>
         </div>
 
+        {clashDates(state, isFullDay).length > 0 && (
+          <p className="mtc-note mtc-note--warn">
+            Two full-day programmes share the same date. Change one before booking.
+          </p>
+        )}
+
         <section className="summary">
           <span className="summary__label">Trip total</span>
           <div className="summary__amt"><span className="amount" id="itn-total"><span className="price-cur">{totalText}</span></span></div>
           <span className="summary__sub" id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
-          <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date)} onClick={book}>Book This Itinerary</button>
+          <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
         </section>
 
         <button className="itn2__add" id="itn-add" type="button" onClick={addDay}>+ Add more day</button>
@@ -164,11 +178,51 @@ export default function ItineraryBuilder() {
             {days.map((d, i) => (
               <div className="itn-day" key={i}>
                 <p className="itn-day__title">Day {i + 1} · {fmtDay(d.date)}</p>
+                <div className="itn-day__fields">
+                  <div className="field">
+                    <label>Date</label>
+                    <input
+                      type="date"
+                      value={d.date || ''}
+                      onChange={(e) => save(cascadeFrom(state, i, e.target.value))}
+                    />
+                  </div>
+                </div>
                 {(d.items || []).length === 0 ? (
                   <p className="itn-day__empty">Nothing added yet.</p>
                 ) : (
-                  <ul>{(d.items || []).map((it, k) => <li key={k}>{it}</li>)}</ul>
+                  <ul>
+                    {(d.items || []).map((it, k) => (
+                      <li key={k}>
+                        {it}
+                        {isFullDay(it) && (
+                          <span className="tour-type tour-type--card">
+                            <span className="tour-type__toggle" role="tablist" aria-label="Tour type">
+                              <button
+                                type="button"
+                                className={`tour-type__btn${((d.itemModes || [])[k] || 'standard') === 'standard' ? ' is-active' : ''}`}
+                                role="tab"
+                                onClick={() => save(setItemMode(state, i, k, 'standard'))}
+                              >
+                                Standard
+                              </button>
+                              <button
+                                type="button"
+                                className={`tour-type__btn${(d.itemModes || [])[k] === 'exclusive' ? ' is-active' : ''}`}
+                                role="tab"
+                                onClick={() => save(setItemMode(state, i, k, 'exclusive'))}
+                              >
+                                Exclusive
+                              </button>
+                            </span>
+                          </span>
+                        )}
+                        <button type="button" className="itn__ghostbtn" aria-label={`Remove ${it}`} onClick={() => save(removeItem(state, i, k))}>&times;</button>
+                      </li>
+                    ))}
+                  </ul>
                 )}
+                <button type="button" className="itn__ghostbtn" onClick={() => save(removeDay(state, i))}>Remove day</button>
               </div>
             ))}
           </div>

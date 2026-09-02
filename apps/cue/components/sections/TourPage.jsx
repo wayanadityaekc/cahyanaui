@@ -2,6 +2,7 @@ import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
+import BookBar from '@/components/booking/BookBar';
 
 function Stop({ s }) {
   const inner = (
@@ -70,6 +71,7 @@ export default function TourPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
+      <BookBar item={data.bookItem} />
 
       {data.bookItem && (
         <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />

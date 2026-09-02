@@ -2,6 +2,7 @@ import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
+import BookBar from '@/components/booking/BookBar';
 
 export default function AttractionPage({ data }) {
   return (
@@ -53,6 +54,7 @@ export default function AttractionPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
+      <BookBar item={data.bookItem} />
 
       {data.crumb && (
         <nav className="crumb" aria-label="Breadcrumb">

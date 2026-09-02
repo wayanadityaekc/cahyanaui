@@ -52,3 +52,37 @@ These behaviours exist in `initItinerary` / `initMyTripsCart` and are **not** in
 - `initSuggested` auto-fill from `SUGGEST` including airport pickup/drop-off.
 
 The pages are structurally correct and the money path is server-priced, but **the builder is not yet at feature parity**. It must not ship in this state.
+
+---
+
+# UPDATE — cart rules ported, builder closer to parity (3 Sep 2026)
+
+`lib/cart.js` ports the behaviour rules verbatim from `script.js`, kept separate
+from anything that touches money:
+
+- `cascadeFrom` - setting a day's date pushes every later day forward one day each.
+- `clashDates` / `hasClash` - two full-day programmes cannot share a date.
+- `setItemMode`, `removeItem`, `removeDay`.
+
+Verified directly rather than by eye:
+
+```
+cascade from day 1 -> 2026-10-01, 2026-10-02, 2026-10-03
+cascade from day 2 -> 2026-10-01, 2026-10-05, 2026-10-06
+clash detected     -> [ '2026-10-01' ]
+no clash           -> []
+remove item        -> {"items":["B"],"itemModes":["exclusive"]}
+```
+
+The builder now has per-day dates with cascade, per-item Standard/Exclusive
+toggles on full-day programmes, remove item, remove day, and a clash warning
+that also disables Book.
+
+## Still not ported
+- The add-item picker that opens a category modal and writes into a chosen day
+  (`itn-svc-modal`). Items still get added from the detail pages via Add to My Trip.
+- Heart/save toggle and the suggested-package browse tab in My Trips.
+- Transfer and charter editing rows inside the builder - they render read-only.
+- `initSuggested` auto-fill from `SUGGEST`, including airport pickup and drop-off.
+  The Build my itinerary button currently creates empty days rather than
+  pre-filling a suggested route.

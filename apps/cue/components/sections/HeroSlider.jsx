@@ -21,7 +21,7 @@ export default function HeroSlider({ slides = [] }) {
 
   return (
     <div
-      className="tour-hero__image"
+      className="tour-hero__image hero-slider"
       onTouchStart={(e) => {
         touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }}

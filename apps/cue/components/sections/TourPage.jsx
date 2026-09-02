@@ -3,6 +3,9 @@ import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
 import BookBar from '@/components/booking/BookBar';
+import HeroSlider from '@/components/sections/HeroSlider';
+import Related from '@/components/sections/Related';
+import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 
 function Stop({ s }) {
   const inner = (
@@ -33,7 +36,11 @@ export default function TourPage({ data }) {
     <>
       <JsonLd page={data.__page} />
       <section className="tour-hero">
-        <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${data.heroBg})` }} />
+        {data.heroSlides && data.heroSlides.length > 1 ? (
+          <HeroSlider slides={data.heroSlides} />
+        ) : (
+          <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${data.heroBg})` }} />
+        )}
         <div className="tour-hero__body">
           <h1 className="subhero__title">{data.title}</h1>
           <p className="tour-hero__desc">{data.desc}</p>
@@ -62,16 +69,18 @@ export default function TourPage({ data }) {
         )}
       </section>
 
-      <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />
+      {data.infoHtml && <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />}
       </div>
       {data.bookItem && (
         <div className="tour-layout__side">
-          <BookSidebar item={data.bookItem} facts={data.facts} included={data.included} />
+          <BookSidebar item={data.bookItem} facts={data.facts} included={data.included} excluded={data.excluded} />
         </div>
       )}
       </div>
       <BookCta item={data.bookItem} />
       <BookBar item={data.bookItem} />
+      <Related href={data.__href} />
+      {data.bookItem && <ReviewCtaBand />}
 
       {data.bookItem && (
         <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />

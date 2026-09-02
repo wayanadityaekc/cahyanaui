@@ -141,3 +141,46 @@ Both had already been committed as done. They were only found because the class 
 
 ### Remaining in MIG-33
 `about-us.html`, `charter.html`, `transfer.html`, `airport-transfer.html`, `bali-guide.html`.
+
+---
+
+# DETAIL PAGES — Wayan's spec, 3 Sep 2026
+
+Wayan sent screenshots of the live `ubud-tour` page as the reference every tour,
+experience and destination page must match, and asked for changes on top of it.
+
+## Missing features that were never ported - now built
+Four things the old site builds at runtime and this migration had silently
+dropped. None of them failed a build, and the class diff could not see them
+because they do not exist in the original static HTML either:
+
+| Feature | Old source | Now |
+|---|---|---|
+| Hero photo slider from the page's own stops | `initTourHeroSlider` | `HeroSlider` - 69 of 71 pages |
+| "You might also like" cards | `initRelated` | `Related` - 63 of 71 pages |
+| "Leave a review" band | `initReviewCta` | `ReviewCtaBand` |
+| Add to My Trip **inside the booking card** | `partials/booking.html` | `BookingForm` second button |
+
+Related renders nothing when fewer than four items qualify, and the hero falls
+back to a single background image when a page has one photo - both exactly as
+the originals behaved.
+
+## Requested change: bottom section removed
+The bottom `Tour Details` / `At a Glance` section is gone, since the facts
+already sit under the title. **The excluded list only lived there**, so it was
+moved into the sidebar's included panel rather than dropped - losing "what you
+pay extra for" would have been a real content loss, not a tidy-up.
+
+## Two navbar bugs fixed
+- **Account icon did nothing.** `is-open` was being put on `.acct`; the
+  stylesheet opens the panel on `.acct__panel.is-open`.
+- **Hamburger menu would not close on an outside tap.** Added the scrim and the
+  outside-click / Escape handling that `closeNavDrawers()` had.
+
+## Gate change
+The 71 detail pages now deliberately differ from the originals, so they were
+removed from the exact class diff - keeping them would have made that gate cry
+wolf. `tools/check-detail.js` replaces it for them: every one must have the
+sidebar, the Add to My Trip button, the spec list, the two-column layout, the
+review band and the hook facts, and must **not** still carry the removed
+section. 71/71 pass, and it runs in CI.

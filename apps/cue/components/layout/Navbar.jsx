@@ -20,6 +20,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const acctRef = useRef(null);
+  const navRef = useRef(null);
+  const burgerRef = useRef(null);
   const pathname = usePathname();
 
   const isActive = (href) => {
@@ -28,14 +30,36 @@ export default function Navbar() {
   };
   const navClass = (href) => (isActive(href) ? 'active' : undefined);
 
+  const closeAll = () => {
+    setAcctOpen(false);
+    setMenuOpen(false);
+    setDropOpen(false);
+  };
+
+  // Tapping outside, or Escape, closes the account panel and the mobile menu -
+  // the drawer behaviour closeNavDrawers() had.
   useEffect(() => {
-    if (!acctOpen) return;
+    if (!acctOpen && !menuOpen) return;
     const onDoc = (e) => {
-      if (acctRef.current && !acctRef.current.contains(e.target)) setAcctOpen(false);
+      const inAcct = acctRef.current && acctRef.current.contains(e.target);
+      const inNav = navRef.current && navRef.current.contains(e.target);
+      const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
+      if (!inAcct && !inNav && !onBurger) closeAll();
     };
+    const onKey = (e) => e.key === 'Escape' && closeAll();
     document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
-  }, [acctOpen]);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('click', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [acctOpen, menuOpen]);
+
+  useEffect(() => {
+    const drawer = acctOpen || menuOpen;
+    document.body.classList.toggle('hs-locked', drawer);
+    return () => document.body.classList.remove('hs-locked');
+  }, [acctOpen, menuOpen]);
 
   return (
     <header className="navbar">
@@ -44,13 +68,13 @@ export default function Navbar() {
           <img src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
 
-        <div className={`acct${acctOpen ? ' is-open' : ''}`} data-acct ref={acctRef}>
+        <div className="acct" data-acct ref={acctRef}>
           <button
             type="button"
             className="acct__btn"
             aria-label="Account & trip"
             aria-expanded={acctOpen}
-            onClick={() => setAcctOpen((v) => !v)}
+            onClick={() => { setAcctOpen((v) => !v); setMenuOpen(false); }}
           >
             <svg className="acct__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="12" cy="8" r="4" />
@@ -59,7 +83,7 @@ export default function Navbar() {
             <span className="acct__dot" hidden={!hasUpcoming} />
           </button>
 
-          <div className="acct__panel" data-acct-panel>
+          <div className={`acct__panel${acctOpen ? ' is-open' : ''}`} data-acct-panel>
             <div className="acct__head">
               <p className="acct__greeting">
                 <span>Welcome,</span> <span className="acct__name">{account ? account.name || 'Guest' : 'Guest'}</span>
@@ -129,7 +153,7 @@ export default function Navbar() {
           <span className="itn-badge navbar__cart-badge" hidden={!count}>{count}</span>
         </a>
 
-        <nav>
+        <nav ref={navRef}>
           <ul className={`navbar__menu${menuOpen ? ' active' : ''}`} id="nav-menu">
             <li><a href="/" className={navClass('/')}>Home</a></li>
             <li className={`navbar__has-drop${dropOpen ? ' active' : ''}`}>
@@ -159,13 +183,15 @@ export default function Navbar() {
           className="navbar__toggle"
           id="hamburger"
           aria-label="Open menu"
-          onClick={() => setMenuOpen((v) => !v)}
+          ref={burgerRef}
+          onClick={() => { setMenuOpen((v) => !v); setAcctOpen(false); }}
         >
           <span /><span /><span />
           <span className="acct__dot acct__dot--ham" hidden={!hasUpcoming} />
         </button>
       </div>
 
+      <div className={`navbar__scrim${acctOpen || menuOpen ? ' open' : ''}`} onClick={closeAll} />
       <TripBar />
     </header>
   );

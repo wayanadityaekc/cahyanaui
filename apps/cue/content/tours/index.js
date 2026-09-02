@@ -6,7 +6,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "8\u201310 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Area",
@@ -23,7 +23,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Banyumala & Twin Lakes",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>8&ndash;10 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Banyumala &amp; Twin Lakes\">$55</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Banyumala &amp; Twin Lakes\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -32,7 +31,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -41,7 +40,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -78,7 +77,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "8\u201310 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Price",
@@ -100,6 +99,21 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/north-bali-tour-card.jpg",
+    "title": "Twin Lakes Viewpoint"
+   },
+   {
+    "src": "/assets/images/tibumana.webp",
+    "title": "Banyumala Twin Waterfall"
+   }
+  ],
+  "__href": "/banyumala-twin-lakes.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals, drinks, and tips (optional)"
   ]
  },
  "batur-sunrise-adrenaline": {
@@ -109,7 +123,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "8\u201310 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Area",
@@ -124,7 +138,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>8&ndash;10 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Batur Sunrise &amp; Adrenaline\" >$85</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby (very early)</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Trekking &amp; hot spring fees where applicable </li> <li>Additional meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Batur Sunrise &amp; Adrenaline\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -133,7 +146,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -142,7 +155,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -181,7 +194,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "8\u201310 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Price",
@@ -199,6 +212,22 @@ export const TOUR_CONTENT = {
    "Hotel or villa pick-up and drop-off in Ubud",
    "Free cold water on board",
    "Exclusive option: Trekking, breakfast & hot spring fees included"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/mount-batur-sunrise.webp",
+    "title": "Mount Batur Sunrise Trek"
+   },
+   {
+    "src": "/assets/images/batur-hot-spring-water.webp",
+    "title": "Natural Hot Spring by Lake"
+   }
+  ],
+  "__href": "/batur-sunrise-adrenaline.html",
+  "excluded": [
+   "Standard option: Trekking & hot spring fees where applicable",
+   "Additional meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "besakih-taman-ujung": {
@@ -208,7 +237,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "7\u20139 hours"
+    "value": "7–9 hours"
    },
    {
     "label": "Area",
@@ -223,7 +252,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>7&ndash;9 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Besakih &amp; Taman Ujung\" >$60</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Besakih &amp; Taman Ujung\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -232,7 +260,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -241,7 +269,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -280,7 +308,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "7\u20139 hours"
+    "value": "7–9 hours"
    },
    {
     "label": "Price",
@@ -298,6 +326,22 @@ export const TOUR_CONTENT = {
    "Sarong rental at temples",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/besakih-temple.webp",
+    "title": "Besakih"
+   },
+   {
+    "src": "/assets/images/taman-ujung-view.webp",
+    "title": "Taman Ujung Water Palace"
+   }
+  ],
+  "__href": "/besakih-taman-ujung.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "best-of-bali-3-day-package": {
@@ -324,7 +368,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "3-Day Best of Bali Package",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>3 days / 2 nights</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"3-Day Best of Bali Package\">$150</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Accommodation for 2 nights</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"3-Day Best of Bali Package\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -333,7 +376,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -342,7 +385,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -356,7 +399,7 @@ export const TOUR_CONTENT = {
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 1 \u00b7 Ubud"
+    "text": "Day 1 · Ubud"
    },
    {
     "type": "stop",
@@ -383,7 +426,7 @@ export const TOUR_CONTENT = {
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 2 \u00b7 Kintamani & Besakih"
+    "text": "Day 2 · Kintamani & Besakih"
    },
    {
     "type": "stop",
@@ -410,7 +453,7 @@ export const TOUR_CONTENT = {
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 3 \u00b7 Uluwatu"
+    "text": "Day 3 · Uluwatu"
    },
    {
     "type": "stop",
@@ -460,6 +503,38 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",
+    "title": "Tegalalang Rice Terrace"
+   },
+   {
+    "src": "/assets/images/monkey-forest-temples.jpg",
+    "title": "Sacred Monkey Forest Sanctuary"
+   },
+   {
+    "src": "/assets/images/mount-batur-sunrise.webp",
+    "title": "Kintamani & Mount Batur Viewpoint"
+   },
+   {
+    "src": "/assets/images/besakih-temple.webp",
+    "title": "Besakih Mother Temple"
+   },
+   {
+    "src": "/assets/images/uluwatu-temple.webp",
+    "title": "Uluwatu Temple"
+   },
+   {
+    "src": "/assets/images/uluwatu-sunset-kecak-dance.webp",
+    "title": "Sunset Kecak Fire Dance"
+   }
+  ],
+  "__href": "/best-of-bali-3-day-package.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Accommodation for 2 nights",
+   "Meals, drinks, and tips (optional)"
   ]
  },
  "full-adventure-rafting-atv": {
@@ -469,7 +544,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "7\u20139 hours"
+    "value": "7–9 hours"
    },
    {
     "label": "Area",
@@ -486,7 +561,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Full Adventure: Rafting & ATV",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>7&ndash;9 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Full Adventure: Rafting &amp; ATV\">$130</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Activity tickets not included</li> <li>Meals, drinks, and tips (optional)</li> <li>A change of clothes (bring one - you'll need it)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Full Adventure: Rafting &amp; ATV\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -495,7 +569,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -504,7 +578,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -541,7 +615,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "7\u20139 hours"
+    "value": "7–9 hours"
    },
    {
     "label": "Price",
@@ -563,6 +637,22 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Activity tickets for rafting & ATV included"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/rafting.webp",
+    "title": "Ayung River Rafting"
+   },
+   {
+    "src": "/assets/images/atv-ride-jungle.webp",
+    "title": "ATV Quad Bike Ride"
+   }
+  ],
+  "__href": "/full-adventure-rafting-atv.html",
+  "excluded": [
+   "Standard option: Activity tickets not included",
+   "Meals, drinks, and tips (optional)",
+   "A change of clothes (bring one - you'll need it)"
   ]
  },
  "gwk-pandawa-beach": {
@@ -572,7 +662,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "4\u20136 hours"
+    "value": "4–6 hours"
    },
    {
     "label": "Area",
@@ -587,7 +677,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>4&ndash;6 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"GWK &amp; Pandawa Beach\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: GWK entrance ticket </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"GWK &amp; Pandawa Beach\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -596,7 +685,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -605,7 +694,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -644,7 +733,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "4\u20136 hours"
+    "value": "4–6 hours"
    },
    {
     "label": "Price",
@@ -661,6 +750,22 @@ export const TOUR_CONTENT = {
    "Hotel or villa pick-up and drop-off in Ubud",
    "Free cold water on board",
    "Exclusive option: GWK entrance ticket included"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/gwk-statue-view.webp",
+    "title": "Garuda Wisnu Kencana"
+   },
+   {
+    "src": "/assets/images/lighthouse-beach-bali.webp",
+    "title": "Pandawa Beach"
+   }
+  ],
+  "__href": "/gwk-pandawa-beach.html",
+  "excluded": [
+   "Standard option: GWK entrance ticket",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "hidden-beaches-cliffs": {
@@ -670,7 +775,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Area",
@@ -687,7 +792,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Bali Hidden Beaches and Cliffs",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>6&ndash;8 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Bali Hidden Beaches and Cliffs\">$45</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: parking &amp; local access fees</li> <li>Meals and drinks</li> <li>Surfboard or sunbed rental (optional)</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -696,7 +800,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -705,7 +809,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -753,7 +857,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Price",
@@ -775,6 +879,27 @@ export const TOUR_CONTENT = {
    "A fresh coconut each to take down to the beach",
    "Free cold water on board",
    "Exclusive option: parking & local access fees included"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/becah-south.jpg",
+    "title": "Green Bowl Beach"
+   },
+   {
+    "src": "/assets/images/melasti-beach.jpg",
+    "title": "Balangan Beach"
+   },
+   {
+    "src": "/assets/images/south-bali-beach-sunset.webp",
+    "title": "Bingin Beach"
+   }
+  ],
+  "__href": "/hidden-beaches-cliffs.html",
+  "excluded": [
+   "Standard option: parking & local access fees",
+   "Meals and drinks",
+   "Surfboard or sunbed rental (optional)",
+   "Tips and gratuities (optional)"
   ]
  },
  "jatiluwih-tour": {
@@ -784,7 +909,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "4\u20136 hours"
+    "value": "4–6 hours"
    },
    {
     "label": "Area",
@@ -799,7 +924,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>4&ndash;6 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Jatiluwih Rice Terrace Tour\" >$45</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Jatiluwih Rice Terrace Tour\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -808,7 +932,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -817,7 +941,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -845,7 +969,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "4\u20136 hours"
+    "value": "4–6 hours"
    },
    {
     "label": "Price",
@@ -862,6 +986,12 @@ export const TOUR_CONTENT = {
    "Hotel or villa pick-up and drop-off in Ubud",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "__href": "/jatiluwih-tour.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "kintamani-sunrise-penglipuran": {
@@ -886,7 +1016,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span ><strong>9&ndash;10 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Kintamani Sunrise & Penglipuran\" >$85</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Jeep sunrise, entrance &amp; activity tickets </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Kintamani Sunrise & Penglipuran\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -895,7 +1024,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -904,7 +1033,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -954,7 +1083,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "9\u201310 hours"
+    "value": "9–10 hours"
    },
    {
     "label": "Price",
@@ -972,6 +1101,26 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Jeep sunrise, entrance & activity tickets for the listed stops"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/jeep-sunrise-mount-batur.jpg",
+    "title": "Mount Batur Jeep Sunrise"
+   },
+   {
+    "src": "/assets/images/penglipuran-village-view.jpg",
+    "title": "Penglipuran Village"
+   },
+   {
+    "src": "/assets/images/tirta-empul-hero.jpg",
+    "title": "Tirta Empul Holy Water Temple"
+   }
+  ],
+  "__href": "/kintamani-sunrise-penglipuran.html",
+  "excluded": [
+   "Standard option: Jeep sunrise, entrance & activity tickets",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "lempuyang-tirta-gangga": {
@@ -981,7 +1130,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Area",
@@ -996,7 +1145,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Lempuyang &amp; Tirta Gangga\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Lempuyang photo-queue fast pass (optional)</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1005,7 +1153,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1014,7 +1162,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1053,7 +1201,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Price",
@@ -1071,6 +1219,23 @@ export const TOUR_CONTENT = {
    "Sarong rental at temples",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/lempuyang.webp",
+    "title": "Lempuyang Temple"
+   },
+   {
+    "src": "/assets/images/tirta-gangga-photo-spot.webp",
+    "title": "Tirta Gangga Water Garden"
+   }
+  ],
+  "__href": "/lempuyang-tirta-gangga.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals and drinks",
+   "Lempuyang photo-queue fast pass (optional)",
+   "Tips and gratuities (optional)"
   ]
  },
  "lovina-dolphin-sekumpul": {
@@ -1095,7 +1260,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span ><strong>11&ndash;12 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Lovina Dolphin & Sekumpul Waterfall\" >$95</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Dolphin cruise, hot spring &amp; Sekumpul tickets </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1104,7 +1268,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1113,7 +1277,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1160,7 +1324,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "11\u201312 hours"
+    "value": "11–12 hours"
    },
    {
     "label": "Price",
@@ -1178,6 +1342,22 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Dolphin cruise, hot spring & Sekumpul entrance tickets"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/lovina-dolphin-sekumpul-card.jpg",
+    "title": "Lovina Sunrise Dolphin Cruise"
+   },
+   {
+    "src": "/assets/images/waterfall.jpg",
+    "title": "Sekumpul Waterfall"
+   }
+  ],
+  "__href": "/lovina-dolphin-sekumpul.html",
+  "excluded": [
+   "Standard option: Dolphin cruise, hot spring & Sekumpul tickets",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "munduk-twin-lakes": {
@@ -1187,7 +1367,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "8\u201310 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Area",
@@ -1204,7 +1384,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Munduk Waterfall Tour",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>8&ndash;10 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Munduk Waterfall Tour\">$55</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Munduk Waterfall Tour\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1213,7 +1392,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1222,7 +1401,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1262,7 +1441,7 @@ export const TOUR_CONTENT = {
     "alt": "Green hills and mountains in Bali's interior",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 3 \u00b7 Optional",
+    "num": "Stop 3 · Optional",
     "name": "Gitgit Waterfall",
     "descHtml": "One of North Bali's most accessible waterfalls - a tall single drop reached by an easy paved path through coffee and spice gardens. A refreshing add-on before the drive back over the mountains to Ubud - let your driver know if you'd like to add it on."
    }
@@ -1270,7 +1449,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "8\u201310 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Price",
@@ -1292,6 +1471,25 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/waterfall.jpg",
+    "title": "Munduk Waterfalls"
+   },
+   {
+    "src": "/assets/images/coffee-plantation-hero.jpg",
+    "title": "Munduk Coffee Plantation"
+   },
+   {
+    "src": "/assets/images/mauntain.jpg",
+    "title": "Gitgit Waterfall"
+   }
+  ],
+  "__href": "/munduk-twin-lakes.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals, drinks, and tips (optional)"
   ]
  },
  "sangeh-tanah-lot": {
@@ -1301,7 +1499,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Area",
@@ -1318,7 +1516,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Sangeh Monkey Forest & Tanah Lot",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>5&ndash;7 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Sangeh Monkey Forest &amp; Tanah Lot\">$50</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Sangeh Monkey Forest &amp; Tanah Lot\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1327,7 +1524,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1336,7 +1533,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1373,7 +1570,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Price",
@@ -1395,6 +1592,21 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/monkey-forest-temples.jpg",
+    "title": "Sangeh Monkey Forest"
+   },
+   {
+    "src": "/assets/images/tanah-lot.webp",
+    "title": "Tanah Lot Sea Temple"
+   }
+  ],
+  "__href": "/sangeh-tanah-lot.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals, drinks, and tips (optional)"
   ]
  },
  "south-coast-sunset-kecak": {
@@ -1404,7 +1616,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "4\u20136 hours"
+    "value": "4–6 hours"
    },
    {
     "label": "Area",
@@ -1419,7 +1631,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>4&ndash;6 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Uluwatu &amp; Sunset Kecak\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: temple entrance and Kecak dance tickets </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Uluwatu &amp; Sunset Kecak\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1428,7 +1639,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1437,7 +1648,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1465,7 +1676,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "4\u20136 hours"
+    "value": "4–6 hours"
    },
    {
     "label": "Price",
@@ -1483,6 +1694,12 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: temple entrance & Kecak dance tickets included"
+  ],
+  "__href": "/south-coast-sunset-kecak.html",
+  "excluded": [
+   "Standard option: temple entrance and Kecak dance tickets",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "tanah-lot-taman-ayun": {
@@ -1492,7 +1709,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Area",
@@ -1507,7 +1724,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>5&ndash;7 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Tanah Lot &amp; Taman Ayun\" >$50</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Tanah Lot &amp; Taman Ayun\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1516,7 +1732,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1525,7 +1741,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1564,7 +1780,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Price",
@@ -1582,6 +1798,22 @@ export const TOUR_CONTENT = {
    "Sarong rental at temples",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/taman-ayun-hero.jpg",
+    "title": "Taman Ayun Royal Temple"
+   },
+   {
+    "src": "/assets/images/tanah-lot.webp",
+    "title": "Tanah Lot Sunset Temple"
+   }
+  ],
+  "__href": "/tanah-lot-taman-ayun.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "ubud-atv-adventure": {
@@ -1591,7 +1823,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Area",
@@ -1608,7 +1840,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Ubud ATV Adventure",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong><span class=\"price\" data-price=\"Ubud ATV Adventure\">$80</span></strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance &amp; activity tickets</li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud ATV Adventure\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1617,7 +1848,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1626,7 +1857,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1685,7 +1916,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Price",
@@ -1707,6 +1938,30 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance & activity tickets for the listed stops"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/atv-ride-jungle.webp",
+    "title": "ATV Quad Bike Ride"
+   },
+   {
+    "src": "/assets/images/bali-zoo-big-cat.webp",
+    "title": "Bali Zoo"
+   },
+   {
+    "src": "/assets/images/bird-park-macaw-show.webp",
+    "title": "Bali Bird Park"
+   },
+   {
+    "src": "/assets/images/tegenungan-waterfall-hero.jpg",
+    "title": "Tegenungan Waterfall"
+   }
+  ],
+  "__href": "/ubud-atv-adventure.html",
+  "excluded": [
+   "Standard option: Entrance & activity tickets",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "ubud-culture-day": {
@@ -1716,7 +1971,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Area",
@@ -1731,7 +1986,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Ubud Culture Day\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li data-only=\"standard\"> Standard option: Dance performance ticket </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1740,7 +1994,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1749,7 +2003,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1824,7 +2078,7 @@ export const TOUR_CONTENT = {
     "alt": "Ubud Traditional Market",
     "w": 1200,
     "hgt": 1157,
-    "num": "Stop 6 \u00b7 Optional",
+    "num": "Stop 6 · Optional",
     "name": "Ubud Traditional Market",
     "descHtml": "Pasar Ubud, right across from the Royal Palace - produce and offering flowers in the morning, textiles, woodcarving, and souvenir stalls the rest of the day. Easy to fold in on the way between stops if you'd like some time to browse and bargain."
    }
@@ -1832,7 +2086,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Price",
@@ -1850,6 +2104,39 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance & dance performance tickets included"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/barong-dance-card.webp",
+    "title": "Barong & Keris Dance"
+   },
+   {
+    "src": "/assets/images/ubud-arts-crafts-hero.jpg",
+    "title": "Ubud Arts & Crafts"
+   },
+   {
+    "src": "/assets/images/pura-batuan-temple.jpg",
+    "title": "Pura Batuan Temple"
+   },
+   {
+    "src": "/assets/images/ubud-saraswati-temple.jpg",
+    "title": "Ubud Royal Palace"
+   },
+   {
+    "src": "/assets/images/kecak.jpg",
+    "title": "Kecak Fire Dance"
+   },
+   {
+    "src": "/assets/images/ubud-market-hero.jpg",
+    "title": "Ubud Traditional Market"
+   }
+  ],
+  "__href": "/ubud-culture-day.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Standard option: Dance performance ticket",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "ubud-rafting-adventure": {
@@ -1859,7 +2146,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Area",
@@ -1876,7 +2163,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Ubud Rafting Adventure",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong><span class=\"price\" data-price=\"Ubud Rafting Adventure\">$75</span></strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance &amp; activity tickets</li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Rafting Adventure\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -1885,7 +2171,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -1894,7 +2180,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -1953,7 +2239,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "6\u20138 hours"
+    "value": "6–8 hours"
    },
    {
     "label": "Price",
@@ -1975,6 +2261,30 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance & activity tickets for the listed stops"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/rafting.webp",
+    "title": "Ayung River Rafting"
+   },
+   {
+    "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",
+    "title": "Tegalalang Rice Terrace"
+   },
+   {
+    "src": "/assets/images/coffee-plantation-hero.jpg",
+    "title": "Luwak Coffee Plantation"
+   },
+   {
+    "src": "/assets/images/tegenungan-waterfall-hero.jpg",
+    "title": "Tegenungan Waterfall"
+   }
+  ],
+  "__href": "/ubud-rafting-adventure.html",
+  "excluded": [
+   "Standard option: Entrance & activity tickets",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "ubud-tour": {
@@ -1999,7 +2309,6 @@ export const TOUR_CONTENT = {
   "ctaHref": "#booking",
   "stopsTitle": "What You'll Do",
   "stopsId": "stops",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>5&ndash;7 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Ubud Tour\">$45</span></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -2008,7 +2317,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -2017,7 +2326,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -2059,7 +2368,7 @@ export const TOUR_CONTENT = {
     "alt": "Rock-cut shrines at Gunung Kawi temple",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 3 \u00b7 Optional",
+    "num": "Stop 3 · Optional",
     "name": "Gunung Kawi Temple",
     "descHtml": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
    },
@@ -2089,7 +2398,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Price",
@@ -2107,6 +2416,34 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",
+    "title": "Tegalalang Rice Terrace"
+   },
+   {
+    "src": "/assets/images/tirta-empul-hero.jpg",
+    "title": "Tirta Empul Holy Water Temple"
+   },
+   {
+    "src": "/assets/images/gunung-kawi-hero.jpg",
+    "title": "Gunung Kawi Temple"
+   },
+   {
+    "src": "/assets/images/goa-gajah-hero.jpg",
+    "title": "Goa Gajah"
+   },
+   {
+    "src": "/assets/images/monkey-forest-temples.jpg",
+    "title": "Sacred Monkey Forest Sanctuary"
+   }
+  ],
+  "__href": "/ubud-tour.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  },
  "ulun-danu-tanah-lot": {
@@ -2116,7 +2453,7 @@ export const TOUR_CONTENT = {
   "hooks": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Area",
@@ -2133,7 +2470,6 @@ export const TOUR_CONTENT = {
   "stopsId": "stops",
   "bookItem": "Ulun Danu Beratan & Handara Gate",
   "bookDefault": "tour",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>5&ndash;7 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span><strong><span class=\"price\" data-price=\"Ulun Danu Beratan &amp; Handara Gate\">$60</span></strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3>  </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ulun Danu Beratan &amp; Handara Gate\">+ My Trips</button> </div> </div>",
   "crumb": [
    {
     "type": "link",
@@ -2142,7 +2478,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "link",
@@ -2151,7 +2487,7 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "sep",
-    "text": "\u203a"
+    "text": "›"
    },
    {
     "type": "text",
@@ -2188,7 +2524,7 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "5\u20137 hours"
+    "value": "5–7 hours"
    },
    {
     "label": "Price",
@@ -2210,6 +2546,22 @@ export const TOUR_CONTENT = {
    "Sarong rental at temples",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/ulun-danu-beratan-hero.webp",
+    "title": "Ulun Danu Beratan Lake Temple"
+   },
+   {
+    "src": "/assets/images/handara-gate.webp",
+    "title": "Handara Gate"
+   }
+  ],
+  "__href": "/ulun-danu-tanah-lot.html",
+  "excluded": [
+   "Standard option: Entrance tickets to attractions",
+   "Meals and drinks",
+   "Tips and gratuities (optional)"
   ]
  }
 };

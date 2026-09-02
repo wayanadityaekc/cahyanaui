@@ -18,6 +18,8 @@ const ALLOWED = {
   'tpick__return-label': 'present in transfer.html, unstyled there too',
   'hs-panel--popup': 'behaviour flag read by JS, never styled',
   'bk-panel--cal': 'marker the original calendar panel also carries, never styled',
+  'hero-slider__arrow--prev': 'direction marker, same as the original, never styled',
+  'hero-slider__arrow--next': 'direction marker, same as the original, never styled',
 };
 
 const BEM = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9-]+)?(?:--[a-z0-9-]+)?$/;

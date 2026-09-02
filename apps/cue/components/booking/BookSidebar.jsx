@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useItinerary } from '@/state/ItineraryProvider';
+import { usePricing } from '@/state/PricingProvider';
+import DatePopup from './DatePopup';
+import { clashDates } from '@/lib/cart';
 import BookingForm from './BookingForm';
 
 const CLOCK = (
@@ -24,8 +28,44 @@ function factOf(facts, prefix) {
   return f ? f.value : '';
 }
 
-export default function BookSidebar({ item, facts, included, perPerson = false }) {
+export default function BookSidebar({ item, facts, included, excluded, perPerson = false }) {
   const [open, setOpen] = useState(false);
+  const [ask, setAsk] = useState(null);
+  const [pending, setPending] = useState(null);
+  const [confirm, setConfirm] = useState(null);
+  const [toast, setToast] = useState('');
+  const { state, save } = useItinerary();
+  const pricing = usePricing();
+
+  const isFullDay = (name) => {
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+    return !!c && (c.category === 'tour' || c.category === 'combo');
+  };
+
+  const addRow = (name, date, mode, goto) => {
+    save({ ...state, days: [...(state.days || []), { items: [name], itemModes: [mode || 'standard'], date, guests: '' }] });
+    if (goto) window.location.href = '/my-trips.html';
+    else {
+      setToast('Added to My Trips');
+      setTimeout(() => setToast(''), 2600);
+    }
+  };
+
+  const commit = (name, date, mode, goto) => {
+    const probe = { ...state, days: [...(state.days || []), { items: [name], itemModes: [mode], date }] };
+    if (isFullDay(name) && clashDates(probe, isFullDay).length > 0) {
+      setConfirm({ name, date, mode, goto });
+      return;
+    }
+    addRow(name, date, mode, goto);
+  };
+
+  const start = (goto) => (name, date, mode) => {
+    if (!name) return;
+    if (date) return commit(name, date, mode, goto);
+    setPending({ name, mode, goto });
+    setAsk(true);
+  };
 
   const duration = factOf(facts, 'duration') || factOf(facts, 'time here');
   const pickup = factOf(facts, 'pick');
@@ -33,7 +73,7 @@ export default function BookSidebar({ item, facts, included, perPerson = false }
 
   return (
     <div className="booksidebar">
-      <BookingForm presetItem={item} presetType="tour" />
+      <BookingForm presetItem={item} presetType="tour" onBook={start(true)} onAdd={start(false)} />
 
       <ul className="booksidebar__specs">
         {duration && <li>{CLOCK}{duration}</li>}
@@ -55,9 +95,38 @@ export default function BookSidebar({ item, facts, included, perPerson = false }
             <ul className="info__list info__list--yes">
               {included.map((it, i) => <li key={i}>{it}</li>)}
             </ul>
+            {excluded && excluded.length > 0 && (
+              <>
+                <div className="booksidebar__panel-head"><span>What&apos;s excluded</span></div>
+                <ul className="info__list info__list--no">
+                  {excluded.map((it, i) => <li key={i}>{it}</li>)}
+                </ul>
+              </>
+            )}
           </div>
         </>
       )}
+
+      <DatePopup
+        open={!!ask}
+        title={pending ? pending.name : ''}
+        onPick={(date) => pending && commit(pending.name, date, pending.mode, pending.goto)}
+        onClose={() => { setAsk(null); setPending(null); }}
+      />
+
+      {confirm && (
+        <div className="modal active" onClick={(e) => e.target === e.currentTarget && setConfirm(null)}>
+          <div className="modal__box modal__box--sm">
+            <button className="modal__close" aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
+            <h3 className="modal__title">Two full-day tours?</h3>
+            <p className="modal__sub">You already have a full-day tour on that date. Add another anyway?</p>
+            <button type="button" className="modal__btn" onClick={() => { const c = confirm; setConfirm(null); addRow(c.name, c.date, c.mode, c.goto); }}>Add anyway</button>
+            <button type="button" className="modal__btn modal__btn--ghost" onClick={() => setConfirm(null)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {toast && <div className="cart-toast">{toast}</div>}
     </div>
   );
 }

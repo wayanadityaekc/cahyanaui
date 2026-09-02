@@ -36,6 +36,9 @@ jobs:
       - name: Verify structured data survived the port
         run: node tools/check-schema.js
 
+      - name: Verify the detail pages keep their intended shape
+        run: node tools/check-detail.js
+
       - name: Publish out/ to the deploy branch
         run: |
           cd out

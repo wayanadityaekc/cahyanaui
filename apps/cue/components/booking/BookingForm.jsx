@@ -17,7 +17,7 @@ const SERVICE_TYPES = [
 
 const CATEGORY_OF = { tour: ['tour', 'combo'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
 
-export default function BookingForm({ presetItem = '', presetType = '' }) {
+export default function BookingForm({ presetItem = '', presetType = '', onBook, onAdd }) {
   const { stay, setStay, displayGuests, currency } = useTripPrefs();
   const pricing = usePricing();
   const { openBooking } = useBooking();
@@ -145,7 +145,23 @@ export default function BookingForm({ presetItem = '', presetType = '' }) {
           </div>
 
           <div className="booking__actions">
-            <button className="booking__btn" id="book-now" onClick={book} disabled={!item || !date}>Book Now</button>
+            <button
+              className="booking__btn"
+              id="book-now"
+              onClick={() => (onBook ? onBook(item, date, hasExclusive ? mode : 'standard') : book())}
+              disabled={!item}
+            >
+              Book Now
+            </button>
+            <button
+              type="button"
+              className="booking__btn booking__btn--alt"
+              id="add-trip"
+              onClick={() => onAdd && onAdd(item, date, hasExclusive ? mode : 'standard')}
+              disabled={!item || !onAdd}
+            >
+              Add to My Trip
+            </button>
           </div>
         </div>
       </div>

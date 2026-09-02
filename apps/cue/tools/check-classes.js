@@ -14,6 +14,8 @@ const ALLOWED = {
   'hsearch__ref': 'present in partials/search.html, unstyled there too',
   'driver-detail__reviews': 'present in about-us.html, unstyled there too',
   'lhero--plain': 'present in about-us.html, unstyled there too',
+  'guide-home__slider': 'present in bali-guide.html, unstyled there too',
+  'tpick__return-label': 'present in transfer.html, unstyled there too',
   'hs-panel--popup': 'behaviour flag read by JS, never styled',
 };
 

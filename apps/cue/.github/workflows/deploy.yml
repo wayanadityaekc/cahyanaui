@@ -35,6 +35,7 @@ jobs:
           node tools/diff-classes.js index.html tour.html activities.html
           destinations.html contact.html faq.html about-us.html all-reviews.html
           terms-conditions.html privacy-policy.html cancellation-policy.html
+          transfer.html charter.html airport-transfer.html bali-guide.html
 
       - name: Publish out/ to the deploy branch
         run: |

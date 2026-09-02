@@ -21,6 +21,16 @@ export default function Faq() {
           ]),
         )}
       />
+      <section className="subhero subhero--overlap">
+        <div className="subhero__content">
+          <h1 className="subhero__title">Frequently Asked Questions</h1>
+          <p className="subhero__text">
+            The quick answers to how booking, pricing, and pick-up work. Still not sure? Message us on WhatsApp - we
+            usually reply within a few hours.
+          </p>
+        </div>
+      </section>
+
       <section className="faq">
         <h2 className="section__title">Frequently Asked Questions</h2>
         <div className="faq__container">

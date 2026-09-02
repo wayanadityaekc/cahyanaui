@@ -123,3 +123,21 @@ Also fixed while here: `ExperienceCard` was using `chdur__badge`, the name CLAUD
 
 ### Remaining in MIG-33
 `about-us.html`, `charter.html`, `transfer.html`, `airport-transfer.html`, `all-reviews.html`, `bali-guide.html`, and the three legal pages.
+
+## Legal pages + all-reviews — done (2 Sep 2026)
+
+`terms-conditions`, `privacy-policy` and `cancellation-policy` render from one `LegalPage` template with the article body extracted verbatim into `content/shared/legal.js`. Relative links inside that prose (`href="contact.html"`) were rewritten to root-absolute - the old pages relied on `<base href="/">`, which is gone.
+
+`all-reviews` renders the subhero plus a client `ReviewsStrip` that fetches `GET /api/reviews`, using the corrected `.rev` markup and keeping the real empty state ("No reviews yet - be the first to share your trip") rather than inventing content.
+
+### Two defects the diff caught in already-"finished" pages
+1. **The FAQ page was missing its entire subhero.** `faq.html` opens with `.subhero.subhero--overlap` carrying the H1 and intro; the version committed earlier started straight at the FAQ list, so the page had **no H1 at all** - an SEO regression, not just a visual one.
+2. **The contact success block only existed after submitting.** The original keeps `#contact-success` in the DOM and toggles `display`; the port rendered it conditionally, so three classes were absent from the static HTML. Now matches.
+
+Both had already been committed as done. They were only found because the class diff was re-run across every finished page rather than only the newest one.
+
+### Running total — class diff vs the originals
+`index`, `tour`, `activities`, `destinations`, `contact`, `faq`, `terms-conditions`, `privacy-policy`, `cancellation-policy`, `all-reviews`: **0 differences on all ten.**
+
+### Remaining in MIG-33
+`about-us.html`, `charter.html`, `transfer.html`, `airport-transfer.html`, `bali-guide.html`.

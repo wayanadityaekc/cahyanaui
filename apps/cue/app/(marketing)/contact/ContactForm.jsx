@@ -28,18 +28,15 @@ export default function ContactForm() {
     }
   };
 
-  if (sent) {
-    return (
-      <div className="contact__success" style={{ display: 'block' }}>
+  return (
+    <>
+      <div className="contact__success" id="contact-success" style={{ display: sent ? 'block' : 'none' }}>
         <div className="contact__success-icon">&#10003;</div>
         <h3 className="contact__heading">Message Sent!</h3>
         <p>Thanks for reaching out. We&apos;ll get back to you by email shortly.</p>
       </div>
-    );
-  }
 
-  return (
-    <div className="contact__form" id="contact-form">
+      <div className="contact__form" id="contact-form" style={{ display: sent ? 'none' : undefined }}>
       <div className="contact__group">
         <label htmlFor="c-name">Your Name</label>
         <input type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
@@ -53,9 +50,10 @@ export default function ContactForm() {
         <textarea id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} />
       </div>
       {error && <small className="modal__referral-msg error">{error}</small>}
-      <button className="contact__btn" id="c-send" onClick={send} disabled={busy}>
-        {busy ? 'Sending...' : 'Send Message'}
-      </button>
-    </div>
+        <button className="contact__btn" id="c-send" onClick={send} disabled={busy}>
+          {busy ? 'Sending...' : 'Send Message'}
+        </button>
+      </div>
+    </>
   );
 }

@@ -1,13 +1,13 @@
+import LegalPage from '@/components/sections/LegalPage';
+import { LEGAL } from '@/content/shared/legal';
+
 export const metadata = {
-  title: 'Privacy Policy',
+  title: 'Privacy Policy | Cahyana Ubud Experience',
+  description:
+    'How Cahyana Ubud Experience collects, uses, and protects your information when you book a tour, transfer, or experience in Ubud, Bali.',
   alternates: { canonical: '/privacy-policy.html' },
 };
 
 export default function Page() {
-  return (
-    <main>
-      <h1>Privacy Policy</h1>
-      <p>Route shell. Content lands in MIG-33.</p>
-    </main>
-  );
+  return <LegalPage data={LEGAL['privacy-policy']} />;
 }

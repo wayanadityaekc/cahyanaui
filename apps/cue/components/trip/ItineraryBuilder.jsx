@@ -1,0 +1,186 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import { useItinerary } from '@/state/ItineraryProvider';
+import { useTripPrefs } from '@/state/TripPrefsProvider';
+import { useReferral } from '@/state/ReferralProvider';
+import { useBooking } from '@/state/BookingProvider';
+import { quote } from '@/lib/api';
+
+const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
+const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+function addDays(ds, n) {
+  if (!ds) return '';
+  const [y, m, d] = ds.split('-').map(Number);
+  const dt = new Date(y, m - 1, d + n);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+}
+
+function fmtDay(ds) {
+  if (!ds) return 'date TBD';
+  const [y, m, d] = ds.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+export default function ItineraryBuilder() {
+  const { state, save, hydrated } = useItinerary();
+  const { displayGuests, guests, setGuests, currency, stay, dateFrom, setDateRange } = useTripPrefs();
+  const { referral } = useReferral();
+  const { openBooking } = useBooking();
+
+  const [sgDays, setSgDays] = useState(3);
+  const [sgGuests, setSgGuests] = useState(2);
+  const [hotel, setHotel] = useState('');
+  const [priced, setPriced] = useState(null);
+
+  const days = state.days || [];
+
+  const rows = useMemo(() => {
+    const out = [];
+    days.forEach((d, i) => {
+      (d.items || []).forEach((name, k) => {
+        out.push({
+          type: 'tour', service: name, date: d.date || '',
+          guests: parseInt(d.guests, 10) || displayGuests,
+          mode: (d.itemModes && d.itemModes[k]) || 'standard', day_no: i + 1,
+        });
+      });
+    });
+    (state.transfers || []).forEach((t) => out.push({ type: 'transfer', service: t.route, date: t.date || '', guests: displayGuests, return: !!t.return }));
+    (state.charters || []).forEach((c) => out.push({ type: 'charter', service: 'Charter', date: c.date || '', guests: displayGuests, area: c.area || 'Ubud', duration: c.dur || c.duration, extra: c.extra || 0 }));
+    return out;
+  }, [state, days, displayGuests]);
+
+  useEffect(() => {
+    if (!hydrated || !rows.length) { setPriced(null); return; }
+    let cancelled = false;
+    quote({ lines: rows, currency, stay, referral: (referral && referral.code) || '' })
+      .then((d) => { if (!cancelled && d && d.lines) setPriced(d); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [rows, currency, stay, referral, hydrated]);
+
+  const symbol = (priced && priced.symbol) || '$';
+  const totalText = priced ? symbol + priced.total.display.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US') : '$0';
+  const dayCount = days.filter((d) => d.items && d.items.length).length;
+
+  const addDay = () => save({ ...state, days: [...days, { items: [], itemModes: [], date: '' }] });
+  const clearAll = () => save({ days: [], transfers: [], charters: [] });
+
+  const setStart = (v) => {
+    setDateRange(v, dateFrom ? '' : '');
+    const next = days.map((d, i) => ({ ...d, date: v ? addDays(v, i) : '' }));
+    save({ ...state, days: next });
+  };
+
+  const book = () => {
+    if (!rows.length || rows.some((r) => !r.date)) return;
+    openBooking({
+      type: 'itinerary',
+      service: `My Trip (${dayCount} day${dayCount > 1 ? 's' : ''})`,
+      guests: String(displayGuests),
+      date: '',
+      pickupOptional: true,
+      dropoffRequired: false,
+      detailsTitle: 'Trip details',
+      detailLines: rows.map((r) => `${r.day_no ? 'Day ' + r.day_no + ' · ' : ''}${fmtDay(r.date)} · ${r.service}`),
+      lines: rows.map((r) => ({ ...r, pickup: hotel, dropoff: hotel })),
+      onSuccess: () => clearAll(),
+    });
+  };
+
+  return (
+    <div className="itn2">
+      <aside className="itn2__side">
+        <div className="itn-suggest" id="suggested">
+          <p className="itn-suggest__t">Don&apos;t know where to start?</p>
+          <p className="itn-suggest__s">Pick a length and group size - we&apos;ll build a suggested plan you can tweak, then book.</p>
+          <div className="itn-suggest__row">
+            <label className="itn-suggest__f">
+              Days
+              <select id="sg-days" value={sgDays} onChange={(e) => setSgDays(+e.target.value)}>
+                {DAY_OPTIONS.map((n) => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </label>
+            <label className="itn-suggest__f">
+              Guests
+              <select id="sg-guests" value={sgGuests} onChange={(e) => { setSgGuests(+e.target.value); setGuests(e.target.value); }}>
+                {GUEST_OPTIONS.map((n) => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </label>
+            <button
+              className="btn-book itn-suggest__btn"
+              id="sg-build"
+              type="button"
+              onClick={() => save({ ...state, days: Array.from({ length: sgDays }, (_, i) => ({ items: [], itemModes: [], date: dateFrom ? addDays(dateFrom, i) : '' })) })}
+            >
+              Build my itinerary
+            </button>
+          </div>
+        </div>
+
+        <div className="itn-trip" id="itn-trip">
+          <p className="itn-trip__t">Trip details</p>
+          <p className="itn-trip__s">Fill once - every day follows automatically.</p>
+          <div className="itn-day__fields itn-trip__fields">
+            <div className="field">
+              <label>Start date</label>
+              <input type="date" id="trip-start" value={dateFrom} onChange={(e) => setStart(e.target.value)} />
+            </div>
+            <div className="field field--full">
+              <label>Hotel / villa (pick-up &amp; drop-off)</label>
+              <input type="text" id="trip-hotel" placeholder="Hotel / villa / area" value={hotel} onChange={(e) => setHotel(e.target.value)} />
+            </div>
+          </div>
+          <p className="itn-trip__guests">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+              <circle cx="9" cy="8" r="3.2" />
+              <path d="M3.5 19c.6-3 2.9-4.6 5.5-4.6s4.9 1.6 5.5 4.6" />
+              <circle cx="16.5" cy="9" r="2.4" />
+              <path d="M15.5 14.7c2.3.2 4.2 1.6 4.9 4.3" />
+            </svg>
+            Guests: <b id="trip-guests-n">{guests || '-'}</b>&nbsp;- follows the navbar picker
+          </p>
+        </div>
+
+        <section className="summary">
+          <span className="summary__label">Trip total</span>
+          <div className="summary__amt"><span className="amount" id="itn-total"><span className="price-cur">{totalText}</span></span></div>
+          <span className="summary__sub" id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
+          <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date)} onClick={book}>Book This Itinerary</button>
+        </section>
+
+        <button className="itn2__add" id="itn-add" type="button" onClick={addDay}>+ Add more day</button>
+      </aside>
+
+      <div className="itn2__main">
+        <div className="itn2__panel">
+          <div className="itn__panel-head">
+            <h3 className="itn__subtitle">Your Days</h3>
+            <button className="itn__ghostbtn" id="itn-clear" type="button" onClick={clearAll}>Clear all</button>
+          </div>
+          <div id="itn-days">
+            {days.map((d, i) => (
+              <div className="itn-day" key={i}>
+                <p className="itn-day__title">Day {i + 1} · {fmtDay(d.date)}</p>
+                {(d.items || []).length === 0 ? (
+                  <p className="itn-day__empty">Nothing added yet.</p>
+                ) : (
+                  <ul>{(d.items || []).map((it, k) => <li key={k}>{it}</li>)}</ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="itn2__panel">
+          <h3 className="itn__subtitle">Transfers &amp; Charter</h3>
+          <div id="itn-transfers-list">
+            {(state.transfers || []).map((t, i) => <p key={'t' + i}>{t.route} · {fmtDay(t.date)}</p>)}
+            {(state.charters || []).map((c, i) => <p key={'c' + i}>Charter · {fmtDay(c.date)}</p>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

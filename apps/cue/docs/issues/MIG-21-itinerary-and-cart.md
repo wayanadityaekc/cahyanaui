@@ -31,3 +31,24 @@ Port the largest single piece of logic in the codebase: the itinerary builder (`
 
 ## Definition of done
 - PR merged. QA runs the money path immediately.
+
+---
+
+# RESULT — pages built, logic partially ported (2 Sep 2026)
+
+`my-trips.html`, `settings.html` and `itinerary.html` now render and **diff clean**, completing 104/104 pages.
+
+What works: cart rows read from `cue_itinerary_v1`, prices come from `POST /api/pricing/quote` (never local maths), remove-from-cart, the empty state, the total, checkout into `BookConfirmModal`, and past bookings from `GET /api/bookings/mine`. The itinerary builder renders days, the suggested-plan controls, trip details, and the running total.
+
+The class gate caught invented names again - `mtc-row__*`. The real markup from `initMyTripsCart` uses `mtc-item`, `mtc-item__title/__desc/__price/__del`, `mtc-empty__lead/__sub`, `mtc-total__label/__val`.
+
+## NOT ported - carried forward
+These behaviours exist in `initItinerary` / `initMyTripsCart` and are **not** in the React version yet:
+- Adding an item to a day from a category modal (`itn-svc-modal` picker flow).
+- Date cascade (`cartCascadeFrom`) and clash detection (`cartHasClash`).
+- Per-item Standard/Exclusive toggle inside the builder.
+- Heart/save toggle and the suggested-package browse tab.
+- Transfer and charter editing rows inside the builder.
+- `initSuggested` auto-fill from `SUGGEST` including airport pickup/drop-off.
+
+The pages are structurally correct and the money path is server-priced, but **the builder is not yet at feature parity**. It must not ship in this state.

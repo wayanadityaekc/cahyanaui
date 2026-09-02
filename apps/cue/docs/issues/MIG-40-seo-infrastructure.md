@@ -32,3 +32,32 @@ Replace the hand-maintained SEO layer and both sync scripts with generated outpu
 ## Definition of done
 - PR merged. Sitemap diff attached to the issue.
 - After cutover: submit the sitemap in Google Search Console (still never done — worth doing at the same time).
+
+---
+
+# BLOCKER FOUND — structured data is almost entirely missing (2 Sep 2026)
+
+The class diff proved all 104 pages match structurally. It is **blind to JSON-LD**, because it only counts `class` attributes. A separate count of `"@type"` across every page:
+
+| Schema type | Original | Built | |
+|---|---|---|---|
+| BreadcrumbList | 100 | 1 | **lost** |
+| ListItem | 286 | 2 | **lost** |
+| Product | 31 | 0 | **lost** |
+| Offer | 33 | 0 | **lost** |
+| Brand | 31 | 0 | **lost** |
+| TouristAttraction | 40 | 0 | **lost** |
+| Organization | 32 | 0 | **lost** |
+| PostalAddress | 43 | 0 | **lost** |
+| Article | 15 | 0 | **lost** |
+| Event | 2 | 0 | **lost** |
+| WebSite / WebPage / TravelAgency / Place / Schedule | 1/1/1/3/2 | 0 | **lost** |
+| FAQPage, Question, Answer | 1/5/5 | 1/5/5 | ok |
+
+Only the FAQ schema survived, because it was rebuilt by hand in `lib/schema.js`.
+
+**This alone means the migration must not go live.** Product/Offer markup is what drives price rich-results; BreadcrumbList drives the breadcrumb trail in search listings; TouristAttraction and Article are the entity markup for 55 pages. Losing them is invisible on screen and severe in search.
+
+`tools/check-schema.js` now counts schema types original-vs-built and **fails the build**, so this can never be shipped unnoticed. It is wired into CI ahead of the deploy step.
+
+Remaining work: port the JSON-LD builders for BreadcrumbList, Product+Offer+Brand, TouristAttraction, Organization+PostalAddress, Article, Event, WebSite, TravelAgency into `lib/schema.js` and emit them from the four templates.

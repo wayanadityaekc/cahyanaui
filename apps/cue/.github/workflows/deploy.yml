@@ -33,6 +33,9 @@ jobs:
       - name: Verify ported pages still match the originals
         run: bash tools/diff-ported.sh
 
+      - name: Verify structured data survived the port
+        run: node tools/check-schema.js
+
       - name: Publish out/ to the deploy branch
         run: |
           cd out

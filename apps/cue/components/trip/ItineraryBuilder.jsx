@@ -6,7 +6,9 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useReferral } from '@/state/ReferralProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { quote } from '@/lib/api';
-import { cascadeFrom, clashDates, setItemMode, removeItem, removeDay, addDaysStr as addDays2 } from '@/lib/cart';
+import { cascadeFrom, clashDates, setItemMode, removeItem, removeDay, suggestState } from '@/lib/cart';
+import { SUGGEST, PKG_AIRPORT, PKG_AIRPORT_PLACE } from '@/content/shared/suggest';
+import AddItemPicker from './AddItemPicker';
 import { usePricing } from '@/state/PricingProvider';
 
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
@@ -41,6 +43,7 @@ export default function ItineraryBuilder() {
   const [sgGuests, setSgGuests] = useState(2);
   const [hotel, setHotel] = useState('');
   const [priced, setPriced] = useState(null);
+  const [pickFor, setPickFor] = useState(null);
 
   const days = state.days || [];
 
@@ -121,7 +124,20 @@ export default function ItineraryBuilder() {
               className="btn-book itn-suggest__btn"
               id="sg-build"
               type="button"
-              onClick={() => save({ ...state, days: Array.from({ length: sgDays }, (_, i) => ({ items: [], itemModes: [], date: dateFrom ? addDays(dateFrom, i) : '' })) })}
+              onClick={() => {
+                const next = suggestState({
+                  nDays: sgDays,
+                  guests: sgGuests,
+                  suggest: SUGGEST,
+                  airportRoute: PKG_AIRPORT,
+                  airportPlace: PKG_AIRPORT_PLACE,
+                  isActive: (name) => {
+                    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+                    return !c || c.active !== false;
+                  },
+                });
+                save(dateFrom ? cascadeFrom(next, 0, dateFrom) : next);
+              }}
             >
               Build my itinerary
             </button>
@@ -222,6 +238,7 @@ export default function ItineraryBuilder() {
                     ))}
                   </ul>
                 )}
+                <button type="button" className="itn__ghostbtn" onClick={() => setPickFor(i)}>+ Add to this day</button>
                 <button type="button" className="itn__ghostbtn" onClick={() => save(removeDay(state, i))}>Remove day</button>
               </div>
             ))}
@@ -235,6 +252,19 @@ export default function ItineraryBuilder() {
           </div>
         </div>
       </div>
+
+      <AddItemPicker
+        open={pickFor !== null}
+        onClose={() => setPickFor(null)}
+        onPick={(name) => {
+          const days = (state.days || []).map((d, i) =>
+            i === pickFor
+              ? { ...d, items: [...(d.items || []), name], itemModes: [...(d.itemModes || []), 'standard'] }
+              : d,
+          );
+          save({ ...state, days });
+        }}
+      />
     </div>
   );
 }

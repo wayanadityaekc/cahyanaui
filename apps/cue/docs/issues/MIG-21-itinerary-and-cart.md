@@ -86,3 +86,28 @@ that also disables Book.
 - `initSuggested` auto-fill from `SUGGEST`, including airport pickup and drop-off.
   The Build my itinerary button currently creates empty days rather than
   pre-filling a suggested route.
+
+---
+
+# UPDATE 2 — suggested plan and add-item picker (3 Sep 2026)
+
+`suggestState` ported into `lib/cart.js` and wired to Build my itinerary:
+tour i on day i from `SUGGEST`, inactive programmes skipped, plus the airport
+pickup and drop-off transfers - and the start date cascades through. Verified:
+
+```
+days     : Ubud Tour | Ubud Culture Day | Batur Sunrise & Adrenaline
+transfers: Airport - Ubud (to) | Airport - Ubud (from)
++ dates  : 2026-11-01, 2026-11-02, 2026-11-03
+```
+
+`AddItemPicker` restores adding an item to a specific day: category first, then
+the items in that category from the live catalog, so it can never offer
+something that is not sellable or is flagged inactive.
+
+## Genuinely still missing
+- Heart/save toggle and the suggested-package browse tab in My Trips.
+- Transfer and charter **editing** rows inside the builder - they render
+  read-only; transfers can be created from the suggested plan or the transfer
+  page, but not edited in place.
+- No click-through test has been run on any of this in a browser.

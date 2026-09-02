@@ -67,3 +67,19 @@ export function removeItem(state, dayIndex, itemIndex) {
 export function removeDay(state, dayIndex) {
   return { ...state, days: (state.days || []).filter((_, i) => i !== dayIndex) };
 }
+
+// Suggested plan: tour i on day i, plus an airport pickup and drop-off.
+// Ported from suggestState() - inactive programmes are skipped, exactly as
+// isProgramActive did.
+export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive }) {
+  const g = guests ? String(guests) : '';
+  const days = suggest
+    .filter((name) => (isActive ? isActive(name) : true))
+    .slice(0, nDays)
+    .map((name) => ({ items: [name], itemModes: ['standard'], date: '', guests: g }));
+  const transfers = [
+    { route: airportRoute, direction: 'to', pickup: airportPlace, dropoff: '', date: '', guests: g },
+    { route: airportRoute, direction: 'from', pickup: '', dropoff: airportPlace, date: '', guests: g },
+  ];
+  return { days, transfers, charters: [] };
+}

@@ -1,0 +1,1096 @@
+export const LISTINGS = {
+  "tour": {
+    "heroBg": "goa-gajah-hero.webp",
+    "title": "Private Bali Tours with Your Own Ubud Driver",
+    "sub": "Fully customizable day trips from Ubud - rice terraces, temples, waterfalls, and beaches, with your own local driver.",
+    "lbox": {
+      "img": "tegallalang-girl.jpg",
+      "tag": "Most Popular Tour",
+      "title": "Ubud Tour",
+      "desc": "Bali's cultural heart in a single day - rice terraces, sacred temples, the monkey forest, and local artisan villages, all at your own pace with a private car and local driver.",
+      "facts": [
+        {
+          "label": "From",
+          "value": "$45",
+          "priceName": "Ubud Tour"
+        },
+        {
+          "label": "Duration",
+          "value": "5–7 hrs"
+        },
+        {
+          "label": "Capacity",
+          "value": "Up to 5"
+        }
+      ],
+      "go": {
+        "href": "/ubud-tour.html",
+        "text": "View tour"
+      },
+      "add": {
+        "item": "Ubud Tour",
+        "text": "+ My Trips"
+      }
+    },
+    "listTitle": "All Bali Tours",
+    "sectionId": "tours",
+    "chipLabel": "Jump to tour category",
+    "chips": [
+      {
+        "id": "cat-ubud",
+        "label": "Ubud & Around"
+      },
+      {
+        "id": "cat-southeast",
+        "label": "South & East"
+      },
+      {
+        "id": "cat-mountains",
+        "label": "Mountains & North"
+      },
+      {
+        "id": "cat-multiday",
+        "label": "Multi-Day Packages"
+      }
+    ],
+    "cats": [
+      {
+        "id": "cat-ubud",
+        "title": "Ubud & Around",
+        "cards": [
+          {
+            "href": "/ubud-tour.html",
+            "zone": "ubud",
+            "img": "tegallalang-girl.jpg",
+            "alt": "Ubud Tour - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Ubud Tour",
+            "meta": "5–7 hours",
+            "metaIcon": "clock",
+            "priceName": "Ubud Tour",
+            "priceFallback": "$45"
+          },
+          {
+            "href": "/ubud-culture-day.html",
+            "zone": "ubud",
+            "img": "ubud-culture-day-card.jpg",
+            "alt": "Ubud Culture Day - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Ubud Culture Day",
+            "meta": "6–8 hours",
+            "metaIcon": "clock",
+            "priceName": "Ubud Culture Day",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/ubud-rafting-adventure.html",
+            "zone": "ubud",
+            "img": "rafting-card.webp",
+            "alt": "Ubud Rafting Adventure - private tour from Ubud, Bali",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Ubud Rafting Adventure",
+            "meta": "6–8 hours",
+            "metaIcon": "clock",
+            "priceName": "Ubud Rafting Adventure",
+            "priceFallback": "$75"
+          },
+          {
+            "href": "/ubud-atv-adventure.html",
+            "zone": "ubud",
+            "img": "ubud-atv-adventure-card.webp",
+            "alt": "Ubud ATV Adventure - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Ubud ATV Adventure",
+            "meta": "6–8 hours",
+            "metaIcon": "clock",
+            "priceName": "Ubud ATV Adventure",
+            "priceFallback": "$80"
+          },
+          {
+            "href": "/full-adventure-rafting-atv.html",
+            "zone": "ubud",
+            "img": "rafting-card.webp",
+            "alt": "Full Adventure: Rafting & ATV - private tour from Ubud, Bali",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Full Adventure: Rafting & ATV",
+            "meta": "7–9 hours",
+            "metaIcon": "clock",
+            "priceName": "Full Adventure: Rafting & ATV",
+            "priceFallback": "$130"
+          }
+        ]
+      },
+      {
+        "id": "cat-southeast",
+        "title": "South & East Bali",
+        "cards": [
+          {
+            "href": "/south-coast-sunset-kecak.html",
+            "zone": "south",
+            "img": "south-coast-sunset-kecak-card.jpg",
+            "alt": "Uluwatu & Sunset Kecak - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Uluwatu & Sunset Kecak",
+            "meta": "4–6 hours",
+            "metaIcon": "clock",
+            "priceName": "Uluwatu & Sunset Kecak",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/gwk-pandawa-beach.html",
+            "zone": "south",
+            "img": "gwk-statue-view.webp",
+            "alt": "GWK & Pandawa Beach - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "GWK & Pandawa Beach",
+            "meta": "4–6 hours",
+            "metaIcon": "clock",
+            "priceName": "GWK & Pandawa Beach",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/hidden-beaches-cliffs.html",
+            "zone": "south",
+            "img": "south-bali-tour-card.jpg",
+            "alt": "Bukit Peninsula Hidden Beaches - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Bukit Peninsula Hidden Beaches",
+            "meta": "6–8 hours",
+            "metaIcon": "clock",
+            "priceName": "Bali Hidden Beaches and Cliffs",
+            "priceFallback": "$45"
+          },
+          {
+            "href": "/lempuyang-tirta-gangga.html",
+            "zone": "east",
+            "img": "east-bali-tour-card.jpg",
+            "alt": "Lempuyang & Tirta Gangga - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Lempuyang & Tirta Gangga",
+            "meta": "6–8 hours",
+            "metaIcon": "clock",
+            "priceName": "Lempuyang & Tirta Gangga",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/besakih-taman-ujung.html",
+            "zone": "east",
+            "img": "besakih-temple.webp",
+            "alt": "Besakih & Taman Ujung - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Besakih & Taman Ujung",
+            "meta": "7–9 hours",
+            "metaIcon": "clock",
+            "priceName": "Besakih & Taman Ujung",
+            "priceFallback": "$60"
+          }
+        ]
+      },
+      {
+        "id": "cat-mountains",
+        "title": "Mountains, Lakes & the North",
+        "cards": [
+          {
+            "href": "/kintamani-sunrise-penglipuran.html",
+            "zone": "kintamani",
+            "img": "jeep-batur-card.webp",
+            "alt": "Kintamani Sunrise & Penglipuran - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Kintamani Sunrise & Penglipuran",
+            "meta": "9–10 hours",
+            "metaIcon": "clock",
+            "priceName": "Kintamani Sunrise & Penglipuran",
+            "priceFallback": "$85"
+          },
+          {
+            "href": "/batur-sunrise-adrenaline.html",
+            "zone": "kintamani",
+            "img": "batur-sunrise-adrenaline-card.jpg",
+            "alt": "Batur Sunrise & Adrenaline - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Batur Sunrise & Adrenaline",
+            "meta": "8–10 hours",
+            "metaIcon": "clock",
+            "priceName": "Batur Sunrise & Adrenaline",
+            "priceFallback": "$85"
+          },
+          {
+            "href": "/ulun-danu-tanah-lot.html",
+            "zone": "west",
+            "img": "west-bali-tour-card.jpg",
+            "alt": "Ulun Danu Beratan & Handara Gate - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Ulun Danu Beratan & Handara Gate",
+            "meta": "5–7 hours",
+            "metaIcon": "clock",
+            "priceName": "Ulun Danu Beratan & Handara Gate",
+            "priceFallback": "$60"
+          },
+          {
+            "href": "/tanah-lot-taman-ayun.html",
+            "zone": "west",
+            "img": "tanah-lot.webp",
+            "alt": "Tanah Lot & Taman Ayun - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Tanah Lot & Taman Ayun",
+            "meta": "5–7 hours",
+            "metaIcon": "clock",
+            "priceName": "Tanah Lot & Taman Ayun",
+            "priceFallback": "$50"
+          },
+          {
+            "href": "/jatiluwih-tour.html",
+            "zone": "west",
+            "img": "jatiluwih.webp",
+            "alt": "Jatiluwih Rice Terrace Tour - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Jatiluwih Rice Terrace Tour",
+            "meta": "4–6 hours",
+            "metaIcon": "clock",
+            "priceName": "Jatiluwih Rice Terrace Tour",
+            "priceFallback": "$45"
+          },
+          {
+            "href": "/sangeh-tanah-lot.html",
+            "zone": "west",
+            "img": "tanah-lot.webp",
+            "alt": "Sangeh Monkey Forest & Tanah Lot - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Sangeh Monkey Forest & Tanah Lot",
+            "meta": "5–7 hours",
+            "metaIcon": "clock",
+            "priceName": "Sangeh Monkey Forest & Tanah Lot",
+            "priceFallback": "$50"
+          },
+          {
+            "href": "/banyumala-twin-lakes.html",
+            "zone": "north",
+            "img": "tibumana.webp",
+            "alt": "Banyumala & Twin Lakes - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Banyumala & Twin Lakes",
+            "meta": "8–10 hours",
+            "metaIcon": "clock",
+            "priceName": "Banyumala & Twin Lakes",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/munduk-twin-lakes.html",
+            "zone": "north",
+            "img": "north-bali-tour-card.jpg",
+            "alt": "Munduk Waterfall Tour - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "Munduk Waterfall Tour",
+            "meta": "8–10 hours",
+            "metaIcon": "clock",
+            "priceName": "Munduk Waterfall Tour",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/lovina-dolphin-sekumpul.html",
+            "zone": "north",
+            "img": "lovina-dolphin-sekumpul-card.jpg",
+            "alt": "Lovina Dolphin & Sekumpul Waterfall - private tour from Ubud, Bali",
+            "w": 1200,
+            "hgt": 800,
+            "name": "Lovina Dolphin & Sekumpul Waterfall",
+            "meta": "11–12 hours",
+            "metaIcon": "clock",
+            "priceName": "Lovina Dolphin & Sekumpul Waterfall",
+            "priceFallback": "$95"
+          }
+        ]
+      },
+      {
+        "id": "cat-multiday",
+        "title": "Multi-Day Packages",
+        "cards": [
+          {
+            "href": "/best-of-bali-3-day-package.html",
+            "zone": "ubud",
+            "img": "besakih-temple.webp",
+            "alt": "3-Day Best of Bali Package - private tour from Ubud, Bali",
+            "w": 600,
+            "hgt": 600,
+            "name": "3-Day Best of Bali Package",
+            "meta": "3 days / 2 nights",
+            "metaIcon": "clock",
+            "priceName": "3-Day Best of Bali Package",
+            "priceFallback": "$150"
+          }
+        ]
+      }
+    ],
+    "closing": {
+      "text": "Rather build your own route? Plan your trip day by day, or explore Bali by area first.",
+      "buttons": [
+        {
+          "href": "/my-trips.html",
+          "cls": "closing-band__btn closing-band__btn--primary",
+          "text": "Build your own itinerary"
+        },
+        {
+          "href": "/destinations.html",
+          "cls": "closing-band__btn",
+          "text": "Browse destinations"
+        }
+      ]
+    }
+  },
+  "activities": {
+    "heroBg": "jungle-swing-card.jpg",
+    "title": "Bali Activities & Cultural Performances",
+    "sub": "From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and performances in and around Ubud - all with local drivers and honest prices.",
+    "lbox": {
+      "img": "kecak.jpg",
+      "tag": "Most Popular",
+      "title": "Kecak Dance",
+      "desc": "Bali's iconic fire-and-chant ritual, performed by a circle of over fifty voices - a performance that stays with you long after the flames die down. Performed every Tuesday & Sunday evening.",
+      "facts": [
+        {
+          "label": "From",
+          "value": "$10",
+          "priceName": "Kecak Dance"
+        },
+        {
+          "label": "Duration",
+          "value": "~1 hour"
+        },
+        {
+          "label": "Days",
+          "value": "Tue & Sun"
+        }
+      ],
+      "go": {
+        "href": "/attractions/kecak-dance.html",
+        "text": "Book"
+      },
+      "add": {
+        "item": "Kecak Dance",
+        "text": "+ My Trips"
+      }
+    },
+    "listTitle": "All Activities & Performances",
+    "sectionId": "activities",
+    "chipLabel": "Jump to activity category",
+    "chips": [
+      {
+        "id": "cat-adventure",
+        "label": "Adventure"
+      },
+      {
+        "id": "cat-culture",
+        "label": "Culture & Wildlife"
+      }
+    ],
+    "cats": [
+      {
+        "id": "cat-adventure",
+        "title": "Adventure",
+        "cards": [
+          {
+            "href": "/attractions/atv-ride.html",
+            "zone": "adventure",
+            "img": "ubud-atv-adventure-card.webp",
+            "alt": "ATV Ride - Bali activity with Ubud pick-up",
+            "w": 600,
+            "hgt": 600,
+            "name": "ATV Ride",
+            "meta": "~2 hours",
+            "metaIcon": "clock",
+            "priceName": "ATV",
+            "priceFallback": "$40"
+          },
+          {
+            "href": "/attractions/rafting.html",
+            "zone": "adventure",
+            "img": "rafting-card.webp",
+            "alt": "Rafting - Bali activity with Ubud pick-up",
+            "w": 5609,
+            "hgt": 3739,
+            "name": "Rafting",
+            "meta": "~2 hours",
+            "metaIcon": "clock",
+            "priceName": "Rafting",
+            "priceFallback": "$35"
+          },
+          {
+            "href": "/attractions/jungle-swing.html",
+            "zone": "adventure",
+            "img": "jungle-swing-valley.jpg",
+            "alt": "Jungle Swing - Bali activity with Ubud pick-up",
+            "w": 1200,
+            "hgt": 1158,
+            "name": "Swing",
+            "meta": "~1–2 hours",
+            "metaIcon": "clock",
+            "priceName": "Swing",
+            "priceFallback": "$25"
+          },
+          {
+            "href": "/attractions/jeep-sunrise.html",
+            "zone": "adventure",
+            "img": "jeep-batur-card.webp",
+            "alt": "Jeep Sunrise - Bali activity with Ubud pick-up",
+            "w": 600,
+            "hgt": 600,
+            "name": "Jeep Sunrise",
+            "meta": "~7 hours",
+            "metaIcon": "clock",
+            "priceName": "Jeep Sunrise",
+            "priceFallback": "$50"
+          },
+          {
+            "href": "/attractions/mount-batur-trekking.html",
+            "zone": "adventure",
+            "img": "mount-batur-sunrise.webp",
+            "alt": "Mount Batur Trekking - Bali activity with Ubud pick-up",
+            "w": 1536,
+            "hgt": 1025,
+            "name": "Mount Batur Trekking",
+            "meta": "~8 hours",
+            "metaIcon": "clock",
+            "priceName": "Mount Batur Trekking",
+            "priceFallback": "$55"
+          },
+          {
+            "href": "/attractions/watersport.html",
+            "zone": "adventure",
+            "img": "watersport-card.jpg",
+            "alt": "Watersport - Bali activity with Ubud pick-up",
+            "w": 1200,
+            "hgt": 908,
+            "name": "Watersport",
+            "metaIcon": "clock",
+            "priceName": "Watersport",
+            "priceFallback": "$45"
+          }
+        ]
+      },
+      {
+        "id": "cat-culture",
+        "title": "Culture & Wildlife",
+        "cards": [
+          {
+            "href": "/attractions/barong-dance.html",
+            "zone": "culture",
+            "img": "barong-dance-card.webp",
+            "alt": "Barong Dance - Bali activity with Ubud pick-up",
+            "w": 1536,
+            "hgt": 862,
+            "name": "Barong Dance",
+            "meta": "~1 hour",
+            "metaIcon": "clock",
+            "priceName": "Barong Dance",
+            "priceFallback": "$10"
+          },
+          {
+            "href": "/attractions/cooking-class.html",
+            "zone": "culture",
+            "img": "cooking-class-card.webp",
+            "alt": "Cooking Class - Bali activity with Ubud pick-up",
+            "w": 1920,
+            "hgt": 1280,
+            "name": "Cooking Class",
+            "meta": "~5 hours",
+            "metaIcon": "clock",
+            "priceName": "Cooking Class",
+            "priceFallback": "$35"
+          },
+          {
+            "href": "/attractions/bali-zoo.html",
+            "zone": "wildlife",
+            "img": "bali-zoo-card.webp",
+            "alt": "Bali Zoo - Bali activity with Ubud pick-up",
+            "w": 600,
+            "hgt": 600,
+            "name": "Bali Zoo",
+            "meta": "~2–3 hours",
+            "metaIcon": "clock",
+            "priceName": "Bali Zoo",
+            "priceFallback": "$40"
+          },
+          {
+            "href": "/attractions/bali-bird-park.html",
+            "zone": "wildlife",
+            "img": "bali-bird-park-card.webp",
+            "alt": "Bali Bird Park - Bali activity with Ubud pick-up",
+            "w": 600,
+            "hgt": 600,
+            "name": "Bali Bird Park",
+            "meta": "~2–3 hours",
+            "metaIcon": "clock",
+            "priceName": "Bali Bird Park",
+            "priceFallback": "$28"
+          }
+        ]
+      }
+    ],
+    "closing": null,
+    "info": {
+      "title": "Good to Know",
+      "facts": [
+        {
+          "label": "Duration",
+          "value": "1–8 hours"
+        },
+        {
+          "label": "Availability",
+          "value": "Daily · Kecak Tue & Sun"
+        },
+        {
+          "label": "Pick-up",
+          "value": "Ubud & nearby"
+        },
+        {
+          "label": "Language",
+          "value": "English"
+        }
+      ],
+      "cols": [
+        {
+          "title": "What's Included",
+          "cls": "info__list--yes",
+          "items": [
+            "Entrance ticket per person",
+            "Round-trip transport - driver takes you, waits, and returns you",
+            "Free mineral water",
+            "Friendly English-speaking driver",
+            "Safety equipment where applicable"
+          ]
+        },
+        {
+          "title": "What's Excluded",
+          "cls": "info__list--no",
+          "items": [
+            "Meals and drinks (unless stated)",
+            "Personal expenses",
+            "Tips and gratuities (optional)",
+            "Additional activities not listed"
+          ]
+        }
+      ]
+    }
+  },
+  "destinations": {
+    "heroBg": "tanah-lot-hero.webp",
+    "title": "Bali Destinations",
+    "sub": "The temples, waterfalls, rice terraces, and beaches that make up Bali's day tours - browse each destination on its own, then build the day you want around the ones you like.",
+    "lbox": {
+      "img": "tanah-lot.webp",
+      "tag": "Most Popular",
+      "title": "Tanah Lot Sunset Temple",
+      "desc": "A sea temple built on a rock just off Bali's southwest coast, cut off by the water at high tide - most famous at sunset.",
+      "facts": [
+        {
+          "label": "Area",
+          "value": "West Bali"
+        },
+        {
+          "label": "Best at",
+          "value": "Sunset"
+        }
+      ],
+      "go": {
+        "href": "/attractions/tanah-lot.html",
+        "text": "Visit destination"
+      },
+      "add": {}
+    },
+    "listTitle": "All Destinations",
+    "sectionId": "destinations",
+    "chipLabel": "Jump to destination category",
+    "chips": [
+      {
+        "id": "cat-temples",
+        "label": "Temples"
+      },
+      {
+        "id": "cat-waterfalls",
+        "label": "Waterfalls"
+      },
+      {
+        "id": "cat-beaches",
+        "label": "Beaches"
+      },
+      {
+        "id": "cat-nature",
+        "label": "Nature & Villages"
+      }
+    ],
+    "cats": [
+      {
+        "id": "cat-temples",
+        "title": "Temples",
+        "cards": [
+          {
+            "variant": "incl",
+            "href": "/attractions/uluwatu-temple.html",
+            "zone": "temple",
+            "img": "uluwatu-temple-top.webp",
+            "alt": "Uluwatu Cliff Temple - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Uluwatu Temple",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Uluwatu & Sunset Kecak|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/tanah-lot.html",
+            "zone": "temple",
+            "img": "tanah-lot.webp",
+            "alt": "Tanah Lot Sunset Temple - Bali attraction near Ubud",
+            "w": 1152,
+            "hgt": 1536,
+            "name": "Tanah Lot",
+            "meta": "West Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Tanah Lot & Taman Ayun| or <strong>Sangeh Monkey Forest & Tanah Lot</strong>"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/besakih.html",
+            "zone": "temple",
+            "img": "besakih-temple-bali.webp",
+            "alt": "Besakih - The Mother Temple - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Besakih Temple",
+            "meta": "East Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Besakih & Taman Ujung|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/tirta-empul.html",
+            "zone": "temple",
+            "img": "tirta-empul-hero.jpg",
+            "alt": "Tirta Empul Holy Water Temple - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Tirta Empul",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Tour| or <strong>Kintamani Sunrise & Penglipuran</strong>"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/goa-gajah.html",
+            "zone": "temple",
+            "img": "goa-gajah-hero.jpg",
+            "alt": "Goa Gajah - The Elephant Cave - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Goa Gajah",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Tour|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/gunung-kawi.html",
+            "zone": "temple",
+            "img": "gunung-kawi-hero.jpg",
+            "alt": "Gunung Kawi Temple - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Gunung Kawi",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Tour|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/lempuyang-temple.html",
+            "zone": "temple",
+            "img": "lempuyang.webp",
+            "alt": "Lempuyang Temple - Gates of Heaven - Bali attraction near Ubud",
+            "w": 2000,
+            "hgt": 3000,
+            "name": "Lempuyang Temple",
+            "meta": "East Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Lempuyang & Tirta Gangga|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/ulun-danu-beratan.html",
+            "zone": "temple",
+            "img": "ulun-danu-beratan-hero.webp",
+            "alt": "Ulun Danu Beratan Lake Temple - Bali attraction near Ubud",
+            "w": 1920,
+            "hgt": 1237,
+            "name": "Ulun Danu",
+            "meta": "Central Highlands",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ulun Danu Beratan & Handara Gate|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/taman-ayun.html",
+            "zone": "temple",
+            "img": "taman-ayun-hero.jpg",
+            "alt": "Taman Ayun Royal Temple - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 1365,
+            "name": "Taman Ayun",
+            "meta": "West Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Tanah Lot & Taman Ayun|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/pura-batuan.html",
+            "zone": "temple",
+            "img": "pura-batuan-temple.jpg",
+            "alt": "Pura Batuan Temple - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Pura Batuan",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Culture Day|"
+          }
+        ]
+      },
+      {
+        "id": "cat-waterfalls",
+        "title": "Waterfalls",
+        "cards": [
+          {
+            "variant": "incl",
+            "href": "/attractions/tegenungan-waterfall.html",
+            "zone": "waterfall",
+            "img": "tegenungan-waterfall-hero.jpg",
+            "alt": "Tegenungan Waterfall - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Tegenungan Waterfall",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Rafting Adventure| or <strong>Ubud ATV Adventure</strong>"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/gitgit-waterfall.html",
+            "zone": "waterfall",
+            "img": "waterfall.webp",
+            "alt": "Git Git Waterfall - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Gitgit Waterfall",
+            "meta": "North Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Munduk Waterfall Tour|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/sekumpul-waterfall.html",
+            "zone": "waterfall",
+            "img": "lovina-dolphin-sekumpul-card.jpg",
+            "alt": "Sekumpul Waterfall - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Sekumpul Waterfall",
+            "meta": "North Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Lovina Dolphin & Sekumpul Waterfall|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/banyumala-waterfall.html",
+            "zone": "waterfall",
+            "img": "waterfall.jpg",
+            "alt": "Banyumala Twin Waterfall - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Banyumala Waterfall",
+            "meta": "North Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Banyumala & Twin Lakes|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/munduk.html",
+            "zone": "waterfall",
+            "img": "tibumana.webp",
+            "alt": "Munduk Waterfalls - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Munduk Waterfalls",
+            "meta": "North Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Munduk Waterfall Tour|"
+          }
+        ]
+      },
+      {
+        "id": "cat-beaches",
+        "title": "Beaches",
+        "cards": [
+          {
+            "variant": "incl",
+            "href": "/attractions/pandawa-beach.html",
+            "zone": "beach",
+            "img": "green-cliff-coast-bali.webp",
+            "alt": "Pandawa Beach - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Pandawa Beach",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |GWK & Pandawa Beach|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/balangan-beach.html",
+            "zone": "beach",
+            "img": "surfers-beach.webp",
+            "alt": "Balangan Beach - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Balangan Beach",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Bali Hidden Beaches and Cliffs|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/bingin-beach.html",
+            "zone": "beach",
+            "img": "kelingking-beach.jpg",
+            "alt": "Bingin Beach - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Bingin Beach",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Bali Hidden Beaches and Cliffs|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/green-bowl-beach.html",
+            "zone": "beach",
+            "img": "cliff-beach.webp",
+            "alt": "Green Bowl Beach - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Green Bowl",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Bali Hidden Beaches and Cliffs|"
+          },
+          {
+            "href": "/attractions/tegal-wangi-beach.html",
+            "zone": "beach",
+            "img": "kelingking-beach.jpg",
+            "alt": "Tegal Wangi Beach - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Tegal Wangi",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "priceName": "Tegal Wangi Beach",
+            "priceFallback": "$45"
+          }
+        ]
+      },
+      {
+        "id": "cat-nature",
+        "title": "Nature, Rice Terraces & Villages",
+        "cards": [
+          {
+            "variant": "incl",
+            "href": "/attractions/tegalalang-rice-terrace.html",
+            "zone": "rice",
+            "img": "tegalalang-rice-terrace-hero.jpg",
+            "alt": "Tegalalang Rice Terrace - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Tegalalang",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Tour| or <strong>Ubud Rafting Adventure</strong>"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/jatiluwih-rice-terrace.html",
+            "zone": "rice",
+            "img": "jatiluwih.webp",
+            "alt": "Jatiluwih Rice Terraces - Bali attraction near Ubud",
+            "w": 1920,
+            "hgt": 1279,
+            "name": "Jatiluwih",
+            "meta": "West Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Jatiluwih Rice Terrace Tour|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/garuda-wisnu-kencana.html",
+            "zone": "nature",
+            "img": "gwk-statue-bali.webp",
+            "alt": "Garuda Wisnu Kencana (GWK) - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "GWK Park",
+            "meta": "South Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |GWK & Pandawa Beach|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/ubud-royal-palace.html",
+            "zone": "nature",
+            "img": "ubud-saraswati-temple.jpg",
+            "alt": "Ubud Royal Palace & Art Market - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Ubud Palace",
+            "meta": "Central Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Culture Day|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/penglipuran.html",
+            "zone": "nature",
+            "img": "penglipuran-village-view.jpg",
+            "alt": "Penglipuran Village - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Penglipuran Village",
+            "meta": "Kintamani",
+            "metaIcon": "pin",
+            "inclText": "Included in |Kintamani Sunrise & Penglipuran|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/handara-gate.html",
+            "zone": "nature",
+            "img": "handara-gate.webp",
+            "alt": "Handara Gate - Bali attraction near Ubud",
+            "w": 1920,
+            "hgt": 1280,
+            "name": "Handara Gate",
+            "meta": "North Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ulun Danu Beratan & Handara Gate|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/tirta-gangga.html",
+            "zone": "nature",
+            "img": "tirtagangga.jpg",
+            "alt": "Tirta Gangga Water Garden - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 800,
+            "name": "Tirta Gangga",
+            "meta": "East Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Lempuyang & Tirta Gangga|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/taman-ujung.html",
+            "zone": "nature",
+            "img": "ujung-water-palace-lake-bali.webp",
+            "alt": "Taman Ujung Water Palace - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Taman Ujung",
+            "meta": "East Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Besakih & Taman Ujung|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/twin-lakes.html",
+            "zone": "nature",
+            "img": "batur-lake.webp",
+            "alt": "Buyan & Tamblingan Twin Lakes - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Twin Lakes",
+            "meta": "North Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Banyumala & Twin Lakes|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/monkey-forest.html",
+            "zone": "nature",
+            "img": "monkey-forest-hero.jpg",
+            "alt": "Sacred Monkey Forest Sanctuary - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Monkey Forest",
+            "meta": "Central Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Tour|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/sangeh-monkey-forest.html",
+            "zone": "nature",
+            "img": "monkey.jpg",
+            "alt": "Sangeh Monkey Forest - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Sangeh Forest",
+            "meta": "West Bali",
+            "metaIcon": "pin",
+            "inclText": "Included in |Sangeh Monkey Forest & Tanah Lot|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/ubud-market.html",
+            "zone": "nature",
+            "img": "ubud-market-hero.jpg",
+            "alt": "Ubud Traditional Market - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 1157,
+            "name": "Ubud Market",
+            "meta": "Central Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Culture Day|"
+          },
+          {
+            "variant": "incl",
+            "href": "/attractions/ubud-arts-crafts.html",
+            "zone": "nature",
+            "img": "ubud-arts-crafts-hero.jpg",
+            "alt": "Ubud Arts & Crafts - Bali attraction near Ubud",
+            "w": 1200,
+            "hgt": 900,
+            "name": "Ubud Centre",
+            "meta": "Near Ubud",
+            "metaIcon": "pin",
+            "inclText": "Included in |Ubud Culture Day|"
+          }
+        ]
+      }
+    ],
+    "closing": null
+  }
+};

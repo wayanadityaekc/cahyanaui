@@ -97,3 +97,29 @@ The real component is `.binfo` / `.binfo__btn` / `.binfo__pop` / `.binfo__row` /
 This was already wired into **`BookingForm`** from MIG-20, so that form carried the same broken popover. Both are fixed, and `BookingForm`'s popover now carries the original Standard/Exclusive explanation rows instead of the single line written from memory.
 
 It is worth naming why this slipped: MIG-11 built the UI kit from the *behaviour* described in `script.js` without checking each class against `style.css`. The class-count diff is what caught it. The other MIG-11 components should get the same check before they are trusted - `Modal`, `Accordion` and `ZoneTabs` have not been verified this way yet.
+
+## Listing pages — done (2 Sep 2026)
+
+`tour.html`, `activities.html` and `destinations.html` now render from one `ListingPage` template fed by `content/shared/listings.js`, extracted from the originals by script.
+
+**Class diff against all three originals: 0 differences.** Card counts match exactly: 20 / 10 / 33.
+
+### Third card variant found
+Destination cards are `experience__card--incl` - a whole-card link with an `experience__incl` block ("Included in **[Tour]**") **and no price at all**, matching the Sep 2026 commit that removed fake per-destination pricing. That makes three card shapes in use:
+
+| Variant | Where | Shape |
+|---|---|---|
+| `link` | tour, activities listings | `<a>`, price, no description |
+| `article` | homepage | `<article>`, description, inner arrow link |
+| `incl` | destinations | `<a>`, "Included in" line, no price |
+
+`ExperienceCard` now covers all three. This strengthens the open question already raised: the card is not one component today, it is three.
+
+### Two things the diff caught
+1. **`tourprog` was missing.** All three pages carry `<body class="tourprog">`, which scopes their card styling. Without it the listing cards would render with no meta-icon sizing and no link reset - the same failure seen in the first UI-kit screenshot. Now wrapped in `<div className="tourprog">`.
+2. **`activities.html` has a "Good to Know" `info` section** - four fact tiles plus Included/Excluded lists - that the first extractor pass missed entirely, because it sits outside the `catsec` structure. 11 classes were absent before this was noticed.
+
+Also fixed while here: `ExperienceCard` was using `chdur__badge`, the name CLAUDE.md gives, rather than the real `chcard__badge`.
+
+### Remaining in MIG-33
+`about-us.html`, `charter.html`, `transfer.html`, `airport-transfer.html`, `all-reviews.html`, `bali-guide.html`, and the three legal pages.

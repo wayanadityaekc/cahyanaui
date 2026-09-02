@@ -1,13 +1,13 @@
+import ListingPage from '@/components/sections/ListingPage';
+import { LISTINGS } from '@/content/shared/listings';
+
 export const metadata = {
-  title: 'Tours',
+  title: 'Bali Tour Programs from Ubud | Private Day Tours',
+  description:
+    'Private, customizable Bali day tours from Ubud - rice terraces, temples, waterfalls, and beaches with local drivers. Only a 10% deposit to book.',
   alternates: { canonical: '/tour.html' },
 };
 
 export default function Page() {
-  return (
-    <main>
-      <h1>Tours</h1>
-      <p>Route shell. Content lands in MIG-33.</p>
-    </main>
-  );
+  return <ListingPage data={LISTINGS.tour} />;
 }

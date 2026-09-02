@@ -34,13 +34,17 @@ export default function ExperienceCard({
   desc,
   program,
   variant = 'link',
+  inclText,
+  width = 600,
+  height = 600,
   children,
 }) {
+  const incl = variant === 'incl';
   const body = (
     <>
       <div className="experience__image">
-        <Img src={`/assets/images/${img}`} alt={alt || name} width={600} height={600} />
-        {badge && <span className="chdur__badge">{badge}</span>}
+        <Img src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />
+        {badge && <span className="chcard__badge">{badge}</span>}
       </div>
       <div className="experience__body">
         <h3 className="experience__name">{name}</h3>
@@ -51,6 +55,13 @@ export default function ExperienceCard({
           </div>
         )}
         {desc && <p className="experience__desc">{desc}</p>}
+        {incl && inclText && (
+          <div className="experience__incl">
+            {inclText.split('|')[0]}
+            <strong>{inclText.split('|')[1]}</strong>
+            {inclText.split('|')[2]}
+          </div>
+        )}
         {(priceName || variant === 'article') && (
           <div className="experience__footer">
             {priceName ? (
@@ -82,7 +93,7 @@ export default function ExperienceCard({
   }
 
   return (
-    <a className="experience__card" href={href} data-zone={zone}>
+    <a className={`experience__card${incl ? ' experience__card--incl' : ''}`} href={href} data-zone={zone}>
       {body}
     </a>
   );

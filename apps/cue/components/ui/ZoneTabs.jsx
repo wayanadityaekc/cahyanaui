@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-export default function ZoneTabs({ zones = [] }) {
+export default function ZoneTabs({ zones = [], label = 'Jump to category' }) {
   const [active, setActive] = useState(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function ZoneTabs({ zones = [] }) {
   }, [zones]);
 
   return (
-    <div className="zone-filter" aria-label="Jump to category">
+    <div className="zone-filter" aria-label={label}>
       {zones.map((z) => (
         <a key={z.id} href={`#${z.id}`} className={`zone-chip${active === z.id ? ' is-active' : ''}`}>
           {z.label}

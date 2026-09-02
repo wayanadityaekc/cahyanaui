@@ -32,3 +32,13 @@ Extract the 15 guide articles into `content/guides/` behind one `GuidePage` temp
 
 ## Definition of done
 - All 16 merged and diffed.
+
+---
+
+# RESULT — 15 guide articles done (2 Sep 2026)
+
+One `GuideArticle` template fed by `content/guides/index.js`: hero with tags, category tabs linking to `bali-guide.html` anchors, the article column, the sidebar, and both `guide-more` sections. **All 15 diff clean.**
+
+The second `guide-more` section carries an extra class (`guide-more tourprog`), so a selector matching `class="guide-more"` exactly found only one of the two.
+
+`bali-guide.html` (the hub) is also done - see MIG-33.

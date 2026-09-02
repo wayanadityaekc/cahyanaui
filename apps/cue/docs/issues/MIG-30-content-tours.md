@@ -33,3 +33,14 @@ Extract the 20 bookable programme pages into `content/tours/` and render them th
 
 ## Definition of done
 - All 20 pages merged and diffed. A page is not done until its screenshot diff is clean.
+
+---
+
+# RESULT — 20 tour pages done (2 Sep 2026)
+
+Extracted by script into `content/tours/index.js` and rendered through one `TourPage`. **All 20 diff clean against their originals.**
+
+Three things the diff caught that a visual pass would not have:
+1. **`data-item` was missing on 11 of 20 pages.** The `book-modal-placeholder` is written across multiple lines, so a regex anchored on `<div id="..."` matched only the 9 single-line ones. Without it those tours could not be booked.
+2. **`best-of-bali-3-day-package` has day sub-headings** (`<h3 class="section__title--sub">Day 1 · Ubud`) interleaved between stops. They are `<h3>`, not `<h2>`, which is why the first fix for them silently found zero.
+3. **One stop uses a gradient placeholder instead of a photo** (Banjar Hot Spring on `lovina-dolphin-sekumpul`) - a `<div class="stop__image" style="background-image: linear-gradient(...)">`. An `<img>`-only extractor dropped it.

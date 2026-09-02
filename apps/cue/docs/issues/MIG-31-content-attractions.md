@@ -33,3 +33,11 @@ Extract the 51 pages under `attractions/` into `content/attractions/` behind one
 
 ## Definition of done
 - All 51 merged and diffed.
+
+---
+
+# RESULT — 51 attraction pages done (2 Sep 2026)
+
+All 51 share one structure (`tour-hero | stops | info`), so they render through one `AttractionPage` fed by `content/attractions/index.js`. 153 stops extracted. **All 51 diff clean.**
+
+The diff caught a breadcrumb (`<nav class="crumb">` with two `crumb__sep`) present on every one of the 51 pages and missed by the first extraction pass - 102 differences across the set, from one omission.

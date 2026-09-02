@@ -1,3 +1,5 @@
+import AttractionPage from '@/components/sections/AttractionPage';
+import { ATTRACTION_CONTENT } from '@/content/attractions';
 import { ATTRACTIONS, attractionPath } from '@/lib/routes';
 
 export const dynamicParams = false;
@@ -8,15 +10,17 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  return { alternates: { canonical: attractionPath(slug) } };
+  const d = ATTRACTION_CONTENT[slug];
+  if (!d) return { alternates: { canonical: attractionPath(slug) } };
+  return {
+    title: d.metaTitle,
+    description: d.metaDesc,
+    alternates: { canonical: attractionPath(slug) },
+    openGraph: { title: d.metaTitle, description: d.metaDesc, images: d.ogImage ? [d.ogImage] : undefined },
+  };
 }
 
-export default async function AttractionPage({ params }) {
+export default async function Page({ params }) {
   const { slug } = await params;
-  return (
-    <main>
-      <h1>{slug}</h1>
-      <p>Attraction route shell. Content lands in MIG-31.</p>
-    </main>
-  );
+  return <AttractionPage data={ATTRACTION_CONTENT[slug]} />;
 }

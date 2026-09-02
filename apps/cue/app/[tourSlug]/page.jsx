@@ -1,3 +1,5 @@
+import TourPage from '@/components/sections/TourPage';
+import { TOUR_CONTENT } from '@/content/tours';
 import { TOURS, tourPath } from '@/lib/routes';
 
 export const dynamicParams = false;
@@ -8,15 +10,17 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { tourSlug } = await params;
-  return { alternates: { canonical: tourPath(tourSlug) } };
+  const d = TOUR_CONTENT[tourSlug];
+  if (!d) return { alternates: { canonical: tourPath(tourSlug) } };
+  return {
+    title: d.metaTitle,
+    description: d.metaDesc,
+    alternates: { canonical: tourPath(tourSlug) },
+    openGraph: { title: d.metaTitle, description: d.metaDesc, images: d.ogImage ? [d.ogImage] : undefined },
+  };
 }
 
-export default async function TourPage({ params }) {
+export default async function Page({ params }) {
   const { tourSlug } = await params;
-  return (
-    <main>
-      <h1>{tourSlug}</h1>
-      <p>Tour route shell. Content lands in MIG-30.</p>
-    </main>
-  );
+  return <TourPage data={TOUR_CONTENT[tourSlug]} />;
 }

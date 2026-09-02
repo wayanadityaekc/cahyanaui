@@ -1,0 +1,1741 @@
+export const TOUR_CONTENT = {
+ "banyumala-twin-lakes": {
+  "heroBg": "tibumana.webp",
+  "title": "Banyumala Twin Waterfall & Twin Lakes Viewpoint Tour",
+  "desc": "Two crater lakes seen from a misty ridge-top viewpoint, then a swim at a jungle waterfall few tourists find - a light, scenic day in Bali's cool green north.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "8–10 hours"
+   },
+   {
+    "label": "Area",
+    "value": "North Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Banyumala & Twin Lakes",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>8&ndash;10 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Banyumala &amp; Twin Lakes\">$55</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\">Exclusive option: Entrance tickets for the listed attractions</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Banyumala &amp; Twin Lakes\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Banyumala & Twin Lakes"
+   }
+  ],
+  "metaTitle": "Banyumala Twin Waterfall & Twin Lakes Viewpoint Tour",
+  "metaDesc": "Private North Bali tour from Ubud - the Twin Lakes viewpoint over Buyan and Tamblingan, then a swim at Banyumala Twin Waterfall. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/tibumana.webp",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/twin-lakes.html",
+    "img": "north-bali-tour-card.jpg",
+    "alt": "Twin Lakes viewpoint over Buyan and Tamblingan, Bali",
+    "w": 600,
+    "hgt": 600,
+    "num": "Stop 1",
+    "name": "Twin Lakes Viewpoint (Buyan & Tamblingan)",
+    "descHtml": "Two crater lakes side by side, seen from a ridge-top viewpoint wrapped in cool mountain air and often a drift of mist. It's one of the most photographed panoramas in the north - a calm, scenic way to open the day."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/banyumala-waterfall.html",
+    "img": "tibumana.webp",
+    "alt": "A single-drop waterfall in the Bali jungle",
+    "w": 1024,
+    "hgt": 1536,
+    "num": "Stop 2",
+    "name": "Banyumala Twin Waterfall",
+    "descHtml": "Two streams falling side by side into a wide, clear pool you can swim in. A short trek down through the jungle keeps the crowds away - you'll often have the place almost to yourself. Bring a change of clothes."
+   }
+  ]
+ },
+ "batur-sunrise-adrenaline": {
+  "heroBg": "mount-batur-sunrise.webp",
+  "title": "Mount Batur Sunrise Trekking & Hot Spring Tour",
+  "desc": "Summit an active volcano for sunrise above the clouds, refuel with a volcano-view breakfast, then ease tired legs in natural hot springs by Lake Batur - a big one-day adventure out of Ubud.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "8–10 hours"
+   },
+   {
+    "label": "Area",
+    "value": "Kintamani"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>8&ndash;10 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Batur Sunrise &amp; Adrenaline\" >$85</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby (very early)</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Licensed trekking guide &amp; sunrise breakfast</li> <li>Natural hot spring entry by Lake Batur</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Trekking, breakfast &amp; hot spring fees included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Trekking &amp; hot spring fees where applicable </li> <li>Additional meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Batur Sunrise &amp; Adrenaline\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Batur Sunrise & Adrenaline"
+   }
+  ],
+  "metaTitle": "Mount Batur Sunrise Trekking & Hot Spring Tour",
+  "metaDesc": "A pre-dawn trek to Mount Batur's summit for sunrise above the clouds, a volcano-view breakfast, and a soak in natural hot springs by the lake.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/batur-sunrise-adrenaline-card.jpg",
+  "bookItem": "Batur Sunrise & Adrenaline",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/mount-batur-trekking.html",
+    "img": "mount-batur-sunrise.webp",
+    "alt": "Sunrise over Mount Batur seen from the trail",
+    "w": 1536,
+    "hgt": 1025,
+    "num": "Stop 1",
+    "name": "Mount Batur Sunrise Trek & Summit Breakfast",
+    "descHtml": "A pre-dawn guided climb up the 1,717-metre active volcano, reaching the summit just as the sun breaks over Lake Batur and Mount Agung. The trail is moderate and no technical experience is needed - just a head torch and a warm layer. At the top, breakfast is served with one of Bali's best views. Catch your breath, take it all in, then head back down as the island wakes up."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/batur-hot-spring.html",
+    "img": "batur-hot-spring-water.webp",
+    "alt": "Batur Hot Spring, Bali",
+    "w": 1536,
+    "hgt": 1025,
+    "num": "Stop 2",
+    "name": "Natural Hot Spring by Lake Batur",
+    "descHtml": "We finish with a soak in natural volcanic hot springs on the shore of Lake Batur. Mineral water warmed underground by the volcano eases tired legs after the sunrise trek, with the caldera and lake around you. The perfect, relaxing end to a big morning."
+   }
+  ]
+ },
+ "besakih-taman-ujung": {
+  "heroBg": "besakih-temple.webp",
+  "title": "Besakih Mother Temple & Taman Ujung Water Palace Tour",
+  "desc": "Bali's holiest temple on the slopes of Mount Agung, then the grand reflecting pools of a royal water palace - the spiritual and regal side of East Bali in one day. A private car, a local driver, your pace.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "7–9 hours"
+   },
+   {
+    "label": "Area",
+    "value": "East Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>7&ndash;9 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Besakih &amp; Taman Ujung\" >$60</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Sarong rental at temples</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets for the listed attractions </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Besakih &amp; Taman Ujung\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Besakih & Taman Ujung"
+   }
+  ],
+  "metaTitle": "Besakih Mother Temple & Taman Ujung Water Palace Tour",
+  "metaDesc": "Private East Bali tour from Ubud - Besakih, Bali's largest and holiest temple, and the royal water palace of Taman Ujung. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
+  "bookItem": "Besakih & Taman Ujung",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/besakih.html",
+    "img": "besakih-temple.webp",
+    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
+    "w": 1920,
+    "hgt": 1284,
+    "num": "Stop 1",
+    "name": "Besakih - The Mother Temple",
+    "descHtml": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/taman-ujung.html",
+    "img": "taman-ujung-view.webp",
+    "alt": "A visitor at the Taman Ujung water palace, Bali",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Taman Ujung Water Palace",
+    "descHtml": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
+   }
+  ]
+ },
+ "best-of-bali-3-day-package": {
+  "heroBg": "uluwatu-cliff-coast-bali.webp",
+  "title": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
+  "desc": "A private multi-day route through Bali's three signature areas - Ubud's temples and rice terraces, the Kintamani highlands and Besakih Mother Temple, then Uluwatu's cliffs and sunset Kecak. Same driver and car for all three days.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "3 days / 2 nights"
+   },
+   {
+    "label": "Area",
+    "value": "Ubud, Kintamani & Uluwatu"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "3-Day Best of Bali Package",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>3 days / 2 nights</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"3-Day Best of Bali Package\">$150</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel for all 3 days</li> <li>Friendly English-speaking driver throughout</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\">Exclusive option: Entrance tickets for the listed attractions</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Accommodation for 2 nights</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"3-Day Best of Bali Package\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "3-Day Best of Bali Package"
+   }
+  ],
+  "metaTitle": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
+  "metaDesc": "A private 3-day route with the same driver and car - Ubud's temples and rice terraces, Kintamani and Besakih Mother Temple, then Uluwatu's cliffs and sunset Kecak.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
+  "items": [
+   {
+    "type": "sub",
+    "tag": "h3",
+    "text": "Day 1 · Ubud"
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tegalalang-rice-terrace.html",
+    "img": "tegalalang-rice-terrace-hero.jpg",
+    "alt": "Tegalalang rice terrace north of Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Tegalalang Rice Terrace",
+    "descHtml": "The iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/monkey-forest.html",
+    "img": "monkey-forest-temples.jpg",
+    "alt": "Long-tailed macaques at the Sacred Monkey Forest, Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Sacred Monkey Forest Sanctuary",
+    "descHtml": "A moss-covered jungle temple complex in the heart of Ubud, home to more than 700 long-tailed macaques. Overnight in Ubud."
+   },
+   {
+    "type": "sub",
+    "tag": "h3",
+    "text": "Day 2 · Kintamani & Besakih"
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/jeep-sunrise.html",
+    "img": "mount-batur-sunrise.webp",
+    "alt": "View over Mount Batur and its crater lake from Kintamani",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Kintamani & Mount Batur Viewpoint",
+    "descHtml": "A highland lookout over the still-active Mount Batur volcano and its crater lake, with cool mountain air and coffee-growing hillsides. A relaxed roadside stop, not the pre-dawn trek."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/besakih.html",
+    "img": "besakih-temple.webp",
+    "alt": "Besakih Mother Temple on the slopes of Mount Agung",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Besakih Mother Temple",
+    "descHtml": "Bali's largest and holiest temple complex, terraced up the slopes of Mount Agung. Overnight near Uluwatu."
+   },
+   {
+    "type": "sub",
+    "tag": "h3",
+    "text": "Day 3 · Uluwatu"
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/uluwatu-temple.html",
+    "img": "uluwatu-temple.webp",
+    "alt": "Uluwatu Temple perched on a clifftop above the ocean",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 5",
+    "name": "Uluwatu Temple",
+    "descHtml": "A clifftop temple 70 metres above the surf on Bali's southern tip, with resident macaques and sweeping ocean views."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/uluwatu-kecak.html",
+    "img": "uluwatu-sunset-kecak-dance.webp",
+    "alt": "Kecak fire dance performance at Uluwatu at sunset",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 6",
+    "name": "Sunset Kecak Fire Dance",
+    "descHtml": "A traditional Kecak performance at the clifftop amphitheater as the sun sets over the ocean - a fitting close to the trip, before drop-off."
+   }
+  ]
+ },
+ "full-adventure-rafting-atv": {
+  "heroBg": "rafting.webp",
+  "title": "Full Adventure: Ayung Rafting & ATV Ride",
+  "desc": "The two most popular adventure activities near Ubud, back to back in one day - white-water rafting down the Ayung River, then a muddy ATV ride through jungle trails and rice paddies. For guests who want the adrenaline, not the sightseeing stops.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "7–9 hours"
+   },
+   {
+    "label": "Area",
+    "value": "Ubud"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Full Adventure: Rafting & ATV",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>7&ndash;9 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Full Adventure: Rafting &amp; ATV\">$130</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\">Exclusive option: Activity tickets for rafting &amp; ATV included</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Activity tickets not included</li> <li>Meals, drinks, and tips (optional)</li> <li>A change of clothes (bring one - you'll need it)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Full Adventure: Rafting &amp; ATV\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Full Adventure: Rafting & ATV"
+   }
+  ],
+  "metaTitle": "Full Adventure: Ayung Rafting & ATV Ride",
+  "metaDesc": "A private, action-packed Ubud day - white-water rafting on the Ayung River, then an ATV quad-bike ride through jungle trails. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/rafting.webp",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/rafting.html",
+    "img": "rafting.webp",
+    "alt": "A rafting crew punching through whitewater rapids on the Ayung River",
+    "w": 5609,
+    "hgt": 3739,
+    "num": "Stop 1",
+    "name": "Ayung River Rafting",
+    "descHtml": "A 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. All safety gear provided."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/atv-ride.html",
+    "img": "atv-ride-jungle.webp",
+    "alt": "Riders splashing an ATV through a muddy jungle track near Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "ATV Quad Bike Ride",
+    "descHtml": "Roughly an hour on an ATV through jungle trails, muddy tracks, rice paddies, and shallow river crossings, with a guide leading the way. Ride solo or tandem; full safety briefing and gear included. There's time to change and dry off between the two activities."
+   }
+  ]
+ },
+ "gwk-pandawa-beach": {
+  "heroBg": "gwk-statue-view.webp",
+  "title": "GWK Cultural Park & Pandawa Beach Half-Day Tour",
+  "desc": "One of the tallest statues on earth, then a swim stop at one of the Bukit's calmest beaches - a relaxed half-day for families or anyone short on time in South Bali.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "4–6 hours"
+   },
+   {
+    "label": "Area",
+    "value": "South Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>4&ndash;6 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"GWK &amp; Pandawa Beach\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: GWK entrance ticket included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: GWK entrance ticket </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"GWK &amp; Pandawa Beach\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "GWK & Pandawa Beach"
+   }
+  ],
+  "metaTitle": "GWK Cultural Park & Pandawa Beach Half-Day Tour",
+  "metaDesc": "Private South Bali half-day tour from Ubud - the giant Garuda Wisnu Kencana statue and the calm sands of Pandawa Beach. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/gwk-statue-view.webp",
+  "bookItem": "GWK & Pandawa Beach",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/garuda-wisnu-kencana.html",
+    "img": "gwk-statue-view.webp",
+    "alt": "Garuda Wisnu Kencana statue, Bali",
+    "w": 1600,
+    "hgt": 873,
+    "num": "Stop 1",
+    "name": "Garuda Wisnu Kencana (GWK)",
+    "descHtml": "One of the tallest statues on earth - Lord Vishnu riding the mythical Garuda, standing 121 metres above a limestone cultural park. Taller than the Statue of Liberty, and it took 28 years to finish. Impressive up close in a way photos never quite capture."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/pandawa-beach.html",
+    "img": "lighthouse-beach-bali.webp",
+    "alt": "Surf rolling into a beach on Bali's south coast",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Pandawa Beach",
+    "descHtml": "Once called \"Secret Beach\" because it was hidden behind a limestone ridge, now reached through a dramatic cut in the cliff lined with giant carved statues. Calm water, wide sand, and space to actually breathe. A good swim stop before heading back."
+   }
+  ]
+ },
+ "hidden-beaches-cliffs": {
+  "heroBg": "south-bali-beach-sunset.webp",
+  "title": "Bukit Peninsula Hidden Beaches: Balangan, Bingin & Green Bowl Tour",
+  "desc": "A slow day around the Bukit's quieter coast - cliff coves, natural rock pools, and surf beaches most tours skip. Fewer crowds, more stairs, and a coconut to carry down to the sand.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "6–8 hours"
+   },
+   {
+    "label": "Area",
+    "value": "South Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>6&ndash;8 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Bali Hidden Beaches and Cliffs\">$45</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>A fresh coconut each to take down to the beach</li> <li>Free cold water on board</li> <li data-only=\"exclusive\">Exclusive option: parking &amp; local access fees included</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: parking &amp; local access fees</li> <li>Meals and drinks</li> <li>Surfboard or sunbed rental (optional)</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Bali Hidden Beaches and Cliffs\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Bali Hidden Beaches and Cliffs"
+   }
+  ],
+  "metaTitle": "Bukit Peninsula Hidden Beaches: Balangan, Bingin & Green Bowl Tour",
+  "metaDesc": "Private tour to the Bukit's quiet beaches - Balangan, Bingin and Green Bowl. Cliff coves, rock pools and surf, away from the crowds, with a coconut on us.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/south-bali-tour-card.jpg",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/green-bowl-beach.html",
+    "img": "becah-south.jpg",
+    "alt": "Surf rolling into a south Bali beach",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Green Bowl Beach",
+    "descHtml": "At the bottom of a long clifftop staircase - a few hundred steps down and back up. The reward is a wide, empty stretch of sand, sea caves, and a reef that draws surfers at the right tide. It is one of the least-visited beaches on the peninsula, mostly because of those steps."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/balangan-beach.html",
+    "img": "melasti-beach.jpg",
+    "alt": "White sand below limestone cliffs, south Bali",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Balangan Beach",
+    "descHtml": "A long beach under limestone cliffs, lined with simple warungs where you can sit with a cold drink and watch the surf. The easiest of the four to get to, with a famous left-hand break offshore. A good spot to eat lunch and slow down for an hour."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/bingin-beach.html",
+    "img": "south-bali-beach-sunset.webp",
+    "alt": "Sunset over a Bukit beach on Bali's south coast",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Bingin Beach",
+    "descHtml": "Reached on foot down a maze of steps past cliffside guesthouses and cafes. The sand shrinks and grows with the tide, so it is best at low water - that is also when the reef break turns on for surfers. Small, scenic, and a laid-back place to end the day with the sunset."
+   }
+  ]
+ },
+ "jatiluwih-tour": {
+  "heroBg": "jatiluwih.webp",
+  "title": "Jatiluwih UNESCO Rice Terrace Tour",
+  "desc": "A UNESCO World Heritage landscape of endless green rice terraces stretching to the horizon, still farmed the traditional subak way - a slow, quiet day out west with almost no crowds.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "4–6 hours"
+   },
+   {
+    "label": "Area",
+    "value": "West Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>4&ndash;6 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Jatiluwih Rice Terrace Tour\" >$45</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets for the listed attractions </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Jatiluwih Rice Terrace Tour\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Jatiluwih Rice Terrace Tour"
+   }
+  ],
+  "metaTitle": "Jatiluwih UNESCO Rice Terrace Tour",
+  "metaDesc": "Private West Bali tour from Ubud to Jatiluwih, a UNESCO World Heritage rice terrace landscape with almost no crowds. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/jatiluwih.webp",
+  "bookItem": "Jatiluwih Rice Terrace Tour",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/jatiluwih-rice-terrace.html",
+    "img": "jatiluwih.webp",
+    "alt": "The Jatiluwih rice terraces across the hills of west Bali",
+    "w": 1920,
+    "hgt": 1279,
+    "num": "Stop 1",
+    "name": "Jatiluwih Rice Terraces",
+    "descHtml": "A UNESCO World Heritage landscape of endless green terraces stretching to the horizon with almost no crowds. Still farmed the traditional subak way, exactly as it has been for a thousand years. We build in time to walk one of the trails through the terraces, not just view them from the road."
+   }
+  ]
+ },
+ "kintamani-sunrise-penglipuran": {
+  "heroBg": "jeep-sunrise-mount-batur.jpg",
+  "title": "Kintamani 4x4 Volcano Sunrise & Penglipuran Village Tour",
+  "desc": "Sunrise over an active volcano from a 4x4 jeep, then the traditional village of Penglipuran and the holy springs of Tirta Empul on the way home.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "Full day"
+   },
+   {
+    "label": "Area",
+    "value": "Kintamani"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span ><strong>9&ndash;10 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Kintamani Sunrise & Penglipuran\" >$85</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: Jeep sunrise, entrance &amp; activity tickets for the listed stops </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Jeep sunrise, entrance &amp; activity tickets </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Kintamani Sunrise & Penglipuran\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Kintamani Sunrise & Penglipuran"
+   }
+  ],
+  "metaTitle": "Kintamani 4x4 Volcano Sunrise & Penglipuran Village Tour",
+  "metaDesc": "A private Kintamani day tour from Ubud - a 4x4 jeep sunrise over Mount Batur, the traditional village of Penglipuran, and Tirta Empul holy springs on the way home.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/mount-batur-sunrise.webp",
+  "bookItem": "Kintamani Sunrise & Penglipuran",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/jeep-sunrise.html",
+    "img": "jeep-sunrise-mount-batur.jpg",
+    "alt": "A 4x4 jeep at a Mount Batur viewpoint at sunrise",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Mount Batur Jeep Sunrise",
+    "descHtml": "We set off before dawn so a 4x4 jeep can carry you up the black-lava slopes of Mount Batur to a viewpoint for sunrise over the caldera and lake - no strenuous hike required. Coffee in hand, watch the sky turn as the volcano wakes up. The easiest way to catch Bali's most famous sunrise."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/penglipuran.html",
+    "img": "penglipuran-village-view.jpg",
+    "alt": "The swept main lane of Penglipuran traditional village",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Penglipuran Village",
+    "descHtml": "One of the cleanest, best-kept traditional villages in Bali - a Bali Aga village with a single spotless main avenue lined with matching gates and courtyard homes. Step into a family compound and see a way of life that has barely changed in centuries. It sits right on the route down from Batur."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tirta-empul.html",
+    "img": "tirta-empul-hero.jpg",
+    "alt": "The purification pools at Tirta Empul holy spring temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Tirta Empul Holy Water Temple",
+    "descHtml": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with respect."
+   }
+  ]
+ },
+ "lempuyang-tirta-gangga": {
+  "heroBg": "lempuyang.webp",
+  "title": "Lempuyang Gates of Heaven & Tirta Gangga Water Garden Tour",
+  "desc": "The Gates of Heaven at Lempuyang, framing Mount Agung, and the royal water garden of Tirta Gangga - East Bali's two most photogenic stops in one relaxed day.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "6–8 hours"
+   },
+   {
+    "label": "Area",
+    "value": "East Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Lempuyang &amp; Tirta Gangga\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Sarong rental at temples</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets for the listed attractions </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Lempuyang photo-queue fast pass (optional)</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lempuyang &amp; Tirta Gangga\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Lempuyang & Tirta Gangga"
+   }
+  ],
+  "metaTitle": "Lempuyang Gates of Heaven & Tirta Gangga Water Garden Tour",
+  "metaDesc": "Private East Bali tour from Ubud - the Gates of Heaven at Lempuyang and the royal water garden of Tirta Gangga. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/east-bali-tour-card.jpg",
+  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/lempuyang-temple.html",
+    "img": "lempuyang.webp",
+    "alt": "Lempuyang, Bali",
+    "w": 2000,
+    "hgt": 3000,
+    "num": "Stop 1",
+    "name": "Lempuyang Temple - Gates of Heaven",
+    "descHtml": "Bali's most photographed split gate, framing Mount Agung on a clear morning. We arrive early to beat the queue and handle the ticket, sarong, and the famous mirror photo so you don't waste half the day waiting in line."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tirta-gangga.html",
+    "img": "tirta-gangga-photo-spot.webp",
+    "alt": "Tirta Gangga, Bali",
+    "w": 736,
+    "hgt": 1030,
+    "num": "Stop 2",
+    "name": "Tirta Gangga Water Garden",
+    "descHtml": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+   }
+  ]
+ },
+ "lovina-dolphin-sekumpul": {
+  "heroBg": "lovina-dolphin-sekumpul-card.jpg",
+  "title": "Lovina Dolphin Sunrise & Sekumpul Waterfall Tour",
+  "desc": "Head out at dawn for the Lovina dolphins, soak in the sacred Banjar hot springs, then trek to Sekumpul, often called Bali's most beautiful waterfall. An early start, worth every minute.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "Full day"
+   },
+   {
+    "label": "Area",
+    "value": "North Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span ><strong>11&ndash;12 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Lovina Dolphin & Sekumpul Waterfall\" >$95</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: Dolphin cruise, hot spring &amp; Sekumpul entrance tickets </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Dolphin cruise, hot spring &amp; Sekumpul tickets </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Lovina Dolphin & Sekumpul Waterfall\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Lovina Dolphin & Sekumpul Waterfall"
+   }
+  ],
+  "metaTitle": "Lovina Dolphin Sunrise & Sekumpul Waterfall Tour",
+  "metaDesc": "A private North Bali adventure from Ubud - a sunrise dolphin cruise off Lovina, the sacred Banjar hot springs, and the trek to Sekumpul waterfall.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/lovina-dolphin-sekumpul-card.jpg",
+  "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/lovina-dolphin.html",
+    "img": "lovina-dolphin-sekumpul-card.jpg",
+    "alt": "Outrigger boats off the north Bali coast at sunrise",
+    "w": 1200,
+    "hgt": 800,
+    "num": "Stop 1",
+    "name": "Lovina Sunrise Dolphin Cruise",
+    "descHtml": "We leave Ubud in the dark to reach Lovina's calm north-coast water at first light. Climb aboard a traditional jukung boat and glide out as pods of wild dolphins surface and play around you, the sunrise glowing behind the mountains. An only-in-the-morning experience."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/banjar-hot-spring.html",
+    "gradient": "background-image: linear-gradient( 135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86) );",
+    "num": "Stop 2",
+    "name": "Banjar Hot Spring",
+    "descHtml": "Back on land, ease into the sacred Banjar hot springs - warm, sulphur-rich water pouring from carved stone dragons into jungle-fringed bathing pools. The perfect way to warm up after the boat and loosen up before the trek."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/sekumpul-waterfall.html",
+    "img": "waterfall.jpg",
+    "alt": "A jungle waterfall falling into a natural pool, Bali",
+    "w": 1200,
+    "hgt": 1337,
+    "num": "Stop 3",
+    "name": "Sekumpul Waterfall",
+    "descHtml": "Often called the most beautiful waterfall in Bali - a cluster of tall cascades pouring into a green jungle gorge. It's a real trek down and back up through the valley, but standing at the base of Sekumpul is a reward few visitors ever see. Moderate fitness needed."
+   }
+  ]
+ },
+ "munduk-twin-lakes": {
+  "heroBg": "north-bali-tour-card.jpg",
+  "title": "Munduk Waterfall & Coffee Plantation Tour",
+  "desc": "A quiet mountain village surrounded by clove and coffee plantations, a trail of slender jungle waterfalls, and a proper Balinese coffee tasting - with Gitgit waterfall as an optional stop on the drive back.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "8–10 hours"
+   },
+   {
+    "label": "Area",
+    "value": "North Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Munduk Waterfall Tour",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>8&ndash;10 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Munduk Waterfall Tour\">$55</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\">Exclusive option: Entrance tickets for the listed attractions</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Munduk Waterfall Tour\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Munduk Waterfall Tour"
+   }
+  ],
+  "metaTitle": "Munduk Waterfall & Coffee Plantation Tour",
+  "metaDesc": "Private North Bali tour from Ubud - the jungle waterfalls of Munduk village and a coffee plantation stop, with Gitgit as an optional stop on the way back.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/north-bali-tour-card.jpg",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/munduk.html",
+    "img": "waterfall.jpg",
+    "alt": "A jungle waterfall falling into a natural pool, Bali",
+    "w": 1200,
+    "hgt": 1337,
+    "num": "Stop 1",
+    "name": "Munduk Waterfalls",
+    "descHtml": "A quiet mountain village surrounded by clove and coffee plantations, with a trail of slender jungle waterfalls tucked into the valleys. We walk to one of the prettiest, tucked into the valley below the village."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/coffee-plantation.html",
+    "img": "coffee-plantation-hero.jpg",
+    "alt": "Coffee beans drying at a plantation in Bali's highlands",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Munduk Coffee Plantation",
+    "descHtml": "Munduk's cool highland slopes grow some of Bali's best coffee and cloves. We stop at a local plantation to see the beans roasted by hand and taste a flight of local brews with a view over the valley."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/gitgit-waterfall.html",
+    "img": "mauntain.jpg",
+    "alt": "Green hills and mountains in Bali's interior",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3 · Optional",
+    "name": "Gitgit Waterfall",
+    "descHtml": "One of North Bali's most accessible waterfalls - a tall single drop reached by an easy paved path through coffee and spice gardens. A refreshing add-on before the drive back over the mountains to Ubud - let your driver know if you'd like to add it on."
+   }
+  ]
+ },
+ "sangeh-tanah-lot": {
+  "heroBg": "tanah-lot.webp",
+  "title": "Sangeh Monkey Forest & Tanah Lot Tour",
+  "desc": "A quieter alternative to the Ubud monkey forest, followed by Bali's most photographed sea temple at sunset. Two stops, an easy pace, a private car, and a local driver.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "5–7 hours"
+   },
+   {
+    "label": "Area",
+    "value": "West Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Sangeh Monkey Forest & Tanah Lot",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"><span>Duration</span><strong>5&ndash;7 hours</strong></div> <div class=\"info__fact\"><span>Price</span><strong><span class=\"price\" data-price=\"Sangeh Monkey Forest &amp; Tanah Lot\">$50</span></strong></div> <div class=\"info__fact\"><span>Pick-up</span><strong>Ubud &amp; nearby</strong></div> <div class=\"info__fact\"><span>Availability</span><strong>Daily</strong></div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\">Exclusive option: Entrance tickets for the listed attractions</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals, drinks, and tips (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Sangeh Monkey Forest &amp; Tanah Lot\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Sangeh Monkey Forest & Tanah Lot"
+   }
+  ],
+  "metaTitle": "Sangeh Monkey Forest & Tanah Lot Tour",
+  "metaDesc": "Private tour from Ubud - the quiet nutmeg forest of Sangeh Monkey Forest, then the Tanah Lot sea temple at sunset. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/sangeh-monkey-forest.html",
+    "img": "monkey-forest-temples.jpg",
+    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Sangeh Monkey Forest",
+    "descHtml": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tanah-lot.html",
+    "img": "tanah-lot.webp",
+    "alt": "Tanah Lot sea temple on its rock outcrop at sunset",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Tanah Lot Sea Temple",
+    "descHtml": "Bali's most photographed temple, perched on a rock outcrop just offshore. We time the visit for late afternoon, so the day ends with the temple silhouetted against the sunset."
+   }
+  ]
+ },
+ "south-coast-sunset-kecak": {
+  "heroBg": "watersport-jetski.webp",
+  "title": "Uluwatu Cliff Temple & Sunset Kecak Dance Tour",
+  "desc": "The clifftop Uluwatu temple 70 metres above the surf, then the Kecak fire dance as the sun sets over the Indian Ocean - a relaxed half-day built around sunset.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "4–6 hours"
+   },
+   {
+    "label": "Area",
+    "value": "South Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>4&ndash;6 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Uluwatu &amp; Sunset Kecak\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: temple entrance &amp; Kecak dance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: temple entrance and Kecak dance tickets </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Uluwatu &amp; Sunset Kecak\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Uluwatu & Sunset Kecak"
+   }
+  ],
+  "metaTitle": "Uluwatu Cliff Temple & Sunset Kecak Dance Tour",
+  "metaDesc": "Private tour from Ubud to the clifftop Uluwatu temple and the Kecak fire dance at sunset, one of Bali's most spectacular sunset shows.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/south-coast-sunset-kecak-card.jpg",
+  "bookItem": "Uluwatu & Sunset Kecak",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/uluwatu-temple.html",
+    "img": "uluwatu-sunset-kecak-dance.webp",
+    "alt": "Uluwatu Temple, Bali",
+    "w": 1920,
+    "hgt": 1279,
+    "num": "Stop 1",
+    "name": "Uluwatu Clifftop Temple & Sunset Kecak",
+    "descHtml": "One of Bali's six key spiritual pillars, perched on a cliff 70 metres above the crashing surf. Walk the clifftop path for wide-open ocean views - and keep an eye on your belongings, the resident monkeys are famously cheeky. We stay on for the Kecak in the temple's cliff-edge amphitheatre: more than seventy chanting men around a ring of fire, retelling the Ramayana with the sunset over the ocean right behind the stage."
+   }
+  ]
+ },
+ "tanah-lot-taman-ayun": {
+  "heroBg": "tanah-lot.webp",
+  "title": "Tanah Lot Sunset Temple & Taman Ayun Royal Temple Tour",
+  "desc": "The royal state temple of Taman Ayun, floating inside its wide moat in Mengwi, then the sea temple of Tanah Lot as the sun drops behind it - a relaxed half-day west of Ubud built around sunset.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "5–7 hours"
+   },
+   {
+    "label": "Area",
+    "value": "West Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>5&ndash;7 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Tanah Lot &amp; Taman Ayun\" >$50</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Sarong rental at temples</li> <li>Free cold water on board</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets for the listed attractions </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Tanah Lot &amp; Taman Ayun\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Tanah Lot & Taman Ayun"
+   }
+  ],
+  "metaTitle": "Tanah Lot Sunset Temple & Taman Ayun Royal Temple Tour",
+  "metaDesc": "Private West Bali half-day tour from Ubud - the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset on the sea. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
+  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/taman-ayun.html",
+    "img": "taman-ayun-hero.jpg",
+    "alt": "Tiered meru shrines across the moat at Taman Ayun temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Taman Ayun Royal Temple",
+    "descHtml": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tanah-lot.html",
+    "img": "tanah-lot.webp",
+    "alt": "Tanah Lot temple on its offshore rock",
+    "w": 1152,
+    "hgt": 1536,
+    "num": "Stop 2",
+    "name": "Tanah Lot Sunset Temple",
+    "descHtml": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia."
+   }
+  ]
+ },
+ "ubud-atv-adventure": {
+  "heroBg": "atv-ride-jungle.webp",
+  "title": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
+  "desc": "Tear through jungle tracks, rice fields, and river crossings on an ATV quad bike, then meet the animals at Bali Zoo and Bird Park before cooling off at Tegenungan waterfall.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "6–8 hours"
+   },
+   {
+    "label": "Area",
+    "value": "Ubud"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Ubud ATV Adventure",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong><span class=\"price\" data-price=\"Ubud ATV Adventure\">$80</span></strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: Entrance &amp; activity tickets for the listed stops </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance &amp; activity tickets</li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud ATV Adventure\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Ubud ATV Adventure"
+   }
+  ],
+  "metaTitle": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
+  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride, then Bali Zoo, Bali Bird Park, and the Tegenungan waterfall. Only a 10% deposit to book.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-atv-adventure-card.jpg",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/atv-ride.html",
+    "img": "atv-ride-jungle.webp",
+    "alt": "Riders splashing an ATV through a muddy jungle track near Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "ATV Quad Bike Ride",
+    "descHtml": "The main event - roughly an hour on an ATV through jungle trails, muddy tracks, rice paddies, and shallow river crossings, with a guide leading the way. Ride solo or tandem; a full safety briefing and gear are included. Expect to get wonderfully muddy."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/bali-zoo.html",
+    "img": "bali-zoo-big-cat.webp",
+    "alt": "A tiger up close at Bali Zoo, south of Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Bali Zoo",
+    "descHtml": "Just south of Ubud, wander shaded jungle grounds past elephants, orangutans, sun bears, and hundreds of tropical animals. Optional feeding sessions and encounters are on offer, and it's compact enough for a relaxed visit - a big hit with kids."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/bali-bird-park.html",
+    "img": "bird-park-macaw-show.webp",
+    "alt": "Macaws at the free-flight show, Bali Bird Park",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Bali Bird Park",
+    "descHtml": "Right nearby, stroll walk-in aviaries home to more than 1,000 birds - from rare Bali starlings to giant hornbills - with free-flight shows overhead. Colourful, shady, and easy-going, it pairs naturally with the zoo."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tegenungan-waterfall.html",
+    "img": "tegenungan-waterfall-hero.jpg",
+    "alt": "Tegenungan waterfall dropping into its plunge pool",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Tegenungan Waterfall",
+    "descHtml": "A wide, powerful waterfall in the jungle just outside Ubud, with a natural pool at its base for a cooling swim when the water is calm. A short walk down, and a refreshing way to end the day."
+   }
+  ]
+ },
+ "ubud-culture-day": {
+  "heroBg": "barong-dance-card.webp",
+  "title": "Ubud Culture Day: Barong Dance, Batuan Temple & Kecak Fire Dance",
+  "desc": "Ubud's arts and traditions in one day - a morning Barong dance, silver and batik crafts, the carved Batuan temple, the royal palace, and the Kecak fire dance to close the night, with the traditional market as an optional stop.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "6–8 hours"
+   },
+   {
+    "label": "Area",
+    "value": "Ubud"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Ubud Culture Day\" >$55</span ></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: Entrance &amp; dance performance tickets included </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li data-only=\"standard\"> Standard option: Dance performance ticket </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Culture Day\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Ubud Culture Day"
+   }
+  ],
+  "metaTitle": "Ubud Culture Day: Barong Dance, Batuan Temple & Kecak Fire Dance",
+  "metaDesc": "A full day of Ubud's arts and traditions - a morning Barong dance, silver and batik crafts, the carved Batuan temple, the royal palace, and an evening Kecak fire dance.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-culture-day-card.jpg",
+  "bookItem": "Ubud Culture Day",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/barong-dance.html",
+    "img": "barong-dance-card.webp",
+    "alt": "Barong and Rangda facing off in a Balinese dance drama",
+    "w": 1536,
+    "hgt": 862,
+    "num": "Stop 1",
+    "name": "Barong & Keris Dance",
+    "descHtml": "We open the day in Batubulan, where the Barong and Keris dance is performed every morning. The Barong - a lion-like guardian of good - faces the demon queen Rangda in an ancient battle of good against evil, set to a live gamelan orchestra and ending with entranced kris dancers. A dramatic, only-in-Bali way to start."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/ubud-arts-crafts.html",
+    "img": "ubud-arts-crafts-hero.jpg",
+    "alt": "Ubud Arts Crafts",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Ubud Arts & Crafts",
+    "descHtml": "Bali's craft traditions in one hands-on stop - the silver workshops of Celuk, a wax-and-dye batik studio, and the intricate Batuan painting style. Watch the artisans, try it yourself, and pick up a keepsake straight from the makers."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/pura-batuan.html",
+    "img": "pura-batuan-temple.jpg",
+    "alt": "Pura Batuan Temple, Bali",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Pura Batuan Temple",
+    "descHtml": "A beautifully carved 11th-century village temple in Batuan, every gate and shrine covered in intricate paras-stone work. Cool, quiet, and rarely crowded - a calm heritage stop right on the road between the craft villages and Ubud."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/ubud-royal-palace.html",
+    "img": "ubud-saraswati-temple.jpg",
+    "alt": "Ubud Saraswati Temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Ubud Royal Palace & Art Market",
+    "descHtml": "Step inside Puri Saren Agung, the ornate home of Ubud's royal family and the beating heart of the town's arts scene. Just across the road, the traditional market is the place to browse handmade crafts, textiles, and souvenirs."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/kecak-dance.html",
+    "img": "kecak.jpg",
+    "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 5",
+    "name": "Kecak Fire Dance",
+    "descHtml": "We close the day with the Kecak - a circle of dozens of chanting men, no instruments, and a fire-lit retelling of the Ramayana as the sun goes down. Raw, powerful, and a fitting end to a full day of Balinese art and culture."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/ubud-market.html",
+    "img": "ubud-market-hero.jpg",
+    "alt": "Ubud Traditional Market",
+    "w": 1200,
+    "hgt": 1157,
+    "num": "Stop 6 · Optional",
+    "name": "Ubud Traditional Market",
+    "descHtml": "Pasar Ubud, right across from the Royal Palace - produce and offering flowers in the morning, textiles, woodcarving, and souvenir stalls the rest of the day. Easy to fold in on the way between stops if you'd like some time to browse and bargain."
+   }
+  ]
+ },
+ "ubud-rafting-adventure": {
+  "heroBg": "rafting.webp",
+  "title": "Ayung River Rafting & Tegenungan Waterfall Tour",
+  "desc": "Paddle the Ayung River through jungle gorges and hidden waterfalls, then dry off among the Tegalalang rice terraces, Luwak coffee, and the Tegenungan waterfall. A private car, a local driver, your pace.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "6–8 hours"
+   },
+   {
+    "label": "Area",
+    "value": "Ubud"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Ubud Rafting Adventure",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>6&ndash;8 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong><span class=\"price\" data-price=\"Ubud Rafting Adventure\">$75</span></strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: Entrance &amp; activity tickets for the listed stops </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance &amp; activity tickets</li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Rafting Adventure\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Ubud Rafting Adventure"
+   }
+  ],
+  "metaTitle": "Ayung River Rafting & Tegenungan Waterfall Tour",
+  "metaDesc": "A private Ubud day tour built around Ayung River white-water rafting, with the Tegalalang rice terrace, Luwak coffee, and the Tegenungan waterfall.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-rafting-adventure-card.jpg",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/rafting.html",
+    "img": "rafting.webp",
+    "alt": "A rafting crew punching through whitewater rapids",
+    "w": 5609,
+    "hgt": 3739,
+    "num": "Stop 1",
+    "name": "Ayung River Rafting",
+    "descHtml": "We start with the highlight - a 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. Beginners and families welcome; all safety gear provided."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tegalalang-rice-terrace.html",
+    "img": "tegalalang-rice-terrace-hero.jpg",
+    "alt": "The stepped rice terraces at Tegalalang, north of Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Tegalalang Rice Terrace",
+    "descHtml": "Bali's most iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by the thousand year old subak irrigation system. Wander the paths, catch the swings and photo spots, and take in one of the island's signature views."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/coffee-plantation.html",
+    "img": "coffee-plantation-hero.jpg",
+    "alt": "A working coffee and spice plantation near Ubud",
+    "w": 1200,
+    "hgt": 1545,
+    "num": "Stop 3",
+    "name": "Luwak Coffee Plantation",
+    "descHtml": "Walk through a working plantation to see how coffee, cacao, and spices grow, then taste your way through a tray of Balinese coffees and teas - including the famous kopi luwak straight from the source. Tastings are complimentary."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tegenungan-waterfall.html",
+    "img": "tegenungan-waterfall-hero.jpg",
+    "alt": "Tegenungan waterfall dropping into its plunge pool",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Tegenungan Waterfall",
+    "descHtml": "A wide, powerful waterfall tucked into the jungle just outside Ubud, with a natural pool at its base you can swim in when the water is calm. A short walk down, and a genuinely refreshing reward to end the day."
+   }
+  ]
+ },
+ "ubud-tour": {
+  "heroBg": "tour-hero.jpg",
+  "title": "Ubud Rice Terrace, Tirta Empul & Monkey Forest Tour",
+  "desc": "Bali's cultural heart in one day - the Tegalalang rice terraces and a coffee plantation, Tirta Empul holy water temple, Goa Gajah, and the famous Monkey Forest, with Gunung Kawi as an optional stop. A private car, a local driver, your pace.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "Approx. 8 hours"
+   },
+   {
+    "label": "Area",
+    "value": "Ubud"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>5&ndash;7 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span ><strong ><span class=\"price\" data-price=\"Ubud Tour\">$45</span></strong > </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off</li> <li>Free cold water on board</li> <li>Flexible, fully customizable itinerary</li> <li data-only=\"exclusive\"> Exclusive option: Entrance tickets for the listed attractions </li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\"> Standard option: Entrance tickets to attractions </li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\" > Book Now </button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ubud Tour\" > + My Trips </button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Ubud Tour"
+   }
+  ],
+  "metaTitle": "Ubud Rice Terrace, Tirta Empul & Monkey Forest Tour",
+  "metaDesc": "Private Ubud tour with a local driver - Tegalalang rice terrace and coffee plantation, Tirta Empul, Goa Gajah, and the Sacred Monkey Forest, with Gunung Kawi as an optional stop.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-tour-card.jpg",
+  "bookItem": "Ubud Tour",
+  "bookDefault": "tour",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/tegalalang-rice-terrace.html",
+    "img": "tegalalang-rice-terrace-hero.jpg",
+    "alt": "Tegalalang rice terrace north of Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Tegalalang Rice Terrace & Coffee Plantation",
+    "descHtml": "We start at the iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system. Right beside it, walk through a working plantation to see how coffee grows and taste the famous kopi luwak straight from the source. Tastings are complimentary."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/tirta-empul.html",
+    "img": "tirta-empul-hero.jpg",
+    "alt": "Purification pools at Tirta Empul holy water temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Tirta Empul Holy Water Temple",
+    "descHtml": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with confidence and respect."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/gunung-kawi.html",
+    "img": "gunung-kawi-hero.jpg",
+    "alt": "Rock-cut shrines at Gunung Kawi temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3 · Optional",
+    "name": "Gunung Kawi Temple",
+    "descHtml": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/goa-gajah.html",
+    "img": "goa-gajah-hero.jpg",
+    "alt": "Carved entrance of Goa Gajah, the Elephant Cave",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Goa Gajah - The Elephant Cave",
+    "descHtml": "A 9th-century sanctuary whose cave mouth is carved into a monstrous demon face you step straight through. Inside are ancient meditation niches; outside, bathing pools and jungle paths lead down to hidden shrines. One of Ubud's oldest and most mysterious sites."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/monkey-forest.html",
+    "img": "monkey-forest-temples.jpg",
+    "alt": "Long-tailed macaques at the Sacred Monkey Forest, Ubud",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 5",
+    "name": "Sacred Monkey Forest Sanctuary",
+    "descHtml": "We finish in the heart of Ubud at a moss-covered jungle temple complex, home to more than 700 long-tailed macaques. Walk beneath ancient banyan roots and past weathered stone guardians in one of Bali's most atmospheric sanctuaries. Keep a firm hold on your belongings and give the monkeys room, and they are easy enough to be around."
+   }
+  ]
+ },
+ "ulun-danu-tanah-lot": {
+  "heroBg": "ulun-danu-beratan-hero.webp",
+  "title": "Ulun Danu Beratan & Handara Gate Instagram Tour",
+  "desc": "A cool highland loop up to the temple that floats on Lake Beratan, then the famous Handara gate framed by jungle-covered mountains - two of Bali's most photographed spots in one relaxed day.",
+  "hooks": [
+   {
+    "label": "Duration",
+    "value": "5–7 hours"
+   },
+   {
+    "label": "Area",
+    "value": "West Bali"
+   },
+   {
+    "label": "Group",
+    "value": "Up to 6 guests"
+   }
+  ],
+  "cta": "Book this program",
+  "ctaHref": "#booking",
+  "stopsTitle": "What You'll Do",
+  "stopsId": "stops",
+  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookDefault": "tour",
+  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Tour Details</h2> <div class=\"info__facts\"> <div class=\"info__fact\"> <span>Duration</span><strong>5&ndash;7 hours</strong> </div> <div class=\"info__fact\"> <span>Price</span><strong><span class=\"price\" data-price=\"Ulun Danu Beratan &amp; Handara Gate\">$60</span></strong> </div> <div class=\"info__fact\"> <span>Pick-up</span><strong>Ubud &amp; nearby</strong> </div> <div class=\"info__fact\"> <span>Availability</span><strong>Daily</strong> </div> </div> <div class=\"info__lists\"> <div class=\"info__col\"> <h3>What's Included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Friendly English-speaking driver</li> <li>Hotel or villa pick-up and drop-off in Ubud</li> <li>Sarong rental at temples</li> <li>Free cold water on board</li> <li data-only=\"exclusive\">Exclusive option: Entrance tickets for the listed attractions</li> </ul> </div> <div class=\"info__col\"> <h3>What's Excluded</h3> <ul class=\"info__list info__list--no\"> <li data-only=\"standard\">Standard option: Entrance tickets to attractions</li> <li>Meals and drinks</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div> <div class=\"info__cta\"> <button class=\"program-cta__btn program-cta__btn--book\" type=\"button\" data-open=\"book-modal\">Book Now</button> <button class=\"program-cta__btn program-cta__btn--add\" type=\"button\" data-add-item=\"Ulun Danu Beratan &amp; Handara Gate\">+ My Trips</button> </div> </div>",
+  "crumb": [
+   {
+    "type": "link",
+    "href": "/",
+    "text": "Home"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "link",
+    "href": "/tour.html",
+    "text": "Tours"
+   },
+   {
+    "type": "sep",
+    "text": "›"
+   },
+   {
+    "type": "text",
+    "text": "Ulun Danu Beratan & Handara Gate"
+   }
+  ],
+  "metaTitle": "Ulun Danu Beratan & Handara Gate Instagram Tour",
+  "metaDesc": "Private West Bali tour from Ubud - the Ulun Danu Beratan lake temple and the famous Handara Gate, two of Bali's most photographed spots in one highland loop.",
+  "ogImage": "https://cahyanaubudexperience.com/assets/images/west-bali-tour-card.jpg",
+  "items": [
+   {
+    "type": "stop",
+    "link": "/attractions/ulun-danu-beratan.html",
+    "img": "ulun-danu-beratan-hero.webp",
+    "alt": "Ulun Danu Beratan temple on the shore of Lake Bratan",
+    "w": 1920,
+    "hgt": 1237,
+    "num": "Stop 1",
+    "name": "Ulun Danu Beratan Lake Temple",
+    "descHtml": "The temple that seems to float on Lake Beratan - the one printed on Indonesia's 50,000 rupiah note. Up in the highlands the air is cool and the mist rolls in off the water, which makes for the kind of photo you can't get anywhere else on the island."
+   },
+   {
+    "type": "stop",
+    "link": "/attractions/handara-gate.html",
+    "img": "handara-gate.webp",
+    "alt": "The Handara gate on the highland road at Bedugul",
+    "w": 1920,
+    "hgt": 1280,
+    "num": "Stop 2",
+    "name": "Handara Gate",
+    "descHtml": "The towering Balinese gate framed by jungle-covered mountains - one of the island's most recognisable photo spots. It sits at the entrance of a highland golf resort, and we time it so you get your shot without the long queue."
+   }
+  ]
+ }
+};

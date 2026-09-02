@@ -1,3 +1,5 @@
+import GuideArticle from '@/components/sections/GuideArticle';
+import { GUIDE_CONTENT } from '@/content/guides';
 import { GUIDES, guidePath } from '@/lib/routes';
 
 export const dynamicParams = false;
@@ -8,15 +10,17 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  return { alternates: { canonical: guidePath(slug) } };
+  const d = GUIDE_CONTENT[slug];
+  if (!d) return { alternates: { canonical: guidePath(slug) } };
+  return {
+    title: d.metaTitle,
+    description: d.metaDesc,
+    alternates: { canonical: guidePath(slug) },
+    openGraph: { title: d.metaTitle, description: d.metaDesc, images: d.ogImage ? [d.ogImage] : undefined },
+  };
 }
 
-export default async function GuidePage({ params }) {
+export default async function Page({ params }) {
   const { slug } = await params;
-  return (
-    <main>
-      <h1>{slug}</h1>
-      <p>Guide route shell. Content lands in MIG-32.</p>
-    </main>
-  );
+  return <GuideArticle data={GUIDE_CONTENT[slug]} />;
 }

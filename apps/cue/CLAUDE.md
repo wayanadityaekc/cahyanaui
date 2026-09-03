@@ -426,7 +426,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v432, PARTIALS 81)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v433, PARTIALS 81)*
 - **Aturan harga (Wayan, 3 Sep 2026)** - dipakai sama di `script.js` (situs lama) dan
   `cahyana-api/pricing.js` (server):
   - **Standar** = harga base tour apa adanya (×2 mobil kalau >5 tamu).

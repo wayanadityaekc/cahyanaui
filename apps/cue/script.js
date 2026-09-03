@@ -388,7 +388,7 @@ function carPrice(base, guests) {
 
 // cari kategori & harga sebuah program dari struktur prices
 function itemInfo(name) {
-  for (const cat of ["tour", "experience", "performance", "villa", "combo", "place"]) {
+  for (const cat of ["tour", "experience", "performance", "villa", "combo"]) {
     if (prices[cat] && prices[cat][name]) return { cat, price: prices[cat][name] };
   }
   return null;
@@ -4466,7 +4466,7 @@ function initTourType() {
   // Unit harga di card: tour/combo = "/car", experience/performance = "/person".
   // Ditaruh sebagai sibling <span> di sebelah harga -> nggak ketimpa renderPrices.
   function addPriceUnit(priceEl, cat) {
-    const unit = cat === "tour" || cat === "combo" || cat === "place" ? "per car"
+    const unit = cat === "tour" || cat === "combo" ? "per car"
       : cat === "experience" || cat === "performance" ? "per person" : "";
     if (!unit || priceEl.parentElement.querySelector(".price-unit")) return;
     const u = document.createElement("span");
@@ -5483,7 +5483,7 @@ function initGlanceHero() {
     // udah ada (dari addPriceUnit) biar nggak dobel.
     const info = itemInfo(priceEl.dataset.price);
     const cat = info ? info.cat : "";
-    const unit = (cat === "tour" || cat === "combo" || cat === "place") ? "per car"
+    const unit = (cat === "tour" || cat === "combo") ? "per car"
       : (cat === "experience" || cat === "performance") ? "per person" : "";
     if (unit) {
       let unitEl = priceFact.querySelector(".price-unit");

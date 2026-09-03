@@ -2,6 +2,14 @@
 #  Cahyana Ubud Experience — performance (cache + kompres)
 # ============================================================
 
+# --- Sumber Next.js jangan dilayanin publik ---
+# Repo ini isinya situs lama (dilayanin) DAN sumber Next.js (nggak). Hostinger
+# nyajiin root repo apa adanya, jadi tanpa ini folder app/, components/, docs/
+# dkk kebuka. Pakai RedirectMatch (mod_alias) yang udah kebukti jalan di sini,
+# bukan mod_rewrite - biar nggak diem-diem mati kalau modulnya nggak ada.
+RedirectMatch 404 ^/(app|components|content|lib|state|tools|docs|node_modules|\.github|\.next|\.claude|out)/
+RedirectMatch 404 ^/(package(-lock)?\.json|next\.config\.[mc]?js|jsconfig\.json|vercel\.json|CLAUDE\.md|MIGRATION_BRIEF\.md)$
+
 # --- Satu host kanonik: www -> apex (301) ---
 # www ngelayanin situs langsung, nggak redirect, jadi tamu yang mendarat di www
 # kena blokir CORS di API: harga live, review, login, booking, contact semua mati

@@ -2084,6 +2084,16 @@ a.tripbar--promo {
 .experience__name {
   margin-bottom: 0.4rem;
 }
+/* Judul kartu listing (tour/activities/destinations) 2 baris - title lebih
+   deskriptif buat SEO (Sep 2026, Wayan). Tinggi di-reserve 2 baris (bukan cuma
+   di-clamp) biar row grid rata walau title tetangga lebih pendek. */
+.catsec .experience__name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 3.2em;
+}
 /* "See more" card di ujung baris slider (ganti tombol See All yang ngambang).
    Kartu foto gelap + panah, ukuran ikut kartu tetangga (stretch full tinggi). */
 .experience__card--more {

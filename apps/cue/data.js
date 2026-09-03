@@ -7,7 +7,6 @@
    - transport       : biaya transport per aktivitas
    - TICKETS         : harga tiket masuk per orang (IDR, turis asing)
    - TOUR_TICKETS    : tiket yang di-cover Exclusive tiap tur
-   - EXCLUSIVE_FEE   : fee internal Exclusive (JANGAN tampil di UI)
    - CURRENCIES dkk  : kurs & simbol mata uang
    Habis ngubah harga: node tools/sync-prices.js, lalu bump ?v= di
    semua halaman (data.js & script.js dimuat dengan versi yang sama).
@@ -22,12 +21,12 @@
 // script.js (isProgramActive + initInactivePrograms, initRelated, relatedUpsellHTML,
 // suggestState). Nggak ngefek ke harga/booking - link langsung ke halamannya tetep jalan.
 const prices = {
-  tour: { "Ubud Tour": { usd: 45, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 55, idr: 850000 }, "Besakih & Taman Ujung": { usd: 60, idr: 950000 }, "Tanah Lot & Taman Ayun": { usd: 50, idr: 780000 }, "Ulun Danu Beratan & Handara Gate": { usd: 60, idr: 950000 }, "Jatiluwih Rice Terrace Tour": { usd: 45, idr: 700000 }, "Bali Hidden Beaches and Cliffs": { usd: 45, idr: 700000 }, "Banyumala & Twin Lakes": { usd: 55, idr: 850000 }, "Munduk Waterfall Tour": { usd: 55, idr: 850000 }, "3-Day Best of Bali Package": { usd: 150, idr: 2300000 } /* CEK WAYAN - paket multi-hari baru, harga contoh */, "Sangeh Monkey Forest & Tanah Lot": { usd: 50, idr: 780000 } /* CEK WAYAN - tour baru, harga contoh */ },
-  experience: { "ATV": { usd: 40, idr: 620000 }, "Rafting": { usd: 35, idr: 550000 }, "Swing": { usd: 25, idr: 400000 }, "Jeep Sunrise": { usd: 50, idr: 780000 }, "Mount Batur Trekking": { usd: 55, idr: 850000 }, "Cooking Class": { usd: 35, idr: 550000 }, "Watersport": { usd: 45, idr: 700000 }, "Bali Zoo": { usd: 40, idr: 600000 }, "Bali Bird Park": { usd: 28, idr: 430000 } },
-  performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
-  transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
-  villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
-  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "Uluwatu & Sunset Kecak": { usd: 55, idr: 850000 }, "GWK & Pandawa Beach": { usd: 55, idr: 850000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 }, "Full Adventure: Rafting & ATV": { usd: 130, idr: 2000000 } /* CEK WAYAN - tour baru, harga contoh */ }
+  tour: { "Ubud Tour": { usd: 40, idr: 700000 }, "Lempuyang & Tirta Gangga": { usd: 49, idr: 850000 }, "Besakih & Taman Ujung": { usd: 54, idr: 950000 }, "Tanah Lot & Taman Ayun": { usd: 45, idr: 780000 }, "Ulun Danu Beratan & Handara Gate": { usd: 54, idr: 950000 }, "Jatiluwih Rice Terrace Tour": { usd: 40, idr: 700000 }, "Bali Hidden Beaches and Cliffs": { usd: 40, idr: 700000 }, "Banyumala & Twin Lakes": { usd: 49, idr: 850000 }, "Munduk Waterfall Tour": { usd: 49, idr: 850000 }, "3-Day Best of Bali Package": { usd: 131, idr: 2300000 } /* CEK WAYAN - paket multi-hari baru, harga contoh */, "Sangeh Monkey Forest & Tanah Lot": { usd: 45, idr: 780000 } /* CEK WAYAN - tour baru, harga contoh */ },
+  experience: { "ATV": { usd: 36, idr: 620000 }, "Rafting": { usd: 32, idr: 550000 }, "Swing": { usd: 23, idr: 400000 }, "Jeep Sunrise": { usd: 45, idr: 780000 }, "Mount Batur Trekking": { usd: 49, idr: 850000 }, "Cooking Class": { usd: 32, idr: 550000 }, "Watersport": { usd: 40, idr: 700000 }, "Bali Zoo": { usd: 35, idr: 600000 }, "Bali Bird Park": { usd: 25, idr: 430000 } },
+  performance: { "Kecak Dance": { usd: 9, idr: 150000 }, "Barong Dance": { usd: 9, idr: 150000 } },
+  transfer: { "Airport – Ubud": { usd: 18, idr: 300000 }, "Denpasar Area – Ubud": { usd: 18, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 26, idr: 450000 }, "Canggu Area – Ubud": { usd: 25, idr: 430000 }, "Kuta Area – Ubud": { usd: 23, idr: 400000 }, "Amed Area – Ubud": { usd: 40, idr: 700000 }, "Buleleng Area – Ubud": { usd: 45, idr: 780000 }, "Candidasa Area – Ubud": { usd: 33, idr: 580000 }, "Kintamani Area – Ubud": { usd: 26, idr: 450000 }, "Seminyak Area – Ubud": { usd: 26, idr: 450000 } },
+  villa: { "Cahyana Tibuah": { usd: 72, idr: 1250000 }, "Cahyana House": { usd: 85, idr: 1480000 } },
+  combo: { "Ubud Culture Day": { usd: 49, idr: 850000 }, "Uluwatu & Sunset Kecak": { usd: 49, idr: 850000 }, "GWK & Pandawa Beach": { usd: 49, idr: 850000 }, "Batur Sunrise & Adrenaline": { usd: 74, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 66, idr: 1150000 }, "Ubud ATV Adventure": { usd: 72, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 74, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 83, idr: 1450000 }, "Full Adventure: Rafting & ATV": { usd: 114, idr: 2000000 } /* CEK WAYAN - tour baru, harga contoh */ }
 };
 
 // ===== Pickup surcharge (diturunkan dari harga transfer) - CEK WAYAN =====
@@ -43,17 +42,17 @@ const ITEM_ZONE = { "Uluwatu Cliff Temple": "south", "Tanah Lot Sunset Temple": 
 // Charter mobil 
 // extended = full day + jam tambahan, + surcharge kalau pickup di luar Ubud.
 const CHARTER = {
-  half: { usd: 40, idr: 600000 },
-  full: { usd: 65, idr: 1000000 },
+  half: { usd: 35, idr: 600000 },
+  full: { usd: 57, idr: 1000000 },
   extHourUsd: 4,
   extHourIdr: 60000,
-  surchargeUsd: 7,
+  surchargeUsd: 6,
   surchargeIdr: 100000
 };
 
 const transport = {
   "ATV": { usd: 3, idr: 50000 }, "Rafting": { usd: 3, idr: 50000 }, "Swing": { usd: 3, idr: 50000 },
-  "Jeep Sunrise": { usd: 7, idr: 100000 }, "Mount Batur Trekking": { usd: 7, idr: 100000 },
+  "Jeep Sunrise": { usd: 6, idr: 100000 }, "Mount Batur Trekking": { usd: 6, idr: 100000 },
   "Cooking Class": { usd: 0, idr: 0 }, "Kecak Dance": { usd: 0, idr: 0 }, "Barong Dance": { usd: 0, idr: 0 },
   "Watersport": { usd: 0, idr: 0 } // PLACEHOLDER - transport Watersport (Tanjung Benoa jauh dari Ubud), Wayan isi
 };
@@ -139,10 +138,7 @@ const TOUR_TICKETS = {
 };
 
 // -- Fee internal Exclusive (JANGAN pernah ditampilkan ke user) & kurs tiket IDR->USD.
-// TIDAK dipakai di rumus harga sejak 3 Sep 2026 - Exclusive = base + tiket x tamu,
-// tanpa margin. Dibiarin ada dulu sampai Wayan mutusin mau dibuang atau dipasang lagi.
-const EXCLUSIVE_FEE = 0.10;
-const TICKET_IDR_PER_USD = 15500;
+const TICKET_IDR_PER_USD = 17600;
 
 // -- Suplemen Exclusive per orang, DITURUNKAN dari TICKETS (bukan angka lepas lagi).
 //    Key = penanda tur mana yang punya toggle Standard/Exclusive.
@@ -187,7 +183,7 @@ const experienceDetails = [
 // IDR pakai harga rupiah tersimpan (bukan hasil konversi) biar tetap angka bulat rapi.
 const CURRENCIES = ["USD", "IDR", "AUD", "EUR", "GBP"];
 
-const CUR_RATE = { USD: 1, AUD: 1.53, EUR: 0.92, GBP: 0.79 };
+const CUR_RATE = { USD: 1, AUD: 1.4, EUR: 0.86, GBP: 0.74 };
 
 // Simbol per currency buat tampilan harga (AUD = A$ biar beda dari USD).
 // Dropdown currency TETAP pakai kode (USD/IDR/...) - ini cuma buat harga.

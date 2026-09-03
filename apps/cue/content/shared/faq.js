@@ -9,7 +9,7 @@ export const FAQ = [
   },
   {
     q: `Can I build my own multi-day itinerary?`,
-    a: `<p>Yes - that's exactly what our <a href="my-trips.html">My Trips</a> planner is for. Add tours, activities, performances, and transfers, pick a date for each, and watch the total update as you plan. Prefer us to plan it for you? Just tell us what you like and we'll shape a route around it.</p>`,
+    a: `<p>Yes - that's exactly what our <a href="/my-trips.html">My Trips</a> planner is for. Add tours, activities, performances, and transfers, pick a date for each, and watch the total update as you plan. Prefer us to plan it for you? Just tell us what you like and we'll shape a route around it.</p>`,
   },
   {
     q: `Are prices per person or per car?`,

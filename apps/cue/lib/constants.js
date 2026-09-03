@@ -1,5 +1,8 @@
 export const WHATSAPP_NUMBER = '61401657862';
-export const API_BASE = 'https://cahyana-api-production.up.railway.app/api';
+// Overridable so a preview build can point at a local API; production keeps
+// the Railway default when the variable is unset.
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
 
 export const KEY = {
   currency: 'cue_currency',

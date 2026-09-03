@@ -64,12 +64,24 @@ for (const file of contentFiles) {
 // invented for a card that never had one - how eight destination cards ended up
 // showing a fabricated $45.
 const legacyPrices = new Set();
-for (const f of htmlFiles) for (const m of fs.readFileSync(f, "utf8").matchAll(/data-price="([^"]*)"/g)) legacyPrices.add(decode(m[1]));
+const legacyFallback = new Map();
+for (const f of htmlFiles) {
+  const src = fs.readFileSync(f, "utf8");
+  for (const m of src.matchAll(/data-price="([^"]*)"/g)) legacyPrices.add(decode(m[1]));
+  for (const m of src.matchAll(/<span[^>]*data-price="([^"]*)"[^>]*>([^<]*)<\/span\s*>/g)) legacyFallback.set(decode(m[1]), m[2].trim());
+}
 for (const m of fs.readFileSync("script.js", "utf8").matchAll(/data-price=\\?"([^"\\]*)/g)) legacyPrices.add(decode(m[1]));
 for (const file of contentFiles) {
   for (const m of fs.readFileSync(file, "utf8").matchAll(/"priceName": "([^"]+)"/g)) {
     checked++;
     if (!legacyPrices.has(m[1])) stale.push(`${file}  priceName with no legacy data-price: ${m[1]}`);
+  }
+  // The fallback is what a visitor reads before the live price arrives, so a
+  // stale one briefly shows an old price. It has to equal the legacy span.
+  for (const m of fs.readFileSync(file, "utf8").matchAll(/"priceName": "([^"]+)",\s*\n\s*"priceFallback": "([^"]*)"/g)) {
+    checked++;
+    const want = legacyFallback.get(m[1]);
+    if (want !== undefined && want !== m[2]) stale.push(`${file}  priceFallback for ${m[1]}: has ${m[2]}, legacy says ${want}`);
   }
 }
 

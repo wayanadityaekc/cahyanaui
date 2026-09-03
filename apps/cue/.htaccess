@@ -2,6 +2,17 @@
 #  Cahyana Ubud Experience — performance (cache + kompres)
 # ============================================================
 
+# --- Satu host kanonik: www -> apex (301) ---
+# www ngelayanin situs langsung, nggak redirect, jadi tamu yang mendarat di www
+# kena blokir CORS di API: harga live, review, login, booking, contact semua mati
+# padahal halamannya keliatan normal. Canonical + og:url juga nunjuk ke apex.
+# Dibungkus IfModule: kalau mod_rewrite nggak ada, ini no-op (nggak error).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
 # --- Redirect URL lama -> baru (301 permanen, jaga SEO) ---
 Redirect 301 /ubud-jeep-sunrise.html /kintamani-sunrise-penglipuran.html
 Redirect 301 /taste-of-ubud.html /attractions/cooking-class.html

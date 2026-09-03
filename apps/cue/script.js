@@ -206,7 +206,7 @@ const SUGGEST = [
 // -- currency & price formatting
 // Bulatin hasil: IDR ke 1.000 terdekat, currency lain ke bilangan bulat.
 function roundCur(v, cur) {
-  return cur === "IDR" ? Math.round(v / 1000) * 1000 : Math.round(v);
+  return cur === "IDR" ? Math.ceil(v / 1000) * 1000 : Math.ceil(v);
 }
 
 // Konversi { usd, idr } ke currency aktif -> angka
@@ -588,7 +588,7 @@ function exclusivePrice(name, guests) {
   const g = guests || currentGuests || DISPLAY_GUESTS;
   const car = carPrice(info.price, g);
   // total = base per mobil + tiket x jumlah tamu, bulatkan KE ATAS (USD ke dolar
-  // utuh, IDR ke 10 ribu). EXCLUSIVE_FEE udah nggak dipakai (Wayan, 3 Sep 2026).
+  // utuh, IDR ke 10 ribu). Nggak ada margin - Wayan udah masukin ke harga base.
   const usd = Math.ceil(car.usd + sup.usd * g);
   const idr = Math.ceil((car.idr + sup.idr * g) / 10000) * 10000;
   return { usd: usd, idr: idr };

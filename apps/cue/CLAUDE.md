@@ -190,8 +190,7 @@ When unsure, ask first (keep it short).
 - Label section pertama: halaman tour = **"What You'll Do"**, attraction = **"The Experience"**.
 - **FAQ**: DIPUSATIN ke **`faq.html`** doang (Agu 2026) — semua FAQ inline + partial di
   halaman lain UDAH DIHAPUS (link ke faq.html ada di footer). Jangan tambahin FAQ ke
-  halaman manapun selain faq.html. Partial `partials/faq-*.html` skarang orphan (nggak
-  kepakai). `sync-schema.js` `FAQ_PAGES = {}`; schema-faq cuma di-generate buat faq.html
+  halaman manapun selain faq.html. Partial `partials/faq-*.html` UDAH DIHAPUS dari disk. `sync-schema.js` `FAQ_PAGES = {}`; schema-faq cuma di-generate buat faq.html
   (lewat section 1b inline). Card "Still have questions?" `.faq__chat` juga udah dihapus.
 - Habis ubah FAQ/meta description → jalanin `node tools/sync-schema.js` (regenerate FAQPage dkk).
 
@@ -426,12 +425,12 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v433, PARTIALS 81)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v435, PARTIALS 81)*
 - **Aturan harga (Wayan, 3 Sep 2026)** - dipakai sama di `script.js` (situs lama) dan
   `cahyana-api/pricing.js` (server):
   - **Standar** = harga base tour apa adanya (×2 mobil kalau >5 tamu).
-  - **Exclusive** = harga base + (tiket masuk × jumlah tamu). **Nggak ada margin 10%**
-    lagi - `EXCLUSIVE_FEE` udah nggak dipakai di rumus ini.
+  - **Exclusive** = harga base + (tiket masuk × jumlah tamu). **Nggak ada margin** -
+    `EXCLUSIVE_FEE` udah DIHAPUS total (Wayan: margin udah dimasukin ke harga base).
   - Tiket masuk beda per lokasi walau namanya mirip: **Kecak Ubud 100k ≠ Kecak Uluwatu 150k**.
     Tiket tiap tour ditentukan dari isi programnya (`TOUR_TICKETS`).
   - **Destinasi single nggak dijual lagi** - `prices.place` udah dibuang, kartu destinasi
@@ -441,13 +440,20 @@ Order **must be kept** (declarations first, run last):
     pengecualian "se-zona sama tour" udah dibuang (dulu `ITEM_ZONE`/`TRANSFER_ZONE`
     dipakai buat itu; datanya masih ada karena API ngirim `zone` ke frontend, tapi
     helper zona di script.js udah dihapus).
+  - **Kurs (Wayan, 4 Sep 2026)**: `TICKET_IDR_PER_USD` = **17.600** (dulu 15.500),
+    `CUR_RATE` = AUD 1.40 · EUR 0.86 · GBP 0.74 (dulu 1.53/0.92/0.79). Pembulatan
+    konversi sekarang **KE ATAS** (`Math.ceil`, IDR ke ribuan terdekat ke atas) di
+    `roundCur` - script.js DAN pricing.js.
+  - **IDR = sumber kebenaran harga.** Harga USD tiap item DITURUNKAN dari IDR
+    (`ceil(idr / 17600)`), bukan angka lepas - dulu semua ke-bake di ~15.500 jadi
+    tamu USD kelebihan bayar ~13%. Ganti harga = ubah IDR, terus turunin ulang USD-nya.
   - **Dua tes, jalanin dua-duanya kalau nyentuh harga:**
     `node tools/pricing-spec-test.js` (di cahyana-api) nge-assert 6 aturan di atas, dan
     `node tools/golden-price-test.js` muat `script.js` situs lama beneran di sandbox terus
     bandingin tiap item × mata uang × jumlah tamu sama server. Aturan berubah = ubah
     `script.js` DAN `pricing.js` bareng, kalau nggak golden test langsung merah.
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
-  transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
+  transport, CUR_RATE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.
 - **Multi-currency**: single source `prices` di data.js (USD+IDR per item) + static `CUR_RATE`.
   `[data-price="Name"]` spans are filled by `renderPrices()`. Supports USD/IDR/AUD/EUR/GBP,

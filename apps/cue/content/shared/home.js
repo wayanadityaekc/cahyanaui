@@ -8,7 +8,7 @@ export const EXPLORE_TOURS = [
       "metaIcon": "clock",
       "desc": "Morning Barong, Ubud crafts, the Batuan temple, and an evening Kecak dance.",
       "priceName": "Ubud Culture Day",
-      "priceFallback": "$55",
+      "priceFallback": "$49",
       "href": "/ubud-culture-day.html"
     },
     {
@@ -20,7 +20,7 @@ export const EXPLORE_TOURS = [
       "metaIcon": "clock",
       "desc": "Rice terraces, sacred temples, and the monkey forest in one full day.",
       "priceName": "Ubud Tour",
-      "priceFallback": "$45",
+      "priceFallback": "$40",
       "href": "/ubud-tour.html"
     },
     {
@@ -32,7 +32,7 @@ export const EXPLORE_TOURS = [
       "metaIcon": "clock",
       "desc": "A 4x4 Batur sunrise, Penglipuran village, and temples back to Ubud.",
       "priceName": "Kintamani Sunrise & Penglipuran",
-      "priceFallback": "$85",
+      "priceFallback": "$74",
       "href": "/kintamani-sunrise-penglipuran.html"
     },
     {
@@ -44,7 +44,7 @@ export const EXPLORE_TOURS = [
       "metaIcon": "clock",
       "desc": "The clifftop Uluwatu temple and the sunset Kecak fire dance.",
       "priceName": "Uluwatu & Sunset Kecak",
-      "priceFallback": "$55",
+      "priceFallback": "$49",
       "href": "/south-coast-sunset-kecak.html"
     }
   ];
@@ -58,7 +58,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "Bali's famous fire-and-chant ritual, performed at sunset.",
       "priceName": "Kecak Dance",
-      "priceFallback": "$10",
+      "priceFallback": "$9",
       "href": "/attractions/kecak-dance.html"
     },
     {
@@ -69,7 +69,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "Soar over the jungle on Bali's famous swing.",
       "priceName": "Swing",
-      "priceFallback": "$25",
+      "priceFallback": "$23",
       "href": "/attractions/jungle-swing.html"
     },
     {
@@ -80,7 +80,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "Quad-bike through jungle trails, mud, and a cave tunnel.",
       "priceName": "ATV",
-      "priceFallback": "$40",
+      "priceFallback": "$36",
       "href": "/attractions/atv-ride.html"
     },
     {
@@ -91,7 +91,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "White-water rafting down the scenic Ayung River gorge.",
       "priceName": "Rafting",
-      "priceFallback": "$35",
+      "priceFallback": "$32",
       "href": "/attractions/rafting.html"
     }
   ];

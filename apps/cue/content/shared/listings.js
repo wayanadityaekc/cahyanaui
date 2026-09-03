@@ -69,7 +69,7 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Tour",
-            "priceFallback": "$45"
+            "priceFallback": "$40"
           },
           {
             "href": "/ubud-culture-day.html",
@@ -82,7 +82,7 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Culture Day",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/ubud-rafting-adventure.html",
@@ -95,7 +95,7 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Rafting Adventure",
-            "priceFallback": "$75"
+            "priceFallback": "$66"
           },
           {
             "href": "/ubud-atv-adventure.html",
@@ -108,7 +108,7 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud ATV Adventure",
-            "priceFallback": "$80"
+            "priceFallback": "$72"
           },
           {
             "href": "/full-adventure-rafting-atv.html",
@@ -121,7 +121,7 @@ export const LISTINGS = {
             "meta": "7–9 hours",
             "metaIcon": "clock",
             "priceName": "Full Adventure: Rafting & ATV",
-            "priceFallback": "$130"
+            "priceFallback": "$114"
           }
         ]
       },
@@ -140,7 +140,7 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "Uluwatu & Sunset Kecak",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/gwk-pandawa-beach.html",
@@ -153,7 +153,7 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "GWK & Pandawa Beach",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/hidden-beaches-cliffs.html",
@@ -166,7 +166,7 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Bali Hidden Beaches and Cliffs",
-            "priceFallback": "$45"
+            "priceFallback": "$40"
           },
           {
             "href": "/lempuyang-tirta-gangga.html",
@@ -179,7 +179,7 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Lempuyang & Tirta Gangga",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/besakih-taman-ujung.html",
@@ -192,7 +192,7 @@ export const LISTINGS = {
             "meta": "7–9 hours",
             "metaIcon": "clock",
             "priceName": "Besakih & Taman Ujung",
-            "priceFallback": "$60"
+            "priceFallback": "$54"
           }
         ]
       },
@@ -211,7 +211,7 @@ export const LISTINGS = {
             "meta": "9–10 hours",
             "metaIcon": "clock",
             "priceName": "Kintamani Sunrise & Penglipuran",
-            "priceFallback": "$85"
+            "priceFallback": "$74"
           },
           {
             "href": "/batur-sunrise-adrenaline.html",
@@ -224,7 +224,7 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Batur Sunrise & Adrenaline",
-            "priceFallback": "$85"
+            "priceFallback": "$74"
           },
           {
             "href": "/ulun-danu-tanah-lot.html",
@@ -237,7 +237,7 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Ulun Danu Beratan & Handara Gate",
-            "priceFallback": "$60"
+            "priceFallback": "$54"
           },
           {
             "href": "/tanah-lot-taman-ayun.html",
@@ -250,7 +250,7 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Tanah Lot & Taman Ayun",
-            "priceFallback": "$50"
+            "priceFallback": "$45"
           },
           {
             "href": "/jatiluwih-tour.html",
@@ -263,7 +263,7 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "Jatiluwih Rice Terrace Tour",
-            "priceFallback": "$45"
+            "priceFallback": "$40"
           },
           {
             "href": "/sangeh-tanah-lot.html",
@@ -276,7 +276,7 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Sangeh Monkey Forest & Tanah Lot",
-            "priceFallback": "$50"
+            "priceFallback": "$45"
           },
           {
             "href": "/banyumala-twin-lakes.html",
@@ -289,7 +289,7 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Banyumala & Twin Lakes",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/munduk-twin-lakes.html",
@@ -302,7 +302,7 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Munduk Waterfall Tour",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/lovina-dolphin-sekumpul.html",
@@ -315,7 +315,7 @@ export const LISTINGS = {
             "meta": "11–12 hours",
             "metaIcon": "clock",
             "priceName": "Lovina Dolphin & Sekumpul Waterfall",
-            "priceFallback": "$95"
+            "priceFallback": "$83"
           }
         ]
       },
@@ -334,7 +334,7 @@ export const LISTINGS = {
             "meta": "3 days / 2 nights",
             "metaIcon": "clock",
             "priceName": "3-Day Best of Bali Package",
-            "priceFallback": "$150"
+            "priceFallback": "$131"
           }
         ]
       }
@@ -417,7 +417,7 @@ export const LISTINGS = {
             "meta": "~2 hours",
             "metaIcon": "clock",
             "priceName": "ATV",
-            "priceFallback": "$40"
+            "priceFallback": "$36"
           },
           {
             "href": "/attractions/rafting.html",
@@ -430,7 +430,7 @@ export const LISTINGS = {
             "meta": "~2 hours",
             "metaIcon": "clock",
             "priceName": "Rafting",
-            "priceFallback": "$35"
+            "priceFallback": "$32"
           },
           {
             "href": "/attractions/jungle-swing.html",
@@ -443,7 +443,7 @@ export const LISTINGS = {
             "meta": "~1–2 hours",
             "metaIcon": "clock",
             "priceName": "Swing",
-            "priceFallback": "$25"
+            "priceFallback": "$23"
           },
           {
             "href": "/attractions/jeep-sunrise.html",
@@ -456,7 +456,7 @@ export const LISTINGS = {
             "meta": "~7 hours",
             "metaIcon": "clock",
             "priceName": "Jeep Sunrise",
-            "priceFallback": "$50"
+            "priceFallback": "$45"
           },
           {
             "href": "/attractions/mount-batur-trekking.html",
@@ -469,7 +469,7 @@ export const LISTINGS = {
             "meta": "~8 hours",
             "metaIcon": "clock",
             "priceName": "Mount Batur Trekking",
-            "priceFallback": "$55"
+            "priceFallback": "$49"
           },
           {
             "href": "/attractions/watersport.html",
@@ -481,7 +481,7 @@ export const LISTINGS = {
             "name": "Watersport Adventure: Jet Ski & Parasailing",
             "metaIcon": "clock",
             "priceName": "Watersport",
-            "priceFallback": "$45"
+            "priceFallback": "$40"
           }
         ]
       },
@@ -500,7 +500,7 @@ export const LISTINGS = {
             "meta": "~1 hour",
             "metaIcon": "clock",
             "priceName": "Barong Dance",
-            "priceFallback": "$10"
+            "priceFallback": "$9"
           },
           {
             "href": "/attractions/cooking-class.html",
@@ -513,7 +513,7 @@ export const LISTINGS = {
             "meta": "~5 hours",
             "metaIcon": "clock",
             "priceName": "Cooking Class",
-            "priceFallback": "$35"
+            "priceFallback": "$32"
           },
           {
             "href": "/attractions/bali-zoo.html",
@@ -526,7 +526,7 @@ export const LISTINGS = {
             "meta": "~2–3 hours",
             "metaIcon": "clock",
             "priceName": "Bali Zoo",
-            "priceFallback": "$40"
+            "priceFallback": "$35"
           },
           {
             "href": "/attractions/bali-bird-park.html",
@@ -539,7 +539,7 @@ export const LISTINGS = {
             "meta": "~2–3 hours",
             "metaIcon": "clock",
             "priceName": "Bali Bird Park",
-            "priceFallback": "$28"
+            "priceFallback": "$25"
           }
         ]
       }

@@ -179,8 +179,14 @@ When unsure, ask first (keep it short).
   prefix apa pun (jangan `../ubud-tour.html` — itu attribut path, bukan filesystem path).
 
 ## Subhero & FAQ (standar per halaman)
-- **H1 maks ±40 karakter** (biar tetap 2 baris di HP — lebih dari itu teks hero bisa
-  ketutup panel overlap). **Teks intro hero 25–40 kata.**
+- **H1 maks ±40 karakter** buat halaman lama/standar (biar tetap 2 baris di HP).
+  **Dikecualikan (Sep 2026, tour restructure 12→18 tour)**: tour dengan nama SEO panjang
+  (mis. "Ulun Danu Beratan & Handara Gate Instagram Tour") sengaja TETAP pakai nama penuh
+  apa adanya di H1 — Wayan pilih ini setelah dites: `.tour-hero__body` (sheet putih di
+  `.subhero__title`) otomatis ngikutin tinggi judul, nggak ada teks kepotong/numpuk walau
+  jadi 3-4 baris di HP (cuma makan scroll lebih, bukan jebol). Jangan potong nama tour
+  panjang buat "muat" ke 40 karakter - itu udah bukan aturannya lagi buat tour-tour ini.
+  **Teks intro hero 25–40 kata.**
 - Label section pertama: halaman tour = **"What You'll Do"**, attraction = **"The Experience"**.
 - **FAQ**: DIPUSATIN ke **`faq.html`** doang (Agu 2026) — semua FAQ inline + partial di
   halaman lain UDAH DIHAPUS (link ke faq.html ada di footer). Jangan tambahin FAQ ke
@@ -420,7 +426,7 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v420, PARTIALS 81)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v430, PARTIALS 81)*
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

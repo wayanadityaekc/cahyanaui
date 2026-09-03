@@ -18,7 +18,7 @@ export const EXPLORE_TOURS = [
       "name": "Ubud Tour",
       "meta": "5–7 hours",
       "metaIcon": "clock",
-      "desc": "Rice terraces, Tirta Empul, Goa Gajah, and the Monkey Forest in one day.",
+      "desc": "Rice terraces, sacred temples, and the monkey forest in one full day.",
       "priceName": "Ubud Tour",
       "priceFallback": "$45",
       "href": "/ubud-tour.html"
@@ -36,27 +36,27 @@ export const EXPLORE_TOURS = [
       "href": "/kintamani-sunrise-penglipuran.html"
     },
     {
-      "program": "South Bali & Sunset Kecak",
+      "program": "Uluwatu & Sunset Kecak",
       "img": "south-coast-sunset-kecak-card.jpg",
-      "alt": "South Bali & Sunset Kecak - private tour from Ubud, Bali",
+      "alt": "Uluwatu & Sunset Kecak - private tour from Ubud, Bali",
       "name": "Uluwatu & Sunset Kecak",
-      "meta": "9-11 hours",
+      "meta": "4–6 hours",
       "metaIcon": "clock",
-      "desc": "Uluwatu's clifftop temple, GWK, Pandawa Beach, and a sunset Kecak dance.",
-      "priceName": "South Bali & Sunset Kecak",
-      "priceFallback": "$85",
+      "desc": "The clifftop Uluwatu temple and the sunset Kecak fire dance.",
+      "priceName": "Uluwatu & Sunset Kecak",
+      "priceFallback": "$55",
       "href": "/south-coast-sunset-kecak.html"
     }
   ];
 
 export const EXPLORE_EXPERIENCES = [
     {
-      "img": "kecak-dance.jpg",
+      "img": "kecak.jpg",
       "alt": "Kecak Dance - Bali activity with Ubud pick-up",
       "name": "Kecak Dance",
       "meta": "~1 hour",
       "metaIcon": "clock",
-      "desc": "The fire-and-chant dance, performed by over fifty voices, Tuesday and Sunday evenings.",
+      "desc": "Bali's famous fire-and-chant ritual, performed at sunset.",
       "priceName": "Kecak Dance",
       "priceFallback": "$10",
       "href": "/attractions/kecak-dance.html"
@@ -67,7 +67,7 @@ export const EXPLORE_EXPERIENCES = [
       "name": "Swing",
       "meta": "~1-2 hours",
       "metaIcon": "clock",
-      "desc": "Soar over a rice-terrace valley on Bali's jungle swings.",
+      "desc": "Soar over the jungle on Bali's famous swing.",
       "priceName": "Swing",
       "priceFallback": "$25",
       "href": "/attractions/jungle-swing.html"
@@ -104,8 +104,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Central Ubud",
       "metaIcon": "pin",
       "desc": "A sacred forest sanctuary in the heart of Ubud.",
-      "priceName": "Sacred Monkey Forest Sanctuary",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -115,8 +113,6 @@ export const HOME_DESTINATIONS = [
       "meta": "West Bali",
       "metaIcon": "pin",
       "desc": "A sea temple cut off by the tide, known for sunset.",
-      "priceName": "Tanah Lot Sunset Temple",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -126,8 +122,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Central Highlands",
       "metaIcon": "pin",
       "desc": "A lakeside temple pictured on the 50,000 rupiah note.",
-      "priceName": "Ulun Danu Beratan Lake Temple",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -137,8 +131,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "A 9th-century cave sanctuary with a demon-face doorway.",
-      "priceName": "Goa Gajah - The Elephant Cave",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -148,8 +140,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Ubud area",
       "metaIcon": "pin",
       "desc": "Iconic stepped rice terraces just north of Ubud.",
-      "priceName": "Tegalalang Rice Terrace",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -159,8 +149,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "A wide jungle waterfall a short drive from town.",
-      "priceName": "Tegenungan Waterfall",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -170,8 +158,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "A holy spring temple used for the melukat water purification ritual.",
-      "priceName": "Tirta Empul Holy Water Temple",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     },
     {
@@ -181,8 +167,6 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "Ancient shrines carved into the cliffs of a green river valley.",
-      "priceName": "Gunung Kawi Temple",
-      "priceFallback": "$45",
       "href": "/destinations.html"
     }
   ];
@@ -245,7 +229,7 @@ export const GUIDE_CARDS = [
       "cat": "nature",
       "kw": "rice terrace subak tegallalang jatiluwih green",
       "featured": true,
-      "img": "ubud-tour-card.jpg",
+      "img": "tegallalang-girl.jpg",
       "alt": "Bali travel guide - Rice Terraces & Subak",
       "w": 600,
       "hgt": 600,

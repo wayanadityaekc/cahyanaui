@@ -909,9 +909,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Tegal Wangi Beach: Natural Rock Pools",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "priceName": "Tegal Wangi Beach",
-            "priceFallback": "$45"
+            "metaIcon": "pin"
           }
         ]
       },

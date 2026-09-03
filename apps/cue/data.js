@@ -27,9 +27,7 @@ const prices = {
   performance: { "Kecak Dance": { usd: 10, idr: 150000 }, "Barong Dance": { usd: 10, idr: 150000 } },
   transfer: { "Airport – Ubud": { usd: 20, idr: 300000 }, "Denpasar Area – Ubud": { usd: 20, idr: 300000 }, "Tanah Lot Area – Ubud": { usd: 30, idr: 450000 }, "Canggu Area – Ubud": { usd: 28, idr: 430000 }, "Kuta Area – Ubud": { usd: 25, idr: 400000 }, "Amed Area – Ubud": { usd: 45, idr: 700000 }, "Buleleng Area – Ubud": { usd: 50, idr: 780000 }, "Candidasa Area – Ubud": { usd: 38, idr: 580000 }, "Kintamani Area – Ubud": { usd: 30, idr: 450000 }, "Seminyak Area – Ubud": { usd: 30, idr: 450000 } },
   villa: { "Cahyana Tibuah": { usd: 80, idr: 1250000 }, "Cahyana House": { usd: 95, idr: 1480000 } },
-  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "Uluwatu & Sunset Kecak": { usd: 55, idr: 850000 }, "GWK & Pandawa Beach": { usd: 55, idr: 850000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 }, "Full Adventure: Rafting & ATV": { usd: 130, idr: 2000000 } /* CEK WAYAN - tour baru, harga contoh */ },
-  // Standalone destinations (halaman Destinations). Harga PLACEHOLDER - CEK WAYAN.
-  place: { "Uluwatu Cliff Temple": { usd: 45, idr: 700000 }, "Tanah Lot Sunset Temple": { usd: 45, idr: 700000 }, "Besakih - The Mother Temple": { usd: 45, idr: 700000 }, "Tirta Empul Holy Water Temple": { usd: 45, idr: 700000 }, "Goa Gajah - The Elephant Cave": { usd: 45, idr: 700000 }, "Gunung Kawi Temple": { usd: 45, idr: 700000 }, "Lempuyang Temple - Gates of Heaven": { usd: 45, idr: 700000 }, "Ulun Danu Beratan Lake Temple": { usd: 45, idr: 700000 }, "Taman Ayun Royal Temple": { usd: 45, idr: 700000 }, "Pura Batuan Temple": { usd: 45, idr: 700000 }, "Garuda Wisnu Kencana (GWK)": { usd: 45, idr: 700000 }, "Ubud Royal Palace & Art Market": { usd: 45, idr: 700000 }, "Penglipuran Village": { usd: 45, idr: 700000 }, "Handara Gate": { usd: 45, idr: 700000 }, "Tirta Gangga Water Palace": { usd: 45, idr: 700000 }, "Taman Ujung Water Palace": { usd: 45, idr: 700000 }, "Tegalalang Rice Terrace": { usd: 45, idr: 700000 }, "Jatiluwih Rice Terraces": { usd: 45, idr: 700000 }, "Tegenungan Waterfall": { usd: 45, idr: 700000 }, "Git Git Waterfall": { usd: 45, idr: 700000 }, "Sekumpul Waterfall": { usd: 45, idr: 700000 }, "Banyumala Twin Waterfall": { usd: 45, idr: 700000 }, "Munduk Coffee Highlands": { usd: 45, idr: 700000 }, "Buyan & Tamblingan Twin Lakes": { usd: 45, idr: 700000 }, "Pandawa Beach": { usd: 45, idr: 700000 }, "Balangan Beach": { usd: 45, idr: 700000 }, "Bingin Beach": { usd: 45, idr: 700000 }, "Green Bowl Beach": { usd: 45, idr: 700000 }, "Tegal Wangi Beach": { usd: 45, idr: 700000, active: false }, "Sacred Monkey Forest Sanctuary": { usd: 45, idr: 700000 }, "Sangeh Monkey Forest": { usd: 45, idr: 700000 }, "Ubud Traditional Market": { usd: 45, idr: 700000 }, "Ubud Arts & Crafts": { usd: 45, idr: 700000 } }
+  combo: { "Ubud Culture Day": { usd: 55, idr: 850000 }, "Uluwatu & Sunset Kecak": { usd: 55, idr: 850000 }, "GWK & Pandawa Beach": { usd: 55, idr: 850000 }, "Batur Sunrise & Adrenaline": { usd: 85, idr: 1300000 }, "Ubud Rafting Adventure": { usd: 75, idr: 1150000 }, "Ubud ATV Adventure": { usd: 80, idr: 1250000 }, "Kintamani Sunrise & Penglipuran": { usd: 85, idr: 1300000 }, "Lovina Dolphin & Sekumpul Waterfall": { usd: 95, idr: 1450000 }, "Full Adventure: Rafting & ATV": { usd: 130, idr: 2000000 } /* CEK WAYAN - tour baru, harga contoh */ }
 };
 
 // ===== Pickup surcharge (diturunkan dari harga transfer) - CEK WAYAN =====
@@ -45,8 +43,8 @@ const ITEM_ZONE = { "Uluwatu Cliff Temple": "south", "Tanah Lot Sunset Temple": 
 // Charter mobil 
 // extended = full day + jam tambahan, + surcharge kalau pickup di luar Ubud.
 const CHARTER = {
-  half: { usd: 35, idr: 500000 },
-  full: { usd: 60, idr: 900000 },
+  half: { usd: 40, idr: 600000 },
+  full: { usd: 65, idr: 1000000 },
   extHourUsd: 4,
   extHourIdr: 60000,
   surchargeUsd: 7,
@@ -67,51 +65,52 @@ const transport = {
 // -- Harga tiket masuk PER ORANG (IDR, turis asing) - riset awal 2026, Wayan koreksi.
 //    Sumber tunggal buat suplemen Exclusive; fact chip di halaman attraction ikut angka ini.
 const TICKETS = {
-  "Tegalalang": 25000,
+  "Tegalalang": 45000,
   "Tirta Empul": 75000,
-  "Gunung Kawi": 50000,
+  "Gunung Kawi": 75000,
   "Goa Gajah": 50000,
-  "Tegenungan": 20000,
-  "Monkey Forest": 80000,           // weekend 100k - dihitung pakai weekday
+  "Tegenungan": 30000,
+  "Monkey Forest": 120000,           // weekend 100k - dihitung pakai weekday
   "Lempuyang": 100000,              // incl. shuttle
-  "Tirta Gangga": 75000,
-  "Taman Ujung": 75000,
+  "Tirta Gangga": 90000,
+  "Taman Ujung": 100000,
   "Besakih": 150000,                // incl. shuttle + sarong
-  "Taman Ayun": 30000,
-  "Sangeh": 30000,
-  "Ulun Danu Beratan": 75000,
+  "Taman Ayun": 50000,
+  "Sangeh": 90000,
+  "Ulun Danu Beratan": 100000,
   "Handara Gate": 50000,
-  "Jatiluwih": 50000,
+  "Jatiluwih": 85000,
   "Tanah Lot": 75000,
   "Watersport Package": 300000,     // paket dasar Tanjung Benoa - CEK WAYAN
   "GWK": 125000,
-  "Pandawa": 25000,
+  "Pandawa": 20000,
   "Melasti": 10000,
   "Tegal Wangi": 10000,             // parkir/retribusi lokal - CEK WAYAN
-  "Green Bowl": 15000,              // parkir + akses tangga - CEK WAYAN
+  "Green Bowl": 10000,              // parkir + akses tangga - CEK WAYAN
   "Balangan": 10000,                // parkir/retribusi - CEK WAYAN
-  "Bingin": 15000,                  // retribusi lokal - CEK WAYAN
+  "Bingin": 10000,                  // retribusi lokal - CEK WAYAN
   "Twin Lakes Viewpoint": 25000,
   "Banyumala": 50000,
-  "Munduk Waterfall": 20000,
+  "Munduk Waterfall": 30000,
   "Gitgit": 20000,
-  "Barong Batubulan": 100000,
-  "Pura Batuan": 15000,             // donasi
+  "Barong Batubulan": 150000,
+  "Pura Batuan": 50000,             // donasi
   "Kecak Ubud": 100000,
   "Padang Padang": 15000,
-  "Uluwatu Temple": 50000,
+  "Uluwatu Temple": 60000,
   "Kecak Uluwatu": 150000,
-  "Batur Trek + Breakfast": 400000, // guide + sarapan - CEK WAYAN
-  "Batur Hot Spring": 200000,
-  "Ayung Rafting": 350000,          // harga operator dalam tur - CEK WAYAN
-  "ATV Ride": 450000,               // CEK WAYAN
-  "Bali Zoo": 400000,               // gate rate - CEK WAYAN
-  "Bali Bird Park": 385000,         // CEK WAYAN
+  "Batur Trek + Breakfast": 350000, // guide + sarapan - CEK WAYAN
+  "Batur Hot Spring": 185000,
+  "Ayung Rafting": 450000,          // harga operator dalam tur - CEK WAYAN
+  "ATV Ride": 600000,               // CEK WAYAN
+  "Bali Zoo": 395000,               // gate rate - CEK WAYAN
+  "Bali Bird Park": 350000,         // CEK WAYAN
   "Jeep Sunrise": 400000,           // per orang, share jeep - CEK WAYAN
   "Penglipuran": 50000,
   "Lovina Boat": 150000,
-  "Banjar Hot Spring": 40000,
-  "Sekumpul Trek": 200000
+  "Banjar Hot Spring": 45000,
+  "Sekumpul Trek": 150000,
+  "Bali Swing": 300000
 };
 
 // -- Tiket apa aja yang ke-cover versi Exclusive tiap tur (stop gratis nggak masuk).
@@ -140,6 +139,8 @@ const TOUR_TICKETS = {
 };
 
 // -- Fee internal Exclusive (JANGAN pernah ditampilkan ke user) & kurs tiket IDR->USD.
+// TIDAK dipakai di rumus harga sejak 3 Sep 2026 - Exclusive = base + tiket x tamu,
+// tanpa margin. Dibiarin ada dulu sampai Wayan mutusin mau dibuang atau dipasang lagi.
 const EXCLUSIVE_FEE = 0.10;
 const TICKET_IDR_PER_USD = 15500;
 
@@ -151,34 +152,6 @@ Object.keys(TOUR_TICKETS).forEach(function (tour) {
   tourExclusive[tour] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
 });
 
-// Standalone place (halaman Destinations): Standard = mobil aja, Exclusive = + tiket masuk
-// tempat itu (per orang, dari TICKETS). Peta place -> key TICKETS. Yang gratis = 0 (toggle
-// tetap tampil, harga sama). Angka tiket PLACEHOLDER dari riset - CEK WAYAN.
-const PLACE_TICKET = {
-  "Uluwatu Cliff Temple": "Uluwatu Temple", "Tanah Lot Sunset Temple": "Tanah Lot",
-  "Besakih - The Mother Temple": "Besakih", "Tirta Empul Holy Water Temple": "Tirta Empul",
-  "Goa Gajah - The Elephant Cave": "Goa Gajah", "Gunung Kawi Temple": "Gunung Kawi",
-  "Lempuyang Temple - Gates of Heaven": "Lempuyang", "Ulun Danu Beratan Lake Temple": "Ulun Danu Beratan",
-  "Taman Ayun Royal Temple": "Taman Ayun", "Pura Batuan Temple": "Pura Batuan",
-  "Garuda Wisnu Kencana (GWK)": "GWK", "Penglipuran Village": "Penglipuran",
-  "Handara Gate": "Handara Gate", "Tirta Gangga Water Palace": "Tirta Gangga",
-  "Taman Ujung Water Palace": "Taman Ujung", "Tegalalang Rice Terrace": "Tegalalang",
-  "Jatiluwih Rice Terraces": "Jatiluwih", "Tegenungan Waterfall": "Tegenungan",
-  "Git Git Waterfall": "Gitgit", "Sekumpul Waterfall": "Sekumpul Trek",
-  "Banyumala Twin Waterfall": "Banyumala", "Munduk Coffee Highlands": "Munduk Waterfall",
-  "Buyan & Tamblingan Twin Lakes": "Twin Lakes Viewpoint", "Pandawa Beach": "Pandawa",
-  "Balangan Beach": "Balangan", "Bingin Beach": "Bingin", "Green Bowl Beach": "Green Bowl",
-  "Tegal Wangi Beach": "Tegal Wangi", "Sacred Monkey Forest Sanctuary": "Monkey Forest",
-  "Sangeh Monkey Forest": "Sangeh"
-};
-Object.keys(prices.place).forEach(function (place) {
-  const idr = TICKETS[PLACE_TICKET[place]] || 0;
-  tourExclusive[place] = { idr: idr, usd: idr / TICKET_IDR_PER_USD };
-});
-
-// -- Kode referral: kode (UPPERCASE) -> persen diskon. Dipakai di search form homepage
-//    (input + Apply) & My Trips. Diskon dipasang ke semua harga (coret + harga baru).
-//    ANGKA & KODE placeholder - CEK WAYAN (ganti/isi kode asli + persen-nya).
 const REFERRAL = {
   "GOWITHCAHYANA": 10, // kode lama (checkout) - dipertahanin, jangan hapus
   "CAHYANA10": 10,

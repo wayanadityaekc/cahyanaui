@@ -90,12 +90,12 @@ export default function AboutPage() {
               </svg>
             </span>
             <div>
-              <strong className="driver-card__name">{driver.name}</strong>
-              <span className="driver-card__tagline">{driver.tagline}</span>
+              <h3 className="driver-modal__name">{driver.name}</h3>
+              <span className="driver-modal__tagline">{driver.tagline}</span>
             </div>
           </div>
         )}
-        {driver && <p>{driver.desc}</p>}
+        {driver && <p className="driver-modal__desc">{driver.desc}</p>}
       </Modal>
     </div>
   );

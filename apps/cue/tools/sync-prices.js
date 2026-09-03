@@ -35,7 +35,7 @@ const unesc = (s) => s.replace(/&amp;/g, "&");
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     if (e.isDirectory())
-      return ["partials", "assets", "tools", "node_modules"].includes(e.name) || e.name.startsWith(".")
+      return ["partials", "assets", "tools", "node_modules", "out", "docs"].includes(e.name) || e.name.startsWith(".")
         ? []
         : walk(path.join(dir, e.name));
     return e.name.endsWith(".html") ? [path.join(dir, e.name)] : [];

@@ -6,9 +6,26 @@ const ROOT = path.join(__dirname, '..');
 
 // Classes the old site injects with JavaScript at runtime, so they never appear
 // in its static HTML. Their absence from the original is expected, not a defect.
-// The old site builds these at runtime with JavaScript, so they never appear in
-// its static HTML. Their absence from the original is expected, not a defect.
-const RUNTIME = /^(navbar|footer|acct|tripbar|slider-|itn-|active|inter_|hs-|wa-|card-|binfo|hero__search|hero-sheet|hsearch|placeholder|modal|tour-layout|booksidebar|price-unit|booking|csel-|bk-|rating|rvm-|mtc-|reviews-strip|rev|guide-cat-|gsearch|zone-|chdur|chcard|tpick|charter__|at-|field|amount|btn-book|summary|itn2|pick-cat|drivers-grid|driver-card|about-gallery|anl|is-sel|is-on|guest-)/;
+const RUNTIME = /^(navbar|footer|acct|tripbar|slider-|itn-|active|inter_|hs-|wa-|card-|binfo|hero__search|hero-sheet|hsearch|placeholder|modal|tour-layout|booksidebar|price-unit|booking|csel-|bk-|rating|rvm-|mtc-|reviews-strip|rev|guide-cat-|gsearch|zone-|chdur|chcard|tpick|charter__|at-|field|amount|btn-book|summary|itn2|pick-cat|drivers-grid|driver-card|driver-modal|about-gallery|anl|is-sel|is-on|guest-)/;
+
+// The old site fetches partials into <div id="X-placeholder"> at runtime, so
+// their markup is missing from the static HTML while the export renders it
+// inline. Expand them first, the way loadPartials() does, or every page that
+// injects reviews reads as a diff. book-modal.html itself contains
+// #booking-placeholder, so this repeats until nothing is left to expand.
+function expandPartials(html) {
+  for (let pass = 0; pass < 5; pass++) {
+    let changed = false;
+    html = html.replace(/<div id="([a-z-]+)-placeholder"[^>]*>\s*<\/div>/g, (m, id) => {
+      const p = path.join(ROOT, "partials", id + ".html");
+      if (!fs.existsSync(p)) return m;
+      changed = true;
+      return fs.readFileSync(p, "utf8");
+    });
+    if (!changed) break;
+  }
+  return html;
+}
 
 const strip = (html) =>
   html
@@ -39,7 +56,7 @@ for (const page of pages) {
     console.log(`  ${page.padEnd(26)} skipped (missing ${fs.existsSync(original) ? 'built' : 'original'})`);
     continue;
   }
-  const A = classCounts(fs.readFileSync(original, 'utf8'));
+  const A = classCounts(expandPartials(fs.readFileSync(original, 'utf8')));
   const B = classCounts(fs.readFileSync(built, 'utf8'));
   const diff = [...new Set([...Object.keys(A), ...Object.keys(B)])]
     .filter((k) => (A[k] || 0) !== (B[k] || 0) && !RUNTIME.test(k))

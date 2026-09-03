@@ -426,7 +426,26 @@ Order **must be kept** (declarations first, run last):
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML
-  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v431, PARTIALS 81)*
+  page (data.js WAJIB dimuat sebelum script.js). Any CSS/JS/data change → bump `N` on all pages. *(current: v432, PARTIALS 81)*
+- **Aturan harga (Wayan, 3 Sep 2026)** - dipakai sama di `script.js` (situs lama) dan
+  `cahyana-api/pricing.js` (server):
+  - **Standar** = harga base tour apa adanya (×2 mobil kalau >5 tamu).
+  - **Exclusive** = harga base + (tiket masuk × jumlah tamu). **Nggak ada margin 10%**
+    lagi - `EXCLUSIVE_FEE` udah nggak dipakai di rumus ini.
+  - Tiket masuk beda per lokasi walau namanya mirip: **Kecak Ubud 100k ≠ Kecak Uluwatu 150k**.
+    Tiket tiap tour ditentukan dari isi programnya (`TOUR_TICKETS`).
+  - **Destinasi single nggak dijual lagi** - `prices.place` udah dibuang, kartu destinasi
+    nggak nampilin harga. Halaman destinasinya TETAP ada (konten/SEO).
+  - **Charter**: 5 jam 600k · 10 jam 1jt · tambahan 60k/jam.
+  - **Pickup fee**: Ubud & nearby = 0. **Selain Ubud selalu kena, di SEMUA tour** -
+    pengecualian "se-zona sama tour" udah dibuang (dulu `ITEM_ZONE`/`TRANSFER_ZONE`
+    dipakai buat itu; datanya masih ada karena API ngirim `zone` ke frontend, tapi
+    helper zona di script.js udah dihapus).
+  - **Dua tes, jalanin dua-duanya kalau nyentuh harga:**
+    `node tools/pricing-spec-test.js` (di cahyana-api) nge-assert 6 aturan di atas, dan
+    `node tools/golden-price-test.js` muat `script.js` situs lama beneran di sandbox terus
+    bandingin tiap item × mata uang × jumlah tamu sama server. Aturan berubah = ubah
+    `script.js` DAN `pricing.js` bareng, kalau nggak golden test langsung merah.
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE, EXCLUSIVE_FEE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

@@ -409,12 +409,6 @@ function isProgramActive(name) {
 function unescAmp(s) { return String(s || "").replace(/&amp;/g, "&"); }
 
 // ---- Pickup surcharge (diturunkan dari harga transfer) ----
-function itemZone(name) { return (typeof ITEM_ZONE !== "undefined" && ITEM_ZONE[name]) || null; }
-// Zona area pickup (key transfer) atau "ubud". null kalau belum ke-map.
-function pickupZoneOf(pk) {
-  if (!pk || pk === "ubud") return "ubud";
-  return (typeof TRANSFER_ZONE !== "undefined" && TRANSFER_ZONE[pk]) || null;
-}
 // Label area pickup buat UI (nama tanpa " Area – Ubud").
 function pickupLabelOf(pk) {
   if (!pk || pk === "ubud") return "Ubud & nearby";
@@ -428,14 +422,13 @@ function pickupOptionsHTML(selected) {
   });
   return html;
 }
-// Surcharge = 60% transfer one-way (Ubud->pickup) × jumlah mobil, cuma kalau pickup != Ubud
-// DAN zona pickup != zona item. Transfer sendiri nggak kena. Angka cuma dipakai di konfirmasi.
+// Surcharge = 60% transfer one-way (Ubud->pickup) × jumlah mobil, kena ke SEMUA tour
+// selama pickup != Ubud (Wayan, 3 Sep 2026 - pengecualian se-zona udah dibuang).
+// Transfer sendiri nggak kena. Angka cuma dipakai di konfirmasi.
 function surchargeFor(name, guests) {
   const pk = currentStay || "ubud";
   if (pk === "ubud") return { usd: 0, idr: 0 };
   if (prices.transfer && prices.transfer[name]) return { usd: 0, idr: 0 };
-  const pz = pickupZoneOf(pk), iz = itemZone(name) || "ubud";
-  if (pz && pz === iz) return { usd: 0, idr: 0 };
   const t = prices.transfer[pk];
   if (!t) return { usd: 0, idr: 0 };
   const cars = (guests || currentGuests || DISPLAY_GUESTS) > 5 ? 2 : 1;
@@ -448,8 +441,6 @@ function surchargeLabel(name) {
   const pk = currentStay || "ubud";
   if (pk === "ubud") return { has: false, txt: "No surcharge - pickup from Ubud" };
   if (prices.transfer && prices.transfer[name]) return { has: false, txt: "" };
-  const pz = pickupZoneOf(pk), iz = itemZone(name) || "ubud";
-  if (pz && pz === iz) return { has: false, txt: "No surcharge - you're in the tour area" };
   return { has: true, txt: "Pickup surcharge applied" };
 }
 // Set area pickup global (value = key transfer atau "ubud"): simpan + render ulang + sinkron.
@@ -596,10 +587,10 @@ function exclusivePrice(name, guests) {
   if (!info || !sup) return null;
   const g = guests || currentGuests || DISPLAY_GUESTS;
   const car = carPrice(info.price, g);
-  // total = (base per mobil + tiket x jumlah tamu) + fee internal, bulatkan KE ATAS
-  // (USD ke dolar utuh, IDR ke 10 ribu). Fee jangan pernah muncul di UI.
-  const usd = Math.ceil((car.usd + sup.usd * g) * (1 + EXCLUSIVE_FEE));
-  const idr = Math.ceil(((car.idr + sup.idr * g) * (1 + EXCLUSIVE_FEE)) / 10000) * 10000;
+  // total = base per mobil + tiket x jumlah tamu, bulatkan KE ATAS (USD ke dolar
+  // utuh, IDR ke 10 ribu). EXCLUSIVE_FEE udah nggak dipakai (Wayan, 3 Sep 2026).
+  const usd = Math.ceil(car.usd + sup.usd * g);
+  const idr = Math.ceil((car.idr + sup.idr * g) / 10000) * 10000;
   return { usd: usd, idr: idr };
 }
 
@@ -4578,7 +4569,7 @@ function initCardTitleOverlay() {
 /* ==================== 5. APP ENTRY ==================== */
 
 /* Homepage hero = "search bar" buat mulai explore Bali.
-   - toggle Standard/Exclusive (Exclusive naikin range ~EXCLUSIVE_FEE)
+   - toggle Standard/Exclusive (Exclusive naikin range sebesar tiket masuk)
    - dropdown kategori (icon + nama kiri, price range rata kanan, currency-aware)
    - date opsional, tombol Explore -> ke halaman kategori.
    Booking beneran tetep di halaman program (nggak diubah). */

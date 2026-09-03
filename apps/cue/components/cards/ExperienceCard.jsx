@@ -63,13 +63,11 @@ export default function ExperienceCard({
         )}
         {(priceName || variant === 'article') && (
           <div className="experience__footer">
-            {priceName ? (
+            {priceName && (
               <div className="experience__price">
                 <span className="price-from">from</span>{' '}
                 <Price name={priceName} mode={priceMode} fallback={priceFallback} />
               </div>
-            ) : (
-              <div className="experience__price" />
             )}
             {variant === 'article' && href && (
               <a href={href} className="experience__arrow" aria-label={`View ${name}`}>

@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 import ReviewCard from '@/components/cards/ReviewCard';
+import ReviewCta from '@/components/reviews/ReviewCta';
 
-export default function ReviewsStrip({ service, emptyText, showEmpty = true }) {
+export default function ReviewsStrip({ service, emptyText, showEmpty = true, emptyCta = false }) {
   const [rows, setRows] = useState(null);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function ReviewsStrip({ service, emptyText, showEmpty = true }) {
       <div className="reviews-strip">
         <div className="reviews__empty">
           <p>{emptyText || 'No reviews yet - be the first to share your trip.'}</p>
+          {emptyCta && <ReviewCta />}
         </div>
       </div>
     );

@@ -1,6 +1,8 @@
 import AboutPage from '@/components/sections/AboutPage';
 import JsonLd from '@/components/JsonLd';
 import Trust from '@/components/sections/home/Trust';
+import GuestGallery from '@/components/sections/GuestGallery';
+import GuestReviews from '@/components/sections/GuestReviews';
 
 export const metadata = {
   title: 'About Us | One Local Family in Ubud, Prices Upfront - Cahyana',
@@ -15,6 +17,8 @@ export default function Page() {
       <JsonLd page="about-us" />
       <AboutPage />
       <Trust showStat={false} showSocials />
+      <GuestGallery />
+      <GuestReviews />
     </>
   );
 }

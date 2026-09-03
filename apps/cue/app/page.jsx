@@ -9,6 +9,7 @@ import Villas from '@/components/sections/home/Villas';
 import CharterHome from '@/components/sections/home/CharterHome';
 import About from '@/components/sections/home/About';
 import Trust from '@/components/sections/home/Trust';
+import GuestReviews from '@/components/sections/GuestReviews';
 
 export const metadata = {
   title: 'Bali Trip Planner with a Private Driver | Cahyana Ubud Experience',
@@ -31,7 +32,7 @@ export default function Home() {
       <CharterHome />
       <About />
       <Trust />
-      <div id="reviews-placeholder" />
+      <GuestReviews />
     </div>
   );
 }

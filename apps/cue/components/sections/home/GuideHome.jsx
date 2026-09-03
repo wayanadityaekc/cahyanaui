@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Slider from '@/components/ui/Slider';
-import Img from '@/components/ui/Img';
+import CardImage from '@/components/cards/CardImage';
 import { GUIDE_CARDS } from '@/content/shared/home';
 
 export default function GuideHome() {
@@ -61,9 +61,7 @@ export default function GuideHome() {
               </a>
             ) : (
               <a className="experience__card guide-home__card" data-cat={c.cat} href={c.href} key={c.href}>
-                <div className="experience__image">
-                  <Img src={`/assets/images/${c.img}`} alt={c.alt} width={c.w} height={c.hgt} />
-                </div>
+                <CardImage img={c.img} alt={c.alt} width={c.w} height={c.hgt} />
                 <div className="experience__body">
                   <span className="guide-home__tag">{c.tag}</span>
                   <h3 className="experience__name">{c.title}</h3>

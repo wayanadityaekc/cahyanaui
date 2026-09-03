@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Img from '@/components/ui/Img';
+import CardImage from '@/components/cards/CardImage';
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
 
 export default function GuideHub() {
@@ -64,9 +64,7 @@ export default function GuideHub() {
             <div className="experience__grid experience__grid--slider guide-home__slider">
               {c.cards.map((card) => (
                 <a className="experience__card guide-home__card" data-cat={card.cat} href={card.href} key={card.href}>
-                  <div className="experience__image">
-                    <Img src={`/assets/images/${card.img}`} alt={card.alt} width={card.w} height={card.hgt} />
-                  </div>
+                  <CardImage img={card.img} alt={card.alt} width={card.w} height={card.hgt} />
                   <div className="experience__body">
                     {card.tag && <span className="guide-home__tag">{card.tag}</span>}
                     <h3 className="experience__name">{card.title}</h3>

@@ -1,4 +1,4 @@
-import Img from '@/components/ui/Img';
+import CardImage from '@/components/cards/CardImage';
 import Price from '@/components/Price';
 
 function ClockIcon() {
@@ -42,10 +42,9 @@ export default function ExperienceCard({
   const incl = variant === 'incl';
   const body = (
     <>
-      <div className="experience__image">
-        <Img src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />
+      <CardImage img={img} alt={alt || name} width={width} height={height}>
         {badge && <span className="chcard__badge">{badge}</span>}
-      </div>
+      </CardImage>
       <div className="experience__body">
         <h3 className="experience__name">{name}</h3>
         {meta && (

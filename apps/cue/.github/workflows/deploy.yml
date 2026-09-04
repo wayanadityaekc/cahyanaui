@@ -5,6 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# The publish step force-pushes the built out/ to the deploy branch, so the
+# workflow token needs write access to repo contents (default is read-only).
+permissions:
+  contents: write
+
 concurrency:
   group: deploy
   cancel-in-progress: false

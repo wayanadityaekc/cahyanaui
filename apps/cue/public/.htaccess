@@ -16,6 +16,38 @@ ErrorDocument 404 /404.html
   Require all granted
 </Files>
 
+
+# --- Cache ---
+# Situs lama punya blok ini di .htaccess-nya; export Next kehilangan, jadi
+# Hostinger pakai default sendiri (CSS 7 hari, HTML tanpa aturan). Akibatnya
+# style.css yang ke-cache rusak nyangkut seminggu dan nggak bisa diperbaiki.
+#
+# HTML WAJIB no-cache: itu satu-satunya file yang nunjuk ke URL ber-hash di
+# bawahnya. Kalau HTML ikut ke-cache, build baru nggak pernah nyampe.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Aman dicache lama: chunk _next/ namanya ber-hash, style.css dipanggil
+  # dengan ?v=<hash isi file> - dua-duanya ganti URL tiap kali isinya berubah.
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  <FilesMatch "\.(woff2?|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  # Gambar nggak pakai versi, jadi sebulan - biar ganti foto tetap kepropagasi.
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|ico|avif)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
 # --- Satu host kanonik: www -> apex (301) ---
 # www ngelayanin situs langsung, nggak redirect, jadi tamu yang mendarat di www
 # kena blokir CORS di API: harga live, review, login, booking, contact semua mati

@@ -8448,6 +8448,119 @@ strong {
   }
 }
 
+/* Our Company page - desktop = sidebar nav kiri + konten kanan (pola .guide-layout),
+   HP = tab strip sticky di atas. Konten body-only: hero kosong (banner legal ijo +
+   galeri foto About) dibuang - gak ada foto beneran, jadi mubazir. */
+.company-layout {
+  max-width: var(--container);
+  margin: 0 auto;
+  /* padding-top clears the fixed navbar (+ promo tripbar) */
+  padding: 6.2rem var(--container-x) var(--space-5);
+  display: flex;
+  /* sidebar di KANAN (samain pola guide/tour) - nav duluan di DOM biar HP di atas */
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+.company-nav {
+  flex: 0 0 260px;
+  position: sticky;
+  /* clear navbar+tripbar fixed - samain sidebar tour page (.tour-layout__side) */
+  top: 104px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  /* kartu = template sidebar program/attraction (.booksidebar): putih + border +
+     radius-lg + shadow green-tint brand. Biar sidebar se-web satu bahasa. */
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.08);
+}
+.company-nav__title {
+  font-family: var(--font-head);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  color: var(--color-green);
+  text-align: center;
+  margin: 0.2rem 0 0.6rem;
+}
+.company-nav__item {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  text-align: left;
+  color: var(--color-green);
+  background: none;
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.company-nav__item:hover { background: var(--color-cream); }
+.company-nav__item.is-active {
+  background: var(--color-cream);
+  color: var(--color-gold);
+  font-weight: 600;
+}
+.company-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.company-heading {
+  font-family: var(--font-head);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  color: var(--color-gold);
+  margin: 0 0 1rem;
+}
+/* Konten reuse (AboutPage/ContactSection/legal body) punya clearance navbar +
+   slot foto sendiri - di dalam kolom udah gak perlu, buang. */
+.company-page .about { padding-top: 0; }
+.company-page .about .lhero { padding-top: 0.5rem; }
+.company-page .about-gallery { display: none; }
+.company-page .contact,
+.company-page .info { padding-top: 0; }
+
+@media (max-width: 992px) {
+  .company-layout {
+    flex-direction: column;
+    gap: 0;
+    padding: 5.4rem 0 var(--space-5);
+  }
+  .company-nav {
+    flex: none;
+    top: 52.8px;
+    z-index: 20;
+    flex-direction: row;
+    gap: 1.5rem;
+    padding: 0.7rem 1.3rem;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    box-shadow: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .company-nav::-webkit-scrollbar { display: none; }
+  .company-nav__title { display: none; }
+  .company-nav__item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    padding: 0.3rem 0.1rem;
+  }
+  .company-nav__item.is-active {
+    background: none;
+    color: var(--color-green);
+    border-bottom-color: var(--color-gold);
+  }
+  .company-main { padding: 0 var(--container-x); }
+}
+
 /* Minimal cards (style A) on the tour programs page */
 .tourprog .experience__card {
   display: block;

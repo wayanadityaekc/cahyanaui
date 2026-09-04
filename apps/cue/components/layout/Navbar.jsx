@@ -171,8 +171,7 @@ export default function Navbar() {
               </ul>
             </li>
             <li><a href="/bali-guide.html" className={navClass('/bali-guide.html')}>Guide</a></li>
-            <li><a href="/about-us.html" className={navClass('/about-us.html')}>About</a></li>
-            <li><a href="/contact.html" className={navClass('/contact.html')}>Contact Us</a></li>
+            <li><a href="/our-company.html" className={navClass('/our-company.html')}>Our Company</a></li>
           </ul>
         </nav>
 

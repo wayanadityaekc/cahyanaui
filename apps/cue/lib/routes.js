@@ -109,6 +109,7 @@ export const BESPOKE = [
   'destinations',
   'faq',
   'itinerary',
+  'our-company',
   'programs',
   'my-trips',
   'privacy-policy',

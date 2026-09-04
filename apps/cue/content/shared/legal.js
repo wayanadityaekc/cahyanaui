@@ -2,7 +2,7 @@ export const LEGAL = {
   "terms-conditions": {
     "heroClass": "subhero subhero--overlap",
     "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-    "title": "Terms &amp; Conditions",
+    "title": "Terms & Conditions",
     "text": "The simple ground rules for booking and travelling with us - clear, upfront, and fair.",
     "metaTitle": "Terms &amp; Conditions | Cahyana Ubud Experience",
     "metaDesc": "The terms and conditions for booking tours, transfers, and experiences with Cahyana Ubud Experience in Ubud, Bali - booking, payment, changes, and your responsibilities.",

@@ -10,6 +10,7 @@ import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
+import Select from '@/components/ui/Select';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -165,31 +166,23 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <div className="hsearch__row2">
         <div className="hsearch__field">
           <label htmlFor="hs-guests">Guests</label>
-          <select
+          <Select
             id="hs-guests"
-            className="hsearch__select"
-            aria-label="Number of guests"
+            label="Guests"
             value={guests || 2}
-            onChange={(e) => setGuests(e.target.value)}
-          >
-            {GUESTS.map((n) => (
-              <option key={n} value={n}>{n} {n === 1 ? 'guest' : 'guests'}</option>
-            ))}
-          </select>
+            onChange={setGuests}
+            options={GUESTS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+          />
         </div>
         <div className="hsearch__field">
           <label htmlFor="hs-stay">Pickup area</label>
-          <select
+          <Select
             id="hs-stay"
-            className="hsearch__select"
-            aria-label="Pickup area"
+            label="Pickup area"
             value={stay || 'ubud'}
-            onChange={(e) => setStay(e.target.value)}
-          >
-            {stayOptions.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
+            onChange={setStay}
+            options={stayOptions}
+          />
         </div>
       </div>
 

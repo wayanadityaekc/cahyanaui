@@ -8,6 +8,7 @@ import { useAccount } from '@/state/AccountProvider';
 import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
+import Select from '@/components/ui/Select';
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -94,30 +95,26 @@ export default function Navbar() {
             <p className="acct__title">Your trip</p>
 
             <label className="acct__label" htmlFor="acct-guests">Guests</label>
-            <select
+            <Select
               id="acct-guests"
-              data-guest-select
-              aria-label="Number of guests"
+              label="Guests"
               value={guests || ''}
-              onChange={(e) => (e.target.value === 'reset' ? resetGuests() : setGuests(e.target.value))}
-            >
-              {!guests && <option value="">Guests</option>}
-              {GUEST_OPTIONS.map((n) => (
-                <option key={n} value={n}>{n}</option>
-              ))}
-              <option value="reset">↺ Reset</option>
-            </select>
+              onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
+              options={[
+                ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
+                { value: 'reset', label: '↺ Reset' },
+              ]}
+              placeholder="Guests"
+            />
 
             <label className="acct__label" htmlFor="acct-stay">Stay area</label>
-            <select
+            <Select
               id="acct-stay"
-              data-stay-select
-              aria-label="Stay area"
+              label="Stay area"
               value={stay || 'ubud'}
-              onChange={(e) => setStay(e.target.value)}
-            >
-              <option value="ubud">Ubud &amp; nearby</option>
-            </select>
+              onChange={setStay}
+              options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
+            />
 
             <FlagDefs />
 

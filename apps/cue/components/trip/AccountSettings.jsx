@@ -5,6 +5,7 @@ import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
+import Select from '@/components/ui/Select';
 
 export default function AccountSettings() {
   const { account, setAccount, logout } = useAccount();
@@ -65,10 +66,14 @@ export default function AccountSettings() {
       </div>
       <div className="contact__group">
         <label htmlFor="st-guests">Guests</label>
-        <select id="st-guests" value={guests || ''} onChange={(e) => setGuests(e.target.value)}>
-          <option value="">Not set</option>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => <option key={n} value={n}>{n}</option>)}
-        </select>
+        <Select
+          id="st-guests"
+          label="Guests"
+          value={guests || ''}
+          onChange={setGuests}
+          options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({ value: String(n), label: String(n) }))}
+          placeholder="Not set"
+        />
       </div>
       <div className="contact__group">
         <label htmlFor="st-stay">Pickup area</label>

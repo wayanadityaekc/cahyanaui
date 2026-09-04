@@ -5,6 +5,7 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
+import Select from '@/components/ui/Select';
 
 const UBUD = 'Ubud';
 
@@ -56,17 +57,12 @@ export default function TransferPicker() {
       <div className="tpick__route">
         <div className="tpick__field">
           <label htmlFor="tp-from">From</label>
-          <select id="tp-from" className="tpick__select" value={from} onChange={(e) => setFrom(e.target.value)}>
-            <option value="" disabled>Select</option>
-            {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
+          <Select id="tp-from" label="From" value={from} onChange={setFrom} options={options} placeholder="Select" />
         </div>
         <button type="button" className="tpick__swap" aria-label="Swap direction" onClick={swap}>&#8646;</button>
         <div className="tpick__field">
           <label htmlFor="tp-to">To</label>
-          <select id="tp-to" className="tpick__select" value={to} onChange={(e) => setTo(e.target.value)}>
-            {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
+          <Select id="tp-to" label="To" value={to} onChange={setTo} options={options} />
         </div>
       </div>
 

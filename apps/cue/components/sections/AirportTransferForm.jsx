@@ -5,9 +5,15 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { AIRPORT } from '@/content/shared/airport';
+import Select from '@/components/ui/Select';
+import DateField from '@/components/ui/DateField';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ROUTE = 'Airport – Ubud';
+const DIRECTIONS = [
+  { value: 'pickup', label: 'Airport pickup (arrival) → your stay' },
+  { value: 'dropoff', label: 'Your stay → airport drop-off (departure)' },
+];
 
 export default function AirportTransferForm() {
   const { currency, setGuests } = useTripPrefs();
@@ -58,28 +64,24 @@ export default function AirportTransferForm() {
 
       <div className="charter__step">
         <label className="charter__label" htmlFor="at-direction">1. Direction</label>
-        <select className="charter__select" id="at-direction" value={direction} onChange={(e) => setDirection(e.target.value)}>
-          <option value="pickup">Airport pickup (arrival) &rarr; your stay</option>
-          <option value="dropoff">Your stay &rarr; airport drop-off (departure)</option>
-        </select>
+        <Select id="at-direction" label="Direction" value={direction} onChange={setDirection} options={DIRECTIONS} />
       </div>
 
       <div className="charter__step charter__fields">
         <div className="field">
           <label className="charter__label" htmlFor="at-date">Date</label>
-          <input type="date" className="charter__select" id="at-date" value={date} onChange={(e) => setDate(e.target.value)} />
+          <DateField id="at-date" label="Date" value={date} onChange={setDate} />
         </div>
         <div className="field">
           <label className="charter__label" htmlFor="at-guests">Guests</label>
-          <select
-            className="charter__select"
+          <Select
             id="at-guests"
+            label="Guests"
             value={guests}
-            onChange={(e) => { setLocalGuests(e.target.value); setGuests(e.target.value); }}
-          >
-            <option value="" disabled>Guests</option>
-            {GUESTS.map((n) => <option key={n} value={n}>{n}</option>)}
-          </select>
+            onChange={(v) => { setLocalGuests(v); setGuests(v); }}
+            options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
+            placeholder="Guests"
+          />
         </div>
       </div>
 

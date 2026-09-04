@@ -10,6 +10,8 @@ import { cascadeFrom, clashDates, setItemMode, removeItem, removeDay, suggestSta
 import { SUGGEST, PKG_AIRPORT, PKG_AIRPORT_PLACE } from '@/content/shared/suggest';
 import AddItemPicker from './AddItemPicker';
 import { usePricing } from '@/state/PricingProvider';
+import Select from '@/components/ui/Select';
+import DateField from '@/components/ui/DateField';
 
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -108,18 +110,26 @@ export default function ItineraryBuilder() {
           <p className="itn-suggest__t">Don&apos;t know where to start?</p>
           <p className="itn-suggest__s">Pick a length and group size - we&apos;ll build a suggested plan you can tweak, then book.</p>
           <div className="itn-suggest__row">
-            <label className="itn-suggest__f">
-              Days
-              <select id="sg-days" value={sgDays} onChange={(e) => setSgDays(+e.target.value)}>
-                {DAY_OPTIONS.map((n) => <option key={n} value={n}>{n}</option>)}
-              </select>
-            </label>
-            <label className="itn-suggest__f">
-              Guests
-              <select id="sg-guests" value={sgGuests} onChange={(e) => { setSgGuests(+e.target.value); setGuests(e.target.value); }}>
-                {GUEST_OPTIONS.map((n) => <option key={n} value={n}>{n}</option>)}
-              </select>
-            </label>
+            <div className="itn-suggest__f">
+              <span>Days</span>
+              <Select
+                id="sg-days"
+                label="Days"
+                value={sgDays}
+                onChange={(v) => setSgDays(+v)}
+                options={DAY_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))}
+              />
+            </div>
+            <div className="itn-suggest__f">
+              <span>Guests</span>
+              <Select
+                id="sg-guests"
+                label="Guests"
+                value={sgGuests}
+                onChange={(v) => { setSgGuests(+v); setGuests(v); }}
+                options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))}
+              />
+            </div>
             <button
               className="btn-book itn-suggest__btn"
               id="sg-build"
@@ -150,7 +160,7 @@ export default function ItineraryBuilder() {
           <div className="itn-day__fields itn-trip__fields">
             <div className="field">
               <label>Start date</label>
-              <input type="date" id="trip-start" value={dateFrom} onChange={(e) => setStart(e.target.value)} />
+              <DateField id="trip-start" label="Start date" value={dateFrom} onChange={setStart} />
             </div>
             <div className="field field--full">
               <label>Hotel / villa (pick-up &amp; drop-off)</label>

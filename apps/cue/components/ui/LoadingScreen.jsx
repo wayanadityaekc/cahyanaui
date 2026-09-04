@@ -18,6 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 export default function LoadingScreen() {
   const [out, setOut] = useState(false);
   const safety = useRef(null);
+  const elRef = useRef(null);
 
   // Fade the arrival splash once the page has loaded.
   useEffect(() => {
@@ -50,6 +51,16 @@ export default function LoadingScreen() {
       if (url.origin !== window.location.origin) return; // external -> new context, let it be
       // Same-page hash jump is not a page change.
       if (url.pathname === window.location.pathname && url.hash) return;
+      // Show it NOW, in this same click tick - not via React's async render,
+      // and with the fade-in transition disabled so it snaps up instantly.
+      // Otherwise there is a frame or two where the old page still shows with
+      // no overlay, which is exactly the gap that reads as "slow". React state
+      // is synced right after so its model matches the DOM we just touched.
+      const el = elRef.current;
+      if (el) {
+        el.style.transition = 'none';
+        el.classList.remove('loadscreen--out');
+      }
       setOut(false);
       // Safety net: if the click turns out NOT to navigate (a link some other
       // handler cancels later, or a failed/blocked request), the real page
@@ -70,7 +81,7 @@ export default function LoadingScreen() {
   }, []);
 
   return (
-    <div className={`loadscreen${out ? ' loadscreen--out' : ''}`} aria-hidden="true">
+    <div ref={elRef} className={`loadscreen${out ? ' loadscreen--out' : ''}`} aria-hidden="true">
       <img
         className="loadscreen__logo"
         src="/assets/images/logo.webp"

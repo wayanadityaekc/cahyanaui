@@ -13,11 +13,50 @@ import DatePopup from '@/components/booking/DatePopup';
 import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
+import { imageForProgram } from '@/lib/programImages';
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
   const [y, m, d] = ds.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function ItemIcon({ row }) {
+  const img = row.kind === 'day' ? imageForProgram(row.service) : null;
+  if (img) {
+    return (
+      <span
+        className="mtc-item__icon mtc-item__icon--photo"
+        style={{ backgroundImage: `url(/assets/images/${img})` }}
+        aria-hidden="true"
+      />
+    );
+  }
+  let glyph;
+  if (row.kind === 'transfer') {
+    glyph = (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 13l1.5-4.5A2 2 0 0 1 8.4 7h7.2a2 2 0 0 1 1.9 1.5L19 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H8v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z" />
+        <circle cx="7.5" cy="15.5" r="1" />
+        <circle cx="16.5" cy="15.5" r="1" />
+      </svg>
+    );
+  } else if (row.kind === 'charter') {
+    glyph = (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    );
+  } else {
+    glyph = (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
+        <circle cx="12" cy="10" r="2.5" />
+      </svg>
+    );
+  }
+  return <span className="mtc-item__icon" aria-hidden="true">{glyph}</span>;
 }
 
 export default function MyTripsCart() {
@@ -142,6 +181,7 @@ export default function MyTripsCart() {
               const line = priced && priced.lines[i];
               return (
                 <div className="mtc-item" key={i}>
+                  <ItemIcon row={r} />
                   <div className="mtc-item__body">
                     <p className="mtc-item__title">{r.service}</p>
                     <p className="mtc-item__desc">

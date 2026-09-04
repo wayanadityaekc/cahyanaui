@@ -5,3 +5,11 @@ out/
 *.tsbuildinfo
 .env
 .env.local
+
+# Folder Documents di Mac ini disinkronkan sesuatu yang bikin salinan " 2"/" 3".
+# Salinan itu pernah ke-commit lewat `git add -A`, termasuk symlink "assets 2"
+# yang bikin seluruh pohon aset kebangun dua kali.
+* [0-9]
+* [0-9].*
+* [0-9][0-9]
+* [0-9][0-9].*

@@ -192,7 +192,7 @@ export default function MyTripsCart() {
     const open = openRef === t.ref;
     const items = t.lines || [];
     return (
-      <div key={t.ref}>
+      <div className="mtc-book" key={t.ref}>
         <div className="mtc-item mtc-item--booked">
           {img ? (
             <span

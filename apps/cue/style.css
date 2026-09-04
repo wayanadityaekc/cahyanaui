@@ -7141,6 +7141,41 @@ button.pick-cat {
   color: var(--color-amber-d);
 }
 
+/* Satu booking = satu kartu. Sebelumnya kartu, toggle detail, dan tombol review
+   masing-masing elemen lepas yang melayang sendiri-sendiri; bingkainya sekarang
+   pindah ke pembungkus ini biar ketiganya kebaca sebagai satu blok. */
+.mtc-book {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  margin-bottom: 0.9rem;
+  overflow: hidden;
+}
+.mtc-book .mtc-item {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+.mtc-book .mtc-det {
+  margin: 0;
+  padding: 0 0.95rem 0.55rem;
+}
+/* Footer aksi: dibedain tipis dari badan kartu supaya kebaca sebagai ajakan,
+   bukan tombol nyasar. */
+.mtc-book .mtc-review {
+  margin: 0;
+  padding: 0.7rem 0.95rem;
+  border-top: 1px solid var(--line);
+  background: var(--color-cream);
+}
+@media (max-width: 600px) {
+  .mtc-book .mtc-review .mtc-review__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Leave a Review: satu tombol di pojok kanan bawah tiap kartu Past Trip yang
    masih ada tour belum direview (modal munculin checklist kalau lebih dari
    satu tour di booking itu). */

@@ -232,11 +232,48 @@ body {
   margin-right: 1rem;
   margin-left: 0.1rem;
 }
+/* Navbar menu = hamburger drawer at ALL widths (Wayan, Sep 2026): slide-in
+   panel from the right, opened by the hamburger. The @media(max-width:992px)
+   block below re-affirms the same for phones. */
 .navbar__menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  width: 80%;
+  max-width: 340px;
+  height: 100dvh;
+  background-color: #fff;
+  box-shadow: -14px 0 40px rgba(26, 26, 26, 0.2);
+  padding: 4.5rem 22px 30px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease);
+  pointer-events: none;
+  z-index: 120;
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  gap: 0;
   list-style: none;
+}
+.navbar__menu.active {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.navbar__menu > li {
+  border-bottom: 1px solid var(--line);
+}
+.navbar__menu > li > a,
+.navbar__menu .navbar__droptoggle {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 0;
+  font-size: 1rem;
+  text-align: left;
 }
 .navbar__menu a {
   font-size: 1rem;
@@ -250,7 +287,7 @@ body {
 }
 .navbar__toggle {
   position: relative;
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 5px;
   width: 28px;
@@ -931,12 +968,39 @@ body {
   max-width: 300px;
 }
 .hs-cal__cap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 1rem;
-  text-align: center;
   color: var(--color-green);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+.hs-cal__cap span {
+  flex: 1 1 auto;
+  text-align: center;
+}
+.hs-cal__cap button {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: #fff;
+  color: var(--color-gold);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+.hs-cal__cap button:hover {
+  background: var(--color-cream);
+  border-color: var(--color-gold);
 }
 .hs-cal__grid {
   display: grid;
@@ -4555,7 +4619,7 @@ a.footer__contact-item:hover {
     overflow-x: auto;
     scrollbar-width: none;
     position: sticky;
-    top: 52.8px; /* clear navbar HP - sama kayak tripbar/anchor lain */
+    top: var(--header-h, 52.8px); /* flush di bawah navbar+tripbar (diukur JS) */
     z-index: 20;
     background: #fff;
     border-bottom: 1px solid var(--line);
@@ -7830,53 +7894,17 @@ button.pick-cat {
 .navbar__drop a {
   display: block;
 }
-/* desktop: dropdown mengambang (hover/klik) */
-@media (min-width: 993px) {
-  .navbar__drop {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 160px;
-    padding: 0.5rem 0;
-    border-radius: var(--r-sm);
-    background: #fff;
-    box-shadow: var(--shadow-md);
-    z-index: 120;
-    /* buka/tutup halus (fade + slide), se-smooth panel lain */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-6px);
-    transition:
-      opacity var(--dur) var(--ease),
-      transform var(--dur) var(--ease),
-      visibility var(--dur);
-    pointer-events: none;
-  }
-  .navbar__has-drop:hover .navbar__drop,
-  .navbar__has-drop.open .navbar__drop {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-  .navbar__drop a {
-    padding: 0.5rem 1.1rem;
-    white-space: nowrap;
-  }
+/* Submenu inline: tap "Program" to expand (nav is a drawer at all widths). */
+.navbar__drop {
+  display: none;
+  margin: 0.1rem 0 0.2rem;
+  padding: 0.2rem 0 0.5rem 0.9rem; /* indent halus, TANPA garis (Wayan) */
 }
-/* mobile: submenu buka ke bawah inline */
-@media (max-width: 992px) {
-  .navbar__drop {
-    display: none;
-    margin: 0.1rem 0 0.2rem;
-    padding: 0.2rem 0 0.2rem 0.9rem; /* indent halus, TANPA garis (Wayan) */
-  }
-  .navbar__has-drop.open .navbar__drop {
-    display: block;
-  }
-  .navbar__drop li {
-    padding: 0.4rem 0;
-  }
+.navbar__has-drop.open .navbar__drop {
+  display: block;
+}
+.navbar__drop li {
+  padding: 0.4rem 0;
 }
 
 /* ==================== Tour Programs slider (desktop) ==================== */
@@ -8632,6 +8660,36 @@ strong {
   font-size: 1rem;
 }
 
+/* Sign-in / create-account popup (components/account/AuthModal.jsx) */
+.auth-modal .modal__box {
+  max-width: 420px;
+}
+.auth-modal__lead {
+  margin: 0 0 1.1rem;
+  color: var(--color-muted);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+}
+.auth-modal__swap {
+  margin: 1rem 0 0;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+.auth-modal__link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--color-gold);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.auth-modal__link:hover {
+  color: var(--color-gold-d);
+}
+
 /* Our Company page - desktop = sidebar nav kiri + konten kanan (pola .guide-layout),
    HP = tab strip sticky di atas. Konten body-only: hero kosong (banner legal ijo +
    galeri foto About) dibuang - gak ada foto beneran, jadi mubazir. */
@@ -8649,8 +8707,8 @@ strong {
 .company-nav {
   flex: 0 0 260px;
   position: sticky;
-  /* clear navbar+tripbar fixed - samain sidebar tour page (.tour-layout__side) */
-  top: 104px;
+  /* clear navbar+tripbar fixed (diukur JS: --header-h) */
+  top: var(--header-h, 104px);
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -8703,20 +8761,29 @@ strong {
 /* Konten reuse (AboutPage/ContactSection/legal body) punya clearance navbar +
    slot foto sendiri - di dalam kolom udah gak perlu, buang. */
 .company-page .about { padding-top: 0; }
-.company-page .about .lhero { padding-top: 0.5rem; }
+.company-page .about .lhero { padding-top: 0.5rem; padding-bottom: 1rem; }
 .company-page .about-gallery { display: none; }
 .company-page .contact,
 .company-page .info { padding-top: 0; }
+/* About tab: kolom konten udah sempit (ada sidebar), jadi hero + kartu intro
+   yang biasa center & narrow di halaman penuh keliatan gak nyatu sama baris
+   editorial (.arow) di bawahnya. Di dalam company-page: rata KIRI + isi penuh
+   lebar kolom, biar hero, intro, dan rows sejajar satu garis kiri. */
+.company-page .about .lhero__inner { max-width: none; text-align: left; }
+.company-page .about .lhero__sub { margin-left: 0; }
+.company-page .about-intro,
+.company-page .about .arows { max-width: none; margin: 0; padding: 0; }
+.company-page .about .ahero-card { max-width: none; margin: 0; }
 
 @media (max-width: 992px) {
   .company-layout {
     flex-direction: column;
     gap: 0;
-    padding: 5.4rem 0 var(--space-5);
+    padding: var(--header-h, 92px) 0 var(--space-5);
   }
   .company-nav {
     flex: none;
-    top: 52.8px;
+    top: var(--header-h, 92px);
     z-index: 20;
     flex-direction: row;
     gap: 1.5rem;
@@ -9922,7 +9989,7 @@ strong {
    STICKY di bawah navbar (Job 2) — top diukur JS (initZoneAnchors). */
 .lhead {
   position: sticky;
-  top: 96px; /* fallback; initZoneAnchors ngukur tinggi navbar asli */
+  top: var(--header-h, 96px); /* flush di bawah navbar+tripbar (diukur JS) */
   z-index: 40; /* di bawah navbar (100) biar dropdown tetap di atas */
   background: #fff;
   display: flex;

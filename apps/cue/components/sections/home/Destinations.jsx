@@ -11,7 +11,7 @@ export default function Destinations() {
       </div>
       <div className="experience__grid experience__grid--home4">
         {HOME_DESTINATIONS.map((c) => (
-          <ExperienceCard key={c.name} variant="article" {...c} />
+          <ExperienceCard key={c.name} {...c} />
         ))}
       </div>
       <div className="xplore__more">

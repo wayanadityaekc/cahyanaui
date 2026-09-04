@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import ExperienceCard from '@/components/cards/ExperienceCard';
-import CharterHome from '@/components/sections/home/CharterHome';
+import CharterSection from '@/components/sections/CharterSection';
+import TransferSection from '@/components/sections/TransferSection';
 import { LISTINGS } from '@/content/shared/listings';
-import { TRANSFER } from '@/content/shared/transfer';
 
 const TABS = [
   { id: 'tour', label: 'Tours' },
@@ -16,20 +16,9 @@ const TABS = [
 
 const flat = (key) => (LISTINGS[key] ? LISTINGS[key].cats : []).flatMap((c) => c.cards || []);
 
-const TRANSFER_CARDS = TRANSFER.routes.map((r) => ({
-  href: '/transfer.html',
-  name: r.name,
-  img: r.bg,
-  alt: r.name,
-  meta: r.meta,
-  metaIcon: 'pin',
-  priceName: r.priceName,
-  priceFallback: r.priceFallback,
-}));
-
 export default function AllPrograms() {
   const [tab, setTab] = useState('tour');
-  const cards = tab === 'transfer' ? TRANSFER_CARDS : flat(tab);
+  const isForm = tab === 'charter' || tab === 'transfer';
 
   return (
     <div className="tourprog">
@@ -52,12 +41,12 @@ export default function AllPrograms() {
           </div>
         </div>
 
-        {tab === 'charter' ? (
-          <CharterHome />
-        ) : (
+        {tab === 'charter' && <CharterSection />}
+        {tab === 'transfer' && <TransferSection />}
+        {!isForm && (
           <section className="catsec">
             <div className="experience__grid experience__grid--home4">
-              {cards.map((c) => (
+              {flat(tab).map((c) => (
                 <ExperienceCard key={(c.href || '') + c.name} {...c} width={c.w} height={c.hgt} />
               ))}
             </div>

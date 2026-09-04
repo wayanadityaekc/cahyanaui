@@ -1,6 +1,5 @@
-import CharterBuilder from '@/components/sections/CharterBuilder';
+import CharterSection from '@/components/sections/CharterSection';
 import JsonLd from '@/components/JsonLd';
-import { CHARTER } from '@/content/shared/charter';
 
 export const metadata = {
   title: 'Private Car Charter Bali from Ubud | Half & Full Day',
@@ -13,15 +12,7 @@ export default function Page() {
   return (
     <>
       <JsonLd page="charter" />
-      <section className="charter-hero">
-        <div className="charter-hero__inner">
-          <h1 className="charter-hero__title">{CHARTER.title}</h1>
-          <p className="charter-hero__sub">{CHARTER.sub}</p>
-          <CharterBuilder />
-        </div>
-      </section>
-      <section className="charter-notes-sec" dangerouslySetInnerHTML={{ __html: CHARTER.notesHtml }} />
-      <section className="info" dangerouslySetInnerHTML={{ __html: CHARTER.infoHtml }} />
+      <CharterSection />
     </>
   );
 }

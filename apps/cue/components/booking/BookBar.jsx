@@ -40,7 +40,7 @@ export default function BookBar({ item, perPerson = false }) {
   };
 
   return (
-    <div className="book-bar">
+    <div className="book-bar is-show">
       <div className="book-bar__price">
         <span className="book-bar__from">from</span>{' '}
         <Price name={item} fallback="" />

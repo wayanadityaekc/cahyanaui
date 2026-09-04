@@ -9,21 +9,40 @@ import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
 import Select from '@/components/ui/Select';
+import AuthModal from '@/components/account/AuthModal';
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function Navbar() {
   const { guests, setGuests, resetGuests, stay, setStay } = useTripPrefs();
   const { count } = useItinerary();
-  const { account, hasUpcoming } = useAccount();
+  const { account, hasUpcoming, logout } = useAccount();
 
   const [acctOpen, setAcctOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const acctRef = useRef(null);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
+  const headerRef = useRef(null);
   const pathname = usePathname();
+
+  // Publish the real fixed-header height (navbar row + trip bar) as --header-h
+  // so sticky tab strips can sit flush right below it at any width / promo state.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return undefined;
+    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    window.addEventListener('resize', set);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', set);
+    };
+  }, []);
 
   const isActive = (href) => {
     if (href === '/') return pathname === '/';
@@ -63,7 +82,7 @@ export default function Navbar() {
   }, [acctOpen, menuOpen]);
 
   return (
-    <header className="navbar">
+    <header className="navbar" ref={headerRef}>
       <div className="navbar__container">
         <a href="/" className="navbar__logo">
           <img src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
@@ -129,7 +148,15 @@ export default function Navbar() {
                 </svg>
                 Settings
               </a>
-              <button type="button" className="acct__link acct__link--auth">
+              <button
+                type="button"
+                className="acct__link acct__link--auth"
+                onClick={() => {
+                  if (account) logout();
+                  else setAuthOpen(true);
+                  closeAll();
+                }}
+              >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                   <circle cx="12" cy="8" r="4" />
                   <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
@@ -153,7 +180,7 @@ export default function Navbar() {
         <nav ref={navRef}>
           <ul className={`navbar__menu${menuOpen ? ' active' : ''}`} id="nav-menu">
             <li><a href="/" className={navClass('/')}>Home</a></li>
-            <li className={`navbar__has-drop${dropOpen ? ' active' : ''}`}>
+            <li className={`navbar__has-drop${dropOpen ? ' open' : ''}`}>
               <button
                 type="button"
                 className="navbar__droptoggle"
@@ -189,6 +216,7 @@ export default function Navbar() {
 
       <div className={`navbar__scrim${acctOpen || menuOpen ? ' open' : ''}`} onClick={closeAll} />
       <TripBar />
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );
 }

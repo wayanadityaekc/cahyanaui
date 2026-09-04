@@ -2268,6 +2268,9 @@ a.tripbar--promo {
 }
 .experience__price {
   color: var(--color-amber);
+  /* Harga jangan pernah pecah baris (mis. IDR panjang "from Rp1.300.000" kalau
+     wrap, baris ke-2 kepotong di kartu). Angkanya tetep penuh, satu baris. */
+  white-space: nowrap;
 }
 .experience__arrow {
   display: flex;
@@ -8303,11 +8306,14 @@ strong {
   font-weight: 600;
   line-height: 1.25;
   /* 2 baris (Sep 2026, tour restructure - judul baru lebih panjang, 1 baris
-     kepotong kebanyakan) - pola sama kayak .tourprog .experience__name. */
+     kepotong kebanyakan) - pola sama kayak .tourprog .experience__name.
+     Tinggi di-reserve 2 baris (min-height, bukan cuma clamp) biar tinggi kartu
+     seragam walau judul tetangga cuma 1 baris - samain kayak .catsec listing. */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: 2.5em;
 }
 .home .experience__footer,
 .related .experience__footer {

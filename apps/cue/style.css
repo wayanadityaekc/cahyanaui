@@ -7080,6 +7080,67 @@ button.pick-cat {
 .mtc-item--booked {
   cursor: default;
 }
+/* Rincian per booking di tab Booked/Past: kartu cuma nampilin ringkasan, ini
+   yang bukain isinya (tour apa aja, tanggal, pax, harga per baris). Beda dari
+   .mtc-receipt yang sengaja di-hide di tab My Trip - di sana rinciannya cuma
+   ngulang kartu di sebelah kiri, di sini nggak ada tempat lain buat lihat. */
+.mtc-det {
+  margin: -0.35rem 0 1.1rem;
+  padding: 0 0.9rem;
+}
+.mtc-det__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 0;
+  background: none;
+  padding: 0.35rem 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.mtc-det__toggle:hover { color: var(--color-gold); }
+.mtc-det__chev {
+  width: 15px;
+  height: 15px;
+  transition: transform var(--dur-fast) ease;
+}
+.mtc-det__toggle[aria-expanded="true"] .mtc-det__chev { transform: rotate(180deg); }
+.mtc-det__list {
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.mtc-det__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  font-size: var(--fs-small);
+}
+.mtc-det__line + .mtc-det__line { border-top: 1px solid var(--line); }
+.mtc-det__name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  color: var(--color-green);
+}
+.mtc-det__meta {
+  font-size: var(--fs-label);
+  color: var(--color-muted);
+}
+.mtc-det__amt {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--color-amber-d);
+}
+
 /* Leave a Review: satu tombol di pojok kanan bawah tiap kartu Past Trip yang
    masih ada tour belum direview (modal munculin checklist kalau lebih dari
    satu tour di booking itu). */

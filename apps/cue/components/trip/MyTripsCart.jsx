@@ -71,6 +71,8 @@ export default function MyTripsCart() {
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
+  const [tab, setTab] = useState('custom');
+  const [openRef, setOpenRef] = useState(null);
 
   const rows = useMemo(() => {
     const days = (state.days || []).filter((d) => d.items && d.items.length);
@@ -165,9 +167,161 @@ export default function MyTripsCart() {
     });
   };
 
+  // Bookings are a record of what was charged, so they show the amount stored
+  // against them rather than a live conversion.
+  const bookedMoney = (usd, idr) =>
+    currency === 'IDR'
+      ? 'Rp' + Number(idr || 0).toLocaleString('id-ID')
+      : '$' + Number(usd || 0).toLocaleString('en-US');
+
+  const fmtRange = (from, to) => {
+    if (!from) return 'Date TBD';
+    if (to && to !== from) return fmtDay(from) + ' - ' + fmtDay(to);
+    return fmtDay(from);
+  };
+
+  const bookingCard = (t, isPast) => {
+    const img =
+      imageForProgram(t.name) ||
+      imageForProgram((t.lines && t.lines[0] && t.lines[0].service) || '');
+    const status = isPast
+      ? 'Completed'
+      : t.status
+        ? t.status.charAt(0).toUpperCase() + t.status.slice(1)
+        : 'Booked';
+    const open = openRef === t.ref;
+    const items = t.lines || [];
+    return (
+      <div key={t.ref}>
+        <div className="mtc-item mtc-item--booked">
+          {img ? (
+            <span
+              className="mtc-item__icon mtc-item__icon--photo"
+              style={{ backgroundImage: 'url(/assets/images/' + img + ')' }}
+              aria-hidden="true"
+            />
+          ) : (
+            <ItemIcon row={{ kind: 'tour' }} />
+          )}
+          <div className="mtc-item__body">
+            <p className="mtc-item__title">{t.name}</p>
+            <p className="mtc-item__desc">{status} · {t.guests || '-'} guests</p>
+            <p className="mtc-item__date">
+              {fmtRange(t.start_date, t.end_date)}{t.ref ? ' · ' + t.ref : ''}
+            </p>
+          </div>
+          <span className="mtc-item__price">
+            <span className="price-cur">{bookedMoney(t.price_usd, t.price_idr)}</span>
+          </span>
+        </div>
+
+        {items.length > 0 && (
+          <div className="mtc-det">
+            <button
+              type="button"
+              className="mtc-det__toggle"
+              aria-expanded={open ? 'true' : 'false'}
+              onClick={() => setOpenRef(open ? null : t.ref)}
+            >
+              {open
+                ? 'Hide details'
+                : 'View details (' + items.length + (items.length > 1 ? ' items)' : ' item)')}
+              <svg className="mtc-det__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            {open && (
+              <ul className="mtc-det__list">
+                {items.map((l, i) => (
+                  <li className="mtc-det__line" key={i}>
+                    <span className="mtc-det__name">
+                      {l.day_no ? 'Day ' + l.day_no + ' · ' : ''}{l.service}
+                      <span className="mtc-det__meta">
+                        {fmtDay(l.date)}
+                        {l.guests ? ' · ' + l.guests + ' pax' : ''}
+                        {l.pickup_time ? ' · ' + l.pickup_time : ''}
+                      </span>
+                    </span>
+                    <span className="mtc-det__amt">{bookedMoney(l.price_usd, l.price_idr)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {isPast && t.review_items && t.review_items.length > 0 && (
+          <div className="mtc-review">
+            <button
+              type="button"
+              className="modal__btn mtc-review__btn"
+              onClick={() => setReview({ ref: t.ref, name: (account && account.name) || '', items: t.review_items })}
+            >
+              Leave a Review
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const bookingPanel = (isPast) => {
+    if (!readLocal(KEY.token, '')) {
+      return (
+        <div className="mtc-empty">
+          <p className="mtc-empty__lead">Sign in to see your trips.</p>
+          <p className="mtc-empty__sub">
+            Open the account menu and sign in with your email - your booked and past trips show up here.
+          </p>
+        </div>
+      );
+    }
+    if (!trips) {
+      return (
+        <div className="mtc-empty">
+          <p className="mtc-empty__sub">Loading your trips…</p>
+        </div>
+      );
+    }
+    const arr = (isPast ? trips.history : trips.upcoming) || [];
+    if (!arr.length) {
+      return (
+        <div className="mtc-empty">
+          <p className="mtc-empty__lead">{isPast ? 'No past trips yet.' : 'No booked trips yet.'}</p>
+          <p className="mtc-empty__sub">
+            {isPast
+              ? 'Trips you have already taken will appear here.'
+              : 'Once you make a payment, your booked trip shows up here.'}
+          </p>
+        </div>
+      );
+    }
+    return <div className="mtc-list">{arr.map((t) => bookingCard(t, isPast))}</div>;
+  };
+
+  const TABS = [
+    { id: 'custom', label: 'My Trip' },
+    { id: 'booked', label: 'Booked Trip' },
+    { id: 'past', label: 'Past Trip' },
+  ];
+
   return (
     <div data-mytrips-cart>
-      {rows.length === 0 ? (
+      <div className="mtc-tabs" role="tablist">
+        {TABS.map((tb) => (
+          <button
+            type="button"
+            key={tb.id}
+            className={'mtc-tab' + (tab === tb.id ? ' is-on' : '')}
+            role="tab"
+            aria-selected={tab === tb.id ? 'true' : 'false'}
+            onClick={() => setTab(tb.id)}
+          >
+            {tb.label}
+          </button>
+        ))}
+      </div>
+      {tab === 'custom' && (rows.length === 0 ? (
         <div className="mtc-empty">
           <p className="mtc-empty__lead">Your trip is empty.</p>
           <p className="mtc-empty__sub">Add a tour, transfer, or experience to get started.</p>
@@ -227,32 +381,10 @@ export default function MyTripsCart() {
             You&apos;ll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email.
           </p>
         </>
-      )}
+      ))}
 
-      {trips && (trips.upcoming.length > 0 || trips.history.length > 0) && (
-        <div className="mtc-panel">
-          <h2 className="section__title">Your bookings</h2>
-          {[...trips.upcoming, ...trips.history].map((t) => (
-            <div className="mtc-item mtc-item--booked" key={t.ref}>
-              <div className="mtc-item__body">
-                <p className="mtc-item__title">{t.name}</p>
-                <p className="mtc-item__desc">{t.ref} · {t.start_date || 'date TBD'} · {t.upcoming ? 'Upcoming' : 'Past'}</p>
-              </div>
-              {t.review_items && t.review_items.length > 0 && (
-                <div className="mtc-review">
-                  <button
-                    type="button"
-                    className="mtc-review__btn"
-                    onClick={() => setReview({ ref: t.ref, name: t.guest_name || '', items: t.review_items })}
-                  >
-                    Leave a Review
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      {tab === 'booked' && <div className="mtc-panel">{bookingPanel(false)}</div>}
+      {tab === 'past' && <div className="mtc-panel">{bookingPanel(true)}</div>}
 
       <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
 

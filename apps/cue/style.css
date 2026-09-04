@@ -2119,6 +2119,11 @@ a.tripbar--promo {
   overflow: hidden;
   background-color: #fff;
   box-shadow: var(--shadow-md);
+  /* kartu = satu <a> (seluruh kartu bisa diklik). Matiin gaya link default biar
+     teks (judul/meta/harga) gak keliatan underline + warna link - masing-masing
+     teks punya warnanya sendiri. */
+  text-decoration: none;
+  color: inherit;
 }
 .experience__image {
   position: relative;
@@ -8814,8 +8819,6 @@ strong {
 /* Minimal cards (style A) on the tour programs page */
 .tourprog .experience__card {
   display: block;
-  text-decoration: none;
-  color: inherit;
 }
 .tourprog .experience__image {
   aspect-ratio: 4 / 3;

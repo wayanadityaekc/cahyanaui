@@ -1,5 +1,13 @@
 export const EXPLORE_OPTIONS = [
   {
+    href: '/programs.html',
+    name: 'All Programs',
+    sub: 'Browse everything in one place',
+    cat: 'all',
+    all: true,
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>',
+  },
+  {
     href: '/tour.html',
     name: 'Tour programs',
     sub: 'Full-day private tours',
@@ -26,13 +34,6 @@ export const EXPLORE_OPTIONS = [
     sub: 'Car + driver, your route',
     cat: 'charter',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l2-9h12l2 9M2 17h20M9 8V5h6v3" /></svg>',
-  },
-  {
-    href: '/my-trips.html',
-    name: 'My Trips',
-    sub: 'Your cart & checkout',
-    cat: 'itinerary',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>',
   },
   {
     href: '/destinations.html',

@@ -60,7 +60,6 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       const hi = Math.max(...arr);
       out[cat] = lo === hi ? 'from ' + fmt(lo) : fmt(lo) + '–' + hi.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
     }
-    out.itinerary = 'Build your own';
     return out;
   }, [catalog, symbol, currency]);
 
@@ -92,6 +91,10 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             key={o.href}
             className={`hs-opt${picked && picked.href === o.href ? ' is-sel' : ''}`}
             onClick={() => {
+              if (o.all) {
+                window.location.href = o.href;
+                return;
+              }
               setPicked(o);
               setOpen(false);
             }}

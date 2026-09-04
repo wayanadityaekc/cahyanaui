@@ -6,7 +6,8 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { useReferral } from '@/state/ReferralProvider';
 import { useBooking } from '@/state/BookingProvider';
-import { quote } from '@/lib/api';
+import useQuote from '@/hooks/useQuote';
+import useMoney from '@/hooks/useMoney';
 import ReviewModal from '@/components/reviews/ReviewModal';
 import AddItemPicker from './AddItemPicker';
 import DatePopup from '@/components/booking/DatePopup';
@@ -66,7 +67,6 @@ export default function MyTripsCart() {
   const { referral } = useReferral();
   const { openBooking } = useBooking();
 
-  const [priced, setPriced] = useState(null);
   const [trips, setTrips] = useState(null);
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
@@ -100,14 +100,14 @@ export default function MyTripsCart() {
     return out;
   }, [state, displayGuests]);
 
-  useEffect(() => {
-    if (!hydrated || !rows.length) { setPriced(null); return; }
-    let cancelled = false;
-    quote({ lines: rows, currency, stay, referral: (referral && referral.code) || '' })
-      .then((d) => { if (!cancelled && d && d.lines) setPriced(d); })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [rows, currency, stay, referral, hydrated]);
+  const priced = useQuote({
+    lines: rows,
+    currency,
+    stay,
+    referral: (referral && referral.code) || '',
+    enabled: hydrated,
+  });
+  const { format } = useMoney();
 
   useEffect(() => {
     const token = readLocal(KEY.token, '');
@@ -123,8 +123,7 @@ export default function MyTripsCart() {
   if (!hydrated) return <div data-mytrips-cart />;
 
   const undated = rows.some((r) => !r.date);
-  const symbol = (priced && priced.symbol) || '$';
-  const totalText = priced ? symbol + priced.total.display.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US') : '-';
+  const totalText = priced ? format(priced.total.display) : '-';
 
   const remove = (row, idx) => {
     const next = JSON.parse(JSON.stringify(state));
@@ -199,7 +198,7 @@ export default function MyTripsCart() {
                   </div>
                   <span className="mtc-item__price">
                     <span className="price-cur">
-                      {line ? symbol + line.display.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US') : '-'}
+                      {line ? format(line.display) : '-'}
                     </span>
                   </span>
                   <button type="button" className="mtc-item__del" aria-label={`Remove ${r.service}`} onClick={() => remove(r, i)}>&times;</button>

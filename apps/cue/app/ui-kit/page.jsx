@@ -1,5 +1,6 @@
 import ExperienceCard from '@/components/cards/ExperienceCard';
 import Slider from '@/components/ui/Slider';
+import Button from '@/components/ui/Button';
 import BookingForm from '@/components/booking/BookingForm';
 
 const CARDS = [
@@ -16,6 +17,16 @@ export default function Kit() {
     <div className="tourprog">
       <section className="experience">
         <div className="catsec">
+          <h2 className="section__title">Buttons</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <Button variant="primary">Book Now</Button>
+            <Button variant="primary" size="lg">Make Payment</Button>
+            <Button variant="ghost">View all</Button>
+            <Button as="a" href="#" variant="ghost">Link button</Button>
+            <Button variant="plain">Read more</Button>
+            <Button variant="primary" disabled>Disabled</Button>
+          </div>
+
           <h2 className="section__title">Card grid</h2>
           <div className="experience__grid experience__grid--home4">
             {CARDS.map((c) => <ExperienceCard key={c.href} {...c} />)}

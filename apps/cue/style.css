@@ -8572,8 +8572,9 @@ strong {
   }
 }
 
-/* Branded loading splash (components/ui/LoadingScreen.jsx). Ke-hide instan di
-   load berikutnya lewat .splash-seen (script inline di <head>). */
+/* Branded loading splash (components/ui/LoadingScreen.jsx) - tampil di SETIAP
+   page load (arrival) DAN pas link diklik (leaving), biar gak ada blank pas
+   pindah halaman. Elemennya tetep mounted, cuma di-toggle lewat --out. */
 .loadscreen {
   position: fixed;
   inset: 0;
@@ -8589,6 +8590,7 @@ strong {
 .loadscreen--out {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
 }
 .loadscreen__logo {
   width: min(200px, 45vw);
@@ -8604,9 +8606,6 @@ strong {
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-.splash-seen .loadscreen {
-  display: none;
 }
 
 /* Button atom (components/ui/Button.jsx) - satu bentuk tombol standar: pill,

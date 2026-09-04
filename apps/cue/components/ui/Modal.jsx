@@ -32,6 +32,13 @@ export default function Modal({ open, onClose, title, children, className = '' }
         <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
           &times;
         </button>
+        <img
+          className="modal__logo"
+          src="/assets/images/logo.webp"
+          alt="The Cahyana Logo"
+          width="1005"
+          height="324"
+        />
         {title && <h3 className="modal__title">{title}</h3>}
         {children}
       </div>

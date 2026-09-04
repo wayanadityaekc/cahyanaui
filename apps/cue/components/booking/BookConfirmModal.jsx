@@ -60,6 +60,9 @@ export default function BookConfirmModal() {
     return '';
   };
 
+  // The quote already fetched above is what the guest sees, so send it with the
+  // booking. Without it the server stores nothing and the confirmation email
+  // reads "$0 / Rp0" - which is what happened to CUE-007.
   const payload = () => ({
     type: ctx.type,
     service: ctx.service,
@@ -68,23 +71,28 @@ export default function BookConfirmModal() {
     email: f.email,
     referral: (referral && referral.code) || '',
     stay: stay || '',
-    lines: ctx.lines.map((l) => ({
-      type: l.type,
-      service: l.service,
-      date: l.date || '',
-      time: l.time || '',
-      guests: String(l.guests || displayGuests),
-      pickup: l.pickup || f.pickup,
-      dropoff: l.dropoff || f.dropoff,
-      day_no: l.day_no != null ? l.day_no : null,
-      flight_number: l.flight_number || '',
-      flight_datetime: l.flight_datetime || '',
-      mode: l.mode || 'standard',
-      area: l.area || '',
-      duration: l.duration || '',
-      extra: l.extra != null ? l.extra : 0,
-      return: !!l.return,
-    })),
+    lines: ctx.lines.map((l, i) => {
+      const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
+      return {
+        type: l.type,
+        service: l.service,
+        date: l.date || '',
+        time: l.time || '',
+        guests: String(l.guests || displayGuests),
+        pickup: l.pickup || f.pickup,
+        dropoff: l.dropoff || f.dropoff,
+        day_no: l.day_no != null ? l.day_no : null,
+        flight_number: l.flight_number || '',
+        flight_datetime: l.flight_datetime || '',
+        mode: l.mode || 'standard',
+        area: l.area || '',
+        duration: l.duration || '',
+        extra: l.extra != null ? l.extra : 0,
+        return: !!l.return,
+        price_usd: p ? p.price_usd : null,
+        price_idr: p ? p.price_idr : null,
+      };
+    }),
   });
 
   const submit = async () => {

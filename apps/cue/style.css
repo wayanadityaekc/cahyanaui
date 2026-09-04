@@ -8290,8 +8290,11 @@ strong {
 .related .experience__body {
   display: grid;
   grid-template-columns: 1fr auto;
+  /* Judul SPAN 2 kolom (full lebar kartu) - dulu numpang kolom kiri (1fr) yang
+     kebagi sama kolom harga. Pas harga IDR panjang, kolom harga melebar, kolom
+     judul menyempit -> judul kepotong. Sekarang judul gak kesentuh lebar harga. */
   grid-template-areas:
-    "title  rating"
+    "title  title"
     "meta   price";
   align-items: baseline;
   column-gap: 0.55rem;

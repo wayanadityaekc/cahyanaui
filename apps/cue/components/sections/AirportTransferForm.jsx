@@ -7,6 +7,7 @@ import { useBooking } from '@/state/BookingProvider';
 import { AIRPORT } from '@/content/shared/airport';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
+import DateTimeField from '@/components/ui/DateTimeField';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ROUTE = 'Airport – Ubud';
@@ -99,7 +100,7 @@ export default function AirportTransferForm() {
 
       <div className="charter__step">
         <label className="charter__label" htmlFor="at-flight-time">Flight date &amp; time</label>
-        <input type="datetime-local" className="charter__select" id="at-flight-time" value={flightTime} onChange={(e) => setFlightTime(e.target.value)} />
+        <DateTimeField id="at-flight-time" label="Flight date & time" value={flightTime} onChange={setFlightTime} />
       </div>
 
       <p className="charter__hint">

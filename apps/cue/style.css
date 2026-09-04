@@ -7664,6 +7664,24 @@ button.pick-cat {
 .charter__fields .field {
   margin-bottom: 0;
 }
+.dtf {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.dtf__time {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.dtf__time .csel-group {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.dtf__colon {
+  font-weight: 600;
+  color: var(--color-muted);
+}
 .charter__total {
   display: flex;
   align-items: baseline;

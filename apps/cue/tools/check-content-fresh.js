@@ -33,6 +33,11 @@ const contentFiles = [];
 })("content");
 
 const CHECK = ["desc", "priceFallback", "img", "meta", "name", "alt", "title", "sub", "lead", "tag"];
+// Migration-era UI copy with no legacy counterpart to match against: the
+// "See All Programs" entry point added to the home search dropdown (a new
+// page). Intentional new labels, not stale/invented content - same reasoning
+// as the SKIP_PARENT waiver for heroSlides below.
+const INTENTIONAL = new Set(["All Programs", "Browse everything in one place"].map(norm));
 const stale = [];
 let checked = 0;
 
@@ -52,6 +57,7 @@ for (const file of contentFiles) {
           if (seen.has(n)) continue;
           seen.add(n);
           checked++;
+          if (INTENTIONAL.has(n)) continue;
           if (!HAY.includes(n) && !JS.includes(n)) stale.push(`${file}  ${k}: ${val.slice(0, 90)}`);
         } else scan(val, k);
       }

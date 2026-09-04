@@ -75,3 +75,42 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     console.log("Relative URLs in extracted HTML : none");
   }
 })();
+
+// A new page that never reaches sitemap.xml is invisible to search, and nothing
+// else notices - our-company.html and programs.html both shipped without it.
+// Pages marked noindex are meant to be absent, so they are skipped.
+(function checkSitemap() {
+  const path = require("path");
+  const OUT = path.join(__dirname, "..", "out");
+  const SITEMAP = path.join(__dirname, "..", "sitemap.xml");
+  if (!fs.existsSync(OUT) || !fs.existsSync(SITEMAP)) return;
+  const sitemap = fs.readFileSync(SITEMAP, "utf8");
+  const pages = [];
+  (function w(d, rel) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      // assets/ holds a favicon <head> snippet, not a page
+      if (e.name === "_next" || e.name === "assets") continue;
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) w(p, rel + e.name + "/");
+      else if (e.name.endsWith(".html")) pages.push(rel + e.name);
+    }
+  })(OUT, "");
+  const missing = [];
+  for (const p of pages) {
+    if (/^(404|_not-found)\.html$/.test(p)) continue;
+    const html = fs.readFileSync(path.join(OUT, p), "utf8");
+    if (/name="robots"[^>]*noindex/.test(html)) continue;
+    if (p === "index.html") {
+      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(p + " (homepage)");
+      continue;
+    }
+    if (!sitemap.includes("/" + p + "<")) missing.push(p);
+  }
+  if (missing.length) {
+    console.error("\nINDEXABLE PAGES MISSING FROM sitemap.xml:");
+    missing.forEach((m) => console.error("  " + m));
+    process.exitCode = 1;
+  } else {
+    console.log("Indexable pages missing from sitemap : none");
+  }
+})();

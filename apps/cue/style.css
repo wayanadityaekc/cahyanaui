@@ -8563,7 +8563,10 @@ strong {
   max-width: 1000px;
   margin: 0 auto 1.6rem;
   border-bottom: 1px solid var(--line);
+  /* Strip tab cuma scroll kiri-kanan, vertikal dikunci (gesture pan-x doang) */
   overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
   scrollbar-width: none;
 }
 .zone-filter::-webkit-scrollbar { display: none; }
@@ -10059,7 +10062,7 @@ strong {
 .lhead .zone-filter {
   max-width: none;
   margin: 0;
-  border-bottom: none; /* garis cuma di chip aktif */
+  border-bottom: 1px solid var(--line); /* garis tipis pemisah di bawah tab (desktop + HP) */
 }
 
 /* Header row reviews: judul kiri + link kanan */

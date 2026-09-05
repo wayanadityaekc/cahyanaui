@@ -15,7 +15,7 @@ export const EXPLORE_TOURS = [
       "program": "Ubud Tour",
       "img": "tegallalang-girl.jpg",
       "alt": "Ubud Tour - private tour from Ubud, Bali",
-      "name": "Ubud Highlights: Rice Terrace & Monkey Forest",
+      "name": "Ubud: Rice Terrace & Monkey Forest",
       "meta": "5–7 hours",
       "metaIcon": "clock",
       "desc": "Rice terraces, sacred temples, and the monkey forest in one full day.",

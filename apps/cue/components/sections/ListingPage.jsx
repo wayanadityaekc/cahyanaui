@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
 
@@ -15,6 +15,27 @@ function CloseIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+function CarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 11l1.4-4.2A2 2 0 0 1 8.3 5.4h7.4a2 2 0 0 1 1.9 1.4L19 11M4 11h16v5H4zM7 16v1.6M17 16v1.6" /><circle cx="7.5" cy="13.5" r="1" /><circle cx="16.5" cy="13.5" r="1" />
+    </svg>
+  );
+}
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+}
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 6L9 17l-5-5" />
     </svg>
   );
 }
@@ -36,6 +57,19 @@ export default function ListingPage({ data }) {
   cats.forEach((cat) => cat.cards.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null })));
   const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
+
+  // The Browse-all button and the sticky bottom nav must not show together:
+  // the sticky nav only appears once the hero (with its button) scrolls away.
+  const browseRef = useRef(null);
+  const [heroInView, setHeroInView] = useState(true);
+  useEffect(() => {
+    const el = browseRef.current;
+    if (!el) { setHeroInView(true); return undefined; }
+    const io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, [q]);
+  const showStickyNav = !q && !heroInView;
 
   return (
     <div className="tourprog">
@@ -65,7 +99,14 @@ export default function ListingPage({ data }) {
               {q ? <CloseIcon /> : <SearchIcon />}
             </button>
           </div>
-          {!q && <a href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>}
+          {!q && (
+            <ul className="lhero-usp">
+              <li><CarIcon />Fixed price per car</li>
+              <li><UserIcon />Private driver</li>
+              <li><CheckIcon />Free cancellation</li>
+            </ul>
+          )}
+          {!q && <a ref={browseRef} href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>}
         </div>
       </section>
 
@@ -77,7 +118,7 @@ export default function ListingPage({ data }) {
         {/* Floating sticky nav (bawah). DESKTOP: segmented tab (.zfilter) - pilih
             daerah => kartu di luar daerah diredupkan. MOBILE: satu pill di tengah
             (SectionSwitcher) - panah scroll ke section (tanpa redup). */}
-        {!q && (
+        {showStickyNav && (
           <div className="zfilter" role="tablist" aria-label="Filter by area">
             {tabs.map((t) => (
               <button
@@ -92,7 +133,7 @@ export default function ListingPage({ data }) {
             ))}
           </div>
         )}
-        {!q && <SectionSwitcher zones={chips} />}
+        {showStickyNav && <SectionSwitcher zones={chips} />}
 
         <section className="catsec">
           <div className="lrow-list">

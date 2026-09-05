@@ -9600,6 +9600,14 @@ strong {
   background: var(--color-cta); color: #fff; font-weight: 600; font-size: 0.85rem; text-decoration: none;
   transition: background-color var(--dur) ease; }
 .lbrowse:hover { background: var(--color-cta-d); }
+/* USP list di hero (price per car / private driver / free cancellation) - ngisi
+   ruang di atas tombol Browse all, desktop & mobile. */
+.lhero-usp { list-style: none; margin: 1.5rem 0 0; padding: 0; display: flex;
+  flex-direction: column; gap: 0.7rem; }
+.lhero-usp li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
+  font-weight: 500; color: var(--color-ink); }
+.lhero-usp svg { width: 19px; height: 19px; color: var(--color-cta); flex: 0 0 auto; }
+@media (max-width: 768px) { .lhero-usp { align-self: center; } }
 @media (max-width: 768px) {
   /* .tour-hero__body sudah position:relative -> jadi offset parent. Angkat search
      ke atas (negatif) biar mengambang bersih di foto, ada jarak dari sheet putih.

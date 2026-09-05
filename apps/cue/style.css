@@ -10042,34 +10042,20 @@ strong {
 
 /* Header row listing: judul kiri + zone-filter kanan sebaris.
    STICKY di bawah navbar (Job 2) — top diukur JS (initZoneAnchors). */
-/* Sub-navbar khusus halaman listing: judul kiri + tab kanan dalam satu bar
-   sticky, satu garis baseline full-width + shadow tipis biar "ngambang" di atas
-   konten (kesan navbar). */
+/* Judul listing = heading tengah (agak gede), TIDAK sticky. Navigasi kategori
+   pindah ke floating switcher (.ssw). */
 .lhead {
-  position: sticky;
-  top: var(--header-h, 96px); /* flush di bawah navbar+tripbar (diukur JS) */
-  z-index: 40; /* di bawah navbar (100) biar dropdown tetap di atas */
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 2rem;
-  flex-wrap: wrap;
-  max-width: 1200px; /* ngunci ke lebar grid kartu */
+  max-width: 1200px;
   margin: 0 auto 1.6rem;
-  padding: 0.7rem 0 0; /* baris nempel ke garis baseline bawah */
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.22);
+  padding: 0.5rem 0 0;
+  text-align: center;
 }
 .lhead .section__title {
-  margin-bottom: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
 }
-.lhead .section__title::after { display: none; } /* baseline bar gantiin underline judul */
-.lhead .zone-filter {
-  max-width: none;
-  margin: 0;
-  border-bottom: none; /* garis pindah ke .lhead (satu baseline penuh) */
-}
+.lhead .section__title::after { left: 50%; transform: translateX(-50%); } /* underline di tengah */
 
 /* Header row reviews: judul kiri + link kanan */
 .reviews__head {

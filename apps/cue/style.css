@@ -10042,6 +10042,9 @@ strong {
 
 /* Header row listing: judul kiri + zone-filter kanan sebaris.
    STICKY di bawah navbar (Job 2) — top diukur JS (initZoneAnchors). */
+/* Sub-navbar khusus halaman listing: judul kiri + tab kanan dalam satu bar
+   sticky, satu garis baseline full-width + shadow tipis biar "ngambang" di atas
+   konten (kesan navbar). */
 .lhead {
   position: sticky;
   top: var(--header-h, 96px); /* flush di bawah navbar+tripbar (diukur JS) */
@@ -10054,15 +10057,18 @@ strong {
   flex-wrap: wrap;
   max-width: 1200px; /* ngunci ke lebar grid kartu */
   margin: 0 auto 1.6rem;
-  padding: 0.6rem 0 0.8rem; /* bawah: ruang garis emas ::after judul */
+  padding: 0.7rem 0 0; /* baris nempel ke garis baseline bawah */
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.22);
 }
 .lhead .section__title {
   margin-bottom: 0;
 }
+.lhead .section__title::after { display: none; } /* baseline bar gantiin underline judul */
 .lhead .zone-filter {
   max-width: none;
   margin: 0;
-  border-bottom: 1px solid var(--line); /* garis tipis pemisah di bawah tab (desktop + HP) */
+  border-bottom: none; /* garis pindah ke .lhead (satu baseline penuh) */
 }
 
 /* Header row reviews: judul kiri + link kanan */

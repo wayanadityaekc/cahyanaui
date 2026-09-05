@@ -9483,11 +9483,18 @@ strong {
   font-family: inherit; font-size: 0.85rem; color: var(--color-ink); }
 .lsearch__input::placeholder { color: var(--color-muted); }
 .lsearch__empty { margin: 1.5rem 0 0; color: var(--color-muted); text-align: center; font-size: 0.9rem; }
+/* Tombol "Browse all" - scroll ke daftar program di bawah (pill hijau). */
+.lbrowse { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.8rem; border-radius: var(--r-pill);
+  background: var(--color-cta); color: #fff; font-weight: 600; font-size: 0.85rem; text-decoration: none;
+  transition: background-color var(--dur) ease; }
+.lbrowse:hover { background: var(--color-cta-d); }
 @media (max-width: 768px) {
   /* .tour-hero__body sudah position:relative -> jadi offset parent. Angkat search
-     ke atas (negatif) biar mengambang di foto, tepat di atas sheet putih. */
-  .tourprog .lsearch { position: absolute; left: 1.2rem; right: 1.2rem; top: -3.4rem;
+     ke atas (negatif) biar mengambang bersih di foto, ada jarak dari sheet putih. */
+  .tourprog .lsearch { position: absolute; left: 1.2rem; right: 1.2rem; top: -3.9rem;
     z-index: 4; margin-top: 0; max-width: none; box-shadow: var(--shadow-lg); }
+  /* Browse all: full-width di bawah intro, di dalam sheet */
+  .tourprog .lbrowse { display: block; width: 100%; margin-top: 1.25rem; text-align: center; }
 }
 
 /* ============================================================

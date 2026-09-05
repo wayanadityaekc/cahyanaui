@@ -48,6 +48,7 @@ export default function ListingPage({ data }) {
               aria-label={`Search ${noun}`}
             />
           </div>
+          <a href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>
         </div>
       </section>
 

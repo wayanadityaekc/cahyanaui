@@ -8900,48 +8900,95 @@ strong {
 .company-page .about-intro,
 .company-page .about .arows { max-width: none; margin: 0; padding: 0; }
 .company-page .about .ahero-card { max-width: none; margin: 0; }
+/* Judul tab (About Us H1 / Terms-Privacy-Cancellation .company-heading / Contact
+   H1) kepake 3 ukuran+bobot beda (40px, 18px/700, 18px/500) - gonta-ganti tab
+   kerasa gak nyambung. Disamain semua ke satu treatment (18px/700/gold, punya
+   .company-heading) - About & Contact di sini yang di-override. Wayan, Sep 2026. */
+.company-page .about .lhero__title { font-size: var(--fs-h2); }
+.company-page .contact__heading {
+  font-weight: 700;
+  color: var(--color-gold);
+}
 
+/* Terms/Privacy/Cancellation tab: .guide-article aslinya sengaja center buat
+   judul nomor (.section__title--sub) di halaman standalone-nya (terms-conditions.html
+   dkk, keputusan lama - JANGAN diubah di sana). Di dalam company-page beda konteks:
+   satu kolom sejajar sama tab About yang udah full rata kiri, jadi di sini
+   di-override rata kiri juga (pola sama kayak .guide-article-page). Wayan, Sep 2026. */
+.company-page .guide-article .section__title--sub {
+  text-align: left;
+}
+/* Garis emas kecil di bawah tiap judul nomor kerasa "nanggung" kalau diulang
+   12x di satu halaman panjang (Terms dkk) - dibuang khusus di sini, judul udah
+   cukup jelas dari bobot 600 + jarak atas. Halaman standalone TETAP pakai garis
+   (keputusan lama, jangan diubah). Wayan, Sep 2026. */
+.company-page .guide-article .section__title--sub::after {
+  content: none;
+}
+
+/* Floating section switcher (HP only) - satu pill ngambang di bawah layar,
+   isinya nama tab aktif + panah kiri/kanan buat gonta-ganti section. Ganti
+   tab strip lama (dulu sticky di atas, numpuk sama navbar+tripbar jadi 3 bar
+   & nutupin konten pas discroll). Desktop TETAP sidebar (.company-nav),
+   pill ini di-hide di desktop. Wayan, Sep 2026. */
+.company-tabbar {
+  display: none;
+}
 @media (max-width: 992px) {
   .company-layout {
     flex-direction: column;
     /* align-items:flex-start (desktop) bikin nav & main shrink-to-fit ke konten -
-       tab strip nowrap + baris flex/grid di dalam .about jadi maksa lebar row-nya
-       sendiri (>390px), page ikut horizontal-overflow. stretch = lebar penuh
-       viewport, overflow konten di dalam ditangani masing-masing (nav: scroll-x). */
+       baris flex/grid di dalam .about jadi maksa lebar row-nya sendiri (>390px),
+       page ikut horizontal-overflow. stretch = lebar penuh viewport. */
     align-items: stretch;
     gap: 0;
-    padding: var(--header-h, 92px) 0 var(--space-5);
+    padding: var(--header-h, 92px) 0 6.5rem;
   }
-  .company-nav {
-    flex: none;
-    min-width: 0;
-    top: var(--header-h, 92px);
-    z-index: 20;
-    flex-direction: row;
-    gap: 1.5rem;
-    padding: 0.7rem 1.3rem;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    border-radius: 0;
-    box-shadow: none;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .company-nav::-webkit-scrollbar { display: none; }
-  .company-nav__title { display: none; }
-  .company-nav__item {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    border-radius: 0;
-    border-bottom: 2px solid transparent;
-    padding: 0.3rem 0.1rem;
-  }
-  .company-nav__item.is-active {
-    background: none;
-    color: var(--color-green);
-    border-bottom-color: var(--color-gold);
-  }
+  /* Sidebar nav lama di-hide di HP - digantiin .company-tabbar ngambang. */
+  .company-nav { display: none; }
   .company-main { padding: 0 var(--container-x); min-width: 0; }
+  .company-tabbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    z-index: 30;
+    min-width: 220px;
+    padding: 0.5rem 0.6rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-xl);
+  }
+  .company-tabbar__arrow {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-cream);
+    color: var(--color-gold-d);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--dur-fast) ease;
+  }
+  .company-tabbar__arrow:hover { background: var(--line); }
+  .company-tabbar__label {
+    flex: 1 1 auto;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--color-green);
+  }
 }
 
 /* Minimal cards (style A) on the tour programs page */

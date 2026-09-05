@@ -3,35 +3,6 @@ export const LISTINGS = {
     "heroBg": "goa-gajah-hero.webp",
     "title": "Private Bali Tours with Your Own Ubud Driver",
     "sub": "Fully customizable day trips from Ubud - rice terraces, temples, waterfalls, and beaches, with your own local driver.",
-    "lbox": {
-      "img": "tegallalang-girl.jpg",
-      "tag": "Most Popular Tour",
-      "title": "Ubud Tour",
-      "desc": "Bali's cultural heart in a single day - rice terraces, sacred temples, the monkey forest, and local artisan villages, all at your own pace with a private car and local driver.",
-      "facts": [
-        {
-          "label": "From",
-          "value": "$45",
-          "priceName": "Ubud Tour"
-        },
-        {
-          "label": "Duration",
-          "value": "5–7 hrs"
-        },
-        {
-          "label": "Capacity",
-          "value": "Up to 5"
-        }
-      ],
-      "go": {
-        "href": "/ubud-tour.html",
-        "text": "View tour"
-      },
-      "add": {
-        "item": "Ubud Tour",
-        "text": "+ My Trips"
-      }
-    },
     "listTitle": "All Bali Tours",
     "sectionId": "tours",
     "chipLabel": "Jump to tour category",
@@ -399,35 +370,6 @@ export const LISTINGS = {
     "heroBg": "jungle-swing-card.jpg",
     "title": "Bali Activities & Cultural Performances",
     "sub": "From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and performances in and around Ubud - all with local drivers and honest prices.",
-    "lbox": {
-      "img": "kecak.jpg",
-      "tag": "Most Popular",
-      "title": "Kecak Dance",
-      "desc": "Bali's iconic fire-and-chant ritual, performed by a circle of over fifty voices - a performance that stays with you long after the flames die down. Performed every Tuesday & Sunday evening.",
-      "facts": [
-        {
-          "label": "From",
-          "value": "$10",
-          "priceName": "Kecak Dance"
-        },
-        {
-          "label": "Duration",
-          "value": "~1 hour"
-        },
-        {
-          "label": "Days",
-          "value": "Tue & Sun"
-        }
-      ],
-      "go": {
-        "href": "/attractions/kecak-dance.html",
-        "text": "Book"
-      },
-      "add": {
-        "item": "Kecak Dance",
-        "text": "+ My Trips"
-      }
-    },
     "listTitle": "All Activities & Performances",
     "sectionId": "activities",
     "chipLabel": "Jump to activity category",
@@ -634,27 +576,6 @@ export const LISTINGS = {
     "heroBg": "tanah-lot-hero.webp",
     "title": "Bali Destinations",
     "sub": "The temples, waterfalls, rice terraces, and beaches that make up Bali's day tours - browse each destination on its own, then build the day you want around the ones you like.",
-    "lbox": {
-      "img": "tanah-lot.webp",
-      "tag": "Most Popular",
-      "title": "Tanah Lot Sunset Temple",
-      "desc": "A sea temple built on a rock just off Bali's southwest coast, cut off by the water at high tide - most famous at sunset.",
-      "facts": [
-        {
-          "label": "Area",
-          "value": "West Bali"
-        },
-        {
-          "label": "Best at",
-          "value": "Sunset"
-        }
-      ],
-      "go": {
-        "href": "/attractions/tanah-lot.html",
-        "text": "Visit destination"
-      },
-      "add": {}
-    },
     "listTitle": "All Destinations",
     "sectionId": "destinations",
     "chipLabel": "Jump to destination category",

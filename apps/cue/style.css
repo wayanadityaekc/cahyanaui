@@ -322,17 +322,19 @@ body {
   }
 }
 
-/* ===== Hamburger drawer: account + grouped menu (Sep 2026, Opsi A) =====
-   Account (identity + currency + sign in) + trip controls hidup DI DALAM drawer;
-   ikon akun terpisah di top bar dihapus (top bar = logo · cart · hamburger). */
+/* ===== Hamburger drawer: welcome + trip + nav (Sep 2026, Opsi A revisi) ===== */
+/* Welcome header - sticky di atas drawer (identity + currency) */
 .navbar__menu > li.navbar__acct {
-  border-bottom: 1px solid var(--line);
-  padding: 0 0 1rem;
-}
-.navbar__acctrow {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 10px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  margin: 0 -22px;
+  padding: 0.2rem 22px 0.8rem;
 }
 .navbar__ava {
   width: 38px;
@@ -361,13 +363,27 @@ body {
   white-space: nowrap;
 }
 .navbar__acct .acct__cur { margin-left: auto; flex: none; }
+
+/* Guests + Stay area = 2 kolom, di atas tombol sign in */
+.navbar__menu > li.navbar__trip2 {
+  border-bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0.9rem 0 0.4rem;
+}
+.navbar__tripcol { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.navbar__triplabel { font-size: var(--fs-small); color: var(--color-muted); }
+.navbar__tripcol .hs-control { width: 100%; }
+
+/* Sign in (baris sendiri, di bawah trip) */
+.navbar__menu > li.navbar__signinrow { border-bottom: 1px solid var(--line); padding-bottom: 1rem; }
 .navbar__signin {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  margin-top: 0.8rem;
   height: 2.6rem;
   border: 0;
   border-radius: var(--r-pill);
@@ -382,36 +398,18 @@ body {
 .navbar__signin:hover { background: var(--color-cta-d); }
 .navbar__signin svg { width: 17px; height: 17px; }
 
-/* Label grup (EXPLORE / PLAN YOUR TRIP / COMPANY) */
-.navbar__menu > li.navbar__grouplabel {
-  border-bottom: 0;
-  padding: 1rem 0 0.2rem;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  font-weight: 600;
-}
-
-/* Baris trip (Guests / Stay area) */
-.navbar__menu > li.navbar__trip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0.55rem 0;
-}
-.navbar__triplabel { flex: 0 0 84px; font-size: var(--fs-small); color: var(--color-muted); }
-.navbar__trip .hs-control { flex: 1 1 auto; }
-
-/* My Trips link di dalam menu (+ badge) */
+/* My Trip link (+ badge) */
 .navbar__menucart { display: flex; align-items: center; }
 .navbar__menucart-badge { margin-left: 8px; }
 
-/* Footer drawer (Settings) */
+/* Footer drawer: Settings + Chat WhatsApp */
 .navbar__menu > li.navbar__menufoot {
   border-bottom: 0;
   margin-top: auto;
   padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 .navbar__footlink {
   display: flex;
@@ -422,6 +420,22 @@ body {
   font-weight: 500;
 }
 .navbar__footlink svg { width: 18px; height: 18px; }
+.navbar__wa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 2.5rem;
+  border: 1px solid var(--color-cta);
+  color: var(--color-cta);
+  border-radius: var(--r-pill);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--fs-strong);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.navbar__wa:hover { background: var(--color-cta); color: #fff; }
+.navbar__wa svg { width: 16px; height: 16px; }
 
 /* ==================== Homepage hero = foto + search bar ==================== */
 .hero {

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
+import { WHATSAPP_NUMBER } from '@/lib/constants';
 import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
@@ -19,6 +20,7 @@ export default function Navbar() {
   const { account, hasUpcoming, logout } = useAccount();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropOpen, setDropOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
@@ -89,21 +91,51 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul className={`navbar__menu${menuOpen ? ' active' : ''}`} id="nav-menu">
-            {/* Account header: identity + currency + sign in (merged into the drawer) */}
+            {/* Welcome header — sticky di atas drawer (identity + currency) */}
             <li className="navbar__acct">
-              <div className="navbar__acctrow">
-                <span className="navbar__ava" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-                  </svg>
-                </span>
-                <span className="navbar__acctid">
-                  <b><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
-                  <span className="navbar__acctemail">{account ? account.email : 'Plan your Bali trip'}</span>
-                </span>
-                <CurrencyPicker />
+              <span className="navbar__ava" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
+                </svg>
+              </span>
+              <span className="navbar__acctid">
+                <b><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
+                <span className="navbar__acctemail">{account ? account.email : 'Plan your Bali trip'}</span>
+              </span>
+              <CurrencyPicker />
+            </li>
+
+            {/* Guests + Stay area = 2 kolom, di atas tombol sign in */}
+            <li className="navbar__trip2">
+              <div className="navbar__tripcol">
+                <label className="navbar__triplabel" htmlFor="acct-guests">Guests</label>
+                <Select
+                  id="acct-guests"
+                  label="Guests"
+                  value={guests || ''}
+                  onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
+                  options={[
+                    ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
+                    { value: 'reset', label: '↺ Reset' },
+                  ]}
+                  placeholder="Guests"
+                />
               </div>
+              <div className="navbar__tripcol">
+                <label className="navbar__triplabel" htmlFor="acct-stay">Stay area</label>
+                <Select
+                  id="acct-stay"
+                  label="Stay area"
+                  value={stay || 'ubud'}
+                  onChange={setStay}
+                  options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
+                />
+              </div>
+            </li>
+
+            {/* Sign in */}
+            <li className="navbar__signinrow">
               <button
                 type="button"
                 className="navbar__signin"
@@ -122,53 +154,30 @@ export default function Navbar() {
               </button>
             </li>
 
-            {/* Explore */}
-            <li className="navbar__grouplabel">Explore</li>
+            {/* Nav */}
             <li><a href="/" className={navClass('/')}>Home</a></li>
-            <li><a href="/tour.html">Tours</a></li>
-            <li><a href="/destinations.html">Destinations</a></li>
-            <li><a href="/activities.html">Experiences</a></li>
-            <li><a href="/transfer.html">Transfer</a></li>
-            <li><a href="/charter.html">Charter</a></li>
-
-            {/* Plan your trip */}
-            <li className="navbar__grouplabel">Plan your trip</li>
-            <li className="navbar__trip">
-              <label className="navbar__triplabel" htmlFor="acct-guests">Guests</label>
-              <Select
-                id="acct-guests"
-                label="Guests"
-                value={guests || ''}
-                onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
-                options={[
-                  ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
-                  { value: 'reset', label: '↺ Reset' },
-                ]}
-                placeholder="Guests"
-              />
+            <li className={`navbar__has-drop${dropOpen ? ' open' : ''}`}>
+              <button
+                type="button"
+                className="navbar__droptoggle"
+                aria-expanded={dropOpen}
+                onClick={() => setDropOpen((v) => !v)}
+              >
+                Program<span className="navbar__caret">&rsaquo;</span>
+              </button>
+              <ul className="navbar__drop">
+                <li><a href="/tour.html">Tours</a></li>
+                <li><a href="/destinations.html">Destinations</a></li>
+                <li><a href="/activities.html">Experiences</a></li>
+                <li><a href="/transfer.html">Transfer</a></li>
+                <li><a href="/charter.html">Charter</a></li>
+              </ul>
             </li>
-            <li className="navbar__trip">
-              <label className="navbar__triplabel" htmlFor="acct-stay">Stay area</label>
-              <Select
-                id="acct-stay"
-                label="Stay area"
-                value={stay || 'ubud'}
-                onChange={setStay}
-                options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
-              />
-            </li>
-            <li>
-              <a href="/my-trips.html" className="navbar__menucart">
-                My Trips<span className="itn-badge navbar__menucart-badge" hidden={!count}>{count}</span>
-              </a>
-            </li>
-
-            {/* Company */}
-            <li className="navbar__grouplabel">Company</li>
             <li><a href="/bali-guide.html" className={navClass('/bali-guide.html')}>Guide</a></li>
+            <li><a href="/my-trips.html" className="navbar__menucart">My Trip<span className="itn-badge navbar__menucart-badge" hidden={!count}>{count}</span></a></li>
             <li><a href="/our-company.html" className={navClass('/our-company.html')}>Our Company</a></li>
 
-            {/* Footer */}
+            {/* Footer: Settings + Chat WA */}
             <li className="navbar__menufoot">
               <a href="/settings.html" className="navbar__footlink">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -176,6 +185,12 @@ export default function Navbar() {
                   <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" />
                 </svg>
                 Settings
+              </a>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="navbar__wa">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z" />
+                </svg>
+                Chat on WhatsApp
               </a>
             </li>
           </ul>

@@ -108,10 +108,10 @@ export default function ListingPage({ data }) {
           </div>
           {!q && (
             <ul className="lhero-usp">
-              <li><CarIcon />Fixed price per car</li>
-              <li><UserIcon />Private driver</li>
-              <li><PinIcon />Free pickup in Ubud area</li>
-              <li><CheckIcon />Free cancellation</li>
+              <li><CarIcon />Fixed price per car - standard or exclusive option</li>
+              <li><UserIcon />Private driver, just for your group</li>
+              <li><PinIcon />Free pickup in the Ubud area</li>
+              <li><CheckIcon />Free cancellation up to 24 hours before your tour</li>
             </ul>
           )}
           {!q && <a ref={browseRef} href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>}

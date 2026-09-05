@@ -21,7 +21,7 @@ export default function Select({
   placeholder = '',
   name,
   id,
-  popup = false,
+  popup = true,
   className = '',
 }) {
   const [open, setOpen] = useState(false);

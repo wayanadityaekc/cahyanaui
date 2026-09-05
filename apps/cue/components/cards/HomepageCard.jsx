@@ -22,10 +22,10 @@ function UserIcon() {
     </svg>
   );
 }
-function HeartIcon() {
+function StarIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 21s-7-4.5-9.5-8A5 5 0 0 1 12 6a5 5 0 0 1 9.5 7c-2.5 3.5-9.5 8-9.5 8z" />
+      <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 20l1.5-6.5-5-4.3 6.6-.6z" />
     </svg>
   );
 }
@@ -86,7 +86,7 @@ export default function HomepageCard({
           <c.Icon />{cat}
         </span>
       )}
-      <span className="hcard__rate"><HeartIcon />{rating || 'New'}</span>
+      <span className="hcard__rate"><StarIcon />{rating || 'New'}</span>
       <div className="hcard__ov">
         <h3 className="hcard__t">{name}</h3>
         <span className={`hcard__accent hcard__accent--${tone}`} />

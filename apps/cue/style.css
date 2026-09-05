@@ -9517,13 +9517,22 @@ strong {
 .lbox__fact .price { color: var(--color-gold); font-weight: 600; }
 /* Search di hero listing (memfilter kartu di halaman itu). Desktop: di bawah
    judul, dalam kolom kiri. Mobile: mengambang di foto (lihat media query). */
-.lsearch { display: flex; align-items: center; gap: 9px; width: 100%; max-width: 430px;
-  margin-top: 1.5rem; height: 2.9rem; padding: 0 16px; background: #fff;
+.lsearch { display: flex; align-items: center; gap: 6px; width: 100%; max-width: 430px;
+  margin-top: 1.5rem; height: 2.9rem; padding: 0 6px 0 18px; background: #fff;
   border: 1px solid var(--line); border-radius: var(--r-pill); box-shadow: var(--shadow-sm); }
-.lsearch svg { width: 18px; height: 18px; color: var(--color-muted); flex: 0 0 auto; }
+/* font 16px = anti-zoom pas fokus di iOS (di bawah 16px Safari auto-zoom) */
 .lsearch__input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none;
-  font-family: inherit; font-size: 0.85rem; color: var(--color-ink); }
+  font-family: inherit; font-size: 16px; color: var(--color-ink); }
 .lsearch__input::placeholder { color: var(--color-muted); }
+/* sembunyiin tombol clear bawaan browser (biar cuma tombol hijau kita) */
+.lsearch__input::-webkit-search-cancel-button,
+.lsearch__input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; display: none; }
+/* tombol search/clear di kanan kolom */
+.lsearch__btn { flex: 0 0 auto; width: 2.1rem; height: 2.1rem; display: flex; align-items: center;
+  justify-content: center; border: 0; border-radius: 50%; background: var(--color-cta); color: #fff;
+  cursor: pointer; transition: background-color var(--dur) ease; }
+.lsearch__btn:hover { background: var(--color-cta-d); }
+.lsearch__btn svg { width: 16px; height: 16px; }
 .lsearch__empty { margin: 1.5rem 0 0; color: var(--color-muted); text-align: center; font-size: 0.9rem; }
 /* Tombol "Browse all" - scroll ke daftar program di bawah (pill hijau). */
 .lbrowse { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.8rem; border-radius: var(--r-pill);

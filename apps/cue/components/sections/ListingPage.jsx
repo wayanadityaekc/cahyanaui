@@ -11,6 +11,13 @@ function SearchIcon() {
     </svg>
   );
 }
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
 
 // Search placeholder noun per listing page.
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
@@ -38,10 +45,9 @@ export default function ListingPage({ data }) {
       <section className="tour-hero">
         <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${heroBg})` }} />
         <div className="tour-hero__body">
-          <h1 className="subhero__title">{title}</h1>
-          <p className="tour-hero__desc">{sub}</p>
+          {!q && <h1 className="subhero__title">{title}</h1>}
+          {!q && <p className="tour-hero__desc">{sub}</p>}
           <div className="lsearch">
-            <SearchIcon />
             <input
               type="search"
               className="lsearch__input"
@@ -50,8 +56,16 @@ export default function ListingPage({ data }) {
               onChange={(e) => setQuery(e.target.value)}
               aria-label={`Search ${noun}`}
             />
+            <button
+              type="button"
+              className="lsearch__btn"
+              aria-label={q ? 'Clear search' : 'Search'}
+              onClick={() => q && setQuery('')}
+            >
+              {q ? <CloseIcon /> : <SearchIcon />}
+            </button>
           </div>
-          <a href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>
+          {!q && <a href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>}
         </div>
       </section>
 

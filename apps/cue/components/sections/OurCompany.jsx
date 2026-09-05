@@ -26,7 +26,13 @@ function LegalBody({ data }) {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const active = TABS.find((t) => t.id === tab);
+  const activeIndex = TABS.findIndex((t) => t.id === tab);
+  const active = TABS[activeIndex];
+
+  const step = (dir) => {
+    const next = (activeIndex + dir + TABS.length) % TABS.length;
+    setTab(TABS[next].id);
+  };
 
   return (
     <div className="company-page">
@@ -49,9 +55,19 @@ export default function OurCompany() {
 
         <div className="company-main">
           {tab === 'about' && <AboutPage />}
-          {active && active.legal && <LegalBody data={LEGAL[active.legal]} />}
+          {active.legal && <LegalBody data={LEGAL[active.legal]} />}
           {tab === 'contact' && <ContactSection />}
         </div>
+      </div>
+
+      <div className="company-tabbar">
+        <button type="button" className="company-tabbar__arrow" aria-label="Previous section" onClick={() => step(-1)}>
+          &lsaquo;
+        </button>
+        <span className="company-tabbar__label">{active.label}</span>
+        <button type="button" className="company-tabbar__arrow" aria-label="Next section" onClick={() => step(1)}>
+          &rsaquo;
+        </button>
       </div>
     </div>
   );

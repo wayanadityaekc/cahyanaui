@@ -1,4 +1,4 @@
-import ExperienceCard from '@/components/cards/ExperienceCard';
+import ListingRow from '@/components/cards/ListingRow';
 import Price from '@/components/Price';
 import ZoneTabs from '@/components/ui/ZoneTabs';
 
@@ -55,9 +55,9 @@ export default function ListingPage({ data }) {
         {cats.map((cat) => (
           <section className="catsec" id={cat.id} key={cat.id}>
             <h2 className="catsec__title">{cat.title}</h2>
-            <div className="experience__grid experience__grid--home4">
+            <div className="lrow-list">
               {cat.cards.map((c) => (
-                <ExperienceCard key={c.href + c.name} {...c} width={c.w} height={c.hgt} hybrid rating={0} cat={c.cat || cat.title} />
+                <ListingRow key={c.href + c.name} {...c} />
               ))}
             </div>
           </section>

@@ -19,14 +19,6 @@ function PinIcon() {
   );
 }
 
-function StarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 20l1.5-6.5-5-4.3 6.6-.6z" />
-    </svg>
-  );
-}
-
 export default function ExperienceCard({
   href,
   name,
@@ -46,48 +38,7 @@ export default function ExperienceCard({
   width = 600,
   height = 600,
   children,
-  hybrid = false,
-  cat,
-  rating = 0,
 }) {
-  // Hybrid card experiment (Wayan): photo on top with a category badge + star
-  // rating over it, then a white panel with title, meta, description, price.
-  if (hybrid) {
-    return (
-      <a className="experience__card experience__card--hy" href={href} data-zone={zone}>
-        <CardImage img={img} alt={alt || name} width={width} height={height}>
-          {cat && <span className="hy__badge">{cat}</span>}
-          <span className="hy__rate"><StarIcon />{rating}</span>
-          {priceName && (
-            <>
-              <span className="hy__scrim" />
-              <span className="hy__price">
-                <small>from</small>
-                <Price name={priceName} mode={priceMode} fallback={priceFallback} />
-              </span>
-            </>
-          )}
-        </CardImage>
-        <div className="hy__body">
-          <h3 className="hy__title">{name}</h3>
-          <div className="hy__meta">
-            <span>{metaIcon === 'pin' ? <PinIcon /> : <ClockIcon />}{meta}</span>
-            {metaIcon !== 'pin' && (
-              <>
-                <span className="hy__sep" />
-                <span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" /></svg>
-                  Private Tour
-                </span>
-              </>
-            )}
-          </div>
-          {desc && <p className="hy__desc">{desc}</p>}
-        </div>
-      </a>
-    );
-  }
-
   const incl = variant === 'incl';
   const body = (
     <>

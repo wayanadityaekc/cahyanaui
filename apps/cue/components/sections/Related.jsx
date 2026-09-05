@@ -1,4 +1,4 @@
-import ExperienceCard from '@/components/cards/ExperienceCard';
+import HomepageCard from '@/components/cards/HomepageCard';
 import { RELATED_ITEMS, RELATED_ALL } from '@/content/shared/related';
 
 // Ported from initRelated: same type, same zone first, then the closest by
@@ -22,7 +22,7 @@ export default function Related({ href }) {
       <h2 className="related__title">You might also like</h2>
       <div className="experience__grid experience__grid--home4">
         {picks.map((it) => (
-          <ExperienceCard
+          <HomepageCard
             key={it.href}
             href={it.href}
             name={it.name}
@@ -31,9 +31,6 @@ export default function Related({ href }) {
             meta={it.meta}
             priceName={it.p ? it.priceName : undefined}
             priceFallback={it.p ? `$${it.p}` : undefined}
-            hybrid
-            rating={0}
-            cat={it.cat}
           />
         ))}
       </div>

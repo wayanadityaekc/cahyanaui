@@ -1,4 +1,4 @@
-import ExperienceCard from '@/components/cards/ExperienceCard';
+import HomepageCard from '@/components/cards/HomepageCard';
 import { HOME_DESTINATIONS } from '@/content/shared/home';
 
 export default function Destinations() {
@@ -11,7 +11,7 @@ export default function Destinations() {
       </div>
       <div className="experience__grid experience__grid--home4">
         {HOME_DESTINATIONS.map((c) => (
-          <ExperienceCard key={c.name} {...c} hybrid rating={0} />
+          <HomepageCard key={c.name} {...c} />
         ))}
       </div>
       <div className="xplore__more">

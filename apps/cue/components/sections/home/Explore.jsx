@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ExperienceCard from '@/components/cards/ExperienceCard';
+import HomepageCard from '@/components/cards/HomepageCard';
 import { EXPLORE_TOURS, EXPLORE_EXPERIENCES } from '@/content/shared/home';
 
 const TABS = [
@@ -38,7 +38,7 @@ export default function Explore() {
         <div className="xpanel" data-xpanel={t.key} key={t.key} hidden={active !== t.key}>
           <div className="experience__grid experience__grid--home4">
             {t.cards.map((c) => (
-              <ExperienceCard key={c.href + c.name} {...c} hybrid rating={0} />
+              <HomepageCard key={c.href + c.name} {...c} />
             ))}
           </div>
           <div className="xplore__more">

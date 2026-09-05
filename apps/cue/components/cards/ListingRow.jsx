@@ -15,7 +15,7 @@ export default function ListingRow({
         <h3 className="lrow__t">{name}</h3>
         {desc && <p className="lrow__desc">{desc}</p>}
         <div className="lrow__foot">
-          <span className="lrow__meta">{meta}{metaIcon !== 'pin' ? ' · Private Tour' : ''}</span>
+          <span className="lrow__meta">{meta}{metaIcon !== 'pin' ? ' · Private' : ''}</span>
           {priceName && (
             <span className="lrow__price">
               <small>from</small>

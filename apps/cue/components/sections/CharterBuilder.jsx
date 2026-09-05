@@ -7,6 +7,7 @@ import { useBooking } from '@/state/BookingProvider';
 import { CHARTER } from '@/content/shared/charter';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
+import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -90,7 +91,7 @@ export default function CharterBuilder() {
                 <span className="chdur__sub">{d.sub}</span>
                 <span className="chdur__price">
                   <span className="chdur__from">{d.from}</span>
-                  <span className="price">{v == null ? '' : fmt(v)}</span>
+                  <span className="price">{v == null ? '' : withSymbol(fmt(v))}</span>
                 </span>
               </button>
             );
@@ -126,7 +127,7 @@ export default function CharterBuilder() {
       <div className="charter__total">
         <span>Total</span>
         <span className="amount" id="ch-total">
-          <span className="price-cur">{total == null ? '-' : fmt(total)}</span>
+          <span className="price-cur">{total == null ? '-' : withSymbol(fmt(total))}</span>
         </span>
       </div>
 

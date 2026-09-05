@@ -15,6 +15,7 @@ import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
+import { withSymbol } from '@/components/Price';
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
@@ -211,7 +212,7 @@ export default function MyTripsCart() {
             </p>
           </div>
           <span className="mtc-item__price">
-            <span className="price-cur">{bookedMoney(t.price_usd, t.price_idr)}</span>
+            <span className="price-cur">{withSymbol(bookedMoney(t.price_usd, t.price_idr))}</span>
           </span>
         </div>
 
@@ -242,7 +243,7 @@ export default function MyTripsCart() {
                         {l.pickup_time ? ' · ' + l.pickup_time : ''}
                       </span>
                     </span>
-                    <span className="mtc-det__amt">{bookedMoney(l.price_usd, l.price_idr)}</span>
+                    <span className="mtc-det__amt">{withSymbol(bookedMoney(l.price_usd, l.price_idr))}</span>
                   </li>
                 ))}
               </ul>
@@ -352,7 +353,7 @@ export default function MyTripsCart() {
                   </div>
                   <span className="mtc-item__price">
                     <span className="price-cur">
-                      {line ? format(line.display) : '-'}
+                      {line ? withSymbol(format(line.display)) : '-'}
                     </span>
                   </span>
                   <button type="button" className="mtc-item__del" aria-label={`Remove ${r.service}`} onClick={() => remove(r, i)}>&times;</button>
@@ -363,7 +364,7 @@ export default function MyTripsCart() {
 
           <div className="mtc-total">
             <span className="mtc-total__label">Total</span>
-            <span className="mtc-total__val"><span className="price-cur">{totalText}</span></span>
+            <span className="mtc-total__val"><span className="price-cur">{withSymbol(totalText)}</span></span>
           </div>
 
           <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add another program</button>

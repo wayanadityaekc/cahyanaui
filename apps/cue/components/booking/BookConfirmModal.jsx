@@ -10,6 +10,7 @@ import { quote, submitInquiry } from '@/lib/api';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import PayChips from './PayChips';
+import { withSymbol } from '@/components/Price';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '' };
 
@@ -182,7 +183,7 @@ export default function BookConfirmModal() {
               {priced && priced.referral && (
                 <div className="modal__row"><span>Referral</span><span>{priced.referral.code} ({priced.referral.pct}%)</span></div>
               )}
-              <div className="modal__row"><span>Price</span><span id="sum-price">{priceText()}</span></div>
+              <div className="modal__row"><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
 
             {ctx.detailLines && ctx.detailLines.length > 0 && (

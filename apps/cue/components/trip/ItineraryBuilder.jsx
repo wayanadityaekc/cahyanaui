@@ -10,6 +10,7 @@ import { cascadeFrom, clashDates, setItemMode, removeItem, removeDay, suggestSta
 import { SUGGEST, PKG_AIRPORT, PKG_AIRPORT_PLACE } from '@/content/shared/suggest';
 import AddItemPicker from './AddItemPicker';
 import { usePricing } from '@/state/PricingProvider';
+import { withSymbol } from '@/components/Price';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
 
@@ -186,7 +187,7 @@ export default function ItineraryBuilder() {
 
         <section className="summary">
           <span className="summary__label">Trip total</span>
-          <div className="summary__amt"><span className="amount" id="itn-total"><span className="price-cur">{totalText}</span></span></div>
+          <div className="summary__amt"><span className="amount" id="itn-total"><span className="price-cur">{withSymbol(totalText)}</span></span></div>
           <span className="summary__sub" id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
           <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
         </section>

@@ -3,9 +3,10 @@
 import { usePricing } from '@/state/PricingProvider';
 
 // Render "$40" / "Rp700.000" with the currency symbol as its own span so it can
-// be shown smaller than the number (see .price__sym in style.css).
-function withSymbol(text) {
-  const m = String(text).match(/^(\D+)(.*)$/);
+// be shown smaller than the number (see .price__sym in style.css). Only splits
+// when the string actually has a number, so placeholders like "-" pass through.
+export function withSymbol(text) {
+  const m = String(text).match(/^(\D+)(\d.*)$/);
   if (!m) return text;
   return (
     <>

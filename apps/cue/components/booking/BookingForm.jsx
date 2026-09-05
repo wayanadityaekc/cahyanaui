@@ -7,6 +7,7 @@ import { useBooking } from '@/state/BookingProvider';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
 import InfoPopover from '@/components/ui/InfoPopover';
+import { withSymbol } from '@/components/Price';
 
 const SERVICE_TYPES = [
   { value: 'tour', label: 'Tour Program' },
@@ -131,7 +132,7 @@ export default function BookingForm({ presetItem = '', presetType = '', onBook, 
               </div>
             )}
 
-            <div className="booking__price" id="price">{priceText}</div>
+            <div className="booking__price" id="price">{withSymbol(priceText)}</div>
             <small className="booking__note" id="price-note">
               {hasExclusive
                 ? mode === 'exclusive'

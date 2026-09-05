@@ -54,7 +54,6 @@ export default function ListingPage({ data }) {
 
         {cats.map((cat) => (
           <section className="catsec" id={cat.id} key={cat.id}>
-            <h2 className="catsec__title">{cat.title}</h2>
             <div className="lrow-list">
               {cat.cards.map((c) => (
                 <ListingRow key={c.href + c.name} {...c} />

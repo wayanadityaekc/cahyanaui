@@ -10079,9 +10079,6 @@ strong {
   .catsec {
     padding: 1.8rem 0 0.8rem;
   }
-  .catsec__title {
-    font-size: 1.15rem;
-  }
   .catsec .experience__grid--home4 {
     margin-top: 1.1rem;
   }
@@ -10106,25 +10103,8 @@ strong {
   text-align: left;
   scroll-margin-top: 120px; /* anchor jump: clear navbar + tripbar + tab sticky nanti */
 }
-/* Garis pemisah antar-kategori DIHAPUS (Wayan): kategori dipisah pakai jarak +
-   judul kategori aja, tanpa border (tour/activities/destinations). */
-.catsec__title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  line-height: var(--lh-heading);
-  color: var(--color-green);
-  margin: 0;
-}
-.catsec__title::after {
-  content: "";
-  display: block;
-  width: 48px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--color-gold);
-  margin-top: 0.5rem;
-}
+/* Judul per-kategori (.catsec__title) DIHAPUS (Wayan): navigasi antar kategori
+   cukup lewat tab (.zone-chip) di .lhead, judulnya redundant. */
 .catsec .experience__grid--home4 {
   margin-top: 1.6rem;
   /* Listing page (tour/activities/destinations): tanpa slider di SEMUA breakpoint -

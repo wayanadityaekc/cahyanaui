@@ -8,6 +8,7 @@ import { AIRPORT } from '@/content/shared/airport';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
 import DateTimeField from '@/components/ui/DateTimeField';
+import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const ROUTE = 'Airport – Ubud';
@@ -109,7 +110,7 @@ export default function AirportTransferForm() {
 
       <div className="charter__total">
         <span>Total</span>
-        <span className="amount" id="at-total"><span className="price-cur">{totalText}</span></span>
+        <span className="amount" id="at-total"><span className="price-cur">{withSymbol(totalText)}</span></span>
       </div>
 
       <button className="btn-book" id="at-book" disabled={!ready} onClick={book}>Book This Transfer</button>

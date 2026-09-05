@@ -7672,6 +7672,13 @@ button.pick-cat {
   color: var(--color-amber);
   font-weight: 600;
 }
+/* Currency symbol ($, Rp, ...) sized down relative to the number, raised a touch */
+.price__sym {
+  font-size: 0.66em;
+  font-weight: 600;
+  vertical-align: 0.12em;
+  margin-right: 1px;
+}
 
 /* ==================== Charter page ==================== */
 /* Charter hero: background + kalkulator di box (gaya transfer) */

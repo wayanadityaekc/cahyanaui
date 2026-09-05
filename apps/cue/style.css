@@ -8803,11 +8803,17 @@ strong {
 @media (max-width: 992px) {
   .company-layout {
     flex-direction: column;
+    /* align-items:flex-start (desktop) bikin nav & main shrink-to-fit ke konten -
+       tab strip nowrap + baris flex/grid di dalam .about jadi maksa lebar row-nya
+       sendiri (>390px), page ikut horizontal-overflow. stretch = lebar penuh
+       viewport, overflow konten di dalam ditangani masing-masing (nav: scroll-x). */
+    align-items: stretch;
     gap: 0;
     padding: var(--header-h, 92px) 0 var(--space-5);
   }
   .company-nav {
     flex: none;
+    min-width: 0;
     top: var(--header-h, 92px);
     z-index: 20;
     flex-direction: row;
@@ -8834,7 +8840,7 @@ strong {
     color: var(--color-green);
     border-bottom-color: var(--color-gold);
   }
-  .company-main { padding: 0 var(--container-x); }
+  .company-main { padding: 0 var(--container-x); min-width: 0; }
 }
 
 /* Minimal cards (style A) on the tour programs page */

@@ -31,6 +31,9 @@ export default function Related({ href }) {
             meta={it.meta}
             priceName={it.p ? it.priceName : undefined}
             priceFallback={it.p ? `$${it.p}` : undefined}
+            hybrid
+            rating={0}
+            cat={it.cat}
           />
         ))}
       </div>

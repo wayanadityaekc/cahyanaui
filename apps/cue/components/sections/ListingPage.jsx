@@ -57,7 +57,7 @@ export default function ListingPage({ data }) {
             <h2 className="catsec__title">{cat.title}</h2>
             <div className="experience__grid experience__grid--home4">
               {cat.cards.map((c) => (
-                <ExperienceCard key={c.href + c.name} {...c} width={c.w} height={c.hgt} />
+                <ExperienceCard key={c.href + c.name} {...c} width={c.w} height={c.hgt} hybrid rating={0} cat={c.cat || cat.title} />
               ))}
             </div>
           </section>

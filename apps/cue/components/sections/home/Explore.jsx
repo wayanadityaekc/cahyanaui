@@ -38,7 +38,7 @@ export default function Explore() {
         <div className="xpanel" data-xpanel={t.key} key={t.key} hidden={active !== t.key}>
           <div className="experience__grid experience__grid--home4">
             {t.cards.map((c) => (
-              <ExperienceCard key={c.href + c.name} {...c} />
+              <ExperienceCard key={c.href + c.name} {...c} hybrid rating={0} />
             ))}
           </div>
           <div className="xplore__more">

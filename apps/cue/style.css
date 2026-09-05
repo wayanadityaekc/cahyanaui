@@ -9490,11 +9490,17 @@ strong {
 .lbrowse:hover { background: var(--color-cta-d); }
 @media (max-width: 768px) {
   /* .tour-hero__body sudah position:relative -> jadi offset parent. Angkat search
-     ke atas (negatif) biar mengambang bersih di foto, ada jarak dari sheet putih. */
+     ke atas (negatif) biar mengambang bersih di foto, ada jarak dari sheet putih.
+     width:auto -> lebar diatur left+right (kalau tetap 100% dia kelewatan layar). */
   .tourprog .lsearch { position: absolute; left: 1.2rem; right: 1.2rem; top: -3.9rem;
-    z-index: 4; margin-top: 0; max-width: none; box-shadow: var(--shadow-lg); }
+    width: auto; z-index: 4; margin-top: 0; max-width: none; box-shadow: var(--shadow-lg); }
   /* Browse all: full-width di bawah intro, di dalam sheet */
   .tourprog .lbrowse { display: block; width: 100%; margin-top: 1.25rem; text-align: center; }
+  /* Gradasi hitam di foto hero (atas tipis + bawah lebih gelap) biar search
+     putih nge-pop & foto lebih dramatis. Cuma listing (.tourprog), cuma mobile. */
+  .tourprog .tour-hero__image { position: relative; }
+  .tourprog .tour-hero__image::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.58) 100%); }
 }
 
 /* ============================================================

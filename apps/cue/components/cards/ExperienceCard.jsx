@@ -58,6 +58,15 @@ export default function ExperienceCard({
         <CardImage img={img} alt={alt || name} width={width} height={height}>
           {cat && <span className="hy__badge">{cat}</span>}
           <span className="hy__rate"><StarIcon />{rating}</span>
+          {priceName && (
+            <>
+              <span className="hy__scrim" />
+              <span className="hy__price">
+                <small>from</small>
+                <Price name={priceName} mode={priceMode} fallback={priceFallback} />
+              </span>
+            </>
+          )}
         </CardImage>
         <div className="hy__body">
           <h3 className="hy__title">{name}</h3>
@@ -73,15 +82,7 @@ export default function ExperienceCard({
               </>
             )}
           </div>
-          <div className="hy__foot">
-            {desc && <p className="hy__desc">{desc}</p>}
-            {priceName && (
-              <span className="hy__price">
-                <small>from</small>
-                <Price name={priceName} mode={priceMode} fallback={priceFallback} />
-              </span>
-            )}
-          </div>
+          {desc && <p className="hy__desc">{desc}</p>}
         </div>
       </a>
     );

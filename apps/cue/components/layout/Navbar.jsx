@@ -65,9 +65,18 @@ export default function Navbar() {
     const onDoc = (e) => {
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      if (!inNav && !onBurger) setMenuOpen(false);
+      // Select popups + their overlay are portaled to <body> (outside navRef). Clicking
+      // inside one (an option, the × close, or the dim overlay) must close only the
+      // popup, never the drawer underneath it.
+      const inPopup = e.target.closest && e.target.closest('.hs-panel, .hs-overlay');
+      if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     };
-    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      // If a popup is open, let it handle Escape (close itself) — don't close the drawer.
+      if (document.querySelector('.hs-panel--popup.open')) return;
+      setMenuOpen(false);
+    };
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -126,6 +135,7 @@ export default function Navbar() {
                   value={guests || 2}
                   onChange={setGuests}
                   options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+                  popup
                 />
               </div>
               <div className="navbar__tripcol">
@@ -136,6 +146,7 @@ export default function Navbar() {
                   value={stay || 'ubud'}
                   onChange={setStay}
                   options={stayOptions}
+                  popup
                 />
               </div>
             </li>

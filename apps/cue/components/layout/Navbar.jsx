@@ -126,6 +126,7 @@ export default function Navbar() {
                   value={guests || 2}
                   onChange={setGuests}
                   options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+                  popup
                 />
               </div>
               <div className="navbar__tripcol">
@@ -136,6 +137,7 @@ export default function Navbar() {
                   value={stay || 'ubud'}
                   onChange={setStay}
                   options={stayOptions}
+                  popup
                 />
               </div>
             </li>

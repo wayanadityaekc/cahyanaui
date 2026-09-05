@@ -426,16 +426,17 @@ body {
   justify-content: center;
   gap: 8px;
   height: 2.5rem;
-  border: 1px solid var(--color-cta);
-  color: var(--color-cta);
+  border: 0;
+  background: var(--color-cta);
+  color: #fff;
   border-radius: var(--r-pill);
   text-decoration: none;
   font-weight: 600;
   font-size: var(--fs-strong);
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  transition: background var(--dur) var(--ease);
 }
-.navbar__wa:hover { background: var(--color-cta); color: #fff; }
-.navbar__wa svg { width: 16px; height: 16px; }
+.navbar__wa:hover { background: var(--color-cta-d); }
+.navbar__wa svg { width: 18px; height: 18px; flex: none; }
 
 /* ==================== Homepage hero = foto + search bar ==================== */
 .hero {
@@ -1831,6 +1832,61 @@ a.tripbar--promo {
   background: var(--color-green);
   color: #fff;
   border-radius: var(--r-sm);
+}
+/* ===== Centered modal popup (Select popup mode) — dipakai buat dropdown yg dibuka
+   dari dalam konteks ber-z-index tinggi (mis. drawer navbar z120). Ukuran & posisi
+   SAMA di semua layar (kartu ke-center, ~15% margin luar), z-index paling atas biar
+   nggak pernah ketutup di manapun komponennya dipakai ulang. Override bottom-sheet HP
+   & anchor desktop, makanya ditaruh SETELAH aturan .hs-panel/.bk-panel. ===== */
+.hs-panel--popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  width: min(440px, 85vw);
+  max-height: 85vh;
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xl);
+  transform: translate(-50%, -50%) scale(0.96);
+  z-index: 340;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.hs-panel--popup.open {
+  transform: translate(-50%, -50%) scale(1);
+}
+.hs-panel--popup .hs-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #f2efe7;
+  flex: none;
+}
+.hs-panel--popup .hs-panel__head h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-green);
+}
+.hs-panel--popup .hs-panel__close {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--color-green);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.hs-panel--popup .hs-panel__body {
+  max-height: none;
+  overflow-y: auto;
+  flex: 1 1 auto;
 }
 /* Popup pilih tanggal (Book Now / + My Trips) = standalone-nya date picker booking form.
    HP: otomatis jadi bottom-sheet dari aturan .hs-panel @media(max-width:768px).

@@ -105,7 +105,7 @@ export default function Select({
       </button>
 
       {mounted && asPortal && open && createPortal(panel, document.body)}
-      {mounted && asPortal && <Overlay open={open} onClose={() => setOpen(false)} />}
+      {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}
     </div>
   );

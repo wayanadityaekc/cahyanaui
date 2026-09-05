@@ -37,7 +37,13 @@ const CHECK = ["desc", "priceFallback", "img", "meta", "name", "alt", "title", "
 // "See All Programs" entry point added to the home search dropdown (a new
 // page). Intentional new labels, not stale/invented content - same reasoning
 // as the SKIP_PARENT waiver for heroSlides below.
-const INTENTIONAL = new Set(["All Programs", "Browse everything in one place"].map(norm));
+// "Ubud Highlights..." is the homepage card label Wayan chose for the Ubud Tour
+// card (the tour itself is unchanged - pricing key stays "Ubud Tour").
+const INTENTIONAL = new Set([
+  "All Programs",
+  "Browse everything in one place",
+  "Ubud Highlights: Rice Terrace & Monkey Forest",
+].map(norm));
 const stale = [];
 let checked = 0;
 

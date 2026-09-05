@@ -16,7 +16,7 @@ export default function Explore() {
     <section className="xplore" id="explore">
       <div className="xplore__head">
         <div className="xplore__intro">
-          <h2 className="xplore__t">Explore Bali</h2>
+          <h2 className="xplore__t">Our Best Bali Tours</h2>
         </div>
         <div className="xtabs" role="tablist">
           {TABS.map((t) => (

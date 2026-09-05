@@ -10443,11 +10443,12 @@ strong {
   transition:color var(--dur) ease,background-color var(--dur) ease;}
 .zfilter__tab:hover{color:var(--color-ink);background:var(--color-cream);}
 .zfilter__tab.is-active{background:var(--color-cta);color:#fff;}
-/* Bar filter floating tampil di desktop & mobile. Desktop = dim filter,
-   mobile = scroll ke section (tanpa redup, di-handle di JS). */
+/* Nav floating: .zfilter (segmented, DESKTOP) vs .ssw (single pill, MOBILE). */
+@media (max-width:768px){ .zfilter{display:none;} }
+@media (min-width:769px){ .ssw{display:none;} }
 /* ruang bawah biar kartu terakhir gak ketutup bar floating */
 .tourprog{padding-bottom:5rem;}
-/* anchor scroll (tab mobile) clear navbar + tripbar */
+/* anchor scroll (switcher mobile) clear navbar + tripbar */
 .lrow{scroll-margin-top:110px;}
 .lrow--dim{opacity:0.34;transition:opacity var(--dur) ease;}
 .lrow--dim:hover{opacity:0.5;}

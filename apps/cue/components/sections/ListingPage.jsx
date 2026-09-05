@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
+import SectionSwitcher from '@/components/ui/SectionSwitcher';
 
 function SearchIcon() {
   return (
@@ -18,59 +19,16 @@ export default function ListingPage({ data }) {
   const { heroBg, title, sub, listTitle, sectionId, chips, cats, closing, info } = data;
   const [query, setQuery] = useState('');
   const [zone, setZone] = useState('all'); // 'all' | category id (desktop dim filter)
-  const [isMobile, setIsMobile] = useState(false);
-  const [spyId, setSpyId] = useState('all'); // category in view (mobile active tab)
 
   const q = query.trim().toLowerCase();
   const noun = NOUN[sectionId] || 'programs';
 
   // One flat grid: every card tagged with its category id; the first card of each
-  // category carries an anchor id so the mobile tabs can scroll to it.
+  // category carries an anchor id so the mobile switcher can scroll to it.
   const allCards = [];
   cats.forEach((cat) => cat.cards.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null })));
   const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
-
-  // Track breakpoint: mobile tabs scroll (no dim), desktop tabs dim.
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)');
-    const sync = () => setIsMobile(mq.matches);
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-
-  // Mobile: scrollspy sets the active tab from the category in view.
-  useEffect(() => {
-    if (!isMobile || q) return;
-    const probe = () => {
-      const y = window.scrollY + 200;
-      let cur = 'all';
-      chips.forEach((c) => {
-        const el = document.getElementById(c.id);
-        if (el && el.getBoundingClientRect().top + window.scrollY <= y) cur = c.id;
-      });
-      setSpyId(cur);
-    };
-    probe();
-    window.addEventListener('scroll', probe, { passive: true });
-    window.addEventListener('resize', probe);
-    return () => {
-      window.removeEventListener('scroll', probe);
-      window.removeEventListener('resize', probe);
-    };
-  }, [isMobile, q, chips]);
-
-  const activeTab = isMobile ? spyId : zone;
-
-  const onTab = (id) => {
-    if (isMobile) {
-      const el = document.getElementById(id === 'all' ? sectionId : id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      setZone(id);
-    }
-  };
 
   return (
     <div className="tourprog">
@@ -102,29 +60,30 @@ export default function ListingPage({ data }) {
           <h2 className="section__title">{listTitle}</h2>
         </div>
 
-        {/* Floating sticky tab bar (bawah). Desktop: pilih daerah -> kartu di luar
-            daerah diredupkan (grid tetap satu). Mobile: tap = scroll ke section
-            kartunya (tanpa redup). */}
+        {/* Floating sticky nav (bawah). DESKTOP: segmented tab (.zfilter) - pilih
+            daerah => kartu di luar daerah diredupkan. MOBILE: satu pill di tengah
+            (SectionSwitcher) - panah scroll ke section (tanpa redup). */}
         {!q && (
           <div className="zfilter" role="tablist" aria-label="Filter by area">
             {tabs.map((t) => (
               <button
                 key={t.id}
                 type="button"
-                className={`zfilter__tab${activeTab === t.id ? ' is-active' : ''}`}
-                aria-pressed={activeTab === t.id}
-                onClick={() => onTab(t.id)}
+                className={`zfilter__tab${zone === t.id ? ' is-active' : ''}`}
+                aria-pressed={zone === t.id}
+                onClick={() => setZone(t.id)}
               >
                 {t.label}
               </button>
             ))}
           </div>
         )}
+        {!q && <SectionSwitcher zones={chips} />}
 
         <section className="catsec">
           <div className="lrow-list">
             {shownCards.map(({ card, catId, anchor }) => {
-              const dim = !isMobile && !q && zone !== 'all' && catId !== zone;
+              const dim = !q && zone !== 'all' && catId !== zone;
               return (
                 <ListingRow
                   key={card.href + card.name}

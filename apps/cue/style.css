@@ -271,12 +271,12 @@ body {
 .navbar__menu .navbar__droptoggle {
   display: block;
   width: 100%;
-  padding: 0.9rem 0;
-  font-size: 1rem;
+  padding: 0.75rem 0;
+  font-size: var(--fs-strong);
   text-align: left;
 }
 .navbar__menu a {
-  font-size: 1rem;
+  font-size: var(--fs-strong);
   font-weight: 500;
   text-decoration: none;
   color: var(--color-gold);
@@ -5153,8 +5153,8 @@ a.footer__contact-item:hover {
   .navbar__menu .navbar__droptoggle {
     display: block;
     width: 100%;
-    padding: 0.9rem 0;
-    font-size: 1rem;
+    padding: 0.75rem 0;
+    font-size: var(--fs-strong);
     text-align: left;
     color: var(--color-gold);
   }
@@ -8008,7 +8008,7 @@ button.pick-cat {
   border: none;
   background: none;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: var(--fs-strong);
   font-weight: 500;
   color: var(--color-gold);
   cursor: pointer;
@@ -8028,6 +8028,7 @@ button.pick-cat {
 }
 .navbar__drop a {
   display: block;
+  font-size: var(--fs-small);
 }
 /* Submenu inline: tap "Program" to expand (nav is a drawer at all widths). */
 .navbar__drop {

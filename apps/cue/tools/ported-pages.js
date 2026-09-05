@@ -20,6 +20,14 @@ const skip = new Set([
   ...list('TOURS').map((s) => `${s}.html`),
   ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`),
   'south-bali-tour.html',
+  // Card redesign (Wayan, Sep 2026): the homepage and the three listing pages
+  // now use the new glassmorphism HomepageCard / horizontal ListingRow instead
+  // of the legacy .experience__card markup, so they are deliberately no longer
+  // identical to the original - same reasoning as the detail pages above.
+  'index.html',
+  'tour.html',
+  'activities.html',
+  'destinations.html',
 ]);
 
 const pages = [

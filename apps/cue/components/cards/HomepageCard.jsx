@@ -78,18 +78,22 @@ export default function HomepageCard({
   const c = (cat && CATS[cat]) || null;
   const tone = c ? c.tone : 'gold';
   const isTour = metaIcon !== 'pin';
+  // Full modifier class names kept as literals (not `--${tone}`) so the
+  // check-classes gate can resolve them statically.
+  const catTone = tone === 'green' ? 'hcard__cat--green' : 'hcard__cat--gold';
+  const accentTone = tone === 'green' ? 'hcard__accent--green' : 'hcard__accent--gold';
   return (
     <a className="experience__card hcard" href={href} data-zone={zone}>
       <CardImage img={img} alt={alt || name} width={width} height={height} />
       {c && (
-        <span className={`hcard__cat hcard__cat--${tone}`}>
+        <span className={`hcard__cat ${catTone}`}>
           <c.Icon />{cat}
         </span>
       )}
       <span className="hcard__rate"><StarIcon />{rating || 'New'}</span>
       <div className="hcard__ov">
         <h3 className="hcard__t">{name}</h3>
-        <span className={`hcard__accent hcard__accent--${tone}`} />
+        <span className={`hcard__accent ${accentTone}`} />
         <div className="hcard__bar">
           <span className="hcard__meta">
             {isTour ? <ClockIcon /> : <PinIcon />}<span>{meta}</span>

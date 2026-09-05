@@ -1509,6 +1509,14 @@ body.hs-locked .wa-float {
     transform: translateY(0);
     visibility: visible;
   }
+  /* Sheet kebuka: angkat stacking-context .hero__inner (default z-index:1) di atas
+     section lain (mis. kartu Explore) - kalau nggak, sheet yg position:fixed di DALAM
+     hero__inner ketembus konten section bawah (bug: badge kartu nongol di atas form).
+     Diikat ke .is-open (BUKAN body.hs-locked) biar nggak ke-reset pas dropdown popup
+     di dalam sheet ditutup (Overlay-nya toggle hs-locked yg sama). */
+  .home .hero__inner:has(.hero__search.is-open) {
+    z-index: 46;
+  }
   /* grab handle di atas sheet */
   .home .hero__search::before {
     content: "";

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
-import SectionSwitcher from '@/components/ui/SectionSwitcher';
 
 function SearchIcon() {
   return (
@@ -18,14 +17,15 @@ const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destina
 export default function ListingPage({ data }) {
   const { heroBg, title, sub, listTitle, sectionId, chips, cats, closing, info } = data;
   const [query, setQuery] = useState('');
+  const [zone, setZone] = useState('all'); // 'all' | category id
 
   const q = query.trim().toLowerCase();
-  const shownCats = q
-    ? cats
-        .map((cat) => ({ ...cat, cards: cat.cards.filter((c) => c.name.toLowerCase().includes(q)) }))
-        .filter((cat) => cat.cards.length > 0)
-    : cats;
   const noun = NOUN[sectionId] || 'programs';
+
+  // One flat grid: every card tagged with its category id (for the zone filter).
+  const allCards = cats.flatMap((cat) => cat.cards.map((card) => ({ card, catId: cat.id })));
+  const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
+  const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
   return (
     <div className="tourprog">
@@ -56,20 +56,43 @@ export default function ListingPage({ data }) {
         <div className="lhead">
           <h2 className="section__title">{listTitle}</h2>
         </div>
-        {!q && <SectionSwitcher zones={chips} />}
 
-        {shownCats.map((cat) => (
-          <section className="catsec" id={cat.id} key={cat.id}>
-            <div className="lrow-list">
-              {cat.cards.map((c) => (
-                <ListingRow key={c.href + c.name} {...c} />
-              ))}
-            </div>
-          </section>
-        ))}
-        {q && shownCats.length === 0 && (
-          <p className="lsearch__empty">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
+        {/* Zone filter tabs: "All" + tiap daerah. Pilih daerah -> kartu di luar
+            daerah itu diredupkan (bukan disembunyiin), grid tetap satu. */}
+        {!q && (
+          <div className="zfilter" role="tablist" aria-label="Filter by area">
+            {tabs.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`zfilter__tab${zone === t.id ? ' is-active' : ''}`}
+                aria-pressed={zone === t.id}
+                onClick={() => setZone(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         )}
+
+        <section className="catsec">
+          <div className="lrow-list">
+            {shownCards.map(({ card, catId }) => {
+              const dim = !q && zone !== 'all' && catId !== zone;
+              return (
+                <ListingRow
+                  key={card.href + card.name}
+                  {...card}
+                  dim={dim}
+                  onReset={() => setZone('all')}
+                />
+              );
+            })}
+          </div>
+          {q && shownCards.length === 0 && (
+            <p className="lsearch__empty">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
+          )}
+        </section>
       </section>
 
       {info && (

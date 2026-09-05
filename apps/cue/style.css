@@ -10429,6 +10429,24 @@ strong {
 .hcard__price small{display:block;font-size:9px;opacity:.85;font-weight:500;}
 .hcard__price .price{color:#fff;font-weight:700;font-size:var(--fs-strong);}
 
+/* Zone filter tabs (All + daerah): pill, aktif = hijau. Grid tetap satu, kartu
+   di luar zona kepilih diredupkan (.lrow--dim). */
+.zfilter{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:1100px;
+  margin:0 auto 1.8rem;padding:0 var(--container-x);}
+.zfilter__tab{font-family:inherit;font-size:0.8rem;font-weight:600;color:var(--color-muted);
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-pill);padding:0.5rem 1.1rem;
+  cursor:pointer;white-space:nowrap;
+  transition:color var(--dur) ease,background-color var(--dur) ease,border-color var(--dur) ease;}
+.zfilter__tab:hover{border-color:var(--color-cta);color:var(--color-cta);}
+.zfilter__tab.is-active{background:var(--color-cta);border-color:var(--color-cta);color:#fff;}
+@media (max-width:768px){
+  .zfilter{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;
+    touch-action:pan-x;scrollbar-width:none;margin-bottom:1.2rem;}
+  .zfilter::-webkit-scrollbar{display:none;}
+}
+.lrow--dim{opacity:0.34;transition:opacity var(--dur) ease;}
+.lrow--dim:hover{opacity:0.5;}
+
 .lrow-list{display:flex;flex-direction:column;gap:14px;}
 /* Kartu = border putih tipis di sekeliling foto (foto ke-inset lewat padding
    kartu). Foto portrait biar kartu lebih tinggi. */

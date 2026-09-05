@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
+import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
@@ -15,9 +16,18 @@ import AuthModal from '@/components/account/AuthModal';
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function Navbar() {
-  const { guests, setGuests, resetGuests, stay, setStay } = useTripPrefs();
+  const { guests, setGuests, stay, setStay } = useTripPrefs();
+  const pricing = usePricing();
   const { count } = useItinerary();
   const { account, hasUpcoming, logout } = useAccount();
+
+  // Pickup-area options mirror the homepage search form: Ubud + every catalog route.
+  const catalog = pricing && pricing.catalog;
+  const stayOptions = useMemo(() => {
+    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
+    if (!catalog) return base;
+    return base.concat(catalog.transfers.map((t) => ({ value: t.route, label: t.route })));
+  }, [catalog]);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
@@ -106,30 +116,26 @@ export default function Navbar() {
               <CurrencyPicker />
             </li>
 
-            {/* Guests + Stay area = 2 kolom, di atas tombol sign in */}
+            {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}
             <li className="navbar__trip2">
               <div className="navbar__tripcol">
                 <label className="navbar__triplabel" htmlFor="acct-guests">Guests</label>
                 <Select
                   id="acct-guests"
                   label="Guests"
-                  value={guests || ''}
-                  onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
-                  options={[
-                    ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
-                    { value: 'reset', label: '↺ Reset' },
-                  ]}
-                  placeholder="Guests"
+                  value={guests || 2}
+                  onChange={setGuests}
+                  options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
                 />
               </div>
               <div className="navbar__tripcol">
-                <label className="navbar__triplabel" htmlFor="acct-stay">Stay area</label>
+                <label className="navbar__triplabel" htmlFor="acct-stay">Pickup area</label>
                 <Select
                   id="acct-stay"
-                  label="Stay area"
+                  label="Pickup area"
                   value={stay || 'ubud'}
                   onChange={setStay}
-                  options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
+                  options={stayOptions}
                 />
               </div>
             </li>

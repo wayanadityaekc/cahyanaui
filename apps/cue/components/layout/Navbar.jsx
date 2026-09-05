@@ -18,11 +18,8 @@ export default function Navbar() {
   const { count } = useItinerary();
   const { account, hasUpcoming, logout } = useAccount();
 
-  const [acctOpen, setAcctOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dropOpen, setDropOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
-  const acctRef = useRef(null);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
@@ -50,36 +47,27 @@ export default function Navbar() {
   };
   const navClass = (href) => (isActive(href) ? 'active' : undefined);
 
-  const closeAll = () => {
-    setAcctOpen(false);
-    setMenuOpen(false);
-    setDropOpen(false);
-  };
-
-  // Tapping outside, or Escape, closes the account panel and the mobile menu -
-  // the drawer behaviour closeNavDrawers() had.
+  // Tapping outside, or Escape, closes the single drawer.
   useEffect(() => {
-    if (!acctOpen && !menuOpen) return;
+    if (!menuOpen) return undefined;
     const onDoc = (e) => {
-      const inAcct = acctRef.current && acctRef.current.contains(e.target);
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      if (!inAcct && !inNav && !onBurger) closeAll();
+      if (!inNav && !onBurger) setMenuOpen(false);
     };
-    const onKey = (e) => e.key === 'Escape' && closeAll();
+    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [acctOpen, menuOpen]);
+  }, [menuOpen]);
 
   useEffect(() => {
-    const drawer = acctOpen || menuOpen;
-    document.body.classList.toggle('hs-locked', drawer);
+    document.body.classList.toggle('hs-locked', menuOpen);
     return () => document.body.classList.remove('hs-locked');
-  }, [acctOpen, menuOpen]);
+  }, [menuOpen]);
 
   return (
     <header className="navbar" ref={headerRef}>
@@ -87,86 +75,6 @@ export default function Navbar() {
         <a href="/" className="navbar__logo">
           <img src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
-
-        <div className="acct" data-acct ref={acctRef}>
-          <button
-            type="button"
-            className="acct__btn"
-            aria-label="Account & trip"
-            aria-expanded={acctOpen}
-            onClick={() => { setAcctOpen((v) => !v); setMenuOpen(false); }}
-          >
-            <svg className="acct__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-            </svg>
-            <span className="acct__dot" hidden={!hasUpcoming} />
-          </button>
-
-          <div className={`acct__panel${acctOpen ? ' is-open' : ''}`} data-acct-panel>
-            <div className="acct__head">
-              <p className="acct__greeting">
-                <span>Welcome,</span> <span className="acct__name">{account ? account.name || 'Guest' : 'Guest'}</span>
-              </p>
-              <p className="acct__email">{account ? account.email : ''}</p>
-            </div>
-
-            <p className="acct__title">Your trip</p>
-
-            <label className="acct__label" htmlFor="acct-guests">Guests</label>
-            <Select
-              id="acct-guests"
-              label="Guests"
-              value={guests || ''}
-              onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
-              options={[
-                ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
-                { value: 'reset', label: '↺ Reset' },
-              ]}
-              placeholder="Guests"
-            />
-
-            <label className="acct__label" htmlFor="acct-stay">Stay area</label>
-            <Select
-              id="acct-stay"
-              label="Stay area"
-              value={stay || 'ubud'}
-              onChange={setStay}
-              options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
-            />
-
-            <FlagDefs />
-
-            <label className="acct__label" htmlFor="acct-cur">Currency</label>
-            <CurrencyPicker />
-
-            <div className="acct__actions">
-              <a href="/settings.html" className="acct__link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" />
-                </svg>
-                Settings
-              </a>
-              <button
-                type="button"
-                className="acct__link acct__link--auth"
-                onClick={() => {
-                  if (account) logout();
-                  else setAuthOpen(true);
-                  closeAll();
-                }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-                  <path d="M19 7v4M21 9h-4" />
-                </svg>
-                <span>{account ? 'Sign out' : 'Sign in / Sign up'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
 
         <a href="/my-trips.html" className="navbar__cart" aria-label="My Trips">
           <svg className="navbar__cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -177,28 +85,99 @@ export default function Navbar() {
           <span className="itn-badge navbar__cart-badge" hidden={!count}>{count}</span>
         </a>
 
+        <FlagDefs />
+
         <nav ref={navRef}>
           <ul className={`navbar__menu${menuOpen ? ' active' : ''}`} id="nav-menu">
-            <li><a href="/" className={navClass('/')}>Home</a></li>
-            <li className={`navbar__has-drop${dropOpen ? ' open' : ''}`}>
+            {/* Account header: identity + currency + sign in (merged into the drawer) */}
+            <li className="navbar__acct">
+              <div className="navbar__acctrow">
+                <span className="navbar__ava" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
+                  </svg>
+                </span>
+                <span className="navbar__acctid">
+                  <b><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
+                  <span className="navbar__acctemail">{account ? account.email : 'Plan your Bali trip'}</span>
+                </span>
+                <CurrencyPicker />
+              </div>
               <button
                 type="button"
-                className="navbar__droptoggle"
-                aria-expanded={dropOpen}
-                onClick={() => setDropOpen((v) => !v)}
+                className="navbar__signin"
+                onClick={() => {
+                  if (account) logout();
+                  else setAuthOpen(true);
+                  setMenuOpen(false);
+                }}
               >
-                Program<span className="navbar__caret">&rsaquo;</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
+                  <path d="M19 7v4M21 9h-4" />
+                </svg>
+                <span>{account ? 'Sign out' : 'Sign in / Sign up'}</span>
               </button>
-              <ul className="navbar__drop">
-                <li><a href="/tour.html">Tours</a></li>
-                <li><a href="/destinations.html">Destinations</a></li>
-                <li><a href="/activities.html">Experiences</a></li>
-                <li><a href="/transfer.html">Transfer</a></li>
-                <li><a href="/charter.html">Charter</a></li>
-              </ul>
             </li>
+
+            {/* Explore */}
+            <li className="navbar__grouplabel">Explore</li>
+            <li><a href="/" className={navClass('/')}>Home</a></li>
+            <li><a href="/tour.html">Tours</a></li>
+            <li><a href="/destinations.html">Destinations</a></li>
+            <li><a href="/activities.html">Experiences</a></li>
+            <li><a href="/transfer.html">Transfer</a></li>
+            <li><a href="/charter.html">Charter</a></li>
+
+            {/* Plan your trip */}
+            <li className="navbar__grouplabel">Plan your trip</li>
+            <li className="navbar__trip">
+              <label className="navbar__triplabel" htmlFor="acct-guests">Guests</label>
+              <Select
+                id="acct-guests"
+                label="Guests"
+                value={guests || ''}
+                onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
+                options={[
+                  ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
+                  { value: 'reset', label: '↺ Reset' },
+                ]}
+                placeholder="Guests"
+              />
+            </li>
+            <li className="navbar__trip">
+              <label className="navbar__triplabel" htmlFor="acct-stay">Stay area</label>
+              <Select
+                id="acct-stay"
+                label="Stay area"
+                value={stay || 'ubud'}
+                onChange={setStay}
+                options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
+              />
+            </li>
+            <li>
+              <a href="/my-trips.html" className="navbar__menucart">
+                My Trips<span className="itn-badge navbar__menucart-badge" hidden={!count}>{count}</span>
+              </a>
+            </li>
+
+            {/* Company */}
+            <li className="navbar__grouplabel">Company</li>
             <li><a href="/bali-guide.html" className={navClass('/bali-guide.html')}>Guide</a></li>
             <li><a href="/our-company.html" className={navClass('/our-company.html')}>Our Company</a></li>
+
+            {/* Footer */}
+            <li className="navbar__menufoot">
+              <a href="/settings.html" className="navbar__footlink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" />
+                </svg>
+                Settings
+              </a>
+            </li>
           </ul>
         </nav>
 
@@ -207,14 +186,14 @@ export default function Navbar() {
           id="hamburger"
           aria-label="Open menu"
           ref={burgerRef}
-          onClick={() => { setMenuOpen((v) => !v); setAcctOpen(false); }}
+          onClick={() => setMenuOpen((v) => !v)}
         >
           <span /><span /><span />
           <span className="acct__dot acct__dot--ham" hidden={!hasUpcoming} />
         </button>
       </div>
 
-      <div className={`navbar__scrim${acctOpen || menuOpen ? ' open' : ''}`} onClick={closeAll} />
+      <div className={`navbar__scrim${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)} />
       <TripBar />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>

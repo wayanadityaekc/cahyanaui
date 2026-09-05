@@ -10325,7 +10325,7 @@ strong {
    rating di atas, judul + accent + bar kaca (durasi/private + harga) di bawah. */
 .hcard{
   position:relative;display:block;padding:0;overflow:hidden;color:#fff;
-  border-radius:var(--r-xl);box-shadow:var(--shadow-md);aspect-ratio:5/4;
+  border-radius:var(--r-xl);box-shadow:var(--shadow-md);aspect-ratio:4/5;
   transition:transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .hcard:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(31,61,43,.16);}

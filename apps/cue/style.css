@@ -8664,7 +8664,10 @@ strong {
   max-width: 1000px;
   margin: 0 auto 1.6rem;
   border-bottom: 1px solid var(--line);
+  /* Strip tab cuma scroll kiri-kanan, vertikal dikunci (gesture pan-x doang) */
   overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
   scrollbar-width: none;
 }
 .zone-filter::-webkit-scrollbar { display: none; }
@@ -9533,54 +9536,8 @@ strong {
   margin: 0 auto 1.6rem;
   max-width: 480px;
 }
-/* Featured box: foto ke-inset (frame putih) di kiri, konten di kanan */
-.lbox {
-  background: #fff;
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-xl);
-  display: grid;
-  grid-template-columns: 42% 58%;
-  padding: 0.7rem;
-  text-align: left;
-}
-.lbox__img {
-  border-radius: var(--r-lg);
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  min-height: 290px;
-}
-.lbox__tag {
-  position: absolute;
-  top: 0.7rem;
-  left: 0.7rem;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-green);
-  background: #fff;
-  border-radius: var(--r-pill);
-  padding: 0.32rem 0.7rem;
-}
-.lbox__body {
-  padding: 1rem 1.1rem 1rem 1.4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.lbox__title {
-  font-family: var(--font-head);
-  font-size: 1.3rem;
-  color: var(--color-green);
-  margin: 0 0 0.35rem;
-}
-.lbox__desc {
-  font-size: var(--fs-small);
-  color: var(--color-ink);
-  line-height: 1.5;
-  margin: 0 0 1rem;
-}
+/* .lbox__facts / .lbox__fact: fact strip 3-sel. Featured box lama udah dihapus
+   dari listing; ini masih dipakai kartu intro About (AboutPage). */
 .lbox__facts {
   display: flex;
   border: 1px solid var(--line);
@@ -9605,27 +9562,34 @@ strong {
   color: var(--color-ink);
 }
 .lbox__fact .price { color: var(--color-gold); font-weight: 600; }
-.lbox__actions { display: flex; flex-direction: column; gap: 0.55rem; }
-.lbox__btn {
-  display: block;
-  padding: 0.75rem;
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  text-align: center;
-  text-decoration: none;
-  border: 1px solid var(--color-gold);
-  cursor: pointer;
-}
-.lbox__btn--go { background: var(--color-cta); color: #fff; }
-.lbox__btn--go:hover { background: var(--color-cta-d); }
-.lbox__btn--add { background: #fff; color: var(--color-green); }
+/* Search di hero listing (memfilter kartu di halaman itu). Desktop: di bawah
+   judul, dalam kolom kiri. Mobile: mengambang di foto (lihat media query). */
+.lsearch { display: flex; align-items: center; gap: 9px; width: 100%; max-width: 430px;
+  margin-top: 1.5rem; height: 2.9rem; padding: 0 16px; background: #fff;
+  border: 1px solid var(--line); border-radius: var(--r-pill); box-shadow: var(--shadow-sm); }
+.lsearch svg { width: 18px; height: 18px; color: var(--color-muted); flex: 0 0 auto; }
+.lsearch__input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none;
+  font-family: inherit; font-size: 0.85rem; color: var(--color-ink); }
+.lsearch__input::placeholder { color: var(--color-muted); }
+.lsearch__empty { margin: 1.5rem 0 0; color: var(--color-muted); text-align: center; font-size: 0.9rem; }
+/* Tombol "Browse all" - scroll ke daftar program di bawah (pill hijau). */
+.lbrowse { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.8rem; border-radius: var(--r-pill);
+  background: var(--color-cta); color: #fff; font-weight: 600; font-size: 0.85rem; text-decoration: none;
+  transition: background-color var(--dur) ease; }
+.lbrowse:hover { background: var(--color-cta-d); }
 @media (max-width: 768px) {
-  .lbox { grid-template-columns: 1fr; }
-  .lbox__img { min-height: 180px; }
-  .lbox__body { padding: 1rem; }
-  .lbox__actions { flex-direction: row; }
+  /* .tour-hero__body sudah position:relative -> jadi offset parent. Angkat search
+     ke atas (negatif) biar mengambang bersih di foto, ada jarak dari sheet putih.
+     width:auto -> lebar diatur left+right (kalau tetap 100% dia kelewatan layar). */
+  .tourprog .lsearch { position: absolute; left: 1.2rem; right: 1.2rem; top: -3.9rem;
+    width: auto; z-index: 4; margin-top: 0; max-width: none; box-shadow: var(--shadow-lg); }
+  /* Browse all: full-width di bawah intro, di dalam sheet */
+  .tourprog .lbrowse { display: block; width: 100%; margin-top: 1.25rem; text-align: center; }
+  /* Gradasi hitam di foto hero (atas tipis + bawah lebih gelap) biar search
+     putih nge-pop & foto lebih dramatis. Cuma listing (.tourprog), cuma mobile. */
+  .tourprog .tour-hero__image { position: relative; }
+  .tourprog .tour-hero__image::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.58) 100%); }
 }
 
 /* ============================================================
@@ -10164,28 +10128,20 @@ strong {
 
 /* Header row listing: judul kiri + zone-filter kanan sebaris.
    STICKY di bawah navbar (Job 2) — top diukur JS (initZoneAnchors). */
+/* Judul listing = heading tengah (agak gede), TIDAK sticky. Navigasi kategori
+   pindah ke floating switcher (.ssw). */
 .lhead {
-  position: sticky;
-  top: var(--header-h, 96px); /* flush di bawah navbar+tripbar (diukur JS) */
-  z-index: 40; /* di bawah navbar (100) biar dropdown tetap di atas */
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 2rem;
-  flex-wrap: wrap;
-  max-width: 1200px; /* ngunci ke lebar grid kartu */
+  max-width: 1200px;
   margin: 0 auto 1.6rem;
-  padding: 0.6rem 0 0.8rem; /* bawah: ruang garis emas ::after judul */
+  padding: 0.5rem 0 0;
+  text-align: center;
 }
 .lhead .section__title {
-  margin-bottom: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
 }
-.lhead .zone-filter {
-  max-width: none;
-  margin: 0;
-  border-bottom: none; /* garis cuma di chip aktif */
-}
+.lhead .section__title::after { left: 50%; transform: translateX(-50%); } /* underline di tengah */
 
 /* Header row reviews: judul kiri + link kanan */
 .reviews__head {
@@ -10209,11 +10165,9 @@ strong {
   /* HP (Opsi A): judul halaman disembunyiin (hero udah jadi judul) —
      tinggal bar tab full-width scrollable + fade kanan sebagai hint geser */
   .lhead {
-    /* tetap sticky dari base; ::after fade nempel ke elemen sticky ini */
-    align-items: flex-start;
-    gap: 0;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    /* tab pindah ke floating switcher; judul sudah disembunyiin di HP -> bar
+       kosong, jadi di-hide. */
+    display: none;
   }
   .lhead .section__title {
     display: none;
@@ -10287,6 +10241,50 @@ strong {
   text-decoration: none;
   display: inline-block;
 }
+
+/* Floating section switcher (pengganti tab strip): pill di bawah-tengah,
+   label section aktif + panah prev/next. */
+.ssw {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1.3rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-xl);
+}
+.ssw__label {
+  min-width: 148px;
+  padding: 0 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+.ssw__arrow {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur) ease;
+}
+.ssw__arrow svg { width: 18px; height: 18px; }
+.ssw__arrow:hover:not(:disabled) { background: var(--line); }
+.ssw__arrow:disabled { opacity: 0.35; cursor: default; }
 
 /* ============================================================
    YOU MIGHT ALSO LIKE (halaman detail) — 4 kartu terkait
@@ -10517,6 +10515,30 @@ strong {
 .hcard__price small{display:block;font-size:9px;opacity:.85;font-weight:500;}
 .hcard__price .price{color:#fff;font-weight:700;font-size:var(--fs-strong);}
 
+/* Zone filter = bar floating STICKY di bawah-tengah (segmented pill): "All" +
+   tiap daerah, aktif = hijau. Grid tetap satu; kartu di luar zona kepilih
+   diredupkan (.lrow--dim). DESKTOP ONLY. */
+.zfilter{position:fixed;left:50%;transform:translateX(-50%);bottom:1.3rem;z-index:50;
+  display:flex;align-items:center;gap:4px;padding:6px;max-width:calc(100vw - 2rem);
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-pill);box-shadow:var(--shadow-xl);
+  overflow-x:auto;scrollbar-width:none;}
+.zfilter::-webkit-scrollbar{display:none;}
+.zfilter__tab{font-family:inherit;font-size:0.78rem;font-weight:600;color:var(--color-muted);
+  background:transparent;border:0;border-radius:var(--r-pill);padding:0.5rem 1rem;
+  cursor:pointer;white-space:nowrap;
+  transition:color var(--dur) ease,background-color var(--dur) ease;}
+.zfilter__tab:hover{color:var(--color-ink);background:var(--color-cream);}
+.zfilter__tab.is-active{background:var(--color-cta);color:#fff;}
+/* Nav floating: .zfilter (segmented, DESKTOP) vs .ssw (single pill, MOBILE). */
+@media (max-width:768px){ .zfilter{display:none;} }
+@media (min-width:769px){ .ssw{display:none;} }
+/* ruang bawah biar kartu terakhir gak ketutup bar floating */
+.tourprog{padding-bottom:5rem;}
+/* anchor scroll (switcher mobile) clear navbar + tripbar */
+.lrow{scroll-margin-top:110px;}
+.lrow--dim{opacity:0.34;transition:opacity var(--dur) ease;}
+.lrow--dim:hover{opacity:0.5;}
+
 .lrow-list{display:flex;flex-direction:column;gap:14px;}
 /* Kartu = border putih tipis di sekeliling foto (foto ke-inset lewat padding
    kartu). Foto portrait biar kartu lebih tinggi. */
@@ -10545,4 +10567,15 @@ strong {
 .lrow__price{margin-top:auto;align-self:flex-end;display:flex;align-items:baseline;gap:4px;white-space:nowrap;}
 .lrow__price small{color:var(--color-muted);font-size:.68rem;}
 .lrow__price .price{font-size:var(--fs-h2);font-weight:700;color:var(--color-amber);}
-@media (min-width:769px){ .lrow-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;} }
+/* Desktop: kartu di-"flip" jadi vertikal - foto di atas (full width), panel putih
+   (judul/meta/badge/harga) di bawah. Markup sama persis kayak mobile, cuma arah
+   flex + posisi yang beda. Mobile TETAP horizontal (foto kiri, putih kanan). */
+@media (min-width:769px){
+  .lrow-list{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .lrow{flex-direction:column;padding:8px;}
+  .lrow__img{flex:0 0 auto;align-self:stretch;width:100%;aspect-ratio:4/3;min-height:0;}
+  .lrow__body{padding:12px 8px 8px;}
+  .lrow__t{font-size:1rem;}
+  /* meta jadi satu baris sejajar (ikon + teks), bukan stack ke bawah */
+  .lrow__meta{flex-direction:row;flex-wrap:wrap;align-items:center;gap:5px 14px;}
+}

@@ -1,66 +1,104 @@
+'use client';
+
+import { useState } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
-import Price from '@/components/Price';
-import ZoneTabs from '@/components/ui/ZoneTabs';
+import SectionSwitcher from '@/components/ui/SectionSwitcher';
+
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
+    </svg>
+  );
+}
+
+// Search placeholder noun per listing page.
+const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
 
 export default function ListingPage({ data }) {
-  const { heroBg, title, sub, lbox, listTitle, sectionId, chipLabel, chips, cats, closing, info } = data;
+  const { heroBg, title, sub, listTitle, sectionId, chips, cats, closing, info } = data;
+  const [query, setQuery] = useState('');
+  const [zone, setZone] = useState('all'); // 'all' | category id (desktop dim filter)
+
+  const q = query.trim().toLowerCase();
+  const noun = NOUN[sectionId] || 'programs';
+
+  // One flat grid: every card tagged with its category id; the first card of each
+  // category carries an anchor id so the mobile switcher can scroll to it.
+  const allCards = [];
+  cats.forEach((cat) => cat.cards.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null })));
+  const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
+  const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
   return (
     <div className="tourprog">
-      <section className="lhero" style={{ backgroundImage: `url(/assets/images/${heroBg})` }}>
-        <div className="lhero__inner">
-          <h1 className="lhero__title">{title}</h1>
-          <p className="lhero__sub">{sub}</p>
-
-          {lbox && (
-            <div className="lbox">
-              <div className="lbox__img" style={{ backgroundImage: `url(/assets/images/${lbox.img})` }}>
-                <span className="lbox__tag">{lbox.tag}</span>
-              </div>
-              <div className="lbox__body">
-                <h2 className="lbox__title">{lbox.title}</h2>
-                <p className="lbox__desc">{lbox.desc}</p>
-                <div className="lbox__facts">
-                  {lbox.facts.map((f) => (
-                    <div className="lbox__fact" key={f.label}>
-                      <span>{f.label}</span>
-                      {f.priceName ? (
-                        <Price name={f.priceName} fallback={f.value} className="price" as="strong" />
-                      ) : (
-                        <strong>{f.value}</strong>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="lbox__actions">
-                  <a href={lbox.go.href} className="lbox__btn lbox__btn--go">{lbox.go.text}</a>
-                  {lbox.add && lbox.add.item && (
-                    <button type="button" className="lbox__btn lbox__btn--add" data-add-item={lbox.add.item}>
-                      {lbox.add.text}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+      {/* Hero = gaya split putih kayak halaman attraction (.tour-hero): teks kiri,
+          foto kanan di desktop; foto atas + sheet putih di mobile. Search di bawah
+          judul (desktop) / mengambang di foto (mobile) - memfilter kartu di bawah. */}
+      <section className="tour-hero">
+        <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${heroBg})` }} />
+        <div className="tour-hero__body">
+          <h1 className="subhero__title">{title}</h1>
+          <p className="tour-hero__desc">{sub}</p>
+          <div className="lsearch">
+            <SearchIcon />
+            <input
+              type="search"
+              className="lsearch__input"
+              placeholder={`Search ${noun}`}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label={`Search ${noun}`}
+            />
+          </div>
+          <a href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>
         </div>
       </section>
 
       <section className="experience experience--alt" id={sectionId}>
         <div className="lhead">
           <h2 className="section__title">{listTitle}</h2>
-          <ZoneTabs zones={chips} label={chipLabel} />
         </div>
 
-        {cats.map((cat) => (
-          <section className="catsec" id={cat.id} key={cat.id}>
-            <div className="lrow-list">
-              {cat.cards.map((c) => (
-                <ListingRow key={c.href + c.name} {...c} />
-              ))}
-            </div>
-          </section>
-        ))}
+        {/* Floating sticky nav (bawah). DESKTOP: segmented tab (.zfilter) - pilih
+            daerah => kartu di luar daerah diredupkan. MOBILE: satu pill di tengah
+            (SectionSwitcher) - panah scroll ke section (tanpa redup). */}
+        {!q && (
+          <div className="zfilter" role="tablist" aria-label="Filter by area">
+            {tabs.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`zfilter__tab${zone === t.id ? ' is-active' : ''}`}
+                aria-pressed={zone === t.id}
+                onClick={() => setZone(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        )}
+        {!q && <SectionSwitcher zones={chips} />}
+
+        <section className="catsec">
+          <div className="lrow-list">
+            {shownCards.map(({ card, catId, anchor }) => {
+              const dim = !q && zone !== 'all' && catId !== zone;
+              return (
+                <ListingRow
+                  key={card.href + card.name}
+                  {...card}
+                  anchorId={anchor || undefined}
+                  dim={dim}
+                  onReset={() => setZone('all')}
+                />
+              );
+            })}
+          </div>
+          {q && shownCards.length === 0 && (
+            <p className="lsearch__empty">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
+          )}
+        </section>
       </section>
 
       {info && (

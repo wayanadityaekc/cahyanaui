@@ -1,3 +1,5 @@
+'use client';
+
 import Price from '@/components/Price';
 
 function StarIcon() {
@@ -44,10 +46,14 @@ function UserIcon() {
 export default function ListingRow({
   href, name, img, alt, meta, metaIcon = 'clock',
   priceName, priceFallback, priceMode = 'standard', zone, stops, priv, rating,
+  dim = false, onReset, anchorId,
 }) {
   const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
+  // A dimmed card (filtered out by the zone tab) taps back to "All" instead of
+  // opening the tour.
+  const handleClick = dim && onReset ? (e) => { e.preventDefault(); onReset(); } : undefined;
   return (
-    <a className="lrow" href={href} data-zone={zone}>
+    <a id={anchorId} className={`lrow${dim ? ' lrow--dim' : ''}`} href={href} data-zone={zone} onClick={handleClick}>
       <div className="lrow__img" style={photo} role="img" aria-label={alt || name}>
         <span className="lrow__rate"><StarIcon />{rating || 'New'}</span>
       </div>

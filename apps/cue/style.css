@@ -9473,6 +9473,22 @@ strong {
   .lbox__body { padding: 1rem; }
   .lbox__actions { flex-direction: row; }
 }
+/* Search di hero listing (memfilter kartu di halaman itu). Desktop: di bawah
+   judul, dalam kolom kiri. Mobile: mengambang di foto (lihat media query). */
+.lsearch { display: flex; align-items: center; gap: 9px; width: 100%; max-width: 430px;
+  margin-top: 1.5rem; height: 2.9rem; padding: 0 16px; background: #fff;
+  border: 1px solid var(--line); border-radius: var(--r-pill); box-shadow: var(--shadow-sm); }
+.lsearch svg { width: 18px; height: 18px; color: var(--color-muted); flex: 0 0 auto; }
+.lsearch__input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none;
+  font-family: inherit; font-size: 0.85rem; color: var(--color-ink); }
+.lsearch__input::placeholder { color: var(--color-muted); }
+.lsearch__empty { margin: 1.5rem 0 0; color: var(--color-muted); text-align: center; font-size: 0.9rem; }
+@media (max-width: 768px) {
+  /* .tour-hero__body sudah position:relative -> jadi offset parent. Angkat search
+     ke atas (negatif) biar mengambang di foto, tepat di atas sheet putih. */
+  .tourprog .lsearch { position: absolute; left: 1.2rem; right: 1.2rem; top: -3.4rem;
+    z-index: 4; margin-top: 0; max-width: none; box-shadow: var(--shadow-lg); }
+}
 
 /* ============================================================
    ABOUT PAGE — layout editorial (judul kiri sticky, isi kanan).
@@ -10391,4 +10407,15 @@ strong {
 .lrow__price{margin-top:auto;align-self:flex-end;display:flex;align-items:baseline;gap:4px;white-space:nowrap;}
 .lrow__price small{color:var(--color-muted);font-size:.68rem;}
 .lrow__price .price{font-size:var(--fs-h2);font-weight:700;color:var(--color-amber);}
-@media (min-width:769px){ .lrow-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;} }
+/* Desktop: kartu di-"flip" jadi vertikal - foto di atas (full width), panel putih
+   (judul/meta/badge/harga) di bawah. Markup sama persis kayak mobile, cuma arah
+   flex + posisi yang beda. Mobile TETAP horizontal (foto kiri, putih kanan). */
+@media (min-width:769px){
+  .lrow-list{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .lrow{flex-direction:column;padding:8px;}
+  .lrow__img{flex:0 0 auto;align-self:stretch;width:100%;aspect-ratio:4/3;min-height:0;}
+  .lrow__body{padding:12px 8px 8px;}
+  .lrow__t{font-size:1rem;}
+  /* meta jadi satu baris sejajar (ikon + teks), bukan stack ke bawah */
+  .lrow__meta{flex-direction:row;flex-wrap:wrap;align-items:center;gap:5px 14px;}
+}

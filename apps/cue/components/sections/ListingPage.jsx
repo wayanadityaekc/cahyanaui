@@ -1,58 +1,63 @@
+'use client';
+
+import { useState } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
-import Price from '@/components/Price';
 import ZoneTabs from '@/components/ui/ZoneTabs';
 
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
+    </svg>
+  );
+}
+
+// Search placeholder noun per listing page.
+const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
+
 export default function ListingPage({ data }) {
-  const { heroBg, title, sub, lbox, listTitle, sectionId, chipLabel, chips, cats, closing, info } = data;
+  const { heroBg, title, sub, listTitle, sectionId, chipLabel, chips, cats, closing, info } = data;
+  const [query, setQuery] = useState('');
+
+  const q = query.trim().toLowerCase();
+  const shownCats = q
+    ? cats
+        .map((cat) => ({ ...cat, cards: cat.cards.filter((c) => c.name.toLowerCase().includes(q)) }))
+        .filter((cat) => cat.cards.length > 0)
+    : cats;
+  const noun = NOUN[sectionId] || 'programs';
 
   return (
     <div className="tourprog">
-      <section className="lhero" style={{ backgroundImage: `url(/assets/images/${heroBg})` }}>
-        <div className="lhero__inner">
-          <h1 className="lhero__title">{title}</h1>
-          <p className="lhero__sub">{sub}</p>
-
-          {lbox && (
-            <div className="lbox">
-              <div className="lbox__img" style={{ backgroundImage: `url(/assets/images/${lbox.img})` }}>
-                <span className="lbox__tag">{lbox.tag}</span>
-              </div>
-              <div className="lbox__body">
-                <h2 className="lbox__title">{lbox.title}</h2>
-                <p className="lbox__desc">{lbox.desc}</p>
-                <div className="lbox__facts">
-                  {lbox.facts.map((f) => (
-                    <div className="lbox__fact" key={f.label}>
-                      <span>{f.label}</span>
-                      {f.priceName ? (
-                        <Price name={f.priceName} fallback={f.value} className="price" as="strong" />
-                      ) : (
-                        <strong>{f.value}</strong>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="lbox__actions">
-                  <a href={lbox.go.href} className="lbox__btn lbox__btn--go">{lbox.go.text}</a>
-                  {lbox.add && lbox.add.item && (
-                    <button type="button" className="lbox__btn lbox__btn--add" data-add-item={lbox.add.item}>
-                      {lbox.add.text}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+      {/* Hero = gaya split putih kayak halaman attraction (.tour-hero): teks kiri,
+          foto kanan di desktop; foto atas + sheet putih di mobile. Search di bawah
+          judul (desktop) / mengambang di foto (mobile) - memfilter kartu di bawah. */}
+      <section className="tour-hero">
+        <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${heroBg})` }} />
+        <div className="tour-hero__body">
+          <h1 className="subhero__title">{title}</h1>
+          <p className="tour-hero__desc">{sub}</p>
+          <div className="lsearch">
+            <SearchIcon />
+            <input
+              type="search"
+              className="lsearch__input"
+              placeholder={`Search ${noun}`}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              aria-label={`Search ${noun}`}
+            />
+          </div>
         </div>
       </section>
 
       <section className="experience experience--alt" id={sectionId}>
         <div className="lhead">
           <h2 className="section__title">{listTitle}</h2>
-          <ZoneTabs zones={chips} label={chipLabel} />
+          {!q && <ZoneTabs zones={chips} label={chipLabel} />}
         </div>
 
-        {cats.map((cat) => (
+        {shownCats.map((cat) => (
           <section className="catsec" id={cat.id} key={cat.id}>
             <div className="lrow-list">
               {cat.cards.map((c) => (
@@ -61,6 +66,9 @@ export default function ListingPage({ data }) {
             </div>
           </section>
         ))}
+        {q && shownCats.length === 0 && (
+          <p className="lsearch__empty">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
+        )}
       </section>
 
       {info && (

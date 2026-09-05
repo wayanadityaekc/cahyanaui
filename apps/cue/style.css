@@ -10093,11 +10093,9 @@ strong {
   /* HP (Opsi A): judul halaman disembunyiin (hero udah jadi judul) —
      tinggal bar tab full-width scrollable + fade kanan sebagai hint geser */
   .lhead {
-    /* tetap sticky dari base; ::after fade nempel ke elemen sticky ini */
-    align-items: flex-start;
-    gap: 0;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    /* tab pindah ke floating switcher; judul sudah disembunyiin di HP -> bar
+       kosong, jadi di-hide. */
+    display: none;
   }
   .lhead .section__title {
     display: none;
@@ -10171,6 +10169,50 @@ strong {
   text-decoration: none;
   display: inline-block;
 }
+
+/* Floating section switcher (pengganti tab strip): pill di bawah-tengah,
+   label section aktif + panah prev/next. */
+.ssw {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1.3rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-xl);
+}
+.ssw__label {
+  min-width: 148px;
+  padding: 0 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+.ssw__arrow {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur) ease;
+}
+.ssw__arrow svg { width: 18px; height: 18px; }
+.ssw__arrow:hover:not(:disabled) { background: var(--line); }
+.ssw__arrow:disabled { opacity: 0.35; cursor: default; }
 
 /* ============================================================
    YOU MIGHT ALSO LIKE (halaman detail) — 4 kartu terkait

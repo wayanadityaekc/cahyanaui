@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
-import ZoneTabs from '@/components/ui/ZoneTabs';
+import SectionSwitcher from '@/components/ui/SectionSwitcher';
 
 function SearchIcon() {
   return (
@@ -16,7 +16,7 @@ function SearchIcon() {
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
 
 export default function ListingPage({ data }) {
-  const { heroBg, title, sub, listTitle, sectionId, chipLabel, chips, cats, closing, info } = data;
+  const { heroBg, title, sub, listTitle, sectionId, chips, cats, closing, info } = data;
   const [query, setQuery] = useState('');
 
   const q = query.trim().toLowerCase();
@@ -55,8 +55,8 @@ export default function ListingPage({ data }) {
       <section className="experience experience--alt" id={sectionId}>
         <div className="lhead">
           <h2 className="section__title">{listTitle}</h2>
-          {!q && <ZoneTabs zones={chips} label={chipLabel} />}
         </div>
+        {!q && <SectionSwitcher zones={chips} />}
 
         {shownCats.map((cat) => (
           <section className="catsec" id={cat.id} key={cat.id}>

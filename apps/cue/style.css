@@ -8799,6 +8799,15 @@ strong {
 .company-page .about-intro,
 .company-page .about .arows { max-width: none; margin: 0; padding: 0; }
 .company-page .about .ahero-card { max-width: none; margin: 0; }
+/* Judul tab (About Us H1 / Terms-Privacy-Cancellation .company-heading / Contact
+   H1) kepake 3 ukuran+bobot beda (40px, 18px/700, 18px/500) - gonta-ganti tab
+   kerasa gak nyambung. Disamain semua ke satu treatment (18px/700/gold, punya
+   .company-heading) - About & Contact di sini yang di-override. Wayan, Sep 2026. */
+.company-page .about .lhero__title { font-size: var(--fs-h2); }
+.company-page .contact__heading {
+  font-weight: 700;
+  color: var(--color-gold);
+}
 
 /* Terms/Privacy/Cancellation tab: .guide-article aslinya sengaja center buat
    judul nomor (.section__title--sub) di halaman standalone-nya (terms-conditions.html
@@ -8808,9 +8817,12 @@ strong {
 .company-page .guide-article .section__title--sub {
   text-align: left;
 }
+/* Garis emas kecil di bawah tiap judul nomor kerasa "nanggung" kalau diulang
+   12x di satu halaman panjang (Terms dkk) - dibuang khusus di sini, judul udah
+   cukup jelas dari bobot 600 + jarak atas. Halaman standalone TETAP pakai garis
+   (keputusan lama, jangan diubah). Wayan, Sep 2026. */
 .company-page .guide-article .section__title--sub::after {
-  left: 0;
-  transform: none;
+  content: none;
 }
 
 /* Floating section switcher (HP only) - satu pill ngambang di bawah layar,

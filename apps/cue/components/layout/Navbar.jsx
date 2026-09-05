@@ -215,7 +215,7 @@ export default function Navbar() {
       </div>
 
       <div className={`navbar__scrim${acctOpen || menuOpen ? ' open' : ''}`} onClick={closeAll} />
-      <TripBar />
+      {pathname !== '/our-company' && <TripBar />}
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );

@@ -322,6 +322,107 @@ body {
   }
 }
 
+/* ===== Hamburger drawer: account + grouped menu (Sep 2026, Opsi A) =====
+   Account (identity + currency + sign in) + trip controls hidup DI DALAM drawer;
+   ikon akun terpisah di top bar dihapus (top bar = logo · cart · hamburger). */
+.navbar__menu > li.navbar__acct {
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 1rem;
+}
+.navbar__acctrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.navbar__ava {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-cream);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--color-gold);
+  flex: none;
+}
+.navbar__ava svg { width: 20px; height: 20px; }
+.navbar__acctid { display: flex; flex-direction: column; min-width: 0; }
+.navbar__acctid b {
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  color: var(--color-gold);
+  line-height: 1.25;
+}
+.navbar__acctemail {
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.navbar__acct .acct__cur { margin-left: auto; flex: none; }
+.navbar__signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 0.8rem;
+  height: 2.6rem;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--color-cta);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--fs-strong);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease);
+}
+.navbar__signin:hover { background: var(--color-cta-d); }
+.navbar__signin svg { width: 17px; height: 17px; }
+
+/* Label grup (EXPLORE / PLAN YOUR TRIP / COMPANY) */
+.navbar__menu > li.navbar__grouplabel {
+  border-bottom: 0;
+  padding: 1rem 0 0.2rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+/* Baris trip (Guests / Stay area) */
+.navbar__menu > li.navbar__trip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.55rem 0;
+}
+.navbar__triplabel { flex: 0 0 84px; font-size: var(--fs-small); color: var(--color-muted); }
+.navbar__trip .hs-control { flex: 1 1 auto; }
+
+/* My Trips link di dalam menu (+ badge) */
+.navbar__menucart { display: flex; align-items: center; }
+.navbar__menucart-badge { margin-left: 8px; }
+
+/* Footer drawer (Settings) */
+.navbar__menu > li.navbar__menufoot {
+  border-bottom: 0;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.navbar__footlink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-gold);
+  text-decoration: none;
+  font-weight: 500;
+}
+.navbar__footlink svg { width: 18px; height: 18px; }
+
 /* ==================== Homepage hero = foto + search bar ==================== */
 .hero {
   position: relative;
@@ -8806,11 +8907,17 @@ strong {
 @media (max-width: 992px) {
   .company-layout {
     flex-direction: column;
+    /* align-items:flex-start (desktop) bikin nav & main shrink-to-fit ke konten -
+       tab strip nowrap + baris flex/grid di dalam .about jadi maksa lebar row-nya
+       sendiri (>390px), page ikut horizontal-overflow. stretch = lebar penuh
+       viewport, overflow konten di dalam ditangani masing-masing (nav: scroll-x). */
+    align-items: stretch;
     gap: 0;
     padding: var(--header-h, 92px) 0 var(--space-5);
   }
   .company-nav {
     flex: none;
+    min-width: 0;
     top: var(--header-h, 92px);
     z-index: 20;
     flex-direction: row;
@@ -8837,7 +8944,7 @@ strong {
     color: var(--color-green);
     border-bottom-color: var(--color-gold);
   }
-  .company-main { padding: 0 var(--container-x); }
+  .company-main { padding: 0 var(--container-x); min-width: 0; }
 }
 
 /* Minimal cards (style A) on the tour programs page */

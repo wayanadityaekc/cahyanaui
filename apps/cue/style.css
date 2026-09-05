@@ -10439,10 +10439,9 @@ strong {
   transition:color var(--dur) ease,background-color var(--dur) ease,border-color var(--dur) ease;}
 .zfilter__tab:hover{border-color:var(--color-cta);color:var(--color-cta);}
 .zfilter__tab.is-active{background:var(--color-cta);border-color:var(--color-cta);color:#fff;}
+/* Filter zona = DESKTOP ONLY. Di HP nggak perlu (tinggal scroll semua kartu). */
 @media (max-width:768px){
-  .zfilter{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;
-    touch-action:pan-x;scrollbar-width:none;margin-bottom:1.2rem;}
-  .zfilter::-webkit-scrollbar{display:none;}
+  .zfilter{display:none;}
 }
 .lrow--dim{opacity:0.34;transition:opacity var(--dur) ease;}
 .lrow--dim:hover{opacity:0.5;}

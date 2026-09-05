@@ -70,7 +70,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Tour",
-            "priceFallback": "$40"
+            "priceFallback": "$40",
+            "stops": 5,
+            "priv": true
           },
           {
             "href": "/ubud-culture-day.html",
@@ -84,7 +86,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Culture Day",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 6,
+            "priv": true
           },
           {
             "href": "/ubud-rafting-adventure.html",
@@ -98,7 +102,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Rafting Adventure",
-            "priceFallback": "$66"
+            "priceFallback": "$66",
+            "stops": 4,
+            "priv": true
           },
           {
             "href": "/ubud-atv-adventure.html",
@@ -112,7 +118,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud ATV Adventure",
-            "priceFallback": "$72"
+            "priceFallback": "$72",
+            "stops": 4,
+            "priv": true
           },
           {
             "href": "/full-adventure-rafting-atv.html",
@@ -126,7 +134,9 @@ export const LISTINGS = {
             "meta": "7–9 hours",
             "metaIcon": "clock",
             "priceName": "Full Adventure: Rafting & ATV",
-            "priceFallback": "$114"
+            "priceFallback": "$114",
+            "stops": 2,
+            "priv": true
           }
         ]
       },
@@ -146,7 +156,9 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "Uluwatu & Sunset Kecak",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 1,
+            "priv": true
           },
           {
             "href": "/gwk-pandawa-beach.html",
@@ -160,7 +172,9 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "GWK & Pandawa Beach",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/hidden-beaches-cliffs.html",
@@ -174,7 +188,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Bali Hidden Beaches and Cliffs",
-            "priceFallback": "$40"
+            "priceFallback": "$40",
+            "stops": 3,
+            "priv": true
           },
           {
             "href": "/lempuyang-tirta-gangga.html",
@@ -188,7 +204,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Lempuyang & Tirta Gangga",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/besakih-taman-ujung.html",
@@ -202,7 +220,9 @@ export const LISTINGS = {
             "meta": "7–9 hours",
             "metaIcon": "clock",
             "priceName": "Besakih & Taman Ujung",
-            "priceFallback": "$54"
+            "priceFallback": "$54",
+            "stops": 2,
+            "priv": true
           }
         ]
       },
@@ -222,7 +242,9 @@ export const LISTINGS = {
             "meta": "9–10 hours",
             "metaIcon": "clock",
             "priceName": "Kintamani Sunrise & Penglipuran",
-            "priceFallback": "$74"
+            "priceFallback": "$74",
+            "stops": 3,
+            "priv": true
           },
           {
             "href": "/batur-sunrise-adrenaline.html",
@@ -236,7 +258,9 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Batur Sunrise & Adrenaline",
-            "priceFallback": "$74"
+            "priceFallback": "$74",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/ulun-danu-tanah-lot.html",
@@ -250,7 +274,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Ulun Danu Beratan & Handara Gate",
-            "priceFallback": "$54"
+            "priceFallback": "$54",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/tanah-lot-taman-ayun.html",
@@ -264,7 +290,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Tanah Lot & Taman Ayun",
-            "priceFallback": "$45"
+            "priceFallback": "$45",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/jatiluwih-tour.html",
@@ -278,7 +306,9 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "Jatiluwih Rice Terrace Tour",
-            "priceFallback": "$40"
+            "priceFallback": "$40",
+            "stops": 1,
+            "priv": true
           },
           {
             "href": "/sangeh-tanah-lot.html",
@@ -292,7 +322,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Sangeh Monkey Forest & Tanah Lot",
-            "priceFallback": "$45"
+            "priceFallback": "$45",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/banyumala-twin-lakes.html",
@@ -306,7 +338,9 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Banyumala & Twin Lakes",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/munduk-twin-lakes.html",
@@ -320,7 +354,9 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Munduk Waterfall Tour",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 3,
+            "priv": true
           },
           {
             "href": "/lovina-dolphin-sekumpul.html",
@@ -334,7 +370,9 @@ export const LISTINGS = {
             "meta": "11–12 hours",
             "metaIcon": "clock",
             "priceName": "Lovina Dolphin & Sekumpul Waterfall",
-            "priceFallback": "$83"
+            "priceFallback": "$83",
+            "stops": 3,
+            "priv": true
           }
         ]
       },
@@ -354,7 +392,9 @@ export const LISTINGS = {
             "meta": "3 days / 2 nights",
             "metaIcon": "clock",
             "priceName": "3-Day Best of Bali Package",
-            "priceFallback": "$131"
+            "priceFallback": "$131",
+            "stops": 6,
+            "priv": true
           }
         ]
       }

@@ -14,14 +14,36 @@ function CheckIcon() {
     </svg>
   );
 }
+function PinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+function ClockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+}
 
-// Listing card (mobile-first): horizontal row - square-ish photo on the left
-// with a thin white inset border and a star rating on it, then title, a short
-// description, duration + Private, a Free cancellation badge, and the price
-// anchored bottom-right. rating shows "New" until there are real reviews.
+// Listing card (mobile-first): horizontal row - photo on the left with a thin
+// white inset border and a small star rating on it, then the title (up to two
+// lines), a stacked meta list (stops / duration / private driver, each with its
+// own icon), a Free cancellation badge, and the price anchored bottom-right.
+// rating shows "New" until there are real reviews.
 export default function ListingRow({
   href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, desc, rating,
+  priceName, priceFallback, priceMode = 'standard', zone, stops, priv, rating,
 }) {
   const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
   return (
@@ -31,9 +53,23 @@ export default function ListingRow({
       </div>
       <div className="lrow__body">
         <h3 className="lrow__t">{name}</h3>
-        {desc && <p className="lrow__desc">{desc}</p>}
-        <span className="lrow__meta">{meta}{metaIcon !== 'pin' ? ' · Private' : ''}</span>
-        <span className="lrow__cancel"><CheckIcon />Free cancellation</span>
+        <ul className="lrow__meta">
+          {stops != null && (
+            <li><PinIcon />{stops} {stops === 1 ? 'stop' : 'stops'}</li>
+          )}
+          {meta && metaIcon === 'pin' && stops == null && (
+            <li><PinIcon />{meta}</li>
+          )}
+          {meta && metaIcon !== 'pin' && (
+            <li><ClockIcon />{meta}</li>
+          )}
+          {priv && (
+            <li><UserIcon />Private driver</li>
+          )}
+        </ul>
+        {priceName && (
+          <span className="lrow__cancel"><CheckIcon />Free cancellation</span>
+        )}
         {priceName && (
           <span className="lrow__price">
             <small>from</small>

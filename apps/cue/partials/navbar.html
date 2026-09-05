@@ -3,98 +3,88 @@
     <a href="index.html" class="navbar__logo">
       <img src="assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
     </a>
+    <div class="acct" data-acct>
+      <button type="button" class="acct__btn" data-acct-toggle aria-label="Account & trip" aria-expanded="false">
+        <svg class="acct__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/></svg>
+        <span class="acct__dot" data-acct-dot hidden></span>
+      </button>
+      <div class="acct__panel" data-acct-panel>
+        <div class="acct__head">
+          <p class="acct__greeting"><span data-acct-greet>Welcome,</span> <span class="acct__name" data-acct-name>Guest</span></p>
+          <p class="acct__email" data-acct-email>guest@gmail.com</p>
+        </div>
+        <p class="acct__title">Your trip</p>
+        <label class="acct__label" for="acct-guests">Guests</label>
+        <select id="acct-guests" data-guest-select aria-label="Number of guests">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="reset">↺ Reset</option>
+        </select>
+        <label class="acct__label" for="acct-stay">Stay area</label>
+        <select id="acct-stay" data-stay-select aria-label="Stay area">
+          <option value="ubud">Ubud &amp; nearby</option>
+        </select>
+        <svg class="acct__flagdefs" aria-hidden="true" width="0" height="0"><defs>
+          <symbol id="flag-usd" viewBox="0 0 60 40"><rect width="60" height="40" fill="#b22234"/><rect y="5" width="60" height="3" fill="#fff"/><rect y="11" width="60" height="3" fill="#fff"/><rect y="17" width="60" height="3" fill="#fff"/><rect y="23" width="60" height="3" fill="#fff"/><rect y="29" width="60" height="3" fill="#fff"/><rect y="35" width="60" height="3" fill="#fff"/><rect width="26" height="22" fill="#3c3b6e"/></symbol>
+          <symbol id="flag-idr" viewBox="0 0 60 40"><rect width="60" height="20" fill="#e11d2e"/><rect y="20" width="60" height="20" fill="#fff"/></symbol>
+          <symbol id="flag-aud" viewBox="0 0 60 40"><rect width="60" height="40" fill="#00247d"/><path d="M0 0 L26 17 M26 0 L0 17" stroke="#fff" stroke-width="4"/><path d="M13 0 V17 M0 8.5 H26" stroke="#fff" stroke-width="5"/><path d="M13 0 V17 M0 8.5 H26" stroke="#cf142b" stroke-width="2.5"/><path d="M0 0 L26 17 M26 0 L0 17" stroke="#cf142b" stroke-width="1.6"/><circle cx="43" cy="27" r="3" fill="#fff"/><circle cx="13" cy="30" r="2" fill="#fff"/></symbol>
+          <symbol id="flag-eur" viewBox="0 0 60 40"><rect width="60" height="40" fill="#003399"/><g fill="#ffcc00"><circle cx="30" cy="8" r="1.6"/><circle cx="41" cy="11" r="1.6"/><circle cx="48" cy="20" r="1.6"/><circle cx="41" cy="29" r="1.6"/><circle cx="30" cy="32" r="1.6"/><circle cx="19" cy="29" r="1.6"/><circle cx="12" cy="20" r="1.6"/><circle cx="19" cy="11" r="1.6"/></g></symbol>
+          <symbol id="flag-gbp" viewBox="0 0 60 40"><rect width="60" height="40" fill="#00247d"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#cf142b" stroke-width="4"/><path d="M30 0 V40 M0 20 H60" stroke="#fff" stroke-width="12"/><path d="M30 0 V40 M0 20 H60" stroke="#cf142b" stroke-width="7"/></symbol>
+        </defs></svg>
+        <label class="acct__label" for="acct-cur">Currency</label>
+        <div class="acct__cur" data-cur>
+          <button type="button" class="acct__curbtn" id="acct-cur" data-cur-toggle aria-haspopup="listbox" aria-expanded="false">
+            <span class="acct__flag" data-cur-flag><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-usd"/></svg></span>
+            <span class="acct__curcode" data-cur-label>USD</span>
+            <svg class="acct__curcaret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="acct__curlist" data-cur-list role="listbox" aria-label="Currency" hidden>
+            <li class="acct__curopt" role="option" data-cur-opt="USD"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-usd"/></svg></span>USD</li>
+            <li class="acct__curopt" role="option" data-cur-opt="IDR"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-idr"/></svg></span>IDR</li>
+            <li class="acct__curopt" role="option" data-cur-opt="AUD"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-aud"/></svg></span>AUD</li>
+            <li class="acct__curopt" role="option" data-cur-opt="EUR"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-eur"/></svg></span>EUR</li>
+            <li class="acct__curopt" role="option" data-cur-opt="GBP"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-gbp"/></svg></span>GBP</li>
+          </ul>
+        </div>
+        <div class="acct__actions">
+          <a href="settings.html" class="acct__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2"/></svg>Settings
+          </a>
+          <button type="button" class="acct__link acct__link--auth" data-acct-auth data-mode="create">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/><path d="M19 7v4M21 9h-4"/></svg>
+            <span data-acct-auth-label>Sign in / Sign up</span>
+          </button>
+        </div>
+      </div>
+    </div>
     <a href="my-trips.html" class="navbar__cart" aria-label="My Trips">
       <svg class="navbar__cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       <span class="itn-badge navbar__cart-badge" data-itn-badge hidden>0</span>
     </a>
-    <!-- Flag defs buat currency picker (dipakai oleh <use href="#flag-*">). -->
-    <svg class="acct__flagdefs" aria-hidden="true" width="0" height="0"><defs>
-      <symbol id="flag-usd" viewBox="0 0 60 40"><rect width="60" height="40" fill="#b22234"/><rect y="5" width="60" height="3" fill="#fff"/><rect y="11" width="60" height="3" fill="#fff"/><rect y="17" width="60" height="3" fill="#fff"/><rect y="23" width="60" height="3" fill="#fff"/><rect y="29" width="60" height="3" fill="#fff"/><rect y="35" width="60" height="3" fill="#fff"/><rect width="26" height="22" fill="#3c3b6e"/></symbol>
-      <symbol id="flag-idr" viewBox="0 0 60 40"><rect width="60" height="20" fill="#e11d2e"/><rect y="20" width="60" height="20" fill="#fff"/></symbol>
-      <symbol id="flag-aud" viewBox="0 0 60 40"><rect width="60" height="40" fill="#00247d"/><path d="M0 0 L26 17 M26 0 L0 17" stroke="#fff" stroke-width="4"/><path d="M13 0 V17 M0 8.5 H26" stroke="#fff" stroke-width="5"/><path d="M13 0 V17 M0 8.5 H26" stroke="#cf142b" stroke-width="2.5"/><path d="M0 0 L26 17 M26 0 L0 17" stroke="#cf142b" stroke-width="1.6"/><circle cx="43" cy="27" r="3" fill="#fff"/><circle cx="13" cy="30" r="2" fill="#fff"/></symbol>
-      <symbol id="flag-eur" viewBox="0 0 60 40"><rect width="60" height="40" fill="#003399"/><g fill="#ffcc00"><circle cx="30" cy="8" r="1.6"/><circle cx="41" cy="11" r="1.6"/><circle cx="48" cy="20" r="1.6"/><circle cx="41" cy="29" r="1.6"/><circle cx="30" cy="32" r="1.6"/><circle cx="19" cy="29" r="1.6"/><circle cx="12" cy="20" r="1.6"/><circle cx="19" cy="11" r="1.6"/></g></symbol>
-      <symbol id="flag-gbp" viewBox="0 0 60 40"><rect width="60" height="40" fill="#00247d"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#cf142b" stroke-width="4"/><path d="M30 0 V40 M0 20 H60" stroke="#fff" stroke-width="12"/><path d="M30 0 V40 M0 20 H60" stroke="#cf142b" stroke-width="7"/></symbol>
-    </defs></svg>
     <nav>
       <ul class="navbar__menu" id="nav-menu">
-        <!-- Account header: identity + currency + sign in (pindah dari ikon akun terpisah) -->
-        <li class="navbar__acct">
-          <div class="navbar__acctrow">
-            <span class="navbar__ava" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/></svg>
-            </span>
-            <span class="navbar__acctid">
-              <b><span data-acct-greet>Welcome,</span> <span data-acct-name>Guest</span></b>
-              <span class="navbar__acctemail" data-acct-email>Plan your Bali trip</span>
-            </span>
-            <div class="acct__cur" data-cur>
-              <button type="button" class="acct__curbtn" id="acct-cur" data-cur-toggle aria-haspopup="listbox" aria-expanded="false">
-                <span class="acct__flag" data-cur-flag><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-usd"/></svg></span>
-                <span class="acct__curcode" data-cur-label>USD</span>
-                <svg class="acct__curcaret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <ul class="acct__curlist" data-cur-list role="listbox" aria-label="Currency" hidden>
-                <li class="acct__curopt" role="option" data-cur-opt="USD"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-usd"/></svg></span>USD</li>
-                <li class="acct__curopt" role="option" data-cur-opt="IDR"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-idr"/></svg></span>IDR</li>
-                <li class="acct__curopt" role="option" data-cur-opt="AUD"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-aud"/></svg></span>AUD</li>
-                <li class="acct__curopt" role="option" data-cur-opt="EUR"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-eur"/></svg></span>EUR</li>
-                <li class="acct__curopt" role="option" data-cur-opt="GBP"><span class="acct__flag"><svg viewBox="0 0 60 40" aria-hidden="true"><use href="#flag-gbp"/></svg></span>GBP</li>
-              </ul>
-            </div>
-          </div>
-          <button type="button" class="navbar__signin acct__link--auth" data-acct-auth data-mode="create">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2"/><path d="M19 7v4M21 9h-4"/></svg>
-            <span data-acct-auth-label>Sign in / Sign up</span>
-          </button>
-        </li>
-
-        <!-- Explore -->
-        <li class="navbar__grouplabel">Explore</li>
         <li><a href="index.html">Home</a></li>
-        <li><a href="tour.html">Tours</a></li>
-        <li><a href="destinations.html">Destinations</a></li>
-        <li><a href="activities.html">Experiences</a></li>
-        <li><a href="transfer.html">Transfer</a></li>
-        <li><a href="charter.html">Charter</a></li>
-
-        <!-- Plan your trip -->
-        <li class="navbar__grouplabel">Plan your trip</li>
-        <li class="navbar__trip">
-          <label class="navbar__triplabel" for="acct-guests">Guests</label>
-          <select id="acct-guests" data-guest-select aria-label="Number of guests">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="reset">↺ Reset</option>
-          </select>
+        <li class="navbar__has-drop">
+          <button type="button" class="navbar__droptoggle" aria-expanded="false">Program<span class="navbar__caret">&rsaquo;</span></button>
+          <ul class="navbar__drop">
+            <li><a href="tour.html">Tours</a></li>
+            <li><a href="destinations.html">Destinations</a></li>
+            <li><a href="activities.html">Experiences</a></li>
+            <li><a href="transfer.html">Transfer</a></li>
+            <li><a href="charter.html">Charter</a></li>
+          </ul>
         </li>
-        <li class="navbar__trip">
-          <label class="navbar__triplabel" for="acct-stay">Stay area</label>
-          <select id="acct-stay" data-stay-select aria-label="Stay area">
-            <option value="ubud">Ubud &amp; nearby</option>
-          </select>
-        </li>
-        <li><a href="my-trips.html" class="navbar__menucart">My Trips<span class="itn-badge navbar__menucart-badge" data-itn-badge hidden>0</span></a></li>
-
-        <!-- Company -->
-        <li class="navbar__grouplabel">Company</li>
         <li><a href="bali-guide.html">Guide</a></li>
         <li><a href="about-us.html">About</a></li>
         <li><a href="contact.html">Contact Us</a></li>
-
-        <!-- Footer -->
-        <li class="navbar__menufoot">
-          <a href="settings.html" class="navbar__footlink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2"/></svg>Settings
-          </a>
-        </li>
       </ul>
     </nav>
     <button class="navbar__toggle" id="hamburger" aria-label="Open menu">

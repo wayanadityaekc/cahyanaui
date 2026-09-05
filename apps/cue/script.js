@@ -3,7 +3,7 @@
 // -- site config
 // Naikin angka ini tiap kali isi file di folder partials/ diubah,
 // biar browser narik versi baru dan bukan yang nyangkut di cache.
-const PARTIALS_VERSION = 82;
+const PARTIALS_VERSION = 81;
 
 const WHATSAPP_NUMBER = "61401657862";
 

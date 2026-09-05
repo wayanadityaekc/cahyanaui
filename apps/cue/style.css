@@ -8800,6 +8800,19 @@ strong {
 .company-page .about .arows { max-width: none; margin: 0; padding: 0; }
 .company-page .about .ahero-card { max-width: none; margin: 0; }
 
+/* Terms/Privacy/Cancellation tab: .guide-article aslinya sengaja center buat
+   judul nomor (.section__title--sub) di halaman standalone-nya (terms-conditions.html
+   dkk, keputusan lama - JANGAN diubah di sana). Di dalam company-page beda konteks:
+   satu kolom sejajar sama tab About yang udah full rata kiri, jadi di sini
+   di-override rata kiri juga (pola sama kayak .guide-article-page). Wayan, Sep 2026. */
+.company-page .guide-article .section__title--sub {
+  text-align: left;
+}
+.company-page .guide-article .section__title--sub::after {
+  left: 0;
+  transform: none;
+}
+
 @media (max-width: 992px) {
   .company-layout {
     flex-direction: column;
@@ -8812,10 +8825,13 @@ strong {
     padding: var(--header-h, 92px) 0 var(--space-5);
   }
   .company-nav {
+    /* NOT sticky (beda dari .guide-cattabs) - HP di sini udah numpuk 3 bar
+       (navbar + tripbar + tab), nempelin tab juga bikin konten di bawahnya
+       (mis. kartu intro About yang mepet banget) ke-scroll nutup di bawah
+       tab pas discroll dikit. Biarin scroll away kayak .zone-chip. Wayan, Sep 2026. */
+    position: static;
     flex: none;
     min-width: 0;
-    top: var(--header-h, 92px);
-    z-index: 20;
     flex-direction: row;
     gap: 1.5rem;
     padding: 0.7rem 1.3rem;

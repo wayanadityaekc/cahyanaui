@@ -73,6 +73,13 @@ export default function Footer() {
           <ul>{COMPANY.map(([h, t]) => <li key={h}><a href={h}>{t}</a></li>)}</ul>
         </div>
       </div>
+      <p className="footer__reg">
+        <span className="footer__reg-item"><b>{R.name}</b></span>
+        <span className="footer__reg-sep" aria-hidden="true">·</span>
+        <span className="footer__reg-item">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener">{R.decreeShort}</a></span>
+        <span className="footer__reg-sep" aria-hidden="true">·</span>
+        <span className="footer__reg-item">Business License (NIB) {R.nib}</span>
+      </p>
       <div className="footer__payments">
         <p className="footer__featured-label">We Accept</p>
         <div className="footer__pay-logos">
@@ -99,13 +106,6 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer__bottom">
-        <p className="footer__reg">
-          <span className="footer__reg-item"><b>{R.name}</b></span>
-          <span className="footer__reg-sep" aria-hidden="true">·</span>
-          <span className="footer__reg-item">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener">{R.decreeShort}</a></span>
-          <span className="footer__reg-sep" aria-hidden="true">·</span>
-          <span className="footer__reg-item">Business License (NIB) {R.nib}</span>
-        </p>
         <p>&copy; 2026 Cahyana Ubud Experience. All rights reserved.</p>
       </div>
     </footer>

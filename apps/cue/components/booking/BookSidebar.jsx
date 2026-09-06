@@ -72,7 +72,7 @@ export default function BookSidebar({ item, facts, perPerson = false }) {
 
   return (
     <div className="booksidebar">
-      <BookingForm presetItem={item} presetType="tour" onBook={start(true)} onAdd={start(false)} />
+      <BookingForm presetItem={item} presetType="tour" perPerson={perPerson} onBook={start(true)} onAdd={start(false)} />
 
       <ul className="booksidebar__specs">
         {duration && <li>{CLOCK}{duration}</li>}

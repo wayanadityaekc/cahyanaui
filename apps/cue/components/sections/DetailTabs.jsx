@@ -25,6 +25,60 @@ function TicketIcon() {
 // Informational cards: the two ways every program can be booked. Choosing the
 // actual mode happens in the booking form's Standard/Exclusive toggle - these
 // cards just explain the difference.
+function ClockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+function BagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 8h12l-1 12H7L6 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" />
+    </svg>
+  );
+}
+function InfoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><path d="M12 8h.01" />
+    </svg>
+  );
+}
+function CardIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="6" width="18" height="12" rx="2" /><path d="M3 10h18M7 15h4" />
+    </svg>
+  );
+}
+
+// "Before you go" - practical, generic-but-real notes that hold for every day
+// tour (pick-up, what to bring, things to note, payment). Deliberately not
+// per-tour specifics, so nothing here is invented.
+function GoodToKnow() {
+  const rows = [
+    { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
+    { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.' },
+    { ic: <InfoIcon />, h: 'Good to know', t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.' },
+    { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end of the day. Free cancellation up to 24 hours before.' },
+  ];
+  return (
+    <ul className="dgtk">
+      {rows.map((r) => (
+        <li key={r.h}>
+          <span className="dgtk__ic">{r.ic}</span>
+          <div>
+            <span className="dgtk__h">{r.h}</span>
+            <p className="dgtk__t">{r.t}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Packages() {
   return (
     <div className="dpkg">
@@ -80,7 +134,18 @@ function Inclusions({ included, excluded }) {
 // active tab follows the section currently in view (scrollspy).
 export default function DetailTabs({ overview, priceItem, included, excluded, reviewService }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
-  if (priceItem) sections.push({ id: 'options', label: 'Options', content: <Packages /> });
+  if (priceItem) {
+    sections.push({
+      id: 'details',
+      label: 'Details',
+      content: (
+        <>
+          <GoodToKnow />
+          <Packages />
+        </>
+      ),
+    });
+  }
   if ((included && included.length) || (excluded && excluded.length)) {
     sections.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
   }

@@ -4091,33 +4091,78 @@ a.footer__contact-item:hover {
 .dpkg__lead {
   font-size: var(--fs-body);
   color: var(--color-green);
-  margin: 0 0 1rem;
+  margin: 0 0 1.1rem;
 }
 .dpkg__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.9rem;
+  gap: 1rem;
 }
 .dpkg__card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem 1.1rem;
+  gap: 0.7rem;
+  padding: 1.3rem 1.3rem 1.1rem;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
+.dpkg__card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+/* Exclusive = kartu unggulan: aksen amber + tint tipis + elevasi lebih */
 .dpkg__card--feat {
   border-color: var(--color-amber);
+  background: linear-gradient(180deg, rgba(201, 164, 92, 0.06), #fff 60%);
+  box-shadow: var(--shadow-lg);
+}
+.dpkg__badge {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--r-pill);
+  background: var(--color-amber);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.dpkg__top {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.dpkg__ic {
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: #fff;
+}
+.dpkg__ic svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+.dpkg__ic--feat {
+  background: linear-gradient(135deg, var(--color-amber), var(--color-amber-d));
 }
 .dpkg__name {
-  font-size: var(--fs-strong);
+  font-size: var(--fs-h3);
   font-weight: 600;
   color: var(--color-gold);
 }
 .dpkg__desc {
   font-size: var(--fs-small);
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--color-green);
   margin: 0;
 }
@@ -4125,8 +4170,9 @@ a.footer__contact-item:hover {
   margin-top: auto;
   display: flex;
   align-items: baseline;
-  gap: 0.3rem;
-  padding-top: 0.2rem;
+  gap: 0.35rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--line);
 }
 .dpkg__price small {
   font-size: var(--fs-label);
@@ -4135,8 +4181,8 @@ a.footer__contact-item:hover {
   color: var(--color-muted);
 }
 .dpkg__amt {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   color: var(--color-amber);
 }
 @media (max-width: 560px) {

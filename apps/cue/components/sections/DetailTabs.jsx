@@ -8,18 +8,40 @@ import Price from '@/components/Price';
 // replaces a facts grid that just repeated the hero hooks; the choice between
 // Standard and Exclusive is the genuinely useful, page-specific decision. Prices
 // are live and currency-correct (Price component), not hardcoded.
+function CarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 11l1.4-4.2A2 2 0 0 1 8.3 5.4h7.4a2 2 0 0 1 1.9 1.4L19 11M4 11h16v5H4zM7 16v1.6M17 16v1.6" /><circle cx="7.5" cy="13.5" r="1" /><circle cx="16.5" cy="13.5" r="1" />
+    </svg>
+  );
+}
+function TicketIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-4z" /><path d="M14 6.5v1.5M14 11v2M14 16v-1.5" />
+    </svg>
+  );
+}
+
 function Packages({ item }) {
   return (
     <div className="dpkg">
       <p className="dpkg__lead">Every program comes two ways - pick when you book.</p>
       <div className="dpkg__grid">
         <div className="dpkg__card">
-          <div className="dpkg__name">Standard</div>
-          <p className="dpkg__desc">Private car, driver and fuel. Entrance tickets aren&apos;t included - you pay them at each gate as you go.</p>
+          <div className="dpkg__top">
+            <span className="dpkg__ic"><CarIcon /></span>
+            <span className="dpkg__name">Standard</span>
+          </div>
+          <p className="dpkg__desc">Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.</p>
           <div className="dpkg__price"><small>from</small> <Price name={item} mode="standard" className="dpkg__amt" /></div>
         </div>
         <div className="dpkg__card dpkg__card--feat">
-          <div className="dpkg__name">Exclusive</div>
+          <span className="dpkg__badge">Tickets included</span>
+          <div className="dpkg__top">
+            <span className="dpkg__ic dpkg__ic--feat"><TicketIcon /></span>
+            <span className="dpkg__name">Exclusive</span>
+          </div>
           <p className="dpkg__desc">The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.</p>
           <div className="dpkg__price"><small>from</small> <Price name={item} mode="exclusive" className="dpkg__amt" /></div>
         </div>

@@ -3401,9 +3401,9 @@ a.footer__contact-item:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 34px;
-  min-width: 52px;
-  padding: 0 0.7rem;
+  height: 27px;
+  min-width: 42px;
+  padding: 0 0.5rem;
   background: #fff;
   border-radius: var(--r-sm);
   box-shadow: var(--shadow-sm);
@@ -3414,7 +3414,7 @@ a.footer__contact-item:hover {
 }
 .footer__pay-svg {
   display: block;
-  height: var(--icon-md);
+  height: var(--icon-sm);
   width: auto;
 }
 .footer__bottom {
@@ -5585,6 +5585,13 @@ a.footer__contact-item:hover {
   }
   .footer__brand {
     grid-column: 1 / -1;
+  }
+  /* Featured On ke tengah di HP */
+  .footer__featured {
+    text-align: center;
+  }
+  .footer__logos {
+    justify-content: center;
   }
   .highlight__container {
     grid-template-columns: 1fr;

@@ -4108,8 +4108,8 @@ a.footer__contact-item:hover {
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
-  background: var(--color-gold);
-  color: #fff;
+  background: var(--color-cream);
+  color: var(--color-gold);
 }
 .dgtk__ic svg {
   width: var(--icon-sm);

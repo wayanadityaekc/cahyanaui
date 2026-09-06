@@ -9303,22 +9303,25 @@ strong {
 @media (min-width: 993px) {
   .company-page {
     background: var(--color-cream);
+    /* clearance navbar + tripbar + gutter kiri/kanan (cream jadi latar) */
+    padding: calc(var(--header-h, 104px) + 0.6rem) var(--container-x) var(--space-5);
   }
   .company-layout {
     max-width: 1180px;
-    margin: calc(var(--header-h, 104px) + 0.4rem) auto var(--space-5);
-    padding: 2.2rem clamp(1.6rem, 2.5vw, 2.6rem) 2.8rem;
+    margin: 0 auto;
+    padding: 0;
+  }
+  /* HANYA konten utama yang jadi "cekungan" putih inset. */
+  .company-main {
     background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--r-xl);
     box-shadow: var(--shadow-md);
+    padding: 2rem clamp(1.6rem, 2.5vw, 2.4rem) 2.4rem;
   }
-  /* nav sekarang di DALAM sheet putih: buang shadow (biar gak kartu-dalam-kartu),
-     kasih tint cream tipis biar tetep kebedain dari sheet. */
-  .company-nav {
-    background: var(--color-cream);
-    box-shadow: none;
-  }
+  /* Sidebar = kartu terpisah di kanan, di LUAR cekungan (pola booking form
+     attraction). Base .company-nav udah putih + border + shadow = kartu sendiri
+     di atas background cream, jadi gak di-override lagi. */
 }
 
 /* Floating section switcher (HP only) - satu pill ngambang di bawah layar,

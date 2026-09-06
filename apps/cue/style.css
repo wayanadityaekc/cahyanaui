@@ -4108,17 +4108,12 @@ a.footer__contact-item:hover {
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
-  background: var(--color-cream);
-  color: var(--color-gold);
+  background: var(--color-gold);
+  color: #fff;
 }
 .dgtk__ic svg {
   width: var(--icon-sm);
   height: var(--icon-sm);
-}
-/* Exclusive = aksen amber (gold beneran) biar kebedain dari Standard */
-.dgtk__ic--feat {
-  background: linear-gradient(135deg, var(--color-amber), var(--color-amber-d));
-  color: #fff;
 }
 .dgtk__h {
   display: block;

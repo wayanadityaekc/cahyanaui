@@ -60,7 +60,7 @@ function CardIcon() {
 function GoodToKnow() {
   const rows = [
     { ic: <CarIcon />, h: 'Standard', t: 'Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.' },
-    { ic: <TicketIcon />, h: 'Exclusive', t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.', feat: true },
+    { ic: <TicketIcon />, h: 'Exclusive', t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.' },
     { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
     { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.' },
     { ic: <InfoIcon />, h: 'Good to know', t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.' },
@@ -70,7 +70,7 @@ function GoodToKnow() {
     <ul className="dgtk">
       {rows.map((r) => (
         <li key={r.h}>
-          <span className={`dgtk__ic${r.feat ? ' dgtk__ic--feat' : ''}`}>{r.ic}</span>
+          <span className="dgtk__ic">{r.ic}</span>
           <div>
             <span className="dgtk__h">{r.h}</span>
             <p className="dgtk__t">{r.t}</p>

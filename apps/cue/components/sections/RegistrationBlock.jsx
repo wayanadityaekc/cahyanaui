@@ -32,7 +32,7 @@ export default function RegistrationBlock() {
           <span className="reg__seal"><SealIcon /></span>
           <div>
             <div className="reg__name">{R.name}</div>
-            <div className="reg__type">{R.type} · Registered in Indonesia</div>
+            <div className="reg__type">Registered in Indonesia</div>
           </div>
         </div>
         <dl className="reg__rows">

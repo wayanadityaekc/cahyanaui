@@ -28,6 +28,10 @@ const skip = new Set([
   'tour.html',
   'activities.html',
   'destinations.html',
+  // About page (Wayan, Sep 2026): added a business-registration trust block
+  // (NIB + Ministry of Law decree), so it deliberately no longer matches the
+  // legacy original.
+  'about-us.html',
 ]);
 
 const pages = [

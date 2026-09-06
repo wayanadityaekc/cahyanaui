@@ -2086,7 +2086,7 @@ a.tripbar--promo {
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--color-amber);
+  color: var(--color-gold);
 }
 .bookcard__amount .price__sym {
   font-size: 0.55em;
@@ -2108,6 +2108,9 @@ a.tripbar--promo {
    Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
    key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */
 .bookcard__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
   margin: 0 0 0.9rem;
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--line);
@@ -2116,13 +2119,23 @@ a.tripbar--promo {
   background: var(--color-cream);
   animation: bookcardNoteIn var(--dur) var(--ease);
 }
-.bookcard__note b {
+.bookcard__note-ic {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  color: var(--color-amber);
+}
+.bookcard__note-ic svg { width: 100%; height: 100%; }
+.bookcard__note-txt { flex: 1 1 auto; min-width: 0; }
+.bookcard__note-txt b {
   display: block;
   font-size: var(--fs-strong);
   font-weight: 600;
   color: var(--color-gold);
 }
-.bookcard__note span {
+.bookcard__note-txt span {
   display: block;
   margin-top: 0.1rem;
   font-size: var(--fs-small);
@@ -3811,10 +3824,10 @@ a.footer__contact-item:hover {
 }
 .booksidebar {
   position: relative; /* anchor buat panel What's included slide-over */
-  background: #fff;
+  /* Wayan: booking form nyatu sama background, no shadow - cukup garis tipis. */
+  background: transparent;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.08);
   overflow: hidden;
 }
 /* form nyatu ke dalam kartu (buang box + min-height-nya sendiri) */

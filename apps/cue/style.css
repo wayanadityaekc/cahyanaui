@@ -2086,7 +2086,7 @@ a.tripbar--promo {
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--color-gold);
+  color: var(--color-amber);
 }
 .bookcard__amount .price__sym {
   font-size: 0.55em;
@@ -2136,9 +2136,8 @@ a.tripbar--promo {
 /* date + guests */
 .bookcard__fields { display: grid; gap: 0.6rem; margin: 0 0 1.1rem; }
 /* CTA full-width + panah */
-.bookcard__cta { display: flex; width: 100%; max-width: none; gap: 0.5rem; background-color: var(--color-cta); }
+.bookcard__cta { display: flex; width: 100%; max-width: none; background-color: var(--color-cta); }
 .bookcard__cta:hover { background-color: var(--color-cta-d); color: #fff; transform: none; }
-.bookcard__cta-arr { font-size: 1.1em; }
 .bookcard__surcharge {
   display: block;
   margin-top: 0.6rem;

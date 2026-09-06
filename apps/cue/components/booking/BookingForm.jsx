@@ -157,7 +157,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           onClick={() => (onBook ? onBook(item, date, hasExclusive ? mode : 'standard') : book())}
           disabled={!item}
         >
-          Book Now <span className="bookcard__cta-arr" aria-hidden="true">&rarr;</span>
+          Book Now
         </button>
 
 

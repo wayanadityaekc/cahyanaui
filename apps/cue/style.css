@@ -3277,27 +3277,38 @@ a.footer__contact-item:hover {
   text-align: center;
   opacity: 0.7;
 }
-/* Registrasi usaha - baris ringkas di footer (semua halaman) */
+/* Registrasi usaha - baris ringkas di footer (semua halaman). Tiap bagian
+   nowrap biar nggak kepotong di tengah; desktop = 1 baris + titik pemisah,
+   HP = tumpuk rapi per baris. */
 .footer__reg {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 4px 10px;
   margin: 0 0 0.6rem;
 }
-.footer__reg-ic {
-  width: 15px;
-  height: 15px;
-  flex: 0 0 auto;
-  color: var(--color-amber);
+.footer__reg-item {
+  white-space: nowrap;
 }
-.footer__reg b {
+.footer__reg-item b {
   font-weight: 600;
 }
-.footer__reg a {
+.footer__reg-item a {
   color: inherit;
   text-decoration: underline;
+}
+.footer__reg-sep {
+  opacity: 0.5;
+}
+@media (max-width: 560px) {
+  .footer__reg {
+    flex-direction: column;
+    gap: 3px;
+  }
+  .footer__reg-sep {
+    display: none;
+  }
 }
 
 /* Registrasi usaha - blok trust di halaman About */

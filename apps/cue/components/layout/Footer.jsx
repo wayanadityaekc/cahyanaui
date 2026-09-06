@@ -96,6 +96,30 @@ export default function Footer() {
             </svg>
           </span>
           <span className="footer__pay-chip">
+            <svg className="footer__pay-svg" viewBox="0 0 48 16" role="img" aria-label="JCB">
+              <rect x="0" y="1" width="14.5" height="14" rx="2" fill="#0B4EA2" />
+              <rect x="16.75" y="1" width="14.5" height="14" rx="2" fill="#E4002B" />
+              <rect x="33.5" y="1" width="14.5" height="14" rx="2" fill="#009944" />
+              <text x="7.25" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">J</text>
+              <text x="24" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">C</text>
+              <text x="40.75" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">B</text>
+            </svg>
+          </span>
+          <span className="footer__pay-chip">
+            <svg className="footer__pay-svg" viewBox="0 0 48 16" role="img" aria-label="American Express">
+              <rect x="0" y="1" width="48" height="14" rx="2" fill="#006FCF" />
+              <text x="24" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="9" fontWeight="700" letterSpacing="0.5" fill="#fff">AMEX</text>
+            </svg>
+          </span>
+          <span className="footer__pay-chip">
+            <svg className="footer__pay-svg" viewBox="0 0 50 16" role="img" aria-label="QRIS">
+              <text x="1" y="13" fontFamily="Arial, Helvetica, sans-serif" fontSize="14" fontWeight="800" fontStyle="italic">
+                <tspan fill="#13326B">QR</tspan>
+                <tspan fill="#E8262A">IS</tspan>
+              </text>
+            </svg>
+          </span>
+          <span className="footer__pay-chip">
             <svg className="footer__pay-svg" viewBox="0 0 62 16" role="img" aria-label="PayPal">
               <text x="0" y="13" fontFamily="Arial, Helvetica, sans-serif" fontSize="15" fontWeight="700" fontStyle="italic">
                 <tspan fill="#003087">Pay</tspan>

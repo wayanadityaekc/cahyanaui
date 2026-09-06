@@ -2042,6 +2042,155 @@ a.tripbar--promo {
   color: var(--color-cream);
 }
 
+/* ============================================================
+   Booking card - price-first (BookingForm.jsx, detail sidebar)
+   Sep 2026, Wayan: harga di ATAS, lalu toggle Standard/Exclusive,
+   date + guests, terus CTA. Reuse .booking__type (toggle) &
+   .booking__btn (CTA); sisanya scoped .bookcard__*.
+   ============================================================ */
+.bookcard__card { text-align: left; }
+.bookcard__head { margin-bottom: 1.1rem; }
+.bookcard__kicker {
+  margin: 0 0 0.5rem;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-amber);
+}
+.bookcard__title {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-gold);
+}
+.bookcard__sub {
+  margin: 0.3rem 0 0;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+/* service pickers - cuma muncul kalau item BELUM preset (ui-kit / generic) */
+.bookcard__pick {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+/* harga besar */
+.bookcard__price { margin: 0 0 1.1rem; }
+.bookcard__amount {
+  display: block;
+  font-family: var(--font-head);
+  font-size: clamp(2.4rem, 8vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-gold);
+}
+.bookcard__amount .price__sym {
+  font-size: 0.55em;
+  font-weight: 600;
+  vertical-align: 0.26em;
+  margin-right: 0.04em;
+}
+.bookcard__unit {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+/* toggle - reuse .booking__type, perbesar dikit + active HIJAU (CTA) */
+.bookcard__toggle { margin: 0 0 0.9rem; padding: 4px; }
+.bookcard__toggle .booking__type-btn { padding: 0.5rem 0.5rem; font-size: var(--fs-small); }
+.bookcard__toggle .booking__type-btn.is-active { background-color: var(--color-cta); }
+/* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
+   Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
+   key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */
+.bookcard__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--color-cta);
+  border-radius: var(--r-md);
+  background: var(--color-cream);
+  animation: bookcardNoteIn var(--dur) var(--ease);
+}
+.bookcard__note-ic {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  color: var(--color-amber);
+}
+.bookcard__note-ic svg { width: 100%; height: 100%; }
+.bookcard__note-txt { flex: 1 1 auto; min-width: 0; }
+.bookcard__note-txt b {
+  display: block;
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.bookcard__note-txt span {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+@keyframes bookcardNoteIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: none; }
+}
+/* date + guests */
+.bookcard__fields { display: grid; gap: 0.6rem; margin: 0 0 1.1rem; }
+/* CTA full-width + panah */
+.bookcard__cta { display: flex; width: 100%; max-width: none; background-color: var(--color-cta); }
+.bookcard__cta:hover { background-color: var(--color-cta-d); color: #fff; transform: none; }
+.bookcard__surcharge {
+  display: block;
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+/* baris reassurance (shield) */
+.bookcard__reassure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+.bookcard__reassure b { font-weight: 600; color: var(--color-green); }
+.bookcard__reassure-ic { display: inline-flex; width: 15px; height: 15px; color: var(--color-cta); }
+.bookcard__reassure-ic svg { width: 100%; height: 100%; }
+
+/* Rich field trigger (icon + hint label + value) - opt-in via icon/hint props
+   di Select/DateField. Dipakai booking card (Date/Guests); field lain tetep
+   .hs-control biasa (tinggi --field-h). */
+.hs-control--rich {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  height: auto;
+  min-height: 3.1rem;
+  padding: 0.5rem 0.85rem;
+  text-align: left;
+}
+.hs-control--rich .hs-control__ic { flex: 0 0 auto; display: inline-flex; width: 20px; height: 20px; color: var(--color-green); }
+.hs-control--rich .hs-control__ic svg { width: 100%; height: 100%; }
+.hs-control--rich .hs-control__stack { flex: 1 1 auto; display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.hs-control--rich .hs-control__hint { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.04em; color: var(--color-muted); }
+.hs-control--rich .hs-control__val { font-size: var(--fs-field); font-weight: 500; color: var(--color-ink); }
+.hs-control--rich .hs-control__val.placeholder { color: var(--color-muted); font-weight: 400; }
+
 /* About (homepage) */
 .about {
   padding: var(--space-5) var(--space-3);
@@ -3804,10 +3953,10 @@ a.footer__contact-item:hover {
 }
 .booksidebar {
   position: relative; /* anchor buat panel What's included slide-over */
-  background: #fff;
+  /* Wayan: booking form nyatu sama background, no shadow - cukup garis tipis. */
+  background: transparent;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.08);
   overflow: hidden;
 }
 /* form nyatu ke dalam kartu (buang box + min-height-nya sendiri) */
@@ -3826,85 +3975,12 @@ a.footer__contact-item:hover {
   box-shadow: none;
   padding: 1.5rem 1.4rem;
 }
-/* field: Pickup / Date / Price full-width, TAPI Program + Select program sebelahan
-   (2 kolom) biar hemat 1 baris. spacing lewat gap (margin-bottom dimatiin). */
-.booksidebar .booking__fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.8rem;
-  row-gap: 0.9rem;
-}
-.booksidebar .booking__fields .booking__group {
-  margin-bottom: 0;
-}
-/* cuma blok harga yang full-width; Pickup|Date & Program|Select masing2 2 kolom */
-.booksidebar .booking__group--price {
-  grid-column: 1 / -1;
-}
-.booksidebar .booking__group label {
-  display: block;
-  margin-bottom: 0.35rem;
-}
-/* Blok harga: buang label + baris pax/surcharge; angka besar & tengah (fs-display) */
-.booksidebar .booking__group--price {
-  margin-bottom: 0;
-}
-.booksidebar .booking__group--price > label {
-  display: none;
-}
-.booksidebar #price-note,
-.booksidebar #price-surcharge {
-  display: none;
-}
-.booksidebar .booking__type {
-  margin: 1.2rem 0 0;
-}
-.booksidebar .booking__price {
-  display: block;
-  height: auto;
-  padding: 0;
-  border: none;
-  background: none;
-  text-align: center;
-  font-size: var(--fs-display);
-  line-height: 1.1;
-  margin: 1.2rem 0 0;
-}
-.booksidebar .price-unit {
-  display: block;
-  text-align: center;
-  margin-top: 0.2rem;
-}
-/* Book Now (gold, default btn) + Ask (ghost, --alt), numpuk full-width */
-.booksidebar .booking__actions {
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 1.2rem 0;
-}
+/* Booking form pakai layout price-first sendiri (.bookcard__*, lihat blok
+   "Booking card - price-first"). Di sidebar cukup pastiin CTA full-width. */
 .booksidebar .booking__btn {
   flex: none;
   width: 100%;
   max-width: none;
-}
-/* Spec list (durasi / kapasitas / pickup) — persis Step-1 */
-.booksidebar__specs {
-  list-style: none;
-  margin: 0 1.4rem;
-  padding: 0;
-}
-.booksidebar__specs li {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0;
-  font-size: var(--fs-body);
-  color: var(--color-green);
-}
-.booksidebar__specs svg {
-  flex: 0 0 auto;
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  color: var(--color-muted);
 }
 /* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
    pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */

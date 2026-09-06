@@ -23,7 +23,10 @@ export default function Select({
   id,
   popup = true,
   className = '',
+  icon = null,
+  hint = '',
 }) {
+  const rich = !!(icon || hint);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const isMobile = useMobile();
@@ -92,15 +95,25 @@ export default function Select({
 
       <button
         type="button"
-        className="hs-control bk-control"
+        className={`hs-control bk-control${rich ? ' hs-control--rich' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className={`hs-control__val${!selected ? ' placeholder' : ''}${selected && selected.flag ? ' hs-control__val--flag' : ''}`}>
-          {selected && selected.flag && <img className="hs-opt__flag" src={`/assets/flags/${selected.flag}.svg`} alt="" />}
-          <span className="hs-opt__nm">{selected ? selected.label : placeholder}</span>
-        </span>
+        {icon && <span className="hs-control__ic" aria-hidden="true">{icon}</span>}
+        {rich ? (
+          <span className="hs-control__stack">
+            {hint && <span className="hs-control__hint">{hint}</span>}
+            <span className={`hs-control__val${!selected ? ' placeholder' : ''}`}>
+              {selected ? selected.label : placeholder}
+            </span>
+          </span>
+        ) : (
+          <span className={`hs-control__val${!selected ? ' placeholder' : ''}${selected && selected.flag ? ' hs-control__val--flag' : ''}`}>
+            {selected && selected.flag && <img className="hs-opt__flag" src={`/assets/flags/${selected.flag}.svg`} alt="" />}
+            <span className="hs-opt__nm">{selected ? selected.label : placeholder}</span>
+          </span>
+        )}
         <Chevron />
       </button>
 

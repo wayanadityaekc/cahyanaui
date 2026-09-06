@@ -19,8 +19,7 @@ const pages = [
 
 const MUST_HAVE = [
   ['booksidebar', 'booking sidebar card'],
-  ['bookcard__add', 'Add to My Trip button'],
-  ['booksidebar__specs', 'spec list'],
+  ['bookcard__cta', 'Book Now CTA'],
   ['tour-layout--book', 'two-column layout'],
   ['review-cta', 'Leave a review band'],
   ['tour-hook', 'facts under the title'],

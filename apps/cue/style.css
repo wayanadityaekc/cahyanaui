@@ -2132,24 +2132,6 @@ a.tripbar--promo {
 .bookcard__cta { display: flex; width: 100%; max-width: none; gap: 0.5rem; background-color: var(--color-cta); }
 .bookcard__cta:hover { background-color: var(--color-cta-d); color: #fff; transform: none; }
 .bookcard__cta-arr { font-size: 1.1em; }
-/* secondary add-to-trip (teks, di bawah CTA) */
-.bookcard__add {
-  display: block;
-  width: 100%;
-  margin-top: 0.6rem;
-  padding: 0.5rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--color-gold);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.bookcard__add:hover { color: var(--color-gold-d); }
-.bookcard__add:disabled { color: var(--color-muted); cursor: not-allowed; text-decoration: none; }
 .bookcard__surcharge {
   display: block;
   margin-top: 0.6rem;
@@ -3851,26 +3833,6 @@ a.footer__contact-item:hover {
   flex: none;
   width: 100%;
   max-width: none;
-}
-/* Spec list (durasi / kapasitas / pickup) — persis Step-1 */
-.booksidebar__specs {
-  list-style: none;
-  margin: 0 1.4rem;
-  padding: 0;
-}
-.booksidebar__specs li {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0;
-  font-size: var(--fs-body);
-  color: var(--color-green);
-}
-.booksidebar__specs svg {
-  flex: 0 0 auto;
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  color: var(--color-muted);
 }
 /* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
    pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */

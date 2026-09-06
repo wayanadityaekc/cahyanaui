@@ -40,7 +40,7 @@ const SHIELD_ICON = (
   </svg>
 );
 
-export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook, onAdd }) {
+export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook }) {
   const { setGuests, displayGuests } = useTripPrefs();
   const pricing = usePricing();
   const { openBooking } = useBooking();
@@ -77,7 +77,13 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const display = band ? band.display : transferEntry ? transferEntry.display : null;
   const priceText = fmt(display);
 
+  const stdDisplay = entry ? entry.standard.display : null;
   const exlDisplay = entry && entry.exclusive ? entry.exclusive.display : null;
+  const upsellDelta = exlDisplay != null && stdDisplay != null ? exlDisplay - stdDisplay : null;
+  const upsellSub =
+    upsellDelta != null && upsellDelta > 0
+      ? `+${fmt(upsellDelta)} · all entrance tickets prepaid`
+      : `${fmt(exlDisplay)} · all entrance tickets prepaid`;
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
   const unit = perPerson ? 'per person' : 'per car';
@@ -138,7 +144,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
             <span className="bookcard__upsell-ic" aria-hidden="true">{SPARK_ICON}</span>
             <span className="bookcard__upsell-txt">
               <b>Exclusive</b>
-              <span>{fmt(exlDisplay)} {unit} · entrance tickets included</span>
+              <span>{upsellSub}</span>
             </span>
             <span className="bookcard__upsell-arr" aria-hidden="true">&rsaquo;</span>
           </button>
@@ -165,17 +171,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           Book Now <span className="bookcard__cta-arr" aria-hidden="true">&rarr;</span>
         </button>
 
-        {onAdd && (
-          <button
-            type="button"
-            className="bookcard__add"
-            id="add-trip"
-            onClick={() => onAdd(item, date, hasExclusive ? mode : 'standard')}
-            disabled={!item}
-          >
-            Add to My Trip
-          </button>
-        )}
 
         {surcharge > 0 && <small className="bookcard__surcharge">Pickup surcharge applied</small>}
 

@@ -2104,28 +2104,37 @@ a.tripbar--promo {
 .bookcard__toggle { margin: 0 0 0.9rem; padding: 4px; }
 .bookcard__toggle .booking__type-btn { padding: 0.5rem 0.5rem; font-size: var(--fs-small); }
 .bookcard__toggle .booking__type-btn.is-active { background-color: var(--color-cta); }
-/* upsell card (nudge Standard -> Exclusive) */
-.bookcard__upsell {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  width: 100%;
+/* Modes explainer box - jelasin beda Standard vs Exclusive di dalam kartu
+   (gantiin upsell), baris mode yang aktif di-highlight. */
+.bookcard__modes {
   margin: 0 0 0.9rem;
-  padding: 0.7rem 0.85rem;
-  text-align: left;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: var(--color-cream);
-  cursor: pointer;
-  transition: border-color var(--dur) ease, background var(--dur) ease;
+  overflow: hidden;
 }
-.bookcard__upsell:hover { border-color: var(--color-amber); }
-.bookcard__upsell-ic { flex: 0 0 auto; display: inline-flex; width: 22px; height: 22px; color: var(--color-amber); }
-.bookcard__upsell-ic svg { width: 100%; height: 100%; }
-.bookcard__upsell-txt { flex: 1 1 auto; display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
-.bookcard__upsell-txt b { font-size: var(--fs-strong); font-weight: 600; color: var(--color-gold); }
-.bookcard__upsell-txt span { font-size: var(--fs-small); color: var(--color-muted); }
-.bookcard__upsell-arr { flex: 0 0 auto; font-size: 1.4rem; line-height: 1; color: var(--color-muted); }
+.bookcard__mode {
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid transparent;
+  transition: background var(--dur) ease, border-color var(--dur) ease;
+}
+.bookcard__mode + .bookcard__mode { border-top: 1px solid var(--line); }
+.bookcard__mode.is-active {
+  background: var(--color-cream);
+  border-left-color: var(--color-cta);
+}
+.bookcard__mode b {
+  display: block;
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  color: var(--color-gold);
+}
+.bookcard__mode span {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--color-muted);
+}
 /* date + guests */
 .bookcard__fields { display: grid; gap: 0.6rem; margin: 0 0 1.1rem; }
 /* CTA full-width + panah */

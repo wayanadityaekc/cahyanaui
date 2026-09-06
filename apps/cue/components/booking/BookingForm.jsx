@@ -29,11 +29,6 @@ const PEOPLE_ICON = (
     <circle cx="12" cy="8" r="3.2" /><path d="M5 20c0-3.4 3.1-5.2 7-5.2s7 1.8 7 5.2" />
   </svg>
 );
-const SPARK_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 3l1.8 4.9L18.5 9l-4.7 1.1L12 15l-1.8-4.9L5.5 9l4.7-1.1z" /><path d="M18 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" />
-  </svg>
-);
 const SHIELD_ICON = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" />
@@ -77,13 +72,6 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const display = band ? band.display : transferEntry ? transferEntry.display : null;
   const priceText = fmt(display);
 
-  const stdDisplay = entry ? entry.standard.display : null;
-  const exlDisplay = entry && entry.exclusive ? entry.exclusive.display : null;
-  const upsellDelta = exlDisplay != null && stdDisplay != null ? exlDisplay - stdDisplay : null;
-  const upsellSub =
-    upsellDelta != null && upsellDelta > 0
-      ? `+${fmt(upsellDelta)} · all entrance tickets prepaid`
-      : `${fmt(exlDisplay)} · all entrance tickets prepaid`;
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
   const unit = perPerson ? 'per person' : 'per car';
@@ -139,15 +127,17 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           </div>
         )}
 
-        {hasExclusive && mode === 'standard' && exlDisplay != null && (
-          <button type="button" className="bookcard__upsell" onClick={() => setMode('exclusive')}>
-            <span className="bookcard__upsell-ic" aria-hidden="true">{SPARK_ICON}</span>
-            <span className="bookcard__upsell-txt">
+        {hasExclusive && (
+          <div className="bookcard__modes">
+            <div className={`bookcard__mode${mode === 'standard' ? ' is-active' : ''}`}>
+              <b>Standard</b>
+              <span>Private car, driver &amp; fuel. Entrance tickets paid as you go.</span>
+            </div>
+            <div className={`bookcard__mode${mode === 'exclusive' ? ' is-active' : ''}`}>
               <b>Exclusive</b>
-              <span>{upsellSub}</span>
-            </span>
-            <span className="bookcard__upsell-arr" aria-hidden="true">&rsaquo;</span>
-          </button>
+              <span>Everything in Standard, plus all entrance tickets prepaid.</span>
+            </div>
+          </div>
         )}
 
         <div className="bookcard__fields">

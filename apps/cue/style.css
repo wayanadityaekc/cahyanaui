@@ -10238,6 +10238,17 @@ strong {
 }
 .lhead .section__title::after { left: 50%; transform: translateX(-50%); } /* underline di tengah */
 
+/* Header All Programs - independen dari .lhead listing (yang sekarang di-hide di
+   HP & non-sticky). Judul + tab di tengah, kasih ruang atas biar gak ketutup
+   navbar fixed (halaman ini gak ada hero di atasnya). Tampil di desktop & HP. */
+.aphead { max-width: 1200px; margin: 0 auto 1.6rem; padding: 7rem var(--container-x) 0; text-align: center; }
+.aphead .section__title { margin-bottom: 1.4rem; }
+.aphead .zone-filter { justify-content: center; max-width: none; margin: 0 auto; }
+@media (max-width: 768px) {
+  .aphead { padding-top: 5.5rem; }
+  .aphead .zone-filter { justify-content: flex-start; }
+}
+
 /* Header row reviews: judul kiri + link kanan */
 .reviews__head {
   display: flex;

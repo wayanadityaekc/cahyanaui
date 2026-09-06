@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ExperienceCard from '@/components/cards/ExperienceCard';
+import ListingRow from '@/components/cards/ListingRow';
 import CharterSection from '@/components/sections/CharterSection';
 import TransferSection from '@/components/sections/TransferSection';
 import { LISTINGS } from '@/content/shared/listings';
@@ -23,7 +23,7 @@ export default function AllPrograms() {
   return (
     <div className="tourprog">
       <section className="experience experience--alt">
-        <div className="lhead">
+        <div className="aphead">
           <h1 className="section__title">All Programs</h1>
           <div className="zone-filter" role="tablist" aria-label="Program categories">
             {TABS.map((t) => (
@@ -45,9 +45,9 @@ export default function AllPrograms() {
         {tab === 'transfer' && <TransferSection />}
         {!isForm && (
           <section className="catsec">
-            <div className="experience__grid experience__grid--home4">
+            <div className="lrow-list">
               {flat(tab).map((c) => (
-                <ExperienceCard key={(c.href || '') + c.name} {...c} width={c.w} height={c.hgt} />
+                <ListingRow key={(c.href || '') + c.name} {...c} />
               ))}
             </div>
           </section>

@@ -173,7 +173,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
 
         <p className="bookcard__reassure">
           <span className="bookcard__reassure-ic" aria-hidden="true">{SHIELD_ICON}</span>
-          <span>Price updates automatically based on your selection.</span>
+          <span><b>Free cancellation</b> up to 24h · Pay after your trip</span>
         </p>
       </div>
     </section>

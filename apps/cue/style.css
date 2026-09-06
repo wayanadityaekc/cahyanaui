@@ -4065,30 +4065,26 @@ a.footer__contact-item:hover {
   color: var(--color-green);
   border-bottom-color: var(--color-gold);
 }
-.dtabs__panel {
+/* Semua section ditumpuk jadi satu halaman scroll; tab = jump-nav (scrollspy) */
+.dtabs__sec {
   padding-top: 1.5rem;
-  animation: dtabFade var(--dur) var(--ease-out);
+  scroll-margin-top: 120px; /* cadangan kalau anchor dipakai langsung */
 }
-@keyframes dtabFade {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.dtabs__sec + .dtabs__sec {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--line);
 }
-@media (prefers-reduced-motion: reduce) {
-  .dtabs__panel {
-    animation: none;
-  }
+.dtabs__sec-h {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  color: var(--color-gold);
+  margin: 0 0 1rem;
 }
-/* stops di dalam tab: buang padding section (spacing diurus tab) */
-.dtabs__panel .stops {
+/* stops di dalam section: buang padding section (spacing diurus wrapper) */
+.dtabs__sec .stops {
   padding: 0;
 }
-.dtabs__panel .stop {
+.dtabs__sec .stop {
   max-width: none;
 }
 /* Details tab - grid fakta (Duration/Price/Availability/Pick-up) */

@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 
-// Facts grid (Details tab) - Duration / Availability / Pick-up etc. The Price
-// fact is dropped on purpose: the live, currency-correct price is shown in the
-// booking bar and form, and the hardcoded price string here is stale (some are
-// even merged with the pick-up value in the source data).
+// Facts grid (Details) - Duration / Availability / Pick-up etc. The Price fact is
+// dropped on purpose: the live, currency-correct price shows in the booking bar
+// and form, and the hardcoded fact price is stale (some are merged with the
+// pick-up value in the source data).
 function FactsGrid({ facts }) {
   const rows = facts.filter((f) => !/^price/i.test(f.label));
   if (!rows.length) return null;
@@ -22,7 +22,7 @@ function FactsGrid({ facts }) {
   );
 }
 
-// Included / excluded lists (Included tab) - reuses the site-wide radio bullet lists.
+// Included / excluded lists - reuses the site-wide radio bullet lists.
 function Inclusions({ included, excluded }) {
   return (
     <div className="dincl">
@@ -46,33 +46,34 @@ function Inclusions({ included, excluded }) {
   );
 }
 
-// Detail page tabs (Overview / Details / Included / Reviews). Clicking a tab
-// swaps the panel in place and scrolls so the sticky tab strip pins right under
-// the fixed header - it reads like a page change without a reload. Every panel
-// is rendered into the static HTML (just hidden), so search engines index it all.
+// Detail page sections (Overview / Details / Included / Reviews). Everything is
+// on one scrollable page - the sections are stacked and always visible - and the
+// sticky tab strip is a jump nav: clicking a tab scrolls to its section, and the
+// active tab follows the section currently in view (scrollspy).
 export default function DetailTabs({ overview, facts, included, excluded, reviewService }) {
   const detailFacts = (facts || []).filter((f) => !/^price/i.test(f.label));
-  const tabs = [{ id: 'overview', label: 'Overview', content: overview }];
-  if (detailFacts.length) tabs.push({ id: 'details', label: 'Details', content: <FactsGrid facts={facts} /> });
+  const sections = [{ id: 'overview', label: 'Overview', content: overview }];
+  if (detailFacts.length) sections.push({ id: 'details', label: 'Details', content: <FactsGrid facts={facts} /> });
   if ((included && included.length) || (excluded && excluded.length)) {
-    tabs.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
+    sections.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
   }
-  tabs.push({
+  sections.push({
     id: 'reviews',
     label: 'Reviews',
     content: <ReviewsStrip service={reviewService} emptyText="No reviews yet for this program - be the first to share your trip." emptyCta />,
   });
 
-  const [active, setActive] = useState(tabs[0].id);
-  const wrapRef = useRef(null);
+  const [active, setActive] = useState(sections[0].id);
   const stripRef = useRef(null);
+  const secRefs = useRef({});
 
-  // Pin the sticky strip right under the fixed header (navbar + promo bar). The
-  // header height changes when the promo bar is on/off, so measure it live.
   const headerH = () => {
     const h = document.querySelector('.navbar');
     return h ? h.getBoundingClientRect().height : 0;
   };
+  const pinOffset = () => headerH() + (stripRef.current ? stripRef.current.offsetHeight : 0);
+
+  // Pin the sticky strip right under the fixed header (navbar + promo bar).
   useEffect(() => {
     const apply = () => { if (stripRef.current) stripRef.current.style.top = `${headerH()}px`; };
     apply();
@@ -80,43 +81,56 @@ export default function DetailTabs({ overview, facts, included, excluded, review
     return () => window.removeEventListener('resize', apply);
   }, []);
 
+  // Scrollspy: highlight the tab whose section is currently under the strip.
+  useEffect(() => {
+    const ids = sections.map((s) => s.id);
+    const onScroll = () => {
+      const line = pinOffset() + 12;
+      let cur = ids[0];
+      ids.forEach((id) => {
+        const el = secRefs.current[id];
+        if (el && el.getBoundingClientRect().top <= line) cur = id;
+      });
+      setActive(cur);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const pick = (id) => {
-    setActive(id);
-    const wrap = wrapRef.current;
-    if (!wrap) return;
-    const top = wrap.getBoundingClientRect().top + window.scrollY - headerH();
+    const el = secRefs.current[id];
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - pinOffset() - 8;
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
   return (
-    <div className="dtabs" ref={wrapRef}>
-      <div className="dtabs__strip" ref={stripRef} role="tablist" aria-label="Program information">
-        {tabs.map((t) => (
+    <div className="dtabs">
+      <div className="dtabs__strip" ref={stripRef} role="tablist" aria-label="Jump to section">
+        {sections.map((s) => (
           <button
-            key={t.id}
+            key={s.id}
             type="button"
-            role="tab"
-            id={`dtab-${t.id}`}
-            aria-selected={active === t.id}
-            aria-controls={`dpanel-${t.id}`}
-            className={`dtabs__tab${active === t.id ? ' is-on' : ''}`}
-            onClick={() => pick(t.id)}
+            aria-current={active === s.id}
+            className={`dtabs__tab${active === s.id ? ' is-on' : ''}`}
+            onClick={() => pick(s.id)}
           >
-            {t.label}
+            {s.label}
           </button>
         ))}
       </div>
-      {tabs.map((t) => (
-        <div
-          key={t.id}
-          id={`dpanel-${t.id}`}
-          role="tabpanel"
-          aria-labelledby={`dtab-${t.id}`}
-          className="dtabs__panel"
-          hidden={active !== t.id}
+      {sections.map((s) => (
+        <section
+          key={s.id}
+          id={`dsec-${s.id}`}
+          ref={(el) => { secRefs.current[s.id] = el; }}
+          className="dtabs__sec"
         >
-          {t.content}
-        </div>
+          <h2 className="dtabs__sec-h">{s.label}</h2>
+          {s.content}
+        </section>
       ))}
     </div>
   );

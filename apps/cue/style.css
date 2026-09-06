@@ -2104,36 +2104,34 @@ a.tripbar--promo {
 .bookcard__toggle { margin: 0 0 0.9rem; padding: 4px; }
 .bookcard__toggle .booking__type-btn { padding: 0.5rem 0.5rem; font-size: var(--fs-small); }
 .bookcard__toggle .booking__type-btn.is-active { background-color: var(--color-cta); }
-/* Modes explainer box - jelasin beda Standard vs Exclusive di dalam kartu
-   (gantiin upsell), baris mode yang aktif di-highlight. */
-.bookcard__modes {
+/* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
+   Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
+   key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */
+.bookcard__note {
   margin: 0 0 0.9rem;
+  padding: 0.7rem 0.85rem;
   border: 1px solid var(--line);
+  border-left: 3px solid var(--color-cta);
   border-radius: var(--r-md);
-  overflow: hidden;
-}
-.bookcard__mode {
-  padding: 0.6rem 0.8rem;
-  border-left: 3px solid transparent;
-  transition: background var(--dur) ease, border-color var(--dur) ease;
-}
-.bookcard__mode + .bookcard__mode { border-top: 1px solid var(--line); }
-.bookcard__mode.is-active {
   background: var(--color-cream);
-  border-left-color: var(--color-cta);
+  animation: bookcardNoteIn var(--dur) var(--ease);
 }
-.bookcard__mode b {
+.bookcard__note b {
   display: block;
   font-size: var(--fs-strong);
   font-weight: 600;
   color: var(--color-gold);
 }
-.bookcard__mode span {
+.bookcard__note span {
   display: block;
   margin-top: 0.1rem;
   font-size: var(--fs-small);
   line-height: 1.4;
   color: var(--color-muted);
+}
+@keyframes bookcardNoteIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: none; }
 }
 /* date + guests */
 .bookcard__fields { display: grid; gap: 0.6rem; margin: 0 0 1.1rem; }

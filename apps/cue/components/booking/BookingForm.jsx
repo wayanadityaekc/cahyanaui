@@ -17,6 +17,11 @@ const SERVICE_TYPES = [
 
 const CATEGORY_OF = { tour: ['tour', 'combo'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
 
+const MODE_INFO = {
+  standard: { label: 'Standard', desc: 'Private car, driver & fuel. Entrance tickets paid as you go.' },
+  exclusive: { label: 'Exclusive', desc: 'Everything in Standard, plus all entrance tickets prepaid.' },
+};
+
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const CAL_ICON = (
@@ -128,15 +133,9 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         )}
 
         {hasExclusive && (
-          <div className="bookcard__modes">
-            <div className={`bookcard__mode${mode === 'standard' ? ' is-active' : ''}`}>
-              <b>Standard</b>
-              <span>Private car, driver &amp; fuel. Entrance tickets paid as you go.</span>
-            </div>
-            <div className={`bookcard__mode${mode === 'exclusive' ? ' is-active' : ''}`}>
-              <b>Exclusive</b>
-              <span>Everything in Standard, plus all entrance tickets prepaid.</span>
-            </div>
+          <div className="bookcard__note" key={mode}>
+            <b>{MODE_INFO[mode].label}</b>
+            <span>{MODE_INFO[mode].desc}</span>
           </div>
         )}
 

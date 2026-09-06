@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
-import Price from '@/components/Price';
-import { usePricing } from '@/state/PricingProvider';
-import { useBookMode } from '@/state/BookModeProvider';
 
 // Options (was "Details") - the two ways every program can be booked. This
 // replaces a facts grid that just repeated the hero hooks; the choice between
@@ -25,49 +22,29 @@ function TicketIcon() {
   );
 }
 
-// Two package cards that double as a selector: clicking one sets the shared
-// Standard/Exclusive mode, which the booking form's toggle reads (and vice
-// versa). Exclusive is disabled once we know an item has no exclusive option.
-function Packages({ item }) {
-  const shared = useBookMode();
-  const pricing = usePricing();
-  const entry = pricing && pricing.lookup ? pricing.lookup(item) : null;
-  const noExclusive = !!(entry && !entry.hasExclusive);
-  const mode = shared ? shared.mode : 'standard';
-  const pick = (m) => shared && shared.setMode(m);
-
+// Informational cards: the two ways every program can be booked. Choosing the
+// actual mode happens in the booking form's Standard/Exclusive toggle - these
+// cards just explain the difference.
+function Packages() {
   return (
     <div className="dpkg">
-      <p className="dpkg__lead">Every program comes two ways - tap to choose, or switch it in the booking box.</p>
+      <p className="dpkg__lead">Every program comes two ways - choose Standard or Exclusive in the booking box.</p>
       <div className="dpkg__grid">
-        <button
-          type="button"
-          className={`dpkg__card${mode === 'standard' ? ' is-sel' : ''}`}
-          aria-pressed={mode === 'standard'}
-          onClick={() => pick('standard')}
-        >
-          <span className="dpkg__top">
+        <div className="dpkg__card">
+          <div className="dpkg__top">
             <span className="dpkg__ic"><CarIcon /></span>
             <span className="dpkg__name">Standard</span>
-          </span>
-          <span className="dpkg__desc">Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.</span>
-          <span className="dpkg__price"><small>from</small> <Price name={item} mode="standard" className="dpkg__amt" /></span>
-        </button>
-        <button
-          type="button"
-          className={`dpkg__card dpkg__card--feat${mode === 'exclusive' ? ' is-sel' : ''}${noExclusive ? ' is-off' : ''}`}
-          aria-pressed={mode === 'exclusive'}
-          disabled={noExclusive}
-          onClick={() => pick('exclusive')}
-        >
-          <span className="dpkg__badge">{noExclusive ? 'Not available' : 'Tickets included'}</span>
-          <span className="dpkg__top">
+          </div>
+          <p className="dpkg__desc">Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.</p>
+        </div>
+        <div className="dpkg__card dpkg__card--feat">
+          <span className="dpkg__badge">Tickets included</span>
+          <div className="dpkg__top">
             <span className="dpkg__ic dpkg__ic--feat"><TicketIcon /></span>
             <span className="dpkg__name">Exclusive</span>
-          </span>
-          <span className="dpkg__desc">The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.</span>
-          <span className="dpkg__price"><small>from</small> <Price name={item} mode="exclusive" className="dpkg__amt" /></span>
-        </button>
+          </div>
+          <p className="dpkg__desc">The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.</p>
+        </div>
       </div>
     </div>
   );
@@ -103,7 +80,7 @@ function Inclusions({ included, excluded }) {
 // active tab follows the section currently in view (scrollspy).
 export default function DetailTabs({ overview, priceItem, included, excluded, reviewService }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
-  if (priceItem) sections.push({ id: 'options', label: 'Options', content: <Packages item={priceItem} /> });
+  if (priceItem) sections.push({ id: 'options', label: 'Options', content: <Packages /> });
   if ((included && included.length) || (excluded && excluded.length)) {
     sections.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
   }

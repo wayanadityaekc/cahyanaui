@@ -4103,44 +4103,13 @@ a.footer__contact-item:hover {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  width: 100%;
-  padding: 1.3rem 1.3rem 1.1rem;
+  padding: 1.3rem 1.3rem 1.2rem;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-md);
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.dpkg__card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-}
-/* status terpilih: ring hijau (sinkron sama toggle di booking form) */
-.dpkg__card.is-sel {
-  border-color: var(--color-cta);
-  box-shadow: 0 0 0 2px rgba(61, 92, 70, 0.22), var(--shadow-md);
-}
-.dpkg__card.is-sel:hover {
-  box-shadow: 0 0 0 2px rgba(61, 92, 70, 0.22), var(--shadow-lg);
-}
-/* Exclusive nggak tersedia buat item ini */
-.dpkg__card.is-off {
-  opacity: 0.5;
-  cursor: default;
-  box-shadow: none;
-}
-.dpkg__card.is-off:hover {
-  transform: none;
-  box-shadow: none;
-}
-.dpkg__card.is-off .dpkg__badge {
-  background: var(--color-muted);
-}
-/* Exclusive = kartu unggulan: aksen amber + tint tipis + elevasi lebih */
+/* Exclusive = kartu unggulan: aksen amber + tint tipis */
 .dpkg__card--feat {
   border-color: var(--color-amber);
   background: linear-gradient(180deg, rgba(201, 164, 92, 0.06), #fff 60%);
@@ -4192,25 +4161,6 @@ a.footer__contact-item:hover {
   line-height: 1.45;
   color: var(--color-green);
   margin: 0;
-}
-.dpkg__price {
-  margin-top: auto;
-  display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  padding-top: 0.4rem;
-  border-top: 1px solid var(--line);
-}
-.dpkg__price small {
-  font-size: var(--fs-label);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.dpkg__amt {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--color-amber);
 }
 @media (max-width: 560px) {
   .dpkg__grid {

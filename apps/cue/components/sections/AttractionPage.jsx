@@ -7,11 +7,10 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
-import { BookModeProvider } from '@/state/BookModeProvider';
 
 export default function AttractionPage({ data }) {
   return (
-    <BookModeProvider>
+    <>
       <JsonLd page={data.__page} />
       <section className="tour-hero">
         {data.heroSlides && data.heroSlides.length > 1 ? (
@@ -85,6 +84,6 @@ export default function AttractionPage({ data }) {
           )}
         </nav>
       )}
-    </BookModeProvider>
+    </>
   );
 }

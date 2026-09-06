@@ -4115,6 +4115,11 @@ a.footer__contact-item:hover {
   width: var(--icon-sm);
   height: var(--icon-sm);
 }
+/* Exclusive = aksen amber (gold beneran) biar kebedain dari Standard */
+.dgtk__ic--feat {
+  background: linear-gradient(135deg, var(--color-amber), var(--color-amber-d));
+  color: #fff;
+}
 .dgtk__h {
   display: block;
   font-size: var(--fs-strong);
@@ -4129,86 +4134,6 @@ a.footer__contact-item:hover {
   margin: 0;
 }
 
-/* Details tab - dua paket: Standard vs Exclusive (info) */
-.dpkg__lead {
-  font-size: var(--fs-body);
-  color: var(--color-green);
-  margin: 0 0 1.1rem;
-}
-.dpkg__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-.dpkg__card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  padding: 1.3rem 1.3rem 1.2rem;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
-}
-/* Exclusive = kartu unggulan: aksen amber + tint tipis */
-.dpkg__card--feat {
-  border-color: var(--color-amber);
-  background: linear-gradient(180deg, rgba(201, 164, 92, 0.06), #fff 60%);
-  box-shadow: var(--shadow-lg);
-}
-.dpkg__badge {
-  position: absolute;
-  top: 0.9rem;
-  right: 0.9rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--r-pill);
-  background: var(--color-amber);
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.dpkg__top {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-.dpkg__ic {
-  display: grid;
-  place-items: center;
-  width: 2.3rem;
-  height: 2.3rem;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  background: var(--color-gold);
-  color: #fff;
-}
-.dpkg__ic svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-.dpkg__ic--feat {
-  background: linear-gradient(135deg, var(--color-amber), var(--color-amber-d));
-}
-.dpkg__name {
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  color: var(--color-gold);
-}
-.dpkg__desc {
-  display: block;
-  font-size: var(--fs-small);
-  line-height: 1.45;
-  color: var(--color-green);
-  margin: 0;
-}
-@media (max-width: 560px) {
-  .dpkg__grid {
-    grid-template-columns: 1fr;
-  }
-}
 /* Included tab - reuse .info__list radio bullets */
 .dincl__h {
   font-size: var(--fs-label);

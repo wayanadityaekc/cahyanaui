@@ -54,11 +54,13 @@ function CardIcon() {
   );
 }
 
-// "Before you go" - practical, generic-but-real notes that hold for every day
-// tour (pick-up, what to bring, things to note, payment). Deliberately not
-// per-tour specifics, so nothing here is invented.
+// Details - the two booking options plus practical, generic-but-real notes that
+// hold for every day tour (pick-up, what to bring, things to note, payment), all
+// in one list. Deliberately not per-tour specifics, so nothing here is invented.
 function GoodToKnow() {
   const rows = [
+    { ic: <CarIcon />, h: 'Standard', t: 'Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.' },
+    { ic: <TicketIcon />, h: 'Exclusive', t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.', feat: true },
     { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
     { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.' },
     { ic: <InfoIcon />, h: 'Good to know', t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.' },
@@ -68,7 +70,7 @@ function GoodToKnow() {
     <ul className="dgtk">
       {rows.map((r) => (
         <li key={r.h}>
-          <span className="dgtk__ic">{r.ic}</span>
+          <span className={`dgtk__ic${r.feat ? ' dgtk__ic--feat' : ''}`}>{r.ic}</span>
           <div>
             <span className="dgtk__h">{r.h}</span>
             <p className="dgtk__t">{r.t}</p>
@@ -76,31 +78,6 @@ function GoodToKnow() {
         </li>
       ))}
     </ul>
-  );
-}
-
-function Packages() {
-  return (
-    <div className="dpkg">
-      <p className="dpkg__lead">Every program comes two ways - choose Standard or Exclusive in the booking box.</p>
-      <div className="dpkg__grid">
-        <div className="dpkg__card">
-          <div className="dpkg__top">
-            <span className="dpkg__ic"><CarIcon /></span>
-            <span className="dpkg__name">Standard</span>
-          </div>
-          <p className="dpkg__desc">Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.</p>
-        </div>
-        <div className="dpkg__card dpkg__card--feat">
-          <span className="dpkg__badge">Tickets included</span>
-          <div className="dpkg__top">
-            <span className="dpkg__ic dpkg__ic--feat"><TicketIcon /></span>
-            <span className="dpkg__name">Exclusive</span>
-          </div>
-          <p className="dpkg__desc">The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.</p>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -138,12 +115,7 @@ export default function DetailTabs({ overview, priceItem, included, excluded, re
     sections.push({
       id: 'details',
       label: 'Details',
-      content: (
-        <>
-          <GoodToKnow />
-          <Packages />
-        </>
-      ),
+      content: <GoodToKnow />,
     });
   }
   if ((included && included.length) || (excluded && excluded.length)) {

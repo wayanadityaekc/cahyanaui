@@ -9309,8 +9309,11 @@ strong {
    ngambang. Sidebar tetep di kanan. Mobile TIDAK kena (udah 1 kolom + tabbar). */
 @media (min-width: 993px) {
   .company-page {
-    background: var(--color-cream);
-    /* clearance navbar + tripbar + gutter kiri/kanan (cream jadi latar) */
+    /* Latar sengaja lebih DALAM dari cream (#f8f8f8) - kalau cream, panel putih
+       nyaris gak kebedain (kontras tipis) & "cekung"-nya gak kebaca. Warna ini
+       (off-white lebih tua) bikin panel konten jelas nongol. */
+    background: #efebe2;
+    /* clearance navbar + tripbar + gutter kiri/kanan */
     padding: calc(var(--header-h, 104px) + 0.6rem) var(--container-x) var(--space-5);
   }
   .company-layout {
@@ -9318,12 +9321,13 @@ strong {
     margin: 0 auto;
     padding: 0;
   }
-  /* HANYA konten utama yang jadi "cekungan" putih inset. */
+  /* HANYA konten utama yang jadi "cekungan" putih - lift green-tint (pola brand)
+     biar jelas ngangkat dari latar & konten kebaca duduk di DALAM panel. */
   .company-main {
     background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--r-xl);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 26px rgba(31, 61, 43, 0.1);
     padding: 2rem clamp(1.6rem, 2.5vw, 2.4rem) 2.4rem;
   }
   /* Sidebar = kartu terpisah di kanan, di LUAR cekungan (pola booking form

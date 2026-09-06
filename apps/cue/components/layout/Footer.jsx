@@ -1,4 +1,5 @@
 import { WHATSAPP_NUMBER } from '@/lib/constants';
+import { REGISTRATION as R } from '@/content/shared/registration';
 
 const EXPLORE = [
   ['/tour.html', 'Tours'],
@@ -98,6 +99,15 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer__bottom">
+        <p className="footer__reg">
+          <svg className="footer__reg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" />
+          </svg>
+          <span>
+            <b>{R.name}</b> · {R.type} · Ministry of Law{' '}
+            <a href={R.verifyUrl} target="_blank" rel="noopener">{R.decreeShort}</a> · NIB {R.nib}
+          </span>
+        </p>
         <p>&copy; 2026 Cahyana Ubud Experience. All rights reserved.</p>
       </div>
     </footer>

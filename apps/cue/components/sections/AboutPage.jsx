@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import DriverCard from '@/components/cards/DriverCard';
 import Modal from '@/components/ui/Modal';
+import RegistrationBlock from '@/components/sections/RegistrationBlock';
 import { ABOUT } from '@/content/shared/about';
 
 export default function AboutPage() {
@@ -79,6 +80,8 @@ export default function AboutPage() {
           </section>
         ))}
       </div>
+
+      <RegistrationBlock />
 
       <Modal open={!!driver} onClose={() => setDriver(null)} title={driver ? driver.name : ''}>
         {driver && (

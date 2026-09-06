@@ -3277,6 +3277,123 @@ a.footer__contact-item:hover {
   text-align: center;
   opacity: 0.7;
 }
+/* Registrasi usaha - baris ringkas di footer (semua halaman) */
+.footer__reg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0 0 0.6rem;
+}
+.footer__reg-ic {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: var(--color-amber);
+}
+.footer__reg b {
+  font-weight: 600;
+}
+.footer__reg a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Registrasi usaha - blok trust di halaman About */
+.reg-sec {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--container-x) var(--section-gap);
+}
+.reg {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.4rem 1.5rem;
+}
+.reg__head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.reg__seal {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--color-gold);
+  color: #fff;
+}
+.reg__seal svg {
+  width: var(--icon-md);
+  height: var(--icon-md);
+}
+.reg__name {
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  color: var(--color-gold);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.reg__type {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-top: 0.15rem;
+}
+.reg__rows {
+  margin: 1rem 0 0;
+}
+.reg__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+.reg__row + .reg__row {
+  border-top: 1px dashed var(--line);
+}
+.reg__k {
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.reg__v {
+  margin: 0;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--color-amber);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.reg__verify {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  font-size: var(--fs-small);
+  color: var(--color-green);
+}
+.reg__verify svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  color: var(--color-ok);
+}
+.reg__verify a {
+  color: var(--color-cta);
+  font-weight: 600;
+  text-decoration: none;
+}
 
 /* Booking modal */
 .modal {

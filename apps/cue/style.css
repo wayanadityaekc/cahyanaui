@@ -9296,6 +9296,31 @@ strong {
   content: none;
 }
 
+/* Desktop: konten Our Company duduk di "sheet" putih inset - pola halaman
+   attraction (.tour-layout--book). Background halaman cream biar sheet kebaca &
+   ruang kosong di kanan (sidebar pendek) jadi napas DALAM panel, bukan halaman
+   ngambang. Sidebar tetep di kanan. Mobile TIDAK kena (udah 1 kolom + tabbar). */
+@media (min-width: 993px) {
+  .company-page {
+    background: var(--color-cream);
+  }
+  .company-layout {
+    max-width: 1180px;
+    margin: calc(var(--header-h, 104px) + 0.4rem) auto var(--space-5);
+    padding: 2.2rem clamp(1.6rem, 2.5vw, 2.6rem) 2.8rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-md);
+  }
+  /* nav sekarang di DALAM sheet putih: buang shadow (biar gak kartu-dalam-kartu),
+     kasih tint cream tipis biar tetep kebedain dari sheet. */
+  .company-nav {
+    background: var(--color-cream);
+    box-shadow: none;
+  }
+}
+
 /* Floating section switcher (HP only) - satu pill ngambang di bawah layar,
    isinya nama tab aktif + panah kiri/kanan buat gonta-ganti section. Ganti
    tab strip lama (dulu sticky di atas, numpuk sama navbar+tripbar jadi 3 bar

@@ -54,7 +54,7 @@ export default function AttractionPage({ data }) {
             ))}
           </div>
         )}
-        facts={data.facts}
+        priceItem={data.bookItem}
         included={data.included}
         excluded={data.excluded}
         reviewService={data.title}

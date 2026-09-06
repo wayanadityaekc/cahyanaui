@@ -4087,36 +4087,62 @@ a.footer__contact-item:hover {
 .dtabs__sec .stop {
   max-width: none;
 }
-/* Details tab - grid fakta (Duration/Price/Availability/Pick-up) */
-.dfacts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  overflow: hidden;
+/* Options tab - dua paket: Standard vs Exclusive (harga live) */
+.dpkg__lead {
+  font-size: var(--fs-body);
+  color: var(--color-green);
+  margin: 0 0 1rem;
 }
-.dfacts li {
-  background: #fff;
-  padding: 0.9rem 1rem;
+.dpkg__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+.dpkg__card {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
 }
-.dfacts__k {
-  font-size: var(--fs-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-muted);
+.dpkg__card--feat {
+  border-color: var(--color-amber);
 }
-.dfacts__v {
+.dpkg__name {
   font-size: var(--fs-strong);
   font-weight: 600;
   color: var(--color-gold);
+}
+.dpkg__desc {
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--color-green);
+  margin: 0;
+}
+.dpkg__price {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding-top: 0.2rem;
+}
+.dpkg__price small {
+  font-size: var(--fs-label);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.dpkg__amt {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-amber);
+}
+@media (max-width: 560px) {
+  .dpkg__grid {
+    grid-template-columns: 1fr;
+  }
 }
 /* Included tab - reuse .info__list radio bullets */
 .dincl__h {

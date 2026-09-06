@@ -2,23 +2,29 @@
 
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
+import Price from '@/components/Price';
 
-// Facts grid (Details) - Duration / Availability / Pick-up etc. The Price fact is
-// dropped on purpose: the live, currency-correct price shows in the booking bar
-// and form, and the hardcoded fact price is stale (some are merged with the
-// pick-up value in the source data).
-function FactsGrid({ facts }) {
-  const rows = facts.filter((f) => !/^price/i.test(f.label));
-  if (!rows.length) return null;
+// Options (was "Details") - the two ways every program can be booked. This
+// replaces a facts grid that just repeated the hero hooks; the choice between
+// Standard and Exclusive is the genuinely useful, page-specific decision. Prices
+// are live and currency-correct (Price component), not hardcoded.
+function Packages({ item }) {
   return (
-    <ul className="dfacts">
-      {rows.map((f) => (
-        <li key={f.label}>
-          <span className="dfacts__k">{f.label}</span>
-          <span className="dfacts__v">{f.value}</span>
-        </li>
-      ))}
-    </ul>
+    <div className="dpkg">
+      <p className="dpkg__lead">Every program comes two ways - pick when you book.</p>
+      <div className="dpkg__grid">
+        <div className="dpkg__card">
+          <div className="dpkg__name">Standard</div>
+          <p className="dpkg__desc">Private car, driver and fuel. Entrance tickets aren&apos;t included - you pay them at each gate as you go.</p>
+          <div className="dpkg__price"><small>from</small> <Price name={item} mode="standard" className="dpkg__amt" /></div>
+        </div>
+        <div className="dpkg__card dpkg__card--feat">
+          <div className="dpkg__name">Exclusive</div>
+          <p className="dpkg__desc">The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.</p>
+          <div className="dpkg__price"><small>from</small> <Price name={item} mode="exclusive" className="dpkg__amt" /></div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -50,10 +56,9 @@ function Inclusions({ included, excluded }) {
 // on one scrollable page - the sections are stacked and always visible - and the
 // sticky tab strip is a jump nav: clicking a tab scrolls to its section, and the
 // active tab follows the section currently in view (scrollspy).
-export default function DetailTabs({ overview, facts, included, excluded, reviewService }) {
-  const detailFacts = (facts || []).filter((f) => !/^price/i.test(f.label));
+export default function DetailTabs({ overview, priceItem, included, excluded, reviewService }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
-  if (detailFacts.length) sections.push({ id: 'details', label: 'Details', content: <FactsGrid facts={facts} /> });
+  if (priceItem) sections.push({ id: 'options', label: 'Options', content: <Packages item={priceItem} /> });
   if ((included && included.length) || (excluded && excluded.length)) {
     sections.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
   }

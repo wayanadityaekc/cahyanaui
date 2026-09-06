@@ -6,6 +6,7 @@ import BookBar from '@/components/booking/BookBar';
 import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
+import DetailTabs from '@/components/sections/DetailTabs';
 
 export default function AttractionPage({ data }) {
   return (
@@ -34,29 +35,34 @@ export default function AttractionPage({ data }) {
 
       <div className={data.bookItem ? 'tour-layout tour-layout--book' : undefined}>
       <div className={data.bookItem ? 'tour-layout__main' : undefined}>
-      <section className="stops" id={data.stopsId}>
-        <h2 className="section__title">{data.stopsTitle}</h2>
-        {data.stops.map((s, i) => (
-          <article className="stop" key={i}>
-            {s.img && (
-              <div className="stop__image">
-                <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
-              </div>
-            )}
-            <div className="stop__body">
-              {s.num && <span className="stop__num">{s.num}</span>}
-              <h3 className="stop__name">{s.name}</h3>
-              <p className="stop__desc" dangerouslySetInnerHTML={{ __html: s.descHtml }} />
-            </div>
-          </article>
-        ))}
-      </section>
-
-      {data.infoHtml && <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />}
+      <DetailTabs
+        overview={(
+          <div className="stops" id={data.stopsId}>
+            {data.stops.map((s, i) => (
+              <article className="stop" key={i}>
+                {s.img && (
+                  <div className="stop__image">
+                    <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
+                  </div>
+                )}
+                <div className="stop__body">
+                  {s.num && <span className="stop__num">{s.num}</span>}
+                  <h3 className="stop__name">{s.name}</h3>
+                  <p className="stop__desc" dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+        facts={data.facts}
+        included={data.included}
+        excluded={data.excluded}
+        reviewService={data.title}
+      />
       </div>
       {data.bookItem && (
         <div className="tour-layout__side">
-          <BookSidebar item={data.bookItem} facts={data.facts} included={data.included} excluded={data.excluded} />
+          <BookSidebar item={data.bookItem} facts={data.facts} />
         </div>
       )}
       </div>

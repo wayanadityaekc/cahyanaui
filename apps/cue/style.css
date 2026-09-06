@@ -3778,81 +3778,6 @@ a.footer__contact-item:hover {
   height: var(--icon-sm);
   color: var(--color-muted);
 }
-/* Divider emas tipis + What's included (centang pakai warna teks, bukan hijau) */
-/* "What's included" trigger (bar bawah kartu) + panah */
-.booksidebar__incl-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: calc(100% - 2.8rem);
-  margin: 1.2rem 1.4rem 1.5rem;
-  padding: 1.2rem 0 0;
-  border: none;
-  border-top: 1px solid rgba(34, 32, 28, 0.4);
-  background: none;
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  color: var(--color-green);
-}
-.booksidebar__chev {
-  width: 9px;
-  height: 9px;
-  flex: 0 0 auto;
-  border-right: 2px solid var(--color-muted);
-  border-bottom: 2px solid var(--color-muted);
-  transform: rotate(-135deg); /* panah ke atas: "buka ke atas" */
-  transition: transform var(--dur) ease;
-}
-.booksidebar.incl-open .booksidebar__chev {
-  transform: rotate(45deg);
-}
-/* Panel slide-over: nutupin form pas dibuka (kartu tinggi tetap) */
-.booksidebar__panel {
-  position: absolute;
-  inset: 0;
-  z-index: 20; /* di atas form (.booking--sidebar z-index:10) biar nutupin penuh */
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem 1.4rem;
-  background: #fff;
-  transform: translateY(100%);
-  transition: transform var(--dur-slow) var(--ease);
-  overflow-y: auto;
-}
-.booksidebar.incl-open .booksidebar__panel {
-  transform: translateY(0);
-}
-.booksidebar__panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.9rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  color: var(--color-green);
-}
-.booksidebar__panel-close {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-muted);
-  padding: 0 0.2rem;
-}
-.booksidebar__panel .info__list li {
-  padding: 0.45rem 0 0.45rem 1.75rem;
-}
-.booksidebar__panel .info__list li[data-only="exclusive"] {
-  display: none;
-}
-.booksidebar__panel.is-exclusive .info__list li[data-only="exclusive"] {
-  display: list-item;
-}
-
 /* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
    pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */
 .tour-layout--book .tour-layout__main section.info {
@@ -4082,6 +4007,132 @@ a.footer__contact-item:hover {
 .highlight__btn:hover {
   background-color: var(--color-gold);
   color: #fff;
+}
+
+/* ===== Detail page tabs (Overview / Details / Included / Reviews) =====
+   Sticky underline tab strip di kolom konten halaman tour/attraction. Klik =
+   ganti panel di tempat + scroll biar strip nempel di bawah header (kerasa
+   pindah halaman, tanpa reload). Semua panel di-render ke HTML (cuma di-hidden),
+   jadi SEO aman. Gaya tab = samain .zone-chip (underline). */
+.dtabs {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.dtabs__strip {
+  display: flex;
+  gap: 1.6rem;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: sticky;
+  top: 0; /* JS set = tinggi header (navbar + promo) biar nempel pas */
+  z-index: 20;
+  background: #fff;
+}
+.dtabs__strip::-webkit-scrollbar {
+  display: none;
+}
+.dtabs__tab {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--color-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.9rem 0.15rem;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+.dtabs__tab:hover {
+  color: var(--color-green);
+}
+.dtabs__tab.is-on {
+  font-weight: 600;
+  color: var(--color-green);
+  border-bottom-color: var(--color-gold);
+}
+.dtabs__panel {
+  padding-top: 1.5rem;
+  animation: dtabFade var(--dur) var(--ease-out);
+}
+@keyframes dtabFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dtabs__panel {
+    animation: none;
+  }
+}
+/* stops di dalam tab: buang padding section (spacing diurus tab) */
+.dtabs__panel .stops {
+  padding: 0;
+}
+.dtabs__panel .stop {
+  max-width: none;
+}
+/* Details tab - grid fakta (Duration/Price/Availability/Pick-up) */
+.dfacts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.dfacts li {
+  background: #fff;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.dfacts__k {
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.dfacts__v {
+  font-size: var(--fs-strong);
+  font-weight: 600;
+  color: var(--color-gold);
+}
+/* Included tab - reuse .info__list radio bullets */
+.dincl__h {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin: 1.3rem 0 0.6rem;
+}
+.dincl__h:first-child {
+  margin-top: 0;
+}
+/* HP: rapetin biar 4 tab (Overview/Details/Included/Reviews) muat tanpa kepotong */
+@media (max-width: 560px) {
+  .dtabs {
+    padding: 0 1rem;
+  }
+  .dtabs__strip {
+    gap: 1.1rem;
+  }
 }
 
 /* Tour stops / detail rows - foto kiri, deskripsi kanan */

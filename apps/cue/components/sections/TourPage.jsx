@@ -6,6 +6,7 @@ import BookBar from '@/components/booking/BookBar';
 import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
+import DetailTabs from '@/components/sections/DetailTabs';
 
 function Stop({ s }) {
   const inner = (
@@ -58,22 +59,27 @@ export default function TourPage({ data }) {
 
       <div className={data.bookItem ? 'tour-layout tour-layout--book' : undefined}>
       <div className={data.bookItem ? 'tour-layout__main' : undefined}>
-      <section className="stops" id={data.stopsId}>
-        <h2 className="section__title">{data.stopsTitle}</h2>
-        {data.items.map((it, i) =>
-          it.type === 'sub' ? (
-            <h3 className="section__title section__title--sub" key={i}>{it.text}</h3>
-          ) : (
-            <Stop s={it} key={i} />
-          ),
+      <DetailTabs
+        overview={(
+          <div className="stops" id={data.stopsId}>
+            {data.items.map((it, i) =>
+              it.type === 'sub' ? (
+                <h3 className="section__title section__title--sub" key={i}>{it.text}</h3>
+              ) : (
+                <Stop s={it} key={i} />
+              ),
+            )}
+          </div>
         )}
-      </section>
-
-      {data.infoHtml && <section className="info" dangerouslySetInnerHTML={{ __html: data.infoHtml }} />}
+        facts={data.facts}
+        included={data.included}
+        excluded={data.excluded}
+        reviewService={data.title}
+      />
       </div>
       {data.bookItem && (
         <div className="tour-layout__side">
-          <BookSidebar item={data.bookItem} facts={data.facts} included={data.included} excluded={data.excluded} />
+          <BookSidebar item={data.bookItem} facts={data.facts} />
         </div>
       )}
       </div>

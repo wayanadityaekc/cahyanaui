@@ -28,8 +28,7 @@ function factOf(facts, prefix) {
   return f ? f.value : '';
 }
 
-export default function BookSidebar({ item, facts, included, excluded, perPerson = false }) {
-  const [open, setOpen] = useState(false);
+export default function BookSidebar({ item, facts, perPerson = false }) {
   const [ask, setAsk] = useState(null);
   const [pending, setPending] = useState(null);
   const [confirm, setConfirm] = useState(null);
@@ -80,32 +79,6 @@ export default function BookSidebar({ item, facts, included, excluded, perPerson
         <li>{PEOPLE}{capacity}</li>
         {pickup && <li>{PIN}{pickup} pick-up</li>}
       </ul>
-
-      {included && included.length > 0 && (
-        <>
-          <button type="button" className="booksidebar__incl-trigger" onClick={() => setOpen(true)}>
-            <span>What&apos;s included</span>
-            <span className="booksidebar__chev" />
-          </button>
-          <div className={`booksidebar__panel${open ? ' is-open' : ''}`}>
-            <div className="booksidebar__panel-head">
-              <span>What&apos;s included</span>
-              <button type="button" className="booksidebar__panel-close" aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
-            </div>
-            <ul className="info__list info__list--yes">
-              {included.map((it, i) => <li key={i}>{it}</li>)}
-            </ul>
-            {excluded && excluded.length > 0 && (
-              <>
-                <div className="booksidebar__panel-head"><span>What&apos;s excluded</span></div>
-                <ul className="info__list info__list--no">
-                  {excluded.map((it, i) => <li key={i}>{it}</li>)}
-                </ul>
-              </>
-            )}
-          </div>
-        </>
-      )}
 
       <DatePopup
         open={!!ask}

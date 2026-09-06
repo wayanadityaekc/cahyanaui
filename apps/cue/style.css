@@ -7731,9 +7731,19 @@ button.pick-cat {
   padding: calc(var(--nav-h, 57.6px) + 2.2rem) 0 3.5rem;
 }
 .mytrips__container {
-  width: min(960px, 92%);
+  /* Checkout-style column: narrow enough that each item's price sits next to
+     its title instead of floating far right on wide screens. */
+  width: min(680px, 92%);
   margin: 0 auto;
 }
+/* Cart action buttons (Add / Make Payment) share one full width for an even,
+   stacked rhythm - scoped to the cart so the shared .btn-pill stays inline
+   ("View all ...") everywhere else. Empty-state CTA stays auto-width. */
+[data-mytrips-cart] .btn-pill {
+  width: 100%;
+  margin-top: 1rem;
+}
+.mtc-empty .btn-pill { width: auto; margin-top: 0; }
 .mytrips__title {
   font-family: var(--font-head);
   font-weight: 500;
@@ -7997,7 +8007,7 @@ button.pick-cat {
   background: var(--color-cream);
   border-radius: var(--r-lg);
   padding: 1rem 1.2rem;
-  margin-top: 0.8rem;
+  margin-top: 1.4rem;
 }
 .mtc-total__label {
   font-weight: 500;

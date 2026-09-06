@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
+import { useBookMode } from '@/state/BookModeProvider';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
 import InfoPopover from '@/components/ui/InfoPopover';
@@ -26,7 +27,12 @@ export default function BookingForm({ presetItem = '', presetType = '', onBook, 
   const [type, setType] = useState(presetType || '');
   const [item, setItem] = useState(presetItem || '');
   const [date, setDate] = useState('');
-  const [mode, setMode] = useState('standard');
+  // Standard/Exclusive: shared with the Options cards on detail pages; falls back
+  // to local state when there's no BookModeProvider (e.g. the booking modal).
+  const sharedMode = useBookMode();
+  const [localMode, setLocalMode] = useState('standard');
+  const mode = sharedMode ? sharedMode.mode : localMode;
+  const setMode = sharedMode ? sharedMode.setMode : setLocalMode;
 
   const catalog = pricing && pricing.catalog;
 

@@ -6,11 +6,41 @@ consistent + the code structure clean**. Claude's role = propose and implement;
 When unsure, ask first (keep it short).
 
 ## Project
-- Static Bali tourism site — "Cahyana Ubud Experience" (https://cahyanaubudexperience.com)
-- Stack: plain HTML + CSS + vanilla JS. **No** framework, build step, or npm.
-- Deploy: Hostinger via GitHub (push = live).
+- Bali tourism site — "Cahyana Ubud Experience" (https://cahyanaubudexperience.com)
 - Core value prop: **trip planner + clear/upfront pricing**.
 - Sister site: villas live at ubudprivatevillas.com (separate — don't mix in).
+
+## Stack (CURRENT) — Next.js + React + Tailwind (hybrid)
+> **PENTING:** yang DI-DEPLOY sekarang = app **Next.js 16 + React 19** (static export
+> `out/`). Komponen di `components/` + `app/` (`.jsx`). CI: push `main` → build →
+> force-push `out/` ke branch `deploy` → Hostinger. **BUKAN lagi** "plain HTML + vanilla JS".
+> Bagian di bawah yang nyebut `script.js`, `partials/`, `?v=` bump, file `.html` = **situs
+> LAMA (legacy static)** — disimpen buat referensi/parity, TAPI yang live = React app.
+> `style.css` di-symlink ke `public/style.css`, di-serve dgn hash otomatis (gak perlu `?v=` manual).
+
+**Styling = Tailwind (migrasi Sep 2026, SELESAI sbg hybrid — standar industri):**
+- **Design token di `app/globals.css` `@theme`** — warna (`--color-gold/amber/cta/cream/...`),
+  radius (`--radius-sm..xl` → `rounded-sm..xl`), shadow, text (`--text-h2/body/...` → `text-h2`),
+  font. Nilai = mirror token `:root` di `style.css`. Ganti brand token → edit `@theme` + `:root` bareng.
+- **Utilities di-import UNLAYERED** (`@import "tailwindcss/utilities.css";` tanpa `layer()`).
+  WAJIB unlayered: reset `* { margin:0; padding:0 }` di `style.css` itu unlayered & selalu
+  menang atas `@layer` apa pun — jadi utility di layer bakal kalah (mis. padding ke-nol-in).
+  Unlayered = utility menang lewat specificity (`.px-6` 0,1,0 > `*` 0,0,0). **Jangan** balikin ke layer.
+- **Preflight OFF** (`style.css` reset yang jalan). Efek: `border` utility butuh warna eksplisit;
+  circle `50%` → pakai `rounded-[50%]` (bukan `rounded-full`); font-size only → `text-[1rem]`
+  (bukan `text-base`, itu bawa line-height).
+- **KOMPONEN = utility Tailwind** (kartu/band/tombol/section). Class string di komponen.
+- **LAYOUT ENGINE = tetap CSS scoped** (`.experience__grid*` di style.css — sengaja, lihat
+  komentar di file). Jangan convert layout engine multi-konteks ke `[&>*]` utility soup.
+- **`style.css` = sisa CSS lama + layout engine + reset.** Terus dikecilin pas komponen
+  di-convert; dead CSS udah dibersihin (pixel-diff before/after = 0).
+- **Verifikasi styling = headless computed-style diff / pixel-diff** (playwright-core di scratchpad,
+  `headless_shell` di `/opt/pw-browsers/`, serve `out/` via `node http`). Bandingin komputasi
+  gaya lama vs baru ATAU pixel before/after — JANGAN andelin mata doang (pernah kelewat beda 8px).
+- Komponen shared (Button/GuideCard/dst) WAJIB 100% identik di semua tempat pemakaian.
+
+## Legacy static site (di bawah = konteks lama, live = React)
+- Deploy lama: Hostinger via GitHub (push = live). Stack lama: plain HTML + CSS + vanilla JS.
 
 ## Working with Wayan
 - Language: **casual Indonesian**. Wayan is learning dev — explain concisely and clearly.

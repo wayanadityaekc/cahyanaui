@@ -2366,6 +2366,16 @@ a.tripbar--promo {
     scroll-padding-left: 1rem;
   }
 }
+/* ============================================================================
+   LAYOUT ENGINE — .experience__grid* (SENGAJA tetap CSS scoped, BUKAN Tailwind).
+   Keputusan Wayan (hybrid, standar industri): komponen = utility Tailwind, tapi
+   layout engine multi-konteks kayak grid ini TETAP CSS. 1 class, 3 kelakuan beda
+   per konteks: .xplore (HP geser / desktop wrap), .related (geser terus), .catsec
+   (wrap terus). Rule-nya SENGAJA nyebar (base + --home4/--slider/--auto + context
+   override + banyak breakpoint) - JANGAN di-convert ke [&>*] utility soup, itu
+   anti-pattern & bikin lebih susah dibaca. Kalau mau ubah layout kartu, edit di
+   sini (scoped CSS), bukan di className komponen React.
+   ============================================================================ */
 .experience__grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

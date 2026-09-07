@@ -9276,7 +9276,43 @@ strong {
 .company-page .about .lhero__sub { margin-left: 0; }
 .company-page .about-intro,
 .company-page .about .arows { max-width: none; margin: 0; padding: 0; }
-.company-page .about .ahero-card { max-width: none; margin: 0; }
+/* No box-in-box (Wayan, Sep 2026): satu-satunya kotak = cekungan .company-main.
+   Kartu intro (.ahero-card) & kartu registrasi (.reg) di dalamnya di-flat-in -
+   bg/border/shadow/radius/padding dilepas biar kontennya ngalir polos di dalam
+   cekungan, bukan kotak numpuk kotak. Strip fakta (.lbox__facts) TETAP - itu
+   elemen data kecil, bukan wrapper konten. */
+.company-page .about .ahero-card {
+  max-width: none;
+  margin: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.company-page .about-intro .ahero-card { margin-top: 0; }
+.company-page .reg-sec { max-width: none; margin: 0; padding: 0; }
+.company-page .reg {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.6rem 0 0;
+  border-top: 1px solid var(--line);
+}
+/* Card driver dikecilin di Our Company (kolom udah sempit karena sidebar) */
+.company-page .drivers-grid { gap: 1rem; }
+.company-page .driver-card {
+  flex: 0 0 158px;
+  padding: 1.1rem 0.9rem;
+}
+.company-page .driver-card__avatar {
+  width: 46px;
+  height: 46px;
+  margin-bottom: 0.6rem;
+  font-size: 1.15rem;
+}
+.company-page .driver-card__avatar svg { width: 24px; height: 24px; }
 /* Judul tab (About Us H1 / Terms-Privacy-Cancellation .company-heading / Contact
    H1) kepake 3 ukuran+bobot beda (40px, 18px/700, 18px/500) - gonta-ganti tab
    kerasa gak nyambung. Disamain semua ke satu treatment (18px/700/gold, punya
@@ -9312,8 +9348,8 @@ strong {
     /* Latar PUTIH. Yang jadi "cekungan" = panel KONTEN-nya (recessed ke dalam),
        bukan latarnya. */
     background: #fff;
-    /* clearance navbar + tripbar + gutter kiri/kanan */
-    padding: calc(var(--header-h, 104px) + 0.6rem) var(--container-x) var(--space-5);
+    /* clearance navbar + tripbar + jarak lega ke cekungan (Wayan minta ditambah) */
+    padding: calc(var(--header-h, 104px) + 1.9rem) var(--container-x) var(--space-5);
   }
   .company-layout {
     max-width: 1180px;
@@ -9352,8 +9388,8 @@ strong {
        page ikut horizontal-overflow. stretch = lebar penuh viewport. */
     align-items: stretch;
     gap: 0;
-    /* side padding = gutter cream di sisi panel putih */
-    padding: var(--header-h, 92px) var(--container-x) 6.5rem;
+    /* side padding = gutter di sisi panel; top = navbar + jarak ke cekungan */
+    padding: calc(var(--header-h, 92px) + 1.4rem) var(--container-x) 6.5rem;
   }
   /* Sidebar nav lama di-hide di HP - digantiin .company-tabbar ngambang. */
   .company-nav { display: none; }

@@ -31,7 +31,7 @@ export default function Home() {
       <Villas />
       <CharterHome />
       <About />
-      <Trust />
+      <Trust cream />
       <GuestReviews />
     </div>
   );

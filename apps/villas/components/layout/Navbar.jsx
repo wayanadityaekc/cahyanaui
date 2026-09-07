@@ -27,10 +27,7 @@ export default function Navbar() {
         <div className="container nav-wrap">
           <Link href="/" className="brand">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo.webp" alt="Cahyana Ubud-Bali" className="brand-logo" width="1005" height="324" />
-            <span className="brand-text">
-              <span className="brand-tag">Ubud Private Villas</span>
-            </span>
+            <img src="/images/logo.webp" alt="Cahyana Ubud-Bali · Ubud Private Villas" className="brand-logo" width="1005" height="324" />
           </Link>
 
           <nav className={`site-nav ${menuOpen ? 'open' : ''}`.trim()}>

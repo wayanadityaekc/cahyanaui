@@ -9344,6 +9344,8 @@ strong {
   display: none;
 }
 @media (max-width: 992px) {
+  /* HP juga: konten duduk di "cekung" putih (samain sama halaman attraction). */
+  .company-page { background: #efebe2; }
   .company-layout {
     flex-direction: column;
     /* align-items:flex-start (desktop) bikin nav & main shrink-to-fit ke konten -
@@ -9351,11 +9353,19 @@ strong {
        page ikut horizontal-overflow. stretch = lebar penuh viewport. */
     align-items: stretch;
     gap: 0;
-    padding: var(--header-h, 92px) 0 6.5rem;
+    /* side padding = gutter cream di sisi panel putih */
+    padding: var(--header-h, 92px) var(--container-x) 6.5rem;
   }
   /* Sidebar nav lama di-hide di HP - digantiin .company-tabbar ngambang. */
   .company-nav { display: none; }
-  .company-main { padding: 0 var(--container-x); min-width: 0; }
+  .company-main {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: 0 6px 20px rgba(31, 61, 43, 0.08);
+    padding: 1.4rem 1.2rem 1.8rem;
+  }
   .company-tabbar {
     display: flex;
     align-items: center;

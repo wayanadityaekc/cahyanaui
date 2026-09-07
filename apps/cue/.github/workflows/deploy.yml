@@ -27,16 +27,19 @@ jobs:
 
       - run: npm ci
 
-      - name: Verify every component class exists in style.css
-        run: node tools/check-classes.js
+      # RETIRED (Wayan, full Tailwind migration): the two legacy-parity gates
+      # below assumed style.css is the source of truth and out/ must match the
+      # legacy HTML class-for-class. Tailwind utilities live in @theme, not
+      # style.css, and change class counts by design - so these no longer apply.
+      # - name: Verify every component class exists in style.css
+      #   run: node tools/check-classes.js
+      # - name: Verify ported pages still match the originals
+      #   run: bash tools/diff-ported.sh
 
       - run: npm run build
 
       - name: Verify every expected URL was built
         run: node tools/check-urls.js
-
-      - name: Verify ported pages still match the originals
-        run: bash tools/diff-ported.sh
 
       - name: Verify structured data survived the port
         run: node tools/check-schema.js

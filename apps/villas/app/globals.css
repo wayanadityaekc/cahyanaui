@@ -182,7 +182,11 @@ h1, h2, h3 {
     top: 0;
     z-index: 100;
     background: #fff;
-    border-bottom: 1px solid var(--color-line);
+    box-shadow: 0 2px 12px rgba(28, 28, 28, 0.07);
+    animation: siteHeaderIn 0.4s ease-out;
+  }
+  @keyframes siteHeaderIn {
+    from { opacity: 0; }
   }
 
   .nav-wrap {
@@ -211,12 +215,11 @@ h1, h2, h3 {
     color: var(--color-grey);
   }
 
-  .nav-list { display: flex; align-items: center; gap: 30px; }
+  .nav-list { display: flex; align-items: center; gap: 24px; }
   .nav-list > li > a {
-    font-size: 0.74rem;
-    font-weight: 400;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
     color: var(--color-charcoal-soft);
     transition: color 0.2s ease;
   }

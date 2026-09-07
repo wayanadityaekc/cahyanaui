@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { PROMO } from '@/content/shared/promo';
 
 const TAG_ICON = (
@@ -10,6 +11,9 @@ const TAG_ICON = (
 );
 
 export default function TripBar({ mode = 'promo' }) {
+  const pathname = usePathname();
+  // Wayan: promo tripbar disembunyiin KHUSUS di halaman Our Company.
+  if (pathname === '/our-company' || pathname === '/our-company.html') return null;
   if (mode !== 'promo') return null;
   if (!PROMO.active || !PROMO.text) return null;
 

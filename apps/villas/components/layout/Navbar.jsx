@@ -26,9 +26,9 @@ export default function Navbar() {
       <header className="site-header">
         <div className="container nav-wrap">
           <Link href="/" className="brand">
-            <span className="brand-mark">◈</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo.webp" alt="Cahyana Ubud-Bali" className="brand-logo" width="1005" height="324" />
             <span className="brand-text">
-              <span className="brand-name">Cahyana Ubud</span>
               <span className="brand-tag">Ubud Private Villas</span>
             </span>
           </Link>

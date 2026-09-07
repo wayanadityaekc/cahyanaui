@@ -2,7 +2,9 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { VillaSelectionProvider } from '@/components/providers/VillaSelectionProvider';
+import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
+import { BookingProvider } from '@/components/providers/BookingProvider';
+import BookingSheet from '@/components/booking/BookingSheet';
 
 const inter = localFont({
   src: '../public/fonts/inter-latin.woff2',
@@ -21,11 +23,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <VillaSelectionProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </VillaSelectionProvider>
+        <CurrencyProvider>
+          <BookingProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <BookingSheet />
+          </BookingProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

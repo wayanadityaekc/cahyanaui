@@ -1,76 +1,100 @@
 import Link from 'next/link';
-import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/airbnb';
+import Logo from '@/components/ui/Logo';
+import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
+
+const SOCIALS = [
+  {
+    label: 'Instagram',
+    href: '#',
+    icon: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+      </>
+    ),
+  },
+  {
+    label: 'Facebook',
+    href: '#',
+    icon: <path d="M14 9h2V6h-2c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.2l.8-3H14V9.6c0-.3.3-.6.6-.6H16" />,
+  },
+];
 
 export default function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="container footer-top">
-        <div className="footer-brand-col">
-          <p className="footer-brand">Cahyana Ubud</p>
-          <p className="footer-tag">Ubud Private Villas</p>
-          <p className="footer-desc">
+    <footer style={{ background: 'var(--color-cta)' }} className="text-white">
+      <div className="container py-12 grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
+        <div>
+          <Logo light />
+          <p className="mt-4 max-w-xs text-small text-white/75">
             Two private pool villas in Ubud, hosted by the family who lives here. Book direct, stay longer, pay less.
           </p>
-          <ul className="footer-contact">
-            <li>
-              <a href={WHATSAPP_LINK} target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
+          <div className="flex items-center gap-3 mt-5">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                aria-label={s.label}
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  {s.icon}
                 </svg>
-                Message us on WhatsApp
               </a>
-            </li>
-            <li>
-              <a href={`mailto:${CONTACT_EMAIL}`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="5" width="18" height="14" rx="2" />
-                  <path d="M3 7l9 6 9-6" />
-                </svg>
-                {CONTACT_EMAIL}
-              </a>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
+            ))}
+            <a
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener"
+              className="btn btn-sm"
+              style={{ background: 'rgba(255,255,255,0.14)', color: '#fff' }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
               </svg>
-              Based in Ubud, Bali
-            </li>
+              Book via WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-label font-semibold uppercase tracking-wide text-white/60 mb-3">Stay</p>
+          <ul className="flex flex-col gap-2.5 text-small">
+            <li><Link href="/villas/cahyana-house" className="text-white/85 hover:text-white">Cahyana House</Link></li>
+            <li><Link href="/villas/cahyana-tibuah" className="text-white/85 hover:text-white">Cahyana Tibuah</Link></li>
+            <li><Link href="/villas" className="text-white/85 hover:text-white">All villas</Link></li>
+            <li><Link href="/experiences" className="text-white/85 hover:text-white">Experiences</Link></li>
           </ul>
         </div>
 
-        <div className="footer-col">
-          <p className="footer-title">Stay</p>
-          <ul>
-            <li><Link href="/villas/cahyana-house">Cahyana House</Link></li>
-            <li><Link href="/villas/cahyana-tibuah">Cahyana Tibuah</Link></li>
-            <li><Link href="/villas">All villas</Link></li>
+        <div>
+          <p className="text-label font-semibold uppercase tracking-wide text-white/60 mb-3">Services</p>
+          <ul className="flex flex-col gap-2.5 text-small">
+            <li><Link href="/services/breakfast" className="text-white/85 hover:text-white">Breakfast</Link></li>
+            <li><Link href="/services/spa" className="text-white/85 hover:text-white">Spa &amp; Massage</Link></li>
+            <li><Link href="/services/live-dinner" className="text-white/85 hover:text-white">Live Dinner</Link></li>
+            <li><Link href="/services/scooter-rental" className="text-white/85 hover:text-white">Scooter Rental</Link></li>
           </ul>
         </div>
 
-        <div className="footer-col">
-          <p className="footer-title">Services</p>
-          <ul>
-            <li><Link href="/services/breakfast">Breakfast</Link></li>
-            <li><Link href="/services/spa">Spa &amp; Massage</Link></li>
-            <li><Link href="/services/live-dinner">Live Dinner</Link></li>
-          </ul>
-        </div>
-
-        <div className="footer-col">
-          <p className="footer-title">Company</p>
-          <ul>
-            <li><Link href="/about">About Us</Link></li>
-            <li><Link href="/about">Contact</Link></li>
-            <li><a href={CUE_LINK} target="_blank" rel="noopener">Tours &amp; Drivers</a></li>
+        <div id="contact">
+          <p className="text-label font-semibold uppercase tracking-wide text-white/60 mb-3">Company</p>
+          <ul className="flex flex-col gap-2.5 text-small">
+            <li><Link href="/about" className="text-white/85 hover:text-white">About Us</Link></li>
+            <li><Link href="/about#contact" className="text-white/85 hover:text-white">Contact</Link></li>
+            <li><a href={`mailto:${CONTACT_EMAIL}`} className="text-white/85 hover:text-white">{CONTACT_EMAIL}</a></li>
+            <li><a href={CUE_LINK} target="_blank" rel="noopener" className="text-white/85 hover:text-white">Tours &amp; Drivers</a></li>
           </ul>
         </div>
       </div>
 
-      <div className="footer-bottom">
-        <div className="container">
-          <p><strong>Cahyana Ubud</strong> · Business License (NIB) 2501220013924 · KBLI 55193</p>
-          <p>© 2026 Ubud Private Villas by Cahyana Ubud. All rights reserved.</p>
+      <div className="border-t border-white/15">
+        <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-label text-white/60">
+          <p>© 2026 Ubud Private Villas. All rights reserved.</p>
+          <a href={CUE_LINK} target="_blank" rel="noopener" className="hover:text-white">
+            Part of Cahyana Ubud Experience
+          </a>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
-import Link from 'next/link';
-import AirbnbLink from '@/components/ui/AirbnbLink';
-import { WHATSAPP_LINK } from '@/lib/airbnb';
+import VillaCard from '@/components/cards/VillaCard';
+import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
+import { VILLA_LIST } from '@/lib/villas';
+import { WHATSAPP_LINK } from '@/lib/constants';
 
 export const metadata = {
   title: 'Our Villas in Ubud | Ubud Private Villas by Cahyana Ubud',
@@ -10,122 +11,74 @@ export const metadata = {
 export default function VillasPage() {
   return (
     <>
-      <section className="page-head">
+      <section className="pt-14 pb-10 border-b border-line" style={{ background: 'var(--color-cream)' }}>
         <div className="container">
           <p className="eyebrow">Our Villas</p>
-          <h1>Pick the one that fits</h1>
-          <p className="page-sub">
-            Both are entire private villas with their own pool, both sit north of Ubud, both are ten minutes from the Palace, Monkey Forest and Tegallalang. The difference is size and what surrounds you.
+          <h1 className="text-display font-bold" style={{ color: 'var(--color-gold)' }}>
+            Two unique villas, one unforgettable stay
+          </h1>
+          <p className="mt-3 max-w-xl text-body text-muted">
+            Choose between two beautifully designed villas, each with a private pool, lush garden and everything you need for a relaxing stay in Ubud.
           </p>
         </div>
       </section>
 
       <section className="section">
-        <div className="container">
-          <article className="v-row">
-            <div className="v-row-media">
-              <img
-                src="https://picsum.photos/seed/house-hero/900/620"
-                alt="Cahyana House pool and garden"
-                width={900}
-                height={620}
-                loading="lazy"
-              />
-              <span className="tag">Sleeps 6</span>
-            </div>
-            <div className="v-row-body">
-              <p className="eyebrow">Cahyana House · ★ 4.96 (221)</p>
-              <h2 className="section-title">Room for everyone</h2>
-              <p>
-                Three spacious bedrooms, each with a king bed, an ensuite bathroom, and a direct view of the pool. Full kitchen, dining area, living room with smart TV, private pool and garden. Airbnb flags it as extra spacious, and guests keep saying the same.
-              </p>
-              <p>
-                Check-in is through a Balinese family compound - a warm welcome on the way in, complete privacy once you&apos;re inside.
-              </p>
-              <ul className="spec-list">
-                <li><span>Bedrooms</span>3, all ensuite</li>
-                <li><span>Beds</span>3 king</li>
-                <li><span>Bathrooms</span>4.5</li>
-                <li><span>Guests</span>Up to 6</li>
-              </ul>
-              <div className="btn-row">
-                <Link href="/villas/cahyana-house" className="btn btn-outline">See the villa</Link>
-                <AirbnbLink villa="house" className="btn btn-gold">Check dates &amp; price</AirbnbLink>
-              </div>
-            </div>
-          </article>
-
-          <article className="v-row reverse">
-            <div className="v-row-media">
-              <img
-                src="https://picsum.photos/seed/tibuah-hero/900/620"
-                alt="Cahyana Tibuah pool with rice field view"
-                width={900}
-                height={620}
-                loading="lazy"
-              />
-              <span className="tag">Sleeps 4</span>
-            </div>
-            <div className="v-row-body">
-              <p className="eyebrow">Cahyana Tibuah · ★ 4.96 (85)</p>
-              <h2 className="section-title">Quiet, and close to it</h2>
-              <p>
-                Two king bedrooms with ensuites, both looking onto the pool. Open-plan living area, fully equipped kitchen, private pool with an outdoor shower. The villa sits a three-minute walk down a path into the rice fields, and each room comes with its own key.
-              </p>
-              <p>Self check-in, housekeeping included, fresh linens and towels changed every two days.</p>
-              <ul className="spec-list">
-                <li><span>Bedrooms</span>2, both ensuite</li>
-                <li><span>Beds</span>2 king</li>
-                <li><span>Bathrooms</span>2</li>
-                <li><span>Guests</span>Up to 4</li>
-              </ul>
-              <div className="btn-row">
-                <Link href="/villas/cahyana-tibuah" className="btn btn-outline">See the villa</Link>
-                <AirbnbLink villa="tibuah" className="btn btn-gold">Check dates &amp; price</AirbnbLink>
-              </div>
-            </div>
-          </article>
+        <div className="container grid sm:grid-cols-2 gap-6">
+          {VILLA_LIST.map((villa) => (
+            <VillaCard key={villa.slug} villa={villa} />
+          ))}
         </div>
       </section>
 
-      <section className="section band-light">
+      <section className="section" style={{ background: 'var(--color-cream)' }}>
         <div className="container">
           <p className="eyebrow">Side by Side</p>
-          <h2 className="section-title">Which villa suits you</h2>
-          <div className="compare-wrap">
-            <table className="compare">
+          <h2 className="text-h2 font-semibold mb-6" style={{ color: 'var(--color-gold)' }}>Which villa suits you</h2>
+          <div className="overflow-x-auto rounded-xl border border-line bg-white">
+            <table className="w-full text-small">
               <thead>
-                <tr>
-                  <th></th>
-                  <th>Cahyana House</th>
-                  <th>Cahyana Tibuah</th>
+                <tr style={{ background: 'var(--color-cream)' }}>
+                  <th className="text-left p-4"></th>
+                  <th className="text-left p-4 text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>Cahyana House</th>
+                  <th className="text-left p-4 text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>Cahyana Tibuah</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td>Best for</td><td>Families and groups</td><td>Couples and small families</td></tr>
-                <tr><td>Guests</td><td>Up to 6</td><td>Up to 4</td></tr>
-                <tr><td>Bedrooms</td><td>3 king, all ensuite</td><td>2 king, both ensuite</td></tr>
-                <tr><td>Bathrooms</td><td>4.5</td><td>2</td></tr>
-                <tr><td>Setting</td><td>Family compound, garden</td><td>Rice fields, 3 min walk in</td></tr>
-                <tr><td>Kitchen</td><td>Fully equipped</td><td>Fully equipped</td></tr>
-                <tr><td>Pool</td><td>Private</td><td>Private, outdoor shower</td></tr>
-                <tr><td>Check-in</td><td>Welcomed by the family</td><td>Self check-in</td></tr>
-                <tr><td>Rating</td><td>★ 4.96 · 221 reviews</td><td>★ 4.96 · 85 reviews</td></tr>
+                {[
+                  ['Best for', 'Families and groups', 'Couples and small families'],
+                  ['Guests', 'Up to 6', 'Up to 4'],
+                  ['Bedrooms', '3 king, all ensuite', '2 king, both ensuite'],
+                  ['Bathrooms', '4.5', '2'],
+                  ['Setting', 'Family compound, garden', 'Rice fields, 3 min walk in'],
+                  ['Pool', 'Private', 'Private, outdoor shower'],
+                  ['Check-in', 'Welcomed by the family', 'Self check-in'],
+                  ['Rating', '★ 4.96 · 221 reviews', '★ 4.96 · 85 reviews'],
+                ].map((row) => (
+                  <tr key={row[0]} className="border-t border-line">
+                    <td className="p-4 text-label uppercase tracking-wide text-muted">{row[0]}</td>
+                    <td className="p-4" style={{ color: 'var(--color-gold)' }}>{row[1]}</td>
+                    <td className="p-4" style={{ color: 'var(--color-gold)' }}>{row[2]}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-          <p className="rate-fine">
-            Nightly rates change with the season - open the Airbnb calendar for the live price on your dates, or message us and we&apos;ll quote you direct.
+          <p className="mt-4 text-small text-muted">
+            Nightly rates shown are starting rates - message us for an exact quote on your dates.
           </p>
         </div>
       </section>
 
-      <section className="cta-strip">
+      <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
         <div className="container">
-          <h2>Still deciding?</h2>
-          <p>Tell us who&apos;s coming and when - we&apos;ll say which villa suits you, even if it&apos;s the smaller one.</p>
-          <div className="btn-row">
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-gold">Ask us on WhatsApp</a>
+          <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>Still deciding?</h2>
+          <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>
+            Tell us who&apos;s coming and when - we&apos;ll say which villa suits you, even if it&apos;s the smaller one.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 mt-6">
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-cta">Ask us on WhatsApp</a>
+            <CheckAvailabilityButton className="btn btn-outline-light" />
           </div>
         </div>
       </section>

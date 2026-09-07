@@ -24,9 +24,9 @@ const SOCIALS = [
 export default function Footer() {
   return (
     <footer style={{ background: 'var(--color-cta)' }} className="text-white">
-      <div className="container py-12 grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
+      <div className="wrap py-12 grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
         <div>
-          <Logo light />
+          <Logo size={32} />
           <p className="mt-4 max-w-xs text-small text-white/75">
             Two private pool villas in Ubud, hosted by the family who lives here. Book direct, stay longer, pay less.
           </p>
@@ -90,7 +90,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/15">
-        <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-label text-white/60">
+        <div className="wrap py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-label text-white/60">
           <p>© 2026 Ubud Private Villas. All rights reserved.</p>
           <a href={CUE_LINK} target="_blank" rel="noopener" className="hover:text-white">
             Part of Cahyana Ubud Experience

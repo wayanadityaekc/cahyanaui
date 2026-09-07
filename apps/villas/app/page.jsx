@@ -47,7 +47,7 @@ export default function HomePage() {
             className="absolute inset-0"
             style={{ background: 'linear-gradient(100deg, rgba(20,20,16,0.62) 0%, rgba(20,20,16,0.28) 48%, rgba(20,20,16,0.05) 75%)' }}
           />
-          <div className="container relative z-10 py-24">
+          <div className="wrap relative z-10 py-24">
             <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>Ubud Private Villas</p>
             <h1 className="text-display font-bold max-w-xl" style={{ color: '#fff' }}>
               A private retreat in the heart of Ubud
@@ -62,14 +62,14 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="container">
+        <div className="wrap">
           <SearchCard />
         </div>
       </section>
 
       {/* Villas */}
       <section className="section" style={{ background: 'var(--color-cream)' }}>
-        <div className="container">
+        <div className="wrap">
           <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
             <div>
               <p className="eyebrow">Our Villas</p>
@@ -116,7 +116,7 @@ export default function HomePage() {
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.15), rgba(20,20,16,0.55))' }} />
-          <div className="container relative z-10 py-16">
+          <div className="wrap relative z-10 py-16">
             <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>More Than Just A Stay</p>
             <h2 className="text-h2 font-semibold max-w-md" style={{ color: '#fff' }}>Experience the real Ubud</h2>
             <p className="mt-2 max-w-md text-small" style={{ color: 'rgba(255,255,255,0.85)' }}>
@@ -144,7 +144,7 @@ export default function HomePage() {
 
       {/* Reviews */}
       <section className="section">
-        <div className="container">
+        <div className="wrap">
           <p className="eyebrow">Guest Reviews</p>
           <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>What our guests say</h2>
           <p className="mt-2 text-small text-muted">Real experiences from people who stayed with us.</p>
@@ -164,7 +164,7 @@ export default function HomePage() {
 
       {/* Neighbourhood / sister brand */}
       <section className="section" style={{ background: 'var(--color-cream)' }}>
-        <div className="container grid md:grid-cols-2 gap-8 items-center">
+        <div className="wrap grid md:grid-cols-2 gap-8 items-center">
           <div>
             <p className="eyebrow">Same Family</p>
             <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>Need a driver while you stay?</h2>
@@ -190,7 +190,7 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
-        <div className="container">
+        <div className="wrap">
           <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>Dates in mind?</h2>
           <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>
             Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.

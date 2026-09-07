@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-line">
-      <div className="container flex items-center justify-between gap-4 py-3.5">
+      <div className="wrap flex items-center justify-between gap-4 py-3.5">
         <Link href="/" aria-label="Ubud Private Villas home">
           <Logo />
         </Link>
@@ -75,7 +75,7 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="md:hidden border-t border-line bg-white shadow-lg">
-          <div className="container py-3">
+          <div className="wrap py-3">
             <ul className="flex flex-col">
               {NAV_LINKS.map((link) => (
                 <li key={link.href} className="border-b border-line last:border-b-0">

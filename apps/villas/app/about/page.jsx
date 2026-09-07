@@ -10,7 +10,7 @@ export default function AboutPage() {
   return (
     <>
       <section className="pt-14 pb-10 border-b border-line" style={{ background: 'var(--color-cream)' }}>
-        <div className="container">
+        <div className="wrap">
           <p className="eyebrow">About Us</p>
           <h1 className="text-display font-bold" style={{ color: 'var(--color-gold)' }}>One family, two villas</h1>
           <p className="mt-3 max-w-xl text-body text-muted">
@@ -20,7 +20,7 @@ export default function AboutPage() {
       </section>
 
       <section className="section">
-        <div className="container grid lg:grid-cols-[1.5fr_1fr] gap-10 items-start">
+        <div className="wrap grid lg:grid-cols-[1.5fr_1fr] gap-10 items-start">
           <div className="prose-copy">
             <h2 className="text-h2 font-semibold mb-3" style={{ color: 'var(--color-gold)' }}>Who we are</h2>
             <p>
@@ -60,7 +60,7 @@ export default function AboutPage() {
       </section>
 
       <section id="contact" className="section scroll-mt-24" style={{ background: 'var(--color-cream)' }}>
-        <div className="container">
+        <div className="wrap">
           <p className="eyebrow">Contact</p>
           <h2 className="text-h2 font-semibold mb-6" style={{ color: 'var(--color-gold)' }}>Get in touch</h2>
           <div className="grid sm:grid-cols-3 gap-5">
@@ -84,7 +84,7 @@ export default function AboutPage() {
       </section>
 
       <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
-        <div className="container">
+        <div className="wrap">
           <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>Come stay with us</h2>
           <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>The villas are easier to understand once you&apos;re standing in one.</p>
           <div className="flex justify-center mt-6">

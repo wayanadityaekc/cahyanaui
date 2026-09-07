@@ -105,15 +105,21 @@
    Layout primitives
    ===================================================================== */
 @layer components {
-  .container {
+  /* Named "wrap*" (not "container*") on purpose: Tailwind v4 auto-generates
+     its own ".container" utility (width:100%, breakpoint max-widths, no
+     margin) in @layer utilities, which beats anything in @layer components
+     regardless of source order or specificity — that collision was silently
+     nuking left/right page padding on mobile (below the first breakpoint,
+     Tailwind's version resolves to width:100% with no centering). */
+  .wrap {
     width: min(var(--container-wide), 92%);
     margin-inline: auto;
   }
-  .container-mid {
+  .wrap-mid {
     width: min(var(--container-mid), 92%);
     margin-inline: auto;
   }
-  .container-read {
+  .wrap-read {
     width: min(var(--container-read), 92%);
     margin-inline: auto;
   }

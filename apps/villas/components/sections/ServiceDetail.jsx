@@ -26,7 +26,7 @@ export default function ServiceDetail({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={heroImg} alt={heroAlt} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.1), rgba(20,20,16,0.65))' }} />
-          <div className="container relative z-10 py-10">
+          <div className="wrap relative z-10 py-10">
             <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>{kicker}</p>
             <h1 className="text-display font-bold" style={{ color: '#fff' }}>{title}</h1>
             <p className="mt-2 max-w-md text-small" style={{ color: 'rgba(255,255,255,0.85)' }}>{subtitle}</p>
@@ -35,7 +35,7 @@ export default function ServiceDetail({
       </section>
 
       <section className="section">
-        <div className="container grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
+        <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
           <div className="prose-copy">
             <p className="eyebrow">At a Glance</p>
             <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
@@ -73,7 +73,7 @@ export default function ServiceDetail({
       </section>
 
       <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
-        <div className="container">
+        <div className="wrap">
           <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>{bottomHeading}</h2>
           <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>{bottomText}</p>
           <div className="flex justify-center mt-6">

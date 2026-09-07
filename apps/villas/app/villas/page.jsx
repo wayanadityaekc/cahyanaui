@@ -12,7 +12,7 @@ export default function VillasPage() {
   return (
     <>
       <section className="pt-14 pb-10 border-b border-line" style={{ background: 'var(--color-cream)' }}>
-        <div className="container">
+        <div className="wrap">
           <p className="eyebrow">Our Villas</p>
           <h1 className="text-display font-bold" style={{ color: 'var(--color-gold)' }}>
             Two unique villas, one unforgettable stay
@@ -24,7 +24,7 @@ export default function VillasPage() {
       </section>
 
       <section className="section">
-        <div className="container grid sm:grid-cols-2 gap-6">
+        <div className="wrap grid sm:grid-cols-2 gap-6">
           {VILLA_LIST.map((villa) => (
             <VillaCard key={villa.slug} villa={villa} />
           ))}
@@ -32,7 +32,7 @@ export default function VillasPage() {
       </section>
 
       <section className="section" style={{ background: 'var(--color-cream)' }}>
-        <div className="container">
+        <div className="wrap">
           <p className="eyebrow">Side by Side</p>
           <h2 className="text-h2 font-semibold mb-6" style={{ color: 'var(--color-gold)' }}>Which villa suits you</h2>
           <div className="overflow-x-auto rounded-xl border border-line bg-white">
@@ -71,7 +71,7 @@ export default function VillasPage() {
       </section>
 
       <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
-        <div className="container">
+        <div className="wrap">
           <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>Still deciding?</h2>
           <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>
             Tell us who&apos;s coming and when - we&apos;ll say which villa suits you, even if it&apos;s the smaller one.

@@ -47,7 +47,7 @@ export default function ExperiencesPage() {
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.2), rgba(20,20,16,0.6))' }} />
-          <div className="container relative z-10 py-14">
+          <div className="wrap relative z-10 py-14">
             <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>More Than Just A Stay</p>
             <h1 className="text-display font-bold max-w-lg" style={{ color: '#fff' }}>Experience the real Ubud</h1>
             <p className="mt-3 max-w-md text-small" style={{ color: 'rgba(255,255,255,0.85)' }}>
@@ -58,7 +58,7 @@ export default function ExperiencesPage() {
       </section>
 
       <section className="section">
-        <div className="container">
+        <div className="wrap">
           <p className="eyebrow">Popular Categories</p>
           <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>What guests usually add on</h2>
           <p className="mt-2 max-w-2xl text-small text-muted">
@@ -82,7 +82,7 @@ export default function ExperiencesPage() {
       </section>
 
       <section className="section text-center" style={{ background: 'var(--color-cream)' }}>
-        <div className="container">
+        <div className="wrap">
           <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>Ready to plan your Ubud stay?</h2>
           <p className="mt-2 text-small text-muted max-w-md mx-auto">
             See real tours, upfront pricing and availability on Cahyana Ubud Experience, or start with our Ubud guide.

@@ -18,13 +18,13 @@ export default function VillaDetail({ villa }) {
   return (
     <>
       <section className="pt-6 sm:pt-10">
-        <div className="container">
+        <div className="wrap">
           <VillaGallery images={villa.gallery} />
         </div>
       </section>
 
       <section className="section pt-8">
-        <div className="container grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
+        <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
           <div className="prose-copy">
             <p className="eyebrow">{villa.tagline}</p>
             <h1 className="text-display font-bold" style={{ color: 'var(--color-gold)' }}>{villa.name}</h1>
@@ -164,7 +164,7 @@ export default function VillaDetail({ villa }) {
       </section>
 
       <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
-        <div className="container">
+        <div className="wrap">
           <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>{villa.name}, your dates</h2>
           <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>See if the villa is free when you are.</p>
           <div className="flex justify-center mt-6">

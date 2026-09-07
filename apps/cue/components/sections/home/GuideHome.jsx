@@ -49,14 +49,14 @@ export default function GuideHome() {
               <a
                 key={c.href}
                 href={c.href}
-                className="experience__card experience__card--more guide-home__card"
+                className="experience__card group relative flex items-center justify-center min-h-[260px] no-underline text-white bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(rgba(40,36,30,0.55),rgba(40,36,30,0.72))]"
                 aria-label={c.aria}
-                style={{ backgroundImage: `url(/assets/images/${c.bg})` }}
+                style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
               >
-                <span className="experience__more-inner">
-                  <span className="experience__more-arrow" aria-hidden="true">&rarr;</span>
-                  <span className="experience__more-title">{c.title}</span>
-                  <span className="experience__more-sub">{c.sub}</span>
+                <span className="relative z-[1] flex flex-col items-center gap-[0.9rem] p-8 text-center">
+                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
+                  <span className="font-semibold text-h2">{c.title}</span>
+                  <span className="text-small opacity-90">{c.sub}</span>
                 </span>
               </a>
             ) : (

@@ -10,10 +10,15 @@ const GUEST_OPTIONS = [2, 3, 4, 5, 6];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDrop, setOpenDrop] = useState(null); // 'villas' | 'services' | null — mobile-only collapse state
   const pathname = usePathname();
 
   const isActive = (paths) => paths.includes(pathname);
   const linkClass = (paths) => `${isActive(paths) ? 'active' : ''}`.trim() || undefined;
+  const toggleDrop = (key) => (e) => {
+    e.preventDefault();
+    setOpenDrop((cur) => (cur === key ? null : key));
+  };
 
   return (
     <>
@@ -35,24 +40,28 @@ export default function Navbar() {
               <li>
                 <Link href="/" className={linkClass(['/'])}>Home</Link>
               </li>
-              <li className="has-dropdown">
+              <li className={`has-dropdown ${openDrop === 'villas' ? 'open' : ''}`.trim()}>
                 <Link href="/villas" className={linkClass(['/villas', '/villas/cahyana-house', '/villas/cahyana-tibuah'])}>
-                  Villas <span className="caret">›</span>
+                  Villas
                 </Link>
+                <button type="button" className="caret" aria-label="Toggle Villas submenu" aria-expanded={openDrop === 'villas'} onClick={toggleDrop('villas')}>
+                  ›
+                </button>
                 <ul className="dropdown">
                   <li><Link href="/villas/cahyana-house">Cahyana House · 3BR</Link></li>
                   <li><Link href="/villas/cahyana-tibuah">Cahyana Tibuah · 2BR</Link></li>
                   <li><Link href="/villas">All villas</Link></li>
                 </ul>
               </li>
-              <li className="has-dropdown">
-                <a
-                  href="#"
-                  className={linkClass(['/services/breakfast', '/services/spa', '/services/live-dinner'])}
-                  onClick={(e) => e.preventDefault()}
+              <li className={`has-dropdown ${openDrop === 'services' ? 'open' : ''}`.trim()}>
+                <button
+                  type="button"
+                  className={`nav-drop-trigger ${linkClass(['/services/breakfast', '/services/spa', '/services/live-dinner']) || ''}`.trim()}
+                  aria-expanded={openDrop === 'services'}
+                  onClick={toggleDrop('services')}
                 >
                   Services <span className="caret">›</span>
-                </a>
+                </button>
                 <ul className="dropdown">
                   <li><Link href="/services/breakfast">Breakfast</Link></li>
                   <li><Link href="/services/spa">Spa &amp; Massage</Link></li>

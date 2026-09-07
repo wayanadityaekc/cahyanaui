@@ -222,11 +222,35 @@ h1, h2, h3 {
     display: inline-block;
     transform: rotate(90deg);
     font-size: 0.8rem;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease;
   }
+  .has-dropdown.open .caret { transform: rotate(270deg); }
 
   .nav-mobile-only { display: none; }
 
-  .has-dropdown { position: relative; }
+  .has-dropdown { position: relative; display: flex; align-items: center; gap: 3px; }
+  .nav-drop-trigger {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-charcoal-soft);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    transition: color 0.2s ease;
+  }
+  .nav-drop-trigger:hover,
+  .nav-drop-trigger.active { color: var(--color-gold); }
   .dropdown {
     position: absolute;
     top: 100%;
@@ -304,29 +328,44 @@ h1, h2, h3 {
       left: 0;
       right: 0;
       background: #fff;
-      border-bottom: 1px solid var(--color-line);
+      box-shadow: 0 14px 24px rgba(28, 28, 28, 0.12);
     }
     .site-nav.open { display: block; }
     .nav-list {
       flex-direction: column;
       align-items: stretch;
       gap: 0;
-      padding: 8px 4% 18px;
+      padding: 10px 5% 20px;
     }
-    .nav-list > li > a {
+    .nav-list > li:not(.has-dropdown) > a {
       display: block;
-      padding: 13px 0;
+      padding: 15px 0;
       border-bottom: 1px solid var(--color-line);
     }
+    .has-dropdown {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--color-line);
+    }
+    .has-dropdown > a,
+    .nav-drop-trigger {
+      padding: 15px 0;
+    }
+    .has-dropdown .caret {
+      padding: 15px 0 15px 12px;
+      font-size: 1rem;
+    }
     .dropdown {
+      flex-basis: 100%;
       position: static;
       opacity: 1;
       visibility: visible;
       transform: none;
-      padding: 0 0 0 16px;
+      display: none;
+      padding: 0 0 10px 16px;
       border: none;
     }
-    .caret { display: none; }
+    .has-dropdown.open .dropdown { display: block; }
   }
 }
 

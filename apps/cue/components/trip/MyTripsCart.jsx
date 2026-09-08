@@ -24,7 +24,7 @@ import { withSymbol } from '@/components/Price';
 // (redundant - .price-cur udah amber default), jadi mtc-total__val full convert.
 const MTC_TABS = 'flex flex-nowrap gap-[0.4rem] overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x [border-bottom:1px_solid_var(--line)] mb-[1.4rem]';
 const mtcTab = (on) =>
-  `flex-[0_0_auto] whitespace-nowrap border-0 bg-transparent py-[0.6rem] px-[0.35rem] mr-[0.6rem] font-body text-small cursor-pointer mb-[-1px] ${on ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent]'}`;
+  `flex-[0_0_auto] whitespace-nowrap border-none bg-transparent py-[0.6rem] px-[0.35rem] mr-[0.6rem] font-body text-small cursor-pointer mb-[-1px] ${on ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent]'}`;
 const MTC_EMPTY = 'mtc-empty text-center pt-2 px-0 pb-0';
 const MTC_EMPTY_LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-0 mb-[0.4rem]';
 const MTC_EMPTY_SUB = 'text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
@@ -41,8 +41,18 @@ const MTC_ITEM_BODY = 'flex-[1_1_auto] min-w-0';
 const MTC_ITEM_TITLE = 'font-semibold text-green m-0';
 const MTC_ITEM_DESC = 'text-small text-muted mt-[0.15rem] mx-0 mb-0';
 const MTC_ITEM_PRICE = 'flex-[0_0_auto] text-right whitespace-nowrap font-semibold text-amber-d';
-const MTC_ITEM_DEL = 'flex-[0_0_auto] border-0 bg-transparent text-muted text-[1.35rem] leading-none cursor-pointer py-0 px-[0.15rem] hover:text-err';
+const MTC_ITEM_DEL = 'flex-[0_0_auto] border-none bg-transparent text-muted text-[1.35rem] leading-none cursor-pointer py-0 px-[0.15rem] hover:text-err';
 const MTC_ITEM_DATE = 'text-label font-medium tracking-[0.14em] uppercase text-muted mt-[0.3rem] mx-0 mb-0';
+// Rincian booked-trip (.mtc-det*) -> utilities. Kontainer .mtc-det (+ context
+// .mtc-book .mtc-det) TETEP CSS. Chev muter pas toggle aria-expanded=true (arbitrary
+// variant), transisi ke `transform` biar animasinya sama.
+const MTC_DET_TOGGLE = 'flex items-center gap-[0.35rem] border-none bg-transparent py-[0.35rem] px-0 font-body text-small font-medium text-muted cursor-pointer hover:text-gold';
+const MTC_DET_CHEV = 'w-[15px] h-[15px] [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
+const MTC_DET_LIST = 'list-none mt-[0.2rem] mx-0 mb-0 p-0 [border-top:1px_solid_var(--line)]';
+const MTC_DET_LINE = 'flex items-baseline justify-between gap-[0.75rem] py-2 px-0 text-small [&+&]:[border-top:1px_solid_var(--line)]';
+const MTC_DET_NAME = 'flex flex-col gap-[0.15rem] min-w-0 text-green';
+const MTC_DET_META = 'text-label text-muted';
+const MTC_DET_AMT = 'flex-[0_0_auto] whitespace-nowrap font-semibold text-amber-d';
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
@@ -247,30 +257,30 @@ export default function MyTripsCart() {
           <div className="mtc-det">
             <button
               type="button"
-              className="mtc-det__toggle"
+              className={MTC_DET_TOGGLE}
               aria-expanded={open ? 'true' : 'false'}
               onClick={() => setOpenRef(open ? null : t.ref)}
             >
               {open
                 ? 'Hide details'
                 : 'View details (' + items.length + (items.length > 1 ? ' items)' : ' item)')}
-              <svg className="mtc-det__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg className={MTC_DET_CHEV} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </button>
             {open && (
-              <ul className="mtc-det__list">
+              <ul className={MTC_DET_LIST}>
                 {items.map((l, i) => (
-                  <li className="mtc-det__line" key={i}>
-                    <span className="mtc-det__name">
+                  <li className={MTC_DET_LINE} key={i}>
+                    <span className={MTC_DET_NAME}>
                       {l.day_no ? 'Day ' + l.day_no + ' · ' : ''}{l.service}
-                      <span className="mtc-det__meta">
+                      <span className={MTC_DET_META}>
                         {fmtDay(l.date)}
                         {l.guests ? ' · ' + l.guests + ' pax' : ''}
                         {l.pickup_time ? ' · ' + l.pickup_time : ''}
                       </span>
                     </span>
-                    <span className="mtc-det__amt">{withSymbol(bookedMoney(l.price_usd, l.price_idr))}</span>
+                    <span className={MTC_DET_AMT}>{withSymbol(bookedMoney(l.price_usd, l.price_idr))}</span>
                   </li>
                 ))}
               </ul>

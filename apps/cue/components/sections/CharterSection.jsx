@@ -13,7 +13,7 @@ export default function CharterSection() {
           <CharterBuilder />
         </div>
       </section>
-      <section className="charter-notes-sec" dangerouslySetInnerHTML={{ __html: CHARTER.notesHtml }} />
+      <section className="pt-10 px-[1.3rem] pb-0" dangerouslySetInnerHTML={{ __html: CHARTER.notesHtml }} />
       <section className="info" dangerouslySetInnerHTML={{ __html: CHARTER.infoHtml }} />
     </>
   );

@@ -7176,30 +7176,6 @@ button.pick-cat {
   margin: 0 auto 1.6rem;
   max-width: 460px;
 }
-.charter__box {
-  background: #fff;
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-xl);
-  padding: 1.5rem 1.4rem 1.6rem;
-  text-align: left;
-}
-.charter__box-title {
-  font-family: var(--font-head);
-  font-size: 1.15rem;
-  color: var(--color-green);
-  text-align: center;
-  margin: 0 0 1.1rem;
-}
-.charter__step {
-  margin-bottom: 1.3rem;
-}
-.charter__label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-green);
-}
 .charter__select {
   width: 100%;
   height: var(--field-h);
@@ -7207,90 +7183,11 @@ button.pick-cat {
   font-size: var(--fs-field);
   background: #fff;
 }
-.charter__hint {
-  margin-top: 0.4rem;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
 /* Duration cards - dibikin gede & menonjol */
-.charter__durations {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.7rem;
-}
-.chdur {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 1.15rem 0.6rem 1.1rem;
-  border: 1.5px solid var(--line);
-  border-radius: var(--r-lg);
-  background: #fff;
-  text-align: center;
-  cursor: pointer;
-  transition:
-    border-color var(--dur) ease,
-    box-shadow var(--dur) ease,
-    transform var(--dur) ease,
-    opacity var(--dur) ease;
-}
-.chdur:hover:not([disabled]) {
-  border-color: var(--color-gold);
-}
 .chdur.active {
   border-color: var(--color-gold);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-}
-.chdur[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.chdur__badge {
-  position: absolute;
-  top: -0.6rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: #fff;
-  background: var(--color-amber);
-  border-radius: var(--r-pill);
-  padding: 0.2rem 0.6rem;
-  white-space: nowrap;
-}
-.chdur__name {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 1.15rem;
-  color: var(--color-green);
-}
-.chdur__sub {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  margin-bottom: 0.5rem;
-}
-.chdur__price {
-  font-weight: 600;
-  color: var(--color-amber);
-  font-size: 1.2rem;
-}
-.chdur__from {
-  font-size: var(--fs-label);
-  font-weight: 400;
-  color: var(--color-muted);
-}
-.charter__extra {
-  margin-top: 1rem;
-}
-.charter__fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
 }
 .charter__fields .field {
   margin-bottom: 0;
@@ -7313,20 +7210,7 @@ button.pick-cat {
   font-weight: 600;
   color: var(--color-muted);
 }
-.charter__total {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  border-top: 1px solid var(--line);
-  padding-top: 1rem;
-  margin: 1.25rem 0 1rem;
-  font-size: var(--fs-strong);
-  font-weight: 600;
-}
 /* Good to know di bawah hero */
-.charter-notes-sec {
-  padding: 2.5rem 1.3rem 0;
-}
 .charter__notes {
   max-width: 720px;
   margin: 0 auto;
@@ -7587,7 +7471,6 @@ strong {
 .contact__group label,
 .field label,
 .review-form__group label,
-.charter__label,
 .acctform__label,
 .summary__label,
 .hsearch__field > label {

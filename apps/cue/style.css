@@ -593,27 +593,6 @@ body {
   right: auto;
   margin-left: 0;
 }
-.binfo__row + .binfo__row {
-  margin-top: 0.6rem;
-  padding-top: 0.6rem;
-  border-top: 1px solid #f2efe7;
-}
-.binfo__tag {
-  display: inline-block;
-  margin-bottom: 0.3rem;
-  padding: 2px 8px;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-green);
-  background: #f0ece2;
-  border-radius: var(--r-pill);
-}
-.binfo__tag--gold {
-  background: var(--color-amber);
-  color: #fff;
-}
 .binfo__pop p {
   margin: 0;
   font-size: var(--fs-small);
@@ -1186,15 +1165,6 @@ body.hs-locked .wa-float {
   }
 }
 /* popup: range tanggal (From/To) sejajar + input date rapi */
-.welcome__daterow {
-  display: flex;
-  gap: 0.5rem;
-}
-.welcome__daterow input {
-  min-width: 0;
-  -webkit-appearance: none;
-  appearance: none;
-}
 .hsearch__go {
   width: 100%;
   margin-top: 0.4rem;
@@ -2311,108 +2281,6 @@ a.tripbar--promo {
 .plan::before {
   content: none;
 } /* photo band = pemisah sendiri, buang divider gold di atasnya */
-.plan__link {
-  position: relative;
-  display: block;
-  padding: 2.8rem 2rem;
-  text-align: center;
-  text-decoration: none;
-  background-size: cover;
-  background-position: center;
-  transition: transform var(--dur-fast) ease;
-}
-.plan__link::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(18, 32, 22, 0.72),
-    rgba(18, 32, 22, 0.82)
-  );
-}
-.plan__link:hover {
-  transform: translateY(-2px);
-}
-.plan__inner {
-  position: relative;
-  max-width: 660px;
-  margin: 0 auto;
-}
-.plan__eyebrow {
-  display: block;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  color: var(--color-gold-l);
-  margin-bottom: 0.5rem;
-}
-.plan__title {
-  font-size: 1.6rem;
-  color: #fff;
-  margin: 0 0 0.4rem;
-}
-.plan__lead {
-  font-size: var(--fs-body);
-  color: rgba(247, 243, 234, 0.85);
-  margin: 0 auto 1.8rem;
-  max-width: 44ch;
-}
-.plan__steps {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin: 0 auto 1.8rem;
-  max-width: 660px;
-}
-.plan__step {
-  flex: 1;
-  max-width: 190px;
-}
-.plan__step-ic {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  margin: 0 auto 0.55rem;
-  border-radius: var(--r-md);
-  background: rgba(34, 32, 28, 0.22);
-  border: 1px solid rgba(230, 207, 151, 0.35);
-  color: var(--color-gold-l);
-}
-.plan__step-ic svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-.plan__step h3 {
-  font-size: 1rem;
-  color: #fff;
-  margin: 0 0 0.2rem;
-}
-.plan__step p {
-  font-size: var(--fs-label);
-  color: rgba(247, 243, 234, 0.72);
-  margin: 0;
-}
-.plan__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.72rem 1.4rem;
-  border-radius: var(--r-pill);
-  background-color: var(--color-cta);
-  color: #fff;
-}
-@media (max-width: 620px) {
-  .plan__steps {
-    flex-direction: column;
-    align-items: center;
-  }
-}
 
 /* Route & Transfer accordion */
 /* Guest reviews */
@@ -6062,64 +5930,7 @@ section.faq::before,
   color: var(--color-cream);
 }
 
-/* ==================== Welcome popup (jumlah orang, muncul sekali) ==================== */
-.welcome__box {
-  text-align: center;
-  max-width: 400px;
-}
-.welcome__title {
-  font-family: var(--font-body);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--color-green);
-  margin-bottom: 0.6rem;
-}
-.welcome__text {
-  color: var(--color-muted);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  margin-bottom: 1.25rem;
-}
-.welcome__field {
-  text-align: left;
-  margin-bottom: 1.25rem;
-}
-.welcome__field label {
-  display: block;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-}
-.welcome__field select,
-.welcome__field input {
-  width: 100%;
-  padding: 0.5rem 0.65rem;
-  font-size: var(--fs-field);
-  font-family: var(--font-body);
-  color: var(--color-green);
-  background: #fff;
-  border: 1px solid #d8d2c4;
-  border-radius: var(--r-sm);
-}
-
-/* Pesan error di form create account */
-.welcome__msg {
-  margin: 0 0 0.9rem;
-  font-size: var(--fs-small);
-  text-align: left;
-}
-.welcome__msg.error {
-  color: var(--color-err);
-}
-.welcome__msg.success {
-  color: var(--color-ok);
-}
 /* Baris "New here? Create account" / "Already have an account? Sign in" */
-.welcome__alt {
-  margin: 0.9rem 0 0;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
 .linklike {
   border: 0;
   background: none;
@@ -6642,27 +6453,6 @@ section.faq::before,
 }
 
 /* Settings form */
-.acctform {
-  display: flex;
-  flex-direction: column;
-}
-.acctform__label {
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-muted);
-  margin: 0.8rem 0 0.3rem;
-}
-.acctform__inp {
-  width: 100%;
-  padding: 0.5rem 0.65rem;
-  height: var(--field-h);
-  font-size: var(--fs-field);
-  font-family: var(--font-body);
-  color: var(--color-green);
-  background: #fff;
-  border: 1px solid #d8d2c4;
-  border-radius: var(--r-sm);
-}
 
 /* Mobile: guest / currency / hamburger dibikin SAMA LEBAR bertiga (rapi sejajar) */
 @media (max-width: 992px) {
@@ -6993,7 +6783,6 @@ section.faq::before,
 .hsearch__title,
 .booking__title,
 .about__title,
-.plan__title,
 .highlight__title,
 .title {
   font-family: var(--font-head);
@@ -7018,7 +6807,6 @@ section.faq::before,
 .itn__subtitle,
 .itn-day__title,
 .acct__name,
-.welcome__title,
 .experience__name {
   font-family: var(--font-body);
   font-weight: 600;
@@ -7032,11 +6820,9 @@ strong {
 /* Field label: Inter medium, normal case (EXPERIMENT — dulu uppercase small-caps).
    Balikin uppercase = set text-transform: uppercase + letter-spacing: 0.07em. */
 .booking__group label,
-.welcome__field label,
 .contact__group label,
 .field label,
 .review-form__group label,
-.acctform__label,
 .summary__label,
 .hsearch__field > label {
   font-family: var(--font-body);

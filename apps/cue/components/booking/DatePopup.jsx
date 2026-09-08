@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { overlay, panelDateSheet, PANEL_HEAD_SHEET, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CAL_FOOT, CAL_HINT, CAL_APPLY } from '@/components/ui/hsClasses';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -45,29 +46,29 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
 
   return createPortal(
     <>
-      <div className="hs-overlay open" onClick={onClose} />
-      <div className="hs-panel bk-panel bk-panel--cal bookdate-panel open">
-        <div className="hs-panel__head">
-          <h3>{title}</h3>
-          <button type="button" className="hs-panel__close" aria-label="Close" onClick={onClose}>&times;</button>
+      <div className={overlay(true, false)} onClick={onClose} />
+      <div className={panelDateSheet(true)}>
+        <div className={PANEL_HEAD_SHEET}>
+          <h3 className={PANEL_HEAD_H3}>{title}</h3>
+          <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={onClose}>&times;</button>
         </div>
-        <div className="hs-cal bk-cal">
-          <div className="hs-cal__cap">
-            <button type="button" aria-label="Previous month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}>&lsaquo;</button>
-            <span>{MONTHS[cursor.getMonth()]} {cursor.getFullYear()}</span>
-            <button type="button" aria-label="Next month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}>&rsaquo;</button>
+        <div className={HS_CAL}>
+          <div className={CAL_CAP}>
+            <button type="button" className={CAL_CAP_BTN} aria-label="Previous month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}>&lsaquo;</button>
+            <span className={CAL_CAP_SPAN}>{MONTHS[cursor.getMonth()]} {cursor.getFullYear()}</span>
+            <button type="button" className={CAL_CAP_BTN} aria-label="Next month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}>&rsaquo;</button>
           </div>
-          <div className="hs-cal__grid">
-            {DOW.map((d) => <span className="hs-cal__dow" key={d}>{d}</span>)}
+          <div className={CAL_GRID}>
+            {DOW.map((d) => <span className={CAL_DOW} key={d}>{d}</span>)}
             {cells.map((d, i) => {
-              if (!d) return <span className="hs-cal__d is-off" key={`e${i}`} />;
+              if (!d) return <span className={calDay(true)} key={`e${i}`} />;
               const v = iso(d);
               const past = v < today;
               return (
                 <button
                   type="button"
                   key={v}
-                  className={`hs-cal__d${past ? ' is-off' : ''}${v === sel ? ' is-sel' : ''}`}
+                  className={calDay(past)}
                   disabled={past}
                   onClick={() => setSel(v)}
                 >
@@ -77,9 +78,9 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
             })}
           </div>
         </div>
-        <div className="hs-cal__foot">
-          <span className="hs-cal__hint">{sel ? sel : 'Pick a date'}</span>
-          <button type="button" className="hs-cal__apply" disabled={!sel} onClick={() => { onPick(sel); onClose(); }}>
+        <div className={CAL_FOOT}>
+          <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
+          <button type="button" className={CAL_APPLY} disabled={!sel} onClick={() => { onPick(sel); onClose(); }}>
             Apply
           </button>
         </div>

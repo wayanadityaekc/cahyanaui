@@ -6,7 +6,7 @@ import Modal from '@/components/ui/Modal';
 import RegistrationBlock from '@/components/sections/RegistrationBlock';
 import { ABOUT } from '@/content/shared/about';
 
-export default function AboutPage() {
+export default function AboutPage({ company = false }) {
   const [driver, setDriver] = useState(null);
 
   return (
@@ -72,7 +72,7 @@ export default function AboutPage() {
               {row.drivers && (
                 <div className="drivers-grid">
                   {row.drivers.map((d) => (
-                    <DriverCard key={d.name} {...d} onOpen={setDriver} />
+                    <DriverCard key={d.name} {...d} onOpen={setDriver} company={company} />
                   ))}
                 </div>
               )}
@@ -81,7 +81,7 @@ export default function AboutPage() {
         ))}
       </div>
 
-      <RegistrationBlock />
+      <RegistrationBlock company={company} />
 
       <Modal open={!!driver} onClose={() => setDriver(null)} title={driver ? driver.name : ''}>
         {driver && (

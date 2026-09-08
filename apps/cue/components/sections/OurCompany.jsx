@@ -54,7 +54,7 @@ export default function OurCompany() {
         </nav>
 
         <div className="company-main">
-          {tab === 'about' && <AboutPage />}
+          {tab === 'about' && <AboutPage company />}
           {active.legal && <LegalBody data={LEGAL[active.legal]} />}
           {tab === 'contact' && <ContactSection />}
         </div>

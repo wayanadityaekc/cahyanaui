@@ -4,17 +4,22 @@
 // tetep ada; di kartu ini avatarnya udah utilities. Blok detail tersembunyi
 // (data holder, display:none) dibiarin apa adanya. Varian `.company-page .driver-card`
 // gak kepake React (DriverCard cuma dipakai di about-us, bukan our-company).
-export default function DriverCard({ name, tagline, desc, emptyReview, onOpen }) {
+// `company` = kartu dikecilin buat halaman Our Company (kolom sempit) — dulu
+// `.company-page .driver-card*` di style.css.
+export default function DriverCard({ name, tagline, desc, emptyReview, onOpen, company = false }) {
+  const box = company ? 'basis-[158px] py-[1.1rem] px-[0.9rem]' : 'basis-[215px] py-[1.75rem] px-5';
+  const ava = company ? 'w-[46px] h-[46px] mb-[0.6rem] text-[1.15rem]' : 'w-[60px] h-[60px] mb-[0.9rem] text-[1.5rem]';
+  const avaSvg = company ? 'w-6 h-6' : 'w-8 h-8';
   return (
     <button
-      className="font-body text-green flex flex-col items-center text-center grow-0 shrink-0 basis-[215px] py-[1.75rem] px-5 border-[1.5px] border-solid border-transparent rounded-lg [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box] cursor-pointer transition-[transform,box-shadow] duration-[0.15s] hover:[transform:translateY(-4px)] hover:shadow-[0_8px_22px_rgba(31,61,43,0.1)]"
+      className={`font-body text-green flex flex-col items-center text-center grow-0 shrink-0 ${box} border-[1.5px] border-solid border-transparent rounded-lg [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box] cursor-pointer transition-[transform,box-shadow] duration-[0.15s] hover:[transform:translateY(-4px)] hover:shadow-[0_8px_22px_rgba(31,61,43,0.1)]`}
       type="button"
       data-name={name}
       data-tagline={tagline}
       onClick={() => onOpen && onOpen({ name, tagline, desc, emptyReview })}
     >
-      <span className="flex items-center justify-center w-[60px] h-[60px] mb-[0.9rem] rounded-[50%] font-head font-semibold text-[1.5rem] text-white bg-[linear-gradient(135deg,var(--color-amber),var(--color-amber-d))]">
-        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <span className={`flex items-center justify-center ${ava} rounded-[50%] font-head font-semibold text-white bg-[linear-gradient(135deg,var(--color-amber),var(--color-amber-d))]`}>
+        <svg className={avaSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
           <circle cx="12" cy="8" r="4" />
           <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
         </svg>

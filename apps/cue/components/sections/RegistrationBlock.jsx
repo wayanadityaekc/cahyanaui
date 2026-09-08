@@ -20,16 +20,22 @@ function CheckIcon({ className }) {
 // portal rather than hosting the certificate.
 // Tailwind-native (migrasi Fase 2): dulu keluarga .reg* di style.css -> utilities.
 // Varian `.company-page .reg` gak kepake React (blok ini cuma di about-us).
-export default function RegistrationBlock() {
+// `company` = varian buat Our Company (borderless, nempel kolom) — dulu
+// `.company-page .reg-sec` + `.company-page .reg` di style.css.
+export default function RegistrationBlock({ company = false }) {
   const rows = [
     ['Ministry of Law Decree', R.decree],
     ['Business License (NIB)', R.nib],
     ['Activity', R.activity],
     ['Registered in', R.location],
   ];
+  const sec = company ? 'max-w-none mx-0 px-0 pb-0' : 'max-w-[760px] mx-auto px-[var(--container-x)] pb-[var(--section-gap)]';
+  const card = company
+    ? 'bg-transparent border-0 [border-top:1px_solid_var(--line)] rounded-none shadow-none pt-[1.6rem] px-0 pb-0'
+    : 'bg-white border border-line rounded-lg shadow-md py-[1.4rem] px-6';
   return (
-    <section className="max-w-[760px] mx-auto px-[var(--container-x)] pb-[var(--section-gap)]">
-      <div className="bg-white border border-line rounded-lg shadow-md py-[1.4rem] px-6">
+    <section className={sec}>
+      <div className={card}>
         <div className="flex items-center gap-[0.8rem] pb-4 border-b border-line">
           <span className="flex-none grid place-items-center w-11 h-11 rounded-[50%] bg-gold text-white">
             <SealIcon className="w-5 h-5" />

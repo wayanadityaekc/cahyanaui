@@ -8,6 +8,7 @@ import { AIRPORT } from '@/content/shared/airport';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
 import DateTimeField from '@/components/ui/DateTimeField';
+import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -60,10 +61,8 @@ export default function AirportTransferForm() {
     });
   };
 
-  // Tailwind-native (migrasi Fase 2): dulu numpang keluarga .charter__* (sama kayak
-  // CharterBuilder). Karena CharterBuilder udah di-convert & .charter__* CSS-nya
-  // dihapus, form ini WAJIB ikut pakai utilities yg sama. Kept: .charter__select
-  // (field, masih ada), Select/DateField/DateTimeField, .price-cur, .btn-book.
+  // Tailwind-native (full-portable): field pakai FIELD_INPUT shared (formClasses.js).
+  // Kept sbg shared primitive: Select/DateField/DateTimeField, .price-cur, .btn-book.
   const LABEL = 'block mb-2 text-small font-medium text-green font-body tracking-normal';
   const FIELD_LABEL = 'block mb-[0.4rem] text-small font-medium text-green font-body tracking-normal';
   return (
@@ -97,12 +96,12 @@ export default function AirportTransferForm() {
         <label className={LABEL} id="at-address-label" htmlFor="at-address">
           {direction === 'pickup' ? 'Hotel / villa drop-off address' : 'Hotel / villa pick-up address'}
         </label>
-        <input type="text" className="charter__select" id="at-address" placeholder="Hotel / villa name and area" value={address} onChange={(e) => setAddress(e.target.value)} />
+        <input type="text" className={FIELD_INPUT} id="at-address" placeholder="Hotel / villa name and area" value={address} onChange={(e) => setAddress(e.target.value)} />
       </div>
 
       <div className="mb-[1.3rem]">
         <label className={LABEL} htmlFor="at-flight-number">Flight number</label>
-        <input type="text" className="charter__select" id="at-flight-number" placeholder="e.g. QZ7501" value={flightNumber} onChange={(e) => setFlightNumber(e.target.value)} />
+        <input type="text" className={FIELD_INPUT} id="at-flight-number" placeholder="e.g. QZ7501" value={flightNumber} onChange={(e) => setFlightNumber(e.target.value)} />
       </div>
 
       <div className="mb-[1.3rem]">

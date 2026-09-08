@@ -905,8 +905,7 @@ a.tripbar--promo {
 .field input[type="date"],
 .mtc-item__datebtn,
 .itn-day__fields .field input,
-.itn-day__fields .field select,
-.charter__select {
+.itn-day__fields .field select {
   border: 1px solid var(--line);
   border-radius: var(--r-md);
   font-family: var(--font-body);
@@ -3576,13 +3575,6 @@ section.faq::before,
   line-height: 1.5;
   margin: 0 auto 1.6rem;
   max-width: 460px;
-}
-.charter__select {
-  width: 100%;
-  height: var(--field-h);
-  padding: 0.6rem 0.8rem;
-  font-size: var(--fs-field);
-  background: #fff;
 }
 /* Duration cards - dibikin gede & menonjol */
 .chdur.active {

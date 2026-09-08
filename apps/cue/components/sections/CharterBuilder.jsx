@@ -7,6 +7,7 @@ import { useBooking } from '@/state/BookingProvider';
 import { CHARTER } from '@/content/shared/charter';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
+import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -56,9 +57,9 @@ export default function CharterBuilder() {
 
   const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];
 
-  // Tailwind-native (migrasi Fase 2): .charter__*/.chdur* -> utilities. Kept: field
-  // input `.charter__select` (shared form-field base), `.price`/`.price-cur` (harga),
-  // `.btn-book` (tombol shared), Select/DateField. NOTE: kartu durasi yg kepilih dulu
+  // Tailwind-native (full-portable): .charter__*/.chdur* -> utilities; field input
+  // pakai FIELD_INPUT shared (formClasses.js). Kept sbg shared primitive: `.price`/
+  // `.price-cur` (harga), `.btn-book` (tombol), Select/DateField. NOTE: kartu durasi kepilih dulu
   // dikasih class `is-on` tapi CSS-nya `.chdur.active` -> highlight-nya gak pernah
   // muncul (bug). Di sini di-benerin: state terpilih dapet border gold + shadow +
   // angkat (sesuai maksud .chdur.active). Cuma keliatan pas diklik (bukan di sweep).
@@ -111,7 +112,7 @@ export default function CharterBuilder() {
         </div>
         <div className="mt-4" id="ch-extra-wrap" hidden={dur !== 'extended'}>
           <label className={LABEL} htmlFor="ch-extra">Extra hours after 10</label>
-          <input type="number" className="charter__select" id="ch-extra" min="1" max="6" value={extra} onChange={(e) => setExtra(e.target.value)} />
+          <input type="number" className={FIELD_INPUT} id="ch-extra" min="1" max="6" value={extra} onChange={(e) => setExtra(e.target.value)} />
         </div>
       </div>
 

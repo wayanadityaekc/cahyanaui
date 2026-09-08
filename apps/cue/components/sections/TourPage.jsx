@@ -16,6 +16,11 @@ export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium trackin
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
 const STOP_LINK = 'stop no-underline text-inherit [transition:transform_var(--dur-fast)_ease] hover:[transform:translateY(-3px)]';
+// Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
+// sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
+export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-bottom:1px_solid_#e0ddd4] text-small text-muted';
+export const CRUMB_LINK = 'text-gold no-underline font-medium hover:underline';
+export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
 
 function Stop({ s }) {
   const inner = (
@@ -102,12 +107,12 @@ export default function TourPage({ data }) {
       )}
 
       {data.crumb && (
-        <nav className="crumb" aria-label="Breadcrumb">
+        <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
             p.type === 'link' ? (
-              <a href={p.href} key={i}>{p.text}</a>
+              <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
             ) : p.type === 'sep' ? (
-              <span className="crumb__sep" key={i}>{p.text}</span>
+              <span className={CRUMB_SEP} key={i}>{p.text}</span>
             ) : (
               <span key={i}>{p.text}</span>
             ),

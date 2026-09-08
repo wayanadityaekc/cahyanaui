@@ -2463,27 +2463,9 @@ section.faq::before,
 }
 
 /* Breadcrumb (halaman anak: tour, attraction, aktivitas) - di atas footer */
-.crumb {
-  max-width: none;
-  margin: 0;
-  padding: 1.25rem 1.5rem;
-  text-align: center;
-  border-bottom: 1px solid #e0ddd4; /* satu garis full-width DI BAWAH breadcrumb (Wayan) */
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.crumb a {
-  color: var(--color-gold);
-  text-decoration: none;
-  font-weight: 500;
-}
-.crumb a:hover {
-  text-decoration: underline;
-}
-.crumb__sep {
-  margin: 0 0.4rem;
-  opacity: 0.55;
-}
+/* .crumb / .crumb a / .crumb__sep -> utilities di TourPage.jsx + AttractionPage.jsx
+   (migrasi Fase 2). Kelas `crumb` tetep dipasang sbg marker: dipakai anchor
+   `.crumb + .related::before` (di bawah) buat matiin divider dobel. */
 
 /* ==================== Bali Guide page (search + toggle + slider/kategori) ==== */
 .guide-page {

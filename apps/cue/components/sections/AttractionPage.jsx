@@ -7,7 +7,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
-import { STOP_NUM, STOP_NAME, STOP_DESC } from '@/components/sections/TourPage';
+import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP } from '@/components/sections/TourPage';
 
 export default function AttractionPage({ data }) {
   return (
@@ -73,12 +73,12 @@ export default function AttractionPage({ data }) {
       {data.bookItem && <ReviewCtaBand />}
 
       {data.crumb && (
-        <nav className="crumb" aria-label="Breadcrumb">
+        <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
             p.type === 'link' ? (
-              <a href={p.href} key={i}>{p.text}</a>
+              <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
             ) : p.type === 'sep' ? (
-              <span className="crumb__sep" key={i}>{p.text}</span>
+              <span className={CRUMB_SEP} key={i}>{p.text}</span>
             ) : (
               <span key={i}>{p.text}</span>
             ),

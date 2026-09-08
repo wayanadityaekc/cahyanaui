@@ -834,55 +834,6 @@ body.hs-locked .wa-float {
 /* Tripbar: bar "Guests · Pickup · Date" fixed di bawah navbar (halaman kategori/detail).
    z-index < navbar (100) biar dropdown navbar tetap di atas. */
 /* Tripbar nyatu di dalam navbar (bukan fixed sendiri lagi) - nempel di bawah bar navbar */
-.tripbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.6rem 1.25rem;
-  border: none;
-  border-top: 1px solid #ececec;
-  background: var(--color-cream);
-  font-family: inherit;
-  font-size: var(--fs-h3);
-  color: var(--color-green);
-  cursor: pointer;
-  text-decoration: none;
-}
-/* Bar promo/event (halaman non-booking). Kalau div (tanpa link) -> gak clickable. */
-.tripbar--promo {
-  cursor: default;
-}
-a.tripbar--promo {
-  cursor: pointer;
-}
-.tripbar__ic {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  flex-shrink: 0;
-  color: var(--color-gold);
-}
-/* Teks tripbar (guests/pickup & promo) SEMUA gak bold — normal weight. */
-.tripbar b {
-  font-weight: 400;
-}
-.tripbar__edit {
-  margin-left: 0.5rem;
-  color: var(--color-gold);
-  font-weight: 400;
-  text-decoration: underline;
-}
-@media (max-width: 560px) {
-  .tripbar {
-    font-size: var(--fs-small);
-    gap: 0.35rem;
-    padding: 0.55rem 0.9rem;
-  }
-  .tripbar__edit {
-    margin-left: 0.3rem;
-  }
-}
 
 /* Booking form */
 .booking {

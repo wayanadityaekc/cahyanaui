@@ -45,13 +45,17 @@ export default function SectionSwitcher({ zones = [] }) {
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  // Tailwind-native (migrasi Fase 2): .ssw* -> utilities. Floating pill, HP-only
+  // (min-[769px]:hidden = dulu `@media(min-width:769px){.ssw{display:none}}`).
+  const arrow =
+    'w-[34px] h-[34px] flex-none flex items-center justify-center border-0 rounded-[50%] bg-cream text-ink cursor-pointer transition-[background-color] duration-200 ease-[ease] enabled:hover:bg-line disabled:opacity-[0.35] disabled:cursor-default [&>svg]:w-[18px] [&>svg]:h-[18px]';
   return (
-    <div className="ssw" role="navigation" aria-label="Jump to category">
-      <button type="button" className="ssw__arrow" onClick={() => go(-1)} disabled={idx === 0} aria-label="Previous category">
+    <div className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-1 py-[5px] px-[6px] bg-white border border-line rounded-pill shadow-xl min-[769px]:hidden" role="navigation" aria-label="Jump to category">
+      <button type="button" className={arrow} onClick={() => go(-1)} disabled={idx === 0} aria-label="Previous category">
         <Chevron dir="left" />
       </button>
-      <span className="ssw__label">{zones[idx].label}</span>
-      <button type="button" className="ssw__arrow" onClick={() => go(1)} disabled={idx === zones.length - 1} aria-label="Next category">
+      <span className="min-w-[148px] px-[6px] text-center font-semibold text-[0.8rem] text-ink whitespace-nowrap">{zones[idx].label}</span>
+      <button type="button" className={arrow} onClick={() => go(1)} disabled={idx === zones.length - 1} aria-label="Next category">
         <Chevron dir="right" />
       </button>
     </div>

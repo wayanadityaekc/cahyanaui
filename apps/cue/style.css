@@ -2501,13 +2501,7 @@ section.faq::before,
   background: transparent;
   box-shadow: none;
 }
-.guide-cat-nav {
-  position: relative;
-  flex: 0 0 auto;
-  display: flex;
-  order: 2; /* kategori di KANAN, search di kiri (search ~90% / kategori ~10%) */
-  border-left: 1px solid var(--line); /* pemisah tipis: search | kategori */
-}
+/* .guide-cat-nav -> utilities di GuideHub.jsx (migrasi Fase 2). */
 .guide-cat-toggle {
   min-height: 3.15rem;
   box-sizing: border-box;
@@ -2546,49 +2540,9 @@ section.faq::before,
 .guide-cat-toggle[aria-expanded="true"] .hs-chev {
   transform: rotate(180deg);
 }
-.guide-cat-menu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 6px);
-  min-width: 220px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  box-shadow: 0 16px 40px rgba(31, 61, 43, 0.14);
-  overflow: hidden;
-  z-index: 20;
-}
-.guide-cat-menu[hidden] {
-  display: none;
-}
-.guide-cat-menu a {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.7rem 1rem;
-  text-decoration: none;
-  color: var(--color-green);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  border-top: 1px solid var(--line);
-}
-.guide-cat-menu a:first-child {
-  border-top: none;
-}
-.guide-cat-menu a:hover {
-  background: rgba(34, 32, 28, 0.08);
-}
-.guide-cat-menu a svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  color: var(--color-gold-d);
-  flex-shrink: 0;
-}
-/* Section per kategori */
-.guide-cat {
-  margin-top: 2.4rem;
-  scroll-margin-top: 80px; /* biar pas loncat gak ketutup navbar fixed */
-}
+/* .guide-cat-menu (+[hidden], +a, +a:first-child, +a:hover, +a svg) -> utilities
+   di GuideHub.jsx (migrasi Fase 2). Hidden via atribut `hidden` (UA default).
+   .guide-cat (section) juga -> utilities. */
 .guide-cat__title {
   text-align: left;
   margin-bottom: 1.1rem;

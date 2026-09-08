@@ -2,6 +2,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import LoadingScreen from '@/components/ui/LoadingScreen';
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { BookingProvider } from '@/components/providers/BookingProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
       <body>
+        <LoadingScreen />
         <CurrencyProvider>
           <BookingProvider>
             <Navbar />

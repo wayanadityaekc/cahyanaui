@@ -268,3 +268,43 @@
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
 }
+
+/* =====================================================================
+   Loading splash (components/ui/LoadingScreen.jsx) - ported token-for-token
+   from CUE's own .loadscreen* rules (style.css), so the sister sites show
+   the same branded cream splash + spinner.
+   ===================================================================== */
+@layer components {
+  .loadscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    background: var(--color-cream);
+    transition: opacity 0.45s var(--ease-DEFAULT), visibility 0.45s var(--ease-DEFAULT);
+  }
+  .loadscreen--out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .loadscreen__logo {
+    width: min(200px, 45vw);
+    height: auto;
+  }
+  .loadscreen__spin {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 3px solid var(--color-line);
+    border-top-color: var(--color-gold);
+    animation: loadscreen-spin 0.7s linear infinite;
+  }
+}
+@keyframes loadscreen-spin {
+  to { transform: rotate(360deg); }
+}

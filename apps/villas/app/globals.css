@@ -233,6 +233,38 @@
     cursor: pointer;
   }
   .field-shell input::-webkit-calendar-picker-indicator { cursor: pointer; }
+
+  /* ===== Pill-bar search (Opsi 1) =====
+     Same label/input look as .field-shell, but no border/radius/background
+     of its own - segments sit side by side inside one seamless bar, with
+     hairlines between them (divide-x/divide-y utilities) instead of each
+     field being its own boxed card. */
+  .pill-seg {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.65rem 1.1rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .pill-seg label {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .pill-seg input,
+  .pill-seg select {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-field);
+    color: var(--color-gold);
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .pill-seg input::-webkit-calendar-picker-indicator { cursor: pointer; }
 }
 
 /* =====================================================================

@@ -5340,37 +5340,7 @@ section.faq::before,
   background: var(--color-green);
   color: #fff;
 }
-.pick-cats {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-.pick-cat {
-  display: block;
-  width: 100%;
-  padding: 0.95rem 1rem;
-  text-align: center;
-  border: 1px solid #e6dfce;
-  border-radius: var(--r-md);
-  background: var(--color-cream);
-  font-family: var(--font-body);
-  font-weight: 600;
-  color: var(--color-green);
-  text-decoration: none;
-  transition:
-    border-color var(--dur) ease,
-    background-color var(--dur) ease;
-}
-.pick-cat:hover {
-  border-color: var(--color-gold);
-  background: #efe9db;
-}
 /* Charter dipilih inline (bukan navigasi) -> pakai <button>, samain tampilannya dg <a> */
-button.pick-cat {
-  width: 100%;
-  font-size: inherit;
-  cursor: pointer;
-}
 /* ====== Slider: swipe samping geser card, swipe atas-bawah scroll page ====== */
 @media (max-width: 992px) {
   .experience__grid:not(.experience__grid--auto) {

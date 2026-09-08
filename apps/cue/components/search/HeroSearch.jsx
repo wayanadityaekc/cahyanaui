@@ -12,6 +12,7 @@ import { REFMSG } from '@/components/ui/modalClasses';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
+import { CONTROL, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, panelMenu, PANEL_HEAD_MENU, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, PANEL_BODY_MENU, optMenu } from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -80,17 +81,17 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   };
 
   const panel = (
-    <div className={`hs-panel hs-panel--menu${open ? ' open' : ''}`}>
-      <div className="hs-panel__head">
-        <h3>How to explore</h3>
-        <button type="button" className="hs-panel__close" aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
+    <div className={panelMenu(open)}>
+      <div className={PANEL_HEAD_MENU}>
+        <h3 className={PANEL_HEAD_H3}>How to explore</h3>
+        <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
       </div>
-      <div className="hs-panel__body">
+      <div className={PANEL_BODY_MENU}>
         {EXPLORE_OPTIONS.map((o) => (
           <button
             type="button"
             key={o.href}
-            className={`hs-opt${picked && picked.href === o.href ? ' is-sel' : ''}`}
+            className={optMenu(picked && picked.href === o.href)}
             onClick={() => {
               if (o.all) {
                 window.location.href = o.href;
@@ -134,13 +135,13 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         </label>
         <button
           type="button"
-          className="hs-control"
+          className={CONTROL}
           aria-haspopup="listbox"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <span className={`hs-control__val${picked ? '' : ' placeholder'}`}>{picked ? picked.name : 'Choose'}</span>
-          <svg className="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
+          <svg className={CHEV} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M6 9l6 6 6-6" />
           </svg>
         </button>

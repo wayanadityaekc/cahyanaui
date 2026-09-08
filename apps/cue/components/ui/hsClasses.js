@@ -144,3 +144,26 @@ export const CAL_APPLY = 'font-body font-semibold text-small bg-cta text-white b
 // Close DatePopup: keliatan di HP, DI-HIDE di desktop (@media min-769 .hs-panel__close),
 // karena panelnya bukan popup (gak ada override display:block).
 export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;
+
+// ===== HeroSearch: dropdown "How to explore" (.hs-panel--menu). Desktop = dropdown
+// ngambang (base .hs-panel absolute), HP = bottom-sheet. Head KE-HIDE di desktop
+// (base .hs-panel__head display:none, gak ada override). =====
+export const panelMenu = (open) => [
+  'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:var(--shadow-xl)] overflow-hidden [overscroll-behavior:contain]',
+  '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]', PANEL_MOBILE_TRANSITION,
+  open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-8px)]',
+  '[@media(max-width:768px)]:fixed [@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
+  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0] [@media(max-width:768px)]:[box-shadow:0_-12px_48px_rgba(26,26,26,0.28)]',
+  '[@media(max-width:768px)]:max-h-[calc(100dvh-100px)] [@media(max-width:768px)]:overflow-y-auto [@media(max-width:768px)]:block [@media(max-width:768px)]:opacity-100',
+  open ? '[@media(max-width:768px)]:[transform:translateY(0)]' : '[@media(max-width:768px)]:[transform:translateY(100%)]',
+].join(' ');
+// Head menu: hidden di desktop, muncul jadi sheet-head di HP.
+export const PANEL_HEAD_MENU =
+  'hidden [@media(max-width:768px)]:flex [@media(max-width:768px)]:items-center [@media(max-width:768px)]:justify-between [@media(max-width:768px)]:pt-4 [@media(max-width:768px)]:px-5 [@media(max-width:768px)]:pb-3 [@media(max-width:768px)]:[border-bottom:1px_solid_#f2efe7] [@media(max-width:768px)]:sticky [@media(max-width:768px)]:top-0 [@media(max-width:768px)]:bg-white';
+// Body menu: max-h 500 di SEMUA layar. `.hs-panel--menu .hs-panel__body` (0,2,0)
+// menang atas @media(max-768) .hs-panel__body none (0,1,0), jadi 500 terus.
+export const PANEL_BODY_MENU = 'max-h-[500px] overflow-y-auto';
+// Opt HeroSearch: padding base .hs-opt (0.85rem 1rem, TANPA .bk-opt). Konten (ic/nm/pr)
+// tetep class shared. is-sel sama kaya Select.
+export const optMenu = (sel) =>
+  `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_#f2efe7] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;

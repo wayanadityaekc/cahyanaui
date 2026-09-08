@@ -15,6 +15,7 @@ export default function Overlay({ open, elevated = false, onClose }) {
   return createPortal(
     <div
       className={overlay(open, elevated)}
+      data-portal="overlay"
       onClick={onClose}
     />,
     document.body,

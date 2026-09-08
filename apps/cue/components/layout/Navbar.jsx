@@ -86,14 +86,15 @@ export default function Navbar() {
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
       // Select popups + their overlay are portaled to <body> (outside navRef). Clicking
       // inside one (an option, the × close, or the dim overlay) must close only the
-      // popup, never the drawer underneath it.
-      const inPopup = e.target.closest && e.target.closest('.hs-panel, .hs-overlay');
+      // popup, never the drawer underneath it. Both carry data-portal (Select/Overlay
+      // emit it as their own contract — no leftover .hs-* class after the Tailwind migrasi).
+      const inPopup = e.target.closest && e.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     };
     const onKey = (e) => {
       if (e.key !== 'Escape') return;
-      // If a popup is open, let it handle Escape (close itself) — don't close the drawer.
-      if (document.querySelector('.hs-panel--popup.open')) return;
+      // If a Select popup is open, let it handle Escape (close itself) — don't close the drawer.
+      if (document.querySelector('[data-portal="select"][data-open]')) return;
       setMenuOpen(false);
     };
     document.addEventListener('click', onDoc);
@@ -152,7 +153,7 @@ export default function Navbar() {
 
             {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}
             <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem] max-[992px]:border-b max-[992px]:border-line">
-              <div className="flex flex-col gap-1 min-w-0 [&_.hs-control]:w-full">
+              <div className="flex flex-col gap-1 min-w-0">
                 <label className="text-small text-muted" htmlFor="acct-guests">Guests</label>
                 <Select
                   id="acct-guests"
@@ -163,7 +164,7 @@ export default function Navbar() {
                   popup
                 />
               </div>
-              <div className="flex flex-col gap-1 min-w-0 [&_.hs-control]:w-full">
+              <div className="flex flex-col gap-1 min-w-0">
                 <label className="text-small text-muted" htmlFor="acct-stay">Pickup area</label>
                 <Select
                   id="acct-stay"

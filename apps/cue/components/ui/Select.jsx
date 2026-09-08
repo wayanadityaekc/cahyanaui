@@ -59,7 +59,7 @@ export default function Select({
   // Panel = mode popup (default; semua pemakaian Select popup). Kalau nanti butuh
   // popup=false (dropdown nempel field / bottom-sheet), mode itu perlu ditambah lagi.
   const panel = (
-    <div className={panelPopup(open)}>
+    <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
       <div className={PANEL_HEAD}>
         <h3 className={PANEL_HEAD_H3}>{label}</h3>
         <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>

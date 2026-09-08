@@ -246,12 +246,11 @@ export default function Navbar() {
           onClick={() => setMenuOpen((v) => !v)}
         >
           <span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" />
-          {/* NOTE: di style.css lama, `.navbar__toggle span:not(.itn-badge)` (spesifisitas
-              lebih tinggi) nge-override .acct__dot -> titik ini SEBENERNYA render jadi
-              bar emas tipis (w 100%/22px, h 2px, gold), BUKAN titik hijau bulat. Direplika
-              apa adanya biar 0 perubahan; ini kemungkinan bug lama - tanya Wayan mau
-              dibenerin jadi titik hijau (sesuai maksud .acct__dot) atau biarin. */}
-          <span className="absolute top-[-2px] right-[-2px] w-full max-[992px]:w-[22px] h-[2px] bg-gold rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
+          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
+              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
+              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
+              jadi titik hijau pas migrasi Tailwind ini.) */}
+          <span className="absolute top-[-2px] right-[-2px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
         </button>
       </div>
 

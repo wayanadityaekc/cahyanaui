@@ -17,14 +17,14 @@ export default function GuideHome() {
   }, [q]);
 
   return (
-    <section className="guide-home" id="guides" aria-labelledby="guide-home-title">
-      <div className="guide-home__inner">
-        <div className="guide-home__head">
-          <h2 className="section__title" id="guide-home-title">Guides &amp; Information</h2>
-          <p className="guide-home__sub">Free local guides to Bali - search a topic, or swipe through below.</p>
+    <section className="px-6" id="guides" aria-labelledby="guide-home-title">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-left mb-7">
+          <h2 className="section__title !text-left [&::after]:!left-0 [&::after]:![transform:none]" id="guide-home-title">Guides &amp; Information</h2>
+          <p className="max-w-[600px] mt-[0.6rem] text-left text-muted text-body leading-[var(--lh-body)]">Free local guides to Bali - search a topic, or swipe through below.</p>
         </div>
 
-        <div className="gsearch">
+        <div className="gsearch !mb-[1.7rem]">
           <div className="gsearch__box">
             <svg className="gsearch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="7" />

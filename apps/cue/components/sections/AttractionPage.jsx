@@ -7,7 +7,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
-import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE } from '@/components/sections/TourPage';
+import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
 
 export default function AttractionPage({ data }) {
   return (
@@ -21,7 +21,7 @@ export default function AttractionPage({ data }) {
         )}
         <div className="tour-hero__body">
           <h1 className="subhero__title">{data.title}</h1>
-          <p className="tour-hero__desc">{data.desc}</p>
+          <p className={HERO_DESC}>{data.desc}</p>
           <ul className={HOOK_UL}>
             {data.hooks.map((h) => (
               <li key={h.label}>
@@ -30,7 +30,7 @@ export default function AttractionPage({ data }) {
               </li>
             ))}
           </ul>
-          <a href={data.ctaHref} className="tour-hero__cta">{data.cta}</a>
+          <a href={data.ctaHref} className={HERO_CTA}>{data.cta}</a>
         </div>
       </section>
 

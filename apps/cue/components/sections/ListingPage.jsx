@@ -87,7 +87,8 @@ export default function ListingPage({ data }) {
         <div className="tour-hero__image" style={{ backgroundImage: `url(/assets/images/${heroBg})` }} />
         <div className="tour-hero__body">
           {!q && <h1 className="subhero__title">{title}</h1>}
-          {!q && <p className="tour-hero__desc">{sub}</p>}
+          {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
+          {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
           <div className="lsearch">
             <input
               type="search"

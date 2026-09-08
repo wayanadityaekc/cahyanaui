@@ -3654,11 +3654,8 @@ section.faq::before,
 .tour-hero__body .subhero__title {
   margin-bottom: 0.75rem;
 }
-.tour-hero__desc {
-  max-width: 460px;
-  margin: 0;
-  color: #3d3d3d;
-}
+/* .tour-hero__desc + .tour-hero__cta -> utilities di TourPage.jsx +
+   AttractionPage.jsx (migrasi Fase 2). Struktur hero lain tetep CSS. */
 /* Konten di bawah hero: matiin efek "sheet naik" bawaan tour-layout */
 .tour-hero + .tour-layout--book {
   margin-top: 0;
@@ -3669,21 +3666,6 @@ section.faq::before,
    nggak terlalu bold. */
 /* .tour-hook* -> utilities di TourPage.jsx + AttractionPage.jsx (migrasi Fase 2).
    Kelas `tour-hook` tetep dipasang sbg marker check-detail. */
-/* CTA di bawah hook (scroll ke form booking) */
-.tour-hero__cta {
-  display: inline-block;
-  margin-top: 1.6rem;
-  padding: 0.8rem 2rem;
-  border-radius: var(--r-pill);
-  background: var(--color-cta);
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color var(--dur) ease;
-}
-.tour-hero__cta:hover {
-  background: var(--color-cta-d);
-}
 /* Glow di kartu booking pas CTA hero diklik - kedip halus 3 detik, nggak terlalu terang */
 @keyframes booksidebarGlow {
   0% {
@@ -3832,15 +3814,6 @@ section.faq::before,
     justify-content: center;
     align-items: flex-start;
     text-align: left;
-  }
-  .tour-hero__desc {
-    max-width: 460px;
-  }
-}
-/* Mobile: buang tombol di bawah hook - booking pakai bar bawah aja (book-bar) */
-@media (max-width: 768px) {
-  .tour-hero__cta {
-    display: none;
   }
 }
 

@@ -28,6 +28,14 @@ export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
 export const HOOK_UL = 'tour-hook list-none flex justify-center mt-6 mx-0 mb-0 p-0 [&>li]:flex [&>li]:flex-col [&>li]:px-4 min-[769px]:[&>li]:px-[22px] [&>li+li]:[border-left:1px_solid_#e6e6e6]';
 export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
 export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
+// Hero detail leaf (migrasi Fase 2): desc + CTA -> utilities. Struktur hero
+// (.tour-hero/.tour-hero__body/.tour-hero__image + override .subhero__title,
+// anchor .tour-hero + .tour-layout--book, scope .tourprog) TETEP CSS. CTA di-hide
+// di HP via max-[768px]:hidden (match @media max-width:768px persis).
+export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
+// `tour-hero__cta` DIPERTAHANKAN sbg marker: di-query JS di BookBar.jsx
+// (IntersectionObserver buat munculin sticky book-bar).
+export const HERO_CTA = 'tour-hero__cta inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease] hover:bg-cta-d [@media(max-width:768px)]:hidden';
 
 function Stop({ s }) {
   const inner = (
@@ -65,7 +73,7 @@ export default function TourPage({ data }) {
         )}
         <div className="tour-hero__body">
           <h1 className="subhero__title">{data.title}</h1>
-          <p className="tour-hero__desc">{data.desc}</p>
+          <p className={HERO_DESC}>{data.desc}</p>
           <ul className={HOOK_UL}>
             {data.hooks.map((h) => (
               <li key={h.label}>
@@ -74,7 +82,7 @@ export default function TourPage({ data }) {
               </li>
             ))}
           </ul>
-          <a href={data.ctaHref} className="tour-hero__cta">{data.cta}</a>
+          <a href={data.ctaHref} className={HERO_CTA}>{data.cta}</a>
         </div>
       </section>
 

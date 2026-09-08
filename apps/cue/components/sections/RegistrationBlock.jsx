@@ -1,15 +1,15 @@
 import { REGISTRATION as R } from '@/content/shared/registration';
 
-function SealIcon() {
+function SealIcon({ className }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" />
     </svg>
   );
 }
-function CheckIcon() {
+function CheckIcon({ className }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M20 6L9 17l-5-5" />
     </svg>
   );
@@ -18,6 +18,8 @@ function CheckIcon() {
 // "Registered business" trust block for the About page. Business registration
 // details only (no personal ID numbers); verification points to the official
 // portal rather than hosting the certificate.
+// Tailwind-native (migrasi Fase 2): dulu keluarga .reg* di style.css -> utilities.
+// Varian `.company-page .reg` gak kepake React (blok ini cuma di about-us).
 export default function RegistrationBlock() {
   const rows = [
     ['Ministry of Law Decree', R.decree],
@@ -26,27 +28,29 @@ export default function RegistrationBlock() {
     ['Registered in', R.location],
   ];
   return (
-    <section className="reg-sec">
-      <div className="reg">
-        <div className="reg__head">
-          <span className="reg__seal"><SealIcon /></span>
+    <section className="max-w-[760px] mx-auto px-[var(--container-x)] pb-[var(--section-gap)]">
+      <div className="bg-white border border-line rounded-lg shadow-md py-[1.4rem] px-6">
+        <div className="flex items-center gap-[0.8rem] pb-4 border-b border-line">
+          <span className="flex-none grid place-items-center w-11 h-11 rounded-[50%] bg-gold text-white">
+            <SealIcon className="w-5 h-5" />
+          </span>
           <div>
-            <div className="reg__name">{R.name}</div>
-            <div className="reg__type">Registered in Indonesia</div>
+            <div className="text-h2 font-bold text-gold tracking-[-0.01em] leading-[1.2]">{R.name}</div>
+            <div className="text-small font-medium tracking-[0.04em] uppercase text-muted mt-[0.15rem]">Registered in Indonesia</div>
           </div>
         </div>
-        <dl className="reg__rows">
+        <dl className="mt-4">
           {rows.map(([k, v]) => (
-            <div className="reg__row" key={k}>
-              <dt className="reg__k">{k}</dt>
-              <dd className="reg__v">{v}</dd>
+            <div className="flex justify-between gap-4 py-2 [&:not(:first-child)]:[border-top:1px_dashed_var(--line)]" key={k}>
+              <dt className="text-label tracking-[0.06em] uppercase text-muted">{k}</dt>
+              <dd className="m-0 text-small font-semibold text-amber text-right [font-variant-numeric:tabular-nums]">{v}</dd>
             </div>
           ))}
         </dl>
-        <p className="reg__verify">
-          <CheckIcon />
+        <p className="flex items-center gap-2 mt-4 text-small text-green">
+          <CheckIcon className="w-[15px] h-[15px] flex-none text-ok" />
           Verify our registration on the official portal{' '}
-          <a href={R.verifyUrl} target="_blank" rel="noopener">ahu.go.id</a>
+          <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-cta font-semibold no-underline">ahu.go.id</a>
         </p>
       </div>
     </section>

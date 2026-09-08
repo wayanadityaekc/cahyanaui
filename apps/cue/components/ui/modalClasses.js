@@ -17,6 +17,9 @@ export const SHELL =
   'fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)] opacity-100 visible pointer-events-auto';
 export const BOX =
   'relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white';
+// .modal__box--sm: the same box, narrower (430px) and centre-aligned (confirm dialogs).
+export const BOX_SM =
+  'relative w-full max-w-[430px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white text-center';
 export const CLOSE =
   'absolute top-3 right-4 text-[1.6rem] leading-none text-green bg-transparent border-none cursor-pointer';
 export const LOGO = 'block h-[38px] w-auto mx-auto mb-[1.1rem]';

@@ -5102,20 +5102,6 @@ section.faq::before,
   font-size: var(--fs-field);
   background: #fff;
 }
-/* Tombol sekunder popup: putih + border hijau (senada .program-cta__btn--add /
-   .card-add) biar kebedain dari tombol utama yang hijau solid.
-   Double class = specificity menang dari .modal__btn apapun urutannya. */
-.modal__btn.modal__btn--ghost {
-  margin-top: 0.6rem;
-  background: #fff;
-  border: 1.5px solid var(--color-green);
-  color: var(--color-green);
-}
-.modal__btn.modal__btn--ghost:hover {
-  background: var(--color-green);
-  border-color: var(--color-green);
-  color: var(--color-cream);
-}
 /* Popup "Added to itinerary" (dibuat di showAddedPopup): jarak antar tombol */
 #itn-added-modal .modal__btn + .modal__btn {
   margin-top: 0.85rem;
@@ -5536,10 +5522,6 @@ section.faq::before,
 .itn2__add:hover {
   background: var(--color-green);
   color: #fff;
-}
-.modal__box--sm {
-  max-width: 430px;
-  text-align: center;
 }
 .modal__sub {
   margin-bottom: 1.1rem;

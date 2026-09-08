@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Modal from '@/components/ui/Modal';
+import { SUB } from '@/components/ui/modalClasses';
 import { usePricing } from '@/state/PricingProvider';
 
 const CATS = [
@@ -28,7 +29,7 @@ export default function AddItemPicker({ open, onClose, onPick }) {
     <Modal open={open} onClose={close} title="Add to your trip">
       {!cat ? (
         <>
-          <p className="modal__sub">Pick a category to add to your trip.</p>
+          <p className={SUB}>Pick a category to add to your trip.</p>
           <div className="pick-cats">
             {CATS.map((c) => (
               <button type="button" className="pick-cat" key={c.key} onClick={() => setCat(c)}>
@@ -41,7 +42,7 @@ export default function AddItemPicker({ open, onClose, onPick }) {
         </>
       ) : (
         <>
-          <p className="modal__sub">{cat.label}</p>
+          <p className={SUB}>{cat.label}</p>
           <div className="pick-cats">
             {items.map((i) => (
               <button

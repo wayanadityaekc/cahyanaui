@@ -31,6 +31,18 @@ const MTC_EMPTY_SUB = 'text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
 const MTC_TOTAL = 'flex justify-between items-center bg-cream rounded-lg py-4 px-[1.2rem] mt-[1.4rem]';
 const MTC_TOTAL_LABEL = 'font-medium text-small tracking-[0.14em] uppercase text-green';
 const MTC_TOTAL_VAL = 'text-[1.4rem] font-semibold text-amber-d';
+// Leaf kartu item -> utilities. Container `.mtc-item` (+ `--booked`, + context
+// `.mtc-book .mtc-item`) TETEP CSS (punya varian read-only, anchor). `.mtc-item__datebtn`
+// juga TETEP CSS (bagian dari base rule field shared, Bucket A). Foto & ikon-svg =
+// string terpisah (bukan di-layer) biar w/h 40 vs 56 gak konflik urutan utility.
+const MTC_ITEM_ICON = 'flex-[0_0_auto] w-10 h-10 grid place-items-center rounded-md bg-cream text-gold-d [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';
+const MTC_ITEM_ICON_PHOTO = 'flex-[0_0_auto] w-[56px] h-[56px] grid place-items-center rounded-md bg-cream bg-cover bg-center text-gold-d';
+const MTC_ITEM_BODY = 'flex-[1_1_auto] min-w-0';
+const MTC_ITEM_TITLE = 'font-semibold text-green m-0';
+const MTC_ITEM_DESC = 'text-small text-muted mt-[0.15rem] mx-0 mb-0';
+const MTC_ITEM_PRICE = 'flex-[0_0_auto] text-right whitespace-nowrap font-semibold text-amber-d';
+const MTC_ITEM_DEL = 'flex-[0_0_auto] border-0 bg-transparent text-muted text-[1.35rem] leading-none cursor-pointer py-0 px-[0.15rem] hover:text-err';
+const MTC_ITEM_DATE = 'text-label font-medium tracking-[0.14em] uppercase text-muted mt-[0.3rem] mx-0 mb-0';
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
@@ -43,7 +55,7 @@ function ItemIcon({ row }) {
   if (img) {
     return (
       <span
-        className="mtc-item__icon mtc-item__icon--photo"
+        className={MTC_ITEM_ICON_PHOTO}
         style={{ backgroundImage: `url(/assets/images/${img})` }}
         aria-hidden="true"
       />
@@ -73,7 +85,7 @@ function ItemIcon({ row }) {
       </svg>
     );
   }
-  return <span className="mtc-item__icon" aria-hidden="true">{glyph}</span>;
+  return <span className={MTC_ITEM_ICON} aria-hidden="true">{glyph}</span>;
 }
 
 export default function MyTripsCart() {
@@ -212,21 +224,21 @@ export default function MyTripsCart() {
         <div className="mtc-item mtc-item--booked">
           {img ? (
             <span
-              className="mtc-item__icon mtc-item__icon--photo"
+              className={MTC_ITEM_ICON_PHOTO}
               style={{ backgroundImage: 'url(/assets/images/' + img + ')' }}
               aria-hidden="true"
             />
           ) : (
             <ItemIcon row={{ kind: 'tour' }} />
           )}
-          <div className="mtc-item__body">
-            <p className="mtc-item__title">{t.name}</p>
-            <p className="mtc-item__desc">{status} · {t.guests || '-'} guests</p>
-            <p className="mtc-item__date">
+          <div className={MTC_ITEM_BODY}>
+            <p className={MTC_ITEM_TITLE}>{t.name}</p>
+            <p className={MTC_ITEM_DESC}>{status} · {t.guests || '-'} guests</p>
+            <p className={MTC_ITEM_DATE}>
               {fmtRange(t.start_date, t.end_date)}{t.ref ? ' · ' + t.ref : ''}
             </p>
           </div>
-          <span className="mtc-item__price">
+          <span className={MTC_ITEM_PRICE}>
             <span className="price-cur">{withSymbol(bookedMoney(t.price_usd, t.price_idr))}</span>
           </span>
         </div>
@@ -351,9 +363,9 @@ export default function MyTripsCart() {
               return (
                 <div className="mtc-item" key={i}>
                   <ItemIcon row={r} />
-                  <div className="mtc-item__body">
-                    <p className="mtc-item__title">{r.service}</p>
-                    <p className="mtc-item__desc">
+                  <div className={MTC_ITEM_BODY}>
+                    <p className={MTC_ITEM_TITLE}>{r.service}</p>
+                    <p className={MTC_ITEM_DESC}>
                       {r.day_no ? `Day ${r.day_no} · ` : ''}
                       <button
                         type="button"
@@ -366,12 +378,12 @@ export default function MyTripsCart() {
                       {r.return ? ' · return' : ''}
                     </p>
                   </div>
-                  <span className="mtc-item__price">
+                  <span className={MTC_ITEM_PRICE}>
                     <span className="price-cur">
                       {line ? withSymbol(format(line.display)) : '-'}
                     </span>
                   </span>
-                  <button type="button" className="mtc-item__del" aria-label={`Remove ${r.service}`} onClick={() => remove(r, i)}>&times;</button>
+                  <button type="button" className={MTC_ITEM_DEL} aria-label={`Remove ${r.service}`} onClick={() => remove(r, i)}>&times;</button>
                 </div>
               );
             })}

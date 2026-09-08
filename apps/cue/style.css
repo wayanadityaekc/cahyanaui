@@ -4194,55 +4194,9 @@ section.faq::before,
   padding: 0.8rem 0.95rem;
   margin-bottom: 0.6rem;
 }
-.mtc-item__icon {
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--r-md);
-  background: var(--color-cream);
-  color: var(--color-gold-d);
-}
-.mtc-item__icon svg { width: var(--icon-md); height: var(--icon-md); }
-/* thumbnail foto card (day items) — gantiin ikon SVG kalau ada gambar */
-.mtc-item__icon--photo {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--r-md);
-  background-color: var(--color-cream);
-  background-size: cover;
-  background-position: center;
-}
-.mtc-item__body { flex: 1 1 auto; min-width: 0; }
-.mtc-item__title {
-  font-weight: 600;
-  color: var(--color-green);
-  margin: 0;
-}
-.mtc-item__desc {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  margin: 0.15rem 0 0;
-}
-.mtc-item__price {
-  flex: 0 0 auto;
-  text-align: right;
-  white-space: nowrap;
-  font-weight: 600;
-  color: var(--color-amber-d);
-}
-.mtc-item__del {
-  flex: 0 0 auto;
-  border: 0;
-  background: none;
-  color: var(--color-muted);
-  font-size: 1.35rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0 0.15rem;
-}
-.mtc-item__del:hover { color: var(--color-err); }
+/* .mtc-item__icon(+svg,--photo) / __body / __title / __desc / __price / __del ->
+   utilities di MyTripsCart.jsx (migrasi Fase 2). Kontainer .mtc-item + varian
+   .mtc-item--booked + context .mtc-book .mtc-item TETEP CSS. */
 /* tanggal per kartu — gantiin header grup tanggal (cart sekarang flat) */
 /* Tombol tanggal per kartu cart — buka kalender custom (bookDatePopup), BUKAN
    date input bawaan browser. Border/radius/font/warna ikut base rule field di atas;
@@ -4272,15 +4226,7 @@ section.faq::before,
   opacity: 0.7;
 }
 .mtc-item__datebtn.is-empty { color: var(--color-muted); }
-/* tanggal teks (tab paket suggested — di sana tanggalnya bawaan paket, bukan input) */
-.mtc-item__date {
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin: 0.3rem 0 0;
-}
+/* .mtc-item__date -> utilities di MyTripsCart.jsx (migrasi Fase 2) */
 /* toggle "ada di trip" di tab paket suggested */
 .mtc-item__heart.is-on { color: var(--color-gold-d); }
 /* strikethrough original when referral active */

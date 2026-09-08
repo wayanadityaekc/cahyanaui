@@ -109,25 +109,30 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     });
   };
 
+  // Tailwind-native (migrasi Fase 2): kelas presentasi `.bookcard__*` -> utilities,
+  // CSS-nya dihapus. DIPERTAHANKAN sbg CSS (context hook / marker / shared): .booking
+  // + .booking__card (struktur, di-override .booksidebar .booking*), .bookcard__amount
+  // (scope .price__sym), .booking__type + .bookcard__toggle + .booking__type-btn (toggle),
+  // .booking__btn + .bookcard__cta (tombol CTA + MARKER check-detail).
   return (
     <section className="booking bookcard" id="booking">
-      <div className="booking__card bookcard__card">
-        <div className="bookcard__head">
-          <p className="bookcard__kicker">Transparent pricing</p>
-          <h2 className="bookcard__title">Your Total Price</h2>
-          <p className="bookcard__sub">No hidden fees. No surprises.</p>
+      <div className="booking__card text-left">
+        <div className="mb-[1.1rem]">
+          <p className="mb-2 text-label font-medium tracking-[0.14em] uppercase text-amber">Transparent pricing</p>
+          <h2 className="m-0 font-head text-h2 font-bold tracking-[-0.01em] text-gold">Your Total Price</h2>
+          <p className="mt-[0.3rem] text-small text-muted">No hidden fees. No surprises.</p>
         </div>
 
         {!locked && (
-          <div className="bookcard__pick">
+          <div className="grid gap-[0.6rem] mb-[1.2rem]">
             <Select label="Service" value={type} onChange={setType} options={SERVICE_TYPES} placeholder="Service" />
             <Select label="Select service" value={item} onChange={setItem} options={itemOptions} placeholder="Choose" />
           </div>
         )}
 
-        <div className="bookcard__price">
+        <div className="mb-[1.1rem]">
           <span className="bookcard__amount">{withSymbol(priceText)}</span>
-          <span className="bookcard__unit">{unit} · {displayGuests} {guestWord}</span>
+          <span className="block mt-[0.45rem] text-small text-muted">{unit} · {displayGuests} {guestWord}</span>
         </div>
 
         {hasExclusive && (
@@ -138,16 +143,16 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         )}
 
         {hasExclusive && (
-          <div className="bookcard__note" key={mode}>
-            <span className="bookcard__note-ic" aria-hidden="true">{SPARK_ICON}</span>
-            <span className="bookcard__note-txt">
-              <b>{MODE_INFO[mode].label}</b>
-              <span>{MODE_INFO[mode].desc}</span>
+          <div className="flex items-start gap-[0.6rem] mb-[0.9rem] py-[0.7rem] px-[0.85rem] [border:1px_solid_var(--line)] [border-left:3px_solid_var(--color-cta)] rounded-md bg-cream animate-[bookcardNoteIn_var(--dur)_var(--ease)]" key={mode}>
+            <span className="flex-none inline-flex w-5 h-5 mt-px text-amber [&>svg]:w-full [&>svg]:h-full" aria-hidden="true">{SPARK_ICON}</span>
+            <span className="flex-1 min-w-0">
+              <b className="block text-strong font-semibold text-gold">{MODE_INFO[mode].label}</b>
+              <span className="block mt-[0.1rem] text-small leading-[1.4] text-muted">{MODE_INFO[mode].desc}</span>
             </span>
           </div>
         )}
 
-        <div className="bookcard__fields">
+        <div className="grid gap-[0.6rem] mb-[1.1rem]">
           <DateField label="Date" hint="Date" icon={CAL_ICON} value={date} onChange={setDate} placeholder="Select date" />
           <Select
             label="Guests"
@@ -169,11 +174,11 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         </button>
 
 
-        {surcharge > 0 && <small className="bookcard__surcharge">Pickup surcharge applied</small>}
+        {surcharge > 0 && <small className="block mt-[0.6rem] text-center text-small text-muted">Pickup surcharge applied</small>}
 
-        <p className="bookcard__reassure">
-          <span className="bookcard__reassure-ic" aria-hidden="true">{SHIELD_ICON}</span>
-          <span><b>Free cancellation</b> up to 24h · Pay after your trip</span>
+        <p className="flex items-center justify-center gap-[0.45rem] mt-4 text-small text-muted">
+          <span className="inline-flex w-[15px] h-[15px] text-cta [&>svg]:w-full [&>svg]:h-full" aria-hidden="true">{SHIELD_ICON}</span>
+          <span><b className="font-semibold text-green">Free cancellation</b> up to 24h · Pay after your trip</span>
         </p>
       </div>
     </section>

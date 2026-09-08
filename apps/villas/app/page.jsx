@@ -39,8 +39,8 @@ export default function HomePage() {
         <div className="relative min-h-[62vh] sm:min-h-[72vh] flex items-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://picsum.photos/seed/ubudvilla9/1800/1100"
-            alt="Cahyana House pool at golden hour with palm trees"
+            src="/images/cahyana-tibuah.webp"
+            alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div

@@ -101,6 +101,7 @@ export default function BookingSheet() {
                       type="date"
                       value={booking.checkIn}
                       onChange={(e) => updateBooking({ checkIn: e.target.value })}
+                      className={booking.checkIn ? undefined : 'is-empty'}
                     />
                   </div>
                 </div>
@@ -113,6 +114,7 @@ export default function BookingSheet() {
                       value={booking.checkOut}
                       min={booking.checkIn || undefined}
                       onChange={(e) => updateBooking({ checkOut: e.target.value })}
+                      className={booking.checkOut ? undefined : 'is-empty'}
                     />
                   </div>
                 </div>

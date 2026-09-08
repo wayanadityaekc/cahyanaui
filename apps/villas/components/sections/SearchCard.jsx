@@ -19,13 +19,26 @@ export default function SearchCard() {
       <div className="field-shell">
         <div className="w-full">
           <label htmlFor="search-checkin">Check-in</label>
-          <input id="search-checkin" type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+          <input
+            id="search-checkin"
+            type="date"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
+            className={checkIn ? undefined : 'is-empty'}
+          />
         </div>
       </div>
       <div className="field-shell">
         <div className="w-full">
           <label htmlFor="search-checkout">Check-out</label>
-          <input id="search-checkout" type="date" value={checkOut} min={checkIn || undefined} onChange={(e) => setCheckOut(e.target.value)} />
+          <input
+            id="search-checkout"
+            type="date"
+            value={checkOut}
+            min={checkIn || undefined}
+            onChange={(e) => setCheckOut(e.target.value)}
+            className={checkOut ? undefined : 'is-empty'}
+          />
         </div>
       </div>
       <div className="field-shell">

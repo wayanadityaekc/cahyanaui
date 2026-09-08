@@ -233,6 +233,11 @@
     cursor: pointer;
   }
   .field-shell input::-webkit-calendar-picker-indicator { cursor: pointer; }
+
+  /* Empty date field shows the mm/dd/yyyy format hint - lighter/muted so it
+     doesn't read as an already-filled value, same weight as it'll get once
+     a real date is picked (input.is-empty toggled off by the component). */
+  .field-shell input[type="date"].is-empty { color: var(--color-muted); }
 }
 
 /* =====================================================================

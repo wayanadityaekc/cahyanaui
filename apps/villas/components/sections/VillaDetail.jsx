@@ -113,13 +113,26 @@ export default function VillaDetail({ villa }) {
                 <div className="field-shell">
                   <div className="w-full">
                     <label htmlFor={`${villa.slug}-checkin`}>Check-in</label>
-                    <input id={`${villa.slug}-checkin`} type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+                    <input
+                      id={`${villa.slug}-checkin`}
+                      type="date"
+                      value={checkIn}
+                      onChange={(e) => setCheckIn(e.target.value)}
+                      className={checkIn ? undefined : 'is-empty'}
+                    />
                   </div>
                 </div>
                 <div className="field-shell">
                   <div className="w-full">
                     <label htmlFor={`${villa.slug}-checkout`}>Check-out</label>
-                    <input id={`${villa.slug}-checkout`} type="date" value={checkOut} min={checkIn || undefined} onChange={(e) => setCheckOut(e.target.value)} />
+                    <input
+                      id={`${villa.slug}-checkout`}
+                      type="date"
+                      value={checkOut}
+                      min={checkIn || undefined}
+                      onChange={(e) => setCheckOut(e.target.value)}
+                      className={checkOut ? undefined : 'is-empty'}
+                    />
                   </div>
                 </div>
               </div>

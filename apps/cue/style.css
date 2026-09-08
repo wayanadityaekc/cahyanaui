@@ -6128,83 +6128,11 @@ button.pick-cat {
   overflow: hidden;
   touch-action: pan-y; /* geser samping = ganti foto (JS), geser vertikal = scroll biasa */
 }
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
 .hero-slide.is-active {
   opacity: 1;
 }
-.hero-slider__cap {
-  position: absolute;
-  left: 14px;
-  bottom: 14px;
-  z-index: 2;
-  max-width: 62%;
-  padding: 5px 12px;
-  border-radius: var(--r-xl);
-  background: rgba(0, 0, 0, 0.42);
-  color: #fff;
-  font-size: var(--fs-small);
-}
-.hero-slider__title {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 /* Panah kecil "‹ ›" - DESKTOP ONLY, di pojok kanan BAWAH (seberang judul) */
-.hero-slider__arrows {
-  position: absolute;
-  bottom: 12px;
-  right: 14px;
-  z-index: 2;
-  display: none;
-  gap: 6px;
-}
-.hero-slider__arrow {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0;
-  color: #fff;
-  font-size: 1.25rem;
-  line-height: 1;
-  cursor: pointer;
-}
-.hero-slider__arrow:hover {
-  background: rgba(0, 0, 0, 0.5);
-}
 /* Dots: max 5, cuma indikator geser (non-klik). Aktif lebih besar, tepi mengecil. */
-.hero-slider__dots {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 16px;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  pointer-events: none;
-}
-.hero-slider__dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-  transition: all var(--dur) ease;
-}
 .hero-slider__dot.is-active {
   width: 7px;
   height: 7px;
@@ -6216,24 +6144,8 @@ button.pick-cat {
   opacity: 0.7;
 }
 /* Panah cuma tampil di desktop */
-@media (min-width: 769px) {
-  .hero-slider__arrows {
-    display: flex;
-  }
-}
 /* Mobile: naikin caption + dots biar nggak ketutup sheet putih; dots ke KANAN
    biar nggak numpuk sama judul foto (kiri) */
-@media (max-width: 768px) {
-  .hero-slider__cap {
-    bottom: 2.6rem;
-  }
-  .hero-slider__dots {
-    left: auto;
-    right: 14px;
-    bottom: 2.6rem;
-    justify-content: flex-end;
-  }
-}
 /* DESKTOP: bg putih dibagi 2 - teks kiri (45%) | foto kanan (55%), tanpa gradasi */
 @media (min-width: 769px) {
   .tour-hero {

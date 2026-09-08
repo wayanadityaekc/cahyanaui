@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { overlay } from './hsClasses';
 
 export default function Overlay({ open, elevated = false, onClose }) {
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function Overlay({ open, elevated = false, onClose }) {
   if (typeof document === 'undefined') return null;
   return createPortal(
     <div
-      className={`hs-overlay${open ? ' open' : ''}${elevated ? ' hs-overlay--elevated' : ''}`}
+      className={overlay(open, elevated)}
       onClick={onClose}
     />,
     document.body,

@@ -47,3 +47,28 @@ export const CONTROL_VAL_RICH_PLACEHOLDER = 'overflow-hidden text-ellipsis white
 // .hs-chev — rotate on open itu DEAD di React (is-open gak pernah di-set), jadi gak
 // dimasukin. transition tetep (mirror computed).
 export const CHEV = 'w-[18px] h-[18px] shrink-0 text-muted [transition:transform_var(--dur)_ease]';
+
+// ===== Panel: mode POPUP (kartu ke-center, SAMA di semua layar). Select selalu popup
+// (popup default true, gak ada pemakaian popup=false), jadi cukup 1 layout - bottom-sheet
+// & floating-dropdown gak kepake buat Select. Base .hs-panel (bg/border/overscroll/
+// transisi) + override .hs-panel--popup (fixed center/size/radius/shadow/flex). =====
+const PANEL_POPUP_STATIC =
+  'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
+  'bg-white [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
+  'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
+  '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]';
+export const panelPopup = (open) =>
+  `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
+export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none';
+export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
+export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-white text-green text-[1.2rem] leading-none cursor-pointer';
+export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto]';
+
+// .hs-opt (+ .bk-opt padding 12/16 + .is-sel + hover + divider antar-opt). Selected TIDAK
+// berubah pas hover (specificity is-sel > :hover di asli), jadi bg-nya di cabang.
+export const opt = (sel) =>
+  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_#f2efe7] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
+
+// .hs-overlay (scrim; cuma tampil pas open). --elevated = z lebih tinggi (dibuka dari modal).
+export const overlay = (open, elevated) =>
+  `fixed inset-0 bg-[rgba(26,26,26,0.42)] ${elevated ? 'z-[300]' : 'z-[55]'} ${open ? 'block' : 'hidden'}`;

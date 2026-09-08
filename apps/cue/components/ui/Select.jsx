@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useMobile from './useMobile';
 import Overlay from './Overlay';
-import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER } from './hsClasses';
+import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelPopup, PANEL_HEAD, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, opt } from './hsClasses';
 
 function Chevron() {
   return (
@@ -56,22 +56,24 @@ export default function Select({
 
   const selected = options.find((o) => String(o.value) === String(value));
 
+  // Panel = mode popup (default; semua pemakaian Select popup). Kalau nanti butuh
+  // popup=false (dropdown nempel field / bottom-sheet), mode itu perlu ditambah lagi.
   const panel = (
-    <div className={`hs-panel bk-panel${open ? ' open' : ''}${popup ? ' hs-panel--popup' : ''}`}>
-      <div className="hs-panel__head">
-        <h3>{label}</h3>
-        <button type="button" className="hs-panel__close" aria-label="Close" onClick={() => setOpen(false)}>
+    <div className={panelPopup(open)}>
+      <div className={PANEL_HEAD}>
+        <h3 className={PANEL_HEAD_H3}>{label}</h3>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
           &times;
         </button>
       </div>
-      <div className="hs-panel__body" role="listbox" aria-label={label}>
+      <div className={PANEL_BODY} role="listbox" aria-label={label}>
         {options.map((o) => (
           <button
             key={String(o.value)}
             type="button"
             role="option"
             aria-selected={String(o.value) === String(value)}
-            className={`hs-opt bk-opt${String(o.value) === String(value) ? ' is-sel' : ''}`}
+            className={opt(String(o.value) === String(value))}
             onClick={() => {
               onChange(o.value);
               setOpen(false);

@@ -224,7 +224,6 @@ body {
 .navbar__acct .acct__cur { margin-left: auto; flex: none; }
 
 /* Guests + Stay area = 2 kolom, di atas tombol sign in */
-.navbar__tripcol .hs-control { width: 100%; }
 
 /* Sign in (baris sendiri, di bawah trip) */
 
@@ -572,67 +571,6 @@ body {
 .hsearch__dd {
   position: relative;
 }
-/* Custom dropdown Guests/Pickup: opsi teks polos + panel bisa scroll kalau panjang */
-.hs-panel--menu .hs-panel__body {
-  max-height: 500px;
-  overflow-y: auto;
-}
-.hs-opt--menu.is-sel {
-  font-weight: 600;
-  color: var(--color-gold);
-}
-/* ===== Control (tombol yang keliatan kaya input) ===== */
-.hs-control {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  border: 1px solid var(--line, #e7e4dd);
-  border-radius: var(--r-md);
-  padding: 0 0.85rem;
-  height: var(--field-h);
-  background: #fff;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--fs-field);
-  color: var(--color-green);
-  text-align: left;
-  cursor: pointer;
-  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
-}
-.hs-control:hover {
-  border-color: var(--color-gold);
-}
-.hs-control.is-open {
-  border-color: var(--color-gold);
-  box-shadow: var(--focus-ring);
-}
-/* "Choose" (explore-type field, search form homepage): disamain ke ukuran
-   label di atasnya (0.8rem) - field ini doang, .hs-control lain (currency,
-   dropdown booking) tetep --fs-field biar konsisten sama field lain. */
-[data-explore-btn].hs-control {
-  font-size: 0.8rem;
-}
-.hs-control__val.placeholder {
-  color: var(--color-muted);
-}
-.hs-control__val {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-/* Opsi berbendera (Country dropdown): bendera + nama sejajar di control & panel. */
-.hs-control__val--flag {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.hs-control__val--flag .hs-opt__nm {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .hs-opt__flag {
   width: 20px;
   height: 14px;
@@ -641,94 +579,12 @@ body {
   border-radius: 2px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
-/* Search box di dalam custom dropdown (opt-in, mis. Country) - nempel di atas list */
-/* Opsi ke-filter search: [hidden] harus menang dari .hs-opt{display:flex} */
-.hs-opt[hidden] {
-  display: none;
-}
 .hs-chev {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   color: var(--color-muted);
   transition: transform var(--dur) ease;
-}
-.hs-chev--cal {
-  width: 17px;
-  height: 17px;
-}
-.hs-control.is-open .hs-chev:not(.hs-chev--cal) {
-  transform: rotate(180deg);
-}
-/* ===== Panel (desktop: floating; mobile: bottom-sheet) ===== */
-.hs-panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  z-index: 60;
-  background: #fff;
-  border: 1px solid var(--line, #e7e4dd);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-xl);
-  overflow: hidden;
-  /* buka/tutup halus (fade + slide), se-smooth drawer */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.24s var(--ease),
-    transform 0.24s var(--ease),
-    visibility 0.24s;
-  pointer-events: none;
-}
-.hs-panel.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-.hs-panel__head {
-  display: none;
-}
-.hs-panel__body {
-  max-height: 340px;
-  overflow-y: auto;
-}
-/* option (kategori) */
-.hs-opt {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.85rem 1rem;
-  border: none;
-  background: none;
-  text-align: left;
-  cursor: pointer;
-}
-.hs-opt + .hs-opt {
-  border-top: 1px solid #f2efe7;
-}
-.hs-opt:hover {
-  background: #faf8f3;
-}
-.hs-opt.is-sel {
-  background: rgba(34, 32, 28, 0.14);
-}
-/* Navigasi keyboard: pilihan yg lagi disorot pakai ↑↓ (beda dari hover mouse) */
-.hs-opt.is-kbd {
-  background: rgba(34, 32, 28, 0.14);
-  box-shadow: inset 3px 0 0 var(--color-gold);
-}
-/* Focus ring pas control di-Tab */
-.hs-control:focus-visible {
-  outline: none;
-  border-color: var(--color-gold);
-  box-shadow: var(--focus-ring);
-}
-.hs-opt:focus-visible {
-  outline: none;
 }
 .hs-opt__ic {
   flex-shrink: 0;
@@ -765,159 +621,6 @@ body {
   color: var(--color-gold-d);
   white-space: nowrap;
 }
-/* ===== Calendar (date range) ===== */
-.hs-cal {
-  padding: 16px 16px 6px;
-  max-height: 340px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-.hs-cal__cap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--color-green);
-  margin-bottom: 12px;
-}
-.hs-cal__cap span {
-  flex: 1 1 auto;
-  text-align: center;
-}
-.hs-cal__cap button {
-  flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-  background: #fff;
-  color: var(--color-gold);
-  font-size: 1.3rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
-}
-.hs-cal__cap button:hover {
-  background: var(--color-cream);
-  border-color: var(--color-gold);
-}
-.hs-cal__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-}
-.hs-cal__dow {
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  text-align: center;
-  padding: 4px 0;
-}
-.hs-cal__d {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--fs-small);
-  color: var(--color-ink);
-  cursor: pointer;
-  border: none;
-  background: none;
-  border-radius: var(--r-sm);
-}
-.hs-cal__d:hover:not(.is-off) {
-  background: #f1efe9;
-}
-.hs-cal__d.is-off {
-  color: #cfccc4;
-  cursor: default;
-}
-.hs-cal__d.today {
-  font-weight: 600;
-  color: var(--color-gold-d);
-}
-.hs-cal__d.in-range {
-  background: rgba(34, 32, 28, 0.14);
-  border-radius: 0;
-}
-.hs-cal__d.pt-start {
-  background: var(--color-green);
-  color: #fff;
-  border-radius: var(--r-sm) 0 0 var(--r-sm);
-}
-.hs-cal__d.pt-end {
-  background: var(--color-green);
-  color: #fff;
-  border-radius: 0 var(--r-sm) var(--r-sm) 0;
-}
-.hs-cal__d.pt-solo {
-  background: var(--color-green);
-  color: #fff;
-  border-radius: var(--r-sm);
-}
-.hs-cal__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 12px 18px;
-  border-top: 1px solid #f2efe7;
-}
-.hs-cal__hint {
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.hs-cal__apply {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-small);
-  background: var(--color-green);
-  color: #fff;
-  border: none;
-  border-radius: var(--r-pill);
-  padding: 9px 20px;
-  cursor: pointer;
-}
-/* Date+time picker (Flight date & time): footer = baris pill jam (scroll) + hint/Apply.
-   Footer sticky (dari .hs-cal__foot) biar jam & Apply selalu keliatan walau kalender scroll. */
-.dt-num.is-sel {
-  background: var(--color-green);
-  color: #fff;
-  font-weight: 600;
-}
-/* overlay (cuma tampil pas bottom-sheet HP) */
-.hs-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(26, 26, 26, 0.42);
-  z-index: 55;
-  display: none;
-}
-.hs-overlay.open {
-  display: block;
-}
-/* Field yg dibuka dari DALAM modal (modal shell = z-index 200, utility di
-   modalClasses.js): overlay + panel WAJIB di atas modal, kalau nggak popup/sheet-nya
-   ke-render di belakang modal (JS nambah class ini). */
-.hs-overlay--elevated {
-  z-index: 300;
-}
-.hs-panel--elevated.open {
-  z-index: 320;
-}
 /* Lock scroll background pas bottom-sheet kebuka (HP): cukup overflow:hidden.
    JANGAN position:fixed + reposisi body -> itu yang bikin layar "loncat/ke-scroll"
    pas dropdown dibuka (apalagi kalau udah scroll ke bawah dulu). Sheet-nya sendiri
@@ -928,97 +631,6 @@ body.hs-locked {
 /* sembunyiin tombol WhatsApp (z-index tinggi) pas sheet kebuka biar gak nutupin Apply */
 body.hs-locked .wa-float {
   display: none;
-}
-/* Tripbar sekarang nyatu di navbar (bukan fixed sendiri). JANGAN di-hide pas sheet
-   kebuka -> dulu display:none bikin navbar nyusut & konten "loncat". Bottom-sheet
-   naik dari bawah + overlay, tripbar di atas nggak nutupin apa-apa. */
-/* scroll di dalem panel gak nembus ke background */
-.hs-panel {
-  overscroll-behavior: contain;
-}
-/* HP: panel jadi bottom-sheet naik dari bawah */
-@media (max-width: 768px) {
-  .hs-panel {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    border-radius: var(--r-xl) var(--r-xl) 0 0;
-    /* Sheet naik dari bawah; kalau kontennya tinggi (kalender 13 bulan) dia mentok
-       max-height. 88vh dulu bikin ATAS sheet (header "Select date" + tombol close)
-       nyelip di belakang navbar+tripbar fixed (~96px) di HP pendek -> header ketutup.
-       Pakai calc(100vh - 100px): tepi atas sheet SELALU 100px dari atas layar, jadi
-       header selalu kelihatan di bawah tripbar (konsisten di semua ukuran layar).
-       dvh buat browser modern (hormatin URL bar), vh sbg fallback. */
-    max-height: calc(100vh - 100px);
-    max-height: calc(100dvh - 100px);
-    overflow-y: auto;
-    /* HP: slide dari bawah. Panel tertutup = visibility:hidden biar GAK ngintip di
-       layar (kartu search punya animation -> jadi containing-block buat position:fixed,
-       jadi translateY(100%) doang gak cukup nyembunyiin). Transition visibility bikin
-       exit slide-nya tetep kelihatan penuh baru hilang. */
-    opacity: 1;
-    visibility: hidden;
-    transform: translateY(100%);
-    transition:
-      transform var(--dur-slow) var(--ease),
-      visibility var(--dur-slow);
-    box-shadow: 0 -12px 48px rgba(26, 26, 26, 0.28);
-    display: block;
-  }
-  .hs-panel.open {
-    transform: translateY(0);
-    visibility: visible;
-  }
-  .hs-panel:not(.open) {
-    pointer-events: none;
-  }
-  .hs-panel__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px 12px;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    border-bottom: 1px solid #f2efe7;
-  }
-  .hs-panel__head h3 {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--color-green);
-  }
-  .hs-panel__close {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid var(--line, #e7e4dd);
-    background: #fff;
-    color: var(--color-green);
-    font-size: 1.2rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-  .hs-panel__body {
-    max-height: none;
-  }
-  /* di sheet: kalender ngalir (seluruh sheet yg scroll), header & Apply tetep keliatan */
-  .hs-cal {
-    max-height: none;
-    overflow: visible;
-  }
-  .hs-cal__foot {
-    position: sticky;
-    bottom: 0;
-    background: #fff;
-  }
-}
-@media (min-width: 769px) {
-  .hs-panel__close {
-    display: none;
-  }
 }
 /* popup: range tanggal (From/To) sejajar + input date rapi */
 .hsearch__go {
@@ -1312,15 +924,12 @@ a.tripbar--promo {
     font-size: var(--fs-field) !important;
   }
 }
-/* Samain tinggi date dengan select (native date picker suka lebih tinggi) */
-/* Select booking disamain look-nya sama search control: chevron custom (bukan
-   panah native OS). Native dropdown pas dibuka tetep dipakai (UX HP paling enak). */
-/* icon kalender native disenadain (muted) — dipakai kalau custom control gak aktif */
-/* ===== Booking form: dropdown & date FULL CUSTOM (enhance native) =====
-   UI custom (.bk-control + .hs-panel) nyetir <select>/<input date> asli yg disembunyiin.
-   Tinggi control = 2.9rem (sama kaya field native) -> anti-CLS aman. */
-/* Wrapper auto buat field non-booking (navbar/charter/transfer/itinerary) yg di-enhance
-   jadi custom dropdown/date -> anchor buat panel desktop (position:absolute). */
+/* Custom select/date shell (React: Select/DateField). `.hs-*`/`.bk-*` styling udah
+   di-migrasi ke utility Tailwind (components/ui/hsClasses.js); yang tersisa di sini
+   cuma primitif shared yg masih dipake komponen:
+   - .csel-group : wrapper (anchor panel desktop position:absolute) buat field non-booking.
+   - .bk-native  : native <select>/<input date> yg disembunyiin (custom UI nyetir value-nya).
+   Opsi (.hs-opt__ic/__nm/__pr/__flag), chevron (.hs-chev) & body.hs-locked juga tetep CSS. */
 .csel-group {
   position: relative;
   display: block;
@@ -1328,146 +937,6 @@ a.tripbar--promo {
 }
 .bk-native {
   display: none !important;
-}
-.bk-control {
-  height: var(--field-h);
-  padding-top: 0;
-  padding-bottom: 0;
-  font-weight: 400;
-}
-.bk-panel .hs-panel__body {
-  max-height: 300px;
-}
-.bk-opt {
-  padding: 12px 16px;
-}
-.bk-opt .hs-opt__nm {
-  font-weight: 500;
-}
-/* date booking: 2 bulan ditumpuk (panel selebar kolom, jd sempit) */
-.bk-cal .hs-cal__months {
-  flex-direction: column;
-  flex-wrap: nowrap;
-  gap: 16px;
-}
-.bk-cal .hs-cal__m {
-  max-width: none;
-}
-.hs-cal__d.sel {
-  background: var(--color-green);
-  color: #fff;
-  border-radius: var(--r-sm);
-}
-/* ===== Centered modal popup (Select popup mode) — dipakai buat dropdown yg dibuka
-   dari dalam konteks ber-z-index tinggi (mis. drawer navbar z120). Ukuran & posisi
-   SAMA di semua layar (kartu ke-center, ~15% margin luar), z-index paling atas biar
-   nggak pernah ketutup di manapun komponennya dipakai ulang. Override bottom-sheet HP
-   & anchor desktop, makanya ditaruh SETELAH aturan .hs-panel/.bk-panel. ===== */
-.hs-panel--popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  width: min(440px, 85vw);
-  max-height: 85vh;
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-xl);
-  transform: translate(-50%, -50%) scale(0.96);
-  z-index: 340;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.hs-panel--popup.open {
-  transform: translate(-50%, -50%) scale(1);
-}
-.hs-panel--popup .hs-panel__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid #f2efe7;
-  flex: none;
-}
-.hs-panel--popup .hs-panel__head h3 {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--color-green);
-}
-.hs-panel--popup .hs-panel__close {
-  display: block;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: #fff;
-  color: var(--color-green);
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
-}
-.hs-panel--popup .hs-panel__body {
-  max-height: none;
-  overflow-y: auto;
-  flex: 1 1 auto;
-}
-/* Popup pilih tanggal (Book Now / + My Trips) = standalone-nya date picker booking form.
-   HP: otomatis jadi bottom-sheet dari aturan .hs-panel @media(max-width:768px).
-   Desktop: .hs-panel default position:absolute (butuh anchor) -> override jadi kartu
-   ke-center + munculin head (yg di desktop di-hide buat booking form). */
-.bookdate-panel .hs-cal__apply:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-@media (min-width: 769px) {
-  .bookdate-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    width: min(430px, 92vw);
-    max-height: 86vh;
-    overflow-y: auto;
-    transform: translate(-50%, -48%);
-  }
-  .bookdate-panel.open {
-    transform: translate(-50%, -50%);
-  }
-  .bookdate-panel .hs-panel__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px 12px;
-    position: sticky;
-    top: 0;
-    background: #fff;
-    border-bottom: 1px solid #f2efe7;
-    z-index: 1;
-  }
-  .bookdate-panel .hs-panel__head h3 {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--color-green);
-  }
-  .bookdate-panel .hs-panel__close {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid var(--line, #e7e4dd);
-    background: #fff;
-    color: var(--color-green);
-    font-size: 1.2rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-  .bookdate-panel .hs-cal__foot {
-    position: sticky;
-    bottom: 0;
-    background: #fff;
-  }
 }
 /* Toast "Added to My Trips" */
 .cart-toast {
@@ -1565,24 +1034,6 @@ a.tripbar--promo {
 .bookcard__cta:hover { background-color: var(--color-cta-d); color: #fff; transform: none; }
 /* baris reassurance (shield) */
 
-/* Rich field trigger (icon + hint label + value) - opt-in via icon/hint props
-   di Select/DateField. Dipakai booking card (Date/Guests); field lain tetep
-   .hs-control biasa (tinggi --field-h). */
-.hs-control--rich {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  height: auto;
-  min-height: 3.1rem;
-  padding: 0.5rem 0.85rem;
-  text-align: left;
-}
-.hs-control--rich .hs-control__ic { flex: 0 0 auto; display: inline-flex; width: 20px; height: 20px; color: var(--color-green); }
-.hs-control--rich .hs-control__ic svg { width: 100%; height: 100%; }
-.hs-control--rich .hs-control__stack { flex: 1 1 auto; display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
-.hs-control--rich .hs-control__hint { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.04em; color: var(--color-muted); }
-.hs-control--rich .hs-control__val { font-size: var(--fs-field); font-weight: 500; color: var(--color-ink); }
-.hs-control--rich .hs-control__val.placeholder { color: var(--color-muted); font-weight: 400; }
 
 /* About (homepage) */
 .about {
@@ -3776,7 +3227,6 @@ section.faq::before,
 }
 /* Hormati setelan "kurangi gerak" */
 @media (prefers-reduced-motion: reduce) {
-  .hs-panel,
   .binfo__pop {
     transition: none;
   }
@@ -4354,23 +3804,18 @@ strong {
    dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
-.hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .program-cta__btn--book, .btn-book {
+.hsearch__go, .booking__btn:not(.booking__btn--alt), .program-cta__btn--book, .btn-book {
   background: var(--color-cta);
   color: #fff;
   border-color: var(--color-cta);
 }
 /* Primary button hover: deeper green, text stays white */
-.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover, .program-cta__btn--book:hover {
+.hsearch__go:hover, .booking__btn:not(.booking__btn--alt):hover, .program-cta__btn--book:hover {
   background: var(--color-cta-d);
   color: #fff;
   border-color: var(--color-cta-d);
 }
 /* Outline/secondary buttons: white bg + dark border + dark text (NOT gold) */
-/* Selected calendar dates = gold + white */
-.hs-cal__d.sel, .hs-cal__d.pt-start, .hs-cal__d.pt-end, .hs-cal__d.pt-solo {
-  background: var(--color-gold);
-  color: #fff;
-}
 /* WhatsApp action keeps its brand green (not gold) */
 
 /* =====================================================================

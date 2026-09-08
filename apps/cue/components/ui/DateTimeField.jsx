@@ -16,8 +16,11 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
     onChange(`${d}T${h || '00'}:${m || '00'}`);
   };
 
+  // Tailwind-native (full-portable): .dtf* -> utilities. Kolom jam/menit = Select
+  // shared, di-stretch lewat className prop (nempel ke .csel-group wrapper-nya).
+  const TIMESEL = 'flex-[1_1_0] min-w-0';
   return (
-    <div className="dtf">
+    <div className="flex flex-col gap-2">
       <DateField
         id={id ? `${id}-date` : undefined}
         label={label}
@@ -26,7 +29,7 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
         min={min}
         placeholder="Select date"
       />
-      <div className="dtf__time">
+      <div className="flex items-center gap-[0.4rem]">
         <Select
           id={id ? `${id}-hour` : undefined}
           label="Hour"
@@ -34,8 +37,9 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
           onChange={(h) => emit(datePart, h, mm)}
           options={HOURS.map((v) => ({ value: v, label: v }))}
           placeholder="HH"
+          className={TIMESEL}
         />
-        <span className="dtf__colon">:</span>
+        <span className="font-semibold text-muted">:</span>
         <Select
           id={id ? `${id}-minute` : undefined}
           label="Minute"
@@ -43,6 +47,7 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
           onChange={(m) => emit(datePart, hh, m)}
           options={MINUTES.map((v) => ({ value: v, label: v }))}
           placeholder="MM"
+          className={TIMESEL}
         />
       </div>
     </div>

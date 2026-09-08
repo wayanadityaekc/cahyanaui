@@ -3593,24 +3593,6 @@ section.faq::before,
 .charter__fields .field {
   margin-bottom: 0;
 }
-.dtf {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.dtf__time {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.dtf__time .csel-group {
-  flex: 1 1 0;
-  min-width: 0;
-}
-.dtf__colon {
-  font-weight: 600;
-  color: var(--color-muted);
-}
 /* Good to know di bawah hero */
 .charter__notes {
   max-width: 720px;
@@ -4677,38 +4659,6 @@ strong {
 }
 
 /* Route picker card */
-.tpick__route {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: end;
-  gap: 0.55rem;
-}
-/* Mobile: From/To ditumpuk vertikal (From atas - panah tengah - To bawah), biar gak
-   sempit kayak 2-kolom. Desktop TETAP 1 baris From|panah|To (Wayan). */
-@media (max-width: 600px) {
-  .tpick__route {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-    gap: 0.5rem;
-    justify-items: stretch;
-  }
-  .tpick__swap {
-    justify-self: center;
-    margin-bottom: 0;
-    transform: rotate(90deg); /* panah kiri-kanan jadi atas-bawah pas ditumpuk */
-  }
-}
-.tpick__swap {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--line);
-  background: #fff;
-  color: var(--color-gold-d);
-  font-size: 1rem;
-  margin-bottom: 0.15rem;
-  cursor: pointer;
-}
 
 /* Popular routes list */
 

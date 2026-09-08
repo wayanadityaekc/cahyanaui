@@ -25,13 +25,19 @@ When unsure, ask first (keep it short).
 > (`app/`+`components/`, state di `state/`, konten di `content/`, harga dari API `cahyana-api`).
 > Gate CI yang tersisa (jalan atas `out/`): `check-urls`, `check-detail`, `check-assets`.
 
-**Styling = Tailwind (migrasi Sep 2026, JALAN → target full utility):**
-- Komponen React di-convert satu-satu ke utility Tailwind. Legacy udah pensiun, jadi tiap
-  komponen yg di-convert → CSS lama-nya **DIHAPUS** dari `style.css` (verify pixel-diff /
-  computed-style diff = 0 dulu, baru hapus). Target akhir: `style.css` = reset + `@theme`/token
-  global doang (warna/font/radius/shadow/dll). Primitif design-system shared (`.section__title`,
-  `.btn-pill`, grid engine `.experience__grid*`, container/`.info`/`.lhero`/`.subhero`) sengaja
-  TETAP CSS (satu definisi, bukan di-inline ke tiap komponen) — itu standar hybrid, bukan "sisa".
+**Styling = Tailwind (migrasi Sep 2026, JALAN → target FULL portable):**
+- **Arah baru (Sep 2026, Wayan): SEMUA komponen self-contained.** Tiap komponen bawa style-nya
+  sendiri (utility di className), biar bisa cabut-tempel ke web lain tanpa ikut nyalin CSS.
+  Target akhir: `style.css` = **reset + `@theme`/token doang** (warna/font/radius/shadow/dll),
+  NOL class komponen. (Ini nge-override stance hybrid lama yg biarin primitif shared tetep CSS.)
+- Komponen di-convert satu-satu → CSS lama-nya **DIHAPUS** dari `style.css` (verify pixel-diff /
+  computed-style diff = 0 dulu, baru hapus).
+- **DRY tanpa CSS**: style yang dipake >1 komponen JANGAN di-inline berulang — taro string
+  utility-nya SEKALI di modul JS (pola `components/ui/hsClasses.js` / `modalClasses.js`) terus
+  di-import. Jadi tetep satu sumber, tapi komponen tetep self-contained (bawa import-nya).
+  Cek dulu breadth pemakaian class SEBELUM hapus CSS-nya: shared → modul, unik → inline.
+- CSS-only mechanics (divider `section + section::before`, underline `::after`, `:has()`) pakai
+  arbitrary variant Tailwind (`before:`/`after:`/`[&+&]:`/`has-[...]:`), bukan alesan tetep CSS.
 - **Design token di `app/globals.css` `@theme`** — warna (`--color-gold/amber/cta/cream/...`),
   radius (`--radius-sm..xl` → `rounded-sm..xl`), shadow, text (`--text-h2/body/...` → `text-h2`),
   font. Nilai = mirror token `:root` di `style.css`. Ganti brand token → edit `@theme` + `:root` bareng.

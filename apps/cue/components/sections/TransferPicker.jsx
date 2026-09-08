@@ -59,14 +59,15 @@ export default function TransferPicker() {
   const BTN = 'py-[0.8rem] rounded-pill font-semibold text-[1rem] text-center border border-gold cursor-pointer font-body disabled:opacity-50 disabled:cursor-not-allowed';
   return (
     <div className="bg-white border border-line rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
-      {/* .tpick__route + .tpick__swap dibiarin sbg class (grid + swap punya interplay
-          @media 600 yg sub-pixel; utility-nya beda ~2px di HP - hook kecil ini aman). */}
-      <div className="tpick__route">
+      {/* From | swap | To. HP (<=600): ditumpuk vertikal, panah muter 90deg. */}
+      <div className="grid grid-cols-[1fr_auto_1fr] [align-items:end] gap-[0.55rem] [@media(max-width:600px)]:grid-cols-[1fr] [@media(max-width:600px)]:items-stretch [@media(max-width:600px)]:gap-2 [@media(max-width:600px)]:justify-items-stretch">
         <div>
           <label className={LABEL} htmlFor="tp-from">From</label>
           <Select id="tp-from" label="From" value={from} onChange={setFrom} options={options} placeholder="Select" />
         </div>
-        <button type="button" className="tpick__swap" aria-label="Swap direction" onClick={swap}>&#8646;</button>
+        {/* Note: CSS lama-nya `mb:0` di @media(<=600) ke-override base (source order,
+            specificity sama) - jadi mb-[0.15rem] BERTAHAN di semua lebar. Direplikasi. */}
+        <button type="button" className="w-9 h-9 rounded-pill border border-line bg-white text-gold-d text-[1rem] mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]" aria-label="Swap direction" onClick={swap}>&#8646;</button>
         <div>
           <label className={LABEL} htmlFor="tp-to">To</label>
           <Select id="tp-to" label="To" value={to} onChange={setTo} options={options} />

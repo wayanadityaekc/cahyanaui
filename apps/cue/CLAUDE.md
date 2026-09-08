@@ -10,15 +10,28 @@ When unsure, ask first (keep it short).
 - Core value prop: **trip planner + clear/upfront pricing**.
 - Sister site: villas live at ubudprivatevillas.com (separate — don't mix in).
 
-## Stack (CURRENT) — Next.js + React + Tailwind (hybrid)
-> **PENTING:** yang DI-DEPLOY sekarang = app **Next.js 16 + React 19** (static export
-> `out/`). Komponen di `components/` + `app/` (`.jsx`). CI: push `main` → build →
-> force-push `out/` ke branch `deploy` → Hostinger. **BUKAN lagi** "plain HTML + vanilla JS".
-> Bagian di bawah yang nyebut `script.js`, `partials/`, `?v=` bump, file `.html` = **situs
-> LAMA (legacy static)** — disimpen buat referensi/parity, TAPI yang live = React app.
-> `style.css` di-symlink ke `public/style.css`, di-serve dgn hash otomatis (gak perlu `?v=` manual).
+## Stack (CURRENT) — Next.js + React + Tailwind
+> **PENTING:** situs = app **Next.js 16 + React 19** (static export `out/`). Komponen di
+> `components/` + `app/` (`.jsx`). CI: push `main` → build → force-push `out/` ke branch
+> `deploy` → Hostinger. `style.css` di-symlink ke `public/style.css` (di-serve dgn hash
+> otomatis, gak perlu `?v=` manual).
+>
+> **Situs static LAMA UDAH DIPENSIUNIN** (Sep 2026, Wayan): semua `.html` (root/`attractions/`/
+> `guide/`), `partials/`, `script.js`, `data.js` + tool legacy (`sync-prices`, `check-schema`,
+> `check-content-fresh`, dst) udah **DIHAPUS** dari repo (masih ada di git history kalau butuh).
+> Jadi bagian mana pun di doc ini yang nyebut `script.js`, `data.js`, `partials/`,
+> `?v=`/`PARTIALS_VERSION` bump, `initX()` (`initBooking`/`initNavbar`/dst), `renderPrices`,
+> atau file `.html` = **KONTEKS LAMA / historis**, gak berlaku lagi. Yang hidup cuma app React
+> (`app/`+`components/`, state di `state/`, konten di `content/`, harga dari API `cahyana-api`).
+> Gate CI yang tersisa (jalan atas `out/`): `check-urls`, `check-detail`, `check-assets`.
 
-**Styling = Tailwind (migrasi Sep 2026, SELESAI sbg hybrid — standar industri):**
+**Styling = Tailwind (migrasi Sep 2026, JALAN → target full utility):**
+- Komponen React di-convert satu-satu ke utility Tailwind. Legacy udah pensiun, jadi tiap
+  komponen yg di-convert → CSS lama-nya **DIHAPUS** dari `style.css` (verify pixel-diff /
+  computed-style diff = 0 dulu, baru hapus). Target akhir: `style.css` = reset + `@theme`/token
+  global doang (warna/font/radius/shadow/dll). Primitif design-system shared (`.section__title`,
+  `.btn-pill`, grid engine `.experience__grid*`, container/`.info`/`.lhero`/`.subhero`) sengaja
+  TETAP CSS (satu definisi, bukan di-inline ke tiap komponen) — itu standar hybrid, bukan "sisa".
 - **Design token di `app/globals.css` `@theme`** — warna (`--color-gold/amber/cta/cream/...`),
   radius (`--radius-sm..xl` → `rounded-sm..xl`), shadow, text (`--text-h2/body/...` → `text-h2`),
   font. Nilai = mirror token `:root` di `style.css`. Ganti brand token → edit `@theme` + `:root` bareng.
@@ -39,8 +52,11 @@ When unsure, ask first (keep it short).
   gaya lama vs baru ATAU pixel before/after — JANGAN andelin mata doang (pernah kelewat beda 8px).
 - Komponen shared (Button/GuideCard/dst) WAJIB 100% identik di semua tempat pemakaian.
 
-## Legacy static site (di bawah = konteks lama, live = React)
-- Deploy lama: Hostinger via GitHub (push = live). Stack lama: plain HTML + CSS + vanilla JS.
+## Legacy static site (RETIRED Sep 2026 — historis)
+- Situs lama = plain HTML + CSS + vanilla JS (`script.js`/`data.js`/`partials/`/`.html`).
+  Semua UDAH DIHAPUS dari repo (ada di git history). Section-section di bawah yang detail-in
+  `script.js`/`data.js`/`partials`/`?v=`/`initX`/`renderPrices` = catatan lama, jangan diikutin
+  lagi buat kerjaan baru — semua logika sekarang di app React.
 
 ## Working with Wayan
 - Language: **casual Indonesian**. Wayan is learning dev — explain concisely and clearly.
@@ -514,10 +530,13 @@ Order **must be kept** (declarations first, run last):
   otomatis). Email welcome akun udah janjiin "deals & Bali updates" → ini follow-up-nya.
 
 ## Before calling it "done" (checklist)
-1. `node --check script.js` passes.
-2. CSS `{}` braces balanced.
-3. Changed CSS/JS → bump `?v=` on all pages. Changed `partials/` → bump `PARTIALS_VERSION`.
-4. Changed any price/ticket in `data.js` → run `node tools/sync-prices.js`
-   (rewrites static fallback prices + JSON-LD Product schema in HTML).
-5. Check: no dead code, no double lines, no dead classes.
-6. Hand off to Wayan to review live & decide on the push.
+1. `npm run build` passes (this is the real syntax/build check now — no more `node --check script.js`).
+2. All active CI gates pass: `node tools/check-urls.js`, `node tools/check-detail.js`,
+   `node tools/check-assets.js`. **Gate the commit on these** (jangan commit kalau ada yang merah).
+   Marker class yang WAJIB ada di detail page (check-detail): `booksidebar`, `bookcard__cta`,
+   `tour-layout--book`, `tour-hook`, `review-cta` — jangan dihapus pas convert.
+3. Styling berubah → verify **pixel-diff / computed-style diff = 0** (harness di scratchpad:
+   playwright-core + `headless_shell`, serve `out/` via `node http`). Baru hapus CSS lama-nya
+   dari `style.css` kalau udah 0.
+4. `style.css` `{}` braces balanced; no dead classes ketinggalan.
+5. Commit + push ke `main` (deploy otomatis). Bump `?v=` UDAH GAK PERLU (hash otomatis).

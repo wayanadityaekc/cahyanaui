@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
+import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 
 // Login-only, exactly as the server gate requires: opened only from a real
 // booking card in My Trips, with a booking_ref that belongs to the account.
@@ -72,28 +73,36 @@ export default function ReviewModal({ open, prefill, onClose }) {
 
   const multi = (prefill.items || []).length > 1;
 
+  // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/title/group/btn/success
+  // pakai konstanta shared (modalClasses.js) - .modal* CSS masih ada (dipakai modal
+  // lain), baru dihapus kalau semua modal udah pindah. Yang ISOLATED ke ReviewModal
+  // (.rating/.rating__star/.rvm-block/.review-modal__error) di-inline utility + CSS-nya
+  // DIHAPUS di commit ini.
+  const star = (on) =>
+    `p-0 border-none bg-transparent text-[1.7rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`;
   return createPortal(
-    <div className="modal active" id="review-modal" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal__box">
-        <button className="modal__close" aria-label="Close" onClick={onClose}>&times;</button>
-        <h3 className="modal__title">Leave a Review</h3>
+    <div className={SHELL} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className={BOX}>
+        <button className={CLOSE} aria-label="Close" onClick={onClose}>&times;</button>
+        <h3 className={TITLE}>Leave a Review</h3>
 
         {!done ? (
           <div data-step="write">
-            <div className="modal__group">
-              <label htmlFor="rvm-name">Your name</label>
-              <input type="text" id="rvm-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="rvm-name">Your name</label>
+              <input className={INPUT} type="text" id="rvm-name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-            <div className="modal__group">
-              <label htmlFor="rvm-country">Country (optional)</label>
-              <input type="text" id="rvm-country" value={country} onChange={(e) => setCountry(e.target.value)} />
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="rvm-country">Country (optional)</label>
+              <input className={INPUT} type="text" id="rvm-country" value={country} onChange={(e) => setCountry(e.target.value)} />
             </div>
 
             {multi && (
-              <div id="rvm-checklist">
+              <div>
                 {(prefill.items || []).map((s) => (
-                  <label key={s} className="modal__group">
+                  <label key={s} className={GROUP}>
                     <input
+                      className={INPUT}
                       type="checkbox"
                       checked={checked.includes(s)}
                       onChange={(e) =>
@@ -106,18 +115,18 @@ export default function ReviewModal({ open, prefill, onClose }) {
               </div>
             )}
 
-            <div id="rvm-blocks">
+            <div>
               {(prefill.items || [])
                 .filter((s) => checked.includes(s))
-                .map((s, idx) => (
-                  <div className="rvm-block" data-idx={idx} data-service={s} key={s}>
-                    <p className="modal__sub"><strong>{s}</strong></p>
-                    <div className="rating">
+                .map((s) => (
+                  <div className="mb-[1.2rem] pb-4 [border-bottom:1px_solid_var(--line)] last-of-type:border-b-0 last-of-type:pb-0" key={s}>
+                    <p className="mb-2 text-body text-green"><strong>{s}</strong></p>
+                    <div className="flex gap-[0.3rem] mb-[0.7rem]">
                       {[1, 2, 3, 4, 5].map((n) => (
                         <button
                           type="button"
                           key={n}
-                          className={`rating__star${(blocks[s] && blocks[s].rating) >= n ? ' active' : ''}`}
+                          className={star((blocks[s] && blocks[s].rating) >= n)}
                           aria-label={`${n} star${n > 1 ? 's' : ''}`}
                           onClick={() => setBlock(s, { rating: n })}
                         >
@@ -125,8 +134,9 @@ export default function ReviewModal({ open, prefill, onClose }) {
                         </button>
                       ))}
                     </div>
-                    <div className="modal__group">
+                    <div className="flex flex-col mb-0">
                       <textarea
+                        className={TEXTAREA}
                         rows="3"
                         placeholder={`Your review for ${s}`}
                         value={(blocks[s] && blocks[s].message) || ''}
@@ -137,17 +147,17 @@ export default function ReviewModal({ open, prefill, onClose }) {
                 ))}
             </div>
 
-            {error && <p className="review-modal__error">{error}</p>}
-            <button type="button" className="modal__btn" onClick={submit} disabled={busy}>
+            {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}
+            <button type="button" className={BTN} onClick={submit} disabled={busy}>
               {busy ? 'Sending...' : 'Submit review'}
             </button>
           </div>
         ) : (
-          <div className="modal__success" style={{ display: 'block' }}>
-            <div className="modal__success-icon">&#10003;</div>
-            <h3 className="modal__title">Thank you!</h3>
-            <p>Your review has been submitted and will appear once approved.</p>
-            <button type="button" className="modal__btn" onClick={onClose}>Done</button>
+          <div className="text-center">
+            <div className={SUCCESS_ICON}>&#10003;</div>
+            <h3 className={TITLE}>Thank you!</h3>
+            <p className={SUCCESS_TEXT}>Your review has been submitted and will appear once approved.</p>
+            <button type="button" className={BTN} onClick={onClose}>Done</button>
           </div>
         )}
       </div>

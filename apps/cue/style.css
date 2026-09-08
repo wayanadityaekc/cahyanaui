@@ -2482,23 +2482,6 @@ a.tripbar--promo {
 .review-form__group textarea {
   resize: vertical;
 }
-.rating {
-  display: flex;
-  gap: 0.3rem;
-}
-.rating__star {
-  padding: 0;
-  border: none;
-  background: none;
-  font-size: 1.7rem;
-  line-height: 1;
-  color: #d8d2c4;
-  cursor: pointer;
-  transition: color var(--dur-fast);
-}
-.rating__star.active {
-  color: var(--color-amber);
-}
 .review-form__btn {
   width: 100%;
   margin-top: 0.5rem;
@@ -3159,48 +3142,6 @@ section.faq::before,
   margin: 0 auto;
   padding: var(--space-4) var(--space-3);
   text-align: center;
-}
-/* Pesan error inline di form review (verify gagal / rating & pesan kosong) */
-.review-modal__error {
-  margin: -0.4rem 0 1rem;
-  font-size: var(--fs-small);
-  color: var(--color-err);
-}
-/* Checklist "Which tours" (>1 tour di booking) + satu blok rating+teks per
-   tour yang dicentang (rvm-blocks) - reuse .modal__group/.rating apa adanya. */
-.rvm-check {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--fs-body);
-  color: var(--color-green);
-  margin-bottom: 0.5rem;
-}
-.rvm-check input {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--color-cta);
-}
-.rvm-block {
-  margin-bottom: 1.2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--line);
-}
-.rvm-block:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-/* Rapihin jarak dalam blok review: nama tour (heading) rapet ke bintang, bintang
-   rapet ke kotak teks (Wayan). */
-.rvm-block .modal__sub {
-  margin: 0 0 0.5rem;
-  color: var(--color-green);
-}
-.rvm-block .rating {
-  margin-bottom: 0.7rem;
-}
-.rvm-block .modal__group {
-  margin-bottom: 0;
 }
 .modal__success {
   display: none;

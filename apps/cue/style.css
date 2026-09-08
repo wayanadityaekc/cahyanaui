@@ -1923,14 +1923,6 @@ a.tripbar--promo {
    Band putih di antara Drivers & Reviews. Foto = thumbnail kecil (foto tamu low-res
    sengaja ditampilin kecil biar nggak pecah). Sengaja TERUS jalan (nggak pause on hover)
    biar keliatan sepintas. Divider emas atas/bawah dari sistem [id$="-placeholder"] > section. */
-/* Heading tetap punya breathing room; marquee-nya full-width (edge to edge). */
-.guest-gallery .section__title {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-.guest-gallery .section__title {
-  margin-bottom: 1.5rem;
-}
 @keyframes guestScroll {
   to {
     transform: translateX(-50%);

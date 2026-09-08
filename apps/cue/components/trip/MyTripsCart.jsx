@@ -18,6 +18,20 @@ import { KEY, API_BASE } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 
+// Tailwind-native (migrasi Fase 2): sub-family kecil my-trips cart -> utilities.
+// `mtc-empty` DIPERTAHANKAN sbg marker: anchor `.mtc-empty .btn-pill` (reset
+// full-width [data-mytrips-cart] .btn-pill). `.mtc-total__val .price-cur` DIHAPUS
+// (redundant - .price-cur udah amber default), jadi mtc-total__val full convert.
+const MTC_TABS = 'flex flex-nowrap gap-[0.4rem] overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x [border-bottom:1px_solid_var(--line)] mb-[1.4rem]';
+const mtcTab = (on) =>
+  `flex-[0_0_auto] whitespace-nowrap border-0 bg-transparent py-[0.6rem] px-[0.35rem] mr-[0.6rem] font-body text-small cursor-pointer mb-[-1px] ${on ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent]'}`;
+const MTC_EMPTY = 'mtc-empty text-center pt-2 px-0 pb-0';
+const MTC_EMPTY_LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-0 mb-[0.4rem]';
+const MTC_EMPTY_SUB = 'text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
+const MTC_TOTAL = 'flex justify-between items-center bg-cream rounded-lg py-4 px-[1.2rem] mt-[1.4rem]';
+const MTC_TOTAL_LABEL = 'font-medium text-small tracking-[0.14em] uppercase text-green';
+const MTC_TOTAL_VAL = 'text-[1.4rem] font-semibold text-amber-d';
+
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
   const [y, m, d] = ds.split('-').map(Number);
@@ -270,9 +284,9 @@ export default function MyTripsCart() {
   const bookingPanel = (isPast) => {
     if (!readLocal(KEY.token, '')) {
       return (
-        <div className="mtc-empty">
-          <p className="mtc-empty__lead">Sign in to see your trips.</p>
-          <p className="mtc-empty__sub">
+        <div className={MTC_EMPTY}>
+          <p className={MTC_EMPTY_LEAD}>Sign in to see your trips.</p>
+          <p className={MTC_EMPTY_SUB}>
             Open the account menu and sign in with your email - your booked and past trips show up here.
           </p>
         </div>
@@ -280,17 +294,17 @@ export default function MyTripsCart() {
     }
     if (!trips) {
       return (
-        <div className="mtc-empty">
-          <p className="mtc-empty__sub">Loading your trips…</p>
+        <div className={MTC_EMPTY}>
+          <p className={MTC_EMPTY_SUB}>Loading your trips…</p>
         </div>
       );
     }
     const arr = (isPast ? trips.history : trips.upcoming) || [];
     if (!arr.length) {
       return (
-        <div className="mtc-empty">
-          <p className="mtc-empty__lead">{isPast ? 'No past trips yet.' : 'No booked trips yet.'}</p>
-          <p className="mtc-empty__sub">
+        <div className={MTC_EMPTY}>
+          <p className={MTC_EMPTY_LEAD}>{isPast ? 'No past trips yet.' : 'No booked trips yet.'}</p>
+          <p className={MTC_EMPTY_SUB}>
             {isPast
               ? 'Trips you have already taken will appear here.'
               : 'Once you make a payment, your booked trip shows up here.'}
@@ -309,12 +323,12 @@ export default function MyTripsCart() {
 
   return (
     <div data-mytrips-cart>
-      <div className="mtc-tabs" role="tablist">
+      <div className={MTC_TABS} role="tablist">
         {TABS.map((tb) => (
           <button
             type="button"
             key={tb.id}
-            className={'mtc-tab' + (tab === tb.id ? ' is-on' : '')}
+            className={mtcTab(tab === tb.id)}
             role="tab"
             aria-selected={tab === tb.id ? 'true' : 'false'}
             onClick={() => setTab(tb.id)}
@@ -324,9 +338,9 @@ export default function MyTripsCart() {
         ))}
       </div>
       {tab === 'custom' && (rows.length === 0 ? (
-        <div className="mtc-empty">
-          <p className="mtc-empty__lead">Your trip is empty.</p>
-          <p className="mtc-empty__sub">Add a tour, transfer, or experience to get started.</p>
+        <div className={MTC_EMPTY}>
+          <p className={MTC_EMPTY_LEAD}>Your trip is empty.</p>
+          <p className={MTC_EMPTY_SUB}>Add a tour, transfer, or experience to get started.</p>
           <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add a program</button>
         </div>
       ) : (
@@ -363,9 +377,9 @@ export default function MyTripsCart() {
             })}
           </div>
 
-          <div className="mtc-total">
-            <span className="mtc-total__label">Total</span>
-            <span className="mtc-total__val"><span className="price-cur">{withSymbol(totalText)}</span></span>
+          <div className={MTC_TOTAL}>
+            <span className={MTC_TOTAL_LABEL}>Total</span>
+            <span className={MTC_TOTAL_VAL}><span className="price-cur">{withSymbol(totalText)}</span></span>
           </div>
 
           <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add another program</button>

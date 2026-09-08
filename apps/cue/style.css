@@ -4176,41 +4176,7 @@ section.faq::before,
 }
 /* referral applied banner */
 /* tabs */
-.mtc-tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 0.4rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  /* Tab strip = swipe HORIZONTAL doang; gesture vertikal di sini dikunci (Wayan).
-     Beda dari card slider (pan-x pan-y) - strip tipis jadi gak perlu scroll halaman
-     dari sini, biar swipe kiri-kanan gak "ketarik" vertikal. */
-  touch-action: pan-x;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 1.4rem;
-}
-.mtc-tabs::-webkit-scrollbar { display: none; }
-.mtc-tab {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  border: 0;
-  background: none;
-  padding: 0.6rem 0.35rem;
-  margin-right: 0.6rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-}
-.mtc-tab.is-on {
-  font-weight: 600;
-  color: var(--color-green);
-  border-bottom-color: var(--color-gold);
-}
+/* .mtc-tabs / .mtc-tab(.is-on) -> utilities di MyTripsCart.jsx (migrasi Fase 2). */
 /* Job 5 - layout kartu (main) vs total/receipt/policy/bayar (side).
    Mobile (base): numpuk, main dulu baru side (urutan DOM). */
 @media (min-width: 993px) {
@@ -4325,28 +4291,8 @@ section.faq::before,
    Elemen + toggle-nya masih di-render JS (script.js ~line 3668) - CSS-only
    hide di sini, biar aman nggak nyentuh punya Engine. Kalau mau bener-bener
    beres (JS-nya berhenti nge-build elemen ini), itu punya Engine. */
-.mtc-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--color-cream);
-  border-radius: var(--r-lg);
-  padding: 1rem 1.2rem;
-  margin-top: 1.4rem;
-}
-.mtc-total__label {
-  font-weight: 500;
-  font-size: var(--fs-small);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-green);
-}
-.mtc-total__val {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--color-amber-d);
-}
-.mtc-total__val .price-cur { color: var(--color-amber); }
+/* .mtc-total* -> utilities di MyTripsCart.jsx (migrasi Fase 2). Override
+   .mtc-total__val .price-cur DIHAPUS: redundant, .price-cur udah amber default. */
 /* buttons + notes */
 .mtc-pay {
   width: 100%;
@@ -4382,20 +4328,9 @@ section.faq::before,
 .mtc-related .related { padding-bottom: 0; }
 .mtc-related .experience__grid--home4 { margin-top: 1.6rem; }
 /* empty state (tab My Trip) */
-.mtc-empty { text-align: center; padding: 0.5rem 0 0; }
-.mtc-empty__lead {
-  font-family: var(--font-head);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: 1rem;
-  color: var(--color-green);
-  margin: 0 0 0.4rem;
-}
-.mtc-empty__sub {
-  color: var(--color-muted);
-  max-width: 44ch;
-  margin: 0 auto 1.8rem;
-}
+/* .mtc-empty (base) / __lead / __sub -> utilities di MyTripsCart.jsx (migrasi
+   Fase 2). Kelas `mtc-empty` tetep dipasang sbg marker: anchor `.mtc-empty
+   .btn-pill` (di atas) buat reset full-width btn di empty state. */
 
 /* Settings form */
 

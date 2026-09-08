@@ -2968,28 +2968,6 @@ section.faq::before,
   resize: vertical;
   background-color: #fff;
 }
-.modal__referral {
-  display: flex;
-  gap: 0.5rem;
-}
-.modal__referral input {
-  flex: 1;
-  padding: 0.5rem 0.65rem;
-  border: 1px solid #d8d2c4;
-  border-radius: var(--r-sm);
-  font-family: var(--font-body);
-  font-size: var(--fs-field);
-  color: var(--color-green);
-}
-.modal__referral button {
-  padding: 0 1.1rem;
-  border: none;
-  border-radius: var(--r-sm);
-  font-weight: 600;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-  cursor: pointer;
-}
 .modal__referral-msg {
   display: block;
   margin-top: 0.4rem;
@@ -3000,110 +2978,6 @@ section.faq::before,
 }
 .modal__referral-msg.error {
   color: var(--color-err);
-}
-.modal__summary {
-  margin: 1.25rem 0;
-  border-top: 1px solid #eee;
-}
-.modal__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.65rem 0;
-  border-bottom: 1px solid #eee;
-  font-size: var(--fs-body);
-}
-.modal__row span:first-child {
-  font-weight: 600;
-}
-/* Baris terakhir (Price) tanpa border bawah - separator berikutnya udah
-   dipegang border-top .modal__details, biar nggak dobel garis */
-.modal__row:last-child {
-  border-bottom: none;
-}
-.modal__row span:last-child {
-  text-align: right;
-  color: var(--color-gold);
-  font-weight: 600;
-}
-.modal__details {
-  margin-bottom: 1.25rem;
-  border-top: 1px solid #eee;
-}
-.modal__details-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.85rem 0;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-green);
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.modal__details-arrow {
-  font-size: 1.4rem;
-  color: var(--color-gold);
-  transition: transform var(--dur-slow) ease;
-}
-.modal__details.active .modal__details-arrow {
-  transform: rotate(90deg);
-}
-.modal__details-list {
-  list-style: none;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--dur-slow) ease;
-}
-.modal__details.active .modal__details-list {
-  max-height: 320px;
-}
-.modal__details-list li {
-  position: relative;
-  padding: 0.4rem 0 0.4rem 1.25rem;
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  color: var(--color-muted);
-}
-.modal__details-list li::before {
-  content: "•";
-  position: absolute;
-  left: 0.25rem;
-  color: var(--color-gold);
-}
-.modal__pay {
-  margin: 1.1rem 0 1.35rem;
-  text-align: center;
-}
-.modal__pay-logos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-.modal__pay-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  min-width: 46px;
-  padding: 0 0.55rem;
-  background: #fff;
-  border: 1px solid #e2ddd0;
-  border-radius: var(--r-sm);
-  transition: transform var(--dur-fast) ease;
-}
-.modal__pay-chip:hover {
-  transform: translateY(-2px);
-}
-.modal__pay-svg {
-  display: block;
-  height: var(--icon-sm);
-  width: auto;
 }
 /* Tombol modal yang numpuk selalu ada jarak (Add again/Cancel, dll) */
 .modal__btn + .modal__btn {
@@ -5739,8 +5613,7 @@ button.pick-cat {
 .driver-modal__desc,
 .review-card__text,
 .modal__sub,
-.modal__success p,
-.modal__row {
+.modal__success p {
   font-size: var(--fs-body);
 }
 /* faq__q = pertanyaan yang jadi trigger accordion (klik buat expand/collapse),

@@ -11,6 +11,7 @@ import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import PayChips from './PayChips';
 import { withSymbol } from '@/components/Price';
+import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '' };
 
@@ -135,76 +136,92 @@ export default function BookConfirmModal() {
     setRefMsg(pct ? { ok: true, text: `Referral applied - ${pct}% off!` } : { ok: false, text: 'Code not valid.' });
   };
 
+  // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/logo/title/group/input/
+  // btn(+wa)/success pakai konstanta shared (modalClasses.js). Bagian yang ISOLATED ke
+  // modal ini (referral input-group, summary/row, details accordion, pay chips) di-inline
+  // utility + CSS-nya DIHAPUS di commit ini. .modal__referral-msg TETEP CSS (dipakai 6
+  // komponen), jadi msg di sini juga di-inline biar CSS-nya bisa dihapus nanti barengan.
+  const REFERRAL_INPUT = 'flex-1 px-[0.65rem] py-2 h-[var(--field-h)] [border:1px_solid_#d8d2c4] rounded-sm font-body text-field text-green';
+  const REFERRAL_BTN = 'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer';
+  const refMsgCls = (ok) => `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`;
+  const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_#eee] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
+  const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
+  const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
   return createPortal(
-    <div className="modal active" id="booking-modal" onClick={(e) => e.target === e.currentTarget && closeBooking()}>
-      <div className="modal__box">
-        <button className="modal__close" aria-label="Close" onClick={closeBooking}>&times;</button>
-        <img className="modal__logo" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+    <div className={SHELL} onClick={(e) => e.target === e.currentTarget && closeBooking()}>
+      <div className={BOX}>
+        <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>
+        <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 
         {!done ? (
           <div id="modal-form">
-            <h3 className="modal__title">Confirm Your Booking</h3>
+            <h3 className={TITLE}>Confirm Your Booking</h3>
 
-            <div className="modal__group">
-              <label htmlFor="booker-name">Your Name</label>
-              <input type="text" id="booker-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="booker-name">Your Name</label>
+              <input className={INPUT} type="text" id="booker-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
             </div>
-            <div className="modal__group">
-              <label htmlFor="booker-phone">Phone Number</label>
-              <input type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" value={f.phone} onChange={set('phone')} />
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="booker-phone">Phone Number</label>
+              <input className={INPUT} type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" value={f.phone} onChange={set('phone')} />
             </div>
-            <div className="modal__group">
-              <label htmlFor="booker-email">Email</label>
-              <input type="email" id="booker-email" placeholder="you@email.com" value={f.email} onChange={set('email')} />
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="booker-email">Email</label>
+              <input className={INPUT} type="email" id="booker-email" placeholder="you@email.com" value={f.email} onChange={set('email')} />
             </div>
-            <div className="modal__group">
-              <label htmlFor="pickup">Pick-up Location</label>
-              <input type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} />
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="pickup">Pick-up Location</label>
+              <input className={INPUT} type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} />
             </div>
             {ctx.dropoffRequired !== false && (
-              <div className="modal__group">
-                <label htmlFor="dropoff">Drop-off Location</label>
-                <input type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} />
+              <div className={GROUP}>
+                <label className={LABEL} htmlFor="dropoff">Drop-off Location</label>
+                <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} />
               </div>
             )}
-            <div className="modal__group">
-              <label htmlFor="referral">Referral Code (optional)</label>
-              <div className="modal__referral">
-                <input type="text" id="referral" placeholder="Enter code" value={f.referral} onChange={set('referral')} />
-                <button type="button" onClick={applyRef}>Apply</button>
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="referral">Referral Code (optional)</label>
+              <div className="flex gap-2">
+                <input className={REFERRAL_INPUT} type="text" id="referral" placeholder="Enter code" value={f.referral} onChange={set('referral')} />
+                <button className={REFERRAL_BTN} type="button" onClick={applyRef}>Apply</button>
               </div>
-              {refMsg && <small className={`modal__referral-msg ${refMsg.ok ? 'success' : 'error'}`}>{refMsg.text}</small>}
+              {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
             </div>
 
-            <div className="modal__summary">
-              <div className="modal__row"><span>Guests</span><span>{ctx.guests || displayGuests}</span></div>
-              <div className="modal__row"><span>Service</span><span>{ctx.service}</span></div>
-              <div className="modal__row"><span>Date</span><span>{ctx.date || '-'}</span></div>
+            <div className="my-5 [border-top:1px_solid_#eee]">
+              <div className={ROW}><span>Guests</span><span>{ctx.guests || displayGuests}</span></div>
+              <div className={ROW}><span>Service</span><span>{ctx.service}</span></div>
+              <div className={ROW}><span>Date</span><span>{ctx.date || '-'}</span></div>
               {priced && priced.referral && (
-                <div className="modal__row"><span>Referral</span><span>{priced.referral.code} ({priced.referral.pct}%)</span></div>
+                <div className={ROW}><span>Referral</span><span>{priced.referral.code} ({priced.referral.pct}%)</span></div>
               )}
-              <div className="modal__row"><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
+              <div className={ROW}><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
 
             {ctx.detailLines && ctx.detailLines.length > 0 && (
-              <div className={`modal__details${detailsOpen ? ' active' : ''}`}>
-                <button type="button" className="modal__details-toggle" onClick={() => setDetailsOpen((v) => !v)}>
+              <div className="mb-5 [border-top:1px_solid_#eee]">
+                <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
                   <span>{ctx.detailsTitle || "What's included"}</span>
-                  <span className="modal__details-arrow">&rsaquo;</span>
+                  <span className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? '[transform:rotate(90deg)]' : ''}`}>&rsaquo;</span>
                 </button>
-                <ul className="modal__details-list">
-                  {ctx.detailLines.map((d, i) => <li key={i}>{d}</li>)}
+                <ul className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? 'max-h-[320px]' : 'max-h-0'}`}>
+                  {ctx.detailLines.map((d, i) => <li className={DETAILS_LI} key={i}>{d}</li>)}
                 </ul>
               </div>
             )}
 
-            <PayChips className="modal__pay" logosClass="modal__pay-logos" chipClass="modal__pay-chip" svgClass="modal__pay-svg" />
+            <PayChips
+              className="mt-[1.1rem] mb-[1.35rem] text-center"
+              logosClass="flex flex-wrap items-center justify-center gap-2"
+              chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm transition-transform duration-[var(--dur-fast)] ease-[ease] hover:[transform:translateY(-2px)]"
+              svgClass="block h-[var(--icon-sm)] w-auto"
+            />
 
-            {error && <small className="modal__referral-msg error">{error}</small>}
+            {error && <small className="block mt-[0.4rem] text-small text-err">{error}</small>}
 
-            <button className="modal__btn" onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
+            <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
             <button
-              className="modal__btn modal__btn--wa"
+              className={`${BTN_WA} ${STACK}`}
               onClick={() => {
                 const err = validate();
                 if (err) { setError(err); return; }
@@ -215,11 +232,11 @@ export default function BookConfirmModal() {
             </button>
           </div>
         ) : (
-          <div className="modal__success" style={{ display: 'block' }}>
-            <div className="modal__success-icon">&#10003;</div>
-            <h3 className="modal__title">Booking Received!</h3>
-            <p>Thank you. We will email you shortly to confirm your booking.</p>
-            <button className="modal__btn" onClick={closeBooking}>Done</button>
+          <div className="text-center">
+            <div className={SUCCESS_ICON}>&#10003;</div>
+            <h3 className={TITLE}>Booking Received!</h3>
+            <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
+            <button className={BTN} onClick={closeBooking}>Done</button>
           </div>
         )}
       </div>

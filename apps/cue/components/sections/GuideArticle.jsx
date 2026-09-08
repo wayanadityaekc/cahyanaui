@@ -1,4 +1,13 @@
 import JsonLd from '@/components/JsonLd';
+
+// Tailwind-native (migrasi Fase 2): tab kategori sticky HP. Base hidden (desktop
+// pakai sidebar), muncul jadi bar sticky di <=992px. [@media(max-width:992px)]
+// dipakai biar match @media (max-width:992px) persis (inklusif 992).
+const CATTABS =
+  'hidden [@media(max-width:992px)]:flex [@media(max-width:992px)]:gap-[1.6rem] [@media(max-width:992px)]:overflow-x-auto [@media(max-width:992px)]:[scrollbar-width:none] [@media(max-width:992px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:992px)]:sticky [@media(max-width:992px)]:top-[var(--header-h,52.8px)] [@media(max-width:992px)]:z-20 [@media(max-width:992px)]:bg-white [@media(max-width:992px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:992px)]:py-[0.7rem] [@media(max-width:992px)]:px-[1.3rem] [@media(max-width:992px)]:[margin:0_-1.3rem_1.5rem]';
+const cattab = (active) =>
+  `flex-[0_0_auto] font-body text-small bg-transparent border-none py-[0.4rem] px-[0.15rem] whitespace-nowrap no-underline [transition:color_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease] ${active ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent] hover:text-green'}`;
+
 export default function GuideArticle({ data }) {
   return (
     <div className="guide-article-page">
@@ -13,9 +22,9 @@ export default function GuideArticle({ data }) {
         </div>
       </section>
 
-      <nav className="guide-cattabs">
+      <nav className={CATTABS}>
         {data.tabs.map((t) => (
-          <a className={`guide-cattab${t.active ? ' is-active' : ''}`} href={t.href} key={t.href}>{t.label}</a>
+          <a className={cattab(t.active)} href={t.href} key={t.href}>{t.label}</a>
         ))}
       </nav>
 

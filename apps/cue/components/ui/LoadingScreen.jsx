@@ -59,7 +59,9 @@ export default function LoadingScreen() {
       const el = elRef.current;
       if (el) {
         el.style.transition = 'none';
-        el.classList.remove('loadscreen--out');
+        // Sama kaya remove class `.loadscreen--out` lama: buang token state "out"-nya
+        // langsung (snap), terus setOut(false) nge-sync className React.
+        el.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
       }
       setOut(false);
       // Safety net: if the click turns out NOT to navigate (a link some other
@@ -80,16 +82,20 @@ export default function LoadingScreen() {
     };
   }, []);
 
+  // Tailwind-native (full-portable). State "out" = 3 token (opacity/visibility/pointer),
+  // ditoggle React + di-remove imperatif di handler klik. Keyframe `spin` global di style.css.
+  const BASE = 'fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-[1.2rem] bg-cream [transition:opacity_0.45s_var(--ease),visibility_0.45s_var(--ease)]';
+  const OUT = 'opacity-0 invisible pointer-events-none';
   return (
-    <div ref={elRef} className={`loadscreen${out ? ' loadscreen--out' : ''}`} aria-hidden="true">
+    <div ref={elRef} className={`${BASE}${out ? ` ${OUT}` : ''}`} aria-hidden="true">
       <img
-        className="loadscreen__logo"
+        className="w-[min(200px,45vw)] h-auto"
         src="/assets/images/logo.webp"
         alt=""
         width="1005"
         height="324"
       />
-      <span className="loadscreen__spin" />
+      <span className="w-[26px] h-[26px] rounded-[50%] border-[3px] border-solid border-line border-t-gold animate-[spin_0.7s_linear_infinite]" />
     </div>
   );
 }

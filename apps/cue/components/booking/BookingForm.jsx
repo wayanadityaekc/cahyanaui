@@ -112,8 +112,13 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   // Tailwind-native (migrasi Fase 2): kelas presentasi `.bookcard__*` -> utilities,
   // CSS-nya dihapus. DIPERTAHANKAN sbg CSS (context hook / marker / shared): .booking
   // + .booking__card (struktur, di-override .booksidebar .booking*), .bookcard__amount
-  // (scope .price__sym), .booking__type + .bookcard__toggle + .booking__type-btn (toggle),
-  // .booking__btn + .bookcard__cta (tombol CTA + MARKER check-detail).
+  // (scope .price__sym), dan .booking__btn + .bookcard__cta (tombol CTA + MARKER
+  // check-detail). Toggle Standard/Exclusive di-convert PENUH (isolated ke komponen ini):
+  // nilai = computed asli (.booking__type menang atas .bookcard__toggle buat padding/margin
+  // container; override .bookcard__toggle .booking__type-btn menang buat padding/size/
+  // active-bg lewat specificity). Active = HIJAU (--color-cta).
+  const typeBtn = (on) =>
+    `flex-1 py-2 px-2 border-none rounded-pill font-body text-small font-semibold cursor-pointer transition-[background-color,color] duration-[var(--dur)] ease-[ease] ${on ? 'text-white bg-cta' : 'text-green bg-transparent'}`;
   return (
     <section className="booking bookcard" id="booking">
       <div className="booking__card text-left">
@@ -136,9 +141,9 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         </div>
 
         {hasExclusive && (
-          <div className="booking__type bookcard__toggle" id="booking-type">
-            <button type="button" className={`booking__type-btn${mode === 'standard' ? ' is-active' : ''}`} onClick={() => setMode('standard')}>Standard</button>
-            <button type="button" className={`booking__type-btn${mode === 'exclusive' ? ' is-active' : ''}`} onClick={() => setMode('exclusive')}>Exclusive</button>
+          <div className="flex p-[3px] mb-[0.4rem] [border:1px_solid_rgba(34,32,28,0.5)] rounded-pill bg-[rgba(34,32,28,0.08)]" id="booking-type">
+            <button type="button" className={typeBtn(mode === 'standard')} onClick={() => setMode('standard')}>Standard</button>
+            <button type="button" className={typeBtn(mode === 'exclusive')} onClick={() => setMode('exclusive')}>Exclusive</button>
           </div>
         )}
 

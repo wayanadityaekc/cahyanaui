@@ -1533,12 +1533,10 @@ a.tripbar--promo {
 /* Tombol kedua (Custom Itinerary) - gaya outline biar beda dari Book Now */
 
 /* ============================================================
-   Booking card - price-first (BookingForm.jsx, detail sidebar)
-   Sep 2026, Wayan: harga di ATAS, lalu toggle Standard/Exclusive,
-   date + guests, terus CTA. Reuse .booking__type (toggle) &
-   .booking__btn (CTA); sisanya scoped .bookcard__*.
+   Booking card - price-first (BookingForm.jsx, detail sidebar). Presentasi
+   + toggle udah jadi utility Tailwind; sisa di sini = .bookcard__amount
+   (scope .price__sym), .bookcard__cta (CTA + marker), keyframe note.
    ============================================================ */
-/* service pickers - cuma muncul kalau item BELUM preset (ui-kit / generic) */
 /* harga besar */
 .bookcard__amount {
   display: block;
@@ -1555,10 +1553,6 @@ a.tripbar--promo {
   vertical-align: 0.26em;
   margin-right: 0.04em;
 }
-/* toggle - reuse .booking__type, perbesar dikit + active HIJAU (CTA) */
-.bookcard__toggle { margin: 0 0 0.9rem; padding: 4px; }
-.bookcard__toggle .booking__type-btn { padding: 0.5rem 0.5rem; font-size: var(--fs-small); }
-.bookcard__toggle .booking__type-btn.is-active { background-color: var(--color-cta); }
 /* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
    Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
    key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */
@@ -4709,40 +4703,6 @@ section.faq::before,
 }
 
 /* ==================== Toggle Standard/Exclusive di booking form ==================== */
-.booking__type {
-  display: flex;
-  padding: 3px;
-  margin-bottom: 0.4rem;
-  border: 1px solid rgba(34, 32, 28, 0.5);
-  border-radius: var(--r-pill);
-  background-color: rgba(34, 32, 28, 0.08);
-}
-/* Non-tour (experience/transfer): toggle tetap tampil tapi redup & nggak bisa diklik */
-.booking__type.is-disabled {
-  opacity: 0.4;
-}
-.booking__type-btn:disabled {
-  cursor: not-allowed;
-}
-.booking__type-btn {
-  flex: 1;
-  padding: 0.35rem 0.5rem;
-  border: none;
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: var(--fs-label);
-  font-weight: 600;
-  color: var(--color-green);
-  background-color: transparent;
-  cursor: pointer;
-  transition:
-    background-color var(--dur) ease,
-    color var(--dur) ease;
-}
-.booking__type-btn.is-active {
-  color: #fff;
-  background-color: var(--color-gold);
-}
 
 /* ==================== Toggle Standard/Exclusive per item di itinerary ==================== */
 .itn-item-type__btn.is-active {

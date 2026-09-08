@@ -7,7 +7,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
-import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP } from '@/components/sections/TourPage';
+import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE } from '@/components/sections/TourPage';
 
 export default function AttractionPage({ data }) {
   return (
@@ -22,11 +22,11 @@ export default function AttractionPage({ data }) {
         <div className="tour-hero__body">
           <h1 className="subhero__title">{data.title}</h1>
           <p className="tour-hero__desc">{data.desc}</p>
-          <ul className="tour-hook">
+          <ul className={HOOK_UL}>
             {data.hooks.map((h) => (
               <li key={h.label}>
-                <span className="tour-hook__label">{h.label}</span>
-                <span className="tour-hook__value">{h.value}</span>
+                <span className={HOOK_LABEL}>{h.label}</span>
+                <span className={HOOK_VALUE}>{h.value}</span>
               </li>
             ))}
           </ul>

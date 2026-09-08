@@ -3667,34 +3667,8 @@ section.faq::before,
 }
 /* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
    nggak terlalu bold. */
-.tour-hook {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  margin: 1.5rem 0 0;
-  padding: 0;
-}
-.tour-hook li {
-  display: flex;
-  flex-direction: column;
-  padding: 0 16px;
-}
-.tour-hook li + li {
-  border-left: 1px solid #e6e6e6;
-}
-.tour-hook__label {
-  font-size: var(--fs-small);
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--color-muted);
-}
-.tour-hook__value {
-  margin-top: 0.2rem;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-ink);
-}
+/* .tour-hook* -> utilities di TourPage.jsx + AttractionPage.jsx (migrasi Fase 2).
+   Kelas `tour-hook` tetep dipasang sbg marker check-detail. */
 /* CTA di bawah hook (scroll ke form booking) */
 .tour-hero__cta {
   display: inline-block;
@@ -3861,13 +3835,6 @@ section.faq::before,
   }
   .tour-hero__desc {
     max-width: 460px;
-  }
-  .tour-hook li {
-    padding: 0 22px;
-  }
-  .tour-hook__value {
-    font-size: var(--fs-h3);
-    white-space: nowrap;
   }
 }
 /* Mobile: buang tombol di bawah hook - booking pakai bar bawah aja (book-bar) */

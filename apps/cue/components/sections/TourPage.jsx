@@ -21,6 +21,13 @@ const STOP_LINK = 'stop no-underline text-inherit [transition:transform_var(--du
 export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-bottom:1px_solid_#e0ddd4] text-small text-muted';
 export const CRUMB_LINK = 'text-gold no-underline font-medium hover:underline';
 export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
+// Fact hooks di hero detail (migrasi Fase 2): presentasi -> utilities. Kelas
+// `tour-hook` DIPERTAHANKAN sbg marker check-detail. Breakpoint min-[769px]
+// (bukan md:/768) biar match @media (min-width:769px) persis. li divider via
+// [&>li+li]. Child li di-style dari <ul> ([&>li]) biar DRY (1 konteks, hero).
+export const HOOK_UL = 'tour-hook list-none flex justify-center mt-6 mx-0 mb-0 p-0 [&>li]:flex [&>li]:flex-col [&>li]:px-4 min-[769px]:[&>li]:px-[22px] [&>li+li]:[border-left:1px_solid_#e6e6e6]';
+export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
+export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 
 function Stop({ s }) {
   const inner = (
@@ -59,11 +66,11 @@ export default function TourPage({ data }) {
         <div className="tour-hero__body">
           <h1 className="subhero__title">{data.title}</h1>
           <p className="tour-hero__desc">{data.desc}</p>
-          <ul className="tour-hook">
+          <ul className={HOOK_UL}>
             {data.hooks.map((h) => (
               <li key={h.label}>
-                <span className="tour-hook__label">{h.label}</span>
-                <span className="tour-hook__value">{h.value}</span>
+                <span className={HOOK_LABEL}>{h.label}</span>
+                <span className={HOOK_VALUE}>{h.value}</span>
               </li>
             ))}
           </ul>

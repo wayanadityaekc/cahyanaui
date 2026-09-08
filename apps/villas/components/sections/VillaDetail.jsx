@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
@@ -15,6 +15,37 @@ export default function VillaDetail({ villa }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
+  // Mobile floating book bar (CUE's own "book-bar" system: desktop keeps the
+  // sticky sidebar, mobile gets a persistent bottom bar instead - here styled
+  // as a floating rounded card rather than CUE's edge-to-edge flat one).
+  // Shown only once BOTH the page title and the booking card have scrolled
+  // out of view, same "neither anchor visible" logic as CUE's, so it never
+  // doubles up with a CTA already on screen.
+  const titleRef = useRef(null);
+  const cardRef = useRef(null);
+  const [showBookBar, setShowBookBar] = useState(false);
+
+  useEffect(() => {
+    const title = titleRef.current;
+    const card = cardRef.current;
+    if (!title || !card) return undefined;
+
+    let titleOn = true;
+    let cardOn = false;
+    const sync = () => setShowBookBar(!titleOn && !cardOn);
+
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === title) titleOn = entry.isIntersecting;
+        if (entry.target === card) cardOn = entry.isIntersecting;
+      }
+      sync();
+    });
+    io.observe(title);
+    io.observe(card);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <>
       <section className="pt-6 sm:pt-10">
@@ -27,7 +58,7 @@ export default function VillaDetail({ villa }) {
         <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
           <div className="prose-copy">
             <p className="eyebrow">{villa.tagline}</p>
-            <h1 className="text-display font-bold text-gold">{villa.name}</h1>
+            <h1 ref={titleRef} className="text-display font-bold text-gold">{villa.name}</h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-small text-muted">
               <span>Up to {villa.guests} guests</span>
               <span>·</span>
@@ -100,7 +131,7 @@ export default function VillaDetail({ villa }) {
           </div>
 
           <aside className="lg:sticky lg:top-24 flex flex-col gap-5">
-            <div className="card p-6">
+            <div ref={cardRef} className="card p-6">
               <div className="flex items-end justify-between">
                 <p>
                   <span className="text-label text-muted block">From</span>
@@ -185,6 +216,44 @@ export default function VillaDetail({ villa }) {
           </div>
         </div>
       </section>
+
+      {/* Mobile-only floating book bar - lg:hidden since the sidebar above
+          already covers desktop. Slides up from the bottom as a rounded,
+          elevated card (shadow-xl) rather than CUE's flush edge-to-edge bar,
+          per Wayan's ask to keep the same system but not the identical look. */}
+      <div
+        className={`fixed left-4 right-4 bottom-4 z-40 lg:hidden transition-transform duration-300 ease-out ${
+          showBookBar ? 'translate-y-0' : 'translate-y-[150%]'
+        }`}
+      >
+        <div className="bg-white rounded-2xl shadow-xl border border-line flex items-center justify-between gap-3 px-4 py-3">
+          <p className="leading-tight">
+            <span className="block text-label text-muted">From</span>
+            <span className="text-h3 font-bold text-amber">{format(villa.nightlyRate)}</span>
+            <span className="text-label text-muted"> / night</span>
+          </p>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <a
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener"
+              aria-label="Chat on WhatsApp"
+              className="flex items-center justify-center w-11 h-11 rounded-full bg-cta text-white flex-shrink-0"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
+              </svg>
+            </a>
+            <button
+              type="button"
+              onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
+              className="btn btn-cta btn-sm whitespace-nowrap"
+            >
+              Check availability
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

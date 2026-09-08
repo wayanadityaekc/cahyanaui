@@ -4,10 +4,11 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useMobile from './useMobile';
 import Overlay from './Overlay';
+import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER } from './hsClasses';
 
 function Chevron() {
   return (
-    <svg className="hs-chev" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className={CHEV} viewBox="0 0 24 24" aria-hidden="true">
       <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -95,23 +96,23 @@ export default function Select({
 
       <button
         type="button"
-        className={`hs-control bk-control${rich ? ' hs-control--rich' : ''}`}
+        className={rich ? CONTROL_RICH : CONTROL}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        {icon && <span className="hs-control__ic" aria-hidden="true">{icon}</span>}
+        {icon && <span className={CONTROL_IC} aria-hidden="true">{icon}</span>}
         {rich ? (
-          <span className="hs-control__stack">
-            {hint && <span className="hs-control__hint">{hint}</span>}
-            <span className={`hs-control__val${!selected ? ' placeholder' : ''}`}>
+          <span className={CONTROL_STACK}>
+            {hint && <span className={CONTROL_HINT}>{hint}</span>}
+            <span className={!selected ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>
               {selected ? selected.label : placeholder}
             </span>
           </span>
         ) : (
-          <span className={`hs-control__val${!selected ? ' placeholder' : ''}${selected && selected.flag ? ' hs-control__val--flag' : ''}`}>
+          <span className={!selected ? CONTROL_VAL_PLACEHOLDER : (selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL)}>
             {selected && selected.flag && <img className="hs-opt__flag" src={`/assets/flags/${selected.flag}.svg`} alt="" />}
-            <span className="hs-opt__nm">{selected ? selected.label : placeholder}</span>
+            <span className={selected && selected.flag ? `hs-opt__nm ${CONTROL_FLAG_NM}` : 'hs-opt__nm'}>{selected ? selected.label : placeholder}</span>
           </span>
         )}
         <Chevron />

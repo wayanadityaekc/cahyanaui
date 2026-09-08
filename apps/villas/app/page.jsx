@@ -36,7 +36,7 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative">
-        <div className="relative min-h-[78vh] sm:min-h-[86vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[62vh] sm:min-h-[72vh] flex items-center overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://picsum.photos/seed/ubudvilla9/1800/1100"

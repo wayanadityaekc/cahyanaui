@@ -176,10 +176,13 @@ export default function HomePage() {
               <a href={UBUD_GUIDE_LINK} target="_blank" rel="noopener" className="btn btn-outline">Read the Ubud guide</a>
             </div>
           </div>
+          {/* Real photo, reused from CUE's own asset
+              (assets/images/tegalalang-rice-terrace-hero.jpg) — an actual
+              destination guests visit, not a stock/placeholder shot. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="https://picsum.photos/seed/g1a/800/560"
-            alt="Village path through the rice fields near the villas"
+            src="/images/tegalalang-rice-terrace.jpg"
+            alt="Tegalalang Rice Terrace, one of the stops on a full-day Ubud tour with our sister brand"
             width={800}
             height={560}
             loading="lazy"

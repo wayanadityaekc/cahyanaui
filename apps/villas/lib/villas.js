@@ -25,10 +25,12 @@ export const VILLAS = {
     host: 'Made · Superhost, 3 years hosting, replies within an hour',
     registration: 'NIB 2501220013924 · KBLI 55193',
     shortDesc: 'A spacious villa with a private pool and tropical garden. Perfect for couples or small families.',
-    heroImg: 'https://picsum.photos/seed/house-hero/1800/900',
-    cardImg: 'https://picsum.photos/seed/house-hero/900/700',
+    // Real photo, reused from CUE's own asset (assets/images/cahyana-house.webp) —
+    // same villa, so it's the actual property, not a stock/placeholder shot.
+    heroImg: '/images/cahyana-house.webp',
+    cardImg: '/images/cahyana-house.webp',
     gallery: [
-      { src: 'https://picsum.photos/seed/house-hero/1200/900', alt: 'Cahyana House pool and garden' },
+      { src: '/images/cahyana-house.webp', alt: 'Cahyana House pool and garden at dusk' },
       { src: 'https://picsum.photos/seed/h1b/1200/900', alt: 'Cahyana House pool at sunset' },
       { src: 'https://picsum.photos/seed/h2b/1200/900', alt: 'Cahyana House living area with smart TV' },
       { src: 'https://picsum.photos/seed/h3b/1200/900', alt: 'Cahyana House king bedroom facing the pool' },
@@ -91,10 +93,12 @@ export const VILLAS = {
     host: 'Wayan · Superhost, replies within an hour, speaks English & Indonesian',
     registration: 'NIB 2501220013924',
     shortDesc: 'A serene escape with a private pool, open living space and a calming view of the tropical garden.',
-    heroImg: 'https://picsum.photos/seed/tibuah-hero/1800/900',
-    cardImg: 'https://picsum.photos/seed/tibuah-hero/900/700',
+    // Real photo, reused from CUE's own asset (assets/images/cahyana-tibuah.webp) —
+    // same villa, so it's the actual property, not a stock/placeholder shot.
+    heroImg: '/images/cahyana-tibuah.webp',
+    cardImg: '/images/cahyana-tibuah.webp',
     gallery: [
-      { src: 'https://picsum.photos/seed/tibuah-hero/1200/900', alt: 'Cahyana Tibuah pool with rice field view' },
+      { src: '/images/cahyana-tibuah.webp', alt: 'Cahyana Tibuah pool at dusk' },
       { src: 'https://picsum.photos/seed/t1b/1200/900', alt: 'Cahyana Tibuah pool above the rice field' },
       { src: 'https://picsum.photos/seed/t2b/1200/900', alt: 'Cahyana Tibuah open plan living area' },
       { src: 'https://picsum.photos/seed/t3b/1200/900', alt: 'Cahyana Tibuah king bedroom' },

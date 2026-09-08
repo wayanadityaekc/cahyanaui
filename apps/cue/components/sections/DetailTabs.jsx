@@ -67,13 +67,13 @@ function GoodToKnow() {
     { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end of the day. Free cancellation up to 24 hours before.' },
   ];
   return (
-    <ul className="dgtk">
+    <ul className="list-none mb-[1.6rem] flex flex-col gap-[1.1rem]">
       {rows.map((r) => (
-        <li key={r.h}>
-          <span className="dgtk__ic">{r.ic}</span>
+        <li className="flex gap-[0.85rem] items-start" key={r.h}>
+          <span className="flex-none grid place-items-center w-[2.2rem] h-[2.2rem] rounded-[50%] bg-cream text-gold [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]">{r.ic}</span>
           <div>
-            <span className="dgtk__h">{r.h}</span>
-            <p className="dgtk__t">{r.t}</p>
+            <span className="block text-strong font-semibold text-gold mb-[0.15rem]">{r.h}</span>
+            <p className="text-small leading-[1.45] text-green m-0">{r.t}</p>
           </div>
         </li>
       ))}
@@ -82,12 +82,13 @@ function GoodToKnow() {
 }
 
 // Included / excluded lists - reuses the site-wide radio bullet lists.
+const DINCL_H = 'text-label font-semibold tracking-[0.06em] uppercase text-gold mt-[1.3rem] mb-[0.6rem] first:mt-0';
 function Inclusions({ included, excluded }) {
   return (
-    <div className="dincl">
+    <div>
       {included && included.length > 0 && (
         <>
-          <h3 className="dincl__h">What&apos;s included</h3>
+          <h3 className={DINCL_H}>What&apos;s included</h3>
           <ul className="info__list info__list--yes">
             {included.map((it, i) => <li key={i}>{it}</li>)}
           </ul>
@@ -95,7 +96,7 @@ function Inclusions({ included, excluded }) {
       )}
       {excluded && excluded.length > 0 && (
         <>
-          <h3 className="dincl__h">Not included</h3>
+          <h3 className={DINCL_H}>Not included</h3>
           <ul className="info__list info__list--no">
             {excluded.map((it, i) => <li key={i}>{it}</li>)}
           </ul>
@@ -170,15 +171,21 @@ export default function DetailTabs({ overview, priceItem, included, excluded, re
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
+  // Tailwind-native (migrasi Fase 2): wrapper/strip/tab/section-heading -> utilities.
+  // .dtabs__sec DIPERTAHANKAN sbg CSS: dia context hook buat .stop di dalamnya
+  // (.dtabs__sec .stops/.stop) + jarak antar-section + scroll-margin. .info__list*
+  // (checklist bullet) juga tetep shared.
+  const tab = (on) =>
+    `font-body text-small bg-transparent [border-top:0] [border-left:0] [border-right:0] py-[0.9rem] px-[0.15rem] mb-[-1px] whitespace-nowrap cursor-pointer transition-[color,border-color] duration-[var(--dur-fast)] ease-[ease] ${on ? '[border-bottom:2px_solid_var(--color-gold)] font-semibold text-green' : '[border-bottom:2px_solid_transparent] font-medium text-muted hover:text-green'}`;
   return (
-    <div className="dtabs">
-      <div className="dtabs__strip" ref={stripRef} role="tablist" aria-label="Jump to section">
+    <div className="max-w-[1000px] mt-5 mx-auto pt-[0.85rem] px-6 pb-8 bg-white rounded-xl [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:mt-4 max-[560px]:px-4 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg">
+      <div className="flex gap-[1.6rem] [border-bottom:1px_solid_var(--line)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sticky top-0 z-20 bg-white max-[560px]:gap-[1.1rem]" ref={stripRef} role="tablist" aria-label="Jump to section">
         {sections.map((s) => (
           <button
             key={s.id}
             type="button"
             aria-current={active === s.id}
-            className={`dtabs__tab${active === s.id ? ' is-on' : ''}`}
+            className={tab(active === s.id)}
             onClick={() => pick(s.id)}
           >
             {s.label}
@@ -192,7 +199,7 @@ export default function DetailTabs({ overview, priceItem, included, excluded, re
           ref={(el) => { secRefs.current[s.id] = el; }}
           className="dtabs__sec"
         >
-          <h2 className="dtabs__sec-h">{s.label}</h2>
+          <h2 className="text-h2 font-semibold text-gold m-0 mb-4">{s.label}</h2>
           {s.content}
         </section>
       ))}

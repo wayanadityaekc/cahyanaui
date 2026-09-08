@@ -2347,58 +2347,9 @@ section.faq::before,
    ganti panel di tempat + scroll biar strip nempel di bawah header (kerasa
    pindah halaman, tanpa reload). Semua panel di-render ke HTML (cuma di-hidden),
    jadi SEO aman. Gaya tab = samain .zone-chip (underline). */
-.dtabs {
-  max-width: 1000px;
-  /* Kesan "cekung" tipis: background putih, cuma inner shadow dangkal di bibir
-     atas -> konten kerasa masuk dikit, hero di lapisan atasnya. */
-  margin: 1.25rem auto 0;
-  padding: 0.85rem 1.5rem 2rem;
-  background: #fff;
-  border-radius: var(--r-xl);
-  /* inner shadow: atas agak kerasa, kiri-kanan tipis banget (biar "cekung" merata) */
-  box-shadow:
-    inset 0 8px 11px -10px rgba(34, 32, 28, 0.3),
-    inset 7px 0 9px -9px rgba(34, 32, 28, 0.1),
-    inset -7px 0 9px -9px rgba(34, 32, 28, 0.1);
-}
-.dtabs__strip {
-  display: flex;
-  gap: 1.6rem;
-  border-bottom: 1px solid var(--line);
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  position: sticky;
-  top: 0; /* JS set = tinggi header (navbar + promo) biar nempel pas */
-  z-index: 20;
-  background: #fff;
-}
-.dtabs__strip::-webkit-scrollbar {
-  display: none;
-}
-.dtabs__tab {
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-muted);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 0.9rem 0.15rem;
-  margin-bottom: -1px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
-}
-.dtabs__tab:hover {
-  color: var(--color-green);
-}
-.dtabs__tab.is-on {
-  font-weight: 600;
-  color: var(--color-green);
-  border-bottom-color: var(--color-gold);
-}
-/* Semua section ditumpuk jadi satu halaman scroll; tab = jump-nav (scrollspy) */
+/* Semua section ditumpuk jadi satu halaman scroll; tab = jump-nav (scrollspy).
+   .dtabs__sec DIPERTAHANKAN sbg context hook buat .stop di dalamnya + jarak antar-
+   section (wrapper/strip/tab/heading udah jadi utility di DetailTabs.jsx). */
 .dtabs__sec {
   padding-top: 1.5rem;
   scroll-margin-top: 120px; /* cadangan kalau anchor dipakai langsung */
@@ -2406,12 +2357,6 @@ section.faq::before,
 .dtabs__sec + .dtabs__sec {
   margin-top: 1.5rem;
   border-top: 1px solid var(--line);
-}
-.dtabs__sec-h {
-  font-size: var(--fs-h2);
-  font-weight: 600;
-  color: var(--color-gold);
-  margin: 0 0 1rem;
 }
 /* stops di dalam section: buang padding section (spacing diurus wrapper) */
 .dtabs__sec .stops {
@@ -2421,70 +2366,9 @@ section.faq::before,
   max-width: none;
 }
 /* Details tab - "Before you go" (info praktis umum) */
-.dgtk {
-  list-style: none;
-  margin: 0 0 1.6rem;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-.dgtk li {
-  display: flex;
-  gap: 0.85rem;
-  align-items: flex-start;
-}
-.dgtk__ic {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  background: var(--color-cream);
-  color: var(--color-gold);
-}
-.dgtk__ic svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-}
-.dgtk__h {
-  display: block;
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  color: var(--color-gold);
-  margin-bottom: 0.15rem;
-}
-.dgtk__t {
-  font-size: var(--fs-small);
-  line-height: 1.45;
-  color: var(--color-green);
-  margin: 0;
-}
 
 /* Included tab - reuse .info__list radio bullets */
-.dincl__h {
-  font-size: var(--fs-label);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-gold);
-  margin: 1.3rem 0 0.6rem;
-}
-.dincl__h:first-child {
-  margin-top: 0;
-}
 /* HP: rapetin biar 4 tab (Overview/Details/Included/Reviews) muat tanpa kepotong */
-@media (max-width: 560px) {
-  .dtabs {
-    margin-top: 1rem;
-    padding: 0.85rem 1rem 1.6rem;
-    border-radius: var(--r-lg);
-  }
-  .dtabs__strip {
-    gap: 1.1rem;
-  }
-}
 
 /* Tour stops / detail rows - foto kiri, deskripsi kanan */
 .stops {

@@ -7,6 +7,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
+import { STOP_NUM, STOP_NAME, STOP_DESC } from '@/components/sections/TourPage';
 
 export default function AttractionPage({ data }) {
   return (
@@ -45,10 +46,10 @@ export default function AttractionPage({ data }) {
                     <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
                   </div>
                 )}
-                <div className="stop__body">
-                  {s.num && <span className="stop__num">{s.num}</span>}
-                  <h3 className="stop__name">{s.name}</h3>
-                  <p className="stop__desc" dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+                <div>
+                  {s.num && <span className={STOP_NUM}>{s.num}</span>}
+                  <h3 className={STOP_NAME}>{s.name}</h3>
+                  <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
                 </div>
               </article>
             ))}

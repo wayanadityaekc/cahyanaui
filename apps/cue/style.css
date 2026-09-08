@@ -136,7 +136,6 @@ body {
 .experience__desc,
 .subhero__text,
 .info__list li,
-.stop__desc,
 .faq__a p {
   font-family: var(--font-body);
   font-size: var(--fs-body);
@@ -2303,21 +2302,9 @@ section.faq::before,
   object-fit: cover;
   object-position: center;
 }
-.stop__num {
-  display: inline-block;
-  margin-bottom: 0.6rem;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.stop__name {
-  margin-bottom: 0.6rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-}
+/* .stop__num / .stop__name / .stop__desc / .stop--link -> utilities di
+   TourPage.jsx + AttractionPage.jsx (migrasi Fase 2). .stop (grid) + .stop__image
+   (primitif foto shared) tetep CSS. */
 
 /* Details: quick facts + included / excluded */
 .info {
@@ -2473,16 +2460,6 @@ section.faq::before,
 }
 .info__container.is-exclusive .info__list li[data-only="standard"] {
   display: none;
-}
-
-/* Stop yang bisa diklik ke halaman attraction-nya */
-.stop--link {
-  text-decoration: none;
-  color: inherit;
-  transition: transform var(--dur-fast) ease;
-}
-.stop--link:hover {
-  transform: translateY(-3px);
 }
 
 /* Breadcrumb (halaman anak: tour, attraction, aktivitas) - di atas footer */
@@ -4759,7 +4736,6 @@ section.faq::before,
 }
 /* Tier UI (Inter): judul kartu, modal, nama, dst */
 .driver-modal__name,
-.stop__name,
 .itn__subtitle,
 .itn-day__title,
 .experience__name {

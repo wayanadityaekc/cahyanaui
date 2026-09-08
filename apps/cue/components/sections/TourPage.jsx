@@ -8,6 +8,15 @@ import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 
+// Tailwind-native (migrasi Fase 2): teks stop (.stop__num/.stop__name/.stop__desc)
+// -> utilities; .stop__body (tanpa CSS) -> drop class; .stop--link (link + hover
+// lift) -> utilities. DIPERTAHANKAN sbg CSS: .stop (grid layout engine, di-scope
+// .dtabs__sec .stop) + .stop__image (primitif foto shared, .stop__image > img).
+export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
+export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
+export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
+const STOP_LINK = 'stop no-underline text-inherit [transition:transform_var(--dur-fast)_ease] hover:[transform:translateY(-3px)]';
+
 function Stop({ s }) {
   const inner = (
     <>
@@ -18,15 +27,15 @@ function Stop({ s }) {
       ) : s.gradient ? (
         <div className="stop__image" style={{ backgroundImage: s.gradient.replace(/^background-image:\s*/, '').replace(/;$/, '') }} />
       ) : null}
-      <div className="stop__body">
-        {s.num && <span className="stop__num">{s.num}</span>}
-        <h3 className="stop__name">{s.name}</h3>
-        <p className="stop__desc" dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+      <div>
+        {s.num && <span className={STOP_NUM}>{s.num}</span>}
+        <h3 className={STOP_NAME}>{s.name}</h3>
+        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
       </div>
     </>
   );
   return s.link ? (
-    <a className="stop stop--link" href={s.link}>{inner}</a>
+    <a className={STOP_LINK} href={s.link}>{inner}</a>
   ) : (
     <article className="stop">{inner}</article>
   );

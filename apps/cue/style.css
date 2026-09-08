@@ -8852,50 +8852,9 @@ strong {
   padding: 4.5rem var(--container-x);
   text-align: left; /* aturan V1: konten grid rata kiri */
 }
-/* Header row V1: intro (kick+judul+sub) kiri, tab kanan sebaris */
-.xplore__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-bottom: 2.2rem;
-}
-/* .xplore__k / .xplore__sub (kicker + description) DIHAPUS - Wayan minta
-   dibuang, cuma H2 title yang tinggal. Kalau nanti butuh lagi, ada di git
-   history. */
-.xplore__t {
-  font-family: var(--font-head);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: var(--fs-h2);
-  line-height: var(--lh-heading);
-  color: var(--color-gold); /* samain warna judul section lain */
-  margin: 0;
-}
-/* tabs (di dalam header row; garis cuma di tab aktif) */
-.xtabs {
-  display: flex;
-  gap: 1.8rem;
-}
-.xtab {
-  background: none;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  padding: 0 0 0.9rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-muted);
-  cursor: pointer;
-}
-.xtab.is-on {
-  font-weight: 600;
-  color: var(--color-green);
-  border-bottom-color: var(--color-gold);
-}
-.xpanel[hidden] { display: none; }
+/* Header row + tab switcher (.xplore__head/.xtabs/.xtab) + "view all"
+   (.xplore__more) di-convert ke utility Tailwind (Explore/Destinations.jsx).
+   Yang tinggal di sini = .xplore (context hook grid-engine) + rule grid di bawah. */
 /* kartu di panel: napas lebih longgar dari default */
 .xplore .experience__grid--home4 { gap: 1.4rem; }
 /* Desktop: Explore & Destinations (homepage) tampilin SEMUA kartu tanpa geser -
@@ -8913,23 +8872,10 @@ strong {
     flex: none;
   }
 }
-
-.xplore__more { margin-top: 2rem; text-align: right; }
 @media (max-width: 768px) {
   .xplore { padding: 3.2rem var(--container-x); }
   /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
-  .xplore__head { margin-bottom: 1.6rem; }
-  .xtabs {
-    width: 100%;
-    gap: 1.1rem;
-    margin-top: 0.4rem;
-    border-bottom: 1px solid var(--line);
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .xtabs::-webkit-scrollbar { display: none; }
   .xplore .experience__grid--home4 { gap: 0.9rem; }
-  .xplore__more { margin-top: 1.6rem; }
 }
 
 /* Card layout (homepage .home + listing .tourprog) = "style A":

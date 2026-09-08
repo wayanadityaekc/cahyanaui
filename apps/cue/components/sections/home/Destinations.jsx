@@ -4,9 +4,9 @@ import { HOME_DESTINATIONS } from '@/content/shared/home';
 export default function Destinations() {
   return (
     <section className="xplore" id="destinations-home">
-      <div className="xplore__head">
-        <div className="xplore__intro">
-          <h2 className="xplore__t">Popular Bali Destinations</h2>
+      <div className="flex justify-between items-end gap-8 flex-wrap mb-[2.2rem] max-[768px]:mb-[1.6rem]">
+        <div>
+          <h2 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-gold m-0">Popular Bali Destinations</h2>
         </div>
       </div>
       <div className="experience__grid experience__grid--home4">
@@ -14,7 +14,7 @@ export default function Destinations() {
           <HomepageCard key={c.name} {...c} />
         ))}
       </div>
-      <div className="xplore__more">
+      <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
         <a href="/destinations.html" className="btn-pill">View all destinations</a>
       </div>
     </section>

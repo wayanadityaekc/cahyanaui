@@ -12,18 +12,24 @@ const TABS = [
 export default function Explore() {
   const [active, setActive] = useState('tours');
 
+  // Tailwind-native (migrasi Fase 2): header/tab/panel/"view all" (.xplore__head/
+  // __t/__more, .xtabs/.xtab, .xpanel) -> utilities, CSS-nya dihapus. KEPT: .xplore
+  // (section) = context hook grid-engine (.xplore .experience__grid--home4 atur
+  // gap/wrap + slider-vs-wrap homepage) + .home .xplore padding; dan .experience__
+  // grid* (engine) + .btn-pill (primitif). .xplore__intro (tanpa CSS) & .xpanel
+  // (cuma [hidden]{display:none}, di-handle prop React `hidden`) dibuang.
   return (
     <section className="xplore" id="explore">
-      <div className="xplore__head">
-        <div className="xplore__intro">
-          <h2 className="xplore__t">Our Best Bali Tours</h2>
+      <div className="flex justify-between items-end gap-8 flex-wrap mb-[2.2rem] max-[768px]:mb-[1.6rem]">
+        <div>
+          <h2 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-gold m-0">Our Best Bali Tours</h2>
         </div>
-        <div className="xtabs" role="tablist">
+        <div className="flex gap-[1.8rem] max-[768px]:w-full max-[768px]:gap-[1.1rem] max-[768px]:mt-[0.4rem] max-[768px]:[border-bottom:1px_solid_var(--line)] max-[768px]:overflow-x-auto max-[768px]:[scrollbar-width:none] max-[768px]:[&::-webkit-scrollbar]:hidden" role="tablist">
           {TABS.map((t) => (
             <button
               key={t.key}
               type="button"
-              className={`xtab${active === t.key ? ' is-on' : ''}`}
+              className={`bg-transparent [border-top:0] [border-right:0] [border-left:0] mb-[-1px] [padding:0_0_0.9rem] font-body text-small cursor-pointer ${active === t.key ? '[border-bottom:2px_solid_var(--color-gold)] font-semibold text-green' : '[border-bottom:2px_solid_transparent] font-medium text-muted'}`}
               role="tab"
               aria-selected={active === t.key}
               onClick={() => setActive(t.key)}
@@ -35,13 +41,13 @@ export default function Explore() {
       </div>
 
       {TABS.map((t) => (
-        <div className="xpanel" data-xpanel={t.key} key={t.key} hidden={active !== t.key}>
+        <div key={t.key} hidden={active !== t.key}>
           <div className="experience__grid experience__grid--home4">
             {t.cards.map((c) => (
               <HomepageCard key={c.href + c.name} {...c} />
             ))}
           </div>
-          <div className="xplore__more">
+          <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
             <a href={t.more[0]} className="btn-pill">{t.more[1]}</a>
           </div>
         </div>

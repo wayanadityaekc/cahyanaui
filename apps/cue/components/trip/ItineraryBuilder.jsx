@@ -192,7 +192,9 @@ export default function ItineraryBuilder() {
           <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
         </section>
 
-        <button className="itn2__add" id="itn-add" type="button" onClick={addDay}>+ Add more day</button>
+        {/* .itn2__add visual -> utilities; kelas `itn2__add` disimpen sbg anchor
+            ordering (.itn2__side > .itn2__add order/margin responsive). Migrasi Fase 2. */}
+        <button className="itn2__add block w-full mt-[1.25rem] p-[0.95rem] [border:1.5px_dashed_var(--color-green)] rounded-md bg-white font-body text-[1rem] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease] hover:bg-green hover:text-white" id="itn-add" type="button" onClick={addDay}>+ Add more day</button>
       </aside>
 
       <div className="itn2__main">

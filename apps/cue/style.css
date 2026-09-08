@@ -3439,27 +3439,9 @@ section.faq::before,
   margin-bottom: 1rem;
 }
 /* Isi popup form transfer/charter (modal--sm default center -> rata kiri) */
-.itn2__add {
-  display: block;
-  width: 100%;
-  margin-top: 1.25rem;
-  padding: 0.95rem;
-  border: 1.5px dashed var(--color-green);
-  border-radius: var(--r-md);
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-green);
-  cursor: pointer;
-  transition:
-    background-color var(--dur) ease,
-    color var(--dur) ease;
-}
-.itn2__add:hover {
-  background: var(--color-green);
-  color: #fff;
-}
+/* .itn2__add visual (+:hover) -> utilities di ItineraryBuilder.jsx (migrasi Fase 2).
+   Kelas `itn2__add` tetep dipasang: anchor `.itn2__side > .itn2__add` (order +
+   margin responsive). Sisa .itn2* = layout engine, sengaja tetep CSS scoped. */
 /* Charter dipilih inline (bukan navigasi) -> pakai <button>, samain tampilannya dg <a> */
 /* ====== Slider: swipe samping geser card, swipe atas-bawah scroll page ====== */
 @media (max-width: 992px) {

@@ -48,11 +48,11 @@ export default function HomePage() {
             style={{ background: 'linear-gradient(100deg, rgba(20,20,16,0.62) 0%, rgba(20,20,16,0.28) 48%, rgba(20,20,16,0.05) 75%)' }}
           />
           <div className="wrap relative z-10 py-24">
-            <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>Ubud Private Villas</p>
-            <h1 className="text-display font-bold max-w-xl" style={{ color: '#fff' }}>
+            <p className="eyebrow text-gold-l">Ubud Private Villas</p>
+            <h1 className="text-display font-bold max-w-xl text-white">
               A private retreat in the heart of Ubud
             </h1>
-            <p className="mt-4 max-w-md text-body" style={{ color: 'rgba(255,255,255,0.88)' }}>
+            <p className="mt-4 max-w-md text-body text-white/88">
               Two exclusive villas, designed for comfort, privacy and a true Balinese experience.
             </p>
             <div className="flex flex-wrap gap-3 mt-7">
@@ -68,12 +68,12 @@ export default function HomePage() {
       </section>
 
       {/* Villas */}
-      <section className="section" style={{ background: 'var(--color-cream)' }}>
+      <section className="section bg-cream">
         <div className="wrap">
           <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
             <div>
               <p className="eyebrow">Our Villas</p>
-              <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>
+              <h2 className="text-h2 font-semibold text-gold">
                 Two unique villas, one unforgettable stay
               </h2>
             </div>
@@ -97,7 +97,7 @@ export default function HomePage() {
                   </svg>
                 </span>
                 <div>
-                  <h3 className="text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>{item.title}</h3>
+                  <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
                   <p className="text-small text-muted mt-1">{item.desc}</p>
                 </div>
               </div>
@@ -117,9 +117,9 @@ export default function HomePage() {
           />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.15), rgba(20,20,16,0.55))' }} />
           <div className="wrap relative z-10 py-16">
-            <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>More Than Just A Stay</p>
-            <h2 className="text-h2 font-semibold max-w-md" style={{ color: '#fff' }}>Experience the real Ubud</h2>
-            <p className="mt-2 max-w-md text-small" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            <p className="eyebrow text-gold-l">More Than Just A Stay</p>
+            <h2 className="text-h2 font-semibold max-w-md text-white">Experience the real Ubud</h2>
+            <p className="mt-2 max-w-md text-small text-white/85">
               Combine your villa stay with our curated experiences, from cultural tours to wellness and adventure.
             </p>
             <Link href="/experiences" className="btn btn-outline-light mt-5">Explore experiences</Link>
@@ -134,7 +134,7 @@ export default function HomePage() {
                 </svg>
               </span>
               <span>
-                <span className="block text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>Ubud Highlights</span>
+                <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>
                 <span className="block text-label text-muted">Temples, rice terraces, waterfalls &amp; more</span>
               </span>
             </Link>
@@ -146,9 +146,9 @@ export default function HomePage() {
       <section className="section">
         <div className="wrap">
           <p className="eyebrow">Guest Reviews</p>
-          <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>What our guests say</h2>
+          <h2 className="text-h2 font-semibold text-gold">What our guests say</h2>
           <p className="mt-2 text-small text-muted">Real experiences from people who stayed with us.</p>
-          <p className="mt-4 flex items-center gap-2 text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>
+          <p className="mt-4 flex items-center gap-2 text-h3 font-semibold text-gold">
             {OVERALL_RATING}/5
             <span className="stars-amber">★★★★★</span>
             <span className="text-small text-muted font-normal">from {OVERALL_REVIEW_COUNT}+ reviews</span>
@@ -163,11 +163,11 @@ export default function HomePage() {
       </section>
 
       {/* Neighbourhood / sister brand */}
-      <section className="section" style={{ background: 'var(--color-cream)' }}>
+      <section className="section bg-cream">
         <div className="wrap grid md:grid-cols-2 gap-8 items-center">
           <div>
             <p className="eyebrow">Same Family</p>
-            <h2 className="text-h2 font-semibold" style={{ color: 'var(--color-gold)' }}>Need a driver while you stay?</h2>
+            <h2 className="text-h2 font-semibold text-gold">Need a driver while you stay?</h2>
             <p className="mt-2 text-small text-muted max-w-md">
               Airport pickup, day tours, temple runs and rice terrace mornings - booked through our sister brand, with every price upfront. Most guests do a full-day Ubud tour and cover 7 or 8 stops.
             </p>
@@ -192,10 +192,10 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
+      <section className="section text-center bg-gold">
         <div className="wrap">
-          <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>Dates in mind?</h2>
-          <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          <h2 className="text-h2 font-semibold text-white">Dates in mind?</h2>
+          <p className="mt-2 text-small text-white/75">
             Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-6">

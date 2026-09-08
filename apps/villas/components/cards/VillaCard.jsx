@@ -31,7 +31,7 @@ export default function VillaCard({ villa }) {
         <span className="badge absolute top-3 right-3">{villa.name}</span>
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">
-        <h3 className="text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>{villa.name}</h3>
+        <h3 className="text-h3 font-semibold text-gold">{villa.name}</h3>
         <div className="flex items-center gap-4 text-small text-muted">
           <span className="flex items-center gap-1.5"><MetaIcon type="guests" />Up to {villa.guests} guests</span>
           <span className="flex items-center gap-1.5"><MetaIcon type="bedrooms" />{villa.bedrooms} bedrooms</span>
@@ -41,7 +41,7 @@ export default function VillaCard({ villa }) {
         <div className="mt-auto pt-3 flex items-end justify-between border-t border-line">
           <p>
             <span className="text-label text-muted block">From</span>
-            <span className="text-h2 font-bold" style={{ color: 'var(--color-amber)' }}>{format(villa.nightlyRate)}</span>
+            <span className="text-h2 font-bold text-amber">{format(villa.nightlyRate)}</span>
             <span className="text-label text-muted"> / night</span>
           </p>
           <span className="btn btn-cta btn-sm">

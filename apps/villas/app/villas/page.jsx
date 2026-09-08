@@ -11,10 +11,10 @@ export const metadata = {
 export default function VillasPage() {
   return (
     <>
-      <section className="pt-14 pb-10 border-b border-line" style={{ background: 'var(--color-cream)' }}>
+      <section className="pt-14 pb-10 border-b border-line bg-cream">
         <div className="wrap">
           <p className="eyebrow">Our Villas</p>
-          <h1 className="text-display font-bold" style={{ color: 'var(--color-gold)' }}>
+          <h1 className="text-display font-bold text-gold">
             Two unique villas, one unforgettable stay
           </h1>
           <p className="mt-3 max-w-xl text-body text-muted">
@@ -31,17 +31,17 @@ export default function VillasPage() {
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--color-cream)' }}>
+      <section className="section bg-cream">
         <div className="wrap">
           <p className="eyebrow">Side by Side</p>
-          <h2 className="text-h2 font-semibold mb-6" style={{ color: 'var(--color-gold)' }}>Which villa suits you</h2>
+          <h2 className="text-h2 font-semibold mb-6 text-gold">Which villa suits you</h2>
           <div className="overflow-x-auto rounded-xl border border-line bg-white">
             <table className="w-full text-small">
               <thead>
-                <tr style={{ background: 'var(--color-cream)' }}>
+                <tr className="bg-cream">
                   <th className="text-left p-4"></th>
-                  <th className="text-left p-4 text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>Cahyana House</th>
-                  <th className="text-left p-4 text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>Cahyana Tibuah</th>
+                  <th className="text-left p-4 text-h3 font-semibold text-gold">Cahyana House</th>
+                  <th className="text-left p-4 text-h3 font-semibold text-gold">Cahyana Tibuah</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,8 +57,8 @@ export default function VillasPage() {
                 ].map((row) => (
                   <tr key={row[0]} className="border-t border-line">
                     <td className="p-4 text-label uppercase tracking-wide text-muted">{row[0]}</td>
-                    <td className="p-4" style={{ color: 'var(--color-gold)' }}>{row[1]}</td>
-                    <td className="p-4" style={{ color: 'var(--color-gold)' }}>{row[2]}</td>
+                    <td className="p-4 text-gold">{row[1]}</td>
+                    <td className="p-4 text-gold">{row[2]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -70,10 +70,10 @@ export default function VillasPage() {
         </div>
       </section>
 
-      <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
+      <section className="section text-center bg-gold">
         <div className="wrap">
-          <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>Still deciding?</h2>
-          <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          <h2 className="text-h2 font-semibold text-white">Still deciding?</h2>
+          <p className="mt-2 text-small text-white/75">
             Tell us who&apos;s coming and when - we&apos;ll say which villa suits you, even if it&apos;s the smaller one.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-6">

@@ -37,11 +37,9 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block py-1 text-small font-semibold border-b"
-                  style={{
-                    color: isActive(link.href) ? 'var(--color-cta)' : 'var(--color-gold)',
-                    borderColor: isActive(link.href) ? 'var(--color-cta)' : 'transparent',
-                  }}
+                  className={`block py-1 text-small font-semibold border-b ${
+                    isActive(link.href) ? 'text-cta border-cta' : 'text-gold border-transparent'
+                  }`}
                 >
                   {link.label}
                 </Link>
@@ -66,9 +64,9 @@ export default function Navbar() {
             onClick={() => setMenuOpen((v) => !v)}
             className="md:hidden flex flex-col gap-[5px] cursor-pointer"
           >
-            <span className="w-5 h-[1.5px]" style={{ background: 'var(--color-gold)' }} />
-            <span className="w-5 h-[1.5px]" style={{ background: 'var(--color-gold)' }} />
-            <span className="w-5 h-[1.5px]" style={{ background: 'var(--color-gold)' }} />
+            <span className="w-5 h-[1.5px] bg-gold" />
+            <span className="w-5 h-[1.5px] bg-gold" />
+            <span className="w-5 h-[1.5px] bg-gold" />
           </button>
         </div>
       </div>
@@ -82,8 +80,9 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block py-3.5 text-small font-semibold"
-                    style={{ color: isActive(link.href) ? 'var(--color-cta)' : 'var(--color-gold)' }}
+                    className={`block py-3.5 text-small font-semibold ${
+                      isActive(link.href) ? 'text-cta' : 'text-gold'
+                    }`}
                   >
                     {link.label}
                   </Link>

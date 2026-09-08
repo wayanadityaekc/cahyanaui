@@ -26,8 +26,7 @@ export default function CurrencyPicker({ light = false }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label="Select currency"
-        className="flex items-center gap-1 text-[0.78rem] font-semibold cursor-pointer"
-        style={{ color: light ? '#fff' : 'var(--color-gold)' }}
+        className={`flex items-center gap-1 text-[0.78rem] font-semibold cursor-pointer ${light ? 'text-white' : 'text-gold'}`}
       >
         {currency}
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className={`transition-transform ${open ? 'rotate-180' : ''}`}>
@@ -48,8 +47,7 @@ export default function CurrencyPicker({ light = false }) {
                 setCurrency(c.code);
                 setOpen(false);
               }}
-              className="w-full flex items-center justify-between gap-3 px-4 py-2 text-left text-small hover:bg-cream cursor-pointer"
-              style={{ color: 'var(--color-gold)' }}
+              className="w-full flex items-center justify-between gap-3 px-4 py-2 text-left text-small hover:bg-cream cursor-pointer text-gold"
             >
               <span className="flex items-center gap-2">
                 <span aria-hidden="true">{c.flag}</span>

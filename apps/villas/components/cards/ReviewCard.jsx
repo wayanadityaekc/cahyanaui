@@ -17,8 +17,8 @@ export default function ReviewCard({ card }) {
         <ul className="flex flex-col gap-2">
           {card.themes.map(([label, count]) => (
             <li key={label} className="flex items-center justify-between text-small py-1.5 border-b border-line last:border-b-0">
-              <span style={{ color: 'var(--color-gold)' }}>{label}</span>
-              <span className="font-semibold" style={{ color: 'var(--color-amber)' }}>{count}</span>
+              <span className="text-gold">{label}</span>
+              <span className="font-semibold text-amber">{count}</span>
             </li>
           ))}
         </ul>
@@ -30,7 +30,7 @@ export default function ReviewCard({ card }) {
   return (
     <div className="card p-6 flex flex-col">
       <Stars count={card.stars} />
-      <p className="text-h3 leading-relaxed flex-1" style={{ color: 'var(--color-gold)' }}>&ldquo;{card.text}&rdquo;</p>
+      <p className="text-h3 leading-relaxed flex-1 text-gold">&ldquo;{card.text}&rdquo;</p>
       <p className="mt-4 text-label text-muted">{card.source}</p>
     </div>
   );

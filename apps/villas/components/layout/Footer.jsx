@@ -23,7 +23,7 @@ const SOCIALS = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'var(--color-cta)' }} className="text-white">
+    <footer className="text-white bg-cta">
       <div className="wrap py-12 grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
         <div>
           <Logo size={32} />
@@ -47,8 +47,7 @@ export default function Footer() {
               href={WHATSAPP_LINK}
               target="_blank"
               rel="noopener"
-              className="btn btn-sm"
-              style={{ background: 'rgba(255,255,255,0.14)', color: '#fff' }}
+              className="btn btn-sm bg-white/14 text-white"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />

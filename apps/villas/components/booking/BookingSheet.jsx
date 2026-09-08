@@ -52,7 +52,7 @@ export default function BookingSheet() {
                 </svg>
               </button>
             )}
-            <h3 className="text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>
+            <h3 className="text-h3 font-semibold text-gold">
               {step === 'details' ? 'Book Your Stay' : 'Price Summary'}
             </h3>
           </div>
@@ -69,7 +69,7 @@ export default function BookingSheet() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 rounded-md object-cover" />
               <div className="flex-1">
-                <p className="text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>{villa.name}</p>
+                <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                 <p className="text-small text-muted">{format(villa.nightlyRate)} / night</p>
               </div>
             </div>
@@ -135,9 +135,8 @@ export default function BookingSheet() {
 
             <button
               type="button"
-              className="btn btn-cta btn-full"
+              className="btn btn-cta btn-full disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!canContinue}
-              style={!canContinue ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
               onClick={goToSummary}
             >
               Check availability
@@ -152,7 +151,7 @@ export default function BookingSheet() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 rounded-md object-cover" />
               <div className="flex-1">
-                <p className="text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>{villa.name}</p>
+                <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                 <p className="text-small text-muted">{booking.checkIn} → {booking.checkOut} · {booking.guests} guest{booking.guests > 1 ? 's' : ''}</p>
               </div>
             </div>
@@ -160,15 +159,15 @@ export default function BookingSheet() {
             <div className="divide-y divide-line text-small">
               <div className="flex justify-between py-2.5">
                 <span className="text-muted">{breakdown.nights} night{breakdown.nights > 1 ? 's' : ''}</span>
-                <span style={{ color: 'var(--color-gold)' }}>{format(breakdown.subtotal)}</span>
+                <span className="text-gold">{format(breakdown.subtotal)}</span>
               </div>
               <div className="flex justify-between py-2.5">
                 <span className="text-muted">Service fee</span>
-                <span style={{ color: 'var(--color-gold)' }}>{format(breakdown.serviceFee)}</span>
+                <span className="text-gold">{format(breakdown.serviceFee)}</span>
               </div>
               <div className="flex justify-between py-3">
-                <span className="text-h3 font-semibold" style={{ color: 'var(--color-gold)' }}>Total</span>
-                <span className="text-h3 font-bold" style={{ color: 'var(--color-amber)' }}>{format(breakdown.total)}</span>
+                <span className="text-h3 font-semibold text-gold">Total</span>
+                <span className="text-h3 font-bold text-amber">{format(breakdown.total)}</span>
               </div>
             </div>
             <p className="text-label text-muted -mt-3">(approx. {formatApproxIDR(breakdown.total)})</p>

@@ -27,7 +27,7 @@ export default function VillaDetail({ villa }) {
         <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
           <div className="prose-copy">
             <p className="eyebrow">{villa.tagline}</p>
-            <h1 className="text-display font-bold" style={{ color: 'var(--color-gold)' }}>{villa.name}</h1>
+            <h1 className="text-display font-bold text-gold">{villa.name}</h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-small text-muted">
               <span>Up to {villa.guests} guests</span>
               <span>·</span>
@@ -41,41 +41,41 @@ export default function VillaDetail({ villa }) {
 
             <div className="mt-6 flex items-center gap-3 flex-wrap">
               {villa.amenities.map((a) => (
-                <span key={a} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small" style={{ color: 'var(--color-gold)' }}>
-                  <span style={{ color: 'var(--color-cta)' }}><AmenityIcon name={a} size={17} /></span>
+                <span key={a} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold">
+                  <span className="text-cta"><AmenityIcon name={a} size={17} /></span>
                   {a}
                 </span>
               ))}
             </div>
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3" style={{ color: 'var(--color-gold)' }}>About the villa</h2>
+            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">About the villa</h2>
             {villa.about.map((p, i) => <p key={i}>{p}</p>)}
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3" style={{ color: 'var(--color-gold)' }}>The space</h2>
+            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">The space</h2>
             <ul className="grid sm:grid-cols-2 gap-x-8">
               {villa.spaceList.map((s) => (
                 <li key={s.title} className="py-3 border-b border-line text-small">
-                  <strong className="block" style={{ color: 'var(--color-gold)' }}>{s.title}</strong>
+                  <strong className="block text-gold">{s.title}</strong>
                   <span className="text-muted">{s.desc}</span>
                 </li>
               ))}
             </ul>
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3" style={{ color: 'var(--color-gold)' }}>Getting around</h2>
+            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Getting around</h2>
             <ul className="border-t border-line">
               {villa.gettingAround.map((g) => (
                 <li key={g.label} className="flex justify-between py-3 border-b border-line text-small">
                   <span className="text-muted">{g.label}</span>
-                  <span style={{ color: 'var(--color-gold)' }}>{g.value}</span>
+                  <span className="text-gold">{g.value}</span>
                 </li>
               ))}
             </ul>
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3" style={{ color: 'var(--color-gold)' }}>Guest ratings</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-px rounded-lg overflow-hidden border border-line" style={{ background: 'var(--color-line)' }}>
+            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Guest ratings</h2>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-px rounded-lg overflow-hidden border border-line bg-line">
               {villa.scores.map(([label, value]) => (
                 <div key={label} className="bg-white text-center py-4 px-2">
-                  <strong className="block text-h2 font-bold" style={{ color: 'var(--color-gold)' }}>{value}</strong>
+                  <strong className="block text-h2 font-bold text-gold">{value}</strong>
                   <span className="text-label text-muted">{label}</span>
                 </div>
               ))}
@@ -83,17 +83,17 @@ export default function VillaDetail({ villa }) {
             {villa.reviewQuote && (
               <blockquote className="card p-6 mt-6">
                 <p className="stars-amber text-small mb-2">★★★★★</p>
-                <p style={{ color: 'var(--color-gold)' }}>&ldquo;{villa.reviewQuote.text}&rdquo;</p>
+                <p className="text-gold">&ldquo;{villa.reviewQuote.text}&rdquo;</p>
                 <cite className="block mt-3 text-label text-muted not-italic">{villa.reviewQuote.source}</cite>
               </blockquote>
             )}
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3" style={{ color: 'var(--color-gold)' }}>Good to know</h2>
+            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Good to know</h2>
             <ul className="border-t border-line">
               {villa.goodToKnow.map((g) => (
                 <li key={g.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
                   <span className="min-w-[120px] text-label uppercase tracking-wide text-muted">{g.label}</span>
-                  <span style={{ color: 'var(--color-gold)' }}>{g.value}</span>
+                  <span className="text-gold">{g.value}</span>
                 </li>
               ))}
             </ul>
@@ -104,7 +104,7 @@ export default function VillaDetail({ villa }) {
               <div className="flex items-end justify-between">
                 <p>
                   <span className="text-label text-muted block">From</span>
-                  <span className="text-h2 font-bold" style={{ color: 'var(--color-amber)' }}>{format(villa.nightlyRate)}</span>
+                  <span className="text-h2 font-bold text-amber">{format(villa.nightlyRate)}</span>
                   <span className="text-label text-muted"> / night</span>
                 </p>
               </div>
@@ -135,7 +135,7 @@ export default function VillaDetail({ villa }) {
               <p className="text-label text-muted text-center mt-3">Rates change by season — message us for a season-specific quote.</p>
             </div>
 
-            <div className="card p-6" style={{ background: 'var(--color-cream)' }}>
+            <div className="card p-6 bg-cream">
               <p className="text-label font-semibold uppercase tracking-wide text-muted mb-3">Add to your stay</p>
               <ul className="flex flex-col">
                 {[
@@ -145,14 +145,14 @@ export default function VillaDetail({ villa }) {
                   { href: '/services/scooter-rental', label: 'Scooter Rental' },
                 ].map((s) => (
                   <li key={s.href} className="border-b border-line last:border-b-0">
-                    <Link href={s.href} className="flex items-center justify-between py-2.5 text-small" style={{ color: 'var(--color-gold)' }}>
+                    <Link href={s.href} className="flex items-center justify-between py-2.5 text-small text-gold">
                       {s.label}
                       <span>›</span>
                     </Link>
                   </li>
                 ))}
                 <li>
-                  <a href={CUE_LINK} target="_blank" rel="noopener" className="flex items-center justify-between py-2.5 text-small" style={{ color: 'var(--color-gold)' }}>
+                  <a href={CUE_LINK} target="_blank" rel="noopener" className="flex items-center justify-between py-2.5 text-small text-gold">
                     Driver &amp; tours
                     <span>›</span>
                   </a>
@@ -163,10 +163,10 @@ export default function VillaDetail({ villa }) {
         </div>
       </section>
 
-      <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
+      <section className="section text-center bg-gold">
         <div className="wrap">
-          <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>{villa.name}, your dates</h2>
-          <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>See if the villa is free when you are.</p>
+          <h2 className="text-h2 font-semibold text-white">{villa.name}, your dates</h2>
+          <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
           <div className="flex justify-center mt-6">
             <CheckAvailabilityButton villaSlug={villa.slug} className="btn btn-cta" />
           </div>

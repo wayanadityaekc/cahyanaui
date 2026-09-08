@@ -27,9 +27,9 @@ export default function ServiceDetail({
           <img src={heroImg} alt={heroAlt} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.1), rgba(20,20,16,0.65))' }} />
           <div className="wrap relative z-10 py-10">
-            <p className="eyebrow" style={{ color: 'var(--color-gold-l)' }}>{kicker}</p>
-            <h1 className="text-display font-bold" style={{ color: '#fff' }}>{title}</h1>
-            <p className="mt-2 max-w-md text-small" style={{ color: 'rgba(255,255,255,0.85)' }}>{subtitle}</p>
+            <p className="eyebrow text-gold-l">{kicker}</p>
+            <h1 className="text-display font-bold text-white">{title}</h1>
+            <p className="mt-2 max-w-md text-small text-white/85">{subtitle}</p>
           </div>
         </div>
       </section>
@@ -42,20 +42,20 @@ export default function ServiceDetail({
               {glance.map((g) => (
                 <li key={g.label} className="flex flex-col py-4 pr-4 text-small">
                   <span className="text-label uppercase tracking-wide text-muted">{g.label}</span>
-                  <span style={{ color: 'var(--color-gold)' }}>{g.value}</span>
+                  <span className="text-gold">{g.value}</span>
                 </li>
               ))}
             </ul>
 
             {sections.map((s) => (
               <div key={s.heading}>
-                <h2 className="text-h2 font-semibold mt-9 mb-3" style={{ color: 'var(--color-gold)' }}>{s.heading}</h2>
+                <h2 className="text-h2 font-semibold mt-9 mb-3 text-gold">{s.heading}</h2>
                 {s.body?.map((p, i) => <p key={i}>{p}</p>)}
                 {s.list && (
                   <ul className="grid sm:grid-cols-2 gap-x-8">
                     {s.list.map((item) => (
                       <li key={item.title} className="py-3 border-b border-line text-small">
-                        <strong className="block" style={{ color: 'var(--color-gold)' }}>{item.title}</strong>
+                        <strong className="block text-gold">{item.title}</strong>
                         <span className="text-muted">{item.desc}</span>
                       </li>
                     ))}
@@ -72,10 +72,10 @@ export default function ServiceDetail({
         </div>
       </section>
 
-      <section className="section text-center" style={{ background: 'var(--color-gold)' }}>
+      <section className="section text-center bg-gold">
         <div className="wrap">
-          <h2 className="text-h2 font-semibold" style={{ color: '#fff' }}>{bottomHeading}</h2>
-          <p className="mt-2 text-small" style={{ color: 'rgba(255,255,255,0.75)' }}>{bottomText}</p>
+          <h2 className="text-h2 font-semibold text-white">{bottomHeading}</h2>
+          <p className="mt-2 text-small text-white/75">{bottomText}</p>
           <div className="flex justify-center mt-6">
             {bottomCta || <Link href="/villas" className="btn btn-cta">See both villas</Link>}
           </div>

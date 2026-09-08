@@ -5220,21 +5220,6 @@ strong {
 /* Why Us - cream band, 4 icon columns */
 
 /* Charter promo - satu panel putih, kartu jam yang bisa di-slide (initTourSlider) */
-.chcard { position: relative; flex: 0 0 220px; scroll-snap-align: start; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--space-3); background: #fff; }
-.chcard--pop { border: 2px solid var(--color-cta); }
-.chcard__badge { position: absolute; top: 0.8rem; right: 0.8rem; background: var(--color-amber); color: var(--color-gold); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-radius: var(--r-pill); padding: 0.2rem 0.7rem; }
-.chcard__hours { font-family: var(--font-head); font-size: var(--fs-h2); font-weight: 600; letter-spacing: -0.01em; margin: 0 0 0.1rem; color: var(--color-gold); }
-.chcard__label { font-size: var(--fs-small); color: var(--color-muted); margin: 0 0 0.8rem; }
-.chcard__price { display: flex; align-items: baseline; gap: 0.3rem; margin: 0 0 0.7rem; }
-.chcard__from { font-size: var(--fs-small); color: var(--color-muted); }
-.chcard__amt { font-size: 1.6rem; font-weight: 600; color: var(--color-amber); letter-spacing: -0.01em; }
-.chcard__unit { font-size: var(--fs-small); color: var(--color-muted); }
-.chcard__note { font-size: var(--fs-small); color: var(--color-muted); margin: 0 0 1.1rem; line-height: 1.45; }
-.chcard__btn { margin-top: auto; width: 100%; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-pill); height: 2.7rem; font-weight: 600; font-size: var(--fs-strong); text-decoration: none; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
-.chcard__btn--solid { background: var(--color-cta); color: #fff; }
-.chcard__btn--solid:hover { background: var(--color-cta-d); }
-.chcard__btn--ghost { background: #fff; color: var(--color-gold); border: 1px solid var(--line); }
-.chcard__btn--ghost:hover { border-color: var(--color-gold); }
 
 /* Mobile */
 

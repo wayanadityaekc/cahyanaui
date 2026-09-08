@@ -1,5 +1,6 @@
 import CardImage from '@/components/cards/CardImage';
 import Price from '@/components/Price';
+import { BADGE_POPULAR } from '@/components/ui/cardClasses';
 
 function ClockIcon() {
   return (
@@ -43,7 +44,7 @@ export default function ExperienceCard({
   const body = (
     <>
       <CardImage img={img} alt={alt || name} width={width} height={height}>
-        {badge && <span className="chcard__badge">{badge}</span>}
+        {badge && <span className={BADGE_POPULAR}>{badge}</span>}
       </CardImage>
       <div className="experience__body">
         <h3 className="experience__name">{name}</h3>

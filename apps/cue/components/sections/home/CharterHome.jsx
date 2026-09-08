@@ -2,16 +2,18 @@
 
 import Slider from '@/components/ui/Slider';
 import CharterPrice from '@/components/CharterPrice';
+import { BADGE_POPULAR } from '@/components/ui/cardClasses';
 import { CHARTER_CARDS } from '@/content/shared/home';
 
+// Tailwind-native (full-portable): keluarga `.chcard*` -> utilities inline. Data
+// (CHARTER_CARDS) sekarang bawa flag `pop`/`solid` (bukan class string), di-map ke
+// utilities di sini. Badge "Popular" pakai BADGE_POPULAR shared (cardClasses.js).
+const CARD_BASE = 'relative flex-[0_0_220px] [scroll-snap-align:start] flex flex-col rounded-md p-[var(--space-3)] bg-white';
+const chcard = (pop) => `${CARD_BASE} ${pop ? '[border:2px_solid_var(--color-cta)]' : '[border:1px_solid_var(--line)]'}`;
+const BTN_BASE = 'mt-auto w-full inline-flex items-center justify-center rounded-pill h-[2.7rem] font-semibold text-strong no-underline [transition:background_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease)]';
+const chbtn = (solid) => `${BTN_BASE} ${solid ? 'bg-cta text-white hover:bg-cta-d' : 'bg-white text-gold [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]'}`;
+
 export default function CharterHome() {
-  // Tailwind-native (migrasi Fase 2): wrapper `.charter-home__*` (section/in/head/
-  // k/t/lead/slider/foot) -> utilities, CSS-nya dihapus dari style.css. KEPT sbagai
-  // primitif kartu shared (content-driven `c.cls`/`c.btnCls` + `.chcard__badge` juga
-  // dipake ExperienceCard): keluarga `.chcard*` TETEP CSS. Slider dulu `.charter-home__
-  // slider experience__grid--slider`; keduanya di-inline jadi utilities self-contained
-  // (flex+scroll-snap+scrollbar-hide) - `.experience__grid--slider` (grid engine) gak
-  // dipake di sini lagi, jadi gak ada tabrakan cascade sama style.css (yg load belakangan).
   return (
     <section className="max-w-[var(--container)] my-[var(--space-5)] mx-auto px-[var(--container-x)]" id="charter-promo">
       <div className="bg-white border border-line rounded-lg shadow-md p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)]">
@@ -26,17 +28,17 @@ export default function CharterHome() {
 
         <Slider gridClassName="flex gap-[var(--space-3)] overflow-x-auto overflow-y-hidden [scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] mt-[var(--space-4)] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {CHARTER_CARDS.map((c) => (
-            <article className={c.cls} key={c.hours}>
-              {c.badge && <span className="chcard__badge">{c.badge}</span>}
-              <h3 className="chcard__hours">{c.hours}</h3>
-              <p className="chcard__label">{c.label}</p>
-              <p className="chcard__price">
-                <span className="chcard__from">{c.from}</span>{' '}
-                <CharterPrice duration={c.charter} extra={c.extra} fallback={c.fallback} className="chcard__amt" />{' '}
-                <span className="chcard__unit">{c.unit}</span>
+            <article className={chcard(c.pop)} key={c.hours}>
+              {c.badge && <span className={BADGE_POPULAR}>{c.badge}</span>}
+              <h3 className="font-head text-h2 font-semibold tracking-[-0.01em] mb-[0.1rem] text-gold">{c.hours}</h3>
+              <p className="text-small text-muted mb-[0.8rem]">{c.label}</p>
+              <p className="flex items-baseline gap-[0.3rem] mb-[0.7rem]">
+                <span className="text-small text-muted">{c.from}</span>{' '}
+                <CharterPrice duration={c.charter} extra={c.extra} fallback={c.fallback} className="text-[1.6rem] font-semibold text-amber tracking-[-0.01em]" />{' '}
+                <span className="text-small text-muted">{c.unit}</span>
               </p>
-              <p className="chcard__note">{c.note}</p>
-              <a className={c.btnCls} href={c.href}>{c.btnText}</a>
+              <p className="text-small text-muted mb-[1.1rem] leading-[1.45]">{c.note}</p>
+              <a className={chbtn(c.solid)} href={c.href}>{c.btnText}</a>
             </article>
           ))}
         </Slider>

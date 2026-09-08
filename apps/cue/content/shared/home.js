@@ -411,7 +411,7 @@ export const WHY_US = [
 
 export const CHARTER_CARDS = [
     {
-      "cls": "chcard",
+      "pop": false,
       "hours": "5 hours",
       "label": "Half day",
       "from": "from",
@@ -419,12 +419,12 @@ export const CHARTER_CARDS = [
       "fallback": "$35",
       "unit": "/ car",
       "note": "Petrol included · ~60 km",
-      "btnCls": "chcard__btn chcard__btn--ghost",
+      "solid": false,
       "btnText": "Choose",
       "href": "/charter.html"
     },
     {
-      "cls": "chcard chcard--pop",
+      "pop": true,
       "badge": "Popular",
       "hours": "10 hours",
       "label": "Full day",
@@ -433,12 +433,12 @@ export const CHARTER_CARDS = [
       "fallback": "$60",
       "unit": "/ car",
       "note": "Petrol included · ~120 km",
-      "btnCls": "chcard__btn chcard__btn--solid",
+      "solid": true,
       "btnText": "Choose",
       "href": "/charter.html"
     },
     {
-      "cls": "chcard",
+      "pop": false,
       "hours": "12 hours",
       "label": "Full day + 2h",
       "from": "from",
@@ -447,12 +447,12 @@ export const CHARTER_CARDS = [
       "fallback": "$68",
       "unit": "/ car",
       "note": "Petrol included · extend by the hour",
-      "btnCls": "chcard__btn chcard__btn--ghost",
+      "solid": false,
       "btnText": "Choose",
       "href": "/charter.html"
     },
     {
-      "cls": "chcard",
+      "pop": false,
       "hours": "14 hours",
       "label": "Full day + 4h",
       "from": "from",
@@ -461,7 +461,7 @@ export const CHARTER_CARDS = [
       "fallback": "$76",
       "unit": "/ car",
       "note": "Petrol included · extend by the hour",
-      "btnCls": "chcard__btn chcard__btn--ghost",
+      "solid": false,
       "btnText": "Choose",
       "href": "/charter.html"
     }

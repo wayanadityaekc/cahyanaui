@@ -56,7 +56,7 @@ export default function OurCompany() {
         <div className="company-main">
           {tab === 'about' && <AboutPage company />}
           {active.legal && <LegalBody data={LEGAL[active.legal]} />}
-          {tab === 'contact' && <ContactSection />}
+          {tab === 'contact' && <ContactSection company />}
         </div>
       </div>
 

@@ -137,7 +137,6 @@ body {
 .experience__desc,
 .subhero__text,
 .highlight__desc,
-.contact__lead,
 .info__list li,
 .stop__desc,
 .reviews__intro,
@@ -4458,63 +4457,6 @@ section.faq::before,
 }
 
 /* Contact page */
-.contact {
-  padding: var(--space-5) var(--space-3);
-}
-.contact__container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  max-width: var(--container-mid);
-  margin: 0 auto;
-}
-.contact__heading {
-  margin-bottom: 0.75rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h2);
-}
-.contact__lead {
-  margin-bottom: 1.5rem;
-  color: var(--color-ink);
-}
-.contact__wa {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  padding: 0.85rem 1.5rem;
-  border-radius: var(--r-sm);
-  font-weight: 600;
-  text-decoration: none;
-  color: #fff;
-  background-color: #25d366;
-}
-.contact__list {
-  list-style: none;
-}
-.contact__item {
-  margin-bottom: 1.25rem;
-}
-.contact__item span {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.contact__item strong {
-  display: block;
-  margin-top: 0.2rem;
-  font-size: 1rem;
-  font-weight: 500;
-}
-.contact__item a {
-  color: var(--color-green);
-  text-decoration: none;
-}
-.contact__form {
-  padding: 2rem;
-  border-radius: var(--r-md);
-  background-color: #fff;
-  box-shadow: var(--shadow-md);
-}
 .contact__group {
   display: flex;
   flex-direction: column;
@@ -4537,46 +4479,8 @@ section.faq::before,
   min-height: 130px;
   resize: vertical;
 }
-.contact__btn {
-  width: 100%;
-  padding: 0.85rem;
-  border: none;
-  border-radius: var(--r-pill);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-green);
-  background-color: var(--color-gold);
-  cursor: pointer;
-}
-.contact__success {
-  display: none;
-  padding: 2rem;
-  text-align: center;
-  border-radius: var(--r-md);
-  color: var(--color-green);
-  background-color: #fff;
-  box-shadow: var(--shadow-md);
-}
-.contact__success-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 1rem;
-  border-radius: 50%;
-  font-size: 1.6rem;
-  color: #fff;
-  background-color: #25d366;
-}
 
 /* Embedded map */
-.map {
-  width: 100%;
-  height: 380px;
-  border: none;
-  display: block;
-}
 .builder__intro {
   max-width: 640px;
   margin: -1rem auto 2rem;
@@ -4857,10 +4761,6 @@ section.faq::before,
   }
   .info__fact--price > strong {
     font-size: 1.5rem;
-  }
-  .contact__container {
-    grid-template-columns: 1fr;
-    gap: 2rem;
   }
 }
 
@@ -5899,8 +5799,7 @@ button.pick-cat {
 .review-card__text,
 .modal__sub,
 .modal__success p,
-.modal__row,
-.contact__item span {
+.modal__row {
   font-size: var(--fs-body);
 }
 /* faq__q = pertanyaan yang jadi trigger accordion (klik buat expand/collapse),
@@ -7645,7 +7544,6 @@ section.faq::before,
 .about__title,
 .plan__title,
 .highlight__title,
-.contact__heading,
 .title {
   font-family: var(--font-head);
   font-weight: 500;
@@ -7704,20 +7602,13 @@ strong {
    dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
-.hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .modal__btn,
-.review-form__btn, .btn-review:not(.btn-review--alt),
-.highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book,
-.btn-book, .contact__btn {
+.hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .modal__btn, .review-form__btn, .btn-review:not(.btn-review--alt), .highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book, .btn-book {
   background: var(--color-cta);
   color: #fff;
   border-color: var(--color-cta);
 }
 /* Primary button hover: deeper green, text stays white */
-.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover,
-.modal__btn:hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover,
-.highlight__btn:not(.highlight__btn--add):hover,
-.svc__save:hover, .program-cta__btn--book:hover,
-.contact__btn:hover {
+.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover, .modal__btn:hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover, .highlight__btn:not(.highlight__btn--add):hover, .svc__save:hover, .program-cta__btn--book:hover {
   background: var(--color-cta-d);
   color: #fff;
   border-color: var(--color-cta-d);
@@ -9615,7 +9506,6 @@ strong {
 .info,
 .closing-band,
 .faq,
-.contact,
 .stops,
 .arow,
 .guide-more {
@@ -9625,9 +9515,6 @@ strong {
 
 /* Contact = section pertama (nggak ada hero lagi) -> butuh clearance buat navbar+tripbar
    fixed (~103px), samain sama padding-top hero. Override rule global di atas. */
-.contact {
-  padding-top: 6.5rem;
-}
 
 /* ============================================================
    HomepageCard (components/cards/HomepageCard.jsx) - foto SQUARE

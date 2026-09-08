@@ -68,7 +68,8 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
                 <button
                   type="button"
                   key={v}
-                  className={calDay(disabled)}
+                  className={calDay(disabled, v === value)}
+                  aria-pressed={v === value}
                   disabled={disabled}
                   onClick={() => { onChange(v); setOpen(false); }}
                 >

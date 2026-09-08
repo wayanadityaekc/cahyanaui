@@ -68,7 +68,8 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
                 <button
                   type="button"
                   key={v}
-                  className={calDay(past)}
+                  className={calDay(past, v === sel)}
+                  aria-pressed={v === sel}
                   disabled={past}
                   onClick={() => setSel(v)}
                 >

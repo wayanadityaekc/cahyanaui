@@ -109,11 +109,17 @@ export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center jus
 // beda sub-pixel, jadi pakai arbitrary biar persis.
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
 export const CAL_DOW = 'font-body font-medium text-label tracking-[0.14em] uppercase text-muted text-center py-1';
-// Hari: is-off (muted, gak bisa klik) vs normal (hover bg). is-sel TANPA style di React
-// (CSS-nya `.sel`, JSX set `is-sel` -> mismatch, tanggal kepilih gak ke-highlight = bug lama,
-// direplikasi apa adanya biar zero-diff).
-export const calDay = (off) =>
-  `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current bg-transparent rounded-sm ${off ? 'text-[#cfccc4] cursor-default' : 'text-ink cursor-pointer hover:bg-[#f1efe9]'}`;
+// Hari: sel (tanggal kepilih, prioritas) = gold/soft-black + putih (konvensi active-state
+// design system) · off (muted, gak bisa klik) · normal (hover bg abu tipis). Dulu tanggal
+// kepilih gak ke-highlight (CSS `.sel` vs JSX `is-sel` mismatch) - sekarang di-wire lewat flag.
+export const calDay = (off, sel) =>
+  `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
+    sel
+      ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
+      : off
+        ? 'bg-transparent text-[#cfccc4] cursor-default'
+        : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
+  }`;
 
 // ===== DatePopup (booking date picker): panel TANPA hs-panel--popup -> HP jadi
 // bottom-sheet (@media max-768 .hs-panel), desktop di-center sama bookdate-panel.

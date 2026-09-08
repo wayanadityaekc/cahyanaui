@@ -25,14 +25,14 @@ export default function GuideHome() {
         </div>
 
         <div className="gsearch !mb-[1.7rem]">
-          <div className="gsearch__box">
-            <svg className="gsearch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <div className="gsearch__box flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white [box-shadow:var(--shadow-md)]">
+            <svg className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="7" />
               <path d="M21 21l-4.3-4.3" />
             </svg>
             <input
               type="text"
-              className="gsearch__input"
+              className="flex-1 border-none border-current [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted"
               placeholder="Search"
               aria-label="Search guides"
               autoComplete="off"

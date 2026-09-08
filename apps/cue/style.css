@@ -2611,34 +2611,11 @@ section.faq::before,
 .guide-home .gsearch {
   margin-bottom: 1.7rem;
 }
-.gsearch__box {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.85rem 1.1rem;
-  border: 1.5px solid var(--color-gold);
-  border-radius: var(--r-lg);
-  background: #fff;
-  box-shadow: var(--shadow-md);
-}
-.gsearch__icon {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  flex-shrink: 0;
-  color: var(--color-gold-d);
-}
-.gsearch__input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: none;
-  font-family: var(--font-body);
-  font-size: var(--fs-field);
-  color: var(--color-green);
-}
-.gsearch__input::placeholder {
-  color: var(--color-muted);
-}
+/* .gsearch__box / __icon / __input (+::placeholder) -> utilities di GuideHub.jsx +
+   GuideHome.jsx (migrasi Fase 2). Kelas `gsearch__box` tetep dipasang: anchor
+   `.guide-hero-search__field .gsearch__box` (varian in-bar). .gsearch (kena adu
+   source-order sama .guide-hero-search__field) + .gsearch__sug ([hidden] state)
+   TETEP CSS. */
 /* dropdown saran */
 .gsearch__sug {
   position: absolute;

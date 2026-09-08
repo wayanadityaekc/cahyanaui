@@ -43,10 +43,10 @@ export default function AuthModal({ open, onClose }) {
   const swap = (v) => { setView(v); reset(); };
 
   return (
-    <Modal open={open} onClose={close} title={view === 'signin' ? 'Sign in' : 'Create your account'} className="auth-modal">
+    <Modal open={open} onClose={close} title={view === 'signin' ? 'Sign in' : 'Create your account'}>
       {view === 'signin' ? (
         <>
-          <p className="auth-modal__lead">Enter your email and we&apos;ll send you a secure sign-in link. No password needed.</p>
+          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">Enter your email and we&apos;ll send you a secure sign-in link. No password needed.</p>
           <div className="contact__group">
             <label htmlFor="auth-email">Email</label>
             <input type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" />
@@ -56,14 +56,14 @@ export default function AuthModal({ open, onClose }) {
           <button type="button" className="modal__btn" onClick={doSignIn} disabled={busy}>
             {busy ? 'Sending...' : 'Email me a sign-in link'}
           </button>
-          <p className="auth-modal__swap">
+          <p className="mt-4 text-center text-small text-muted">
             New here?{' '}
-            <button type="button" className="auth-modal__link" onClick={() => swap('create')}>Create an account</button>
+            <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={() => swap('create')}>Create an account</button>
           </p>
         </>
       ) : (
         <>
-          <p className="auth-modal__lead">No password - we&apos;ll recognise you by email &amp; phone.</p>
+          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">No password - we&apos;ll recognise you by email &amp; phone.</p>
           <div className="contact__group">
             <label htmlFor="auth-name">Your Name</label>
             <input type="text" id="auth-name" placeholder="Enter your name" value={f.name} onChange={set('name')} autoComplete="name" />
@@ -80,9 +80,9 @@ export default function AuthModal({ open, onClose }) {
           <button type="button" className="modal__btn" onClick={doCreate} disabled={busy}>
             {busy ? 'Creating...' : 'Create Account'}
           </button>
-          <p className="auth-modal__swap">
+          <p className="mt-4 text-center text-small text-muted">
             Already have an account?{' '}
-            <button type="button" className="auth-modal__link" onClick={() => swap('signin')}>Sign in</button>
+            <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={() => swap('signin')}>Sign in</button>
           </p>
         </>
       )}

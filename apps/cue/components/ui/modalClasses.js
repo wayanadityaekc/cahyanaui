@@ -49,6 +49,12 @@ export const BTN_GHOST =
 export const BTN_WA =
   'w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold no-underline cursor-pointer transition-[background-color,color] duration-[var(--dur)] ease-[ease] text-white bg-[#25d366] hover:bg-[#1fb457] hover:text-white';
 
+// Inline message under a form (.modal__referral-msg): base has no colour (inherits);
+// .error -> red, .success -> green. Used by auth / account / contact / hero-search.
+export const REFMSG = 'block mt-[0.4rem] text-small';
+export const REFMSG_ERR = 'block mt-[0.4rem] text-small text-err';
+export const REFMSG_OK = 'block mt-[0.4rem] text-small text-ok';
+
 // Success state (.modal__success + icon + p). display:none default is handled by
 // conditional render in React, so only the visible styles are mirrored here.
 export const SUCCESS_ICON =

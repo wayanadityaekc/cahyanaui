@@ -1066,8 +1066,9 @@ body {
 .hs-overlay.open {
   display: block;
 }
-/* Field yg dibuka dari DALAM modal (.modal z-index 200): overlay + panel WAJIB di atas
-   modal, kalau nggak popup/sheet-nya ke-render di belakang modal (JS nambah class ini). */
+/* Field yg dibuka dari DALAM modal (modal shell = z-index 200, utility di
+   modalClasses.js): overlay + panel WAJIB di atas modal, kalau nggak popup/sheet-nya
+   ke-render di belakang modal (JS nambah class ini). */
 .hs-overlay--elevated {
   z-index: 300;
 }
@@ -2866,41 +2867,6 @@ section.faq::before,
    nowrap biar nggak kepotong di tengah; desktop = 1 baris + titik pemisah,
    HP = tumpuk rapi per baris. */
 
-/* Registrasi usaha - blok trust di halaman About */
-
-.modal__referral-msg {
-  display: block;
-  margin-top: 0.4rem;
-  font-size: var(--fs-small);
-}
-.modal__referral-msg.success {
-  color: var(--color-ok);
-}
-.modal__referral-msg.error {
-  color: var(--color-err);
-}
-/* Tombol modal yang numpuk selalu ada jarak (Add again/Cancel, dll) */
-.modal__btn + .modal__btn {
-  margin-top: 0.6rem;
-}
-.modal__btn {
-  width: 100%;
-  padding: 0.85rem;
-  border: none;
-  border-radius: var(--r-pill);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-  cursor: pointer;
-  transition:
-    background-color var(--dur) ease,
-    color var(--dur) ease;
-}
-.modal__btn:hover {
-  background-color: var(--color-gold);
-  color: #fff;
-}
 /* Tombol "Leave a review" di paling bawah halaman bookable (initReviewCta) */
 .review-cta {
   max-width: 1200px;
@@ -4963,9 +4929,6 @@ section.faq::before,
   transition: transform var(--dur-slow) ease;
 }
 /* Popup "Added to itinerary" (dibuat di showAddedPopup): jarak antar tombol */
-#itn-added-modal .modal__btn + .modal__btn {
-  margin-top: 0.85rem;
-}
 
 /* ============ ITINERARY v2 (satu kolom, card teks, add via popup) ============ */
 .itn2 {
@@ -5755,8 +5718,7 @@ button.pick-cat {
 }
 /* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
 .btn-book,
-.btn-review,
-.modal__btn {
+.btn-review {
   text-decoration: none;
 }
 .program-cta__btn--book {
@@ -6731,9 +6693,6 @@ button.pick-cat {
   border: 1px solid #d8d2c4;
   border-radius: var(--r-sm);
 }
-.acctform .modal__btn {
-  margin-top: 1.3rem;
-}
 
 /* Mobile: guest / currency / hamburger dibikin SAMA LEBAR bertiga (rapi sejajar) */
 @media (max-width: 992px) {
@@ -7121,13 +7080,13 @@ strong {
    dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
-.hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .modal__btn, .review-form__btn, .btn-review:not(.btn-review--alt), .highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book, .btn-book {
+.hsearch__go, .hs-cal__apply, .booking__btn:not(.booking__btn--alt), .review-form__btn, .btn-review:not(.btn-review--alt), .highlight__btn:not(.highlight__btn--add), .svc__save, .program-cta__btn--book, .btn-book {
   background: var(--color-cta);
   color: #fff;
   border-color: var(--color-cta);
 }
 /* Primary button hover: deeper green, text stays white */
-.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover, .modal__btn:hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover, .highlight__btn:not(.highlight__btn--add):hover, .svc__save:hover, .program-cta__btn--book:hover {
+.hsearch__go:hover, .hs-cal__apply:hover, .booking__btn:not(.booking__btn--alt):hover, .review-form__btn:hover, .btn-review:not(.btn-review--alt):hover, .highlight__btn:not(.highlight__btn--add):hover, .svc__save:hover, .program-cta__btn--book:hover {
   background: var(--color-cta-d);
   color: #fff;
   border-color: var(--color-cta-d);

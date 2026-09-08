@@ -6,6 +6,7 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import Select from '@/components/ui/Select';
+import { REFMSG } from '@/components/ui/modalClasses';
 
 export default function AccountSettings() {
   const { account, setAccount, logout } = useAccount();
@@ -79,7 +80,7 @@ export default function AccountSettings() {
         <label htmlFor="st-stay">Pickup area</label>
         <input type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
-      {msg && <small className="modal__referral-msg">{msg}</small>}
+      {msg && <small className={REFMSG}>{msg}</small>}
       <button className="contact__btn" onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
       <button className="btn-pill" onClick={logout}>Sign out</button>
     </div>

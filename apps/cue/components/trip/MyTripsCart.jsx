@@ -10,6 +10,7 @@ import useQuote from '@/hooks/useQuote';
 import useMoney from '@/hooks/useMoney';
 import ReviewModal from '@/components/reviews/ReviewModal';
 import AddItemPicker from './AddItemPicker';
+import { BTN } from '@/components/ui/modalClasses';
 import DatePopup from '@/components/booking/DatePopup';
 import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
@@ -255,7 +256,7 @@ export default function MyTripsCart() {
           <div className="mtc-review">
             <button
               type="button"
-              className="modal__btn mtc-review__btn"
+              className={`${BTN} mtc-review__btn`}
               onClick={() => setReview({ ref: t.ref, name: (account && account.name) || '', items: t.review_items })}
             >
               Leave a Review
@@ -377,7 +378,7 @@ export default function MyTripsCart() {
             By clicking <strong>Make Payment</strong>, you agree to our{' '}
             <a href="/terms-conditions.html">Terms</a> and <a href="/cancellation-policy.html">Cancellation Policy</a>.
           </p>
-          <button type="button" className="modal__btn mtc-pay" disabled={undated} onClick={checkout}>Make Payment</button>
+          <button type="button" className={`${BTN} mtc-pay`} disabled={undated} onClick={checkout}>Make Payment</button>
           <p className="mtc-note">
             You&apos;ll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email.
           </p>

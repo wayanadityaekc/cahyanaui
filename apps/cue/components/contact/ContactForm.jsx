@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { submitContact } from '@/lib/api';
+import { REFMSG_ERR } from '@/components/ui/modalClasses';
 
 export default function ContactForm({ company = false }) {
   const [f, setF] = useState({ name: '', email: '', message: '' });
@@ -49,7 +50,7 @@ export default function ContactForm({ company = false }) {
         <label htmlFor="c-message">Message</label>
         <textarea id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} />
       </div>
-      {error && <small className="modal__referral-msg error">{error}</small>}
+      {error && <small className={REFMSG_ERR}>{error}</small>}
         <button className="w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold text-white bg-cta cursor-pointer hover:bg-cta-d" id="c-send" onClick={send} disabled={busy}>
           {busy ? 'Sending...' : 'Send Message'}
         </button>

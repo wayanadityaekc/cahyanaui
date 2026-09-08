@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Modal from '@/components/ui/Modal';
+import { BTN, REFMSG, REFMSG_ERR } from '@/components/ui/modalClasses';
 import { useAccount } from '@/state/AccountProvider';
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
@@ -51,9 +52,9 @@ export default function AuthModal({ open, onClose }) {
             <label htmlFor="auth-email">Email</label>
             <input type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" />
           </div>
-          {msg && <small className="modal__referral-msg error">{msg}</small>}
-          {ok && <small className="modal__referral-msg">{ok}</small>}
-          <button type="button" className="modal__btn" onClick={doSignIn} disabled={busy}>
+          {msg && <small className={REFMSG_ERR}>{msg}</small>}
+          {ok && <small className={REFMSG}>{ok}</small>}
+          <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
             {busy ? 'Sending...' : 'Email me a sign-in link'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
@@ -76,8 +77,8 @@ export default function AuthModal({ open, onClose }) {
             <label htmlFor="auth-phone">Phone / WhatsApp</label>
             <input type="tel" id="auth-phone" placeholder="+62 ..." value={f.phone} onChange={set('phone')} autoComplete="tel" />
           </div>
-          {msg && <small className="modal__referral-msg error">{msg}</small>}
-          <button type="button" className="modal__btn" onClick={doCreate} disabled={busy}>
+          {msg && <small className={REFMSG_ERR}>{msg}</small>}
+          <button type="button" className={BTN} onClick={doCreate} disabled={busy}>
             {busy ? 'Creating...' : 'Create Account'}
           </button>
           <p className="mt-4 text-center text-small text-muted">

@@ -8,6 +8,7 @@ import { useReferral } from '@/state/ReferralProvider';
 import useMobile from '@/components/ui/useMobile';
 import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
+import { REFMSG } from '@/components/ui/modalClasses';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
@@ -163,7 +164,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           />
           <button type="button" className="hsearch__refbtn" onClick={applyCode}>Apply</button>
         </div>
-        {refMsg && <small className="modal__referral-msg">{refMsg}</small>}
+        {refMsg && <small className={REFMSG}>{refMsg}</small>}
       </div>
 
       <div className="hsearch__row2">

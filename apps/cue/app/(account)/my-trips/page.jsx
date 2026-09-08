@@ -10,9 +10,10 @@ export default function Page() {
   return (
     <div className="tourprog">
       <JsonLd page="my-trips" />
-    <section className="mytrips">
-      <div className="mytrips__container">
-        <h1 className="mytrips__title">My Trips</h1>
+    {/* .mytrips/.mytrips__container/.mytrips__title -> utilities (migrasi Fase 2) */}
+    <section className="pt-[calc(var(--nav-h,57.6px)_+_2.2rem)] px-0 pb-14">
+      <div className="w-[min(680px,92%)] mx-auto">
+        <h1 className="font-head font-medium tracking-[-0.01em] text-display leading-[var(--lh-heading)] text-green m-0 mb-[1.2rem]">My Trips</h1>
         <MyTripsCart />
       </div>
     </section>

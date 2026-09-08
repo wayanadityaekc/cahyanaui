@@ -419,7 +419,7 @@ export default function MyTripsCart() {
             By clicking <strong>Make Payment</strong>, you agree to our{' '}
             <a className={MTC_POLICY_LINK} href="/terms-conditions.html">Terms</a> and <a className={MTC_POLICY_LINK} href="/cancellation-policy.html">Cancellation Policy</a>.
           </p>
-          <button type="button" className={`${BTN} mtc-pay`} disabled={undated} onClick={checkout}>Make Payment</button>
+          <button type="button" className={`${BTN} mt-[1.2rem] disabled:opacity-45 disabled:cursor-not-allowed`} disabled={undated} onClick={checkout}>Make Payment</button>
           <p className={MTC_NOTE}>
             You&apos;ll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email.
           </p>

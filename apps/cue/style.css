@@ -4099,15 +4099,8 @@ section.faq::before,
   text-decoration: none;
 }
 /* ===== My Trips cart page (Fase C) ===== */
-.mytrips {
-  padding: calc(var(--nav-h, 57.6px) + 2.2rem) 0 3.5rem;
-}
-.mytrips__container {
-  /* Checkout-style column: narrow enough that each item's price sits next to
-     its title instead of floating far right on wide screens. */
-  width: min(680px, 92%);
-  margin: 0 auto;
-}
+/* .mytrips / .mytrips__container / .mytrips__title -> utilities di
+   app/(account)/my-trips/page.jsx (migrasi Fase 2). */
 /* Cart action buttons (Add / Make Payment) share one full width for an even,
    stacked rhythm - scoped to the cart so the shared .btn-pill stays inline
    ("View all ...") everywhere else. Empty-state CTA stays auto-width. */
@@ -4116,15 +4109,6 @@ section.faq::before,
   margin-top: 1rem;
 }
 .mtc-empty .btn-pill { width: auto; margin-top: 0; }
-.mytrips__title {
-  font-family: var(--font-head);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: var(--fs-display);
-  line-height: var(--lh-heading);
-  color: var(--color-green);
-  margin: 0 0 1.2rem;
-}
 /* referral applied banner */
 /* tabs */
 /* .mtc-tabs / .mtc-tab(.is-on) -> utilities di MyTripsCart.jsx (migrasi Fase 2). */
@@ -4191,15 +4175,7 @@ section.faq::before,
 /* .mtc-total* -> utilities di MyTripsCart.jsx (migrasi Fase 2). Override
    .mtc-total__val .price-cur DIHAPUS: redundant, .price-cur udah amber default. */
 /* buttons + notes */
-.mtc-pay {
-  width: 100%;
-  margin-top: 1.2rem;
-}
-/* Make Payment ke-lock selama masih ada kartu yang belum ada tanggalnya */
-.mtc-pay:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
+/* .mtc-pay (+:disabled) -> utilities (${BTN} + mt/disabled) di MyTripsCart.jsx (Fase 2) */
 /* .mtc-note(+--warn) / .mtc-policy a -> utilities di MyTripsCart.jsx (migrasi Fase 2). */
 /* Upsell "You might also like" abis bayar - .related dipakai apa adanya (reuse),
    cuma jarak atasnya disesuain karena di sini dia nempel di dalam kartu cart,

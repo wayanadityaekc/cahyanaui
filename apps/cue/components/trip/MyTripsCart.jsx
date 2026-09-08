@@ -53,6 +53,11 @@ const MTC_DET_LINE = 'flex items-baseline justify-between gap-[0.75rem] py-2 px-
 const MTC_DET_NAME = 'flex flex-col gap-[0.15rem] min-w-0 text-green';
 const MTC_DET_META = 'text-label text-muted';
 const MTC_DET_AMT = 'flex-[0_0_auto] whitespace-nowrap font-semibold text-amber-d';
+// Notes/policy -> utilities. Varian --warn = string penuh (bukan di-layer) biar
+// text-muted vs text-err gak konflik urutan. `.mtc-policy a` -> utility di tiap <a>.
+const MTC_NOTE = 'text-small text-muted text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]';
+const MTC_NOTE_WARN = 'text-small text-err text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]';
+const MTC_POLICY_LINK = 'text-gold-d underline';
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
@@ -407,15 +412,15 @@ export default function MyTripsCart() {
           <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add another program</button>
 
           {undated && (
-            <p className="mtc-note mtc-note--warn">Every item needs a date before you can pay. Tap a date to set it.</p>
+            <p className={MTC_NOTE_WARN}>Every item needs a date before you can pay. Tap a date to set it.</p>
           )}
 
-          <p className="mtc-note mtc-policy">
+          <p className={MTC_NOTE}>
             By clicking <strong>Make Payment</strong>, you agree to our{' '}
-            <a href="/terms-conditions.html">Terms</a> and <a href="/cancellation-policy.html">Cancellation Policy</a>.
+            <a className={MTC_POLICY_LINK} href="/terms-conditions.html">Terms</a> and <a className={MTC_POLICY_LINK} href="/cancellation-policy.html">Cancellation Policy</a>.
           </p>
           <button type="button" className={`${BTN} mtc-pay`} disabled={undated} onClick={checkout}>Make Payment</button>
-          <p className="mtc-note">
+          <p className={MTC_NOTE}>
             You&apos;ll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email.
           </p>
         </>

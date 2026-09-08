@@ -4200,21 +4200,7 @@ section.faq::before,
   opacity: 0.45;
   cursor: not-allowed;
 }
-.mtc-note {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  text-align: center;
-  margin: 0.7rem auto 0;
-  max-width: 46ch;
-}
-/* peringatan "masih ada kartu tanpa tanggal" - harus SETELAH .mtc-note,
-   specificity-nya sama (1 class) jadi yang belakangan yang menang */
-.mtc-note--warn { color: var(--color-err); }
-/* Policy line (Job 4) - link ke halaman policy yg udah ada, pola sama kayak .crumb a */
-.mtc-policy a {
-  color: var(--color-gold-d);
-  text-decoration: underline;
-}
+/* .mtc-note(+--warn) / .mtc-policy a -> utilities di MyTripsCart.jsx (migrasi Fase 2). */
 /* Upsell "You might also like" abis bayar - .related dipakai apa adanya (reuse),
    cuma jarak atasnya disesuain karena di sini dia nempel di dalam kartu cart,
    bukan section halaman penuh kayak initRelated. */

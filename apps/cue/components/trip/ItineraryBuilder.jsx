@@ -180,7 +180,7 @@ export default function ItineraryBuilder() {
         </div>
 
         {clashDates(state, isFullDay).length > 0 && (
-          <p className="mtc-note mtc-note--warn">
+          <p className="text-small text-err text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]">
             Two full-day programmes share the same date. Change one before booking.
           </p>
         )}

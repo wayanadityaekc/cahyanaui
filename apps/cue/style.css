@@ -9077,23 +9077,6 @@ strong {
 .crumb + .related::before {
   content: none;
 }
-.related__title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  line-height: var(--lh-heading);
-  color: var(--color-green);
-  margin: 0;
-}
-.related__title::after {
-  content: "";
-  display: block;
-  width: 48px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--color-gold);
-  margin-top: 0.5rem;
-}
 .related .experience__grid--home4 {
   margin-top: 1.6rem;
 }
@@ -9103,18 +9086,6 @@ strong {
 .related .experience__card {
   text-decoration: none;
   color: inherit;
-}
-.related__all {
-  margin: 1.6rem 0 0;
-}
-.related__all a {
-  color: var(--color-gold-d);
-  font-weight: 500;
-  font-size: var(--fs-h3);
-  text-decoration: none;
-}
-.related__all a:hover {
-  text-decoration: underline;
 }
 @media (max-width: 768px) {
   .related {

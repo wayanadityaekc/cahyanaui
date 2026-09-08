@@ -17,9 +17,14 @@ export default function Related({ href }) {
 
   const all = RELATED_ALL[me.type];
 
+  // Tailwind-native (migrasi Fase 2): judul (.related__title + underline ::after)
+  // & link "view all" (.related__all) -> utilities, CSS-nya dihapus. KEPT: .related
+  // (section) = context hook - dia yg pegang divider ::before, override kartu
+  // .related .experience__* (di-share sama .home), + padding responsif; jadi jangan
+  // dibuang. Engine .experience__grid* & komponen HomepageCard juga tetep.
   return (
     <section className="related">
-      <h2 className="related__title">You might also like</h2>
+      <h2 className="font-body font-semibold text-h3 leading-[var(--lh-heading)] text-green m-0 [&::after]:content-[''] [&::after]:block [&::after]:w-12 [&::after]:h-[3px] [&::after]:rounded-[2px] [&::after]:bg-gold [&::after]:mt-2">You might also like</h2>
       <div className="experience__grid experience__grid--home4">
         {picks.map((it) => (
           <HomepageCard
@@ -35,8 +40,8 @@ export default function Related({ href }) {
         ))}
       </div>
       {all && (
-        <p className="related__all">
-          <a href={all[0]}>{all[1]} &rsaquo;</a>
+        <p className="mt-[1.6rem]">
+          <a href={all[0]} className="text-gold-d font-medium text-h3 no-underline hover:underline">{all[1]} &rsaquo;</a>
         </p>
       )}
     </section>

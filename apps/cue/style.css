@@ -196,104 +196,20 @@ body {
   left: 0;
   transform: none;
 }
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  width: 100%;
-  background-color: #fff;
-  /* Nempel di atas pas scroll; shadow tipis biar kepisah dari konten di bawahnya. */
-  box-shadow: 0 2px 12px rgba(31, 61, 43, 0.07);
-  /* Navbar di-inject via JS -> tanpa ini dia "pop" mendadak. FADE aja (tanpa slide)
-     biar seragam sama hero & nol pergerakan posisi. */
-  animation: navbarIn 0.4s ease-out;
-}
 @keyframes navbarIn {
   from {
     opacity: 0;
   }
 }
-
-.navbar__container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0.55rem 1.5rem;
-}
-.navbar__logo img {
-  height: 40px;
-  width: auto;
-  display: block;
-  margin-right: 1rem;
-  margin-left: 0.1rem;
-}
 /* Navbar menu = hamburger drawer at ALL widths (Wayan, Sep 2026): slide-in
    panel from the right, opened by the hamburger. The @media(max-width:992px)
    block below re-affirms the same for phones. */
-.navbar__menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: auto;
-  width: 80%;
-  max-width: 340px;
-  height: 100dvh;
-  background-color: #fff;
-  box-shadow: -14px 0 40px rgba(26, 26, 26, 0.2);
-  padding: 4.5rem 22px 30px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  transform: translateX(100%);
-  transition: transform var(--dur-slow) var(--ease);
-  pointer-events: none;
-  z-index: 120;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  text-align: left;
-  gap: 0;
-  list-style: none;
-}
 .navbar__menu.active {
   transform: translateX(0);
   pointer-events: auto;
 }
-.navbar__menu > li {
-  border-bottom: 1px solid var(--line);
-}
-.navbar__menu > li > a,
-.navbar__menu .navbar__droptoggle {
-  display: block;
-  width: 100%;
-  padding: 0.75rem 0;
-  font-size: var(--fs-strong);
-  text-align: left;
-}
-.navbar__menu a {
-  font-size: var(--fs-strong);
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--color-gold);
-}
-.navbar__menu a:hover,
 .navbar__menu a.active {
   color: var(--color-green);
-}
-.navbar__toggle {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 28px;
-  background: none;
-  border: none;
-  cursor: pointer;
 }
 .navbar__toggle span:not(.itn-badge) {
   width: 100%;
@@ -302,141 +218,24 @@ body {
 }
 /* Scrim (dim) buat drawer navbar di HP. z-index DI BAWAH navbar (100) biar drawer
    yg nempel di dalam navbar tetep di atas scrim (bisa diklik & gak ke-dim). */
-.navbar__scrim {
-  position: fixed;
-  inset: 0;
-  background: rgba(26, 26, 26, 0.45);
-  z-index: 95;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--dur) ease, visibility var(--dur);
-}
 .navbar__scrim.open {
   opacity: 1;
   visibility: visible;
 }
 /* header drawer (judul + close) cuma buat mobile drawer: sembunyiin di desktop */
-@media (min-width: 993px) {
-  .navbar__drawerhead {
-    display: none;
-  }
-}
 
 /* ===== Hamburger drawer: welcome + trip + nav (Sep 2026, Opsi A revisi) ===== */
 /* Welcome header - sticky di atas drawer (identity + currency) */
-.navbar__menu > li.navbar__acct {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border-bottom: 1px solid var(--line);
-  margin: 0 -22px;
-  padding: 0.2rem 22px 0.8rem;
-}
-.navbar__ava {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--color-cream);
-  border: 1px solid var(--line);
-  display: grid;
-  place-items: center;
-  color: var(--color-gold);
-  flex: none;
-}
-.navbar__ava svg { width: 20px; height: 20px; }
-.navbar__acctid { display: flex; flex-direction: column; min-width: 0; }
-.navbar__acctid b {
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  color: var(--color-gold);
-  line-height: 1.25;
-}
-.navbar__acctemail {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .navbar__acct .acct__cur { margin-left: auto; flex: none; }
 
 /* Guests + Stay area = 2 kolom, di atas tombol sign in */
-.navbar__menu > li.navbar__trip2 {
-  border-bottom: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 0.9rem 0 0.4rem;
-}
-.navbar__tripcol { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.navbar__triplabel { font-size: var(--fs-small); color: var(--color-muted); }
 .navbar__tripcol .hs-control { width: 100%; }
 
 /* Sign in (baris sendiri, di bawah trip) */
-.navbar__menu > li.navbar__signinrow { border-bottom: 1px solid var(--line); padding-bottom: 1rem; }
-.navbar__signin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  height: 2.6rem;
-  border: 0;
-  border-radius: var(--r-pill);
-  background: var(--color-cta);
-  color: #fff;
-  font: inherit;
-  font-weight: 600;
-  font-size: var(--fs-strong);
-  cursor: pointer;
-  transition: background var(--dur) var(--ease);
-}
-.navbar__signin:hover { background: var(--color-cta-d); }
-.navbar__signin svg { width: 17px; height: 17px; }
 
 /* My Trip link (+ badge) */
-.navbar__menucart { display: flex; align-items: center; }
-.navbar__menucart-badge { margin-left: 8px; }
 
 /* Footer drawer: Settings + Chat WhatsApp */
-.navbar__menu > li.navbar__menufoot {
-  border-bottom: 0;
-  margin-top: auto;
-  padding-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.navbar__footlink {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-gold);
-  text-decoration: none;
-  font-weight: 500;
-}
-.navbar__footlink svg { width: 18px; height: 18px; }
-.navbar__wa {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 2.5rem;
-  border: 0;
-  background: var(--color-cta);
-  color: #fff;
-  border-radius: var(--r-pill);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: var(--fs-strong);
-  transition: background var(--dur) var(--ease);
-}
-.navbar__wa:hover { background: var(--color-cta-d); }
-.navbar__wa svg { width: 18px; height: 18px; flex: none; }
 
 /* ==================== Homepage hero = foto + search bar ==================== */
 .hero {
@@ -2857,65 +2656,17 @@ a.tripbar--promo {
    Band putih di antara Drivers & Reviews. Foto = thumbnail kecil (foto tamu low-res
    sengaja ditampilin kecil biar nggak pecah). Sengaja TERUS jalan (nggak pause on hover)
    biar keliatan sepintas. Divider emas atas/bawah dari sistem [id$="-placeholder"] > section. */
-.guest-gallery {
-  padding: 3rem 0 3.2rem;
-  background: #fff;
-}
 /* Heading tetap punya breathing room; marquee-nya full-width (edge to edge). */
-.guest-gallery__label,
 .guest-gallery .section__title {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
-.guest-gallery__label {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  color: var(--color-gold);
-  text-align: center;
-}
 .guest-gallery .section__title {
   margin-bottom: 1.5rem;
-}
-.guest-marquee {
-  overflow: hidden;
-  /* Fade tipis di pinggir (2%) biar foto masuk/keluar halus tanpa kepotong tegas. */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
-}
-.guest-track {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(2, 128px);
-  grid-auto-columns: 128px;
-  gap: 6px;
-  width: max-content;
-  animation: guestScroll 35s linear infinite;
 }
 @keyframes guestScroll {
   to {
     transform: translateX(-50%);
-  }
-}
-.guest-track figure {
-  margin: 0;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  border: 2px solid var(--color-gold);
-}
-.guest-track img {
-  width: 128px;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-@media (prefers-reduced-motion: reduce) {
-  .guest-track {
-    animation: none;
-  }
-  .guest-marquee {
-    overflow-x: auto;
   }
 }
 .drivers__inner {
@@ -3132,321 +2883,14 @@ section.faq::before,
     min-height: 688px;
   }
 }
-
-.footer {
-  padding: var(--space-5) var(--space-3) var(--space-3);
-  color: var(--color-green);
-  background-color: #ebe8e2;
-}
-.footer__top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 2.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.footer__logo {
-  display: inline-block;
-  text-decoration: none;
-  color: var(--color-green);
-}
 /* Wordmark teks (ganti logo gambar) — ukuran sedang, gak kegedean */
-.footer__wordmark {
-  font-family: var(--font-body);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--color-green);
-  line-height: 1.2;
-}
 /* Blok kontak footer: WhatsApp / email / lokasi */
-.footer__contact {
-  margin-top: 0.9rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-.footer__contact-item {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.8rem; /* was var(--fs-body) 1rem - Wayan, footer body lebih kecil (step B) */
-  color: var(--color-green);
-  opacity: 0.9;
-  text-decoration: none;
-}
-.footer__contact-item svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  flex-shrink: 0;
-  color: var(--color-gold);
-}
-a.footer__contact-item:hover {
-  opacity: 1;
-  color: var(--color-gold);
-}
-.footer__tagline {
-  margin-top: 0.75rem;
-  max-width: 320px;
-  font-size: 0.8rem; /* was var(--fs-body) 1rem - Wayan, footer body lebih kecil (step B) */
-  line-height: 1.6;
-  opacity: 0.85;
-}
-.footer__socials {
-  display: flex;
-  gap: 1.25rem;
-}
-.footer__socials a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  color: var(--color-green);
-  background-color: rgba(0, 0, 0, 0.06);
-}
-.footer__socials svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.footer__socials a img {
-  width: 100%; /* isi penuh lingkaran */
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.footer__socials a:hover {
-  color: #fff;
-  background-color: var(--color-gold);
-}
-.footer__heading {
-  margin-bottom: 1rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  color: var(--color-gold);
-}
-.footer__col ul {
-  list-style: none;
-}
-.footer__col li {
-  margin-bottom: 0.6rem;
-  font-size: 0.8rem; /* was var(--fs-body) 1rem - Wayan, footer body lebih kecil (step B) */
-  opacity: 0.85;
-}
-.footer__col a {
-  text-decoration: none;
-  color: var(--color-green);
-}
-.footer__col a:hover {
-  color: var(--color-gold);
-}
 /* "Featured On" nempel di kolom brand (bawah tagline); sosmed jadi item di list logo */
-.footer__featured {
-  margin-top: 1.5rem;
-  text-align: left;
-}
-.footer__featured-label {
-  margin-bottom: 0.75rem;
-  font-size: var(--fs-label);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  opacity: 0.7;
-}
-.footer__logos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.25rem;
-}
-.footer__logos img {
-  height: 24px;
-  width: auto;
-  opacity: 0.85;
-}
-.footer__logos span {
-  font-family: var(--font-body);
-  font-size: 1.15rem;
-  font-weight: 600;
-  opacity: 0.85;
-}
-.footer__payments {
-  max-width: 1100px;
-  margin: 2.5rem auto 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  text-align: center;
-}
-.footer__pay-logos {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-.footer__pay-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 27px;
-  min-width: 42px;
-  padding: 0 0.5rem;
-  background: #fff;
-  border-radius: var(--r-sm);
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--dur-fast) ease;
-}
-.footer__pay-chip:hover {
-  transform: translateY(-2px);
-}
-.footer__pay-svg {
-  display: block;
-  height: var(--icon-sm);
-  width: auto;
-}
-.footer__bottom {
-  max-width: 1100px;
-  margin: 2.5rem auto 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  font-size: var(--fs-small);
-  text-align: center;
-  opacity: 0.7;
-}
 /* Registrasi usaha - baris ringkas di footer (semua halaman). Tiap bagian
    nowrap biar nggak kepotong di tengah; desktop = 1 baris + titik pemisah,
    HP = tumpuk rapi per baris. */
-.footer__reg {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 4px 10px;
-  max-width: 1100px;
-  margin: 2rem auto 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.footer__reg-item {
-  white-space: nowrap;
-}
-.footer__reg-item b {
-  font-weight: 600;
-}
-.footer__reg-item a {
-  color: inherit;
-  text-decoration: underline;
-}
-.footer__reg-sep {
-  opacity: 0.5;
-}
-@media (max-width: 560px) {
-  .footer__reg {
-    flex-direction: column;
-    gap: 3px;
-  }
-  .footer__reg-sep {
-    display: none;
-  }
-}
 
 /* Registrasi usaha - blok trust di halaman About */
-.reg-sec {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 var(--container-x) var(--section-gap);
-}
-.reg {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
-  padding: 1.4rem 1.5rem;
-}
-.reg__head {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--line);
-}
-.reg__seal {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  background: var(--color-gold);
-  color: #fff;
-}
-.reg__seal svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-.reg__name {
-  font-size: var(--fs-h2);
-  font-weight: 700;
-  color: var(--color-gold);
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-}
-.reg__type {
-  font-size: var(--fs-small);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin-top: 0.15rem;
-}
-.reg__rows {
-  margin: 1rem 0 0;
-}
-.reg__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.5rem 0;
-}
-.reg__row + .reg__row {
-  border-top: 1px dashed var(--line);
-}
-.reg__k {
-  font-size: var(--fs-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-.reg__v {
-  margin: 0;
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--color-amber);
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-.reg__verify {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 1rem 0 0;
-  font-size: var(--fs-small);
-  color: var(--color-green);
-}
-.reg__verify svg {
-  width: 15px;
-  height: 15px;
-  flex: 0 0 auto;
-  color: var(--color-ok);
-}
-.reg__verify a {
-  color: var(--color-cta);
-  font-weight: 600;
-  text-decoration: none;
-}
 
 /* Booking modal */
 .modal {
@@ -5315,16 +4759,8 @@ a.footer__contact-item:hover {
 }
 
 @media (max-width: 992px) {
-  .navbar__toggle {
-    display: flex;
-  }
   /* Mobile: logo dikecilin dikit + digeser kiri dikit (desktop 40px) */
-  .navbar__logo img {
-    height: 34px;
-    margin-left: -0.25rem;
-  }
   /* ===== Menu & Account jadi DRAWER dari kanan (HP) ===== */
-  .navbar__menu,
   .acct__panel {
     position: fixed;
     top: 0;
@@ -5346,14 +4782,6 @@ a.footer__contact-item:hover {
     pointer-events: none;
     z-index: 120;
   }
-  .navbar__menu {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    text-align: left;
-    gap: 0;
-    border-top: none;
-  }
   .acct__panel {
     border: none;
     border-radius: 0;
@@ -5363,57 +4791,10 @@ a.footer__contact-item:hover {
     transform: translateX(0);
     pointer-events: auto;
   }
-  .navbar__menu > li > a,
-  .navbar__menu .navbar__droptoggle {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 0;
-    font-size: var(--fs-strong);
-    text-align: left;
-    color: var(--color-gold);
-  }
-  .navbar__menu a:hover,
   .navbar__menu a.active {
     color: var(--color-gold-d);
   }
-  .navbar__menu > li:not(.navbar__drawerhead) {
-    border-bottom: 1px solid var(--line);
-  }
   /* header drawer (judul + tombol close) di-inject via JS, sticky di atas */
-  .navbar__drawerhead {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 -22px 6px;
-    padding: 17px 22px;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    list-style: none;
-  }
-  .navbar__menu > li.navbar__drawerhead {
-    border-bottom: 1px solid var(--line);
-  }
-  .navbar__drawertitle {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--color-green);
-  }
-  .navbar__drawerclose {
-    flex: 0 0 auto;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: #fff;
-    color: var(--color-green);
-    font-size: 1.2rem;
-    line-height: 1;
-    cursor: pointer;
-  }
   .experience__grid {
     display: flex;
     overflow-x: auto;
@@ -5452,19 +4833,7 @@ a.footer__contact-item:hover {
   .about__boxes {
     min-height: 200px;
   }
-  .footer__top {
-    grid-template-columns: 1fr 1fr;
-  }
-  .footer__brand {
-    grid-column: 1 / -1;
-  }
   /* Featured On ke tengah di HP */
-  .footer__featured {
-    text-align: center;
-  }
-  .footer__logos {
-    justify-content: center;
-  }
   .highlight__container {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -5644,8 +5013,7 @@ a.footer__contact-item:hover {
 /* Hormatin user yang matiin animasi (aksesibilitas) */
 @media (prefers-reduced-motion: reduce) {
   .subhero__content,
-  .hero__booking .booking__card,
-  .navbar {
+  .hero__booking .booking__card {
     animation: none;
   }
   .reveal {
@@ -6999,9 +6367,6 @@ button.pick-cat {
 }
 
 /* ==================== Navbar logo (dorong menu ke kanan) ==================== */
-.navbar__logo {
-  margin-right: auto;
-}
 /* Guest picker di navbar (ikon orang + select angka), gaya sama kaya currency */
 .guest-select {
   display: inline-flex;
@@ -7037,34 +6402,11 @@ button.pick-cat {
   margin-right: 0.9rem; /* was 0.3rem - Wayan, kerasa mepet ke cart icon */
 }
 /* Nav cart icon "My Trips" (sebelah icon akun) + badge jumlah item */
-.navbar__cart {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  color: var(--color-gold);
-  margin-right: 1.3rem; /* was 0.85rem - Wayan, kasih jarak lebih ke menu */
-  transition: color var(--dur) ease;
-}
-.navbar__cart:hover {
-  color: var(--color-gold-d);
-}
 /* Mobile: jarak antar icon kluster kanan (akun / My Trips / hamburger) diseragamin biar
    rapi (Wayan) - default desktop (acct .9 / cart 1.3) kejauhan pas menu di-hide. Ditaruh
    SETELAH rule base biar menang (media query gak nambah specificity). */
 @media (max-width: 992px) {
   .acct { margin-right: 1rem; }
-  .navbar__cart { margin-right: 0.85rem; }
-}
-.navbar__cart-icon {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-.navbar__cart-badge {
-  position: absolute;
-  top: -7px;
-  right: -9px;
-  margin-left: 0;
-  background-color: var(--color-gold);
 }
 /* Ikon akun gaya Nike: line-icon polos, tanpa lingkaran/border/badge. */
 .acct__btn {
@@ -7116,8 +6458,6 @@ button.pick-cat {
 /* Hormati setelan "kurangi gerak" */
 @media (prefers-reduced-motion: reduce) {
   .acct__panel,
-  .navbar__menu,
-  .navbar__drop,
   .hs-panel,
   .binfo__pop,
   .modal,
@@ -7243,23 +6583,6 @@ button.pick-cat {
 /* Titik hijau: ada booking mendatang (di ikon akun + hamburger) */
 .acct__btn {
   position: relative;
-}
-.acct__dot {
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #3fae5a;
-  border: 2px solid #fff;
-}
-.acct__dot[hidden] {
-  display: none;
-}
-.acct__dot--ham {
-  top: -2px;
-  right: -2px;
 }
 
 /* Header dropdown akun (greeting + email) */
@@ -8002,16 +7325,6 @@ button.pick-cat {
     -webkit-appearance: none;
     appearance: none;
   }
-  .navbar__toggle {
-    /* Box dulu 3rem (48px) + bar di-tengah -> ada ruang mati ~13px di kiri, jadi jarak
-       VISUAL ke My Trips keliatan lebih jauh dari jarak akun<->My Trips (Wayan). Box
-       dirapetin ke lebar bar + margin-left dibuang biar jaraknya seragam. */
-    width: 1.65rem;
-    height: 2.2rem;
-    margin-left: 0.25rem;
-    align-items: center;
-    justify-content: center;
-  }
   .navbar__toggle span:not(.itn-badge) {
     width: 22px;
   }
@@ -8228,50 +7541,12 @@ button.pick-cat {
 }
 
 /* ==================== Navbar Program dropdown ==================== */
-.navbar__has-drop {
-  position: relative;
-}
-.navbar__droptoggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0;
-  border: none;
-  background: none;
-  font-family: var(--font-body);
-  font-size: var(--fs-strong);
-  font-weight: 500;
-  color: var(--color-gold);
-  cursor: pointer;
-}
-.navbar__droptoggle:hover {
-  color: var(--color-green);
-}
-.navbar__caret {
-  display: inline-block;
-  transition: transform var(--dur) ease;
-}
 .navbar__has-drop.open .navbar__caret {
   transform: rotate(90deg);
 }
-.navbar__drop {
-  list-style: none;
-}
-.navbar__drop a {
-  display: block;
-  font-size: var(--fs-small);
-}
 /* Submenu inline: tap "Program" to expand (nav is a drawer at all widths). */
-.navbar__drop {
-  display: none;
-  margin: 0.1rem 0 0.2rem;
-  padding: 0.2rem 0 0.5rem 0.9rem; /* indent halus, TANPA garis (Wayan) */
-}
 .navbar__has-drop.open .navbar__drop {
   display: block;
-}
-.navbar__drop li {
-  padding: 0.4rem 0;
 }
 
 /* ==================== Tour Programs slider (desktop) ==================== */
@@ -8292,10 +7567,6 @@ button.pick-cat {
 }
 
 /* ==================== Slider arrows (muncul pas hover, desktop) ==================== */
-
-@media (min-width: 993px) {
-
-}
 
 /* Sembunyiin scrollbar slider (navigasi via arrow / swipe) */
 .experience__grid--slider,
@@ -8501,7 +7772,6 @@ section.faq::before,
 .review-card__name,
 .driver-card__name,
 .driver-modal__name,
-.footer__heading,
 .modal__title,
 .stop__name,
 .itn__subtitle,
@@ -8736,13 +8006,6 @@ strong {
 }
 
 /* --- Reviews: compact 3-across strip --- */
-.reviews-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  max-width: 1100px;
-  margin: 1.5rem auto 0;
-}
 
 .reviews__seeall {
   display: inline-block;
@@ -8792,9 +8055,6 @@ strong {
   .about__container--team {
     grid-template-columns: 1fr;
     gap: 1.8rem;
-  }
-  .reviews-strip {
-    grid-template-columns: 1fr;
   }
   
 }
@@ -10329,47 +9589,6 @@ strong {
 
 /* Floating section switcher (pengganti tab strip): pill di bawah-tengah,
    label section aktif + panah prev/next. */
-.ssw {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 1.3rem;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 6px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--r-pill);
-  box-shadow: var(--shadow-xl);
-}
-.ssw__label {
-  min-width: 148px;
-  padding: 0 6px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.8rem;
-  color: var(--color-ink);
-  white-space: nowrap;
-}
-.ssw__arrow {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 50%;
-  background: var(--color-cream);
-  color: var(--color-ink);
-  cursor: pointer;
-  transition: background-color var(--dur) ease;
-}
-.ssw__arrow svg { width: 18px; height: 18px; }
-.ssw__arrow:hover:not(:disabled) { background: var(--line); }
-.ssw__arrow:disabled { opacity: 0.35; cursor: default; }
 
 /* ============================================================
    YOU MIGHT ALSO LIKE (halaman detail) — 4 kartu terkait
@@ -10490,9 +9709,6 @@ strong {
 .charter-home__foot b { color: var(--color-gold); font-weight: 600; }
 
 /* Mobile */
-@media (max-width: 760px) {
-  
-}
 @media (max-width: 560px) {
 
   .charter-home__in { padding: var(--space-4) var(--space-3); }
@@ -10551,7 +9767,6 @@ strong {
 .zfilter__tab.is-active{background:var(--color-cta);color:#fff;}
 /* Nav floating: .zfilter (segmented, DESKTOP) vs .ssw (single pill, MOBILE). */
 @media (max-width:768px){ .zfilter{display:none;} }
-@media (min-width:769px){ .ssw{display:none;} }
 /* ruang bawah biar kartu terakhir gak ketutup bar floating */
 .tourprog{padding-bottom:5rem;}
 /* anchor scroll (switcher mobile) clear navbar + tripbar */

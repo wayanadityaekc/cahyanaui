@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Overlay from './Overlay';
+import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay } from './hsClasses';
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -45,29 +46,29 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
   for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), d));
 
   const panel = (
-    <div className={`hs-panel bk-panel hs-panel--popup bookdate-panel${open ? ' open' : ''}`}>
-      <div className="hs-panel__head">
-        <h3>{label}</h3>
-        <button type="button" className="hs-panel__close" aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
+    <div className={panelBookdate(open)}>
+      <div className={PANEL_HEAD_BOOKDATE}>
+        <h3 className={PANEL_HEAD_H3}>{label}</h3>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
       </div>
-      <div className="hs-panel__body">
-        <div className="hs-cal bk-cal">
-          <div className="hs-cal__cap">
-            <button type="button" aria-label="Previous month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}>&lsaquo;</button>
-            <span>{MONTHS[cursor.getMonth()]} {cursor.getFullYear()}</span>
-            <button type="button" aria-label="Next month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}>&rsaquo;</button>
+      <div className={PANEL_BODY}>
+        <div className={HS_CAL}>
+          <div className={CAL_CAP}>
+            <button type="button" className={CAL_CAP_BTN} aria-label="Previous month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}>&lsaquo;</button>
+            <span className={CAL_CAP_SPAN}>{MONTHS[cursor.getMonth()]} {cursor.getFullYear()}</span>
+            <button type="button" className={CAL_CAP_BTN} aria-label="Next month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}>&rsaquo;</button>
           </div>
-          <div className="hs-cal__grid">
-            {DOW.map((d) => <span className="hs-cal__dow" key={d}>{d}</span>)}
+          <div className={CAL_GRID}>
+            {DOW.map((d) => <span className={CAL_DOW} key={d}>{d}</span>)}
             {cells.map((d, i) => {
-              if (!d) return <span className="hs-cal__d is-off" key={`e${i}`} />;
+              if (!d) return <span className={calDay(true)} key={`e${i}`} />;
               const v = iso(d);
               const disabled = v < minDate;
               return (
                 <button
                   type="button"
                   key={v}
-                  className={`hs-cal__d${disabled ? ' is-off' : ''}${v === value ? ' is-sel' : ''}`}
+                  className={calDay(disabled)}
                   disabled={disabled}
                   onClick={() => { onChange(v); setOpen(false); }}
                 >
@@ -84,22 +85,22 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
   return (
     <div className="csel-group">
       <input type="date" className="bk-native" name={name} id={id} value={value || ''} min={minDate} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true" />
-      <button type="button" className={`hs-control bk-control${rich ? ' hs-control--rich' : ''}`} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
-        {icon && <span className="hs-control__ic" aria-hidden="true">{icon}</span>}
+      <button type="button" className={rich ? CONTROL_RICH : CONTROL} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
+        {icon && <span className={CONTROL_IC} aria-hidden="true">{icon}</span>}
         {rich ? (
-          <span className="hs-control__stack">
-            {hint && <span className="hs-control__hint">{hint}</span>}
-            <span className={`hs-control__val${!value ? ' placeholder' : ''}`}>{value ? fmtLabel(value) : placeholder}</span>
+          <span className={CONTROL_STACK}>
+            {hint && <span className={CONTROL_HINT}>{hint}</span>}
+            <span className={!value ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>{value ? fmtLabel(value) : placeholder}</span>
           </span>
         ) : (
-          <span className={`hs-control__val${!value ? ' placeholder' : ''}`}>{value ? fmtLabel(value) : placeholder}</span>
+          <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>{value ? fmtLabel(value) : placeholder}</span>
         )}
         {rich ? (
-          <svg className="hs-chev" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className={CHEV} viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         ) : (
-          <svg className="hs-chev hs-chev--cal" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className={CHEV_CAL} viewBox="0 0 24 24" aria-hidden="true">
             <rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
             <path d="M3 10h18M8 3v4M16 3v4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           </svg>

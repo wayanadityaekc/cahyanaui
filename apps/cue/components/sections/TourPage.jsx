@@ -54,8 +54,12 @@ function Stop({ s }) {
       </div>
     </>
   );
-  return s.link ? (
-    <a className={STOP_LINK} href={s.link}>{inner}</a>
+  // Link stop = detail page. refId (referensi destination/experience) diturunkan jadi
+  // /attractions/<refId>.html (URL tetep, nol perubahan SEO); fallback s.link buat item
+  // non-attraction lama. name/img/descHtml(highlight) tetep tour-specific.
+  const href = s.refId ? `/attractions/${s.refId}.html` : s.link;
+  return href ? (
+    <a className={STOP_LINK} href={href}>{inner}</a>
   ) : (
     <article className="stop">{inner}</article>
   );

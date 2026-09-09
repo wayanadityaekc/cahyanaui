@@ -53,7 +53,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/twin-lakes.html",
+    "refType": "destination",
+    "refId": "twin-lakes",
     "img": "north-bali-tour-card.jpg",
     "alt": "Twin Lakes viewpoint over Buyan and Tamblingan, Bali",
     "w": 600,
@@ -64,7 +65,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/banyumala-waterfall.html",
+    "refType": "destination",
+    "refId": "banyumala-waterfall",
     "img": "tibumana.webp",
     "alt": "A single-drop waterfall in the Bali jungle",
     "w": 1024,
@@ -170,7 +172,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/mount-batur-trekking.html",
+    "refType": "experience",
+    "refId": "mount-batur-trekking",
     "img": "mount-batur-sunrise.webp",
     "alt": "Sunrise over Mount Batur seen from the trail",
     "w": 1536,
@@ -181,7 +184,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/batur-hot-spring.html",
+    "refType": "experience",
+    "refId": "batur-hot-spring",
     "img": "batur-hot-spring-water.webp",
     "alt": "Batur Hot Spring, Bali",
     "w": 1536,
@@ -284,7 +288,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/besakih.html",
+    "refType": "destination",
+    "refId": "besakih",
     "img": "besakih-temple.webp",
     "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
     "w": 1920,
@@ -295,7 +300,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/taman-ujung.html",
+    "refType": "destination",
+    "refId": "taman-ujung",
     "img": "taman-ujung-view.webp",
     "alt": "A visitor at the Taman Ujung water palace, Bali",
     "w": 1200,
@@ -403,7 +409,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tegalalang-rice-terrace.html",
+    "refType": "destination",
+    "refId": "tegalalang-rice-terrace",
     "img": "tegalalang-rice-terrace-hero.jpg",
     "alt": "Tegalalang rice terrace north of Ubud",
     "w": 1200,
@@ -414,7 +421,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/monkey-forest.html",
+    "refType": "destination",
+    "refId": "monkey-forest",
     "img": "monkey-forest-temples.jpg",
     "alt": "Long-tailed macaques at the Sacred Monkey Forest, Ubud",
     "w": 1200,
@@ -430,7 +438,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/jeep-sunrise.html",
+    "refType": "experience",
+    "refId": "jeep-sunrise",
     "img": "mount-batur-sunrise.webp",
     "alt": "View over Mount Batur and its crater lake from Kintamani",
     "w": 1200,
@@ -441,7 +450,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/besakih.html",
+    "refType": "destination",
+    "refId": "besakih",
     "img": "besakih-temple.webp",
     "alt": "Besakih Mother Temple on the slopes of Mount Agung",
     "w": 1200,
@@ -457,7 +467,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/uluwatu-temple.html",
+    "refType": "destination",
+    "refId": "uluwatu-temple",
     "img": "uluwatu-temple.webp",
     "alt": "Uluwatu Temple perched on a clifftop above the ocean",
     "w": 1200,
@@ -468,7 +479,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/uluwatu-kecak.html",
+    "refType": "experience",
+    "refId": "uluwatu-kecak",
     "img": "uluwatu-sunset-kecak-dance.webp",
     "alt": "Kecak fire dance performance at Uluwatu at sunset",
     "w": 1200,
@@ -591,7 +603,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/rafting.html",
+    "refType": "experience",
+    "refId": "rafting",
     "img": "rafting.webp",
     "alt": "A rafting crew punching through whitewater rapids on the Ayung River",
     "w": 5609,
@@ -602,7 +615,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/atv-ride.html",
+    "refType": "experience",
+    "refId": "atv-ride",
     "img": "atv-ride-jungle.webp",
     "alt": "Riders splashing an ATV through a muddy jungle track near Ubud",
     "w": 1200,
@@ -709,7 +723,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/garuda-wisnu-kencana.html",
+    "refType": "destination",
+    "refId": "garuda-wisnu-kencana",
     "img": "gwk-statue-view.webp",
     "alt": "Garuda Wisnu Kencana statue, Bali",
     "w": 1600,
@@ -720,7 +735,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/pandawa-beach.html",
+    "refType": "destination",
+    "refId": "pandawa-beach",
     "img": "lighthouse-beach-bali.webp",
     "alt": "Surf rolling into a beach on Bali's south coast",
     "w": 1200,
@@ -822,7 +838,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/green-bowl-beach.html",
+    "refType": "destination",
+    "refId": "green-bowl-beach",
     "img": "becah-south.jpg",
     "alt": "Surf rolling into a south Bali beach",
     "w": 1200,
@@ -833,7 +850,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/balangan-beach.html",
+    "refType": "destination",
+    "refId": "balangan-beach",
     "img": "melasti-beach.jpg",
     "alt": "White sand below limestone cliffs, south Bali",
     "w": 1200,
@@ -844,7 +862,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/bingin-beach.html",
+    "refType": "destination",
+    "refId": "bingin-beach",
     "img": "south-bali-beach-sunset.webp",
     "alt": "Sunset over a Bukit beach on Bali's south coast",
     "w": 1200,
@@ -956,7 +975,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/jatiluwih-rice-terrace.html",
+    "refType": "destination",
+    "refId": "jatiluwih-rice-terrace",
     "img": "jatiluwih.webp",
     "alt": "The Jatiluwih rice terraces across the hills of west Bali",
     "w": 1920,
@@ -1048,7 +1068,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/jeep-sunrise.html",
+    "refType": "experience",
+    "refId": "jeep-sunrise",
     "img": "jeep-sunrise-mount-batur.jpg",
     "alt": "A 4x4 jeep at a Mount Batur viewpoint at sunrise",
     "w": 1200,
@@ -1059,7 +1080,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/penglipuran.html",
+    "refType": "destination",
+    "refId": "penglipuran",
     "img": "penglipuran-village-view.jpg",
     "alt": "The swept main lane of Penglipuran traditional village",
     "w": 1200,
@@ -1070,7 +1092,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tirta-empul.html",
+    "refType": "destination",
+    "refId": "tirta-empul",
     "img": "tirta-empul-hero.jpg",
     "alt": "The purification pools at Tirta Empul holy spring temple",
     "w": 1200,
@@ -1177,7 +1200,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/lempuyang-temple.html",
+    "refType": "destination",
+    "refId": "lempuyang-temple",
     "img": "lempuyang.webp",
     "alt": "Lempuyang, Bali",
     "w": 2000,
@@ -1188,7 +1212,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tirta-gangga.html",
+    "refType": "destination",
+    "refId": "tirta-gangga",
     "img": "tirta-gangga-photo-spot.webp",
     "alt": "Tirta Gangga, Bali",
     "w": 736,
@@ -1292,7 +1317,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/lovina-dolphin.html",
+    "refType": "experience",
+    "refId": "lovina-dolphin",
     "img": "lovina-dolphin-sekumpul-card.jpg",
     "alt": "Outrigger boats off the north Bali coast at sunrise",
     "w": 1200,
@@ -1303,7 +1329,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/banjar-hot-spring.html",
+    "refType": "experience",
+    "refId": "banjar-hot-spring",
     "gradient": "background-image: linear-gradient( 135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86) );",
     "num": "Stop 2",
     "name": "Banjar Hot Spring",
@@ -1311,7 +1338,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/sekumpul-waterfall.html",
+    "refType": "destination",
+    "refId": "sekumpul-waterfall",
     "img": "waterfall.jpg",
     "alt": "A jungle waterfall falling into a natural pool, Bali",
     "w": 1200,
@@ -1414,7 +1442,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/munduk.html",
+    "refType": "destination",
+    "refId": "munduk",
     "img": "waterfall.jpg",
     "alt": "A jungle waterfall falling into a natural pool, Bali",
     "w": 1200,
@@ -1425,7 +1454,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/coffee-plantation.html",
+    "refType": "destination",
+    "refId": "coffee-plantation",
     "img": "coffee-plantation-hero.jpg",
     "alt": "Coffee beans drying at a plantation in Bali's highlands",
     "w": 1200,
@@ -1436,7 +1466,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/gitgit-waterfall.html",
+    "refType": "destination",
+    "refId": "gitgit-waterfall",
     "img": "mauntain.jpg",
     "alt": "Green hills and mountains in Bali's interior",
     "w": 1200,
@@ -1546,7 +1577,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/sangeh-monkey-forest.html",
+    "refType": "destination",
+    "refId": "sangeh-monkey-forest",
     "img": "monkey-forest-temples.jpg",
     "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
     "w": 1200,
@@ -1557,7 +1589,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tanah-lot.html",
+    "refType": "destination",
+    "refId": "tanah-lot",
     "img": "tanah-lot.webp",
     "alt": "Tanah Lot sea temple on its rock outcrop at sunset",
     "w": 1200,
@@ -1663,7 +1696,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/uluwatu-temple.html",
+    "refType": "destination",
+    "refId": "uluwatu-temple",
     "img": "uluwatu-sunset-kecak-dance.webp",
     "alt": "Uluwatu Temple, Bali",
     "w": 1920,
@@ -1756,7 +1790,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/taman-ayun.html",
+    "refType": "destination",
+    "refId": "taman-ayun",
     "img": "taman-ayun-hero.jpg",
     "alt": "Tiered meru shrines across the moat at Taman Ayun temple",
     "w": 1200,
@@ -1767,7 +1802,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tanah-lot.html",
+    "refType": "destination",
+    "refId": "tanah-lot",
     "img": "tanah-lot.webp",
     "alt": "Tanah Lot temple on its offshore rock",
     "w": 1152,
@@ -1870,7 +1906,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/atv-ride.html",
+    "refType": "experience",
+    "refId": "atv-ride",
     "img": "atv-ride-jungle.webp",
     "alt": "Riders splashing an ATV through a muddy jungle track near Ubud",
     "w": 1200,
@@ -1881,7 +1918,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/bali-zoo.html",
+    "refType": "experience",
+    "refId": "bali-zoo",
     "img": "bali-zoo-big-cat.webp",
     "alt": "A tiger up close at Bali Zoo, south of Ubud",
     "w": 1200,
@@ -1892,7 +1930,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/bali-bird-park.html",
+    "refType": "experience",
+    "refId": "bali-bird-park",
     "img": "bird-park-macaw-show.webp",
     "alt": "Macaws at the free-flight show, Bali Bird Park",
     "w": 1200,
@@ -1903,7 +1942,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tegenungan-waterfall.html",
+    "refType": "destination",
+    "refId": "tegenungan-waterfall",
     "img": "tegenungan-waterfall-hero.jpg",
     "alt": "Tegenungan waterfall dropping into its plunge pool",
     "w": 1200,
@@ -2018,7 +2058,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/barong-dance.html",
+    "refType": "experience",
+    "refId": "barong-dance",
     "img": "barong-dance-card.webp",
     "alt": "Barong and Rangda facing off in a Balinese dance drama",
     "w": 1536,
@@ -2029,7 +2070,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/ubud-arts-crafts.html",
+    "refType": "destination",
+    "refId": "ubud-arts-crafts",
     "img": "ubud-arts-crafts-hero.jpg",
     "alt": "Ubud Arts Crafts",
     "w": 1200,
@@ -2040,7 +2082,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/pura-batuan.html",
+    "refType": "destination",
+    "refId": "pura-batuan",
     "img": "pura-batuan-temple.jpg",
     "alt": "Pura Batuan Temple, Bali",
     "w": 1200,
@@ -2051,7 +2094,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/ubud-royal-palace.html",
+    "refType": "destination",
+    "refId": "ubud-royal-palace",
     "img": "ubud-saraswati-temple.jpg",
     "alt": "Ubud Saraswati Temple",
     "w": 1200,
@@ -2062,7 +2106,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/kecak-dance.html",
+    "refType": "experience",
+    "refId": "kecak-dance",
     "img": "kecak.jpg",
     "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
     "w": 1200,
@@ -2073,7 +2118,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/ubud-market.html",
+    "refType": "destination",
+    "refId": "ubud-market",
     "img": "ubud-market-hero.jpg",
     "alt": "Ubud Traditional Market",
     "w": 1200,
@@ -2193,7 +2239,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/rafting.html",
+    "refType": "experience",
+    "refId": "rafting",
     "img": "rafting.webp",
     "alt": "A rafting crew punching through whitewater rapids",
     "w": 5609,
@@ -2204,7 +2251,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tegalalang-rice-terrace.html",
+    "refType": "destination",
+    "refId": "tegalalang-rice-terrace",
     "img": "tegalalang-rice-terrace-hero.jpg",
     "alt": "The stepped rice terraces at Tegalalang, north of Ubud",
     "w": 1200,
@@ -2215,7 +2263,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/coffee-plantation.html",
+    "refType": "destination",
+    "refId": "coffee-plantation",
     "img": "coffee-plantation-hero.jpg",
     "alt": "A working coffee and spice plantation near Ubud",
     "w": 1200,
@@ -2226,7 +2275,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tegenungan-waterfall.html",
+    "refType": "destination",
+    "refId": "tegenungan-waterfall",
     "img": "tegenungan-waterfall-hero.jpg",
     "alt": "Tegenungan waterfall dropping into its plunge pool",
     "w": 1200,
@@ -2341,7 +2391,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/tegalalang-rice-terrace.html",
+    "refType": "destination",
+    "refId": "tegalalang-rice-terrace",
     "img": "tegalalang-rice-terrace-hero.jpg",
     "alt": "Tegalalang rice terrace north of Ubud",
     "w": 1200,
@@ -2352,7 +2403,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/tirta-empul.html",
+    "refType": "destination",
+    "refId": "tirta-empul",
     "img": "tirta-empul-hero.jpg",
     "alt": "Purification pools at Tirta Empul holy water temple",
     "w": 1200,
@@ -2363,7 +2415,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/gunung-kawi.html",
+    "refType": "destination",
+    "refId": "gunung-kawi",
     "img": "gunung-kawi-hero.jpg",
     "alt": "Rock-cut shrines at Gunung Kawi temple",
     "w": 1200,
@@ -2374,7 +2427,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/goa-gajah.html",
+    "refType": "destination",
+    "refId": "goa-gajah",
     "img": "goa-gajah-hero.jpg",
     "alt": "Carved entrance of Goa Gajah, the Elephant Cave",
     "w": 1200,
@@ -2385,7 +2439,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/monkey-forest.html",
+    "refType": "destination",
+    "refId": "monkey-forest",
     "img": "monkey-forest-temples.jpg",
     "alt": "Long-tailed macaques at the Sacred Monkey Forest, Ubud",
     "w": 1200,
@@ -2500,7 +2555,8 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "link": "/attractions/ulun-danu-beratan.html",
+    "refType": "destination",
+    "refId": "ulun-danu-beratan",
     "img": "ulun-danu-beratan-hero.webp",
     "alt": "Ulun Danu Beratan temple on the shore of Lake Bratan",
     "w": 1920,
@@ -2511,7 +2567,8 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "link": "/attractions/handara-gate.html",
+    "refType": "destination",
+    "refId": "handara-gate",
     "img": "handara-gate.webp",
     "alt": "The Handara gate on the highland road at Bedugul",
     "w": 1920,

@@ -8,6 +8,7 @@ import DatePopup from './DatePopup';
 import { clashDates } from '@/lib/cart';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 // Wayan's flow (3 Sep 2026), which differs from the old site:
 //   Add to My Trip -> pick a date, add to the cart, stay on the page.
@@ -74,6 +75,8 @@ export default function BookCta({ item, perPerson = false }) {
     if (goto) window.location.href = '/my-trips.html';
     else setToast('Added to My Trips');
   };
+
+  useBodyLock(!!confirm);
 
   if (!item) return null;
 

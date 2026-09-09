@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 // Login-only, exactly as the server gate requires: opened only from a real
 // booking card in My Trips, with a booking_ref that belongs to the account.
@@ -30,6 +31,8 @@ export default function ReviewModal({ open, prefill, onClose }) {
     setError('');
     setDone(false);
   }, [open, prefill]);
+
+  useBodyLock(open);
 
   if (!mounted || !open || !prefill) return null;
 

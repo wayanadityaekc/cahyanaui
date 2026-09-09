@@ -107,7 +107,9 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
           </svg>
         )}
       </button>
-      {mounted && open && createPortal(panel, document.body)}
+      {/* Always portal-mounted once mounted (not gated on `open`) so the panel has a
+          "closed" frame to transition FROM - see Select.jsx for the same fix. */}
+      {mounted && createPortal(panel, document.body)}
       {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}
     </div>
   );

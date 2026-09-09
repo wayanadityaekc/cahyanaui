@@ -117,16 +117,11 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   );
 
   return (
-    // "hero__search"/"is-open" kept as inert marker classes (no styling left on
-    // them) - required by `.home .hero__inner:has(.hero__search.is-open)` in
-    // style.css (z-index bump on the shared .hero__inner while the mobile sheet
-    // is open), which is left untouched since .hero__inner is a shared primitive
-    // out of scope for this issue. All actual visuals below are Tailwind utilities.
     <div
-      className={`hero__search${sheetOpen ? ' is-open' : ''} flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
+      className={`flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
         animate-[heroCardIn_0.5s_var(--ease)_backwards] motion-reduce:animate-none
         max-[992px]:fixed max-[992px]:left-0 max-[992px]:right-0 max-[992px]:bottom-0 max-[992px]:z-[45] max-[992px]:w-auto
-        max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
+        max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:[scrollbar-width:none] max-[992px]:[&::-webkit-scrollbar]:hidden max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
         max-[992px]:pt-[1.9rem] max-[992px]:animate-none
         max-[992px]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]
         max-[992px]:shadow-[0_-12px_48px_rgba(26,26,26,0.28)]
@@ -172,7 +167,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             <path d="M6 9l6 6 6-6" />
           </svg>
         </button>
-        {mounted && isMobile && open && createPortal(panel, document.body)}
+        {/* Portal-mounted once mobile+mounted (not gated on `open`) so the sheet has a
+            "closed" frame to transition FROM instead of popping in already-open. */}
+        {mounted && isMobile && createPortal(panel, document.body)}
         {mounted && isMobile && <Overlay open={open} onClose={() => setOpen(false)} />}
         {(!isMobile || !mounted) && panel}
       </div>
@@ -238,7 +235,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <button
         type="button"
         className="w-full mt-[0.4rem] bg-cta text-white border-none rounded-pill p-[0.9rem] font-body font-semibold text-strong cursor-pointer
-          [transition:transform_var(--dur)_ease,box-shadow_var(--dur)_ease] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
+          [transition:transform_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
         onClick={go}
       >
         Explore

@@ -597,16 +597,6 @@ body.hs-locked .wa-float {
     scroll-padding-left: 1rem;
   }
 }
-@media (max-width: 768px) {
-  .reviews .reviews-cards {
-    max-width: none; /* base-nya max-width:100% -> ngepatok lebar, sisa margin di kanan */
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    scroll-padding-left: 1rem;
-  }
-}
 /* ============================================================================
    LAYOUT ENGINE — .experience__grid* (SENGAJA tetap CSS scoped, BUKAN Tailwind).
    Keputusan Wayan (hybrid, standar industri): komponen = utility Tailwind, tapi
@@ -640,29 +630,22 @@ body.hs-locked .wa-float {
 } /* photo band = pemisah sendiri, buang divider gold di atasnya */
 
 /* Route & Transfer accordion */
-/* Guest reviews */
-.reviews {
-  padding: var(--space-6) var(--space-3);
-}
+/* Guest reviews - .reviews own padding, .reviews__head, .reviews__seeall,
+   .review-cta own styling -> Tailwind utilities in app/(marketing)/all-reviews/page.jsx
+   + components/reviews/ReviewCtaBand.jsx (TW-A5, #326). "reviews"/"review-cta" kept
+   as inert marker classNames (see JSX comments) - needed by the shared
+   `.reviews .section__title` rule below (out of scope, B-FINAL) and the
+   check-detail.js CI marker, respectively.
+   .reviews__empty CSS kept - still used (hidden data holder) by
+   components/cards/DriverCard.jsx, out of scope for this issue.
+   .reviews-strip/.review/.reviews__seeall (dead - zero remaining consumers,
+   ReviewsStrip/ReviewCard/GuestReviews already fully Tailwind) removed outright. */
 .reviews__empty {
   padding: 2.5rem 1.5rem;
   text-align: center;
   border: 1px dashed #d8d2c4;
   border-radius: var(--r-md);
   color: var(--color-muted);
-}
-.reviews-strip .reviews__empty {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.1rem;
-}
-.review {
-  padding: 1.5rem;
-  border-radius: var(--r-md);
-  background-color: #fff;
-  box-shadow: var(--shadow-md);
 }
 
 /* Review form (diisi tamu) */
@@ -768,13 +751,6 @@ section.faq::before,
    nowrap biar nggak kepotong di tengah; desktop = 1 baris + titik pemisah,
    HP = tumpuk rapi per baris. */
 
-/* Tombol "Leave a review" di paling bawah halaman bookable (initReviewCta) */
-.review-cta {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-3);
-  text-align: center;
-}
 /* Checkmark khusus "Added to itinerary" = emas (booking success tetap ijo) */
 
 /* ---------- Subpage styles ---------- */
@@ -2883,17 +2859,6 @@ strong {
 
 /* --- Reviews: compact 3-across strip --- */
 
-.reviews__seeall {
-  display: inline-block;
-  margin-top: 1.3rem;
-  color: var(--color-gold-d);
-  font-weight: 500;
-  text-decoration: none;
-}
-.reviews__seeall:hover {
-  text-decoration: underline;
-}
-
 /* --- Homepage section separation: no gold divider lines; use bg + padding --- */
 .home section + section::before,
 .home section.faq::before,
@@ -3597,23 +3562,6 @@ strong {
   .aphead .zone-filter { justify-content: flex-start; }
 }
 
-/* Header row reviews: judul kiri + link kanan */
-.reviews__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  max-width: 1100px; /* ngunci ke lebar reviews-strip */
-  margin: 0 auto 1.6rem;
-  padding-bottom: 0.8rem;
-}
-.reviews__head .section__title {
-  margin-bottom: 0;
-}
-.reviews__head .reviews__seeall {
-  margin-top: 0;
-}
 
 @media (max-width: 768px) {
   /* HP (Opsi A): judul halaman disembunyiin (hero udah jadi judul) —

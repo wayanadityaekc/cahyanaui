@@ -23,9 +23,14 @@ export default function AllReviews() {
         </div>
       </section>
 
-      <section className="reviews" id="all-reviews">
-        <div className="reviews__head">
-          <h2 className="section__title">All Reviews</h2>
+      {/* "reviews" kept as an inert marker className (no styling left on it) -
+          needed by the shared `.reviews .section__title` rule in style.css
+          (left-aligned heading + underline, out of scope: .section__title is
+          a shared primitive reserved for B-FINAL). Own layout below (padding,
+          header row) is Tailwind utilities (TW-A5, #326). */}
+      <section className="reviews py-16 px-6" id="all-reviews">
+        <div className="flex justify-between items-end gap-6 flex-wrap max-w-[1100px] mx-auto mb-[1.6rem] pb-[0.8rem]">
+          <h2 className="section__title !mb-0">All Reviews</h2>
           <ReviewCta />
         </div>
         <ReviewsStrip />

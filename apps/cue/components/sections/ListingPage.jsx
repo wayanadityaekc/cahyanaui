@@ -4,6 +4,20 @@ import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
 
+// Tailwind-native (TW-A12, #333): .closing-band* -> utilities. `closing.buttons[].cls`
+// in content/shared/listings.js still holds legacy-looking BEM strings
+// ("closing-band__btn(--primary)?") - left untouched there (it's content data, not
+// this component's job to rewrite) and read here only as a variant flag.
+// py-9 = var(--section-gap) (36px, NOT the old rule's own 3rem/48px - that was
+// already losing to the later, same-specificity global --section-gap rule, same
+// gotcha as .arow in #328).
+const CLOSING_BTN_BASE =
+  'inline-block py-[0.8rem] px-[1.4rem] rounded-pill font-body font-semibold no-underline border transition-colors duration-200 ease-in-out';
+const CLOSING_BTN = {
+  primary: `${CLOSING_BTN_BASE} bg-cta border-cta text-white hover:bg-cta-d hover:border-cta-d`,
+  default: `${CLOSING_BTN_BASE} bg-white border-green text-green hover:bg-green hover:text-white`,
+};
+
 function SearchIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -203,11 +217,11 @@ export default function ListingPage({ data }) {
       )}
 
       {closing && (
-        <section className="closing-band">
-          <p className="closing-band__text">{closing.text}</p>
-          <div className="closing-band__actions">
+        <section className="text-center py-9 px-6 bg-cream">
+          <p className="mx-auto mb-[1.3rem] max-w-[640px] text-green">{closing.text}</p>
+          <div className="flex gap-[0.8rem] justify-center flex-wrap">
             {closing.buttons.map((b) => (
-              <a href={b.href} className={b.cls} key={b.href}>{b.text}</a>
+              <a href={b.href} className={b.cls.includes('--primary') ? CLOSING_BTN.primary : CLOSING_BTN.default} key={b.href}>{b.text}</a>
             ))}
           </div>
         </section>

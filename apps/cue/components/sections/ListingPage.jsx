@@ -148,7 +148,7 @@ export default function ListingPage({ data }) {
       </section>
 
       <section className="experience experience--alt" id={sectionId}>
-        <div className="lhead">
+        <div className="max-w-[1200px] mx-auto mb-[1.6rem] pt-2 text-center max-[768px]:hidden">
           <h2 className={`${SECTION_TITLE} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>
 

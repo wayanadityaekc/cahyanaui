@@ -18,6 +18,17 @@ const TABS = [
 
 const flat = (key) => (LISTINGS[key] ? LISTINGS[key].cats : []).flatMap((c) => c.cards || []);
 
+// .aphead + .zone-filter/.zone-chip (B-FINAL). Only consumer is this component, so
+// the aphead-context zone-filter override (justify-center, max-w-none, my-0) is baked
+// straight into the effective utility string. zone-chip is a <button>: bg-transparent
+// kills UA buttonface; [border:none] then [border-bottom:...] mirrors the old two-decl
+// border reset. Active state = full string swap (no is-active) to avoid utility order
+// clashes. Dead (dropped): .lhead .zone-filter + .lhead::after (no zone-filter in lhead).
+const APHEAD = 'max-w-[1200px] mx-auto mb-[1.6rem] pt-28 px-[var(--container-x)] text-center max-[768px]:pt-[5.5rem]';
+const ZFILTER = 'flex flex-nowrap justify-center gap-[1.6rem] max-w-none mx-auto my-0 border-b border-b-line overflow-x-auto overflow-y-hidden [touch-action:pan-x] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:justify-start max-[768px]:gap-[1.4rem] max-[768px]:px-4';
+const ZC = 'inline-block font-body text-[length:var(--fs-small)] font-medium text-muted bg-transparent [border-top:none] [border-left:none] [border-right:none] [border-bottom:2px_solid_transparent] py-[0.6rem] px-[0.15rem] mb-[-1px] whitespace-nowrap cursor-pointer no-underline [transition:color_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease] hover:text-green';
+const ZC_ON = 'inline-block font-body text-[length:var(--fs-small)] font-semibold text-green bg-transparent [border-top:none] [border-left:none] [border-right:none] [border-bottom:2px_solid_var(--color-gold)] py-[0.6rem] px-[0.15rem] mb-[-1px] whitespace-nowrap cursor-pointer no-underline [transition:color_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease] hover:text-green';
+
 export default function AllPrograms() {
   const [tab, setTab] = useState('tour');
   const isForm = tab === 'charter' || tab === 'transfer';
@@ -25,16 +36,16 @@ export default function AllPrograms() {
   return (
     <div className="tourprog">
       <section className="experience experience--alt">
-        <div className="aphead">
+        <div className={APHEAD}>
           <h1 className={`${SECTION_TITLE} !mb-[1.4rem]`}>All Programs</h1>
-          <div className="zone-filter" role="tablist" aria-label="Program categories">
+          <div className={ZFILTER} role="tablist" aria-label="Program categories">
             {TABS.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 role="tab"
                 aria-selected={tab === t.id}
-                className={`zone-chip${tab === t.id ? ' is-active' : ''}`}
+                className={tab === t.id ? ZC_ON : ZC}
                 onClick={() => setTab(t.id)}
               >
                 {t.label}

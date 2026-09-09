@@ -679,7 +679,7 @@ section.faq::before,
    Sticky underline tab strip di kolom konten halaman tour/attraction. Klik =
    ganti panel di tempat + scroll biar strip nempel di bawah header (kerasa
    pindah halaman, tanpa reload). Semua panel di-render ke HTML (cuma di-hidden),
-   jadi SEO aman. Gaya tab = samain .zone-chip (underline). */
+   jadi SEO aman. Gaya tab = underline strip (sama pola tab kategori listing). */
 
 /* Tour stops / detail rows - foto kiri, deskripsi kanan */
 .stops {
@@ -1511,53 +1511,6 @@ strong {
   font-weight: 400;
 }
 
-/* Zone/category filter: tab garis bawah, 1 baris (geser samping di HP) */
-.zone-filter {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-end; /* tab kategori rata kanan (desktop) */
-  gap: 1.6rem;
-  max-width: 1000px;
-  margin: 0 auto 1.6rem;
-  border-bottom: 1px solid var(--line);
-  /* Strip tab cuma scroll kiri-kanan, vertikal dikunci (gesture pan-x doang) */
-  overflow-x: auto;
-  overflow-y: hidden;
-  touch-action: pan-x;
-  scrollbar-width: none;
-}
-.zone-filter::-webkit-scrollbar { display: none; }
-.zone-chip {
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-muted);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 0.6rem 0.15rem;
-  margin-bottom: -1px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
-}
-.zone-chip:hover {
-  color: var(--color-green);
-}
-.zone-chip.is-active {
-  font-weight: 600;
-  color: var(--color-green);
-  border-bottom-color: var(--color-gold);
-}
-/* HP: rata kiri + geser (biar tab pertama nggak kepotong pas overflow) */
-@media (max-width: 768px) {
-  .zone-filter {
-    justify-content: flex-start;
-    gap: 1.4rem;
-    padding: 0 1rem;
-  }
-}
-
 /* Branded loading splash (components/ui/LoadingScreen.jsx) - tampil di SETIAP
    page load (arrival) DAN pas link diklik (leaving), biar gak ada blank pas
    pindah halaman. Elemennya tetep mounted, cuma di-toggle lewat --out. */
@@ -1937,60 +1890,6 @@ strong {
   .xplore { padding: 3.2rem var(--container-x); }
   /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
   .xplore .experience__grid--home4 { gap: 0.9rem; }
-}
-
-/* Header row listing: judul kiri + zone-filter kanan sebaris.
-   STICKY di bawah navbar (Job 2) — top diukur JS (initZoneAnchors). */
-/* Judul listing = heading tengah (agak gede), TIDAK sticky. Navigasi kategori
-   pindah ke floating switcher (.ssw). */
-.lhead {
-  max-width: 1200px;
-  margin: 0 auto 1.6rem;
-  padding: 0.5rem 0 0;
-  text-align: center;
-} /* underline di tengah */
-
-/* Header All Programs - independen dari .lhead listing (yang sekarang di-hide di
-   HP & non-sticky). Judul + tab di tengah, kasih ruang atas biar gak ketutup
-   navbar fixed (halaman ini gak ada hero di atasnya). Tampil di desktop & HP. */
-.aphead { max-width: 1200px; margin: 0 auto 1.6rem; padding: 7rem var(--container-x) 0; text-align: center; }
-.aphead .zone-filter { justify-content: center; max-width: none; margin: 0 auto; }
-@media (max-width: 768px) {
-  .aphead { padding-top: 5.5rem; }
-  .aphead .zone-filter { justify-content: flex-start; }
-}
-
-
-@media (max-width: 768px) {
-  /* HP (Opsi A): judul halaman disembunyiin (hero udah jadi judul) —
-     tinggal bar tab full-width scrollable + fade kanan sebagai hint geser */
-  .lhead {
-    /* tab pindah ke floating switcher; judul sudah disembunyiin di HP -> bar
-       kosong, jadi di-hide. */
-    display: none;
-  }
-  .lhead .zone-filter {
-    width: 100%;
-    justify-content: flex-start;
-    border-bottom: 1px solid var(--line);
-    overflow-x: auto;
-  }
-  .lhead::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 44px;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
-    pointer-events: none;
-  }
-}
-
-/* zone-chip skarang <a> (bukan button) */
-.zone-chip {
-  text-decoration: none;
-  display: inline-block;
 }
 
 /* Floating section switcher (pengganti tab strip): pill di bawah-tengah,

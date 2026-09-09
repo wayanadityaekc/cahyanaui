@@ -511,10 +511,6 @@ section.faq::before,
   height: 1px;
   background: rgba(34, 32, 28, 0.4);
 }
-/* Kecuali: garis di bawah section .highlight (featured tour) tetap pendek/inset */
-.highlight + section::before {
-  width: min(1100px, 90%);
-}
 /* Jangan kasih garis di hero / booking / tepat setelah subhero
    (hero didahului navbar-placeholder -> bisa ke-target divider section) */
 .hero::before,
@@ -654,23 +650,6 @@ section.faq::before,
   .tour-layout--book .tour-layout__side {
     margin-top: 1.2rem;
   }
-}
-
-/* Featured highlight: split image / content */
-.highlight {
-  padding: 3rem 1.5rem;
-}
-/* Card highlight yang nge-link ke halaman program (dipasang initHighlightLink) */
-/* Badge di pojok kiri-atas foto */
-/* Stat strip rapi: From / Duration / (Type|Days|Capacity) dalam panel bergaris */
-/* Harga tetap gold (menang atas .highlight__meta-item span yg bikin muted) */
-.highlight__meta-item .price {
-  color: var(--color-amber);
-}
-.highlight__btn--add.added {
-  background-color: var(--color-ok);
-  border-color: var(--color-ok);
-  color: #fff;
 }
 
 /* ===== Detail page tabs (Overview / Details / Included / Reviews) =====
@@ -942,11 +921,6 @@ section.faq::before,
 }
 
 @media (max-width: 768px) {
-  /* Featured On ke tengah di HP */
-  /* Mobile: stat strip tetap 1 baris (3 kolom), padding lebih rapat + harga kebaca */
-  .highlight__meta-item .price {
-    font-size: 1.05rem;
-  }
   .stop {
     grid-template-columns: 1fr;
     gap: 1.25rem;
@@ -1350,8 +1324,7 @@ section.faq::before,
 section + section::before,
 section.faq::before,
 [id$="-placeholder"] > section::before,
-[id$="-placeholder"] + section::before,
-.highlight + section::before {
+[id$="-placeholder"] + section::before {
   content: none;
 }
 

@@ -125,12 +125,12 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <div className="hsearch__field hsearch__dd" ref={ddRef}>
         <label>
           How do you want to explore?
-          <InfoPopover>
-            <p className="binfo__lead">
+          <InfoPopover variant="hero">
+            <p className="!mb-[0.6rem] pb-[0.6rem] [border-bottom:1px_solid_#f2efe7] !font-semibold !text-green">
               Pick what you want to do, choose your dates, set how many guests and where we pick you up, then choose
               your currency. Tap Explore to see the options with real prices.
             </p>
-            <p className="binfo__note">On each program page you can choose Standard or Exclusive when you book.</p>
+            <p>On each program page you can choose Standard or Exclusive when you book.</p>
           </InfoPopover>
         </label>
         <button

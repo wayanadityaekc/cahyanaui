@@ -441,123 +441,6 @@ body {
   box-shadow: 0 0 0 3px rgba(200, 80, 70, 0.14);
 }
 /* harga diskon referral (dipasang renderPrices di card/form) */
-/* ===== Info popover "Standard vs Exclusive" (dipakai booking + search form) ===== */
-.binfo {
-  position: relative;
-  display: inline-flex;
-  vertical-align: middle;
-}
-.binfo__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--color-gold);
-  cursor: pointer;
-  border-radius: 50%;
-  transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
-}
-.binfo__btn:hover,
-.binfo__btn[aria-expanded="true"] {
-  color: var(--color-green);
-  background: rgba(34, 32, 28, 0.15);
-}
-.binfo__btn svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-}
-.binfo__pop {
-  position: absolute;
-  top: calc(100% + 9px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 60;
-  width: min(272px, 82vw);
-  padding: 0.85rem 0.9rem;
-  background: #fff;
-  border: 1px solid #ece6d8;
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-lg);
-  text-align: left;
-  text-transform: none;
-  letter-spacing: normal;
-  /* fade halus (transform dipakai buat posisi, jadi cuma opacity yg dianimasiin) */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--dur-fast) var(--ease), visibility var(--dur-fast);
-  pointer-events: none;
-}
-.binfo__pop.open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-.binfo__pop::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  margin-left: -5px;
-  width: 11px;
-  height: 11px;
-  background: #fff;
-  border-left: 1px solid #ece6d8;
-  border-top: 1px solid #ece6d8;
-  transform: rotate(45deg);
-}
-/* search form: icon di label "How do you want to explore?" -> popover di-anchor
-   ke tepi kiri field (buka ke kanan) biar gak kepotong; panah nunjuk ke icon. */
-.hsearch__dd .binfo {
-  position: static;
-}
-.hsearch__dd .binfo__pop {
-  top: 2.1rem;
-  left: 0;
-  right: auto;
-  transform: none;
-}
-.hsearch__dd .binfo__pop::before {
-  left: 242px;
-  right: auto;
-  margin-left: 0;
-}
-/* booking form: label "Price" rata kiri -> popover di-anchor ke tepi kiri kolom
-   (buka ke kanan) biar gak kepotong; panah tetap nunjuk ke icon. */
-.booking__group--price .binfo {
-  position: static;
-}
-.booking__group--price .binfo__pop {
-  top: 1.95rem;
-  left: 0;
-  right: auto;
-  transform: none;
-}
-.booking__group--price .binfo__pop::before {
-  left: 40px;
-  right: auto;
-  margin-left: 0;
-}
-.binfo__pop p {
-  margin: 0;
-  font-size: var(--fs-small);
-  line-height: 1.45;
-  font-weight: 400;
-  color: #6b6456;
-}
-/* baris pengantar "cara pakai form" di atas Standard/Exclusive */
-.binfo__pop .binfo__lead {
-  margin: 0 0 0.6rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid #f2efe7;
-  font-size: var(--fs-small);
-  line-height: 1.45;
-  font-weight: 600;
-  color: var(--color-green);
-}
 .hsearch__field {
   margin-bottom: 0.8rem;
 }
@@ -3155,12 +3038,6 @@ section.faq::before,
     visibility: visible;
     transform: translateY(0) scale(1);
     pointer-events: auto;
-  }
-}
-/* Hormati setelan "kurangi gerak" */
-@media (prefers-reduced-motion: reduce) {
-  .binfo__pop {
-    transition: none;
   }
 }
 /* Custom dropdown currency (tombol + list bendera SVG) di dropdown akun.

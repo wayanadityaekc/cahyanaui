@@ -21,13 +21,16 @@ const DIRECTIONS = [
 ];
 
 export default function AirportTransferForm() {
-  const { currency, setGuests } = useTripPrefs();
+  // Guests: bound directly to the shared TripPrefs value (no local shadow copy) -
+  // same pattern as HeroSearch's `value={guests || 2}`, so whatever the guest
+  // already picked on the homepage search shows up here pre-filled instead of
+  // an empty "Guests" placeholder (Wayan, Sep 2026).
+  const { currency, setGuests, displayGuests } = useTripPrefs();
   const pricing = usePricing();
   const { openBooking } = useBooking();
 
   const [direction, setDirection] = useState('pickup');
   const [date, setDate] = useState('');
-  const [guests, setLocalGuests] = useState('');
   const [address, setAddress] = useState('');
   const [flightNumber, setFlightNumber] = useState('');
   const [flightTime, setFlightTime] = useState('');
@@ -35,25 +38,25 @@ export default function AirportTransferForm() {
   const catalog = pricing && pricing.catalog;
   const entry = catalog ? catalog.transfers.find((t) => t.route === ROUTE) : null;
   const symbol = (catalog && catalog.symbol) || '$';
-  const cars = (parseInt(guests, 10) || 0) > 5 ? 2 : 1;
+  const cars = displayGuests > 5 ? 2 : 1;
   const total = entry ? entry.display * cars : null;
   const totalText = total == null ? '-' : symbol + total.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
-  const ready = !!(date && guests && address && flightNumber && flightTime);
+  const ready = !!(date && address && flightNumber && flightTime);
 
   const book = () => {
     if (!ready) return;
     openBooking({
       type: 'transfer',
       service: ROUTE,
-      guests: String(guests),
+      guests: String(displayGuests),
       date,
       pickupOptional: true,
       dropoffRequired: false,
       lines: [{
         type: 'transfer',
         service: ROUTE,
-        guests,
+        guests: displayGuests,
         date,
         pickup: direction === 'pickup' ? 'Ngurah Rai Airport (DPS)' : address,
         dropoff: direction === 'pickup' ? address : 'Ngurah Rai Airport (DPS)',
@@ -86,10 +89,9 @@ export default function AirportTransferForm() {
           <Select
             id="at-guests"
             label="Guests"
-            value={guests}
-            onChange={(v) => { setLocalGuests(v); setGuests(v); }}
+            value={displayGuests}
+            onChange={setGuests}
             options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
-            placeholder="Guests"
           />
         </div>
       </div>

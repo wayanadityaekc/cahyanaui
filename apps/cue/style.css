@@ -1200,29 +1200,6 @@ section.faq::before,
 .btn-book {
   text-decoration: none;
 }
-/* ===== My Trips cart page (Fase C) ===== */
-/* .mytrips / .mytrips__container / .mytrips__title -> utilities di
-   app/(account)/my-trips/page.jsx (migrasi Fase 2). Cart action buttons
-   (.mtc*, incl. the old full-width `[data-mytrips-cart] .btn-pill`) -> utilities
-   di components/trip/MyTripsCart.jsx: full-width set per-button (`w-full mt-4`),
-   empty-state CTA tetep auto-width. */
-
-/* Settings form */
-
-/* harga hasil render dari JS (currency aktif) + tiket masuk (.fee) - semua gold biar konsisten */
-.price,
-.price-cur,
-.fee {
-  color: var(--color-amber);
-  font-weight: 600;
-}
-/* Currency symbol ($, Rp, ...) sized down relative to the number, raised a touch */
-.price__sym {
-  font-size: 0.66em;
-  font-weight: 600;
-  vertical-align: 0.12em;
-  margin-right: 1px;
-}
 /* .charter__notes -> utilities in CharterSection (TW-B4 #337). */
 
 
@@ -1254,13 +1231,6 @@ section.faq::before,
 .experience__grid--slider::-webkit-scrollbar,
 .experience__grid:not(.experience__grid--auto)::-webkit-scrollbar {
   display: none;
-}
-/* Unit di sebelah harga card: "per car" (tour) atau "per person" (experience). */
-.price-unit {
-  margin-left: 0.3rem;
-  font-size: var(--fs-label);
-  font-weight: 500;
-  color: var(--color-muted);
 }
 
 /* ==================== Toggle Standard/Exclusive di booking form ==================== */
@@ -1361,18 +1331,6 @@ strong {
 }
 .home #activities{
   background-color: var(--color-cream);
-}
-
-
-/* =====================================================================
-   TOUR PROGRAMS PAGE (Steps 3 & 4) — directory layout + minimal cards
-   ===================================================================== */
-
-/* "from" price prefix (home + tour cards) */
-.price-from {
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-  font-weight: 400;
 }
 
 /* Branded loading splash (components/ui/LoadingScreen.jsx) - tampil di SETIAP

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useAccount } from '@/state/AccountProvider';
@@ -273,7 +274,7 @@ export default function MyTripsCart() {
             </p>
           </div>
           <span className={MTC_ITEM_PRICE}>
-            <span className="price-cur">{withSymbol(bookedMoney(t.price_usd, t.price_idr))}</span>
+            <span className={PRICE}>{withSymbol(bookedMoney(t.price_usd, t.price_idr))}</span>
           </span>
         </div>
 
@@ -413,7 +414,7 @@ export default function MyTripsCart() {
                     </p>
                   </div>
                   <span className={MTC_ITEM_PRICE}>
-                    <span className="price-cur">
+                    <span className={PRICE}>
                       {line ? withSymbol(format(line.display)) : '-'}
                     </span>
                   </span>
@@ -425,7 +426,7 @@ export default function MyTripsCart() {
 
           <div className={MTC_TOTAL}>
             <span className={MTC_TOTAL_LABEL}>Total</span>
-            <span className={MTC_TOTAL_VAL}><span className="price-cur">{withSymbol(totalText)}</span></span>
+            <span className={MTC_TOTAL_VAL}><span className={PRICE}>{withSymbol(totalText)}</span></span>
           </div>
 
           <button type="button" className={MTC_ADD_FULL} onClick={() => setAdding(true)}>+ Add another program</button>

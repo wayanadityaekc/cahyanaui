@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useReferral } from '@/state/ReferralProvider';
@@ -229,7 +230,7 @@ export default function ItineraryBuilder() {
 
         <section className={ITN_SUMMARY}>
           <span className={ITN_SUMMARY_LABEL}>Trip total</span>
-          <div className={ITN_SUMMARY_AMT}><span className="amount" id="itn-total"><span className="price-cur">{withSymbol(totalText)}</span></span></div>
+          <div className={ITN_SUMMARY_AMT}><span className="amount" id="itn-total"><span className={PRICE}>{withSymbol(totalText)}</span></span></div>
           <span className={ITN_SUMMARY_SUB} id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
           <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
         </section>

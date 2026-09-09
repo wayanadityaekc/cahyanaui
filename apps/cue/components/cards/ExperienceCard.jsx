@@ -1,5 +1,6 @@
 import Img from '@/components/ui/Img';
 import Price from '@/components/Price';
+import { PRICE_FROM } from '@/components/ui/priceClasses';
 import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
@@ -90,7 +91,7 @@ export default function ExperienceCard({
         {priceName && (
           <div className={FOOTER}>
             <div className={PRICE}>
-              <span className="price-from">from</span> <Price name={priceName} mode={priceMode} fallback={priceFallback} />
+              <span className={PRICE_FROM}>from</span> <Price name={priceName} mode={priceMode} fallback={priceFallback} />
             </div>
           </div>
         )}

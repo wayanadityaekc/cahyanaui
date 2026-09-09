@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PRICE } from '@/components/ui/priceClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
@@ -115,7 +116,7 @@ export default function AirportTransferForm() {
 
       <div className="flex items-baseline justify-between border-t border-line pt-4 mt-5 mb-4 text-strong font-semibold">
         <span>Total</span>
-        <span id="at-total"><span className="price-cur">{withSymbol(totalText)}</span></span>
+        <span id="at-total"><span className={PRICE}>{withSymbol(totalText)}</span></span>
       </div>
 
       <button className="btn-book" id="at-book" disabled={!ready} onClick={book}>Book This Transfer</button>

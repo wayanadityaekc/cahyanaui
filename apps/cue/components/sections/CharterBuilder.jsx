@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PRICE } from '@/components/ui/priceClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
@@ -104,7 +105,7 @@ export default function CharterBuilder() {
                 <span className="text-small text-muted mb-2">{d.sub}</span>
                 <span className="font-semibold text-amber text-[1.2rem]">
                   <span className="text-label font-normal text-muted">{d.from}</span>
-                  <span className="price">{v == null ? '' : withSymbol(fmt(v))}</span>
+                  <span className={PRICE}>{v == null ? '' : withSymbol(fmt(v))}</span>
                 </span>
               </button>
             );
@@ -140,7 +141,7 @@ export default function CharterBuilder() {
       <div className="flex items-baseline justify-between border-t border-line pt-4 mt-5 mb-4 text-strong font-semibold">
         <span>Total</span>
         <span id="ch-total">
-          <span className="price-cur">{total == null ? '-' : withSymbol(fmt(total))}</span>
+          <span className={PRICE}>{total == null ? '-' : withSymbol(fmt(total))}</span>
         </span>
       </div>
 

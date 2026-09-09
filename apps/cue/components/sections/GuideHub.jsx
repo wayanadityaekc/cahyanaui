@@ -35,14 +35,14 @@ export default function GuideHub() {
           <h1 className={SUBHERO_TITLE}>{GUIDE_HUB.title}</h1>
           <p className={SUBHERO_TEXT}>{GUIDE_HUB.text}</p>
 
-          <div className="guide-hero-search">
+          <div className="flex items-stretch max-w-[640px] mt-6 mx-auto [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white shadow-md">
             <div className={GC_NAV}>
-              <button className="guide-cat-toggle" type="button" aria-haspopup="true" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-                <svg className="gcat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <button className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden" type="button" aria-haspopup="true" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+                <svg className="w-[var(--icon-md)] h-[var(--icon-md)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
                 <span>Categories</span>
-                <svg className="hs-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg className={`w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]${open ? ' [transform:rotate(180deg)]' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </button>
@@ -55,15 +55,15 @@ export default function GuideHub() {
                 ))}
               </div>
             </div>
-            <div className="gsearch guide-hero-search__field">
-              <div className="gsearch__box flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white [box-shadow:var(--shadow-md)]">
+            <div className="relative flex-1 max-w-[560px] mt-6 mx-auto mb-0">
+              <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] min-h-[var(--field-h)] box-border [border:none] rounded-none bg-transparent [box-shadow:none]">
                 <svg className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <circle cx="11" cy="11" r="7" />
                   <path d="M21 21l-4.3-4.3" />
                 </svg>
                 <input type="text" className="flex-1 border-none border-current [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted" placeholder="Search" aria-label="Search guides" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} />
               </div>
-              <div className="gsearch__sug" role="listbox" hidden />
+              <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:0_16px_40px_rgba(31,61,43,0.14)] overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
             </div>
           </div>
         </div>

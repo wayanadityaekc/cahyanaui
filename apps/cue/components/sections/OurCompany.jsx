@@ -36,7 +36,7 @@ const C_LABEL = 'max-[992px]:flex-[1_1_auto] max-[992px]:text-center max-[992px]
 function LegalBody({ data }) {
   return (
     <section className={`${INFO_SECTION_ARTICLE} !pt-0`}>
-      <div className={`${INFO_CONTAINER_ARTICLE} guide-article`}>
+      <div className={INFO_CONTAINER_ARTICLE}>
         <h1 className={C_HEADING}>{data.title}</h1>
         <div>
           <Prose blocks={data.body} headingVariant="company" />

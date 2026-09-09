@@ -718,19 +718,6 @@ section + section::before,
 .gsearch__sug[hidden] {
   display: none;
 }
-/* kartu guide: foto lebih landscape + label kategori emas */
-
-/* Halaman artikel guide */
-.guide-article {
-  max-width: var(--container-read);
-  text-align: left;
-}
-.guide-article p {
-  line-height: var(--lh-body);
-  margin: 0 0 1rem;
-  color: var(--color-ink);
-  font-size: var(--fs-body);
-}
 /* "You might also like" / "See our tours" cards (guide-more, pakai --home4):
    ikutin pola homepage — DESKTOP tampilin semua kartu (grid wrap, no slide),
    MOBILE geser (slider default --home4 + initTourSlider). Agu 2026, Wayan. */

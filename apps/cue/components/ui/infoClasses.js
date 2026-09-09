@@ -14,8 +14,12 @@ export const INFO_CARD =
   '[box-shadow:0_10px_30px_rgba(31,61,43,0.06)] max-[576px]:p-[1.75rem_1.25rem] ' +
   '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
 
-// .info__container base (guide-article variant keeps its own .guide-article class for width).
-export const INFO_CONTAINER_ARTICLE = 'mx-auto';
+// .info__container article variant = the .guide-article reading column (narrow read
+// width, left-aligned, bare <p> styling for Prose 'para' blocks). Merged in so the
+// separate .guide-article class isn't needed on the 3 consumers.
+export const INFO_CONTAINER_ARTICLE =
+  'mx-auto max-w-[var(--container-read)] text-left ' +
+  '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 
 // .info__facts — spec strip (4-col desktop / 2-col mobile), 1px divider lines via bg+gap.
 export const INFO_FACTS =

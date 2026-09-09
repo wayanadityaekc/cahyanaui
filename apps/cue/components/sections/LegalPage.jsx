@@ -14,7 +14,7 @@ export default function LegalPage({ data }) {
         </div>
       </section>
       <section className={INFO_SECTION_ARTICLE}>
-        <div className={`${INFO_CONTAINER_ARTICLE} guide-article`}>
+        <div className={INFO_CONTAINER_ARTICLE}>
           <Prose blocks={data.body} />
         </div>
       </section>

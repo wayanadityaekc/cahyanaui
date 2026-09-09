@@ -378,14 +378,6 @@ body.hs-locked {
   margin-top: 0.5rem;
 }
 
-.experience {
-  padding: 3rem 1.5rem;
-  background-color: #fff;
-}
-.experience--alt {
-  background-color: #fff;
-}
-
 /* Review form (diisi tamu) */
 
 /* Review display cards (icon orang) - gaya beda dari card halaman */
@@ -1023,21 +1015,6 @@ strong {
 .home > #reviews-placeholder { margin-top: var(--section-gap); margin-bottom: 0; }
 .home .xplore,
 .home .guide-home { padding-top: 0; padding-bottom: 0; }
-
-/* Why Us - cream band, 4 icon columns */
-
-/* Charter promo - satu panel putih, kartu jam yang bisa di-slide (initTourSlider) */
-
-/* Mobile */
-
-/* ---- Ritme section SEMUA halaman selaras homepage (Sep 2026, Wayan) ----
-   Snap padding vertikal section konten ke --section-gap (36px) di seluruh web.
-   Semua section konten (listing/detail/legal/guide/about) dulu 48px, disamain ke
-   36px biar jarak antar-section satu ritme sama homepage. */
-.experience {
-  padding-top: var(--section-gap);
-  padding-bottom: var(--section-gap);
-}
 /* .tourprog wrapper padding-bottom (ruang bawah biar kartu terakhir gak ketutup
    bar floating) -> pb-20 utility on the wrappers. `.tourprog` class stays as a hook
    for the mobile .tourprog .tour-hero__image gradient above (tour-hero family). */

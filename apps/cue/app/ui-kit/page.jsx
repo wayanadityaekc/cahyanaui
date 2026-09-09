@@ -18,7 +18,7 @@ export const metadata = { title: 'UI kit', robots: { index: false, follow: false
 export default function Kit() {
   return (
     <div className="tourprog pb-20">
-      <section className="experience">
+      <section className="bg-white py-[var(--section-gap)] px-6">
         <div className={CATSEC}>
           <h2 className={SECTION_TITLE}>Buttons</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>

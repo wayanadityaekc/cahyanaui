@@ -35,7 +35,7 @@ export default function AllPrograms() {
 
   return (
     <div className="tourprog pb-20">
-      <section className="experience experience--alt">
+      <section className="bg-white py-[var(--section-gap)] px-6">
         <div className={APHEAD}>
           <h1 className={`${SECTION_TITLE} !mb-[1.4rem]`}>All Programs</h1>
           <div className={ZFILTER} role="tablist" aria-label="Program categories">

@@ -2375,50 +2375,6 @@ strong {
     background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
     pointer-events: none;
   }
-  /* section kategori: rapetin & kecilin judul di HP */
-  .catsec {
-    padding: 1.8rem 0 0.8rem;
-  }
-  .catsec .experience__grid--home4 {
-    margin-top: 1.1rem;
-  }
-}
-
-/* ============================================================
-   CATEGORY SECTIONS (listing pages) — tab filter diganti section
-   bertumpuk per kategori: judul + grid (deskripsi dihapus, Sep 2026 -
-   Wayan minta section lebih ringkas).
-   Pemisah antar section = garis emas inset (standar divider).
-   Tab .zone-chip skarang jadi anchor link (sticky+scrollspy = Job 2).
-   ============================================================ */
-.catsec {
-  position: relative;
-  /* catsec nested di dalam .experience (padding-x udah 24px), jadi JANGAN nambah
-     padding-x lagi (nanti numpuk -> 48px di HP). Biar tepi konten sejajar sama
-     container wide lain (homepage/guide = 144px desktop / 24px HP), max-width-nya
-     dikurangi 2x --container-x: grid-nya jadi persis selebar grid homepage (1152). */
-  max-width: calc(var(--container) - 2 * var(--container-x));
-  margin: 0 auto;
-  padding: var(--space-5) 0 var(--space-2);
-  text-align: left;
-  scroll-margin-top: 120px; /* anchor jump: clear navbar + tripbar + tab sticky nanti */
-}
-/* Judul per-kategori (.catsec__title) DIHAPUS (Wayan): navigasi antar kategori
-   cukup lewat tab (.zone-chip) di .lhead, judulnya redundant. */
-.catsec .experience__grid--home4 {
-  margin-top: 1.6rem;
-  /* Listing page (tour/activities/destinations): tanpa slider di SEMUA breakpoint -
-     grid wrap (4-an per baris desktop, row baru kalau >4; HP jadi scroll ke bawah biasa).
-     auto-fill (bukan auto-fit): kategori yang kartunya kurang dari 1 baris penuh
-     (mis. "South & East Bali" cuma 3 kartu) sisa kolomnya kosong, BUKAN kartu
-     yang ada ke-stretch ngisi lebar penuh - Sep 2026, Wayan. */
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  overflow: visible;
-  touch-action: auto;
-}
-.catsec .experience__grid--home4 > * {
-  flex: none;
 }
 
 /* zone-chip skarang <a> (bukan button) */
@@ -2502,22 +2458,3 @@ strong {
 }
 /* ruang bawah biar kartu terakhir gak ketutup bar floating */
 .tourprog{padding-bottom:5rem;}
-/* anchor scroll (switcher mobile) clear navbar + tripbar */
-
-.lrow-list{display:flex;flex-direction:column;gap:14px;}
-/* Kartu = border putih tipis di sekeliling foto (foto ke-inset lewat padding
-   kartu). Foto portrait biar kartu lebih tinggi. */
-
-/* Meta = daftar baris ber-ikon (stops / durasi / private driver) */
-
-/* Desktop: kartu di-"flip" jadi vertikal - foto di atas (full width), panel putih
-   (judul/meta/badge/harga) di bawah. Markup sama persis kayak mobile, cuma arah
-   flex + posisi yang beda. Mobile TETAP horizontal (foto kiri, putih kanan). */
-@media (min-width:769px){
-  .lrow-list{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
-
-  
-  
-  /* meta jadi satu baris sejajar (ikon + teks), bukan stack ke bawah */
-  
-}

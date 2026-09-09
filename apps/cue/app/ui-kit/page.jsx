@@ -1,4 +1,5 @@
 import ExperienceCard from '@/components/cards/ExperienceCard';
+import { CATSEC } from '@/components/ui/listingClasses';
 import Slider from '@/components/ui/Slider';
 import Button from '@/components/ui/Button';
 import BookingForm from '@/components/booking/BookingForm';
@@ -16,7 +17,7 @@ export default function Kit() {
   return (
     <div className="tourprog">
       <section className="experience">
-        <div className="catsec">
+        <div className={CATSEC}>
           <h2 className="section__title">Buttons</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
             <Button variant="primary">Book Now</Button>

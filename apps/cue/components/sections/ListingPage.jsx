@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
+import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 
 // Tailwind-native (TW-A12, #333): .closing-band* -> utilities. `closing.buttons[].cls`
 // in content/shared/listings.js still holds legacy-looking BEM strings
@@ -169,8 +170,8 @@ export default function ListingPage({ data }) {
         )}
         {showStickyNav && <SectionSwitcher zones={chips} />}
 
-        <section className="catsec">
-          <div className="lrow-list">
+        <section className={CATSEC}>
+          <div className={LROW_LIST}>
             {shownCards.map(({ card, catId, anchor }) => {
               const dim = !q && zone !== 'all' && catId !== zone;
               return (

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import ListingRow from '@/components/cards/ListingRow';
 import CharterSection from '@/components/sections/CharterSection';
 import TransferSection from '@/components/sections/TransferSection';
@@ -44,8 +45,8 @@ export default function AllPrograms() {
         {tab === 'charter' && <CharterSection />}
         {tab === 'transfer' && <TransferSection />}
         {!isForm && (
-          <section className="catsec">
-            <div className="lrow-list">
+          <section className={CATSEC}>
+            <div className={LROW_LIST}>
               {flat(tab).map((c) => (
                 <ListingRow key={(c.href || '') + c.name} {...c} />
               ))}

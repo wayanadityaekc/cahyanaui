@@ -19,12 +19,9 @@ export default function HeroSlider({ slides = [] }) {
   const count = Math.min(DOT_MAX, total);
   const start = total > DOT_MAX ? Math.min(Math.max(cur - 2, 0), total - DOT_MAX) : 0;
 
-  // Tailwind-native (migrasi Fase 2 + TW-A11 #332): .hero-slider* -> utilities.
-  // `.tour-hero__image` own sizing (min-h/bg) now also inlined here directly -
-  // its shared CSS rule (style.css) was removed as part of #332, since this is
-  // the OTHER place (besides AttractionPage/TourPage/ListingPage) that carries
-  // the "tour-hero__image" marker className. `.hero-slider__dots` (dihitung
-  // check-detail) dibiarin sbg hook. Fade antar-slide via transition opacity 0.5s.
+  // Tailwind-native (B-FINAL): .hero-slider* + the hero image sizing (min-h/bg) are all
+  // utilities; no tour-hero marker classes. `.hero-slider__dots` stays as a hook (counted
+  // by check-detail). Fade between slides via transition opacity 0.5s.
   const ARROW =
     'w-[30px] h-[30px] flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.3)] p-0 text-white text-[1.25rem] leading-none cursor-pointer hover:bg-[rgba(0,0,0,0.5)]';
   const dotCls = (idx, j) => {
@@ -36,7 +33,7 @@ export default function HeroSlider({ slides = [] }) {
   };
   return (
     <div
-      className="tour-hero__image min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 relative overflow-hidden touch-pan-y"
+      className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 relative overflow-hidden touch-pan-y"
       onTouchStart={(e) => {
         touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }}

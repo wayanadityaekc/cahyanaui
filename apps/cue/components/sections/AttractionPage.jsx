@@ -16,22 +16,17 @@ export default function AttractionPage({ data }) {
   return (
     <>
       <JsonLd page={data.__page} />
-      {/* "tour-hero"/"tour-hero__image"/"tour-hero__body" kept as inert marker
-          classNames (own styling below is Tailwind utilities) - needed by rules
-          left untouched in style.css: `.tour-hero + .tour-layout--book` (sibling
-          selector), `.tourprog .tour-hero__image::after` (ListingPage-only mobile
-          gradient), and `.tour-hero__body .subhero__title` (margin-bottom on the
-          shared H1 tier, out of scope). */}
-      <section className="tour-hero min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[6.5rem]">
+      {/* Split hero (photo + white body). Fully Tailwind now; no tour-hero marker classes. */}
+      <section className="min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[6.5rem]">
         {data.heroSlides && data.heroSlides.length > 1 ? (
           <HeroSlider slides={data.heroSlides} />
         ) : (
           <div
-            className="tour-hero__image min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0"
+            className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0"
             style={{ backgroundImage: `url(/assets/images/${data.heroBg})` }}
           />
         )}
-        <div className="tour-hero__body relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
+        <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
           <h1 className={`${SUBHERO_TITLE} mb-3`}>{data.title}</h1>

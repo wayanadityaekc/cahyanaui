@@ -18,12 +18,10 @@ export default function Hero() {
   }, [sheetOpen]);
 
   return (
-    // "hero" kept as an inert marker class (no styling left on it) - required by
-    // shared selectors elsewhere in style.css that key off its presence:
-    // `.home > section:not(.hero)` (section-gap spacing) and `.hero::before { content:none }`
-    // (divider-exclusion list). Actual visuals below are Tailwind utilities.
+    // Homepage hero. No marker class needed anymore: the section-gap engine keys off
+    // :first-of-type (this is the first <section> child) and the old divider is gone.
     <section
-      className="hero relative flex items-center min-h-[88vh] pt-28 px-6 pb-12 bg-green
+      className="relative flex items-center min-h-[88vh] pt-28 px-6 pb-12 bg-green
         min-[993px]:min-h-[92vh] min-[993px]:pt-36 min-[993px]:pb-20
         max-[992px]:bg-[#12100c] max-[992px]:min-h-[58vh] max-[992px]:pb-8
         after:content-[''] after:absolute after:inset-0 after:z-0 after:bg-cover after:[background-position:center_top]
@@ -32,11 +30,8 @@ export default function Hero() {
         max-[992px]:after:bg-[image:linear-gradient(rgba(0,0,0,0.18),rgba(0,0,0,0.3)_45%,rgba(0,0,0,0.6)),url(/assets/images/ubud-saraswati-temple-hero-mobile.webp)]"
       id="hero"
     >
-      {/* hero__inner/hero__content/hero__title -> utilities (B-FINAL). These turned out
-          NOT to be shared: no subhero contains a .hero__inner (confirmed in built HTML),
-          so this is homepage-only. The mobile sheet-open z-bump (was
-          .home .hero__inner:has(.hero__search.is-open){z-index:46}) is conditioned on
-          the sheetOpen state instead. */}
+      {/* Homepage-only hero inner (no .hero__inner marker; the mobile sheet-open z-bump
+          is conditioned on the sheetOpen state). */}
       <div className={`relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch${sheetOpen ? ' max-[992px]:z-[46]' : ''}`}>
         <div className="flex-1 min-w-0 text-white max-[992px]:text-center">
           <h1 className="font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em] animate-[heroTextIn_0.6s_var(--ease)_backwards] [animation-delay:0.08s] motion-reduce:animate-none">Your Private Bali Trip Planner with a Driver</h1>
@@ -60,9 +55,9 @@ export default function Hero() {
           <HeroSearch sheetOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
         </div>
 
-        {/* "hero-sheet-ov" kept as an inert marker; styling below is Tailwind-only. */}
+        {/* Mobile scrim behind the plan-your-trip sheet; visibility driven by sheetOpen. */}
         <div
-          className={`hero-sheet-ov${sheetOpen ? ' is-open' : ''} max-[992px]:fixed max-[992px]:inset-0 max-[992px]:z-[44]
+          className={`max-[992px]:fixed max-[992px]:inset-0 max-[992px]:z-[44]
             max-[992px]:bg-[rgba(26,26,26,0.42)] max-[992px]:[transition:opacity_var(--dur)_var(--ease),visibility_var(--dur)]
             ${sheetOpen ? 'max-[992px]:opacity-100 max-[992px]:visible' : 'max-[992px]:opacity-0 max-[992px]:invisible'}`}
           onClick={() => setSheetOpen(false)}

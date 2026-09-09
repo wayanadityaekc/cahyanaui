@@ -30,20 +30,6 @@ export default function Page() {
         </p>
         <ItineraryBuilder />
       </section>
-
-      <div className="modal" id="itn-pick-modal">
-        <div className="modal__box modal__box--sm">
-          <button className="modal__close" aria-label="Close">&times;</button>
-          <h3 className="modal__title">Add to your trip</h3>
-          <p className="modal__sub">Pick a category to add to your trip.</p>
-          <div className="pick-cats">
-            <a href="/tour.html" className="pick-cat">Tour Programs</a>
-            <a href="/transfer.html" className="pick-cat">Transfers</a>
-            <a href="/charter.html" className="pick-cat">Private Car Charter</a>
-            <a href="/activities.html" className="pick-cat">Activities &amp; Performances</a>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

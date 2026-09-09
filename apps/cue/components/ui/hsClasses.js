@@ -67,9 +67,11 @@ export const panelPopup = (open) =>
 export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
 export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-white text-green text-[1.2rem] leading-none cursor-pointer';
-// No visible scroll-button/scrollbar chrome (Sep 2026, Wayan) - scrolls exactly the
-// same via wheel/touch/drag, only the browser's own scrollbar UI is hidden.
-export const PANEL_BODY = 'max-h-none overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden flex-[1_1_auto]';
+// Scrollbar disembunyiin (Wayan) - dulu keliatan pas opsi kepanjangan buat area
+// popup (Guests/Pickup area di navbar, dst); tetep bisa di-scroll (touch/drag),
+// cuma track/thumb-nya gak digambar. Pola sama kayak slider (`[scrollbar-width:none]
+// [&::-webkit-scrollbar]:hidden`, lihat Modal.jsx/gridClasses.js).
+export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
 // .hs-opt (+ .bk-opt padding 12/16 + .is-sel + hover + divider antar-opt). Selected TIDAK
 // berubah pas hover (specificity is-sel > :hover di asli), jadi bg-nya di cabang.

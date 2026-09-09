@@ -133,11 +133,15 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] pt-[4.5rem] max-[992px]:pt-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] pt-[var(--header-h)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
-            {/* Welcome header — sticky di atas drawer (identity + currency) */}
-            <li className="sticky top-0 z-[2] flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.2rem] px-[22px] pb-[0.8rem]">
+            {/* Welcome header — clears the fixed header (pt-[var(--header-h)] on the
+                <ul> above), then scrolls as ONE block with the rest of the drawer
+                (NOT sticky — dulu sticky top-0 bikin menu jalan DI BAWAH-nya pas
+                di-scroll, kesan kepisah; Wayan minta jadi satu). border-b di sini
+                = SATU-SATUNYA garis pembatas di drawer (lihat komentar di bawah). */}
+            <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.2rem] px-[22px] pb-[0.8rem]">
               <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="8" r="4" />
@@ -152,7 +156,7 @@ export default function Navbar() {
             </li>
 
             {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}
-            <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem] max-[992px]:border-b max-[992px]:border-line">
+            <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem]">
               <div className="flex flex-col gap-1 min-w-0">
                 <label className="text-small text-muted" htmlFor="acct-guests">Guests</label>
                 <Select
@@ -178,7 +182,7 @@ export default function Navbar() {
             </li>
 
             {/* Sign in */}
-            <li className="border-b border-line pb-4">
+            <li className="pb-4">
               <button
                 type="button"
                 className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d"
@@ -197,9 +201,11 @@ export default function Navbar() {
               </button>
             </li>
 
-            {/* Nav */}
-            <li className="border-b border-line"><a href="/" className={navLink(isActive('/'))}>Home</a></li>
-            <li className="relative border-b border-line">
+            {/* Nav — WAJIB cuma satu garis di drawer (di bawah Welcome, di atas); antar
+                link nggak dikasih border lagi, kerasa kebanyakan garis (Wayan). Spacing
+                antar-link murni dari py-3 tiap link. */}
+            <li><a href="/" className={navLink(isActive('/'))}>Home</a></li>
+            <li className="relative">
               <button
                 type="button"
                 className="block w-full py-3 text-left text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer gap-1 items-center hover:text-green"
@@ -216,12 +222,12 @@ export default function Navbar() {
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/charter.html">Charter</a></li>
               </ul>
             </li>
-            <li className="border-b border-line"><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
-            <li className="border-b border-line"><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
-            <li className="border-b border-line"><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
+            <li><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
+            <li><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
+            <li><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
 
             {/* Footer: Settings + Chat WA */}
-            <li className="mt-auto pt-4 flex flex-col gap-3 max-[992px]:border-b max-[992px]:border-line">
+            <li className="mt-auto pt-4 flex flex-col gap-3">
               <a href="/settings.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold gap-2.5 items-center hover:text-green max-[992px]:hover:text-gold-d">
                 <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                   <circle cx="12" cy="12" r="3" />
@@ -229,7 +235,11 @@ export default function Navbar() {
                 </svg>
                 Settings
               </a>
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold h-[2.5rem] border-0 bg-cta rounded-pill gap-2 items-center justify-center transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d">
+              {/* Bug lama: `block` + `items-center justify-center` itu no-op tanpa
+                  `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
+                  hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white
+                  (icon currentColor ikut putih, samain gaya sama tombol Sign in). */}
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d">
                 <svg className="w-[18px] h-[18px] flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z" />
                 </svg>

@@ -137,7 +137,7 @@ export default function Navbar() {
             id="nav-menu"
           >
             {/* Welcome header — sticky di atas drawer (identity + currency) */}
-            <li className="sticky top-0 z-[2] flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.2rem] px-[22px] pb-[0.8rem] [&_.acct\_\_cur]:ml-auto [&_.acct\_\_cur]:flex-none">
+            <li className="sticky top-0 z-[2] flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.2rem] px-[22px] pb-[0.8rem]">
               <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="8" r="4" />
@@ -148,7 +148,7 @@ export default function Navbar() {
                 <b className="text-strong font-semibold text-gold leading-[1.25]"><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
                 <span className="text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account ? account.email : 'Plan your Bali trip'}</span>
               </span>
-              <CurrencyPicker />
+              <CurrencyPicker variant="navbar" />
             </li>
 
             {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}

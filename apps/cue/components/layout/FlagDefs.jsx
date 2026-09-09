@@ -1,6 +1,6 @@
 export default function FlagDefs() {
   return (
-    <svg className="acct__flagdefs" aria-hidden="true" width="0" height="0">
+    <svg className="absolute w-0 h-0" aria-hidden="true" width="0" height="0">
       <defs>
         <symbol id="flag-usd" viewBox="0 0 60 40">
           <rect width="60" height="40" fill="#b22234" />

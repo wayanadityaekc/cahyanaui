@@ -221,7 +221,6 @@ body {
 
 /* ===== Hamburger drawer: welcome + trip + nav (Sep 2026, Opsi A revisi) ===== */
 /* Welcome header - sticky di atas drawer (identity + currency) */
-.navbar__acct .acct__cur { margin-left: auto; flex: none; }
 
 /* Guests + Stay area = 2 kolom, di atas tombol sign in */
 
@@ -367,20 +366,6 @@ body {
 }
 /* Native select (Guests/Pickup) disamain look-nya sama .hs-control: chevron custom,
    tinggi & border seragam. Native dropdown pas dibuka tetep dipakai (UX HP paling enak). */
-/* Currency di dalam search form: bikin tombol dropdown seukuran field lain */
-.hsearch__cur .acct__curbtn {
-  padding: 0 0.85rem;
-  height: var(--field-h);
-  border-color: var(--line, #e7e4dd);
-  border-radius: var(--r-md);
-  font-weight: 400;
-}
-.hsearch__cur .acct__curbtn:hover {
-  border-color: var(--color-gold);
-}
-.hsearch__cur .acct__curlist {
-  border-radius: var(--r-md);
-}
 /* ===== Referral field di search form (ganti field tanggal) ===== */
 .hsearch__refrow {
   display: flex;
@@ -3042,90 +3027,6 @@ section.faq::before,
 }
 /* Custom dropdown currency (tombol + list bendera SVG) di dropdown akun.
    Pakai custom (bukan <select>) karena <select> native gak bisa nampilin flag di opsi. */
-.acct__flagdefs {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-.acct__cur {
-  position: relative;
-}
-.acct__curbtn {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  width: 100%;
-  padding: 0.5rem 0.65rem;
-  border: 1px solid #d8d2c4;
-  border-radius: var(--r-pill);
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: var(--fs-field);
-  font-weight: 600;
-  color: var(--color-green);
-  cursor: pointer;
-}
-.acct__curcode {
-  flex: 1 1 auto;
-  text-align: left;
-}
-.acct__curcaret {
-  width: 14px;
-  height: 14px;
-  color: var(--color-muted);
-  flex: 0 0 auto;
-  transition: transform var(--dur-fast) ease;
-}
-.acct__curbtn[aria-expanded="true"] .acct__curcaret {
-  transform: rotate(180deg);
-}
-.acct__curlist {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: 0.25rem 0 0;
-  padding: 0.25rem;
-  list-style: none;
-  background: #fff;
-  border: 1px solid #e4dcc8;
-  border-radius: var(--r-sm);
-  box-shadow: 0 10px 24px rgba(31, 61, 43, 0.16);
-  z-index: 10;
-}
-.acct__curlist[hidden] {
-  display: none;
-}
-.acct__curopt {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.4rem;
-  border-radius: var(--r-sm);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-green);
-  cursor: pointer;
-}
-.acct__curopt:hover {
-  background: var(--color-cream);
-}
-.acct__curopt.is-active {
-  background: rgba(34, 32, 28, 0.16);
-}
-.acct__flag {
-  display: inline-block;
-  width: 20px;
-  height: 14px;
-  border-radius: 2px;
-  overflow: hidden;
-  flex: 0 0 auto;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
-}
-.acct__flag svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 
 /* Titik hijau: ada booking mendatang (di ikon akun + hamburger) */
 

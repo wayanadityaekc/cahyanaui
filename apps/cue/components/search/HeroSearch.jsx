@@ -194,7 +194,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <div className="hsearch__field hsearch__cur">
         <label>Show prices in</label>
         <FlagDefs />
-        <CurrencyPicker />
+        <CurrencyPicker variant="hero" />
       </div>
 
       <button type="button" className="hsearch__go" onClick={go}>Explore</button>

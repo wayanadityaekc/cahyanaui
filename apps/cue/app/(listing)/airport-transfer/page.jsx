@@ -1,6 +1,7 @@
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
 import JsonLd from '@/components/JsonLd';
 import { AIRPORT } from '@/content/shared/airport';
+import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
 
 export const metadata = {
   title: 'Bali Airport Transfer Booking | Flight Details Form',
@@ -13,10 +14,10 @@ export default function Page() {
   return (
     <>
       <JsonLd page="airport-transfer" />
-      <section className="charter-hero" style={{ backgroundImage: 'url(/assets/images/transfer-hero.webp)' }}>
-        <div className="charter-hero__inner">
-          <h1 className="charter-hero__title">{AIRPORT.title}</h1>
-          <p className="charter-hero__sub">{AIRPORT.sub}</p>
+      <section className={`${CHARTER_HERO} bg-[url(/assets/images/transfer-hero.webp)]`}>
+        <div className={CHARTER_HERO_INNER}>
+          <h1 className={CHARTER_HERO_TITLE}>{AIRPORT.title}</h1>
+          <p className={CHARTER_HERO_SUB}>{AIRPORT.sub}</p>
           <AirportTransferForm />
         </div>
       </section>

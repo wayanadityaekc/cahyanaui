@@ -1,15 +1,16 @@
 import CharterBuilder from '@/components/sections/CharterBuilder';
 import { CHARTER } from '@/content/shared/charter';
+import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
 
 // The charter page body (hero + builder form + notes/info), extracted so both
 // the /charter route and the All Programs "Charter" tab render the real form.
 export default function CharterSection() {
   return (
     <>
-      <section className="charter-hero">
-        <div className="charter-hero__inner">
-          <h1 className="charter-hero__title">{CHARTER.title}</h1>
-          <p className="charter-hero__sub">{CHARTER.sub}</p>
+      <section className={`${CHARTER_HERO} bg-[url(/assets/images/road-ubud.webp)]`}>
+        <div className={CHARTER_HERO_INNER}>
+          <h1 className={CHARTER_HERO_TITLE}>{CHARTER.title}</h1>
+          <p className={CHARTER_HERO_SUB}>{CHARTER.sub}</p>
           <CharterBuilder />
         </div>
       </section>

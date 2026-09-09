@@ -2085,25 +2085,13 @@ section.faq::before,
 }
 /* Tour hero. MOBILE (base) = numpuk ala Airbnb: foto lebar atas + sheet putih
    membulat naik, teks di tengah. DESKTOP = background putih dibagi 2:
-   teks (judul+deskripsi rata kiri) kiri | foto kanan. Tanpa gradasi. */
-.tour-hero__image {
-  min-height: 48vh;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-}
-.tour-hero__body {
-  position: relative;
-  z-index: 1;
-  margin-top: -1.75rem;
-  padding: 2.25rem 1.5rem 0.75rem;
-  background: #fff;
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
+   teks (judul+deskripsi rata kiri) kiri | foto kanan. Tanpa gradasi.
+   .tour-hero/.tour-hero__image/.tour-hero__body own styling -> Tailwind
+   utilities in AttractionPage.jsx/TourPage.jsx/ListingPage.jsx/HeroSlider.jsx
+   (TW-A11, #332). All 3 kept as inert marker classNames (no styling left on
+   them) - needed by the 2 rules below (`.tour-hero + .tour-layout--book`,
+   `.tour-hero__body .subhero__title`) and `.tourprog .tour-hero__image::after`
+   further down (untouched - shared with .subhero__title/.tourprog, out of scope). */
 .tour-hero__body .subhero__title {
   margin-bottom: 0.75rem;
 }
@@ -2220,55 +2208,13 @@ section.faq::before,
   }
   /* Bar udah punya tombol WA sendiri -> WA float ngambang disembunyiin biar nggak dobel */
 }
-/* Hero slider manual: foto konten (stops) program, fade antar slide + judul kecil */
-.tour-hero__image.hero-slider {
-  position: relative;
-  overflow: hidden;
-  touch-action: pan-y; /* geser samping = ganti foto (JS), geser vertikal = scroll biasa */
-}
-.hero-slide.is-active {
-  opacity: 1;
-}
-/* Panah kecil "‹ ›" - DESKTOP ONLY, di pojok kanan BAWAH (seberang judul) */
-/* Dots: max 5, cuma indikator geser (non-klik). Aktif lebih besar, tepi mengecil. */
-.hero-slider__dot.is-active {
-  width: 7px;
-  height: 7px;
-  background: #fff;
-}
-.hero-slider__dot.is-edge {
-  width: 3px;
-  height: 3px;
-  opacity: 0.7;
-}
-/* Panah cuma tampil di desktop */
-/* Mobile: naikin caption + dots biar nggak ketutup sheet putih; dots ke KANAN
-   biar nggak numpuk sama judul foto (kiri) */
-/* DESKTOP: bg putih dibagi 2 - teks kiri (45%) | foto kanan (55%), tanpa gradasi */
-@media (min-width: 769px) {
-  .tour-hero {
-    display: grid;
-    grid-template-columns: 45% 55%;
-    align-items: stretch;
-    min-height: 62vh;
-    /* clear fixed navbar (+ tripbar) so the hero top isn't hidden behind them.
-       Padding area sits under the solid header, so no visible white gap. */
-    padding-top: 6.5rem;
-  }
-  .tour-hero__image {
-    order: 1; /* foto ke kanan */
-    min-height: 0;
-  }
-  .tour-hero__body {
-    margin-top: 0;
-    padding: 3rem 3rem 3rem max(1.5rem, calc((100vw - 1280px) / 2));
-    background: transparent;
-    border-radius: 0;
-    justify-content: center;
-    align-items: flex-start;
-    text-align: left;
-  }
-}
+/* .tour-hero__image.hero-slider / .hero-slide.is-active / .hero-slider__dot.is-active
+   / .is-edge - dead (HeroSlider.jsx dropped these literal classNames entirely in an
+   earlier commit in favor of inline Tailwind utilities on the same elements; the
+   selectors here can no longer match anything) - removed. Panah/dots' own styling
+   already lives in HeroSlider.jsx (ARROW/dotCls). Desktop split-hero layout
+   (.tour-hero/.tour-hero__image/.tour-hero__body @ min-width:769px) -> Tailwind
+   utilities alongside the mobile-base rules above (TW-A11, #332). */
 
 /* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
 .btn-book {

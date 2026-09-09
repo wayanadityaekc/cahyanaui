@@ -990,17 +990,6 @@ body.hs-locked .wa-float {
 /* "See more" card di ujung baris slider (ganti tombol See All yang ngambang).
    Kartu foto gelap + panah, ukuran ikut kartu tetangga (stretch full tinggi). */
 
-/* Judul di DALAM foto (dipindah via initCardTitleOverlay) + gradient gelap
-   dari bawah biar teks putihnya kebaca. Berlaku card tour/experience, villa,
-   dan highlight tour/experience/transfer. */
-.photo-titled .experience__name {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-  padding: 0 0.9rem 0.85rem;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-}
 .experience__desc {
   color: var(--color-muted);
   /* Konsisten 2 baris biar tinggi card seragam (potong yang kepanjangan,
@@ -4060,7 +4049,6 @@ strong {
   height: 100%;
   object-fit: cover;
 }
-/* .card-add NOT hidden — restyled into the heart badge (see block below). */
 .tourprog .experience__desc,
 .tourprog .tour-type--card,
 .tourprog .experience__arrow,
@@ -4133,109 +4121,6 @@ strong {
   color: var(--color-gold-d);
 }
 
-/* ===== Card heart badge (grid cards only) =====
-   Reuses the existing "+ My Trips" button (.card-add) — same click = add to
-   trip. On grid cards it's restyled into a translucent circular heart pinned
-   to the top-right of the photo; the button text is hidden and a heart icon is
-   drawn via mask-image (inherits --color-green). Detail-page .card-add buttons
-   are untouched (they keep the full-width outline style). */
-.home .experience__card .card-add,
-.tourprog .experience__card .card-add {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 34px;
-  height: 34px;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.55);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  box-shadow: var(--shadow-sm);
-  font-size: 0; /* hide "+ My Trips" text, keep it for a11y/label */
-  z-index: 2;
-}
-.home .experience__card .card-add::before,
-.tourprog .experience__card .card-add::before {
-  content: "";
-  width: 17px;
-  height: 17px;
-  background: var(--color-green);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-}
-/* saved state: gold fill + white heart */
-.home .experience__card .card-add.added,
-.tourprog .experience__card .card-add.added {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
-}
-.home .experience__card .card-add.added::before,
-.tourprog .experience__card .card-add.added::before {
-  background: #fff;
-}
-/* TEMP OFF (Wayan, masih mikirin lagi soal heart badge di kartu grid) —
-   CSS-only hide, ditaruh PALING AKHIR blok biar menang di cascade (rule di
-   atas declare display:flex juga). Styling di atas dibiarin utuh, tinggal
-   hapus rule ini buat nyalain lagi. */
-.home .experience__card .card-add,
-.tourprog .experience__card .card-add {
-  display: none;
-}
-
-/* ===== Card rating slot (grid cards) =====
-   Right of the title. Structurally ready; only rendered by JS when a real
-   rating exists (no data = no element = clean card, never "0 reviews").
-   Contract for the render function:
-     <div class="experience__rating">
-       <svg viewBox="0 0 24 24">…star…</svg><b>4.9</b><span>(23)</span>
-     </div> */
-.home .experience__rating,
-.tourprog .experience__rating {
-  grid-area: rating;
-  display: flex;
-  align-items: center;
-  gap: 0.22rem;
-  font-size: var(--fs-small);
-  white-space: nowrap;
-}
-.home .experience__rating svg,
-.tourprog .experience__rating svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  flex: 0 0 auto;
-  fill: var(--color-amber);
-  stroke: none;
-}
-.home .experience__rating b,
-.tourprog .experience__rating b {
-  font-weight: 600;
-  color: var(--color-green);
-}
-.home .experience__rating span,
-.tourprog .experience__rating span {
-  color: var(--color-muted);
-}
-
-/* ===== Card stops slot (grid cards) =====
-   A second meta item next to duration. JS appends it inside .experience__meta
-   only when the tour has a real stop count. Contract:
-     <span class="experience__stops"><svg …pin…/>7 stops</span> */
-.home .experience__stops,
-.tourprog .experience__stops {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.28rem;
-  margin-left: 0.35rem; /* separate the stops group from duration */
-  white-space: nowrap;
-}
 
 /* Closing band */
 .closing-band {

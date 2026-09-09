@@ -1,3 +1,5 @@
+import Prose from '@/components/prose/Prose';
+
 export default function LegalPage({ data }) {
   return (
     <>
@@ -11,10 +13,9 @@ export default function LegalPage({ data }) {
         </div>
       </section>
       <section className="info">
-        <div
-          className="info__container guide-article"
-          dangerouslySetInnerHTML={{ __html: data.bodyHtml }}
-        />
+        <div className="info__container guide-article">
+          <Prose blocks={data.body} />
+        </div>
       </section>
     </>
   );

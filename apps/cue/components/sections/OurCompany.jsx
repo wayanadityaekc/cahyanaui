@@ -4,6 +4,7 @@ import { useState } from 'react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
+import Prose from '@/components/prose/Prose';
 
 const TABS = [
   { id: 'about', label: 'About Us' },
@@ -18,7 +19,9 @@ function LegalBody({ data }) {
     <section className="info">
       <div className="info__container guide-article">
         <h1 className="company-heading">{data.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: data.bodyHtml }} />
+        <div>
+          <Prose blocks={data.body} />
+        </div>
       </div>
     </section>
   );

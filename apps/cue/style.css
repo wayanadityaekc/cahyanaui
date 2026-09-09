@@ -2264,45 +2264,7 @@ strong {
   margin: 0 auto 1.6rem;
   max-width: 480px;
 }
-/* Search di hero listing (memfilter kartu di halaman itu). Desktop: di bawah
-   judul, dalam kolom kiri. Mobile: mengambang di foto (lihat media query). */
-.lsearch { display: flex; align-items: center; gap: 6px; width: 100%; max-width: 430px;
-  margin-top: 1.5rem; height: 2.9rem; padding: 0 6px 0 18px; background: #fff;
-  border: 1px solid var(--line); border-radius: var(--r-pill); box-shadow: var(--shadow-sm); }
-/* font 16px = anti-zoom pas fokus di iOS (di bawah 16px Safari auto-zoom) */
-.lsearch__input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none;
-  font-family: inherit; font-size: 16px; color: var(--color-ink); }
-.lsearch__input::placeholder { color: var(--color-muted); }
-/* sembunyiin tombol clear bawaan browser (biar cuma tombol hijau kita) */
-.lsearch__input::-webkit-search-cancel-button,
-.lsearch__input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; display: none; }
-/* tombol search/clear di kanan kolom */
-.lsearch__btn { flex: 0 0 auto; width: 2.1rem; height: 2.1rem; display: flex; align-items: center;
-  justify-content: center; border: 0; border-radius: 50%; background: var(--color-cta); color: #fff;
-  cursor: pointer; transition: background-color var(--dur) ease; }
-.lsearch__btn:hover { background: var(--color-cta-d); }
-.lsearch__btn svg { width: 16px; height: 16px; }
-.lsearch__empty { margin: 1.5rem 0 0; color: var(--color-muted); text-align: center; font-size: 0.9rem; }
-/* Tombol "Browse all" - scroll ke daftar program di bawah (pill hijau). */
-.lbrowse { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.8rem; border-radius: var(--r-pill);
-  background: var(--color-cta); color: #fff; font-weight: 600; font-size: 0.85rem; text-decoration: none;
-  transition: background-color var(--dur) ease; }
-.lbrowse:hover { background: var(--color-cta-d); }
-/* USP list di hero (price per car / private driver / free cancellation) - ngisi
-   ruang di atas tombol Browse all, desktop & mobile. */
-.lhero-usp { list-style: none; margin: 1.5rem 0 0; padding: 0; display: flex;
-  flex-direction: column; gap: 0.7rem; text-align: left; align-self: flex-start; }
-.lhero-usp li { display: flex; align-items: center; gap: 10px; font-size: 0.82rem;
-  font-weight: 500; line-height: 1.3; white-space: nowrap; color: var(--color-ink); }
-.lhero-usp svg { width: 18px; height: 18px; color: var(--color-cta); flex: 0 0 auto; }
 @media (max-width: 768px) {
-  /* .tour-hero__body sudah position:relative -> jadi offset parent. Angkat search
-     ke atas (negatif) biar mengambang bersih di foto, ada jarak dari sheet putih.
-     width:auto -> lebar diatur left+right (kalau tetap 100% dia kelewatan layar). */
-  .tourprog .lsearch { position: absolute; left: 1.2rem; right: 1.2rem; top: -3.9rem;
-    width: auto; z-index: 4; margin-top: 0; max-width: none; box-shadow: var(--shadow-lg); }
-  /* Browse all: full-width di bawah intro, di dalam sheet */
-  .tourprog .lbrowse { display: block; width: 100%; margin-top: 1.25rem; text-align: center; }
   /* Gradasi hitam di foto hero (atas tipis + bawah lebih gelap) biar search
      putih nge-pop & foto lebih dramatis. Cuma listing (.tourprog), cuma mobile. */
   .tourprog .tour-hero__image { position: relative; }
@@ -2575,41 +2537,6 @@ strong {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
 }
-
-/* Contact = section pertama (nggak ada hero lagi) -> butuh clearance buat navbar+tripbar
-   fixed (~103px), samain sama padding-top hero. Override rule global di atas. */
-
-/* ============================================================
-   HomepageCard (components/cards/HomepageCard.jsx) - foto SQUARE
-   + harga di foto (kiri-bawah, scrim tipis) + panel putih (judul,
-   meta, deskripsi). Homepage + "You might also like".
-   ListingRow (components/cards/ListingRow.jsx) - kartu listing
-   horizontal (foto kiri + judul/deskripsi + meta & harga di bawah).
-   Eksperimen: branch claude/exp-card-hybrid.
-   ============================================================ */
-/* Glassmorphism overlay card -> MIGRASI TAILWIND (Fase 2, Opsi A "pisah bersih"):
-   semua gaya .hcard / .hcard__* dipindah jadi utilities di HomepageCard.jsx
-   (komponen mandiri, foto render sendiri). Rule visual di sini dihapus. Class
-   `hcard` MASIH dipakai HomepageCard sbg hook layout grid doang (lihat
-   `.home .experience__grid--home4 .hcard { flex:0 0 88% }` di media query 576px).
-   Catatan: index.html LAMA (statis, gak di-deploy) masih pakai .hcard - abaikan. */
-
-/* Zone filter = bar floating STICKY di bawah-tengah (segmented pill): "All" +
-   tiap daerah, aktif = hijau. Grid tetap satu; kartu di luar zona kepilih
-   diredupkan (.lrow--dim). DESKTOP ONLY. */
-.zfilter{position:fixed;left:50%;transform:translateX(-50%);bottom:1.3rem;z-index:50;
-  display:flex;align-items:center;gap:4px;padding:6px;max-width:calc(100vw - 2rem);
-  background:#fff;border:1px solid var(--line);border-radius:var(--r-pill);box-shadow:var(--shadow-xl);
-  overflow-x:auto;scrollbar-width:none;}
-.zfilter::-webkit-scrollbar{display:none;}
-.zfilter__tab{font-family:inherit;font-size:0.78rem;font-weight:600;color:var(--color-muted);
-  background:transparent;border:0;border-radius:var(--r-pill);padding:0.5rem 1rem;
-  cursor:pointer;white-space:nowrap;
-  transition:color var(--dur) ease,background-color var(--dur) ease;}
-.zfilter__tab:hover{color:var(--color-ink);background:var(--color-cream);}
-.zfilter__tab.is-active{background:var(--color-cta);color:#fff;}
-/* Nav floating: .zfilter (segmented, DESKTOP) vs .ssw (single pill, MOBILE). */
-@media (max-width:768px){ .zfilter{display:none;} }
 /* ruang bawah biar kartu terakhir gak ketutup bar floating */
 .tourprog{padding-bottom:5rem;}
 /* anchor scroll (switcher mobile) clear navbar + tripbar */

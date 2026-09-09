@@ -114,10 +114,10 @@ export default function ListingPage({ data }) {
           {!q && <h1 className="subhero__title">{title}</h1>}
           {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
           {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
-          <div className="lsearch">
+          <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-pill [box-shadow:var(--shadow-sm)] max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none max-[768px]:[box-shadow:var(--shadow-lg)]">
             <input
               type="search"
-              className="lsearch__input"
+              className="flex-1 min-w-0 [border:0] bg-transparent outline-none [font-family:inherit] text-[16px] text-ink placeholder:text-muted [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-decoration]:hidden"
               placeholder={`Search ${noun}`}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -125,7 +125,7 @@ export default function ListingPage({ data }) {
             />
             <button
               type="button"
-              className="lsearch__btn"
+              className="flex-none w-[2.1rem] h-[2.1rem] flex items-center justify-center [border:0] rounded-[50%] bg-cta text-white cursor-pointer [transition:background-color_var(--dur)_ease] hover:bg-cta-d [&_svg]:w-4 [&_svg]:h-4"
               aria-label={q ? 'Clear search' : 'Search'}
               onClick={() => q && setQuery('')}
             >
@@ -133,14 +133,14 @@ export default function ListingPage({ data }) {
             </button>
           </div>
           {!q && (
-            <ul className="lhero-usp">
+            <ul className="list-none mt-6 p-0 flex flex-col gap-[0.7rem] text-left self-start [&>li]:flex [&>li]:items-center [&>li]:gap-[10px] [&>li]:text-[0.82rem] [&>li]:font-medium [&>li]:leading-[1.3] [&>li]:whitespace-nowrap [&>li]:text-ink [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:text-cta [&_svg]:flex-none">
               <li><CarIcon />Fixed price per car (standard or exclusive)</li>
               <li><UserIcon />Private driver, just for your group</li>
               <li><PinIcon />Free pickup in the Ubud area</li>
               <li><CheckIcon />Free cancellation up to 24h before your tour</li>
             </ul>
           )}
-          {!q && <a ref={browseRef} href={`#${sectionId}`} className="lbrowse">Browse all {noun}</a>}
+          {!q && <a ref={browseRef} href={`#${sectionId}`} className="inline-block mt-4 py-3 px-[1.8rem] rounded-pill bg-cta text-white font-semibold text-[0.85rem] no-underline [transition:background-color_var(--dur)_ease] hover:bg-cta-d max-[768px]:block max-[768px]:w-full max-[768px]:mt-[1.25rem] max-[768px]:text-center">Browse all {noun}</a>}
         </div>
       </section>
 
@@ -153,12 +153,12 @@ export default function ListingPage({ data }) {
             daerah => kartu di luar daerah diredupkan. MOBILE: satu pill di tengah
             (SectionSwitcher) - panah scroll ke section (tanpa redup). */}
         {showStickyNav && (
-          <div className="zfilter" role="tablist" aria-label="Filter by area">
+          <div className="fixed left-1/2 [transform:translateX(-50%)] bottom-[1.3rem] z-50 flex items-center gap-[4px] p-[6px] max-w-[calc(100vw-2rem)] bg-white [border:1px_solid_var(--line)] rounded-pill [box-shadow:var(--shadow-xl)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[768px]:hidden" role="tablist" aria-label="Filter by area">
             {tabs.map((t) => (
               <button
                 key={t.id}
                 type="button"
-                className={`zfilter__tab${zone === t.id ? ' is-active' : ''}`}
+                className={`[font-family:inherit] text-[0.78rem] font-semibold rounded-pill py-2 px-4 [border:0] cursor-pointer whitespace-nowrap [transition:color_var(--dur)_ease,background-color_var(--dur)_ease] ${zone === t.id ? 'bg-cta text-white' : 'bg-transparent text-muted hover:text-ink hover:bg-cream'}`}
                 aria-pressed={zone === t.id}
                 onClick={() => setZone(t.id)}
               >
@@ -185,7 +185,7 @@ export default function ListingPage({ data }) {
             })}
           </div>
           {q && shownCards.length === 0 && (
-            <p className="lsearch__empty">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
+            <p className="mt-6 text-muted text-center text-[0.9rem]">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
           )}
         </section>
       </section>

@@ -32,14 +32,14 @@ export default function Hero() {
         max-[992px]:after:bg-[image:linear-gradient(rgba(0,0,0,0.18),rgba(0,0,0,0.3)_45%,rgba(0,0,0,0.6)),url(/assets/images/ubud-saraswati-temple-hero-mobile.webp)]"
       id="hero"
     >
-      {/* hero__inner/hero__content/hero__title kept fully as-is (untouched CSS classes,
-          no new utilities added) - they are SHARED base rules used by many other
-          non-homepage sections (subhero pages, legal pages, guide hub, etc). Out of
-          scope for #325 (Hero/HeroSearch only); left for the shared-primitive cleanup
-          in A11/B-FINAL once every other usage is also converted. */}
-      <div className="hero__inner">
-        <div className="hero__content max-[992px]:text-center">
-          <h1 className="hero__title">Your Private Bali Trip Planner with a Driver</h1>
+      {/* hero__inner/hero__content/hero__title -> utilities (B-FINAL). These turned out
+          NOT to be shared: no subhero contains a .hero__inner (confirmed in built HTML),
+          so this is homepage-only. The mobile sheet-open z-bump (was
+          .home .hero__inner:has(.hero__search.is-open){z-index:46}) is conditioned on
+          the sheetOpen state instead. */}
+      <div className={`relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch${sheetOpen ? ' max-[992px]:z-[46]' : ''}`}>
+        <div className="flex-1 min-w-0 text-white max-[992px]:text-center">
+          <h1 className="font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em] animate-[heroTextIn_0.6s_var(--ease)_backwards] [animation-delay:0.08s] motion-reduce:animate-none">Your Private Bali Trip Planner with a Driver</h1>
           <p className="mt-4 text-cream max-w-[52ch] animate-[heroTextIn_0.6s_var(--ease)_backwards] [animation-delay:0.18s] motion-reduce:animate-none">
             Tours, transfers, experiences &amp; villas - build your trip day by day, with real prices before you book.
           </p>

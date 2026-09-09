@@ -144,64 +144,6 @@ body {
     opacity: 0;
   }
 }
-/* Navbar (header/drawer/hamburger/scrim/program-dropdown/account) full Tailwind
-   di Navbar.jsx sekarang (TW-A9, #330) - `.navbar__*`/`.acct*` (BEM lama, toggle
-   `.active`/`.open`/`.is-open` via classList) CSS-nya udah dihapus, React state
-   + className kondisional yang nyetir sekarang. `@keyframes navbarIn` TETAP -
-   masih dipakai (`animate-[navbarIn_0.4s_ease-out]`). */
-
-/* ===== Hamburger drawer: welcome + trip + nav (Sep 2026, Opsi A revisi) ===== */
-/* Welcome header - sticky di atas drawer (identity + currency) */
-
-/* Guests + Stay area = 2 kolom, di atas tombol sign in */
-
-/* Sign in (baris sendiri, di bawah trip) */
-
-/* My Trip link (+ badge) */
-
-/* Footer drawer: Settings + Chat WhatsApp */
-
-/* ==================== Homepage hero = foto + search bar ====================
-   .hero itself (bg/photo/overlay), .hero__subtitle, .hero__search + .hsearch*,
-   .hero__planbtn, .hero-sheet-ov -> converted to Tailwind utilities in
-   components/sections/home/Hero.jsx + components/search/HeroSearch.jsx
-   (TW-A4, issue #325). ".hero"/".hero__search"+"is-open"/".hero-sheet-ov" kept
-   as inert marker classNames on those elements (no styling left here) - needed
-   by shared selectors elsewhere that key off their presence: `.home > section:not(.hero)`
-   (section-gap spacing), `.hero::before { content:none }` (divider-exclusion list, ~line 1101),
-   and `.home .hero__inner:has(.hero__search.is-open)` (z-index bump, kept below near
-   .hero__inner - untouched, that's a shared primitive out of scope here). */
-.hero__inner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-}
-.hero__content {
-  flex: 1;
-  min-width: 0;
-  color: #fff;
-}
-/* Teks hero senada hero halaman lain: judul putih, font heading (Playfair) */
-.hero__title {
-  font-family: var(--font-head);
-  font-size: var(--fs-display);
-  line-height: var(--lh-heading);
-  color: #fff;
-}
-/* .hero__subtitle animation-delay merged into .hero__title's below (Tailwind now
-   handles .hero__subtitle's own animation inline). Keyframes stay - referenced by
-   both .hero__title here and Tailwind's animate-[heroTextIn_...] in Hero.jsx. */
-.hero__title {
-  animation: heroTextIn 0.6s var(--ease) backwards;
-}
-.hero__title {
-  animation-delay: 0.08s;
-}
 @keyframes heroTextIn {
   from {
     opacity: 0;
@@ -215,11 +157,6 @@ body {
   from {
     opacity: 0;
     transform: translateY(14px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__title {
-    animation: none;
   }
 }
 .hs-opt__flag {
@@ -278,42 +215,6 @@ body {
    udah position:fixed jadi tetep nempel walau background di belakang kebuka. */
 body.hs-locked {
   overflow: hidden;
-}
-/* Mobile: .hero__inner flex-direction:column - SHARED (used by every non-homepage
-   .hero__inner consumer too, not just Hero.jsx), left untouched. */
-@media (max-width: 992px) {
-  .hero__inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2rem;
-  }
-
-  /* Sheet kebuka: angkat stacking-context .hero__inner (default z-index:1) di atas
-     section lain (mis. kartu Explore) - kalau nggak, sheet yg position:fixed di DALAM
-     hero__inner ketembus konten section bawah (bug: badge kartu nongol di atas form).
-     Diikat ke .is-open (BUKAN body.hs-locked) biar nggak ke-reset pas dropdown popup
-     di dalam sheet ditutup (Overlay-nya toggle hs-locked yg sama). KEPT: targets the
-     shared .hero__inner (out of scope), conditioned on .hero__search/.is-open marker
-     classNames intentionally kept on the Tailwind-converted HeroSearch.jsx root (#325). */
-  .home .hero__inner:has(.hero__search.is-open) {
-    z-index: 46;
-  }
-}
-
-/* Booking card di subhero halaman kategori (class .hero__booking) - layout 2 kolom.
-   Homepage pakai .hero__search; halaman tour/transfer/activities/destinations pakai ini. */
-.hero__inner .subhero__content {
-  flex: 1;
-  min-width: 0;
-}
-/* Subhero yg punya booking form (tour/transfer/activities/destinations/charter):
-   samain sama .hero homepage -> teks rata kiri + tinggi 88vh biar hero & subhero
-   yang isinya form keliatan setinggi & sekonsisten. (Subhero polos tanpa form
-   tetep center + 60vh dari rule dasar .subhero.) */
-.subhero:has(.hero__inner) {
-  min-height: 88vh;
-  padding-bottom: 2rem;
-  text-align: left;
 }
 /* ==================== Shared form-field base (DRY) ==================== */
 .field select,
@@ -891,7 +792,6 @@ section + section::before,
 }
 /* Tier display H1 (semua halaman): hero__title (homepage), subhero__title
    (halaman detail), lhero__title (halaman listing) - satu bobot konsisten. */
-.hero__title,
 .subhero__title {
   font-family: var(--font-head);
   font-weight: 700;

@@ -1518,47 +1518,6 @@ strong {
   to { transform: rotate(360deg); }
 }
 
-/* Button atom (components/ui/Button.jsx) - satu bentuk tombol standar: pill,
-   bobot 600, peran warna dari token. primary=CTA hijau, ghost=soft-black outline. */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-small);
-  line-height: 1;
-  height: 2.9rem;
-  padding: 0 1.5rem;
-  border: 1px solid transparent;
-  border-radius: var(--r-pill);
-  cursor: pointer;
-  text-decoration: none;
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
-    border-color var(--dur) var(--ease);
-}
-.btn--primary {
-  background: var(--color-cta);
-  color: #fff;
-}
-.btn--primary:hover {
-  background: var(--color-cta-d);
-}
-.btn--ghost {
-  background: none;
-  color: var(--color-gold);
-  border-color: var(--line);
-}
-.btn--ghost:hover {
-  background: var(--color-cream);
-}
-.btn--lg {
-  height: 3.2rem;
-  padding: 0 1.9rem;
-  font-size: 1rem;
-}
-
 /* Our Company page - desktop = sidebar nav kiri + konten kanan (pola .guide-layout),
    HP = tab strip sticky di atas. Konten body-only: hero kosong (banner legal ijo +
    galeri foto About) dibuang - gak ada foto beneran, jadi mubazir. */

@@ -1352,69 +1352,6 @@ section.faq::before,
   color: var(--color-muted);
 }
 
-/* ==================== Suggested-plan box + homepage CTA ==================== */
-/* Foto band mini (rice terrace + overlay gelap) - senada teaser "Plan Your Trip" homepage.
-   Sekarang di DALAM .itn2 (sidebar kiri di desktop). */
-.itn-suggest {
-  position: relative;
-  overflow: hidden;
-  padding: 1.25rem 1.35rem;
-  border-radius: var(--r-lg);
-  background-image: url(assets/images/ubud-tour-card.jpg);
-  background-size: cover;
-  background-position: center;
-}
-.itn-suggest::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(18, 32, 22, 0.68),
-    rgba(18, 32, 22, 0.8)
-  );
-}
-.itn-suggest > * {
-  position: relative;
-}
-.itn-suggest__t {
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  color: #fff;
-}
-.itn-suggest__s {
-  margin: 0.25rem 0 1rem;
-  font-size: var(--fs-body);
-  color: rgba(247, 243, 234, 0.85);
-}
-.itn-suggest__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.7rem;
-}
-.itn-suggest__f {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: var(--fs-label);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(247, 243, 234, 0.85);
-}
-.itn-suggest__f select {
-  min-width: 120px;
-  height: var(--field-h);
-  padding: 0.4rem 0.6rem;
-}
-.itn-suggest__btn {
-  height: var(--field-h);
-  padding: 0 1.3rem;
-  font-size: 1rem;
-}
-
 .field {
   margin-bottom: 1.1rem;
 }
@@ -1438,34 +1375,6 @@ section.faq::before,
 
 .slot {
   margin-bottom: 0.9rem;
-}
-
-/* Total price "Opsi A": panel hijau, angka gold gede, note deposit 10% */
-.summary {
-  padding: 1.5rem 1.5rem 1.4rem;
-  border-radius: var(--r-md);
-  text-align: center;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-}
-.summary__label {
-  font-size: var(--fs-small);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-weight: 500;
-  color: var(--color-gold-l);
-}
-.summary__amt {
-  margin: 0.15rem 0 0.1rem;
-  font-size: 2rem;
-  line-height: 1.15;
-}
-.summary__amt .price-cur {
-  color: var(--color-amber);
-}
-.summary__sub {
-  font-size: var(--fs-small);
-  color: rgba(247, 243, 234, 0.72);
 }
 .btn-book {
   width: 100%;
@@ -1536,9 +1445,6 @@ section.faq::before,
   .info__container:not(.guide-article) {
     padding: 1.75rem 1.25rem; /* kartu detail nggak kesempitan di HP */
   }
-  .summary {
-    padding: 1.25rem;
-  }
 }
 
 /* Layar HP kecil - kecilin field booking biar 2 kolom tetap muat rapi */
@@ -1565,19 +1471,6 @@ section.faq::before,
     animation: none;
   }
 }
-
-/* =================== ITINERARY BUILDER (2 kolom) =================== */
-.itn {
-  padding: 3rem 1.5rem;
-}
-.itn__panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
 .itn__subtitle {
   position: relative;
   padding-bottom: 0.45rem;
@@ -1596,58 +1489,6 @@ section.faq::before,
   height: 3px;
   border-radius: 3px;
   background: var(--color-gold);
-}
-.itn__ghostbtn {
-  padding: 0.45rem 0.8rem;
-  border: 1px solid #d8d2c4;
-  border-radius: var(--r-pill);
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--color-green);
-  cursor: pointer;
-  transition: background-color var(--dur) ease;
-}
-.itn__ghostbtn:hover {
-  background-color: #efe9db;
-}
-
-/* day / transfer card di kiri */
-.itn-day {
-  position: relative;
-  padding: 1.1rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e6dfce;
-  border-radius: var(--r-md);
-  background-color: #fff;
-}
-.itn-day:last-child {
-  margin-bottom: 0;
-}
-.itn-day__title {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-green);
-}
-.itn-day__status.done {
-  background: #e2f0e6;
-  color: var(--color-ok);
-}
-/* Chip ringkasan hari (keisi otomatis dari Trip Details) */
-/* Form override per-hari (kebuka via Edit) */
-.itn-ovr.open {
-  display: block;
-}
-.itn-day__empty {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.2rem;
-  margin-bottom: 1rem;
-  font-size: var(--fs-small);
-  color: #9a9382;
 }
 .itn-day__fields {
   display: grid;
@@ -1674,13 +1515,6 @@ section.faq::before,
   padding: 0.55rem 0.65rem;
   font-size: var(--fs-field);
   background: #fff;
-}
-
-/* tombol Add to itinerary di card biasa + card jadi clickable */
-.card-add.added {
-  background: var(--color-ok);
-  border-color: var(--color-ok);
-  color: #fff;
 }
 
 /* badge hijau di menu Itinerary */
@@ -1749,47 +1583,8 @@ section.faq::before,
   gap: 1.5rem;
   min-width: 0;
 }
-/* Boks Trip Details: isi sekali -> semua hari ngikut (panel cream + border gold gradasi) */
-.itn-trip {
-  padding: 1rem 1.1rem 1.2rem;
-  border: 1.5px solid transparent;
-  border-radius: var(--r-md);
-  background:
-    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
-    var(--gold-edge)
-      border-box;
-}
-.itn-trip__t {
-  margin: 0 0 0.15rem;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--color-green);
-}
-.itn-trip__s {
-  margin: 0 0 0.8rem;
-  font-size: var(--fs-label);
-  color: var(--color-muted);
-}
 .itn-trip__fields {
   margin-bottom: 0;
-}
-/* Baris "Guests: N - follows the navbar picker" (nggak ada field guests sendiri) */
-.itn-trip__guests {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0.7rem 0 0;
-  font-size: var(--fs-label);
-  color: var(--color-muted);
-}
-.itn-trip__guests svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  color: var(--color-gold);
-  flex: none;
-}
-.itn-trip__guests b {
-  color: var(--color-green);
 }
 /* Desktop: sidebar kiri = SATU kartu (suggest -> trip -> price -> add day),
    konten kanan = slider hari (1 baris) + boks transfer/charter di bawahnya. */
@@ -1812,45 +1607,6 @@ section.faq::before,
   }
   .itn2__side > .itn2__add {
     margin-top: 0; /* jarak antar kartu udah dari gap */
-  }
-  /* Judul tiap seksi sidebar: garis bawah tipis biar kerasa kepisah + font nggak kegedean */
-  .itn2__side .itn-suggest__t {
-    font-size: var(--fs-body);
-    padding-bottom: 0.55rem;
-    margin-bottom: 0.6rem;
-    border-bottom: 1px solid rgba(247, 243, 234, 0.35);
-  }
-  .itn2__side .itn-suggest__s {
-    font-size: var(--fs-small);
-  }
-  .itn2__side .itn-trip__t {
-    padding-bottom: 0.55rem;
-    margin-bottom: 0.6rem;
-    border-bottom: 1px solid rgba(34, 32, 28, 0.4);
-  }
-  .itn2__side .summary__label {
-    display: block;
-    padding-bottom: 0.55rem;
-    margin-bottom: 0.6rem;
-    border-bottom: 1px solid rgba(247, 243, 234, 0.25);
-  }
-  .itn2__side .summary__amt {
-    font-size: 1.6rem;
-  }
-  /* Kolom input sidebar sejajar lebarnya: 2 kolom = bagi dua rata, sisanya full width */
-  .itn2__side .itn-suggest__row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.7rem;
-    align-items: end;
-  }
-  .itn2__side .itn-suggest__f select {
-    width: 100%;
-    min-width: 0;
-  }
-  .itn2__side .itn-suggest__btn {
-    grid-column: 1 / -1;
-    width: 100%;
   }
   .itn2__side .itn-trip__fields {
     grid-template-columns: 1fr;
@@ -1889,14 +1645,6 @@ section.faq::before,
   to {
     opacity: 1;
     transform: none;
-  }
-}
-.itn-day.itn-enter {
-  animation: itnFadeUp 0.4s ease both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .itn-day.itn-enter {
-    animation: none;
   }
 }
 /* Desktop: mini card SEBARIS ke samping - pas 4 kotak selebar kolom.
@@ -2216,8 +1964,7 @@ section.faq::before,
   line-height: var(--lh-heading);
 }
 /* Tier UI (Inter): judul kartu, modal, nama, dst */
-.itn__subtitle,
-.itn-day__title {
+.itn__subtitle {
   font-family: var(--font-body);
   font-weight: 600;
   letter-spacing: 0;
@@ -2230,8 +1977,7 @@ strong {
 /* Field label: Inter medium, normal case (EXPERIMENT — dulu uppercase small-caps).
    Balikin uppercase = set text-transform: uppercase + letter-spacing: 0.07em. */
 .contact__group label,
-.field label,
-.summary__label {
+.field label {
   font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: normal;

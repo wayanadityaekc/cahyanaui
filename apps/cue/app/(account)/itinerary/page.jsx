@@ -22,7 +22,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="itn" id="itinerary">
+      <section className="py-12 px-6" id="itinerary">
         <h2 className="section__title">Plan Your Bali Trip Day by Day</h2>
         <p className="builder__intro">
           Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a

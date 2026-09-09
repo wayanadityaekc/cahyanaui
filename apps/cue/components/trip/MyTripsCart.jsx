@@ -25,7 +25,7 @@ import { withSymbol } from '@/components/Price';
 const MTC_TABS = 'flex flex-nowrap gap-[0.4rem] overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x [border-bottom:1px_solid_var(--line)] mb-[1.4rem]';
 const mtcTab = (on) =>
   `flex-[0_0_auto] whitespace-nowrap border-none bg-transparent py-[0.6rem] px-[0.35rem] mr-[0.6rem] font-body text-small cursor-pointer mb-[-1px] ${on ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent]'}`;
-const MTC_EMPTY = 'mtc-empty text-center pt-2 px-0 pb-0';
+const MTC_EMPTY = 'text-center pt-2 px-0 pb-0';
 const MTC_EMPTY_LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-0 mb-[0.4rem]';
 const MTC_EMPTY_SUB = 'text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
 const MTC_TOTAL = 'flex justify-between items-center bg-cream rounded-lg py-4 px-[1.2rem] mt-[1.4rem]';
@@ -58,6 +58,24 @@ const MTC_DET_AMT = 'flex-[0_0_auto] whitespace-nowrap font-semibold text-amber-
 const MTC_NOTE = 'text-small text-muted text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]';
 const MTC_NOTE_WARN = 'text-small text-err text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]';
 const MTC_POLICY_LINK = 'text-gold-d underline';
+// Container/variant classes (migrasi #324): were the last `.mtc*` rules in
+// style.css. Cart-list item (standalone) vs booked-card item (inside .mtc-book,
+// read-only). `.mtc-book` card + its context overrides -> flat utilities. Booked/
+// past cards only render with server data (not reachable in the static export
+// harness) so those are exact 1:1 CSS maps, flagged in the PR.
+const MTC_ITEM = 'flex items-center gap-[0.85rem] bg-white border border-line rounded-md py-[0.8rem] px-[0.95rem] mb-[0.6rem]';
+const MTC_ITEM_BOOKED = 'flex items-center gap-[0.85rem] py-[0.8rem] px-[0.95rem] bg-transparent border-0 rounded-none mb-0 cursor-default';
+const MTC_BOOK = 'bg-white border border-line rounded-lg mb-[0.9rem] overflow-hidden';
+const MTC_DET_BOX = 'm-0 pt-0 px-[0.95rem] pb-[0.55rem]';
+const MTC_REVIEW_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
+const MTC_REVIEW_BTN = 'inline-flex w-auto mt-0 py-[0.55rem] px-[1.3rem] text-small no-underline max-[600px]:w-full max-[600px]:justify-center';
+// Cart action buttons: shared .btn-pill was forced full-width via
+// `[data-mytrips-cart] .btn-pill` (removed); set per-button now.
+const MTC_ADD_FULL = 'btn-pill w-full mt-4';
+// datebtn: base field look (shared rule) + button specifics + calendar ::before
+// (mask, %20-encoded so it survives as a Tailwind arbitrary value).
+const CAL_MASK = "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='3'%20y='5'%20width='18'%20height='16'%20rx='2'/%3E%3Cpath%20d='M8%203v4M16%203v4M3%2010h18'/%3E%3C/svg%3E\")";
+const MTC_DATEBTN = `inline-flex items-center gap-[0.4rem] mt-[0.35rem] py-[0.3rem] px-[0.6rem] bg-white text-left cursor-pointer border border-line rounded-md font-body text-[length:var(--fs-field)] text-green before:content-[''] before:flex-none before:w-[14px] before:h-[14px] before:bg-current before:opacity-70 before:[-webkit-mask-image:${CAL_MASK}] before:[mask-image:${CAL_MASK}] before:[-webkit-mask-repeat:no-repeat] before:[mask-repeat:no-repeat] before:[-webkit-mask-position:center] before:[mask-position:center] before:[-webkit-mask-size:contain] before:[mask-size:contain]`;
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
@@ -235,8 +253,8 @@ export default function MyTripsCart() {
     const open = openRef === t.ref;
     const items = t.lines || [];
     return (
-      <div className="mtc-book" key={t.ref}>
-        <div className="mtc-item mtc-item--booked">
+      <div className={MTC_BOOK} key={t.ref}>
+        <div className={MTC_ITEM_BOOKED}>
           {img ? (
             <span
               className={MTC_ITEM_ICON_PHOTO}
@@ -259,7 +277,7 @@ export default function MyTripsCart() {
         </div>
 
         {items.length > 0 && (
-          <div className="mtc-det">
+          <div className={MTC_DET_BOX}>
             <button
               type="button"
               className={MTC_DET_TOGGLE}
@@ -294,10 +312,10 @@ export default function MyTripsCart() {
         )}
 
         {isPast && t.review_items && t.review_items.length > 0 && (
-          <div className="mtc-review">
+          <div className={MTC_REVIEW_BOX}>
             <button
               type="button"
-              className={`${BTN} mtc-review__btn`}
+              className={`${BTN} ${MTC_REVIEW_BTN}`}
               onClick={() => setReview({ ref: t.ref, name: (account && account.name) || '', items: t.review_items })}
             >
               Leave a Review
@@ -339,7 +357,7 @@ export default function MyTripsCart() {
         </div>
       );
     }
-    return <div className="mtc-list">{arr.map((t) => bookingCard(t, isPast))}</div>;
+    return <div>{arr.map((t) => bookingCard(t, isPast))}</div>;
   };
 
   const TABS = [
@@ -372,11 +390,11 @@ export default function MyTripsCart() {
         </div>
       ) : (
         <>
-          <div className="mtc-list">
+          <div>
             {rows.map((r, i) => {
               const line = priced && priced.lines[i];
               return (
-                <div className="mtc-item" key={i}>
+                <div className={MTC_ITEM} key={i}>
                   <ItemIcon row={r} />
                   <div className={MTC_ITEM_BODY}>
                     <p className={MTC_ITEM_TITLE}>{r.service}</p>
@@ -384,7 +402,7 @@ export default function MyTripsCart() {
                       {r.day_no ? `Day ${r.day_no} · ` : ''}
                       <button
                         type="button"
-                        className="mtc-item__datebtn"
+                        className={MTC_DATEBTN}
                         onClick={() => setEditDate({ row: r, index: i })}
                       >
                         {fmtDay(r.date)}
@@ -409,7 +427,7 @@ export default function MyTripsCart() {
             <span className={MTC_TOTAL_VAL}><span className="price-cur">{withSymbol(totalText)}</span></span>
           </div>
 
-          <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add another program</button>
+          <button type="button" className={MTC_ADD_FULL} onClick={() => setAdding(true)}>+ Add another program</button>
 
           {undated && (
             <p className={MTC_NOTE_WARN}>Every item needs a date before you can pay. Tap a date to set it.</p>
@@ -426,8 +444,8 @@ export default function MyTripsCart() {
         </>
       ))}
 
-      {tab === 'booked' && <div className="mtc-panel">{bookingPanel(false)}</div>}
-      {tab === 'past' && <div className="mtc-panel">{bookingPanel(true)}</div>}
+      {tab === 'booked' && <div>{bookingPanel(false)}</div>}
+      {tab === 'past' && <div>{bookingPanel(true)}</div>}
 
       <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
 

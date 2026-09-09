@@ -227,45 +227,16 @@ body {
 
 /* Footer drawer: Settings + Chat WhatsApp */
 
-/* ==================== Homepage hero = foto + search bar ==================== */
-.hero {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 88vh;
-  padding: 7rem var(--space-3) var(--space-5);
-  background-color: var(--color-green);
-}
-/* Foto hero (Ubud Saraswati Temple - kolam teratai + gerbang) + overlay gelap. Scrim diarahin:
-   desktop = gelap di kiri (tempat teks) fade ke kanan; mobile = vertikal (teks center). */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-size: cover;
-  /* Frame ke ATAS biar ujung candi/meru keliatan (Wayan) - bukan center */
-  background-position: center top;
-  background-image:
-    linear-gradient(100deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0.12)),
-    url("assets/images/ubud-saraswati-temple-hero.webp");
-}
-@media (max-width: 992px) {
-  /* HP: foto diturunin mulai dari bawah nav bar (top:53px = tinggi nav) biar ada napas
-     LANGIT dikit tepat di bawah tripbar (Wayan). Strip 0-53px keisi bg gelap .hero =
-     ketutup nav bar (opaque) jadi gak keliatan. Foto frame center top -> langit di atas. */
-  .hero {
-    background-color: #12100c;
-  }
-  .hero::after {
-    top: 53px;
-    background-size: cover;
-    background-position: center top;
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.6)),
-      url("assets/images/ubud-saraswati-temple-hero-mobile.webp");
-  }
-}
+/* ==================== Homepage hero = foto + search bar ====================
+   .hero itself (bg/photo/overlay), .hero__subtitle, .hero__search + .hsearch*,
+   .hero__planbtn, .hero-sheet-ov -> converted to Tailwind utilities in
+   components/sections/home/Hero.jsx + components/search/HeroSearch.jsx
+   (TW-A4, issue #325). ".hero"/".hero__search"+"is-open"/".hero-sheet-ov" kept
+   as inert marker classNames on those elements (no styling left here) - needed
+   by shared selectors elsewhere that key off their presence: `.home > section:not(.hero)`
+   (section-gap spacing), `.hero::before { content:none }` (divider-exclusion list, ~line 1101),
+   and `.home .hero__inner:has(.hero__search.is-open)` (z-index bump, kept below near
+   .hero__inner - untouched, that's a shared primitive out of scope here). */
 .hero__inner {
   position: relative;
   z-index: 1;
@@ -288,22 +259,14 @@ body {
   line-height: var(--lh-heading);
   color: #fff;
 }
-.hero__subtitle {
-  margin-top: 1rem;
-  color: var(--color-cream);
-  max-width: 52ch;
-}
-/* Entry halus teks hero (eyebrow -> title -> subtitle) pas load, di-stagger dikit
-   biar se-smooth kartu search. backwards = animasi masuk doang, gak nyisa transform. */
-.hero__title,
-.hero__subtitle {
+/* .hero__subtitle animation-delay merged into .hero__title's below (Tailwind now
+   handles .hero__subtitle's own animation inline). Keyframes stay - referenced by
+   both .hero__title here and Tailwind's animate-[heroTextIn_...] in Hero.jsx. */
+.hero__title {
   animation: heroTextIn 0.6s var(--ease) backwards;
 }
 .hero__title {
   animation-delay: 0.08s;
-}
-.hero__subtitle {
-  animation-delay: 0.18s;
 }
 @keyframes heroTextIn {
   from {
@@ -312,129 +275,18 @@ body {
   }
 }
 
-/* ---- Search card ---- */
-.hero__search {
-  flex-shrink: 0;
-  width: 420px;
-  background: #fff;
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-xl);
-  padding: 1.5rem;
-  color: var(--color-green);
-  /* Search form di-inject via fetch -> tanpa ini dia "pop". Fade + slide-up halus
-     pas masuk (se-smooth navbar). Placeholder di #search-placeholder udah nahan
-     ruangnya, jadi nol layout shift.
-     Fill-mode = backwards (BUKAN both): kalau both, kartu nyimpen status transform
-     -> jadi containing-block buat position:fixed panel di dalemnya, bikin bottom-sheet
-     salah posisi/ngintip di HP. backwards = animasi masuk doang, gak nyisa transform. */
-  animation: heroCardIn 0.5s var(--ease) backwards;
-}
+/* ---- Search card ---- keyframe kept (heroCardIn), referenced by Tailwind's
+   animate-[heroCardIn_...] in HeroSearch.jsx. */
 @keyframes heroCardIn {
   from {
     opacity: 0;
     transform: translateY(14px);
   }
 }
-/* Anti-CLS: tahan ruang search form (tinggi form ~470px, desktop & HP sama, hasil
-   ukur headless) biar hero gak melar/jump pas partial-nya masuk. Ukuran WAJIB >=
-   tinggi form asli; kalau ubah isi search form -> ukur ulang & update angka ini.
-   Mau beda di HP? tambah override di @media (max-width: 992px). */
-#search-placeholder {
-  min-height: 470px;
-}
 @media (prefers-reduced-motion: reduce) {
-  .hero__search,
-  .hero__title,
-  .hero__subtitle {
+  .hero__title {
     animation: none;
   }
-}
-.hsearch__title {
-  font-size: var(--fs-h3);
-  text-align: center;
-  color: var(--color-gold);
-  margin-bottom: var(--space-3);
-}
-/* Baris 2 kolom (Guests + Pickup) di search form */
-.hsearch__row2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-}
-/* Native select (Guests/Pickup) disamain look-nya sama .hs-control: chevron custom,
-   tinggi & border seragam. Native dropdown pas dibuka tetep dipakai (UX HP paling enak). */
-/* ===== Referral field di search form (ganti field tanggal) ===== */
-.hsearch__refrow {
-  display: flex;
-  gap: 0.5rem;
-}
-.hsearch__refinp {
-  flex: 1 1 auto;
-  min-width: 0;
-  border: 1px solid var(--line, #e7e4dd);
-  border-radius: var(--r-md);
-  padding: 0 0.85rem;
-  height: var(--field-h);
-  background-color: #fff;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: var(--fs-field);
-  color: var(--color-green);
-  text-transform: uppercase;
-  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
-}
-.hsearch__refinp::placeholder {
-  color: var(--color-muted);
-  text-transform: none;
-  font-weight: 400;
-}
-.hsearch__refinp:focus {
-  outline: none;
-  border-color: var(--color-gold);
-  box-shadow: var(--focus-ring);
-}
-.hsearch__refinp:disabled {
-  background: var(--color-cream);
-  color: var(--color-gold-d);
-  border-color: rgba(34, 32, 28, 0.5);
-}
-.hsearch__refbtn {
-  flex: 0 0 auto;
-  border: none;
-  border-radius: var(--r-pill);
-  padding: 0.72rem 1.15rem;
-  background: var(--color-cta);
-  color: #fff;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background var(--dur-fast) ease;
-}
-.hsearch__refbtn:hover {
-  background: var(--color-cta-d);
-}
-.hsearch__refbtn.is-active {
-  background: var(--color-muted);
-}
-/* strict: kode salah -> border merah sekejap (tanpa teks pesan) */
-.hsearch__refinp.is-err {
-  border-color: var(--color-err);
-  box-shadow: 0 0 0 3px rgba(200, 80, 70, 0.14);
-}
-/* harga diskon referral (dipasang renderPrices di card/form) */
-.hsearch__field {
-  margin-bottom: 0.8rem;
-}
-.hsearch__field > label {
-  display: block;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-green);
-  margin-bottom: 0.4rem;
-}
-.hsearch__dd {
-  position: relative;
 }
 .hs-opt__flag {
   width: 20px;
@@ -497,176 +349,24 @@ body.hs-locked {
 body.hs-locked .wa-float {
   display: none;
 }
-/* popup: range tanggal (From/To) sejajar + input date rapi */
-.hsearch__go {
-  width: 100%;
-  margin-top: 0.4rem;
-  background: var(--color-green);
-  color: #fff;
-  border: none;
-  border-radius: var(--r-pill);
-  padding: 0.9rem;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: var(--fs-strong);
-  cursor: pointer;
-  transition: transform var(--dur) ease, box-shadow var(--dur) ease;
-}
-.hsearch__go:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-/* Tombol "Plan your trip" (HP only) - desktop pakai form inline, tombol disembunyiin */
-.hero__planbtn {
-  display: none;
-}
-
-/* Desktop homepage hero: dibikin lebih tinggi + napas atas lebih gede biar search form
-   ke-tengah (gak mepet ke atas/tripbar). align-items:center udah nangani centering-nya. */
-@media (min-width: 993px) {
-  .home .hero {
-    min-height: 92vh;
-    padding-top: 9rem;
-    padding-bottom: 5rem;
-  }
-}
-
-/* Mobile: hero stack, search full width */
+/* Mobile: .hero__inner flex-direction:column - SHARED (used by every non-homepage
+   .hero__inner consumer too, not just Hero.jsx), left untouched. */
 @media (max-width: 992px) {
   .hero__inner {
     flex-direction: column;
     align-items: stretch;
     gap: 2rem;
   }
-  .hero__search {
-    width: 100%;
-  }
 
-  /* ===== Mobile hero: pendek (foto + headline + 1 tombol), form pindah ke bottom-sheet =====
-     Hero gak full-screen lagi; #search-placeholder gak nahan ruang (form-nya jadi sheet
-     fixed di luar flow), jadi hero tinggal setinggi konten + napas. Desktop TIDAK kena. */
-  .home .hero {
-    min-height: 58vh;
-    padding-bottom: var(--space-4);
-  }
-  /* Teks hero HP rata tengah (ala Viator) - headline, subtitle, tombol semua center */
-  .home .hero__content {
-    text-align: center;
-  }
-  .home #search-placeholder {
-    min-height: 0;
-  }
-  /* Tombol trigger = CTA pill hijau. Width auto (bukan full), ke-center ikut text-align. */
-  .hero__planbtn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1.5rem;
-    width: auto;
-    height: 2.9rem;
-    padding: 0 1.9rem;
-    border: none;
-    border-radius: var(--r-pill);
-    background: var(--color-cta);
-    color: #fff;
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: var(--shadow-lg);
-    transition: background var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
-  }
-  .hero__planbtn:active {
-    transform: scale(0.99);
-  }
-  .hero__planbtn:hover {
-    background: var(--color-cta-d);
-  }
-
-  /* Search form jadi bottom-sheet: default ketutup (translateY 100%), slide up pas .is-open.
-     z-index 45 SENGAJA di bawah panel field (guests/pickup = .hs-panel z60 + overlay z55)
-     biar sub-dropdown-nya tetep muncul DI ATAS sheet ini pas dibuka. */
-  .home .hero__search {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 45;
-    width: auto;
-    max-height: 90vh;
-    overflow-y: auto;
-    border-radius: var(--r-xl) var(--r-xl) 0 0;
-    padding-top: 1.9rem;
-    margin: 0;
-    animation: none; /* matiin heroCardIn di HP - transform dipake buat sheet */
-    transform: translateY(100%);
-    visibility: hidden;
-    transition:
-      transform var(--dur-slow) var(--ease),
-      visibility var(--dur-slow);
-    box-shadow: 0 -12px 48px rgba(26, 26, 26, 0.28);
-  }
-  .home .hero__search.is-open {
-    transform: translateY(0);
-    visibility: visible;
-  }
   /* Sheet kebuka: angkat stacking-context .hero__inner (default z-index:1) di atas
      section lain (mis. kartu Explore) - kalau nggak, sheet yg position:fixed di DALAM
      hero__inner ketembus konten section bawah (bug: badge kartu nongol di atas form).
      Diikat ke .is-open (BUKAN body.hs-locked) biar nggak ke-reset pas dropdown popup
-     di dalam sheet ditutup (Overlay-nya toggle hs-locked yg sama). */
+     di dalam sheet ditutup (Overlay-nya toggle hs-locked yg sama). KEPT: targets the
+     shared .hero__inner (out of scope), conditioned on .hero__search/.is-open marker
+     classNames intentionally kept on the Tailwind-converted HeroSearch.jsx root (#325). */
   .home .hero__inner:has(.hero__search.is-open) {
     z-index: 46;
-  }
-  /* grab handle di atas sheet */
-  .home .hero__search::before {
-    content: "";
-    position: absolute;
-    top: 0.6rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 4px;
-    border-radius: 999px;
-    background: #d9d5cc;
-  }
-  /* tombol close (di-inject JS) */
-  .hero__search-close {
-    position: absolute;
-    top: 0.9rem;
-    right: 0.9rem;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--line);
-    border-radius: 50%;
-    background: #fff;
-    color: var(--color-green);
-    font-size: 1.2rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-  /* scrim di belakang sheet */
-  .hero-sheet-ov {
-    position: fixed;
-    inset: 0;
-    z-index: 44;
-    background: rgba(26, 26, 26, 0.42);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--dur) var(--ease), visibility var(--dur);
-  }
-  .hero-sheet-ov.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-/* Desktop: pastiin close button gak pernah nongol (sheet cuma HP) */
-@media (min-width: 993px) {
-  .hero__search-close {
-    display: none;
   }
 }
 
@@ -3192,7 +2892,6 @@ section.faq::before,
    Wayan minta H1 lebih tebal (700), H2 section tetep 500. */
 .section__title,
 .section__title--sub,
-.hsearch__title,
 .title {
   font-family: var(--font-head);
   font-weight: 500;
@@ -3225,8 +2924,7 @@ strong {
    Balikin uppercase = set text-transform: uppercase + letter-spacing: 0.07em. */
 .contact__group label,
 .field label,
-.summary__label,
-.hsearch__field > label {
+.summary__label {
   font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: normal;
@@ -3238,13 +2936,13 @@ strong {
    dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
-.hsearch__go, .booking__btn:not(.booking__btn--alt), .btn-book {
+.booking__btn:not(.booking__btn--alt), .btn-book {
   background: var(--color-cta);
   color: #fff;
   border-color: var(--color-cta);
 }
 /* Primary button hover: deeper green, text stays white */
-.hsearch__go:hover, .booking__btn:not(.booking__btn--alt):hover {
+.booking__btn:not(.booking__btn--alt):hover {
   background: var(--color-cta-d);
   color: #fff;
   border-color: var(--color-cta-d);

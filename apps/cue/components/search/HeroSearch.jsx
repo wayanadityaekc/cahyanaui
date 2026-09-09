@@ -17,6 +17,9 @@ import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+// .hsearch__field > label (dulu di style.css) - dipake berkali di file ini.
+const FIELD_LABEL = 'block text-small font-medium text-green mb-[0.4rem] font-body tracking-normal normal-case';
+
 export default function HeroSearch({ onClose, sheetOpen = false }) {
   const { guests, setGuests, stay, setStay, currency } = useTripPrefs();
   const pricing = usePricing();
@@ -114,16 +117,40 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   );
 
   return (
-    <div className={`hero__search${sheetOpen ? ' is-open' : ''}`} id="hero-search">
+    // "hero__search"/"is-open" kept as inert marker classes (no styling left on
+    // them) - required by `.home .hero__inner:has(.hero__search.is-open)` in
+    // style.css (z-index bump on the shared .hero__inner while the mobile sheet
+    // is open), which is left untouched since .hero__inner is a shared primitive
+    // out of scope for this issue. All actual visuals below are Tailwind utilities.
+    <div
+      className={`hero__search${sheetOpen ? ' is-open' : ''} flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
+        animate-[heroCardIn_0.5s_var(--ease)_backwards] motion-reduce:animate-none
+        max-[992px]:fixed max-[992px]:left-0 max-[992px]:right-0 max-[992px]:bottom-0 max-[992px]:z-[45] max-[992px]:w-auto
+        max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
+        max-[992px]:pt-[1.9rem] max-[992px]:animate-none
+        max-[992px]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]
+        max-[992px]:shadow-[0_-12px_48px_rgba(26,26,26,0.28)]
+        max-[992px]:before:content-[''] max-[992px]:before:absolute max-[992px]:before:top-[0.6rem] max-[992px]:before:left-1/2
+        max-[992px]:before:[transform:translateX(-50%)] max-[992px]:before:w-10 max-[992px]:before:h-1 max-[992px]:before:rounded-full
+        max-[992px]:before:bg-[#d9d5cc]
+        ${sheetOpen ? 'max-[992px]:translate-y-0 max-[992px]:visible' : 'max-[992px]:translate-y-full max-[992px]:invisible'}`}
+      id="hero-search"
+    >
       {onClose && (
-        <button type="button" className="hero__search-close" aria-label="Close" onClick={onClose}>
+        <button
+          type="button"
+          className="absolute top-[0.9rem] right-[0.9rem] w-[30px] h-[30px] flex items-center justify-center border border-line
+            rounded-[50%] bg-white text-green text-[1.2rem] leading-none cursor-pointer min-[993px]:hidden"
+          aria-label="Close"
+          onClick={onClose}
+        >
           &times;
         </button>
       )}
-      <h2 className="hsearch__title">Plan your trip</h2>
+      <h2 className="font-head text-h3 font-medium tracking-[-0.01em] leading-[1.15] text-center text-gold mb-6">Plan your trip</h2>
 
-      <div className="hsearch__field hsearch__dd" ref={ddRef}>
-        <label>
+      <div className="mb-[0.8rem] relative" ref={ddRef}>
+        <label className={FIELD_LABEL}>
           How do you want to explore?
           <InfoPopover variant="hero">
             <p className="!mb-[0.6rem] pb-[0.6rem] [border-bottom:1px_solid_#f2efe7] !font-semibold !text-green">
@@ -150,27 +177,38 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         {(!isMobile || !mounted) && panel}
       </div>
 
-      <div className="hsearch__field hsearch__ref">
-        <label htmlFor="hs-referral">Referral code</label>
-        <div className="hsearch__refrow">
+      <div className="mb-[0.8rem]">
+        <label className={FIELD_LABEL} htmlFor="hs-referral">Referral code</label>
+        <div className="flex gap-2">
           <input
             type="text"
             id="hs-referral"
-            className="hsearch__refinp"
+            className="[flex:1_1_auto] min-w-0 border border-line rounded-md px-[0.85rem] py-0 h-[var(--field-h)] bg-white font-body
+              font-medium text-field text-green uppercase [transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease]
+              placeholder:text-muted placeholder:normal-case placeholder:font-normal
+              focus:outline-none focus:[border-color:var(--color-gold)] focus:[box-shadow:var(--focus-ring)]
+              disabled:bg-cream disabled:text-gold-d disabled:[border-color:rgba(34,32,28,0.5)]"
             placeholder="Have a code?"
             autoComplete="off"
             spellCheck="false"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <button type="button" className="hsearch__refbtn" onClick={applyCode}>Apply</button>
+          <button
+            type="button"
+            className="flex-none border-none rounded-pill py-[0.72rem] px-[1.15rem] bg-cta text-white font-body font-semibold
+              text-[1rem] cursor-pointer [transition:background_var(--dur-fast)_ease] hover:bg-cta-d"
+            onClick={applyCode}
+          >
+            Apply
+          </button>
         </div>
         {refMsg && <small className={REFMSG}>{refMsg}</small>}
       </div>
 
-      <div className="hsearch__row2">
-        <div className="hsearch__field">
-          <label htmlFor="hs-guests">Guests</label>
+      <div className="grid grid-cols-[1fr_1fr] gap-[0.8rem]">
+        <div className="mb-[0.8rem]">
+          <label className={FIELD_LABEL} htmlFor="hs-guests">Guests</label>
           <Select
             id="hs-guests"
             label="Guests"
@@ -179,8 +217,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             options={GUESTS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
           />
         </div>
-        <div className="hsearch__field">
-          <label htmlFor="hs-stay">Pickup area</label>
+        <div className="mb-[0.8rem]">
+          <label className={FIELD_LABEL} htmlFor="hs-stay">Pickup area</label>
           <Select
             id="hs-stay"
             label="Pickup area"
@@ -191,13 +229,20 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         </div>
       </div>
 
-      <div className="hsearch__field hsearch__cur">
-        <label>Show prices in</label>
+      <div className="mb-[0.8rem]">
+        <label className={FIELD_LABEL}>Show prices in</label>
         <FlagDefs />
         <CurrencyPicker variant="hero" />
       </div>
 
-      <button type="button" className="hsearch__go" onClick={go}>Explore</button>
+      <button
+        type="button"
+        className="w-full mt-[0.4rem] bg-cta text-white border-none rounded-pill p-[0.9rem] font-body font-semibold text-strong cursor-pointer
+          [transition:transform_var(--dur)_ease,box-shadow_var(--dur)_ease] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
+        onClick={go}
+      >
+        Explore
+      </button>
     </div>
   );
 }

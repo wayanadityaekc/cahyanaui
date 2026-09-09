@@ -148,46 +148,6 @@ body {
   font-weight: 600;
   line-height: 1.6;
 }
-
-.section__title {
-  position: relative;
-  margin-bottom: 2rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h2);
-  font-weight: 600;
-  text-align: center;
-  color: var(--color-gold);
-  line-height: var(--lh-heading);
-}
-
-.section__title::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -10px;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 3px;
-  border-radius: 2px;
-  background-color: var(--color-gold);
-}
-/* Judul section ke-2 dst dalam satu blok (jarak atas) - gantiin inline margin-top */
-.section__title--sub {
-  margin-top: 2.75rem;
-  font-size: var(--fs-h3);
-}
-/* Guide article doang: judul rata KIRI (sejajar body text, gampang di-scan pas
-   baca artikel panjang). Scope-nya `.guide-page` (body class khusus guide/*.html),
-   BUKAN `.guide-article` - class itu ternyata numpang dipake juga di Terms/Privacy/
-   Cancellation/Charter (kolom baca polos yang sama), yang HARUS tetap center.
-   Sep 2026, Wayan. */
-.guide-article-page .section__title--sub {
-  text-align: left;
-}
-.guide-article-page .section__title--sub::after {
-  left: 0;
-  transform: none;
-}
 @keyframes navbarIn {
   from {
     opacity: 0;
@@ -718,15 +678,6 @@ section.faq::before,
   box-shadow: none;
 }
 
-/* Judul section di kolom kiri (mis. "What You'll Do") - geser ke tengah LAYAR
-   penuh, bukan cuma tengah kolom konten (kolom kiri lebih sempit karena ada
-   sidebar "Build Your Trip" di kanan, lebar sidebar-nya campuran %/max-width
-   jadi gak bisa dihitung offset-nya lewat CSS calc() biasa - --title-shift
-   diukur & di-set JS, liat centerBreakoutTitles() di script.js). */
-.tour-layout__main .section__title {
-  transform: translateX(var(--title-shift, 0px));
-}
-
 @media (min-width: 993px) {
   .tour-layout--book {
     display: flex;
@@ -1054,16 +1005,6 @@ section.faq::before,
 }
 .guide-cat-toggle[aria-expanded="true"] .hs-chev {
   transform: rotate(180deg);
-}
-/* .guide-cat-menu (+[hidden], +a, +a:first-child, +a:hover, +a svg) -> utilities
-   di GuideHub.jsx (migrasi Fase 2). Hidden via atribut `hidden` (UA default).
-   .guide-cat (section) juga -> utilities. */
-.guide-cat__title {
-  text-align: left;
-  margin-bottom: 1.1rem;
-}
-.guide-cat__title::after {
-  margin-left: 0;
 }
 
 /* ==================== Guides & Information (homepage) ====================
@@ -1755,8 +1696,6 @@ section.faq::before,
    card/UI tier di bawah, biar tetep kerasa beda kelas walau satu font sama
    body. H1 (.hero__title/.subhero__title/.lhero__title) DIPISAH ke bawah -
    Wayan minta H1 lebih tebal (700), H2 section tetep 500. */
-.section__title,
-.section__title--sub,
 .title {
   font-family: var(--font-head);
   font-weight: 500;
@@ -2048,22 +1987,6 @@ strong {
    .company-heading) - About & Contact di sini yang di-override. Wayan, Sep 2026. */
 .company-page .about .lhero__title { font-size: var(--fs-h2); }
 
-/* Terms/Privacy/Cancellation tab: .guide-article aslinya sengaja center buat
-   judul nomor (.section__title--sub) di halaman standalone-nya (terms-conditions.html
-   dkk, keputusan lama - JANGAN diubah di sana). Di dalam company-page beda konteks:
-   satu kolom sejajar sama tab About yang udah full rata kiri, jadi di sini
-   di-override rata kiri juga (pola sama kayak .guide-article-page). Wayan, Sep 2026. */
-.company-page .guide-article .section__title--sub {
-  text-align: left;
-}
-/* Garis emas kecil di bawah tiap judul nomor kerasa "nanggung" kalau diulang
-   12x di satu halaman panjang (Terms dkk) - dibuang khusus di sini, judul udah
-   cukup jelas dari bobot 600 + jarak atas. Halaman standalone TETAP pakai garis
-   (keputusan lama, jangan diubah). Wayan, Sep 2026. */
-.company-page .guide-article .section__title--sub::after {
-  content: none;
-}
-
 /* Desktop: konten Our Company duduk di "sheet" putih inset - pola halaman
    attraction (.tour-layout--book). Background halaman cream biar sheet kebaca &
    ruang kosong di kanan (sidebar pendek) jadi napas DALAM panel, bukan halaman
@@ -2301,24 +2224,6 @@ strong {
   .xplore .experience__grid--home4 { gap: 0.9rem; }
 }
 
-/* ============================================================
-   ALIGNMENT V1 (Job 2) — judul section rata kiri di section
-   ber-grid: Explore (styles sendiri), Guides, Reviews, listing
-   (.lhead). Utility (tab/See all) kanan sebaris sama judul.
-   Yang simetris tetap center: search guides, band CTA/villa.
-   ============================================================ */
-.guide-home .section__title,
-.reviews .section__title,
-.lhead .section__title {
-  text-align: left;
-}
-.guide-home .section__title::after,
-.reviews .section__title::after,
-.lhead .section__title::after {
-  left: 0;
-  transform: none;
-}
-
 /* Header row listing: judul kiri + zone-filter kanan sebaris.
    STICKY di bawah navbar (Job 2) — top diukur JS (initZoneAnchors). */
 /* Judul listing = heading tengah (agak gede), TIDAK sticky. Navigasi kategori
@@ -2328,19 +2233,12 @@ strong {
   margin: 0 auto 1.6rem;
   padding: 0.5rem 0 0;
   text-align: center;
-}
-.lhead .section__title {
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-}
-.lhead .section__title::after { left: 50%; transform: translateX(-50%); } /* underline di tengah */
+} /* underline di tengah */
 
 /* Header All Programs - independen dari .lhead listing (yang sekarang di-hide di
    HP & non-sticky). Judul + tab di tengah, kasih ruang atas biar gak ketutup
    navbar fixed (halaman ini gak ada hero di atasnya). Tampil di desktop & HP. */
 .aphead { max-width: 1200px; margin: 0 auto 1.6rem; padding: 7rem var(--container-x) 0; text-align: center; }
-.aphead .section__title { margin-bottom: 1.4rem; }
 .aphead .zone-filter { justify-content: center; max-width: none; margin: 0 auto; }
 @media (max-width: 768px) {
   .aphead { padding-top: 5.5rem; }
@@ -2354,9 +2252,6 @@ strong {
   .lhead {
     /* tab pindah ke floating switcher; judul sudah disembunyiin di HP -> bar
        kosong, jadi di-hide. */
-    display: none;
-  }
-  .lhead .section__title {
     display: none;
   }
   .lhead .zone-filter {

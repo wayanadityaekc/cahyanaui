@@ -49,7 +49,7 @@ export default function GuideArticle({ data }) {
         <div className={LAYOUT_MAIN}>
           <section className="info">
             <div className="info__container guide-article">
-              <Prose blocks={data.body} />
+              <Prose blocks={data.body} headingVariant="guide" />
             </div>
           </section>
         </div>

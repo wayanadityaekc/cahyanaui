@@ -1,5 +1,6 @@
 'use client';
 
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { useMemo, useState } from 'react';
 import GuideCard from '@/components/cards/GuideCard';
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
@@ -69,7 +70,7 @@ export default function GuideHub() {
       <section className={GUIDE_HUB.wrapClass}>
         {cats.map((c) => (
           <div className={GC_SECTION} id={c.id} key={c.id}>
-            <h2 className="section__title guide-cat__title">{c.title}</h2>
+            <h2 className={`${SECTION_TITLE} !text-left !mb-[1.1rem]`}>{c.title}</h2>
             <div className="experience__grid experience__grid--slider guide-home__slider">
               {c.cards.map((card) => (
                 <GuideCard key={card.href} href={card.href} img={card.img} alt={card.alt} title={card.title} tag={card.tag} cat={card.cat} w={card.w} hgt={card.hgt} />

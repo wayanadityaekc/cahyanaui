@@ -1,4 +1,5 @@
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import JsonLd from '@/components/JsonLd';
 import ReviewCta from '@/components/reviews/ReviewCta';
 
@@ -30,7 +31,7 @@ export default function AllReviews() {
           header row) is Tailwind utilities (TW-A5, #326). */}
       <section className="reviews py-16 px-6" id="all-reviews">
         <div className="flex justify-between items-end gap-6 flex-wrap max-w-[1100px] mx-auto mb-[1.6rem] pb-[0.8rem]">
-          <h2 className="section__title !mb-0">All Reviews</h2>
+          <h2 className={`${SECTION_TITLE} ${ST_LEFT} !mb-0`}>All Reviews</h2>
           <ReviewCta />
         </div>
         <ReviewsStrip />

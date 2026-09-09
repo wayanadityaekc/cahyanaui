@@ -20,7 +20,7 @@ function LegalBody({ data }) {
       <div className="info__container guide-article">
         <h1 className="company-heading">{data.title}</h1>
         <div>
-          <Prose blocks={data.body} />
+          <Prose blocks={data.body} headingVariant="company" />
         </div>
       </div>
     </section>

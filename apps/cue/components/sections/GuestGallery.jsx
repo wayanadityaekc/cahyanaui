@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 const GUESTS = [
   { img: 'guest-monkey-forest.jpg', alt: 'A guest at the Sacred Monkey Forest, Ubud' },
   { img: 'guest-jungle-swing.jpg', alt: 'A guest on a jungle swing near Ubud' },
@@ -20,7 +21,7 @@ export default function GuestGallery() {
   return (
     <section className="pt-12 pb-[3.2rem] bg-white" id="guest-gallery" aria-label="Photos with our guests">
       <p className="uppercase tracking-[0.14em] text-label font-medium text-gold text-center px-6">Our Guests</p>
-      <h2 className="section__title px-6 !mb-6">Moments With Our Guests</h2>
+      <h2 className={`${SECTION_TITLE} px-6 !mb-6`}>Moments With Our Guests</h2>
       <div className="overflow-hidden [-webkit-mask-image:linear-gradient(90deg,transparent,#000_2%,#000_98%,transparent)] [mask-image:linear-gradient(90deg,transparent,#000_2%,#000_98%,transparent)] motion-reduce:overflow-x-auto">
         <div className="grid grid-flow-col grid-rows-[repeat(2,128px)] auto-cols-[128px] gap-[6px] w-max animate-[guestScroll_35s_linear_infinite] motion-reduce:animate-none">
           {TRACK.map((g, i) => (

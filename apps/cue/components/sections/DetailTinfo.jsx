@@ -1,3 +1,4 @@
+import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 // "Good to know" block for transfer / airport detail pages (TW-B4 #337).
 // Was a raw HTML string (TRANSFER.tinfoHtml / AIRPORT.tinfoHtml) carrying
 // .tinfo__facts / .tinfo__fact / .tinfo__cols / .tinfo__col - now data + this
@@ -21,7 +22,7 @@
 export default function DetailTinfo({ facts, included, excluded }) {
   return (
     <>
-      <h2 className="section__title">Good to know</h2>
+      <h2 className={SECTION_TITLE}>Good to know</h2>
       <div className="flex flex-wrap [border:1px_solid_var(--line)] rounded-[var(--r-lg)] overflow-hidden max-w-[720px] mt-[0.4rem] mx-auto mb-[2.2rem]">
         {facts.map((f) => (
           <div className="flex-[1_1_0px] min-w-[130px] text-center py-[0.9rem] px-[0.8rem] [border-right:1px_solid_var(--line)] last:[border-right:none]" key={f.label}>

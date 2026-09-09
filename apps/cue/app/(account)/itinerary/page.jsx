@@ -1,4 +1,5 @@
 import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
@@ -23,7 +24,7 @@ export default function Page() {
       </section>
 
       <section className="py-12 px-6" id="itinerary">
-        <h2 className="section__title">Plan Your Bali Trip Day by Day</h2>
+        <h2 className={SECTION_TITLE}>Plan Your Bali Trip Day by Day</h2>
         <p className="builder__intro">
           Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a
           10% deposit to book.

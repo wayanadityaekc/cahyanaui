@@ -1,4 +1,5 @@
 import TransferPicker from '@/components/sections/TransferPicker';
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import Price from '@/components/Price';
 import DetailTinfo from '@/components/sections/DetailTinfo';
 import { TRANSFER } from '@/content/shared/transfer';
@@ -32,7 +33,7 @@ export default function TransferSection() {
       </section>
 
       <section className="max-w-[960px] mx-auto mt-12 px-[1.3rem] before:content-none">
-        <h2 className="section__title">{TRANSFER.routesTitle}</h2>
+        <h2 className={SECTION_TITLE}>{TRANSFER.routesTitle}</h2>
         <p className="text-center text-muted text-[0.8rem] mt-[0.2rem] mb-[1.4rem]">{TRANSFER.routesNote}</p>
         <div className="grid grid-cols-2 max-[768px]:grid-cols-1 gap-[0.6rem]">
           {TRANSFER.routes.map((r) => (

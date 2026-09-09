@@ -1,4 +1,5 @@
 import Img from '@/components/ui/Img';
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
@@ -108,7 +109,7 @@ export default function TourPage({ data }) {
           <div className="stops" id={data.stopsId}>
             {data.items.map((it, i) =>
               it.type === 'sub' ? (
-                <h3 className="section__title section__title--sub" key={i}>{it.text}</h3>
+                <h3 className={`${SECTION_TITLE_SUB} [transform:translateX(var(--title-shift,0px))]`} key={i}>{it.text}</h3>
               ) : (
                 <Stop s={it} key={i} />
               ),

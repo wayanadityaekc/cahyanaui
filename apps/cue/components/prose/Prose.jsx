@@ -4,7 +4,20 @@
 // those to Tailwind utilities belongs to a later, separate issue (see
 // content/schema/prose.js header). This component only moves the markup out
 // of a raw HTML string into data + real elements.
-export default function Prose({ blocks }) {
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+
+// headingVariant tunes the `--sub` article headings per context (the old
+// `.guide-article-page` / `.company-page .guide-article` descendant overrides):
+//   'legal'   (default) = centered + underline (base .section__title--sub)
+//   'guide'   = left-aligned + underline shifted left
+//   'company' = left-aligned + underline removed (Terms-style in Our Company)
+const SUB_VARIANT = {
+  legal: SECTION_TITLE_SUB,
+  guide: `${SECTION_TITLE_SUB} ${ST_LEFT}`,
+  company: `${SECTION_TITLE_SUB} !text-left after:!content-none`,
+};
+
+export default function Prose({ blocks, headingVariant = 'legal' }) {
   return blocks.map((b, i) => {
     switch (b.type) {
       case 'crumb':
@@ -23,8 +36,8 @@ export default function Prose({ blocks }) {
         // charter/airport "How a Charter Day Works" etc.). Class kept as-is -
         // .section__title base is B-FINAL's to convert.
         return b.sub === false
-          ? <h2 className="section__title" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />
-          : <h2 className="section__title section__title--sub" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+          ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: b.html }} />
+          : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'para':
         return <p key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'list':

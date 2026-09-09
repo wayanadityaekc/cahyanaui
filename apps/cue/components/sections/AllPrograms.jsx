@@ -1,5 +1,6 @@
 'use client';
 
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { useState } from 'react';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import ListingRow from '@/components/cards/ListingRow';
@@ -25,7 +26,7 @@ export default function AllPrograms() {
     <div className="tourprog">
       <section className="experience experience--alt">
         <div className="aphead">
-          <h1 className="section__title">All Programs</h1>
+          <h1 className={`${SECTION_TITLE} !mb-[1.4rem]`}>All Programs</h1>
           <div className="zone-filter" role="tablist" aria-label="Program categories">
             {TABS.map((t) => (
               <button

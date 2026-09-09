@@ -1,5 +1,6 @@
 'use client';
 
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { useMemo, useState } from 'react';
 import Slider from '@/components/ui/Slider';
 import GuideCard from '@/components/cards/GuideCard';
@@ -21,7 +22,7 @@ export default function GuideHome() {
     <section className="px-6" id="guides" aria-labelledby="guide-home-title">
       <div className="max-w-[1200px] mx-auto">
         <div className="text-left mb-7">
-          <h2 className="section__title !text-left [&::after]:!left-0 [&::after]:![transform:none]" id="guide-home-title">Guides &amp; Information</h2>
+          <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">Guides &amp; Information</h2>
           <p className="max-w-[600px] mt-[0.6rem] text-left text-muted text-body leading-[var(--lh-body)]">Free local guides to Bali - search a topic, or swipe through below.</p>
         </div>
 

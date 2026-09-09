@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
+import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 
 // Tailwind-native (TW-A12, #333): .closing-band* -> utilities. `closing.buttons[].cls`
 // in content/shared/listings.js still holds legacy-looking BEM strings
@@ -147,7 +148,7 @@ export default function ListingPage({ data }) {
 
       <section className="experience experience--alt" id={sectionId}>
         <div className="lhead">
-          <h2 className="section__title">{listTitle}</h2>
+          <h2 className={`${SECTION_TITLE} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>
 
         {/* Floating sticky nav (bawah). DESKTOP: segmented tab (.zfilter) - pilih
@@ -194,7 +195,7 @@ export default function ListingPage({ data }) {
       {info && (
         <section className="info">
           <div className="info__container">
-            <h2 className="section__title">{info.title}</h2>
+            <h2 className={SECTION_TITLE}>{info.title}</h2>
             <div className="info__facts">
               {info.facts.map((f) => (
                 <div className="info__fact" key={f.label}>

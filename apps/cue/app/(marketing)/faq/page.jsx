@@ -1,4 +1,5 @@
 import { FAQ } from '@/content/shared/faq';
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
@@ -23,7 +24,7 @@ export default function Faq() {
       </section>
 
       <section className="faq">
-        <h2 className="section__title">Frequently Asked Questions</h2>
+        <h2 className={SECTION_TITLE}>Frequently Asked Questions</h2>
         <div className="max-w-[var(--container-mid)] mx-auto">
           <div className="min-w-0">
             {FAQ.map((item, i) => (

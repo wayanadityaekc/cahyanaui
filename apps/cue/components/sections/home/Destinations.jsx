@@ -1,5 +1,6 @@
 import HomepageCard from '@/components/cards/HomepageCard';
 import { HOME_DESTINATIONS } from '@/content/shared/home';
+import { GRID_XPLORE } from '@/components/ui/gridClasses';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 
 export default function Destinations() {
@@ -10,7 +11,7 @@ export default function Destinations() {
           <h2 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-gold m-0">Popular Bali Destinations</h2>
         </div>
       </div>
-      <div className="experience__grid experience__grid--home4">
+      <div className={GRID_XPLORE}>
         {HOME_DESTINATIONS.map((c) => (
           <HomepageCard key={c.name} {...c} />
         ))}

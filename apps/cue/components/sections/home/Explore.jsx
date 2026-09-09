@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { GRID_XPLORE } from '@/components/ui/gridClasses';
 import HomepageCard from '@/components/cards/HomepageCard';
 import { EXPLORE_TOURS, EXPLORE_EXPERIENCES } from '@/content/shared/home';
 import { BTN_PILL } from '@/components/ui/btnClasses';
@@ -43,7 +44,7 @@ export default function Explore() {
 
       {TABS.map((t) => (
         <div key={t.key} hidden={active !== t.key}>
-          <div className="experience__grid experience__grid--home4">
+          <div className={GRID_XPLORE}>
             {t.cards.map((c) => (
               <HomepageCard key={c.href + c.name} {...c} />
             ))}

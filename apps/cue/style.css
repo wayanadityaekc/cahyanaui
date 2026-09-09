@@ -324,8 +324,6 @@ body.hs-locked {
   text-align: left;
 }
 /* ==================== Shared form-field base (DRY) ==================== */
-.contact__group input,
-.contact__group textarea,
 .field select,
 .field input[type="date"],
 .itn-day__fields .field input,
@@ -874,33 +872,6 @@ section.faq::before,
   
 }
 
-/* Wrapping grid for pages with many cards (tour & activities).
-   minmax 260px -> ~4 kartu per baris di desktop (biar segede homepage), auto turun di layar kecil. */
-
-/* Contact page */
-.contact__group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-.contact__group label {
-  margin-bottom: 0.4rem;
-  font-size: var(--fs-small);
-  font-weight: 500;
-}
-.contact__group input,
-.contact__group textarea {
-  padding: 0.5rem 0.65rem;
-  font-size: var(--fs-field);
-}
-.contact__group input {
-  height: var(--field-h);
-}
-.contact__group textarea {
-  min-height: 130px;
-  resize: vertical;
-}
-
 /* Embedded map */
 .builder__intro {
   max-width: 640px;
@@ -1421,7 +1392,6 @@ strong {
 }
 /* Field label: Inter medium, normal case (EXPERIMENT — dulu uppercase small-caps).
    Balikin uppercase = set text-transform: uppercase + letter-spacing: 0.07em. */
-.contact__group label,
 .field label {
   font-family: var(--font-body);
   font-weight: 500;

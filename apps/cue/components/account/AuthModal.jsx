@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { BTN, REFMSG, REFMSG_ERR } from '@/components/ui/modalClasses';
+import { CONTACT_GROUP, CONTACT_LABEL, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { useAccount } from '@/state/AccountProvider';
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
@@ -48,9 +49,9 @@ export default function AuthModal({ open, onClose }) {
       {view === 'signin' ? (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">Enter your email and we&apos;ll send you a secure sign-in link. No password needed.</p>
-          <div className="contact__group">
-            <label htmlFor="auth-email">Email</label>
-            <input type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" />
+          <div className={CONTACT_GROUP}>
+            <label className={CONTACT_LABEL} htmlFor="auth-email">Email</label>
+            <input className={CONTACT_INPUT} type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" />
           </div>
           {msg && <small className={REFMSG_ERR}>{msg}</small>}
           {ok && <small className={REFMSG}>{ok}</small>}
@@ -65,17 +66,17 @@ export default function AuthModal({ open, onClose }) {
       ) : (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">No password - we&apos;ll recognise you by email &amp; phone.</p>
-          <div className="contact__group">
-            <label htmlFor="auth-name">Your Name</label>
-            <input type="text" id="auth-name" placeholder="Enter your name" value={f.name} onChange={set('name')} autoComplete="name" />
+          <div className={CONTACT_GROUP}>
+            <label className={CONTACT_LABEL} htmlFor="auth-name">Your Name</label>
+            <input className={CONTACT_INPUT} type="text" id="auth-name" placeholder="Enter your name" value={f.name} onChange={set('name')} autoComplete="name" />
           </div>
-          <div className="contact__group">
-            <label htmlFor="auth-cemail">Email</label>
-            <input type="email" id="auth-cemail" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" />
+          <div className={CONTACT_GROUP}>
+            <label className={CONTACT_LABEL} htmlFor="auth-cemail">Email</label>
+            <input className={CONTACT_INPUT} type="email" id="auth-cemail" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" />
           </div>
-          <div className="contact__group">
-            <label htmlFor="auth-phone">Phone / WhatsApp</label>
-            <input type="tel" id="auth-phone" placeholder="+62 ..." value={f.phone} onChange={set('phone')} autoComplete="tel" />
+          <div className={CONTACT_GROUP}>
+            <label className={CONTACT_LABEL} htmlFor="auth-phone">Phone / WhatsApp</label>
+            <input className={CONTACT_INPUT} type="tel" id="auth-phone" placeholder="+62 ..." value={f.phone} onChange={set('phone')} autoComplete="tel" />
           </div>
           {msg && <small className={REFMSG_ERR}>{msg}</small>}
           <button type="button" className={BTN} onClick={doCreate} disabled={busy}>

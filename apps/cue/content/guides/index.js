@@ -37,8 +37,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-beaches-surf.html\"> <div class=\"experience__image\"><img src=\"/assets/images/melasti-beach.jpg\" alt=\"White sand and clear water at a south Bali beach\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Coast</span><h3 class=\"experience__name\">Beaches &amp; Surf</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-day-tours.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tour-hero.jpg\" alt=\"A private day tour through the Bali countryside\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Tours</span><h3 class=\"experience__name\">Guided Day Tours</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-beaches-surf.html",
+      "img": "melasti-beach.jpg",
+      "alt": "White sand and clear water at a south Bali beach",
+      "title": "Beaches & Surf",
+      "tag": "Coast",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-day-tours.html",
+      "img": "tour-hero.jpg",
+      "alt": "A private day tour through the Bali countryside",
+      "title": "Guided Day Tours",
+      "tag": "Tours",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -83,8 +122,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-adventure-activities.html\"> <div class=\"experience__image\"><img src=\"/assets/images/ubud-atv-adventure-card.jpg\" alt=\"ATV quad biking through the jungle near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Adventure</span><h3 class=\"experience__name\">Adventure Activities</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-day-tours.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tour-hero.jpg\" alt=\"A private day tour through the Bali countryside\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Tours</span><h3 class=\"experience__name\">Guided Day Tours</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-adventure-activities.html",
+      "img": "ubud-atv-adventure-card.jpg",
+      "alt": "ATV quad biking through the jungle near Ubud",
+      "title": "Adventure Activities",
+      "tag": "Adventure",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-day-tours.html",
+      "img": "tour-hero.jpg",
+      "alt": "A private day tour through the Bali countryside",
+      "title": "Guided Day Tours",
+      "tag": "Tours",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -129,8 +207,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-adventure-activities.html\"> <div class=\"experience__image\"><img src=\"/assets/images/ubud-atv-adventure-card.jpg\" alt=\"ATV quad biking through the jungle near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Adventure</span><h3 class=\"experience__name\">Adventure Activities</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-beaches-surf.html\"> <div class=\"experience__image\"><img src=\"/assets/images/melasti-beach.jpg\" alt=\"White sand and clear water at a south Bali beach\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Coast</span><h3 class=\"experience__name\">Beaches &amp; Surf</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-adventure-activities.html",
+      "img": "ubud-atv-adventure-card.jpg",
+      "alt": "ATV quad biking through the jungle near Ubud",
+      "title": "Adventure Activities",
+      "tag": "Adventure",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-beaches-surf.html",
+      "img": "melasti-beach.jpg",
+      "alt": "White sand and clear water at a south Bali beach",
+      "title": "Beaches & Surf",
+      "tag": "Coast",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -175,8 +292,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/best-time-to-visit-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tanahlot-sunset.jpg\" alt=\"Sunset behind Tanah Lot temple, Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Timing</span><h3 class=\"experience__name\">Best Time to Visit</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/getting-around-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/transfer-hero.webp\" alt=\"A private car transfer in Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Transport</span><h3 class=\"experience__name\">Getting Around Bali</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/best-time-to-visit-bali.html",
+      "img": "tanahlot-sunset.jpg",
+      "alt": "Sunset behind Tanah Lot temple, Bali",
+      "title": "Best Time to Visit",
+      "tag": "Timing",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/getting-around-bali.html",
+      "img": "transfer-hero.webp",
+      "alt": "A private car transfer in Bali",
+      "title": "Getting Around Bali",
+      "tag": "Transport",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -221,8 +377,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-volcanoes.html\"> <div class=\"experience__image\"><img src=\"/assets/images/mount-batur-volcano.webp\" alt=\"Mount Batur's volcanic slopes, Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Mountains</span><h3 class=\"experience__name\">Volcanoes: Agung &amp; Batur</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-waterfalls.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tegenungan-waterfall-hero.jpg\" alt=\"Tegenungan waterfall near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Waterfalls</span><h3 class=\"experience__name\">Waterfalls of Bali</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-volcanoes.html",
+      "img": "mount-batur-volcano.webp",
+      "alt": "Mount Batur's volcanic slopes, Bali",
+      "title": "Volcanoes: Agung & Batur",
+      "tag": "Mountains",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-waterfalls.html",
+      "img": "tegenungan-waterfall-hero.jpg",
+      "alt": "Tegenungan waterfall near Ubud",
+      "title": "Waterfalls of Bali",
+      "tag": "Waterfalls",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -267,8 +462,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-rice-terraces.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tegalalang-subak-terraces.jpg\" alt=\"Subak-irrigated rice terraces at Tegalalang\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Landscapes</span><h3 class=\"experience__name\">Rice Terraces &amp; Subak</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-waterfalls.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tegenungan-waterfall-hero.jpg\" alt=\"Tegenungan waterfall near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Waterfalls</span><h3 class=\"experience__name\">Waterfalls of Bali</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-rice-terraces.html",
+      "img": "tegalalang-subak-terraces.jpg",
+      "alt": "Subak-irrigated rice terraces at Tegalalang",
+      "title": "Rice Terraces & Subak",
+      "tag": "Landscapes",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-waterfalls.html",
+      "img": "tegenungan-waterfall-hero.jpg",
+      "alt": "Tegenungan waterfall near Ubud",
+      "title": "Waterfalls of Bali",
+      "tag": "Waterfalls",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -313,8 +547,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-rice-terraces.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tegalalang-subak-terraces.jpg\" alt=\"Subak-irrigated rice terraces at Tegalalang\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Landscapes</span><h3 class=\"experience__name\">Rice Terraces &amp; Subak</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-volcanoes.html\"> <div class=\"experience__image\"><img src=\"/assets/images/mount-batur-volcano.webp\" alt=\"Mount Batur's volcanic slopes, Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Mountains</span><h3 class=\"experience__name\">Volcanoes: Agung &amp; Batur</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-rice-terraces.html",
+      "img": "tegalalang-subak-terraces.jpg",
+      "alt": "Subak-irrigated rice terraces at Tegalalang",
+      "title": "Rice Terraces & Subak",
+      "tag": "Landscapes",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-volcanoes.html",
+      "img": "mount-batur-volcano.webp",
+      "alt": "Mount Batur's volcanic slopes, Bali",
+      "title": "Volcanoes: Agung & Batur",
+      "tag": "Mountains",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -359,8 +632,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/balinese-hinduism.html\"> <div class=\"experience__image\"><img src=\"/assets/images/pura-batuan-temple.jpg\" alt=\"Carved gates and shrines at a Balinese temple\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Beliefs</span><h3 class=\"experience__name\">Balinese Hinduism</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/temple-etiquette.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tirta-empul-melukat-ritual.jpg\" alt=\"Worshippers in sarongs at a Balinese temple ritual\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Etiquette</span><h3 class=\"experience__name\">Temple Etiquette &amp; Dress</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/balinese-hinduism.html",
+      "img": "pura-batuan-temple.jpg",
+      "alt": "Carved gates and shrines at a Balinese temple",
+      "title": "Balinese Hinduism",
+      "tag": "Beliefs",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/temple-etiquette.html",
+      "img": "tirta-empul-melukat-ritual.jpg",
+      "alt": "Worshippers in sarongs at a Balinese temple ritual",
+      "title": "Temple Etiquette & Dress",
+      "tag": "Etiquette",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -405,8 +717,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/temple-etiquette.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tirta-empul-melukat-ritual.jpg\" alt=\"Worshippers in sarongs at a Balinese temple ritual\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Etiquette</span><h3 class=\"experience__name\">Temple Etiquette &amp; Dress</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/balinese-dance.html\"> <div class=\"experience__image\"><img src=\"/assets/images/legong.jpg\" alt=\"A Balinese dancer in gilded costume\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Performing arts</span><h3 class=\"experience__name\">Traditional Dance</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/temple-etiquette.html",
+      "img": "tirta-empul-melukat-ritual.jpg",
+      "alt": "Worshippers in sarongs at a Balinese temple ritual",
+      "title": "Temple Etiquette & Dress",
+      "tag": "Etiquette",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/balinese-dance.html",
+      "img": "legong.jpg",
+      "alt": "A Balinese dancer in gilded costume",
+      "title": "Traditional Dance",
+      "tag": "Performing arts",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -451,8 +802,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-money-sim-visa.html\"> <div class=\"experience__image\"><img src=\"/assets/images/ubud-art-market.jpg\" alt=\"Stalls of crafts and textiles at Ubud Art Market\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Essentials</span><h3 class=\"experience__name\">Money, SIM &amp; Visas</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/getting-around-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/transfer-hero.webp\" alt=\"A private car transfer in Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Transport</span><h3 class=\"experience__name\">Getting Around Bali</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-money-sim-visa.html",
+      "img": "ubud-art-market.jpg",
+      "alt": "Stalls of crafts and textiles at Ubud Art Market",
+      "title": "Money, SIM & Visas",
+      "tag": "Essentials",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/getting-around-bali.html",
+      "img": "transfer-hero.webp",
+      "alt": "A private car transfer in Bali",
+      "title": "Getting Around Bali",
+      "tag": "Transport",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -497,8 +887,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/uluwatu-bukit.html\"> <div class=\"experience__image\"><img src=\"/assets/images/uluwatu-temple.webp\" alt=\"Uluwatu clifftop temple above the sea\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Clifftop south</span><h3 class=\"experience__name\">Uluwatu &amp; the Bukit</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/best-time-to-visit-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tanahlot-sunset.jpg\" alt=\"Sunset behind Tanah Lot temple, Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Timing</span><h3 class=\"experience__name\">Best Time to Visit</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/getting-around-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/transfer-hero.webp\" alt=\"A private car transfer in Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Transport</span><h3 class=\"experience__name\">Getting Around Bali</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/uluwatu-bukit.html",
+      "img": "uluwatu-temple.webp",
+      "alt": "Uluwatu clifftop temple above the sea",
+      "title": "Uluwatu & the Bukit",
+      "tag": "Clifftop south",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/best-time-to-visit-bali.html",
+      "img": "tanahlot-sunset.jpg",
+      "alt": "Sunset behind Tanah Lot temple, Bali",
+      "title": "Best Time to Visit",
+      "tag": "Timing",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/getting-around-bali.html",
+      "img": "transfer-hero.webp",
+      "alt": "A private car transfer in Bali",
+      "title": "Getting Around Bali",
+      "tag": "Transport",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -543,8 +972,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-money-sim-visa.html\"> <div class=\"experience__image\"><img src=\"/assets/images/ubud-art-market.jpg\" alt=\"Stalls of crafts and textiles at Ubud Art Market\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Essentials</span><h3 class=\"experience__name\">Money, SIM &amp; Visas</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/best-time-to-visit-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tanahlot-sunset.jpg\" alt=\"Sunset behind Tanah Lot temple, Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Timing</span><h3 class=\"experience__name\">Best Time to Visit</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/bali-money-sim-visa.html",
+      "img": "ubud-art-market.jpg",
+      "alt": "Stalls of crafts and textiles at Ubud Art Market",
+      "title": "Money, SIM & Visas",
+      "tag": "Essentials",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/best-time-to-visit-bali.html",
+      "img": "tanahlot-sunset.jpg",
+      "alt": "Sunset behind Tanah Lot temple, Bali",
+      "title": "Best Time to Visit",
+      "tag": "Timing",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -589,8 +1057,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/balinese-hinduism.html\"> <div class=\"experience__image\"><img src=\"/assets/images/pura-batuan-temple.jpg\" alt=\"Carved gates and shrines at a Balinese temple\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Beliefs</span><h3 class=\"experience__name\">Balinese Hinduism</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/balinese-dance.html\"> <div class=\"experience__image\"><img src=\"/assets/images/legong.jpg\" alt=\"A Balinese dancer in gilded costume\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Performing arts</span><h3 class=\"experience__name\">Traditional Dance</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/balinese-hinduism.html",
+      "img": "pura-batuan-temple.jpg",
+      "alt": "Carved gates and shrines at a Balinese temple",
+      "title": "Balinese Hinduism",
+      "tag": "Beliefs",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/balinese-dance.html",
+      "img": "legong.jpg",
+      "alt": "A Balinese dancer in gilded costume",
+      "title": "Traditional Dance",
+      "tag": "Performing arts",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -636,8 +1143,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/temple-etiquette.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tirta-empul-melukat-ritual.jpg\" alt=\"Worshippers in sarongs at a Balinese temple ritual\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Etiquette</span><h3 class=\"experience__name\">Temple Etiquette &amp; Dress</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/bali-rice-terraces.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tegalalang-subak-terraces.jpg\" alt=\"Subak-irrigated rice terraces at Tegalalang\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Landscapes</span><h3 class=\"experience__name\">Rice Terraces &amp; Subak</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/balinese-dance.html\"> <div class=\"experience__image\"><img src=\"/assets/images/legong.jpg\" alt=\"A Balinese dancer in gilded costume\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Performing arts</span><h3 class=\"experience__name\">Traditional Dance</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/temple-etiquette.html",
+      "img": "tirta-empul-melukat-ritual.jpg",
+      "alt": "Worshippers in sarongs at a Balinese temple ritual",
+      "title": "Temple Etiquette & Dress",
+      "tag": "Etiquette",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/bali-rice-terraces.html",
+      "img": "tegalalang-subak-terraces.jpg",
+      "alt": "Subak-irrigated rice terraces at Tegalalang",
+      "title": "Rice Terraces & Subak",
+      "tag": "Landscapes",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/balinese-dance.html",
+      "img": "legong.jpg",
+      "alt": "A Balinese dancer in gilded costume",
+      "title": "Traditional Dance",
+      "tag": "Performing arts",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"
@@ -682,8 +1228,47 @@ export const GUIDE_CONTENT = {
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {
+    "kind": "guides",
     "cls": "guide-more",
-    "html": "<h2 class=\"guide-more__title\">You might also like</h2> <div class=\"experience__grid experience__grid--home4\"> <a class=\"experience__card guide-home__card\" href=\"/guide/ubud.html\"> <div class=\"experience__image\"><img src=\"/assets/images/campuhan-ridge.jpg\" alt=\"The Campuhan Ridge walking trail near Ubud\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Cultural hub</span><h3 class=\"experience__name\">Ubud</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/canggu.html\"> <div class=\"experience__image\"><img src=\"/assets/images/becah-south.jpg\" alt=\"A surf beach on Bali's south coast\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Surf &amp; cafes</span><h3 class=\"experience__name\">Canggu</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/best-time-to-visit-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/tanahlot-sunset.jpg\" alt=\"Sunset behind Tanah Lot temple, Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Timing</span><h3 class=\"experience__name\">Best Time to Visit</h3></div> </a> <a class=\"experience__card guide-home__card\" href=\"/guide/getting-around-bali.html\"> <div class=\"experience__image\"><img src=\"/assets/images/transfer-hero.webp\" alt=\"A private car transfer in Bali\" loading=\"lazy\" width=\"1200\" height=\"900\" /></div> <div class=\"experience__body\"><span class=\"guide-home__tag\">Transport</span><h3 class=\"experience__name\">Getting Around Bali</h3></div> </a> </div>"
+    "title": "You might also like",
+    "cards": [
+     {
+      "href": "/guide/ubud.html",
+      "img": "campuhan-ridge.jpg",
+      "alt": "The Campuhan Ridge walking trail near Ubud",
+      "title": "Ubud",
+      "tag": "Cultural hub",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/canggu.html",
+      "img": "becah-south.jpg",
+      "alt": "A surf beach on Bali's south coast",
+      "title": "Canggu",
+      "tag": "Surf & cafes",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/best-time-to-visit-bali.html",
+      "img": "tanahlot-sunset.jpg",
+      "alt": "Sunset behind Tanah Lot temple, Bali",
+      "title": "Best Time to Visit",
+      "tag": "Timing",
+      "w": 1200,
+      "hgt": 900
+     },
+     {
+      "href": "/guide/getting-around-bali.html",
+      "img": "transfer-hero.webp",
+      "alt": "A private car transfer in Bali",
+      "title": "Getting Around Bali",
+      "tag": "Transport",
+      "w": 1200,
+      "hgt": 900
+     }
+    ]
    },
    {
     "kind": "tours"

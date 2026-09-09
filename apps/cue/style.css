@@ -1600,47 +1600,10 @@ section.faq::before,
 .btn-book {
   text-decoration: none;
 }
-
-/* NOTE (TW-A9, #330, buat Wayan/Architect): `.acct`/`.acct__panel`/`.acct__curopt`/
-   `.acct__dot` (account-icon-di-navbar-persisten punya CSS lama) dihapus di sini -
-   digrep di SELURUH app/components, nol classList/className match, cuma nyisa
-   di komentar. Navbar.jsx sekarang gak punya ikon akun sendiri lagi di header -
-   guests/pickup/currency/sign-in udah pindah ke dalam drawer hamburger (row
-   "Welcome, ..." + CurrencyPicker variant="navbar"). Beda dari asumsi issue #330
-   ("`.acct`/[data-*] JS hook - udah dikonversi" = out of scope) - kayaknya itu
-   ditulis pas .acct MASIH ikon terpisah; sekarang codebase-nya udah beda (redesign
-   entah kapan, di luar migrasi Tailwind ini). CLAUDE.md bagian Navbar juga masih
-   nyebut nilai `.acct margin-right 0.9rem` yang classnya udah gak ada - mungkin
-   perlu di-refresh. Dihapus di sini karena udah diverifikasi dead, tapi flag di
-   PR biar Wayan tau ini nemu, bukan cuma dianggap remeh. */
-
-/* ==================== Pickup surcharge (form + card labels) ==================== */
-/* Destinations card: tombol "Visit this destination" (gaya outline sama .card-add) */
-
-/* Baris "New here? Create account" / "Already have an account? Sign in" */
-
-/* ==================== Halaman akun (My Trips / Settings) ==================== */
-.account-page {
-  max-width: 640px;
-}
 /* Settings tanpa hero: section clear navbar+tripbar sendiri (pola sama kayak .mytrips) +
    judul polos. Pakai .info.account-settings biar menang dari rule global .info (36px). */
 .info.account-settings {
   padding-top: calc(var(--nav-h, 57.6px) + 3rem);
-}
-.account-page__title {
-  font-family: var(--font-head);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: var(--fs-display);
-  line-height: var(--lh-heading);
-  color: var(--color-green);
-  margin: 0 0 0.3rem;
-}
-.account-page__lead {
-  color: var(--color-muted);
-  font-size: var(--fs-body);
-  margin: 0 0 1.6rem;
 }
 /* ===== My Trips cart page (Fase C) ===== */
 /* .mytrips / .mytrips__container / .mytrips__title -> utilities di

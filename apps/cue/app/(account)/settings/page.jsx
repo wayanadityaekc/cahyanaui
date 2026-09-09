@@ -11,9 +11,9 @@ export default function Page() {
     <>
       <JsonLd page="settings" />
       <section className="info account-settings">
-      <div className="info__container account-page">
-        <h1 className="account-page__title">Account Settings</h1>
-        <p className="account-page__lead">Update your details and saved trip preferences.</p>
+      <div className="info__container !max-w-[640px]">
+        <h1 className="font-head font-medium tracking-[-0.01em] text-display leading-[var(--lh-heading)] text-green m-0 mb-[0.3rem]">Account Settings</h1>
+        <p className="text-muted text-body m-0 mb-[1.6rem]">Update your details and saved trip preferences.</p>
         <AccountSettings />
       </div>
     </section>

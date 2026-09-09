@@ -611,49 +611,6 @@ section.faq::before,
   }
 }
 
-/* ===== Detail page tabs (Overview / Details / Included / Reviews) =====
-   Sticky underline tab strip di kolom konten halaman tour/attraction. Klik =
-   ganti panel di tempat + scroll biar strip nempel di bawah header (kerasa
-   pindah halaman, tanpa reload). Semua panel di-render ke HTML (cuma di-hidden),
-   jadi SEO aman. Gaya tab = underline strip (sama pola tab kategori listing). */
-
-/* Tour stops / detail rows - foto kiri, deskripsi kanan */
-.stops {
-  padding: 3rem 1.5rem;
-}
-.stop {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 2.5rem;
-  align-items: center;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem 0;
-  border-bottom: 1px solid #e0ddd4;
-}
-.stop:last-child {
-  border-bottom: none;
-}
-.stop__image {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--r-md);
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-}
-/* Slot foto pakai <img> (SEO + lazy-load) - ngisi wrapper persis kayak background cover.
-   Wrapper tetap pegang rasio/radius; overlay ::after card tetap di atas foto. */
-.stop__image > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
 /* Breadcrumb (halaman anak: tour, attraction, aktivitas) - di atas footer */
 /* .crumb / .crumb a / .crumb__sep -> utilities di TourPage.jsx + AttractionPage.jsx
    (migrasi Fase 2). Kelas `crumb` tetep dipasang sbg marker: dipakai anchor
@@ -876,13 +833,6 @@ section.faq::before,
   /* Keep the many-card grid wrapping instead of turning into a slider */
   .experience__grid--auto > * {
     flex: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .stop {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
   }
 }
 
@@ -1239,15 +1189,6 @@ section.faq::before,
 .itn-item-type__btn.is-active {
   color: #fff;
   background-color: var(--color-gold);
-}
-
-/* ==================== EKSPERIMEN LAYOUT (revertible) ====================
-   - no border-radius: card, foto konten, slider, villa
-   - slider activities/performance: judul di foto dihapus (cukup slider-label), full + margin tipis
-   - villa card full-bleed, gold edge dibuang, margin mepet, 1 kolom di HP
-   - semua garis gold antar section dihapus (divider ::before + border section) */
-.stop__image {
-  border-radius: 0;
 }
 /* garis gold antar section OFF */
 section + section::before,
@@ -1740,8 +1681,7 @@ strong {
    Semua section konten (listing/detail/legal/guide/about) dulu 48px, disamain ke
    36px biar jarak antar-section satu ritme sama homepage. */
 .experience,
-.faq,
-.stops {
+.faq {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
 }

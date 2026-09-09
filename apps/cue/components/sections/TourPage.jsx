@@ -1,5 +1,6 @@
 import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
@@ -16,7 +17,9 @@ import DetailTabs from '@/components/sections/DetailTabs';
 export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
-const STOP_LINK = 'stop no-underline text-inherit [transition:transform_var(--dur-fast)_ease] hover:[transform:translateY(-3px)]';
+// Linked stop = the same STOP grid layout (incl. its `stop` hook for DetailTabs'
+// [&_.stop]:max-w-none) plus link-only styling.
+const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur-fast)_ease] hover:[transform:translateY(-3px)]`;
 // Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
 // sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
 export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-bottom:1px_solid_#e0ddd4] text-small text-muted';
@@ -42,11 +45,11 @@ function Stop({ s }) {
   const inner = (
     <>
       {s.img ? (
-        <div className="stop__image">
+        <div className={STOP_IMAGE}>
           <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
         </div>
       ) : s.gradient ? (
-        <div className="stop__image" style={{ backgroundImage: s.gradient.replace(/^background-image:\s*/, '').replace(/;$/, '') }} />
+        <div className={STOP_IMAGE} style={{ backgroundImage: s.gradient.replace(/^background-image:\s*/, '').replace(/;$/, '') }} />
       ) : null}
       <div>
         {s.num && <span className={STOP_NUM}>{s.num}</span>}
@@ -62,7 +65,7 @@ function Stop({ s }) {
   return href ? (
     <a className={STOP_LINK} href={href}>{inner}</a>
   ) : (
-    <article className="stop">{inner}</article>
+    <article className={STOP}>{inner}</article>
   );
 }
 
@@ -106,7 +109,7 @@ export default function TourPage({ data }) {
       <div className={data.bookItem ? 'tour-layout__main' : undefined}>
       <DetailTabs
         overview={(
-          <div className="stops" id={data.stopsId}>
+          <div className={STOPS} id={data.stopsId}>
             {data.items.map((it, i) =>
               it.type === 'sub' ? (
                 <h3 className={`${SECTION_TITLE_SUB} [transform:translateX(var(--title-shift,0px))]`} key={i}>{it.text}</h3>

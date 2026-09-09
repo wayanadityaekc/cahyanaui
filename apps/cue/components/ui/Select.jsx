@@ -73,8 +73,11 @@ export default function Select({
             type="button"
             role="option"
             aria-selected={String(o.value) === String(value)}
-            className={opt(String(o.value) === String(value))}
+            aria-disabled={o.disabled || undefined}
+            className={opt(String(o.value) === String(value), o.disabled)}
+            disabled={!!o.disabled}
             onClick={() => {
+              if (o.disabled) return;
               onChange(o.value);
               setOpen(false);
             }}
@@ -92,7 +95,7 @@ export default function Select({
       <select name={name} id={fieldId} className={BK_NATIVE} value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (
-          <option key={String(o.value)} value={o.value}>{o.label}</option>
+          <option key={String(o.value)} value={o.value} disabled={o.disabled}>{o.label}</option>
         ))}
       </select>
 

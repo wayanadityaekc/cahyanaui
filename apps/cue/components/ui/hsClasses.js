@@ -71,8 +71,14 @@ export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto]';
 
 // .hs-opt (+ .bk-opt padding 12/16 + .is-sel + hover + divider antar-opt). Selected TIDAK
 // berubah pas hover (specificity is-sel > :hover di asli), jadi bg-nya di cabang.
-export const opt = (sel) =>
-  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_#f2efe7] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
+// `disabled` (Sep 2026, time-slot picker #TIME-1): opsi tetep KELIATAN (guest ngerti ada
+// slot itu tapi gak bisa dipilih) - dimuting + no hover/cursor, bukan disembunyiin.
+export const opt = (sel, disabled) =>
+  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_#f2efe7] ${
+    disabled
+      ? 'cursor-not-allowed opacity-40 bg-transparent'
+      : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
+  }`;
 
 // .hs-overlay (scrim; cuma tampil pas open). --elevated = z lebih tinggi (dibuka dari modal).
 export const overlay = (open, elevated) =>

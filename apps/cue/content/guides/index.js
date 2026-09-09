@@ -137,10 +137,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Adventure and Shows in Bali | Bali Guide",
   "metaDesc": "A guide to adventure activities in Bali - white-water rafting, jungle ATV rides, cliff-edge swings, and the Mount Batur sunrise trek.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -342,10 +341,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Bali's Beaches & Surf | Bali Guide",
   "metaDesc": "A guide to Bali's beaches and surf - white-sand breaks in the south, quieter black-sand shores in the east and north, and safety tips.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -521,10 +519,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Bali Day Tours Explained | Bali Guide",
   "metaDesc": "A guide to private day tours in Bali - themed routes for Ubud, East, West, South, and North Bali with a local driver-guide and upfront pricing.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -690,10 +687,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Bali Money, SIM Cards & Visas | Bali Guide",
   "metaDesc": "Practical Bali basics - the rupiah currency and cash vs cards, cheap local SIM cards and eSIMs, and where to check current visa requirements.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -857,10 +853,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Bali's Rice Terraces & the Subak System | Bali Guide",
   "metaDesc": "A guide to Bali's rice terraces and the UNESCO-listed subak irrigation system - including Tegalalang and the vast Jatiluwih landscape.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -1020,10 +1015,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Bali's Volcanoes: Mount Agung & Mount Batur | Bali Guide",
   "metaDesc": "A guide to Bali's volcanoes - sacred Mount Agung and the popular Mount Batur sunrise trek over its caldera and crater lake.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -1215,10 +1209,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "The Best Waterfalls in Bali | Bali Guide",
   "metaDesc": "A guide to Bali's waterfalls - from the easy-access Tegenungan near Ubud to the wild, multi-tiered Sekumpul in the north.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -1390,10 +1383,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Balinese Dance: Kecak, Barong & Legong | Bali Guide",
   "metaDesc": "A guide to traditional Balinese dance - the fire-lit Kecak, the theatrical Barong, and the graceful Legong, performed to live gamelan music.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -1581,10 +1573,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Balinese Hinduism & Daily Offerings | Bali Guide",
   "metaDesc": "Understand Balinese Hinduism - the Tri Hita Karana philosophy of harmony, daily canang sari offerings, temples, and year-round ceremonies.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -1804,10 +1795,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Best Time to Visit Bali | Bali Guide",
   "metaDesc": "When is the best time to visit Bali? A month-by-month guide to the dry and wet seasons, crowds, prices, and what to pack.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -1977,10 +1967,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Canggu - Bali's Surf & Cafe Town | Bali Guide",
   "metaDesc": "A guide to Canggu, Bali's laid-back surf-and-cafe town - beach breaks, black-sand shores, and a lively digital-nomad scene.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -2193,10 +2182,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Getting Around Bali | Bali Guide",
   "metaDesc": "How to get around Bali - private drivers and car charters, scooters and their risks, ride-hailing, and why journeys take longer than the map suggests.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -2372,10 +2360,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Temple Etiquette & Dress Code in Bali | Bali Guide",
   "metaDesc": "A simple guide to temple etiquette in Bali - what to wear (sarong and sash), how to behave respectfully, and customs to know before you visit.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -2580,10 +2567,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Ubud - Bali's Cultural Heart | Bali Guide",
   "metaDesc": "A guide to Ubud, Bali's cultural heart - art, temples, rice terraces, yoga, and the best base for day trips across the island.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -2785,10 +2771,9 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "back",
-    "html": "<a href=\"/bali-guide.html\" class=\"guide-crumb-back\">&lsaquo; Back to the Bali Guide</a>"
+    "html": "<a href=\"/bali-guide.html\">&lsaquo; Back to the Bali Guide</a>"
    }
   ],
-  "sideHtml": "<aside class=\"guide-layout__side\"> <div class=\"guide-sidebar\"> <p class=\"guide-sidebar__title\">Categories</p> <ul class=\"guide-sidebar__list\"> <li><a class=\"is-active\" href=\"/bali-guide.html#gcat-island\">About the Island</a></li> <li><a href=\"/bali-guide.html#gcat-culture\">People &amp; Culture</a></li> <li><a href=\"/bali-guide.html#gcat-nature\">Nature</a></li> <li><a href=\"/bali-guide.html#gcat-do\">What to Do</a></li> <li><a href=\"/bali-guide.html#gcat-know\">Good to Know</a></li> </ul> </div> </aside>",
   "metaTitle": "Uluwatu & the Bukit Peninsula | Bali Guide",
   "metaDesc": "A guide to Uluwatu and the Bukit Peninsula - Bali's clifftop south, with famous surf breaks, hidden beaches, and a famous sea temple.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",

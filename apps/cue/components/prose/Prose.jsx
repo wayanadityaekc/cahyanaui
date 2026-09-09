@@ -8,7 +8,7 @@ export default function Prose({ blocks }) {
   return blocks.map((b, i) => {
     switch (b.type) {
       case 'crumb':
-        return <p className="guide-crumb" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+        return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'lead':
         return (
           <figure className="guide-lead" key={i}>
@@ -27,7 +27,9 @@ export default function Prose({ blocks }) {
           </ul>
         );
       case 'back':
-        return <p style={{ marginTop: '2rem' }} key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+        // margin-top stays inline: `.guide-article p` (0,1,1) outweighs a mt-* utility
+        // (0,1,0), same as the pre-migration inline style; [&_a]: replaces .guide-crumb-back.
+        return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       default:
         return null;
     }

@@ -9,11 +9,20 @@ import { SEE_OUR_TOURS } from '@/content/shared/guide-more';
 // guide-home__card + experience__image/body/name + guide-home__tag) = zero-diff. Bukan
 // <GuideCard> (itu versi homepage judul-overlay, beda konteks). CSS class-nya diapus
 // nanti pas family .experience__*/.guide-home__* dikonversi ke utilities.
+//
+// TW-B3 #336: box (.guide-more) + judul (.guide-more__title) -> utilities. Class
+// `guide-more` dipertahankan HANYA sbg hook buat rule grid-override desktop
+// `.guide-more .experience__grid--home4` (biar kartu wrap, bukan slide) - itu
+// nempel ke grid engine `.experience__grid*` yg sengaja tetep CSS (CLAUDE.md).
+const BOX = 'max-w-[1200px] mx-auto py-[var(--section-gap)] px-[var(--space-3)]';
+const TITLE = 'font-body font-semibold text-h3 text-green mb-[1.2rem]';
+
 export default function GuideMore({ block }) {
   const b = block.kind === 'tours' && !block.cards ? SEE_OUR_TOURS : block;
+  const extra = b.cls.includes('tourprog') ? ' tourprog' : '';
   return (
-    <section className={b.cls}>
-      <h2 className="guide-more__title">{b.title}</h2>
+    <section className={`guide-more ${BOX}${extra}`}>
+      <h2 className={TITLE}>{b.title}</h2>
       <div className="experience__grid experience__grid--home4">
         {b.kind === 'tours'
           ? b.cards.map((c, i) => (

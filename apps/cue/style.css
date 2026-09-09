@@ -1114,17 +1114,6 @@ section.faq::before,
   color: var(--color-ink);
   font-size: var(--fs-body);
 }
-.guide-crumb {
-  font-size: var(--fs-label);
-  color: var(--color-muted);
-  margin-bottom: 1.25rem;
-}
-.guide-crumb a,
-.guide-crumb-back {
-  color: var(--color-gold);
-  text-decoration: none;
-  font-weight: 500;
-}
 /* Foto artikel guide (lead di atas + foto inline dalam section) - 4:3, disamain
    sama foto konten tour (.stop__image) biar selaras di seluruh situs - Sep 2026, Wayan. */
 .guide-lead {
@@ -1159,106 +1148,6 @@ section.faq::before,
   min-height: 320px;
   padding-top: 6.5rem;
   padding-bottom: 1.5rem;
-}
-.guide-hero-tags {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 0.6rem 0 0;
-}
-.guide-tag {
-  display: inline-block;
-  padding: 0.3rem 0.8rem;
-  border-radius: var(--r-pill);
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-}
-
-/* Layout: artikel (main) + kategori (side, sticky, kanan) - desktop */
-.guide-layout {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: var(--space-5) var(--container-x);
-  display: flex;
-  align-items: flex-start;
-  gap: 2.5rem;
-}
-.guide-layout__main {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.guide-layout__side {
-  flex: 0 0 260px;
-  position: sticky;
-  top: 6.5rem;
-}
-.guide-sidebar {
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  padding: 1.2rem 1.1rem;
-  background: #fff;
-}
-.guide-sidebar__title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  color: var(--color-green);
-  margin: 0 0 0.8rem;
-}
-.guide-sidebar__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.guide-sidebar__list li + li {
-  margin-top: 0.35rem;
-}
-.guide-sidebar__list a {
-  display: block;
-  padding: 0.5rem 0.6rem;
-  border-radius: var(--r-sm);
-  text-decoration: none;
-  color: var(--color-green);
-  font-size: var(--fs-small);
-  font-weight: 500;
-}
-.guide-sidebar__list a.is-active {
-  background: var(--color-cream);
-  color: var(--color-amber);
-  font-weight: 600;
-}
-
-/* Mobile: sidebar ilang, diganti tab kategori sticky horizontal */
-/* .guide-cattabs (+responsive) / .guide-cattab (+:hover, +.is-active) -> utilities
-   di GuideArticle.jsx (migrasi Fase 2). Underline pindah ke cabang ternary
-   (bukan base) biar gold aktif gak kalah sama transparent. */
-@media (max-width: 992px) {
-  .guide-layout {
-    flex-direction: column;
-  }
-  .guide-layout__side {
-    display: none;
-  }
-}
-
-/* "You might also like" (guide lain) + "See our tours" (upsell) di bawah artikel */
-.guide-more {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-5) var(--space-3);
-}
-.guide-more__title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  color: var(--color-green);
-  margin: 0 0 1.2rem;
 }
 /* "You might also like" / "See our tours" cards (guide-more, pakai --home4):
    ikutin pola homepage — DESKTOP tampilin semua kartu (grid wrap, no slide),
@@ -2753,8 +2642,7 @@ strong {
 .experience,
 .info,
 .faq,
-.stops,
-.guide-more {
+.stops {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
 }

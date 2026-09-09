@@ -1,5 +1,7 @@
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
 import JsonLd from '@/components/JsonLd';
+import Prose from '@/components/prose/Prose';
+import DetailTinfo from '@/components/sections/DetailTinfo';
 import { AIRPORT } from '@/content/shared/airport';
 import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
 
@@ -21,8 +23,14 @@ export default function Page() {
           <AirportTransferForm />
         </div>
       </section>
-      <section className="tinfo" dangerouslySetInnerHTML={{ __html: AIRPORT.tinfoHtml }} />
-      <section className="info" dangerouslySetInnerHTML={{ __html: AIRPORT.infoHtml }} />
+      <section className="tinfo">
+        <DetailTinfo facts={AIRPORT.tinfo.facts} included={AIRPORT.tinfo.included} excluded={AIRPORT.tinfo.excluded} />
+      </section>
+      <section className="info">
+        <div className="info__container">
+          <Prose blocks={AIRPORT.info} />
+        </div>
+      </section>
     </>
   );
 }

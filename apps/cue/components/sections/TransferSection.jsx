@@ -1,5 +1,6 @@
 import TransferPicker from '@/components/sections/TransferPicker';
 import Price from '@/components/Price';
+import DetailTinfo from '@/components/sections/DetailTinfo';
 import { TRANSFER } from '@/content/shared/transfer';
 
 // The transfer page body (hero + picker form + routes + info), extracted so
@@ -14,8 +15,8 @@ import { TRANSFER } from '@/content/shared/transfer';
 // `.transfer-hero + section::before` both in the shared kill-list) - the hero's
 // own before: now carries real content instead of `none`, and the routes
 // section gets its own `before:content-none` since the adjacency selector can't
-// key off a class name that no longer exists. `.tinfo__*` below stays CSS - it's
-// inside TRANSFER.tinfoHtml (content string, Track B's job).
+// key off a class name that no longer exists. The "Good to know" block (was
+// TRANSFER.tinfoHtml, .tinfo__*) is now data + <DetailTinfo> utilities (TW-B4 #337).
 export default function TransferSection() {
   return (
     <>
@@ -47,7 +48,9 @@ export default function TransferSection() {
         </div>
       </section>
 
-      <section className="max-w-[820px] mx-auto py-12 px-[1.3rem]" dangerouslySetInnerHTML={{ __html: TRANSFER.tinfoHtml }} />
+      <section className="max-w-[820px] mx-auto py-12 px-[1.3rem]">
+        <DetailTinfo facts={TRANSFER.tinfo.facts} included={TRANSFER.tinfo.included} excluded={TRANSFER.tinfo.excluded} />
+      </section>
     </>
   );
 }

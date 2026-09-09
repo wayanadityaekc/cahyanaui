@@ -17,7 +17,14 @@ export default function Prose({ blocks }) {
           </figure>
         );
       case 'heading':
-        return <h2 className="section__title section__title--sub" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+        // Default = sub-section heading (.section__title--sub), unchanged for all
+        // guide/legal callers. `sub: false` = a main section heading (plain
+        // .section__title), used by the detail-page info bodies (TW-B4 #337:
+        // charter/airport "How a Charter Day Works" etc.). Class kept as-is -
+        // .section__title base is B-FINAL's to convert.
+        return b.sub === false
+          ? <h2 className="section__title" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />
+          : <h2 className="section__title section__title--sub" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'para':
         return <p key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'list':

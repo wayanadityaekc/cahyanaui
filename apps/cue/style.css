@@ -1665,11 +1665,7 @@ section.faq::before,
   vertical-align: 0.12em;
   margin-right: 1px;
 }
-/* Good to know di bawah hero */
-.charter__notes {
-  max-width: 720px;
-  margin: 0 auto;
-}
+/* .charter__notes -> utilities in CharterSection (TW-B4 #337). */
 
 
 /* ==================== Tour Programs slider (desktop) ==================== */
@@ -2241,55 +2237,8 @@ strong {
 
 /* Popular routes list */
 
-/* Good to know (transfer) — fakta seukuran .tour-hook (label 12px / value 15px), checklist ✓/✕ */
-.tinfo__facts {
-  display: flex;
-  flex-wrap: wrap;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  max-width: 720px;
-  margin: 0.4rem auto 2.2rem;
-}
-.tinfo__fact {
-  flex: 1 1 0;
-  min-width: 130px;
-  text-align: center;
-  padding: 0.9rem 0.8rem;
-  border-right: 1px solid var(--line);
-}
-.tinfo__fact:last-child { border-right: none; }
-.tinfo__fact span { display: block; font-size: var(--fs-small); font-weight: 400; color: var(--color-muted); }
-.tinfo__fact strong {
-  display: block;
-  margin-top: 0.2rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-ink);
-}
-.tinfo__cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  max-width: 720px;
-  margin: 0 auto;
-}
-.tinfo__col h3 {
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--color-muted);
-  margin: 0 0 0.8rem;
-}
-@media (min-width: 769px) {
-  .tinfo__fact strong { font-size: var(--fs-h3); }
-}
-@media (max-width: 768px) {
-  .tinfo__cols { grid-template-columns: 1fr; gap: 1.3rem; }
-}
+/* .tinfo__* ("Good to know" facts + included/excluded cols) -> utilities in
+   components/sections/DetailTinfo.jsx (TW-B4 #337). */
 
 /* ==================== Listing hero (tour/experience/destination): bg + featured box ==================== */
 .lhero {

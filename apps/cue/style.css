@@ -160,18 +160,6 @@ body {
 body.hs-locked {
   overflow: hidden;
 }
-/* ==================== Shared form-field base (DRY) ==================== */
-.field select,
-.field input[type="date"],
-.itn-day__fields .field input,
-.itn-day__fields .field select {
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  font-family: var(--font-body);
-  font-size: var(--fs-field);
-  color: var(--color-green);
-}
-
 /* Ukuran field di HP: samain kecil (~14px) biar gak keliatan kegedean.
    Auto-zoom iOS pas fokus dicegah lewat viewport (maximum-scale=1, user-scalable=no)
    di tiap halaman, jadi gak perlu lagi paksa 16px di sini. */
@@ -302,28 +290,6 @@ section + section::before,
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
 
-.field {
-  margin-bottom: 1.1rem;
-}
-.field label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-size: var(--fs-small);
-  font-weight: 500;
-}
-.field select,
-.field input[type="date"] {
-  width: 100%;
-  height: var(--field-h);
-  padding: 0.5rem 0.65rem;
-  font-size: var(--fs-field);
-  line-height: 1.4;
-  background-color: #fff;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* Layar HP kecil - kecilin field booking biar 2 kolom tetap muat rapi */
 
 /* Animasi masuk hero + box booking: FADE aja (tanpa gerak) - form booking di-inject
    via JS, gerakan naik + selisih tinggi bikin kesan "zoom"/goyang. Fade murni = mulus. */
@@ -334,32 +300,6 @@ section + section::before,
   to {
     opacity: 1;
   }
-}
-.itn-day__fields {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 0.8rem;
-  margin-bottom: 0.9rem;
-}
-/* Form override hari: field menurun (1 kolom). Transfer/charter tetap 2 kolom. */
-.itn-ovr .itn-day__fields {
-  grid-template-columns: 1fr;
-}
-.field--full {
-  grid-column: 1 / -1;
-}
-.itn-day__fields .field {
-  margin-bottom: 0;
-  min-width: 0;
-}
-.itn-day__fields .field input,
-.itn-day__fields .field select {
-  width: 100%;
-  min-width: 0;
-  height: var(--field-h);
-  padding: 0.55rem 0.65rem;
-  font-size: var(--fs-field);
-  background: #fff;
 }
 /* badge di tombol hamburger (kelihatan di mobile walau menu ketutup) */
 /* ---- itinerary responsive: katalog jadi bar floating di bawah ---- */
@@ -380,98 +320,6 @@ section + section::before,
 }
 /* Popup "Added to itinerary" (dibuat di showAddedPopup): jarak antar tombol */
 
-/* ============ ITINERARY v2 (satu kolom, card teks, add via popup) ============ */
-.itn2 {
-  max-width: 760px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-/* Mobile: aside sidebar transparan (anak-anaknya jadi flex item .itn2 langsung),
-   urutan lama dijaga pakai order: suggest -> trip -> days -> add -> total. */
-.itn2__side {
-  display: contents;
-}
-.itn2__side > .itn-suggest { order: 1; }
-.itn2__side > .itn-trip { order: 2; }
-.itn2 > .itn2__main { order: 3; }
-.itn2__side > .itn2__add { order: 4; }
-.itn2__side > .summary { order: 5; }
-.itn2__panel {
-  padding: 0;
-  background-color: transparent;
-}
-.itn2__main {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  min-width: 0;
-}
-.itn-trip__fields {
-  margin-bottom: 0;
-}
-/* Desktop: sidebar kiri = SATU kartu (suggest -> trip -> price -> add day),
-   konten kanan = slider hari (1 baris) + boks transfer/charter di bawahnya. */
-@media (min-width: 993px) {
-  .itn2 {
-    max-width: 1320px;
-    display: grid;
-    grid-template-columns: 380px minmax(0, 1fr);
-    align-items: start;
-  }
-  /* Sidebar: kartu-kartu TERPISAH (suggest / trip / price / add day),
-     semua otomatis sama lebar karena satu kolom grid 380px. */
-  .itn2__side {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-  .itn2__side > * {
-    order: 0; /* balikin urutan DOM (order mobile nggak berlaku) */
-  }
-  .itn2__side > .itn2__add {
-    margin-top: 0; /* jarak antar kartu udah dari gap */
-  }
-  .itn2__side .itn-trip__fields {
-    grid-template-columns: 1fr;
-  }
-  /* Konten: hari-hari jadi slider 1 baris (card lebih kecil dari card tour 300px),
-     scrollbar disembunyiin - navigasi via panah hover / swipe trackpad. */
-  #itn-days {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    touch-action: pan-x pan-y;
-    padding-bottom: 0.75rem;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  #itn-days::-webkit-scrollbar {
-    display: none;
-  }
-  #itn-days > .itn-day {
-    flex: 0 0 300px; /* samain persis sama card slider homepage (300px) */
-    scroll-snap-align: start;
-    margin-bottom: 0;
-  }
-  /* (styling mini card transfer/charter desktop ada di bawah, SETELAH rule
-     base .itn-minis - biar nggak kalah urutan cascade) */
-}
-
-/* Fade-up halus buat konten builder yang dirender dinamis (sekali, pas load) */
-@keyframes itnFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 /* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
    nggak terlalu bold. */
 /* .tour-hook* -> utilities di TourPage.jsx + AttractionPage.jsx (migrasi Fase 2).
@@ -508,15 +356,6 @@ b,
 strong {
   font-weight: 600;
 }
-/* Field label: Inter medium, normal case (EXPERIMENT — dulu uppercase small-caps).
-   Balikin uppercase = set text-transform: uppercase + letter-spacing: 0.07em. */
-.field label {
-  font-family: var(--font-body);
-  font-weight: 500;
-  letter-spacing: normal;
-  text-transform: none;
-}
-
 /* --- Reviews: compact 3-across strip --- */
 
 /* --- Homepage section separation: no gold divider lines; use bg + padding --- */

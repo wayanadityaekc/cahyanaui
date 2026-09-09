@@ -1700,8 +1700,8 @@ section.faq::before,
 
 /* ==================== Guides & Information (homepage) ====================
    Menu kategori vertikal (kiri) + slider kartu (kanan). Ikon Set 1 (thematic).
-   Kartu reuse .experience__card (foto homepage). Slider pakai mesin yang sama
-   (.experience__grid--slider + initTourSlider). Di HP menu jadi baris atas. */
+   Kartu = GuideCard (full Tailwind, frame CARD_FRAME). Slider pakai grid engine
+   yang sama (.experience__grid--slider, sizing anak `> *`). Di HP menu jadi baris atas. */
 /* ---- Search guide (typeahead) ---- */
 .gsearch {
   position: relative;

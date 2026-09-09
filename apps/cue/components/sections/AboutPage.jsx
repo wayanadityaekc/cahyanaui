@@ -25,7 +25,10 @@ import { ABOUT } from '@/content/shared/about';
 // hook ini juga bisa dicabut sekalian.
 export default function AboutPage({ company = false }) {
   const [driver, setDriver] = useState(null);
-  const modalAvatar = driverAvatarClasses(company);
+  // Modal di-portal ke <body> (di LUAR .company-page), jadi baseline avatar-nya
+  // SELALU ukuran base (.driver-card__avatar 60px) - shrink company (46px) cuma
+  // buat kartu driver yang beneran nested di .company-page, bukan modal ini.
+  const modalAvatar = driverAvatarClasses(false);
 
   // GOTCHA (kejadian pas migrasi ini): JANGAN nempelin `${cond ? ... : ''}` LANGSUNG
   // abis token utility tanpa spasi (mis. `...px-4${x}`) - Tailwind v4 content-scanner
@@ -41,7 +44,7 @@ export default function AboutPage({ company = false }) {
     ? 'max-w-none mx-0 px-0'
     : 'max-w-[var(--container-mid)] mx-auto px-[var(--container-x)]';
   const heroCard = company
-    ? 'relative z-[3] mt-0 max-w-none mx-0 text-left bg-transparent rounded-none shadow-none p-0'
+    ? 'relative z-[3] mt-0 max-w-none mx-0 text-left bg-transparent rounded-none [box-shadow:none] p-0'
     : 'relative z-[3] mt-[0.5rem] max-w-[560px] mx-auto text-left bg-white rounded-xl shadow-xl py-[1.4rem] px-[1.3rem]';
   const driversGrid = company
     ? 'flex flex-wrap justify-start gap-4 max-[768px]:flex-nowrap max-[768px]:max-w-full max-[768px]:overflow-x-auto max-[768px]:overflow-y-hidden max-[768px]:[touch-action:pan-x_pan-y] max-[768px]:[scroll-snap-type:x_mandatory] max-[768px]:pb-2 max-[768px]:justify-center max-[768px]:[&>*]:flex-[0_0_78%] max-[768px]:[&>*]:[scroll-snap-align:start] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
@@ -54,7 +57,7 @@ export default function AboutPage({ company = false }) {
           <h1 className="lhero__title">{ABOUT.title}</h1>
           <p className="lhero__sub">{ABOUT.sub}</p>
 
-          <div className={company ? 'hidden' : 'relative max-w-[640px] mt-[0.6rem] mx-auto'}>
+          <div className={`relative max-w-[640px] mt-[0.6rem] mx-auto ${company ? 'hidden' : ''}`}>
             <div className="flex gap-[0.6rem] overflow-x-auto [scroll-snap-type:x_mandatory] [scrollbar-width:none] [-ms-overflow-style:none] [touch-action:pan-x_pan-y] rounded-lg [&::-webkit-scrollbar]:hidden">
               {ABOUT.gallery.map((label) => (
                 <div className="flex-[0_0_100%] [scroll-snap-align:center]" key={label}>
@@ -89,7 +92,7 @@ export default function AboutPage({ company = false }) {
             ngelacak cascade buat migrasi ini, bukan salah baca .arow doang. */}
         {ABOUT.arows.map((row) => (
           <section
-            className="grid grid-cols-[240px_1fr] max-[768px]:grid-cols-[1fr] gap-[2.5rem] max-[768px]:gap-4 items-start py-[var(--section-gap)] [&+&]:border-t [&+&]:border-t-line before:content-none"
+            className="grid grid-cols-[240px_1fr] max-[768px]:grid-cols-[1fr] gap-[2.5rem] max-[768px]:gap-4 [align-items:start] py-[var(--section-gap)] [&+&]:border-t [&+&]:border-t-line before:content-none"
             key={row.heading}
           >
             <div className="sticky max-[768px]:static top-[6.5rem]">

@@ -192,10 +192,6 @@ body.hs-locked {
 
 /* Baris social media di section "Featured On" (logo sama kaya footer) */
 
-/* Experience & Tour cards */
-#experiences {
-  margin-top: 0.5rem;
-}
 
 /* Review form (diisi tamu) */
 
@@ -221,38 +217,6 @@ body.hs-locked {
   display: none;
 }
 
-/* ==================== Divider gold tipis antar section (inset, ada pinggir) ==================== */
-section + section,
-[id$="-placeholder"] > section,
-[id$="-placeholder"] + section {
-  position: relative;
-}
-section + section::before,
-[id$="-placeholder"] > section::before,
-[id$="-placeholder"] + section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 1px;
-  background: rgba(34, 32, 28, 0.4);
-}
-/* Jangan kasih garis di hero / booking / tepat setelah subhero
-   (hero didahului navbar-placeholder -> bisa ke-target divider section) */
-.hero::before,
-.subhero::before,
-.subhero + section::before {
-  content: none;
-}
-/* Section Drivers (cream) udah punya border gold sendiri (atas & bawah) → buang
-   divider inset di atasnya & di section (reviews) tepat setelahnya biar nggak dobel. */
-#drivers-placeholder > section::before,
-#drivers-placeholder + [id$="-placeholder"] > section::before {
-  content: none;
-}
-
 /* Footer */
 /* ==================== Anti-CLS: reserve tempat partial yang di-inject JS ====================
    Booking form & footer masuk lewat fetch -> tanpa reserve, konten loncat pas partial nongol
@@ -263,23 +227,6 @@ section + section::before,
    PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 480px setelah
    dropdown/date jadi full-custom). Kalau kurang, hero melar pas form masuk -> background
    cover ke-rescale -> foto "zoom". */
-#booking-placeholder {
-  min-height: 480px;
-}
-@media (min-width: 576px) {
-  #booking-placeholder {
-    min-height: 480px;
-  }
-}
-#footer-placeholder {
-  min-height: 487px;
-}
-@media (max-width: 768px) {
-  #footer-placeholder {
-    min-height: 688px;
-  }
-}
-
 /* Section pertama numpuk ke subhero (cuma dipakai di about & itinerary) */
 .subhero--overlap + section {
   position: relative;
@@ -345,12 +292,6 @@ section + section::before,
     box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
 }
-/* garis gold antar section OFF */
-section + section::before,
-[id$="-placeholder"] > section::before,
-[id$="-placeholder"] + section::before {
-  content: none;
-}
 /* Bold inline (b/strong) ikut skala bobot: maks 600 */
 b,
 strong {
@@ -358,12 +299,6 @@ strong {
 }
 /* --- Reviews: compact 3-across strip --- */
 
-/* --- Homepage section separation: no gold divider lines; use bg + padding --- */
-.home section + section::before,
-.home [id$="-placeholder"] > section::before,
-.home [id$="-placeholder"] + section::before {
-  content: none !important;
-}
 .home #activities{
   background-color: var(--color-cream);
 }

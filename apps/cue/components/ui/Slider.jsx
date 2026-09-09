@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { GRID_SLIDER } from '@/components/ui/gridClasses';
 
 // Tailwind-native (migrasi Fase 2, keluarga kartu - stage 4a: slider wrapper).
 // .slider-holder -> `group relative` (group buat hover-reveal panah). .slider-arrow
@@ -14,7 +15,7 @@ const ARROW =
   'cursor-pointer opacity-0 transition-[opacity,background-color,color] duration-200 ease-[ease] ' +
   'min-[993px]:flex min-[993px]:group-hover:opacity-100 hover:bg-gold';
 
-export default function Slider({ children, className = '', gridClassName = 'experience__grid experience__grid--slider' }) {
+export default function Slider({ children, className = '', gridClassName = GRID_SLIDER }) {
   const trackRef = useRef(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);

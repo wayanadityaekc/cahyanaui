@@ -1,6 +1,7 @@
 'use client';
 
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { GRID_SLIDER } from '@/components/ui/gridClasses';
 import { useMemo, useState } from 'react';
 import Slider from '@/components/ui/Slider';
 import GuideCard from '@/components/cards/GuideCard';
@@ -45,7 +46,7 @@ export default function GuideHome() {
           <div className="gsearch__sug" role="listbox" hidden />
         </div>
 
-        <Slider gridClassName="experience__grid experience__grid--slider guide-home__slider">
+        <Slider gridClassName={GRID_SLIDER}>
           {shown.map((c) =>
             c.more ? (
               <a

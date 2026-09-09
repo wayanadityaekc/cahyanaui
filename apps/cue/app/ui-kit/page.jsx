@@ -1,5 +1,6 @@
 import ExperienceCard from '@/components/cards/ExperienceCard';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { GRID_RELATED } from '@/components/ui/gridClasses';
 import { CATSEC } from '@/components/ui/listingClasses';
 import Slider from '@/components/ui/Slider';
 import Button from '@/components/ui/Button';
@@ -30,7 +31,7 @@ export default function Kit() {
           </div>
 
           <h2 className={SECTION_TITLE}>Card grid</h2>
-          <div className="experience__grid experience__grid--home4">
+          <div className={GRID_RELATED}>
             {CARDS.map((c) => <ExperienceCard key={c.href} {...c} />)}
           </div>
           <h2 className={SECTION_TITLE}>Slider</h2>

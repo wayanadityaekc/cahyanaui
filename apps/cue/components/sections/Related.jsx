@@ -1,5 +1,6 @@
 import HomepageCard from '@/components/cards/HomepageCard';
 import { RELATED_ITEMS, RELATED_ALL } from '@/content/shared/related';
+import { GRID_RELATED } from '@/components/ui/gridClasses';
 
 // Ported from initRelated: same type, same zone first, then the closest by
 // price. Renders nothing when fewer than 4 qualify, exactly as before.
@@ -25,7 +26,7 @@ export default function Related({ href }) {
   return (
     <section className="related">
       <h2 className="font-body font-semibold text-h3 leading-[var(--lh-heading)] text-green m-0 [&::after]:content-[''] [&::after]:block [&::after]:w-12 [&::after]:h-[3px] [&::after]:rounded-[2px] [&::after]:bg-gold [&::after]:mt-2">You might also like</h2>
-      <div className="experience__grid experience__grid--home4">
+      <div className={GRID_RELATED}>
         {picks.map((it) => (
           <HomepageCard
             key={it.href}

@@ -386,46 +386,6 @@ body.hs-locked {
   background-color: #fff;
 }
 
-/* Homepage card sliders (#tours + #activities): gap antar-card tipis. */
-#tours .experience__grid--slider,
-#activities .experience__grid--slider {
-  gap: 0.5rem;
-}
-/* Full-bleed: pangkas pinggir SEMUA slider card di mobile (nempel ke pinggir layar).
-   Section-section ini sama-sama padding samping 1.5rem, jadi -1.5rem pas ke pinggir,
-   plus lead 1rem biar card pertama nggak nempel banget. */
-@media (max-width: 992px) {
-  .experience__grid.experience__grid--slider {
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
-    padding-left: 1rem;
-    scroll-padding-left: 1rem;
-  }
-}
-/* ============================================================================
-   LAYOUT ENGINE — .experience__grid* (SENGAJA tetap CSS scoped, BUKAN Tailwind).
-   Keputusan Wayan (hybrid, standar industri): komponen = utility Tailwind, tapi
-   layout engine multi-konteks kayak grid ini TETAP CSS. 1 class, 3 kelakuan beda
-   per konteks: .xplore (HP geser / desktop wrap), .related (geser terus), .catsec
-   (wrap terus). Rule-nya SENGAJA nyebar (base + --home4/--slider/--auto + context
-   override + banyak breakpoint) - JANGAN di-convert ke [&>*] utility soup, itu
-   anti-pattern & bikin lebih susah dibaca. Kalau mau ubah layout kartu, edit di
-   sini (scoped CSS), bukan di className komponen React.
-   SIZING ANAK = `> *` (direct child), BUKAN `.experience__card`/`.hcard` (Sep 2026):
-   engine nge-size anak apa pun yang ditaro di dalamnya, jadi kartu (ExperienceCard/
-   HomepageCard/GuideCard) gak perlu bawa hook-class buat di-size. Ini yang benerin
-   bug slider .related (dulu pake HomepageCard=.hcard tapi rule cuma target
-   .experience__card -> kartu collapse 0px, gak keliatan) + ngebebasin ExperienceCard
-   jadi full-Tailwind. Anak grid = selalu kartu (heading/"See all" di LUAR grid).
-   ============================================================================ */
-.experience__grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1.25rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 /* Review form (diisi tamu) */
 
 /* Review display cards (icon orang) - gaya beda dari card halaman */
@@ -664,21 +624,6 @@ section + section::before,
 .gsearch__sug[hidden] {
   display: none;
 }
-/* "You might also like" / "See our tours" cards (guide-more, pakai --home4):
-   ikutin pola homepage — DESKTOP tampilin semua kartu (grid wrap, no slide),
-   MOBILE geser (slider default --home4 + initTourSlider). Agu 2026, Wayan. */
-@media (min-width: 993px) {
-  .guide-more .experience__grid--home4 {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.4rem;
-    overflow: visible;
-  }
-  .guide-more .experience__grid--home4 > * {
-    flex: none;
-  }
-  
-}
 
 .field {
   margin-bottom: 1.1rem;
@@ -699,35 +644,6 @@ section + section::before,
   background-color: #fff;
   -webkit-appearance: none;
   appearance: none;
-}
-
-@media (max-width: 992px) {
-  .experience__grid {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding-bottom: 1rem;
-  }
-  .experience__grid > * {
-    flex: 0 0 70%;
-    scroll-snap-align: start;
-  }
-  /* Keep the many-card grid wrapping instead of turning into a slider */
-  .experience__grid--auto > * {
-    flex: none;
-  }
-}
-
-@media (max-width: 576px) {
-  .experience__grid > * {
-    flex: 0 0 80%;
-  }
-  /* Overlay homepage card (glass) butuh lebih lebar biar bar (durasi + Private
-     Tour + harga) muat - dilebarin dari 80% ke 88% (tetep peek kartu berikutnya). */
-  .home .experience__grid--home4 > * {
-    flex: 0 0 88%;
-  }
 }
 
 /* Layar HP kecil - kecilin field booking biar 2 kolom tetap muat rapi */
@@ -916,18 +832,6 @@ section + section::before,
 .itn2__panel > .itn__subtitle {
   margin-bottom: 1rem;
 }
-/* Isi popup form transfer/charter (modal--sm default center -> rata kiri) */
-/* .itn2__add visual (+:hover) -> utilities di ItineraryBuilder.jsx (migrasi Fase 2).
-   Kelas `itn2__add` tetep dipasang: anchor `.itn2__side > .itn2__add` (order +
-   margin responsive). Sisa .itn2* = layout engine, sengaja tetep CSS scoped. */
-/* Charter dipilih inline (bukan navigasi) -> pakai <button>, samain tampilannya dg <a> */
-/* ====== Slider: swipe samping geser card, swipe atas-bawah scroll page ====== */
-@media (max-width: 992px) {
-  .experience__grid:not(.experience__grid--auto) {
-    overflow-y: hidden;
-    touch-action: pan-x pan-y;
-  }
-}
 
 /* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */
 /* Halaman detail (hero overlap + foto): hero lebih pendek dari default 60vh,
@@ -987,38 +891,6 @@ section + section::before,
     box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
 }
-/* .charter__notes -> utilities in CharterSection (TW-B4 #337). */
-
-
-/* ==================== Tour Programs slider (desktop) ==================== */
-@media (min-width: 993px) {
-  .experience__grid--slider {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    touch-action: pan-x pan-y;
-    padding-bottom: 1rem;
-  }
-  .experience__grid--slider > * {
-    flex: 0 0 300px;
-    scroll-snap-align: start;
-  }
-}
-
-/* ==================== Slider arrows (muncul pas hover, desktop) ==================== */
-
-/* Sembunyiin scrollbar slider (navigasi via arrow / swipe) */
-.experience__grid--slider,
-.experience__grid:not(.experience__grid--auto) {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.experience__grid--slider::-webkit-scrollbar,
-.experience__grid:not(.experience__grid--auto)::-webkit-scrollbar {
-  display: none;
-}
 /* garis gold antar section OFF */
 section + section::before,
 [id$="-placeholder"] > section::before,
@@ -1052,30 +924,6 @@ strong {
   font-weight: 500;
   letter-spacing: normal;
   text-transform: none;
-}
-
-/* --- Card slider (dulu grid 4-up yang numpuk kalau lebih dari 4 kartu -
-   sekarang mesin yang sama kayak Guides & Information: 1 baris, geser
-   samping, kartu ~300px). Dipakai homepage Explore, kategori listing
-   (tour/activities/destinations), dan related cards. --- */
-.experience__grid--home4 {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-@media (min-width: 993px) {
-  .experience__grid--home4 {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    touch-action: pan-x pan-y;
-    padding-bottom: 1rem;
-  }
-  .experience__grid--home4 > * {
-    flex: 0 0 300px;
-    scroll-snap-align: start;
-  }
 }
 
 /* --- Reviews: compact 3-across strip --- */
@@ -1119,30 +967,8 @@ strong {
   padding: 4.5rem var(--container-x);
   text-align: left; /* aturan V1: konten grid rata kiri */
 }
-/* Header row + tab switcher (.xplore__head/.xtabs/.xtab) + "view all"
-   (.xplore__more) di-convert ke utility Tailwind (Explore/Destinations.jsx).
-   Yang tinggal di sini = .xplore (context hook grid-engine) + rule grid di bawah. */
-/* kartu di panel: napas lebih longgar dari default */
-.xplore .experience__grid--home4 { gap: 1.4rem; }
-/* Desktop: Explore & Destinations (homepage) tampilin SEMUA kartu tanpa geser -
-   wrap ke grid (>4 kartu = row baru, liat section Destinations). Mobile TETAP
-   slider (base .experience__grid mobile rule, sengaja gak disentuh - khusus
-   homepage aja yang boleh geser di HP, listing page lain nggak - liat .catsec). */
-@media (min-width: 993px) {
-  .xplore .experience__grid--home4 {
-    display: grid;
-    /* auto-fill: kartu kurang dari 1 baris penuh -> sisa kolom kosong, bukan stretch */
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    overflow: visible;
-  }
-  .xplore .experience__grid--home4 > * {
-    flex: none;
-  }
-}
 @media (max-width: 768px) {
   .xplore { padding: 3.2rem var(--container-x); }
-  /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
-  .xplore .experience__grid--home4 { gap: 0.9rem; }
 }
 
 /* Floating section switcher (pengganti tab strip): pill di bawah-tengah,
@@ -1174,9 +1000,6 @@ strong {
    .related -> divider inset ini jadi dobel, matiin kalo related nempel abis crumb. */
 .crumb + .related::before {
   content: none;
-}
-.related .experience__grid--home4 {
-  margin-top: 1.6rem;
 }
 @media (max-width: 768px) {
   .related {

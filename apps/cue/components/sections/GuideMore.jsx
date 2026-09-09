@@ -1,5 +1,6 @@
 import ExperienceCard from '@/components/cards/ExperienceCard';
 import { CARD_FRAME, CARD_IMAGE, CARD_IMG } from '@/components/ui/cardClasses';
+import { GRID_GUIDEMORE } from '@/components/ui/gridClasses';
 import { SEE_OUR_TOURS } from '@/content/shared/guide-more';
 
 // Blok "guide-more" di bawah artikel guide. `block`:
@@ -23,7 +24,7 @@ export default function GuideMore({ block }) {
   return (
     <section className={`guide-more ${BOX}${extra}`}>
       <h2 className={TITLE}>{b.title}</h2>
-      <div className="experience__grid experience__grid--home4">
+      <div className={GRID_GUIDEMORE}>
         {b.kind === 'tours'
           ? b.cards.map((c, i) => (
               <ExperienceCard

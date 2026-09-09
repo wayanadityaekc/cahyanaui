@@ -845,28 +845,6 @@ section.faq::before,
   color: var(--color-ink);
   font-size: var(--fs-body);
 }
-/* Foto artikel guide (lead di atas + foto inline dalam section) - 4:3, disamain
-   sama foto konten tour (.stop__image) biar selaras di seluruh situs - Sep 2026, Wayan. */
-.guide-lead {
-  margin: 0 0 1.5rem;
-}
-.guide-lead img {
-  width: 100%;
-  height: auto; /* wajib eksplisit - kalau nggak, atribut height="" di <img> menang
-    atas aspect-ratio CSS (presentational hint), foto jadi ikut rasio file asli */
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--r-lg);
-  box-shadow: 0 8px 24px rgba(31, 61, 43, 0.1);
-  display: block;
-}
-.guide-lead figcaption {
-  margin-top: 0.5rem;
-  font-size: var(--fs-label);
-  font-style: italic;
-  text-align: center;
-  color: var(--color-muted);
-}
 
 /* ============================================================
    GUIDE ARTICLE TEMPLATE (Sep 2026) - hero tags, category sidebar

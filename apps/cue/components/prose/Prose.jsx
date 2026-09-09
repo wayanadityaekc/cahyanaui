@@ -25,9 +25,15 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'lead':
         return (
-          <figure className="guide-lead" key={i}>
-            <img src={b.src} alt={b.alt} loading={b.loading} width={b.width} height={b.height} />
-            <figcaption dangerouslySetInnerHTML={{ __html: b.caption }} />
+          <figure className="mb-6" key={i}>
+            <img
+              className="block w-full h-auto aspect-[4/3] object-cover rounded-lg shadow-[0_8px_24px_rgba(31,61,43,0.1)]"
+              src={b.src} alt={b.alt} loading={b.loading} width={b.width} height={b.height}
+            />
+            <figcaption
+              className="mt-2 text-[length:var(--fs-label)] italic text-center text-muted"
+              dangerouslySetInnerHTML={{ __html: b.caption }}
+            />
           </figure>
         );
       case 'heading':

@@ -17,6 +17,39 @@ import DateField from '@/components/ui/DateField';
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+// Presentational `.itn-*` classes -> utilities (migrasi #323). KEPT as CSS:
+// `.itn2*` (layout engine: 2-col grid + order reflow + #itn-days slider),
+// `.itn__subtitle` (content HTML string), `.itn-day__fields`/`.itn-trip__fields`
+// (+ their `.field` context = shared field-family, defer B-FINAL), `.itn-badge`
+// (rendered in Navbar). Class-names that anchor a kept layout rule
+// (`.itn2__side > .itn-suggest/.itn-trip/.summary{order}`, `#itn-days > .itn-day`)
+// stay on the element. Desktop context overrides (`.itn2__side .X`) reproduced
+// as min-[993px]: utilities. text-[length:...] so a var font-size isn't parsed
+// as a color.
+// bg image via inline style (not bg-[url(...)]) so the bundler doesn't hash/move
+// the asset to /_next/static/media - keeps the exact /assets/images path the old
+// CSS used (background-position/size stay as utilities).
+const ITN_SUGGEST = 'itn-suggest relative overflow-hidden py-[1.25rem] px-[1.35rem] rounded-lg bg-cover bg-center before:content-[""] before:absolute before:inset-0 before:[background:linear-gradient(180deg,rgba(18,32,22,0.68),rgba(18,32,22,0.8))] [&>*]:relative';
+const ITN_SUGGEST_BG = { backgroundImage: 'url(/assets/images/ubud-tour-card.jpg)' };
+const ITN_SUGGEST_T = 'font-body text-[length:var(--fs-h3)] font-semibold text-white min-[993px]:text-[length:var(--fs-body)] min-[993px]:pb-[0.55rem] min-[993px]:mb-[0.6rem] min-[993px]:border-b min-[993px]:border-b-[rgba(247,243,234,0.35)]';
+const ITN_SUGGEST_S = 'mt-[0.25rem] mb-4 text-[length:var(--fs-body)] text-[rgba(247,243,234,0.85)] min-[993px]:text-[length:var(--fs-small)]';
+const ITN_SUGGEST_ROW = 'flex flex-wrap items-end gap-[0.7rem] min-[993px]:grid min-[993px]:grid-cols-[1fr_1fr] min-[993px]:[align-items:end]';
+const ITN_SUGGEST_F = 'flex flex-col gap-[0.25rem] text-[length:var(--fs-label)] font-semibold tracking-[0.14em] uppercase text-[rgba(247,243,234,0.85)] [&_select]:min-w-[120px] [&_select]:h-[var(--field-h)] [&_select]:px-[0.6rem] [&_select]:py-[0.4rem] min-[993px]:[&_select]:w-full min-[993px]:[&_select]:min-w-0';
+const ITN_SUGGEST_BTN = 'btn-book itn-suggest__btn h-[var(--field-h)] px-[1.3rem] text-[1rem] min-[993px]:[grid-column:1/-1]';
+const ITN_TRIP = 'itn-trip pt-4 px-[1.1rem] pb-[1.2rem] [border:1.5px_solid_transparent] rounded-md [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box]';
+const ITN_TRIP_T = 'mt-0 mb-[0.15rem] text-[length:var(--fs-body)] font-semibold text-green min-[993px]:pb-[0.55rem] min-[993px]:mb-[0.6rem] min-[993px]:border-b min-[993px]:border-b-[rgba(34,32,28,0.4)]';
+const ITN_TRIP_S = 'mt-0 mb-[0.8rem] text-[length:var(--fs-label)] text-muted';
+const ITN_TRIP_GUESTS = 'flex items-center gap-[0.4rem] mt-[0.7rem] mb-0 text-[length:var(--fs-label)] text-muted [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold [&_svg]:flex-none [&_b]:text-green';
+const ITN_PANEL_HEAD = 'flex items-center justify-between flex-wrap gap-2 mb-4';
+const ITN_GHOSTBTN = 'py-[0.45rem] px-[0.8rem] border border-[#d8d2c4] rounded-pill bg-white font-body text-[length:var(--fs-small)] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease] hover:bg-[#efe9db]';
+const ITN_DAY = 'itn-day relative p-[1.1rem] mb-4 border border-[#e6dfce] rounded-md bg-white last:mb-0';
+const ITN_DAY_TITLE = 'font-body text-[1rem] font-semibold text-green';
+const ITN_DAY_EMPTY = 'flex items-center gap-[0.6rem] py-2 px-[0.2rem] mb-4 text-[length:var(--fs-small)] text-[#9a9382]';
+const ITN_SUMMARY = 'summary py-6 px-6 pb-[1.4rem] rounded-md text-center text-cream bg-green max-[992px]:p-[1.25rem]';
+const ITN_SUMMARY_LABEL = 'text-[length:var(--fs-small)] font-medium text-gold-l normal-case tracking-normal min-[993px]:block min-[993px]:pb-[0.55rem] min-[993px]:mb-[0.6rem] min-[993px]:border-b min-[993px]:border-b-[rgba(247,243,234,0.25)]';
+const ITN_SUMMARY_AMT = 'mt-[0.15rem] mb-[0.1rem] text-[2rem] leading-[1.15] min-[993px]:text-[1.6rem]';
+const ITN_SUMMARY_SUB = 'text-[length:var(--fs-small)] text-[rgba(247,243,234,0.72)]';
+
 function addDays(ds, n) {
   if (!ds) return '';
   const [y, m, d] = ds.split('-').map(Number);
@@ -107,11 +140,11 @@ export default function ItineraryBuilder() {
   return (
     <div className="itn2">
       <aside className="itn2__side">
-        <div className="itn-suggest" id="suggested">
-          <p className="itn-suggest__t">Don&apos;t know where to start?</p>
-          <p className="itn-suggest__s">Pick a length and group size - we&apos;ll build a suggested plan you can tweak, then book.</p>
-          <div className="itn-suggest__row">
-            <div className="itn-suggest__f">
+        <div className={ITN_SUGGEST} style={ITN_SUGGEST_BG} id="suggested">
+          <p className={ITN_SUGGEST_T}>Don&apos;t know where to start?</p>
+          <p className={ITN_SUGGEST_S}>Pick a length and group size - we&apos;ll build a suggested plan you can tweak, then book.</p>
+          <div className={ITN_SUGGEST_ROW}>
+            <div className={ITN_SUGGEST_F}>
               <span>Days</span>
               <Select
                 id="sg-days"
@@ -121,7 +154,7 @@ export default function ItineraryBuilder() {
                 options={DAY_OPTIONS.map((n) => ({ value: String(n), label: String(n) }))}
               />
             </div>
-            <div className="itn-suggest__f">
+            <div className={ITN_SUGGEST_F}>
               <span>Guests</span>
               <Select
                 id="sg-guests"
@@ -132,7 +165,7 @@ export default function ItineraryBuilder() {
               />
             </div>
             <button
-              className="btn-book itn-suggest__btn"
+              className={ITN_SUGGEST_BTN}
               id="sg-build"
               type="button"
               onClick={() => {
@@ -155,9 +188,9 @@ export default function ItineraryBuilder() {
           </div>
         </div>
 
-        <div className="itn-trip" id="itn-trip">
-          <p className="itn-trip__t">Trip details</p>
-          <p className="itn-trip__s">Fill once - every day follows automatically.</p>
+        <div className={ITN_TRIP} id="itn-trip">
+          <p className={ITN_TRIP_T}>Trip details</p>
+          <p className={ITN_TRIP_S}>Fill once - every day follows automatically.</p>
           <div className="itn-day__fields itn-trip__fields">
             <div className="field">
               <label>Start date</label>
@@ -168,7 +201,7 @@ export default function ItineraryBuilder() {
               <input type="text" id="trip-hotel" placeholder="Hotel / villa / area" value={hotel} onChange={(e) => setHotel(e.target.value)} />
             </div>
           </div>
-          <p className="itn-trip__guests">
+          <p className={ITN_TRIP_GUESTS}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
               <circle cx="9" cy="8" r="3.2" />
               <path d="M3.5 19c.6-3 2.9-4.6 5.5-4.6s4.9 1.6 5.5 4.6" />
@@ -185,10 +218,10 @@ export default function ItineraryBuilder() {
           </p>
         )}
 
-        <section className="summary">
-          <span className="summary__label">Trip total</span>
-          <div className="summary__amt"><span className="amount" id="itn-total"><span className="price-cur">{withSymbol(totalText)}</span></span></div>
-          <span className="summary__sub" id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
+        <section className={ITN_SUMMARY}>
+          <span className={ITN_SUMMARY_LABEL}>Trip total</span>
+          <div className={ITN_SUMMARY_AMT}><span className="amount" id="itn-total"><span className="price-cur">{withSymbol(totalText)}</span></span></div>
+          <span className={ITN_SUMMARY_SUB} id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
           <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
         </section>
 
@@ -199,14 +232,14 @@ export default function ItineraryBuilder() {
 
       <div className="itn2__main">
         <div className="itn2__panel">
-          <div className="itn__panel-head">
+          <div className={ITN_PANEL_HEAD}>
             <h3 className="itn__subtitle">Your Days</h3>
-            <button className="itn__ghostbtn" id="itn-clear" type="button" onClick={clearAll}>Clear all</button>
+            <button className={ITN_GHOSTBTN} id="itn-clear" type="button" onClick={clearAll}>Clear all</button>
           </div>
           <div id="itn-days">
             {days.map((d, i) => (
-              <div className="itn-day" key={i}>
-                <p className="itn-day__title">Day {i + 1} · {fmtDay(d.date)}</p>
+              <div className={ITN_DAY} key={i}>
+                <p className={ITN_DAY_TITLE}>Day {i + 1} · {fmtDay(d.date)}</p>
                 <div className="itn-day__fields">
                   <div className="field">
                     <label>Date</label>
@@ -218,7 +251,7 @@ export default function ItineraryBuilder() {
                   </div>
                 </div>
                 {(d.items || []).length === 0 ? (
-                  <p className="itn-day__empty">Nothing added yet.</p>
+                  <p className={ITN_DAY_EMPTY}>Nothing added yet.</p>
                 ) : (
                   <ul>
                     {(d.items || []).map((it, k) => (
@@ -246,13 +279,13 @@ export default function ItineraryBuilder() {
                             </span>
                           </span>
                         )}
-                        <button type="button" className="itn__ghostbtn" aria-label={`Remove ${it}`} onClick={() => save(removeItem(state, i, k))}>&times;</button>
+                        <button type="button" className={ITN_GHOSTBTN} aria-label={`Remove ${it}`} onClick={() => save(removeItem(state, i, k))}>&times;</button>
                       </li>
                     ))}
                   </ul>
                 )}
-                <button type="button" className="itn__ghostbtn" onClick={() => setPickFor(i)}>+ Add to this day</button>
-                <button type="button" className="itn__ghostbtn" onClick={() => save(removeDay(state, i))}>Remove day</button>
+                <button type="button" className={ITN_GHOSTBTN} onClick={() => setPickFor(i)}>+ Add to this day</button>
+                <button type="button" className={ITN_GHOSTBTN} onClick={() => save(removeDay(state, i))}>Remove day</button>
               </div>
             ))}
           </div>

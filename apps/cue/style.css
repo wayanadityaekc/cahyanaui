@@ -134,8 +134,7 @@ body {
   overflow-x: clip;
 }
 .subhero__text,
-.info__list li,
-.faq__a p {
+.info__list li {
   font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -1117,52 +1116,6 @@ section.faq::before,
 .faq {
   padding: var(--space-5) var(--space-3);
 }
-.faq__container {
-  max-width: var(--container-mid);
-  margin: 0 auto;
-}
-.faq__list {
-  min-width: 0;
-}
-/* Kolom chat WhatsApp di samping FAQ */
-.faq__item {
-  margin-bottom: 0.75rem;
-  border: 1px solid #e0ddd4;
-  border-radius: var(--r-md);
-  background-color: #fff;
-  overflow: hidden;
-}
-.faq__q {
-  position: relative;
-  padding: 1.1rem 3rem 1.1rem 1.25rem;
-  font-family: var(--font-body);
-  font-weight: 600;
-  color: var(--color-green);
-  cursor: pointer;
-  list-style: none;
-}
-.faq__q::-webkit-details-marker {
-  display: none;
-}
-.faq__q::after {
-  content: "+";
-  position: absolute;
-  top: 50%;
-  right: 1.25rem;
-  transform: translateY(-50%);
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: var(--color-gold);
-}
-.faq__item[open] .faq__q {
-  color: var(--color-gold);
-}
-.faq__item[open] .faq__q::after {
-  content: "\2212";
-}
-.faq__a {
-  padding: 0 1.25rem 1.25rem;
-}
 
 /* Footer */
 /* ==================== Anti-CLS: reserve tempat partial yang di-inject JS ====================
@@ -2128,9 +2081,6 @@ section.faq::before,
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
-  .faq__container {
-    grid-template-columns: 1fr;
-  }
   .info__lists {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -2571,11 +2521,6 @@ section.faq::before,
 .driver-modal__tagline,
 .driver-modal__desc {
   font-size: var(--fs-body);
-}
-/* faq__q = pertanyaan yang jadi trigger accordion (klik buat expand/collapse),
-   bukan teks statis - biarin di ukuran sekarang, jangan ikut nyusut --fs-body. */
-.faq__q {
-  font-size: 1rem;
 }
 
 /* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */

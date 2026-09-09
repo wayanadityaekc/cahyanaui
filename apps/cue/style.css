@@ -903,26 +903,6 @@ section.faq::before,
   font-size: var(--fs-field);
   background: #fff;
 }
-
-/* badge hijau di menu Itinerary */
-.itn-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  margin-left: 5px;
-  padding: 0 5px;
-  border-radius: var(--r-pill);
-  background-color: var(--color-ok);
-  color: #fff;
-  font-size: var(--fs-label);
-  font-weight: 600;
-  line-height: 1;
-}
-.itn-badge[hidden] {
-  display: none;
-}
 /* badge di tombol hamburger (kelihatan di mobile walau menu ketutup) */
 /* ---- itinerary responsive: katalog jadi bar floating di bawah ---- */
 /* Trip bar mobile (baris ringkas). Default disembunyiin {
@@ -1168,14 +1148,6 @@ section.faq::before,
 .experience__grid--slider::-webkit-scrollbar,
 .experience__grid:not(.experience__grid--auto)::-webkit-scrollbar {
   display: none;
-}
-
-/* ==================== Toggle Standard/Exclusive di booking form ==================== */
-
-/* ==================== Toggle Standard/Exclusive per item di itinerary ==================== */
-.itn-item-type__btn.is-active {
-  color: #fff;
-  background-color: var(--color-gold);
 }
 /* garis gold antar section OFF */
 section + section::before,

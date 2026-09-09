@@ -1,15 +1,22 @@
 // Tailwind-native (migrasi Fase 2): kartu driver (about-us, di dalam .drivers-grid).
-// Dulu keluarga .driver-card* di style.css -> utilities 1:1. `.driver-card__avatar`
-// CSS masih dipakai driver modal di AboutPage (belum di-convert), jadi rule-nya
-// tetep ada; di kartu ini avatarnya udah utilities. Blok detail tersembunyi
-// (data holder, display:none) dibiarin apa adanya. Varian `.company-page .driver-card`
-// gak kepake React (DriverCard cuma dipakai di about-us, bukan our-company).
-// `company` = kartu dikecilin buat halaman Our Company (kolom sempit) — dulu
-// `.company-page .driver-card*` di style.css.
+// Dulu keluarga .driver-card* di style.css -> utilities 1:1 (TW-A7, #328 - CSS-nya
+// udah dihapus, termasuk `.driver-card__avatar`/`.company-page .driver-card*`).
+// Blok detail tersembunyi (data holder, display:none via attr `hidden`) dibiarin
+// apa adanya - bukan family-ku, ada kemungkinan dipakai flow review nanti.
+// `company` = kartu dikecilin buat halaman Our Company (kolom sempit).
+// `driverAvatarClasses` diexport biar dipakai bareng avatar di driver-modal
+// (AboutPage.jsx) - dulu 2 rule CSS beda (`.driver-card__avatar` vs modal
+// head-nya) tapi angkanya identik, jadi disatuin ke satu sumber (DRY).
+export function driverAvatarClasses(company) {
+  return {
+    box: company ? 'w-[46px] h-[46px] mb-[0.6rem] text-[1.15rem]' : 'w-[60px] h-[60px] mb-[0.9rem] text-[1.5rem]',
+    svg: company ? 'w-6 h-6' : 'w-8 h-8',
+  };
+}
+
 export default function DriverCard({ name, tagline, desc, emptyReview, onOpen, company = false }) {
   const box = company ? 'basis-[158px] py-[1.1rem] px-[0.9rem]' : 'basis-[215px] py-[1.75rem] px-5';
-  const ava = company ? 'w-[46px] h-[46px] mb-[0.6rem] text-[1.15rem]' : 'w-[60px] h-[60px] mb-[0.9rem] text-[1.5rem]';
-  const avaSvg = company ? 'w-6 h-6' : 'w-8 h-8';
+  const { box: ava, svg: avaSvg } = driverAvatarClasses(company);
   return (
     <button
       className={`font-body text-green flex flex-col items-center text-center grow-0 shrink-0 ${box} border-[1.5px] border-solid border-transparent rounded-lg [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box] cursor-pointer transition-[transform,box-shadow] duration-[0.15s] hover:[transform:translateY(-4px)] hover:shadow-[0_8px_22px_rgba(31,61,43,0.1)]`}

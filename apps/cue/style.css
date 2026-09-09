@@ -550,11 +550,6 @@ body.hs-locked .wa-float {
 /* baris reassurance (shield) */
 
 
-/* About (homepage) */
-.about {
-  padding: var(--space-5) var(--space-3);
-}
-
 .title {
   text-align: center;
 }
@@ -603,7 +598,6 @@ body.hs-locked .wa-float {
   }
 }
 @media (max-width: 768px) {
-  .drivers .drivers-grid,
   .reviews .reviews-cards {
     max-width: none; /* base-nya max-width:100% -> ngepatok lebar, sisa margin di kanan */
     margin-left: -1.5rem;
@@ -679,14 +673,6 @@ body.hs-locked .wa-float {
 
 /* Wide popup + all-reviews grid (2 kolom) */
 
-/* Driver cards */
-/* Drivers = section putih + garis emas atas, kartu cream + border gold gradasi. */
-.drivers {
-  padding: var(--space-5) var(--space-3);
-  background: #fff;
-  border-top: 1px solid rgba(34, 32, 28, 0.4);
-}
-
 /* ==================== Galeri foto tamu (marquee auto-scroll) ====================
    Band putih di antara Drivers & Reviews. Foto = thumbnail kecil (foto tamu low-res
    sengaja ditampilin kecil biar nggak pecah). Sengaja TERUS jalan (nggak pause on hover)
@@ -696,81 +682,13 @@ body.hs-locked .wa-float {
     transform: translateX(-50%);
   }
 }
-.drivers-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-}
-.driver-card {
-  font-family: var(--font-body);
-  color: var(--color-green);
-  display: flex;
-  flex: 0 0 215px;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 1.75rem 1.25rem;
-  border: 1.5px solid transparent;
-  border-radius: var(--r-lg);
-  background:
-    linear-gradient(var(--color-cream), var(--color-cream)) padding-box,
-    var(--gold-edge)
-      border-box;
-  cursor: pointer;
-  transition:
-    transform var(--dur-fast),
-    box-shadow var(--dur-fast);
-}
-.driver-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 22px rgba(31, 61, 43, 0.1);
-}
-.driver-card__avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  margin-bottom: 0.9rem;
-  border-radius: 50%;
-  /* Avatar inisial (Opsi C): huruf depan nama, gradasi emas — diisi initDrivers */
-  font-family: var(--font-head);
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #fff;
-  background: linear-gradient(135deg, var(--color-amber), var(--color-amber-d));
-}
-.driver-card__avatar svg {
-  width: 32px;
-  height: 32px;
-}
+/* Kartu/avatar/modal driver full Tailwind (TW-A7, #328). Blok detail tersembunyi
+   (data holder, disembunyiin lewat attr `hidden` di JSX) dibiarin CSS-nya - bukan
+   family ini, kemungkinan kepake flow review nanti. */
 .driver-card__detail {
   display: none;
 }
 
-/* Driver profile popup */
-.driver-modal__head {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-}
-.driver-modal__name {
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-}
-.driver-modal__tagline {
-  display: block;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.driver-modal__desc {
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-  color: var(--color-ink);
-}
 /* ==================== Divider gold tipis antar section (inset, ada pinggir) ==================== */
 section + section,
 section.faq,
@@ -1769,9 +1687,6 @@ section.faq::before,
 }
 
 @media (max-width: 768px) {
-  .about {
-    margin-top: -1rem;
-  }
   /* Featured On ke tengah di HP */
   /* Mobile: stat strip tetap 1 baris (3 kolom), padding lebih rapat + harga kebaca */
   .highlight__meta-item .price {
@@ -2197,29 +2112,9 @@ section.faq::before,
   }
 }
 
-/* Card driver & review jadi slider di HP */
-@media (max-width: 768px) {
-  .drivers-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 1rem;
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    touch-action: pan-x pan-y;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 0.5rem;
-  }
-  .drivers-grid > * {
-    flex: 0 0 78%;
-    scroll-snap-align: start;
-  }
-}
 /* ====== Samain body text yang kebaca ke 0.85rem (ikut homepage) ======
    Title/heading/harga/stat/tag TIDAK diubah - cuma teks paragraf/deskripsi. */
-.builder__intro,
-.driver-modal__tagline,
-.driver-modal__desc {
+.builder__intro {
   font-size: var(--fs-body);
 }
 
@@ -2782,14 +2677,12 @@ section.faq::before,
 
 /* Sembunyiin scrollbar slider (navigasi via arrow / swipe) */
 .experience__grid--slider,
-.experience__grid:not(.experience__grid--auto),
-.drivers-grid {
+.experience__grid:not(.experience__grid--auto) {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 .experience__grid--slider::-webkit-scrollbar,
-.experience__grid:not(.experience__grid--auto)::-webkit-scrollbar,
-.drivers-grid::-webkit-scrollbar {
+.experience__grid:not(.experience__grid--auto)::-webkit-scrollbar {
   display: none;
 }
 
@@ -2877,9 +2770,6 @@ section.faq::before,
 .highlight + section::before {
   content: none;
 }
-.drivers {
-  border-top: none;
-}
 
 /* ============================================================
    TYPOGRAPHY SYSTEM — satu font (Inter) buat body & heading
@@ -2908,7 +2798,6 @@ section.faq::before,
   line-height: var(--lh-heading);
 }
 /* Tier UI (Inter): judul kartu, modal, nama, dst */
-.driver-modal__name,
 .itn__subtitle,
 .itn-day__title {
   font-family: var(--font-body);
@@ -2990,13 +2879,6 @@ strong {
 .btn-pill:hover {
   background: var(--color-gold);
   color: #fff;
-}
-
-/* --- About + Drivers merged: text left, driver cards right --- */
-.about__drivers .drivers-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.8rem;
 }
 
 /* --- Reviews: compact 3-across strip --- */
@@ -3200,9 +3082,7 @@ strong {
 }
 /* Konten reuse (AboutPage/ContactSection/legal body) punya clearance navbar +
    slot foto sendiri - di dalam kolom udah gak perlu, buang. */
-.company-page .about { padding-top: 0; }
 .company-page .about .lhero { padding-top: 0.5rem; padding-bottom: 1rem; }
-.company-page .about-gallery { display: none; }
 .company-page .contact,
 .company-page .info { padding-top: 0; }
 /* About tab: kolom konten udah sempit (ada sidebar), jadi hero + kartu intro
@@ -3211,23 +3091,13 @@ strong {
    lebar kolom, biar hero, intro, dan rows sejajar satu garis kiri. */
 .company-page .about .lhero__inner { max-width: none; text-align: left; }
 .company-page .about .lhero__sub { margin-left: 0; }
-.company-page .about-intro,
-.company-page .about .arows { max-width: none; margin: 0; padding: 0; }
-/* No box-in-box (Wayan, Sep 2026): satu-satunya kotak = cekungan .company-main.
-   Kartu intro (.ahero-card) & kartu registrasi (.reg) di dalamnya di-flat-in -
-   bg/border/shadow/radius/padding dilepas biar kontennya ngalir polos di dalam
-   cekungan, bukan kotak numpuk kotak. Strip fakta (.lbox__facts) TETAP - itu
-   elemen data kecil, bukan wrapper konten. */
-.company-page .about .ahero-card {
-  max-width: none;
-  margin: 0;
-  background: none;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0;
-}
-.company-page .about-intro .ahero-card { margin-top: 0; }
+/* .company-page .about-intro / .about .arows / .about .ahero-card / .about-intro
+   .ahero-card / .drivers-grid / .driver-card* dulu di sini - full Tailwind lewat
+   prop `company` di AboutPage.jsx/DriverCard.jsx sekarang (TW-A7, #328).
+   `.company-page .reg-sec` / `.company-page .reg` di bawah BUKAN family ini
+   (`.reg*`, punya RegistrationBlock) - kepantau udah dead juga (RegistrationBlock
+   udah full utilities duluan), tapi dibiarin/gak dihapus di sini, di luar scope
+   #328 - lihat catatan PR. */
 .company-page .reg-sec { max-width: none; margin: 0; padding: 0; }
 .company-page .reg {
   background: none;
@@ -3237,19 +3107,6 @@ strong {
   padding: 1.6rem 0 0;
   border-top: 1px solid var(--line);
 }
-/* Card driver dikecilin di Our Company (kolom udah sempit karena sidebar) */
-.company-page .drivers-grid { gap: 1rem; }
-.company-page .driver-card {
-  flex: 0 0 158px;
-  padding: 1.1rem 0.9rem;
-}
-.company-page .driver-card__avatar {
-  width: 46px;
-  height: 46px;
-  margin-bottom: 0.6rem;
-  font-size: 1.15rem;
-}
-.company-page .driver-card__avatar svg { width: 24px; height: 24px; }
 /* Judul tab (About Us H1 / Terms-Privacy-Cancellation .company-heading / Contact
    H1) kepake 3 ukuran+bobot beda (40px, 18px/700, 18px/500) - gonta-ganti tab
    kerasa gak nyambung. Disamain semua ke satu treatment (18px/700/gold, punya
@@ -3567,32 +3424,6 @@ strong {
   margin: 0 auto 1.6rem;
   max-width: 480px;
 }
-/* .lbox__facts / .lbox__fact: fact strip 3-sel. Featured box lama udah dihapus
-   dari listing; ini masih dipakai kartu intro About (AboutPage). */
-.lbox__facts {
-  display: flex;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  overflow: hidden;
-  margin-bottom: 1.1rem;
-}
-.lbox__fact {
-  flex: 1;
-  text-align: center;
-  padding: 0.55rem 0.4rem;
-  border-right: 1px solid var(--line);
-}
-.lbox__fact:last-child { border-right: none; }
-.lbox__fact span { display: block; font-size: var(--fs-small); color: var(--color-muted); }
-.lbox__fact strong {
-  display: block;
-  margin-top: 0.15rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 500;
-  color: var(--color-ink);
-}
-.lbox__fact .price { color: var(--color-gold); font-weight: 600; }
 /* Search di hero listing (memfilter kartu di halaman itu). Desktop: di bawah
    judul, dalam kolom kiri. Mobile: mengambang di foto (lihat media query). */
 .lsearch { display: flex; align-items: center; gap: 6px; width: 100%; max-width: 430px;
@@ -3643,8 +3474,14 @@ strong {
    ABOUT PAGE — layout editorial (judul kiri sticky, isi kanan).
    Pakai design system: lhero (hero foto), font-head Playfair,
    emas/cream. Kartu intro di hero + baris editorial + list.
+
+   .about-gallery* / .about-intro / .ahero-card / .lbox__facts / .arows /
+   .arow* / .anl* full Tailwind di AboutPage.jsx sekarang (TW-A7, #328).
+   `.about .lhero*` (di bawah) TETAP CSS - itu primitif shared `.lhero`
+   (family issue LAIN, belum dikonversi), class token literal "about" masih
+   nempel di wrapper AboutPage.jsx khusus jadi hook buat rule ini (+ varian
+   `.company-page .about .lhero*`) - lihat komentar di AboutPage.jsx.
    ============================================================ */
-/* Kartu intro putih di dalam hero (di bawah judul) */
 /* About hero dipendekin ala guide (Sep 2026, Wayan) - kartu intro pindah ke bawah,
    jadi hero cukup muat judul + sub aja. Sejajar sama .guide-article-page .lhero. */
 .about .lhero {
@@ -3657,187 +3494,6 @@ strong {
 /* Tanpa foto gelap di belakang -> teks jadi warna gelap biar kebaca */
 .about .lhero__title { color: var(--color-gold); text-shadow: none; }
 .about .lhero__sub { color: var(--color-muted); text-shadow: none; }
-/* Galeri foto About: landscape 4:3, di TENGAH di bawah judul/tagline, bisa di-swipe.
-   Desktop dapat panah prev/next (di-inject initAboutGallery). */
-.about-gallery {
-  position: relative;
-  max-width: 640px;
-  margin: 0.6rem auto 0;
-}
-.about-gallery__track {
-  display: flex;
-  gap: 0.6rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  touch-action: pan-x pan-y; /* swipe horizontal geser foto, swipe vertikal tetap scroll halaman */
-  border-radius: var(--r-lg);
-}
-.about-gallery__track::-webkit-scrollbar { display: none; }
-.about-gallery__slide {
-  flex: 0 0 100%;
-  scroll-snap-align: center;
-}
-.about-gallery__slide img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--r-lg);
-}
-/* Placeholder sementara sampai foto asli dipasang (gradient rapi, bukan kotak kosong) */
-.about-gallery__ph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--r-lg);
-  border: 1px dashed var(--line);
-  background: linear-gradient(160deg, #f3f1ea, #e9e6dd);
-  color: var(--color-muted);
-  font-size: var(--fs-small);
-  letter-spacing: 0.04em;
-}
-/* Panah slider (desktop) - muncul pas hover, pola sama kayak .slider-arrow */
-.about-gallery:hover .about-gallery__arrow { opacity: 1; }
-/* Container kartu intro (di bawah hero) - lebar & padding tepi samain sama .arows */
-.about-intro {
-  max-width: var(--container-mid);
-  margin: 0 auto;
-  padding: 0 var(--container-x);
-}
-.about-intro .ahero-card {
-  margin-top: 0.5rem; /* foto hero dihapus - gak nyembul lagi, jarak normal di bawah hero */
-  position: relative;
-  z-index: 3;
-}
-.ahero-card {
-  background: #fff;
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-xl);
-  padding: 1.4rem 1.3rem;
-  max-width: 560px;
-  margin: 0 auto;
-  text-align: left;
-}
-.ahero-card p {
-  margin: 0 0 1rem;
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  color: var(--color-ink);
-}
-/* .lbox__facts di dalam kartu intro dapat style dari blok listing */
-
-/* Baris editorial: label kiri (sticky) + isi kanan */
-.arows {
-  max-width: var(--container-mid);
-  margin: 0 auto;
-  padding: 0 var(--container-x);
-}
-.arow {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 2.5rem;
-  align-items: start;
-  padding: var(--space-5) 0;
-}
-.arow + .arow {
-  border-top: 1px solid var(--line);
-}
-/* baris editorial punya border sendiri -> matikan divider emas otomatis */
-.arow::before {
-  content: none;
-}
-.arow__lab {
-  position: sticky;
-  top: 6.5rem; /* clear fixed navbar */
-}
-.arow__k {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--color-muted);
-}
-.arow__h {
-  margin: 0;
-  font-family: var(--font-head);
-  font-size: var(--fs-h2);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: var(--lh-heading);
-  color: var(--color-green);
-}
-.arow__body > p {
-  margin: 0 0 1rem;
-  max-width: 62ch;
-  font-size: var(--fs-body);
-  line-height: 1.75;
-  color: var(--color-ink);
-}
-.arow__body > p:last-child {
-  margin-bottom: 0;
-}
-.arow__body .drivers-grid {
-  justify-content: flex-start;
-}
-
-/* List bernomor vertikal (How it works) */
-.anl {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.anl li {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-.anl li + li {
-  border-top: 1px solid var(--line);
-}
-.anl__n {
-  display: flex;
-  flex: 0 0 34px;
-  align-items: center;
-  justify-content: center;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--color-cream);
-  border: 1px solid var(--line);
-  font-family: var(--font-head);
-  font-weight: 600;
-  color: var(--color-gold-d);
-}
-.anl b {
-  display: block;
-  margin-bottom: 0.15rem;
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  color: var(--color-green);
-}
-.anl p {
-  margin: 0;
-  font-size: var(--fs-small);
-  line-height: 1.5;
-  color: var(--color-muted);
-}
-
-@media (max-width: 768px) {
-  .arow {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    padding: 2.2rem 0;
-  }
-  .arow__lab {
-    position: static;
-  }
-  .arow__body .drivers-grid {
-    justify-content: center;
-  }
-}
 
 /* ============================================================
    HOMEPAGE — section About (Opsi C): photo band + overlay,
@@ -4109,7 +3765,6 @@ strong {
 .closing-band,
 .faq,
 .stops,
-.arow,
 .guide-more {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);

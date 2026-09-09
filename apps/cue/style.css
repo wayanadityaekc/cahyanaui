@@ -133,36 +133,39 @@ body {
   background-color: #fff;
   overflow-x: clip;
 }
+
+/* ===== Animation keyframes (referenced by Tailwind animate-[name...] in components) ===== */
 @keyframes navbarIn {
-  from {
-    opacity: 0;
-  }
+  from { opacity: 0; }
 }
 @keyframes heroTextIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+}
+@keyframes heroCardIn {
+  from { opacity: 0; transform: translateY(14px); }
+}
+@keyframes bookcardNoteIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes guestScroll {
+  to { transform: translateX(-50%); }
+}
+@keyframes heroFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-/* ---- Search card ---- keyframe kept (heroCardIn), referenced by Tailwind's
-   animate-[heroCardIn_...] in HeroSearch.jsx. */
-@keyframes heroCardIn {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-}
-/* Lock scroll background pas bottom-sheet kebuka (HP): cukup overflow:hidden.
-   JANGAN position:fixed + reposisi body -> itu yang bikin layar "loncat/ke-scroll"
-   pas dropdown dibuka (apalagi kalau udah scroll ke bawah dulu). Sheet-nya sendiri
-   udah position:fixed jadi tetep nempel walau background di belakang kebuka. */
+/* ===== Global element / behaviour rules (the "reset" half of this file) ===== */
+/* Scroll-lock toggled on <body> by JS while a bottom-sheet / dropdown is open
+   (overflow:hidden only - NOT position:fixed, which makes the page jump). */
 body.hs-locked {
   overflow: hidden;
 }
-/* Ukuran field di HP: samain kecil (~14px) biar gak keliatan kegedean.
-   Auto-zoom iOS pas fokus dicegah lewat viewport (maximum-scale=1, user-scalable=no)
-   di tiap halaman, jadi gak perlu lagi paksa 16px di sini. */
+/* Mobile: hold all form controls at --fs-field so iOS doesn't auto-zoom on focus. */
 @media (max-width: 992px) {
   input,
   select,
@@ -170,118 +173,8 @@ body.hs-locked {
     font-size: var(--fs-field) !important;
   }
 }
-/* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
-   Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
-   key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */
-@keyframes bookcardNoteIn {
-  from { opacity: 0; transform: translateY(-2px); }
-  to { opacity: 1; transform: none; }
-}
-/* Panel About = cream + border gold gradasi, isinya kotak putih + border gold gradasi
-   (konsep tour-details). Class .about--panel dipakai di homepage (#about) & about-us (#values).
-   Butuh SVG def #aboutGold di halaman itu buat stroke ikonnya. */
-/* Ikon: buang lingkaran, garisnya gold gradasi (def #aboutGold di index.html) */
-/* Panel About udah punya border sendiri -> buang divider di atas panel & section setelahnya */
-/* Deskripsi kecil di bawah judul tiap box About */
-/* Homepage About boxes = kotak (persegi) kecil, ketengah di dalam box hijau */
-/* Kunci disc icon biar gak disusutin flexbox di box kotak (tetap bulat 44x44) */
-
-/* Trust stat (jumlah akun) — 1 baris penuh di atas logo/sosmed */
-
-/* "Featured On" & "Follow Us" bersebelahan dalam satu baris (numpuk di layar sempit) */
-
-/* Baris social media di section "Featured On" (logo sama kaya footer) */
-
-
-/* Review form (diisi tamu) */
-
-/* Review display cards (icon orang) - gaya beda dari card halaman */
-
-/* Review section action buttons */
-
-/* Wide popup + all-reviews grid (2 kolom) */
-
-/* ==================== Galeri foto tamu (marquee auto-scroll) ====================
-   Band putih di antara Drivers & Reviews. Foto = thumbnail kecil (foto tamu low-res
-   sengaja ditampilin kecil biar nggak pecah). Sengaja TERUS jalan (nggak pause on hover)
-   biar keliatan sepintas. Divider emas atas/bawah dari sistem [id$="-placeholder"] > section. */
-@keyframes guestScroll {
-  to {
-    transform: translateX(-50%);
-  }
-}
-/* Footer */
-/* ==================== Anti-CLS: reserve tempat partial yang di-inject JS ====================
-   Booking form & footer masuk lewat fetch -> tanpa reserve, konten loncat pas partial nongol
-   (CLS). Angka = tinggi rendered hasil ukur headless Chromium (font Montserrat ke-load):
-   booking 464px (<576) / 455px, footer 688px (<=768) / 487px.
-   NB: kalau isi partial booking/footer berubah, UKUR ULANG & update angka ini.
-   Navbar nggak perlu: position absolute, nggak dorong konten.
-   PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 480px setelah
-   dropdown/date jadi full-custom). Kalau kurang, hero melar pas form masuk -> background
-   cover ke-rescale -> foto "zoom". */
-/* Animasi masuk hero + box booking: FADE aja (tanpa gerak) - form booking di-inject
-   via JS, gerakan naik + selisih tinggi bikin kesan "zoom"/goyang. Fade murni = mulus. */
-@keyframes heroFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-/* badge di tombol hamburger (kelihatan di mobile walau menu ketutup) */
-/* ---- itinerary responsive: katalog jadi bar floating di bawah ---- */
-/* Trip bar mobile (baris ringkas). Default disembunyiin {
-  display: none;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 190;
-  flex-direction: column;
-  gap: 0.55rem;
-  padding: 0.7rem 1rem 1rem;
-  background: #fff;
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.16);
-  transition: transform var(--dur-slow) ease;
-}
-/* Popup "Added to itinerary" (dibuat di showAddedPopup): jarak antar tombol */
-
-/* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
-   nggak terlalu bold. */
-/* .tour-hook* -> utilities di TourPage.jsx + AttractionPage.jsx (migrasi Fase 2).
-   Kelas `tour-hook` tetep dipasang sbg marker check-detail. */
-/* Glow di kartu booking pas CTA hero diklik - kedip halus 3 detik, nggak terlalu terang */
-@keyframes booksidebarGlow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
-  }
-  20% {
-    box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
-  }
-  40% {
-    box-shadow: 0 0 0 1px rgba(34, 32, 28, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
-  }
-  60% {
-    box-shadow: 0 0 0 3px rgba(34, 32, 28, 0.3), 0 10px 30px rgba(31, 61, 43, 0.1);
-  }
-  80% {
-    box-shadow: 0 0 0 1px rgba(34, 32, 28, 0.1), 0 10px 30px rgba(31, 61, 43, 0.08);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
-  }
-}
-/* Bold inline (b/strong) ikut skala bobot: maks 600 */
+/* Inline bold (b/strong) capped at 600 to match the type scale. */
 b,
 strong {
   font-weight: 600;
-}
-/* Branded loading splash (components/ui/LoadingScreen.jsx) - tampil di SETIAP
-   page load (arrival) DAN pas link diklik (leaving), biar gak ada blank pas
-   pindah halaman. Elemennya tetep mounted, cuma di-toggle lewat --out. */
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }

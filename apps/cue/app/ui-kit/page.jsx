@@ -16,7 +16,7 @@ export const metadata = { title: 'UI kit', robots: { index: false, follow: false
 
 export default function Kit() {
   return (
-    <div className="tourprog">
+    <div className="tourprog pb-20">
       <section className="experience">
         <div className={CATSEC}>
           <h2 className={SECTION_TITLE}>Buttons</h2>

@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="tourprog">
+    <div className="tourprog pb-20">
       <JsonLd page="my-trips" />
     {/* .mytrips/.mytrips__container/.mytrips__title -> utilities (migrasi Fase 2) */}
     <section className="pt-[calc(var(--nav-h,57.6px)_+_2.2rem)] px-0 pb-14">

@@ -1685,5 +1685,6 @@ strong {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
 }
-/* ruang bawah biar kartu terakhir gak ketutup bar floating */
-.tourprog{padding-bottom:5rem;}
+/* .tourprog wrapper padding-bottom (ruang bawah biar kartu terakhir gak ketutup
+   bar floating) -> pb-20 utility on the wrappers. `.tourprog` class stays as a hook
+   for the mobile .tourprog .tour-hero__image gradient above (tour-hero family). */

@@ -96,7 +96,7 @@ export default function ListingPage({ data }) {
   const showStickyNav = !q && !heroInView;
 
   return (
-    <div className="tourprog">
+    <div className="tourprog pb-20">
       {/* Hero = gaya split putih kayak halaman attraction (.tour-hero): teks kiri,
           foto kanan di desktop; foto atas + sheet putih di mobile. Search di bawah
           judul (desktop) / mengambang di foto (mobile) - memfilter kartu di bawah. */}

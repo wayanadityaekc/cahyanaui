@@ -1,4 +1,5 @@
 import Prose from '@/components/prose/Prose';
+import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
 
 export default function LegalPage({ data }) {
   return (
@@ -12,8 +13,8 @@ export default function LegalPage({ data }) {
           <p className="subhero__text">{data.text}</p>
         </div>
       </section>
-      <section className="info">
-        <div className="info__container guide-article">
+      <section className={INFO_SECTION_ARTICLE}>
+        <div className={`${INFO_CONTAINER_ARTICLE} guide-article`}>
           <Prose blocks={data.body} />
         </div>
       </section>

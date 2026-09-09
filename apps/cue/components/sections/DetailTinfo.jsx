@@ -1,4 +1,5 @@
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
+import { INFO_LIST_YES, INFO_LIST_NO } from '@/components/ui/infoClasses';
 // "Good to know" block for transfer / airport detail pages (TW-B4 #337).
 // Was a raw HTML string (TRANSFER.tinfoHtml / AIRPORT.tinfoHtml) carrying
 // .tinfo__facts / .tinfo__fact / .tinfo__cols / .tinfo__col - now data + this
@@ -34,13 +35,13 @@ export default function DetailTinfo({ facts, included, excluded }) {
       <div className="grid grid-cols-2 gap-10 max-w-[720px] mx-auto max-[768px]:grid-cols-1 max-[768px]:gap-[1.3rem]">
         <div>
           <h3 className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-muted mb-[0.8rem]">What&apos;s included</h3>
-          <ul className="info__list info__list--yes">
+          <ul className={INFO_LIST_YES}>
             {included.map((item, j) => <li key={j}>{item}</li>)}
           </ul>
         </div>
         <div>
           <h3 className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-muted mb-[0.8rem]">What&apos;s excluded</h3>
-          <ul className="info__list info__list--no">
+          <ul className={INFO_LIST_NO}>
             {excluded.map((item, j) => <li key={j}>{item}</li>)}
           </ul>
         </div>

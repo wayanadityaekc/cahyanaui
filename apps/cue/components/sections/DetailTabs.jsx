@@ -1,5 +1,6 @@
 'use client';
 
+import { INFO_LIST_YES, INFO_LIST_NO } from '@/components/ui/infoClasses';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 
@@ -89,7 +90,7 @@ function Inclusions({ included, excluded }) {
       {included && included.length > 0 && (
         <>
           <h3 className={DINCL_H}>What&apos;s included</h3>
-          <ul className="info__list info__list--yes">
+          <ul className={INFO_LIST_YES}>
             {included.map((it, i) => <li key={i}>{it}</li>)}
           </ul>
         </>
@@ -97,7 +98,7 @@ function Inclusions({ included, excluded }) {
       {excluded && excluded.length > 0 && (
         <>
           <h3 className={DINCL_H}>Not included</h3>
-          <ul className="info__list info__list--no">
+          <ul className={INFO_LIST_NO}>
             {excluded.map((it, i) => <li key={i}>{it}</li>)}
           </ul>
         </>

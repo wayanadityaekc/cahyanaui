@@ -5,6 +5,7 @@ import DriverCard, { driverAvatarClasses } from '@/components/cards/DriverCard';
 import Modal from '@/components/ui/Modal';
 import RegistrationBlock from '@/components/sections/RegistrationBlock';
 import { ABOUT } from '@/content/shared/about';
+import { infoList } from '@/components/ui/infoClasses';
 
 // Tailwind-native (migrasi Fase 2, TW-A7 #328): keluarga .arow*/.arows/.about*
 // (kecuali .about-gallery -> dipertahankan render tapi disembunyiin lewat
@@ -115,7 +116,7 @@ export default function AboutPage({ company = false }) {
                 </ol>
               )}
               {row.list && (
-                <ul className={row.list.cls}>
+                <ul className={infoList(row.list.cls)}>
                   {row.list.items.map((it, i) => <li key={i}>{it}</li>)}
                 </ul>
               )}

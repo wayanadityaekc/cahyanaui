@@ -1,5 +1,6 @@
 'use client';
 
+import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
 import { useState } from 'react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
@@ -16,8 +17,8 @@ const TABS = [
 
 function LegalBody({ data }) {
   return (
-    <section className="info">
-      <div className="info__container guide-article">
+    <section className={`${INFO_SECTION_ARTICLE} !pt-0`}>
+      <div className={`${INFO_CONTAINER_ARTICLE} guide-article`}>
         <h1 className="company-heading">{data.title}</h1>
         <div>
           <Prose blocks={data.body} headingVariant="company" />

@@ -1,4 +1,5 @@
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
+import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
 import JsonLd from '@/components/JsonLd';
 import Prose from '@/components/prose/Prose';
 import DetailTinfo from '@/components/sections/DetailTinfo';
@@ -26,8 +27,8 @@ export default function Page() {
       <section className="tinfo">
         <DetailTinfo facts={AIRPORT.tinfo.facts} included={AIRPORT.tinfo.included} excluded={AIRPORT.tinfo.excluded} />
       </section>
-      <section className="info">
-        <div className="info__container">
+      <section className={INFO_SECTION_DETAIL}>
+        <div className={INFO_CARD}>
           <Prose blocks={AIRPORT.info} />
         </div>
       </section>

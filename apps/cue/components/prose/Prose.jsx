@@ -5,6 +5,7 @@
 // content/schema/prose.js header). This component only moves the markup out
 // of a raw HTML string into data + real elements.
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { infoList } from '@/components/ui/infoClasses';
 
 // headingVariant tunes the `--sub` article headings per context (the old
 // `.guide-article-page` / `.company-page .guide-article` descendant overrides):
@@ -42,7 +43,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         return <p key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
       case 'list':
         return (
-          <ul className={`info__list info__list--${b.variant}`} key={i}>
+          <ul className={infoList(b.variant)} key={i}>
             {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: item }} />)}
           </ul>
         );

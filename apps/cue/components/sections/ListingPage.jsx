@@ -1,5 +1,6 @@
 'use client';
 
+import { infoList, INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT, INFO_LISTS, INFO_COL_H3 } from '@/components/ui/infoClasses';
 import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
@@ -193,22 +194,22 @@ export default function ListingPage({ data }) {
       </section>
 
       {info && (
-        <section className="info">
-          <div className="info__container">
+        <section className={INFO_SECTION_DETAIL}>
+          <div className={INFO_CARD}>
             <h2 className={SECTION_TITLE}>{info.title}</h2>
-            <div className="info__facts">
+            <div className={INFO_FACTS}>
               {info.facts.map((f) => (
-                <div className="info__fact" key={f.label}>
+                <div className={INFO_FACT} key={f.label}>
                   <span>{f.label}</span>
                   <strong>{f.value}</strong>
                 </div>
               ))}
             </div>
-            <div className="info__lists">
+            <div className={INFO_LISTS}>
               {info.cols.map((c) => (
-                <div className="info__col" key={c.title}>
-                  <h3>{c.title}</h3>
-                  <ul className={`info__list ${c.cls}`}>
+                <div key={c.title}>
+                  <h3 className={INFO_COL_H3}>{c.title}</h3>
+                  <ul className={infoList(c.cls)}>
                     {c.items.map((it, i) => <li key={i}>{it}</li>)}
                   </ul>
                 </div>

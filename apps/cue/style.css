@@ -133,8 +133,7 @@ body {
   background-color: #fff;
   overflow-x: clip;
 }
-.subhero__text,
-.info__list li {
+.subhero__text {
   font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -663,20 +662,6 @@ section.faq::before,
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
-/* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
-   pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */
-.tour-layout--book .tour-layout__main section.info {
-  background: transparent;
-  padding: 0;
-}
-.tour-layout--book .tour-layout__main section.info .info__container {
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
 
 @media (min-width: 993px) {
   .tour-layout--book {
@@ -727,10 +712,6 @@ section.faq::before,
    ganti panel di tempat + scroll biar strip nempel di bawah header (kerasa
    pindah halaman, tanpa reload). Semua panel di-render ke HTML (cuma di-hidden),
    jadi SEO aman. Gaya tab = samain .zone-chip (underline). */
-/* Details tab - "Before you go" (info praktis umum) */
-
-/* Included tab - reuse .info__list radio bullets */
-/* HP: rapetin biar 4 tab (Overview/Details/Included/Reviews) muat tanpa kepotong */
 
 /* Tour stops / detail rows - foto kiri, deskripsi kanan */
 .stops {
@@ -767,165 +748,6 @@ section.faq::before,
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-/* .stop__num / .stop__name / .stop__desc / .stop--link -> utilities di
-   TourPage.jsx + AttractionPage.jsx (migrasi Fase 2). .stop (grid) + .stop__image
-   (primitif foto shared) tetep CSS. */
-
-/* Details: quick facts + included / excluded */
-.info {
-  padding: 3rem 1.5rem;
-  background-color: #fff;
-}
-.info__container {
-  max-width: var(--container-mid);
-  margin: 0 auto;
-}
-/* Detail page: section cream (lapis belakang) + container kartu putih (lapis depan).
-   Legal/guide (.guide-article) di-exclude → tetap kolom baca putih polos. */
-.info:has(> .info__container:not(.guide-article)) {
-  background-color: var(--color-cream);
-}
-.info__container:not(.guide-article) {
-  background-color: #fff;
-  border-radius: var(--r-lg);
-  padding: 2.5rem 2rem;
-  box-shadow: 0 10px 30px rgba(31, 61, 43, 0.06);
-}
-/* Jarak antar-paragraf di kartu info (charter/detail). Reset global `* {margin:0}`
-   bikin <p> beruntun nempel jadi tembok teks - kasih ritme yang sama kayak
-   guide-article/.arow (margin 0 0 1rem), last-child reset biar gak nambah gap. */
-.info__container:not(.guide-article) > p {
-  margin: 0 0 1rem;
-  line-height: var(--lh-body);
-  font-size: var(--fs-body); /* snap ke body standar 0.8rem - default 16px kegedean & gak seragam (Wayan) */
-}
-.info__container:not(.guide-article) > p:last-child {
-  margin-bottom: 0;
-}
-/* Spec strip: satu strip rapi, tiap stat dipisah garis tipis (gap 1px yg nembus
-   warna --line dari background). Ringkas & seragam dgn strip di kartu highlight. */
-.info__facts {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* desktop: 1 baris 4 stat */
-  gap: 1px; /* garis pemisah tipis antar stat */
-  background: var(--line); /* warna garis keliatan lewat gap */
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  overflow: hidden;
-  margin-bottom: 2.5rem;
-}
-.info__fact {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 84px; /* tinggi seragam antar halaman walau teks beda panjang */
-  padding: 1.05rem 1rem;
-  text-align: center;
-  background: #fdfcfa;
-}
-/* label = direct child span aja (biar value fee/.price yg span-nya nested di
-   dalam <strong> nggak ikut ke-muted & bisa gold) */
-.info__fact > span {
-  font-size: var(--fs-label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--color-muted);
-}
-.info__fact strong {
-  display: block;
-  margin-top: 0.3rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-strong);
-}
-
-/* ===== Glance dengan harga bookable: harga jadi HERO + fakta lain jadi box ===== */
-/* Cuma harga (hero) yang tampil - 3 box detail disembunyiin */
-.info__facts--hero .info__fact:not(.info__fact--price) {
-  display: none;
-}
-/* harga = hero: full width, di atas, tengah, tanpa border */
-/* Format harga = SAMA kaya card (coret inline + harga emas + "per car"),
-   cuma ukurannya lebih gede dikit (section details beda size dari card). */
-.info__facts--hero .info__fact--price .price {
-  color: var(--color-amber);
-  font-size: inherit; /* ikut ukuran hero, lawan .info__fact .price */
-}
-.info__facts--hero .info__fact--price .price-unit {
-  margin-left: 0.3rem;
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 0.62em;
-  color: var(--color-green);
-}
-.info__lists {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-}
-.info__col h3 {
-  margin-bottom: 1rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-}
-/* Checklist marker: SATU format di seluruh web -> marker RADIO. Included = lingkaran
-   keisi (dot abu di dalam ring), Excluded = lingkaran kosong + teks di-mute. Dipakai
-   info, detail card, sidebar panel, transfer, legal, dll. Generic bullet (•) nggak kena. */
-.info__list {
-  list-style: none;
-}
-.info__list li {
-  position: relative;
-  padding: 0.5rem 0 0.5rem 1.95rem;
-  color: var(--color-ink);
-}
-.info__list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.7rem;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  box-sizing: border-box;
-}
-.info__list--yes li::before {
-  border: 1.5px solid var(--color-green);
-  background: radial-gradient(
-    circle at center,
-    var(--color-green) 0 3.5px,
-    transparent 4px
-  );
-}
-.info__list--no li::before {
-  border: 1.5px solid #cfc9ba;
-  background: transparent;
-}
-.info__list--no li {
-  color: #8a8578;
-}
-/* CTA (Book / Add) di dalam kartu detail */
-.info__cta {
-  display: flex;
-  gap: 0.8rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2.25rem;
-  padding-top: 1.9rem;
-  border-top: 1px solid #efe9db;
-}
-/* Item yang cuma tampil di salah satu mode (Standard / Exclusive). Default =
-   Standard, jadi item exclusive-only disembunyiin dulu (nggak ada flash). Class
-   .is-exclusive di .info__container (di-set toggle) yang nge-swap barisan tiket. */
-.info__list li[data-only="exclusive"] {
-  display: none;
-}
-.info__container.is-exclusive .info__list li[data-only="exclusive"] {
-  display: list-item;
-}
-.info__container.is-exclusive .info__list li[data-only="standard"] {
-  display: none;
 }
 
 /* Breadcrumb (halaman anak: tour, attraction, aktivitas) - di atas footer */
@@ -1212,16 +1034,6 @@ section.faq::before,
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
-  .info__lists {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  .info__facts {
-    grid-template-columns: repeat(2, 1fr); /* HP: 2x2, divider tetep rapi via gap */
-  }
-  .info__facts--hero .info__fact {
-    padding: 0.7rem 0.4rem;
-  }
 }
 
 @media (max-width: 576px) {
@@ -1232,9 +1044,6 @@ section.faq::before,
      Tour + harga) muat - dilebarin dari 80% ke 88% (tetep peek kartu berikutnya). */
   .home .experience__grid--home4 > * {
     flex: 0 0 88%;
-  }
-  .info__container:not(.guide-article) {
-    padding: 1.75rem 1.25rem; /* kartu detail nggak kesempitan di HP */
   }
 }
 
@@ -1541,11 +1350,6 @@ section.faq::before,
 .btn-book {
   text-decoration: none;
 }
-/* Settings tanpa hero: section clear navbar+tripbar sendiri (pola sama kayak .mytrips) +
-   judul polos. Pakai .info.account-settings biar menang dari rule global .info (36px). */
-.info.account-settings {
-  padding-top: calc(var(--nav-h, 57.6px) + 3rem);
-}
 /* ===== My Trips cart page (Fase C) ===== */
 /* .mytrips / .mytrips__container / .mytrips__title -> utilities di
    app/(account)/my-trips/page.jsx (migrasi Fase 2). Cart action buttons
@@ -1652,14 +1456,6 @@ section.faq::before,
   font-size: var(--fs-label);
   font-weight: 500;
   color: var(--color-muted);
-}
-/* Box "Price" di Tour Details / Good to Know: nilai seukuran fakta lain (--fs-strong),
-   unit "per car / per person" dibikin sedikit lebih kebaca. */
-.info__fact .price {
-  font-size: var(--fs-strong);
-}
-.info__fact .price-unit {
-  font-size: var(--fs-small);
 }
 
 /* ==================== Toggle Standard/Exclusive di booking form ==================== */
@@ -1958,7 +1754,6 @@ strong {
 /* Konten reuse (AboutPage/ContactSection/legal body) punya clearance navbar +
    slot foto sendiri - di dalam kolom udah gak perlu, buang. */
 .company-page .about .lhero { padding-top: 0.5rem; padding-bottom: 1rem; }
-.company-page .info { padding-top: 0; }
 /* About tab: kolom konten udah sempit (ada sidebar), jadi hero + kartu intro
    yang biasa center & narrow di halaman penuh keliatan gak nyatu sama baris
    editorial (.arow) di bawahnya. Di dalam company-page: rata KIRI + isi penuh
@@ -2319,8 +2114,8 @@ strong {
 
 /* ============================================================
    HOMEPAGE SECTIONS (Sep 2026): Airport pickup, Why Us, Charter.
-   Pakai token brand. Feature list charter reuse .info__list--yes
-   (marker radio) biar centang selaras dengan seluruh web.
+   Pakai token brand. Checklist marker radio (centang selaras dengan
+   seluruh web) sekarang lewat utility di infoClasses.js.
    ============================================================ */
 
 /* Airport pickup - FULL-BLEED dark band (pola .habout: bg + overlay di section). */
@@ -2345,7 +2140,6 @@ strong {
    Semua section konten (listing/detail/legal/guide/about) dulu 48px, disamain ke
    36px biar jarak antar-section satu ritme sama homepage. */
 .experience,
-.info,
 .faq,
 .stops {
   padding-top: var(--section-gap);

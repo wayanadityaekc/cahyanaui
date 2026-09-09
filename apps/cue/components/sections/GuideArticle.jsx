@@ -1,4 +1,5 @@
 import JsonLd from '@/components/JsonLd';
+import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 
@@ -47,8 +48,8 @@ export default function GuideArticle({ data }) {
 
       <div className={LAYOUT}>
         <div className={LAYOUT_MAIN}>
-          <section className="info">
-            <div className="info__container guide-article">
+          <section className={INFO_SECTION_ARTICLE}>
+            <div className={`${INFO_CONTAINER_ARTICLE} guide-article`}>
               <Prose blocks={data.body} headingVariant="guide" />
             </div>
           </section>

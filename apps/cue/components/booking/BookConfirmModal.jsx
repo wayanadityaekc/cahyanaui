@@ -6,21 +6,26 @@ import { useBooking } from '@/state/BookingProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useReferral } from '@/state/ReferralProvider';
 import { useAccount } from '@/state/AccountProvider';
+import { usePricing } from '@/state/PricingProvider';
 import { quote, submitInquiry } from '@/lib/api';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import PayChips from './PayChips';
+import Select from '@/components/ui/Select';
+import DateTimeField from '@/components/ui/DateTimeField';
+import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '' };
+const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
 
 export default function BookConfirmModal() {
   const { ctx, closeBooking } = useBooking();
   const { currency, stay, displayGuests } = useTripPrefs();
   const { referral, apply } = useReferral();
   const { setAccount } = useAccount();
+  const pricing = usePricing();
 
   const [f, setF] = useState(EMPTY);
   const [priced, setPriced] = useState(null);
@@ -56,12 +61,41 @@ export default function BookConfirmModal() {
 
   const set = (k) => (e) => setF((v) => ({ ...v, [k]: e.target.value }));
 
+  // Pickup-time field (Sep 2026, #TIME-1): only shown when the booking is a
+  // single line - a multi-day itinerary/cart checkout has one time PER DAY, which
+  // needs its own row-level editor in MyTripsCart/ItineraryBuilder (not built yet,
+  // flagged separately - out of scope here so this popup doesn't show one time
+  // field that would only apply to one of several lines).
+  const catalog = pricing && pricing.catalog;
+  const singleLine = ctx.lines && ctx.lines.length === 1 ? ctx.lines[0] : null;
+  const catalogItem = catalog && singleLine ? catalog.items.find((i) => i.name === singleLine.service) : null;
+  // category drives which times are restrictable. `line.type` alone isn't reliable -
+  // BookSidebar hardcodes `type:'tour'` for every detail-page item (tour/experience/
+  // performance alike), so the REAL category comes from the pricing catalog lookup.
+  const category = catalogItem ? catalogItem.category : singleLine ? singleLine.type : null;
+  const isAirportRoute = !!singleLine && singleLine.service === AIRPORT_ROUTE;
+  const hasFlightAlready = !!(singleLine && singleLine.flight_number); // pre-filled via AirportTransferForm
+  const needsFlight = isAirportRoute && !hasFlightAlready;
+  const needsTime = !!singleLine && !isAirportRoute; // airport's flight date&time already IS the pickup time
+  const timeOpts = needsTime ? timeOptions(category, singleLine && singleLine.service) : [];
+  // Flight number shown in the summary whenever there IS one to show - collected
+  // in this popup (needsFlight) OR already pre-filled upstream by AirportTransferForm
+  // (hasFlightAlready). Without the `hasFlightAlready` branch the guest had no way
+  // to see their flight number was actually carried into this booking (found via
+  // headless verification, not guessed).
+  const flightNumberDisplay = needsFlight ? f.flightNumber : hasFlightAlready ? singleLine.flight_number : '';
+
   const validate = () => {
     if (!f.name.trim()) return 'Please enter your name.';
     if (!f.phone.trim()) return 'Please enter your phone number.';
     if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) return 'Please enter a valid email address.';
     if (!ctx.pickupOptional && !f.pickup.trim()) return 'Please enter your pick-up location.';
     if (ctx.dropoffRequired && !f.dropoff.trim()) return 'Please enter your drop-off location.';
+    if (needsTime && !f.time) return 'Please select a pickup time.';
+    if (needsFlight) {
+      if (!f.flightNumber.trim()) return 'Please enter your flight number.';
+      if (!f.flightDatetime) return 'Please enter your flight date & time.';
+    }
     return '';
   };
 
@@ -78,17 +112,22 @@ export default function BookConfirmModal() {
     stay: stay || '',
     lines: ctx.lines.map((l, i) => {
       const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
+      // Time/flight fields collected in this popup only apply to the single
+      // line they were shown for (see needsTime/needsFlight above) - other
+      // lines fall back to whatever they already carried (e.g. from a caller
+      // that pre-filled it, like AirportTransferForm).
+      const isTarget = !!singleLine && i === 0;
       return {
         type: l.type,
         service: l.service,
         date: l.date || '',
-        time: l.time || '',
+        time: (isTarget && needsTime ? f.time : l.time) || '',
         guests: String(l.guests || displayGuests),
         pickup: l.pickup || f.pickup,
         dropoff: l.dropoff || f.dropoff,
         day_no: l.day_no != null ? l.day_no : null,
-        flight_number: l.flight_number || '',
-        flight_datetime: l.flight_datetime || '',
+        flight_number: (isTarget && needsFlight ? f.flightNumber : l.flight_number) || '',
+        flight_datetime: (isTarget && needsFlight ? f.flightDatetime : l.flight_datetime) || '',
         mode: l.mode || 'standard',
         area: l.area || '',
         duration: l.duration || '',
@@ -125,7 +164,14 @@ export default function BookConfirmModal() {
     const lines = ctx.lines
       .map((l) => `- ${l.day_no ? 'Day ' + l.day_no + ' · ' : ''}${l.date || 'TBD'} · ${l.service} · ${l.guests || displayGuests} pax`)
       .join('\n');
-    return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${lines}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}\nPrice: ${priceText()}`;
+    const timeLine = needsTime && f.time ? `\nPickup time: ${timeLabel(f.time)}` : '';
+    const flightLine = flightNumberDisplay ? `\nFlight: ${flightNumberDisplay} (${(needsFlight ? f.flightDatetime : singleLine.flight_datetime) || 'TBD'})` : '';
+    return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${lines}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}${timeLine}${flightLine}\nPrice: ${priceText()}`;
+  };
+
+  const timeLabel = (t) => {
+    const opt = timeOpts.find((o) => o.value === t);
+    return opt ? opt.label : t;
   };
 
   const priceText = () => {
@@ -182,6 +228,31 @@ export default function BookConfirmModal() {
                 <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} />
               </div>
             )}
+            {needsTime && (
+              <div className={GROUP}>
+                <label className={LABEL} htmlFor="pickup-time">Pickup Time</label>
+                <Select
+                  id="pickup-time"
+                  label="Pickup Time"
+                  value={f.time}
+                  onChange={(v) => setF((s) => ({ ...s, time: v }))}
+                  options={timeOpts}
+                  placeholder="Select a time"
+                />
+              </div>
+            )}
+            {needsFlight && (
+              <>
+                <div className={GROUP}>
+                  <label className={LABEL} htmlFor="flight-number">Flight Number</label>
+                  <input className={INPUT} type="text" id="flight-number" placeholder="e.g. QZ7501" value={f.flightNumber} onChange={set('flightNumber')} />
+                </div>
+                <div className={GROUP}>
+                  <label className={LABEL} htmlFor="flight-datetime">Flight Date &amp; Time</label>
+                  <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={(v) => setF((s) => ({ ...s, flightDatetime: v }))} />
+                </div>
+              </>
+            )}
             <div className={GROUP}>
               <label className={LABEL} htmlFor="referral">Referral Code (optional)</label>
               <div className="flex gap-2">
@@ -195,6 +266,12 @@ export default function BookConfirmModal() {
               <div className={ROW}><span>Guests</span><span>{ctx.guests || displayGuests}</span></div>
               <div className={ROW}><span>Service</span><span>{ctx.service}</span></div>
               <div className={ROW}><span>Date</span><span>{ctx.date || '-'}</span></div>
+              {needsTime && (
+                <div className={ROW}><span>Time</span><span>{f.time ? timeLabel(f.time) : '-'}</span></div>
+              )}
+              {isAirportRoute && (
+                <div className={ROW}><span>Flight</span><span>{flightNumberDisplay || '-'}</span></div>
+              )}
               {priced && priced.referral && (
                 <div className={ROW}><span>Referral</span><span>{priced.referral.code} ({priced.referral.pct}%)</span></div>
               )}

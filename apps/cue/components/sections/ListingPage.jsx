@@ -101,15 +101,13 @@ export default function ListingPage({ data }) {
       {/* Hero = gaya split putih kayak halaman attraction (.tour-hero): teks kiri,
           foto kanan di desktop; foto atas + sheet putih di mobile. Search di bawah
           judul (desktop) / mengambang di foto (mobile) - memfilter kartu di bawah. */}
-      {/* "tour-hero"/"tour-hero__image"/"tour-hero__body" kept as inert marker
-          classNames (own styling below is Tailwind utilities) - needed by rules
-          left untouched in style.css: `.tour-hero + .tour-layout--book` (sibling
-          selector, n/a here but shared with AttractionPage/TourPage),
-          `.tourprog .tour-hero__image::after` (this page's own mobile gradient),
-          and `.tour-hero__body .subhero__title` (shared H1 tier, out of scope). */}
-      <section className="tour-hero min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[6.5rem]">
+      {/* The mobile hero-photo gradient (was `.tourprog .tour-hero__image::after`) is
+          now a [.tourprog_&]: scoped after: utility on the image - it only paints when
+          an ancestor .tourprog exists (always true here). `tourprog` stays as that hook
+          marker; tour-hero markers carry no CSS anymore. */}
+      <section className="min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[6.5rem]">
         <div
-          className="tour-hero__image min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0"
+          className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 max-[768px]:[.tourprog_&]:relative max-[768px]:[.tourprog_&]:after:content-[''] max-[768px]:[.tourprog_&]:after:absolute max-[768px]:[.tourprog_&]:after:inset-0 max-[768px]:[.tourprog_&]:after:[background:linear-gradient(to_bottom,rgba(0,0,0,0.34)_0%,rgba(0,0,0,0)_32%,rgba(0,0,0,0.58)_100%)]"
           style={{ backgroundImage: `url(/assets/images/${heroBg})` }}
         />
         <div className="tour-hero__body relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center

@@ -210,13 +210,6 @@ body.hs-locked {
     transform: translateX(-50%);
   }
 }
-/* Kartu/avatar/modal driver full Tailwind (TW-A7, #328). Blok detail tersembunyi
-   (data holder, disembunyiin lewat attr `hidden` di JSX) dibiarin CSS-nya - bukan
-   family ini, kemungkinan kepake flow review nanti. */
-.driver-card__detail {
-  display: none;
-}
-
 /* Footer */
 /* ==================== Anti-CLS: reserve tempat partial yang di-inject JS ====================
    Booking form & footer masuk lewat fetch -> tanpa reserve, konten loncat pas partial nongol
@@ -227,17 +220,6 @@ body.hs-locked {
    PENTING (mobile): booking min-height WAJIB >= tinggi form asli (maks 480px setelah
    dropdown/date jadi full-custom). Kalau kurang, hero melar pas form masuk -> background
    cover ke-rescale -> foto "zoom". */
-/* Section pertama numpuk ke subhero (cuma dipakai di about & itinerary) */
-.subhero--overlap + section {
-  position: relative;
-  z-index: 2;
-  margin-top: -5rem;
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  background-color: #fff;
-  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
-}
-
-
 /* Animasi masuk hero + box booking: FADE aja (tanpa gerak) - form booking di-inject
    via JS, gerakan naik + selisih tinggi bikin kesan "zoom"/goyang. Fade murni = mulus. */
 @keyframes heroFadeIn {
@@ -297,26 +279,12 @@ b,
 strong {
   font-weight: 600;
 }
-/* --- Reviews: compact 3-across strip --- */
-
-.home #activities{
-  background-color: var(--color-cream);
-}
-
 /* Branded loading splash (components/ui/LoadingScreen.jsx) - tampil di SETIAP
    page load (arrival) DAN pas link diklik (leaving), biar gak ada blank pas
    pindah halaman. Elemennya tetep mounted, cuma di-toggle lewat --out. */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-@media (max-width: 768px) {
-  /* Gradasi hitam di foto hero (atas tipis + bawah lebih gelap) biar search
-     putih nge-pop & foto lebih dramatis. Cuma listing (.tourprog), cuma mobile. */
-  .tourprog .tour-hero__image { position: relative; }
-  .tourprog .tour-hero__image::after { content: ""; position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.58) 100%); }
-}
-
 /* ============================================================
    HOMEPAGE — section About (Opsi C): photo band + overlay,
    lalu strip "Meet the drivers" di cream. Senada hero halaman.

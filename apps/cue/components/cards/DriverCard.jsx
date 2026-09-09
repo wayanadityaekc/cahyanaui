@@ -34,7 +34,7 @@ export default function DriverCard({ name, tagline, desc, emptyReview, onOpen, c
       <strong className="font-body text-h3 font-semibold tracking-normal">{name}</strong>
       <span className="mt-[0.2rem] text-body text-muted">{tagline}</span>
       <span className="mt-[0.6rem] text-label font-medium text-green opacity-70">View profile &rsaquo;</span>
-      <div className="driver-card__detail" hidden data-desc={desc}>
+      <div className="hidden" hidden data-desc={desc}>
         <div className="driver-detail__reviews">
           <p className="py-10 px-6 text-center [border:1px_dashed_#d8d2c4] rounded-md text-muted">{emptyReview}</p>
         </div>

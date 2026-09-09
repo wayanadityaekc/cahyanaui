@@ -1,6 +1,6 @@
 import { FAQ } from '@/content/shared/faq';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
-import { SUBHERO_OVERLAP, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
+import { SUBHERO_OVERLAP, SUBHERO_OVERLAP_NEXT, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
 import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
@@ -24,7 +24,7 @@ export default function Faq() {
         </div>
       </section>
 
-      <section className="py-[var(--section-gap)] px-[var(--space-3)]">
+      <section className={`${SUBHERO_OVERLAP_NEXT} py-[var(--section-gap)] px-[var(--space-3)]`}>
         <h2 className={SECTION_TITLE}>Frequently Asked Questions</h2>
         <div className="max-w-[var(--container-mid)] mx-auto">
           <div className="min-w-0">

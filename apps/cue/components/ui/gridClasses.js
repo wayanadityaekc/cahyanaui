@@ -3,6 +3,11 @@
 // the old `.experience__grid > *` direct-child rules, breakpoints mirror the @media.
 // Base 5-col grid was always overridden per context, so it isn't reproduced.
 
+// Homepage Explore/Destinations SECTION container (was `.xplore` + `.home .xplore`):
+// centered container, uniform side padding, left-aligned content. Vertical padding is 0
+// (the old .home .xplore rule zeroed it; the homepage --section-gap margins do the spacing).
+export const XPLORE_SECTION = 'max-w-[var(--container)] mx-auto px-[var(--container-x)] text-left';
+
 // .xplore .experience__grid--home4 (homepage Explore + Destinations):
 // desktop = grid wrap (auto-fill), mobile = slider. On the homepage so >* is 88% @576.
 export const GRID_XPLORE =

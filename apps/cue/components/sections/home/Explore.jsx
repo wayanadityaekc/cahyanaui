@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { GRID_XPLORE } from '@/components/ui/gridClasses';
+import { GRID_XPLORE, XPLORE_SECTION } from '@/components/ui/gridClasses';
 import HomepageCard from '@/components/cards/HomepageCard';
 import { EXPLORE_TOURS, EXPLORE_EXPERIENCES } from '@/content/shared/home';
 import { BTN_PILL } from '@/components/ui/btnClasses';
@@ -14,14 +14,13 @@ const TABS = [
 export default function Explore() {
   const [active, setActive] = useState('tours');
 
-  // Tailwind-native (migrasi Fase 2): header/tab/panel/"view all" (.xplore__head/
-  // __t/__more, .xtabs/.xtab, .xpanel) -> utilities, CSS-nya dihapus. KEPT: .xplore
-  // (section) = context hook grid-engine (.xplore .experience__grid--home4 atur
-  // gap/wrap + slider-vs-wrap homepage) + .home .xplore padding; dan .experience__
-  // grid* (engine) + .btn-pill (primitif). .xplore__intro (tanpa CSS) & .xpanel
-  // (cuma [hidden]{display:none}, di-handle prop React `hidden`) dibuang.
+  // Tailwind-native (B-FINAL): the Explore section is now fully self-contained. The old
+  // `.xplore{max-width/margin/padding/text-align}` + `.home .xplore{padding-top/bottom:0}`
+  // collapse to the utilities below (vertical padding was always zeroed on the homepage,
+  // the only place xplore existed, so it's just omitted). The grid engine (GRID_XPLORE)
+  // no longer needs `.xplore` as a context ancestor - it's self-contained.
   return (
-    <section className="xplore" id="explore">
+    <section className={XPLORE_SECTION} id="explore">
       <div className="flex justify-between items-end gap-8 flex-wrap mb-[2.2rem] max-[768px]:mb-[1.6rem]">
         <div>
           <h2 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-gold m-0">Our Best Bali Tours</h2>

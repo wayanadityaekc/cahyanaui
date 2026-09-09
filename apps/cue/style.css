@@ -424,25 +424,6 @@ body.hs-locked {
   gap: 1.25rem;
   max-width: 1200px;
   margin: 0 auto;
-} /* photo band = pemisah sendiri, buang divider gold di atasnya */
-
-/* Route & Transfer accordion */
-/* Guest reviews - .reviews own padding, .reviews__head, .reviews__seeall,
-   .review-cta own styling -> Tailwind utilities in app/(marketing)/all-reviews/page.jsx
-   + components/reviews/ReviewCtaBand.jsx (TW-A5, #326). "reviews"/"review-cta" kept
-   as inert marker classNames (see JSX comments) - needed by the shared
-   `.reviews .section__title` rule below (out of scope, B-FINAL) and the
-   check-detail.js CI marker, respectively.
-   .reviews__empty CSS kept - still used (hidden data holder) by
-   components/cards/DriverCard.jsx, out of scope for this issue.
-   .reviews-strip/.review/.reviews__seeall (dead - zero remaining consumers,
-   ReviewsStrip/ReviewCard/GuestReviews already fully Tailwind) removed outright. */
-.reviews__empty {
-  padding: 2.5rem 1.5rem;
-  text-align: center;
-  border: 1px dashed #d8d2c4;
-  border-radius: var(--r-md);
-  color: var(--color-muted);
 }
 
 /* Review form (diisi tamu) */

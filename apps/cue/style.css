@@ -594,9 +594,7 @@ section.faq::before,
    (hero didahului navbar-placeholder -> bisa ke-target divider section) */
 .hero::before,
 .subhero::before,
-.subhero + section::before,
-.transfer-hero::before,
-.transfer-hero + section::before {
+.subhero + section::before {
   content: none;
 }
 /* Section Drivers (cream) udah punya border gold sendiri (atas & bawah) → buang
@@ -2069,15 +2067,6 @@ section.faq::before,
   vertical-align: 0.12em;
   margin-right: 1px;
 }
-/* Duration cards - dibikin gede & menonjol */
-.chdur.active {
-  border-color: var(--color-gold);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-.charter__fields .field {
-  margin-bottom: 0;
-}
 /* Good to know di bawah hero */
 .charter__notes {
   max-width: 720px;
@@ -2656,46 +2645,6 @@ strong {
 
 
 /* .closing-band* full Tailwind di ListingPage.jsx (TW-A12, #333). */
-
-/* ==================== Transfer page: Hero B + route picker + routes list ==================== */
-.transfer-hero {
-  position: relative;
-  min-height: 560px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: url(assets/images/transfer-hero.webp) center / cover;
-  /* padding-top clears the fixed navbar (+promo tripbar) so the H1 isn't hidden */
-  padding: 7rem 1.3rem 3rem;
-}
-.transfer-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55));
-}
-.transfer-hero__inner {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 560px;
-  text-align: center;
-}
-.transfer-hero__title {
-  font-family: var(--font-head);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: var(--fs-display);
-  line-height: var(--lh-heading);
-  color: #fff;
-  margin: 0 0 0.4rem;
-}
-.transfer-hero__desc {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: var(--fs-body);
-  margin: 0 auto 1.6rem;
-  max-width: 440px;
-}
 
 /* Route picker card */
 

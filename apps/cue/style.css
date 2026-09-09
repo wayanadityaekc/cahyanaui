@@ -361,38 +361,6 @@ body.hs-locked {
 .bk-native {
   display: none !important;
 }
-/* Toast "Added to My Trips" */
-.cart-toast {
-  position: fixed;
-  left: 50%;
-  bottom: 24px;
-  transform: translateX(-50%) translateY(20px);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-green);
-  color: #fff;
-  padding: 0.7rem 1.2rem;
-  border-radius: var(--r-pill);
-  font-size: 1rem;
-  font-weight: 600;
-  box-shadow: var(--shadow-lg);
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity var(--dur) ease,
-    transform var(--dur) ease;
-  z-index: 300;
-}
-.cart-toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-.cart-toast svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-  color: var(--color-gold);
-}
 /* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
    Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
    key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */

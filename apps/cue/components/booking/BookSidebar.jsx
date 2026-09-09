@@ -7,6 +7,7 @@ import DatePopup from './DatePopup';
 import { clashDates } from '@/lib/cart';
 import BookingForm from './BookingForm';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
+import { CART_TOAST } from '@/components/ui/cartToastClasses';
 
 export default function BookSidebar({ item, perPerson = false }) {
   const [ask, setAsk] = useState(null);
@@ -69,7 +70,7 @@ export default function BookSidebar({ item, perPerson = false }) {
         </div>
       )}
 
-      {toast && <div className="cart-toast">{toast}</div>}
+      {toast && <div className={CART_TOAST}>{toast}</div>}
     </div>
   );
 }

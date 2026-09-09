@@ -7,6 +7,7 @@ import { usePricing } from '@/state/PricingProvider';
 import DatePopup from './DatePopup';
 import { clashDates } from '@/lib/cart';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
+import { CART_TOAST } from '@/components/ui/cartToastClasses';
 
 // Wayan's flow (3 Sep 2026), which differs from the old site:
 //   Add to My Trip -> pick a date, add to the cart, stay on the page.
@@ -99,7 +100,7 @@ export default function BookCta({ item, perPerson = false }) {
         </div>
       )}
 
-      {toast && <div className="cart-toast">{toast}</div>}
+      {toast && <div className={CART_TOAST}>{toast}</div>}
     </>
   );
 }

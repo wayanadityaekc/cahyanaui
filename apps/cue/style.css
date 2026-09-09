@@ -193,28 +193,11 @@ body {
     opacity: 0;
   }
 }
-/* Navbar menu = hamburger drawer at ALL widths (Wayan, Sep 2026): slide-in
-   panel from the right, opened by the hamburger. The @media(max-width:992px)
-   block below re-affirms the same for phones. */
-.navbar__menu.active {
-  transform: translateX(0);
-  pointer-events: auto;
-}
-.navbar__menu a.active {
-  color: var(--color-green);
-}
-.navbar__toggle span:not(.itn-badge) {
-  width: 100%;
-  height: 2px;
-  background-color: var(--color-gold);
-}
-/* Scrim (dim) buat drawer navbar di HP. z-index DI BAWAH navbar (100) biar drawer
-   yg nempel di dalam navbar tetep di atas scrim (bisa diklik & gak ke-dim). */
-.navbar__scrim.open {
-  opacity: 1;
-  visibility: visible;
-}
-/* header drawer (judul + close) cuma buat mobile drawer: sembunyiin di desktop */
+/* Navbar (header/drawer/hamburger/scrim/program-dropdown/account) full Tailwind
+   di Navbar.jsx sekarang (TW-A9, #330) - `.navbar__*`/`.acct*` (BEM lama, toggle
+   `.active`/`.open`/`.is-open` via classList) CSS-nya udah dihapus, React state
+   + className kondisional yang nyetir sekarang. `@keyframes navbarIn` TETAP -
+   masih dipakai (`animate-[navbarIn_0.4s_ease-out]`). */
 
 /* ===== Hamburger drawer: welcome + trip + nav (Sep 2026, Opsi A revisi) ===== */
 /* Welcome header - sticky di atas drawer (identity + currency) */
@@ -344,10 +327,6 @@ body {
    udah position:fixed jadi tetep nempel walau background di belakang kebuka. */
 body.hs-locked {
   overflow: hidden;
-}
-/* sembunyiin tombol WhatsApp (z-index tinggi) pas sheet kebuka biar gak nutupin Apply */
-body.hs-locked .wa-float {
-  display: none;
 }
 /* Mobile: .hero__inner flex-direction:column - SHARED (used by every non-homepage
    .hero__inner consumer too, not just Hero.jsx), left untouched. */
@@ -1634,17 +1613,6 @@ section.faq::before,
 }
 
 @media (max-width: 992px) {
-  /* Mobile: logo dikecilin dikit + digeser kiri dikit (desktop 40px) */
-  /* ===== Menu & Account jadi DRAWER dari kanan (HP) ===== */
-  .navbar__menu.active,
-  .acct__panel.is-open {
-    transform: translateX(0);
-    pointer-events: auto;
-  }
-  .navbar__menu a.active {
-    color: var(--color-gold-d);
-  }
-  /* header drawer (judul + tombol close) di-inject via JS, sticky di atas */
   .experience__grid {
     display: flex;
     overflow-x: auto;
@@ -2319,41 +2287,18 @@ section.faq::before,
   box-shadow: none;
 }
 
-/* ==================== Navbar logo (dorong menu ke kanan) ==================== */
-/* Guest picker di navbar (ikon orang + select angka), gaya sama kaya currency */
-
-/* ==================== Account menu (navbar: guests + stay area) ==================== */
-.acct {
-  position: relative;
-  margin-right: 0.9rem; /* was 0.3rem - Wayan, kerasa mepet ke cart icon */
-}
-/* Nav cart icon "My Trips" (sebelah icon akun) + badge jumlah item */
-/* Mobile: jarak antar icon kluster kanan (akun / My Trips / hamburger) diseragamin biar
-   rapi (Wayan) - default desktop (acct .9 / cart 1.3) kejauhan pas menu di-hide. Ditaruh
-   SETELAH rule base biar menang (media query gak nambah specificity). */
-@media (max-width: 992px) {
-  .acct { margin-right: 1rem; }
-}
-/* Ikon akun gaya Nike: line-icon polos, tanpa lingkaran/border/badge. */
-/* Desktop: account panel = dropdown kecil di bawah ikon. Di HP (<=992px) jadi
-   drawer kanan (lihat blok drawer di media query atas). Di-scope ke desktop biar
-   gak nge-override style drawer mobile. */
-@media (min-width: 993px) {
-  .acct__panel.is-open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
-  }
-}
-/* Custom dropdown currency (tombol + list bendera SVG) di dropdown akun.
-   Pakai custom (bukan <select>) karena <select> native gak bisa nampilin flag di opsi. */
-
-/* Titik hijau: ada booking mendatang (di ikon akun + hamburger) */
-
-/* Header dropdown akun (greeting + email) */
-
-/* Tombol aksi dropdown (My Trips / Settings / Create-Log out) */
+/* NOTE (TW-A9, #330, buat Wayan/Architect): `.acct`/`.acct__panel`/`.acct__curopt`/
+   `.acct__dot` (account-icon-di-navbar-persisten punya CSS lama) dihapus di sini -
+   digrep di SELURUH app/components, nol classList/className match, cuma nyisa
+   di komentar. Navbar.jsx sekarang gak punya ikon akun sendiri lagi di header -
+   guests/pickup/currency/sign-in udah pindah ke dalam drawer hamburger (row
+   "Welcome, ..." + CurrencyPicker variant="navbar"). Beda dari asumsi issue #330
+   ("`.acct`/[data-*] JS hook - udah dikonversi" = out of scope) - kayaknya itu
+   ditulis pas .acct MASIH ikon terpisah; sekarang codebase-nya udah beda (redesign
+   entah kapan, di luar migrasi Tailwind ini). CLAUDE.md bagian Navbar juga masih
+   nyebut nilai `.acct margin-right 0.9rem` yang classnya udah gak ada - mungkin
+   perlu di-refresh. Dihapus di sini karena udah diverifikasi dead, tapi flag di
+   PR biar Wayan tau ini nemu, bukan cuma dianggap remeh. */
 
 /* ==================== Pickup surcharge (form + card labels) ==================== */
 /* Destinations card: tombol "Visit this destination" (gaya outline sama .card-add) */
@@ -2547,12 +2492,6 @@ section.faq::before,
 
 /* Settings form */
 
-/* Mobile: guest / currency / hamburger dibikin SAMA LEBAR bertiga (rapi sejajar) */
-@media (max-width: 992px) {
-  .navbar__toggle span:not(.itn-badge) {
-    width: 22px;
-  }
-}
 /* harga hasil render dari JS (currency aktif) + tiket masuk (.fee) - semua gold biar konsisten */
 .price,
 .price-cur,
@@ -2623,14 +2562,6 @@ section.faq::before,
   margin: 0 auto;
 }
 
-/* ==================== Navbar Program dropdown ==================== */
-.navbar__has-drop.open .navbar__caret {
-  transform: rotate(90deg);
-}
-/* Submenu inline: tap "Program" to expand (nav is a drawer at all widths). */
-.navbar__has-drop.open .navbar__drop {
-  display: block;
-}
 
 /* ==================== Tour Programs slider (desktop) ==================== */
 @media (min-width: 993px) {

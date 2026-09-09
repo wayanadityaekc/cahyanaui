@@ -7,6 +7,7 @@ import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
+import { BTN_PILL } from '@/components/ui/btnClasses';
 
 export default function AccountSettings() {
   const { account, setAccount, logout } = useAccount();
@@ -82,7 +83,7 @@ export default function AccountSettings() {
       </div>
       {msg && <small className={REFMSG}>{msg}</small>}
       <button className="contact__btn" onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
-      <button className="btn-pill" onClick={logout}>Sign out</button>
+      <button className={BTN_PILL} onClick={logout}>Sign out</button>
     </div>
   );
 }

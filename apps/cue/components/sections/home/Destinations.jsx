@@ -1,5 +1,6 @@
 import HomepageCard from '@/components/cards/HomepageCard';
 import { HOME_DESTINATIONS } from '@/content/shared/home';
+import { BTN_PILL } from '@/components/ui/btnClasses';
 
 export default function Destinations() {
   return (
@@ -15,7 +16,7 @@ export default function Destinations() {
         ))}
       </div>
       <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
-        <a href="/destinations.html" className="btn-pill">View all destinations</a>
+        <a href="/destinations.html" className={BTN_PILL}>View all destinations</a>
       </div>
     </section>
   );

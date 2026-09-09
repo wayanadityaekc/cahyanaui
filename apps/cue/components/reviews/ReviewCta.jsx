@@ -1,10 +1,12 @@
 'use client';
 
+import { BTN_PILL } from '@/components/ui/btnClasses';
+
 export default function ReviewCta({ label = 'Leave a review' }) {
   return (
     <button
       type="button"
-      className="btn-pill"
+      className={BTN_PILL}
       onClick={() => {
         window.location.href = '/my-trips.html';
       }}

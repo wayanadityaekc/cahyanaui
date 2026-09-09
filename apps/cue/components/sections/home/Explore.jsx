@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import HomepageCard from '@/components/cards/HomepageCard';
 import { EXPLORE_TOURS, EXPLORE_EXPERIENCES } from '@/content/shared/home';
+import { BTN_PILL } from '@/components/ui/btnClasses';
 
 const TABS = [
   { key: 'tours', label: 'Tours', cards: EXPLORE_TOURS, more: ['/tour.html', 'View all tours'] },
@@ -48,7 +49,7 @@ export default function Explore() {
             ))}
           </div>
           <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
-            <a href={t.more[0]} className="btn-pill">{t.more[1]}</a>
+            <a href={t.more[0]} className={BTN_PILL}>{t.more[1]}</a>
           </div>
         </div>
       ))}

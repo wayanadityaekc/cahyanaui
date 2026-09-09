@@ -17,6 +17,7 @@ import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
+import { BTN_PILL } from '@/components/ui/btnClasses';
 
 // Tailwind-native (migrasi Fase 2): sub-family kecil my-trips cart -> utilities.
 // `mtc-empty` DIPERTAHANKAN sbg marker: anchor `.mtc-empty .btn-pill` (reset
@@ -71,7 +72,7 @@ const MTC_REVIEW_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t b
 const MTC_REVIEW_BTN = 'inline-flex w-auto mt-0 py-[0.55rem] px-[1.3rem] text-small no-underline max-[600px]:w-full max-[600px]:justify-center';
 // Cart action buttons: shared .btn-pill was forced full-width via
 // `[data-mytrips-cart] .btn-pill` (removed); set per-button now.
-const MTC_ADD_FULL = 'btn-pill w-full mt-4';
+const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
 // datebtn: base field look (shared rule) + button specifics + calendar ::before
 // (mask, %20-encoded so it survives as a Tailwind arbitrary value).
 const CAL_MASK = "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='3'%20y='5'%20width='18'%20height='16'%20rx='2'/%3E%3Cpath%20d='M8%203v4M16%203v4M3%2010h18'/%3E%3C/svg%3E\")";
@@ -386,7 +387,7 @@ export default function MyTripsCart() {
         <div className={MTC_EMPTY}>
           <p className={MTC_EMPTY_LEAD}>Your trip is empty.</p>
           <p className={MTC_EMPTY_SUB}>Add a tour, transfer, or experience to get started.</p>
-          <button type="button" className="btn-pill" onClick={() => setAdding(true)}>+ Add a program</button>
+          <button type="button" className={BTN_PILL} onClick={() => setAdding(true)}>+ Add a program</button>
         </div>
       ) : (
         <>

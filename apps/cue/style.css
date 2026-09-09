@@ -1865,26 +1865,6 @@ strong {
   }
 }
 
-/* --- "See all" button beneath the grid (grid width, tight above, room below) --- */
-/* Pill "View all …" — inline (nggak full-width), dipakai di section Explore */
-.btn-pill {
-  display: inline-block;
-  padding: 0.85rem 1.9rem;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--color-gold);
-  background: #fff;
-  color: var(--color-gold-d);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-h3);
-  text-decoration: none;
-  transition: background-color var(--dur) ease, color var(--dur) ease;
-}
-.btn-pill:hover {
-  background: var(--color-gold);
-  color: #fff;
-}
-
 /* --- Reviews: compact 3-across strip --- */
 
 /* --- Homepage section separation: no gold divider lines; use bg + padding --- */

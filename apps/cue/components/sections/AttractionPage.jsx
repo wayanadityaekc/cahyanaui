@@ -1,5 +1,6 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
+import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import BookCta from '@/components/booking/BookCta';
@@ -33,7 +34,7 @@ export default function AttractionPage({ data }) {
         <div className="tour-hero__body relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
-          <h1 className="subhero__title">{data.title}</h1>
+          <h1 className={`${SUBHERO_TITLE} mb-3`}>{data.title}</h1>
           <p className={HERO_DESC}>{data.desc}</p>
           <ul className={HOOK_UL}>
             {data.hooks.map((h) => (

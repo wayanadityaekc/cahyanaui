@@ -1,6 +1,7 @@
 'use client';
 
 import { infoList, INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT, INFO_LISTS, INFO_COL_H3 } from '@/components/ui/infoClasses';
+import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
@@ -114,7 +115,7 @@ export default function ListingPage({ data }) {
         <div className="tour-hero__body relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
-          {!q && <h1 className="subhero__title">{title}</h1>}
+          {!q && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
           {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
           <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-pill [box-shadow:var(--shadow-sm)] max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none max-[768px]:[box-shadow:var(--shadow-lg)]">

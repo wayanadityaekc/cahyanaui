@@ -1,6 +1,7 @@
 'use client';
 
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { SUBHERO, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
 import { GRID_SLIDER } from '@/components/ui/gridClasses';
 import { useMemo, useState } from 'react';
 import GuideCard from '@/components/cards/GuideCard';
@@ -29,10 +30,10 @@ export default function GuideHub() {
 
   return (
     <>
-      <section className="subhero" style={{ backgroundImage: GUIDE_HUB.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}>
-        <div className="subhero__content">
-          <h1 className="subhero__title">{GUIDE_HUB.title}</h1>
-          <p className="subhero__text">{GUIDE_HUB.text}</p>
+      <section className={SUBHERO} style={{ backgroundImage: GUIDE_HUB.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}>
+        <div className={SUBHERO_CONTENT}>
+          <h1 className={SUBHERO_TITLE}>{GUIDE_HUB.title}</h1>
+          <p className={SUBHERO_TEXT}>{GUIDE_HUB.text}</p>
 
           <div className="guide-hero-search">
             <div className={GC_NAV}>

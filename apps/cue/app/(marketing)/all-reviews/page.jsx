@@ -1,5 +1,6 @@
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { SUBHERO, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
 import JsonLd from '@/components/JsonLd';
 import ReviewCta from '@/components/reviews/ReviewCta';
 
@@ -14,10 +15,10 @@ export default function AllReviews() {
   return (
     <>
       <JsonLd page="all-reviews" />
-      <section className="subhero">
-        <div className="subhero__content">
-          <h1 className="subhero__title">Guest Reviews</h1>
-          <p className="subhero__text">
+      <section className={SUBHERO}>
+        <div className={SUBHERO_CONTENT}>
+          <h1 className={SUBHERO_TITLE}>Guest Reviews</h1>
+          <p className={SUBHERO_TEXT}>
             Every review here comes from a guest with a real, completed booking - no invitations, no incentives, just
             what they told us after their trip.
           </p>

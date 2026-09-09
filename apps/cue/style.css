@@ -133,12 +133,6 @@ body {
   background-color: #fff;
   overflow-x: clip;
 }
-.subhero__text {
-  font-family: var(--font-body);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  font-weight: 400;
-}
 @keyframes navbarIn {
   from {
     opacity: 0;
@@ -361,49 +355,6 @@ section + section::before,
     min-height: 688px;
   }
 }
-/* Wordmark teks (ganti logo gambar) — ukuran sedang, gak kegedean */
-/* Blok kontak footer: WhatsApp / email / lokasi */
-/* "Featured On" nempel di kolom brand (bawah tagline); sosmed jadi item di list logo */
-/* Registrasi usaha - baris ringkas di footer (semua halaman). Tiap bagian
-   nowrap biar nggak kepotong di tengah; desktop = 1 baris + titik pemisah,
-   HP = tumpuk rapi per baris. */
-
-/* Checkmark khusus "Added to itinerary" = emas (booking success tetap ijo) */
-
-/* ---------- Subpage styles ---------- */
-
-/* Subpage banner */
-.subhero {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  padding: 7rem var(--space-3) var(--space-6);
-  text-align: center;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55)),
-    url("assets/images/homepage_hero.webp");
-}
-.subhero__content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 720px;
-}
-.subhero__title {
-  font-family: var(--font-body);
-  font-size: var(--fs-display);
-  line-height: var(--lh-heading);
-  color: var(--color-gold);
-}
-.subhero__text {
-  margin-top: 1rem;
-  color: var(--color-cream);
-}
 
 /* Section pertama numpuk ke subhero (cuma dipakai di about & itinerary) */
 .subhero--overlap + section {
@@ -549,18 +500,6 @@ section + section::before,
   }
   to {
     opacity: 1;
-  }
-}
-.subhero__content {
-  animation: heroFadeIn 0.6s ease both;
-}
-
-/* Tombol WhatsApp ngambang (Talk with Wayan) */
-
-/* Hormatin user yang matiin animasi (aksesibilitas) */
-@media (prefers-reduced-motion: reduce) {
-  .subhero__content {
-    animation: none;
   }
 }
 .itn__subtitle {
@@ -725,40 +664,6 @@ section + section::before,
 .itn2__panel > .itn__subtitle {
   margin-bottom: 1rem;
 }
-
-/* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */
-/* Halaman detail (hero overlap + foto): hero lebih pendek dari default 60vh,
-   tapi teks-nya diperbesar biar tetep berasa "hero". */
-.subhero--overlap.subhero--tour {
-  min-height: 46vh;
-  padding-top: 6rem;
-  padding-bottom: 3rem;
-}
-/* Teks hero diperbesar HANYA di desktop; mobile tetap seperti semula */
-@media (min-width: 769px) {
-  .subhero--overlap.subhero--tour .subhero__title {
-    font-size: clamp(2.3rem, 5.5vw, 3rem);
-  }
-  .subhero--overlap.subhero--tour .subhero__text {
-    font-size: 1rem;
-    line-height: 1.55;
-    max-width: 640px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-/* Tour hero. MOBILE (base) = numpuk ala Airbnb: foto lebar atas + sheet putih
-   membulat naik, teks di tengah. DESKTOP = background putih dibagi 2:
-   teks (judul+deskripsi rata kiri) kiri | foto kanan. Tanpa gradasi.
-   .tour-hero/.tour-hero__image/.tour-hero__body own styling -> Tailwind
-   utilities in AttractionPage.jsx/TourPage.jsx/ListingPage.jsx/HeroSlider.jsx
-   (TW-A11, #332). All 3 kept as inert marker classNames (no styling left on
-   them) - needed by the 2 rules below (`.tour-hero + .tour-layout--book`,
-   `.tour-hero__body .subhero__title`) and `.tourprog .tour-hero__image::after`
-   further down (untouched - shared with .subhero__title/.tourprog, out of scope). */
-.tour-hero__body .subhero__title {
-  margin-bottom: 0.75rem;
-}
 /* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
    nggak terlalu bold. */
 /* .tour-hook* -> utilities di TourPage.jsx + AttractionPage.jsx (migrasi Fase 2).
@@ -789,14 +694,6 @@ section + section::before,
 [id$="-placeholder"] > section::before,
 [id$="-placeholder"] + section::before {
   content: none;
-}
-/* Tier display H1 (semua halaman): hero__title (homepage), subhero__title
-   (halaman detail), lhero__title (halaman listing) - satu bobot konsisten. */
-.subhero__title {
-  font-family: var(--font-head);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: var(--lh-heading);
 }
 /* Tier UI (Inter): judul kartu, modal, nama, dst */
 .itn__subtitle {

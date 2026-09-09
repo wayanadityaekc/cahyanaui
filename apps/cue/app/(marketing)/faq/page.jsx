@@ -1,5 +1,6 @@
 import { FAQ } from '@/content/shared/faq';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { SUBHERO_OVERLAP, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
 import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
@@ -13,10 +14,10 @@ export default function Faq() {
   return (
     <>
       <JsonLd page="faq" />
-      <section className="subhero subhero--overlap">
-        <div className="subhero__content">
-          <h1 className="subhero__title">Frequently Asked Questions</h1>
-          <p className="subhero__text">
+      <section className={SUBHERO_OVERLAP}>
+        <div className={SUBHERO_CONTENT}>
+          <h1 className={SUBHERO_TITLE}>Frequently Asked Questions</h1>
+          <p className={SUBHERO_TEXT}>
             The quick answers to how booking, pricing, and pick-up work. Still not sure? Message us on WhatsApp - we
             usually reply within a few hours.
           </p>

@@ -11,15 +11,23 @@
 //     form-field base (~1527) + padding/height dari blok modal.
 // `.modal*` CSS baru dihapus dari style.css kalau SEMUA pemakainya udah pindah ke sini.
 
-// Shell + box selalu-aktif: modal inline (ReviewModal/BookConfirm dst) cuma di-render
-// pas open, jadi state tertutup/transisi gak pernah keliatan.
+// Shell + box: these modals mount fresh only while open (ReviewModal/BookConfirm/
+// BookSidebar/BookCta confirm-dialogs), so a CSS *transition* never gets a "closed"
+// frame to animate from - it would just render already-open on the very first paint.
+// A mount-triggered *keyframe* animation solves that (it plays from frame one
+// regardless of prior state): SHELL fades the backdrop in (heroFadeIn, already used
+// site-wide for entrances), BOX/BOX_SM pop the card in (popCardIn - same values as
+// the always-mounted <Modal> component's own transition, for a consistent feel).
 export const SHELL =
-  'fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)] opacity-100 visible pointer-events-auto';
+  'fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)] opacity-100 visible pointer-events-auto ' +
+  'animate-[heroFadeIn_0.25s_var(--ease-out)_both] motion-reduce:animate-none';
 export const BOX =
-  'relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white';
+  'relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white ' +
+  'animate-[popCardIn_0.32s_var(--ease-out)_both] motion-reduce:animate-none';
 // .modal__box--sm: the same box, narrower (430px) and centre-aligned (confirm dialogs).
 export const BOX_SM =
-  'relative w-full max-w-[430px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white text-center';
+  'relative w-full max-w-[430px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white text-center ' +
+  'animate-[popCardIn_0.32s_var(--ease-out)_both] motion-reduce:animate-none';
 export const CLOSE =
   'absolute top-3 right-4 text-[1.6rem] leading-none text-green bg-transparent border-none cursor-pointer';
 export const LOGO = 'block h-[38px] w-auto mx-auto mb-[1.1rem]';

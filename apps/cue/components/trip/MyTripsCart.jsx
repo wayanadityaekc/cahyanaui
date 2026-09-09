@@ -15,7 +15,7 @@ import { BTN } from '@/components/ui/modalClasses';
 import DatePopup from '@/components/booking/DatePopup';
 import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
-import { KEY, API_BASE } from '@/lib/constants';
+import { KEY, API_BASE, WHATSAPP_NUMBER } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
@@ -29,7 +29,10 @@ const mtcTab = (on) =>
   `flex-[0_0_auto] whitespace-nowrap border-none bg-transparent py-[0.6rem] px-[0.35rem] mr-[0.6rem] font-body text-small cursor-pointer mb-[-1px] ${on ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent]'}`;
 const MTC_EMPTY = 'text-center pt-2 px-0 pb-0';
 const MTC_EMPTY_LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-0 mb-[0.4rem]';
-const MTC_EMPTY_SUB = 'text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
+// Hint/explanation text: needs the site's body-text size explicitly (text-body) -
+// without it a bare <p> falls back to the browser default (16px), which reads
+// noticeably bigger/inconsistent next to every other page's 0.8rem body copy.
+const MTC_EMPTY_SUB = 'text-body text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
 const MTC_TOTAL = 'flex justify-between items-center bg-cream rounded-lg py-4 px-[1.2rem] mt-[1.4rem]';
 const MTC_TOTAL_LABEL = 'font-medium text-small tracking-[0.14em] uppercase text-green';
 const MTC_TOTAL_VAL = 'text-[1.4rem] font-semibold text-amber-d';
@@ -69,8 +72,17 @@ const MTC_ITEM = 'flex items-center gap-[0.85rem] bg-white border border-line ro
 const MTC_ITEM_BOOKED = 'flex items-center gap-[0.85rem] py-[0.8rem] px-[0.95rem] bg-transparent border-0 rounded-none mb-0 cursor-default';
 const MTC_BOOK = 'bg-white border border-line rounded-lg mb-[0.9rem] overflow-hidden';
 const MTC_DET_BOX = 'm-0 pt-0 px-[0.95rem] pb-[0.55rem]';
-const MTC_REVIEW_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
-const MTC_REVIEW_BTN = 'inline-flex w-auto mt-0 py-[0.55rem] px-[1.3rem] text-small no-underline max-[600px]:w-full max-[600px]:justify-center';
+// Leave a Review (Wayan, Sep 2026): rombak dari 1 tombol PER kartu past-trip jadi
+// SATU tombol global di bawah tab Past Trip, yang ngumpulin item review-able dari
+// SEMUA past booking - user centang mana aja yang mau di-review dalam satu form
+// (lihat ReviewModal.jsx). Constant di bawah dipake buat box/tombol global itu.
+const MTC_REVIEW_BOX = 'flex justify-center mt-[1.4rem]';
+const MTC_REVIEW_BTN = 'w-full';
+// Cancellation contact (Wayan, Sep 2026): a bottom action on each BOOKED (upcoming)
+// trip card - ghost/gold outline (secondary action, CLAUDE.md: primary CTA stays
+// green, "look at more / secondary" stays gold) vs the green primary review CTA.
+const MTC_CANCEL_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
+const MTC_CANCEL_BTN = 'inline-flex w-auto items-center py-[0.55rem] px-[1.3rem] rounded-pill [border:1px_solid_var(--color-gold)] bg-white text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center';
 // Cart action buttons: shared .btn-pill was forced full-width via
 // `[data-mytrips-cart] .btn-pill` (removed); set per-button now.
 const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
@@ -138,10 +150,18 @@ export default function MyTripsCart() {
   const [openRef, setOpenRef] = useState(null);
 
   const rows = useMemo(() => {
-    const days = (state.days || []).filter((d) => d.items && d.items.length);
     const out = [];
-    days.forEach((d, i) => {
-      (d.items || []).forEach((name, k) => {
+    // Bug fix (Sep 2026, Wayan - proof screenshot, X still stuck on a single day
+    // item): day_no used to be the position in the FILTERED list (skipping empty
+    // days), but remove()/date-edit index into the RAW state.days array with it.
+    // An empty day slot anywhere before this one (e.g. left behind by "+ Add Day"
+    // on /itinerary, which shares this same localStorage state) shifts the two
+    // out of sync - remove() then hits the wrong day (often empty) and silently
+    // no-ops. Iterate the RAW array and skip empties inline so day_no always
+    // matches its real state.days index.
+    (state.days || []).forEach((d, i) => {
+      if (!d.items || !d.items.length) return;
+      d.items.forEach((name, k) => {
         out.push({
           kind: 'day',
           type: 'tour',
@@ -153,9 +173,9 @@ export default function MyTripsCart() {
         });
       });
     });
-    (state.transfers || []).forEach((t) => out.push({
+    (state.transfers || []).forEach((t, ti) => out.push({
       kind: 'transfer', type: 'transfer', service: t.route, date: t.date || '',
-      guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return,
+      guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return, localIndex: ti,
       // Airport-transfer extras (AirportTransferForm) - carried through so they
       // survive into `lines` at checkout; BookConfirmModal.payload() already
       // forwards pickup/dropoff/flight_number/flight_datetime per line.
@@ -165,10 +185,10 @@ export default function MyTripsCart() {
       ...(t.flight_number ? { flight_number: t.flight_number } : null),
       ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
     }));
-    (state.charters || []).forEach((c) => out.push({
+    (state.charters || []).forEach((c, ci) => out.push({
       kind: 'charter', type: 'charter', service: 'Charter', date: c.date || '',
       guests: parseInt(c.guests, 10) || displayGuests, area: c.area || 'Ubud',
-      duration: c.dur || c.duration, extra: c.extra || 0,
+      duration: c.dur || c.duration, extra: c.extra || 0, localIndex: ci,
     }));
     return out;
   }, [state, displayGuests]);
@@ -181,6 +201,22 @@ export default function MyTripsCart() {
     enabled: hydrated,
   });
   const { format } = useMoney();
+
+  // Aggregate every still-reviewable tour across ALL past bookings (not just one
+  // card) - feeds the single global "Leave a Review" button (Wayan, Sep 2026).
+  const reviewableItems = useMemo(() => {
+    if (!trips || !trips.history) return [];
+    const out = [];
+    trips.history.forEach((t) => {
+      (t.review_items || []).forEach((s) => out.push({
+        ref: t.ref,
+        service: s,
+        tripName: t.name,
+        date: t.start_date ? fmtDay(t.start_date) : '',
+      }));
+    });
+    return out;
+  }, [trips]);
 
   useEffect(() => {
     const token = readLocal(KEY.token, '');
@@ -198,12 +234,23 @@ export default function MyTripsCart() {
   const undated = rows.some((r) => !r.date);
   const totalText = priced ? format(priced.total.display) : '-';
 
-  const remove = (row, idx) => {
+  // Bug fix (Sep 2026, Wayan: "X gak berfungsi"): dulu di-splice pakai index GLOBAL
+  // di `rows` (gabungan days+transfers+charters) - begitu ada day item sebelum
+  // transfer/charter, index itu udah gak match posisi asli di state.transfers/
+  // .charters, jadi splice-nya no-op alias silently gagal. Row day-item TETEP
+  // di-cari via indexOf(service) di hari-nya, itu udah bener dari dulu.
+  const remove = (row) => {
     const next = JSON.parse(JSON.stringify(state));
-    if (row.kind === 'transfer') next.transfers.splice(idx, 1);
-    else if (row.kind === 'charter') next.charters.splice(idx, 1);
+    if (row.kind === 'transfer') next.transfers.splice(row.localIndex, 1);
+    else if (row.kind === 'charter') next.charters.splice(row.localIndex, 1);
     else {
-      const d = next.days[row.day_no - 1];
+      let d = next.days[row.day_no - 1];
+      // Defensive fallback: if the expected day doesn't actually hold this item
+      // (an index mismatch we've been bitten by twice now), search every day
+      // instead of no-op'ing - a delete tap should never just do nothing.
+      if (!d || !(d.items || []).includes(row.service)) {
+        d = (next.days || []).find((dd) => (dd.items || []).includes(row.service));
+      }
       if (d) {
         const k = d.items.indexOf(row.service);
         if (k >= 0) {
@@ -321,15 +368,18 @@ export default function MyTripsCart() {
           </div>
         )}
 
-        {isPast && t.review_items && t.review_items.length > 0 && (
-          <div className={MTC_REVIEW_BOX}>
-            <button
-              type="button"
-              className={`${BTN} ${MTC_REVIEW_BTN}`}
-              onClick={() => setReview({ ref: t.ref, name: (account && account.name) || '', items: t.review_items })}
+        {!isPast && (
+          <div className={MTC_CANCEL_BOX}>
+            <a
+              className={MTC_CANCEL_BTN}
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                `Hi, I'd like to ask about cancelling or changing my booking${t.ref ? ' (' + t.ref + ')' : ''} - ${t.name || 'my trip'}${t.start_date ? ' on ' + fmtRange(t.start_date, t.end_date) : ''}.`,
+              )}`}
+              target="_blank"
+              rel="noopener"
             >
-              Leave a Review
-            </button>
+              Contact us to cancel or change
+            </a>
           </div>
         )}
       </div>
@@ -367,7 +417,22 @@ export default function MyTripsCart() {
         </div>
       );
     }
-    return <div>{arr.map((t) => bookingCard(t, isPast))}</div>;
+    return (
+      <div>
+        {arr.map((t) => bookingCard(t, isPast))}
+        {isPast && reviewableItems.length > 0 && (
+          <div className={MTC_REVIEW_BOX}>
+            <button
+              type="button"
+              className={`${BTN_PILL} ${MTC_REVIEW_BTN}`}
+              onClick={() => setReview({ name: (account && account.name) || '', items: reviewableItems })}
+            >
+              Leave a Review
+            </button>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const TABS = [
@@ -426,7 +491,7 @@ export default function MyTripsCart() {
                       {line ? withSymbol(format(line.display)) : '-'}
                     </span>
                   </span>
-                  <button type="button" className={MTC_ITEM_DEL} aria-label={`Remove ${r.service}`} onClick={() => remove(r, i)}>&times;</button>
+                  <button type="button" className={MTC_ITEM_DEL} aria-label={`Remove ${r.service}`} onClick={() => remove(r)}>&times;</button>
                 </div>
               );
             })}
@@ -459,13 +524,7 @@ export default function MyTripsCart() {
 
       <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
 
-      <AddItemPicker
-        open={adding}
-        onClose={() => setAdding(false)}
-        onPick={(name) =>
-          save({ ...state, days: [...(state.days || []), { items: [name], itemModes: ['standard'], date: '', guests: '' }] })
-        }
-      />
+      <AddItemPicker open={adding} onClose={() => setAdding(false)} />
 
       <DatePopup
         open={!!editDate}

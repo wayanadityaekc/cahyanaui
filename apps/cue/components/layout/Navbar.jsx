@@ -133,15 +133,19 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] pt-[var(--header-h)] overflow-y-auto overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
-            {/* Welcome header — clears the fixed header (pt-[var(--header-h)] on the
-                <ul> above), then scrolls as ONE block with the rest of the drawer
-                (NOT sticky — dulu sticky top-0 bikin menu jalan DI BAWAH-nya pas
-                di-scroll, kesan kepisah; Wayan minta jadi satu). border-b di sini
-                = SATU-SATUNYA garis pembatas di drawer (lihat komentar di bawah). */}
-            <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.2rem] px-[22px] pb-[0.8rem]">
+            {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
+                pt-[var(--header-h)]): konsepnya drawer BUKAN konten yang mulai DI
+                BAWAH navbar+tripbar, tapi panel yang nutup di level YANG SAMA (drawer
+                ini `fixed inset` full-height z-120, di ATAS header z-100) - Welcome
+                jadi baris paling atas drawer, pas di ketinggian navbar, gak digeser
+                turun. Sekarang scroll SATU BLOK sama link di bawahnya (NOT sticky -
+                dulu sticky top-0 bikin menu jalan DI BAWAH-nya pas di-scroll, kesan
+                kepisah). border-b di sini = SATU-SATUNYA garis pembatas di drawer
+                (lihat komentar di bawah). */}
+            <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem]">
               <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="8" r="4" />
@@ -225,16 +229,13 @@ export default function Navbar() {
             <li><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
             <li><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
             <li><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
+            {/* Settings - dipindah ke sini (Wayan): dulu di footer drawer bareng WA,
+                sekarang jadi nav link biasa (plain, no icon) persis di bawah Our
+                Company. Label "Settings" -> "Account Settings". */}
+            <li><a href="/settings.html" className={navLink(isActive('/settings.html'))}>Account Settings</a></li>
 
-            {/* Footer: Settings + Chat WA */}
-            <li className="mt-auto pt-4 flex flex-col gap-3">
-              <a href="/settings.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold gap-2.5 items-center hover:text-green max-[992px]:hover:text-gold-d">
-                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" />
-                </svg>
-                Settings
-              </a>
+            {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}
+            <li className="mt-auto pt-4">
               {/* Bug lama: `block` + `items-center justify-center` itu no-op tanpa
                   `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
                   hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white

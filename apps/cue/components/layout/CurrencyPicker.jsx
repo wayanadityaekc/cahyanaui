@@ -16,8 +16,13 @@ const curbtn = (v) =>
     : `${CURBTN_BASE} py-2 px-[0.65rem] rounded-pill font-semibold [border:1px_solid_#d8d2c4]`;
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-const curlist = (v) =>
-  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_#e4dcc8] [box-shadow:0_10px_24px_rgba(31,61,43,0.16)] z-10 [&[hidden]]:hidden ${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
+// Was an instant `hidden` attribute snap - now fades+lifts in (element stays mounted,
+// only opacity/transform/pointer-events toggle, so the transition actually plays).
+const curlist = (v, open) =>
+  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_#e4dcc8] [box-shadow:0_10px_24px_rgba(31,61,43,0.16)] z-10 ` +
+  `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
+  `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
+  `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
 const CUROPT = 'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
 const FLAG = 'inline-block w-5 h-[14px] rounded-[2px] overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
 
@@ -61,7 +66,7 @@ export default function CurrencyPicker({ variant = 'default' }) {
           <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      <ul className={curlist(variant)} role="listbox" aria-label="Currency" hidden={!open}>
+      <ul className={curlist(variant, open)} role="listbox" aria-label="Currency">
         {CURRENCIES.map((c) => (
           <li
             key={c}

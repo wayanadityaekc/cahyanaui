@@ -125,6 +125,13 @@ html {
   scroll-behavior: smooth;
   /* clip (bukan hidden) biar nyegah scroll horizontal TAPI position:sticky tetap jalan */
   overflow-x: clip;
+  /* No visible scroll-button/track chrome anywhere on the site (Sep 2026, Wayan):
+     page still scrolls exactly the same via wheel/touch/keyboard, only the browser's
+     own scrollbar UI is hidden. Same pattern already used on cards/modals/panels. */
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -157,6 +164,15 @@ body {
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+/* Modal/popup card entrance (Sep 2026 - Wayan: no popup should just snap into view).
+   Mirrors Modal.jsx's own transition values (translateY(14px) scale(0.96) -> normal)
+   so every modal/confirm-dialog that mounts fresh (SHELL/BOX in modalClasses.js) gets
+   the same soft pop-in via `animate-[popCardIn_...]` instead of a CSS transition
+   (transitions don't fire on first mount - a keyframe animation does). */
+@keyframes popCardIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: none; }
 }
 
 /* ===== Global element / behaviour rules (the "reset" half of this file) ===== */

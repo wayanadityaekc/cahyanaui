@@ -15,7 +15,7 @@ const SOCIAL_A =
   'flex items-center justify-center w-7 h-7 rounded-[50%] text-green bg-[rgba(0,0,0,0.06)] hover:text-white hover:bg-gold';
 const PAY_CHIP =
   'inline-flex items-center justify-center h-[27px] min-w-[42px] px-2 bg-white rounded-sm shadow-sm ' +
-  'transition-[transform] duration-[0.15s] ease-[ease] hover:[transform:translateY(-2px)]';
+  'transition-[transform] duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]';
 const COL_A = 'no-underline text-green hover:text-gold';
 
 const EXPLORE = [

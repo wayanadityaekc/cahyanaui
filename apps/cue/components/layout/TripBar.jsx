@@ -16,8 +16,12 @@ const TAG_ICON = (
 
 export default function TripBar({ mode = 'promo' }) {
   const pathname = usePathname();
-  // Wayan: promo tripbar disembunyiin KHUSUS di halaman Our Company.
-  if (pathname === '/our-company' || pathname === '/our-company.html') return null;
+  // Wayan: promo tripbar disembunyiin di Our Company + My Trips (rombak Sep 2026 -
+  // My Trips udah punya tab strip-nya sendiri, tripbar cuma numpuk di atasnya).
+  if (
+    pathname === '/our-company' || pathname === '/our-company.html' ||
+    pathname === '/my-trips' || pathname === '/my-trips.html'
+  ) return null;
   if (mode !== 'promo') return null;
   if (!PROMO.active || !PROMO.text) return null;
 

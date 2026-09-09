@@ -19,7 +19,7 @@ export default function DriverCard({ name, tagline, desc, emptyReview, onOpen, c
   const { box: ava, svg: avaSvg } = driverAvatarClasses(company);
   return (
     <button
-      className={`font-body text-green flex flex-col items-center text-center grow-0 shrink-0 ${box} border-[1.5px] border-solid border-transparent rounded-lg [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box] cursor-pointer transition-[transform,box-shadow] duration-[0.15s] hover:[transform:translateY(-4px)] hover:shadow-[0_8px_22px_rgba(31,61,43,0.1)]`}
+      className={`font-body text-green flex flex-col items-center text-center grow-0 shrink-0 ${box} border-[1.5px] border-solid border-transparent rounded-lg [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box] cursor-pointer transition-[transform,box-shadow] duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-4px)] hover:shadow-[0_8px_22px_rgba(31,61,43,0.1)]`}
       type="button"
       data-name={name}
       data-tagline={tagline}

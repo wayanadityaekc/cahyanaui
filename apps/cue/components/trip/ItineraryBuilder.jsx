@@ -339,6 +339,7 @@ export default function ItineraryBuilder() {
       </div>
 
       <AddItemPicker
+        mode="pick"
         open={pickFor !== null}
         onClose={() => setPickFor(null)}
         onPick={(name) => {

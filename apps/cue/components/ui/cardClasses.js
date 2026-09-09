@@ -10,9 +10,12 @@ export const BADGE_POPULAR =
 // lift. DISPLAY sengaja gak diikutin di sini - ditambah per komponen (`flex flex-col`
 // buat kartu standar, `block` buat kartu tourprog "See our tours"). Dipake
 // ExperienceCard / GuideCard / GuideMore (you-might) / GuideHome (CTA more).
+// Hover lift uses --ease-out (gentle deceleration) instead of the old plain `ease` -
+// softer entry into the hover state, not an abrupt snap (Sep 2026, Wayan: card hover
+// shouldn't feel harsh).
 export const CARD_FRAME =
   'relative rounded-lg p-[5px] overflow-hidden bg-white [box-shadow:var(--shadow-md)] no-underline text-inherit ' +
-  '[transition:transform_var(--dur-slow)_ease,box-shadow_var(--dur-slow)_ease] hover:[transform:translateY(-4px)] hover:[box-shadow:var(--shadow-lg)]';
+  '[transition:transform_var(--dur-slow)_var(--ease-out),box-shadow_var(--dur-slow)_var(--ease-out)] hover:[transform:translateY(-4px)] hover:[box-shadow:var(--shadow-lg)]';
 
 // Foto kartu persegi (dulu `.experience__image` + ::after gradient). Wrapper pegang
 // rasio/radius/overflow; gradient gelap dari bawah biar teks putih (kalau ada) kebaca.

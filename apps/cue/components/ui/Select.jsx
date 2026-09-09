@@ -73,8 +73,11 @@ export default function Select({
             type="button"
             role="option"
             aria-selected={String(o.value) === String(value)}
-            className={opt(String(o.value) === String(value))}
+            aria-disabled={o.disabled || undefined}
+            className={opt(String(o.value) === String(value), o.disabled)}
+            disabled={!!o.disabled}
             onClick={() => {
+              if (o.disabled) return;
               onChange(o.value);
               setOpen(false);
             }}
@@ -92,7 +95,7 @@ export default function Select({
       <select name={name} id={fieldId} className={BK_NATIVE} value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (
-          <option key={String(o.value)} value={o.value}>{o.label}</option>
+          <option key={String(o.value)} value={o.value} disabled={o.disabled}>{o.label}</option>
         ))}
       </select>
 
@@ -120,7 +123,11 @@ export default function Select({
         <Chevron />
       </button>
 
-      {mounted && asPortal && open && createPortal(panel, document.body)}
+      {/* Panel is portal-mounted as soon as it's a portal context, not just while
+          open - otherwise it renders straight into its "open" state on first paint
+          (no prior "closed" frame for the CSS transition to animate from), which is
+          what made it pop in instantly instead of transitioning in smoothly. */}
+      {mounted && asPortal && createPortal(panel, document.body)}
       {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}
     </div>

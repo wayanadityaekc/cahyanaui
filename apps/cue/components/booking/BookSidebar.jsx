@@ -8,6 +8,7 @@ import { clashDates } from '@/lib/cart';
 import BookingForm from './BookingForm';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 export default function BookSidebar({ item, perPerson = false }) {
   const [ask, setAsk] = useState(null);
@@ -46,6 +47,8 @@ export default function BookSidebar({ item, perPerson = false }) {
     setPending({ name, mode, goto });
     setAsk(true);
   };
+
+  useBodyLock(!!confirm);
 
   return (
     <div className="booksidebar relative border border-line rounded-lg overflow-hidden">

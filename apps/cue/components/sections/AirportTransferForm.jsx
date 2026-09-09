@@ -7,6 +7,7 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { AIRPORT } from '@/content/shared/airport';
+import { AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
 import DateTimeField from '@/components/ui/DateTimeField';
@@ -14,7 +15,7 @@ import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const ROUTE = 'Airport – Ubud';
+const ROUTE = AIRPORT_ROUTE;
 const DIRECTIONS = [
   { value: 'pickup', label: 'Airport pickup (arrival) → your stay' },
   { value: 'dropoff', label: 'Your stay → airport drop-off (departure)' },

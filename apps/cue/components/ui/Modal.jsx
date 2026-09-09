@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import useBodyLock from './useBodyLock';
 
 export default function Modal({ open, onClose, title, children, className = '' }) {
   const [mounted, setMounted] = useState(false);
@@ -11,12 +12,10 @@ export default function Modal({ open, onClose, title, children, className = '' }
     if (!open) return;
     const onKey = (e) => e.key === 'Escape' && onClose && onClose();
     document.addEventListener('keydown', onKey);
-    document.body.classList.add('hs-locked');
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.classList.remove('hs-locked');
-    };
+    return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
+
+  useBodyLock(open);
 
   if (!mounted) return null;
 

@@ -10,6 +10,7 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
+import useBodyLock from '@/components/ui/useBodyLock';
 import Select from '@/components/ui/Select';
 import AuthModal from '@/components/account/AuthModal';
 
@@ -105,10 +106,7 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  useEffect(() => {
-    document.body.classList.toggle('hs-locked', menuOpen);
-    return () => document.body.classList.remove('hs-locked');
-  }, [menuOpen]);
+  useBodyLock(menuOpen);
 
   return (
     <header

@@ -2,20 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import HeroSearch from '@/components/search/HeroSearch';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 export default function Hero() {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => {
     if (!sheetOpen) return;
-    document.body.classList.add('hs-locked');
     const onKey = (e) => e.key === 'Escape' && setSheetOpen(false);
     document.addEventListener('keydown', onKey);
-    return () => {
-      document.body.classList.remove('hs-locked');
-      document.removeEventListener('keydown', onKey);
-    };
+    return () => document.removeEventListener('keydown', onKey);
   }, [sheetOpen]);
+
+  useBodyLock(sheetOpen);
 
   return (
     // Homepage hero. No marker class needed anymore: the section-gap engine keys off

@@ -176,8 +176,12 @@ body {
 }
 
 /* ===== Global element / behaviour rules (the "reset" half of this file) ===== */
-/* Scroll-lock toggled on <body> by JS while a bottom-sheet / dropdown is open
-   (overflow:hidden only - NOT position:fixed, which makes the page jump). */
+/* Scroll-lock toggled by JS while a bottom-sheet / dropdown is open (overflow:hidden
+   only - NOT position:fixed, which makes the page jump). Both <html> AND <body> get
+   the class (useBodyLock.js): desktop/Chrome scroll via <body>, but iOS Safari very
+   often scrolls via <html> instead - body-only left the page scrollable under every
+   popup on iPhone (Wayan, Sep 2026). */
+html.hs-locked,
 body.hs-locked {
   overflow: hidden;
 }

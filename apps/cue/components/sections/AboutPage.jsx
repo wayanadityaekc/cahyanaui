@@ -12,18 +12,11 @@ import { infoList } from '@/components/ui/infoClasses';
 // `hidden` di company mode, bukan dihapus dari DOM)/.driver*/.drivers* ->
 // utilities 1:1, CSS-nya udah dihapus dari style.css.
 //
-// GOTCHA disengaja: div pembungkus paling luar TETAP pakai literal className
-// "about" (bukan cuma utility) - itu bukan sisa lupa dihapus. `.lhero`/
-// `.lhero__inner`/`.lhero__title`/`.lhero__sub` di section di bawahnya itu
-// primitif SHARED (dipakai listing/guide/dll, family issue LAIN, belum
-// dikonversi) dan style.css masih punya override khusus About yang
-// nyasumsiin ancestor `.about` ada (hero dipendekin, foto dibuang, warna judul
-// beda) - `.about .lhero`, `.about .lhero__title`, `.about .lhero__sub`, plus
-// varian `.company-page .about .lhero*`. Kalau token "about" dicabut dari DOM,
-// override itu berhenti match diam-diam (regresi visual) padahal CSS-nya
-// bukan family aku buat dihapus. Jadi class "about" dibiarin nempel murni
-// sebagai hook lintas-family - begitu `.lhero` family dikonversi (issue lain),
-// hook ini juga bisa dicabut sekalian.
+// `.lhero` family UDAH dikonversi (B-FINAL): hero About sekarang bawa utility-nya
+// sendiri (lheroSec/lheroInner/lheroTitle/lheroSub di bawah, + varian company).
+// `.about .lhero*` + `.company-page .about .lhero*` override udah dihapus, jadi
+// class hook "about" di wrapper LUAR udah dicabut (gak ada lagi CSS/JSX yang
+// nyandarin ancestor `.about`).
 export default function AboutPage({ company = false }) {
   const [driver, setDriver] = useState(null);
   // Modal di-portal ke <body> (di LUAR .company-page), jadi baseline avatar-nya
@@ -39,8 +32,8 @@ export default function AboutPage({ company = false }) {
   // Solusinya: dua string LENGKAP terpisah lewat ternary (pola DriverCard/RegistrationBlock),
   // bukan nyambung suffix ke base string.
   const wrap = company
-    ? 'about py-[var(--space-5)] px-[var(--space-3)] max-[768px]:-mt-4 pt-0'
-    : 'about py-[var(--space-5)] px-[var(--space-3)] max-[768px]:-mt-4';
+    ? 'py-[var(--space-5)] px-[var(--space-3)] max-[768px]:-mt-4 pt-0'
+    : 'py-[var(--space-5)] px-[var(--space-3)] max-[768px]:-mt-4';
   const intro = company
     ? 'max-w-none mx-0 px-0'
     : 'max-w-[var(--container-mid)] mx-auto px-[var(--container-x)]';
@@ -51,12 +44,24 @@ export default function AboutPage({ company = false }) {
     ? 'flex flex-wrap justify-start gap-4 max-[768px]:flex-nowrap max-[768px]:max-w-full max-[768px]:overflow-x-auto max-[768px]:overflow-y-hidden max-[768px]:[touch-action:pan-x_pan-y] max-[768px]:[scroll-snap-type:x_mandatory] max-[768px]:pb-2 max-[768px]:justify-center max-[768px]:[&>*]:flex-[0_0_78%] max-[768px]:[&>*]:[scroll-snap-align:start] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'
     : 'flex flex-wrap justify-start gap-6 max-[768px]:flex-nowrap max-[768px]:gap-4 max-[768px]:max-w-full max-[768px]:overflow-x-auto max-[768px]:overflow-y-hidden max-[768px]:[touch-action:pan-x_pan-y] max-[768px]:[scroll-snap-type:x_mandatory] max-[768px]:pb-2 max-[768px]:justify-center max-[768px]:[&>*]:flex-[0_0_78%] max-[768px]:[&>*]:[scroll-snap-align:start] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden';
 
+  // .about .lhero* (+ .company-page .about .lhero*) baked to utilities. About hero is a
+  // plain text block (no bg/overlay), gold title + muted sub. Company mode: tighter pad,
+  // left-aligned full-width inner, smaller (fs-h2) title, left-pushed sub.
+  const lheroSec = company
+    ? 'relative min-h-0 flex items-center justify-center pt-2 px-[1.3rem] pb-4'
+    : 'relative min-h-0 flex items-center justify-center pt-[6.5rem] px-[1.3rem] pb-8';
+  const lheroInner = company
+    ? 'relative z-[2] w-full max-w-none text-left'
+    : 'relative z-[2] w-full max-w-[840px] text-center';
+  const lheroTitle = `font-head font-bold tracking-[-0.01em] leading-[var(--lh-heading)] text-gold m-0 mb-[0.4rem] ${company ? 'text-[length:var(--fs-h2)]' : 'text-[length:var(--fs-display)]'}`;
+  const lheroSub = `text-muted text-[length:var(--fs-body)] leading-[1.5] mt-0 mb-[1.6rem] max-w-[480px] ${company ? 'mr-auto ml-0' : 'mx-auto'}`;
+
   return (
     <div className={wrap}>
-      <section className="lhero lhero--plain">
-        <div className="lhero__inner">
-          <h1 className="lhero__title">{ABOUT.title}</h1>
-          <p className="lhero__sub">{ABOUT.sub}</p>
+      <section className={lheroSec}>
+        <div className={lheroInner}>
+          <h1 className={lheroTitle}>{ABOUT.title}</h1>
+          <p className={lheroSub}>{ABOUT.sub}</p>
 
           <div className={`relative max-w-[640px] mt-[0.6rem] mx-auto ${company ? 'hidden' : ''}`}>
             <div className="flex gap-[0.6rem] overflow-x-auto [scroll-snap-type:x_mandatory] [scrollbar-width:none] [-ms-overflow-style:none] [touch-action:pan-x_pan-y] rounded-lg [&::-webkit-scrollbar]:hidden">

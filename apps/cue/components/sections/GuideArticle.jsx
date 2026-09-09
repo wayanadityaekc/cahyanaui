@@ -30,10 +30,13 @@ export default function GuideArticle({ data }) {
   return (
     <div className="guide-article-page">
       <JsonLd page={data.__page} />
-      <section className="lhero" style={{ backgroundImage: data.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}>
-        <div className="lhero__inner">
-          <h1 className="lhero__title">{data.title}</h1>
-          <p className="lhero__sub">{data.sub}</p>
+      <section
+        className="relative min-h-[320px] flex items-center justify-center bg-cover bg-center pt-[6.5rem] px-[1.3rem] pb-[1.5rem] before:content-[''] before:absolute before:inset-0 before:[background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66))]"
+        style={{ backgroundImage: data.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}
+      >
+        <div className="relative z-[2] w-full max-w-[840px] text-center">
+          <h1 className="font-head font-bold tracking-[-0.01em] text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.55)] m-0 mb-[0.4rem]">{data.title}</h1>
+          <p className="text-[rgba(255,255,255,0.9)] text-[length:var(--fs-body)] leading-[1.5] [text-shadow:0_1px_12px_rgba(0,0,0,0.5)] mt-0 mx-auto mb-[1.6rem] max-w-[480px]">{data.sub}</p>
           <div className={HERO_TAGS}>
             {data.tags.map((t) => <span className={HERO_TAG} key={t}>{t}</span>)}
           </div>

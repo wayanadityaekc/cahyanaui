@@ -738,19 +738,6 @@ section.faq::before,
   color: var(--color-ink);
   font-size: var(--fs-body);
 }
-
-/* ============================================================
-   GUIDE ARTICLE TEMPLATE (Sep 2026) - hero tags, category sidebar
-   (desktop) / sticky tabs (mobile), bottom "You might also like" +
-   "See our tours". Applies only on .guide-page (guide/*.html).
-   ============================================================ */
-/* Hero lebih pendek dari .lhero standar (560px) - guide article halaman
-   sekunder, bukan halaman utama, jangan makan layar sebanyak listing page. */
-.guide-article-page .lhero {
-  min-height: 320px;
-  padding-top: 6.5rem;
-  padding-bottom: 1.5rem;
-}
 /* "You might also like" / "See our tours" cards (guide-more, pakai --home4):
    ikutin pola homepage — DESKTOP tampilin semua kartu (grid wrap, no slide),
    MOBILE geser (slider default --home4 + initTourSlider). Agu 2026, Wayan. */
@@ -1349,15 +1336,6 @@ strong {
   color: var(--color-gold);
   margin: 0 0 1rem;
 }
-/* Konten reuse (AboutPage/ContactSection/legal body) punya clearance navbar +
-   slot foto sendiri - di dalam kolom udah gak perlu, buang. */
-.company-page .about .lhero { padding-top: 0.5rem; padding-bottom: 1rem; }
-/* About tab: kolom konten udah sempit (ada sidebar), jadi hero + kartu intro
-   yang biasa center & narrow di halaman penuh keliatan gak nyatu sama baris
-   editorial (.arow) di bawahnya. Di dalam company-page: rata KIRI + isi penuh
-   lebar kolom, biar hero, intro, dan rows sejajar satu garis kiri. */
-.company-page .about .lhero__inner { max-width: none; text-align: left; }
-.company-page .about .lhero__sub { margin-left: 0; }
 /* .company-page .about-intro / .about .arows / .about .ahero-card / .about-intro
    .ahero-card / .drivers-grid / .driver-card* dulu di sini - full Tailwind lewat
    prop `company` di AboutPage.jsx/DriverCard.jsx sekarang (TW-A7, #328).
@@ -1374,11 +1352,6 @@ strong {
   padding: 1.6rem 0 0;
   border-top: 1px solid var(--line);
 }
-/* Judul tab (About Us H1 / Terms-Privacy-Cancellation .company-heading / Contact
-   H1) kepake 3 ukuran+bobot beda (40px, 18px/700, 18px/500) - gonta-ganti tab
-   kerasa gak nyambung. Disamain semua ke satu treatment (18px/700/gold, punya
-   .company-heading) - About & Contact di sini yang di-override. Wayan, Sep 2026. */
-.company-page .about .lhero__title { font-size: var(--fs-h2); }
 
 /* Desktop: konten Our Company duduk di "sheet" putih inset - pola halaman
    attraction (.tour-layout--book). Background halaman cream biar sheet kebaca &
@@ -1485,61 +1458,6 @@ strong {
     color: var(--color-green);
   }
 }
-
-
-/* .closing-band* full Tailwind di ListingPage.jsx (TW-A12, #333). */
-
-/* Route picker card */
-
-/* Popular routes list */
-
-/* .tinfo__* ("Good to know" facts + included/excluded cols) -> utilities in
-   components/sections/DetailTinfo.jsx (TW-B4 #337). */
-
-/* ==================== Listing hero (tour/experience/destination): bg + featured box ==================== */
-.lhero {
-  position: relative;
-  min-height: 560px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-size: cover;
-  background-position: center;
-  /* padding-top clears fixed navbar (+ tripbar); padding sits under the solid header */
-  padding: 7rem 1.3rem 3rem;
-}
-.lhero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.66));
-}
-.lhero__inner {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 840px;
-  text-align: center;
-}
-.lhero__title {
-  font-family: var(--font-head);
-  font-weight: 700; /* was 500 - Wayan, H1 dipertebal (opsi B) */
-  letter-spacing: -0.01em;
-  font-size: var(--fs-display);
-  line-height: var(--lh-heading);
-  color: #fff;
-  /* halo gelap tipis biar teks putih tetep kebaca di foto terang (mis. Tanah Lot sunset) */
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
-  margin: 0 0 0.4rem;
-}
-.lhero__sub {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: var(--fs-body);
-  line-height: 1.5;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
-  margin: 0 auto 1.6rem;
-  max-width: 480px;
-}
 @media (max-width: 768px) {
   /* Gradasi hitam di foto hero (atas tipis + bawah lebih gelap) biar search
      putih nge-pop & foto lebih dramatis. Cuma listing (.tourprog), cuma mobile. */
@@ -1547,31 +1465,6 @@ strong {
   .tourprog .tour-hero__image::after { content: ""; position: absolute; inset: 0;
     background: linear-gradient(to bottom, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 32%, rgba(0,0,0,0.58) 100%); }
 }
-
-/* ============================================================
-   ABOUT PAGE — layout editorial (judul kiri sticky, isi kanan).
-   Pakai design system: lhero (hero foto), font-head Playfair,
-   emas/cream. Kartu intro di hero + baris editorial + list.
-
-   .about-gallery* / .about-intro / .ahero-card / .lbox__facts / .arows /
-   .arow* / .anl* full Tailwind di AboutPage.jsx sekarang (TW-A7, #328).
-   `.about .lhero*` (di bawah) TETAP CSS - itu primitif shared `.lhero`
-   (family issue LAIN, belum dikonversi), class token literal "about" masih
-   nempel di wrapper AboutPage.jsx khusus jadi hook buat rule ini (+ varian
-   `.company-page .about .lhero*`) - lihat komentar di AboutPage.jsx.
-   ============================================================ */
-/* About hero dipendekin ala guide (Sep 2026, Wayan) - kartu intro pindah ke bawah,
-   jadi hero cukup muat judul + sub aja. Sejajar sama .guide-article-page .lhero. */
-.about .lhero {
-  min-height: 0;
-  background: none; /* foto hero dihapus (Wayan) - jadi blok teks polos */
-  padding-top: 6.5rem;
-  padding-bottom: 2rem;
-}
-.about .lhero::before { content: none; } /* buang overlay gelap - gak ada foto lagi */
-/* Tanpa foto gelap di belakang -> teks jadi warna gelap biar kebaca */
-.about .lhero__title { color: var(--color-gold); text-shadow: none; }
-.about .lhero__sub { color: var(--color-muted); text-shadow: none; }
 
 /* ============================================================
    HOMEPAGE — section About (Opsi C): photo band + overlay,

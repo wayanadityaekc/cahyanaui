@@ -93,6 +93,34 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
   await pg.close();
 }
 
+// ---- 3b) Wayan's exact screenshot bug: an EMPTY leading day (left over from
+// /itinerary's "+ Add Day", same shared state) before the one visible tour. Old
+// code indexed state.days by the FILTERED position (0), landing on the empty
+// day instead of the real one - X looked clickable but silently did nothing. ----
+{
+  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  await pg.addInitScript(() => {
+    try {
+      localStorage.setItem('cue_itinerary_v1', JSON.stringify({
+        days: [
+          { items: [], itemModes: [], date: '' },
+          { items: ['Ubud Tour'], itemModes: ['exclusive'], date: '2026-09-18', guests: '2' },
+        ],
+        transfers: [], charters: [],
+      }));
+    } catch {}
+  });
+  await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
+  await pg.waitForTimeout(500);
+  const rowsBefore = await pg.evaluate(() => document.querySelectorAll('[data-mytrips-cart] button[aria-label^="Remove"]').length);
+  await pg.locator('[data-mytrips-cart] button[aria-label^="Remove"]').first().click();
+  await pg.waitForTimeout(300);
+  const rowsAfter = await pg.evaluate(() => document.querySelectorAll('[data-mytrips-cart] button[aria-label^="Remove"]').length);
+  const emptyState = await pg.$('text=Your trip is empty.');
+  check(`Empty-leading-day scenario: X removes the tour (before=${rowsBefore} after=${rowsAfter})`, rowsBefore === 1 && rowsAfter === 0 && emptyState !== null);
+  await pg.close();
+}
+
 // ---- 4) Add Program picker: single-step, links straight to the category pages ----
 {
   const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });

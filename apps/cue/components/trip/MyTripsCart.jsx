@@ -150,10 +150,18 @@ export default function MyTripsCart() {
   const [openRef, setOpenRef] = useState(null);
 
   const rows = useMemo(() => {
-    const days = (state.days || []).filter((d) => d.items && d.items.length);
     const out = [];
-    days.forEach((d, i) => {
-      (d.items || []).forEach((name, k) => {
+    // Bug fix (Sep 2026, Wayan - proof screenshot, X still stuck on a single day
+    // item): day_no used to be the position in the FILTERED list (skipping empty
+    // days), but remove()/date-edit index into the RAW state.days array with it.
+    // An empty day slot anywhere before this one (e.g. left behind by "+ Add Day"
+    // on /itinerary, which shares this same localStorage state) shifts the two
+    // out of sync - remove() then hits the wrong day (often empty) and silently
+    // no-ops. Iterate the RAW array and skip empties inline so day_no always
+    // matches its real state.days index.
+    (state.days || []).forEach((d, i) => {
+      if (!d.items || !d.items.length) return;
+      d.items.forEach((name, k) => {
         out.push({
           kind: 'day',
           type: 'tour',
@@ -228,7 +236,13 @@ export default function MyTripsCart() {
     if (row.kind === 'transfer') next.transfers.splice(row.localIndex, 1);
     else if (row.kind === 'charter') next.charters.splice(row.localIndex, 1);
     else {
-      const d = next.days[row.day_no - 1];
+      let d = next.days[row.day_no - 1];
+      // Defensive fallback: if the expected day doesn't actually hold this item
+      // (an index mismatch we've been bitten by twice now), search every day
+      // instead of no-op'ing - a delete tap should never just do nothing.
+      if (!d || !(d.items || []).includes(row.service)) {
+        d = (next.days || []).find((dd) => (dd.items || []).includes(row.service));
+      }
       if (d) {
         const k = d.items.indexOf(row.service);
         if (k >= 0) {

@@ -1,6 +1,7 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
+import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
 import BookBar from '@/components/booking/BookBar';
@@ -46,8 +47,8 @@ export default function AttractionPage({ data }) {
         </div>
       </section>
 
-      <div className={data.bookItem ? 'tour-layout tour-layout--book' : undefined}>
-      <div className={data.bookItem ? 'tour-layout__main' : undefined}>
+      <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
+      <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
       <DetailTabs
         overview={(
           <div className={STOPS} id={data.stopsId}>
@@ -74,7 +75,7 @@ export default function AttractionPage({ data }) {
       />
       </div>
       {data.bookItem && (
-        <div className="tour-layout__side">
+        <div className={TOUR_LAYOUT_SIDE}>
           <BookSidebar item={data.bookItem} facts={data.facts} />
         </div>
       )}

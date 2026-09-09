@@ -561,48 +561,6 @@ section + section::before,
   background-color: #fff;
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
 }
-
-/* ===== KARTU BOOKING SIDEBAR (halaman detail): form "Build Your Trip" + checklist
-       Included/Excluded + Ask jadi SATU kartu. Desktop = 2 kolom (kartu sticky kanan),
-       Mobile = 1 kolom, kartu di paling bawah setelah konten. ===== */
-/* Sheet putih konten "naik" dikit ke hero (sudut atas melengkung) — overlap
-   halus, sama kaya about/itinerary. Full-width, isinya di-center max 1200px. */
-.tour-layout--book {
-  position: relative;
-  z-index: 2;
-  margin: -3rem 0 0;
-  padding: 1.6rem max(var(--container-x), calc((100% - 1280px) / 2)) 3rem;
-  background: #fff;
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
-}
-
-@media (min-width: 993px) {
-  .tour-layout--book {
-    display: flex;
-    align-items: flex-start;
-    gap: 2.2rem;
-  }
-  .tour-layout--book .tour-layout__main {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .tour-layout--book .tour-layout__side {
-    flex: 0 0 34%;
-    max-width: 380px;
-    position: sticky;
-    /* clear navbar+tripbar fixed (96px) biar atas kartu gak ketutup */
-    top: 104px;
-    /* turun biar sejajar foto pertama konten (di-set JS alignSideToFirstPhoto) */
-    margin-top: var(--side-offset, 0);
-  }
-}
-@media (max-width: 992px) {
-  /* mobile: kartu turun ke bawah konten */
-  .tour-layout--book .tour-layout__side {
-    margin-top: 1.2rem;
-  }
-}
 /* Search bar di dalam hero (bawah deskripsi): toggle Categories (kiri) + search
    (kanan, lebar), sejajar 1 baris. */
 /* Search + kategori = SATU bar: search ~90% kiri, kategori (icon) ~10% kanan.
@@ -1019,14 +977,6 @@ section + section::before,
    further down (untouched - shared with .subhero__title/.tourprog, out of scope). */
 .tour-hero__body .subhero__title {
   margin-bottom: 0.75rem;
-}
-/* .tour-hero__desc + .tour-hero__cta -> utilities di TourPage.jsx +
-   AttractionPage.jsx (migrasi Fase 2). Struktur hero lain tetep CSS. */
-/* Konten di bawah hero: matiin efek "sheet naik" bawaan tour-layout */
-.tour-hero + .tour-layout--book {
-  margin-top: 0;
-  border-radius: 0;
-  box-shadow: none;
 }
 /* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
    nggak terlalu bold. */

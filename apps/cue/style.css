@@ -133,7 +133,6 @@ body {
   background-color: #fff;
   overflow-x: clip;
 }
-.experience__desc,
 .subhero__text,
 .info__list li,
 .faq__a p {
@@ -144,7 +143,6 @@ body {
 }
 
 /* Judul card & slider - 1 gaya, ngikut font judul card */
-.experience__name,
 .title {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -939,102 +937,6 @@ body.hs-locked .wa-float {
   max-width: 1200px;
   margin: 0 auto;
 }
-.experience__card {
-  position: relative; /* anchor for the heart badge on grid cards */
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--r-lg);
-  /* frame putih tipis di sekeliling foto (foto ke-inset + membulat di dalam card) */
-  padding: 5px;
-  overflow: hidden;
-  background-color: #fff;
-  box-shadow: var(--shadow-md);
-  /* kartu = satu <a> (seluruh kartu bisa diklik). Matiin gaya link default biar
-     teks (judul/meta/harga) gak keliatan underline + warna link - masing-masing
-     teks punya warnanya sendiri. */
-  text-decoration: none;
-  color: inherit;
-}
-.experience__image {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: var(--r-md);
-  overflow: hidden;
-  background-color: var(--color-green);
-  background-size: cover;
-  background-position: center;
-}
-.experience__image::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 55%,
-    rgba(31, 61, 43, 0.45)
-  );
-}
-.experience__body {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 1rem;
-}
-.experience__name {
-  margin-bottom: 0.4rem;
-}
-/* Judul kartu listing (tour/activities/destinations) 2 baris - title lebih
-   deskriptif buat SEO (Sep 2026, Wayan). Tinggi di-reserve 2 baris (bukan cuma
-   di-clamp) biar row grid rata walau title tetangga lebih pendek. */
-.catsec .experience__name {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 3.2em;
-}
-/* "See more" card di ujung baris slider (ganti tombol See All yang ngambang).
-   Kartu foto gelap + panah, ukuran ikut kartu tetangga (stretch full tinggi). */
-
-.experience__desc {
-  color: var(--color-muted);
-  /* Konsisten 2 baris biar tinggi card seragam (potong yang kepanjangan,
-     tahan tinggi 2 baris buat yang pendek). */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: calc(1.6em * 2);
-}
-.experience__footer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-top: auto;
-  padding-top: 1rem;
-}
-.experience__price {
-  color: var(--color-amber);
-  /* Harga jangan pernah pecah baris (mis. IDR panjang "from Rp1.300.000" kalau
-     wrap, baris ke-2 kepotong di kartu). Angkanya tetep penuh, satu baris. */
-  white-space: nowrap;
-}
-.experience__arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-size: 1.1rem;
-  text-decoration: none;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-}
-.experience__arrow:hover {
-  background-color: var(--color-gold);
-  color: #fff;
-}
 
 /* ===== Plan Your Trip (itinerary teaser, homepage) ===== */
 .plan {
@@ -1539,8 +1441,7 @@ section.faq::before,
 }
 /* Slot foto pakai <img> (SEO + lazy-load) - ngisi wrapper persis kayak background cover.
    Wrapper tetap pegang rasio/radius; overlay ::after card tetap di atas foto. */
-.stop__image > img,
-.experience__image > img {
+.stop__image > img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -2275,16 +2176,6 @@ section.faq::before,
 .hero__booking .booking__card {
   animation: heroFadeIn 0.6s ease both;
 }
-/* Hover lift halus buat card (naik dikit + shadow lembut) */
-.experience__card {
-  transition:
-    transform var(--dur-slow) ease,
-    box-shadow var(--dur-slow) ease;
-}
-.experience__card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-}
 
 /* Tombol WhatsApp ngambang (Talk with Wayan) */
 
@@ -2294,7 +2185,6 @@ section.faq::before,
   .hero__booking .booking__card {
     animation: none;
   }
-  .experience__card:hover,
   .booking__btn:hover {
     transform: none;
   }
@@ -2369,27 +2259,10 @@ section.faq::before,
   background: #e2f0e6;
   color: var(--color-ok);
 }
-/* Kartu program (foto homepage .experience__card) + form di bawahnya */
-.itn-prog .experience__image {
-  position: relative;
-}
-/* ===== Kartu hari program (builder itinerary) =====
-   Kartu tour polos (tanpa panel box) + chip ringkasan dari Trip Details +
-   form override per-hari. Mobile: kartu di tengah; desktop: grid 2 kolom. */
-/* Kartu program bisa diklik ke halaman tour; × & footer (toggle kiri) di luar link */
-/* Footer nyambung ke body (body-nya padding-bottom 0) biar spacing-nya
-   satu alur kayak card homepage - nggak dobel padding di tengah card */
-.itn-prog .experience__body {
-  padding-bottom: 0;
-}
 /* Chip ringkasan hari (keisi otomatis dari Trip Details) */
 /* Form override per-hari (kebuka via Edit) */
 .itn-ovr.open {
   display: block;
-}
-@media (max-width: 992px) {
-  /* Mobile/tablet: kartu hari di tengah, lebar SAMA kayak card slider homepage
-     (70% viewport; 80% di <=576px - lihat rule .experience__card di media query) */
 }
 .itn-day__empty {
   display: flex;
@@ -3393,8 +3266,7 @@ section.faq::before,
 /* Tier UI (Inter): judul kartu, modal, nama, dst */
 .driver-modal__name,
 .itn__subtitle,
-.itn-day__title,
-.experience__name {
+.itn-day__title {
   font-family: var(--font-body);
   font-weight: 600;
   letter-spacing: 0;
@@ -3431,94 +3303,6 @@ strong {
   background: var(--color-cta-d);
   color: #fff;
   border-color: var(--color-cta-d);
-}
-/* Outline/secondary buttons: white bg + dark border + dark text (NOT gold) */
-/* WhatsApp action keeps its brand green (not gold) */
-
-/* =====================================================================
-   STEP 2 — HOMEPAGE REDESIGN (layout only; reuses existing type/colours)
-   ===================================================================== */
-
-/* --- Homepage cards: style A (4:3 photo, heart badge on photo, 2-row body:
-   title + rating on row 1, duration/stops meta + price on row 2). Hide the
-   description, Standard/Exclusive toggle, and price unit. The + My Trips button
-   is NOT hidden here — it's restyled into the heart badge (see "Card heart
-   badge" block below). Scoped to the homepage; the whole card stays clickable. --- */
-.home .experience__card .experience__desc,
-.home .experience__card .tour-type--card,
-.home .experience__price .price-unit {
-  display: none;
-}
-/* Compact card: 4:3 photo + tight body (title, duration, price grouped right
-   under the photo). Card height = content, so it's shorter than the old square
-   version — deliberate (Wayan picked the compact layout). */
-/* landscape 4:3 photo. Kartu "You might also like" (.related) pakai style compact
-   yang SAMA PERSIS kayak homepage (Wayan) -> selektor di-share .home + .related. */
-.home .experience__image,
-.related .experience__image {
-  aspect-ratio: 4 / 3;
-}
-.home .experience__image img,
-.related .experience__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* body: 2 rows — title|rating (top), meta|price (bottom).
-   rating & stops slots stay empty until real data exists (filled by JS). */
-.home .experience__body,
-.related .experience__body {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  /* Judul SPAN 2 kolom (full lebar kartu) - dulu numpang kolom kiri (1fr) yang
-     kebagi sama kolom harga. Pas harga IDR panjang, kolom harga melebar, kolom
-     judul menyempit -> judul kepotong. Sekarang judul gak kesentuh lebar harga. */
-  grid-template-areas:
-    "title  title"
-    "meta   price";
-  align-items: baseline;
-  column-gap: 0.55rem;
-  row-gap: 0.4rem;
-  padding: 0.6rem 0.9rem 0.8rem; /* judul lebih nempel ke atas */
-}
-.home .experience__name,
-.related .experience__name {
-  grid-area: title;
-  margin: 0;
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  line-height: 1.25;
-  /* 2 baris (Sep 2026, tour restructure - judul baru lebih panjang, 1 baris
-     kepotong kebanyakan) - pola sama kayak .tourprog .experience__name.
-     Tinggi di-reserve 2 baris (min-height, bukan cuma clamp) biar tinggi kartu
-     seragam walau judul tetangga cuma 1 baris - samain kayak .catsec listing. */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 2.5em;
-}
-.home .experience__footer,
-.related .experience__footer {
-  grid-area: price;
-  margin: 0;
-  padding: 0;
-}
-.home .experience__meta,
-.related .experience__meta {
-  grid-area: meta;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.home .experience__meta svg,
-.related .experience__meta svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  flex: 0 0 auto;
-  color: var(--color-gold-d);
 }
 
 /* --- Card slider (dulu grid 4-up yang numpuk kalau lebih dari 4 kartu -
@@ -3596,31 +3380,6 @@ strong {
   background-color: var(--color-cream);
 }
 
-/* --- Mobile: stacked reviews/about (kartu sekarang ikut slider mesin
-   yang sama kayak Guides - lihat .experience__grid base rule) --- */
-@media (max-width: 992px) {
-  /* mobile: smaller card text, same 2-row option-A layout */
-  .home .experience__body {
-    row-gap: 0.25rem;
-  }
-  .home .experience__footer {
-    justify-self: end;
-  }
-  .home .experience__name {
-    font-size: var(--fs-small);
-  }
-  .home .experience__price .price {
-    font-size: var(--fs-small);
-  }
-  .home .experience__meta {
-    font-size: var(--fs-label);
-  }
-  .home .experience__meta svg {
-    width: var(--icon-sm);
-    height: var(--icon-sm);
-  }
-  
-}
 
 /* =====================================================================
    TOUR PROGRAMS PAGE (Steps 3 & 4) — directory layout + minimal cards
@@ -3979,89 +3738,8 @@ strong {
     color: var(--color-green);
   }
 }
-
-/* Minimal cards (style A) on the tour programs page */
-.tourprog .experience__card {
-  display: block;
-}
-.tourprog .experience__image {
-  aspect-ratio: 4 / 3;
-}
-.tourprog .experience__image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.tourprog .experience__desc,
-.tourprog .tour-type--card,
-.tourprog .experience__arrow,
-.tourprog .experience__price .price-unit {
+.tourprog .tour-type--card {
   display: none;
-}
-.tourprog .experience__body {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "title  rating"
-    "meta   price";
-  align-items: baseline;
-  column-gap: 0.55rem;
-  row-gap: 0.4rem;
-  padding: 0.6rem 0.9rem 0.8rem;
-}
-/* Kartu destinasi (Task 2, Sep 2026): destinasi udah nggak dijual sendiri-sendiri
-   (harga "$45" generik dihapus, Wayan: "semua masuk ke program") - kartu jadi
-   overview doang, baris terakhir "Included in [Tour]" ngarahin ke program yang
-   nyakup destinasi itu. Nggak ada kolom price lagi -> 1 kolom penuh. */
-.tourprog .experience__card--incl .experience__body {
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    "title"
-    "meta"
-    "incl";
-}
-.experience__incl {
-  grid-area: incl;
-  font-size: var(--fs-label);
-  color: var(--color-muted);
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.experience__incl strong {
-  color: var(--color-gold);
-  font-weight: 500;
-}
-.tourprog .experience__name {
-  grid-area: title;
-  margin: 0;
-  font-size: var(--fs-strong);
-  font-weight: 600;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.tourprog .experience__footer {
-  grid-area: price;
-  margin: 0;
-  padding: 0;
-}
-.tourprog .experience__meta {
-  grid-area: meta;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: var(--fs-small);
-  color: var(--color-muted);
-}
-.tourprog .experience__meta svg {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  flex: 0 0 auto;
-  color: var(--color-gold-d);
 }
 
 
@@ -4106,18 +3784,6 @@ strong {
 .closing-band__btn--primary:hover {
   background: var(--color-cta-d);
   border-color: var(--color-cta-d);
-}
-
-@media (max-width: 992px) {
-  .tourprog .experience__name {
-    font-size: var(--fs-small);
-  }
-  .tourprog .experience__price .price {
-    font-size: var(--fs-small);
-  }
-  .tourprog .experience__meta {
-    font-size: var(--fs-label);
-  }
 }
 
 /* ==================== Transfer page: Hero B + route picker + routes list ==================== */
@@ -4393,8 +4059,6 @@ strong {
 }
 /* Panah slider (desktop) - muncul pas hover, pola sama kayak .slider-arrow */
 .about-gallery:hover .about-gallery__arrow { opacity: 1; }
-@media (hover: none) { /* HP: swipe aja, gak usah panah */
-}
 /* Container kartu intro (di bawah hero) - lebar & padding tepi samain sama .arows */
 .about-intro {
   max-width: var(--container-mid);
@@ -4571,17 +4235,6 @@ strong {
   .xplore { padding: 3.2rem var(--container-x); }
   /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
   .xplore .experience__grid--home4 { gap: 0.9rem; }
-}
-
-/* Card layout (homepage .home + listing .tourprog) = "style A":
-   title + rating in the white body (NOT on the photo), duration/stops + price
-   below. The rules live in the ".home"/".tourprog experience__body" grid blocks
-   above + the "Card heart / rating / stops" blocks. The old title-on-photo
-   EXPERIMENT was removed here so the body grid wins. The arrow is hidden (whole
-   card is clickable via initExperienceCards). */
-.home .experience__arrow,
-.tourprog .experience__arrow {
-  display: none;
 }
 
 /* Guide cards (Guides & Information): judul DI DALAM foto + tag di bawah.
@@ -4774,13 +4427,6 @@ strong {
 }
 .related .experience__grid--home4 {
   margin-top: 1.6rem;
-}
-/* Kartu related = SATU style, sama persis sama listing (.experience__card apa
-   adanya). Cuma reset link karena kartunya <a>. Overlay judul-di-foto udah
-   dibuang (Wayan: card cuma 1 komponen, DRY). */
-.related .experience__card {
-  text-decoration: none;
-  color: inherit;
 }
 @media (max-width: 768px) {
   .related {

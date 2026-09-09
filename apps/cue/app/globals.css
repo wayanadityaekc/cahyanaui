@@ -106,14 +106,3 @@
   --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(34, 32, 28, 0.25));
 }
 
-/* Approved deviation (Wayan, 2 Sep 2026). style.css sets line-height 1.25 on
-   .home/.related .experience__name but leaves it off .tourprog, so the same card
-   title had two different line heights. Unified on 1.25.
-   Written here, not in style.css, because style.css is still shared with the
-   live site and editing it would change the current site too.
-   style.css loads after this file, so the selector is deliberately one step
-   more specific than .tourprog .experience__name in order to win.
-   MIG-92: expect tour listing titles to shift slightly. This is intended. */
-.tourprog .experience__card .experience__name {
-  line-height: 1.25;
-}

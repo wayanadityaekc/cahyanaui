@@ -1,6 +1,8 @@
-import CardImage from '@/components/cards/CardImage';
+import Img from '@/components/ui/Img';
 import Price from '@/components/Price';
-import { BADGE_POPULAR } from '@/components/ui/cardClasses';
+import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
+
+const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
 function ClockIcon() {
   return (
@@ -20,6 +22,30 @@ function PinIcon() {
   );
 }
 
+// Tailwind-native PENUH (migrasi Fase 2 - keluarga kartu, stage final). Dulu numpang
+// .experience__card + .experience__image/body/name/meta/footer/price + override
+// .tourprog .experience__* - sekarang SEMUA utilities. Layout = kartu "See our tours"
+// (tourprog): foto 4:3, body grid 2 baris (title/rating, meta/price). Frame pakai
+// CARD_FRAME shared. Keluarga CSS .experience__* (kecuali grid engine) udah dihapus.
+const IMG_WRAP =
+  'relative aspect-[4/3] rounded-md overflow-hidden bg-green bg-cover bg-center ' +
+  "after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,transparent_55%,rgba(31,61,43,0.45))]";
+const BODY =
+  "grid grid-cols-[1fr_auto] [grid-template-areas:'title_rating''meta_price'] [flex-direction:column] items-baseline " +
+  'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
+const BODY_INCL =
+  "grid grid-cols-[1fr] [grid-template-areas:'title''meta''incl'] [flex-direction:column] items-baseline " +
+  'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
+const NAME =
+  '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
+const META =
+  '[grid-area:meta] flex items-center gap-[0.4rem] text-small max-[992px]:text-label text-muted ' +
+  '[&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:shrink-0 [&_svg]:text-gold-d';
+const FOOTER = '[grid-area:price] m-0 p-0 flex items-end justify-between';
+const PRICE = 'text-amber whitespace-nowrap max-[992px]:[&_.price]:text-small';
+const INCL =
+  '[grid-area:incl] text-label text-muted leading-[1.35] line-clamp-2 [&_strong]:text-gold [&_strong]:font-medium';
+
 export default function ExperienceCard({
   href,
   name,
@@ -32,7 +58,6 @@ export default function ExperienceCard({
   priceMode = 'standard',
   zone,
   badge,
-  desc,
   program,
   variant = 'link',
   inclText,
@@ -43,38 +68,30 @@ export default function ExperienceCard({
   const incl = variant === 'incl';
   const body = (
     <>
-      <CardImage img={img} alt={alt || name} width={width} height={height}>
+      <div className={IMG_WRAP} style={img ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
+        {img && <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />}
         {badge && <span className={BADGE_POPULAR}>{badge}</span>}
-      </CardImage>
-      <div className="experience__body">
-        <h3 className="experience__name">{name}</h3>
+      </div>
+      <div className={incl ? BODY_INCL : BODY}>
+        <h3 className={NAME}>{name}</h3>
         {meta && (
-          <div className="experience__meta">
+          <div className={META}>
             {metaIcon === 'pin' ? <PinIcon /> : <ClockIcon />}
             <span>{meta}</span>
           </div>
         )}
-        {desc && <p className="experience__desc">{desc}</p>}
         {incl && inclText && (
-          <div className="experience__incl">
+          <div className={INCL}>
             {inclText.split('|')[0]}
             <strong>{inclText.split('|')[1]}</strong>
             {inclText.split('|')[2]}
           </div>
         )}
-        {(priceName || variant === 'article') && (
-          <div className="experience__footer">
-            {priceName && (
-              <div className="experience__price">
-                <span className="price-from">from</span>{' '}
-                <Price name={priceName} mode={priceMode} fallback={priceFallback} />
-              </div>
-            )}
-            {variant === 'article' && href && (
-              <a href={href} className="experience__arrow" aria-label={`View ${name}`}>
-                &rarr;
-              </a>
-            )}
+        {priceName && (
+          <div className={FOOTER}>
+            <div className={PRICE}>
+              <span className="price-from">from</span> <Price name={priceName} mode={priceMode} fallback={priceFallback} />
+            </div>
           </div>
         )}
         {children}
@@ -82,16 +99,16 @@ export default function ExperienceCard({
     </>
   );
 
+  const cls = `${CARD_FRAME} block [flex-direction:column]`;
   if (variant === 'article') {
     return (
-      <article className="experience__card" data-program={program} data-zone={zone}>
+      <article className={cls} data-program={program} data-zone={zone}>
         {body}
       </article>
     );
   }
-
   return (
-    <a className={`experience__card${incl ? ' experience__card--incl' : ''}`} href={href} data-zone={zone}>
+    <a className={cls} href={href} data-zone={zone}>
       {body}
     </a>
   );

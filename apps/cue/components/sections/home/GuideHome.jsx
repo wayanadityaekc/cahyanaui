@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import Slider from '@/components/ui/Slider';
 import GuideCard from '@/components/cards/GuideCard';
+import { CARD_FRAME } from '@/components/ui/cardClasses';
 import { GUIDE_CARDS } from '@/content/shared/home';
 
 export default function GuideHome() {
@@ -49,7 +50,7 @@ export default function GuideHome() {
               <a
                 key={c.href}
                 href={c.href}
-                className="experience__card group relative flex items-center justify-center min-h-[260px] no-underline text-white bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(rgba(40,36,30,0.55),rgba(40,36,30,0.72))]"
+                className={`${CARD_FRAME} group flex flex-col items-center justify-center min-h-[260px] bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(rgba(40,36,30,0.55),rgba(40,36,30,0.72))]`}
                 aria-label={c.aria}
                 style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
               >

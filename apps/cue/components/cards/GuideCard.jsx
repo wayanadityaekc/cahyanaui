@@ -5,9 +5,11 @@
 // - sekarang inner-nya utilities mandiri (lepas dari CardImage & tema
 // .experience__*). Class `experience__card` DIPERTAHANKAN sbg frame kartu (putih
 // inset radius/shadow) + hook sizing grid-slider. desc di-drop (dulu display:none).
+import { CARD_FRAME } from '@/components/ui/cardClasses';
+
 export default function GuideCard({ href, img, alt, title, tag, cat, w = 600, hgt = 600 }) {
   return (
-    <a className="experience__card" data-cat={cat} href={href}>
+    <a className={`${CARD_FRAME} flex flex-col`} data-cat={cat} href={href}>
       <div className="relative aspect-square rounded-md overflow-hidden bg-green after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,transparent_42%,rgba(0,0,0,0.6))]">
         {img && (
           <img

@@ -1,4 +1,5 @@
 import ExperienceCard from '@/components/cards/ExperienceCard';
+import { CARD_FRAME, CARD_IMAGE, CARD_IMG } from '@/components/ui/cardClasses';
 import { SEE_OUR_TOURS } from '@/content/shared/guide-more';
 
 // Blok "guide-more" di bawah artikel guide. `block`:
@@ -27,13 +28,13 @@ export default function GuideMore({ block }) {
               />
             ))
           : b.cards.map((c, i) => (
-              <a className="experience__card guide-home__card" href={c.href} key={i}>
-                <div className="experience__image">
-                  <img src={`/assets/images/${c.img}`} alt={c.alt} loading="lazy" width={c.w} height={c.hgt} />
+              <a className={`${CARD_FRAME} flex flex-col`} href={c.href} key={i}>
+                <div className={CARD_IMAGE}>
+                  <img className={CARD_IMG} src={`/assets/images/${c.img}`} alt={c.alt} loading="lazy" width={c.w} height={c.hgt} />
                 </div>
-                <div className="experience__body">
-                  <span className="guide-home__tag">{c.tag}</span>
-                  <h3 className="experience__name">{c.title}</h3>
+                <div className="flex flex-col grow p-4">
+                  <span>{c.tag}</span>
+                  <h3 className="font-body text-[1rem] font-semibold leading-[1.6] mb-[0.4rem]">{c.title}</h3>
                 </div>
               </a>
             ))}

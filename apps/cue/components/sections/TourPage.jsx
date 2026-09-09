@@ -21,7 +21,7 @@ export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
 // Linked stop = the same STOP grid layout (incl. its `stop` hook for DetailTabs'
 // [&_.stop]:max-w-none) plus link-only styling.
-const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur-fast)_ease] hover:[transform:translateY(-3px)]`;
+const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur)_var(--ease-out)] hover:[transform:translateY(-3px)]`;
 // Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
 // sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
 export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-bottom:1px_solid_#e0ddd4] text-small text-muted';

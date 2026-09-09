@@ -16,6 +16,7 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
 
@@ -53,6 +54,8 @@ export default function BookConfirmModal() {
       .catch(() => {});
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
+
+  useBodyLock(!!ctx);
 
   if (!mounted || !ctx) return null;
 
@@ -290,7 +293,7 @@ export default function BookConfirmModal() {
             <PayChips
               className="mt-[1.1rem] mb-[1.35rem] text-center"
               logosClass="flex flex-wrap items-center justify-center gap-2"
-              chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm transition-transform duration-[var(--dur-fast)] ease-[ease] hover:[transform:translateY(-2px)]"
+              chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
               svgClass="block h-[var(--icon-sm)] w-auto"
             />
 

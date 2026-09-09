@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { overlay, panelDateSheet, PANEL_HEAD_SHEET, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CAL_FOOT, CAL_HINT, CAL_APPLY } from '@/components/ui/hsClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -24,18 +25,18 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
   useEffect(() => {
     if (open) setSel(initial || '');
   }, [open, initial]);
+  useBodyLock(open);
   useEffect(() => {
     if (!open) return;
-    document.body.classList.add('hs-locked');
     const onKey = (e) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', onKey);
-    return () => {
-      document.body.classList.remove('hs-locked');
-      document.removeEventListener('keydown', onKey);
-    };
+    return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  if (!mounted || !open) return null;
+  // Stay portal-mounted once mounted (not gated on `open`) so the sheet/backdrop have
+  // a "closed" frame to transition FROM - `overlay`/`panelDateSheet` already carry the
+  // open/closed classes, they just weren't getting a chance to animate between them.
+  if (!mounted) return null;
 
   const today = iso(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
@@ -46,8 +47,8 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
 
   return createPortal(
     <>
-      <div className={overlay(true, false)} onClick={onClose} />
-      <div className={panelDateSheet(true)}>
+      <div className={overlay(open, false)} onClick={onClose} />
+      <div className={panelDateSheet(open)}>
         <div className={PANEL_HEAD_SHEET}>
           <h3 className={PANEL_HEAD_H3}>{title}</h3>
           <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={onClose}>&times;</button>

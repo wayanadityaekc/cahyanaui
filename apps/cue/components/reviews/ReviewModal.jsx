@@ -4,17 +4,31 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
+import Select from '@/components/ui/Select';
+import { COUNTRIES } from '@/content/shared/countries';
 import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
-// Login-only, exactly as the server gate requires: opened only from a real
-// booking card in My Trips, with a booking_ref that belongs to the account.
-// One rating + message per tour, so a custom itinerary can be reviewed per tour.
+const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
+
+// Unique key for a reviewable tour: (booking_ref, service) - the same pair the
+// server uses to de-dupe reviews. Needed because "Leave a Review" now aggregates
+// across ALL past bookings (Wayan, Sep 2026), not just the tours in one trip, so
+// two different bookings can carry the same service name.
+const itemKey = (it) => `${it.ref}::${it.service}`;
+
+// Login-only, exactly as the server gate requires: opened only from My Trips (Past
+// Trip), with each item's own booking_ref carried along. One overall rating +
+// message, submitted to every tour the guest checks - not a separate rating/message
+// per tour (that was the old per-item flow; Wayan asked for one simple form that
+// fans out to whatever's ticked).
 export default function ReviewModal({ open, prefill, onClose }) {
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
-  const [country, setCountry] = useState('');
+  const [countryCode, setCountryCode] = useState('');
   const [checked, setChecked] = useState([]);
-  const [blocks, setBlocks] = useState({});
+  const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -24,41 +38,44 @@ export default function ReviewModal({ open, prefill, onClose }) {
   useEffect(() => {
     if (!open || !prefill) return;
     setName(prefill.name || '');
-    setCountry('');
-    setChecked(prefill.items || []);
-    setBlocks(Object.fromEntries((prefill.items || []).map((s) => [s, { rating: 0, message: '' }])));
+    setCountryCode('');
+    // Pre-check everything - most guests reviewing after a trip want to cover all
+    // of it; unchecking a tour they'd rather skip is one tap.
+    setChecked((prefill.items || []).map(itemKey));
+    setRating(0);
+    setMessage('');
     setError('');
     setDone(false);
   }, [open, prefill]);
 
+  useBodyLock(open);
+
   if (!mounted || !open || !prefill) return null;
 
-  const setBlock = (service, patch) =>
-    setBlocks((b) => ({ ...b, [service]: { ...b[service], ...patch } }));
+  const items = prefill.items || [];
+  const multi = items.length > 1;
 
   const submit = async () => {
-    const picked = (prefill.items || []).filter((s) => checked.includes(s));
-    if (!picked.length) return setError('Please pick which tour you are reviewing.');
-    for (const s of picked) {
-      const b = blocks[s] || {};
-      if (!b.rating) return setError('Please give a star rating.');
-      if (!b.message || !b.message.trim()) return setError('Please write your review.');
-    }
+    const picked = items.filter((it) => checked.includes(itemKey(it)));
+    if (!picked.length) return setError('Please pick at least one tour to review.');
+    if (!rating) return setError('Please give a star rating.');
+    if (!message.trim()) return setError('Please write your review.');
     setError('');
     setBusy(true);
     try {
       const token = readLocal(KEY.token, '');
-      for (const s of picked) {
+      const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
+      for (const it of picked) {
         const d = await fetch(`${API_BASE}/reviews`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
-            booking_ref: prefill.ref,
-            service: s,
+            booking_ref: it.ref,
+            service: it.service,
             name: name.trim(),
-            country: country.trim(),
-            rating: blocks[s].rating,
-            message: blocks[s].message.trim(),
+            country,
+            rating,
+            message: message.trim(),
           }),
         }).then((r) => r.json());
         if (!d || !d.ok) throw new Error((d && d.reason) || 'Something went wrong. Please try again.');
@@ -71,15 +88,16 @@ export default function ReviewModal({ open, prefill, onClose }) {
     }
   };
 
-  const multi = (prefill.items || []).length > 1;
-
   // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/title/group/btn/success
-  // pakai konstanta shared (modalClasses.js) - .modal* CSS masih ada (dipakai modal
-  // lain), baru dihapus kalau semua modal udah pindah. Yang ISOLATED ke ReviewModal
-  // (.rating/.rating__star/.rvm-block/.review-modal__error) di-inline utility + CSS-nya
-  // DIHAPUS di commit ini.
+  // pakai konstanta shared (modalClasses.js). Star row + checklist row -> inline
+  // utility, isolated ke komponen ini.
   const star = (on) =>
-    `p-0 border-none bg-transparent text-[1.7rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`;
+    `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`;
+  const CHECK_ROW = 'flex items-start gap-[0.6rem] py-[0.5rem] [border-bottom:1px_solid_var(--line)] last:border-b-0 cursor-pointer';
+  const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
+  const CHECK_SVC = 'font-semibold text-green text-body';
+  const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
+
   return createPortal(
     <div className={SHELL} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className={BOX}>
@@ -94,57 +112,76 @@ export default function ReviewModal({ open, prefill, onClose }) {
             </div>
             <div className={GROUP}>
               <label className={LABEL} htmlFor="rvm-country">Country (optional)</label>
-              <input className={INPUT} type="text" id="rvm-country" value={country} onChange={(e) => setCountry(e.target.value)} />
+              <Select
+                id="rvm-country"
+                label="Country"
+                value={countryCode}
+                onChange={setCountryCode}
+                options={COUNTRY_OPTIONS}
+                placeholder="Select your country"
+              />
             </div>
 
             {multi && (
-              <div>
-                {(prefill.items || []).map((s) => (
-                  <label key={s} className={GROUP}>
-                    <input
-                      className={INPUT}
-                      type="checkbox"
-                      checked={checked.includes(s)}
-                      onChange={(e) =>
-                        setChecked((c) => (e.target.checked ? [...c, s] : c.filter((x) => x !== s)))
-                      }
-                    />{' '}
-                    {s}
-                  </label>
-                ))}
+              <div className={GROUP}>
+                <label className={LABEL}>Which trips are you reviewing?</label>
+                <div>
+                  {items.map((it) => {
+                    const key = itemKey(it);
+                    return (
+                      <label key={key} className={CHECK_ROW}>
+                        <input
+                          className={CHECK_INPUT}
+                          type="checkbox"
+                          checked={checked.includes(key)}
+                          onChange={(e) =>
+                            setChecked((c) => (e.target.checked ? [...c, key] : c.filter((x) => x !== key)))
+                          }
+                        />
+                        <span>
+                          <span className={CHECK_SVC}>{it.service}</span>
+                          {(it.tripName && it.tripName !== it.service) || it.date ? (
+                            <span className={CHECK_META}>
+                              {[it.tripName && it.tripName !== it.service ? it.tripName : null, it.date]
+                                .filter(Boolean)
+                                .join(' · ')}
+                            </span>
+                          ) : null}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
-            <div>
-              {(prefill.items || [])
-                .filter((s) => checked.includes(s))
-                .map((s) => (
-                  <div className="mb-[1.2rem] pb-4 [border-bottom:1px_solid_var(--line)] last-of-type:border-b-0 last-of-type:pb-0" key={s}>
-                    <p className="mb-2 text-body text-green"><strong>{s}</strong></p>
-                    <div className="flex gap-[0.3rem] mb-[0.7rem]">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <button
-                          type="button"
-                          key={n}
-                          className={star((blocks[s] && blocks[s].rating) >= n)}
-                          aria-label={`${n} star${n > 1 ? 's' : ''}`}
-                          onClick={() => setBlock(s, { rating: n })}
-                        >
-                          &#9733;
-                        </button>
-                      ))}
-                    </div>
-                    <div className="flex flex-col mb-0">
-                      <textarea
-                        className={TEXTAREA}
-                        rows="3"
-                        placeholder={`Your review for ${s}`}
-                        value={(blocks[s] && blocks[s].message) || ''}
-                        onChange={(e) => setBlock(s, { message: e.target.value })}
-                      />
-                    </div>
-                  </div>
+            <div className={GROUP}>
+              <label className={LABEL}>Overall Experience</label>
+              <div className="flex gap-[0.3rem]">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    type="button"
+                    key={n}
+                    className={star(rating >= n)}
+                    aria-label={`${n} star${n > 1 ? 's' : ''}`}
+                    onClick={() => setRating(n)}
+                  >
+                    &#9733;
+                  </button>
                 ))}
+              </div>
+            </div>
+
+            <div className={GROUP}>
+              <label className={LABEL} htmlFor="rvm-message">Tell us about your trip</label>
+              <textarea
+                className={TEXTAREA}
+                id="rvm-message"
+                rows="4"
+                placeholder="What would you like to share?"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
             </div>
 
             {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}

@@ -123,7 +123,11 @@ export default function Select({
         <Chevron />
       </button>
 
-      {mounted && asPortal && open && createPortal(panel, document.body)}
+      {/* Panel is portal-mounted as soon as it's a portal context, not just while
+          open - otherwise it renders straight into its "open" state on first paint
+          (no prior "closed" frame for the CSS transition to animate from), which is
+          what made it pop in instantly instead of transitioning in smoothly. */}
+      {mounted && asPortal && createPortal(panel, document.body)}
       {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}
     </div>

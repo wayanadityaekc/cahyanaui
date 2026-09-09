@@ -700,22 +700,6 @@ section + section::before,
   -webkit-appearance: none;
   appearance: none;
 }
-.btn-book {
-  width: 100%;
-  margin-top: 1rem;
-  padding: 0.9rem;
-  border: none;
-  border-radius: var(--r-pill);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-green);
-  background-color: var(--color-gold);
-  cursor: pointer;
-}
-.btn-book:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
 
 @media (max-width: 992px) {
   .experience__grid {
@@ -1003,18 +987,6 @@ section + section::before,
     box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
 }
-/* .tour-hero__image.hero-slider / .hero-slide.is-active / .hero-slider__dot.is-active
-   / .is-edge - dead (HeroSlider.jsx dropped these literal classNames entirely in an
-   earlier commit in favor of inline Tailwind utilities on the same elements; the
-   selectors here can no longer match anything) - removed. Panah/dots' own styling
-   already lives in HeroSlider.jsx (ARROW/dotCls). Desktop split-hero layout
-   (.tour-hero/.tour-hero__image/.tour-hero__body @ min-width:769px) -> Tailwind
-   utilities alongside the mobile-base rules above (TW-A11, #332). */
-
-/* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
-.btn-book {
-  text-decoration: none;
-}
 /* .charter__notes -> utilities in CharterSection (TW-B4 #337). */
 
 
@@ -1080,17 +1052,6 @@ strong {
   font-weight: 500;
   letter-spacing: normal;
   text-transform: none;
-}
-
-/* ==== Palet final: tombol CTA gold + teks putih (putih · gold · light grey · dark grey) ==== */
-/* Primary buttons: green fill (--color-cta), white text (Sep 2026, Wayan opsi B -
-   dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
-   NOTE: exclude the outline/secondary variants (--alt / --add) that share a
-   base class - those stay white bg + dark border + dark text (see below). */
-.btn-book {
-  background: var(--color-cta);
-  color: #fff;
-  border-color: var(--color-cta);
 }
 
 /* --- Card slider (dulu grid 4-up yang numpuk kalau lebih dari 4 kartu -

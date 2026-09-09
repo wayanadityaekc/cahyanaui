@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -36,7 +37,7 @@ const ITN_SUGGEST_T = 'font-body text-[length:var(--fs-h3)] font-semibold text-w
 const ITN_SUGGEST_S = 'mt-[0.25rem] mb-4 text-[length:var(--fs-body)] text-[rgba(247,243,234,0.85)] min-[993px]:text-[length:var(--fs-small)]';
 const ITN_SUGGEST_ROW = 'flex flex-wrap items-end gap-[0.7rem] min-[993px]:grid min-[993px]:grid-cols-[1fr_1fr] min-[993px]:[align-items:end]';
 const ITN_SUGGEST_F = 'flex flex-col gap-[0.25rem] text-[length:var(--fs-label)] font-semibold tracking-[0.14em] uppercase text-[rgba(247,243,234,0.85)] [&_select]:min-w-[120px] [&_select]:h-[var(--field-h)] [&_select]:px-[0.6rem] [&_select]:py-[0.4rem] min-[993px]:[&_select]:w-full min-[993px]:[&_select]:min-w-0';
-const ITN_SUGGEST_BTN = 'btn-book itn-suggest__btn h-[var(--field-h)] px-[1.3rem] text-[1rem] min-[993px]:[grid-column:1/-1]';
+const ITN_SUGGEST_BTN = `${BTN_BOOK} itn-suggest__btn h-[var(--field-h)] px-[1.3rem] text-[1rem] min-[993px]:[grid-column:1/-1]`;
 const ITN_TRIP = 'itn-trip pt-4 px-[1.1rem] pb-[1.2rem] [border:1.5px_solid_transparent] rounded-md [background:linear-gradient(var(--color-cream),var(--color-cream))_padding-box,var(--gold-edge)_border-box]';
 const ITN_TRIP_T = 'mt-0 mb-[0.15rem] text-[length:var(--fs-body)] font-semibold text-green min-[993px]:pb-[0.55rem] min-[993px]:mb-[0.6rem] min-[993px]:border-b min-[993px]:border-b-[rgba(34,32,28,0.4)]';
 const ITN_TRIP_S = 'mt-0 mb-[0.8rem] text-[length:var(--fs-label)] text-muted';
@@ -232,7 +233,7 @@ export default function ItineraryBuilder() {
           <span className={ITN_SUMMARY_LABEL}>Trip total</span>
           <div className={ITN_SUMMARY_AMT}><span className="amount" id="itn-total"><span className={PRICE}>{withSymbol(totalText)}</span></span></div>
           <span className={ITN_SUMMARY_SUB} id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
-          <button className="btn-book" id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
+          <button className={BTN_BOOK} id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
         </section>
 
         {/* .itn2__add visual -> utilities; kelas `itn2__add` disimpen sbg anchor

@@ -445,25 +445,6 @@ section + section::before,
     opacity: 1;
   }
 }
-.itn__subtitle {
-  position: relative;
-  padding-bottom: 0.45rem;
-  font-family: var(--font-body);
-  font-size: var(--fs-h3);
-  font-weight: 600;
-  color: var(--color-green);
-}
-/* Underline gold pendek - senada judul section homepage */
-.itn__subtitle::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 44px;
-  height: 3px;
-  border-radius: 3px;
-  background: var(--color-gold);
-}
 .itn-day__fields {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -601,12 +582,6 @@ section + section::before,
     transform: none;
   }
 }
-/* Desktop: mini card SEBARIS ke samping - pas 4 kotak selebar kolom.
-   Lebih dari 4 -> geser ke samping (slider, scrollbar disembunyiin, snap). */
-/* Judul panel polos (Transfers & Charter, tanpa .itn__panel-head) -> kasih jarak ke konten */
-.itn2__panel > .itn__subtitle {
-  margin-bottom: 1rem;
-}
 /* Fact hook: 3 sel sebaris, garis pemisah 1px cuma DI ANTARA sel. Value kecil,
    nggak terlalu bold. */
 /* .tour-hook* -> utilities di TourPage.jsx + AttractionPage.jsx (migrasi Fase 2).
@@ -637,12 +612,6 @@ section + section::before,
 [id$="-placeholder"] > section::before,
 [id$="-placeholder"] + section::before {
   content: none;
-}
-/* Tier UI (Inter): judul kartu, modal, nama, dst */
-.itn__subtitle {
-  font-family: var(--font-body);
-  font-weight: 600;
-  letter-spacing: 0;
 }
 /* Bold inline (b/strong) ikut skala bobot: maks 600 */
 b,

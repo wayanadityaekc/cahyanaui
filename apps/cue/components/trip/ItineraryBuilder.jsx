@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { ITN_SUBTITLE } from '@/components/ui/itnClasses';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
@@ -244,7 +245,7 @@ export default function ItineraryBuilder() {
       <div className="itn2__main">
         <div className="itn2__panel">
           <div className={ITN_PANEL_HEAD}>
-            <h3 className="itn__subtitle">Your Days</h3>
+            <h3 className={ITN_SUBTITLE}>Your Days</h3>
             <button className={ITN_GHOSTBTN} id="itn-clear" type="button" onClick={clearAll}>Clear all</button>
           </div>
           <div id="itn-days">
@@ -302,7 +303,7 @@ export default function ItineraryBuilder() {
           </div>
         </div>
         <div className="itn2__panel">
-          <h3 className="itn__subtitle">Transfers &amp; Charter</h3>
+          <h3 className={`${ITN_SUBTITLE} mb-4`}>Transfers &amp; Charter</h3>
           <div id="itn-transfers-list">
             {(state.transfers || []).map((t, i) => <p key={'t' + i}>{t.route} · {fmtDay(t.date)}</p>)}
             {(state.charters || []).map((c, i) => <p key={'c' + i}>Charter · {fmtDay(c.date)}</p>)}

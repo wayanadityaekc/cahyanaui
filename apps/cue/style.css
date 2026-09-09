@@ -2282,34 +2282,11 @@ section.faq::before,
 
 /* Tombol WhatsApp ngambang (Talk with Wayan) */
 
-/* Scroll reveal - card & judul muncul (fade + naik) pas masuk layar.
-   Class 'reveal' ditambah lewat JS, jadi tanpa JS semua tetap kelihatan. */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-/* Teks prosa halaman legal/guide: fade HALUS aja (tanpa gerak naik) */
-.guide-article .reveal {
-  transform: none;
-}
-
 /* Hormatin user yang matiin animasi (aksesibilitas) */
 @media (prefers-reduced-motion: reduce) {
   .subhero__content,
   .hero__booking .booking__card {
     animation: none;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
   .experience__card:hover,
   .booking__btn:hover {

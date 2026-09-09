@@ -47,8 +47,8 @@ export default function BookSidebar({ item, perPerson = false }) {
   };
 
   return (
-    <div className="booksidebar">
-      <BookingForm presetItem={item} presetType="tour" perPerson={perPerson} onBook={start(true)} />
+    <div className="booksidebar relative border border-line rounded-lg overflow-hidden">
+      <BookingForm presetItem={item} presetType="tour" perPerson={perPerson} onBook={start(true)} variant="sidebar" />
 
       <DatePopup
         open={!!ask}

@@ -355,16 +355,6 @@ body.hs-locked {
   flex: 1;
   min-width: 0;
 }
-/* lebar tetap cuma di desktop; mobile (<=992) full-width dari media di atas */
-.hero__booking .booking {
-  position: static;
-  padding: 0;
-}
-.hero__booking .booking__card {
-  max-width: 100%;
-  margin: 0;
-  padding: 1.75rem;
-}
 /* Subhero yg punya booking form (tour/transfer/activities/destinations/charter):
    samain sama .hero homepage -> teks rata kiri + tinggi 88vh biar hero & subhero
    yang isinya form keliatan setinggi & sekonsisten. (Subhero polos tanpa form
@@ -373,25 +363,6 @@ body.hs-locked {
   min-height: 88vh;
   padding-bottom: 2rem;
   text-align: left;
-}
-
-/* Tripbar: bar "Guests · Pickup · Date" fixed di bawah navbar (halaman kategori/detail).
-   z-index < navbar (100) biar dropdown navbar tetap di atas. */
-/* Tripbar nyatu di dalam navbar (bukan fixed sendiri lagi) - nempel di bawah bar navbar */
-
-/* Booking form */
-.booking {
-  position: relative;
-  z-index: 10;
-  padding: 3rem 1.5rem;
-}
-.booking__card {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
-  border-radius: var(--r-md);
-  background-color: #fff;
-  box-shadow: var(--shadow-md);
 }
 /* ==================== Shared form-field base (DRY) ==================== */
 .contact__group input,
@@ -464,57 +435,6 @@ body.hs-locked {
   height: var(--icon-md);
   color: var(--color-gold);
 }
-.booking__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  max-width: 240px;
-  height: 2.9rem; /* tombol CTA: tetep tinggi normal, TIDAK ikut --field-h (form dikecilin) */
-  padding: 0 0.85rem;
-  border: none;
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  color: var(--color-cream);
-  background-color: var(--color-green);
-  cursor: pointer;
-  transition:
-    background-color var(--dur) ease,
-    color var(--dur) ease,
-    transform var(--dur-fast) ease;
-}
-.booking__btn:hover {
-  background-color: var(--color-gold);
-  color: #fff;
-  transform: translateY(-2px);
-}
-/* Tombol kedua (Custom Itinerary) - gaya outline biar beda dari Book Now */
-
-/* ============================================================
-   Booking card - price-first (BookingForm.jsx, detail sidebar). Presentasi
-   + toggle udah jadi utility Tailwind; sisa di sini = .bookcard__amount
-   (scope .price__sym), .bookcard__cta (CTA + marker), keyframe note.
-   ============================================================ */
-/* harga besar */
-.bookcard__amount {
-  display: block;
-  font-family: var(--font-head);
-  font-size: clamp(2.4rem, 8vw, 3.1rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--color-gold);
-}
-.bookcard__amount .price__sym {
-  font-size: 0.55em;
-  font-weight: 600;
-  vertical-align: 0.26em;
-  margin-right: 0.04em;
-}
 /* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
    Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.
    key={mode} di JSX remount elemen -> fade-in halus tiap ganti mode. */
@@ -522,10 +442,6 @@ body.hs-locked {
   from { opacity: 0; transform: translateY(-2px); }
   to { opacity: 1; transform: none; }
 }
-/* date + guests */
-/* CTA full-width + panah */
-.bookcard__cta { display: flex; width: 100%; max-width: none; background-color: var(--color-cta); }
-.bookcard__cta:hover { background-color: var(--color-cta-d); color: #fff; transform: none; }
 /* baris reassurance (shield) */
 
 
@@ -679,10 +595,9 @@ section.faq::before,
    (hero didahului navbar-placeholder -> bisa ke-target divider section) */
 .hero::before,
 .subhero::before,
-.booking::before,
 .subhero + section::before,
 .transfer-hero::before,
-.transfer-hero + section::before{
+.transfer-hero + section::before {
   content: none;
 }
 /* Section Drivers (cream) udah punya border gold sendiri (atas & bawah) → buang
@@ -790,37 +705,6 @@ section.faq::before,
   background: #fff;
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.06);
-}
-.booksidebar {
-  position: relative; /* anchor buat panel What's included slide-over */
-  /* Wayan: booking form nyatu sama background, no shadow - cukup garis tipis. */
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-}
-/* form nyatu ke dalam kartu (buang box + min-height-nya sendiri) */
-.booksidebar .booking,
-.booksidebar #booking-placeholder {
-  min-height: 0;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-}
-.booksidebar .booking__card {
-  max-width: none;
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 1.5rem 1.4rem;
-}
-/* Booking form pakai layout price-first sendiri (.bookcard__*, lihat blok
-   "Booking card - price-first"). Di sidebar cukup pastiin CTA full-width. */
-.booksidebar .booking__btn {
-  flex: none;
-  width: 100%;
-  max-width: none;
 }
 /* konten kiri (charter): .info nyatu ke sheet putih (buang box cream + panel).
    pakai section.info biar menang atas rule .info:has() yg kasih bg cream. */
@@ -1603,15 +1487,6 @@ section.faq::before,
   cursor: not-allowed;
 }
 
-/* ---------- Responsive ---------- */
-
-/* Desktop: booking fields in 6 columns side by side */
-@media (min-width: 993px) {
-  .booking__card {
-    max-width: 1100px;
-  }
-}
-
 @media (max-width: 992px) {
   .experience__grid {
     display: flex;
@@ -1681,8 +1556,7 @@ section.faq::before,
     opacity: 1;
   }
 }
-.subhero__content,
-.hero__booking .booking__card {
+.subhero__content {
   animation: heroFadeIn 0.6s ease both;
 }
 
@@ -1690,12 +1564,8 @@ section.faq::before,
 
 /* Hormatin user yang matiin animasi (aksesibilitas) */
 @media (prefers-reduced-motion: reduce) {
-  .subhero__content,
-  .hero__booking .booking__card {
+  .subhero__content {
     animation: none;
-  }
-  .booking__btn:hover {
-    transform: none;
   }
 }
 
@@ -2032,11 +1902,6 @@ section.faq::before,
     animation: none;
   }
 }
-
-/* ===== Mini card transfer & charter (2 kolom, setengah card tour) ===== */
-@media (max-width: 992px) {
-  /* Selebar kartu hari (yang ngikut lebar card slider homepage), di tengah */
-}
 /* Desktop: mini card SEBARIS ke samping - pas 4 kotak selebar kolom.
    Lebih dari 4 -> geser ke samping (slider, scrollbar disembunyiin, snap). */
 /* Judul panel polos (Transfers & Charter, tanpa .itn__panel-head) -> kasih jarak ke konten */
@@ -2128,86 +1993,6 @@ section.faq::before,
     box-shadow: 0 0 0 0 rgba(34, 32, 28, 0), 0 10px 30px rgba(31, 61, 43, 0.08);
   }
 }
-/* Bar harga + tombol nempel bawah (MOBILE). Slide naik pas .is-show. Desktop: off. */
-.book-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 95;
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.65rem 1rem;
-  background: #fff;
-  border-top: 1px solid var(--line);
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
-  transform: translateY(110%);
-  transition: transform var(--dur-slow) ease;
-}
-.book-bar__price {
-  font-size: 1rem;
-  color: var(--color-green);
-}
-.book-bar__from {
-  color: var(--color-muted);
-  font-size: var(--fs-small);
-}
-.book-bar .price {
-  color: var(--color-amber);
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-.book-bar__unit {
-  color: var(--color-muted);
-  font-size: var(--fs-small);
-}
-.book-bar__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-.book-bar__wa {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: var(--r-pill);
-  background: #25d366;
-  color: #fff;
-  text-decoration: none;
-}
-.book-bar__wa svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-.book-bar__wa:hover {
-  background: #1fb757;
-}
-.book-bar__btn {
-  padding: 0.7rem 1.7rem;
-  border-radius: var(--r-pill);
-  background: var(--color-cta);
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.book-bar__btn:hover {
-  background: var(--color-cta-d);
-}
-@media (max-width: 768px) {
-  .book-bar {
-    display: flex;
-  }
-  .book-bar.is-show {
-    transform: translateY(0);
-  }
-  /* Bar udah punya tombol WA sendiri -> WA float ngambang disembunyiin biar nggak dobel */
-}
 /* .tour-hero__image.hero-slider / .hero-slide.is-active / .hero-slider__dot.is-active
    / .is-edge - dead (HeroSlider.jsx dropped these literal classNames entirely in an
    earlier commit in favor of inline Tailwind utilities on the same elements; the
@@ -2219,18 +2004,6 @@ section.faq::before,
 /* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
 .btn-book {
   text-decoration: none;
-}
-
-/* ==================== Booking form di dalam popup (halaman program) ==================== */
-#book-modal .booking {
-  position: static;
-  padding: 0;
-}
-#book-modal .booking__card {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  box-shadow: none;
 }
 
 /* NOTE (TW-A9, #330, buat Wayan/Architect): `.acct`/`.acct__panel`/`.acct__curopt`/
@@ -2354,15 +2127,6 @@ section.faq::before,
   margin-top: 1rem;
 }
 .mtc-empty .btn-pill { width: auto; margin-top: 0; }
-/* referral applied banner */
-/* tabs */
-/* .mtc-tabs / .mtc-tab(.is-on) -> utilities di MyTripsCart.jsx (migrasi Fase 2). */
-/* Job 5 - layout kartu (main) vs total/receipt/policy/bayar (side).
-   Mobile (base): numpuk, main dulu baru side (urutan DOM). */
-@media (min-width: 993px) {
-  /* Desktop: main|side jadi 2 kolom, side nempel (sticky) - kartu jalan normal
-     di kolom kiri, total/receipt/policy/bayar tetep keliatan pas discroll. */
-}
 /* item card */
 .mtc-item {
   display: flex;
@@ -2637,16 +2401,10 @@ strong {
    dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
-.booking__btn:not(.booking__btn--alt), .btn-book {
+.btn-book {
   background: var(--color-cta);
   color: #fff;
   border-color: var(--color-cta);
-}
-/* Primary button hover: deeper green, text stays white */
-.booking__btn:not(.booking__btn--alt):hover {
-  background: var(--color-cta-d);
-  color: #fff;
-  border-color: var(--color-cta-d);
 }
 
 /* --- Card slider (dulu grid 4-up yang numpuk kalau lebih dari 4 kartu -
@@ -3335,21 +3093,6 @@ strong {
   .xplore { padding: 3.2rem var(--container-x); }
   /* HP: header numpuk — tab turun ke bawah sub, bisa scroll samping */
   .xplore .experience__grid--home4 { gap: 0.9rem; }
-}
-
-/* Guide cards (Guides & Information): judul DI DALAM foto + tag di bawah.
-   Bikin bali-guide.html (body tanpa .home) konsisten sama homepage. */
-
-/* ============================================================
-   VILLA PROMO BAND (homepage #villas) — Ubud Private Villas.
-   2 foto villa jadi background belah-dua + overlay gelap, teks
-   putih ketengah, SATU CTA keluar (external-link icon).
-   ============================================================ */
-
-@media (max-width: 768px) {
-  
-  /* HP: 2 foto jadi tumpukan atas-bawah biar tiap villa tetep kebaca */
-
 }
 
 /* ============================================================

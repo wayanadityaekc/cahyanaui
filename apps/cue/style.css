@@ -603,18 +603,6 @@ section + section::before,
     margin-top: 1.2rem;
   }
 }
-
-/* Breadcrumb (halaman anak: tour, attraction, aktivitas) - di atas footer */
-/* .crumb / .crumb a / .crumb__sep -> utilities di TourPage.jsx + AttractionPage.jsx
-   (migrasi Fase 2). Kelas `crumb` tetep dipasang sbg marker: dipakai anchor
-   `.crumb + .related::before` (di bawah) buat matiin divider dobel. */
-
-/* ==================== Bali Guide page (search + toggle + slider/kategori) ==== */
-.guide-page {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 2.5rem var(--container-x) 3rem;
-}
 /* Search bar di dalam hero (bawah deskripsi): toggle Categories (kiri) + search
    (kanan, lebar), sejajar 1 baris. */
 /* Search + kategori = SATU bar: search ~90% kiri, kategori (icon) ~10% kanan.

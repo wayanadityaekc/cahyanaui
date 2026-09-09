@@ -64,7 +64,11 @@ function processBlock(s) {
     const prelude = s.slice(i, brace);
     const close = matchClose(s, brace);
     const body = s.slice(brace + 1, close);
-    const t = prelude.trim();
+    // Strip leading comment(s) before testing for @-rules: a comment glued to the
+    // prelude (e.g. `/* ... */\n@media (...)`) would otherwise hide the @media/@supports
+    // branch, so dead selectors nested inside the block never get recursed + dropped.
+    // The original `prelude` (comment included) is still what we re-emit below.
+    const t = prelude.replace(/^\s*(?:\/\*[\s\S]*?\*\/\s*)*/, '').trim();
     if (/^@media|^@supports/.test(t)) {
       const inner = processBlock(body);
       if (inner.replace(/\/\*[\s\S]*?\*\//g, '').trim() !== '') out += prelude + '{' + inner + '}';

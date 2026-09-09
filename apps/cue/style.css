@@ -2907,49 +2907,9 @@ section.faq::before,
   }
 }
 
-/* ==================== Tombol Book / Add to itinerary di halaman program ==================== */
-.program-cta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  padding: 2.5rem 1.5rem 3.5rem;
-}
-.program-cta__btn {
-  min-width: 210px;
-  padding: 0.95rem 1.75rem;
-  border: 1.5px solid var(--color-green);
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background-color var(--dur) ease,
-    color var(--dur) ease,
-    border-color var(--dur) ease;
-}
 /* Semua tombol nggak pernah underline (sebagian dipakai sebagai <a>) */
 .btn-book {
   text-decoration: none;
-}
-.program-cta__btn--book {
-  background: var(--color-green);
-  color: var(--color-cream);
-}
-.program-cta__btn--book:hover {
-  background: var(--color-gold);
-  color: #fff;
-  border-color: var(--color-gold);
-}
-.program-cta__btn--add {
-  background: transparent;
-  color: var(--color-green);
-}
-.program-cta__btn--add:hover {
-  background: var(--color-green);
-  color: #fff;
 }
 
 /* ==================== Booking form di dalam popup (halaman program) ==================== */
@@ -3455,13 +3415,13 @@ strong {
    dulu gold/soft-black, sekarang dipisah biar tombol lebih "manggil mata").
    NOTE: exclude the outline/secondary variants (--alt / --add) that share a
    base class - those stay white bg + dark border + dark text (see below). */
-.hsearch__go, .booking__btn:not(.booking__btn--alt), .program-cta__btn--book, .btn-book {
+.hsearch__go, .booking__btn:not(.booking__btn--alt), .btn-book {
   background: var(--color-cta);
   color: #fff;
   border-color: var(--color-cta);
 }
 /* Primary button hover: deeper green, text stays white */
-.hsearch__go:hover, .booking__btn:not(.booking__btn--alt):hover, .program-cta__btn--book:hover {
+.hsearch__go:hover, .booking__btn:not(.booking__btn--alt):hover {
   background: var(--color-cta-d);
   color: #fff;
   border-color: var(--color-cta-d);

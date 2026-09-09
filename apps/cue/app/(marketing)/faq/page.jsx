@@ -23,7 +23,7 @@ export default function Faq() {
         </div>
       </section>
 
-      <section className="faq">
+      <section className="py-[var(--section-gap)] px-[var(--space-3)]">
         <h2 className={SECTION_TITLE}>Frequently Asked Questions</h2>
         <div className="max-w-[var(--container-mid)] mx-auto">
           <div className="min-w-0">

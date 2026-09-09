@@ -25,7 +25,7 @@ export default function Page() {
 
       <section className="py-12 px-6" id="itinerary">
         <h2 className={SECTION_TITLE}>Plan Your Bali Trip Day by Day</h2>
-        <p className="builder__intro">
+        <p className="max-w-[640px] mt-[-1rem] mx-auto mb-8 text-body leading-[1.6] text-center text-muted">
           Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a
           10% deposit to book.
         </p>

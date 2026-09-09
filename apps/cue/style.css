@@ -452,13 +452,11 @@ body.hs-locked {
 
 /* ==================== Divider gold tipis antar section (inset, ada pinggir) ==================== */
 section + section,
-section.faq,
 [id$="-placeholder"] > section,
 [id$="-placeholder"] + section {
   position: relative;
 }
 section + section::before,
-section.faq::before,
 [id$="-placeholder"] > section::before,
 [id$="-placeholder"] + section::before {
   content: "";
@@ -482,11 +480,6 @@ section.faq::before,
 #drivers-placeholder > section::before,
 #drivers-placeholder + [id$="-placeholder"] > section::before {
   content: none;
-}
-
-/* FAQ accordion */
-.faq {
-  padding: var(--space-5) var(--space-3);
 }
 
 /* Footer */
@@ -754,16 +747,6 @@ section.faq::before,
   
 }
 
-/* Embedded map */
-.builder__intro {
-  max-width: 640px;
-  margin: -1rem auto 2rem;
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  text-align: center;
-  color: var(--color-muted);
-}
-
 .field {
   margin-bottom: 1.1rem;
 }
@@ -783,10 +766,6 @@ section.faq::before,
   background-color: #fff;
   -webkit-appearance: none;
   appearance: none;
-}
-
-.slot {
-  margin-bottom: 0.9rem;
 }
 .btn-book {
   width: 100%;
@@ -1033,12 +1012,6 @@ section.faq::before,
   }
 }
 
-/* ====== Samain body text yang kebaca ke 0.85rem (ikut homepage) ======
-   Title/heading/harga/stat/tag TIDAK diubah - cuma teks paragraf/deskripsi. */
-.builder__intro {
-  font-size: var(--fs-body);
-}
-
 /* ==================== Subhero foto per tipe (gradient sama kayak hero) ==================== */
 /* Halaman detail (hero overlap + foto): hero lebih pendek dari default 60vh,
    tapi teks-nya diperbesar biar tetep berasa "hero". */
@@ -1151,7 +1124,6 @@ section.faq::before,
 }
 /* garis gold antar section OFF */
 section + section::before,
-section.faq::before,
 [id$="-placeholder"] > section::before,
 [id$="-placeholder"] + section::before {
   content: none;
@@ -1224,7 +1196,6 @@ strong {
 
 /* --- Homepage section separation: no gold divider lines; use bg + padding --- */
 .home section + section::before,
-.home section.faq::before,
 .home [id$="-placeholder"] > section::before,
 .home [id$="-placeholder"] + section::before {
   content: none !important;
@@ -1354,8 +1325,7 @@ strong {
    Snap padding vertikal section konten ke --section-gap (36px) di seluruh web.
    Semua section konten (listing/detail/legal/guide/about) dulu 48px, disamain ke
    36px biar jarak antar-section satu ritme sama homepage. */
-.experience,
-.faq {
+.experience {
   padding-top: var(--section-gap);
   padding-bottom: var(--section-gap);
 }

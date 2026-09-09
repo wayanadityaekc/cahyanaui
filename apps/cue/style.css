@@ -925,6 +925,12 @@ body.hs-locked .wa-float {
    override + banyak breakpoint) - JANGAN di-convert ke [&>*] utility soup, itu
    anti-pattern & bikin lebih susah dibaca. Kalau mau ubah layout kartu, edit di
    sini (scoped CSS), bukan di className komponen React.
+   SIZING ANAK = `> *` (direct child), BUKAN `.experience__card`/`.hcard` (Sep 2026):
+   engine nge-size anak apa pun yang ditaro di dalamnya, jadi kartu (ExperienceCard/
+   HomepageCard/GuideCard) gak perlu bawa hook-class buat di-size. Ini yang benerin
+   bug slider .related (dulu pake HomepageCard=.hcard tapi rule cuma target
+   .experience__card -> kartu collapse 0px, gak keliatan) + ngebebasin ExperienceCard
+   jadi full-Tailwind. Anak grid = selalu kartu (heading/"See all" di LUAR grid).
    ============================================================================ */
 .experience__grid {
   display: grid;
@@ -1995,7 +2001,7 @@ section.faq::before,
     gap: 1.4rem;
     overflow: visible;
   }
-  .guide-more .experience__grid--home4 .experience__card {
+  .guide-more .experience__grid--home4 > * {
     flex: none;
   }
   
@@ -2198,12 +2204,12 @@ section.faq::before,
     gap: 1rem;
     padding-bottom: 1rem;
   }
-  .experience__card {
+  .experience__grid > * {
     flex: 0 0 70%;
     scroll-snap-align: start;
   }
   /* Keep the many-card grid wrapping instead of turning into a slider */
-  .experience__grid--auto .experience__card {
+  .experience__grid--auto > * {
     flex: none;
   }
 }
@@ -2237,12 +2243,12 @@ section.faq::before,
 }
 
 @media (max-width: 576px) {
-  .experience__card {
+  .experience__grid > * {
     flex: 0 0 80%;
   }
   /* Overlay homepage card (glass) butuh lebih lebar biar bar (durasi + Private
      Tour + harga) muat - dilebarin dari 80% ke 88% (tetep peek kartu berikutnya). */
-  .home .experience__grid--home4 .hcard {
+  .home .experience__grid--home4 > * {
     flex: 0 0 88%;
   }
   .info__container:not(.guide-article) {
@@ -3248,7 +3254,7 @@ section.faq::before,
     touch-action: pan-x pan-y;
     padding-bottom: 1rem;
   }
-  .experience__grid--slider .experience__card {
+  .experience__grid--slider > * {
     flex: 0 0 300px;
     scroll-snap-align: start;
   }
@@ -3533,7 +3539,7 @@ strong {
     touch-action: pan-x pan-y;
     padding-bottom: 1rem;
   }
-  .experience__grid--home4 .experience__card {
+  .experience__grid--home4 > * {
     flex: 0 0 300px;
     scroll-snap-align: start;
   }
@@ -4557,7 +4563,7 @@ strong {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     overflow: visible;
   }
-  .xplore .experience__grid--home4 .experience__card {
+  .xplore .experience__grid--home4 > * {
     flex: none;
   }
 }
@@ -4726,7 +4732,7 @@ strong {
   overflow: visible;
   touch-action: auto;
 }
-.catsec .experience__grid--home4 .experience__card {
+.catsec .experience__grid--home4 > * {
   flex: none;
 }
 

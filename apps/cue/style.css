@@ -153,55 +153,12 @@ body {
     transform: translateY(14px);
   }
 }
-.hs-opt__flag {
-  width: 20px;
-  height: 14px;
-  flex: 0 0 auto;
-  object-fit: cover;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-}
 .hs-chev {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   color: var(--color-muted);
   transition: transform var(--dur) ease;
-}
-.hs-opt__ic {
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1.5px solid var(--color-gold);
-  color: var(--color-gold-d);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hs-opt__ic svg {
-  width: var(--icon-md);
-  height: var(--icon-md);
-}
-.hs-opt__nm {
-  flex: 1;
-  font-family: var(--font-body);
-  font-weight: 500;
-  font-size: 1rem;
-  color: var(--color-green);
-}
-.hs-opt__nm small {
-  display: block;
-  font-weight: 400;
-  font-size: var(--fs-label);
-  color: var(--color-muted);
-}
-.hs-opt__pr {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--fs-small);
-  color: var(--color-gold-d);
-  white-space: nowrap;
 }
 /* Lock scroll background pas bottom-sheet kebuka (HP): cukup overflow:hidden.
    JANGAN position:fixed + reposisi body -> itu yang bikin layar "loncat/ke-scroll"
@@ -231,20 +188,6 @@ body.hs-locked {
   textarea {
     font-size: var(--fs-field) !important;
   }
-}
-/* Custom select/date shell (React: Select/DateField). `.hs-*`/`.bk-*` styling udah
-   di-migrasi ke utility Tailwind (components/ui/hsClasses.js); yang tersisa di sini
-   cuma primitif shared yg masih dipake komponen:
-   - .csel-group : wrapper (anchor panel desktop position:absolute) buat field non-booking.
-   - .bk-native  : native <select>/<input date> yg disembunyiin (custom UI nyetir value-nya).
-   Opsi (.hs-opt__ic/__nm/__pr/__flag), chevron (.hs-chev) & body.hs-locked juga tetep CSS. */
-.csel-group {
-  position: relative;
-  display: block;
-  width: 100%;
-}
-.bk-native {
-  display: none !important;
 }
 /* Mode explainer box - SATU box, isinya ganti ngikutin toggle (Standard/
    Exclusive). Aksen kiri hijau + cream biar nyambung sama toggle aktif.

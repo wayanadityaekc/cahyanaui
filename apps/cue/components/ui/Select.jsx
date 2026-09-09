@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useMobile from './useMobile';
 import Overlay from './Overlay';
-import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelPopup, PANEL_HEAD, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, opt } from './hsClasses';
+import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelPopup, PANEL_HEAD, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, opt, CSEL_GROUP, BK_NATIVE, HS_OPT_FLAG, HS_OPT_NM } from './hsClasses';
 
 function Chevron() {
   return (
@@ -79,8 +79,8 @@ export default function Select({
               setOpen(false);
             }}
           >
-            {o.flag && <img className="hs-opt__flag" src={`/assets/flags/${o.flag}.svg`} alt="" />}
-            <span className="hs-opt__nm">{o.label}</span>
+            {o.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${o.flag}.svg`} alt="" />}
+            <span className={HS_OPT_NM}>{o.label}</span>
           </button>
         ))}
       </div>
@@ -88,8 +88,8 @@ export default function Select({
   );
 
   return (
-    <div className={`csel-group ${className}`.trim()} ref={groupRef}>
-      <select name={name} id={fieldId} className="bk-native" value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
+    <div className={`${CSEL_GROUP} ${className}`.trim()} ref={groupRef}>
+      <select name={name} id={fieldId} className={BK_NATIVE} value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (
           <option key={String(o.value)} value={o.value}>{o.label}</option>
@@ -113,8 +113,8 @@ export default function Select({
           </span>
         ) : (
           <span className={!selected ? CONTROL_VAL_PLACEHOLDER : (selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL)}>
-            {selected && selected.flag && <img className="hs-opt__flag" src={`/assets/flags/${selected.flag}.svg`} alt="" />}
-            <span className={selected && selected.flag ? `hs-opt__nm ${CONTROL_FLAG_NM}` : 'hs-opt__nm'}>{selected ? selected.label : placeholder}</span>
+            {selected && selected.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${selected.flag}.svg`} alt="" />}
+            <span className={selected && selected.flag ? `${HS_OPT_NM} ${CONTROL_FLAG_NM}` : 'hs-opt__nm'}>{selected ? selected.label : placeholder}</span>
           </span>
         )}
         <Chevron />

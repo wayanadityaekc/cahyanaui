@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Overlay from './Overlay';
-import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay } from './hsClasses';
+import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CSEL_GROUP, BK_NATIVE } from './hsClasses';
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -84,8 +84,8 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
   );
 
   return (
-    <div className="csel-group">
-      <input type="date" className="bk-native" name={name} id={id} value={value || ''} min={minDate} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true" />
+    <div className={CSEL_GROUP}>
+      <input type="date" className={BK_NATIVE} name={name} id={id} value={value || ''} min={minDate} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true" />
       <button type="button" className={rich ? CONTROL_RICH : CONTROL} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
         {icon && <span className={CONTROL_IC} aria-hidden="true">{icon}</span>}
         {rich ? (

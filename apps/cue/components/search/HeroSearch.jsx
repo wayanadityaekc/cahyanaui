@@ -12,7 +12,7 @@ import { REFMSG } from '@/components/ui/modalClasses';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
-import { CONTROL, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, panelMenu, PANEL_HEAD_MENU, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, PANEL_BODY_MENU, optMenu } from '@/components/ui/hsClasses';
+import { CONTROL, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, panelMenu, PANEL_HEAD_MENU, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, PANEL_BODY_MENU, optMenu, HS_OPT_IC, HS_OPT_NM, HS_OPT_PR } from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -104,12 +104,12 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
               setOpen(false);
             }}
           >
-            <span className="hs-opt__ic" dangerouslySetInnerHTML={{ __html: o.icon }} />
-            <span className="hs-opt__nm">
+            <span className={HS_OPT_IC} dangerouslySetInnerHTML={{ __html: o.icon }} />
+            <span className={HS_OPT_NM}>
               {o.name}
               <small>{o.sub}</small>
             </span>
-            <span className="hs-opt__pr">{ranges[o.cat] || ''}</span>
+            <span className={HS_OPT_PR}>{ranges[o.cat] || ''}</span>
           </button>
         ))}
       </div>

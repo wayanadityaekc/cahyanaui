@@ -173,3 +173,12 @@ export const PANEL_BODY_MENU = 'max-h-[500px] overflow-y-auto';
 // tetep class shared. is-sel sama kaya Select.
 export const optMenu = (sel) =>
   `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_#f2efe7] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
+
+// Custom-select shell + option-item primitives (B-FINAL). Wrapper, hidden native,
+// and the flag / name / price / icon parts of option rows and the selected-value display.
+export const CSEL_GROUP = 'relative block w-full';
+export const BK_NATIVE = '!hidden';
+export const HS_OPT_FLAG = 'w-5 h-[14px] flex-none object-cover rounded-[2px] [box-shadow:0_0_0_1px_rgba(0,0,0,0.08)]';
+export const HS_OPT_NM = 'flex-1 font-body font-medium text-[1rem] text-green [&_small]:block [&_small]:font-normal [&_small]:text-[length:var(--fs-label)] [&_small]:text-muted';
+export const HS_OPT_PR = 'font-body font-semibold text-[length:var(--fs-small)] text-gold-d whitespace-nowrap';
+export const HS_OPT_IC = 'flex-none w-[38px] h-[38px] rounded-[50%] [border:1.5px_solid_var(--color-gold)] text-gold-d flex items-center justify-center [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';

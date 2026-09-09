@@ -145,7 +145,7 @@ export default function Navbar() {
                 dulu sticky top-0 bikin menu jalan DI BAWAH-nya pas di-scroll, kesan
                 kepisah). border-b di sini = SATU-SATUNYA garis pembatas di drawer
                 (lihat komentar di bawah). */}
-            <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.2rem] px-[22px] pb-[0.8rem]">
+            <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem]">
               <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="8" r="4" />
@@ -229,16 +229,13 @@ export default function Navbar() {
             <li><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
             <li><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
             <li><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
+            {/* Settings - dipindah ke sini (Wayan): dulu di footer drawer bareng WA,
+                sekarang jadi nav link biasa (plain, no icon) persis di bawah Our
+                Company. Label "Settings" -> "Account Settings". */}
+            <li><a href="/settings.html" className={navLink(isActive('/settings.html'))}>Account Settings</a></li>
 
-            {/* Footer: Settings + Chat WA */}
-            <li className="mt-auto pt-4 flex flex-col gap-3">
-              <a href="/settings.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold gap-2.5 items-center hover:text-green max-[992px]:hover:text-gold-d">
-                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" />
-                </svg>
-                Settings
-              </a>
+            {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}
+            <li className="mt-auto pt-4">
               {/* Bug lama: `block` + `items-center justify-center` itu no-op tanpa
                   `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
                   hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white

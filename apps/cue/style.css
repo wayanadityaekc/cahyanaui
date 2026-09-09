@@ -1373,51 +1373,6 @@ section.faq::before,
 .experience__grid:not(.experience__grid--auto)::-webkit-scrollbar {
   display: none;
 }
-
-/* ==================== Tour type toggle (Standard / Exclusive) ==================== */
-/* Di-inject via initTourType() di card tour & halaman detail. */
-.tour-type {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 0.7rem;
-}
-.tour-type--card {
-  margin-top: 0.75rem;
-}
-/* Detail page: toggle di tengah (di bawah judul) + kasih jarak ke facts/teks bawahnya */
-.tour-type__toggle {
-  display: inline-flex;
-  padding: 3px;
-  border: 1px solid rgba(34, 32, 28, 0.5);
-  border-radius: var(--r-pill);
-  background-color: rgba(34, 32, 28, 0.08);
-}
-.tour-type__btn {
-  padding: 0.3rem 0.85rem;
-  border: none;
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: var(--fs-label);
-  font-weight: 500;
-  color: var(--color-green);
-  background-color: transparent;
-  cursor: pointer;
-  transition:
-    background-color var(--dur) ease,
-    color var(--dur) ease;
-}
-.tour-type__btn.is-active {
-  font-weight: 600;
-  color: #fff;
-  background-color: var(--color-gold);
-}
-/* Blok gold "Experience/Performance" di card experience = toggle STATIS (disabled):
-   tampil sama kayak toggle tour tapi nggak bisa diklik. */
-.tour-type__toggle--static .tour-type__btn:disabled {
-  cursor: default;
-  opacity: 1; /* jangan diredupin browser - biar warnanya sama kayak toggle tour */
-}
 /* Unit di sebelah harga card: "per car" (tour) atau "per person" (experience). */
 .price-unit {
   margin-left: 0.3rem;
@@ -1854,9 +1809,6 @@ strong {
     font-weight: 600;
     color: var(--color-green);
   }
-}
-.tourprog .tour-type--card {
-  display: none;
 }
 
 

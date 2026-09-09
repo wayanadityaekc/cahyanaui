@@ -50,6 +50,15 @@ const ITN_SUMMARY_LABEL = 'text-[length:var(--fs-small)] font-medium text-gold-l
 const ITN_SUMMARY_AMT = 'mt-[0.15rem] mb-[0.1rem] text-[2rem] leading-[1.15] min-[993px]:text-[1.6rem]';
 const ITN_SUMMARY_SUB = 'text-[length:var(--fs-small)] text-[rgba(247,243,234,0.72)]';
 
+// .tour-type* Standard/Exclusive toggle (B-FINAL). Only consumer is this builder.
+// Dead in old CSS (not reproduced): .tour-type__toggle--static + :disabled (no static
+// toggle rendered). `.tourprog .tour-type--card{display:none}` kept as [.tourprog_&]:hidden.
+// Active state = full string swap (not base+is-active) so no font-weight/color/bg order clash.
+const TT_CARD = 'flex flex-wrap items-center gap-[0.4rem_0.7rem] mt-3 [.tourprog_&]:hidden';
+const TT_TOGGLE = 'inline-flex p-[3px] border border-[rgba(34,32,28,0.5)] rounded-[var(--r-pill)] bg-[rgba(34,32,28,0.08)]';
+const TT_BTN = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-medium text-green bg-transparent cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease]';
+const TT_BTN_ON = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-semibold text-white bg-gold cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease]';
+
 function addDays(ds, n) {
   if (!ds) return '';
   const [y, m, d] = ds.split('-').map(Number);
@@ -258,11 +267,11 @@ export default function ItineraryBuilder() {
                       <li key={k}>
                         {it}
                         {isFullDay(it) && (
-                          <span className="tour-type tour-type--card">
-                            <span className="tour-type__toggle" role="tablist" aria-label="Tour type">
+                          <span className={TT_CARD}>
+                            <span className={TT_TOGGLE} role="tablist" aria-label="Tour type">
                               <button
                                 type="button"
-                                className={`tour-type__btn${((d.itemModes || [])[k] || 'standard') === 'standard' ? ' is-active' : ''}`}
+                                className={((d.itemModes || [])[k] || 'standard') === 'standard' ? TT_BTN_ON : TT_BTN}
                                 role="tab"
                                 onClick={() => save(setItemMode(state, i, k, 'standard'))}
                               >
@@ -270,7 +279,7 @@ export default function ItineraryBuilder() {
                               </button>
                               <button
                                 type="button"
-                                className={`tour-type__btn${(d.itemModes || [])[k] === 'exclusive' ? ' is-active' : ''}`}
+                                className={(d.itemModes || [])[k] === 'exclusive' ? TT_BTN_ON : TT_BTN}
                                 role="tab"
                                 onClick={() => save(setItemMode(state, i, k, 'exclusive'))}
                               >

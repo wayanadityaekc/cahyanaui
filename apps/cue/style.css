@@ -1643,24 +1643,6 @@ section.faq::before,
    ganti panel di tempat + scroll biar strip nempel di bawah header (kerasa
    pindah halaman, tanpa reload). Semua panel di-render ke HTML (cuma di-hidden),
    jadi SEO aman. Gaya tab = samain .zone-chip (underline). */
-/* Semua section ditumpuk jadi satu halaman scroll; tab = jump-nav (scrollspy).
-   .dtabs__sec DIPERTAHANKAN sbg context hook buat .stop di dalamnya + jarak antar-
-   section (wrapper/strip/tab/heading udah jadi utility di DetailTabs.jsx). */
-.dtabs__sec {
-  padding-top: 1.5rem;
-  scroll-margin-top: 120px; /* cadangan kalau anchor dipakai langsung */
-}
-.dtabs__sec + .dtabs__sec {
-  margin-top: 1.5rem;
-  border-top: 1px solid var(--line);
-}
-/* stops di dalam section: buang padding section (spacing diurus wrapper) */
-.dtabs__sec .stops {
-  padding: 0;
-}
-.dtabs__sec .stop {
-  max-width: none;
-}
 /* Details tab - "Before you go" (info praktis umum) */
 
 /* Included tab - reuse .info__list radio bullets */

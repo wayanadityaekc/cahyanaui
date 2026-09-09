@@ -171,10 +171,11 @@ export default function DetailTabs({ overview, priceItem, included, excluded, re
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
-  // Tailwind-native (migrasi Fase 2): wrapper/strip/tab/section-heading -> utilities.
-  // .dtabs__sec DIPERTAHANKAN sbg CSS: dia context hook buat .stop di dalamnya
-  // (.dtabs__sec .stops/.stop) + jarak antar-section + scroll-margin. .info__list*
-  // (checklist bullet) juga tetep shared.
+  // Tailwind-native (full-portable): wrapper/strip/tab/section-heading + section
+  // wrapper -> utilities. Section pakai [&+&] (jarak antar-section) + [&_.stops]/
+  // [&_.stop] (context override buat engine .stop yg masih CSS). .info__list*
+  // (checklist bullet, kosakata konten) tetep shared - dikonversi di pass-nya.
+  const SEC = 'pt-6 [scroll-margin-top:120px] [&+&]:mt-6 [&+&]:[border-top:1px_solid_var(--line)] [&_.stops]:p-0 [&_.stop]:max-w-none';
   const tab = (on) =>
     `font-body text-small bg-transparent [border-top:0] [border-left:0] [border-right:0] py-[0.9rem] px-[0.15rem] mb-[-1px] whitespace-nowrap cursor-pointer transition-[color,border-color] duration-[var(--dur-fast)] ease-[ease] ${on ? '[border-bottom:2px_solid_var(--color-gold)] font-semibold text-green' : '[border-bottom:2px_solid_transparent] font-medium text-muted hover:text-green'}`;
   return (
@@ -197,7 +198,7 @@ export default function DetailTabs({ overview, priceItem, included, excluded, re
           key={s.id}
           id={`dsec-${s.id}`}
           ref={(el) => { secRefs.current[s.id] = el; }}
-          className="dtabs__sec"
+          className={SEC}
         >
           <h2 className="text-h2 font-semibold text-gold m-0 mb-4">{s.label}</h2>
           {s.content}

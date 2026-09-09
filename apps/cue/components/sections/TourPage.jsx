@@ -50,13 +50,13 @@ function Stop({ s }) {
       <div>
         {s.num && <span className={STOP_NUM}>{s.num}</span>}
         <h3 className={STOP_NAME}>{s.name}</h3>
-        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.highlight }} />
       </div>
     </>
   );
   // Link stop = detail page. refId (referensi destination/experience) diturunkan jadi
   // /attractions/<refId>.html (URL tetep, nol perubahan SEO); fallback s.link buat item
-  // non-attraction lama. name/img/descHtml(highlight) tetep tour-specific.
+  // non-attraction lama. name/img/highlight tetep tour-specific.
   const href = s.refId ? `/attractions/${s.refId}.html` : s.link;
   return href ? (
     <a className={STOP_LINK} href={href}>{inner}</a>

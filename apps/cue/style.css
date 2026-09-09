@@ -754,45 +754,6 @@ section.faq::before,
   }
 }
 
-/* ===== DESKTOP (tour/activities/transfer): Tour Details + FAQ digabung jadi satu
-       card 2 kolom — Details kiri, FAQ kanan, garis pemisah di tengah. Di bawah
-       kartu, BUKAN sidebar. Mobile nggak kena (JS >=993px + semua di media ini). ===== */
-@media (min-width: 993px) {
-  /* dua section jadi pane, nyatu ke card gabungan */
-  .detailsfaq > .info,
-  .detailsfaq > .faq {
-    background: transparent !important; /* lawan .info:has() cream */
-    padding: 1.9rem;
-    margin: 0 !important;
-  }
-  .detailsfaq > .faq {
-    border-left: 1px solid var(--line); /* garis pemisah di tengah */
-  }
-  /* matiin divider emas ::before biar nggak ada garis nyasar di dalam card */
-  .detailsfaq > .info::before,
-  .detailsfaq > .faq::before {
-    content: none;
-  }
-  /* Tour Details: buang styling kartu container (udah di dalam card gabungan) */
-  .detailsfaq .info__container {
-    max-width: none;
-    background: transparent;
-    border-radius: 0;
-    box-shadow: none;
-    padding: 0;
-  }
-  /* facts 2 kolom di pane sempit + jarak dikecilin */
-  .detailsfaq .info__facts {
-    grid-template-columns: repeat(2, 1fr);
-    margin-bottom: 1.6rem;
-  }
-  /* FAQ: cuma accordion 1 kolom, kartu WhatsApp disembunyiin */
-  .detailsfaq .faq__container {
-    display: block;
-    max-width: none;
-  }
-}
-
 /* Featured highlight: split image / content */
 .highlight {
   padding: 3rem 1.5rem;
@@ -2230,7 +2191,6 @@ strong {
 /* Konten reuse (AboutPage/ContactSection/legal body) punya clearance navbar +
    slot foto sendiri - di dalam kolom udah gak perlu, buang. */
 .company-page .about .lhero { padding-top: 0.5rem; padding-bottom: 1rem; }
-.company-page .contact,
 .company-page .info { padding-top: 0; }
 /* About tab: kolom konten udah sempit (ada sidebar), jadi hero + kartu intro
    yang biasa center & narrow di halaman penuh keliatan gak nyatu sama baris
@@ -2259,10 +2219,6 @@ strong {
    kerasa gak nyambung. Disamain semua ke satu treatment (18px/700/gold, punya
    .company-heading) - About & Contact di sini yang di-override. Wayan, Sep 2026. */
 .company-page .about .lhero__title { font-size: var(--fs-h2); }
-.company-page .contact__heading {
-  font-weight: 700;
-  color: var(--color-gold);
-}
 
 /* Terms/Privacy/Cancellation tab: .guide-article aslinya sengaja center buat
    judul nomor (.section__title--sub) di halaman standalone-nya (terms-conditions.html

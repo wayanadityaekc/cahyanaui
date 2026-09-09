@@ -5,7 +5,7 @@ import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
-import { useBooking } from '@/state/BookingProvider';
+import { useItinerary } from '@/state/ItineraryProvider';
 import { AIRPORT } from '@/content/shared/airport';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
@@ -27,7 +27,7 @@ export default function AirportTransferForm() {
   // an empty "Guests" placeholder (Wayan, Sep 2026).
   const { currency, setGuests, displayGuests } = useTripPrefs();
   const pricing = usePricing();
-  const { openBooking } = useBooking();
+  const { state, save } = useItinerary();
 
   const [direction, setDirection] = useState('pickup');
   const [date, setDate] = useState('');
@@ -44,26 +44,29 @@ export default function AirportTransferForm() {
 
   const ready = !!(date && address && flightNumber && flightTime);
 
+  // All booking flows go through the cart -> My Trips -> Make Payment (Wayan, Sep
+  // 2026) - same as tours (BookSidebar/BookCta's `add(date, goto=true)`). Flight
+  // details ride along on the transfers row (MyTripsCart's row-builder carries
+  // them through to `lines`, and BookConfirmModal.payload() already forwards
+  // pickup/dropoff/flight_number/flight_datetime per line - no popup change needed
+  // for this data path).
   const book = () => {
     if (!ready) return;
-    openBooking({
-      type: 'transfer',
-      service: ROUTE,
-      guests: String(displayGuests),
-      date,
-      pickupOptional: true,
-      dropoffRequired: false,
-      lines: [{
-        type: 'transfer',
-        service: ROUTE,
+    save({
+      ...state,
+      transfers: [...(state.transfers || []), {
+        route: ROUTE,
         guests: displayGuests,
+        return: false,
         date,
+        direction,
         pickup: direction === 'pickup' ? 'Ngurah Rai Airport (DPS)' : address,
         dropoff: direction === 'pickup' ? address : 'Ngurah Rai Airport (DPS)',
         flight_number: flightNumber,
         flight_datetime: flightTime,
       }],
     });
+    window.location.href = '/my-trips.html';
   };
 
   // Tailwind-native (full-portable): field pakai FIELD_INPUT shared (formClasses.js).

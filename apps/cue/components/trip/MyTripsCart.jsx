@@ -156,6 +156,14 @@ export default function MyTripsCart() {
     (state.transfers || []).forEach((t) => out.push({
       kind: 'transfer', type: 'transfer', service: t.route, date: t.date || '',
       guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return,
+      // Airport-transfer extras (AirportTransferForm) - carried through so they
+      // survive into `lines` at checkout; BookConfirmModal.payload() already
+      // forwards pickup/dropoff/flight_number/flight_datetime per line.
+      ...(t.direction ? { direction: t.direction } : null),
+      ...(t.pickup ? { pickup: t.pickup } : null),
+      ...(t.dropoff ? { dropoff: t.dropoff } : null),
+      ...(t.flight_number ? { flight_number: t.flight_number } : null),
+      ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
     }));
     (state.charters || []).forEach((c) => out.push({
       kind: 'charter', type: 'charter', service: 'Charter', date: c.date || '',

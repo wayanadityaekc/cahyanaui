@@ -3,16 +3,18 @@
 import { useMemo, useState } from 'react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
-import { useBooking } from '@/state/BookingProvider';
+import { useItinerary } from '@/state/ItineraryProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import Select from '@/components/ui/Select';
+import { CART_TOAST } from '@/components/ui/cartToastClasses';
 
 const UBUD = 'Ubud';
 
 export default function TransferPicker() {
   const { displayGuests, currency } = useTripPrefs();
   const pricing = usePricing();
-  const { openBooking } = useBooking();
+  const { state, save } = useItinerary();
+  const [toast, setToast] = useState('');
 
   const catalog = pricing && pricing.catalog;
   const areas = useMemo(() => {
@@ -39,17 +41,22 @@ export default function TransferPicker() {
     setTo(from === UBUD ? UBUD : from);
   };
 
-  const book = () => {
+  // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
+  // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto)`).
+  // "Book Now" adds + redirects; "Add to My Trip" adds + stays on the page.
+  // No date field on this form (unlike Charter/Airport) - the row lands in My
+  // Trips undated, same "tap to set date" fallback as adding a tour undated.
+  const addToTrip = (goto) => {
     if (!entry) return;
-    openBooking({
-      type: 'transfer',
-      service: routeName,
-      guests: String(displayGuests),
-      date: '',
-      pickupOptional: false,
-      dropoffRequired: true,
-      lines: [{ type: 'transfer', service: routeName, guests: displayGuests, return: isReturn }],
+    save({
+      ...state,
+      transfers: [...(state.transfers || []), { route: routeName, guests: displayGuests, return: isReturn, date: '' }],
     });
+    if (goto) window.location.href = '/my-trips.html';
+    else {
+      setToast('Added to My Trips');
+      setTimeout(() => setToast(''), 2600);
+    }
   };
 
   // Tailwind-native (migrasi Fase 2): .tpick* -> utilities. Toggle return pakai
@@ -86,14 +93,16 @@ export default function TransferPicker() {
       </label>
 
       <div className="flex flex-col gap-[0.55rem]">
-        <button type="button" className={`${BTN} bg-cta text-white hover:bg-cta-d`} onClick={book} disabled={!entry}>Book Now</button>
-        <button type="button" className={`${BTN} bg-white text-green`} disabled={!entry}>Add to My Trip</button>
+        <button type="button" className={`${BTN} bg-cta text-white hover:bg-cta-d`} onClick={() => addToTrip(true)} disabled={!entry}>Book Now</button>
+        <button type="button" className={`${BTN} bg-white text-green`} onClick={() => addToTrip(false)} disabled={!entry}>Add to My Trip</button>
       </div>
 
       <p className="text-center text-[0.8rem] text-muted mt-[0.8rem] [&_a]:text-gold-d" hidden={!from || !!entry}>
         No fixed price for this pair -{' '}
         <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">ask us on WhatsApp</a>.
       </p>
+
+      {toast && <div className={CART_TOAST}>{toast}</div>}
     </div>
   );
 }

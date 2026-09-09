@@ -5,7 +5,7 @@ import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
-import { useBooking } from '@/state/BookingProvider';
+import { useItinerary } from '@/state/ItineraryProvider';
 import { CHARTER } from '@/content/shared/charter';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
@@ -17,7 +17,7 @@ const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export default function CharterBuilder() {
   const { currency, displayGuests, setGuests } = useTripPrefs();
   const pricing = usePricing();
-  const { openBooking } = useBooking();
+  const { state, save } = useItinerary();
 
   const [area, setArea] = useState('');
   const [dur, setDur] = useState('');
@@ -44,17 +44,15 @@ export default function CharterBuilder() {
   const total = dur ? tier(dur) : null;
   const ready = !!(area && dur && date && guests);
 
+  // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
+  // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto=true)`).
   const book = () => {
     if (!ready) return;
-    openBooking({
-      type: 'charter',
-      service: `Charter - ${dur === 'half' ? 'Half Day' : dur === 'full' ? 'Full Day' : 'Extended'}`,
-      guests: String(guests),
-      date,
-      pickupOptional: false,
-      dropoffRequired: false,
-      lines: [{ type: 'charter', service: 'Charter', guests, date, area, duration: dur === 'extended' ? 'extended' : dur, extra: dur === 'extended' ? extra : 0 }],
+    save({
+      ...state,
+      charters: [...(state.charters || []), { date, guests, area, dur: dur === 'extended' ? 'extended' : dur, extra: dur === 'extended' ? extra : 0 }],
     });
+    window.location.href = '/my-trips.html';
   };
 
   const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];

@@ -1,4 +1,5 @@
 import JsonLd from '@/components/JsonLd';
+import GuideMore from '@/components/sections/GuideMore';
 
 // Tailwind-native (migrasi Fase 2): tab kategori sticky HP. Base hidden (desktop
 // pakai sidebar), muncul jadi bar sticky di <=992px. [@media(max-width:992px)]
@@ -38,7 +39,9 @@ export default function GuideArticle({ data }) {
       </div>
 
       {data.more.map((m, i) => (
-        <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
+        m.kind
+          ? <GuideMore block={m} key={i} />
+          : <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
       ))}
     </div>
   );

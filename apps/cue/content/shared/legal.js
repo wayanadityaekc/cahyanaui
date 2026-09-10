@@ -71,7 +71,7 @@ export const LEGAL = {
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "Your privacy matters to us. This policy explains what information Cahyana Ubud Experience collects when you contact or book with us, how we use it, and the choices you have. We only ever ask for what we need to plan and run your trip." },
       { "type": "heading", "html": "1. Who we are" },
-      { "type": "para", "html": "Cahyana Ubud Experience is a local, family-run travel service in Ubud, Bali, operated by I Wayan Aditya Eka Cahyana. If you have any question about your data, you can reach us at <a href=\"mailto:cahyanaubud@gmail.com\">cahyanaubud@gmail.com</a>." },
+      { "type": "para", "html": "Cahyana Ubud Experience is a local, family-run travel service in Ubud, Bali, operated by I Wayan Aditya Eka Cahyana. If you have any question about your data, you can reach us at <a href=\"mailto:cahyanabaliexperience@gmail.com\">cahyanabaliexperience@gmail.com</a>." },
       { "type": "heading", "html": "2. Information we collect" },
       { "type": "para", "html": "When you make a booking or enquiry, we may collect:" },
       { "type": "list", "variant": "yes", "items": [
@@ -93,7 +93,7 @@ export const LEGAL = {
       { "type": "heading", "html": "6. How long we keep it" },
       { "type": "para", "html": "We keep your booking information only for as long as needed to run your trip and for our normal record-keeping, then remove it." },
       { "type": "heading", "html": "7. Your rights" },
-      { "type": "para", "html": "You can ask us to see, correct, or delete the personal information we hold about you at any time. Just contact us at <a href=\"mailto:cahyanaubud@gmail.com\">cahyanaubud@gmail.com</a> and we will take care of it." },
+      { "type": "para", "html": "You can ask us to see, correct, or delete the personal information we hold about you at any time. Just contact us at <a href=\"mailto:cahyanabaliexperience@gmail.com\">cahyanabaliexperience@gmail.com</a> and we will take care of it." },
       { "type": "heading", "html": "8. Children's privacy" },
       { "type": "para", "html": "Our services are booked by adults. We do not knowingly collect personal information directly from children; bookings that include children are made by a parent or guardian." },
       { "type": "heading", "html": "9. Changes to this policy" },

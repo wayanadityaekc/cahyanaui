@@ -147,11 +147,11 @@ export default function Footer() {
             </svg>
           </span>
         </div>
-        <p className="flex flex-wrap items-center justify-center gap-x-[8px] gap-y-1 max-[560px]:flex-col max-[560px]:gap-[2px] mt-3 text-[length:var(--fs-label)] text-muted opacity-50">
-          <span className="whitespace-nowrap"><b className="font-medium">{R.name}</b></span>
-          <span className="opacity-70 max-[560px]:hidden" aria-hidden="true">·</span>
+        <p className="flex flex-wrap items-center justify-center gap-x-[7px] gap-y-1 max-[560px]:flex-col max-[560px]:gap-[2px] mt-3 text-[length:0.58rem] font-normal text-muted opacity-30">
+          <span className="whitespace-nowrap">{R.name}</span>
+          <span className="max-[560px]:hidden" aria-hidden="true">·</span>
           <span className="whitespace-nowrap">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{R.decreeShort}</a></span>
-          <span className="opacity-70 max-[560px]:hidden" aria-hidden="true">·</span>
+          <span className="max-[560px]:hidden" aria-hidden="true">·</span>
           <span className="whitespace-nowrap">Business License (NIB) {R.nib}</span>
         </p>
       </div>

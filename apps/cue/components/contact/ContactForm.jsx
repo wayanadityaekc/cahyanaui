@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { submitContact } from '@/lib/api';
+import { REFMSG_ERR } from '@/components/ui/modalClasses';
+import { CONTACT_GROUP, CONTACT_LABEL, CONTACT_INPUT, CONTACT_TEXTAREA } from '@/components/ui/contactFieldClasses';
 
-export default function ContactForm() {
+export default function ContactForm({ company = false }) {
   const [f, setF] = useState({ name: '', email: '', message: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
@@ -30,27 +32,27 @@ export default function ContactForm() {
 
   return (
     <>
-      <div className="contact__success" id="contact-success" style={{ display: sent ? 'block' : 'none' }}>
-        <div className="contact__success-icon">&#10003;</div>
-        <h3 className="contact__heading">Message Sent!</h3>
+      <div className="p-8 text-center rounded-md text-green bg-white shadow-md" id="contact-success" style={{ display: sent ? 'block' : 'none' }}>
+        <div className="flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-[50%] text-[1.6rem] text-white bg-[#25d366]">&#10003;</div>
+        <h3 className={`mb-3 font-head text-h2 font-medium leading-[1.15] tracking-[-0.01em] ${company ? '!font-bold !text-gold' : ''}`}>Message Sent!</h3>
         <p>Thanks for reaching out. We&apos;ll get back to you by email shortly.</p>
       </div>
 
-      <div className="contact__form" id="contact-form" style={{ display: sent ? 'none' : undefined }}>
-      <div className="contact__group">
-        <label htmlFor="c-name">Your Name</label>
-        <input type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
+      <div className="p-8 rounded-md bg-white shadow-md" id="contact-form" style={{ display: sent ? 'none' : undefined }}>
+      <div className={CONTACT_GROUP}>
+        <label className={CONTACT_LABEL} htmlFor="c-name">Your Name</label>
+        <input className={CONTACT_INPUT} type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
       </div>
-      <div className="contact__group">
-        <label htmlFor="c-email">Email</label>
-        <input type="email" id="c-email" placeholder="you@email.com" value={f.email} onChange={set('email')} />
+      <div className={CONTACT_GROUP}>
+        <label className={CONTACT_LABEL} htmlFor="c-email">Email</label>
+        <input className={CONTACT_INPUT} type="email" id="c-email" placeholder="you@email.com" value={f.email} onChange={set('email')} />
       </div>
-      <div className="contact__group">
-        <label htmlFor="c-message">Message</label>
-        <textarea id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} />
+      <div className={CONTACT_GROUP}>
+        <label className={CONTACT_LABEL} htmlFor="c-message">Message</label>
+        <textarea className={CONTACT_TEXTAREA} id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} />
       </div>
-      {error && <small className="modal__referral-msg error">{error}</small>}
-        <button className="contact__btn" id="c-send" onClick={send} disabled={busy}>
+      {error && <small className={REFMSG_ERR}>{error}</small>}
+        <button className="w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold text-white bg-cta cursor-pointer hover:bg-cta-d" id="c-send" onClick={send} disabled={busy}>
           {busy ? 'Sending...' : 'Send Message'}
         </button>
       </div>

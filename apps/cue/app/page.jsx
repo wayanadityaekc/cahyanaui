@@ -19,8 +19,14 @@ export const metadata = {
 };
 
 export default function Home() {
+  // Homepage section rhythm (was `.home > section:not(.hero){margin-top:--section-gap;
+  // margin-bottom:0}`): every direct-child <section> except the first (Hero) gets the
+  // uniform gap AND has its bottom margin forced to 0 (so a section's own my-* - e.g.
+  // charter's my-[space-5] - doesn't add extra space; the gap is purely the top margin).
+  // Hero is the first section child (the JsonLd script isn't a section), so
+  // :not(:first-of-type) targets exactly the same set as the old :not(.hero).
   return (
-    <div className="home">
+    <div className="[&>section:not(:first-of-type)]:mt-[var(--section-gap)] [&>section:not(:first-of-type)]:mb-0">
       <JsonLd page="index" />
       <Hero />
       <Explore />
@@ -31,7 +37,7 @@ export default function Home() {
       <Villas />
       <CharterHome />
       <About />
-      <Trust />
+      <Trust cream />
       <GuestReviews />
     </div>
   );

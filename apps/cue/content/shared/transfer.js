@@ -53,7 +53,28 @@ export const TRANSFER = {
       "priceFallback": "$45"
     }
   ],
-  "tinfoHtml": "<h2 class=\"section__title\">Good to know</h2> <div class=\"tinfo__facts\"> <div class=\"tinfo__fact\"><span>Availability</span><strong>24 / 7</strong></div> <div class=\"tinfo__fact\"><span>Capacity</span><strong>Up to 5 pax</strong></div> <div class=\"tinfo__fact\"><span>Pick-up</span><strong>Door to door</strong></div> <div class=\"tinfo__fact\"><span>Language</span><strong>English</strong></div> </div> <div class=\"tinfo__cols\"> <div class=\"tinfo__col\"> <h3>What's included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Professional English-speaking driver</li> <li>Door-to-door pick-up and drop-off</li> <li>Luggage assistance</li> <li>Free bottled water</li> </ul> </div> <div class=\"tinfo__col\"> <h3>What's excluded</h3> <ul class=\"info__list info__list--no\"> <li>Extra stops beyond the booked route</li> <li>Long waiting time (please advise flight details)</li> <li>Meals and personal expenses</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div>",
+  // Good-to-know (TW-B4 #337): was tinfoHtml raw string -> data for <DetailTinfo>.
+  "tinfo": {
+    "facts": [
+      { "label": "Availability", "value": "24 / 7" },
+      { "label": "Capacity", "value": "Up to 5 pax" },
+      { "label": "Pick-up", "value": "Door to door" },
+      { "label": "Language", "value": "English" }
+    ],
+    "included": [
+      "Private air-conditioned car and fuel",
+      "Professional English-speaking driver",
+      "Door-to-door pick-up and drop-off",
+      "Luggage assistance",
+      "Free bottled water"
+    ],
+    "excluded": [
+      "Extra stops beyond the booked route",
+      "Long waiting time (please advise flight details)",
+      "Meals and personal expenses",
+      "Tips and gratuities (optional)"
+    ]
+  },
   "metaTitle": "Bali Airport Transfer to Ubud | Private Car, Fixed Prices",
   "metaDesc": "Private car transfers between Ubud and Bali's airport, beaches, and regions. Fixed prices per car, local drivers, door-to-door comfort."
 };

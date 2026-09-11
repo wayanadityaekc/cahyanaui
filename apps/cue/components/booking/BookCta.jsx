@@ -6,6 +6,9 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import { usePricing } from '@/state/PricingProvider';
 import DatePopup from './DatePopup';
 import { clashDates } from '@/lib/cart';
+import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
+import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 // Wayan's flow (3 Sep 2026), which differs from the old site:
 //   Add to My Trip -> pick a date, add to the cart, stay on the page.
@@ -73,6 +76,8 @@ export default function BookCta({ item, perPerson = false }) {
     else setToast('Added to My Trips');
   };
 
+  useBodyLock(!!confirm);
+
   if (!item) return null;
 
   return (
@@ -85,20 +90,20 @@ export default function BookCta({ item, perPerson = false }) {
       />
 
       {confirm && (
-        <div className="modal active" onClick={(e) => e.target === e.currentTarget && setConfirm(null)}>
-          <div className="modal__box modal__box--sm">
-            <button className="modal__close" aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
-            <h3 className="modal__title">Two full-day tours?</h3>
-            <p className="modal__sub">You already have a full-day tour on that date. Add another anyway?</p>
-            <button type="button" className="modal__btn" onClick={() => { const c = confirm; setConfirm(null); add(c.date, c.goto); }}>
+        <div className={SHELL} onClick={(e) => e.target === e.currentTarget && setConfirm(null)}>
+          <div className={BOX_SM}>
+            <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
+            <h3 className={TITLE}>Two full-day tours?</h3>
+            <p className={SUB}>You already have a full-day tour on that date. Add another anyway?</p>
+            <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); add(c.date, c.goto); }}>
               Add anyway
             </button>
-            <button type="button" className="modal__btn modal__btn--ghost" onClick={() => setConfirm(null)}>Cancel</button>
+            <button type="button" className={BTN_GHOST} onClick={() => setConfirm(null)}>Cancel</button>
           </div>
         </div>
       )}
 
-      {toast && <div className="cart-toast">{toast}</div>}
+      {toast && <div className={CART_TOAST}>{toast}</div>}
     </>
   );
 }

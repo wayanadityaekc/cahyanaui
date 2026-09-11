@@ -1,4 +1,7 @@
 import ExperienceCard from '@/components/cards/ExperienceCard';
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { GRID_RELATED } from '@/components/ui/gridClasses';
+import { CATSEC } from '@/components/ui/listingClasses';
 import Slider from '@/components/ui/Slider';
 import Button from '@/components/ui/Button';
 import BookingForm from '@/components/booking/BookingForm';
@@ -14,10 +17,10 @@ export const metadata = { title: 'UI kit', robots: { index: false, follow: false
 
 export default function Kit() {
   return (
-    <div className="tourprog">
-      <section className="experience">
-        <div className="catsec">
-          <h2 className="section__title">Buttons</h2>
+    <div className="tourprog pb-20">
+      <section className="bg-white py-[var(--section-gap)] px-6">
+        <div className={CATSEC}>
+          <h2 className={SECTION_TITLE}>Buttons</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
             <Button variant="primary">Book Now</Button>
             <Button variant="primary" size="lg">Make Payment</Button>
@@ -27,11 +30,11 @@ export default function Kit() {
             <Button variant="primary" disabled>Disabled</Button>
           </div>
 
-          <h2 className="section__title">Card grid</h2>
-          <div className="experience__grid experience__grid--home4">
+          <h2 className={SECTION_TITLE}>Card grid</h2>
+          <div className={GRID_RELATED}>
             {CARDS.map((c) => <ExperienceCard key={c.href} {...c} />)}
           </div>
-          <h2 className="section__title">Slider</h2>
+          <h2 className={SECTION_TITLE}>Slider</h2>
           <Slider>{CARDS.map((c) => <ExperienceCard key={'s' + c.href} {...c} />)}</Slider>
         </div>
       </section>

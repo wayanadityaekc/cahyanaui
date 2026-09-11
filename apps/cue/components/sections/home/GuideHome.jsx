@@ -1,8 +1,11 @@
 'use client';
 
+import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import { GRID_SLIDER } from '@/components/ui/gridClasses';
 import { useMemo, useState } from 'react';
 import Slider from '@/components/ui/Slider';
-import CardImage from '@/components/cards/CardImage';
+import GuideCard from '@/components/cards/GuideCard';
+import { CARD_FRAME } from '@/components/ui/cardClasses';
 import { GUIDE_CARDS } from '@/content/shared/home';
 
 export default function GuideHome() {
@@ -17,22 +20,22 @@ export default function GuideHome() {
   }, [q]);
 
   return (
-    <section className="guide-home" id="guides" aria-labelledby="guide-home-title">
-      <div className="guide-home__inner">
-        <div className="guide-home__head">
-          <h2 className="section__title" id="guide-home-title">Guides &amp; Information</h2>
-          <p className="guide-home__sub">Free local guides to Bali - search a topic, or swipe through below.</p>
+    <section className="px-6" id="guides" aria-labelledby="guide-home-title">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-left mb-7">
+          <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">Guides &amp; Information</h2>
+          <p className="max-w-[600px] mt-[0.6rem] text-left text-muted text-body leading-[var(--lh-body)]">Free local guides to Bali - search a topic, or swipe through below.</p>
         </div>
 
-        <div className="gsearch">
-          <div className="gsearch__box">
-            <svg className="gsearch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <div className="relative max-w-[560px] mt-6 mx-auto mb-[1.7rem]">
+          <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white [box-shadow:var(--shadow-md)]">
+            <svg className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="7" />
               <path d="M21 21l-4.3-4.3" />
             </svg>
             <input
               type="text"
-              className="gsearch__input"
+              className="flex-1 border-none border-current [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted"
               placeholder="Search"
               aria-label="Search guides"
               autoComplete="off"
@@ -40,34 +43,27 @@ export default function GuideHome() {
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="gsearch__sug" role="listbox" hidden />
+          <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:0_16px_40px_rgba(31,61,43,0.14)] overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
         </div>
 
-        <Slider gridClassName="experience__grid experience__grid--slider guide-home__slider">
+        <Slider gridClassName={GRID_SLIDER}>
           {shown.map((c) =>
             c.more ? (
               <a
                 key={c.href}
                 href={c.href}
-                className="experience__card experience__card--more guide-home__card"
+                className={`${CARD_FRAME} group flex flex-col items-center justify-center min-h-[260px] bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(rgba(40,36,30,0.55),rgba(40,36,30,0.72))]`}
                 aria-label={c.aria}
-                style={{ backgroundImage: `url(/assets/images/${c.bg})` }}
+                style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
               >
-                <span className="experience__more-inner">
-                  <span className="experience__more-arrow" aria-hidden="true">&rarr;</span>
-                  <span className="experience__more-title">{c.title}</span>
-                  <span className="experience__more-sub">{c.sub}</span>
+                <span className="relative z-[1] flex flex-col items-center gap-[0.9rem] p-8 text-center">
+                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
+                  <span className="font-semibold text-h2">{c.title}</span>
+                  <span className="text-small opacity-90">{c.sub}</span>
                 </span>
               </a>
             ) : (
-              <a className="experience__card guide-home__card" data-cat={c.cat} href={c.href} key={c.href}>
-                <CardImage img={c.img} alt={c.alt} width={c.w} height={c.hgt} />
-                <div className="experience__body">
-                  <span className="guide-home__tag">{c.tag}</span>
-                  <h3 className="experience__name">{c.title}</h3>
-                  <p className="experience__desc">{c.desc}</p>
-                </div>
-              </a>
+              <GuideCard key={c.href} href={c.href} img={c.img} alt={c.alt} title={c.title} tag={c.tag} cat={c.cat} w={c.w} hgt={c.hgt} />
             ),
           )}
         </Slider>

@@ -1,35 +1,82 @@
 import JsonLd from '@/components/JsonLd';
+import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
+import GuideMore from '@/components/sections/GuideMore';
+import Prose from '@/components/prose/Prose';
+
+// Tailwind-native (migrasi Fase 2): tab kategori sticky HP. Base hidden (desktop
+// pakai sidebar), muncul jadi bar sticky di <=992px. [@media(max-width:992px)]
+// dipakai biar match @media (max-width:992px) persis (inklusif 992).
+const CATTABS =
+  'hidden [@media(max-width:992px)]:flex [@media(max-width:992px)]:gap-[1.6rem] [@media(max-width:992px)]:overflow-x-auto [@media(max-width:992px)]:[scrollbar-width:none] [@media(max-width:992px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:992px)]:sticky [@media(max-width:992px)]:top-[var(--header-h,52.8px)] [@media(max-width:992px)]:z-20 [@media(max-width:992px)]:bg-white [@media(max-width:992px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:992px)]:py-[0.7rem] [@media(max-width:992px)]:px-[1.3rem] [@media(max-width:992px)]:[margin:0_-1.3rem_1.5rem]';
+const cattab = (active) =>
+  `flex-[0_0_auto] font-body text-small bg-transparent border-none py-[0.4rem] px-[0.15rem] whitespace-nowrap no-underline [transition:color_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease] ${active ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent] hover:text-green'}`;
+
+// Guide chrome (migrasi TW-B3 #336): hero tags, article+sidebar layout, category
+// sidebar (desktop). Sidebar di-derive dari data.tabs (item + is-active identik) -
+// dulu raw HTML string `sideHtml` per halaman.
+const HERO_TAGS = 'flex gap-2 justify-center flex-wrap mt-[0.6rem]';
+const HERO_TAG =
+  'inline-block py-[0.3rem] px-[0.8rem] rounded-pill text-label font-medium tracking-[0.08em] uppercase bg-[rgba(255,255,255,0.16)] text-white [border:1px_solid_rgba(255,255,255,0.35)]';
+const LAYOUT = 'max-w-[var(--container)] mx-auto py-[var(--space-5)] px-[var(--container-x)] flex items-start gap-10 [@media(max-width:992px)]:flex-col';
+const LAYOUT_MAIN = 'flex-[1_1_auto] min-w-0';
+const LAYOUT_SIDE = 'flex-[0_0_260px] sticky top-[6.5rem] [@media(max-width:992px)]:hidden';
+const SIDEBAR = '[border:1px_solid_var(--line)] rounded-lg py-[1.2rem] px-[1.1rem] bg-white';
+const SIDEBAR_TITLE = 'font-body font-semibold text-h3 text-green mb-[0.8rem]';
+const SIDEBAR_LIST = 'list-none [&_li+li]:mt-[0.35rem]';
+const sidebarLink = (active) =>
+  `block py-2 px-[0.6rem] rounded-sm no-underline text-small ${active ? 'bg-cream text-amber font-semibold' : 'text-green font-medium'}`;
+
 export default function GuideArticle({ data }) {
   return (
     <div className="guide-article-page">
       <JsonLd page={data.__page} />
-      <section className="lhero" style={{ backgroundImage: data.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}>
-        <div className="lhero__inner">
-          <h1 className="lhero__title">{data.title}</h1>
-          <p className="lhero__sub">{data.sub}</p>
-          <div className="guide-hero-tags">
-            {data.tags.map((t) => <span className="guide-tag" key={t}>{t}</span>)}
+      <section
+        className="relative min-h-[320px] flex items-center justify-center bg-cover bg-center pt-[6.5rem] px-[1.3rem] pb-[1.5rem] before:content-[''] before:absolute before:inset-0 before:[background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66))]"
+        style={{ backgroundImage: data.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}
+      >
+        <div className="relative z-[2] w-full max-w-[840px] text-center">
+          <h1 className="font-head font-bold tracking-[-0.01em] text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.55)] m-0 mb-[0.4rem]">{data.title}</h1>
+          <p className="text-[rgba(255,255,255,0.9)] text-[length:var(--fs-body)] leading-[1.5] [text-shadow:0_1px_12px_rgba(0,0,0,0.5)] mt-0 mx-auto mb-[1.6rem] max-w-[480px]">{data.sub}</p>
+          <div className={HERO_TAGS}>
+            {data.tags.map((t) => <span className={HERO_TAG} key={t}>{t}</span>)}
           </div>
         </div>
       </section>
 
-      <nav className="guide-cattabs">
+      <nav className={CATTABS}>
         {data.tabs.map((t) => (
-          <a className={`guide-cattab${t.active ? ' is-active' : ''}`} href={t.href} key={t.href}>{t.label}</a>
+          <a className={cattab(t.active)} href={t.href} key={t.href}>{t.label}</a>
         ))}
       </nav>
 
-      <div className="guide-layout">
-        <div className="guide-layout__main">
-          <section className="info">
-            <div className="info__container guide-article" dangerouslySetInnerHTML={{ __html: data.articleHtml }} />
+      <div className={LAYOUT}>
+        <div className={LAYOUT_MAIN}>
+          <section className={INFO_SECTION_ARTICLE}>
+            <div className={INFO_CONTAINER_ARTICLE}>
+              <Prose blocks={data.body} headingVariant="guide" />
+            </div>
           </section>
         </div>
-        {data.sideHtml && <div dangerouslySetInnerHTML={{ __html: data.sideHtml }} />}
+        {/* wrapper div preserves pre-migration DOM (sideHtml was injected via a
+            wrapping <div dangerouslySetInnerHTML>) so element count / layout = 0-diff */}
+        <div>
+          <aside className={LAYOUT_SIDE}>
+            <div className={SIDEBAR}>
+              <p className={SIDEBAR_TITLE}>Categories</p>
+              <ul className={SIDEBAR_LIST}>
+                {data.tabs.map((t) => (
+                  <li key={t.href}><a className={sidebarLink(t.active)} href={t.href}>{t.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </div>
       </div>
 
       {data.more.map((m, i) => (
-        <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
+        m.kind
+          ? <GuideMore block={m} key={i} />
+          : <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
       ))}
     </div>
   );

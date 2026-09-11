@@ -2,7 +2,7 @@ export const GUIDE_HUB = {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
   "title": "Bali Travel Guide",
   "text": "Everything worth knowing before you go - the island and its regions, the culture, the landscapes, what to do, and the practical bits that make a trip smooth.",
-  "wrapClass": "guide-page",
+  "wrapClass": "max-w-[var(--container)] mx-auto pt-10 px-[var(--container-x)] pb-12",
   "navItems": [
     {
       "id": "gcat-island",

@@ -27,25 +27,19 @@ jobs:
 
       - run: npm ci
 
-      - name: Verify every component class exists in style.css
-        run: node tools/check-classes.js
+      # The legacy static site was retired (Wayan, full Tailwind migration), so
+      # the gates that diffed the React build against the legacy HTML are gone:
+      #   check-classes / diff-ported  - style.css class-for-class parity
+      #   check-schema / check-content-fresh - JSON-LD + content vs legacy HTML
+      # The surviving gates validate the React build (out/) on its own terms.
 
       - run: npm run build
 
       - name: Verify every expected URL was built
         run: node tools/check-urls.js
 
-      - name: Verify ported pages still match the originals
-        run: bash tools/diff-ported.sh
-
-      - name: Verify structured data survived the port
-        run: node tools/check-schema.js
-
       - name: Verify the detail pages keep their intended shape
         run: node tools/check-detail.js
-
-      - name: Verify extracted content still matches the legacy source
-        run: node tools/check-content-fresh.js
 
       - name: Verify every referenced asset exists and pages carry a favicon
         run: node tools/check-assets.js

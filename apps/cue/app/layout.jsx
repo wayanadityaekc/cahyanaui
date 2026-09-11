@@ -39,14 +39,6 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/assets/icons/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
         <link rel="stylesheet" href={`/style.css?v=${STYLE_V}`} />
-        {/* Splash: show once per session; repeat loads get `splash-seen` before
-            paint so CSS hides the overlay instantly (no flash). */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(sessionStorage.getItem('cue_splash')){document.documentElement.className+=' splash-seen'}else{sessionStorage.setItem('cue_splash','1')}}catch(e){}",
-          }}
-        />
       </head>
       <body>
         <LoadingScreen />

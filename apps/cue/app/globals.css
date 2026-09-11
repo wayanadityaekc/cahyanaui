@@ -1,10 +1,18 @@
 /* Tailwind WITHOUT preflight. style.css already ships its own reset
    (* { margin:0; padding:0; box-sizing:border-box }) and preflight would
    change rendering under it - block images, unstyled headings, zeroed
-   borders. style.css stays the only reset until it is fully retired. */
+   borders. style.css stays the only reset until it is fully retired.
+
+   Utilities imported UNLAYERED (Fase 1 migrasi Tailwind): style.css reset
+   `* { margin:0; padding:0 }` itu UNLAYERED, dan rule unlayered SELALU menang
+   atas rule di @layer apa pun - jadi utilities di layer(utilities) kalah, mis.
+   `px-6` ke-nol-in reset. Dengan unlayered, utilities menang lewat SPECIFICITY:
+   `.px-6` (0,1,0) > `*` (0,0,0). Komponen legacy pakai class BEM (.btn--primary
+   dst) yang gak tabrakan nama sama utility, jadi aman. Theme tetap di layer(theme)
+   (cuma variabel, gak kena cascade). */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss/utilities.css";
 
 @theme {
   --color-green: #5c5c5c;
@@ -98,14 +106,3 @@
   --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(34, 32, 28, 0.25));
 }
 
-/* Approved deviation (Wayan, 2 Sep 2026). style.css sets line-height 1.25 on
-   .home/.related .experience__name but leaves it off .tourprog, so the same card
-   title had two different line heights. Unified on 1.25.
-   Written here, not in style.css, because style.css is still shared with the
-   live site and editing it would change the current site too.
-   style.css loads after this file, so the selector is deliberately one step
-   more specific than .tourprog .experience__name in order to win.
-   MIG-92: expect tour listing titles to shift slightly. This is intended. */
-.tourprog .experience__card .experience__name {
-  line-height: 1.25;
-}

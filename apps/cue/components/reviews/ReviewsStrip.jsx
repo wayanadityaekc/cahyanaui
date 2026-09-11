@@ -31,8 +31,8 @@ export default function ReviewsStrip({ service, emptyText, showEmpty = true, emp
   if (list.length === 0) {
     if (!showEmpty) return null;
     return (
-      <div className="reviews-strip">
-        <div className="reviews__empty">
+      <div className="grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-auto mt-6">
+        <div className="col-[1/-1] flex flex-col items-center gap-[1.1rem] py-10 px-6 text-center border border-dashed border-[#d8d2c4] rounded-md text-muted">
           <p>{emptyText || 'No reviews yet - be the first to share your trip.'}</p>
           {emptyCta && <ReviewCta />}
         </div>
@@ -41,7 +41,7 @@ export default function ReviewsStrip({ service, emptyText, showEmpty = true, emp
   }
 
   return (
-    <div className="reviews-strip">
+    <div className="grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-auto mt-6">
       {list.map((r, i) => (
         <ReviewCard key={i} {...r} />
       ))}

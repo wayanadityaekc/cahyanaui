@@ -5,8 +5,39 @@ export const AIRPORT = {
   "sub": "Private car to or from Ngurah Rai Airport (DPS), fixed price. Add your flight number and time so your driver knows when to be there.",
   "boxId": "airport-transfer",
   "boxTitle": "Book Your Airport Transfer",
-  "infoHtml": "<div class=\"info__container\"> <h2 class=\"section__title\">Why We Ask for Flight Details</h2> <p> Domestic and international flights land at different terminals, and delays happen. Your flight number and scheduled time let your driver track the actual landing time instead of guessing, so they're waiting when you clear immigration and baggage claim rather than parking and watching the clock. </p> <p> For a departure drop-off, the same details help time the pick-up from your hotel or villa so you reach the airport with enough buffer for check-in and security, without sitting around too early. </p> <h2 class=\"section__title section__title--sub\">How It Works</h2> <p> Fill in the direction, date, and guest count, then your hotel or villa address and flight details. Confirm the booking with only a 10% deposit, and the rest is settled directly with your driver. You'll get a booking confirmation by email with everything you entered - if a flight changes, reply to that email or message us on WhatsApp and we'll pass it on to your driver. </p> <p> Need the return leg too? Book it separately closer to your departure date, once your flight is confirmed - the direction picker above covers both pickup and drop-off. </p> </div>",
+  // Info body (TW-B4 #337): was infoHtml raw string -> Prose blocks. Rendered
+  // inside <section.info><div.info__container> (both classes kept - shared/B-FINAL).
+  "info": [
+    { "type": "heading", "sub": false, "html": "Why We Ask for Flight Details" },
+    { "type": "para", "html": "Domestic and international flights land at different terminals, and delays happen. Your flight number and scheduled time let your driver track the actual landing time instead of guessing, so they're waiting when you clear immigration and baggage claim rather than parking and watching the clock." },
+    { "type": "para", "html": "For a departure drop-off, the same details help time the pick-up from your hotel or villa so you reach the airport with enough buffer for check-in and security, without sitting around too early." },
+    { "type": "heading", "html": "How It Works" },
+    { "type": "para", "html": "Fill in the direction, date, and guest count, then your hotel or villa address and flight details. Confirm the booking with only a 10% deposit, and the rest is settled directly with your driver. You'll get a booking confirmation by email with everything you entered - if a flight changes, reply to that email or message us on WhatsApp and we'll pass it on to your driver." },
+    { "type": "para", "html": "Need the return leg too? Book it separately closer to your departure date, once your flight is confirmed - the direction picker above covers both pickup and drop-off." }
+  ],
   "metaTitle": "Bali Airport Transfer Booking | Flight Details Form",
   "metaDesc": "Book your private Bali airport transfer to or from Ubud. Add your flight number and time so your driver tracks delays and is ready when you land or need pickup.",
-  "tinfoHtml": "<h2 class=\"section__title\">Good to know</h2> <div class=\"tinfo__facts\"> <div class=\"tinfo__fact\"><span>Availability</span><strong>24 / 7</strong></div> <div class=\"tinfo__fact\"><span>Capacity</span><strong>Up to 5 pax</strong></div> <div class=\"tinfo__fact\"><span>Meet &amp; greet</span><strong>At arrivals</strong></div> <div class=\"tinfo__fact\"><span>Language</span><strong>English</strong></div> </div> <div class=\"tinfo__cols\"> <div class=\"tinfo__col\"> <h3>What's included</h3> <ul class=\"info__list info__list--yes\"> <li>Private air-conditioned car and fuel</li> <li>Professional English-speaking driver</li> <li>Meet &amp; greet with a name board at arrivals</li> <li>Flight tracking, so your driver adjusts for delays</li> <li>Luggage assistance</li> <li>Free bottled water</li> </ul> </div> <div class=\"tinfo__col\"> <h3>What's excluded</h3> <ul class=\"info__list info__list--no\"> <li>Extra stops beyond the airport and your address</li> <li>Waiting time beyond a reasonable grace period if flight details are missing or change without notice</li> <li>Meals and personal expenses</li> <li>Tips and gratuities (optional)</li> </ul> </div> </div>"
+  // Good-to-know (TW-B4 #337): was tinfoHtml raw string -> data for <DetailTinfo>.
+  "tinfo": {
+    "facts": [
+      { "label": "Availability", "value": "24 / 7" },
+      { "label": "Capacity", "value": "Up to 5 pax" },
+      { "label": "Meet & greet", "value": "At arrivals" },
+      { "label": "Language", "value": "English" }
+    ],
+    "included": [
+      "Private air-conditioned car and fuel",
+      "Professional English-speaking driver",
+      "Meet & greet with a name board at arrivals",
+      "Flight tracking, so your driver adjusts for delays",
+      "Luggage assistance",
+      "Free bottled water"
+    ],
+    "excluded": [
+      "Extra stops beyond the airport and your address",
+      "Waiting time beyond a reasonable grace period if flight details are missing or change without notice",
+      "Meals and personal expenses",
+      "Tips and gratuities (optional)"
+    ]
+  }
 };

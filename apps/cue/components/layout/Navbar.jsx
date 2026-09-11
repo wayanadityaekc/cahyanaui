@@ -1,194 +1,272 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
+import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
+import { WHATSAPP_NUMBER } from '@/lib/constants';
 import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
+import useBodyLock from '@/components/ui/useBodyLock';
 import Select from '@/components/ui/Select';
+import AuthModal from '@/components/account/AuthModal';
+
+// Tailwind-native (migrasi Fase 2): navbar (semua halaman). Dulu keluarga
+// .navbar*/.acct__dot/.itn-badge di style.css - sekarang utilities 1:1.
+// Navbar = drawer geser dari kanan di SEMUA lebar (keputusan Wayan Sep 2026),
+// dibuka via hamburger. Struktur DOM sengaja dijaga identik supaya diff
+// computed-style old vs new bisa per-elemen. .navbar* CSS DIBIARIN di style.css
+// karena partial legacy (partials/nav*.html) masih pakai. Beberapa aturan
+// numpuk di 1 elemen (mis. `.navbar__menu > li > a` menang atas display flex
+// tiap link) - hasil flatten-nya diverifikasi lewat computed-style diff.
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export default function Navbar() {
-  const { guests, setGuests, resetGuests, stay, setStay } = useTripPrefs();
-  const { count } = useItinerary();
-  const { account, hasUpcoming } = useAccount();
+// Link nav utama (Home/Guide/Our Company/My Trip). `.navbar__menu > li > a`
+// maksa display:block + w-full + py-3 (menang atas display link sendiri).
+// Warna aktif/hover: desktop hijau, HP (<=992px) gold-d.
+const navLink = (active) =>
+  active
+    ? 'block w-full py-3 text-left text-strong font-medium no-underline text-green max-[992px]:text-gold-d'
+    : 'block w-full py-3 text-left text-strong font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d';
 
-  const [acctOpen, setAcctOpen] = useState(false);
+const BADGE_BASE =
+  'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
+
+export default function Navbar() {
+  const { guests, setGuests, stay, setStay } = useTripPrefs();
+  const pricing = usePricing();
+  const { count } = useItinerary();
+  const { account, hasUpcoming, logout } = useAccount();
+
+  // Pickup-area options mirror the homepage search form: Ubud + every catalog route.
+  const catalog = pricing && pricing.catalog;
+  const stayOptions = useMemo(() => {
+    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
+    if (!catalog) return base;
+    return base.concat(catalog.transfers.map((t) => ({ value: t.route, label: t.route })));
+  }, [catalog]);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
-  const acctRef = useRef(null);
+  const [authOpen, setAuthOpen] = useState(false);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
+  const headerRef = useRef(null);
   const pathname = usePathname();
+
+  // Publish the real fixed-header height (navbar row + trip bar) as --header-h
+  // so sticky tab strips can sit flush right below it at any width / promo state.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return undefined;
+    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    window.addEventListener('resize', set);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', set);
+    };
+  }, []);
 
   const isActive = (href) => {
     if (href === '/') return pathname === '/';
     return pathname === href.replace(/\.html$/, '') || pathname === href;
   };
-  const navClass = (href) => (isActive(href) ? 'active' : undefined);
 
-  const closeAll = () => {
-    setAcctOpen(false);
-    setMenuOpen(false);
-    setDropOpen(false);
-  };
-
-  // Tapping outside, or Escape, closes the account panel and the mobile menu -
-  // the drawer behaviour closeNavDrawers() had.
+  // Tapping outside, or Escape, closes the single drawer.
   useEffect(() => {
-    if (!acctOpen && !menuOpen) return;
+    if (!menuOpen) return undefined;
     const onDoc = (e) => {
-      const inAcct = acctRef.current && acctRef.current.contains(e.target);
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      if (!inAcct && !inNav && !onBurger) closeAll();
+      // Select popups + their overlay are portaled to <body> (outside navRef). Clicking
+      // inside one (an option, the × close, or the dim overlay) must close only the
+      // popup, never the drawer underneath it. Both carry data-portal (Select/Overlay
+      // emit it as their own contract — no leftover .hs-* class after the Tailwind migrasi).
+      const inPopup = e.target.closest && e.target.closest('[data-portal]');
+      if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     };
-    const onKey = (e) => e.key === 'Escape' && closeAll();
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      // If a Select popup is open, let it handle Escape (close itself) — don't close the drawer.
+      if (document.querySelector('[data-portal="select"][data-open]')) return;
+      setMenuOpen(false);
+    };
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('click', onDoc);
       document.removeEventListener('keydown', onKey);
     };
-  }, [acctOpen, menuOpen]);
+  }, [menuOpen]);
 
-  useEffect(() => {
-    const drawer = acctOpen || menuOpen;
-    document.body.classList.toggle('hs-locked', drawer);
-    return () => document.body.classList.remove('hs-locked');
-  }, [acctOpen, menuOpen]);
+  useBodyLock(menuOpen);
 
   return (
-    <header className="navbar">
-      <div className="navbar__container">
-        <a href="/" className="navbar__logo">
-          <img src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+    <header
+      className="fixed top-0 left-0 right-0 z-[100] w-full bg-white shadow-[0_2px_12px_rgba(31,61,43,0.07)] animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none"
+      ref={headerRef}
+    >
+      <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-6">
+        <a href="/" className="mr-auto">
+          <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-[-0.25rem]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
 
-        <div className="acct" data-acct ref={acctRef}>
-          <button
-            type="button"
-            className="acct__btn"
-            aria-label="Account & trip"
-            aria-expanded={acctOpen}
-            onClick={() => { setAcctOpen((v) => !v); setMenuOpen(false); }}
+        <a href="/my-trips.html" className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]" aria-label="My Trips">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <path d="M3 6h18" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
+        </a>
+
+        <FlagDefs />
+
+        <nav ref={navRef}>
+          <ul
+            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+            id="nav-menu"
           >
-            <svg className="acct__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-            </svg>
-            <span className="acct__dot" hidden={!hasUpcoming} />
-          </button>
-
-          <div className={`acct__panel${acctOpen ? ' is-open' : ''}`} data-acct-panel>
-            <div className="acct__head">
-              <p className="acct__greeting">
-                <span>Welcome,</span> <span className="acct__name">{account ? account.name || 'Guest' : 'Guest'}</span>
-              </p>
-              <p className="acct__email">{account ? account.email : ''}</p>
-            </div>
-
-            <p className="acct__title">Your trip</p>
-
-            <label className="acct__label" htmlFor="acct-guests">Guests</label>
-            <Select
-              id="acct-guests"
-              label="Guests"
-              value={guests || ''}
-              onChange={(v) => (v === 'reset' ? resetGuests() : setGuests(v))}
-              options={[
-                ...GUEST_OPTIONS.map((n) => ({ value: String(n), label: String(n) })),
-                { value: 'reset', label: '↺ Reset' },
-              ]}
-              placeholder="Guests"
-            />
-
-            <label className="acct__label" htmlFor="acct-stay">Stay area</label>
-            <Select
-              id="acct-stay"
-              label="Stay area"
-              value={stay || 'ubud'}
-              onChange={setStay}
-              options={[{ value: 'ubud', label: 'Ubud & nearby' }]}
-            />
-
-            <FlagDefs />
-
-            <label className="acct__label" htmlFor="acct-cur">Currency</label>
-            <CurrencyPicker />
-
-            <div className="acct__actions">
-              <a href="/settings.html" className="acct__link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M5.6 18.4l2-2M16.4 7.6l2-2" />
+            {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
+                pt-[var(--header-h)]): konsepnya drawer BUKAN konten yang mulai DI
+                BAWAH navbar+tripbar, tapi panel yang nutup di level YANG SAMA (drawer
+                ini `fixed inset` full-height z-120, di ATAS header z-100) - Welcome
+                jadi baris paling atas drawer, pas di ketinggian navbar, gak digeser
+                turun. Sekarang scroll SATU BLOK sama link di bawahnya (NOT sticky -
+                dulu sticky top-0 bikin menu jalan DI BAWAH-nya pas di-scroll, kesan
+                kepisah). border-b di sini = SATU-SATUNYA garis pembatas di drawer
+                (lihat komentar di bawah). */}
+            <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem]">
+              <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
                 </svg>
-                Settings
-              </a>
-              <button type="button" className="acct__link acct__link--auth">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+              </span>
+              <span className="flex flex-col min-w-0">
+                <b className="text-strong font-semibold text-gold leading-[1.25]"><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
+                <span className="text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account ? account.email : 'Plan your Bali trip'}</span>
+              </span>
+              <CurrencyPicker variant="navbar" />
+            </li>
+
+            {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}
+            <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem]">
+              <div className="flex flex-col gap-1 min-w-0">
+                <label className="text-small text-muted" htmlFor="acct-guests">Guests</label>
+                <Select
+                  id="acct-guests"
+                  label="Guests"
+                  value={guests || 2}
+                  onChange={setGuests}
+                  options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+                  popup
+                />
+              </div>
+              <div className="flex flex-col gap-1 min-w-0">
+                <label className="text-small text-muted" htmlFor="acct-stay">Pickup area</label>
+                <Select
+                  id="acct-stay"
+                  label="Pickup area"
+                  value={stay || 'ubud'}
+                  onChange={setStay}
+                  options={stayOptions}
+                  popup
+                />
+              </div>
+            </li>
+
+            {/* Sign in */}
+            <li className="pb-4">
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d"
+                onClick={() => {
+                  if (account) logout();
+                  else setAuthOpen(true);
+                  setMenuOpen(false);
+                }}
+              >
+                <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <circle cx="12" cy="8" r="4" />
                   <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
                   <path d="M19 7v4M21 9h-4" />
                 </svg>
                 <span>{account ? 'Sign out' : 'Sign in / Sign up'}</span>
               </button>
-            </div>
-          </div>
-        </div>
+            </li>
 
-        <a href="/my-trips.html" className="navbar__cart" aria-label="My Trips">
-          <svg className="navbar__cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <path d="M3 6h18" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
-          <span className="itn-badge navbar__cart-badge" hidden={!count}>{count}</span>
-        </a>
-
-        <nav ref={navRef}>
-          <ul className={`navbar__menu${menuOpen ? ' active' : ''}`} id="nav-menu">
-            <li><a href="/" className={navClass('/')}>Home</a></li>
-            <li className={`navbar__has-drop${dropOpen ? ' active' : ''}`}>
+            {/* Nav — WAJIB cuma satu garis di drawer (di bawah Welcome, di atas); antar
+                link nggak dikasih border lagi, kerasa kebanyakan garis (Wayan). Spacing
+                antar-link murni dari py-3 tiap link. */}
+            <li><a href="/" className={navLink(isActive('/'))}>Home</a></li>
+            <li className="relative">
               <button
                 type="button"
-                className="navbar__droptoggle"
+                className="block w-full py-3 text-left text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer gap-1 items-center hover:text-green"
                 aria-expanded={dropOpen}
                 onClick={() => setDropOpen((v) => !v)}
               >
-                Program<span className="navbar__caret">&rsaquo;</span>
+                Program<span className={`inline-block transition-[transform] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
               </button>
-              <ul className="navbar__drop">
-                <li><a href="/tour.html">Tours</a></li>
-                <li><a href="/destinations.html">Destinations</a></li>
-                <li><a href="/activities.html">Experiences</a></li>
-                <li><a href="/transfer.html">Transfer</a></li>
-                <li><a href="/charter.html">Charter</a></li>
+              <ul className={`list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[0.9rem] ${dropOpen ? 'block' : 'hidden'}`}>
+                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/tour.html">Tours</a></li>
+                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/destinations.html">Destinations</a></li>
+                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/activities.html">Experiences</a></li>
+                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/transfer.html">Transfer</a></li>
+                <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/charter.html">Charter</a></li>
               </ul>
             </li>
-            <li><a href="/bali-guide.html" className={navClass('/bali-guide.html')}>Guide</a></li>
-            <li><a href="/our-company.html" className={navClass('/our-company.html')}>Our Company</a></li>
+            <li><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
+            <li><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
+            <li><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
+            {/* Settings - dipindah ke sini (Wayan): dulu di footer drawer bareng WA,
+                sekarang jadi nav link biasa (plain, no icon) persis di bawah Our
+                Company. Label "Settings" -> "Account Settings". */}
+            <li><a href="/settings.html" className={navLink(isActive('/settings.html'))}>Account Settings</a></li>
+
+            {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}
+            <li className="mt-auto pt-4">
+              {/* Bug lama: `block` + `items-center justify-center` itu no-op tanpa
+                  `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
+                  hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white
+                  (icon currentColor ikut putih, samain gaya sama tombol Sign in). */}
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d">
+                <svg className="w-[18px] h-[18px] flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z" />
+                </svg>
+                Chat on WhatsApp
+              </a>
+            </li>
           </ul>
         </nav>
 
         <button
-          className="navbar__toggle"
+          className="relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
           aria-label="Open menu"
           ref={burgerRef}
-          onClick={() => { setMenuOpen((v) => !v); setAcctOpen(false); }}
+          onClick={() => setMenuOpen((v) => !v)}
         >
-          <span /><span /><span />
-          <span className="acct__dot acct__dot--ham" hidden={!hasUpcoming} />
+          <span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" />
+          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
+              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
+              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
+              jadi titik hijau pas migrasi Tailwind ini.) */}
+          <span className="absolute top-[-2px] right-[-2px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
         </button>
       </div>
 
-      <div className={`navbar__scrim${acctOpen || menuOpen ? ' open' : ''}`} onClick={closeAll} />
-      <TripBar />
+      <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-200 ease-[ease] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
+      {pathname !== '/our-company' && <TripBar />}
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );
 }

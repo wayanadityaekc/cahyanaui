@@ -1,30 +1,54 @@
 import Price from '@/components/Price';
 
+// Tailwind-native (migrasi): utilities dipetakan 1:1 dari .airport* di style.css.
+// Overlay gelap (dulu ::after) pakai variant after:* - gradient horizontal di
+// desktop, ganti ke vertikal lebih gelap di <=560px persis media query lama.
+// (.airport__price .price-unit di CSS lama = dead di React: <Price> gak render
+// .price-unit, cuma renderPrices JS situs lama yang nambahin.)
+const CLS = {
+  section:
+    "relative overflow-hidden bg-cover bg-center py-8 text-white " +
+    "after:content-[''] after:absolute after:inset-0 " +
+    'after:bg-[linear-gradient(90deg,rgba(20,19,15,0.86)_0%,rgba(20,19,15,0.62)_55%,rgba(20,19,15,0.35)_100%)] ' +
+    'max-[560px]:after:bg-[linear-gradient(180deg,rgba(20,19,15,0.72)_0%,rgba(20,19,15,0.82)_100%)]',
+  inner: 'relative z-[1] max-w-[var(--container)] mx-auto px-6',
+  body: 'max-w-[560px]',
+  k: 'block uppercase tracking-[0.14em] text-label text-gold-l mb-[0.6rem]',
+  t: 'font-head text-[1.6rem] font-semibold tracking-[-0.01em] leading-[1.15] mt-0 mb-[0.7rem]',
+  lead: 'text-body leading-[1.6] text-[rgba(247,243,234,0.85)] mt-0 mb-[1.3rem] max-w-[46ch]',
+  chips: 'flex flex-wrap gap-[0.6rem] mb-6',
+  chip: 'text-small bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.18)] rounded-pill px-[0.85rem] py-[0.35rem]',
+  row: 'flex items-center gap-[1.1rem] flex-wrap',
+  price: 'text-small text-[rgba(247,243,234,0.85)]',
+  amt: 'text-[1.35rem] font-semibold text-amber',
+  btn: 'inline-flex items-center gap-[0.4rem] bg-cta text-white rounded-pill px-[1.4rem] h-[2.9rem] font-semibold text-strong no-underline transition-colors duration-200 ease-in-out hover:bg-cta-d',
+};
+
 export default function Airport() {
   return (
     <section
-      className="airport"
+      className={CLS.section}
       id="airport-pickup"
       style={{ backgroundImage: 'url(/assets/images/transfer-hero.webp)' }}
     >
-      <div className="airport__inner">
-        <div className="airport__body">
-          <span className="airport__k">Airport Pickup</span>
-          <h2 className="airport__t">Land in Bali, we&apos;re already there</h2>
-          <p className="airport__lead">
+      <div className={CLS.inner}>
+        <div className={CLS.body}>
+          <span className={CLS.k}>Airport Pickup</span>
+          <h2 className={CLS.t}>Land in Bali, we&apos;re already there</h2>
+          <p className={CLS.lead}>
             Private car from Ngurah Rai (DPS) to your Ubud stay. Fixed price, meet &amp; greet at arrivals, sorted
             before you even land.
           </p>
-          <div className="airport__chips">
-            <span>Meet &amp; greet</span>
-            <span>Fixed price per car</span>
-            <span>Local Ubud driver</span>
+          <div className={CLS.chips}>
+            <span className={CLS.chip}>Meet &amp; greet</span>
+            <span className={CLS.chip}>Fixed price per car</span>
+            <span className={CLS.chip}>Local Ubud driver</span>
           </div>
-          <div className="airport__row">
-            <span className="airport__price">
-              from <Price name="Airport – Ubud" fallback="$20" className="airport__amt" as="b" />
+          <div className={CLS.row}>
+            <span className={CLS.price}>
+              from <Price name="Airport – Ubud" fallback="$20" className={CLS.amt} as="b" />
             </span>
-            <a className="airport__btn" href="/airport-transfer.html">
+            <a className={CLS.btn} href="/airport-transfer.html">
               Book a transfer &rsaquo;
             </a>
           </div>

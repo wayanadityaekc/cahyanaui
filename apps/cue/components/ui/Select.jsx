@@ -4,10 +4,11 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import useMobile from './useMobile';
 import Overlay from './Overlay';
+import { CONTROL, CONTROL_RICH, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_VAL_FLAG, CONTROL_FLAG_NM, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelPopup, PANEL_HEAD, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, opt, CSEL_GROUP, BK_NATIVE, HS_OPT_FLAG, HS_OPT_NM } from './hsClasses';
 
 function Chevron() {
   return (
-    <svg className="hs-chev" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className={CHEV} viewBox="0 0 24 24" aria-hidden="true">
       <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -21,9 +22,12 @@ export default function Select({
   placeholder = '',
   name,
   id,
-  popup = false,
+  popup = true,
   className = '',
+  icon = null,
+  hint = '',
 }) {
+  const rich = !!(icon || hint);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const isMobile = useMobile();
@@ -52,29 +56,34 @@ export default function Select({
 
   const selected = options.find((o) => String(o.value) === String(value));
 
+  // Panel = mode popup (default; semua pemakaian Select popup). Kalau nanti butuh
+  // popup=false (dropdown nempel field / bottom-sheet), mode itu perlu ditambah lagi.
   const panel = (
-    <div className={`hs-panel bk-panel${open ? ' open' : ''}${popup ? ' hs-panel--popup' : ''}`}>
-      <div className="hs-panel__head">
-        <h3>{label}</h3>
-        <button type="button" className="hs-panel__close" aria-label="Close" onClick={() => setOpen(false)}>
+    <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
+      <div className={PANEL_HEAD}>
+        <h3 className={PANEL_HEAD_H3}>{label}</h3>
+        <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setOpen(false)}>
           &times;
         </button>
       </div>
-      <div className="hs-panel__body" role="listbox" aria-label={label}>
+      <div className={PANEL_BODY} role="listbox" aria-label={label}>
         {options.map((o) => (
           <button
             key={String(o.value)}
             type="button"
             role="option"
             aria-selected={String(o.value) === String(value)}
-            className={`hs-opt bk-opt${String(o.value) === String(value) ? ' is-sel' : ''}`}
+            aria-disabled={o.disabled || undefined}
+            className={opt(String(o.value) === String(value), o.disabled)}
+            disabled={!!o.disabled}
             onClick={() => {
+              if (o.disabled) return;
               onChange(o.value);
               setOpen(false);
             }}
           >
-            {o.flag && <img className="hs-opt__flag" src={`/assets/flags/${o.flag}.svg`} alt="" />}
-            <span className="hs-opt__nm">{o.label}</span>
+            {o.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${o.flag}.svg`} alt="" />}
+            <span className={HS_OPT_NM}>{o.label}</span>
           </button>
         ))}
       </div>
@@ -82,30 +91,44 @@ export default function Select({
   );
 
   return (
-    <div className={`csel-group ${className}`.trim()} ref={groupRef}>
-      <select name={name} id={fieldId} className="bk-native" value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
+    <div className={`${CSEL_GROUP} ${className}`.trim()} ref={groupRef}>
+      <select name={name} id={fieldId} className={BK_NATIVE} value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (
-          <option key={String(o.value)} value={o.value}>{o.label}</option>
+          <option key={String(o.value)} value={o.value} disabled={o.disabled}>{o.label}</option>
         ))}
       </select>
 
       <button
         type="button"
-        className="hs-control bk-control"
+        className={rich ? CONTROL_RICH : CONTROL}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className={`hs-control__val${!selected ? ' placeholder' : ''}${selected && selected.flag ? ' hs-control__val--flag' : ''}`}>
-          {selected && selected.flag && <img className="hs-opt__flag" src={`/assets/flags/${selected.flag}.svg`} alt="" />}
-          <span className="hs-opt__nm">{selected ? selected.label : placeholder}</span>
-        </span>
+        {icon && <span className={CONTROL_IC} aria-hidden="true">{icon}</span>}
+        {rich ? (
+          <span className={CONTROL_STACK}>
+            {hint && <span className={CONTROL_HINT}>{hint}</span>}
+            <span className={!selected ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>
+              {selected ? selected.label : placeholder}
+            </span>
+          </span>
+        ) : (
+          <span className={!selected ? CONTROL_VAL_PLACEHOLDER : (selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL)}>
+            {selected && selected.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${selected.flag}.svg`} alt="" />}
+            <span className={selected && selected.flag ? `${HS_OPT_NM} ${CONTROL_FLAG_NM}` : 'hs-opt__nm'}>{selected ? selected.label : placeholder}</span>
+          </span>
+        )}
         <Chevron />
       </button>
 
-      {mounted && asPortal && open && createPortal(panel, document.body)}
-      {mounted && asPortal && <Overlay open={open} onClose={() => setOpen(false)} />}
+      {/* Panel is portal-mounted as soon as it's a portal context, not just while
+          open - otherwise it renders straight into its "open" state on first paint
+          (no prior "closed" frame for the CSS transition to animate from), which is
+          what made it pop in instantly instead of transitioning in smoothly. */}
+      {mounted && asPortal && createPortal(panel, document.body)}
+      {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}
     </div>
   );

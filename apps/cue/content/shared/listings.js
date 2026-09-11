@@ -3,35 +3,6 @@ export const LISTINGS = {
     "heroBg": "goa-gajah-hero.webp",
     "title": "Private Bali Tours with Your Own Ubud Driver",
     "sub": "Fully customizable day trips from Ubud - rice terraces, temples, waterfalls, and beaches, with your own local driver.",
-    "lbox": {
-      "img": "tegallalang-girl.jpg",
-      "tag": "Most Popular Tour",
-      "title": "Ubud Tour",
-      "desc": "Bali's cultural heart in a single day - rice terraces, sacred temples, the monkey forest, and local artisan villages, all at your own pace with a private car and local driver.",
-      "facts": [
-        {
-          "label": "From",
-          "value": "$45",
-          "priceName": "Ubud Tour"
-        },
-        {
-          "label": "Duration",
-          "value": "5–7 hrs"
-        },
-        {
-          "label": "Capacity",
-          "value": "Up to 5"
-        }
-      ],
-      "go": {
-        "href": "/ubud-tour.html",
-        "text": "View tour"
-      },
-      "add": {
-        "item": "Ubud Tour",
-        "text": "+ My Trips"
-      }
-    },
     "listTitle": "All Bali Tours",
     "sectionId": "tours",
     "chipLabel": "Jump to tour category",
@@ -69,7 +40,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Tour",
-            "priceFallback": "$40"
+            "priceFallback": "$40",
+            "stops": 5,
+            "priv": true
           },
           {
             "href": "/ubud-culture-day.html",
@@ -82,7 +55,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Culture Day",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 6,
+            "priv": true
           },
           {
             "href": "/ubud-rafting-adventure.html",
@@ -95,7 +70,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud Rafting Adventure",
-            "priceFallback": "$66"
+            "priceFallback": "$66",
+            "stops": 4,
+            "priv": true
           },
           {
             "href": "/ubud-atv-adventure.html",
@@ -108,7 +85,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Ubud ATV Adventure",
-            "priceFallback": "$72"
+            "priceFallback": "$72",
+            "stops": 4,
+            "priv": true
           },
           {
             "href": "/full-adventure-rafting-atv.html",
@@ -121,7 +100,9 @@ export const LISTINGS = {
             "meta": "7–9 hours",
             "metaIcon": "clock",
             "priceName": "Full Adventure: Rafting & ATV",
-            "priceFallback": "$114"
+            "priceFallback": "$114",
+            "stops": 2,
+            "priv": true
           }
         ]
       },
@@ -140,7 +121,9 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "Uluwatu & Sunset Kecak",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 1,
+            "priv": true
           },
           {
             "href": "/gwk-pandawa-beach.html",
@@ -153,7 +136,9 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "GWK & Pandawa Beach",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/hidden-beaches-cliffs.html",
@@ -166,7 +151,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Bali Hidden Beaches and Cliffs",
-            "priceFallback": "$40"
+            "priceFallback": "$40",
+            "stops": 3,
+            "priv": true
           },
           {
             "href": "/lempuyang-tirta-gangga.html",
@@ -179,7 +166,9 @@ export const LISTINGS = {
             "meta": "6–8 hours",
             "metaIcon": "clock",
             "priceName": "Lempuyang & Tirta Gangga",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/besakih-taman-ujung.html",
@@ -192,7 +181,9 @@ export const LISTINGS = {
             "meta": "7–9 hours",
             "metaIcon": "clock",
             "priceName": "Besakih & Taman Ujung",
-            "priceFallback": "$54"
+            "priceFallback": "$54",
+            "stops": 2,
+            "priv": true
           }
         ]
       },
@@ -211,7 +202,9 @@ export const LISTINGS = {
             "meta": "9–10 hours",
             "metaIcon": "clock",
             "priceName": "Kintamani Sunrise & Penglipuran",
-            "priceFallback": "$74"
+            "priceFallback": "$74",
+            "stops": 3,
+            "priv": true
           },
           {
             "href": "/batur-sunrise-adrenaline.html",
@@ -224,7 +217,9 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Batur Sunrise & Adrenaline",
-            "priceFallback": "$74"
+            "priceFallback": "$74",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/ulun-danu-tanah-lot.html",
@@ -237,7 +232,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Ulun Danu Beratan & Handara Gate",
-            "priceFallback": "$54"
+            "priceFallback": "$54",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/tanah-lot-taman-ayun.html",
@@ -250,7 +247,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Tanah Lot & Taman Ayun",
-            "priceFallback": "$45"
+            "priceFallback": "$45",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/jatiluwih-tour.html",
@@ -263,7 +262,9 @@ export const LISTINGS = {
             "meta": "4–6 hours",
             "metaIcon": "clock",
             "priceName": "Jatiluwih Rice Terrace Tour",
-            "priceFallback": "$40"
+            "priceFallback": "$40",
+            "stops": 1,
+            "priv": true
           },
           {
             "href": "/sangeh-tanah-lot.html",
@@ -276,7 +277,9 @@ export const LISTINGS = {
             "meta": "5–7 hours",
             "metaIcon": "clock",
             "priceName": "Sangeh Monkey Forest & Tanah Lot",
-            "priceFallback": "$45"
+            "priceFallback": "$45",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/banyumala-twin-lakes.html",
@@ -289,7 +292,9 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Banyumala & Twin Lakes",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 2,
+            "priv": true
           },
           {
             "href": "/munduk-twin-lakes.html",
@@ -302,7 +307,9 @@ export const LISTINGS = {
             "meta": "8–10 hours",
             "metaIcon": "clock",
             "priceName": "Munduk Waterfall Tour",
-            "priceFallback": "$49"
+            "priceFallback": "$49",
+            "stops": 3,
+            "priv": true
           },
           {
             "href": "/lovina-dolphin-sekumpul.html",
@@ -315,7 +322,9 @@ export const LISTINGS = {
             "meta": "11–12 hours",
             "metaIcon": "clock",
             "priceName": "Lovina Dolphin & Sekumpul Waterfall",
-            "priceFallback": "$83"
+            "priceFallback": "$83",
+            "stops": 3,
+            "priv": true
           }
         ]
       },
@@ -334,7 +343,9 @@ export const LISTINGS = {
             "meta": "3 days / 2 nights",
             "metaIcon": "clock",
             "priceName": "3-Day Best of Bali Package",
-            "priceFallback": "$131"
+            "priceFallback": "$131",
+            "stops": 6,
+            "priv": true
           }
         ]
       }
@@ -359,35 +370,6 @@ export const LISTINGS = {
     "heroBg": "jungle-swing-card.jpg",
     "title": "Bali Activities & Cultural Performances",
     "sub": "From jungle ATV rides and white-water rafting to the Kecak fire dance, discover authentic Balinese adventures and performances in and around Ubud - all with local drivers and honest prices.",
-    "lbox": {
-      "img": "kecak.jpg",
-      "tag": "Most Popular",
-      "title": "Kecak Dance",
-      "desc": "Bali's iconic fire-and-chant ritual, performed by a circle of over fifty voices - a performance that stays with you long after the flames die down. Performed every Tuesday & Sunday evening.",
-      "facts": [
-        {
-          "label": "From",
-          "value": "$10",
-          "priceName": "Kecak Dance"
-        },
-        {
-          "label": "Duration",
-          "value": "~1 hour"
-        },
-        {
-          "label": "Days",
-          "value": "Tue & Sun"
-        }
-      ],
-      "go": {
-        "href": "/attractions/kecak-dance.html",
-        "text": "Book"
-      },
-      "add": {
-        "item": "Kecak Dance",
-        "text": "+ My Trips"
-      }
-    },
     "listTitle": "All Activities & Performances",
     "sectionId": "activities",
     "chipLabel": "Jump to activity category",
@@ -594,27 +576,6 @@ export const LISTINGS = {
     "heroBg": "tanah-lot-hero.webp",
     "title": "Bali Destinations",
     "sub": "The temples, waterfalls, rice terraces, and beaches that make up Bali's day tours - browse each destination on its own, then build the day you want around the ones you like.",
-    "lbox": {
-      "img": "tanah-lot.webp",
-      "tag": "Most Popular",
-      "title": "Tanah Lot Sunset Temple",
-      "desc": "A sea temple built on a rock just off Bali's southwest coast, cut off by the water at high tide - most famous at sunset.",
-      "facts": [
-        {
-          "label": "Area",
-          "value": "West Bali"
-        },
-        {
-          "label": "Best at",
-          "value": "Sunset"
-        }
-      ],
-      "go": {
-        "href": "/attractions/tanah-lot.html",
-        "text": "Visit destination"
-      },
-      "add": {}
-    },
     "listTitle": "All Destinations",
     "sectionId": "destinations",
     "chipLabel": "Jump to destination category",

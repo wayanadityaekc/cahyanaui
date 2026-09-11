@@ -10,7 +10,7 @@ import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/u
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-export default function BookSidebar({ item, perPerson = false }) {
+export default function BookSidebar({ item, presetType = 'tour', perPerson = false }) {
   const [ask, setAsk] = useState(null);
   const [pending, setPending] = useState(null);
   const [confirm, setConfirm] = useState(null);
@@ -52,7 +52,7 @@ export default function BookSidebar({ item, perPerson = false }) {
 
   return (
     <div className="booksidebar relative border border-line rounded-lg overflow-hidden">
-      <BookingForm presetItem={item} presetType="tour" perPerson={perPerson} onBook={start(true)} variant="sidebar" />
+      <BookingForm presetItem={item} presetType={presetType} perPerson={perPerson} onBook={start(true)} variant="sidebar" />
 
       <DatePopup
         open={!!ask}

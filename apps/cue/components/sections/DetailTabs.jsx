@@ -58,15 +58,27 @@ function CardIcon() {
 // Details - the two booking options plus practical, generic-but-real notes that
 // hold for every day tour (pick-up, what to bring, things to note, payment), all
 // in one list. Deliberately not per-tour specifics, so nothing here is invented.
-function GoodToKnow() {
-  const rows = [
-    { ic: <CarIcon />, h: 'Standard', t: 'Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.' },
-    { ic: <TicketIcon />, h: 'Exclusive', t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.' },
-    { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
-    { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.' },
-    { ic: <InfoIcon />, h: 'Good to know', t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.' },
-    { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end of the day. Free cancellation up to 24 hours before.' },
-  ];
+//
+// Single activities/performances (ATV, Kecak Dance, etc.) have no car-tour
+// Standard/Exclusive split - the ticket is always in the price - so they get a
+// one-row "included" explanation instead of the two tour tiers, and skip the
+// temple/sarong line, which isn't true for every activity.
+function GoodToKnow({ isActivity }) {
+  const rows = isActivity
+    ? [
+        { ic: <TicketIcon />, h: 'Included in this price', t: 'Your entrance ticket and return transport from Ubud are already included - nothing extra to pay for the activity itself.' },
+        { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
+        { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable clothes and shoes suited to the activity, sunscreen, and a change of clothes if things might get wet or muddy.' },
+        { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end. Free cancellation up to 24 hours before.' },
+      ]
+    : [
+        { ic: <CarIcon />, h: 'Standard', t: 'Private car, driver and fuel. You pay entrance tickets at each gate as you go - handy if you like to skip a stop.' },
+        { ic: <TicketIcon />, h: 'Exclusive', t: 'The whole day prepaid, with entrance tickets for the listed stops included. Nothing to pay at the gates.' },
+        { ic: <ClockIcon />, h: 'Pick-up & timing', t: 'We pick you up from your hotel or villa in the Ubud area at the time you choose. Your driver shares their details the day before.' },
+        { ic: <BagIcon />, h: 'What to bring', t: 'Comfortable shoes, sunscreen and a hat, and some cash for entrance tickets (Standard) and lunch along the way.' },
+        { ic: <InfoIcon />, h: 'Good to know', t: 'Temples ask for a sarong, arranged at the gate. A few stops have stairs or a short walk. The route is flexible - linger or skip as you like.' },
+        { ic: <CardIcon />, h: 'Booking & payment', t: 'A small deposit over WhatsApp holds your date; you settle the rest at the end of the day. Free cancellation up to 24 hours before.' },
+      ];
   return (
     <ul className="list-none mb-[1.6rem] flex flex-col gap-[1.1rem]">
       {rows.map((r) => (
@@ -111,13 +123,13 @@ function Inclusions({ included, excluded }) {
 // on one scrollable page - the sections are stacked and always visible - and the
 // sticky tab strip is a jump nav: clicking a tab scrolls to its section, and the
 // active tab follows the section currently in view (scrollspy).
-export default function DetailTabs({ overview, priceItem, included, excluded, reviewService }) {
+export default function DetailTabs({ overview, priceItem, bookType, included, excluded, reviewService }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
   if (priceItem) {
     sections.push({
       id: 'details',
       label: 'Details',
-      content: <GoodToKnow />,
+      content: <GoodToKnow isActivity={bookType === 'experience' || bookType === 'performance'} />,
     });
   }
   if ((included && included.length) || (excluded && excluded.length)) {

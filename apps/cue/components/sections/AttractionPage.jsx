@@ -13,6 +13,8 @@ import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
 
 export default function AttractionPage({ data }) {
+  const bookType = data.bookDefault || 'tour';
+  const perPerson = bookType === 'experience' || bookType === 'performance';
   return (
     <>
       <JsonLd page={data.__page} />
@@ -65,6 +67,7 @@ export default function AttractionPage({ data }) {
           </div>
         )}
         priceItem={data.bookItem}
+        bookType={bookType}
         included={data.included}
         excluded={data.excluded}
         reviewService={data.title}
@@ -72,12 +75,12 @@ export default function AttractionPage({ data }) {
       </div>
       {data.bookItem && (
         <div className={TOUR_LAYOUT_SIDE}>
-          <BookSidebar item={data.bookItem} facts={data.facts} />
+          <BookSidebar item={data.bookItem} presetType={bookType} perPerson={perPerson} facts={data.facts} />
         </div>
       )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} />
+      <BookBar item={data.bookItem} perPerson={perPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

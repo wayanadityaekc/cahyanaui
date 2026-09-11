@@ -43,9 +43,22 @@ export function PricingProvider({ children, initialCatalog = null }) {
     };
   }, [currency, displayGuests, stay, hydrated]);
 
+  // `name` is usually a catalog.items name (tour/experience/performance/combo/
+  // villa), but a few <Price> callers (e.g. the homepage Airport band) pass a
+  // transfer route instead ("Airport – Ubud") - transfers live in a separate
+  // catalog.transfers array with a flat {route,usd,idr,display} shape (no
+  // .standard/.exclusive nesting), so a plain catalog.items.find() never
+  // matches it and <Price> falls back to its hardcoded placeholder forever,
+  // in every currency (found while verifying the IDR-default change: the
+  // Airport price stayed "$20" even after the catalog loaded). Normalized to
+  // the items shape here so <Price> doesn't need its own transfer branch.
   const lookup = (name) => {
     if (!catalog) return null;
-    return catalog.items.find((i) => i.name === name) || null;
+    const item = catalog.items.find((i) => i.name === name);
+    if (item) return item;
+    const transfer = catalog.transfers.find((t) => t.route === name);
+    if (transfer) return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
+    return null;
   };
 
   return (

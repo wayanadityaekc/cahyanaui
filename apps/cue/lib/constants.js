@@ -18,3 +18,9 @@ export const KEY = {
 
 export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP'];
 export const DISPLAY_GUESTS = 2;
+
+// Currency a first-time visitor sees before they pick one themselves (or before
+// their saved localStorage choice loads) - the single place to flip this site-wide.
+// Read by TripPrefsProvider only; a visitor's own manual choice always overrides it
+// and persists as before, this only controls the starting point.
+export const DEFAULT_CURRENCY = 'IDR';

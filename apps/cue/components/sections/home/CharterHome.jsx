@@ -2,6 +2,7 @@
 
 import Slider from '@/components/ui/Slider';
 import CharterPrice from '@/components/CharterPrice';
+import CharterSurcharge from '@/components/CharterSurcharge';
 import { BADGE_POPULAR } from '@/components/ui/cardClasses';
 import { CHARTER_CARDS } from '@/content/shared/home';
 
@@ -44,7 +45,7 @@ export default function CharterHome() {
         </Slider>
 
         <p className="text-center mt-[var(--space-4)] text-small text-muted">
-          Only a <b className="text-gold font-semibold">10% deposit</b> to book &middot; prices per car, pick-up outside Ubud +$7
+          Only a <b className="text-gold font-semibold">10% deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
         </p>
       </div>
     </section>

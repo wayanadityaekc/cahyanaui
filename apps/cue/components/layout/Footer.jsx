@@ -90,14 +90,7 @@ export default function Footer() {
           <ul className="list-none">{COMPANY.map(([h, t]) => <li key={h} className="mb-[0.6rem] text-[0.8rem] opacity-[0.85]"><a href={h} className={COL_A}>{t}</a></li>)}</ul>
         </div>
       </div>
-      <p className="flex flex-wrap items-center justify-center gap-x-[10px] gap-y-1 max-[560px]:flex-col max-[560px]:gap-[3px] max-w-[1100px] mx-auto mt-8 pt-6 border-t border-[rgba(0,0,0,0.1)] text-small text-muted">
-        <span className="whitespace-nowrap"><b className="font-semibold">{R.name}</b></span>
-        <span className="opacity-50 max-[560px]:hidden" aria-hidden="true">·</span>
-        <span className="whitespace-nowrap">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{R.decreeShort}</a></span>
-        <span className="opacity-50 max-[560px]:hidden" aria-hidden="true">·</span>
-        <span className="whitespace-nowrap">Business License (NIB) {R.nib}</span>
-      </p>
-      <div className="max-w-[1100px] mx-auto mt-10 pt-6 border-t border-[rgba(0,0,0,0.12)] text-center">
+      <div className="max-w-[1100px] mx-auto mt-8 pt-6 border-t border-[rgba(0,0,0,0.1)] text-center">
         <p className="mb-3 text-label tracking-[0.14em] uppercase opacity-70">We Accept</p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <span className={PAY_CHIP}>
@@ -154,6 +147,13 @@ export default function Footer() {
             </svg>
           </span>
         </div>
+        <p className="flex flex-wrap items-center justify-center gap-x-[8px] gap-y-1 max-[560px]:flex-col max-[560px]:gap-[2px] mt-3 text-[length:var(--fs-label)] text-muted opacity-50">
+          <span className="whitespace-nowrap"><b className="font-medium">{R.name}</b></span>
+          <span className="opacity-70 max-[560px]:hidden" aria-hidden="true">·</span>
+          <span className="whitespace-nowrap">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{R.decreeShort}</a></span>
+          <span className="opacity-70 max-[560px]:hidden" aria-hidden="true">·</span>
+          <span className="whitespace-nowrap">Business License (NIB) {R.nib}</span>
+        </p>
       </div>
       <div className="max-w-[1100px] mx-auto mt-10 pt-6 border-t border-[rgba(0,0,0,0.12)] text-small text-center opacity-70">
         <p>&copy; 2026 Cahyana Ubud Experience. All rights reserved.</p>

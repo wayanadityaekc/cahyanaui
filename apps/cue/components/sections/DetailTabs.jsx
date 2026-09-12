@@ -142,37 +142,94 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   });
 
   const [active, setActive] = useState(sections[0].id);
+  const wrapRef = useRef(null);
+  const boxRef = useRef(null);
   const stripRef = useRef(null);
   const secRefs = useRef({});
 
   // Small breathing room so the strip doesn't sit flush against the navbar
   // once it's stuck (Wayan: "jangan nempel banget, kasi space dikit").
   const NAV_GAP = 10;
+  // Desktop only (see DESKTOP_MQ below) - on mobile a nested scroll region is
+  // exactly the "stuck scroll" feel the site's sliders deliberately avoid
+  // (touch-action: pan-x pan-y so vertical swipe always reaches the page),
+  // so small screens keep the simpler page-level sticky strip instead.
+  const DESKTOP_MQ = '(min-width: 769px)';
 
-  // Was `.navbar` - dead selector since the Tailwind migration dropped that
-  // class from the header, so this always measured 0 and the strip stuck at
-  // top:0, directly behind the fixed navbar (z-100 vs the strip's z-20) -
-  // technically still "sticky" (it correctly un-pins once its container
-  // scrolls past), just invisible the whole time it should've been showing.
   const headerH = () => {
     const h = document.querySelector('header');
     return h ? h.getBoundingClientRect().height : 0;
   };
-  const pinOffset = () => headerH() + NAV_GAP + (stripRef.current ? stripRef.current.offsetHeight : 0);
 
-  // Pin the sticky strip right under the fixed header, with the gap above.
+  // Wayan (12 Sep 2026): not just the tab strip - the whole card should hold
+  // still while its OWN content (photos, text) scrolls inside it, and only
+  // let go once that content runs out.
+  //
+  // Gotcha that made the first attempt at this a no-op: giving the card itself
+  // both `position:sticky` AND `max-height + overflow-y:auto` clips the card's
+  // own contribution to its parent's height down to that max-height - so the
+  // parent ends up almost exactly as tall as the card, leaving ~0px of scroll
+  // "runway" for the sticky mechanic to ever visibly pin against. Fixed with an
+  // extra unstyled wrapper around the card whose height is set (via JS) to the
+  // card's true, unclipped content height - `scrollHeight` reports that even
+  // while the card itself is visually clipped by overflow/max-height - so the
+  // wrapper reserves the real amount of page-flow space and the card has
+  // somewhere to be "stuck" for.
   useEffect(() => {
-    const apply = () => { if (stripRef.current) stripRef.current.style.top = `${headerH() + NAV_GAP}px`; };
+    const mq = window.matchMedia(DESKTOP_MQ);
+    const lastId = sections[sections.length - 1].id;
+    const apply = () => {
+      const top = headerH() + NAV_GAP;
+      if (boxRef.current) {
+        if (mq.matches) {
+          boxRef.current.style.top = `${top}px`;
+          boxRef.current.style.maxHeight = `calc(100dvh - ${top}px - ${NAV_GAP}px)`;
+          // Reset to the natural (Tailwind pb-8) padding first, so the shortfall
+          // below is measured against the real content height, not a stale
+          // extra-padding value from a previous run of this same effect.
+          boxRef.current.style.paddingBottom = '';
+          // The LAST section needs to be scrollable all the way up to align
+          // under the strip - without extra room, the box's max scrollTop gets
+          // reached before a short trailing section (e.g. an empty Reviews
+          // state) ever clears the strip, so it can never become the
+          // scrollspy's active tab. Add exactly the missing amount, not a flat
+          // guess - a full extra viewport of blank padding looked broken.
+          const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
+          const lastEl = secRefs.current[lastId];
+          const maxScrollable = boxRef.current.scrollHeight - boxRef.current.clientHeight;
+          const neededForLast = lastEl ? lastEl.offsetTop - stripH - 8 : 0;
+          const shortfall = Math.max(0, neededForLast - maxScrollable);
+          if (shortfall > 0) boxRef.current.style.paddingBottom = `calc(2rem + ${shortfall}px)`;
+          // Read AFTER settling the padding above, since scrollHeight includes it.
+          if (wrapRef.current) wrapRef.current.style.height = `${boxRef.current.scrollHeight}px`;
+        } else {
+          boxRef.current.style.top = '';
+          boxRef.current.style.maxHeight = '';
+          boxRef.current.style.paddingBottom = '';
+          if (wrapRef.current) wrapRef.current.style.height = '';
+        }
+      }
+      if (stripRef.current) stripRef.current.style.top = mq.matches ? '0px' : `${top}px`;
+    };
     apply();
     window.addEventListener('resize', apply);
-    return () => window.removeEventListener('resize', apply);
+    mq.addEventListener('change', apply);
+    return () => {
+      window.removeEventListener('resize', apply);
+      mq.removeEventListener('change', apply);
+    };
   }, []);
 
   // Scrollspy: highlight the tab whose section is currently under the strip.
+  // getBoundingClientRect() is always viewport-relative regardless of which
+  // element actually scrolled, so the same line/comparison works whether the
+  // page scrolled (mobile) or the card scrolled internally (desktop) - just
+  // listen on both, the one that isn't the active scroller never fires.
   useEffect(() => {
+    const box = boxRef.current;
     const ids = sections.map((s) => s.id);
     const onScroll = () => {
-      const line = pinOffset() + 12;
+      const line = (stripRef.current ? stripRef.current.getBoundingClientRect().bottom : 0) + 12;
       let cur = ids[0];
       ids.forEach((id) => {
         const el = secRefs.current[id];
@@ -182,15 +239,24 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    if (box) box.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (box) box.removeEventListener('scroll', onScroll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const pick = (id) => {
     const el = secRefs.current[id];
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - pinOffset() - 8;
-    window.scrollTo({ top, behavior: 'smooth' });
+    const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
+    if (window.matchMedia(DESKTOP_MQ).matches && boxRef.current) {
+      boxRef.current.scrollTo({ top: el.offsetTop - stripH - 8, behavior: 'smooth' });
+    } else {
+      const top = el.getBoundingClientRect().top + window.scrollY - headerH() - NAV_GAP - stripH - 8;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
   // Tailwind-native (full-portable): wrapper/strip/tab/section-heading + section
@@ -201,8 +267,12 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   const tab = (on) =>
     `font-body text-small bg-transparent [border-top:0] [border-left:0] [border-right:0] py-[0.9rem] px-[0.15rem] mb-[-1px] whitespace-nowrap cursor-pointer transition-[color,border-color] duration-[var(--dur-fast)] ease-[ease] ${on ? '[border-bottom:2px_solid_var(--color-gold)] font-semibold text-green' : '[border-bottom:2px_solid_transparent] font-medium text-muted hover:text-green'}`;
   return (
-    <div className="max-w-[1000px] mt-5 mx-auto pt-[0.85rem] px-6 pb-8 bg-white rounded-xl [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:mt-4 max-[560px]:px-4 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg">
-      <div className="flex gap-[1.6rem] [border-bottom:1px_solid_var(--line)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sticky top-0 z-20 bg-white max-[560px]:gap-[1.1rem]" ref={stripRef} role="tablist" aria-label="Jump to section">
+    <div ref={wrapRef} className="min-[769px]:relative">
+    <div
+      ref={boxRef}
+      className="max-w-[1000px] mt-5 mx-auto pt-[0.85rem] px-6 pb-8 bg-white rounded-xl [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:mt-4 max-[560px]:px-4 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg min-[769px]:sticky min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden"
+    >
+      <div className="flex gap-[1.6rem] [border-bottom:1px_solid_var(--line)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sticky z-20 bg-white max-[560px]:gap-[1.1rem]" ref={stripRef} role="tablist" aria-label="Jump to section">
         {sections.map((s) => (
           <button
             key={s.id}
@@ -226,6 +296,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
           {s.content}
         </section>
       ))}
+    </div>
     </div>
   );
 }

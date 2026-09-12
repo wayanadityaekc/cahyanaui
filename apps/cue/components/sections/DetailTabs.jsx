@@ -145,15 +145,24 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   const stripRef = useRef(null);
   const secRefs = useRef({});
 
+  // Small breathing room so the strip doesn't sit flush against the navbar
+  // once it's stuck (Wayan: "jangan nempel banget, kasi space dikit").
+  const NAV_GAP = 10;
+
+  // Was `.navbar` - dead selector since the Tailwind migration dropped that
+  // class from the header, so this always measured 0 and the strip stuck at
+  // top:0, directly behind the fixed navbar (z-100 vs the strip's z-20) -
+  // technically still "sticky" (it correctly un-pins once its container
+  // scrolls past), just invisible the whole time it should've been showing.
   const headerH = () => {
-    const h = document.querySelector('.navbar');
+    const h = document.querySelector('header');
     return h ? h.getBoundingClientRect().height : 0;
   };
-  const pinOffset = () => headerH() + (stripRef.current ? stripRef.current.offsetHeight : 0);
+  const pinOffset = () => headerH() + NAV_GAP + (stripRef.current ? stripRef.current.offsetHeight : 0);
 
-  // Pin the sticky strip right under the fixed header (navbar + promo bar).
+  // Pin the sticky strip right under the fixed header, with the gap above.
   useEffect(() => {
-    const apply = () => { if (stripRef.current) stripRef.current.style.top = `${headerH()}px`; };
+    const apply = () => { if (stripRef.current) stripRef.current.style.top = `${headerH() + NAV_GAP}px`; };
     apply();
     window.addEventListener('resize', apply);
     return () => window.removeEventListener('resize', apply);

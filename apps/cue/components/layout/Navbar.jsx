@@ -265,7 +265,7 @@ export default function Navbar() {
       </div>
 
       <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-200 ease-[ease] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
-      {pathname !== '/our-company' && <TripBar />}
+      {pathname === '/' && <TripBar />}
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );

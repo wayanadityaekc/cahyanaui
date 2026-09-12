@@ -1,6 +1,5 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { PROMO } from '@/content/shared/promo';
 
 // Tailwind-native (full-portable): .tripbar* -> utilities.
@@ -15,13 +14,8 @@ const TAG_ICON = (
 );
 
 export default function TripBar({ mode = 'promo' }) {
-  const pathname = usePathname();
-  // Wayan: promo tripbar disembunyiin di Our Company + My Trips (rombak Sep 2026 -
-  // My Trips udah punya tab strip-nya sendiri, tripbar cuma numpuk di atasnya).
-  if (
-    pathname === '/our-company' || pathname === '/our-company.html' ||
-    pathname === '/my-trips' || pathname === '/my-trips.html'
-  ) return null;
+  // Wayan (Sep 2026): tripbar now only ever mounts on the homepage - Navbar
+  // gates the render (`pathname === '/'`), so no per-page exclusion is needed here.
   if (mode !== 'promo') return null;
   if (!PROMO.active || !PROMO.text) return null;
 

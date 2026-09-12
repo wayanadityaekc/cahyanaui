@@ -12,6 +12,7 @@ import { REFMSG } from '@/components/ui/modalClasses';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
+import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import { CONTROL, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, panelMenu, PANEL_HEAD_MENU, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, PANEL_BODY_MENU, optMenu, HS_OPT_IC, HS_OPT_NM, HS_OPT_PR } from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
@@ -21,7 +22,7 @@ const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const FIELD_LABEL = 'block text-small font-medium text-green mb-[0.4rem] font-body tracking-normal normal-case';
 
 export default function HeroSearch({ onClose, sheetOpen = false }) {
-  const { guests, setGuests, stay, setStay, currency } = useTripPrefs();
+  const { guests, setGuests, currency } = useTripPrefs();
   const pricing = usePricing();
   const { apply } = useReferral();
   const isMobile = useMobile();
@@ -67,12 +68,6 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     }
     return out;
   }, [catalog, symbol, currency]);
-
-  const stayOptions = useMemo(() => {
-    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
-    if (!catalog) return base;
-    return base.concat(catalog.transfers.map((t) => ({ value: t.route, label: t.route })));
-  }, [catalog]);
 
   const applyCode = async () => {
     const pct = await apply(code);
@@ -216,13 +211,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         </div>
         <div className="mb-[0.8rem]">
           <label className={FIELD_LABEL} htmlFor="hs-stay">Pickup area</label>
-          <Select
-            id="hs-stay"
-            label="Pickup area"
-            value={stay || 'ubud'}
-            onChange={setStay}
-            options={stayOptions}
-          />
+          <PickupAreaSelect id="hs-stay" />
         </div>
       </div>
 

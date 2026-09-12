@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
-import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
@@ -12,6 +11,7 @@ import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
 import useBodyLock from '@/components/ui/useBodyLock';
 import Select from '@/components/ui/Select';
+import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import AuthModal from '@/components/account/AuthModal';
 
 // Tailwind-native (migrasi Fase 2): navbar (semua halaman). Dulu keluarga
@@ -37,18 +37,9 @@ const BADGE_BASE =
   'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
 
 export default function Navbar() {
-  const { guests, setGuests, stay, setStay } = useTripPrefs();
-  const pricing = usePricing();
+  const { guests, setGuests } = useTripPrefs();
   const { count } = useItinerary();
   const { account, hasUpcoming, logout } = useAccount();
-
-  // Pickup-area options mirror the homepage search form: Ubud + every catalog route.
-  const catalog = pricing && pricing.catalog;
-  const stayOptions = useMemo(() => {
-    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
-    if (!catalog) return base;
-    return base.concat(catalog.transfers.map((t) => ({ value: t.route, label: t.route })));
-  }, [catalog]);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
@@ -172,14 +163,7 @@ export default function Navbar() {
               </div>
               <div className="flex flex-col gap-1 min-w-0">
                 <label className="text-small text-muted" htmlFor="acct-stay">Pickup area</label>
-                <Select
-                  id="acct-stay"
-                  label="Pickup area"
-                  value={stay || 'ubud'}
-                  onChange={setStay}
-                  options={stayOptions}
-                  popup
-                />
+                <PickupAreaSelect id="acct-stay" />
               </div>
             </li>
 

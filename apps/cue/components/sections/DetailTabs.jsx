@@ -270,7 +270,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     <div ref={wrapRef} className="min-[769px]:relative">
     <div
       ref={boxRef}
-      className="max-w-[1000px] mt-5 mx-auto pt-[0.85rem] px-6 pb-8 bg-white rounded-xl [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:mt-4 max-[560px]:px-4 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg min-[769px]:sticky min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden"
+      className="max-w-[1000px] mt-5 mx-auto px-6 pb-8 bg-white rounded-xl [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:mt-4 max-[560px]:px-4 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg min-[769px]:sticky min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden"
     >
       <div className="flex gap-[1.6rem] [border-bottom:1px_solid_var(--line)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sticky z-20 bg-white max-[560px]:gap-[1.1rem]" ref={stripRef} role="tablist" aria-label="Jump to section">
         {sections.map((s) => (

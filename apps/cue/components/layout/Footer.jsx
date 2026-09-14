@@ -26,13 +26,16 @@ const EXPLORE = [
   ['/my-trips.html', 'My Trips'],
 ];
 
+// About/Contact/FAQ/Terms/Privacy/Cancellation are all sections of the Our
+// Company page now (Sep 2026, Wayan - their standalone pages are retired).
+// Each link lands directly on its section (OurCompany.jsx reads the hash).
 const COMPANY = [
-  ['/contact.html', 'Contact Us'],
-  ['/about-us.html', 'About Us'],
-  ['/faq.html', 'FAQ'],
-  ['/terms-conditions.html', 'Terms & Conditions'],
-  ['/privacy-policy.html', 'Privacy Policy'],
-  ['/cancellation-policy.html', 'Cancellation Policy'],
+  ['/our-company.html#contact', 'Contact Us'],
+  ['/our-company.html#about', 'About Us'],
+  ['/our-company.html#faq', 'FAQ'],
+  ['/our-company.html#terms', 'Terms & Conditions'],
+  ['/our-company.html#privacy', 'Privacy Policy'],
+  ['/our-company.html#cancellation', 'Cancellation Policy'],
 ];
 
 export default function Footer() {

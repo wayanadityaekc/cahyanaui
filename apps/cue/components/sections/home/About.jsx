@@ -25,7 +25,7 @@ export default function About() {
           Tours, driver, activities and villa from one team in Ubud - plan it once, ask one person, and see every price
           before you commit.
         </p>
-        <a className={CLS.btn} href="/about-us.html">Read our story</a>
+        <a className={CLS.btn} href="/our-company.html#about">Read our story</a>
       </div>
     </section>
   );

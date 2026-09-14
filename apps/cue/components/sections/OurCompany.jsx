@@ -1,19 +1,32 @@
 'use client';
 
 import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
+import { FAQ } from '@/content/shared/faq';
 import Prose from '@/components/prose/Prose';
 
 const TABS = [
   { id: 'about', label: 'About Us' },
+  { id: 'contact', label: 'Contact' },
+  { id: 'faq', label: 'FAQ' },
   { id: 'terms', label: 'Terms', legal: 'terms-conditions' },
   { id: 'privacy', label: 'Privacy', legal: 'privacy-policy' },
   { id: 'cancellation', label: 'Cancellation', legal: 'cancellation-policy' },
-  { id: 'contact', label: 'Contact' },
 ];
+
+// URL hash <-> tab (Sep 2026, Wayan): footer/other pages link straight to a section
+// (`/our-company.html#faq`), not just the plain page. Read on mount + `hashchange`
+// (same-doc anchor clicks fire that event without a reload); `history.replaceState`
+// on tab click keeps the URL shareable without the native jump-to-anchor scroll
+// (there's no real element with that id, this is a JS tab switch, not a real anchor).
+function idFromHash() {
+  if (typeof window === 'undefined') return null;
+  const id = window.location.hash.replace('#', '');
+  return TABS.some((t) => t.id === id) ? id : null;
+}
 
 // .company-* chrome -> utilities (B-FINAL). Desktop (>=993) = white page, content sits
 // in a recessed white "sheet" (inset shadow) with a sticky sidebar-nav card on the right;
@@ -46,14 +59,52 @@ function LegalBody({ data }) {
   );
 }
 
+// FAQ tab (Sep 2026, Wayan): faq.html retired, folded in here - same accordion
+// markup that page used, just without its own hero (Our Company already has one).
+function FAQBody() {
+  return (
+    <section className={`${INFO_SECTION_ARTICLE} !pt-0`}>
+      <div className={INFO_CONTAINER_ARTICLE}>
+        <h1 className={C_HEADING}>Frequently Asked Questions</h1>
+        {FAQ.map((item, i) => (
+          <details className="group mb-3 [border:1px_solid_#e0ddd4] rounded-md bg-white overflow-hidden" key={i}>
+            <summary className="relative py-[1.1rem] pr-12 pl-5 font-body text-[1rem] font-semibold text-green cursor-pointer list-none [&::-webkit-details-marker]:hidden after:content-['+'] after:absolute after:top-1/2 after:right-5 after:-translate-y-1/2 after:text-[1.5rem] after:font-normal after:text-gold [[open]_&]:text-gold [[open]_&]:after:content-['−']">
+              {item.q}
+            </summary>
+            <div
+              className="pt-0 px-5 pb-5 [&_p]:font-body [&_p]:text-body [&_p]:leading-[var(--lh-body)] [&_p]:font-normal"
+              dangerouslySetInnerHTML={{ __html: item.a }}
+            />
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
   const activeIndex = TABS.findIndex((t) => t.id === tab);
   const active = TABS[activeIndex];
 
+  useEffect(() => {
+    const applyHash = () => {
+      const id = idFromHash();
+      if (id) setTab(id);
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
+  const goTo = (id) => {
+    setTab(id);
+    window.history.replaceState(null, '', `#${id}`);
+  };
+
   const step = (dir) => {
     const next = (activeIndex + dir + TABS.length) % TABS.length;
-    setTab(TABS[next].id);
+    goTo(TABS[next].id);
   };
 
   return (
@@ -68,7 +119,7 @@ export default function OurCompany() {
               role="tab"
               aria-selected={tab === t.id}
               className={tab === t.id ? C_NAV_ITEM_ON : C_NAV_ITEM}
-              onClick={() => setTab(t.id)}
+              onClick={() => goTo(t.id)}
             >
               {t.label}
             </button>
@@ -77,8 +128,9 @@ export default function OurCompany() {
 
         <div className={C_MAIN}>
           {tab === 'about' && <AboutPage company />}
-          {active.legal && <LegalBody data={LEGAL[active.legal]} />}
           {tab === 'contact' && <ContactSection company />}
+          {tab === 'faq' && <FAQBody />}
+          {active.legal && <LegalBody data={LEGAL[active.legal]} />}
         </div>
       </div>
 

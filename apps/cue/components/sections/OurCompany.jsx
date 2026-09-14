@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ChevronDown, LayoutGrid } from 'lucide-react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -121,17 +122,10 @@ export default function OurCompany() {
             className="flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer font-body text-body font-semibold text-gold"
           >
             <span className="flex items-center gap-[0.6rem]">
-              <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="7" height="7" rx="1" />
-              </svg>
+              <LayoutGrid className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
               {active.label}
             </span>
-            <svg className={`w-4 h-4 shrink-0 text-muted transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6 9l6 6 6-6" />
-            </svg>
+            <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
           </button>
           {/* `flex` (author class) beats the `hidden` attribute's UA-default display:none in
               cascade order, so toggle via className instead of the `hidden` prop here. */}

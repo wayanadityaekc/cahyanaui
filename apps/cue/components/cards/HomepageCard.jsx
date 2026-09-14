@@ -97,9 +97,18 @@ const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
   'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(255,255,255,0.13)] ' +
   'backdrop-blur-[12px] border border-[rgba(255,255,255,0.2)]';
+// Wayan (14 Sep 2026): the meta row (duration + "Private Tour") could shrink
+// (min-w-0 flex-[0_1_auto] above) but its text never did - every child was
+// pinned flex-[0_0_auto], so a long duration ("10-11 hours") plus "Private
+// Tour" just visually overflowed past the shrunk box into the price on the
+// right instead of wrapping/hiding. Duration stays fixed-size (META_ITEM,
+// it's the more important half); "Private Tour" is the one allowed to
+// shrink+ellipsis (META_TRUNC) since it's the more skippable label.
+const META_ITEM = 'flex-[0_0_auto]';
+const META_TRUNC = 'min-w-0 truncate';
 const META =
   'inline-flex items-center gap-[6px] text-[rgba(255,255,255,0.92)] text-[0.62rem] min-w-0 flex-[0_1_auto] whitespace-nowrap ' +
-  '[&>span]:flex-[0_0_auto] [&_svg]:w-3 [&_svg]:h-3 [&_svg]:flex-[0_0_auto]';
+  '[&_svg]:w-3 [&_svg]:h-3 [&_svg]:flex-[0_0_auto]';
 const SEP = 'w-px h-[11px] bg-[rgba(255,255,255,0.35)] flex-[0_0_auto]';
 const PRICE_WRAP = 'flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap text-white';
 
@@ -130,11 +139,11 @@ export default function HomepageCard({
         <span className={`${ACCENT} ${accentTone}`} />
         <div className={BAR}>
           <span className={META}>
-            {isTour ? <ClockIcon /> : <PinIcon />}<span>{meta}</span>
+            {isTour ? <ClockIcon /> : <PinIcon />}<span className={META_ITEM}>{meta}</span>
             {isTour && (
               <>
                 <span className={SEP} />
-                <UserIcon /><span>Private Tour</span>
+                <UserIcon /><span className={META_TRUNC}>Private Tour</span>
               </>
             )}
           </span>

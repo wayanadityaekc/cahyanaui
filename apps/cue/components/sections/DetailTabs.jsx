@@ -1,5 +1,6 @@
 'use client';
 
+import { Backpack, Banknote, Car, Clock, CreditCard, Info } from 'lucide-react';
 import { INFO_LIST_YES, INFO_LIST_NO } from '@/components/ui/infoClasses';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
@@ -8,52 +9,16 @@ import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 // replaces a facts grid that just repeated the hero hooks; the choice between
 // Standard and Exclusive is the genuinely useful, page-specific decision. Prices
 // are live and currency-correct (Price component), not hardcoded.
-function CarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 11l1.4-4.2A2 2 0 0 1 8.3 5.4h7.4a2 2 0 0 1 1.9 1.4L19 11M4 11h16v5H4zM7 16v1.6M17 16v1.6" /><circle cx="7.5" cy="13.5" r="1" /><circle cx="16.5" cy="13.5" r="1" />
-    </svg>
-  );
-}
-function TicketIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-4z" /><path d="M14 6.5v1.5M14 11v2M14 16v-1.5" />
-    </svg>
-  );
-}
+const CarIcon = () => <Car strokeWidth={1.7} aria-hidden="true" />;
+const TicketIcon = () => <Banknote strokeWidth={1.7} aria-hidden="true" />;
 
 // Informational cards: the two ways every program can be booked. Choosing the
 // actual mode happens in the booking form's Standard/Exclusive toggle - these
 // cards just explain the difference.
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-function BagIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6 8h12l-1 12H7L6 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" />
-    </svg>
-  );
-}
-function InfoIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><path d="M12 8h.01" />
-    </svg>
-  );
-}
-function CardIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="3" y="6" width="18" height="12" rx="2" /><path d="M3 10h18M7 15h4" />
-    </svg>
-  );
-}
+const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
+const BagIcon = () => <Backpack strokeWidth={1.7} aria-hidden="true" />;
+const InfoIcon = () => <Info strokeWidth={1.7} aria-hidden="true" />;
+const CardIcon = () => <CreditCard strokeWidth={1.7} aria-hidden="true" />;
 
 // Details - the two booking options plus practical, generic-but-real notes that
 // hold for every day tour (pick-up, what to bring, things to note, payment), all

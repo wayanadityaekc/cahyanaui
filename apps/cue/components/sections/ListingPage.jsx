@@ -1,5 +1,6 @@
 'use client';
 
+import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
 import { infoList, INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT, INFO_LISTS, INFO_COL_H3 } from '@/components/ui/infoClasses';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { useState, useRef, useEffect } from 'react';
@@ -9,48 +10,12 @@ import ProgramPromoSlider from '@/components/sections/ProgramPromoSlider';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
-    </svg>
-  );
-}
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  );
-}
-function CarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 11l1.4-4.2A2 2 0 0 1 8.3 5.4h7.4a2 2 0 0 1 1.9 1.4L19 11M4 11h16v5H4zM7 16v1.6M17 16v1.6" /><circle cx="7.5" cy="13.5" r="1" /><circle cx="16.5" cy="13.5" r="1" />
-    </svg>
-  );
-}
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-    </svg>
-  );
-}
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  );
-}
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
+const SearchIcon = () => <Search strokeWidth={1.8} aria-hidden="true" />;
+const CloseIcon = () => <X aria-hidden="true" />;
+const CarIcon = () => <Car strokeWidth={1.7} aria-hidden="true" />;
+const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
+const CheckIcon = () => <Check aria-hidden="true" />;
+const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
 
 // Search placeholder noun per listing page.
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };

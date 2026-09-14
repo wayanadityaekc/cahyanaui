@@ -54,7 +54,7 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
         <div className={PICK_CATS}>
           {LINK_OPTIONS.map((o) => (
             <a href={o.href} className={LINK_CAT} key={o.href}>
-              <span className={LINK_ICON} dangerouslySetInnerHTML={{ __html: o.icon }} />
+              <span className={LINK_ICON}><o.Icon strokeWidth={1.6} /></span>
               <span>
                 <span className={LINK_NAME}>{o.name}</span>
                 <span className={LINK_SUB}>{o.sub}</span>

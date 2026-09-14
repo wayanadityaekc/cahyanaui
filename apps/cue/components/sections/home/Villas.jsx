@@ -1,3 +1,5 @@
+import { ArrowUpRight } from 'lucide-react';
+
 // Tailwind-native (migrasi): .vpromo* -> utilities 1:1 dari style.css. Overlay
 // (dulu ::after) pakai variant after:*. 2 foto villa side-by-side (grid 2 kolom)
 // jadi tumpuk atas-bawah di <=768px persis media query lama. Judul level-halaman
@@ -31,9 +33,7 @@ export default function Villas() {
         </p>
         <a className={CLS.cta} href="https://ubudprivatevillas.com" target="_blank" rel="noopener">
           Visit ubudprivatevillas.com
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M7 17L17 7M9 7h8v8" />
-          </svg>
+          <ArrowUpRight aria-hidden="true" />
         </a>
       </div>
     </section>

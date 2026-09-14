@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { Calendar, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
@@ -32,26 +33,10 @@ const ACTIVITY_MODE_INFO = {
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-const CAL_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />
-  </svg>
-);
-const PEOPLE_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="8" r="3.2" /><path d="M5 20c0-3.4 3.1-5.2 7-5.2s7 1.8 7 5.2" />
-  </svg>
-);
-const SPARK_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 3l1.8 4.9L18.5 9l-4.7 1.1L12 15l-1.8-4.9L5.5 9l4.7-1.1z" /><path d="M18 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" />
-  </svg>
-);
-const SHIELD_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" />
-  </svg>
-);
+const CAL_ICON = <Calendar strokeWidth={1.6} />;
+const PEOPLE_ICON = <UserRound strokeWidth={1.6} />;
+const SPARK_ICON = <Sparkles strokeWidth={1.5} />;
+const SHIELD_ICON = <ShieldCheck strokeWidth={1.6} />;
 
 export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook, variant = 'standalone' }) {
   const { setGuests, displayGuests } = useTripPrefs();

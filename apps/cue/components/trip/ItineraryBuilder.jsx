@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { UsersRound } from 'lucide-react';
 import { ITN_SUBTITLE } from '@/components/ui/itnClasses';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
@@ -241,12 +242,7 @@ export default function ItineraryBuilder() {
             </div>
           </div>
           <p className={ITN_TRIP_GUESTS}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-              <circle cx="9" cy="8" r="3.2" />
-              <path d="M3.5 19c.6-3 2.9-4.6 5.5-4.6s4.9 1.6 5.5 4.6" />
-              <circle cx="16.5" cy="9" r="2.4" />
-              <path d="M15.5 14.7c2.3.2 4.2 1.6 4.9 4.3" />
-            </svg>
+            <UsersRound strokeWidth={1.8} aria-hidden="true" />
             Guests: <b id="trip-guests-n">{guests || '-'}</b>&nbsp;- follows the navbar picker
           </p>
         </div>

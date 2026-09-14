@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { Car, ChevronDown, Clock, MapPin } from 'lucide-react';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -109,29 +110,9 @@ function ItemIcon({ row }) {
     );
   }
   let glyph;
-  if (row.kind === 'transfer') {
-    glyph = (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M5 13l1.5-4.5A2 2 0 0 1 8.4 7h7.2a2 2 0 0 1 1.9 1.5L19 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H8v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z" />
-        <circle cx="7.5" cy="15.5" r="1" />
-        <circle cx="16.5" cy="15.5" r="1" />
-      </svg>
-    );
-  } else if (row.kind === 'charter') {
-    glyph = (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
-      </svg>
-    );
-  } else {
-    glyph = (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-        <circle cx="12" cy="10" r="2.5" />
-      </svg>
-    );
-  }
+  if (row.kind === 'transfer') glyph = <Car strokeWidth={1.7} />;
+  else if (row.kind === 'charter') glyph = <Clock strokeWidth={1.7} />;
+  else glyph = <MapPin strokeWidth={1.7} />;
   return <span className={MTC_ITEM_ICON} aria-hidden="true">{glyph}</span>;
 }
 
@@ -336,9 +317,7 @@ export default function MyTripsCart() {
               {open
                 ? 'Hide details'
                 : 'View details (' + items.length + (items.length > 1 ? ' items)' : ' item)')}
-              <svg className={MTC_DET_CHEV} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
+              <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
             </button>
             {open && (
               <ul className={MTC_DET_LIST}>

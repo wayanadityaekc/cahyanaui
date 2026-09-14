@@ -36,7 +36,7 @@ export const ABOUT = {
       "kicker": "The people",
       "heading": "Who shows up at your door",
       "paras": [
-        "The local guides behind every trip. Tap a card to see their profile."
+        "The local guides behind every trip."
       ],
       "drivers": [
         {

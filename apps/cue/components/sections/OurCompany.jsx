@@ -89,7 +89,7 @@ export default function OurCompany() {
       </nav>
 
       <section id="about" hidden={tab !== 'about'}>
-        <AboutPage company />
+        <AboutPage />
       </section>
       <section id="contact" hidden={tab !== 'contact'}>
         <ContactSection company />

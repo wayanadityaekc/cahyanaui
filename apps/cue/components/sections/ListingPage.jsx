@@ -5,6 +5,7 @@ import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
+import ProgramPromoSlider from '@/components/sections/ProgramPromoSlider';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 
@@ -191,6 +192,8 @@ export default function ListingPage({ data }) {
           )}
         </section>
       </section>
+
+      <ProgramPromoSlider />
 
       {info && (
         <section className={INFO_SECTION_DETAIL}>

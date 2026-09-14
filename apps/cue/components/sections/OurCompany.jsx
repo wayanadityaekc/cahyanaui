@@ -111,7 +111,8 @@ export default function OurCompany() {
           ))}
         </nav>
 
-        {/* Mobile: hamburger-style dropdown - one button showing the active tab, tap to expand the list. */}
+        {/* Mobile: dropdown toggle showing the active tab, tap to expand the category list.
+            Icon = 2x2 grid (categories), not the 3-line hamburger navbar already uses. */}
         <div className="min-[993px]:hidden w-full pb-3 border-b border-line">
           <button
             type="button"
@@ -120,8 +121,11 @@ export default function OurCompany() {
             className="flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer font-body text-body font-semibold text-gold"
           >
             <span className="flex items-center gap-[0.6rem]">
-              <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="M4 6h16M4 12h16M4 18h16" />
+              <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
               </svg>
               {active.label}
             </span>

@@ -69,6 +69,8 @@ function FAQBody() {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const active = TABS.find((t) => t.id === tab);
 
   useEffect(() => {
     const applyHash = () => {
@@ -82,15 +84,16 @@ export default function OurCompany() {
 
   const goTo = (id) => {
     setTab(id);
+    setMenuOpen(false);
     window.history.replaceState(null, '', `#${id}`);
   };
 
   return (
     <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[calc(var(--header-h,104px)+1.9rem)] pb-[var(--space-5)]">
-      <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-6">
-        {/* Desktop: plain sticky full-height sidebar. Mobile: plain wrapping row on top. */}
+      <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-3">
+        {/* Desktop: plain sticky full-height sidebar. */}
         <nav
-          className="flex flex-col gap-3 flex-none w-[200px] sticky top-[var(--header-h,104px)] self-start h-[calc(100vh-var(--header-h,104px))] overflow-y-auto pr-6 border-r border-line max-[992px]:static max-[992px]:h-auto max-[992px]:w-auto max-[992px]:flex-row max-[992px]:flex-wrap max-[992px]:gap-x-6 max-[992px]:gap-y-2 max-[992px]:pr-0 max-[992px]:pb-4 max-[992px]:border-r-0 max-[992px]:border-b"
+          className="max-[992px]:hidden flex flex-col gap-3 flex-none w-[200px] sticky top-[var(--header-h,104px)] self-start h-[calc(100vh-var(--header-h,104px))] overflow-y-auto pr-6 border-r border-line"
           role="tablist"
           aria-label="Our company"
         >
@@ -107,6 +110,42 @@ export default function OurCompany() {
             </button>
           ))}
         </nav>
+
+        {/* Mobile: hamburger-style dropdown - one button showing the active tab, tap to expand the list. */}
+        <div className="min-[993px]:hidden w-full pb-3 border-b border-line">
+          <button
+            type="button"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer font-body text-body font-semibold text-gold"
+          >
+            <span className="flex items-center gap-[0.6rem]">
+              <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              {active.label}
+            </span>
+            <svg className={`w-4 h-4 shrink-0 text-muted transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          {/* `flex` (author class) beats the `hidden` attribute's UA-default display:none in
+              cascade order, so toggle via className instead of the `hidden` prop here. */}
+          <div className={`mt-3 gap-1 ${menuOpen ? 'flex flex-col' : 'hidden'}`} role="tablist" aria-label="Our company">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                onClick={() => goTo(t.id)}
+                className={`p-0 py-[0.35rem] bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="flex-1 min-w-0">
           <section id="about" hidden={tab !== 'about'}>

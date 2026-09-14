@@ -1,6 +1,6 @@
 'use client';
 
-import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
+import { INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
 import { useState, useEffect } from 'react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
@@ -12,80 +12,49 @@ const TABS = [
   { id: 'about', label: 'About Us' },
   { id: 'contact', label: 'Contact' },
   { id: 'faq', label: 'FAQ' },
-  { id: 'terms', label: 'Terms', legal: 'terms-conditions' },
-  { id: 'privacy', label: 'Privacy', legal: 'privacy-policy' },
-  { id: 'cancellation', label: 'Cancellation', legal: 'cancellation-policy' },
+  { id: 'terms', label: 'Terms & Conditions' },
+  { id: 'privacy', label: 'Privacy Policy' },
+  { id: 'cancellation', label: 'Cancellation Policy' },
 ];
 
-// URL hash <-> tab (Sep 2026, Wayan): footer/other pages link straight to a section
-// (`/our-company.html#faq`), not just the plain page. Read on mount + `hashchange`
-// (same-doc anchor clicks fire that event without a reload); `history.replaceState`
-// on tab click keeps the URL shareable without the native jump-to-anchor scroll
-// (there's no real element with that id, this is a JS tab switch, not a real anchor).
+// Rombak total (Sep 2026, Wayan): satu page, SEMUA section di DOM sekaligus
+// (bagus buat SEO - crawler baca semuanya, bukan cuma tab default) tapi cuma
+// satu yang keliatan lewat `hidden` (UA default [hidden]{display:none}) -
+// pindah section WAJIB klik tab, gak bisa di-scroll nembus ke section lain
+// (section yang hidden = 0 tinggi, gak ada apa-apa buat di-scroll ke sana).
+// URL hash tetap disinkronkan (footer dkk link ke /our-company.html#faq)
+// via `hashchange` + `history.replaceState`, sama seperti sebelumnya.
 function idFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
   return TABS.some((t) => t.id === id) ? id : null;
 }
 
-// .company-* chrome -> utilities (B-FINAL). Desktop (>=993) = white page, content sits
-// in a recessed white "sheet" (inset shadow) with a sticky sidebar-nav card on the right;
-// mobile (<=992) = single column white sheet + floating bottom tabbar. .company-page .reg*
-// was dead (no .reg renders) so no hooks are kept. Base padding/max-width of .company-layout
-// was always overridden by one of the two breakpoints (contiguous), so only the effective
-// per-breakpoint values are reproduced. min-[993px]/max-[992px] mirror the @media split.
-const C_PAGE = 'bg-white min-[993px]:pt-[calc(var(--header-h,104px)+1.9rem)] min-[993px]:px-[var(--container-x)] min-[993px]:pb-[var(--space-5)]';
-const C_LAYOUT = 'flex flex-row-reverse items-start gap-10 max-w-[var(--container)] mx-auto min-[993px]:max-w-[1180px] min-[993px]:p-0 max-[992px]:flex-col max-[992px]:items-stretch max-[992px]:gap-0 max-[992px]:pt-[calc(var(--header-h,92px)+1.4rem)] max-[992px]:px-[var(--container-x)] max-[992px]:pb-[6.5rem]';
-const C_NAV = 'flex-[0_0_260px] sticky top-[var(--header-h,104px)] flex flex-col gap-1 p-4 bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:0_10px_30px_rgba(31,61,43,0.08)] max-[992px]:hidden';
-const C_NAV_TITLE = 'font-head text-[length:var(--fs-h3)] font-semibold text-green text-center mt-[0.2rem] mx-0 mb-[0.6rem]';
-const C_NAV_ITEM = 'font-body text-[length:var(--fs-small)] font-medium text-left text-green bg-transparent [border:none] rounded-sm py-[0.55rem] px-[0.7rem] cursor-pointer [transition:background_var(--dur-fast)_ease,color_var(--dur-fast)_ease] hover:bg-cream';
-const C_NAV_ITEM_ON = 'font-body text-[length:var(--fs-small)] font-semibold text-left text-gold bg-cream [border:none] rounded-sm py-[0.55rem] px-[0.7rem] cursor-pointer [transition:background_var(--dur-fast)_ease,color_var(--dur-fast)_ease] hover:bg-cream';
-const C_MAIN = 'flex-[1_1_auto] min-w-0 bg-white [border:1px_solid_var(--line)] [box-shadow:inset_0_1px_6px_rgba(34,32,28,0.05)] min-[993px]:rounded-xl min-[993px]:pt-8 min-[993px]:px-[clamp(1.6rem,2.5vw,2.4rem)] min-[993px]:pb-[2.4rem] max-[992px]:rounded-lg max-[992px]:pt-[1.4rem] max-[992px]:px-[1.2rem] max-[992px]:pb-[1.8rem]';
-const C_HEADING = 'font-head text-[length:var(--fs-h2)] font-bold text-gold m-0 mb-4';
-const C_TABBAR = 'hidden max-[992px]:flex max-[992px]:items-center max-[992px]:justify-center max-[992px]:gap-[0.9rem] max-[992px]:fixed max-[992px]:left-1/2 max-[992px]:bottom-4 max-[992px]:[transform:translateX(-50%)] max-[992px]:z-30 max-[992px]:min-w-[220px] max-[992px]:py-2 max-[992px]:px-[0.6rem] max-[992px]:bg-white max-[992px]:[border:1px_solid_var(--line)] max-[992px]:rounded-pill max-[992px]:[box-shadow:var(--shadow-xl)]';
-const C_ARROW = 'max-[992px]:flex-[0_0_auto] max-[992px]:flex max-[992px]:items-center max-[992px]:justify-center max-[992px]:w-[34px] max-[992px]:h-[34px] max-[992px]:rounded-[50%] max-[992px]:[border:none] max-[992px]:bg-cream max-[992px]:text-gold-d max-[992px]:text-[1.3rem] max-[992px]:leading-none max-[992px]:cursor-pointer max-[992px]:[transition:background_var(--dur-fast)_ease] max-[992px]:hover:bg-line';
-const C_LABEL = 'max-[992px]:flex-[1_1_auto] max-[992px]:text-center max-[992px]:font-body max-[992px]:text-[length:var(--fs-small)] max-[992px]:font-semibold max-[992px]:text-green';
-
 function LegalBody({ data }) {
   return (
-    <section className={`${INFO_SECTION_ARTICLE} !pt-0`}>
-      <div className={INFO_CONTAINER_ARTICLE}>
-        <h1 className={C_HEADING}>{data.title}</h1>
-        <div>
-          <Prose blocks={data.body} headingVariant="company" />
-        </div>
-      </div>
-    </section>
+    <div className={INFO_CONTAINER_ARTICLE}>
+      <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
+      <Prose blocks={data.body} headingVariant="company" />
+    </div>
   );
 }
 
-// FAQ tab (Sep 2026, Wayan): faq.html retired, folded in here - same accordion
-// markup that page used, just without its own hero (Our Company already has one).
 function FAQBody() {
   return (
-    <section className={`${INFO_SECTION_ARTICLE} !pt-0`}>
-      <div className={INFO_CONTAINER_ARTICLE}>
-        <h1 className={C_HEADING}>Frequently Asked Questions</h1>
-        {FAQ.map((item, i) => (
-          <details className="group mb-3 [border:1px_solid_#e0ddd4] rounded-md bg-white overflow-hidden" key={i}>
-            <summary className="relative py-[1.1rem] pr-12 pl-5 font-body text-[1rem] font-semibold text-green cursor-pointer list-none [&::-webkit-details-marker]:hidden after:content-['+'] after:absolute after:top-1/2 after:right-5 after:-translate-y-1/2 after:text-[1.5rem] after:font-normal after:text-gold [[open]_&]:text-gold [[open]_&]:after:content-['−']">
-              {item.q}
-            </summary>
-            <div
-              className="pt-0 px-5 pb-5 [&_p]:font-body [&_p]:text-body [&_p]:leading-[var(--lh-body)] [&_p]:font-normal"
-              dangerouslySetInnerHTML={{ __html: item.a }}
-            />
-          </details>
-        ))}
-      </div>
-    </section>
+    <div className={INFO_CONTAINER_ARTICLE}>
+      <h1 className="font-head text-h2 font-bold text-gold mb-4">Frequently Asked Questions</h1>
+      {FAQ.map((item, i) => (
+        <details className="mb-3 border border-line rounded-md p-4" key={i}>
+          <summary className="font-body text-[1rem] font-semibold text-green cursor-pointer">{item.q}</summary>
+          <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]" dangerouslySetInnerHTML={{ __html: item.a }} />
+        </details>
+      ))}
+    </div>
   );
 }
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const activeIndex = TABS.findIndex((t) => t.id === tab);
-  const active = TABS[activeIndex];
 
   useEffect(() => {
     const applyHash = () => {
@@ -102,47 +71,41 @@ export default function OurCompany() {
     window.history.replaceState(null, '', `#${id}`);
   };
 
-  const step = (dir) => {
-    const next = (activeIndex + dir + TABS.length) % TABS.length;
-    goTo(TABS[next].id);
-  };
-
   return (
-    <div className={C_PAGE}>
-      <div className={C_LAYOUT}>
-        <nav className={C_NAV} role="tablist" aria-label="Our company">
-          <p className={C_NAV_TITLE}>Our Company</p>
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.id}
-              className={tab === t.id ? C_NAV_ITEM_ON : C_NAV_ITEM}
-              onClick={() => goTo(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </nav>
+    <div className="max-w-[var(--container-mid)] mx-auto px-[var(--container-x)] pt-[calc(var(--header-h,104px)+1.9rem)] pb-[var(--space-5)]">
+      <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-8 pb-4 border-b border-line" role="tablist" aria-label="Our company">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            onClick={() => goTo(t.id)}
+            className={`p-0 bg-transparent border-none cursor-pointer font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </nav>
 
-        <div className={C_MAIN}>
-          {tab === 'about' && <AboutPage company />}
-          {tab === 'contact' && <ContactSection company />}
-          {tab === 'faq' && <FAQBody />}
-          {active.legal && <LegalBody data={LEGAL[active.legal]} />}
-        </div>
-      </div>
-
-      <div className={C_TABBAR}>
-        <button type="button" className={C_ARROW} aria-label="Previous section" onClick={() => step(-1)}>
-          &lsaquo;
-        </button>
-        <span className={C_LABEL}>{active.label}</span>
-        <button type="button" className={C_ARROW} aria-label="Next section" onClick={() => step(1)}>
-          &rsaquo;
-        </button>
-      </div>
+      <section id="about" hidden={tab !== 'about'}>
+        <AboutPage company />
+      </section>
+      <section id="contact" hidden={tab !== 'contact'}>
+        <ContactSection company />
+      </section>
+      <section id="faq" hidden={tab !== 'faq'}>
+        <FAQBody />
+      </section>
+      <section id="terms" hidden={tab !== 'terms'}>
+        <LegalBody data={LEGAL['terms-conditions']} />
+      </section>
+      <section id="privacy" hidden={tab !== 'privacy'}>
+        <LegalBody data={LEGAL['privacy-policy']} />
+      </section>
+      <section id="cancellation" hidden={tab !== 'cancellation'}>
+        <LegalBody data={LEGAL['cancellation-policy']} />
+      </section>
     </div>
   );
 }

@@ -43,15 +43,25 @@ function LegalBody({ data }) {
   );
 }
 
+// FAQ grouped by category (Sep 2026, Wayan: tambah pertanyaan + kategori buat SEO).
+// FAQ.cat udah urut per kelompok di faq.js, jadi ngambil kategori unik dalam
+// urutan kemunculan cukup buat bikin heading per grup - gak perlu sort/data baru.
+const FAQ_CATS = [...new Set(FAQ.map((item) => item.cat))];
+
 function FAQBody() {
   return (
     <div className={BODY_TEXT}>
       <h1 className="font-head text-h2 font-bold text-gold mb-4">Frequently Asked Questions</h1>
-      {FAQ.map((item, i) => (
-        <details className="mb-3 border border-line rounded-md p-4" key={i}>
-          <summary className="font-body text-[1rem] font-semibold text-green cursor-pointer">{item.q}</summary>
-          <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]" dangerouslySetInnerHTML={{ __html: item.a }} />
-        </details>
+      {FAQ_CATS.map((cat) => (
+        <div className="mb-8" key={cat}>
+          <h2 className="m-0 mb-3 font-head text-h3 font-semibold text-green">{cat}</h2>
+          {FAQ.filter((item) => item.cat === cat).map((item, i) => (
+            <details className="mb-3 border border-line rounded-md p-4" key={i}>
+              <summary className="font-body text-[1rem] font-semibold text-green cursor-pointer">{item.q}</summary>
+              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]" dangerouslySetInnerHTML={{ __html: item.a }} />
+            </details>
+          ))}
+        </div>
       ))}
     </div>
   );

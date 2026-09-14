@@ -1,4 +1,5 @@
 import OurCompany from '@/components/sections/OurCompany';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata = {
   title: 'Our Company | About, Contact, FAQ & Policies - Cahyana Ubud',
@@ -8,5 +9,10 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <OurCompany />;
+  return (
+    <>
+      <JsonLd page="our-company" />
+      <OurCompany />
+    </>
+  );
 }

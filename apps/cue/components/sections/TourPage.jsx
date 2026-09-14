@@ -24,7 +24,7 @@ export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-norm
 const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur)_var(--ease-out)] hover:[transform:translateY(-3px)]`;
 // Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
 // sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
-export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-bottom:1px_solid_#e0ddd4] text-small text-muted';
+export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-top:1px_solid_#e0ddd4] [border-bottom:1px_solid_#e0ddd4] text-h3 text-muted';
 export const CRUMB_LINK = 'text-gold no-underline font-medium hover:underline';
 export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
 // Fact hooks di hero detail (migrasi Fase 2): presentasi -> utilities. Kelas

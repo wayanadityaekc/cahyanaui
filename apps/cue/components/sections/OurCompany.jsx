@@ -1,95 +1,176 @@
 'use client';
 
-import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
+import { FAQ } from '@/content/shared/faq';
 import Prose from '@/components/prose/Prose';
 
 const TABS = [
   { id: 'about', label: 'About Us' },
-  { id: 'terms', label: 'Terms', legal: 'terms-conditions' },
-  { id: 'privacy', label: 'Privacy', legal: 'privacy-policy' },
-  { id: 'cancellation', label: 'Cancellation', legal: 'cancellation-policy' },
   { id: 'contact', label: 'Contact' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'terms', label: 'Terms & Conditions' },
+  { id: 'privacy', label: 'Privacy Policy' },
+  { id: 'cancellation', label: 'Cancellation Policy' },
 ];
 
-// .company-* chrome -> utilities (B-FINAL). Desktop (>=993) = white page, content sits
-// in a recessed white "sheet" (inset shadow) with a sticky sidebar-nav card on the right;
-// mobile (<=992) = single column white sheet + floating bottom tabbar. .company-page .reg*
-// was dead (no .reg renders) so no hooks are kept. Base padding/max-width of .company-layout
-// was always overridden by one of the two breakpoints (contiguous), so only the effective
-// per-breakpoint values are reproduced. min-[993px]/max-[992px] mirror the @media split.
-const C_PAGE = 'bg-white min-[993px]:pt-[calc(var(--header-h,104px)+1.9rem)] min-[993px]:px-[var(--container-x)] min-[993px]:pb-[var(--space-5)]';
-const C_LAYOUT = 'flex flex-row-reverse items-start gap-10 max-w-[var(--container)] mx-auto min-[993px]:max-w-[1180px] min-[993px]:p-0 max-[992px]:flex-col max-[992px]:items-stretch max-[992px]:gap-0 max-[992px]:pt-[calc(var(--header-h,92px)+1.4rem)] max-[992px]:px-[var(--container-x)] max-[992px]:pb-[6.5rem]';
-const C_NAV = 'flex-[0_0_260px] sticky top-[var(--header-h,104px)] flex flex-col gap-1 p-4 bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:0_10px_30px_rgba(31,61,43,0.08)] max-[992px]:hidden';
-const C_NAV_TITLE = 'font-head text-[length:var(--fs-h3)] font-semibold text-green text-center mt-[0.2rem] mx-0 mb-[0.6rem]';
-const C_NAV_ITEM = 'font-body text-[length:var(--fs-small)] font-medium text-left text-green bg-transparent [border:none] rounded-sm py-[0.55rem] px-[0.7rem] cursor-pointer [transition:background_var(--dur-fast)_ease,color_var(--dur-fast)_ease] hover:bg-cream';
-const C_NAV_ITEM_ON = 'font-body text-[length:var(--fs-small)] font-semibold text-left text-gold bg-cream [border:none] rounded-sm py-[0.55rem] px-[0.7rem] cursor-pointer [transition:background_var(--dur-fast)_ease,color_var(--dur-fast)_ease] hover:bg-cream';
-const C_MAIN = 'flex-[1_1_auto] min-w-0 bg-white [border:1px_solid_var(--line)] [box-shadow:inset_0_1px_6px_rgba(34,32,28,0.05)] min-[993px]:rounded-xl min-[993px]:pt-8 min-[993px]:px-[clamp(1.6rem,2.5vw,2.4rem)] min-[993px]:pb-[2.4rem] max-[992px]:rounded-lg max-[992px]:pt-[1.4rem] max-[992px]:px-[1.2rem] max-[992px]:pb-[1.8rem]';
-const C_HEADING = 'font-head text-[length:var(--fs-h2)] font-bold text-gold m-0 mb-4';
-const C_TABBAR = 'hidden max-[992px]:flex max-[992px]:items-center max-[992px]:justify-center max-[992px]:gap-[0.9rem] max-[992px]:fixed max-[992px]:left-1/2 max-[992px]:bottom-4 max-[992px]:[transform:translateX(-50%)] max-[992px]:z-30 max-[992px]:min-w-[220px] max-[992px]:py-2 max-[992px]:px-[0.6rem] max-[992px]:bg-white max-[992px]:[border:1px_solid_var(--line)] max-[992px]:rounded-pill max-[992px]:[box-shadow:var(--shadow-xl)]';
-const C_ARROW = 'max-[992px]:flex-[0_0_auto] max-[992px]:flex max-[992px]:items-center max-[992px]:justify-center max-[992px]:w-[34px] max-[992px]:h-[34px] max-[992px]:rounded-[50%] max-[992px]:[border:none] max-[992px]:bg-cream max-[992px]:text-gold-d max-[992px]:text-[1.3rem] max-[992px]:leading-none max-[992px]:cursor-pointer max-[992px]:[transition:background_var(--dur-fast)_ease] max-[992px]:hover:bg-line';
-const C_LABEL = 'max-[992px]:flex-[1_1_auto] max-[992px]:text-center max-[992px]:font-body max-[992px]:text-[length:var(--fs-small)] max-[992px]:font-semibold max-[992px]:text-green';
+// Rombak total (Sep 2026, Wayan): satu page, SEMUA section di DOM sekaligus
+// (bagus buat SEO - crawler baca semuanya, bukan cuma tab default) tapi cuma
+// satu yang keliatan lewat `hidden` (UA default [hidden]{display:none}) -
+// pindah section WAJIB klik tab, gak bisa di-scroll nembus ke section lain
+// (section yang hidden = 0 tinggi, gak ada apa-apa buat di-scroll ke sana).
+// URL hash tetap disinkronkan (footer dkk link ke /our-company.html#faq)
+// via `hashchange` + `history.replaceState`, sama seperti sebelumnya.
+function idFromHash() {
+  if (typeof window === 'undefined') return null;
+  const id = window.location.hash.replace('#', '');
+  return TABS.some((t) => t.id === id) ? id : null;
+}
+
+// Sama lebar dengan ContactSection (bukan dibatasin --container-read lagi, Sep 2026
+// Wayan: biar padding kanan semua tab konsisten - Contact ngisi penuh lebar kolom,
+// yang lain jangan malah lebih sempit).
+const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 
 function LegalBody({ data }) {
   return (
-    <section className={`${INFO_SECTION_ARTICLE} !pt-0`}>
-      <div className={INFO_CONTAINER_ARTICLE}>
-        <h1 className={C_HEADING}>{data.title}</h1>
-        <div>
-          <Prose blocks={data.body} headingVariant="company" />
+    <div className={BODY_TEXT}>
+      <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
+      <Prose blocks={data.body} headingVariant="company" />
+    </div>
+  );
+}
+
+// FAQ grouped by category (Sep 2026, Wayan: tambah pertanyaan + kategori buat SEO).
+// FAQ.cat udah urut per kelompok di faq.js, jadi ngambil kategori unik dalam
+// urutan kemunculan cukup buat bikin heading per grup - gak perlu sort/data baru.
+const FAQ_CATS = [...new Set(FAQ.map((item) => item.cat))];
+
+function FAQBody() {
+  return (
+    <div className={BODY_TEXT}>
+      <h1 className="font-head text-h2 font-bold text-gold mb-4">Frequently Asked Questions</h1>
+      {FAQ_CATS.map((cat) => (
+        <div className="mb-8" key={cat}>
+          <h2 className="m-0 mb-3 font-head text-h3 font-semibold text-green">{cat}</h2>
+          {FAQ.filter((item) => item.cat === cat).map((item, i) => (
+            <details className="mb-3 border border-line rounded-md p-4" key={i}>
+              <summary className="font-body text-[1rem] font-semibold text-green cursor-pointer">{item.q}</summary>
+              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]" dangerouslySetInnerHTML={{ __html: item.a }} />
+            </details>
+          ))}
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const activeIndex = TABS.findIndex((t) => t.id === tab);
-  const active = TABS[activeIndex];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const active = TABS.find((t) => t.id === tab);
 
-  const step = (dir) => {
-    const next = (activeIndex + dir + TABS.length) % TABS.length;
-    setTab(TABS[next].id);
+  useEffect(() => {
+    const applyHash = () => {
+      const id = idFromHash();
+      if (id) setTab(id);
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
+  const goTo = (id) => {
+    setTab(id);
+    setMenuOpen(false);
+    window.history.replaceState(null, '', `#${id}`);
   };
 
   return (
-    <div className={C_PAGE}>
-      <div className={C_LAYOUT}>
-        <nav className={C_NAV} role="tablist" aria-label="Our company">
-          <p className={C_NAV_TITLE}>Our Company</p>
+    <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[calc(var(--header-h,104px)+1.9rem)] pb-[var(--space-5)]">
+      <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-3">
+        {/* Desktop: plain sticky full-height sidebar. */}
+        <nav
+          className="max-[992px]:hidden flex flex-col gap-3 flex-none w-[200px] sticky top-[var(--header-h,104px)] self-start h-[calc(100vh-var(--header-h,104px))] overflow-y-auto pr-6 border-r border-line"
+          role="tablist"
+          aria-label="Our company"
+        >
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               role="tab"
               aria-selected={tab === t.id}
-              className={tab === t.id ? C_NAV_ITEM_ON : C_NAV_ITEM}
-              onClick={() => setTab(t.id)}
+              onClick={() => goTo(t.id)}
+              className={`p-0 bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
             >
               {t.label}
             </button>
           ))}
         </nav>
 
-        <div className={C_MAIN}>
-          {tab === 'about' && <AboutPage company />}
-          {active.legal && <LegalBody data={LEGAL[active.legal]} />}
-          {tab === 'contact' && <ContactSection company />}
+        {/* Mobile: dropdown toggle showing the active tab, tap to expand the category list.
+            Icon = 2x2 grid (categories), not the 3-line hamburger navbar already uses. */}
+        <div className="min-[993px]:hidden w-full pb-3 border-b border-line">
+          <button
+            type="button"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer font-body text-body font-semibold text-gold"
+          >
+            <span className="flex items-center gap-[0.6rem]">
+              <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+              {active.label}
+            </span>
+            <svg className={`w-4 h-4 shrink-0 text-muted transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          {/* `flex` (author class) beats the `hidden` attribute's UA-default display:none in
+              cascade order, so toggle via className instead of the `hidden` prop here. */}
+          <div className={`mt-3 gap-1 ${menuOpen ? 'flex flex-col' : 'hidden'}`} role="tablist" aria-label="Our company">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                onClick={() => goTo(t.id)}
+                className={`p-0 py-[0.35rem] bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className={C_TABBAR}>
-        <button type="button" className={C_ARROW} aria-label="Previous section" onClick={() => step(-1)}>
-          &lsaquo;
-        </button>
-        <span className={C_LABEL}>{active.label}</span>
-        <button type="button" className={C_ARROW} aria-label="Next section" onClick={() => step(1)}>
-          &rsaquo;
-        </button>
+        <div className="flex-1 min-w-0">
+          <section id="about" hidden={tab !== 'about'}>
+            <AboutPage />
+          </section>
+          <section id="contact" hidden={tab !== 'contact'}>
+            <ContactSection company />
+          </section>
+          <section id="faq" hidden={tab !== 'faq'}>
+            <FAQBody />
+          </section>
+          <section id="terms" hidden={tab !== 'terms'}>
+            <LegalBody data={LEGAL['terms-conditions']} />
+          </section>
+          <section id="privacy" hidden={tab !== 'privacy'}>
+            <LegalBody data={LEGAL['privacy-policy']} />
+          </section>
+          <section id="cancellation" hidden={tab !== 'cancellation'}>
+            <LegalBody data={LEGAL['cancellation-policy']} />
+          </section>
+        </div>
       </div>
     </div>
   );

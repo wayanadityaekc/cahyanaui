@@ -35,7 +35,7 @@ export const LEGAL = {
         "Prices may change for public holidays, special events, or routes outside the Ubud area - we will always tell you before you confirm."
       ] },
       { "type": "heading", "html": "4. Changes &amp; cancellations" },
-      { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/cancellation-policy.html\">Cancellation Policy</a>, which forms part of these terms." },
+      { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/our-company.html#cancellation\">Cancellation Policy</a>, which forms part of these terms." },
       { "type": "heading", "html": "5. Your responsibilities" },
       { "type": "list", "variant": "yes", "items": [
         "Be ready at the agreed pick-up point and time - late starts can shorten the day.",
@@ -56,7 +56,7 @@ export const LEGAL = {
       { "type": "heading", "html": "11. Changes to these terms" },
       { "type": "para", "html": "We may update these Terms &amp; Conditions from time to time. The version published on this page at the time of your booking is the one that applies." },
       { "type": "heading", "html": "12. Contact" },
-      { "type": "para", "html": "Questions about these terms? <a href=\"/contact.html\">Contact us</a> - we are happy to help before you book." }
+      { "type": "para", "html": "Questions about these terms? <a href=\"/our-company.html#contact\">Contact us</a> - we are happy to help before you book." }
     ]
   },
   "privacy-policy": {
@@ -99,7 +99,7 @@ export const LEGAL = {
       { "type": "heading", "html": "9. Changes to this policy" },
       { "type": "para", "html": "We may update this Privacy Policy from time to time. The version shown on this page is the one that currently applies." },
       { "type": "heading", "html": "10. Contact" },
-      { "type": "para", "html": "Questions about your privacy? <a href=\"/contact.html\">Contact us</a> - we are glad to help." }
+      { "type": "para", "html": "Questions about your privacy? <a href=\"/our-company.html#contact\">Contact us</a> - we are glad to help." }
     ]
   },
   "cancellation-policy": {
@@ -137,7 +137,7 @@ export const LEGAL = {
       { "type": "heading", "html": "9. How refunds are paid" },
       { "type": "para", "html": "Approved refunds are returned by bank transfer or your original payment channel within 7-14 days." },
       { "type": "heading", "html": "10. Contact" },
-      { "type": "para", "html": "Need to cancel or have a question? <a href=\"/contact.html\">Contact us</a> - the sooner you tell us, the more flexible we can be." }
+      { "type": "para", "html": "Need to cancel or have a question? <a href=\"/our-company.html#contact\">Contact us</a> - the sooner you tell us, the more flexible we can be." }
     ]
   }
 };

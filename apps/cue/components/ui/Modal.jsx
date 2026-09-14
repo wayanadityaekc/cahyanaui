@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import clsx from 'clsx';
 import useBodyLock from './useBodyLock';
 
 export default function Modal({ open, onClose, title, children, className = '' }) {
@@ -25,7 +26,11 @@ export default function Modal({ open, onClose, title, children, className = '' }
   // dihapus kalau SEMUA pemakai .modal* udah di-convert.
   return createPortal(
     <div
-      className={`fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)] transition-[opacity,visibility] duration-300 ease-[ease] motion-reduce:transition-none ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${className}`.trim()}
+      className={clsx(
+        'fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)] transition-[opacity,visibility] duration-300 ease-[ease] motion-reduce:transition-none',
+        open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none',
+        className,
+      )}
       onClick={(e) => e.target === e.currentTarget && onClose && onClose()}
       role="dialog"
       aria-modal="true"

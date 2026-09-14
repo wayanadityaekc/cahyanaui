@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { API_BASE } from '@/lib/constants';
 
 // Tailwind-native (migrasi): .trust* -> utilities 1:1 dari style.css.
@@ -40,7 +41,7 @@ export default function Trust({ showStat = true, showSocials = false, cream = fa
   }, []);
 
   return (
-    <section className={`${CLS.base}${cream ? ' bg-cream' : ''}`}>
+    <section className={clsx(CLS.base, cream && 'bg-cream')}>
       {showStat && (
         <p className={CLS.stat} hidden={!count}>
           <strong className={CLS.statStrong}>{count}</strong> travelers have joined Cahyana

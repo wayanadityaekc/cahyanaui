@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { Check, Clock, MapPin, Star, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
 
@@ -51,7 +52,7 @@ export default function ListingRow({
   return (
     <a
       id={anchorId}
-      className={`${CARD}${dim ? ' opacity-[0.34] hover:opacity-[0.5]' : ''}`}
+      className={clsx(CARD, dim && 'opacity-[0.34] hover:opacity-[0.5]')}
       href={href}
       data-zone={zone}
       onClick={handleClick}

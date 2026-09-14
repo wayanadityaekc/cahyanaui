@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import clsx from 'clsx';
 import { ChevronDown } from 'lucide-react';
 import useMobile from './useMobile';
 import Overlay from './Overlay';
@@ -88,7 +89,7 @@ export default function Select({
   );
 
   return (
-    <div className={`${CSEL_GROUP} ${className}`.trim()} ref={groupRef}>
+    <div className={clsx(CSEL_GROUP, className)} ref={groupRef}>
       <select name={name} id={fieldId} className={BK_NATIVE} value={value ?? ''} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true">
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (

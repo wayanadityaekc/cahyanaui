@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 
 /**
  * LoadingScreen - branded cream splash (logo + spinner) shown on EVERY page.
@@ -87,7 +88,7 @@ export default function LoadingScreen() {
   const BASE = 'fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-[1.2rem] bg-cream [transition:opacity_0.45s_var(--ease),visibility_0.45s_var(--ease)]';
   const OUT = 'opacity-0 invisible pointer-events-none';
   return (
-    <div ref={elRef} className={`${BASE}${out ? ` ${OUT}` : ''}`} aria-hidden="true">
+    <div ref={elRef} className={clsx(BASE, out && OUT)} aria-hidden="true">
       <img
         className="w-[min(200px,45vw)] h-auto"
         src="/assets/images/logo.webp"

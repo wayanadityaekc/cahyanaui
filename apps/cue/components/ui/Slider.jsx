@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
 import { GRID_SLIDER } from '@/components/ui/gridClasses';
 
 // Tailwind-native (migrasi Fase 2, keluarga kartu - stage 4a: slider wrapper).
@@ -49,7 +50,7 @@ export default function Slider({ children, className = '', gridClassName = GRID_
   };
 
   return (
-    <div className={`group relative ${className}`.trim()}>
+    <div className={clsx('group relative', className)}>
       <button
         type="button"
         className={`${ARROW} left-[-6px]`}

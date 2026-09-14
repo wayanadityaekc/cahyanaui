@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { ChevronDown, Menu, Search } from 'lucide-react';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { SUBHERO, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
@@ -41,7 +42,10 @@ export default function GuideHub() {
               <button className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden" type="button" aria-haspopup="true" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
                 <span>Categories</span>
-                <ChevronDown className={`w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]${open ? ' [transform:rotate(180deg)]' : ''}`} aria-hidden="true" />
+                <ChevronDown
+                  className={clsx('w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]', open && '[transform:rotate(180deg)]')}
+                  aria-hidden="true"
+                />
               </button>
               <div className={GC_MENU} hidden={!open}>
                 {GUIDE_HUB.navItems.map((n) => (

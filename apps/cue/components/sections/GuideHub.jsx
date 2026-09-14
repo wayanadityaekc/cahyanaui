@@ -32,7 +32,7 @@ export default function GuideHub() {
     <>
       <section className={SUBHERO} style={{ backgroundImage: GUIDE_HUB.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}>
         <div className={SUBHERO_CONTENT}>
-          <h1 className={SUBHERO_TITLE}>{GUIDE_HUB.title}</h1>
+          <h1 className={`${SUBHERO_TITLE} !text-white`}>{GUIDE_HUB.title}</h1>
           <p className={SUBHERO_TEXT}>{GUIDE_HUB.text}</p>
 
           <div className="flex items-stretch max-w-[640px] mt-6 mx-auto [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white shadow-md">

@@ -34,6 +34,17 @@ export const GRID_GUIDEMORE =
   'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] max-[992px]:gap-4 ' +
   'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_80%]';
 
+// GuideHub category grid (guide hub page, Sep 2026 - Wayan): FIXED 4 columns visible
+// on desktop, always sized as 1/4 of the container regardless of how many cards a
+// category has today - a 5th+ card overflows and is reached by scrolling sideways
+// (snap), it does NOT wrap to a new row. Mobile: same slider pattern as GRID_SLIDER
+// (70/80% card, swipe).
+export const GRID_GUIDEHUB =
+  'flex max-w-[1200px] mx-auto pb-4 overflow-x-auto overflow-y-hidden ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'gap-[1.4rem] [&>*]:[scroll-snap-align:start] ' +
+  'min-[993px]:[&>*]:flex-[0_0_calc((100%-4.2rem)/4)] max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_80%]';
+
 // .experience__grid--slider (GuideHub + GuideHome sliders): slider every breakpoint,
 // with the mobile full-bleed (-mx-6 + pl-4) the --slider @992 rule adds.
 export const GRID_SLIDER =

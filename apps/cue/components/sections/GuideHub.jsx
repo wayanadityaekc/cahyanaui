@@ -2,7 +2,7 @@
 
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { SUBHERO, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
-import { GRID_SLIDER } from '@/components/ui/gridClasses';
+import { GRID_GUIDEHUB } from '@/components/ui/gridClasses';
 import { useMemo, useState } from 'react';
 import GuideCard from '@/components/cards/GuideCard';
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
@@ -73,9 +73,9 @@ export default function GuideHub() {
         {cats.map((c) => (
           <div className={GC_SECTION} id={c.id} key={c.id}>
             <h2 className={`${SECTION_TITLE} !text-left !mb-[1.1rem]`}>{c.title}</h2>
-            <div className={GRID_SLIDER}>
+            <div className={GRID_GUIDEHUB}>
               {c.cards.map((card) => (
-                <GuideCard key={card.href} href={card.href} img={card.img} alt={card.alt} title={card.title} tag={card.tag} cat={card.cat} w={card.w} hgt={card.hgt} />
+                <GuideCard key={card.href} href={card.href} img={card.img} alt={card.alt} title={card.title} tag={card.tag} cat={card.cat} w={card.w} hgt={card.hgt} overlayTag />
               ))}
             </div>
           </div>

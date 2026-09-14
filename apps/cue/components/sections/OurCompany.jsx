@@ -1,6 +1,5 @@
 'use client';
 
-import { INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
 import { useState, useEffect } from 'react';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
@@ -30,9 +29,14 @@ function idFromHash() {
   return TABS.some((t) => t.id === id) ? id : null;
 }
 
+// Sama lebar dengan ContactSection (bukan dibatasin --container-read lagi, Sep 2026
+// Wayan: biar padding kanan semua tab konsisten - Contact ngisi penuh lebar kolom,
+// yang lain jangan malah lebih sempit).
+const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
+
 function LegalBody({ data }) {
   return (
-    <div className={INFO_CONTAINER_ARTICLE}>
+    <div className={BODY_TEXT}>
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
       <Prose blocks={data.body} headingVariant="company" />
     </div>
@@ -41,7 +45,7 @@ function LegalBody({ data }) {
 
 function FAQBody() {
   return (
-    <div className={INFO_CONTAINER_ARTICLE}>
+    <div className={BODY_TEXT}>
       <h1 className="font-head text-h2 font-bold text-gold mb-4">Frequently Asked Questions</h1>
       {FAQ.map((item, i) => (
         <details className="mb-3 border border-line rounded-md p-4" key={i}>

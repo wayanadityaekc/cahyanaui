@@ -350,21 +350,7 @@ export const LISTINGS = {
         ]
       }
     ],
-    "closing": {
-      "text": "Rather build your own route? Plan your trip day by day, or explore Bali by area first.",
-      "buttons": [
-        {
-          "href": "/my-trips.html",
-          "cls": "closing-band__btn closing-band__btn--primary",
-          "text": "Build your own itinerary"
-        },
-        {
-          "href": "/destinations.html",
-          "cls": "closing-band__btn",
-          "text": "Browse destinations"
-        }
-      ]
-    }
+    "closing": null
   },
   "activities": {
     "heroBg": "jungle-swing-card.jpg",

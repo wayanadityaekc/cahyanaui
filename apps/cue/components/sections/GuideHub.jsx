@@ -30,7 +30,7 @@ export default function GuideHub() {
 
   return (
     <>
-      <section className={SUBHERO} style={{ backgroundImage: GUIDE_HUB.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, ''), backgroundPosition: 'center 68%' }}>
+      <section className={SUBHERO} style={{ backgroundImage: GUIDE_HUB.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, ''), backgroundPosition: 'center 60%' }}>
         <div className={SUBHERO_CONTENT}>
           <h1 className={`${SUBHERO_TITLE} !text-white`}>{GUIDE_HUB.title}</h1>
           <p className={SUBHERO_TEXT}>{GUIDE_HUB.text}</p>

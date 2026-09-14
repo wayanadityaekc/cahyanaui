@@ -6,6 +6,7 @@ import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import Select from '@/components/ui/Select';
+import { withSymbol } from '@/components/Price';
 
 const UBUD = 'Ubud';
 
@@ -75,7 +76,7 @@ export default function TransferPicker() {
       </div>
 
       <div className="text-center mt-[1.2rem] mb-[0.1rem]">
-        <span className="font-body text-[2rem] text-amber font-semibold">{priceText}</span>
+        <span className="font-body text-[2rem] text-amber font-semibold">{withSymbol(priceText)}</span>
         <span className="block text-muted text-small mt-[0.1rem]">{amount == null ? '' : 'per car'}</span>
       </div>
 

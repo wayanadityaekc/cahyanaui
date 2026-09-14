@@ -7,7 +7,11 @@ import { PRICE, PRICE_SYM, PRICE_TAIL } from '@/components/ui/priceClasses';
 // instead of full-size, so long amounts ("Rp1.300.000") read clearly and take
 // less width. Splits after the LAST dot, keeping it with the (normal-size)
 // leading digits - e.g. "1.300.000" -> "1.300." + small "000".
-function withDeemphasizedThousands(num) {
+// Exported for the rare spot that needs to shrink a bare (already
+// symbol-less) IDR number - e.g. HeroSearch's price-range hint, where only
+// the low end of "Rp700.000-1.300.000" carries the "Rp" prefix withSymbol()
+// looks for.
+export function withDeemphasizedThousands(num) {
   const i = num.lastIndexOf('.');
   if (i === -1) return num;
   return (

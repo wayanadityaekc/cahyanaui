@@ -1,6 +1,7 @@
 'use client';
 
 import { usePricing } from '@/state/PricingProvider';
+import { withSymbol } from '@/components/Price';
 
 // Renders the live "+$6" / "+Rp100.000" pick-up-outside-Ubud charter surcharge
 // from catalog.charterSurcharge (cahyana-api/pricing.js), so CharterHome's copy
@@ -16,6 +17,7 @@ export default function CharterSurcharge({ fallback = '+$6' }) {
 
   const isIdr = catalog.currency === 'IDR';
   const symbol = catalog.symbol || '$';
+  const text = symbol + sur.display.toLocaleString(isIdr ? 'id-ID' : 'en-US');
 
-  return `+${symbol}${sur.display.toLocaleString(isIdr ? 'id-ID' : 'en-US')}`;
+  return <>+{withSymbol(text)}</>;
 }

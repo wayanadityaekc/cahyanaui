@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useReferral } from '@/state/ReferralProvider';
+import { withSymbol, withDeemphasizedThousands } from '@/components/Price';
 import useMobile from '@/components/ui/useMobile';
 import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
@@ -51,7 +52,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   const ranges = useMemo(() => {
     const out = {};
     if (!catalog) return out;
-    const fmt = (n) => symbol + n.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
+    const isIdr = currency === 'IDR';
+    const loc = isIdr ? 'id-ID' : 'en-US';
+    const fmt = (n) => withSymbol(symbol + n.toLocaleString(loc));
     const byCat = (cats) => catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
     const sets = {
       tour: byCat(['tour', 'combo']),
@@ -64,7 +67,11 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       if (!arr.length) continue;
       const lo = Math.min(...arr);
       const hi = Math.max(...arr);
-      out[cat] = lo === hi ? 'from ' + fmt(lo) : fmt(lo) + '–' + hi.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
+      // Only the low end carries the "Rp"/"$" symbol (unchanged shape) - the
+      // bare high-end number still gets the small-thousands treatment for IDR
+      // so both ends of the range read consistently.
+      const hiText = isIdr ? withDeemphasizedThousands(hi.toLocaleString(loc)) : hi.toLocaleString(loc);
+      out[cat] = lo === hi ? <>from {fmt(lo)}</> : <>{fmt(lo)}–{hiText}</>;
     }
     return out;
   }, [catalog, symbol, currency]);

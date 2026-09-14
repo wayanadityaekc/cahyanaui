@@ -155,6 +155,19 @@ When unsure, ask first (keep it short).
   gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
   Semua tombol aksi = **pill** (border-radius 999px). Chip logo bayar & toggle nggak.
 - Hover lift: keep it subtle, not harsh.
+- **Ikon = `lucide-react`** (Sep 2026, Wayan pilih opsi "full Lucide" setelah lihat sheet
+  perbandingan lama-vs-Lucide). Ikon baru = import dari `lucide-react`, **JANGAN gambar SVG
+  manual lagi**. Aturannya:
+  - **WAJIB kasih class ukuran eksplisit** (`w-4 h-4` / `w-[var(--icon-sm)]` / lewat `[&>svg]`
+    di parent). Lucide nge-render atribut `width/height=24`, jadi ikon yang gak dikasih ukuran
+    bakal melar jadi 24px.
+  - `strokeWidth` cuma dioper kalau BUKAN 2 (default Lucide) — mis. `strokeWidth={1.7}`.
+  - Ikon yang dulu **solid** (bintang rating, badge kategori) dikasih `fill="currentColor"`
+    biar gak berubah jadi outline.
+  - **Masih hand-drawn & JANGAN diganti** (Lucide gak punya): glyph WhatsApp (`BookBar`),
+    7 logo pembayaran (`PayChips` + `Footer`), bendera mata uang (`FlagDefs`/`CurrencyPicker`).
+  - Verifikasi: harness `icons-snap.mjs` + `icons-diff.mjs` di scratchpad — patokannya
+    `boxDrift=0` & `countDrift=0` (gak ada ikon yang berubah ukuran / ilang).
 - Icons: SVG, **no emoji**. Ukuran ikon inline kecil pakai token (Agu 2026): `--icon-sm` 16px
   (meta jam/lokasi/pax, kontak, chip, sosmed) · `--icon-md` 20px (nav cart/akun, book-bar,
   toggle, search) · `--icon-lg` 24px (ikon aksi lebih besar). Dulu berserakan 13-23px, di-snap

@@ -12,4 +12,4 @@ export const PRICE_FROM = 'text-[length:var(--fs-small)] text-muted font-normal'
 // significant digits read clearly and the whole number takes less width
 // (Wayan, 14 Sep 2026 - fixes price text overlapping HomepageCard's meta row
 // on long amounts like "Rp1.300.000").
-export const PRICE_TAIL = 'text-[0.7em]';
+export const PRICE_TAIL = 'text-[0.55em] [vertical-align:0.05em]';

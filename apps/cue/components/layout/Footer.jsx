@@ -1,3 +1,4 @@
+import { Mail, MapPin, MessageCircle } from 'lucide-react';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as R } from '@/content/shared/registration';
 
@@ -48,23 +49,15 @@ export default function Footer() {
           </a>
           <div className="mt-[0.9rem] flex flex-col gap-[0.55rem]">
             <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={CONTACT_LINK}>
-              <svg className={CONTACT_SVG} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
-              </svg>
+              <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
               Message us on WhatsApp
             </a>
             <a href="mailto:cahyanabaliexperience@gmail.com" className={CONTACT_LINK}>
-              <svg className={CONTACT_SVG} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="5" width="18" height="14" rx="2" />
-                <path d="M3 7l9 6 9-6" />
-              </svg>
+              <Mail className={CONTACT_SVG} strokeWidth={1.8} />
               cahyanabaliexperience@gmail.com
             </a>
             <span className={CONTACT_ITEM}>
-              <svg className={CONTACT_SVG} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
-              </svg>
+              <MapPin className={CONTACT_SVG} strokeWidth={1.8} />
               Based in Ubud, Bali
             </span>
           </div>

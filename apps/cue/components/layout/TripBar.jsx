@@ -1,17 +1,13 @@
 'use client';
 
+import { Tag } from 'lucide-react';
 import { PROMO } from '@/content/shared/promo';
 
 // Tailwind-native (full-portable): .tripbar* -> utilities.
 const BAR = 'flex items-center justify-center gap-2 w-full py-[0.6rem] px-5 [border-top:1px_solid_#ececec] bg-cream text-h3 text-green no-underline [@media(max-width:560px)]:text-small [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:py-[0.55rem] [@media(max-width:560px)]:px-[0.9rem]';
 const EDIT = 'ml-2 text-gold font-normal underline [@media(max-width:560px)]:ml-[0.3rem]';
 
-const TAG_ICON = (
-  <svg className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-    <line x1="7" y1="7" x2="7.01" y2="7" />
-  </svg>
-);
+const TAG_ICON = <Tag className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold" strokeWidth={1.8} />;
 
 export default function TripBar({ mode = 'promo' }) {
   // Wayan (Sep 2026): tripbar now only ever mounts on the homepage - Navbar

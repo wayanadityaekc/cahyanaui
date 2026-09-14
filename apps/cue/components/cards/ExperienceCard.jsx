@@ -1,27 +1,10 @@
+import { Clock, MapPin } from 'lucide-react';
 import Img from '@/components/ui/Img';
 import Price from '@/components/Price';
 import { PRICE_FROM } from '@/components/ui/priceClasses';
 import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
-
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-      <circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
 
 // Tailwind-native PENUH (migrasi Fase 2 - keluarga kartu, stage final). Dulu numpang
 // .experience__card + .experience__image/body/name/meta/footer/price + override
@@ -77,7 +60,7 @@ export default function ExperienceCard({
         <h3 className={NAME}>{name}</h3>
         {meta && (
           <div className={META}>
-            {metaIcon === 'pin' ? <PinIcon /> : <ClockIcon />}
+            {metaIcon === 'pin' ? <MapPin strokeWidth={1.7} /> : <Clock strokeWidth={1.7} />}
             <span>{meta}</span>
           </div>
         )}

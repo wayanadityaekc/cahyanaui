@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// Size comes from the parent button's [&>svg] rule, same as before.
 function Chevron({ dir }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {dir === 'left' ? <path d="M15 6l-6 6 6 6" /> : <path d="M9 6l6 6-6 6" />}
-    </svg>
-  );
+  const Ic = dir === 'left' ? ChevronLeft : ChevronRight;
+  return <Ic aria-hidden="true" />;
 }
 
 // Floating category switcher (bottom-center): shows the section currently in

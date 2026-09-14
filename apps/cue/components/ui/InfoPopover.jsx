@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Info } from 'lucide-react';
 
 // Tailwind-native (full-portable). Popover info kecil (ikon "i" + tooltip). `variant`
 // nyetir posisi popover + panah: 'default' (nempel bawah ikon, ke-center), 'hero'
@@ -59,11 +60,7 @@ export default function InfoPopover({ children, label = 'How to use this form', 
           setOpen((v) => !v);
         }}
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="9" />
-          <line x1="12" y1="11" x2="12" y2="16" />
-          <circle cx="12" cy="7.6" r="0.7" fill="currentColor" stroke="none" />
-        </svg>
+        <Info />
       </button>
       <div className={`${POP_BASE} ${POP_POS[variant] || POP_POS.default} ${open ? POP_OPEN : POP_CLOSED}`} role="tooltip">
         {children}

@@ -1,63 +1,18 @@
+import { Clock, Landmark, Leaf, MapPin, Mountain, Star, UserRound, VenetianMask } from 'lucide-react';
 import Price from '@/components/Price';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-    </svg>
-  );
-}
-function StarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 20l1.5-6.5-5-4.3 6.6-.6z" />
-    </svg>
-  );
-}
-function LeafIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M5 21c0-8 5-15 15-16 1 10-5 16-13 16H5zm3-3c5-1 8-4 9-9-5 2-8 5-9 9z" />
-    </svg>
-  );
-}
-function MaskIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2c-4 0-7 2-7 6 0 5 3 10 7 14 4-4 7-9 7-14 0-4-3-6-7-6zM9.5 9a1.2 1.2 0 1 1 0 .01zM14.5 9a1.2 1.2 0 1 1 0 .01zM9 14c1 1.2 5 1.2 6 0-1 2-5 2-6 0z" />
-    </svg>
-  );
-}
-function MountainIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M3 20h18L14 8l-3.2 5-2-2.8L3 20z" />
-    </svg>
-  );
-}
-function TempleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l9 5v2H3V7l9-5zM5 10h2v7H5v-7zm4 0h2v7H9v-7zm4 0h2v7h-2v-7zm4 0h2v7h-2v-7zM3 18h18v3H3v-3z" />
-    </svg>
-  );
-}
+const ClockIcon = () => <Clock strokeWidth={1.7} />;
+const PinIcon = () => <MapPin strokeWidth={1.7} />;
+const UserIcon = () => <UserRound strokeWidth={1.7} />;
+// Rating star and the category badges were solid shapes before Lucide, so they
+// keep `fill` - outline-only would read as a different badge style.
+const StarIcon = () => <Star fill="currentColor" stroke="none" aria-hidden="true" />;
+const LeafIcon = () => <Leaf fill="currentColor" aria-hidden="true" />;
+const MaskIcon = () => <VenetianMask fill="currentColor" aria-hidden="true" />;
+const MountainIcon = () => <Mountain fill="currentColor" aria-hidden="true" />;
+const TempleIcon = () => <Landmark fill="currentColor" aria-hidden="true" />;
 
 // Category -> badge tone + icon. Labels are the real category (no invented
 // "Popular" tags), tone reuses the brand gold/green.

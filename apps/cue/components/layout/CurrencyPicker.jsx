@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { CURRENCIES } from '@/lib/constants';
 
@@ -62,9 +63,7 @@ export default function CurrencyPicker({ variant = 'default' }) {
       >
         <Flag code={currency} />
         <span className={CURCODE}>{currency}</span>
-        <svg className={CURCARET} viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <ChevronDown className={CURCARET} aria-hidden="true" />
       </button>
       <ul className={curlist(variant, open)} role="listbox" aria-label="Currency">
         {CURRENCIES.map((c) => (

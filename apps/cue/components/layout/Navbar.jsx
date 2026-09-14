@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { MessageCircle, ShoppingBag, UserRound, UserRoundPlus } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
@@ -110,11 +111,7 @@ export default function Navbar() {
         </a>
 
         <a href="/my-trips.html" className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]" aria-label="My Trips">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <path d="M3 6h18" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
+          <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
         </a>
 
@@ -136,10 +133,7 @@ export default function Navbar() {
                 (lihat komentar di bawah). */}
             <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem]">
               <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-                </svg>
+                <UserRound className="w-5 h-5" strokeWidth={1.6} />
               </span>
               <span className="flex flex-col min-w-0">
                 <b className="text-strong font-semibold text-gold leading-[1.25]"><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
@@ -178,11 +172,7 @@ export default function Navbar() {
                   setMenuOpen(false);
                 }}
               >
-                <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-                  <path d="M19 7v4M21 9h-4" />
-                </svg>
+                <UserRoundPlus className="w-[17px] h-[17px]" strokeWidth={1.8} aria-hidden="true" />
                 <span>{account ? 'Sign out' : 'Sign in / Sign up'}</span>
               </button>
             </li>
@@ -223,9 +213,7 @@ export default function Navbar() {
                   hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white
                   (icon currentColor ikut putih, samain gaya sama tombol Sign in). */}
               <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d">
-                <svg className="w-[18px] h-[18px] flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z" />
-                </svg>
+                <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
                 Chat on WhatsApp
               </a>
             </li>

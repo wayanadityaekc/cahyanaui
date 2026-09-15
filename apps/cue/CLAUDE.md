@@ -522,6 +522,35 @@ Order **must be kept** (declarations first, run last):
     transition terakhir - `motion-reduce:transition-none` nimpa transition asli, jadi drawer-nya
     ke-skip. Ketahuan cuma gara-gara bug drawer sengaja dibalikin buat nguji. Sekarang cuma
     transition TANPA varian yang dibaca.
+  - **Tambalan kedua (Sep 2026)**: gate-nya sempet CUMA baca transition tanpa varian, jadi
+    transition yang di-scope ke breakpoint kelewat - dan itu nyembunyiin bug **sheet hero HP**
+    (`max-[992px]:[transition:transform...]` + `translate-y-full` = sheet-nya lompat, gak geser).
+    Sekarang gate ngelompokin per scope varian (`""` = base, `max-[992px]`, `hover`, dst) dan
+    ngecek tiap scope sendiri-sendiri; `motion-reduce` di-skip (emang sengaja matiin animasi).
+- **Swipe-down buat nutup sheet HP = `components/ui/DragSheet.jsx`, PAKAI POINTER EVENT, BUKAN
+  Framer Motion** (Sep 2026, setelah diukur). FM `drag` ada di feature set **domMax** (satu paket
+  sama `layout`), dan narik itu masuk = **+12 KB gzip di SEMUA halaman**, termasuk halaman yang
+  gak punya sheet - soalnya `motion/react` udah nangkring di shared chunk lewat navbar, jadi
+  fitur tambahannya nimbrung di situ juga. Di-`dynamic()` pun angkanya gak gerak (udah dicoba).
+  Pointer event bikin hal yang sama di 1 file, ongkos ~0 KB.
+  - CSS tetep yang pegang posisi diam (open/close lewat `translate`), pointer event cuma nge-set
+    `transform` selama jari nempel - dua properti beda, jadi numpuk rapi, gak rebutan.
+  - Drag mulai dari **handle** (strip di atas sheet), BUKAN seluruh sheet - isinya form yang
+    bisa di-scroll, kalau listener-nya se-sheet nanti scroll & tap field ketelen.
+  - Ambang nutup: geser > 90px ATAU kecepatan > 0.5 px/ms (biar flick pendek juga nutup).
+  - Verifikasi: `swipe-test.mjs` di scratchpad - geser 160px harus NUTUP, geser 30px harus
+    TETEP KEBUKA, `transform` sisa harus bersih, dan di desktop handle-nya harus gak ada.
+- **Stagger list = `<Stagger>` + `<StaggerItem>` di `Reveal.jsx`** (dipakai grid guide hub pas
+  di-search). Kartu yang BARU MUNCUL fade+naik berurutan; kartu yang bertahan dari filter gak
+  ke-remount jadi diem aja (itu benar, bukan bug).
+  - **BUKAN `layout` animation** (kartu gliding pindah posisi) - `layout` juga di domMax, jadi
+    +12 KB di semua halaman buat 1 halaman doang. Stagger pakai feature set yang udah ada = +0.1 KB.
+  - **Gotcha `AnimatePresence initial={false}`**: flag-nya nyebar lewat context ke SEMUA keturunan,
+    bukan cuma render pertama - jadi item yang mount belakangan ikut ke-skip dan animasinya gak
+    pernah jalan. Ganti pola: provider yang baru `true` SETELAH mount-nya sendiri, jadi kartu yang
+    datang bareng halaman langsung penuh (aman buat LCP) tapi kartu yang muncul belakangan animasi.
+  - Nyisipin wrapper di dalam CSS grid itu RAWAN - verifikasi geometri kartu before/after
+    (`guide-geo.mjs`): harus identik di desktop & HP. Terakhir diukur: 30 kotak, nol geser.
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`

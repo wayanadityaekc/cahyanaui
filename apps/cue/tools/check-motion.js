@@ -38,7 +38,10 @@ function baseOf(token) {
     else if (c === "]") depth--;
     else if (c === ":" && depth === 0) last = i;
   }
-  return { base: last === -1 ? token : token.slice(last + 1), variant: last !== -1 };
+  return {
+    base: last === -1 ? token : token.slice(last + 1),
+    scope: last === -1 ? "" : token.slice(0, last),
+  };
 }
 
 const inner = (t) => t.slice(t.indexOf("[") + 1, t.lastIndexOf("]"));
@@ -103,36 +106,49 @@ for (const p of pages) {
     const tokens = tokenize(cls.replace(/&quot;/g, '"'));
     elements++;
 
-    const set = new Set();
-    let trans = null;
+    // Everything is grouped by its variant prefix, because a transition declared
+    // under one (max-[992px]:[transition:...]) only governs that scope. An
+    // earlier version looked at the unprefixed transition alone and so missed
+    // the mobile hero sheet, whose whole animation lives under max-[992px]:.
+    // "" is the unprefixed scope, and every scope also inherits from it.
+    const setBy = new Map();     // scope -> Set(properties the classes set)
+    const transBy = new Map();   // scope -> transition-property list
     for (const t of tokens) {
-      const { base, variant } = baseOf(t);
-      // A state-scoped utility still sets the property (hover:-translate-y-1).
+      const { base, scope } = baseOf(t);
       const prop = setsProperty(base);
-      if (prop) set.add(prop);
-      // ...but only the UNSCOPED transition describes the element's base state.
-      // Taking the last one found would let motion-reduce:transition-none (or any
-      // other variant) erase it - which is exactly how this check first missed
-      // the drawer it was written for.
-      if (variant) continue;
+      if (prop) {
+        if (!setBy.has(scope)) setBy.set(scope, new Set());
+        setBy.get(scope).add(prop);
+      }
       const list = transitionList(base);
-      if (list) trans = list;
-    }
-    if (!trans || !trans.length) continue;
-    const has = (p2) => trans.includes(p2) || trans.includes("all");
-
-    // Rule 1
-    const standalone = ["translate", "rotate", "scale"].filter((x) => set.has(x));
-    if (trans.includes("transform") && !set.has("transform") && standalone.length) {
-      const key = `transition names 'transform' but the element sets ${standalone.join("/")} - rename it to transition-[${standalone.join(",")}]`;
-      if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
+      if (list) transBy.set(scope, list);
     }
 
-    // Rule 2
-    const clickable = tag === "button" || /role="button"/.test(attrs) || (tag === "a" && tokens.includes("rounded-pill"));
-    if (clickable && !has("scale")) {
-      const key = `${tag} transitions [${trans.join(",")}] with no 'scale' - the press feedback will snap`;
-      if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
+    const baseSet = setBy.get("") || new Set();
+    const baseTrans = transBy.get("") || null;
+
+    for (const [scope, list] of [["", baseTrans], ...transBy]) {
+      if (!list || !list.length) continue;
+      if (scope === "motion-reduce") continue;   // deliberately turns motion off
+      const trans = list;
+      const set = new Set([...baseSet, ...(setBy.get(scope) || [])]);
+      const has = (p2) => trans.includes(p2) || trans.includes("all");
+      const where = scope ? ` (under ${scope}:)` : "";
+
+      // Rule 1
+      const standalone = ["translate", "rotate", "scale"].filter((x) => set.has(x));
+      if (trans.includes("transform") && !set.has("transform") && standalone.length) {
+        const key = `transition names 'transform'${where} but the element sets ${standalone.join("/")} - name it ${standalone.join(",")} instead`;
+        if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
+      }
+
+      // Rule 2 - only meaningful for the unprefixed scope; a responsive override
+      // does not change whether the element is a clickable.
+      const clickable = tag === "button" || /role="button"/.test(attrs) || (tag === "a" && tokens.includes("rounded-pill"));
+      if (!scope && clickable && !has("scale")) {
+        const key = `${tag} transitions [${trans.join(",")}] with no 'scale' - the press feedback will snap`;
+        if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
+      }
     }
   }
 }

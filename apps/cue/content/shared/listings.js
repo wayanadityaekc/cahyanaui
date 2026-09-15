@@ -122,7 +122,7 @@ export const LISTINGS = {
             "metaIcon": "clock",
             "priceName": "Uluwatu & Sunset Kecak",
             "priceFallback": "$49",
-            "stops": 1,
+            "stops": 2,
             "priv": true
           },
           {

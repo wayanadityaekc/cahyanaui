@@ -1698,13 +1698,25 @@ export const TOUR_CONTENT = {
     "type": "stop",
     "refType": "destination",
     "refId": "uluwatu-temple",
-    "img": "uluwatu-sunset-kecak-dance.webp",
-    "alt": "Uluwatu Temple, Bali",
-    "w": 1920,
-    "hgt": 1279,
+    "img": "uluwatu-temple.webp",
+    "alt": "Uluwatu Temple perched on a clifftop above the ocean",
+    "w": 1400,
+    "hgt": 933,
     "num": "Stop 1",
-    "name": "Uluwatu Clifftop Temple & Sunset Kecak",
-    "highlight": "One of Bali's six key spiritual pillars, perched on a cliff 70 metres above the crashing surf. Walk the clifftop path for wide-open ocean views - and keep an eye on your belongings, the resident monkeys are famously cheeky. We stay on for the Kecak in the temple's cliff-edge amphitheatre: more than seventy chanting men around a ring of fire, retelling the Ramayana with the sunset over the ocean right behind the stage."
+    "name": "Uluwatu Cliff Temple",
+    "highlight": "One of Bali's six key spiritual pillars, perched on a cliff 70 metres above the crashing surf. Walk the clifftop path for wide-open ocean views - and keep an eye on your belongings, the resident monkeys are famously cheeky."
+   },
+   {
+    "type": "stop",
+    "refType": "experience",
+    "refId": "uluwatu-kecak",
+    "img": "uluwatu-sunset-kecak-dance.webp",
+    "alt": "Kecak fire dance performance at Uluwatu at sunset",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Sunset Kecak Fire Dance",
+    "highlight": "We stay on for the Kecak in the temple's cliff-edge amphitheatre: more than seventy chanting men around a ring of fire, retelling the Ramayana with the sunset over the ocean right behind the stage."
    }
   ],
   "facts": [

@@ -1,6 +1,15 @@
 export const SITE = 'https://cahyanaubudexperience.com';
 
-export const NOINDEX = ['my-trips', 'settings'];
+// Kept out of the generated sitemap. my-trips/settings are private tools;
+// programs.html sets robots:noindex in its own metadata, so listing it would
+// send Google both "here is my URL" and "do not index it".
+export const NOINDEX = ['my-trips', 'settings', 'programs'];
+
+// Tours parked as "not ready to sell yet" (Wayan). Their content stays in
+// content/tours/index.js so they can be switched back on by deleting a line
+// here. This list keeps them out of the shipped sitemap; sitemap.xml at the
+// root marks the same slugs NONAKTIF.
+export const HIDDEN_TOURS = ['lovina-dolphin-sekumpul', 'munduk-twin-lakes'];
 
 export const TOURS = [
   'banyumala-twin-lakes',
@@ -97,24 +106,22 @@ export const GUIDES = [
   'uluwatu-bukit',
 ];
 
+// about-us / contact / faq / terms-conditions / privacy-policy /
+// cancellation-policy were folded into our-company.html (Sep 2026) and now only
+// exist as 301s in public/.htaccess - listing them here kept them in the shipped
+// sitemap, pointing Google at six redirects.
 export const BESPOKE = [
-  'about-us',
   'activities',
   'airport-transfer',
   'all-reviews',
   'bali-guide',
-  'cancellation-policy',
   'charter',
-  'contact',
   'destinations',
-  'faq',
   'itinerary',
   'our-company',
   'programs',
   'my-trips',
-  'privacy-policy',
   'settings',
-  'terms-conditions',
   'tour',
   'transfer',
 ];
@@ -151,5 +158,6 @@ export function allPaths() {
 }
 
 export function indexablePaths() {
-  return allPaths().filter((p) => !NOINDEX.some((s) => p === `/${s}.html`));
+  const off = new Set([...NOINDEX, ...HIDDEN_TOURS].map((s) => `/${s}.html`));
+  return allPaths().filter((p) => !off.has(p));
 }

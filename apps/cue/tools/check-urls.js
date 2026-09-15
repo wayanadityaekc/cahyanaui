@@ -114,3 +114,38 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     console.log("Indexable pages missing from sitemap : none");
   }
 })();
+
+// Two sitemaps exist: sitemap.xml at the repo root (hand-kept checklist, read by
+// the checks above) and out/sitemap.xml (generated from lib/routes.js - the one
+// that actually ships). They silently drifted once: the root file dropped the six
+// retired legal/about pages while routes.js kept them, so the live sitemap sent
+// Google to six redirects. Comparing them makes that impossible to repeat.
+(function checkSitemapsAgree() {
+  const path = require("path");
+  const root = path.join(__dirname, "..", "sitemap.xml");
+  const built = path.join(__dirname, "..", "out", "sitemap.xml");
+  if (!fs.existsSync(root) || !fs.existsSync(built)) return;
+  // Commented-out entries are deliberately-parked URLs (e.g. programs.html), not
+  // live ones - strip comments first or they read as present in the checklist.
+  const locs = (file) =>
+    new Set(
+      [
+        ...fs
+          .readFileSync(file, "utf8")
+          .replace(/<!--[\s\S]*?-->/g, "")
+          .matchAll(/<loc>([^<]+)<\/loc>/g),
+      ].map((m) => m[1].trim()),
+    );
+  const rootLocs = locs(root);
+  const builtLocs = locs(built);
+  const onlyBuilt = [...builtLocs].filter((u) => !rootLocs.has(u));
+  const onlyRoot = [...rootLocs].filter((u) => !builtLocs.has(u));
+  if (onlyBuilt.length || onlyRoot.length) {
+    console.error("\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:");
+    onlyBuilt.forEach((u) => console.error("  shipped but not in the root checklist: " + u));
+    onlyRoot.forEach((u) => console.error("  in the root checklist but not shipped: " + u));
+    process.exitCode = 1;
+  } else {
+    console.log(`Sitemaps agree : ${rootLocs.size} URLs in both`);
+  }
+})();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Car, ChevronDown, Clock, MapPin } from 'lucide-react';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
@@ -16,7 +16,7 @@ import { BTN } from '@/components/ui/modalClasses';
 import DatePopup from '@/components/booking/DatePopup';
 import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
-import { KEY, API_BASE, WHATSAPP_NUMBER } from '@/lib/constants';
+import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
@@ -119,11 +119,10 @@ function ItemIcon({ row }) {
 export default function MyTripsCart() {
   const { state, save, hydrated } = useItinerary();
   const { displayGuests, currency, stay } = useTripPrefs();
-  const { account } = useAccount();
+  const { account, trips, reviewableItems } = useAccount();
   const { referral } = useReferral();
   const { openBooking } = useBooking();
 
-  const [trips, setTrips] = useState(null);
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
@@ -174,33 +173,6 @@ export default function MyTripsCart() {
     enabled: hydrated,
   });
   const { format } = useMoney();
-
-  // Aggregate every still-reviewable tour across ALL past bookings (not just one
-  // card) - feeds the single global "Leave a Review" button (Wayan, Sep 2026).
-  const reviewableItems = useMemo(() => {
-    if (!trips || !trips.history) return [];
-    const out = [];
-    trips.history.forEach((t) => {
-      (t.review_items || []).forEach((s) => out.push({
-        ref: t.ref,
-        service: s,
-        tripName: t.name,
-        date: t.start_date ? fmtDay(t.start_date) : '',
-      }));
-    });
-    return out;
-  }, [trips]);
-
-  useEffect(() => {
-    const token = readLocal(KEY.token, '');
-    if (!token) return;
-    let cancelled = false;
-    fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (!cancelled && d && Array.isArray(d.upcoming)) setTrips(d); })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [account]);
 
   if (!hydrated) return <div data-mytrips-cart />;
 

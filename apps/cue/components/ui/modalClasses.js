@@ -63,6 +63,10 @@ export const REFMSG = 'block mt-[0.4rem] text-small';
 export const REFMSG_ERR = 'block mt-[0.4rem] text-small text-err';
 export const REFMSG_OK = 'block mt-[0.4rem] text-small text-ok';
 
+// Per-field validation message - sits directly under the input it belongs to, so a
+// guest sees every missing field at once instead of one message per submit attempt.
+export const FIELD_ERR = 'block mt-[0.3rem] text-small text-err';
+
 // Success state (.modal__success + icon + p). display:none default is handled by
 // conditional render in React, so only the visible styles are mirrored here.
 export const SUCCESS_ICON =

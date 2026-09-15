@@ -2,25 +2,34 @@
 
 import { useState } from 'react';
 import { submitContact } from '@/lib/api';
-import { REFMSG_ERR } from '@/components/ui/modalClasses';
+import { contactSchema } from '@/lib/schemas';
+import { validateWith } from '@/lib/validate';
+import { FIELD_ERR, REFMSG_ERR } from '@/components/ui/modalClasses';
 import { CONTACT_GROUP, CONTACT_LABEL, CONTACT_INPUT, CONTACT_TEXTAREA } from '@/components/ui/contactFieldClasses';
 
 export default function ContactForm({ company = false }) {
   const [f, setF] = useState({ name: '', email: '', message: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
-  const set = (k) => (e) => setF((v) => ({ ...v, [k]: e.target.value }));
+  // Clearing the field's own error as it is typed in keeps the message from sitting
+  // there contradicting what the guest just fixed.
+  const set = (k) => (e) => {
+    const { value } = e.target;
+    setF((v) => ({ ...v, [k]: value }));
+    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  };
 
   const send = async () => {
-    if (!f.name.trim()) return setError('Please enter your name.');
-    if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) return setError('Please enter a valid email address.');
-    if (!f.message.trim()) return setError('Please enter a message.');
+    const { ok, errors: fieldErrors, data } = validateWith(contactSchema, f);
+    setErrors(fieldErrors);
+    if (!ok) { setError(''); return; }
     setError('');
     setBusy(true);
     try {
-      const d = await submitContact({ name: f.name.trim(), email: f.email.trim(), message: f.message.trim() });
+      const d = await submitContact(data);
       if (!d || d.status !== 'saved') throw new Error((d && d.detail) || '');
       setSent(true);
     } catch (e) {
@@ -41,15 +50,18 @@ export default function ContactForm({ company = false }) {
       <div className="p-8 rounded-md bg-white shadow-md" id="contact-form" style={{ display: sent ? 'none' : undefined }}>
       <div className={CONTACT_GROUP}>
         <label className={CONTACT_LABEL} htmlFor="c-name">Your Name</label>
-        <input className={CONTACT_INPUT} type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
+        <input className={CONTACT_INPUT} type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} aria-invalid={!!errors.name} />
+        {errors.name && <small className={FIELD_ERR}>{errors.name}</small>}
       </div>
       <div className={CONTACT_GROUP}>
         <label className={CONTACT_LABEL} htmlFor="c-email">Email</label>
-        <input className={CONTACT_INPUT} type="email" id="c-email" placeholder="you@email.com" value={f.email} onChange={set('email')} />
+        <input className={CONTACT_INPUT} type="email" id="c-email" placeholder="you@email.com" value={f.email} onChange={set('email')} aria-invalid={!!errors.email} />
+        {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
       </div>
       <div className={CONTACT_GROUP}>
         <label className={CONTACT_LABEL} htmlFor="c-message">Message</label>
-        <textarea className={CONTACT_TEXTAREA} id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} />
+        <textarea className={CONTACT_TEXTAREA} id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} aria-invalid={!!errors.message} />
+        {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
       </div>
       {error && <small className={REFMSG_ERR}>{error}</small>}
         <button className="w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold text-white bg-cta cursor-pointer hover:bg-cta-d" id="c-send" onClick={send} disabled={busy}>

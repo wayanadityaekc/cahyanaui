@@ -6,7 +6,9 @@ import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import Select from '@/components/ui/Select';
 import { COUNTRIES } from '@/content/shared/countries';
-import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import { reviewSchema } from '@/lib/schemas';
+import { validateWith } from '@/lib/validate';
+import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
@@ -29,6 +31,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const [checked, setChecked] = useState([]);
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -44,6 +47,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
     setChecked((prefill.items || []).map(itemKey));
     setRating(0);
     setMessage('');
+    setErrors({});
     setError('');
     setDone(false);
   }, [open, prefill]);
@@ -57,9 +61,13 @@ export default function ReviewModal({ open, prefill, onClose }) {
 
   const submit = async () => {
     const picked = items.filter((it) => checked.includes(itemKey(it)));
-    if (!picked.length) return setError('Please pick at least one tour to review.');
-    if (!rating) return setError('Please give a star rating.');
-    if (!message.trim()) return setError('Please write your review.');
+    const { ok, errors: fieldErrors } = validateWith(reviewSchema, {
+      picked: picked.map(itemKey),
+      rating,
+      message,
+    });
+    setErrors(fieldErrors);
+    if (!ok) { setError(''); return; }
     setError('');
     setBusy(true);
     try {
@@ -134,9 +142,10 @@ export default function ReviewModal({ open, prefill, onClose }) {
                           className={CHECK_INPUT}
                           type="checkbox"
                           checked={checked.includes(key)}
-                          onChange={(e) =>
-                            setChecked((c) => (e.target.checked ? [...c, key] : c.filter((x) => x !== key)))
-                          }
+                          onChange={(e) => {
+                            setChecked((c) => (e.target.checked ? [...c, key] : c.filter((x) => x !== key)));
+                            setErrors((v) => (v.picked ? { ...v, picked: undefined } : v));
+                          }}
                         />
                         <span>
                           <span className={CHECK_SVC}>{it.service}</span>
@@ -152,6 +161,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                     );
                   })}
                 </div>
+                {errors.picked && <small className={FIELD_ERR}>{errors.picked}</small>}
               </div>
             )}
 
@@ -164,12 +174,13 @@ export default function ReviewModal({ open, prefill, onClose }) {
                     key={n}
                     className={star(rating >= n)}
                     aria-label={`${n} star${n > 1 ? 's' : ''}`}
-                    onClick={() => setRating(n)}
+                    onClick={() => { setRating(n); setErrors((v) => (v.rating ? { ...v, rating: undefined } : v)); }}
                   >
                     &#9733;
                   </button>
                 ))}
               </div>
+              {errors.rating && <small className={FIELD_ERR}>{errors.rating}</small>}
             </div>
 
             <div className={GROUP}>
@@ -180,8 +191,10 @@ export default function ReviewModal({ open, prefill, onClose }) {
                 rows="4"
                 placeholder="What would you like to share?"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => { setMessage(e.target.value); setErrors((v) => (v.message ? { ...v, message: undefined } : v)); }}
+                aria-invalid={!!errors.message}
               />
+              {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
             </div>
 
             {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}

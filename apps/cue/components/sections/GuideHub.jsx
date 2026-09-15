@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { ChevronDown, Menu, Search } from 'lucide-react';
+import { PopMenu } from '@/components/ui/Reveal';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { SUBHERO, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
 import { GRID_GUIDEHUB } from '@/components/ui/gridClasses';
@@ -47,7 +48,8 @@ export default function GuideHub() {
                   aria-hidden="true"
                 />
               </button>
-              <div className={GC_MENU} hidden={!open}>
+              <PopMenu open={open}>
+              <div className={GC_MENU}>
                 {GUIDE_HUB.navItems.map((n) => (
                   <a className={GC_MENU_A} href={`#${n.id}`} key={n.id} onClick={() => setOpen(false)}>
                     <span><n.Icon strokeWidth={1.7} aria-hidden="true" /></span>
@@ -55,6 +57,7 @@ export default function GuideHub() {
                   </a>
                 ))}
               </div>
+              </PopMenu>
             </div>
             <div className="relative flex-1 max-w-[560px] mt-6 mx-auto mb-0">
               <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] min-h-[var(--field-h)] box-border [border:none] rounded-none bg-transparent [box-shadow:none]">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronDown, LayoutGrid } from 'lucide-react';
+import { Collapse } from '@/components/ui/Reveal';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -127,9 +128,8 @@ export default function OurCompany() {
             </span>
             <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
           </button>
-          {/* `flex` (author class) beats the `hidden` attribute's UA-default display:none in
-              cascade order, so toggle via className instead of the `hidden` prop here. */}
-          <div className={`mt-3 gap-1 ${menuOpen ? 'flex flex-col' : 'hidden'}`} role="tablist" aria-label="Our company">
+          <Collapse open={menuOpen}>
+          <div className="mt-3 gap-1 flex flex-col" role="tablist" aria-label="Our company">
             {TABS.map((t) => (
               <button
                 key={t.id}
@@ -143,6 +143,7 @@ export default function OurCompany() {
               </button>
             ))}
           </div>
+          </Collapse>
         </div>
 
         <div className="flex-1 min-w-0">

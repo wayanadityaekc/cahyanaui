@@ -451,6 +451,24 @@ Order **must be kept** (declarations first, run last):
   interaksi). **DIBIARIN** (disengaja): durasi `animation:` entrance (0.4-0.6s, choreography),
   fade lambat `0.5s`, special (marquee `35s`, glow booksidebar `2-3s`), dan keyword `ease`
   (udah konsisten). Snap durasi transition: 0.12/0.15/0.18→fast · 0.2/0.25→base · 0.28/0.3→slow.
+- **Buka/tutup menu = `components/ui/Reveal.jsx`** (Framer Motion / paket `motion`, Sep 2026, Wayan
+  pilih "langsung Framer Motion"). Alasannya: menu-menu itu dulu di-toggle pakai `display`
+  (`hidden` / `? 'block' : 'hidden'`), dan `display` **gak bisa di-animasi sama sekali** - itu
+  sumber "kaku"-nya, bukan easing-nya. Dua komponen:
+  - `<Collapse open={...}>` - menu inline yang **nyorong konten di bawahnya** (submenu Program di
+    navbar, list kategori HP di Our Company). Animasi `height`, jadi WAJIB `overflow:hidden` -
+    makanya **JANGAN dipakai buat dropdown `absolute`**, panelnya bakal kepotong jadi nol.
+  - `<PopMenu open={...}>` - panel **ngambang** di atas konten (dropdown kategori guide hub).
+    Fade + naik dikit, gak nyentuh height, jadi `absolute` anaknya aman.
+  - Durasi/easing-nya mirror token CSS (`--dur`/`--ease-out`) biar satu ritme sama transition
+    lain. `useReducedMotion` → durasi 0 (hormatin setting OS).
+  - **Ongkos: +36 KB gzip di SEMUA halaman** (homepage 295 → 332 KB), soalnya Navbar ada di mana-mana.
+    Udah pakai konfigurasi paling irit (`LazyMotion` + `m` + `domAnimation`). **Code-split fitur
+    animasinya malah LEBIH GEDE** (339 KB) - chunk async-nya duplikat core yang tetep dibutuhin
+    eager. Udah diukur, jangan di-"optimasi" balik ke `import()` dinamis tanpa ngukur ulang.
+  - **Catatan jujur**: khusus 3 menu ini, trik CSS (`grid-template-rows: 0fr → 1fr`) bisa ngasih
+    hasil yang sama di **0 KB**. Framer Motion baru beneran kepake pas modal digarap (animasi
+    **keluar**/unmount gak bisa CSS) - itu rencana setelah tanggal 28.
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`

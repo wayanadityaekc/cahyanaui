@@ -9,7 +9,11 @@ export const NOINDEX = ['my-trips', 'settings', 'programs'];
 // content/tours/index.js so they can be switched back on by deleting a line
 // here. This list keeps them out of the shipped sitemap; sitemap.xml at the
 // root marks the same slugs NONAKTIF.
-export const HIDDEN_TOURS = ['lovina-dolphin-sekumpul', 'munduk-twin-lakes'];
+export const HIDDEN_TOURS = [
+  'hidden-beaches-cliffs',
+  'lovina-dolphin-sekumpul',
+  'munduk-twin-lakes',
+];
 
 export const TOURS = [
   'banyumala-twin-lakes',
@@ -137,6 +141,14 @@ export const LEGACY_REDIRECTS = {
 
 export function tourPath(slug) {
   return `/${slug}.html`;
+}
+
+// True for a link pointing at a parked tour. Card lists filter on this so a
+// hidden tour stops being offered anywhere, while its page still resolves for
+// anyone holding the link (no 404s) and its content stays put for the day
+// Wayan switches it back on.
+export function isHiddenTour(href) {
+  return HIDDEN_TOURS.some((slug) => href === tourPath(slug));
 }
 
 export function attractionPath(slug) {

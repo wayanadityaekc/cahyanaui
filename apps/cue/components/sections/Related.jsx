@@ -1,6 +1,7 @@
 import HomepageCard from '@/components/cards/HomepageCard';
 import { RELATED_ITEMS, RELATED_ALL } from '@/content/shared/related';
 import { GRID_RELATED } from '@/components/ui/gridClasses';
+import { isHiddenTour } from '@/lib/routes';
 
 // Ported from initRelated: same type, same zone first, then the closest by
 // price. Renders nothing when fewer than 4 qualify, exactly as before.
@@ -8,7 +9,7 @@ export default function Related({ href }) {
   const me = RELATED_ITEMS.find((it) => it.href === href);
   if (!me) return null;
 
-  const pool = RELATED_ITEMS.filter((it) => it.type === me.type && it.href !== me.href);
+  const pool = RELATED_ITEMS.filter((it) => it.type === me.type && it.href !== me.href && !isHiddenTour(it.href));
   const sameZone = pool.filter((it) => it.zone === me.zone);
   const rest = pool
     .filter((it) => it.zone !== me.zone)

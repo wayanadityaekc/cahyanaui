@@ -8,6 +8,7 @@ import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
 import ProgramPromoSlider from '@/components/sections/ProgramPromoSlider';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
+import { isHiddenTour } from '@/lib/routes';
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 
 const SearchIcon = () => <Search strokeWidth={1.8} aria-hidden="true" />;
@@ -31,7 +32,12 @@ export default function ListingPage({ data }) {
   // One flat grid: every card tagged with its category id; the first card of each
   // category carries an anchor id so the mobile switcher can scroll to it.
   const allCards = [];
-  cats.forEach((cat) => cat.cards.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null })));
+  cats.forEach((cat) => {
+    // Parked tours drop out of the grid entirely, so the anchor has to land on
+    // whichever card is shown first, not on cat.cards[0].
+    const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
+    shown.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null }));
+  });
   const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 

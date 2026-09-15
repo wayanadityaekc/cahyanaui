@@ -86,7 +86,7 @@ export const LISTINGS = {
             "metaIcon": "clock",
             "priceName": "Ubud ATV Adventure",
             "priceFallback": "$72",
-            "stops": 4,
+            "stops": 3,
             "priv": true
           },
           {

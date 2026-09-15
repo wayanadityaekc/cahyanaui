@@ -1855,7 +1855,7 @@ export const TOUR_CONTENT = {
  "ubud-atv-adventure": {
   "heroBg": "atv-ride-jungle.webp",
   "title": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
-  "desc": "Tear through jungle tracks, rice fields, and river crossings on an ATV quad bike, then meet the animals at Bali Zoo and Bird Park before cooling off at Tegenungan waterfall.",
+  "desc": "Tear through jungle tracks, rice fields, and river crossings on an ATV quad bike, then spend the rest of the day with the animals at Bali Zoo and the Bali Bird Park. A private car, a local driver, your pace.",
   "hooks": [
    {
     "label": "Duration",
@@ -1901,7 +1901,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
-  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride, then Bali Zoo, Bali Bird Park, and the Tegenungan waterfall. Only a 10% deposit to book.",
+  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride through rice fields and river crossings, then Bali Zoo and the Bali Bird Park. Only a 10% deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-atv-adventure-card.jpg",
   "items": [
    {
@@ -1939,18 +1939,6 @@ export const TOUR_CONTENT = {
     "num": "Stop 3",
     "name": "Bali Bird Park",
     "highlight": "Right nearby, stroll walk-in aviaries home to more than 1,000 birds - from rare Bali starlings to giant hornbills - with free-flight shows overhead. Colourful, shady, and easy-going, it pairs naturally with the zoo."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "tegenungan-waterfall",
-    "img": "tegenungan-waterfall-hero.jpg",
-    "alt": "Tegenungan waterfall dropping into its plunge pool",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 4",
-    "name": "Tegenungan Waterfall",
-    "highlight": "A wide, powerful waterfall in the jungle just outside Ubud, with a natural pool at its base for a cooling swim when the water is calm. A short walk down, and a refreshing way to end the day."
    }
   ],
   "facts": [
@@ -1991,10 +1979,6 @@ export const TOUR_CONTENT = {
    {
     "src": "/assets/images/bird-park-macaw-show.webp",
     "title": "Bali Bird Park"
-   },
-   {
-    "src": "/assets/images/tegenungan-waterfall-hero.jpg",
-    "title": "Tegenungan Waterfall"
    }
   ],
   "__href": "/ubud-atv-adventure.html",

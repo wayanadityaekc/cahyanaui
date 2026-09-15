@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useBooking } from '@/state/BookingProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -18,6 +18,7 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
@@ -59,9 +60,16 @@ export default function BookConfirmModal() {
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
 
+  const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
-  if (!mounted || !ctx) return null;
+  // While closing, ctx is already null but the card is still on screen for the
+  // length of its exit animation, so the markup reads from the last ctx we saw.
+  // Everything that ACTS - validate, submit, the WhatsApp text - still reads the
+  // live ctx, unchanged.
+  if (ctx) lastCtx.current = ctx;
+  const view = ctx || lastCtx.current;
+  if (!mounted || !view) return null;
 
   const set = (k) => (e) => {
     const { value } = e.target;
@@ -80,7 +88,7 @@ export default function BookConfirmModal() {
   // flagged separately - out of scope here so this popup doesn't show one time
   // field that would only apply to one of several lines).
   const catalog = pricing && pricing.catalog;
-  const singleLine = ctx.lines && ctx.lines.length === 1 ? ctx.lines[0] : null;
+  const singleLine = view.lines && view.lines.length === 1 ? view.lines[0] : null;
   const catalogItem = catalog && singleLine ? catalog.items.find((i) => i.name === singleLine.service) : null;
   // category drives which times are restrictable. `line.type` alone isn't reliable -
   // BookSidebar hardcodes `type:'tour'` for every detail-page item (tour/experience/
@@ -212,8 +220,7 @@ export default function BookConfirmModal() {
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
   return createPortal(
-    <div className={SHELL} onClick={(e) => e.target === e.currentTarget && closeBooking()}>
-      <div className={BOX}>
+    <ModalPresence open={!!ctx} onClose={closeBooking} box={BOX}>
         <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>
         <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 
@@ -241,7 +248,7 @@ export default function BookConfirmModal() {
               <input className={INPUT} type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} aria-invalid={!!errors.pickup} />
               {errors.pickup && <small className={FIELD_ERR}>{errors.pickup}</small>}
             </div>
-            {ctx.dropoffRequired !== false && (
+            {view.dropoffRequired !== false && (
               <div className={GROUP}>
                 <label className={LABEL} htmlFor="dropoff">Drop-off Location</label>
                 <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} aria-invalid={!!errors.dropoff} />
@@ -286,9 +293,9 @@ export default function BookConfirmModal() {
             </div>
 
             <div className="my-5 [border-top:1px_solid_#eee]">
-              <div className={ROW}><span>Guests</span><span>{ctx.guests || displayGuests}</span></div>
-              <div className={ROW}><span>Service</span><span>{ctx.service}</span></div>
-              <div className={ROW}><span>Date</span><span>{ctx.date || '-'}</span></div>
+              <div className={ROW}><span>Guests</span><span>{view.guests || displayGuests}</span></div>
+              <div className={ROW}><span>Service</span><span>{view.service}</span></div>
+              <div className={ROW}><span>Date</span><span>{view.date || '-'}</span></div>
               {needsTime && (
                 <div className={ROW}><span>Time</span><span>{f.time ? timeLabel(f.time) : '-'}</span></div>
               )}
@@ -301,14 +308,14 @@ export default function BookConfirmModal() {
               <div className={ROW}><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
 
-            {ctx.detailLines && ctx.detailLines.length > 0 && (
+            {view.detailLines && view.detailLines.length > 0 && (
               <div className="mb-5 [border-top:1px_solid_#eee]">
                 <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
-                  <span>{ctx.detailsTitle || "What's included"}</span>
+                  <span>{view.detailsTitle || "What's included"}</span>
                   <span className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? '[transform:rotate(90deg)]' : ''}`}>&rsaquo;</span>
                 </button>
                 <ul className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? 'max-h-[320px]' : 'max-h-0'}`}>
-                  {ctx.detailLines.map((d, i) => <li className={DETAILS_LI} key={i}>{d}</li>)}
+                  {view.detailLines.map((d, i) => <li className={DETAILS_LI} key={i}>{d}</li>)}
                 </ul>
               </div>
             )}
@@ -341,8 +348,7 @@ export default function BookConfirmModal() {
             <button className={BTN} onClick={closeBooking}>Done</button>
           </div>
         )}
-      </div>
-    </div>,
+    </ModalPresence>,
     document.body,
   );
 }

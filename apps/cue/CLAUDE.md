@@ -551,6 +551,27 @@ Order **must be kept** (declarations first, run last):
     datang bareng halaman langsung penuh (aman buat LCP) tapi kartu yang muncul belakangan animasi.
   - Nyisipin wrapper di dalam CSS grid itu RAWAN - verifikasi geometri kartu before/after
     (`guide-geo.mjs`): harus identik di desktop & HP. Terakhir diukur: 30 kotak, nol geser.
+- **Modal nutup = `components/ui/ModalPresence.jsx` (AnimatePresence)** - INI kasus Framer Motion
+  yang beneran gak ada gantinya. Modal-modal ini (`ReviewModal`, `BookConfirmModal`,
+  dialog konfirmasi `BookSidebar`/`BookCta`) cuma **mount pas kebuka**, jadi dulu masuknya pakai
+  keyframe (`heroFadeIn`/`popCardIn`) dan **keluarnya gak ada sama sekali** - elemennya udah lepas
+  dari DOM sebelum transition sempat jalan. AnimatePresence nahan elemennya sampai animasi keluar
+  selesai, baru di-unmount. Ongkos ~0 KB (feature set-nya udah kepasang lewat navbar).
+  - Keyframe di `modalClasses.js` UDAH DIBUANG - `SHELL`/`BOX`/`BOX_SM` sekarang murni tampilan,
+    animasi dua arah semuanya di `ModalPresence`. Jangan tambahin `animate-[...]` ke situ lagi.
+  - **Pola "tahan isi terakhir"**: `BookConfirmModal`/`ReviewModal` dulu `return null` pas
+    `ctx`/`prefill` null, jadi pas nutup gak ada yang bisa dianimasiin. Sekarang ada
+    `lastCtx`/`lastPrefill` (useRef) dan **JSX-nya baca `view`**, sementara **semua jalur logika
+    (validate, submit, teks WhatsApp) TETAP baca `ctx` yang live** - jangan ikut diganti ke
+    `view`, itu beda maksud.
+  - **Wajib `pointerEvents: 'none'` di variant `exit`**, BUKAN di prop `style` yang dihitung dari
+    `open`. AnimatePresence nge-render elemen yang lagi keluar pakai props TERAKHIR-nya, jadi
+    style yang diturunin dari `open` ke-bake jadi `auto` selamanya. Kalau kelewat, tombol
+    "Confirm" masih bisa dipencet selama 0,32 detik fade padahal `ctx` udah null. Diukur:
+    sekarang mati dalam ~43ms dan tetep mati.
+  - **Gotcha harness**: nyari shell modal pakai "div z-index 200 mana aja" itu SALAH - `AuthModal`
+    lewat `<Modal>` selalu ke-mount dengan opacity 0 & z-200, jadi ke-comot dan lapor "gak ada
+    animasi" padahal ada. Pakai `#modal-form` terus `.closest('div.fixed.inset-0')`.
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`

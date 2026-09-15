@@ -18,7 +18,7 @@ const CLS = {
   group: 'flex-[0_1_auto]',
   label: 'mb-6 text-label tracking-[0.14em] uppercase text-muted',
   logos: 'flex flex-wrap items-center justify-center gap-y-6 gap-x-[2.75rem] max-w-[900px] mx-auto',
-  logoImg: 'h-[30px] w-auto transition-[transform] duration-200 ease-[var(--ease-out)] hover:-translate-y-[2px]',
+  logoImg: 'h-[30px] w-auto transition-[translate] duration-200 ease-[var(--ease-out)] hover:-translate-y-[2px]',
   socials: 'flex items-center justify-center gap-6',
   socialImg: 'h-[30px] w-auto transition-[transform] duration-200 ease-[var(--ease-out)]',
   socialLink: '[&:hover>img]:-translate-y-[2px]',

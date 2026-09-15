@@ -70,7 +70,7 @@ export default function CharterBuilder() {
   // `.charter__label` (0.5rem). Field-nya sekarang div polos, jadi pakai mb-[0.4rem].
   const FIELD_LABEL = 'block mb-[0.4rem] text-small font-medium text-green font-body tracking-normal';
   const chdur = (isOn) =>
-    `relative flex flex-col items-center gap-[0.15rem] pt-[1.15rem] px-[0.6rem] pb-[1.1rem] border-[1.5px] border-solid rounded-lg bg-white text-center cursor-pointer transition-[border-color,box-shadow,transform,opacity] duration-200 ease-[ease] disabled:opacity-50 disabled:cursor-not-allowed ${isOn ? 'border-gold shadow-md [transform:translateY(-2px)]' : 'border-line enabled:hover:border-gold'}`;
+    `relative flex flex-col items-center gap-[0.15rem] pt-[1.15rem] px-[0.6rem] pb-[1.1rem] border-[1.5px] border-solid rounded-lg bg-white text-center cursor-pointer transition-[border-color,box-shadow,transform,opacity,scale] duration-200 ease-[ease] disabled:opacity-50 disabled:cursor-not-allowed ${isOn ? 'border-gold shadow-md [transform:translateY(-2px)]' : 'border-line enabled:hover:border-gold'}`;
   return (
     <div className="bg-white rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left" id={CHARTER.boxId}>
       <h2 className="font-head text-[1.15rem] text-green text-center mt-0 mb-[1.1rem]">{CHARTER.boxTitle}</h2>

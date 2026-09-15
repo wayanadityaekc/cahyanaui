@@ -487,6 +487,23 @@ Order **must be kept** (declarations first, run last):
     yang dibaca di tick yang sama sama `scrollIntoView` masih koordinat LAMA - mouse mendarat
     di tempat lain & `:active` gak kena (kejadian, sempet kebaca `scale: none`). Pakai
     `behavior:'instant'` + tunggu dulu sebelum baca rect.
+- **JEBAKAN BESAR Tailwind v4: `transition-[transform]` GAK NGE-COVER utility translate/
+  rotate/scale.** Di v4, `translate-x-full` / `rotate-180` / `scale-95` dikompilasi ke properti
+  **berdiri sendiri** (`translate:` / `rotate:` / `scale:`), BUKAN ke `transform:`. Jadi kalau
+  transition-nya nyebut `transform`, animasinya **gak jalan sama sekali** - elemennya lompat.
+  Diem-diem aja, gak ada error, build lolos.
+  - Kena di 6 tempat (Sep 2026, ketahuan pas Wayan bilang hamburger masih kasar): **drawer navbar**
+    (`translate-x-full` - drawer-nya gak pernah geser, langsung nempel), chevron Program, chevron
+    Our Company, logo Featured-on, kartu homepage, CTA Explore hero. Udah dibenerin semua ke
+    `transition-[translate]` / `[rotate]` sesuai yang dipakai.
+  - **Yang arbitrary TETAP transform**: `[transform:translateY(-2px)]` beneran nge-set `transform`,
+    jadi `transition`-nya memang harus `transform` (mis. kartu charter). Jangan ikut diganti.
+  - **Cara cek**: harness `burger-probe.mjs` / `snap-sweep.mjs` di scratchpad baca
+    `getComputedStyle(el).translate` frame per frame. Kalau langsung `100% -> 0px` dalam satu
+    frame = transition-nya salah sasaran. Yang bener: `100% -> 82% -> 41% -> 16% -> 5% -> 0`.
+  - Hamburger sekarang juga **morph jadi X** pas drawer kebuka (bar atas/bawah ketemu di tengah
+    terus muter 45°, bar tengah fade), `aria-label` ikut ganti Open/Close menu. Scrim disamain
+    ke 300ms/`--ease` biar segerak sama drawer (dulu 200ms, kepisah).
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`

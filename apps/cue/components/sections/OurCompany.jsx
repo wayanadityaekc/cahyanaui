@@ -126,7 +126,7 @@ export default function OurCompany() {
               <LayoutGrid className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
               {active.label}
             </span>
-            <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+            <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-[rotate] duration-200 ${menuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
           </button>
           <Collapse open={menuOpen}>
           <div className="mt-3 gap-1 flex flex-col" role="tablist" aria-label="Our company">

@@ -25,6 +25,13 @@ import AuthModal from '@/components/account/AuthModal';
 // numpuk di 1 elemen (mis. `.navbar__menu > li > a` menang atas display flex
 // tiap link) - hasil flatten-nya diverifikasi lewat computed-style diff.
 
+// Hamburger bars. They morph into an X while the drawer is open so the button
+// itself reacts to the tap, instead of three lines sitting there unchanged.
+const BURGER_BAR =
+  'w-full h-[2px] bg-gold max-[992px]:w-[22px] ' +
+  '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
+  'motion-reduce:transition-none';
+
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Link nav utama (Home/Guide/Our Company/My Trip). `.navbar__menu > li > a`
@@ -120,7 +127,7 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
             {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
@@ -189,7 +196,7 @@ export default function Navbar() {
                 aria-expanded={dropOpen}
                 onClick={() => setDropOpen((v) => !v)}
               >
-                Program<span className={`inline-block transition-[transform] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
+                Program<span className={`inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
               </button>
               <Collapse open={dropOpen}>
               <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[0.9rem] block">
@@ -226,11 +233,13 @@ export default function Navbar() {
         <button
           className="relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
-          aria-label="Open menu"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
           {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
               .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
               span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
@@ -239,7 +248,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-200 ease-[ease] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
+      <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
       {pathname === '/' && <TripBar />}
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>

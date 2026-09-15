@@ -230,7 +230,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <button
         type="button"
         className="w-full mt-[0.4rem] bg-cta text-white border-none rounded-pill p-[0.9rem] font-body font-semibold text-strong cursor-pointer
-          [transition:transform_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
+          [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
         onClick={go}
       >
         Explore

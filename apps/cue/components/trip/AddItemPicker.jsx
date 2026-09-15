@@ -16,9 +16,9 @@ const PICK_CATS_SRC = [
 // Tailwind-native (migrasi Fase 2): .pick-cats/.pick-cat (isolated ke komponen ini)
 // -> utilities, CSS-nya dihapus.
 const PICK_CATS = 'flex flex-col gap-[0.6rem]';
-const PICK_CAT = 'block w-full py-[0.95rem] px-4 text-center [border:1px_solid_#e6dfce] rounded-md bg-cream font-body font-semibold text-green no-underline transition-[border-color,background-color] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
+const PICK_CAT = 'block w-full py-[0.95rem] px-4 text-center [border:1px_solid_#e6dfce] rounded-md bg-cream font-body font-semibold text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
 const PICK_CAT_BTN = `${PICK_CAT} cursor-pointer [font-size:inherit]`;
-const LINK_CAT = 'flex items-center gap-[0.85rem] w-full py-[0.85rem] px-4 text-left [border:1px_solid_#e6dfce] rounded-md bg-cream font-body text-green no-underline transition-[border-color,background-color] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
+const LINK_CAT = 'flex items-center gap-[0.85rem] w-full py-[0.85rem] px-4 text-left [border:1px_solid_#e6dfce] rounded-md bg-cream font-body text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
 const LINK_ICON = 'flex-none w-9 h-9 grid place-items-center rounded-[50%] bg-white text-gold [&>svg]:w-[var(--icon-md)] [&>svg]:h-[var(--icon-md)]';
 const LINK_NAME = 'font-semibold text-green';
 const LINK_SUB = 'block text-small text-muted mt-[0.1rem]';

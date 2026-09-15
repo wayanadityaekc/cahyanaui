@@ -37,7 +37,7 @@ export default function TransferSection() {
         <p className="text-center text-muted text-[0.8rem] mt-[0.2rem] mb-[1.4rem]">{TRANSFER.routesNote}</p>
         <div className="grid grid-cols-2 max-[768px]:grid-cols-1 gap-[0.6rem]">
           {TRANSFER.routes.map((r) => (
-            <button type="button" className="flex items-center gap-3 border border-line rounded-md py-[0.55rem] px-[0.85rem] bg-white cursor-pointer text-left font-body w-full transition-[border-color] duration-[0.15s] hover:border-gold" key={r.key}>
+            <button type="button" className="flex items-center gap-3 border border-line rounded-md py-[0.55rem] px-[0.85rem] bg-white cursor-pointer text-left font-body w-full transition-[border-color,scale] duration-[0.15s] hover:border-gold" key={r.key}>
               <span className="w-[46px] h-[46px] rounded-md bg-cover bg-center shrink-0" style={{ backgroundImage: `url(/assets/images/${r.bg})` }} />
               <span className="flex flex-col">
                 <span className="font-semibold text-green text-h3">{r.name}</span>

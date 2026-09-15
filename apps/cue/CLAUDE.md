@@ -652,11 +652,15 @@ Order **must be kept** (declarations first, run last):
   - **IDR = sumber kebenaran harga.** Harga USD tiap item DITURUNKAN dari IDR
     (`ceil(idr / 17600)`), bukan angka lepas - dulu semua ke-bake di ~15.500 jadi
     tamu USD kelebihan bayar ~13%. Ganti harga = ubah IDR, terus turunin ulang USD-nya.
-  - **Dua tes, jalanin dua-duanya kalau nyentuh harga:**
-    `node tools/pricing-spec-test.js` (di cahyana-api) nge-assert 6 aturan di atas, dan
-    `node tools/golden-price-test.js` muat `script.js` situs lama beneran di sandbox terus
-    bandingin tiap item × mata uang × jumlah tamu sama server. Aturan berubah = ubah
-    `script.js` DAN `pricing.js` bareng, kalau nggak golden test langsung merah.
+  - **Tes harga, jalanin kalau nyentuh harga:** `node tools/pricing-spec-test.js`
+    (di cahyana-api) nge-assert 6 aturan di atas. Dulu ada tes kedua
+    (`golden-price-test.js`) yang bandingin server sama `script.js` situs lama —
+    UDAH DIHAPUS (Sep 2026, Wayan), soalnya pembandingnya ikut kehapus pas situs
+    lama dipensiunin, jadi tes-nya gak bisa jalan sama sekali.
+  - **Ganti isi program tour = cek tiketnya juga.** `TOUR_TICKETS` di
+    `cahyana-api/pricing-data.js` nentuin tiket apa aja yang di-cover Exclusive per
+    tour. Nambah/hapus stop tanpa update situ = tamu Exclusive bayar tiket tempat
+    yang gak didatengin (atau sebaliknya).
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.

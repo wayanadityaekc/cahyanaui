@@ -43,7 +43,7 @@ const ITN_TRIP_T = 'mt-0 mb-[0.15rem] text-[length:var(--fs-body)] font-semibold
 const ITN_TRIP_S = 'mt-0 mb-[0.8rem] text-[length:var(--fs-label)] text-muted';
 const ITN_TRIP_GUESTS = 'flex items-center gap-[0.4rem] mt-[0.7rem] mb-0 text-[length:var(--fs-label)] text-muted [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold [&_svg]:flex-none [&_b]:text-green';
 const ITN_PANEL_HEAD = 'flex items-center justify-between flex-wrap gap-2 mb-4';
-const ITN_GHOSTBTN = 'py-[0.45rem] px-[0.8rem] border border-[#d8d2c4] rounded-pill bg-white font-body text-[length:var(--fs-small)] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease] hover:bg-[#efe9db]';
+const ITN_GHOSTBTN = 'py-[0.45rem] px-[0.8rem] border border-[#d8d2c4] rounded-pill bg-white font-body text-[length:var(--fs-small)] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[#efe9db]';
 const ITN_DAY = 'itn-day relative p-[1.1rem] mb-4 border border-[#e6dfce] rounded-md bg-white last:mb-0';
 const ITN_DAY_TITLE = 'font-body text-[1rem] font-semibold text-green';
 const ITN_DAY_EMPTY = 'flex items-center gap-[0.6rem] py-2 px-[0.2rem] mb-4 text-[length:var(--fs-small)] text-[#9a9382]';
@@ -58,8 +58,8 @@ const ITN_SUMMARY_SUB = 'text-[length:var(--fs-small)] text-[rgba(247,243,234,0.
 // Active state = full string swap (not base+is-active) so no font-weight/color/bg order clash.
 const TT_CARD = 'flex flex-wrap items-center gap-[0.4rem_0.7rem] mt-3 [.tourprog_&]:hidden';
 const TT_TOGGLE = 'inline-flex p-[3px] border border-[rgba(34,32,28,0.5)] rounded-[var(--r-pill)] bg-[rgba(34,32,28,0.08)]';
-const TT_BTN = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-medium text-green bg-transparent cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease]';
-const TT_BTN_ON = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-semibold text-white bg-gold cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease]';
+const TT_BTN = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-medium text-green bg-transparent cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
+const TT_BTN_ON = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-semibold text-white bg-gold cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
 
 // .itn2* itinerary layout engine (B-FINAL). Mobile: single flex column, order reflow
 // (side becomes display:contents so its children reorder among the itn2 flex items:
@@ -72,7 +72,7 @@ const ITN2 = 'max-w-[760px] mx-auto flex flex-col gap-6 min-[993px]:max-w-[1320p
 const ITN2_SIDE = '[display:contents] min-[993px]:flex min-[993px]:flex-col min-[993px]:gap-5';
 const ITN2_MAIN = '[order:3] flex flex-col gap-6 min-w-0';
 const ITN2_PANEL = 'p-0 bg-transparent';
-const ITN2_ADD = 'block w-full mt-[1.25rem] p-[0.95rem] [border:1.5px_dashed_var(--color-green)] rounded-md bg-white font-body text-[1rem] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease] hover:bg-green hover:text-white [order:4] min-[993px]:mt-0';
+const ITN2_ADD = 'block w-full mt-[1.25rem] p-[0.95rem] [border:1.5px_dashed_var(--color-green)] rounded-md bg-white font-body text-[1rem] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-green hover:text-white [order:4] min-[993px]:mt-0';
 // #itn-days desktop slider (mobile: days stack normally).
 const ITN_DAYS = 'min-[993px]:flex min-[993px]:gap-4 min-[993px]:overflow-x-auto min-[993px]:overflow-y-hidden min-[993px]:[scroll-snap-type:x_mandatory] min-[993px]:[touch-action:pan-x_pan-y] min-[993px]:pb-3 min-[993px]:[scrollbar-width:none] min-[993px]:[&::-webkit-scrollbar]:hidden min-[993px]:[&>.itn-day]:flex-[0_0_300px] min-[993px]:[&>.itn-day]:[scroll-snap-align:start] min-[993px]:[&>.itn-day]:mb-0';
 // .itn-day__fields grid + .field wrapper (in-itn context: mb-0, min-w-0) + label + the

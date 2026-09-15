@@ -40,7 +40,7 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
 // `tour-hero__cta` DIPERTAHANKAN sbg marker: di-query JS di BookBar.jsx
 // (IntersectionObserver buat munculin sticky book-bar).
-export const HERO_CTA = 'tour-hero__cta inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease] hover:bg-cta-d [@media(max-width:768px)]:hidden';
+export const HERO_CTA = 'tour-hero__cta inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
 
 function Stop({ s }) {
   const inner = (

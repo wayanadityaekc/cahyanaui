@@ -79,7 +79,7 @@ export default function ListingPage({ data }) {
             />
             <button
               type="button"
-              className="flex-none w-[2.1rem] h-[2.1rem] flex items-center justify-center [border:0] rounded-[50%] bg-cta text-white cursor-pointer [transition:background-color_var(--dur)_ease] hover:bg-cta-d [&_svg]:w-4 [&_svg]:h-4"
+              className="flex-none w-[2.1rem] h-[2.1rem] flex items-center justify-center [border:0] rounded-[50%] bg-cta text-white cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [&_svg]:w-4 [&_svg]:h-4"
               aria-label={q ? 'Clear search' : 'Search'}
               onClick={() => q && setQuery('')}
             >
@@ -94,7 +94,7 @@ export default function ListingPage({ data }) {
               <li><CheckIcon />Free cancellation up to 24h before your tour</li>
             </ul>
           )}
-          {!q && <a ref={browseRef} href={`#${sectionId}`} className="inline-block mt-4 py-3 px-[1.8rem] rounded-pill bg-cta text-white font-semibold text-[0.85rem] no-underline [transition:background-color_var(--dur)_ease] hover:bg-cta-d max-[768px]:block max-[768px]:w-full max-[768px]:mt-[1.25rem] max-[768px]:text-center">Browse all {noun}</a>}
+          {!q && <a ref={browseRef} href={`#${sectionId}`} className="inline-block mt-4 py-3 px-[1.8rem] rounded-pill bg-cta text-white font-semibold text-[0.85rem] no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:block max-[768px]:w-full max-[768px]:mt-[1.25rem] max-[768px]:text-center">Browse all {noun}</a>}
         </div>
       </section>
 

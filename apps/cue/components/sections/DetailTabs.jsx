@@ -176,7 +176,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   // otherwise, once stuck, whatever section content scrolls up to that height
   // peeks through on either side of the (narrower) button row.
   const tab = (on) =>
-    `flex-1 text-center whitespace-nowrap font-body text-small font-semibold border-none rounded-pill py-[0.55rem] px-2 cursor-pointer transition-[background-color,color] duration-[var(--dur-fast)] ease-[ease] ${on ? 'bg-gold text-white' : 'bg-transparent text-muted hover:text-green'}`;
+    `flex-1 text-center whitespace-nowrap font-body text-small font-semibold border-none rounded-pill py-[0.55rem] px-2 cursor-pointer transition-[background-color,color,scale] duration-[var(--dur-fast)] ease-[ease] ${on ? 'bg-gold text-white' : 'bg-transparent text-muted hover:text-green'}`;
   return (
     <div className="max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4">
       <div className="bg-white rounded-xl px-6 pt-6 pb-8 [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg">

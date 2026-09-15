@@ -40,7 +40,7 @@ export default function GuideHub() {
 
           <div className="flex items-stretch max-w-[640px] mt-6 mx-auto [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white shadow-md">
             <div className={GC_NAV}>
-              <button className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden" type="button" aria-haspopup="true" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+              <button className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden" type="button" aria-haspopup="true" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
                 <span>Categories</span>
                 <ChevronDown

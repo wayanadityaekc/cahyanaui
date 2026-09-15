@@ -166,7 +166,7 @@ export default function Navbar() {
             <li className="pb-4">
               <button
                 type="button"
-                className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d"
+                className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d"
                 onClick={() => {
                   if (account) logout();
                   else setAuthOpen(true);
@@ -215,7 +215,7 @@ export default function Navbar() {
                   `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
                   hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white
                   (icon currentColor ikut putih, samain gaya sama tombol Sign in). */}
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d">
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d">
                 <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
                 Chat on WhatsApp
               </a>

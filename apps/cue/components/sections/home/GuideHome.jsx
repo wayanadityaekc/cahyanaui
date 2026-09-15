@@ -55,7 +55,7 @@ export default function GuideHome() {
                 style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
               >
                 <span className="relative z-[1] flex flex-col items-center gap-[0.9rem] p-8 text-center">
-                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
+                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color,scale] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
                   <span className="font-semibold text-h2">{c.title}</span>
                   <span className="text-small opacity-90">{c.sub}</span>
                 </span>

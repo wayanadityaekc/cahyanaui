@@ -46,16 +46,16 @@ export const SELECT =
 // Primary button = the site CTA (green fill, white text) - NOT the dead green in the
 // 3129 block. Stacked buttons keep a 0.6rem gap (STACK), applied to the 2nd+ button.
 export const BTN =
-  'w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold text-white bg-cta no-underline cursor-pointer transition-[background-color,color] duration-[var(--dur)] ease-[ease] hover:bg-cta-d hover:text-white';
+  'w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold text-white bg-cta no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d hover:text-white';
 export const STACK = 'mt-[0.6rem]';
 export const BTN_GHOST =
-  'w-full p-[0.85rem] rounded-pill text-[1rem] font-semibold no-underline cursor-pointer transition-[background-color,color] duration-[var(--dur)] ease-[ease] mt-[0.6rem] bg-white [border:1.5px_solid_var(--color-green)] text-green hover:bg-green hover:text-cream hover:[border-color:var(--color-green)]';
+  'w-full p-[0.85rem] rounded-pill text-[1rem] font-semibold no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] mt-[0.6rem] bg-white [border:1.5px_solid_var(--color-green)] text-green hover:bg-green hover:text-cream hover:[border-color:var(--color-green)]';
 // WhatsApp button: base layout + WA brand green. NO top margin baked in - the gap
 // to the button above is context (the .modal__btn + .modal__btn adjacency = STACK,
 // 0.6rem, which wins over .modal__btn--wa's own 0.75rem when stacked). Callers add
 // the margin they actually render with (STACK when it follows another button).
 export const BTN_WA =
-  'w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold no-underline cursor-pointer transition-[background-color,color] duration-[var(--dur)] ease-[ease] text-white bg-[#25d366] hover:bg-[#1fb457] hover:text-white';
+  'w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] text-white bg-[#25d366] hover:bg-[#1fb457] hover:text-white';
 
 // Inline message under a form (.modal__referral-msg): base has no colour (inherits);
 // .error -> red, .success -> green. Used by auth / account / contact / hero-search.

@@ -13,7 +13,7 @@ import { GRID_SLIDER } from '@/components/ui/gridClasses';
 const ARROW =
   'absolute top-[calc(50%-0.5rem)] [transform:translateY(-50%)] z-[5] hidden items-center justify-center w-11 h-11 ' +
   'border-none rounded-[50%] text-[1.7rem] leading-none text-green bg-[rgba(255,255,255,0.96)] shadow-sm ' +
-  'cursor-pointer opacity-0 transition-[opacity,background-color,color] duration-200 ease-[ease] ' +
+  'cursor-pointer opacity-0 transition-[opacity,background-color,color,scale] duration-200 ease-[ease] ' +
   'min-[993px]:flex min-[993px]:group-hover:opacity-100 hover:bg-gold';
 
 export default function Slider({ children, className = '', gridClassName = GRID_SLIDER }) {

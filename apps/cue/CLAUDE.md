@@ -469,6 +469,24 @@ Order **must be kept** (declarations first, run last):
   - **Catatan jujur**: khusus 3 menu ini, trik CSS (`grid-template-rows: 0fr → 1fr`) bisa ngasih
     hasil yang sama di **0 KB**. Framer Motion baru beneran kepake pas modal digarap (animasi
     **keluar**/unmount gak bisa CSS) - itu rencana setelah tanggal 28.
+- **Press feedback tombol (Sep 2026, Wayan: "pas button di klik gak ada animasi")** - sebelum ini
+  web NOL `:active` state, jadi tombol ditap gak ngasih respons apa-apa. Rule-nya di
+  **`style.css` bareng reset**, BUKAN per-komponen: ada ~99 tag `<button>` tulis-tangan dan cuma
+  segelintir yang lewat primitif `Button.jsx`, jadi per-komponen bakal kelewat banyak.
+  - Pakai properti `scale` berdiri sendiri, **BUKAN `transform: scale()`** - kartu & CTA udah
+    animasi `transform` pas hover (translateY), kalau pakai transform dua-duanya saling timpa.
+    `scale` numpuk rapi sama `transform`.
+  - Transition-nya sengaja di specificity elemen (0,0,1) biar komponen yang punya
+    `transition` sendiri (0,1,0) tetap menang; rule `:active`-nya 0,1,1 biar feedback-nya
+    SELALU kena. Konsekuensinya: komponen yang nulis `transition` sendiri harus **nambahin
+    `scale`** ke daftarnya, kalau nggak press-nya nyentak (bukan gak ada, cuma gak halus).
+  - Cek cakupannya: harness `press-probe.mjs` di scratchpad - ngitung tiap tombol yang keliatan
+    per halaman, patokannya `press instan: 0`. Terakhir diukur: index 64/64, tour 43/43,
+    our-company 29/29, bali-guide 24/24, my-trips 61/61, charter 73/76.
+  - **Gotcha harness**: `html` punya `scroll-behavior: smooth`, jadi `getBoundingClientRect()`
+    yang dibaca di tick yang sama sama `scrollIntoView` masih koordinat LAMA - mouse mendarat
+    di tempat lain & `:active` gak kena (kejadian, sempet kebaca `scale: none`). Pakai
+    `behavior:'instant'` + tunggu dulu sebelum baca rect.
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`

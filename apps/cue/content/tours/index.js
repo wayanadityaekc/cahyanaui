@@ -2188,7 +2188,7 @@ export const TOUR_CONTENT = {
  "ubud-rafting-adventure": {
   "heroBg": "rafting.webp",
   "title": "Ayung River Rafting & Tegenungan Waterfall Tour",
-  "desc": "Paddle the Ayung River through jungle gorges and hidden waterfalls, then dry off among the Tegalalang rice terraces, Luwak coffee, and the Tegenungan waterfall. A private car, a local driver, your pace.",
+  "desc": "Start among the Tegalalang rice terraces and a Luwak coffee tasting, then paddle the Ayung River through jungle gorges, and finish at the Tegenungan waterfall. A private car, a local driver, your pace.",
   "hooks": [
    {
     "label": "Duration",
@@ -2239,25 +2239,13 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "rafting",
-    "img": "rafting.webp",
-    "alt": "A rafting crew punching through whitewater rapids",
-    "w": 5609,
-    "hgt": 3739,
-    "num": "Stop 1",
-    "name": "Ayung River Rafting",
-    "highlight": "We start with the highlight - a 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. Beginners and families welcome; all safety gear provided."
-   },
-   {
-    "type": "stop",
     "refType": "destination",
     "refId": "tegalalang-rice-terrace",
     "img": "tegalalang-rice-terrace-hero.jpg",
     "alt": "The stepped rice terraces at Tegalalang, north of Ubud",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 2",
+    "num": "Stop 1",
     "name": "Tegalalang Rice Terrace",
     "highlight": "Bali's most iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by the thousand year old subak irrigation system. Wander the paths, catch the swings and photo spots, and take in one of the island's signature views."
    },
@@ -2269,9 +2257,21 @@ export const TOUR_CONTENT = {
     "alt": "A working coffee and spice plantation near Ubud",
     "w": 1200,
     "hgt": 1545,
-    "num": "Stop 3",
+    "num": "Stop 2",
     "name": "Luwak Coffee Plantation",
     "highlight": "Walk through a working plantation to see how coffee, cacao, and spices grow, then taste your way through a tray of Balinese coffees and teas - including the famous kopi luwak straight from the source. Tastings are complimentary."
+   },
+   {
+    "type": "stop",
+    "refType": "experience",
+    "refId": "rafting",
+    "img": "rafting.webp",
+    "alt": "A rafting crew punching through whitewater rapids",
+    "w": 5609,
+    "hgt": 3739,
+    "num": "Stop 3",
+    "name": "Ayung River Rafting",
+    "highlight": "The main event - a 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. Beginners and families welcome; all safety gear provided."
    },
    {
     "type": "stop",
@@ -2314,16 +2314,16 @@ export const TOUR_CONTENT = {
   ],
   "heroSlides": [
    {
-    "src": "/assets/images/rafting.webp",
-    "title": "Ayung River Rafting"
-   },
-   {
     "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",
     "title": "Tegalalang Rice Terrace"
    },
    {
     "src": "/assets/images/coffee-plantation-hero.jpg",
     "title": "Luwak Coffee Plantation"
+   },
+   {
+    "src": "/assets/images/rafting.webp",
+    "title": "Ayung River Rafting"
    },
    {
     "src": "/assets/images/tegenungan-waterfall-hero.jpg",

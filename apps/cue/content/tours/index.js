@@ -1643,7 +1643,7 @@ export const TOUR_CONTENT = {
   ]
  },
  "south-coast-sunset-kecak": {
-  "heroBg": "watersport-jetski.webp",
+  "heroBg": "uluwatu-temple-top.webp",
   "title": "Uluwatu Cliff Temple & Sunset Kecak Dance Tour",
   "desc": "The clifftop Uluwatu temple 70 metres above the surf, then the Kecak fire dance as the sun sets over the Indian Ocean - a relaxed half-day built around sunset.",
   "hooks": [
@@ -1740,6 +1740,16 @@ export const TOUR_CONTENT = {
    "Free cold water on board",
    "Flexible, fully customizable itinerary",
    "Exclusive option: temple entrance & Kecak dance tickets included"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/uluwatu-temple-top.webp",
+    "title": "Uluwatu Cliff Temple"
+   },
+   {
+    "src": "/assets/images/uluwatu-sunset-kecak-dance.webp",
+    "title": "Sunset Kecak Fire Dance"
+   }
   ],
   "__href": "/south-coast-sunset-kecak.html",
   "excluded": [

@@ -8,6 +8,8 @@ import { useReferral } from '@/state/ReferralProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { quote, submitInquiry } from '@/lib/api';
+import { bookingSchema } from '@/lib/schemas';
+import { validateWith } from '@/lib/validate';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import PayChips from './PayChips';
@@ -15,7 +17,7 @@ import Select from '@/components/ui/Select';
 import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
-import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
@@ -31,6 +33,7 @@ export default function BookConfirmModal() {
   const [priced, setPriced] = useState(null);
   const [refMsg, setRefMsg] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -43,6 +46,7 @@ export default function BookConfirmModal() {
       setF(EMPTY);
       setPriced(null);
       setDone(false);
+      setErrors({});
       setError('');
       setRefMsg(null);
       return;
@@ -59,7 +63,16 @@ export default function BookConfirmModal() {
 
   if (!mounted || !ctx) return null;
 
-  const set = (k) => (e) => setF((v) => ({ ...v, [k]: e.target.value }));
+  const set = (k) => (e) => {
+    const { value } = e.target;
+    setF((v) => ({ ...v, [k]: value }));
+    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  };
+  // Custom controls (Select / DateTimeField) hand back a value, not an event.
+  const setValue = (k) => (value) => {
+    setF((v) => ({ ...v, [k]: value }));
+    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  };
 
   // Pickup-time field (Sep 2026, #TIME-1): only shown when the booking is a
   // single line - a multi-day itinerary/cart checkout has one time PER DAY, which
@@ -85,18 +98,21 @@ export default function BookConfirmModal() {
   // headless verification, not guessed).
   const flightNumberDisplay = needsFlight ? f.flightNumber : hasFlightAlready ? singleLine.flight_number : '';
 
+  // Which fields are required depends on the booking being confirmed, so the schema
+  // is built per render from the same flags the fields themselves are shown by.
+  // Both the Book Now button and the WhatsApp button run this - they must agree.
   const validate = () => {
-    if (!f.name.trim()) return 'Please enter your name.';
-    if (!f.phone.trim()) return 'Please enter your phone number.';
-    if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) return 'Please enter a valid email address.';
-    if (!ctx.pickupOptional && !f.pickup.trim()) return 'Please enter your pick-up location.';
-    if (ctx.dropoffRequired && !f.dropoff.trim()) return 'Please enter your drop-off location.';
-    if (needsTime && !f.time) return 'Please select a pickup time.';
-    if (needsFlight) {
-      if (!f.flightNumber.trim()) return 'Please enter your flight number.';
-      if (!f.flightDatetime) return 'Please enter your flight date & time.';
-    }
-    return '';
+    const { ok, errors: fieldErrors } = validateWith(
+      bookingSchema({
+        pickupOptional: !!ctx.pickupOptional,
+        dropoffRequired: !!ctx.dropoffRequired,
+        needsTime,
+        needsFlight,
+      }),
+      f,
+    );
+    setErrors(fieldErrors);
+    return ok;
   };
 
   // The quote already fetched above is what the guest sees, so send it with the
@@ -140,8 +156,7 @@ export default function BookConfirmModal() {
   });
 
   const submit = async () => {
-    const err = validate();
-    if (err) { setError(err); return; }
+    if (!validate()) { setError(''); return; }
     setError('');
     setBusy(true);
     try {
@@ -208,24 +223,29 @@ export default function BookConfirmModal() {
 
             <div className={GROUP}>
               <label className={LABEL} htmlFor="booker-name">Your Name</label>
-              <input className={INPUT} type="text" id="booker-name" placeholder="Enter your name" value={f.name} onChange={set('name')} />
+              <input className={INPUT} type="text" id="booker-name" placeholder="Enter your name" value={f.name} onChange={set('name')} aria-invalid={!!errors.name} />
+              {errors.name && <small className={FIELD_ERR}>{errors.name}</small>}
             </div>
             <div className={GROUP}>
               <label className={LABEL} htmlFor="booker-phone">Phone Number</label>
-              <input className={INPUT} type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" value={f.phone} onChange={set('phone')} />
+              <input className={INPUT} type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" value={f.phone} onChange={set('phone')} aria-invalid={!!errors.phone} />
+              {errors.phone && <small className={FIELD_ERR}>{errors.phone}</small>}
             </div>
             <div className={GROUP}>
               <label className={LABEL} htmlFor="booker-email">Email</label>
-              <input className={INPUT} type="email" id="booker-email" placeholder="you@email.com" value={f.email} onChange={set('email')} />
+              <input className={INPUT} type="email" id="booker-email" placeholder="you@email.com" value={f.email} onChange={set('email')} aria-invalid={!!errors.email} />
+              {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
             </div>
             <div className={GROUP}>
               <label className={LABEL} htmlFor="pickup">Pick-up Location</label>
-              <input className={INPUT} type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} />
+              <input className={INPUT} type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} aria-invalid={!!errors.pickup} />
+              {errors.pickup && <small className={FIELD_ERR}>{errors.pickup}</small>}
             </div>
             {ctx.dropoffRequired !== false && (
               <div className={GROUP}>
                 <label className={LABEL} htmlFor="dropoff">Drop-off Location</label>
-                <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} />
+                <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} aria-invalid={!!errors.dropoff} />
+                {errors.dropoff && <small className={FIELD_ERR}>{errors.dropoff}</small>}
               </div>
             )}
             {needsTime && (
@@ -235,21 +255,24 @@ export default function BookConfirmModal() {
                   id="pickup-time"
                   label="Pickup Time"
                   value={f.time}
-                  onChange={(v) => setF((s) => ({ ...s, time: v }))}
+                  onChange={setValue('time')}
                   options={timeOpts}
                   placeholder="Select a time"
                 />
+                {errors.time && <small className={FIELD_ERR}>{errors.time}</small>}
               </div>
             )}
             {needsFlight && (
               <>
                 <div className={GROUP}>
                   <label className={LABEL} htmlFor="flight-number">Flight Number</label>
-                  <input className={INPUT} type="text" id="flight-number" placeholder="e.g. QZ7501" value={f.flightNumber} onChange={set('flightNumber')} />
+                  <input className={INPUT} type="text" id="flight-number" placeholder="e.g. QZ7501" value={f.flightNumber} onChange={set('flightNumber')} aria-invalid={!!errors.flightNumber} />
+                  {errors.flightNumber && <small className={FIELD_ERR}>{errors.flightNumber}</small>}
                 </div>
                 <div className={GROUP}>
                   <label className={LABEL} htmlFor="flight-datetime">Flight Date &amp; Time</label>
-                  <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={(v) => setF((s) => ({ ...s, flightDatetime: v }))} />
+                  <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={setValue('flightDatetime')} />
+                  {errors.flightDatetime && <small className={FIELD_ERR}>{errors.flightDatetime}</small>}
                 </div>
               </>
             )}
@@ -303,8 +326,7 @@ export default function BookConfirmModal() {
             <button
               className={`${BTN_WA} ${STACK}`}
               onClick={() => {
-                const err = validate();
-                if (err) { setError(err); return; }
+                if (!validate()) { setError(''); return; }
                 window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
               }}
             >

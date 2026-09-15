@@ -2106,27 +2106,27 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "kecak-dance",
-    "img": "kecak.jpg",
-    "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 5",
-    "name": "Kecak Fire Dance",
-    "highlight": "We close the day with the Kecak - a circle of dozens of chanting men, no instruments, and a fire-lit retelling of the Ramayana as the sun goes down. Raw, powerful, and a fitting end to a full day of Balinese art and culture."
-   },
-   {
-    "type": "stop",
     "refType": "destination",
     "refId": "ubud-market",
     "img": "ubud-market-hero.jpg",
     "alt": "Ubud Traditional Market",
     "w": 1200,
     "hgt": 1157,
-    "num": "Stop 6 · Optional",
+    "num": "Stop 5 · Optional",
     "name": "Ubud Traditional Market",
     "highlight": "Pasar Ubud, right across from the Royal Palace - produce and offering flowers in the morning, textiles, woodcarving, and souvenir stalls the rest of the day. Easy to fold in on the way between stops if you'd like some time to browse and bargain."
+   },
+   {
+    "type": "stop",
+    "refType": "experience",
+    "refId": "kecak-dance",
+    "img": "kecak.jpg",
+    "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 6",
+    "name": "Kecak Fire Dance",
+    "highlight": "We close the day with the Kecak - a circle of dozens of chanting men, no instruments, and a fire-lit retelling of the Ramayana as the sun goes down. Raw, powerful, and a fitting end to a full day of Balinese art and culture."
    }
   ],
   "facts": [
@@ -2169,12 +2169,12 @@ export const TOUR_CONTENT = {
     "title": "Ubud Royal Palace"
    },
    {
-    "src": "/assets/images/kecak.jpg",
-    "title": "Kecak Fire Dance"
-   },
-   {
     "src": "/assets/images/ubud-market-hero.jpg",
     "title": "Ubud Traditional Market"
+   },
+   {
+    "src": "/assets/images/kecak.jpg",
+    "title": "Kecak Fire Dance"
    }
   ],
   "__href": "/ubud-culture-day.html",

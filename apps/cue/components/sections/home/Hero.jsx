@@ -60,7 +60,7 @@ export default function Hero() {
         {/* Mobile scrim behind the plan-your-trip sheet; visibility driven by sheetOpen. */}
         <div
           className={`max-[992px]:fixed max-[992px]:inset-0 max-[992px]:z-[44]
-            max-[992px]:bg-[rgba(26,26,26,0.42)] max-[992px]:[transition:opacity_var(--dur)_var(--ease),visibility_var(--dur)]
+            max-[992px]:bg-[rgba(26,26,26,0.42)] max-[992px]:[transition:opacity_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]
             ${sheetOpen ? 'max-[992px]:opacity-100 max-[992px]:visible' : 'max-[992px]:opacity-0 max-[992px]:invisible'}`}
           onClick={() => setSheetOpen(false)}
         />

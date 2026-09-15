@@ -91,7 +91,7 @@
      Cuma buat `transition:` (feedback interaksi: hover/focus/state). DIBIARIN: durasi
      `animation:` entrance (0.4-0.6s, choreography sengaja), fade lambat 0.5s, dan special
      (marquee 35s, glow booksidebar 2-3s). Keyword `ease` juga dibiarin (udah konsisten). */
-  --dur-fast: var(--dur-fast); /* hover kecil, state cepet */
+  --dur-fast: 0.15s; /* hover kecil, state cepet */
   --dur: 0.2s;       /* default transisi */
   --dur-slow: 0.3s;  /* transform lebih gede */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);      /* standar (material) */

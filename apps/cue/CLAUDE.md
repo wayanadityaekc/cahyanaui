@@ -445,6 +445,13 @@ Order **must be kept** (declarations first, run last):
   error** merah, **hairline** `0 0 0 1px`. Sama filosofinya kayak amber/gold: satuin yang
   kebetulan duplikat, jaga yang punya makna.
 - **Motion (token, Agu 2026)**: durasi transisi + easing dipusatin biar animasi satu ritme.
+  **BUG 3 MINGGU (dibetulin Sep 2026)**: `--dur-fast` di `style.css` ketulis
+  `--dur-fast: var(--dur-fast)` - nunjuk dirinya sendiri, jadi tokennya resolve ke KOSONG. Tiap
+  `transition: ... var(--dur-fast) ...` (shorthand) jadi invalid at computed-value time dan
+  jatuh ke nilai awal **`all 0s`** = gak animasi apa-apa. Kena 43 pemakaian, build ijo terus.
+  Sekarang dijaga gate (`check-motion` rule CYCLE). Kalau nemu transition yang "harusnya jalan
+  tapi enggak", cek `getComputedStyle(el).transitionDuration` - kalau `0s` padahal class-nya
+  nulis durasi, berarti ada `var()` yang gagal resolve, bukan salah selector.
   `--dur-fast` 0.15s (hover kecil/state cepet) · `--dur` 0.2s (default) · `--dur-slow` 0.3s
   (transform gede) · `--ease` `cubic-bezier(.4,0,.2,1)` (standar/material) · `--ease-out`
   `cubic-bezier(.16,1,.3,1)` (entrance expo-out). CUMA dipakai di `transition:` (feedback
@@ -527,6 +534,18 @@ Order **must be kept** (declarations first, run last):
     (`max-[992px]:[transition:transform...]` + `translate-y-full` = sheet-nya lompat, gak geser).
     Sekarang gate ngelompokin per scope varian (`""` = base, `max-[992px]`, `hover`, dst) dan
     ngecek tiap scope sendiri-sendiri; `motion-reduce` di-skip (emang sengaja matiin animasi).
+  - **Rule 3 - CYCLE (Sep 2026)**: custom property yang didefinisiin sebagai dirinya sendiri
+    (`--x: var(--x)`). Itu yang kejadian sama `--dur-fast`. Satu regex, nahan seluruh kelas bug ini.
+  - **Harness `press-probe`/`snap-sweep` sempet BOHONG**: dia ngitung `transition-property: all`
+    sebagai "lulus", padahal `all` + durasi `0s` itu justru tanda transition-nya MATI. Makanya
+    dia lapor "index 64/64 mulus" selama `--dur-fast` rusak. Sekarang `all`+`0s` dihitung mati.
+- **Sheet hero HP (tombol "Plan your trip")** - urutannya: tombol press `scale` 0.97
+  (`--dur-fast`), sheet naik `translate` 0.3s **`--ease-out`** (kurva entrance - sengaja beda dari
+  drawer navbar yang pakai `--ease`, karena ini "muncul" bukan "geser"), scrim `--dur-slow` biar
+  **segerak sama sheet** (dulu `--dur` 0.2s, jadi gelapnya kelar duluan di ~167ms padahal sheet
+  baru nyampe ~317ms). Ukur pakai `plan-probe.mjs`.
+  - **Gotcha harness**: kalau nge-tes press-nya pakai mouse down+up, itu = KLIK, sheet-nya kebuka.
+    Reload dulu sebelum ngukur animasi bukanya, kalau nggak semua kebaca "udah selesai".
 - **Swipe-down buat nutup sheet HP = `components/ui/DragSheet.jsx`, PAKAI POINTER EVENT, BUKAN
   Framer Motion** (Sep 2026, setelah diukur). FM `drag` ada di feature set **domMax** (satu paket
   sama `layout`), dan narik itu masuk = **+12 KB gzip di SEMUA halaman**, termasuk halaman yang

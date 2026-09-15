@@ -129,7 +129,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         max-[992px]:fixed max-[992px]:left-0 max-[992px]:right-0 max-[992px]:bottom-0 max-[992px]:z-[45] max-[992px]:w-auto
         max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:[scrollbar-width:none] max-[992px]:[&::-webkit-scrollbar]:hidden max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
         max-[992px]:pt-[1.9rem] max-[992px]:animate-none
-        max-[992px]:[transition:translate_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]
+        max-[992px]:[transition:translate_var(--dur-slow)_var(--ease-out),visibility_var(--dur-slow)]
         max-[992px]:shadow-[0_-12px_48px_rgba(26,26,26,0.28)]
         max-[992px]:before:content-[''] max-[992px]:before:absolute max-[992px]:before:top-[0.6rem] max-[992px]:before:left-1/2
         max-[992px]:before:[transform:translateX(-50%)] max-[992px]:before:w-10 max-[992px]:before:h-1 max-[992px]:before:rounded-full

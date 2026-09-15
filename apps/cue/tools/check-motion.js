@@ -14,6 +14,8 @@
 //         nothing on it sets `transform` -> dead transition.
 // Rule 2: a clickable declares its own transition list without `scale` -> the
 //         global press feedback in style.css snaps instead of easing.
+// Rule 3: a custom property defined as itself (--x: var(--x)) -> it resolves to
+//         nothing, and every shorthand using it collapses to `all 0s`.
 //
 // Runs over out/, like the other gates. No browser needed.
 const fs = require("fs");
@@ -95,7 +97,21 @@ const walk = (dir) => {
 const pages = walk(OUT);
 const dead = new Map();   // rule 1
 const snap = new Map();   // rule 2
+const cycles = [];        // rule 3
 let elements = 0;
+
+// Rule 3: a custom property that references itself. `--dur-fast: var(--dur-fast)`
+// sat in style.css for three weeks: the cycle makes the token resolve to nothing,
+// which makes every `transition: ... var(--dur-fast) ...` shorthand invalid at
+// computed-value time, which silently falls back to the initial value `all 0s`.
+// 43 usages animated nothing and the build was green throughout. One regex is a
+// cheap price for never repeating that.
+for (const css of fs.readdirSync(OUT).filter((n) => n.endsWith(".css")).map((n) => path.join(OUT, n))) {
+  const text = fs.readFileSync(css, "utf8");
+  for (const m of text.matchAll(/(--[\w-]+)\s*:\s*var\(\s*\1\s*[,)]/g)) {
+    cycles.push(`${path.relative(OUT, css)}: ${m[1]} is defined as var(${m[1]}) - it resolves to nothing`);
+  }
+}
 
 for (const p of pages) {
   const html = fs.readFileSync(p, "utf8");
@@ -157,10 +173,12 @@ console.log(`Pages scanned        : ${pages.length}`);
 console.log(`Elements with classes: ${elements}`);
 console.log(`Dead transitions     : ${dead.size}`);
 console.log(`Snapping clickables  : ${snap.size}`);
+console.log(`Self-referencing vars: ${cycles.length}`);
 
-if (dead.size || snap.size) {
+if (dead.size || snap.size || cycles.length) {
   for (const [why, where] of dead) console.log(`\n  DEAD  ${why}\n        first seen: ${where}`);
   for (const [why, where] of snap) console.log(`\n  SNAP  ${why}\n        first seen: ${where}`);
+  for (const c of cycles) console.log(`\n  CYCLE ${c}`);
   console.log("\nMotion check FAILED.");
   process.exit(1);
 }

@@ -195,7 +195,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <button
             type="button"
             className="flex-none border-none rounded-pill py-[0.72rem] px-[1.15rem] bg-cta text-white font-body font-semibold
-              text-[1rem] cursor-pointer [transition:background_var(--dur-fast)_ease] hover:bg-cta-d"
+              text-[1rem] cursor-pointer [transition:background_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d"
             onClick={applyCode}
           >
             Apply

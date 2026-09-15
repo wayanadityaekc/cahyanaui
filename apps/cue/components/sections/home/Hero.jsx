@@ -46,8 +46,7 @@ export default function Hero() {
             className="hidden max-[992px]:inline-flex max-[992px]:items-center max-[992px]:justify-center max-[992px]:mt-6
               max-[992px]:w-auto max-[992px]:h-[2.9rem] max-[992px]:px-[1.9rem] max-[992px]:border-none max-[992px]:rounded-pill
               max-[992px]:bg-cta max-[992px]:text-white max-[992px]:font-body max-[992px]:font-semibold max-[992px]:text-[1rem] max-[992px]:cursor-pointer
-              max-[992px]:shadow-lg max-[992px]:[transition:background_var(--dur)_var(--ease),transform_var(--dur-fast)_var(--ease)]
-              max-[992px]:active:scale-[0.99] max-[992px]:hover:bg-cta-d"
+              max-[992px]:shadow-lg max-[992px]:[transition:background_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cta-d"
             onClick={() => setSheetOpen(true)}
           >
             Plan your trip

@@ -492,10 +492,13 @@ Order **must be kept** (declarations first, run last):
   **berdiri sendiri** (`translate:` / `rotate:` / `scale:`), BUKAN ke `transform:`. Jadi kalau
   transition-nya nyebut `transform`, animasinya **gak jalan sama sekali** - elemennya lompat.
   Diem-diem aja, gak ada error, build lolos.
-  - Kena di 6 tempat (Sep 2026, ketahuan pas Wayan bilang hamburger masih kasar): **drawer navbar**
-    (`translate-x-full` - drawer-nya gak pernah geser, langsung nempel), chevron Program, chevron
-    Our Company, logo Featured-on, kartu homepage, CTA Explore hero. Udah dibenerin semua ke
-    `transition-[translate]` / `[rotate]` sesuai yang dipakai.
+  - **CUMA bentuk ARBITRARY yang rusak.** Keyword `transition-transform` AMAN - Tailwind v4
+    nge-compile dia jadi `transform,translate,scale,rotate` (udah ikut). Yang bahaya cuma tulis
+    tangan: `transition-[transform]` / `[transition:transform ...]` = literal `transform` doang.
+  - Kena di **5 tempat** (Sep 2026, ketahuan pas Wayan bilang hamburger masih kasar): **drawer navbar**
+    (`translate-x-full` - drawer-nya gak pernah geser, langsung nempel), chevron Program, logo
+    Featured-on, kartu homepage, CTA Explore hero. (Chevron Our Company sempet keitung juga -
+    **SALAH**, dia pakai keyword `transition-transform`, jadi sebenernya udah jalan.)
   - **Yang arbitrary TETAP transform**: `[transform:translateY(-2px)]` beneran nge-set `transform`,
     jadi `transition`-nya memang harus `transform` (mis. kartu charter). Jangan ikut diganti.
   - **Cara cek**: harness `burger-probe.mjs` / `snap-sweep.mjs` di scratchpad baca
@@ -504,6 +507,21 @@ Order **must be kept** (declarations first, run last):
   - Hamburger sekarang juga **morph jadi X** pas drawer kebuka (bar atas/bawah ketemu di tengah
     terus muter 45°, bar tengah fade), `aria-label` ikut ganti Open/Close menu. Scrim disamain
     ke 300ms/`--ease` biar segerak sama drawer (dulu 200ms, kepisah).
+- **GATE CI `node tools/check-motion.js`** (Sep 2026, Wayan pilih "hybrid + gate" daripada
+  konversi semua ke Framer Motion). Jalan atas `out/`, tanpa browser, 2 aturan:
+  1. **DEAD** - elemen nge-transition `transform` tapi yang dia set translate/rotate/scale, dan
+     gak ada yang nge-set `transform` -> transition-nya nembak angin, elemen bakal lompat.
+  2. **SNAP** - tombol / link-pill yang nulis `transition` sendiri tanpa `scale` -> press feedback
+     global di `style.css` jadi nyentak.
+  - **Pas dipasang langsung nemu 8 yang kelewat dari sapuan browser** (browser cuma ngecek elemen
+    yang KELIATAN di 12 halaman; gate nyisir 104 halaman termasuk isi drawer/modal/panel yang lagi
+    kesembunyi). Termasuk tombol "Plan your trip" yang ternyata udah punya `active:scale-[0.99]`
+    dari dulu tapi gak pernah halus karena transition-nya nyebut `transform`.
+  - **Nulis gate begini WAJIB dites pakai bug aslinya.** Versi pertama gate ini "lolos" padahal
+    gak ngecek apa-apa (`baseOf` balikin string, destructuring-nya `undefined`), DAN salah ambil
+    transition terakhir - `motion-reduce:transition-none` nimpa transition asli, jadi drawer-nya
+    ke-skip. Ketahuan cuma gara-gara bug drawer sengaja dibalikin buat nguji. Sekarang cuma
+    transition TANPA varian yang dibaca.
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`

@@ -10,7 +10,7 @@ import { Info } from 'lucide-react';
 const wrap = (v) => `inline-flex align-middle ${v === 'default' ? 'relative' : 'static'}`;
 const BTN =
   'inline-flex items-center justify-center w-[18px] h-[18px] p-0 border-none border-current bg-none text-gold cursor-pointer rounded-[50%] ' +
-  '[transition:color_var(--dur-fast)_ease,background_var(--dur-fast)_ease] ' +
+  '[transition:color_var(--dur-fast)_ease,background_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ' +
   'hover:text-green hover:bg-[rgba(34,32,28,0.15)] aria-expanded:text-green aria-expanded:bg-[rgba(34,32,28,0.15)] ' +
   '[&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]';
 const POP_BASE =

@@ -17,7 +17,7 @@
 const CONTROL_COMMON =
   'w-full bg-white font-body font-normal text-field text-green text-left cursor-pointer rounded-md ' +
   '[border:1px_solid_var(--line)] ' +
-  '[transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease] ' +
+  '[transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ' +
   'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
   'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
 

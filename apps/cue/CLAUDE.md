@@ -529,6 +529,23 @@ Order **must be kept** (declarations first, run last):
   + tombol balik aktif. Dulu nembak `SHEET_ENDPOINT` placeholder pakai `mode:"no-cors"`
   jadi gagal diem-diem tapi tetep bilang "success" — pesan tamu keilangan. Jangan balikin
   pola fire-and-forget itu: form apa pun harus nunggu respons sebelum bilang sukses.
+- **Validasi form = Zod, TANPA React Hook Form** (Sep 2026, keputusan Wayan setelah diukur).
+  Semua aturan ada di **`lib/schemas.js`** (satu tempat, bisa dicocokin sama server), dipakai
+  lewat `validateWith()` di `lib/validate.js`; error ditampilin **per field** pakai class
+  `FIELD_ERR` (modalClasses). Form-nya sendiri tetap **plain React `useState`**.
+  - **RHF UDAH DICOBA & DITOLAK.** Diukur di 4 form: ContactForm 73→69 baris, AuthModal
+    104→105, ReviewModal 217→220, BookConfirmModal 348→358. Untungnya nol/minus karena
+    SEMUA dropdown & date picker di web ini komponen custom (`Select`/`DateField`/
+    `DateTimeField`) yang `onChange`-nya ngasih nilai, bukan event - jadi tiap satu butuh
+    `Controller`. Plus RHF 26KB gzip, dan karena `AuthModal` di-import `Navbar`, itu ikut
+    ke SEMUA halaman. Percobaannya diarsipkan di branch `claude/rhf-booking-review`.
+  - **Gotcha Zod**: resolver/`safeParse` ngebalikin data yang UDAH DI-PARSE, dan Zod
+    **buang key yang gak terdaftar di schema**. Field tanpa aturan (mis. `referral`,
+    `name`/`countryCode` di review) TETAP wajib didaftarin, kalau nggak datanya hilang diam-diam.
+  - **Email pakai regex sendiri** (`EMAIL_RE`), BUKAN `z.email()` - bawaan Zod lebih ketat
+    dan bakal mulai nolak alamat yang selama ini diterima. Jangan diganti tanpa sengaja.
+  - Habis nyentuh `lib/schemas.js` → jalanin **`node tools/form-rules-test.mjs`** (ngadu
+    schema baru vs aturan if-chain lama, ~394rb kombinasi, harus "all identical").
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
 - **Charter**: `CHARTER` config, live pricing.
 

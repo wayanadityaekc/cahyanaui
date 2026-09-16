@@ -77,7 +77,7 @@ export const RELATED_ITEMS = [
   "img": "east-bali-tour-card.jpg",
   "meta": "10–12 hours",
   "p": 52,
-  "priceName": "Lempuyang & Tirta Gangga"
+  "priceName": "East Bali Tour"
  },
  {
   "href": "/kintamani-sunrise-penglipuran.html",

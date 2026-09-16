@@ -5,7 +5,7 @@ export const SUGGEST = [
   'Ubud Tour',
   'Ubud Culture Day',
   'Batur Sunrise & Adrenaline',
-  'Lempuyang & Tirta Gangga',
+  'East Bali Tour',
   'Uluwatu & Sunset Kecak',
   'Ulun Danu Beratan & Handara Gate',
   'Munduk Waterfall Tour',

@@ -16,6 +16,16 @@ export const KEY = {
   referral: 'cue_referral',
 };
 
+// Saved trips in localStorage hold product NAMES, not ids, so renaming a
+// product would leave anyone mid-planning with an item the API can no longer
+// price. Trips are migrated through this map on load; cahyana-api keeps the
+// matching LEGACY_ITEM_NAMES for requests that arrive from a page cached
+// before the rename. Keep both, and add to them rather than renaming in place.
+export const LEGACY_ITEM_NAMES = {
+  'Lempuyang & Tirta Gangga': 'East Bali Tour',
+  'Besakih & Taman Ujung': 'East Bali Tour',
+};
+
 export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP'];
 export const DISPLAY_GUESTS = 2;
 

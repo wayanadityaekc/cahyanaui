@@ -1203,7 +1203,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The whole complex faces sacred Mount Agung, Bali's highest and holiest volcano, which rises directly behind the upper shrines. On a clear day the mountain is as memorable as the temple itself, but the weather here shifts fast, so the peak is often wrapped in cloud until it lifts."
    }
   ],
-  "metaTitle": "Besakih - The Mother Temple | Besakih & Taman Ujung",
+  "metaTitle": "Besakih - The Mother Temple | East Bali Tour",
   "metaDesc": "Pura Besakih, Bali's largest and holiest temple complex, rises in terraces up Mount Agung with over 20 temples, a sarong included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/besakih.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
@@ -1231,7 +1231,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Besakih - The Mother Temple"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3004,7 +3004,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/lempuyang-tirta-gangga.html",
-    "text": "Lempuyang & Tirta Gangga"
+    "text": "East Bali Tour"
    },
    {
     "type": "sep",
@@ -3015,7 +3015,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Lempuyang Temple - Gates of Heaven"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4391,7 +4391,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Mask, snorkel, and fins are provided, and the calm shallows work for complete beginners. We read the day's conditions and pick the sheltered spot with the best visibility, since clarity changes with weather and tide. Bring a swimsuit, towel, and a change of clothes, float at your own pace, and dry off in the sun before the drive on."
    }
   ],
-  "metaTitle": "Snorkeling in East Bali | Lempuyang & Tirta Gangga",
+  "metaTitle": "Snorkeling in East Bali | East Bali Tour",
   "metaDesc": "Snorkeling in East Bali offers calm, clear water with coral gardens and reef fish a short swim from shore, with gear provided for beginners.",
   "canonical": "https://cahyanaubudexperience.com/attractions/snorkeling-east-bali.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/kids-snorkeling.webp",
@@ -4408,7 +4408,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/lempuyang-tirta-gangga.html",
-    "text": "Lempuyang & Tirta Gangga"
+    "text": "East Bali Tour"
    },
    {
     "type": "sep",
@@ -4419,7 +4419,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Snorkeling in East Bali"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4647,7 +4647,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Walking is flat around the ponds with some steps up the terraces, and shade is limited, so a hat and water help; allow around 45 minutes. Taman Ujung sits close to Tirta Gangga, and the two royal water palaces of Karangasem pair naturally on an East Bali day."
    }
   ],
-  "metaTitle": "Taman Ujung Water Palace | Besakih & Taman Ujung",
+  "metaTitle": "Taman Ujung Water Palace | East Bali Tour",
   "metaDesc": "Taman Ujung is the early-1900s water palace of the Karangasem kings in East Bali, with reflecting ponds, bridges, and pavilions below Mount Agung and the sea.",
   "canonical": "https://cahyanaubudexperience.com/attractions/taman-ujung.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -4675,7 +4675,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Taman Ujung Water Palace"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5432,7 +5432,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/lempuyang-tirta-gangga.html",
-    "text": "Lempuyang & Tirta Gangga"
+    "text": "East Bali Tour"
    },
    {
     "type": "sep",
@@ -5443,7 +5443,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tirta Gangga Water Garden"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {

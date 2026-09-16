@@ -1079,7 +1079,7 @@ export const TOUR_CONTENT = {
   "metaTitle": "East Bali: Lempuyang Gates of Heaven, Besakih & Tirta Gangga",
   "metaDesc": "Private East Bali day tour from Ubud - the Gates of Heaven at Lempuyang, the water gardens of Tirta Gangga and Taman Ujung, then Besakih. Only a 10% deposit.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/east-bali-tour-card.jpg",
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "items": [
    {

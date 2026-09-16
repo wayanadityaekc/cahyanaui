@@ -165,7 +165,7 @@ export const LISTINGS = {
             "name": "East Bali: Lempuyang, Besakih & Tirta Gangga",
             "meta": "10–12 hours",
             "metaIcon": "clock",
-            "priceName": "Lempuyang & Tirta Gangga",
+            "priceName": "East Bali Tour",
             "priceFallback": "$52",
             "stops": 4,
             "priv": true
@@ -610,7 +610,7 @@ export const LISTINGS = {
             "name": "Besakih: The Mother Temple of Bali",
             "meta": "East Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Besakih & Taman Ujung|"
+            "inclText": "Included in |East Bali Tour|"
           },
           {
             "variant": "incl",
@@ -662,7 +662,7 @@ export const LISTINGS = {
             "name": "Lempuyang Temple: Gates of Heaven",
             "meta": "East Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Lempuyang & Tirta Gangga|"
+            "inclText": "Included in |East Bali Tour|"
           },
           {
             "variant": "incl",
@@ -938,7 +938,7 @@ export const LISTINGS = {
             "name": "Tirta Gangga Water Garden",
             "meta": "East Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Lempuyang & Tirta Gangga|"
+            "inclText": "Included in |East Bali Tour|"
           },
           {
             "variant": "incl",
@@ -951,7 +951,7 @@ export const LISTINGS = {
             "name": "Taman Ujung Water Palace",
             "meta": "East Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Besakih & Taman Ujung|"
+            "inclText": "Included in |East Bali Tour|"
           },
           {
             "variant": "incl",

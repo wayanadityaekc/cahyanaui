@@ -76,3 +76,8 @@ Redirect 301 /cancellation-policy.html /our-company.html#cancellation
 
 # Besakih & Taman Ujung merged into the East Bali tour (Sep 2026, Wayan).
 Redirect 301 /besakih-taman-ujung.html /lempuyang-tirta-gangga.html
+
+# Ulun Danu Beratan & Handara Gate merged into the Bedugul highlands tour, and
+# Sangeh Monkey Forest & Tanah Lot into the West Bali sunset tour (Sep 2026, Wayan).
+Redirect 301 /ulun-danu-tanah-lot.html /jatiluwih-tour.html
+Redirect 301 /sangeh-tanah-lot.html /tanah-lot-taman-ayun.html

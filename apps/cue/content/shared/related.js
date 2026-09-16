@@ -100,34 +100,24 @@ export const RELATED_ITEMS = [
   "priceName": "Batur Sunrise & Adrenaline"
  },
  {
-  "href": "/ulun-danu-tanah-lot.html",
-  "type": "tour",
-  "zone": "west",
-  "name": "Ulun Danu Beratan & Handara Gate",
-  "img": "ulun-danu-beratan-hero.webp",
-  "meta": "5–7 hours",
-  "p": 60,
-  "priceName": "Ulun Danu Beratan & Handara Gate"
- },
- {
   "href": "/tanah-lot-taman-ayun.html",
   "type": "tour",
   "zone": "west",
-  "name": "Tanah Lot & Taman Ayun",
+  "name": "West Bali Tour",
   "img": "tanah-lot.webp",
-  "meta": "5–7 hours",
-  "p": 50,
-  "priceName": "Tanah Lot & Taman Ayun"
+  "meta": "8–10 hours",
+  "p": 57,
+  "priceName": "West Bali Tour"
  },
  {
   "href": "/jatiluwih-tour.html",
   "type": "tour",
   "zone": "west",
-  "name": "Jatiluwih Rice Terrace Tour",
+  "name": "Bedugul Highlands Tour",
   "img": "jatiluwih.webp",
-  "meta": "4–6 hours",
-  "p": 45,
-  "priceName": "Jatiluwih Rice Terrace Tour"
+  "meta": "9–11 hours",
+  "p": 57,
+  "priceName": "Bedugul Highlands Tour"
  },
  {
   "href": "/banyumala-twin-lakes.html",
@@ -168,16 +158,6 @@ export const RELATED_ITEMS = [
   "meta": "3 days / 2 nights",
   "p": 150,
   "priceName": "3-Day Best of Bali Package"
- },
- {
-  "href": "/sangeh-tanah-lot.html",
-  "type": "tour",
-  "zone": "west",
-  "name": "Sangeh Monkey Forest & Tanah Lot",
-  "img": "tanah-lot.webp",
-  "meta": "5–7 hours",
-  "p": 50,
-  "priceName": "Sangeh Monkey Forest & Tanah Lot"
  },
  {
   "href": "/full-adventure-rafting-atv.html",

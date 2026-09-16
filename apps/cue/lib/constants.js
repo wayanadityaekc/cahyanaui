@@ -24,6 +24,10 @@ export const KEY = {
 export const LEGACY_ITEM_NAMES = {
   'Lempuyang & Tirta Gangga': 'East Bali Tour',
   'Besakih & Taman Ujung': 'East Bali Tour',
+  'Jatiluwih Rice Terrace Tour': 'Bedugul Highlands Tour',
+  'Ulun Danu Beratan & Handara Gate': 'Bedugul Highlands Tour',
+  'Tanah Lot & Taman Ayun': 'West Bali Tour',
+  'Sangeh Monkey Forest & Tanah Lot': 'West Bali Tour',
 };
 
 export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP'];

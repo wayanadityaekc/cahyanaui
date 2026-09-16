@@ -463,7 +463,7 @@ export const GUIDE_CONTENT = {
     "items": [
      "<b>First time in Bali</b> - the <a href=\"/ubud-tour.html\">Ubud Tour</a>: terraces, temples, waterfall &amp; Monkey Forest, short drives",
      "<b>Temple lover</b> - <a href=\"/lempuyang-tirta-gangga.html\">East Bali</a> for the Gates of Heaven &amp; Besakih",
-     "<b>Sunset chaser</b> - <a href=\"/ulun-danu-tanah-lot.html\">West Bali</a> (Tanah Lot) or the <a href=\"/south-coast-sunset-kecak.html\">South Bali &amp; Sunset Kecak</a>",
+     "<b>Sunset chaser</b> - <a href=\"/tanah-lot-taman-ayun.html\">West Bali</a> (Tanah Lot) or the <a href=\"/south-coast-sunset-kecak.html\">South Bali &amp; Sunset Kecak</a>",
      "<b>Family with kids</b> - the <a href=\"/ubud-atv-adventure.html\">ATV Adventure</a> or <a href=\"/hidden-beaches-cliffs.html\">South Bali</a> beaches day",
      "<b>Early riser</b> - <a href=\"/batur-sunrise-adrenaline.html\">Batur trek</a> or the no-hike <a href=\"/kintamani-sunrise-penglipuran.html\">Kintamani jeep sunrise</a>",
      "<b>Waterfall hunter</b> - <a href=\"/munduk-twin-lakes.html\">North Bali</a>, or <a href=\"/lovina-dolphin-sekumpul.html\">Lovina &amp; Sekumpul</a> for the full expedition",
@@ -801,7 +801,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "<a href=\"/attractions/jatiluwih-rice-terrace.html\">Jatiluwih</a>, in the western highlands, is the opposite: vast, open, and quiet - the core of the UNESCO listing, with proper walking and cycling trails through working farmland and hardly a souvenir stand in sight. It asks for more driving (we go on the <a href=\"/ulun-danu-tanah-lot.html\">Ulun Danu Beratan &amp; Tanah Lot Temple</a> tour) and repays it with space. Short version: Tegalalang for the classic photo, Jatiluwih for the walk."
+    "html": "<a href=\"/attractions/jatiluwih-rice-terrace.html\">Jatiluwih</a>, in the western highlands, is the opposite: vast, open, and quiet - the core of the UNESCO listing, with proper walking and cycling trails through working farmland and hardly a souvenir stand in sight. It asks for more driving (we go on the <a href=\"/jatiluwih-tour.html\">Bedugul highlands</a> tour) and repays it with space. Short version: Tegalalang for the classic photo, Jatiluwih for the walk."
    },
    {
     "type": "heading",
@@ -2292,7 +2292,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "The non-negotiable is a <b>sarong</b> wrapped around the waist, usually with a <b>sash</b> tied over it, and shoulders covered. This applies to everyone - men, women, children - regardless of how long your trousers are; the sarong isn't about covering skin so much as marking that you've entered sacred ground. Every major temple lends or rents them at the entrance, and on our tours the sarong is part of the arrangement (rental is included on the <a href=\"/lempuyang-tirta-gangga.html\">East</a> and <a href=\"/ulun-danu-tanah-lot.html\">West Bali</a> tours). Hats and sunglasses come off inside the courtyards."
+    "html": "The non-negotiable is a <b>sarong</b> wrapped around the waist, usually with a <b>sash</b> tied over it, and shoulders covered. This applies to everyone - men, women, children - regardless of how long your trousers are; the sarong isn't about covering skin so much as marking that you've entered sacred ground. Every major temple lends or rents them at the entrance, and on our tours the sarong is part of the arrangement (rental is included on the <a href=\"/lempuyang-tirta-gangga.html\">East</a> and <a href=\"/tanah-lot-taman-ayun.html\">West Bali</a> tours). Hats and sunglasses come off inside the courtyards."
    },
    {
     "type": "heading",

@@ -207,63 +207,33 @@ export const LISTINGS = {
             "priv": true
           },
           {
-            "href": "/ulun-danu-tanah-lot.html",
-            "zone": "west",
-            "img": "west-bali-tour-card.jpg",
-            "alt": "Ulun Danu Beratan & Handara Gate - private tour from Ubud, Bali",
-            "w": 600,
-            "hgt": 600,
-            "name": "Ulun Danu Beratan & Handara Gate",
-            "meta": "5–7 hours",
-            "metaIcon": "clock",
-            "priceName": "Ulun Danu Beratan & Handara Gate",
-            "priceFallback": "$54",
-            "stops": 2,
-            "priv": true
-          },
-          {
             "href": "/tanah-lot-taman-ayun.html",
             "zone": "west",
             "img": "tanah-lot.webp",
-            "alt": "Tanah Lot & Taman Ayun - private tour from Ubud, Bali",
+            "alt": "West Bali Tour - private tour from Ubud, Bali",
             "w": 600,
             "hgt": 600,
-            "name": "Tanah Lot & Taman Ayun",
-            "meta": "5–7 hours",
+            "name": "West Bali Tour",
+            "meta": "8–10 hours",
             "metaIcon": "clock",
-            "priceName": "Tanah Lot & Taman Ayun",
-            "priceFallback": "$45",
-            "stops": 2,
+            "priceName": "West Bali Tour",
+            "priceFallback": "$57",
+            "stops": 3,
             "priv": true
           },
           {
             "href": "/jatiluwih-tour.html",
             "zone": "west",
             "img": "jatiluwih.webp",
-            "alt": "Jatiluwih Rice Terrace Tour - private tour from Ubud, Bali",
+            "alt": "Bedugul Highlands Tour - private tour from Ubud, Bali",
             "w": 600,
             "hgt": 600,
-            "name": "Jatiluwih Rice Terrace Tour",
-            "meta": "4–6 hours",
+            "name": "Bedugul Highlands Tour",
+            "meta": "9–11 hours",
             "metaIcon": "clock",
-            "priceName": "Jatiluwih Rice Terrace Tour",
-            "priceFallback": "$40",
-            "stops": 1,
-            "priv": true
-          },
-          {
-            "href": "/sangeh-tanah-lot.html",
-            "zone": "west",
-            "img": "tanah-lot.webp",
-            "alt": "Sangeh Monkey Forest & Tanah Lot - private tour from Ubud, Bali",
-            "w": 600,
-            "hgt": 600,
-            "name": "Sangeh Monkey Forest & Tanah Lot",
-            "meta": "5–7 hours",
-            "metaIcon": "clock",
-            "priceName": "Sangeh Monkey Forest & Tanah Lot",
-            "priceFallback": "$45",
-            "stops": 2,
+            "priceName": "Bedugul Highlands Tour",
+            "priceFallback": "$57",
+            "stops": 3,
             "priv": true
           },
           {
@@ -597,7 +567,7 @@ export const LISTINGS = {
             "name": "Tanah Lot Sunset Temple",
             "meta": "West Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Tanah Lot & Taman Ayun| or <strong>Sangeh Monkey Forest & Tanah Lot</strong>"
+            "inclText": "Included in |West Bali Tour|"
           },
           {
             "variant": "incl",
@@ -675,7 +645,7 @@ export const LISTINGS = {
             "name": "Ulun Danu Beratan Lake Temple",
             "meta": "Central Highlands",
             "metaIcon": "pin",
-            "inclText": "Included in |Ulun Danu Beratan & Handara Gate|"
+            "inclText": "Included in |Bedugul Highlands Tour|"
           },
           {
             "variant": "incl",
@@ -688,7 +658,7 @@ export const LISTINGS = {
             "name": "Taman Ayun Royal Temple",
             "meta": "West Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Tanah Lot & Taman Ayun|"
+            "inclText": "Included in |West Bali Tour|"
           },
           {
             "variant": "incl",
@@ -873,7 +843,7 @@ export const LISTINGS = {
             "name": "Jatiluwih: UNESCO Rice Terraces",
             "meta": "West Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Jatiluwih Rice Terrace Tour|"
+            "inclText": "Included in |Bedugul Highlands Tour|"
           },
           {
             "variant": "incl",
@@ -925,7 +895,7 @@ export const LISTINGS = {
             "name": "Handara Gate: Bali's Iconic Split Gate",
             "meta": "North Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Ulun Danu Beratan & Handara Gate|"
+            "inclText": "Included in |Bedugul Highlands Tour|"
           },
           {
             "variant": "incl",
@@ -990,7 +960,7 @@ export const LISTINGS = {
             "name": "Sangeh Monkey Forest: Nutmeg Grove",
             "meta": "West Bali",
             "metaIcon": "pin",
-            "inclText": "Included in |Sangeh Monkey Forest & Tanah Lot|"
+            "inclText": "Included in |West Bali Tour|"
           },
           {
             "variant": "incl",

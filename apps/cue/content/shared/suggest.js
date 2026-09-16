@@ -7,6 +7,6 @@ export const SUGGEST = [
   'Batur Sunrise & Adrenaline',
   'East Bali Tour',
   'Uluwatu & Sunset Kecak',
-  'Ulun Danu Beratan & Handara Gate',
+  'Bedugul Highlands Tour',
   'Munduk Waterfall Tour',
 ];

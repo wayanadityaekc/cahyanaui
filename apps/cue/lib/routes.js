@@ -27,14 +27,12 @@ export const TOURS = [
   'lempuyang-tirta-gangga',
   'lovina-dolphin-sekumpul',
   'munduk-twin-lakes',
-  'sangeh-tanah-lot',
   'south-coast-sunset-kecak',
   'tanah-lot-taman-ayun',
   'ubud-atv-adventure',
   'ubud-culture-day',
   'ubud-rafting-adventure',
   'ubud-tour',
-  'ulun-danu-tanah-lot',
 ];
 
 export const ATTRACTIONS = [
@@ -136,6 +134,8 @@ export const LEGACY_REDIRECTS = {
   '/attractions/celuk-silver.html': '/attractions/ubud-arts-crafts.html',
   '/attractions/batik.html': '/attractions/ubud-arts-crafts.html',
   '/south-bali-tour.html': '/hidden-beaches-cliffs.html',
+  '/ulun-danu-tanah-lot.html': '/jatiluwih-tour.html',
+  '/sangeh-tanah-lot.html': '/tanah-lot-taman-ayun.html',
 };
 
 export function tourPath(slug) {

@@ -807,16 +807,16 @@ export const TOUR_CONTENT = {
  },
  "jatiluwih-tour": {
   "heroBg": "jatiluwih.webp",
-  "title": "Jatiluwih UNESCO Rice Terrace Tour",
-  "desc": "A UNESCO World Heritage landscape of endless green rice terraces stretching to the horizon, still farmed the traditional subak way - a slow, quiet day out west with almost no crowds.",
+  "title": "Jatiluwih, Ulun Danu Beratan & Handara Gate Tour",
+  "desc": "The UNESCO rice terraces at Jatiluwih, the temple that floats on Lake Beratan, and the Handara gate framed by mountains - one cool highland day west of Ubud, at an easy pace.",
   "hooks": [
    {
     "label": "Duration",
-    "value": "4–6 hours"
+    "value": "9–11 hours"
    },
    {
     "label": "Area",
-    "value": "West Bali"
+    "value": "Bedugul Highlands"
    },
    {
     "label": "Group",
@@ -848,13 +848,13 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "text",
-    "text": "Jatiluwih Rice Terrace Tour"
+    "text": "Bedugul Highlands Tour"
    }
   ],
-  "metaTitle": "Jatiluwih UNESCO Rice Terrace Tour",
-  "metaDesc": "Private West Bali tour from Ubud to Jatiluwih, a UNESCO World Heritage rice terrace landscape with almost no crowds. Only a 10% deposit to book.",
+  "metaTitle": "Jatiluwih, Ulun Danu Beratan & Handara Gate Tour",
+  "metaDesc": "Private highland tour from Ubud - the Jatiluwih UNESCO rice terraces, the Ulun Danu Beratan lake temple and the Handara Gate. Only a 10% deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/jatiluwih.webp",
-  "bookItem": "Jatiluwih Rice Terrace Tour",
+  "bookItem": "Bedugul Highlands Tour",
   "bookDefault": "tour",
   "items": [
    {
@@ -868,16 +868,44 @@ export const TOUR_CONTENT = {
     "num": "Stop 1",
     "name": "Jatiluwih Rice Terraces",
     "highlight": "A UNESCO World Heritage landscape of endless green terraces stretching to the horizon with almost no crowds. Still farmed the traditional subak way, exactly as it has been for a thousand years. We build in time to walk one of the trails through the terraces, not just view them from the road."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "ulun-danu-beratan",
+    "img": "ulun-danu-beratan-hero.webp",
+    "alt": "Ulun Danu Beratan temple on the shore of Lake Bratan",
+    "w": 1920,
+    "hgt": 1237,
+    "num": "Stop 2",
+    "name": "Ulun Danu Beratan Lake Temple",
+    "highlight": "The temple that seems to float on Lake Beratan - the one printed on Indonesia's 50,000 rupiah note. Up in the highlands the air is cool and the mist rolls in off the water, which makes for the kind of photo you can't get anywhere else on the island."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "handara-gate",
+    "img": "handara-gate.webp",
+    "alt": "The Handara gate on the highland road at Bedugul",
+    "w": 1920,
+    "hgt": 1280,
+    "num": "Stop 3",
+    "name": "Handara Gate",
+    "highlight": "The towering Balinese gate framed by jungle-covered mountains - one of the island's most recognisable photo spots. It sits at the entrance of a highland golf resort, and we time it so you get your shot without the long queue."
    }
   ],
   "facts": [
    {
     "label": "Duration",
-    "value": "4–6 hours"
+    "value": "9–11 hours"
    },
    {
     "label": "Price",
-    "value": "$45 Pick-upUbud & nearby"
+    "value": "$57"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -888,8 +916,23 @@ export const TOUR_CONTENT = {
    "Private air-conditioned car and fuel",
    "Friendly English-speaking driver",
    "Hotel or villa pick-up and drop-off in Ubud",
+   "Sarong rental at temples",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/jatiluwih.webp",
+    "title": "Jatiluwih Rice Terraces"
+   },
+   {
+    "src": "/assets/images/ulun-danu-beratan-hero.webp",
+    "title": "Ulun Danu Beratan Lake Temple"
+   },
+   {
+    "src": "/assets/images/handara-gate.webp",
+    "title": "Handara Gate"
+   }
   ],
   "__href": "/jatiluwih-tour.html",
   "excluded": [
@@ -1443,125 +1486,6 @@ export const TOUR_CONTENT = {
    "Meals, drinks, and tips (optional)"
   ]
  },
- "sangeh-tanah-lot": {
-  "heroBg": "tanah-lot.webp",
-  "title": "Sangeh Monkey Forest & Tanah Lot Tour",
-  "desc": "A quieter alternative to the Ubud monkey forest, followed by Bali's most photographed sea temple at sunset. Two stops, an easy pace, a private car, and a local driver.",
-  "hooks": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Area",
-    "value": "West Bali"
-   },
-   {
-    "label": "Group",
-    "value": "Up to 6 guests"
-   }
-  ],
-  "cta": "Book this program",
-  "ctaHref": "#booking",
-  "stopsTitle": "What You'll Do",
-  "stopsId": "stops",
-  "bookItem": "Sangeh Monkey Forest & Tanah Lot",
-  "bookDefault": "tour",
-  "crumb": [
-   {
-    "type": "link",
-    "href": "/",
-    "text": "Home"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "link",
-    "href": "/tour.html",
-    "text": "Tours"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "text",
-    "text": "Sangeh Monkey Forest & Tanah Lot"
-   }
-  ],
-  "metaTitle": "Sangeh Monkey Forest & Tanah Lot Tour",
-  "metaDesc": "Private tour from Ubud - the quiet nutmeg forest of Sangeh Monkey Forest, then the Tanah Lot sea temple at sunset. Only a 10% deposit to book.",
-  "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
-  "items": [
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "sangeh-monkey-forest",
-    "img": "monkey-forest-temples.jpg",
-    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 1",
-    "name": "Sangeh Monkey Forest",
-    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "tanah-lot",
-    "img": "tanah-lot.webp",
-    "alt": "Tanah Lot sea temple on its rock outcrop at sunset",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 2",
-    "name": "Tanah Lot Sea Temple",
-    "highlight": "Bali's most photographed temple, perched on a rock outcrop just offshore. We time the visit for late afternoon, so the day ends with the temple silhouetted against the sunset."
-   }
-  ],
-  "facts": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$50"
-   },
-   {
-    "label": "Pick-up",
-    "value": "Ubud & nearby"
-   },
-   {
-    "label": "Availability",
-    "value": "Daily"
-   }
-  ],
-  "included": [
-   "Private air-conditioned car and fuel",
-   "Friendly English-speaking driver",
-   "Hotel or villa pick-up and drop-off",
-   "Free cold water on board",
-   "Flexible, fully customizable itinerary",
-   "Exclusive option: Entrance tickets for the listed attractions"
-  ],
-  "heroSlides": [
-   {
-    "src": "/assets/images/monkey-forest-temples.jpg",
-    "title": "Sangeh Monkey Forest"
-   },
-   {
-    "src": "/assets/images/tanah-lot.webp",
-    "title": "Tanah Lot Sea Temple"
-   }
-  ],
-  "__href": "/sangeh-tanah-lot.html",
-  "excluded": [
-   "Standard option: Entrance tickets to attractions",
-   "Meals, drinks, and tips (optional)"
-  ]
- },
  "south-coast-sunset-kecak": {
   "heroBg": "uluwatu-temple-top.webp",
   "title": "Uluwatu Cliff Temple & Sunset Kecak Dance Tour",
@@ -1680,12 +1604,12 @@ export const TOUR_CONTENT = {
  },
  "tanah-lot-taman-ayun": {
   "heroBg": "tanah-lot.webp",
-  "title": "Tanah Lot Sunset Temple & Taman Ayun Royal Temple Tour",
-  "desc": "The royal state temple of Taman Ayun, floating inside its wide moat in Mengwi, then the sea temple of Tanah Lot as the sun drops behind it - a relaxed half-day west of Ubud built around sunset.",
+  "title": "Sangeh, Taman Ayun & Tanah Lot Sunset Tour",
+  "desc": "The quiet nutmeg forest at Sangeh, the royal temple of Taman Ayun floating inside its moat, then Tanah Lot as the sun drops behind it - an easy day west of Ubud built around sunset.",
   "hooks": [
    {
     "label": "Duration",
-    "value": "5–7 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Area",
@@ -1721,15 +1645,27 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "text",
-    "text": "Tanah Lot & Taman Ayun"
+    "text": "West Bali Tour"
    }
   ],
-  "metaTitle": "Tanah Lot Sunset Temple & Taman Ayun Royal Temple Tour",
-  "metaDesc": "Private West Bali half-day tour from Ubud - the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset on the sea. Only a 10% deposit to book.",
+  "metaTitle": "Sangeh, Taman Ayun & Tanah Lot Sunset Tour",
+  "metaDesc": "Private West Bali tour from Ubud - Sangeh Monkey Forest, the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset. Only a 10% deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
-  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookItem": "West Bali Tour",
   "bookDefault": "tour",
   "items": [
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "sangeh-monkey-forest",
+    "img": "monkey-forest-temples.jpg",
+    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 1",
+    "name": "Sangeh Monkey Forest",
+    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
+   },
    {
     "type": "stop",
     "refType": "destination",
@@ -1738,7 +1674,7 @@ export const TOUR_CONTENT = {
     "alt": "Tiered meru shrines across the moat at Taman Ayun temple",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 1",
+    "num": "Stop 2",
     "name": "Taman Ayun Royal Temple",
     "highlight": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
    },
@@ -1750,7 +1686,7 @@ export const TOUR_CONTENT = {
     "alt": "Tanah Lot temple on its offshore rock",
     "w": 1152,
     "hgt": 1536,
-    "num": "Stop 2",
+    "num": "Stop 3",
     "name": "Tanah Lot Sunset Temple",
     "highlight": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia."
    }
@@ -1758,11 +1694,15 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "5–7 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Price",
-    "value": "$50 Pick-upUbud & nearby"
+    "value": "$57"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1778,6 +1718,10 @@ export const TOUR_CONTENT = {
    "Exclusive option: Entrance tickets for the listed attractions"
   ],
   "heroSlides": [
+   {
+    "src": "/assets/images/monkey-forest-temples.jpg",
+    "title": "Sangeh Monkey Forest"
+   },
    {
     "src": "/assets/images/taman-ayun-hero.jpg",
     "title": "Taman Ayun Royal Temple"
@@ -2421,126 +2365,6 @@ export const TOUR_CONTENT = {
    }
   ],
   "__href": "/ubud-tour.html",
-  "excluded": [
-   "Standard option: Entrance tickets to attractions",
-   "Meals and drinks",
-   "Tips and gratuities (optional)"
-  ]
- },
- "ulun-danu-tanah-lot": {
-  "heroBg": "ulun-danu-beratan-hero.webp",
-  "title": "Ulun Danu Beratan & Handara Gate Instagram Tour",
-  "desc": "A cool highland loop up to the temple that floats on Lake Beratan, then the famous Handara gate framed by jungle-covered mountains - two of Bali's most photographed spots in one relaxed day.",
-  "hooks": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Area",
-    "value": "West Bali"
-   },
-   {
-    "label": "Group",
-    "value": "Up to 6 guests"
-   }
-  ],
-  "cta": "Book this program",
-  "ctaHref": "#booking",
-  "stopsTitle": "What You'll Do",
-  "stopsId": "stops",
-  "bookItem": "Ulun Danu Beratan & Handara Gate",
-  "bookDefault": "tour",
-  "crumb": [
-   {
-    "type": "link",
-    "href": "/",
-    "text": "Home"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "link",
-    "href": "/tour.html",
-    "text": "Tours"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "text",
-    "text": "Ulun Danu Beratan & Handara Gate"
-   }
-  ],
-  "metaTitle": "Ulun Danu Beratan & Handara Gate Instagram Tour",
-  "metaDesc": "Private West Bali tour from Ubud - the Ulun Danu Beratan lake temple and the famous Handara Gate, two of Bali's most photographed spots in one highland loop.",
-  "ogImage": "https://cahyanaubudexperience.com/assets/images/west-bali-tour-card.jpg",
-  "items": [
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "ulun-danu-beratan",
-    "img": "ulun-danu-beratan-hero.webp",
-    "alt": "Ulun Danu Beratan temple on the shore of Lake Bratan",
-    "w": 1920,
-    "hgt": 1237,
-    "num": "Stop 1",
-    "name": "Ulun Danu Beratan Lake Temple",
-    "highlight": "The temple that seems to float on Lake Beratan - the one printed on Indonesia's 50,000 rupiah note. Up in the highlands the air is cool and the mist rolls in off the water, which makes for the kind of photo you can't get anywhere else on the island."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "handara-gate",
-    "img": "handara-gate.webp",
-    "alt": "The Handara gate on the highland road at Bedugul",
-    "w": 1920,
-    "hgt": 1280,
-    "num": "Stop 2",
-    "name": "Handara Gate",
-    "highlight": "The towering Balinese gate framed by jungle-covered mountains - one of the island's most recognisable photo spots. It sits at the entrance of a highland golf resort, and we time it so you get your shot without the long queue."
-   }
-  ],
-  "facts": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$60"
-   },
-   {
-    "label": "Pick-up",
-    "value": "Ubud & nearby"
-   },
-   {
-    "label": "Availability",
-    "value": "Daily"
-   }
-  ],
-  "included": [
-   "Private air-conditioned car and fuel",
-   "Friendly English-speaking driver",
-   "Hotel or villa pick-up and drop-off in Ubud",
-   "Sarong rental at temples",
-   "Free cold water on board",
-   "Exclusive option: Entrance tickets for the listed attractions"
-  ],
-  "heroSlides": [
-   {
-    "src": "/assets/images/ulun-danu-beratan-hero.webp",
-    "title": "Ulun Danu Beratan Lake Temple"
-   },
-   {
-    "src": "/assets/images/handara-gate.webp",
-    "title": "Handara Gate"
-   }
-  ],
-  "__href": "/ulun-danu-tanah-lot.html",
   "excluded": [
    "Standard option: Entrance tickets to attractions",
    "Meals and drinks",

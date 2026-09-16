@@ -2355,7 +2355,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "This is a quick photo stop, and timing matters, since the gate is popular and a queue forms fast. We aim for a quieter window so you get your shot without a long wait, then carry on. It is a short but worthwhile pause on the way through the highlands, best folded into the morning before the crowds build."
    }
   ],
-  "metaTitle": "Handara Gate | Ulun Danu Beratan & Handara Gate",
+  "metaTitle": "Handara Gate | Bedugul Highlands Tour",
   "metaDesc": "Handara Gate is a traditional split gate at a highland golf resort near Bedugul, one of Bali's most recognisable photo spots framed by jungle mountains.",
   "canonical": "https://cahyanaubudexperience.com/attractions/handara-gate.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/handara-gate.webp",
@@ -2371,8 +2371,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ulun-danu-tanah-lot.html",
-    "text": "Ulun Danu Beratan & Handara Gate"
+    "href": "/jatiluwih-tour.html",
+    "text": "Bedugul Highlands Tour"
    },
    {
     "type": "sep",
@@ -2383,7 +2383,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Handara Gate"
    }
   ],
-  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookItem": "Bedugul Highlands Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -2500,7 +2500,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/jatiluwih-tour.html",
-    "text": "Jatiluwih Rice Terrace Tour"
+    "text": "Bedugul Highlands Tour"
    },
    {
     "type": "sep",
@@ -2511,7 +2511,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Jatiluwih Rice Terraces"
    }
   ],
-  "bookItem": "Jatiluwih Rice Terrace Tour",
+  "bookItem": "Bedugul Highlands Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4151,8 +4151,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/sangeh-tanah-lot.html",
-    "text": "Sangeh Monkey Forest & Tanah Lot"
+    "href": "/tanah-lot-taman-ayun.html",
+    "text": "West Bali Tour"
    },
    {
     "type": "sep",
@@ -4163,7 +4163,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Sangeh Monkey Forest"
    }
   ],
-  "bookItem": "Sangeh Monkey Forest & Tanah Lot",
+  "bookItem": "West Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4519,7 +4519,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Walking is flat and easy on paved paths around the outside of the moat; the inner courtyard is reserved for worship, so you take in the meru from the walkways and across the water. Morning is cooler and quieter, and a sarong is required and provided. Taman Ayun sits in Mengwi about 45 minutes from Ubud, and pairs naturally with Tanah Lot later the same day."
    }
   ],
-  "metaTitle": "Taman Ayun Royal Temple | Tanah Lot & Taman Ayun",
+  "metaTitle": "Taman Ayun Royal Temple | West Bali Tour",
   "metaDesc": "Taman Ayun is the moat-ringed royal temple of the Mengwi kingdom near Ubud, with rows of tiered meru towers and part of Bali's UNESCO subak landscape.",
   "canonical": "https://cahyanaubudexperience.com/attractions/taman-ayun.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/taman-ayun-hero.jpg",
@@ -4536,7 +4536,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/tanah-lot-taman-ayun.html",
-    "text": "Tanah Lot & Taman Ayun"
+    "text": "West Bali Tour"
    },
    {
     "type": "sep",
@@ -4547,7 +4547,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Taman Ayun Royal Temple"
    }
   ],
-  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookItem": "West Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4792,7 +4792,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/tanah-lot-taman-ayun.html",
-    "text": "Tanah Lot & Taman Ayun"
+    "text": "West Bali Tour"
    },
    {
     "type": "sep",
@@ -4803,7 +4803,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tanah Lot Sunset Temple"
    }
   ],
-  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookItem": "West Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -6071,8 +6071,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ulun-danu-tanah-lot.html",
-    "text": "Ulun Danu Beratan & Handara Gate"
+    "href": "/jatiluwih-tour.html",
+    "text": "Bedugul Highlands Tour"
    },
    {
     "type": "sep",
@@ -6083,7 +6083,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Ulun Danu Beratan Lake Temple"
    }
   ],
-  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookItem": "Bedugul Highlands Tour",
   "bookDefault": "tour",
   "facts": [
    {

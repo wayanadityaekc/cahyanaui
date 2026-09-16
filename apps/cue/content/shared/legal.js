@@ -20,7 +20,7 @@ export const LEGAL = {
       { "type": "heading", "html": "1. Who we are" },
       { "type": "para", "html": "Cahyana Ubud Experience is a local travel service based in Ubud, Bali, offering private tours, driver and transfer services, and curated experiences. In these terms, \"we\", \"us\", and \"our\" refer to Cahyana Ubud Experience, operated by I Wayan Aditya Eka Cahyana, Ubud, Bali, Indonesia." },
       { "type": "heading", "html": "2. Booking &amp; confirmation" },
-      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once you make a deposit payment then we will contact you shortly. Payment can be made online by card (processed securely via DOKU), or later as agreed." },
+      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once you make a deposit payment then we will contact you shortly. Payment can be made online by card (processed securely via a third-party payment provider), or later as agreed." },
       { "type": "list", "variant": "yes", "items": [
         "Please book with as much notice as possible, especially in high season.",
         "Give us an accurate pick-up location, date, time, and number of guests.",
@@ -123,7 +123,7 @@ export const LEGAL = {
         "Cancel more than 24 hours before start: full refund of the deposit.",
         "Cancel within 24 hours before start: the deposit is non-refundable.",
         "Balance for the tour itself is only due once the service is delivered.",
-        "Refunds are returned to your original payment method - your card via DOKU, or bank transfer if you paid that way - and typically take 7-14 business days to arrive."
+        "Refunds are returned to your original payment method - your card via our third-party payment provider, or bank transfer if you paid that way - and typically take 7-14 business days to arrive."
       ] },
       { "type": "heading", "html": "4. No-shows" },
       { "type": "para", "html": "If no one is at the pick-up point at the agreed time and we cannot reach you, the booking is treated as a no-show and any deposit is non-refundable." },
@@ -136,7 +136,7 @@ export const LEGAL = {
       { "type": "heading", "html": "8. Third-party tickets &amp; activities" },
       { "type": "para", "html": "Some entrance tickets, performances, and adventure activities are booked with third-party providers and may be non-refundable once purchased. We will tell you clearly before booking anything that carries its own cancellation terms." },
       { "type": "heading", "html": "9. How refunds are paid" },
-      { "type": "para", "html": "Approved refunds are returned to your original payment method - your card via DOKU, or bank transfer if you paid that way - within 7-14 business days." },
+      { "type": "para", "html": "Approved refunds are returned to your original payment method - your card via our third-party payment provider, or bank transfer if you paid that way - within 7-14 business days." },
       { "type": "heading", "html": "10. Contact" },
       { "type": "para", "html": "Need to cancel or have a question? <a href=\"/our-company.html#contact\">Contact us</a> - the sooner you tell us, the more flexible we can be." }
     ]

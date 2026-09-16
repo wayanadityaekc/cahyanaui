@@ -1,4 +1,5 @@
 import { TOUR_CONTENT } from '@/content/tours';
+import { LISTINGS } from '@/content/shared/listings';
 import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
 // Which tours actually stop at a given attraction, derived from each tour's own
@@ -58,21 +59,30 @@ export function withInclLabels(listing) {
   return walk(listing);
 }
 
-// Everything a guest can actually book that stops at this attraction, for the
+// Every tour a guest can actually book that stops at this attraction, for the
 // "Visit this place on" card. Unlike inclLabel, multi-day packages ARE included:
 // the card has room, and a package is a real way to see the place.
+//
+// Returns the tour's OWN listing card, straight out of LISTINGS.tour, so the
+// card in a destination sidebar is the same card as on the Tours page - photo,
+// meta, stop count, price and all - instead of a second, drifting description
+// of the same tour.
+const TOUR_CARDS = {};
+(function collect(node) {
+  if (Array.isArray(node)) return node.forEach(collect);
+  if (!node || typeof node !== 'object') return;
+  if (typeof node.href === 'string' && node.priceName) TOUR_CARDS[node.href] = node;
+  Object.values(node).forEach(collect);
+})(LISTINGS.tour);
+
 export function visitOptions(slug) {
   const out = [];
   for (const [tourSlug, t] of Object.entries(TOUR_CONTENT)) {
     if (parked.has(tourSlug)) continue;
     if (!(t.items || []).some((i) => i.refId === slug)) continue;
-    const fact = (label) => ((t.facts || []).find((f) => f.label === label) || {}).value;
-    out.push({
-      href: tourPath(tourSlug),
-      name: t.bookItem,
-      duration: ((t.hooks || []).find((h) => h.label === 'Duration') || {}).value || fact('Duration'),
-      priceFallback: fact('Price'),
-    });
+    const href = tourPath(tourSlug);
+    const card = TOUR_CARDS[href];
+    if (card) out.push(card);
   }
   return out;
 }

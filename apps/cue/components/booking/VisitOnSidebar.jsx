@@ -1,9 +1,14 @@
-import Price from '@/components/Price';
+import ListingRow from '@/components/cards/ListingRow';
 
 // Sidebar for a destination page. A destination is an information page, not a
 // product - one place can sit on several tours, so instead of guessing which
 // one to sell it lists every live tour that actually stops there (derived in
 // lib/tourIndex from each tour's own items) and lets the guest pick.
+//
+// The entries are the tours' real ListingRow cards, unmodified, so a tour looks
+// the same here as on the Tours page and carries its live price. ListingRow is
+// already responsive on its own - a horizontal row on mobile, a vertical card
+// from 769px - which is exactly the pairing Wayan asked for.
 //
 // Same shell as BookSidebar, including the booksidebar / bookcard__cta markers
 // and the id="booking" the hero CTA anchors to, so the styling is unchanged.
@@ -22,32 +27,17 @@ export default function VisitOnSidebar({ tours }) {
             </p>
           </div>
 
-          <div className="grid gap-[0.6rem] mb-[1.1rem]">
-            {tours.map((t, i) => (
-              <a
-                key={t.href}
-                href={t.href}
-                className={`block p-[0.85rem] rounded-md no-underline text-left [border:1px_solid_var(--line)] transition-[background-color,border-color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cream hover:[border-color:var(--color-cta)] ${i === 0 ? '[border-left:3px_solid_var(--color-cta)]' : ''}`}
-              >
-                <span className="block text-strong font-semibold text-gold">{t.name}</span>
-                <span className="flex items-baseline justify-between gap-3 mt-[0.35rem]">
-                  <span className="text-small text-muted">{t.duration}</span>
-                  <span className="text-small text-muted">
-                    from{' '}
-                    <span className="text-[1rem] font-semibold text-amber">
-                      <Price name={t.name} fallback={t.priceFallback || ''} />
-                    </span>
-                  </span>
-                </span>
-              </a>
+          <div className="grid gap-[0.9rem] mb-[1.1rem]">
+            {tours.map((t) => (
+              <ListingRow key={t.href} {...t} />
             ))}
           </div>
 
           <a
             className="bookcard__cta flex flex-none w-full max-w-none items-center justify-center h-[2.9rem] px-[0.85rem] border-none rounded-pill font-body text-[1rem] font-semibold text-center no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d"
-            href={tours[0].href}
+            href="/tour.html"
           >
-            See the {tours.length === 1 ? 'tour' : 'tours'}
+            See all tours
           </a>
 
           <p className="mt-4 text-center text-small text-muted">Entrance ticket is covered on the Exclusive option.</p>

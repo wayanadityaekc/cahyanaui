@@ -4849,6 +4849,28 @@ export const ATTRACTION_CONTENT = {
    "Standard option: Entrance tickets not included",
    "Meals and drinks",
    "Tips and gratuities (optional)"
+  ],
+  "tips": [
+   {
+    "icon": "tide",
+    "text": "You can only walk across the sand to the foot of the rock at low tide. When the tide is in, the temple is viewed from the shore and the cliff paths."
+   },
+   {
+    "icon": "temple",
+    "text": "The temple itself is open only to Balinese Hindus for prayer. Everyone else takes it in from the shore and the paths above."
+   },
+   {
+    "icon": "crowd",
+    "text": "Most visitors arrive for the last hour of light, which is also the busiest. Coming a little earlier leaves time to walk the cliffs first."
+   },
+   {
+    "icon": "walk",
+    "text": "The path down runs through a long row of market stalls, and the cliffs either side carry smaller shrines and lookout points."
+   },
+   {
+    "icon": "drive",
+    "text": "Tanah Lot is in Tabanan on Bali's west side, roughly an hour and a half from Ubud, so it usually rounds off a day out west rather than a trip on its own."
+   }
   ]
  },
  "tegal-wangi-beach": {

@@ -15,6 +15,7 @@ import { isHiddenTour } from '@/lib/routes';
 import { isHiddenItem } from '@/lib/hiddenItems';
 import InfoSidebar from '@/components/booking/InfoSidebar';
 import VisitOnSidebar from '@/components/booking/VisitOnSidebar';
+import PlaceNotes from '@/components/sections/PlaceNotes';
 import { visitOptions } from '@/lib/tourIndex';
 
 // PROTOTYPE (Wayan, Sep 2026) - the destination flow is live on this slug only
@@ -97,6 +98,7 @@ export default function AttractionPage({ data }) {
         included={infoOnly ? undefined : data.included}
         excluded={infoOnly ? undefined : data.excluded}
         reviewService={data.title}
+        notes={infoOnly ? <PlaceNotes facts={data.facts} tips={data.tips} /> : undefined}
         showReviews={!infoOnly}
       />
       </div>

@@ -88,8 +88,10 @@ function Inclusions({ included, excluded }) {
 // on one scrollable page - the sections are stacked and always visible - and the
 // sticky tab strip is a jump nav: clicking a tab scrolls to its section, and the
 // active tab follows the section currently in view (scrollspy).
-export default function DetailTabs({ overview, priceItem, bookType, included, excluded, reviewService, showReviews = true }) {
+export default function DetailTabs({ overview, notes, priceItem, bookType, included, excluded, reviewService, showReviews = true }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
+  // Destination pages: the practical notes that replace Include/Exclude.
+  if (notes) sections.push({ id: 'notes', label: 'Good to know', content: notes });
   if (priceItem) {
     sections.push({
       id: 'details',

@@ -164,8 +164,10 @@ When unsure, ask first (keep it short).
   - `strokeWidth` cuma dioper kalau BUKAN 2 (default Lucide) — mis. `strokeWidth={1.7}`.
   - Ikon yang dulu **solid** (bintang rating, badge kategori) dikasih `fill="currentColor"`
     biar gak berubah jadi outline.
-  - **Masih hand-drawn & JANGAN diganti** (Lucide gak punya): glyph WhatsApp (`BookBar`),
-    7 logo pembayaran (`PayChips` + `Footer`), bendera mata uang (`FlagDefs`/`CurrencyPicker`).
+  - **Masih hand-drawn & JANGAN diganti** (Lucide gak punya): 7 logo pembayaran
+    (`PayChips` + `Footer`), bendera mata uang (`FlagDefs`/`CurrencyPicker`).
+    (Glyph WhatsApp hand-drawn `BookBar` udah dihapus Sep 2026 bareng tombol
+    WhatsApp-nya — footer udah lama pakai Lucide `MessageCircle`, bukan ini.)
   - Verifikasi: harness `icons-snap.mjs` + `icons-diff.mjs` di scratchpad — patokannya
     `boxDrift=0` & `countDrift=0` (gak ada ikon yang berubah ukuran / ilang).
 - Icons: SVG, **no emoji**. Ukuran ikon inline kecil pakai token (Agu 2026): `--icon-sm` 16px

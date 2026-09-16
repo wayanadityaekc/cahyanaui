@@ -20,7 +20,7 @@ export const LEGAL = {
       { "type": "heading", "html": "1. Who we are" },
       { "type": "para", "html": "Cahyana Ubud Experience is a local travel service based in Ubud, Bali, offering private tours, driver and transfer services, and curated experiences. In these terms, \"we\", \"us\", and \"our\" refer to Cahyana Ubud Experience, operated by I Wayan Aditya Eka Cahyana, Ubud, Bali, Indonesia." },
       { "type": "heading", "html": "2. Booking &amp; confirmation" },
-      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once you make a deposit payment then we will contact you shortly. We work on a <strong>book now, pay later</strong> basis and full payment option with more benefits." },
+      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once you make a deposit payment then we will contact you shortly. Payment can be made online by card (processed securely via DOKU), or later as agreed." },
       { "type": "list", "variant": "yes", "items": [
         "Please book with as much notice as possible, especially in high season.",
         "Give us an accurate pick-up location, date, time, and number of guests.",
@@ -35,7 +35,7 @@ export const LEGAL = {
         "Prices may change for public holidays, special events, and has an additional pick up fee outside the Ubud area - we will always tell you before you confirm."
       ] },
       { "type": "heading", "html": "4. Changes &amp; cancellations" },
-      { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/our-company.html#cancellation\">Cancellation Policy</a>, which forms part of these terms." },
+      { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/our-company.html#cancellation\">Cancellation &amp; Refund Policy</a>, which forms part of these terms." },
       { "type": "heading", "html": "5. Your responsibilities" },
       { "type": "list", "variant": "yes", "items": [
         "Be ready at the agreed pick-up point and time - late starts can shorten the day.",
@@ -105,12 +105,12 @@ export const LEGAL = {
   "cancellation-policy": {
     "heroClass": "subhero subhero--overlap",
     "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-    "title": "Cancellation Policy",
+    "title": "Cancellation &amp; Refund Policy",
     "text": "Plans change - here is exactly how cancellations, reschedules, and refunds work.",
-    "metaTitle": "Cancellation Policy | Cahyana Ubud Experience",
+    "metaTitle": "Cancellation &amp; Refund Policy | Cahyana Ubud Experience",
     "metaDesc": "How to cancel or reschedule a booking with Cahyana Ubud Experience - free-cancellation window, deposits, refunds, no-shows, and bad-weather options.",
     "body": [
-      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Cancellation Policy" },
+      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Cancellation &amp; Refund Policy" },
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "We keep cancellations simple and fair. Because we book on a <strong>pay-later</strong> basis, cancelling is usually quick and free - the details below explain the timings, deposits, and refunds so there are no surprises." },
       { "type": "heading", "html": "1. How to cancel or reschedule" },
@@ -122,7 +122,8 @@ export const LEGAL = {
       { "type": "list", "variant": "yes", "items": [
         "Cancel more than 24 hours before start: full refund of the deposit.",
         "Cancel within 24 hours before start: the deposit is non-refundable.",
-        "Balance for the tour itself is only due once the service is delivered."
+        "Balance for the tour itself is only due once the service is delivered.",
+        "Refunds are returned to your original payment method - your card via DOKU, or bank transfer if you paid that way - and typically take 7-14 business days to arrive."
       ] },
       { "type": "heading", "html": "4. No-shows" },
       { "type": "para", "html": "If no one is at the pick-up point at the agreed time and we cannot reach you, the booking is treated as a no-show and any deposit is non-refundable." },
@@ -135,7 +136,7 @@ export const LEGAL = {
       { "type": "heading", "html": "8. Third-party tickets &amp; activities" },
       { "type": "para", "html": "Some entrance tickets, performances, and adventure activities are booked with third-party providers and may be non-refundable once purchased. We will tell you clearly before booking anything that carries its own cancellation terms." },
       { "type": "heading", "html": "9. How refunds are paid" },
-      { "type": "para", "html": "Approved refunds are returned by bank transfer or your original payment channel within 7-14 days." },
+      { "type": "para", "html": "Approved refunds are returned to your original payment method - your card via DOKU, or bank transfer if you paid that way - within 7-14 business days." },
       { "type": "heading", "html": "10. Contact" },
       { "type": "para", "html": "Need to cancel or have a question? <a href=\"/our-company.html#contact\">Contact us</a> - the sooner you tell us, the more flexible we can be." }
     ]

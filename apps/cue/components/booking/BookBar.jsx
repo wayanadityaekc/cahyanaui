@@ -42,13 +42,12 @@ export default function BookBar({ item }) {
     if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
-  // Tailwind-native (migrasi #322, restyled Sep 2026 - Wayan: pill panjang sticky
-  // dulu punya WhatsApp sbg badge bulat berdiri sendiri (dibuang), sekarang Wayan
-  // kirim referensi 3-segmen: Chat (icon+label kecil) | divider | guests+harga |
-  // Book now - reuse Lucide MessageCircle yang sama kayak footer, CTA-nya tetep
-  // hijau (--color-cta) sesuai standar tombol aksi utama, bukan gold kayak referensi.
+  // Tailwind-native (migrasi #322, restyled Sep 2026 - Wayan: "jelek", balik ke
+  // nempel edge-to-edge bawah layar, radius dibuang, dipendekin - pill-ngambang
+  // sebelumnya cuma bertahan 1 iterasi). Konten (Chat/guests+harga/Book now)
+  // dipertahankan, cuma bentuk luarnya yang berubah balik ke bar rata, bukan pill.
   return (
-    <div className="fixed left-4 right-4 bottom-4 z-[95] hidden max-md:flex items-center gap-3 py-[0.5rem] pl-[0.9rem] pr-[0.5rem] rounded-pill bg-white shadow-xl translate-y-0 transition-transform duration-[var(--dur-slow)] ease-[ease]">
+    <div className="fixed inset-x-0 bottom-0 z-[95] hidden max-md:flex items-center gap-3 py-[0.4rem] pl-4 pr-[0.4rem] bg-white border-t border-line shadow-[0_-4px_16px_rgba(0,0,0,0.08)] translate-y-0 transition-transform duration-[var(--dur-slow)] ease-[ease]">
       <a
         href={`https://wa.me/${WHATSAPP_NUMBER}`}
         target="_blank"
@@ -64,7 +63,7 @@ export default function BookBar({ item }) {
         <div className="text-muted text-small">{displayGuests} {displayGuests === 1 ? 'guest' : 'guests'}</div>
         <div className="text-[1.1rem] font-semibold text-amber"><Price name={item} fallback="" /></div>
       </div>
-      <a href="#booking" className="flex-none py-[0.7rem] px-[1.7rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d" onClick={scrollToCard}>Book now</a>
+      <a href="#booking" className="flex-none py-[0.55rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d" onClick={scrollToCard}>Book now</a>
     </div>
   );
 }

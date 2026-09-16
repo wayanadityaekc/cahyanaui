@@ -12,20 +12,10 @@ const list = (name) => {
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
 };
 
-// Destination pages are information pages, not products: they show which tours
-// stop there instead of selling one, so they deliberately have no Book Now and
-// no review band. The type is read straight out of the content, so this gate
-// cannot disagree with AttractionPage about which pages those are.
-const attractionSrc = fs.readFileSync(path.join(ROOT, 'content/attractions/index.js'), 'utf8');
-const infoOnly = new Set(
-  [...attractionSrc.matchAll(/^ "([a-z0-9-]+)": \{\n  "type": "destination"/gm)].map((m) => m[1])
-);
-
 const pages = [
   ...list('TOURS').map((s) => `${s}.html`),
-  ...list('ATTRACTIONS').filter((s) => !infoOnly.has(s)).map((s) => `attractions/${s}.html`),
+  ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`),
 ];
-if (infoOnly.size) console.log(`Info-only destinations skipped : ${infoOnly.size}`);
 
 const MUST_HAVE = [
   ['booksidebar', 'booking sidebar card'],

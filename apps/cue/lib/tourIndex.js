@@ -1,5 +1,4 @@
 import { TOUR_CONTENT } from '@/content/tours';
-import { LISTINGS } from '@/content/shared/listings';
 import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
 // Which tours actually stop at a given attraction, derived from each tour's own
@@ -11,7 +10,8 @@ import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 // sub-headings, and they stop at so many places that listing them would put the
 // same package on 14 cards and drown the tour a guest is actually looking for.
 //
-// SERVER-SIDE ONLY: pulls in the whole tour dataset. See lib/hiddenItems.js.
+// SERVER-SIDE ONLY: pulls in the whole tour dataset, so it must not be imported
+// from a client component (ListingPage is one).
 const parked = new Set(HIDDEN_TOURS);
 const isPackage = (t) => (t.items || []).some((i) => i.type === 'sub');
 
@@ -57,35 +57,4 @@ export function withInclLabels(listing) {
     return next;
   };
   return walk(listing);
-}
-
-// Every tour a guest can actually book that stops at this attraction, for the
-// "Visit this place on" card. Unlike inclLabel, multi-day packages ARE included:
-// the card has room, and a package is a real way to see the place.
-//
-// Returns the tour's OWN listing card, straight out of LISTINGS.tour, so the
-// card in a destination sidebar is the same card as on the Tours page - photo,
-// meta, stop count, price and all - instead of a second, drifting description
-// of the same tour.
-const TOUR_CARDS = {};
-(function collect(node) {
-  if (Array.isArray(node)) return node.forEach(collect);
-  if (!node || typeof node !== 'object') return;
-  if (typeof node.href === 'string' && node.priceName) TOUR_CARDS[node.href] = node;
-  Object.values(node).forEach(collect);
-})(LISTINGS.tour);
-
-export function visitOptions(slug) {
-  const out = [];
-  for (const [tourSlug, t] of Object.entries(TOUR_CONTENT)) {
-    if (parked.has(tourSlug)) continue;
-    if (!(t.items || []).some((i) => i.refId === slug)) continue;
-    const href = tourPath(tourSlug);
-    const card = TOUR_CARDS[href];
-    if (card) out.push({ ...card, isPackage: isPackage(t) });
-  }
-  // Day tours first, multi-day packages last: the package is the upsell, not
-  // the obvious answer to "how do I see this place", and the sidebar's primary
-  // button points at the first entry.
-  return out.sort((a, b) => Number(a.isPackage) - Number(b.isPackage));
 }

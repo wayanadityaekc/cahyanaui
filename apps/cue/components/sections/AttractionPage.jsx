@@ -12,26 +12,10 @@ import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
-import { isHiddenItem } from '@/lib/hiddenItems';
-import InfoSidebar from '@/components/booking/InfoSidebar';
-import VisitOnSidebar from '@/components/booking/VisitOnSidebar';
-import PlaceNotes from '@/components/sections/PlaceNotes';
-import { visitOptions } from '@/lib/tourIndex';
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
-  // Parent tour parked: keep the two-column layout and the hero CTA anchor, but
-  // nothing on the page may take a booking for it. bookItem going null switches
-  // off the price tab, BookCta and the sticky BookBar; the sidebar becomes the
-  // non-selling InfoSidebar.
-  const parked = isHiddenItem(data.bookItem);
-  // A destination is an information page, not a product: one place can sit on
-  // several tours, so it shows which tours stop there instead of selling one.
-  const slug = (data.__page || '').replace('attractions/', '');
-  const infoOnly = data.type === 'destination';
-  const visits = infoOnly ? visitOptions(slug) : [];
-  const bookItem = parked || infoOnly ? null : data.bookItem;
   return (
     <>
       <JsonLd page={data.__page} />
@@ -63,7 +47,7 @@ export default function AttractionPage({ data }) {
               </li>
             ))}
           </ul>
-          <a href={data.ctaHref} className={HERO_CTA}>{infoOnly && visits.length ? 'See the tours' : parked || infoOnly ? 'Plan a visit' : data.cta}</a>
+          <a href={data.ctaHref} className={HERO_CTA}>{data.cta}</a>
         </div>
       </section>
 
@@ -88,33 +72,23 @@ export default function AttractionPage({ data }) {
             ))}
           </div>
         )}
-        priceItem={bookItem}
+        priceItem={data.bookItem}
         bookType={bookType}
-        included={infoOnly ? undefined : data.included}
-        excluded={infoOnly ? undefined : data.excluded}
+        included={data.included}
+        excluded={data.excluded}
         reviewService={data.title}
-        notes={infoOnly && ((data.facts && data.facts.length) || (data.tips && data.tips.length)) ? (
-          <PlaceNotes facts={data.facts} tips={data.tips} />
-        ) : undefined}
-        showReviews={!infoOnly}
       />
       </div>
       {data.bookItem && (
         <div className={TOUR_LAYOUT_SIDE}>
-          {infoOnly && visits.length ? (
-            <VisitOnSidebar tours={visits} />
-          ) : parked || infoOnly ? (
-            <InfoSidebar facts={data.facts} />
-          ) : (
-            <BookSidebar item={bookItem} presetType={bookType} perPerson={perPerson} facts={data.facts} />
-          )}
+          <BookSidebar item={data.bookItem} presetType={bookType} perPerson={perPerson} facts={data.facts} />
         </div>
       )}
       </div>
-      <BookCta item={bookItem} />
-      <BookBar item={bookItem} />
+      <BookCta item={data.bookItem} />
+      <BookBar item={data.bookItem} />
       <Related href={data.__href} />
-      {data.bookItem && !infoOnly && <ReviewCtaBand />}
+      {data.bookItem && <ReviewCtaBand />}
 
       {data.crumb && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">

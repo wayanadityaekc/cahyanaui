@@ -10,6 +10,7 @@ export const NOINDEX = ['my-trips', 'settings', 'programs'];
 // here. This list keeps them out of the shipped sitemap; sitemap.xml at the
 // root marks the same slugs NONAKTIF.
 export const HIDDEN_TOURS = [
+  'banyumala-twin-lakes',
   'hidden-beaches-cliffs',
   'lovina-dolphin-sekumpul',
   'munduk-twin-lakes',

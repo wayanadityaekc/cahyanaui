@@ -235,9 +235,9 @@ export const TOUR_CONTENT = {
   ]
  },
  "best-of-bali-3-day-package": {
-  "heroBg": "uluwatu-cliff-coast-bali.webp",
-  "title": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
-  "desc": "A private multi-day route through Bali's three signature areas - Ubud's temples and rice terraces, the Kintamani highlands and Besakih Mother Temple, then Uluwatu's cliffs and sunset Kecak. Same driver and car for all three days.",
+  "heroBg": "besakih-temple.webp",
+  "title": "3-Day Best of Bali Package: Ubud, East & West Bali",
+  "desc": "Three days, one driver and one car - Ubud's rice terraces and temples, the Gates of Heaven and Besakih in the east, then Taman Ayun and the Tanah Lot sunset in the west.",
   "hooks": [
    {
     "label": "Duration",
@@ -245,7 +245,7 @@ export const TOUR_CONTENT = {
    },
    {
     "label": "Area",
-    "value": "Ubud, Kintamani & Uluwatu"
+    "value": "Ubud, East & West Bali"
    },
    {
     "label": "Group",
@@ -282,8 +282,8 @@ export const TOUR_CONTENT = {
     "text": "3-Day Best of Bali Package"
    }
   ],
-  "metaTitle": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
-  "metaDesc": "A private 3-day route with the same driver and car - Ubud's temples and rice terraces, Kintamani and Besakih Mother Temple, then Uluwatu's cliffs and sunset Kecak.",
+  "metaTitle": "3-Day Best of Bali Package: Ubud, East & West Bali",
+  "metaDesc": "A private 3-day Bali route with the same driver and car - Ubud's rice terraces and temples, Lempuyang and Besakih in the east, then the Tanah Lot sunset.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
   "items": [
    {
@@ -300,8 +300,44 @@ export const TOUR_CONTENT = {
     "w": 1200,
     "hgt": 900,
     "num": "Stop 1",
-    "name": "Tegalalang Rice Terrace",
-    "highlight": "The iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system."
+    "name": "Tegalalang Rice Terrace & Coffee Plantation",
+    "highlight": "We start at the iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system. Right beside it, walk through a working plantation to see how coffee grows and taste the famous kopi luwak straight from the source. Tastings are complimentary."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "tirta-empul",
+    "img": "tirta-empul-hero.jpg",
+    "alt": "Purification pools at Tirta Empul holy water temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Tirta Empul Holy Water Temple",
+    "highlight": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with confidence and respect."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "gunung-kawi",
+    "img": "gunung-kawi-hero.jpg",
+    "alt": "Rock-cut shrines at Gunung Kawi temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3 · Optional",
+    "name": "Gunung Kawi Temple",
+    "highlight": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "goa-gajah",
+    "img": "goa-gajah-hero.jpg",
+    "alt": "Carved entrance of Goa Gajah, the Elephant Cave",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Goa Gajah - The Elephant Cave",
+    "highlight": "A 9th-century sanctuary whose cave mouth is carved into a monstrous demon face you step straight through. Inside are ancient meditation niches; outside, bathing pools and jungle paths lead down to hidden shrines. One of Ubud's oldest and most mysterious sites."
    },
    {
     "type": "stop",
@@ -311,67 +347,103 @@ export const TOUR_CONTENT = {
     "alt": "Long-tailed macaques at the Sacred Monkey Forest, Ubud",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 2",
+    "num": "Stop 5",
     "name": "Sacred Monkey Forest Sanctuary",
-    "highlight": "A moss-covered jungle temple complex in the heart of Ubud, home to more than 700 long-tailed macaques. Overnight in Ubud."
+    "highlight": "We close the first day in the heart of Ubud, at a moss-covered jungle temple complex, home to more than 700 long-tailed macaques. Walk beneath ancient banyan roots and past weathered stone guardians in one of Bali's most atmospheric sanctuaries. Keep a firm hold on your belongings and give the monkeys room, and they are easy enough to be around. Overnight in Ubud."
    },
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 2 · Kintamani & Besakih"
+    "text": "Day 2 · East Bali"
    },
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "jeep-sunrise",
-    "img": "mount-batur-sunrise.webp",
-    "alt": "View over Mount Batur and its crater lake from Kintamani",
+    "refType": "destination",
+    "refId": "lempuyang-temple",
+    "img": "lempuyang.webp",
+    "alt": "Lempuyang, Bali",
+    "w": 2000,
+    "hgt": 3000,
+    "num": "Stop 6",
+    "name": "Lempuyang Temple - Gates of Heaven",
+    "highlight": "Bali's most photographed split gate, framing Mount Agung on a clear morning. We arrive early to beat the queue and handle the ticket, sarong, and the famous mirror photo so you don't waste half the day waiting in line."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "tirta-gangga",
+    "img": "tirta-gangga-photo-spot.webp",
+    "alt": "Tirta Gangga, Bali",
+    "w": 736,
+    "hgt": 1030,
+    "num": "Stop 7",
+    "name": "Tirta Gangga Water Garden",
+    "highlight": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "taman-ujung",
+    "img": "taman-ujung-view.webp",
+    "alt": "A visitor at the Taman Ujung water palace, Bali",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 3",
-    "name": "Kintamani & Mount Batur Viewpoint",
-    "highlight": "A highland lookout over the still-active Mount Batur volcano and its crater lake, with cool mountain air and coffee-growing hillsides. A relaxed roadside stop, not the pre-dawn trek."
+    "num": "Stop 8",
+    "name": "Taman Ujung Water Palace",
+    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
    },
    {
     "type": "stop",
     "refType": "destination",
     "refId": "besakih",
     "img": "besakih-temple.webp",
-    "alt": "Besakih Mother Temple on the slopes of Mount Agung",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 4",
-    "name": "Besakih Mother Temple",
-    "highlight": "Bali's largest and holiest temple complex, terraced up the slopes of Mount Agung. Overnight near Uluwatu."
+    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
+    "w": 1920,
+    "hgt": 1284,
+    "num": "Stop 9",
+    "name": "Besakih - The Mother Temple",
+    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included. Back to Ubud for the second night."
    },
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 3 · Uluwatu"
+    "text": "Day 3 · West Bali"
    },
    {
     "type": "stop",
     "refType": "destination",
-    "refId": "uluwatu-temple",
-    "img": "uluwatu-temple.webp",
-    "alt": "Uluwatu Temple perched on a clifftop above the ocean",
+    "refId": "sangeh-monkey-forest",
+    "img": "monkey.jpg",
+    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
     "w": 1200,
-    "hgt": 900,
-    "num": "Stop 5",
-    "name": "Uluwatu Temple",
-    "highlight": "A clifftop temple 70 metres above the surf on Bali's southern tip, with resident macaques and sweeping ocean views."
+    "hgt": 800,
+    "num": "Stop 10",
+    "name": "Sangeh Monkey Forest",
+    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
    },
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "uluwatu-kecak",
-    "img": "uluwatu-sunset-kecak-dance.webp",
-    "alt": "Kecak fire dance performance at Uluwatu at sunset",
+    "refType": "destination",
+    "refId": "taman-ayun",
+    "img": "taman-ayun-hero.jpg",
+    "alt": "Tiered meru shrines across the moat at Taman Ayun temple",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 6",
-    "name": "Sunset Kecak Fire Dance",
-    "highlight": "A traditional Kecak performance at the clifftop amphitheater as the sun sets over the ocean - a fitting close to the trip, before drop-off."
+    "num": "Stop 11",
+    "name": "Taman Ayun Royal Temple",
+    "highlight": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "tanah-lot",
+    "img": "tanah-lot.webp",
+    "alt": "Tanah Lot temple on its offshore rock",
+    "w": 1152,
+    "hgt": 1536,
+    "num": "Stop 12",
+    "name": "Tanah Lot Sunset Temple",
+    "highlight": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia. Drop-off after sunset."
    }
   ],
   "facts": [
@@ -381,7 +453,7 @@ export const TOUR_CONTENT = {
    },
    {
     "label": "Price",
-    "value": "$150"
+    "value": "$131"
    },
    {
     "label": "Pick-up",
@@ -406,24 +478,24 @@ export const TOUR_CONTENT = {
     "title": "Tegalalang Rice Terrace"
    },
    {
-    "src": "/assets/images/monkey-forest-temples.jpg",
-    "title": "Sacred Monkey Forest Sanctuary"
+    "src": "/assets/images/tirta-empul-hero.jpg",
+    "title": "Tirta Empul Holy Water Temple"
    },
    {
-    "src": "/assets/images/mount-batur-sunrise.webp",
-    "title": "Kintamani & Mount Batur Viewpoint"
+    "src": "/assets/images/lempuyang.webp",
+    "title": "Lempuyang - Gates of Heaven"
    },
    {
     "src": "/assets/images/besakih-temple.webp",
-    "title": "Besakih Mother Temple"
+    "title": "Besakih - The Mother Temple"
    },
    {
-    "src": "/assets/images/uluwatu-temple.webp",
-    "title": "Uluwatu Temple"
+    "src": "/assets/images/taman-ayun-hero.jpg",
+    "title": "Taman Ayun Royal Temple"
    },
    {
-    "src": "/assets/images/uluwatu-sunset-kecak-dance.webp",
-    "title": "Sunset Kecak Fire Dance"
+    "src": "/assets/images/tanah-lot.webp",
+    "title": "Tanah Lot Sunset Temple"
    }
   ],
   "__href": "/best-of-bali-3-day-package.html",
@@ -1658,10 +1730,10 @@ export const TOUR_CONTENT = {
     "type": "stop",
     "refType": "destination",
     "refId": "sangeh-monkey-forest",
-    "img": "monkey-forest-temples.jpg",
+    "img": "monkey.jpg",
     "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
     "w": 1200,
-    "hgt": 900,
+    "hgt": 800,
     "num": "Stop 1",
     "name": "Sangeh Monkey Forest",
     "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
@@ -1719,7 +1791,7 @@ export const TOUR_CONTENT = {
   ],
   "heroSlides": [
    {
-    "src": "/assets/images/monkey-forest-temples.jpg",
+    "src": "/assets/images/monkey.jpg",
     "title": "Sangeh Monkey Forest"
    },
    {

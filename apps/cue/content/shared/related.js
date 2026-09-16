@@ -156,7 +156,7 @@ export const RELATED_ITEMS = [
   "name": "3-Day Best of Bali Package",
   "img": "besakih-temple.webp",
   "meta": "3 days / 2 nights",
-  "p": 150,
+  "p": 131,
   "priceName": "3-Day Best of Bali Package"
  },
  {

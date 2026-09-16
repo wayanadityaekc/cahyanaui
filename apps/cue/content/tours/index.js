@@ -453,7 +453,7 @@ export const TOUR_CONTENT = {
    },
    {
     "label": "Price",
-    "value": "$131"
+    "value": "$148"
    },
    {
     "label": "Pick-up",

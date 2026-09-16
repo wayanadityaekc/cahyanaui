@@ -298,7 +298,7 @@ export const LISTINGS = {
             "meta": "3 days / 2 nights",
             "metaIcon": "clock",
             "priceName": "3-Day Best of Bali Package",
-            "priceFallback": "$131",
+            "priceFallback": "$148",
             "stops": 12,
             "priv": true
           }

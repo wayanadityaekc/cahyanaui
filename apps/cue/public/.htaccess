@@ -73,3 +73,6 @@ Redirect 301 /faq.html /our-company.html#faq
 Redirect 301 /terms-conditions.html /our-company.html#terms
 Redirect 301 /privacy-policy.html /our-company.html#privacy
 Redirect 301 /cancellation-policy.html /our-company.html#cancellation
+
+# Besakih & Taman Ujung merged into the East Bali tour (Sep 2026, Wayan).
+Redirect 301 /besakih-taman-ujung.html /lempuyang-tirta-gangga.html

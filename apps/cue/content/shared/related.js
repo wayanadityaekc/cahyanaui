@@ -73,21 +73,11 @@ export const RELATED_ITEMS = [
   "href": "/lempuyang-tirta-gangga.html",
   "type": "tour",
   "zone": "east",
-  "name": "Lempuyang & Tirta Gangga",
+  "name": "East Bali: Lempuyang, Besakih & Tirta Gangga",
   "img": "east-bali-tour-card.jpg",
-  "meta": "6–8 hours",
-  "p": 55,
+  "meta": "10–12 hours",
+  "p": 52,
   "priceName": "Lempuyang & Tirta Gangga"
- },
- {
-  "href": "/besakih-taman-ujung.html",
-  "type": "tour",
-  "zone": "east",
-  "name": "Besakih & Taman Ujung",
-  "img": "besakih-temple.webp",
-  "meta": "7–9 hours",
-  "p": 60,
-  "priceName": "Besakih & Taman Ujung"
  },
  {
   "href": "/kintamani-sunrise-penglipuran.html",

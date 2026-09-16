@@ -234,122 +234,6 @@ export const TOUR_CONTENT = {
    "Tips and gratuities (optional)"
   ]
  },
- "besakih-taman-ujung": {
-  "heroBg": "besakih-temple.webp",
-  "title": "Besakih Mother Temple & Taman Ujung Water Palace Tour",
-  "desc": "Bali's holiest temple on the slopes of Mount Agung, then the grand reflecting pools of a royal water palace - the spiritual and regal side of East Bali in one day. A private car, a local driver, your pace.",
-  "hooks": [
-   {
-    "label": "Duration",
-    "value": "7–9 hours"
-   },
-   {
-    "label": "Area",
-    "value": "East Bali"
-   },
-   {
-    "label": "Group",
-    "value": "Up to 6 guests"
-   }
-  ],
-  "cta": "Book this program",
-  "ctaHref": "#booking",
-  "stopsTitle": "What You'll Do",
-  "stopsId": "stops",
-  "crumb": [
-   {
-    "type": "link",
-    "href": "/",
-    "text": "Home"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "link",
-    "href": "/tour.html",
-    "text": "Tours"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "text",
-    "text": "Besakih & Taman Ujung"
-   }
-  ],
-  "metaTitle": "Besakih Mother Temple & Taman Ujung Water Palace Tour",
-  "metaDesc": "Private East Bali tour from Ubud - Besakih, Bali's largest and holiest temple, and the royal water palace of Taman Ujung. Only a 10% deposit to book.",
-  "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
-  "bookItem": "Besakih & Taman Ujung",
-  "bookDefault": "tour",
-  "items": [
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "besakih",
-    "img": "besakih-temple.webp",
-    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
-    "w": 1920,
-    "hgt": 1284,
-    "num": "Stop 1",
-    "name": "Besakih - The Mother Temple",
-    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "taman-ujung",
-    "img": "taman-ujung-view.webp",
-    "alt": "A visitor at the Taman Ujung water palace, Bali",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 2",
-    "name": "Taman Ujung Water Palace",
-    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
-   }
-  ],
-  "facts": [
-   {
-    "label": "Duration",
-    "value": "7–9 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$60 Pick-upUbud & nearby"
-   },
-   {
-    "label": "Availability",
-    "value": "Daily"
-   }
-  ],
-  "included": [
-   "Private air-conditioned car and fuel",
-   "Friendly English-speaking driver",
-   "Hotel or villa pick-up and drop-off in Ubud",
-   "Sarong rental at temples",
-   "Free cold water on board",
-   "Exclusive option: Entrance tickets for the listed attractions"
-  ],
-  "heroSlides": [
-   {
-    "src": "/assets/images/besakih-temple.webp",
-    "title": "Besakih"
-   },
-   {
-    "src": "/assets/images/taman-ujung-view.webp",
-    "title": "Taman Ujung Water Palace"
-   }
-  ],
-  "__href": "/besakih-taman-ujung.html",
-  "excluded": [
-   "Standard option: Entrance tickets to attractions",
-   "Meals and drinks",
-   "Tips and gratuities (optional)"
-  ]
- },
  "best-of-bali-3-day-package": {
   "heroBg": "uluwatu-cliff-coast-bali.webp",
   "title": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
@@ -1148,12 +1032,12 @@ export const TOUR_CONTENT = {
  },
  "lempuyang-tirta-gangga": {
   "heroBg": "lempuyang.webp",
-  "title": "Lempuyang Gates of Heaven & Tirta Gangga Water Garden Tour",
-  "desc": "The Gates of Heaven at Lempuyang, framing Mount Agung, and the royal water garden of Tirta Gangga - East Bali's two most photogenic stops in one relaxed day.",
+  "title": "East Bali: Lempuyang Gates of Heaven, Besakih & Tirta Gangga",
+  "desc": "The Gates of Heaven at Lempuyang first, while the queue is short, then the royal water gardens of Tirta Gangga and Taman Ujung, and Besakih on the slope of Mount Agung. A long day, one private car.",
   "hooks": [
    {
     "label": "Duration",
-    "value": "6–8 hours"
+    "value": "10–12 hours"
    },
    {
     "label": "Area",
@@ -1189,11 +1073,11 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "text",
-    "text": "Lempuyang & Tirta Gangga"
+    "text": "East Bali Tour"
    }
   ],
-  "metaTitle": "Lempuyang Gates of Heaven & Tirta Gangga Water Garden Tour",
-  "metaDesc": "Private East Bali tour from Ubud - the Gates of Heaven at Lempuyang and the royal water garden of Tirta Gangga. Only a 10% deposit to book.",
+  "metaTitle": "East Bali: Lempuyang Gates of Heaven, Besakih & Tirta Gangga",
+  "metaDesc": "Private East Bali day tour from Ubud - the Gates of Heaven at Lempuyang, the water gardens of Tirta Gangga and Taman Ujung, then Besakih. Only a 10% deposit.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/east-bali-tour-card.jpg",
   "bookItem": "Lempuyang & Tirta Gangga",
   "bookDefault": "tour",
@@ -1221,16 +1105,44 @@ export const TOUR_CONTENT = {
     "num": "Stop 2",
     "name": "Tirta Gangga Water Garden",
     "highlight": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "taman-ujung",
+    "img": "taman-ujung-view.webp",
+    "alt": "A visitor at the Taman Ujung water palace, Bali",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Taman Ujung Water Palace",
+    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "besakih",
+    "img": "besakih-temple.webp",
+    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
+    "w": 1920,
+    "hgt": 1284,
+    "num": "Stop 4",
+    "name": "Besakih - The Mother Temple",
+    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included."
    }
   ],
   "facts": [
    {
     "label": "Duration",
-    "value": "6–8 hours"
+    "value": "10–12 hours"
    },
    {
     "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "value": "$52"
+   },
+   {
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1253,6 +1165,14 @@ export const TOUR_CONTENT = {
    {
     "src": "/assets/images/tirta-gangga-photo-spot.webp",
     "title": "Tirta Gangga Water Garden"
+   },
+   {
+    "src": "/assets/images/taman-ujung-view.webp",
+    "title": "Taman Ujung Water Palace"
+   },
+   {
+    "src": "/assets/images/besakih-temple.webp",
+    "title": "Besakih"
    }
   ],
   "__href": "/lempuyang-tirta-gangga.html",

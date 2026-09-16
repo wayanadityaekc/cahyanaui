@@ -18,7 +18,6 @@ export const HIDDEN_TOURS = [
 export const TOURS = [
   'banyumala-twin-lakes',
   'batur-sunrise-adrenaline',
-  'besakih-taman-ujung',
   'best-of-bali-3-day-package',
   'full-adventure-rafting-atv',
   'gwk-pandawa-beach',

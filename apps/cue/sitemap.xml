@@ -64,7 +64,7 @@
   <!-- NONAKTIF (belum siap): programs.html -->
   <!-- <url><loc>https://cahyanaubudexperience.com/programs.html</loc></url> -->
   <url><loc>https://cahyanaubudexperience.com/lempuyang-tirta-gangga.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/besakih-taman-ujung.html</loc></url>
+  <!-- MERGED (Sep 2026): besakih-taman-ujung.html -> lempuyang-tirta-gangga.html (301) -->
   <url><loc>https://cahyanaubudexperience.com/guide/bali-adventure-activities.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/guide/bali-beaches-surf.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/guide/bali-day-tours.html</loc></url>

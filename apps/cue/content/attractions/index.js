@@ -1219,8 +1219,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/besakih-taman-ujung.html",
-    "text": "Besakih & Taman Ujung"
+    "href": "/lempuyang-tirta-gangga.html",
+    "text": "East Bali Tour"
    },
    {
     "type": "sep",
@@ -1231,7 +1231,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Besakih - The Mother Temple"
    }
   ],
-  "bookItem": "Besakih & Taman Ujung",
+  "bookItem": "Lempuyang & Tirta Gangga",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4663,8 +4663,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/besakih-taman-ujung.html",
-    "text": "Besakih & Taman Ujung"
+    "href": "/lempuyang-tirta-gangga.html",
+    "text": "East Bali Tour"
    },
    {
     "type": "sep",
@@ -4675,7 +4675,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Taman Ujung Water Palace"
    }
   ],
-  "bookItem": "Besakih & Taman Ujung",
+  "bookItem": "Lempuyang & Tirta Gangga",
   "bookDefault": "tour",
   "facts": [
    {

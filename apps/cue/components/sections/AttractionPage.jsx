@@ -18,11 +18,6 @@ import VisitOnSidebar from '@/components/booking/VisitOnSidebar';
 import PlaceNotes from '@/components/sections/PlaceNotes';
 import { visitOptions } from '@/lib/tourIndex';
 
-// PROTOTYPE (Wayan, Sep 2026) - the destination flow is live on this slug only
-// while he looks at it. Rollout = drop this list and key off data.type alone;
-// tools/check-detail.js reads the same list.
-const INFO_ONLY = ['tanah-lot'];
-
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
@@ -34,7 +29,7 @@ export default function AttractionPage({ data }) {
   // A destination is an information page, not a product: one place can sit on
   // several tours, so it shows which tours stop there instead of selling one.
   const slug = (data.__page || '').replace('attractions/', '');
-  const infoOnly = data.type === 'destination' && INFO_ONLY.includes(slug);
+  const infoOnly = data.type === 'destination';
   const visits = infoOnly ? visitOptions(slug) : [];
   const bookItem = parked || infoOnly ? null : data.bookItem;
   return (
@@ -98,7 +93,9 @@ export default function AttractionPage({ data }) {
         included={infoOnly ? undefined : data.included}
         excluded={infoOnly ? undefined : data.excluded}
         reviewService={data.title}
-        notes={infoOnly ? <PlaceNotes facts={data.facts} tips={data.tips} /> : undefined}
+        notes={infoOnly && ((data.facts && data.facts.length) || (data.tips && data.tips.length)) ? (
+          <PlaceNotes facts={data.facts} tips={data.tips} />
+        ) : undefined}
         showReviews={!infoOnly}
       />
       </div>

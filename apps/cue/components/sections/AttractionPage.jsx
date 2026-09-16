@@ -11,6 +11,7 @@ import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
+import { isHiddenTour } from '@/lib/routes';
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
@@ -92,7 +93,7 @@ export default function AttractionPage({ data }) {
       {data.crumb && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
-            p.type === 'link' ? (
+            p.type === 'link' && !isHiddenTour(p.href) ? (
               <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
             ) : p.type === 'sep' ? (
               <span className={CRUMB_SEP} key={i}>{p.text}</span>

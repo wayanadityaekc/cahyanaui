@@ -11,6 +11,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
+import { isHiddenTour } from '@/lib/routes';
 
 // Tailwind-native (migrasi Fase 2): teks stop (.stop__num/.stop__name/.stop__desc)
 // -> utilities; .stop__body (tanpa CSS) -> drop class; .stop--link (link + hover
@@ -142,7 +143,7 @@ export default function TourPage({ data }) {
       {data.crumb && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
-            p.type === 'link' ? (
+            p.type === 'link' && !isHiddenTour(p.href) ? (
               <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
             ) : p.type === 'sep' ? (
               <span className={CRUMB_SEP} key={i}>{p.text}</span>

@@ -7,6 +7,7 @@ import ListingRow from '@/components/cards/ListingRow';
 import CharterSection from '@/components/sections/CharterSection';
 import TransferSection from '@/components/sections/TransferSection';
 import { LISTINGS } from '@/content/shared/listings';
+import { isHiddenTour } from '@/lib/routes';
 
 const TABS = [
   { id: 'tour', label: 'Tours' },
@@ -16,7 +17,10 @@ const TABS = [
   { id: 'destinations', label: 'Destinations' },
 ];
 
-const flat = (key) => (LISTINGS[key] ? LISTINGS[key].cats : []).flatMap((c) => c.cards || []);
+const flat = (key) =>
+  (LISTINGS[key] ? LISTINGS[key].cats : [])
+    .flatMap((c) => c.cards || [])
+    .filter((c) => !isHiddenTour(c.href));
 
 // .aphead + .zone-filter/.zone-chip (B-FINAL). Only consumer is this component, so
 // the aphead-context zone-filter override (justify-center, max-w-none, my-0) is baked

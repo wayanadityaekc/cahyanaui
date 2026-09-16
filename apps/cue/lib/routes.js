@@ -151,6 +151,15 @@ export function isHiddenTour(href) {
   return HIDDEN_TOURS.some((slug) => href === tourPath(slug));
 }
 
+// Same switch, applied to editorial HTML: an anchor pointing at a parked tour
+// is unwrapped so the sentence reads the same but stops being a way through to
+// a page that still has a Book Now on it.
+export function unlinkHiddenTours(html) {
+  if (!html || !HIDDEN_TOURS.length) return html;
+  const slugs = HIDDEN_TOURS.join('|');
+  return html.replace(new RegExp(`<a\\b[^>]*href="/(?:${slugs})\\.html"[^>]*>([\\s\\S]*?)</a>`, 'gi'), '$1');
+}
+
 export function attractionPath(slug) {
   return `/attractions/${slug}.html`;
 }

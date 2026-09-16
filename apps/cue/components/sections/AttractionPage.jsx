@@ -12,10 +12,18 @@ import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
+import { isHiddenItem } from '@/lib/hiddenItems';
+import InfoSidebar from '@/components/booking/InfoSidebar';
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
+  // Parent tour parked: keep the two-column layout and the hero CTA anchor, but
+  // nothing on the page may take a booking for it. bookItem going null switches
+  // off the price tab, BookCta and the sticky BookBar; the sidebar becomes the
+  // non-selling InfoSidebar.
+  const parked = isHiddenItem(data.bookItem);
+  const bookItem = parked ? null : data.bookItem;
   return (
     <>
       <JsonLd page={data.__page} />
@@ -47,7 +55,7 @@ export default function AttractionPage({ data }) {
               </li>
             ))}
           </ul>
-          <a href={data.ctaHref} className={HERO_CTA}>{data.cta}</a>
+          <a href={data.ctaHref} className={HERO_CTA}>{parked ? 'Plan a visit' : data.cta}</a>
         </div>
       </section>
 
@@ -72,7 +80,7 @@ export default function AttractionPage({ data }) {
             ))}
           </div>
         )}
-        priceItem={data.bookItem}
+        priceItem={bookItem}
         bookType={bookType}
         included={data.included}
         excluded={data.excluded}
@@ -81,12 +89,16 @@ export default function AttractionPage({ data }) {
       </div>
       {data.bookItem && (
         <div className={TOUR_LAYOUT_SIDE}>
-          <BookSidebar item={data.bookItem} presetType={bookType} perPerson={perPerson} facts={data.facts} />
+          {parked ? (
+            <InfoSidebar facts={data.facts} />
+          ) : (
+            <BookSidebar item={bookItem} presetType={bookType} perPerson={perPerson} facts={data.facts} />
+          )}
         </div>
       )}
       </div>
-      <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} perPerson={perPerson} />
+      <BookCta item={bookItem} />
+      <BookBar item={bookItem} perPerson={perPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

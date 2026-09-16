@@ -6,7 +6,7 @@ import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/componen
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
-import BookBarRegister from '@/components/booking/BookBarRegister';
+import BookBar from '@/components/booking/BookBar';
 import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
@@ -39,9 +39,7 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 // Tailwind now (no tour-hero marker classes). CTA hidden on mobile via the arbitrary
 // media variant (matches the old @media max-width:768px exactly).
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
-// `tour-hero__cta` DIPERTAHANKAN sbg marker: di-query JS di BookBar.jsx
-// (IntersectionObserver buat munculin sticky book-bar).
-export const HERO_CTA = 'tour-hero__cta inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
+export const HERO_CTA = 'inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
 
 function Stop({ s }) {
   const inner = (
@@ -132,7 +130,7 @@ export default function TourPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBarRegister item={data.bookItem} />
+      <BookBar item={data.bookItem} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

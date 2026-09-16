@@ -18,9 +18,9 @@ export const LEGAL = {
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "These Terms &amp; Conditions apply to every booking made with Cahyana Ubud Experience. By booking a tour, transfer, or experience with us - through this website, WhatsApp, email, or in person - you agree to the terms below. Please read them before you book." },
       { "type": "heading", "html": "1. Who we are" },
-      { "type": "para", "html": "Cahyana Ubud Experience is a local, family-run travel service based in Ubud, Bali, offering private tours, driver and transfer services, and curated experiences. In these terms, \"we\", \"us\", and \"our\" refer to Cahyana Ubud Experience, operated by I Wayan Aditya Eka Cahyana, Ubud, Bali, Indonesia." },
+      { "type": "para", "html": "Cahyana Ubud Experience is a local travel service based in Ubud, Bali, offering private tours, driver and transfer services, and curated experiences. In these terms, \"we\", \"us\", and \"our\" refer to Cahyana Ubud Experience, operated by I Wayan Aditya Eka Cahyana, Ubud, Bali, Indonesia." },
       { "type": "heading", "html": "2. Booking &amp; confirmation" },
-      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once we reply to confirm your date, service, and price. We work on a <strong>book now, pay later</strong> basis - no full payment is taken upfront to reserve your date." },
+      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once you make a deposit payment then we will contact you shortly. We work on a <strong>book now, pay later</strong> basis and full payment option with more benefits." },
       { "type": "list", "variant": "yes", "items": [
         "Please book with as much notice as possible, especially in high season.",
         "Give us an accurate pick-up location, date, time, and number of guests.",
@@ -32,7 +32,7 @@ export const LEGAL = {
         "<strong>Standard</strong> tours include car, driver, and fuel; entrance tickets are not included.",
         "<strong>Exclusive</strong> tours include everything in Standard plus entrance tickets for the listed attractions, priced per person.",
         "A deposit of 10% may be requested to confirm certain bookings; the balance is paid on the day of your trip - either charged automatically or settled in person by cash or transfer after your tour.",
-        "Prices may change for public holidays, special events, or routes outside the Ubud area - we will always tell you before you confirm."
+        "Prices may change for public holidays, special events, and has an additional pick up fee outside the Ubud area - we will always tell you before you confirm."
       ] },
       { "type": "heading", "html": "4. Changes &amp; cancellations" },
       { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/our-company.html#cancellation\">Cancellation Policy</a>, which forms part of these terms." },
@@ -71,7 +71,7 @@ export const LEGAL = {
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "Your privacy matters to us. This policy explains what information Cahyana Ubud Experience collects when you contact or book with us, how we use it, and the choices you have. We only ever ask for what we need to plan and run your trip." },
       { "type": "heading", "html": "1. Who we are" },
-      { "type": "para", "html": "Cahyana Ubud Experience is a local, family-run travel service in Ubud, Bali, operated by I Wayan Aditya Eka Cahyana. If you have any question about your data, you can reach us at <a href=\"mailto:cahyanabaliexperience@gmail.com\">cahyanabaliexperience@gmail.com</a>." },
+      { "type": "para", "html": "Cahyana Ubud Experience is a local travel service in Ubud, Bali, operated by I Wayan Aditya Eka Cahyana. If you have any question about your data, you can reach us at <a href=\"mailto:cahyanabaliexperience@gmail.com\">cahyanabaliexperience@gmail.com</a>." },
       { "type": "heading", "html": "2. Information we collect" },
       { "type": "para", "html": "When you make a booking or enquiry, we may collect:" },
       { "type": "list", "variant": "yes", "items": [
@@ -87,7 +87,7 @@ export const LEGAL = {
         "To answer your questions and improve the service we offer."
       ] },
       { "type": "heading", "html": "4. Who we share it with" },
-      { "type": "para", "html": "We only share your details when it is needed to deliver your booking - for example, giving your driver or guide your pick-up point, or booking an entrance ticket or activity with a third-party provider on your behalf. We do <strong>not</strong> sell your personal information to anyone." },
+      { "type": "para", "html": "We only share your details when it is needed to deliver your booking - for example, giving your driver your pick-up point, or booking an entrance ticket or activity with a third-party provider on your behalf. We do <strong>not</strong> sell your personal information to anyone." },
       { "type": "heading", "html": "5. Cookies &amp; local storage" },
       { "type": "para", "html": "This website does not use advertising or third-party tracking cookies. To make your visit smoother, we store a few small settings directly in your browser (your chosen currency and your saved itinerary). This stays on your device and is not sent to us. If we ever add analytics or similar tools in the future, we will update this policy first." },
       { "type": "heading", "html": "6. How long we keep it" },
@@ -118,7 +118,7 @@ export const LEGAL = {
       { "type": "heading", "html": "2. Free-cancellation window" },
       { "type": "para", "html": "Cancel at least 24 hours before your scheduled start time and there is nothing to pay - and any deposit you paid is fully refunded." },
       { "type": "heading", "html": "3. Deposits &amp; refunds" },
-      { "type": "para", "html": "Where a deposit of 10% was taken to confirm your booking, refunds work as follows:" },
+      { "type": "para", "html": "Where a deposit of 10% was taken to confirm your booking or if you choose to make a full payment, refunds work as follows:" },
       { "type": "list", "variant": "yes", "items": [
         "Cancel more than 24 hours before start: full refund of the deposit.",
         "Cancel within 24 hours before start: the deposit is non-refundable.",

@@ -112,7 +112,7 @@ export const LEGAL = {
     "body": [
       { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Cancellation &amp; Refund Policy" },
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
-      { "type": "para", "html": "We keep cancellations simple and fair. Because we book on a <strong>pay-later</strong> basis, cancelling is usually quick and free - the details below explain the timings, deposits, and refunds so there are no surprises." },
+      { "type": "para", "html": "We keep cancellations simple and fair, whether you paid a deposit, in full, or nothing yet. Cancelling with enough notice is quick and free - the details below explain the timings, deposits, and refunds so there are no surprises." },
       { "type": "heading", "html": "1. How to cancel or reschedule" },
       { "type": "para", "html": "Just message us on WhatsApp or by email as early as you can, with your name and the date of your booking. We will confirm the cancellation or the new date in writing." },
       { "type": "heading", "html": "2. Free-cancellation window" },

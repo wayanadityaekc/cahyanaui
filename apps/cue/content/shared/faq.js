@@ -42,7 +42,7 @@ export const FAQ = [
   {
     cat: `Pricing & Payment`,
     q: `What if I need to cancel?`,
-    a: `<p>Cancel at least 24 hours before your scheduled start and there's nothing to pay - any deposit is fully refunded. See our <a href="/our-company.html#cancellation">Cancellation Policy</a> for the full details.</p>`,
+    a: `<p>Cancel at least 24 hours before your scheduled start and there's nothing to pay - any deposit is fully refunded. See our <a href="/our-company.html#cancellation">Cancellation & Refund Policy</a> for the full details.</p>`,
   },
   {
     cat: `Pickup & Transport`,

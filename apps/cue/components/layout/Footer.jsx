@@ -36,7 +36,7 @@ const COMPANY = [
   ['/our-company.html#faq', 'FAQ'],
   ['/our-company.html#terms', 'Terms & Conditions'],
   ['/our-company.html#privacy', 'Privacy Policy'],
-  ['/our-company.html#cancellation', 'Cancellation Policy'],
+  ['/our-company.html#cancellation', 'Cancellation & Refund Policy'],
 ];
 
 export default function Footer() {

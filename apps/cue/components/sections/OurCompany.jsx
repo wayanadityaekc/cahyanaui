@@ -15,7 +15,7 @@ const TABS = [
   { id: 'faq', label: 'FAQ' },
   { id: 'terms', label: 'Terms & Conditions' },
   { id: 'privacy', label: 'Privacy Policy' },
-  { id: 'cancellation', label: 'Cancellation Policy' },
+  { id: 'cancellation', label: 'Cancellation & Refund Policy' },
 ];
 
 // Rombak total (Sep 2026, Wayan): satu page, SEMUA section di DOM sekaligus

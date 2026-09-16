@@ -453,7 +453,7 @@ export default function MyTripsCart() {
 
           <p className={MTC_NOTE}>
             By clicking <strong>Make Payment</strong>, you agree to our{' '}
-            <a className={MTC_POLICY_LINK} href="/our-company.html#terms">Terms</a> and <a className={MTC_POLICY_LINK} href="/our-company.html#cancellation">Cancellation Policy</a>.
+            <a className={MTC_POLICY_LINK} href="/our-company.html#terms">Terms</a> and <a className={MTC_POLICY_LINK} href="/our-company.html#cancellation">Cancellation & Refund Policy</a>.
           </p>
           <button type="button" className={`${BTN} mt-[1.2rem] disabled:opacity-45 disabled:cursor-not-allowed`} disabled={undated} onClick={checkout}>Make Payment</button>
           <p className={MTC_NOTE}>

@@ -82,7 +82,10 @@ export function visitOptions(slug) {
     if (!(t.items || []).some((i) => i.refId === slug)) continue;
     const href = tourPath(tourSlug);
     const card = TOUR_CARDS[href];
-    if (card) out.push(card);
+    if (card) out.push({ ...card, isPackage: isPackage(t) });
   }
-  return out;
+  // Day tours first, multi-day packages last: the package is the upsell, not
+  // the obvious answer to "how do I see this place", and the sidebar's primary
+  // button points at the first entry.
+  return out.sort((a, b) => Number(a.isPackage) - Number(b.isPackage));
 }

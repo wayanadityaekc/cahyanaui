@@ -12,10 +12,20 @@ const list = (name) => {
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
 };
 
+// Destination pages running the info-only flow (AttractionPage's INFO_ONLY)
+// deliberately have no Book Now and no review band - they point at the tours
+// that stop there instead of selling one. Read from the component so the two
+// lists cannot drift apart.
+const attractionSrc = fs.readFileSync(path.join(ROOT, 'components/sections/AttractionPage.jsx'), 'utf8');
+const infoOnly = new Set(
+  [...(attractionSrc.match(/const INFO_ONLY = \[([^\]]*)\]/) || [null, ''])[1].matchAll(/'([^']+)'/g)].map((m) => m[1])
+);
+
 const pages = [
   ...list('TOURS').map((s) => `${s}.html`),
-  ...list('ATTRACTIONS').map((s) => `attractions/${s}.html`),
+  ...list('ATTRACTIONS').filter((s) => !infoOnly.has(s)).map((s) => `attractions/${s}.html`),
 ];
+if (infoOnly.size) console.log(`Info-only destinations skipped : ${[...infoOnly].join(', ')}`);
 
 const MUST_HAVE = [
   ['booksidebar', 'booking sidebar card'],

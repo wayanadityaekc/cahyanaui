@@ -14,6 +14,13 @@ import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_
 import { isHiddenTour } from '@/lib/routes';
 import { isHiddenItem } from '@/lib/hiddenItems';
 import InfoSidebar from '@/components/booking/InfoSidebar';
+import VisitOnSidebar from '@/components/booking/VisitOnSidebar';
+import { visitOptions } from '@/lib/tourIndex';
+
+// PROTOTYPE (Wayan, Sep 2026) - the destination flow is live on this slug only
+// while he looks at it. Rollout = drop this list and key off data.type alone;
+// tools/check-detail.js reads the same list.
+const INFO_ONLY = ['tanah-lot'];
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
@@ -23,7 +30,12 @@ export default function AttractionPage({ data }) {
   // off the price tab, BookCta and the sticky BookBar; the sidebar becomes the
   // non-selling InfoSidebar.
   const parked = isHiddenItem(data.bookItem);
-  const bookItem = parked ? null : data.bookItem;
+  // A destination is an information page, not a product: one place can sit on
+  // several tours, so it shows which tours stop there instead of selling one.
+  const slug = (data.__page || '').replace('attractions/', '');
+  const infoOnly = data.type === 'destination' && INFO_ONLY.includes(slug);
+  const visits = infoOnly ? visitOptions(slug) : [];
+  const bookItem = parked || infoOnly ? null : data.bookItem;
   return (
     <>
       <JsonLd page={data.__page} />
@@ -55,7 +67,7 @@ export default function AttractionPage({ data }) {
               </li>
             ))}
           </ul>
-          <a href={data.ctaHref} className={HERO_CTA}>{parked ? 'Plan a visit' : data.cta}</a>
+          <a href={data.ctaHref} className={HERO_CTA}>{infoOnly && visits.length ? 'See the tours' : parked || infoOnly ? 'Plan a visit' : data.cta}</a>
         </div>
       </section>
 
@@ -82,14 +94,17 @@ export default function AttractionPage({ data }) {
         )}
         priceItem={bookItem}
         bookType={bookType}
-        included={data.included}
-        excluded={data.excluded}
+        included={infoOnly ? undefined : data.included}
+        excluded={infoOnly ? undefined : data.excluded}
         reviewService={data.title}
+        showReviews={!infoOnly}
       />
       </div>
       {data.bookItem && (
         <div className={TOUR_LAYOUT_SIDE}>
-          {parked ? (
+          {infoOnly && visits.length ? (
+            <VisitOnSidebar tours={visits} />
+          ) : parked || infoOnly ? (
             <InfoSidebar facts={data.facts} />
           ) : (
             <BookSidebar item={bookItem} presetType={bookType} perPerson={perPerson} facts={data.facts} />
@@ -100,7 +115,7 @@ export default function AttractionPage({ data }) {
       <BookCta item={bookItem} />
       <BookBar item={bookItem} />
       <Related href={data.__href} />
-      {data.bookItem && <ReviewCtaBand />}
+      {data.bookItem && !infoOnly && <ReviewCtaBand />}
 
       {data.crumb && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">

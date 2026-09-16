@@ -88,7 +88,7 @@ function Inclusions({ included, excluded }) {
 // on one scrollable page - the sections are stacked and always visible - and the
 // sticky tab strip is a jump nav: clicking a tab scrolls to its section, and the
 // active tab follows the section currently in view (scrollspy).
-export default function DetailTabs({ overview, priceItem, bookType, included, excluded, reviewService }) {
+export default function DetailTabs({ overview, priceItem, bookType, included, excluded, reviewService, showReviews = true }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
   if (priceItem) {
     sections.push({
@@ -100,7 +100,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   if ((included && included.length) || (excluded && excluded.length)) {
     sections.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
   }
-  sections.push({
+  if (showReviews) sections.push({
     id: 'reviews',
     label: 'Reviews',
     content: <ReviewsStrip service={reviewService} emptyText="No reviews yet for this program - be the first to share your trip." emptyCta />,
@@ -185,7 +185,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
             transparent gap there let whatever section is mid-scroll peek
             through the moment the track is stuck (Wayan caught this on the
             Reviews tab: the tail end of Included's list showed through). */}
-        <div ref={stripRef} className="sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-white">
+        <div ref={stripRef} className={`${sections.length > 1 ? '' : 'hidden '}sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-white`}>
           <div
             className="mb-6 flex w-full gap-1 p-1 rounded-pill bg-[rgba(34,32,28,0.08)]"
             role="tablist"

@@ -57,3 +57,22 @@ export function withInclLabels(listing) {
   };
   return walk(listing);
 }
+
+// Everything a guest can actually book that stops at this attraction, for the
+// "Visit this place on" card. Unlike inclLabel, multi-day packages ARE included:
+// the card has room, and a package is a real way to see the place.
+export function visitOptions(slug) {
+  const out = [];
+  for (const [tourSlug, t] of Object.entries(TOUR_CONTENT)) {
+    if (parked.has(tourSlug)) continue;
+    if (!(t.items || []).some((i) => i.refId === slug)) continue;
+    const fact = (label) => ((t.facts || []).find((f) => f.label === label) || {}).value;
+    out.push({
+      href: tourPath(tourSlug),
+      name: t.bookItem,
+      duration: ((t.hooks || []).find((h) => h.label === 'Duration') || {}).value || fact('Duration'),
+      priceFallback: fact('Price'),
+    });
+  }
+  return out;
+}

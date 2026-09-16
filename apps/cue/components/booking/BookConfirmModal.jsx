@@ -18,6 +18,7 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import DepositNotice from './DepositNotice';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -307,6 +308,17 @@ export default function BookConfirmModal() {
               )}
               <div className={ROW}><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
+
+            {/* Deposit block - display only at this checkpoint. It reads the
+                pickup zone that is already in TripPrefs and, for transfers, the
+                route on the line; it does not touch priceText() or the quote. */}
+            <DepositNotice
+              stay={stay}
+              /* Only a REAL transfer sets this. singleLine.service is just the item
+                 name for a tour, so passing it unconditionally made every booking
+                 look like an outside-Ubud pickup. */
+              transferRoute={view.type === 'transfer' && singleLine ? singleLine.service : ''}
+            />
 
             {view.detailLines && view.detailLines.length > 0 && (
               <div className="mb-5 [border-top:1px_solid_#eee]">

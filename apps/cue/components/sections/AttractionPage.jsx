@@ -5,7 +5,7 @@ import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
-import BookBar from '@/components/booking/BookBar';
+import BookBarRegister from '@/components/booking/BookBarRegister';
 import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
@@ -113,7 +113,7 @@ export default function AttractionPage({ data }) {
       )}
       </div>
       <BookCta item={bookItem} />
-      <BookBar item={bookItem} />
+      <BookBarRegister item={bookItem} />
       <Related href={data.__href} />
       {data.bookItem && !infoOnly && <ReviewCtaBand />}
 

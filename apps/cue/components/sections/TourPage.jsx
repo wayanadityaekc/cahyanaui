@@ -6,7 +6,7 @@ import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/componen
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
-import BookBar from '@/components/booking/BookBar';
+import BookBarRegister from '@/components/booking/BookBarRegister';
 import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
@@ -132,7 +132,7 @@ export default function TourPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} />
+      <BookBarRegister item={data.bookItem} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

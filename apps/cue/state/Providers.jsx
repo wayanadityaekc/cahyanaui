@@ -6,6 +6,7 @@ import { AccountProvider } from './AccountProvider';
 import { ReferralProvider } from './ReferralProvider';
 import { PricingProvider } from './PricingProvider';
 import { BookingProvider } from './BookingProvider';
+import { ReviewsProvider } from './ReviewsProvider';
 
 export default function Providers({ children }) {
   return (
@@ -14,7 +15,9 @@ export default function Providers({ children }) {
         <AccountProvider>
           <ItineraryProvider>
             <PricingProvider>
-              <BookingProvider>{children}</BookingProvider>
+              <ReviewsProvider>
+                <BookingProvider>{children}</BookingProvider>
+              </ReviewsProvider>
             </PricingProvider>
           </ItineraryProvider>
         </AccountProvider>

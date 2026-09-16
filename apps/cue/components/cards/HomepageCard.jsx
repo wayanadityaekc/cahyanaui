@@ -1,14 +1,14 @@
-import { Clock, Landmark, Leaf, MapPin, Mountain, Star, UserRound, VenetianMask } from 'lucide-react';
+import { Clock, Landmark, Leaf, MapPin, Mountain, UserRound, VenetianMask } from 'lucide-react';
 import Price from '@/components/Price';
+import Rating from '@/components/Rating';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
 const ClockIcon = () => <Clock strokeWidth={1.7} />;
 const PinIcon = () => <MapPin strokeWidth={1.7} />;
 const UserIcon = () => <UserRound strokeWidth={1.7} />;
-// Rating star and the category badges were solid shapes before Lucide, so they
-// keep `fill` - outline-only would read as a different badge style.
-const StarIcon = () => <Star fill="currentColor" stroke="none" aria-hidden="true" />;
+// Category badges were solid shapes before Lucide, so they keep `fill` -
+// outline-only would read as a different badge style.
 const LeafIcon = () => <Leaf fill="currentColor" aria-hidden="true" />;
 const MaskIcon = () => <VenetianMask fill="currentColor" aria-hidden="true" />;
 const MountainIcon = () => <Mountain fill="currentColor" aria-hidden="true" />;
@@ -69,7 +69,7 @@ const PRICE_WRAP = 'flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap 
 
 export default function HomepageCard({
   href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, cat, rating, width = 600, height = 600,
+  priceName, priceFallback, priceMode = 'standard', zone, cat, width = 600, height = 600,
 }) {
   const c = (cat && CATS[cat]) || null;
   const tone = c ? c.tone : 'gold';
@@ -88,7 +88,7 @@ export default function HomepageCard({
           <c.Icon />{cat}
         </span>
       )}
-      <span className={RATE}><StarIcon />{rating || 'New'}</span>
+      <Rating name={priceName} className={RATE} />
       <div className={OV}>
         <h3 className={TITLE}>{name}</h3>
         <span className={`${ACCENT} ${accentTone}`} />

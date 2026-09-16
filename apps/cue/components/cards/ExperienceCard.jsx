@@ -1,6 +1,7 @@
 import { Clock, MapPin } from 'lucide-react';
 import Img from '@/components/ui/Img';
 import Price from '@/components/Price';
+import Rating from '@/components/Rating';
 import { PRICE_FROM } from '@/components/ui/priceClasses';
 import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
 
@@ -22,6 +23,13 @@ const BODY_INCL =
   'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
 const NAME =
   '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
+// New (Sep 2026) - this grid cell existed in the layout ('title_rating') but
+// nothing ever rendered into it; wired up alongside real review data. Same
+// star + amber-d treatment as HomepageCard/ListingRow's rating badge, just
+// inline instead of an absolute pill (no photo underneath to float over here).
+const RATING =
+  '[grid-area:rating] flex items-center gap-[3px] self-start justify-self-end text-small font-semibold text-amber-d whitespace-nowrap ' +
+  '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const META =
   '[grid-area:meta] flex items-center gap-[0.4rem] text-small max-[992px]:text-label text-muted ' +
   '[&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:shrink-0 [&_svg]:text-gold-d';
@@ -58,6 +66,7 @@ export default function ExperienceCard({
       </div>
       <div className={incl ? BODY_INCL : BODY}>
         <h3 className={NAME}>{name}</h3>
+        {!incl && priceName && <Rating name={priceName} className={RATING} />}
         {meta && (
           <div className={META}>
             {metaIcon === 'pin' ? <MapPin strokeWidth={1.7} /> : <Clock strokeWidth={1.7} />}

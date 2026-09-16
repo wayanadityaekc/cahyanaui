@@ -1,12 +1,10 @@
 'use client';
 
 import clsx from 'clsx';
-import { Check, Clock, MapPin, Star, UserRound } from 'lucide-react';
+import { Check, Clock, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
+import Rating from '@/components/Rating';
 
-// Rating star stays solid - `fill` makes the Lucide outline star read the same
-// as the hand-drawn one it replaces.
-const StarIcon = () => <Star fill="currentColor" stroke="none" aria-hidden="true" />;
 const CheckIcon = () => <Check strokeWidth={2.4} aria-hidden="true" />;
 const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
 const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
@@ -44,7 +42,7 @@ const PRICE = 'mt-auto self-end flex items-baseline gap-1 whitespace-nowrap';
 
 export default function ListingRow({
   href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, stops, priv, rating,
+  priceName, priceFallback, priceMode = 'standard', zone, stops, priv,
   dim = false, onReset, anchorId,
 }) {
   const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
@@ -58,7 +56,7 @@ export default function ListingRow({
       onClick={handleClick}
     >
       <div className={IMG} style={photo} role="img" aria-label={alt || name}>
-        <span className={RATE}><StarIcon />{rating || 'New'}</span>
+        <Rating name={priceName} className={RATE} />
       </div>
       <div className={BODY}>
         <h3 className={TITLE}>{name}</h3>

@@ -3,8 +3,15 @@
 import { MessageCircle } from 'lucide-react';
 import Price from '@/components/Price';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
+import { useItinerary } from '@/state/ItineraryProvider';
 import { useBookBarItem } from '@/state/BookBarProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
+
+// Shared size/style for the two mutually-exclusive CTA buttons (Book now /
+// Plan your trip) - Wayan: "samain ukuran" - was flex-1 (stretched full width)
+// on the fallback button, flex-none (compact) on Book now, so they read as
+// two different sizes depending on which page you were on.
+const CTA_BTN = 'flex-none py-[0.55rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d';
 
 // Global sticky bar (Sep 2026, Wayan: "muncul di setiap halaman dan setiap
 // saat") - mounted once in app/layout.jsx, always visible on mobile, no more
@@ -14,6 +21,7 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 // back to a generic "Plan your trip" CTA. Chat stays in both modes.
 export default function BookBar() {
   const { displayGuests } = useTripPrefs();
+  const { count } = useItinerary();
   const { item } = useBookBarItem();
 
   const scrollToCard = (e) => {
@@ -41,10 +49,25 @@ export default function BookBar() {
             <div className="text-muted text-small">{displayGuests} {displayGuests === 1 ? 'guest' : 'guests'}</div>
             <div className="text-[1.1rem] font-semibold text-amber"><Price name={item} fallback="" /></div>
           </div>
-          <a href="#booking" className="flex-none py-[0.55rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d" onClick={scrollToCard}>Book now</a>
+          <a href="#booking" className={CTA_BTN} onClick={scrollToCard}>Book now</a>
         </>
       ) : (
-        <a href="/tour.html" className="flex-1 min-w-0 py-[0.55rem] px-4 rounded-pill bg-cta text-white font-semibold no-underline text-center whitespace-nowrap hover:bg-cta-d">Plan your trip</a>
+        <>
+          <div className="flex-1 min-w-0 leading-tight">
+            {count > 0 ? (
+              <>
+                <div className="text-muted text-small">Your trip</div>
+                <div className="text-[1.1rem] font-semibold text-green">{count} {count === 1 ? 'stop' : 'stops'} planned</div>
+              </>
+            ) : (
+              <>
+                <div className="text-muted text-small">Cahyana Ubud Experience</div>
+                <div className="text-[0.95rem] font-semibold text-green">Clear pricing, real drivers</div>
+              </>
+            )}
+          </div>
+          <a href="/tour.html" className={CTA_BTN}>Plan your trip</a>
+        </>
       )}
     </div>
   );

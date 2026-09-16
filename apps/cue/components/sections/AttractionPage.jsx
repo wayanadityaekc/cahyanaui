@@ -98,7 +98,7 @@ export default function AttractionPage({ data }) {
       )}
       </div>
       <BookCta item={bookItem} />
-      <BookBar item={bookItem} perPerson={perPerson} />
+      <BookBar item={bookItem} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

@@ -21,7 +21,7 @@ export default function Rating({ name, className, minReviews = 1 }) {
       {show ? (
         <>
           {r.avg_rating.toFixed(1)}
-          <span className="font-normal opacity-70">&nbsp;({r.count})</span>
+          <span className="ml-[1px] text-[0.8em] font-normal opacity-70">({r.count})</span>
         </>
       ) : (
         'New'

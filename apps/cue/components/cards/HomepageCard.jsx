@@ -43,7 +43,7 @@ const CAT_BASE =
   'tracking-[0.06em] uppercase text-white backdrop-blur-[6px] border border-[rgba(255,255,255,0.2)] ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:shrink-0';
 const RATE =
-  'absolute top-3 right-3 z-[3] inline-flex items-center gap-[5px] px-[10px] py-[5px] rounded-pill ' +
+  'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-pill ' +
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold shadow-sm ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const OV = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';

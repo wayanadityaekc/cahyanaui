@@ -1,75 +1,28 @@
 'use client';
 
+import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
 import { infoList, INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT, INFO_LISTS, INFO_COL_H3 } from '@/components/ui/infoClasses';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
 import SectionSwitcher from '@/components/ui/SectionSwitcher';
+import ProgramPromoSlider from '@/components/sections/ProgramPromoSlider';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
+import { isHiddenTour } from '@/lib/routes';
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 
-// Tailwind-native (TW-A12, #333): .closing-band* -> utilities. `closing.buttons[].cls`
-// in content/shared/listings.js still holds legacy-looking BEM strings
-// ("closing-band__btn(--primary)?") - left untouched there (it's content data, not
-// this component's job to rewrite) and read here only as a variant flag.
-// py-9 = var(--section-gap) (36px, NOT the old rule's own 3rem/48px - that was
-// already losing to the later, same-specificity global --section-gap rule, same
-// gotcha as .arow in #328).
-const CLOSING_BTN_BASE =
-  'inline-block py-[0.8rem] px-[1.4rem] rounded-pill font-body font-semibold no-underline border transition-colors duration-200 ease-in-out';
-const CLOSING_BTN = {
-  primary: `${CLOSING_BTN_BASE} bg-cta border-cta text-white hover:bg-cta-d hover:border-cta-d`,
-  default: `${CLOSING_BTN_BASE} bg-white border-green text-green hover:bg-green hover:text-white`,
-};
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
-    </svg>
-  );
-}
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  );
-}
-function CarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 11l1.4-4.2A2 2 0 0 1 8.3 5.4h7.4a2 2 0 0 1 1.9 1.4L19 11M4 11h16v5H4zM7 16v1.6M17 16v1.6" /><circle cx="7.5" cy="13.5" r="1" /><circle cx="16.5" cy="13.5" r="1" />
-    </svg>
-  );
-}
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-    </svg>
-  );
-}
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  );
-}
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
+const SearchIcon = () => <Search strokeWidth={1.8} aria-hidden="true" />;
+const CloseIcon = () => <X aria-hidden="true" />;
+const CarIcon = () => <Car strokeWidth={1.7} aria-hidden="true" />;
+const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
+const CheckIcon = () => <Check aria-hidden="true" />;
+const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
 
 // Search placeholder noun per listing page.
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
 
 export default function ListingPage({ data }) {
-  const { heroBg, title, sub, listTitle, sectionId, chips, cats, closing, info } = data;
+  const { heroBg, title, sub, listTitle, sectionId, chips, cats, info } = data;
   const [query, setQuery] = useState('');
   const [zone, setZone] = useState('all'); // 'all' | category id (desktop dim filter)
 
@@ -79,7 +32,12 @@ export default function ListingPage({ data }) {
   // One flat grid: every card tagged with its category id; the first card of each
   // category carries an anchor id so the mobile switcher can scroll to it.
   const allCards = [];
-  cats.forEach((cat) => cat.cards.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null })));
+  cats.forEach((cat) => {
+    // Parked tours drop out of the grid entirely, so the anchor has to land on
+    // whichever card is shown first, not on cat.cards[0].
+    const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
+    shown.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null }));
+  });
   const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
@@ -127,7 +85,7 @@ export default function ListingPage({ data }) {
             />
             <button
               type="button"
-              className="flex-none w-[2.1rem] h-[2.1rem] flex items-center justify-center [border:0] rounded-[50%] bg-cta text-white cursor-pointer [transition:background-color_var(--dur)_ease] hover:bg-cta-d [&_svg]:w-4 [&_svg]:h-4"
+              className="flex-none w-[2.1rem] h-[2.1rem] flex items-center justify-center [border:0] rounded-[50%] bg-cta text-white cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [&_svg]:w-4 [&_svg]:h-4"
               aria-label={q ? 'Clear search' : 'Search'}
               onClick={() => q && setQuery('')}
             >
@@ -142,7 +100,7 @@ export default function ListingPage({ data }) {
               <li><CheckIcon />Free cancellation up to 24h before your tour</li>
             </ul>
           )}
-          {!q && <a ref={browseRef} href={`#${sectionId}`} className="inline-block mt-4 py-3 px-[1.8rem] rounded-pill bg-cta text-white font-semibold text-[0.85rem] no-underline [transition:background-color_var(--dur)_ease] hover:bg-cta-d max-[768px]:block max-[768px]:w-full max-[768px]:mt-[1.25rem] max-[768px]:text-center">Browse all {noun}</a>}
+          {!q && <a ref={browseRef} href={`#${sectionId}`} className="inline-block mt-4 py-3 px-[1.8rem] rounded-pill bg-cta text-white font-semibold text-[0.85rem] no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:block max-[768px]:w-full max-[768px]:mt-[1.25rem] max-[768px]:text-center">Browse all {noun}</a>}
         </div>
       </section>
 
@@ -192,6 +150,8 @@ export default function ListingPage({ data }) {
         </section>
       </section>
 
+      <ProgramPromoSlider />
+
       {info && (
         <section className={INFO_SECTION_DETAIL}>
           <div className={INFO_CARD}>
@@ -214,17 +174,6 @@ export default function ListingPage({ data }) {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
-
-      {closing && (
-        <section className="text-center py-9 px-6 bg-cream">
-          <p className="mx-auto mb-[1.3rem] max-w-[640px] text-green">{closing.text}</p>
-          <div className="flex gap-[0.8rem] justify-center flex-wrap">
-            {closing.buttons.map((b) => (
-              <a href={b.href} className={b.cls.includes('--primary') ? CLOSING_BTN.primary : CLOSING_BTN.default} key={b.href}>{b.text}</a>
-            ))}
           </div>
         </section>
       )}

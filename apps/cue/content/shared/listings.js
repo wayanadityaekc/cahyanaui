@@ -86,7 +86,7 @@ export const LISTINGS = {
             "metaIcon": "clock",
             "priceName": "Ubud ATV Adventure",
             "priceFallback": "$72",
-            "stops": 4,
+            "stops": 3,
             "priv": true
           },
           {
@@ -122,7 +122,7 @@ export const LISTINGS = {
             "metaIcon": "clock",
             "priceName": "Uluwatu & Sunset Kecak",
             "priceFallback": "$49",
-            "stops": 1,
+            "stops": 2,
             "priv": true
           },
           {
@@ -159,30 +159,15 @@ export const LISTINGS = {
             "href": "/lempuyang-tirta-gangga.html",
             "zone": "east",
             "img": "east-bali-tour-card.jpg",
-            "alt": "Lempuyang & Tirta Gangga - private tour from Ubud, Bali",
+            "alt": "East Bali tour - Lempuyang, Besakih and Tirta Gangga from Ubud",
             "w": 600,
             "hgt": 600,
-            "name": "Lempuyang & Tirta Gangga",
-            "meta": "6–8 hours",
+            "name": "East Bali: Lempuyang, Besakih & Tirta Gangga",
+            "meta": "10–12 hours",
             "metaIcon": "clock",
-            "priceName": "Lempuyang & Tirta Gangga",
-            "priceFallback": "$49",
-            "stops": 2,
-            "priv": true
-          },
-          {
-            "href": "/besakih-taman-ujung.html",
-            "zone": "east",
-            "img": "besakih-temple.webp",
-            "alt": "Besakih & Taman Ujung - private tour from Ubud, Bali",
-            "w": 600,
-            "hgt": 600,
-            "name": "Besakih & Taman Ujung",
-            "meta": "7–9 hours",
-            "metaIcon": "clock",
-            "priceName": "Besakih & Taman Ujung",
-            "priceFallback": "$54",
-            "stops": 2,
+            "priceName": "East Bali Tour",
+            "priceFallback": "$52",
+            "stops": 4,
             "priv": true
           }
         ]
@@ -222,63 +207,33 @@ export const LISTINGS = {
             "priv": true
           },
           {
-            "href": "/ulun-danu-tanah-lot.html",
-            "zone": "west",
-            "img": "west-bali-tour-card.jpg",
-            "alt": "Ulun Danu Beratan & Handara Gate - private tour from Ubud, Bali",
-            "w": 600,
-            "hgt": 600,
-            "name": "Ulun Danu Beratan & Handara Gate",
-            "meta": "5–7 hours",
-            "metaIcon": "clock",
-            "priceName": "Ulun Danu Beratan & Handara Gate",
-            "priceFallback": "$54",
-            "stops": 2,
-            "priv": true
-          },
-          {
             "href": "/tanah-lot-taman-ayun.html",
             "zone": "west",
             "img": "tanah-lot.webp",
-            "alt": "Tanah Lot & Taman Ayun - private tour from Ubud, Bali",
+            "alt": "West Bali Tour - private tour from Ubud, Bali",
             "w": 600,
             "hgt": 600,
-            "name": "Tanah Lot & Taman Ayun",
-            "meta": "5–7 hours",
+            "name": "West Bali Tour",
+            "meta": "8–10 hours",
             "metaIcon": "clock",
-            "priceName": "Tanah Lot & Taman Ayun",
-            "priceFallback": "$45",
-            "stops": 2,
+            "priceName": "West Bali Tour",
+            "priceFallback": "$57",
+            "stops": 3,
             "priv": true
           },
           {
             "href": "/jatiluwih-tour.html",
             "zone": "west",
             "img": "jatiluwih.webp",
-            "alt": "Jatiluwih Rice Terrace Tour - private tour from Ubud, Bali",
+            "alt": "Bedugul Highlands Tour - private tour from Ubud, Bali",
             "w": 600,
             "hgt": 600,
-            "name": "Jatiluwih Rice Terrace Tour",
-            "meta": "4–6 hours",
+            "name": "Bedugul Highlands Tour",
+            "meta": "9–11 hours",
             "metaIcon": "clock",
-            "priceName": "Jatiluwih Rice Terrace Tour",
-            "priceFallback": "$40",
-            "stops": 1,
-            "priv": true
-          },
-          {
-            "href": "/sangeh-tanah-lot.html",
-            "zone": "west",
-            "img": "tanah-lot.webp",
-            "alt": "Sangeh Monkey Forest & Tanah Lot - private tour from Ubud, Bali",
-            "w": 600,
-            "hgt": 600,
-            "name": "Sangeh Monkey Forest & Tanah Lot",
-            "meta": "5–7 hours",
-            "metaIcon": "clock",
-            "priceName": "Sangeh Monkey Forest & Tanah Lot",
-            "priceFallback": "$45",
-            "stops": 2,
+            "priceName": "Bedugul Highlands Tour",
+            "priceFallback": "$57",
+            "stops": 3,
             "priv": true
           },
           {
@@ -343,28 +298,14 @@ export const LISTINGS = {
             "meta": "3 days / 2 nights",
             "metaIcon": "clock",
             "priceName": "3-Day Best of Bali Package",
-            "priceFallback": "$131",
-            "stops": 6,
+            "priceFallback": "$148",
+            "stops": 12,
             "priv": true
           }
         ]
       }
     ],
-    "closing": {
-      "text": "Rather build your own route? Plan your trip day by day, or explore Bali by area first.",
-      "buttons": [
-        {
-          "href": "/my-trips.html",
-          "cls": "closing-band__btn closing-band__btn--primary",
-          "text": "Build your own itinerary"
-        },
-        {
-          "href": "/destinations.html",
-          "cls": "closing-band__btn",
-          "text": "Browse destinations"
-        }
-      ]
-    }
+    "closing": null
   },
   "activities": {
     "heroBg": "jungle-swing-card.jpg",
@@ -612,8 +553,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Uluwatu Cliff Temple: 70m Above the Ocean",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Uluwatu & Sunset Kecak|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -625,8 +565,7 @@ export const LISTINGS = {
             "hgt": 1536,
             "name": "Tanah Lot Sunset Temple",
             "meta": "West Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Tanah Lot & Taman Ayun| or <strong>Sangeh Monkey Forest & Tanah Lot</strong>"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -638,8 +577,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Besakih: The Mother Temple of Bali",
             "meta": "East Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Besakih & Taman Ujung|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -651,8 +589,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Tirta Empul Holy Water Temple",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Tour| or <strong>Kintamani Sunrise & Penglipuran</strong>"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -664,8 +601,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Goa Gajah: The Elephant Cave",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Tour|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -677,8 +613,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Gunung Kawi: 11th-Century Cliff Shrines",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Tour|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -690,8 +625,7 @@ export const LISTINGS = {
             "hgt": 3000,
             "name": "Lempuyang Temple: Gates of Heaven",
             "meta": "East Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Lempuyang & Tirta Gangga|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -703,8 +637,7 @@ export const LISTINGS = {
             "hgt": 1237,
             "name": "Ulun Danu Beratan Lake Temple",
             "meta": "Central Highlands",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ulun Danu Beratan & Handara Gate|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -716,8 +649,7 @@ export const LISTINGS = {
             "hgt": 1365,
             "name": "Taman Ayun Royal Temple",
             "meta": "West Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Tanah Lot & Taman Ayun|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -729,8 +661,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Pura Batuan: 11th-Century Village Temple",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Culture Day|"
+            "metaIcon": "pin"
           }
         ]
       },
@@ -748,8 +679,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Tegenungan Waterfall: Swimming Pool",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Rafting Adventure| or <strong>Ubud ATV Adventure</strong>"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -761,8 +691,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Gitgit Waterfall: 35m Single-Drop Falls",
             "meta": "North Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Munduk Waterfall Tour|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -774,8 +703,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Sekumpul: Bali's Most Beautiful Waterfall",
             "meta": "North Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Lovina Dolphin & Sekumpul Waterfall|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -787,8 +715,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Banyumala Twin Waterfall & Swim Pool",
             "meta": "North Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Banyumala & Twin Lakes|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -800,8 +727,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Munduk: Highland Village & Waterfalls",
             "meta": "North Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Munduk Waterfall Tour|"
+            "metaIcon": "pin"
           }
         ]
       },
@@ -819,8 +745,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Pandawa Beach: Statue-Lined Cliff Cut",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |GWK & Pandawa Beach|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -832,8 +757,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Balangan Beach: Left-Hand Reef Surf",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Bali Hidden Beaches and Cliffs|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -845,8 +769,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Bingin Beach: Cliffside Steps & Reef Break",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Bali Hidden Beaches and Cliffs|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -858,8 +781,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Green Bowl Beach: Sea Caves at Low Tide",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Bali Hidden Beaches and Cliffs|"
+            "metaIcon": "pin"
           },
           {
             "href": "/attractions/tegal-wangi-beach.html",
@@ -888,8 +810,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Tegalalang Rice Terrace & Coffee",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Tour| or <strong>Ubud Rafting Adventure</strong>"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -901,8 +822,7 @@ export const LISTINGS = {
             "hgt": 1279,
             "name": "Jatiluwih: UNESCO Rice Terraces",
             "meta": "West Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Jatiluwih Rice Terrace Tour|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -914,8 +834,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Garuda Wisnu Kencana (GWK) Statue Park",
             "meta": "South Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |GWK & Pandawa Beach|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -927,8 +846,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Ubud Royal Palace & Art Market",
             "meta": "Central Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Culture Day|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -940,8 +858,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Penglipuran: World's Cleanest Village",
             "meta": "Kintamani",
-            "metaIcon": "pin",
-            "inclText": "Included in |Kintamani Sunrise & Penglipuran|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -953,8 +870,7 @@ export const LISTINGS = {
             "hgt": 1280,
             "name": "Handara Gate: Bali's Iconic Split Gate",
             "meta": "North Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ulun Danu Beratan & Handara Gate|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -966,8 +882,7 @@ export const LISTINGS = {
             "hgt": 800,
             "name": "Tirta Gangga Water Garden",
             "meta": "East Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Lempuyang & Tirta Gangga|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -979,8 +894,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Taman Ujung Water Palace",
             "meta": "East Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Besakih & Taman Ujung|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -992,8 +906,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Buyan & Tamblingan Twin Lakes",
             "meta": "North Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Banyumala & Twin Lakes|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -1005,8 +918,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Sacred Monkey Forest Sanctuary",
             "meta": "Central Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Tour|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -1018,8 +930,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Sangeh Monkey Forest: Nutmeg Grove",
             "meta": "West Bali",
-            "metaIcon": "pin",
-            "inclText": "Included in |Sangeh Monkey Forest & Tanah Lot|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -1031,8 +942,7 @@ export const LISTINGS = {
             "hgt": 1157,
             "name": "Ubud Traditional Market",
             "meta": "Central Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Culture Day|"
+            "metaIcon": "pin"
           },
           {
             "variant": "incl",
@@ -1044,8 +954,7 @@ export const LISTINGS = {
             "hgt": 900,
             "name": "Ubud Arts & Crafts: Silver & Batik",
             "meta": "Near Ubud",
-            "metaIcon": "pin",
-            "inclText": "Included in |Ubud Culture Day|"
+            "metaIcon": "pin"
           }
         ]
       }

@@ -1,3 +1,4 @@
+import { Mail, MapPin, MessageCircle } from 'lucide-react';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as R } from '@/content/shared/registration';
 
@@ -26,13 +27,16 @@ const EXPLORE = [
   ['/my-trips.html', 'My Trips'],
 ];
 
+// About/Contact/FAQ/Terms/Privacy/Cancellation are all sections of the Our
+// Company page now (Sep 2026, Wayan - their standalone pages are retired).
+// Each link lands directly on its section (OurCompany.jsx reads the hash).
 const COMPANY = [
-  ['/contact.html', 'Contact Us'],
-  ['/about-us.html', 'About Us'],
-  ['/faq.html', 'FAQ'],
-  ['/terms-conditions.html', 'Terms & Conditions'],
-  ['/privacy-policy.html', 'Privacy Policy'],
-  ['/cancellation-policy.html', 'Cancellation Policy'],
+  ['/our-company.html#contact', 'Contact Us'],
+  ['/our-company.html#about', 'About Us'],
+  ['/our-company.html#faq', 'FAQ'],
+  ['/our-company.html#terms', 'Terms & Conditions'],
+  ['/our-company.html#privacy', 'Privacy Policy'],
+  ['/our-company.html#cancellation', 'Cancellation & Refund Policy'],
 ];
 
 export default function Footer() {
@@ -45,23 +49,15 @@ export default function Footer() {
           </a>
           <div className="mt-[0.9rem] flex flex-col gap-[0.55rem]">
             <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={CONTACT_LINK}>
-              <svg className={CONTACT_SVG} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
-              </svg>
+              <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
               Message us on WhatsApp
             </a>
             <a href="mailto:cahyanabaliexperience@gmail.com" className={CONTACT_LINK}>
-              <svg className={CONTACT_SVG} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="5" width="18" height="14" rx="2" />
-                <path d="M3 7l9 6 9-6" />
-              </svg>
+              <Mail className={CONTACT_SVG} strokeWidth={1.8} />
               cahyanabaliexperience@gmail.com
             </a>
             <span className={CONTACT_ITEM}>
-              <svg className={CONTACT_SVG} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
-              </svg>
+              <MapPin className={CONTACT_SVG} strokeWidth={1.8} />
               Based in Ubud, Bali
             </span>
           </div>
@@ -90,14 +86,7 @@ export default function Footer() {
           <ul className="list-none">{COMPANY.map(([h, t]) => <li key={h} className="mb-[0.6rem] text-[0.8rem] opacity-[0.85]"><a href={h} className={COL_A}>{t}</a></li>)}</ul>
         </div>
       </div>
-      <p className="flex flex-wrap items-center justify-center gap-x-[10px] gap-y-1 max-[560px]:flex-col max-[560px]:gap-[3px] max-w-[1100px] mx-auto mt-8 pt-6 border-t border-[rgba(0,0,0,0.1)] text-small text-muted">
-        <span className="whitespace-nowrap"><b className="font-semibold">{R.name}</b></span>
-        <span className="opacity-50 max-[560px]:hidden" aria-hidden="true">·</span>
-        <span className="whitespace-nowrap">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{R.decreeShort}</a></span>
-        <span className="opacity-50 max-[560px]:hidden" aria-hidden="true">·</span>
-        <span className="whitespace-nowrap">Business License (NIB) {R.nib}</span>
-      </p>
-      <div className="max-w-[1100px] mx-auto mt-10 pt-6 border-t border-[rgba(0,0,0,0.12)] text-center">
+      <div className="max-w-[1100px] mx-auto mt-8 pt-6 border-t border-[rgba(0,0,0,0.1)] text-center">
         <p className="mb-3 text-label tracking-[0.14em] uppercase opacity-70">We Accept</p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <span className={PAY_CHIP}>
@@ -154,6 +143,13 @@ export default function Footer() {
             </svg>
           </span>
         </div>
+        <p className="flex flex-wrap items-center justify-center gap-x-[7px] gap-y-1 max-[560px]:flex-col max-[560px]:gap-[2px] mt-3 text-[length:0.58rem] font-normal text-muted opacity-30">
+          <span className="whitespace-nowrap">{R.name}</span>
+          <span className="max-[560px]:hidden" aria-hidden="true">·</span>
+          <span className="whitespace-nowrap">Ministry of Law <a href={R.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{R.decreeShort}</a></span>
+          <span className="max-[560px]:hidden" aria-hidden="true">·</span>
+          <span className="whitespace-nowrap">Business License (NIB) {R.nib}</span>
+        </p>
       </div>
       <div className="max-w-[1100px] mx-auto mt-10 pt-6 border-t border-[rgba(0,0,0,0.12)] text-small text-center opacity-70">
         <p>&copy; 2026 Cahyana Ubud Experience. All rights reserved.</p>

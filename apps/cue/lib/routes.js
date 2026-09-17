@@ -1,11 +1,25 @@
 export const SITE = 'https://cahyanaubudexperience.com';
 
-export const NOINDEX = ['my-trips', 'settings'];
+// Kept out of the generated sitemap. my-trips/settings are private tools;
+// programs.html sets robots:noindex in its own metadata, so listing it would
+// send Google both "here is my URL" and "do not index it".
+export const NOINDEX = ['my-trips', 'settings', 'programs'];
+
+// Tours parked as "not ready to sell yet" (Wayan). Their content stays in
+// content/tours/index.js so they can be switched back on by deleting a line
+// here. This list keeps them out of the shipped sitemap; sitemap.xml at the
+// root marks the same slugs NONAKTIF.
+export const HIDDEN_TOURS = [
+  'banyumala-twin-lakes',
+  'gwk-pandawa-beach',
+  'hidden-beaches-cliffs',
+  'lovina-dolphin-sekumpul',
+  'munduk-twin-lakes',
+];
 
 export const TOURS = [
   'banyumala-twin-lakes',
   'batur-sunrise-adrenaline',
-  'besakih-taman-ujung',
   'best-of-bali-3-day-package',
   'full-adventure-rafting-atv',
   'gwk-pandawa-beach',
@@ -15,14 +29,12 @@ export const TOURS = [
   'lempuyang-tirta-gangga',
   'lovina-dolphin-sekumpul',
   'munduk-twin-lakes',
-  'sangeh-tanah-lot',
   'south-coast-sunset-kecak',
   'tanah-lot-taman-ayun',
   'ubud-atv-adventure',
   'ubud-culture-day',
   'ubud-rafting-adventure',
   'ubud-tour',
-  'ulun-danu-tanah-lot',
 ];
 
 export const ATTRACTIONS = [
@@ -97,24 +109,22 @@ export const GUIDES = [
   'uluwatu-bukit',
 ];
 
+// about-us / contact / faq / terms-conditions / privacy-policy /
+// cancellation-policy were folded into our-company.html (Sep 2026) and now only
+// exist as 301s in public/.htaccess - listing them here kept them in the shipped
+// sitemap, pointing Google at six redirects.
 export const BESPOKE = [
-  'about-us',
   'activities',
   'airport-transfer',
   'all-reviews',
   'bali-guide',
-  'cancellation-policy',
   'charter',
-  'contact',
   'destinations',
-  'faq',
   'itinerary',
   'our-company',
   'programs',
   'my-trips',
-  'privacy-policy',
   'settings',
-  'terms-conditions',
   'tour',
   'transfer',
 ];
@@ -126,10 +136,29 @@ export const LEGACY_REDIRECTS = {
   '/attractions/celuk-silver.html': '/attractions/ubud-arts-crafts.html',
   '/attractions/batik.html': '/attractions/ubud-arts-crafts.html',
   '/south-bali-tour.html': '/hidden-beaches-cliffs.html',
+  '/ulun-danu-tanah-lot.html': '/jatiluwih-tour.html',
+  '/sangeh-tanah-lot.html': '/tanah-lot-taman-ayun.html',
 };
 
 export function tourPath(slug) {
   return `/${slug}.html`;
+}
+
+// True for a link pointing at a parked tour. Card lists filter on this so a
+// hidden tour stops being offered anywhere, while its page still resolves for
+// anyone holding the link (no 404s) and its content stays put for the day
+// Wayan switches it back on.
+export function isHiddenTour(href) {
+  return HIDDEN_TOURS.some((slug) => href === tourPath(slug));
+}
+
+// Same switch, applied to editorial HTML: an anchor pointing at a parked tour
+// is unwrapped so the sentence reads the same but stops being a way through to
+// a page that still has a Book Now on it.
+export function unlinkHiddenTours(html) {
+  if (!html || !HIDDEN_TOURS.length) return html;
+  const slugs = HIDDEN_TOURS.join('|');
+  return html.replace(new RegExp(`<a\\b[^>]*href="/(?:${slugs})\\.html"[^>]*>([\\s\\S]*?)</a>`, 'gi'), '$1');
 }
 
 export function attractionPath(slug) {
@@ -151,5 +180,6 @@ export function allPaths() {
 }
 
 export function indexablePaths() {
-  return allPaths().filter((p) => !NOINDEX.some((s) => p === `/${s}.html`));
+  const off = new Set([...NOINDEX, ...HIDDEN_TOURS].map((s) => `/${s}.html`));
+  return allPaths().filter((p) => !off.has(p));
 }

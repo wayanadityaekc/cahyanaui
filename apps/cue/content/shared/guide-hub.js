@@ -1,32 +1,34 @@
+import { Compass, Info, Leaf, MountainSnow, VenetianMask } from 'lucide-react';
+
 export const GUIDE_HUB = {
-  "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
+  "heroStyle": "background-image: url(/assets/images/bali-highlands-hero.webp);",
   "title": "Bali Travel Guide",
   "text": "Everything worth knowing before you go - the island and its regions, the culture, the landscapes, what to do, and the practical bits that make a trip smooth.",
   "wrapClass": "max-w-[var(--container)] mx-auto pt-10 px-[var(--container-x)] pb-12",
   "navItems": [
     {
       "id": "gcat-island",
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"17\" cy=\"6.5\" r=\"2\"/><path d=\"M3 20h18M5 20l4.5-6 3 4 2-3 4.5 5\"/></svg>",
+      "Icon": MountainSnow,
       "label": "About the Island"
     },
     {
       "id": "gcat-culture",
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 4h14v5a7 7 0 0 1-14 0z\"/><path d=\"M9 8.5h.01M15 8.5h.01M9.5 12c1.2 1 4 1 5 0\"/></svg>",
+      "Icon": VenetianMask,
       "label": "People & Culture"
     },
     {
       "id": "gcat-nature",
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19C5 11 11 5 19 5c0 8-6 14-14 14z\"/><path d=\"M6 18C10 14 13 11 16 9\"/></svg>",
+      "Icon": Leaf,
       "label": "Nature"
     },
     {
       "id": "gcat-do",
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M15.5 8.5l-2.2 4.8-4.8 2.2 2.2-4.8z\"/></svg>",
+      "Icon": Compass,
       "label": "What to Do"
     },
     {
       "id": "gcat-know",
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11.5v5M12 7.7h.01\"/></svg>",
+      "Icon": Info,
       "label": "Good to Know"
     }
   ],

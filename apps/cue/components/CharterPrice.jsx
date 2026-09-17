@@ -1,6 +1,7 @@
 'use client';
 
 import { usePricing } from '@/state/PricingProvider';
+import { withSymbol } from '@/components/Price';
 
 export default function CharterPrice({ duration, extra, fallback, className = 'chcard__amt' }) {
   const ctx = usePricing();
@@ -23,7 +24,7 @@ export default function CharterPrice({ duration, extra, fallback, className = 'c
 
   return (
     <span className={className} data-charter={duration} data-charter-extra={extra}>
-      {symbol + value.toLocaleString(isIdr ? 'id-ID' : 'en-US')}
+      {withSymbol(symbol + value.toLocaleString(isIdr ? 'id-ID' : 'en-US'))}
     </span>
   );
 }

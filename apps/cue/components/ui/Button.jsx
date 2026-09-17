@@ -14,7 +14,7 @@
  */
 const BASE =
   'inline-flex items-center justify-center gap-2 font-body font-semibold leading-none ' +
-  'border cursor-pointer no-underline transition-colors duration-200 ease-in-out';
+  'border cursor-pointer no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out';
 
 const VARIANTS = {
   primary: 'rounded-pill border-transparent bg-cta text-white hover:bg-cta-d',

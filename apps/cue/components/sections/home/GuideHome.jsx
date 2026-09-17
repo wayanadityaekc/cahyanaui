@@ -1,5 +1,6 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { GRID_SLIDER } from '@/components/ui/gridClasses';
 import { useMemo, useState } from 'react';
@@ -29,10 +30,7 @@ export default function GuideHome() {
 
         <div className="relative max-w-[560px] mt-6 mx-auto mb-[1.7rem]">
           <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white [box-shadow:var(--shadow-md)]">
-            <svg className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M21 21l-4.3-4.3" />
-            </svg>
+            <Search className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" aria-hidden="true" />
             <input
               type="text"
               className="flex-1 border-none border-current [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted"
@@ -57,7 +55,7 @@ export default function GuideHome() {
                 style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
               >
                 <span className="relative z-[1] flex flex-col items-center gap-[0.9rem] p-8 text-center">
-                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
+                  <span className="flex items-center justify-center w-14 h-14 border-2 border-[rgba(255,255,255,0.9)] rounded-[50%] text-[1.5rem] transition-[background-color,color,scale] duration-200 ease-[ease] group-hover:bg-white group-hover:text-green" aria-hidden="true">&rarr;</span>
                   <span className="font-semibold text-h2">{c.title}</span>
                   <span className="text-small opacity-90">{c.sub}</span>
                 </span>

@@ -1,27 +1,11 @@
+import { Clock, MapPin } from 'lucide-react';
 import Img from '@/components/ui/Img';
 import Price from '@/components/Price';
+import Rating from '@/components/Rating';
 import { PRICE_FROM } from '@/components/ui/priceClasses';
 import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
-
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-      <circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
 
 // Tailwind-native PENUH (migrasi Fase 2 - keluarga kartu, stage final). Dulu numpang
 // .experience__card + .experience__image/body/name/meta/footer/price + override
@@ -39,6 +23,13 @@ const BODY_INCL =
   'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
 const NAME =
   '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
+// New (Sep 2026) - this grid cell existed in the layout ('title_rating') but
+// nothing ever rendered into it; wired up alongside real review data. Same
+// star + amber-d treatment as HomepageCard/ListingRow's rating badge, just
+// inline instead of an absolute pill (no photo underneath to float over here).
+const RATING =
+  '[grid-area:rating] flex items-center gap-[3px] self-start justify-self-end text-small font-semibold text-amber-d whitespace-nowrap ' +
+  '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const META =
   '[grid-area:meta] flex items-center gap-[0.4rem] text-small max-[992px]:text-label text-muted ' +
   '[&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:shrink-0 [&_svg]:text-gold-d';
@@ -75,9 +66,10 @@ export default function ExperienceCard({
       </div>
       <div className={incl ? BODY_INCL : BODY}>
         <h3 className={NAME}>{name}</h3>
+        {!incl && priceName && <Rating name={priceName} className={RATING} />}
         {meta && (
           <div className={META}>
-            {metaIcon === 'pin' ? <PinIcon /> : <ClockIcon />}
+            {metaIcon === 'pin' ? <MapPin strokeWidth={1.7} /> : <Clock strokeWidth={1.7} />}
             <span>{meta}</span>
           </div>
         )}

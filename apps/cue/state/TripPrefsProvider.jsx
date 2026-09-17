@@ -2,12 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { readLocal, writeLocal, removeLocal } from '@/lib/storage';
-import { KEY, CURRENCIES, DISPLAY_GUESTS } from '@/lib/constants';
+import { KEY, CURRENCIES, DISPLAY_GUESTS, DEFAULT_CURRENCY } from '@/lib/constants';
 
 const TripPrefsContext = createContext(null);
 
 export function TripPrefsProvider({ children }) {
-  const [currency, setCurrencyState] = useState('USD');
+  const [currency, setCurrencyState] = useState(DEFAULT_CURRENCY);
   const [guests, setGuestsState] = useState(0);
   const [stay, setStayState] = useState('');
   const [dateFrom, setDateFromState] = useState('');
@@ -15,8 +15,8 @@ export function TripPrefsProvider({ children }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const cur = readLocal(KEY.currency, 'USD');
-    setCurrencyState(CURRENCIES.includes(cur) ? cur : 'USD');
+    const cur = readLocal(KEY.currency, DEFAULT_CURRENCY);
+    setCurrencyState(CURRENCIES.includes(cur) ? cur : DEFAULT_CURRENCY);
     setGuestsState(parseInt(readLocal(KEY.guests, '0'), 10) || 0);
     setStayState(readLocal(KEY.stay, '') || '');
     setDateFromState(readLocal(KEY.dateFrom, '') || '');

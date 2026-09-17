@@ -19,12 +19,16 @@ export const GRID_XPLORE =
   'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_88%]';
 
 // .related .experience__grid--home4 (detail-page "You might also like"):
-// slider at every breakpoint (300px desktop, 70/80% mobile), + margin-top 1.6rem.
+// Wayan (14 Sep 2026) wanted this reusing the homepage card sizing - desktop
+// is now a fixed 4-column grid (Related.jsx always renders exactly 4 picks or
+// nothing, so no wrap/auto-fill needed, unlike GRID_XPLORE) with the SAME
+// container width + gap as GRID_XPLORE, giving pixel-identical card width;
+// mobile mirrors GRID_XPLORE's slider steps too (was a related-only 80% card).
 export const GRID_RELATED =
-  'flex max-w-[1200px] mx-auto mt-[1.6rem] pb-4 overflow-x-auto overflow-y-hidden ' +
-  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  'min-[993px]:gap-[1.5rem] max-[992px]:gap-4 [&>*]:[scroll-snap-align:start] ' +
-  'min-[993px]:[&>*]:flex-[0_0_300px] max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_80%]';
+  'max-w-[1200px] mx-auto mt-[1.6rem] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'min-[993px]:grid min-[993px]:grid-cols-4 min-[993px]:gap-[1.4rem] min-[993px]:overflow-visible min-[993px]:[&>*]:flex-none ' +
+  'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
+  'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_88%]';
 
 // .guide-more .experience__grid--home4 (guide "you might also like" / "see our tours"):
 // like xplore (desktop grid wrap, mobile slider) but base gap + 80% mobile card (not .home).
@@ -34,6 +38,17 @@ export const GRID_GUIDEMORE =
   'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] max-[992px]:gap-4 ' +
   'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_80%]';
 
+// GuideHub category grid (guide hub page, Sep 2026 - Wayan): FIXED 4 columns visible
+// on desktop, always sized as 1/4 of the container regardless of how many cards a
+// category has today - a 5th+ card overflows and is reached by scrolling sideways
+// (snap), it does NOT wrap to a new row. Mobile: same slider pattern as GRID_SLIDER
+// (70/80% card, swipe).
+export const GRID_GUIDEHUB =
+  'flex max-w-[1200px] mx-auto pb-4 overflow-x-auto overflow-y-hidden ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'gap-[1.4rem] [&>*]:[scroll-snap-align:start] ' +
+  'min-[993px]:[&>*]:flex-[0_0_calc((100%-4.2rem)/4)] max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_80%]';
+
 // .experience__grid--slider (GuideHub + GuideHome sliders): slider every breakpoint,
 // with the mobile full-bleed (-mx-6 + pl-4) the --slider @992 rule adds.
 export const GRID_SLIDER =
@@ -41,3 +56,15 @@ export const GRID_SLIDER =
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   'min-[993px]:gap-[1.5rem] max-[992px]:gap-4 max-[992px]:-mx-6 max-[992px]:pl-4 max-[992px]:[scroll-padding-left:1rem] ' +
   '[&>*]:[scroll-snap-align:start] min-[993px]:[&>*]:flex-[0_0_300px] max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_80%]';
+
+// Tour-page carousels ("Destinations you'll visit" + "You might also like").
+// A slider at every width, but on desktop each card is sized to exactly one
+// column of the old 4-up grid - calc((100% - 3 gaps) / 4) - so four fill the
+// container and anything past that slides instead of wrapping to a second row
+// (Wayan, Sep 2026). Mobile sizing is GRID_RELATED's, unchanged.
+export const GRID_CAROUSEL_4UP =
+  'flex max-w-[1200px] mx-auto mt-[1.6rem] pb-4 overflow-x-auto overflow-y-hidden ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'min-[993px]:gap-[1.4rem] min-[993px]:[&>*]:flex-[0_0_calc((100%_-_3_*_1.4rem)_/_4)] ' +
+  'max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
+  'max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_88%] [&>*]:[scroll-snap-align:start]';

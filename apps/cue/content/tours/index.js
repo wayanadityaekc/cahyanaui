@@ -82,10 +82,6 @@ export const TOUR_CONTENT = {
     "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$55"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -201,8 +197,8 @@ export const TOUR_CONTENT = {
     "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$85 Pick-upUbud & nearby (very early)"
+    "label": "Pick-up",
+    "value": "Ubud & nearby (very early)"
    },
    {
     "label": "Availability",
@@ -234,126 +230,10 @@ export const TOUR_CONTENT = {
    "Tips and gratuities (optional)"
   ]
  },
- "besakih-taman-ujung": {
-  "heroBg": "besakih-temple.webp",
-  "title": "Besakih Mother Temple & Taman Ujung Water Palace Tour",
-  "desc": "Bali's holiest temple on the slopes of Mount Agung, then the grand reflecting pools of a royal water palace - the spiritual and regal side of East Bali in one day. A private car, a local driver, your pace.",
-  "hooks": [
-   {
-    "label": "Duration",
-    "value": "7–9 hours"
-   },
-   {
-    "label": "Area",
-    "value": "East Bali"
-   },
-   {
-    "label": "Group",
-    "value": "Up to 6 guests"
-   }
-  ],
-  "cta": "Book this program",
-  "ctaHref": "#booking",
-  "stopsTitle": "What You'll Do",
-  "stopsId": "stops",
-  "crumb": [
-   {
-    "type": "link",
-    "href": "/",
-    "text": "Home"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "link",
-    "href": "/tour.html",
-    "text": "Tours"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "text",
-    "text": "Besakih & Taman Ujung"
-   }
-  ],
-  "metaTitle": "Besakih Mother Temple & Taman Ujung Water Palace Tour",
-  "metaDesc": "Private East Bali tour from Ubud - Besakih, Bali's largest and holiest temple, and the royal water palace of Taman Ujung. Only a 10% deposit to book.",
-  "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
-  "bookItem": "Besakih & Taman Ujung",
-  "bookDefault": "tour",
-  "items": [
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "besakih",
-    "img": "besakih-temple.webp",
-    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
-    "w": 1920,
-    "hgt": 1284,
-    "num": "Stop 1",
-    "name": "Besakih - The Mother Temple",
-    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "taman-ujung",
-    "img": "taman-ujung-view.webp",
-    "alt": "A visitor at the Taman Ujung water palace, Bali",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 2",
-    "name": "Taman Ujung Water Palace",
-    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
-   }
-  ],
-  "facts": [
-   {
-    "label": "Duration",
-    "value": "7–9 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$60 Pick-upUbud & nearby"
-   },
-   {
-    "label": "Availability",
-    "value": "Daily"
-   }
-  ],
-  "included": [
-   "Private air-conditioned car and fuel",
-   "Friendly English-speaking driver",
-   "Hotel or villa pick-up and drop-off in Ubud",
-   "Sarong rental at temples",
-   "Free cold water on board",
-   "Exclusive option: Entrance tickets for the listed attractions"
-  ],
-  "heroSlides": [
-   {
-    "src": "/assets/images/besakih-temple.webp",
-    "title": "Besakih"
-   },
-   {
-    "src": "/assets/images/taman-ujung-view.webp",
-    "title": "Taman Ujung Water Palace"
-   }
-  ],
-  "__href": "/besakih-taman-ujung.html",
-  "excluded": [
-   "Standard option: Entrance tickets to attractions",
-   "Meals and drinks",
-   "Tips and gratuities (optional)"
-  ]
- },
  "best-of-bali-3-day-package": {
-  "heroBg": "uluwatu-cliff-coast-bali.webp",
-  "title": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
-  "desc": "A private multi-day route through Bali's three signature areas - Ubud's temples and rice terraces, the Kintamani highlands and Besakih Mother Temple, then Uluwatu's cliffs and sunset Kecak. Same driver and car for all three days.",
+  "heroBg": "besakih-temple.webp",
+  "title": "3-Day Best of Bali Package: Ubud, East & West Bali",
+  "desc": "Three days, one driver and one car - Ubud's rice terraces and temples, the Gates of Heaven and Besakih in the east, then Taman Ayun and the Tanah Lot sunset in the west.",
   "hooks": [
    {
     "label": "Duration",
@@ -361,7 +241,7 @@ export const TOUR_CONTENT = {
    },
    {
     "label": "Area",
-    "value": "Ubud, Kintamani & Uluwatu"
+    "value": "Ubud, East & West Bali"
    },
    {
     "label": "Group",
@@ -398,8 +278,8 @@ export const TOUR_CONTENT = {
     "text": "3-Day Best of Bali Package"
    }
   ],
-  "metaTitle": "3-Day Best of Bali Package: Ubud, Kintamani & Uluwatu",
-  "metaDesc": "A private 3-day route with the same driver and car - Ubud's temples and rice terraces, Kintamani and Besakih Mother Temple, then Uluwatu's cliffs and sunset Kecak.",
+  "metaTitle": "3-Day Best of Bali Package: Ubud, East & West Bali",
+  "metaDesc": "A private 3-day Bali route with the same driver and car - Ubud's rice terraces and temples, Lempuyang and Besakih in the east, then the Tanah Lot sunset.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
   "items": [
    {
@@ -416,8 +296,44 @@ export const TOUR_CONTENT = {
     "w": 1200,
     "hgt": 900,
     "num": "Stop 1",
-    "name": "Tegalalang Rice Terrace",
-    "highlight": "The iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system."
+    "name": "Tegalalang Rice Terrace & Coffee Plantation",
+    "highlight": "We start at the iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system. Right beside it, walk through a working plantation to see how coffee grows and taste the famous kopi luwak straight from the source. Tastings are complimentary."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "tirta-empul",
+    "img": "tirta-empul-hero.jpg",
+    "alt": "Purification pools at Tirta Empul holy water temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Tirta Empul Holy Water Temple",
+    "highlight": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with confidence and respect."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "gunung-kawi",
+    "img": "gunung-kawi-hero.jpg",
+    "alt": "Rock-cut shrines at Gunung Kawi temple",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3 · Optional",
+    "name": "Gunung Kawi Temple",
+    "highlight": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "goa-gajah",
+    "img": "goa-gajah-hero.jpg",
+    "alt": "Carved entrance of Goa Gajah, the Elephant Cave",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 4",
+    "name": "Goa Gajah - The Elephant Cave",
+    "highlight": "A 9th-century sanctuary whose cave mouth is carved into a monstrous demon face you step straight through. Inside are ancient meditation niches; outside, bathing pools and jungle paths lead down to hidden shrines. One of Ubud's oldest and most mysterious sites."
    },
    {
     "type": "stop",
@@ -427,77 +343,109 @@ export const TOUR_CONTENT = {
     "alt": "Long-tailed macaques at the Sacred Monkey Forest, Ubud",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 2",
+    "num": "Stop 5",
     "name": "Sacred Monkey Forest Sanctuary",
-    "highlight": "A moss-covered jungle temple complex in the heart of Ubud, home to more than 700 long-tailed macaques. Overnight in Ubud."
+    "highlight": "We close the first day in the heart of Ubud, at a moss-covered jungle temple complex, home to more than 700 long-tailed macaques. Walk beneath ancient banyan roots and past weathered stone guardians in one of Bali's most atmospheric sanctuaries. Keep a firm hold on your belongings and give the monkeys room, and they are easy enough to be around. Overnight in Ubud."
    },
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 2 · Kintamani & Besakih"
+    "text": "Day 2 · East Bali"
    },
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "jeep-sunrise",
-    "img": "mount-batur-sunrise.webp",
-    "alt": "View over Mount Batur and its crater lake from Kintamani",
+    "refType": "destination",
+    "refId": "lempuyang-temple",
+    "img": "lempuyang.webp",
+    "alt": "Lempuyang, Bali",
+    "w": 2000,
+    "hgt": 3000,
+    "num": "Stop 6",
+    "name": "Lempuyang Temple - Gates of Heaven",
+    "highlight": "Bali's most photographed split gate, framing Mount Agung on a clear morning. We arrive early to beat the queue and handle the ticket, sarong, and the famous mirror photo so you don't waste half the day waiting in line."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "tirta-gangga",
+    "img": "tirta-gangga-photo-spot.webp",
+    "alt": "Tirta Gangga, Bali",
+    "w": 736,
+    "hgt": 1030,
+    "num": "Stop 7",
+    "name": "Tirta Gangga Water Garden",
+    "highlight": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "taman-ujung",
+    "img": "taman-ujung-view.webp",
+    "alt": "A visitor at the Taman Ujung water palace, Bali",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 3",
-    "name": "Kintamani & Mount Batur Viewpoint",
-    "highlight": "A highland lookout over the still-active Mount Batur volcano and its crater lake, with cool mountain air and coffee-growing hillsides. A relaxed roadside stop, not the pre-dawn trek."
+    "num": "Stop 8",
+    "name": "Taman Ujung Water Palace",
+    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
    },
    {
     "type": "stop",
     "refType": "destination",
     "refId": "besakih",
     "img": "besakih-temple.webp",
-    "alt": "Besakih Mother Temple on the slopes of Mount Agung",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 4",
-    "name": "Besakih Mother Temple",
-    "highlight": "Bali's largest and holiest temple complex, terraced up the slopes of Mount Agung. Overnight near Uluwatu."
+    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
+    "w": 1920,
+    "hgt": 1284,
+    "num": "Stop 9",
+    "name": "Besakih - The Mother Temple",
+    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included. Back to Ubud for the second night."
    },
    {
     "type": "sub",
     "tag": "h3",
-    "text": "Day 3 · Uluwatu"
+    "text": "Day 3 · West Bali"
    },
    {
     "type": "stop",
     "refType": "destination",
-    "refId": "uluwatu-temple",
-    "img": "uluwatu-temple.webp",
-    "alt": "Uluwatu Temple perched on a clifftop above the ocean",
+    "refId": "sangeh-monkey-forest",
+    "img": "monkey.jpg",
+    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
     "w": 1200,
-    "hgt": 900,
-    "num": "Stop 5",
-    "name": "Uluwatu Temple",
-    "highlight": "A clifftop temple 70 metres above the surf on Bali's southern tip, with resident macaques and sweeping ocean views."
+    "hgt": 800,
+    "num": "Stop 10",
+    "name": "Sangeh Monkey Forest",
+    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
    },
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "uluwatu-kecak",
-    "img": "uluwatu-sunset-kecak-dance.webp",
-    "alt": "Kecak fire dance performance at Uluwatu at sunset",
+    "refType": "destination",
+    "refId": "taman-ayun",
+    "img": "taman-ayun-hero.jpg",
+    "alt": "Tiered meru shrines across the moat at Taman Ayun temple",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 6",
-    "name": "Sunset Kecak Fire Dance",
-    "highlight": "A traditional Kecak performance at the clifftop amphitheater as the sun sets over the ocean - a fitting close to the trip, before drop-off."
+    "num": "Stop 11",
+    "name": "Taman Ayun Royal Temple",
+    "highlight": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "tanah-lot",
+    "img": "tanah-lot.webp",
+    "alt": "Tanah Lot temple on its offshore rock",
+    "w": 1152,
+    "hgt": 1536,
+    "num": "Stop 12",
+    "name": "Tanah Lot Sunset Temple",
+    "highlight": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia. Drop-off after sunset."
    }
   ],
   "facts": [
    {
     "label": "Duration",
     "value": "3 days / 2 nights"
-   },
-   {
-    "label": "Price",
-    "value": "$150"
    },
    {
     "label": "Pick-up",
@@ -522,24 +470,24 @@ export const TOUR_CONTENT = {
     "title": "Tegalalang Rice Terrace"
    },
    {
-    "src": "/assets/images/monkey-forest-temples.jpg",
-    "title": "Sacred Monkey Forest Sanctuary"
+    "src": "/assets/images/tirta-empul-hero.jpg",
+    "title": "Tirta Empul Holy Water Temple"
    },
    {
-    "src": "/assets/images/mount-batur-sunrise.webp",
-    "title": "Kintamani & Mount Batur Viewpoint"
+    "src": "/assets/images/lempuyang.webp",
+    "title": "Lempuyang - Gates of Heaven"
    },
    {
     "src": "/assets/images/besakih-temple.webp",
-    "title": "Besakih Mother Temple"
+    "title": "Besakih - The Mother Temple"
    },
    {
-    "src": "/assets/images/uluwatu-temple.webp",
-    "title": "Uluwatu Temple"
+    "src": "/assets/images/taman-ayun-hero.jpg",
+    "title": "Taman Ayun Royal Temple"
    },
    {
-    "src": "/assets/images/uluwatu-sunset-kecak-dance.webp",
-    "title": "Sunset Kecak Fire Dance"
+    "src": "/assets/images/tanah-lot.webp",
+    "title": "Tanah Lot Sunset Temple"
    }
   ],
   "__href": "/best-of-bali-3-day-package.html",
@@ -630,10 +578,6 @@ export const TOUR_CONTENT = {
    {
     "label": "Duration",
     "value": "7–9 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$130"
    },
    {
     "label": "Pick-up",
@@ -752,8 +696,8 @@ export const TOUR_CONTENT = {
     "value": "4–6 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -879,10 +823,6 @@ export const TOUR_CONTENT = {
     "value": "6–8 hours"
    },
    {
-    "label": "Price",
-    "value": "$45"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -923,16 +863,16 @@ export const TOUR_CONTENT = {
  },
  "jatiluwih-tour": {
   "heroBg": "jatiluwih.webp",
-  "title": "Jatiluwih UNESCO Rice Terrace Tour",
-  "desc": "A UNESCO World Heritage landscape of endless green rice terraces stretching to the horizon, still farmed the traditional subak way - a slow, quiet day out west with almost no crowds.",
+  "title": "Jatiluwih, Ulun Danu Beratan & Handara Gate Tour",
+  "desc": "The UNESCO rice terraces at Jatiluwih, the temple that floats on Lake Beratan, and the Handara gate framed by mountains - one cool highland day west of Ubud, at an easy pace.",
   "hooks": [
    {
     "label": "Duration",
-    "value": "4–6 hours"
+    "value": "9–11 hours"
    },
    {
     "label": "Area",
-    "value": "West Bali"
+    "value": "Bedugul Highlands"
    },
    {
     "label": "Group",
@@ -964,13 +904,13 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "text",
-    "text": "Jatiluwih Rice Terrace Tour"
+    "text": "Bedugul Highlands Tour"
    }
   ],
-  "metaTitle": "Jatiluwih UNESCO Rice Terrace Tour",
-  "metaDesc": "Private West Bali tour from Ubud to Jatiluwih, a UNESCO World Heritage rice terrace landscape with almost no crowds. Only a 10% deposit to book.",
+  "metaTitle": "Jatiluwih, Ulun Danu Beratan & Handara Gate Tour",
+  "metaDesc": "Private highland tour from Ubud - the Jatiluwih UNESCO rice terraces, the Ulun Danu Beratan lake temple and the Handara Gate. Only a 10% deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/jatiluwih.webp",
-  "bookItem": "Jatiluwih Rice Terrace Tour",
+  "bookItem": "Bedugul Highlands Tour",
   "bookDefault": "tour",
   "items": [
    {
@@ -984,16 +924,40 @@ export const TOUR_CONTENT = {
     "num": "Stop 1",
     "name": "Jatiluwih Rice Terraces",
     "highlight": "A UNESCO World Heritage landscape of endless green terraces stretching to the horizon with almost no crowds. Still farmed the traditional subak way, exactly as it has been for a thousand years. We build in time to walk one of the trails through the terraces, not just view them from the road."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "ulun-danu-beratan",
+    "img": "ulun-danu-beratan-hero.webp",
+    "alt": "Ulun Danu Beratan temple on the shore of Lake Bratan",
+    "w": 1920,
+    "hgt": 1237,
+    "num": "Stop 2",
+    "name": "Ulun Danu Beratan Lake Temple",
+    "highlight": "The temple that seems to float on Lake Beratan - the one printed on Indonesia's 50,000 rupiah note. Up in the highlands the air is cool and the mist rolls in off the water, which makes for the kind of photo you can't get anywhere else on the island."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "handara-gate",
+    "img": "handara-gate.webp",
+    "alt": "The Handara gate on the highland road at Bedugul",
+    "w": 1920,
+    "hgt": 1280,
+    "num": "Stop 3",
+    "name": "Handara Gate",
+    "highlight": "The towering Balinese gate framed by jungle-covered mountains - one of the island's most recognisable photo spots. It sits at the entrance of a highland golf resort, and we time it so you get your shot without the long queue."
    }
   ],
   "facts": [
    {
     "label": "Duration",
-    "value": "4–6 hours"
+    "value": "9–11 hours"
    },
    {
-    "label": "Price",
-    "value": "$45 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1004,8 +968,23 @@ export const TOUR_CONTENT = {
    "Private air-conditioned car and fuel",
    "Friendly English-speaking driver",
    "Hotel or villa pick-up and drop-off in Ubud",
+   "Sarong rental at temples",
    "Free cold water on board",
    "Exclusive option: Entrance tickets for the listed attractions"
+  ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/jatiluwih.webp",
+    "title": "Jatiluwih Rice Terraces"
+   },
+   {
+    "src": "/assets/images/ulun-danu-beratan-hero.webp",
+    "title": "Ulun Danu Beratan Lake Temple"
+   },
+   {
+    "src": "/assets/images/handara-gate.webp",
+    "title": "Handara Gate"
+   }
   ],
   "__href": "/jatiluwih-tour.html",
   "excluded": [
@@ -1109,8 +1088,8 @@ export const TOUR_CONTENT = {
     "value": "9–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$85 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1148,12 +1127,12 @@ export const TOUR_CONTENT = {
  },
  "lempuyang-tirta-gangga": {
   "heroBg": "lempuyang.webp",
-  "title": "Lempuyang Gates of Heaven & Tirta Gangga Water Garden Tour",
-  "desc": "The Gates of Heaven at Lempuyang, framing Mount Agung, and the royal water garden of Tirta Gangga - East Bali's two most photogenic stops in one relaxed day.",
+  "title": "East Bali: Lempuyang Gates of Heaven, Besakih & Tirta Gangga",
+  "desc": "The Gates of Heaven at Lempuyang first, while the queue is short, then the royal water gardens of Tirta Gangga and Taman Ujung, and Besakih on the slope of Mount Agung. A long day, one private car.",
   "hooks": [
    {
     "label": "Duration",
-    "value": "6–8 hours"
+    "value": "10–12 hours"
    },
    {
     "label": "Area",
@@ -1189,13 +1168,13 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "text",
-    "text": "Lempuyang & Tirta Gangga"
+    "text": "East Bali Tour"
    }
   ],
-  "metaTitle": "Lempuyang Gates of Heaven & Tirta Gangga Water Garden Tour",
-  "metaDesc": "Private East Bali tour from Ubud - the Gates of Heaven at Lempuyang and the royal water garden of Tirta Gangga. Only a 10% deposit to book.",
+  "metaTitle": "East Bali: Lempuyang Gates of Heaven, Besakih & Tirta Gangga",
+  "metaDesc": "Private East Bali day tour from Ubud - the Gates of Heaven at Lempuyang, the water gardens of Tirta Gangga and Taman Ujung, then Besakih. Only a 10% deposit.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/east-bali-tour-card.jpg",
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "items": [
    {
@@ -1221,16 +1200,40 @@ export const TOUR_CONTENT = {
     "num": "Stop 2",
     "name": "Tirta Gangga Water Garden",
     "highlight": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "taman-ujung",
+    "img": "taman-ujung-view.webp",
+    "alt": "A visitor at the Taman Ujung water palace, Bali",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 3",
+    "name": "Taman Ujung Water Palace",
+    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
+   },
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "besakih",
+    "img": "besakih-temple.webp",
+    "alt": "Tiered shrines climbing the slope at Besakih, Bali's mother temple",
+    "w": 1920,
+    "hgt": 1284,
+    "num": "Stop 4",
+    "name": "Besakih - The Mother Temple",
+    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included."
    }
   ],
   "facts": [
    {
     "label": "Duration",
-    "value": "6–8 hours"
+    "value": "10–12 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1253,6 +1256,14 @@ export const TOUR_CONTENT = {
    {
     "src": "/assets/images/tirta-gangga-photo-spot.webp",
     "title": "Tirta Gangga Water Garden"
+   },
+   {
+    "src": "/assets/images/taman-ujung-view.webp",
+    "title": "Taman Ujung Water Palace"
+   },
+   {
+    "src": "/assets/images/besakih-temple.webp",
+    "title": "Besakih"
    }
   ],
   "__href": "/lempuyang-tirta-gangga.html",
@@ -1355,8 +1366,8 @@ export const TOUR_CONTENT = {
     "value": "11–12 hours"
    },
    {
-    "label": "Price",
-    "value": "$95 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1483,10 +1494,6 @@ export const TOUR_CONTENT = {
     "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$55"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -1523,127 +1530,8 @@ export const TOUR_CONTENT = {
    "Meals, drinks, and tips (optional)"
   ]
  },
- "sangeh-tanah-lot": {
-  "heroBg": "tanah-lot.webp",
-  "title": "Sangeh Monkey Forest & Tanah Lot Tour",
-  "desc": "A quieter alternative to the Ubud monkey forest, followed by Bali's most photographed sea temple at sunset. Two stops, an easy pace, a private car, and a local driver.",
-  "hooks": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Area",
-    "value": "West Bali"
-   },
-   {
-    "label": "Group",
-    "value": "Up to 6 guests"
-   }
-  ],
-  "cta": "Book this program",
-  "ctaHref": "#booking",
-  "stopsTitle": "What You'll Do",
-  "stopsId": "stops",
-  "bookItem": "Sangeh Monkey Forest & Tanah Lot",
-  "bookDefault": "tour",
-  "crumb": [
-   {
-    "type": "link",
-    "href": "/",
-    "text": "Home"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "link",
-    "href": "/tour.html",
-    "text": "Tours"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "text",
-    "text": "Sangeh Monkey Forest & Tanah Lot"
-   }
-  ],
-  "metaTitle": "Sangeh Monkey Forest & Tanah Lot Tour",
-  "metaDesc": "Private tour from Ubud - the quiet nutmeg forest of Sangeh Monkey Forest, then the Tanah Lot sea temple at sunset. Only a 10% deposit to book.",
-  "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
-  "items": [
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "sangeh-monkey-forest",
-    "img": "monkey-forest-temples.jpg",
-    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 1",
-    "name": "Sangeh Monkey Forest",
-    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "tanah-lot",
-    "img": "tanah-lot.webp",
-    "alt": "Tanah Lot sea temple on its rock outcrop at sunset",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 2",
-    "name": "Tanah Lot Sea Temple",
-    "highlight": "Bali's most photographed temple, perched on a rock outcrop just offshore. We time the visit for late afternoon, so the day ends with the temple silhouetted against the sunset."
-   }
-  ],
-  "facts": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$50"
-   },
-   {
-    "label": "Pick-up",
-    "value": "Ubud & nearby"
-   },
-   {
-    "label": "Availability",
-    "value": "Daily"
-   }
-  ],
-  "included": [
-   "Private air-conditioned car and fuel",
-   "Friendly English-speaking driver",
-   "Hotel or villa pick-up and drop-off",
-   "Free cold water on board",
-   "Flexible, fully customizable itinerary",
-   "Exclusive option: Entrance tickets for the listed attractions"
-  ],
-  "heroSlides": [
-   {
-    "src": "/assets/images/monkey-forest-temples.jpg",
-    "title": "Sangeh Monkey Forest"
-   },
-   {
-    "src": "/assets/images/tanah-lot.webp",
-    "title": "Tanah Lot Sea Temple"
-   }
-  ],
-  "__href": "/sangeh-tanah-lot.html",
-  "excluded": [
-   "Standard option: Entrance tickets to attractions",
-   "Meals, drinks, and tips (optional)"
-  ]
- },
  "south-coast-sunset-kecak": {
-  "heroBg": "watersport-jetski.webp",
+  "heroBg": "uluwatu-temple-top.webp",
   "title": "Uluwatu Cliff Temple & Sunset Kecak Dance Tour",
   "desc": "The clifftop Uluwatu temple 70 metres above the surf, then the Kecak fire dance as the sun sets over the Indian Ocean - a relaxed half-day built around sunset.",
   "hooks": [
@@ -1698,13 +1586,25 @@ export const TOUR_CONTENT = {
     "type": "stop",
     "refType": "destination",
     "refId": "uluwatu-temple",
-    "img": "uluwatu-sunset-kecak-dance.webp",
-    "alt": "Uluwatu Temple, Bali",
-    "w": 1920,
-    "hgt": 1279,
+    "img": "uluwatu-temple.webp",
+    "alt": "Uluwatu Temple perched on a clifftop above the ocean",
+    "w": 1400,
+    "hgt": 933,
     "num": "Stop 1",
-    "name": "Uluwatu Clifftop Temple & Sunset Kecak",
-    "highlight": "One of Bali's six key spiritual pillars, perched on a cliff 70 metres above the crashing surf. Walk the clifftop path for wide-open ocean views - and keep an eye on your belongings, the resident monkeys are famously cheeky. We stay on for the Kecak in the temple's cliff-edge amphitheatre: more than seventy chanting men around a ring of fire, retelling the Ramayana with the sunset over the ocean right behind the stage."
+    "name": "Uluwatu Cliff Temple",
+    "highlight": "One of Bali's six key spiritual pillars, perched on a cliff 70 metres above the crashing surf. Walk the clifftop path for wide-open ocean views - and keep an eye on your belongings, the resident monkeys are famously cheeky."
+   },
+   {
+    "type": "stop",
+    "refType": "experience",
+    "refId": "uluwatu-kecak",
+    "img": "uluwatu-sunset-kecak-dance.webp",
+    "alt": "Kecak fire dance performance at Uluwatu at sunset",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 2",
+    "name": "Sunset Kecak Fire Dance",
+    "highlight": "We stay on for the Kecak in the temple's cliff-edge amphitheatre: more than seventy chanting men around a ring of fire, retelling the Ramayana with the sunset over the ocean right behind the stage."
    }
   ],
   "facts": [
@@ -1713,8 +1613,8 @@ export const TOUR_CONTENT = {
     "value": "4–6 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1729,6 +1629,16 @@ export const TOUR_CONTENT = {
    "Flexible, fully customizable itinerary",
    "Exclusive option: temple entrance & Kecak dance tickets included"
   ],
+  "heroSlides": [
+   {
+    "src": "/assets/images/uluwatu-temple-top.webp",
+    "title": "Uluwatu Cliff Temple"
+   },
+   {
+    "src": "/assets/images/uluwatu-sunset-kecak-dance.webp",
+    "title": "Sunset Kecak Fire Dance"
+   }
+  ],
   "__href": "/south-coast-sunset-kecak.html",
   "excluded": [
    "Standard option: temple entrance and Kecak dance tickets",
@@ -1738,12 +1648,12 @@ export const TOUR_CONTENT = {
  },
  "tanah-lot-taman-ayun": {
   "heroBg": "tanah-lot.webp",
-  "title": "Tanah Lot Sunset Temple & Taman Ayun Royal Temple Tour",
-  "desc": "The royal state temple of Taman Ayun, floating inside its wide moat in Mengwi, then the sea temple of Tanah Lot as the sun drops behind it - a relaxed half-day west of Ubud built around sunset.",
+  "title": "Sangeh, Taman Ayun & Tanah Lot Sunset Tour",
+  "desc": "The quiet nutmeg forest at Sangeh, the royal temple of Taman Ayun floating inside its moat, then Tanah Lot as the sun drops behind it - an easy day west of Ubud built around sunset.",
   "hooks": [
    {
     "label": "Duration",
-    "value": "5–7 hours"
+    "value": "8–10 hours"
    },
    {
     "label": "Area",
@@ -1779,15 +1689,27 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "text",
-    "text": "Tanah Lot & Taman Ayun"
+    "text": "West Bali Tour"
    }
   ],
-  "metaTitle": "Tanah Lot Sunset Temple & Taman Ayun Royal Temple Tour",
-  "metaDesc": "Private West Bali half-day tour from Ubud - the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset on the sea. Only a 10% deposit to book.",
+  "metaTitle": "Sangeh, Taman Ayun & Tanah Lot Sunset Tour",
+  "metaDesc": "Private West Bali tour from Ubud - Sangeh Monkey Forest, the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset. Only a 10% deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
-  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookItem": "West Bali Tour",
   "bookDefault": "tour",
   "items": [
+   {
+    "type": "stop",
+    "refType": "destination",
+    "refId": "sangeh-monkey-forest",
+    "img": "monkey.jpg",
+    "alt": "Long-tailed macaques among the nutmeg trees at Sangeh Monkey Forest",
+    "w": 1200,
+    "hgt": 800,
+    "num": "Stop 1",
+    "name": "Sangeh Monkey Forest",
+    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
+   },
    {
     "type": "stop",
     "refType": "destination",
@@ -1796,7 +1718,7 @@ export const TOUR_CONTENT = {
     "alt": "Tiered meru shrines across the moat at Taman Ayun temple",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 1",
+    "num": "Stop 2",
     "name": "Taman Ayun Royal Temple",
     "highlight": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
    },
@@ -1808,7 +1730,7 @@ export const TOUR_CONTENT = {
     "alt": "Tanah Lot temple on its offshore rock",
     "w": 1152,
     "hgt": 1536,
-    "num": "Stop 2",
+    "num": "Stop 3",
     "name": "Tanah Lot Sunset Temple",
     "highlight": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia."
    }
@@ -1816,11 +1738,11 @@ export const TOUR_CONTENT = {
   "facts": [
    {
     "label": "Duration",
-    "value": "5–7 hours"
+    "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$50 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1836,6 +1758,10 @@ export const TOUR_CONTENT = {
    "Exclusive option: Entrance tickets for the listed attractions"
   ],
   "heroSlides": [
+   {
+    "src": "/assets/images/monkey.jpg",
+    "title": "Sangeh Monkey Forest"
+   },
    {
     "src": "/assets/images/taman-ayun-hero.jpg",
     "title": "Taman Ayun Royal Temple"
@@ -1855,7 +1781,7 @@ export const TOUR_CONTENT = {
  "ubud-atv-adventure": {
   "heroBg": "atv-ride-jungle.webp",
   "title": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
-  "desc": "Tear through jungle tracks, rice fields, and river crossings on an ATV quad bike, then meet the animals at Bali Zoo and Bird Park before cooling off at Tegenungan waterfall.",
+  "desc": "Tear through jungle tracks, rice fields, and river crossings on an ATV quad bike, then spend the rest of the day with the animals at Bali Zoo and the Bali Bird Park. A private car, a local driver, your pace.",
   "hooks": [
    {
     "label": "Duration",
@@ -1901,7 +1827,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
-  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride, then Bali Zoo, Bali Bird Park, and the Tegenungan waterfall. Only a 10% deposit to book.",
+  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride through rice fields and river crossings, then Bali Zoo and the Bali Bird Park. Only a 10% deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-atv-adventure-card.jpg",
   "items": [
    {
@@ -1939,28 +1865,12 @@ export const TOUR_CONTENT = {
     "num": "Stop 3",
     "name": "Bali Bird Park",
     "highlight": "Right nearby, stroll walk-in aviaries home to more than 1,000 birds - from rare Bali starlings to giant hornbills - with free-flight shows overhead. Colourful, shady, and easy-going, it pairs naturally with the zoo."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "tegenungan-waterfall",
-    "img": "tegenungan-waterfall-hero.jpg",
-    "alt": "Tegenungan waterfall dropping into its plunge pool",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 4",
-    "name": "Tegenungan Waterfall",
-    "highlight": "A wide, powerful waterfall in the jungle just outside Ubud, with a natural pool at its base for a cooling swim when the water is calm. A short walk down, and a refreshing way to end the day."
    }
   ],
   "facts": [
    {
     "label": "Duration",
     "value": "6–8 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$80"
    },
    {
     "label": "Pick-up",
@@ -1991,10 +1901,6 @@ export const TOUR_CONTENT = {
    {
     "src": "/assets/images/bird-park-macaw-show.webp",
     "title": "Bali Bird Park"
-   },
-   {
-    "src": "/assets/images/tegenungan-waterfall-hero.jpg",
-    "title": "Tegenungan Waterfall"
    }
   ],
   "__href": "/ubud-atv-adventure.html",
@@ -2106,27 +2012,27 @@ export const TOUR_CONTENT = {
    },
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "kecak-dance",
-    "img": "kecak.jpg",
-    "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
-    "w": 1200,
-    "hgt": 900,
-    "num": "Stop 5",
-    "name": "Kecak Fire Dance",
-    "highlight": "We close the day with the Kecak - a circle of dozens of chanting men, no instruments, and a fire-lit retelling of the Ramayana as the sun goes down. Raw, powerful, and a fitting end to a full day of Balinese art and culture."
-   },
-   {
-    "type": "stop",
     "refType": "destination",
     "refId": "ubud-market",
     "img": "ubud-market-hero.jpg",
     "alt": "Ubud Traditional Market",
     "w": 1200,
     "hgt": 1157,
-    "num": "Stop 6 · Optional",
+    "num": "Stop 5 · Optional",
     "name": "Ubud Traditional Market",
     "highlight": "Pasar Ubud, right across from the Royal Palace - produce and offering flowers in the morning, textiles, woodcarving, and souvenir stalls the rest of the day. Easy to fold in on the way between stops if you'd like some time to browse and bargain."
+   },
+   {
+    "type": "stop",
+    "refType": "experience",
+    "refId": "kecak-dance",
+    "img": "kecak.jpg",
+    "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
+    "w": 1200,
+    "hgt": 900,
+    "num": "Stop 6",
+    "name": "Kecak Fire Dance",
+    "highlight": "We close the day with the Kecak - a circle of dozens of chanting men, no instruments, and a fire-lit retelling of the Ramayana as the sun goes down. Raw, powerful, and a fitting end to a full day of Balinese art and culture."
    }
   ],
   "facts": [
@@ -2135,8 +2041,8 @@ export const TOUR_CONTENT = {
     "value": "6–8 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -2169,12 +2075,12 @@ export const TOUR_CONTENT = {
     "title": "Ubud Royal Palace"
    },
    {
-    "src": "/assets/images/kecak.jpg",
-    "title": "Kecak Fire Dance"
-   },
-   {
     "src": "/assets/images/ubud-market-hero.jpg",
     "title": "Ubud Traditional Market"
+   },
+   {
+    "src": "/assets/images/kecak.jpg",
+    "title": "Kecak Fire Dance"
    }
   ],
   "__href": "/ubud-culture-day.html",
@@ -2188,7 +2094,7 @@ export const TOUR_CONTENT = {
  "ubud-rafting-adventure": {
   "heroBg": "rafting.webp",
   "title": "Ayung River Rafting & Tegenungan Waterfall Tour",
-  "desc": "Paddle the Ayung River through jungle gorges and hidden waterfalls, then dry off among the Tegalalang rice terraces, Luwak coffee, and the Tegenungan waterfall. A private car, a local driver, your pace.",
+  "desc": "Start among the Tegalalang rice terraces and a Luwak coffee tasting, then paddle the Ayung River through jungle gorges, and finish at the Tegenungan waterfall. A private car, a local driver, your pace.",
   "hooks": [
    {
     "label": "Duration",
@@ -2239,25 +2145,13 @@ export const TOUR_CONTENT = {
   "items": [
    {
     "type": "stop",
-    "refType": "experience",
-    "refId": "rafting",
-    "img": "rafting.webp",
-    "alt": "A rafting crew punching through whitewater rapids",
-    "w": 5609,
-    "hgt": 3739,
-    "num": "Stop 1",
-    "name": "Ayung River Rafting",
-    "highlight": "We start with the highlight - a 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. Beginners and families welcome; all safety gear provided."
-   },
-   {
-    "type": "stop",
     "refType": "destination",
     "refId": "tegalalang-rice-terrace",
     "img": "tegalalang-rice-terrace-hero.jpg",
     "alt": "The stepped rice terraces at Tegalalang, north of Ubud",
     "w": 1200,
     "hgt": 900,
-    "num": "Stop 2",
+    "num": "Stop 1",
     "name": "Tegalalang Rice Terrace",
     "highlight": "Bali's most iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by the thousand year old subak irrigation system. Wander the paths, catch the swings and photo spots, and take in one of the island's signature views."
    },
@@ -2269,9 +2163,21 @@ export const TOUR_CONTENT = {
     "alt": "A working coffee and spice plantation near Ubud",
     "w": 1200,
     "hgt": 1545,
-    "num": "Stop 3",
+    "num": "Stop 2",
     "name": "Luwak Coffee Plantation",
     "highlight": "Walk through a working plantation to see how coffee, cacao, and spices grow, then taste your way through a tray of Balinese coffees and teas - including the famous kopi luwak straight from the source. Tastings are complimentary."
+   },
+   {
+    "type": "stop",
+    "refType": "experience",
+    "refId": "rafting",
+    "img": "rafting.webp",
+    "alt": "A rafting crew punching through whitewater rapids",
+    "w": 5609,
+    "hgt": 3739,
+    "num": "Stop 3",
+    "name": "Ayung River Rafting",
+    "highlight": "The main event - a 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. Beginners and families welcome; all safety gear provided."
    },
    {
     "type": "stop",
@@ -2292,10 +2198,6 @@ export const TOUR_CONTENT = {
     "value": "6–8 hours"
    },
    {
-    "label": "Price",
-    "value": "$75"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -2314,16 +2216,16 @@ export const TOUR_CONTENT = {
   ],
   "heroSlides": [
    {
-    "src": "/assets/images/rafting.webp",
-    "title": "Ayung River Rafting"
-   },
-   {
     "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",
     "title": "Tegalalang Rice Terrace"
    },
    {
     "src": "/assets/images/coffee-plantation-hero.jpg",
     "title": "Luwak Coffee Plantation"
+   },
+   {
+    "src": "/assets/images/rafting.webp",
+    "title": "Ayung River Rafting"
    },
    {
     "src": "/assets/images/tegenungan-waterfall-hero.jpg",
@@ -2456,8 +2358,8 @@ export const TOUR_CONTENT = {
     "value": "5–7 hours"
    },
    {
-    "label": "Price",
-    "value": "$45 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -2495,126 +2397,6 @@ export const TOUR_CONTENT = {
    }
   ],
   "__href": "/ubud-tour.html",
-  "excluded": [
-   "Standard option: Entrance tickets to attractions",
-   "Meals and drinks",
-   "Tips and gratuities (optional)"
-  ]
- },
- "ulun-danu-tanah-lot": {
-  "heroBg": "ulun-danu-beratan-hero.webp",
-  "title": "Ulun Danu Beratan & Handara Gate Instagram Tour",
-  "desc": "A cool highland loop up to the temple that floats on Lake Beratan, then the famous Handara gate framed by jungle-covered mountains - two of Bali's most photographed spots in one relaxed day.",
-  "hooks": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Area",
-    "value": "West Bali"
-   },
-   {
-    "label": "Group",
-    "value": "Up to 6 guests"
-   }
-  ],
-  "cta": "Book this program",
-  "ctaHref": "#booking",
-  "stopsTitle": "What You'll Do",
-  "stopsId": "stops",
-  "bookItem": "Ulun Danu Beratan & Handara Gate",
-  "bookDefault": "tour",
-  "crumb": [
-   {
-    "type": "link",
-    "href": "/",
-    "text": "Home"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "link",
-    "href": "/tour.html",
-    "text": "Tours"
-   },
-   {
-    "type": "sep",
-    "text": "›"
-   },
-   {
-    "type": "text",
-    "text": "Ulun Danu Beratan & Handara Gate"
-   }
-  ],
-  "metaTitle": "Ulun Danu Beratan & Handara Gate Instagram Tour",
-  "metaDesc": "Private West Bali tour from Ubud - the Ulun Danu Beratan lake temple and the famous Handara Gate, two of Bali's most photographed spots in one highland loop.",
-  "ogImage": "https://cahyanaubudexperience.com/assets/images/west-bali-tour-card.jpg",
-  "items": [
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "ulun-danu-beratan",
-    "img": "ulun-danu-beratan-hero.webp",
-    "alt": "Ulun Danu Beratan temple on the shore of Lake Bratan",
-    "w": 1920,
-    "hgt": 1237,
-    "num": "Stop 1",
-    "name": "Ulun Danu Beratan Lake Temple",
-    "highlight": "The temple that seems to float on Lake Beratan - the one printed on Indonesia's 50,000 rupiah note. Up in the highlands the air is cool and the mist rolls in off the water, which makes for the kind of photo you can't get anywhere else on the island."
-   },
-   {
-    "type": "stop",
-    "refType": "destination",
-    "refId": "handara-gate",
-    "img": "handara-gate.webp",
-    "alt": "The Handara gate on the highland road at Bedugul",
-    "w": 1920,
-    "hgt": 1280,
-    "num": "Stop 2",
-    "name": "Handara Gate",
-    "highlight": "The towering Balinese gate framed by jungle-covered mountains - one of the island's most recognisable photo spots. It sits at the entrance of a highland golf resort, and we time it so you get your shot without the long queue."
-   }
-  ],
-  "facts": [
-   {
-    "label": "Duration",
-    "value": "5–7 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$60"
-   },
-   {
-    "label": "Pick-up",
-    "value": "Ubud & nearby"
-   },
-   {
-    "label": "Availability",
-    "value": "Daily"
-   }
-  ],
-  "included": [
-   "Private air-conditioned car and fuel",
-   "Friendly English-speaking driver",
-   "Hotel or villa pick-up and drop-off in Ubud",
-   "Sarong rental at temples",
-   "Free cold water on board",
-   "Exclusive option: Entrance tickets for the listed attractions"
-  ],
-  "heroSlides": [
-   {
-    "src": "/assets/images/ulun-danu-beratan-hero.webp",
-    "title": "Ulun Danu Beratan Lake Temple"
-   },
-   {
-    "src": "/assets/images/handara-gate.webp",
-    "title": "Handara Gate"
-   }
-  ],
-  "__href": "/ulun-danu-tanah-lot.html",
   "excluded": [
    "Standard option: Entrance tickets to attractions",
    "Meals and drinks",

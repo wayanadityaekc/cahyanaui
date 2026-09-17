@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { Calendar, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
@@ -15,37 +16,34 @@ const SERVICE_TYPES = [
   { value: 'transfer', label: 'Route Transfer' },
 ];
 
-const CATEGORY_OF = { tour: ['tour', 'combo'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
+// A single destination is category 'place' on the server but books exactly like a
+// tour - per car, same Standard/Exclusive split - so it lives under Tour Program.
+// Leaving it out meant a destination page's preset item matched nothing in the
+// list and got cleared by the effect below, which blanked the price and disabled
+// Book Now on all 34 of them.
+const CATEGORY_OF = { tour: ['tour', 'combo', 'place'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
 
 const MODE_INFO = {
   standard: { label: 'Standard', desc: 'Private car, driver & fuel. Entrance tickets paid as you go.' },
   exclusive: { label: 'Exclusive', desc: 'Everything in Standard, plus all entrance tickets prepaid.' },
 };
 
+// Single activities & performances (ATV, Kecak Dance, etc.) have no "pay tickets
+// separately" tier - the price is always ticket + transport, so Exclusive is the
+// only real option. Standard still shows (visual consistency with tour pages) but
+// is locked - see `isActivity` below.
+const ACTIVITY_MODE_INFO = {
+  exclusive: { label: 'Exclusive', desc: 'Entrance ticket and return transport are already included in this price.' },
+};
+
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-const CAL_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />
-  </svg>
-);
-const PEOPLE_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="8" r="3.2" /><path d="M5 20c0-3.4 3.1-5.2 7-5.2s7 1.8 7 5.2" />
-  </svg>
-);
-const SPARK_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 3l1.8 4.9L18.5 9l-4.7 1.1L12 15l-1.8-4.9L5.5 9l4.7-1.1z" /><path d="M18 15l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" />
-  </svg>
-);
-const SHIELD_ICON = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" />
-  </svg>
-);
+const CAL_ICON = <Calendar strokeWidth={1.6} />;
+const PEOPLE_ICON = <UserRound strokeWidth={1.6} />;
+const SPARK_ICON = <Sparkles strokeWidth={1.5} />;
+const SHIELD_ICON = <ShieldCheck strokeWidth={1.6} />;
 
-export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook, variant = 'standalone' }) {
+export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook, variant = 'standalone', belowPrice }) {
   const { setGuests, displayGuests } = useTripPrefs();
   const pricing = usePricing();
   const { openBooking } = useBooking();
@@ -67,18 +65,29 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     return catalog.items.filter((i) => cats.includes(i.category) && i.active).map((i) => ({ value: i.name, label: i.name }));
   }, [catalog, type]);
 
+  // Clearing an item that is not in the list belongs to the generic picker. A
+  // detail page presets its item and hides the pickers, so there is nothing for
+  // the guest to correct - wiping it there just breaks the page silently.
   useEffect(() => {
+    if (locked) return;
     if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
-  }, [itemOptions, item]);
+  }, [locked, itemOptions, item]);
 
   const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;
   const transferEntry = catalog && item ? catalog.transfers.find((t) => t.route === item) : null;
   const hasExclusive = !!(entry && entry.hasExclusive);
+  // Single activities/performances: no Standard-without-ticket tier exists, so the
+  // toggle is shown locked on Exclusive rather than hidden - keeps the booking card
+  // visually consistent with tour pages instead of silently dropping a section.
+  const isActivity = !!(entry && (entry.category === 'experience' || entry.category === 'performance'));
+  const showToggle = hasExclusive || isActivity;
+  const effectiveMode = isActivity ? 'exclusive' : mode;
+  const modeInfo = isActivity ? ACTIVITY_MODE_INFO : MODE_INFO;
 
   const symbol = (catalog && catalog.symbol) || '$';
   const fmt = (n) => (n == null ? '-' : symbol + n.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
 
-  const band = entry ? (mode === 'exclusive' && entry.exclusive ? entry.exclusive : entry.standard) : null;
+  const band = entry ? (effectiveMode === 'exclusive' && entry.exclusive ? entry.exclusive : entry.standard) : null;
   const display = band ? band.display : transferEntry ? transferEntry.display : null;
   const priceText = fmt(display);
 
@@ -92,7 +101,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     service: item,
     date,
     guests: displayGuests,
-    mode: hasExclusive ? mode : 'standard',
+    mode: showToggle ? effectiveMode : 'standard',
     return: false,
   });
 
@@ -123,8 +132,8 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const cardCls = isSidebar
     ? 'max-w-none m-0 py-6 px-[1.4rem] rounded-none bg-white border-none text-left'
     : 'max-w-[900px] min-[993px]:max-w-[1100px] mx-auto p-8 rounded-md bg-white shadow-md text-left';
-  const typeBtn = (on) =>
-    `flex-1 py-2 px-2 border-none rounded-pill font-body text-small font-semibold cursor-pointer transition-[background-color,color] duration-[var(--dur)] ease-[ease] ${on ? 'text-white bg-cta' : 'text-green bg-transparent'}`;
+  const typeBtn = (on, disabled) =>
+    `flex-1 py-2 px-2 border-none rounded-pill font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${disabled ? 'text-muted bg-transparent cursor-not-allowed opacity-60' : on ? 'text-white bg-cta cursor-pointer' : 'text-green bg-transparent cursor-pointer'}`;
   return (
     <section className={sectionCls} id="booking">
       <div className={cardCls}>
@@ -146,19 +155,32 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           <span className="block mt-[0.45rem] text-small text-muted">{unit} · {displayGuests} {guestWord}</span>
         </div>
 
-        {hasExclusive && (
+        {/* Slot directly under the price: the attraction pages put the tour
+            comparison here, so the guest reads "this place alone costs X" and
+            "the day that includes it costs Y" as one thought. */}
+        {belowPrice}
+
+        {showToggle && (
           <div className="flex p-[3px] mb-[0.4rem] [border:1px_solid_rgba(34,32,28,0.5)] rounded-pill bg-[rgba(34,32,28,0.08)]" id="booking-type">
-            <button type="button" className={typeBtn(mode === 'standard')} onClick={() => setMode('standard')}>Standard</button>
-            <button type="button" className={typeBtn(mode === 'exclusive')} onClick={() => setMode('exclusive')}>Exclusive</button>
+            <button
+              type="button"
+              className={typeBtn(effectiveMode === 'standard', isActivity)}
+              onClick={() => !isActivity && setMode('standard')}
+              disabled={isActivity}
+              title={isActivity ? 'This activity always includes the entrance ticket - Standard is not available.' : undefined}
+            >
+              Standard
+            </button>
+            <button type="button" className={typeBtn(effectiveMode === 'exclusive', false)} onClick={() => setMode('exclusive')}>Exclusive</button>
           </div>
         )}
 
-        {hasExclusive && (
-          <div className="flex items-start gap-[0.6rem] mb-[0.9rem] py-[0.7rem] px-[0.85rem] [border:1px_solid_var(--line)] [border-left:3px_solid_var(--color-cta)] rounded-md bg-cream animate-[bookcardNoteIn_var(--dur)_var(--ease)]" key={mode}>
+        {showToggle && (
+          <div className="flex items-start gap-[0.6rem] mb-[0.9rem] py-[0.7rem] px-[0.85rem] [border:1px_solid_var(--line)] [border-left:3px_solid_var(--color-cta)] rounded-md bg-cream animate-[bookcardNoteIn_var(--dur)_var(--ease)]" key={effectiveMode}>
             <span className="flex-none inline-flex w-5 h-5 mt-px text-amber [&>svg]:w-full [&>svg]:h-full" aria-hidden="true">{SPARK_ICON}</span>
             <span className="flex-1 min-w-0">
-              <b className="block text-strong font-semibold text-gold">{MODE_INFO[mode].label}</b>
-              <span className="block mt-[0.1rem] text-small leading-[1.4] text-muted">{MODE_INFO[mode].desc}</span>
+              <b className="block text-strong font-semibold text-gold">{modeInfo[effectiveMode].label}</b>
+              <span className="block mt-[0.1rem] text-small leading-[1.4] text-muted">{modeInfo[effectiveMode].desc}</span>
             </span>
           </div>
         )}
@@ -176,9 +198,9 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         </div>
 
         <button
-          className="bookcard__cta flex flex-none w-full max-w-none items-center justify-center h-[2.9rem] px-[0.85rem] border-none border-cta rounded-pill font-body text-[1rem] font-semibold text-center no-underline text-white bg-cta cursor-pointer transition-[background-color,color,transform] duration-[var(--dur)] ease-[ease] hover:bg-cta-d"
+          className="bookcard__cta flex flex-none w-full max-w-none items-center justify-center h-[2.9rem] px-[0.85rem] border-none border-cta rounded-pill font-body text-[1rem] font-semibold text-center no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d"
           id="book-now"
-          onClick={() => (onBook ? onBook(item, date, hasExclusive ? mode : 'standard') : book())}
+          onClick={() => (onBook ? onBook(item, date, showToggle ? effectiveMode : 'standard') : book())}
           disabled={!item}
         >
           Book Now

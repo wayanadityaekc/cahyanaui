@@ -9,4 +9,4 @@
 export const BTN_PILL =
   'inline-block py-[0.85rem] px-[1.9rem] rounded-pill [border:1px_solid_var(--color-gold)] ' +
   'bg-white text-gold-d font-body font-semibold text-h3 no-underline ' +
-  '[transition:background-color_var(--dur)_ease,color_var(--dur)_ease] hover:bg-gold hover:text-white';
+  '[transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-gold hover:text-white';

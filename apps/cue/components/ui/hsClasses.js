@@ -17,7 +17,7 @@
 const CONTROL_COMMON =
   'w-full bg-white font-body font-normal text-field text-green text-left cursor-pointer rounded-md ' +
   '[border:1px_solid_var(--line)] ' +
-  '[transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease] ' +
+  '[transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ' +
   'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
   'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
 
@@ -119,7 +119,7 @@ export const PANEL_HEAD_BOOKDATE =
 export const HS_CAL = 'pt-4 px-4 pb-[6px] max-h-[340px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [overscroll-behavior:contain] [@media(max-width:768px)]:max-h-none [@media(max-width:768px)]:overflow-visible';
 export const CAL_CAP = 'flex items-center justify-between gap-[0.5rem] font-body font-semibold text-[1rem] text-green mb-3';
 export const CAL_CAP_SPAN = 'flex-[1_1_auto] text-center';
-export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-white text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease] hover:bg-cream hover:[border-color:var(--color-gold)]';
+export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-white text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';
 // grid-cols-7 Tailwind = repeat(7,minmax(0,1fr)); asli pakai repeat(7,1fr) (min auto) ->
 // beda sub-pixel, jadi pakai arbitrary biar persis.
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';

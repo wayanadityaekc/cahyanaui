@@ -8,6 +8,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
+import ChatFab from '@/components/booking/ChatFab';
 
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
@@ -40,13 +41,14 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
         <link rel="stylesheet" href={`/style.css?v=${STYLE_V}`} />
       </head>
-      <body>
+      <body className="max-md:has-[.stickybar]:pb-[60px]">
         <LoadingScreen />
         <Providers>
           <Navbar />
           {children}
           <Footer />
           <BookConfirmModal />
+          <ChatFab />
         </Providers>
       </body>
     </html>

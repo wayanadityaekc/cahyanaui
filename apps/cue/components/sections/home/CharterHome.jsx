@@ -2,6 +2,7 @@
 
 import Slider from '@/components/ui/Slider';
 import CharterPrice from '@/components/CharterPrice';
+import CharterSurcharge from '@/components/CharterSurcharge';
 import { BADGE_POPULAR } from '@/components/ui/cardClasses';
 import { CHARTER_CARDS } from '@/content/shared/home';
 
@@ -10,7 +11,7 @@ import { CHARTER_CARDS } from '@/content/shared/home';
 // utilities di sini. Badge "Popular" pakai BADGE_POPULAR shared (cardClasses.js).
 const CARD_BASE = 'relative flex-[0_0_220px] [scroll-snap-align:start] flex flex-col rounded-md p-[var(--space-3)] bg-white';
 const chcard = (pop) => `${CARD_BASE} ${pop ? '[border:2px_solid_var(--color-cta)]' : '[border:1px_solid_var(--line)]'}`;
-const BTN_BASE = 'mt-auto w-full inline-flex items-center justify-center rounded-pill h-[2.7rem] font-semibold text-strong no-underline [transition:background_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease)]';
+const BTN_BASE = 'mt-auto w-full inline-flex items-center justify-center rounded-pill h-[2.7rem] font-semibold text-strong no-underline [transition:background_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
 const chbtn = (solid) => `${BTN_BASE} ${solid ? 'bg-cta text-white hover:bg-cta-d' : 'bg-white text-gold [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]'}`;
 
 export default function CharterHome() {
@@ -44,7 +45,7 @@ export default function CharterHome() {
         </Slider>
 
         <p className="text-center mt-[var(--space-4)] text-small text-muted">
-          Only a <b className="text-gold font-semibold">10% deposit</b> to book &middot; prices per car, pick-up outside Ubud +$7
+          Only a <b className="text-gold font-semibold">10% deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
         </p>
       </div>
     </section>

@@ -44,6 +44,9 @@ jobs:
       - name: Verify every referenced asset exists and pages carry a favicon
         run: node tools/check-assets.js
 
+      - name: Verify every declared transition actually animates something
+        run: node tools/check-motion.js
+
       - name: Publish out/ to the deploy branch
         run: |
           cd out

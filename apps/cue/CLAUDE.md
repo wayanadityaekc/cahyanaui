@@ -155,6 +155,21 @@ When unsure, ask first (keep it short).
   gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
   Semua tombol aksi = **pill** (border-radius 999px). Chip logo bayar & toggle nggak.
 - Hover lift: keep it subtle, not harsh.
+- **Ikon = `lucide-react`** (Sep 2026, Wayan pilih opsi "full Lucide" setelah lihat sheet
+  perbandingan lama-vs-Lucide). Ikon baru = import dari `lucide-react`, **JANGAN gambar SVG
+  manual lagi**. Aturannya:
+  - **WAJIB kasih class ukuran eksplisit** (`w-4 h-4` / `w-[var(--icon-sm)]` / lewat `[&>svg]`
+    di parent). Lucide nge-render atribut `width/height=24`, jadi ikon yang gak dikasih ukuran
+    bakal melar jadi 24px.
+  - `strokeWidth` cuma dioper kalau BUKAN 2 (default Lucide) — mis. `strokeWidth={1.7}`.
+  - Ikon yang dulu **solid** (bintang rating, badge kategori) dikasih `fill="currentColor"`
+    biar gak berubah jadi outline.
+  - **Masih hand-drawn & JANGAN diganti** (Lucide gak punya): 7 logo pembayaran
+    (`PayChips` + `Footer`), bendera mata uang (`FlagDefs`/`CurrencyPicker`).
+    (Glyph WhatsApp hand-drawn `BookBar` udah dihapus Sep 2026 bareng tombol
+    WhatsApp-nya — footer udah lama pakai Lucide `MessageCircle`, bukan ini.)
+  - Verifikasi: harness `icons-snap.mjs` + `icons-diff.mjs` di scratchpad — patokannya
+    `boxDrift=0` & `countDrift=0` (gak ada ikon yang berubah ukuran / ilang).
 - Icons: SVG, **no emoji**. Ukuran ikon inline kecil pakai token (Agu 2026): `--icon-sm` 16px
   (meta jam/lokasi/pax, kontak, chip, sosmed) · `--icon-md` 20px (nav cart/akun, book-bar,
   toggle, search) · `--icon-lg` 24px (ikon aksi lebih besar). Dulu berserakan 13-23px, di-snap
@@ -432,12 +447,152 @@ Order **must be kept** (declarations first, run last):
   error** merah, **hairline** `0 0 0 1px`. Sama filosofinya kayak amber/gold: satuin yang
   kebetulan duplikat, jaga yang punya makna.
 - **Motion (token, Agu 2026)**: durasi transisi + easing dipusatin biar animasi satu ritme.
+  **BUG 3 MINGGU (dibetulin Sep 2026)**: `--dur-fast` di `style.css` ketulis
+  `--dur-fast: var(--dur-fast)` - nunjuk dirinya sendiri, jadi tokennya resolve ke KOSONG. Tiap
+  `transition: ... var(--dur-fast) ...` (shorthand) jadi invalid at computed-value time dan
+  jatuh ke nilai awal **`all 0s`** = gak animasi apa-apa. Kena 43 pemakaian, build ijo terus.
+  Sekarang dijaga gate (`check-motion` rule CYCLE). Kalau nemu transition yang "harusnya jalan
+  tapi enggak", cek `getComputedStyle(el).transitionDuration` - kalau `0s` padahal class-nya
+  nulis durasi, berarti ada `var()` yang gagal resolve, bukan salah selector.
   `--dur-fast` 0.15s (hover kecil/state cepet) · `--dur` 0.2s (default) · `--dur-slow` 0.3s
   (transform gede) · `--ease` `cubic-bezier(.4,0,.2,1)` (standar/material) · `--ease-out`
   `cubic-bezier(.16,1,.3,1)` (entrance expo-out). CUMA dipakai di `transition:` (feedback
   interaksi). **DIBIARIN** (disengaja): durasi `animation:` entrance (0.4-0.6s, choreography),
   fade lambat `0.5s`, special (marquee `35s`, glow booksidebar `2-3s`), dan keyword `ease`
   (udah konsisten). Snap durasi transition: 0.12/0.15/0.18→fast · 0.2/0.25→base · 0.28/0.3→slow.
+- **Buka/tutup menu = `components/ui/Reveal.jsx`** (Framer Motion / paket `motion`, Sep 2026, Wayan
+  pilih "langsung Framer Motion"). Alasannya: menu-menu itu dulu di-toggle pakai `display`
+  (`hidden` / `? 'block' : 'hidden'`), dan `display` **gak bisa di-animasi sama sekali** - itu
+  sumber "kaku"-nya, bukan easing-nya. Dua komponen:
+  - `<Collapse open={...}>` - menu inline yang **nyorong konten di bawahnya** (submenu Program di
+    navbar, list kategori HP di Our Company). Animasi `height`, jadi WAJIB `overflow:hidden` -
+    makanya **JANGAN dipakai buat dropdown `absolute`**, panelnya bakal kepotong jadi nol.
+  - `<PopMenu open={...}>` - panel **ngambang** di atas konten (dropdown kategori guide hub).
+    Fade + naik dikit, gak nyentuh height, jadi `absolute` anaknya aman.
+  - Durasi/easing-nya mirror token CSS (`--dur`/`--ease-out`) biar satu ritme sama transition
+    lain. `useReducedMotion` → durasi 0 (hormatin setting OS).
+  - **Ongkos: +36 KB gzip di SEMUA halaman** (homepage 295 → 332 KB), soalnya Navbar ada di mana-mana.
+    Udah pakai konfigurasi paling irit (`LazyMotion` + `m` + `domAnimation`). **Code-split fitur
+    animasinya malah LEBIH GEDE** (339 KB) - chunk async-nya duplikat core yang tetep dibutuhin
+    eager. Udah diukur, jangan di-"optimasi" balik ke `import()` dinamis tanpa ngukur ulang.
+  - **Catatan jujur**: khusus 3 menu ini, trik CSS (`grid-template-rows: 0fr → 1fr`) bisa ngasih
+    hasil yang sama di **0 KB**. Framer Motion baru beneran kepake pas modal digarap (animasi
+    **keluar**/unmount gak bisa CSS) - itu rencana setelah tanggal 28.
+- **Press feedback tombol (Sep 2026, Wayan: "pas button di klik gak ada animasi")** - sebelum ini
+  web NOL `:active` state, jadi tombol ditap gak ngasih respons apa-apa. Rule-nya di
+  **`style.css` bareng reset**, BUKAN per-komponen: ada ~99 tag `<button>` tulis-tangan dan cuma
+  segelintir yang lewat primitif `Button.jsx`, jadi per-komponen bakal kelewat banyak.
+  - Pakai properti `scale` berdiri sendiri, **BUKAN `transform: scale()`** - kartu & CTA udah
+    animasi `transform` pas hover (translateY), kalau pakai transform dua-duanya saling timpa.
+    `scale` numpuk rapi sama `transform`.
+  - Transition-nya sengaja di specificity elemen (0,0,1) biar komponen yang punya
+    `transition` sendiri (0,1,0) tetap menang; rule `:active`-nya 0,1,1 biar feedback-nya
+    SELALU kena. Konsekuensinya: komponen yang nulis `transition` sendiri harus **nambahin
+    `scale`** ke daftarnya, kalau nggak press-nya nyentak (bukan gak ada, cuma gak halus).
+  - Cek cakupannya: harness `press-probe.mjs` di scratchpad - ngitung tiap tombol yang keliatan
+    per halaman, patokannya `press instan: 0`. Terakhir diukur: index 64/64, tour 43/43,
+    our-company 29/29, bali-guide 24/24, my-trips 61/61, charter 73/76.
+  - **Gotcha harness**: `html` punya `scroll-behavior: smooth`, jadi `getBoundingClientRect()`
+    yang dibaca di tick yang sama sama `scrollIntoView` masih koordinat LAMA - mouse mendarat
+    di tempat lain & `:active` gak kena (kejadian, sempet kebaca `scale: none`). Pakai
+    `behavior:'instant'` + tunggu dulu sebelum baca rect.
+- **JEBAKAN BESAR Tailwind v4: `transition-[transform]` GAK NGE-COVER utility translate/
+  rotate/scale.** Di v4, `translate-x-full` / `rotate-180` / `scale-95` dikompilasi ke properti
+  **berdiri sendiri** (`translate:` / `rotate:` / `scale:`), BUKAN ke `transform:`. Jadi kalau
+  transition-nya nyebut `transform`, animasinya **gak jalan sama sekali** - elemennya lompat.
+  Diem-diem aja, gak ada error, build lolos.
+  - **CUMA bentuk ARBITRARY yang rusak.** Keyword `transition-transform` AMAN - Tailwind v4
+    nge-compile dia jadi `transform,translate,scale,rotate` (udah ikut). Yang bahaya cuma tulis
+    tangan: `transition-[transform]` / `[transition:transform ...]` = literal `transform` doang.
+  - Kena di **5 tempat** (Sep 2026, ketahuan pas Wayan bilang hamburger masih kasar): **drawer navbar**
+    (`translate-x-full` - drawer-nya gak pernah geser, langsung nempel), chevron Program, logo
+    Featured-on, kartu homepage, CTA Explore hero. (Chevron Our Company sempet keitung juga -
+    **SALAH**, dia pakai keyword `transition-transform`, jadi sebenernya udah jalan.)
+  - **Yang arbitrary TETAP transform**: `[transform:translateY(-2px)]` beneran nge-set `transform`,
+    jadi `transition`-nya memang harus `transform` (mis. kartu charter). Jangan ikut diganti.
+  - **Cara cek**: harness `burger-probe.mjs` / `snap-sweep.mjs` di scratchpad baca
+    `getComputedStyle(el).translate` frame per frame. Kalau langsung `100% -> 0px` dalam satu
+    frame = transition-nya salah sasaran. Yang bener: `100% -> 82% -> 41% -> 16% -> 5% -> 0`.
+  - Hamburger sekarang juga **morph jadi X** pas drawer kebuka (bar atas/bawah ketemu di tengah
+    terus muter 45°, bar tengah fade), `aria-label` ikut ganti Open/Close menu. Scrim disamain
+    ke 300ms/`--ease` biar segerak sama drawer (dulu 200ms, kepisah).
+- **GATE CI `node tools/check-motion.js`** (Sep 2026, Wayan pilih "hybrid + gate" daripada
+  konversi semua ke Framer Motion). Jalan atas `out/`, tanpa browser, 2 aturan:
+  1. **DEAD** - elemen nge-transition `transform` tapi yang dia set translate/rotate/scale, dan
+     gak ada yang nge-set `transform` -> transition-nya nembak angin, elemen bakal lompat.
+  2. **SNAP** - tombol / link-pill yang nulis `transition` sendiri tanpa `scale` -> press feedback
+     global di `style.css` jadi nyentak.
+  - **Pas dipasang langsung nemu 8 yang kelewat dari sapuan browser** (browser cuma ngecek elemen
+    yang KELIATAN di 12 halaman; gate nyisir 104 halaman termasuk isi drawer/modal/panel yang lagi
+    kesembunyi). Termasuk tombol "Plan your trip" yang ternyata udah punya `active:scale-[0.99]`
+    dari dulu tapi gak pernah halus karena transition-nya nyebut `transform`.
+  - **Nulis gate begini WAJIB dites pakai bug aslinya.** Versi pertama gate ini "lolos" padahal
+    gak ngecek apa-apa (`baseOf` balikin string, destructuring-nya `undefined`), DAN salah ambil
+    transition terakhir - `motion-reduce:transition-none` nimpa transition asli, jadi drawer-nya
+    ke-skip. Ketahuan cuma gara-gara bug drawer sengaja dibalikin buat nguji. Sekarang cuma
+    transition TANPA varian yang dibaca.
+  - **Tambalan kedua (Sep 2026)**: gate-nya sempet CUMA baca transition tanpa varian, jadi
+    transition yang di-scope ke breakpoint kelewat - dan itu nyembunyiin bug **sheet hero HP**
+    (`max-[992px]:[transition:transform...]` + `translate-y-full` = sheet-nya lompat, gak geser).
+    Sekarang gate ngelompokin per scope varian (`""` = base, `max-[992px]`, `hover`, dst) dan
+    ngecek tiap scope sendiri-sendiri; `motion-reduce` di-skip (emang sengaja matiin animasi).
+  - **Rule 3 - CYCLE (Sep 2026)**: custom property yang didefinisiin sebagai dirinya sendiri
+    (`--x: var(--x)`). Itu yang kejadian sama `--dur-fast`. Satu regex, nahan seluruh kelas bug ini.
+  - **Harness `press-probe`/`snap-sweep` sempet BOHONG**: dia ngitung `transition-property: all`
+    sebagai "lulus", padahal `all` + durasi `0s` itu justru tanda transition-nya MATI. Makanya
+    dia lapor "index 64/64 mulus" selama `--dur-fast` rusak. Sekarang `all`+`0s` dihitung mati.
+- **Sheet hero HP (tombol "Plan your trip")** - urutannya: tombol press `scale` 0.97
+  (`--dur-fast`), sheet naik `translate` 0.3s **`--ease-out`** (kurva entrance - sengaja beda dari
+  drawer navbar yang pakai `--ease`, karena ini "muncul" bukan "geser"), scrim `--dur-slow` biar
+  **segerak sama sheet** (dulu `--dur` 0.2s, jadi gelapnya kelar duluan di ~167ms padahal sheet
+  baru nyampe ~317ms). Ukur pakai `plan-probe.mjs`.
+  - **Gotcha harness**: kalau nge-tes press-nya pakai mouse down+up, itu = KLIK, sheet-nya kebuka.
+    Reload dulu sebelum ngukur animasi bukanya, kalau nggak semua kebaca "udah selesai".
+- **Swipe-down buat nutup sheet HP = `components/ui/DragSheet.jsx`, PAKAI POINTER EVENT, BUKAN
+  Framer Motion** (Sep 2026, setelah diukur). FM `drag` ada di feature set **domMax** (satu paket
+  sama `layout`), dan narik itu masuk = **+12 KB gzip di SEMUA halaman**, termasuk halaman yang
+  gak punya sheet - soalnya `motion/react` udah nangkring di shared chunk lewat navbar, jadi
+  fitur tambahannya nimbrung di situ juga. Di-`dynamic()` pun angkanya gak gerak (udah dicoba).
+  Pointer event bikin hal yang sama di 1 file, ongkos ~0 KB.
+  - CSS tetep yang pegang posisi diam (open/close lewat `translate`), pointer event cuma nge-set
+    `transform` selama jari nempel - dua properti beda, jadi numpuk rapi, gak rebutan.
+  - Drag mulai dari **handle** (strip di atas sheet), BUKAN seluruh sheet - isinya form yang
+    bisa di-scroll, kalau listener-nya se-sheet nanti scroll & tap field ketelen.
+  - Ambang nutup: geser > 90px ATAU kecepatan > 0.5 px/ms (biar flick pendek juga nutup).
+  - Verifikasi: `swipe-test.mjs` di scratchpad - geser 160px harus NUTUP, geser 30px harus
+    TETEP KEBUKA, `transform` sisa harus bersih, dan di desktop handle-nya harus gak ada.
+- **Stagger list = `<Stagger>` + `<StaggerItem>` di `Reveal.jsx`** (dipakai grid guide hub pas
+  di-search). Kartu yang BARU MUNCUL fade+naik berurutan; kartu yang bertahan dari filter gak
+  ke-remount jadi diem aja (itu benar, bukan bug).
+  - **BUKAN `layout` animation** (kartu gliding pindah posisi) - `layout` juga di domMax, jadi
+    +12 KB di semua halaman buat 1 halaman doang. Stagger pakai feature set yang udah ada = +0.1 KB.
+  - **Gotcha `AnimatePresence initial={false}`**: flag-nya nyebar lewat context ke SEMUA keturunan,
+    bukan cuma render pertama - jadi item yang mount belakangan ikut ke-skip dan animasinya gak
+    pernah jalan. Ganti pola: provider yang baru `true` SETELAH mount-nya sendiri, jadi kartu yang
+    datang bareng halaman langsung penuh (aman buat LCP) tapi kartu yang muncul belakangan animasi.
+  - Nyisipin wrapper di dalam CSS grid itu RAWAN - verifikasi geometri kartu before/after
+    (`guide-geo.mjs`): harus identik di desktop & HP. Terakhir diukur: 30 kotak, nol geser.
+- **Modal nutup = `components/ui/ModalPresence.jsx` (AnimatePresence)** - INI kasus Framer Motion
+  yang beneran gak ada gantinya. Modal-modal ini (`ReviewModal`, `BookConfirmModal`,
+  dialog konfirmasi `BookSidebar`/`BookCta`) cuma **mount pas kebuka**, jadi dulu masuknya pakai
+  keyframe (`heroFadeIn`/`popCardIn`) dan **keluarnya gak ada sama sekali** - elemennya udah lepas
+  dari DOM sebelum transition sempat jalan. AnimatePresence nahan elemennya sampai animasi keluar
+  selesai, baru di-unmount. Ongkos ~0 KB (feature set-nya udah kepasang lewat navbar).
+  - Keyframe di `modalClasses.js` UDAH DIBUANG - `SHELL`/`BOX`/`BOX_SM` sekarang murni tampilan,
+    animasi dua arah semuanya di `ModalPresence`. Jangan tambahin `animate-[...]` ke situ lagi.
+  - **Pola "tahan isi terakhir"**: `BookConfirmModal`/`ReviewModal` dulu `return null` pas
+    `ctx`/`prefill` null, jadi pas nutup gak ada yang bisa dianimasiin. Sekarang ada
+    `lastCtx`/`lastPrefill` (useRef) dan **JSX-nya baca `view`**, sementara **semua jalur logika
+    (validate, submit, teks WhatsApp) TETAP baca `ctx` yang live** - jangan ikut diganti ke
+    `view`, itu beda maksud.
+  - **Wajib `pointerEvents: 'none'` di variant `exit`**, BUKAN di prop `style` yang dihitung dari
+    `open`. AnimatePresence nge-render elemen yang lagi keluar pakai props TERAKHIR-nya, jadi
+    style yang diturunin dari `open` ke-bake jadi `auto` selamanya. Kalau kelewat, tombol
+    "Confirm" masih bisa dipencet selama 0,32 detik fade padahal `ctx` udah null. Diukur:
+    sekarang mati dalam ~43ms dan tetep mati.
+  - **Gotcha harness**: nyari shell modal pakai "div z-index 200 mana aja" itu SALAH - `AuthModal`
+    lewat `<Modal>` selalu ke-mount dengan opacity 0 & z-200, jadi ke-comot dan lapor "gak ada
+    animasi" padahal ada. Pakai `#modal-form` terus `.closest('div.fixed.inset-0')`.
 
 ## Key mechanics
 - **Custom dropdown/date SITE-WIDE (no native select)** — SEMUA `<select>` & `<input type=date>`
@@ -499,11 +654,15 @@ Order **must be kept** (declarations first, run last):
   - **IDR = sumber kebenaran harga.** Harga USD tiap item DITURUNKAN dari IDR
     (`ceil(idr / 17600)`), bukan angka lepas - dulu semua ke-bake di ~15.500 jadi
     tamu USD kelebihan bayar ~13%. Ganti harga = ubah IDR, terus turunin ulang USD-nya.
-  - **Dua tes, jalanin dua-duanya kalau nyentuh harga:**
-    `node tools/pricing-spec-test.js` (di cahyana-api) nge-assert 6 aturan di atas, dan
-    `node tools/golden-price-test.js` muat `script.js` situs lama beneran di sandbox terus
-    bandingin tiap item × mata uang × jumlah tamu sama server. Aturan berubah = ubah
-    `script.js` DAN `pricing.js` bareng, kalau nggak golden test langsung merah.
+  - **Tes harga, jalanin kalau nyentuh harga:** `node tools/pricing-spec-test.js`
+    (di cahyana-api) nge-assert 6 aturan di atas. Dulu ada tes kedua
+    (`golden-price-test.js`) yang bandingin server sama `script.js` situs lama —
+    UDAH DIHAPUS (Sep 2026, Wayan), soalnya pembandingnya ikut kehapus pas situs
+    lama dipensiunin, jadi tes-nya gak bisa jalan sama sekali.
+  - **Ganti isi program tour = cek tiketnya juga.** `TOUR_TICKETS` di
+    `cahyana-api/pricing-data.js` nentuin tiket apa aja yang di-cover Exclusive per
+    tour. Nambah/hapus stop tanpa update situ = tamu Exclusive bayar tiket tempat
+    yang gak didatengin (atau sebaliknya).
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.
@@ -516,6 +675,23 @@ Order **must be kept** (declarations first, run last):
   + tombol balik aktif. Dulu nembak `SHEET_ENDPOINT` placeholder pakai `mode:"no-cors"`
   jadi gagal diem-diem tapi tetep bilang "success" — pesan tamu keilangan. Jangan balikin
   pola fire-and-forget itu: form apa pun harus nunggu respons sebelum bilang sukses.
+- **Validasi form = Zod, TANPA React Hook Form** (Sep 2026, keputusan Wayan setelah diukur).
+  Semua aturan ada di **`lib/schemas.js`** (satu tempat, bisa dicocokin sama server), dipakai
+  lewat `validateWith()` di `lib/validate.js`; error ditampilin **per field** pakai class
+  `FIELD_ERR` (modalClasses). Form-nya sendiri tetap **plain React `useState`**.
+  - **RHF UDAH DICOBA & DITOLAK.** Diukur di 4 form: ContactForm 73→69 baris, AuthModal
+    104→105, ReviewModal 217→220, BookConfirmModal 348→358. Untungnya nol/minus karena
+    SEMUA dropdown & date picker di web ini komponen custom (`Select`/`DateField`/
+    `DateTimeField`) yang `onChange`-nya ngasih nilai, bukan event - jadi tiap satu butuh
+    `Controller`. Plus RHF 26KB gzip, dan karena `AuthModal` di-import `Navbar`, itu ikut
+    ke SEMUA halaman. Percobaannya diarsipkan di branch `claude/rhf-booking-review`.
+  - **Gotcha Zod**: resolver/`safeParse` ngebalikin data yang UDAH DI-PARSE, dan Zod
+    **buang key yang gak terdaftar di schema**. Field tanpa aturan (mis. `referral`,
+    `name`/`countryCode` di review) TETAP wajib didaftarin, kalau nggak datanya hilang diam-diam.
+  - **Email pakai regex sendiri** (`EMAIL_RE`), BUKAN `z.email()` - bawaan Zod lebih ketat
+    dan bakal mulai nolak alamat yang selama ini diterima. Jangan diganti tanpa sengaja.
+  - Habis nyentuh `lib/schemas.js` → jalanin **`node tools/form-rules-test.mjs`** (ngadu
+    schema baru vs aturan if-chain lama, ~394rb kombinasi, harus "all identical").
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
 - **Charter**: `CHARTER` config, live pricing.
 
@@ -529,6 +705,16 @@ Order **must be kept** (declarations first, run last):
 - Foto nganggur: 13 duplikat/sisa lama (hapus?) + stok belum kepasang (`ubud-palace.jpg` dkk
   buat slot TODO) — keputusan Wayan.
 - Google Search Console: submit sitemap (belum pernah).
+- **`/itinerary.html` jadi halaman yatim** (ketemu Sep 2026): navbar (ikon desktop +
+  menu HP) semuanya nunjuk `/my-trips.html`, dan **nol** link internal ke
+  `itinerary.html` di seluruh repo. Halamannya tetep di-build + masuk sitemap +
+  bisa diindeks Google. Isinya BUKAN duplikat My Trips: `/itinerary.html` =
+  builder rencana multi-hari (`ItineraryBuilder`, judul "Build Your Own Bali
+  Itinerary"), `/my-trips.html` = keranjang (`MyTripsCart`, noindex). Dua-duanya
+  baca simpanan yang SAMA (`cue_itinerary_v1` lewat `useItinerary`) - jadi
+  storage-nya jelas masih kepakai, yang nganggur cuma halamannya. Pilihan buat
+  Wayan: (a) biarin, (b) pasang link lagi (keyword "build your own bali
+  itinerary" lumayan), (c) pensiunin -> 301 ke my-trips + keluarin dari sitemap.
 - **Broadcast/newsletter promo + update Bali** (DITUNDA — Wayan mau lanjut nanti):
   pakai **Resend Audiences + Broadcasts** (Cara A). Rencana: auto-daftarin email
   akun baru ke Audience Resend (1 fungsi di `cahyana-api` POST /api/account), terus

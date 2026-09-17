@@ -1,14 +1,20 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { readLocal, writeLocal, removeLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 
 const AccountContext = createContext(null);
 
+function fmtDay(ds) {
+  if (!ds) return 'date TBD';
+  const [y, m, d] = ds.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
-  const [hasUpcoming, setHasUpcoming] = useState(false);
+  const [trips, setTrips] = useState(null);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -44,7 +50,7 @@ export function AccountProvider({ children }) {
     fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (!cancelled && d && Array.isArray(d.upcoming)) setHasUpcoming(d.upcoming.length > 0);
+        if (!cancelled && d && Array.isArray(d.upcoming)) setTrips(d);
       })
       .catch(() => {});
 
@@ -53,10 +59,29 @@ export function AccountProvider({ children }) {
     };
   }, []);
 
+  const hasUpcoming = !!(trips && Array.isArray(trips.upcoming) && trips.upcoming.length > 0);
+
+  // Every still-reviewable tour across ALL past bookings (not just one trip) - feeds
+  // any "Leave a Review" trigger site-wide (My Trips button + ReviewGate on bookable
+  // pages), so it's computed once here instead of re-fetched per consumer.
+  const reviewableItems = useMemo(() => {
+    if (!trips || !trips.history) return [];
+    const out = [];
+    trips.history.forEach((t) => {
+      (t.review_items || []).forEach((s) => out.push({
+        ref: t.ref,
+        service: s,
+        tripName: t.name,
+        date: t.start_date ? fmtDay(t.start_date) : '',
+      }));
+    });
+    return out;
+  }, [trips]);
+
   const logout = () => {
     removeLocal(KEY.token);
     setAccount(null);
-    setHasUpcoming(false);
+    setTrips(null);
   };
 
   // Ask the backend to email a magic sign-in link. Backend never reveals whether
@@ -102,7 +127,7 @@ export function AccountProvider({ children }) {
   };
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, logout, requestLogin, createAccount, hydrated }}>
+    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, logout, requestLogin, createAccount, hydrated }}>
       {children}
     </AccountContext.Provider>
   );

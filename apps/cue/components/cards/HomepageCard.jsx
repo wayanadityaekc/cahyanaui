@@ -1,63 +1,18 @@
+import { Clock, Landmark, Leaf, MapPin, Mountain, UserRound, VenetianMask } from 'lucide-react';
 import Price from '@/components/Price';
+import Rating from '@/components/Rating';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-    </svg>
-  );
-}
-function StarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 20l1.5-6.5-5-4.3 6.6-.6z" />
-    </svg>
-  );
-}
-function LeafIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M5 21c0-8 5-15 15-16 1 10-5 16-13 16H5zm3-3c5-1 8-4 9-9-5 2-8 5-9 9z" />
-    </svg>
-  );
-}
-function MaskIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2c-4 0-7 2-7 6 0 5 3 10 7 14 4-4 7-9 7-14 0-4-3-6-7-6zM9.5 9a1.2 1.2 0 1 1 0 .01zM14.5 9a1.2 1.2 0 1 1 0 .01zM9 14c1 1.2 5 1.2 6 0-1 2-5 2-6 0z" />
-    </svg>
-  );
-}
-function MountainIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M3 20h18L14 8l-3.2 5-2-2.8L3 20z" />
-    </svg>
-  );
-}
-function TempleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l9 5v2H3V7l9-5zM5 10h2v7H5v-7zm4 0h2v7H9v-7zm4 0h2v7h-2v-7zm4 0h2v7h-2v-7zM3 18h18v3H3v-3z" />
-    </svg>
-  );
-}
+const ClockIcon = () => <Clock strokeWidth={1.7} />;
+const PinIcon = () => <MapPin strokeWidth={1.7} />;
+const UserIcon = () => <UserRound strokeWidth={1.7} />;
+// Category badges were solid shapes before Lucide, so they keep `fill` -
+// outline-only would read as a different badge style.
+const LeafIcon = () => <Leaf fill="currentColor" aria-hidden="true" />;
+const MaskIcon = () => <VenetianMask fill="currentColor" aria-hidden="true" />;
+const MountainIcon = () => <Mountain fill="currentColor" aria-hidden="true" />;
+const TempleIcon = () => <Landmark fill="currentColor" aria-hidden="true" />;
 
 // Category -> badge tone + icon. Labels are the real category (no invented
 // "Popular" tags), tone reuses the brand gold/green.
@@ -78,7 +33,7 @@ const CATS = {
 // komponen ini). Grid/slider + ExperienceCard klasik = stage berikutnya.
 const FRAME =
   "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl shadow-md aspect-[4/5] " +
-  'transition-[transform,box-shadow] duration-200 ease-[var(--ease-out)] hover:-translate-y-[3px] ' +
+  'transition-[translate,box-shadow] duration-200 ease-[var(--ease-out)] hover:-translate-y-[3px] ' +
   'hover:shadow-[0_16px_38px_rgba(31,61,43,0.16)] ' +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
@@ -88,7 +43,7 @@ const CAT_BASE =
   'tracking-[0.06em] uppercase text-white backdrop-blur-[6px] border border-[rgba(255,255,255,0.2)] ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:shrink-0';
 const RATE =
-  'absolute top-3 right-3 z-[3] inline-flex items-center gap-[5px] px-[10px] py-[5px] rounded-pill ' +
+  'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-pill ' +
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold shadow-sm ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const OV = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
@@ -97,15 +52,24 @@ const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
   'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(255,255,255,0.13)] ' +
   'backdrop-blur-[12px] border border-[rgba(255,255,255,0.2)]';
+// Wayan (14 Sep 2026): the meta row (duration + "Private Tour") could shrink
+// (min-w-0 flex-[0_1_auto] above) but its text never did - every child was
+// pinned flex-[0_0_auto], so a long duration ("10-11 hours") plus "Private
+// Tour" just visually overflowed past the shrunk box into the price on the
+// right instead of wrapping/hiding. Duration stays fixed-size (META_ITEM,
+// it's the more important half); "Private Tour" is the one allowed to
+// shrink+ellipsis (META_TRUNC) since it's the more skippable label.
+const META_ITEM = 'flex-[0_0_auto]';
+const META_TRUNC = 'min-w-0 truncate';
 const META =
   'inline-flex items-center gap-[6px] text-[rgba(255,255,255,0.92)] text-[0.62rem] min-w-0 flex-[0_1_auto] whitespace-nowrap ' +
-  '[&>span]:flex-[0_0_auto] [&_svg]:w-3 [&_svg]:h-3 [&_svg]:flex-[0_0_auto]';
+  '[&_svg]:w-3 [&_svg]:h-3 [&_svg]:flex-[0_0_auto]';
 const SEP = 'w-px h-[11px] bg-[rgba(255,255,255,0.35)] flex-[0_0_auto]';
 const PRICE_WRAP = 'flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap text-white';
 
 export default function HomepageCard({
   href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, cat, rating, width = 600, height = 600,
+  priceName, priceFallback, priceMode = 'standard', zone, cat, width = 600, height = 600,
 }) {
   const c = (cat && CATS[cat]) || null;
   const tone = c ? c.tone : 'gold';
@@ -124,17 +88,17 @@ export default function HomepageCard({
           <c.Icon />{cat}
         </span>
       )}
-      <span className={RATE}><StarIcon />{rating || 'New'}</span>
+      <Rating name={priceName} className={RATE} />
       <div className={OV}>
         <h3 className={TITLE}>{name}</h3>
         <span className={`${ACCENT} ${accentTone}`} />
         <div className={BAR}>
           <span className={META}>
-            {isTour ? <ClockIcon /> : <PinIcon />}<span>{meta}</span>
+            {isTour ? <ClockIcon /> : <PinIcon />}<span className={META_ITEM}>{meta}</span>
             {isTour && (
               <>
                 <span className={SEP} />
-                <UserIcon /><span>Private Tour</span>
+                <UserIcon /><span className={META_TRUNC}>Private Tour</span>
               </>
             )}
           </span>

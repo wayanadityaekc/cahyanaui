@@ -1,5 +1,9 @@
 import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import TourDestinationCards from '@/components/sections/TourDestinationCards';
+import { tourDestinations, priceFallbackFor } from '@/lib/tourIndex';
+import { ATTRACTION_CONTENT } from '@/content/attractions';
+
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
@@ -11,6 +15,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
+import { isHiddenTour } from '@/lib/routes';
 
 // Tailwind-native (migrasi Fase 2): teks stop (.stop__num/.stop__name/.stop__desc)
 // -> utilities; .stop__body (tanpa CSS) -> drop class; .stop--link (link + hover
@@ -21,10 +26,9 @@ export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
 // Linked stop = the same STOP grid layout (incl. its `stop` hook for DetailTabs'
 // [&_.stop]:max-w-none) plus link-only styling.
-const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur)_var(--ease-out)] hover:[transform:translateY(-3px)]`;
 // Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
 // sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
-export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-bottom:1px_solid_#e0ddd4] text-small text-muted';
+export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-top:1px_solid_#e0ddd4] [border-bottom:1px_solid_#e0ddd4] text-h3 text-muted';
 export const CRUMB_LINK = 'text-gold no-underline font-medium hover:underline';
 export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
 // Fact hooks di hero detail (migrasi Fase 2): presentasi -> utilities. Kelas
@@ -38,9 +42,7 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 // Tailwind now (no tour-hero marker classes). CTA hidden on mobile via the arbitrary
 // media variant (matches the old @media max-width:768px exactly).
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
-// `tour-hero__cta` DIPERTAHANKAN sbg marker: di-query JS di BookBar.jsx
-// (IntersectionObserver buat munculin sticky book-bar).
-export const HERO_CTA = 'tour-hero__cta inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease] hover:bg-cta-d [@media(max-width:768px)]:hidden';
+export const HERO_CTA = 'inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
 
 function Stop({ s }) {
   const inner = (
@@ -59,23 +61,25 @@ function Stop({ s }) {
       </div>
     </>
   );
-  // Link stop = detail page. refId (referensi destination/experience) diturunkan jadi
-  // /attractions/<refId>.html (URL tetep, nol perubahan SEO); fallback s.link buat item
-  // non-attraction lama. name/img/highlight tetep tour-specific.
-  const href = s.refId ? `/attractions/${s.refId}.html` : s.link;
-  return href ? (
-    <a className={STOP_LINK} href={href}>{inner}</a>
-  ) : (
-    <article className={STOP}>{inner}</article>
-  );
+  // Stops are plain text. They used to link to /attractions/<refId>.html, which
+  // dropped a guest mid-decision onto a page quoting a second, single-destination
+  // price - the confusion this change exists to remove. The way through is the
+  // destination carousel at the bottom, so the tour sidebar stays the only price
+  // on screen while they read.
+  return <article className={STOP}>{inner}</article>;
 }
 
 export default function TourPage({ data }) {
+  const slug = (data.__page || '').replace(/^\//, '');
+  const destinations = tourDestinations(slug, ATTRACTION_CONTENT);
   return (
     <>
       <JsonLd page={data.__page} />
-      {/* Split hero (photo + white body). Fully Tailwind now; no tour-hero marker classes. */}
-      <section className="min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[6.5rem]">
+      {/* Split hero (photo + white body). Fully Tailwind now; no tour-hero marker classes.
+          pt- reserves clearance under the fixed navbar (--header-h, published by Navbar's
+          ResizeObserver) so the photo's top edge isn't hidden under it - see AttractionPage.jsx
+          for the same fix and full rationale (was hardcoded for navbar+tripbar together). */}
+      <section className="pt-[var(--header-h,52.8px)] min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[var(--header-h,57.6px)]">
         {data.heroSlides && data.heroSlides.length > 1 ? (
           <HeroSlider slides={data.heroSlides} />
         ) : (
@@ -128,7 +132,8 @@ export default function TourPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} />
+      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} />
+      <TourDestinationCards items={destinations} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
@@ -139,7 +144,7 @@ export default function TourPage({ data }) {
       {data.crumb && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
-            p.type === 'link' ? (
+            p.type === 'link' && !isHiddenTour(p.href) ? (
               <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
             ) : p.type === 'sep' ? (
               <span className={CRUMB_SEP} key={i}>{p.text}</span>

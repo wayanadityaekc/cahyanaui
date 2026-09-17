@@ -18,9 +18,9 @@ export const LEGAL = {
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "These Terms &amp; Conditions apply to every booking made with Cahyana Ubud Experience. By booking a tour, transfer, or experience with us - through this website, WhatsApp, email, or in person - you agree to the terms below. Please read them before you book." },
       { "type": "heading", "html": "1. Who we are" },
-      { "type": "para", "html": "Cahyana Ubud Experience is a local, family-run travel service based in Ubud, Bali, offering private tours, driver and transfer services, and curated experiences. In these terms, \"we\", \"us\", and \"our\" refer to Cahyana Ubud Experience, operated by I Wayan Aditya Eka Cahyana, Ubud, Bali, Indonesia." },
+      { "type": "para", "html": "Cahyana Ubud Experience is a local travel service based in Ubud, Bali, offering private tours, driver and transfer services, and curated experiences. In these terms, \"we\", \"us\", and \"our\" refer to Cahyana Ubud Experience, operated by I Wayan Aditya Eka Cahyana, Ubud, Bali, Indonesia." },
       { "type": "heading", "html": "2. Booking &amp; confirmation" },
-      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once we reply to confirm your date, service, and price. We work on a <strong>book now, pay later</strong> basis - no full payment is taken upfront to reserve your date." },
+      { "type": "para", "html": "You can request a booking through our website, by WhatsApp, or by email. A booking is only confirmed once you make a deposit payment then we will contact you shortly. Payment can be made online by card (processed securely via a third-party payment provider), or later as agreed." },
       { "type": "list", "variant": "yes", "items": [
         "Please book with as much notice as possible, especially in high season.",
         "Give us an accurate pick-up location, date, time, and number of guests.",
@@ -32,10 +32,10 @@ export const LEGAL = {
         "<strong>Standard</strong> tours include car, driver, and fuel; entrance tickets are not included.",
         "<strong>Exclusive</strong> tours include everything in Standard plus entrance tickets for the listed attractions, priced per person.",
         "A deposit of 10% may be requested to confirm certain bookings; the balance is paid on the day of your trip - either charged automatically or settled in person by cash or transfer after your tour.",
-        "Prices may change for public holidays, special events, or routes outside the Ubud area - we will always tell you before you confirm."
+        "Prices may change for public holidays, special events, and has an additional pick up fee outside the Ubud area - we will always tell you before you confirm."
       ] },
       { "type": "heading", "html": "4. Changes &amp; cancellations" },
-      { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/cancellation-policy.html\">Cancellation Policy</a>, which forms part of these terms." },
+      { "type": "para", "html": "Need to change your date, timing, or group size? Message us as early as you can and we will do our best to accommodate you, subject to availability. Cancellations and refunds are covered in full by our <a href=\"/our-company.html#cancellation\">Cancellation &amp; Refund Policy</a>, which forms part of these terms." },
       { "type": "heading", "html": "5. Your responsibilities" },
       { "type": "list", "variant": "yes", "items": [
         "Be ready at the agreed pick-up point and time - late starts can shorten the day.",
@@ -56,7 +56,7 @@ export const LEGAL = {
       { "type": "heading", "html": "11. Changes to these terms" },
       { "type": "para", "html": "We may update these Terms &amp; Conditions from time to time. The version published on this page at the time of your booking is the one that applies." },
       { "type": "heading", "html": "12. Contact" },
-      { "type": "para", "html": "Questions about these terms? <a href=\"/contact.html\">Contact us</a> - we are happy to help before you book." }
+      { "type": "para", "html": "Questions about these terms? <a href=\"/our-company.html#contact\">Contact us</a> - we are happy to help before you book." }
     ]
   },
   "privacy-policy": {
@@ -71,7 +71,7 @@ export const LEGAL = {
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "Your privacy matters to us. This policy explains what information Cahyana Ubud Experience collects when you contact or book with us, how we use it, and the choices you have. We only ever ask for what we need to plan and run your trip." },
       { "type": "heading", "html": "1. Who we are" },
-      { "type": "para", "html": "Cahyana Ubud Experience is a local, family-run travel service in Ubud, Bali, operated by I Wayan Aditya Eka Cahyana. If you have any question about your data, you can reach us at <a href=\"mailto:cahyanaubud@gmail.com\">cahyanaubud@gmail.com</a>." },
+      { "type": "para", "html": "Cahyana Ubud Experience is a local travel service in Ubud, Bali, operated by I Wayan Aditya Eka Cahyana. If you have any question about your data, you can reach us at <a href=\"mailto:cahyanabaliexperience@gmail.com\">cahyanabaliexperience@gmail.com</a>." },
       { "type": "heading", "html": "2. Information we collect" },
       { "type": "para", "html": "When you make a booking or enquiry, we may collect:" },
       { "type": "list", "variant": "yes", "items": [
@@ -87,42 +87,43 @@ export const LEGAL = {
         "To answer your questions and improve the service we offer."
       ] },
       { "type": "heading", "html": "4. Who we share it with" },
-      { "type": "para", "html": "We only share your details when it is needed to deliver your booking - for example, giving your driver or guide your pick-up point, or booking an entrance ticket or activity with a third-party provider on your behalf. We do <strong>not</strong> sell your personal information to anyone." },
+      { "type": "para", "html": "We only share your details when it is needed to deliver your booking - for example, giving your driver your pick-up point, or booking an entrance ticket or activity with a third-party provider on your behalf. We do <strong>not</strong> sell your personal information to anyone." },
       { "type": "heading", "html": "5. Cookies &amp; local storage" },
       { "type": "para", "html": "This website does not use advertising or third-party tracking cookies. To make your visit smoother, we store a few small settings directly in your browser (your chosen currency and your saved itinerary). This stays on your device and is not sent to us. If we ever add analytics or similar tools in the future, we will update this policy first." },
       { "type": "heading", "html": "6. How long we keep it" },
       { "type": "para", "html": "We keep your booking information only for as long as needed to run your trip and for our normal record-keeping, then remove it." },
       { "type": "heading", "html": "7. Your rights" },
-      { "type": "para", "html": "You can ask us to see, correct, or delete the personal information we hold about you at any time. Just contact us at <a href=\"mailto:cahyanaubud@gmail.com\">cahyanaubud@gmail.com</a> and we will take care of it." },
+      { "type": "para", "html": "You can ask us to see, correct, or delete the personal information we hold about you at any time. Just contact us at <a href=\"mailto:cahyanabaliexperience@gmail.com\">cahyanabaliexperience@gmail.com</a> and we will take care of it." },
       { "type": "heading", "html": "8. Children's privacy" },
       { "type": "para", "html": "Our services are booked by adults. We do not knowingly collect personal information directly from children; bookings that include children are made by a parent or guardian." },
       { "type": "heading", "html": "9. Changes to this policy" },
       { "type": "para", "html": "We may update this Privacy Policy from time to time. The version shown on this page is the one that currently applies." },
       { "type": "heading", "html": "10. Contact" },
-      { "type": "para", "html": "Questions about your privacy? <a href=\"/contact.html\">Contact us</a> - we are glad to help." }
+      { "type": "para", "html": "Questions about your privacy? <a href=\"/our-company.html#contact\">Contact us</a> - we are glad to help." }
     ]
   },
   "cancellation-policy": {
     "heroClass": "subhero subhero--overlap",
     "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-    "title": "Cancellation Policy",
+    "title": "Cancellation &amp; Refund Policy",
     "text": "Plans change - here is exactly how cancellations, reschedules, and refunds work.",
-    "metaTitle": "Cancellation Policy | Cahyana Ubud Experience",
+    "metaTitle": "Cancellation &amp; Refund Policy | Cahyana Ubud Experience",
     "metaDesc": "How to cancel or reschedule a booking with Cahyana Ubud Experience - free-cancellation window, deposits, refunds, no-shows, and bad-weather options.",
     "body": [
-      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Cancellation Policy" },
+      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Cancellation &amp; Refund Policy" },
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
-      { "type": "para", "html": "We keep cancellations simple and fair. Because we book on a <strong>pay-later</strong> basis, cancelling is usually quick and free - the details below explain the timings, deposits, and refunds so there are no surprises." },
+      { "type": "para", "html": "We keep cancellations simple and fair, whether you paid a deposit, in full, or nothing yet. Cancelling with enough notice is quick and free - the details below explain the timings, deposits, and refunds so there are no surprises." },
       { "type": "heading", "html": "1. How to cancel or reschedule" },
       { "type": "para", "html": "Just message us on WhatsApp or by email as early as you can, with your name and the date of your booking. We will confirm the cancellation or the new date in writing." },
       { "type": "heading", "html": "2. Free-cancellation window" },
       { "type": "para", "html": "Cancel at least 24 hours before your scheduled start time and there is nothing to pay - and any deposit you paid is fully refunded." },
       { "type": "heading", "html": "3. Deposits &amp; refunds" },
-      { "type": "para", "html": "Where a deposit of 10% was taken to confirm your booking, refunds work as follows:" },
+      { "type": "para", "html": "Where a deposit of 10% was taken to confirm your booking or if you choose to make a full payment, refunds work as follows:" },
       { "type": "list", "variant": "yes", "items": [
         "Cancel more than 24 hours before start: full refund of the deposit.",
         "Cancel within 24 hours before start: the deposit is non-refundable.",
-        "Balance for the tour itself is only due once the service is delivered."
+        "Balance for the tour itself is only due once the service is delivered.",
+        "Refunds are returned to your original payment method - your card via our third-party payment provider, or bank transfer if you paid that way - and typically take 7-14 business days to arrive."
       ] },
       { "type": "heading", "html": "4. No-shows" },
       { "type": "para", "html": "If no one is at the pick-up point at the agreed time and we cannot reach you, the booking is treated as a no-show and any deposit is non-refundable." },
@@ -135,9 +136,9 @@ export const LEGAL = {
       { "type": "heading", "html": "8. Third-party tickets &amp; activities" },
       { "type": "para", "html": "Some entrance tickets, performances, and adventure activities are booked with third-party providers and may be non-refundable once purchased. We will tell you clearly before booking anything that carries its own cancellation terms." },
       { "type": "heading", "html": "9. How refunds are paid" },
-      { "type": "para", "html": "Approved refunds are returned by bank transfer or your original payment channel within 7-14 days." },
+      { "type": "para", "html": "Approved refunds are returned to your original payment method - your card via our third-party payment provider, or bank transfer if you paid that way - within 7-14 business days." },
       { "type": "heading", "html": "10. Contact" },
-      { "type": "para", "html": "Need to cancel or have a question? <a href=\"/contact.html\">Contact us</a> - the sooner you tell us, the more flexible we can be." }
+      { "type": "para", "html": "Need to cancel or have a question? <a href=\"/our-company.html#contact\">Contact us</a> - the sooner you tell us, the more flexible we can be." }
     ]
   }
 };

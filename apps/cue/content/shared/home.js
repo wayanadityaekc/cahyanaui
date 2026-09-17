@@ -1,3 +1,5 @@
+import { Calendar, Car, Clock, Users } from 'lucide-react';
+
 export const EXPLORE_TOURS = [
     {
       "program": "Ubud Culture Day",
@@ -388,22 +390,22 @@ export const GUIDE_CARDS = [
 
 export const WHY_US = [
     {
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3 2\"/></svg>",
+      "Icon": Clock,
       "title": "Prices upfront",
       "text": "Every price before you commit. No hidden fees, no haggling."
     },
     {
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"3\"/><path d=\"M16 3.1a3 3 0 0 1 0 5.8M21 21v-2a4 4 0 0 0-3-3.9\"/></svg>",
+      "Icon": Users,
       "title": "Local family",
       "text": "One team in Ubud runs your whole trip. Ask one person."
     },
     {
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><path d=\"M5 17h14M6 17l1.5-5A2 2 0 0 1 9.4 10h5.2a2 2 0 0 1 1.9 2L18 17M7 17v2M17 17v2\"/><circle cx=\"8\" cy=\"14\" r=\"1\"/><circle cx=\"16\" cy=\"14\" r=\"1\"/></svg>",
+      "Icon": Car,
       "title": "Private driver-guide",
       "text": "Your own car and driver, not a shared bus, not a stranger."
     },
     {
-      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 9h18M8 3v4M16 3v4\"/></svg>",
+      "Icon": Calendar,
       "title": "Build your own trip",
       "text": "Plan Bali day by day, see the total, adjust anytime."
     }

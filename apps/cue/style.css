@@ -91,7 +91,7 @@
      Cuma buat `transition:` (feedback interaksi: hover/focus/state). DIBIARIN: durasi
      `animation:` entrance (0.4-0.6s, choreography sengaja), fade lambat 0.5s, dan special
      (marquee 35s, glow booksidebar 2-3s). Keyword `ease` juga dibiarin (udah konsisten). */
-  --dur-fast: var(--dur-fast); /* hover kecil, state cepet */
+  --dur-fast: 0.15s; /* hover kecil, state cepet */
   --dur: 0.2s;       /* default transisi */
   --dur-slow: 0.3s;  /* transform lebih gede */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);      /* standar (material) */
@@ -119,6 +119,41 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* Press feedback (Sep 2026, Wayan: "pas button di klik gak ada animasi").
+   Belongs with the reset, not with a component: there are ~99 hand-rolled
+   <button> tags on this site and only a handful go through the shared Button
+   primitive, so per-component classes would miss most of them.
+
+   Uses the standalone `scale` property, NOT `transform: scale()` - cards and
+   CTAs already animate `transform` on hover (translateY lift) and the two would
+   overwrite each other. `scale` composes with `transform` instead of replacing it.
+
+   The transition sits at element specificity ON PURPOSE (0,0,1): a component
+   that declares its own `transition` utility (0,1,0) still wins, and just gets
+   an instant press instead of an eased one. The `:active` rule is 0,1,1 so the
+   feedback itself always lands, whatever the component declares. */
+button,
+[role="button"],
+a[class~="rounded-pill"] {
+  transition-property: scale;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+button:not(:disabled):active,
+[role="button"]:active,
+a[class~="rounded-pill"]:active {
+  scale: 0.97;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):active,
+  [role="button"]:active,
+  a[class~="rounded-pill"]:active {
+    scale: 1;
+  }
 }
 
 html {
@@ -176,8 +211,12 @@ body {
 }
 
 /* ===== Global element / behaviour rules (the "reset" half of this file) ===== */
-/* Scroll-lock toggled on <body> by JS while a bottom-sheet / dropdown is open
-   (overflow:hidden only - NOT position:fixed, which makes the page jump). */
+/* Scroll-lock toggled by JS while a bottom-sheet / dropdown is open (overflow:hidden
+   only - NOT position:fixed, which makes the page jump). Both <html> AND <body> get
+   the class (useBodyLock.js): desktop/Chrome scroll via <body>, but iOS Safari very
+   often scrolls via <html> instead - body-only left the page scrollable under every
+   popup on iPhone (Wayan, Sep 2026). */
+html.hs-locked,
 body.hs-locked {
   overflow: hidden;
 }

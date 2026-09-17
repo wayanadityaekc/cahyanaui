@@ -7,10 +7,11 @@ import DatePopup from './DatePopup';
 import { clashDates } from '@/lib/cart';
 import BookingForm from './BookingForm';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
+import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-export default function BookSidebar({ item, perPerson = false }) {
+export default function BookSidebar({ item, presetType = 'tour', perPerson = false, belowPrice }) {
   const [ask, setAsk] = useState(null);
   const [pending, setPending] = useState(null);
   const [confirm, setConfirm] = useState(null);
@@ -52,7 +53,7 @@ export default function BookSidebar({ item, perPerson = false }) {
 
   return (
     <div className="booksidebar relative border border-line rounded-lg overflow-hidden">
-      <BookingForm presetItem={item} presetType="tour" perPerson={perPerson} onBook={start(true)} variant="sidebar" />
+      <BookingForm presetItem={item} presetType={presetType} perPerson={perPerson} onBook={start(true)} variant="sidebar" belowPrice={belowPrice} />
 
       <DatePopup
         open={!!ask}
@@ -61,17 +62,17 @@ export default function BookSidebar({ item, perPerson = false }) {
         onClose={() => { setAsk(null); setPending(null); }}
       />
 
-      {confirm && (
-        <div className={SHELL} onClick={(e) => e.target === e.currentTarget && setConfirm(null)}>
-          <div className={BOX_SM}>
+      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} box={BOX_SM}>
+        {confirm && (
+          <>
             <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
             <h3 className={TITLE}>Two full-day tours?</h3>
             <p className={SUB}>You already have a full-day tour on that date. Add another anyway?</p>
             <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); addRow(c.name, c.date, c.mode, c.goto); }}>Add anyway</button>
             <button type="button" className={BTN_GHOST} onClick={() => setConfirm(null)}>Cancel</button>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </ModalPresence>
 
       {toast && <div className={CART_TOAST}>{toast}</div>}
     </div>

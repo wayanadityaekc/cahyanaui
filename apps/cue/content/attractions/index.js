@@ -87,10 +87,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~2 hours riding"
    },
    {
-    "label": "Price",
-    "value": "$40"
-   },
-   {
     "label": "Availability",
     "value": "Daily"
    },
@@ -195,8 +191,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/hidden-beaches-cliffs.html",
-    "text": "Bali Hidden Beaches and Cliffs"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -207,7 +203,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Balangan Beach"
    }
   ],
-  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookItem": "Balangan Beach",
   "bookDefault": "tour",
   "facts": [
    {
@@ -221,10 +217,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free (parking only)"
    }
   ],
   "included": [
@@ -341,10 +333,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~2-3 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$28"
    },
    {
     "label": "Availability",
@@ -469,10 +457,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~2-3 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$40"
    },
    {
     "label": "Availability",
@@ -707,8 +691,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/banyumala-twin-lakes.html",
-    "text": "Banyumala & Twin Lakes"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -719,7 +703,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Banyumala Twin Waterfall"
    }
   ],
-  "bookItem": "Banyumala & Twin Lakes",
+  "bookItem": "Banyumala Twin Waterfall",
   "bookDefault": "tour",
   "facts": [
    {
@@ -733,10 +717,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000"
    }
   ],
   "included": [
@@ -853,10 +833,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~1 hour"
-   },
-   {
-    "label": "Price",
-    "value": "$10"
    },
    {
     "label": "Availability",
@@ -1203,7 +1179,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "The whole complex faces sacred Mount Agung, Bali's highest and holiest volcano, which rises directly behind the upper shrines. On a clear day the mountain is as memorable as the temple itself, but the weather here shifts fast, so the peak is often wrapped in cloud until it lifts."
    }
   ],
-  "metaTitle": "Besakih - The Mother Temple | Besakih & Taman Ujung",
+  "metaTitle": "Besakih - The Mother Temple | East Bali Tour",
   "metaDesc": "Pura Besakih, Bali's largest and holiest temple complex, rises in terraces up Mount Agung with over 20 temples, a sarong included.",
   "canonical": "https://cahyanaubudexperience.com/attractions/besakih.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/besakih-temple.webp",
@@ -1219,8 +1195,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/besakih-taman-ujung.html",
-    "text": "Besakih & Taman Ujung"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -1231,7 +1207,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Besakih - The Mother Temple"
    }
   ],
-  "bookItem": "Besakih & Taman Ujung",
+  "bookItem": "Besakih - The Mother Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -1245,10 +1221,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp150.000 (incl. shuttle)"
    }
   ],
   "included": [
@@ -1347,8 +1319,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/hidden-beaches-cliffs.html",
-    "text": "Bali Hidden Beaches and Cliffs"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -1359,7 +1331,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Bingin Beach"
    }
   ],
-  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookItem": "Bingin Beach",
   "bookDefault": "tour",
   "facts": [
    {
@@ -1373,10 +1345,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free (parking only)"
    }
   ],
   "included": [
@@ -1475,8 +1443,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-rafting-adventure.html",
-    "text": "Ubud Rafting Adventure"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -1487,7 +1455,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Coffee Plantation & Tasting"
    }
   ],
-  "bookItem": "Ubud Rafting Adventure",
+  "bookItem": "Coffee Plantation & Tasting",
   "bookDefault": "tour",
   "facts": [
    {
@@ -1501,10 +1469,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "30–45 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free"
    }
   ],
   "included": [
@@ -1623,10 +1587,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~5 hours"
    },
    {
-    "label": "Price",
-    "value": "$35"
-   },
-   {
     "label": "Availability",
     "value": "Daily"
    },
@@ -1731,8 +1691,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/gwk-pandawa-beach.html",
-    "text": "GWK & Pandawa Beach"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -1743,7 +1703,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Garuda Wisnu Kencana (GWK)"
    }
   ],
-  "bookItem": "GWK & Pandawa Beach",
+  "bookItem": "Garuda Wisnu Kencana (GWK)",
   "bookDefault": "tour",
   "facts": [
    {
@@ -1757,10 +1717,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp125.000"
    }
   ],
   "included": [
@@ -1859,8 +1815,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/munduk-twin-lakes.html",
-    "text": "Munduk Waterfall Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -1871,7 +1827,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Git Git Waterfall"
    }
   ],
-  "bookItem": "Munduk Waterfall Tour",
+  "bookItem": "Git Git Waterfall",
   "bookDefault": "tour",
   "facts": [
    {
@@ -1885,10 +1841,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp20.000"
    }
   ],
   "included": [
@@ -1987,8 +1939,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-tour.html",
-    "text": "Ubud Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -1999,7 +1951,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Goa Gajah - The Elephant Cave"
    }
   ],
-  "bookItem": "Ubud Tour",
+  "bookItem": "Goa Gajah - The Elephant Cave",
   "bookDefault": "tour",
   "facts": [
    {
@@ -2013,10 +1965,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000"
    }
   ],
   "included": [
@@ -2115,8 +2063,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/hidden-beaches-cliffs.html",
-    "text": "Bali Hidden Beaches and Cliffs"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -2127,7 +2075,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Green Bowl Beach"
    }
   ],
-  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookItem": "Green Bowl Beach",
   "bookDefault": "tour",
   "facts": [
    {
@@ -2141,10 +2089,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free (parking only)"
    }
   ],
   "included": [
@@ -2243,8 +2187,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-tour.html",
-    "text": "Ubud Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -2255,7 +2199,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Gunung Kawi Temple"
    }
   ],
-  "bookItem": "Ubud Tour",
+  "bookItem": "Gunung Kawi Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -2269,10 +2213,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000"
    }
   ],
   "included": [
@@ -2355,7 +2295,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "This is a quick photo stop, and timing matters, since the gate is popular and a queue forms fast. We aim for a quieter window so you get your shot without a long wait, then carry on. It is a short but worthwhile pause on the way through the highlands, best folded into the morning before the crowds build."
    }
   ],
-  "metaTitle": "Handara Gate | Ulun Danu Beratan & Handara Gate",
+  "metaTitle": "Handara Gate | Bedugul Highlands Tour",
   "metaDesc": "Handara Gate is a traditional split gate at a highland golf resort near Bedugul, one of Bali's most recognisable photo spots framed by jungle mountains.",
   "canonical": "https://cahyanaubudexperience.com/attractions/handara-gate.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/handara-gate.webp",
@@ -2371,8 +2311,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ulun-danu-tanah-lot.html",
-    "text": "Ulun Danu Beratan & Handara Gate"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -2383,7 +2323,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Handara Gate"
    }
   ],
-  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookItem": "Handara Gate",
   "bookDefault": "tour",
   "facts": [
    {
@@ -2397,10 +2337,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "20–30 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000 (photo spot)"
    }
   ],
   "included": [
@@ -2499,8 +2435,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/jatiluwih-tour.html",
-    "text": "Jatiluwih Rice Terrace Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -2511,7 +2447,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Jatiluwih Rice Terraces"
    }
   ],
-  "bookItem": "Jatiluwih Rice Terrace Tour",
+  "bookItem": "Jatiluwih Rice Terraces",
   "bookDefault": "tour",
   "facts": [
    {
@@ -2525,10 +2461,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000"
    }
   ],
   "included": [
@@ -2645,10 +2577,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~7 hours (2:30 AM start)"
-   },
-   {
-    "label": "Price",
-    "value": "$50 AvailabilityDaily"
    },
    {
     "label": "Pick-up",
@@ -2769,10 +2697,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~1–2 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$25"
    },
    {
     "label": "Availability",
@@ -2899,10 +2823,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~1 hour"
    },
    {
-    "label": "Price",
-    "value": "$10 DaysTue & Sun"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    }
@@ -3003,8 +2923,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/lempuyang-tirta-gangga.html",
-    "text": "Lempuyang & Tirta Gangga"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -3015,7 +2935,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Lempuyang Temple - Gates of Heaven"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "Lempuyang Temple - Gates of Heaven",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3029,10 +2949,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp100.000 (incl. shuttle)"
    }
   ],
   "included": [
@@ -3259,8 +3175,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-tour.html",
-    "text": "Ubud Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -3271,7 +3187,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Sacred Monkey Forest Sanctuary"
    }
   ],
-  "bookItem": "Ubud Tour",
+  "bookItem": "Sacred Monkey Forest Sanctuary",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3285,10 +3201,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp80.000 (weekend higher)"
    }
   ],
   "included": [
@@ -3407,10 +3319,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~8 hours (2:00 AM start)"
    },
    {
-    "label": "Price",
-    "value": "$55 DifficultyModerate"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    }
@@ -3511,8 +3419,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/munduk-twin-lakes.html",
-    "text": "Munduk Waterfall Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -3523,7 +3431,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Munduk Waterfalls"
    }
   ],
-  "bookItem": "Munduk Waterfall Tour",
+  "bookItem": "Munduk Waterfalls",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3537,10 +3445,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp20.000 per falls"
    }
   ],
   "included": [
@@ -3639,8 +3543,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/gwk-pandawa-beach.html",
-    "text": "GWK & Pandawa Beach"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -3651,7 +3555,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Pandawa Beach"
    }
   ],
-  "bookItem": "GWK & Pandawa Beach",
+  "bookItem": "Pandawa Beach",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3665,10 +3569,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp25.000"
    }
   ],
   "included": [
@@ -3767,8 +3667,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/kintamani-sunrise-penglipuran.html",
-    "text": "Kintamani Sunrise & Penglipuran"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -3779,7 +3679,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Penglipuran Village"
    }
   ],
-  "bookItem": "Kintamani Sunrise & Penglipuran",
+  "bookItem": "Penglipuran Village",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3793,10 +3693,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000"
    }
   ],
   "included": [
@@ -3895,8 +3791,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-culture-day.html",
-    "text": "Ubud Culture Day"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -3907,7 +3803,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Pura Batuan Temple"
    }
   ],
-  "bookItem": "Ubud Culture Day",
+  "bookItem": "Pura Batuan Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -3921,10 +3817,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "30–45 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Donation"
    }
   ],
   "included": [
@@ -4043,10 +3935,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~2 hours on water"
    },
    {
-    "label": "Price",
-    "value": "$35"
-   },
-   {
     "label": "Availability",
     "value": "Daily"
    },
@@ -4151,8 +4039,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/sangeh-tanah-lot.html",
-    "text": "Sangeh Monkey Forest & Tanah Lot"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -4163,7 +4051,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Sangeh Monkey Forest"
    }
   ],
-  "bookItem": "Sangeh Monkey Forest & Tanah Lot",
+  "bookItem": "Sangeh Monkey Forest",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4177,10 +4065,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "30–45 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp30.000"
    }
   ],
   "included": [
@@ -4279,8 +4163,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/lovina-dolphin-sekumpul.html",
-    "text": "Lovina Dolphin & Sekumpul Waterfall"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -4291,7 +4175,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Sekumpul Waterfall"
    }
   ],
-  "bookItem": "Lovina Dolphin & Sekumpul Waterfall",
+  "bookItem": "Sekumpul Waterfall",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4305,10 +4189,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "2–3 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp20.000 / trek ~Rp200.000"
    }
   ],
   "included": [
@@ -4391,7 +4271,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Mask, snorkel, and fins are provided, and the calm shallows work for complete beginners. We read the day's conditions and pick the sheltered spot with the best visibility, since clarity changes with weather and tide. Bring a swimsuit, towel, and a change of clothes, float at your own pace, and dry off in the sun before the drive on."
    }
   ],
-  "metaTitle": "Snorkeling in East Bali | Lempuyang & Tirta Gangga",
+  "metaTitle": "Snorkeling in East Bali | East Bali Tour",
   "metaDesc": "Snorkeling in East Bali offers calm, clear water with coral gardens and reef fish a short swim from shore, with gear provided for beginners.",
   "canonical": "https://cahyanaubudexperience.com/attractions/snorkeling-east-bali.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/kids-snorkeling.webp",
@@ -4408,7 +4288,7 @@ export const ATTRACTION_CONTENT = {
    {
     "type": "link",
     "href": "/lempuyang-tirta-gangga.html",
-    "text": "Lempuyang & Tirta Gangga"
+    "text": "East Bali Tour"
    },
    {
     "type": "sep",
@@ -4419,7 +4299,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Snorkeling in East Bali"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "East Bali Tour",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4519,7 +4399,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Walking is flat and easy on paved paths around the outside of the moat; the inner courtyard is reserved for worship, so you take in the meru from the walkways and across the water. Morning is cooler and quieter, and a sarong is required and provided. Taman Ayun sits in Mengwi about 45 minutes from Ubud, and pairs naturally with Tanah Lot later the same day."
    }
   ],
-  "metaTitle": "Taman Ayun Royal Temple | Tanah Lot & Taman Ayun",
+  "metaTitle": "Taman Ayun Royal Temple | West Bali Tour",
   "metaDesc": "Taman Ayun is the moat-ringed royal temple of the Mengwi kingdom near Ubud, with rows of tiered meru towers and part of Bali's UNESCO subak landscape.",
   "canonical": "https://cahyanaubudexperience.com/attractions/taman-ayun.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/taman-ayun-hero.jpg",
@@ -4535,8 +4415,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/tanah-lot-taman-ayun.html",
-    "text": "Tanah Lot & Taman Ayun"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -4547,7 +4427,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Taman Ayun Royal Temple"
    }
   ],
-  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookItem": "Taman Ayun Royal Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4561,10 +4441,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "30–45 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp30.000"
    }
   ],
   "included": [
@@ -4647,7 +4523,7 @@ export const ATTRACTION_CONTENT = {
     "descHtml": "Walking is flat around the ponds with some steps up the terraces, and shade is limited, so a hat and water help; allow around 45 minutes. Taman Ujung sits close to Tirta Gangga, and the two royal water palaces of Karangasem pair naturally on an East Bali day."
    }
   ],
-  "metaTitle": "Taman Ujung Water Palace | Besakih & Taman Ujung",
+  "metaTitle": "Taman Ujung Water Palace | East Bali Tour",
   "metaDesc": "Taman Ujung is the early-1900s water palace of the Karangasem kings in East Bali, with reflecting ponds, bridges, and pavilions below Mount Agung and the sea.",
   "canonical": "https://cahyanaubudexperience.com/attractions/taman-ujung.html",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
@@ -4663,8 +4539,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/besakih-taman-ujung.html",
-    "text": "Besakih & Taman Ujung"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -4675,7 +4551,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Taman Ujung Water Palace"
    }
   ],
-  "bookItem": "Besakih & Taman Ujung",
+  "bookItem": "Taman Ujung Water Palace",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4689,10 +4565,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "30–45 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp75.000"
    }
   ],
   "included": [
@@ -4791,8 +4663,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/tanah-lot-taman-ayun.html",
-    "text": "Tanah Lot & Taman Ayun"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -4803,7 +4675,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tanah Lot Sunset Temple"
    }
   ],
-  "bookItem": "Tanah Lot & Taman Ayun",
+  "bookItem": "Tanah Lot Sunset Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4817,10 +4689,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp75.000"
    }
   ],
   "included": [
@@ -4919,8 +4787,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/hidden-beaches-cliffs.html",
-    "text": "Bali Hidden Beaches and Cliffs"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -4931,7 +4799,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tegal Wangi Beach"
    }
   ],
-  "bookItem": "Bali Hidden Beaches and Cliffs",
+  "bookItem": "Tegal Wangi Beach",
   "bookDefault": "tour",
   "facts": [
    {
@@ -4945,10 +4813,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free (parking only)"
    }
   ],
   "included": [
@@ -5047,8 +4911,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-tour.html",
-    "text": "Ubud Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5059,7 +4923,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tegalalang Rice Terrace & Coffee Plantation"
    }
   ],
-  "bookItem": "Ubud Tour",
+  "bookItem": "Tegalalang Rice Terrace",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5073,10 +4937,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp25.000"
    }
   ],
   "included": [
@@ -5175,8 +5035,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-tour.html",
-    "text": "Ubud Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5187,7 +5047,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tegenungan Waterfall"
    }
   ],
-  "bookItem": "Ubud Tour",
+  "bookItem": "Tegenungan Waterfall",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5201,10 +5061,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp20.000"
    }
   ],
   "included": [
@@ -5303,8 +5159,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-tour.html",
-    "text": "Ubud Tour"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5315,7 +5171,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tirta Empul Holy Water Temple"
    }
   ],
-  "bookItem": "Ubud Tour",
+  "bookItem": "Tirta Empul Holy Water Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5329,10 +5185,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp75.000"
    }
   ],
   "included": [
@@ -5431,8 +5283,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/lempuyang-tirta-gangga.html",
-    "text": "Lempuyang & Tirta Gangga"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5443,7 +5295,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Tirta Gangga Water Garden"
    }
   ],
-  "bookItem": "Lempuyang & Tirta Gangga",
+  "bookItem": "Tirta Gangga Water Garden",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5457,10 +5309,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp75.000"
    }
   ],
   "included": [
@@ -5559,8 +5407,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/banyumala-twin-lakes.html",
-    "text": "Banyumala & Twin Lakes"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5571,7 +5419,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Twin Lakes Viewpoint (Buyan & Tamblingan)"
    }
   ],
-  "bookItem": "Banyumala & Twin Lakes",
+  "bookItem": "Buyan & Tamblingan Twin Lakes",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5585,10 +5433,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "20–30 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp20.000–Rp50.000"
    }
   ],
   "included": [
@@ -5687,8 +5531,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-culture-day.html",
-    "text": "Ubud Culture Day"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5699,7 +5543,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Ubud Arts & Crafts"
    }
   ],
-  "bookItem": "Ubud Culture Day",
+  "bookItem": "Ubud Arts & Crafts",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5713,10 +5557,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free"
    }
   ],
   "included": [
@@ -5815,8 +5655,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/attractions/cooking-class.html",
-    "text": "Cooking Class"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5827,8 +5667,8 @@ export const ATTRACTION_CONTENT = {
     "text": "Ubud Traditional Market"
    }
   ],
-  "bookItem": "Cooking Class",
-  "bookDefault": "experience",
+  "bookItem": "Ubud Traditional Market",
+  "bookDefault": "tour",
   "facts": [
    {
     "label": "Area",
@@ -5841,10 +5681,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "30–45 min"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free"
    }
   ],
   "included": [
@@ -5943,8 +5779,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ubud-culture-day.html",
-    "text": "Ubud Culture Day"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -5955,7 +5791,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Ubud Royal Palace & Art Market"
    }
   ],
-  "bookItem": "Ubud Culture Day",
+  "bookItem": "Ubud Royal Palace & Art Market",
   "bookDefault": "tour",
   "facts": [
    {
@@ -5969,10 +5805,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–1.5 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Free"
    }
   ],
   "included": [
@@ -6071,8 +5903,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/ulun-danu-tanah-lot.html",
-    "text": "Ulun Danu Beratan & Handara Gate"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -6083,7 +5915,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Ulun Danu Beratan Lake Temple"
    }
   ],
-  "bookItem": "Ulun Danu Beratan & Handara Gate",
+  "bookItem": "Ulun Danu Beratan Lake Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -6097,10 +5929,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp75.000"
    }
   ],
   "included": [
@@ -6323,8 +6151,8 @@ export const ATTRACTION_CONTENT = {
    },
    {
     "type": "link",
-    "href": "/south-coast-sunset-kecak.html",
-    "text": "Uluwatu & Sunset Kecak"
+    "href": "/destinations.html",
+    "text": "Destinations"
    },
    {
     "type": "sep",
@@ -6335,7 +6163,7 @@ export const ATTRACTION_CONTENT = {
     "text": "Uluwatu Cliff Temple"
    }
   ],
-  "bookItem": "Uluwatu & Sunset Kecak",
+  "bookItem": "Uluwatu Cliff Temple",
   "bookDefault": "tour",
   "facts": [
    {
@@ -6349,10 +6177,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Time here",
     "value": "1–2 hours"
-   },
-   {
-    "label": "Entrance",
-    "value": "Rp50.000"
    }
   ],
   "included": [
@@ -6469,10 +6293,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Area",
     "value": "Tanjung Benoa"
-   },
-   {
-    "label": "Price",
-    "value": "$45"
    },
    {
     "label": "Availability",

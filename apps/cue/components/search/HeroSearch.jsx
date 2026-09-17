@@ -2,16 +2,20 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { ChevronDown } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useReferral } from '@/state/ReferralProvider';
+import { withSymbol, withDeemphasizedThousands } from '@/components/Price';
 import useMobile from '@/components/ui/useMobile';
+import DragSheet from '@/components/ui/DragSheet';
 import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
 import { REFMSG } from '@/components/ui/modalClasses';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
+import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import { CONTROL, CHEV, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, panelMenu, PANEL_HEAD_MENU, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, PANEL_BODY_MENU, optMenu, HS_OPT_IC, HS_OPT_NM, HS_OPT_PR } from '@/components/ui/hsClasses';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
@@ -21,7 +25,7 @@ const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const FIELD_LABEL = 'block text-small font-medium text-green mb-[0.4rem] font-body tracking-normal normal-case';
 
 export default function HeroSearch({ onClose, sheetOpen = false }) {
-  const { guests, setGuests, stay, setStay, currency } = useTripPrefs();
+  const { guests, setGuests, currency } = useTripPrefs();
   const pricing = usePricing();
   const { apply } = useReferral();
   const isMobile = useMobile();
@@ -50,7 +54,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   const ranges = useMemo(() => {
     const out = {};
     if (!catalog) return out;
-    const fmt = (n) => symbol + n.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
+    const isIdr = currency === 'IDR';
+    const loc = isIdr ? 'id-ID' : 'en-US';
+    const fmt = (n) => withSymbol(symbol + n.toLocaleString(loc));
     const byCat = (cats) => catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
     const sets = {
       tour: byCat(['tour', 'combo']),
@@ -63,16 +69,14 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       if (!arr.length) continue;
       const lo = Math.min(...arr);
       const hi = Math.max(...arr);
-      out[cat] = lo === hi ? 'from ' + fmt(lo) : fmt(lo) + '–' + hi.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
+      // Only the low end carries the "Rp"/"$" symbol (unchanged shape) - the
+      // bare high-end number still gets the small-thousands treatment for IDR
+      // so both ends of the range read consistently.
+      const hiText = isIdr ? withDeemphasizedThousands(hi.toLocaleString(loc)) : hi.toLocaleString(loc);
+      out[cat] = lo === hi ? <>from {fmt(lo)}</> : <>{fmt(lo)}–{hiText}</>;
     }
     return out;
   }, [catalog, symbol, currency]);
-
-  const stayOptions = useMemo(() => {
-    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
-    if (!catalog) return base;
-    return base.concat(catalog.transfers.map((t) => ({ value: t.route, label: t.route })));
-  }, [catalog]);
 
   const applyCode = async () => {
     const pct = await apply(code);
@@ -104,7 +108,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
               setOpen(false);
             }}
           >
-            <span className={HS_OPT_IC} dangerouslySetInnerHTML={{ __html: o.icon }} />
+            <span className={HS_OPT_IC}><o.Icon strokeWidth={1.6} /></span>
             <span className={HS_OPT_NM}>
               {o.name}
               <small>{o.sub}</small>
@@ -117,13 +121,15 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   );
 
   return (
-    <div
-      className={`flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
+    <DragSheet
+      enabled={isMobile && sheetOpen}
+      onDismiss={onClose}
+      className={`relative flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
         animate-[heroCardIn_0.5s_var(--ease)_backwards] motion-reduce:animate-none
         max-[992px]:fixed max-[992px]:left-0 max-[992px]:right-0 max-[992px]:bottom-0 max-[992px]:z-[45] max-[992px]:w-auto
         max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:[scrollbar-width:none] max-[992px]:[&::-webkit-scrollbar]:hidden max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
         max-[992px]:pt-[1.9rem] max-[992px]:animate-none
-        max-[992px]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]
+        max-[992px]:[transition:translate_var(--dur-slow)_var(--ease-out),visibility_var(--dur-slow)]
         max-[992px]:shadow-[0_-12px_48px_rgba(26,26,26,0.28)]
         max-[992px]:before:content-[''] max-[992px]:before:absolute max-[992px]:before:top-[0.6rem] max-[992px]:before:left-1/2
         max-[992px]:before:[transform:translateX(-50%)] max-[992px]:before:w-10 max-[992px]:before:h-1 max-[992px]:before:rounded-full
@@ -163,9 +169,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           onClick={() => setOpen((v) => !v)}
         >
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
-          <svg className={CHEV} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+          <ChevronDown className={CHEV} />
         </button>
         {/* Portal-mounted once mobile+mounted (not gated on `open`) so the sheet has a
             "closed" frame to transition FROM instead of popping in already-open. */}
@@ -194,7 +198,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <button
             type="button"
             className="flex-none border-none rounded-pill py-[0.72rem] px-[1.15rem] bg-cta text-white font-body font-semibold
-              text-[1rem] cursor-pointer [transition:background_var(--dur-fast)_ease] hover:bg-cta-d"
+              text-[1rem] cursor-pointer [transition:background_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d"
             onClick={applyCode}
           >
             Apply
@@ -216,13 +220,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         </div>
         <div className="mb-[0.8rem]">
           <label className={FIELD_LABEL} htmlFor="hs-stay">Pickup area</label>
-          <Select
-            id="hs-stay"
-            label="Pickup area"
-            value={stay || 'ubud'}
-            onChange={setStay}
-            options={stayOptions}
-          />
+          <PickupAreaSelect id="hs-stay" />
         </div>
       </div>
 
@@ -235,11 +233,11 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <button
         type="button"
         className="w-full mt-[0.4rem] bg-cta text-white border-none rounded-pill p-[0.9rem] font-body font-semibold text-strong cursor-pointer
-          [transition:transform_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
+          [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
         onClick={go}
       >
         Explore
       </button>
-    </div>
+    </DragSheet>
   );
 }

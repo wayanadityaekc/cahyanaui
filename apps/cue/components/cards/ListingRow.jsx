@@ -1,42 +1,14 @@
 'use client';
 
+import clsx from 'clsx';
+import { Check, Clock, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
+import Rating from '@/components/Rating';
 
-function StarIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 20l1.5-6.5-5-4.3 6.6-.6z" />
-    </svg>
-  );
-}
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  );
-}
-function PinIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" />
-    </svg>
-  );
-}
-function ClockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-    </svg>
-  );
-}
+const CheckIcon = () => <Check strokeWidth={2.4} aria-hidden="true" />;
+const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
+const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
+const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
 
 // Tailwind-native (migrasi Fase 2, keluarga kartu - stage 2): kartu listing
 // (tour/activities/destinations). MOBILE = baris horizontal (foto kiri + panel
@@ -70,7 +42,7 @@ const PRICE = 'mt-auto self-end flex items-baseline gap-1 whitespace-nowrap';
 
 export default function ListingRow({
   href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, stops, priv, rating,
+  priceName, priceFallback, priceMode = 'standard', zone, stops, priv,
   dim = false, onReset, anchorId,
 }) {
   const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
@@ -78,13 +50,13 @@ export default function ListingRow({
   return (
     <a
       id={anchorId}
-      className={`${CARD}${dim ? ' opacity-[0.34] hover:opacity-[0.5]' : ''}`}
+      className={clsx(CARD, dim && 'opacity-[0.34] hover:opacity-[0.5]')}
       href={href}
       data-zone={zone}
       onClick={handleClick}
     >
       <div className={IMG} style={photo} role="img" aria-label={alt || name}>
-        <span className={RATE}><StarIcon />{rating || 'New'}</span>
+        <Rating name={priceName} className={RATE} />
       </div>
       <div className={BODY}>
         <h3 className={TITLE}>{name}</h3>

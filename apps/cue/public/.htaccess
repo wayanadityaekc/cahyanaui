@@ -65,3 +65,19 @@ Redirect 301 /ubud-cooking-market.html /attractions/cooking-class.html
 Redirect 301 /attractions/celuk-silver.html /attractions/ubud-arts-crafts.html
 Redirect 301 /attractions/batik.html /attractions/ubud-arts-crafts.html
 Redirect 301 /south-bali-tour.html /hidden-beaches-cliffs.html
+
+# About/Contact/FAQ/Terms/Privacy/Cancellation folded into Our Company sections (Sep 2026).
+Redirect 301 /about-us.html /our-company.html#about
+Redirect 301 /contact.html /our-company.html#contact
+Redirect 301 /faq.html /our-company.html#faq
+Redirect 301 /terms-conditions.html /our-company.html#terms
+Redirect 301 /privacy-policy.html /our-company.html#privacy
+Redirect 301 /cancellation-policy.html /our-company.html#cancellation
+
+# Besakih & Taman Ujung merged into the East Bali tour (Sep 2026, Wayan).
+Redirect 301 /besakih-taman-ujung.html /lempuyang-tirta-gangga.html
+
+# Ulun Danu Beratan & Handara Gate merged into the Bedugul highlands tour, and
+# Sangeh Monkey Forest & Tanah Lot into the West Bali sunset tour (Sep 2026, Wayan).
+Redirect 301 /ulun-danu-tanah-lot.html /jatiluwih-tour.html
+Redirect 301 /sangeh-tanah-lot.html /tanah-lot-taman-ayun.html

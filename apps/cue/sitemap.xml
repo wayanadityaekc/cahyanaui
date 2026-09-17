@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://cahyanaubudexperience.com/</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/about-us.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/activities.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/airport-transfer.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/faq.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/all-reviews.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/attractions/atv-ride.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/attractions/bali-bird-park.html</loc></url>
@@ -59,16 +57,14 @@
   <url><loc>https://cahyanaubudexperience.com/attractions/watersport.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/bali-guide.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/batur-sunrise-adrenaline.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/cancellation-policy.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/charter.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/contact.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/itinerary.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/our-company.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/destinations.html</loc></url>
   <!-- NONAKTIF (belum siap): programs.html -->
   <!-- <url><loc>https://cahyanaubudexperience.com/programs.html</loc></url> -->
   <url><loc>https://cahyanaubudexperience.com/lempuyang-tirta-gangga.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/besakih-taman-ujung.html</loc></url>
+  <!-- MERGED (Sep 2026): besakih-taman-ujung.html -> lempuyang-tirta-gangga.html (301) -->
   <url><loc>https://cahyanaubudexperience.com/guide/bali-adventure-activities.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/guide/bali-beaches-surf.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/guide/bali-day-tours.html</loc></url>
@@ -87,11 +83,11 @@
   <!-- NONAKTIF (tour belum siap): lovina-dolphin-sekumpul.html & munduk-twin-lakes.html -->
   <!-- <url><loc>https://cahyanaubudexperience.com/lovina-dolphin-sekumpul.html</loc></url> -->
   <!-- <url><loc>https://cahyanaubudexperience.com/munduk-twin-lakes.html</loc></url> -->
-  <url><loc>https://cahyanaubudexperience.com/privacy-policy.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/hidden-beaches-cliffs.html</loc></url>
+  <!-- NONAKTIF (tour belum siap): hidden-beaches-cliffs.html -->
+  <!-- <url><loc>https://cahyanaubudexperience.com/hidden-beaches-cliffs.html</loc></url> -->
   <url><loc>https://cahyanaubudexperience.com/south-coast-sunset-kecak.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/gwk-pandawa-beach.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/terms-conditions.html</loc></url>
+  <!-- NONAKTIF (tour belum siap): gwk-pandawa-beach.html -->
+  <!-- <url><loc>https://cahyanaubudexperience.com/gwk-pandawa-beach.html</loc></url> -->
   <url><loc>https://cahyanaubudexperience.com/tour.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/transfer.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/ubud-atv-adventure.html</loc></url>
@@ -99,11 +95,12 @@
   <url><loc>https://cahyanaubudexperience.com/kintamani-sunrise-penglipuran.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/ubud-rafting-adventure.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/ubud-tour.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/ulun-danu-tanah-lot.html</loc></url>
+  <!-- MERGED (Sep 2026): ulun-danu-tanah-lot.html -> jatiluwih-tour.html (301) -->
   <url><loc>https://cahyanaubudexperience.com/tanah-lot-taman-ayun.html</loc></url>
   <url><loc>https://cahyanaubudexperience.com/jatiluwih-tour.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/banyumala-twin-lakes.html</loc></url>
+  <!-- NONAKTIF (tour belum siap): banyumala-twin-lakes.html -->
+  <!-- <url><loc>https://cahyanaubudexperience.com/banyumala-twin-lakes.html</loc></url> -->
   <url><loc>https://cahyanaubudexperience.com/best-of-bali-3-day-package.html</loc></url>
-  <url><loc>https://cahyanaubudexperience.com/sangeh-tanah-lot.html</loc></url>
+  <!-- MERGED (Sep 2026): sangeh-tanah-lot.html -> tanah-lot-taman-ayun.html (301) -->
   <url><loc>https://cahyanaubudexperience.com/full-adventure-rafting-atv.html</loc></url>
 </urlset>

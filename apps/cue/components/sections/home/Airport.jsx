@@ -21,7 +21,7 @@ const CLS = {
   row: 'flex items-center gap-[1.1rem] flex-wrap',
   price: 'text-small text-[rgba(247,243,234,0.85)]',
   amt: 'text-[1.35rem] font-semibold text-amber',
-  btn: 'inline-flex items-center gap-[0.4rem] bg-cta text-white rounded-pill px-[1.4rem] h-[2.9rem] font-semibold text-strong no-underline transition-colors duration-200 ease-in-out hover:bg-cta-d',
+  btn: 'inline-flex items-center gap-[0.4rem] bg-cta text-white rounded-pill px-[1.4rem] h-[2.9rem] font-semibold text-strong no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out hover:bg-cta-d',
 };
 
 export default function Airport() {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { Calendar, ChevronDown } from 'lucide-react';
 import Overlay from './Overlay';
 import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CSEL_GROUP, BK_NATIVE } from './hsClasses';
 
@@ -97,14 +98,9 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
           <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>{value ? fmtLabel(value) : placeholder}</span>
         )}
         {rich ? (
-          <svg className={CHEV} viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <ChevronDown className={CHEV} aria-hidden="true" />
         ) : (
-          <svg className={CHEV_CAL} viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-            <path d="M3 10h18M8 3v4M16 3v4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
+          <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
         )}
       </button>
       {/* Always portal-mounted once mounted (not gated on `open`) so the panel has a

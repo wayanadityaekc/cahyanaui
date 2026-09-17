@@ -2,16 +2,24 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { readLocalJSON, writeLocal } from '@/lib/storage';
-import { KEY } from '@/lib/constants';
+import { KEY, LEGACY_ITEM_NAMES } from '@/lib/constants';
 
 const ItineraryContext = createContext(null);
 
 const EMPTY = { days: [], transfers: [], charters: [] };
 
+// A trip saved before a product was renamed still names the old one, and the
+// API prices by name - so carry those entries over to the current name on load.
+function currentName(name) {
+  return LEGACY_ITEM_NAMES[name] || name;
+}
+
 function normalise(state) {
   if (!state || typeof state !== 'object') return { ...EMPTY };
   return {
-    days: Array.isArray(state.days) ? state.days : [],
+    days: Array.isArray(state.days)
+      ? state.days.map((d) => (Array.isArray(d.items) ? { ...d, items: d.items.map(currentName) } : d))
+      : [],
     transfers: Array.isArray(state.transfers) ? state.transfers : [],
     charters: Array.isArray(state.charters) ? state.charters : [],
   };

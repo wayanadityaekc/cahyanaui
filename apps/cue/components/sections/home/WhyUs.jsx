@@ -3,8 +3,8 @@ import { WHY_US } from '@/content/shared/home';
 // Tailwind-native (migrasi): utilities dipetakan 1:1 dari .whyus* di style.css.
 // space token -> numeric utility yang nilainya sama (space-5 3rem=py-12,
 // container-x 1.5rem=px-6, space-4 2rem=gap-8/mb-8, space-3 1.5rem=gap-x-6).
-// Grid jadi 2 kolom di <=760px persis media query lama. Ikon svg disuntik via
-// dangerouslySetInnerHTML, jadi ukurannya di-set lewat variant [&>svg].
+// Grid jadi 2 kolom di <=760px persis media query lama. Ikon = komponen Lucide
+// dari WHY_US, ukurannya di-set lewat variant [&>svg].
 const CLS = {
   section: 'bg-cream',
   in: 'max-w-[var(--container)] mx-auto px-6 py-12',
@@ -29,7 +29,7 @@ export default function WhyUs() {
         <div className={CLS.grid}>
           {WHY_US.map((c) => (
             <div className={CLS.col} key={c.title}>
-              <span className={CLS.ic} dangerouslySetInnerHTML={{ __html: c.icon }} />
+              <span className={CLS.ic}><c.Icon strokeWidth={1.6} /></span>
               <h3 className={CLS.h3}>{c.title}</h3>
               <p className={CLS.p}>{c.text}</p>
             </div>

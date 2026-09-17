@@ -6,6 +6,7 @@
 // of a raw HTML string into data + real elements.
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { infoList } from '@/components/ui/infoClasses';
+import { unlinkHiddenTours } from '@/lib/routes';
 
 // headingVariant tunes the `--sub` article headings per context (the old
 // `.guide-article-page` / `.company-page .guide-article` descendant overrides):
@@ -22,7 +23,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
   return blocks.map((b, i) => {
     switch (b.type) {
       case 'crumb':
-        return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+        return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'lead':
         return (
           <figure className="mb-6" key={i}>
@@ -32,7 +33,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
             />
             <figcaption
               className="mt-2 text-[length:var(--fs-label)] italic text-center text-muted"
-              dangerouslySetInnerHTML={{ __html: b.caption }}
+              dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.caption) }}
             />
           </figure>
         );
@@ -43,20 +44,20 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         // charter/airport "How a Charter Day Works" etc.). Class kept as-is -
         // .section__title base is B-FINAL's to convert.
         return b.sub === false
-          ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: b.html }} />
-          : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+          ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
+          : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'para':
-        return <p key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+        return <p key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'list':
         return (
           <ul className={infoList(b.variant)} key={i}>
-            {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: item }} />)}
+            {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
           </ul>
         );
       case 'back':
         // margin-top stays inline: `.guide-article p` (0,1,1) outweighs a mt-* utility
         // (0,1,0), same as the pre-migration inline style; [&_a]: replaces .guide-crumb-back.
-        return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: b.html }} />;
+        return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       default:
         return null;
     }

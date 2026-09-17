@@ -1,16 +1,19 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { MessageCircle, ShoppingBag, UserRound, UserRoundPlus } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
-import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
+import { Collapse } from '@/components/ui/Reveal';
 import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
+import useBodyLock from '@/components/ui/useBodyLock';
 import Select from '@/components/ui/Select';
+import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import AuthModal from '@/components/account/AuthModal';
 
 // Tailwind-native (migrasi Fase 2): navbar (semua halaman). Dulu keluarga
@@ -21,6 +24,13 @@ import AuthModal from '@/components/account/AuthModal';
 // karena partial legacy (partials/nav*.html) masih pakai. Beberapa aturan
 // numpuk di 1 elemen (mis. `.navbar__menu > li > a` menang atas display flex
 // tiap link) - hasil flatten-nya diverifikasi lewat computed-style diff.
+
+// Hamburger bars. They morph into an X while the drawer is open so the button
+// itself reacts to the tap, instead of three lines sitting there unchanged.
+const BURGER_BAR =
+  'w-full h-[2px] bg-gold max-[992px]:w-[22px] ' +
+  '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
+  'motion-reduce:transition-none';
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -36,18 +46,9 @@ const BADGE_BASE =
   'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
 
 export default function Navbar() {
-  const { guests, setGuests, stay, setStay } = useTripPrefs();
-  const pricing = usePricing();
+  const { guests, setGuests } = useTripPrefs();
   const { count } = useItinerary();
   const { account, hasUpcoming, logout } = useAccount();
-
-  // Pickup-area options mirror the homepage search form: Ubud + every catalog route.
-  const catalog = pricing && pricing.catalog;
-  const stayOptions = useMemo(() => {
-    const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
-    if (!catalog) return base;
-    return base.concat(catalog.transfers.map((t) => ({ value: t.route, label: t.route })));
-  }, [catalog]);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
@@ -105,10 +106,7 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  useEffect(() => {
-    document.body.classList.toggle('hs-locked', menuOpen);
-    return () => document.body.classList.remove('hs-locked');
-  }, [menuOpen]);
+  useBodyLock(menuOpen);
 
   return (
     <header
@@ -121,11 +119,7 @@ export default function Navbar() {
         </a>
 
         <a href="/my-trips.html" className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]" aria-label="My Trips">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-            <path d="M3 6h18" />
-            <path d="M16 10a4 4 0 0 1-8 0" />
-          </svg>
+          <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
         </a>
 
@@ -133,7 +127,7 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[transform] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
             {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
@@ -147,10 +141,7 @@ export default function Navbar() {
                 (lihat komentar di bawah). */}
             <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem]">
               <span className="w-[38px] h-[38px] rounded-[50%] bg-cream border border-line grid place-items-center text-gold flex-none" aria-hidden="true">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-                </svg>
+                <UserRound className="w-5 h-5" strokeWidth={1.6} />
               </span>
               <span className="flex flex-col min-w-0">
                 <b className="text-strong font-semibold text-gold leading-[1.25]"><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
@@ -174,14 +165,7 @@ export default function Navbar() {
               </div>
               <div className="flex flex-col gap-1 min-w-0">
                 <label className="text-small text-muted" htmlFor="acct-stay">Pickup area</label>
-                <Select
-                  id="acct-stay"
-                  label="Pickup area"
-                  value={stay || 'ubud'}
-                  onChange={setStay}
-                  options={stayOptions}
-                  popup
-                />
+                <PickupAreaSelect id="acct-stay" />
               </div>
             </li>
 
@@ -189,18 +173,14 @@ export default function Navbar() {
             <li className="pb-4">
               <button
                 type="button"
-                className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d"
+                className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d"
                 onClick={() => {
                   if (account) logout();
                   else setAuthOpen(true);
                   setMenuOpen(false);
                 }}
               >
-                <svg className="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 4-6.2 8-6.2s8 2.2 8 6.2" />
-                  <path d="M19 7v4M21 9h-4" />
-                </svg>
+                <UserRoundPlus className="w-[17px] h-[17px]" strokeWidth={1.8} aria-hidden="true" />
                 <span>{account ? 'Sign out' : 'Sign in / Sign up'}</span>
               </button>
             </li>
@@ -216,15 +196,17 @@ export default function Navbar() {
                 aria-expanded={dropOpen}
                 onClick={() => setDropOpen((v) => !v)}
               >
-                Program<span className={`inline-block transition-[transform] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
+                Program<span className={`inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
               </button>
-              <ul className={`list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[0.9rem] ${dropOpen ? 'block' : 'hidden'}`}>
+              <Collapse open={dropOpen}>
+              <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[0.9rem] block">
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/tour.html">Tours</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/destinations.html">Destinations</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/activities.html">Experiences</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/transfer.html">Transfer</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/charter.html">Charter</a></li>
               </ul>
+              </Collapse>
             </li>
             <li><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
             <li><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
@@ -240,10 +222,8 @@ export default function Navbar() {
                   `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
                   hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white
                   (icon currentColor ikut putih, samain gaya sama tombol Sign in). */}
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background] duration-200 ease-[var(--ease)] hover:bg-cta-d">
-                <svg className="w-[18px] h-[18px] flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z" />
-                </svg>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d">
+                <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
                 Chat on WhatsApp
               </a>
             </li>
@@ -253,11 +233,13 @@ export default function Navbar() {
         <button
           className="relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
-          aria-label="Open menu"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" /><span className="w-full h-[2px] bg-gold max-[992px]:w-[22px]" />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
           {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
               .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
               span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
@@ -266,8 +248,8 @@ export default function Navbar() {
         </button>
       </div>
 
-      <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-200 ease-[ease] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
-      {pathname !== '/our-company' && <TripBar />}
+      <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
+      {pathname === '/' && <TripBar />}
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );

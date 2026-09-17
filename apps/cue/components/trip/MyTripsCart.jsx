@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Car, ChevronDown, Clock, MapPin } from 'lucide-react';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -15,7 +16,7 @@ import { BTN } from '@/components/ui/modalClasses';
 import DatePopup from '@/components/booking/DatePopup';
 import { cascadeFrom } from '@/lib/cart';
 import { readLocal } from '@/lib/storage';
-import { KEY, API_BASE, WHATSAPP_NUMBER } from '@/lib/constants';
+import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
@@ -82,7 +83,7 @@ const MTC_REVIEW_BTN = 'w-full';
 // trip card - ghost/gold outline (secondary action, CLAUDE.md: primary CTA stays
 // green, "look at more / secondary" stays gold) vs the green primary review CTA.
 const MTC_CANCEL_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
-const MTC_CANCEL_BTN = 'inline-flex w-auto items-center py-[0.55rem] px-[1.3rem] rounded-pill [border:1px_solid_var(--color-gold)] bg-white text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center';
+const MTC_CANCEL_BTN = 'inline-flex w-auto items-center py-[0.55rem] px-[1.3rem] rounded-pill [border:1px_solid_var(--color-gold)] bg-white text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center';
 // Cart action buttons: shared .btn-pill was forced full-width via
 // `[data-mytrips-cart] .btn-pill` (removed); set per-button now.
 const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
@@ -109,40 +110,19 @@ function ItemIcon({ row }) {
     );
   }
   let glyph;
-  if (row.kind === 'transfer') {
-    glyph = (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M5 13l1.5-4.5A2 2 0 0 1 8.4 7h7.2a2 2 0 0 1 1.9 1.5L19 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H8v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z" />
-        <circle cx="7.5" cy="15.5" r="1" />
-        <circle cx="16.5" cy="15.5" r="1" />
-      </svg>
-    );
-  } else if (row.kind === 'charter') {
-    glyph = (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
-      </svg>
-    );
-  } else {
-    glyph = (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-        <circle cx="12" cy="10" r="2.5" />
-      </svg>
-    );
-  }
+  if (row.kind === 'transfer') glyph = <Car strokeWidth={1.7} />;
+  else if (row.kind === 'charter') glyph = <Clock strokeWidth={1.7} />;
+  else glyph = <MapPin strokeWidth={1.7} />;
   return <span className={MTC_ITEM_ICON} aria-hidden="true">{glyph}</span>;
 }
 
 export default function MyTripsCart() {
   const { state, save, hydrated } = useItinerary();
   const { displayGuests, currency, stay } = useTripPrefs();
-  const { account } = useAccount();
+  const { account, trips, reviewableItems } = useAccount();
   const { referral } = useReferral();
   const { openBooking } = useBooking();
 
-  const [trips, setTrips] = useState(null);
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
@@ -201,33 +181,6 @@ export default function MyTripsCart() {
     enabled: hydrated,
   });
   const { format } = useMoney();
-
-  // Aggregate every still-reviewable tour across ALL past bookings (not just one
-  // card) - feeds the single global "Leave a Review" button (Wayan, Sep 2026).
-  const reviewableItems = useMemo(() => {
-    if (!trips || !trips.history) return [];
-    const out = [];
-    trips.history.forEach((t) => {
-      (t.review_items || []).forEach((s) => out.push({
-        ref: t.ref,
-        service: s,
-        tripName: t.name,
-        date: t.start_date ? fmtDay(t.start_date) : '',
-      }));
-    });
-    return out;
-  }, [trips]);
-
-  useEffect(() => {
-    const token = readLocal(KEY.token, '');
-    if (!token) return;
-    let cancelled = false;
-    fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (!cancelled && d && Array.isArray(d.upcoming)) setTrips(d); })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [account]);
 
   if (!hydrated) return <div data-mytrips-cart />;
 
@@ -344,9 +297,7 @@ export default function MyTripsCart() {
               {open
                 ? 'Hide details'
                 : 'View details (' + items.length + (items.length > 1 ? ' items)' : ' item)')}
-              <svg className={MTC_DET_CHEV} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
+              <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
             </button>
             {open && (
               <ul className={MTC_DET_LIST}>
@@ -510,7 +461,7 @@ export default function MyTripsCart() {
 
           <p className={MTC_NOTE}>
             By clicking <strong>Make Payment</strong>, you agree to our{' '}
-            <a className={MTC_POLICY_LINK} href="/terms-conditions.html">Terms</a> and <a className={MTC_POLICY_LINK} href="/cancellation-policy.html">Cancellation Policy</a>.
+            <a className={MTC_POLICY_LINK} href="/our-company.html#terms">Terms</a> and <a className={MTC_POLICY_LINK} href="/our-company.html#cancellation">Cancellation & Refund Policy</a>.
           </p>
           <button type="button" className={`${BTN} mt-[1.2rem] disabled:opacity-45 disabled:cursor-not-allowed`} disabled={undated} onClick={checkout}>Make Payment</button>
           <p className={MTC_NOTE}>

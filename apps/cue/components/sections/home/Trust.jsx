@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { API_BASE } from '@/lib/constants';
 
 // Tailwind-native (migrasi): .trust* -> utilities 1:1 dari style.css.
@@ -17,7 +18,7 @@ const CLS = {
   group: 'flex-[0_1_auto]',
   label: 'mb-6 text-label tracking-[0.14em] uppercase text-muted',
   logos: 'flex flex-wrap items-center justify-center gap-y-6 gap-x-[2.75rem] max-w-[900px] mx-auto',
-  logoImg: 'h-[30px] w-auto transition-[transform] duration-200 ease-[var(--ease-out)] hover:-translate-y-[2px]',
+  logoImg: 'h-[30px] w-auto transition-[translate] duration-200 ease-[var(--ease-out)] hover:-translate-y-[2px]',
   socials: 'flex items-center justify-center gap-6',
   socialImg: 'h-[30px] w-auto transition-[transform] duration-200 ease-[var(--ease-out)]',
   socialLink: '[&:hover>img]:-translate-y-[2px]',
@@ -40,7 +41,7 @@ export default function Trust({ showStat = true, showSocials = false, cream = fa
   }, []);
 
   return (
-    <section className={`${CLS.base}${cream ? ' bg-cream' : ''}`}>
+    <section className={clsx(CLS.base, cream && 'bg-cream')}>
       {showStat && (
         <p className={CLS.stat} hidden={!count}>
           <strong className={CLS.statStrong}>{count}</strong> travelers have joined Cahyana

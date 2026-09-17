@@ -38,7 +38,7 @@ const PEOPLE_ICON = <UserRound strokeWidth={1.6} />;
 const SPARK_ICON = <Sparkles strokeWidth={1.5} />;
 const SHIELD_ICON = <ShieldCheck strokeWidth={1.6} />;
 
-export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook, variant = 'standalone' }) {
+export default function BookingForm({ presetItem = '', presetType = '', perPerson = false, onBook, variant = 'standalone', belowPrice }) {
   const { setGuests, displayGuests } = useTripPrefs();
   const pricing = usePricing();
   const { openBooking } = useBooking();
@@ -145,6 +145,11 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           <span className="block font-head text-[clamp(2.4rem,8vw,3.1rem)] font-bold leading-none tracking-[-0.02em] text-gold [&_.price__sym]:text-[0.55em] [&_.price__sym]:font-semibold [&_.price__sym]:[vertical-align:0.26em] [&_.price__sym]:mr-[0.04em]">{withSymbol(priceText)}</span>
           <span className="block mt-[0.45rem] text-small text-muted">{unit} · {displayGuests} {guestWord}</span>
         </div>
+
+        {/* Slot directly under the price: the attraction pages put the tour
+            comparison here, so the guest reads "this place alone costs X" and
+            "the day that includes it costs Y" as one thought. */}
+        {belowPrice}
 
         {showToggle && (
           <div className="flex p-[3px] mb-[0.4rem] [border:1px_solid_rgba(34,32,28,0.5)] rounded-pill bg-[rgba(34,32,28,0.08)]" id="booking-type">

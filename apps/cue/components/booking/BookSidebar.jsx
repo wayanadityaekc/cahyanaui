@@ -11,7 +11,7 @@ import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-export default function BookSidebar({ item, presetType = 'tour', perPerson = false }) {
+export default function BookSidebar({ item, presetType = 'tour', perPerson = false, belowPrice }) {
   const [ask, setAsk] = useState(null);
   const [pending, setPending] = useState(null);
   const [confirm, setConfirm] = useState(null);
@@ -53,7 +53,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
 
   return (
     <div className="booksidebar relative border border-line rounded-lg overflow-hidden">
-      <BookingForm presetItem={item} presetType={presetType} perPerson={perPerson} onBook={start(true)} variant="sidebar" />
+      <BookingForm presetItem={item} presetType={presetType} perPerson={perPerson} onBook={start(true)} variant="sidebar" belowPrice={belowPrice} />
 
       <DatePopup
         open={!!ask}

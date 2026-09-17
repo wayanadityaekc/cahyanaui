@@ -1,5 +1,9 @@
 import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
+import TourDestinationCards from '@/components/sections/TourDestinationCards';
+import { tourDestinations } from '@/lib/tourIndex';
+import { ATTRACTION_CONTENT } from '@/content/attractions';
+
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
@@ -17,12 +21,12 @@ import { isHiddenTour } from '@/lib/routes';
 // -> utilities; .stop__body (tanpa CSS) -> drop class; .stop--link (link + hover
 // lift) -> utilities. DIPERTAHANKAN sbg CSS: .stop (grid layout engine, di-scope
 // .dtabs__sec .stop) + .stop__image (primitif foto shared, .stop__image > img).
+const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur)_var(--ease-out)] hover:[transform:translateY(-3px)]`;
 export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
 // Linked stop = the same STOP grid layout (incl. its `stop` hook for DetailTabs'
 // [&_.stop]:max-w-none) plus link-only styling.
-const STOP_LINK = `${STOP} no-underline text-inherit [transition:transform_var(--dur)_var(--ease-out)] hover:[transform:translateY(-3px)]`;
 // Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
 // sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
 export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-top:1px_solid_#e0ddd4] [border-bottom:1px_solid_#e0ddd4] text-h3 text-muted';
@@ -41,7 +45,7 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
 export const HERO_CTA = 'inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
 
-function Stop({ s }) {
+function Stop({ s, linked }) {
   const inner = (
     <>
       {s.img ? (
@@ -58,10 +62,12 @@ function Stop({ s }) {
       </div>
     </>
   );
-  // Link stop = detail page. refId (referensi destination/experience) diturunkan jadi
-  // /attractions/<refId>.html (URL tetep, nol perubahan SEO); fallback s.link buat item
-  // non-attraction lama. name/img/highlight tetep tour-specific.
-  const href = s.refId ? `/attractions/${s.refId}.html` : s.link;
+  // Stops are plain text where the new flow is on (Wayan, Sep 2026). They used to
+  // link to /attractions/<refId>.html, which dropped a guest mid-decision onto a
+  // page quoting a second, single-destination price - the confusion this change
+  // exists to remove. The way through is now the card grid at the bottom, so the
+  // tour sidebar stays the only price on screen while they read.
+  const href = linked ? (s.refId ? `/attractions/${s.refId}.html` : s.link) : null;
   return href ? (
     <a className={STOP_LINK} href={href}>{inner}</a>
   ) : (
@@ -69,7 +75,14 @@ function Stop({ s }) {
   );
 }
 
+// PILOT (Wayan, Sep 2026): unlinked stops + the destination card grid run on this
+// tour only while he reviews it. Rollout = drop the list and let every tour through.
+const PILOT = ['ubud-culture-day'];
+
 export default function TourPage({ data }) {
+  const slug = (data.__page || '').replace(/^\//, '');
+  const newFlow = PILOT.includes(slug);
+  const destinations = newFlow ? tourDestinations(slug, ATTRACTION_CONTENT) : [];
   return (
     <>
       <JsonLd page={data.__page} />
@@ -112,7 +125,7 @@ export default function TourPage({ data }) {
               it.type === 'sub' ? (
                 <h3 className={`${SECTION_TITLE_SUB} [transform:translateX(var(--title-shift,0px))]`} key={i}>{it.text}</h3>
               ) : (
-                <Stop s={it} key={i} />
+                <Stop s={it} linked={!newFlow} key={i} />
               ),
             )}
           </div>
@@ -131,6 +144,7 @@ export default function TourPage({ data }) {
       </div>
       <BookCta item={data.bookItem} />
       <BookBar item={data.bookItem} />
+      <TourDestinationCards items={destinations} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

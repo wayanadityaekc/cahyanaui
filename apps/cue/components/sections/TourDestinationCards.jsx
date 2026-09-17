@@ -1,6 +1,6 @@
 import HomepageCard from '@/components/cards/HomepageCard';
-import { SECTION_TITLE } from '@/components/ui/sectionTitle';
-import Slider from '@/components/ui/Slider';
+import { GRID_RELATED } from '@/components/ui/gridClasses';
+import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 
 // "Destinations you'll visit on this tour" - the only link from a tour page to
 // an attraction page now that the itinerary stops are plain text. Keeping the
@@ -12,16 +12,16 @@ import Slider from '@/components/ui/Slider';
 // else: leaving priceName out is what keeps the price off them, so the tour's
 // sidebar stays the only price on screen while a guest reads.
 //
-// A carousel, not a grid (Wayan): a tour can have more stops than fit a row - Ubud
-// Culture Day has six - and a wrapping grid puts the tail on a second row while the
-// "You might also like" carousel below it stays on one. Slider keeps both sections
-// scrolling the same way, with arrows on desktop and swipe on mobile.
+// Same section chrome and the same GRID_RELATED as "You might also like" below it
+// (Wayan: identical to carousel 2) - a 4-up grid on desktop, a slider on mobile.
+// Six stops wrap to a second row on desktop; that is the same behaviour the other
+// carousel would have with six cards, which is the point.
 export default function TourDestinationCards({ items }) {
   if (!items || !items.length) return null;
   return (
-    <section className="relative max-w-[1200px] mx-auto py-[var(--space-5)] px-[var(--space-3)] text-left max-[768px]:pt-8 max-[768px]:px-[1.1rem] max-[768px]:pb-[2.4rem]">
-      <h2 className={SECTION_TITLE}>Destinations you&apos;ll visit on this tour</h2>
-      <Slider>
+    <section className={CAROUSEL_SECTION}>
+      <h2 className={CAROUSEL_TITLE}>Destinations you&apos;ll visit on this tour</h2>
+      <div className={GRID_RELATED}>
         {items.map((d) => (
           <HomepageCard
             key={d.refId}
@@ -33,7 +33,7 @@ export default function TourDestinationCards({ items }) {
             metaIcon="pin"
           />
         ))}
-      </Slider>
+      </div>
     </section>
   );
 }

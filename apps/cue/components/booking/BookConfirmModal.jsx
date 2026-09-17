@@ -17,9 +17,9 @@ import Select from '@/components/ui/Select';
 import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
-import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT, REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
+import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
-import { baseTotal } from '@/lib/payment';
+import { baseTotal, PAY_COPY } from '@/lib/payment';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -211,17 +211,13 @@ export default function BookConfirmModal() {
 
   const applyRef = async () => {
     const pct = await apply(f.referral);
-    setRefMsg(pct ? { ok: true, text: `Referral applied - ${pct}% off!` } : { ok: false, text: 'Code not valid.' });
+    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   };
 
   // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/logo/title/group/input/
-  // btn(+wa)/success pakai konstanta shared (modalClasses.js). Bagian yang ISOLATED ke
-  // modal ini (referral input-group, summary/row, details accordion, pay chips) di-inline
-  // utility + CSS-nya DIHAPUS di commit ini. .modal__referral-msg TETEP CSS (dipakai 6
-  // komponen), jadi msg di sini juga di-inline biar CSS-nya bisa dihapus nanti barengan.
-  const REFERRAL_INPUT = 'flex-1 px-[0.65rem] py-2 h-[var(--field-h)] [border:1px_solid_#d8d2c4] rounded-sm font-body text-field text-green';
-  const REFERRAL_BTN = 'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer';
-  const refMsgCls = (ok) => `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`;
+  // btn(+wa)/success pakai konstanta shared (modalClasses.js). Yang ISOLATED ke modal
+  // ini (summary/row, details accordion) di-inline utility + CSS-nya DIHAPUS. Referral
+  // input-group + msg pindah ke modalClasses juga, karena PaymentStep ikut pakai.
   const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_#eee] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";

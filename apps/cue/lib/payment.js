@@ -112,6 +112,13 @@ export const PAY_COPY = {
   methodHeading: 'Pay with',
   referralLabel: 'Referral code',
   referralHint: 'Got a code? Enter it first - it changes both options below.',
+  // What a code is worth, said the way the model actually works. It used to read
+  // "Referral applied - 10% off!", which is no longer true anywhere: a code does
+  // not cut the price by itself, it unlocks the bigger full-payment discount and
+  // waives the deposit. Two screens show this (homepage search + booking modal),
+  // so the sentence lives here and not in either of them.
+  referralOk: `Code applied. Pay in full at checkout for ${FULL_DISCOUNT_REFERRAL_PCT}% off, or book now with no deposit.`,
+  referralBad: 'Code not valid.',
   cancel: `Free cancellation up to ${FREE_CANCEL_HOURS} hours before pickup - anything paid is refunded in full.`,
   late: 'Cancel later than that, or no-show, and what you paid is not refunded.',
   secureCard: 'Card details are entered on a secure DOKU window. We never see or store them.',

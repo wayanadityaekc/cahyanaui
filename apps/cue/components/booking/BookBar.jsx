@@ -1,22 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MessageCircle } from 'lucide-react';
 import Price from '@/components/Price';
-import { WHATSAPP_NUMBER } from '@/lib/constants';
+import { BAR_SHELL, BAR_ON, BAR_DIVIDER, BarChat } from '@/components/ui/stickyBar';
 
 // Sticky price + CTA on mobile, rendered by the page that actually sells
 // something (TourPage/AttractionPage pass their bookItem). Wayan, Sep 2026:
-// - chat stays leftmost, then the price, then the CTA on the right
-// - no guest count in here any more
-// - rounded and floating just clear of the bottom edge, not edge-to-edge
+// - chat leftmost, then the price, then the CTA on the right
+// - no guest count in here
 // - hidden whenever the booking form is on screen, so its "Book now" and the
 //   card's own CTA are never both visible - same rule initBookBar had.
 //
 // It stays mounted while hidden (slides out instead of unmounting) so the
-// reserved body padding doesn't flip; `bookbar-on` is the marker ChatFab reads
-// to know the bar is actually showing, and `bookbar` the one <body> reads for
-// that padding.
+// reserved body padding doesn't flip; the shell's marker classes are what
+// <body> and ChatFab read - see components/ui/stickyBar.jsx.
 export default function BookBar({ item, priceFallback }) {
   const [hidden, setHidden] = useState(false);
 
@@ -49,22 +46,13 @@ export default function BookBar({ item, priceFallback }) {
 
   return (
     <div
-      className={`bookbar ${hidden ? '' : 'bookbar-on '}fixed left-2 right-2 bottom-1.5 z-[95] hidden max-md:flex items-center gap-3 py-[0.4rem] pl-4 pr-[0.4rem] bg-white border border-line rounded-[var(--r-xl)] shadow-xl [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
+      className={`${BAR_SHELL} ${hidden ? '' : `${BAR_ON} `}[transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
         hidden ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
       inert={hidden || undefined}
     >
-      <a
-        href={`https://wa.me/${WHATSAPP_NUMBER}`}
-        target="_blank"
-        rel="noopener"
-        className="flex-none flex flex-col items-center gap-[2px] text-green no-underline"
-        aria-label="Chat on WhatsApp"
-      >
-        <MessageCircle className="w-[18px] h-[18px]" strokeWidth={1.8} />
-        <span className="text-[0.6rem] font-medium leading-none">Chat</span>
-      </a>
-      <span className="w-px self-stretch bg-line flex-none" aria-hidden="true" />
+      <BarChat />
+      <span className={BAR_DIVIDER} aria-hidden="true" />
       <div className="flex-1 min-w-0 text-[1.1rem] font-semibold text-amber leading-none">
         <Price name={item} fallback={priceFallback} />
       </div>

@@ -17,7 +17,7 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 // reserved body padding doesn't flip; `bookbar-on` is the marker ChatFab reads
 // to know the bar is actually showing, and `bookbar` the one <body> reads for
 // that padding.
-export default function BookBar({ item }) {
+export default function BookBar({ item, priceFallback }) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function BookBar({ item }) {
       </a>
       <span className="w-px self-stretch bg-line flex-none" aria-hidden="true" />
       <div className="flex-1 min-w-0 text-[1.1rem] font-semibold text-amber leading-none">
-        <Price name={item} fallback="" />
+        <Price name={item} fallback={priceFallback} />
       </div>
       <a
         href="#booking"

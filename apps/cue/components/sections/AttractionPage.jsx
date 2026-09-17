@@ -13,7 +13,7 @@ import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
 import TourComparisonBox from '@/components/booking/TourComparisonBox';
-import { toursContaining } from '@/lib/tourIndex';
+import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
 
 // PILOT (Wayan, Sep 2026): the strip and the comparison box show only for the
 // stops of the pilot tour while he reviews them. Rollout = drop the list, and
@@ -103,7 +103,7 @@ export default function AttractionPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} />
+      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 

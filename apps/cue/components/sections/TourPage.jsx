@@ -1,7 +1,7 @@
 import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import TourDestinationCards from '@/components/sections/TourDestinationCards';
-import { tourDestinations } from '@/lib/tourIndex';
+import { tourDestinations, priceFallbackFor } from '@/lib/tourIndex';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
 
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
@@ -143,7 +143,7 @@ export default function TourPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      <BookBar item={data.bookItem} />
+      <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} />
       <TourDestinationCards items={destinations} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}

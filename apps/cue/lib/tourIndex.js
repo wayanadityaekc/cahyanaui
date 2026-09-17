@@ -77,6 +77,24 @@ const TOUR_CARDS = {};
   Object.values(node).forEach(collect);
 })(LISTINGS.tour);
 
+// Same card prices, keyed by item name and across every listing (tours,
+// activities, destinations). <Price> renders nothing until the live catalog
+// arrives, which is fine for a card in a grid but leaves the sticky book bar
+// with a hole where its price belongs - on a slow connection, and for as long
+// as the API is down. Cards have always passed this build-time number for
+// exactly that reason; the bar now does too.
+const CARD_PRICE = {};
+(function collect(node) {
+  if (Array.isArray(node)) return node.forEach(collect);
+  if (!node || typeof node !== 'object') return;
+  if (node.priceName && node.priceFallback) CARD_PRICE[node.priceName] = node.priceFallback;
+  Object.values(node).forEach(collect);
+})(LISTINGS);
+
+export function priceFallbackFor(name) {
+  return CARD_PRICE[name];
+}
+
 const CONTAINS = {};
 for (const [slug, t] of Object.entries(TOUR_CONTENT)) {
   if (parked.has(slug)) continue;

@@ -399,7 +399,7 @@ export const GUIDE_CONTENT = {
  "bali-day-tours": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
   "title": "Bali Day Tours Explained",
-  "sub": "See the highlights with a local driver-guide - no stress, no driving.",
+  "sub": "See the highlights with a local driver - no stress, no driving.",
   "tags": [
    "What to Do",
    "Day Trips"
@@ -451,7 +451,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "A private day tour is your own air-conditioned car, a local English-speaking driver-guide, and a themed route you're free to bend - linger, skip, swap, add. Pricing is per car for up to five people, so a family pays the same as a couple, and every price is shown upfront. On our tours you choose between <b>Standard</b> (car, petrol, crew - entrance tickets paid at each gate) and <b>Exclusive</b> (tickets for the listed stops included, whole day prepaid). Pick-up and drop-off are at your hotel or villa in the Ubud area, and a 20% deposit on WhatsApp locks the date."
+    "html": "A private day tour is your own air-conditioned car, a local English-speaking driver, and a themed route you're free to bend - linger, skip, swap, add. Pricing is per car for up to five people, so a family pays the same as a couple, and every price is shown upfront. On our tours you choose between <b>Standard</b> (car, petrol, crew - entrance tickets paid at each gate) and <b>Exclusive</b> (tickets for the listed stops included, whole day prepaid). Pick-up and drop-off are at your hotel or villa in the Ubud area, and a 20% deposit on WhatsApp locks the date."
    },
    {
     "type": "heading",
@@ -523,7 +523,7 @@ export const GUIDE_CONTENT = {
    }
   ],
   "metaTitle": "Bali Day Tours Explained | Bali Guide",
-  "metaDesc": "A guide to private day tours in Bali - themed routes for Ubud, East, West, South, and North Bali with a local driver-guide and upfront pricing.",
+  "metaDesc": "A guide to private day tours in Bali - themed routes for Ubud, East, West, South, and North Bali with a local driver and upfront pricing.",
   "ogImage": "https://cahyanaubudexperience.com/assets/icons/preview.jpg",
   "more": [
    {

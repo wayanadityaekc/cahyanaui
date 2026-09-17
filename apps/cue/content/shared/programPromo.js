@@ -69,7 +69,7 @@ export const PROGRAM_PROMO = [
   {
     id: 'company',
     kicker: 'Our Company',
-    title: 'One Local Family in Ubud',
+    title: 'Local Drivers in Ubud',
     text: 'Tours, driver, activities and villa from one team - plan it once, ask one person, and see every price before you commit.',
     img: 'tegalalang-rice-terrace-hero.jpg',
     href: '/our-company.html',

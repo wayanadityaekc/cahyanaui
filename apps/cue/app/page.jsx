@@ -14,7 +14,7 @@ import GuestReviews from '@/components/sections/GuestReviews';
 export const metadata = {
   title: 'Bali Trip Planner with a Private Driver | Cahyana Ubud Experience',
   description:
-    'Plan your whole Bali trip in one place - private tours, airport transfers, experiences and villas from a local Ubud family, with every price upfront.',
+    'Plan your whole Bali trip in one place - private tours, airport transfers, experiences and villas from local Ubud drivers, with every price upfront.',
   alternates: { canonical: '/' },
 };
 

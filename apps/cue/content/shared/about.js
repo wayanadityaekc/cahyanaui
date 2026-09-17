@@ -1,13 +1,13 @@
 export const ABOUT = {
   "title": "About Us",
-  "sub": "One local family in Ubud, running your whole trip - the tours, the driver, the villa - so you plan it once and know the price before you say yes.",
+  "sub": "Local drivers in Ubud, running your whole trip - the tours, the transport, the villa - so you plan it once and know the price before you say yes.",
   "gallery": [
     "Photo 1",
     "Photo 2",
     "Photo 3"
   ],
   "intro": {
-    "text": "Cahyana started with one car and one driver. It has grown since - a few more drivers, and the villas over at ubudprivatevillas.com - but it is still the same family. The people who answer your message are the ones who show up at your hotel in the morning.",
+    "text": "Cahyana started with one car and one driver. It has grown since - a few more drivers, and the villas over at ubudprivatevillas.com - but it is still the same small team of local drivers. The people who answer your message are the ones who show up at your hotel in the morning.",
     "facts": [
       {
         "label": "Based in",
@@ -15,7 +15,7 @@ export const ABOUT = {
       },
       {
         "label": "Run by",
-        "value": "One family"
+        "value": "Local drivers"
       },
       {
         "label": "Prices",
@@ -26,7 +26,7 @@ export const ABOUT = {
   "arows": [
     {
       "kicker": "Our story",
-      "heading": "One family, one car, one idea",
+      "heading": "One local driver, one car, one idea",
       "paras": [
         "Cahyana started with a single idea: that visitors deserve to see Bali the way locals actually live it - not the version stitched together from a dozen browser tabs. One car, one driver, and a promise to keep it honest.",
         "We're not an agency with a call centre. The same people who answer your message are the ones who show up at your hotel in the morning, and who know which temple is quiet at 9am and which warung does the best lunch on the way back."
@@ -69,6 +69,6 @@ export const ABOUT = {
       }
     }
   ],
-  "metaTitle": "About Us | One Local Family in Ubud, Prices Upfront - Cahyana",
-  "metaDesc": "Meet the family behind Cahyana Ubud Experience - one local team in Ubud for your tours, driver, activities, and villa. Every price upfront, no hidden fees."
+  "metaTitle": "About Us | Local Drivers in Ubud, Prices Upfront - Cahyana",
+  "metaDesc": "Meet the local drivers behind Cahyana Ubud Experience - one team in Ubud for your tours, driver, activities, and villa. Every price upfront, no hidden fees."
 };

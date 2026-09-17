@@ -279,7 +279,7 @@ export const GUIDE_CARDS = [
       "hgt": 1080,
       "tag": "Tours",
       "title": "Guided Day Tours",
-      "desc": "See the highlights the easy way with a local driver-guide, on themed routes across Bali."
+      "desc": "See the highlights the easy way with a local driver, on themed routes across Bali."
     },
     {
       "href": "/guide/best-time-to-visit-bali.html",
@@ -396,12 +396,12 @@ export const WHY_US = [
     },
     {
       "Icon": Users,
-      "title": "Local family",
+      "title": "Local drivers",
       "text": "One team in Ubud runs your whole trip. Ask one person."
     },
     {
       "Icon": Car,
-      "title": "Private driver-guide",
+      "title": "Private local driver",
       "text": "Your own car and driver, not a shared bus, not a stranger."
     },
     {

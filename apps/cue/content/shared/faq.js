@@ -72,6 +72,6 @@ export const FAQ = [
   {
     cat: `On Your Trip`,
     q: `Does my driver speak English?`,
-    a: `<p>Yes - our driver-guides speak English and know the island well, from quiet temple hours to which warung does the best lunch on the way back.</p>`,
+    a: `<p>Yes - our local drivers speak English and know the island well, from quiet temple hours to which warung does the best lunch on the way back.</p>`,
   },
 ];

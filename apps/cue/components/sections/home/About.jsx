@@ -20,7 +20,7 @@ export default function About() {
     >
       <div className={CLS.in}>
         <span className={CLS.k}>About Cahyana</span>
-        <h2 className={CLS.t}>One local family, your whole trip</h2>
+        <h2 className={CLS.t}>Local drivers, your whole trip</h2>
         <p className={CLS.lead}>
           Tours, driver, activities and villa from one team in Ubud - plan it once, ask one person, and see every price
           before you commit.

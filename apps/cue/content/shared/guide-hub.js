@@ -173,7 +173,7 @@ export const GUIDE_HUB = {
           "hgt": 900,
           "tag": "Tours",
           "title": "Guided Day Tours",
-          "desc": "See the highlights the easy way with a local driver-guide - themed routes across Ubud, and East, West, South, and North Bali."
+          "desc": "See the highlights the easy way with a local driver - themed routes across Ubud, and East, West, South, and North Bali."
         },
         {
           "href": "/guide/bali-adventure-activities.html",

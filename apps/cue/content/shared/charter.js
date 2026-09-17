@@ -55,7 +55,7 @@ export const CHARTER = {
       "An airport run with sightseeing on the way"
     ] },
     { "type": "heading", "html": "Charter or Guided Tour?" },
-    { "type": "para", "html": "Both come with a private car and driver - the difference is structure. Our <a href=\"/tour.html\">day tours</a> follow a curated route with a local guide and a Standard / Exclusive ticket option, so the whole day is designed for you. A charter is pure freedom: transport, driver, and time, with the itinerary left entirely to you. If it's your first visit, a tour makes a great introduction; once you know what you love, a charter lets you chase it." }
+    { "type": "para", "html": "Both come with a private car and driver - the difference is structure. Our <a href=\"/tour.html\">day tours</a> follow a curated route with a local driver and a Standard / Exclusive ticket option, so the whole day is designed for you. A charter is pure freedom: transport, driver, and time, with the itinerary left entirely to you. If it's your first visit, a tour makes a great introduction; once you know what you love, a charter lets you chase it." }
   ],
   "metaTitle": "Private Car Charter Bali | Half & Full Day",
   "metaDesc": "Charter a private car with driver in Bali from Ubud - half day (5 hours) or full day (10 hours), extend by the hour, petrol included. Pick-up from anywhere on the island."

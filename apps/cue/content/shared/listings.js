@@ -546,6 +546,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/uluwatu-temple.html",
+            "priceName": "Uluwatu Cliff Temple",
+            "priceFallback": "$35",
             "zone": "temple",
             "img": "uluwatu-temple-top.webp",
             "alt": "Uluwatu Cliff Temple - Bali attraction near Ubud",
@@ -558,6 +560,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/tanah-lot.html",
+            "priceName": "Tanah Lot Sunset Temple",
+            "priceFallback": "$35",
             "zone": "temple",
             "img": "tanah-lot.webp",
             "alt": "Tanah Lot Sunset Temple - Bali attraction near Ubud",
@@ -570,6 +574,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/besakih.html",
+            "priceName": "Besakih - The Mother Temple",
+            "priceFallback": "$46",
             "zone": "temple",
             "img": "besakih-temple-bali.webp",
             "alt": "Besakih - The Mother Temple - Bali attraction near Ubud",
@@ -582,6 +588,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/tirta-empul.html",
+            "priceName": "Tirta Empul Holy Water Temple",
+            "priceFallback": "$23",
             "zone": "temple",
             "img": "tirta-empul-hero.jpg",
             "alt": "Tirta Empul Holy Water Temple - Bali attraction near Ubud",
@@ -594,6 +602,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/goa-gajah.html",
+            "priceName": "Goa Gajah - The Elephant Cave",
+            "priceFallback": "$23",
             "zone": "temple",
             "img": "goa-gajah-hero.jpg",
             "alt": "Goa Gajah - The Elephant Cave - Bali attraction near Ubud",
@@ -606,6 +616,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/gunung-kawi.html",
+            "priceName": "Gunung Kawi Temple",
+            "priceFallback": "$23",
             "zone": "temple",
             "img": "gunung-kawi-hero.jpg",
             "alt": "Gunung Kawi Temple - Bali attraction near Ubud",
@@ -618,6 +630,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/lempuyang-temple.html",
+            "priceName": "Lempuyang Temple - Gates of Heaven",
+            "priceFallback": "$46",
             "zone": "temple",
             "img": "lempuyang.webp",
             "alt": "Lempuyang Temple - Gates of Heaven - Bali attraction near Ubud",
@@ -630,6 +644,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/ulun-danu-beratan.html",
+            "priceName": "Ulun Danu Beratan Lake Temple",
+            "priceFallback": "$46",
             "zone": "temple",
             "img": "ulun-danu-beratan-hero.webp",
             "alt": "Ulun Danu Beratan Lake Temple - Bali attraction near Ubud",
@@ -642,6 +658,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/taman-ayun.html",
+            "priceName": "Taman Ayun Royal Temple",
+            "priceFallback": "$35",
             "zone": "temple",
             "img": "taman-ayun-hero.jpg",
             "alt": "Taman Ayun Royal Temple - Bali attraction near Ubud",
@@ -654,6 +672,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/pura-batuan.html",
+            "priceName": "Pura Batuan Temple",
+            "priceFallback": "$23",
             "zone": "temple",
             "img": "pura-batuan-temple.jpg",
             "alt": "Pura Batuan Temple - Bali attraction near Ubud",
@@ -672,6 +692,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/tegenungan-waterfall.html",
+            "priceName": "Tegenungan Waterfall",
+            "priceFallback": "$23",
             "zone": "waterfall",
             "img": "tegenungan-waterfall-hero.jpg",
             "alt": "Tegenungan Waterfall - Bali attraction near Ubud",
@@ -684,6 +706,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/gitgit-waterfall.html",
+            "priceName": "Git Git Waterfall",
+            "priceFallback": "$57",
             "zone": "waterfall",
             "img": "waterfall.webp",
             "alt": "Git Git Waterfall - Bali attraction near Ubud",
@@ -696,6 +720,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/sekumpul-waterfall.html",
+            "priceName": "Sekumpul Waterfall",
+            "priceFallback": "$57",
             "zone": "waterfall",
             "img": "lovina-dolphin-sekumpul-card.jpg",
             "alt": "Sekumpul Waterfall - Bali attraction near Ubud",
@@ -708,6 +734,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/banyumala-waterfall.html",
+            "priceName": "Banyumala Twin Waterfall",
+            "priceFallback": "$57",
             "zone": "waterfall",
             "img": "waterfall.jpg",
             "alt": "Banyumala Twin Waterfall - Bali attraction near Ubud",
@@ -720,6 +748,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/munduk.html",
+            "priceName": "Munduk Waterfalls",
+            "priceFallback": "$57",
             "zone": "waterfall",
             "img": "tibumana.webp",
             "alt": "Munduk Waterfalls - Bali attraction near Ubud",
@@ -738,6 +768,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/pandawa-beach.html",
+            "priceName": "Pandawa Beach",
+            "priceFallback": "$57",
             "zone": "beach",
             "img": "green-cliff-coast-bali.webp",
             "alt": "Pandawa Beach - Bali attraction near Ubud",
@@ -750,6 +782,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/balangan-beach.html",
+            "priceName": "Balangan Beach",
+            "priceFallback": "$57",
             "zone": "beach",
             "img": "surfers-beach.webp",
             "alt": "Balangan Beach - Bali attraction near Ubud",
@@ -762,6 +796,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/bingin-beach.html",
+            "priceName": "Bingin Beach",
+            "priceFallback": "$57",
             "zone": "beach",
             "img": "kelingking-beach.jpg",
             "alt": "Bingin Beach - Bali attraction near Ubud",
@@ -774,6 +810,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/green-bowl-beach.html",
+            "priceName": "Green Bowl Beach",
+            "priceFallback": "$57",
             "zone": "beach",
             "img": "cliff-beach.webp",
             "alt": "Green Bowl Beach - Bali attraction near Ubud",
@@ -785,6 +823,8 @@ export const LISTINGS = {
           },
           {
             "href": "/attractions/tegal-wangi-beach.html",
+            "priceName": "Tegal Wangi Beach",
+            "priceFallback": "$57",
             "zone": "beach",
             "img": "kelingking-beach.jpg",
             "alt": "Tegal Wangi Beach - Bali attraction near Ubud",
@@ -803,6 +843,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/tegalalang-rice-terrace.html",
+            "priceName": "Tegalalang Rice Terrace",
+            "priceFallback": "$23",
             "zone": "rice",
             "img": "tegalalang-rice-terrace-hero.jpg",
             "alt": "Tegalalang Rice Terrace - Bali attraction near Ubud",
@@ -815,6 +857,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/jatiluwih-rice-terrace.html",
+            "priceName": "Jatiluwih Rice Terraces",
+            "priceFallback": "$46",
             "zone": "rice",
             "img": "jatiluwih.webp",
             "alt": "Jatiluwih Rice Terraces - Bali attraction near Ubud",
@@ -827,6 +871,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/garuda-wisnu-kencana.html",
+            "priceName": "Garuda Wisnu Kencana (GWK)",
+            "priceFallback": "$57",
             "zone": "nature",
             "img": "gwk-statue-bali.webp",
             "alt": "Garuda Wisnu Kencana (GWK) - Bali attraction near Ubud",
@@ -839,6 +885,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/ubud-royal-palace.html",
+            "priceName": "Ubud Royal Palace & Art Market",
+            "priceFallback": "$23",
             "zone": "nature",
             "img": "ubud-saraswati-temple.jpg",
             "alt": "Ubud Royal Palace & Art Market - Bali attraction near Ubud",
@@ -851,6 +899,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/penglipuran.html",
+            "priceName": "Penglipuran Village",
+            "priceFallback": "$46",
             "zone": "nature",
             "img": "penglipuran-village-view.jpg",
             "alt": "Penglipuran Village - Bali attraction near Ubud",
@@ -863,6 +913,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/handara-gate.html",
+            "priceName": "Handara Gate",
+            "priceFallback": "$46",
             "zone": "nature",
             "img": "handara-gate.webp",
             "alt": "Handara Gate - Bali attraction near Ubud",
@@ -875,6 +927,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/tirta-gangga.html",
+            "priceName": "Tirta Gangga Water Garden",
+            "priceFallback": "$46",
             "zone": "nature",
             "img": "tirtagangga.jpg",
             "alt": "Tirta Gangga Water Garden - Bali attraction near Ubud",
@@ -887,6 +941,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/taman-ujung.html",
+            "priceName": "Taman Ujung Water Palace",
+            "priceFallback": "$46",
             "zone": "nature",
             "img": "ujung-water-palace-lake-bali.webp",
             "alt": "Taman Ujung Water Palace - Bali attraction near Ubud",
@@ -899,6 +955,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/twin-lakes.html",
+            "priceName": "Buyan & Tamblingan Twin Lakes",
+            "priceFallback": "$57",
             "zone": "nature",
             "img": "batur-lake.webp",
             "alt": "Buyan & Tamblingan Twin Lakes - Bali attraction near Ubud",
@@ -911,6 +969,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/monkey-forest.html",
+            "priceName": "Sacred Monkey Forest Sanctuary",
+            "priceFallback": "$23",
             "zone": "nature",
             "img": "monkey-forest-hero.jpg",
             "alt": "Sacred Monkey Forest Sanctuary - Bali attraction near Ubud",
@@ -923,6 +983,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/sangeh-monkey-forest.html",
+            "priceName": "Sangeh Monkey Forest",
+            "priceFallback": "$35",
             "zone": "nature",
             "img": "monkey.jpg",
             "alt": "Sangeh Monkey Forest - Bali attraction near Ubud",
@@ -935,6 +997,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/ubud-market.html",
+            "priceName": "Ubud Traditional Market",
+            "priceFallback": "$23",
             "zone": "nature",
             "img": "ubud-market-hero.jpg",
             "alt": "Ubud Traditional Market - Bali attraction near Ubud",
@@ -947,6 +1011,8 @@ export const LISTINGS = {
           {
             "variant": "incl",
             "href": "/attractions/ubud-arts-crafts.html",
+            "priceName": "Ubud Arts & Crafts",
+            "priceFallback": "$23",
             "zone": "nature",
             "img": "ubud-arts-crafts-hero.jpg",
             "alt": "Ubud Arts & Crafts - Bali attraction near Ubud",

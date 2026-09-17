@@ -1,6 +1,5 @@
 import { TOUR_CONTENT } from '@/content/tours';
 import { LISTINGS } from '@/content/shared/listings';
-import { PLACE_PRICE } from '@/content/shared/place-prices';
 import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
 // Which tours actually stop at a given attraction, derived from each tour's own
@@ -44,14 +43,16 @@ export function inclLabel(slug) {
 // and the experiences one - from that attraction's own page, so both read like
 // the tours listing (Wayan, Sep 2026: experience and destination have to match
 // the tour page). Each is sold as a private trip to one place, so: one stop, the
-// time to spend there (its own "Time here" hook), a private driver, and - via
-// priceName + priceFallback - the price and the free-cancellation badge
-// ListingRow hangs off them. Nothing is typed by hand twice; it comes from the
-// attraction, or from the price mirror for destinations.
+// time to spend there, and a private driver.
+//
+// Prices are NOT filled here: every card carries its own `priceFallback`, the
+// way tour cards always have (Wayan: "samain aja sama tour") - that string is
+// also what the sticky book bar reads through priceFallbackFor, so it has to be
+// on the card, not derived at render.
 //
 // Only fills what a card leaves blank: the experiences cards carry their own
-// hand-written hours ("~2 hours riding" reads better than the hook) and their
-// own price, and those stay.
+// hand-written hours ("~2 hours riding" reads better than the hook), and those
+// stay.
 //
 // `attractions` is passed in rather than imported so this stays callable from a
 // page without lib/ deciding which content set it gets. Called from the listing
@@ -92,7 +93,6 @@ export function withAttractionCards(listing, attractions = {}) {
         if (next.stops == null) next.stops = 1;
         if (next.priv == null) next.priv = true;
         if (!next.priceName && place.bookItem) next.priceName = place.bookItem;
-        if (!next.priceFallback && next.priceName) next.priceFallback = PLACE_PRICE[next.priceName];
       }
     }
     return next;
@@ -132,7 +132,7 @@ const CARD_PRICE = {};
 })(LISTINGS);
 
 export function priceFallbackFor(name) {
-  return CARD_PRICE[name] || PLACE_PRICE[name];
+  return CARD_PRICE[name];
 }
 
 const CONTAINS = {};

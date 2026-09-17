@@ -4,6 +4,7 @@ import Slider from '@/components/ui/Slider';
 import CharterPrice from '@/components/CharterPrice';
 import CharterSurcharge from '@/components/CharterSurcharge';
 import { BADGE_POPULAR } from '@/components/ui/cardClasses';
+import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import { CHARTER_CARDS } from '@/content/shared/home';
 
 // Tailwind-native (full-portable): keluarga `.chcard*` -> utilities inline. Data
@@ -27,7 +28,7 @@ export default function CharterHome() {
           </p>
         </div>
 
-        <Slider gridClassName="flex gap-[var(--space-3)] overflow-x-auto overflow-y-hidden [scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] mt-[var(--space-4)] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Slider gridClassName={`flex gap-[var(--space-3)] overflow-x-auto overflow-y-hidden [scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] mt-[var(--space-4)] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${BLEED_MOBILE}`}>
           {CHARTER_CARDS.map((c) => (
             <article className={chcard(c.pop)} key={c.hours}>
               {c.badge && <span className={BADGE_POPULAR}>{c.badge}</span>}

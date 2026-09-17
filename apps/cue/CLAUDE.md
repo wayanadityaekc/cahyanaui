@@ -295,6 +295,31 @@ When unsure, ask first (keep it short).
 - Halaman baru → tambah ke `sitemap.xml` + punya canonical + BreadcrumbList.
 
 ## Sliders (horizontal card sliders)
+- **SEMUA slider FULL-BLEED di HP** (Sep 2026, Wayan: "buat slidernya full width screen kayak
+  di slider guide, walk ke seluruh slider di website, ubah seperti itu semua"). Dulu cuma
+  slider guide home yang gitu; sekarang satu konstanta **`BLEED_MOBILE`** di
+  `components/ui/gridClasses.js` dipakai SEMUA track: `GRID_XPLORE` (homepage Tours +
+  Destinations) · `GRID_SLIDER` (guide home) · `GRID_GUIDEHUB` (5 baris kategori guide hub) ·
+  `GRID_GUIDEMORE` (guide article) · `GRID_CAROUSEL_4UP` (carousel halaman tour/attraction) ·
+  `GRID_RELATED` · slider kartu charter di homepage. **Bikin slider baru → import konstanta
+  itu, jangan tulis bleed sendiri.**
+  - **Rumusnya `margin-inline: calc(50% - 50vw)`, BUKAN `-mx-6`** (yang dipakai slider guide
+    dulu). Alesannya: padding container tiap slider BEDA — 24px di homepage & halaman guide,
+    **~18px** di dalam layout booking, **49px** di dalam panel charter. Angka mati bakal
+    nyisain celah di sebagian tempat & kelewatan di sebagian lain. `50%` di margin ngukur ke
+    **lebar containing block**, jadi rumus ini otomatis pas asal container-nya ke-center —
+    dan semua container di web ini ke-center. Udah diukur: 24 track, semuanya mendarat di
+    `L0 R0`.
+  - **CUMA di HP (`max-[992px]`)** — sama kayak slider guide dulu. Di desktop sebagian grid
+    ini malah jadi grid wrap (`GRID_XPLORE`/`GRID_GUIDEMORE`), sebagian lagi sengaja dipatok
+    selebar container biar kartunya pas 4-up (`GRID_CAROUSEL_4UP`/`GRID_GUIDEHUB`).
+    **Diverifikasi: geometri desktop (1280 & 1440) NOL berubah.**
+  - **`pr-4` = satu-satunya yang beda dari slider guide yang lama.** Tanpa itu kartu terakhir
+    nempel mentok ke tepi kanan pas di-scroll habis, keliatan kepotong.
+  - **BAHAYA `100vw`**: kalau browser masang scrollbar klasik, `50vw` > setengah `innerWidth`
+    dan halamannya melar ke samping. **WAJIB dicek** `document.scrollWidth - innerWidth == 0`
+    di tiap halaman tiap lebar — harness `slider-geo.mjs` di scratchpad ngecek itu bareng
+    diff geometri before/after (patokannya: desktop 0 diff, overflow 0 di semua halaman).
 - Desktop: left/right arrows appear on **hover** (`.slider-arrow`, created in
   `initTourSlider()`; the slider is wrapped in `.slider-holder`).
 - Scrollbar is **hidden** (navigate via arrows / swipe).

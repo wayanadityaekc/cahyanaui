@@ -115,7 +115,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Central Ubud",
       "metaIcon": "pin",
       "desc": "A sacred forest sanctuary in the heart of Ubud.",
-      "href": "/destinations.html"
+      "href": "/attractions/monkey-forest.html"
     },
     {
       "img": "tanah-lot.webp",
@@ -125,7 +125,7 @@ export const HOME_DESTINATIONS = [
       "meta": "West Bali",
       "metaIcon": "pin",
       "desc": "A sea temple cut off by the tide, known for sunset.",
-      "href": "/destinations.html"
+      "href": "/attractions/tanah-lot.html"
     },
     {
       "img": "ulun-danu-beratan-hero.webp",
@@ -135,7 +135,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Central Highlands",
       "metaIcon": "pin",
       "desc": "A lakeside temple pictured on the 50,000 rupiah note.",
-      "href": "/destinations.html"
+      "href": "/attractions/ulun-danu-beratan.html"
     },
     {
       "img": "goa-gajah-hero.jpg",
@@ -145,7 +145,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "A 9th-century cave sanctuary with a demon-face doorway.",
-      "href": "/destinations.html"
+      "href": "/attractions/goa-gajah.html"
     },
     {
       "img": "tegalalang-rice-terrace-hero.jpg",
@@ -155,7 +155,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Ubud area",
       "metaIcon": "pin",
       "desc": "Iconic stepped rice terraces just north of Ubud.",
-      "href": "/destinations.html"
+      "href": "/attractions/tegalalang-rice-terrace.html"
     },
     {
       "img": "tegenungan-waterfall-hero.jpg",
@@ -165,7 +165,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "A wide jungle waterfall a short drive from town.",
-      "href": "/destinations.html"
+      "href": "/attractions/tegenungan-waterfall.html"
     },
     {
       "img": "tirta-empul-hero.jpg",
@@ -175,7 +175,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "A holy spring temple used for the melukat water purification ritual.",
-      "href": "/destinations.html"
+      "href": "/attractions/tirta-empul.html"
     },
     {
       "img": "gunung-kawi-hero.jpg",
@@ -185,7 +185,7 @@ export const HOME_DESTINATIONS = [
       "meta": "Near Ubud",
       "metaIcon": "pin",
       "desc": "Ancient shrines carved into the cliffs of a green river valley.",
-      "href": "/destinations.html"
+      "href": "/attractions/gunung-kawi.html"
     }
   ];
 

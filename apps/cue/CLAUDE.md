@@ -23,7 +23,8 @@ When unsure, ask first (keep it short).
 > `?v=`/`PARTIALS_VERSION` bump, `initX()` (`initBooking`/`initNavbar`/dst), `renderPrices`,
 > atau file `.html` = **KONTEKS LAMA / historis**, gak berlaku lagi. Yang hidup cuma app React
 > (`app/`+`components/`, state di `state/`, konten di `content/`, harga dari API `cahyana-api`).
-> Gate CI yang tersisa (jalan atas `out/`): `check-urls`, `check-detail`, `check-assets`.
+> Gate CI yang tersisa (jalan atas `out/`): `check-urls`, `check-detail`, `check-assets`,
+> `check-motion`. Plus 1 cek manual (bukan gate): `check-prices` — lihat section harga.
 
 **Styling = Tailwind (migrasi Sep 2026, JALAN → target FULL portable):**
 - **Arah baru (Sep 2026, Wayan): SEMUA komponen self-contained.** Tiap komponen bawa style-nya
@@ -308,7 +309,39 @@ When unsure, ask first (keep it short).
     stack into rows" bug, which is why it got unified to slider everywhere). Re-tested
     both contexts after the change; watch for regressions if touching this again.
 
-## Listing page category tabs (`.zone-chip`, tour/activities/destinations)
+## Listing page (tour/activities/destinations) — `ListingPage.jsx`
+**Navigasi kategori (Sep 2026, bentuk sekarang):**
+- **HP** = `components/ui/SectionSwitcher.jsx`, satu bar di bawah layar: **Chat kiri ·
+  nama kategori yang lagi keliatan · panah ◀▶**. Panah = lompat ke section sebelum/sesudah.
+  Bar ini **pakai cangkang yang SAMA** kayak book bar (lihat section "Sticky bottom bar").
+  Dulu dia pill sendiri di tengah-bawah dan **ketumpuk** sama tombol chat ngambang —
+  itu sebabnya digabung.
+- **DESKTOP** = tab segmented lama (pill panjang ngambang, `role="tablist"`, isinya
+  "All Bali Tours / Ubud & Around / ..."), **SENGAJA DIBIARIN** beda dari HP
+  (Sep 2026, Wayan: "desktop biarin") — layar lega, semua kategori keliatan sekaligus.
+  Jangan "dirapihin" biar sama sama HP tanpa nanya.
+
+**Isi kartu listing (`ListingRow`) — tour / experience / destinasi WAJIB seragam:**
+- Barisnya: `N stops` (ikon pin) · durasi (jam) · [area, ikon PETA — destinasi doang] ·
+  `Private driver` · badge `Free cancellation` · harga. Wayan minta ketiganya sama
+  (Sep 2026) — kalau nambah jenis listing baru, samain juga.
+- Kartu tour & experience nulis sendiri di `content/shared/listings.js`. Kartu yang
+  nunjuk halaman attraction (**destinasi + experience**) dilengkapin otomatis sama
+  **`withAttractionCards(listing, ATTRACTION_CONTENT)`** di `lib/tourIndex.js`, dipanggil
+  dari `app/(listing)/*/page.jsx` (server component — `ListingPage` itu `'use client'`,
+  kalau di-import di sana seluruh dataset tour keikut ke browser).
+- `withAttractionCards` **cuma ngisi yang KOSONG**, gak nimpa: experience tetep pakai
+  jam tulisan tangannya sendiri ("~2 hours riding"). Destinasi: jam ngisi slot `meta`,
+  area-nya pindah ke baris sendiri.
+- **Gotcha label durasi**: halaman attraction nyimpen durasi di 2 nama — **"Time here"**
+  (40 halaman, destinasi) dan **"Duration"** (11 halaman, experience). Kalau cuma baca
+  salah satu, ada kartu yang jamnya ilang diam-diam (kejadian: Watersport).
+- **Harga**: tiap kartu bawa `priceName` + `priceFallback` sendiri (termasuk 33 kartu
+  destinasi) — bukan cuma buat kartu, tapi juga dibaca book bar lewat `priceFallbackFor()`.
+  Pernah dicoba naro harga destinasi di file terpisah (`place-prices.js`) → dibuang,
+  Wayan: "samain aja sama tour". Satu konvensi, satu tempat.
+
+**Scrollspy (legacy note):**
 - Anchor links + scrollspy (`initZoneAnchors()` in script.js) — tab aktif ngikutin
   section yang lagi keliatan pas scroll, no filtering.
 - **Fix (Sep 2026)**: scrollspy dulu pakai `s.offsetTop`, yang keliru kalau section
@@ -354,6 +387,40 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     `data-charter="half|full"` + `data-charter-extra="N"` → `renderCharterPromo()` (dipanggil dari
     `renderPrices`, baca `CHARTER` di data.js: full + N*extHour, ikut kurs).
 - **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
+
+## Sticky bottom bar + chat (Sep 2026)
+**Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
+yang sama di **`components/ui/stickyBar.jsx`** (`BAR_SHELL`, `BAR_DIVIDER`, `<BarChat/>`) —
+ganti bentuk/warna bar = edit di situ, dua-duanya ikut:
+- **`BookBar`** (halaman detail yang jualan): **Chat · harga · Book now**. Di-render dari
+  `TourPage`/`AttractionPage` (**bukan** dari layout) — `<BookBar item={...}
+  priceFallback={priceFallbackFor(...)} />`. Karena di-render halaman, bar-nya ikut ke
+  HTML statis → gak ada kedip "isi salah dulu baru bener".
+- **`SectionSwitcher`** (halaman listing, HP): **Chat · nama kategori · panah ◀▶**.
+- **`ChatFab`** (`components/booking/ChatFab.jsx`): tombol chat ngambang **kiri bawah**,
+  HP **dan** desktop, di SEMUA halaman. Nanti jadi chatbot (Wayan) — semua logikanya di
+  1 file, tinggal ganti isinya.
+
+Aturan mainnya (jangan diubah tanpa ngerti kenapa):
+- **Bentuk bar**: `fixed left-2 right-2 bottom-1.5`, `rounded-[var(--r-xl)]`, HP doang
+  (`hidden max-md:flex`). Wayan: nempel bawah, jangan ngambang tinggi.
+- **Marker `stickybar` + `stickybar-on`**: `stickybar` = bar-nya ADA (dipakai `<body
+  className="max-md:has-[.stickybar]:pb-[60px]">` buat mesen ruang di bawah);
+  `stickybar-on` = bar-nya lagi KELIATAN. `ChatFab` sembunyi lewat
+  `max-md:[body:has(.stickybar-on)_&]:hidden` — jadi chat balik ke pojok pas bar-nya pergi.
+- **Kenapa `-on` dipisah**: `BookBar` **turun sembunyi pas form booking keliatan**
+  (IntersectionObserver ke `.booksidebar`/`.bookcard__cta`) — Wayan: gak boleh ada 2 tombol
+  Book kelihatan bareng. Bar-nya **tetep ke-mount** (cuma di-translate keluar) biar padding
+  body gak kedip-kedip.
+- **Scope `max-md` di rule `:has()` WAJIB**: elemen bar tetep ada di DOM di semua lebar
+  (cuma `display:none` di atas 768px), jadi rule tanpa scope bakal ikut ngilangin chat di
+  desktop.
+- **Harga di bar** = `priceFallbackFor(name)` (angka kartu) dulu, diganti angka API pas
+  katalog nyampe. Tour/experience/destinasi WAJIB sama — ini yang dulu beda (destinasi
+  kosong sampe API balas) dan Wayan minta disamain.
+- Ukur pakai harness di scratchpad (`verify-bookbar-v2` / `verify-listingbar` /
+  `compare-detailbars`) — patokan penting: **cuma 1 elemen** yang nempel di bawah, dan
+  harga kebaca walau API di-`abort()`.
 
 ## Booking sidebar layout (`.tour-layout--book`, halaman detail bookable)
 - `initBookSidebar()` (script.js) inject 2 kolom via JS setelah subhero: `.tour-layout__main`
@@ -640,8 +707,11 @@ Order **must be kept** (declarations first, run last):
     `EXCLUSIVE_FEE` udah DIHAPUS total (Wayan: margin udah dimasukin ke harga base).
   - Tiket masuk beda per lokasi walau namanya mirip: **Kecak Ubud 100k ≠ Kecak Uluwatu 150k**.
     Tiket tiap tour ditentukan dari isi programnya (`TOUR_TICKETS`).
-  - **Destinasi single nggak dijual lagi** - `prices.place` udah dibuang, kartu destinasi
-    nggak nampilin harga. Halaman destinasinya TETAP ada (konten/SEO).
+  - **Destinasi single DIJUAL LAGI (Sep 2026, cb48800 di cahyana-api)** - `prices.place`
+    dibalikin, isi 34 tempat, harganya dipatok dari tarif charter. Kartu destinasi
+    nampilin harga, halaman destinasinya punya Book now + book bar kayak tour.
+    (Ini NGE-OVERRIDE keputusan 3 Sep yang bilang destinasi single nggak dijual &
+    `prices.place` dibuang - kalau nemu tulisan itu di tempat lain, yang berlaku ini.)
   - **Charter**: 5 jam 600k · 10 jam 1jt · tambahan 60k/jam.
   - **Pickup fee**: Ubud & nearby = 0. **Selain Ubud selalu kena, di SEMUA tour** -
     pengecualian "se-zona sama tour" udah dibuang (dulu `ITEM_ZONE`/`TRANSFER_ZONE`
@@ -663,6 +733,19 @@ Order **must be kept** (declarations first, run last):
     `cahyana-api/pricing-data.js` nentuin tiket apa aja yang di-cover Exclusive per
     tour. Nambah/hapus stop tanpa update situ = tamu Exclusive bayar tiket tempat
     yang gak didatengin (atau sebaliknya).
+  - **Harga cadangan di kartu = SALINAN, bisa basi.** Tiap kartu listing punya
+    `priceFallback` (`"$40"`) di `content/shared/listings.js` - itu yang keliatan
+    SEBELUM katalog API balas, dan juga yang dibaca book bar lewat `priceFallbackFor()`.
+    Begitu katalog nyampe, angka API yang menang. **Ganti harga di cahyana-api = update
+    juga angka di kartu**, kalau nggak tamu lihat angka lama sekejap tiap buka halaman.
+    Cek pakai **`node tools/check-prices.js`** (adu semua kartu lawan `prices` di API;
+    terakhir 60/60 cocok). BUKAN gate CI - CI cuma punya `out/`, gak punya repo sebelah.
+  - **JEBAKAN: clone `cahyana-api` yang ketinggalan bikin lu salah baca harga.** Kejadian
+    2x dalam sehari (Sep 2026): baca `pricing-data.js` dari clone lama → lapor ke Wayan
+    bahwa 34 destinasi "gak ada harganya" (padahal udah ada berjam-jam sebelumnya), dan
+    run pertama `check-prices` nunjuk 36 kartu bermasalah yang semuanya palsu.
+    `check-prices.js` sekarang NOLAK jalan kalau clone-nya di belakang `origin/main`.
+    **Sebelum ngomongin isi `cahyana-api`, `git fetch` dulu** - jangan percaya clone lokal.
 - **Data harga terpisah**: SEMUA harga & tarif (prices, TICKETS, TOUR_TICKETS, CHARTER,
   transport, CUR_RATE) hidup di **`data.js`** — script.js cuma logika.
   Ganti harga = edit data.js → `node tools/sync-prices.js` → bump `?v=`.
@@ -724,9 +807,13 @@ Order **must be kept** (declarations first, run last):
 ## Before calling it "done" (checklist)
 1. `npm run build` passes (this is the real syntax/build check now — no more `node --check script.js`).
 2. All active CI gates pass: `node tools/check-urls.js`, `node tools/check-detail.js`,
-   `node tools/check-assets.js`. **Gate the commit on these** (jangan commit kalau ada yang merah).
+   `node tools/check-assets.js`, `node tools/check-motion.js`. **Gate the commit on these**
+   (jangan commit kalau ada yang merah).
    Marker class yang WAJIB ada di detail page (check-detail): `booksidebar`, `bookcard__cta`,
    `tour-layout--book`, `tour-hook`, `review-cta` — jangan dihapus pas convert.
+2b. Nyentuh harga (di sini ATAU di `cahyana-api`) → `node tools/check-prices.js` (manual,
+   bukan gate CI — butuh repo `cahyana-api` di sebelah, dan dia nolak jalan kalau clone-nya
+   ketinggalan). Plus `node tools/pricing-spec-test.js` di cahyana-api.
 3. Styling berubah → verify **pixel-diff / computed-style diff = 0** (harness di scratchpad:
    playwright-core + `headless_shell`, serve `out/` via `node http`). Baru hapus CSS lama-nya
    dari `style.css` kalau udah 0.

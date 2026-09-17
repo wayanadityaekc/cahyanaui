@@ -17,8 +17,8 @@ import Select from '@/components/ui/Select';
 import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
-import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
-import DepositNotice from './DepositNotice';
+import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT, REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
+import PaymentStep from './PaymentStep';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -61,6 +61,10 @@ export default function BookConfirmModal() {
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
 
+  // Checkpoint 1: the guest's payment choice is held here so the step can be
+  // driven and screenshotted. Nothing acts on it yet.
+  const [payOption, setPayOption] = useState('deposit');
+  const [payMethod, setPayMethod] = useState('card');
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
@@ -284,14 +288,6 @@ export default function BookConfirmModal() {
                 </div>
               </>
             )}
-            <div className={GROUP}>
-              <label className={LABEL} htmlFor="referral">Referral Code (optional)</label>
-              <div className="flex gap-2">
-                <input className={REFERRAL_INPUT} type="text" id="referral" placeholder="Enter code" value={f.referral} onChange={set('referral')} />
-                <button className={REFERRAL_BTN} type="button" onClick={applyRef}>Apply</button>
-              </div>
-              {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
-            </div>
 
             <div className="my-5 [border-top:1px_solid_#eee]">
               <div className={ROW}><span>Guests</span><span>{view.guests || displayGuests}</span></div>
@@ -309,15 +305,17 @@ export default function BookConfirmModal() {
               <div className={ROW}><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
 
-            {/* Deposit block - display only at this checkpoint. It reads the
-                pickup zone that is already in TripPrefs and, for transfers, the
-                route on the line; it does not touch priceText() or the quote. */}
-            <DepositNotice
-              stay={stay}
-              /* Only a REAL transfer sets this. singleLine.service is just the item
-                 name for a tour, so passing it unconditionally made every booking
-                 look like an outside-Ubud pickup. */
-              transferRoute={view.type === 'transfer' && singleLine ? singleLine.service : ''}
+            <PaymentStep
+              option={payOption}
+              onOption={setPayOption}
+              method={payMethod}
+              onMethod={setPayMethod}
+              total={priced && priced.total ? priced.total.display : null}
+              symbol={(priced && priced.symbol) || '$'}
+              referral={f.referral}
+              onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
+              onApplyReferral={applyRef}
+              refMsg={refMsg}
             />
 
             {view.detailLines && view.detailLines.length > 0 && (

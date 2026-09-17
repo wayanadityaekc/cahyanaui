@@ -311,11 +311,11 @@ When unsure, ask first (keep it short).
 
 ## Listing page (tour/activities/destinations) — `ListingPage.jsx`
 **Navigasi kategori (Sep 2026, bentuk sekarang):**
-- **HP** = `components/ui/SectionSwitcher.jsx`, satu bar di bawah layar: **Chat kiri ·
-  nama kategori yang lagi keliatan · panah ◀▶**. Panah = lompat ke section sebelum/sesudah.
+- **HP** = `components/ui/SectionSwitcher.jsx`, satu bar di bawah layar: **nama kategori
+  yang lagi keliatan · panah ◀▶**. Panah = lompat ke section sebelum/sesudah.
   Bar ini **pakai cangkang yang SAMA** kayak book bar (lihat section "Sticky bottom bar").
   Dulu dia pill sendiri di tengah-bawah dan **ketumpuk** sama tombol chat ngambang —
-  itu sebabnya digabung.
+  itu sebabnya digabung (chat-nya sendiri sekarang udah pindah ke navbar).
 - **DESKTOP** = tab segmented lama (pill panjang ngambang, `role="tablist"`, isinya
   "All Bali Tours / Ubud & Around / ..."), **SENGAJA DIBIARIN** beda dari HP
   (Sep 2026, Wayan: "desktop biarin") — layar lega, semua kategori keliatan sekaligus.
@@ -388,39 +388,41 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     `renderPrices`, baca `CHARTER` di data.js: full + N*extHour, ikut kurs).
 - **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
 
-## Sticky bottom bar + chat (Sep 2026)
+## Sticky bottom bar (Sep 2026)
 **Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
-yang sama di **`components/ui/stickyBar.jsx`** (`BAR_SHELL`, `BAR_DIVIDER`, `<BarChat/>`) —
-ganti bentuk/warna bar = edit di situ, dua-duanya ikut:
-- **`BookBar`** (halaman detail yang jualan): **Chat · harga · Book now**. Di-render dari
+yang sama di **`components/ui/stickyBar.jsx`** (`BAR_SHELL`) — ganti bentuk/warna bar =
+edit di situ, dua-duanya ikut:
+- **`BookBar`** (halaman detail yang jualan): **harga · Book now**. Di-render dari
   `TourPage`/`AttractionPage` (**bukan** dari layout) — `<BookBar item={...}
   priceFallback={priceFallbackFor(...)} />`. Karena di-render halaman, bar-nya ikut ke
   HTML statis → gak ada kedip "isi salah dulu baru bener".
-- **`SectionSwitcher`** (halaman listing, HP): **Chat · nama kategori · panah ◀▶**.
-- **`ChatFab`** (`components/booking/ChatFab.jsx`): tombol chat ngambang **kiri bawah**,
-  HP **dan** desktop, di SEMUA halaman. Nanti jadi chatbot (Wayan) — semua logikanya di
-  1 file, tinggal ganti isinya.
+- **`SectionSwitcher`** (halaman listing, HP): **nama kategori · panah ◀▶**.
+
+**CHAT GAK DI SINI — ada di NAVBAR** (Sep 2026, Wayan: "chat di bawah sticky dihapus,
+pindahin ke navbar"). Ikon `MessageCircle` di kluster kanan navbar (sebelah kiri
+keranjang), keliatan di semua halaman & semua lebar, link ke `wa.me`. Tombol hijau
+"Chat on WhatsApp" di dalam drawer TETEP ada. **Riwayat biar gak muter-muter**: chat
+pernah jadi tombol ngambang (`ChatFab`, pojok kiri bawah) + kolom di dalam bar —
+dua-duanya UDAH DIHAPUS, `BarChat`/`BAR_DIVIDER`/marker `stickybar-on` ikut kebuang.
 
 Aturan mainnya (jangan diubah tanpa ngerti kenapa):
 - **Bentuk bar**: `fixed left-2 right-2 bottom-1.5`, `rounded-[var(--r-xl)]`, HP doang
   (`hidden max-md:flex`). Wayan: nempel bawah, jangan ngambang tinggi.
-- **Marker `stickybar` + `stickybar-on`**: `stickybar` = bar-nya ADA (dipakai `<body
-  className="max-md:has-[.stickybar]:pb-[60px]">` buat mesen ruang di bawah);
-  `stickybar-on` = bar-nya lagi KELIATAN. `ChatFab` sembunyi lewat
-  `max-md:[body:has(.stickybar-on)_&]:hidden` — jadi chat balik ke pojok pas bar-nya pergi.
-- **Kenapa `-on` dipisah**: `BookBar` **turun sembunyi pas form booking keliatan**
-  (IntersectionObserver ke `.booksidebar`/`.bookcard__cta`) — Wayan: gak boleh ada 2 tombol
-  Book kelihatan bareng. Bar-nya **tetep ke-mount** (cuma di-translate keluar) biar padding
-  body gak kedip-kedip.
-- **Scope `max-md` di rule `:has()` WAJIB**: elemen bar tetep ada di DOM di semua lebar
-  (cuma `display:none` di atas 768px), jadi rule tanpa scope bakal ikut ngilangin chat di
-  desktop.
+- **Marker `stickybar`** = bar-nya ADA, dipakai `<body
+  className="max-md:has-[.stickybar]:pb-[60px]">` buat mesen ruang di bawah biar konten
+  paling bawah gak ketutupan.
+- **`BookBar` turun sembunyi pas form booking keliatan** (IntersectionObserver ke
+  `.booksidebar`/`.bookcard__cta`) — Wayan: gak boleh ada 2 tombol Book kelihatan bareng.
+  Bar-nya **tetep ke-mount** (cuma di-translate keluar) biar padding body gak kedip-kedip.
+- **Kalau nambah rule `:has()` yang nyangkut bar ini, scope-in ke `max-md`**: elemen bar
+  tetep ada di DOM di semua lebar (cuma `display:none` di atas 768px), jadi rule tanpa
+  scope bakal kena juga di desktop. (Dulu kejadian pas ChatFab masih ada.)
 - **Harga di bar** = `priceFallbackFor(name)` (angka kartu) dulu, diganti angka API pas
   katalog nyampe. Tour/experience/destinasi WAJIB sama — ini yang dulu beda (destinasi
   kosong sampe API balas) dan Wayan minta disamain.
-- Ukur pakai harness di scratchpad (`verify-bookbar-v2` / `verify-listingbar` /
-  `compare-detailbars`) — patokan penting: **cuma 1 elemen** yang nempel di bawah, dan
-  harga kebaca walau API di-`abort()`.
+- Ukur pakai harness di scratchpad (`verify-navchat` / `verify-bookbar-v2` /
+  `verify-listingbar` / `compare-detailbars`) — patokan: **cuma 1 elemen** nempel di bawah,
+  chat ketemu di navbar di semua halaman, dan harga kebaca walau API di-`abort()`.
 
 ## Booking sidebar layout (`.tour-layout--book`, halaman detail bookable)
 - `initBookSidebar()` (script.js) inject 2 kolom via JS setelah subhero: `.tour-layout__main`
@@ -440,6 +442,11 @@ Aturan mainnya (jangan diubah tanpa ngerti kenapa):
   button yang di-hide (`.wa-float { display:none!important }` di style.css; JS-nya
   di `initWhatsApp()` masih bikin elemennya, cuma CSS-hide, gampang dinyalain lagi).
   WA tetep bisa dari link footer.
+- **Ikon chat** (Sep 2026, Wayan): `MessageCircle` di kluster kanan, **sebelah kiri
+  keranjang**, link `wa.me`. Ini rumah barunya chat — dulu nempel di sticky bar bawah +
+  tombol ngambang, dua-duanya udah dihapus (lihat section "Sticky bottom bar").
+  Gayanya niru ikon keranjang persis (`w-5 h-5`, `text-gold`, `mr-[1.3rem]` /
+  `max-[992px]:mr-[0.85rem]`) - kalau ubah salah satu, samain dua-duanya.
 - **Spacing icon kluster kanan** (akun/cart/menu): `.acct` margin-right 0.9rem,
   `.navbar__cart` margin-right 1.3rem (Sep 2026, dulu 0.3rem/0.85rem — kerasa mepet).
   Gap besar logo↔kluster (`.navbar__logo{margin-right:auto}`) itu disengaja (standar

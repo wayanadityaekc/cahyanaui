@@ -118,6 +118,20 @@ export default function Navbar() {
           <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-[-0.25rem]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
 
+        {/* Chat pindah ke sini (Sep 2026, Wayan) - dulu nempel di sticky bar bawah
+            + tombol ngambang. Di navbar dia keliatan di semua halaman & semua lebar
+            tanpa makan ruang di bawah layar. Yang di dalam drawer (tombol hijau
+            "Chat on WhatsApp") tetep ada - itu buat yang udah buka menu. */}
+        <a
+          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]"
+          aria-label="Chat on WhatsApp"
+        >
+          <MessageCircle className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+        </a>
+
         <a href="/my-trips.html" className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]" aria-label="My Trips">
           <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>

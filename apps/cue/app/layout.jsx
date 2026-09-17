@@ -8,7 +8,6 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
-import ChatFab from '@/components/booking/ChatFab';
 
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
@@ -48,7 +47,6 @@ export default function RootLayout({ children }) {
           {children}
           <Footer />
           <BookConfirmModal />
-          <ChatFab />
         </Providers>
       </body>
     </html>

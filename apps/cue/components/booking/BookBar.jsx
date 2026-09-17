@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Price from '@/components/Price';
-import { BAR_SHELL, BAR_ON, BAR_DIVIDER, BarChat } from '@/components/ui/stickyBar';
+import { BAR_SHELL } from '@/components/ui/stickyBar';
 
 // Sticky price + CTA on mobile, rendered by the page that actually sells
 // something (TourPage/AttractionPage pass their bookItem). Wayan, Sep 2026:
@@ -12,8 +12,9 @@ import { BAR_SHELL, BAR_ON, BAR_DIVIDER, BarChat } from '@/components/ui/stickyB
 //   card's own CTA are never both visible - same rule initBookBar had.
 //
 // It stays mounted while hidden (slides out instead of unmounting) so the
-// reserved body padding doesn't flip; the shell's marker classes are what
-// <body> and ChatFab read - see components/ui/stickyBar.jsx.
+// reserved body padding doesn't flip; `stickybar` is the marker <body> reads for
+// that - see components/ui/stickyBar.jsx. Chat lives in the navbar now, not in
+// here.
 export default function BookBar({ item, priceFallback }) {
   const [hidden, setHidden] = useState(false);
 
@@ -46,13 +47,11 @@ export default function BookBar({ item, priceFallback }) {
 
   return (
     <div
-      className={`${BAR_SHELL} ${hidden ? '' : `${BAR_ON} `}[transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
+      className={`${BAR_SHELL} [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
         hidden ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
       inert={hidden || undefined}
     >
-      <BarChat />
-      <span className={BAR_DIVIDER} aria-hidden="true" />
       <div className="flex-1 min-w-0 text-[1.1rem] font-semibold text-amber leading-none">
         <Price name={item} fallback={priceFallback} />
       </div>

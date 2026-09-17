@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { BAR_SHELL, BAR_ON, BAR_DIVIDER, BarChat } from '@/components/ui/stickyBar';
+import { BAR_SHELL } from '@/components/ui/stickyBar';
 
 // Size comes from the parent button's [&>svg] rule, same as before.
 function Chevron({ dir }) {
@@ -54,9 +54,7 @@ export default function SectionSwitcher({ zones = [] }) {
     'w-[34px] h-[34px] flex-none flex items-center justify-center border-0 rounded-[50%] bg-cream text-ink cursor-pointer transition-[background-color,scale] duration-200 ease-[ease] enabled:hover:bg-line disabled:opacity-[0.35] disabled:cursor-default [&>svg]:w-[18px] [&>svg]:h-[18px]';
 
   return (
-    <div className={`${BAR_SHELL} ${BAR_ON}`} role="navigation" aria-label="Jump to category">
-      <BarChat />
-      <span className={BAR_DIVIDER} aria-hidden="true" />
+    <div className={BAR_SHELL} role="navigation" aria-label="Jump to category">
       <span className="flex-1 min-w-0 truncate font-semibold text-[0.8rem] text-ink">{zones[idx].label}</span>
       <div className="flex-none flex items-center gap-1">
         <button type="button" className={arrow} onClick={() => go(-1)} disabled={idx === 0} aria-label="Previous category">

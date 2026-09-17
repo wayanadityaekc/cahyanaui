@@ -423,7 +423,7 @@ edit di situ, dua-duanya ikut:
     dan tamu/Exclusive/pickup cuma bisa naikin.
   - **Tinggi CTA = 2.9rem/46px** (token tombol aksi), **BUKAN `self-stretch`** — di-stretch
     dia jadi 81% tinggi kartu & bentuknya lonjong banget (GYG sendiri ~54%).
-  - **Bar ini LEBIH TINGGI dari `SectionSwitcher`** (80px vs 49px), jadi `<body>` mesen
+  - **Bar ini LEBIH TINGGI dari `SectionSwitcher`** (84px vs 53px), jadi `<body>` mesen
     ruang beda per bar lewat marker kedua **`bookbar`**. Dua rule `:has()`-nya dibikin
     **saling eksklusif** (`not-has-[.bookbar]:has-[.stickybar]` vs `has-[.bookbar]`) —
     kalau cuma ditumpuk, specificity-nya sama persis dan yang menang ditentukan urutan
@@ -440,8 +440,19 @@ pernah jadi tombol ngambang (`ChatFab`, pojok kiri bawah) + kolom di dalam bar �
 dua-duanya UDAH DIHAPUS, `BarChat`/`BAR_DIVIDER`/marker `stickybar-on` ikut kebuang.
 
 Aturan mainnya (jangan diubah tanpa ngerti kenapa):
-- **Bentuk bar**: `fixed left-2 right-2 bottom-1.5`, `rounded-[var(--r-xl)]`, HP doang
-  (`hidden max-md:flex`). Wayan: nempel bawah, jangan ngambang tinggi.
+- **Bentuk bar = NEMPEL PENUH ke tepi bawah** (Sep 2026, Wayan: "tempelin book bar di
+  bawah, persis kayak GYG"): `fixed inset-x-0 bottom-0`, full width, **sudut ATAS doang**
+  (`rounded-t-[var(--r-xl)]`), HP doang (`hidden max-md:flex`). Ini langkah KETIGA dari
+  permintaan yang sama — dulu ngambang (`left-2 right-2 bottom-1.5` + radius 4 sudut), terus
+  "kira-kira 95% nempel", sekarang nempel beneran. **Jangan dibalikin ke ngambang.**
+  Konsekuensi yang gampang kelewat:
+  - **Border cuma di ATAS** (`[border-top:...]`) — sisi & bawah ke-gambar di luar layar.
+  - **Bayangan harus ke ATAS** (`0 -6px 22px`), BUKAN `--shadow-xl` (yang nyorot ke BAWAH
+    dan ketelen tepi layar, jadi bar-nya keliatan nempel tanpa elevasi sama sekali).
+  - **WAJIB `env(safe-area-inset-bottom)`** lewat `max()`: di iPhone ada home indicator di
+    strip itu, bar yang nempel bakal naro tombol CTA di bawahnya. Di device lain nilainya
+    0, jadi padding normalnya kepakai.
+  - **`SectionSwitcher` ikut berubah** — cangkangnya satu (itu emang aturannya di atas).
 - **Marker `stickybar`** = bar-nya ADA, dipakai `<body
   className="max-md:has-[.stickybar]:pb-[60px]">` buat mesen ruang di bawah biar konten
   paling bawah gak ketutupan.

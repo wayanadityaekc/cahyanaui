@@ -15,18 +15,13 @@ import { isHiddenTour } from '@/lib/routes';
 import TourComparisonBox from '@/components/booking/TourComparisonBox';
 import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
 
-// PILOT (Wayan, Sep 2026): the strip and the comparison box show only for the
-// stops of the pilot tour while he reviews them. Rollout = drop the list, and
-// every attraction that belongs to a tour gets both.
-const PILOT_TOURS = ['ubud-culture-day'];
-
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
   // Which tours stop here, for the comparison box in the booking card. Reverse lookup
   // on refId, so a stop added to a tour shows up on this page by itself.
   const slug = (data.__page || '').replace('attractions/', '');
-  const onTours = toursContaining(slug).filter((t) => PILOT_TOURS.includes(t.slug));
+  const onTours = toursContaining(slug);
   return (
     <>
       <JsonLd page={data.__page} />

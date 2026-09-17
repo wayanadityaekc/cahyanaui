@@ -82,10 +82,6 @@ export const TOUR_CONTENT = {
     "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$55"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -201,8 +197,8 @@ export const TOUR_CONTENT = {
     "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$85 Pick-upUbud & nearby (very early)"
+    "label": "Pick-up",
+    "value": "Ubud & nearby (very early)"
    },
    {
     "label": "Availability",
@@ -452,10 +448,6 @@ export const TOUR_CONTENT = {
     "value": "3 days / 2 nights"
    },
    {
-    "label": "Price",
-    "value": "$148"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -588,10 +580,6 @@ export const TOUR_CONTENT = {
     "value": "7–9 hours"
    },
    {
-    "label": "Price",
-    "value": "$130"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -708,8 +696,8 @@ export const TOUR_CONTENT = {
     "value": "4–6 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -833,10 +821,6 @@ export const TOUR_CONTENT = {
    {
     "label": "Duration",
     "value": "6–8 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$45"
    },
    {
     "label": "Pick-up",
@@ -972,10 +956,6 @@ export const TOUR_CONTENT = {
     "value": "9–11 hours"
    },
    {
-    "label": "Price",
-    "value": "$57"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -1108,8 +1088,8 @@ export const TOUR_CONTENT = {
     "value": "9–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$85 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1252,10 +1232,6 @@ export const TOUR_CONTENT = {
     "value": "10–12 hours"
    },
    {
-    "label": "Price",
-    "value": "$52"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -1390,8 +1366,8 @@ export const TOUR_CONTENT = {
     "value": "11–12 hours"
    },
    {
-    "label": "Price",
-    "value": "$95 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1518,10 +1494,6 @@ export const TOUR_CONTENT = {
     "value": "8–10 hours"
    },
    {
-    "label": "Price",
-    "value": "$55"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    },
@@ -1641,8 +1613,8 @@ export const TOUR_CONTENT = {
     "value": "4–6 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -1767,10 +1739,6 @@ export const TOUR_CONTENT = {
    {
     "label": "Duration",
     "value": "8–10 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$57"
    },
    {
     "label": "Pick-up",
@@ -1903,10 +1871,6 @@ export const TOUR_CONTENT = {
    {
     "label": "Duration",
     "value": "6–8 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$80"
    },
    {
     "label": "Pick-up",
@@ -2077,8 +2041,8 @@ export const TOUR_CONTENT = {
     "value": "6–8 hours"
    },
    {
-    "label": "Price",
-    "value": "$55 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",
@@ -2232,10 +2196,6 @@ export const TOUR_CONTENT = {
    {
     "label": "Duration",
     "value": "6–8 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$75"
    },
    {
     "label": "Pick-up",
@@ -2398,8 +2358,8 @@ export const TOUR_CONTENT = {
     "value": "5–7 hours"
    },
    {
-    "label": "Price",
-    "value": "$45 Pick-upUbud & nearby"
+    "label": "Pick-up",
+    "value": "Ubud & nearby"
    },
    {
     "label": "Availability",

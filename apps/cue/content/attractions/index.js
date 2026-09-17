@@ -87,10 +87,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~2 hours riding"
    },
    {
-    "label": "Price",
-    "value": "$40"
-   },
-   {
     "label": "Availability",
     "value": "Daily"
    },
@@ -339,10 +335,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~2-3 hours"
    },
    {
-    "label": "Price",
-    "value": "$28"
-   },
-   {
     "label": "Availability",
     "value": "Daily"
    },
@@ -465,10 +457,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~2-3 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$40"
    },
    {
     "label": "Availability",
@@ -845,10 +833,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~1 hour"
-   },
-   {
-    "label": "Price",
-    "value": "$10"
    },
    {
     "label": "Availability",
@@ -1601,10 +1585,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~5 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$35"
    },
    {
     "label": "Availability",
@@ -2599,10 +2579,6 @@ export const ATTRACTION_CONTENT = {
     "value": "~7 hours (2:30 AM start)"
    },
    {
-    "label": "Price",
-    "value": "$50 AvailabilityDaily"
-   },
-   {
     "label": "Pick-up",
     "value": "Ubud & nearby"
    }
@@ -2721,10 +2697,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~1–2 hours"
-   },
-   {
-    "label": "Price",
-    "value": "$25"
    },
    {
     "label": "Availability",
@@ -2849,10 +2821,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~1 hour"
-   },
-   {
-    "label": "Price",
-    "value": "$10 DaysTue & Sun"
    },
    {
     "label": "Pick-up",
@@ -3349,10 +3317,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~8 hours (2:00 AM start)"
-   },
-   {
-    "label": "Price",
-    "value": "$55 DifficultyModerate"
    },
    {
     "label": "Pick-up",
@@ -3969,10 +3933,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Duration",
     "value": "~2 hours on water"
-   },
-   {
-    "label": "Price",
-    "value": "$35"
    },
    {
     "label": "Availability",
@@ -6333,10 +6293,6 @@ export const ATTRACTION_CONTENT = {
    {
     "label": "Area",
     "value": "Tanjung Benoa"
-   },
-   {
-    "label": "Price",
-    "value": "$45"
    },
    {
     "label": "Availability",

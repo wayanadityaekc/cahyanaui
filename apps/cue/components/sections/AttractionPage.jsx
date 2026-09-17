@@ -12,7 +12,6 @@ import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP, HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
-import TourAlsoOnStrip from '@/components/sections/TourAlsoOnStrip';
 import TourComparisonBox from '@/components/booking/TourComparisonBox';
 import { toursContaining } from '@/lib/tourIndex';
 
@@ -24,14 +23,13 @@ const PILOT_TOURS = ['ubud-culture-day'];
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
-  // Which tours stop here, for the strip and the comparison box. Reverse lookup
+  // Which tours stop here, for the comparison box in the booking card. Reverse lookup
   // on refId, so a stop added to a tour shows up on this page by itself.
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = toursContaining(slug).filter((t) => PILOT_TOURS.includes(t.slug));
   return (
     <>
       <JsonLd page={data.__page} />
-      <TourAlsoOnStrip tours={onTours} />
       {/* Split hero (photo + white body). Fully Tailwind now; no tour-hero marker classes.
           pt- reserves clearance under the fixed navbar (--header-h, published by Navbar's
           ResizeObserver) so the photo's top edge isn't hidden under it - was a hardcoded

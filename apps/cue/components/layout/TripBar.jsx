@@ -9,12 +9,17 @@ import { promoFor } from '@/content/shared/promo';
 // semua halaman; sebelumnya sempat homepage-only). Isinya PER HALAMAN, lihat
 // content/shared/promo.js. Teksnya sengaja kecil & tipis: ini pengumuman, bukan
 // headline - jangan dibikin setebal nav.
-const BAR = 'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-top:1px_solid_#ececec] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
-const CTA = 'ml-2 text-gold underline [@media(max-width:560px)]:ml-[0.3rem]';
+// SATU BARIS, selalu (Wayan, Sep 2026 - "gua gamau ada 2 line"). Copy-nya
+// ditulis pendek di promo.js, TAPI panjang teks beda-beda per font/bahasa, jadi
+// bar-nya juga diklem di sini: `whitespace-nowrap` + `truncate` (butuh `min-w-0`
+// di flex parent, kalau nggak anaknya gak mau nyusut). Efeknya kalau kepanjangan
+// dia kepotong "...", BUKAN turun ke baris kedua & bikin header melar.
+const BAR = 'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-top:1px_solid_#ececec] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
+const CTA = 'ml-2 shrink-0 text-gold underline [@media(max-width:560px)]:ml-[0.3rem]';
 // The fade only carries the text swap on a rotating bar; a single-message page
 // never triggers it. motion-reduce kills the fade, the swap itself still happens
 // (it is content, not decoration).
-const FADE = 'flex items-center gap-2 [transition:opacity_var(--dur)_var(--ease)] motion-reduce:transition-none [@media(max-width:560px)]:gap-[0.35rem]';
+const FADE = 'flex items-center min-w-0 max-w-full gap-2 [transition:opacity_var(--dur)_var(--ease)] motion-reduce:transition-none [@media(max-width:560px)]:gap-[0.35rem]';
 
 // Lucide needs an explicit size or it renders at 24px.
 const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold';
@@ -80,7 +85,7 @@ export default function TripBar() {
   const inner = (
     <span className={`${FADE} ${dim ? 'opacity-0' : 'opacity-100'}`}>
       <Icon className={ICON} strokeWidth={1.7} aria-hidden="true" />
-      <span>{msg.text}</span>
+      <span className="truncate">{msg.text}</span>
       {msg.cta && <span className={CTA}>{msg.cta}</span>}
     </span>
   );

@@ -12,40 +12,47 @@
 // /guide/ inherits without touching this file; an exact route always wins over
 // a prefix, and the longest prefix wins (see kecak-dance).
 //
+// ONE LINE, ALWAYS (Wayan, Sep 2026 - "gua gamau ada 2 line"). The bar is a
+// single strip: text + cta together must fit on one line down to a 320px phone.
+// Budget is about 48 characters INCLUDING the cta. TripBar also clamps it
+// (nowrap + ellipsis) so a long line can never push the bar to two rows, but
+// that clamp is a seatbelt, not a licence - write short copy and check with
+// `verify-promo.mjs` ("1 baris di 320/360/390" + "gak ada yang kepotong").
+//
 // COPY RULE: every line here has to be TRUE. Where the claims come from:
 // free cancellation 24h (listing cards + FAQ), car/driver/fuel included and
 // tickets separate per tier (FAQ "Standard vs Exclusive"), charter priced per
-// car up to 5 pax + 60k extra hour (charter page + pricing-data), 10% deposit
-// (booking flow). Nothing new gets promised here without Wayan.
+// car up to 5 pax (charter page + pricing-data), 20% deposit (Wayan, Sep 2026).
+// Nothing new gets promised here without Wayan.
 
 const FREE_CANCEL = {
-  text: 'Free cancellation up to 24 hours before pickup',
-  cta: 'See the policy',
+  text: 'Free cancellation up to 24 hours',
+  cta: 'See policy',
   href: '/our-company.html#cancellation',
   icon: 'shield',
 };
 
 const KECAK = {
-  text: 'Kecak dance: every Sunday and Tuesday',
+  text: 'Kecak dance: Sundays and Tuesdays',
   cta: 'See details',
   href: '/attractions/kecak-dance.html',
   icon: 'calendar',
 };
 
 const PRIVATE_TOUR = {
-  text: 'Every tour is private. Car, driver and fuel included',
+  text: 'Private tour, car and driver included',
   icon: 'car',
 };
 
 const ASK_FIRST = {
-  text: 'Planning questions are free. Ask before you book',
-  cta: 'Chat with us',
+  text: 'Planning questions are free',
+  cta: 'Ask us',
   href: '/our-company.html#contact',
   icon: 'info',
 };
 
 const NAME_BOARD = { text: 'Your driver meets you with a name board', icon: 'car' };
-const PLAN_LOCAL = { text: 'Your plan is saved on this device only', icon: 'info' };
+const PLAN_LOCAL = { text: 'Saved on this device only', icon: 'info' };
 
 // Detail pages (the 18 tour pages at the root + everything under /attractions/)
 // are the majority and all want the same line, so THEY are the default and the
@@ -55,7 +62,7 @@ const PLAN_LOCAL = { text: 'Your plan is saved on this device only', icon: 'info
 // No WhatsApp on detail pages (Wayan, Sep 2026): the book bar and the booking
 // card already own the next step, a second channel just splits it.
 export const PROMO_DEFAULT = {
-  text: 'A 10% deposit locks your date. The rest is paid on the day',
+  text: 'A 20% deposit locks your date',
   icon: 'info',
 };
 
@@ -66,10 +73,10 @@ export const PROMO = {
   // Selling pages - answer the doubt that stops the booking.
   '/tour': PRIVATE_TOUR,
   '/programs': PRIVATE_TOUR,
-  '/activities': { text: 'Gear and a licensed guide included on every activity', icon: 'shield' },
+  '/activities': { text: 'Gear and licensed guide included', icon: 'shield' },
   '/destinations': {
-    text: 'Standard leaves entrance tickets out, Exclusive includes them',
-    cta: 'See the difference',
+    text: 'Exclusive includes entrance tickets',
+    cta: 'Compare',
     href: '/our-company.html#faq',
     icon: 'info',
   },
@@ -77,7 +84,9 @@ export const PROMO = {
   // Exact route beats the default - on the Kecak page itself the old global
   // promo linked to the page you were already reading.
   '/attractions/kecak-dance': {
-    text: 'Special event: Kecak dance every Sunday and Tuesday',
+    // Nama tariannya gak usah diulang - ini KE-render di halaman Kecak sendiri,
+    // dan versi panjangnya kepotong "..." di layar 320px.
+    text: 'Special event: Sundays and Tuesdays',
     icon: 'calendar',
   },
 
@@ -86,7 +95,7 @@ export const PROMO = {
   '/guide/': ASK_FIRST,
 
   '/charter': {
-    text: 'Priced per car, up to 5 passengers. Extra hours 60k',
+    text: 'Per car, up to 5 passengers',
     cta: 'See rates',
     href: '/charter.html#ch-durations',
     icon: 'car',

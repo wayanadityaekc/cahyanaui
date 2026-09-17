@@ -745,9 +745,19 @@ Order **must be kept** (declarations first, run last):
     - **Gak ada WhatsApp di halaman detail** (Wayan): book bar + kartu booking udah pegang
       langkah berikutnya, channel kedua cuma mecah perhatian.
     - Ikon per pesan (`tag`/`shield`/`calendar`/`info`/`car`, Lucide + ukuran eksplisit).
+    - **SATU BARIS, selalu** (Wayan, Sep 2026: "gua gamau ada 2 line"). Jatah ±48 karakter
+      **termasuk CTA**, harus muat sampe layar **320px**. `TripBar` juga ngeklem
+      (`whitespace-nowrap` + `truncate`, butuh `min-w-0` di flex parent) — itu SABUK
+      PENGAMAN biar header gak melar, bukan izin nulis panjang: kepanjangan = kepotong
+      "...", tetep jelek. Ukur pakai `oneline.mjs` (16 halaman × 4 lebar, ngecek
+      `tinggi/line-height == 1` DAN `scrollWidth == clientWidth`).
     - **Tiap baris di file itu WAJIB fakta yang udah ada di web** (gratis batal 24 jam,
-      car/driver/fuel included, Standard vs Exclusive, charter per mobil + 60k/jam, deposit
-      10%). Nambah janji baru = tanya Wayan dulu.
+      car/driver included, Exclusive include tiket, charter per mobil s/d 5 orang,
+      **deposit 20%** — Wayan, Sep 2026, naik dari 10%). Nambah janji baru = tanya Wayan dulu.
+    - **PERINGATAN deposit**: sisa web masih nulis **10%** di 33 tempat (FAQ, Terms,
+      Charter, Transfer, Airport, About, guide, itinerary, metaDesc 7 tour, JSON-LD).
+      Cuma bar yang udah 20%. Kalau ganti angka deposit, `grep -rn "10% deposit"` dan
+      sapu SEMUA — jangan cuma satu tempat, nanti web-nya ngomong dua angka beda.
   - **Rotasi: `setIdx` dan `setDim(false)` JANGAN di tick yang sama.** Kalau barengan,
     teks baru ke-paint langsung di opacity 1 → nyentak, bukan fade. Pola yang bener:
     fade-out → `setTimeout(FADE_MS)` → ganti index → `requestAnimationFrame` → fade-in.

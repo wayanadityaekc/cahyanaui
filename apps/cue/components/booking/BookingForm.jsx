@@ -16,7 +16,12 @@ const SERVICE_TYPES = [
   { value: 'transfer', label: 'Route Transfer' },
 ];
 
-const CATEGORY_OF = { tour: ['tour', 'combo'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
+// A single destination is category 'place' on the server but books exactly like a
+// tour - per car, same Standard/Exclusive split - so it lives under Tour Program.
+// Leaving it out meant a destination page's preset item matched nothing in the
+// list and got cleared by the effect below, which blanked the price and disabled
+// Book Now on all 34 of them.
+const CATEGORY_OF = { tour: ['tour', 'combo', 'place'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
 
 const MODE_INFO = {
   standard: { label: 'Standard', desc: 'Private car, driver & fuel. Entrance tickets paid as you go.' },
@@ -60,9 +65,13 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     return catalog.items.filter((i) => cats.includes(i.category) && i.active).map((i) => ({ value: i.name, label: i.name }));
   }, [catalog, type]);
 
+  // Clearing an item that is not in the list belongs to the generic picker. A
+  // detail page presets its item and hides the pickers, so there is nothing for
+  // the guest to correct - wiping it there just breaks the page silently.
   useEffect(() => {
+    if (locked) return;
     if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
-  }, [itemOptions, item]);
+  }, [locked, itemOptions, item]);
 
   const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;
   const transferEntry = catalog && item ? catalog.transfers.find((t) => t.route === item) : null;

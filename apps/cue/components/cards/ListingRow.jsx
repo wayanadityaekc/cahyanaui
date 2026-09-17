@@ -1,13 +1,15 @@
 'use client';
 
 import clsx from 'clsx';
-import { Check, Clock, MapPin, UserRound } from 'lucide-react';
+import { Check, Clock, Map, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
 import Rating from '@/components/Rating';
 
 const CheckIcon = () => <Check strokeWidth={2.4} aria-hidden="true" />;
 const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
 const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
+// A region, not a point - so not the pin the stop count already uses.
+const AreaIcon = () => <Map strokeWidth={1.7} aria-hidden="true" />;
 const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
 
 // Tailwind-native (migrasi Fase 2, keluarga kartu - stage 2): kartu listing
@@ -42,7 +44,7 @@ const PRICE = 'mt-auto self-end flex items-baseline gap-1 whitespace-nowrap';
 
 export default function ListingRow({
   href, name, img, alt, meta, metaIcon = 'clock',
-  priceName, priceFallback, priceMode = 'standard', zone, stops, priv,
+  priceName, priceFallback, priceMode = 'standard', zone, stops, priv, area,
   dim = false, onReset, anchorId,
 }) {
   const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
@@ -69,6 +71,9 @@ export default function ListingRow({
           )}
           {meta && metaIcon !== 'pin' && (
             <li><ClockIcon />{meta}</li>
+          )}
+          {area && (
+            <li><AreaIcon />{area}</li>
           )}
           {priv && (
             <li><UserIcon />Private driver</li>

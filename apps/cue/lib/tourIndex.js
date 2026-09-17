@@ -76,10 +76,12 @@ export function withAttractionCards(listing, attractions = {}) {
     if (m) {
       const place = attractions[m[1]];
       if (place) {
-        // A destination card's `meta` is its area ("South Bali"), which the time
-        // replaces - the page already groups by area. An experience card's is
-        // already a time, and keeps its own wording.
+        // A destination card's `meta` is its area ("South Bali"). The time takes
+        // the meta slot and the area moves to its own line (Wayan asked for it
+        // back). An experience card's meta is already a time and keeps its own
+        // wording, and has no area to move.
         if (next.metaIcon === 'pin' || !next.meta) {
+          if (next.metaIcon === 'pin' && next.meta && !next.area) next.area = next.meta;
           // Destinations label it "Time here", experiences "Duration" - same
           // question ("how long am I there?"), two words for it in the content.
           const timeHere = ((place.hooks || []).find((h) => /time here|duration/i.test(h.label))

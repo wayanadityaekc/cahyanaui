@@ -19,7 +19,7 @@ export default function ChatFab() {
       href={`https://wa.me/${WHATSAPP_NUMBER}`}
       target="_blank"
       rel="noopener"
-      className="fixed right-4 bottom-4 z-[95] flex items-center gap-[6px] py-[0.5rem] px-[0.85rem] rounded-pill bg-white border border-line shadow-lg text-green no-underline min-[769px]:right-6 min-[769px]:bottom-6 max-md:[body:has(.bookbar-on)_&]:hidden"
+      className="fixed left-4 bottom-4 z-[95] flex items-center gap-[6px] py-[0.5rem] px-[0.85rem] rounded-pill bg-white border border-line shadow-lg text-green no-underline min-[769px]:left-6 min-[769px]:bottom-6 max-md:[body:has(.bookbar-on)_&]:hidden"
       aria-label="Chat on WhatsApp"
     >
       <MessageCircle className="w-[18px] h-[18px]" strokeWidth={1.8} />

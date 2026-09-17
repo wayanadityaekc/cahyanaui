@@ -7,7 +7,7 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 
 // Sticky price + CTA on mobile, rendered by the page that actually sells
 // something (TourPage/AttractionPage pass their bookItem). Wayan, Sep 2026:
-// - chat moved to the right, next to the CTA
+// - chat stays leftmost, then the price, then the CTA on the right
 // - no guest count in here any more
 // - rounded and floating just clear of the bottom edge, not edge-to-edge
 // - hidden whenever the booking form is on screen, so its "Book now" and the
@@ -49,15 +49,11 @@ export default function BookBar({ item }) {
 
   return (
     <div
-      className={`bookbar ${hidden ? '' : 'bookbar-on '}fixed left-2 right-2 bottom-1.5 z-[95] hidden max-md:flex items-center gap-3 py-[0.4rem] pl-5 pr-[0.4rem] bg-white border border-line rounded-[var(--r-xl)] shadow-xl [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
+      className={`bookbar ${hidden ? '' : 'bookbar-on '}fixed left-2 right-2 bottom-1.5 z-[95] hidden max-md:flex items-center gap-3 py-[0.4rem] pl-4 pr-[0.4rem] bg-white border border-line rounded-[var(--r-xl)] shadow-xl [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
         hidden ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
       inert={hidden || undefined}
     >
-      <div className="flex-1 min-w-0 text-[1.1rem] font-semibold text-amber leading-none">
-        <Price name={item} fallback="" />
-      </div>
-      <span className="w-px self-stretch bg-line flex-none" aria-hidden="true" />
       <a
         href={`https://wa.me/${WHATSAPP_NUMBER}`}
         target="_blank"
@@ -68,6 +64,10 @@ export default function BookBar({ item }) {
         <MessageCircle className="w-[18px] h-[18px]" strokeWidth={1.8} />
         <span className="text-[0.6rem] font-medium leading-none">Chat</span>
       </a>
+      <span className="w-px self-stretch bg-line flex-none" aria-hidden="true" />
+      <div className="flex-1 min-w-0 text-[1.1rem] font-semibold text-amber leading-none">
+        <Price name={item} fallback="" />
+      </div>
       <a
         href="#booking"
         className="flex-none py-[0.55rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d"

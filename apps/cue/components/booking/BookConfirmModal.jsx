@@ -19,6 +19,7 @@ import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT, REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
+import { baseTotal } from '@/lib/payment';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -63,7 +64,7 @@ export default function BookConfirmModal() {
 
   // Checkpoint 1: the guest's payment choice is held here so the step can be
   // driven and screenshotted. Nothing acts on it yet.
-  const [payOption, setPayOption] = useState('deposit');
+  const [payOption, setPayOption] = useState('later');
   const [payMethod, setPayMethod] = useState('card');
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
@@ -310,8 +311,12 @@ export default function BookConfirmModal() {
               onOption={setPayOption}
               method={payMethod}
               onMethod={setPayMethod}
-              total={priced && priced.total ? priced.total.display : null}
+              /* baseTotal, not priced.total: the quote already subtracts the
+                 code's own percentage, and in this model a code is worth nothing
+                 on its own - counting it here too would discount twice. */
+              total={baseTotal(priced)}
               symbol={(priced && priced.symbol) || '$'}
+              hasReferral={!!(priced && priced.referral)}
               referral={f.referral}
               onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
               onApplyReferral={applyRef}

@@ -4,36 +4,34 @@ import { ShieldCheck } from 'lucide-react';
 import { withSymbol } from '@/components/Price';
 import PayChips from './PayChips';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
-import { PAY_OPTIONS, PAY_METHODS, PAY_COPY, amountDueNow } from '@/lib/payment';
+import { PAY_METHODS, PAY_COPY, amountDueNow, payOptions } from '@/lib/payment';
 
-// CHECKPOINT 1 - design only. Nothing here opens DOKU, creates a session or
-// charges anything; it renders the choice and reports it upward.
+// CHECKPOINT 1 - design only. Nothing here opens DOKU or PayPal, creates a
+// session or charges anything; it renders the choice and reports it upward.
 //
-// Two stacked choices, because they answer different questions:
-//   1. HOW MUCH do you pay now - deposit, in full, or nothing (referral).
-//   2. WITH WHAT - card or PayPal.
-// The second only appears when the first actually charges something, so a
-// referral booking does not ask a guest to pick a card for a zero payment.
+// Order on the page is deliberate: the referral code comes FIRST, because a code
+// changes what both options below are worth. Entering it afterwards would mean
+// the guest picks from the wrong numbers.
 //
-// Amounts are derived from the total the server already quoted (priced.total),
-// in the guest's own currency. No price is calculated here.
+// The method picker only appears when something is actually being charged, so a
+// code holder booking with no deposit is never asked to choose a card for a
+// payment of zero.
 const ROW =
   'w-full flex items-start gap-3 text-left p-[0.85rem] rounded-md bg-white cursor-pointer ' +
   '[transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
 const ROW_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
 const ROW_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
 const DOT = 'flex-none w-[18px] h-[18px] mt-[0.1rem] rounded-[50%] flex items-center justify-center';
-const DOT_ON = '[border:1.5px_solid_var(--color-cta)]';
-const DOT_OFF = '[border:1.5px_solid_#cfc9ba]';
 const LABEL = 'font-semibold text-green text-[1rem] leading-tight';
 const SUB = 'block mt-[0.2rem] text-small text-muted leading-[var(--lh-body)]';
 const AMOUNT = 'font-semibold text-amber text-[1rem] whitespace-nowrap';
+const AMOUNT_FREE = 'font-semibold text-cta text-small whitespace-nowrap';
 const BADGE = 'inline-block ml-2 px-[0.45rem] py-[0.1rem] rounded-sm bg-[rgba(201,164,92,0.16)] text-amber-d text-small font-semibold align-middle';
 const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.6rem]';
 
 function Radio({ on }) {
   return (
-    <span className={`${DOT} ${on ? DOT_ON : DOT_OFF}`} aria-hidden="true">
+    <span className={`${DOT} ${on ? '[border:1.5px_solid_var(--color-cta)]' : '[border:1.5px_solid_#cfc9ba]'}`} aria-hidden="true">
       {on && <span className="w-[8px] h-[8px] rounded-[50%] bg-cta" />}
     </span>
   );
@@ -42,61 +40,61 @@ function Radio({ on }) {
 export default function PaymentStep({
   option, onOption,
   method, onMethod,
-  total, symbol = '$',
+  total, symbol = '$', hasReferral = false,
   referral, onReferral, onApplyReferral, refMsg,
 }) {
-  const charges = option !== 'referral';
+  const options = payOptions(hasReferral);
+  const charges = !!amountDueNow(option, total, symbol, hasReferral);
 
   return (
     <div className="my-5">
-      <p className={HEAD}>{PAY_COPY.heading}</p>
+      {/* Code first - it rewrites both rows below. */}
+      <label className={HEAD} htmlFor="referral">{PAY_COPY.referralLabel}</label>
+      <div className="flex gap-2">
+        <input
+          className={REFERRAL_INPUT}
+          type="text"
+          id="referral"
+          placeholder="Enter code"
+          value={referral}
+          onChange={(e) => onReferral(e.target.value)}
+          aria-describedby="referral-hint"
+        />
+        <button className={REFERRAL_BTN} type="button" onClick={onApplyReferral}>Apply</button>
+      </div>
+      {/* A hint, not a validation message. Tied to the input with
+          aria-describedby so a screen reader announces it as guidance - the
+          error messages elsewhere in this form are the ones carrying text-err. */}
+      {refMsg
+        ? <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>
+        : <small id="referral-hint" className="block mt-[0.3rem] text-small text-muted">{PAY_COPY.referralHint}</small>}
 
-      <div className="flex flex-col gap-2">
-        {PAY_OPTIONS.map((o) => {
+      <p className={`${HEAD} mt-5`}>{PAY_COPY.heading}</p>
+      <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
+        {options.map((o) => {
           const on = option === o.id;
-          const due = amountDueNow(o.id, total, symbol);
+          const due = amountDueNow(o.id, total, symbol, hasReferral);
           return (
-            <div key={o.id}>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={on}
-                className={`${ROW} ${on ? ROW_ON : ROW_OFF}`}
-                onClick={() => onOption(o.id)}
-              >
-                <Radio on={on} />
-                <span className="flex-1 min-w-0">
-                  <span className={LABEL}>
-                    {o.label}
-                    <span className={BADGE}>{o.badge}</span>
-                  </span>
-                  <span className={SUB}>{o.sub}</span>
+            <button
+              key={o.id}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              className={`${ROW} ${on ? ROW_ON : ROW_OFF}`}
+              onClick={() => onOption(o.id)}
+            >
+              <Radio on={on} />
+              <span className="flex-1 min-w-0">
+                <span className={LABEL}>
+                  {o.label}
+                  <span className={BADGE}>{o.badge}</span>
                 </span>
-                {due && <span className={AMOUNT}>{withSymbol(due)}</span>}
-              </button>
-
-              {/* The code field lives inside its own row, so it is obvious what
-                  it belongs to. Pre-filled when the guest already entered a code
-                  earlier in the form - they should not have to type it twice. */}
-              {on && o.id === 'referral' && (
-                <div className="mt-2 ml-[calc(18px+0.75rem)]">
-                  <div className="flex gap-2">
-                    <input
-                      className={REFERRAL_INPUT}
-                      type="text"
-                      aria-label="Referral code"
-                      placeholder="Enter code"
-                      value={referral}
-                      onChange={(e) => onReferral(e.target.value)}
-                    />
-                    <button className={REFERRAL_BTN} type="button" onClick={onApplyReferral}>Apply</button>
-                  </div>
-                  {refMsg
-                    ? <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>
-                    : <small className="block mt-[0.3rem] text-small text-muted">{PAY_COPY.referralNone}</small>}
-                </div>
-              )}
-            </div>
+                <span className={SUB}>{o.sub}</span>
+              </span>
+              <span className={due ? AMOUNT : AMOUNT_FREE}>
+                {due ? withSymbol(due) : PAY_COPY.nothingNow}
+              </span>
+            </button>
           );
         })}
       </div>
@@ -104,7 +102,7 @@ export default function PaymentStep({
       {charges && (
         <>
           <p className={`${HEAD} mt-5`}>{PAY_COPY.methodHeading}</p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.methodHeading}>
             {PAY_METHODS.map((m) => {
               const on = method === m.id;
               return (

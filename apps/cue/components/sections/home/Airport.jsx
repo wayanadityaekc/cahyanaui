@@ -11,7 +11,7 @@ const CLS = {
     "after:content-[''] after:absolute after:inset-0 " +
     'after:bg-[linear-gradient(90deg,rgba(20,19,15,0.86)_0%,rgba(20,19,15,0.62)_55%,rgba(20,19,15,0.35)_100%)] ' +
     'max-[560px]:after:bg-[linear-gradient(180deg,rgba(20,19,15,0.72)_0%,rgba(20,19,15,0.82)_100%)]',
-  inner: 'relative z-[1] max-w-[var(--container)] mx-auto px-6',
+  inner: 'relative z-[1] max-w-[var(--container)] mx-auto px-[var(--container-x)]',
   body: 'max-w-[560px]',
   k: 'block uppercase tracking-[0.14em] text-label text-gold-l mb-[0.6rem]',
   t: 'font-head text-[1.6rem] font-semibold tracking-[-0.01em] leading-[1.15] mt-0 mb-[0.7rem]',

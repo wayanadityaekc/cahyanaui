@@ -390,10 +390,17 @@ When unsure, ask first (keep it short).
   probe belum nyampe section manapun.
 
 ## Homepage section order (Sep 2026)
-Urutan `index.html` (`body.home`): Hero → Explore/Tours (`#explore`) → **Airport pickup**
+Urutan `index.html` (`body.home`): Hero → **Program** (`#explore`) → **Airport pickup**
 (`#airport-pickup`) → Destinations (`#destinations-home`) → **Why Us** (`#why-us`) →
 Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) → About (`#about`)
 → Featured On (`.trust`) → Reviews (`#reviews-placeholder`).
+- **Section `#explore` = "Our Best Bali Program"**, SATU set 8 kartu (4 tour + 4 experience)
+  digabung (Sep 2026, Wayan: "keluarin card dari kategori, tour dan experience jadi satu").
+  Dulu 2 tab (Tours | Experiences) — separuh kartu kesembunyi di balik tap, dan section-nya
+  keliatan lebih kurus dari katalog aslinya. 8 kartu = jumlah yang sama kayak Destinations,
+  jadi `GRID_XPLORE` nata-nya persis sama: **HP 1 slider, desktop 2 baris × 4**. CTA-nya
+  tinggal satu → `/programs.html` (halaman yang emang gabungin dua-duanya). Gak ada state
+  tab lagi → `Explore.jsx` balik jadi **server component** (gak ngirim JS).
 - **Trip Planner band (`.plan` / `#plan`) DIHAPUS dari homepage** (Wayan: kebanyakan tulisan; hero
   udah "trip planner" sendiri). CSS `.plan*` masih ada (dipakai halaman lain? cek dulu kalau mau buang).
 - **Driver cards DIHAPUS dari homepage** (section `.habout-people` + `#drivers-placeholder` +
@@ -566,7 +573,17 @@ Order **must be kept** (declarations first, run last):
   - `--container-read` **720px** — kolom baca sempit: legal + artikel guide (`.guide-article`).
     Sengaja lebih sempit demi panjang baris enak dibaca (di 12.8px, 720 udah ±105 char — JANGAN
     dinaikin, malah kepanjangan; kalau kerasa kosong, naikin font body, bukan lebar kolom).
-  - `--container-x` = `var(--space-3)` (1.5rem) — padding kiri/kanan seragam (jaga jarak tepi HP).
+  - `--container-x` = `var(--space-3)` (1.5rem) di desktop, **`1rem` (16px) di HP** —
+    padding kiri/kanan seragam. **Override HP-nya di `@media (max-width: 992px)`, ditulis di
+    `style.css` DAN `app/globals.css` dua-duanya** (urutan load-nya gak dijamin, jadi
+    disamain biar siapa pun yang menang nilainya sama). Breakpoint 992 itu SENGAJA sama
+    persis sama band `BLEED_MOBILE`: slider full-bleed nge-inset kartu pertama 1rem, jadi
+    kalau container-nya tetep 24px judul section sama kartu pertama gak lurus (Sep 2026,
+    Wayan: "samain 16px semua biar rapi"). **Section wrapper JANGAN hardcode `px-6` lagi** —
+    pakai `px-[var(--container-x)]` biar ikut. Yang udah disapu: Hero, About, Airport,
+    GuideHome, Trust, Villas, WhyUs, GuestReviews (+ XPLORE_SECTION & CharterHome udah token
+    dari dulu). Cek pakai `gutter-check.mjs` di scratchpad: di 390px SEMUA judul section
+    rata-kiri harus mulai di 16px dan kartu pertama tiap slider juga 16px.
   - **Booking detail** (`.tour-layout--book`, ~1280px, attraction/tour bookable) = layout khusus
     2-kolom, **TIDAK ikut** token ini (sengaja paling lebar). Info di dalamnya di-override
     `max-width:none` (line ~3240), jadi ganti base `.info__container` gak ngefek ke sana.

@@ -106,3 +106,11 @@
   --gold-edge: linear-gradient(150deg, var(--color-gold), rgba(34, 32, 28, 0.25));
 }
 
+/* HP = gutter 16px (Sep 2026, Wayan: "samain 16px semua biar rapi"). Slider full-bleed
+   nge-inset kartu pertamanya 1rem, jadi kalau container-nya tetep 24px judul section
+   dan kartu pertama gak lurus - ini yang bikin kerasa berantakan. Breakpoint-nya 992px
+   BIAR SAMA persis sama band-nya BLEED_MOBILE; kalau dipasang di 768 nanti di 769-992
+   mismatch-nya balik lagi. Desktop tetep 1.5rem. */
+@media (max-width: 992px) {
+  :root { --container-x: 1rem; }
+}

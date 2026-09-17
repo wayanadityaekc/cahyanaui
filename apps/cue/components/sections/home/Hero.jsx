@@ -21,7 +21,7 @@ export default function Hero() {
     // Homepage hero. No marker class needed anymore: the section-gap engine keys off
     // :first-of-type (this is the first <section> child) and the old divider is gone.
     <section
-      className="relative flex items-center min-h-[88vh] pt-28 px-6 pb-12 bg-green
+      className="relative flex items-center min-h-[88vh] pt-28 px-[var(--container-x)] pb-12 bg-green
         min-[993px]:min-h-[92vh] min-[993px]:pt-36 min-[993px]:pb-20
         max-[992px]:bg-[#12100c] max-[992px]:min-h-[58vh] max-[992px]:pb-8
         after:content-[''] after:absolute after:inset-0 after:z-0 after:bg-cover after:[background-position:center_top]

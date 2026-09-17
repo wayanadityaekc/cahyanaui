@@ -6,7 +6,7 @@ import { ArrowUpRight } from 'lucide-react';
 // (2.1rem, sengaja non-token) -> text-[2.1rem], mengecil ke 1.7rem di HP.
 const CLS = {
   section:
-    "relative min-h-[420px] flex items-center justify-center text-center px-6 py-12 max-[768px]:min-h-[380px] " +
+    "relative min-h-[420px] flex items-center justify-center text-center px-[var(--container-x)] py-12 max-[768px]:min-h-[380px] " +
     "after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(180deg,rgba(20,28,23,0.55),rgba(20,28,23,0.72))]",
   bg: 'absolute inset-0 grid grid-cols-2 max-[768px]:grid-cols-1 max-[768px]:grid-rows-2',
   bgTile: 'bg-cover bg-center',

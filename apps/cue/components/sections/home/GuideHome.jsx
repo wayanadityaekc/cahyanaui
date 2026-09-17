@@ -21,7 +21,7 @@ export default function GuideHome() {
   }, [q]);
 
   return (
-    <section className="px-6" id="guides" aria-labelledby="guide-home-title">
+    <section className="px-[var(--container-x)]" id="guides" aria-labelledby="guide-home-title">
       <div className="max-w-[1200px] mx-auto">
         <div className="text-left mb-7">
           <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">Guides &amp; Information</h2>

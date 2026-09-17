@@ -7,7 +7,7 @@ import { WHY_US } from '@/content/shared/home';
 // dari WHY_US, ukurannya di-set lewat variant [&>svg].
 const CLS = {
   section: 'bg-cream',
-  in: 'max-w-[var(--container)] mx-auto px-6 py-12',
+  in: 'max-w-[var(--container)] mx-auto px-[var(--container-x)] py-12',
   head: 'text-center mb-8',
   k: 'block uppercase tracking-[0.14em] text-label text-muted mb-[0.4rem]',
   t: 'font-head text-h2 font-medium tracking-[-0.01em] m-0 text-gold',

@@ -2,7 +2,7 @@
 // gelap (dulu ::before) pakai variant before:*. space-6/space-3 -> py-16/px-6.
 const CLS = {
   section:
-    "relative flex items-center justify-center min-h-[360px] px-6 py-16 text-center bg-cover bg-center " +
+    "relative flex items-center justify-center min-h-[360px] px-[var(--container-x)] py-16 text-center bg-cover bg-center " +
     "before:content-[''] before:absolute before:inset-0 before:bg-[linear-gradient(180deg,rgba(0,0,0,0.52),rgba(0,0,0,0.72))]",
   in: 'relative z-[2] max-w-[600px]',
   k: 'block mb-[0.55rem] text-label tracking-[0.14em] uppercase font-medium text-gold-l',

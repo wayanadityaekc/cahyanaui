@@ -11,7 +11,7 @@ import { API_BASE } from '@/lib/constants';
 // - Margin homepage tetep di-drive parent .home>section (tag-based, masih jalan).
 const CLS = {
   base:
-    "max-w-[1100px] mx-auto mt-0 mb-6 py-9 px-6 text-center flex flex-wrap items-center justify-center " +
+    "max-w-[1100px] mx-auto mt-0 mb-6 py-9 px-[var(--container-x)] text-center flex flex-wrap items-center justify-center " +
     'gap-y-8 gap-x-[4.5rem] before:content-none',
   stat: 'basis-full grow-0 shrink-0 m-0 text-[1rem] text-green',
   statStrong: 'text-gold text-h2 font-semibold',

@@ -1,5 +1,6 @@
 import { TOUR_CONTENT } from '@/content/tours';
 import { LISTINGS } from '@/content/shared/listings';
+import { PLACE_PRICE } from '@/content/shared/place-prices';
 import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
 // Which tours actually stop at a given attraction, derived from each tour's own
@@ -39,19 +40,24 @@ export function inclLabel(slug) {
   return `Included in |${list}|`;
 }
 
-// Fills in every destination card from the destination's own page: the
-// "Included in ..." line from the index above, plus the same meta row the tour
-// cards carry (Wayan, Sep 2026 - "di listing destination juga isi dong"). A
-// destination is sold as a private trip to that one place, so: one stop, the
+// Fills in every card that opens an attraction page - the destinations listing
+// and the experiences one - from that attraction's own page, so both read like
+// the tours listing (Wayan, Sep 2026: experience and destination have to match
+// the tour page). Each is sold as a private trip to one place, so: one stop, the
 // time to spend there (its own "Time here" hook), a private driver, and - via
-// priceName - the price and the free-cancellation badge ListingRow hangs off it.
-// Nothing here is typed by hand twice; it all comes from the attraction.
+// priceName + priceFallback - the price and the free-cancellation badge
+// ListingRow hangs off them. Nothing is typed by hand twice; it comes from the
+// attraction, or from the price mirror for destinations.
+//
+// Only fills what a card leaves blank: the experiences cards carry their own
+// hand-written hours ("~2 hours riding" reads better than the hook) and their
+// own price, and those stay.
 //
 // `attractions` is passed in rather than imported so this stays callable from a
-// page without lib/ deciding which content set it gets. Called from the
-// destinations page, a server component: ListingPage itself is 'use client', so
+// page without lib/ deciding which content set it gets. Called from the listing
+// pages, which are server components: ListingPage itself is 'use client', so
 // importing this there would ship the whole tour dataset to the browser.
-export function withDestinationCards(listing, attractions = {}) {
+export function withAttractionCards(listing, attractions = {}) {
   const walk = (node) => {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
@@ -69,18 +75,24 @@ export function withDestinationCards(listing, attractions = {}) {
     if (m) {
       const place = attractions[m[1]];
       if (place) {
-        const timeHere = ((place.hooks || []).find((h) => /time here/i.test(h.label))
-          || (place.facts || []).find((f) => /time here/i.test(f.label))
-          || {}).value;
-        // The card's own `meta` is the area ("South Bali"), which the time
-        // replaces - the area is already how this page groups its sections.
-        if (timeHere) {
-          next.meta = timeHere;
-          next.metaIcon = 'clock';
+        // A destination card's `meta` is its area ("South Bali"), which the time
+        // replaces - the page already groups by area. An experience card's is
+        // already a time, and keeps its own wording.
+        if (next.metaIcon === 'pin' || !next.meta) {
+          // Destinations label it "Time here", experiences "Duration" - same
+          // question ("how long am I there?"), two words for it in the content.
+          const timeHere = ((place.hooks || []).find((h) => /time here|duration/i.test(h.label))
+            || (place.facts || []).find((f) => /time here|duration/i.test(f.label))
+            || {}).value;
+          if (timeHere) {
+            next.meta = timeHere;
+            next.metaIcon = 'clock';
+          }
         }
-        next.stops = 1;
-        next.priv = true;
-        if (place.bookItem) next.priceName = place.bookItem;
+        if (next.stops == null) next.stops = 1;
+        if (next.priv == null) next.priv = true;
+        if (!next.priceName && place.bookItem) next.priceName = place.bookItem;
+        if (!next.priceFallback && next.priceName) next.priceFallback = PLACE_PRICE[next.priceName];
       }
     }
     return next;
@@ -120,7 +132,7 @@ const CARD_PRICE = {};
 })(LISTINGS);
 
 export function priceFallbackFor(name) {
-  return CARD_PRICE[name];
+  return CARD_PRICE[name] || PLACE_PRICE[name];
 }
 
 const CONTAINS = {};

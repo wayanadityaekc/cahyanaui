@@ -727,9 +727,36 @@ Order **must be kept** (declarations first, run last):
       halaman dipatok ke `--header-h`, seluruh dokumen **lompat naik ~39px** persis pas trip
       bar nutup — itu bug-nya, dan itu sebabnya var-nya dipisah. Fallback-nya = tinggi header
       penuh hasil ukur (92px HP / 98px desktop), biar paint pertama gak kepotong.
-  - Verifikasi: `verify-tripbar.mjs` di scratchpad — patokannya bar ada di 6 jenis halaman,
-    font ≤12px, `--header-h` mengecil TAPI `--header-h-max` enggak, dan **posisi hero di
-    dokumen gak geser** selama bar animasi.
+  - **ISINYA BEDA PER HALAMAN** (Sep 2026, Wayan: "gua mau tiap halaman beda") — semua
+    di **`content/shared/promo.js`**, di-resolve `promoFor(pathname)`:
+    - Key = pathname **tanpa `.html`** (itu yang dikasih `usePathname` di static export).
+      Key yang diakhiri `/` = cocok per **prefix** (`/guide/`), jadi halaman guide baru
+      ikut sendiri. **Exact menang atas prefix**, prefix terpanjang menang (mis.
+      `/attractions/kecak-dance` nimpa default detail).
+    - Value = 1 pesan ATAU **array** (di-rotate di tempat — homepage: free cancellation ⇄
+      Kecak, 7 detik, crossfade). `null` = bar **MATI** di halaman itu (`/our-company`,
+      `/settings`) — itu state jujur buat halaman yang copy-nya belum diputusin, jangan
+      diisi karangan.
+    - **Default-nya = halaman DETAIL** ("10% deposit locks your date"), bukan sebaliknya:
+      18 halaman tour di root + semua `/attractions/` itu mayoritas, dan buat tau slug
+      mana yang tour kita harus import `TOUR_CONTENT` — itu narik seluruh dataset tour ke
+      **bundle SEMUA halaman** (TripBar nempel di Navbar). Makanya dibalik: yang bukan
+      halaman detail didaftarin satu-satu.
+    - **Gak ada WhatsApp di halaman detail** (Wayan): book bar + kartu booking udah pegang
+      langkah berikutnya, channel kedua cuma mecah perhatian.
+    - Ikon per pesan (`tag`/`shield`/`calendar`/`info`/`car`, Lucide + ukuran eksplisit).
+    - **Tiap baris di file itu WAJIB fakta yang udah ada di web** (gratis batal 24 jam,
+      car/driver/fuel included, Standard vs Exclusive, charter per mobil + 60k/jam, deposit
+      10%). Nambah janji baru = tanya Wayan dulu.
+  - **Rotasi: `setIdx` dan `setDim(false)` JANGAN di tick yang sama.** Kalau barengan,
+    teks baru ke-paint langsung di opacity 1 → nyentak, bukan fade. Pola yang bener:
+    fade-out → `setTimeout(FADE_MS)` → ganti index → `requestAnimationFrame` → fade-in.
+  - Verifikasi: `verify-tripbar.mjs` + **`verify-promo.mjs`** di scratchpad — patokannya
+    bar ada di 6 jenis halaman, font ≤12px, `--header-h` mengecil TAPI `--header-h-max`
+    enggak, **posisi hero di dokumen gak geser**, tiap halaman teksnya beda (≥8 unik),
+    homepage muter 2 pesan + href-nya ikut ganti, dan halaman 1-pesan **gak kedip**.
+    Cek ketumpuk seluruh web = `overlap-sweep.mjs` (22 halaman × 2 lebar: konten ketutupan
+    header, celah strip sticky, dan jumlah bar yang nempel di bawah).
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML

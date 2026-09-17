@@ -1,4 +1,4 @@
-import ExperienceCard from '@/components/cards/ExperienceCard';
+import HomepageCard from '@/components/cards/HomepageCard';
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
 import Slider from '@/components/ui/Slider';
 
@@ -7,11 +7,10 @@ import Slider from '@/components/ui/Slider';
 // stops unlinked is the point: a guest reading a tour never lands on a page
 // quoting a second, single-destination price mid-decision.
 //
-// Cards carry a photo, a name and one line, and nothing else: no price, no Book
-// button, no Include/Exclude, so the tour's own sidebar stays the only price on
-// screen. ExperienceCard's `incl` variant is exactly that shape already, and its
-// inclText slot takes the one-liner (it splits on pipes, and a plain string has
-// none, so it renders as-is).
+// Cards are HomepageCard, the same card the "You might also like" carousel below
+// uses, so the two sections read as one pair. Photo, name and area, and nothing
+// else: leaving priceName out is what keeps the price off them, so the tour's
+// sidebar stays the only price on screen while a guest reads.
 //
 // A carousel, not a grid (Wayan): a tour can have more stops than fit a row - Ubud
 // Culture Day has six - and a wrapping grid puts the tail on a second row while the
@@ -24,14 +23,14 @@ export default function TourDestinationCards({ items }) {
       <h2 className={SECTION_TITLE}>Destinations you&apos;ll visit on this tour</h2>
       <Slider>
         {items.map((d) => (
-          <ExperienceCard
+          <HomepageCard
             key={d.refId}
-            variant="incl"
             href={d.href}
             name={d.name}
             img={d.img}
             alt={d.alt}
-            inclText={d.summary}
+            meta={d.meta}
+            metaIcon="pin"
           />
         ))}
       </Slider>

@@ -139,7 +139,9 @@ export function tourDestinations(tourSlug, attractions) {
       name: a.title,
       img: it.img || a.heroBg,
       alt: it.alt || a.title,
-      summary: (a.desc || '').split(/(?<=\.)\s/)[0],
+      // Area for the card's meta row - the attraction's own hook, so it reads
+      // the same as it does on the Destinations listing.
+      meta: ((a.hooks || []).find((h) => h.label === 'Area') || (a.facts || []).find((f) => f.label === 'Area') || {}).value || '',
     });
   }
   return out;

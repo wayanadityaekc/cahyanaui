@@ -76,10 +76,10 @@ export default function TourPage({ data }) {
     <>
       <JsonLd page={data.__page} />
       {/* Split hero (photo + white body). Fully Tailwind now; no tour-hero marker classes.
-          pt- reserves clearance under the fixed navbar (--header-h, published by Navbar's
-          ResizeObserver) so the photo's top edge isn't hidden under it - see AttractionPage.jsx
-          for the same fix and full rationale (was hardcoded for navbar+tripbar together). */}
-      <section className="pt-[var(--header-h,52.8px)] min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[var(--header-h,57.6px)]">
+          pt- reserves clearance under the fixed header (navbar + trip bar), via
+          --header-h-max so the retracting trip bar never shifts the page - see
+          AttractionPage.jsx for the full rationale. */}
+      <section className="pt-[var(--header-h-max,92px)] min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[var(--header-h-max,98px)]">
         {data.heroSlides && data.heroSlides.length > 1 ? (
           <HeroSlider slides={data.heroSlides} />
         ) : (

@@ -136,6 +136,12 @@ When unsure, ask first (keep it short).
   dkk), dan judul besar level-halaman (`.subhero__title` var overlap, `.vpromo__title`).
 - Prices = gold (`--color-amber`, gold BENERAN — bukan `--color-gold`) + bold
   (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
+  **SATU pengecualian (Sep 2026, Wayan)**: harga di **book bar** (`BookBar.jsx`) =
+  `text-gold` (soft black), bukan amber — di bar itu amber nabrak tombol CTA hijau
+  tepat di sebelahnya. Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
+  Warnanya WAJIB dioper lewat prop `className` punya `<Price>` — default-nya
+  (`PRICE` = amber) nempel LANGSUNG di elemen `[data-price]`, jadi `text-gold` di
+  elemen pembungkus KALAH. Class `price` tetep dibawa (itu hook, bukan warna).
 
 **Section dividers:**
 - Thin gold **inset** line (margin on the sides) — via a `::before` pseudo-element,
@@ -417,6 +423,9 @@ Aturan mainnya (jangan diubah tanpa ngerti kenapa):
 - **Kalau nambah rule `:has()` yang nyangkut bar ini, scope-in ke `max-md`**: elemen bar
   tetep ada di DOM di semua lebar (cuma `display:none` di atas 768px), jadi rule tanpa
   scope bakal kena juga di desktop. (Dulu kejadian pas ChatFab masih ada.)
+- **Harga di bar = HITAM** (`text-gold`), bukan amber — pengecualian yang disengaja dari
+  aturan "semua harga amber", lihat section Design system. Dioper lewat `className` punya
+  `<Price>`, bukan lewat wrapper (wrapper kalah).
 - **Harga di bar** = `priceFallbackFor(name)` (angka kartu) dulu, diganti angka API pas
   katalog nyampe. Tour/experience/destinasi WAJIB sama — ini yang dulu beda (destinasi
   kosong sampe API balas) dan Wayan minta disamain.
@@ -699,10 +708,28 @@ Order **must be kept** (declarations first, run last):
   hero melar & foto "zoom"). **Ubah isi partial booking/footer/search → ukur ulang & update
   angkanya** (navbar nggak perlu: position fixed). Search form juga fade+slide masuk
   (`@keyframes heroCardIn`) — placeholder yang nahan ruangnya jadi nol shift.
-- **Tripbar (bar di bawah navbar)**: `initTripBar` jalan di SEMUA halaman. Halaman booking →
-  bar Guests/Pickup (klik = editor trip). Halaman non-booking → bar **promo/event** dari
-  `PROMO` di data.js (`{active, text, cta, href}`) — cuma muncul kalau `active:true` &
-  `text` keisi (default off, no fake content). Isi PROMO = tampil di semua halaman non-booking.
+- **Trip bar (`components/layout/TripBar.jsx`, strip di bawah navbar)** — Sep 2026, Wayan
+  minta **dibalikin ke SEMUA halaman** (sempat homepage-only). Di-render dari `Navbar`, isinya
+  promo dari `PROMO` (`content/shared/promo.js`: `{active, text, cta, href}`) — cuma muncul
+  kalau `active:true` & `text` keisi (default off, no fake content).
+  - **Teksnya sengaja kecil & tipis**: `text-[0.72rem] font-normal text-muted` (≤12px, dulu
+    12.8 HP / 14 PC dan warnanya `--color-green`). Ini pengumuman, bukan headline — jangan
+    dibikin setebal nav.
+  - **Nutup pas scroll turun, balik pas scroll naik.** Ambang: abaikan gerakan <6px (jitter),
+    dan gak pernah nutup selama masih <80px dari atas. Animasinya `grid-template-rows`
+    **0fr ↔ 1fr** (anaknya `overflow-hidden`) — gak usah ngukur tinggi apa pun.
+  - **DUA var tinggi header, jangan ketuker:**
+    - `--header-h` = tinggi header **live** (di-update `ResizeObserver` di `Navbar`), jadi
+      ikut mengecil pas trip bar nutup. Dipakai elemen yang harus **nempel** ke bawah navbar
+      (strip tab sticky di listing/guide) — kalau pakai yang beku, nanti nyisa celah.
+    - `--header-h-max` = **plafon**, cuma naik, gak pernah turun (reset pas resize). Dipakai
+      `padding-top` halaman (hero `TourPage`/`AttractionPage`, `OurCompany`). Kalau padding
+      halaman dipatok ke `--header-h`, seluruh dokumen **lompat naik ~39px** persis pas trip
+      bar nutup — itu bug-nya, dan itu sebabnya var-nya dipisah. Fallback-nya = tinggi header
+      penuh hasil ukur (92px HP / 98px desktop), biar paint pertama gak kepotong.
+  - Verifikasi: `verify-tripbar.mjs` di scratchpad — patokannya bar ada di 6 jenis halaman,
+    font ≤12px, `--header-h` mengecil TAPI `--header-h-max` enggak, dan **posisi hero di
+    dokumen gak geser** selama bar animasi.
 - **Partials**: injected via `fetch` into `<div id="X-placeholder">`, cache-busted with
   `?v=${PARTIALS_VERSION}`. Editing anything in `partials/` → **bump `PARTIALS_VERSION`** in script.js.
 - **File cache-busting**: `style.css?v=N`, `data.js?v=N` & `script.js?v=N` on **every** HTML

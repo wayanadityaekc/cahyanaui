@@ -58,19 +58,35 @@ export default function Navbar() {
   const headerRef = useRef(null);
   const pathname = usePathname();
 
-  // Publish the real fixed-header height (navbar row + trip bar) as --header-h
-  // so sticky tab strips can sit flush right below it at any width / promo state.
+  // Two heights, because they answer two different questions:
+  //   --header-h     = how tall the header is RIGHT NOW. Sticky tab strips sit at
+  //                    this, so they follow the trip bar up as it retracts.
+  //   --header-h-max = how tall it gets with the trip bar open. Page top padding
+  //                    uses this, so the document does not jump 39px under the
+  //                    reader the moment the bar collapses mid-scroll.
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return undefined;
-    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    const root = document.documentElement;
+    let max = 0;
+    const set = () => {
+      const h = el.offsetHeight;
+      root.style.setProperty('--header-h', `${h}px`);
+      if (h > max) {
+        max = h;
+        root.style.setProperty('--header-h-max', `${h}px`);
+      }
+    };
+    // A viewport change gives a different natural height (and rotating a phone
+    // shouldn't keep the desktop maximum), so the ceiling is re-measured there.
+    const onResize = () => { max = 0; set(); };
     set();
     const ro = new ResizeObserver(set);
     ro.observe(el);
-    window.addEventListener('resize', set);
+    window.addEventListener('resize', onResize);
     return () => {
       ro.disconnect();
-      window.removeEventListener('resize', set);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
@@ -263,7 +279,7 @@ export default function Navbar() {
       </div>
 
       <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
-      {pathname === '/' && <TripBar />}
+      <TripBar />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );

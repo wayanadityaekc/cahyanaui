@@ -91,7 +91,7 @@ export default function OurCompany() {
   };
 
   return (
-    <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[calc(var(--header-h,104px)+1.9rem)] pb-[var(--space-5)]">
+    <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[calc(var(--header-h-max,104px)+1.9rem)] pb-[var(--space-5)]">
       <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-3">
         {/* Desktop: plain sticky full-height sidebar. */}
         <nav

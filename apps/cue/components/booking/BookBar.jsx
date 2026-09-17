@@ -52,8 +52,19 @@ export default function BookBar({ item, priceFallback }) {
       }`}
       inert={hidden || undefined}
     >
-      <div className="flex-1 min-w-0 text-[1.1rem] font-semibold text-amber leading-none">
-        <Price name={item} fallback={priceFallback} />
+      {/* Harga di SINI hitam (`text-gold` = soft black), BUKAN amber - Wayan,
+          Sep 2026. Pengecualian yang disengaja dari aturan "semua harga gold":
+          di bar ini amber-nya nabrak tombol CTA hijau tepat di sebelahnya.
+          Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
+          Warnanya WAJIB dioper lewat className-nya <Price> sendiri: default-nya
+          (PRICE, amber) nempel LANGSUNG di elemen [data-price], jadi text-gold di
+          wrapper kalah. Class `price` tetep dibawa - itu hook, bukan warna. */}
+      <div className="flex-1 min-w-0 leading-none">
+        <Price
+          name={item}
+          fallback={priceFallback}
+          className="price text-[1.1rem] font-semibold text-gold"
+        />
       </div>
       <a
         href="#booking"

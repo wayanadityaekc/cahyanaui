@@ -1,7 +1,8 @@
 import ListingPage from '@/components/sections/ListingPage';
 import JsonLd from '@/components/JsonLd';
 import { LISTINGS } from '@/content/shared/listings';
-import { withInclLabels } from '@/lib/tourIndex';
+import { withDestinationCards } from '@/lib/tourIndex';
+import { ATTRACTION_CONTENT } from '@/content/attractions';
 
 export const metadata = {
   title: 'Bali Attractions & Destinations from Ubud',
@@ -14,7 +15,7 @@ export default function Page() {
   return (
     <>
       <JsonLd page="destinations" />
-      <ListingPage data={withInclLabels(LISTINGS.destinations)} />
+      <ListingPage data={withDestinationCards(LISTINGS.destinations, ATTRACTION_CONTENT)} />
     </>
   );
 }

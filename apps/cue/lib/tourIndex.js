@@ -39,21 +39,49 @@ export function inclLabel(slug) {
   return `Included in |${list}|`;
 }
 
-// Rewrites the "Included in ..." line on every destination card from the index
-// above. Called from the destinations page, which is a server component:
-// ListingPage itself is 'use client', so importing this there would ship the
-// whole tour dataset to the browser.
-export function withInclLabels(listing) {
+// Fills in every destination card from the destination's own page: the
+// "Included in ..." line from the index above, plus the same meta row the tour
+// cards carry (Wayan, Sep 2026 - "di listing destination juga isi dong"). A
+// destination is sold as a private trip to that one place, so: one stop, the
+// time to spend there (its own "Time here" hook), a private driver, and - via
+// priceName - the price and the free-cancellation badge ListingRow hangs off it.
+// Nothing here is typed by hand twice; it all comes from the attraction.
+//
+// `attractions` is passed in rather than imported so this stays callable from a
+// page without lib/ deciding which content set it gets. Called from the
+// destinations page, a server component: ListingPage itself is 'use client', so
+// importing this there would ship the whole tour dataset to the browser.
+export function withDestinationCards(listing, attractions = {}) {
   const walk = (node) => {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
     const next = {};
     for (const [k, v] of Object.entries(node)) next[k] = walk(v);
+    const m = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
     if (next.variant === 'incl') {
-      const m = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
       const label = m ? inclLabel(m[1]) : undefined;
       if (label) next.inclText = label;
       else delete next.inclText;
+    }
+    // Keyed off the href, not `variant` - one card (Tegal Wangi) carries no
+    // variant flag, and keying off it left that single card with a bare meta
+    // row and no price while its 32 siblings had one.
+    if (m) {
+      const place = attractions[m[1]];
+      if (place) {
+        const timeHere = ((place.hooks || []).find((h) => /time here/i.test(h.label))
+          || (place.facts || []).find((f) => /time here/i.test(f.label))
+          || {}).value;
+        // The card's own `meta` is the area ("South Bali"), which the time
+        // replaces - the area is already how this page groups its sections.
+        if (timeHere) {
+          next.meta = timeHere;
+          next.metaIcon = 'clock';
+        }
+        next.stops = 1;
+        next.priv = true;
+        if (place.bookItem) next.priceName = place.bookItem;
+      }
     }
     return next;
   };

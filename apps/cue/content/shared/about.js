@@ -33,33 +33,6 @@ export const ABOUT = {
       ]
     },
     {
-      "kicker": "The people",
-      "heading": "Who shows up at your door",
-      "paras": [
-        "The local guides behind every trip."
-      ],
-      "drivers": [
-        {
-          "name": "Wayan",
-          "tagline": "Founder & host",
-          "desc": "Wayan is the person behind Cahyana Ubud Experience, and usually the one who replies to your messages and builder of this website. Born and raised in Ubud, he studied in Australia, speaks English. When he's not running the business he's out on the road, showing guests the island he grew up on.",
-          "emptyReview": "No reviews for this driver yet - be the first to share your experience."
-        },
-        {
-          "name": "Made",
-          "tagline": "Villa host & driver since 2010",
-          "desc": "Made has been driving guests around Bali since 2010 and hosts his own villa on Airbnb, so he knows exactly what travellers need. Calm, reliable, and endlessly patient, he speaks good English and knows every back road, quiet temple hour, and honest warung on the island.",
-          "emptyReview": "No reviews for this driver yet - be the first to share your experience."
-        },
-        {
-          "name": "Nyoman",
-          "tagline": "Ubud local · Driver-guide",
-          "desc": "(PLACEHOLDER) Short description of the driver. Replace with real info.",
-          "emptyReview": "No reviews for this driver yet - be the first to share your experience."
-        }
-      ]
-    },
-    {
       "kicker": "How it works",
       "heading": "One conversation, start to finish",
       "paras": [],

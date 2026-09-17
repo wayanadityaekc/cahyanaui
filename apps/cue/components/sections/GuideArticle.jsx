@@ -2,6 +2,8 @@ import JsonLd from '@/components/JsonLd';
 import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
+import DetailHero from '@/components/sections/DetailHero';
+import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 
 // Tailwind-native (migrasi Fase 2): tab kategori sticky HP. Base hidden (desktop
 // pakai sidebar), muncul jadi bar sticky di <=992px. [@media(max-width:992px)]
@@ -11,12 +13,9 @@ const CATTABS =
 const cattab = (active) =>
   `flex-[0_0_auto] font-body text-small bg-transparent border-none py-[0.4rem] px-[0.15rem] whitespace-nowrap no-underline [transition:color_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ${active ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent] hover:text-green'}`;
 
-// Guide chrome (migrasi TW-B3 #336): hero tags, article+sidebar layout, category
+// Guide chrome (migrasi TW-B3 #336): article+sidebar layout, category
 // sidebar (desktop). Sidebar di-derive dari data.tabs (item + is-active identik) -
 // dulu raw HTML string `sideHtml` per halaman.
-const HERO_TAGS = 'flex gap-2 justify-center flex-wrap mt-[0.6rem]';
-const HERO_TAG =
-  'inline-block py-[0.3rem] px-[0.8rem] rounded-pill text-label font-medium tracking-[0.08em] uppercase bg-[rgba(255,255,255,0.16)] text-white [border:1px_solid_rgba(255,255,255,0.35)]';
 const LAYOUT = 'max-w-[var(--container)] mx-auto py-[var(--space-5)] px-[var(--container-x)] flex items-start gap-10 [@media(max-width:992px)]:flex-col';
 const LAYOUT_MAIN = 'flex-[1_1_auto] min-w-0';
 const LAYOUT_SIDE = 'flex-[0_0_260px] sticky top-[6.5rem] [@media(max-width:992px)]:hidden';
@@ -27,21 +26,38 @@ const sidebarLink = (active) =>
   `block py-2 px-[0.6rem] rounded-sm no-underline text-small ${active ? 'bg-cream text-amber font-semibold' : 'text-green font-medium'}`;
 
 export default function GuideArticle({ data }) {
+  const slug = (data.__page || '').replace(/^guide\//, '');
+  const card = guideCard(slug) || {};
+  const hooks = [
+    { label: 'Category', value: guideCategory(data.tabs) },
+    { label: 'Topic', value: card.tag },
+    { label: 'Read', value: `~${readMinutes(data.body)} min` },
+  ].filter((h) => h.value);
+
   return (
     <div className="guide-article-page">
       <JsonLd page={data.__page} />
-      <section
-        className="relative min-h-[320px] flex items-center justify-center bg-cover bg-center pt-[6.5rem] px-[1.3rem] pb-[1.5rem] before:content-[''] before:absolute before:inset-0 before:[background:linear-gradient(180deg,rgba(0,0,0,0.56),rgba(0,0,0,0.66))]"
-        style={{ backgroundImage: data.heroStyle.replace(/^background-image:\s*/, '').replace(/;$/, '') }}
-      >
-        <div className="relative z-[2] w-full max-w-[840px] text-center">
-          <h1 className="font-head font-bold tracking-[-0.01em] text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.55)] m-0 mb-[0.4rem]">{data.title}</h1>
-          <p className="text-[rgba(255,255,255,0.9)] text-[length:var(--fs-body)] leading-[1.5] [text-shadow:0_1px_12px_rgba(0,0,0,0.5)] mt-0 mx-auto mb-[1.6rem] max-w-[480px]">{data.sub}</p>
-          <div className={HERO_TAGS}>
-            {data.tags.map((t) => <span className={HERO_TAG} key={t}>{t}</span>)}
-          </div>
-        </div>
-      </section>
+      {/* Same split hero the tour and attraction pages open with (Sep 2026, Wayan:
+          "ubah semua page articles, pakai layout seperti tour destination dan
+          experience, biar punya ciri khasnya"). It replaces the old dark full-bleed
+          banner with the centered title.
+
+          The photo comes from this guide's HUB CARD, not from data.heroStyle: 14 of
+          the 15 guides only ever had a gradient there, and the split hero needs a real
+          image. The card photo is the one already representing this guide everywhere
+          else on the site, so nothing is invented.
+
+          The three facts replace the tag pills the old banner carried - category and
+          topic say the same thing the pills did, and reading time is counted from the
+          article's own words. */}
+      <DetailHero
+        heroBg={card.img}
+        title={data.title}
+        desc={data.sub}
+        hooks={hooks}
+        cta="See our tours"
+        ctaHref="/tour.html"
+      />
 
       <nav className={CATTABS}>
         {data.tabs.map((t) => (

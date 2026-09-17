@@ -212,6 +212,30 @@ When unsure, ask first (keep it short).
   aslinya (kejadian di `.guide-lead`, Sep 2026).
 
 ## Guide article template (`guide/*.html`)
+- **HERO-nya = HERO HALAMAN DETAIL** (Sep 2026, Wayan: "ubah semua page articles, pakai
+  layout seperti tour destination dan experience, biar punya ciri khasnya"). Banner gelap
+  full-bleed dengan judul putih di tengah + pill tag UDAH DIGANTI: sekarang 15 halaman guide
+  buka pakai **`components/sections/DetailHero.jsx`** — cangkang yang SAMA persis dipakai
+  `TourPage` & `AttractionPage` (foto 45% + sheet putih 55% isi judul, intro, 3 fakta, CTA).
+  - **`DetailHero` itu hasil EKSTRAK**, bukan komponen baru: markup-nya dulu ke-copy
+    byte-per-byte di `TourPage` + `AttractionPage`. Diverifikasi sebelum dipakai guide:
+    **464 elemen hero diadu before/after di 4 halaman × 4 lebar → 0 beda**. Ubah hero =
+    edit 1 file, 3 jenis halaman ikut.
+  - **FOTONYA dari KARTU HUB, bukan `data.heroStyle`.** 14 dari 15 halaman guide cuma punya
+    **gradient** di `heroStyle` (gak ada foto), padahal hero split butuh foto beneran.
+    Tiap guide UDAH punya foto asli + label di kartu guide hub, jadi itu yang dipakai lewat
+    `lib/guideMeta.js` → `guideCard(slug)`. **Bukan foto karangan** — itu foto yang emang
+    udah mewakili guide itu di seluruh web. (`heroStyle` sekarang nganggur di data guide;
+    sengaja dibiarin, itu konten bukan CSS mati.)
+  - **3 fakta di hero** (gantiin pill tag lama): **Category** (tab hub yang aktif) · **Topic**
+    (label kartu hub, mis. "Waterfalls"/"Cultural hub") · **Read** (`~N min`, DIHITUNG dari
+    jumlah kata artikelnya sendiri @200 wpm, bukan angka karangan). CTA-nya "See our tours"
+    → `/tour.html` (di HP ke-hide, sama kayak CTA hero tour).
+  - Isi artikel + sidebar kategori + blok "You might also like"/"See our tours" **TIDAK
+    diubah** — yang diganti cuma hero-nya.
+  - Verifikasi: `verify-guidehero.mjs` di scratchpad (23/23) — 15 halaman semuanya punya foto,
+    3 hook & CTA; foto/judul posisi + ukurannya **identik sama `/ubud-tour.html`**; di HP
+    judulnya hitam di sheet putih (bukan putih di atas foto lagi); artikel & sidebar utuh.
 - Body semua halaman guide punya class **`.guide-article-page`** (beda dari `.guide-article` yang
   numpang dipake juga di Terms/Privacy/Cancellation/Charter buat kolom-baca-polos yang sama -
   jangan scope hal khusus-guide ke `.guide-article`, salah sasaran kena 4 halaman itu juga).

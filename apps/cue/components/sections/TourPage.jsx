@@ -4,14 +4,13 @@ import TourDestinationCards from '@/components/sections/TourDestinationCards';
 import { tourDestinations, priceFallbackFor } from '@/lib/tourIndex';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
 
-import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
 import BookBar from '@/components/booking/BookBar';
-import HeroSlider from '@/components/sections/HeroSlider';
+import DetailHero from '@/components/sections/DetailHero';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
@@ -31,18 +30,10 @@ export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-norm
 export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-top:1px_solid_#e0ddd4] [border-bottom:1px_solid_#e0ddd4] text-h3 text-muted';
 export const CRUMB_LINK = 'text-gold no-underline font-medium hover:underline';
 export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
-// Fact hooks di hero detail (migrasi Fase 2): presentasi -> utilities. Kelas
-// `tour-hook` DIPERTAHANKAN sbg marker check-detail. Breakpoint min-[769px]
-// (bukan md:/768) biar match @media (min-width:769px) persis. li divider via
-// [&>li+li]. Child li di-style dari <ul> ([&>li]) biar DRY (1 konteks, hero).
-export const HOOK_UL = 'tour-hook list-none flex justify-center mt-6 mx-0 mb-0 p-0 [&>li]:flex [&>li]:flex-col [&>li]:px-4 min-[769px]:[&>li]:px-[22px] [&>li+li]:[border-left:1px_solid_#e6e6e6]';
-export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
-export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
-// Hero detail leaf (B-FINAL): desc + CTA -> utilities. The hero structure is fully
-// Tailwind now (no tour-hero marker classes). CTA hidden on mobile via the arbitrary
-// media variant (matches the old @media max-width:768px exactly).
-export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
-export const HERO_CTA = 'inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
+// The hero itself now lives in DetailHero (shared with AttractionPage and the guide
+// articles). Its class names are re-exported here because other modules already import
+// them from this file.
+export { HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/DetailHero';
 
 function Stop({ s }) {
   const inner = (
@@ -75,35 +66,15 @@ export default function TourPage({ data }) {
   return (
     <>
       <JsonLd page={data.__page} />
-      {/* Split hero (photo + white body). Fully Tailwind now; no tour-hero marker classes.
-          pt- reserves clearance under the fixed header (navbar + trip bar), via
-          --header-h-max so the retracting trip bar never shifts the page - see
-          AttractionPage.jsx for the full rationale. */}
-      <section className="pt-[var(--header-h-max,92px)] min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[var(--header-h-max,98px)]">
-        {data.heroSlides && data.heroSlides.length > 1 ? (
-          <HeroSlider slides={data.heroSlides} />
-        ) : (
-          <div
-            className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0"
-            style={{ backgroundImage: `url(/assets/images/${data.heroBg})` }}
-          />
-        )}
-        <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
-          min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
-          min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
-          <h1 className={`${SUBHERO_TITLE} mb-3`}>{data.title}</h1>
-          <p className={HERO_DESC}>{data.desc}</p>
-          <ul className={HOOK_UL}>
-            {data.hooks.map((h) => (
-              <li key={h.label}>
-                <span className={HOOK_LABEL}>{h.label}</span>
-                <span className={HOOK_VALUE}>{h.value}</span>
-              </li>
-            ))}
-          </ul>
-          <a href={data.ctaHref} className={HERO_CTA}>{data.cta}</a>
-        </div>
-      </section>
+      <DetailHero
+        heroBg={data.heroBg}
+        heroSlides={data.heroSlides}
+        title={data.title}
+        desc={data.desc}
+        hooks={data.hooks}
+        cta={data.cta}
+        ctaHref={data.ctaHref}
+      />
 
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
       <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>

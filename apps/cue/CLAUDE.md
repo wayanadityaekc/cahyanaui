@@ -231,8 +231,31 @@ When unsure, ask first (keep it short).
     (label kartu hub, mis. "Waterfalls"/"Cultural hub") · **Read** (`~N min`, DIHITUNG dari
     jumlah kata artikelnya sendiri @200 wpm, bukan angka karangan). CTA-nya "See our tours"
     → `/tour.html` (di HP ke-hide, sama kayak CTA hero tour).
-  - Isi artikel + sidebar kategori + blok "You might also like"/"See our tours" **TIDAK
-    diubah** — yang diganti cuma hero-nya.
+- **LAYOUT ISINYA JUGA = LAYOUT TOUR** (Sep 2026, Wayan: "kontenya buat padding yang rapi
+  terutama di kiri, ikutin website biar konsisten; tab nya buat seperti tab tour, layout
+  kontenya juga, se mirip mungkin"). Kolom baca 720px yang ngambang di tengah container
+  UDAH DIGANTI: sekarang guide pakai `TOUR_LAYOUT_BOOK/MAIN/SIDE` yang sama + kartu konten
+  yang sama (`components/ui/detailCardClasses.js`).
+  - **`detailCardClasses.js` juga hasil EKSTRAK dari `DetailTabs`** (kartu putih + shadow
+    inset, wrapper sticky, track pill, section + judulnya). Diverifikasi: **3008 elemen
+    kolom konten tour/attraction diadu before/after → 0 beda.**
+  - **Yang dibenerin Wayan**: dulu judul isi artikel mulai di **181px** @1280 (kolom 720
+    ke-center), sementara halaman tour di **48px**. Sekarang dua-duanya **48px** @1280 dan
+    **32px** @390 — dijaga `verify-guidehero.mjs` (ngadu langsung lawan `/ubud-tour.html`).
+  - **Teksnya tetep dibatesin `--container-read` (720px) TAPI rata KIRI di dalam kartu**,
+    bukan ke-center: tepi kirinya lurus sama halaman tour, tapi barisnya gak jadi ~145
+    karakter (kartu-nya 1000px). Ini kompromi yang disengaja — jangan dilebarin ke penuh.
+  - **Tab kategori pakai track pill tour**, TAPI **variannya `TRACK_SCROLL` + `segmentLink`**,
+    bukan `TRACK`/`segment`: tab tour cuma 4 kata pendek jadi muat pakai `flex-1`; kategori
+    guide 5 dan panjang ("About the Island", "People & Culture") — pakai `flex-1` di layar
+    390px **KEPOTONG**. Jadi segmennya selebar teksnya & row-nya bisa di-geser. Plus
+    `no-underline` (tab tour itu `<button>`, ini `<a>` yang default-nya digarisbawahi).
+  - Tab tetep **HP doang**, sidebar kategori tetep **desktop doang** — sama kayak sebelumnya,
+    yang berubah cuma gayanya. Jangan dibikin dua-duanya nongol bareng, nanti dobel.
+  - **Kenapa tab-nya BUKAN heading artikel** (kayak Overview/Details/Included punya tour):
+    tiap guide punya **5-9 heading, ada yang 46 karakter** — di-jejelin ke track pill yang
+    gak nge-scroll itu gak kebaca. Kalau mau dicoba lagi, itu masalahnya.
+  - Isi artikel + sidebar + blok "You might also like"/"See our tours" **isinya TIDAK diubah**.
   - Verifikasi: `verify-guidehero.mjs` di scratchpad (23/23) — 15 halaman semuanya punya foto,
     3 hook & CTA; foto/judul posisi + ukurannya **identik sama `/ubud-tour.html`**; di HP
     judulnya hitam di sheet putih (bukan putih di atas foto lagi); artikel & sidebar utuh.

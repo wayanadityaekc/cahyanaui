@@ -4,6 +4,7 @@ import { Backpack, Banknote, Car, Clock, CreditCard, Info } from 'lucide-react';
 import { INFO_LIST_YES, INFO_LIST_NO } from '@/components/ui/infoClasses';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
+import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
 // Options (was "Details") - the two ways every program can be booked. This
 // replaces a facts grid that just repeated the hero hooks; the choice between
@@ -164,30 +165,17 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   // wrapper -> utilities. Section pakai [&+&] (jarak antar-section) + [&_.stops]/
   // [&_.stop] (context override buat engine .stop yg masih CSS). .info__list*
   // (checklist bullet, kosakata konten) tetep shared - dikonversi di pass-nya.
-  const SEC = 'pt-6 [scroll-margin-top:120px] [&+&]:mt-6 [&+&]:[border-top:1px_solid_var(--line)] [&_.stops]:p-0 [&_.stop]:max-w-none';
-  // One elongated pill-shaped track (Wayan, 14 Sep 2026: "1 box memanjang
-  // dengan border radius, bukan pill kecil-kecil") holding the tab buttons -
-  // same segmented-control pattern as the Standard/Exclusive toggle in
-  // BookingForm.jsx (muted track, active segment = filled pill), not a row of
-  // separately-bordered pills. Nested back inside the card (not floating
-  // outside it) - only this track is sticky, bound to the card's own height.
-  // w-full + flex-1 tabs (not inline-flex/shrink-to-fit): the track needs an
-  // opaque background spanning the FULL row, not just around its buttons -
-  // otherwise, once stuck, whatever section content scrolls up to that height
-  // peeks through on either side of the (narrower) button row.
-  const tab = (on) =>
-    `flex-1 text-center whitespace-nowrap font-body text-small font-semibold border-none rounded-pill py-[0.55rem] px-2 cursor-pointer transition-[background-color,color,scale] duration-[var(--dur-fast)] ease-[ease] ${on ? 'bg-gold text-white' : 'bg-transparent text-muted hover:text-green'}`;
   return (
-    <div className="max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4">
-      <div className="bg-white rounded-xl px-6 pt-6 pb-8 [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg">
+    <div className={CARD_WRAP}>
+      <div className={CARD}>
         {/* Wraps the visible pill track with the small breathing-room gap baked
             in as opaque padding (bg-white), not an empty gap above it - a
             transparent gap there let whatever section is mid-scroll peek
             through the moment the track is stuck (Wayan caught this on the
             Reviews tab: the tail end of Included's list showed through). */}
-        <div ref={stripRef} className="sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-white">
+        <div ref={stripRef} className={STRIP}>
           <div
-            className="mb-6 flex w-full gap-1 p-1 rounded-pill bg-[rgba(34,32,28,0.08)]"
+            className={TRACK}
             role="tablist"
             aria-label="Jump to section"
           >
@@ -196,7 +184,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
                 key={s.id}
                 type="button"
                 aria-current={active === s.id}
-                className={tab(active === s.id)}
+                className={segment(active === s.id)}
                 onClick={() => pick(s.id)}
               >
                 {s.label}
@@ -211,7 +199,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
             ref={(el) => { secRefs.current[s.id] = el; }}
             className={SEC}
           >
-            <h2 className="text-h2 font-semibold text-gold m-0 mb-4">{s.label}</h2>
+            <h2 className={SEC_H}>{s.label}</h2>
             {s.content}
           </section>
         ))}

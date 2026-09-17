@@ -1,29 +1,30 @@
 import JsonLd from '@/components/JsonLd';
-import { INFO_SECTION_ARTICLE, INFO_CONTAINER_ARTICLE } from '@/components/ui/infoClasses';
+import { CARD, CARD_WRAP, STRIP, TRACK_SCROLL, segmentLink } from '@/components/ui/detailCardClasses';
+import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
 import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 
-// Tailwind-native (migrasi Fase 2): tab kategori sticky HP. Base hidden (desktop
-// pakai sidebar), muncul jadi bar sticky di <=992px. [@media(max-width:992px)]
-// dipakai biar match @media (max-width:992px) persis (inklusif 992).
-const CATTABS =
-  'hidden [@media(max-width:992px)]:flex [@media(max-width:992px)]:gap-[1.6rem] [@media(max-width:992px)]:overflow-x-auto [@media(max-width:992px)]:[scrollbar-width:none] [@media(max-width:992px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:992px)]:sticky [@media(max-width:992px)]:top-[var(--header-h,52.8px)] [@media(max-width:992px)]:z-20 [@media(max-width:992px)]:bg-white [@media(max-width:992px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:992px)]:py-[0.7rem] [@media(max-width:992px)]:px-[1.3rem] [@media(max-width:992px)]:[margin:0_-1.3rem_1.5rem]';
-const cattab = (active) =>
-  `flex-[0_0_auto] font-body text-small bg-transparent border-none py-[0.4rem] px-[0.15rem] whitespace-nowrap no-underline [transition:color_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ${active ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent] hover:text-green'}`;
-
+// Category nav, now wearing the tour pages' pill track (Sep 2026, Wayan: "tab nya
+// buat seperti tab tour"). Still phone-only and still the 5 hub categories - on
+// desktop the sidebar carries them, exactly as before; only the styling changed,
+// from a row of plain underlined tabs to the shared segmented control.
+// [@media(max-width:992px)] (not md:) to match the sidebar's own breakpoint exactly.
+const CATTABS = 'hidden [@media(max-width:992px)]:block ' + STRIP;
 // Guide chrome (migrasi TW-B3 #336): article+sidebar layout, category
 // sidebar (desktop). Sidebar di-derive dari data.tabs (item + is-active identik) -
 // dulu raw HTML string `sideHtml` per halaman.
-const LAYOUT = 'max-w-[var(--container)] mx-auto py-[var(--space-5)] px-[var(--container-x)] flex items-start gap-10 [@media(max-width:992px)]:flex-col';
-const LAYOUT_MAIN = 'flex-[1_1_auto] min-w-0';
-const LAYOUT_SIDE = 'flex-[0_0_260px] sticky top-[6.5rem] [@media(max-width:992px)]:hidden';
 const SIDEBAR = '[border:1px_solid_var(--line)] rounded-lg py-[1.2rem] px-[1.1rem] bg-white';
 const SIDEBAR_TITLE = 'font-body font-semibold text-h3 text-green mb-[0.8rem]';
 const SIDEBAR_LIST = 'list-none [&_li+li]:mt-[0.35rem]';
 const sidebarLink = (active) =>
   `block py-2 px-[0.6rem] rounded-sm no-underline text-small ${active ? 'bg-cream text-amber font-semibold' : 'text-green font-medium'}`;
+// The prose keeps a readable measure inside the wide card: it starts at the card's
+// left edge (so it lines up with a tour page's content) but stops well short of the
+// right one. --container-read is the width CLAUDE.md pins for reading columns - a
+// full 950px line at 12.8px would run ~145 characters.
+const PROSE = 'max-w-[var(--container-read)]';
 
 export default function GuideArticle({ data }) {
   const slug = (data.__page || '').replace(/^guide\//, '');
@@ -59,24 +60,25 @@ export default function GuideArticle({ data }) {
         ctaHref="/tour.html"
       />
 
-      <nav className={CATTABS}>
-        {data.tabs.map((t) => (
-          <a className={cattab(t.active)} href={t.href} key={t.href}>{t.label}</a>
-        ))}
-      </nav>
-
-      <div className={LAYOUT}>
-        <div className={LAYOUT_MAIN}>
-          <section className={INFO_SECTION_ARTICLE}>
-            <div className={INFO_CONTAINER_ARTICLE}>
-              <Prose blocks={data.body} headingVariant="guide" />
+      <div className={TOUR_LAYOUT_BOOK}>
+        <div className={TOUR_LAYOUT_MAIN}>
+          <div className={CARD_WRAP}>
+            <div className={CARD}>
+              <nav className={CATTABS} aria-label="Guide categories">
+                <div className={TRACK_SCROLL}>
+                  {data.tabs.map((t) => (
+                    <a className={segmentLink(t.active)} href={t.href} key={t.href} aria-current={t.active || undefined}>{t.label}</a>
+                  ))}
+                </div>
+              </nav>
+              <div className={PROSE}>
+                <Prose blocks={data.body} headingVariant="guide" />
+              </div>
             </div>
-          </section>
+          </div>
         </div>
-        {/* wrapper div preserves pre-migration DOM (sideHtml was injected via a
-            wrapping <div dangerouslySetInnerHTML>) so element count / layout = 0-diff */}
-        <div>
-          <aside className={LAYOUT_SIDE}>
+        <div className={TOUR_LAYOUT_SIDE}>
+          <aside className="[@media(max-width:992px)]:hidden">
             <div className={SIDEBAR}>
               <p className={SIDEBAR_TITLE}>Categories</p>
               <ul className={SIDEBAR_LIST}>

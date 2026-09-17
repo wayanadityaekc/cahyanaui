@@ -1,5 +1,6 @@
 import HomepageCard from '@/components/cards/HomepageCard';
-import { GRID_RELATED } from '@/components/ui/gridClasses';
+import { GRID_CAROUSEL_4UP } from '@/components/ui/gridClasses';
+import Slider from '@/components/ui/Slider';
 import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 
 // "Destinations you'll visit on this tour" - the only link from a tour page to
@@ -12,16 +13,15 @@ import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSectio
 // else: leaving priceName out is what keeps the price off them, so the tour's
 // sidebar stays the only price on screen while a guest reads.
 //
-// Same section chrome and the same GRID_RELATED as "You might also like" below it
-// (Wayan: identical to carousel 2) - a 4-up grid on desktop, a slider on mobile.
-// Six stops wrap to a second row on desktop; that is the same behaviour the other
-// carousel would have with six cards, which is the point.
+// Same section chrome and the same track as "You might also like" below it. On
+// desktop four cards fill the row and the rest slide - a wrapping grid put the
+// tail on a second row, which is what Wayan did not want.
 export default function TourDestinationCards({ items }) {
   if (!items || !items.length) return null;
   return (
     <section className={CAROUSEL_SECTION}>
       <h2 className={CAROUSEL_TITLE}>Destinations you&apos;ll visit on this tour</h2>
-      <div className={GRID_RELATED}>
+      <Slider gridClassName={GRID_CAROUSEL_4UP}>
         {items.map((d) => (
           <HomepageCard
             key={d.refId}
@@ -33,7 +33,7 @@ export default function TourDestinationCards({ items }) {
             metaIcon="pin"
           />
         ))}
-      </div>
+      </Slider>
     </section>
   );
 }

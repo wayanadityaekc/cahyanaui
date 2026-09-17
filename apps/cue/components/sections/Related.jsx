@@ -1,6 +1,7 @@
 import HomepageCard from '@/components/cards/HomepageCard';
 import { RELATED_ITEMS, RELATED_ALL } from '@/content/shared/related';
-import { GRID_RELATED } from '@/components/ui/gridClasses';
+import { GRID_CAROUSEL_4UP } from '@/components/ui/gridClasses';
+import Slider from '@/components/ui/Slider';
 import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 import { isHiddenTour } from '@/lib/routes';
 
@@ -27,7 +28,7 @@ export default function Related({ href }) {
   return (
     <section className={CAROUSEL_SECTION}>
       <h2 className={CAROUSEL_TITLE}>You might also like</h2>
-      <div className={GRID_RELATED}>
+      <Slider gridClassName={GRID_CAROUSEL_4UP}>
         {picks.map((it) => (
           <HomepageCard
             key={it.href}
@@ -40,7 +41,7 @@ export default function Related({ href }) {
             priceFallback={it.p ? `$${it.p}` : undefined}
           />
         ))}
-      </div>
+      </Slider>
       {all && (
         <p className="mt-[1.6rem]">
           <a href={all[0]} className="text-gold-d font-medium text-h3 no-underline hover:underline">{all[1]} &rsaquo;</a>

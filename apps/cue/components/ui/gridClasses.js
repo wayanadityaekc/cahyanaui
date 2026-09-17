@@ -56,3 +56,15 @@ export const GRID_SLIDER =
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   'min-[993px]:gap-[1.5rem] max-[992px]:gap-4 max-[992px]:-mx-6 max-[992px]:pl-4 max-[992px]:[scroll-padding-left:1rem] ' +
   '[&>*]:[scroll-snap-align:start] min-[993px]:[&>*]:flex-[0_0_300px] max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_80%]';
+
+// Tour-page carousels ("Destinations you'll visit" + "You might also like").
+// A slider at every width, but on desktop each card is sized to exactly one
+// column of the old 4-up grid - calc((100% - 3 gaps) / 4) - so four fill the
+// container and anything past that slides instead of wrapping to a second row
+// (Wayan, Sep 2026). Mobile sizing is GRID_RELATED's, unchanged.
+export const GRID_CAROUSEL_4UP =
+  'flex max-w-[1200px] mx-auto mt-[1.6rem] pb-4 overflow-x-auto overflow-y-hidden ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'min-[993px]:gap-[1.4rem] min-[993px]:[&>*]:flex-[0_0_calc((100%_-_3_*_1.4rem)_/_4)] ' +
+  'max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
+  'max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_88%] [&>*]:[scroll-snap-align:start]';

@@ -15,7 +15,6 @@ export default function RegistrationBlock({ company = false }) {
   const rows = [
     ['Ministry of Law Decree', R.decree],
     ['Business License (NIB)', R.nib],
-    ['Activity', R.activity],
     ['Registered in', R.location],
   ];
   const sec = company ? 'max-w-none mx-0 px-0 pb-0' : 'max-w-[760px] mx-auto px-[var(--container-x)] pb-[var(--section-gap)]';

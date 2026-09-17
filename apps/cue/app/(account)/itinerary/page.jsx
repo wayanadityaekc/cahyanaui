@@ -19,7 +19,7 @@ export default function Page() {
           <h1 className={SUBHERO_TITLE}>Build Your Own Bali Itinerary</h1>
           <p className={SUBHERO_TEXT}>
             Combine tours, activities, performances, and transfers into your perfect multi-day trip - up to 7 days,
-            with live pricing as you plan. Only a 10% deposit to book.
+            with live pricing as you plan. Only a 20% deposit to book.
           </p>
         </div>
       </section>
@@ -28,7 +28,7 @@ export default function Page() {
         <h2 className={SECTION_TITLE}>Plan Your Bali Trip Day by Day</h2>
         <p className="max-w-[640px] mt-[-1rem] mx-auto mb-8 text-body leading-[1.6] text-center text-muted">
           Add tours, activities, and transfers to build your multi-day trip - up to 7 days, with live pricing. Only a
-          10% deposit to book.
+          20% deposit to book.
         </p>
         <ItineraryBuilder />
       </section>

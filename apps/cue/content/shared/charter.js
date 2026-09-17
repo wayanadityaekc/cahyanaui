@@ -1,7 +1,7 @@
 export const CHARTER = {
   "heroClass": "charter-hero",
   "title": "Private Car Charter in Bali",
-  "sub": "Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace. Half or full day, petrol included, only a 10% deposit to book.",
+  "sub": "Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace. Half or full day, petrol included, only a 20% deposit to book.",
   "boxId": "charter",
   "boxTitle": "Build your charter",
   "durations": [
@@ -35,7 +35,7 @@ export const CHARTER = {
     "Half day covers roughly a 60 km range, full day roughly 120 km",
     "Entrance tickets and meals are not included",
     "Extend on the day if you need more time - just pay the hourly rate",
-    "Book now, pay after - only a 10% deposit to confirm"
+    "Book now, pay after - only a 20% deposit to confirm"
   ],
   // Info body (TW-B4 #337): was infoHtml raw string -> Prose blocks. Rendered
   // inside <section.info><div.info__container> (both classes kept - shared/B-FINAL).

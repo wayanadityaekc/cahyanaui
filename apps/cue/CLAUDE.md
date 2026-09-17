@@ -266,7 +266,13 @@ When unsure, ask first (keep it short).
   halaman lain UDAH DIHAPUS (link ke faq.html ada di footer). Jangan tambahin FAQ ke
   halaman manapun selain faq.html. Partial `partials/faq-*.html` UDAH DIHAPUS dari disk. `sync-schema.js` `FAQ_PAGES = {}`; schema-faq cuma di-generate buat faq.html
   (lewat section 1b inline). Card "Still have questions?" `.faq__chat` juga udah dihapus.
-- Habis ubah FAQ/meta description → jalanin `node tools/sync-schema.js` (regenerate FAQPage dkk).
+- **`tools/sync-schema.js` UDAH GAK ADA** (ikut kehapus pas situs lama dipensiunin), jadi
+  **`content/shared/schema.js` sekarang dirawat TANGAN** dan bisa MELENCENG dari sumbernya.
+  Udah kejadian (ketemu Sep 2026): JSON-LD `ubud-atv-adventure` masih ngiklanin stop
+  **Tegenungan** yang udah lama dibuang dari program itu, padahal `metaDesc`-nya udah bener —
+  jadi Google dikasih tau stop yang gak didatengin. Udah dibenerin. **Habis ubah `metaDesc`
+  atau isi program, WAJIB update `schema.js` bareng**, terus adu: tiap `metaDesc` harus
+  muncul PERSIS sebagai `description` di JSON-LD-nya (sekarang 7/7 cocok).
 
 ## Gaya bahasa copy (English, semua halaman)
 - **Lugas & bermanfaat, bukan puitis.** Kalimat pendek, info konkret yang kepake
@@ -754,10 +760,14 @@ Order **must be kept** (declarations first, run last):
     - **Tiap baris di file itu WAJIB fakta yang udah ada di web** (gratis batal 24 jam,
       car/driver included, Exclusive include tiket, charter per mobil s/d 5 orang,
       **deposit 20%** — Wayan, Sep 2026, naik dari 10%). Nambah janji baru = tanya Wayan dulu.
-    - **PERINGATAN deposit**: sisa web masih nulis **10%** di 33 tempat (FAQ, Terms,
-      Charter, Transfer, Airport, About, guide, itinerary, metaDesc 7 tour, JSON-LD).
-      Cuma bar yang udah 20%. Kalau ganti angka deposit, `grep -rn "10% deposit"` dan
-      sapu SEMUA — jangan cuma satu tempat, nanti web-nya ngomong dua angka beda.
+    - **Deposit = 20% di SELURUH web** (Wayan, Sep 2026 — naik dari 10%, udah disapu
+      33 tempat di 12 file: FAQ, Terms + kebijakan refund, Charter, Transfer, Airport,
+      About, 2 guide, Itinerary, metaDesc 7 tour, JSON-LD). Gak ada logika deposit di
+      server — ini murni copy. **Kalau angkanya berubah lagi, `grep -rn "20% deposit"`
+      dan sapu SEMUA sekaligus**; jangan cuma bar-nya, nanti web ngomong dua angka beda.
+      **JANGAN kesapu**: `(save 10%)` di `TransferPicker` — itu diskon return trip,
+      BUKAN deposit (dipatok `pricing-spec-test`: "return is 2x less 10%"). Makanya pola
+      sapuan WAJIB di-anchor ke kata "deposit", bukan ke angka "10%" doang.
   - **Rotasi: `setIdx` dan `setDim(false)` JANGAN di tick yang sama.** Kalau barengan,
     teks baru ke-paint langsung di opacity 1 → nyentak, bukan fade. Pola yang bener:
     fade-out → `setTimeout(FADE_MS)` → ganti index → `requestAnimationFrame` → fade-in.

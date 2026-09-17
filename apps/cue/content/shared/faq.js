@@ -17,7 +17,7 @@ export const FAQ = [
   {
     cat: `Pricing & Payment`,
     q: `How does payment work?`,
-    a: `<p>A <strong>10% deposit</strong> confirms your booking - pay online by card (secured via a third-party payment provider), or settle the balance in cash or by transfer at the end of your tour. Guests staying at one of <strong>our villas</strong> enjoy a special privilege: <strong>no upfront payment at all</strong>, you simply settle everything afterwards.</p>`,
+    a: `<p>A <strong>20% deposit</strong> confirms your booking - pay online by card (secured via a third-party payment provider), or settle the balance in cash or by transfer at the end of your tour. Guests staying at one of <strong>our villas</strong> enjoy a special privilege: <strong>no upfront payment at all</strong>, you simply settle everything afterwards.</p>`,
   },
   {
     cat: `Pricing & Payment`,

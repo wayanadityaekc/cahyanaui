@@ -45,7 +45,7 @@ export default function CharterHome() {
         </Slider>
 
         <p className="text-center mt-[var(--space-4)] text-small text-muted">
-          Only a <b className="text-gold font-semibold">10% deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
+          Only a <b className="text-gold font-semibold">20% deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
         </p>
       </div>
     </section>

@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
         <link rel="stylesheet" href={`/style.css?v=${STYLE_V}`} />
       </head>
-      <body className="max-md:has-[.stickybar]:pb-[60px]">
+      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-md:has-[.bookbar]:pb-[86px]">
         <LoadingScreen />
         <Providers>
           <Navbar />

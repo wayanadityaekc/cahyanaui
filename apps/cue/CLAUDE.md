@@ -404,10 +404,32 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 **Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
 yang sama di **`components/ui/stickyBar.jsx`** (`BAR_SHELL`) — ganti bentuk/warna bar =
 edit di situ, dua-duanya ikut:
-- **`BookBar`** (halaman detail yang jualan): **harga · Book now**. Di-render dari
-  `TourPage`/`AttractionPage` (**bukan** dari layout) — `<BookBar item={...}
-  priceFallback={priceFallbackFor(...)} />`. Karena di-render halaman, bar-nya ikut ke
-  HTML statis → gak ada kedip "isi salah dulu baru bener".
+- **`BookBar`** (halaman detail yang jualan) — **gaya GetYourGuide** (Sep 2026, Wayan
+  ngasih screenshot GYG): blok harga bertumpuk di kiri (**kicker "From" · angka + unit ·
+  badge**), CTA **"Book now"** di kanan. Di-render dari `TourPage`/`AttractionPage`
+  (**bukan** dari layout) — `<BookBar item={...} priceFallback={priceFallbackFor(...)}
+  perPerson={...} />`. Karena di-render halaman, bar-nya ikut ke HTML statis → gak ada
+  kedip "isi salah dulu baru bener".
+  - **2 hal dari GYG SENGAJA GAK DITIRU** (jangan ditambahin nanti):
+    1. **Harga coret "A$55"** — kita gak punya list price, jadi angka coret apa pun =
+       diskon karangan.
+    2. **Badge "Likely to sell out"** — kita gak ngelacak sisa kursi, jadi itu urgensi
+       palsu. Diganti **"Free cancellation"** (+ ikon `ShieldCheck`): sama-sama jawab
+       keraguan yang bikin orang nunda, tapi beneran bener & udah ada di tiap kartu.
+  - **Unit WAJIB ikut jenis produk**: `perPerson` dioper dari `AttractionPage` (flag yang
+    sama yang dikasih ke `BookSidebar`), tour = `per car`. Kalau gak dioper, bar bakal
+    ngomong beda sama form booking di halaman yang sama.
+  - **"From" itu akurat, bukan basa-basi jualan**: yang ditampilin harga base Standard,
+    dan tamu/Exclusive/pickup cuma bisa naikin.
+  - **Tinggi CTA = 2.9rem/46px** (token tombol aksi), **BUKAN `self-stretch`** — di-stretch
+    dia jadi 81% tinggi kartu & bentuknya lonjong banget (GYG sendiri ~54%).
+  - **Bar ini LEBIH TINGGI dari `SectionSwitcher`** (80px vs 49px), jadi `<body>` mesen
+    ruang beda per bar lewat marker kedua **`bookbar`**. Dua rule `:has()`-nya dibikin
+    **saling eksklusif** (`not-has-[.bookbar]:has-[.stickybar]` vs `has-[.bookbar]`) —
+    kalau cuma ditumpuk, specificity-nya sama persis dan yang menang ditentukan urutan
+    class hasil generate Tailwind, bukan maksud kita. **Ubah isi bar → ukur ulang
+    tingginya & update angka padding-nya** (`verify-gygbar.mjs` ngejaga: padding harus
+    ≥ tinggi bar, dan sisanya ≤14px biar gak kebanyakan ruang kosong).
 - **`SectionSwitcher`** (halaman listing, HP): **nama kategori · panah ◀▶**.
 
 **CHAT GAK DI SINI — ada di NAVBAR** (Sep 2026, Wayan: "chat di bawah sticky dihapus,

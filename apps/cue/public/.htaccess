@@ -81,3 +81,39 @@ Redirect 301 /besakih-taman-ujung.html /lempuyang-tirta-gangga.html
 # Sangeh Monkey Forest & Tanah Lot into the West Bali sunset tour (Sep 2026, Wayan).
 Redirect 301 /ulun-danu-tanah-lot.html /jatiluwih-tour.html
 Redirect 301 /sangeh-tanah-lot.html /tanah-lot-taman-ayun.html
+
+# The 31 attraction pages lived at the ROOT on the old static site before they
+# moved into /attractions/ (audited Sep 2026, before submitting the sitemap to
+# Search Console): every one of these was a live URL and every one has been a 404
+# since the move. Same slug, same page - mechanical, nothing judged.
+Redirect 301 /atv-ride.html /attractions/atv-ride.html
+Redirect 301 /banyumala-waterfall.html /attractions/banyumala-waterfall.html
+Redirect 301 /barong-dance.html /attractions/barong-dance.html
+Redirect 301 /besakih.html /attractions/besakih.html
+Redirect 301 /cooking-class.html /attractions/cooking-class.html
+Redirect 301 /garuda-wisnu-kencana.html /attractions/garuda-wisnu-kencana.html
+Redirect 301 /gitgit-waterfall.html /attractions/gitgit-waterfall.html
+Redirect 301 /goa-gajah.html /attractions/goa-gajah.html
+Redirect 301 /gunung-kawi.html /attractions/gunung-kawi.html
+Redirect 301 /handara-gate.html /attractions/handara-gate.html
+Redirect 301 /jatiluwih-rice-terrace.html /attractions/jatiluwih-rice-terrace.html
+Redirect 301 /jeep-sunrise.html /attractions/jeep-sunrise.html
+Redirect 301 /jungle-swing.html /attractions/jungle-swing.html
+Redirect 301 /kecak-dance.html /attractions/kecak-dance.html
+Redirect 301 /lempuyang-temple.html /attractions/lempuyang-temple.html
+Redirect 301 /lovina-dolphin.html /attractions/lovina-dolphin.html
+Redirect 301 /monkey-forest.html /attractions/monkey-forest.html
+Redirect 301 /mount-batur-trekking.html /attractions/mount-batur-trekking.html
+Redirect 301 /munduk.html /attractions/munduk.html
+Redirect 301 /pandawa-beach.html /attractions/pandawa-beach.html
+Redirect 301 /rafting.html /attractions/rafting.html
+Redirect 301 /sekumpul-waterfall.html /attractions/sekumpul-waterfall.html
+Redirect 301 /snorkeling-east-bali.html /attractions/snorkeling-east-bali.html
+Redirect 301 /tanah-lot.html /attractions/tanah-lot.html
+Redirect 301 /tegalalang-rice-terrace.html /attractions/tegalalang-rice-terrace.html
+Redirect 301 /tegenungan-waterfall.html /attractions/tegenungan-waterfall.html
+Redirect 301 /tirta-empul.html /attractions/tirta-empul.html
+Redirect 301 /tirta-gangga.html /attractions/tirta-gangga.html
+Redirect 301 /twin-lakes.html /attractions/twin-lakes.html
+Redirect 301 /ulun-danu-beratan.html /attractions/ulun-danu-beratan.html
+Redirect 301 /uluwatu-temple.html /attractions/uluwatu-temple.html

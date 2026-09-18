@@ -525,6 +525,44 @@ When unsure, ask first (keep it short).
   - **TETEP bukan gate CI** — dia butuh clone `cahyana-api` di sebelah, dan CI cuma punya `out/`.
     Jalanin tangan tiap nyentuh harga.
 
+## Redirect & sitemap (Sep 2026, sebelum submit GSC)
+- **REDIRECT HIDUPNYA DI `public/.htaccess`, BUKAN `next.config.js`.** Situs ini
+  `output: 'export'` (static export) — Next **gak dukung** `redirects()`/`rewrites()`/
+  `headers()` di mode itu, jadi blok `async redirects()` bakal jadi **kode mati yang
+  diem-diem gak jalan**. Hostinger itu Apache; `public/.htaccess` ke-copy ke `out/` pas
+  build. Nambah redirect = tambah baris `Redirect 301` di situ.
+- **JANGAN bikin redirect `/:path*.html` → `/:path*`.** URL kanonik kita JUSTRU yang
+  ber-`.html`: canonical tag, 89 entri sitemap, dan semua link internal. Static export
+  nulis `charter.html`; folder `out/charter/` isinya cuma payload RSC `.txt`, **gak ada
+  `index.html`** — jadi `/charter` gak ada yang bisa di-serve. Redirect itu = 301-in tiap
+  halaman ke-index ke 404. Kalau suatu saat emang mau URL tanpa `.html`, itu proyek
+  sendiri (ubah bentuk export → tiap route emit `folder/index.html`, sapu semua link +
+  canonical + sitemap, BARU pasang redirect `.html` → bersih) dan WAJIB dikerjain
+  **sebelum** URL-nya ke-index rame, bukan sesudah.
+- **Sitemap ada DUA, dua-duanya sengaja:**
+  - `app/sitemap.js` → `out/sitemap.xml`, di-generate dari `indexablePaths()`
+    (`lib/routes.js`). **Ini yang di-serve** & yang ditunjuk `robots.txt`.
+  - `sitemap.xml` di **ROOT repo** = checklist tangan, **gak di-serve** (bukan di `public/`,
+    jadi gak ke-copy). `check-urls` ngadu dua-duanya — dulu pernah melenceng diam-diam
+    (root buang 6 halaman legal/about, `routes.js` masih bawa, jadi sitemap live nyuruh
+    Google ke 6 redirect). **Jangan dihapus**, itu gate.
+  - Entri yang di-**comment** di checklist = URL yang sengaja diparkir; komentarnya di-strip
+    sebelum dibandingin. Makanya `grep -c '<loc>'` root (95) ≠ yang ke-serve (89).
+- **Audit 404 sebelum submit GSC** (Sep 2026): gua adu SEMUA `.html` yang pernah ada di
+  git history lawan halaman yang hidup + daftar redirect. Ketemu **31 URL yang bener-bener
+  bolong**: halaman attraction dulu ada di ROOT (`/monkey-forest.html` dst) sebelum pindah
+  ke `/attractions/`, dan sejak pindah **gak pernah di-redirect**. Slug-nya sama persis,
+  jadi pemetaannya mekanis — udah dipasang semua.
+  - **Gotcha `Redirect` mod_alias**: dia cocokin **prefix path**, bukan exact. Jadi sebelum
+    nambah, cek sumbernya bukan awalan dari URL yang masih hidup (mis. `/tanah-lot.html`
+    aman karena `/tanah-lot-taman-ayun.html` gak diawali string itu). Cek ini dijalanin
+    pas masang 31 itu.
+  - **11 sisanya butuh keputusan Wayan** (gak ada penerus yang jelas): `/east-bali-tour`,
+    `/north-bali-tour`, `/west-bali-tour` (sisa restructure 12→18 tour), `/melasti-beach`,
+    `/padang-padang-beach`, `/jimbaran-seafood`, `/scooter` (halaman attraction yang
+    emang dibuang), `/booking`, `/dashboard`, `/why`. Sisanya di daftar itu (mock,
+    `partials`, file ` 2.html` duplikat) emang gak pernah live — abaikan.
+
 ## Sliders (horizontal card sliders)
 - **SEMUA slider FULL-BLEED di HP** (Sep 2026, Wayan: "buat slidernya full width screen kayak
   di slider guide, walk ke seluruh slider di website, ubah seperti itu semua"). Dulu cuma

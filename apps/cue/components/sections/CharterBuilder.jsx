@@ -9,6 +9,7 @@ import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import {
   PLAN_PRICE_KICK, PLAN_PRICE_LEAD,
   PLAN_ROW, PLAN_ROW_PICKED, PLAN_NAME, PLAN_SUB, PLAN_BADGE,
+  PLAN_GRID, PLAN_CELL_NAME, PLAN_CELL_PRICE, PLAN_CELL_SUB,
 } from '@/components/ui/charterPlanClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
@@ -128,22 +129,32 @@ export default function CharterBuilder() {
                   key={d.dur}
                   role="radio"
                   aria-checked={on}
-                  className={`${on ? PLAN_ROW_PICKED : PLAN_ROW} items-start ${ROW_BTN}`}
+                  className={`${on ? PLAN_ROW_PICKED : PLAN_ROW} items-start min-[993px]:items-center ${ROW_BTN}`}
                   onClick={() => setDur(d.dur)}
                 >
-                  <span className="flex-1 min-w-0">
+                  {/* One DOM order, two arrangements (Wayan, Sep 2026: "di desktop
+                      jelek bro, harga bagusnya di kanan card"). On a phone the three
+                      blocks stack in source order - name, price, sub - which is the
+                      card option he picked. From 993px the grid puts the price in a
+                      second column spanning both rows, so it sits right-aligned
+                      against the name and the sub line, where a wide row has the
+                      space for it. A grid rather than reordered flex children: it
+                      moves the price without splitting the name from its sub line. */}
+                  <span className={PLAN_GRID}>
                     {/* flex-wrap, and the name itself never wraps. At 320px in rupiah
                         "Full Day POPULAR" broke the NAME across two lines - measured,
                         the same bug the old cards had with an inline badge. */}
-                    <span className="flex flex-wrap items-center gap-x-[6px]">
+                    <span className={`${PLAN_CELL_NAME} flex flex-wrap items-center gap-x-[6px]`}>
                       <span className={`${PLAN_NAME} whitespace-nowrap`}>{d.name}</span>
                       {d.badge && <span className={PLAN_BADGE}>{d.badge}</span>}
                     </span>
-                    <span className={`${PLAN_PRICE_KICK} block mt-[2px]`}>{area ? 'Total' : 'From'}</span>
-                    {/* No invented number while the catalog is still in flight: the
-                        old card printed the word "from" with nothing after it. */}
-                    <span className={PLAN_PRICE_LEAD}>{v == null ? '\u2014' : withSymbol(fmt(v))}</span>
-                    <span className={`${PLAN_SUB} mt-[2px]`}>{d.sub}</span>
+                    <span className={PLAN_CELL_PRICE}>
+                      <span className={`${PLAN_PRICE_KICK} block mt-[2px] min-[993px]:mt-0`}>{area ? 'Total' : 'From'}</span>
+                      {/* No invented number while the catalog is still in flight: the
+                          old card printed the word "from" with nothing after it. */}
+                      <span className={PLAN_PRICE_LEAD}>{v == null ? '\u2014' : withSymbol(fmt(v))}</span>
+                    </span>
+                    <span className={`${PLAN_CELL_SUB} ${PLAN_SUB} mt-[2px] min-[993px]:mt-0`}>{d.sub}</span>
                   </span>
 
                   <span className={on ? TICK_ON : TICK_OFF}>

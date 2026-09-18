@@ -1066,9 +1066,17 @@ Order **must be kept** (declarations first, run last):
     **list dulu, field belakangan**, tombol Book paling bawah. Desktop **993px+**: 2 kolom
     (`grid-cols-[1fr_340px]`). **993, BUKAN 769** — harus barengan sama panel-nya sendiri
     (`CHARTER_HERO_INNER_WIDE`), kalau nggak 2 kolomnya ke-jejel di dalam kotak 600px.
-  - **BENTUK KARTUNYA = "opsi D"** (Sep 2026, Wayan pilih dari sheet 4 opsi): **harga naik ke
-    KIRI, persis di bawah nama** dan jadi angka paling gede di baris itu (`PLAN_PRICE_LEAD`,
-    1.5rem) — bukan di-parkir di box cream pojok kanan lagi. Di bawah harga ada **satu sub-baris**
+  - **BENTUK KARTUNYA = "opsi D"** (Sep 2026, Wayan pilih dari sheet 4 opsi): harga jadi angka
+    paling gede di baris itu (`PLAN_PRICE_LEAD`, 1.5rem), bukan di box cream kecil lagi.
+    **POSISINYA BEDA HP vs DESKTOP** (Wayan, Sep 2026: "di desktop jelek bro, harga bagusnya di
+    kanan card") — **HP: di KIRI, persis di bawah nama**; **desktop (993px+): di KANAN**, rata
+    kanan, sejajar sama nama + sub-baris. Baris desktop jadi 2 baris doang & tiga harganya lurus
+    satu garis.
+    - Caranya **grid** (`PLAN_GRID`/`PLAN_CELL_NAME`/`_PRICE`/`_SUB`), SATU urutan DOM buat
+      dua-duanya: di HP 1 kolom (numpuk sesuai urutan: nama, harga, sub), di 993px+ kolom kedua
+      buat harga yang `row-span-2` + `self-center`. **Bukan flex yang di-reorder** — flex bisa
+      mindahin blok harganya, tapi cuma dengan misahin nama dari sub-baris-nya, dan dua itu
+      satu paket. Di bawah harga ada **satu sub-baris**
     (`10 hours · around 120 km · per car up to 5`), gantiin 2-3 point berikon yang dulu.
     Kanan cuma **lingkaran centang** (`TICK_ON`/`TICK_OFF`) — kepilih = bulat hijau + centang,
     nggak = ring kosong. Baris yang kepilih juga di-tint cream (`PLAN_ROW_PICKED`).
@@ -1114,10 +1122,11 @@ Order **must be kept** (declarations first, run last):
     Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
     `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
     dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (98/98) — 320/390/430/768: list di ATAS
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (104/104) — 320/390/430/768: list di ATAS
     field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
     di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
-    centangnya keisi + di-tint cream, halaman gak melar. Desktop 1024/1280/1440: list di KIRI field
+    centangnya keisi + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama
+    dan tiga-tiganya **berhenti di garis yang sama**. Desktop 1024/1280/1440: list di KIRI field
     & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
     paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker From→Total, yang
     ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.

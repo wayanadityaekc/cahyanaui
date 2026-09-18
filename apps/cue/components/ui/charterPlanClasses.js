@@ -48,3 +48,21 @@ export const PLAN_BADGE = 'text-label tracking-[0.1em] uppercase font-medium tex
 // (Wayan, Sep 2026, picking option D from the card sheet). Dark for the same reason
 // the boxed one is - it sits in a row whose action is a green CTA.
 export const PLAN_PRICE_LEAD = 'block text-gold font-semibold text-[1.5rem] leading-[1.15] whitespace-nowrap';
+
+// The builder row's inner grid. One DOM order (name, price, sub), two arrangements:
+// stacked on a phone, and from 993px a second column that holds the price against
+// the right edge of the row, spanning both text lines (Wayan, Sep 2026: "di desktop
+// jelek bro, harga bagusnya di kanan card" - the wide row left the number stranded
+// on the left with empty space beside it).
+//
+// A grid, not reordered flex children: flex could move the price block, but only by
+// splitting the name away from its sub line, and those two belong together.
+export const PLAN_GRID =
+  'flex-1 min-w-0 grid grid-cols-1 gap-x-3 min-[993px]:grid-cols-[1fr_auto] min-[993px]:items-center';
+export const PLAN_CELL_NAME = 'min-[993px]:col-start-1 min-[993px]:row-start-1';
+export const PLAN_CELL_SUB = 'min-[993px]:col-start-1 min-[993px]:row-start-2';
+// row-span-2 + self-center: the price sits level with the pair beside it rather
+// than against the name's line, whether the sub line wraps or not.
+export const PLAN_CELL_PRICE =
+  'min-[993px]:col-start-2 min-[993px]:row-start-1 min-[993px]:row-span-2 ' +
+  'min-[993px]:self-center min-[993px]:text-right';

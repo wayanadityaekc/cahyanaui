@@ -1,6 +1,6 @@
 'use client';
 
-import CatDropdown, { CAT_ITEM } from '@/components/ui/CatDropdown';
+import CatDropdown, { CAT_ITEM, CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 
 // Guide category nav, borrowed from Our Company (Sep 2026, Wayan: "taruh tab
 // kategorinya seperti kategori di our company, kayaknya itu lebih masuk akal").
@@ -31,7 +31,7 @@ export default function GuideCatNav({ tabs = [], variant = 'desktop' }) {
   if (variant === 'desktop') {
     return (
       <nav
-        className="max-[992px]:hidden flex flex-col gap-3 sticky top-[calc(var(--header-h,104px)+1rem)] self-start pl-6 border-l border-line"
+        className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] sticky top-[calc(var(--header-h,104px)+var(--space-2))] self-start pl-[var(--space-3)] border-l border-line"
         aria-label="Guide categories"
       >
         {tabs.map((t) => (
@@ -47,7 +47,7 @@ export default function GuideCatNav({ tabs = [], variant = 'desktop' }) {
   // Company uses, floating over the article rather than pushing it down.
   return (
     <CatDropdown
-      className="min-[993px]:hidden w-full pb-3 mb-4 border-b border-line"
+      className="min-[993px]:hidden w-full pb-[var(--space-1)] mb-[var(--space-2)] border-b border-line"
       label={active.label}
       ariaLabel="Guide categories"
     >
@@ -57,7 +57,7 @@ export default function GuideCatNav({ tabs = [], variant = 'desktop' }) {
             key={t.href}
             href={t.href}
             onClick={close}
-            className={`${CAT_ITEM(t.active)} py-[0.35rem]`}
+            className={CAT_ITEM_TAP(t.active)}
             aria-current={t.active || undefined}
           >
             {t.label}

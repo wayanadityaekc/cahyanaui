@@ -715,7 +715,16 @@ Order **must be kept** (declarations first, run last):
     nembus keliatan), z-index, **tap-di-luar & Escape buat nutup** (beda sama `Collapse`
     yang nyorong konten jadi jelas kebuka — yang ngambang bisa ketinggalan kebuka pas
     di-scroll).
-  - Ngetes-nya: harness `verify-catdrop.mjs` + `verify-catpick.mjs` di scratchpad —
+  - **Ukuran & jarak semuanya token** (Sep 2026, Wayan: "rapikan ukuran text dan spacenya
+    sesuai semua web"): teks `--fs-body` + `--lh-body` · ikon `--icon-sm` (dulu 18px,
+    di luar tangga 16/20/24) · SEMUA jarak `--space-1` 8px (gap ikon-teks, padding panel,
+    offset panel ke trigger, padding baris) · transisi chevron `--dur`/`--ease` (dulu
+    `duration-200` mentah). Dua padding 8px yang ketemu = **16px antar-teks**, dan kolom
+    desktop-nya dipatok `gap-[var(--space-2)]` = angka yang sama — jadi varian HP & desktop
+    ritmenya identik. `--lh-body` bukan cuma kosmetik: tanpa itu barisnya 31px (line-height
+    `normal` bawaan browser), dengan itu 36px = kekejar jempol.
+  - Ngetes-nya: harness `verify-catdrop.mjs` + `verify-catpick.mjs` + **`verify-cattokens.mjs`**
+    di scratchpad —
     patokannya **posisi elemen di bawah dropdown GAK BERUBAH** pas dibuka (itu inti
     permintaannya) + tinggi dokumen tetap, panel di atas konten (hit-test), gak kepotong di
     320/390/430, dan milih kategori masih ganti section/hash (Our Company) & link-nya masih

@@ -16,13 +16,23 @@ import { PopMenu } from '@/components/ui/Reveal';
 //
 // Shared because the two are now the same control; keeping one copy is what stops
 // them drifting apart again.
+// leading is the site's body line-height rather than the browser's `normal`: it is
+// what every other run of --fs-body text on the site sits on, and it is also what
+// lifts a panel row to a thumb-sized 36px instead of 31.
 export const CAT_ITEM = (active) =>
-  `text-left font-body text-body no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`;
+  `text-left font-body text-body leading-[var(--lh-body)] no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`;
+// Rows inside the floating panel. The padding is not decoration: at --fs-body the
+// text box is only ~20px tall, which is a thin thing to hit with a thumb.
+export const CAT_ITEM_TAP = (active) => `${CAT_ITEM(active)} py-[var(--space-1)]`;
 
 // Floating, so it needs its own surface - an opaque background, a border and an
 // elevation, or the article's text reads straight through it.
+// Spacing is all --space-1 (8px): the offset under the trigger, the panel's own
+// padding, and (via CAT_ITEM_TAP) the padding on each row. Two stacked 8px
+// paddings put 16px between one row's text and the next - the same rhythm as the
+// desktop columns' gap, so both variants read identically.
 const PANEL =
-  'absolute left-0 right-0 top-[calc(100%+6px)] z-30 flex flex-col gap-1 p-3 ' +
+  'absolute left-0 right-0 top-[calc(100%+var(--space-1))] z-30 flex flex-col p-[var(--space-1)] ' +
   'bg-white [border:1px_solid_var(--line)] rounded-md [box-shadow:var(--shadow-lg)]';
 
 const TRIGGER =
@@ -66,13 +76,13 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
           className={TRIGGER}
           onClick={() => setOpen((v) => !v)}
         >
-          <span className="flex items-center gap-[0.6rem]">
+          <span className="flex items-center gap-[var(--space-1)]">
             {/* 2x2 grid = categories, not the navbar's three-line hamburger. */}
-            <LayoutGrid className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
+            <LayoutGrid className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0" aria-hidden="true" />
             {label}
           </span>
           <ChevronDown
-            className={`w-4 h-4 shrink-0 text-muted transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`}
+            className={`w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] ${open ? 'rotate-180' : ''}`}
             aria-hidden="true"
           />
         </button>

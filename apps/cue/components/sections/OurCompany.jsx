@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CatDropdown, { CAT_ITEM } from '@/components/ui/CatDropdown';
+import CatDropdown, { CAT_ITEM, CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -92,7 +92,7 @@ export default function OurCompany() {
       <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-3">
         {/* Desktop: plain sticky full-height sidebar. */}
         <nav
-          className="max-[992px]:hidden flex flex-col gap-3 flex-none w-[200px] sticky top-[var(--header-h,104px)] self-start h-[calc(100vh-var(--header-h,104px))] overflow-y-auto pr-6 border-r border-line"
+          className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] flex-none w-[200px] sticky top-[var(--header-h,104px)] self-start h-[calc(100vh-var(--header-h,104px))] overflow-y-auto pr-[var(--space-3)] border-r border-line"
           role="tablist"
           aria-label="Our company"
         >
@@ -113,7 +113,7 @@ export default function OurCompany() {
         {/* Mobile: the active tab, tapped to reach the rest. Shared with the guide
             articles' category nav, and floating rather than inline - see CatDropdown. */}
         <CatDropdown
-          className="min-[993px]:hidden w-full pb-3 border-b border-line"
+          className="min-[993px]:hidden w-full pb-[var(--space-1)] border-b border-line"
           label={active.label}
           ariaLabel="Our company"
         >
@@ -124,7 +124,7 @@ export default function OurCompany() {
                 type="button"
                 aria-current={tab === t.id || undefined}
                 onClick={() => { goTo(t.id); close(); }}
-                className={`p-0 py-[0.35rem] bg-transparent border-none cursor-pointer ${CAT_ITEM(tab === t.id)}`}
+                className={`p-0 bg-transparent border-none cursor-pointer ${CAT_ITEM_TAP(tab === t.id)}`}
               >
                 {t.label}
               </button>

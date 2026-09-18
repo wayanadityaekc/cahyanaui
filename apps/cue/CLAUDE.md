@@ -186,10 +186,25 @@ When unsure, ask first (keep it short).
   ke 3 tingkat (geser maks ~3px). **DIBIARIN** (beda peran, bukan ikon inline): ikon besar
   30-56px (avatar review/driver, lingkaran step "How it works", ikon centang sukses, avatar
   panel), ikon centang mini 10px, dan logo pembayaran (`width:auto`, cuma tinggi ikut token).
-- **Checklist bullet (Included/Excluded)**: SATU format di seluruh web — marker **radio**
-  di `.info__list--yes/--no li::before`: included = lingkaran keisi (dot `--color-green` di dalam ring),
-  excluded = lingkaran kosong (border `#cfc9ba`) + teks di-mute (`#8a8578`). Ukuran nyesuain konteks.
-  Bullet generik lain (mis. `.modal__details-list` = `•` emas) beda.
+- **Checklist bullet (Included/Excluded) — SEKARANG ADA 2 FORMAT** (Sep 2026, Wayan pilih
+  "opsi B" dari sheet penanda). Jangan campur, dan jangan "samain" salah satunya tanpa nanya:
+  - **KOTAK, tanpa marker** = `components/ui/InfoBoxes.jsx` — dipakai **charter, transfer,
+    airport**. Tiap daftar duduk di kotak berbingkai (`--line`, `--r-md`), baris dipisah
+    **garis rambut**, **NOL simbol per baris**. Yang "Not included" di-tint `bg-cream` +
+    teks `--color-muted` — itu yang gantiin peran lingkaran kosong. Desktop 2 kolom,
+    HP numpuk (`max-[768px]`, sama kayak grid checklist lama).
+    - **Kenapa gak ada marker**: lingkaran isi/kosong itu minjem bentuk radio button dan
+      nangkring di tengah kolom bacaan. Kotaknya yang bilang "ini grup", jadi gak ada yang
+      perlu diulang di tiap baris. Ikon centang/silang juga ditawarin & **gak dipilih**.
+    - Teks "not included" pakai token `--color-muted`, **bukan `#8a8578` yang lama** —
+      yang lama kebaca kayak disabled, bukan kayak informasi.
+  - **Marker radio** (`.info__list--yes/--no li::before`: included = lingkaran keisi dot
+    `--color-green` di dalam ring, excluded = lingkaran kosong border `#cfc9ba` + teks
+    `#8a8578`) — **masih kepakai di halaman tour & destinasi** (`DetailTabs`),
+    `ListingPage`, `AboutPage`. String-nya tetep di `infoClasses.js`, jangan dihapus.
+  - **Belum diputusin Wayan**: apakah halaman tour/destinasi ikut pindah ke kotak. Sampai
+    dia bilang, dua format ini SENGAJA hidup bareng — bukan kelupaan disapu.
+  - Bullet generik lain (mis. `.modal__details-list` = `•` emas) beda lagi.
 
 ## Foto & gambar (standar)
 - **Nama file = subjek + slot**, semua lowercase-hyphen. Pola:
@@ -1165,9 +1180,27 @@ Order **must be kept** (declarations first, run last):
   - **Detail halaman = SATU section** (Wayan, Sep 2026: "details seperti include exclude dan
     how charter works itu jadiin satu dan konten sama pakai styling text di our company").
     Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
-    `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
-    dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (134/134, list-nya sendiri dijaga `verify-charterhome`) — 320/390/430/768: list di ATAS
+    `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS.
+  - **Isinya = 2 BARIS KOTAK** (Sep 2026, Wayan: "pakai kolom termasuk yang dibawahnya how
+    charter works dan lagi satunya"), lewat blok prose baru `{ type: 'boxes', items: [...] }`:
+    - Baris 1 = **What's included | Not included** · Baris 2 = **How the day works |
+      What a day can cover**. "Charter or guided tour?" TETEP selebar kartu di bawahnya —
+      satu kotak sendirian di baris 2-kolom kebaca kayak ada kotak yang ilang.
+    - **Pasangannya dipilih dari TINGGI, bukan topik**: penjelasan 3-paragraf & daftar 7 ide
+      rute itu dua blok yang tingginya paling mirip, jadi kotaknya mendarat rata. Kalau
+      nambah/ngurangin isi salah satunya, cek lagi pasangannya — kotak stretch, yang pendek
+      bakal nyisain ruang kosong.
+    - Tiap item: `{ title, variant?, paras?, list? }`. `variant:'no'` = di-tint cream +
+      teks muted. Tanpa variant = kotak putih biasa (itu yang dipakai 2 kotak penjelasan).
+    - **Teks isinya BELUM diubah** — Wayan minta layout dulu ("abis itu kita rapihin lagi
+      text kontenya"). Opsi mecah "How the day works" jadi 3 langkah bernomor udah ditawarin
+      & masih nunggu dia.
+  - Verifikasi kotak Included/penjelasan = **`verify-infoboxes.mjs`** (107/107) — nyisir
+    charter + transfer + airport di 390/767/768/1024/1280: gak ada marker/bullet sisa, garis
+    rambut antar-baris (gak ada di baris terakhir), kotak "not" di-tint, 2 kolom dari 768 ke
+    atas & numpuk di bawahnya, halaman gak melar, DAN **bentuk kotak 3 halaman itu identik**
+    (border/radius/padding/gaya judul/gaya baris) — itu yang nahan mereka melenceng lagi.
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (144/144, list-nya sendiri dijaga `verify-charterhome`) — 320/390/430/768: list di ATAS
     field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
     di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
     punya pita "Selected" (warna CTA, gak kepotong) + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama

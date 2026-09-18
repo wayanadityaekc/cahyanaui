@@ -6,6 +6,7 @@
 // of a raw HTML string into data + real elements.
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { infoList } from '@/components/ui/infoClasses';
+import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { unlinkHiddenTours } from '@/lib/routes';
 
 // headingVariant tunes the `--sub` article headings per context (the old
@@ -53,6 +54,28 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
           <ul className={infoList(b.variant)} key={i}>
             {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
           </ul>
+        );
+      case 'boxes':
+        // Option B boxes (Sep 2026): a row of bordered boxes instead of marker
+        // lists / loose headings. Each item is { title, variant?, paras?, list? };
+        // variant 'no' tints it cream. Desktop two columns, mobile stacked.
+        return (
+          <InfoBoxes key={i}>
+            {b.items.map((box, k) => (
+              <InfoBox key={k} title={box.title} variant={box.variant}>
+                {(box.paras || []).map((html, p) => (
+                  <p key={p} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(html) }} />
+                ))}
+                {box.list && (
+                  <InfoBoxList
+                    items={box.list}
+                    variant={box.variant}
+                    render={(item) => <span dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />}
+                  />
+                )}
+              </InfoBox>
+            ))}
+          </InfoBoxes>
         );
       case 'back':
         // margin-top stays inline: `.guide-article p` (0,1,1) outweighs a mt-* utility

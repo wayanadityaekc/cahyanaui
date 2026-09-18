@@ -1,12 +1,17 @@
 import { SECTION_TITLE } from '@/components/ui/sectionTitle';
-import { INFO_LIST_YES, INFO_LIST_NO } from '@/components/ui/infoClasses';
+import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 // "Good to know" block for transfer / airport detail pages (TW-B4 #337).
 // Was a raw HTML string (TRANSFER.tinfoHtml / AIRPORT.tinfoHtml) carrying
 // .tinfo__facts / .tinfo__fact / .tinfo__cols / .tinfo__col - now data + this
 // self-contained component with the styling as Tailwind utilities (those .tinfo*
-// CSS rules are removed from style.css). Kept as classes on purpose (out of
-// scope, other issues own them): .section__title (B-FINAL) and
-// .info__list--yes/--no (B-FINAL checklist bullet).
+// CSS rules are removed from style.css). Kept as a class on purpose (out of
+// scope, another issue owns it): .section__title (B-FINAL).
+//
+// The included/excluded pair is <InfoBoxes> (Sep 2026, Wayan: option B, and
+// "biar bisa di pakai juga di page transfer") - the SAME component the charter
+// details body uses, so transfer, airport and charter cannot drift apart. The
+// old marker lists and the uppercase column labels went with it; the box title
+// is now the shared one.
 //
 // Utility map (1:1 with the removed CSS):
 //   .tinfo__facts = flex flex-wrap [border:1px_solid_var(--line)] rounded-[var(--r-lg)]
@@ -32,19 +37,16 @@ export default function DetailTinfo({ facts, included, excluded }) {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-10 max-w-[720px] mx-auto max-[768px]:grid-cols-1 max-[768px]:gap-[1.3rem]">
-        <div>
-          <h3 className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-muted mb-[0.8rem]">What&apos;s included</h3>
-          <ul className={INFO_LIST_YES}>
-            {included.map((item, j) => <li key={j}>{item}</li>)}
-          </ul>
-        </div>
-        <div>
-          <h3 className="font-body text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-muted mb-[0.8rem]">What&apos;s excluded</h3>
-          <ul className={INFO_LIST_NO}>
-            {excluded.map((item, j) => <li key={j}>{item}</li>)}
-          </ul>
-        </div>
+      {/* the good-to-know block is capped at 720px - keep that cap on the pair */}
+      <div className="max-w-[720px] mx-auto">
+        <InfoBoxes>
+          <InfoBox title="What's included">
+            <InfoBoxList items={included} />
+          </InfoBox>
+          <InfoBox title="What's excluded" variant="no">
+            <InfoBoxList items={excluded} variant="no" />
+          </InfoBox>
+        </InfoBoxes>
       </div>
     </>
   );

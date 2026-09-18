@@ -1,5 +1,5 @@
 export const TRANSFER = {
-  "title": "Bali Airport & Route Transfers",
+  "title": "Private Car Transfers in Bali",
   "desc": "Fixed price per car, professional local drivers, door to door - 24/7. Only a 20% deposit to book.",
   "routesTitle": "Popular routes",
   "routesNote": "All prices per car · max 5 passengers · tap a route to pre-fill the search",

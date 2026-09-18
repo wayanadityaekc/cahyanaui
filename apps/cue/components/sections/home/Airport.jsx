@@ -48,8 +48,11 @@ export default function Airport() {
             <span className={CLS.price}>
               from <Price name="Airport – Ubud" fallback="$26" className={CLS.amt} as="b" />
             </span>
+            {/* Anchor text carries the keyword on purpose: this band is the main
+                internal link to /airport-transfer, and "Book a transfer" told
+                Google nothing about what is on the other end. */}
             <a className={CLS.btn} href="/airport-transfer.html">
-              Book a transfer &rsaquo;
+              Book your airport transfer &rsaquo;
             </a>
           </div>
         </div>

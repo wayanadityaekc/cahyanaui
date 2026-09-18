@@ -33,7 +33,7 @@ export const PROGRAM_PROMO = [
   {
     id: 'transfer',
     kicker: 'Transfer',
-    title: 'Bali Airport & Route Transfers',
+    title: 'Private Car Transfers in Bali',
     text: 'Fixed price per car, professional local drivers, door to door, 24/7.',
     img: 'south-bali-beach-sunset.webp',
     href: '/transfer.html',
@@ -46,7 +46,7 @@ export const PROGRAM_PROMO = [
     text: 'Private car from Ngurah Rai (DPS) to your Ubud stay. Fixed price, meet & greet at arrivals.',
     img: 'transfer-hero.webp',
     href: '/airport-transfer.html',
-    cta: 'Book a transfer',
+    cta: 'Book airport transfer',
   },
   {
     id: 'destinations',

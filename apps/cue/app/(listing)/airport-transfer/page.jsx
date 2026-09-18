@@ -6,10 +6,15 @@ import { detailBlocks } from '@/lib/detailBlocks';
 import { AIRPORT } from '@/content/shared/airport';
 import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
 
+// SEO: this page owns "bali airport transfer" (Sep 2026, Wayan). It used to
+// title itself "Booking | Flight Details Form" while /transfer led on the
+// keyword - so the query landed on the page with 375 words and this one, with
+// the depth AND the flight-number field that actually answers it, sat on four
+// internal links. The title now leads on the phrase and /transfer names routes.
 export const metadata = {
-  title: 'Bali Airport Transfer Booking | Flight Details Form',
+  title: 'Bali Airport Transfer to Ubud | Private Car, Fixed Price',
   description:
-    'Book your private Bali airport transfer to or from Ubud. Add your flight number and time so your driver tracks delays and is ready when you land or need pickup.',
+    'Private car between Ngurah Rai airport (DPS) and Ubud at a fixed price per car. Add your flight number so your driver tracks delays and meets you at arrivals.',
   alternates: { canonical: '/airport-transfer.html' },
 };
 

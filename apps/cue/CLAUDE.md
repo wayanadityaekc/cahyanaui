@@ -404,6 +404,40 @@ When unsure, ask first (keep it short).
 - **Meta description 110–170 karakter**, unik per halaman; `og:description` disamain.
 - `og:image` = foto card/hero halaman itu (bukan preview.jpg) kalau ada.
 - Halaman baru → tambah ke `sitemap.xml` + punya canonical + BreadcrumbList.
+- **/transfer vs /airport-transfer = DUA QUERY BEDA, jangan disatuin lagi** (Sep 2026, Wayan
+  pilih "opsi B" dari 3 opsi yang ditawarin). Dulu dua-duanya buka title-nya pakai frasa
+  **"Bali Airport Transfer"**, jadi rebutan satu query - dan yang menang link-nya
+  (`/transfer`, **100 link** dari navbar + footer) justru yang paling tipis (**375 kata**),
+  sementara yang punya isi + field nomor penerbangan yang beneran ngejawab query itu
+  (`/airport-transfer`, **746 kata**) cuma dapet **4 link**.
+  - **`/airport-transfer` PEGANG "bali airport transfer"** - cuma DIA yang title/H1-nya
+    boleh mulai dengan frasa itu. Dijaga `seo-split-check.cjs` di scratchpad: dia nyisir
+    SEMUA `.html` di `out/`, patokannya **tepat 1 halaman** yang mulai dengan frasa itu.
+  - **`/transfer` = halaman SEMUA ROUTE.** Title "Bali Private Car Transfers | Ubud to
+    Canggu, Kuta, Amed", H1 "Private Car Transfers in Bali". Frasa "airport transfer"
+    **gak boleh** nongol lagi di title/meta-nya.
+  - **Kartu route Airport TETEP ada di `/transfer`** dan tetep pre-fill form kayak 5 kartu
+    lainnya - tamu yang lagi nyisir daftar route emang nyari harganya, dan bikin 1 dari 6
+    kartu beda kelakuan itu bug sendiri. Yang misahin dua halaman itu **FUNGSINYA**: form di
+    sini ngasih harga, halaman sana nerima nomor penerbangan. Link ke sana ditaro sebaris di
+    bawah grid route (`TransferRoutes.jsx`), anchor-nya "Bali airport transfer page".
+  - **Anchor text WAJIB nyebut "airport"** di tiap link ke halaman itu. Dulu semuanya
+    "Book a transfer" - gak ngasih tau Google apa-apa soal isi halaman tujuannya. Sekarang:
+    band airport homepage + listing (`components/sections/home/Airport.jsx`) =
+    "Book your airport transfer", kartu promo slider (`content/shared/programPromo.js`) =
+    "Book airport transfer".
+  - **`programPromo.js` GAMPANG KELEWAT**: kartu "Transfer"-nya nyimpen **salinan judul
+    halaman**, jadi H1 lama ("Bali Airport & Route Transfers") sempet ketinggalan di situ dan
+    ke-print di 3 halaman listing padahal halamannya sendiri udah ganti. **Ganti H1 halaman
+    yang punya kartu promo = cek file itu bareng.**
+  - **Gotcha harness**: nyari anchor pakai regex `<a href="..."` itu SALAH - Next gak jamin
+    urutan atribut, jadi anchor yang ke-render `class=` duluan kelewat diam-diam (kejadian:
+    harness lapor anchor homepage kosong padahal udah bener). Pakai `<a\b[^>]*href="..."`.
+  - **Yang BELUM dikerjain, keputusan Wayan**: `/airport-transfer` masih cuma dapet
+    **5 link internal** lawan 100-nya `/transfer` (yang nempel di navbar + footer). Naro dia
+    di dropdown Program navbar ATAU kolom Programs di footer = 1 baris, langsung jadi link
+    se-web - sengaja belum dilakuin, itu ngubah navigasi bukan cuma copy. Plus: dua halaman
+    ini JSON-LD-nya masih `BreadcrumbList` doang, belum ada `Service`/`Offer` + harga.
 
 ## Sliders (horizontal card sliders)
 - **SEMUA slider FULL-BLEED di HP** (Sep 2026, Wayan: "buat slidernya full width screen kayak

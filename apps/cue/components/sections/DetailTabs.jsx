@@ -104,7 +104,18 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     });
   }
   if ((included && included.length) || (excluded && excluded.length)) {
-    sections.push({ id: 'included', label: 'Included', content: <Inclusions included={included} excluded={excluded} /> });
+    // heading:false - the two boxes already say "What's included" / "Not included",
+    // so an "Included" h2 on top of them just says it a third time (Sep 2026,
+    // Wayan: "title 'include' itu seharusnya di hapus bro, sudah jelas dengan
+    // container include dan not included aja"). The label stays on the jump tab,
+    // and the section carries it as aria-label so the heading is only gone
+    // visually, not for a screen reader.
+    sections.push({
+      id: 'included',
+      label: 'Included',
+      heading: false,
+      content: <Inclusions included={included} excluded={excluded} />,
+    });
   }
   sections.push({
     id: 'reviews',
@@ -203,8 +214,9 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
             id={`dsec-${s.id}`}
             ref={(el) => { secRefs.current[s.id] = el; }}
             className={SEC}
+            aria-label={s.heading === false ? s.label : undefined}
           >
-            <h2 className={SEC_H}>{s.label}</h2>
+            {s.heading !== false && <h2 className={SEC_H}>{s.label}</h2>}
             {s.content}
           </section>
         ))}

@@ -137,9 +137,9 @@ When unsure, ask first (keep it short).
 - Prices = gold (`--color-amber`, gold BENERAN — bukan `--color-gold`) + bold
   (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
   **DUA pengecualian (Sep 2026, Wayan)** - dua-duanya karena harganya nempel ke CTA hijau
-  dan amber di sebelahnya berantem: (1) **kartu paket charter** (`CharterBuilder.jsx`,
-  box harga tepat di atas tombol Book — dan baris tarif charter di **homepage**
-  (`CharterHome.jsx`), yang emang box harga yang sama persis) dan (2) harga di **book bar** (`BookBar.jsx`) =
+  dan amber di sebelahnya berantem: (1) **kartu paket charter** (`CharterPlans.jsx`, dipakai
+  halaman charter DAN section homepage — harganya duduk di baris yang aksinya CTA hijau) dan
+  (2) harga di **book bar** (`BookBar.jsx`) =
   `text-gold` (soft black), bukan amber — di bar itu amber nabrak tombol CTA hijau
   tepat di sebelahnya. Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
   Warnanya WAJIB dioper lewat prop `className` punya `<Price>` — default-nya
@@ -491,36 +491,34 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     `renderPrices` auto-nambahin `<span class="price-unit">per car</span>`, jadi JANGAN nulis "/ car" manual).
   - **Why Us** = cream band, 4 kolom ikon. Headline "Clear prices, local team, your plan" (sengaja
     beda dari About "One local family..." biar gak dobel).
-  - **Charter (`CharterHome.jsx`) = BARIS TARIF, bukan slider kartu** (Sep 2026, Wayan: "section
-    charter di homepage juga samain, dengan price menurun seperti di pagenya, tapi button build your
-    charter ke page charternya, terus button jangan isi garis di bawahnya"). Satu panel putih isi
-    **4 baris** (5h/10h/12h/14h): kiri nama jam + sub-baris, kanan **box harga yang SAMA PERSIS kayak
-    kartu di halaman charter** — `PLAN_PRICE_BOX`/`_KICK`/`_BIG` di
-    `components/ui/charterPlanClasses.js`, di-**import** dua-duanya (CharterBuilder + CharterHome),
-    bukan di-copy. Ganti bentuk harga = edit 1 file, dua-duanya ikut.
-    - Dulu 4 kartu tinggi di slider, masing-masing punya tombol "Choose" yang semuanya ke halaman
-      yang sama. Di HP 3 dari 4 tarif ada di luar layar. Sekarang **satu CTA** "Build your charter"
-      → `/charter.html` (pakai `BTN_BOOK`, jadi `no-underline` udah ikut — itu yang Wayan minta),
-      dan semua tarif keliatan sekaligus dengan tinggi lebih pendek dari 1 kartu lama.
-    - **HP 1 kolom, desktop (`min-[769px]`) 2 kolom × 2 baris** — panel homepage selebar
-      `--container` (1200), jadi 769 udah cukup lega buat 2 kolom.
-    - **Badge "Popular" JANGAN ditaro sebaris sama nama jam.** Di 320px pakai rupiah, box harga nyisain
-      kolom nama cuma sedikit lebih lebar dari namanya sendiri — apa pun yang nemenin di baris itu
-      bakal wrap. Penanda barisnya = **border `--color-cta` + inset ring** (nol ongkos lebar), kata
-      "Popular" numpang di sub-baris (amber, wrap di situ gak masalah).
-    - `CHARTER_CARDS` (`content/shared/home.js`) ikut dipangkas: `solid`/`btnText`/`href` kebuang
-      bareng tombol per-kartu, `unit` juga (footnote di bawah baris udah bilang "prices per car").
-      `note` = jarak/catatan, **bukan** "petrol included" — itu udah disebut sekali di lead section.
-    - **`fallback` WAJIB = angka yang bakal dihitung `CharterPrice` dari API**: `base.display +
-      jam_tambahan × charterExtraHour.usd` (USD 4/jam), BUKAN IDR dibagi kurs. Ketemu basi Sep 2026:
-      10/12/14 jam ketulis $60/$68/$76 padahal API bilang $57/$65/$73 — harga salah kedip tiap
-      halaman dibuka. **`check-prices.js` gak baca file ini**, jadi ganti tarif charter di
-      `cahyana-api` = update angka ini tangan.
-    - Verifikasi: **`verify-charterhome.mjs`** di scratchpad (71/71) — 320/390/430/768 + desktop
-      1024/1280/1440: tiap nama 1 baris & gak keremes, box harga di KANAN nama tanpa numpuk, kicker
-      **di atas** angka, harga gelap (bukan amber), cuma 1 CTA & href-nya `/charter.html` & gak
-      bergaris, cuma 1 baris yang ke-mark popular, halaman gak melar, dan harga tetep kebaca walau
-      katalog di-`abort()`.
+  - **Charter (`CharterHome.jsx`) = KARTU PAKET DOANG + 1 tombol** (Sep 2026, Wayan: "reuse
+    komponen bro, gimanapun styling dan structure di page charter pakai itu juga di section
+    homepage, berarti lu harus pisah input form dan card nya ... di section homepage gua mau cuma
+    card nya aja dan button yang mengarah ke page charter untuk melengkapi form").
+    - **Kartunya = `components/sections/CharterPlans.jsx` yang SAMA PERSIS dipakai halaman
+      charter** — bukan tiruan, komponennya sendiri. Dulu homepage punya 4 baris tarif sendiri
+      (5h/10h/12h/14h) dengan box harga cream, dan tiap kali halaman charter berubah dia
+      ketinggalan. Sekarang cuma ada SATU list paket di seluruh web.
+    - Homepage **gak punya field sama sekali** — form-nya cuma di halaman charter. CTA-nya satu,
+      "Build your charter" → `/charter.html` (`BTN_BOOK`, jadi `no-underline` udah ikut).
+    - **`area` sengaja dikosongin** di homepage: gak ada field pick-up berarti gak ada surcharge
+      buat dihitung, jadi kicker-nya jujur nulis **From** (bukan Total).
+    - **Pilihan tamu di homepage KEBAWA ke halaman charter** (Wayan: "make sure apapun yang di
+      pilih user di homepage, tetep di inget atau auto fill di page charter") — lewat
+      `lib/charterDraft.js` (localStorage `cue_charter_v1`, key-nya kedaftar di `KEY`).
+      Homepage nyimpen pas di-tap; builder baca pas mount terus nge-seed `dur`/`extra`.
+      **WAJIB dibaca di `useEffect`, JANGAN di initial state** — ini static export, nilai yang
+      cuma ada di browser bakal bikin render pertama beda sama HTML hasil pre-render.
+    - `CHARTER_CARDS` di `content/shared/home.js` + komponen `CharterPrice.jsx` **UDAH DIHAPUS**
+      (ikut kebuang bareng 4 baris tarif lama). Harga sekarang dihitung `useCharterTier()` dari
+      katalog API, jadi **gak ada lagi angka cadangan yang bisa basi** di homepage.
+    - Verifikasi: **`verify-charterhome.mjs`** di scratchpad (81/81) — 320/390/430/768 + desktop
+      1024/1280/1440: 3 kartu ada, NOL field, cuma 1 tombol & href-nya `/charter.html` & gak
+      bergaris, kicker "From", halaman gak melar. Plus **adu dua halaman di lebar yang sama**:
+      nama/harga/class row/class grid/gaya teks/tinggi baris harus IDENTIK homepage vs halaman
+      charter. Plus **serah-terima**: pilih Extended di homepage → tersimpan → halaman charter
+      kebuka di Extended + field Extra hours ikut nongol + baris ringkasan nyebut Extended;
+      pengunjung baru (storage kosong) tetep dapet Full Day.
 - **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
 
 ## Sticky bottom bar (Sep 2026)
@@ -1093,12 +1091,20 @@ Order **must be kept** (declarations first, run last):
     - **Kicker `From`/`Total` TETAP ADA**, sebaris kecil di antara nama & harga. Jangan dibuang
       biar "lebih bersih": `tier()` emang ngitung surcharge + jam tambahan, jadi begitu area
       kepilih angkanya total beneran — nulis "from" terus itu bohong kecil.
-  - **Shell baris dipakai bareng homepage** (`PLAN_ROW`/`PLAN_ROW_ON`/`PLAN_ROW_PICKED`/
-    `PLAN_NAME`/`PLAN_SUB`/`PLAN_BADGE` di `components/ui/charterPlanClasses.js`).
-    **HARGANYA yang SENGAJA BEDA**: homepage = box cream di pojok (`PLAN_PRICE_BOX`/`_BIG`,
-    baris statis), builder = angka gede di kiri (`PLAN_PRICE_LEAD`, baris yang bisa dipilih).
-    Shell-nya **gak bawa `items-*`** — homepage nge-center barisnya, builder rata-atas (centangnya
-    nemenin blok 3 baris), jadi tiap pemakai naro alignment-nya sendiri.
+  - **LIST PAKETNYA = `components/sections/CharterPlans.jsx`, KOMPONEN BERSAMA sama section
+    charter di homepage** (Sep 2026, Wayan: "reuse komponen bro ... lu harus pisah input form dan
+    card nya"). Builder = list + kolom field; homepage = list doang + tombol ke halaman ini.
+    Ubah bentuk kartu = edit 1 file, dua-duanya ikut.
+    - **Paket kepilih itu PROP, bukan state di dalam list** (`value`/`onChange`): halaman butuh
+      nilai yang sama buat baris ringkasan + tombol Book, dan homepage butuh buat nyimpen.
+      Satu pemilik, gak ada salinan kebenaran kedua.
+    - **Hitungan harga = `useCharterTier({ area, extra })`**, di-export dari file yang sama —
+      list-nya pakai buat tiap baris, halaman pakai buat total di ringkasan & gerbang tombol
+      Book. Satu rumus, gak bisa melenceng.
+    - Class-nya di `components/ui/charterPlanClasses.js`. `PLAN_PRICE_BOX`/`_BIG`/`PLAN_ROW_ON`
+      **UDAH DIHAPUS** (dead) — itu sisa box harga cream punya homepage yang lama.
+  - **Pilihan di homepage ke-bawa ke sini** lewat `lib/charterDraft.js` — lihat bullet Charter di
+    "Homepage section order" buat aturan lengkapnya (baca di `useEffect`, jangan initial state).
   - **SATU tombol Book, di bawah field** (dulu tiap kartu punya tombolnya sendiri). Artinya
     state "durasi kepilih" **BALIK LAGI** — itu disengaja atas permintaan Wayan, bukan regresi;
     kalau nemu catatan lama yang bilang state itu udah dibuang, yang berlaku ini. Baris paket =
@@ -1141,7 +1147,7 @@ Order **must be kept** (declarations first, run last):
     Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
     `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
     dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (134/134) — 320/390/430/768: list di ATAS
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (134/134, list-nya sendiri dijaga `verify-charterhome`) — 320/390/430/768: list di ATAS
     field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
     di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
     punya pita "Selected" (warna CTA, gak kepotong) + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama

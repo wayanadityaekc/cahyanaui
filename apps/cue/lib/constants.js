@@ -14,6 +14,7 @@ export const KEY = {
   itnSynced: 'cue_itn_synced',
   token: 'cue_token',
   referral: 'cue_referral',
+  charter: 'cue_charter_v1',
 };
 
 // Saved trips in localStorage hold product NAMES, not ids, so renaming a

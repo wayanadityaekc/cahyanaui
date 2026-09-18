@@ -557,11 +557,29 @@ When unsure, ask first (keep it short).
     nambah, cek sumbernya bukan awalan dari URL yang masih hidup (mis. `/tanah-lot.html`
     aman karena `/tanah-lot-taman-ayun.html` gak diawali string itu). Cek ini dijalanin
     pas masang 31 itu.
-  - **11 sisanya butuh keputusan Wayan** (gak ada penerus yang jelas): `/east-bali-tour`,
-    `/north-bali-tour`, `/west-bali-tour` (sisa restructure 12→18 tour), `/melasti-beach`,
-    `/padang-padang-beach`, `/jimbaran-seafood`, `/scooter` (halaman attraction yang
-    emang dibuang), `/booking`, `/dashboard`, `/why`. Sisanya di daftar itu (mock,
-    `partials`, file ` 2.html` duplikat) emang gak pernah live — abaikan.
+  - **Sisanya UDAH DIPUTUSIN & DIPASANG** (Sep 2026, Wayan: "gass") — 10 redirect lagi,
+    total 56. Dicek dulu sebelum dipasang: **nol** link ke URL-URL itu di seluruh repo
+    (yang tadinya keliatan `melasti-beach` 5 file itu FOTO-nya, `booking` itu class CSS
+    `booking__*`, `why` itu `whyus` — **grep pola URL (`"/x.html"`), jangan slug
+    telanjang**), dan kontennya gak pindah slug.
+    - **Ternyata 14 URL, bukan 11**: 3 stop South Bali (melasti/padang-padang/jimbaran)
+      sempet pindah ke `/attractions/` sebelum dibuang, jadi **dua-duanya** bolong.
+    - **2 tour punya penerus PERSIS** (kebaca dari title lama di git history):
+      `/east-bali-tour` = "Lempuyang Gates of Heaven & Tirta Gangga" → `/lempuyang-tirta-gangga`,
+      `/west-bali-tour` = "Tanah Lot Sunset, Ulun Danu & Jatiluwih" → `/jatiluwih-tour`.
+      `/north-bali-tour` **gak punya** — munduk/banyumala/lovina semuanya `HIDDEN_TOURS`,
+      jadi ke `/tour.html`. 6 URL beach → `/destinations.html` (alasan yang sama:
+      `hidden-beaches-cliffs` diparkir). `/scooter` → `/guide/getting-around-bali`.
+      **Jangan pernah nge-301 ke tour yang diparkir** — itu ngarahin Google ke halaman
+      yang gak dijual.
+    - **Sengaja DIBIARIN 404**: `/booking`, `/dashboard`, `/why` (halaman internal/admin,
+      gak pernah punya title publik) + scaffolding dev (`footer.html`, `navbar.html`,
+      `guide/_template.html`, `react-demo/`, `dashboard-mockup.html`). Mock, `partials`,
+      dan file ` 2.html` duplikat emang gak pernah live — abaikan.
+    - **Cek wajib tiap nambah redirect** (udah dijalanin buat 56-nya): target harus halaman
+      HIDUP & bukan sumber redirect lain (nol rantai), dan sumbernya bukan awalan URL hidup
+      (mod_alias cocokin prefix). Yang 6 fold legal/about `→ /our-company.html#…` emang
+      keliatan "target gak hidup" kalau dibandingin string penuh — itu fragment, aman.
 
 ## Sliders (horizontal card sliders)
 - **SEMUA slider FULL-BLEED di HP** (Sep 2026, Wayan: "buat slidernya full width screen kayak

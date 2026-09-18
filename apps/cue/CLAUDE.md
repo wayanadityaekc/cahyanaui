@@ -433,11 +433,21 @@ When unsure, ask first (keep it short).
   - **Gotcha harness**: nyari anchor pakai regex `<a href="..."` itu SALAH - Next gak jamin
     urutan atribut, jadi anchor yang ke-render `class=` duluan kelewat diam-diam (kejadian:
     harness lapor anchor homepage kosong padahal udah bener). Pakai `<a\b[^>]*href="..."`.
-  - **Yang BELUM dikerjain, keputusan Wayan**: `/airport-transfer` masih cuma dapet
-    **5 link internal** lawan 100-nya `/transfer` (yang nempel di navbar + footer). Naro dia
-    di dropdown Program navbar ATAU kolom Programs di footer = 1 baris, langsung jadi link
-    se-web - sengaja belum dilakuin, itu ngubah navigasi bukan cuma copy. Plus: dua halaman
-    ini JSON-LD-nya masih `BreadcrumbList` doang, belum ada `Service`/`Offer` + harga.
+  - **Link se-web = lewat FOOTER** (Sep 2026, Wayan: "gas footer aja bro"). Habis split-nya,
+    `/airport-transfer` cuma dapet **5 link internal** lawan 100-nya `/transfer` - halaman
+    yang justru mau di-rank-in malah nyaris gak ada dukungan internal. Sekarang ada baris
+    **"Airport Transfer"** di kolom Explore `components/layout/Footer.jsx` (tepat di bawah
+    Transfer), jadi **100 link, sama rata sama `/transfer`**.
+    - Label-nya **frasa penuh, bukan "Airport"** - label footer itu SEKALIAN anchor text-nya.
+    - **Tinggi footer NOL berubah** (681/632/617/306/306 di 320/390/768/1280/1440, diukur
+      before-after): kolom Explore bukan yang paling tinggi, jadi baris ke-6 gratis. Kalau
+      nambah baris lagi di kolom itu, **ukur ulang** - begitu dia nyusul kolom Company,
+      footer-nya mulai tumbuh.
+    - **Navbar sengaja GAK disentuh**: dropdown Program tetep 4 item (Tours/Experiences/
+      Transfer/Charter). Footer udah ngasih jangkauan yang sama, dan dropdown 5 item kerasa
+      penuh. Jangan ditambahin ke situ juga tanpa nanya - nanti dobel.
+  - **Yang masih nunggu Wayan**: dua halaman ini JSON-LD-nya masih `BreadcrumbList` doang,
+    belum ada `Service`/`Offer` + harga (kandidat rich result, angkanya udah ada di API).
 
 ## Sliders (horizontal card sliders)
 - **SEMUA slider FULL-BLEED di HP** (Sep 2026, Wayan: "buat slidernya full width screen kayak

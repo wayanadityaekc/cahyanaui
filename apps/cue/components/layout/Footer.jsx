@@ -38,10 +38,17 @@ const COL_A = 'no-underline text-green hover:text-gold';
 const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';
 const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 
+// "Airport Transfer" sits here, right under Transfer, as the ONE site-wide link
+// to that page (Sep 2026, Wayan: "gas footer aja bro"). /airport-transfer owns
+// the "bali airport transfer" query but was reachable from only 5 pages, while
+// /transfer had 100 through this footer and the navbar - so the page Google is
+// meant to rank had almost no internal support. The label doubles as the anchor
+// text, which is why it is the full phrase and not "Airport".
 const EXPLORE = [
   ['/tour.html', 'Tours'],
   ['/activities.html', 'Experiences'],
   ['/transfer.html', 'Transfer'],
+  ['/airport-transfer.html', 'Airport Transfer'],
   ['/charter.html', 'Charter'],
   ['/my-trips.html', 'My Trips'],
 ];

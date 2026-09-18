@@ -40,7 +40,7 @@ export default function DetailTinfo({ facts, included, excluded }) {
       {/* the good-to-know block is capped at 720px - keep that cap on the pair */}
       <div className="max-w-[720px] mx-auto">
         <InfoBoxes>
-          <InfoBox title="What's included">
+          <InfoBox title="What's included" variant="yes">
             <InfoBoxList items={included} variant="yes" />
           </InfoBox>
           <InfoBox title="What's excluded" variant="no">

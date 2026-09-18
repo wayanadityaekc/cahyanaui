@@ -193,12 +193,23 @@ When unsure, ask first (keep it short).
     baris**. Yang "Not included" di-tint `bg-cream` + teks `--color-muted` — itu yang
     gantiin peran lingkaran kosong. Desktop 2 kolom, HP numpuk (`max-[768px]`, sama kayak
     grid checklist lama).
-    - **GARIS RAMBUT antar-baris CUMA buat pasangan include/exclude** (Sep 2026, Wayan:
-      "gua mau komponen include dan exclude aja yang isi border line yang lain jangan").
-      Dua itu spek yang dibaca baris per baris, jadi garisnya nolong; daftar lain yang
-      kebetulan ada di kotak (mis. ide rute charter) lebih deket ke prosa — garisnya malah
-      bikin kebaca kayak tabel. Aturannya **nempel ke `variant`**: `'yes'`/`'no'` =
-      bergaris, tanpa variant = polos. Jadi jangan bikin flag baru buat ini, kasih variant.
+    - **KOTAK-nya CUMA buat pasangan include/exclude.** Dua permintaan Wayan berurutan
+      (Sep 2026): (1) "gua mau komponen include dan exclude aja yang isi border line yang
+      lain jangan" = garis rambut antar-baris, terus (2) "garis di luar kontainer juga
+      selain include not include juga hilangin" = bingkai kotaknya. Jadi sekarang:
+      - **variant `'yes'`/`'no'`** = BERBINGKAI (border + radius + padding) **DAN**
+        baris-barisnya bergaris rambut. Itu spek yang dibaca baris per baris.
+      - **tanpa variant** = **KOLOM POLOS**: nol bingkai, nol padding, nol garis baris.
+        Ini yang emang diminta dari awal buat "How the day works" & "What a day can cover"
+        ("pakai kolom", bukan kotak). Padding-nya sengaja NOL juga — biar teksnya lurus
+        sama tepi kiri kartu & judul di atas/bawahnya, bukan masuk 1.2rem tanpa alasan.
+      - Aturannya **nempel ke `variant`**, jadi jangan bikin flag baru buat ini —
+        kasih variant (atau jangan) di **`InfoBox`**-nya.
+      - **GOTCHA yang udah kejadian**: `variant` dioper ke DUA tempat — `InfoBox`
+        (bingkai + tint) dan `InfoBoxList` (garis baris + warna teks). Di `DetailTinfo`
+        sempat cuma ke-pasang di list-nya, jadi kotak "What's included" transfer/airport
+        ilang bingkainya diam-diam. Ke-tangkep `verify-infoboxes` doang (adu bentuk
+        3 halaman) — mata gak bakal nyadar. Kasih variant ke dua-duanya.
     - **Kenapa gak ada marker**: lingkaran isi/kosong itu minjem bentuk radio button dan
       nangkring di tengah kolom bacaan. Kotaknya yang bilang "ini grup", jadi gak ada yang
       perlu diulang di tiap baris. Ikon centang/silang juga ditawarin & **gak dipilih**.
@@ -1201,12 +1212,13 @@ Order **must be kept** (declarations first, run last):
     - **Teks isinya BELUM diubah** — Wayan minta layout dulu ("abis itu kita rapihin lagi
       text kontenya"). Opsi mecah "How the day works" jadi 3 langkah bernomor udah ditawarin
       & masih nunggu dia.
-  - Verifikasi kotak Included/penjelasan = **`verify-infoboxes.mjs`** (107/107) — nyisir
-    charter + transfer + airport di 390/767/768/1024/1280: gak ada marker/bullet sisa, garis
-    rambut antar-baris (gak ada di baris terakhir), kotak "not" di-tint, 2 kolom dari 768 ke
-    atas & numpuk di bawahnya, halaman gak melar, DAN **bentuk kotak 3 halaman itu identik**
+  - Verifikasi kotak Included/penjelasan = **`verify-infoboxes.mjs`** (152/152) — nyisir
+    charter + transfer + airport di 390/767/768/1024/1280: gak ada marker/bullet sisa; garis
+    rambut CUMA di pasangan include/exclude (gak ada di baris terakhir, gak ada sama sekali di
+    kotak lain); bingkai CUMA di pasangan itu juga; kotak "not" di-tint; 2 kolom dari 768 ke
+    atas & numpuk di bawahnya; halaman gak melar; DAN **bentuk kotak 3 halaman itu identik**
     (border/radius/padding/gaya judul/gaya baris) — itu yang nahan mereka melenceng lagi.
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (144/144, list-nya sendiri dijaga `verify-charterhome`) — 320/390/430/768: list di ATAS
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (145/145, list-nya sendiri dijaga `verify-charterhome`) — 320/390/430/768: list di ATAS
     field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
     di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
     punya pita "Selected" (warna CTA, gak kepotong) + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama

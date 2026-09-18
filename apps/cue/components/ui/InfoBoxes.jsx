@@ -22,12 +22,20 @@ export const BOX_GRID =
   'grid grid-cols-2 gap-[var(--space-4)] mb-[var(--space-4)] ' +
   'max-[768px]:grid-cols-1 max-[768px]:gap-[var(--space-3)]';
 
-const BOX_BASE =
-  '[border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[1.1rem_1.2rem] ' +
+// Paragraph rhythm - every box gets this, framed or not.
+const BOX_TEXT =
   '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
+// The FRAME (outline + radius + padding) belongs to the included/excluded pair
+// ONLY (Sep 2026, Wayan: "garis di luar kontainer juga selain include not include
+// juga hilangin"). Everything else in a row is a plain COLUMN - which is what he
+// asked for in the first place ("pakai kolom"). A column carries no padding
+// either, so its text lines up with the card's own left edge and with the
+// headings above and below it, instead of sitting 1.2rem in from nothing.
+const BOX_FRAMED =
+  `${BOX_TEXT} [border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[1.1rem_1.2rem]`;
 // variant 'no' = the "not included" half: cream so the pair reads as two states
 // at a glance, which is the job the empty circle used to do.
-const BOX_NO = `${BOX_BASE} bg-cream`;
+const BOX_NO = `${BOX_FRAMED} bg-cream`;
 
 export const BOX_TITLE = 'font-body text-h3 font-semibold text-gold mb-[0.7rem]';
 
@@ -58,8 +66,9 @@ export function InfoBoxList({ items, variant, render }) {
 }
 
 export function InfoBox({ title, variant, children }) {
+  const cls = variant === 'no' ? BOX_NO : variant === 'yes' ? BOX_FRAMED : BOX_TEXT;
   return (
-    <div className={variant === 'no' ? BOX_NO : BOX_BASE}>
+    <div className={cls}>
       {title && <h3 className={BOX_TITLE}>{title}</h3>}
       {children}
     </div>

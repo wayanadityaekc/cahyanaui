@@ -411,6 +411,21 @@ export const WHY_US = [
     }
   ];
 
+// The homepage charter rates, rendered as rows by CharterHome (Sep 2026). They
+// used to be four cards in a slider, each with its own "Choose" button; the
+// section now carries ONE CTA to /charter.html, so per-card `solid`/`btnText`/
+// `href` are gone with the buttons, and `unit` with them - the footnote under the
+// rows already says prices are per car.
+//
+// `note` is the distance or the catch, never "petrol included": the section's own
+// lead sentence says that once, and repeating it on all four rows is noise.
+//
+// `fallback` is what shows until the catalog answers, so it has to be the number
+// CharterPrice would itself compute from the API: base display + extra hours at
+// charterExtraHour (USD 4/hour), NOT the raw IDR divided by the rate. The 10/12/14
+// hour rows were $60/$68/$76 here against a live $57/$65/$73 - a stale price
+// flashing on every page load. check-prices.js does not read this file, so a
+// charter rate change in cahyana-api has to be carried over by hand.
 export const CHARTER_CARDS = [
     {
       "pop": false,
@@ -419,11 +434,7 @@ export const CHARTER_CARDS = [
       "from": "from",
       "charter": "half",
       "fallback": "$35",
-      "unit": "/ car",
-      "note": "Petrol included · ~60 km",
-      "solid": false,
-      "btnText": "Choose",
-      "href": "/charter.html"
+      "note": "around 60 km"
     },
     {
       "pop": true,
@@ -432,39 +443,25 @@ export const CHARTER_CARDS = [
       "label": "Full day",
       "from": "from",
       "charter": "full",
-      "fallback": "$60",
-      "unit": "/ car",
-      "note": "Petrol included · ~120 km",
-      "solid": true,
-      "btnText": "Choose",
-      "href": "/charter.html"
+      "fallback": "$57",
+      "note": "around 120 km"
     },
     {
       "pop": false,
       "hours": "12 hours",
-      "label": "Full day + 2h",
+      "label": "Full day plus 2 hours",
       "from": "from",
       "charter": "full",
       "extra": "2",
-      "fallback": "$68",
-      "unit": "/ car",
-      "note": "Petrol included · extend by the hour",
-      "solid": false,
-      "btnText": "Choose",
-      "href": "/charter.html"
+      "fallback": "$65"
     },
     {
       "pop": false,
       "hours": "14 hours",
-      "label": "Full day + 4h",
+      "label": "Full day plus 4 hours",
       "from": "from",
       "charter": "full",
       "extra": "4",
-      "fallback": "$76",
-      "unit": "/ car",
-      "note": "Petrol included · extend by the hour",
-      "solid": false,
-      "btnText": "Choose",
-      "href": "/charter.html"
+      "fallback": "$73"
     }
   ];

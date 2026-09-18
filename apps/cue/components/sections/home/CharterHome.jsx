@@ -1,19 +1,41 @@
-'use client';
-
-import Slider from '@/components/ui/Slider';
 import CharterPrice from '@/components/CharterPrice';
 import CharterSurcharge from '@/components/CharterSurcharge';
-import { BADGE_POPULAR } from '@/components/ui/cardClasses';
-import { BLEED_MOBILE } from '@/components/ui/gridClasses';
+import { BTN_BOOK } from '@/components/ui/btnBookClasses';
+import { PLAN_PRICE_BOX, PLAN_PRICE_KICK, PLAN_PRICE_BIG } from '@/components/ui/charterPlanClasses';
 import { CHARTER_CARDS } from '@/content/shared/home';
 
-// Tailwind-native (full-portable): keluarga `.chcard*` -> utilities inline. Data
-// (CHARTER_CARDS) sekarang bawa flag `pop`/`solid` (bukan class string), di-map ke
-// utilities di sini. Badge "Popular" pakai BADGE_POPULAR shared (cardClasses.js).
-const CARD_BASE = 'relative flex-[0_0_220px] [scroll-snap-align:start] flex flex-col rounded-md p-[var(--space-3)] bg-white';
-const chcard = (pop) => `${CARD_BASE} ${pop ? '[border:2px_solid_var(--color-cta)]' : '[border:1px_solid_var(--line)]'}`;
-const BTN_BASE = 'mt-auto w-full inline-flex items-center justify-center rounded-pill h-[2.7rem] font-semibold text-strong no-underline [transition:background_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
-const chbtn = (solid) => `${BTN_BASE} ${solid ? 'bg-cta text-white hover:bg-cta-d' : 'bg-white text-gold [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]'}`;
+// The homepage charter section reads as RATE ROWS, not a card slider (Sep 2026,
+// Wayan: "section charter di homepage juga samain, dengan price menurun seperti di
+// pagenya"). Four tall cards in a horizontal track meant three of the four rates
+// were off-screen on a phone, each behind its own "Choose" button that went to the
+// same page anyway. A row per rate shows all four at once and takes less height
+// than one card did.
+//
+// The price block is the charter page's own (PLAN_PRICE_*, imported not copied):
+// kicker stacked above the amount in a tinted box, dark rather than amber. Same
+// component, same source, so the two cannot drift.
+//
+// ONE CTA for the section, to /charter.html (Wayan: "button build your charter ke
+// page charternya"). The rows quote prices; the page is where a charter is
+// actually built, so there is nothing for a per-row button to do that this one
+// does not. no-underline comes with BTN_BOOK - it is an <a>, and Wayan asked for
+// the line under it gone.
+//
+// Not a client component any more: with the slider gone nothing here holds state.
+// CharterPrice and CharterSurcharge carry their own 'use client'.
+const ROWS = 'mt-[var(--space-4)] flex flex-col gap-2 min-[769px]:grid min-[769px]:grid-cols-2 min-[769px]:gap-x-4 min-[769px]:gap-y-[0.625rem]';
+// pop = the Full Day rate. Marked with the CTA border instead of a badge beside
+// the name: at 320px in rupiah the price box leaves the name column barely wider
+// than the name itself, and anything sharing that line wraps. The word "Popular"
+// rides on the sub line, where a wrap costs nothing.
+const ROW_BASE = 'flex items-center gap-3 py-[0.7rem] px-[0.875rem] rounded-md bg-white';
+const ROW = `${ROW_BASE} [border:1px_solid_var(--line)]`;
+// The inset ring is what makes the CTA border read as deliberate rather than as a
+// 1px colour slip; it thickens the line without moving the row's box by a pixel,
+// so the popular row still sits level with the others in the grid.
+const ROW_POP = `${ROW_BASE} [border:1px_solid_var(--color-cta)] [box-shadow:inset_0_0_0_1px_var(--color-cta)]`;
+const NAME = 'block text-h3 font-semibold text-gold';
+const SUB = 'block text-[0.66rem] leading-[1.45] text-muted';
 
 export default function CharterHome() {
   return (
@@ -28,24 +50,27 @@ export default function CharterHome() {
           </p>
         </div>
 
-        <Slider gridClassName={`flex gap-[var(--space-3)] overflow-x-auto overflow-y-hidden [scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] mt-[var(--space-4)] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${BLEED_MOBILE}`}>
+        <div className={ROWS}>
           {CHARTER_CARDS.map((c) => (
-            <article className={chcard(c.pop)} key={c.hours}>
-              {c.badge && <span className={BADGE_POPULAR}>{c.badge}</span>}
-              <h3 className="font-head text-h2 font-semibold tracking-[-0.01em] mb-[0.1rem] text-gold">{c.hours}</h3>
-              <p className="text-small text-muted mb-[0.8rem]">{c.label}</p>
-              <p className="flex items-baseline gap-[0.3rem] mb-[0.7rem]">
-                <span className="text-small text-muted">{c.from}</span>{' '}
-                <CharterPrice duration={c.charter} extra={c.extra} fallback={c.fallback} className="text-[1.6rem] font-semibold text-amber tracking-[-0.01em]" />{' '}
-                <span className="text-small text-muted">{c.unit}</span>
-              </p>
-              <p className="text-small text-muted mb-[1.1rem] leading-[1.45]">{c.note}</p>
-              <a className={chbtn(c.solid)} href={c.href}>{c.btnText}</a>
-            </article>
+            <div className={c.pop ? ROW_POP : ROW} key={c.hours}>
+              <span className="flex-1 min-w-0">
+                <span className={NAME}>{c.hours}</span>
+                <span className={SUB}>
+                  {c.badge && <b className="font-semibold text-amber-d">{c.badge} &middot; </b>}
+                  {c.label}{c.note ? ` \u00b7 ${c.note}` : ''}
+                </span>
+              </span>
+              <span className={PLAN_PRICE_BOX}>
+                <span className={PLAN_PRICE_KICK}>{c.from}</span>
+                <CharterPrice duration={c.charter} extra={c.extra} fallback={c.fallback} className={PLAN_PRICE_BIG} />
+              </span>
+            </div>
           ))}
-        </Slider>
+        </div>
 
-        <p className="text-center mt-[var(--space-4)] text-small text-muted">
+        <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">Build your charter</a>
+
+        <p className="text-center mt-[var(--space-3)] text-small text-muted">
           Only a <b className="text-gold font-semibold">20% deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
         </p>
       </div>

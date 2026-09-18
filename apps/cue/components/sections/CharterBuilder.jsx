@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Car, ChevronLeft, ChevronRight, Clock, Route, UserRound } from 'lucide-react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { GRID_PLANS } from '@/components/ui/gridClasses';
+// The price box lives in its own module: the homepage's charter rates render the
+// exact same block, and one copy is what keeps them from drifting.
+import { PLAN_PRICE_BOX, PLAN_PRICE_KICK, PLAN_PRICE_BIG } from '@/components/ui/charterPlanClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
@@ -32,16 +35,6 @@ const POINTS =
   'm-0 mt-[var(--space-1)] p-0 list-none flex flex-col gap-[3px] ' +
   '[&>li]:flex [&>li]:items-start [&>li]:gap-[6px] [&>li]:text-muted [&>li]:text-[0.66rem] [&>li]:leading-[1.45] ' +
   '[&_svg]:shrink-0 [&_svg]:mt-[2px] [&_svg]:w-[11px] [&_svg]:h-[11px] [&_svg]:text-muted';
-// The price sits in its own tinted box in the top-right (Wayan, Sep 2026: "kanan box
-// berisikan harga yang ukuranya lumayan gede"). shrink-0 + the whole box on one line
-// so a long Rp figure never squeezes the title column instead of wrapping itself.
-const PRICE_BOX =
-  'shrink-0 flex flex-col items-end text-right px-[var(--space-1)] py-[6px] rounded-md bg-cream ' +
-  '[border:1px_solid_var(--line)]';
-// text-gold, NOT the amber every other price uses. Same reason the book bar is
-// exempt: the price sits directly above a green CTA, and amber next to it fights.
-// Wayan, Sep 2026: "harga warna dark seperti lainya".
-const PRICE_BIG = 'text-gold font-semibold text-[1.35rem] leading-[1.1] whitespace-nowrap';
 const ARROW =
   'flex items-center justify-center w-[30px] h-[30px] rounded-[50%] bg-white cursor-pointer ' +
   '[border:1px_solid_var(--line)] text-gold [transition:opacity_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] ' +
@@ -242,13 +235,13 @@ export default function CharterBuilder() {
                   </ul>
                 </div>
 
-                <span className={PRICE_BOX}>
-                  <span className="text-label tracking-[0.1em] uppercase text-muted">
+                <span className={PLAN_PRICE_BOX}>
+                  <span className={PLAN_PRICE_KICK}>
                     {area ? 'Total' : 'From'}
                   </span>
                   {/* No invented number while the catalog is still in flight: the
                       old card printed the word "from" with nothing after it. */}
-                  <span className={PRICE_BIG}>
+                  <span className={PLAN_PRICE_BIG}>
                     {v == null ? '\u2014' : withSymbol(fmt(v))}
                   </span>
                 </span>

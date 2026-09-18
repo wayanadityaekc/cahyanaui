@@ -138,7 +138,8 @@ When unsure, ask first (keep it short).
   (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
   **DUA pengecualian (Sep 2026, Wayan)** - dua-duanya karena harganya nempel ke CTA hijau
   dan amber di sebelahnya berantem: (1) **kartu paket charter** (`CharterBuilder.jsx`,
-  box harga tepat di atas tombol Book) dan (2) harga di **book bar** (`BookBar.jsx`) =
+  box harga tepat di atas tombol Book — dan baris tarif charter di **homepage**
+  (`CharterHome.jsx`), yang emang box harga yang sama persis) dan (2) harga di **book bar** (`BookBar.jsx`) =
   `text-gold` (soft black), bukan amber — di bar itu amber nabrak tombol CTA hijau
   tepat di sebelahnya. Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
   Warnanya WAJIB dioper lewat prop `className` punya `<Price>` — default-nya
@@ -489,12 +490,36 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     `renderPrices` auto-nambahin `<span class="price-unit">per car</span>`, jadi JANGAN nulis "/ car" manual).
   - **Why Us** = cream band, 4 kolom ikon. Headline "Clear prices, local team, your plan" (sengaja
     beda dari About "One local family..." biar gak dobel).
-  - **Charter** = **satu panel putih** (`.charter-home__in`) isi **slider kartu jam** (`.charter-home__slider`
-    = `experience__grid--slider`, di-wrap `initTourSlider` → panah hover desktop + swipe HP). Kartu = 5h/10h/12h/14h
-    (`.chcard`), Full Day (10h) di-highlight + badge amber "Popular" (badge di POJOK DALAM kartu, bukan
-    negatif-top, biar gak kepotong `overflow` slider). Harga tiap kartu di-wire lewat
-    `data-charter="half|full"` + `data-charter-extra="N"` → `renderCharterPromo()` (dipanggil dari
-    `renderPrices`, baca `CHARTER` di data.js: full + N*extHour, ikut kurs).
+  - **Charter (`CharterHome.jsx`) = BARIS TARIF, bukan slider kartu** (Sep 2026, Wayan: "section
+    charter di homepage juga samain, dengan price menurun seperti di pagenya, tapi button build your
+    charter ke page charternya, terus button jangan isi garis di bawahnya"). Satu panel putih isi
+    **4 baris** (5h/10h/12h/14h): kiri nama jam + sub-baris, kanan **box harga yang SAMA PERSIS kayak
+    kartu di halaman charter** — `PLAN_PRICE_BOX`/`_KICK`/`_BIG` di
+    `components/ui/charterPlanClasses.js`, di-**import** dua-duanya (CharterBuilder + CharterHome),
+    bukan di-copy. Ganti bentuk harga = edit 1 file, dua-duanya ikut.
+    - Dulu 4 kartu tinggi di slider, masing-masing punya tombol "Choose" yang semuanya ke halaman
+      yang sama. Di HP 3 dari 4 tarif ada di luar layar. Sekarang **satu CTA** "Build your charter"
+      → `/charter.html` (pakai `BTN_BOOK`, jadi `no-underline` udah ikut — itu yang Wayan minta),
+      dan semua tarif keliatan sekaligus dengan tinggi lebih pendek dari 1 kartu lama.
+    - **HP 1 kolom, desktop (`min-[769px]`) 2 kolom × 2 baris.** Beda dari `GRID_PLANS` yang 3-up di
+      993px — panel homepage selebar `--container` (1200), bukan panel builder yang sempit.
+    - **Badge "Popular" JANGAN ditaro sebaris sama nama jam.** Di 320px pakai rupiah, box harga nyisain
+      kolom nama cuma sedikit lebih lebar dari namanya sendiri — apa pun yang nemenin di baris itu
+      bakal wrap. Penanda barisnya = **border `--color-cta` + inset ring** (nol ongkos lebar), kata
+      "Popular" numpang di sub-baris (amber, wrap di situ gak masalah).
+    - `CHARTER_CARDS` (`content/shared/home.js`) ikut dipangkas: `solid`/`btnText`/`href` kebuang
+      bareng tombol per-kartu, `unit` juga (footnote di bawah baris udah bilang "prices per car").
+      `note` = jarak/catatan, **bukan** "petrol included" — itu udah disebut sekali di lead section.
+    - **`fallback` WAJIB = angka yang bakal dihitung `CharterPrice` dari API**: `base.display +
+      jam_tambahan × charterExtraHour.usd` (USD 4/jam), BUKAN IDR dibagi kurs. Ketemu basi Sep 2026:
+      10/12/14 jam ketulis $60/$68/$76 padahal API bilang $57/$65/$73 — harga salah kedip tiap
+      halaman dibuka. **`check-prices.js` gak baca file ini**, jadi ganti tarif charter di
+      `cahyana-api` = update angka ini tangan.
+    - Verifikasi: **`verify-charterhome.mjs`** di scratchpad (71/71) — 320/390/430/768 + desktop
+      1024/1280/1440: tiap nama 1 baris & gak keremes, box harga di KANAN nama tanpa numpuk, kicker
+      **di atas** angka, harga gelap (bukan amber), cuma 1 CTA & href-nya `/charter.html` & gak
+      bergaris, cuma 1 baris yang ke-mark popular, halaman gak melar, dan harga tetep kebaca walau
+      katalog di-`abort()`.
 - **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
 
 ## Sticky bottom bar (Sep 2026)

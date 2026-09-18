@@ -259,6 +259,32 @@ When unsure, ask first (keep it short).
   tambahin `height: auto;` bareng `aspect-ratio` di rule yang sama, atau foto ikut rasio file
   aslinya (kejadian di `.guide-lead`, Sep 2026).
 
+## Favicon / logo tab (Sep 2026)
+- Semua ikon di **`public/assets/icons/`**, di-generate dari SATU file logo pakai
+  **`node tools/make-icons.js <logo.png>`** (bukan gate CI — jalanin tangan kalau logo
+  ganti, terus commit hasilnya). Ganti logo = cukup 1 perintah, jangan bikin ikon satu-satu.
+  - Yang dihasilkan: `favicon.svg` · `favicon.ico` (frame 16/32/48) · `favicon-16x16.png` ·
+    `favicon-32x32.png` · `apple-touch-icon.png` (180) · `icon-192.png` · `icon-512.png`.
+  - **Crop-nya OTOMATIS ke "ink"-nya** (bbox piksel yang bukan transparan & bukan putih,
+    terus dibikin persegi dari titik tengahnya). Logo kiriman biasanya nangkring di kanvas
+    transparan gede dan **gak selalu pas di tengah** — kalau gak di-crop, di 16px yang
+    keliatan cuma titik kecil ngambang di dalam padding.
+  - **Latarnya PUTIH SOLID, bukan transparan**, buat semua PNG — iOS & Android nge-compositing
+    ikon transparan sendiri, biasanya ke HITAM. Itu juga yang dipakai ikon set sebelumnya.
+  - **`favicon.svg` = cangkang SVG yang MBUNGKUS raster**, sama kayak file yang dia gantiin —
+    monogram-nya glyph custom, gak ada vektor jujurnya. Bedanya: sudutnya **transparan**
+    (tab browser bisa gelap, jadi bulatannya harus kebaca bulat, bukan kotak putih).
+  - PNG-nya **palette** (128 warna): logo 2 warna, hasilnya sama persis tapi ukurannya
+    sepotong (RGBA mentah bikin `icon-512` 4x lebih gede).
+  - `sharp` kebawa **transitif dari Next**, gak kedaftar di `package.json`. Kalau suatu saat
+    ilang: `npm i -D sharp`.
+- **Link-nya di `app/layout.jsx` pakai CONTENT HASH** (`assetV()`, pola yang sama kayak
+  `STYLE_V` punya `style.css`). File di `public/` di-serve di path tetap **tanpa hash**, dan
+  browser nge-cache ikon tab lebih keras dari hampir apa pun — tuker file doang bisa bikin
+  logo lama nangkring berhari-hari. Hash-nya ganti persis pas file-nya ganti, jadi **gak ada
+  yang perlu di-bump tangan**. (Ini BUKAN balik ke `?v=` manual situs lama.)
+  - `check-assets` aman: regex-nya berhenti di `?`, jadi path-nya tetep kebaca bersih.
+
 ## Guide article template (`guide/*.html`)
 - **HERO-nya = HERO HALAMAN DETAIL** (Sep 2026, Wayan: "ubah semua page articles, pakai
   layout seperti tour destination dan experience, biar punya ciri khasnya"). Banner gelap

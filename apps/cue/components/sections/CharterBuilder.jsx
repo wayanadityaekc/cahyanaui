@@ -17,6 +17,7 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import { CHARTER } from '@/content/shared/charter';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
+import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -168,7 +169,15 @@ export default function CharterBuilder() {
 
         {/* 2 - the trip, then the one Book button. */}
         <div>
-          <h3 className="m-0 mb-[var(--space-1)] text-h3 font-semibold text-gold">Your trip</h3>
+          <div className="flex items-center gap-[var(--space-1)] mb-[var(--space-1)]">
+            <h3 className="m-0 text-h3 font-semibold text-gold">Your trip</h3>
+            {/* The surcharge note used to be two lines of grey text sitting under the
+                fields. It is an answer to a question, not something every guest needs
+                to read, so it lives behind this dot now. */}
+            <InfoDot label="About charter prices">
+              Pick-up outside Ubud adds a small surcharge. It is already counted in the prices shown.
+            </InfoDot>
+          </div>
           <div className="grid grid-cols-2 gap-[var(--space-1)]">
             <div className="col-span-2">
               <label className={FIELD_LABEL} htmlFor="ch-pickup">Pick-up area</label>
@@ -224,10 +233,6 @@ export default function CharterBuilder() {
               </div>
             )}
           </div>
-
-          <p className="mt-[var(--space-1)] text-small text-muted leading-[var(--lh-body)]" id="ch-pickup-hint">
-            Pick-up outside Ubud adds a small surcharge, already counted in the prices.
-          </p>
 
           {/* Which plan the button books, restated where the button is. On a phone
               the list is above the fields, so by the time a guest reaches Book the

@@ -1102,6 +1102,17 @@ Order **must be kept** (declarations first, run last):
     dikit sampe "Full Day POPULAR" mecah **NAMA**-nya jadi 2 baris (ke-ukur, bukan tebakan — ini
     bug yang sama persis kayak versi kartu dulu). Dengan wrap, di 320 kata-nya turun sendiri ke
     baris bawah, di lebar lain tetep nempel di samping nama.
+  - **Teks panjang pindah ke balik ikon info** (Sep 2026, Wayan: "jangan terlalu banyak tulisan
+    bro, isi aja icon tanda seru buat informasi di samping your trip terus deskripsi yang panjang
+    seperti pick up outside ubud itu pindahin kesana, akan muncul kalau di klik"). Catatan
+    surcharge dulu 2 baris abu nempel di bawah field; sekarang ada **`components/ui/InfoDot.jsx`**
+    (ikon Lucide `Info`, hook `data-infodot`) sebelah judul "Your trip", di-tap baru munculin
+    panelnya.
+    - Panelnya **NGAMBANG** (`PopMenu`), bukan nyorong konten — sama aturannya kayak dropdown
+      kategori: bg solid + border + `--shadow-lg` + z-index + **tap-di-luar & Escape buat nutup**.
+      Pembungkus `relative`-nya WAJIB mepet ke tombolnya (jebakan containing block `PopMenu`).
+    - Komponennya **reusable** — kalau ada teks panjang lain yang bikin form rame, pakai ini,
+      jangan tulis panel sendiri.
   - **Field "Extra hours" pindah ke KOLOM INPUT** (cuma nongol kalau paket Extended kepilih) —
     dia emang input, dan alesan lama dia gak berlabel (nyamain tinggi kartu) udah gak ada, jadi
     label-nya dibalikin.
@@ -1122,11 +1133,13 @@ Order **must be kept** (declarations first, run last):
     Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
     `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
     dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (104/104) — 320/390/430/768: list di ATAS
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (122/122) — 320/390/430/768: list di ATAS
     field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
     di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
     centangnya keisi + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama
-    dan tiga-tiganya **berhenti di garis yang sama**. Desktop 1024/1280/1440: list di KIRI field
+    dan tiga-tiganya **berhenti di garis yang sama**. Ikon info: catatan surcharge
+    GAK ke-print di halaman, nongol pas di-tap, ngambang di ATAS form (hit-test), **gak nyorong
+    apa pun** (tinggi dokumen & posisi tombol Book gak gerak), gak kepotong tepi layar, Escape nutup. Desktop 1024/1280/1440: list di KIRI field
     & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
     paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker From→Total, yang
     ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.

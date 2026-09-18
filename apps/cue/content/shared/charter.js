@@ -1,6 +1,6 @@
 export const CHARTER = {
   "title": "Private Car Charter in Bali",
-  "sub": "Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace. Half or full day, petrol included, only a 20% deposit to book.",
+  "sub": "Your own car and local driver for the day. You choose the route, your driver knows the roads. Half or full day, petrol included, 20% deposit to book.",
   "boxId": "charter",
   "boxTitle": "Build your charter",
   // Full Day FIRST (Wayan, Sep 2026: "kalo paling depan taruh full day") - it is
@@ -47,24 +47,25 @@ export const CHARTER = {
     { "type": "heading", "sub": false, "html": "Charter Details" },
     { "type": "boxes", "items": [
       { "title": "What's included", "variant": "yes", "list": [
-        "A private car with a local driver, yours for the booked hours",
+        "A private car and a local driver, for the hours you book",
         "Petrol, parking and road tolls",
         "Pick-up and drop-off at your accommodation",
-        "One price per car for up to 5 guests, not per person",
+        "One price per car, up to 5 guests - not per person",
         "Free cancellation up to 24 hours before the trip"
       ] },
       { "title": "Not included", "variant": "no", "list": [
         "Entrance tickets to temples, waterfalls and attractions",
-        "Meals and drinks for you and the driver",
+        "Meals and drinks, for you and for the driver",
         "Activities booked on the day, such as rafting or an ATV ride",
-        "Hours past the time you booked, charged at the hourly rate"
+        "Hours past the ones you booked - added at the hourly rate"
       ] }
     ] },
     { "type": "boxes", "items": [
       { "title": "How the day works", "paras": [
-        "You get an air-conditioned car, a local driver, and a block of time. Pick a half day (5 hours, around 60 km) or a full day (10 hours, around 120 km). The driver collects you at your accommodation at the time you chose and the day is yours from there.",
-        "There is no fixed route. Tell your driver in the morning where you want to go, or decide as you drive. Stop for photos, pull over for lunch at a warung, stay longer anywhere you like. Our drivers live here and will happily suggest routes and places to eat if you would rather not plan it yourself.",
-        "If the day runs long, add hours at the hourly rate and settle it at the end. A 20% deposit confirms the date and the rest is paid after the trip. One honest warning: traffic in the south is slow in the afternoon, so plan fewer stops than the map suggests."
+        "You get an air-conditioned car, a local driver and a block of time. Half day is 5 hours and around 60 km. Full day is 10 hours and around 120 km.",
+        "There is no fixed route. Tell your driver in the morning, or decide as you go. They live here, so ask them if you would rather not plan it yourself.",
+        "Running long? Add hours at the hourly rate and settle at the end. A 20% deposit confirms the date; the rest is paid after the trip.",
+        "One honest warning: traffic in the south is slow in the afternoon, so plan fewer stops than the map suggests."
       ] },
       { "title": "What a day can cover", "paras": [
         "Rough guides, not fixed packages. Ask your driver what fits the traffic on the day."
@@ -79,7 +80,7 @@ export const CHARTER = {
       ] }
     ] },
     { "type": "heading", "html": "Charter or guided tour?" },
-    { "type": "para", "html": "Both come with a private car and driver. The difference is who plans the day. Our <a href=\"/tour.html\">day tours</a> follow a set route and offer a Standard or Exclusive ticket option, so the day is worked out for you. A charter gives you the car, the driver and the hours, and leaves the route to you. First visit to Bali? A tour is the easier start. Know what you want to see? Charter it." }
+    { "type": "para", "html": "Both come with a private car and driver. The difference is who plans the day. Our <a href=\"/tour.html\">day tours</a> follow a set route, with a Standard or Exclusive ticket option, so it is worked out for you. A charter hands you the car, the driver and the hours, and leaves the route to you. First visit to Bali? Start with a tour. Already know what you want to see? Charter it." }
   ],
   "metaTitle": "Private Car Charter Bali | Half & Full Day",
   "metaDesc": "Charter a private car with driver in Bali from Ubud - half day (5 hours) or full day (10 hours), extend by the hour, petrol included. Pick-up from anywhere on the island."

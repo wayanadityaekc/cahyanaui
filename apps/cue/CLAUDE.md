@@ -1421,9 +1421,24 @@ Order **must be kept** (declarations first, run last):
       bakal nyisain ruang kosong.
     - Tiap item: `{ title, variant?, paras?, list? }`. `variant:'no'` = di-tint cream +
       teks muted. Tanpa variant = kotak putih biasa (itu yang dipakai 2 kotak penjelasan).
-    - **Teks isinya BELUM diubah** — Wayan minta layout dulu ("abis itu kita rapihin lagi
-      text kontenya"). Opsi mecah "How the day works" jadi 3 langkah bernomor udah ditawarin
-      & masih nunggu dia.
+    - **Teksnya UDAH dirapihin** (Sep 2026, Wayan: "gass rapihin text kontenya bro") — layout
+      duluan, copy belakangan, sesuai urutan yang dia minta. Yang diubah:
+      - **Sub hero**: klausa kedua dulu slogan ("go anywhere, stop anywhere, at your own
+        pace"), diganti fakta yang kepake ("You choose the route, your driver knows the roads").
+      - **"How the day works" 150 → ~85 kata**, 3 paragraf panjang jadi 4 paragraf pendek.
+        Teks itu ditulis waktu blok-nya masih selebar kartu; sekarang dia **kolom sempit**,
+        jadi kalimat panjang bikin baris-barisnya numpuk. **Gak ada fakta yang dibuang**:
+        jam, km, no fixed route, jam tambahan di tarif per jam, deposit 20%, peringatan macet
+        semuanya masih ada. Yang ilang cuma bantalannya ("stop for photos, pull over for lunch
+        at a warung" = sama aja sama "decide as you go") dan "driver collects you at your
+        accommodation" (udah ada di Included, jadi dobel).
+      - Baris Included/Not included dipendekin per baris (kolomnya sempit, tiap baris yang
+        wrap = nambah tinggi), dan "Charter or guided tour?" 5 kalimat jadi 4.
+      - **Opsi "3 langkah bernomor" buat How the day works GAK JADI DIPAKAI.** Itu dirancang
+        waktu blok-nya masih KOTAK; sekarang dia kolom polos, dan paragraf pendek udah kebaca.
+        Masih bisa dipasang kalau Wayan mau — tinggal bilang.
+      - Patokan copy-nya tetep: nol em-dash, nol kata glorify, **"20% deposit"** ditulis persis
+        (itu anchor sapuan kalau angkanya berubah).
   - Verifikasi kotak Included/penjelasan = **`verify-infoboxes.mjs`** (152/152) — nyisir
     charter + transfer + airport di 390/767/768/1024/1280: gak ada marker/bullet sisa; garis
     rambut CUMA di pasangan include/exclude (gak ada di baris terakhir, gak ada sama sekali di

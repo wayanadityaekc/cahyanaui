@@ -532,7 +532,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
   - **Airport** = **full-bleed** dark band (pola `.habout`: bg + `::after` overlay di `<section>`,
     konten di `.airport__inner` = container). Foto `transfer-hero.webp`. Jarak ke Tours/Destinations
     sengaja dirapetin lewat `#explore{padding-bottom}` + `#destinations-home{padding-top}` = `--space-3`.
-    Harga "from $20" di-wire lewat `data-price="Airport – Ubud"` (ikut kurs/referral via `renderPrices`;
+    Harga "from $26" di-wire lewat `data-price="Airport – Ubud"` (ikut kurs/referral via `renderPrices`;
     `renderPrices` auto-nambahin `<span class="price-unit">per car</span>`, jadi JANGAN nulis "/ car" manual).
   - **Why Us** = cream band, 4 kolom ikon. Headline "Clear prices, local team, your plan" (sengaja
     beda dari About "One local family..." biar gak dobel).
@@ -627,9 +627,32 @@ harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sam
   Kalau harness bilang beda, **cek dulu harness-nya baca yang bener**.
 - **Route di /transfer TETEP markup halaman** (bukan blok Prose): itu kontrol berharga yang
   bisa ditap, bukan bacaan. Dia duduk DI DALAM kartu biar halamannya tetep hero + 1 kartu.
-  **Tombolnya masih MATI** - `TransferSection` bukan client component & gak ada
-  `onClick`, padahal catatannya nulis "tap a route to pre-fill the search". Itu bug
-  perilaku, sengaja gak dibenerin di perubahan layout ini, masih nunggu Wayan.
+- **Tombol route UDAH HIDUP** (Sep 2026, Wayan: "benerin bro"). Dulu mati - `TransferSection`
+  bukan client component, jadi `onClick` yang dijanjiin catatannya ("tap a route to pre-fill
+  the search") gak pernah bisa kepasang. Sekarang:
+  - Enam kartunya pindah ke **`components/sections/TransferRoutes.jsx`** (`'use client'`),
+    **markup-nya gak diubah sama sekali** - yang dibenerin perilakunya, bukan tampilannya.
+  - From/To-nya naik ke **`components/sections/TransferRouteProvider.jsx`**. Kartunya ada di
+    kartu BAWAH, form-nya di hero - beda subtree, jadi state yang dipake berdua harus di atas
+    dua-duanya. Provider-nya **gak nge-render elemen**, jadi `TransferSection` TETEP server
+    component & kartu detail di bawahnya tetep server-rendered; yang ngirim JS cuma form +
+    6 tombol itu.
+  - `selectRoute(area)` selalu nge-set **area -> Ubud**, walau tamu udah nuker arahnya:
+    satu kartu route nyebut SATU arah, setengah-setengah bikin form-nya ngomong hal lain.
+    Terus dia **scroll balik ke form** (form-nya di ATAS kartu - tanpa itu tamu nge-tap dan
+    keliatannya gak ada yang terjadi). Scroll-nya pakai ref yang didaftarin picker, bukan id.
+  - `r.key` ("Airport", "Canggu Area") = persis nama opsi di picker (route katalog dibuang
+    suffix " – Ubud"). Kalau salah satu berubah, samain dua-duanya.
+  - Verifikasi: `verify-routes.mjs` di scratchpad (101/101) - 390 & 1280, keenam kartu:
+    From/To kepasang bener (baca `value` `<select>` native + label tombolnya), harga
+    kebaca (bukan em dash), Book Now nyala, halaman scroll BALIK ke atas & picker keliatan,
+    reset arah sesudah swap, halaman gak melar, dan tab Transfer di /programs ikut jalan.
+    Plus harga airport = Rp450.000 / $26 di kartu DAN di picker, dua mata uang.
+  - **Gotcha harness**: `#tp-from` itu `<select>` native yang kesembunyi. `textContent`
+    grup-nya kebaca "SelectUbud" (placeholder + daftar opsi) - pakai `.value`-nya, atau
+    label di tombol `[aria-haspopup="listbox"]`. Dan katalog WAJIB di-stub
+    (`**/api/pricing/catalog*`), kalau nggak semua harga em dash & Book Now mati - itu
+    bukan bug, itu emang state "API belum jawab".
 
 ## Sticky bottom bar (Sep 2026)
 **Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
@@ -1102,6 +1125,16 @@ Order **must be kept** (declarations first, run last):
     (Ini NGE-OVERRIDE keputusan 3 Sep yang bilang destinasi single nggak dijual &
     `prices.place` dibuang - kalau nemu tulisan itu di tempat lain, yang berlaku ini.)
   - **Charter**: 5 jam 600k · 10 jam 1jt · tambahan 60k/jam.
+  - **Airport – Ubud = Rp450.000** (Wayan, Sep 2026 - naik dari Rp300.000). Mata uang lain
+    diturunin sendiri (`usd = ceil(450000/17600) = $26`), jadi yang diubah CUMA `idr` di
+    `prices.transfer` (`cahyana-api/pricing-data.js`). Salinan di CUE yang ikut disapu:
+    `content/shared/transfer.js` (`priceFallback` kartu route) + `components/sections/home/
+    Airport.jsx` (`fallback` band homepage). **Dua-duanya di luar jangkauan `check-prices`**
+    (dia cuma nyisir `listings.js`) - itu sebabnya band homepage sempet nulis $20 padahal
+    API bilang $18. Ganti harga transfer lagi = sapu tangan ketiga tempat itu.
+    - **Efek sampingan yang disengaja**: surcharge pickup = 60% harga transfer, jadi pickup
+      di bandara buat tour ikut naik **180k -> 270k**. Itu turunan otomatis dari satu angka,
+      bukan angka kedua yang bisa di-tune sendiri.
   - **Pickup fee**: Ubud & nearby = 0. **Selain Ubud selalu kena, di SEMUA tour** -
     pengecualian "se-zona sama tour" udah dibuang (dulu `ITEM_ZONE`/`TRANSFER_ZONE`
     dipakai buat itu; datanya masih ada karena API ngirim `zone` ke frontend, tapi

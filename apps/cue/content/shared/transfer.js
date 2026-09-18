@@ -10,7 +10,7 @@ export const TRANSFER = {
       "name": "Airport → Ubud",
       "meta": "~1.5 hrs · per car",
       "priceName": "Airport – Ubud",
-      "priceFallback": "$18"
+      "priceFallback": "$26"
     },
     {
       "key": "Canggu Area",

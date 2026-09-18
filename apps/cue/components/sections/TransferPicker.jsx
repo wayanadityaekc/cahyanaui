@@ -8,6 +8,7 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 import Select from '@/components/ui/Select';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import { withSymbol } from '@/components/Price';
+import { useTransferRoute } from '@/components/sections/TransferRouteProvider';
 
 const UBUD = 'Ubud';
 
@@ -23,8 +24,10 @@ export default function TransferPicker() {
     return catalog.transfers.map((t) => ({ route: t.route, area: t.route.replace(/\s*–\s*Ubud$/, '') }));
   }, [catalog]);
 
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState(UBUD);
+  // From/To live in TransferRouteProvider, not here: the "Popular routes"
+  // cards further down the page set them too. isReturn stays local - nothing
+  // outside this form touches it.
+  const { from, to, setFrom, setTo, pickerRef } = useTransferRoute();
   const [isReturn, setIsReturn] = useState(false);
 
   const routeName = from && to === UBUD ? `${from} – Ubud` : to && from === UBUD ? `${to} – Ubud` : '';
@@ -66,7 +69,7 @@ export default function TransferPicker() {
   const LABEL = 'block text-small uppercase tracking-[0.14em] text-muted mb-[0.3rem] font-medium';
   const BTN = 'py-[0.8rem] rounded-pill font-semibold text-[1rem] text-center border border-gold cursor-pointer font-body disabled:opacity-50 disabled:cursor-not-allowed';
   return (
-    <div className="bg-white border border-line rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
+    <div ref={pickerRef} className="bg-white border border-line rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
       {/* From | swap | To. HP (<=600): ditumpuk vertikal, panah muter 90deg. */}
       <div className="grid grid-cols-[1fr_auto_1fr] [align-items:end] gap-[0.55rem] [@media(max-width:600px)]:grid-cols-[1fr] [@media(max-width:600px)]:items-stretch [@media(max-width:600px)]:gap-2 [@media(max-width:600px)]:justify-items-stretch">
         <div>

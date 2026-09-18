@@ -46,7 +46,7 @@ export default function Airport() {
           </div>
           <div className={CLS.row}>
             <span className={CLS.price}>
-              from <Price name="Airport – Ubud" fallback="$20" className={CLS.amt} as="b" />
+              from <Price name="Airport – Ubud" fallback="$26" className={CLS.amt} as="b" />
             </span>
             <a className={CLS.btn} href="/airport-transfer.html">
               Book a transfer &rsaquo;

@@ -1,6 +1,4 @@
 export const AIRPORT = {
-  "heroClass": "charter-hero",
-  "heroBg": "transfer-hero.webp",
   "title": "Bali Airport Transfer",
   "sub": "Private car to or from Ngurah Rai Airport (DPS), fixed price. Add your flight number and time so your driver knows when to be there.",
   "boxId": "airport-transfer",

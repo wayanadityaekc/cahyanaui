@@ -1,5 +1,4 @@
 export const CHARTER = {
-  "heroClass": "charter-hero",
   "title": "Private Car Charter in Bali",
   "sub": "Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace. Half or full day, petrol included, only a 20% deposit to book.",
   "boxId": "charter",

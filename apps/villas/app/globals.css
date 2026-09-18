@@ -50,14 +50,86 @@
 
   --font-display: var(--font-inter), sans-serif;
   --font-body: var(--font-inter), sans-serif;
+  --font-head: var(--font-inter), sans-serif;
 }
 
-/* Container widths — not a Tailwind v4 auto-utility namespace, kept as
-   plain custom properties + a small helper class. */
+/* =====================================================================
+   :root alias layer — ported from CUE's own app/globals.css.
+
+   Why this exists: CUE's shared components are written against SHORT token
+   names (var(--dur), var(--line), var(--r-md), var(--space-1), var(--icon-sm),
+   var(--lh-body), ...), while Tailwind v4's @theme above generates its
+   utilities from the LONG names (--radius-md, --color-line, ...). Porting a
+   CUE component without this layer makes every one of those var() calls
+   resolve to nothing — and a failed var() inside a `transition:` shorthand is
+   invalid at computed-value time, so the whole declaration silently falls back
+   to `all 0s` and the animation just never runs. That exact bug (a self-
+   referencing --dur-fast) went unnoticed in CUE for three weeks across 43 uses
+   with a green build, which is why the aliases are declared up front here
+   rather than added one at a time as components get ported.
+
+   Values mirror @theme above — change a brand value there, not here.
+   ===================================================================== */
 :root {
+  /* Container widths — not a Tailwind v4 auto-utility namespace. */
   --container-wide: 1200px;
   --container-mid: 1080px;
   --container-read: 720px;
+  --container: var(--container-wide);
+  --container-x: 1.5rem;
+
+  /* Type */
+  --fs-display: var(--text-display);
+  --fs-h2: var(--text-h2);
+  --fs-h3: var(--text-h3);
+  --fs-strong: var(--text-strong);
+  --fs-body: var(--text-body);
+  --fs-field: var(--text-field);
+  --fs-small: var(--text-small);
+  --fs-label: var(--text-label);
+  --lh-body: 1.6;
+  --lh-heading: 1.15;
+
+  /* Radius */
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-xl: var(--radius-xl);
+  --r-pill: var(--radius-pill);
+
+  /* Hairline border colour */
+  --line: var(--color-line);
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --section-gap: 2.25rem;
+
+  /* Controls & icons */
+  --field-h: 2.1rem;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  /* Motion. --ease is the name CUE components use; --ease-DEFAULT is the name
+     Tailwind v4 needs in @theme to generate the `ease-*` utility. Same curve. */
+  --dur-fast: 0.15s;
+  --dur: 0.2s;
+  --dur-slow: 0.3s;
+  --ease: var(--ease-DEFAULT);
+
+  --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
+}
+
+/* Mobile gutter, same 992px breakpoint CUE uses — it has to match the band the
+   full-bleed sliders (BLEED_MOBILE in components/ui/gridClasses.js) turn on at,
+   or a section heading and the first card in the slider under it stop lining up. */
+@media (max-width: 992px) {
+  :root { --container-x: 1rem; }
 }
 
 /* =====================================================================
@@ -73,7 +145,29 @@
    keeps the intended precedence: components > base > theme.
    ===================================================================== */
 @layer base {
-  html { scroll-behavior: smooth; }
+  /* overflow-x: CLIP, not hidden — ported from CUE's style.css.
+
+     Two reasons it has to be here, on BOTH html and body:
+
+     1. The closed navbar drawer is a position:fixed panel parked off the right
+        edge with translate-x-full. Chrome counts it in
+        documentElement.scrollWidth even though it never actually scrolls, so
+        every page here reported ~340px of phantom horizontal overflow. That
+        makes `scrollWidth - innerWidth === 0` — the guard a full-bleed slider
+        has to be checked with — useless, since a real overflow and the drawer's
+        phantom one look the same.
+     2. components/ui/gridClasses.js BLEED_MOBILE breaks a slider track out to
+        both screen edges with calc(50% - 50vw). If the browser paints a classic
+        scrollbar, 50vw is wider than half of innerWidth and the page really
+        does grow sideways. clip stops that from ever reaching the guest.
+
+     CLIP and not HIDDEN: `hidden` on an ancestor turns every descendant
+     position:sticky into a no-op, and the navbar here is sticky. `clip` blocks
+     the scrolling without creating a scroll container, so sticky keeps working. */
+  html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
 
   body {
     font-family: var(--font-body);
@@ -82,6 +176,7 @@
     line-height: 1.6;
     color: var(--color-ink);
     background: #fff;
+    overflow-x: clip;
   }
 
   img { display: block; max-width: 100%; }
@@ -308,3 +403,13 @@
 @keyframes loadscreen-spin {
   to { transform: rotate(360deg); }
 }
+
+/* =====================================================================
+   Scroll lock (components/ui/useBodyLock.js)
+   Toggled on <html> AND <body>: Chrome/desktop scroll the page via <body>,
+   but iOS Safari very often scrolls <html> (documentElement) instead, so
+   locking only one leaves the page scrollable under a popup on iPhone.
+   Deliberately overflow-only — no position:fixed, which is what makes the
+   page jump to the top when a modal opens.
+   ===================================================================== */
+.hs-locked { overflow: hidden !important; }

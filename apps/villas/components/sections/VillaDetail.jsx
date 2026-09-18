@@ -5,6 +5,7 @@ import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
+import { BAR_SHELL, BAR_CARD } from '@/components/ui/stickyBar';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { WHATSAPP_LINK, CUE_LINK } from '@/lib/constants';
@@ -221,12 +222,8 @@ export default function VillaDetail({ villa }) {
           already covers desktop. Slides up from the bottom as a rounded,
           elevated card (shadow-xl) rather than CUE's flush edge-to-edge bar,
           per Wayan's ask to keep the same system but not the identical look. */}
-      <div
-        className={`fixed left-4 right-4 bottom-4 z-40 lg:hidden transition-transform duration-300 ease-out ${
-          showBookBar ? 'translate-y-0' : 'translate-y-[150%]'
-        }`}
-      >
-        <div className="bg-white rounded-2xl shadow-xl border border-line flex items-center justify-between gap-3 px-4 py-3">
+      <div className={`${BAR_SHELL} ${showBookBar ? 'translate-y-0' : 'translate-y-[150%]'}`}>
+        <div className={BAR_CARD}>
           <p className="leading-tight">
             <span className="block text-label text-muted">From</span>
             <span className="text-h3 font-bold text-amber">{format(villa.nightlyRate)}</span>

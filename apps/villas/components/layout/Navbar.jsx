@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import CurrencyPicker from '@/components/ui/CurrencyPicker';
 import { useBooking } from '@/components/providers/BookingProvider';
+import useBodyLock from '@/components/ui/useBodyLock';
 
 const NAV_LINKS = [
   { href: '/villas', label: 'Villas' },
@@ -58,10 +59,12 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  useEffect(() => {
-    document.body.classList.toggle('overflow-hidden', menuOpen);
-    return () => document.body.classList.remove('overflow-hidden');
-  }, [menuOpen]);
+  // Shared scroll lock (components/ui/useBodyLock.js), replacing a body-only
+  // `overflow-hidden` toggle. It locks <html> AND <body>: Chrome and desktop
+  // browsers scroll the page through <body>, but iOS Safari very often scrolls
+  // <html> instead, so locking only body left the page scrollable behind this
+  // drawer on iPhone. Still overflow-only, so the page does not jump to the top.
+  useBodyLock(menuOpen);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-line">

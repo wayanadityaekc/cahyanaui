@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Check } from 'lucide-react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 // The plan row lives in its own module: the homepage's charter rates render the
 // same shell, and one copy is what keeps them from drifting. The PRICE differs on
@@ -34,13 +33,19 @@ const TIMES = (() => {
   return out;
 })();
 
-// The tick on the right: filled when this plan is the one being booked, an empty
-// ring when it is not. With the price moved under the name the right side would
-// otherwise be blank, and a row that only differs by its border is easy to read as
-// decoration rather than a choice.
-const TICK_BASE = 'shrink-0 mt-[2px] w-5 h-5 rounded-[50%] flex items-center justify-center';
-const TICK_ON = `${TICK_BASE} bg-cta text-white`;
-const TICK_OFF = `${TICK_BASE} [border:1.5px_solid_#cfc9ba]`;
+// The chosen plan is marked by a small tab straddling its top edge (Wayan, Sep
+// 2026, picking option C from the indicator sheet). No circle, no control shape:
+// it says the state in a word instead of borrowing the look of a radio button,
+// and only one row carries it, so the list stays quiet.
+//
+// It sits OUTSIDE the row's box (-top), so the list needs headroom above it and a
+// gap between rows wide enough for the tab to land in - see ROWS below.
+const FLAG =
+  'absolute -top-[9px] left-[14px] px-2 py-[2px] rounded-pill bg-cta text-white ' +
+  'text-label tracking-[0.1em] uppercase font-semibold whitespace-nowrap';
+// pt: room for the first row's tab under the heading. gap-3: the tab drops into
+// the space between two rows instead of sitting on the row above.
+const ROWS = 'flex flex-col gap-3 pt-[9px]';
 // The rows are buttons now, so they need what a button does not inherit: full
 // width, left-aligned text, a pointer, and a transition that names `scale` so the
 // site-wide press feedback stays smooth instead of snapping.
@@ -120,7 +125,7 @@ export default function CharterBuilder() {
         {/* 1 - the plan. A list you pick from, not cards that each book. */}
         <div>
           <h3 className="m-0 mb-[var(--space-1)] text-h3 font-semibold text-gold">How long do you need the car?</h3>
-          <div className="flex flex-col gap-2" role="radiogroup" aria-label="Charter length">
+          <div className={ROWS} role="radiogroup" aria-label="Charter length">
             {CHARTER.durations.map((d) => {
               const v = tier(d.dur);
               const on = d.dur === dur;
@@ -130,9 +135,10 @@ export default function CharterBuilder() {
                   key={d.dur}
                   role="radio"
                   aria-checked={on}
-                  className={`${on ? PLAN_ROW_PICKED : PLAN_ROW} items-start min-[993px]:items-center ${ROW_BTN}`}
+                  className={`${on ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
                   onClick={() => setDur(d.dur)}
                 >
+                  {on && <span className={FLAG} data-plan-flag>Selected</span>}
                   {/* One DOM order, two arrangements (Wayan, Sep 2026: "di desktop
                       jelek bro, harga bagusnya di kanan card"). On a phone the three
                       blocks stack in source order - name, price, sub - which is the
@@ -141,7 +147,7 @@ export default function CharterBuilder() {
                       against the name and the sub line, where a wide row has the
                       space for it. A grid rather than reordered flex children: it
                       moves the price without splitting the name from its sub line. */}
-                  <span className={PLAN_GRID}>
+                  <span className={PLAN_GRID} data-plan-grid>
                     {/* flex-wrap, and the name itself never wraps. At 320px in rupiah
                         "Full Day POPULAR" broke the NAME across two lines - measured,
                         the same bug the old cards had with an inline badge. */}
@@ -158,9 +164,6 @@ export default function CharterBuilder() {
                     <span className={`${PLAN_CELL_SUB} ${PLAN_SUB} mt-[2px] min-[993px]:mt-0`}>{d.sub}</span>
                   </span>
 
-                  <span className={on ? TICK_ON : TICK_OFF}>
-                    {on && <Check strokeWidth={3.5} className="w-[11px] h-[11px]" aria-hidden="true" />}
-                  </span>
                 </button>
               );
             })}

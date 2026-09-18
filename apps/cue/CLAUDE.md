@@ -1078,10 +1078,18 @@ Order **must be kept** (declarations first, run last):
       mindahin blok harganya, tapi cuma dengan misahin nama dari sub-baris-nya, dan dua itu
       satu paket. Di bawah harga ada **satu sub-baris**
     (`10 hours · around 120 km · per car up to 5`), gantiin 2-3 point berikon yang dulu.
-    Kanan cuma **lingkaran centang** (`TICK_ON`/`TICK_OFF`) — kepilih = bulat hijau + centang,
-    nggak = ring kosong. Baris yang kepilih juga di-tint cream (`PLAN_ROW_PICKED`).
-    - **Kenapa ada centang**: harga pindah ke kiri bikin sisi kanan kosong, dan baris yang cuma
-      beda border gampang kebaca sebagai hiasan, bukan pilihan.
+    **PENANDA KEPILIH = pita "Selected"** (`FLAG`, hook `data-plan-flag`) yang nangkring di
+    tepi ATAS kartu — Sep 2026, Wayan pilih opsi C dari sheet penanda, gantiin lingkaran centang
+    (`TICK_ON`/`TICK_OFF` UDAH DIHAPUS). Baris kepilih juga di-tint cream (`PLAN_ROW_PICKED`).
+    - **Kenapa bukan bulatan**: bulatan itu minjem bentuk radio button, dan Wayan gak mau kontrol
+      form di list yang isinya kartu. Pita nyebut statusnya pakai KATA, cuma 1 kartu yang punya.
+    - **Pita-nya di LUAR kotak kartu** (`-top-[9px]`), jadi list-nya WAJIB punya headroom +
+      jarak antar-baris yang cukup: `ROWS = 'flex flex-col gap-3 pt-[9px]'`. `gap-2` (8px)
+      kekecilan — pita-nya bakal nimpa tepi bawah kartu di atasnya, bukan mendarat di celah.
+      Kalau ganti ukuran/offset pita, **ubah `ROWS` bareng**.
+    - Harness-nya ngecek pita gak kepotong: `flag.top >= #charter.top`.
+    - **`data-plan-grid`** = hook buat blok isi kartu. Harness JANGAN pakai `firstElementChild`:
+      di kartu yang kepilih, anak pertamanya itu pita-nya, bukan grid.
     - **Kicker `From`/`Total` TETAP ADA**, sebaris kecil di antara nama & harga. Jangan dibuang
       biar "lebih bersih": `tier()` emang ngitung surcharge + jam tambahan, jadi begitu area
       kepilih angkanya total beneran — nulis "from" terus itu bohong kecil.
@@ -1133,10 +1141,10 @@ Order **must be kept** (declarations first, run last):
     Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
     `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
     dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (122/122) — 320/390/430/768: list di ATAS
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (134/134) — 320/390/430/768: list di ATAS
     field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
     di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
-    centangnya keisi + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama
+    punya pita "Selected" (warna CTA, gak kepotong) + di-tint cream, halaman gak melar. Desktop: harga pindah ke KANAN nama
     dan tiga-tiganya **berhenti di garis yang sama**. Ikon info: catatan surcharge
     GAK ke-print di halaman, nongol pas di-tap, ngambang di ATAS form (hit-test), **gak nyorong
     apa pun** (tinggi dokumen & posisi tombol Book gak gerak), gak kepotong tepi layar, Escape nutup. Desktop 1024/1280/1440: list di KIRI field

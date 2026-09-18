@@ -1,7 +1,7 @@
 'use client';
 
 import { Backpack, Banknote, Car, Clock, CreditCard, Info } from 'lucide-react';
-import { INFO_LIST_YES, INFO_LIST_NO } from '@/components/ui/infoClasses';
+import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
@@ -60,28 +60,33 @@ function GoodToKnow({ isActivity }) {
   );
 }
 
-// Included / excluded lists - reuses the site-wide radio bullet lists.
-const DINCL_H = 'text-label font-semibold tracking-[0.06em] uppercase text-gold mt-[1.3rem] mb-[0.6rem] first:mt-0';
+// Included / excluded - the SAME <InfoBoxes> the charter, transfer and airport
+// pages use (Sep 2026, Wayan: "include dan not included yang ada di semua page
+// ubah bro, samain kayak styling charter"). Two framed boxes side by side, the
+// "not" half tinted cream, no per-row marker - the radio bullet this used to
+// draw is gone from tour and destination pages with it. The uppercase label
+// heading went too; the box title is the shared one now.
+//
+// variant goes to BOTH <InfoBox> (frame + tint) and <InfoBoxList> (row rules +
+// muted text). Passing it to only one is a real bug that already happened once
+// on the transfer page and is invisible to the eye - see CLAUDE.md.
+//
+// The length guards stay: today every tour and destination has both lists, but a
+// lone box would sit at half width in the two-column grid rather than break.
 function Inclusions({ included, excluded }) {
   return (
-    <div>
+    <InfoBoxes>
       {included && included.length > 0 && (
-        <>
-          <h3 className={DINCL_H}>What&apos;s included</h3>
-          <ul className={INFO_LIST_YES}>
-            {included.map((it, i) => <li key={i}>{it}</li>)}
-          </ul>
-        </>
+        <InfoBox title="What's included" variant="yes">
+          <InfoBoxList items={included} variant="yes" />
+        </InfoBox>
       )}
       {excluded && excluded.length > 0 && (
-        <>
-          <h3 className={DINCL_H}>Not included</h3>
-          <ul className={INFO_LIST_NO}>
-            {excluded.map((it, i) => <li key={i}>{it}</li>)}
-          </ul>
-        </>
+        <InfoBox title="Not included" variant="no">
+          <InfoBoxList items={excluded} variant="no" />
+        </InfoBox>
       )}
-    </div>
+    </InfoBoxes>
   );
 }
 

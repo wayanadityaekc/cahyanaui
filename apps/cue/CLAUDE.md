@@ -186,10 +186,12 @@ When unsure, ask first (keep it short).
   ke 3 tingkat (geser maks ~3px). **DIBIARIN** (beda peran, bukan ikon inline): ikon besar
   30-56px (avatar review/driver, lingkaran step "How it works", ikon centang sukses, avatar
   panel), ikon centang mini 10px, dan logo pembayaran (`width:auto`, cuma tinggi ikut token).
-- **Checklist bullet (Included/Excluded) — SEKARANG ADA 2 FORMAT** (Sep 2026, Wayan pilih
-  "opsi B" dari sheet penanda). Jangan campur, dan jangan "samain" salah satunya tanpa nanya:
+- **Checklist bullet (Included/Excluded) — SATU FORMAT DI SELURUH WEB** (Sep 2026, Wayan
+  pilih "opsi B" dari sheet penanda, terus "include dan not included yang ada di semua page
+  ubah bro, samain kayak styling charter"):
   - **KOTAK, tanpa marker** = `components/ui/InfoBoxes.jsx` — dipakai **charter, transfer,
-    airport**. Tiap daftar duduk di kotak berbingkai (`--line`, `--r-md`), **NOL simbol per
+    airport, halaman tour & destinasi (`DetailTabs`), dan blok info halaman listing
+    (`ListingPage`)**. Itu SEMUA pasangan include/exclude yang ada di web ini. Tiap daftar duduk di kotak berbingkai (`--line`, `--r-md`), **NOL simbol per
     baris**. Yang "Not included" di-tint `bg-cream` + teks `--color-muted` — itu yang
     gantiin peran lingkaran kosong. Desktop 2 kolom, HP numpuk (`max-[768px]`, sama kayak
     grid checklist lama).
@@ -215,12 +217,23 @@ When unsure, ask first (keep it short).
       perlu diulang di tiap baris. Ikon centang/silang juga ditawarin & **gak dipilih**.
     - Teks "not included" pakai token `--color-muted`, **bukan `#8a8578` yang lama** —
       yang lama kebaca kayak disabled, bukan kayak informasi.
-  - **Marker radio** (`.info__list--yes/--no li::before`: included = lingkaran keisi dot
-    `--color-green` di dalam ring, excluded = lingkaran kosong border `#cfc9ba` + teks
-    `#8a8578`) — **masih kepakai di halaman tour & destinasi** (`DetailTabs`),
-    `ListingPage`, `AboutPage`. String-nya tetep di `infoClasses.js`, jangan dihapus.
-  - **Belum diputusin Wayan**: apakah halaman tour/destinasi ikut pindah ke kotak. Sampai
-    dia bilang, dua format ini SENGAJA hidup bareng — bukan kelupaan disapu.
+  - **Marker radio** (`.info__list--yes/--no li::before`: lingkaran keisi / lingkaran
+    kosong) **UDAH GAK DIPAKAI BUAT INCLUDE/EXCLUDE DI MANA PUN**. String-nya
+    (`INFO_LIST_YES`/`_NO`/`infoList`) TETEP di `infoClasses.js` karena masih kepakai
+    2 tempat yang **bukan** pasangan include/exclude — jangan dihapus, dan jangan ikut
+    dijadiin kotak tanpa nanya Wayan dulu:
+    - `AboutPage` — list "Our promise / What you can hold us to". Itu daftar janji yang
+      berdiri sendiri, gak ada lawannya; kotak berbingkai butuh PASANGAN buat masuk akal.
+    - `Prose` blok `{ type: 'list' }` — bullet biasa di artikel guide & halaman legal
+      (Terms/Privacy/Cancellation). Itu prosa, bukan spek yang dibaca baris per baris.
+  - **Kalau nambah pasangan include/exclude baru**: pakai `InfoBoxes`, jangan
+    `INFO_LIST_YES/_NO`. Harness `verify-incl.mjs` di scratchpad ngadu bentuk kotak
+    8 halaman (charter jadi acuan) di 390/767/768/1024/1280 — patokannya nol marker sisa,
+    garis rambut ada kecuali baris terakhir, kotak "not" di-tint, 2 kolom dari 768 ke atas,
+    halaman gak melar, dan **tanda tangan bentuknya identik antar-halaman**.
+  - **Catatan**: dari 3 halaman listing, cuma `activities` yang punya blok info + kolom
+    include/exclude. `tour` & `destinations` emang gak punya `info` di
+    `content/shared/listings.js` — itu dari dulu, bukan ke-skip pas konversi.
   - Bullet generik lain (mis. `.modal__details-list` = `•` emas) beda lagi.
 
 ## Foto & gambar (standar)

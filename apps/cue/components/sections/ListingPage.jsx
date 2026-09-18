@@ -1,7 +1,8 @@
 'use client';
 
 import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
-import { infoList, INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT, INFO_LISTS, INFO_COL_H3 } from '@/components/ui/infoClasses';
+import { INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT } from '@/components/ui/infoClasses';
+import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { useState, useRef, useEffect } from 'react';
 import ListingRow from '@/components/cards/ListingRow';
@@ -164,16 +165,22 @@ export default function ListingPage({ data }) {
                 </div>
               ))}
             </div>
-            <div className={INFO_LISTS}>
-              {info.cols.map((c) => (
-                <div key={c.title}>
-                  <h3 className={INFO_COL_H3}>{c.title}</h3>
-                  <ul className={infoList(c.cls)}>
-                    {c.items.map((it, i) => <li key={i}>{it}</li>)}
-                  </ul>
-                </div>
-              ))}
-            </div>
+            {/* Included / excluded = the SAME <InfoBoxes> charter, transfer, airport
+                and the tour/destination pages use (Sep 2026, Wayan: "samain kayak
+                styling charter"). The data still carries the legacy hint string
+                (cls: "info__list--yes" / "--no"), so it is mapped to a variant
+                here rather than rewritten across every listing. variant must go to
+                BOTH the box and the list - see CLAUDE.md. */}
+            <InfoBoxes>
+              {info.cols.map((c) => {
+                const variant = String(c.cls).includes('no') ? 'no' : 'yes';
+                return (
+                  <InfoBox key={c.title} title={c.title} variant={variant}>
+                    <InfoBoxList items={c.items} variant={variant} />
+                  </InfoBox>
+                );
+              })}
+            </InfoBoxes>
           </div>
         </section>
       )}

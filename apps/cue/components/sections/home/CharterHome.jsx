@@ -47,7 +47,7 @@ export default function CharterHome() {
 
         <div className={ROWS}>
           {CHARTER_CARDS.map((c) => (
-            <div className={c.pop ? PLAN_ROW_ON : PLAN_ROW} key={c.hours}>
+            <div className={`${c.pop ? PLAN_ROW_ON : PLAN_ROW} items-center`} key={c.hours}>
               <span className="flex-1 min-w-0">
                 <span className={PLAN_NAME}>{c.hours}</span>
                 <span className={PLAN_SUB}>

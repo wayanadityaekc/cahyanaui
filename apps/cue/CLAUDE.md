@@ -1066,19 +1066,31 @@ Order **must be kept** (declarations first, run last):
     **list dulu, field belakangan**, tombol Book paling bawah. Desktop **993px+**: 2 kolom
     (`grid-cols-[1fr_340px]`). **993, BUKAN 769** — harus barengan sama panel-nya sendiri
     (`CHARTER_HERO_INNER_WIDE`), kalau nggak 2 kolomnya ke-jejel di dalam kotak 600px.
-  - **Baris paket = `PLAN_ROW`/`PLAN_ROW_ON`/`PLAN_NAME` + `PLAN_PRICE_BOX`/`_KICK`/`_BIG` di
-    `components/ui/charterPlanClasses.js`** — persis benda yang sama yang dipakai baris tarif
-    charter di homepage. Satu definisi, dua tempat. `PLAN_ROW_ON` (border CTA + inset ring)
-    artinya **"Popular"** di homepage dan **"paket yang lagi kepilih"** di builder — sengaja satu
-    bahasa visual.
+  - **BENTUK KARTUNYA = "opsi D"** (Sep 2026, Wayan pilih dari sheet 4 opsi): **harga naik ke
+    KIRI, persis di bawah nama** dan jadi angka paling gede di baris itu (`PLAN_PRICE_LEAD`,
+    1.5rem) — bukan di-parkir di box cream pojok kanan lagi. Di bawah harga ada **satu sub-baris**
+    (`10 hours · around 120 km · per car up to 5`), gantiin 2-3 point berikon yang dulu.
+    Kanan cuma **lingkaran centang** (`TICK_ON`/`TICK_OFF`) — kepilih = bulat hijau + centang,
+    nggak = ring kosong. Baris yang kepilih juga di-tint cream (`PLAN_ROW_PICKED`).
+    - **Kenapa ada centang**: harga pindah ke kiri bikin sisi kanan kosong, dan baris yang cuma
+      beda border gampang kebaca sebagai hiasan, bukan pilihan.
+    - **Kicker `From`/`Total` TETAP ADA**, sebaris kecil di antara nama & harga. Jangan dibuang
+      biar "lebih bersih": `tier()` emang ngitung surcharge + jam tambahan, jadi begitu area
+      kepilih angkanya total beneran — nulis "from" terus itu bohong kecil.
+  - **Shell baris dipakai bareng homepage** (`PLAN_ROW`/`PLAN_ROW_ON`/`PLAN_ROW_PICKED`/
+    `PLAN_NAME`/`PLAN_SUB`/`PLAN_BADGE` di `components/ui/charterPlanClasses.js`).
+    **HARGANYA yang SENGAJA BEDA**: homepage = box cream di pojok (`PLAN_PRICE_BOX`/`_BIG`,
+    baris statis), builder = angka gede di kiri (`PLAN_PRICE_LEAD`, baris yang bisa dipilih).
+    Shell-nya **gak bawa `items-*`** — homepage nge-center barisnya, builder rata-atas (centangnya
+    nemenin blok 3 baris), jadi tiap pemakai naro alignment-nya sendiri.
   - **SATU tombol Book, di bawah field** (dulu tiap kartu punya tombolnya sendiri). Artinya
     state "durasi kepilih" **BALIK LAGI** — itu disengaja atas permintaan Wayan, bukan regresi;
     kalau nemu catatan lama yang bilang state itu udah dibuang, yang berlaku ini. Baris paket =
     `role="radiogroup"` + `role="radio"`, default **Full Day** (paling atas & di-badge Popular).
   - **Slider paket + panah + penghitung "1 / 3" UDAH DIBUANG** — gak ada track lagi, jadi
     `GRID_PLANS` di `gridClasses.js` ikut **DIHAPUS** (dead). Mau balik ke slider = tulis ulang.
-  - **Kata "Popular" boleh sebaris sama nama paket TAPI wajib `flex-wrap` + nama-nya
-    `whitespace-nowrap`.** Tanpa itu di **320px pakai rupiah** box harga nyisain ruang segitu
+  - **Kata "Popular" (`PLAN_BADGE`) boleh sebaris sama nama paket TAPI wajib `flex-wrap` +
+    nama-nya `whitespace-nowrap`.** Tanpa itu di **320px pakai rupiah** box harga nyisain ruang segitu
     dikit sampe "Full Day POPULAR" mecah **NAMA**-nya jadi 2 baris (ke-ukur, bukan tebakan — ini
     bug yang sama persis kayak versi kartu dulu). Dengan wrap, di 320 kata-nya turun sendiri ke
     baris bawah, di lebar lain tetep nempel di samping nama.
@@ -1102,16 +1114,17 @@ Order **must be kept** (declarations first, run last):
     Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
     `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
     dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (81/81) — 320/390/430/768: list di ATAS
-    field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, box harga di kanan
-    nama tanpa numpuk, harga gelap, halaman gak melar. Desktop 1024/1280/1440: list di KIRI field
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (98/98) — 320/390/430/768: list di ATAS
+    field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, harga ada di KIRI
+    di bawah nama & gak pernah wrap & ≥22px & gelap (bukan amber), cuma baris kepilih yang
+    centangnya keisi + di-tint cream, halaman gak melar. Desktop 1024/1280/1440: list di KIRI field
     & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
     paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker From→Total, yang
     ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.
-  - **Gotcha harness**: "box harga ada di kanan nama" DOANG gak cukup — assertion itu lolos
+  - **Gotcha harness**: "harga ada di samping/bawah nama" DOANG gak cukup — assertion itu lolos
     waktu namanya keremes jadi 2 baris. Ukur **nama-nya juga**: `tinggi/line-height == 1` +
-    `scrollWidth == clientWidth`. Itu yang nangkep bug badge di 320px.
-  - **Gotcha harness**: span harga bawa utility `PLAN_PRICE_BIG`, **bukan class `.price`** —
+    `scrollWidth == clientWidth`, dan harganya juga (1 baris). Itu yang nangkep bug badge di 320px.
+  - **Gotcha harness**: span harga bawa utility `PLAN_PRICE_LEAD`, **bukan class `.price`** —
     nyari `.price` hasilnya nihil. Sama juga `.info__list--yes/--no` & `.info__card`: udah
     di-migrasi ke utility, jadi cek hasilnya (warna li yang di-mute) bukan nama class-nya.
   - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;

@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Car, Clock, Route, UserRound } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
-// The price box and the plan row live in their own module: the homepage's charter
-// rates render the exact same blocks, and one copy is what keeps them from drifting.
+// The plan row lives in its own module: the homepage's charter rates render the
+// same shell, and one copy is what keeps them from drifting. The PRICE differs on
+// purpose - boxed in the corner there, big under the name here.
 import {
-  PLAN_PRICE_BOX, PLAN_PRICE_KICK, PLAN_PRICE_BIG,
-  PLAN_ROW, PLAN_ROW_ON, PLAN_NAME,
+  PLAN_PRICE_KICK, PLAN_PRICE_LEAD,
+  PLAN_ROW, PLAN_ROW_PICKED, PLAN_NAME, PLAN_SUB, PLAN_BADGE,
 } from '@/components/ui/charterPlanClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
@@ -19,7 +20,6 @@ import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const EXTRA_HOURS = [1, 2, 3, 4, 5, 6];
-const ICONS = { clock: Clock, route: Route, car: Car, users: UserRound };
 
 // Pick-up times, every half hour across the window a charter day realistically
 // starts in. 24-hour clock, which is what the rest of the site's times use and
@@ -32,12 +32,13 @@ const TIMES = (() => {
   return out;
 })();
 
-// Icon points inside a plan row, on the listing card's meta shape: 11px icon,
-// muted text.
-const POINTS =
-  'm-0 mt-[3px] p-0 list-none flex flex-col gap-[2px] ' +
-  '[&>li]:flex [&>li]:items-start [&>li]:gap-[6px] [&>li]:text-muted [&>li]:text-[0.66rem] [&>li]:leading-[1.45] ' +
-  '[&_svg]:shrink-0 [&_svg]:mt-[2px] [&_svg]:w-[11px] [&_svg]:h-[11px] [&_svg]:text-muted';
+// The tick on the right: filled when this plan is the one being booked, an empty
+// ring when it is not. With the price moved under the name the right side would
+// otherwise be blank, and a row that only differs by its border is easy to read as
+// decoration rather than a choice.
+const TICK_BASE = 'shrink-0 mt-[2px] w-5 h-5 rounded-[50%] flex items-center justify-center';
+const TICK_ON = `${TICK_BASE} bg-cta text-white`;
+const TICK_OFF = `${TICK_BASE} [border:1.5px_solid_#cfc9ba]`;
 // The rows are buttons now, so they need what a button does not inherit: full
 // width, left-aligned text, a pointer, and a transition that names `scale` so the
 // site-wide press feedback stays smooth instead of snapping.
@@ -127,40 +128,26 @@ export default function CharterBuilder() {
                   key={d.dur}
                   role="radio"
                   aria-checked={on}
-                  className={`${on ? PLAN_ROW_ON : PLAN_ROW} ${ROW_BTN}`}
+                  className={`${on ? PLAN_ROW_PICKED : PLAN_ROW} items-start ${ROW_BTN}`}
                   onClick={() => setDur(d.dur)}
                 >
                   <span className="flex-1 min-w-0">
                     {/* flex-wrap, and the name itself never wraps. At 320px in rupiah
-                        the price box leaves so little room that "Full Day POPULAR" broke
-                        the NAME across two lines - measured, it is the same bug the old
-                        cards had. Wrapping drops the word onto its own line there and
-                        keeps it beside the name everywhere else. */}
+                        "Full Day POPULAR" broke the NAME across two lines - measured,
+                        the same bug the old cards had with an inline badge. */}
                     <span className="flex flex-wrap items-center gap-x-[6px]">
-                      <Clock strokeWidth={1.7} className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold" aria-hidden="true" />
                       <span className={`${PLAN_NAME} whitespace-nowrap`}>{d.name}</span>
-                      {d.badge && (
-                        <span className="text-label tracking-[0.1em] uppercase font-medium text-amber-d whitespace-nowrap">{d.badge}</span>
-                      )}
+                      {d.badge && <span className={PLAN_BADGE}>{d.badge}</span>}
                     </span>
-                    <ul className={POINTS}>
-                      {d.points.map((pt) => {
-                        const Icon = ICONS[pt.icon] || Clock;
-                        return (
-                          <li key={pt.text}>
-                            <Icon strokeWidth={1.7} aria-hidden="true" />
-                            {pt.text}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </span>
-
-                  <span className={PLAN_PRICE_BOX}>
-                    <span className={PLAN_PRICE_KICK}>{area ? 'Total' : 'From'}</span>
+                    <span className={`${PLAN_PRICE_KICK} block mt-[2px]`}>{area ? 'Total' : 'From'}</span>
                     {/* No invented number while the catalog is still in flight: the
                         old card printed the word "from" with nothing after it. */}
-                    <span className={PLAN_PRICE_BIG}>{v == null ? '—' : withSymbol(fmt(v))}</span>
+                    <span className={PLAN_PRICE_LEAD}>{v == null ? '\u2014' : withSymbol(fmt(v))}</span>
+                    <span className={`${PLAN_SUB} mt-[2px]`}>{d.sub}</span>
+                  </span>
+
+                  <span className={on ? TICK_ON : TICK_OFF}>
+                    {on && <Check strokeWidth={3.5} className="w-[11px] h-[11px]" aria-hidden="true" />}
                   </span>
                 </button>
               );

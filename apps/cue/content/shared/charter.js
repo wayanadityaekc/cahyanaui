@@ -5,39 +5,29 @@ export const CHARTER = {
   "boxId": "charter",
   "boxTitle": "Build your charter",
   // Full Day FIRST (Wayan, Sep 2026: "kalo paling depan taruh full day") - it is
-  // the one marked Popular, and on a phone the first card is the only one a guest
-  // sees without touching anything.
+  // the one marked Popular, and in a picker the top row is what a guest reads first.
   //
-  // Two points per card, not four. The card is meant to be short (Wayan: "buat card
-  // lebih pendek"), so each line carries more: hours and distance on one, what the
-  // price covers on the other. The terms trimmed out of here are not lost - they are
-  // in the Included list further down the same page.
+  // ONE sub line per plan, not a list of icon points (Wayan picked the card option
+  // where the PRICE is the second thing you read). The points became a single
+  // dot-separated line under the price: the same facts, one line instead of three,
+  // which is what leaves room for the big number. Anything trimmed out of here is
+  // still in the Included list further down the same page.
   "durations": [
     {
       "dur": "full",
       "badge": "Popular",
       "name": "Full Day",
-      "points": [
-        { "icon": "clock", "text": "10 hours, around 120 km" },
-        { "icon": "car", "text": "Petrol, driver and parking, per car up to 5" }
-      ]
+      "sub": "10 hours \u00b7 around 120 km \u00b7 per car up to 5"
     },
     {
       "dur": "half",
       "name": "Half Day",
-      "points": [
-        { "icon": "clock", "text": "5 hours, around 60 km" },
-        { "icon": "car", "text": "Petrol, driver and parking, per car up to 5" }
-      ]
+      "sub": "5 hours \u00b7 around 60 km \u00b7 per car up to 5"
     },
     {
       "dur": "extended",
       "name": "Extended",
-      // One line only: the extra-hours field takes the second line's place, which
-      // keeps this card close in height to the other two.
-      "points": [
-        { "icon": "clock", "text": "A full day plus the hours you add" }
-      ]
+      "sub": "A full day plus the hours you add"
     }
   ],
   // ONE details section (Wayan, Sep 2026: "details seperti include exclude dan

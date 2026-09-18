@@ -1037,15 +1037,34 @@ Order **must be kept** (declarations first, run last):
     mana pun hidup. Kalau field ditaro di bawah, tamu nge-tap Book terus disuruh balik ke atas.
   - **Tombol Book ADA DI DALAM tiap kartu** - nge-tap Book di kartu itu = booking durasi itu.
     Gak ada lagi state "durasi kepilih" yang kepisah dari tombolnya.
-  - **Slider-nya `GRID_PLANS` di `gridClasses.js`** - HP geser (snap per kartu, 1 kartu ~86%
-    lebar + kartu berikutnya ngintip), **desktop (`min-[769px]`) jadi grid 3 kolom biasa**.
-    **Ini SATU-SATUNYA slider yang sengaja GAK pakai `BLEED_MOBILE`**: track-nya di DALAM
-    panel putih builder, bukan di section halaman - kalau di-bleed ke viewport, kartunya
-    keluar dari tepi + bayangan panel dan keliatan kayak render rusak. Negative margin-nya =
-    padding panel, bukan `50% - 50vw`.
-  - `items-start` di HP, `items-stretch` di desktop: 3 kartu sebelahan wajib rata bawah,
-    tapi pas cuma 1 kartu keliatan, di-stretch malah bikin lubang kosong di kartu yang lebih
-    pendek dari kartu Extended (yang bawa field tambahan).
+  - **Slider-nya `GRID_PLANS` di `gridClasses.js`** - HP geser + snap, **desktop
+    (`min-[769px]`) jadi grid 3 kolom biasa**. **Ini SATU-SATUNYA slider yang sengaja GAK
+    pakai `BLEED_MOBILE`**: track-nya di DALAM panel putih builder, bukan di section
+    halaman - kalau di-bleed ke viewport, kartunya keluar dari tepi + bayangan panel dan
+    keliatan kayak render rusak. Track-nya juga gak punya padding kiri/kanan, jadi 1 langkah
+    scroll = persis 1 kartu.
+  - **Kartu paket = SATU kartu penuh + panah** (Wayan, Sep 2026: "kelihatan 1 card emang
+    bener-bener satu card, dan buat aja arrow kiri kanan biar bisa lihat card lainya di
+    mobile"). Di HP kartunya **100% lebar container, gak ada kartu sebelah yang ngintip**.
+    Konsekuensinya: peek yang dulu jadi petunjuk "ada kartu lain" ilang, jadi **panah kiri/
+    kanan + penghitung "1 / 3" itu WAJIB**, bukan hiasan - tanpa itu gak ada apa pun di
+    layar yang bilang paket lain ada. Panah cuma di HP (`min-[769px]:hidden`).
+  - Panah nge-scroll **TRACK**-nya (`scrollTo` ke `offsetLeft` kartu), **BUKAN
+    `scrollIntoView`** - yang itu bakal ikut narik halaman vertikal dan nendang tamu keluar
+    dari form. Index-nya dibaca ulang dari `scrollLeft` lewat listener `scroll`, jadi
+    **di-swipe tangan pun panah & penghitungnya ikut bener**.
+  - **Isi kartu = point berikon, kayak kartu listing** (Wayan: "point dengan logo seperti
+    card listing") - ikon 11px + teks 0.66rem muted, sama persis sama `META` di
+    `ListingRow.jsx`, plus chip hijau "Free cancellation" yang sama. Paragraf deskripsi
+    lama diganti 4 point. **2 point terakhir sengaja SAMA di ketiga kartu** (petrol/driver/
+    parkir, per mobil s/d 5 tamu) - kartu listing juga ngulang "Private driver"/"Free
+    cancellation" di tiap kartu, dan pas cuma 1 kartu keliatan, syarat yang ditaro di luar
+    kartu = syarat yang gak pernah kebaca.
+  - `items-stretch` di SEMUA lebar. Baris flex tingginya = anak tertinggi, mau di-stretch
+    atau nggak, jadi sisa ruang dari field tambahan kartu Extended tetep ada - pertanyaannya
+    cuma mendarat di mana. Di-stretch: masuk ke DALAM kartu jadi napas di atas harga, tombol
+    nempel di tepi bawah kartu. Gak di-stretch: kartunya berhenti duluan dan sisanya jadi
+    celah nganggur antara kartu sama teks di bawahnya - itu yang keliatan kayak bug.
   - **Field JAM (`ch-time`) BARU** - dulu form charter cuma nanya tanggal. Jam-nya ikut
     ke-simpen di `cue_itinerary_v1` (`charters[].time`), ditampilin di My Trips sebelah
     tanggal, dan ikut ke checkout. **Sengaja GAK dipakai buat ngitung harga**: server cuma
@@ -1059,19 +1078,24 @@ Order **must be kept** (declarations first, run last):
     tombol mati. **Sengaja gak dikasih angka cadangan**: harga charter gak ada di
     `listings.js`, jadi angka hardcode di sini gak kejaga `check-prices` dan bisa basi
     diem-diem. Kalau mau fallback, taro sumbernya di tempat yang kejaga tes dulu.
-  - **Copy `content/shared/charter.js` dirombak** (Wayan: "rombak total"): tiap paket
-    sekarang punya `note` sendiri (km + contoh dipake buat apa) biar kartunya berdiri sendiri
-    di HP; syarat yang sama buat ketiganya (per mobil s/d 5 tamu, petrol/driver/parkir)
-    ditaro SEKALI di `planTerms` di bawah slider, bukan diulang 3x di dalam kartu. `notes`
-    ditambah 1 baris jujur soal macet sore di selatan (gaya "jujur soal minus").
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (40/40) - HP 320/390/430 geser + snap +
+  - **Detail halaman = SATU section** (Wayan, Sep 2026: "details seperti include exclude dan
+    how charter works itu jadiin satu dan konten sama pakai styling text di our company").
+    Dulu ada list "Good to know" nempel polos di background halaman + kartu putih terpisah
+    isi artikel = dua perlakuan buat hal yang sama di satu halaman. Sekarang satu kartu,
+    judulnya "Charter Details", pakai gaya baca **Our Company** (`BODY_TEXT` +
+    `headingVariant="company"`: paragraf `--fs-body`/`--lh-body`, judul sub rata KIRI tanpa
+    garis bawah ke-center). `CHARTER.notes` + `planTerms` UDAH DIHAPUS.
+  - List campur "included + gak included" dipecah jadi **Included / Not included** pakai
+    marker standar web (`variant: 'yes'` / `'no'` → lingkaran keisi vs kosong + teks di-mute)
+    - format yang emang udah dipakai semua halaman tour & attraction.
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (54/54) - HP 320/390/430 geser + snap +
     kartu berikutnya ngintip + halaman gak melar, desktop 1024/1280/1440 grid 3 kolom tinggi
     sama tanpa geser, tombol Book mati sebelum field lengkap & hidup sesudahnya, jam
     ke-simpen, dan harga gak kosong walau katalog di-`abort()`.
-  - **Gotcha harness**: `flex-basis` persen ngukur ke **content box**, dan track-nya punya
-    padding sendiri - jadi kartu 86% kebaca ~0.76-0.79 dari `clientWidth`. Jangan dikira
-    kartunya mengecil. Dan span harga bawa utility `PRICE`, **bukan class `.price`** - nyari
-    `.price` di situ hasilnya nihil (sempet bikin harness lapor "harga kosong" palsu).
+  - **Gotcha harness**: span harga bawa utility `PRICE`, **bukan class `.price`** - nyari
+    `.price` di situ hasilnya nihil (sempet bikin harness lapor "harga kosong" palsu). Sama
+    juga `.info__list--yes/--no` sama `.info__card`: udah di-migrasi ke utility, jadi gak ada
+    class-nya buat di-query - cek hasilnya (warna li yang di-mute) bukan nama class-nya.
 
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,

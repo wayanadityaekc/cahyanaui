@@ -1,12 +1,24 @@
 import CharterBuilder from '@/components/sections/CharterBuilder';
-import { INFO_LIST_YES, INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
-import { ITN_SUBTITLE } from '@/components/ui/itnClasses';
+import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
 import Prose from '@/components/prose/Prose';
 import { CHARTER } from '@/content/shared/charter';
 import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
 
-// The charter page body (hero + builder form + notes/info), extracted so both
-// the /charter route and the All Programs "Charter" tab render the real form.
+// The charter page body (hero + builder form + one details section), extracted so
+// both the /charter route and the All Programs "Charter" tab render the real form.
+//
+// ONE details section, not two (Sep 2026, Wayan: "details seperti include exclude
+// dan how charter works itu jadiin satu dan konten sama pakai styling text di our
+// company"). There used to be a loose "Good to know" list sitting on the page
+// background above a separate white card holding the article - two treatments of
+// the same thing on one page. Included/excluded and the article are now a single
+// run of text inside the card, and CHARTER.notes is gone with it.
+//
+// BODY_TEXT and headingVariant="company" are Our Company's reading style, copied
+// here rather than reinvented: paragraphs on --lh-body at --fs-body, and section
+// headings left-aligned with no centred underline.
+const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
+
 export default function CharterSection() {
   return (
     <>
@@ -17,17 +29,9 @@ export default function CharterSection() {
           <CharterBuilder />
         </div>
       </section>
-      <section className="pt-10 px-[1.3rem] pb-0">
-        <div className="max-w-[720px] mx-auto">
-          <h3 className={ITN_SUBTITLE}>Good to know</h3>
-          <ul className={INFO_LIST_YES}>
-            {CHARTER.notes.map((item, i) => <li key={i}>{item}</li>)}
-          </ul>
-        </div>
-      </section>
       <section className={INFO_SECTION_DETAIL}>
-        <div className={INFO_CARD}>
-          <Prose blocks={CHARTER.info} />
+        <div className={`${INFO_CARD} ${BODY_TEXT}`}>
+          <Prose blocks={CHARTER.info} headingVariant="company" />
         </div>
       </section>
     </>

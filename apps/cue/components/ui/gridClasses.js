@@ -94,23 +94,26 @@ export const GRID_CAROUSEL_4UP =
 // (Wayan, Sep 2026: "untuk mobile ... bisa di slide ke kanan kiri ... di desktop
 // tampil biasa gak isi slider").
 //
-// The one slider on the site that deliberately does NOT take BLEED_MOBILE: this
-// track lives INSIDE the white builder panel, not in a page section. Bleeding it
-// to the viewport would run the cards out past the panel's own edge and shadow,
-// which reads as a rendering fault rather than a full-width slider. The negative
-// margin here is the panel's padding instead, so a card can sit flush with the
-// panel edge and the next one peeks in - the peek is what says "there is more".
+// Cards are a FULL 100% on the phone - no sliver of the next one showing (Wayan:
+// "kelihatan 1 card emang bener-bener satu card"). That costs the peek that used
+// to hint at the other plans, so CharterBuilder pairs this with explicit left and
+// right arrows; without them there is nothing on screen saying more cards exist.
 //
-// Cards are stretched to equal height (items-stretch) because they carry their
-// own Book button: ragged bottoms would put the three buttons at three heights.
+// 100% of the track's content box, and the track carries no horizontal padding,
+// so one scroll step is exactly one card and a card's edges line up with the rest
+// of the panel's content. That is also why this slider takes no BLEED_MOBILE: it
+// lives INSIDE the white builder panel, and bleeding it to the viewport would run
+// the cards past the panel's own edge and shadow.
+//
+// items-stretch at every width. A flex row is as tall as its tallest child either
+// way, so the slack from the Extended card's extra field exists regardless: the
+// only question is where it lands. Stretched, it sits INSIDE the shorter card as
+// breathing room above the price, with the button on the card's bottom edge where
+// it belongs. Unstretched, the card stops early and the slack becomes an orphan
+// gap between the card and the text under the slider, which reads as a bug.
 export const GRID_PLANS =
-  // items-start on the phone, items-stretch from 769px: stretched cards all end
-  // level, which is what three side by side need, but with one card on screen it
-  // just opens a hole between the text and the button on whichever card is
-  // shorter than the Extended one (which carries an extra field).
-  'flex items-start gap-[var(--space-1)] overflow-x-auto overflow-y-hidden pb-1 ' +
+  'flex items-stretch gap-[var(--space-2)] overflow-x-auto overflow-y-hidden ' +
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  '[margin-inline:calc(var(--space-2)*-1)] px-[var(--space-2)] ' +
-  '[&>*]:flex-[0_0_86%] [&>*]:[scroll-snap-align:center] ' +
-  'min-[769px]:grid min-[769px]:grid-cols-3 min-[769px]:items-stretch min-[769px]:overflow-visible min-[769px]:m-0 min-[769px]:p-0 ' +
+  '[&>*]:flex-[0_0_100%] [&>*]:[scroll-snap-align:start] ' +
+  'min-[769px]:grid min-[769px]:grid-cols-3 min-[769px]:overflow-visible ' +
   'min-[769px]:[&>*]:flex-none';

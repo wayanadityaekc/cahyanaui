@@ -7,6 +7,7 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { UBUD_GUIDE_LINK } from '@/lib/constants';
+import { GRID_PAIR, GRID_TRIO } from '@/components/ui/gridClasses';
 
 export const metadata = {
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
@@ -36,18 +37,23 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative">
-        <div className="relative min-h-[62vh] sm:min-h-[72vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[58vh] sm:min-h-[72vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/cahyana-tibuah.webp"
             alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(100deg, rgba(20,20,16,0.62) 0%, rgba(20,20,16,0.28) 48%, rgba(20,20,16,0.05) 75%)' }}
-          />
-          <div className="wrap relative z-10 py-24">
+          {/* TWO scrims, because the two layouts need opposite things.
+              Desktop puts the copy in the left third, so a left-to-right gradient
+              darkens exactly where the words are and leaves the photo clear.
+              On a phone the copy spans the FULL width, and that same gradient
+              left the right-hand end of every line sitting on a lit window — the
+              subhead was genuinely hard to read. Below 993px it becomes a
+              top-to-bottom scrim instead, dark at both ends, with the bottom end
+              carrying the search card that overlaps it. */}
+          <div className="absolute inset-0 [background:linear-gradient(180deg,rgba(20,20,16,0.5)_0%,rgba(20,20,16,0.34)_40%,rgba(20,20,16,0.68)_100%)] min-[993px]:[background:linear-gradient(100deg,rgba(20,20,16,0.62)_0%,rgba(20,20,16,0.28)_48%,rgba(20,20,16,0.05)_75%)]" />
+          <div className="wrap relative z-10 py-14 sm:py-24">
             <p className="eyebrow text-gold-l">Ubud Private Villas</p>
             <h1 className="text-display font-bold max-w-xl text-white">
               A private retreat in the heart of Ubud
@@ -81,7 +87,7 @@ export default function HomePage() {
               Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className={GRID_PAIR}>
             {VILLA_LIST.map((villa) => (
               <VillaCard key={villa.slug} villa={villa} />
             ))}
@@ -108,7 +114,7 @@ export default function HomePage() {
 
       {/* Experience the real Ubud */}
       <section className="relative">
-        <div className="relative min-h-[46vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[46vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://picsum.photos/seed/ubudwalk9/1800/900"
@@ -154,7 +160,7 @@ export default function HomePage() {
             <span className="text-small text-muted font-normal">from {OVERALL_REVIEW_COUNT}+ reviews</span>
           </p>
 
-          <div className="grid sm:grid-cols-3 gap-6 mt-7">
+          <div className={`${GRID_TRIO} mt-7`}>
             {REVIEW_CARDS.map((card, i) => (
               <ReviewCard key={i} card={card} />
             ))}

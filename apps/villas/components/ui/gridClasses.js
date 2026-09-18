@@ -37,15 +37,40 @@ export const BLEED_MOBILE =
 // --container-x token (1.5rem desktop / 1rem mobile), left-aligned content.
 export const GRID_SECTION = 'max-w-[var(--container)] mx-auto px-[var(--container-x)] text-left';
 
-// Desktop = wrapping grid (auto-fill, NOT auto-fit: with fewer cards than a full
-// row, the leftover columns stay empty instead of stretching the cards we do
-// have across the full width). Mobile = swipeable slider.
+// The MOBILE half of every card row on this site, on its own so a page can
+// keep whatever desktop grid it already had and still get CUE's phone
+// behaviour. Below 992px a row of cards becomes a full-bleed, snapping,
+// swipeable track with the next card peeking in at the right edge — that peek
+// is the whole point, it is what tells a guest there is more to the side.
+//
+// `touch-action: pan-x pan-y` and not `pan-x` alone: with pan-x only, a
+// vertical swipe that starts on a card sticks instead of scrolling the page.
+export const MOBILE_SLIDER =
+  'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden ' +
+  'max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] ' +
+  '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
+  'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] ' +
+  'max-[576px]:[&>*]:flex-[0_0_88%] ' + BLEED_MOBILE;
+
+// Desktop halves. Each is paired with MOBILE_SLIDER below; they are kept apart
+// because `grid-cols-*` and the slider's `flex` both set display, and a page
+// that wrote its own `sm:grid-cols-2` (min-width 640) would overlap the
+// slider's band (max-width 992) and fight it between 640 and 992px. Every
+// desktop rule here starts at 993 so the two never both apply.
+const D = 'min-[993px]:grid min-[993px]:gap-[1.4rem] min-[993px]:overflow-visible min-[993px]:[&>*]:flex-none';
+
+// Wrapping grid — auto-fill, NOT auto-fit. With fewer cards than a full row,
+// auto-fill leaves the spare columns empty; auto-fit collapses them and
+// stretches the cards that are there, which is wrong for a row that happens to
+// be short today.
 export const GRID_CARDS =
-  'max-w-[1200px] mx-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  'min-[993px]:grid min-[993px]:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] min-[993px]:gap-[1.4rem] min-[993px]:overflow-visible min-[993px]:[&>*]:flex-none ' +
-  'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
-  'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_88%] ' +
-  BLEED_MOBILE;
+  `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] ${MOBILE_SLIDER}`;
+
+// Fixed-column rows, for a set whose count is known and meant to stay put.
+export const GRID_PAIR = `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-2 ${MOBILE_SLIDER}`;
+export const GRID_TRIO = `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-3 ${MOBILE_SLIDER}`;
+export const GRID_QUAD = `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-4 ${MOBILE_SLIDER}`;
 
 // A slider at EVERY width: fixed 300px cards on desktop, 70/80% on mobile.
 // `touch-action: pan-x pan-y` (not pan-x alone) so a vertical swipe still

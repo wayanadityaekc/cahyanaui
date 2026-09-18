@@ -22,7 +22,7 @@ export default function ServiceDetail({
   return (
     <>
       <section className="relative">
-        <div className="relative min-h-[38vh] flex items-end overflow-hidden">
+        <div className="relative min-h-[38vh] flex items-end overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={heroImg} alt={heroAlt} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.1), rgba(20,20,16,0.65))' }} />

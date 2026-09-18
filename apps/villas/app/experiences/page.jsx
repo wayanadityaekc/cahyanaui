@@ -1,3 +1,4 @@
+import { GRID_QUAD } from '@/components/ui/gridClasses';
 import { CUE_LINK, UBUD_GUIDE_LINK } from '@/lib/constants';
 
 // Judgement call (see report): there is no real, ready-to-publish content
@@ -39,7 +40,7 @@ export default function ExperiencesPage() {
   return (
     <>
       <section className="relative">
-        <div className="relative min-h-[42vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[42vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://picsum.photos/seed/ubudwalk9/1800/900"
@@ -65,7 +66,7 @@ export default function ExperiencesPage() {
             These are illustrative categories, not a live booking list — exact tours, prices and availability are confirmed directly with Cahyana Ubud Experience, the local driver-and-tour team our family also runs.
           </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+          <div className={`${GRID_QUAD} mt-8`}>
             {CATEGORIES.map((c) => (
               <div key={c.title} className="card p-6">
                 <span className="icon-circle">

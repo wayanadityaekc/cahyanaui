@@ -47,7 +47,7 @@ export const CHARTER = {
   "info": [
     { "type": "heading", "sub": false, "html": "Charter Details" },
     { "type": "boxes", "items": [
-      { "title": "What's included", "list": [
+      { "title": "What's included", "variant": "yes", "list": [
         "A private car with a local driver, yours for the booked hours",
         "Petrol, parking and road tolls",
         "Pick-up and drop-off at your accommodation",

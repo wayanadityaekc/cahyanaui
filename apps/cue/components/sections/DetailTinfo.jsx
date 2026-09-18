@@ -41,7 +41,7 @@ export default function DetailTinfo({ facts, included, excluded }) {
       <div className="max-w-[720px] mx-auto">
         <InfoBoxes>
           <InfoBox title="What's included">
-            <InfoBoxList items={included} />
+            <InfoBoxList items={included} variant="yes" />
           </InfoBox>
           <InfoBox title="What's excluded" variant="no">
             <InfoBoxList items={excluded} variant="no" />

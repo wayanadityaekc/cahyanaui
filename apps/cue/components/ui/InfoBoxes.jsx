@@ -31,18 +31,27 @@ const BOX_NO = `${BOX_BASE} bg-cream`;
 
 export const BOX_TITLE = 'font-body text-h3 font-semibold text-gold mb-[0.7rem]';
 
-// Hairline-separated rows, no marker. The muted colour on the 'no' variant is the
-// SAME muted token the rest of the site uses - deliberately not the old washed-out
-// #8a8578, which read as disabled rather than as information.
+// Rows carry no marker. The muted colour on the 'no' variant is the SAME muted
+// token the rest of the site uses - deliberately not the old washed-out #8a8578,
+// which read as disabled rather than as information.
 const ROWS_BASE =
   'list-none m-0 p-0 [&_li]:font-body [&_li]:text-body [&_li]:font-normal ' +
-  '[&_li]:leading-[var(--lh-body)] [&_li]:py-2 ' +
+  '[&_li]:leading-[var(--lh-body)] [&_li]:py-2 [&_a]:text-gold [&_a]:font-medium';
+
+// The hairline between rows belongs to the INCLUDED/EXCLUDED pair ONLY (Sep 2026,
+// Wayan: "gua mau komponen include dan exclude aja yang isi border line yang lain
+// jangan"). Those two are a spec you read line by line, so the rules help; any
+// other list in a box (route ideas, etc.) is closer to prose and the rules just
+// made it look like a table. That is exactly what `variant` marks, so the rules
+// follow it - a box with no variant gets no rules, no extra flag to remember.
+const ROWS_RULED =
   '[&_li]:[border-bottom:1px_solid_var(--line)] [&_li:last-child]:[border-bottom:none] ' +
-  '[&_li:last-child]:pb-0 [&_a]:text-gold [&_a]:font-medium';
+  '[&_li:last-child]:pb-0';
 
 export function InfoBoxList({ items, variant, render }) {
+  const ruled = variant === 'yes' || variant === 'no';
   return (
-    <ul className={`${ROWS_BASE} ${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
+    <ul className={`${ROWS_BASE} ${ruled ? ROWS_RULED + ' ' : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
       {items.map((item, i) => <li key={i}>{render ? render(item) : item}</li>)}
     </ul>
   );

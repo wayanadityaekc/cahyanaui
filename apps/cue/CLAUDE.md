@@ -189,10 +189,16 @@ When unsure, ask first (keep it short).
 - **Checklist bullet (Included/Excluded) — SEKARANG ADA 2 FORMAT** (Sep 2026, Wayan pilih
   "opsi B" dari sheet penanda). Jangan campur, dan jangan "samain" salah satunya tanpa nanya:
   - **KOTAK, tanpa marker** = `components/ui/InfoBoxes.jsx` — dipakai **charter, transfer,
-    airport**. Tiap daftar duduk di kotak berbingkai (`--line`, `--r-md`), baris dipisah
-    **garis rambut**, **NOL simbol per baris**. Yang "Not included" di-tint `bg-cream` +
-    teks `--color-muted` — itu yang gantiin peran lingkaran kosong. Desktop 2 kolom,
-    HP numpuk (`max-[768px]`, sama kayak grid checklist lama).
+    airport**. Tiap daftar duduk di kotak berbingkai (`--line`, `--r-md`), **NOL simbol per
+    baris**. Yang "Not included" di-tint `bg-cream` + teks `--color-muted` — itu yang
+    gantiin peran lingkaran kosong. Desktop 2 kolom, HP numpuk (`max-[768px]`, sama kayak
+    grid checklist lama).
+    - **GARIS RAMBUT antar-baris CUMA buat pasangan include/exclude** (Sep 2026, Wayan:
+      "gua mau komponen include dan exclude aja yang isi border line yang lain jangan").
+      Dua itu spek yang dibaca baris per baris, jadi garisnya nolong; daftar lain yang
+      kebetulan ada di kotak (mis. ide rute charter) lebih deket ke prosa — garisnya malah
+      bikin kebaca kayak tabel. Aturannya **nempel ke `variant`**: `'yes'`/`'no'` =
+      bergaris, tanpa variant = polos. Jadi jangan bikin flag baru buat ini, kasih variant.
     - **Kenapa gak ada marker**: lingkaran isi/kosong itu minjem bentuk radio button dan
       nangkring di tengah kolom bacaan. Kotaknya yang bilang "ini grup", jadi gak ada yang
       perlu diulang di tiap baris. Ikon centang/silang juga ditawarin & **gak dipilih**.

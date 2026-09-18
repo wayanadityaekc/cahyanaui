@@ -135,7 +135,7 @@ export default function ItineraryBuilder() {
       });
     });
     (state.transfers || []).forEach((t) => out.push({ type: 'transfer', service: t.route, date: t.date || '', guests: displayGuests, return: !!t.return }));
-    (state.charters || []).forEach((c) => out.push({ type: 'charter', service: 'Charter', date: c.date || '', guests: displayGuests, area: c.area || 'Ubud', duration: c.dur || c.duration, extra: c.extra || 0 }));
+    (state.charters || []).forEach((c) => out.push({ type: 'charter', service: 'Charter', date: c.date || '', guests: displayGuests, area: c.area || 'Ubud', duration: c.dur || c.duration, extra: c.extra || 0, ...(c.time ? { time: c.time } : null) }));
     return out;
   }, [state, days, displayGuests]);
 

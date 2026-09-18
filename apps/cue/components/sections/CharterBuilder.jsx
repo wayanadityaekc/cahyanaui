@@ -3,16 +3,28 @@
 import { useState } from 'react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
+import { GRID_PLANS } from '@/components/ui/gridClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { CHARTER } from '@/content/shared/charter';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
-import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const EXTRA_HOURS = [1, 2, 3, 4, 5, 6];
+
+// Pick-up times, every half hour across the window a charter day realistically
+// starts in. 24-hour clock, which is what the rest of the site's times use and
+// what reads the same to every nationality that books here.
+const TIMES = (() => {
+  const out = [];
+  for (let m = 6 * 60; m <= 17 * 60; m += 30) {
+    out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+  }
+  return out;
+})();
 
 export default function CharterBuilder() {
   const { currency, displayGuests, setGuests } = useTripPrefs();
@@ -20,10 +32,10 @@ export default function CharterBuilder() {
   const { state, save } = useItinerary();
 
   const [area, setArea] = useState('');
-  const [dur, setDur] = useState('');
-  const [extra, setExtra] = useState(1);
   const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [guests, setLocalGuests] = useState('');
+  const [extra, setExtra] = useState('1');
 
   const catalog = pricing && pricing.catalog;
   const symbol = (catalog && catalog.symbol) || '$';
@@ -41,110 +53,149 @@ export default function CharterBuilder() {
     return value + surcharge;
   };
 
-  const total = dur ? tier(dur) : null;
-  const ready = !!(area && dur && date && guests);
+  // Every card books, so the trip details have to be filled before ANY of them
+  // is live - that is why the fields come first on the page and the cards after.
+  const ready = !!(area && date && time && guests);
 
   // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
   // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto=true)`).
-  const book = () => {
+  const book = (d) => {
     if (!ready) return;
     save({
       ...state,
-      charters: [...(state.charters || []), { date, guests, area, dur: dur === 'extended' ? 'extended' : dur, extra: dur === 'extended' ? extra : 0 }],
+      charters: [...(state.charters || []), {
+        date,
+        time,
+        guests,
+        area,
+        dur: d,
+        extra: d === 'extended' ? extra : 0,
+      }],
     });
     window.location.href = '/my-trips.html';
   };
 
   const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];
 
-  // Tailwind-native (full-portable): .charter__*/.chdur* -> utilities; field input
-  // pakai FIELD_INPUT shared (formClasses.js). Kept sbg shared primitive: `.price`/
-  // `.price-cur` (harga), `.btn-book` (tombol), Select/DateField. NOTE: kartu durasi kepilih dulu
-  // dikasih class `is-on` tapi CSS-nya `.chdur.active` -> highlight-nya gak pernah
-  // muncul (bug). Di sini di-benerin: state terpilih dapet border gold + shadow +
-  // angkat (sesuai maksud .chdur.active). Cuma keliatan pas diklik (bukan di sweep).
-  const LABEL = 'block mb-2 text-small font-medium text-green font-body tracking-normal';
-  // Date/Guests labels dulu di dalam .field -> `.field label` (mb 0.4rem) menang atas
-  // `.charter__label` (0.5rem). Field-nya sekarang div polos, jadi pakai mb-[0.4rem].
-  const FIELD_LABEL = 'block mb-[0.4rem] text-small font-medium text-green font-body tracking-normal';
-  const chdur = (isOn) =>
-    `relative flex flex-col items-center gap-[0.15rem] pt-[1.15rem] px-[0.6rem] pb-[1.1rem] border-[1.5px] border-solid rounded-lg bg-white text-center cursor-pointer transition-[border-color,box-shadow,transform,opacity,scale] duration-200 ease-[ease] disabled:opacity-50 disabled:cursor-not-allowed ${isOn ? 'border-gold shadow-md [transform:translateY(-2px)]' : 'border-line enabled:hover:border-gold'}`;
+  const FIELD_LABEL = 'block mb-[var(--space-1)] text-small font-medium text-green font-body tracking-normal';
+
+  // One plan card. Self-contained on purpose: on a phone only one is on screen,
+  // so it carries its own price and its own Book button rather than pointing at
+  // a shared control further down the page.
+  const CARD =
+    'flex flex-col text-left p-[var(--space-2)] rounded-lg bg-white [border:1px_solid_var(--line)] ' +
+    '[box-shadow:var(--shadow-sm)]';
+
   return (
-    <div className="bg-white rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left" id={CHARTER.boxId}>
-      <h2 className="font-head text-[1.15rem] text-green text-center mt-0 mb-[1.1rem]">{CHARTER.boxTitle}</h2>
+    <div className="bg-white rounded-xl shadow-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
+      <h2 className="font-head text-h2 font-semibold text-gold text-center m-0 mb-[var(--space-2)]">{CHARTER.boxTitle}</h2>
 
-      <div className="mb-[1.3rem]">
-        <label className={LABEL} htmlFor="ch-pickup">1. Pick-up area</label>
-        <Select
-          id="ch-pickup"
-          label="Pick-up area"
-          value={area}
-          onChange={setArea}
-          options={areas.map((a) => ({ value: a, label: a }))}
-          placeholder="Select your pick-up area"
-        />
-        <p className="mt-[0.4rem] text-small text-muted" id="ch-pickup-hint">Pick-up outside Ubud adds a small surcharge.</p>
-      </div>
-
-      <div className="mb-[1.3rem]">
-        <label className={LABEL}>2. How long do you need the car?</label>
-        <div className="grid grid-cols-[repeat(3,1fr)] gap-[0.7rem]" id="ch-durations">
-          {CHARTER.durations.map((d) => {
-            const v = tier(d.dur);
-            return (
-              <button
-                key={d.dur}
-                className={chdur(dur === d.dur)}
-                type="button"
-                disabled={!catalog}
-                onClick={() => setDur(d.dur)}
-              >
-                {d.badge && <span className="absolute top-[-0.6rem] left-1/2 [transform:translateX(-50%)] text-label tracking-[0.14em] uppercase font-medium text-white bg-amber rounded-pill py-[0.2rem] px-[0.6rem] whitespace-nowrap">{d.badge}</span>}
-                <span className="font-body font-semibold text-[1.15rem] text-green">{d.name}</span>
-                <span className="text-small text-muted mb-2">{d.sub}</span>
-                <span className="font-semibold text-amber text-[1.2rem]">
-                  <span className="text-label font-normal text-muted">{d.from}</span>
-                  <span className={PRICE}>{v == null ? '' : withSymbol(fmt(v))}</span>
-                </span>
-              </button>
-            );
-          })}
+      {/* 1 - the trip. Four fields, two per row, so the block reads as one unit
+          instead of a numbered interrogation. */}
+      <div className="grid grid-cols-2 gap-[var(--space-1)]">
+        <div className="col-span-2">
+          <label className={FIELD_LABEL} htmlFor="ch-pickup">Pick-up area</label>
+          <Select
+            id="ch-pickup"
+            label="Pick-up area"
+            value={area}
+            onChange={setArea}
+            options={areas.map((a) => ({ value: a, label: a }))}
+            placeholder="Where should we collect you?"
+          />
         </div>
-        <div className="mt-4" id="ch-extra-wrap" hidden={dur !== 'extended'}>
-          <label className={LABEL} htmlFor="ch-extra">Extra hours after 10</label>
-          <input type="number" className={FIELD_INPUT} id="ch-extra" min="1" max="6" value={extra} onChange={(e) => setExtra(e.target.value)} />
-        </div>
-      </div>
-
-      <div className="mb-[1.3rem] grid grid-cols-[1fr_1fr] gap-4">
         <div>
           <label className={FIELD_LABEL} htmlFor="ch-date">Date</label>
           <DateField id="ch-date" label="Date" value={date} onChange={setDate} />
         </div>
         <div>
+          <label className={FIELD_LABEL} htmlFor="ch-time">Pick-up time</label>
+          <Select
+            id="ch-time"
+            label="Pick-up time"
+            value={time}
+            onChange={setTime}
+            options={TIMES.map((t) => ({ value: t, label: t }))}
+            placeholder="Time"
+          />
+        </div>
+        <div className="col-span-2">
           <label className={FIELD_LABEL} htmlFor="ch-guests">Guests</label>
           <Select
             id="ch-guests"
             label="Guests"
             value={guests}
-            onChange={(v) => {
-              setLocalGuests(v);
-              setGuests(v);
-            }}
+            onChange={(v) => { setLocalGuests(v); setGuests(v); }}
             options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
-            placeholder="Guests"
+            placeholder="How many of you?"
           />
         </div>
       </div>
+      <p className="mt-[var(--space-1)] text-small text-muted leading-[var(--lh-body)]" id="ch-pickup-hint">
+        Pick-up outside Ubud adds a small surcharge, already counted in the prices below.
+      </p>
 
-      <div className="flex items-baseline justify-between border-t border-line pt-4 mt-5 mb-4 text-strong font-semibold">
-        <span>Total</span>
-        <span id="ch-total">
-          <span className={PRICE}>{total == null ? '-' : withSymbol(fmt(total))}</span>
-        </span>
+      {/* 2 - the plan. Phone: one card at a time, swipe for the rest. Desktop:
+          all three side by side (Wayan: "di desktop tampil biasa gak isi slider"). */}
+      <h3 className="mt-[var(--space-3)] mb-[var(--space-1)] text-h3 font-semibold text-gold">How long do you need the car?</h3>
+      <div className={GRID_PLANS} role="group" aria-label="Charter length">
+        {CHARTER.durations.map((d) => {
+          const v = tier(d.dur);
+          return (
+            <div className={CARD} key={d.dur}>
+              {/* Badge sits INSIDE the card. Hung off the top edge it left the
+                  three cards with a ragged top line, and in a scrolling track it
+                  is the first thing `overflow` clips. */}
+              <span className="min-h-[1rem] text-label tracking-[0.1em] uppercase font-medium text-amber-d">
+                {d.badge || ' '}
+              </span>
+              <span className="mt-[var(--space-1)] text-h3 font-semibold text-gold">{d.name}</span>
+              <span className="text-small text-muted leading-[var(--lh-body)]">{d.hours}</span>
+              <p className="mt-[var(--space-1)] mb-0 text-small text-muted leading-[var(--lh-body)]">{d.note}</p>
+
+              {d.dur === 'extended' && (
+                <div className="mt-[var(--space-1)]">
+                  <label className={FIELD_LABEL} htmlFor="ch-extra">Extra hours</label>
+                  <Select
+                    id="ch-extra"
+                    label="Extra hours"
+                    value={extra}
+                    onChange={setExtra}
+                    options={EXTRA_HOURS.map((n) => ({ value: String(n), label: `+${n} ${n === 1 ? 'hour' : 'hours'}` }))}
+                    placeholder="Extra hours"
+                  />
+                </div>
+              )}
+
+              {/* mt-auto pins the price and button to the bottom, so all three
+                  line up however much text sits above them. */}
+              <div className="mt-auto pt-[var(--space-2)]">
+                <span className="block text-label tracking-[0.1em] uppercase text-muted">
+                  {area ? 'Total' : 'From'}
+                </span>
+                {/* No invented number while the catalog is still in flight: the
+                    old card printed the word "from" with nothing after it. */}
+                <span className={`${PRICE} text-[1.2rem] leading-[1.15]`}>
+                  {v == null ? '—' : withSymbol(fmt(v))}
+                </span>
+                <button
+                  className={`${BTN_BOOK} mt-[var(--space-1)]`}
+                  type="button"
+                  disabled={!ready || v == null}
+                  onClick={() => book(d.dur)}
+                >
+                  Book this charter
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      <button className={BTN_BOOK} id="ch-book" disabled={!ready} onClick={book}>Book This Charter</button>
+      <p className="mt-[var(--space-1)] mb-0 text-small text-muted leading-[var(--lh-body)]">
+        {CHARTER.planTerms}
+        {!ready && <span className="block text-gold">Pick your area, date, time and guests to book.</span>}
+      </p>
     </div>
   );
 }

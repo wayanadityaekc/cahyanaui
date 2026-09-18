@@ -169,6 +169,10 @@ export default function MyTripsCart() {
       kind: 'charter', type: 'charter', service: 'Charter', date: c.date || '',
       guests: parseInt(c.guests, 10) || displayGuests, area: c.area || 'Ubud',
       duration: c.dur || c.duration, extra: c.extra || 0, localIndex: ci,
+      // The pick-up time the guest chose in the builder. Carried like the
+      // transfer fields above it: shown in the cart and forwarded at checkout,
+      // ignored by the pricing call, which prices a charter off area/duration/extra.
+      ...(c.time ? { time: c.time } : null),
     }));
     return out;
   }, [state, displayGuests]);
@@ -433,6 +437,7 @@ export default function MyTripsCart() {
                       >
                         {fmtDay(r.date)}
                       </button>
+                      {r.time ? ` · ${r.time}` : ''}
                       {r.mode === 'exclusive' ? ' · Exclusive' : ''}
                       {r.return ? ' · return' : ''}
                     </p>

@@ -1029,7 +1029,49 @@ Order **must be kept** (declarations first, run last):
   - Habis nyentuh `lib/schemas.js` → jalanin **`node tools/form-rules-test.mjs`** (ngadu
     schema baru vs aturan if-chain lama, ~394rb kombinasi, harus "all identical").
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
-- **Charter**: `CHARTER` config, live pricing.
+- **Charter builder (`CharterBuilder.jsx`) - dirombak Sep 2026** (Wayan: "untuk mobile ...
+  satu kartu yang berisikan semua detail, dan button book, trus bisa di slide ke kanan kiri ...
+  di desktop tampil biasa gak isi slider"):
+  - **Urutannya: field DULU, kartu paket BELAKANGAN.** Wajib gitu, bukan selera: tiap kartu
+    punya tombol Book sendiri, jadi area/tanggal/jam/tamu harus udah keisi sebelum tombol
+    mana pun hidup. Kalau field ditaro di bawah, tamu nge-tap Book terus disuruh balik ke atas.
+  - **Tombol Book ADA DI DALAM tiap kartu** - nge-tap Book di kartu itu = booking durasi itu.
+    Gak ada lagi state "durasi kepilih" yang kepisah dari tombolnya.
+  - **Slider-nya `GRID_PLANS` di `gridClasses.js`** - HP geser (snap per kartu, 1 kartu ~86%
+    lebar + kartu berikutnya ngintip), **desktop (`min-[769px]`) jadi grid 3 kolom biasa**.
+    **Ini SATU-SATUNYA slider yang sengaja GAK pakai `BLEED_MOBILE`**: track-nya di DALAM
+    panel putih builder, bukan di section halaman - kalau di-bleed ke viewport, kartunya
+    keluar dari tepi + bayangan panel dan keliatan kayak render rusak. Negative margin-nya =
+    padding panel, bukan `50% - 50vw`.
+  - `items-start` di HP, `items-stretch` di desktop: 3 kartu sebelahan wajib rata bawah,
+    tapi pas cuma 1 kartu keliatan, di-stretch malah bikin lubang kosong di kartu yang lebih
+    pendek dari kartu Extended (yang bawa field tambahan).
+  - **Field JAM (`ch-time`) BARU** - dulu form charter cuma nanya tanggal. Jam-nya ikut
+    ke-simpen di `cue_itinerary_v1` (`charters[].time`), ditampilin di My Trips sebelah
+    tanggal, dan ikut ke checkout. **Sengaja GAK dipakai buat ngitung harga**: server cuma
+    baca `area`/`duration`/`extra` (`pricing.js` baris ~207), key lain diabaikan - sama
+    kayak `flight_number` punya transfer.
+  - **Kicker harga = `From` sebelum area dipilih, `Total` sesudahnya.** `tier()` emang udah
+    ngitung surcharge area + jam tambahan, jadi begitu area kepilih angkanya total beneran -
+    nulis "from" terus itu bohong kecil.
+  - **Harga gak pernah kosong lagi.** Dulu kartu nulis "from" TANPA angka selama katalog API
+    belum balas (kejadian, kebukti di screenshot). Sekarang pas `catalog` null jadi em dash +
+    tombol mati. **Sengaja gak dikasih angka cadangan**: harga charter gak ada di
+    `listings.js`, jadi angka hardcode di sini gak kejaga `check-prices` dan bisa basi
+    diem-diem. Kalau mau fallback, taro sumbernya di tempat yang kejaga tes dulu.
+  - **Copy `content/shared/charter.js` dirombak** (Wayan: "rombak total"): tiap paket
+    sekarang punya `note` sendiri (km + contoh dipake buat apa) biar kartunya berdiri sendiri
+    di HP; syarat yang sama buat ketiganya (per mobil s/d 5 tamu, petrol/driver/parkir)
+    ditaro SEKALI di `planTerms` di bawah slider, bukan diulang 3x di dalam kartu. `notes`
+    ditambah 1 baris jujur soal macet sore di selatan (gaya "jujur soal minus").
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (40/40) - HP 320/390/430 geser + snap +
+    kartu berikutnya ngintip + halaman gak melar, desktop 1024/1280/1440 grid 3 kolom tinggi
+    sama tanpa geser, tombol Book mati sebelum field lengkap & hidup sesudahnya, jam
+    ke-simpen, dan harga gak kosong walau katalog di-`abort()`.
+  - **Gotcha harness**: `flex-basis` persen ngukur ke **content box**, dan track-nya punya
+    padding sendiri - jadi kartu 86% kebaca ~0.76-0.79 dari `clientWidth`. Jangan dikira
+    kartunya mengecil. Dan span harga bawa utility `PRICE`, **bukan class `.price`** - nyari
+    `.price` di situ hasilnya nihil (sempet bikin harness lapor "harga kosong" palsu).
 
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,

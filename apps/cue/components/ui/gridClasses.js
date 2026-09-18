@@ -89,3 +89,28 @@ export const GRID_CAROUSEL_4UP =
   'min-[993px]:gap-[1.4rem] min-[993px]:[&>*]:flex-[0_0_calc((100%_-_3_*_1.4rem)_/_4)] ' +
   'max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
   'max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_88%] [&>*]:[scroll-snap-align:start]' + ' ' + BLEED_MOBILE;
+
+// Charter builder's plan cards. Slider on the phone, plain 3-up grid from 769px
+// (Wayan, Sep 2026: "untuk mobile ... bisa di slide ke kanan kiri ... di desktop
+// tampil biasa gak isi slider").
+//
+// The one slider on the site that deliberately does NOT take BLEED_MOBILE: this
+// track lives INSIDE the white builder panel, not in a page section. Bleeding it
+// to the viewport would run the cards out past the panel's own edge and shadow,
+// which reads as a rendering fault rather than a full-width slider. The negative
+// margin here is the panel's padding instead, so a card can sit flush with the
+// panel edge and the next one peeks in - the peek is what says "there is more".
+//
+// Cards are stretched to equal height (items-stretch) because they carry their
+// own Book button: ragged bottoms would put the three buttons at three heights.
+export const GRID_PLANS =
+  // items-start on the phone, items-stretch from 769px: stretched cards all end
+  // level, which is what three side by side need, but with one card on screen it
+  // just opens a hole between the text and the button on whichever card is
+  // shorter than the Extended one (which carries an extra field).
+  'flex items-start gap-[var(--space-1)] overflow-x-auto overflow-y-hidden pb-1 ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  '[margin-inline:calc(var(--space-2)*-1)] px-[var(--space-2)] ' +
+  '[&>*]:flex-[0_0_86%] [&>*]:[scroll-snap-align:center] ' +
+  'min-[769px]:grid min-[769px]:grid-cols-3 min-[769px]:items-stretch min-[769px]:overflow-visible min-[769px]:m-0 min-[769px]:p-0 ' +
+  'min-[769px]:[&>*]:flex-none';

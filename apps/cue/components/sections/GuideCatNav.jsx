@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronDown, LayoutGrid } from 'lucide-react';
-import { Collapse } from '@/components/ui/Reveal';
+import CatDropdown, { CAT_ITEM } from '@/components/ui/CatDropdown';
 
 // Guide category nav, borrowed from Our Company (Sep 2026, Wayan: "taruh tab
 // kategorinya seperti kategori di our company, kayaknya itu lebih masuk akal").
@@ -23,11 +21,7 @@ import { Collapse } from '@/components/ui/Reveal';
 // Rendered TWICE from GuideArticle with different variants, because the two forms
 // belong in different columns: the desktop list sits in the side column beside the
 // article, the mobile dropdown at the top of the article card itself.
-const ITEM = (active) =>
-  `text-left font-body text-body no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`;
-
 export default function GuideCatNav({ tabs = [], variant = 'desktop' }) {
-  const [open, setOpen] = useState(false);
   if (!tabs.length) return null;
   const active = tabs.find((t) => t.active) || tabs[0];
 
@@ -41,7 +35,7 @@ export default function GuideCatNav({ tabs = [], variant = 'desktop' }) {
         aria-label="Guide categories"
       >
         {tabs.map((t) => (
-          <a key={t.href} href={t.href} className={ITEM(t.active)} aria-current={t.active || undefined}>
+          <a key={t.href} href={t.href} className={CAT_ITEM(t.active)} aria-current={t.active || undefined}>
             {t.label}
           </a>
         ))}
@@ -49,31 +43,27 @@ export default function GuideCatNav({ tabs = [], variant = 'desktop' }) {
     );
   }
 
-  // Mobile: the active category, tap to see the rest. Icon = 2x2 grid (categories),
-  // not the navbar's 3-line hamburger - same call Our Company made.
+  // Mobile: the active category, tap to see the rest - the same control Our
+  // Company uses, floating over the article rather than pushing it down.
   return (
-    <div className="min-[993px]:hidden w-full pb-3 mb-4 border-b border-line">
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer font-body text-body font-semibold text-gold"
-      >
-        <span className="flex items-center gap-[0.6rem]">
-          <LayoutGrid className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
-          {active.label}
-        </span>
-        <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-      </button>
-      <Collapse open={open}>
-        <div className="mt-3 gap-1 flex flex-col" aria-label="Guide categories">
-          {tabs.map((t) => (
-            <a key={t.href} href={t.href} className={`${ITEM(t.active)} py-[0.35rem]`} aria-current={t.active || undefined}>
-              {t.label}
-            </a>
-          ))}
-        </div>
-      </Collapse>
-    </div>
+    <CatDropdown
+      className="min-[993px]:hidden w-full pb-3 mb-4 border-b border-line"
+      label={active.label}
+      ariaLabel="Guide categories"
+    >
+      {(close) =>
+        tabs.map((t) => (
+          <a
+            key={t.href}
+            href={t.href}
+            onClick={close}
+            className={`${CAT_ITEM(t.active)} py-[0.35rem]`}
+            aria-current={t.active || undefined}
+          >
+            {t.label}
+          </a>
+        ))
+      }
+    </CatDropdown>
   );
 }

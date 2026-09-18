@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronDown, LayoutGrid } from 'lucide-react';
-import { Collapse } from '@/components/ui/Reveal';
+import CatDropdown, { CAT_ITEM } from '@/components/ui/CatDropdown';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -71,7 +70,6 @@ function FAQBody() {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const [menuOpen, setMenuOpen] = useState(false);
   const active = TABS.find((t) => t.id === tab);
 
   useEffect(() => {
@@ -86,7 +84,6 @@ export default function OurCompany() {
 
   const goTo = (id) => {
     setTab(id);
-    setMenuOpen(false);
     window.history.replaceState(null, '', `#${id}`);
   };
 
@@ -113,38 +110,27 @@ export default function OurCompany() {
           ))}
         </nav>
 
-        {/* Mobile: dropdown toggle showing the active tab, tap to expand the category list.
-            Icon = 2x2 grid (categories), not the 3-line hamburger navbar already uses. */}
-        <div className="min-[993px]:hidden w-full pb-3 border-b border-line">
-          <button
-            type="button"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((v) => !v)}
-            className="flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer font-body text-body font-semibold text-gold"
-          >
-            <span className="flex items-center gap-[0.6rem]">
-              <LayoutGrid className="w-[18px] h-[18px] shrink-0" aria-hidden="true" />
-              {active.label}
-            </span>
-            <ChevronDown className={`w-4 h-4 shrink-0 text-muted transition-[rotate] duration-200 ${menuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
-          </button>
-          <Collapse open={menuOpen}>
-          <div className="mt-3 gap-1 flex flex-col" role="tablist" aria-label="Our company">
-            {TABS.map((t) => (
+        {/* Mobile: the active tab, tapped to reach the rest. Shared with the guide
+            articles' category nav, and floating rather than inline - see CatDropdown. */}
+        <CatDropdown
+          className="min-[993px]:hidden w-full pb-3 border-b border-line"
+          label={active.label}
+          ariaLabel="Our company"
+        >
+          {(close) =>
+            TABS.map((t) => (
               <button
                 key={t.id}
                 type="button"
-                role="tab"
-                aria-selected={tab === t.id}
-                onClick={() => goTo(t.id)}
-                className={`p-0 py-[0.35rem] bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
+                aria-current={tab === t.id || undefined}
+                onClick={() => { goTo(t.id); close(); }}
+                className={`p-0 py-[0.35rem] bg-transparent border-none cursor-pointer ${CAT_ITEM(tab === t.id)}`}
               >
                 {t.label}
               </button>
-            ))}
-          </div>
-          </Collapse>
-        </div>
+            ))
+          }
+        </CatDropdown>
 
         <div className="flex-1 min-w-0">
           <section id="about" hidden={tab !== 'about'}>

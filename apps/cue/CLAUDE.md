@@ -247,11 +247,11 @@ When unsure, ask first (keep it short).
     karakter (kartu-nya 1000px). Ini kompromi yang disengaja — jangan dilebarin ke penuh.
   - **NAV KATEGORI = POLA OUR COMPANY**, di `components/sections/GuideCatNav.jsx`
     (Sep 2026, Wayan: "taruh tab kategorinya seperti kategori di our company, kayaknya itu
-    lebih masuk akal"). Satu komponen, dua varian — `variant="desktop"` (list vertikal
-    sticky di `TOUR_LAYOUT_SIDE`) + `variant="mobile"` (baris kategori aktif + ikon
-    `LayoutGrid`, di-tap buka sisanya lewat `<Collapse>`). Gaya item-nya di-adu langsung
-    lawan `/our-company.html`: ukuran sama, aktif `font-semibold text-gold`, idle
-    `text-muted`.
+    lebih masuk akal"). Dua varian — `variant="desktop"` (list vertikal sticky di
+    `TOUR_LAYOUT_SIDE`) + `variant="mobile"`, yang sekarang **komponen BERSAMA sama Our
+    Company**: `components/ui/CatDropdown.jsx` (+ `CAT_ITEM` buat gaya item, dipakai
+    varian desktop juga). Dua halaman itu kontrolnya emang udah sama persis — satu salinan
+    = gak bisa melenceng lagi. Ganti bentuk dropdown = edit 1 file, dua-duanya ikut.
   - **Track pill tour UDAH DICOBA & DIBUANG** (sempat ke-commit di 27f61d4). Kategori guide
     ada 5 dan panjang ("About the Island", "People & Culture"), jadi pill-nya kudu
     `TRACK_SCROLL` + `segmentLink` (segmen selebar teks + row yang bisa di-geser) —
@@ -698,6 +698,31 @@ Order **must be kept** (declarations first, run last):
     Fade + naik dikit, gak nyentuh height, jadi `absolute` anaknya aman.
   - Durasi/easing-nya mirror token CSS (`--dur`/`--ease-out`) biar satu ritme sama transition
     lain. `useReducedMotion` → durasi 0 (hormatin setting OS).
+  - **Dropdown kategori (Our Company + guide article) UDAH PINDAH `Collapse` → `PopMenu`**
+    (Sep 2026, Wayan: "gua mau dropdownya itu behaviornya seperti hamburger menu, kalo di
+    buka gak buat konten geser menurun"). `Collapse` animasi `height`, jadi dia **nyorong
+    semua yang di bawahnya** — buka daftar kategori pas lagi baca, paragraf yang lagi dibaca
+    kegeser. `PopMenu` cuma fade+naik, panelnya `absolute` = ngambang di atas artikel.
+    Dua-duanya lewat `CatDropdown`.
+  - **JEBAKAN posisi panel `PopMenu`**: `m.div` punya `transform` SELAMA animasi masuk,
+    jadi dia jadi containing block buat anak `absolute`-nya; begitu animasi kelar Framer
+    nge-set `transform: none` dan containing block-nya **pindah** ke pembungkus `relative`
+    terdekat. Kalau dua acuan itu tingginya beda, panelnya **lompat** pas animasi selesai.
+    Makanya pembungkus `relative`-nya WAJIB **mepet ke trigger** (nol padding sendiri) —
+    jarak/border ditaro di elemen di luarnya. Pola yang sama dipakai `GuideHub` (`GC_NAV`
+    cuma mbungkus tombolnya).
+  - Panel ngambang WAJIB punya: bg solid + border + `--shadow-lg` (kalau nggak teks artikel
+    nembus keliatan), z-index, **tap-di-luar & Escape buat nutup** (beda sama `Collapse`
+    yang nyorong konten jadi jelas kebuka — yang ngambang bisa ketinggalan kebuka pas
+    di-scroll).
+  - Ngetes-nya: harness `verify-catdrop.mjs` + `verify-catpick.mjs` di scratchpad —
+    patokannya **posisi elemen di bawah dropdown GAK BERUBAH** pas dibuka (itu inti
+    permintaannya) + tinggi dokumen tetap, panel di atas konten (hit-test), gak kepotong di
+    320/390/430, dan milih kategori masih ganti section/hash (Our Company) & link-nya masih
+    ke anchor hub (guide).
+  - **Gotcha harness**: `button[aria-expanded]` nyomot toggle submenu drawer navbar yang
+    nangkring di luar layar di SEMUA halaman. Trigger-nya dikasih hook `data-catnav` —
+    pakai itu.
   - **Ongkos: +36 KB gzip di SEMUA halaman** (homepage 295 → 332 KB), soalnya Navbar ada di mana-mana.
     Udah pakai konfigurasi paling irit (`LazyMotion` + `m` + `domAnimation`). **Code-split fitur
     animasinya malah LEBIH GEDE** (339 KB) - chunk async-nya duplikat core yang tetep dibutuhin

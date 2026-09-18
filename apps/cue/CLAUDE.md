@@ -282,6 +282,15 @@ When unsure, ask first (keep it short).
       **Bulatannya di-zoom 1.45x terus di-crop tengah** biar tumpah keluar ubin — kalau cuma
       di-flatten ke emas, nyisa **cincin samar** (emas di artwork-nya rada gradient, gak ada
       warna rata yang persis sama).
+    - **"Bikin semua bulat" UDAH DITANYA & GAK BISA** (Sep 2026, Wayan: "gua maunya biar semua
+      circle gabisa?"). **iOS SELALU** nge-mask ikon home screen ke kotak-bunder (squircle) —
+      gak ada aplikasi mana pun yang bisa bulat di situ. Yang bisa diatur cuma **isi sudutnya**:
+      emas (sekarang) · putih (ditolak) · transparan → **iOS isi HITAM**, jadi malah kotak hitam
+      + bulatan emas di dalamnya, lebih jelek dari dua-duanya. Wayan pilih **emas**. Jadi kalau
+      nanti ada yang ngeliat ubin ini terus kepikiran "kok gak bulat" — ini jawabannya, jangan
+      dicoba lagi.
+    - Ikon home screen cuma nongol kalau tamu sengaja "Add to Home Screen". Tab browser, hasil
+      Google, bookmark — semuanya pakai yang bulat.
   - **`favicon.svg` = cangkang SVG yang MBUNGKUS raster**, sama kayak file yang dia gantiin —
     monogram-nya glyph custom, gak ada vektor jujurnya. Bedanya: sudutnya **transparan**
     (tab browser bisa gelap, jadi bulatannya harus kebaca bulat, bukan kotak putih).

@@ -245,18 +245,34 @@ When unsure, ask first (keep it short).
   - **Teksnya tetep dibatesin `--container-read` (720px) TAPI rata KIRI di dalam kartu**,
     bukan ke-center: tepi kirinya lurus sama halaman tour, tapi barisnya gak jadi ~145
     karakter (kartu-nya 1000px). Ini kompromi yang disengaja — jangan dilebarin ke penuh.
-  - **Tab kategori pakai track pill tour**, TAPI **variannya `TRACK_SCROLL` + `segmentLink`**,
-    bukan `TRACK`/`segment`: tab tour cuma 4 kata pendek jadi muat pakai `flex-1`; kategori
-    guide 5 dan panjang ("About the Island", "People & Culture") — pakai `flex-1` di layar
-    390px **KEPOTONG**. Jadi segmennya selebar teksnya & row-nya bisa di-geser. Plus
-    `no-underline` (tab tour itu `<button>`, ini `<a>` yang default-nya digarisbawahi).
-  - Tab tetep **HP doang**, sidebar kategori tetep **desktop doang** — sama kayak sebelumnya,
-    yang berubah cuma gayanya. Jangan dibikin dua-duanya nongol bareng, nanti dobel.
-  - **Kenapa tab-nya BUKAN heading artikel** (kayak Overview/Details/Included punya tour):
-    tiap guide punya **5-9 heading, ada yang 46 karakter** — di-jejelin ke track pill yang
-    gak nge-scroll itu gak kebaca. Kalau mau dicoba lagi, itu masalahnya.
+  - **NAV KATEGORI = POLA OUR COMPANY**, di `components/sections/GuideCatNav.jsx`
+    (Sep 2026, Wayan: "taruh tab kategorinya seperti kategori di our company, kayaknya itu
+    lebih masuk akal"). Satu komponen, dua varian — `variant="desktop"` (list vertikal
+    sticky di `TOUR_LAYOUT_SIDE`) + `variant="mobile"` (baris kategori aktif + ikon
+    `LayoutGrid`, di-tap buka sisanya lewat `<Collapse>`). Gaya item-nya di-adu langsung
+    lawan `/our-company.html`: ukuran sama, aktif `font-semibold text-gold`, idle
+    `text-muted`.
+  - **Track pill tour UDAH DICOBA & DIBUANG** (sempat ke-commit di 27f61d4). Kategori guide
+    ada 5 dan panjang ("About the Island", "People & Culture"), jadi pill-nya kudu
+    `TRACK_SCROLL` + `segmentLink` (segmen selebar teks + row yang bisa di-geser) —
+    artinya di HP sebagian kategori **kesembunyi di luar layar**, harus di-swipe dulu baru
+    ketauan ada. Dropdown Our Company nunjukin semuanya sekali tap. `TRACK_SCROLL`/
+    `segmentLink` UDAH DIHAPUS dari `detailCardClasses.js` (dead) — kalau mau balik ke
+    pill, tulis ulang, jangan cari sisanya.
+  - **Border-nya `border-l`, BUKAN `border-r`** kayak Our Company: kolom kategori guide
+    ada di **KANAN** (Our Company di kiri), jadi garisnya harus di sisi yang ngadep konten.
+    Mindahin kolomnya ke kiri = artikel ke-geser dari 48px yang baru aja disamain sama
+    halaman tour — jangan.
+  - Nav-nya **HP = dropdown, desktop = kolom** (satu komponen, varian ke-hide lewat
+    `max-[992px]:hidden` / `min-[993px]:hidden`). Jangan dibikin dua-duanya nongol
+    bareng, nanti dobel.
+  - **Kenapa isinya BUKAN heading artikel** (kayak Overview/Details/Included punya tour):
+    kategori itu navigasi ANTAR-guide (link ke hub), heading itu navigasi DALAM halaman —
+    beda peran. Daftar isi "On this page" dari heading artikel sendiri masih mungkin
+    ditambah nanti di kolom yang sama (list vertikal muat 5-9 heading panjang, pill track
+    nggak) — belum diputusin Wayan.
   - Isi artikel + sidebar + blok "You might also like"/"See our tours" **isinya TIDAK diubah**.
-  - Verifikasi: `verify-guidehero.mjs` di scratchpad (23/23) — 15 halaman semuanya punya foto,
+  - Verifikasi: `verify-guidehero.mjs` di scratchpad (34/34) — 15 halaman semuanya punya foto,
     3 hook & CTA; foto/judul posisi + ukurannya **identik sama `/ubud-tour.html`**; di HP
     judulnya hitam di sheet putih (bukan putih di atas foto lagi); artikel & sidebar utuh.
 - Body semua halaman guide punya class **`.guide-article-page`** (beda dari `.guide-article` yang

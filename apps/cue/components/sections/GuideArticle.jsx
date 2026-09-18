@@ -1,25 +1,12 @@
 import JsonLd from '@/components/JsonLd';
-import { CARD, CARD_WRAP, STRIP, TRACK_SCROLL, segmentLink } from '@/components/ui/detailCardClasses';
+import { CARD, CARD_WRAP } from '@/components/ui/detailCardClasses';
+import GuideCatNav from '@/components/sections/GuideCatNav';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
 import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 
-// Category nav, now wearing the tour pages' pill track (Sep 2026, Wayan: "tab nya
-// buat seperti tab tour"). Still phone-only and still the 5 hub categories - on
-// desktop the sidebar carries them, exactly as before; only the styling changed,
-// from a row of plain underlined tabs to the shared segmented control.
-// [@media(max-width:992px)] (not md:) to match the sidebar's own breakpoint exactly.
-const CATTABS = 'hidden [@media(max-width:992px)]:block ' + STRIP;
-// Guide chrome (migrasi TW-B3 #336): article+sidebar layout, category
-// sidebar (desktop). Sidebar di-derive dari data.tabs (item + is-active identik) -
-// dulu raw HTML string `sideHtml` per halaman.
-const SIDEBAR = '[border:1px_solid_var(--line)] rounded-lg py-[1.2rem] px-[1.1rem] bg-white';
-const SIDEBAR_TITLE = 'font-body font-semibold text-h3 text-green mb-[0.8rem]';
-const SIDEBAR_LIST = 'list-none [&_li+li]:mt-[0.35rem]';
-const sidebarLink = (active) =>
-  `block py-2 px-[0.6rem] rounded-sm no-underline text-small ${active ? 'bg-cream text-amber font-semibold' : 'text-green font-medium'}`;
 // The prose keeps a readable measure inside the wide card: it starts at the card's
 // left edge (so it lines up with a tour page's content) but stops well short of the
 // right one. --container-read is the width CLAUDE.md pins for reading columns - a
@@ -64,13 +51,7 @@ export default function GuideArticle({ data }) {
         <div className={TOUR_LAYOUT_MAIN}>
           <div className={CARD_WRAP}>
             <div className={CARD}>
-              <nav className={CATTABS} aria-label="Guide categories">
-                <div className={TRACK_SCROLL}>
-                  {data.tabs.map((t) => (
-                    <a className={segmentLink(t.active)} href={t.href} key={t.href} aria-current={t.active || undefined}>{t.label}</a>
-                  ))}
-                </div>
-              </nav>
+              <GuideCatNav tabs={data.tabs} variant="mobile" />
               <div className={PROSE}>
                 <Prose blocks={data.body} headingVariant="guide" />
               </div>
@@ -78,16 +59,7 @@ export default function GuideArticle({ data }) {
           </div>
         </div>
         <div className={TOUR_LAYOUT_SIDE}>
-          <aside className="[@media(max-width:992px)]:hidden">
-            <div className={SIDEBAR}>
-              <p className={SIDEBAR_TITLE}>Categories</p>
-              <ul className={SIDEBAR_LIST}>
-                {data.tabs.map((t) => (
-                  <li key={t.href}><a className={sidebarLink(t.active)} href={t.href}>{t.label}</a></li>
-                ))}
-              </ul>
-            </div>
-          </aside>
+          <GuideCatNav tabs={data.tabs} variant="desktop" />
         </div>
       </div>
 

@@ -585,6 +585,52 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     About masih selebar viewport & sudutnya 0. Halaman gak melar di semua lebar.
 - **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
 
+## Transfer / Airport / Charter = SATU CANGKANG (Sep 2026)
+Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
+harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sama persis:
+
+    <section CHARTER_HERO + bg-[url(...)]>      <- foto + judul + sub + FORM-nya
+      <div CHARTER_HERO_INNER(_WIDE)>           <- charter pakai _WIDE (butuh 3 kartu)
+    <section INFO_SECTION_DETAIL>               <- band cream
+      <div INFO_CARD + INFO_CARD_BODY>          <- kartu putih, --container-mid
+        <Prose ... headingVariant="company" />
+
+- **Yang boleh beda cuma FOTO hero-nya.** Sisanya (min-height 620, padding, gradient
+  overlay 0.5→0.64, ukuran+bobot+warna H1, bg band, lebar kartu, padding kartu, radius,
+  offset kiri) WAJIB identik - dijaga `verify-trio.mjs` di scratchpad (6 lebar × 3
+  halaman, 120 assertion): tiap halaman tanda-tangan cangkangnya diadu lawan charter.
+- **`INFO_CARD_BODY`** (ritme paragraf di dalam kartu) di `infoClasses.js`. Dulu namanya
+  `BODY_TEXT`, const lokal di `CharterSection` - transfer & airport gak ikut, jadi
+  paragrafnya beda. Sekarang satu string, tiga pemakai.
+- **Isi kartu dibangun `lib/detailBlocks.js`** buat transfer & airport:
+  judul kartu → strip fakta (`{type:'facts'}`) → include/exclude (`{type:'boxes'}`) →
+  prosa halaman itu sendiri. Charter tetep nulis blok-nya sendiri di `charter.js` (dia
+  gak punya strip fakta + punya baris kotak penjelasan kedua) - yang wajib sama itu
+  CANGKANG-nya, bukan isinya.
+- **Judul kotak = "What's included" / "Not included"** di ketiganya. Transfer & airport
+  dulu nulis "What's excluded" - ide yang sama, kata beda, di halaman yang dibaca
+  berurutan sama tamu.
+- **`<DetailTinfo>` UDAH DIHAPUS** dan class **`.tinfo` emang gak pernah punya rule** di
+  `style.css`. Halaman airport nulis `<section className="tinfo">`, jadi section itu
+  **padding-nya NOL**: di HP 390px strip fakta & kotaknya mulai di **0px** (bordernya
+  kepotong tepi layar) sementara blok yang sama di /transfer duduk di 21px. Ke-tangkep pas
+  audit, bukan pas ngoding - **kalau nulis `className` string mentah, `grep` dulu
+  rule-nya beneran ada.**
+- **Yang dibuang bareng itu**: hero tulis-tangan di `TransferSection` (min-h 560 / inner
+  560 / overlay .45-.55 - beda dari charter padahal FOTO-nya sama), `max-w-[960px]` +
+  `max-w-[820px]` (dua-duanya bukan token container), dan gutter `px-[1.3rem]` (20.8px,
+  bukan 24 desktop / 16 HP).
+- **Gotcha harness yang nyaris nipu**: `verify-trio` versi pertama helper-nya
+  `cs = (el) => getComputedStyle(el)` - argumen pseudo-nya ke-buang, jadi
+  `cs(hero,'::before')` diem-diem ngebalikin gaya SECTION-nya (= foto hero). Harness-nya
+  lapor 12 gagal "cangkang beda" padahal yang beda cuma fotonya, yang emang disengaja.
+  Kalau harness bilang beda, **cek dulu harness-nya baca yang bener**.
+- **Route di /transfer TETEP markup halaman** (bukan blok Prose): itu kontrol berharga yang
+  bisa ditap, bukan bacaan. Dia duduk DI DALAM kartu biar halamannya tetep hero + 1 kartu.
+  **Tombolnya masih MATI** - `TransferSection` bukan client component & gak ada
+  `onClick`, padahal catatannya nulis "tap a route to pre-fill the search". Itu bug
+  perilaku, sengaja gak dibenerin di perubahan layout ini, masih nunggu Wayan.
+
 ## Sticky bottom bar (Sep 2026)
 **Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
 yang sama di **`components/ui/stickyBar.jsx`** (`BAR_SHELL`) — ganti bentuk/warna bar =

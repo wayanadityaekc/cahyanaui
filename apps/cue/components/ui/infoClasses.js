@@ -14,6 +14,12 @@ export const INFO_CARD =
   '[box-shadow:0_10px_30px_rgba(31,61,43,0.06)] max-[576px]:p-[1.75rem_1.25rem] ' +
   '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
 
+// Paragraph rhythm inside the white detail card. Was a local BODY_TEXT const in
+// CharterSection ("Our Company's reading style"); exported here (Sep 2026) so the
+// transfer and airport cards read identically instead of each page deciding.
+export const INFO_CARD_BODY =
+  '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
+
 // .info__container article variant = the .guide-article reading column (narrow read
 // width, left-aligned, bare <p> styling for Prose 'para' blocks). Merged in so the
 // separate .guide-article class isn't needed on the 3 consumers.

@@ -1,5 +1,5 @@
 import CharterBuilder from '@/components/sections/CharterBuilder';
-import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
+import { INFO_SECTION_DETAIL, INFO_CARD, INFO_CARD_BODY } from '@/components/ui/infoClasses';
 import Prose from '@/components/prose/Prose';
 import { CHARTER } from '@/content/shared/charter';
 import { CHARTER_HERO, CHARTER_HERO_INNER_WIDE, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
@@ -17,7 +17,8 @@ import { CHARTER_HERO, CHARTER_HERO_INNER_WIDE, CHARTER_HERO_TITLE, CHARTER_HERO
 // BODY_TEXT and headingVariant="company" are Our Company's reading style, copied
 // here rather than reinvented: paragraphs on --lh-body at --fs-body, and section
 // headings left-aligned with no centred underline.
-const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
+// (BODY_TEXT moved to infoClasses as INFO_CARD_BODY - transfer and airport read
+// from the same string now, Sep 2026.)
 
 export default function CharterSection() {
   return (
@@ -30,7 +31,7 @@ export default function CharterSection() {
         </div>
       </section>
       <section className={INFO_SECTION_DETAIL}>
-        <div className={`${INFO_CARD} ${BODY_TEXT}`}>
+        <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
           <Prose blocks={CHARTER.info} headingVariant="company" />
         </div>
       </section>

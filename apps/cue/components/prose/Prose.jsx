@@ -7,6 +7,7 @@
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { infoList } from '@/components/ui/infoClasses';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
+import InfoFacts from '@/components/ui/InfoFacts';
 import { unlinkHiddenTours } from '@/lib/routes';
 
 // headingVariant tunes the `--sub` article headings per context (the old
@@ -55,6 +56,11 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
             {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
           </ul>
         );
+      case 'facts':
+        // The spec strip that opens the transfer / airport details card
+        // (Sep 2026). A block type rather than page markup so those two pages
+        // compose their card the same way the charter page does.
+        return <InfoFacts key={i} items={b.items} />;
       case 'boxes':
         // Option B boxes (Sep 2026): a row of bordered boxes instead of marker
         // lists / loose headings. Each item is { title, variant?, paras?, list? };

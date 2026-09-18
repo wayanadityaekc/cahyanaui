@@ -19,4 +19,6 @@
 //   { type: 'list', variant: 'yes' | 'no', items: [html, ...] } - checklist (.info__list.info__list--yes|--no)
 //   { type: 'back', html }                                     - closing "back to guide" link (owned by TW-B3, .guide-crumb-back)
 
-export const PROSE_BLOCK_TYPES = ['crumb', 'lead', 'heading', 'para', 'list', 'back'];
+// Nothing imports this today - it is documentation that can rot, and it had
+// already fallen behind ('boxes' was added without it). Kept in step on purpose.
+export const PROSE_BLOCK_TYPES = ['crumb', 'lead', 'heading', 'para', 'list', 'boxes', 'facts', 'back'];

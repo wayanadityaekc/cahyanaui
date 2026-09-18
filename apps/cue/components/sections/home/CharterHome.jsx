@@ -1,7 +1,10 @@
 import CharterPrice from '@/components/CharterPrice';
 import CharterSurcharge from '@/components/CharterSurcharge';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
-import { PLAN_PRICE_BOX, PLAN_PRICE_KICK, PLAN_PRICE_BIG } from '@/components/ui/charterPlanClasses';
+import {
+  PLAN_PRICE_BOX, PLAN_PRICE_KICK, PLAN_PRICE_BIG,
+  PLAN_ROW, PLAN_ROW_ON, PLAN_NAME, PLAN_SUB,
+} from '@/components/ui/charterPlanClasses';
 import { CHARTER_CARDS } from '@/content/shared/home';
 
 // The homepage charter section reads as RATE ROWS, not a card slider (Sep 2026,
@@ -24,18 +27,10 @@ import { CHARTER_CARDS } from '@/content/shared/home';
 // Not a client component any more: with the slider gone nothing here holds state.
 // CharterPrice and CharterSurcharge carry their own 'use client'.
 const ROWS = 'mt-[var(--space-4)] flex flex-col gap-2 min-[769px]:grid min-[769px]:grid-cols-2 min-[769px]:gap-x-4 min-[769px]:gap-y-[0.625rem]';
-// pop = the Full Day rate. Marked with the CTA border instead of a badge beside
-// the name: at 320px in rupiah the price box leaves the name column barely wider
-// than the name itself, and anything sharing that line wraps. The word "Popular"
-// rides on the sub line, where a wrap costs nothing.
-const ROW_BASE = 'flex items-center gap-3 py-[0.7rem] px-[0.875rem] rounded-md bg-white';
-const ROW = `${ROW_BASE} [border:1px_solid_var(--line)]`;
-// The inset ring is what makes the CTA border read as deliberate rather than as a
-// 1px colour slip; it thickens the line without moving the row's box by a pixel,
-// so the popular row still sits level with the others in the grid.
-const ROW_POP = `${ROW_BASE} [border:1px_solid_var(--color-cta)] [box-shadow:inset_0_0_0_1px_var(--color-cta)]`;
-const NAME = 'block text-h3 font-semibold text-gold';
-const SUB = 'block text-[0.66rem] leading-[1.45] text-muted';
+// pop = the Full Day rate. Marked with the shared highlighted row instead of a
+// badge beside the name: at 320px in rupiah the price box leaves the name column
+// barely wider than the name itself, and anything sharing that line wraps. The
+// word "Popular" rides on the sub line, where a wrap costs nothing.
 
 export default function CharterHome() {
   return (
@@ -52,10 +47,10 @@ export default function CharterHome() {
 
         <div className={ROWS}>
           {CHARTER_CARDS.map((c) => (
-            <div className={c.pop ? ROW_POP : ROW} key={c.hours}>
+            <div className={c.pop ? PLAN_ROW_ON : PLAN_ROW} key={c.hours}>
               <span className="flex-1 min-w-0">
-                <span className={NAME}>{c.hours}</span>
-                <span className={SUB}>
+                <span className={PLAN_NAME}>{c.hours}</span>
+                <span className={PLAN_SUB}>
                   {c.badge && <b className="font-semibold text-amber-d">{c.badge} &middot; </b>}
                   {c.label}{c.note ? ` \u00b7 ${c.note}` : ''}
                 </span>

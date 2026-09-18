@@ -367,7 +367,8 @@ When unsure, ask first (keep it short).
   `components/ui/gridClasses.js` dipakai SEMUA track: `GRID_XPLORE` (homepage Tours +
   Destinations) · `GRID_SLIDER` (guide home) · `GRID_GUIDEHUB` (5 baris kategori guide hub) ·
   `GRID_GUIDEMORE` (guide article) · `GRID_CAROUSEL_4UP` (carousel halaman tour/attraction) ·
-  `GRID_RELATED` · slider kartu charter di homepage. **Bikin slider baru → import konstanta
+  `GRID_RELATED`. (Slider kartu charter di homepage UDAH GAK ADA - section itu sekarang baris
+  tarif, lihat "Homepage section order".) **Bikin slider baru → import konstanta
   itu, jangan tulis bleed sendiri.**
   - **Rumusnya `margin-inline: calc(50% - 50vw)`, BUKAN `-mx-6`** (yang dipakai slider guide
     dulu). Alesannya: padding container tiap slider BEDA — 24px di homepage & halaman guide,
@@ -501,8 +502,8 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
       yang sama. Di HP 3 dari 4 tarif ada di luar layar. Sekarang **satu CTA** "Build your charter"
       → `/charter.html` (pakai `BTN_BOOK`, jadi `no-underline` udah ikut — itu yang Wayan minta),
       dan semua tarif keliatan sekaligus dengan tinggi lebih pendek dari 1 kartu lama.
-    - **HP 1 kolom, desktop (`min-[769px]`) 2 kolom × 2 baris.** Beda dari `GRID_PLANS` yang 3-up di
-      993px — panel homepage selebar `--container` (1200), bukan panel builder yang sempit.
+    - **HP 1 kolom, desktop (`min-[769px]`) 2 kolom × 2 baris** — panel homepage selebar
+      `--container` (1200), jadi 769 udah cukup lega buat 2 kolom.
     - **Badge "Popular" JANGAN ditaro sebaris sama nama jam.** Di 320px pakai rupiah, box harga nyisain
       kolom nama cuma sedikit lebih lebar dari namanya sendiri — apa pun yang nemenin di baris itu
       bakal wrap. Penanda barisnya = **border `--color-cta` + inset ring** (nol ongkos lebar), kata
@@ -1056,98 +1057,65 @@ Order **must be kept** (declarations first, run last):
   - Habis nyentuh `lib/schemas.js` → jalanin **`node tools/form-rules-test.mjs`** (ngadu
     schema baru vs aturan if-chain lama, ~394rb kombinasi, harus "all identical").
 - **Itinerary**: localStorage `cue_itinerary_v1`. Each add = a new day. Badge in the navbar.
-- **Charter builder (`CharterBuilder.jsx`) - dirombak Sep 2026** (Wayan: "untuk mobile ...
-  satu kartu yang berisikan semua detail, dan button book, trus bisa di slide ke kanan kiri ...
-  di desktop tampil biasa gak isi slider"):
-  - **Urutannya: field DULU, kartu paket BELAKANGAN.** Wajib gitu, bukan selera: tiap kartu
-    punya tombol Book sendiri, jadi area/tanggal/jam/tamu harus udah keisi sebelum tombol
-    mana pun hidup. Kalau field ditaro di bawah, tamu nge-tap Book terus disuruh balik ke atas.
-  - **Tombol Book ADA DI DALAM tiap kartu** - nge-tap Book di kartu itu = booking durasi itu.
-    Gak ada lagi state "durasi kepilih" yang kepisah dari tombolnya.
-  - **Slider-nya `GRID_PLANS` di `gridClasses.js`** - HP geser + snap, **desktop
-    (`min-[769px]`) jadi grid 3 kolom biasa**. **Ini SATU-SATUNYA slider yang sengaja GAK
-    pakai `BLEED_MOBILE`**: track-nya di DALAM panel putih builder, bukan di section
-    halaman - kalau di-bleed ke viewport, kartunya keluar dari tepi + bayangan panel dan
-    keliatan kayak render rusak. Track-nya juga gak punya padding kiri/kanan, jadi 1 langkah
-    scroll = persis 1 kartu.
-  - **Kartu paket = SATU kartu penuh + panah** (Wayan, Sep 2026: "kelihatan 1 card emang
-    bener-bener satu card, dan buat aja arrow kiri kanan biar bisa lihat card lainya di
-    mobile"). Di HP kartunya **100% lebar container, gak ada kartu sebelah yang ngintip**.
-    Konsekuensinya: peek yang dulu jadi petunjuk "ada kartu lain" ilang, jadi **panah kiri/
-    kanan + penghitung "1 / 3" itu WAJIB**, bukan hiasan - tanpa itu gak ada apa pun di
-    layar yang bilang paket lain ada. Panah cuma di HP (`min-[769px]:hidden`).
-  - Panah nge-scroll **TRACK**-nya (`scrollTo` ke `offsetLeft` kartu), **BUKAN
-    `scrollIntoView`** - yang itu bakal ikut narik halaman vertikal dan nendang tamu keluar
-    dari form. Index-nya dibaca ulang dari `scrollLeft` lewat listener `scroll`, jadi
-    **di-swipe tangan pun panah & penghitungnya ikut bener**.
-  - **Isi kartu = point berikon, kayak kartu listing** (Wayan: "point dengan logo seperti
-    card listing") - ikon 11px + teks 0.66rem muted, sama persis sama `META` di
-    `ListingRow.jsx`. Dipangkas jadi **1-2 point** pas kartunya dipendekin; syarat yang
-    kepotong gak ilang, ada di list Included di bawahnya.
-  - **Bentuk kartu = 2 KOLOM di atas, tombol di bawah** (Wayan, Sep 2026: "bagian atas jadi
-    dua kolom kiri kolom icon dan title seperti half day dan kanan box berisikan harga yang
-    ukuranya lumayan gede, di bawahnya baru button"). Kiri: ikon + nama paket + 1-2 point
-    berikon. Kanan: **box harga** (bg cream + border) isi kicker + angka `1.35rem`. Tombol
-    full-width di bawah dua-duanya. **Kartunya jadi 193px** (dulu 400+).
-  - **FULL DAY paling depan** (Wayan: "kalo paling depan taruh full day") - dia yang di-badge
-    Popular, dan di HP kartu pertama = satu-satunya yang keliatan tanpa tamu ngapa-ngapain.
-  - **Harga di kartu ini `text-gold` (gelap), BUKAN amber** (Wayan: "harga warna dark seperti
-    lainya"). Ini pengecualian KEDUA dari aturan "semua harga amber", alasannya sama persis
-    kayak book bar: harganya duduk tepat di atas CTA hijau, dan amber di sebelahnya berantem.
-  - **Badge "Popular" punya BARIS SENDIRI di atas judul, jangan di-inline.** Pernah ditaro
-    sebaris sama judul → "Full Day POPULAR" jadi **2 baris** di 320px dan di kolom desktop
-    yang sempit. Nama paket lebih panjang atau mata uang lain bakal ngulang bug yang sama.
-    `&nbsp;` di kartu tanpa badge biar tiga judulnya rata.
-  - **Breakpoint grid = 993px, BUKAN 769px, dan panel builder ikut melebar di angka yang
-    SAMA.** Tiga kartu 2-kolom di dalam panel 600px = ~190px per kartu, dan box harganya
-    **numpuk di atas judul** (kejadian, kebukti di screenshot). Jadi `GRID_PLANS` baru 3-up
-    di 993px, dan charter pakai `CHARTER_HERO_INNER_WIDE` (`max-w-[1040px]` di 993px+).
-    `/airport-transfer` TETEP `CHARTER_HERO_INNER` 600px - dia gak punya kartu, dilebarin
-    cuma bikin form-nya melar. **Ubah salah satu angka = ubah dua-duanya.**
-  - Select "Extra hours" di kartu Extended **sengaja tanpa label**. Dia benda tertinggi di
-    kartu mana pun, dan tambahan tingginya berubah jadi ruang kosong di atas tombol kartu
-    yang LAIN (stretch) - label-nya dibuang, celahnya turun dari 46px ke 23px. Value-nya
-    sendiri kebaca "+2 hours", jadi kontrolnya tetep jelas.
-  - `items-stretch` di SEMUA lebar. Baris flex tingginya = anak tertinggi, mau di-stretch
-    atau nggak, jadi sisa ruang dari field tambahan kartu Extended tetep ada - pertanyaannya
-    cuma mendarat di mana. Di-stretch: masuk ke DALAM kartu jadi napas di atas harga, tombol
-    nempel di tepi bawah kartu. Gak di-stretch: kartunya berhenti duluan dan sisanya jadi
-    celah nganggur antara kartu sama teks di bawahnya - itu yang keliatan kayak bug.
-  - **Field JAM (`ch-time`) BARU** - dulu form charter cuma nanya tanggal. Jam-nya ikut
-    ke-simpen di `cue_itinerary_v1` (`charters[].time`), ditampilin di My Trips sebelah
-    tanggal, dan ikut ke checkout. **Sengaja GAK dipakai buat ngitung harga**: server cuma
-    baca `area`/`duration`/`extra` (`pricing.js` baris ~207), key lain diabaikan - sama
-    kayak `flight_number` punya transfer.
+- **Charter builder (`CharterBuilder.jsx`) - dirombak LAGI Sep 2026** (Wayan: "isi kolom input
+  buat guest, date, time pickup, pickup area, di mobile tampilan pertama list card yang tadi itu,
+  kedua baru kolom inputnya, di desktop jadiin 2 kolom, di kiri list charternya di kanan kolom
+  inputnya, button cuma satu di bawah input yaitu book, langsung mengarah ke my trip untuk make
+  payment"):
+  - **Bentuknya = LIST PAKET (kiri) + KOLOM INPUT (kanan).** HP: numpuk sesuai urutan DOM —
+    **list dulu, field belakangan**, tombol Book paling bawah. Desktop **993px+**: 2 kolom
+    (`grid-cols-[1fr_340px]`). **993, BUKAN 769** — harus barengan sama panel-nya sendiri
+    (`CHARTER_HERO_INNER_WIDE`), kalau nggak 2 kolomnya ke-jejel di dalam kotak 600px.
+  - **Baris paket = `PLAN_ROW`/`PLAN_ROW_ON`/`PLAN_NAME` + `PLAN_PRICE_BOX`/`_KICK`/`_BIG` di
+    `components/ui/charterPlanClasses.js`** — persis benda yang sama yang dipakai baris tarif
+    charter di homepage. Satu definisi, dua tempat. `PLAN_ROW_ON` (border CTA + inset ring)
+    artinya **"Popular"** di homepage dan **"paket yang lagi kepilih"** di builder — sengaja satu
+    bahasa visual.
+  - **SATU tombol Book, di bawah field** (dulu tiap kartu punya tombolnya sendiri). Artinya
+    state "durasi kepilih" **BALIK LAGI** — itu disengaja atas permintaan Wayan, bukan regresi;
+    kalau nemu catatan lama yang bilang state itu udah dibuang, yang berlaku ini. Baris paket =
+    `role="radiogroup"` + `role="radio"`, default **Full Day** (paling atas & di-badge Popular).
+  - **Slider paket + panah + penghitung "1 / 3" UDAH DIBUANG** — gak ada track lagi, jadi
+    `GRID_PLANS` di `gridClasses.js` ikut **DIHAPUS** (dead). Mau balik ke slider = tulis ulang.
+  - **Kata "Popular" boleh sebaris sama nama paket TAPI wajib `flex-wrap` + nama-nya
+    `whitespace-nowrap`.** Tanpa itu di **320px pakai rupiah** box harga nyisain ruang segitu
+    dikit sampe "Full Day POPULAR" mecah **NAMA**-nya jadi 2 baris (ke-ukur, bukan tebakan — ini
+    bug yang sama persis kayak versi kartu dulu). Dengan wrap, di 320 kata-nya turun sendiri ke
+    baris bawah, di lebar lain tetep nempel di samping nama.
+  - **Field "Extra hours" pindah ke KOLOM INPUT** (cuma nongol kalau paket Extended kepilih) —
+    dia emang input, dan alesan lama dia gak berlabel (nyamain tinggi kartu) udah gak ada, jadi
+    label-nya dibalikin.
+  - **Ada baris ringkasan di atas tombol** (nama paket + total). Di HP list-nya ada di ATAS field,
+    jadi pas tamu nyampe tombol Book baris yang dia pilih bisa udah keluar layar — ini yang
+    ngasih tau tombolnya mau nge-book apa.
+  - **Field JAM (`ch-time`)** ikut ke-simpen di `cue_itinerary_v1` (`charters[].time`), muncul di
+    My Trips sebelah tanggal. **Sengaja GAK dipakai ngitung harga**: server cuma baca
+    `area`/`duration`/`extra` (`pricing.js` ~baris 207), key lain diabaikan — sama kayak
+    `flight_number` punya transfer.
   - **Kicker harga = `From` sebelum area dipilih, `Total` sesudahnya.** `tier()` emang udah
-    ngitung surcharge area + jam tambahan, jadi begitu area kepilih angkanya total beneran -
-    nulis "from" terus itu bohong kecil.
-  - **Harga gak pernah kosong lagi.** Dulu kartu nulis "from" TANPA angka selama katalog API
-    belum balas (kejadian, kebukti di screenshot). Sekarang pas `catalog` null jadi em dash +
-    tombol mati. **Sengaja gak dikasih angka cadangan**: harga charter gak ada di
-    `listings.js`, jadi angka hardcode di sini gak kejaga `check-prices` dan bisa basi
-    diem-diem. Kalau mau fallback, taro sumbernya di tempat yang kejaga tes dulu.
+    ngitung surcharge area + jam tambahan, jadi begitu area kepilih angkanya total beneran.
+  - **Harga gak pernah kosong**: pas `catalog` null jadi em dash + tombol mati. **Sengaja gak
+    dikasih angka cadangan** — tarif charter gak ada di `listings.js`, jadi angka hardcode di
+    sini gak kejaga `check-prices` dan bisa basi diem-diem.
   - **Detail halaman = SATU section** (Wayan, Sep 2026: "details seperti include exclude dan
     how charter works itu jadiin satu dan konten sama pakai styling text di our company").
-    Dulu ada list "Good to know" nempel polos di background halaman + kartu putih terpisah
-    isi artikel = dua perlakuan buat hal yang sama di satu halaman. Sekarang satu kartu,
-    judulnya "Charter Details", pakai gaya baca **Our Company** (`BODY_TEXT` +
-    `headingVariant="company"`: paragraf `--fs-body`/`--lh-body`, judul sub rata KIRI tanpa
-    garis bawah ke-center). `CHARTER.notes` + `planTerms` UDAH DIHAPUS.
-  - List campur "included + gak included" dipecah jadi **Included / Not included** pakai
-    marker standar web (`variant: 'yes'` / `'no'` → lingkaran keisi vs kosong + teks di-mute)
-    - format yang emang udah dipakai semua halaman tour & attraction.
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (84/84) - HP 320/390/430 geser + snap +
-    kartu berikutnya ngintip + halaman gak melar, desktop 1024/1280/1440 grid 3 kolom tinggi
-    sama tanpa geser, tombol Book mati sebelum field lengkap & hidup sesudahnya, jam
-    ke-simpen, dan harga gak kosong walau katalog di-`abort()`.
-  - **Gotcha harness**: "box harga ada di kanan judul" DOANG itu gak cukup - assertion itu
-    tetep lolos waktu box-nya numpuk di atas judul yang keremes jadi 1 kata per baris.
-    Ukur **judulnya juga**: `tinggi/line-height == 1` + `scrollWidth == clientWidth` per
-    kartu. Itu yang akhirnya nangkep bug desktop 190px.
-  - **Gotcha harness**: span harga bawa utility `PRICE`, **bukan class `.price`** - nyari
-    `.price` di situ hasilnya nihil (sempet bikin harness lapor "harga kosong" palsu). Sama
-    juga `.info__list--yes/--no` sama `.info__card`: udah di-migrasi ke utility, jadi gak ada
-    class-nya buat di-query - cek hasilnya (warna li yang di-mute) bukan nama class-nya.
+    Satu kartu, judulnya "Charter Details", gaya baca **Our Company** (`BODY_TEXT` +
+    `headingVariant="company"`). `CHARTER.notes` + `planTerms` UDAH DIHAPUS. List campur
+    dipecah jadi **Included / Not included** (`variant: 'yes'`/`'no'`).
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (81/81) — 320/390/430/768: list di ATAS
+    field, cuma 1 tombol Book & posisinya di BAWAH field, nama paket 1 baris, box harga di kanan
+    nama tanpa numpuk, harga gelap, halaman gak melar. Desktop 1024/1280/1440: list di KIRI field
+    & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
+    paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker From→Total, yang
+    ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.
+  - **Gotcha harness**: "box harga ada di kanan nama" DOANG gak cukup — assertion itu lolos
+    waktu namanya keremes jadi 2 baris. Ukur **nama-nya juga**: `tinggi/line-height == 1` +
+    `scrollWidth == clientWidth`. Itu yang nangkep bug badge di 320px.
+  - **Gotcha harness**: span harga bawa utility `PLAN_PRICE_BIG`, **bukan class `.price`** —
+    nyari `.price` hasilnya nihil. Sama juga `.info__list--yes/--no` & `.info__card`: udah
+    di-migrasi ke utility, jadi cek hasilnya (warna li yang di-mute) bukan nama class-nya.
+  - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;
+    kalau di-stub `'$'` harness-nya ngukur "$1.000.000" — string yang gak pernah dilihat tamu.
 
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,

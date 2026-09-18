@@ -90,35 +90,3 @@ export const GRID_CAROUSEL_4UP =
   'max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
   'max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_88%] [&>*]:[scroll-snap-align:start]' + ' ' + BLEED_MOBILE;
 
-// Charter builder's plan cards. Slider on the phone, plain 3-up grid from 769px
-// (Wayan, Sep 2026: "untuk mobile ... bisa di slide ke kanan kiri ... di desktop
-// tampil biasa gak isi slider").
-//
-// Cards are a FULL 100% on the phone - no sliver of the next one showing (Wayan:
-// "kelihatan 1 card emang bener-bener satu card"). That costs the peek that used
-// to hint at the other plans, so CharterBuilder pairs this with explicit left and
-// right arrows; without them there is nothing on screen saying more cards exist.
-//
-// 100% of the track's content box, and the track carries no horizontal padding,
-// so one scroll step is exactly one card and a card's edges line up with the rest
-// of the panel's content. That is also why this slider takes no BLEED_MOBILE: it
-// lives INSIDE the white builder panel, and bleeding it to the viewport would run
-// the cards past the panel's own edge and shadow.
-//
-// items-stretch at every width. A flex row is as tall as its tallest child either
-// way, so the slack from the Extended card's extra field exists regardless: the
-// only question is where it lands. Stretched, it sits INSIDE the shorter card as
-// breathing room above the price, with the button on the card's bottom edge where
-// it belongs. Unstretched, the card stops early and the slack becomes an orphan
-// gap between the card and the text under the slider, which reads as a bug.
-// The 3-up switch is at 993px, NOT 769px, and it has to stay in step with the
-// builder panel's own width below. Each card carries a two-column top row (title
-// left, price box right); three of those inside the 600px panel left ~190px per
-// card and the price box landed on top of the title. So: wide panel and 3-up
-// together from 993px, one card at a time with arrows below that.
-export const GRID_PLANS =
-  'flex items-stretch gap-[var(--space-2)] overflow-x-auto overflow-y-hidden ' +
-  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  '[&>*]:flex-[0_0_100%] [&>*]:[scroll-snap-align:start] ' +
-  'min-[993px]:grid min-[993px]:grid-cols-3 min-[993px]:overflow-visible ' +
-  'min-[993px]:[&>*]:flex-none';

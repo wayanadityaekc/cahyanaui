@@ -15,6 +15,11 @@ export const CHARTER_HERO =
 
 // .charter-hero__inner
 export const CHARTER_HERO_INNER = 'relative z-[2] w-full max-w-[600px] text-center';
+// Charter only. Its builder holds three plan cards side by side from 993px, and
+// each card needs room for a title and a price box on one row - 600px across three
+// columns is about 190px each, where the price box sits on the title. /airport-transfer
+// keeps CHARTER_HERO_INNER: it has no cards, so widening it would only stretch a form.
+export const CHARTER_HERO_INNER_WIDE = CHARTER_HERO_INNER + ' min-[993px]:max-w-[1040px]';
 
 // .charter-hero__title (H1) — weight 500 (NOT the 700 "Tier display H1" block).
 export const CHARTER_HERO_TITLE =

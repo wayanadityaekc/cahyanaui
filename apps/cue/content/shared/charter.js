@@ -4,49 +4,39 @@ export const CHARTER = {
   "sub": "Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace. Half or full day, petrol included, only a 20% deposit to book.",
   "boxId": "charter",
   "boxTitle": "Build your charter",
-  // One plan = one card, and on a phone one card fills the screen with nothing
-  // peeking beside it (Wayan, Sep 2026: "kelihatan 1 card emang bener-bener satu
-  // card"). So each card has to answer everything on its own - hence `points`
-  // rather than a paragraph, written the way a listing card writes its meta row:
-  // a short line with an icon in front (Wayan: "point dengan logo seperti card
-  // listing"). `icon` maps to a Lucide component in CharterBuilder.
+  // Full Day FIRST (Wayan, Sep 2026: "kalo paling depan taruh full day") - it is
+  // the one marked Popular, and on a phone the first card is the only one a guest
+  // sees without touching anything.
   //
-  // The last two points repeat across all three cards on purpose. Listing cards
-  // repeat "Private driver" and "Free cancellation" the same way: with one card
-  // on screen, terms kept somewhere else are terms the guest never reads.
+  // Two points per card, not four. The card is meant to be short (Wayan: "buat card
+  // lebih pendek"), so each line carries more: hours and distance on one, what the
+  // price covers on the other. The terms trimmed out of here are not lost - they are
+  // in the Included list further down the same page.
   "durations": [
-    {
-      "dur": "half",
-      "name": "Half Day",
-      "hours": "5 hours",
-      "points": [
-        { "icon": "clock", "text": "5 hours with the car" },
-        { "icon": "route", "text": "Around 60 km, enough for one area" },
-        { "icon": "car", "text": "Petrol, driver and parking included" },
-        { "icon": "users", "text": "One price per car, up to 5 guests" }
-      ]
-    },
     {
       "dur": "full",
       "badge": "Popular",
       "name": "Full Day",
-      "hours": "10 hours",
       "points": [
-        { "icon": "clock", "text": "10 hours with the car" },
-        { "icon": "route", "text": "Around 120 km, enough to cross the island" },
-        { "icon": "car", "text": "Petrol, driver and parking included" },
-        { "icon": "users", "text": "One price per car, up to 5 guests" }
+        { "icon": "clock", "text": "10 hours, around 120 km" },
+        { "icon": "car", "text": "Petrol, driver and parking, per car up to 5" }
+      ]
+    },
+    {
+      "dur": "half",
+      "name": "Half Day",
+      "points": [
+        { "icon": "clock", "text": "5 hours, around 60 km" },
+        { "icon": "car", "text": "Petrol, driver and parking, per car up to 5" }
       ]
     },
     {
       "dur": "extended",
       "name": "Extended",
-      "hours": "10 hours + extra",
+      // One line only: the extra-hours field takes the second line's place, which
+      // keeps this card close in height to the other two.
       "points": [
-        { "icon": "clock", "text": "10 hours, plus the hours you add" },
-        { "icon": "route", "text": "Hourly rate after the tenth hour" },
-        { "icon": "car", "text": "Petrol, driver and parking included" },
-        { "icon": "users", "text": "One price per car, up to 5 guests" }
+        { "icon": "clock", "text": "A full day plus the hours you add" }
       ]
     }
   ],

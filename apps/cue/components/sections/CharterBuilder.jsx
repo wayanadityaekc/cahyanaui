@@ -1,9 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Car, Check, ChevronLeft, ChevronRight, Clock, Route, UserRound } from 'lucide-react';
+import { Car, ChevronLeft, ChevronRight, Clock, Route, UserRound } from 'lucide-react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
-import { PRICE } from '@/components/ui/priceClasses';
 import { GRID_PLANS } from '@/components/ui/gridClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
@@ -28,18 +27,25 @@ const TIMES = (() => {
   return out;
 })();
 
-// Same shape as a listing card's meta row: 11px icon, muted text, tight rows.
+// Two points per card, on the listing card's meta shape: 11px icon, muted text.
 const POINTS =
   'm-0 mt-[var(--space-1)] p-0 list-none flex flex-col gap-[3px] ' +
   '[&>li]:flex [&>li]:items-start [&>li]:gap-[6px] [&>li]:text-muted [&>li]:text-[0.66rem] [&>li]:leading-[1.45] ' +
   '[&_svg]:shrink-0 [&_svg]:mt-[2px] [&_svg]:w-[11px] [&_svg]:h-[11px] [&_svg]:text-muted';
-const CANCEL =
-  'mt-[var(--space-1)] inline-flex items-center gap-1 self-start px-2 py-[3px] rounded-pill ' +
-  'bg-[rgba(61,92,70,0.1)] text-cta text-[0.58rem] font-semibold [&>svg]:w-[10px] [&>svg]:h-[10px]';
+// The price sits in its own tinted box in the top-right (Wayan, Sep 2026: "kanan box
+// berisikan harga yang ukuranya lumayan gede"). shrink-0 + the whole box on one line
+// so a long Rp figure never squeezes the title column instead of wrapping itself.
+const PRICE_BOX =
+  'shrink-0 flex flex-col items-end text-right px-[var(--space-1)] py-[6px] rounded-md bg-cream ' +
+  '[border:1px_solid_var(--line)]';
+// text-gold, NOT the amber every other price uses. Same reason the book bar is
+// exempt: the price sits directly above a green CTA, and amber next to it fights.
+// Wayan, Sep 2026: "harga warna dark seperti lainya".
+const PRICE_BIG = 'text-gold font-semibold text-[1.35rem] leading-[1.1] whitespace-nowrap';
 const ARROW =
   'flex items-center justify-center w-[30px] h-[30px] rounded-[50%] bg-white cursor-pointer ' +
   '[border:1px_solid_var(--line)] text-gold [transition:opacity_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] ' +
-  'disabled:opacity-35 disabled:cursor-not-allowed min-[769px]:hidden';
+  'disabled:opacity-35 disabled:cursor-not-allowed min-[993px]:hidden';
 
 export default function CharterBuilder() {
   const { currency, displayGuests, setGuests } = useTripPrefs();
@@ -189,7 +195,7 @@ export default function CharterBuilder() {
           they sit right above what they move. */}
       <div className="mt-[var(--space-3)] mb-[var(--space-1)] flex items-center justify-between gap-[var(--space-1)]">
         <h3 className="m-0 text-h3 font-semibold text-gold">How long do you need the car?</h3>
-        <div className="flex items-center gap-[var(--space-1)] min-[769px]:hidden">
+        <div className="flex items-center gap-[var(--space-1)] min-[993px]:hidden">
           <span className="text-label text-muted whitespace-nowrap" aria-hidden="true">{idx + 1} / {last + 1}</span>
           <button type="button" className={ARROW} onClick={() => goTo(idx - 1)} disabled={idx === 0} aria-label="Previous option">
             <ChevronLeft strokeWidth={1.7} className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
@@ -205,30 +211,57 @@ export default function CharterBuilder() {
           const v = tier(d.dur);
           return (
             <div className={CARD} key={d.dur}>
-              {/* Badge sits INSIDE the card. Hung off the top edge it left the
-                  three cards with a ragged top line, and in a scrolling track it
-                  is the first thing `overflow` clips. */}
-              <span className="min-h-[1rem] text-label tracking-[0.1em] uppercase font-medium text-amber-d">
-                {d.badge || ' '}
-              </span>
-              <span className="mt-[var(--space-1)] text-h3 font-semibold text-gold">{d.name}</span>
+              {/* Top half is two columns: the plan on the left, its price boxed on
+                  the right. Everything a guest compares sits on one line that way,
+                  which is also what keeps the card short. */}
+              <div className="flex items-start justify-between gap-[var(--space-2)]">
+                <div className="min-w-0">
+                  {/* Badge on its own line, not beside the title. Inline it pushed
+                      "Full Day POPULAR" onto two lines at 320px and in the narrow
+                      desktop columns - and it would do it again for any longer plan
+                      name or currency. The nbsp keeps the three titles level. */}
+                  <span className="block min-h-[0.95rem] text-label tracking-[0.1em] uppercase font-medium text-amber-d whitespace-nowrap">
+                    {d.badge || '\u00a0'}
+                  </span>
+                  <span className="flex items-center gap-[6px]">
+                    {/* The plan's own icon, beside the title rather than above it -
+                        stacking them would add back the height this layout removes. */}
+                    <Clock strokeWidth={1.7} className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold" aria-hidden="true" />
+                    <span className="text-h3 font-semibold text-gold whitespace-nowrap">{d.name}</span>
+                  </span>
+                  <ul className={POINTS}>
+                    {d.points.map((pt) => {
+                      const Icon = ICONS[pt.icon] || Clock;
+                      return (
+                        <li key={pt.text}>
+                          <Icon strokeWidth={1.7} aria-hidden="true" />
+                          {pt.text}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
 
-              <ul className={POINTS}>
-                {d.points.map((pt) => {
-                  const Icon = ICONS[pt.icon] || Clock;
-                  return (
-                    <li key={pt.text}>
-                      <Icon strokeWidth={1.7} aria-hidden="true" />
-                      {pt.text}
-                    </li>
-                  );
-                })}
-              </ul>
-              <span className={CANCEL}><Check strokeWidth={2.4} aria-hidden="true" />Free cancellation</span>
+                <span className={PRICE_BOX}>
+                  <span className="text-label tracking-[0.1em] uppercase text-muted">
+                    {area ? 'Total' : 'From'}
+                  </span>
+                  {/* No invented number while the catalog is still in flight: the
+                      old card printed the word "from" with nothing after it. */}
+                  <span className={PRICE_BIG}>
+                    {v == null ? '\u2014' : withSymbol(fmt(v))}
+                  </span>
+                </span>
+              </div>
 
+              {/* No label above this select, unlike the fields at the top. It is the
+                  tallest thing in any card, and whatever it adds becomes empty space
+                  above the button on the OTHER two - dropping the label halves that.
+                  Its own value reads "+2 hours", so the control still says what it is.
+                  The comment lives OUT here: inside the && parentheses it would be a
+                  second child of a single-expression return and the build refuses it. */}
               {d.dur === 'extended' && (
-                <div className="mt-[var(--space-2)]">
-                  <label className={FIELD_LABEL} htmlFor="ch-extra">Extra hours</label>
+                <div className="mt-[var(--space-1)]">
                   <Select
                     id="ch-extra"
                     label="Extra hours"
@@ -240,26 +273,16 @@ export default function CharterBuilder() {
                 </div>
               )}
 
-              {/* mt-auto pins the price and button to the bottom, so all three
+              {/* mt-auto keeps the button on the card's bottom edge, so all three
                   line up however much text sits above them. */}
-              <div className="mt-auto pt-[var(--space-2)]">
-                <span className="block text-label tracking-[0.1em] uppercase text-muted">
-                  {area ? 'Total' : 'From'}
-                </span>
-                {/* No invented number while the catalog is still in flight: the
-                    old card printed the word "from" with nothing after it. */}
-                <span className={`${PRICE} text-[1.2rem] leading-[1.15]`}>
-                  {v == null ? '—' : withSymbol(fmt(v))}
-                </span>
-                <button
-                  className={`${BTN_BOOK} mt-[var(--space-1)]`}
-                  type="button"
-                  disabled={!ready || v == null}
-                  onClick={() => book(d.dur)}
-                >
-                  Book this charter
-                </button>
-              </div>
+              <button
+                className={`${BTN_BOOK} mt-auto`}
+                type="button"
+                disabled={!ready || v == null}
+                onClick={() => book(d.dur)}
+              >
+                Book this charter
+              </button>
             </div>
           );
         })}

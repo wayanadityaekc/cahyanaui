@@ -111,9 +111,14 @@ export const GRID_CAROUSEL_4UP =
 // breathing room above the price, with the button on the card's bottom edge where
 // it belongs. Unstretched, the card stops early and the slack becomes an orphan
 // gap between the card and the text under the slider, which reads as a bug.
+// The 3-up switch is at 993px, NOT 769px, and it has to stay in step with the
+// builder panel's own width below. Each card carries a two-column top row (title
+// left, price box right); three of those inside the 600px panel left ~190px per
+// card and the price box landed on top of the title. So: wide panel and 3-up
+// together from 993px, one card at a time with arrows below that.
 export const GRID_PLANS =
   'flex items-stretch gap-[var(--space-2)] overflow-x-auto overflow-y-hidden ' +
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   '[&>*]:flex-[0_0_100%] [&>*]:[scroll-snap-align:start] ' +
-  'min-[769px]:grid min-[769px]:grid-cols-3 min-[769px]:overflow-visible ' +
-  'min-[769px]:[&>*]:flex-none';
+  'min-[993px]:grid min-[993px]:grid-cols-3 min-[993px]:overflow-visible ' +
+  'min-[993px]:[&>*]:flex-none';

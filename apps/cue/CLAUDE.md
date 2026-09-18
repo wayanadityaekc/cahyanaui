@@ -136,7 +136,9 @@ When unsure, ask first (keep it short).
   dkk), dan judul besar level-halaman (`.subhero__title` var overlap, `.vpromo__title`).
 - Prices = gold (`--color-amber`, gold BENERAN — bukan `--color-gold`) + bold
   (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
-  **SATU pengecualian (Sep 2026, Wayan)**: harga di **book bar** (`BookBar.jsx`) =
+  **DUA pengecualian (Sep 2026, Wayan)** - dua-duanya karena harganya nempel ke CTA hijau
+  dan amber di sebelahnya berantem: (1) **kartu paket charter** (`CharterBuilder.jsx`,
+  box harga tepat di atas tombol Book) dan (2) harga di **book bar** (`BookBar.jsx`) =
   `text-gold` (soft black), bukan amber — di bar itu amber nabrak tombol CTA hijau
   tepat di sebelahnya. Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
   Warnanya WAJIB dioper lewat prop `className` punya `<Price>` — default-nya
@@ -1055,11 +1057,32 @@ Order **must be kept** (declarations first, run last):
     **di-swipe tangan pun panah & penghitungnya ikut bener**.
   - **Isi kartu = point berikon, kayak kartu listing** (Wayan: "point dengan logo seperti
     card listing") - ikon 11px + teks 0.66rem muted, sama persis sama `META` di
-    `ListingRow.jsx`, plus chip hijau "Free cancellation" yang sama. Paragraf deskripsi
-    lama diganti 4 point. **2 point terakhir sengaja SAMA di ketiga kartu** (petrol/driver/
-    parkir, per mobil s/d 5 tamu) - kartu listing juga ngulang "Private driver"/"Free
-    cancellation" di tiap kartu, dan pas cuma 1 kartu keliatan, syarat yang ditaro di luar
-    kartu = syarat yang gak pernah kebaca.
+    `ListingRow.jsx`. Dipangkas jadi **1-2 point** pas kartunya dipendekin; syarat yang
+    kepotong gak ilang, ada di list Included di bawahnya.
+  - **Bentuk kartu = 2 KOLOM di atas, tombol di bawah** (Wayan, Sep 2026: "bagian atas jadi
+    dua kolom kiri kolom icon dan title seperti half day dan kanan box berisikan harga yang
+    ukuranya lumayan gede, di bawahnya baru button"). Kiri: ikon + nama paket + 1-2 point
+    berikon. Kanan: **box harga** (bg cream + border) isi kicker + angka `1.35rem`. Tombol
+    full-width di bawah dua-duanya. **Kartunya jadi 193px** (dulu 400+).
+  - **FULL DAY paling depan** (Wayan: "kalo paling depan taruh full day") - dia yang di-badge
+    Popular, dan di HP kartu pertama = satu-satunya yang keliatan tanpa tamu ngapa-ngapain.
+  - **Harga di kartu ini `text-gold` (gelap), BUKAN amber** (Wayan: "harga warna dark seperti
+    lainya"). Ini pengecualian KEDUA dari aturan "semua harga amber", alasannya sama persis
+    kayak book bar: harganya duduk tepat di atas CTA hijau, dan amber di sebelahnya berantem.
+  - **Badge "Popular" punya BARIS SENDIRI di atas judul, jangan di-inline.** Pernah ditaro
+    sebaris sama judul → "Full Day POPULAR" jadi **2 baris** di 320px dan di kolom desktop
+    yang sempit. Nama paket lebih panjang atau mata uang lain bakal ngulang bug yang sama.
+    `&nbsp;` di kartu tanpa badge biar tiga judulnya rata.
+  - **Breakpoint grid = 993px, BUKAN 769px, dan panel builder ikut melebar di angka yang
+    SAMA.** Tiga kartu 2-kolom di dalam panel 600px = ~190px per kartu, dan box harganya
+    **numpuk di atas judul** (kejadian, kebukti di screenshot). Jadi `GRID_PLANS` baru 3-up
+    di 993px, dan charter pakai `CHARTER_HERO_INNER_WIDE` (`max-w-[1040px]` di 993px+).
+    `/airport-transfer` TETEP `CHARTER_HERO_INNER` 600px - dia gak punya kartu, dilebarin
+    cuma bikin form-nya melar. **Ubah salah satu angka = ubah dua-duanya.**
+  - Select "Extra hours" di kartu Extended **sengaja tanpa label**. Dia benda tertinggi di
+    kartu mana pun, dan tambahan tingginya berubah jadi ruang kosong di atas tombol kartu
+    yang LAIN (stretch) - label-nya dibuang, celahnya turun dari 46px ke 23px. Value-nya
+    sendiri kebaca "+2 hours", jadi kontrolnya tetep jelas.
   - `items-stretch` di SEMUA lebar. Baris flex tingginya = anak tertinggi, mau di-stretch
     atau nggak, jadi sisa ruang dari field tambahan kartu Extended tetep ada - pertanyaannya
     cuma mendarat di mana. Di-stretch: masuk ke DALAM kartu jadi napas di atas harga, tombol
@@ -1088,10 +1111,14 @@ Order **must be kept** (declarations first, run last):
   - List campur "included + gak included" dipecah jadi **Included / Not included** pakai
     marker standar web (`variant: 'yes'` / `'no'` → lingkaran keisi vs kosong + teks di-mute)
     - format yang emang udah dipakai semua halaman tour & attraction.
-  - Verifikasi: **`verify-charter.mjs`** di scratchpad (54/54) - HP 320/390/430 geser + snap +
+  - Verifikasi: **`verify-charter.mjs`** di scratchpad (84/84) - HP 320/390/430 geser + snap +
     kartu berikutnya ngintip + halaman gak melar, desktop 1024/1280/1440 grid 3 kolom tinggi
     sama tanpa geser, tombol Book mati sebelum field lengkap & hidup sesudahnya, jam
     ke-simpen, dan harga gak kosong walau katalog di-`abort()`.
+  - **Gotcha harness**: "box harga ada di kanan judul" DOANG itu gak cukup - assertion itu
+    tetep lolos waktu box-nya numpuk di atas judul yang keremes jadi 1 kata per baris.
+    Ukur **judulnya juga**: `tinggi/line-height == 1` + `scrollWidth == clientWidth` per
+    kartu. Itu yang akhirnya nangkep bug desktop 190px.
   - **Gotcha harness**: span harga bawa utility `PRICE`, **bukan class `.price`** - nyari
     `.price` di situ hasilnya nihil (sempet bikin harness lapor "harga kosong" palsu). Sama
     juga `.info__list--yes/--no` sama `.info__card`: udah di-migrasi ke utility, jadi gak ada

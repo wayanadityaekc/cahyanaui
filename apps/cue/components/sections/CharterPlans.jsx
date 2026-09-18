@@ -100,7 +100,13 @@ export default function CharterPlans({ value, onChange, area = '', extra = '1', 
                   {d.badge && <span className={PLAN_BADGE}>{d.badge}</span>}
                 </span>
                 <span className={PLAN_CELL_PRICE}>
-                  <span className={`${PLAN_PRICE_KICK} block mt-[2px] min-[993px]:mt-0`}>{area ? 'Total' : 'From'}</span>
+                  {/* No "From" over the number (Wayan, Sep 2026: "hapus from di atas
+                      harga itu bro"). The word only appears once it has something to
+                      say: tier() adds the area surcharge and the extra hours, so after
+                      a pick-up area is chosen the figure really is the total, and the
+                      page says so. Before that - and on the homepage, which has no
+                      pick-up field at all - the number stands on its own. */}
+                  {area && <span className={`${PLAN_PRICE_KICK} block mt-[2px] min-[993px]:mt-0`}>Total</span>}
                   {/* No invented number while the catalog is still in flight: the
                       old card printed the word "from" with nothing after it. */}
                   <span className={PLAN_PRICE_LEAD}>{v == null ? '—' : withSymbol(fmt(v))}</span>

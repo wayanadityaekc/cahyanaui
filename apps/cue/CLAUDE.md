@@ -502,7 +502,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     - Homepage **gak punya field sama sekali** — form-nya cuma di halaman charter. CTA-nya satu,
       "Build your charter" → `/charter.html` (`BTN_BOOK`, jadi `no-underline` udah ikut).
     - **`area` sengaja dikosongin** di homepage: gak ada field pick-up berarti gak ada surcharge
-      buat dihitung, jadi kicker-nya jujur nulis **From** (bukan Total).
+      buat dihitung, jadi angkanya polos tanpa kata "Total" di atasnya.
     - **Pilihan tamu di homepage KEBAWA ke halaman charter** (Wayan: "make sure apapun yang di
       pilih user di homepage, tetep di inget atau auto fill di page charter") — lewat
       `lib/charterDraft.js` (localStorage `cue_charter_v1`, key-nya kedaftar di `KEY`).
@@ -514,7 +514,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
       katalog API, jadi **gak ada lagi angka cadangan yang bisa basi** di homepage.
     - Verifikasi: **`verify-charterhome.mjs`** di scratchpad (81/81) — 320/390/430/768 + desktop
       1024/1280/1440: 3 kartu ada, NOL field, cuma 1 tombol & href-nya `/charter.html` & gak
-      bergaris, kicker "From", halaman gak melar. Plus **adu dua halaman di lebar yang sama**:
+      bergaris, gak ada kicker di atas harga, halaman gak melar. Plus **adu dua halaman di lebar yang sama**:
       nama/harga/class row/class grid/gaya teks/tinggi baris harus IDENTIK homepage vs halaman
       charter. Plus **serah-terima**: pilih Extended di homepage → tersimpan → halaman charter
       kebuka di Extended + field Extra hours ikut nongol + baris ringkasan nyebut Extended;
@@ -1088,9 +1088,12 @@ Order **must be kept** (declarations first, run last):
     - Harness-nya ngecek pita gak kepotong: `flag.top >= #charter.top`.
     - **`data-plan-grid`** = hook buat blok isi kartu. Harness JANGAN pakai `firstElementChild`:
       di kartu yang kepilih, anak pertamanya itu pita-nya, bukan grid.
-    - **Kicker `From`/`Total` TETAP ADA**, sebaris kecil di antara nama & harga. Jangan dibuang
-      biar "lebih bersih": `tier()` emang ngitung surcharge + jam tambahan, jadi begitu area
-      kepilih angkanya total beneran — nulis "from" terus itu bohong kecil.
+    - **GAK ADA kicker "From" lagi** (Sep 2026, Wayan: "hapus from di atas harga itu bro").
+      Kata di atas angka **cuma muncul kalau ada yang mau dibilang**: begitu area pick-up kepilih,
+      `tier()` udah nambahin surcharge + jam tambahan, jadi angkanya total beneran dan baru di situ
+      nongol **"Total"**. Sebelum itu — dan di homepage yang emang gak punya field pick-up —
+      angkanya berdiri sendiri. **Jangan balikin "From"**; yang dibuang cuma kata itu, bukan
+      penanda Total-nya (itu yang bikin angkanya gak bohong).
   - **LIST PAKETNYA = `components/sections/CharterPlans.jsx`, KOMPONEN BERSAMA sama section
     charter di homepage** (Sep 2026, Wayan: "reuse komponen bro ... lu harus pisah input form dan
     card nya"). Builder = list + kolom field; homepage = list doang + tombol ke halaman ini.
@@ -1137,8 +1140,6 @@ Order **must be kept** (declarations first, run last):
     My Trips sebelah tanggal. **Sengaja GAK dipakai ngitung harga**: server cuma baca
     `area`/`duration`/`extra` (`pricing.js` ~baris 207), key lain diabaikan — sama kayak
     `flight_number` punya transfer.
-  - **Kicker harga = `From` sebelum area dipilih, `Total` sesudahnya.** `tier()` emang udah
-    ngitung surcharge area + jam tambahan, jadi begitu area kepilih angkanya total beneran.
   - **Harga gak pernah kosong**: pas `catalog` null jadi em dash + tombol mati. **Sengaja gak
     dikasih angka cadangan** — tarif charter gak ada di `listings.js`, jadi angka hardcode di
     sini gak kejaga `check-prices` dan bisa basi diem-diem.
@@ -1155,7 +1156,7 @@ Order **must be kept** (declarations first, run last):
     GAK ke-print di halaman, nongol pas di-tap, ngambang di ATAS form (hit-test), **gak nyorong
     apa pun** (tinggi dokumen & posisi tombol Book gak gerak), gak kepotong tepi layar, Escape nutup. Desktop 1024/1280/1440: list di KIRI field
     & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
-    paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker From→Total, yang
+    paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker kosong → "Total" pas area kepilih, yang
     ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.
   - **Gotcha harness**: "harga ada di samping/bawah nama" DOANG gak cukup — assertion itu lolos
     waktu namanya keremes jadi 2 baris. Ukur **nama-nya juga**: `tinggi/line-height == 1` +

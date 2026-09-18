@@ -17,7 +17,15 @@ import { CHARTER } from '@/content/shared/charter';
 //
 // area is left empty here on purpose: with no pick-up field there is no
 // surcharge to count, so the kicker honestly reads "From" rather than "Total".
-export default function CharterHome() {
+// paired = rendered beside About in the homepage's two-column row (desktop only).
+// The wrapper becomes the container there, so this section drops its own width and
+// gutters from 993px, and its vertical margin always: the wrapper spaces the pair.
+const SECTION = 'max-w-[var(--container)] my-[var(--space-5)] mx-auto px-[var(--container-x)]';
+const SECTION_PAIRED =
+  'max-w-[var(--container)] mx-auto px-[var(--container-x)] my-0 ' +
+  'min-[993px]:max-w-none min-[993px]:mx-0 min-[993px]:px-0';
+
+export default function CharterHome({ paired = false }) {
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
   // In an effect, never in the initial state: this is a static export, and
@@ -30,8 +38,8 @@ export default function CharterHome() {
   const pick = (d) => { setDur(d); saveCharterDraft({ dur: d }); };
 
   return (
-    <section className="max-w-[var(--container)] my-[var(--space-5)] mx-auto px-[var(--container-x)]" id="charter-promo">
-      <div className="bg-white border border-line rounded-lg shadow-md p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)]">
+    <section className={paired ? SECTION_PAIRED : SECTION} id="charter-promo">
+      <div className={`bg-white border border-line rounded-lg shadow-md p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)] ${paired ? 'min-[993px]:h-full' : ''}`}>
         <div className="text-center mb-[var(--space-3)]">
           <span className="block uppercase tracking-[0.14em] text-label text-muted mb-[0.4rem]">One more way to explore</span>
           <h2 className="font-head text-h2 font-medium tracking-[-0.01em] mb-[0.6rem] text-gold">Charter a car for the whole day</h2>

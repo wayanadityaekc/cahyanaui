@@ -512,13 +512,32 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
     - `CHARTER_CARDS` di `content/shared/home.js` + komponen `CharterPrice.jsx` **UDAH DIHAPUS**
       (ikut kebuang bareng 4 baris tarif lama). Harga sekarang dihitung `useCharterTier()` dari
       katalog API, jadi **gak ada lagi angka cadangan yang bisa basi** di homepage.
-    - Verifikasi: **`verify-charterhome.mjs`** di scratchpad (81/81) — 320/390/430/768 + desktop
+    - Verifikasi: **`verify-charterhome.mjs`** di scratchpad (124/124) — 320/390/430/768 + desktop
       1024/1280/1440: 3 kartu ada, NOL field, cuma 1 tombol & href-nya `/charter.html` & gak
       bergaris, gak ada kicker di atas harga, halaman gak melar. Plus **adu dua halaman di lebar yang sama**:
       nama/harga/class row/class grid/gaya teks/tinggi baris harus IDENTIK homepage vs halaman
       charter. Plus **serah-terima**: pilih Extended di homepage → tersimpan → halaman charter
       kebuka di Extended + field Extra hours ikut nongol + baris ringkasan nyebut Extended;
-      pengunjung baru (storage kosong) tetep dapet Full Day.
+      pengunjung baru (storage kosong) tetep dapet Full Day. Plus **baris berdua sama About**
+      (lihat bullet di bawah).
+- **Charter + About = SATU BARIS 2 kolom di DESKTOP** (Sep 2026, Wayan: "khusus desktop
+  charter dan section di bawah charter jadiin 2 kolom" → "gass kayak mockup bro"). Yang
+  mbungkus dua-duanya = **div di `app/page.jsx`**, bukan section-nya sendiri: dia yang
+  pegang container + gutter + jarak, `grid-cols-[1.35fr_1fr]` mulai **993px**
+  (`items-stretch`, jadi dua kolomnya sama tinggi).
+  - Dua section itu dikasih prop **`paired`** — cuma itu yang boleh beda, JANGAN bikin
+    salinan komponen kedua. `CharterHome paired` ngelepas lebar + gutter + margin
+    vertikalnya sendiri di 993px (wrapper yang pegang) & panelnya `h-full`.
+    `About paired` berhenti jadi band full-bleed di 993px: jadi kartu `rounded-lg`
+    + `overflow-hidden`, teksnya **rata KIRI** (kolom sempit lebih enak dibaca
+    ragged-right daripada ke-center), `h-full`.
+  - **Di bawah 993px NOL yang berubah**: charter numpuk di atas, About tetep band foto
+    full-bleed. Itu disengaja — divider emas mati di homepage, jadi band foto itu yang
+    ngasih ritme di bagian bawah halaman. Jangan ikut dijadiin kartu di HP.
+  - Dijaga `verify-charterhome.mjs`: di 1024/1280/1440 tepi kanan charter ≤ tepi kiri
+    About, atas & bawahnya selurus (sama tinggi), celahnya satu gutter, About udah gak
+    selebar layar & sudutnya bunder & teksnya kiri; di 320/390/430/768 masih numpuk,
+    About masih selebar viewport & sudutnya 0. Halaman gak melar di semua lebar.
 - **Copy**: no em-dash (`—`) di teks — pakai hyphen biasa (` - `) atau pecah kalimat.
 
 ## Sticky bottom bar (Sep 2026)

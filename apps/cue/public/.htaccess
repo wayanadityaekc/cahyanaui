@@ -117,3 +117,23 @@ Redirect 301 /tirta-gangga.html /attractions/tirta-gangga.html
 Redirect 301 /twin-lakes.html /attractions/twin-lakes.html
 Redirect 301 /ulun-danu-beratan.html /attractions/ulun-danu-beratan.html
 Redirect 301 /uluwatu-temple.html /attractions/uluwatu-temple.html
+
+# Retired pages with no successor page of their own (Sep 2026, pre-GSC 404 audit).
+# The three "region" tours were split into named tours; the two that map onto a
+# live tour one-for-one go straight there, the north one goes to the tour index
+# because every north tour is currently parked. The South Bali stops lost their
+# own pages when the tour they belonged to was parked, so they go to the
+# destinations index rather than a page that is not sold.
+Redirect 301 /east-bali-tour.html /lempuyang-tirta-gangga.html
+Redirect 301 /west-bali-tour.html /jatiluwih-tour.html
+Redirect 301 /north-bali-tour.html /tour.html
+Redirect 301 /melasti-beach.html /destinations.html
+Redirect 301 /attractions/melasti-beach.html /destinations.html
+Redirect 301 /padang-padang-beach.html /destinations.html
+Redirect 301 /attractions/padang-padang-beach.html /destinations.html
+Redirect 301 /jimbaran-seafood.html /destinations.html
+Redirect 301 /attractions/jimbaran-seafood.html /destinations.html
+
+# Scooter rental is no longer a service we offer. The getting-around guide is
+# the page that now answers "how do I get around Bali on a scooter".
+Redirect 301 /scooter.html /guide/getting-around-bali.html

@@ -49,19 +49,41 @@ async function inkBox() {
   // A two-colour mark: a palette PNG is visually identical and a fraction of the
   // size (raw RGBA came out 4x bigger at 512).
   const PNG = { palette: true, colours: 128, compressionLevel: 9, effort: 10 };
-  // Opaque WHITE square, not transparency: iOS and Android composite a
-  // transparent icon themselves, usually onto black.
-  const onWhite = (size) =>
-    disc().resize(size, size, { fit: 'cover' }).flatten({ background: '#ffffff' }).png(PNG);
 
-  for (const [name, size] of [['favicon-16x16.png', 16], ['favicon-32x32.png', 32],
-                              ['apple-touch-icon.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
-    await onWhite(size).toFile(OUT + name);
+  // TAB ICONS keep their TRANSPARENT corners (Sep 2026, Wayan: "kok isi kotak
+  // putih"). A white square behind the disc is invisible on a light tab strip and
+  // a white tile on a dark one - transparency is the only setting that reads as a
+  // disc on both, and every browser here handles a transparent PNG/ICO.
+  const onClear = (size) => disc().resize(size, size, { fit: 'cover' }).png(PNG);
+
+  // HOME-SCREEN ICONS must be opaque - iOS and Android composite transparency
+  // themselves, usually onto black, and they round the corners for you. So the
+  // tile is filled with the logo's own gold instead: the disc melts into it and
+  // the result is a solid brand tile carrying the monogram, not a white box with
+  // a sticker on it. The colour is sampled from the artwork, not guessed.
+  // Zoomed past the rim (1.45x, then centre-cropped) so the disc BLEEDS off the
+  // tile. Just flattening onto the gold leaves a faint ring, because the artwork's
+  // gold has a slight gradient and no flat fill matches it exactly. The flatten
+  // stays as a backstop for sub-pixel edges.
+  const GOLD = '#b4975f';
+  const onGold = async (size) => {
+    const z = Math.round(size * 1.45);
+    const zoomed = await disc().resize(z, z).png().toBuffer();
+    const off = Math.round((z - size) / 2);
+    return sharp(zoomed).extract({ left: off, top: off, width: size, height: size })
+      .flatten({ background: GOLD }).png(PNG);
+  };
+
+  for (const [name, size] of [['favicon-16x16.png', 16], ['favicon-32x32.png', 32]]) {
+    await onClear(size).toFile(OUT + name);
+  }
+  for (const [name, size] of [['apple-touch-icon.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
+    await (await onGold(size)).toFile(OUT + name);
   }
 
   // ICO holding PNG frames - understood by every browser this site supports.
   const frames = [];
-  for (const size of [16, 32, 48]) frames.push({ size, buf: await onWhite(size).toBuffer() });
+  for (const size of [16, 32, 48]) frames.push({ size, buf: await onClear(size).toBuffer() });
   const head = Buffer.alloc(6);
   head.writeUInt16LE(1, 2); head.writeUInt16LE(frames.length, 4);
   let offset = 6 + frames.length * 16;

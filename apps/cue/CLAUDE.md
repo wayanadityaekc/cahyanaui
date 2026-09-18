@@ -269,8 +269,19 @@ When unsure, ask first (keep it short).
     terus dibikin persegi dari titik tengahnya). Logo kiriman biasanya nangkring di kanvas
     transparan gede dan **gak selalu pas di tengah** — kalau gak di-crop, di 16px yang
     keliatan cuma titik kecil ngambang di dalam padding.
-  - **Latarnya PUTIH SOLID, bukan transparan**, buat semua PNG — iOS & Android nge-compositing
-    ikon transparan sendiri, biasanya ke HITAM. Itu juga yang dipakai ikon set sebelumnya.
+  - **GAK ADA KOTAK PUTIH di mana pun** (Sep 2026, Wayan: "kok isi kotak putih"). Dua perlakuan
+    beda, sengaja:
+    - **Ikon TAB** (`favicon.svg`/`.ico`/`favicon-16/32`) = bulatan doang, **sudut transparan**.
+      Kotak putih di belakang bulatan itu gak keliatan di tab terang TAPI jadi ubin putih di tab
+      gelap — transparan satu-satunya setelan yang kebaca bulat di dua-duanya, dan semua browser
+      yang kita dukung udah beres sama PNG/ICO transparan.
+    - **Ikon HOME-SCREEN** (`apple-touch-icon`, `icon-192/512`) WAJIB opaque — iOS & Android
+      nge-compositing transparan sendiri (biasanya ke HITAM) dan sudutnya mereka yang bunderin.
+      Jadi ubinnya diisi **emasnya logo sendiri** (`#b4975f`, di-SAMPLE dari artwork, bukan
+      tebakan): hasilnya ubin brand utuh, bukan kotak putih yang ditempelin stiker.
+      **Bulatannya di-zoom 1.45x terus di-crop tengah** biar tumpah keluar ubin — kalau cuma
+      di-flatten ke emas, nyisa **cincin samar** (emas di artwork-nya rada gradient, gak ada
+      warna rata yang persis sama).
   - **`favicon.svg` = cangkang SVG yang MBUNGKUS raster**, sama kayak file yang dia gantiin —
     monogram-nya glyph custom, gak ada vektor jujurnya. Bedanya: sudutnya **transparan**
     (tab browser bisa gelap, jadi bulatannya harus kebaca bulat, bukan kotak putih).

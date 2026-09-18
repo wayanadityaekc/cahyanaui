@@ -5,32 +5,60 @@ import { catalog } from '@/lib/api';
 // time - that is what tools/sync-prices.js used to prevent. Every other type is
 // static and is emitted exactly as extracted.
 let catalogPromise = null;
-function usdByName() {
+function livePrices() {
   if (!catalogPromise) {
     catalogPromise = catalog({ currency: 'USD', guests: 2, stay: '' })
       .then((d) => {
         if (!d || !Array.isArray(d.items)) return null;
-        const map = {};
-        for (const i of d.items) map[i.name] = i.standard.usd;
-        for (const t of d.transfers || []) map[t.route] = t.usd;
-        return map;
+        const byName = {};
+        for (const i of d.items) byName[i.name] = i.standard.usd;
+        for (const t of d.transfers || []) byName[t.route] = t.usd;
+        // Kept as a group as well, for the aggregate offer on /transfer: that
+        // page sells every route in the picker, not a list written here, so the
+        // range has to follow the catalog rather than a copy of it.
+        const transfers = (d.transfers || []).map((t) => t.usd).filter((n) => n > 0);
+        return { byName, transfers };
       })
       .catch(() => null);
   }
   return catalogPromise;
 }
 
-function withLivePrice(node, prices) {
-  if (!prices || !node || node['@type'] !== 'Product') return node;
-  const usd = prices[node.name];
-  if (usd == null || !node.offers) return node;
+// A block may name the catalog entry its price comes from, which is what lets a
+// Product be TITLED for a reader ("Bali Airport Transfer") while still pricing
+// off the route key the API knows it by ("Airport – Ubud"). `priceKey` and
+// `priceGroup` live on the BLOCK, never inside `json` - anything inside `json`
+// is emitted verbatim as JSON-LD, and those are not schema.org fields.
+//
+// Everything written in the static file is a fallback for the build where the
+// API cannot be reached; when it answers, the live number wins.
+function withLivePrice(block, prices) {
+  const node = block.json;
+  if (!prices || !node || node['@type'] !== 'Product' || !node.offers) return node;
+
+  if (block.priceGroup === 'transfers') {
+    const all = prices.transfers;
+    if (!all || !all.length) return node;
+    return {
+      ...node,
+      offers: {
+        ...node.offers,
+        lowPrice: String(Math.min(...all)),
+        highPrice: String(Math.max(...all)),
+        offerCount: all.length,
+      },
+    };
+  }
+
+  const usd = prices.byName[block.priceKey || node.name];
+  if (usd == null) return node;
   return { ...node, offers: { ...node.offers, price: String(usd) } };
 }
 
 export default async function JsonLd({ page }) {
   const blocks = PAGE_SCHEMA[page];
   if (!blocks || !blocks.length) return null;
-  const prices = await usdByName();
+  const prices = await livePrices();
 
   return (
     <>
@@ -39,7 +67,7 @@ export default async function JsonLd({ page }) {
           key={i}
           type="application/ld+json"
           id={b.id || undefined}
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(withLivePrice(b.json, prices)) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(withLivePrice(b, prices)) }}
         />
       ))}
     </>

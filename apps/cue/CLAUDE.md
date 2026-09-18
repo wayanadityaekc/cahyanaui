@@ -492,8 +492,38 @@ When unsure, ask first (keep it short).
     - **Navbar sengaja GAK disentuh**: dropdown Program tetep 4 item (Tours/Experiences/
       Transfer/Charter). Footer udah ngasih jangkauan yang sama, dan dropdown 5 item kerasa
       penuh. Jangan ditambahin ke situ juga tanpa nanya - nanti dobel.
-  - **Yang masih nunggu Wayan**: dua halaman ini JSON-LD-nya masih `BreadcrumbList` doang,
-    belum ada `Service`/`Offer` + harga (kandidat rich result, angkanya udah ada di API).
+  - **Schema harga UDAH DIPASANG** (Sep 2026, Wayan: "gas schema nya bro"). Dua-duanya sekarang
+    punya `Product` + harga, ikut konvensi yang udah dipake 62 Product lain:
+    - `/airport-transfer` = `Offer` harga tunggal. `/transfer` = **`AggregateOffer`**
+      (low/high/offerCount), karena halaman itu jual SEMUA route di picker, jadi klaim yang
+      jujur itu RENTANG, bukan satu angka.
+    - **Dua hint baru di BLOCK schema, bukan di dalam `json`** (apa pun di dalam `json`
+      ke-print mentah jadi JSON-LD, dan ini bukan field schema.org):
+      - `priceKey` — nama entry katalog buat ambil harganya. Ini yang bikin Product-nya bisa
+        DIJUDULIN buat pembaca ("Bali Airport Transfer") tapi tetep ngambil harga dari key yang
+        dikenal API ("Airport – Ubud").
+      - `priceGroup: 'transfers'` — low/high/offerCount dihitung dari SELURUH route di katalog,
+        jadi rentangnya ngikut API, bukan daftar yang disalin ke sini terus basi begitu ada
+        route baru.
+- **JSON-LD ITU SALINAN HARGA JUGA, dan ini kelewat 24 kali.** `JsonLd` emang nambal harga
+  `Product` dari katalog live — **TAPI cuma kalau build-nya BISA nyampe API**. Kalau nggak
+  (mis. jaringannya diblokir), **angka yang ketulis di `schema.js` yang dikirim ke Google**.
+  Ke-buktiin dengan sengaja ngerusak angka fallback-nya terus build: angka rusaknya yang nongol.
+  - Pas `check-prices` diperluas buat nyisir `schema.js`, langsung ketemu **24 harga basi** —
+    semuanya sisa era kurs 15.500 dan semuanya **LEBIH MAHAL dari harga beneran** (Ubud Tour
+    $45 vs $40, Bali Zoo $40 vs $35, Batur Sunrise $85 vs $74). Jadi Google dikasih tau harga
+    ~12% di atas yang kita tagih, di 24 halaman. Udah disamain semua.
+  - **Kartunya sendiri (60) NOL yang basi** — yang bolong emang cuma JSON-LD, karena gak ada
+    yang pernah nyisir situ.
+- **`check-prices` sekarang nyisir SEMUA salinan harga, bukan cuma `listings.js`**: kartu route
+  `/transfer` (`transfer.js`), band airport (`home/Airport.jsx`), dan fallback JSON-LD
+  (`schema.js`, dibaca generik lewat `priceKey`/`priceGroup`). Itu 3 tempat yang dulu di luar
+  jangkauan — dan persis kenapa band homepage sempet nulis $20 padahal API bilang $18.
+  Sekarang laporannya 2 baris: "Cards checked" + "Other copies checked".
+  - **Gate-nya dites pakai bug aslinya** (aturan yang sama kayak `check-motion`): keempat jenis
+    salinan dirusak satu-satu, keempat-empatnya ke-tangkep, baru dibalikin.
+  - **TETEP bukan gate CI** — dia butuh clone `cahyana-api` di sebelah, dan CI cuma punya `out/`.
+    Jalanin tangan tiap nyentuh harga.
 
 ## Sliders (horizontal card sliders)
 - **SEMUA slider FULL-BLEED di HP** (Sep 2026, Wayan: "buat slidernya full width screen kayak

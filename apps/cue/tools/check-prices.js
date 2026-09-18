@@ -40,6 +40,80 @@ const cards = (node, out = []) => {
   return out;
 };
 
+// ---------------------------------------------------------------------------
+// The copies that live OUTSIDE listings.js.
+//
+// The sweep above only walks LISTINGS, which is how the homepage airport band
+// came to be quoting $20 while the API said $18 - nothing was looking at it.
+// These are the other places a price is written down by hand:
+//   - the six route cards on /transfer          (content/shared/transfer.js)
+//   - the homepage/listing airport band         (components/sections/home/Airport.jsx)
+//   - the JSON-LD fallbacks on both pages       (content/shared/schema.js)
+//
+// The JSON-LD ones matter more than they look: JsonLd patches Product prices
+// from the live catalog, but only when the build can REACH it. When it cannot,
+// the number written in schema.js is what ships to Google.
+const num = (v) => Number(String(v).replace(/[^0-9]/g, ""));
+
+function readSchemaProducts() {
+  const HEAD = "export const PAGE_SCHEMA = ";
+  const src = fs.readFileSync(path.join(ROOT, "content/shared/schema.js"), "utf8");
+  const obj = JSON.parse(src.slice(HEAD.length).replace(/;\s*$/, ""));
+  const out = [];
+  for (const [page, blocks] of Object.entries(obj)) {
+    for (const b of blocks) {
+      if (b && b.json && b.json["@type"] === "Product" && b.json.offers) out.push({ page, block: b });
+    }
+  }
+  return out;
+}
+
+async function checkCopies(api) {
+  const problems = [];
+  let ok = 0;
+  const cmp = (where, shown, live) => {
+    if (shown === live) ok++;
+    else problems.push(`${where}: says ${shown}, API says ${live}`);
+  };
+
+  // 1. /transfer route cards.
+  const { TRANSFER } = await import("../content/shared/transfer.js");
+  for (const r of TRANSFER.routes) {
+    const live = api[r.priceName];
+    if (!live) { problems.push(`transfer.js: "${r.priceName}" is not sold by the API`); continue; }
+    cmp(`transfer.js route "${r.name}"`, num(r.priceFallback), live.usd);
+  }
+
+  // 2. Homepage/listing airport band.
+  const band = fs.readFileSync(path.join(ROOT, "components/sections/home/Airport.jsx"), "utf8");
+  const m = band.match(/name="([^"]+)"\s+fallback="([^"]+)"/);
+  if (!m) problems.push("Airport.jsx: could not find the <Price name=... fallback=...> band");
+  else if (!api[m[1]]) problems.push(`Airport.jsx: "${m[1]}" is not sold by the API`);
+  else cmp(`Airport.jsx band "${m[1]}"`, num(m[2]), api[m[1]].usd);
+
+  // 3. JSON-LD fallbacks, read generically off the same hints JsonLd uses.
+  const transferUsd = Object.entries(api)
+    .filter(([name]) => / – Ubud$/.test(name))
+    .map(([, v]) => v.usd)
+    .filter((n) => n > 0);
+  for (const { page, block } of readSchemaProducts()) {
+    const o = block.json.offers;
+    if (block.priceGroup === "transfers") {
+      if (!transferUsd.length) { problems.push("schema.js: no transfer routes found in the API"); continue; }
+      cmp(`schema.js ${page} lowPrice`, num(o.lowPrice), Math.min(...transferUsd));
+      cmp(`schema.js ${page} highPrice`, num(o.highPrice), Math.max(...transferUsd));
+      cmp(`schema.js ${page} offerCount`, Number(o.offerCount), transferUsd.length);
+      continue;
+    }
+    const key = block.priceKey || block.json.name;
+    const live = api[key];
+    if (!live) continue; // tour Products are covered by the LISTINGS sweep above
+    cmp(`schema.js ${page} "${key}"`, num(o.price), live.usd);
+  }
+
+  return { ok, problems };
+}
+
 async function main() {
   if (!fs.existsSync(API)) {
     console.log("cahyana-api not checked out next to this repo - skipping.");
@@ -77,18 +151,23 @@ async function main() {
     }
   }
 
+  const copies = await checkCopies(api);
+
   console.log(`Cards checked        : ${ok + drift.length + unknown.length + missing.length}`);
   console.log(`Matching the API     : ${ok}`);
   console.log(`Drifted              : ${drift.length}`);
   console.log(`No price in the API  : ${unknown.length}`);
   console.log(`No fallback on card  : ${missing.length}`);
-  for (const line of [...drift, ...unknown, ...missing]) console.log(`   - ${line}`);
+  console.log(`Other copies checked : ${copies.ok + copies.problems.length}`);
+  console.log(`Other copies drifted : ${copies.problems.length}`);
+  for (const line of [...drift, ...unknown, ...missing, ...copies.problems]) console.log(`   - ${line}`);
 
-  if (drift.length || unknown.length || missing.length) {
-    console.log("\nFix: copy the API's usd value into the card's priceFallback in content/shared/listings.js.");
+  if (drift.length || unknown.length || missing.length || copies.problems.length) {
+    console.log("\nFix: copy the API's usd value into whichever copy drifted - the card's");
+    console.log("priceFallback, the band's fallback prop, or the JSON-LD offer in schema.js.");
     return 1;
   }
-  console.log("\nEvery card price matches the API.");
+  console.log("\nEvery price copy matches the API.");
   return 0;
 }
 

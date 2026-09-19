@@ -500,7 +500,7 @@ export const TOUR_CONTENT = {
  "full-adventure-rafting-atv": {
   "heroBg": "rafting.webp",
   "title": "Full Adventure: Ayung Rafting & ATV Ride",
-  "desc": "The two most popular adventure activities near Ubud, back to back in one day - white-water rafting down the Ayung River, then a muddy ATV ride through jungle trails and rice paddies. For guests who want the adrenaline, not the sightseeing stops.",
+  "desc": "The two most popular adventures near Ubud, back to back in one day - white-water rafting down the Ayung River, then a muddy ATV ride through jungle trails and rice paddies. For guests who want adrenaline, not sightseeing stops.",
   "hooks": [
    {
     "label": "Duration",
@@ -2242,7 +2242,7 @@ export const TOUR_CONTENT = {
  "ubud-tour": {
   "heroBg": "tour-hero.jpg",
   "title": "Ubud Rice Terrace, Tirta Empul & Monkey Forest Tour",
-  "desc": "Bali's cultural heart in one day - the Tegalalang rice terraces and a coffee plantation, Tirta Empul holy water temple, Goa Gajah, and the famous Monkey Forest, with Gunung Kawi as an optional stop. A private car, a local driver, your pace.",
+  "desc": "Bali's cultural heart in one day - the Tegalalang rice terraces and a coffee plantation, Tirta Empul holy water temple, Goa Gajah, and the famous Monkey Forest, with Gunung Kawi optional. A private car, a local driver, your pace.",
   "gallery": [
    {
     "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",

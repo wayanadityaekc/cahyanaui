@@ -50,16 +50,26 @@ export const INFO_FACT =
 export const INFO_LISTS = 'grid grid-cols-2 max-[768px]:grid-cols-1 gap-10 max-[768px]:gap-6';
 export const INFO_COL_H3 = 'mb-4 font-body text-h3';
 
-// .info__list + radio-bullet ::before. Variant --yes (filled) / --no (empty + muted text).
+// Bullet lists in body copy. The marker is a small DOT (Sep 2026, Wayan: "gas
+// ganti marker bulatan itu bro").
+//
+// It used to be a 14px ring with a filled centre - the shape of a radio button,
+// which is exactly why Wayan had already thrown it out of the include/exclude
+// pair ("minjem bentuk radio button"). It survived here because these lists were
+// never part of that pass, so guide articles, the legal pages and About were
+// still printing a row of form controls down the side of a reading column. A
+// 5px dot is the same bullet the rest of the site's generic lists use.
+//
+// Only two things render this now: Prose's { type: 'list' } block and About's
+// promise list. Everything else that once did (the include/exclude pairs) moved
+// to InfoBoxes and carries no marker at all.
 const LIST_BASE =
   'list-none [&_li]:font-body [&_li]:text-body [&_li]:font-normal [&_li]:leading-[var(--lh-body)] ' +
-  '[&_li]:relative [&_li]:py-2 [&_li]:pr-0 [&_li]:pl-[1.95rem] ' +
-  "[&_li]:before:content-[''] [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-[0.7rem] " +
-  '[&_li]:before:w-[14px] [&_li]:before:h-[14px] [&_li]:before:rounded-[50%] [&_li]:before:box-border';
-export const INFO_LIST_YES =
-  `${LIST_BASE} [&_li]:text-ink [&_li]:before:[border:1.5px_solid_var(--color-green)] ` +
-  '[&_li]:before:[background:radial-gradient(circle_at_center,var(--color-green)_0_3.5px,transparent_4px)]';
-export const INFO_LIST_NO =
-  `${LIST_BASE} [&_li]:text-[#8a8578] [&_li]:before:[border:1.5px_solid_#cfc9ba] [&_li]:before:bg-transparent`;
-// Pick a checklist variant from a 'yes'/'no' hint (or a legacy 'info__list--no' string).
+  '[&_li]:relative [&_li]:py-2 [&_li]:pr-0 [&_li]:pl-[1.1rem] ' +
+  "[&_li]:before:content-[''] [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-[0.98rem] " +
+  // rounded-[50%], not rounded-full: Preflight is off.
+  '[&_li]:before:w-[5px] [&_li]:before:h-[5px] [&_li]:before:rounded-[50%]';
+export const INFO_LIST_YES = `${LIST_BASE} [&_li]:text-ink [&_li]:before:bg-gold`;
+// Kept, though nothing renders it today: a muted dot for a muted list.
+export const INFO_LIST_NO = `${LIST_BASE} [&_li]:text-muted [&_li]:before:bg-muted`;
 export const infoList = (v) => (String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES);

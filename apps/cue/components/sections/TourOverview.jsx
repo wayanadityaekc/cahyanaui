@@ -20,26 +20,50 @@ const OPTIONAL =
   'inline-block ml-2 py-[0.1rem] px-[0.45rem] rounded-pill align-middle ' +
   'font-body text-label font-medium tracking-[0.08em] uppercase text-muted [border:1px_solid_var(--color-line)]';
 const TEXT = 'font-body text-body leading-[var(--lh-body)] text-green m-0 max-w-[68ch]';
+// Sub-headings ("Day 1 - Ubud"). Only the 3-day package has them, and dropping
+// them would turn 13 stops into one undifferentiated list, so the walk below
+// keeps them AND restarts the numbering under each - which is how an itinerary
+// reads. Tours without sub-headings number straight through, unchanged.
+const DAY = 'font-body text-h3 font-semibold tracking-[0.02em] text-gold m-0 mt-2 mb-4 first:mt-0';
 
 export default function TourOverview({ intro, items = [] }) {
-  const stops = items.filter((it) => it.type === 'stop');
+  // One pass over the page's own order, so a day heading never loses the stops
+  // that belong under it. Each heading opens a fresh <ol>, which is also what
+  // restarts the count.
+  const groups = [];
+  items.forEach((it) => {
+    if (!it) return;
+    if (it.type === 'sub') {
+      groups.push({ heading: it.text, stops: [] });
+      return;
+    }
+    if (it.type !== 'stop') return;
+    if (!groups.length) groups.push({ heading: null, stops: [] });
+    groups[groups.length - 1].stops.push(it);
+  });
+
   return (
     <div>
       {intro && <p className={INTRO}>{intro}</p>}
-      <ol className="list-none m-0 p-0">
-        {stops.map((s, i) => (
-          <li className={ROW} key={s.refId || s.name}>
-            <span className={DOT}>{i + 1}</span>
-            <div>
-              <h3 className={NAME}>
-                {s.name}
-                {s.optional && <span className={OPTIONAL}>Optional</span>}
-              </h3>
-              <p className={TEXT}>{s.summary || s.highlight}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      {groups.map((g, gi) => (
+        <div key={g.heading || gi} className={gi ? 'mt-7' : undefined}>
+          {g.heading && <h3 className={DAY}>{g.heading}</h3>}
+          <ol className="list-none m-0 p-0">
+            {g.stops.map((s, i) => (
+              <li className={ROW} key={s.refId || s.name}>
+                <span className={DOT}>{i + 1}</span>
+                <div>
+                  <h3 className={NAME}>
+                    {s.name}
+                    {s.optional && <span className={OPTIONAL}>Optional</span>}
+                  </h3>
+                  <p className={TEXT}>{s.summary || s.highlight}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
     </div>
   );
 }

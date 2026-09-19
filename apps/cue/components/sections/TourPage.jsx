@@ -2,6 +2,7 @@ import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import TourDestinationCards from '@/components/sections/TourDestinationCards';
 import { tourDestinations, priceFallbackFor } from '@/lib/tourIndex';
+import { galleryFrom } from '@/lib/galleryFrom';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
 
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
@@ -70,24 +71,27 @@ export default function TourPage({ data }) {
   // is dropped rather than printed twice. Nothing else depends on it: the
   // BreadcrumbList JSON-LD is generated separately, and the `.crumb + .related`
   // divider off-switch it used to anchor never matched (see Related.jsx).
-  const gallery = !!(data.gallery && data.gallery.length);
+  // Every tour now opens with the gallery hero (Wayan, Sep 2026: "Rollout bro").
+  // The photos are the page's own - see lib/galleryFrom. A page that later gets a
+  // hand-picked `gallery` in its content file overrides this automatically.
+  const gallery = galleryFrom(data);
   return (
     <>
       <JsonLd page={data.__page} />
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
-        gallery={data.gallery}
+        gallery={gallery}
         title={data.title}
         desc={data.desc}
         hooks={data.hooks}
         cta={data.cta}
         ctaHref={data.ctaHref}
-        crumb={gallery ? data.crumb : undefined}
+        crumb={gallery.length ? data.crumb : undefined}
         stops={data.items.filter((it) => it.type === 'stop').length}
         ratingName={data.bookItem}
         belowChips={
-          gallery && data.bookItem ? (
+          gallery.length && data.bookItem ? (
             <BookNowRow item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} />
           ) : null
         }
@@ -96,7 +100,7 @@ export default function TourPage({ data }) {
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
       <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
       <DetailTabs
-        overview={data.gallery && data.gallery.length ? (
+        overview={gallery.length ? (
           // Gallery hero carries the photos, so the overview is text only.
           <div id={data.stopsId}>
             {/* `desc` is the hero intro line; with the gallery hero it moves down
@@ -136,7 +140,7 @@ export default function TourPage({ data }) {
         <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />
       )}
 
-      {data.crumb && !gallery && (
+      {data.crumb && !gallery.length && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
             p.type === 'link' && !isHiddenTour(p.href) ? (

@@ -48,7 +48,15 @@ const CTA =
   'flex-none flex items-center h-[2.9rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d';
 
 export default function BookBar({ item, priceFallback, perPerson = false }) {
-  const [hidden, setHidden] = useState(false);
+  // STARTS HIDDEN (Wayan, Sep 2026, after the entrance was measured: "1. Ok gass").
+  // It used to start visible, and because this is a static export that meant the
+  // bar shipped in the HTML already on screen - measured, it sat there fully
+  // visible for ~230ms while the page hydrated, then slid out over 300ms once the
+  // observer noticed the inline price row was on screen. A 348ms flash on every
+  // single page load. Starting hidden costs nothing: the observer's first callback
+  // lands in the same frame it would have, and where the bar IS wanted it now
+  // animates in properly instead of being caught already there.
+  const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
     if (!item) return undefined;
@@ -58,7 +66,11 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
     // booking now button double"). The selector lives in bookScroll so the row
     // and the bar read the same list.
     const self = document.querySelector('.bookbar');
-    return observeBookCtas(self, setHidden);
+    const stop = observeBookCtas(self, setHidden);
+    // Nothing to watch means nothing can hide it - show it, or a bar that starts
+    // hidden would stay hidden forever.
+    if (!stop) setHidden(false);
+    return stop;
   }, [item]);
 
   if (!item) return null;

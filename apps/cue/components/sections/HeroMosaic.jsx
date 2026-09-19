@@ -3,42 +3,73 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Img from '@/components/ui/Img';
+import Slider from '@/components/ui/Slider';
+import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Gallery hero - the Viator / GetYourGuide pattern: one large photo plus two
-// thumbnails, the rest behind a "+N" tile that opens a lightbox.
+// Gallery hero - the Viator / GetYourGuide shape: one large photo, then pairs of
+// stacked thumbnails, and the next column peeking at the right edge because the
+// whole thing SLIDES (Wayan, Sep 2026: "jangan isi show all photos di depan tapi
+// bisa di slide biar semua gambar bisa di slide, nanti kalo kebanyakan baru isi
+// itu"). Every photo is reachable by sliding, so the "Show all N photos" pill
+// only appears once there are more than a guest would want to swipe through.
 //
-// Why a photo POOL instead of one photo per named stop (Wayan, Sep 2026): photo
-// availability per place is uneven - some Bali sites have plenty online, others
-// none - so a fixed one-photo-per-stop layout fails in both directions at once.
-// A hole opens where a place has no photo, and the 2nd or 3rd photo of a place
-// that has several gets no seat at all (46 usable photos sat unused in the repo
-// for exactly that reason). A pool is elastic: it absorbs the surplus, and never
-// demands a photo of one specific place, so a gap never has to be filled with a
-// lookalike from somewhere else. Captions stay attached per photo in the
-// lightbox, so no photo claims to be a place it isn't.
+// Why a photo POOL instead of one photo per named stop: photo availability per
+// place is uneven - some Bali sites have plenty online, others none - so a fixed
+// one-photo-per-stop layout fails in both directions at once. A hole opens where
+// a place has no photo, and the 2nd or 3rd photo of a place that has several gets
+// no seat at all (46 usable photos sat unused in the repo for exactly that
+// reason). A pool is elastic: it absorbs the surplus, and never demands a photo
+// of one specific place, so a gap never has to be filled with a lookalike from
+// somewhere else. Captions stay attached per photo in the lightbox, so no photo
+// claims to be a place it isn't.
 //
 // Layouts degrade by count so every tour looks finished with what it has:
-// 1 photo = one wide tile, 2 = side by side, 3+ = the mosaic.
-const VISIBLE = 3;
+// 1 photo = one wide tile, 2 = side by side, 3+ = the sliding mosaic.
 
+// Past this many, sliding stops being the nice way through and a grid overview
+// earns its place. Judgment call, not a measurement - tune it freely.
+const PILL_FROM = 10;
+
+// Radius sits on each TILE, not on the track: a track has to scroll, so it
+// cannot carry `overflow-hidden` to clip one shared corner.
+//
+// MOBILE = one landscape photo per slide. A lead-plus-thumbnails mosaic cannot
+// also be landscape on a phone: at 390px a 62%-wide lead over a 250px track is
+// ~0.89 (near square), and reaching 1.6 would need a tile wider than the screen.
+// Wayan asked for landscape, so the phone slides one photo at a time instead.
+// DESKTOP = the mosaic, via one flat DOM: `grid-template-columns` sizes the lead
+// column and `grid-auto-columns` every following pair column, so the same tiles
+// flow 1 big + stacked pairs with no wrapper divs to switch between breakpoints.
 const TILE_BASE =
-  'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
+  'relative block w-full overflow-hidden p-0 bg-cream border-none rounded-md cursor-pointer ' +
+  'aspect-[16/10] [scroll-snap-align:start] min-[769px]:aspect-auto min-[769px]:h-full ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center ' +
   '[&>img]:[transition:transform_var(--dur-slow)_var(--ease)] hover:[&>img]:[transform:scale(1.04)]';
-// Mobile: lead photo full width, thumbs in a row beneath. Desktop: lead photo
-// left spanning both rows, thumbs stacked right - the grid's own aspect sets the
-// height, so the tiles come out near-square like Viator's.
-const TILE_LEAD = `${TILE_BASE} col-span-2 aspect-[16/10] min-[769px]:col-span-1 min-[769px]:row-span-2 min-[769px]:aspect-auto`;
-const TILE_THUMB = `${TILE_BASE} aspect-[4/3] min-[769px]:aspect-auto`;
-const GRID_BASE = 'grid gap-1 overflow-hidden rounded-lg';
-// Corner pill rather than a dark overlay across the last tile - an overlay lands
-// on whatever the photo's subject happens to be (it sat right on the macaque's
+const TILE = `${TILE_BASE} flex-[0_0_88%] min-[769px]:flex-none`;
+const TILE_LEAD = `${TILE} min-[769px]:row-span-2`;
+// Desktop crop comes from the track's ASPECT, not a stepped pixel height: with
+// `aspect-[2.7/1]` the lead is always 0.62 x 2.7 = ~1.67 wide-to-tall at every
+// width. Fixed heights made it drift (474px tall at a 993px viewport gave a 1.24
+// lead - taller than wide-ish, not the landscape Wayan asked for).
+const TRACK =
+  'flex gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ' +
+  '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'min-[769px]:grid min-[769px]:grid-flow-col min-[769px]:grid-rows-2 ' +
+  'min-[769px]:[grid-template-columns:62%] min-[769px]:[grid-auto-columns:35%] ' +
+  'min-[769px]:aspect-[2.7/1] ' +
+  BLEED_MOBILE;
+// Static (non-sliding) layouts for 1 and 2 photos - no track, so no snap needed.
+const STATIC_1 = 'min-[769px]:aspect-[2.7/1]';
+const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
+// Corner pill rather than a dark overlay across a tile - an overlay lands on
+// whatever the photo's subject happens to be (it sat right on the macaque's
 // face), and Viator/Airbnb put this control in the corner for the same reason.
 // `scale` belongs in every clickable's own transition list, or the global press
 // feedback in style.css snaps instead of easing (check-motion rule 2).
 const MORE_BTN =
-  'absolute bottom-3 right-3 z-[2] py-[0.4rem] px-[0.85rem] rounded-pill bg-white [border:1px_solid_var(--color-line)] ' +
+  'absolute bottom-3 right-3 z-[6] py-[0.4rem] px-[0.85rem] rounded-pill bg-white [border:1px_solid_var(--color-line)] ' +
   'shadow-md font-body text-small font-semibold text-gold cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 
@@ -64,39 +95,32 @@ export default function HeroMosaic({ photos = [], title }) {
 
   if (!photos.length) return null;
 
-  const shown = photos.slice(0, VISIBLE);
-  const extra = photos.length - shown.length;
+  const tile = (p, i) => (
+    <button
+      type="button"
+      key={p.src}
+      className={i === 0 ? TILE_LEAD : TILE}
+      onClick={() => setAt(i)}
+      aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
+    >
+      <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
+    </button>
+  );
 
-  const grid =
-    photos.length === 1
-      ? `${GRID_BASE} grid-cols-1`
-      : photos.length === 2
-        ? `${GRID_BASE} grid-cols-2`
-        : `${GRID_BASE} grid-cols-2 min-[769px]:grid-cols-[1.85fr_1fr] min-[769px]:grid-rows-2 min-[769px]:aspect-[2.7/1]`;
-
-  const tileCls = (i) => {
-    if (photos.length === 1) return `${TILE_BASE} aspect-[16/9]`;
-    if (photos.length === 2) return `${TILE_BASE} aspect-[4/3]`;
-    return i === 0 ? TILE_LEAD : TILE_THUMB;
-  };
+  const gallery =
+    photos.length === 1 ? (
+      <div className={STATIC_1}>{tile(photos[0], 0)}</div>
+    ) : photos.length === 2 ? (
+      <div className={STATIC_2}>{photos.map((p, i) => tile(p, i))}</div>
+    ) : (
+      <Slider gridClassName={TRACK}>{photos.map((p, i) => tile(p, i))}</Slider>
+    );
 
   return (
     <>
       <div className="relative">
-        <div className={grid}>
-          {shown.map((p, i) => (
-            <button
-              type="button"
-              key={p.src}
-              className={tileCls(i)}
-              onClick={() => setAt(i)}
-              aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
-            >
-              <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
-            </button>
-          ))}
-        </div>
-        {extra > 0 && (
+        {gallery}
+        {photos.length >= PILL_FROM && (
           <button type="button" className={MORE_BTN} onClick={() => setAt(0)}>
             Show all {photos.length} photos
           </button>

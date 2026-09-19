@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShieldCheck } from 'lucide-react';
 import Price from '@/components/Price';
 import { BAR_SHELL, BAR_UPTO_LG } from '@/components/ui/stickyBar';
 import { observeBookCtas, scrollToBookCard } from './bookScroll';
@@ -16,21 +15,26 @@ import { observeBookCtas, scrollToBookCard } from './bookScroll';
 // that - see components/ui/stickyBar.jsx. Chat lives in the navbar now, not in
 // here.
 //
-// LAYOUT (Sep 2026, Wayan: "style book bar kayak GetYourGuide"): stacked price
-// block on the left - kicker, amount + unit, reassurance badge - with the CTA
-// filling the right. Two things from that reference are deliberately NOT copied:
+// LAYOUT (Sep 2026, Wayan: "style book bar kayak GetYourGuide"): price block on
+// the left - kicker, amount + unit - with the CTA filling the right. Two things
+// from that reference are deliberately NOT copied:
 //   - the struck-through "was" price. We have no list price to strike out, so
 //     any number there would be an invented discount.
 //   - "Likely to sell out". We do not track remaining seats, so it would be
-//     fake scarcity. The badge says what is actually true and answers the same
-//     hesitation: the booking can be cancelled for free.
+//     fake scarcity.
+//
+// The "Free cancellation" badge that stood in for that second one is GONE
+// (Wayan, Sep 2026: "yang di book bar hapus bro"). It was saying the same thing
+// twice on the same page: every detail page now carries a Free cancellation chip
+// under the hero, and the booking card's own footnote repeats it above the Book
+// Now button. Nothing was lost, and the bar got shorter - see the body padding
+// in app/layout.jsx, which is measured against this bar's height.
 // `bookbar` is a second marker: this bar is taller than SectionSwitcher, and
 // <body> reserves a different height for each (see app/layout.jsx).
 
 // Kept small and quiet so the amount stays the loudest thing in the bar.
 const KICKER = 'text-[0.6rem] font-medium tracking-[0.12em] uppercase text-muted leading-none';
 const UNIT = 'text-[0.68rem] font-normal text-muted leading-none';
-const BADGE = 'inline-flex items-center gap-1 mt-[0.3rem] text-[0.62rem] font-medium leading-none text-cta';
 // Harga di bar ini HITAM (`text-gold` = soft black), BUKAN amber - pengecualian
 // yang disengaja dari aturan "semua harga amber": di sini amber nabrak tombol CTA
 // hijau tepat di sebelahnya. Warnanya WAJIB dioper lewat className-nya <Price>
@@ -75,10 +79,6 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
           {/* Tours are sold per car, experiences per person - same wording
               BookingForm uses, so the bar and the form never disagree. */}
           <span className={UNIT}>{perPerson ? 'per person' : 'per car'}</span>
-        </span>
-        <span className={BADGE}>
-          <ShieldCheck className="w-[0.8rem] h-[0.8rem] shrink-0" strokeWidth={2} aria-hidden="true" />
-          Free cancellation
         </span>
       </div>
       <a href="#booking" className={CTA} onClick={scrollToBookCard}>

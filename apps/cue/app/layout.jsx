@@ -56,7 +56,7 @@ export default function RootLayout({ children }) {
           class order rather than by intent. The bookbar rule tracks the bar's own
           breakpoint - and a Tailwind v4 `max-[N]` is width < N, so 993 here means
           "up to and including 992". SectionSwitcher still stops at 767. */}
-      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[86px]">
+      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px]">
         <LoadingScreen />
         <Providers>
           <Navbar />

@@ -2,7 +2,7 @@ import CharterBuilder from '@/components/sections/CharterBuilder';
 import { INFO_SECTION_DETAIL, INFO_CARD, INFO_CARD_BODY } from '@/components/ui/infoClasses';
 import Prose from '@/components/prose/Prose';
 import { CHARTER } from '@/content/shared/charter';
-import { CHARTER_HERO, CHARTER_HERO_INNER_WIDE, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
+import FormHero from '@/components/sections/FormHero';
 
 // The charter page body (hero + builder form + one details section), extracted so
 // both the /charter route and the All Programs "Charter" tab render the real form.
@@ -20,16 +20,18 @@ import { CHARTER_HERO, CHARTER_HERO_INNER_WIDE, CHARTER_HERO_TITLE, CHARTER_HERO
 // (BODY_TEXT moved to infoClasses as INFO_CARD_BODY - transfer and airport read
 // from the same string now, Sep 2026.)
 
-export default function CharterSection() {
+export default function CharterSection({ embedded }) {
   return (
     <>
-      <section className={`${CHARTER_HERO} bg-[url(/assets/images/road-ubud.webp)]`}>
-        <div className={CHARTER_HERO_INNER_WIDE}>
-          <h1 className={CHARTER_HERO_TITLE}>{CHARTER.title}</h1>
-          <p className={CHARTER_HERO_SUB}>{CHARTER.sub}</p>
-          <CharterBuilder />
-        </div>
-      </section>
+      <FormHero
+        title={CHARTER.title}
+        sub={CHARTER.sub}
+        photo="road-ubud.webp"
+        alt="A road leading out of Ubud, lined with shops and traffic"
+        embedded={embedded}
+      >
+        <CharterBuilder />
+      </FormHero>
       <section className={INFO_SECTION_DETAIL}>
         <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
           <Prose blocks={CHARTER.info} headingVariant="company" />

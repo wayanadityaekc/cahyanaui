@@ -58,8 +58,8 @@ export default function AllPrograms() {
           </div>
         </div>
 
-        {tab === 'charter' && <CharterSection />}
-        {tab === 'transfer' && <TransferSection />}
+        {tab === 'charter' && <CharterSection embedded />}
+        {tab === 'transfer' && <TransferSection embedded />}
         {!isForm && (
           <section className={CATSEC}>
             <div className={LROW_LIST}>

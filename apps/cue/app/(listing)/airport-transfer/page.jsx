@@ -4,7 +4,7 @@ import JsonLd from '@/components/JsonLd';
 import Prose from '@/components/prose/Prose';
 import { detailBlocks } from '@/lib/detailBlocks';
 import { AIRPORT } from '@/content/shared/airport';
-import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
+import FormHero from '@/components/sections/FormHero';
 
 // SEO: this page owns "bali airport transfer" (Sep 2026, Wayan). It used to
 // title itself "Booking | Flight Details Form" while /transfer led on the
@@ -36,13 +36,14 @@ export default function Page() {
   return (
     <>
       <JsonLd page="airport-transfer" />
-      <section className={`${CHARTER_HERO} bg-[url(/assets/images/transfer-hero.webp)]`}>
-        <div className={CHARTER_HERO_INNER}>
-          <h1 className={CHARTER_HERO_TITLE}>{AIRPORT.title}</h1>
-          <p className={CHARTER_HERO_SUB}>{AIRPORT.sub}</p>
-          <AirportTransferForm />
-        </div>
-      </section>
+      <FormHero
+        title={AIRPORT.title}
+        sub={AIRPORT.sub}
+        photo="transfer-hero.webp"
+        alt="The glass facade of Bali's Ngurah Rai international airport terminal"
+      >
+        <AirportTransferForm />
+      </FormHero>
       <section className={INFO_SECTION_DETAIL}>
         <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
           <Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />

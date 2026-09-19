@@ -763,18 +763,50 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 
 ## Transfer / Airport / Charter = SATU CANGKANG (Sep 2026)
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
-harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sama persis:
+harus identik". Ketiganya **cuma punya 2 section**, dan cangkangnya sama persis:
 
-    <section CHARTER_HERO + bg-[url(...)]>      <- foto + judul + sub + FORM-nya
-      <div CHARTER_HERO_INNER(_WIDE)>           <- charter pakai _WIDE (butuh 3 kartu)
+    <FormHero title sub photo alt [embedded]>   <- judul, sub, FORM, terus FOTO
+      {form halaman itu}
     <section INFO_SECTION_DETAIL>               <- band cream
       <div INFO_CARD + INFO_CARD_BODY>          <- kartu putih, --container-mid
         <Prose ... headingVariant="company" />
 
-- **Yang boleh beda cuma FOTO hero-nya.** Sisanya (min-height 620, padding, gradient
-  overlay 0.5→0.64, ukuran+bobot+warna H1, bg band, lebar kartu, padding kartu, radius,
-  offset kiri) WAJIB identik - dijaga `verify-trio.mjs` di scratchpad (6 lebar × 3
-  halaman, 120 assertion): tiap halaman tanda-tangan cangkangnya diadu lawan charter.
+- **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
+  kalo di desktop jadiin kolom, misal kiri form kanan foto".** Band foto gelap yang dulu
+  nampung judul + sub + form DI ATASNYA udah **DIHAPUS**; sekarang foto jadi panel
+  sendiri di sebelah form, dan tulisannya duduk di putih. Urutan DOM: judul → sub →
+  form → foto. HP numpuk sesuai urutan itu; desktop 2 kolom.
+- **Cangkangnya = SATU KOMPONEN, `components/sections/FormHero.jsx`**, bukan 3 salinan
+  string class. Yang wajib sama itu **URUTAN** empat bagian itu, dan urutan gak bisa
+  dijaga cuma dengan berbagi string - alasan yang sama kenapa `DetailHero` ada buat
+  tour/attraction/guide. `CHARTER_HERO*` + file `charterHeroClasses.js` **UDAH DIHAPUS**.
+- **2 kolomnya mulai 1200px, BUKAN 993 - dan angka itu penting.** `CharterBuilder`
+  punya 2 kolom SENDIRI (paket | field, `1fr 340px`) dari 993px. Kalau yang luar juga
+  993, kolom paket mendarat di **~244px** dan nama paket + harga gak muat sebaris. Di
+  1200 kolom form ~791px jadi paket dapet ~450px. Di bawah 1200 semuanya numpuk = urutan
+  HP yang diminta. **Jangan turunin ke 993.**
+- **Rasio kolom `2.4fr 1fr`, hasil UKUR bukan tebakan.** Sub-baris paket charter
+  ("10 hours · around 120 km · per car up to 5") mulai wrap begitu kolom form di bawah
+  ~790px: di `1.75fr` dua dari tiga baris pecah di 1200px dan nyisain "5" sendirian.
+  Ganti rasio = **ukur ulang sub-baris itu**.
+- **Grid-nya `grid-cols-[minmax(0,1fr)]`, jangan track `auto`.** Lantai track grid itu
+  **min-content**, jadi form yang bentuk tersempitnya lebih lebar dari layar bakal
+  ndorong track lewat viewport dan `body{overflow-x:clip}` motong tepi kanannya
+  **diam-diam**. Form airport persis gitu di 320px (form 316px di kolom 288px).
+- **Judul turun jadi `<h2>` kalau `embedded`** (tab /programs punya H1 sendiri). Tanpa
+  itu /programs punya 2 H1.
+- **Foto `/transfer` DIGANTI** `transfer-hero.webp` → `coastal-road-beach-bali.webp`.
+  Foto lama itu fasad terminal dengan tulisan "BALI International Airport" kebaca jelas.
+  Dulu aman karena ke-gelapin di belakang teks putih; jadi panel terang dia naro balik
+  frasa yang halaman ini justru **sengaja dilepas** (split SEO Sep 2026: yang pegang
+  "bali airport transfer" itu `/airport-transfer`). `/airport-transfer` tetep pakai foto
+  itu - di situ emang nyambung.
+- **Yang boleh beda cuma FOTO-nya.** Sisanya (padding, bg, ukuran+bobot+warna H1, lebar
+  kolom, radius foto, posisi) WAJIB identik - dijaga **`verify-formhero.mjs`** di
+  scratchpad (8 lebar × 3 halaman, 226 assertion): urutan judul→sub→form→foto, foto di
+  KANAN form dari 1200 & numpuk di bawahnya, tanda tangan cangkang tiap halaman diadu
+  lawan charter, foto gak lazy & ada alt, halaman gak melar, dan nama + sub-baris paket
+  charter gak wrap.
 - **`INFO_CARD_BODY`** (ritme paragraf di dalam kartu) di `infoClasses.js`. Dulu namanya
   `BODY_TEXT`, const lokal di `CharterSection` - transfer & airport gak ikut, jadi
   paragrafnya beda. Sekarang satu string, tiga pemakai.
@@ -796,10 +828,11 @@ harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sam
   560 / overlay .45-.55 - beda dari charter padahal FOTO-nya sama), `max-w-[960px]` +
   `max-w-[820px]` (dua-duanya bukan token container), dan gutter `px-[1.3rem]` (20.8px,
   bukan 24 desktop / 16 HP).
-- **Gotcha harness yang nyaris nipu**: `verify-trio` versi pertama helper-nya
+- **Gotcha harness yang nyaris nipu** (dari `verify-trio`, harness band foto lama -
+  band-nya udah gak ada, pelajarannya masih kepakai): helper-nya ditulis
   `cs = (el) => getComputedStyle(el)` - argumen pseudo-nya ke-buang, jadi
-  `cs(hero,'::before')` diem-diem ngebalikin gaya SECTION-nya (= foto hero). Harness-nya
-  lapor 12 gagal "cangkang beda" padahal yang beda cuma fotonya, yang emang disengaja.
+  `cs(hero,'::before')` diem-diem ngebalikin gaya SECTION-nya. Harness-nya lapor 12
+  gagal "cangkang beda" padahal yang beda cuma fotonya, yang emang disengaja.
   Kalau harness bilang beda, **cek dulu harness-nya baca yang bener**.
 - **Route di /transfer TETEP markup halaman** (bukan blok Prose): itu kontrol berharga yang
   bisa ditap, bukan bacaan. Dia duduk DI DALAM kartu biar halamannya tetep hero + 1 kartu.

@@ -95,8 +95,10 @@ export default function CharterBuilder() {
           (Wayan, Sep 2026: "di desktop jadiin 2 kolom, di kiri list charternya di
           kanan kolom inputnya"). On a phone they stack in DOM order, which is the
           order he asked for - the list first, the fields after it.
-          993px, not 769: it has to change at the same width as the panel itself
-          (CHARTER_HERO_INNER_WIDE), or the two columns land inside a 600px box. */}
+          993px, not 769: below that there is not enough width for a 340px field
+          column and a readable plan row side by side. FormHero only splits the
+          page into form + photo from 1200px for the same reason, one level up -
+          see the note there. */}
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
 
         {/* 1 - the plan. The same list the homepage shows; here it drives the

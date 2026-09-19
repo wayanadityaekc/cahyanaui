@@ -52,7 +52,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
   useBodyLock(!!confirm);
 
   return (
-    <div className="booksidebar relative border border-line rounded-lg overflow-hidden">
+    <div className="booksidebar relative border border-line rounded-md overflow-hidden">
       <BookingForm presetItem={item} presetType={presetType} perPerson={perPerson} onBook={start(true)} variant="sidebar" belowPrice={belowPrice} />
 
       <DatePopup

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import Price from '@/components/Price';
-import { BAR_SHELL } from '@/components/ui/stickyBar';
+import { BAR_SHELL, BAR_UPTO_LG } from '@/components/ui/stickyBar';
 import { observeBookCtas, scrollToBookCard } from './bookScroll';
 
 // Sticky price + CTA on mobile, rendered by the page that actually sells
@@ -61,7 +61,7 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
 
   return (
     <div
-      className={`${BAR_SHELL} bookbar [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
+      className={`${BAR_SHELL} ${BAR_UPTO_LG} bookbar [transition:translate_var(--dur-slow)_var(--ease),opacity_var(--dur)_var(--ease)] ${
         hidden ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
       inert={hidden || undefined}

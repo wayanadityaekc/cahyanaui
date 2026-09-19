@@ -23,8 +23,29 @@
 // `stickybar` is the marker <body> reads to reserve the bar's height.
 export const BAR_MARK = 'stickybar';
 
+// UP TO WHICH WIDTH the bar shows is the one thing the two consumers differ on, so
+// it is named rather than baked into the shell (Wayan, Sep 2026: "Lebarin bro").
+//   - BAR_UPTO_LG (992px) = BookBar. A detail page has no other Book affordance in
+//     the 769-992 band: the booking card stacks BELOW the whole tab block there,
+//     and it is the same 992 boundary BookNowRow uses, so the two hand over cleanly.
+//   - BAR_UPTO_MD (767px) = SectionSwitcher. Widening THIS one would be a bug: the
+//     listing pages' segmented tablist is only hidden under 769px, so from 769 up
+//     the switcher and the tablist would both be on screen.
+// Everything else - shape, colour, border, upward shadow, safe-area padding - stays
+// shared, so both bars still look like one bar in one place.
+//
+// TAILWIND v4 GOTCHA, measured: a `max-[N]` variant compiles to
+// `@media not all and (min-width: N)`, which is width STRICTLY LESS THAN N - it does
+// NOT include N. `max-[992px]` left the bar missing at exactly 992px even though
+// `matchMedia('(max-width: 992px)')` reported true. So the number here is the first
+// width the bar should NOT appear at, i.e. one past the intended last one. Same
+// reason `max-md` covers up to 767 and the listing tablist (`max-[768px]:hidden`)
+// takes over cleanly at 768.
+export const BAR_UPTO_MD = 'hidden max-md:flex';
+export const BAR_UPTO_LG = 'hidden max-[993px]:flex';
+
 export const BAR_SHELL =
-  `${BAR_MARK} fixed inset-x-0 bottom-0 z-[95] hidden max-md:flex items-center gap-3 ` +
+  `${BAR_MARK} fixed inset-x-0 bottom-0 z-[95] items-center gap-3 ` +
   'pt-[0.55rem] pl-[1.1rem] pr-[0.9rem] pb-[max(0.55rem,env(safe-area-inset-bottom))] ' +
   'bg-white [border-top:1px_solid_var(--color-line)] rounded-t-[var(--r-xl)] ' +
   '[box-shadow:0_-6px_22px_rgba(0,0,0,0.08)]';

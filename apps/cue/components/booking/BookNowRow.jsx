@@ -32,13 +32,14 @@ const KICKER = 'text-[0.6rem] font-medium tracking-[0.12em] uppercase text-muted
 // button starts at x=173 - the unit printed straight over the CTA. One line only
 // fits down there if the type gives a little, so the amount steps down under 360px
 // and the button loses some side padding with it. Everything from 360px up is
-// untouched.
-const AMOUNT = 'price font-head text-[1.6rem] max-[359px]:text-[1.25rem] font-bold leading-[1.05] tracking-[-0.02em] text-gold';
+// untouched. (A Tailwind v4 `max-[N]` is width < N, so 360 here really does mean
+// "below 360", not "360 and under".)
+const AMOUNT = 'price font-head text-[1.6rem] max-[360px]:text-[1.25rem] font-bold leading-[1.05] tracking-[-0.02em] text-gold';
 // Inline, on the amount's baseline (Wayan, Sep 2026: "harga per car jangan di
 // tumpuk") - stacked it read as two facts when it is one.
 const UNIT = 'text-small text-muted';
 const CTA =
-  'flex-none flex items-center h-[2.9rem] px-[1.15rem] max-[359px]:px-3 rounded-pill bg-cta text-white font-body text-[1rem] font-semibold ' +
+  'flex-none flex items-center h-[2.9rem] px-[1.15rem] max-[360px]:px-3 rounded-pill bg-cta text-white font-body text-[1rem] font-semibold ' +
   'no-underline whitespace-nowrap border-none cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 // No `flex` here on purpose - it is added below only while the row is showing.

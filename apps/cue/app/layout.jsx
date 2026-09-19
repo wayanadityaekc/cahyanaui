@@ -50,7 +50,13 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href={`/assets/icons/apple-touch-icon.png?v=${ICON_APPLE_V}`} />
         <link rel="stylesheet" href={`/style.css?v=${STYLE_V}`} />
       </head>
-      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-md:has-[.bookbar]:pb-[86px]">
+      {/* Space reserved for whichever sticky bar is on screen. The two rules are
+          kept MUTUALLY EXCLUSIVE on purpose (see CLAUDE.md): stacked, they would
+          have identical specificity and the winner would be decided by Tailwind's
+          class order rather than by intent. The bookbar rule tracks the bar's own
+          breakpoint - and a Tailwind v4 `max-[N]` is width < N, so 993 here means
+          "up to and including 992". SectionSwitcher still stops at 767. */}
+      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[86px]">
         <LoadingScreen />
         <Providers>
           <Navbar />

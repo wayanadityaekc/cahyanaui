@@ -1,6 +1,9 @@
 import Img from '@/components/ui/Img';
 import JsonLd from '@/components/JsonLd';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
+import AttractionOverview from '@/components/sections/AttractionOverview';
+import BookNowRow from '@/components/booking/BookNowRow';
+import { galleryFrom } from '@/lib/galleryFrom';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
@@ -21,23 +24,38 @@ export default function AttractionPage({ data }) {
   // on refId, so a stop added to a tour shows up on this page by itself.
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = toursContaining(slug);
+  // Same rollout as the tours (Wayan, Sep 2026: "Rollout bro") - the gallery is
+  // built from this page's own hero photo and section photos, and a hand-picked
+  // `gallery` in the content file overrides it.
+  const gallery = galleryFrom(data);
   return (
     <>
       <JsonLd page={data.__page} />
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
+        gallery={gallery}
         title={data.title}
         desc={data.desc}
         hooks={data.hooks}
         cta={data.cta}
         ctaHref={data.ctaHref}
+        crumb={gallery.length ? data.crumb : undefined}
+        ratingName={data.bookItem}
+        belowChips={
+          gallery.length && data.bookItem ? (
+            <BookNowRow item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
+          ) : null
+        }
       />
 
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
       <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
       <DetailTabs
-        overview={(
+        overview={gallery.length ? (
+          // Gallery hero holds the photos, so the sections are text only.
+          <AttractionOverview stops={data.stops} id={data.stopsId} />
+        ) : (
           <div className={STOPS} id={data.stopsId}>
             {data.stops.map((s, i) => (
               <article className={STOP} key={i}>
@@ -81,7 +99,9 @@ export default function AttractionPage({ data }) {
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
-      {data.crumb && (
+      {/* With the gallery hero the breadcrumb prints at the TOP of the page, so
+          the foot copy is dropped rather than shown twice - same as TourPage. */}
+      {data.crumb && !gallery.length && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
             p.type === 'link' && !isHiddenTour(p.href) ? (

@@ -31,37 +31,50 @@ import useBodyLock from '@/components/ui/useBodyLock';
 // earns its place. Judgment call, not a measurement - tune it freely.
 const PILL_FROM = 10;
 
-// Radius sits on each TILE, not on the track: a track has to scroll, so it
-// cannot carry `overflow-hidden` to clip one shared corner.
+// The track slides in GROUPS OF THREE - one big photo plus the two small ones
+// (Wayan, Sep 2026: "3 kalo habis foto besar foto kecil yang 2 itu"). Grouping
+// is what lets the phone show all three AND keep the big photo landscape: on a
+// phone the big one sits on its own row above the pair (GetYourGuide's shape),
+// on desktop it sits beside them spanning both rows (Viator's). Same DOM, the
+// group grid just rearranges.
 //
-// MOBILE = one landscape photo per slide. A lead-plus-thumbnails mosaic cannot
-// also be landscape on a phone: at 390px a 62%-wide lead over a 250px track is
-// ~0.89 (near square), and reaching 1.6 would need a tile wider than the screen.
-// Wayan asked for landscape, so the phone slides one photo at a time instead.
-// DESKTOP = the mosaic, via one flat DOM: `grid-template-columns` sizes the lead
-// column and `grid-auto-columns` every following pair column, so the same tiles
-// flow 1 big + stacked pairs with no wrapper divs to switch between breakpoints.
+// NO RADIUS on the tiles (Wayan: "grid nya gausah kasi border radius").
+// Tiles carry NO aspect of their own: the GROUP owns the shape (its aspect plus
+// its row ratio), and each tile just fills its cell. Per-tile aspects broke once
+// the groups became flex items - `align-items: stretch` grew them to the tallest
+// group, and a stretched cell beats a tile's aspect, so the big photo measured
+// 1.23 instead of 1.6 on phones. Owning it at group level makes the ratio exact
+// and identical for every group, whatever it holds.
 const TILE_BASE =
-  'relative block w-full overflow-hidden p-0 bg-cream border-none rounded-md cursor-pointer ' +
-  'aspect-[16/10] [scroll-snap-align:start] min-[769px]:aspect-auto min-[769px]:h-full ' +
+  'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center ' +
   '[&>img]:[transition:transform_var(--dur-slow)_var(--ease)] hover:[&>img]:[transform:scale(1.04)]';
-const TILE = `${TILE_BASE} flex-[0_0_88%] min-[769px]:flex-none`;
-const TILE_LEAD = `${TILE} min-[769px]:row-span-2`;
-// Desktop crop comes from the track's ASPECT, not a stepped pixel height: with
-// `aspect-[2.7/1]` the lead is always 0.62 x 2.7 = ~1.67 wide-to-tall at every
-// width. Fixed heights made it drift (474px tall at a 993px viewport gave a 1.24
-// lead - taller than wide-ish, not the landscape Wayan asked for).
+// Big photo: full width above the pair on mobile, beside it spanning both rows on
+// desktop.
+const TILE_BIG = `${TILE_BASE} col-span-2 min-[769px]:col-span-1 min-[769px]:row-span-2`;
+const TILE_SM = TILE_BASE;
+// The last group when the count is not a multiple of three: the single small one
+// takes the whole remaining space rather than leaving a hole beside it.
+const TILE_SM_WIDE = `${TILE_BASE} col-span-2 min-[769px]:col-span-1 min-[769px]:row-span-2`;
+// Group shape. Mobile: square-ish with 5:3 rows, which puts the big photo at
+// ~1.6 (the landscape Wayan asked for) and the two small ones at ~4:3. Desktop:
+// 2.7/1 with equal rows, big photo beside them at ~1.74. Aspect, never a pixel
+// height, so the crop holds at every width - a stepped height gave a 1.24 big
+// photo at a 993px viewport. 96% leaves the next group peeking at the right
+// edge, which is the "there is more" signal.
+const GROUP =
+  'flex-[0_0_96%] grid grid-cols-2 gap-1 [scroll-snap-align:start] ' +
+  'aspect-square [grid-template-rows:5fr_3fr] ' +
+  'min-[769px]:[grid-template-columns:64fr_35fr] min-[769px]:[grid-template-rows:1fr_1fr] min-[769px]:aspect-[2.7/1]';
+// items-start so a group's own aspect sets its height; flex's default stretch
+// would override it.
 const TRACK =
-  'flex gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
+  'flex items-start gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  'min-[769px]:grid min-[769px]:grid-flow-col min-[769px]:grid-rows-2 ' +
-  'min-[769px]:[grid-template-columns:62%] min-[769px]:[grid-auto-columns:35%] ' +
-  'min-[769px]:aspect-[2.7/1] ' +
   BLEED_MOBILE;
 // Static (non-sliding) layouts for 1 and 2 photos - no track, so no snap needed.
-const STATIC_1 = 'min-[769px]:aspect-[2.7/1]';
+const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
 const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 // Corner pill rather than a dark overlay across a tile - an overlay lands on
 // whatever the photo's subject happens to be (it sat right on the macaque's
@@ -95,25 +108,42 @@ export default function HeroMosaic({ photos = [], title }) {
 
   if (!photos.length) return null;
 
-  const tile = (p, i) => (
-    <button
-      type="button"
-      key={p.src}
-      className={i === 0 ? TILE_LEAD : TILE}
-      onClick={() => setAt(i)}
-      aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
-    >
-      <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
-    </button>
-  );
+  const tile = (i, cls) => {
+    const p = photos[i];
+    return (
+      <button
+        type="button"
+        key={p.src}
+        className={cls}
+        onClick={() => setAt(i)}
+        aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
+      >
+        <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
+      </button>
+    );
+  };
+
+  // One big + two small per group.
+  const groups = [];
+  for (let i = 0; i < photos.length; i += 3) {
+    groups.push([i, i + 1, i + 2].filter((n) => n < photos.length));
+  }
 
   const gallery =
     photos.length === 1 ? (
-      <div className={STATIC_1}>{tile(photos[0], 0)}</div>
+      <div className={STATIC_1}>{tile(0, TILE_BASE)}</div>
     ) : photos.length === 2 ? (
-      <div className={STATIC_2}>{photos.map((p, i) => tile(p, i))}</div>
+      <div className={STATIC_2}>{photos.map((p, i) => tile(i, TILE_BASE))}</div>
     ) : (
-      <Slider gridClassName={TRACK}>{photos.map((p, i) => tile(p, i))}</Slider>
+      <Slider gridClassName={TRACK}>
+        {groups.map((g) => (
+          <div className={GROUP} key={g[0]}>
+            {g.map((n, k) =>
+              k === 0 ? tile(n, TILE_BIG) : tile(n, g.length === 2 ? TILE_SM_WIDE : TILE_SM),
+            )}
+          </div>
+        ))}
+      </Slider>
     );
 
   return (

@@ -2243,7 +2243,6 @@ export const TOUR_CONTENT = {
   "heroBg": "tour-hero.jpg",
   "title": "Ubud Rice Terrace, Tirta Empul & Monkey Forest Tour",
   "desc": "Bali's cultural heart in one day - the Tegalalang rice terraces and a coffee plantation, Tirta Empul holy water temple, Goa Gajah, and the famous Monkey Forest, with Gunung Kawi as an optional stop. A private car, a local driver, your pace.",
-  "intro": "A full day around Ubud in a private car with your own driver. Around 8 hours from pick-up to drop-off, starting at whatever time suits you - four main stops across the rice fields north of town and the temple sites just east of it, plus one optional. The route stays yours: linger somewhere longer, or skip a stop and move on.",
   "gallery": [
    {
     "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",

@@ -84,7 +84,9 @@ export default function TourPage({ data }) {
         overview={data.gallery && data.gallery.length ? (
           // Gallery hero carries the photos, so the overview is text only.
           <div id={data.stopsId}>
-            <TourOverview intro={data.intro} items={data.items} />
+            {/* `desc` is the hero intro line; with the gallery hero it moves down
+                here (Wayan: "deskripsi di bawah title taruh di overview aja"). */}
+            <TourOverview intro={data.desc} items={data.items} />
           </div>
         ) : (
           <div className={STOPS} id={data.stopsId}>

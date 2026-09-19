@@ -55,10 +55,23 @@ function HeroBody({ title, desc, hooks, cta, ctaHref, align }) {
 export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref }) {
   if (gallery && gallery.length) {
     return (
+      // Title ABOVE the gallery (Wayan, Sep 2026: "title di atas image hero") -
+      // Viator's order. The intro paragraph is gone from here on purpose: it moved
+      // into the Overview section ("deskripsi di bawah title taruh di overview aja"),
+      // so the hero is title, photos, facts, CTA.
       <section className="pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
+        <h1 className={`${SUBHERO_TITLE} mb-4 text-left`}>{title}</h1>
         <HeroMosaic photos={gallery} title={title} />
-        <div className="flex flex-col items-start mt-6 text-left">
-          <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} align="left" />
+        <div className="flex flex-col items-start mt-5 text-left">
+          <ul className={HOOK_UL_LEFT}>
+            {hooks.map((h) => (
+              <li key={h.label}>
+                <span className={HOOK_LABEL}>{h.label}</span>
+                <span className={HOOK_VALUE}>{h.value}</span>
+              </li>
+            ))}
+          </ul>
+          {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
         </div>
       </section>
     );

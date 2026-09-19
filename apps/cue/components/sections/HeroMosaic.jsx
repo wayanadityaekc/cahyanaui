@@ -29,7 +29,7 @@ const TILE_BASE =
 // Mobile: lead photo full width, thumbs in a row beneath. Desktop: lead photo
 // left spanning both rows, thumbs stacked right - the grid's own aspect sets the
 // height, so the tiles come out near-square like Viator's.
-const TILE_LEAD = `${TILE_BASE} col-span-2 aspect-[4/3] min-[769px]:col-span-1 min-[769px]:row-span-2 min-[769px]:aspect-auto`;
+const TILE_LEAD = `${TILE_BASE} col-span-2 aspect-[16/10] min-[769px]:col-span-1 min-[769px]:row-span-2 min-[769px]:aspect-auto`;
 const TILE_THUMB = `${TILE_BASE} aspect-[4/3] min-[769px]:aspect-auto`;
 const GRID_BASE = 'grid gap-1 overflow-hidden rounded-lg';
 // Corner pill rather than a dark overlay across the last tile - an overlay lands
@@ -72,7 +72,7 @@ export default function HeroMosaic({ photos = [], title }) {
       ? `${GRID_BASE} grid-cols-1`
       : photos.length === 2
         ? `${GRID_BASE} grid-cols-2`
-        : `${GRID_BASE} grid-cols-2 min-[769px]:grid-cols-[1.85fr_1fr] min-[769px]:grid-rows-2 min-[769px]:aspect-[2.35/1]`;
+        : `${GRID_BASE} grid-cols-2 min-[769px]:grid-cols-[1.85fr_1fr] min-[769px]:grid-rows-2 min-[769px]:aspect-[2.7/1]`;
 
   const tileCls = (i) => {
     if (photos.length === 1) return `${TILE_BASE} aspect-[16/9]`;

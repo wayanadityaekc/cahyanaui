@@ -139,6 +139,10 @@ export default function BookConfirmModal() {
     phone: f.phone,
     email: f.email,
     referral: (referral && referral.code) || '',
+    // Which of the two options the guest picked. The server does NOT trust an
+    // amount from here - it recomputes what is owed from its own prices. This is
+    // the choice only, so the invoice matches the row the guest actually tapped.
+    pay_option: payOption,
     stay: stay || '',
     lines: ctx.lines.map((l, i) => {
       const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;

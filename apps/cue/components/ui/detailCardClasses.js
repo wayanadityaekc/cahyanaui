@@ -2,8 +2,14 @@
 // DetailTabs so the guide articles can use the exact same shell (Sep 2026, Wayan:
 // "tab nya buat seperti tab tour, layout kontenya juga, se mirip mungkin").
 //
-// CARD: white panel with the inset edge shadow, centred, narrower padding on small
-// phones. STRIP: the sticky wrapper - its pt-[10px] bakes the breathing room in as
+// CARD: white panel, centred, narrower padding on small phones. It now wears the
+// SAME edge as the inline price row above it (Wayan, Sep 2026: "container kontenya
+// style kayak container harga, radius nya dan hilangin shadownya") - --r-md corners
+// and a hairline --color-line border, no shadow. The inset edge shadow it used to
+// carry is gone, and so is the separate smaller radius under 560px: one radius at
+// every width, matching the row.
+//
+// STRIP: the sticky wrapper - its pt-[10px] bakes the breathing room in as
 // OPAQUE padding (bg-white) rather than an empty gap, so nothing peeks through once
 // the strip is stuck. TRACK: one elongated pill holding the segments (Wayan, 14 Sep
 // 2026: "1 box memanjang dengan border radius, bukan pill kecil-kecil") - same
@@ -11,7 +17,8 @@
 // opaque track spans the whole row; a narrower row would let content scroll through
 // beside it.
 export const CARD =
-  'bg-white rounded-xl px-6 pt-6 pb-8 [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem] max-[560px]:rounded-lg';
+  'bg-white rounded-md [border:1px_solid_var(--color-line)] px-6 pt-6 pb-8 ' +
+  'max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
 export const CARD_WRAP = 'max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4';
 export const STRIP = 'sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-white';
 export const TRACK = 'mb-6 flex w-full gap-1 p-1 rounded-pill bg-[rgba(34,32,28,0.08)]';

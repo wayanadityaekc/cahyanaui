@@ -48,7 +48,10 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 //
 // `tour-hook` rides on the chip list: it is a marker class check-detail requires on
 // every detail page, and the <ul> it used to sit on is gone from this variant.
-export const HERO_CRUMB = 'font-body text-small text-muted m-0 mb-2';
+// Sits BELOW the price row now (Wayan, Sep 2026: "breadcrumbs taruh di bawah harga
+// yang di atas"), so the margin is on top. On desktop the price row is display:none,
+// so it trails the chips instead - same spacing either way.
+export const HERO_CRUMB = 'font-body text-small text-muted mt-[1.1rem] mx-0 mb-0';
 export const HERO_CRUMB_LINK = 'text-muted no-underline hover:underline';
 export const HERO_CRUMB_SEP = 'mx-[0.35rem] opacity-[0.55]';
 // Star sized explicitly - Lucide renders width/height=24, so an unsized icon blows
@@ -117,19 +120,6 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
       // into the Overview section ("deskripsi di bawah title taruh di overview aja"),
       // so the hero is title, photos, facts, CTA.
       <section className="pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
-        {crumb && (
-          <nav className={HERO_CRUMB} aria-label="Breadcrumb">
-            {crumb.map((p, i) =>
-              p.type === 'link' && !isHiddenTour(p.href) ? (
-                <a className={HERO_CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
-              ) : p.type === 'sep' ? (
-                <span className={HERO_CRUMB_SEP} key={i}>{p.text}</span>
-              ) : (
-                <span key={i}>{p.text}</span>
-              ),
-            )}
-          </nav>
-        )}
         <h1 className={`${SUBHERO_TITLE} mb-2 text-left`}>{title}</h1>
         {ratingName && (
           <div className="mb-[0.9rem]">
@@ -146,6 +136,19 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
             row in here, so it inherits this section's container padding instead of
             re-declaring it and drifting out of line with the gallery. */}
         {belowChips}
+        {crumb && (
+          <nav className={HERO_CRUMB} aria-label="Breadcrumb">
+            {crumb.map((p, i) =>
+              p.type === 'link' && !isHiddenTour(p.href) ? (
+                <a className={HERO_CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
+              ) : p.type === 'sep' ? (
+                <span className={HERO_CRUMB_SEP} key={i}>{p.text}</span>
+              ) : (
+                <span key={i}>{p.text}</span>
+              ),
+            )}
+          </nav>
+        )}
       </section>
     );
   }

@@ -28,10 +28,17 @@ const KICKER = 'text-[0.6rem] font-medium tracking-[0.12em] uppercase text-muted
 // amber fights the green CTA sitting right next to it. It has to ride on <Price>'s
 // own className - the amber default is attached to the [data-price] element itself,
 // so text-gold on a wrapper loses.
-const AMOUNT = 'price font-head text-[1.6rem] font-bold leading-[1.05] tracking-[-0.02em] text-gold';
-const UNIT = 'block mt-[0.15rem] text-small text-muted';
+// MEASURED: at 320px the amount at 1.6rem plus "per car" runs to x=189 while the
+// button starts at x=173 - the unit printed straight over the CTA. One line only
+// fits down there if the type gives a little, so the amount steps down under 360px
+// and the button loses some side padding with it. Everything from 360px up is
+// untouched.
+const AMOUNT = 'price font-head text-[1.6rem] max-[359px]:text-[1.25rem] font-bold leading-[1.05] tracking-[-0.02em] text-gold';
+// Inline, on the amount's baseline (Wayan, Sep 2026: "harga per car jangan di
+// tumpuk") - stacked it read as two facts when it is one.
+const UNIT = 'text-small text-muted';
 const CTA =
-  'flex-none flex items-center h-[2.9rem] px-[1.15rem] rounded-pill bg-cta text-white font-body text-[1rem] font-semibold ' +
+  'flex-none flex items-center h-[2.9rem] px-[1.15rem] max-[359px]:px-3 rounded-pill bg-cta text-white font-body text-[1rem] font-semibold ' +
   'no-underline whitespace-nowrap border-none cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 // No `flex` here on purpose - it is added below only while the row is showing.
@@ -59,8 +66,10 @@ export default function BookNowRow({ item, priceFallback, perPerson = false }) {
     <div className={`${ROW} ${hidden ? 'hidden' : 'flex'}`}>
       <span className="min-w-0">
         <span className={KICKER}>From</span>
-        <Price name={item} fallback={priceFallback} className={`block mt-[0.2rem] ${AMOUNT}`} />
-        <span className={UNIT}>{perPerson ? 'per person' : 'per car'}</span>
+        <span className="flex items-baseline gap-2 mt-[0.2rem] whitespace-nowrap">
+          <Price name={item} fallback={priceFallback} className={AMOUNT} />
+          <span className={UNIT}>{perPerson ? 'per person' : 'per car'}</span>
+        </span>
       </span>
       <button type="button" className={CTA} onClick={scrollToBookCard} aria-label="Book now - go to the booking form">
         Book now

@@ -1,5 +1,6 @@
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import HeroSlider from '@/components/sections/HeroSlider';
+import HeroMosaic from '@/components/sections/HeroMosaic';
 
 // The split hero every "detail" page opens with: photo on one side, a white sheet
 // carrying the title, the intro line, a row of facts and a CTA on the other. It was
@@ -26,7 +27,42 @@ export const HOOK_UL =
 export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
 export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 
-export default function DetailHero({ heroBg, heroSlides, title, desc, hooks = [], cta, ctaHref }) {
+// Gallery variant (Wayan, Sep 2026): pass `gallery` and the hero becomes the
+// Viator/GetYourGuide shape - a photo mosaic across the full content width, with
+// the title, intro, facts and CTA stacked underneath instead of beside a single
+// photo. Padding-x matches TOUR_LAYOUT_BOOK so the mosaic lines up with the
+// content below it. Same component either way, so a rollout is one flag per page.
+export const HOOK_UL_LEFT = HOOK_UL.replace('justify-center', 'justify-start [&>li:first-child]:pl-0');
+
+function HeroBody({ title, desc, hooks, cta, ctaHref, align }) {
+  return (
+    <>
+      <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
+      <p className={HERO_DESC}>{desc}</p>
+      <ul className={align === 'left' ? HOOK_UL_LEFT : HOOK_UL}>
+        {hooks.map((h) => (
+          <li key={h.label}>
+            <span className={HOOK_LABEL}>{h.label}</span>
+            <span className={HOOK_VALUE}>{h.value}</span>
+          </li>
+        ))}
+      </ul>
+      {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
+    </>
+  );
+}
+
+export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref }) {
+  if (gallery && gallery.length) {
+    return (
+      <section className="pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
+        <HeroMosaic photos={gallery} title={title} />
+        <div className="flex flex-col items-start mt-6 text-left">
+          <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} align="left" />
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="pt-[var(--header-h-max,92px)] min-[769px]:grid min-[769px]:grid-cols-[45%_55%] min-[769px]:items-stretch min-[769px]:min-h-[62vh] min-[769px]:pt-[var(--header-h-max,98px)]">
       {heroSlides && heroSlides.length > 1 ? (
@@ -40,17 +76,7 @@ export default function DetailHero({ heroBg, heroSlides, title, desc, hooks = []
       <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
         min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
         min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
-        <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
-        <p className={HERO_DESC}>{desc}</p>
-        <ul className={HOOK_UL}>
-          {hooks.map((h) => (
-            <li key={h.label}>
-              <span className={HOOK_LABEL}>{h.label}</span>
-              <span className={HOOK_VALUE}>{h.value}</span>
-            </li>
-          ))}
-        </ul>
-        {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
+        <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} />
       </div>
     </section>
   );

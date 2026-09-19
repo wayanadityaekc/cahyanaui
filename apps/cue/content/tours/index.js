@@ -2243,6 +2243,65 @@ export const TOUR_CONTENT = {
   "heroBg": "tour-hero.jpg",
   "title": "Ubud Rice Terrace, Tirta Empul & Monkey Forest Tour",
   "desc": "Bali's cultural heart in one day - the Tegalalang rice terraces and a coffee plantation, Tirta Empul holy water temple, Goa Gajah, and the famous Monkey Forest, with Gunung Kawi as an optional stop. A private car, a local driver, your pace.",
+  "intro": "A full day around Ubud in a private car with your own driver. Around 8 hours from pick-up to drop-off, starting at whatever time suits you - four main stops across the rice fields north of town and the temple sites just east of it, plus one optional. The route stays yours: linger somewhere longer, or skip a stop and move on.",
+  "gallery": [
+   {
+    "src": "/assets/images/tegalalang-rice-terrace-hero.jpg",
+    "alt": "Tegalalang rice terrace north of Ubud",
+    "title": "Tegalalang Rice Terrace",
+    "w": 1200,
+    "hgt": 900
+   },
+   {
+    "src": "/assets/images/tirta-empul-hero.jpg",
+    "alt": "Purification pools at Tirta Empul holy water temple",
+    "title": "Tirta Empul Holy Water Temple",
+    "w": 1200,
+    "hgt": 900
+   },
+   {
+    "src": "/assets/images/monkey-forest-pathway.jpg",
+    "alt": "Long-tailed macaque walking along a path",
+    "title": "Long-tailed macaque",
+    "w": 1200,
+    "hgt": 800
+   },
+   {
+    "src": "/assets/images/monkey-forest-temples.jpg",
+    "alt": "Moss-covered stone temple in the Sacred Monkey Forest Sanctuary",
+    "title": "Sacred Monkey Forest Sanctuary",
+    "w": 1200,
+    "hgt": 900
+   },
+   {
+    "src": "/assets/images/goa-gajah-hero.jpg",
+    "alt": "Carved cave entrance at Goa Gajah",
+    "title": "Goa Gajah",
+    "w": 1200,
+    "hgt": 900
+   },
+   {
+    "src": "/assets/images/gunung-kawi-hero.jpg",
+    "alt": "Rock-cut shrines in the river valley at Gunung Kawi",
+    "title": "Gunung Kawi Temple",
+    "w": 1200,
+    "hgt": 900
+   },
+   {
+    "src": "/assets/images/tirta-empul-watersource.jpg",
+    "alt": "Spring pool with thatched shrines and ceremonial umbrellas at Tirta Empul",
+    "title": "The spring pool at Tirta Empul",
+    "w": 1200,
+    "hgt": 800
+   },
+   {
+    "src": "/assets/images/ricefield.jpg",
+    "alt": "Rice fields and palm jungle around Ubud at sunrise",
+    "title": "Rice fields around Ubud",
+    "w": 1200,
+    "hgt": 1128
+   }
+  ],
   "hooks": [
    {
     "label": "Duration",
@@ -2301,6 +2360,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "Tegalalang Rice Terrace & Coffee Plantation",
+    "summary": "The stepped rice fields north of Ubud, still watered by the thousand-year-old subak system. Next door is a working coffee plantation where you can see how the beans grow and taste kopi luwak. Tastings are free.",
     "highlight": "We start at the iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system. Right beside it, walk through a working plantation to see how coffee grows and taste the famous kopi luwak straight from the source. Tastings are complimentary."
    },
    {
@@ -2313,6 +2373,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Tirta Empul Holy Water Temple",
+    "summary": "Bali's main spring temple, where the melukat purification ritual has been performed for more than a thousand years. You are welcome to take part - we arrange a sarong and explain the etiquette first.",
     "highlight": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with confidence and respect."
    },
    {
@@ -2325,6 +2386,8 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3 · Optional",
     "name": "Gunung Kawi Temple",
+    "optional": true,
+    "summary": "Ten shrines cut into a river-valley cliff in the 11th century, and much quieter than the better-known temples. It is a long staircase down through the rice fields and back up again, so tell your driver if you want it added.",
     "highlight": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
    },
    {
@@ -2337,6 +2400,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 4",
     "name": "Goa Gajah - The Elephant Cave",
+    "summary": "A 9th-century site where you step through a cave mouth carved as a demon's face into old meditation niches. Bathing pools and jungle paths run down the slope behind it.",
     "highlight": "A 9th-century sanctuary whose cave mouth is carved into a monstrous demon face you step straight through. Inside are ancient meditation niches; outside, bathing pools and jungle paths lead down to hidden shrines. One of Ubud's oldest and most mysterious sites."
    },
    {
@@ -2349,6 +2413,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 5",
     "name": "Sacred Monkey Forest Sanctuary",
+    "summary": "The day ends in the middle of Ubud at a jungle temple complex with around 700 long-tailed macaques. Keep bags, sunglasses and loose items zipped away and give the monkeys room.",
     "highlight": "We finish in the heart of Ubud at a moss-covered jungle temple complex, home to more than 700 long-tailed macaques. Walk beneath ancient banyan roots and past weathered stone guardians in one of Bali's most atmospheric sanctuaries. Keep a firm hold on your belongings and give the monkeys room, and they are easy enough to be around."
    }
   ],

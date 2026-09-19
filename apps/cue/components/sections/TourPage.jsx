@@ -11,6 +11,7 @@ import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
 import BookBar from '@/components/booking/BookBar';
 import DetailHero from '@/components/sections/DetailHero';
+import TourOverview from '@/components/sections/TourOverview';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
@@ -69,6 +70,7 @@ export default function TourPage({ data }) {
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
+        gallery={data.gallery}
         title={data.title}
         desc={data.desc}
         hooks={data.hooks}
@@ -79,7 +81,12 @@ export default function TourPage({ data }) {
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
       <div className={data.bookItem ? TOUR_LAYOUT_MAIN : undefined}>
       <DetailTabs
-        overview={(
+        overview={data.gallery && data.gallery.length ? (
+          // Gallery hero carries the photos, so the overview is text only.
+          <div id={data.stopsId}>
+            <TourOverview intro={data.intro} items={data.items} />
+          </div>
+        ) : (
           <div className={STOPS} id={data.stopsId}>
             {data.items.map((it, i) =>
               it.type === 'sub' ? (

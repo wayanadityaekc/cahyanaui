@@ -31,45 +31,33 @@ import useBodyLock from '@/components/ui/useBodyLock';
 // earns its place. Judgment call, not a measurement - tune it freely.
 const PILL_FROM = 10;
 
-// The track slides in GROUPS OF THREE - one big photo plus the two small ones
-// (Wayan, Sep 2026: "3 kalo habis foto besar foto kecil yang 2 itu"). Grouping
-// is what lets the phone show all three AND keep the big photo landscape: on a
-// phone the big one sits on its own row above the pair (GetYourGuide's shape),
-// on desktop it sits beside them spanning both rows (Viator's). Same DOM, the
-// group grid just rearranges.
+// The track ALTERNATES, continuously: big photo, a column of two small, big
+// photo, a column of two small... (Wayan, Sep 2026, pointing at Viator: "3 kalo
+// habis foto besar foto kecil yang 2 itu"). Because there are no group
+// boundaries, a mid-scroll position shows `2 small | BIG | 2 small` exactly like
+// the reference - a locked 3-photo group only ever showed one big photo at the
+// front, which is what was wrong with the previous take.
+//
+// Tiles carry no aspect of their own - the TRACK owns the height (via aspect, so
+// the crop holds at every width) and every child stretches into it.
 //
 // NO RADIUS on the tiles (Wayan: "grid nya gausah kasi border radius").
-// Tiles carry NO aspect of their own: the GROUP owns the shape (its aspect plus
-// its row ratio), and each tile just fills its cell. Per-tile aspects broke once
-// the groups became flex items - `align-items: stretch` grew them to the tallest
-// group, and a stretched cell beats a tile's aspect, so the big photo measured
-// 1.23 instead of 1.6 on phones. Owning it at group level makes the ratio exact
-// and identical for every group, whatever it holds.
 const TILE_BASE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center ' +
   '[&>img]:[transition:transform_var(--dur-slow)_var(--ease)] hover:[&>img]:[transform:scale(1.04)]';
-// Big photo: full width above the pair on mobile, beside it spanning both rows on
-// desktop.
-const TILE_BIG = `${TILE_BASE} col-span-2 min-[769px]:col-span-1 min-[769px]:row-span-2`;
-const TILE_SM = TILE_BASE;
-// The last group when the count is not a multiple of three: the single small one
-// takes the whole remaining space rather than leaving a hole beside it.
-const TILE_SM_WIDE = `${TILE_BASE} col-span-2 min-[769px]:col-span-1 min-[769px]:row-span-2`;
-// Group shape. Mobile: square-ish with 5:3 rows, which puts the big photo at
-// ~1.6 (the landscape Wayan asked for) and the two small ones at ~4:3. Desktop:
-// 2.7/1 with equal rows, big photo beside them at ~1.74. Aspect, never a pixel
-// height, so the crop holds at every width - a stepped height gave a 1.24 big
-// photo at a 993px viewport. 96% leaves the next group peeking at the right
-// edge, which is the "there is more" signal.
-const GROUP =
-  'flex-[0_0_96%] grid grid-cols-2 gap-1 [scroll-snap-align:start] ' +
-  'aspect-square [grid-template-rows:5fr_3fr] ' +
-  'min-[769px]:[grid-template-columns:64fr_35fr] min-[769px]:[grid-template-rows:1fr_1fr] min-[769px]:aspect-[2.7/1]';
-// items-start so a group's own aspect sets its height; flex's default stretch
-// would override it.
+const BIG = `${TILE_BASE} flex-[0_0_62%] [scroll-snap-align:start]`;
+// A column of two stacked small photos. One photo in it (the tail of an odd
+// count) fills the column height instead of leaving a hole - it is the only
+// flex-1 child.
+const PAIR = 'flex-[0_0_35%] h-full flex flex-col gap-1 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
+// Track aspect sets the crop. Mobile 1.6/1 puts the big photo at ~1.0, matching
+// Viator's phone gallery; desktop 2.7/1 puts it at ~1.67, the landscape Wayan
+// asked for. Never a pixel height - a stepped height gave a 1.24 big photo at a
+// 993px viewport.
 const TRACK =
-  'flex items-start gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
+  'flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ' +
+  'overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   BLEED_MOBILE;
@@ -123,10 +111,22 @@ export default function HeroMosaic({ photos = [], title }) {
     );
   };
 
-  // One big + two small per group.
-  const groups = [];
+  // Flat, alternating children: big, pair, big, pair... The pair is the only
+  // wrapper (it stacks two photos), and it sits as a SIBLING of the big tile
+  // rather than inside a group with it - that is what keeps the rhythm running
+  // past the third photo, so a mid-scroll position can show two smalls, a big,
+  // and two more smalls at once.
+  const children = [];
   for (let i = 0; i < photos.length; i += 3) {
-    groups.push([i, i + 1, i + 2].filter((n) => n < photos.length));
+    children.push(tile(i, BIG));
+    const pair = [i + 1, i + 2].filter((n) => n < photos.length);
+    if (pair.length) {
+      children.push(
+        <div className={PAIR} key={`pair-${i}`}>
+          {pair.map((n) => tile(n, TILE_BASE))}
+        </div>,
+      );
+    }
   }
 
   const gallery =
@@ -135,15 +135,7 @@ export default function HeroMosaic({ photos = [], title }) {
     ) : photos.length === 2 ? (
       <div className={STATIC_2}>{photos.map((p, i) => tile(i, TILE_BASE))}</div>
     ) : (
-      <Slider gridClassName={TRACK}>
-        {groups.map((g) => (
-          <div className={GROUP} key={g[0]}>
-            {g.map((n, k) =>
-              k === 0 ? tile(n, TILE_BIG) : tile(n, g.length === 2 ? TILE_SM_WIDE : TILE_SM),
-            )}
-          </div>
-        ))}
-      </Slider>
+      <Slider gridClassName={TRACK}>{children}</Slider>
     );
 
   return (

@@ -27,19 +27,16 @@ export const HOOK_UL =
 export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
 export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 
-// Gallery variant (Wayan, Sep 2026): pass `gallery` and the hero becomes the
-// Viator/GetYourGuide shape - a photo mosaic across the full content width, with
-// the title, intro, facts and CTA stacked underneath instead of beside a single
-// photo. Padding-x matches TOUR_LAYOUT_BOOK so the mosaic lines up with the
-// content below it. Same component either way, so a rollout is one flag per page.
+// The fact row is centred in the split hero (the sheet centres everything on a
+// phone) but left-aligned under the gallery, where there is nothing to centre on.
 export const HOOK_UL_LEFT = HOOK_UL.replace('justify-center', 'justify-start [&>li:first-child]:pl-0');
 
-function HeroBody({ title, desc, hooks, cta, ctaHref, align }) {
+function HeroBody({ title, desc, hooks, cta, ctaHref }) {
   return (
     <>
       <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
       <p className={HERO_DESC}>{desc}</p>
-      <ul className={align === 'left' ? HOOK_UL_LEFT : HOOK_UL}>
+      <ul className={HOOK_UL}>
         {hooks.map((h) => (
           <li key={h.label}>
             <span className={HOOK_LABEL}>{h.label}</span>
@@ -52,6 +49,12 @@ function HeroBody({ title, desc, hooks, cta, ctaHref, align }) {
   );
 }
 
+// Gallery variant (Wayan, Sep 2026): pass `gallery` and the hero becomes the
+// Viator/GetYourGuide shape - a photo mosaic across the full content width, with
+// the title above it and the facts and CTA underneath, instead of a single photo
+// beside a sheet. Padding-x matches TOUR_LAYOUT_BOOK so the mosaic lines up with
+// the content below it. Same component either way, so a rollout is one prop per
+// page and nothing else moves.
 export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref }) {
   if (gallery && gallery.length) {
     return (

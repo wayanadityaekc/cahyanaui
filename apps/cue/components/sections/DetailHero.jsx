@@ -100,7 +100,7 @@ function HeroBody({ title, desc, hooks, cta, ctaHref }) {
 // beside a sheet. Padding-x matches TOUR_LAYOUT_BOOK so the mosaic lines up with
 // the content below it. Same component either way, so a rollout is one prop per
 // page and nothing else moves.
-export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref, crumb, stops, ratingName }) {
+export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref, crumb, stops, ratingName, belowChips }) {
   if (gallery && gallery.length) {
     // Duration first, then the stop count, then the rest - the order Wayan picked.
     // A single stop is not worth a chip, and attraction pages have none at all.
@@ -142,6 +142,10 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
             <Chip key={c.key} icon={c.icon} text={c.text} ok={c.ok} />
           ))}
         </ul>
+        {/* Slot under the chips - the tour pages drop the inline price + Book now
+            row in here, so it inherits this section's container padding instead of
+            re-declaring it and drifting out of line with the gallery. */}
+        {belowChips}
       </section>
     );
   }

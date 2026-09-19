@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import Price from '@/components/Price';
 import { BAR_SHELL } from '@/components/ui/stickyBar';
+import { observeBookCtas, scrollToBookCard } from './bookScroll';
 
 // Sticky price + CTA on mobile, rendered by the page that actually sells
 // something (TourPage/AttractionPage pass their bookItem). Wayan, Sep 2026:
@@ -46,31 +47,17 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    if (!item) return;
+    if (!item) return undefined;
     // The card holds the second Book button, so the whole card counts as "the
-    // form is on screen", not just the button at its bottom.
-    const targets = document.querySelectorAll('.booksidebar, .bookcard__cta');
-    if (!targets.length) return;
-
-    const onScreen = new Set();
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) onScreen.add(e.target);
-        else onScreen.delete(e.target);
-      }
-      setHidden(onScreen.size > 0);
-    });
-    targets.forEach((t) => io.observe(t));
-    return () => io.disconnect();
+    // form is on screen", not just the button at its bottom - and since Sep 2026
+    // the inline BookNowRow under the hero chips counts too (Wayan: "gaada
+    // booking now button double"). The selector lives in bookScroll so the row
+    // and the bar read the same list.
+    const self = document.querySelector('.bookbar');
+    return observeBookCtas(self, setHidden);
   }, [item]);
 
   if (!item) return null;
-
-  const scrollToCard = (e) => {
-    e.preventDefault();
-    const card = document.querySelector('.booksidebar');
-    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
 
   return (
     <div
@@ -94,7 +81,7 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
           Free cancellation
         </span>
       </div>
-      <a href="#booking" className={CTA} onClick={scrollToCard}>
+      <a href="#booking" className={CTA} onClick={scrollToBookCard}>
         Book now
       </a>
     </div>

@@ -10,6 +10,7 @@ import JsonLd from '@/components/JsonLd';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
 import BookBar from '@/components/booking/BookBar';
+import BookNowRow from '@/components/booking/BookNowRow';
 import DetailHero from '@/components/sections/DetailHero';
 import TourOverview from '@/components/sections/TourOverview';
 import Related from '@/components/sections/Related';
@@ -85,6 +86,11 @@ export default function TourPage({ data }) {
         crumb={gallery ? data.crumb : undefined}
         stops={data.items.filter((it) => it.type === 'stop').length}
         ratingName={data.bookItem}
+        belowChips={
+          gallery && data.bookItem ? (
+            <BookNowRow item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} />
+          ) : null
+        }
       />
 
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>

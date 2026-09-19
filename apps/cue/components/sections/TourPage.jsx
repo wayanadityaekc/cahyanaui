@@ -64,6 +64,12 @@ function Stop({ s }) {
 export default function TourPage({ data }) {
   const slug = (data.__page || '').replace(/^\//, '');
   const destinations = tourDestinations(slug, ATTRACTION_CONTENT);
+  // With the gallery hero the breadcrumb moves to the TOP of the page, where Viator
+  // and GetYourGuide put it and where Google usually surfaces it - so the foot copy
+  // is dropped rather than printed twice. Nothing else depends on it: the
+  // BreadcrumbList JSON-LD is generated separately, and the `.crumb + .related`
+  // divider off-switch it used to anchor never matched (see Related.jsx).
+  const gallery = !!(data.gallery && data.gallery.length);
   return (
     <>
       <JsonLd page={data.__page} />
@@ -76,6 +82,9 @@ export default function TourPage({ data }) {
         hooks={data.hooks}
         cta={data.cta}
         ctaHref={data.ctaHref}
+        crumb={gallery ? data.crumb : undefined}
+        stops={data.items.filter((it) => it.type === 'stop').length}
+        ratingName={data.bookItem}
       />
 
       <div className={data.bookItem ? TOUR_LAYOUT_BOOK : undefined}>
@@ -121,7 +130,7 @@ export default function TourPage({ data }) {
         <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />
       )}
 
-      {data.crumb && (
+      {data.crumb && !gallery && (
         <nav className={CRUMB_NAV} aria-label="Breadcrumb">
           {data.crumb.map((p, i) =>
             p.type === 'link' && !isHiddenTour(p.href) ? (

@@ -1,6 +1,9 @@
+import { Clock, Info, MapPin, Route, ShieldCheck, Users } from 'lucide-react';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import HeroSlider from '@/components/sections/HeroSlider';
 import HeroMosaic from '@/components/sections/HeroMosaic';
+import Rating from '@/components/Rating';
+import { isHiddenTour } from '@/lib/routes';
 
 // The split hero every "detail" page opens with: photo on one side, a white sheet
 // carrying the title, the intro line, a row of facts and a CTA on the other. It was
@@ -27,9 +30,44 @@ export const HOOK_UL =
 export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
 export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 
-// The fact row is centred in the split hero (the sheet centres everything on a
-// phone) but left-aligned under the gallery, where there is nothing to centre on.
-export const HOOK_UL_LEFT = HOOK_UL.replace('justify-center', 'justify-start [&>li:first-child]:pl-0');
+// ---------------------------------------------------------------------------
+// Gallery title block: breadcrumb, title, rating, chips - all flush LEFT at every
+// width (Wayan, Sep 2026: "mobile bisa gak rating dan pill nya align kiri"). The
+// facts became CHIPS rather than the split hero's label/value columns: a 354px-wide
+// column row stranded itself in the middle of a 1232px content width when centred,
+// and chips flow from the left and wrap on their own at any width, so one alignment
+// works everywhere. Pills are already this site's vocabulary (zone-chip, guide-tag,
+// the Popular badge), so this reads new without being a new idiom.
+//
+// `tour-hook` rides on the chip list: it is a marker class check-detail requires on
+// every detail page, and the <ul> it used to sit on is gone from this variant.
+export const HERO_CRUMB = 'font-body text-small text-muted m-0 mb-2';
+export const HERO_CRUMB_LINK = 'text-muted no-underline hover:underline';
+export const HERO_CRUMB_SEP = 'mx-[0.35rem] opacity-[0.55]';
+// Star sized explicitly - Lucide renders width/height=24, so an unsized icon blows
+// up to 24px. amber-d matches the star on every card (design system: rating = amber).
+export const HERO_RATING =
+  'inline-flex items-center gap-[0.3rem] font-body text-small font-semibold text-amber-d [&>svg]:w-4 [&>svg]:h-4';
+export const HERO_CHIPS = 'tour-hook list-none flex flex-wrap items-center gap-[0.45rem] m-0 mb-[1.1rem] p-0';
+export const HERO_CHIP =
+  'inline-flex items-center gap-[0.4rem] py-[0.35rem] px-3 rounded-pill [border:1px_solid_var(--color-line)] ' +
+  'font-body text-small text-green whitespace-nowrap [&>svg]:w-4 [&>svg]:h-4 [&>svg]:text-muted';
+// The one chip that answers a doubt rather than states a spec, so it carries the
+// success colour. Same promise as the book bar and every card - not a new claim.
+export const HERO_CHIP_OK = 'text-ok [border-color:rgba(46,125,84,0.35)] [&>svg]:text-ok';
+
+// Attraction pages label the same fact "Time here" where tours say "Duration".
+const CHIP_ICON = { Duration: Clock, 'Time here': Clock, Area: MapPin, Group: Users, 'Pick-up': MapPin };
+
+function Chip({ icon: Icon, text, ok }) {
+  return (
+    <li className={ok ? `${HERO_CHIP} ${HERO_CHIP_OK}` : HERO_CHIP}>
+      <Icon aria-hidden="true" />
+      <span>{text}</span>
+    </li>
+  );
+}
+
 
 function HeroBody({ title, desc, hooks, cta, ctaHref }) {
   return (
@@ -55,27 +93,49 @@ function HeroBody({ title, desc, hooks, cta, ctaHref }) {
 // beside a sheet. Padding-x matches TOUR_LAYOUT_BOOK so the mosaic lines up with
 // the content below it. Same component either way, so a rollout is one prop per
 // page and nothing else moves.
-export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref }) {
+export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, hooks = [], cta, ctaHref, crumb, stops, ratingName }) {
   if (gallery && gallery.length) {
+    // Duration first, then the stop count, then the rest - the order Wayan picked.
+    // A single stop is not worth a chip, and attraction pages have none at all.
+    const chips = [];
+    hooks.forEach((h, i) => {
+      chips.push({ key: h.label, icon: CHIP_ICON[h.label] || Info, text: h.value });
+      if (i === 0 && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
+    });
+    if (!hooks.length && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
+    chips.push({ key: 'cancel', icon: ShieldCheck, text: 'Free cancellation', ok: true });
     return (
       // Title ABOVE the gallery (Wayan, Sep 2026: "title di atas image hero") -
       // Viator's order. The intro paragraph is gone from here on purpose: it moved
       // into the Overview section ("deskripsi di bawah title taruh di overview aja"),
       // so the hero is title, photos, facts, CTA.
       <section className="pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
-        <h1 className={`${SUBHERO_TITLE} mb-4 text-left`}>{title}</h1>
+        {crumb && (
+          <nav className={HERO_CRUMB} aria-label="Breadcrumb">
+            {crumb.map((p, i) =>
+              p.type === 'link' && !isHiddenTour(p.href) ? (
+                <a className={HERO_CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
+              ) : p.type === 'sep' ? (
+                <span className={HERO_CRUMB_SEP} key={i}>{p.text}</span>
+              ) : (
+                <span key={i}>{p.text}</span>
+              ),
+            )}
+          </nav>
+        )}
+        <h1 className={`${SUBHERO_TITLE} mb-2 text-left`}>{title}</h1>
+        {ratingName && (
+          <div className="mb-[0.9rem]">
+            <Rating name={ratingName} className={HERO_RATING} withWord />
+          </div>
+        )}
+        <ul className={HERO_CHIPS}>
+          {chips.map((c) => (
+            <Chip key={c.key} icon={c.icon} text={c.text} ok={c.ok} />
+          ))}
+        </ul>
         <HeroMosaic photos={gallery} title={title} />
-        <div className="flex flex-col items-start mt-5 text-left">
-          <ul className={HOOK_UL_LEFT}>
-            {hooks.map((h) => (
-              <li key={h.label}>
-                <span className={HOOK_LABEL}>{h.label}</span>
-                <span className={HOOK_VALUE}>{h.value}</span>
-              </li>
-            ))}
-          </ul>
-          {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
-        </div>
+        {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
       </section>
     );
   }

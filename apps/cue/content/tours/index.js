@@ -61,7 +61,7 @@ export const TOUR_CONTENT = {
     "hgt": 600,
     "num": "Stop 1",
     "name": "Twin Lakes Viewpoint (Buyan & Tamblingan)",
-    "highlight": "Two crater lakes side by side, seen from a ridge-top viewpoint wrapped in cool mountain air and often a drift of mist. It's one of the most photographed panoramas in the north - a calm, scenic way to open the day."
+    "highlight": "Two crater lakes side by side from a ridge-top viewpoint, high enough that the air is cool and mist often drifts across. One of the most photographed views in the north, and a short stop to open the day."
    },
    {
     "type": "stop",
@@ -73,7 +73,7 @@ export const TOUR_CONTENT = {
     "hgt": 1536,
     "num": "Stop 2",
     "name": "Banyumala Twin Waterfall",
-    "highlight": "Two streams falling side by side into a wide, clear pool you can swim in. A short trek down through the jungle keeps the crowds away - you'll often have the place almost to yourself. Bring a change of clothes."
+    "highlight": "Two streams falling side by side into a wide, clear pool you can swim in. It is a short trek down through the jungle, which is why it stays quiet. Bring a change of clothes."
    }
   ],
   "facts": [
@@ -176,7 +176,7 @@ export const TOUR_CONTENT = {
     "hgt": 1025,
     "num": "Stop 1",
     "name": "Mount Batur Sunrise Trek & Summit Breakfast",
-    "highlight": "A pre-dawn guided climb up the 1,717-metre active volcano, reaching the summit just as the sun breaks over Lake Batur and Mount Agung. The trail is moderate and no technical experience is needed - just a head torch and a warm layer. At the top, breakfast is served with one of Bali's best views. Catch your breath, take it all in, then head back down as the island wakes up."
+    "highlight": "A pre-dawn guided climb up the 1,717-metre active volcano, reaching the top as the sun comes up over Lake Batur and Mount Agung. The trail is moderate and needs no experience, just a head torch and a warm layer. Breakfast is served at the summit."
    },
    {
     "type": "stop",
@@ -188,7 +188,7 @@ export const TOUR_CONTENT = {
     "hgt": 1025,
     "num": "Stop 2",
     "name": "Natural Hot Spring by Lake Batur",
-    "highlight": "We finish with a soak in natural volcanic hot springs on the shore of Lake Batur. Mineral water warmed underground by the volcano eases tired legs after the sunrise trek, with the caldera and lake around you. The perfect, relaxing end to a big morning."
+    "highlight": "Natural volcanic hot springs on the shore of Lake Batur, where mineral water is warmed underground. It is where the day finishes, and it helps after a few hours on the trail."
    }
   ],
   "facts": [
@@ -297,7 +297,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "Tegalalang Rice Terrace & Coffee Plantation",
-    "highlight": "We start at the iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system. Right beside it, walk through a working plantation to see how coffee grows and taste the famous kopi luwak straight from the source. Tastings are complimentary."
+    "highlight": "The stepped rice fields north of Ubud, still watered by the thousand-year-old subak system. Next door is a working coffee plantation where you can see how the beans grow and taste kopi luwak. Tastings are free."
    },
    {
     "type": "stop",
@@ -309,7 +309,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Tirta Empul Holy Water Temple",
-    "highlight": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with confidence and respect."
+    "highlight": "Bali's main spring temple, where the melukat purification ritual has been performed for more than a thousand years. You are welcome to take part - we arrange a sarong and explain the etiquette first."
    },
    {
     "type": "stop",
@@ -321,7 +321,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3 · Optional",
     "name": "Gunung Kawi Temple",
-    "highlight": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
+    "highlight": "Ten shrines cut into a river-valley cliff in the 11th century, and much quieter than the better-known temples. It is a long staircase down through the rice fields and back up again, so tell your driver if you want it added."
    },
    {
     "type": "stop",
@@ -333,7 +333,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 4",
     "name": "Goa Gajah - The Elephant Cave",
-    "highlight": "A 9th-century sanctuary whose cave mouth is carved into a monstrous demon face you step straight through. Inside are ancient meditation niches; outside, bathing pools and jungle paths lead down to hidden shrines. One of Ubud's oldest and most mysterious sites."
+    "highlight": "An 11th-century meditation cave with a carved demon face around the entrance, plus bathing pools uncovered in the 1950s. A short flight of steps down, and a quick stop."
    },
    {
     "type": "stop",
@@ -345,7 +345,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 5",
     "name": "Sacred Monkey Forest Sanctuary",
-    "highlight": "We close the first day in the heart of Ubud, at a moss-covered jungle temple complex, home to more than 700 long-tailed macaques. Walk beneath ancient banyan roots and past weathered stone guardians in one of Bali's most atmospheric sanctuaries. Keep a firm hold on your belongings and give the monkeys room, and they are easy enough to be around. Overnight in Ubud."
+    "highlight": "The first day closes in the middle of Ubud, in a forest temple complex with more than 700 long-tailed macaques living in it. Keep a firm hold on bags and sunglasses and give the monkeys room. Overnight in Ubud."
    },
    {
     "type": "sub",
@@ -362,7 +362,7 @@ export const TOUR_CONTENT = {
     "hgt": 3000,
     "num": "Stop 6",
     "name": "Lempuyang Temple - Gates of Heaven",
-    "highlight": "Bali's most photographed split gate, framing Mount Agung on a clear morning. We arrive early to beat the queue and handle the ticket, sarong, and the famous mirror photo so you don't waste half the day waiting in line."
+    "highlight": "Bali's most photographed split gate, with Mount Agung behind it on a clear morning. We arrive early because the queue for the photo gets long, and we handle the ticket, the sarong and the mirror shot."
    },
    {
     "type": "stop",
@@ -374,7 +374,7 @@ export const TOUR_CONTENT = {
     "hgt": 1030,
     "num": "Stop 7",
     "name": "Tirta Gangga Water Garden",
-    "highlight": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+    "highlight": "A former royal garden of tiered fountains and koi pools, with stepping stones you can walk across the water on. Green, quiet, and easy walking - and less busy than most of East Bali."
    },
    {
     "type": "stop",
@@ -386,7 +386,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 8",
     "name": "Taman Ujung Water Palace",
-    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
+    "highlight": "The Karangasem royal family's water palace: reflecting ponds, bridges and hillside pavilions, with Mount Agung on one side and the sea on the other. Flat, easy walking."
    },
    {
     "type": "stop",
@@ -398,7 +398,7 @@ export const TOUR_CONTENT = {
     "hgt": 1284,
     "num": "Stop 9",
     "name": "Besakih - The Mother Temple",
-    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included. Back to Ubud for the second night."
+    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung: more than 20 temples in one sanctuary, still the island's spiritual centre after a thousand years. Sarong included. Back to Ubud for the second night."
    },
    {
     "type": "sub",
@@ -415,7 +415,7 @@ export const TOUR_CONTENT = {
     "hgt": 800,
     "num": "Stop 10",
     "name": "Sangeh Monkey Forest",
-    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
+    "highlight": "A grove of tall nutmeg trees on the way to Tanah Lot, with a resident troop of long-tailed macaques and a small temple. Quieter than the Monkey Forest in Ubud, and the paths are just as easy."
    },
    {
     "type": "stop",
@@ -427,7 +427,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 11",
     "name": "Taman Ayun Royal Temple",
-    "highlight": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
+    "highlight": "The state temple of the Mengwi kingdom, founded in 1634 and UNESCO-listed. Its rows of tiered meru shrines sit on an island inside a wide moat. Flat paths run around the outside, which is where the photos of the towers are taken from."
    },
    {
     "type": "stop",
@@ -439,7 +439,7 @@ export const TOUR_CONTENT = {
     "hgt": 1536,
     "num": "Stop 12",
     "name": "Tanah Lot Sunset Temple",
-    "highlight": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia. Drop-off after sunset."
+    "highlight": "A sea temple on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with time to walk the cliff path and pick a spot before the light goes. Drop-off after sunset."
    }
   ],
   "facts": [
@@ -559,7 +559,7 @@ export const TOUR_CONTENT = {
     "hgt": 3739,
     "num": "Stop 1",
     "name": "Ayung River Rafting",
-    "highlight": "A 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. All safety gear provided."
+    "highlight": "A two-hour white-water descent of the Ayung River, Ubud's best-known rafting run. Grade II-III rapids past jungle walls, carved stone reliefs and waterfalls, with a trained guide in every boat. All safety gear provided."
    },
    {
     "type": "stop",
@@ -571,7 +571,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "ATV Quad Bike Ride",
-    "highlight": "Roughly an hour on an ATV through jungle trails, muddy tracks, rice paddies, and shallow river crossings, with a guide leading the way. Ride solo or tandem; full safety briefing and gear included. There's time to change and dry off between the two activities."
+    "highlight": "Roughly an hour on an ATV through jungle trails, mud, rice paddies and shallow river crossings, with a guide leading. Solo or tandem, briefing and gear included. There is time to change and dry off between the two activities."
    }
   ],
   "facts": [
@@ -675,7 +675,7 @@ export const TOUR_CONTENT = {
     "hgt": 873,
     "num": "Stop 1",
     "name": "Garuda Wisnu Kencana (GWK)",
-    "highlight": "One of the tallest statues on earth - Lord Vishnu riding the mythical Garuda, standing 121 metres above a limestone cultural park. Taller than the Statue of Liberty, and it took 28 years to finish. Impressive up close in a way photos never quite capture."
+    "highlight": "Vishnu riding the Garuda, 121 metres above a limestone cultural park - one of the tallest statues in the world, and taller than the Statue of Liberty. It took 28 years to finish."
    },
    {
     "type": "stop",
@@ -687,7 +687,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Pandawa Beach",
-    "highlight": "Once called \"Secret Beach\" because it was hidden behind a limestone ridge, now reached through a dramatic cut in the cliff lined with giant carved statues. Calm water, wide sand, and space to actually breathe. A good swim stop before heading back."
+    "highlight": "Once called Secret Beach, because a limestone ridge hid it from the road. The access route is cut through that ridge and lined with carved statues. Calm water and wide sand, so it works as a swim stop before the drive back."
    }
   ],
   "facts": [
@@ -790,7 +790,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "Green Bowl Beach",
-    "highlight": "At the bottom of a long clifftop staircase - a few hundred steps down and back up. The reward is a wide, empty stretch of sand, sea caves, and a reef that draws surfers at the right tide. It is one of the least-visited beaches on the peninsula, mostly because of those steps."
+    "highlight": "At the bottom of a clifftop staircase, a few hundred steps down and the same back up. That is why it stays one of the least-visited beaches on the peninsula: wide empty sand, sea caves, and a reef surfers use at the right tide."
    },
    {
     "type": "stop",
@@ -802,7 +802,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Balangan Beach",
-    "highlight": "A long beach under limestone cliffs, lined with simple warungs where you can sit with a cold drink and watch the surf. The easiest of the four to get to, with a famous left-hand break offshore. A good spot to eat lunch and slow down for an hour."
+    "highlight": "A long beach under limestone cliffs with simple warungs along it, and the easiest of the four to reach. There is a well-known left-hand break offshore. A good place to eat lunch and sit for an hour."
    },
    {
     "type": "stop",
@@ -814,7 +814,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3",
     "name": "Bingin Beach",
-    "highlight": "Reached on foot down a maze of steps past cliffside guesthouses and cafes. The sand shrinks and grows with the tide, so it is best at low water - that is also when the reef break turns on for surfers. Small, scenic, and a laid-back place to end the day with the sunset."
+    "highlight": "Reached on foot down steps winding past cliffside guesthouses and cafes. The sand shrinks and grows with the tide, so low water is the time to come, and that is when the reef break works too. A small beach to end the day on."
    }
   ],
   "facts": [
@@ -923,7 +923,7 @@ export const TOUR_CONTENT = {
     "hgt": 1279,
     "num": "Stop 1",
     "name": "Jatiluwih Rice Terraces",
-    "highlight": "A UNESCO World Heritage landscape of endless green terraces stretching to the horizon with almost no crowds. Still farmed the traditional subak way, exactly as it has been for a thousand years. We build in time to walk one of the trails through the terraces, not just view them from the road."
+    "highlight": "A UNESCO World Heritage landscape of terraces with almost no crowds, still farmed the traditional subak way as it has been for a thousand years. We build in time to walk one of the trails, not just look from the road."
    },
    {
     "type": "stop",
@@ -935,7 +935,7 @@ export const TOUR_CONTENT = {
     "hgt": 1237,
     "num": "Stop 2",
     "name": "Ulun Danu Beratan Lake Temple",
-    "highlight": "The temple that seems to float on Lake Beratan - the one printed on Indonesia's 50,000 rupiah note. Up in the highlands the air is cool and the mist rolls in off the water, which makes for the kind of photo you can't get anywhere else on the island."
+    "highlight": "The temple that looks like it floats on Lake Beratan, the one printed on the 50,000 rupiah note. It is up in the highlands, so the air is cool and mist often rolls in off the water."
    },
    {
     "type": "stop",
@@ -947,7 +947,7 @@ export const TOUR_CONTENT = {
     "hgt": 1280,
     "num": "Stop 3",
     "name": "Handara Gate",
-    "highlight": "The towering Balinese gate framed by jungle-covered mountains - one of the island's most recognisable photo spots. It sits at the entrance of a highland golf resort, and we time it so you get your shot without the long queue."
+    "highlight": "A tall Balinese gate with jungle-covered mountains behind it, at the entrance of a highland golf resort. It is a well-known photo spot, so we time the stop to miss the long queue."
    }
   ],
   "facts": [
@@ -1055,7 +1055,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "Mount Batur Jeep Sunrise",
-    "highlight": "We set off before dawn so a 4x4 jeep can carry you up the black-lava slopes of Mount Batur to a viewpoint for sunrise over the caldera and lake - no strenuous hike required. Coffee in hand, watch the sky turn as the volcano wakes up. The easiest way to catch Bali's most famous sunrise."
+    "highlight": "We set off before dawn and a 4x4 carries you up the black lava slopes to a viewpoint for sunrise over the caldera and lake. No hike required, and there is coffee at the top. The trade-off is the early start."
    },
    {
     "type": "stop",
@@ -1067,7 +1067,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Penglipuran Village",
-    "highlight": "One of the cleanest, best-kept traditional villages in Bali - a Bali Aga village with a single spotless main avenue lined with matching gates and courtyard homes. Step into a family compound and see a way of life that has barely changed in centuries. It sits right on the route down from Batur."
+    "highlight": "A Bali Aga village with one main avenue lined with matching gates and courtyard homes, and a reputation as one of the tidiest villages in Bali. You can step inside a family compound. It sits on the route down from Batur."
    },
    {
     "type": "stop",
@@ -1079,7 +1079,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3",
     "name": "Tirta Empul Holy Water Temple",
-    "highlight": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with respect."
+    "highlight": "Bali's main spring temple, where the melukat purification ritual has been performed for more than a thousand years. You are welcome to take part - we arrange a sarong and explain the etiquette first."
    }
   ],
   "facts": [
@@ -1187,7 +1187,7 @@ export const TOUR_CONTENT = {
     "hgt": 3000,
     "num": "Stop 1",
     "name": "Lempuyang Temple - Gates of Heaven",
-    "highlight": "Bali's most photographed split gate, framing Mount Agung on a clear morning. We arrive early to beat the queue and handle the ticket, sarong, and the famous mirror photo so you don't waste half the day waiting in line."
+    "highlight": "Bali's most photographed split gate, with Mount Agung behind it on a clear morning. We arrive early because the queue for the photo gets long, and we handle the ticket, the sarong and the mirror shot."
    },
    {
     "type": "stop",
@@ -1199,7 +1199,7 @@ export const TOUR_CONTENT = {
     "hgt": 1030,
     "num": "Stop 2",
     "name": "Tirta Gangga Water Garden",
-    "highlight": "A former royal garden built around tiered fountains and koi-filled pools, with stepping stones you can walk across the water on. Peaceful, green, and endlessly photogenic - one of East Bali's most underrated stops."
+    "highlight": "A former royal garden of tiered fountains and koi pools, with stepping stones you can walk across the water on. Green, quiet, and easy walking - and less busy than most of East Bali."
    },
    {
     "type": "stop",
@@ -1211,7 +1211,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3",
     "name": "Taman Ujung Water Palace",
-    "highlight": "The grand water palace of the Karangasem royal family - a spread of reflecting ponds, ornate bridges, and hillside pavilions framed by Mount Agung and the sea. Elegant, photogenic, and an easy stroll."
+    "highlight": "The Karangasem royal family's water palace: reflecting ponds, bridges and hillside pavilions, with Mount Agung on one side and the sea on the other. Flat, easy walking."
    },
    {
     "type": "stop",
@@ -1223,7 +1223,7 @@ export const TOUR_CONTENT = {
     "hgt": 1284,
     "num": "Stop 4",
     "name": "Besakih - The Mother Temple",
-    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung. More than 20 temples in one sanctuary, still the spiritual centre of the island after a thousand years. Sarong included."
+    "highlight": "Bali's largest and holiest temple complex, built in terraces up the slope of Mount Agung: more than 20 temples in one sanctuary, still the island's spiritual centre after a thousand years. Sarong included."
    }
   ],
   "facts": [
@@ -1336,7 +1336,7 @@ export const TOUR_CONTENT = {
     "hgt": 800,
     "num": "Stop 1",
     "name": "Lovina Sunrise Dolphin Cruise",
-    "highlight": "We leave Ubud in the dark to reach Lovina's calm north-coast water at first light. Climb aboard a traditional jukung boat and glide out as pods of wild dolphins surface and play around you, the sunrise glowing behind the mountains. An only-in-the-morning experience."
+    "highlight": "We leave Ubud in the dark to reach Lovina's calm north-coast water at first light, then head out in a traditional jukung boat. Wild dolphins usually surface around it, though they are wild and never guaranteed."
    },
    {
     "type": "stop",
@@ -1345,7 +1345,7 @@ export const TOUR_CONTENT = {
     "gradient": "background-image: linear-gradient( 135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86) );",
     "num": "Stop 2",
     "name": "Banjar Hot Spring",
-    "highlight": "Back on land, ease into the sacred Banjar hot springs - warm, sulphur-rich water pouring from carved stone dragons into jungle-fringed bathing pools. The perfect way to warm up after the boat and loosen up before the trek."
+    "highlight": "The sacred Banjar hot springs, where warm sulphur water pours from carved stone dragons into bathing pools in the jungle. It sits between the boat and the trek, which is a good place for it."
    },
    {
     "type": "stop",
@@ -1357,7 +1357,7 @@ export const TOUR_CONTENT = {
     "hgt": 1337,
     "num": "Stop 3",
     "name": "Sekumpul Waterfall",
-    "highlight": "Often called the most beautiful waterfall in Bali - a cluster of tall cascades pouring into a green jungle gorge. It's a real trek down and back up through the valley, but standing at the base of Sekumpul is a reward few visitors ever see. Moderate fitness needed."
+    "highlight": "Often called the most beautiful waterfall in Bali - a cluster of tall cascades falling into a jungle gorge. It is a real trek down into the valley and back up again, so moderate fitness is needed."
    }
   ],
   "facts": [
@@ -1461,7 +1461,7 @@ export const TOUR_CONTENT = {
     "hgt": 1337,
     "num": "Stop 1",
     "name": "Munduk Waterfalls",
-    "highlight": "A quiet mountain village surrounded by clove and coffee plantations, with a trail of slender jungle waterfalls tucked into the valleys. We walk to one of the prettiest, tucked into the valley below the village."
+    "highlight": "A quiet mountain village surrounded by clove and coffee plantations, with jungle waterfalls in the valleys around it. We walk down to one of them, below the village."
    },
    {
     "type": "stop",
@@ -1473,7 +1473,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Munduk Coffee Plantation",
-    "highlight": "Munduk's cool highland slopes grow some of Bali's best coffee and cloves. We stop at a local plantation to see the beans roasted by hand and taste a flight of local brews with a view over the valley."
+    "highlight": "Munduk's cool highland slopes grow coffee and cloves. We stop at a local plantation to watch the beans roasted by hand and taste a flight of local brews, with the valley in view."
    },
    {
     "type": "stop",
@@ -1485,7 +1485,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3 · Optional",
     "name": "Gitgit Waterfall",
-    "highlight": "One of North Bali's most accessible waterfalls - a tall single drop reached by an easy paved path through coffee and spice gardens. A refreshing add-on before the drive back over the mountains to Ubud - let your driver know if you'd like to add it on."
+    "highlight": "A tall single drop reached by an easy paved path through coffee and spice gardens, which makes it one of the more accessible waterfalls in the north. An add-on before the drive back over the mountains - tell your driver if you want it."
    }
   ],
   "facts": [
@@ -1592,7 +1592,7 @@ export const TOUR_CONTENT = {
     "hgt": 933,
     "num": "Stop 1",
     "name": "Uluwatu Cliff Temple",
-    "highlight": "One of Bali's six key spiritual pillars, perched on a cliff 70 metres above the crashing surf. Walk the clifftop path for wide-open ocean views - and keep an eye on your belongings, the resident monkeys are famously cheeky."
+    "highlight": "One of Bali's six key spiritual pillars, on a cliff 70 metres above the surf, with a clifftop path to walk for the ocean views. Keep a hold of your belongings: the resident monkeys take things."
    },
    {
     "type": "stop",
@@ -1708,7 +1708,7 @@ export const TOUR_CONTENT = {
     "hgt": 800,
     "num": "Stop 1",
     "name": "Sangeh Monkey Forest",
-    "highlight": "A grove of towering nutmeg trees on the way to Tanah Lot, home to a resident troop of long-tailed macaques and a small temple. Quieter and less crowded than Ubud's Monkey Forest, with the same easy walking paths."
+    "highlight": "A grove of tall nutmeg trees on the way to Tanah Lot, with a resident troop of long-tailed macaques and a small temple. Quieter than the Monkey Forest in Ubud, and the paths are just as easy."
    },
    {
     "type": "stop",
@@ -1720,7 +1720,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Taman Ayun Royal Temple",
-    "highlight": "The state temple of the Mengwi kingdom, its rows of tiered meru shrines set on an island inside a wide moat so the temple seems to float on the water. Founded in 1634 and part of Bali's UNESCO-listed cultural landscape, with flat, easy paths around the outside for good photos of the towers."
+    "highlight": "The state temple of the Mengwi kingdom, founded in 1634 and UNESCO-listed. Its rows of tiered meru shrines sit on an island inside a wide moat. Flat paths run around the outside, which is where the photos of the towers are taken from."
    },
    {
     "type": "stop",
@@ -1732,7 +1732,7 @@ export const TOUR_CONTENT = {
     "hgt": 1536,
     "num": "Stop 3",
     "name": "Tanah Lot Sunset Temple",
-    "highlight": "The grand finale - a sea temple perched on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with enough time to walk the cliff path and find a good spot before the light turns. Easily one of the best sunsets in Southeast Asia."
+    "highlight": "A sea temple on a rock offshore, cut off by the tide as the sun drops behind it. We arrive with time to walk the cliff path and pick a spot before the light goes."
    }
   ],
   "facts": [
@@ -1840,7 +1840,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "ATV Quad Bike Ride",
-    "highlight": "The main event - roughly an hour on an ATV through jungle trails, muddy tracks, rice paddies, and shallow river crossings, with a guide leading the way. Ride solo or tandem; a full safety briefing and gear are included. Expect to get wonderfully muddy."
+    "highlight": "Roughly an hour on an ATV through jungle trails, mud, rice paddies and shallow river crossings, with a guide leading. Solo or tandem, and a briefing and gear are included. Expect to get muddy."
    },
    {
     "type": "stop",
@@ -1852,7 +1852,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Bali Zoo",
-    "highlight": "Just south of Ubud, wander shaded jungle grounds past elephants, orangutans, sun bears, and hundreds of tropical animals. Optional feeding sessions and encounters are on offer, and it's compact enough for a relaxed visit - a big hit with kids."
+    "highlight": "Just south of Ubud: shaded grounds with elephants, orangutans, sun bears and a few hundred other animals. Feeding sessions and animal encounters cost extra. It is compact enough to see at a relaxed pace, which is why it works with kids."
    },
    {
     "type": "stop",
@@ -1864,7 +1864,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3",
     "name": "Bali Bird Park",
-    "highlight": "Right nearby, stroll walk-in aviaries home to more than 1,000 birds - from rare Bali starlings to giant hornbills - with free-flight shows overhead. Colourful, shady, and easy-going, it pairs naturally with the zoo."
+    "highlight": "Walk-in aviaries with more than 1,000 birds, from rare Bali starlings to hornbills, and free-flight shows through the day. Shady and flat, and right next to the zoo, so the two pair up easily."
    }
   ],
   "facts": [
@@ -1972,7 +1972,7 @@ export const TOUR_CONTENT = {
     "hgt": 862,
     "num": "Stop 1",
     "name": "Barong & Keris Dance",
-    "highlight": "We open the day in Batubulan, where the Barong and Keris dance is performed every morning. The Barong - a lion-like guardian of good - faces the demon queen Rangda in an ancient battle of good against evil, set to a live gamelan orchestra and ending with entranced kris dancers. A dramatic, only-in-Bali way to start."
+    "highlight": "We open in Batubulan, where the Barong and Keris dance is performed every morning. The Barong, a lion-like guardian, faces the demon queen Rangda, with a live gamelan orchestra and entranced kris dancers at the end."
    },
    {
     "type": "stop",
@@ -1984,7 +1984,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Ubud Arts & Crafts",
-    "highlight": "Bali's craft traditions in one hands-on stop - the silver workshops of Celuk, a wax-and-dye batik studio, and the intricate Batuan painting style. Watch the artisans, try it yourself, and pick up a keepsake straight from the makers."
+    "highlight": "Three craft stops in one run: the silver workshops of Celuk, a wax-and-dye batik studio, and the Batuan painting style. You watch the artisans work, can try it yourself, and buy straight from the makers."
    },
    {
     "type": "stop",
@@ -1996,7 +1996,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 3",
     "name": "Pura Batuan Temple",
-    "highlight": "A beautifully carved 11th-century village temple in Batuan, every gate and shrine covered in intricate paras-stone work. Cool, quiet, and rarely crowded - a calm heritage stop right on the road between the craft villages and Ubud."
+    "highlight": "An 11th-century village temple in Batuan, with every gate and shrine covered in carved paras stone. Cool, quiet and rarely crowded, and it sits right on the road between the craft villages and Ubud."
    },
    {
     "type": "stop",
@@ -2008,7 +2008,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 4",
     "name": "Ubud Royal Palace & Art Market",
-    "highlight": "Step inside Puri Saren Agung, the ornate home of Ubud's royal family and the beating heart of the town's arts scene. Just across the road, the traditional market is the place to browse handmade crafts, textiles, and souvenirs."
+    "highlight": "Puri Saren Agung, the home of Ubud's royal family, in the middle of town. The traditional market is straight across the road, which is where the handmade crafts, textiles and souvenirs are."
    },
    {
     "type": "stop",
@@ -2020,7 +2020,7 @@ export const TOUR_CONTENT = {
     "hgt": 1157,
     "num": "Stop 5 · Optional",
     "name": "Ubud Traditional Market",
-    "highlight": "Pasar Ubud, right across from the Royal Palace - produce and offering flowers in the morning, textiles, woodcarving, and souvenir stalls the rest of the day. Easy to fold in on the way between stops if you'd like some time to browse and bargain."
+    "highlight": "Pasar Ubud, across from the Royal Palace: produce and offering flowers in the morning, then textiles, woodcarving and souvenir stalls the rest of the day. Easy to fold in between stops if you want time to browse and bargain."
    },
    {
     "type": "stop",
@@ -2032,7 +2032,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 6",
     "name": "Kecak Fire Dance",
-    "highlight": "We close the day with the Kecak - a circle of dozens of chanting men, no instruments, and a fire-lit retelling of the Ramayana as the sun goes down. Raw, powerful, and a fitting end to a full day of Balinese art and culture."
+    "highlight": "The day closes with the Kecak: a circle of dozens of chanting men, no instruments, retelling the Ramayana around a fire as the sun goes down."
    }
   ],
   "facts": [
@@ -2153,7 +2153,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "Tegalalang Rice Terrace",
-    "highlight": "Bali's most iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by the thousand year old subak irrigation system. Wander the paths, catch the swings and photo spots, and take in one of the island's signature views."
+    "highlight": "The stepped rice fields north of Ubud, hand-carved over generations and still fed by the thousand-year-old subak irrigation system. You can walk the paths, and the swings and photo platforms are here too."
    },
    {
     "type": "stop",
@@ -2165,7 +2165,7 @@ export const TOUR_CONTENT = {
     "hgt": 1545,
     "num": "Stop 2",
     "name": "Luwak Coffee Plantation",
-    "highlight": "Walk through a working plantation to see how coffee, cacao, and spices grow, then taste your way through a tray of Balinese coffees and teas - including the famous kopi luwak straight from the source. Tastings are complimentary."
+    "highlight": "A working plantation where you can see how coffee, cacao and spices grow, then taste a tray of Balinese coffees and teas, including kopi luwak. Tastings are free."
    },
    {
     "type": "stop",
@@ -2177,7 +2177,7 @@ export const TOUR_CONTENT = {
     "hgt": 3739,
     "num": "Stop 3",
     "name": "Ayung River Rafting",
-    "highlight": "The main event - a 2-hour white-water descent of the Ayung River, Ubud's most famous rafting run. Grade II-III rapids weave past jungle walls, carved stone reliefs, and cascading waterfalls, with a trained guide in every boat. Beginners and families welcome; all safety gear provided."
+    "highlight": "A two-hour white-water descent of the Ayung River, Ubud's best-known rafting run. Grade II-III rapids past jungle walls, carved stone reliefs and waterfalls, with a trained guide in every boat. Beginners and families welcome, all safety gear provided."
    },
    {
     "type": "stop",
@@ -2189,7 +2189,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 4",
     "name": "Tegenungan Waterfall",
-    "highlight": "A wide, powerful waterfall tucked into the jungle just outside Ubud, with a natural pool at its base you can swim in when the water is calm. A short walk down, and a genuinely refreshing reward to end the day."
+    "highlight": "A wide, powerful waterfall in the jungle just outside Ubud, with a pool at the base you can swim in when the water is calm. A short walk down, and the last stop of the day."
    }
   ],
   "facts": [
@@ -2359,8 +2359,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 1",
     "name": "Tegalalang Rice Terrace & Coffee Plantation",
-    "summary": "The stepped rice fields north of Ubud, still watered by the thousand-year-old subak system. Next door is a working coffee plantation where you can see how the beans grow and taste kopi luwak. Tastings are free.",
-    "highlight": "We start at the iconic stepped rice fields north of Ubud, hand-carved over generations and still fed by Bali's thousand year old subak irrigation system. Right beside it, walk through a working plantation to see how coffee grows and taste the famous kopi luwak straight from the source. Tastings are complimentary."
+    "highlight": "The stepped rice fields north of Ubud, still watered by the thousand-year-old subak system. Next door is a working coffee plantation where you can see how the beans grow and taste kopi luwak. Tastings are free."
    },
    {
     "type": "stop",
@@ -2372,8 +2371,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 2",
     "name": "Tirta Empul Holy Water Temple",
-    "summary": "Bali's main spring temple, where the melukat purification ritual has been performed for more than a thousand years. You are welcome to take part - we arrange a sarong and explain the etiquette first.",
-    "highlight": "Bali's most sacred spring temple, where Balinese Hindus have performed the melukat purification ritual for over a thousand years. You're welcome to join the ritual yourself - we'll arrange a sarong and walk you through the etiquette so you can take part with confidence and respect."
+    "highlight": "Bali's main spring temple, where the melukat purification ritual has been performed for more than a thousand years. You are welcome to take part - we arrange a sarong and explain the etiquette first."
    },
    {
     "type": "stop",
@@ -2386,8 +2384,7 @@ export const TOUR_CONTENT = {
     "num": "Stop 3 · Optional",
     "name": "Gunung Kawi Temple",
     "optional": true,
-    "summary": "Ten shrines cut into a river-valley cliff in the 11th century, and much quieter than the better-known temples. It is a long staircase down through the rice fields and back up again, so tell your driver if you want it added.",
-    "highlight": "An 11th-century wonder carved directly into the rock face of a river valley. Ten giant shrines, each cut from the living cliff, reached by a staircase down through emerald rice paddies. It's quieter than the famous temples. A little walking, a lot of reward - let your driver know if you'd like to add it on."
+    "highlight": "Ten shrines cut into a river-valley cliff in the 11th century, and much quieter than the better-known temples. It is a long staircase down through the rice fields and back up again, so tell your driver if you want it added."
    },
    {
     "type": "stop",
@@ -2399,8 +2396,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 4",
     "name": "Goa Gajah - The Elephant Cave",
-    "summary": "A 9th-century site where you step through a cave mouth carved as a demon's face into old meditation niches. Bathing pools and jungle paths run down the slope behind it.",
-    "highlight": "A 9th-century sanctuary whose cave mouth is carved into a monstrous demon face you step straight through. Inside are ancient meditation niches; outside, bathing pools and jungle paths lead down to hidden shrines. One of Ubud's oldest and most mysterious sites."
+    "highlight": "An 11th-century meditation cave with a carved demon face around the entrance, plus bathing pools uncovered in the 1950s. A short flight of steps down, and a quick stop."
    },
    {
     "type": "stop",
@@ -2412,8 +2408,7 @@ export const TOUR_CONTENT = {
     "hgt": 900,
     "num": "Stop 5",
     "name": "Sacred Monkey Forest Sanctuary",
-    "summary": "The day ends in the middle of Ubud at a jungle temple complex with around 700 long-tailed macaques. Keep bags, sunglasses and loose items zipped away and give the monkeys room.",
-    "highlight": "We finish in the heart of Ubud at a moss-covered jungle temple complex, home to more than 700 long-tailed macaques. Walk beneath ancient banyan roots and past weathered stone guardians in one of Bali's most atmospheric sanctuaries. Keep a firm hold on your belongings and give the monkeys room, and they are easy enough to be around."
+    "highlight": "A forest temple complex in the middle of Ubud with more than 700 long-tailed macaques living in it. Easy flat paths. Keep a firm hold on bags and sunglasses, and give the monkeys room."
    }
   ],
   "facts": [

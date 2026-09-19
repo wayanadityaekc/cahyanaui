@@ -3,6 +3,12 @@
 // longer needs a photo OF that place to look finished - which is what used to
 // force a lookalike photo in when a place had nothing available online.
 //
+// Reads `highlight`, and only that. The pilot briefly had a second field
+// (`summary`) holding a shorter rewrite; the rewrite has since been applied to
+// every tour and folded back into `highlight`, so there is one field per stop
+// again. Don't reintroduce the pair - two fields meant two versions of the same
+// paragraph and only one of them was ever on screen.
+//
 // Stop names are PLAIN TEXT, deliberately not linked: linking them to
 // /attractions/<refId>.html dropped a guest mid-decision onto a page quoting a
 // second, single-destination price. Same reason the photo-per-stop layout in
@@ -57,7 +63,7 @@ export default function TourOverview({ intro, items = [] }) {
                     {s.name}
                     {s.optional && <span className={OPTIONAL}>Optional</span>}
                   </h3>
-                  <p className={TEXT}>{s.summary || s.highlight}</p>
+                  <p className={TEXT}>{s.highlight}</p>
                 </div>
               </li>
             ))}

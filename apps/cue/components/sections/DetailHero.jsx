@@ -39,6 +39,13 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 // works everywhere. Pills are already this site's vocabulary (zone-chip, guide-tag,
 // the Popular badge), so this reads new without being a new idiom.
 //
+// The chips sit BELOW the photos (Wayan, Sep 2026, after a sheet of four shapes:
+// "S1 bro"). That is the split Viator and GetYourGuide both use - the rating belongs
+// beside the name, the spec belongs after the look - and it is free: the block is the
+// same height either way, so the gallery simply starts 83px higher on a phone and
+// 47px higher on desktop, filling a gap that was empty below it anyway (the hero CTA
+// is gone, and it never showed on mobile).
+//
 // `tour-hook` rides on the chip list: it is a marker class check-detail requires on
 // every detail page, and the <ul> it used to sit on is gone from this variant.
 export const HERO_CRUMB = 'font-body text-small text-muted m-0 mb-2';
@@ -48,7 +55,7 @@ export const HERO_CRUMB_SEP = 'mx-[0.35rem] opacity-[0.55]';
 // up to 24px. amber-d matches the star on every card (design system: rating = amber).
 export const HERO_RATING =
   'inline-flex items-center gap-[0.3rem] font-body text-small font-semibold text-amber-d [&>svg]:w-4 [&>svg]:h-4';
-export const HERO_CHIPS = 'tour-hook list-none flex flex-wrap items-center gap-[0.45rem] m-0 mb-[1.1rem] p-0';
+export const HERO_CHIPS = 'tour-hook list-none flex flex-wrap items-center gap-[0.45rem] mt-[1.1rem] mx-0 mb-0 p-0';
 export const HERO_CHIP =
   'inline-flex items-center gap-[0.4rem] py-[0.35rem] px-3 rounded-pill [border:1px_solid_var(--color-line)] ' +
   'font-body text-small text-green whitespace-nowrap [&>svg]:w-4 [&>svg]:h-4 [&>svg]:text-muted';
@@ -129,13 +136,12 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
             <Rating name={ratingName} className={HERO_RATING} withWord />
           </div>
         )}
+        <HeroMosaic photos={gallery} title={title} />
         <ul className={HERO_CHIPS}>
           {chips.map((c) => (
             <Chip key={c.key} icon={c.icon} text={c.text} ok={c.ok} />
           ))}
         </ul>
-        <HeroMosaic photos={gallery} title={title} />
-        {cta && <a href={ctaHref} className={HERO_CTA}>{cta}</a>}
       </section>
     );
   }

@@ -65,7 +65,6 @@ export default function BookConfirmModal() {
   // Checkpoint 1: the guest's payment choice is held here so the step can be
   // driven and screenshotted. Nothing acts on it yet.
   const [payOption, setPayOption] = useState('later');
-  const [payMethod, setPayMethod] = useState('card');
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
@@ -143,6 +142,10 @@ export default function BookConfirmModal() {
     // amount from here - it recomputes what is owed from its own prices. This is
     // the choice only, so the invoice matches the row the guest actually tapped.
     pay_option: payOption,
+    // The currency the guest was quoted in. Without it the server can only
+    // record USD/IDR, and an invoice sent in the wrong currency is a different
+    // number from the one they agreed to.
+    currency: currency || 'USD',
     stay: stay || '',
     lines: ctx.lines.map((l, i) => {
       const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
@@ -309,8 +312,6 @@ export default function BookConfirmModal() {
             <PaymentStep
               option={payOption}
               onOption={setPayOption}
-              method={payMethod}
-              onMethod={setPayMethod}
               /* baseTotal, not priced.total: the quote already subtracts the
                  code's own percentage, and in this model a code is worth nothing
                  on its own - counting it here too would discount twice. */

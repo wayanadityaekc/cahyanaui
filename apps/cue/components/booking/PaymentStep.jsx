@@ -13,9 +13,9 @@ import { PAY_METHODS, PAY_COPY, amountDueNow, payOptions } from '@/lib/payment';
 // changes what both options below are worth. Entering it afterwards would mean
 // the guest picks from the wrong numbers.
 //
-// The method picker only appears when something is actually being charged, so a
-// code holder booking with no deposit is never asked to choose a card for a
-// payment of zero.
+// The "Pay with" block only appears when something is actually being charged, so
+// a code holder booking with no deposit is never shown card logos for a payment
+// of zero.
 const ROW =
   'w-full flex items-start gap-3 text-left p-[0.85rem] rounded-md bg-white cursor-pointer ' +
   '[transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
@@ -39,7 +39,6 @@ function Radio({ on }) {
 
 export default function PaymentStep({
   option, onOption,
-  method, onMethod,
   total, symbol = '$', hasReferral = false,
   referral, onReferral, onApplyReferral, refMsg,
 }) {
@@ -99,44 +98,26 @@ export default function PaymentStep({
         })}
       </div>
 
+      {/* One rail, so there is nothing to pick - a radio group with a single
+          option is a control that cannot do anything. Stated, not offered. */}
       {charges && (
         <>
           <p className={`${HEAD} mt-5`}>{PAY_COPY.methodHeading}</p>
-          <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.methodHeading}>
-            {PAY_METHODS.map((m) => {
-              const on = method === m.id;
-              return (
-                <button
-                  key={m.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  className={`${ROW} ${on ? ROW_ON : ROW_OFF} flex-col`}
-                  onClick={() => onMethod(m.id)}
-                >
-                  <span className="flex items-start gap-3 w-full">
-                    <Radio on={on} />
-                    <span className="flex-1 min-w-0">
-                      <span className={LABEL}>{m.label}</span>
-                      <span className={SUB}>{m.sub}</span>
-                    </span>
-                  </span>
-                  {/* Brands only once card is chosen - the row stays quiet until
-                      it is the one being used. */}
-                  {on && m.id === 'card' && (
-                    <PayChips
-                      className="w-full mt-[0.7rem] ml-[calc(18px+0.75rem)]"
-                      logosClass="flex flex-wrap items-center gap-2"
-                      chipClass="inline-flex items-center justify-center h-[28px] min-w-[44px] px-[0.5rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm"
-                      svgClass="block h-[var(--icon-sm)] w-auto"
-                    />
-                  )}
-                </button>
-              );
-            })}
+          <div className={`${ROW} ${ROW_OFF} cursor-default flex-col`}>
+            <span className="flex-1 min-w-0">
+              <span className={LABEL}>{PAY_METHODS[0].label}</span>
+              <span className={SUB}>{PAY_METHODS[0].sub}</span>
+            </span>
+            <PayChips
+              className="w-full mt-[0.7rem]"
+              logosClass="flex flex-wrap items-center gap-2"
+              chipClass="inline-flex items-center justify-center h-[28px] min-w-[44px] px-[0.5rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm"
+              svgClass="block h-[var(--icon-sm)] w-auto"
+            />
           </div>
         </>
       )}
+
 
       <p className="mt-[0.9rem] text-small text-green leading-[var(--lh-body)]">
         {PAY_COPY.cancel} <span className="text-muted">{PAY_COPY.late}</span>{' '}
@@ -148,7 +129,7 @@ export default function PaymentStep({
       {charges && (
         <p className="flex items-start gap-2 mt-[0.6rem] text-small text-muted leading-[var(--lh-body)]">
           <ShieldCheck className="w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 mt-[0.1rem] text-cta" strokeWidth={1.7} aria-hidden="true" />
-          <span>{method === 'paypal' ? PAY_COPY.securePaypal : PAY_COPY.secureCard}</span>
+          <span>{PAY_COPY.secureCard}</span>
         </p>
       )}
     </div>

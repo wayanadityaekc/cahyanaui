@@ -102,9 +102,17 @@ export function payOptions(hasReferral) {
   ];
 }
 
+// ONE rail, not two. Cards are accepted through PayPal's guest checkout, so a
+// separate "Card" row would be a second name for the same thing - and, while
+// DOKU's card service is still in review, a row that leads nowhere.
+//
+// Verified before this copy was written: a real invoice from this account,
+// opened logged-out in a private window from an address with no PayPal account,
+// offers "Debit or Credit Card" (and Apple Pay). Guest checkout is not offered
+// to every buyer - PayPal decides per transaction - so the copy says what is
+// normally true without promising it.
 export const PAY_METHODS = [
-  { id: 'card', label: 'Card', sub: 'Visa, Mastercard, JCB or Amex' },
-  { id: 'paypal', label: 'PayPal', sub: 'Pay from your PayPal balance or linked card' },
+  { id: 'paypal', label: 'Card or PayPal', sub: 'Visa, Mastercard, JCB, Amex - or your PayPal balance' },
 ];
 
 export const PAY_COPY = {
@@ -121,7 +129,7 @@ export const PAY_COPY = {
   referralBad: 'Code not valid.',
   cancel: `Free cancellation up to ${FREE_CANCEL_HOURS} hours before pickup - anything paid is refunded in full.`,
   late: 'Cancel later than that, or no-show, and what you paid is not refunded.',
-  secureCard: 'Card details are entered on a secure DOKU window. We never see or store them.',
-  securePaypal: 'You finish the payment in PayPal, then come back here.',
+  secureCard: 'We email you a secure PayPal invoice. Card details are entered on PayPal - we never see or store them.',
+  securePaypal: 'No PayPal account needed - you can pay the invoice straight from a card.',
   nothingNow: 'Nothing today',
 };

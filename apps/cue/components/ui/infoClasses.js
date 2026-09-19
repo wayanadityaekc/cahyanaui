@@ -27,6 +27,17 @@ export const INFO_CONTAINER_ARTICLE =
   'mx-auto max-w-[var(--container-read)] text-left ' +
   '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 
+// Inline links inside body copy. Preflight is OFF, so an <a> with no styling
+// keeps the browser default - bright blue #0000EE with an underline. That is
+// what every guide article and the charter page were shipping inside their
+// paragraphs and lists: 112 links across 15 pages, measured. Only the crumb,
+// the back link and InfoBoxList had ever been given a colour.
+//
+// One string, imported by everything that prints body HTML, so the three
+// places cannot drift apart again. Underline is left alone on purpose: inside
+// a paragraph it is the thing that marks the link as a link.
+export const PROSE_LINK = '[&_a]:text-gold [&_a]:font-medium';
+
 // .info__facts — spec strip (4-col desktop / 2-col mobile), 1px divider lines via bg+gap.
 export const INFO_FACTS =
   'grid grid-cols-4 max-[768px]:grid-cols-2 gap-px bg-line [border:1px_solid_var(--line)] rounded-[var(--r-md)] overflow-hidden mb-10';

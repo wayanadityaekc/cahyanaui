@@ -5,7 +5,7 @@
 // content/schema/prose.js header). This component only moves the markup out
 // of a raw HTML string into data + real elements.
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
-import { infoList } from '@/components/ui/infoClasses';
+import { infoList, PROSE_LINK } from '@/components/ui/infoClasses';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import InfoFacts from '@/components/ui/InfoFacts';
 import { unlinkHiddenTours } from '@/lib/routes';
@@ -49,10 +49,10 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
           ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
           : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'para':
-        return <p key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+        return <p className={PROSE_LINK} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'list':
         return (
-          <ul className={infoList(b.variant)} key={i}>
+          <ul className={`${infoList(b.variant)} ${PROSE_LINK}`} key={i}>
             {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
           </ul>
         );

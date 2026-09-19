@@ -1228,9 +1228,25 @@ Order **must be kept** (declarations first, run last):
   - **Teksnya sengaja kecil & tipis**: `text-[0.72rem] font-normal text-muted` (≤12px, dulu
     12.8 HP / 14 PC dan warnanya `--color-green`). Ini pengumuman, bukan headline — jangan
     dibikin setebal nav.
-  - **Nutup pas scroll turun, balik pas scroll naik.** Ambang: abaikan gerakan <6px (jitter),
-    dan gak pernah nutup selama masih <80px dari atas. Animasinya `grid-template-rows`
-    **0fr ↔ 1fr** (anaknya `overflow-hidden`) — gak usah ngukur tinggi apa pun.
+  - **KEBUKA CUMA DI ATAS, arah scroll gak ngaruh** (Sep 2026, Wayan: "Gas A bro").
+    `scrollY > 80` = nutup, titik. Animasinya `grid-template-rows` **0fr ↔ 1fr**
+    (anaknya `overflow-hidden`) — gak usah ngukur tinggi apa pun.
+    - **Dulu**: nutup pas scroll turun, **balik pas scroll naik** (+ ambang jitter 6px).
+      Bukanya itu yang bikin loncatan pas Wayan scroll balik ke atas ngelewatin hero:
+      header tumbuh **53 → 86px**, dan strip tab sticky dipatok ke `--header-h`, jadi
+      strip-nya **turun sendiri 33px dalam ~150ms** sementara konten di belakangnya
+      tetep jalan ikut scroll. Diukur di scrollY yang SAMA PERSIS (1400 dua kali):
+      strip pindah **53 → 68px** padahal halamannya gak gerak sama sekali.
+    - Sekarang header **satu tinggi buat seluruh scroll** — yang nempel ke dia gak
+      pernah gerak di tengah halaman. Strip emang baca `--header-h` (bukan
+      `--header-h-max`) supaya nempel tanpa celah pas bar-nya kebuka di atas; itu
+      sebabnya tingginya gak boleh berubah pas lagi di tengah halaman.
+    - Verifikasi: **`verify-tripbar-a.mjs`** di scratchpad (54/54) — 390 & 1280 di
+      4 jenis halaman: bar kebuka pas mendarat (scrollY 0), nutup lewat 80px, balik
+      pas balik ke atas, `--header-h` **beku** selama scroll naik ngelewatin hero,
+      `--header-h-max` gak gerak sama sekali, dan yang paling penting: elemen yang
+      dipatok ke `--header-h` **drift ≤1px di scrollY yang sama**. Gate-nya udah
+      dites pakai bug aslinya (handler lama dibalikin → 12 gagal, drift 15px).
   - **DUA var tinggi header, jangan ketuker:**
     - `--header-h` = tinggi header **live** (di-update `ResizeObserver` di `Navbar`), jadi
       ikut mengecil pas trip bar nutup. Dipakai elemen yang harus **nempel** ke bawah navbar

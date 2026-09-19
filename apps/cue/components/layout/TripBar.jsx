@@ -43,15 +43,23 @@ export default function TripBar() {
   const [dim, setDim] = useState(false);
   const timers = useRef([]);
 
+  // OPEN ONLY NEAR THE TOP (Wayan, Sep 2026: "Gas A bro"). It used to close on
+  // scroll down and REOPEN on scroll up, and the reopening is what caused a visible
+  // lurch: the header grows 53 -> 86px, and the sticky tab strip is pinned to
+  // `--header-h`, so the strip slid 33px down over ~150ms while the content behind
+  // it kept moving at scroll speed. Measured at a FIXED scroll position (scrollY
+  // 1400 twice in a row) the strip moved 53 -> 68px on its own - the page had not
+  // scrolled at all. It fired exactly where a guest scrolling back up to the hero
+  // would see it.
+  //
+  // Direction no longer matters: past 80px the bar is closed, full stop. So the
+  // header is one height for the whole scroll and nothing pinned to it ever moves.
+  // This also keeps the strip glued to the navbar with no gap, which is why it
+  // reads --header-h rather than the frozen --header-h-max in the first place.
+  // The bar is an announcement, and it is still there when a guest arrives.
   useEffect(() => {
-    let last = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      // Ignore jitter, and never hide while still near the top of the page.
-      if (Math.abs(y - last) < 6) return;
-      setHidden(y > last && y > 80);
-      last = y;
-    };
+    const onScroll = () => setHidden(window.scrollY > 80);
+    onScroll(); // a page opened at an anchor starts already scrolled
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);

@@ -136,12 +136,17 @@ When unsure, ask first (keep it short).
   dkk), dan judul besar level-halaman (`.subhero__title` var overlap, `.vpromo__title`).
 - Prices = gold (`--color-amber`, gold BENERAN — bukan `--color-gold`) + bold
   (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
-  **DUA pengecualian (Sep 2026, Wayan)** - dua-duanya karena harganya nempel ke CTA hijau
+  **TIGA pengecualian (Sep 2026, Wayan)** - semuanya karena harganya nempel ke CTA hijau
   dan amber di sebelahnya berantem: (1) **kartu paket charter** (`CharterPlans.jsx`, dipakai
   halaman charter DAN section homepage — harganya duduk di baris yang aksinya CTA hijau) dan
   (2) harga di **book bar** (`BookBar.jsx`) =
   `text-gold` (soft black), bukan amber — di bar itu amber nabrak tombol CTA hijau
-  tepat di sebelahnya. Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
+  tepat di sebelahnya. Yang ketiga: (3) **baris Total di form airport**
+  (`AirportTransferForm`) — Wayan, Sep 2026: "ukuran text harga gedein dikit biar lebih
+  menonjol dan ganti warna menjadi black". Dia juga **digedein ke 1.35rem**: itu satu-satunya
+  angka di form itu, dan di `--fs-strong` + amber dia kebaca kayak satu baris lagi dari
+  daftar field di atasnya. Warnanya dioper `!text-gold` di span yang SAMA yang bawa `PRICE`
+  (amber-nya nempel di elemen itu, jadi wrapper kalah). Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
   Warnanya WAJIB dioper lewat prop `className` punya `<Price>` — default-nya
   (`PRICE` = amber) nempel LANGSUNG di elemen `[data-price]`, jadi `text-gold` di
   elemen pembungkus KALAH. Class `price` tetep dibawa (itu hook, bukan warna).
@@ -857,15 +862,42 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   Gate itu salah satu ide rute yang halaman ini **udah sebut sendiri** ("Full day
   north: Handara Gate"), jadi bukan foto tempat yang gak kita datengin, dan
   komposisinya ke-center jadi tahan di crop tinggi-sempit.
-  - **Kartu promo Charter di 3 halaman listing MASIH `road-ubud.webp`**
-    (`content/shared/programPromo.js`) - belum diputusin Wayan, jadi sengaja dibiarin.
-    Kalau nanti diganti, samain ke `handara-gate.webp`.
+  - **Kartu promo Charter di 3 halaman listing IKUT DIGANTI** (Sep 2026, Wayan: "gas samain
+    foto promo charter bro") — `content/shared/programPromo.js` sekarang `handara-gate.webp`
+    juga. Nol `road-ubud.webp` ketinggalan di seluruh repo; dijaga `verify-r3.mjs` (3 halaman
+    listing). **Yang MASIH salinan basi di file itu**: teks kartunya nulis "go anywhere, stop
+    anywhere, at your own pace" — slogan yang udah dibuang dari `CHARTER.sub` (diganti fakta).
+    Belum ditanyain ke Wayan, itu copy.
+- **`/airport-transfer` BAGI DUA 50/50 di desktop, dua yang lain TETEP 2.4fr** (Sep 2026,
+  Wayan: "di desktop bagi 2 aja, 50% kolom input 50% image nya"). Ini **hal KEDUA** yang
+  boleh beda antar tiga halaman itu, setelah foto — jadi dia di `FormHero` sebagai prop
+  `half`, bukan di salinan cangkang kedua.
+  - Alasannya beda peran kolom: form airport itu satu tumpukan field selebar penuh, gak ada
+    yang butuh lebar ekstra. **Charter GAK BISA ikut**: sub-baris paketnya wrap begitu kolom
+    form di bawah ~790px, dan 50/50 di 1200 cuma ngasih **576px** (diukur).
+  - Dua string class-nya ditulis PENUH (`GRID_COLS` / `GRID_COLS_HALF`) — Tailwind nyisir
+    teks sumber, class yang dirangkai pakai interpolasi **gak pernah ke-generate**.
+  - `verify-formhero` ikut diubah: `formw`/`photow`/`photox` **keluar** dari tanda tangan
+    cangkang bersama (bedanya disengaja & di-assert sendiri), tapi **tepi KIRI form** dan
+    **tepi KANAN baris** tetep wajib sama di ketiganya.
 - **`photoPos` = SATU-SATUNYA prop yang ngatur foto selain `photo`/`alt`.** Default
-  `[&>img]:object-center`. `/airport-transfer` naro `[&>img]:object-[26%_50%]`: di
-  kolom tinggi-sempit, crop tengah motong tulisan "BALI International Airport" **di
-  tengah kata**; 26% mendarat di pantulan pesawat di kacanya - tetep kebaca "bandara"
-  tanpa setengah papan nama. **Nambah halaman baru = cek crop-nya di 1280 & 1440**,
-  jangan asal percaya `object-center`.
+  `[&>img]:object-center`. `/airport-transfer` naro **`[&>img]:object-[80%_50%]`**: itu
+  satu-satunya offset yang muat tulisan "BALI International Airport" **UTUH** di kolom
+  50/50-nya. Diadu di browser: center, 38% dan 62% semuanya motong kata "Airport" di tepi
+  kanan, dan **26% — yang bener waktu kolomnya masih slot sempit 0.57:1 — sekarang malah
+  mendarat di tengah papan nama.** Jadi **ganti lebar kolom = ukur ulang crop-nya**, jangan
+  cuma percaya angka yang udah ada. (Papan namanya kebaca di halaman INI gak masalah: dia
+  yang megang frasa itu. Yang gak boleh nampilin itu `/transfer`, dan dia pakai foto lain.)
+- **SATU FIELD TANGGAL per form** (Sep 2026, Wayan: "di page airport transfer ada 2 kolom
+  date, which is itu gak bener"). Form airport dulu punya **"Date" DAN "Flight date & time"**
+  — nanya hal yang sama dua kali, dan dua-duanya bisa beda: transfer ke-book tanggal 12,
+  pesawatnya mendarat tanggal 13. Sekarang tanggal transfer **dibaca dari penerbangannya**
+  (`flightTime.slice(0,10)`), dan catatan di bawah field-nya nyebut itu. `ready` ikut:
+  alamat + nomor penerbangan + tanggal penerbangan.
+  - `FIELD_LABEL` di form itu **udah dihapus** (dia cuma ada buat baris Date|Guests yang
+    2 kolom); sekarang semua label lewat `LABEL`.
+  - Label "1. Direction" ilang "1."-nya — gak ada 2. dan 3., sisa dari versi form
+    yang dulu bernomor.
 - **Form gak boleh ganti tinggi pas harga nyampe** (Sep 2026). `/transfer` dulu
   nyetak **NOL** apa pun sebelum route kepilih, jadi begitu harganya muncul form-nya
   tumbuh - dan karena foto-nya `h-full` di 1200+, **foto-nya ikut lompat**. Sekarang
@@ -954,6 +986,28 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   Kalau harness bilang beda, **cek dulu harness-nya baca yang bener**.
 - **Route di /transfer TETEP markup halaman** (bukan blok Prose): itu kontrol berharga yang
   bisa ditap, bukan bacaan. Dia jalan paling atas di blok `details`, sebelum prosanya.
+- **PICKER /transfer: SATU SISI SELALU UBUD** (Sep 2026, Wayan: "kalo kita milih area dari
+  kolom input belum bisa jalan dan di book"). Semua route yang kita hargain bentuknya
+  "X – Ubud", jadi pasangan yang gak ada Ubud-nya gak mungkin punya harga - tapi form-nya
+  dulu ngebolehin tamu bikin persis itu, dan yang lebih parah: **To mulai di "Ubud", From
+  mulai di placeholder kosong**, jadi tamu yang milih area di **To** doang nyisain From
+  kosong → `routeName` kosong → harga tetep "Pick a route to see the price" dan Book mati,
+  **tanpa satu kata pun di layar yang bilang kenapa**. Ke-ukur sebelum dibenerin: pilih
+  To = Canggu Area → `from:""`, Book disabled.
+  - Sekarang milih area di satu sisi **naro Ubud di sisi lain**; milih Ubud di sisi yang
+    lawannya udah Ubud **ngosongin** yang lawannya balik ke placeholder (dulu "Ubud → Ubud"
+    nampilin em dash + baris "no fixed price for this pair", kayak route-nya yang salah).
+  - Aturannya di `TransferRouteProvider` (`pickFrom`/`pickTo`), dan **`setFrom`/`setTo`
+    UDAH GAK di-export** — biar invariant-nya gak bisa dijebol dari luar lagi. `To` juga
+    dikasih `placeholder` (dia sekarang bisa kosong).
+  - `routeName` gak lagi nyoba dua bentuk: sisi yang BUKAN Ubud itu nama route-nya.
+  - Baris "No fixed price for this pair" jadi **jaring pengaman**, bukan state normal.
+  - **Row yang di-book sekarang bawa `pickup`/`dropoff`** (kartu My Trips udah nerusin
+    dua-duanya pas checkout). Dulu cuma nama route, jadi tamu yang book "Ubud → Canggu"
+    dan yang book "Canggu → Ubud" nyimpen row yang IDENTIK dan driver gak bisa bedain.
+  - Dijaga `verify-r3.mjs`: milih area di From doang DAN di To doang dua-duanya kasih harga
+    + Book nyala, pasangan dua-duanya non-Ubud gak bisa kejadian, swap tetep bener, 6 kartu
+    route tetep pre-fill, dan arah yang ke-book ke-simpen.
 - **Tombol route UDAH HIDUP** (Sep 2026, Wayan: "benerin bro"). Dulu mati - `TransferSection`
   bukan client component, jadi `onClick` yang dijanjiin catatannya ("tap a route to pre-fill
   the search") gak pernah bisa kepasang. Sekarang:
@@ -1529,7 +1583,16 @@ Order **must be kept** (declarations first, run last):
     nampilin harga, halaman destinasinya punya Book now + book bar kayak tour.
     (Ini NGE-OVERRIDE keputusan 3 Sep yang bilang destinasi single nggak dijual &
     `prices.place` dibuang - kalau nemu tulisan itu di tempat lain, yang berlaku ini.)
-  - **Charter**: 5 jam 600k · 10 jam 1jt · tambahan 60k/jam.
+  - **Charter**: 5 jam 600k (`half`) · 10 jam 1jt (`full`) · **12 jam 1,12jt (`long`)** ·
+    tambahan 60k/jam. **`long` BUKAN angka baru**: 1.120.000 = `full` + 2 × 60k, jadi dia
+    tetep keiket ke tarif per jam (dipatok `pricing-spec-test`). Ditulis sebagai tarif sendiri
+    di `CHARTER` biar usd-nya diturunin dari IDR-nya sendiri ($64), bukan dijumlah dari dua
+    angka usd yang dua-duanya udah dibulatkan ke atas (57 + 2×4 = **65**, salah 1 dolar).
+    `extHourIdr` tetep kepakai buat jam yang LEWAT dari yang di-book.
+    - **`extended` UDAH GAK DIJUAL** (Sep 2026, Wayan: "jangan pakai extended pakai 12 jam
+      aja yang max") — tapi branch-nya di `charterPrice` **JANGAN dihapus**: keranjang yang
+      ke-simpen sebelum perubahan ini masih bawa `dur:"extended"` di localStorage tamu, dan
+      tanpa branch itu row-nya dihargain **0**.
   - **Airport – Ubud = Rp450.000** (Wayan, Sep 2026 - naik dari Rp300.000). Mata uang lain
     diturunin sendiri (`usd = ceil(450000/17600) = $26`), jadi yang diubah CUMA `idr` di
     `prices.transfer` (`cahyana-api/pricing-data.js`). Salinan di CUE yang ikut disapu:
@@ -1649,9 +1712,20 @@ Order **must be kept** (declarations first, run last):
     - **Paket kepilih itu PROP, bukan state di dalam list** (`value`/`onChange`): halaman butuh
       nilai yang sama buat baris ringkasan + tombol Book, dan homepage butuh buat nyimpen.
       Satu pemilik, gak ada salinan kebenaran kedua.
-    - **Hitungan harga = `useCharterTier({ area, extra })`**, di-export dari file yang sama —
+    - **Hitungan harga = `useCharterTier({ area })`**, di-export dari file yang sama —
       list-nya pakai buat tiap baris, halaman pakai buat total di ringkasan & gerbang tombol
       Book. Satu rumus, gak bisa melenceng.
+      - **DIA GAK NGITUNG APA-APA LAGI** (Sep 2026): tiap panjang yang dijual punya tarifnya
+        sendiri di katalog (`half`/`full`/`long`), jadi dia cuma NYARI, bukan nambahin jam ke
+        tarif yang lebih pendek. Versi lama nambah `extra × charterExtraHour` di atas `full`,
+        jadi halaman & server dua-duanya ngitung satu harga dan bisa beda satu langkah
+        pembulatan (57 + 2×4 = 65 lawan `ceil(1120000/17600)` = 64).
+      - **Surcharge pickup juga dari katalog** (`charterSurcharge.display`). Dulu ke-hardcode
+        `isIdr ? 100000 : 7` di sini: **7-nya udah melenceng** dari 6 yang bener, DAN buat tamu
+        yang bayar AUD/EUR/GBP dia nambahin 7 mata uang MEREKA ke harga yang udah dikonversi.
+        Ini kesalahan yang SAMA yang dulu bikin `CharterHome` nulis "+\$7" (lihat catatan
+        `charterSurcharge` di `pricing.js`) — muncul dua kali, sekarang gak ada angka
+        surcharge yang ke-tulis di CUE sama sekali.
     - Class-nya di `components/ui/charterPlanClasses.js`. `PLAN_PRICE_BOX`/`_BIG`/`PLAN_ROW_ON`
       **UDAH DIHAPUS** (dead) — itu sisa box harga cream punya homepage yang lama.
   - **Pilihan di homepage ke-bawa ke sini** lewat `lib/charterDraft.js` — lihat bullet Charter di
@@ -1678,9 +1752,20 @@ Order **must be kept** (declarations first, run last):
       Pembungkus `relative`-nya WAJIB mepet ke tombolnya (jebakan containing block `PopMenu`).
     - Komponennya **reusable** — kalau ada teks panjang lain yang bikin form rame, pakai ini,
       jangan tulis panel sendiri.
-  - **Field "Extra hours" pindah ke KOLOM INPUT** (cuma nongol kalau paket Extended kepilih) —
-    dia emang input, dan alesan lama dia gak berlabel (nyamain tinggi kartu) udah gak ada, jadi
-    label-nya dibalikin.
+  - **PAKET KETIGA = "12 Hours", BUKAN "Extended" LAGI** (Sep 2026, Wayan: "di charter kita
+    ganti konsep bro, jangan pakai extended pakai 12 jam aja yang max"). Efeknya:
+    - **Field "Extra hours" UDAH DIHAPUS** dari kolom input, bareng state `extra`,
+      `EXTRA_HOURS`, dan `extra` di row yang ke-simpen. Yang lama itu bikin harga baris
+      belum ketauan sampai tamu milih DUA hal, jadi kartunya gak bisa nyebut harganya
+      sendiri. Blok tetap bisa.
+    - `dur` barunya **`'long'`** (bukan `'twelve'`), nyamain nama tarif di API.
+    - Sub-baris "12 hours · around 140 km · per car up to 5" — **140 km itu 12 km/jam yang
+      SAMA** kayak dua baris lain (5j/60, 10j/120), bukan angka yang dibulet-buletin sendiri.
+    - Nama **"12 Hours"** sengaja beda pola dari "Full Day"/"Half Day": itu justru yang
+      ngebedain dia, dan "Long Day" kebaca terlalu mirip "Full Day" pas di-scan. Kalau Wayan
+      mau nama day-part, tinggal ganti `name` di `content/shared/charter.js`.
+    - Draft homepage yang nyimpen `dur:"extended"` **gak bikin error**: builder & homepage
+      dua-duanya nge-cek `CHARTER.durations.some(...)` dulu, jadi jatuh ke Full Day.
   - **Ada baris ringkasan di atas tombol** (nama paket + total). Di HP list-nya ada di ATAS field,
     jadi pas tamu nyampe tombol Book baris yang dia pilih bisa udah keluar layar — ini yang
     ngasih tau tombolnya mau nge-book apa.
@@ -1698,8 +1783,19 @@ Order **must be kept** (declarations first, run last):
   - **Isinya = 2 BARIS KOTAK** (Sep 2026, Wayan: "pakai kolom termasuk yang dibawahnya how
     charter works dan lagi satunya"), lewat blok prose baru `{ type: 'boxes', items: [...] }`:
     - Baris 1 = **What's included | Not included** · Baris 2 = **How the day works |
-      What a day can cover**. "Charter or guided tour?" TETEP selebar kartu di bawahnya —
-      satu kotak sendirian di baris 2-kolom kebaca kayak ada kotak yang ilang.
+      What a day can cover**. **"Charter or guided tour?" NUMPUK DI KOLOM KIRI**, di bawah
+      "How the day works" (Sep 2026, Wayan pilih opsi a dari 3 opsi buat ngeratain baris itu).
+      Dulu dia heading selebar kartu DI BAWAH baris — jadi ada ~80px putih di bawah kolom
+      kiri **terus masih ada konten lagi**, dan putih di tengah baris kebaca kayak bolong.
+      Numpuk di kiri, kolom kirinya jadi yang paling panjang, jadi putih sisanya (**62px**,
+      diukur) mendarat di UJUNG kartu di sebelah padding bawahnya sendiri.
+      - Caranya: item baris `boxes` boleh isi **`stack: [...]`** = dua blok di satu sel grid
+        (`Prose.jsx`). Item biasa gak kesentuh, jadi transfer & airport gak berubah.
+      - **Di HP urutan bacanya DIJAGA**: pembungkus stack-nya `max-[768px]:contents`, jadi di
+        bawah 768 dua blok itu jadi grid item sendiri dan yang belakangan dapet
+        `order-last` — urutannya tetep How → What a day can cover → Charter or guided tour?,
+        persis kayak waktu dia masih heading di bawah baris. Tanpa itu catatan penutupnya
+        nyempil di TENGAH di HP.
     - **Pasangannya dipilih dari TINGGI, bukan topik**: penjelasan 3-paragraf & daftar 7 ide
       rute itu dua blok yang tingginya paling mirip, jadi kotaknya mendarat rata. Kalau
       nambah/ngurangin isi salah satunya, cek lagi pasangannya — kotak stretch, yang pendek
@@ -1737,9 +1833,17 @@ Order **must be kept** (declarations first, run last):
     dan tiga-tiganya **berhenti di garis yang sama**. Ikon info: catatan surcharge
     GAK ke-print di halaman, nongol pas di-tap, ngambang di ATAS form (hit-test), **gak nyorong
     apa pun** (tinggi dokumen & posisi tombol Book gak gerak), gak kepotong tepi layar, Escape nutup. Desktop 1024/1280/1440: list di KIRI field
-    & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
-    paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker kosong → "Total" pas area kepilih, yang
+    & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan,
+    tombol mati sebelum 4 field keisi, kicker kosong → "Total" pas area kepilih, yang
     ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.
+    - **`verify-charter.mjs` & `verify-charterhome.mjs` ILANG dari scratchpad** (scratchpad
+      itu per-sesi). Yang ada sekarang: **`verify-r3.mjs`** (232/232, 390/768/1024/1280/1440)
+      — dia nutup bagian yang kena perubahan Sep 2026: 3 paket & NOL field Extra hours,
+      harga 12 jam 1.120.000 (dan 1.220.000 kalau pickup Canggu, dari katalog), kicker
+      "Total", halaman charter & section homepage nyebut angka yang SAMA, serah-terima
+      12 Hours dari homepage, plus form airport & picker transfer. Assertion lama soal
+      bentuk kartu (pita, harga kiri/kanan, 1 baris) **belum ada penggantinya** — kalau
+      nyentuh `charterPlanClasses`, tulis ulang harness-nya dulu.
   - **Gotcha harness**: "harga ada di samping/bawah nama" DOANG gak cukup — assertion itu lolos
     waktu namanya keremes jadi 2 baris. Ukur **nama-nya juga**: `tinggi/line-height == 1` +
     `scrollWidth == clientWidth`, dan harganya juga (1 baris). Itu yang nangkep bug badge di 320px.

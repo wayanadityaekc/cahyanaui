@@ -40,10 +40,18 @@ export default function Page() {
         sub={AIRPORT.sub}
         photo="transfer-hero.webp"
         alt="A plane reflected in the glass facade of Bali's Ngurah Rai airport terminal"
-        // Centred, the tall narrow column cut "BALI International Airport" through
-        // the middle of a word. This lands on the plane in the glass instead, which
-        // says airport without half a sign.
-        photoPos="[&>img]:object-[26%_50%]"
+        // 80%, measured against the alternatives at the new 50/50 width: it is the
+        // only offset that fits "BALI International Airport" in WHOLE. Centred, 38%
+        // and 62% all cut the word "Airport" at the right edge, and 26% - which was
+        // right while this column was a narrow 0.57:1 slot - now lands mid-sign too.
+        // Reading the sign is fine on THIS page: it is the one that owns the phrase
+        // (see the SEO split). /transfer is the page that must not show it, and it
+        // uses a different photo entirely.
+        photoPos="[&>img]:object-[80%_50%]"
+        // 50/50 on desktop (Wayan, Sep 2026). This form is one stack of
+        // full-width fields, so it gains nothing from the wider column the other
+        // two need - and the photo gets a slot it can actually be cropped into.
+        half
         details={<Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />}
       >
         <AirportTransferForm />

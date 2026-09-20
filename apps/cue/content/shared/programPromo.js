@@ -26,7 +26,10 @@ export const PROGRAM_PROMO = [
     kicker: 'Charter',
     title: 'Private Car Charter in Bali',
     text: 'Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace.',
-    img: 'road-ubud.webp',
+    // Same photo as the charter page itself (Sep 2026, Wayan: "gas samain foto
+    // promo charter bro"). road-ubud was a traffic jam, and this card sits on
+    // three listing pages selling the opposite.
+    img: 'handara-gate.webp',
     href: '/charter.html',
     cta: 'Build your charter',
   },

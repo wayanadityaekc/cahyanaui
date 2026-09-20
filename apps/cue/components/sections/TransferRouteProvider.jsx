@@ -15,6 +15,12 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState } fro
 
 const UBUD = 'Ubud';
 
+// What the OTHER side becomes when this one is set to v. Module scope on purpose:
+// it depends on nothing but v, so the setters below can keep an empty dep list.
+// An empty v only reaches it from the picker's swap(), which is setting both
+// sides in the same tick - so leave the other side alone rather than forcing Ubud.
+const facing = (v) => (other) => (!v ? other : v === UBUD ? (other === UBUD ? '' : other) : UBUD);
+
 const Ctx = createContext(null);
 
 export function useTransferRoute() {
@@ -30,6 +36,23 @@ export default function TransferRouteProvider({ children }) {
   // without a magic element id.
   const pickerRef = useRef(null);
 
+  // ONE SIDE IS ALWAYS UBUD (Sep 2026, Wayan: "kalo kita milih area dari kolom
+  // input belum bisa jalan dan di book"). Every route we price is "X - Ubud", so
+  // a pair with no Ubud in it can never have a price. The form used to let the
+  // guest build exactly that, and worse: To started at Ubud and From at the empty
+  // placeholder, so picking an area in TO alone left From empty - the priced
+  // route needs both sides, so the price stayed "Pick a route to see the price"
+  // and Book stayed dead with nothing on screen saying why. Measured before the
+  // fix: picking To = Canggu Area left from:"" and Book disabled.
+  //
+  // So choosing an area on one side puts Ubud on the other. Choosing Ubud on a
+  // side that already faces Ubud clears the opposite one back to its placeholder,
+  // so the form asks for the area instead of sitting on "Ubud -> Ubud" (which
+  // used to render the em dash and the "no fixed price for this pair" line, as if
+  // the route were the problem).
+  const pickFrom = useCallback((v) => { setFrom(v); setTo(facing(v)); }, []);
+  const pickTo = useCallback((v) => { setTo(v); setFrom(facing(v)); }, []);
+
   // Tapping a route always resets to the canonical direction (area -> Ubud),
   // even if the guest had swapped the form round - a route card names one
   // direction, so half-applying it would leave the form saying something the
@@ -42,9 +65,11 @@ export default function TransferRouteProvider({ children }) {
     if (pickerRef.current) pickerRef.current.scrollIntoView({ block: 'center' });
   }, []);
 
+  // setFrom/setTo are NOT exported: the picker has to go through pickFrom/pickTo
+  // or the invariant above can be broken from the outside again.
   const value = useMemo(
-    () => ({ from, to, setFrom, setTo, selectRoute, pickerRef, UBUD }),
-    [from, to, selectRoute]
+    () => ({ from, to, pickFrom, pickTo, selectRoute, pickerRef, UBUD }),
+    [from, to, pickFrom, pickTo, selectRoute]
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

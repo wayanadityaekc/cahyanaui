@@ -22,6 +22,25 @@ const SUB_VARIANT = {
   company: `${SECTION_TITLE_SUB} !text-left`,
 };
 
+// One box of a 'boxes' row: { title, variant?, paras?, list? }. Split out so a
+// row item can also be a STACK of these in one column (see the boxes case).
+function Box({ box }) {
+  return (
+    <InfoBox title={box.title} variant={box.variant}>
+      {(box.paras || []).map((html, p) => (
+        <p key={p} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(html) }} />
+      ))}
+      {box.list && (
+        <InfoBoxList
+          items={box.list}
+          variant={box.variant}
+          render={(item) => <span dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />}
+        />
+      )}
+    </InfoBox>
+  );
+}
+
 export default function Prose({ blocks, headingVariant = 'legal' }) {
   return blocks.map((b, i) => {
     // A --sub heading carries mt-[2.75rem] to separate it from the prose above.
@@ -74,20 +93,30 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         // variant 'no' tints it cream. Desktop two columns, mobile stacked.
         return (
           <InfoBoxes key={i}>
-            {b.items.map((box, k) => (
-              <InfoBox key={k} title={box.title} variant={box.variant}>
-                {(box.paras || []).map((html, p) => (
-                  <p key={p} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(html) }} />
-                ))}
-                {box.list && (
-                  <InfoBoxList
-                    items={box.list}
-                    variant={box.variant}
-                    render={(item) => <span dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />}
-                  />
-                )}
-              </InfoBox>
-            ))}
+            {b.items.map((box, k) =>
+              // An item may hold a STACK of blocks instead of one, which puts two
+              // blocks in the same grid cell (Sep 2026, Wayan picked option a for
+              // levelling the charter row: "Charter or guided tour?" moved out of
+              // its own full-width heading and under "How the day works"). The gap
+              // between the two matches the grid's own column gap.
+              box.stack ? (
+                // display:contents below the grid's own breakpoint, so the stacked
+                // blocks become grid items in their own right once the row is a
+                // single column - which lets the trailing ones take order-last and
+                // keep the phone's reading order (the two main blocks first, the
+                // closing note after them) exactly as it was before the stack
+                // existed. On desktop the wrapper is a real flex column again.
+                <div className="flex flex-col gap-[var(--space-4)] max-[768px]:contents" key={k}>
+                  {box.stack.map((sub, s2) => (
+                    <div className={s2 === 0 ? undefined : 'max-[768px]:order-last'} key={s2}>
+                      <Box box={sub} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Box box={box} key={k} />
+              ),
+            )}
           </InfoBoxes>
         );
       case 'back':

@@ -41,7 +41,20 @@ const SUB = 'mt-3 mb-0 font-body text-body leading-[var(--lh-body)] text-green m
 // the track past the viewport and body's overflow-x:clip silently cuts the right
 // edge off. The airport form did exactly that at 320px (316px of form in a 288px
 // column). minmax(0,...) lets the track shrink and the form wrap instead.
-const GRID = 'mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 min-[1200px]:grid-cols-[2.4fr_1fr] min-[1200px]:gap-8 min-[1200px]:items-stretch';
+const GRID = 'mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 min-[1200px]:gap-8 min-[1200px]:items-stretch';
+// The charter and transfer default. Both strings are written out in full because
+// Tailwind scans source text - a class built by interpolation is never generated.
+const GRID_COLS = 'min-[1200px]:grid-cols-[2.4fr_1fr]';
+// HALF AND HALF, for /airport-transfer only (Sep 2026, Wayan: "di desktop bagi 2
+// aja, 50% kolom input 50% image nya"). That page's form is a single stack of
+// full-width fields, so it has nothing that needs the extra width - and at
+// 2.4fr its photo column was only ~330px, a 0.57:1 slot that no landscape photo
+// crops into well. Charter and transfer KEEP 2.4fr: the charter plan rows wrap
+// their sub line under ~790px of form column, and an even split at 1200 gives
+// them ~576px (measured). So this is a real difference between the three pages -
+// the only one besides the photo - and it is here, in the shared shell, rather
+// than in a second copy of it.
+const GRID_COLS_HALF = 'min-[1200px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]';
 // 4:3 on a phone, then it simply fills the row on desktop. min-h-0 lets the
 // stretched track actually size it instead of the intrinsic image height.
 //
@@ -77,7 +90,7 @@ const DETAILS =
   `mt-[var(--section-gap)] ${INFO_CARD_BODY} [&_p]:max-w-[var(--container-read)] ` +
   '[&>h2]:!text-left';
 
-export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', embedded, details, children }) {
+export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', half = false, embedded, details, children }) {
   // On /programs this renders inside a tab under that page's own H1, so the title
   // steps down to an H2 rather than giving the page a second H1.
   const H = embedded ? 'h2' : 'h1';
@@ -86,7 +99,7 @@ export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:o
       <div className={INNER}>
         <H className={`${SUBHERO_TITLE} m-0 text-left`}>{title}</H>
         <p className={SUB}>{sub}</p>
-        <div className={GRID}>
+        <div className={`${GRID} ${half ? GRID_COLS_HALF : GRID_COLS}`}>
           <div className="min-w-0" data-formhero-form>{children}</div>
           <div className={`${PHOTO} ${photoPos}`} data-formhero-photo>
             {/* Above the fold, so it loads eagerly - no lazy. */}

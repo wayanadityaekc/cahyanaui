@@ -146,6 +146,27 @@ When unsure, ask first (keep it short).
   (`PRICE` = amber) nempel LANGSUNG di elemen `[data-price]`, jadi `text-gold` di
   elemen pembungkus KALAH. Class `price` tetep dibawa (itu hook, bukan warna).
 
+**Judul section — TANPA GARIS BAWAH** (Sep 2026, Wayan: "hilangin garis di bawah semua
+title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis itu lagi"):
+- Tiap judul section dulu bawa bar emas **48×3** di `::after`, 10px di bawah teksnya.
+  **Udah dihapus dari SELURUH web.** Jangan dipasang lagi di komponen baru.
+- Ada **3 tempat** yang masing-masing gambar versinya sendiri, ketiganya udah bersih:
+  `ui/sectionTitle.js` (`SECTION_TITLE`/`_SUB` — hampir semua judul), `ui/carouselSection.js`
+  (`CAROUSEL_TITLE` — 2 carousel di bawah halaman tour), `ui/itnClasses.js`
+  (`ITN_SUBTITLE` — panel itinerary). Kalau nemu bar emas lagi di bawah judul, cek tiga file itu.
+- **`ST_LEFT` sekarang cuma `!text-left`.** Dia dulu ada buat nggeser underline yang
+  ke-center ke tepi kiri; sisanya (`after:!left-0`, `after:![transform:none]`,
+  `after:!content-none` di `Prose` varian `company`, dan di `FormHero`) udah dibuang.
+- **`relative` ikut dibuang** dari `ST_CORE` + `ITN_SUBTITLE` — itu cuma containing block
+  buat bar-nya.
+- **Jarak NOL berubah**, itu disengaja: yang di `sectionTitle` bar-nya `absolute` jadi emang
+  gak makan ruang; yang di `CAROUSEL_TITLE` **in-flow** (block + `mt-2`), jadi 11px-nya
+  (8px margin + 3px bar) dibalikin sebagai `pb-[11px]`. **Padding, bukan margin** — margin di
+  situ ke-collapse dan section-nya jadi 11px lebih pendek (ke-ukur). `pb-[0.45rem]` di
+  `ITN_SUBTITLE` juga **DIBIARIN** dengan alasan sama.
+- Diukur before/after, 15 halaman × 390 & 1280: **bar 60 → 0**, **861 elemen gak gerak**,
+  1 geser 1px (pembulatan), **tinggi dokumen gak berubah di semua halaman**.
+
 **Section dividers:**
 - Thin gold **inset** line (margin on the sides) — via a `::before` pseudo-element,
   width `min(1100px, 90%)` centered, color `rgba(201,164,92,0.4)`.
@@ -799,7 +820,7 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   - **Paragraf lepas di-cap `--container-read`** tapi rata KIRI. Kontainernya 1200;
     paragraf selebar itu ±190 karakter. Kompromi yang sama kayak artikel guide. Cap-nya
     **gak pernah kena** di dalam `InfoBox` (kolomnya udah di bawah 720).
-  - **Judul "X Details" ikut ke KIRI** (underline-nya juga, pola `ST_LEFT`). Dulu
+  - **Judul "X Details" ikut ke KIRI** (pola `ST_LEFT`). Dulu
     ke-center - masuk akal waktu dia baris pertama kartunya sendiri, kebaca kayak sisa
     begitu semua di atasnya rata kiri.
   - `INFO_SECTION_DETAIL` + `INFO_CARD` **TETEP ADA** - masih dipakai `ListingPage`
@@ -865,7 +886,7 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
     NaN; cek 1 baris pakai tinggi + `scrollWidth == clientWidth` (chip-nya
     `whitespace-nowrap`, jadi wrap ke-detect sebagai overflow).
 - **Baris ke-center di `/transfer` UDAH DIKIRIKAN**: judul "Popular routes"
-  (+ underline-nya, pola `ST_LEFT`) dan catatan "All prices per car...". Itu sisa dari
+  (pola `ST_LEFT`) dan catatan "All prices per car...". Itu sisa dari
   waktu kartunya masih ke-center; begitu semua di sekelilingnya rata kiri, dua itu
   nyempil sendiri. (Baris ketiga, "Flying in or out?", ikut dikirikan terus **dihapus**
   sama sekali - lihat section SEO.)
@@ -1088,7 +1109,8 @@ Order **must be kept** (declarations first, run last):
   `--r-xl` 22 (modal besar, hero card, charter box, sudut atas sheet) · `--r-pill` 999
   (tombol/chip pill/toggle). Sudut satu-sisi (mis. sheet atas) tetep pola-nya, cuma nilainya
   di-token (`var(--r-xl) var(--r-xl) 0 0`). **DIBIARIN** (jangan ikut di-token): `50%`
-  (bulat/avatar), `2px`/`3px` (bar tipis mis. underline judul `.section__title::after`), `0`.
+  (bulat/avatar), `2px`/`3px` (bar tipis), `0`. (Contoh lama buat `2px`/`3px` itu underline
+  judul section - **udah gak ada**, lihat "Judul section" di Design system.)
 - **Shadow (token, Agu 2026, Wayan minta subtle)**: 4 tingkat elevasi neutral + focus-ring,
   sengaja HALUS (opacity rendah) biar kartu "nempel halus", bukan ngambang berat:
   `--shadow-sm` `0 1px 2px /.04` (chip/kontrol kecil) · `--shadow-md` `0 2px 8px /.05`

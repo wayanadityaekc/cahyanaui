@@ -14,11 +14,12 @@ import { unlinkHiddenTours } from '@/lib/routes';
 // `.guide-article-page` / `.company-page .guide-article` descendant overrides):
 //   'legal'   (default) = centered + underline (base .section__title--sub)
 //   'guide'   = left-aligned + underline shifted left
-//   'company' = left-aligned + underline removed (Terms-style in Our Company)
+//   'company' = left-aligned (Terms-style in Our Company). It used to also switch
+//               the underline off; no section title has one any more.
 const SUB_VARIANT = {
   legal: SECTION_TITLE_SUB,
   guide: `${SECTION_TITLE_SUB} ${ST_LEFT}`,
-  company: `${SECTION_TITLE_SUB} !text-left after:!content-none`,
+  company: `${SECTION_TITLE_SUB} !text-left`,
 };
 
 export default function Prose({ blocks, headingVariant = 'legal' }) {

@@ -63,12 +63,13 @@ const PHOTO =
 // LEFT, so its left edge still lines up with everything above it. The cap never
 // binds inside an InfoBox, whose columns are narrower than 720 already.
 //
-// The "X Details" heading goes left too. It was centred with a centred underline,
-// which read fine as the first line of its own card and reads like a leftover now
-// that everything above it is left-aligned.
+// The "X Details" heading goes left too. It was centred, which read fine as the
+// first line of its own card and reads like a leftover now that everything above
+// it is left-aligned. (It had a centred underline as well; every section title on
+// the site has since lost that - see ui/sectionTitle.)
 const DETAILS =
   `mt-[var(--section-gap)] ${INFO_CARD_BODY} [&_p]:max-w-[var(--container-read)] ` +
-  '[&>h2]:!text-left [&>h2]:after:!left-0 [&>h2]:after:![transform:none]';
+  '[&>h2]:!text-left';
 
 export default function FormHero({ title, sub, photo, alt, embedded, details, children }) {
   // On /programs this renders inside a tab under that page's own H1, so the title

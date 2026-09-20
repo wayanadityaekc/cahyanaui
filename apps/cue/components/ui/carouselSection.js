@@ -12,6 +12,11 @@ export const CAROUSEL_SECTION =
   'before:content-[""] before:absolute before:top-0 before:left-1/2 before:[transform:translateX(-50%)] ' +
   'before:w-[min(1100px,90%)] before:h-px before:bg-[rgba(34,32,28,0.4)]';
 
+// The 48x3 gold bar under this heading is gone with every other one (Sep 2026,
+// Wayan: "kita gak pakai garis itu lagi"). It was an in-flow block with mt-2, so
+// it carried 11px of the gap down to the cards (8px mt-2 + the 3px bar itself).
+// pb-[11px] - that exact sum, not a rounded rem - puts it back INSIDE
+// the box - a margin there collapses away and the section came out 11px shorter
+// (measured), padding cannot.
 export const CAROUSEL_TITLE =
-  "font-body font-semibold text-h3 leading-[var(--lh-heading)] text-green m-0 " +
-  "[&::after]:content-[''] [&::after]:block [&::after]:w-12 [&::after]:h-[3px] [&::after]:rounded-[2px] [&::after]:bg-gold [&::after]:mt-2";
+  'font-body font-semibold text-h3 leading-[var(--lh-heading)] text-green m-0 pb-[11px]';

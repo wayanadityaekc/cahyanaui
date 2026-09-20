@@ -20,6 +20,7 @@ import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
 import { baseTotal, PAY_COPY } from '@/lib/payment';
+import PayPalCheckout from './PayPalCheckout';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -64,7 +65,11 @@ export default function BookConfirmModal() {
 
   // Checkpoint 1: the guest's payment choice is held here so the step can be
   // driven and screenshotted. Nothing acts on it yet.
-  const [payOption, setPayOption] = useState('later');
+  const [payOption, setPayOption] = useState('deposit');
+  // Set once the booking is saved as pending; switches the modal to the payment
+  // step. The booking exists from this point whether or not payment succeeds.
+  const [bookingRef, setBookingRef] = useState('');
+  const [paid, setPaid] = useState(false);
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
@@ -188,6 +193,10 @@ export default function BookConfirmModal() {
         if (d.account) setAccount(d.account);
       }
       if (typeof ctx.onSuccess === 'function') ctx.onSuccess();
+      // The booking is saved as 'pending'. It is NOT confirmed yet - that only
+      // happens when PayPal's webhook says the money cleared - so the modal moves
+      // to the payment step rather than showing a success screen.
+      setBookingRef(d.ref || '');
       setDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
@@ -313,10 +322,12 @@ export default function BookConfirmModal() {
               option={payOption}
               onOption={setPayOption}
               /* baseTotal, not priced.total: the quote already subtracts the
-                 code's own percentage, and in this model a code is worth nothing
-                 on its own - counting it here too would discount twice. */
+                 code's own percentage, and here the code is its own option -
+                 counting it in both places would discount twice. */
               total={baseTotal(priced)}
               symbol={(priced && priced.symbol) || '$'}
+              currency={currency || 'USD'}
+              stay={stay || ''}
               hasReferral={!!(priced && priced.referral)}
               referral={f.referral}
               onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
@@ -357,11 +368,35 @@ export default function BookConfirmModal() {
             </button>
           </div>
         ) : (
-          <div className="text-center">
-            <div className={SUCCESS_ICON}>&#10003;</div>
-            <h3 className={TITLE}>Booking Received!</h3>
-            <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
-            <button className={BTN} onClick={closeBooking}>Done</button>
+          <div className={paid ? 'text-center' : ''}>
+            {paid ? (
+              <>
+                <div className={SUCCESS_ICON}>&#10003;</div>
+                <h3 className={TITLE}>Payment received</h3>
+                <p className={SUCCESS_TEXT}>
+                  Thank you. Your confirmation email is on its way - it is sent once the payment clears.
+                </p>
+                <button className={BTN} onClick={closeBooking}>Done</button>
+              </>
+            ) : (
+              <>
+                <h3 className={TITLE}>Almost there - just the payment</h3>
+                <p className={SUCCESS_TEXT}>
+                  Your booking is saved{bookingRef ? ` (${bookingRef})` : ''}. It is confirmed once this payment
+                  goes through. Nothing is lost if you close this - you can pay later.
+                </p>
+                {bookingRef ? (
+                  <PayPalCheckout
+                    bookingRef={bookingRef}
+                    option={payOption}
+                    copy={PAY_COPY}
+                    onPaid={() => setPaid(true)}
+                  />
+                ) : (
+                  <p className="text-small text-err">We could not read your booking reference. Please contact us.</p>
+                )}
+              </>
+            )}
           </div>
         )}
     </ModalPresence>,

@@ -2,6 +2,11 @@
 
 import { ChevronLeft, MessageCircle, X } from 'lucide-react';
 import { useEffect } from 'react';
+import DateField from '@/components/ui/DateField';
+import DragSheet from '@/components/ui/DragSheet';
+import SheetPresence from '@/components/ui/SheetPresence';
+import useMobile from '@/components/ui/useMobile';
+import Select from '@/components/ui/Select';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
@@ -18,6 +23,7 @@ export default function BookingSheet() {
   const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
   const { currency, format } = useCurrency();
   const { setStay } = useCart();
+  const isPhone = useMobile('(max-width: 639px)');
 
   // Reaching the summary is the guest settling on a villa and dates, so that is
   // the moment the stay belongs in My Booking - not on every keystroke in step
@@ -38,10 +44,6 @@ export default function BookingSheet() {
   const breakdown = priceBreakdown(villa.slug, booking.checkIn, booking.checkOut);
   const canContinue = booking.checkIn && booking.checkOut && breakdown && breakdown.nights > 0;
 
-  // Hooks above, bail-out here: an early return before them would change the
-  // hook order between renders.
-  if (!isOpen) return null;
-
   const message = breakdown
     ? [
         `Hi! I'd like to book ${villa.name}.`,
@@ -55,16 +57,33 @@ export default function BookingSheet() {
     : `Hi! I'd like to ask about booking ${villa.name}.`;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
-      <button
-        type="button"
-        aria-label="Close booking"
-        onClick={closeBooking}
-        className="absolute inset-0 bg-black/45 cursor-default"
-      />
+    <SheetPresence
+      open={isOpen}
+      onClose={closeBooking}
+      shell="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/45"
+      box="relative w-full sm:max-w-md"
+    >
+      {/* enabled only where this actually IS a bottom sheet. Above 640px it
+          becomes a centred card, and dragging a centred card downwards to
+          dismiss reads as a bug, not a gesture. DragSheet's own handle hides
+          at 993px, which is CUE's sheet breakpoint, not this one. */}
+      <DragSheet
+        enabled={isPhone}
+        onDismiss={closeBooking}
+        handleClassName="absolute top-0 left-0 right-0 h-5 z-20 [touch-action:none] cursor-grab active:cursor-grabbing"
+        className="relative bg-white rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto max-[639px]:pt-5"
+      >
+        {/* The grab pill the handle sits over. Mobile only - there is nothing
+            to grab on a centred card.
 
-      <div className="relative w-full sm:max-w-md bg-white rounded-t-xl sm:rounded-xl shadow-xl max-h-[92vh] overflow-y-auto animate-[sheetIn_0.25s_ease-out]">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 bg-white z-10">
+            pointer-events-none is load-bearing, not tidiness: DragSheet's
+            invisible grab area is z-[2] and this pill sat above it at z-[3],
+            so a finger landing on the one visible thing that says "drag me"
+            hit the decoration and the gesture never started. Caught by the
+            harness - the swipe-to-dismiss test failed while everything looked
+            right on screen. */}
+        {isPhone && <span className="absolute top-2 left-1/2 -translate-x-1/2 z-30 w-10 h-1 rounded-pill bg-line pointer-events-none" aria-hidden="true" />}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 max-[639px]:top-5 bg-white z-10">
           <div className="flex items-center gap-2">
             {step === 'summary' && (
               <button type="button" onClick={goToDetails} aria-label="Back" className="text-gold cursor-pointer">
@@ -94,62 +113,52 @@ export default function BookingSheet() {
             {VILLA_LIST.length > 1 && (
               <div>
                 <p className="eyebrow">Villa</p>
-                <div className="field-shell">
-                  <select
-                    value={villa.slug}
-                    onChange={(e) => updateBooking({ villaSlug: e.target.value })}
-                  >
-                    {VILLA_LIST.map((v) => (
-                      <option key={v.slug} value={v.slug}>{v.name}</option>
-                    ))}
-                  </select>
-                </div>
+                <Select
+                  id="bk-villa"
+                  label="Villa"
+                  value={villa.slug}
+                  onChange={(v) => updateBooking({ villaSlug: v })}
+                  options={VILLA_LIST.map((v) => ({ value: v.slug, label: v.name }))}
+                />
               </div>
             )}
 
             <div>
               <p className="eyebrow">Stay dates</p>
               <div className="grid grid-cols-2 gap-3">
-                <div className="field-shell">
-                  <div className="w-full">
-                    <label htmlFor="bk-checkin">Check-in</label>
-                    <input
-                      id="bk-checkin"
-                      type="date"
-                      value={booking.checkIn}
-                      onChange={(e) => updateBooking({ checkIn: e.target.value })}
-                      className={booking.checkIn ? undefined : 'is-empty'}
-                    />
-                  </div>
+                <div className="min-w-0">
+                  <label className="" htmlFor="bk-checkin">Check-in</label>
+                  <DateField
+                    id="bk-checkin"
+                    label="Check-in"
+                    value={booking.checkIn}
+                    onChange={(v) => updateBooking({ checkIn: v })}
+                    placeholder="Add date"
+                  />
                 </div>
-                <div className="field-shell">
-                  <div className="w-full">
-                    <label htmlFor="bk-checkout">Check-out</label>
-                    <input
-                      id="bk-checkout"
-                      type="date"
-                      value={booking.checkOut}
-                      min={booking.checkIn || undefined}
-                      onChange={(e) => updateBooking({ checkOut: e.target.value })}
-                      className={booking.checkOut ? undefined : 'is-empty'}
-                    />
-                  </div>
+                <div className="min-w-0">
+                  <label className="" htmlFor="bk-checkout">Check-out</label>
+                  <DateField
+                    id="bk-checkout"
+                    label="Check-out"
+                    value={booking.checkOut}
+                    min={booking.checkIn || undefined}
+                    onChange={(v) => updateBooking({ checkOut: v })}
+                    placeholder="Add date"
+                  />
                 </div>
               </div>
             </div>
 
             <div>
               <p className="eyebrow">Guests</p>
-              <div className="field-shell">
-                <select
-                  value={booking.guests}
-                  onChange={(e) => updateBooking({ guests: Number(e.target.value) })}
-                >
-                  {Array.from({ length: villa.guests }, (_, i) => i + 1).map((n) => (
-                    <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                id="bk-guests"
+                label="Guests"
+                value={String(booking.guests)}
+                onChange={(v) => updateBooking({ guests: Number(v) })}
+                options={Array.from({ length: villa.guests }, (_, i) => i + 1).map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
+              />
             </div>
 
             <button
@@ -205,7 +214,7 @@ export default function BookingSheet() {
             </p>
           </div>
         )}
-      </div>
-    </div>
+      </DragSheet>
+    </SheetPresence>
   );
 }

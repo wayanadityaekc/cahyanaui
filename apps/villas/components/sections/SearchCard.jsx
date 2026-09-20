@@ -2,13 +2,26 @@
 
 import { useState } from 'react';
 import { Search } from 'lucide-react';
+import DateField from '@/components/ui/DateField';
+import Select from '@/components/ui/Select';
 import { useBooking } from '@/components/providers/BookingProvider';
 
-// Hero "Search" card (overlaps the hero photo edge, per the mockup). Feeds
-// straight into the booking flow rather than a separate search results
-// page — with two villas total, "search" here means "open Book Your Stay
-// pre-filled with these dates/guests". Mobile stacks every field into its
-// own full-width row (grid-cols-1); desktop stays a single 4-column row.
+// Hero "Search" card. Feeds straight into the booking flow rather than a
+// results page — with two villas, "search" means "open Book Your Stay with
+// these dates and guests already in it".
+//
+// The three fields are CUE's custom controls, not native <select> and
+// <input type="date">. Native ones render as a different widget on every
+// platform and show an American "mm/dd/yyyy" hint to guests who do not write
+// dates that way; CUE replaced every native control site-wide for exactly
+// that. The date picker is a calendar, and check-out cannot be set before
+// check-in because DateField takes a `min`.
+//
+// Mobile stacks each field into its own full-width row; desktop stays one
+// four-column row.
+const FIELD_LABEL = 'block mb-1 caps';
+const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
+
 export default function SearchCard() {
   const { openBooking } = useBooking();
   const [checkIn, setCheckIn] = useState('');
@@ -16,42 +29,41 @@ export default function SearchCard() {
   const [guests, setGuests] = useState(2);
 
   return (
-    <div className="card relative z-10 mx-auto -mt-10 sm:-mt-12 max-w-4xl grid grid-cols-1 sm:grid-cols-4 gap-2 p-3">
-      <div className="field-shell">
-        <div className="w-full">
-          <label htmlFor="search-checkin">Check-in</label>
-          <input
-            id="search-checkin"
-            type="date"
-            value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)}
-            className={checkIn ? undefined : 'is-empty'}
-          />
-        </div>
+    <div className="card relative z-10 mx-auto -mt-10 sm:-mt-12 max-w-4xl grid grid-cols-1 sm:grid-cols-4 gap-3 p-3 sm:items-end">
+      <div className="min-w-0">
+        <label className={FIELD_LABEL} htmlFor="search-checkin">Check-in</label>
+        <DateField
+          id="search-checkin"
+          label="Check-in"
+          value={checkIn}
+          onChange={setCheckIn}
+          placeholder="Add date"
+        />
       </div>
-      <div className="field-shell">
-        <div className="w-full">
-          <label htmlFor="search-checkout">Check-out</label>
-          <input
-            id="search-checkout"
-            type="date"
-            value={checkOut}
-            min={checkIn || undefined}
-            onChange={(e) => setCheckOut(e.target.value)}
-            className={checkOut ? undefined : 'is-empty'}
-          />
-        </div>
+
+      <div className="min-w-0">
+        <label className={FIELD_LABEL} htmlFor="search-checkout">Check-out</label>
+        <DateField
+          id="search-checkout"
+          label="Check-out"
+          value={checkOut}
+          onChange={setCheckOut}
+          min={checkIn || undefined}
+          placeholder="Add date"
+        />
       </div>
-      <div className="field-shell">
-        <div className="w-full">
-          <label htmlFor="search-guests">Guests</label>
-          <select id="search-guests" value={guests} onChange={(e) => setGuests(Number(e.target.value))}>
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>
-            ))}
-          </select>
-        </div>
+
+      <div className="min-w-0">
+        <label className={FIELD_LABEL} htmlFor="search-guests">Guests</label>
+        <Select
+          id="search-guests"
+          label="Guests"
+          value={String(guests)}
+          onChange={(v) => setGuests(Number(v))}
+          options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
+        />
       </div>
+
       <button
         type="button"
         className="btn btn-cta"

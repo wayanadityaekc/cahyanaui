@@ -6,6 +6,7 @@ import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
+import DateField from '@/components/ui/DateField';
 import { BAR_SHELL, BAR_CARD } from '@/components/ui/stickyBar';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
@@ -143,30 +144,26 @@ export default function VillaDetail({ villa }) {
               </div>
 
               <div className="grid grid-cols-2 gap-2 mt-5">
-                <div className="field-shell">
-                  <div className="w-full">
-                    <label htmlFor={`${villa.slug}-checkin`}>Check-in</label>
-                    <input
-                      id={`${villa.slug}-checkin`}
-                      type="date"
-                      value={checkIn}
-                      onChange={(e) => setCheckIn(e.target.value)}
-                      className={checkIn ? undefined : 'is-empty'}
-                    />
-                  </div>
+                <div className="min-w-0">
+                  <label className="" htmlFor={`${villa.slug}-checkin`}>Check-in</label>
+                  <DateField
+                    id={`${villa.slug}-checkin`}
+                    label="Check-in"
+                    value={checkIn}
+                    onChange={setCheckIn}
+                    placeholder="Add date"
+                  />
                 </div>
-                <div className="field-shell">
-                  <div className="w-full">
-                    <label htmlFor={`${villa.slug}-checkout`}>Check-out</label>
-                    <input
-                      id={`${villa.slug}-checkout`}
-                      type="date"
-                      value={checkOut}
-                      min={checkIn || undefined}
-                      onChange={(e) => setCheckOut(e.target.value)}
-                      className={checkOut ? undefined : 'is-empty'}
-                    />
-                  </div>
+                <div className="min-w-0">
+                  <label className="" htmlFor={`${villa.slug}-checkout`}>Check-out</label>
+                  <DateField
+                    id={`${villa.slug}-checkout`}
+                    label="Check-out"
+                    value={checkOut}
+                    min={checkIn || undefined}
+                    onChange={setCheckOut}
+                    placeholder="Add date"
+                  />
                 </div>
               </div>
 

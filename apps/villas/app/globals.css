@@ -329,39 +329,6 @@
   .badge-amber { background: var(--color-amber); color: #fff; }
   .badge-cta { background: var(--color-cta); color: #fff; }
 
-  .field-shell {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 0.9rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-line);
-    background: #fff;
-  }
-  .field-shell label {
-    display: block;
-    font-size: var(--text-label);
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-  .field-shell input,
-  .field-shell select {
-    width: 100%;
-    font-family: var(--font-body);
-    font-size: var(--text-field);
-    color: var(--color-gold);
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
-  .field-shell input::-webkit-calendar-picker-indicator { cursor: pointer; }
-
-  /* Empty date field shows the mm/dd/yyyy format hint - lighter/muted so it
-     doesn't read as an already-filled value, same weight as it'll get once
-     a real date is picked (input.is-empty toggled off by the component). */
-  .field-shell input[type="date"].is-empty { color: var(--color-muted); }
 }
 
 /* =====================================================================
@@ -386,11 +353,6 @@
   }
 
   .stars-amber { color: var(--color-amber); letter-spacing: 0.1em; }
-}
-
-@keyframes sheetIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
 }
 
 /* =====================================================================

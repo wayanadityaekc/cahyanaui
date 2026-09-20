@@ -1064,6 +1064,67 @@ Aturan mainnya (jangan diubah tanpa ngerti kenapa):
   `alignSideToFirstPhoto()`/`--side-offset` di atasnya). Berlaku ke SEMUA `.section__title`
   yang landing di `.tour-layout__main`, bukan cuma "What You'll Do" doang (biar konsisten).
 
+## Our Company + My Trips = SATU CANGKANG RAIL (Sep 2026)
+Wayan: "gua mau sidebar sticky, page my trip dan our company akan menggunakan layout yang
+sama ... gua mau page our company kayak page email di desktop, memiliki stiky sidebar dan
+sidebarnya kelihatan strong dengan konten di tengah". Dia pilih **opsi A** dari sheet 3 rail,
+terus **HP-3** dari sheet 3 bentuk HP.
+- **Class-nya di `components/ui/railClasses.js`**, bukan ditulis di komponen - My Trips bakal
+  pakai yang sama. **`OurCompany.jsx` udah pakai; My Trips BELUM** (nunggu keputusan Wayan
+  soal Total + Make Payment ditaro di mana, lihat di bawah).
+- **DESKTOP = satu kotak berbingkai**: rail cream 248px di kiri + kolom konten putih.
+  Baris aktif = **pill putih terangkat** (bg putih + border + `--shadow-sm`) - rail-nya udah
+  cream, jadi "keangkat keluar dari tint" itu yang kebaca sebagai kepilih.
+  - **Rail-nya gak punya tinggi sendiri.** Dia flex child di `items-stretch`, jadi cream-nya
+    otomatis ngisi setinggi kotak; yang `sticky` itu MENU di dalamnya. Jangan kasih
+    `h-[100vh-...]` ke rail-nya - itu bug lama yang bikin lubang putih di halaman pendek.
+- **JEBAKAN BESAR: `overflow-hidden` DI FRAME BIKIN `position:sticky` MATI TOTAL.**
+  Elemen sticky nempel ke **scroll container terdekat**, dan `overflow:hidden` bikin frame-nya
+  JADI scroll container - jadi menunya ke-scroll ikut halaman, gak pernah pin di bawah header.
+  Diem-diem aja, gak ada error. Pakai **`overflow-clip`**: sama-sama motong cream ke sudut
+  bunder, TAPI gak bikin scroll container. (Safari <16 jatuh ke `visible` = sudutnya kotak,
+  halamannya tetep jalan.) Ke-tangkep `verify-rail`, mata gak bakal nyadar.
+- **Rail baca `--header-h` (live), BUKAN `--header-h-max`** - dia harus NEMPEL ke bawah
+  navbar. Padding-top halamannya tetep `--header-h-max` (aturan lama, jangan ketuker).
+- **HP (<=992px) = rail JADI LAYAR PERTAMA** ("HP-3"): mendarat = daftar 6 section full-width
+  + chevron, tap -> kontennya kebuka + baris **back**. Yang kebawa dari desktop cuma ISINYA
+  (ikon, pemisah About/Legal, label section), bukan bentuknya - di 390px gak ada ruang kolom.
+  - **`reading` state WAJIB `false` di initial state**, hash dibaca di `useEffect`. Ini static
+    export, satu HTML dipakai HP & desktop - nilai yang cuma ada di browser bikin render
+    pertama beda sama hasil pre-render.
+  - **Navbar -> `/our-company.html` (tanpa hash) = mendarat di DAFTAR**; **footer -> `#faq`
+    dkk = mendarat LANGSUNG di kontennya**, gak lewat daftar. Itu disengaja & dijaga harness.
+  - **Back ikut ngapus hash** (`replaceState` ke pathname): kalau nggak, reload atau link
+    yang di-share bakal diem-diem buka lagi section yang barusan ditinggal.
+- **6 section TETEP di DOM semua** (crawler baca semuanya), cuma satu yang keliatan lewat
+  atribut `hidden` - itu pola lama, jangan diganti jadi conditional render.
+- **GOTCHA `<span>` pemisah grup**: `h-px` di elemen **inline** gak ngegambar apa-apa. Di rail
+  desktop dia kebetulan keliatan (parent-nya `flex`, jadi ke-blockify); di daftar HP parent-nya
+  div biasa, jadi **garisnya ilang diam-diam**. WAJIB `block`.
+- **Tombol "Chat on WhatsApp" di rail = `w-full`**, bukan inline. Label 16 karakter di kolom
+  248px itu cuma sejengkal dari nyembul keluar kartu - di-stretch = failure mode-nya ilang,
+  bukan ditambal angka pas-pasan. Di HP balik `inline-flex` (kartunya lebar).
+- Verifikasi: **`verify-rail.mjs`** di scratchpad (99/99) - desktop 1024/1280/1440: rail 248 &
+  cream & setinggi frame, menu **beneran pin di `--header-h` sesudah di-scroll**, konten gak
+  nabrak rail, prosa <=720, baris aktif putih+border, garis pemisah keliatan, tombol help
+  1 baris & gak nyembul kartunya, 6 section di DOM, halaman gak melar. HP 320/390/430: mendarat
+  di daftar, tap = konten + back + hash, back = balik ke daftar + hash bersih, deep link
+  `#terms` langsung ke konten, garis pemisah keliatan, gak melar.
+  - **Gate-nya dites pakai 3 bug aslinya** (overflow-hidden, span inline, rail 228px).
+  - **PELAJARAN harness**: assertion "lebar rail == 248" itu **tautologi** - dia cuma ngulang
+    angka yang gua set sendiri, dan pas rail 228 dia "nangkep" bug yang salah. Yang beneran
+    ngukur itu **containment** (`btn.right <= card.right - padding`). Versi pertama cek-nya
+    `scrollWidth-clientWidth` di TOMBOLNYA - dan itu selalu 0, karena `whitespace-nowrap`
+    bikin tombolnya melar keluar KARTU, bukan overflow ke dalam dirinya sendiri. Jadi dia
+    lapor lolos di 248 padahal masih nyembul 2.7px. **Kalau assertion-nya cuma ngulang angka
+    yang lu tulis, itu bukan tes.**
+
+**Yang MASIH NUNGGU WAYAN**: di My Trips ada **Total + Make Payment**, dan Our Company gak punya
+padanannya. 3 pilihan yang udah ditawarin: (1) ikut di rail kiri bawah menu (sticky, selalu
+keliatan - rekomendasi gua), (2) kolom kanan sendiri jadi 3 kolom, (3) tetep di dalam konten
+kayak sekarang. **Jangan konversi My Trips sebelum ini dijawab.**
+
+
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**

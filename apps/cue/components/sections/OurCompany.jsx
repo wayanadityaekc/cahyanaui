@@ -1,38 +1,41 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CatDropdown, { CAT_ITEM, CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
+import {
+  Building2, Mail, HelpCircle, FileText, Shield, XCircle,
+  ChevronRight, ChevronLeft, MessageCircle,
+} from 'lucide-react';
+import {
+  RAIL_PAGE, RAIL_FRAME, RAIL_ASIDE, RAIL_STICK, RAIL_LABEL, railItem, RAIL_SPLIT,
+  RAIL_MAIN, RAIL_READ, RAIL_MLIST, RAIL_MLABEL, railMobileItem, RAIL_MCHEV, RAIL_BACK,
+  RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN,
+} from '@/components/ui/railClasses';
+import { WHATSAPP_NUMBER } from '@/lib/constants';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
 import { FAQ } from '@/content/shared/faq';
 import Prose from '@/components/prose/Prose';
 
+// Every section stays in the DOM at once (good for crawlers - they read all six,
+// not just the default) but only one is visible, via the `hidden` attribute.
+// `split: true` starts the second group: the first three are about us, the last
+// three are the small print, and six unbroken rows read as one long list.
 const TABS = [
-  { id: 'about', label: 'About Us' },
-  { id: 'contact', label: 'Contact' },
-  { id: 'faq', label: 'FAQ' },
-  { id: 'terms', label: 'Terms & Conditions' },
-  { id: 'privacy', label: 'Privacy Policy' },
-  { id: 'cancellation', label: 'Cancellation & Refund Policy' },
+  { id: 'about', label: 'About Us', Icon: Building2 },
+  { id: 'contact', label: 'Contact', Icon: Mail },
+  { id: 'faq', label: 'FAQ', Icon: HelpCircle },
+  { id: 'terms', label: 'Terms & Conditions', Icon: FileText, split: true },
+  { id: 'privacy', label: 'Privacy Policy', Icon: Shield },
+  { id: 'cancellation', label: 'Cancellation & Refund', Icon: XCircle },
 ];
 
-// Rombak total (Sep 2026, Wayan): satu page, SEMUA section di DOM sekaligus
-// (bagus buat SEO - crawler baca semuanya, bukan cuma tab default) tapi cuma
-// satu yang keliatan lewat `hidden` (UA default [hidden]{display:none}) -
-// pindah section WAJIB klik tab, gak bisa di-scroll nembus ke section lain
-// (section yang hidden = 0 tinggi, gak ada apa-apa buat di-scroll ke sana).
-// URL hash tetap disinkronkan (footer dkk link ke /our-company.html#faq)
-// via `hashchange` + `history.replaceState`, sama seperti sebelumnya.
 function idFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
   return TABS.some((t) => t.id === id) ? id : null;
 }
 
-// Sama lebar dengan ContactSection (bukan dibatasin --container-read lagi, Sep 2026
-// Wayan: biar padding kanan semua tab konsisten - Contact ngisi penuh lebar kolom,
-// yang lain jangan malah lebih sempit).
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 
 function LegalBody({ data }) {
@@ -68,14 +71,35 @@ function FAQBody() {
   );
 }
 
+function HelpCard({ className = '' }) {
+  return (
+    <div className={`${RAIL_HELP} ${className}`}>
+      <p className={RAIL_HELP_TEXT}>Still not sure about something?</p>
+      <a
+        className={RAIL_HELP_BTN}
+        href={`https://wa.me/${WHATSAPP_NUMBER}`}
+        target="_blank"
+        rel="noopener"
+      >
+        <MessageCircle strokeWidth={1.7} aria-hidden="true" />
+        Chat on WhatsApp
+      </a>
+    </div>
+  );
+}
+
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const active = TABS.find((t) => t.id === tab);
+  // The phone has no room for a column, so the rail IS the first screen and a
+  // section opens over it. false = the list. It must start the same on the
+  // server and the client (this is a static export, one HTML for both widths),
+  // so the hash is read in an effect, not in the initial value.
+  const [reading, setReading] = useState(false);
 
   useEffect(() => {
     const applyHash = () => {
       const id = idFromHash();
-      if (id) setTab(id);
+      if (id) { setTab(id); setReading(true); }
     };
     applyHash();
     window.addEventListener('hashchange', applyHash);
@@ -84,74 +108,96 @@ export default function OurCompany() {
 
   const goTo = (id) => {
     setTab(id);
+    setReading(true);
     window.history.replaceState(null, '', `#${id}`);
   };
 
+  // Back drops the hash too, so a reload (or a shared link) lands on the list
+  // rather than silently reopening the section the guest just left.
+  const goBack = () => {
+    setReading(false);
+    window.history.replaceState(null, '', window.location.pathname);
+  };
+
   return (
-    <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[calc(var(--header-h-max,104px)+1.9rem)] pb-[var(--space-5)]">
-      <div className="flex gap-10 items-start max-[992px]:flex-col max-[992px]:gap-3">
-        {/* Desktop: plain sticky full-height sidebar. */}
-        <nav
-          className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] flex-none w-[200px] sticky top-[var(--header-h,104px)] self-start h-[calc(100vh-var(--header-h,104px))] overflow-y-auto pr-[var(--space-3)] border-r border-line"
-          role="tablist"
-          aria-label="Our company"
-        >
+    <div className={RAIL_PAGE}>
+      <div className={RAIL_FRAME}>
+        {/* Desktop: the rail. It carries no height of its own, so the flex row
+            stretches it and the cream fills the whole box; the menu inside is
+            what sticks. */}
+        <aside className={RAIL_ASIDE}>
+          <div className={RAIL_STICK}>
+            <p className={RAIL_LABEL}>Our company</p>
+            <nav className="flex flex-col" role="tablist" aria-label="Our company">
+              {TABS.map((t) => (
+                <div key={t.id} className="contents">
+                  {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={tab === t.id}
+                    onClick={() => goTo(t.id)}
+                    className={railItem(tab === t.id)}
+                  >
+                    <t.Icon strokeWidth={1.7} aria-hidden="true" />
+                    {t.label}
+                  </button>
+                </div>
+              ))}
+            </nav>
+            <HelpCard />
+          </div>
+        </aside>
+
+        {/* Phone: the list of sections, full width. Hidden outright once a
+            section is open - on desktop this whole block never shows. */}
+        <div className={reading ? 'hidden' : RAIL_MLIST}>
+          <p className={RAIL_MLABEL}>Our company</p>
           {TABS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => goTo(t.id)}
-              className={`p-0 bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </nav>
-
-        {/* Mobile: the active tab, tapped to reach the rest. Shared with the guide
-            articles' category nav, and floating rather than inline - see CatDropdown. */}
-        <CatDropdown
-          className="min-[993px]:hidden w-full pb-[var(--space-1)] border-b border-line"
-          label={active.label}
-          ariaLabel="Our company"
-        >
-          {(close) =>
-            TABS.map((t) => (
+            <div key={t.id} className="contents">
+              {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
               <button
-                key={t.id}
                 type="button"
-                aria-current={tab === t.id || undefined}
-                onClick={() => { goTo(t.id); close(); }}
-                className={`p-0 bg-transparent border-none cursor-pointer ${CAT_ITEM_TAP(tab === t.id)}`}
+                onClick={() => goTo(t.id)}
+                className={railMobileItem(tab === t.id)}
               >
+                <t.Icon strokeWidth={1.7} aria-hidden="true" />
                 {t.label}
+                <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />
               </button>
-            ))
-          }
-        </CatDropdown>
-
-        <div className="flex-1 min-w-0">
-          <section id="about" hidden={tab !== 'about'}>
-            <AboutPage />
-          </section>
-          <section id="contact" hidden={tab !== 'contact'}>
-            <ContactSection company />
-          </section>
-          <section id="faq" hidden={tab !== 'faq'}>
-            <FAQBody />
-          </section>
-          <section id="terms" hidden={tab !== 'terms'}>
-            <LegalBody data={LEGAL['terms-conditions']} />
-          </section>
-          <section id="privacy" hidden={tab !== 'privacy'}>
-            <LegalBody data={LEGAL['privacy-policy']} />
-          </section>
-          <section id="cancellation" hidden={tab !== 'cancellation'}>
-            <LegalBody data={LEGAL['cancellation-policy']} />
-          </section>
+            </div>
+          ))}
+          <HelpCard />
         </div>
+
+        {/* The content column. On the phone it waits behind the list; on desktop
+            it is always the right-hand column. */}
+        <main className={`${RAIL_MAIN} ${reading ? '' : 'max-[992px]:hidden'}`}>
+          <button type="button" className={RAIL_BACK} onClick={goBack}>
+            <ChevronLeft strokeWidth={1.7} aria-hidden="true" />
+            Our company
+          </button>
+          <div className={RAIL_READ}>
+            <section id="about" hidden={tab !== 'about'}>
+              <AboutPage />
+            </section>
+            <section id="contact" hidden={tab !== 'contact'}>
+              <ContactSection company />
+            </section>
+            <section id="faq" hidden={tab !== 'faq'}>
+              <FAQBody />
+            </section>
+            <section id="terms" hidden={tab !== 'terms'}>
+              <LegalBody data={LEGAL['terms-conditions']} />
+            </section>
+            <section id="privacy" hidden={tab !== 'privacy'}>
+              <LegalBody data={LEGAL['privacy-policy']} />
+            </section>
+            <section id="cancellation" hidden={tab !== 'cancellation'}>
+              <LegalBody data={LEGAL['cancellation-policy']} />
+            </section>
+          </div>
+        </main>
       </div>
     </div>
   );

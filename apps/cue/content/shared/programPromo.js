@@ -25,7 +25,11 @@ export const PROGRAM_PROMO = [
     id: 'charter',
     kicker: 'Charter',
     title: 'Private Car Charter in Bali',
-    text: 'Your own car and local driver for the day - go anywhere, stop anywhere, at your own pace.',
+    // Mirrors CHARTER.sub again (Sep 2026, Wayan: "gas samain teksnya juga bro").
+    // The old line kept "go anywhere, stop anywhere, at your own pace" - the slogan
+    // the charter page itself dropped for a fact you can use. Same trim as the
+    // transfer card: the page's first two sentences, without its hours/deposit clause.
+    text: 'Your own car and local driver for the day. You choose the route, your driver knows the roads.',
     // Same photo as the charter page itself (Sep 2026, Wayan: "gas samain foto
     // promo charter bro"). road-ubud was a traffic jam, and this card sits on
     // three listing pages selling the opposite.

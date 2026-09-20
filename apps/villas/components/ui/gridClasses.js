@@ -68,7 +68,20 @@ export const GRID_CARDS =
   `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] ${MOBILE_SLIDER}`;
 
 // Fixed-column rows, for a set whose count is known and meant to stay put.
-export const GRID_PAIR = `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-2 ${MOBILE_SLIDER}`;
+// A SHORT set — two items — so this one STACKS on a phone instead of sliding
+// (Wayan, Sep 2026: "buat card villa jadi row menurun, jangan kolom kesamping,
+// karna itu terlalu sempit dan villa baru ada 2").
+//
+// The swipe track is the right call for a row of six destinations, where the
+// peeking card says "there is more along here" and no single card matters
+// more than the others. With two villas it works against itself: each card
+// gets ~88% of a 390px screen instead of the full width, and half the entire
+// inventory sits behind a gesture the guest has to discover. Stacked, both
+// villas are simply there, each as wide as the screen allows.
+//
+// Desktop is unchanged: two columns from 993px.
+export const GRID_PAIR =
+  `max-w-[1200px] mx-auto grid grid-cols-1 gap-[1.4rem] max-[768px]:gap-[0.9rem] ${D} min-[993px]:grid-cols-2`;
 export const GRID_TRIO = `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-3 ${MOBILE_SLIDER}`;
 export const GRID_QUAD = `max-w-[1200px] mx-auto pb-4 ${D} min-[993px]:grid-cols-4 ${MOBILE_SLIDER}`;
 

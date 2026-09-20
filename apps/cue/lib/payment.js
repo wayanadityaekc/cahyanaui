@@ -6,17 +6,22 @@
 //
 // Model (Wayan, 20 Sep 2026):
 //
-//   1. deposit   - flat $5 if pick-up is in Ubud, $15 if outside. Rest is cash
-//                  to the driver on the day.
-//   2. full      - the whole amount, no discount.
+//   1. deposit   - FLAT $10, every booking, every pick-up area.
+//   2. full      - the whole amount, NO discount and NO change to the
+//                  cancellation window. What it buys is the day itself being
+//                  simpler: no cash to carry, no money changer, and the guest
+//                  pays in their own currency at a rate they can see now.
 //   3. referral  - 5% off, and no deposit. Only offered with a valid code.
 //
-// This REPLACES the 20%-deposit / 5%-off-full model. The site copy elsewhere
-// still says "20% deposit" in roughly 33 places; that sweep is not done here.
+// Two earlier models are recorded so they do not come back: the deposit is not
+// 20%, and it does not vary by pick-up area.
 
-export const DEPOSIT_UBUD_USD = 5;
-export const DEPOSIT_OUTSIDE_USD = 15;
+export const DEPOSIT_USD = 10;
 export const REFERRAL_DISCOUNT_PCT = 5;
+// One window, every booking, however it was paid. A longer window was drafted
+// as a perk for paying in full and dropped (Wayan, 20 Sep 2026): a longer notice
+// period is a STRICTER deadline, not a better one, so it would have punished the
+// guests who paid the most. Free cancellation is 24 hours for everyone.
 export const FREE_CANCEL_HOURS = 24;
 
 // Mirrors TICKET_IDR_PER_USD / CUR_RATE in the API. Only used to show the flat
@@ -26,13 +31,10 @@ const RATE = { USD: 1, AUD: 1.4, EUR: 0.86, GBP: 0.74 };
 
 export const PAY_OPTIONS = ['deposit', 'full', 'referral'];
 
-// Empty pick-up means Ubud, matching the server's default.
-export function isUbudPickup(stay) {
-  return !stay || stay === 'ubud';
-}
-
-export function depositUsd(stay) {
-  return isUbudPickup(stay) ? DEPOSIT_UBUD_USD : DEPOSIT_OUTSIDE_USD;
+// Flat, so the pick-up area is not consulted. Callers still pass `stay` because
+// the booking records it for other reasons; it has no say in the deposit.
+export function depositUsd() {
+  return DEPOSIT_USD;
 }
 
 function roundUp(v, cur) {
@@ -44,8 +46,8 @@ function roundDown(v, cur) {
   return cur === 'IDR' ? Math.floor(v / 1000) * 1000 : Math.floor(v);
 }
 
-function depositIn(cur, stay) {
-  const usd = depositUsd(stay);
+function depositIn(cur) {
+  const usd = depositUsd();
   return cur === 'IDR' ? roundUp(usd * IDR_PER_USD, cur) : roundUp(usd * (RATE[cur] || 1), cur);
 }
 
@@ -64,7 +66,7 @@ export function baseTotal(priced) {
 export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false }) {
   const cur = String(currency || 'USD').toUpperCase();
   const known = total != null;
-  const dep = depositIn(cur, stay);
+  const dep = depositIn(cur);
   const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, cur) : null;
 
   return [
@@ -80,7 +82,7 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
     {
       id: 'full',
       label: 'Pay in full now',
-      sub: 'No cash needed, no money changer, nothing to pay your driver on the day.',
+      sub: 'No cash to carry, no money changer, nothing to pay on the day. You pay in your own currency, at a rate you can see now.',
       badge: null,
       amount: known ? total : null,
       balance: null,
@@ -112,9 +114,9 @@ export const PAY_COPY = {
   referralBad: 'Code not valid.',
   // One explanation for all three, behind the info button next to the heading.
   optionsInfo: [
-    `Deposit - pay $${DEPOSIT_UBUD_USD} if we pick you up in Ubud, $${DEPOSIT_OUTSIDE_USD} anywhere else. It holds your date; the rest is cash to your driver on the day.`,
-    'Pay in full - nothing left to sort out on the day. No cash, no money changer, nothing to hand over.',
-    `Referral code - ${REFERRAL_DISCOUNT_PCT}% off the whole trip, and no deposit. Enter the code above to unlock it.`,
+    `Deposit - $${DEPOSIT_USD} holds your date, whatever the trip costs and wherever we pick you up. The rest is cash to your driver on the day.`,
+    `Pay in full - the same price and the same ${FREE_CANCEL_HOURS}-hour free cancellation, with nothing to sort out on the day: no cash to carry, no money changer, no ATM. You pay in your own currency, at a rate you can see right now.`,
+    `Referral code - ${REFERRAL_DISCOUNT_PCT}% off the whole trip and no deposit. Enter the code above to unlock it.`,
   ],
   cancel: `Free cancellation up to ${FREE_CANCEL_HOURS} hours before pickup - anything paid is refunded in full.`,
   late: 'Cancel later than that, or no-show, and what you paid is not refunded.',

@@ -55,7 +55,7 @@ export default function CharterHome({ paired = false }) {
         <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">Build your charter</a>
 
         <p className="text-center mt-[var(--space-3)] text-small text-muted">
-          Only a <b className="text-gold font-semibold">20% deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
+          Only a <b className="text-gold font-semibold">$10 deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />
         </p>
       </div>
     </section>

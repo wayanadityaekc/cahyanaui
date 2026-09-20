@@ -50,7 +50,7 @@ export const ABOUT = {
         {
           "n": "3",
           "title": "Explore, pay after",
-          "text": "20% deposit to confirm, settle the rest at the end."
+          "text": "$10 deposit to confirm, settle the rest at the end."
         }
       ]
     },
@@ -62,7 +62,7 @@ export const ABOUT = {
         "cls": "info__list info__list--yes",
         "items": [
           "Every price is already on the site - no messaging to find out what a Tuesday costs",
-          "Just a 20% deposit to confirm; settle the rest at the end",
+          "Just a $10 deposit to confirm; settle the rest at the end",
           "No commission stops at overpriced souvenir shops",
           "Skip, swap, or linger - change the plan on the day"
         ]

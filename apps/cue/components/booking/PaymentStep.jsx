@@ -4,6 +4,7 @@ import { withSymbol } from '@/components/Price';
 import InfoDot from '@/components/ui/InfoDot';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
 import { PAY_COPY, payOptions } from '@/lib/payment';
+import { noteFor } from '@/lib/rails';
 
 // The three ways to pay, each showing what it costs right now.
 //
@@ -45,6 +46,10 @@ export default function PaymentStep({
   referral, onReferral, onApplyReferral, refMsg,
 }) {
   const options = payOptions({ total, currency, stay, hasReferral });
+  // Only ever set when the guest's currency cannot be settled on the rail that
+  // will take the payment - said here, before a card number is typed, rather
+  // than appearing as a surprise amount at the card form.
+  const railNote = noteFor(currency);
 
   return (
     <div className="my-5">
@@ -117,6 +122,10 @@ export default function PaymentStep({
           );
         })}
       </div>
+
+      {railNote && (
+        <p className="mt-[0.9rem] text-small text-muted leading-[var(--lh-body)]">{railNote}</p>
+      )}
 
       <p className="mt-[0.9rem] text-small text-green leading-[var(--lh-body)]">
         {PAY_COPY.cancel} <span className="text-muted">{PAY_COPY.late}</span>{' '}

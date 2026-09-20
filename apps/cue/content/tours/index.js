@@ -48,7 +48,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Banyumala Twin Waterfall & Twin Lakes Viewpoint Tour",
-  "metaDesc": "Private North Bali tour from Ubud - the Twin Lakes viewpoint over Buyan and Tamblingan, then a swim at Banyumala Twin Waterfall. Only a 20% deposit to book.",
+  "metaDesc": "Private North Bali tour from Ubud - the Twin Lakes viewpoint over Buyan and Tamblingan, then a swim at Banyumala Twin Waterfall. Only a $10 deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/tibumana.webp",
   "items": [
    {
@@ -546,7 +546,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Full Adventure: Ayung Rafting & ATV Ride",
-  "metaDesc": "A private, action-packed Ubud day - white-water rafting on the Ayung River, then an ATV quad-bike ride through jungle trails. Only a 20% deposit to book.",
+  "metaDesc": "A private, action-packed Ubud day - white-water rafting on the Ayung River, then an ATV quad-bike ride through jungle trails. Only a $10 deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/rafting.webp",
   "items": [
    {
@@ -660,7 +660,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "GWK Cultural Park & Pandawa Beach Half-Day Tour",
-  "metaDesc": "Private South Bali half-day tour from Ubud - the giant Garuda Wisnu Kencana statue and the calm sands of Pandawa Beach. Only a 20% deposit to book.",
+  "metaDesc": "Private South Bali half-day tour from Ubud - the giant Garuda Wisnu Kencana statue and the calm sands of Pandawa Beach. Only a $10 deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/gwk-statue-view.webp",
   "bookItem": "GWK & Pandawa Beach",
   "bookDefault": "tour",
@@ -908,7 +908,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Jatiluwih, Ulun Danu Beratan & Handara Gate Tour",
-  "metaDesc": "Private highland tour from Ubud - the Jatiluwih UNESCO rice terraces, the Ulun Danu Beratan lake temple and the Handara Gate. Only a 20% deposit to book.",
+  "metaDesc": "Private highland tour from Ubud - the Jatiluwih UNESCO rice terraces, the Ulun Danu Beratan lake temple and the Handara Gate. Only a $10 deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/jatiluwih.webp",
   "bookItem": "Bedugul Highlands Tour",
   "bookDefault": "tour",
@@ -1172,7 +1172,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "East Bali: Lempuyang Gates of Heaven, Besakih & Tirta Gangga",
-  "metaDesc": "Private East Bali day tour from Ubud - the Gates of Heaven at Lempuyang, the water gardens of Tirta Gangga and Taman Ujung, then Besakih. Only a 20% deposit.",
+  "metaDesc": "Private East Bali day tour from Ubud - the Gates of Heaven at Lempuyang, the water gardens of Tirta Gangga and Taman Ujung, then Besakih. Only a $10 deposit.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/east-bali-tour-card.jpg",
   "bookItem": "East Bali Tour",
   "bookDefault": "tour",
@@ -1693,7 +1693,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Sangeh, Taman Ayun & Tanah Lot Sunset Tour",
-  "metaDesc": "Private West Bali tour from Ubud - Sangeh Monkey Forest, the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset. Only a 20% deposit to book.",
+  "metaDesc": "Private West Bali tour from Ubud - Sangeh Monkey Forest, the royal Taman Ayun temple in Mengwi, then the Tanah Lot sunset. Only a $10 deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/tanah-lot.webp",
   "bookItem": "West Bali Tour",
   "bookDefault": "tour",
@@ -1827,7 +1827,7 @@ export const TOUR_CONTENT = {
    }
   ],
   "metaTitle": "Ubud ATV Adventure: Bali Zoo, Bird Park & Jungle Quad Bike",
-  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride through rice fields and river crossings, then Bali Zoo and the Bali Bird Park. Only a 20% deposit to book.",
+  "metaDesc": "A private, family-friendly Ubud day tour - an ATV quad-bike jungle ride through rice fields and river crossings, then Bali Zoo and the Bali Bird Park. Only a $10 deposit to book.",
   "ogImage": "https://cahyanaubudexperience.com/assets/images/ubud-atv-adventure-card.jpg",
   "items": [
    {

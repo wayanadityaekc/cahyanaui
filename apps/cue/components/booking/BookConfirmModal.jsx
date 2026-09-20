@@ -390,6 +390,7 @@ export default function BookConfirmModal() {
                     bookingRef={bookingRef}
                     option={payOption}
                     copy={PAY_COPY}
+                    currency={currency}
                     onPaid={() => setPaid(true)}
                   />
                 ) : (

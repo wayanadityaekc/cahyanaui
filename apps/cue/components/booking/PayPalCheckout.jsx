@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
+import { chargeCurrency } from '@/lib/rails';
 
 // The PayPal checkout, rendered inside our own page - no redirect, no new tab.
 //
@@ -15,26 +16,36 @@ import { API_BASE } from '@/lib/constants';
 // are not eligible, the buttons render on their own - those still offer a guest
 // "Debit or Credit Card" option, so a card is always payable either way.
 
-const SDK_ID = 'paypal-sdk';
+// The SDK is loaded PER CURRENCY, under its own namespace.
+//
+// PayPal refuses an order whose currency is not the one the SDK was loaded with,
+// and one page can legitimately need two: the guest's own currency, or USD when
+// theirs cannot be settled. Loading once under `window.paypal` meant whichever
+// currency got there first won, and the second guest's checkout simply failed.
+const sdkId = (cur) => 'paypal-sdk-' + cur;
+const sdkNs = (cur) => 'paypal_' + cur;
 
 function loadSdk({ clientId, currency }) {
+  const id = sdkId(currency);
+  const ns = sdkNs(currency);
   return new Promise((resolve, reject) => {
-    const existing = document.getElementById(SDK_ID);
-    if (existing && window.paypal) return resolve(window.paypal);
+    const existing = document.getElementById(id);
+    if (existing && window[ns]) return resolve(window[ns]);
     if (existing) {
-      existing.addEventListener('load', () => resolve(window.paypal));
+      existing.addEventListener('load', () => resolve(window[ns]));
       existing.addEventListener('error', reject);
       return;
     }
     const s = document.createElement('script');
-    s.id = SDK_ID;
+    s.id = id;
+    s.setAttribute('data-namespace', ns);
     // card-fields is requested alongside buttons; asking for it on an
     // ineligible account is harmless, paypal.CardFields() just reports
     // isEligible() false and we fall back.
     s.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
-    s.onload = () => resolve(window.paypal);
+    s.onload = () => resolve(window[ns]);
     s.onerror = () => reject(new Error('Could not load PayPal.'));
     document.head.appendChild(s);
   });
@@ -44,7 +55,7 @@ const LABEL = 'block text-label font-medium tracking-[0.08em] uppercase text-mut
 const FIELD = 'h-[var(--field-h)] px-[0.65rem] [border:1px_solid_#d8d2c4] rounded-sm bg-white';
 const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
-export default function PayPalCheckout({ bookingRef, option, copy, onPaid, onError }) {
+export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {
   const [state, setState] = useState('loading'); // loading | ready | paying | done | error
   const [msg, setMsg] = useState('');
   const [cardsOn, setCardsOn] = useState(false);
@@ -108,7 +119,11 @@ export default function PayPalCheckout({ bookingRef, option, copy, onPaid, onErr
       try {
         const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
         if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
-        const sdk = await loadSdk({ clientId: cfg.clientId, currency: cfg.fallbackCurrency });
+        // What the order will actually be created in - the guest's own currency
+        // unless the rail cannot settle it. Loading the SDK with anything else
+        // makes every order bounce.
+        const billCurrency = chargeCurrency(currency);
+        const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
         if (cancelled) return;
 
         await sdk
@@ -144,7 +159,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, onPaid, onErr
     })();
 
     return () => { cancelled = true; };
-  }, [bookingRef, option, copy, onPaid, onError]);
+  }, [bookingRef, option, copy, currency, onPaid, onError]);
 
   const payByCard = async () => {
     if (!cardRef.current) return;

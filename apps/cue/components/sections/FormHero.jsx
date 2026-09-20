@@ -44,10 +44,16 @@ const SUB = 'mt-3 mb-0 font-body text-body leading-[var(--lh-body)] text-green m
 const GRID = 'mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 min-[1200px]:grid-cols-[2.4fr_1fr] min-[1200px]:gap-8 min-[1200px]:items-stretch';
 // 4:3 on a phone, then it simply fills the row on desktop. min-h-0 lets the
 // stretched track actually size it instead of the intrinsic image height.
+//
+// The crop point is a PROP, because it belongs to the photo and the photo is the
+// one thing these three pages are allowed to differ on. It earns its keep on
+// /airport-transfer: that form is ~600px tall, so the column crops a landscape
+// photo to about 0.57:1, and centred it sliced the terminal's sign clean through
+// the middle of a word.
 const PHOTO =
   'relative overflow-hidden rounded-lg bg-cream aspect-[4/3] ' +
   'min-[1200px]:aspect-auto min-[1200px]:h-full min-[1200px]:min-h-0 ' +
-  '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
+  '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover';
 
 // ONE CONTAINER for the whole page (Sep 2026, Wayan: "charter details sama form
 // di atasanya, sekarang masih beda kontainer, jadiin satu aja dan rapikan margin
@@ -71,7 +77,7 @@ const DETAILS =
   `mt-[var(--section-gap)] ${INFO_CARD_BODY} [&_p]:max-w-[var(--container-read)] ` +
   '[&>h2]:!text-left';
 
-export default function FormHero({ title, sub, photo, alt, embedded, details, children }) {
+export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', embedded, details, children }) {
   // On /programs this renders inside a tab under that page's own H1, so the title
   // steps down to an H2 rather than giving the page a second H1.
   const H = embedded ? 'h2' : 'h1';
@@ -82,7 +88,7 @@ export default function FormHero({ title, sub, photo, alt, embedded, details, ch
         <p className={SUB}>{sub}</p>
         <div className={GRID}>
           <div className="min-w-0" data-formhero-form>{children}</div>
-          <div className={PHOTO} data-formhero-photo>
+          <div className={`${PHOTO} ${photoPos}`} data-formhero-photo>
             {/* Above the fold, so it loads eagerly - no lazy. */}
             <Img src={`/assets/images/${photo}`} alt={alt} priority />
           </div>

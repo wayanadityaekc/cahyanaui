@@ -85,9 +85,23 @@ export default function TransferPicker() {
         </div>
       </div>
 
-      <div className="text-center mt-[1.2rem] mb-[0.1rem]">
-        <span className="font-body text-[2rem] text-amber font-semibold">{withSymbol(priceText)}</span>
-        <span className="block text-muted text-small mt-[0.1rem]">{amount == null ? '' : 'per car'}</span>
+      {/* Before a route is picked this used to render a lone em dash at 2rem with an
+          empty line under it, which read as a hole in the middle of the form rather
+          than as "nothing to show yet". The prompt says what to do instead. min-h is
+          the priced block's own height (measured), so the form does not grow when the
+          price arrives - and the photo beside it, which stretches to the form, does
+          not jump either. */}
+      <div className="text-center mt-[1.2rem] mb-[0.1rem] min-h-[57px] flex flex-col justify-center">
+        {from ? (
+          <>
+            <span className="font-body text-[2rem] text-amber font-semibold">{withSymbol(priceText)}</span>
+            <span className="block text-muted text-small mt-[0.1rem]">{amount == null ? '' : 'per car'}</span>
+          </>
+        ) : (
+          <span className="block font-body text-body leading-[var(--lh-body)] text-muted">
+            Pick a route to see the price
+          </span>
+        )}
       </div>
 
       <label className="flex items-center justify-center gap-2 mt-[0.9rem] mb-[1.1rem] text-green text-small cursor-pointer">

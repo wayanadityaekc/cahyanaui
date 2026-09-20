@@ -39,7 +39,11 @@ export default function Page() {
         title={AIRPORT.title}
         sub={AIRPORT.sub}
         photo="transfer-hero.webp"
-        alt="The glass facade of Bali's Ngurah Rai international airport terminal"
+        alt="A plane reflected in the glass facade of Bali's Ngurah Rai airport terminal"
+        // Centred, the tall narrow column cut "BALI International Airport" through
+        // the middle of a word. This lands on the plane in the glass instead, which
+        // says airport without half a sign.
+        photoPos="[&>img]:object-[26%_50%]"
         details={<Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />}
       >
         <AirportTransferForm />

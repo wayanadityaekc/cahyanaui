@@ -20,14 +20,22 @@ import FormHero from '@/components/sections/FormHero';
 // CHARTER.notes is gone with it.
 //
 // headingVariant="company" is Our Company's reading style: paragraphs on
-// --lh-body at --fs-body, sub-headings left-aligned with no centred underline.
+// --lh-body at --fs-body, sub-headings left-aligned.
+//
+// PHOTO: handara-gate, not road-ubud (Sep 2026, Wayan). road-ubud is a traffic jam
+// - motorbikes, a no-parking sign - which was survivable while it sat darkened
+// behind white hero text and is not once it is a bright panel beside the form, on
+// a page selling "sit back, someone else drives". Handara Gate is one of the route
+// ideas this page already lists ("Full day north: Handara Gate"), so it is not a
+// photo of somewhere we do not go, and its centred composition survives the tall
+// narrow crop.
 export default function CharterSection({ embedded }) {
   return (
     <FormHero
       title={CHARTER.title}
       sub={CHARTER.sub}
-      photo="road-ubud.webp"
-      alt="A road leading out of Ubud, lined with shops and traffic"
+      photo="handara-gate.webp"
+      alt="The Handara Gate on the road north, with the Bedugul hills behind it"
       embedded={embedded}
       details={<Prose blocks={CHARTER.info} headingVariant="company" />}
     >

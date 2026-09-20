@@ -24,6 +24,12 @@ const SUB_VARIANT = {
 
 export default function Prose({ blocks, headingVariant = 'legal' }) {
   return blocks.map((b, i) => {
+    // A --sub heading carries mt-[2.75rem] to separate it from the prose above.
+    // After a 'boxes' row that is a second gap on top of the row's own mb-8: the
+    // two collapse to 44px and the charter page came out with a visible dead band
+    // between its explainer columns and "Charter or guided tour?" (measured). The
+    // row already spaces itself, so drop the heading's own top margin there.
+    const afterBoxes = i > 0 && blocks[i - 1] && blocks[i - 1].type === 'boxes';
     switch (b.type) {
       case 'crumb':
         return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
@@ -48,7 +54,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         // .section__title base is B-FINAL's to convert.
         return b.sub === false
           ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
-          : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+          : <h2 className={`${SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}${afterBoxes ? ' !mt-0' : ''}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'para':
         return <p className={PROSE_LINK} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'list':

@@ -763,19 +763,31 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 
 ## Transfer / Airport / Charter = SATU CANGKANG (Sep 2026)
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
-harus identik". Ketiganya **cuma punya 2 section**, dan cangkangnya sama persis:
+harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 
-    <FormHero title sub photo alt [embedded]>   <- judul, sub, FORM, terus FOTO
-      {form halaman itu}
-    <section INFO_SECTION_DETAIL>               <- band cream
-      <div INFO_CARD + INFO_CARD_BODY>          <- kartu putih, --container-mid
-        <Prose ... headingVariant="company" />
+    <FormHero title sub photo alt details [embedded]>
+      {form halaman itu}                        <- judul, sub, FORM, FOTO, DETAILS
 
 - **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
   kalo di desktop jadiin kolom, misal kiri form kanan foto".** Band foto gelap yang dulu
   nampung judul + sub + form DI ATASNYA udah **DIHAPUS**; sekarang foto jadi panel
   sendiri di sebelah form, dan tulisannya duduk di putih. Urutan DOM: judul → sub →
   form → foto. HP numpuk sesuai urutan itu; desktop 2 kolom.
+- **SATU KONTAINER, details ikut di dalamnya** (Sep 2026, Wayan: "charter details sama
+  form di atasanya, sekarang masih beda kontainer, jadiin satu aja dan rapikan margin
+  left right"). Dulu details duduk di kartu KEDUA di atas band cream, lebarnya
+  `--container-mid` (1080) lawan `--container` (1200) punya baris form - tepinya
+  **meleset 60px** di 1280 & 1440 dan **8px** di 390 & 768 (diukur). Sekarang dia masuk
+  `INNER` yang sama lewat prop `details`, jadi tepinya lurus dengan sendirinya
+  (diukur ulang: **L0 R0 di 390/768/1024/1280/1440, ketiga halaman**).
+  - **Paragraf lepas di-cap `--container-read`** tapi rata KIRI. Kontainernya 1200;
+    paragraf selebar itu ±190 karakter. Kompromi yang sama kayak artikel guide. Cap-nya
+    **gak pernah kena** di dalam `InfoBox` (kolomnya udah di bawah 720).
+  - **Judul "X Details" ikut ke KIRI** (underline-nya juga, pola `ST_LEFT`). Dulu
+    ke-center - masuk akal waktu dia baris pertama kartunya sendiri, kebaca kayak sisa
+    begitu semua di atasnya rata kiri.
+  - `INFO_SECTION_DETAIL` + `INFO_CARD` **TETEP ADA** - masih dipakai `ListingPage`
+    sama `/settings`. Yang berubah cuma: ketiga halaman ini gak pakai mereka lagi.
 - **Cangkangnya = SATU KOMPONEN, `components/sections/FormHero.jsx`**, bukan 3 salinan
   string class. Yang wajib sama itu **URUTAN** empat bagian itu, dan urutan gak bisa
   dijaga cuma dengan berbagi string - alasan yang sama kenapa `DetailHero` ada buat
@@ -835,7 +847,7 @@ harus identik". Ketiganya **cuma punya 2 section**, dan cangkangnya sama persis:
   gagal "cangkang beda" padahal yang beda cuma fotonya, yang emang disengaja.
   Kalau harness bilang beda, **cek dulu harness-nya baca yang bener**.
 - **Route di /transfer TETEP markup halaman** (bukan blok Prose): itu kontrol berharga yang
-  bisa ditap, bukan bacaan. Dia duduk DI DALAM kartu biar halamannya tetep hero + 1 kartu.
+  bisa ditap, bukan bacaan. Dia jalan paling atas di blok `details`, sebelum prosanya.
 - **Tombol route UDAH HIDUP** (Sep 2026, Wayan: "benerin bro"). Dulu mati - `TransferSection`
   bukan client component, jadi `onClick` yang dijanjiin catatannya ("tap a route to pre-fill
   the search") gak pernah bisa kepasang. Sekarang:

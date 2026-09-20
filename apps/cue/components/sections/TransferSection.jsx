@@ -2,7 +2,6 @@ import TransferPicker from '@/components/sections/TransferPicker';
 import TransferRoutes from '@/components/sections/TransferRoutes';
 import TransferRouteProvider from '@/components/sections/TransferRouteProvider';
 import Prose from '@/components/prose/Prose';
-import { INFO_SECTION_DETAIL, INFO_CARD, INFO_CARD_BODY } from '@/components/ui/infoClasses';
 import FormHero from '@/components/sections/FormHero';
 import { detailBlocks } from '@/lib/detailBlocks';
 import { TRANSFER } from '@/content/shared/transfer';
@@ -51,20 +50,17 @@ export default function TransferSection({ embedded }) {
         photo="coastal-road-beach-bali.webp"
         alt="A coastal road running along a beach on the south Bali cliffs"
         embedded={embedded}
+        details={
+          <>
+            {/* Routes stay page markup, not a Prose block: they are priced,
+                tappable controls, not reading content. */}
+            <TransferRoutes />
+            <Prose blocks={detailBlocks('Transfer Details', TRANSFER.tinfo)} headingVariant="company" />
+          </>
+        }
       >
         <TransferPicker />
       </FormHero>
-
-      <section className={INFO_SECTION_DETAIL}>
-        <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
-          {/* Routes stay page markup, not a Prose block: they are priced, tappable
-              controls, not reading content. They sit inside the card so the page
-              is hero + one card, the same as charter and airport. */}
-          <TransferRoutes />
-
-          <Prose blocks={detailBlocks('Transfer Details', TRANSFER.tinfo)} headingVariant="company" />
-        </div>
-      </section>
     </TransferRouteProvider>
   );
 }

@@ -1,5 +1,4 @@
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
-import { INFO_SECTION_DETAIL, INFO_CARD, INFO_CARD_BODY } from '@/components/ui/infoClasses';
 import JsonLd from '@/components/JsonLd';
 import Prose from '@/components/prose/Prose';
 import { detailBlocks } from '@/lib/detailBlocks';
@@ -41,14 +40,10 @@ export default function Page() {
         sub={AIRPORT.sub}
         photo="transfer-hero.webp"
         alt="The glass facade of Bali's Ngurah Rai international airport terminal"
+        details={<Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />}
       >
         <AirportTransferForm />
       </FormHero>
-      <section className={INFO_SECTION_DETAIL}>
-        <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
-          <Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />
-        </div>
-      </section>
     </>
   );
 }

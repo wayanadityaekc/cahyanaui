@@ -1,5 +1,6 @@
 import Img from '@/components/ui/Img';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
+import { INFO_CARD_BODY } from '@/components/ui/infoClasses';
 
 // The head of the three form pages - charter, transfer, airport (Wayan, Sep 2026:
 // "di atas judul abis itu formnya abis itu baru foto, kalo di desktop jadiin
@@ -48,7 +49,28 @@ const PHOTO =
   'min-[1200px]:aspect-auto min-[1200px]:h-full min-[1200px]:min-h-0 ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
 
-export default function FormHero({ title, sub, photo, alt, embedded, children }) {
+// ONE CONTAINER for the whole page (Sep 2026, Wayan: "charter details sama form
+// di atasanya, sekarang masih beda kontainer, jadiin satu aja dan rapikan margin
+// left right"). The details used to be a second, NARROWER card on a cream band:
+// --container-mid (1080) against the form row's --container (1200), so the two
+// blocks' edges missed each other by 60px at 1280 and 1440 and by 8px at 390 and
+// 768 (measured). Now the details continue the same white surface, inside the
+// same INNER, so both edges line up by construction at every width.
+//
+// The loose paragraphs are capped at --container-read instead: the container is
+// 1200 wide and a paragraph running its full width is about 190 characters. Same
+// compromise the guide articles make - text held to a readable measure but flush
+// LEFT, so its left edge still lines up with everything above it. The cap never
+// binds inside an InfoBox, whose columns are narrower than 720 already.
+//
+// The "X Details" heading goes left too. It was centred with a centred underline,
+// which read fine as the first line of its own card and reads like a leftover now
+// that everything above it is left-aligned.
+const DETAILS =
+  `mt-[var(--section-gap)] ${INFO_CARD_BODY} [&_p]:max-w-[var(--container-read)] ` +
+  '[&>h2]:!text-left [&>h2]:after:!left-0 [&>h2]:after:![transform:none]';
+
+export default function FormHero({ title, sub, photo, alt, embedded, details, children }) {
   // On /programs this renders inside a tab under that page's own H1, so the title
   // steps down to an H2 rather than giving the page a second H1.
   const H = embedded ? 'h2' : 'h1';
@@ -64,6 +86,7 @@ export default function FormHero({ title, sub, photo, alt, embedded, children })
             <Img src={`/assets/images/${photo}`} alt={alt} priority />
           </div>
         </div>
+        {details && <div className={DETAILS} data-formhero-details>{details}</div>}
       </div>
     </section>
   );

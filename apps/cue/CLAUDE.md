@@ -802,7 +802,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
 harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 
-    <FormHero title sub photo alt details [embedded]>
+    <FormHero title sub photo alt [photoPos] details [embedded]>
       {form halaman itu}                        <- judul, sub, FORM, FOTO, DETAILS
 
 - **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
@@ -850,6 +850,28 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   frasa yang halaman ini justru **sengaja dilepas** (split SEO Sep 2026: yang pegang
   "bali airport transfer" itu `/airport-transfer`). `/airport-transfer` tetep pakai foto
   itu - di situ emang nyambung.
+- **Foto `/charter` DIGANTI** `road-ubud.webp` → `handara-gate.webp` (Sep 2026, Wayan).
+  Foto lama itu **macet** - motor berjejer + rambu larangan parkir. Aman selama dia
+  ke-gelapin di belakang teks hero putih; begitu jadi panel terang di sebelah form,
+  halaman yang jualan "duduk aja, ada yang nyetir" malah mamerin kemacetan. Handara
+  Gate itu salah satu ide rute yang halaman ini **udah sebut sendiri** ("Full day
+  north: Handara Gate"), jadi bukan foto tempat yang gak kita datengin, dan
+  komposisinya ke-center jadi tahan di crop tinggi-sempit.
+  - **Kartu promo Charter di 3 halaman listing MASIH `road-ubud.webp`**
+    (`content/shared/programPromo.js`) - belum diputusin Wayan, jadi sengaja dibiarin.
+    Kalau nanti diganti, samain ke `handara-gate.webp`.
+- **`photoPos` = SATU-SATUNYA prop yang ngatur foto selain `photo`/`alt`.** Default
+  `[&>img]:object-center`. `/airport-transfer` naro `[&>img]:object-[26%_50%]`: di
+  kolom tinggi-sempit, crop tengah motong tulisan "BALI International Airport" **di
+  tengah kata**; 26% mendarat di pantulan pesawat di kacanya - tetep kebaca "bandara"
+  tanpa setengah papan nama. **Nambah halaman baru = cek crop-nya di 1280 & 1440**,
+  jangan asal percaya `object-center`.
+- **Form gak boleh ganti tinggi pas harga nyampe** (Sep 2026). `/transfer` dulu
+  nyetak **NOL** apa pun sebelum route kepilih, jadi begitu harganya muncul form-nya
+  tumbuh - dan karena foto-nya `h-full` di 1200+, **foto-nya ikut lompat**. Sekarang
+  slot harganya `min-h-[57px]` + `flex justify-center` dan isinya "Pick a route to
+  see the price". Aturannya umum: **apa pun yang nongol belakangan di dalam form wajib
+  udah punya ruangnya** - kalau nggak, panel foto di sebelahnya yang kena.
 - **Yang boleh beda cuma FOTO-nya.** Sisanya (padding, bg, ukuran+bobot+warna H1, lebar
   kolom, radius foto, posisi) WAJIB identik - dijaga **`verify-formhero.mjs`** di
   scratchpad (8 lebar × 3 halaman, 226 assertion): urutan judul→sub→form→foto, foto di
@@ -898,6 +920,22 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 - **Judul kotak = "What's included" / "Not included"** di ketiganya. Transfer & airport
   dulu nulis "What's excluded" - ide yang sama, kata beda, di halaman yang dibaca
   berurutan sama tamu.
+- **Judul `--sub` PERSIS setelah baris `boxes` kehilangan margin atasnya** (`!mt-0`
+  di `Prose`, Sep 2026). `SECTION_TITLE_SUB` bawa `mt-[2.75rem]` (44px) buat misahin
+  dia dari paragraf di atasnya - tapi baris `boxes` udah punya jarak bawahnya sendiri,
+  jadi dua-duanya numpuk dan di charter nyisa **pita kosong ~44px** antara kotak
+  "How the day works" dan judul berikutnya. Yang di-nol-in cuma posisi itu
+  (`blocks[i-1].type === 'boxes'`), jadi judul `--sub` di tempat lain gak kesenggol.
+  - **Sisa yang JUJUR (bukan bug)**: dua kotak charter itu tingginya sama (kotak
+    stretch), tapi teks kolom kiri ~240px lawan kanan ~320px, jadi masih ada ~80px
+    putih di bawah kolom kiri. Itu **panjang isi**, bukan layout - beresinnya ya
+    nambah/ngurangin copy, atau pindahin "Charter or guided tour?" ke kolom kiri.
+    Belum diputusin Wayan. (Kolom airport yang baru: 167/167, rata.)
+- **Blok prosa full-width JANGAN dipasang di bawah baris `boxes`.** `AIRPORT.info`
+  dulu gitu: kotak 2 kolom, terus paragraf selebar kartu, jadi halamannya lebar →
+  sempit → lebar dan separuh kanan kebaca kayak kosong. Sekarang dia satu baris
+  `boxes` isi 2 kolom polos ("Why we ask for flight details" | "How it works") -
+  pola yang sama kayak charter.
 - **`<DetailTinfo>` UDAH DIHAPUS** dan class **`.tinfo` emang gak pernah punya rule** di
   `style.css`. Halaman airport nulis `<section className="tinfo">`, jadi section itu
   **padding-nya NOL**: di HP 390px strip fakta & kotaknya mulai di **0px** (bordernya

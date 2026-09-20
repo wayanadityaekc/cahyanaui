@@ -10,7 +10,8 @@
     "check:urls": "node tools/check-urls.js",
     "check:detail": "node tools/check-detail.js",
     "check:assets": "node tools/check-assets.js",
-    "check:motion": "node tools/check-motion.js"
+    "check:motion": "node tools/check-motion.js",
+    "serve": "node tools/serve-out.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",

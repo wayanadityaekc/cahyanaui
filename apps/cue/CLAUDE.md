@@ -1612,6 +1612,19 @@ di IDR).
   Wayan nulis & kirim broadcast dari dashboard Resend (unsubscribe + analytics
   otomatis). Email welcome akun udah janjiin "deals & Bali updates" → ini follow-up-nya.
 
+### Nge-jalanin situs lokal
+- **`npm run dev` GAK BISA dipakai buat klik-klik situs ini.** Semua link internal
+  diakhiri `.html` (`/ubud-tour.html`) - itu yang ditulis static export, dan yang
+  dipakai canonical + sitemap + 56 redirect. `next dev` nyajiin `/ubud-tour` dan
+  jawab **404** buat bentuk `.html`-nya (`/tour.html` malah **500**), jadi di dev
+  **tiap kartu yang diklik mendarat di halaman error**. Itu BUKAN bug situsnya.
+  - Buat klik-klik atau tes checkout: **`npm run build && npm run serve`**
+    (= `node tools/serve-out.js`, port 4000) - nyajiin `out/` persis kayak
+    Hostinger, jadi yang dites emang artefak yang bakal di-deploy.
+  - Diadu langsung: `/ubud-tour.html` -> **200** di serve-out, **404** di dev.
+  - `next dev` tetep berguna buat hot reload waktu ngoding satu komponen; yang
+    gak bisa cuma navigasi antar-halaman.
+
 ## Before calling it "done" (checklist)
 1. `npm run build` passes (this is the real syntax/build check now — no more `node --check script.js`).
 2. All active CI gates pass: `node tools/check-urls.js`, `node tools/check-detail.js`,

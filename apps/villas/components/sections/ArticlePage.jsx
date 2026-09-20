@@ -95,7 +95,7 @@ export default function ArticlePage({ article }) {
             className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] pl-[var(--space-3)] border-l border-line"
             aria-label="Guide categories"
           >
-            <p className="text-label font-semibold uppercase tracking-[0.12em] text-muted">Guide</p>
+            <p className="caps text-muted">Guide</p>
             <CatList activeId={article.cat} />
             <Link href="/guide" className="inline-flex items-center gap-1.5 mt-2 text-body text-gold hover:text-cta">
               All articles <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
@@ -114,7 +114,7 @@ export default function ArticlePage({ article }) {
                   <p className="eyebrow !mb-0">{categoryLabel(a.cat)}</p>
                   <h3 className="text-h3 font-semibold text-gold">{a.title}</h3>
                   <p className="text-small text-muted">{a.sub}</p>
-                  <span className="mt-auto pt-3 inline-flex items-center gap-1.5 text-label font-semibold uppercase tracking-wide text-cta">
+                  <span className="mt-auto pt-3 inline-flex items-center gap-1.5 caps text-cta">
                     Read <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
                   </span>
                 </Link>

@@ -21,7 +21,7 @@ import { whatsappLink } from '@/lib/constants';
 // "Spa & Massage" would be a price nobody set.
 const CARD = 'bg-white border border-line rounded-lg [box-shadow:var(--shadow-md)]';
 const ROW_H = 'text-h3 font-semibold text-gold';
-const LABEL = 'text-label font-semibold uppercase tracking-[0.12em] text-muted';
+const LABEL = 'caps text-muted';
 const LINE = 'flex items-center justify-between gap-4 text-body';
 const ICON_BTN =
   'inline-flex items-center gap-1.5 p-0 bg-transparent border-none cursor-pointer text-body text-muted ' +

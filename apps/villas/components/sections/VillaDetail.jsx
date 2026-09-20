@@ -125,7 +125,7 @@ export default function VillaDetail({ villa }) {
             <ul className="border-t border-line">
               {villa.goodToKnow.map((g) => (
                 <li key={g.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
-                  <span className="min-w-[120px] text-label uppercase tracking-wide text-muted">{g.label}</span>
+                  <span className="min-w-[120px] caps text-muted">{g.label}</span>
                   <span className="text-gold">{g.value}</span>
                 </li>
               ))}
@@ -182,7 +182,7 @@ export default function VillaDetail({ villa }) {
             </div>
 
             <div className="card p-6 bg-cream">
-              <p className="text-label font-semibold uppercase tracking-wide text-muted mb-3">Add to your stay</p>
+              <p className="caps text-muted mb-3">Add to your stay</p>
               <ul className="flex flex-col">
                 {[
                   { href: '/services/breakfast', label: 'Breakfast' },

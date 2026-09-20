@@ -6,7 +6,7 @@ export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherSer
   return (
     <aside className="lg:sticky lg:top-24 flex flex-col gap-5">
       <div className="card p-6">
-        <p className="text-label font-semibold uppercase tracking-wide text-muted mb-3">{title}</p>
+        <p className="caps text-muted mb-3">{title}</p>
         <ul className="flex flex-col gap-2 mb-5">
           {facts.map((fact) => (
             <li key={fact} className="flex items-start gap-2 text-small text-gold">
@@ -21,7 +21,7 @@ export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherSer
       </div>
 
       <div className="card p-6 bg-cream">
-        <p className="text-label font-semibold uppercase tracking-wide text-muted mb-3">Also at your villa</p>
+        <p className="caps text-muted mb-3">Also at your villa</p>
         <ul className="flex flex-col">
           {otherServices.map((s) => (
             <li key={s.href} className="border-b border-line last:border-b-0">

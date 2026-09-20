@@ -13,7 +13,7 @@ export default function ReviewCard({ card }) {
   if (card.type === 'themes') {
     return (
       <div className="card p-6">
-        <p className="text-label font-semibold uppercase tracking-wide text-muted mb-3">{card.heading}</p>
+        <p className="caps text-muted mb-3">{card.heading}</p>
         <ul className="flex flex-col gap-2">
           {card.themes.map(([label, count]) => (
             <li key={label} className="flex items-center justify-between text-small py-1.5 border-b border-line last:border-b-0">

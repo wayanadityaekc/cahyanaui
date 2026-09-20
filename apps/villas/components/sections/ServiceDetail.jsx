@@ -42,7 +42,7 @@ export default function ServiceDetail({
             <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
               {glance.map((g) => (
                 <li key={g.label} className="flex flex-col py-4 pr-4 text-small">
-                  <span className="text-label uppercase tracking-wide text-muted">{g.label}</span>
+                  <span className="caps text-muted">{g.label}</span>
                   <span className="text-gold">{g.value}</span>
                 </li>
               ))}

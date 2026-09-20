@@ -39,7 +39,7 @@ export default function GuideHubPage() {
                     <h3 className="text-h3 font-semibold text-gold">{a.title}</h3>
                     <p className="text-small text-muted">{a.sub}</p>
                     <span className="mt-auto pt-3 flex items-center justify-between gap-3">
-                      <span className="inline-flex items-center gap-1.5 text-label font-semibold uppercase tracking-wide text-cta">
+                      <span className="inline-flex items-center gap-1.5 caps text-cta">
                         Read <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
                       </span>
                       <span className="inline-flex items-center gap-1.5 text-label text-muted">

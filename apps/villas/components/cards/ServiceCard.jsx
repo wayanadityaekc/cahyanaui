@@ -9,7 +9,7 @@ export default function ServiceCard({ href, img, alt, name, desc, cta }) {
       <div className="p-5">
         <h3 className="text-h3 font-semibold text-gold">{name}</h3>
         <p className="mt-1.5 text-small text-muted">{desc}</p>
-        <span className="mt-3 inline-flex items-center gap-1 text-label font-semibold uppercase tracking-wide text-cta">
+        <span className="mt-3 inline-flex items-center gap-1 caps text-cta">
           {cta}
           <ArrowRight className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.6} aria-hidden="true" />
         </span>

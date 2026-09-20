@@ -14,13 +14,15 @@ import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 
 // headingVariant tunes the `--sub` article headings per context (the old
 // `.guide-article-page` / `.company-page .guide-article` descendant overrides):
-//   'legal'   (default) = centered + underline (base .section__title--sub)
-//   'guide'   = left-aligned + underline shifted left
-//   'company' = left-aligned + underline removed (Terms-style in Our Company)
+//   'legal'   (default) = centered (base .section__title--sub)
+//   'guide'   = left-aligned
+//   'company' = left-aligned (Terms-style in Our Company)
 const SUB_VARIANT = {
   legal: SECTION_TITLE_SUB,
   guide: `${SECTION_TITLE_SUB} ${ST_LEFT}`,
-  company: `${SECTION_TITLE_SUB} !text-left after:!content-none`,
+  // 'company' used to also switch the underline off; there is no underline
+  // to switch off any more, so it is simply the left-aligned variant.
+  company: `${SECTION_TITLE_SUB} ${ST_LEFT}`,
 };
 
 export default function Prose({ blocks, headingVariant = 'legal' }) {

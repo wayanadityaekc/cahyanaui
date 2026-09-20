@@ -59,7 +59,7 @@ export default function VillasPage() {
                   ['Rating', '★ 4.96 · 221 reviews', '★ 4.96 · 85 reviews'],
                 ].map((row) => (
                   <tr key={row[0]} className="border-t border-line">
-                    <td className="p-4 text-label uppercase tracking-wide text-muted">{row[0]}</td>
+                    <td className="p-4 caps text-muted">{row[0]}</td>
                     <td className="p-4 text-gold">{row[1]}</td>
                     <td className="p-4 text-gold">{row[2]}</td>
                   </tr>

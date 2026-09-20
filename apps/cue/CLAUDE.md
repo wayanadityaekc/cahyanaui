@@ -462,11 +462,27 @@ When unsure, ask first (keep it short).
   - **`/transfer` = halaman SEMUA ROUTE.** Title "Bali Private Car Transfers | Ubud to
     Canggu, Kuta, Amed", H1 "Private Car Transfers in Bali". Frasa "airport transfer"
     **gak boleh** nongol lagi di title/meta-nya.
-  - **Kartu route Airport TETEP ada di `/transfer`** dan tetep pre-fill form kayak 5 kartu
-    lainnya - tamu yang lagi nyisir daftar route emang nyari harganya, dan bikin 1 dari 6
-    kartu beda kelakuan itu bug sendiri. Yang misahin dua halaman itu **FUNGSINYA**: form di
-    sini ngasih harga, halaman sana nerima nomor penerbangan. Link ke sana ditaro sebaris di
-    bawah grid route (`TransferRoutes.jsx`), anchor-nya "Bali airport transfer page".
+  - **Kartu route Airport = LINK ke `/airport-transfer`, bukan pre-fill** (Sep 2026, Wayan:
+    "tulisan flying in or out delete aja bro, tapi kalo di klik airport ubud langsung
+    mengarah ke page airport dan auto fill"). Href-nya
+    `/airport-transfer.html?dir=pickup`; halaman tujuan baca `?dir` di `useEffect` terus
+    nge-set Direction ke **arrival**. Guests gak perlu dioper - dia di TripPrefs
+    (localStorage), jadi ke-baca lagi sendiri di halaman itu.
+    - **Ini NGE-OVERRIDE catatan lama** yang bilang keenam kartu harus sama kelakuannya
+      ("bikin 1 dari 6 kartu beda kelakuan itu bug sendiri"). Alasannya tetep masuk akal:
+      leg bandara itu satu-satunya yang butuh **nomor penerbangan**, dan field itu cuma
+      ada di halaman sana.
+    - **5 kartu lain GAK BERUBAH** - tetep pre-fill picker di tempat, gak pindah halaman.
+      Dijaga `verify-airportlink.mjs`.
+    - **Tampilannya sengaja IDENTIK** (`CARD` + `<Face>` dipakai dua-duanya, cuma tag-nya
+      `<a>` vs `<button>`). Yang beda cuma efek tap-nya. Kalau nanti kerasa bikin kaget,
+      tinggal tambahin penanda kecil di kartu itu - belum diputusin Wayan.
+    - **Baris prosa "Flying in or out? Book on the Bali airport transfer page..." UDAH
+      DIHAPUS** - kartunya yang ngomong sekarang, dengan cara nganterin ke sana.
+    - **Kartu itu jadi SATU-SATUNYA link dari `/transfer` ke halaman itu**, jadi dia juga
+      yang mikul link internalnya. Teksnya udah ngandung keyword ("Airport → Ubud"), jadi
+      aturan anchor-text tetep kepenuhan. Diukur sesudah: **100 halaman / 105 link** ke
+      `/airport-transfer` (footer 100 + kartu ini) - sama kayak sebelum.
   - **Anchor text WAJIB nyebut "airport"** di tiap link ke halaman itu. Dulu semuanya
     "Book a transfer" - gak ngasih tau Google apa-apa soal isi halaman tujuannya. Sekarang:
     band airport homepage + listing (`components/sections/home/Airport.jsx`) =
@@ -848,10 +864,11 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
     ketemu apa-apa. Dan `line-height`-nya `normal`, jadi rumus tinggi/line-height =
     NaN; cek 1 baris pakai tinggi + `scrollWidth == clientWidth` (chip-nya
     `whitespace-nowrap`, jadi wrap ke-detect sebagai overflow).
-- **Tiga baris ke-center di `/transfer` UDAH DIKIRIKAN**: judul "Popular routes"
-  (+ underline-nya, pola `ST_LEFT`), catatan "All prices per car...", dan baris
-  "Flying in or out?". Itu sisa dari waktu kartunya masih ke-center; begitu semua di
-  sekelilingnya rata kiri, tiga itu nyempil sendiri.
+- **Baris ke-center di `/transfer` UDAH DIKIRIKAN**: judul "Popular routes"
+  (+ underline-nya, pola `ST_LEFT`) dan catatan "All prices per car...". Itu sisa dari
+  waktu kartunya masih ke-center; begitu semua di sekelilingnya rata kiri, dua itu
+  nyempil sendiri. (Baris ketiga, "Flying in or out?", ikut dikirikan terus **dihapus**
+  sama sekali - lihat section SEO.)
 - **Isi kartu dibangun `lib/detailBlocks.js`** buat transfer & airport:
   judul kartu → strip fakta (`{type:'facts'}`) → include/exclude (`{type:'boxes'}`) →
   prosa halaman itu sendiri. Charter tetep nulis blok-nya sendiri di `charter.js` (dia

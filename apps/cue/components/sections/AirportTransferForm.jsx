@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -31,6 +31,18 @@ export default function AirportTransferForm() {
   const { state, save } = useItinerary();
 
   const [direction, setDirection] = useState('pickup');
+
+  // Arriving from the Airport card on /transfer, which links here instead of
+  // pre-filling that page's picker (Wayan, Sep 2026). Guests needs nothing: it
+  // lives in TripPrefs, which reads it back out of localStorage on this page too.
+  //
+  // Read in an EFFECT, not in initial state - this is a static export, so a
+  // value that only exists in the browser would make the first render disagree
+  // with the pre-rendered HTML.
+  useEffect(() => {
+    const dir = new URLSearchParams(window.location.search).get('dir');
+    if (dir === 'pickup' || dir === 'dropoff') setDirection(dir);
+  }, []);
   const [date, setDate] = useState('');
   const [address, setAddress] = useState('');
   const [flightNumber, setFlightNumber] = useState('');

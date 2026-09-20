@@ -1,15 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Building2, Mail, HelpCircle, FileText, Shield, XCircle,
-  ChevronRight, ChevronLeft, MessageCircle,
-} from 'lucide-react';
-import {
-  RAIL_PAGE, RAIL_FRAME, RAIL_ASIDE, RAIL_STICK, RAIL_LABEL, railItem, RAIL_SPLIT,
-  RAIL_MAIN, RAIL_READ, RAIL_MLIST, RAIL_MLABEL, railMobileItem, RAIL_MCHEV, RAIL_BACK,
-  RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN,
-} from '@/components/ui/railClasses';
+import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle } from 'lucide-react';
+import RailLayout from '@/components/ui/RailLayout';
+import { RAIL_PAGE, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
@@ -121,84 +115,36 @@ export default function OurCompany() {
 
   return (
     <div className={RAIL_PAGE}>
-      <div className={RAIL_FRAME}>
-        {/* Desktop: the rail. It carries no height of its own, so the flex row
-            stretches it and the cream fills the whole box; the menu inside is
-            what sticks. */}
-        <aside className={RAIL_ASIDE}>
-          <div className={RAIL_STICK}>
-            <p className={RAIL_LABEL}>Our company</p>
-            <nav className="flex flex-col" role="tablist" aria-label="Our company">
-              {TABS.map((t) => (
-                <div key={t.id} className="contents">
-                  {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={tab === t.id}
-                    onClick={() => goTo(t.id)}
-                    className={railItem(tab === t.id)}
-                  >
-                    <t.Icon strokeWidth={1.7} aria-hidden="true" />
-                    {t.label}
-                  </button>
-                </div>
-              ))}
-            </nav>
-            <HelpCard />
-          </div>
-        </aside>
-
-        {/* Phone: the list of sections, full width. Hidden outright once a
-            section is open - on desktop this whole block never shows. */}
-        <div className={reading ? 'hidden' : RAIL_MLIST}>
-          <p className={RAIL_MLABEL}>Our company</p>
-          {TABS.map((t) => (
-            <div key={t.id} className="contents">
-              {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
-              <button
-                type="button"
-                onClick={() => goTo(t.id)}
-                className={railMobileItem(tab === t.id)}
-              >
-                <t.Icon strokeWidth={1.7} aria-hidden="true" />
-                {t.label}
-                <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />
-              </button>
-            </div>
-          ))}
-          <HelpCard />
+      <RailLayout
+        label="Our company"
+        items={TABS}
+        active={tab}
+        onSelect={goTo}
+        reading={reading}
+        onBack={goBack}
+        help={<HelpCard />}
+      >
+        <div className={RAIL_READ}>
+          <section id="about" hidden={tab !== 'about'}>
+            <AboutPage />
+          </section>
+          <section id="contact" hidden={tab !== 'contact'}>
+            <ContactSection company />
+          </section>
+          <section id="faq" hidden={tab !== 'faq'}>
+            <FAQBody />
+          </section>
+          <section id="terms" hidden={tab !== 'terms'}>
+            <LegalBody data={LEGAL['terms-conditions']} />
+          </section>
+          <section id="privacy" hidden={tab !== 'privacy'}>
+            <LegalBody data={LEGAL['privacy-policy']} />
+          </section>
+          <section id="cancellation" hidden={tab !== 'cancellation'}>
+            <LegalBody data={LEGAL['cancellation-policy']} />
+          </section>
         </div>
-
-        {/* The content column. On the phone it waits behind the list; on desktop
-            it is always the right-hand column. */}
-        <main className={`${RAIL_MAIN} ${reading ? '' : 'max-[992px]:hidden'}`}>
-          <button type="button" className={RAIL_BACK} onClick={goBack}>
-            <ChevronLeft strokeWidth={1.7} aria-hidden="true" />
-            Our company
-          </button>
-          <div className={RAIL_READ}>
-            <section id="about" hidden={tab !== 'about'}>
-              <AboutPage />
-            </section>
-            <section id="contact" hidden={tab !== 'contact'}>
-              <ContactSection company />
-            </section>
-            <section id="faq" hidden={tab !== 'faq'}>
-              <FAQBody />
-            </section>
-            <section id="terms" hidden={tab !== 'terms'}>
-              <LegalBody data={LEGAL['terms-conditions']} />
-            </section>
-            <section id="privacy" hidden={tab !== 'privacy'}>
-              <LegalBody data={LEGAL['privacy-policy']} />
-            </section>
-            <section id="cancellation" hidden={tab !== 'cancellation'}>
-              <LegalBody data={LEGAL['cancellation-policy']} />
-            </section>
-          </div>
-        </main>
-      </div>
+      </RailLayout>
     </div>
   );
 }

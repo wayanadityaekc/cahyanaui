@@ -1123,9 +1123,13 @@ Wayan: "gua mau sidebar sticky, page my trip dan our company akan menggunakan la
 sama ... gua mau page our company kayak page email di desktop, memiliki stiky sidebar dan
 sidebarnya kelihatan strong dengan konten di tengah". Dia pilih **opsi A** dari sheet 3 rail,
 terus **HP-3** dari sheet 3 bentuk HP.
-- **Class-nya di `components/ui/railClasses.js`**, bukan ditulis di komponen - My Trips bakal
-  pakai yang sama. **`OurCompany.jsx` udah pakai; My Trips BELUM** (nunggu keputusan Wayan
-  soal Total + Make Payment ditaro di mana, lihat di bawah).
+- **Cangkangnya = KOMPONEN, `components/ui/RailLayout.jsx`** (class-nya di `railClasses.js`).
+  Dipakai **`OurCompany.jsx` DAN `MyTripsCart.jsx`**. Yang wajib sama itu **URUTAN + PERILAKU**
+  (rail lalu konten; di HP daftar lalu section; back ngapus jejak), dan itu gak bisa dijaga cuma
+  dengan berbagi string - alasan yang persis sama kenapa `DetailHero` & `FormHero` ada.
+  State-nya dipegang pemanggil: Our Company nyetir section dari hash URL, My Trips cuma tab.
+- **Tab horizontal lama My Trips (`MTC_TABS`/`mtcTab`) UDAH DIHAPUS** - rail-nya yang jadi tab
+  sekarang. Dijaga harness (`hasOldTabs`), biar gak diem-diem balik lagi jadi dobel.
 - **DESKTOP = satu kotak berbingkai**: rail cream 248px di kiri + kolom konten putih.
   Baris aktif = **pill putih terangkat** (bg putih + border + `--shadow-sm`) - rail-nya udah
   cream, jadi "keangkat keluar dari tint" itu yang kebaca sebagai kepilih.
@@ -1173,10 +1177,28 @@ terus **HP-3** dari sheet 3 bentuk HP.
     lapor lolos di 248 padahal masih nyembul 2.7px. **Kalau assertion-nya cuma ngulang angka
     yang lu tulis, itu bukan tes.**
 
-**Yang MASIH NUNGGU WAYAN**: di My Trips ada **Total + Make Payment**, dan Our Company gak punya
-padanannya. 3 pilihan yang udah ditawarin: (1) ikut di rail kiri bawah menu (sticky, selalu
-keliatan - rekomendasi gua), (2) kolom kanan sendiri jadi 3 kolom, (3) tetep di dalam konten
-kayak sekarang. **Jangan konversi My Trips sebelum ini dijawab.**
+- **Total + Make Payment TETEP DI DALAM KONTEN** (Sep 2026, Wayan pilih "3" dari 3 opsi;
+  yang ditolak: naro di rail kiri, atau bikin kolom ketiga). Jadi rail-nya MURNI buat pindah
+  section - jangan taro aksi/harga di situ.
+- **LAYAR PERTAMA DI HP BEDA, dan itu disengaja**: Our Company buka di **daftar**, My Trips buka
+  **langsung di keranjang** (`reading` initial `true`). My Trips punya default yang jelas dan
+  tamu yang dateng buat bayar gak boleh disuruh nge-tap menu dulu; Our Company gak punya
+  default. Back tetep nyampe ke daftar di dua-duanya. Cangkangnya sama, pintu masuknya beda.
+- **`<h1>` "My Trips" ditaro DI ATAS frame**, bukan di kolom konten - dia nyebut seluruh
+  halaman, dan ketiga section duduk di bawahnya; di dalam kolom dia bakal kebaca kayak judul
+  satu section. Our Company gak punya h1 halaman (tiap section punya sendiri).
+
+**PELAJARAN HARNESS (2 lagi, dari sesi yang sama):**
+- **Ngadu PIXEL antar-halaman itu bukan ngadu cangkang.** Cek drift gua sempat lapor
+  "stickTop 58 vs 91" sebagai beda - padahal dua-duanya nulis `var(--header-h)` yang sama;
+  angkanya beda karena My Trips PUNYA trip bar ("Saved on this device only") dan Our Company
+  `null`. Yang bener: cek **aturannya** (`stickTop == --header-h` halaman itu sendiri),
+  bukan samain angkanya antar-halaman.
+- **Sabotase buat nguji gate bisa GAGAL NYALA tanpa lu sadar.** Gua tes cek drift dengan
+  nambahin `w-[200px]` di samping `w-[248px]` - harness lapor 151/151, dan gua nyaris nyimpulin
+  cek-nya rusak. Padahal dua utility itu **specificity-nya sama**, jadi yang menang urutan CSS
+  hasil generate, dan sabotasenya emang gak pernah ke-render. Pakai **inline `style`** kalau mau
+  maksa beda - baru ke-tangkep (lebar + warna dua-duanya kelaporan.
 
 
 ## Navbar

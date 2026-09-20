@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Car, ChevronDown, Clock, MapPin } from 'lucide-react';
+import { CalendarCheck, Car, ChevronDown, Clock, History, MapPin, ShoppingBag } from 'lucide-react';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -20,14 +20,12 @@ import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
+import RailLayout from '@/components/ui/RailLayout';
 
 // Tailwind-native (migrasi Fase 2): sub-family kecil my-trips cart -> utilities.
 // `mtc-empty` DIPERTAHANKAN sbg marker: anchor `.mtc-empty .btn-pill` (reset
 // full-width [data-mytrips-cart] .btn-pill). `.mtc-total__val .price-cur` DIHAPUS
 // (redundant - .price-cur udah amber default), jadi mtc-total__val full convert.
-const MTC_TABS = 'flex flex-nowrap gap-[0.4rem] overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x [border-bottom:1px_solid_var(--line)] mb-[1.4rem]';
-const mtcTab = (on) =>
-  `flex-[0_0_auto] whitespace-nowrap border-none bg-transparent py-[0.6rem] px-[0.35rem] mr-[0.6rem] font-body text-small cursor-pointer mb-[-1px] ${on ? 'font-semibold text-green [border-bottom:2px_solid_var(--color-gold)]' : 'font-medium text-muted [border-bottom:2px_solid_transparent]'}`;
 const MTC_EMPTY = 'text-center pt-2 px-0 pb-0';
 const MTC_EMPTY_LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-0 mb-[0.4rem]';
 // Hint/explanation text: needs the site's body-text size explicitly (text-body) -
@@ -127,6 +125,11 @@ export default function MyTripsCart() {
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
   const [tab, setTab] = useState('custom');
+  // Phone: which of the shell's two screens is showing. This page opens straight
+  // on the cart rather than on the section list - unlike Our Company it has an
+  // obvious default, and a guest who came here to pay should not have to tap
+  // through a menu first. Back still reaches the list.
+  const [reading, setReading] = useState(true);
   const [openRef, setOpenRef] = useState(null);
 
   const rows = useMemo(() => {
@@ -391,27 +394,21 @@ export default function MyTripsCart() {
   };
 
   const TABS = [
-    { id: 'custom', label: 'My Trip' },
-    { id: 'booked', label: 'Booked Trip' },
-    { id: 'past', label: 'Past Trip' },
+    { id: 'custom', label: 'My Trip', Icon: ShoppingBag },
+    { id: 'booked', label: 'Booked Trip', Icon: CalendarCheck },
+    { id: 'past', label: 'Past Trip', Icon: History },
   ];
 
   return (
     <div data-mytrips-cart>
-      <div className={MTC_TABS} role="tablist">
-        {TABS.map((tb) => (
-          <button
-            type="button"
-            key={tb.id}
-            className={mtcTab(tab === tb.id)}
-            role="tab"
-            aria-selected={tab === tb.id ? 'true' : 'false'}
-            onClick={() => setTab(tb.id)}
-          >
-            {tb.label}
-          </button>
-        ))}
-      </div>
+      <RailLayout
+        label="My trips"
+        items={TABS}
+        active={tab}
+        onSelect={(id) => { setTab(id); setReading(true); }}
+        reading={reading}
+        onBack={() => setReading(false)}
+      >
       {tab === 'custom' && (rows.length === 0 ? (
         <div className={MTC_EMPTY}>
           <p className={MTC_EMPTY_LEAD}>Your trip is empty.</p>
@@ -477,6 +474,7 @@ export default function MyTripsCart() {
 
       {tab === 'booked' && <div>{bookingPanel(false)}</div>}
       {tab === 'past' && <div>{bookingPanel(true)}</div>}
+      </RailLayout>
 
       <ReviewModal open={!!review} prefill={review} onClose={() => setReview(null)} />
 

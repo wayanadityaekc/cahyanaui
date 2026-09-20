@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BedDouble, MessageCircle } from 'lucide-react';
+import { BedDouble, MessageCircle, ShoppingBag } from 'lucide-react';
 import { Collapse } from '@/components/ui/Reveal';
 import useBodyLock from '@/components/ui/useBodyLock';
 import CurrencyPicker from '@/components/ui/CurrencyPicker';
 import FlagDefs from '@/components/layout/FlagDefs';
 import { useBooking } from '@/components/providers/BookingProvider';
+import { useCart } from '@/components/providers/CartProvider';
 import { WHATSAPP_LINK } from '@/lib/constants';
 
 // CUE's navbar (components/layout/Navbar.jsx there), reused class for class.
@@ -50,6 +51,10 @@ import { WHATSAPP_LINK } from '@/lib/constants';
 // - The currency picker lives in the drawer's header row, which is where CUE
 //   keeps it (inside its account panel, never loose in the bar).
 
+// CUE's BADGE_BASE, verbatim: the little count that rides the cart icon.
+const BADGE_BASE =
+  'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
+
 const BURGER_BAR =
   'w-full h-[2px] bg-gold max-[992px]:w-[22px] ' +
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
@@ -81,6 +86,7 @@ const LINKS_BEFORE = [
   { href: '/', label: 'Home' },
   { href: '/villas', label: 'Villas' },
   { href: '/experiences', label: 'Experiences' },
+  { href: '/guide', label: 'Guide' },
 ];
 
 const SUBMENU = {
@@ -94,10 +100,8 @@ const SUBMENU = {
 };
 
 const LINKS_AFTER = [
-  { href: '/about', label: 'About' },
-  // No stand-alone Contact page was specced with real content, so this lands on
-  // the About page's Get in Touch section rather than a thin new page.
-  { href: '/about#contact', label: 'Contact' },
+  { href: '/our-company', label: 'Our Company' },
+  { href: '/our-company#contact', label: 'Contact' },
 ];
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -110,6 +114,7 @@ export default function Navbar() {
   const headerRef = useRef(null);
   const pathname = usePathname();
   const { openBooking } = useBooking();
+  const { count } = useCart();
 
   useEffect(() => {
     const el = headerRef.current;
@@ -196,6 +201,18 @@ export default function Navbar() {
         >
           <MessageCircle className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
         </a>
+
+        {/* My Booking, CUE's cart slot: same icon size, same spacing pair, same
+            badge. It only shows a number once there is something in the booking -
+            an empty badge is noise. */}
+        <Link
+          href="/my-booking"
+          className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]"
+          aria-label="My Booking"
+        >
+          <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+          <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
+        </Link>
 
         <FlagDefs />
 

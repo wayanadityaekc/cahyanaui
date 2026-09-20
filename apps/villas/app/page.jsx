@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Mountain, ShieldCheck, Users, Waves } from 'lucide-react';
 import VillaCard from '@/components/cards/VillaCard';
 import ServiceCard from '@/components/cards/ServiceCard';
 import ReviewCard from '@/components/cards/ReviewCard';
@@ -15,21 +16,9 @@ export const metadata = {
 };
 
 const WHY_STAY = [
-  {
-    title: 'Private Pool',
-    desc: 'Enjoy your own pool, surrounded by tropical greenery.',
-    icon: <path d="M3 16c1.5-1 2.5-1 4 0s2.5 1 4 0 2.5-1 4 0 2.5 1 4 0M3 12c1.5-1 2.5-1 4 0s2.5 1 4 0 2.5-1 4 0 2.5 1 4 0M6 12V7a2 2 0 0 1 2-2h1v2" />,
-  },
-  {
-    title: 'Local Hosting',
-    desc: 'Our family is here to make your stay feel like home.',
-    icon: <><circle cx="9" cy="8" r="2.6" /><circle cx="16" cy="9" r="2.2" /><path d="M3.5 19c0-3 2.5-5.4 5.5-5.4S14.5 16 14.5 19M14.8 13.7c2.5.3 4.2 2.4 4.2 5" /></>,
-  },
-  {
-    title: 'Transparent Pricing',
-    desc: 'No hidden fees. What you see is what you pay.',
-    icon: <><path d="M12 3l7 3.2v5c0 4.5-3 8.2-7 9.6-4-1.4-7-5.1-7-9.6v-5L12 3Z" /><path d="m9 12 2 2 4-4" /></>,
-  },
+  { title: 'Private Pool', desc: 'Enjoy your own pool, surrounded by tropical greenery.', Icon: Waves },
+  { title: 'Local Hosting', desc: 'Our family is here to make your stay feel like home.', Icon: Users },
+  { title: 'Transparent Pricing', desc: 'No hidden fees. What you see is what you pay.', Icon: ShieldCheck },
 ];
 
 export default function HomePage() {
@@ -98,9 +87,7 @@ export default function HomePage() {
             {WHY_STAY.map((item) => (
               <div key={item.title} className="flex items-start gap-4">
                 <span className="icon-circle">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    {item.icon}
-                  </svg>
+                  <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
                 </span>
                 <div>
                   <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
@@ -135,9 +122,7 @@ export default function HomePage() {
               className="card mt-8 inline-flex items-center gap-3 p-4 max-w-xs bg-white"
             >
               <span className="icon-circle">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m3 20 5-8 4 5 3-4 6 7Z" /><circle cx="8" cy="7" r="2" />
-                </svg>
+                <Mountain className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
               </span>
               <span>
                 <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>

@@ -1,6 +1,9 @@
 'use client';
 
+import { ChevronLeft, MessageCircle, X } from 'lucide-react';
+import { useEffect } from 'react';
 import { useBooking } from '@/components/providers/BookingProvider';
+import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
 import { formatApproxIDR, formatCurrency } from '@/lib/currency';
@@ -14,12 +17,30 @@ import { whatsappLink } from '@/lib/constants';
 export default function BookingSheet() {
   const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
   const { currency, format } = useCurrency();
+  const { setStay } = useCart();
 
-  if (!isOpen) return null;
+  // Reaching the summary is the guest settling on a villa and dates, so that is
+  // the moment the stay belongs in My Booking - not on every keystroke in step
+  // one, which would fill the badge while they are still browsing. Runs in an
+  // effect, never during render: writing to another provider mid-render is what
+  // makes React complain about updating one component while rendering another.
+  useEffect(() => {
+    if (!isOpen || step !== 'summary') return;
+    setStay({
+      villaSlug: booking.villaSlug,
+      checkIn: booking.checkIn,
+      checkOut: booking.checkOut,
+      guests: booking.guests,
+    });
+  }, [isOpen, step, booking.villaSlug, booking.checkIn, booking.checkOut, booking.guests, setStay]);
 
   const villa = VILLAS[booking.villaSlug] || VILLA_LIST[0];
   const breakdown = priceBreakdown(villa.slug, booking.checkIn, booking.checkOut);
   const canContinue = booking.checkIn && booking.checkOut && breakdown && breakdown.nights > 0;
+
+  // Hooks above, bail-out here: an early return before them would change the
+  // hook order between renders.
+  if (!isOpen) return null;
 
   const message = breakdown
     ? [
@@ -47,9 +68,7 @@ export default function BookingSheet() {
           <div className="flex items-center gap-2">
             {step === 'summary' && (
               <button type="button" onClick={goToDetails} aria-label="Back" className="text-gold cursor-pointer">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path d="M11 3.5 5.5 9l5.5 5.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <ChevronLeft className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
               </button>
             )}
             <h3 className="text-h3 font-semibold text-gold">
@@ -57,9 +76,7 @@ export default function BookingSheet() {
             </h3>
           </div>
           <button type="button" onClick={closeBooking} aria-label="Close" className="text-gold cursor-pointer">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M4 4l10 10M14 4 4 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
+            <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
           </button>
         </div>
 
@@ -180,9 +197,7 @@ export default function BookingSheet() {
               rel="noopener"
               className="btn btn-cta btn-full"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
-              </svg>
+              <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />
               Continue to WhatsApp
             </a>
             <p className="text-label text-muted text-center">

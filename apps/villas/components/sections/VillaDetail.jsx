@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
@@ -74,7 +75,7 @@ export default function VillaDetail({ villa }) {
             <div className="mt-6 flex items-center gap-3 flex-wrap">
               {villa.amenities.map((a) => (
                 <span key={a} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold">
-                  <span className="text-cta"><AmenityIcon name={a} size={17} /></span>
+                  <span className="text-cta"><AmenityIcon name={a} /></span>
                   {a}
                 </span>
               ))}
@@ -237,9 +238,7 @@ export default function VillaDetail({ villa }) {
               aria-label="Chat on WhatsApp"
               className="flex items-center justify-center w-11 h-11 rounded-full bg-cta text-white flex-shrink-0"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
-              </svg>
+              <MessageCircle className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
             </a>
             <button
               type="button"

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BedDouble, Users, Waves } from 'lucide-react';
+import { ArrowRight, BedDouble, Users, Waves } from 'lucide-react';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 
 // Lucide, per CUE's rule that new icons come from the set and are never drawn
@@ -51,7 +51,7 @@ export default function VillaCard({ villa }) {
           </p>
           <span className="btn btn-cta btn-sm">
             View details
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.5h7M7 3l3.5 3.5L7 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <ArrowRight className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.6} aria-hidden="true" />
           </span>
         </div>
       </div>

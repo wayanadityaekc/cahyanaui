@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function ServiceCard({ href, img, alt, name, desc, cta }) {
   return (
@@ -10,7 +11,7 @@ export default function ServiceCard({ href, img, alt, name, desc, cta }) {
         <p className="mt-1.5 text-small text-muted">{desc}</p>
         <span className="mt-3 inline-flex items-center gap-1 text-label font-semibold uppercase tracking-wide text-cta">
           {cta}
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M6.5 2.5 10 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <ArrowRight className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.6} aria-hidden="true" />
         </span>
       </div>
     </Link>

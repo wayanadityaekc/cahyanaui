@@ -38,13 +38,17 @@ const COL_A = 'no-underline text-green hover:text-gold';
 const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';
 const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 
-// Instagram and Facebook stay HAND-DRAWN. Lucide dropped its brand icons in v1
-// (6329 icons, zero brand marks), which is the same carve-out CUE already makes
-// for its payment marks and currency flags.
+// Airbnb, Instagram and Facebook are HAND-DRAWN. Lucide dropped brand icons in
+// v1 (6329 icons, zero brand marks), which is the same carve-out CUE already
+// makes for its payment logos and currency flags. Drawn as single-colour
+// outlines so they inherit currentColor and sit in the 22px circles like CUE's.
 function BrandIcon({ name }) {
   return (
     <svg className="block w-[13px] h-[13px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {name === 'Instagram' ? (
+      {name === 'Airbnb' ? (
+        // The Bélo: a loop that rises to a point and tucks back under itself.
+        <path d="M12 3c1 0 1.7.7 2.3 1.9 1.4 2.8 3.4 7 4.4 9.4.7 1.8.1 3.6-1.5 4.3-1.5.6-3.2 0-4.2-1.4L12 15.6l-1 1.6c-1 1.4-2.7 2-4.2 1.4-1.6-.7-2.2-2.5-1.5-4.3 1-2.4 3-6.6 4.4-9.4C10.3 3.7 11 3 12 3Z" />
+      ) : name === 'Instagram' ? (
         <>
           <rect x="3" y="3" width="18" height="18" rx="5" />
           <circle cx="12" cy="12" r="4" />
@@ -57,6 +61,17 @@ function BrandIcon({ name }) {
   );
 }
 
+// ONE PLACE TO PUT THE REAL LINKS IN. Every one of these is an account that
+// exists in life but has no URL on file yet, so each carries aria-disabled
+// instead of a bare href="#": a link that goes nowhere should say so to a
+// screen reader rather than silently jumping to the top of the page. Fill in
+// `href` here and delete the `href: null` and the attribute follows.
+const SOCIAL = [
+  { name: 'Airbnb', href: null },     // TODO: the two villas' Airbnb listing or host page
+  { name: 'Instagram', href: null },  // TODO
+  { name: 'Facebook', href: null },   // TODO
+];
+
 /* ── CONTENT ─────────────────────────────────────────────────────────────── */
 
 const BRAND = 'Ubud Private Villas';
@@ -66,6 +81,7 @@ const STAY = [
   ['/villas/cahyana-tibuah', 'Cahyana Tibuah'],
   ['/villas', 'All villas'],
   ['/experiences', 'Experiences'],
+  ['/guide', 'Ubud guide'],
 ];
 
 const SERVICES = [
@@ -75,9 +91,15 @@ const SERVICES = [
   ['/services/scooter-rental', 'Scooter Rental'],
 ];
 
+// The standalone /about page is gone: its copy now lives in the Our Company
+// page's About tab, and running both would have been the same words on two
+// URLs competing with each other in search. CUE retired its standalone
+// About/Contact/FAQ pages into Our Company for the same reason.
 const COMPANY = [
-  ['/about', 'About Us'],
-  ['/about#contact', 'Contact'],
+  ['/our-company#about', 'About Us'],
+  ['/our-company#contact', 'Contact'],
+  ['/our-company#faq', 'FAQ'],
+  ['/our-company#privacy', 'Privacy Policy'],
 ];
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -134,15 +156,21 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Both social links point at accounts that do not exist yet, so they
-            carry aria-disabled rather than just href="#": a link that goes
-            nowhere should say so instead of silently jumping to the top of the
-            page. Give them real URLs and drop the attribute. */}
         <div>
           <h4 className={COL_H}>Follow</h4>
           <div className="flex gap-[0.6rem]">
-            <a href="#" aria-label="Instagram" aria-disabled="true" className={SOCIAL_A}><BrandIcon name="Instagram" /></a>
-            <a href="#" aria-label="Facebook" aria-disabled="true" className={SOCIAL_A}><BrandIcon name="Facebook" /></a>
+            {SOCIAL.map((s) => (
+              <a
+                key={s.name}
+                href={s.href || '#'}
+                aria-label={s.name}
+                aria-disabled={s.href ? undefined : 'true'}
+                {...(s.href ? { target: '_blank', rel: 'noopener' } : {})}
+                className={SOCIAL_A}
+              >
+                <BrandIcon name={s.name} />
+              </a>
+            ))}
           </div>
         </div>
       </div>

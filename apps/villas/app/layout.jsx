@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { BookingProvider } from '@/components/providers/BookingProvider';
+import { CartProvider } from '@/components/providers/CartProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
 
 const inter = localFont({
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
       <body>
         <LoadingScreen />
         <CurrencyProvider>
+          <CartProvider>
           <BookingProvider>
             <Navbar />
             {/* The header is FIXED (CUE's), so the page reserves its height here.
@@ -37,6 +39,7 @@ export default function RootLayout({ children }) {
             <Footer />
             <BookingSheet />
           </BookingProvider>
+          </CartProvider>
         </CurrencyProvider>
       </body>
     </html>

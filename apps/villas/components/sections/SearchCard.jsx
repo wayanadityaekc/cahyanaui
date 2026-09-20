@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Search } from 'lucide-react';
 import { useBooking } from '@/components/providers/BookingProvider';
 
 // Hero "Search" card (overlaps the hero photo edge, per the mockup). Feeds
@@ -56,9 +57,7 @@ export default function SearchCard() {
         className="btn btn-cta"
         onClick={() => openBooking({ checkIn, checkOut, guests })}
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
-        </svg>
+        <Search className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
         Search
       </button>
     </div>

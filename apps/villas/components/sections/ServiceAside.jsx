@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import AddToBooking from '@/components/ui/AddToBooking';
 import { WHATSAPP_LINK } from '@/lib/constants';
 
-export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherServices }) {
+export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherServices, serviceId }) {
   return (
     <aside className="lg:sticky lg:top-24 flex flex-col gap-5">
       <div className="card p-6">
@@ -15,6 +16,7 @@ export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherSer
           ))}
         </ul>
         <Link href="/villas" className="btn btn-cta btn-full">Pick your villa</Link>
+        {serviceId && <AddToBooking serviceId={serviceId} />}
         <a href={ctaHref || WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-outline btn-full mt-2">{ctaLabel}</a>
       </div>
 

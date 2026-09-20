@@ -15,6 +15,7 @@ export default function ServiceDetail({
   sections,
   gallery,
   aside,
+  serviceId,
   bottomHeading,
   bottomText,
   bottomCta,
@@ -68,7 +69,7 @@ export default function ServiceDetail({
             {gallery && <Mosaic images={gallery} />}
           </div>
 
-          <ServiceAside {...aside} />
+          <ServiceAside {...aside} serviceId={serviceId} />
         </div>
       </section>
 

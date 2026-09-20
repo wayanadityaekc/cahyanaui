@@ -8,6 +8,7 @@ export const metadata = {
 export default function BreakfastPage() {
   return (
     <ServiceDetail
+      serviceId="breakfast"
       kicker="At Your Villa"
       title="Breakfast"
       subtitle="Cooked fresh in your own villa kitchen each morning."

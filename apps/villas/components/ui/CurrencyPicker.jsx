@@ -1,70 +1,95 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { CURRENCIES } from '@/lib/currency';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 
-// Currency dropdown for the navbar (desktop popover / mobile behaves the
-// same, just narrower) — a real display-currency switcher, not decorative.
-export default function CurrencyPicker({ light = false }) {
+// CUE's CurrencyPicker (components/layout/CurrencyPicker.jsx there), class for
+// class. Only the data source changed: this site's useCurrency() hook and its
+// CURRENCIES list in place of CUE's TripPrefs context.
+//
+// The flags are CUE's SVG sprite (FlagDefs), not the emoji this site used
+// before — CUE's rule is SVG and no emoji anywhere, and emoji flags render as
+// two-letter boxes on most of Windows, so a guest on a laptop saw "US" instead
+// of a flag.
+//
+// `variant`: 'navbar' (sits at the end of the drawer's header row) / 'hero'
+// (sized to match a form field) / 'default'.
+const wrap = (v) => `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`;
+const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body text-field text-green cursor-pointer';
+const curbtn = (v) =>
+  v === 'hero'
+    ? `${CURBTN_BASE} py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
+    : `${CURBTN_BASE} py-2 px-[0.65rem] rounded-pill font-semibold [border:1px_solid_#d8d2c4]`;
+const CURCODE = 'flex-[1_1_auto] text-left';
+const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
+// The list stays mounted and only toggles opacity/transform/pointer-events, so
+// the transition actually plays — a `hidden` attribute would snap.
+const curlist = (v, open) =>
+  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_#e4dcc8] [box-shadow:0_10px_24px_rgba(31,61,43,0.16)] z-10 ` +
+  `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
+  `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
+  `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
+const CUROPT = 'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
+const FLAG = 'inline-block w-5 h-[14px] rounded-[2px] overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
+
+function Flag({ code }) {
+  return (
+    <span className={FLAG}>
+      <svg viewBox="0 0 60 40" aria-hidden="true">
+        <use href={`#flag-${code.toLowerCase()}`} />
+      </svg>
+    </span>
+  );
+}
+
+export default function CurrencyPicker({ variant = 'default' }) {
   const { currency, setCurrency } = useCurrency();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
-    function onClick(e) {
+    if (!open) return;
+    const onDoc = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    }
-    document.addEventListener('mousedown', onClick);
-    return () => document.removeEventListener('mousedown', onClick);
-  }, []);
+    };
+    document.addEventListener('click', onDoc);
+    return () => document.removeEventListener('click', onDoc);
+  }, [open]);
 
   return (
-    <div className="relative" ref={ref}>
+    <div className={wrap(variant)} data-cur ref={ref}>
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
+        className={curbtn(variant)}
+        id="acct-cur"
         aria-label="Select currency"
-        className={`flex items-center gap-1 text-[0.78rem] font-semibold cursor-pointer ${light ? 'text-white' : 'text-gold'}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
       >
-        {currency}
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className={`transition-transform ${open ? 'rotate-180' : ''}`}>
-          <path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <Flag code={currency} />
+        <span className={CURCODE}>{currency}</span>
+        <ChevronDown className={CURCARET} aria-hidden="true" />
       </button>
-
-      {open && (
-        <div
-          className="absolute right-0 top-[calc(100%+10px)] w-56 rounded-lg bg-white border border-line shadow-lg py-2 z-50"
-        >
-          <p className="px-4 pb-2 text-label font-semibold uppercase tracking-wide text-muted">Select currency</p>
-          {CURRENCIES.map((c) => (
-            <button
-              key={c.code}
-              type="button"
-              onClick={() => {
-                setCurrency(c.code);
-                setOpen(false);
-              }}
-              className="w-full flex items-center justify-between gap-3 px-4 py-2 text-left text-small hover:bg-cream cursor-pointer text-gold"
-            >
-              <span className="flex items-center gap-2">
-                <span aria-hidden="true">{c.flag}</span>
-                <span>
-                  {c.code} <span className="text-muted">· {c.name}</span>
-                </span>
-              </span>
-              {currency === c.code && (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="8" fill="var(--color-cta)" />
-                  <path d="M4.5 8.2 7 10.5 11.5 5.5" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+      <ul className={curlist(variant, open)} role="listbox" aria-label="Currency">
+        {CURRENCIES.map((c) => (
+          <li
+            key={c.code}
+            className={CUROPT}
+            role="option"
+            aria-selected={c.code === currency}
+            onClick={() => {
+              setCurrency(c.code);
+              setOpen(false);
+            }}
+          >
+            <Flag code={c.code} />
+            {c.code}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

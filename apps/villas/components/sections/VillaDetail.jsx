@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
+import DateField from '@/components/ui/DateField';
+import { BAR_SHELL, BAR_CARD } from '@/components/ui/stickyBar';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { WHATSAPP_LINK, CUE_LINK } from '@/lib/constants';
@@ -73,7 +76,7 @@ export default function VillaDetail({ villa }) {
             <div className="mt-6 flex items-center gap-3 flex-wrap">
               {villa.amenities.map((a) => (
                 <span key={a} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold">
-                  <span className="text-cta"><AmenityIcon name={a} size={17} /></span>
+                  <span className="text-cta"><AmenityIcon name={a} /></span>
                   {a}
                 </span>
               ))}
@@ -123,7 +126,7 @@ export default function VillaDetail({ villa }) {
             <ul className="border-t border-line">
               {villa.goodToKnow.map((g) => (
                 <li key={g.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
-                  <span className="min-w-[120px] text-label uppercase tracking-wide text-muted">{g.label}</span>
+                  <span className="min-w-[120px] caps text-muted">{g.label}</span>
                   <span className="text-gold">{g.value}</span>
                 </li>
               ))}
@@ -141,30 +144,26 @@ export default function VillaDetail({ villa }) {
               </div>
 
               <div className="grid grid-cols-2 gap-2 mt-5">
-                <div className="field-shell">
-                  <div className="w-full">
-                    <label htmlFor={`${villa.slug}-checkin`}>Check-in</label>
-                    <input
-                      id={`${villa.slug}-checkin`}
-                      type="date"
-                      value={checkIn}
-                      onChange={(e) => setCheckIn(e.target.value)}
-                      className={checkIn ? undefined : 'is-empty'}
-                    />
-                  </div>
+                <div className="min-w-0">
+                  <label className="" htmlFor={`${villa.slug}-checkin`}>Check-in</label>
+                  <DateField
+                    id={`${villa.slug}-checkin`}
+                    label="Check-in"
+                    value={checkIn}
+                    onChange={setCheckIn}
+                    placeholder="Add date"
+                  />
                 </div>
-                <div className="field-shell">
-                  <div className="w-full">
-                    <label htmlFor={`${villa.slug}-checkout`}>Check-out</label>
-                    <input
-                      id={`${villa.slug}-checkout`}
-                      type="date"
-                      value={checkOut}
-                      min={checkIn || undefined}
-                      onChange={(e) => setCheckOut(e.target.value)}
-                      className={checkOut ? undefined : 'is-empty'}
-                    />
-                  </div>
+                <div className="min-w-0">
+                  <label className="" htmlFor={`${villa.slug}-checkout`}>Check-out</label>
+                  <DateField
+                    id={`${villa.slug}-checkout`}
+                    label="Check-out"
+                    value={checkOut}
+                    min={checkIn || undefined}
+                    onChange={setCheckOut}
+                    placeholder="Add date"
+                  />
                 </div>
               </div>
 
@@ -180,7 +179,7 @@ export default function VillaDetail({ villa }) {
             </div>
 
             <div className="card p-6 bg-cream">
-              <p className="text-label font-semibold uppercase tracking-wide text-muted mb-3">Add to your stay</p>
+              <p className="caps text-muted mb-3">Add to your stay</p>
               <ul className="flex flex-col">
                 {[
                   { href: '/services/breakfast', label: 'Breakfast' },
@@ -221,12 +220,8 @@ export default function VillaDetail({ villa }) {
           already covers desktop. Slides up from the bottom as a rounded,
           elevated card (shadow-xl) rather than CUE's flush edge-to-edge bar,
           per Wayan's ask to keep the same system but not the identical look. */}
-      <div
-        className={`fixed left-4 right-4 bottom-4 z-40 lg:hidden transition-transform duration-300 ease-out ${
-          showBookBar ? 'translate-y-0' : 'translate-y-[150%]'
-        }`}
-      >
-        <div className="bg-white rounded-2xl shadow-xl border border-line flex items-center justify-between gap-3 px-4 py-3">
+      <div className={`${BAR_SHELL} ${showBookBar ? 'translate-y-0' : 'translate-y-[150%]'}`}>
+        <div className={BAR_CARD}>
           <p className="leading-tight">
             <span className="block text-label text-muted">From</span>
             <span className="text-h3 font-bold text-amber">{format(villa.nightlyRate)}</span>
@@ -240,9 +235,7 @@ export default function VillaDetail({ villa }) {
               aria-label="Chat on WhatsApp"
               className="flex items-center justify-center w-11 h-11 rounded-full bg-cta text-white flex-shrink-0"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5a8.5 8.5 0 1 1 17-3z" />
-              </svg>
+              <MessageCircle className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
             </a>
             <button
               type="button"

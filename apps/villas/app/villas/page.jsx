@@ -1,4 +1,5 @@
 import VillaCard from '@/components/cards/VillaCard';
+import { GRID_PAIR } from '@/components/ui/gridClasses';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
 import { VILLA_LIST } from '@/lib/villas';
 import { WHATSAPP_LINK } from '@/lib/constants';
@@ -24,10 +25,12 @@ export default function VillasPage() {
       </section>
 
       <section className="section">
-        <div className="wrap grid sm:grid-cols-2 gap-6">
-          {VILLA_LIST.map((villa) => (
-            <VillaCard key={villa.slug} villa={villa} />
-          ))}
+        <div className="wrap">
+          <div className={GRID_PAIR}>
+            {VILLA_LIST.map((villa) => (
+              <VillaCard key={villa.slug} villa={villa} />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -56,7 +59,7 @@ export default function VillasPage() {
                   ['Rating', '★ 4.96 · 221 reviews', '★ 4.96 · 85 reviews'],
                 ].map((row) => (
                   <tr key={row[0]} className="border-t border-line">
-                    <td className="p-4 text-label uppercase tracking-wide text-muted">{row[0]}</td>
+                    <td className="p-4 caps text-muted">{row[0]}</td>
                     <td className="p-4 text-gold">{row[1]}</td>
                     <td className="p-4 text-gold">{row[2]}</td>
                   </tr>

@@ -15,6 +15,7 @@ export default function ServiceDetail({
   sections,
   gallery,
   aside,
+  serviceId,
   bottomHeading,
   bottomText,
   bottomCta,
@@ -22,7 +23,7 @@ export default function ServiceDetail({
   return (
     <>
       <section className="relative">
-        <div className="relative min-h-[38vh] flex items-end overflow-hidden">
+        <div className="relative min-h-[38vh] flex items-end overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={heroImg} alt={heroAlt} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.1), rgba(20,20,16,0.65))' }} />
@@ -41,7 +42,7 @@ export default function ServiceDetail({
             <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
               {glance.map((g) => (
                 <li key={g.label} className="flex flex-col py-4 pr-4 text-small">
-                  <span className="text-label uppercase tracking-wide text-muted">{g.label}</span>
+                  <span className="caps text-muted">{g.label}</span>
                   <span className="text-gold">{g.value}</span>
                 </li>
               ))}
@@ -68,7 +69,7 @@ export default function ServiceDetail({
             {gallery && <Mosaic images={gallery} />}
           </div>
 
-          <ServiceAside {...aside} />
+          <ServiceAside {...aside} serviceId={serviceId} />
         </div>
       </section>
 

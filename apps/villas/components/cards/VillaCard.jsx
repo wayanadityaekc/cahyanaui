@@ -1,13 +1,18 @@
 'use client';
 
 import Link from 'next/link';
+import { ArrowRight, BedDouble, Users, Waves } from 'lucide-react';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 
+// Lucide, per CUE's rule that new icons come from the set and are never drawn
+// by hand again (hand-drawn is reserved for marks Lucide does not carry, like
+// payment logos). Size is always explicit — Lucide renders width/height=24, so
+// an icon given no size class balloons to 24px.
 function MetaIcon({ type }) {
-  const common = { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' };
-  if (type === 'guests') return <svg {...common}><circle cx="12" cy="8" r="3.2" /><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" /></svg>;
-  if (type === 'bedrooms') return <svg {...common}><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18v2M21 18v2M3 12V8a2 2 0 0 1 2-2h3v4" /></svg>;
-  return <svg {...common}><path d="M4 16c1.5-1 2.5-1 4 0s2.5 1 4 0 2.5-1 4 0 2.5 1 4 0M4 12c1.5-1 2.5-1 4 0s2.5 1 4 0 2.5-1 4 0 2.5 1 4 0" /><path d="M6 12V8a2 2 0 0 1 2-2h1v2" /></svg>;
+  const cls = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
+  if (type === 'guests') return <Users className={cls} strokeWidth={1.8} aria-hidden="true" />;
+  if (type === 'bedrooms') return <BedDouble className={cls} strokeWidth={1.8} aria-hidden="true" />;
+  return <Waves className={cls} strokeWidth={1.8} aria-hidden="true" />;
 }
 
 export default function VillaCard({ villa }) {
@@ -32,7 +37,7 @@ export default function VillaCard({ villa }) {
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">
         <h3 className="text-h3 font-semibold text-gold">{villa.name}</h3>
-        <div className="flex items-center gap-4 text-small text-muted">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-small text-muted [&>span]:whitespace-nowrap">
           <span className="flex items-center gap-1.5"><MetaIcon type="guests" />Up to {villa.guests} guests</span>
           <span className="flex items-center gap-1.5"><MetaIcon type="bedrooms" />{villa.bedrooms} bedrooms</span>
           <span className="flex items-center gap-1.5"><MetaIcon type="pool" />Private pool</span>
@@ -46,7 +51,7 @@ export default function VillaCard({ villa }) {
           </p>
           <span className="btn btn-cta btn-sm">
             View details
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.5h7M7 3l3.5 3.5L7 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <ArrowRight className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.6} aria-hidden="true" />
           </span>
         </div>
       </div>

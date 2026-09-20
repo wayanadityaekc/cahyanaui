@@ -1,3 +1,5 @@
+import { Flower2, Landmark, Mountain, Trees } from 'lucide-react';
+import { GRID_QUAD } from '@/components/ui/gridClasses';
 import { CUE_LINK, UBUD_GUIDE_LINK } from '@/lib/constants';
 
 // Judgement call (see report): there is no real, ready-to-publish content
@@ -16,22 +18,22 @@ const CATEGORIES = [
   {
     title: 'Ubud Highlights',
     desc: 'Temples, rice terraces, waterfalls and the classic Ubud stops in one day.',
-    icon: <path d="m3 20 5-8 4 5 3-4 6 7Z" />,
+    Icon: Mountain,
   },
   {
     title: 'Balinese Culture & Temples',
     desc: 'Traditional ceremonies, sacred sites and local craft villages.',
-    icon: <><path d="M12 3l7 3.2v5c0 4.5-3 8.2-7 9.6-4-1.4-7-5.1-7-9.6v-5L12 3Z" /></>,
+    Icon: Landmark,
   },
   {
     title: 'Nature & Waterfalls',
     desc: "Bali's waterfalls, jungle treks and rice terrace walks.",
-    icon: <path d="M12 3v9M8 8l4-5 4 5M6 21c0-4 2.7-7 6-7s6 3 6 7" />,
+    Icon: Trees,
   },
   {
     title: 'Wellness & Spa Day',
     desc: 'Spa mornings and slow days out, beyond the in-villa massage.',
-    icon: <><circle cx="12" cy="12" r="8" /><path d="M9 12h6M12 9v6" /></>,
+    Icon: Flower2,
   },
 ];
 
@@ -39,7 +41,7 @@ export default function ExperiencesPage() {
   return (
     <>
       <section className="relative">
-        <div className="relative min-h-[42vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[42vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://picsum.photos/seed/ubudwalk9/1800/900"
@@ -65,13 +67,11 @@ export default function ExperiencesPage() {
             These are illustrative categories, not a live booking list — exact tours, prices and availability are confirmed directly with Cahyana Ubud Experience, the local driver-and-tour team our family also runs.
           </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+          <div className={`${GRID_QUAD} mt-8`}>
             {CATEGORIES.map((c) => (
               <div key={c.title} className="card p-6">
                 <span className="icon-circle">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    {c.icon}
-                  </svg>
+                  <c.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
                 </span>
                 <h3 className="text-h3 font-semibold mt-4 text-gold">{c.title}</h3>
                 <p className="text-small text-muted mt-1.5">{c.desc}</p>

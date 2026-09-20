@@ -8,6 +8,7 @@ export const metadata = {
 export default function LiveDinnerPage() {
   return (
     <ServiceDetail
+      serviceId="live-dinner"
       kicker="At Your Villa"
       title="Live Dinner"
       subtitle="A chef in your kitchen, a table under the stars, no booking a restaurant."

@@ -8,6 +8,7 @@ export const metadata = {
 export default function SpaPage() {
   return (
     <ServiceDetail
+      serviceId="spa"
       kicker="At Your Villa"
       title="Spa & Massage"
       subtitle="Local therapists, your own villa, no taxi afterwards."

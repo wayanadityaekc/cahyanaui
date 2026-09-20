@@ -13,6 +13,7 @@ export const metadata = {
 export default function ScooterRentalPage() {
   return (
     <ServiceDetail
+      serviceId="scooter-rental"
       kicker="At Your Villa"
       title="Scooter Rental"
       subtitle="A scooter delivered to your villa, so you can explore Ubud at your own pace."

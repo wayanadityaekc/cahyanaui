@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Mountain, ShieldCheck, Users, Waves } from 'lucide-react';
 import VillaCard from '@/components/cards/VillaCard';
 import ServiceCard from '@/components/cards/ServiceCard';
 import ReviewCard from '@/components/cards/ReviewCard';
@@ -7,6 +8,7 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { UBUD_GUIDE_LINK } from '@/lib/constants';
+import { GRID_PAIR, GRID_TRIO } from '@/components/ui/gridClasses';
 
 export const metadata = {
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
@@ -14,21 +16,9 @@ export const metadata = {
 };
 
 const WHY_STAY = [
-  {
-    title: 'Private Pool',
-    desc: 'Enjoy your own pool, surrounded by tropical greenery.',
-    icon: <path d="M3 16c1.5-1 2.5-1 4 0s2.5 1 4 0 2.5-1 4 0 2.5 1 4 0M3 12c1.5-1 2.5-1 4 0s2.5 1 4 0 2.5-1 4 0 2.5 1 4 0M6 12V7a2 2 0 0 1 2-2h1v2" />,
-  },
-  {
-    title: 'Local Hosting',
-    desc: 'Our family is here to make your stay feel like home.',
-    icon: <><circle cx="9" cy="8" r="2.6" /><circle cx="16" cy="9" r="2.2" /><path d="M3.5 19c0-3 2.5-5.4 5.5-5.4S14.5 16 14.5 19M14.8 13.7c2.5.3 4.2 2.4 4.2 5" /></>,
-  },
-  {
-    title: 'Transparent Pricing',
-    desc: 'No hidden fees. What you see is what you pay.',
-    icon: <><path d="M12 3l7 3.2v5c0 4.5-3 8.2-7 9.6-4-1.4-7-5.1-7-9.6v-5L12 3Z" /><path d="m9 12 2 2 4-4" /></>,
-  },
+  { title: 'Private Pool', desc: 'Enjoy your own pool, surrounded by tropical greenery.', Icon: Waves },
+  { title: 'Local Hosting', desc: 'Our family is here to make your stay feel like home.', Icon: Users },
+  { title: 'Transparent Pricing', desc: 'No hidden fees. What you see is what you pay.', Icon: ShieldCheck },
 ];
 
 export default function HomePage() {
@@ -36,18 +26,23 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative">
-        <div className="relative min-h-[62vh] sm:min-h-[72vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[58vh] sm:min-h-[72vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/cahyana-tibuah.webp"
             alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(100deg, rgba(20,20,16,0.62) 0%, rgba(20,20,16,0.28) 48%, rgba(20,20,16,0.05) 75%)' }}
-          />
-          <div className="wrap relative z-10 py-24">
+          {/* TWO scrims, because the two layouts need opposite things.
+              Desktop puts the copy in the left third, so a left-to-right gradient
+              darkens exactly where the words are and leaves the photo clear.
+              On a phone the copy spans the FULL width, and that same gradient
+              left the right-hand end of every line sitting on a lit window — the
+              subhead was genuinely hard to read. Below 993px it becomes a
+              top-to-bottom scrim instead, dark at both ends, with the bottom end
+              carrying the search card that overlaps it. */}
+          <div className="absolute inset-0 [background:linear-gradient(180deg,rgba(20,20,16,0.5)_0%,rgba(20,20,16,0.34)_40%,rgba(20,20,16,0.68)_100%)] min-[993px]:[background:linear-gradient(100deg,rgba(20,20,16,0.62)_0%,rgba(20,20,16,0.28)_48%,rgba(20,20,16,0.05)_75%)]" />
+          <div className="wrap relative z-10 py-14 sm:py-24">
             <p className="eyebrow text-gold-l">Ubud Private Villas</p>
             <h1 className="text-display font-bold max-w-xl text-white">
               A private retreat in the heart of Ubud
@@ -81,7 +76,7 @@ export default function HomePage() {
               Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className={GRID_PAIR}>
             {VILLA_LIST.map((villa) => (
               <VillaCard key={villa.slug} villa={villa} />
             ))}
@@ -92,9 +87,7 @@ export default function HomePage() {
             {WHY_STAY.map((item) => (
               <div key={item.title} className="flex items-start gap-4">
                 <span className="icon-circle">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    {item.icon}
-                  </svg>
+                  <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
                 </span>
                 <div>
                   <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
@@ -108,7 +101,7 @@ export default function HomePage() {
 
       {/* Experience the real Ubud */}
       <section className="relative">
-        <div className="relative min-h-[46vh] flex items-center overflow-hidden">
+        <div className="relative min-h-[46vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://picsum.photos/seed/ubudwalk9/1800/900"
@@ -129,9 +122,7 @@ export default function HomePage() {
               className="card mt-8 inline-flex items-center gap-3 p-4 max-w-xs bg-white"
             >
               <span className="icon-circle">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m3 20 5-8 4 5 3-4 6 7Z" /><circle cx="8" cy="7" r="2" />
-                </svg>
+                <Mountain className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
               </span>
               <span>
                 <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>
@@ -154,7 +145,7 @@ export default function HomePage() {
             <span className="text-small text-muted font-normal">from {OVERALL_REVIEW_COUNT}+ reviews</span>
           </p>
 
-          <div className="grid sm:grid-cols-3 gap-6 mt-7">
+          <div className={`${GRID_TRIO} mt-7`}>
             {REVIEW_CARDS.map((card, i) => (
               <ReviewCard key={i} card={card} />
             ))}

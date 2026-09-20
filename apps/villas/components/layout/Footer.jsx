@@ -1,47 +1,49 @@
 import Link from 'next/link';
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
-import Logo from '@/components/ui/Logo';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 
-// Footer — CUE's footer shape (components/layout/Footer.jsx there), with this
-// site's links in it.
+// CUE's footer (components/layout/Footer.jsx there), reused class for class —
+// including the light surface. Only the five columns' contents are this site's.
 //
-// The thing actually being reused is the LAYOUT, and it is the fix for the
-// mobile problem: CUE's footer is ONE grid row that goes to TWO columns below
-// 900px with the brand block spanning the full width, so the link lists sit
-// beside each other instead of queueing up. This site's previous footer went to
-// a single column on a phone and ran ~640px tall — four headings and fourteen
-// links stacked in a line under the last thing on the page. Same content, half
-// the scrolling.
+// SHAPE: one grid row, five columns on desktop, dropping to two below 900px
+// with the brand block spanning the full width. CUE arrived at this after
+// building and measuring three layouts; what makes it compact is that nothing
+// gets a full-width band of its own. There is exactly ONE hairline in the whole
+// footer — the bar above the copyright.
 //
-// Also carried over from CUE: exactly ONE hairline in the whole footer (the bar
-// above the copyright — the "Featured On" / "We Accept" full-width bands with
-// their own dividers are what made CUE's old footer feel heavy), and the small
-// icon sizes. CUE sets social circles at 22px deliberately: the footer is the
-// last thing anyone reads, not somewhere to pull attention.
+// COLUMN MAPPING (CUE -> here):
+//   brand + contact        -> brand + contact
+//   Explore                -> Stay
+//   Company                -> Services
+//   Featured On + Follow   -> Company + Follow   (no press logos here, so the
+//                             slot carries the second heading pair instead)
+//   We Accept              -> (dropped: no payment chips on this site)
 //
-// SURFACE COLOUR IS THIS SITE'S, NOT CUE'S. CUE's footer is light (#ebe8e2 with
-// green text); this one stays on the brand green it already shipped with, since
-// nothing in the ask was about repainting it. Swapping it is two class changes
-// on the <footer> and the text colours if that is ever wanted.
-const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-white';
-const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
-const COL_A = 'no-underline text-white/85 hover:text-white';
-const CONTACT_ITEM = 'flex items-center gap-[0.55rem] text-[0.8rem] text-white/85 no-underline';
-const CONTACT_LINK = `${CONTACT_ITEM} hover:text-white`;
-const CONTACT_SVG = 'w-4 h-4 shrink-0 text-white/70';
+// The brand is a TEXT wordmark, as CUE's is, not the logo image — at footer
+// size the mark stops being legible and the name has to be readable.
+//
+// leading-[normal] on the <footer>: CUE's body sets no line-height and this
+// site's base layer sets 1.6, so without this every row here rendered ~5px
+// taller than CUE's (col item 20.5px vs 15px, bottom bar 41.5px vs 36px).
+// Scoped to this subtree so body copy elsewhere keeps its 1.6.
+//
+// Icon sizes are deliberately small (CUE: social circles 22px). The footer is
+// the last thing anyone reads, not somewhere to pull attention.
+const CONTACT_ITEM = 'flex items-center gap-[0.55rem] text-[0.8rem] text-green opacity-90 no-underline';
+const CONTACT_LINK = `${CONTACT_ITEM} hover:opacity-100 hover:text-gold`;
+const CONTACT_SVG = 'w-4 h-4 shrink-0 text-gold';
 const SOCIAL_A =
-  'flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-white bg-white/15 hover:bg-white/30 ' +
-  '[transition:background-color_var(--dur)_var(--ease)]';
+  'flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-green bg-[rgba(0,0,0,0.06)] hover:text-white hover:bg-gold';
+const COL_A = 'no-underline text-green hover:text-gold';
+const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';
+const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 
 // Instagram and Facebook stay HAND-DRAWN. Lucide dropped its brand icons in v1
-// (6329 icons, zero brand marks), and CUE's own rule already carves out exactly
-// this case: everything comes from Lucide EXCEPT logos it does not carry —
-// there that is the payment marks and currency flags, here it is these two.
-// Explicit w/h as always, or Lucide's and a raw <svg>'s defaults disagree.
+// (6329 icons, zero brand marks), which is the same carve-out CUE already makes
+// for its payment marks and currency flags.
 function BrandIcon({ name }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="block w-[13px] h-[13px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {name === 'Instagram' ? (
         <>
           <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -54,6 +56,10 @@ function BrandIcon({ name }) {
     </svg>
   );
 }
+
+/* ── CONTENT ─────────────────────────────────────────────────────────────── */
+
+const BRAND = 'Ubud Private Villas';
 
 const STAY = [
   ['/villas/cahyana-house', 'Cahyana House'],
@@ -74,26 +80,19 @@ const COMPANY = [
   ['/about#contact', 'Contact'],
 ];
 
+/* ────────────────────────────────────────────────────────────────────────── */
+
 export default function Footer() {
   return (
-    <footer className="px-[var(--container-x)] pt-10 pb-5 text-white bg-cta">
+    <footer className="px-6 pt-10 pb-5 leading-[normal] text-green bg-[#ebe8e2]">
       <div
         className="grid max-w-[1100px] mx-auto gap-x-8 gap-y-9
-                   grid-cols-[1.5fr_0.9fr_1.1fr_0.9fr_0.7fr]
-                   max-[992px]:gap-x-5 max-[767px]:grid-cols-2 max-[992px]:gap-y-8"
+                   grid-cols-[1.5fr_0.9fr_1.2fr_0.9fr_1fr]
+                   max-[900px]:grid-cols-2 max-[900px]:gap-y-8"
       >
-        {/* TWO steps, and the middle one is deliberately NOT CUE's. CUE drops
-            straight from five columns to two at 900px, which works there because
-            its fifth column is a wrapping row of payment chips. Doing that here
-            made a 768px tablet TALLER than before the port — measured: 335px of
-            footer became 611px, because the brand block started claiming a row
-            of its own. Instead the five columns hold all the way down to 768px
-            on a tighter gap (gap-x-5), and only below that does it go to two
-            with the brand spanning. Measured after: 291px at 768, 639px at 390
-            (was 863). */}
-        <div className="max-[767px]:col-span-full">
-          <Link href="/" className="inline-block no-underline">
-            <Logo size={30} />
+        <div className="max-[900px]:col-span-full">
+          <Link href="/" className="inline-block no-underline text-green">
+            <span className="font-body text-[1.1rem] font-semibold text-green leading-[1.2]">{BRAND}</span>
           </Link>
           <div className="mt-[0.9rem] flex flex-col gap-[0.55rem]">
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={CONTACT_LINK}>
@@ -135,32 +134,24 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Follow is its OWN column, not a block tacked under Company. At two
-            columns that is what keeps every cell filled: brand across the top,
-            then Stay | Services, then Company | Follow. Left inside Company it
-            sat alone on a fourth row with an empty cell beside it.
-            Both links point at accounts that do not exist yet, so they carry
-            aria-disabled rather than just href="#" — a link that goes nowhere
-            should say so instead of silently jumping to the top of the page.
-            Give them real URLs and drop the attribute. */}
+        {/* Both social links point at accounts that do not exist yet, so they
+            carry aria-disabled rather than just href="#": a link that goes
+            nowhere should say so instead of silently jumping to the top of the
+            page. Give them real URLs and drop the attribute. */}
         <div>
           <h4 className={COL_H}>Follow</h4>
           <div className="flex gap-[0.6rem]">
-            <a href="#" aria-label="Instagram" aria-disabled="true" className={SOCIAL_A}>
-              <BrandIcon name="Instagram" />
-            </a>
-            <a href="#" aria-label="Facebook" aria-disabled="true" className={SOCIAL_A}>
-              <BrandIcon name="Facebook" />
-            </a>
+            <a href="#" aria-label="Instagram" aria-disabled="true" className={SOCIAL_A}><BrandIcon name="Instagram" /></a>
+            <a href="#" aria-label="Facebook" aria-disabled="true" className={SOCIAL_A}><BrandIcon name="Facebook" /></a>
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1100px] mx-auto mt-9 pt-5 border-t border-white/15
+      <div className="max-w-[1100px] mx-auto mt-9 pt-5 border-t border-[rgba(0,0,0,0.12)]
                       flex flex-wrap items-center justify-between gap-x-6 gap-y-2
                       max-[700px]:flex-col max-[700px]:text-center">
-        <p className="text-small text-white/60">&copy; 2026 Ubud Private Villas. All rights reserved.</p>
-        <a href={CUE_LINK} target="_blank" rel="noopener" className="text-small text-white/60 hover:text-white no-underline">
+        <p className="text-small opacity-70">&copy; 2026 {BRAND}. All rights reserved.</p>
+        <a href={CUE_LINK} target="_blank" rel="noopener" className="text-small opacity-70 no-underline text-green hover:text-gold">
           Part of Cahyana Ubud Experience
         </a>
       </div>

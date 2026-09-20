@@ -432,3 +432,44 @@
    page jump to the top when a modal opens.
    ===================================================================== */
 .hs-locked { overflow: hidden !important; }
+
+/* Header entrance, from CUE's style.css. */
+@keyframes navbarIn {
+  from { opacity: 0; }
+}
+
+/* =====================================================================
+   Press feedback — ported from CUE's style.css.
+
+   Uses the standalone `scale` property, NOT `transform: scale()`: cards and
+   CTAs already animate `transform` on hover (a translateY lift) and the two
+   would overwrite each other. `scale` composes with `transform` instead.
+
+   The transition sits at ELEMENT specificity on purpose (0,0,1), so a component
+   that declares its own transition (0,1,0) still wins and simply gets an
+   instant press instead of an eased one. The :active rule is 0,1,1 so the
+   feedback itself always lands, whatever the component declares.
+   ===================================================================== */
+@layer base {
+  button,
+  [role="button"],
+  a[class~="rounded-pill"] {
+    transition-property: scale;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
+  button:not(:disabled):active,
+  [role="button"]:active,
+  a[class~="rounded-pill"]:active {
+    scale: 0.97;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button:not(:disabled):active,
+    [role="button"]:active,
+    a[class~="rounded-pill"]:active {
+      scale: 1;
+    }
+  }
+}

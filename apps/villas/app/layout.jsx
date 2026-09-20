@@ -28,7 +28,12 @@ export default function RootLayout({ children }) {
         <CurrencyProvider>
           <BookingProvider>
             <Navbar />
-            <main>{children}</main>
+            {/* The header is FIXED (CUE's), so the page reserves its height here.
+                --header-h-max is the ceiling the navbar publishes — it only ever
+                grows, so the document cannot jump under the reader if the bar's
+                contents shrink. The literal is the measured full height, used for
+                the first paint before the observer has run. */}
+            <main className="pt-[var(--header-h-max,53px)]">{children}</main>
             <Footer />
             <BookingSheet />
           </BookingProvider>

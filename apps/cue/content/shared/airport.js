@@ -20,8 +20,8 @@ export const AIRPORT = {
     "facts": [
       { "label": "Availability", "value": "24 / 7" },
       { "label": "Capacity", "value": "Up to 5 pax" },
-      { "label": "Meet & greet", "value": "At arrivals" },
-      { "label": "Language", "value": "English" }
+      { "label": "Meet & greet", "value": "Meet & greet at arrivals" },
+      { "label": "Language", "value": "English-speaking driver" }
     ],
     "included": [
       "Private air-conditioned car and fuel",

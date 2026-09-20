@@ -59,7 +59,7 @@ export const TRANSFER = {
       { "label": "Availability", "value": "24 / 7" },
       { "label": "Capacity", "value": "Up to 5 pax" },
       { "label": "Pick-up", "value": "Door to door" },
-      { "label": "Language", "value": "English" }
+      { "label": "Language", "value": "English-speaking driver" }
     ],
     "included": [
       "Private air-conditioned car and fuel",

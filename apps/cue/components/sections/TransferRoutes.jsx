@@ -1,7 +1,7 @@
 'use client';
 
 import Price from '@/components/Price';
-import { SECTION_TITLE } from '@/components/ui/sectionTitle';
+import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 import { TRANSFER } from '@/content/shared/transfer';
 import { useTransferRoute } from '@/components/sections/TransferRouteProvider';
 
@@ -21,8 +21,8 @@ export default function TransferRoutes() {
   const { selectRoute } = useTransferRoute();
   return (
     <>
-      <h2 className={SECTION_TITLE}>{TRANSFER.routesTitle}</h2>
-      <p className="text-center text-muted text-[0.8rem] mt-[0.2rem] mb-[1.4rem]">{TRANSFER.routesNote}</p>
+      <h2 className={`${SECTION_TITLE} ${ST_LEFT}`}>{TRANSFER.routesTitle}</h2>
+      <p className="text-muted text-[0.8rem] mt-[0.2rem] mb-[1.4rem]">{TRANSFER.routesNote}</p>
       <div className="grid grid-cols-2 max-[768px]:grid-cols-1 gap-[0.6rem] mb-[0.9rem]">
         {TRANSFER.routes.map((r) => (
           <button type="button" className="flex items-center gap-3 border border-line rounded-md py-[0.55rem] px-[0.85rem] bg-white cursor-pointer text-left font-body w-full transition-[border-color,scale] duration-[0.15s] hover:border-gold" key={r.key} onClick={() => selectRoute(r.key)}>
@@ -44,7 +44,7 @@ export default function TransferRoutes() {
           of six behave differently would be its own bug. The split is about what
           each page is FOR: this form quotes a price, that page takes a flight
           number. */}
-      <p className="text-center text-muted text-[0.8rem] mb-[var(--space-5)] [&_a]:text-gold-d">
+      <p className="text-muted text-[0.8rem] mb-[var(--space-5)] max-w-[var(--container-read)] [&_a]:text-gold-d">
         Flying in or out? Book on the{' '}
         <a href="/airport-transfer.html">Bali airport transfer page</a> instead - it takes your
         flight number, so your driver can track delays.

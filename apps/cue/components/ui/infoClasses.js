@@ -38,14 +38,6 @@ export const INFO_CONTAINER_ARTICLE =
 // a paragraph it is the thing that marks the link as a link.
 export const PROSE_LINK = '[&_a]:text-gold [&_a]:font-medium';
 
-// .info__facts — spec strip (4-col desktop / 2-col mobile), 1px divider lines via bg+gap.
-export const INFO_FACTS =
-  'grid grid-cols-4 max-[768px]:grid-cols-2 gap-px bg-line [border:1px_solid_var(--line)] rounded-[var(--r-md)] overflow-hidden mb-10';
-// .info__fact
-export const INFO_FACT =
-  'flex flex-col items-center justify-center min-h-[84px] py-[1.05rem] px-4 text-center bg-[#fdfcfa] ' +
-  '[&>span]:text-label [&>span]:uppercase [&>span]:tracking-[0.14em] [&>span]:text-muted ' +
-  '[&_strong]:block [&_strong]:mt-[0.3rem] [&_strong]:font-body [&_strong]:text-strong';
 // .info__lists / .info__col
 export const INFO_LISTS = 'grid grid-cols-2 max-[768px]:grid-cols-1 gap-10 max-[768px]:gap-6';
 export const INFO_COL_H3 = 'mb-4 font-body text-h3';

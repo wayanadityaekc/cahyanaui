@@ -822,6 +822,36 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 - **`INFO_CARD_BODY`** (ritme paragraf di dalam kartu) di `infoClasses.js`. Dulu namanya
   `BODY_TEXT`, const lokal di `CharterSection` - transfer & airport gak ikut, jadi
   paragrafnya beda. Sekarang satu string, tiga pemakai.
+- **Strip fakta = CHIP, bukan kotak** (Sep 2026, Wayan: "box untuk availability,
+  capacity dll ganti bro gua gamau isi box gitu"). Dulu grid 4 sel berbingkai -
+  kontainer jenis kedua di halaman yang baru aja dijadiin satu. Sekarang chip pill,
+  yang emang **udah jadi bahasa web ini** buat fakta jenis ini (hero tour/destinasi
+  nampilin Duration/Group/Free cancellation persis pakai itu).
+  - **Pill-nya SATU string di `components/ui/chipClasses.js`** (`CHIP` + `CHIP_OK`).
+    `DetailHero` sekarang import dari situ dan tetep nge-export `HERO_CHIP` buat
+    pemakai lamanya. Dijaga `verify-chips.mjs`: bentuk chip di strip fakta **diadu
+    lawan** chip hero tour/attraction, harus identik.
+  - **Chip nyetak NILAI doang; LABEL-nya milih IKON** (`chipIcon()` di file yang sama).
+    Jadi tiap nilai WAJIB bisa berdiri sendiri - itu sebabnya di konten diubah:
+    "English" → **"English-speaking driver"** (3 file), "At arrivals" →
+    **"Meet & greet at arrivals"** (airport). Nambah fakta baru = pastiin nilainya
+    kebaca tanpa label, dan daftarin label-nya di `ICONS` (kalau nggak dapet `Info`).
+  - **`/activities` ikut** - dulu `ListingPage` punya SALINAN SENDIRI kotak itu
+    (`INFO_FACTS`/`INFO_FACT`), jadi begitu satu berubah dua-duanya melenceng.
+    Sekarang dia render `<InfoFacts>` yang sama. `INFO_FACTS`/`INFO_FACT` **UDAH
+    DIHAPUS** dari `infoClasses.js`.
+  - **Kenapa chip menang dari 2 opsi lain** (kolom polos & satu baris dipisah titik,
+    dua-duanya udah di-render buat Wayan): di HP kolom polos jatuh **3 + 1** (baris
+    kedua nyisa satu) dan satu-baris **pecah di tengah frasa**. Chip turun utuh.
+  - **Gotcha harness**: `<li>` chip itu flex ITEM, jadi `inline-flex`-nya
+    **ke-blockify jadi `flex`** - filter `display === 'inline-flex'` diem-diem gak
+    ketemu apa-apa. Dan `line-height`-nya `normal`, jadi rumus tinggi/line-height =
+    NaN; cek 1 baris pakai tinggi + `scrollWidth == clientWidth` (chip-nya
+    `whitespace-nowrap`, jadi wrap ke-detect sebagai overflow).
+- **Tiga baris ke-center di `/transfer` UDAH DIKIRIKAN**: judul "Popular routes"
+  (+ underline-nya, pola `ST_LEFT`), catatan "All prices per car...", dan baris
+  "Flying in or out?". Itu sisa dari waktu kartunya masih ke-center; begitu semua di
+  sekelilingnya rata kiri, tiga itu nyempil sendiri.
 - **Isi kartu dibangun `lib/detailBlocks.js`** buat transfer & airport:
   judul kartu → strip fakta (`{type:'facts'}`) → include/exclude (`{type:'boxes'}`) →
   prosa halaman itu sendiri. Charter tetep nulis blok-nya sendiri di `charter.js` (dia

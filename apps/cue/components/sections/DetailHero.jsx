@@ -4,6 +4,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import HeroMosaic from '@/components/sections/HeroMosaic';
 import Rating from '@/components/Rating';
 import { isHiddenTour } from '@/lib/routes';
+import { CHIP, CHIP_OK } from '@/components/ui/chipClasses';
 
 // The split hero every "detail" page opens with: photo on one side, a white sheet
 // carrying the title, the intro line, a row of facts and a CTA on the other. It was
@@ -59,12 +60,12 @@ export const HERO_CRUMB_SEP = 'mx-[0.35rem] opacity-[0.55]';
 export const HERO_RATING =
   'inline-flex items-center gap-[0.3rem] font-body text-small font-semibold text-amber-d [&>svg]:w-4 [&>svg]:h-4';
 export const HERO_CHIPS = 'tour-hook list-none flex flex-wrap items-center gap-[0.45rem] mt-[1.1rem] mx-0 mb-0 p-0';
-export const HERO_CHIP =
-  'inline-flex items-center gap-[0.4rem] py-[0.35rem] px-3 rounded-pill [border:1px_solid_var(--color-line)] ' +
-  'font-body text-small text-green whitespace-nowrap [&>svg]:w-4 [&>svg]:h-4 [&>svg]:text-muted';
+// The pill itself lives in ui/chipClasses now - the spec strips on transfer,
+// airport and the activities listing use the same one.
+export const HERO_CHIP = CHIP;
 // The one chip that answers a doubt rather than states a spec, so it carries the
 // success colour. Same promise as the book bar and every card - not a new claim.
-export const HERO_CHIP_OK = 'text-ok [border-color:rgba(46,125,84,0.35)] [&>svg]:text-ok';
+export const HERO_CHIP_OK = CHIP_OK;
 
 // Attraction pages label the same fact "Time here" where tours say "Duration".
 const CHIP_ICON = { Duration: Clock, 'Time here': Clock, Area: MapPin, Group: Users, 'Pick-up': MapPin };

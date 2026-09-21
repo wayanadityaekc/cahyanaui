@@ -166,15 +166,48 @@ Wayan: *"gua cuma pengen ukuran dan standar yang bagus dan konsisten"*. Semuanya
   - **Input yang BORDER-nya 0 di-skip**: input search di halaman listing itu duduk DI DALAM
     kotak berbingkai, jadi yang gambar kotaknya si wrapper. Itu bener, bukan pengecualian.
 
+**ZOOM iOS pas field di-fokus — dibenerin di VIEWPORT, bukan di font (Sep 2026)**
+Wayan: *"benerin zoom tapi jangan gedein font bisa?"*
+- **Gak ada cara di level elemen yang bisa dua-duanya.** Ambang iOS itu `font-size` kontrol
+  yang DI-FOKUS: di bawah 16px dia nge-zoom. Field kita 12.8px (`--fs-field`) dan itu
+  disengaja. Jadi satu-satunya tuas yang sisa = **viewport**, dan yang nahan zoom otomatis
+  itu `maximum-scale=1`.
+- **`components/layout/IosZoomFix.jsx`** — client component, di-mount dari `app/layout.jsx`,
+  nge-render NOL elemen. Dia nambahin `,maximum-scale=1` ke meta viewport **cuma di iOS**.
+- **KENAPA iOS DOANG (jangan ditaro di meta statis)**: **Android Chrome NURUT** sama
+  `maximum-scale`, jadi kalau ditulis di HTML semua tamu Android **kehilangan pinch-zoom** —
+  di web yang isinya foto, dan tombol override-nya kesembunyi di setelan aksesibilitas
+  Chrome. Safari iOS sejak iOS 10 **sengaja ngabaikan** batasan zoom buat pinch dari USER,
+  jadi iPhone tetep bisa pinch. Dipasang di iOS doang = nol yang dikorbanin.
+  **`user-scalable=no` JANGAN dipakai** — yang itu beneran ngerampas zoom.
+- **KENAPA di `useEffect`, bukan script inline di `<head>`**: udah dicoba inline dulu dan
+  **ke-tangkep harness** — meta viewport itu punya metadata Next, jadi ngutak-atik dia
+  sebelum hydration bikin (a) editannya dibalikin, atau (b) nyisa **DUA** tag viewport di
+  head. Sesudah mount, Next udah settle dan editannya nempel. Timing aman: clamp-nya baru
+  ngaruh pas tamu nge-fokus field, jauh sesudah hydration.
+- iPadOS UA-nya bilang **Mac**, jadi dia ke-deteksi dari `navigator.maxTouchPoints > 1`
+  (iPadOS 5, Mac 0). Mac gak pernah ada yang layar sentuh, jadi kombinasi itu = iPadOS.
+- **GAK BISA DITES DI SINI, dan ini penting**: headless Chromium gak nge-implement focus-zoom
+  punya Safari, dan gak ada device iOS di sandbox. Yang dijamin harness itu **SIAPA yang dapet
+  clamp**, bukan zoom-nya beneran berhenti. **Wayan wajib cek di iPhone-nya.** Kalau ternyata
+  iOS versi baru ngabaikan `maximum-scale`, satu-satunya jalan yang tersisa = field 16px,
+  dan itu yang justru gak dia mau.
+- Verifikasi: **`verify-zoom.mjs`** (108/108) — 6 jenis device × 3 halaman: iPhone & iPadOS
+  dapet clamp; Mac asli, Mac layar sentuh, Android, Windows layar sentuh **nggak**; selalu
+  **tepat 1** meta viewport; `width=device-width` gak pernah ilang; `user-scalable=no` gak
+  pernah muncul; `maximum-scale` gak dobel.
+  - **Harness-nya WAJIB maksa `navigator.maxTouchPoints`** (`addInitScript`): `hasTouch`
+    punya Playwright cuma ngasih **1**, sementara iPadOS asli **5** — tanpa di-override,
+    cabang iPadOS-nya **gak pernah dieksekusi** dan kasusnya "lolos" tanpa nguji apa pun.
+    Itu jebakan yang sama kayak sabotase yang gak pernah ke-render.
+  - **Dites pakai 2 bug aslinya**: (1) cabang iPadOS dibuang → 3 gagal, (2) clamp dikirim ke
+    semua device → 12 gagal. **Dites SATU-SATU**: bug 2 nutupin bug 1 kalau dipasang bareng
+    (clamp-nya kena semua orang, jadi iPadOS tetep dapet).
+- Komentar di `style.css` yang dulu ngeklaim rule `!important` itu nyegah zoom **udah
+  dibenerin** — dia justru mastiin zoom-nya kejadian. Jangan "dibenerin" dengan naikin font
+  di situ: itu ngubah tampilan semua form.
+
 **BELUM DIPUTUSIN (ketemu pas ngerjain ini, gua GAK sentuh):**
-- `style.css` ~baris 231 maksa `input,select,textarea{font-size:var(--fs-field)!important}`
-  di bawah 992px, komentarnya nulis *"so iOS doesn't auto-zoom on focus"*. Itu **kebalik**:
-  iOS nge-zoom kalau font input **di bawah 16px**, dan `--fs-field` itu 12.8px — jadi rule
-  itu **mastiin** zoom-nya kejadian, bukan nyegah. Efek lain: `text-[16px]` di input search
-  listing (satu-satunya yang 16px, dan itu ukuran yang beneran nyegah zoom) **mati di HP**
-  gara-gara `!important` ini. Gua cuma samain font-nya ke `text-field` (efeknya di desktop
-  doang, karena di HP udah ketimpa). Mau dibenerin beneran = keputusan Wayan, soalnya
-  naikin font field ke 16px di HP itu ngubah tampilan SEMUA form.
 - Border `#d8d2c4` masih ada di **1 tombol** (`ITN_GHOSTBTN`). Itu tombol, bukan field, dan
   `--line` bikin garisnya lebih terang — belum ditanyain.
 

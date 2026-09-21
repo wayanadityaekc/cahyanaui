@@ -227,7 +227,14 @@ html.hs-locked,
 body.hs-locked {
   overflow: hidden;
 }
-/* Mobile: hold all form controls at --fs-field so iOS doesn't auto-zoom on focus. */
+/* Mobile: hold all form controls at --fs-field so no field creeps back up to a
+   bigger size on phones than it has on desktop.
+   NOTE: this rule used to claim it stopped iOS auto-zoom on focus. It does the
+   opposite - iOS zooms when a focused control computes UNDER 16px, and --fs-field
+   is 12.8px, so this guarantees the zoom instead of preventing it. The zoom is
+   handled at the viewport instead (iOS-only maximum-scale clamp in app/layout.jsx),
+   because Wayan wants the 12.8px text kept. Do not "fix" this by raising the font
+   here - that changes the look of every form on the site. */
 @media (max-width: 992px) {
   input,
   select,

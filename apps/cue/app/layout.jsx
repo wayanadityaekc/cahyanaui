@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Providers from '@/state/Providers';
 import Navbar from '@/components/layout/Navbar';
+import IosZoomFix from '@/components/layout/IosZoomFix';
 import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
@@ -59,6 +60,7 @@ export default function RootLayout({ children }) {
       <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px]">
         <LoadingScreen />
         <Providers>
+          <IosZoomFix />
           <Navbar />
           {children}
           <Footer />

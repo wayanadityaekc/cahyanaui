@@ -8,6 +8,7 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { Collapse } from '@/components/ui/Reveal';
+import { MENU_ROW_BOX } from '@/components/ui/railClasses';
 import CurrencyPicker from './CurrencyPicker';
 import TripBar from './TripBar';
 import FlagDefs from './FlagDefs';
@@ -34,13 +35,30 @@ const BURGER_BAR =
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-// Link nav utama (Home/Guide/Our Company/My Trip). `.navbar__menu > li > a`
-// maksa display:block + w-full + py-3 (menang atas display link sendiri).
-// Warna aktif/hover: desktop hijau, HP (<=992px) gold-d.
+// Link nav utama (Home/Program/Guide/My Trip/Our Company/Account Settings).
+//
+// BARIS = PILL, bentuknya DIPINJEM dari rail (Sep 2026, Wayan pilih "B" dari
+// sheet 3 opsi - dia bilang "gass B, tombol X nya hilangin"). Sebelum ini
+// baris drawer itu teks polos yang hover-nya cuma ganti warna, sementara rail
+// Our Company & My Trips barisnya udah pill - satu web, dua macem baris menu.
+// Sekarang GEOMETRI-nya satu string (`MENU_ROW_BOX`), jadi gak bisa melenceng
+// lagi; warna & ukuran teksnya tetep punya drawer sendiri.
+//
+// Yang dioper dari mock: baris kepilih = pill cream (rail juga gitu di HP),
+// hover = pill cream, badge & chevron ke tepi KANAN.
+// Yang TIDAK diambil: ikon per baris (itu opsi A) dan tombol × (Wayan: hapus).
 const navLink = (active) =>
-  active
-    ? 'block w-full py-3 text-left text-strong font-medium no-underline text-green max-[992px]:text-gold-d'
-    : 'block w-full py-3 text-left text-strong font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d';
+  `${MENU_ROW_BOX} text-strong no-underline ` +
+  (active
+    ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
+    : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d');
+
+// Pill-nya butuh padding 12px (0.75rem) di dalam, dan drawer-nya sendiri udah
+// px-[22px]. Tanpa narik <li>-nya keluar 12px, SEMUA label geser 12px ke kanan
+// dan gak lurus lagi sama baris Welcome + label Guests di atasnya (diukur:
+// tepi kiri teks harus tetep 100px @390). Jadi pill-nya yang mekar keluar,
+// bukan teksnya yang masuk.
+const NAV_LI = '-mx-3';
 
 const BADGE_BASE =
   'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
@@ -216,20 +234,25 @@ export default function Navbar() {
             </li>
 
             {/* Nav — WAJIB cuma satu garis di drawer (di bawah Welcome, di atas); antar
-                link nggak dikasih border lagi, kerasa kebanyakan garis (Wayan). Spacing
-                antar-link murni dari py-3 tiap link. */}
-            <li><a href="/" className={navLink(isActive('/'))}>Home</a></li>
-            <li className="relative">
+                link nggak dikasih border lagi, kerasa kebanyakan garis (Wayan). Jarak
+                antar-link murni dari padding baris (sekarang lewat MENU_ROW_BOX). */}
+            <li className={NAV_LI}><a href="/" className={navLink(isActive('/'))}>Home</a></li>
+            <li className={`relative ${NAV_LI}`}>
               <button
                 type="button"
-                className="block w-full py-3 text-left text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer gap-1 items-center hover:text-green"
+                className={`${MENU_ROW_BOX} text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer hover:bg-cream hover:text-green`}
                 aria-expanded={dropOpen}
                 onClick={() => setDropOpen((v) => !v)}
               >
-                Program<span className={`inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
+                {/* ml-auto: chevron duduk di tepi kanan baris, sama kayak
+                    chevron rail di HP (RAIL_MCHEV) - dulu dia nempel di teksnya. */}
+                Program<span className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
               </button>
               <Collapse open={dropOpen}>
-              <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[0.9rem] block">
+              {/* pl = 0.9rem indent + 0.75rem yang dipinjem NAV_LI, biar sub-item
+                  tetep mendarat di tempat yang sama (diukur: x=114 @390, sebelum
+                  & sesudah). Ubah NAV_LI = ubah ini bareng. */}
+              <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block">
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/tour.html">Tours</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/destinations.html">Destinations</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/activities.html">Experiences</a></li>
@@ -238,13 +261,18 @@ export default function Navbar() {
               </ul>
               </Collapse>
             </li>
-            <li><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
-            <li><a href="/my-trips.html" className="block w-full py-3 text-left text-strong font-medium no-underline text-gold items-center hover:text-green max-[992px]:hover:text-gold-d">My Trip<span className={`ml-[5px] bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
-            <li><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
+            <li className={NAV_LI}><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
+            {/* My Trip nulis class-nya sendiri dulu (salinan varian inactive
+                navLink) cuma karena dia bawa badge - sekarang ikut navLink kayak
+                yang lain, jadi dia ikut nyala pas lagi di /my-trips juga.
+                ml-auto: angkanya ke tepi kanan (diukur: 216px -> 22px dari tepi
+                drawer), bukan nempel di teks. */}
+            <li className={NAV_LI}><a href="/my-trips.html" className={navLink(isActive('/my-trips.html'))}>My Trip<span className={`ml-auto bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
+            <li className={NAV_LI}><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
             {/* Settings - dipindah ke sini (Wayan): dulu di footer drawer bareng WA,
                 sekarang jadi nav link biasa (plain, no icon) persis di bawah Our
                 Company. Label "Settings" -> "Account Settings". */}
-            <li><a href="/settings.html" className={navLink(isActive('/settings.html'))}>Account Settings</a></li>
+            <li className={NAV_LI}><a href="/settings.html" className={navLink(isActive('/settings.html'))}>Account Settings</a></li>
 
             {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}
             <li className="mt-auto pt-4">

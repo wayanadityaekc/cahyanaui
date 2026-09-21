@@ -69,8 +69,21 @@ export const RAIL_MLIST = 'min-[993px]:hidden';
 export const RAIL_MLABEL =
   'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-1)] px-[0.75rem]';
 
+// The GEOMETRY of one menu row: flex, gap, padding, radius, full width. Shared
+// with the navbar drawer (Sep 2026, Wayan picked "B" from a sheet of three) - its
+// rows used to be plain text with a colour-only hover while these already had a
+// pill, so one site had two kinds of menu row. One string is what stops them
+// drifting apart again, the same reason DetailHero and FormHero exist.
+//
+// Only the SHAPE travels. Each side keeps its own type and colours: the rail's
+// rows are muted body text, the drawer's are --fs-strong in soft black.
+// The DESKTOP rail row is deliberately NOT built from this - it runs a tighter
+// 0.55rem padding, and a drawer row has to stay thumb-sized.
+export const MENU_ROW_BOX =
+  'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)]';
+
 export const railMobileItem = (active) =>
-  'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)] ' +
+  `${MENU_ROW_BOX} ` +
   'bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   (active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');

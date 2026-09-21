@@ -148,7 +148,7 @@ export default function AirportTransferForm() {
         <span id="at-total"><span className={`${PRICE} !text-gold text-[1.35rem]`}>{withSymbol(totalText)}</span></span>
       </div>
 
-      <button className={BTN_BOOK} id="at-book" disabled={!ready} onClick={book}>Book This Transfer</button>
+      <button className={BTN_BOOK} id="at-book" disabled={!ready} onClick={book}>Book transfer</button>
     </div>
   );
 }

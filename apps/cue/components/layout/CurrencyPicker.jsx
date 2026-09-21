@@ -14,7 +14,7 @@ const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body t
 const curbtn = (v) =>
   v === 'hero'
     ? `${CURBTN_BASE} py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
-    : `${CURBTN_BASE} py-2 px-[0.65rem] rounded-pill font-semibold [border:1px_solid_#d8d2c4]`;
+    : `${CURBTN_BASE} py-2 px-[0.65rem] rounded-md font-semibold [border:1px_solid_#d8d2c4]`;
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
 // Was an instant `hidden` attribute snap - now fades+lifts in (element stays mounted,

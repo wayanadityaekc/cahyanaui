@@ -12,7 +12,7 @@ import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 // Wayan's flow (3 Sep 2026), which differs from the old site:
-//   Add to My Trip -> pick a date, add to the cart, stay on the page.
+//   Save trip -> pick a date, add to the cart, stay on the page.
 //   Book Now       -> pick a date, add to the cart, go to My Trips to pay.
 // The old site kept the guest on the page for both. The date is still asked
 // for first, otherwise the row lands in My Trips undated and Make Payment

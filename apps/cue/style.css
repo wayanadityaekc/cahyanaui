@@ -106,6 +106,13 @@
      seragam (dulu contact 33px vs booking/charter 46px). Varian compact 2.7rem (itinerary
      builder, hero mobile) sengaja lebih pendek, dibiarin. */
   --field-h: 2.1rem; /* ~33px - form dikecilin nyesuain body text 0.8rem (Wayan) */
+  /* ---- Button height (Sep 2026, Wayan pilih "A" = SEMUA tombol aksi satu ukuran
+     kecil). Nilainya sama dengan --field-h hari ini, TAPI sengaja token sendiri:
+     kalau tinggi field diubah lagi, tombol gak ikut kegeser diam-diam.
+     Ini NGE-OVERRIDE catatan lama "CTA sengaja 2.9rem, boleh lebih tinggi dari
+     field" - Wayan ngeliat hasil ukurnya dulu (67 tombol di halaman build asli,
+     nol halaman melar, dokumen malah memendek) baru mutusin. */
+  --btn-h: 2.1rem; /* 33.6px */
   /* ---- DRY tokens (nilai sama, dipusatin) ---- */
   --color-muted: #7a7466;
   --color-gold-l: #cfc9ba; /* kicker/label di atas foto gelap — tetap terang (bukan hitam), biar kebaca */

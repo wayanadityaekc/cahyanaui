@@ -1,3 +1,4 @@
+import { BTN_SM } from '@/components/ui/btnClasses';
 import Price from '@/components/Price';
 
 // Tailwind-native (migrasi): utilities dipetakan 1:1 dari .airport* di style.css.
@@ -21,7 +22,7 @@ const CLS = {
   row: 'flex items-center gap-[1.1rem] flex-wrap',
   price: 'text-small text-[rgba(247,243,234,0.85)]',
   amt: 'text-[1.35rem] font-semibold text-amber',
-  btn: 'inline-flex items-center gap-[0.4rem] bg-cta text-white rounded-pill px-[1.4rem] h-[2.9rem] font-semibold text-strong no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out hover:bg-cta-d',
+  btn: `inline-flex ${BTN_SM} gap-[0.4rem] bg-cta text-white no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out hover:bg-cta-d`,
 };
 
 export default function Airport() {
@@ -52,7 +53,7 @@ export default function Airport() {
                 internal link to /airport-transfer, and "Book a transfer" told
                 Google nothing about what is on the other end. */}
             <a className={CLS.btn} href="/airport-transfer.html">
-              Book your airport transfer &rsaquo;
+              Airport transfer &rsaquo;
             </a>
           </div>
         </div>

@@ -125,9 +125,11 @@ When unsure, ask first (keep it short).
   `--fs-body`/`--fs-small`), semua field pakai token ini (jangan hardcode ukuran di form lagi).
 - **Tinggi field** = `--field-h` **2.1rem (~33px)** — semua kontrol form (input/select/date/
   custom-select) pakai token ini biar seragam (Agu 2026, Wayan: dikecilin dari 46px nyesuain
-  body text yang udah 0.8rem — 46 kerasa kegedean). **TOMBOL CTA** (`.booking__btn` dkk) TIDAK
-  ikut token ini — sengaja tetep ~46px (`height: 2.9rem`), CTA boleh lebih tinggi dari field.
+  body text yang udah 0.8rem — 46 kerasa kegedean).
   Textarea (`.contact__group textarea`) pakai `min-height` sendiri, bukan `--field-h`.
+  **TOMBOL punya token SENDIRI `--btn-h` (2.1rem)** — nilainya sama, tapi sengaja dipisah
+  (lihat section "Tombol"). Catatan lama "CTA sengaja 2.9rem, boleh lebih tinggi dari field"
+  **UDAH GAK BERLAKU** (Sep 2026, Wayan pilih "semua small").
 - **Konsolidasi (Sep 2026)**: puluhan `font-size` yang di-hardcode langsung (bukan token) —
   hasil nambahin fitur satu-satu dari waktu ke waktu — di-sapu & di-snap ke token terdekat
   (`--fs-label`/`--fs-small`/`--fs-h3`/`1rem`/`--fs-h2`). YANG SENGAJA DIBIARIN beda-beda
@@ -189,8 +191,67 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
   tetep dipake buat harga & aksen lain, sengaja dipisah biar peran warna nggak numpuk).
   Ghost/secondary variant (`.modal__btn--ghost`, `.btn-pill` "View all …") TETEP di
   gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
-  Semua tombol aksi = **pill** (border-radius 999px). Chip logo bayar & toggle nggak.
+  Bentuk & ukuran tombol = **`BTN_SM`**, lihat section "Tombol" di bawah. **BUKAN pill lagi**
+  (radius 999px) — itu keputusan lama yang udah diganti Sep 2026.
 - Hover lift: keep it subtle, not harsh.
+
+**Tombol — SATU UKURAN, radius 8px (Sep 2026, Wayan pilih "A")**
+- Wayan: *"A, make sure semua text align center, margin bottom top center juga"*, sesudah
+  ngeliat sheet hasil ukur. Sebelumnya tombol berserakan: **28 varian**, dan **CTA hijau
+  sendiri punya 11 tinggi** (30/33/34/40/42/43/45/46/47/48/49px) + 4 ukuran teks — padahal
+  doc ini nulis tingginya 46. Itu hasil nambah tombol satu-satu dari waktu ke waktu.
+- **Satu string: `BTN_SM` di `components/ui/btnClasses.js`.** Import, jangan tulis ulang angkanya.
+  - tinggi **`--btn-h` 2.1rem (33.6px)** · teks **`text-small` 12.8px** · radius
+    **`rounded-sm` 8px** · bobot 600 · padding-x `px-4` · **`py-0`**.
+  - **Radius 8px itu `--r-sm` yang udah ada, DAN persis sama dengan `rounded-md` punya
+    shadcn** — jadi "ikut shadcn" di sini gak nambah angka baru.
+  - **Teks ke-center DUA ARAH**: `items-center justify-center text-center leading-none`
+    + `py-0` (biar gak ada sisa padding vertikal yang nggeser label). `leading-none` itu
+    yang ngilangin slack line-box yang bikin label pendek keliatan turun.
+- **`--btn-h` token SENDIRI walau nilainya = `--field-h`.** Kalau tinggi field diubah lagi,
+  tombol gak ikut kegeser diam-diam. Ditulis di `style.css` **DAN** `app/globals.css` (mirror).
+- **`BTN_SM` = GEOMETRI DOANG.** Warna, lebar, `display`, transition tetep punya pemanggil —
+  pola yang sama kayak `MENU_ROW_BOX`. **`display` sengaja GAK di dalemnya**: ada yang butuh
+  `flex`, ada yang `inline-flex`, ada yang display-nya di-scope breakpoint (`Hero`), dan di
+  Tailwind yang menang itu urutan CSS, bukan urutan class. **Pemanggil WAJIB bawa flex sendiri**,
+  kalau nggak center-nya gak jalan.
+- **PALING GAMPANG SALAH**: nempelin `BTN_SM` **di samping** class geometri lama gak nge-override
+  apa pun — yang menang urutan CSS hasil compile. Class lama (`h-`/`py-`/`px-`/`text-`/
+  `rounded-`) **WAJIB DIHAPUS**. Ini kejadian 2x: `text-strong` ketinggalan di tombol Explore
+  (font tetep 14px), dan `rounded-none` punya varian `plain` **kalah** sama `rounded-sm`.
+- **`Button.jsx`: prop `size` UDAH DIHAPUS** (md/lg gak ada lagi). Varian `plain` itu **text
+  link, bukan tombol** — dia pakai `BASE_LINK` dan **gak pernah** dapet `BTN_SM`.
+- **LABEL 1-2 KATA** (Wayan: *"usahakan 1 max 2 kata di dalam button"*). Yang dipotong:
+  "See all tours"→"All tours" · "View all programs"→"All programs" · "Book this charter"→
+  "Book charter" · "Make Payment"→"Pay now" · "Leave a review"→"Write review" ·
+  "Chat on WhatsApp"→"WhatsApp" · "Sign in / Sign up"→"Sign in" · "Plan your trip"→"Plan trip" ·
+  "Add to My Trip"→"Save trip".
+  - **"Book your airport transfer" → "Airport transfer", JANGAN "Book transfer"**: tiap link ke
+    `/airport-transfer` wajib nyebut "airport" (aturan anchor text SEO). 2 kata & keyword-nya utuh.
+  - **Ganti label tombol yang di-QUOTE di prosa = ganti dua-duanya.** `MyTripsCart` nulis
+    "By clicking **Pay now**..." tepat di atas tombolnya; kalau cuma tombolnya yang diubah,
+    halamannya nyuruh tamu nge-klik sesuatu yang udah gak ada.
+  - Dua label yang **sengaja kehilangan sedikit makna** (belum diputusin ulang sama Wayan):
+    "Save trip" (dulu "Add to My Trip") dan "Sign in" (nyembunyiin kalau bisa DAFTAR juga).
+- **YANG BUKAN TOMBOL AKSI — jangan ikut dikasih `BTN_SM`**: chip fakta (`chipClasses`), badge
+  kartu, toggle (`role="radiogroup"`/segmented Standard-Exclusive), tab (`role="tablist"`,
+  track `detailCardClasses`), pita "Selected" charter, dan `CART_TOAST` (itu cangkang toast).
+- **Currency picker BUKAN tombol** — dia field. Tapi radius-nya diubah **pill → `rounded-md`
+  (12px)**, alasannya: komponen yang sama **udah** render `rounded-md` di varian `hero`
+  (search form), dan di drawer dia duduk sebaris sama field Guests & Pickup yang dua-duanya
+  12px. Jadi satu kontrol, satu sudut. Kalau Wayan gak setuju: 1 baris di `CurrencyPicker.jsx`.
+- Verifikasi: **`verify-btnsm.mjs`** di scratchpad — **5180/5180**, 520 tombol, 20 halaman ×
+  320/390/768/1280/1440. Patokannya per tombol: tinggi 33.6 · font 12.8 · radius 8 ·
+  `justify-content`/`align-items`/`text-align` = center · padding atas-bawah 0 · display flex ·
+  teks 1 baris · label ≤2 kata; plus per halaman: **nol tombol pill sisa** & halaman gak melar.
+  - **Gate-nya dites pakai bug aslinya** (inline `style`, bukan utility — dua utility
+    specificity-nya sama jadi sabotase pakai class bisa diem-diem gak ke-render).
+  - **LUBANG YANG KE-TANGKEP GARA-GARA ITU**: `contact.html` **udah gak ada** di build (form
+    kontak sekarang di section `/our-company#contact`), jadi harness-nya buka **404**, nemu
+    nol tombol, dan **lapor lolos**. Sekarang dia nge-assert tiap halaman HTTP 200, judulnya
+    bukan 404, dan **ada minimal 1 tombol ke-ukur**. Itu yang akhirnya nemu tombol WhatsApp
+    di `ContactSection` yang belum ke-konversi — ke-hide di halaman itu, jadi census browser
+    gak pernah lihat. **Halaman yang sectionnya di-`hidden` WAJIB dibuka lewat hash.**
 - **Ikon = `lucide-react`** (Sep 2026, Wayan pilih opsi "full Lucide" setelah lihat sheet
   perbandingan lama-vs-Lucide). Ikon baru = import dari `lucide-react`, **JANGAN gambar SVG
   manual lagi**. Aturannya:

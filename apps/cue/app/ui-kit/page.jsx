@@ -22,7 +22,7 @@ export default function Kit() {
           <h2 className={SECTION_TITLE}>Buttons</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
             <Button variant="primary">Book Now</Button>
-            <Button variant="primary" size="lg">Make Payment</Button>
+            <Button variant="primary">Pay now</Button>
             <Button variant="ghost">View all</Button>
             <Button as="a" href="#" variant="ghost">Link button</Button>
             <Button variant="plain">Read more</Button>

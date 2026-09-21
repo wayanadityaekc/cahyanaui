@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useMemo, useState } from 'react';
 import { CalendarCheck, Car, ChevronDown, Clock, History, MapPin, ShoppingBag } from 'lucide-react';
@@ -81,7 +82,7 @@ const MTC_REVIEW_BTN = 'w-full';
 // trip card - ghost/gold outline (secondary action, CLAUDE.md: primary CTA stays
 // green, "look at more / secondary" stays gold) vs the green primary review CTA.
 const MTC_CANCEL_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
-const MTC_CANCEL_BTN = 'inline-flex w-auto items-center py-[0.55rem] px-[1.3rem] rounded-pill [border:1px_solid_var(--color-gold)] bg-white text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center';
+const MTC_CANCEL_BTN = `inline-flex w-auto ${BTN_SM} [border:1px_solid_var(--color-gold)] bg-white text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center`;
 // Cart action buttons: shared .btn-pill was forced full-width via
 // `[data-mytrips-cart] .btn-pill` (removed); set per-button now.
 const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
@@ -413,7 +414,7 @@ export default function MyTripsCart() {
         <div className={MTC_EMPTY}>
           <p className={MTC_EMPTY_LEAD}>Your trip is empty.</p>
           <p className={MTC_EMPTY_SUB}>Add a tour, transfer, or experience to get started.</p>
-          <button type="button" className={BTN_PILL} onClick={() => setAdding(true)}>+ Add a program</button>
+          <button type="button" className={BTN_PILL} onClick={() => setAdding(true)}>Add program</button>
         </div>
       ) : (
         <>
@@ -462,10 +463,10 @@ export default function MyTripsCart() {
           )}
 
           <p className={MTC_NOTE}>
-            By clicking <strong>Make Payment</strong>, you agree to our{' '}
+            By clicking <strong>Pay now</strong>, you agree to our{' '}
             <a className={MTC_POLICY_LINK} href="/our-company.html#terms">Terms</a> and <a className={MTC_POLICY_LINK} href="/our-company.html#cancellation">Cancellation & Refund Policy</a>.
           </p>
-          <button type="button" className={`${BTN} mt-[1.2rem] disabled:opacity-45 disabled:cursor-not-allowed`} disabled={undated} onClick={checkout}>Make Payment</button>
+          <button type="button" className={`${BTN} mt-[1.2rem] disabled:opacity-45 disabled:cursor-not-allowed`} disabled={undated} onClick={checkout}>Pay now</button>
           <p className={MTC_NOTE}>
             You&apos;ll add your name &amp; contact details at payment - that also creates your account so you can log in later with the same email.
           </p>

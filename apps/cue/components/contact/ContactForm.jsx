@@ -64,7 +64,7 @@ export default function ContactForm({ company = false }) {
         {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
       </div>
       {error && <small className={REFMSG_ERR}>{error}</small>}
-        <button className="w-full p-[0.85rem] border-none rounded-pill text-[1rem] font-semibold text-white bg-cta cursor-pointer hover:bg-cta-d" id="c-send" onClick={send} disabled={busy}>
+        <button className="flex w-full items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold border-none text-white bg-cta cursor-pointer hover:bg-cta-d" id="c-send" onClick={send} disabled={busy}>
           {busy ? 'Sending...' : 'Send Message'}
         </button>
       </div>

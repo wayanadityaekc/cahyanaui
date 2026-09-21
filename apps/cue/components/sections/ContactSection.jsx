@@ -1,3 +1,4 @@
+import { BTN_SM } from '@/components/ui/btnClasses';
 import { MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
@@ -17,9 +18,9 @@ export default function ContactSection({ company = false }) {
               Have a question, a custom request, or a group booking? Reach out on WhatsApp or send us a message - our
               local team usually replies within a few hours.
             </p>
-            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} className="inline-flex items-center gap-2 mb-8 py-[0.85rem] px-6 rounded-sm font-semibold no-underline text-white bg-[#25d366]" target="_blank" rel="noopener">
-              <MessageCircle size={20} strokeWidth={1.8} />
-              Chat on WhatsApp
+            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} className={`inline-flex gap-2 mb-8 ${BTN_SM} no-underline text-white bg-[#25d366]`} target="_blank" rel="noopener">
+              <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)] flex-none" strokeWidth={1.8} />
+              WhatsApp
             </a>
             <ul className="list-none">
               <li className="mb-5">

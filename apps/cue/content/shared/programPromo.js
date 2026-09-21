@@ -10,7 +10,7 @@ export const PROGRAM_PROMO = [
     text: 'Fully customizable day trips from Ubud - rice terraces, temples, waterfalls, and beaches, with your own local driver.',
     img: 'goa-gajah-hero.webp',
     href: '/tour.html',
-    cta: 'See all tours',
+    cta: 'All tours',
   },
   {
     id: 'activities',
@@ -19,7 +19,7 @@ export const PROGRAM_PROMO = [
     text: 'ATV rides, Ayung rafting, jungle swings, Mount Batur sunrise, Kecak and Barong dance - authentic activities from Ubud.',
     img: 'jungle-swing-card.jpg',
     href: '/activities.html',
-    cta: 'See all experiences',
+    cta: 'All experiences',
   },
   {
     id: 'charter',
@@ -35,7 +35,7 @@ export const PROGRAM_PROMO = [
     // three listing pages selling the opposite.
     img: 'handara-gate.webp',
     href: '/charter.html',
-    cta: 'Build your charter',
+    cta: 'Build charter',
   },
   {
     id: 'transfer',
@@ -53,7 +53,7 @@ export const PROGRAM_PROMO = [
     text: 'Private car from Ngurah Rai (DPS) to your Ubud stay. Fixed price, meet & greet at arrivals.',
     img: 'transfer-hero.webp',
     href: '/airport-transfer.html',
-    cta: 'Book airport transfer',
+    cta: 'Airport transfer',
   },
   {
     id: 'destinations',
@@ -62,7 +62,7 @@ export const PROGRAM_PROMO = [
     text: 'Temples, waterfalls, rice terraces, and beaches - the individual places behind our tours.',
     img: 'tanah-lot-hero.webp',
     href: '/destinations.html',
-    cta: 'Explore destinations',
+    cta: 'All destinations',
   },
   {
     id: 'guide',
@@ -71,7 +71,7 @@ export const PROGRAM_PROMO = [
     text: 'Everything worth knowing before you go - the island, the culture, and the practical bits that make a trip smooth.',
     img: 'bali-highlands-hero.webp',
     href: '/bali-guide.html',
-    cta: 'Read the guide',
+    cta: 'Bali guide',
   },
   {
     id: 'company',

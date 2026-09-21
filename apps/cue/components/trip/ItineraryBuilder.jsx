@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useMemo, useState } from 'react';
 import { UsersRound } from 'lucide-react';
@@ -43,7 +44,7 @@ const ITN_TRIP_T = 'mt-0 mb-[0.15rem] text-[length:var(--fs-body)] font-semibold
 const ITN_TRIP_S = 'mt-0 mb-[0.8rem] text-[length:var(--fs-label)] text-muted';
 const ITN_TRIP_GUESTS = 'flex items-center gap-[0.4rem] mt-[0.7rem] mb-0 text-[length:var(--fs-label)] text-muted [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold [&_svg]:flex-none [&_b]:text-green';
 const ITN_PANEL_HEAD = 'flex items-center justify-between flex-wrap gap-2 mb-4';
-const ITN_GHOSTBTN = 'py-[0.45rem] px-[0.8rem] border border-[#d8d2c4] rounded-pill bg-white font-body text-[length:var(--fs-small)] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[#efe9db]';
+const ITN_GHOSTBTN = `inline-flex ${BTN_SM} border border-[#d8d2c4] bg-white font-body text-[length:var(--fs-small)] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[#efe9db]`;
 const ITN_DAY = 'itn-day relative p-[1.1rem] mb-4 border border-[#e6dfce] rounded-md bg-white last:mb-0';
 const ITN_DAY_TITLE = 'font-body text-[1rem] font-semibold text-green';
 const ITN_DAY_EMPTY = 'flex items-center gap-[0.6rem] py-2 px-[0.2rem] mb-4 text-[length:var(--fs-small)] text-[#9a9382]';
@@ -223,7 +224,7 @@ export default function ItineraryBuilder() {
                 save(dateFrom ? cascadeFrom(next, 0, dateFrom) : next);
               }}
             >
-              Build my itinerary
+              Build itinerary
             </button>
           </div>
         </div>
@@ -257,11 +258,11 @@ export default function ItineraryBuilder() {
           <span className={ITN_SUMMARY_LABEL}>Trip total</span>
           <div className={ITN_SUMMARY_AMT}><span className="amount" id="itn-total"><span className={PRICE}>{withSymbol(totalText)}</span></span></div>
           <span className={ITN_SUMMARY_SUB} id="itn-total-label">{dayCount} day{dayCount === 1 ? '' : 's'}</span>
-          <button className={BTN_BOOK} id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book This Itinerary</button>
+          <button className={BTN_BOOK} id="itn-book" disabled={!rows.length || rows.some((r) => !r.date) || clashDates(state, isFullDay).length > 0} onClick={book}>Book itinerary</button>
         </section>
 
         {/* "Add more day" - order:4 + desktop mt:0 baked into ITN2_ADD utilities. */}
-        <button className={ITN2_ADD} id="itn-add" type="button" onClick={addDay}>+ Add more day</button>
+        <button className={ITN2_ADD} id="itn-add" type="button" onClick={addDay}>Add day</button>
       </aside>
 
       <div className={ITN2_MAIN}>

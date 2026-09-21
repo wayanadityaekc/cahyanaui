@@ -12,7 +12,7 @@ import { BTN } from '@/components/ui/modalClasses';
 // instead of sending the guest to My Trips first (Wayan, Sep 2026). Gates on the
 // same two conditions the server does: signed in, and at least one completed
 // booking still open for review (booking_ref + service pair not yet reviewed).
-export default function ReviewGate({ className, children = 'Leave a review' }) {
+export default function ReviewGate({ className, children = 'Write review' }) {
   const { account, hydrated, reviewableItems } = useAccount();
   const [authOpen, setAuthOpen] = useState(false);
   const [blockedOpen, setBlockedOpen] = useState(false);

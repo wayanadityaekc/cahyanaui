@@ -1,3 +1,4 @@
+import { BTN_SM } from '@/components/ui/btnClasses';
 // Tailwind utility strings mirroring the legacy `.hs-*` custom control system
 // (migrasi Fase 2, opsi A - Wayan: komponen self-contained). Didefinisiin SEKALI di
 // sini, di-import Select / DateField / DatePopup / HeroSearch biar gak keduplikat.
@@ -161,7 +162,7 @@ export const CAL_FOOT = 'flex items-center justify-between gap-[14px] py-3 px-[1
 export const CAL_HINT = 'font-body font-normal text-small text-muted';
 // Apply = tombol CTA (bg-nya di-override grup .hs-cal__apply/.hsearch__go/dst jadi
 // --color-cta, bukan --color-green; hover cta-d). border-color cta walau style none.
-export const CAL_APPLY = 'font-body font-semibold text-small bg-cta text-white border-none [border-color:var(--color-cta)] rounded-pill py-[9px] px-5 cursor-pointer hover:bg-cta-d hover:[border-color:var(--color-cta-d)] hover:text-white disabled:opacity-50 disabled:cursor-default';
+export const CAL_APPLY = `inline-flex ${BTN_SM} font-body bg-cta text-white border-none [border-color:var(--color-cta)] cursor-pointer hover:bg-cta-d hover:[border-color:var(--color-cta-d)] hover:text-white disabled:opacity-50 disabled:cursor-default`;
 // Close DatePopup: keliatan di HP, DI-HIDE di desktop (@media min-769 .hs-panel__close),
 // karena panelnya bukan popup (gak ada override display:block).
 export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;

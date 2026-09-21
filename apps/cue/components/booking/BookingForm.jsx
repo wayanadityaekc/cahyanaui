@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useMemo, useState } from 'react';
 import { Calendar, ShieldCheck, Sparkles, UserRound } from 'lucide-react';
@@ -198,7 +199,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         </div>
 
         <button
-          className="bookcard__cta flex flex-none w-full max-w-none items-center justify-center h-[2.9rem] px-[0.85rem] border-none border-cta rounded-pill font-body text-[1rem] font-semibold text-center no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d"
+          className={`bookcard__cta flex flex-none w-full max-w-none ${BTN_SM} border-none border-cta font-body no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d`}
           id="book-now"
           onClick={() => (onBook ? onBook(item, date, showToggle ? effectiveMode : 'standard') : book())}
           disabled={!item}

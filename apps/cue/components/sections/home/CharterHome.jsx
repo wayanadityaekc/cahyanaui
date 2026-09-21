@@ -52,7 +52,7 @@ export default function CharterHome({ paired = false }) {
         <CharterPlans value={dur} onChange={pick} />
 
         {/* The page is where the trip gets filled in, so the button says so. */}
-        <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">Build your charter</a>
+        <a className={`${BTN_BOOK} block max-w-[320px] mx-auto text-center`} href="/charter.html">Build charter</a>
 
         <p className="text-center mt-[var(--space-3)] text-small text-muted">
           Only a <b className="text-gold font-semibold">$10 deposit</b> to book &middot; prices per car, pick-up outside Ubud <CharterSurcharge />

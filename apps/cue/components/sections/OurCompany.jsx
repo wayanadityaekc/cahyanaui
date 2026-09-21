@@ -76,7 +76,7 @@ function HelpCard({ className = '' }) {
         rel="noopener"
       >
         <MessageCircle strokeWidth={1.7} aria-hidden="true" />
-        Chat on WhatsApp
+        WhatsApp
       </a>
     </div>
   );

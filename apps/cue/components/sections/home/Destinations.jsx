@@ -17,7 +17,7 @@ export default function Destinations() {
         ))}
       </div>
       <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
-        <a href="/destinations.html" className={BTN_PILL}>View all destinations</a>
+        <a href="/destinations.html" className={BTN_PILL}>All destinations</a>
       </div>
     </section>
   );

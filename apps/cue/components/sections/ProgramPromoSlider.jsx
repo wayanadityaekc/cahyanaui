@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useRef, useState } from 'react';
 import { PROGRAM_PROMO } from '@/content/shared/programPromo';
@@ -67,7 +68,7 @@ export default function ProgramPromoSlider() {
               <p className="mx-auto mt-0 mb-[1.3rem] max-w-[46ch] text-body leading-[1.6] text-[rgba(247,243,234,0.85)]">{s.text}</p>
               <a
                 href={s.href}
-                className="inline-block py-[0.8rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold text-strong no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out hover:bg-cta-d"
+                className={`inline-flex ${BTN_SM} bg-cta text-white no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out hover:bg-cta-d`}
               >
                 {s.cta}
               </a>

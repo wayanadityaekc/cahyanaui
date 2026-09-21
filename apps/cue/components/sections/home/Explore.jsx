@@ -29,7 +29,7 @@ export default function Explore() {
         ))}
       </div>
       <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
-        <a href="/programs.html" className={BTN_PILL}>View all programs</a>
+        <a href="/programs.html" className={BTN_PILL}>All programs</a>
       </div>
     </section>
   );

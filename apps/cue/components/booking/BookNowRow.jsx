@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import Price from '@/components/Price';
 import { scrollToBookCard } from './bookScroll';
@@ -38,8 +39,8 @@ const AMOUNT = 'price font-head text-[1.6rem] max-[360px]:text-[1.25rem] font-bo
 // tumpuk") - stacked it read as two facts when it is one.
 const UNIT = 'text-small text-muted';
 const CTA =
-  'flex-none flex items-center h-[2.9rem] px-[1.15rem] max-[360px]:px-3 rounded-pill bg-cta text-white font-body text-[1rem] font-semibold ' +
-  'no-underline whitespace-nowrap border-none cursor-pointer ' +
+  `flex-none flex ${BTN_SM} max-[360px]:px-3 bg-cta text-white font-body ` +
+  'no-underline border-none cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 // This row NEVER hides itself, and that is deliberate - see the note in the
 // component below.

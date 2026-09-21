@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -70,8 +71,8 @@ const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 // `scale` belongs in every clickable's own transition list, or the global press
 // feedback in style.css snaps instead of easing (check-motion rule 2).
 const MORE_BTN =
-  'absolute bottom-3 right-3 z-[6] py-[0.4rem] px-[0.85rem] rounded-pill bg-white [border:1px_solid_var(--color-line)] ' +
-  'shadow-md font-body text-small font-semibold text-gold cursor-pointer ' +
+  `absolute bottom-3 right-3 z-[6] inline-flex ${BTN_SM} bg-white [border:1px_solid_var(--color-line)] ` +
+  'shadow-md font-body text-gold cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 
 const LB_ICON_BTN =

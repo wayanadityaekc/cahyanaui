@@ -94,6 +94,7 @@
   --container-x: var(--space-3);
 
   --field-h: 2.1rem;
+  --btn-h: 2.1rem; /* tinggi SEMUA tombol aksi - mirror style.css */
   --icon-sm: 16px;
   --icon-md: 20px;
   --icon-lg: 24px;

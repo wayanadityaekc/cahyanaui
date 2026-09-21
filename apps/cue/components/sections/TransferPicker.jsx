@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useMemo, useState } from 'react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -49,7 +50,7 @@ export default function TransferPicker() {
 
   // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
   // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto)`).
-  // "Book Now" adds + redirects; "Add to My Trip" adds + stays on the page.
+  // "Book Now" adds + redirects; "Save trip" adds + stays on the page.
   // No date field on this form (unlike Charter/Airport) - the row lands in My
   // Trips undated, same "tap to set date" fallback as adding a tour undated.
   const addToTrip = (goto) => {
@@ -73,7 +74,7 @@ export default function TransferPicker() {
   // pola `peer` (input hidden = peer, switch pakai peer-checked:). Select tetep
   // komponen shared. `.tpick__field` gak punya CSS sendiri (cuma wrapper).
   const LABEL = 'block text-small uppercase tracking-[0.14em] text-muted mb-[0.3rem] font-medium';
-  const BTN = 'py-[0.8rem] rounded-pill font-semibold text-[1rem] text-center border border-gold cursor-pointer font-body disabled:opacity-50 disabled:cursor-not-allowed';
+  const BTN = `flex ${BTN_SM} border border-gold cursor-pointer font-body disabled:opacity-50 disabled:cursor-not-allowed`;
   return (
     <div ref={pickerRef} className="bg-white border border-line rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
       {/* From | swap | To. HP (<=600): ditumpuk vertikal, panah muter 90deg. */}
@@ -84,7 +85,7 @@ export default function TransferPicker() {
         </div>
         {/* Note: CSS lama-nya `mb:0` di @media(<=600) ke-override base (source order,
             specificity sama) - jadi mb-[0.15rem] BERTAHAN di semua lebar. Direplikasi. */}
-        <button type="button" className="w-9 h-9 rounded-pill border border-line bg-white text-gold-d text-[1rem] mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]" aria-label="Swap direction" onClick={swap}>&#8646;</button>
+        <button type="button" className="inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-sm border border-line bg-white text-gold-d text-small leading-none mb-[0.15rem] cursor-pointer [@media(max-width:600px)]:justify-self-center [@media(max-width:600px)]:[transform:rotate(90deg)]" aria-label="Swap direction" onClick={swap}>&#8646;</button>
         <div>
           <label className={LABEL} htmlFor="tp-to">To</label>
           <Select id="tp-to" label="To" value={to} onChange={pickTo} options={options} placeholder="Select" />
@@ -117,8 +118,8 @@ export default function TransferPicker() {
       </label>
 
       <div className="flex flex-col gap-[0.55rem]">
-        <button type="button" className={`${BTN} bg-cta text-white hover:bg-cta-d`} onClick={() => addToTrip(true)} disabled={!entry}>Book Now</button>
-        <button type="button" className={`${BTN} bg-white text-green`} onClick={() => addToTrip(false)} disabled={!entry}>Add to My Trip</button>
+        <button type="button" className={`${BTN} bg-cta text-white hover:bg-cta-d`} onClick={() => addToTrip(true)} disabled={!entry}>Book now</button>
+        <button type="button" className={`${BTN} bg-white text-green`} onClick={() => addToTrip(false)} disabled={!entry}>Save trip</button>
       </div>
 
       {/* Safety net, not a normal state: every option comes from the catalog and

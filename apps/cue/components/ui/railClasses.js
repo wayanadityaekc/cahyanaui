@@ -1,3 +1,4 @@
+import { BTN_SM } from '@/components/ui/btnClasses';
 // The two-column "mail app" shell: a tinted rail of sections on the left, the
 // chosen section's content on the right (Sep 2026, Wayan picked "opsi A" from a
 // sheet of three rails, then "hp 3" for the phone).
@@ -109,8 +110,8 @@ export const RAIL_HELP_BTN =
   // Full width inside the rail: the label is 16 characters in a 248px column,
   // so any inline size is one font tweak away from poking out of the card.
   // Stretching it removes the failure mode instead of tuning around it.
-  'flex w-full justify-center max-[992px]:inline-flex max-[992px]:w-auto ' +
-  'items-center gap-[0.4rem] no-underline font-body text-body font-semibold ' +
-  'text-white bg-cta rounded-[var(--r-pill)] py-[0.45rem] px-[0.9rem] ' +
+  'flex w-full max-[992px]:inline-flex max-[992px]:w-auto ' +
+  `${BTN_SM} gap-[0.4rem] no-underline font-body ` +
+  'text-white bg-cta ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 whitespace-nowrap ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';

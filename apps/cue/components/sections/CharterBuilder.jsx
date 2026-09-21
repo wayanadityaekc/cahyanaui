@@ -167,7 +167,7 @@ export default function CharterBuilder() {
             disabled={!ready || total == null}
             onClick={book}
           >
-            Book this charter
+            Book charter
           </button>
 
           {!ready && (

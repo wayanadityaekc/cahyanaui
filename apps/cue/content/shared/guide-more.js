@@ -5,7 +5,7 @@
 export const SEE_OUR_TOURS = {
   kind: 'tours',
   cls: 'guide-more tourprog',
-  title: 'See our tours',
+  title: 'Our tours',
   cards: [
     { href: '/ubud-tour.html', img: 'tour-hero.jpg', name: 'Ubud Tour', meta: 'Approx. 10 hours', priceName: 'Ubud Tour', priceFallback: '$45' },
     { href: '/ubud-culture-day.html', img: 'ubud-culture-day-card.jpg', name: 'Ubud Culture Day', meta: '6-8 hours', priceName: 'Ubud Culture Day', priceFallback: '$55' },

@@ -191,7 +191,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
             type="button"
             onClick={payByCard}
             disabled={state === 'paying'}
-            className="w-full mt-3 h-[2.9rem] rounded-pill border-none bg-cta text-white font-body font-semibold
+            className="flex w-full mt-3 items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold border-none bg-cta text-white font-body
               text-[1rem] cursor-pointer disabled:opacity-60
               [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d"
           >

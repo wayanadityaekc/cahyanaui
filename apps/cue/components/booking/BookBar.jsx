@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useState } from 'react';
 import Price from '@/components/Price';
@@ -45,7 +46,7 @@ const AMOUNT = 'price text-[1.2rem] font-semibold text-gold leading-none';
 // BUKAN `self-stretch`: di-stretch dia jadi 81% tinggi kartu dan bentuknya lonjong
 // banget. GYG sendiri tombolnya cuma ~54% tinggi kartu.
 const CTA =
-  'flex-none flex items-center h-[2.9rem] px-[1.4rem] rounded-pill bg-cta text-white font-semibold no-underline whitespace-nowrap hover:bg-cta-d';
+  `flex-none flex ${BTN_SM} bg-cta text-white no-underline whitespace-nowrap hover:bg-cta-d`;
 
 export default function BookBar({ item, priceFallback, perPerson = false }) {
   // STARTS HIDDEN (Wayan, Sep 2026, after the entrance was measured: "1. Ok gass").

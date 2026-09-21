@@ -1,3 +1,4 @@
+import { BTN_SM } from '@/components/ui/btnClasses';
 import { Clock, Info, MapPin, Route, ShieldCheck, Users } from 'lucide-react';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import HeroSlider from '@/components/sections/HeroSlider';
@@ -19,7 +20,7 @@ import { CHIP, CHIP_OK } from '@/components/ui/chipClasses';
 // not clipped on the first paint before Navbar publishes the real numbers.
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
 export const HERO_CTA =
-  'inline-block mt-[1.6rem] py-[0.8rem] px-8 rounded-pill bg-cta text-white font-semibold no-underline ' +
+  `inline-flex mt-[1.6rem] ${BTN_SM} bg-cta text-white no-underline ` +
   '[transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [@media(max-width:768px)]:hidden';
 // Fact hooks in the hero. The `tour-hook` class is KEPT as the marker check-detail
 // looks for. Breakpoint min-[769px] (not md:/768) to match @media (min-width:769px)

@@ -64,7 +64,7 @@ export default function AuthModal({ open, onClose }) {
           {msg && <small className={REFMSG_ERR}>{msg}</small>}
           {ok && <small className={REFMSG}>{ok}</small>}
           <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
-            {busy ? 'Sending...' : 'Email me a sign-in link'}
+            {busy ? 'Sending...' : 'Send link'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
             New here?{' '}

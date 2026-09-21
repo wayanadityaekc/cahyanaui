@@ -43,7 +43,7 @@ export default function GuideArticle({ data }) {
         title={data.title}
         desc={data.sub}
         hooks={hooks}
-        cta="See our tours"
+        cta="Our tours"
         ctaHref="/tour.html"
       />
 

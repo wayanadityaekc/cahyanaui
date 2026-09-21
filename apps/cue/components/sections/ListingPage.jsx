@@ -1,4 +1,5 @@
 'use client';
+import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
 import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
@@ -102,7 +103,7 @@ export default function ListingPage({ data }) {
               <li><CheckIcon />Free cancellation up to 24h before your tour</li>
             </ul>
           )}
-          {!q && <a ref={browseRef} href={`#${sectionId}`} className="inline-block mt-4 py-3 px-[1.8rem] rounded-pill bg-cta text-white font-semibold text-[0.85rem] no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:block max-[768px]:w-full max-[768px]:mt-[1.25rem] max-[768px]:text-center">Browse all {noun}</a>}
+          {!q && <a ref={browseRef} href={`#${sectionId}`} className={`inline-flex mt-4 ${BTN_SM} bg-cta text-white no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:flex max-[768px]:w-full max-[768px]:mt-[1.25rem]`}>All {noun}</a>}
         </div>
       </section>
 

@@ -134,7 +134,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     ? 'max-w-none m-0 py-6 px-[1.4rem] rounded-none bg-white border-none text-left'
     : 'max-w-[900px] min-[993px]:max-w-[1100px] mx-auto p-8 rounded-md bg-white shadow-md text-left';
   const typeBtn = (on, disabled) =>
-    `flex-1 py-2 px-2 border-none rounded-pill font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${disabled ? 'text-muted bg-transparent cursor-not-allowed opacity-60' : on ? 'text-white bg-cta cursor-pointer' : 'text-green bg-transparent cursor-pointer'}`;
+    `flex-1 py-2 px-2 border-none rounded-sm font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${disabled ? 'text-muted bg-transparent cursor-not-allowed opacity-60' : on ? 'text-white bg-cta cursor-pointer' : 'text-green bg-transparent cursor-pointer'}`;
   return (
     <section className={sectionCls} id="booking">
       <div className={cardCls}>
@@ -162,7 +162,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         {belowPrice}
 
         {showToggle && (
-          <div className="flex p-[3px] mb-[0.4rem] [border:1px_solid_rgba(34,32,28,0.5)] rounded-pill bg-[rgba(34,32,28,0.08)]" id="booking-type">
+          <div className="flex p-[3px] mb-[0.4rem] [border:1px_solid_rgba(34,32,28,0.5)] rounded-md bg-[rgba(34,32,28,0.08)]" id="booking-type">
             <button
               type="button"
               className={typeBtn(effectiveMode === 'standard', isActivity)}

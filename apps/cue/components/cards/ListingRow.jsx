@@ -26,7 +26,7 @@ const IMG =
   'relative flex-[0_0_124px] self-stretch min-h-[158px] rounded-md bg-cover bg-center bg-cream ' +
   'min-[769px]:flex-[0_0_auto] min-[769px]:w-full min-[769px]:aspect-[4/3] min-[769px]:min-h-0';
 const RATE =
-  'absolute top-[7px] right-[7px] inline-flex items-center gap-[3px] px-[6px] py-[2px] rounded-pill ' +
+  'absolute top-[7px] right-[7px] inline-flex items-center gap-[3px] px-[6px] py-[2px] rounded-sm ' +
   'bg-[rgba(255,255,255,0.94)] text-ink text-[0.56rem] font-semibold shadow-sm ' +
   '[&>svg]:w-[9px] [&>svg]:h-[9px] [&>svg]:text-amber-d';
 const BODY =
@@ -38,7 +38,7 @@ const META =
   '[&>li]:flex [&>li]:items-center [&>li]:gap-[5px] [&>li]:text-muted [&>li]:text-[0.66rem] [&>li]:leading-[1.35] ' +
   '[&_svg]:shrink-0 [&_svg]:w-[11px] [&_svg]:h-[11px] [&_svg]:text-muted';
 const CANCEL =
-  'mt-2 inline-flex items-center gap-1 self-start px-2 py-[3px] rounded-pill bg-[rgba(61,92,70,0.1)] text-cta ' +
+  'mt-2 inline-flex items-center gap-1 self-start px-2 py-[3px] rounded-sm bg-[rgba(61,92,70,0.1)] text-cta ' +
   'text-[0.58rem] font-semibold [&>svg]:w-[10px] [&>svg]:h-[10px]';
 const PRICE = 'mt-auto self-end flex items-baseline gap-1 whitespace-nowrap';
 

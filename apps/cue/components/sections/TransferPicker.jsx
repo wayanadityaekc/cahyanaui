@@ -113,6 +113,9 @@ export default function TransferPicker() {
 
       <label className="flex items-center justify-center gap-2 mt-[0.9rem] mb-[1.1rem] text-green text-small cursor-pointer">
         <input type="checkbox" className="peer absolute opacity-0 w-0 h-0" checked={isReturn} onChange={(e) => setIsReturn(e.target.checked)} />
+        {/* Stays a PILL while everything else went to 8px corners - a switch is
+            round by convention (shadcn Switch is rounded-full as well), and at 8px
+            it reads as a small box holding another box. Do not "fix" this. */}
         <span className="w-10 h-[23px] rounded-pill bg-line relative shrink-0 transition-[background] duration-200 peer-checked:bg-gold after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[17px] after:h-[17px] after:rounded-[50%] after:bg-white after:transition-[left] after:duration-200 peer-checked:after:left-[20px]" />
         <span>Add return trip <b className="text-gold-d">(save 10%)</b></span>
       </label>

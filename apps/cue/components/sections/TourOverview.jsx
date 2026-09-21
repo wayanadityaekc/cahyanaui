@@ -23,7 +23,7 @@ const DOT =
   'font-body text-label font-semibold text-gold';
 const NAME = 'font-body text-h3 font-semibold text-gold m-0 mb-[0.3rem]';
 const OPTIONAL =
-  'inline-block ml-2 py-[0.1rem] px-[0.45rem] rounded-pill align-middle ' +
+  'inline-block ml-2 py-[0.1rem] px-[0.45rem] rounded-sm align-middle ' +
   'font-body text-label font-medium tracking-[0.08em] uppercase text-muted [border:1px_solid_var(--color-line)]';
 const TEXT = 'font-body text-body leading-[var(--lh-body)] text-green m-0 max-w-[68ch]';
 // Sub-headings ("Day 1 - Ubud"). Only the 3-day package has them, and dropping

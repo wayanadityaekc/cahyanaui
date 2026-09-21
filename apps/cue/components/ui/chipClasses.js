@@ -6,7 +6,7 @@ import { CalendarDays, Clock, Info, Languages, MapPin, UserCheck, Users } from '
 // (Wayan: "box untuk availability, capacity dll ganti bro gua gamau isi box
 // gitu"). One string, so a chip is a chip everywhere.
 export const CHIP =
-  'inline-flex items-center gap-[0.4rem] py-[0.35rem] px-3 rounded-pill [border:1px_solid_var(--color-line)] ' +
+  'inline-flex items-center gap-[0.4rem] py-[0.35rem] px-3 rounded-sm [border:1px_solid_var(--color-line)] ' +
   'font-body text-small text-green whitespace-nowrap [&>svg]:w-4 [&>svg]:h-4 [&>svg]:text-muted';
 // The one chip that answers a doubt rather than states a spec, so it carries the
 // success colour. Same promise as the book bar and every card - not a new claim.

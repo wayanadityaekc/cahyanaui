@@ -58,9 +58,9 @@ const ITN_SUMMARY_SUB = 'text-[length:var(--fs-small)] text-[rgba(247,243,234,0.
 // toggle rendered). `.tourprog .tour-type--card{display:none}` kept as [.tourprog_&]:hidden.
 // Active state = full string swap (not base+is-active) so no font-weight/color/bg order clash.
 const TT_CARD = 'flex flex-wrap items-center gap-[0.4rem_0.7rem] mt-3 [.tourprog_&]:hidden';
-const TT_TOGGLE = 'inline-flex p-[3px] border border-[rgba(34,32,28,0.5)] rounded-[var(--r-pill)] bg-[rgba(34,32,28,0.08)]';
-const TT_BTN = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-medium text-green bg-transparent cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
-const TT_BTN_ON = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-[var(--r-pill)] font-body text-[length:var(--fs-label)] font-semibold text-white bg-gold cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
+const TT_TOGGLE = 'inline-flex p-[3px] border border-[rgba(34,32,28,0.5)] rounded-md bg-[rgba(34,32,28,0.08)]';
+const TT_BTN = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-sm font-body text-[length:var(--fs-label)] font-medium text-green bg-transparent cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
+const TT_BTN_ON = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-sm font-body text-[length:var(--fs-label)] font-semibold text-white bg-gold cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
 
 // .itn2* itinerary layout engine (B-FINAL). Mobile: single flex column, order reflow
 // (side becomes display:contents so its children reorder among the itn2 flex items:

@@ -17,8 +17,10 @@ export const DOKU_THEME = {
   // Matches --color-gold (soft black) and --color-cream.
   textColor: '#22201c',
   backgroundColor: '#f8f8f8',
-  // Pill buttons everywhere else on the site (--r-pill).
-  buttonRadius: 999,
+  // Matches the site's button corner: --r-sm 8px (BTN_SM). Was 999 back when
+  // every button was a pill - the whole job of this value is to keep DOKU's
+  // hosted page looking like ours, so it moves when our buttons move.
+  buttonRadius: 8,
   fontFamily: 'Inter, system-ui, sans-serif',
 };
 

@@ -39,11 +39,11 @@ const FRAME =
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
 const IMG = 'absolute inset-0 w-full h-full object-cover';
 const CAT_BASE =
-  'absolute top-3 left-3 z-[3] inline-flex items-center gap-[6px] px-3 py-[6px] rounded-pill text-label font-semibold ' +
+  'absolute top-3 left-3 z-[3] inline-flex items-center gap-[6px] px-3 py-[6px] rounded-sm text-label font-semibold ' +
   'tracking-[0.06em] uppercase text-white backdrop-blur-[6px] border border-[rgba(255,255,255,0.2)] ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:shrink-0';
 const RATE =
-  'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-pill ' +
+  'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-sm ' +
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold shadow-sm ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const OV = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';

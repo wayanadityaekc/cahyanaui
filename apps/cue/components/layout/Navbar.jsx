@@ -69,7 +69,7 @@ const navLink = (active) =>
 const NAV_LI = '-mx-3';
 
 const BADGE_BASE =
-  'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
+  'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-sm text-white text-label font-semibold leading-none [&[hidden]]:hidden';
 
 export default function Navbar() {
   const { guests, setGuests } = useTripPrefs();

@@ -28,7 +28,7 @@ import { withSymbol } from '@/components/Price';
 // It sits OUTSIDE the row's box (-top), so the list needs headroom above it and a
 // gap between rows wide enough for the tab to land in - see ROWS below.
 const FLAG =
-  'absolute -top-[9px] left-[14px] px-2 py-[2px] rounded-pill bg-cta text-white ' +
+  'absolute -top-[9px] left-[14px] px-2 py-[2px] rounded-sm bg-cta text-white ' +
   'text-label tracking-[0.1em] uppercase font-semibold whitespace-nowrap';
 // pt: room for the first row's tab under the heading. gap-3: the tab drops into
 // the space between two rows instead of sitting on the row above.

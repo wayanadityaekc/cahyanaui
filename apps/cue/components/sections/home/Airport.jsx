@@ -18,7 +18,7 @@ const CLS = {
   t: 'font-head text-[1.6rem] font-semibold tracking-[-0.01em] leading-[1.15] mt-0 mb-[0.7rem]',
   lead: 'text-body leading-[1.6] text-[rgba(247,243,234,0.85)] mt-0 mb-[1.3rem] max-w-[46ch]',
   chips: 'flex flex-wrap gap-[0.6rem] mb-6',
-  chip: 'text-small bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.18)] rounded-pill px-[0.85rem] py-[0.35rem]',
+  chip: 'text-small bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.18)] rounded-sm px-[0.85rem] py-[0.35rem]',
   row: 'flex items-center gap-[1.1rem] flex-wrap',
   price: 'text-small text-[rgba(247,243,234,0.85)]',
   amt: 'text-[1.35rem] font-semibold text-amber',

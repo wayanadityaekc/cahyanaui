@@ -11,7 +11,8 @@ import useMobile from '@/components/ui/useMobile';
 import DragSheet from '@/components/ui/DragSheet';
 import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
-import { REFMSG } from '@/components/ui/modalClasses';
+import { refMsgCls } from '@/components/ui/modalClasses';
+import { PAY_COPY } from '@/lib/payment';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
 import Select from '@/components/ui/Select';
@@ -33,7 +34,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState(null);
   const [code, setCode] = useState('');
-  const [refMsg, setRefMsg] = useState('');
+  const [refMsg, setRefMsg] = useState(null);
   const [mounted, setMounted] = useState(false);
   const ddRef = useRef(null);
 
@@ -80,7 +81,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
 
   const applyCode = async () => {
     const pct = await apply(code);
-    setRefMsg(pct ? `Referral applied - ${pct}% off!` : 'Code not valid.');
+    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   };
 
   const go = () => {
@@ -204,7 +205,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             Apply
           </button>
         </div>
-        {refMsg && <small className={REFMSG}>{refMsg}</small>}
+        {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
       </div>
 
       <div className="grid grid-cols-[1fr_1fr] gap-[0.8rem]">

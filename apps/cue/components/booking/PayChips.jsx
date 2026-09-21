@@ -1,3 +1,13 @@
+// The card brands accepted at the booking step.
+//
+// Changed Sep 2026 when the deposit step was added: this used to show Visa,
+// Mastercard and PayPal, from back when the modal was an enquiry form and the
+// chips were decorative. The DOKU card integration accepts Visa, Mastercard, JCB
+// and American Express, and NOT PayPal - leaving PayPal here would promise a
+// method the payment window does not offer. The JCB and Amex marks are the ones
+// already hand-drawn in the footer, reused rather than redrawn.
+//
+// Brand marks stay hand-drawn (never Lucide) - see CLAUDE.md.
 export default function PayChips({ className = '', logosClass = '', chipClass = '', svgClass = '' }) {
   return (
     <div className={className}>
@@ -15,11 +25,19 @@ export default function PayChips({ className = '', logosClass = '', chipClass = 
           </svg>
         </span>
         <span className={chipClass}>
-          <svg className={svgClass} viewBox="0 0 62 16" role="img" aria-label="PayPal">
-            <text x="0" y="13" fontFamily="Arial, Helvetica, sans-serif" fontSize="15" fontWeight="700" fontStyle="italic">
-              <tspan fill="#003087">Pay</tspan>
-              <tspan fill="#009CDE">Pal</tspan>
-            </text>
+          <svg className={svgClass} viewBox="0 0 48 16" role="img" aria-label="JCB">
+            <rect x="0" y="1" width="14.5" height="14" rx="2" fill="#0B4EA2" />
+            <rect x="16.75" y="1" width="14.5" height="14" rx="2" fill="#E4002B" />
+            <rect x="33.5" y="1" width="14.5" height="14" rx="2" fill="#009944" />
+            <text x="7.25" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">J</text>
+            <text x="24" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">C</text>
+            <text x="40.75" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="10" fontWeight="700" fill="#fff">B</text>
+          </svg>
+        </span>
+        <span className={chipClass}>
+          <svg className={svgClass} viewBox="0 0 48 16" role="img" aria-label="American Express">
+            <rect x="0" y="1" width="48" height="14" rx="2" fill="#006FCF" />
+            <text x="24" y="11.5" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="9" fontWeight="700" letterSpacing="0.5" fill="#fff">AMEX</text>
           </svg>
         </span>
       </div>

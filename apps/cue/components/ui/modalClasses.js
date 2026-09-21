@@ -68,3 +68,13 @@ export const FIELD_ERR = 'block mt-[0.3rem] text-small text-err';
 export const SUCCESS_ICON =
   'flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-[50%] text-[1.6rem] text-white bg-[#25d366]';
 export const SUCCESS_TEXT = 'mb-6 text-body leading-[var(--lh-body)]';
+
+// Referral code field - lives here rather than inline in one component now that
+// both the booking modal and the payment step render it (DRY rule in CLAUDE.md:
+// used by more than one component means one module, imported, not copy-pasted).
+export const REFERRAL_INPUT =
+  'flex-1 px-[0.65rem] py-2 h-[var(--field-h)] [border:1px_solid_#d8d2c4] rounded-sm font-body text-field text-green';
+export const REFERRAL_BTN =
+  'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer ' +
+  '[transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
+export const refMsgCls = (ok) => `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`;

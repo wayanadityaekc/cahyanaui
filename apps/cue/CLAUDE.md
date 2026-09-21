@@ -1571,15 +1571,29 @@ Order **must be kept** (declarations first, run last):
       `tinggi/line-height == 1` DAN `scrollWidth == clientWidth`).
     - **Tiap baris di file itu WAJIB fakta yang udah ada di web** (gratis batal 24 jam,
       car/driver included, Exclusive include tiket, charter per mobil s/d 5 orang,
-      **deposit 20%** — Wayan, Sep 2026, naik dari 10%). Nambah janji baru = tanya Wayan dulu.
-    - **Deposit = 20% di SELURUH web** (Wayan, Sep 2026 — naik dari 10%, udah disapu
-      33 tempat di 12 file: FAQ, Terms + kebijakan refund, Charter, Transfer, Airport,
-      About, 2 guide, Itinerary, metaDesc 7 tour, JSON-LD). Gak ada logika deposit di
-      server — ini murni copy. **Kalau angkanya berubah lagi, `grep -rn "20% deposit"`
-      dan sapu SEMUA sekaligus**; jangan cuma bar-nya, nanti web ngomong dua angka beda.
-      **JANGAN kesapu**: `(save 10%)` di `TransferPicker` — itu diskon return trip,
-      BUKAN deposit (dipatok `pricing-spec-test`: "return is 2x less 10%"). Makanya pola
-      sapuan WAJIB di-anchor ke kata "deposit", bukan ke angka "10%" doang.
+      **deposit $10** — Wayan, 20 Sep 2026). Nambah janji baru = tanya Wayan dulu.
+    - **Deposit = `$10` FLAT di SELURUH web** (Wayan, 20 Sep 2026 — dulu 20%, sebelumnya
+      10%; disapu 35 tempat di 13 file: FAQ, Terms + kebijakan refund, Charter, Transfer,
+      Airport, About, 2 guide, Itinerary, metaDesc 7 tour, JSON-LD). **Sekarang ADA
+      logikanya di server** — `payment.js` di `cahyana-api` (`DEPOSIT_USD`), di-mirror
+      `lib/payment.js` di sini, dan dua-duanya diadu `node tools/check-pay-agree.mjs`
+      (600 kombinasi + 5 rail). Jadi copy bukan lagi satu-satunya tempat angkanya hidup:
+      **ganti angkanya = ubah `DEPOSIT_USD` di API, mirror-nya di sini, TERUS sapu copy-nya**.
+      Sapuannya `grep -rn "\$10 deposit"` dan kerjain SEMUA sekaligus; jangan cuma bar-nya,
+      nanti web ngomong dua angka beda.
+      - **Flat, gak ngikut area jemput.** Pernah ada draft spek yang bikin depositnya
+        $5 di Ubud / $15 di luar — **dibuang** (Wayan: "tidak ada area yang bergantung
+        deposit"). Yang ngikut area itu **pickup fee**, dan itu di `pricing.js`.
+        Dipatok `paypal-flow-test.js` ("deposit is flat, outside Ubud").
+      - **JANGAN kesapu**: `(save 10%)` di `TransferPicker` — itu diskon return trip,
+        BUKAN deposit (dipatok `pricing-spec-test`: "return is 2x less 10%"). Makanya pola
+        sapuan WAJIB di-anchor ke kata "deposit", bukan ke angka telanjang.
+    - **Bayar penuh GAK dapet diskon dan GAK ngubah window batal** (Wayan, 20 Sep 2026).
+      Yang dijual: gak usah bawa cash, gak usah ke money changer, bayar pakai mata uang
+      sendiri di kurs yang keliatan. **Batal gratis tetep 24 jam buat SEMUA booking.**
+      Sempat dirancang "48 jam buat yang bayar penuh" — **salah arah, dibuang**: notice
+      lebih panjang itu deadline lebih KETAT, bukan lebih longgar, jadi malah ngehukum
+      tamu yang bayar paling banyak. Kalau nemu ide ini lagi, ini jawabannya.
   - **Rotasi: `setIdx` dan `setDim(false)` JANGAN di tick yang sama.** Kalau barengan,
     teks baru ke-paint langsung di opacity 1 → nyentak, bukan fade. Pola yang bener:
     fade-out → `setTimeout(FADE_MS)` → ganti index → `requestAnimationFrame` → fade-in.
@@ -1831,7 +1845,7 @@ Order **must be kept** (declarations first, run last):
       - **"How the day works" 150 → ~85 kata**, 3 paragraf panjang jadi 4 paragraf pendek.
         Teks itu ditulis waktu blok-nya masih selebar kartu; sekarang dia **kolom sempit**,
         jadi kalimat panjang bikin baris-barisnya numpuk. **Gak ada fakta yang dibuang**:
-        jam, km, no fixed route, jam tambahan di tarif per jam, deposit 20%, peringatan macet
+        jam, km, no fixed route, jam tambahan di tarif per jam, deposit $10, peringatan macet
         semuanya masih ada. Yang ilang cuma bantalannya ("stop for photos, pull over for lunch
         at a warung" = sama aja sama "decide as you go") dan "driver collects you at your
         accommodation" (udah ada di Included, jadi dobel).
@@ -1840,7 +1854,7 @@ Order **must be kept** (declarations first, run last):
       - **Opsi "3 langkah bernomor" buat How the day works GAK JADI DIPAKAI.** Itu dirancang
         waktu blok-nya masih KOTAK; sekarang dia kolom polos, dan paragraf pendek udah kebaca.
         Masih bisa dipasang kalau Wayan mau — tinggal bilang.
-      - Patokan copy-nya tetep: nol em-dash, nol kata glorify, **"20% deposit"** ditulis persis
+      - Patokan copy-nya tetep: nol em-dash, nol kata glorify, **"$10 deposit"** ditulis persis
         (itu anchor sapuan kalau angkanya berubah).
   - Verifikasi kotak Included/penjelasan = **`verify-infoboxes.mjs`** (152/152) — nyisir
     charter + transfer + airport di 390/767/768/1024/1280: gak ada marker/bullet sisa; garis
@@ -1875,6 +1889,58 @@ Order **must be kept** (declarations first, run last):
   - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;
     kalau di-stub `'$'` harness-nya ngukur "$1.000.000" — string yang gak pernah dilihat tamu.
 
+## Pembayaran online (checkout) — Sep 2026
+Tamu sekarang bisa bayar di halaman kita sendiri. Ini bagian yang kalau salah angka
+= duit beneran, jadi aturannya lebih ketat dari bagian lain.
+
+**Tiga opsi, satu sumber aturan:**
+- `cahyana-api/payment.js` = SATU-SATUNYA tempat aturan deposit/diskon hidup. Dia
+  **gak tau apa-apa soal PayPal/DOKU** — provider yang nanya ke dia, bukan sebaliknya.
+- `CUE/lib/payment.js` = **cermin tampilan** (apa yang tamu LIHAT sebelum commit).
+  Dua-duanya diadu `node tools/check-pay-agree.mjs` (600 kombinasi + 5 rail, harus
+  `beda: 0`). **Ubah satu = ubah dua-duanya**, kalau nggak gate-nya merah.
+- Opsinya: `deposit` ($10 flat) · `full` (100%, NOL diskon) · `referral` (5% off,
+  cuma nongol kalau kodenya valid).
+
+**Rail: IDR → DOKU, selain itu → PayPal** (`cahyana-api/providers.js`, cermin
+`CUE/lib/rails.js`). **PayPal gak bisa settle rupiah sama sekali** — itu alasan
+DOKU ada, bukan preferensi.
+- **DOKU masih PLACEHOLDER** (`cahyana-api/doku.js`) — akunnya ada, kartunya masih
+  di-review. Selama `DOKU_CLIENT_ID`/`DOKU_SECRET` kosong, booking IDR jatuh ke
+  PayPal dalam USD, dan tamunya **dikasih tau di layar sebelum ngetik kartu**
+  (`noteFor()` di `lib/rails.js` → satu baris di `PaymentStep`).
+- `doku.js` sengaja **NOLAK jalan**, bukan pura-pura sukses: `configured()` false
+  dan tiap fungsi throw. Rail pembayaran yang diem-diem no-op itu bug terburuk yang
+  bisa ada di repo ini — tamu ngira udah bayar, kita ngira belum.
+- Begitu DOKU nyala, `/api/paypal/create-order` **NOLAK** booking IDR (409
+  `wrong_rail`). Dipatok `paypal-flow-test.js` — jadi placeholder-nya beneran
+  nyambung, bukan hiasan.
+
+**Aturan yang gak boleh dilanggar:**
+1. **Nominal GAK PERNAH dateng dari browser.** Browser cuma ngirim `booking_ref` +
+   `option`. Server baca harga yang DIA sendiri simpen, terus `payment.js` yang
+   mutusin. Dipatok tes "browser amount ignored".
+2. **Status jadi `paid` CUMA di webhook**, gak pernah dari frontend dan gak pernah
+   dari respons capture doang. Webhook verifikasi signature DULU, terus adu
+   **nominal DAN mata uang**; beda sedikit → `status = 'mismatch'`, tetep belum
+   dibayar. Email konfirmasi juga dikirim dari webhook, bukan pas booking dibuat.
+3. **Data kartu gak pernah nyentuh state React atau server kita** — Card Fields itu
+   iframe punya PayPal. Itu yang bikin kita di luar scope PCI. Jangan bikin input
+   kartu sendiri.
+4. **Secret cuma di env Railway**, gak pernah di kode frontend atau di git.
+   `PAYPAL_ENV` yang kosong = **sandbox**, bukan live (di `paypal.js`) — default yang
+   salah di sini artinya duit beneran ke-charge waktu lagi ngetes.
+5. `express.json({ verify })` nyimpen `rawBody` buat cek signature. **Jangan**
+   serialisasi ulang body yang udah di-parse — signature-nya langsung invalid.
+
+**Habis nyentuh checkout, jalanin:**
+`node tools/check-pay-agree.mjs` (di CUE) + `node tools/paypal-flow-test.js` (di
+cahyana-api, 26 assertion, stub PayPal & DB tapi server Express-nya beneran nyala).
+Kalau yang berubah COPY-nya: `pay-copy.mjs` di scratchpad — buka modal booking
+beneran di USD & IDR terus baca teksnya (nol janji 48 jam, window 24 jam masih
+disebut, baris full jualan harinya bukan diskon, peringatan settle-USD cuma nongol
+di IDR).
+
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,
   ATV, rafting, Zoo, Bird Park) — angka riset, Wayan koreksi.
@@ -1901,6 +1967,19 @@ Order **must be kept** (declarations first, run last):
   Wayan nulis & kirim broadcast dari dashboard Resend (unsubscribe + analytics
   otomatis). Email welcome akun udah janjiin "deals & Bali updates" → ini follow-up-nya.
 
+### Nge-jalanin situs lokal
+- **`npm run dev` GAK BISA dipakai buat klik-klik situs ini.** Semua link internal
+  diakhiri `.html` (`/ubud-tour.html`) - itu yang ditulis static export, dan yang
+  dipakai canonical + sitemap + 56 redirect. `next dev` nyajiin `/ubud-tour` dan
+  jawab **404** buat bentuk `.html`-nya (`/tour.html` malah **500**), jadi di dev
+  **tiap kartu yang diklik mendarat di halaman error**. Itu BUKAN bug situsnya.
+  - Buat klik-klik atau tes checkout: **`npm run build && npm run serve`**
+    (= `node tools/serve-out.js`, port 4000) - nyajiin `out/` persis kayak
+    Hostinger, jadi yang dites emang artefak yang bakal di-deploy.
+  - Diadu langsung: `/ubud-tour.html` -> **200** di serve-out, **404** di dev.
+  - `next dev` tetep berguna buat hot reload waktu ngoding satu komponen; yang
+    gak bisa cuma navigasi antar-halaman.
+
 ## Before calling it "done" (checklist)
 1. `npm run build` passes (this is the real syntax/build check now — no more `node --check script.js`).
 2. All active CI gates pass: `node tools/check-urls.js`, `node tools/check-detail.js`,
@@ -1916,3 +1995,24 @@ Order **must be kept** (declarations first, run last):
    dari `style.css` kalau udah 0.
 4. `style.css` `{}` braces balanced; no dead classes ketinggalan.
 5. Commit + push ke `main` (deploy otomatis). Bump `?v=` UDAH GAK PERLU (hash otomatis).
+
+### Saklar pembayaran (`lib/payFlag.js`)
+- **Step pembayaran MATI buat semua orang** (`PAY_DEFAULT = false`). Checkout itu kode
+  yang udah kelar jauh sebelum dia jadi produk yang kelar: tamu yang ketemu form
+  bayar yang belum dibuktiin ujung-ke-ujung = **booking yang hilang diam-diam** —
+  dia gak bisa bayar, booking-nya nyangkut `pending`, dan email konfirmasi gak
+  kekirim (email sekarang nungguin webhook).
+- Nyalain buat diri sendiri: **`?pay=1`** di URL mana pun (matiin lagi `?pay=0`).
+  Ke-simpen per browser, jadi cuma perlu sekali.
+- **MATI = perilaku lama PERSIS**: `pay_option` dikirim kosong → server ngitung
+  gak ada yang ditagih → booking langsung `new` (confirmed) + 2 email kekirim, dan
+  modalnya balik nunjukin layar "Booking Received!" yang lama.
+- **Dibacanya di `useEffect`, JANGAN di initial state** — static export, paint
+  pertama harus sama persis sama HTML hasil pre-render (aturan yang sama kayak
+  `charterDraft`).
+- **Ganti `PAY_DEFAULT` jadi `true` = satu-satunya edit** yang nyalain pembayaran
+  buat semua tamu. Gak ada yang lain yang perlu diubah.
+- Verifikasi: **`payflag.mjs`** di scratchpad (8/8) — dua keadaan diadu di halaman
+  hasil build beneran: step-nya nongol/nggak, `pay_option` yang KEKIRIM, dan layar
+  akhir sesudah submit. Dites pakai bug aslinya (`PAY_DEFAULT = true` → 3 assertion
+  "MATI" langsung merah).

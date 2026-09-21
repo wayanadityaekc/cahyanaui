@@ -22,7 +22,7 @@
 // COPY RULE: every line here has to be TRUE. Where the claims come from:
 // free cancellation 24h (listing cards + FAQ), car/driver/fuel included and
 // tickets separate per tier (FAQ "Standard vs Exclusive"), charter priced per
-// car up to 5 pax (charter page + pricing-data), 20% deposit (Wayan, Sep 2026).
+// car up to 5 pax (charter page + pricing-data), $10 deposit (Wayan, Sep 2026).
 // Nothing new gets promised here without Wayan.
 
 const FREE_CANCEL = {
@@ -62,7 +62,7 @@ const PLAN_LOCAL = { text: 'Saved on this device only', icon: 'info' };
 // No WhatsApp on detail pages (Wayan, Sep 2026): the book bar and the booking
 // card already own the next step, a second channel just splits it.
 export const PROMO_DEFAULT = {
-  text: 'A 20% deposit locks your date',
+  text: 'A $10 deposit locks your date',
   icon: 'info',
 };
 

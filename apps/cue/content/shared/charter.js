@@ -1,6 +1,6 @@
 export const CHARTER = {
   "title": "Private Car Charter in Bali",
-  "sub": "Your own car and local driver for the day. You choose the route, your driver knows the roads. Five, ten or twelve hours, petrol included, 20% deposit to book.",
+  "sub": "Your own car and local driver for the day. You choose the route, your driver knows the roads. Five, ten or twelve hours, petrol included, $10 deposit to book.",
   "boxId": "charter",
   "boxTitle": "Build your charter",
   // Full Day FIRST (Wayan, Sep 2026: "kalo paling depan taruh full day") - it is
@@ -82,7 +82,7 @@ export const CHARTER = {
       { "title": "How the day works", "paras": [
         "You get an air-conditioned car, a local driver and a block of time. Half day is 5 hours, full day is 10, and the longest block is 12.",
         "There is no fixed route. Tell your driver in the morning, or decide as you go. They live here, so ask them if you would rather not plan it yourself.",
-        "Running long? Add hours at the hourly rate and settle at the end. A 20% deposit confirms the date; the rest is paid after the trip.",
+        "Running long? Add hours at the hourly rate and settle at the end. A $10 deposit confirms the date; the rest is paid after the trip.",
         "One honest warning: traffic in the south is slow in the afternoon, so plan fewer stops than the map suggests."
       ] },
       { "title": "Charter or guided tour?", "paras": [

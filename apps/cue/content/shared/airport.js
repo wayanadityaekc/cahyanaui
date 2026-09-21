@@ -20,7 +20,7 @@ export const AIRPORT = {
         "For a departure drop-off, the same details help time the pick-up from your hotel or villa so you reach the airport with enough buffer for check-in and security, without sitting around too early."
       ] },
       { "title": "How it works", "paras": [
-        "Fill in the direction, date, and guest count, then your hotel or villa address and flight details. Confirm the booking with only a 20% deposit, and the rest is settled directly with your driver. You'll get a booking confirmation by email with everything you entered - if a flight changes, reply to that email or message us on WhatsApp and we'll pass it on to your driver.",
+        "Fill in the direction, date, and guest count, then your hotel or villa address and flight details. Confirm the booking with only a $10 deposit, and the rest is settled directly with your driver. You'll get a booking confirmation by email with everything you entered - if a flight changes, reply to that email or message us on WhatsApp and we'll pass it on to your driver.",
         "Need the return leg too? Book it separately closer to your departure date, once your flight is confirmed - the direction picker above covers both pickup and drop-off."
       ] }
     ] }

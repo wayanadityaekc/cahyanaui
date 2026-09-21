@@ -451,7 +451,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "A private day tour is your own air-conditioned car, a local English-speaking driver, and a themed route you're free to bend - linger, skip, swap, add. Pricing is per car for up to five people, so a family pays the same as a couple, and every price is shown upfront. On our tours you choose between <b>Standard</b> (car, petrol, crew - entrance tickets paid at each gate) and <b>Exclusive</b> (tickets for the listed stops included, whole day prepaid). Pick-up and drop-off are at your hotel or villa in the Ubud area, and a 20% deposit on WhatsApp locks the date."
+    "html": "A private day tour is your own air-conditioned car, a local English-speaking driver, and a themed route you're free to bend - linger, skip, swap, add. Pricing is per car for up to five people, so a family pays the same as a couple, and every price is shown upfront. On our tours you choose between <b>Standard</b> (car, petrol, crew - entrance tickets paid at each gate) and <b>Exclusive</b> (tickets for the listed stops included, whole day prepaid). Pick-up and drop-off are at your hotel or villa in the Ubud area, and a $10 deposit on WhatsApp locks the date."
    },
    {
     "type": "heading",
@@ -500,7 +500,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "The mechanics, so nothing surprises you: pick a tour and date, tap Book, and the conversation moves to WhatsApp, where we confirm the plan, the pick-up point, and the timing. A 20% deposit locks it in. The day before, you'll get your driver's details; on the morning, the car is at your hotel at the agreed time, and the balance is settled at the end of the day in cash or by transfer. Change of plans? Message us - dates move, stops swap, and multi-day guests reshuffle constantly. That flexibility is the point of private."
+    "html": "The mechanics, so nothing surprises you: pick a tour and date, tap Book, and the conversation moves to WhatsApp, where we confirm the plan, the pick-up point, and the timing. A $10 deposit locks it in. The day before, you'll get your driver's details; on the morning, the car is at your hotel at the agreed time, and the balance is settled at the end of the day in cash or by transfer. Change of plans? Message us - dates move, stops swap, and multi-day guests reshuffle constantly. That flexibility is the point of private."
    },
    {
     "type": "heading",
@@ -652,7 +652,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "For our own trips the money part is simple, and worth knowing before you budget your cash: a 20% deposit by transfer confirms any booking, and the balance is settled at the end of the day in cash or by transfer. Tours are priced per car, not per person. On the Standard version of a tour you'll want cash for entrance tickets at each gate; on Exclusive, tickets are prepaid and your wallet stays in the bag. Details are on every program page, and the <a href=\"/transfer.html\">transfer</a> and <a href=\"/charter.html\">charter</a> pages show every price upfront."
+    "html": "For our own trips the money part is simple, and worth knowing before you budget your cash: a $10 deposit by transfer confirms any booking, and the balance is settled at the end of the day in cash or by transfer. Tours are priced per car, not per person. On the Standard version of a tour you'll want cash for entrance tickets at each gate; on Exclusive, tickets are prepaid and your wallet stays in the bag. Details are on every program page, and the <a href=\"/transfer.html\">transfer</a> and <a href=\"/charter.html\">charter</a> pages show every price upfront."
    },
    {
     "type": "heading",
@@ -682,7 +682,7 @@ export const GUIDE_CONTENT = {
      "eSIM before you fly = connected on arrival",
      "Check visa, passport validity, e-customs &amp; the tourist levy on official sites",
      "Tipping: appreciated, never obligatory",
-     "Our tours: 20% deposit, balance at the end, priced per car"
+     "Our tours: $10 deposit, balance at the end, priced per car"
     ]
    },
    {
@@ -2138,7 +2138,7 @@ export const GUIDE_CONTENT = {
    },
    {
     "type": "para",
-    "html": "If you have never used a driver abroad: in Bali it is the normal, unremarkable way to travel, not a luxury. Prices are quoted per car, not per person - typically for up to 5 passengers - so a full car costs the same as a solo traveller. The driver waits while you visit each stop, petrol and parking are part of the price, and the day ends back at your hotel. With us, a 20% deposit on WhatsApp confirms the booking and the balance is settled at the end of the day in cash or by transfer."
+    "html": "If you have never used a driver abroad: in Bali it is the normal, unremarkable way to travel, not a luxury. Prices are quoted per car, not per person - typically for up to 5 passengers - so a full car costs the same as a solo traveller. The driver waits while you visit each stop, petrol and parking are part of the price, and the day ends back at your hotel. With us, a $10 deposit on WhatsApp confirms the booking and the balance is settled at the end of the day in cash or by transfer."
    },
    {
     "type": "para",

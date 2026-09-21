@@ -18,6 +18,10 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import PaymentStep from './PaymentStep';
+import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
+import { baseTotal, PAY_COPY } from '@/lib/payment';
+import PayPalCheckout from './PayPalCheckout';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -60,6 +64,19 @@ export default function BookConfirmModal() {
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
 
+  // Checkpoint 1: the guest's payment choice is held here so the step can be
+  // driven and screenshotted. Nothing acts on it yet.
+  const [payOption, setPayOption] = useState('deposit');
+  // Set once the booking is saved as pending; switches the modal to the payment
+  // step. The booking exists from this point whether or not payment succeeds.
+  const [bookingRef, setBookingRef] = useState('');
+  const [paid, setPaid] = useState(false);
+  // Is this visitor being offered online payment at all? Off for everyone until
+  // the chain is proven live - see lib/payFlag.js. Read in an effect, never in
+  // initial state: this is a static export and the first paint has to match the
+  // pre-rendered HTML.
+  const [payOn, setPayOn] = useState(PAY_DEFAULT);
+  useEffect(() => { setPayOn(readPayFlag()); }, []);
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
@@ -133,6 +150,14 @@ export default function BookConfirmModal() {
     phone: f.phone,
     email: f.email,
     referral: (referral && referral.code) || '',
+    // Which of the two options the guest picked. The server does NOT trust an
+    // amount from here - it recomputes what is owed from its own prices. This is
+    // the choice only, so the invoice matches the row the guest actually tapped.
+    pay_option: payOn ? payOption : '',
+    // The currency the guest was quoted in. Without it the server can only
+    // record USD/IDR, and an invoice sent in the wrong currency is a different
+    // number from the one they agreed to.
+    currency: currency || 'USD',
     stay: stay || '',
     lines: ctx.lines.map((l, i) => {
       const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
@@ -175,6 +200,10 @@ export default function BookConfirmModal() {
         if (d.account) setAccount(d.account);
       }
       if (typeof ctx.onSuccess === 'function') ctx.onSuccess();
+      // The booking is saved as 'pending'. It is NOT confirmed yet - that only
+      // happens when PayPal's webhook says the money cleared - so the modal moves
+      // to the payment step rather than showing a success screen.
+      setBookingRef(d.ref || '');
       setDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
@@ -205,17 +234,13 @@ export default function BookConfirmModal() {
 
   const applyRef = async () => {
     const pct = await apply(f.referral);
-    setRefMsg(pct ? { ok: true, text: `Referral applied - ${pct}% off!` } : { ok: false, text: 'Code not valid.' });
+    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   };
 
   // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/logo/title/group/input/
-  // btn(+wa)/success pakai konstanta shared (modalClasses.js). Bagian yang ISOLATED ke
-  // modal ini (referral input-group, summary/row, details accordion, pay chips) di-inline
-  // utility + CSS-nya DIHAPUS di commit ini. .modal__referral-msg TETEP CSS (dipakai 6
-  // komponen), jadi msg di sini juga di-inline biar CSS-nya bisa dihapus nanti barengan.
-  const REFERRAL_INPUT = 'flex-1 px-[0.65rem] py-2 h-[var(--field-h)] [border:1px_solid_#d8d2c4] rounded-sm font-body text-field text-green';
-  const REFERRAL_BTN = 'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer';
-  const refMsgCls = (ok) => `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`;
+  // btn(+wa)/success pakai konstanta shared (modalClasses.js). Yang ISOLATED ke modal
+  // ini (summary/row, details accordion) di-inline utility + CSS-nya DIHAPUS. Referral
+  // input-group + msg pindah ke modalClasses juga, karena PaymentStep ikut pakai.
   const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_#eee] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
@@ -283,14 +308,6 @@ export default function BookConfirmModal() {
                 </div>
               </>
             )}
-            <div className={GROUP}>
-              <label className={LABEL} htmlFor="referral">Referral Code (optional)</label>
-              <div className="flex gap-2">
-                <input className={REFERRAL_INPUT} type="text" id="referral" placeholder="Enter code" value={f.referral} onChange={set('referral')} />
-                <button className={REFERRAL_BTN} type="button" onClick={applyRef}>Apply</button>
-              </div>
-              {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
-            </div>
 
             <div className="my-5 [border-top:1px_solid_#eee]">
               <div className={ROW}><span>Guests</span><span>{view.guests || displayGuests}</span></div>
@@ -307,6 +324,23 @@ export default function BookConfirmModal() {
               )}
               <div className={ROW}><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
+
+            {payOn && <PaymentStep
+              option={payOption}
+              onOption={setPayOption}
+              /* baseTotal, not priced.total: the quote already subtracts the
+                 code's own percentage, and here the code is its own option -
+                 counting it in both places would discount twice. */
+              total={baseTotal(priced)}
+              symbol={(priced && priced.symbol) || '$'}
+              currency={currency || 'USD'}
+              stay={stay || ''}
+              hasReferral={!!(priced && priced.referral)}
+              referral={f.referral}
+              onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
+              onApplyReferral={applyRef}
+              refMsg={refMsg}
+            />}
 
             {view.detailLines && view.detailLines.length > 0 && (
               <div className="mb-5 [border-top:1px_solid_#eee]">
@@ -340,12 +374,44 @@ export default function BookConfirmModal() {
               Discuss via WhatsApp
             </button>
           </div>
-        ) : (
+        ) : !payOn ? (
           <div className="text-center">
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Booking Received!</h3>
             <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
             <button className={BTN} onClick={closeBooking}>Done</button>
+          </div>
+        ) : (
+          <div className={paid ? 'text-center' : ''}>
+            {paid ? (
+              <>
+                <div className={SUCCESS_ICON}>&#10003;</div>
+                <h3 className={TITLE}>Payment received</h3>
+                <p className={SUCCESS_TEXT}>
+                  Thank you. Your confirmation email is on its way - it is sent once the payment clears.
+                </p>
+                <button className={BTN} onClick={closeBooking}>Done</button>
+              </>
+            ) : (
+              <>
+                <h3 className={TITLE}>Almost there - just the payment</h3>
+                <p className={SUCCESS_TEXT}>
+                  Your booking is saved{bookingRef ? ` (${bookingRef})` : ''}. It is confirmed once this payment
+                  goes through. Nothing is lost if you close this - you can pay later.
+                </p>
+                {bookingRef ? (
+                  <PayPalCheckout
+                    bookingRef={bookingRef}
+                    option={payOption}
+                    copy={PAY_COPY}
+                    currency={currency}
+                    onPaid={() => setPaid(true)}
+                  />
+                ) : (
+                  <p className="text-small text-err">We could not read your booking reference. Please contact us.</p>
+                )}
+              </>
+            )}
           </div>
         )}
     </ModalPresence>,

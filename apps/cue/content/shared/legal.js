@@ -31,7 +31,7 @@ export const LEGAL = {
       { "type": "list", "variant": "yes", "items": [
         "<strong>Standard</strong> tours include car, driver, and fuel; entrance tickets are not included.",
         "<strong>Exclusive</strong> tours include everything in Standard plus entrance tickets for the listed attractions, priced per person.",
-        "A deposit of 20% may be requested to confirm certain bookings; the balance is paid on the day of your trip - either charged automatically or settled in person by cash or transfer after your tour.",
+        "A $10 deposit may be requested to confirm certain bookings; the balance is paid on the day of your trip - either charged automatically or settled in person by cash or transfer after your tour.",
         "Prices may change for public holidays, special events, and has an additional pick up fee outside the Ubud area - we will always tell you before you confirm."
       ] },
       { "type": "heading", "html": "4. Changes &amp; cancellations" },
@@ -118,7 +118,7 @@ export const LEGAL = {
       { "type": "heading", "html": "2. Free-cancellation window" },
       { "type": "para", "html": "Cancel at least 24 hours before your scheduled start time and there is nothing to pay - and any deposit you paid is fully refunded." },
       { "type": "heading", "html": "3. Deposits &amp; refunds" },
-      { "type": "para", "html": "Where a deposit of 20% was taken to confirm your booking or if you choose to make a full payment, refunds work as follows:" },
+      { "type": "para", "html": "Where a $10 deposit was taken to confirm your booking or if you choose to make a full payment, refunds work as follows:" },
       { "type": "list", "variant": "yes", "items": [
         "Cancel more than 24 hours before start: full refund of the deposit.",
         "Cancel within 24 hours before start: the deposit is non-refundable.",

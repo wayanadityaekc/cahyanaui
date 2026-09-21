@@ -1213,6 +1213,47 @@ terus **HP-3** dari sheet 3 bentuk HP.
   tombol ngambang, dua-duanya udah dihapus (lihat section "Sticky bottom bar").
   Gayanya niru ikon keranjang persis (`w-5 h-5`, `text-gold`, `mr-[1.3rem]` /
   `max-[992px]:mr-[0.85rem]`) - kalau ubah salah satu, samain dua-duanya.
+- **BARIS DRAWER = PILL, bentuknya DIPINJEM dari rail** (Sep 2026, Wayan pilih "B" dari
+  sheet 3 opsi: sekarang / B / B+ikon; dia bilang "gass B, tombol X nya hilangin").
+  **BELUM DI MAIN** - ada di branch `claude/role-definition-d9kvwl` (Wayan: "jangan di
+  push live dulu"). Kalau catatan ini kebaca tapi kode-nya gak ada, berarti branch-nya
+  belum di-merge.
+  - Geometri baris = **`MENU_ROW_BOX` di `railClasses.js`**, string yang SAMA dipakai
+    `railMobileItem`. Drawer dulu teks polos yang hover-nya cuma ganti warna, padahal
+    rail Our Company & My Trips barisnya udah pill - satu web, dua macem baris menu.
+    Yang travel cuma BENTUK; warna & ukuran teks tetep punya masing-masing.
+  - Baris halaman aktif = **pill cream + semibold** (tepat 1 baris). Hover ngasih pill yang
+    sama **cuma di desktop** - Tailwind mbungkus `hover:` di `@media (hover:hover)`, jadi
+    layar sentuh gak nyangkutin state hover. Itu bener, jangan "dibenerin".
+  - **Badge & chevron ke tepi KANAN** (`ml-auto`): badge keranjang dari 216px dari tepi
+    drawer jadi ≤14px. Baris My Trip juga berhenti nulis salinan class-nya sendiri (dia cuma
+    beda karena bawa badge), jadi sekarang dia ikut nyala pas lagi di `/my-trips`.
+  - **Tiap `<li>` ditarik keluar 12px (`-mx-3` = `NAV_LI`)**, karena padding 12px punya
+    pill bakal nggeser SEMUA label ke kanan dan gak lurus lagi sama baris Welcome di atasnya.
+    Diukur: tepi kiri label **100px @390 / 962px @1280, sebelum = sesudah**. Submenu Program
+    nyerep 12px yang sama (`pl-[1.65rem]`) biar sub-item tetep 36px dari tepi drawer -
+    **ganti `NAV_LI` = ganti itu bareng.**
+  - **NOL tombol ×** (Wayan). Konsekuensinya currency picker **TETEP di baris Welcome** -
+    mindahin dia ke bawah (gabung Guests/Pickup) itu cuma buat bikin ruang buat ×, dan
+    diukur: 4 benda di baris 268px bikin nama wrap 2 baris (65→77px) atau kepotong
+    "Welcom…". Kalau suatu saat × dipasang, pindahin currency-nya bareng.
+  - **Yang GAK ditiru dari drawer Flowbite** (sumber idenya): drawer dari kiri (hamburger
+    kita di kanan), baris 32px (kita 39px = ukuran jempol), `h-screen` (kita `100dvh`,
+    itu yang tahan chrome browser HP muncul-ilang).
+  - **HAMBURGER KETUTUPAN DRAWER** (diukur, bukan dugaan): drawer `fixed right-0` z-120,
+    hamburger di header z-100 di tepi kanan - hit-test di tengah hamburger pas drawer kebuka
+    mendarat di elemen DI DALAM drawer, di 390 DAN 1280. Jadi morph hamburger→X itu **gak
+    keliatan** selama menu kebuka, dan sekarang **gak ada penanda tutup sama sekali** di dalam
+    drawer (tutupnya: tap scrim / Escape). Wayan udah tau & milih gitu.
+  - Verifikasi: **`verify-drawerb.mjs`** (275/275) di 320/390/768/1280/1440 × 5 halaman:
+    tepat 1 pill & bener halamannya, radius `--r-md`, baris ≥38px, tepi kiri label seragam,
+    badge/chevron ≤14px dari kanan, NOL tombol close, submenu 36px, halaman gak melar.
+    Plus **rail-nya diadu before/after: 17 baris × 2 lebar, IDENTIK** (dia cuma minjemin
+    string, jadi wajib nol geser).
+  - **Sisa yang BUKAN dari perubahan ini**: (1) `isActive('/')` cuma cocok sama pathname
+    `/`, jadi kalau ada yang mendarat di `/index.html` baris Home gak nyala (nol link
+    internal ke situ, jadi gak ada efeknya); (2) di **320px** baris Welcome **udah wrap dari
+    dulu** (77px). Dua-duanya belum ditanyain ke Wayan.
 - **Spacing icon kluster kanan** (akun/cart/menu): `.acct` margin-right 0.9rem,
   `.navbar__cart` margin-right 1.3rem (Sep 2026, dulu 0.3rem/0.85rem — kerasa mepet).
   Gap besar logo↔kluster (`.navbar__logo{margin-right:auto}`) itu disengaja (standar

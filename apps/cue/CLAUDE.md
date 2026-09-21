@@ -1213,13 +1213,17 @@ terus **HP-3** dari sheet 3 bentuk HP.
   tombol ngambang, dua-duanya udah dihapus (lihat section "Sticky bottom bar").
   Gayanya niru ikon keranjang persis (`w-5 h-5`, `text-gold`, `mr-[1.3rem]` /
   `max-[992px]:mr-[0.85rem]`) - kalau ubah salah satu, samain dua-duanya.
-- **BARIS DRAWER = PILL, bentuknya DIPINJEM dari rail** (Sep 2026, Wayan pilih "B" dari
-  sheet 3 opsi: sekarang / B / B+ikon; dia bilang "gass B, tombol X nya hilangin").
+- **BARIS DRAWER = PILL + IKON, bentuknya DIPINJEM dari rail** (Sep 2026). Wayan pilih
+  **"B"** dulu dari sheet 3 opsi (sekarang / B / B+ikon) sambil bilang "tombol X nya
+  hilangin" - terus dia **ngirim balik screenshot mock A: "gua mau ini"**, jadi yang
+  jadi itu **A**: ikon per baris + tombol × + currency turun. Yang berlaku = A.
   **BELUM DI MAIN** - ada di branch `claude/role-definition-d9kvwl` (Wayan: "jangan di
   push live dulu"). Kalau catatan ini kebaca tapi kode-nya gak ada, berarti branch-nya
   belum di-merge.
-  - Geometri baris = **`MENU_ROW_BOX` di `railClasses.js`**, string yang SAMA dipakai
-    `railMobileItem`. Drawer dulu teks polos yang hover-nya cuma ganti warna, padahal
+  - Geometri baris **+ ukuran ikon** = **`MENU_ROW_BOX` di `railClasses.js`**, string yang
+    SAMA dipakai `railMobileItem`. Ukuran ikon ikut masuk situ karena Lucide tanpa ukuran
+    eksplisit nge-render 24px - jadi "baris menu" & "ikonnya segede apa" satu keputusan,
+    bukan dua tempat yang bisa kelewat. Drawer dulu teks polos yang hover-nya cuma ganti warna, padahal
     rail Our Company & My Trips barisnya udah pill - satu web, dua macem baris menu.
     Yang travel cuma BENTUK; warna & ukuran teks tetep punya masing-masing.
   - Baris halaman aktif = **pill cream + semibold** (tepat 1 baris). Hover ngasih pill yang
@@ -1233,10 +1237,28 @@ terus **HP-3** dari sheet 3 bentuk HP.
     Diukur: tepi kiri label **100px @390 / 962px @1280, sebelum = sesudah**. Submenu Program
     nyerep 12px yang sama (`pl-[1.65rem]`) biar sub-item tetep 36px dari tepi drawer -
     **ganti `NAV_LI` = ganti itu bareng.**
-  - **NOL tombol ×** (Wayan). Konsekuensinya currency picker **TETEP di baris Welcome** -
-    mindahin dia ke bawah (gabung Guests/Pickup) itu cuma buat bikin ruang buat ×, dan
-    diukur: 4 benda di baris 268px bikin nama wrap 2 baris (65→77px) atau kepotong
-    "Welcom…". Kalau suatu saat × dipasang, pindahin currency-nya bareng.
+  - **IKON per baris**: House · Compass (Program) · BookOpen (Guide) · ShoppingBag (My Trip,
+    sama kayak ikon keranjang di navbar) · **Building2** (Our Company - ikon yang PERSIS
+    dipakai rail Our Company buat section "About Us") · Settings. Semuanya 16px
+    (`--icon-sm`) lewat `MENU_ROW_BOX`, `strokeWidth={1.7}`.
+    - **Tepi kiri yang jadi patokan sekarang IKON-nya**, bukan label: ikon mendarat di
+      100px @390 / 962px @1280 (persis di tempat label dulu), label-nya geser ke 126/988.
+      Jadi barisnya tetep lurus sama baris Welcome di atasnya.
+  - **TOMBOL × di baris Welcome** (34×34, border `--line`, radius `--r-md`). Sebelum ini
+    drawer **gak punya penanda tutup sama sekali**: hamburger-nya **ketutupan drawer**
+    (diukur - drawer `fixed right-0` z-120 lawan header z-100, hit-test di tengah hamburger
+    pas drawer kebuka mendarat di elemen DI DALAM drawer, di 390 DAN 1280), jadi morph
+    hamburger→X itu gak pernah keliatan selama menu kebuka. Tutupnya cuma tap scrim/Escape.
+    - Dia **gak nulis `transition` buat scale** - biar press feedback global di `style.css`
+      yang kepakai (aturan SNAP di `check-motion`).
+  - **CURRENCY PICKER TURUN ke kolom field** (gabung Guests/Pickup, label "Currency").
+    Itu yang bikin ruang buat ×: diukur, 4 benda di baris Welcome (268px) bikin namanya
+    **wrap 2 baris (65→77px)** atau kepotong jadi "Welcom…". Dia juga emang milik sini -
+    currency itu preferensi trip kayak guests & pickup, dan di search form homepage
+    ketiganya udah sebaris. Pakai **`variant="default"`**, bukan `"navbar"`: tombolnya
+    sama persis, cuma tanpa `ml-auto flex-none` yang gunanya buat duduk di kanan.
+    - **Efek samping yang bagus**: di **320px** baris Welcome dulu wrap (77px) walau belum
+      ada × - sekarang 1 baris, 65px di 320 DAN 390.
   - **Yang GAK ditiru dari drawer Flowbite** (sumber idenya): drawer dari kiri (hamburger
     kita di kanan), baris 32px (kita 39px = ukuran jempol), `h-screen` (kita `100dvh`,
     itu yang tahan chrome browser HP muncul-ilang).
@@ -1245,15 +1267,17 @@ terus **HP-3** dari sheet 3 bentuk HP.
     mendarat di elemen DI DALAM drawer, di 390 DAN 1280. Jadi morph hamburger→X itu **gak
     keliatan** selama menu kebuka, dan sekarang **gak ada penanda tutup sama sekali** di dalam
     drawer (tutupnya: tap scrim / Escape). Wayan udah tau & milih gitu.
-  - Verifikasi: **`verify-drawerb.mjs`** (275/275) di 320/390/768/1280/1440 × 5 halaman:
-    tepat 1 pill & bener halamannya, radius `--r-md`, baris ≥38px, tepi kiri label seragam,
-    badge/chevron ≤14px dari kanan, NOL tombol close, submenu 36px, halaman gak melar.
+  - Verifikasi: **`verify-drawera.mjs`** (350/350) di 320/390/768/1280/1440 × 5 halaman:
+    tiap baris punya ikon 16px & ikonnya satu tepi kiri, tepat 1 pill & bener halamannya,
+    radius `--r-md`, baris ≥38px, badge/chevron ≤14px dari kanan, **tepat 1** tombol close
+    34×34 & di-klik beneran nutup drawer, currency ada di kolom field & BUKAN di baris
+    Welcome, nama Welcome 1 baris & gak kepotong & row-nya 65px, submenu 36px, gak melar.
+    (`verify-drawerb.mjs` = versi opsi B, udah gak berlaku.)
     Plus **rail-nya diadu before/after: 17 baris × 2 lebar, IDENTIK** (dia cuma minjemin
     string, jadi wajib nol geser).
-  - **Sisa yang BUKAN dari perubahan ini**: (1) `isActive('/')` cuma cocok sama pathname
-    `/`, jadi kalau ada yang mendarat di `/index.html` baris Home gak nyala (nol link
-    internal ke situ, jadi gak ada efeknya); (2) di **320px** baris Welcome **udah wrap dari
-    dulu** (77px). Dua-duanya belum ditanyain ke Wayan.
+  - **Sisa yang BUKAN dari perubahan ini**: `isActive('/')` cuma cocok sama pathname `/`,
+    jadi kalau ada yang mendarat di `/index.html` baris Home gak nyala (nol link internal
+    ke situ, jadi praktis gak ada efeknya). Belum ditanyain ke Wayan.
 - **Spacing icon kluster kanan** (akun/cart/menu): `.acct` margin-right 0.9rem,
   `.navbar__cart` margin-right 1.3rem (Sep 2026, dulu 0.3rem/0.85rem — kerasa mepet).
   Gap besar logo↔kluster (`.navbar__logo{margin-right:auto}`) itu disengaja (standar

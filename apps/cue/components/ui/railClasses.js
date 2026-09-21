@@ -79,13 +79,16 @@ export const RAIL_MLABEL =
 // rows are muted body text, the drawer's are --fs-strong in soft black.
 // The DESKTOP rail row is deliberately NOT built from this - it runs a tighter
 // 0.55rem padding, and a drawer row has to stay thumb-sized.
+// The icon sizing lives here too, because a Lucide icon with no explicit size
+// renders at its 24px attribute - so "a menu row" and "how big its icon is" are
+// one decision, not two places to forget.
 export const MENU_ROW_BOX =
-  'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)]';
+  'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)] ' +
+  '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0';
 
 export const railMobileItem = (active) =>
   `${MENU_ROW_BOX} ` +
   'bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
-  '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   (active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');
 
 export const RAIL_MCHEV = 'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted opacity-70';

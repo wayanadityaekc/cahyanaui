@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, ShoppingBag, UserRound, UserRoundPlus } from 'lucide-react';
+import {
+  Building2, Compass, BookOpen, House, MessageCircle, Settings, ShoppingBag, UserRound, UserRoundPlus, X,
+} from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useAccount } from '@/state/AccountProvider';
@@ -46,7 +48,12 @@ const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 //
 // Yang dioper dari mock: baris kepilih = pill cream (rail juga gitu di HP),
 // hover = pill cream, badge & chevron ke tepi KANAN.
-// Yang TIDAK diambil: ikon per baris (itu opsi A) dan tombol × (Wayan: hapus).
+//
+// TERUS JADI OPSI A (Wayan ngirim balik screenshot mock A: "gua mau ini") -
+// jadi IKON PER BARIS + tombol × ikut masuk, dua-duanya yang tadinya dia minta
+// dilepas. Ikonnya bukan selera Flowbite: ukurannya `--icon-sm` lewat
+// MENU_ROW_BOX yang sama, dan Our Company pakai `Building2` - ikon yang PERSIS
+// dipakai rail Our Company buat section "About Us".
 const navLink = (active) =>
   `${MENU_ROW_BOX} text-strong no-underline ` +
   (active
@@ -195,7 +202,22 @@ export default function Navbar() {
                 <b className="text-strong font-semibold text-gold leading-[1.25]"><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
                 <span className="text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account ? account.email : 'Plan your Bali trip'}</span>
               </span>
-              <CurrencyPicker variant="navbar" />
+              {/* TOMBOL × (Wayan, sesudah lihat mock A). Sampai sekarang drawer gak
+                  punya penanda tutup sama sekali: hamburger-nya KETUTUPAN drawer
+                  (diukur - drawer `fixed right-0` z-120 lawan header z-100, hit-test
+                  di tengah hamburger mendarat di dalam drawer di 390 DAN 1280), jadi
+                  morph jadi X itu gak pernah keliatan pas menu kebuka. Tutupnya cuma
+                  tap scrim / Escape, dan gak ada apa pun di layar yang bilang gitu.
+                  Gak nulis `transition` sendiri buat scale - biar press feedback
+                  global di style.css yang kepakai (lihat aturan SNAP check-motion). */}
+              <button
+                type="button"
+                className="ml-auto flex-none grid place-items-center w-[34px] h-[34px] rounded-[var(--r-md)] [border:1px_solid_var(--line)] bg-white text-gold cursor-pointer [&>svg]:w-4 [&>svg]:h-4 [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream"
+                aria-label="Close menu"
+                onClick={() => setMenuOpen(false)}
+              >
+                <X strokeWidth={2} aria-hidden="true" />
+              </button>
             </li>
 
             {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}
@@ -214,6 +236,16 @@ export default function Navbar() {
               <div className="flex flex-col gap-1 min-w-0">
                 <label className="text-small text-muted" htmlFor="acct-stay">Pickup area</label>
                 <PickupAreaSelect id="acct-stay" />
+              </div>
+              {/* Currency TURUN ke sini pas tombol × masuk: diukur, 4 benda di baris
+                  Welcome (268px) bikin namanya wrap 2 baris (65 -> 77px) atau kepotong
+                  jadi "Welcom…". Dia juga emang milik sini - currency itu preferensi
+                  trip kayak guests & pickup, dan di search form homepage ketiganya
+                  udah sebaris. variant="default" (bukan "navbar"): tombolnya sama
+                  persis, cuma tanpa `ml-auto flex-none` yang buat duduk di kanan. */}
+              <div className="flex flex-col gap-1 min-w-0">
+                <label className="text-small text-muted" htmlFor="acct-cur">Currency</label>
+                <CurrencyPicker />
               </div>
             </li>
 
@@ -236,7 +268,7 @@ export default function Navbar() {
             {/* Nav — WAJIB cuma satu garis di drawer (di bawah Welcome, di atas); antar
                 link nggak dikasih border lagi, kerasa kebanyakan garis (Wayan). Jarak
                 antar-link murni dari padding baris (sekarang lewat MENU_ROW_BOX). */}
-            <li className={NAV_LI}><a href="/" className={navLink(isActive('/'))}>Home</a></li>
+            <li className={NAV_LI}><a href="/" className={navLink(isActive('/'))}><House strokeWidth={1.7} aria-hidden="true" />Home</a></li>
             <li className={`relative ${NAV_LI}`}>
               <button
                 type="button"
@@ -246,7 +278,7 @@ export default function Navbar() {
               >
                 {/* ml-auto: chevron duduk di tepi kanan baris, sama kayak
                     chevron rail di HP (RAIL_MCHEV) - dulu dia nempel di teksnya. */}
-                Program<span className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
+                <Compass strokeWidth={1.7} aria-hidden="true" />Program<span className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
               </button>
               <Collapse open={dropOpen}>
               {/* pl = 0.9rem indent + 0.75rem yang dipinjem NAV_LI, biar sub-item
@@ -261,18 +293,19 @@ export default function Navbar() {
               </ul>
               </Collapse>
             </li>
-            <li className={NAV_LI}><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>Guide</a></li>
+            <li className={NAV_LI}><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}><BookOpen strokeWidth={1.7} aria-hidden="true" />Guide</a></li>
             {/* My Trip nulis class-nya sendiri dulu (salinan varian inactive
                 navLink) cuma karena dia bawa badge - sekarang ikut navLink kayak
                 yang lain, jadi dia ikut nyala pas lagi di /my-trips juga.
                 ml-auto: angkanya ke tepi kanan (diukur: 216px -> 22px dari tepi
                 drawer), bukan nempel di teks. */}
-            <li className={NAV_LI}><a href="/my-trips.html" className={navLink(isActive('/my-trips.html'))}>My Trip<span className={`ml-auto bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
-            <li className={NAV_LI}><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>Our Company</a></li>
+            <li className={NAV_LI}><a href="/my-trips.html" className={navLink(isActive('/my-trips.html'))}><ShoppingBag strokeWidth={1.7} aria-hidden="true" />My Trip<span className={`ml-auto bg-ok ${BADGE_BASE}`} hidden={!count}>{count}</span></a></li>
+            {/* Building2 = ikon yang sama dipakai rail Our Company buat "About Us". */}
+            <li className={NAV_LI}><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}><Building2 strokeWidth={1.7} aria-hidden="true" />Our Company</a></li>
             {/* Settings - dipindah ke sini (Wayan): dulu di footer drawer bareng WA,
                 sekarang jadi nav link biasa (plain, no icon) persis di bawah Our
                 Company. Label "Settings" -> "Account Settings". */}
-            <li className={NAV_LI}><a href="/settings.html" className={navLink(isActive('/settings.html'))}>Account Settings</a></li>
+            <li className={NAV_LI}><a href="/settings.html" className={navLink(isActive('/settings.html'))}><Settings strokeWidth={1.7} aria-hidden="true" />Account Settings</a></li>
 
             {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}
             <li className="mt-auto pt-4">

@@ -1,4 +1,5 @@
 'use client';
+import { FIELD_INPUT } from '@/components/ui/formClasses';
 
 import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
@@ -52,7 +53,9 @@ function loadSdk({ clientId, currency }) {
 }
 
 const LABEL = 'block text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.4rem]';
-const FIELD = 'h-[var(--field-h)] px-[0.65rem] [border:1px_solid_#d8d2c4] rounded-sm bg-white';
+// The box is ours; the input inside it is PayPal's iframe. Same field box as
+// everything else - it used to carry the button corner and a hardcoded grey.
+const FIELD = FIELD_INPUT;
 const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
 export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {

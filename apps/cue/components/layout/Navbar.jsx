@@ -1,4 +1,5 @@
 'use client';
+import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useRef, useState } from 'react';
@@ -224,7 +225,7 @@ export default function Navbar() {
             {/* Guests + Pickup area = 2 kolom (dropdown sama kayak search form), di atas Sign in */}
             <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem]">
               <div className="flex flex-col gap-1 min-w-0">
-                <label className="text-small text-muted" htmlFor="acct-guests">Guests</label>
+                <label className={FIELD_LABEL} htmlFor="acct-guests">Guests</label>
                 <Select
                   id="acct-guests"
                   label="Guests"
@@ -235,7 +236,7 @@ export default function Navbar() {
                 />
               </div>
               <div className="flex flex-col gap-1 min-w-0">
-                <label className="text-small text-muted" htmlFor="acct-stay">Pickup area</label>
+                <label className={FIELD_LABEL} htmlFor="acct-stay">Pickup area</label>
                 <PickupAreaSelect id="acct-stay" />
               </div>
               {/* Currency TURUN ke sini pas tombol × masuk: diukur, 4 benda di baris
@@ -245,7 +246,7 @@ export default function Navbar() {
                   udah sebaris. variant="default" (bukan "navbar"): tombolnya sama
                   persis, cuma tanpa `ml-auto flex-none` yang buat duduk di kanan. */}
               <div className="flex flex-col gap-1 min-w-0">
-                <label className="text-small text-muted" htmlFor="acct-cur">Currency</label>
+                <label className={FIELD_LABEL} htmlFor="acct-cur">Currency</label>
                 <CurrencyPicker />
               </div>
             </li>

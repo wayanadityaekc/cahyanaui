@@ -24,11 +24,11 @@ const CONTROL_COMMON =
 
 // Plain control (.hs-control): 1 baris, chevron di kanan.
 export const CONTROL =
-  `${CONTROL_COMMON} flex items-center justify-between gap-[10px] px-[0.85rem] py-0 h-[var(--field-h)]`;
+  `${CONTROL_COMMON} flex items-center justify-between gap-[10px] px-3 py-0 h-[var(--field-h)]`;
 
 // Rich control (.hs-control--rich): ikon + stack (hint+val) + chevron, lebih tinggi.
 export const CONTROL_RICH =
-  `${CONTROL_COMMON} flex items-center justify-between gap-[0.65rem] px-[0.85rem] py-2 h-auto min-h-[3.1rem]`;
+  `${CONTROL_COMMON} flex items-center justify-between gap-[0.65rem] px-3 py-2 h-auto min-h-[3.1rem]`;
 
 // .hs-control__val (plain): teks kepotong ellipsis. placeholder -> muted.
 export const CONTROL_VAL = 'overflow-hidden text-ellipsis whitespace-nowrap';

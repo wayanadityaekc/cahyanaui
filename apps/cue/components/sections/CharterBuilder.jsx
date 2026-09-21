@@ -1,4 +1,5 @@
 'use client';
+import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useState } from 'react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
@@ -29,7 +30,6 @@ const TIMES = (() => {
   return out;
 })();
 
-const FIELD_LABEL = 'block mb-[var(--space-1)] text-small font-medium text-green font-body tracking-normal';
 
 export default function CharterBuilder() {
   const { setGuests } = useTripPrefs();

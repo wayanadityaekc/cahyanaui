@@ -8,7 +8,8 @@ import { KEY, API_BASE } from '@/lib/constants';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
 import { BTN_PILL } from '@/components/ui/btnClasses';
-import { CONTACT_GROUP, CONTACT_LABEL, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
+import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
+import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 export default function AccountSettings() {
   const { account, setAccount, logout } = useAccount();
@@ -56,19 +57,19 @@ export default function AccountSettings() {
   return (
     <div id="settings-root" data-settings>
       <div className={CONTACT_GROUP}>
-        <label className={CONTACT_LABEL} htmlFor="st-name">Name</label>
+        <label className={FIELD_LABEL} htmlFor="st-name">Name</label>
         <input className={CONTACT_INPUT} type="text" id="st-name" value={form.name} onChange={set('name')} />
       </div>
       <div className={CONTACT_GROUP}>
-        <label className={CONTACT_LABEL} htmlFor="st-email">Email</label>
+        <label className={FIELD_LABEL} htmlFor="st-email">Email</label>
         <input className={CONTACT_INPUT} type="email" id="st-email" value={form.email} onChange={set('email')} />
       </div>
       <div className={CONTACT_GROUP}>
-        <label className={CONTACT_LABEL} htmlFor="st-phone">Phone</label>
+        <label className={FIELD_LABEL} htmlFor="st-phone">Phone</label>
         <input className={CONTACT_INPUT} type="tel" id="st-phone" value={form.phone} onChange={set('phone')} />
       </div>
       <div className={CONTACT_GROUP}>
-        <label className={CONTACT_LABEL} htmlFor="st-guests">Guests</label>
+        <label className={FIELD_LABEL} htmlFor="st-guests">Guests</label>
         <Select
           id="st-guests"
           label="Guests"
@@ -79,7 +80,7 @@ export default function AccountSettings() {
         />
       </div>
       <div className={CONTACT_GROUP}>
-        <label className={CONTACT_LABEL} htmlFor="st-stay">Pickup area</label>
+        <label className={FIELD_LABEL} htmlFor="st-stay">Pickup area</label>
         <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
       {msg && <small className={REFMSG}>{msg}</small>}

@@ -1,4 +1,5 @@
 'use client';
+import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -23,7 +24,6 @@ import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // .hsearch__field > label (dulu di style.css) - dipake berkali di file ini.
-const FIELD_LABEL = 'block text-small font-medium text-green mb-[0.4rem] font-body tracking-normal normal-case';
 
 export default function HeroSearch({ onClose, sheetOpen = false }) {
   const { guests, setGuests, currency } = useTripPrefs();
@@ -185,7 +185,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <input
             type="text"
             id="hs-referral"
-            className="[flex:1_1_auto] min-w-0 border border-line rounded-md px-[0.85rem] py-0 h-[var(--field-h)] bg-white font-body
+            className="[flex:1_1_auto] min-w-0 border border-line rounded-md px-3 py-0 h-[var(--field-h)] bg-white font-body
               font-medium text-field text-green uppercase [transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease]
               placeholder:text-muted placeholder:normal-case placeholder:font-normal
               focus:outline-none focus:[border-color:var(--color-gold)] focus:[box-shadow:var(--focus-ring)]

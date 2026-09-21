@@ -5,7 +5,8 @@ import Modal from '@/components/ui/Modal';
 import { createAccountSchema, signInSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { BTN, FIELD_ERR, REFMSG, REFMSG_ERR } from '@/components/ui/modalClasses';
-import { CONTACT_GROUP, CONTACT_LABEL, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
+import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
+import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 
 export default function AuthModal({ open, onClose }) {
@@ -57,7 +58,7 @@ export default function AuthModal({ open, onClose }) {
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">Enter your email and we&apos;ll send you a secure sign-in link. No password needed.</p>
           <div className={CONTACT_GROUP}>
-            <label className={CONTACT_LABEL} htmlFor="auth-email">Email</label>
+            <label className={FIELD_LABEL} htmlFor="auth-email">Email</label>
             <input className={CONTACT_INPUT} type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />
             {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
           </div>
@@ -75,17 +76,17 @@ export default function AuthModal({ open, onClose }) {
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">No password - we&apos;ll recognise you by email &amp; phone.</p>
           <div className={CONTACT_GROUP}>
-            <label className={CONTACT_LABEL} htmlFor="auth-name">Your Name</label>
+            <label className={FIELD_LABEL} htmlFor="auth-name">Your Name</label>
             <input className={CONTACT_INPUT} type="text" id="auth-name" placeholder="Enter your name" value={f.name} onChange={set('name')} autoComplete="name" aria-invalid={!!errors.name} />
             {errors.name && <small className={FIELD_ERR}>{errors.name}</small>}
           </div>
           <div className={CONTACT_GROUP}>
-            <label className={CONTACT_LABEL} htmlFor="auth-cemail">Email</label>
+            <label className={FIELD_LABEL} htmlFor="auth-cemail">Email</label>
             <input className={CONTACT_INPUT} type="email" id="auth-cemail" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />
             {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
           </div>
           <div className={CONTACT_GROUP}>
-            <label className={CONTACT_LABEL} htmlFor="auth-phone">Phone / WhatsApp</label>
+            <label className={FIELD_LABEL} htmlFor="auth-phone">Phone / WhatsApp</label>
             <input className={CONTACT_INPUT} type="tel" id="auth-phone" placeholder="+62 ..." value={f.phone} onChange={set('phone')} autoComplete="tel" aria-invalid={!!errors.phone} />
             {errors.phone && <small className={FIELD_ERR}>{errors.phone}</small>}
           </div>

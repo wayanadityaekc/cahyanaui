@@ -1,4 +1,5 @@
 'use client';
+import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useState } from 'react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
@@ -90,18 +91,17 @@ export default function AirportTransferForm() {
   // Kept sbg shared primitive: Select/DateTimeField, .price-cur, .btn-book.
   // FIELD_LABEL went with the Date field it belonged to - every label here is
   // now a full-width one, so there is one label style again.
-  const LABEL = 'block mb-2 text-small font-medium text-green font-body tracking-normal';
   return (
     <div className="bg-white rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left" id={AIRPORT.boxId}>
       <h2 className="font-head text-[1.15rem] text-green text-center mt-0 mb-[1.1rem]">{AIRPORT.boxTitle}</h2>
 
       <div className="mb-[1.3rem]">
-        <label className={LABEL} htmlFor="at-direction">Direction</label>
+        <label className={FIELD_LABEL} htmlFor="at-direction">Direction</label>
         <Select id="at-direction" label="Direction" value={direction} onChange={setDirection} options={DIRECTIONS} />
       </div>
 
       <div className="mb-[1.3rem]">
-        <label className={LABEL} htmlFor="at-guests">Guests</label>
+        <label className={FIELD_LABEL} htmlFor="at-guests">Guests</label>
         <Select
           id="at-guests"
           label="Guests"
@@ -112,19 +112,19 @@ export default function AirportTransferForm() {
       </div>
 
       <div className="mb-[1.3rem]">
-        <label className={LABEL} id="at-address-label" htmlFor="at-address">
+        <label className={FIELD_LABEL} id="at-address-label" htmlFor="at-address">
           {direction === 'pickup' ? 'Hotel / villa drop-off address' : 'Hotel / villa pick-up address'}
         </label>
         <input type="text" className={FIELD_INPUT} id="at-address" placeholder="Hotel / villa name and area" value={address} onChange={(e) => setAddress(e.target.value)} />
       </div>
 
       <div className="mb-[1.3rem]">
-        <label className={LABEL} htmlFor="at-flight-number">Flight number</label>
+        <label className={FIELD_LABEL} htmlFor="at-flight-number">Flight number</label>
         <input type="text" className={FIELD_INPUT} id="at-flight-number" placeholder="e.g. QZ7501" value={flightNumber} onChange={(e) => setFlightNumber(e.target.value)} />
       </div>
 
       <div className="mb-[1.3rem]">
-        <label className={LABEL} htmlFor="at-flight-time">Flight date &amp; time</label>
+        <label className={FIELD_LABEL} htmlFor="at-flight-time">Flight date &amp; time</label>
         <DateTimeField id="at-flight-time" label="Flight date & time" value={flightTime} onChange={setFlightTime} />
       </div>
 

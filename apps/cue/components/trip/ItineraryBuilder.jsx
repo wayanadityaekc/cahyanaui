@@ -1,4 +1,5 @@
 'use client';
+import { FIELD_LABEL, FIELD_INPUT } from '@/components/ui/formClasses';
 import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -81,14 +82,16 @@ const ITN_DAYS = 'min-[993px]:flex min-[993px]:gap-4 min-[993px]:overflow-x-auto
 // Trip fields: 2-col mobile, 1-col desktop in the side (.itn2__side .itn-trip__fields).
 const ITN_DAY_FIELDS = 'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-[0.8rem] mb-[0.9rem]';
 const ITN_TRIP_FIELDS = 'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-[0.8rem] mb-0 min-[993px]:grid-cols-[1fr]';
-const ITN_FIELD = 'mb-0 min-w-0 [&_label]:block [&_label]:mb-[0.4rem] [&_label]:text-[length:var(--fs-small)] [&_label]:font-medium [&_label]:font-body [&_label]:tracking-normal [&_label]:normal-case';
+// The label used to be styled from here with [&_label]: - one more copy of the
+// same four numbers. It carries FIELD_LABEL itself now.
+const ITN_FIELD = 'mb-0 min-w-0';
 const ITN_FIELD_FULL = `${ITN_FIELD} [grid-column:1/-1]`;
 // Effective style of a field control inside `.itn-day__fields .field` (the trip-fields
 // wrapper had BOTH itn-day__fields+itn-trip__fields, so both text + date inputs hit it):
 // base (border/radius/font/color) + .itn-day__fields .field input (w/min-w/height/pad
 // 0.55rem 0.65rem/bg). Date input additionally hits .field input[type="date"]
 // (line-height 1.4 + appearance:none) - same padding wins by source order.
-const ITN_FIELD_INPUT = 'w-full min-w-0 h-[var(--field-h)] py-[0.55rem] px-[0.65rem] [border:1px_solid_var(--line)] rounded-md bg-white font-body text-[length:var(--fs-field)] text-green';
+const ITN_FIELD_INPUT = `min-w-0 ${FIELD_INPUT}` + ' font-body text-[length:var(--fs-field)] text-green';
 const ITN_FIELD_DATE = `${ITN_FIELD_INPUT} leading-[1.4] appearance-none`;
 
 function addDays(ds, n) {
@@ -234,11 +237,11 @@ export default function ItineraryBuilder() {
           <p className={ITN_TRIP_S}>Fill once - every day follows automatically.</p>
           <div className={ITN_TRIP_FIELDS}>
             <div className={ITN_FIELD}>
-              <label>Start date</label>
+              <label className={FIELD_LABEL}>Start date</label>
               <DateField id="trip-start" label="Start date" value={dateFrom} onChange={setStart} />
             </div>
             <div className={ITN_FIELD_FULL}>
-              <label>Hotel / villa (pick-up &amp; drop-off)</label>
+              <label className={FIELD_LABEL}>Hotel / villa (pick-up &amp; drop-off)</label>
               <input className={ITN_FIELD_INPUT} type="text" id="trip-hotel" placeholder="Hotel / villa / area" value={hotel} onChange={(e) => setHotel(e.target.value)} />
             </div>
           </div>
@@ -277,7 +280,7 @@ export default function ItineraryBuilder() {
                 <p className={ITN_DAY_TITLE}>Day {i + 1} · {fmtDay(d.date)}</p>
                 <div className={ITN_DAY_FIELDS}>
                   <div className={ITN_FIELD}>
-                    <label>Date</label>
+                    <label className={FIELD_LABEL}>Date</label>
                     <input
                       className={ITN_FIELD_DATE}
                       type="date"

@@ -123,6 +123,61 @@ When unsure, ask first (keep it short).
   each was unhooked to its own explicit size so they don't shrink with body text.
 - Form field (input/select/textarea) = `0.8rem` (`--fs-field`, was 0.875rem — disamain ke
   `--fs-body`/`--fs-small`), semua field pakai token ini (jangan hardcode ukuran di form lagi).
+**Field & label — SATU KOTAK, SATU LABEL (Sep 2026, Wayan pilih "opsi 1")**
+Wayan: *"gua cuma pengen ukuran dan standar yang bagus dan konsisten"*. Semuanya di
+**`components/ui/formClasses.js`** — apa pun yang bentuknya field WAJIB dibangun dari situ.
+- **`FIELD_INPUT`** = kotak field: `--field-h` · `py-0 px-3` · `rounded-md` (12px) ·
+  border `--line` · `text-field` (12.8px). **`FIELD_AREA`** buat textarea (satu-satunya
+  yang tumbuh, jadi dia punya padding vertikal sendiri).
+- **`FIELD_LABEL`** = `block mb-2` (8px) · `text-small` (12.8px) · `font-medium` (500) ·
+  `text-green`. **Satu label buat seluruh web.**
+- **`FIELD_INVALID`** = state error, ikut ke dua string di atas.
+- Yang ke-ukur SEBELUM ini (11 halaman): field-nya sendiri udah rapi, tapi sekelilingnya
+  nggak — **8 definisi label**, **4 nilai padding kiri** (10.4/11.2/12.8/13.6px), **2 warna
+  border** (satu `#d8d2c4` hardcoded). Sesudah: **1 label** (52 label identik), **1 padding**,
+  **1 warna border**.
+- **8 label yang dilebur**: `modalClasses.LABEL` · `CONTACT_LABEL` · `LABEL` di
+  `AirportTransferForm` & `TransferPicker` · `FIELD_LABEL` lokal di `CharterBuilder` &
+  `HeroSearch` · 3 label inline di `Navbar` · `[&_label]:` di `ITN_FIELD`.
+  `CONTACT_LABEL` **UDAH DIHAPUS**; `modalClasses` nge-re-export `FIELD_LABEL` sebagai
+  `LABEL` biar 2 modal gak perlu diubah importnya.
+- **Konsekuensi yang disengaja**: label uppercase+tracked `FROM`/`TO` di /transfer jadi label
+  biasa, dan 3 label di drawer navbar (Guests/Pickup/Currency) naik dari 400-muted ke
+  500-gelap. Wayan milih **satu** label, bukan dua peran — opsi "dua peran resmi" udah
+  ditawarin & **gak dipilih**.
+- **`aria-invalid` DULU GAK NGEFEK APA-APA.** Dia kepasang di 14 field dari lama, tapi nol
+  styling nyangkut: diukur di browser (isi email salah → submit), field yang error itu
+  border/shadow/bg-nya **IDENTIK** sama field valid. Sekarang `FIELD_INVALID` bikin
+  border-nya `--color-err` + ring halus.
+  - Pakai **`aria-[invalid=true]:`**, BUKAN `aria-invalid:` — `aria-invalid` bukan varian
+    aria bawaan Tailwind, jadi `aria-invalid:` **gak ke-generate sama sekali**. Dan harus
+    di-match ke `=true`: nilainya dari `aria-invalid={!!errors.x}`, jadi tanpa itu
+    `aria-invalid="false"` ikut kena merah.
+- **Yang SENGAJA bukan label field** (jangan ikut dijadiin `FIELD_LABEL`): kicker section
+  (`WHY CAHYANA`, 10.24px uppercase), teks di samping switch ("Add return trip"),
+  `LABEL` di `PaymentStep` (judul opsi bayar) & `PayPalCheckout` (heading "Card details").
+- Verifikasi: **`verify-fields.mjs`** di scratchpad (**1242/1242**, 125 field + 109 label,
+  12 halaman × 390/1280). Per field: font 12.8 · radius 12 · padding kiri 12 · border
+  `--line` (atau `--color-err` kalau invalid). Per label: 12.8 · bobot 500 · margin bawah 8 ·
+  warna `--color-green` · gak uppercase · gak tracked. Plus: **field invalid WAJIB keliatan
+  beda** dari yang valid (dites dengan beneran submit form contact).
+  - **Gate-nya dites pakai 3 bug aslinya** (margin label lama, padding lama, `FIELD_INVALID`
+    dikosongin) — ketiga-tiganya nyala.
+  - **Input yang BORDER-nya 0 di-skip**: input search di halaman listing itu duduk DI DALAM
+    kotak berbingkai, jadi yang gambar kotaknya si wrapper. Itu bener, bukan pengecualian.
+
+**BELUM DIPUTUSIN (ketemu pas ngerjain ini, gua GAK sentuh):**
+- `style.css` ~baris 231 maksa `input,select,textarea{font-size:var(--fs-field)!important}`
+  di bawah 992px, komentarnya nulis *"so iOS doesn't auto-zoom on focus"*. Itu **kebalik**:
+  iOS nge-zoom kalau font input **di bawah 16px**, dan `--fs-field` itu 12.8px — jadi rule
+  itu **mastiin** zoom-nya kejadian, bukan nyegah. Efek lain: `text-[16px]` di input search
+  listing (satu-satunya yang 16px, dan itu ukuran yang beneran nyegah zoom) **mati di HP**
+  gara-gara `!important` ini. Gua cuma samain font-nya ke `text-field` (efeknya di desktop
+  doang, karena di HP udah ketimpa). Mau dibenerin beneran = keputusan Wayan, soalnya
+  naikin font field ke 16px di HP itu ngubah tampilan SEMUA form.
+- Border `#d8d2c4` masih ada di **1 tombol** (`ITN_GHOSTBTN`). Itu tombol, bukan field, dan
+  `--line` bikin garisnya lebih terang — belum ditanyain.
+
 - **Tinggi field** = `--field-h` **2.1rem (~33px)** — semua kontrol form (input/select/date/
   custom-select) pakai token ini biar seragam (Agu 2026, Wayan: dikecilin dari 46px nyesuain
   body text yang udah 0.8rem — 46 kerasa kegedean).

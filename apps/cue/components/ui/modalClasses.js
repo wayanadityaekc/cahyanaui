@@ -1,3 +1,4 @@
+import { FIELD_INPUT, FIELD_AREA } from '@/components/ui/formClasses';
 import { BTN_SM } from '@/components/ui/btnClasses';
 // Tailwind utility strings mirroring the legacy `.modal*` CSS family (migrasi Fase 2,
 // opsi B - Wayan: modal full-utility). Didefinisiin SEKALI di sini, di-import tiap
@@ -32,13 +33,13 @@ export const TITLE = 'mb-5 font-body text-h3 text-center font-semibold tracking-
 export const SUB = 'mb-[1.1rem] text-body text-muted';
 
 export const GROUP = 'flex flex-col mb-4';
-export const LABEL = 'mb-[0.4rem] text-small font-medium font-body tracking-normal normal-case';
-export const INPUT =
-  'border border-line rounded-md font-body text-field text-green px-[0.65rem] py-2 h-[var(--field-h)]';
-export const TEXTAREA =
-  'border border-line rounded-md font-body text-field text-green px-[0.65rem] py-2 min-h-[110px] resize-y bg-white';
-export const SELECT =
-  'border border-line rounded-md font-body text-field text-green w-full h-[var(--field-h)] px-[0.7rem] py-[0.6rem] bg-white';
+// LABEL dipindah ke formClasses.FIELD_LABEL (satu label buat seluruh web).
+export { FIELD_LABEL as LABEL } from '@/components/ui/formClasses';
+// One field box for the whole site - these three used to run 10.4px / 11.2px
+// padding of their own, and the modal textarea a 110px floor instead of 130px.
+export const INPUT = FIELD_INPUT;
+export const TEXTAREA = FIELD_AREA;
+export const SELECT = FIELD_INPUT;
 
 // Primary button = the site CTA (green fill, white text) - NOT the dead green in the
 // 3129 block. Stacked buttons keep a 0.6rem gap (STACK), applied to the 2nd+ button.
@@ -73,8 +74,7 @@ export const SUCCESS_TEXT = 'mb-6 text-body leading-[var(--lh-body)]';
 // Referral code field - lives here rather than inline in one component now that
 // both the booking modal and the payment step render it (DRY rule in CLAUDE.md:
 // used by more than one component means one module, imported, not copy-pasted).
-export const REFERRAL_INPUT =
-  'flex-1 px-[0.65rem] py-2 h-[var(--field-h)] [border:1px_solid_#d8d2c4] rounded-sm font-body text-field text-green';
+export const REFERRAL_INPUT = `flex-1 ${FIELD_INPUT}`;
 export const REFERRAL_BTN =
   'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer ' +
   '[transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';

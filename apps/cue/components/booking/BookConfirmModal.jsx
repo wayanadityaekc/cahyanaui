@@ -19,6 +19,7 @@ import { timeOptions, AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
+import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
 import { baseTotal, PAY_COPY } from '@/lib/payment';
 import PayPalCheckout from './PayPalCheckout';
 import ModalPresence from '@/components/ui/ModalPresence';
@@ -70,6 +71,12 @@ export default function BookConfirmModal() {
   // step. The booking exists from this point whether or not payment succeeds.
   const [bookingRef, setBookingRef] = useState('');
   const [paid, setPaid] = useState(false);
+  // Is this visitor being offered online payment at all? Off for everyone until
+  // the chain is proven live - see lib/payFlag.js. Read in an effect, never in
+  // initial state: this is a static export and the first paint has to match the
+  // pre-rendered HTML.
+  const [payOn, setPayOn] = useState(PAY_DEFAULT);
+  useEffect(() => { setPayOn(readPayFlag()); }, []);
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
@@ -146,7 +153,7 @@ export default function BookConfirmModal() {
     // Which of the two options the guest picked. The server does NOT trust an
     // amount from here - it recomputes what is owed from its own prices. This is
     // the choice only, so the invoice matches the row the guest actually tapped.
-    pay_option: payOption,
+    pay_option: payOn ? payOption : '',
     // The currency the guest was quoted in. Without it the server can only
     // record USD/IDR, and an invoice sent in the wrong currency is a different
     // number from the one they agreed to.
@@ -318,7 +325,7 @@ export default function BookConfirmModal() {
               <div className={ROW}><span>Price</span><span id="sum-price">{withSymbol(priceText())}</span></div>
             </div>
 
-            <PaymentStep
+            {payOn && <PaymentStep
               option={payOption}
               onOption={setPayOption}
               /* baseTotal, not priced.total: the quote already subtracts the
@@ -333,7 +340,7 @@ export default function BookConfirmModal() {
               onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
               onApplyReferral={applyRef}
               refMsg={refMsg}
-            />
+            />}
 
             {view.detailLines && view.detailLines.length > 0 && (
               <div className="mb-5 [border-top:1px_solid_#eee]">
@@ -366,6 +373,13 @@ export default function BookConfirmModal() {
             >
               Discuss via WhatsApp
             </button>
+          </div>
+        ) : !payOn ? (
+          <div className="text-center">
+            <div className={SUCCESS_ICON}>&#10003;</div>
+            <h3 className={TITLE}>Booking Received!</h3>
+            <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
+            <button className={BTN} onClick={closeBooking}>Done</button>
           </div>
         ) : (
           <div className={paid ? 'text-center' : ''}>

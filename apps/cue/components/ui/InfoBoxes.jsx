@@ -23,8 +23,10 @@ export const BOX_GRID =
   'max-[768px]:grid-cols-1 max-[768px]:gap-[var(--space-3)]';
 
 // Paragraph rhythm - every box gets this, framed or not.
+import { PROSE_LINK } from '@/components/ui/infoClasses';
+
 const BOX_TEXT =
-  '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
+  '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0 ' + PROSE_LINK;
 // The FRAME (outline + radius + padding) belongs to the included/excluded pair
 // ONLY (Sep 2026, Wayan: "garis di luar kontainer juga selain include not include
 // juga hilangin"). Everything else in a row is a plain COLUMN - which is what he
@@ -44,7 +46,7 @@ export const BOX_TITLE = 'font-body text-h3 font-semibold text-gold mb-[0.7rem]'
 // which read as disabled rather than as information.
 const ROWS_BASE =
   'list-none m-0 p-0 [&_li]:font-body [&_li]:text-body [&_li]:font-normal ' +
-  '[&_li]:leading-[var(--lh-body)] [&_li]:py-2 [&_a]:text-gold [&_a]:font-medium';
+  '[&_li]:leading-[var(--lh-body)] [&_li]:py-2 ' + PROSE_LINK;
 
 // The hairline between rows belongs to the INCLUDED/EXCLUDED pair ONLY (Sep 2026,
 // Wayan: "gua mau komponen include dan exclude aja yang isi border line yang lain

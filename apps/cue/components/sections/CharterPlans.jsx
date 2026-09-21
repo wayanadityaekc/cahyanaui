@@ -40,9 +40,20 @@ const ROW_BTN =
   'w-full text-left cursor-pointer ' +
   '[transition:border-color_var(--dur)_var(--ease),box-shadow_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
 
-// Both the list and the page's own summary/Book gate need this number, so the
-// arithmetic lives here once and the page imports it.
-export function useCharterTier({ area = '', extra = '1' } = {}) {
+// Both the list and the page's own summary/Book gate need this number, so it is
+// read in one place and the page imports it.
+//
+// NOTHING IS COMPUTED HERE ANY MORE (Sep 2026). Every length the site sells -
+// half, full, and the 12-hour block that replaced "Extended" - is its own tier in
+// the catalog, so this looks one up instead of adding hours onto a shorter one.
+// The old version added `extra` x charterExtraHour on top of "full", which meant
+// the page and the server each did the arithmetic and could land a rounding step
+// apart (57 + 2x4 = 65 against the server's ceil(1120000/17600) = 64).
+//
+// The pick-up surcharge comes from the catalog too. It used to be written here as
+// `isIdr ? 100000 : 7`: the 7 had drifted from the real 6, and a guest paying in
+// AUD, EUR or GBP had 7 of THEIR currency added to an already-converted price.
+export function useCharterTier({ area = '' } = {}) {
   const { currency } = useTripPrefs();
   const pricing = usePricing();
   const catalog = pricing && pricing.catalog;
@@ -52,19 +63,16 @@ export function useCharterTier({ area = '', extra = '1' } = {}) {
   const fmt = (n) => symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US');
   const tier = (d) => {
     if (!catalog) return null;
-    const base = catalog.charters.find((c) => c.duration === (d === 'extended' ? 'full' : d));
+    const base = catalog.charters.find((c) => c.duration === d);
     if (!base) return null;
-    const hours = d === 'extended' ? Math.max(1, parseInt(extra, 10) || 1) : 0;
-    const per = catalog.charterExtraHour || { usd: 0, idr: 0 };
-    const value = isIdr ? base.idr + hours * per.idr : base.display + hours * per.usd;
-    const surcharge = area && area !== 'Ubud' ? (isIdr ? 100000 : 7) : 0;
-    return value + surcharge;
+    const sur = catalog.charterSurcharge;
+    return base.display + (area && area !== 'Ubud' && sur ? sur.display : 0);
   };
   return { tier, fmt };
 }
 
-export default function CharterPlans({ value, onChange, area = '', extra = '1', heading }) {
-  const { tier, fmt } = useCharterTier({ area, extra });
+export default function CharterPlans({ value, onChange, area = '', heading }) {
+  const { tier, fmt } = useCharterTier({ area });
 
   return (
     <div>
@@ -102,9 +110,8 @@ export default function CharterPlans({ value, onChange, area = '', extra = '1', 
                 <span className={PLAN_CELL_PRICE}>
                   {/* No "From" over the number (Wayan, Sep 2026: "hapus from di atas
                       harga itu bro"). The word only appears once it has something to
-                      say: tier() adds the area surcharge and the extra hours, so after
-                      a pick-up area is chosen the figure really is the total, and the
-                      page says so. Before that - and on the homepage, which has no
+                      say: tier() adds the area surcharge, so once a pick-up area is
+                      chosen the figure really is the total, and the page says so. Before that - and on the homepage, which has no
                       pick-up field at all - the number stands on its own. */}
                   {area && <span className={`${PLAN_PRICE_KICK} block mt-[2px] min-[993px]:mt-0`}>Total</span>}
                   {/* No invented number while the catalog is still in flight: the

@@ -1,10 +1,9 @@
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
-import { INFO_SECTION_DETAIL, INFO_CARD, INFO_CARD_BODY } from '@/components/ui/infoClasses';
 import JsonLd from '@/components/JsonLd';
 import Prose from '@/components/prose/Prose';
 import { detailBlocks } from '@/lib/detailBlocks';
 import { AIRPORT } from '@/content/shared/airport';
-import { CHARTER_HERO, CHARTER_HERO_INNER, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
+import FormHero from '@/components/sections/FormHero';
 
 // SEO: this page owns "bali airport transfer" (Sep 2026, Wayan). It used to
 // title itself "Booking | Flight Details Form" while /transfer led on the
@@ -36,18 +35,27 @@ export default function Page() {
   return (
     <>
       <JsonLd page="airport-transfer" />
-      <section className={`${CHARTER_HERO} bg-[url(/assets/images/transfer-hero.webp)]`}>
-        <div className={CHARTER_HERO_INNER}>
-          <h1 className={CHARTER_HERO_TITLE}>{AIRPORT.title}</h1>
-          <p className={CHARTER_HERO_SUB}>{AIRPORT.sub}</p>
-          <AirportTransferForm />
-        </div>
-      </section>
-      <section className={INFO_SECTION_DETAIL}>
-        <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
-          <Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />
-        </div>
-      </section>
+      <FormHero
+        title={AIRPORT.title}
+        sub={AIRPORT.sub}
+        photo="transfer-hero.webp"
+        alt="A plane reflected in the glass facade of Bali's Ngurah Rai airport terminal"
+        // 80%, measured against the alternatives at the new 50/50 width: it is the
+        // only offset that fits "BALI International Airport" in WHOLE. Centred, 38%
+        // and 62% all cut the word "Airport" at the right edge, and 26% - which was
+        // right while this column was a narrow 0.57:1 slot - now lands mid-sign too.
+        // Reading the sign is fine on THIS page: it is the one that owns the phrase
+        // (see the SEO split). /transfer is the page that must not show it, and it
+        // uses a different photo entirely.
+        photoPos="[&>img]:object-[80%_50%]"
+        // 50/50 on desktop (Wayan, Sep 2026). This form is one stack of
+        // full-width fields, so it gains nothing from the wider column the other
+        // two need - and the photo gets a slot it can actually be cropped into.
+        half
+        details={<Prose blocks={detailBlocks('Airport Transfer Details', AIRPORT.tinfo, AIRPORT.info)} headingVariant="company" />}
+      >
+        <AirportTransferForm />
+      </FormHero>
     </>
   );
 }

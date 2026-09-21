@@ -1,40 +1,45 @@
 import CharterBuilder from '@/components/sections/CharterBuilder';
-import { INFO_SECTION_DETAIL, INFO_CARD, INFO_CARD_BODY } from '@/components/ui/infoClasses';
 import Prose from '@/components/prose/Prose';
 import { CHARTER } from '@/content/shared/charter';
-import { CHARTER_HERO, CHARTER_HERO_INNER_WIDE, CHARTER_HERO_TITLE, CHARTER_HERO_SUB } from '@/components/ui/charterHeroClasses';
+import FormHero from '@/components/sections/FormHero';
 
-// The charter page body (hero + builder form + one details section), extracted so
-// both the /charter route and the All Programs "Charter" tab render the real form.
+// The charter page body, extracted so both the /charter route and the All
+// Programs "Charter" tab render the real form.
+//
+// The whole page is ONE <FormHero> now (Sep 2026, Wayan: "charter details sama
+// form di atasanya, sekarang masih beda kontainer, jadiin satu aja"): title, sub,
+// the builder, the photo, then the details, all in one container at one width.
+// Before this the details lived in a second card on a cream band, 120px narrower
+// than the form row above it.
 //
 // ONE details section, not two (Sep 2026, Wayan: "details seperti include exclude
 // dan how charter works itu jadiin satu dan konten sama pakai styling text di our
-// company"). There used to be a loose "Good to know" list sitting on the page
-// background above a separate white card holding the article - two treatments of
-// the same thing on one page. Included/excluded and the article are now a single
-// run of text inside the card, and CHARTER.notes is gone with it.
+// company"). There used to be a loose "Good to know" list above a separate card
+// holding the article - two treatments of the same thing on one page.
+// Included/excluded and the article are a single run of text now, and
+// CHARTER.notes is gone with it.
 //
-// BODY_TEXT and headingVariant="company" are Our Company's reading style, copied
-// here rather than reinvented: paragraphs on --lh-body at --fs-body, and section
-// headings left-aligned with no centred underline.
-// (BODY_TEXT moved to infoClasses as INFO_CARD_BODY - transfer and airport read
-// from the same string now, Sep 2026.)
-
-export default function CharterSection() {
+// headingVariant="company" is Our Company's reading style: paragraphs on
+// --lh-body at --fs-body, sub-headings left-aligned.
+//
+// PHOTO: handara-gate, not road-ubud (Sep 2026, Wayan). road-ubud is a traffic jam
+// - motorbikes, a no-parking sign - which was survivable while it sat darkened
+// behind white hero text and is not once it is a bright panel beside the form, on
+// a page selling "sit back, someone else drives". Handara Gate is one of the route
+// ideas this page already lists ("Full day north: Handara Gate"), so it is not a
+// photo of somewhere we do not go, and its centred composition survives the tall
+// narrow crop.
+export default function CharterSection({ embedded }) {
   return (
-    <>
-      <section className={`${CHARTER_HERO} bg-[url(/assets/images/road-ubud.webp)]`}>
-        <div className={CHARTER_HERO_INNER_WIDE}>
-          <h1 className={CHARTER_HERO_TITLE}>{CHARTER.title}</h1>
-          <p className={CHARTER_HERO_SUB}>{CHARTER.sub}</p>
-          <CharterBuilder />
-        </div>
-      </section>
-      <section className={INFO_SECTION_DETAIL}>
-        <div className={`${INFO_CARD} ${INFO_CARD_BODY}`}>
-          <Prose blocks={CHARTER.info} headingVariant="company" />
-        </div>
-      </section>
-    </>
+    <FormHero
+      title={CHARTER.title}
+      sub={CHARTER.sub}
+      photo="handara-gate.webp"
+      alt="The Handara Gate on the road north, with the Bedugul hills behind it"
+      embedded={embedded}
+      details={<Prose blocks={CHARTER.info} headingVariant="company" />}
+    >
+      <CharterBuilder />
+    </FormHero>
   );
 }

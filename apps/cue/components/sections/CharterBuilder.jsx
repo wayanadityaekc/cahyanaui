@@ -17,7 +17,6 @@ import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const EXTRA_HOURS = [1, 2, 3, 4, 5, 6];
 
 // Pick-up times, every half hour across the window a charter day realistically
 // starts in. 24-hour clock, which is what the rest of the site's times use and
@@ -40,7 +39,6 @@ export default function CharterBuilder() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [guests, setLocalGuests] = useState('');
-  const [extra, setExtra] = useState('1');
   // The plan is picked in the list and booked by the ONE button under the fields
   // (Wayan, Sep 2026: "button cuma satu di bawah input yaitu book"). That brings
   // back a selected-duration state, which an earlier pass had removed when every
@@ -54,13 +52,11 @@ export default function CharterBuilder() {
     const d = readCharterDraft();
     if (!d) return;
     if (CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
-    if (d.extra) setExtra(String(d.extra));
   }, []);
 
   const pick = (d) => { setDur(d); saveCharterDraft({ dur: d }); };
-  const pickExtra = (v) => { setExtra(v); saveCharterDraft({ extra: v }); };
 
-  const { tier, fmt } = useCharterTier({ area, extra });
+  const { tier, fmt } = useCharterTier({ area });
   const catalog = usePricing()?.catalog;
 
   const ready = !!(area && date && time && guests);
@@ -79,7 +75,6 @@ export default function CharterBuilder() {
         guests,
         area,
         dur,
-        extra: dur === 'extended' ? extra : 0,
       }],
     });
     window.location.href = '/my-trips.html';
@@ -95,13 +90,15 @@ export default function CharterBuilder() {
           (Wayan, Sep 2026: "di desktop jadiin 2 kolom, di kiri list charternya di
           kanan kolom inputnya"). On a phone they stack in DOM order, which is the
           order he asked for - the list first, the fields after it.
-          993px, not 769: it has to change at the same width as the panel itself
-          (CHARTER_HERO_INNER_WIDE), or the two columns land inside a 600px box. */}
+          993px, not 769: below that there is not enough width for a 340px field
+          column and a readable plan row side by side. FormHero only splits the
+          page into form + photo from 1200px for the same reason, one level up -
+          see the note there. */}
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
 
         {/* 1 - the plan. The same list the homepage shows; here it drives the
             Book button under the fields. */}
-        <CharterPlans value={dur} onChange={pick} area={area} extra={extra} heading="How long do you need the car?" />
+        <CharterPlans value={dur} onChange={pick} area={area} heading="How long do you need the car?" />
 
         {/* 2 - the trip, then the one Book button. */}
         <div>
@@ -152,29 +149,13 @@ export default function CharterBuilder() {
                 placeholder="How many of you?"
               />
             </div>
-            {/* Extra hours is a field, so it sits with the fields - and only for the
-                plan that has them. It gets its label back here: the reason it lost
-                one was card-height equalising, which this layout no longer does. */}
-            {dur === 'extended' && (
-              <div className="col-span-2">
-                <label className={FIELD_LABEL} htmlFor="ch-extra">Extra hours</label>
-                <Select
-                  id="ch-extra"
-                  label="Extra hours"
-                  value={extra}
-                  onChange={pickExtra}
-                  options={EXTRA_HOURS.map((n) => ({ value: String(n), label: `+${n} ${n === 1 ? 'hour' : 'hours'}` }))}
-                  placeholder="Extra hours"
-                />
-              </div>
-            )}
           </div>
 
           {/* Which plan the button books, restated where the button is. On a phone
               the list is above the fields, so by the time a guest reaches Book the
               row they picked can be off screen. */}
           <div className="mt-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-1)] [border-top:1px_solid_var(--line)] pt-[var(--space-1)]">
-            <span className="text-small text-muted">{selected.name}{dur === 'extended' ? ` +${extra}h` : ''}</span>
+            <span className="text-small text-muted">{selected.name}</span>
             <span className="text-gold font-semibold text-[1.05rem] whitespace-nowrap">
               {total == null ? '—' : withSymbol(fmt(total))}
             </span>

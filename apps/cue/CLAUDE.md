@@ -136,15 +136,41 @@ When unsure, ask first (keep it short).
   dkk), dan judul besar level-halaman (`.subhero__title` var overlap, `.vpromo__title`).
 - Prices = gold (`--color-amber`, gold BENERAN — bukan `--color-gold`) + bold
   (`.price`, `.price-cur`, `.fee` — tiket masuk). Semua harga = gold.
-  **DUA pengecualian (Sep 2026, Wayan)** - dua-duanya karena harganya nempel ke CTA hijau
+  **TIGA pengecualian (Sep 2026, Wayan)** - semuanya karena harganya nempel ke CTA hijau
   dan amber di sebelahnya berantem: (1) **kartu paket charter** (`CharterPlans.jsx`, dipakai
   halaman charter DAN section homepage — harganya duduk di baris yang aksinya CTA hijau) dan
   (2) harga di **book bar** (`BookBar.jsx`) =
   `text-gold` (soft black), bukan amber — di bar itu amber nabrak tombol CTA hijau
-  tepat di sebelahnya. Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
+  tepat di sebelahnya. Yang ketiga: (3) **baris Total di form airport**
+  (`AirportTransferForm`) — Wayan, Sep 2026: "ukuran text harga gedein dikit biar lebih
+  menonjol dan ganti warna menjadi black". Dia juga **digedein ke 1.35rem**: itu satu-satunya
+  angka di form itu, dan di `--fs-strong` + amber dia kebaca kayak satu baris lagi dari
+  daftar field di atasnya. Warnanya dioper `!text-gold` di span yang SAMA yang bawa `PRICE`
+  (amber-nya nempel di elemen itu, jadi wrapper kalah). Harga di tempat lain (kartu, sidebar, ringkasan) TETAP amber.
   Warnanya WAJIB dioper lewat prop `className` punya `<Price>` — default-nya
   (`PRICE` = amber) nempel LANGSUNG di elemen `[data-price]`, jadi `text-gold` di
   elemen pembungkus KALAH. Class `price` tetep dibawa (itu hook, bukan warna).
+
+**Judul section — TANPA GARIS BAWAH** (Sep 2026, Wayan: "hilangin garis di bawah semua
+title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis itu lagi"):
+- Tiap judul section dulu bawa bar emas **48×3** di `::after`, 10px di bawah teksnya.
+  **Udah dihapus dari SELURUH web.** Jangan dipasang lagi di komponen baru.
+- Ada **3 tempat** yang masing-masing gambar versinya sendiri, ketiganya udah bersih:
+  `ui/sectionTitle.js` (`SECTION_TITLE`/`_SUB` — hampir semua judul), `ui/carouselSection.js`
+  (`CAROUSEL_TITLE` — 2 carousel di bawah halaman tour), `ui/itnClasses.js`
+  (`ITN_SUBTITLE` — panel itinerary). Kalau nemu bar emas lagi di bawah judul, cek tiga file itu.
+- **`ST_LEFT` sekarang cuma `!text-left`.** Dia dulu ada buat nggeser underline yang
+  ke-center ke tepi kiri; sisanya (`after:!left-0`, `after:![transform:none]`,
+  `after:!content-none` di `Prose` varian `company`, dan di `FormHero`) udah dibuang.
+- **`relative` ikut dibuang** dari `ST_CORE` + `ITN_SUBTITLE` — itu cuma containing block
+  buat bar-nya.
+- **Jarak NOL berubah**, itu disengaja: yang di `sectionTitle` bar-nya `absolute` jadi emang
+  gak makan ruang; yang di `CAROUSEL_TITLE` **in-flow** (block + `mt-2`), jadi 11px-nya
+  (8px margin + 3px bar) dibalikin sebagai `pb-[11px]`. **Padding, bukan margin** — margin di
+  situ ke-collapse dan section-nya jadi 11px lebih pendek (ke-ukur). `pb-[0.45rem]` di
+  `ITN_SUBTITLE` juga **DIBIARIN** dengan alasan sama.
+- Diukur before/after, 15 halaman × 390 & 1280: **bar 60 → 0**, **861 elemen gak gerak**,
+  1 geser 1px (pembulatan), **tinggi dokumen gak berubah di semua halaman**.
 
 **Section dividers:**
 - Thin gold **inset** line (margin on the sides) — via a `::before` pseudo-element,
@@ -462,11 +488,27 @@ When unsure, ask first (keep it short).
   - **`/transfer` = halaman SEMUA ROUTE.** Title "Bali Private Car Transfers | Ubud to
     Canggu, Kuta, Amed", H1 "Private Car Transfers in Bali". Frasa "airport transfer"
     **gak boleh** nongol lagi di title/meta-nya.
-  - **Kartu route Airport TETEP ada di `/transfer`** dan tetep pre-fill form kayak 5 kartu
-    lainnya - tamu yang lagi nyisir daftar route emang nyari harganya, dan bikin 1 dari 6
-    kartu beda kelakuan itu bug sendiri. Yang misahin dua halaman itu **FUNGSINYA**: form di
-    sini ngasih harga, halaman sana nerima nomor penerbangan. Link ke sana ditaro sebaris di
-    bawah grid route (`TransferRoutes.jsx`), anchor-nya "Bali airport transfer page".
+  - **Kartu route Airport = LINK ke `/airport-transfer`, bukan pre-fill** (Sep 2026, Wayan:
+    "tulisan flying in or out delete aja bro, tapi kalo di klik airport ubud langsung
+    mengarah ke page airport dan auto fill"). Href-nya
+    `/airport-transfer.html?dir=pickup`; halaman tujuan baca `?dir` di `useEffect` terus
+    nge-set Direction ke **arrival**. Guests gak perlu dioper - dia di TripPrefs
+    (localStorage), jadi ke-baca lagi sendiri di halaman itu.
+    - **Ini NGE-OVERRIDE catatan lama** yang bilang keenam kartu harus sama kelakuannya
+      ("bikin 1 dari 6 kartu beda kelakuan itu bug sendiri"). Alasannya tetep masuk akal:
+      leg bandara itu satu-satunya yang butuh **nomor penerbangan**, dan field itu cuma
+      ada di halaman sana.
+    - **5 kartu lain GAK BERUBAH** - tetep pre-fill picker di tempat, gak pindah halaman.
+      Dijaga `verify-airportlink.mjs`.
+    - **Tampilannya sengaja IDENTIK** (`CARD` + `<Face>` dipakai dua-duanya, cuma tag-nya
+      `<a>` vs `<button>`). Yang beda cuma efek tap-nya. Kalau nanti kerasa bikin kaget,
+      tinggal tambahin penanda kecil di kartu itu - belum diputusin Wayan.
+    - **Baris prosa "Flying in or out? Book on the Bali airport transfer page..." UDAH
+      DIHAPUS** - kartunya yang ngomong sekarang, dengan cara nganterin ke sana.
+    - **Kartu itu jadi SATU-SATUNYA link dari `/transfer` ke halaman itu**, jadi dia juga
+      yang mikul link internalnya. Teksnya udah ngandung keyword ("Airport → Ubud"), jadi
+      aturan anchor-text tetep kepenuhan. Diukur sesudah: **100 halaman / 105 link** ke
+      `/airport-transfer` (footer 100 + kartu ini) - sama kayak sebelum.
   - **Anchor text WAJIB nyebut "airport"** di tiap link ke halaman itu. Dulu semuanya
     "Book a transfer" - gak ngasih tau Google apa-apa soal isi halaman tujuannya. Sekarang:
     band airport homepage + listing (`components/sections/home/Airport.jsx`) =
@@ -763,21 +805,145 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 
 ## Transfer / Airport / Charter = SATU CANGKANG (Sep 2026)
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
-harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sama persis:
+harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 
-    <section CHARTER_HERO + bg-[url(...)]>      <- foto + judul + sub + FORM-nya
-      <div CHARTER_HERO_INNER(_WIDE)>           <- charter pakai _WIDE (butuh 3 kartu)
-    <section INFO_SECTION_DETAIL>               <- band cream
-      <div INFO_CARD + INFO_CARD_BODY>          <- kartu putih, --container-mid
-        <Prose ... headingVariant="company" />
+    <FormHero title sub photo alt [photoPos] details [embedded]>
+      {form halaman itu}                        <- judul, sub, FORM, FOTO, DETAILS
 
-- **Yang boleh beda cuma FOTO hero-nya.** Sisanya (min-height 620, padding, gradient
-  overlay 0.5→0.64, ukuran+bobot+warna H1, bg band, lebar kartu, padding kartu, radius,
-  offset kiri) WAJIB identik - dijaga `verify-trio.mjs` di scratchpad (6 lebar × 3
-  halaman, 120 assertion): tiap halaman tanda-tangan cangkangnya diadu lawan charter.
+- **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
+  kalo di desktop jadiin kolom, misal kiri form kanan foto".** Band foto gelap yang dulu
+  nampung judul + sub + form DI ATASNYA udah **DIHAPUS**; sekarang foto jadi panel
+  sendiri di sebelah form, dan tulisannya duduk di putih. Urutan DOM: judul → sub →
+  form → foto. HP numpuk sesuai urutan itu; desktop 2 kolom.
+- **SATU KONTAINER, details ikut di dalamnya** (Sep 2026, Wayan: "charter details sama
+  form di atasanya, sekarang masih beda kontainer, jadiin satu aja dan rapikan margin
+  left right"). Dulu details duduk di kartu KEDUA di atas band cream, lebarnya
+  `--container-mid` (1080) lawan `--container` (1200) punya baris form - tepinya
+  **meleset 60px** di 1280 & 1440 dan **8px** di 390 & 768 (diukur). Sekarang dia masuk
+  `INNER` yang sama lewat prop `details`, jadi tepinya lurus dengan sendirinya
+  (diukur ulang: **L0 R0 di 390/768/1024/1280/1440, ketiga halaman**).
+  - **Paragraf lepas di-cap `--container-read`** tapi rata KIRI. Kontainernya 1200;
+    paragraf selebar itu ±190 karakter. Kompromi yang sama kayak artikel guide. Cap-nya
+    **gak pernah kena** di dalam `InfoBox` (kolomnya udah di bawah 720).
+  - **Judul "X Details" ikut ke KIRI** (pola `ST_LEFT`). Dulu
+    ke-center - masuk akal waktu dia baris pertama kartunya sendiri, kebaca kayak sisa
+    begitu semua di atasnya rata kiri.
+  - `INFO_SECTION_DETAIL` + `INFO_CARD` **TETEP ADA** - masih dipakai `ListingPage`
+    sama `/settings`. Yang berubah cuma: ketiga halaman ini gak pakai mereka lagi.
+- **Cangkangnya = SATU KOMPONEN, `components/sections/FormHero.jsx`**, bukan 3 salinan
+  string class. Yang wajib sama itu **URUTAN** empat bagian itu, dan urutan gak bisa
+  dijaga cuma dengan berbagi string - alasan yang sama kenapa `DetailHero` ada buat
+  tour/attraction/guide. `CHARTER_HERO*` + file `charterHeroClasses.js` **UDAH DIHAPUS**.
+- **2 kolomnya mulai 1200px, BUKAN 993 - dan angka itu penting.** `CharterBuilder`
+  punya 2 kolom SENDIRI (paket | field, `1fr 340px`) dari 993px. Kalau yang luar juga
+  993, kolom paket mendarat di **~244px** dan nama paket + harga gak muat sebaris. Di
+  1200 kolom form ~791px jadi paket dapet ~450px. Di bawah 1200 semuanya numpuk = urutan
+  HP yang diminta. **Jangan turunin ke 993.**
+- **Rasio kolom `2.4fr 1fr`, hasil UKUR bukan tebakan.** Sub-baris paket charter
+  ("10 hours · around 120 km · per car up to 5") mulai wrap begitu kolom form di bawah
+  ~790px: di `1.75fr` dua dari tiga baris pecah di 1200px dan nyisain "5" sendirian.
+  Ganti rasio = **ukur ulang sub-baris itu**.
+- **Grid-nya `grid-cols-[minmax(0,1fr)]`, jangan track `auto`.** Lantai track grid itu
+  **min-content**, jadi form yang bentuk tersempitnya lebih lebar dari layar bakal
+  ndorong track lewat viewport dan `body{overflow-x:clip}` motong tepi kanannya
+  **diam-diam**. Form airport persis gitu di 320px (form 316px di kolom 288px).
+- **Judul turun jadi `<h2>` kalau `embedded`** (tab /programs punya H1 sendiri). Tanpa
+  itu /programs punya 2 H1.
+- **Foto `/transfer` DIGANTI** `transfer-hero.webp` → `coastal-road-beach-bali.webp`.
+  Foto lama itu fasad terminal dengan tulisan "BALI International Airport" kebaca jelas.
+  Dulu aman karena ke-gelapin di belakang teks putih; jadi panel terang dia naro balik
+  frasa yang halaman ini justru **sengaja dilepas** (split SEO Sep 2026: yang pegang
+  "bali airport transfer" itu `/airport-transfer`). `/airport-transfer` tetep pakai foto
+  itu - di situ emang nyambung.
+- **Foto `/charter` DIGANTI** `road-ubud.webp` → `handara-gate.webp` (Sep 2026, Wayan).
+  Foto lama itu **macet** - motor berjejer + rambu larangan parkir. Aman selama dia
+  ke-gelapin di belakang teks hero putih; begitu jadi panel terang di sebelah form,
+  halaman yang jualan "duduk aja, ada yang nyetir" malah mamerin kemacetan. Handara
+  Gate itu salah satu ide rute yang halaman ini **udah sebut sendiri** ("Full day
+  north: Handara Gate"), jadi bukan foto tempat yang gak kita datengin, dan
+  komposisinya ke-center jadi tahan di crop tinggi-sempit.
+  - **Kartu promo Charter di 3 halaman listing IKUT DIGANTI** (Sep 2026, Wayan: "gas samain
+    foto promo charter bro") — `content/shared/programPromo.js` sekarang `handara-gate.webp`
+    juga. Nol `road-ubud.webp` ketinggalan di seluruh repo; dijaga `verify-r3.mjs` (3 halaman
+    listing). **Yang MASIH salinan basi di file itu**: teks kartunya nulis "go anywhere, stop
+    anywhere, at your own pace" — slogan yang udah dibuang dari `CHARTER.sub` (diganti fakta).
+    Belum ditanyain ke Wayan, itu copy.
+- **`/airport-transfer` BAGI DUA 50/50 di desktop, dua yang lain TETEP 2.4fr** (Sep 2026,
+  Wayan: "di desktop bagi 2 aja, 50% kolom input 50% image nya"). Ini **hal KEDUA** yang
+  boleh beda antar tiga halaman itu, setelah foto — jadi dia di `FormHero` sebagai prop
+  `half`, bukan di salinan cangkang kedua.
+  - Alasannya beda peran kolom: form airport itu satu tumpukan field selebar penuh, gak ada
+    yang butuh lebar ekstra. **Charter GAK BISA ikut**: sub-baris paketnya wrap begitu kolom
+    form di bawah ~790px, dan 50/50 di 1200 cuma ngasih **576px** (diukur).
+  - Dua string class-nya ditulis PENUH (`GRID_COLS` / `GRID_COLS_HALF`) — Tailwind nyisir
+    teks sumber, class yang dirangkai pakai interpolasi **gak pernah ke-generate**.
+  - `verify-formhero` ikut diubah: `formw`/`photow`/`photox` **keluar** dari tanda tangan
+    cangkang bersama (bedanya disengaja & di-assert sendiri), tapi **tepi KIRI form** dan
+    **tepi KANAN baris** tetep wajib sama di ketiganya.
+- **`photoPos` = SATU-SATUNYA prop yang ngatur foto selain `photo`/`alt`.** Default
+  `[&>img]:object-center`. `/airport-transfer` naro **`[&>img]:object-[80%_50%]`**: itu
+  satu-satunya offset yang muat tulisan "BALI International Airport" **UTUH** di kolom
+  50/50-nya. Diadu di browser: center, 38% dan 62% semuanya motong kata "Airport" di tepi
+  kanan, dan **26% — yang bener waktu kolomnya masih slot sempit 0.57:1 — sekarang malah
+  mendarat di tengah papan nama.** Jadi **ganti lebar kolom = ukur ulang crop-nya**, jangan
+  cuma percaya angka yang udah ada. (Papan namanya kebaca di halaman INI gak masalah: dia
+  yang megang frasa itu. Yang gak boleh nampilin itu `/transfer`, dan dia pakai foto lain.)
+- **SATU FIELD TANGGAL per form** (Sep 2026, Wayan: "di page airport transfer ada 2 kolom
+  date, which is itu gak bener"). Form airport dulu punya **"Date" DAN "Flight date & time"**
+  — nanya hal yang sama dua kali, dan dua-duanya bisa beda: transfer ke-book tanggal 12,
+  pesawatnya mendarat tanggal 13. Sekarang tanggal transfer **dibaca dari penerbangannya**
+  (`flightTime.slice(0,10)`), dan catatan di bawah field-nya nyebut itu. `ready` ikut:
+  alamat + nomor penerbangan + tanggal penerbangan.
+  - `FIELD_LABEL` di form itu **udah dihapus** (dia cuma ada buat baris Date|Guests yang
+    2 kolom); sekarang semua label lewat `LABEL`.
+  - Label "1. Direction" ilang "1."-nya — gak ada 2. dan 3., sisa dari versi form
+    yang dulu bernomor.
+- **Form gak boleh ganti tinggi pas harga nyampe** (Sep 2026). `/transfer` dulu
+  nyetak **NOL** apa pun sebelum route kepilih, jadi begitu harganya muncul form-nya
+  tumbuh - dan karena foto-nya `h-full` di 1200+, **foto-nya ikut lompat**. Sekarang
+  slot harganya `min-h-[57px]` + `flex justify-center` dan isinya "Pick a route to
+  see the price". Aturannya umum: **apa pun yang nongol belakangan di dalam form wajib
+  udah punya ruangnya** - kalau nggak, panel foto di sebelahnya yang kena.
+- **Yang boleh beda cuma FOTO-nya.** Sisanya (padding, bg, ukuran+bobot+warna H1, lebar
+  kolom, radius foto, posisi) WAJIB identik - dijaga **`verify-formhero.mjs`** di
+  scratchpad (8 lebar × 3 halaman, 226 assertion): urutan judul→sub→form→foto, foto di
+  KANAN form dari 1200 & numpuk di bawahnya, tanda tangan cangkang tiap halaman diadu
+  lawan charter, foto gak lazy & ada alt, halaman gak melar, dan nama + sub-baris paket
+  charter gak wrap.
 - **`INFO_CARD_BODY`** (ritme paragraf di dalam kartu) di `infoClasses.js`. Dulu namanya
   `BODY_TEXT`, const lokal di `CharterSection` - transfer & airport gak ikut, jadi
   paragrafnya beda. Sekarang satu string, tiga pemakai.
+- **Strip fakta = CHIP, bukan kotak** (Sep 2026, Wayan: "box untuk availability,
+  capacity dll ganti bro gua gamau isi box gitu"). Dulu grid 4 sel berbingkai -
+  kontainer jenis kedua di halaman yang baru aja dijadiin satu. Sekarang chip pill,
+  yang emang **udah jadi bahasa web ini** buat fakta jenis ini (hero tour/destinasi
+  nampilin Duration/Group/Free cancellation persis pakai itu).
+  - **Pill-nya SATU string di `components/ui/chipClasses.js`** (`CHIP` + `CHIP_OK`).
+    `DetailHero` sekarang import dari situ dan tetep nge-export `HERO_CHIP` buat
+    pemakai lamanya. Dijaga `verify-chips.mjs`: bentuk chip di strip fakta **diadu
+    lawan** chip hero tour/attraction, harus identik.
+  - **Chip nyetak NILAI doang; LABEL-nya milih IKON** (`chipIcon()` di file yang sama).
+    Jadi tiap nilai WAJIB bisa berdiri sendiri - itu sebabnya di konten diubah:
+    "English" → **"English-speaking driver"** (3 file), "At arrivals" →
+    **"Meet & greet at arrivals"** (airport). Nambah fakta baru = pastiin nilainya
+    kebaca tanpa label, dan daftarin label-nya di `ICONS` (kalau nggak dapet `Info`).
+  - **`/activities` ikut** - dulu `ListingPage` punya SALINAN SENDIRI kotak itu
+    (`INFO_FACTS`/`INFO_FACT`), jadi begitu satu berubah dua-duanya melenceng.
+    Sekarang dia render `<InfoFacts>` yang sama. `INFO_FACTS`/`INFO_FACT` **UDAH
+    DIHAPUS** dari `infoClasses.js`.
+  - **Kenapa chip menang dari 2 opsi lain** (kolom polos & satu baris dipisah titik,
+    dua-duanya udah di-render buat Wayan): di HP kolom polos jatuh **3 + 1** (baris
+    kedua nyisa satu) dan satu-baris **pecah di tengah frasa**. Chip turun utuh.
+  - **Gotcha harness**: `<li>` chip itu flex ITEM, jadi `inline-flex`-nya
+    **ke-blockify jadi `flex`** - filter `display === 'inline-flex'` diem-diem gak
+    ketemu apa-apa. Dan `line-height`-nya `normal`, jadi rumus tinggi/line-height =
+    NaN; cek 1 baris pakai tinggi + `scrollWidth == clientWidth` (chip-nya
+    `whitespace-nowrap`, jadi wrap ke-detect sebagai overflow).
+- **Baris ke-center di `/transfer` UDAH DIKIRIKAN**: judul "Popular routes"
+  (pola `ST_LEFT`) dan catatan "All prices per car...". Itu sisa dari
+  waktu kartunya masih ke-center; begitu semua di sekelilingnya rata kiri, dua itu
+  nyempil sendiri. (Baris ketiga, "Flying in or out?", ikut dikirikan terus **dihapus**
+  sama sekali - lihat section SEO.)
 - **Isi kartu dibangun `lib/detailBlocks.js`** buat transfer & airport:
   judul kartu → strip fakta (`{type:'facts'}`) → include/exclude (`{type:'boxes'}`) →
   prosa halaman itu sendiri. Charter tetep nulis blok-nya sendiri di `charter.js` (dia
@@ -786,6 +952,22 @@ harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sam
 - **Judul kotak = "What's included" / "Not included"** di ketiganya. Transfer & airport
   dulu nulis "What's excluded" - ide yang sama, kata beda, di halaman yang dibaca
   berurutan sama tamu.
+- **Judul `--sub` PERSIS setelah baris `boxes` kehilangan margin atasnya** (`!mt-0`
+  di `Prose`, Sep 2026). `SECTION_TITLE_SUB` bawa `mt-[2.75rem]` (44px) buat misahin
+  dia dari paragraf di atasnya - tapi baris `boxes` udah punya jarak bawahnya sendiri,
+  jadi dua-duanya numpuk dan di charter nyisa **pita kosong ~44px** antara kotak
+  "How the day works" dan judul berikutnya. Yang di-nol-in cuma posisi itu
+  (`blocks[i-1].type === 'boxes'`), jadi judul `--sub` di tempat lain gak kesenggol.
+  - **Sisa yang JUJUR (bukan bug)**: dua kotak charter itu tingginya sama (kotak
+    stretch), tapi teks kolom kiri ~240px lawan kanan ~320px, jadi masih ada ~80px
+    putih di bawah kolom kiri. Itu **panjang isi**, bukan layout - beresinnya ya
+    nambah/ngurangin copy, atau pindahin "Charter or guided tour?" ke kolom kiri.
+    Belum diputusin Wayan. (Kolom airport yang baru: 167/167, rata.)
+- **Blok prosa full-width JANGAN dipasang di bawah baris `boxes`.** `AIRPORT.info`
+  dulu gitu: kotak 2 kolom, terus paragraf selebar kartu, jadi halamannya lebar →
+  sempit → lebar dan separuh kanan kebaca kayak kosong. Sekarang dia satu baris
+  `boxes` isi 2 kolom polos ("Why we ask for flight details" | "How it works") -
+  pola yang sama kayak charter.
 - **`<DetailTinfo>` UDAH DIHAPUS** dan class **`.tinfo` emang gak pernah punya rule** di
   `style.css`. Halaman airport nulis `<section className="tinfo">`, jadi section itu
   **padding-nya NOL**: di HP 390px strip fakta & kotaknya mulai di **0px** (bordernya
@@ -796,13 +978,36 @@ harus identik". Ketiganya sekarang **cuma punya 2 section**, dan cangkangnya sam
   560 / overlay .45-.55 - beda dari charter padahal FOTO-nya sama), `max-w-[960px]` +
   `max-w-[820px]` (dua-duanya bukan token container), dan gutter `px-[1.3rem]` (20.8px,
   bukan 24 desktop / 16 HP).
-- **Gotcha harness yang nyaris nipu**: `verify-trio` versi pertama helper-nya
+- **Gotcha harness yang nyaris nipu** (dari `verify-trio`, harness band foto lama -
+  band-nya udah gak ada, pelajarannya masih kepakai): helper-nya ditulis
   `cs = (el) => getComputedStyle(el)` - argumen pseudo-nya ke-buang, jadi
-  `cs(hero,'::before')` diem-diem ngebalikin gaya SECTION-nya (= foto hero). Harness-nya
-  lapor 12 gagal "cangkang beda" padahal yang beda cuma fotonya, yang emang disengaja.
+  `cs(hero,'::before')` diem-diem ngebalikin gaya SECTION-nya. Harness-nya lapor 12
+  gagal "cangkang beda" padahal yang beda cuma fotonya, yang emang disengaja.
   Kalau harness bilang beda, **cek dulu harness-nya baca yang bener**.
 - **Route di /transfer TETEP markup halaman** (bukan blok Prose): itu kontrol berharga yang
-  bisa ditap, bukan bacaan. Dia duduk DI DALAM kartu biar halamannya tetep hero + 1 kartu.
+  bisa ditap, bukan bacaan. Dia jalan paling atas di blok `details`, sebelum prosanya.
+- **PICKER /transfer: SATU SISI SELALU UBUD** (Sep 2026, Wayan: "kalo kita milih area dari
+  kolom input belum bisa jalan dan di book"). Semua route yang kita hargain bentuknya
+  "X – Ubud", jadi pasangan yang gak ada Ubud-nya gak mungkin punya harga - tapi form-nya
+  dulu ngebolehin tamu bikin persis itu, dan yang lebih parah: **To mulai di "Ubud", From
+  mulai di placeholder kosong**, jadi tamu yang milih area di **To** doang nyisain From
+  kosong → `routeName` kosong → harga tetep "Pick a route to see the price" dan Book mati,
+  **tanpa satu kata pun di layar yang bilang kenapa**. Ke-ukur sebelum dibenerin: pilih
+  To = Canggu Area → `from:""`, Book disabled.
+  - Sekarang milih area di satu sisi **naro Ubud di sisi lain**; milih Ubud di sisi yang
+    lawannya udah Ubud **ngosongin** yang lawannya balik ke placeholder (dulu "Ubud → Ubud"
+    nampilin em dash + baris "no fixed price for this pair", kayak route-nya yang salah).
+  - Aturannya di `TransferRouteProvider` (`pickFrom`/`pickTo`), dan **`setFrom`/`setTo`
+    UDAH GAK di-export** — biar invariant-nya gak bisa dijebol dari luar lagi. `To` juga
+    dikasih `placeholder` (dia sekarang bisa kosong).
+  - `routeName` gak lagi nyoba dua bentuk: sisi yang BUKAN Ubud itu nama route-nya.
+  - Baris "No fixed price for this pair" jadi **jaring pengaman**, bukan state normal.
+  - **Row yang di-book sekarang bawa `pickup`/`dropoff`** (kartu My Trips udah nerusin
+    dua-duanya pas checkout). Dulu cuma nama route, jadi tamu yang book "Ubud → Canggu"
+    dan yang book "Canggu → Ubud" nyimpen row yang IDENTIK dan driver gak bisa bedain.
+  - Dijaga `verify-r3.mjs`: milih area di From doang DAN di To doang dua-duanya kasih harga
+    + Book nyala, pasangan dua-duanya non-Ubud gak bisa kejadian, swap tetep bener, 6 kartu
+    route tetep pre-fill, dan arah yang ke-book ke-simpen.
 - **Tombol route UDAH HIDUP** (Sep 2026, Wayan: "benerin bro"). Dulu mati - `TransferSection`
   bukan client component, jadi `onClick` yang dijanjiin catatannya ("tap a route to pre-fill
   the search") gak pernah bisa kepasang. Sekarang:
@@ -913,6 +1118,89 @@ Aturan mainnya (jangan diubah tanpa ngerti kenapa):
   `alignSideToFirstPhoto()`/`--side-offset` di atasnya). Berlaku ke SEMUA `.section__title`
   yang landing di `.tour-layout__main`, bukan cuma "What You'll Do" doang (biar konsisten).
 
+## Our Company + My Trips = SATU CANGKANG RAIL (Sep 2026)
+Wayan: "gua mau sidebar sticky, page my trip dan our company akan menggunakan layout yang
+sama ... gua mau page our company kayak page email di desktop, memiliki stiky sidebar dan
+sidebarnya kelihatan strong dengan konten di tengah". Dia pilih **opsi A** dari sheet 3 rail,
+terus **HP-3** dari sheet 3 bentuk HP.
+- **Cangkangnya = KOMPONEN, `components/ui/RailLayout.jsx`** (class-nya di `railClasses.js`).
+  Dipakai **`OurCompany.jsx` DAN `MyTripsCart.jsx`**. Yang wajib sama itu **URUTAN + PERILAKU**
+  (rail lalu konten; di HP daftar lalu section; back ngapus jejak), dan itu gak bisa dijaga cuma
+  dengan berbagi string - alasan yang persis sama kenapa `DetailHero` & `FormHero` ada.
+  State-nya dipegang pemanggil: Our Company nyetir section dari hash URL, My Trips cuma tab.
+- **Tab horizontal lama My Trips (`MTC_TABS`/`mtcTab`) UDAH DIHAPUS** - rail-nya yang jadi tab
+  sekarang. Dijaga harness (`hasOldTabs`), biar gak diem-diem balik lagi jadi dobel.
+- **DESKTOP = satu kotak berbingkai**: rail cream 248px di kiri + kolom konten putih.
+  Baris aktif = **pill putih terangkat** (bg putih + border + `--shadow-sm`) - rail-nya udah
+  cream, jadi "keangkat keluar dari tint" itu yang kebaca sebagai kepilih.
+  - **Rail-nya gak punya tinggi sendiri.** Dia flex child di `items-stretch`, jadi cream-nya
+    otomatis ngisi setinggi kotak; yang `sticky` itu MENU di dalamnya. Jangan kasih
+    `h-[100vh-...]` ke rail-nya - itu bug lama yang bikin lubang putih di halaman pendek.
+- **JEBAKAN BESAR: `overflow-hidden` DI FRAME BIKIN `position:sticky` MATI TOTAL.**
+  Elemen sticky nempel ke **scroll container terdekat**, dan `overflow:hidden` bikin frame-nya
+  JADI scroll container - jadi menunya ke-scroll ikut halaman, gak pernah pin di bawah header.
+  Diem-diem aja, gak ada error. Pakai **`overflow-clip`**: sama-sama motong cream ke sudut
+  bunder, TAPI gak bikin scroll container. (Safari <16 jatuh ke `visible` = sudutnya kotak,
+  halamannya tetep jalan.) Ke-tangkep `verify-rail`, mata gak bakal nyadar.
+- **Rail baca `--header-h` (live), BUKAN `--header-h-max`** - dia harus NEMPEL ke bawah
+  navbar. Padding-top halamannya tetep `--header-h-max` (aturan lama, jangan ketuker).
+- **HP (<=992px) = rail JADI LAYAR PERTAMA** ("HP-3"): mendarat = daftar 6 section full-width
+  + chevron, tap -> kontennya kebuka + baris **back**. Yang kebawa dari desktop cuma ISINYA
+  (ikon, pemisah About/Legal, label section), bukan bentuknya - di 390px gak ada ruang kolom.
+  - **`reading` state WAJIB `false` di initial state**, hash dibaca di `useEffect`. Ini static
+    export, satu HTML dipakai HP & desktop - nilai yang cuma ada di browser bikin render
+    pertama beda sama hasil pre-render.
+  - **Navbar -> `/our-company.html` (tanpa hash) = mendarat di DAFTAR**; **footer -> `#faq`
+    dkk = mendarat LANGSUNG di kontennya**, gak lewat daftar. Itu disengaja & dijaga harness.
+  - **Back ikut ngapus hash** (`replaceState` ke pathname): kalau nggak, reload atau link
+    yang di-share bakal diem-diem buka lagi section yang barusan ditinggal.
+- **6 section TETEP di DOM semua** (crawler baca semuanya), cuma satu yang keliatan lewat
+  atribut `hidden` - itu pola lama, jangan diganti jadi conditional render.
+- **GOTCHA `<span>` pemisah grup**: `h-px` di elemen **inline** gak ngegambar apa-apa. Di rail
+  desktop dia kebetulan keliatan (parent-nya `flex`, jadi ke-blockify); di daftar HP parent-nya
+  div biasa, jadi **garisnya ilang diam-diam**. WAJIB `block`.
+- **Tombol "Chat on WhatsApp" di rail = `w-full`**, bukan inline. Label 16 karakter di kolom
+  248px itu cuma sejengkal dari nyembul keluar kartu - di-stretch = failure mode-nya ilang,
+  bukan ditambal angka pas-pasan. Di HP balik `inline-flex` (kartunya lebar).
+- Verifikasi: **`verify-rail.mjs`** di scratchpad (99/99) - desktop 1024/1280/1440: rail 248 &
+  cream & setinggi frame, menu **beneran pin di `--header-h` sesudah di-scroll**, konten gak
+  nabrak rail, prosa <=720, baris aktif putih+border, garis pemisah keliatan, tombol help
+  1 baris & gak nyembul kartunya, 6 section di DOM, halaman gak melar. HP 320/390/430: mendarat
+  di daftar, tap = konten + back + hash, back = balik ke daftar + hash bersih, deep link
+  `#terms` langsung ke konten, garis pemisah keliatan, gak melar.
+  - **Gate-nya dites pakai 3 bug aslinya** (overflow-hidden, span inline, rail 228px).
+  - **PELAJARAN harness**: assertion "lebar rail == 248" itu **tautologi** - dia cuma ngulang
+    angka yang gua set sendiri, dan pas rail 228 dia "nangkep" bug yang salah. Yang beneran
+    ngukur itu **containment** (`btn.right <= card.right - padding`). Versi pertama cek-nya
+    `scrollWidth-clientWidth` di TOMBOLNYA - dan itu selalu 0, karena `whitespace-nowrap`
+    bikin tombolnya melar keluar KARTU, bukan overflow ke dalam dirinya sendiri. Jadi dia
+    lapor lolos di 248 padahal masih nyembul 2.7px. **Kalau assertion-nya cuma ngulang angka
+    yang lu tulis, itu bukan tes.**
+
+- **Total + Make Payment TETEP DI DALAM KONTEN** (Sep 2026, Wayan pilih "3" dari 3 opsi;
+  yang ditolak: naro di rail kiri, atau bikin kolom ketiga). Jadi rail-nya MURNI buat pindah
+  section - jangan taro aksi/harga di situ.
+- **LAYAR PERTAMA DI HP BEDA, dan itu disengaja**: Our Company buka di **daftar**, My Trips buka
+  **langsung di keranjang** (`reading` initial `true`). My Trips punya default yang jelas dan
+  tamu yang dateng buat bayar gak boleh disuruh nge-tap menu dulu; Our Company gak punya
+  default. Back tetep nyampe ke daftar di dua-duanya. Cangkangnya sama, pintu masuknya beda.
+- **`<h1>` "My Trips" ditaro DI ATAS frame**, bukan di kolom konten - dia nyebut seluruh
+  halaman, dan ketiga section duduk di bawahnya; di dalam kolom dia bakal kebaca kayak judul
+  satu section. Our Company gak punya h1 halaman (tiap section punya sendiri).
+
+**PELAJARAN HARNESS (2 lagi, dari sesi yang sama):**
+- **Ngadu PIXEL antar-halaman itu bukan ngadu cangkang.** Cek drift gua sempat lapor
+  "stickTop 58 vs 91" sebagai beda - padahal dua-duanya nulis `var(--header-h)` yang sama;
+  angkanya beda karena My Trips PUNYA trip bar ("Saved on this device only") dan Our Company
+  `null`. Yang bener: cek **aturannya** (`stickTop == --header-h` halaman itu sendiri),
+  bukan samain angkanya antar-halaman.
+- **Sabotase buat nguji gate bisa GAGAL NYALA tanpa lu sadar.** Gua tes cek drift dengan
+  nambahin `w-[200px]` di samping `w-[248px]` - harness lapor 151/151, dan gua nyaris nyimpulin
+  cek-nya rusak. Padahal dua utility itu **specificity-nya sama**, jadi yang menang urutan CSS
+  hasil generate, dan sabotasenya emang gak pernah ke-render. Pakai **inline `style`** kalau mau
+  maksa beda - baru ke-tangkep (lebar + warna dua-duanya kelaporan.
+
+
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**
@@ -996,7 +1284,8 @@ Order **must be kept** (declarations first, run last):
   `--r-xl` 22 (modal besar, hero card, charter box, sudut atas sheet) · `--r-pill` 999
   (tombol/chip pill/toggle). Sudut satu-sisi (mis. sheet atas) tetep pola-nya, cuma nilainya
   di-token (`var(--r-xl) var(--r-xl) 0 0`). **DIBIARIN** (jangan ikut di-token): `50%`
-  (bulat/avatar), `2px`/`3px` (bar tipis mis. underline judul `.section__title::after`), `0`.
+  (bulat/avatar), `2px`/`3px` (bar tipis), `0`. (Contoh lama buat `2px`/`3px` itu underline
+  judul section - **udah gak ada**, lihat "Judul section" di Design system.)
 - **Shadow (token, Agu 2026, Wayan minta subtle)**: 4 tingkat elevasi neutral + focus-ring,
   sengaja HALUS (opacity rendah) biar kartu "nempel halus", bukan ngambang berat:
   `--shadow-sm` `0 1px 2px /.04` (chip/kontrol kecil) · `--shadow-md` `0 2px 8px /.05`
@@ -1228,9 +1517,25 @@ Order **must be kept** (declarations first, run last):
   - **Teksnya sengaja kecil & tipis**: `text-[0.72rem] font-normal text-muted` (≤12px, dulu
     12.8 HP / 14 PC dan warnanya `--color-green`). Ini pengumuman, bukan headline — jangan
     dibikin setebal nav.
-  - **Nutup pas scroll turun, balik pas scroll naik.** Ambang: abaikan gerakan <6px (jitter),
-    dan gak pernah nutup selama masih <80px dari atas. Animasinya `grid-template-rows`
-    **0fr ↔ 1fr** (anaknya `overflow-hidden`) — gak usah ngukur tinggi apa pun.
+  - **KEBUKA CUMA DI ATAS, arah scroll gak ngaruh** (Sep 2026, Wayan: "Gas A bro").
+    `scrollY > 80` = nutup, titik. Animasinya `grid-template-rows` **0fr ↔ 1fr**
+    (anaknya `overflow-hidden`) — gak usah ngukur tinggi apa pun.
+    - **Dulu**: nutup pas scroll turun, **balik pas scroll naik** (+ ambang jitter 6px).
+      Bukanya itu yang bikin loncatan pas Wayan scroll balik ke atas ngelewatin hero:
+      header tumbuh **53 → 86px**, dan strip tab sticky dipatok ke `--header-h`, jadi
+      strip-nya **turun sendiri 33px dalam ~150ms** sementara konten di belakangnya
+      tetep jalan ikut scroll. Diukur di scrollY yang SAMA PERSIS (1400 dua kali):
+      strip pindah **53 → 68px** padahal halamannya gak gerak sama sekali.
+    - Sekarang header **satu tinggi buat seluruh scroll** — yang nempel ke dia gak
+      pernah gerak di tengah halaman. Strip emang baca `--header-h` (bukan
+      `--header-h-max`) supaya nempel tanpa celah pas bar-nya kebuka di atas; itu
+      sebabnya tingginya gak boleh berubah pas lagi di tengah halaman.
+    - Verifikasi: **`verify-tripbar-a.mjs`** di scratchpad (54/54) — 390 & 1280 di
+      4 jenis halaman: bar kebuka pas mendarat (scrollY 0), nutup lewat 80px, balik
+      pas balik ke atas, `--header-h` **beku** selama scroll naik ngelewatin hero,
+      `--header-h-max` gak gerak sama sekali, dan yang paling penting: elemen yang
+      dipatok ke `--header-h` **drift ≤1px di scrollY yang sama**. Gate-nya udah
+      dites pakai bug aslinya (handler lama dibalikin → 12 gagal, drift 15px).
   - **DUA var tinggi header, jangan ketuker:**
     - `--header-h` = tinggi header **live** (di-update `ResizeObserver` di `Navbar`), jadi
       ikut mengecil pas trip bar nutup. Dipakai elemen yang harus **nempel** ke bawah navbar
@@ -1314,7 +1619,16 @@ Order **must be kept** (declarations first, run last):
     nampilin harga, halaman destinasinya punya Book now + book bar kayak tour.
     (Ini NGE-OVERRIDE keputusan 3 Sep yang bilang destinasi single nggak dijual &
     `prices.place` dibuang - kalau nemu tulisan itu di tempat lain, yang berlaku ini.)
-  - **Charter**: 5 jam 600k · 10 jam 1jt · tambahan 60k/jam.
+  - **Charter**: 5 jam 600k (`half`) · 10 jam 1jt (`full`) · **12 jam 1,12jt (`long`)** ·
+    tambahan 60k/jam. **`long` BUKAN angka baru**: 1.120.000 = `full` + 2 × 60k, jadi dia
+    tetep keiket ke tarif per jam (dipatok `pricing-spec-test`). Ditulis sebagai tarif sendiri
+    di `CHARTER` biar usd-nya diturunin dari IDR-nya sendiri ($64), bukan dijumlah dari dua
+    angka usd yang dua-duanya udah dibulatkan ke atas (57 + 2×4 = **65**, salah 1 dolar).
+    `extHourIdr` tetep kepakai buat jam yang LEWAT dari yang di-book.
+    - **`extended` UDAH GAK DIJUAL** (Sep 2026, Wayan: "jangan pakai extended pakai 12 jam
+      aja yang max") — tapi branch-nya di `charterPrice` **JANGAN dihapus**: keranjang yang
+      ke-simpen sebelum perubahan ini masih bawa `dur:"extended"` di localStorage tamu, dan
+      tanpa branch itu row-nya dihargain **0**.
   - **Airport – Ubud = Rp450.000** (Wayan, Sep 2026 - naik dari Rp300.000). Mata uang lain
     diturunin sendiri (`usd = ceil(450000/17600) = $26`), jadi yang diubah CUMA `idr` di
     `prices.transfer` (`cahyana-api/pricing-data.js`). Salinan di CUE yang ikut disapu:
@@ -1434,9 +1748,20 @@ Order **must be kept** (declarations first, run last):
     - **Paket kepilih itu PROP, bukan state di dalam list** (`value`/`onChange`): halaman butuh
       nilai yang sama buat baris ringkasan + tombol Book, dan homepage butuh buat nyimpen.
       Satu pemilik, gak ada salinan kebenaran kedua.
-    - **Hitungan harga = `useCharterTier({ area, extra })`**, di-export dari file yang sama —
+    - **Hitungan harga = `useCharterTier({ area })`**, di-export dari file yang sama —
       list-nya pakai buat tiap baris, halaman pakai buat total di ringkasan & gerbang tombol
       Book. Satu rumus, gak bisa melenceng.
+      - **DIA GAK NGITUNG APA-APA LAGI** (Sep 2026): tiap panjang yang dijual punya tarifnya
+        sendiri di katalog (`half`/`full`/`long`), jadi dia cuma NYARI, bukan nambahin jam ke
+        tarif yang lebih pendek. Versi lama nambah `extra × charterExtraHour` di atas `full`,
+        jadi halaman & server dua-duanya ngitung satu harga dan bisa beda satu langkah
+        pembulatan (57 + 2×4 = 65 lawan `ceil(1120000/17600)` = 64).
+      - **Surcharge pickup juga dari katalog** (`charterSurcharge.display`). Dulu ke-hardcode
+        `isIdr ? 100000 : 7` di sini: **7-nya udah melenceng** dari 6 yang bener, DAN buat tamu
+        yang bayar AUD/EUR/GBP dia nambahin 7 mata uang MEREKA ke harga yang udah dikonversi.
+        Ini kesalahan yang SAMA yang dulu bikin `CharterHome` nulis "+\$7" (lihat catatan
+        `charterSurcharge` di `pricing.js`) — muncul dua kali, sekarang gak ada angka
+        surcharge yang ke-tulis di CUE sama sekali.
     - Class-nya di `components/ui/charterPlanClasses.js`. `PLAN_PRICE_BOX`/`_BIG`/`PLAN_ROW_ON`
       **UDAH DIHAPUS** (dead) — itu sisa box harga cream punya homepage yang lama.
   - **Pilihan di homepage ke-bawa ke sini** lewat `lib/charterDraft.js` — lihat bullet Charter di
@@ -1463,9 +1788,20 @@ Order **must be kept** (declarations first, run last):
       Pembungkus `relative`-nya WAJIB mepet ke tombolnya (jebakan containing block `PopMenu`).
     - Komponennya **reusable** — kalau ada teks panjang lain yang bikin form rame, pakai ini,
       jangan tulis panel sendiri.
-  - **Field "Extra hours" pindah ke KOLOM INPUT** (cuma nongol kalau paket Extended kepilih) —
-    dia emang input, dan alesan lama dia gak berlabel (nyamain tinggi kartu) udah gak ada, jadi
-    label-nya dibalikin.
+  - **PAKET KETIGA = "12 Hours", BUKAN "Extended" LAGI** (Sep 2026, Wayan: "di charter kita
+    ganti konsep bro, jangan pakai extended pakai 12 jam aja yang max"). Efeknya:
+    - **Field "Extra hours" UDAH DIHAPUS** dari kolom input, bareng state `extra`,
+      `EXTRA_HOURS`, dan `extra` di row yang ke-simpen. Yang lama itu bikin harga baris
+      belum ketauan sampai tamu milih DUA hal, jadi kartunya gak bisa nyebut harganya
+      sendiri. Blok tetap bisa.
+    - `dur` barunya **`'long'`** (bukan `'twelve'`), nyamain nama tarif di API.
+    - Sub-baris "12 hours · around 140 km · per car up to 5" — **140 km itu 12 km/jam yang
+      SAMA** kayak dua baris lain (5j/60, 10j/120), bukan angka yang dibulet-buletin sendiri.
+    - Nama **"12 Hours"** sengaja beda pola dari "Full Day"/"Half Day": itu justru yang
+      ngebedain dia, dan "Long Day" kebaca terlalu mirip "Full Day" pas di-scan. Kalau Wayan
+      mau nama day-part, tinggal ganti `name` di `content/shared/charter.js`.
+    - Draft homepage yang nyimpen `dur:"extended"` **gak bikin error**: builder & homepage
+      dua-duanya nge-cek `CHARTER.durations.some(...)` dulu, jadi jatuh ke Full Day.
   - **Ada baris ringkasan di atas tombol** (nama paket + total). Di HP list-nya ada di ATAS field,
     jadi pas tamu nyampe tombol Book baris yang dia pilih bisa udah keluar layar — ini yang
     ngasih tau tombolnya mau nge-book apa.
@@ -1483,8 +1819,19 @@ Order **must be kept** (declarations first, run last):
   - **Isinya = 2 BARIS KOTAK** (Sep 2026, Wayan: "pakai kolom termasuk yang dibawahnya how
     charter works dan lagi satunya"), lewat blok prose baru `{ type: 'boxes', items: [...] }`:
     - Baris 1 = **What's included | Not included** · Baris 2 = **How the day works |
-      What a day can cover**. "Charter or guided tour?" TETEP selebar kartu di bawahnya —
-      satu kotak sendirian di baris 2-kolom kebaca kayak ada kotak yang ilang.
+      What a day can cover**. **"Charter or guided tour?" NUMPUK DI KOLOM KIRI**, di bawah
+      "How the day works" (Sep 2026, Wayan pilih opsi a dari 3 opsi buat ngeratain baris itu).
+      Dulu dia heading selebar kartu DI BAWAH baris — jadi ada ~80px putih di bawah kolom
+      kiri **terus masih ada konten lagi**, dan putih di tengah baris kebaca kayak bolong.
+      Numpuk di kiri, kolom kirinya jadi yang paling panjang, jadi putih sisanya (**62px**,
+      diukur) mendarat di UJUNG kartu di sebelah padding bawahnya sendiri.
+      - Caranya: item baris `boxes` boleh isi **`stack: [...]`** = dua blok di satu sel grid
+        (`Prose.jsx`). Item biasa gak kesentuh, jadi transfer & airport gak berubah.
+      - **Di HP urutan bacanya DIJAGA**: pembungkus stack-nya `max-[768px]:contents`, jadi di
+        bawah 768 dua blok itu jadi grid item sendiri dan yang belakangan dapet
+        `order-last` — urutannya tetep How → What a day can cover → Charter or guided tour?,
+        persis kayak waktu dia masih heading di bawah baris. Tanpa itu catatan penutupnya
+        nyempil di TENGAH di HP.
     - **Pasangannya dipilih dari TINGGI, bukan topik**: penjelasan 3-paragraf & daftar 7 ide
       rute itu dua blok yang tingginya paling mirip, jadi kotaknya mendarat rata. Kalau
       nambah/ngurangin isi salah satunya, cek lagi pasangannya — kotak stretch, yang pendek
@@ -1522,9 +1869,17 @@ Order **must be kept** (declarations first, run last):
     dan tiga-tiganya **berhenti di garis yang sama**. Ikon info: catatan surcharge
     GAK ke-print di halaman, nongol pas di-tap, ngambang di ATAS form (hit-test), **gak nyorong
     apa pun** (tinggi dokumen & posisi tombol Book gak gerak), gak kepotong tepi layar, Escape nutup. Desktop 1024/1280/1440: list di KIRI field
-    & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan, Extra hours nongol/ilang ikut
-    paket & mendarat di kolom input, tombol mati sebelum 4 field keisi, kicker kosong → "Total" pas area kepilih, yang
+    & dua kolomnya mulai sejajar. Plus: tap baris = pindah pilihan,
+    tombol mati sebelum 4 field keisi, kicker kosong → "Total" pas area kepilih, yang
     ke-book = paket yang KEPILIH (bukan yang pertama), dan mendarat di My Trips.
+    - **`verify-charter.mjs` & `verify-charterhome.mjs` ILANG dari scratchpad** (scratchpad
+      itu per-sesi). Yang ada sekarang: **`verify-r3.mjs`** (232/232, 390/768/1024/1280/1440)
+      — dia nutup bagian yang kena perubahan Sep 2026: 3 paket & NOL field Extra hours,
+      harga 12 jam 1.120.000 (dan 1.220.000 kalau pickup Canggu, dari katalog), kicker
+      "Total", halaman charter & section homepage nyebut angka yang SAMA, serah-terima
+      12 Hours dari homepage, plus form airport & picker transfer. Assertion lama soal
+      bentuk kartu (pita, harga kiri/kanan, 1 baris) **belum ada penggantinya** — kalau
+      nyentuh `charterPlanClasses`, tulis ulang harness-nya dulu.
   - **Gotcha harness**: "harga ada di samping/bawah nama" DOANG gak cukup — assertion itu lolos
     waktu namanya keremes jadi 2 baris. Ukur **nama-nya juga**: `tinggi/line-height == 1` +
     `scrollWidth == clientWidth`, dan harganya juga (1 baris). Itu yang nangkep bug badge di 320px.
@@ -1640,3 +1995,24 @@ di IDR).
    dari `style.css` kalau udah 0.
 4. `style.css` `{}` braces balanced; no dead classes ketinggalan.
 5. Commit + push ke `main` (deploy otomatis). Bump `?v=` UDAH GAK PERLU (hash otomatis).
+
+### Saklar pembayaran (`lib/payFlag.js`)
+- **Step pembayaran MATI buat semua orang** (`PAY_DEFAULT = false`). Checkout itu kode
+  yang udah kelar jauh sebelum dia jadi produk yang kelar: tamu yang ketemu form
+  bayar yang belum dibuktiin ujung-ke-ujung = **booking yang hilang diam-diam** —
+  dia gak bisa bayar, booking-nya nyangkut `pending`, dan email konfirmasi gak
+  kekirim (email sekarang nungguin webhook).
+- Nyalain buat diri sendiri: **`?pay=1`** di URL mana pun (matiin lagi `?pay=0`).
+  Ke-simpen per browser, jadi cuma perlu sekali.
+- **MATI = perilaku lama PERSIS**: `pay_option` dikirim kosong → server ngitung
+  gak ada yang ditagih → booking langsung `new` (confirmed) + 2 email kekirim, dan
+  modalnya balik nunjukin layar "Booking Received!" yang lama.
+- **Dibacanya di `useEffect`, JANGAN di initial state** — static export, paint
+  pertama harus sama persis sama HTML hasil pre-render (aturan yang sama kayak
+  `charterDraft`).
+- **Ganti `PAY_DEFAULT` jadi `true` = satu-satunya edit** yang nyalain pembayaran
+  buat semua tamu. Gak ada yang lain yang perlu diubah.
+- Verifikasi: **`payflag.mjs`** di scratchpad (8/8) — dua keadaan diadu di halaman
+  hasil build beneran: step-nya nongol/nggak, `pay_option` yang KEKIRIM, dan layar
+  akhir sesudah submit. Dites pakai bug aslinya (`PAY_DEFAULT = true` → 3 assertion
+  "MATI" langsung merah).

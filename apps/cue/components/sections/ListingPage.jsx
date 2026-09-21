@@ -1,7 +1,8 @@
 'use client';
 
 import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
-import { INFO_SECTION_DETAIL, INFO_CARD, INFO_FACTS, INFO_FACT } from '@/components/ui/infoClasses';
+import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
+import InfoFacts from '@/components/ui/InfoFacts';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { useState, useRef, useEffect } from 'react';
@@ -157,14 +158,10 @@ export default function ListingPage({ data }) {
         <section className={INFO_SECTION_DETAIL}>
           <div className={INFO_CARD}>
             <h2 className={SECTION_TITLE}>{info.title}</h2>
-            <div className={INFO_FACTS}>
-              {info.facts.map((f) => (
-                <div className={INFO_FACT} key={f.label}>
-                  <span>{f.label}</span>
-                  <strong>{f.value}</strong>
-                </div>
-              ))}
-            </div>
+            {/* The same chips transfer and airport use - this page had its own
+                copy of the old bordered grid, so the two drifted as soon as one
+                changed (Sep 2026). One component now. */}
+            <InfoFacts items={info.facts} />
             {/* Included / excluded = the SAME <InfoBoxes> charter, transfer, airport
                 and the tour/destination pages use (Sep 2026, Wayan: "samain kayak
                 styling charter"). The data still carries the legacy hint string

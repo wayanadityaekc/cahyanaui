@@ -73,7 +73,7 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
     {
       id: 'deposit',
       label: 'Pay a deposit',
-      sub: 'Holds your date. The rest is cash to your driver on the day.',
+      sub: 'Holds your date.',
       badge: 'Deposit',
       amount: known ? dep : null,
       balance: known ? total - dep : null,
@@ -82,7 +82,7 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
     {
       id: 'full',
       label: 'Pay in full now',
-      sub: 'No cash to carry, no money changer, nothing to pay on the day. You pay in your own currency, at a rate you can see now.',
+      sub: 'Nothing to pay on the day. Your own currency, at the rate shown.',
       badge: null,
       amount: known ? total : null,
       balance: null,

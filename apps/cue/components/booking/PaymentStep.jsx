@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { withSymbol } from '@/components/Price';
 import InfoDot from '@/components/ui/InfoDot';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
@@ -51,6 +52,16 @@ export default function PaymentStep({
   // than appearing as a surprise amount at the card form.
   const railNote = noteFor(currency);
 
+  // An option that is no longer available must not stay selected. The referral
+  // row is only rendered while the code is valid, and hasReferral can go back to
+  // false when the quote refreshes without it - leaving 'referral' chosen with
+  // nothing on screen to show it, and a discount asked for on submit. The server
+  // recomputes either way, but the guest should see what they are about to pay.
+  useEffect(() => {
+    const picked = options.find((o) => o.id === option);
+    if (picked && !picked.available) onOption('deposit');
+  }, [options, option, onOption]);
+
   return (
     <div className="my-5">
       {/* Code first - it unlocks the third option below. */}
@@ -83,9 +94,9 @@ export default function PaymentStep({
       </div>
 
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
-        {options.map((o) => {
+        {options.filter((o) => o.available).map((o) => {
           const on = option === o.id;
-          const dim = !o.available;
+          const dim = false;
           return (
             <button
               key={o.id}
@@ -109,7 +120,7 @@ export default function PaymentStep({
                       worked out - a deposit with an unnamed balance is the
                       thing guests ask about. */}
                   {!dim && o.balance != null && (
-                    <> Then {withSymbol(symbol + o.balance.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'))} on the day.</>
+                    <> Then {withSymbol(symbol + o.balance.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'))} cash to your driver on the day.</>
                   )}
                 </span>
               </span>

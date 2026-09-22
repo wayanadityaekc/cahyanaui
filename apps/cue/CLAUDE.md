@@ -123,6 +123,41 @@ When unsure, ask first (keep it short).
   each was unhooked to its own explicit size so they don't shrink with body text.
 - Form field (input/select/textarea) = `0.8rem` (`--fs-field`, was 0.875rem — disamain ke
   `--fs-body`/`--fs-small`), semua field pakai token ini (jangan hardcode ukuran di form lagi).
+**JADWAL JAM MULAI — `content/shared/timeSlots.js` (Sep 2026, Wayan)**
+Wayan: *"kita nambah data baru di setiap tour yang di pilih harus user milih start jam berapa"*.
+Jadi file ini berhenti jadi "picker jam di popup konfirmasi" dan jadi **jadwal situs**.
+- `TIME_SLOTS` = **00:00–23:30, tiap 30 menit (48 slot)**. Dulu mulai 06:00 — artinya
+  **02:00 & 03:00 gak ada sama sekali**, padahal itu jam berangkat trip sunrise.
+- Aturannya (kata Wayan, di-quote di file itu): tour normal **08:00/08:30/09:00** ·
+  **Lempuyang 03:00–09:00** · **trekking & jeep sunrise 02:00 dan 03:00** ·
+  experience selain Kecak/Barong **daylight = 07:00–16:00** · **Kecak 19:00** ·
+  Barong **pagi** (jam pasti nyusul) · **Uluwatu & Sunset Kecak + destinasi sunset 12:00–16:00** ·
+  **charter/transfer/airport BEBAS 24 jam**.
+- **DUA nama harus diterjemahin ke key katalog** — ini yang paling gampang salah:
+  "Lempuyang" itu **DUA item**: `tour` → **"East Bali Tour"** (halamannya "East Bali:
+  Lempuyang, Besakih & Tirta Gangga") dan `place` → **"Lempuyang Temple - Gates of
+  Heaven"**. Dan **Kecak/Barong itu `performance`, BUKAN `experience`**.
+- `place` **sekarang masuk `RESTRICTABLE`** — dulu nggak, jadi 34 destinasi nawarin
+  semua jam, Lempuyang termasuk.
+- **KENAPA typo di sini BAHAYA**: `RESTRICTED_SLOTS` di-key pakai nama item katalog.
+  Key yang gak cocok **gak nge-restrict apa pun — tanpa error**: itemnya balik ke default
+  kategorinya. Dites: `'Jeep sunrise'` (s kecil) bikin Jeep Sunrise jatuh ke daylight,
+  jadi trip jam 2 pagi bisa di-book jam 4 sore dan situsnya keliatan normal.
+- Gate: **`node tools/check-timeslots.js`** — ngadu tiap aturan lawan katalog asli
+  (62 item, 11 override). Dia NOLAK jalan kalau clone `cahyana-api` ketinggalan (pola
+  yang sama kayak `check-prices`). **BUKAN gate CI** (butuh repo sebelah).
+  Dites pakai 2 bug asli: key typo + rentang daylight salah.
+- **Server GAK perlu diubah**: kolom `pickup_time TEXT` di `inquiries` udah ada, ke-insert
+  dari `l.time`, dan ke-print di 3 tempat (baris dashboard, email internal, detail email
+  tamu) lewat `fmtTime12`.
+- **BELUM: jamnya masih cuma ditanya buat booking SATU BARIS.** `needsTime = !!singleLine`
+  di `BookConfirmModal` (`singleLine = lines.length === 1 ? ... : null`), jadi itinerary
+  3 tour = **NOL** field jam. Row `days[]` juga belum punya slot `time`. Itu langkah
+  berikutnya, belum dikerjain.
+- **Angka yang perlu diinget buat desain picker**: karena semua slot tetep ditampilin dan
+  yang gak boleh cuma di-disable ("jam yang lainya matiin aja"), **Ubud Tour = 3 nyala dari
+  48**, Kecak **1 dari 48**. Belum diputusin Wayan mau tetep gitu atau cuma nampilin yang boleh.
+
 **Field & label — SATU KOTAK, SATU LABEL (Sep 2026, Wayan pilih "opsi 1")**
 Wayan: *"gua cuma pengen ukuran dan standar yang bagus dan konsisten"*. Semuanya di
 **`components/ui/formClasses.js`** — apa pun yang bentuknya field WAJIB dibangun dari situ.

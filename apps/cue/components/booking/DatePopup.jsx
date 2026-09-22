@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { overlay, panelDateSheet, PANEL_HEAD_SHEET, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CAL_FOOT, CAL_HINT, CAL_APPLY } from '@/components/ui/hsClasses';
+import { overlay, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CAL_FOOT, CAL_HINT, CAL_APPLY } from '@/components/ui/hsClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 import TimeChoice from '@/components/ui/TimeChoice';
 
@@ -13,7 +13,13 @@ function iso(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// Centred calendar popup, same shell as the original bookDatePopup.
+// SATU BENTUK PANEL TANGGAL BUAT SELURUH WEB (Sep 2026, Wayan: "buat default date
+// pickernya kalo di klik itu sebagai pop up bukan muncul dari bawah"). Dia dulu
+// `panelDateSheet`: bottom-sheet di bawah 768px, popup ke-center di desktop — jadi
+// tamu HP ketemu DUA bentuk buat pertanyaan yang sama, tergantung dia nge-tap tanggal
+// di form booking (`DateField`, selalu popup) atau di My Trips / Book Now (ini).
+// Sekarang dua-duanya pakai `panelBookdate` yang sama. `panelDateSheet` +
+// `PANEL_HEAD_SHEET` UDAH DIHAPUS (dead) — kalau mau balik ke sheet, tulis ulang.
 //
 // withTime asks for the start time in the SAME panel (Sep 2026, Wayan: "ini pake di
 // tiap date, kalo user milih date di booking form udah langsung milih jam"), the same
@@ -55,7 +61,7 @@ export default function DatePopup({
   }, [open, onClose]);
 
   // Stay portal-mounted once mounted (not gated on `open`) so the sheet/backdrop have
-  // a "closed" frame to transition FROM - `overlay`/`panelDateSheet` already carry the
+  // a "closed" frame to transition FROM - `overlay`/`panelBookdate` already carry the
   // open/closed classes, they just weren't getting a chance to animate between them.
   if (!mounted) return null;
 
@@ -69,11 +75,15 @@ export default function DatePopup({
   return createPortal(
     <>
       <div className={overlay(open, false)} onClick={onClose} />
-      <div className={panelDateSheet(open)}>
-        <div className={PANEL_HEAD_SHEET}>
+      <div className={panelBookdate(open)}>
+        <div className={PANEL_HEAD_BOOKDATE}>
           <h3 className={PANEL_HEAD_H3}>{title}</h3>
-          <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={onClose}>&times;</button>
+          {/* PANEL_CLOSE, bukan PANEL_CLOSE_SHEET: yang itu ke-hide di atas 768px
+              (bener buat sheet, karena sheet cuma ada di HP). Popup ke-center butuh
+              tombol tutup di SEMUA lebar. */}
+          <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={onClose}>&times;</button>
         </div>
+        <div className={PANEL_BODY}>
         <div className={HS_CAL}>
           <div className={CAL_CAP}>
             <button type="button" className={CAL_CAP_BTN} aria-label="Previous month" onClick={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}>&lsaquo;</button>
@@ -100,6 +110,7 @@ export default function DatePopup({
               );
             })}
           </div>
+        </div>
         </div>
         <div className={CAL_FOOT} data-cal-foot>
           {withTime ? (

@@ -137,34 +137,19 @@ export const calDay = (off, sel) =>
         : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
   }`;
 
-// ===== DatePopup (booking date picker): panel TANPA hs-panel--popup -> HP jadi
-// bottom-sheet (@media max-768 .hs-panel), desktop di-center sama bookdate-panel.
-// Radius/z/shadow ikut base .hs-panel (bukan popup): radius-lg, z-60. =====
-export const panelDateSheet = (open) => [
-  'fixed bg-white [border:1px_solid_var(--line)] z-[60] overflow-x-hidden overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [overscroll-behavior:contain]',
-  'rounded-lg [box-shadow:var(--shadow-xl)]',
-  '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]', PANEL_MOBILE_TRANSITION,
-  open ? 'visible pointer-events-auto opacity-100' : 'invisible pointer-events-none opacity-0',
-  // HP: bottom-sheet
-  '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
-  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0] [@media(max-width:768px)]:[box-shadow:0_-12px_48px_rgba(26,26,26,0.28)]',
-  '[@media(max-width:768px)]:max-h-[calc(100dvh-100px)] [@media(max-width:768px)]:block [@media(max-width:768px)]:opacity-100',
-  open ? '[@media(max-width:768px)]:[transform:translateY(0)]' : '[@media(max-width:768px)]:[transform:translateY(100%)]',
-  // Desktop: center (bookdate)
-  'min-[769px]:top-1/2 min-[769px]:left-1/2 min-[769px]:right-auto min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh]',
-  open ? 'min-[769px]:[transform:translate(-50%,-50%)]' : 'min-[769px]:[transform:translate(-50%,-48%)]',
-].join(' ');
-// Head DatePopup: sama kaya bookdate TAPI TANPA flex-none (panelnya bukan flex-col).
-export const PANEL_HEAD_SHEET =
-  'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] sticky top-0 bg-white min-[769px]:z-[1]';
+// ===== Footer kalender, dipakai DateField DAN DatePopup =====
+// (`panelDateSheet` + `PANEL_HEAD_SHEET` UDAH DIHAPUS Sep 2026: DatePopup sekarang
+// pakai `panelBookdate` yang sama kayak DateField, jadi panel tanggal cuma satu bentuk
+// di seluruh web. `PANEL_CLOSE_SHEET` TETEP — HeroSearch masih sheet beneran.)
 // Footer kalender (Apply) - sticky bottom di HP & desktop.
 export const CAL_FOOT = 'flex items-center justify-between gap-[14px] py-3 px-[18px] [border-top:1px_solid_#f2efe7] sticky bottom-0 bg-white';
 export const CAL_HINT = 'font-body font-normal text-small text-muted';
 // Apply = tombol CTA (bg-nya di-override grup .hs-cal__apply/.hsearch__go/dst jadi
 // --color-cta, bukan --color-green; hover cta-d). border-color cta walau style none.
 export const CAL_APPLY = `inline-flex ${BTN_SM} font-body bg-cta text-white border-none [border-color:var(--color-cta)] cursor-pointer hover:bg-cta-d hover:[border-color:var(--color-cta-d)] hover:text-white disabled:opacity-50 disabled:cursor-default`;
-// Close DatePopup: keliatan di HP, DI-HIDE di desktop (@media min-769 .hs-panel__close),
-// karena panelnya bukan popup (gak ada override display:block).
+// Close sheet HP: keliatan di HP, DI-HIDE di atas 768px - bener buat panel yang cuma
+// JADI sheet di HP. Sekarang pemakainya CUMA HeroSearch; DatePopup udah pindah ke
+// PANEL_CLOSE (popup butuh tombol tutup di semua lebar).
 export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;
 
 // ===== HeroSearch: dropdown "How to explore" (.hs-panel--menu). Desktop = dropdown

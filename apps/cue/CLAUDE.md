@@ -164,6 +164,28 @@ Jadi file ini berhenti jadi "picker jam di popup konfirmasi" dan jadi **jadwal s
     `category`/`itemName`), dan `onPick` sekarang ngasih **`(date, time)`**. Dia yang
     kepakai 3 tempat: `BookSidebar` (Book Now tanpa tanggal), `BookCta`, dan editor
     tanggal di **My Trips**. Satu kontrol jam buat seluruh web, bukan 3 salinan.
+  - **SATU BENTUK PANEL TANGGAL SE-WEB — popup ke-center, BUKAN sheet dari bawah**
+    (Sep 2026, Wayan: *"buat default date pickernya kalo di klik itu sebagai pop up
+    bukan muncul dari bawah"*). `DatePopup` dulu pakai `panelDateSheet`: **bottom-sheet
+    di bawah 768px**, popup ke-center di desktop — sementara `DateField` (form booking)
+    dari dulu selalu popup. Jadi tamu HP ketemu **DUA bentuk buat pertanyaan yang sama**,
+    tergantung dia nge-tap tanggal di form booking atau di My Trips / Book Now. Sekarang
+    dua-duanya `panelBookdate`.
+    - **`panelDateSheet` + `PANEL_HEAD_SHEET` UDAH DIHAPUS** dari `hsClasses.js` (dead).
+      Mau balik ke sheet = tulis ulang, jangan cari sisanya.
+    - **`PANEL_CLOSE_SHEET` TETEP ADA** — `HeroSearch` masih sheet beneran di HP.
+      Tapi `DatePopup` sekarang pakai **`PANEL_CLOSE`** (tanpa `min-[769px]:hidden`):
+      yang versi sheet itu ke-hide di atas 768px, bener buat panel yang cuma JADI sheet
+      di HP, tapi popup ke-center butuh tombol tutup di **semua** lebar.
+    - Strukturnya ikut `DateField`: kalender WAJIB dibungkus **`PANEL_BODY`** — panelnya
+      `flex flex-col overflow-hidden`, jadi tanpa pembungkus yang `flex-[1_1_auto]`
+      + `overflow-y-auto` kalendernya gak bisa di-scroll di dalam panel.
+    - Dijaga `verify-datetime.mjs`: per lebar di-assert **aturannya** (gak selebar layar ·
+      gak nempel tepi bawah · ke-center V & H · radius sama atas-bawah · tombol tutup
+      keliatan), terus **bentuk dua panel itu diadu langsung** dan wajib identik.
+      Diukur di 320/390/768/1280: **beda NOL**. Dites pakai bug aslinya (bentuk sheet
+      dibalikin pakai inline `style`, bukan class — dua utility specificity-nya sama jadi
+      sabotase pakai class bisa diem-diem gak ke-render) → **8 assertion nyala**.
   - **Kategori buat aturan jam WAJIB dari katalog, jangan dari `type`/`presetType`.**
     `BookSidebar`/`BookCta`/`BookingForm`/`MyTripsCart`/`ItineraryBuilder` semuanya
     punya `categoryOf(name)` yang nanya `pricing.catalog` — halaman detail nge-preset
@@ -1862,9 +1884,10 @@ Order **must be kept** (declarations first, run last):
   programmatik** (setGuests/setStay/resetGuests, swap From/To transfer) → panggil `cselRefreshAll()`
   biar label custom ikut update (native `.value=` gak fire change). Nambah select/date baru → otomatis
   ke-enhance kalau lewat `initCustomSelects` (tambah id/attr-nya) atau `enhanceFieldsIn` (modal).
-  **Date picker = POPUP ke-center di desktop juga** (bukan dropdown nempel field): panel dikasih
-  class `hs-panel--popup` + `bookdate-panel` → `openPanel` reparent ke body + overlay walau desktop
-  (reuse gaya `.bookdate-panel` punya Book Now). Dropdown biasa (select) tetep nempel field di desktop.
+  **Date picker = POPUP ke-center DI SEMUA LEBAR** (Sep 2026) — bukan dropdown nempel field, dan
+  **bukan bottom-sheet di HP lagi**: `DateField` DAN `DatePopup` sekarang pakai `panelBookdate` yang
+  sama (lihat "SATU BENTUK PANEL TANGGAL SE-WEB" di section jadwal jam). Dropdown biasa (select)
+  tetep bottom-sheet di HP / nempel field di desktop — yang disatuin cuma panel TANGGAL.
 - **Mobile hero = form jadi bottom-sheet** (Sep 2026, Wayan): di HP (≤992px) hero dipendekin
   (`min-height:68vh`), form search `.hero__search` disembunyiin (jadi sheet `position:fixed`
   translateY(100%)), diganti tombol **`.hero__planbtn`** ("Plan your trip", `[data-plan-open]`).

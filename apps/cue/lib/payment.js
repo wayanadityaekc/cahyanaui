@@ -81,7 +81,7 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
     },
     {
       id: 'full',
-      label: 'Pay in full now',
+      label: 'Pay in full',
       sub: 'Nothing to pay on the day. Your own currency, at the rate shown.',
       badge: null,
       amount: known ? total : null,
@@ -90,7 +90,7 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
     },
     {
       id: 'referral',
-      label: 'Use your referral code',
+      label: 'Referral code',
       sub: `${REFERRAL_DISCOUNT_PCT}% off, and no deposit to pay.`,
       badge: `Save ${REFERRAL_DISCOUNT_PCT}%`,
       amount: known ? disc : null,
@@ -109,16 +109,30 @@ export const PAY_COPY = {
   heading: 'How would you like to pay?',
   methodHeading: 'Pay with',
   referralLabel: 'Referral code',
-  referralHint: 'Got a code? Enter it first - it unlocks a third option.',
+  referralHint: 'Got a code? Enter it here to unlock the third option below.',
   referralOk: `Code applied. You can now pay ${REFERRAL_DISCOUNT_PCT}% less, with no deposit.`,
   referralBad: 'Code not valid.',
-  // One explanation for all three, behind the info button next to the heading.
-  optionsInfo: [
-    `Deposit - $${DEPOSIT_USD} holds your date, whatever the trip costs and wherever we pick you up. The rest is cash to your driver on the day.`,
-    `Pay in full - the same price and the same ${FREE_CANCEL_HOURS}-hour free cancellation, with nothing to sort out on the day: no cash to carry, no money changer, no ATM. You pay in your own currency, at a rate you can see right now.`,
-    `Referral code - ${REFERRAL_DISCOUNT_PCT}% off the whole trip and no deposit. Enter the code above to unlock it.`,
+  // Why the third row is there but not selectable. Short on purpose: it is the
+  // one line that has to be readable without opening anything, because a row
+  // that is greyed out with no reason given reads as broken.
+  referralLocked: 'Enter a valid code to use this.',
+  detailsMore: 'Details',
+  detailsTitle: 'What happens when you pay',
+  detailsClose: 'Got it',
+  // ONE short line stays on screen; everything else is behind the Details
+  // button (Wayan, Sep 2026: "yang tulisan card payment itu loh, itu hide
+  // dulu, terus kasi button details"). The 24-hour window is the fact that
+  // changes a decision, so it is the line that is never hidden.
+  cancelShort: `Free cancellation up to ${FREE_CANCEL_HOURS} hours before pickup.`,
+  // What actually happens after the card goes through. Every line is
+  // something the system really does - the card form is PayPal's iframe, the
+  // booking is confirmed by the webhook, and the emails wait for it.
+  whatHappens: [
+    'PayPal takes the card details in their own secure field. They never reach our site.',
+    'We wait for the payment to clear, then your booking is confirmed.',
+    'You get a confirmation email with the trip and the amount paid.',
   ],
-  cancel: `Free cancellation up to ${FREE_CANCEL_HOURS} hours before pickup - anything paid is refunded in full.`,
+  cancel: `Anything paid is refunded in full within that ${FREE_CANCEL_HOURS} hours.`,
   late: 'Cancel later than that, or no-show, and what you paid is not refunded.',
   secure: 'Card details go straight to PayPal from a secure field. They never reach our site or our server.',
   declined: 'That card was declined. Try another card, or pay with PayPal.',

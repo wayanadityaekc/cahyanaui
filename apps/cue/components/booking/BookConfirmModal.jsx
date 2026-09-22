@@ -323,6 +323,8 @@ export default function BookConfirmModal() {
   // input-group + msg pindah ke modalClasses juga, karena PaymentStep ikut pakai.
   const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_#eee] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
   // Two-step chrome. Isolated to this modal, same as ROW below.
+  const lastStep = payOn ? 3 : 2;
+  const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const STEPS = 'flex gap-[6px] mb-2';
   const stepBar = (on) => 'flex-1 h-[3px] rounded-[2px] ' + (on ? 'bg-cta' : 'bg-line');
   const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
@@ -347,11 +349,10 @@ export default function BookConfirmModal() {
           <div id="modal-form">
             <h3 className={TITLE}>Booking Confirmation</h3>
             <div className={STEPS} aria-hidden="true">
-              <span className={stepBar(true)} />
-              <span className={stepBar(step === 2)} />
+              {STEP_NAMES.map((n, i) => <span className={stepBar(step >= i + 1)} key={n} />)}
             </div>
             <p className={STEP_LABEL}>
-              Step {step} of 2 &middot; {step === 1 ? 'Your details' : 'Check & book'}
+              Step {step} of {lastStep} &middot; {STEP_NAMES[step - 1]}
             </p>
 
             {step === 1 ? (
@@ -426,7 +427,7 @@ export default function BookConfirmModal() {
 
                 <button className={BTN} onClick={() => { if (validate()) { setError(''); setStep(2); } }}>Continue</button>
               </>
-            ) : (
+            ) : step === 2 ? (
               <>
                 <p className={GROUP_LABEL}>Your trip</p>
                 <div className={ROWSET}>
@@ -486,7 +487,43 @@ export default function BookConfirmModal() {
                   <span className={PBAR_V} id="sum-price">{withSymbol(priceText())}</span>
                 </div>
 
-                {payOn && <PaymentStep
+                {payOn && (
+                  <button className={BTN + ' ' + STACK} onClick={() => { setError(''); setStep(3); }}>Continue</button>
+                )}
+
+                {!payOn && (
+                  <>
+                <PayChips
+                  className="mt-[1.1rem] mb-[1.35rem] text-center"
+                  logosClass="flex flex-wrap items-center justify-center gap-2"
+                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
+                  svgClass="block h-[var(--icon-sm)] w-auto"
+                />
+
+                {error && <small className="block mt-[0.4rem] text-small text-err">{error}</small>}
+
+                <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
+                <button
+                  className={BTN_WA + ' ' + STACK}
+                  onClick={() => {
+                    if (!validate()) { setError(''); setStep(1); return; }
+                    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waText()), '_blank');
+                  }}
+                >
+                  Discuss via WhatsApp
+                </button>
+                  </>
+                )}
+                {/* Last, and a text link rather than a third button: three stacked
+                    buttons read as three equal choices when Book Now is the one. */}
+                <button type="button" className={BACK_LINK} onClick={() => setStep(1)}>&lsaquo; Edit details</button>
+              </>
+            ) : (
+              <>
+                {/* Step 3: the payment on its own screen. The trip total was read
+                    and agreed on step 2; what is chosen here is how much of it to
+                    pay now, and each row carries its own amount. */}
+                <PaymentStep
                   option={payOption}
                   onOption={setPayOption}
                   /* baseTotal, not priced.total: the quote already subtracts the
@@ -501,7 +538,7 @@ export default function BookConfirmModal() {
                   onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
                   onApplyReferral={applyRef}
                   refMsg={refMsg}
-                />}
+                />
 
                 <PayChips
                   className="mt-[1.1rem] mb-[1.35rem] text-center"
@@ -522,11 +559,10 @@ export default function BookConfirmModal() {
                 >
                   Discuss via WhatsApp
                 </button>
-                {/* Last, and a text link rather than a third button: three stacked
-                    buttons read as three equal choices when Book Now is the one. */}
-                <button type="button" className={BACK_LINK} onClick={() => setStep(1)}>&lsaquo; Edit details</button>
+                <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>&lsaquo; Back</button>
               </>
             )}
+
           </div>
         ) : !payOn ? (
           <div className="text-center">

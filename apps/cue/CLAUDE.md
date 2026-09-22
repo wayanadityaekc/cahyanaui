@@ -1589,9 +1589,10 @@ Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu
   **"B"** dulu dari sheet 3 opsi (sekarang / B / B+ikon) sambil bilang "tombol X nya
   hilangin" - terus dia **ngirim balik screenshot mock A: "gua mau ini"**, jadi yang
   jadi itu **A**: ikon per baris + tombol × + currency turun. Yang berlaku = A.
-  **BELUM DI MAIN** - ada di branch `claude/role-definition-d9kvwl` (Wayan: "jangan di
-  push live dulu"). Kalau catatan ini kebaca tapi kode-nya gak ada, berarti branch-nya
-  belum di-merge.
+  **UDAH DI MAIN & LIVE** (22 Sep 2026) - branch `claude/role-definition-d9kvwl` udah
+  di-merge. Catatan lama di sini nulis "BELUM DI MAIN / jangan di push live dulu"; itu
+  udah gak berlaku, `MENU_ROW_BOX` + ikon per baris + tombol x semuanya kepasang di
+  `Navbar.jsx`.
   - Geometri baris **+ ukuran ikon** = **`MENU_ROW_BOX` di `railClasses.js`**, string yang
     SAMA dipakai `railMobileItem`. Ukuran ikon ikut masuk situ karena Lucide tanpa ukuran
     eksplisit nge-render 24px - jadi "baris menu" & "ikonnya segede apa" satu keputusan,

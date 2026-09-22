@@ -2561,8 +2561,21 @@ di IDR).
   + ngabarin owner. Dipasang SEBELUM saklar ini dinyalain, alasannya: tamu yang
   nyangkut gak bakal lapor, dia cuma pergi. Jangan matiin cron itu selama
   `PAY_DEFAULT` true.
-- Verifikasi: **`payflag.mjs`** di scratchpad (8/8) — dua keadaan diadu di halaman
+- Verifikasi: **`payflag.mjs`** di scratchpad (10/10) — dua keadaan diadu di halaman
   hasil build beneran: step-nya nongol/nggak, `pay_option` yang KEKIRIM, dan layar
   akhir sesudah submit. Habis flip, harapannya dibalik juga: default = NYALA,
   `?pay=0` = perilaku lama persis. Ganti `PAY_DEFAULT` = **update harness-nya bareng**,
   kalau nggak dia ngetes keadaan yang udah gak ada.
+  - **Harness ini KE-PATAHIN dua kali sama kerjaan orang lain** (22 Sep 2026), dan
+    dua-duanya BUKAN bug produksi — jadi kalau dia merah, **cek dulu dia masih bisa
+    nyetir form-nya**:
+    1. Popup jadi **2 step**, jadi harness yang nge-klik "Book now" langsung gak pernah
+       nyampe — sekarang dia harus pencet **Continue** dulu & mastiin "Step 2 of 2".
+       Pilihan bayar ada di **step 2**, jadi cuma kebaca dari situ.
+    2. Halaman tumbuh **input tanggal KEDUA**, jadi nge-set yang pertama doang ngisi form
+       yang salah dan `book()` balik diem-diem tanpa mbuka apa-apa. Sekarang di-set semua.
+  - **POLANYA yang penting**: waktu patah, **SEMUA assertion merah, termasuk `?pay=0`
+    yang gak nyentuh flag sama sekali**, dan layar akhirnya "NO MODAL". Merah yang rata
+    kayak gitu = harness keilangan alurnya. Kalau flag-nya yang beneran rusak, yang merah
+    cuma sisi NYALA-nya (udah dibuktiin: `PAY_DEFAULT=false` → 4 merah, sisi `?pay=0`
+    tetep ijo).

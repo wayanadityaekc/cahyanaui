@@ -2378,7 +2378,7 @@ Order **must be kept** (declarations first, run last):
   - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;
     kalau di-stub `'$'` harness-nya ngukur "$1.000.000" — string yang gak pernah dilihat tamu.
 
-## POPUP KONFIRMASI = 2 STEP (Sep 2026, Wayan)
+## POPUP KONFIRMASI = 3 STEP kalau pembayaran NYALA (Sep 2026, Wayan)
 Wayan: *"kalo misalnya ada input dan summary mending bikin 2 step bro, pertama step input
 kedua summarynya"*. `BookConfirmModal` dulu satu layar panjang: field DI ATAS, terus
 ringkasan yang nyetak ulang Guests/Date/Time/Flight — **data yang sama ke-print dua kali di
@@ -2403,36 +2403,65 @@ satu layar**, dan di kasus airport isinya 926px di layar 844px (**scroll 285px**
 - Ruang sisa (ke-ukur, judul + Edit details udah dihitung): step 1 134–272px · step 2
   89–124px · My Trip step 2 **41px @320**. **Nol scroll sampai 4 baris keranjang.**
 
-**STEP 3 ITU UTANG, dan sekarang KEPAKAI** (22 Sep 2026). Checkout dinyalain buat semua
-tamu di hari yang sama (`PAY_DEFAULT = true`), jadi **pilihan bayar sekarang ikut di step 2
-buat SEMUA orang** — dan itu nge-override patokan "nol scroll" yang jadi alasan popup ini
-dipecah. Ke-ukur **sesudah blok bayar dirapiin** (695→492px, lihat bawah): step 2 butuh scroll
-**514px @390 · 710px @320 · 432px @768** (booking 1 baris; keranjang 3 baris ~sama).
-Sebelum dirapiin angkanya 717 / 954 / 554 — jadi merapikan blok itu motong ~200px di
-tiap lebar, dan sisanya cuma bisa diberesin step 3. Perilakunya utuh — 101 assertion `verify-flow`
-lolos, yang merah **cuma** jatah scroll. Jawabannya bukan nambal geometri lagi: **isi → cek →
-bayar**, tiga step. Wayan udah dikasih angkanya; belum dibikin.
-- **Jangan setel ulang jatah scroll harness biar ijo.** Merah-nya itu tanda utang ini masih ada.
+**STEP 3 UDAH DIBIKIN** (22 Sep 2026, Wayan: "coba buat step 3"). Checkout dinyalain buat
+semua tamu (`PAY_DEFAULT = true`), jadi blok bayar ikut di step 2 buat SEMUA orang dan
+step 2 butuh scroll **514px @390 · 710px @320** — nge-override patokan "nol scroll" yang
+jadi alasan popup ini dipecah. Sekarang: **isi → cek → bayar**.
+- `lastStep` & `STEP_NAMES` dua-duanya diturunin dari `payOn`, jadi **gak ada salinan
+  kedua alur lama**. Pembayaran MATI = "Step 1 of 2 / Step 2 of 2 · Check & book", Book Now
+  di step 2, nol blok bayar (dipatok `payflag.mjs` + `shot3.mjs`).
+- Ke-ukur (keranjang 3 baris), scroll per step: **320 = 0 / 0 / 145** · **390 = 0 / 0 / 0** ·
+  **768 = 0 / 0 / 0**. Step 1 & 2 balik ke nol scroll di semua lebar — itu patokan aslinya.
+  Sisa 145px di 320 = logo pembayaran yang wrap + paragraf pendek di bawah opsi.
+- **Harness step-label ngecek "of 2" ATAU "of 3"** (`/step 1 of [23]/`): yang penting step
+  ke-berapa, bukan totalnya — totalnya emang beda tergantung saklar bayar.
 
-**BLOK PILIHAN BAYAR = 492px, dan JANGAN digedein lagi** (22 Sep 2026, Wayan:
-"rapikan blok pilihan bayar"). Dulu **695px @390 / 893px @320** dalam kotak 820px.
-Yang dipotong, semuanya tanpa ngilangin fakta:
-- **Baris opsi referral GAK di-render kalau kodenya belum valid.** Doc ini udah nulis
-  opsi itu "cuma nongol kalau kodenya valid" dan `payOptions` udah nandain
-  `available: !!hasReferral` — komponennya doang yang masih gambar dia abu-abu, makan
-  **114px @390 / 154px @320** buat baris yang gak bisa dipakai tamu. Penjelasan apa itu
-  tetep ada di panel `InfoDot` sebelah judulnya.
-- **Sub baris "Pay in full" dipendekin** (dulu 4 baris @390). Versi panjangnya UDAH
-  ketulis di `PAY_COPY.optionsInfo` di balik ikon info yang sama, jadi barisnya cukup
-  bawa 2 fakta yang nentuin. **Konsekuensi yang disengaja & udah diputusin Wayan
-  ("biarin")**: frasa "no money changer" gak eksplisit lagi di baris itu.
-- **Baris deposit dulu nulis "on the day" DUA KALI** — sub-nya udahan gitu, terus
-  kalimat saldo di belakangnya ngulang.
-- **Opsi yang kepilih tapi udah gak available otomatis balik ke `deposit`.** Celah ini
-  kebuka gara-gara barisnya disembunyiin: `hasReferral` bisa balik `false` pas quote
-  di-refresh tanpa kodenya, jadi `'referral'` nyangkut kepilih tanpa ada apa pun di
-  layar yang nunjukin, dan submit minta diskon yang gak keliatan. Server tetep ngitung
-  sendiri, tapi tamu wajib bisa lihat apa yang dia bayar.
+**BLOK PILIHAN BAYAR (`PaymentStep`) — BARIS POLOS, FINE PRINT DI BALIK 1 POPUP**
+(22 Sep 2026, Wayan: *"text di dalam pilihan pembayaran fine, isi text singkat dan jelas
+jangan bisa di klik details gitu, nah dibawahnya yang tulisan card payment itu loh, itu
+hide dulu, terus kasi button details ... atau buat singkat dulu kalo di klik muncul popup
+lengkapnya"*).
+- **3 baris opsi, semuanya POLOS**: nama + badge + SATU baris pendek + harga. Nol yang
+  perlu dibuka. **Versi "Details per baris" UDAH DIBIKIN & DITOLAK** — tamu yang lagi
+  milih di antara 3 harga gak boleh disuruh buka 3 benda dulu buat bisa ngebandingin.
+  Baris deposit tetep nyebut sisanya ("Then Rp… cash to your driver on the day") — itu
+  angka yang paling sering ditanya.
+- **Referral = opsi ke-3 yang SELALU di-render**, abu-abu sampai kodenya valid (dulu
+  di-skip sama sekali). Dia **bawa kolom kodenya sendiri**, dan itu yang mbayarin
+  ruangnya: blok "Referral code" (label + field + hint) yang dulu nangkring di ATAS
+  daftar **udah dihapus**. Yang abu tetep nyebut alasannya ("Enter a valid code to use
+  this") — baris abu tanpa alasan kebacanya kayak rusak.
+- **Yang DI-HIDE itu blok di BAWAH opsi**: catatan settle USD + syarat refund. Sisa
+  **1 baris** ("Free cancellation up to 24 hours before pickup.") + **1 tombol Details**.
+- **Details buka POPUP (`ModalPresence`, `z-[210]`), BUKAN ke-buka di tempat.**
+  Ke-ukur: ke-buka di tempat **ndorong Book Now 268px** ke bawah scroll — tamu baca
+  syarat malah kehilangan tombol yang mau dia pencet. Popup = Book Now **nol gerak**.
+  Isinya `PAY_COPY.whatHappens` (3 langkah yang sistemnya emang beneran lakuin: kartu
+  diambil field-nya PayPal, kita nunggu duitnya cair, baru email konfirmasi) + catatan
+  rail + syarat batal + link policy. Tutup: "Got it" / tap di luar / **Escape**
+  (`BookConfirmModal` gak punya handler Escape, jadi gak ada yang rebutan tombol itu).
+- **Kartu opsi = `<div>`, bukan tombol radionya.** Baris referral bawa `<input>`, dan
+  `<input>` gak boleh di dalam `<button>`. Dua tombolnya **gak nulis `transition`
+  sendiri** biar press feedback global di `style.css` tetep kepakai (aturan SNAP).
+- **`PAY_COPY.optionsInfo` + `InfoDot` di samping judul UDAH DIHAPUS** — isinya persis
+  3 penjelasan yang sama, cuma dipisah dari barisnya.
+- **Opsi yang kepilih tapi udah gak available otomatis balik ke `deposit`.**
+  `hasReferral` bisa balik `false` pas quote di-refresh tanpa kodenya, jadi
+  `'referral'` nyangkut kepilih sementara barisnya abu — dan submit minta diskon yang
+  gak keliatan. Server tetep ngitung sendiri, tapi tamu wajib bisa lihat apa yang dia bayar.
+- Verifikasi: **`verify-fine.mjs`** di scratchpad (**88/88**, 320/390/768/1280) — nol
+  toggle di dalam baris opsi, tiap baris punya teks singkatnya, "settled in USD" &
+  "not refunded" **gak ada di halaman** sebelum Details di-tap, tepat 1 tombol Details,
+  popup ke-center & gak kepotong & beneran di ATAS modal booking (hit-test), **Book Now
+  gak gerak & kotaknya gak tumbuh**, Escape & tap-di-luar nutup popup TAPI gak nutup
+  modal booking, nol page error.
+  - **Dites pakai 2 bug, satu-satu**: (1) fine print dibalikin inline → **9 nyala**.
+    (2) popup diubah `fixed` → `absolute` → **ijo semua**, karena cangkang modal
+    booking sendiri `fixed inset-0`, jadi di scrollTop 0 dua-duanya mendarat di tempat
+    yang sama. Baru ke-tangkep sesudah ditambah kasus yang bisa mbedain: **scroll kotak
+    booking-nya ke bawah dulu, baru buka popup-nya** → nyala di 320, satu-satunya lebar
+    yang kotaknya emang ke-scroll. **Kalau sabotase gak nyala, bukan berarti gate-nya
+    rusak — kadang sabotasenya emang bukan bug di geometri itu.**
 
 **KERANJANG DIKOSONGIN PAS KARTU KE-CHARGE, bukan pas webhook mendarat.** `onSuccess` (yang
 `save({days:[],...})` di `MyTripsCart`) dipanggil dari `onPaid` punya `PayPalCheckout`.
@@ -2541,7 +2570,8 @@ foto destinasi auto slide"*.
   halaman (jebakan yang sama kayak `TripBar` + `TOUR_CONTENT`).
 - Yang ke-mount cuma slide sekarang + berikutnya, jadi 5 file gak di-fetch bareng.
   `prefers-reduced-motion` → fotonya **diem** di yang pertama.
-- **Gak bisa nyampe sini tanpa `?pay=1`** — `PAY_DEFAULT` masih `false`.
+- Dulu cuma kejangkau lewat `?pay=1`; sejak 22 Sep 2026 `PAY_DEFAULT = true`, jadi ini
+  layar yang dilihat SEMUA tamu yang bayar (lihat "Saklar pembayaran").
 
 ## Pembayaran online (checkout) — Sep 2026
 Tamu sekarang bisa bayar di halaman kita sendiri. Ini bagian yang kalau salah angka

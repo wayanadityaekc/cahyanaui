@@ -2282,6 +2282,76 @@ Order **must be kept** (declarations first, run last):
   - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;
     kalau di-stub `'$'` harness-nya ngukur "$1.000.000" — string yang gak pernah dilihat tamu.
 
+## POPUP KONFIRMASI = 2 STEP (Sep 2026, Wayan)
+Wayan: *"kalo misalnya ada input dan summary mending bikin 2 step bro, pertama step input
+kedua summarynya"*. `BookConfirmModal` dulu satu layar panjang: field DI ATAS, terus
+ringkasan yang nyetak ulang Guests/Date/Time/Flight — **data yang sama ke-print dua kali di
+satu layar**, dan di kasus airport isinya 926px di layar 844px (**scroll 285px**, ke-ukur).
+- **Step 1 = isi · Step 2 = cek & book.** Judul **"Booking Confirmation"** di bawah logo di
+  **dua-duanya** (itu nama popup-nya, bukan nama satu layar), plus bar + "Step N of 2".
+- **"Edit details" di PALING BAWAH**, di bawah Book Now + WhatsApp, dan **text link bukan
+  tombol** — tiga tombol setumpuk kebaca kayak tiga pilihan sederajat padahal Book Now yang
+  utama. Dia juga yang satu-satunya jalan balik ke step 1, dan isian yang udah diketik
+  **gak ilang** pas balik.
+- **Step 2 nunjukin BALIK kontak tamu** (Name/Phone/Email/Pick-up). Dulu nggak: tamu ngetik
+  email terus gak pernah lihat lagi apa yang dia ketik sebelum nekan Book.
+- **Kotak fakta 2x2 UDAH DITOLAK** (Wajan: "gua ga ngerti maksud lu yang ada di dalam box
+  dibawah itu"). Step 2 pakai **baris label-nilai** (`ROW`) yang emang udah dipakai modal ini
+  — nol bentuk baru buat dipelajarin.
+- **Field jangan dipasangin 2 kolom.** Pasangan Phone|Email itu dibikin buat ngalahin scroll;
+  2 step udah nyelesaiin itu, jadi pasangannya cuma nyisain ongkos: di **320px** placeholder
+  `e.g. +61 412 345 678` **kepotong 31px** (ke-ukur). Semua field selebar penuh = nol kepotong.
+- **Daftar "Trip details" KEBUKA default**, gak di balik accordion lagi — di ambang bayar,
+  daftar apa yang di-book gak boleh kesembunyi. **Lewat 4 baris dia balik ke accordion**:
+  ke-ukur, keranjang 5 baris butuh **scroll 45px @320px**, 6 baris 96px.
+- Ruang sisa (ke-ukur, judul + Edit details udah dihitung): step 1 134–272px · step 2
+  89–124px · My Trip step 2 **41px @320**. **Nol scroll sampai 4 baris keranjang.**
+
+**TANGGAL + JAM DI SEMUA KASUS** (Wayan: *"date dan time harus ada di semua popup, gunakan
+date dan time yang kita buat tadi, kalo user udah pilih berarti auto fill dan bisa di set ulang"*):
+- Pakai **`DateField withTime`** yang sama kayak seluruh web (popup kalender + `TimeChoice`
+  di footer), ke-seed dari baris yang masuk dan bisa di-set ulang.
+- **Field "Pickup Time" yang berdiri sendiri UDAH DIHAPUS** (bareng `needsTime` & import
+  `Select`). Dia cuma ada buat nutup satu kasus yang dateng tanpa jam; sekarang jamnya
+  dijawab kontrol tanggalnya. **Jangan dibalikin** — itu dua kontrol buat satu pertanyaan.
+- **`lineDT` = state PER BARIS** (`[{date,time}]`), bukan satu field. Alesannya sama kayak
+  `itemTimes` di keranjang: satu kontrol cuma bisa bener buat baris PERTAMA. My Trip dapet
+  satu kontrol per baris, label = nama programnya.
+- **Airport CUMA 1 kontrol tanggal**, dan itu **`DateTimeField` (menit asli)**, bukan
+  `DateField` grid 30 menit: pesawat mendarat 2:35 PM. `dateOf()`/`timeOf()` nurunin
+  tanggal & jam baris itu dari `flightDatetime`. Nambah "Date & time" kedua di situ = balik
+  ke bug yang Wayan udah suruh benerin di halaman airport ("ada 2 kolom date, itu gak bener").
+- **Validasi tanggal/jam PER BARIS, bukan di schema.** `bookingSchema` cuma punya SATU field
+  `time`, jadi keranjang dulu **gak pernah ditanya sama sekali**; sekarang `needsTime:false`
+  dan tiap baris dicek sendiri (`dtErr`). Schema tetep yang pegang field kontak.
+- `payload()` nulis `date: dateOf(l,i)`, `time: timeOf(l,i)` — tiap baris nerusin punyanya
+  sendiri. Daftar field yang kekirim **gak berubah** (17 key, dijaga harness).
+
+## LAYAR TUNGGU SESUDAH BAYAR — `PayWaiting.jsx` (Sep 2026, Wayan)
+Wayan: *"setelah user bayar, selagi menunggu email masuk dan backend nerima notif dari
+webhook, lock layar dan kasi loading dan tulisan sambil menunggu, tapi background nya itu
+foto destinasi auto slide"*.
+- **Kenapa perlu**: kartu ke-charge BUKAN booking-nya confirmed. Yang nandain `paid` +
+  ngirim email itu **webhook** (`confirmPayment` di cahyana-api). Di antara dua momen itu
+  modal dulu nampilin "Payment received" — ngaku lebih dari yang kita tau.
+- **Dia NANYA ke server, bukan ngitung detik**: `GET /api/booking-status/:ref` tiap 4 detik,
+  nyerah di 2 menit. Spinner di atas timer itu cuma bisa bohong atau muter selamanya.
+- **Ke-LOCK beneran selagi nunggu**: nol tombol tutup, `CLOSE` modal-nya ke-hide, `onClose`
+  punya `ModalPresence` di-nol-in (`paid ? () => {} : closeBooking`), body ke-lock.
+  **Escape gak nutup** (dijaga harness). Tombol baru nongol kalau udah ada yang bener
+  buat dibilang.
+- **4 keadaan, semuanya jujur**: `paid` → "Booking confirmed" · `mismatch` → "We need to
+  check this payment" + WhatsApp (**gak pernah ngaku confirmed**) · lewat 2 menit → "Still
+  confirming" + boleh ditutup · **nol token** → "Payment sent" (gak bisa nanya dari device
+  itu, jadi bilang apa adanya, bukan muter).
+- **Foto = `content/shared/waitPhotos.js`**, 5 foto destinasi yang **udah ada di web**
+  (Lempuyang, Ulun Danu, Jatiluwih, Tirta Gangga, Tegenungan). **JANGAN pakai
+  `imageForProgram()`** — dia import seluruh `LISTINGS`, dan modal ini ke-mount di SEMUA
+  halaman (jebakan yang sama kayak `TripBar` + `TOUR_CONTENT`).
+- Yang ke-mount cuma slide sekarang + berikutnya, jadi 5 file gak di-fetch bareng.
+  `prefers-reduced-motion` → fotonya **diem** di yang pertama.
+- **Gak bisa nyampe sini tanpa `?pay=1`** — `PAY_DEFAULT` masih `false`.
+
 ## Pembayaran online (checkout) — Sep 2026
 Tamu sekarang bisa bayar di halaman kita sendiri. Ini bagian yang kalau salah angka
 = duit beneran, jadi aturannya lebih ketat dari bagian lain.

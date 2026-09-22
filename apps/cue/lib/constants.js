@@ -15,6 +15,11 @@ export const KEY = {
   token: 'cue_token',
   referral: 'cue_referral',
   charter: 'cue_charter_v1',
+  // The pick-up / drop-off address the guest last booked with. NOT on the account
+  // (that holds name/email/phone plus the guest-count and area preferences), so it
+  // is remembered on this device, next to the cart and the trip preferences.
+  pickup: 'cue_pickup',
+  dropoff: 'cue_dropoff',
 };
 
 // Saved trips in localStorage hold product NAMES, not ids, so renaming a

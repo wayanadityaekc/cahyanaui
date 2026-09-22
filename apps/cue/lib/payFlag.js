@@ -11,10 +11,17 @@
 // Turn it on for yourself with `?pay=1` and off again with `?pay=0`. The choice
 // is remembered per browser, so it only has to be passed once.
 //
-// Flipping PAY_DEFAULT to true is the single edit that ships payments to
-// everyone. Nothing else needs to change.
+// ON for everyone since 22 Sep 2026, once the chain was proven end to end on a
+// real payment: PayPal captured, the webhook arrived, the amount and currency
+// checked out, the booking went to paid and both emails went out - in the same
+// second, with nobody touching it. Before that it was off precisely because
+// none of that had been proven, and a guest meeting an unproven payment form is
+// a booking lost in silence.
+//
+// Set this back to false to switch checkout off for everyone; `?pay=0` only
+// switches it off for one browser.
 
-export const PAY_DEFAULT = false;
+export const PAY_DEFAULT = true;
 
 const KEY = 'cue_pay_beta';
 

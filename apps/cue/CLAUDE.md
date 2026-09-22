@@ -2310,11 +2310,33 @@ satu layar**, dan di kasus airport isinya 926px di layar 844px (**scroll 285px**
 **STEP 3 ITU UTANG, dan sekarang KEPAKAI** (22 Sep 2026). Checkout dinyalain buat semua
 tamu di hari yang sama (`PAY_DEFAULT = true`), jadi **pilihan bayar sekarang ikut di step 2
 buat SEMUA orang** — dan itu nge-override patokan "nol scroll" yang jadi alasan popup ini
-dipecah. Ke-ukur sesudah merge: step 2 butuh scroll **717px @390 · 954px @320 · 554px @768**
-(booking 1 baris; keranjang 3 baris ~sama). Perilakunya utuh — 101 assertion `verify-flow`
+dipecah. Ke-ukur **sesudah blok bayar dirapiin** (695→492px, lihat bawah): step 2 butuh scroll
+**514px @390 · 710px @320 · 432px @768** (booking 1 baris; keranjang 3 baris ~sama).
+Sebelum dirapiin angkanya 717 / 954 / 554 — jadi merapikan blok itu motong ~200px di
+tiap lebar, dan sisanya cuma bisa diberesin step 3. Perilakunya utuh — 101 assertion `verify-flow`
 lolos, yang merah **cuma** jatah scroll. Jawabannya bukan nambal geometri lagi: **isi → cek →
 bayar**, tiga step. Wayan udah dikasih angkanya; belum dibikin.
 - **Jangan setel ulang jatah scroll harness biar ijo.** Merah-nya itu tanda utang ini masih ada.
+
+**BLOK PILIHAN BAYAR = 492px, dan JANGAN digedein lagi** (22 Sep 2026, Wayan:
+"rapikan blok pilihan bayar"). Dulu **695px @390 / 893px @320** dalam kotak 820px.
+Yang dipotong, semuanya tanpa ngilangin fakta:
+- **Baris opsi referral GAK di-render kalau kodenya belum valid.** Doc ini udah nulis
+  opsi itu "cuma nongol kalau kodenya valid" dan `payOptions` udah nandain
+  `available: !!hasReferral` — komponennya doang yang masih gambar dia abu-abu, makan
+  **114px @390 / 154px @320** buat baris yang gak bisa dipakai tamu. Penjelasan apa itu
+  tetep ada di panel `InfoDot` sebelah judulnya.
+- **Sub baris "Pay in full" dipendekin** (dulu 4 baris @390). Versi panjangnya UDAH
+  ketulis di `PAY_COPY.optionsInfo` di balik ikon info yang sama, jadi barisnya cukup
+  bawa 2 fakta yang nentuin. **Konsekuensi yang disengaja & udah diputusin Wayan
+  ("biarin")**: frasa "no money changer" gak eksplisit lagi di baris itu.
+- **Baris deposit dulu nulis "on the day" DUA KALI** — sub-nya udahan gitu, terus
+  kalimat saldo di belakangnya ngulang.
+- **Opsi yang kepilih tapi udah gak available otomatis balik ke `deposit`.** Celah ini
+  kebuka gara-gara barisnya disembunyiin: `hasReferral` bisa balik `false` pas quote
+  di-refresh tanpa kodenya, jadi `'referral'` nyangkut kepilih tanpa ada apa pun di
+  layar yang nunjukin, dan submit minta diskon yang gak keliatan. Server tetep ngitung
+  sendiri, tapi tamu wajib bisa lihat apa yang dia bayar.
 
 **KERANJANG DIKOSONGIN PAS KARTU KE-CHARGE, bukan pas webhook mendarat.** `onSuccess` (yang
 `save({days:[],...})` di `MyTripsCart`) dipanggil dari `onPaid` punya `PayPalCheckout`.

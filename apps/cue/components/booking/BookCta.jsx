@@ -53,26 +53,26 @@ export default function BookCta({ item, perPerson = false }) {
     return () => clearTimeout(t);
   }, [toast]);
 
-  const commit = (date, mode) => {
-    const days = [...(state.days || []), { items: [item], itemModes: [mode || 'standard'], date, guests: '' }];
-    const next = { ...state, days };
-    save(next);
-    if (mode === 'book') return;
+  // The real category, for the start-time rules (see BookSidebar for why the page
+  // type cannot be used).
+  const categoryOf = (name) => {
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+    return c ? c.category : null;
   };
 
-  const pick = (date) => {
+  const pick = (date, time) => {
     const goto = ask === 'book';
     // Same guard the old cartAddChecked used: two full-day programmes on one date.
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
     if (isFullDay(item) && clashDates(probe, isFullDay).length > 0) {
-      setConfirm({ date, goto });
+      setConfirm({ date, goto, time });
       return;
     }
-    add(date, goto);
+    add(date, goto, time);
   };
 
-  const add = (date, goto) => {
-    save({ ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date, guests: '' }] });
+  const add = (date, goto, time) => {
+    save({ ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], itemTimes: [time || ''], date, guests: '' }] });
     if (goto) window.location.href = '/my-trips.html';
     else setToast('Added to My Trips');
   };
@@ -88,6 +88,9 @@ export default function BookCta({ item, perPerson = false }) {
         title={item}
         onPick={pick}
         onClose={() => setAsk(null)}
+        withTime
+        category={categoryOf(item)}
+        itemName={item}
       />
 
       <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} box={BOX_SM}>
@@ -96,7 +99,7 @@ export default function BookCta({ item, perPerson = false }) {
             <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
             <h3 className={TITLE}>Two full-day tours?</h3>
             <p className={SUB}>You already have a full-day tour on that date. Add another anyway?</p>
-            <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); add(c.date, c.goto); }}>
+            <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); add(c.date, c.goto, c.time); }}>
               Add anyway
             </button>
             <button type="button" className={BTN_GHOST} onClick={() => setConfirm(null)}>Cancel</button>

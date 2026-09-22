@@ -63,6 +63,11 @@ export default function DateField({
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
 
+  // The trigger names both halves of what the panel now holds ("30 Sept 2026 · 8:00 AM").
+  // Both variants go through this - the rich one (booking form) used to print the date
+  // only, so a guest who picked a time in the panel could not see it from the outside.
+  const label12 = (v) => (withTime && time ? `${fmtLabel(v)} · ${fmtTime(time)}` : fmtLabel(v));
+
   const cells = [];
   for (let i = 0; i < lead; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), d));
@@ -129,10 +134,10 @@ export default function DateField({
         {rich ? (
           <span className={CONTROL_STACK}>
             {hint && <span className={CONTROL_HINT}>{hint}</span>}
-            <span className={!value ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>{value ? fmtLabel(value) : placeholder}</span>
+            <span className={!value ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>{value ? label12(value) : placeholder}</span>
           </span>
         ) : (
-          <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>{value ? (withTime && time ? `${fmtLabel(value)} · ${fmtTime(time)}` : fmtLabel(value)) : placeholder}</span>
+          <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>{value ? label12(value) : placeholder}</span>
         )}
         {rich ? (
           <ChevronDown className={CHEV} aria-hidden="true" />

@@ -12,13 +12,15 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useReferral } from '@/state/ReferralProvider';
 import { useBooking } from '@/state/BookingProvider';
 import { quote } from '@/lib/api';
-import { cascadeFrom, clashDates, setItemMode, removeItem, removeDay, suggestState } from '@/lib/cart';
+import { cascadeFrom, clashDates, setItemMode, setItemTime, removeItem, removeDay, suggestState } from '@/lib/cart';
 import { SUGGEST, PKG_AIRPORT, PKG_AIRPORT_PLACE } from '@/content/shared/suggest';
 import AddItemPicker from './AddItemPicker';
 import { usePricing } from '@/state/PricingProvider';
 import { withSymbol } from '@/components/Price';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
+import TimeChoice from '@/components/ui/TimeChoice';
+import { defaultSlot } from '@/content/shared/timeSlots';
 
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -92,7 +94,10 @@ const ITN_FIELD_FULL = `${ITN_FIELD} [grid-column:1/-1]`;
 // 0.55rem 0.65rem/bg). Date input additionally hits .field input[type="date"]
 // (line-height 1.4 + appearance:none) - same padding wins by source order.
 const ITN_FIELD_INPUT = `min-w-0 ${FIELD_INPUT}` + ' font-body text-[length:var(--fs-field)] text-green';
-const ITN_FIELD_DATE = `${ITN_FIELD_INPUT} leading-[1.4] appearance-none`;
+// One start time PER ITEM, not per day: a day can hold two programmes and Wayan's
+// rule is that each gets its own hour. Capped in width so it reads as a small control
+// inside the item row, not as another full-width field.
+const ITN_ITEM_TIME = 'mt-[0.6rem] max-w-[190px]';
 
 function addDays(ds, n) {
   if (!ds) return '';
@@ -132,7 +137,7 @@ export default function ItineraryBuilder() {
     days.forEach((d, i) => {
       (d.items || []).forEach((name, k) => {
         out.push({
-          type: 'tour', service: name, date: d.date || '',
+          type: 'tour', service: name, date: d.date || '', time: (d.itemTimes || [])[k] || '',
           guests: parseInt(d.guests, 10) || displayGuests,
           mode: (d.itemModes && d.itemModes[k]) || 'standard', day_no: i + 1,
         });
@@ -155,6 +160,12 @@ export default function ItineraryBuilder() {
   const symbol = (priced && priced.symbol) || '$';
   const totalText = priced ? symbol + priced.total.display.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US') : '$0';
   const dayCount = days.filter((d) => d.items && d.items.length).length;
+
+  // Real category for the start-time rules (same catalog lookup isFullDay does).
+  const categoryOf = (name) => {
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+    return c ? c.category : null;
+  };
 
   const addDay = () => save({ ...state, days: [...days, { items: [], itemModes: [], date: '' }] });
   const clearAll = () => save({ days: [], transfers: [], charters: [] });
@@ -214,6 +225,7 @@ export default function ItineraryBuilder() {
               type="button"
               onClick={() => {
                 const next = suggestState({
+                  timeFor: (name) => defaultSlot(categoryOf(name), name),
                   nDays: sgDays,
                   guests: sgGuests,
                   suggest: SUGGEST,
@@ -280,12 +292,12 @@ export default function ItineraryBuilder() {
                 <p className={ITN_DAY_TITLE}>Day {i + 1} · {fmtDay(d.date)}</p>
                 <div className={ITN_DAY_FIELDS}>
                   <div className={ITN_FIELD}>
-                    <label className={FIELD_LABEL}>Date</label>
-                    <input
-                      className={ITN_FIELD_DATE}
-                      type="date"
+                    <label className={FIELD_LABEL} htmlFor={`itn-day-${i}`}>Date</label>
+                    <DateField
+                      id={`itn-day-${i}`}
+                      label={`Day ${i + 1} date`}
                       value={d.date || ''}
-                      onChange={(e) => save(cascadeFrom(state, i, e.target.value))}
+                      onChange={(v) => save(cascadeFrom(state, i, v))}
                     />
                   </div>
                 </div>
@@ -319,6 +331,15 @@ export default function ItineraryBuilder() {
                           </span>
                         )}
                         <button type="button" className={ITN_GHOSTBTN} aria-label={`Remove ${it}`} onClick={() => save(removeItem(state, i, k))}>&times;</button>
+                        <div className={ITN_ITEM_TIME}>
+                          <TimeChoice
+                            id={`itn-time-${i}-${k}`}
+                            category={categoryOf(it)}
+                            itemName={it}
+                            value={(d.itemTimes || [])[k] || ''}
+                            onChange={(v) => save(setItemTime(state, i, k, v))}
+                          />
+                        </div>
                       </li>
                     ))}
                   </ul>

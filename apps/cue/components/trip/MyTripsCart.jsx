@@ -16,7 +16,8 @@ import ReviewModal from '@/components/reviews/ReviewModal';
 import AddItemPicker from './AddItemPicker';
 import { BTN } from '@/components/ui/modalClasses';
 import DatePopup from '@/components/booking/DatePopup';
-import { cascadeFrom } from '@/lib/cart';
+import { cascadeFrom, setItemTime } from '@/lib/cart';
+import { usePricing } from '@/state/PricingProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
@@ -90,7 +91,7 @@ const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
 // datebtn: base field look (shared rule) + button specifics + calendar ::before
 // (mask, %20-encoded so it survives as a Tailwind arbitrary value).
 const CAL_MASK = "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='3'%20y='5'%20width='18'%20height='16'%20rx='2'/%3E%3Cpath%20d='M8%203v4M16%203v4M3%2010h18'/%3E%3C/svg%3E\")";
-const MTC_DATEBTN = `inline-flex items-center gap-[0.4rem] mt-[0.35rem] py-[0.3rem] px-[0.6rem] bg-white text-left cursor-pointer border border-line rounded-md font-body text-[length:var(--fs-field)] text-green before:content-[''] before:flex-none before:w-[14px] before:h-[14px] before:bg-current before:opacity-70 before:[-webkit-mask-image:${CAL_MASK}] before:[mask-image:${CAL_MASK}] before:[-webkit-mask-repeat:no-repeat] before:[mask-repeat:no-repeat] before:[-webkit-mask-position:center] before:[mask-position:center] before:[-webkit-mask-size:contain] before:[mask-size:contain]`;
+const MTC_DATEBTN = `inline-flex items-center whitespace-nowrap gap-[0.4rem] mt-[0.35rem] py-[0.3rem] px-[0.6rem] bg-white text-left cursor-pointer border border-line rounded-md font-body text-[length:var(--fs-field)] text-green before:content-[''] before:flex-none before:w-[14px] before:h-[14px] before:bg-current before:opacity-70 before:[-webkit-mask-image:${CAL_MASK}] before:[mask-image:${CAL_MASK}] before:[-webkit-mask-repeat:no-repeat] before:[mask-repeat:no-repeat] before:[-webkit-mask-position:center] before:[mask-position:center] before:[-webkit-mask-size:contain] before:[mask-size:contain]`;
 
 function fmtDay(ds) {
   if (!ds) return 'date TBD';
@@ -122,6 +123,7 @@ export default function MyTripsCart() {
   const { account, trips, reviewableItems } = useAccount();
   const { referral } = useReferral();
   const { openBooking } = useBooking();
+  const pricing = usePricing();
 
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
@@ -154,6 +156,10 @@ export default function MyTripsCart() {
           date: d.date || '',
           guests: parseInt(d.guests, 10) || displayGuests,
           mode: (d.itemModes && d.itemModes[k]) || 'standard',
+          // Start time is per ITEM, not per day - two programmes on one date have two
+          // start times (Wayan). `itemIndex` is what the date editor writes back with.
+          time: (d.itemTimes && d.itemTimes[k]) || '',
+          itemIndex: k,
           day_no: i + 1,
         });
       });
@@ -181,6 +187,15 @@ export default function MyTripsCart() {
     }));
     return out;
   }, [state, displayGuests]);
+
+  // The real category for a row, so the date editor offers the right start times.
+  // A transfer or charter row is free all day, which is what a null/own-kind category
+  // gives - allowedSlots() only restricts the bookable programme categories.
+  const categoryOfRow = (r) => {
+    if (r.kind !== 'day') return r.kind;
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === r.service);
+    return c ? c.category : null;
+  };
 
   const priced = useQuote({
     lines: rows,
@@ -241,7 +256,7 @@ export default function MyTripsCart() {
       pickupOptional: true,
       dropoffRequired: false,
       detailsTitle: 'Trip details',
-      detailLines: rows.map((r) => `${r.day_no ? 'Day ' + r.day_no + ' · ' : ''}${fmtDay(r.date)} · ${r.service}`),
+      detailLines: rows.map((r) => `${r.day_no ? 'Day ' + r.day_no + ' · ' : ''}${fmtDay(r.date)}${r.time ? ' · ' + fmtTime(r.time) : ''} · ${r.service}`),
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
@@ -434,9 +449,8 @@ export default function MyTripsCart() {
                         className={MTC_DATEBTN}
                         onClick={() => setEditDate({ row: r, index: i })}
                       >
-                        {fmtDay(r.date)}
+                        {fmtDay(r.date)}{r.time ? ` · ${fmtTime(r.time)}` : ''}
                       </button>
-                      {r.time ? ` · ${fmtTime(r.time)}` : ''}
                       {r.mode === 'exclusive' ? ' · Exclusive' : ''}
                       {r.return ? ' · return' : ''}
                     </p>
@@ -486,21 +500,28 @@ export default function MyTripsCart() {
         open={!!editDate}
         title={editDate ? editDate.row.service : ''}
         initial={editDate ? editDate.row.date : ''}
-        onPick={(date) => {
+        onPick={(date, time) => {
           if (!editDate) return;
           const r = editDate.row;
           if (r.kind === 'day' && r.day_no) {
-            save(cascadeFrom(state, r.day_no - 1, date));
+            // cascadeFrom only moves dates, so the time is written on top of its
+            // result - one save, or the second would overwrite the first.
+            const moved = cascadeFrom(state, r.day_no - 1, date);
+            save(setItemTime(moved, r.day_no - 1, r.itemIndex || 0, time || ''));
           } else {
             const next = JSON.parse(JSON.stringify(state));
             const list = r.kind === 'transfer' ? next.transfers : next.charters;
             const idx = r.kind === 'transfer'
               ? (state.transfers || []).findIndex((t) => t.route === r.service && t.date === r.date)
               : (state.charters || []).findIndex((c) => c.date === r.date);
-            if (idx >= 0) { list[idx].date = date; save(next); }
+            if (idx >= 0) { list[idx].date = date; list[idx].time = time || ''; save(next); }
           }
         }}
         onClose={() => setEditDate(null)}
+        withTime
+        initialTime={editDate ? editDate.row.time || '' : ''}
+        category={editDate ? categoryOfRow(editDate.row) : null}
+        itemName={editDate ? editDate.row.service : null}
       />
     </div>
   );

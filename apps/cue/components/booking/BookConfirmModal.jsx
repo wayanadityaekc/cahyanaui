@@ -99,11 +99,14 @@ export default function BookConfirmModal() {
     setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
   };
 
-  // Pickup-time field (Sep 2026, #TIME-1): only shown when the booking is a
-  // single line - a multi-day itinerary/cart checkout has one time PER DAY, which
-  // needs its own row-level editor in MyTripsCart/ItineraryBuilder (not built yet,
-  // flagged separately - out of scope here so this popup doesn't show one time
-  // field that would only apply to one of several lines).
+  // Pickup time is now chosen AT THE DATE (Sep 2026, Wayan: "kalo user milih date di
+  // booking form udah langsung milih jam"), so every line arrives carrying its own
+  // `time` and this popup asks for nothing. The field below is the fallback for the
+  // one case that still has no time: a single line whose category is free all day
+  // (transfer / charter), where TimeChoice deliberately starts empty rather than
+  // inventing a pick-up hour. A multi-line checkout is never asked - one field here
+  // could only ever be right for one of its rows; each row has its own editor in
+  // My Trips.
   const catalog = pricing && pricing.catalog;
   const singleLine = view.lines && view.lines.length === 1 ? view.lines[0] : null;
   const catalogItem = catalog && singleLine ? catalog.items.find((i) => i.name === singleLine.service) : null;
@@ -114,8 +117,11 @@ export default function BookConfirmModal() {
   const isAirportRoute = !!singleLine && singleLine.service === AIRPORT_ROUTE;
   const hasFlightAlready = !!(singleLine && singleLine.flight_number); // pre-filled via AirportTransferForm
   const needsFlight = isAirportRoute && !hasFlightAlready;
-  const needsTime = !!singleLine && !isAirportRoute; // airport's flight date&time already IS the pickup time
-  const timeOpts = needsTime ? timeOptions(category, singleLine && singleLine.service) : [];
+  const lineTime = (singleLine && singleLine.time) || '';
+  const needsTime = !!singleLine && !isAirportRoute && !lineTime; // airport's flight date&time already IS the pickup time
+  // What the summary shows: what the guest picked here, or what the line already had.
+  const timeShown = needsTime ? f.time : lineTime;
+  const timeOpts = singleLine && !isAirportRoute ? timeOptions(category, singleLine.service) : [];
   // Flight number shown in the summary whenever there IS one to show - collected
   // in this popup (needsFlight) OR already pre-filled upstream by AirportTransferForm
   // (hasFlightAlready). Without the `hasFlightAlready` branch the guest had no way
@@ -170,7 +176,7 @@ export default function BookConfirmModal() {
         type: l.type,
         service: l.service,
         date: l.date || '',
-        time: (isTarget && needsTime ? f.time : l.time) || '',
+        time: l.time || (isTarget && needsTime ? f.time : '') || '',
         guests: String(l.guests || displayGuests),
         pickup: l.pickup || f.pickup,
         dropoff: l.dropoff || f.dropoff,
@@ -216,7 +222,7 @@ export default function BookConfirmModal() {
     const lines = ctx.lines
       .map((l) => `- ${l.day_no ? 'Day ' + l.day_no + ' · ' : ''}${l.date || 'TBD'} · ${l.service} · ${l.guests || displayGuests} pax`)
       .join('\n');
-    const timeLine = needsTime && f.time ? `\nPickup time: ${timeLabel(f.time)}` : '';
+    const timeLine = timeShown ? `\nPickup time: ${timeLabel(timeShown)}` : '';
     const flightLine = flightNumberDisplay ? `\nFlight: ${flightNumberDisplay} (${(needsFlight ? f.flightDatetime : singleLine.flight_datetime) || 'TBD'})` : '';
     return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${lines}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}${timeLine}${flightLine}\nPrice: ${priceText()}`;
   };
@@ -313,8 +319,8 @@ export default function BookConfirmModal() {
               <div className={ROW}><span>Guests</span><span>{view.guests || displayGuests}</span></div>
               <div className={ROW}><span>Service</span><span>{view.service}</span></div>
               <div className={ROW}><span>Date</span><span>{view.date || '-'}</span></div>
-              {needsTime && (
-                <div className={ROW}><span>Time</span><span>{f.time ? timeLabel(f.time) : '-'}</span></div>
+              {(needsTime || timeShown) && (
+                <div className={ROW}><span>Time</span><span>{timeShown ? timeLabel(timeShown) : '-'}</span></div>
               )}
               {isAirportRoute && (
                 <div className={ROW}><span>Flight</span><span>{flightNumberDisplay || '-'}</span></div>

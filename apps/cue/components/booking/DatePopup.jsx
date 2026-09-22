@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { overlay, panelDateSheet, PANEL_HEAD_SHEET, PANEL_HEAD_H3, PANEL_CLOSE_SHEET, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CAL_FOOT, CAL_HINT, CAL_APPLY } from '@/components/ui/hsClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
+import TimeChoice from '@/components/ui/TimeChoice';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -13,9 +14,26 @@ function iso(d) {
 }
 
 // Centred calendar popup, same shell as the original bookDatePopup.
-export default function DatePopup({ open, title = 'Select date', initial = '', onPick, onClose }) {
+//
+// withTime asks for the start time in the SAME panel (Sep 2026, Wayan: "ini pake di
+// tiap date, kalo user milih date di booking form udah langsung milih jam"), the same
+// prop DateField takes and the same TimeChoice control - the Apply row it sits next to
+// was already here. onPick then hands back (date, time); callers that ignore the second
+// argument keep working.
+export default function DatePopup({
+  open,
+  title = 'Select date',
+  initial = '',
+  onPick,
+  onClose,
+  withTime = false,
+  initialTime = '',
+  category = null,
+  itemName = null,
+}) {
   const [mounted, setMounted] = useState(false);
   const [sel, setSel] = useState(initial || '');
+  const [time, setTime] = useState(initialTime || '');
   const [cursor, setCursor] = useState(() => {
     const base = initial ? new Date(initial) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
@@ -25,6 +43,9 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
   useEffect(() => {
     if (open) setSel(initial || '');
   }, [open, initial]);
+  useEffect(() => {
+    if (open) setTime(initialTime || '');
+  }, [open, initialTime]);
   useBodyLock(open);
   useEffect(() => {
     if (!open) return;
@@ -80,9 +101,15 @@ export default function DatePopup({ open, title = 'Select date', initial = '', o
             })}
           </div>
         </div>
-        <div className={CAL_FOOT}>
-          <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
-          <button type="button" className={CAL_APPLY} disabled={!sel} onClick={() => { onPick(sel); onClose(); }}>
+        <div className={CAL_FOOT} data-cal-foot>
+          {withTime ? (
+            <div className="flex-1 min-w-0">
+              <TimeChoice category={category} itemName={itemName} value={time} onChange={setTime} id="datepopup-time" />
+            </div>
+          ) : (
+            <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
+          )}
+          <button type="button" className={CAL_APPLY} disabled={!sel} onClick={() => { onPick(sel, time); onClose(); }}>
             Apply
           </button>
         </div>

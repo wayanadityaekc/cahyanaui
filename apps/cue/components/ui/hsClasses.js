@@ -117,7 +117,7 @@ export const PANEL_HEAD_BOOKDATE =
   'sticky top-0 bg-white min-[769px]:z-[1]';
 
 // Kalender (.hs-cal*). HP: cal max-h none + overflow visible (panel body yg scroll).
-export const HS_CAL = 'pt-4 px-4 pb-[6px] max-h-[340px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [overscroll-behavior:contain] [@media(max-width:768px)]:max-h-none [@media(max-width:768px)]:overflow-visible';
+export const HS_CAL = 'pt-4 px-4 pb-[6px] max-h-[420px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [overscroll-behavior:contain] [@media(max-width:768px)]:max-h-none [@media(max-width:768px)]:overflow-visible';
 export const CAL_CAP = 'flex items-center justify-between gap-[0.5rem] font-body font-semibold text-[1rem] text-green mb-3';
 export const CAL_CAP_SPAN = 'flex-[1_1_auto] text-center';
 export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-white text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';

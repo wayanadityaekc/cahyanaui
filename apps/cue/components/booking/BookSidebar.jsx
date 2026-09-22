@@ -24,8 +24,15 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
     return !!c && (c.category === 'tour' || c.category === 'combo');
   };
 
-  const addRow = (name, date, mode, goto) => {
-    save({ ...state, days: [...(state.days || []), { items: [name], itemModes: [mode || 'standard'], date, guests: '' }] });
+  // The real category, for the start-time rules. `presetType` is 'tour' on every
+  // detail page (experiences and performances included), so it cannot be used here.
+  const categoryOf = (name) => {
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
+    return c ? c.category : null;
+  };
+
+  const addRow = (name, date, mode, goto, time) => {
+    save({ ...state, days: [...(state.days || []), { items: [name], itemModes: [mode || 'standard'], itemTimes: [time || ''], date, guests: '' }] });
     if (goto) window.location.href = '/my-trips.html';
     else {
       setToast('Added to My Trips');
@@ -33,18 +40,18 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
     }
   };
 
-  const commit = (name, date, mode, goto) => {
+  const commit = (name, date, mode, goto, time) => {
     const probe = { ...state, days: [...(state.days || []), { items: [name], itemModes: [mode], date }] };
     if (isFullDay(name) && clashDates(probe, isFullDay).length > 0) {
-      setConfirm({ name, date, mode, goto });
+      setConfirm({ name, date, mode, goto, time });
       return;
     }
-    addRow(name, date, mode, goto);
+    addRow(name, date, mode, goto, time);
   };
 
-  const start = (goto) => (name, date, mode) => {
+  const start = (goto) => (name, date, mode, time) => {
     if (!name) return;
-    if (date) return commit(name, date, mode, goto);
+    if (date) return commit(name, date, mode, goto, time);
     setPending({ name, mode, goto });
     setAsk(true);
   };
@@ -58,8 +65,11 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
       <DatePopup
         open={!!ask}
         title={pending ? pending.name : ''}
-        onPick={(date) => pending && commit(pending.name, date, pending.mode, pending.goto)}
+        onPick={(date, time) => pending && commit(pending.name, date, pending.mode, pending.goto, time)}
         onClose={() => { setAsk(null); setPending(null); }}
+        withTime
+        category={pending ? categoryOf(pending.name) : null}
+        itemName={pending ? pending.name : null}
       />
 
       <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} box={BOX_SM}>
@@ -68,7 +78,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
             <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
             <h3 className={TITLE}>Two full-day tours?</h3>
             <p className={SUB}>You already have a full-day tour on that date. Add another anyway?</p>
-            <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); addRow(c.name, c.date, c.mode, c.goto); }}>Add anyway</button>
+            <button type="button" className={BTN} onClick={() => { const c = confirm; setConfirm(null); addRow(c.name, c.date, c.mode, c.goto, c.time); }}>Add anyway</button>
             <button type="button" className={BTN_GHOST} onClick={() => setConfirm(null)}>Cancel</button>
           </>
         )}

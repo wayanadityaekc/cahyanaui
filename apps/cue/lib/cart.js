@@ -52,14 +52,30 @@ export function setItemMode(state, dayIndex, itemIndex, mode) {
   return { ...state, days };
 }
 
+// Start time is stored PER ITEM, parallel to itemModes - not per day (Sep 2026,
+// Wayan: "item yang berisikan 2 tour dalam sehari ... jadi bakalan ada 2 jam soalnya
+// beda program"). A day holds items[], so one time on the day row could only ever be
+// right for the first of them.
+export function setItemTime(state, dayIndex, itemIndex, time) {
+  const days = (state.days || []).map((d, i) => {
+    if (i !== dayIndex) return d;
+    const times = [...(d.itemTimes || [])];
+    times[itemIndex] = time;
+    return { ...d, itemTimes: times };
+  });
+  return { ...state, days };
+}
+
 export function removeItem(state, dayIndex, itemIndex) {
   const days = (state.days || []).map((d, i) => {
     if (i !== dayIndex) return d;
     const items = [...(d.items || [])];
     const modes = [...(d.itemModes || [])];
+    const times = [...(d.itemTimes || [])];
     items.splice(itemIndex, 1);
     modes.splice(itemIndex, 1);
-    return { ...d, items, itemModes: modes };
+    times.splice(itemIndex, 1);
+    return { ...d, items, itemModes: modes, itemTimes: times };
   });
   return { ...state, days };
 }
@@ -71,12 +87,15 @@ export function removeDay(state, dayIndex) {
 // Suggested plan: tour i on day i, plus an airport pickup and drop-off.
 // Ported from suggestState() - inactive programmes are skipped, exactly as
 // isProgramActive did.
-export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive }) {
+// timeFor(name) = the default start time for that programme (defaultSlot via the
+// pricing catalog, supplied by the caller so this file stays free of catalog logic).
+// Without it the suggested days land in the cart with no time at all.
+export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive, timeFor }) {
   const g = guests ? String(guests) : '';
   const days = suggest
     .filter((name) => (isActive ? isActive(name) : true))
     .slice(0, nDays)
-    .map((name) => ({ items: [name], itemModes: ['standard'], date: '', guests: g }));
+    .map((name) => ({ items: [name], itemModes: ['standard'], itemTimes: [(timeFor && timeFor(name)) || ''], date: '', guests: g }));
   const transfers = [
     { route: airportRoute, direction: 'to', pickup: airportPlace, dropoff: '', date: '', guests: g },
     { route: airportRoute, direction: 'from', pickup: '', dropoff: airportPlace, date: '', guests: g },

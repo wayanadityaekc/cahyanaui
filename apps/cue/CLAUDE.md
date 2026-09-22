@@ -150,10 +150,67 @@ Jadi file ini berhenti jadi "picker jam di popup konfirmasi" dan jadi **jadwal s
 - **Server GAK perlu diubah**: kolom `pickup_time TEXT` di `inquiries` udah ada, ke-insert
   dari `l.time`, dan ke-print di 3 tempat (baris dashboard, email internal, detail email
   tamu) lewat `fmtTime12`.
-- **BELUM: jamnya masih cuma ditanya buat booking SATU BARIS.** `needsTime = !!singleLine`
-  di `BookConfirmModal` (`singleLine = lines.length === 1 ? ... : null`), jadi itinerary
-  3 tour = **NOL** field jam. Row `days[]` juga belum punya slot `time`. Itu langkah
-  berikutnya, belum dikerjain.
+- **JAMNYA DITANYA DI TANGGAL, DI SEMUA DATE PICKER** (Sep 2026, Wayan: *"ini pake di
+  tiap date, kalo user milih date di booking form udah langsung milih jam, dan di my trip
+  udah tersimpan dengan jamnya juga"*). Jadi alurnya sekarang: pilih tanggal = pilih jam,
+  satu panel, terus jamnya ikut ke row keranjang sampai ke server.
+  - **JAM = PER ITEM, BUKAN PER HARI** — row `days[]` dapet **`itemTimes[]`**, array
+    paralel sama `itemModes[]`. Alesannya aturan Wayan sendiri: *"item yang berisikan
+    2 tour dalam sehari ... jadi bakalan ada 2 jam soalnya beda program"*. Satu hari itu
+    `items[]`, jadi satu `time` di row cuma bisa bener buat item pertama.
+    **`removeItem` nge-splice `itemTimes` juga** — kalau nggak, hapus item pertama
+    bikin jam item kedua nyangkut di item yang salah.
+  - **`DatePopup` dapet `withTime` yang SAMA kayak `DateField`** (+ `initialTime`/
+    `category`/`itemName`), dan `onPick` sekarang ngasih **`(date, time)`**. Dia yang
+    kepakai 3 tempat: `BookSidebar` (Book Now tanpa tanggal), `BookCta`, dan editor
+    tanggal di **My Trips**. Satu kontrol jam buat seluruh web, bukan 3 salinan.
+  - **Kategori buat aturan jam WAJIB dari katalog, jangan dari `type`/`presetType`.**
+    `BookSidebar`/`BookCta`/`BookingForm`/`MyTripsCart`/`ItineraryBuilder` semuanya
+    punya `categoryOf(name)` yang nanya `pricing.catalog` — halaman detail nge-preset
+    `type:'tour'` buat experience & performance juga, jadi baca `type` bakal ngasih
+    Kecak Dance jendela pagi punya tour.
+  - **`BookConfirmModal` BERHENTI NANYA kalau barisnya udah bawa jam.**
+    `needsTime = !!singleLine && !isAirportRoute && !lineTime`, dan `payload()` nulis
+    `l.time || (isTarget && needsTime ? f.time : '')` — jadi tiap baris nerusin jamnya
+    SENDIRI. Itinerary 3 tour = 3 jam beda ke server, nol field ditanya. Yang **masih**
+    ditanya cuma satu kasus: satu baris yang kategorinya bebas 24 jam
+    (transfer/charter), karena `TimeChoice` sengaja mulai kosong di situ.
+  - **Tombol pemicu `DateField` nyebut dua-duanya di DUA varian.** Varian `rich`
+    (yang dipakai booking form) dulu cuma nyetak tanggal, jadi tamu yang milih jam di
+    panel gak bisa lihat dari luar. Sekarang satu `label12()` buat dua-duanya.
+  - **Baris My Trips: tanggal + jam jadi SATU tombol** ("12 Oct · 8:30 AM"), jadi
+    nge-tap benerin dua-duanya. Tombolnya **`whitespace-nowrap`** — tanpa itu di 390px
+    labelnya pecah dan "AM" nyangkut sendiri di baris kedua (ke-ukur).
+  - **`ItineraryBuilder`**: input `<input type="date">` mentah-nya diganti `DateField`
+    (satu kontrol tanggal se-web), dan tiap item di list dapet `TimeChoice` sendiri.
+    `suggestState()` nerima `timeFor(name)` biar rencana yang di-generate gak mendarat
+    tanpa jam.
+  - **`cascadeFrom` cuma mindahin TANGGAL**, jadi di My Trips jam-nya ditulis di atas
+    hasilnya (`setItemTime(moved, ...)`) dalam **satu** `save` — dua save bikin yang
+    kedua nimpa yang pertama.
+  - **Row lama di localStorage tamu gak punya `itemTimes`** dan itu gak error: barisnya
+    jalan tanpa jam (persis kayak sebelum fitur ini) dan tamu bisa nambahin lewat editor
+    tanggal. **Gak gua isi otomatis** — nulis jam ke booking orang tanpa dia milih itu
+    ngarang.
+  - Verifikasi: **`verify-datetime.mjs`** di scratchpad (**83/83**) — alur penuh di
+    halaman hasil build: hint kontrol nyebut jam, panel kebuka bawa footer jam, jumlah
+    opsi persis per item (Ubud Tour 3 · Kecak 1 · Lempuyang 13 · Batur 02/03), nol opsi
+    mati, label 12 jam tapi `value` 24 jam, **pilih tanggal gak nutup panel**, tombol
+    pemicu nyebut tanggal + jam, Book Now nyimpen `itemTimes` yang bener, baris My Trips
+    nyetak 12 jam & jadi satu tombol, ganti jam ke-simpen & tanggal gak kegeser, checkout
+    2 baris nyebut 2 jam beda & NOL field jam, transfer TETEP ditanya, dan 4 halaman ×
+    3 lebar gak melar.
+    - **Dites pakai 3 bug aslinya** (`itemTimes` gak ditulis · tombol pemicu balik cuma
+      tanggal · jam ditaro di luar tombol My Trips), satu-satu, ketiga-tiganya nyala.
+    - **Gotcha harness (2, dua-duanya mahal)**: (1) **tiap panel tanggal ke-mount
+      SELAMANYA** (biar ada frame "ketutup" buat transisi) dan yang ketutup itu
+      di-translate/fade, **bukan `display:none`** — jadi `:visible` punya Playwright
+      cocok ke **3 panel** di halaman detail dan "yang terakhir di DOM" itu panel yang
+      SALAH. Harness-nya nandain panel yang beneran kebuka (opacity/visibility/
+      pointer-events + on-screen) terus locate lewat itu. (2) **`selectOption()` GAK
+      BISA dipakai di web ini** — tiap `<select>` itu `.bk-native` yang kesembunyi dan
+      listbox custom yang nyetir; baca `.value` & daftar `<option>` boleh, **ngubah**
+      wajib lewat kontrol yang tamu tap.
 - **Picker-nya = `components/ui/TimeChoice.jsx`, SATU BENTUK buat semua** (Wayan:
   *"konsisten aja, buat semya dengan style yang sama seperti contoh east bali tour, tapi
   pilihanya yang di batasi"*): dropdown `Select` yang sama kayak kontrol lain, isinya
@@ -279,19 +336,18 @@ Wayan: *"benerin zoom tapi jangan gedein font bisa?"*
   dibenerin** — dia justru mastiin zoom-nya kejadian. Jangan "dibenerin" dengan naikin font
   di situ: itu ngubah tampilan semua form.
 
-**BUG LAMA YANG KETEMU PAS NGERJAIN INI (udah live, GAK gua benerin):**
-- **Baris terakhir kalender kepotong 24px di desktop.** `HS_CAL` punya
-  `max-h-[340px] overflow-y-auto` di atas 768px, dan bulan yang jatuh 6 baris (mis.
-  September 2026) gak muat. Yang bikin parah: `scrollHeight - clientHeight` = **0**,
-  jadi tamu **gak bisa scroll** buat nyampe baris itu — dia cuma kepotong.
-  Di 390px aman (muat, sisa 6px).
-- **Ini BUKAN akibat footer jam yang baru.** Ke-buktiin: panel tanggal **biasa** di
-  `/charter.html` (tanpa `withTime`, gak disentuh) kepotong **24px yang sama persis**.
-  Gua sempat salah diagnosa & mecah `CAL_FOOT` jadi dua buat "benerin" ini — **udah
-  dibalikin**, karena gak ngefek apa-apa dan alasannya salah.
-- Kenapa gak gua benerin sekalian: itu nyentuh **semua** date picker di web (termasuk
-  jalur booking), dan ini bukan yang Wayan minta. Perlu keputusan dia dulu — naikin
-  `max-h`, atau biarin panelnya tumbuh.
+**BARIS TERAKHIR KALENDER KEPOTONG — UDAH DIBENERIN (Sep 2026, Wayan: "naikin max-h nya juga")**
+- `HS_CAL` dulu `max-h-[340px] overflow-y-auto` di atas 768px, dan bulan yang jatuh
+  6 baris (mis. September 2026) gak muat. Yang bikin parah: `scrollHeight - clientHeight`
+  = **0**, jadi tamu **gak bisa scroll** buat nyampe baris itu — dia cuma kepotong 24px.
+  Sekarang **`max-h-[420px]`**: bulan 6 baris jadi 370px, sisa 6px lega. Di 390px dari
+  dulu aman.
+- **Itu BUKAN akibat footer jam.** Ke-buktiin sebelum dibenerin: panel tanggal **biasa**
+  di `/charter.html` (tanpa `withTime`) kepotong **24px yang sama persis**. Gua sempat
+  salah diagnosa & mecah `CAL_FOOT` jadi dua buat "benerin" — udah dibalikin, alesannya
+  salah.
+- Kalau nanti isi footer panel nambah lagi, **ukur ulang**: patokannya baris terakhir
+  kalender kebaca utuh di 390 DAN 1280 (bulan 6 baris).
 
 **BELUM DIPUTUSIN (ketemu pas ngerjain ini, gua GAK sentuh):**
 - Border `#d8d2c4` masih ada di **1 tombol** (`ITN_GHOSTBTN`). Itu tombol, bukan field, dan

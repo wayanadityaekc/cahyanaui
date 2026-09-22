@@ -52,6 +52,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const [type, setType] = useState(presetType || '');
   const [item, setItem] = useState(presetItem || '');
   const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [mode, setMode] = useState('standard');
 
   const catalog = pricing && pricing.catalog;
@@ -94,6 +95,12 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
 
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
+  // Which start times this item may use. The REAL category comes from the catalog
+  // entry, never from `type` - the Tour Program picker holds tour, combo AND place,
+  // and a detail page presets `type:'tour'` for experiences and performances too,
+  // so reading `type` would hand Kecak Dance a tour's morning window.
+  const timeCategory = entry ? entry.category : type === 'transfer' ? 'transfer' : null;
+
   const unit = perPerson ? 'per person' : 'per car';
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
 
@@ -101,6 +108,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     type: type === 'transfer' ? 'transfer' : type || 'tour',
     service: item,
     date,
+    time,
     guests: displayGuests,
     mode: showToggle ? effectiveMode : 'standard',
     return: false,
@@ -113,6 +121,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
       service: item,
       guests: String(displayGuests),
       date,
+      time,
       pickupOptional: false,
       dropoffRequired: type === 'transfer',
       lines: [line()],
@@ -187,7 +196,19 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         )}
 
         <div className="grid gap-[0.6rem] mb-[1.1rem]">
-          <DateField label="Date" hint="Date" icon={CAL_ICON} value={date} onChange={setDate} placeholder="Select date" />
+          <DateField
+            label="Date and start time"
+            hint="Date & time"
+            icon={CAL_ICON}
+            value={date}
+            onChange={setDate}
+            placeholder="Select date"
+            withTime
+            time={time}
+            onTimeChange={setTime}
+            category={timeCategory}
+            itemName={item}
+          />
           <Select
             label="Guests"
             hint="Guests"
@@ -201,7 +222,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
         <button
           className={`bookcard__cta flex flex-none w-full max-w-none ${BTN_SM} border-none border-cta font-body no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d`}
           id="book-now"
-          onClick={() => (onBook ? onBook(item, date, showToggle ? effectiveMode : 'standard') : book())}
+          onClick={() => (onBook ? onBook(item, date, showToggle ? effectiveMode : 'standard', time) : book())}
           disabled={!item}
         >
           Book Now

@@ -2327,6 +2327,60 @@ date dan time yang kita buat tadi, kalo user udah pilih berarti auto fill dan bi
 - `payload()` nulis `date: dateOf(l,i)`, `time: timeOf(l,i)` — tiap baris nerusin punyanya
   sendiri. Daftar field yang kekirim **gak berubah** (17 key, dijaga harness).
 
+**GEOMETRI KOTAKNYA = `SHELL_WIDE` + `BOX_WIDE`, bukan `SHELL`/`BOX`.** Gutter **12px**
+(dulu 24) dan padding **20px** (dulu 32) — itu separuh "A" yang Wayan pilih, dan sempat
+KETINGGALAN: layout-nya kepasang, geometrinya nggak, jadi prediksi mock "sisa 41px" gak pernah
+kejadian (keranjang 3 baris scroll **106px @390 / 200px @320**). Sesudah 12/20: **19px / 98px**.
+Di-scope ke popup ini, BUKAN ke `SHELL`/`BOX` — dua itu dipakai bareng modal review/auth/
+konfirmasi dan belum pernah diukur di geometri yang lebih rapat. `ModalPresence` sekarang
+nerima `shellClass`.
+- **`max-h` = `calc(100dvh-24px)`, JANGAN `95vh`.** `95vh` itu 802px dari layar 844px padahal
+  shell cuma butuh gutter 12px-nya — **42px nganggur buat nahan 18px**. Cara nemunya: scroll-nya
+  **18px yang SAMA di 390 dan 768**; angka identik di dua lebar itu nandain plafon, bukan teks
+  yang wrap. `dvh` bukan `vh` (chrome browser HP gerak).
+- **Sisa yang JUJUR, gak bisa diberesin geometri**: di **320px** tujuh logo pembayaran turun
+  jadi 2 baris = **+38px**, dan itu seluruh sisa overflow-nya. Ngecilin/ngurangin logo di
+  step 2 belum ditanyain ke Wayan.
+
+**Verifikasi: `verify-flow.mjs` di scratchpad (108/108)** — kelima kasus lewat **My Trips**,
+keranjangnya di-seed ke localStorage: bentuk step 1 + autofill per kasus, nomor & jam
+penerbangan ke-autofill, judul, Edit details paling bawah & beneran balik ke step 1 tanpa
+ngilangin isian, transfer tanpa jam **DITAHAN** di step 1 + dikasih alasan, jam baris ke-2
+diganti **gak nggeser** baris ke-1, 3 baris kekirim dengan 3 jam sendiri + daftar field utuh
+(17 key), layar tunggu ke-lock (nol tombol tutup, Escape gak nutup) & beneran nanya server &
+resolve ke confirmed, dan mismatch **gak pernah** ngaku confirmed.
+- Jatah scroll di-assert **per lebar**, bukan ambang yang diturunin biar ijo: booking 1 baris
+  **0px @390/768**, ≤45px @320 (logo pembayaran wrap); keranjang 3 baris ≤25px @390/768,
+  ≤110px @320.
+- **JEBAKAN HARNESS (4, semuanya mahal, semuanya ketangkep gara-gara harness-nya salah duluan):**
+  1. **Stub katalog salah bentuk** — item itu `{standard:{display}}`, bukan `{price:{display}}`.
+     `Price.jsx` throw pas hydration → **seluruh tree React ilang** → semua selector nol, dan
+     harness-nya **nyalahin aplikasi**. Sekarang `page.on('pageerror')` bikin run MERAH.
+  2. **Nama item ngarang** — `'Batur Sunrise Trekking'` gak ada di katalog (aslinya
+     **`'Mount Batur Trekking'`**), dan nama yang gak cocok **diem-diem** jatuh ke jendela
+     siang. Persis bahaya yang ditulis di section jadwal jam.
+  3. **Alurnya salah dari awal** — harness pertama nge-klik Book di halaman detail dan nungguin
+     modal yang gak pernah muncul: `BookSidebar` ngoper `onBook`, jadi tombol itu **nyimpen ke
+     keranjang + pindah ke /my-trips**. `openBooking({type:'tour'})` di `BookingForm` **cuma
+     kepakai di `/ui-kit`** — nol pemakai di alur tamu.
+  4. **Selector tanggal ngarang** — tombol hari itu `button[aria-pressed]` (gak ada
+     `data-day`), dan tanggal lampau `disabled`, jadi fallback `.nth(12)` nge-klik tombol mati.
+- **Dites pakai bug aslinya**: `payload()` dibalikin ngirim `l.time` (jam yang dibawa baris,
+  bukan yang tamu set) → assertion "tiap baris bawa jamnya sendiri" nyala.
+
+**TEMUAN ALUR (2 bug asli, ketemu pas NGE-JALANIN alurnya, bukan pas baca diff):**
+1. **Jam baris TRANSFER ilang di keranjang** (bug LAMA). Editor tanggal My Trips nyimpen
+   `transfers[i].time` dengan bener, tapi yang mbangun baris keranjang cuma baca balik jam
+   **charter** — transfer kelewat. Rantainya: kartu gak nyetak jamnya · buka lagi editornya
+   kosong · **checkout ngirim jam kosong buat tiap transfer**. Ke-sembunyi selama ini karena
+   popup lama cuma nanya jam kalau barisnya TUNGGAL; keranjang isi banyak gak pernah ditanya.
+   Validasi per-baris yang baru yang bikin dia nongol. Perbaikannya 1 baris di `MyTripsCart`.
+2. **Keranjang dikosongin SEBELUM dibayar.** `onSuccess` (yang `save({days:[],...})`) jalan
+   begitu booking ke-simpen — dan dengan pembayaran nyala, booking ke-simpen **`pending`**
+   sebelum kartu disentuh. Jadi tamu yang nutup layar bayar **kehilangan seluruh trip-nya** dan
+   nyisa booking pending yang gak pernah dibayar. Sekarang dia nunggu duitnya cair
+   (`onConfirmed` di `PayWaiting`). Dengan pembayaran MATI perilakunya **byte-identik**.
+
 ## LAYAR TUNGGU SESUDAH BAYAR — `PayWaiting.jsx` (Sep 2026, Wayan)
 Wayan: *"setelah user bayar, selagi menunggu email masuk dan backend nerima notif dari
 webhook, lock layar dan kasi loading dan tulisan sambil menunggu, tapi background nya itu

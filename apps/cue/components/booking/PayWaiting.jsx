@@ -34,19 +34,13 @@ const POLL_MS = 4000;
 // screen that never resolves is worse than one that hands back control.
 const GIVE_UP_MS = 120000;
 
-export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
+export default function PayWaiting({ bookingRef, onClose }) {
   const [phase, setPhase] = useState('waiting'); // waiting | paid | mismatch | slow | blind
   const [idx, setIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timer = useRef(null);
 
   useEffect(() => setMounted(true), []);
-  // Told once, when the money has actually cleared: the caller uses it to empty
-  // the cart, which must not happen for a booking that was never paid for.
-  const told = useRef(false);
-  useEffect(() => {
-    if (phase === 'paid' && !told.current) { told.current = true; if (onConfirmed) onConfirmed(); }
-  }, [phase, onConfirmed]);
   useBodyLock(true);
 
   // --- background slideshow -------------------------------------------------
@@ -130,7 +124,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
       title: 'Payment sent',
       lines: [
         'Your card went through and your booking is saved.',
-        'We cannot check the confirmation from this device, but your email is on its way once the payment clears.',
+        'Your confirmation email is on its way as soon as the payment clears.',
       ],
     },
   }[phase];

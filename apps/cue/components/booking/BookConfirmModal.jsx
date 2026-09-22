@@ -252,8 +252,9 @@ export default function BookConfirmModal() {
         writeLocal(KEY.token, d.token);
         if (d.account) setAccount(d.account);
       }
-      // Only when nothing is being collected online - otherwise it waits for
-      // the webhook (see onConfirmed on PayWaiting below).
+      // Only when nothing is being collected online. When it is, the cart is
+      // cleared the moment the card is charged (see onPaid below) - not here,
+      // where the booking is still pending and the guest may never pay.
       if (!payOn && typeof ctx.onSuccess === 'function') ctx.onSuccess();
       // The booking is saved as 'pending'. It is NOT confirmed yet - that only
       // happens when PayPal's webhook says the money cleared - so the modal moves
@@ -518,7 +519,6 @@ export default function BookConfirmModal() {
               <PayWaiting
                 bookingRef={bookingRef}
                 onClose={closeBooking}
-                onConfirmed={() => { if (view.onSuccess) view.onSuccess(); }}
               />
             ) : (
               <>
@@ -533,7 +533,14 @@ export default function BookConfirmModal() {
                     option={payOption}
                     copy={PAY_COPY}
                     currency={currency}
-                    onPaid={() => setPaid(true)}
+                    onPaid={() => {
+                      setPaid(true);
+                      // Charged, so the trip is booked and paid for: clear the
+                      // cart here. Not on the webhook - if we cannot reach the
+                      // status route the webhook phase never arrives and a guest
+                      // who paid could pay again.
+                      if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
+                    }}
                   />
                 ) : (
                   <p className="text-small text-err">We could not read your booking reference. Please contact us.</p>

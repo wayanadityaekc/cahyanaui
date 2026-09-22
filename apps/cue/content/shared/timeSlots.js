@@ -84,11 +84,20 @@ export const RESTRICTED_SLOTS = {
 // so all 34 destinations offered every slot, Lempuyang included.
 const RESTRICTABLE = new Set(['tour', 'experience', 'performance', 'combo', 'place']);
 
-function fmtLabel(t) {
+// The ONE time formatter (Sep 2026, Wayan: "jadiin 12 jam semua bro"). Every time a
+// guest reads on this site goes through here: the start-time pickers, the charter
+// picker, the cart rows, the booking summary. The stored VALUE stays 24-hour
+// ("14:30") - that is what the server writes to pickup_time and what sorts right.
+export function fmtTime(t) {
+  if (!t) return '';
   const [h, m] = t.split(':').map(Number);
-  const period = h < 12 ? 'AM' : 'PM';
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}:${String(m).padStart(2, '0')} ${period}`;
+  return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+}
+
+// Just the hour, for a picker that keeps hours and minutes apart (flight time).
+export function fmtHour(h) {
+  const n = Number(h);
+  return `${n % 12 === 0 ? 12 : n % 12} ${n < 12 ? 'AM' : 'PM'}`;
 }
 
 // The times an item may start. Item override first, then its category, then the full
@@ -104,7 +113,7 @@ export function timeOptions(category, itemName) {
   const allowed = allowedSlots(category, itemName);
   return TIME_SLOTS.map((t) => ({
     value: t,
-    label: fmtLabel(t),
+    label: fmtTime(t),
     disabled: !!allowed && !allowed.includes(t),
   }));
 }

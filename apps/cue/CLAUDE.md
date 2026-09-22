@@ -175,6 +175,20 @@ Jadi file ini berhenti jadi "picker jam di popup konfirmasi" dan jadi **jadwal s
     belum diputusin.
   - `components/ui/TimeChoiceKit.jsx` + section di `/ui-kit` cuma buat ngeliat/nge-foto
     bentuknya lawan item katalog asli. `/ui-kit` noindex, nol pemakai di alur live.
+  - **JAM & TANGGAL JADI SATU PANEL** (Wayan: *"satuin dengan datenya"*): `DateField`
+    dapet prop **`withTime`** (+ `time`/`onTimeChange`/`category`/`itemName`).
+    Nyala = `TimeChoice` nongol di **footer panel** yang udah ada (slot-nya emang udah
+    ada dari dulu — `DatePopup` pakai itu buat baris Apply), pilih tanggal **gak nutup
+    panel** lagi (kalau nutup, kontrol jamnya kabur sebelum kepake), dan ada tombol
+    **Done**. Tombol pemicunya nyebut dua-duanya: "30 Sept 2026 · 8:00 AM".
+    **Default MATI**, jadi 4 pemakai `DateField` yang cuma mau tanggal gak kesentuh.
+  - **SEMUA JAM 12 JAM** (Wayan: *"jadiin 12 jam semua bro"*) lewat **satu** formatter
+    `fmtTime` di `timeSlots.js`. Yang dulu masih 24 jam & udah disapu: **picker charter**
+    (label doang — **value-nya tetep 24 jam**, itu yang masuk `pickup_time` di server dan
+    yang urut bener), **baris kartu My Trips** (dulu nyetak `· 06:00` mentah), dan
+    **jam penerbangan** (`DateTimeField`) — yang ini jam-nya berlabel 12 jam ("2 PM")
+    **tapi menitnya tetep**, karena pesawat mendarat 14:35, bukan di setengah jam.
+    Nambah select AM/PM bakal bikin kontrolnya jadi 3.
   - Verifikasi: **`verify-timechoice.mjs`** (248/248, 6 item × 320/390/768/1280) —
     jumlah opsi persis, nol opsi mati, nol chip, nol kalimat, default ke-seed (yang bebas
     kosong), tinggi 34 & radius 12 & font 12.8 (sama kayak field lain), dan **tanda tangan
@@ -264,6 +278,20 @@ Wayan: *"benerin zoom tapi jangan gedein font bisa?"*
 - Komentar di `style.css` yang dulu ngeklaim rule `!important` itu nyegah zoom **udah
   dibenerin** — dia justru mastiin zoom-nya kejadian. Jangan "dibenerin" dengan naikin font
   di situ: itu ngubah tampilan semua form.
+
+**BUG LAMA YANG KETEMU PAS NGERJAIN INI (udah live, GAK gua benerin):**
+- **Baris terakhir kalender kepotong 24px di desktop.** `HS_CAL` punya
+  `max-h-[340px] overflow-y-auto` di atas 768px, dan bulan yang jatuh 6 baris (mis.
+  September 2026) gak muat. Yang bikin parah: `scrollHeight - clientHeight` = **0**,
+  jadi tamu **gak bisa scroll** buat nyampe baris itu — dia cuma kepotong.
+  Di 390px aman (muat, sisa 6px).
+- **Ini BUKAN akibat footer jam yang baru.** Ke-buktiin: panel tanggal **biasa** di
+  `/charter.html` (tanpa `withTime`, gak disentuh) kepotong **24px yang sama persis**.
+  Gua sempat salah diagnosa & mecah `CAL_FOOT` jadi dua buat "benerin" ini — **udah
+  dibalikin**, karena gak ngefek apa-apa dan alasannya salah.
+- Kenapa gak gua benerin sekalian: itu nyentuh **semua** date picker di web (termasuk
+  jalur booking), dan ini bukan yang Wayan minta. Perlu keputusan dia dulu — naikin
+  `max-h`, atau biarin panelnya tumbuh.
 
 **BELUM DIPUTUSIN (ketemu pas ngerjain ini, gua GAK sentuh):**
 - Border `#d8d2c4` masih ada di **1 tombol** (`ITN_GHOSTBTN`). Itu tombol, bukan field, dan

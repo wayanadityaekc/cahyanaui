@@ -1,4 +1,5 @@
 'use client';
+import { fmtTime } from '@/content/shared/timeSlots';
 import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useMemo, useState } from 'react';
@@ -435,7 +436,7 @@ export default function MyTripsCart() {
                       >
                         {fmtDay(r.date)}
                       </button>
-                      {r.time ? ` · ${r.time}` : ''}
+                      {r.time ? ` · ${fmtTime(r.time)}` : ''}
                       {r.mode === 'exclusive' ? ' · Exclusive' : ''}
                       {r.return ? ' · return' : ''}
                     </p>

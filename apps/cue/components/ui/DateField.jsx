@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Calendar, ChevronDown } from 'lucide-react';
 import Overlay from './Overlay';
-import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CSEL_GROUP, BK_NATIVE } from './hsClasses';
+import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CSEL_GROUP, BK_NATIVE, CAL_FOOT, CAL_APPLY } from './hsClasses';
+import TimeChoice from './TimeChoice';
+import { fmtTime } from '@/content/shared/timeSlots';
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -20,7 +22,26 @@ function fmtLabel(v) {
   return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-export default function DateField({ label = 'Date', value, onChange, min, placeholder = 'Select date', name, id, icon = null, hint = '' }) {
+// withTime folds the start time INTO this panel (Sep 2026, Wayan: "satuin dengan
+// datenya"), the shape shadcn's CalendarWithTime uses - and the footer slot it needs
+// already existed here, DatePopup has been using it for its Apply row.
+// Default OFF, so the four callers that only want a date are untouched.
+export default function DateField({
+  label = 'Date',
+  value,
+  onChange,
+  min,
+  placeholder = 'Select date',
+  name,
+  id,
+  icon = null,
+  hint = '',
+  withTime = false,
+  time = '',
+  onTimeChange,
+  category = null,
+  itemName = null,
+}) {
   const rich = !!(icon || hint);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -72,7 +93,7 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
                   className={calDay(disabled, v === value)}
                   aria-pressed={v === value}
                   disabled={disabled}
-                  onClick={() => { onChange(v); setOpen(false); }}
+                  onClick={() => { onChange(v); if (!withTime) setOpen(false); }}
                 >
                   {d.getDate()}
                 </button>
@@ -81,6 +102,22 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
           </div>
         </div>
       </div>
+      {withTime && (
+        <div className={CAL_FOOT} data-cal-foot>
+          <div className="flex-1 min-w-0">
+            <TimeChoice
+              category={category}
+              itemName={itemName}
+              value={time}
+              onChange={onTimeChange}
+              id={id ? `${id}-time` : undefined}
+            />
+          </div>
+          <button type="button" className={CAL_APPLY} disabled={!value} onClick={() => setOpen(false)}>
+            Done
+          </button>
+        </div>
+      )}
     </div>
   );
 
@@ -95,7 +132,7 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
             <span className={!value ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>{value ? fmtLabel(value) : placeholder}</span>
           </span>
         ) : (
-          <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>{value ? fmtLabel(value) : placeholder}</span>
+          <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>{value ? (withTime && time ? `${fmtLabel(value)} · ${fmtTime(time)}` : fmtLabel(value)) : placeholder}</span>
         )}
         {rich ? (
           <ChevronDown className={CHEV} aria-hidden="true" />

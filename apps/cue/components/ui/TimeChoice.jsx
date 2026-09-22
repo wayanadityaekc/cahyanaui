@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Select from './Select';
-import { allowedSlots, defaultSlot, TIME_SLOTS } from '@/content/shared/timeSlots';
+import { allowedSlots, defaultSlot, fmtTime, TIME_SLOTS } from '@/content/shared/timeSlots';
 import { FIELD_LABEL } from './formClasses';
 
 /**
@@ -32,15 +32,9 @@ import { FIELD_LABEL } from './formClasses';
  * component and is not settled.
  */
 
-const fmt = (t) => {
-  const [h, m] = t.split(':').map(Number);
-  const period = h < 12 ? 'AM' : 'PM';
-  return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, '0')} ${period}`;
-};
-
 export default function TimeChoice({ category, itemName, value, onChange, label = 'Start time', id }) {
   const allowed = allowedSlots(category, itemName);
-  const list = (allowed || TIME_SLOTS).map((t) => ({ value: t, label: fmt(t) }));
+  const list = (allowed || TIME_SLOTS).map((t) => ({ value: t, label: fmtTime(t) }));
 
   // A row saved without a time defeats the whole feature, so a restricted item is
   // seeded with its first allowed slot - and a value that is no longer allowed (the

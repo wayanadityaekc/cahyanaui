@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import TimeChoice from './TimeChoice';
+import DateField from './DateField';
 import { allowedSlots, defaultSlot } from '@/content/shared/timeSlots';
 
 /**
@@ -23,7 +24,26 @@ export default function TimeChoiceKit() {
   const [vals, setVals] = useState(() =>
     Object.fromEntries(ITEMS.map(([c, n]) => [n, defaultSlot(c, n)]))
   );
+  // the merged control: one panel holding the date AND the start time
+  const [d, setD] = useState('');
+  const [t, setT] = useState(defaultSlot('tour', 'Ubud Tour'));
   return (
+    <>
+    <div className="mb-6 p-4 rounded-md bg-white [border:1px_solid_var(--line)] max-w-[370px]" data-merged>
+      <p className="mb-1 font-body text-strong font-semibold text-gold">Ubud Tour</p>
+      <p className="mb-3 font-body text-small text-muted">tanggal + jam, satu panel</p>
+      <DateField
+        id="kit-merged"
+        label="Date & start time"
+        value={d}
+        onChange={setD}
+        withTime
+        time={t}
+        onTimeChange={setT}
+        category="tour"
+        itemName="Ubud Tour"
+      />
+    </div>
     <div className="grid gap-5 max-w-[760px] min-[769px]:grid-cols-2">
       {ITEMS.map(([category, name, note]) => {
         const a = allowedSlots(category, name);
@@ -47,5 +67,6 @@ export default function TimeChoiceKit() {
         );
       })}
     </div>
+    </>
   );
 }

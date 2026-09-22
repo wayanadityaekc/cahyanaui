@@ -2,6 +2,7 @@
 
 import DateField from './DateField';
 import Select from './Select';
+import { fmtHour } from '@/content/shared/timeSlots';
 
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
 const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
@@ -35,8 +36,8 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
           label="Hour"
           value={hh}
           onChange={(h) => emit(datePart, h, mm)}
-          options={HOURS.map((v) => ({ value: v, label: v }))}
-          placeholder="HH"
+          options={HOURS.map((v) => ({ value: v, label: fmtHour(v) }))}
+          placeholder="Hour"
           className={TIMESEL}
         />
         <span className="font-semibold text-muted">:</span>

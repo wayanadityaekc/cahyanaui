@@ -17,7 +17,7 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import DateField from '@/components/ui/DateField';
 import { AIRPORT_ROUTE, fmtTime } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
-import { SHELL, BOX, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
 import { baseTotal, PAY_COPY } from '@/lib/payment';
@@ -312,7 +312,7 @@ export default function BookConfirmModal() {
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
   return createPortal(
-    <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} box={BOX}>
+    <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} box={BOX_WIDE} shellClass={SHELL_WIDE}>
         {!paid && <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>}
         <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 

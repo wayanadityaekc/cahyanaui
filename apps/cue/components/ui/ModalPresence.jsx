@@ -19,7 +19,7 @@ const EASE_OUT = [0.16, 1, 0.3, 1];
 const BOX_FROM = { opacity: 0, y: 14, scale: 0.96 };
 const BOX_TO = { opacity: 1, y: 0, scale: 1 };
 
-export default function ModalPresence({ open, onClose, box = BOX, children }) {
+export default function ModalPresence({ open, onClose, box = BOX, shellClass = SHELL, children }) {
   const reduced = useReducedMotion();
   const shell = reduced ? 0 : 0.25;
   const card = reduced ? 0 : 0.32;
@@ -30,7 +30,7 @@ export default function ModalPresence({ open, onClose, box = BOX, children }) {
         {open && (
           <m.div
             key="shell"
-            className={SHELL}
+            className={shellClass}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             // pointerEvents belongs in `exit`, NOT in a style prop keyed on

@@ -26,6 +26,16 @@ export const BOX =
 // .modal__box--sm: the same box, narrower (430px) and centre-aligned (confirm dialogs).
 export const BOX_SM =
   'relative w-full max-w-[430px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white text-center';
+// The booking popup only (Sep 2026, Wayan picked "A" from the measured sheet):
+// a 12px gutter instead of 24 and 20px of padding instead of 32, which is 48px
+// more content width and 24px less height at 390px. Scoped rather than applied to
+// SHELL/BOX because those are shared with the review / auth / confirm dialogs,
+// and none of those has been measured at the tighter geometry.
+export const SHELL_WIDE =
+  'fixed inset-0 z-[200] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.55)] pointer-events-auto';
+export const BOX_WIDE =
+  'relative w-full max-w-[560px] max-h-[95vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-5 rounded-md bg-white';
+
 export const CLOSE =
   'absolute top-3 right-4 text-[1.6rem] leading-none text-green bg-transparent border-none cursor-pointer';
 export const LOGO = 'block h-[38px] w-auto mx-auto mb-[1.1rem]';

@@ -739,7 +739,17 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
   - **`ExperienceCard` sekarang nol pemakai di alur live** — sisanya cuma `/ui-kit`
     (galeri komponen, noindex). Belum dihapus; tanya Wayan dulu kalau mau dibuang.
 - Isi artikel + sidebar **isinya TIDAK diubah**.
-  - Verifikasi: `verify-guidehero.mjs` di scratchpad (34/34) — 15 halaman semuanya punya foto,
+  - **`verify-guidehero.mjs` UDAH BASI (Sep 2026) - 14/34, dan merahnya BUKAN regresi.**
+    Dua premisnya udah gak berlaku: (1) dia nunggu CTA hero `'See our tours'`, padahal
+    label itu udah dipotong jadi **`'Our tours'`** pas aturan tombol 1-2 kata; (2) dia
+    ngadu hero guide lawan `/ubud-tour.html` dan nuntut **identik**, padahal halaman tour
+    udah pindah ke hero **gallery** - ke-cek: div `background-image` di section pertama
+    ADA di `/guide/ubud.html`, **TIDAK ADA** di `/ubud-tour.html`, jadi sisi pembandingnya
+    ngukur 0/null dan SEMUA assertion lintas-halaman ikut merah. Hero guide sendiri sehat
+    (foto + 3 fakta + CTA lengkap di 15 halaman). **Jangan "dibenerin" biar ijo** - kalau
+    mau dipakai lagi, tulis ulang tanpa premis "sama kayak halaman tour". Yang nutup hero
+    guide sekarang: `verify-guide.mjs` (193/193) + `hero-fit.mjs`.
+  - Verifikasi lama (buat konteks): `verify-guidehero.mjs` — 15 halaman semuanya punya foto,
     3 hook & CTA; foto/judul posisi + ukurannya **identik sama `/ubud-tour.html`**; di HP
     judulnya hitam di sheet putih (bukan putih di atas foto lagi); artikel & sidebar utuh.
 - **TYPOGRAFI ARTIKEL DULU LEPAS DARI TANGGA GLOBAL — UDAH DIBENERIN** (Sep 2026, Wayan:
@@ -812,6 +822,41 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
   jadi 3-4 baris di HP (cuma makan scroll lebih, bukan jebol). Jangan potong nama tour
   panjang buat "muat" ke 40 karakter - itu udah bukan aturannya lagi buat tour-tour ini.
   **Teks intro hero 25–40 kata.**
+- **DESKRIPSI DI BAWAH JUDUL = SATU BAND, 25-40 KATA, DI SEMUA JENIS HALAMAN**
+  (Sep 2026, Wayan: "gua mau biar konsisten jumlah katanya, gak terlalu sedikit gak
+  terlalu banyak"). Slot-nya sama (`HERO_DESC` punya `DetailHero`), tapi isinya ditulis
+  di 3 file beda dan melenceng jauh. Diukur SEBELUM:
+  - **guide `sub` 8-14 kata** (rata-rata 11) - jauh di bawah, dan itu yang paling keliatan:
+    teks satu barisnya ditulis waktu hero guide masih **banner gelap** dengan judul di
+    tengah. Begitu pindah ke hero split (sheet putih 55%), sheet-nya kebaca setengah kosong
+    di sebelah foto setinggi layar.
+  - tour `desc` 26-40 (rata-rata 34) - udah pas · attraction `desc` 32-43 (rata-rata 37,5),
+    **4 halaman lewat 40**.
+  - SESUDAH: guide **31-35**, tour 26-40, attraction 32-40. Se-web **83 baris, 26-40 kata**.
+- **15 sub guide ditulis ULANG dari isi artikelnya sendiri**, bukan dikarang - tiap kalimat
+  ngambil fakta yang emang udah ada di body/metaDesc halaman itu (aturan "no fake content").
+  Patokan copy-nya tetep: nol em-dash, nol kata glorify, apostrof LURUS (file-nya pakai
+  `'`; gua sempat nyisipin 4 apostrof keriting & harus disapu balik).
+- **`sub`/`desc` BUKAN `metaDesc`** - halaman guide ambil SEO-nya dari `metaDesc` yang
+  terpisah, jadi nulis ulang `sub` gak nyentuh title/description di Google sama sekali.
+- **ATTRACTION `desc` GAK KE-RENDER DI MANA PUN** (ketemu pas ngukur ini, Sep 2026).
+  Ke-51-nya dioper `DetailHero desc={data.desc}`, TAPI halaman attraction pakai varian
+  **gallery**, dan varian itu gak pernah nge-mount `HeroBody` - jadi teksnya cuma nyangkut
+  di payload RSC di dalam `<script>`, nol yang kebaca tamu. Dicek di browser (bukan
+  grep HTML - grep bilang "ada" karena ke-match payload script-nya, itu jebakan):
+  **tour 17/17 kelihatan** (lewat `TourOverview intro`, bukan hero), **attraction 0/12 sampel**.
+  4 halaman yang lewat 40 kata tetep gua potong biar datanya satu band, tapi **nol efek
+  visual hari ini**. Mau blurb-nya balik kelihatan di halaman destinasi = keputusan Wayan
+  (hero gallery itu bentuk yang dia pilih sendiri), belum ditanyain.
+- Verifikasi: **`check-sub.mjs`** di scratchpad (499/499) - ngukur 83 baris lawan band 25-40,
+  nol em-dash, nol kata glorify, nol apostrof keriting, nol baris kembar, dan spread se-web
+  ≤15 kata. Plus **`hero-fit.mjs`** (151/151, 390 & 1280): blurb-nya gak kepotong, gak bikin
+  halaman melar, gak tumpah keluar hero, dan berhenti di **3-4 baris @1280 / 4-6 baris @390**.
+  - Gate-nya dites pakai 3 bug aslinya (sub pendek yang lama dibalikin, em-dash, kata
+    "stunning") - ketiganya nyala.
+  - `hero-fit` versi pertama nyari blurb pakai "`<p>` pertama sesudah h1" dan **diem-diem
+    gak nemu apa-apa** di halaman attraction; itu yang bikin ketahuan varian gallery gak
+    nge-render dia. Sekarang dia nyari lewat **teks persisnya**.
 - Label section pertama: halaman tour = **"What You'll Do"**, attraction = **"The Experience"**.
 - **FAQ**: DIPUSATIN ke **`faq.html`** doang (Agu 2026) — semua FAQ inline + partial di
   halaman lain UDAH DIHAPUS (link ke faq.html ada di footer). Jangan tambahin FAQ ke

@@ -2739,7 +2739,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "kecak-dance.jpg",
   "title": "Kecak Fire Dance",
-  "desc": "The Kecak is a Balinese performance built entirely from the human voice - over fifty men chanting in interlocking rhythm while the Ramayana plays out around a ring of fire. It was shaped in the 1930s and runs about an hour.",
+  "desc": "The Kecak is a Balinese performance built entirely from the human voice - over fifty men chanting in interlocking rhythm while the Ramayana plays out around a ring of fire. Shaped in the 1930s, it runs about an hour.",
   "hooks": [
    {
     "label": "Duration",
@@ -3355,7 +3355,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tibumana.webp",
   "title": "Munduk Waterfalls",
-  "desc": "Munduk sits high in Bali's northern hills, where a string of jungle waterfalls hides in the valleys among coffee, clove, and cacao plantations. The air is cool and the roads up are winding, but the valley views run down toward the north coast.",
+  "desc": "Munduk sits high in Bali's northern hills, where a string of jungle waterfalls hides in valleys among coffee, clove, and cacao plantations. The air is cool, the roads wind, and the views run toward the north coast.",
   "hooks": [
    {
     "label": "Area",
@@ -4847,7 +4847,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tegalalang-rice-terrace-hero.jpg",
   "title": "Tegalalang Rice Terrace",
-  "desc": "A valley of stepped rice fields north of Ubud, carved over generations and still watered by the subak system. Walk the paths between the paddies, then stop at the coffee plantation in the same area for a tasting that includes kopi luwak.",
+  "desc": "A valley of stepped rice fields north of Ubud, carved over generations and still watered by the subak system. Walk the paths between the paddies, then stop nearby for a coffee tasting that includes kopi luwak.",
   "hooks": [
    {
     "label": "Area",
@@ -5219,7 +5219,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tirtagangga.jpg",
   "title": "Tirta Gangga Water Garden",
-  "desc": "Built by the last king of Karangasem, Tirta Gangga is a water garden of tiered fountains, koi ponds, and stepping stones set across the main pond. It sits in the hills of East Bali and stays green and quiet away from the crowds.",
+  "desc": "Built by the last king of Karangasem, Tirta Gangga is a water garden of tiered fountains, koi ponds, and stepping stones across the pond. It sits in the hills of East Bali, green and quiet away from the crowds.",
   "hooks": [
    {
     "label": "Area",

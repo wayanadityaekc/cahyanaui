@@ -33,8 +33,13 @@ export const BOX_SM =
 // and none of those has been measured at the tighter geometry.
 export const SHELL_WIDE =
   'fixed inset-0 z-[200] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.55)] pointer-events-auto';
+// max-h is the shell's gutter, not a percentage: 95vh left 42px of the screen
+// unused while the shell only needs its own 12px, which was exactly the 18px of
+// scroll a single-line booking needed at 390 AND 768 (identical at both widths -
+// the giveaway that it was the cap, not wrapping). dvh, not vh: mobile browser
+// chrome moves, and the rest of this codebase uses dvh for the same reason.
 export const BOX_WIDE =
-  'relative w-full max-w-[560px] max-h-[95vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-5 rounded-md bg-white';
+  'relative w-full max-w-[560px] max-h-[calc(100dvh-24px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-5 rounded-md bg-white';
 
 export const CLOSE =
   'absolute top-3 right-4 text-[1.6rem] leading-none text-green bg-transparent border-none cursor-pointer';

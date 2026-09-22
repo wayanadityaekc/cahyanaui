@@ -2514,22 +2514,36 @@ di IDR).
 5. Commit + push ke `main` (deploy otomatis). Bump `?v=` UDAH GAK PERLU (hash otomatis).
 
 ### Saklar pembayaran (`lib/payFlag.js`)
-- **Step pembayaran MATI buat semua orang** (`PAY_DEFAULT = false`). Checkout itu kode
-  yang udah kelar jauh sebelum dia jadi produk yang kelar: tamu yang ketemu form
-  bayar yang belum dibuktiin ujung-ke-ujung = **booking yang hilang diam-diam** —
-  dia gak bisa bayar, booking-nya nyangkut `pending`, dan email konfirmasi gak
-  kekirim (email sekarang nungguin webhook).
-- Nyalain buat diri sendiri: **`?pay=1`** di URL mana pun (matiin lagi `?pay=0`).
-  Ke-simpen per browser, jadi cuma perlu sekali.
+- **NYALA buat semua tamu sejak 22 Sep 2026** (`PAY_DEFAULT = true`). Dinyalain baru
+  setelah rantainya kebukti ujung-ke-ujung pakai duit beneran (CUE-013): PayPal
+  capture → webhook nyampe → nominal & mata uang dicek → `paid` → dua email, semuanya
+  **di detik yang sama**, tanpa disentuh.
+  - **Kenapa dulu MATI**: checkout itu kode yang udah kelar jauh sebelum dia jadi
+    produk yang kelar. Tamu yang ketemu form bayar yang belum dibuktiin =
+    **booking yang hilang diam-diam** — dia gak bisa bayar, booking nyangkut
+    `pending`, email konfirmasi gak kekirim (email nungguin webhook). Itu bukan
+    teori: dua pembayaran live pertama kejadian persis gitu, gara-gara webhook-nya
+    kedaftar di app PayPal yang beda (detailnya di CLAUDE.md `cahyana-api`).
+  - **Matiin lagi buat semua orang** = balikin `PAY_DEFAULT` ke `false`. `?pay=0`
+    cuma matiin di SATU browser.
+- **`?pay=1` / `?pay=0`** di URL mana pun = paksa nyala/mati **buat browser itu doang**,
+  ke-simpen di localStorage. Gotcha yang sempet bikin bingung: sekali lu buka pakai
+  `?pay=1`, SEMUA halaman di browser itu ikut nyala — termasuk link yang diketik
+  manual tanpa query. Itu bukan bocor ke tamu; localStorage itu per browser per
+  device. Cara ngecek tampilan tamu: **Incognito**.
 - **MATI = perilaku lama PERSIS**: `pay_option` dikirim kosong → server ngitung
   gak ada yang ditagih → booking langsung `new` (confirmed) + 2 email kekirim, dan
   modalnya balik nunjukin layar "Booking Received!" yang lama.
 - **Dibacanya di `useEffect`, JANGAN di initial state** — static export, paint
   pertama harus sama persis sama HTML hasil pre-render (aturan yang sama kayak
   `charterDraft`).
-- **Ganti `PAY_DEFAULT` jadi `true` = satu-satunya edit** yang nyalain pembayaran
-  buat semua tamu. Gak ada yang lain yang perlu diubah.
+- **Jaring pengamannya di backend**: cron tiap jam (`sweepStuckPayments`) nyisir
+  pembayaran yang duitnya cair tapi webhook-nya gak nyampe, terus nyelesein sendiri
+  + ngabarin owner. Dipasang SEBELUM saklar ini dinyalain, alasannya: tamu yang
+  nyangkut gak bakal lapor, dia cuma pergi. Jangan matiin cron itu selama
+  `PAY_DEFAULT` true.
 - Verifikasi: **`payflag.mjs`** di scratchpad (8/8) — dua keadaan diadu di halaman
   hasil build beneran: step-nya nongol/nggak, `pay_option` yang KEKIRIM, dan layar
-  akhir sesudah submit. Dites pakai bug aslinya (`PAY_DEFAULT = true` → 3 assertion
-  "MATI" langsung merah).
+  akhir sesudah submit. Habis flip, harapannya dibalik juga: default = NYALA,
+  `?pay=0` = perilaku lama persis. Ganti `PAY_DEFAULT` = **update harness-nya bareng**,
+  kalau nggak dia ngetes keadaan yang udah gak ada.

@@ -1528,6 +1528,51 @@ terus **HP-3** dari sheet 3 bentuk HP.
   maksa beda - baru ke-tangkep (lebar + warna dua-duanya kelaporan.
 
 
+## FAQ accordion (Sep 2026) - `<details>`, BUKAN library
+Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu:
+"gass kerjain bro, tapi make sure lu memakai ukuran text yang rapi sesuai text global".
+- **Snippet-nya BUKAN shadcn/ui** walau import path-nya `@/components/ui/accordion`.
+  shadcn (Radix) pakai `type="single" collapsible defaultValue` + `AccordionItem value=`;
+  yang dikirim pakai `defaultExpandedKeys={[...]}` + `AccordionItem id=` = **React Aria
+  Components** (Intent UI / Justd). `npx shadcn add accordion` gak bakal ngasih API itu.
+- **Keputusan: gak nambah dependency.** Dari 5 hal yang dikasih library, **3 gratis**:
+  - **cuma-satu-kebuka = atribut `name` bawaan HTML** (`<details name="faq">`). Dites di
+    Chromium: buka A, buka B -> A nutup sendiri. Support ~2 tahun (Chrome 120 / Safari 17.2
+    / Firefox 130). **Ini yang paling sering gak diketahui - jangan install library cuma
+    buat ini.**
+  - chevron custom & ukuran token = CSS doang.
+  Yang **dilepas**: animasi buka-tutup (native cuma animasi di Chrome) & panah keyboard
+  antar-pertanyaan. Yang **didapet balik**: halaman jalan sebelum hydration, dan
+  **Ctrl+F browser bisa nemuin jawaban yang lagi ke-collapse** - accordion JS nyembunyiin
+  itu dari find-in-page, dan halaman FAQ itu justru halaman yang orang Ctrl+F.
+  `package.json` tetep **7 dependency**.
+- **Typography SEMUA token, nol angka mentah** - 3 tingkat yang masing-masing udah dipakai
+  di tempat lain: kategori = **group-label** (`--fs-label` 500 tracked uppercase, sama kayak
+  label "OUR COMPANY" di rail) · pertanyaan = `--fs-h3` 600 · jawaban = `--fs-body` +
+  `--lh-body`. Dulu pertanyaannya `text-[1rem]` (16px, di luar tangga).
+  - Kategori sengaja **turun** jadi label, bukan tetep `--fs-h3`: kalau dua-duanya h3,
+    kategori & pertanyaan ukurannya sama persis dan hirarkinya ilang.
+- **Bentuknya garis rambut, bukan 15 kotak berbingkai** (`first-of-type` dapet border-top).
+- **Chevron: `transition-[rotate]`, JANGAN `transition-[transform]`** - Tailwind v4 nge-compile
+  `rotate-180` ke properti `rotate` yang berdiri sendiri. String-nya sama persis kayak
+  `CatDropdown`. Muternya lewat `group` di `<details>` + `group-open:rotate-180`.
+- **`h1` "Frequently Asked Questions" SENGAJA GAK DISENTUH** - kelima section lain di rail
+  (About/Contact/Terms/Privacy/Cancellation) pakai `text-h2 font-bold` yang sama. Ngubah
+  FAQ doang bikin dia yang nyempil. Kalau mau diubah, ubah kelima-limanya bareng.
+- Verifikasi: **`verify-faq.mjs`** di scratchpad (51/51, 390/768/1280) - 15 baris, `name`
+  dipakai bareng, segitiga browser ilang, 15 chevron & **beneran muter pas dibuka**
+  (transition-property kebaca `rotate` & durasi > 0), cuma satu kebuka (klik A lalu B ->
+  A nutup), teks pertanyaan & jawaban **ada di DOM walau ke-collapse** (itu yang bikin
+  Ctrl+F jalan), halaman gak melar.
+  - **Ukuran diadu lawan TOKEN yang di-resolve halaman itu sendiri**, bukan angka yang
+    diketik di harness - kalau di-hardcode, yang kebukti cuma harness setuju sama dirinya
+    sendiri. Token-nya dibaca lewat elemen bayangan `font-size:var(--fs-h3)` dst.
+  - Gate-nya dites pakai **4 bug aslinya** (16px balik, `name` dibuang, `list-none` dibuang,
+    `transition-[transform]`), empat-empatnya ke-tangkep. Sabotasenya **ditukar, bukan
+    ditambahin** - `text-[1rem]` di samping `text-h3` itu specificity-nya sama, jadi
+    sabotase model itu bisa gak pernah ke-render (kejadian, lihat pelajaran harness di
+    section rail).
+
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**

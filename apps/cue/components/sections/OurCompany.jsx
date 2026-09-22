@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle } from 'lucide-react';
+import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle, ChevronDown } from 'lucide-react';
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_PAGE, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
@@ -46,17 +46,56 @@ function LegalBody({ data }) {
 // urutan kemunculan cukup buat bikin heading per grup - gak perlu sort/data baru.
 const FAQ_CATS = [...new Set(FAQ.map((item) => item.cat))];
 
+// Native <details>, deliberately - not an accordion library (Sep 2026, Wayan sent a
+// React Aria accordion snippet and asked how it compared). Everything that snippet
+// adds over <details> is either free here or not worth a dependency: one-open-at-a-time
+// is the HTML `name` attribute, the chevron and the sizes are CSS. What <details>
+// gives back is what a FAQ page actually needs - it works before hydration, and
+// browser find-in-page opens a collapsed answer, which a JS accordion hides from
+// Ctrl+F. The two things we give up are an open/close animation (native only
+// animates in Chrome) and arrow-key movement between questions.
+//
+// Typography is all tokens, no raw sizes (Wayan: "typography ngikutin global"):
+// category = the site's group-label (same as the rail's "OUR COMPANY"), question =
+// --fs-h3 at 600, answer = --fs-body. Three tiers, each already used elsewhere.
+const FAQ_CAT = 'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-1)]';
+
+// list-none + the webkit rule kill the browser's default triangle; it was the one
+// place on the site not using a Lucide chevron.
+const FAQ_Q =
+  'list-none [&::-webkit-details-marker]:hidden flex items-center gap-[var(--space-2)] ' +
+  'cursor-pointer py-[0.85rem] font-body text-h3 font-semibold text-gold';
+
+// Transition `rotate`, not `transform`: Tailwind v4 compiles rotate-180 to the
+// standalone rotate property, so naming transform here would animate nothing.
+// Same string CatDropdown uses.
+const FAQ_CHEV =
+  'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted ' +
+  'transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] group-open:rotate-180';
+
+const FAQ_ROW =
+  'group [border-bottom:1px_solid_var(--line)] first-of-type:[border-top:1px_solid_var(--line)]';
+
+const FAQ_A =
+  'pb-[var(--space-2)] pr-[var(--space-4)] [&_p]:m-0 [&_p]:text-body ' +
+  '[&_p]:leading-[var(--lh-body)] [&_p]:text-ink [&_a]:text-gold [&_a]:font-medium';
+
 function FAQBody() {
   return (
     <div className={BODY_TEXT}>
       <h1 className="font-head text-h2 font-bold text-gold mb-4">Frequently Asked Questions</h1>
       {FAQ_CATS.map((cat) => (
-        <div className="mb-8" key={cat}>
-          <h2 className="m-0 mb-3 font-head text-h3 font-semibold text-green">{cat}</h2>
+        <div className="mb-[var(--space-4)]" key={cat}>
+          <h2 className={FAQ_CAT}>{cat}</h2>
           {FAQ.filter((item) => item.cat === cat).map((item, i) => (
-            <details className="mb-3 border border-line rounded-md p-4" key={i}>
-              <summary className="font-body text-[1rem] font-semibold text-green cursor-pointer">{item.q}</summary>
-              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]" dangerouslySetInnerHTML={{ __html: item.a }} />
+            // One shared name across all four groups: opening any answer closes the
+            // one before it, so the page never becomes a wall of open text.
+            <details className={FAQ_ROW} name="faq" key={i}>
+              <summary className={FAQ_Q}>
+                {item.q}
+                <ChevronDown className={FAQ_CHEV} strokeWidth={1.7} aria-hidden="true" />
+              </summary>
+              <div className={FAQ_A} dangerouslySetInnerHTML={{ __html: item.a }} />
             </details>
           ))}
         </div>

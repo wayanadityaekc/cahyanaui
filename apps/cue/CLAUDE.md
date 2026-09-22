@@ -178,6 +178,20 @@ Jadi file ini berhenti jadi "picker jam di popup konfirmasi" dan jadi **jadwal s
   - **Tombol pemicu `DateField` nyebut dua-duanya di DUA varian.** Varian `rich`
     (yang dipakai booking form) dulu cuma nyetak tanggal, jadi tamu yang milih jam di
     panel gak bisa lihat dari luar. Sekarang satu `label12()` buat dua-duanya.
+  - **Tombol Done/Apply pakai `self-end`, BUKAN `items-center` punya barisnya.**
+    Kolom jam bawa label di atas field-nya, tombolnya nggak — jadi ke-center ke seluruh
+    tumpukan bikin tombolnya duduk **11,5px lebih tinggi** dari field di sebelahnya
+    (= setengah tinggi label + margin-nya, ke-ukur di 390 & 1280, DateField & DatePopup).
+    Tinggi dua-duanya `--btn-h`/`--field-h` yang sama, jadi nyamain tepi BAWAH bikin
+    dua-duanya lurus persis — bukan digeser pakai angka ajaib. Di `DatePopup` cuma
+    dipasang kalau `withTime`: baris hint yang polos gak punya label, jadi gak ada yang
+    perlu dikompensasi.
+    - **INI KE-SHIP MELENCENG DULU gara-gara harness-nya salah baca**: cek pertama gua
+      ambil `f.querySelector('button')` — dan itu **trigger jam**-nya, bukan Done. Jadi
+      dia ngadu elemen sama elemen itu sendiri dan lapor "sejajar sempurna" di 4 kasus,
+      sementara crop-nya jelas keliatan geser. Pola yang bener: CTA = tombol yang **bukan**
+      `[aria-haspopup]`. Kalau harness bilang dua benda cocok sempurna, cek dulu dia gak
+      lagi ngukur satu benda dua kali.
   - **Baris My Trips: tanggal + jam jadi SATU tombol** ("12 Oct · 8:30 AM"), jadi
     nge-tap benerin dua-duanya. Tombolnya **`whitespace-nowrap`** — tanpa itu di 390px
     labelnya pecah dan "AM" nyangkut sendiri di baris kedua (ke-ukur).

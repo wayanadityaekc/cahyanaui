@@ -109,7 +109,10 @@ export default function DatePopup({
           ) : (
             <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
           )}
-          <button type="button" className={CAL_APPLY} disabled={!sel} onClick={() => { onPick(sel, time); onClose(); }}>
+          {/* self-end only with the time control: it brings a label the button does
+              not have, so the row's items-center would sit the button 11.5px high.
+              The plain hint row has no label and stays centred. */}
+          <button type="button" className={`${CAL_APPLY}${withTime ? ' self-end' : ''}`} disabled={!sel} onClick={() => { onPick(sel, time); onClose(); }}>
             Apply
           </button>
         </div>

@@ -118,7 +118,12 @@ export default function DateField({
               id={id ? `${id}-time` : undefined}
             />
           </div>
-          <button type="button" className={CAL_APPLY} disabled={!value} onClick={() => setOpen(false)}>
+          {/* self-end, NOT the row's items-center: the time column carries a label
+              above its field and the button does not, so centering against the whole
+              stack puts the button 11.5px (half the label + its margin) above the
+              field it sits next to. Both are --btn-h/--field-h, so aligning the
+              bottoms lines them up exactly instead of nudging by a magic number. */}
+          <button type="button" className={`${CAL_APPLY} self-end`} disabled={!value} onClick={() => setOpen(false)}>
             Done
           </button>
         </div>

@@ -5,6 +5,7 @@ import { CATSEC } from '@/components/ui/listingClasses';
 import Slider from '@/components/ui/Slider';
 import Button from '@/components/ui/Button';
 import BookingForm from '@/components/booking/BookingForm';
+import TimeChoiceKit from '@/components/ui/TimeChoiceKit';
 
 const CARDS = [
   { href: '/ubud-tour.html', name: 'Ubud Tour', img: 'tegallalang-girl.jpg', alt: 'Ubud Tour - private tour from Ubud, Bali', meta: '5–7 hours', priceName: 'Ubud Tour', priceFallback: '$40', zone: 'ubud' },
@@ -17,6 +18,13 @@ export const metadata = { title: 'UI kit', robots: { index: false, follow: false
 export default function Kit() {
   return (
     <div className="tourprog pb-20">
+      <section className="bg-white py-[var(--section-gap)] px-6">
+        <div className={CATSEC}>
+          <h2 className={SECTION_TITLE}>Start time (TimeChoice)</h2>
+          <TimeChoiceKit />
+        </div>
+      </section>
+
       <section className="bg-white py-[var(--section-gap)] px-6">
         <div className={CATSEC}>
           <h2 className={SECTION_TITLE}>Buttons</h2>

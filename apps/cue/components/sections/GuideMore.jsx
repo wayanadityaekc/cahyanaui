@@ -2,6 +2,7 @@ import HomepageCard from '@/components/cards/HomepageCard';
 import { CARD_FRAME, CARD_IMAGE, CARD_IMG } from '@/components/ui/cardClasses';
 import { CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 import { GRID_GUIDEMORE } from '@/components/ui/gridClasses';
+import { PAGE_WIDE } from '@/components/ui/railClasses';
 import { SEE_OUR_TOURS } from '@/content/shared/guide-more';
 
 // Blok "guide-more" di bawah artikel guide. `block`:
@@ -19,7 +20,10 @@ import { SEE_OUR_TOURS } from '@/content/shared/guide-more';
 // Judul section pakai `CAROUSEL_TITLE` - string yang SAMA dipakai "You might also like"
 // & "Destinations you'll visit" di halaman tour. Dulu ditulis ulang di sini dan
 // ketinggalan `leading-[var(--lh-heading)]`.
-const BOX = 'max-w-[1200px] mx-auto py-[var(--section-gap)] px-[var(--space-3)]';
+// SAME box as the article above it - the blocks on a guide page all start at one
+// left edge. It also picks up the gutter TOKEN, so the phone gutter is 16px like the
+// rest of the site instead of the 24px this had hardcoded.
+const BOX = `${PAGE_WIDE} py-[var(--section-gap)]`;
 
 export default function GuideMore({ block }) {
   const b = block.kind === 'tours' && !block.cards ? SEE_OUR_TOURS : block;

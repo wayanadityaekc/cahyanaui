@@ -727,8 +727,24 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
       HP per halaman, jadi dua bentuk itu gak bisa melenceng. **Jangan** nambal pakai utility
       yang bentrok di samping yang lama - `rounded-none` lawan `rounded-md` specificity-nya
       sama, yang menang urutan compile.
-    - Blok "You might also like"/"Our tours" di bawah artikel **gak ikut melebar** (masih
-      container 1200) - belum ditanyain ke Wayan.
+    - **Blok "You might also like"/"Our tours" IKUT KOTAK YANG SAMA** (Sep 2026, Wayan:
+      "kalo isi margin ya semua komponen yang makai dia harus isi margin juga").
+      `GuideMore` dulu nulis kotaknya sendiri (`max-w-[1200px] mx-auto px-[var(--space-3)]`),
+      jadi satu halaman guide punya **DUA tepi kiri**: kartu artikel di 24px, blok kartu di
+      **120px** (ke-ukur @1440). Sekarang dia import `PAGE_WIDE` yang sama.
+      - **Gutter HP-nya ikut kebenerin**: `px-[var(--space-3)]` itu 24px di semua lebar,
+        padahal token-nya 16 di HP. Jadi di 390px judul "Our tours" duduk di 24 sementara
+        kartu artikel di atasnya di 16. Sekarang dua-duanya 16. **Ini artinya HP guide
+        BERUBAH**, beda dari commit rail sebelumnya yang nol berubah di HP - tapi ini
+        persis aturan yang Wayan minta, dan sesuai catatan container-x di doc ini.
+      - **`GRID_GUIDEMORE` tetep di-CAP, cuma `mx-auto`-nya yang dibuang.** Cap-nya
+        sekarang `calc(var(--container) - 2 * var(--container-x))` = 1152, pola yang sama
+        kayak `.catsec` - itu yang bikin kartunya mendarat **271px, angka yang sama kayak
+        kartu homepage**, di tiap lebar desktop. Cap-nya dibuang sama sekali → kartunya
+        jadi **291 @1280 · 260 @1440 · 273 @1920** (ke-ukur): mengecil pas layar membesar.
+        `mx-auto`-nya yang wajib dibuang, bukan cap-nya - kalau ke-center, barisnya
+        ngambang ke tengah kotak lebar dan tepi kirinya melenceng lagi dari judulnya.
+      - Putih di kanan baris kartu = kompromi yang SAMA kayak prosa 720px di atasnya.
     - Verifikasi: **`verify-guiderail.mjs`** di scratchpad (**268/268**, 3 halaman guide ×
       1024/1280/1440/1920 + 320/390/768): rail ada & 248 & cream & setinggi frame & di KIRI
       artikel, 5 kategori & gak bergaris bawah & baris aktif pill putih 600, dropdown HP gak
@@ -1602,6 +1618,23 @@ terus **HP-3** dari sheet 3 bentuk HP.
     & rata KIRI, jadi kolom konten yang sekarang ~1100px (@1440) nyisain ~380px putih di kanan -
     paling kentara di guide & legal. Naikin `--container-read` DILARANG (baris kepanjangan).
     Pilihannya: biarin · prosa di-center di kolomnya · cap kontainer diturunin lagi.
+  - **SATU HALAMAN, SATU TEPI KIRI** (Sep 2026, Wayan: "kalo isi margin ya semua komponen
+    yang makai dia harus isi margin juga"). Lebar + gutter-nya dipisah jadi **`PAGE_WIDE`**
+    (`max-w-[1800px] mx-auto px-[var(--container-x)]`), dan **tiap blok di halaman yang
+    punya rail WAJIB dibangun dari situ** - `RAIL_PAGE_BOX`/`RAIL_PAGE` sekarang turunan
+    dia, dan `GuideMore` import dia langsung.
+    - **Jarak vertikal TETEP punya pemanggil**, jangan ikut dimasukin: nempelin `py-` di
+      samping `pb-` yang udah ke-bake itu dua utility specificity-nya sama, yang menang
+      urutan compile (jebakan yang sama kayak `BTN_SM`).
+    - Diukur di 4 halaman × 390/768/1280/1440/1920: tiap blok yang punya kotak mulai &
+      berhenti di tepi yang SAMA kayak frame-nya.
+  - Verifikasi: **`verify-onebox.mjs`** di scratchpad (**83/83**) - tiap blok level-halaman
+    diadu lawan **frame-nya sendiri** (bukan angka yang diketik di harness, itu cuma bakal
+    ngebuktiin harness setuju sama dirinya sendiri), judul & **baris kartunya** ikut dicek,
+    lebar kartu diadu lawan build sebelum perubahan (271 = 271), halaman gak melar.
+    Dites pakai 2 bug: `GuideMore` dibalikin ke kotak 1200-nya sendiri (**50 nyala**) dan
+    `mx-auto` dibalikin ke baris kartu (**6 nyala** - assertion baris kartu itu ditambah
+    JUSTRU karena sabotase kedua awalnya lolos: harness-nya cuma ngecek section & judul).
   - Verifikasi: **`verify-railwide.mjs`** di scratchpad (**111/111**, 1024/1280/1440/1920 +
     320/390/768): tepi = gutter & ke-center & gak pernah lebih lebar dari sebelumnya, rail 248
     & cream & setinggi frame, frame nyampe bawah layar, menu pin sesudah scroll, rail gak

@@ -22,10 +22,19 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 // 1800 is still a cap rather than no cap at all: below 1800 the box is the screen
 // minus the site gutter, and above it the frame stops growing so an ultra-wide
 // monitor does not get a 2500px row.
+// WIDTH + GUTTER ONLY, and every block on a rail page is built from it (Sep 2026,
+// Wayan: "kalo isi margin ya semua komponen yang makai dia harus isi margin juga").
+// Vertical space belongs to the caller - stacking a `py-` next to a baked-in `pb-`
+// would be two utilities of the same specificity, where the compile order decides.
+//
+// It is what stops a page from having two left edges: the guide articles used to put
+// the rail frame here and the "Our tours" block in the 1200px container below it, so
+// the same page started at 24px and then at 120px (measured @1440).
+export const PAGE_WIDE = 'max-w-[1800px] mx-auto px-[var(--container-x)]';
+
 // Split in two: the guide articles reuse the WIDTH half but open with a hero, so
 // they set their own top padding instead of clearing the header.
-export const RAIL_PAGE_BOX =
-  'max-w-[1800px] mx-auto px-[var(--container-x)] pb-[var(--space-5)]';
+export const RAIL_PAGE_BOX = `${PAGE_WIDE} pb-[var(--space-5)]`;
 
 export const RAIL_PAGE = `${RAIL_PAGE_BOX} pt-[calc(var(--header-h-max,104px)+1.9rem)]`;
 

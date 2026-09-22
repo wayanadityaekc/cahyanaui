@@ -1,34 +1,35 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Clock } from 'lucide-react';
 import Select from './Select';
-import { allowedSlots, TIME_SLOTS } from '@/content/shared/timeSlots';
-import { BTN_SM } from './btnClasses';
+import { allowedSlots, defaultSlot, TIME_SLOTS } from '@/content/shared/timeSlots';
 import { FIELD_LABEL } from './formClasses';
 
 /**
  * Start time for one booked item (Sep 2026, Wayan: "kita nambah data baru di setiap
  * tour yang di pilih harus user milih start jam berapa").
  *
- * Wayan picked shape "C": the control matches how much choice there actually is,
- * instead of one 48-row dropdown for everything.
- *   1 slot   -> NOT a control. A sentence. Kecak runs at 19:00 and nothing else, so
- *               a dropdown holding one option is a decision the guest cannot make.
- *   2-3      -> the times side by side. Zero scrolling, and the whole offer is
- *               visible at a glance (a normal tour is 08:00 / 08:30 / 09:00).
- *   4+       -> the shared Select. Lempuyang is 13 slots, daylight is 19.
- *   no limit -> the shared Select over the full day (charter / transfer, 48).
+ * ONE SHAPE for everything (Wayan: "konsisten aja, buat semya dengan style yang sama
+ * seperti contoh east bali tour, tapi pilihanya yang di batasi"): the same dropdown as
+ * every other control on this site, holding ONLY the times the item can actually start
+ * at. Kecak gets a dropdown with one row, a normal tour three, Lempuyang thirteen, and
+ * charter / transfer / airport all 48 because Wayan wants those free.
  *
- * Measured, and the reason shape A was dropped: showing all 48 slots with the rest
- * disabled means a guest booking Ubud Tour scrolls past 45 dead rows to reach 3 live
- * ones, and Kecak becomes a 48-row list with a single pickable row. So the sentence
- * and chip shapes only ever show times the item can actually start at.
+ * A FOUR-SHAPE VERSION WAS BUILT AND REJECTED (a sentence for one slot, chips for two
+ * or three, dropdown for a range). It read well in the kit, but it meant a guest met
+ * three different controls for the same question depending on which tour they picked.
+ * Do not reintroduce the chips or the sentence - verify-timechoice.mjs fails if either
+ * comes back.
  *
- * Times read as 12-hour with AM/PM, which is what the booking popup already showed
- * and what the confirmation emails print (cahyana-api fmtTime12). NOTE: the charter
- * builder's own picker prints 24-hour ("06:00"). That difference is older than this
- * component and is not settled - see the CLAUDE.md note.
+ * What it must also NOT become is all 48 rows with the disallowed ones greyed out.
+ * Measured: Ubud Tour would be 3 live rows behind 45 dead ones, Kecak a 48-row list
+ * with one pickable row. The restriction happens by LISTING less, never by disabling
+ * more.
+ *
+ * Times read as 12-hour with AM/PM, which is what the booking popup already showed and
+ * what the confirmation emails print (cahyana-api fmtTime12). NOTE: the charter
+ * builder's own picker prints 24-hour ("06:00"); that difference predates this
+ * component and is not settled.
  */
 
 const fmt = (t) => {
@@ -37,71 +38,21 @@ const fmt = (t) => {
   return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, '0')} ${period}`;
 };
 
-// One offered time: the same geometry as every other button on the site (BTN_SM), so
-// these read as buttons and not as a second kind of control.
-const chip = (on) =>
-  `${BTN_SM} cursor-pointer [transition:background-color_var(--dur)_var(--ease),color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] ` +
-  (on
-    ? 'bg-cta text-white [border:1px_solid_var(--color-cta)]'
-    : 'bg-white text-green [border:1px_solid_var(--line)] hover:bg-cream');
-
-const FIXED =
-  'flex items-center gap-[0.4rem] font-body text-small text-green ' +
-  '[&>svg]:w-4 [&>svg]:h-4 [&>svg]:text-muted [&>svg]:shrink-0';
-
 export default function TimeChoice({ category, itemName, value, onChange, label = 'Start time', id }) {
   const allowed = allowedSlots(category, itemName);
-  const only = allowed && allowed.length === 1 ? allowed[0] : null;
-
-  // When there is exactly one possible start the guest is told, not asked - but the
-  // value still has to be SET, or the row saves without the time this whole feature
-  // exists for. Callers seed it from defaultSlot(); this covers the ones that did not.
-  // In an effect, never in render: setting a parent's state while rendering is how you
-  // get an update loop. Hooks run before the early returns below, as they must.
-  useEffect(() => {
-    if (only && value !== only && onChange) onChange(only);
-  }, [only, value, onChange]);
-
-  if (only) {
-    return (
-      <div>
-        <span className={FIELD_LABEL}>{label}</span>
-        <p className={FIXED}>
-          <Clock strokeWidth={1.7} aria-hidden="true" />
-          Starts {fmt(only)}
-        </p>
-      </div>
-    );
-  }
-
-  // Two or three: show them. A dropdown for three options costs a tap to open, a
-  // scroll and a tap to pick, for something that fits on one line.
-  if (allowed && allowed.length <= 3) {
-    return (
-      <div>
-        <span className={FIELD_LABEL} id={id ? `${id}-label` : undefined}>{label}</span>
-        <div className="flex flex-wrap gap-2" role="radiogroup" aria-labelledby={id ? `${id}-label` : undefined}>
-          {allowed.map((t) => (
-            <button
-              key={t}
-              type="button"
-              role="radio"
-              aria-checked={value === t}
-              className={chip(value === t)}
-              onClick={() => onChange(t)}
-            >
-              {fmt(t)}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // A real range, or no limit at all (charter/transfer/airport are free, all 48): the
-  // shared control. Only times the item can start at are listed - a disabled row the
-  // guest has to scroll past is noise.
   const list = (allowed || TIME_SLOTS).map((t) => ({ value: t, label: fmt(t) }));
+
+  // A row saved without a time defeats the whole feature, so a restricted item is
+  // seeded with its first allowed slot - and a value that is no longer allowed (the
+  // guest swapped the tour under it) is corrected rather than left standing.
+  // In an effect, never in render: setting a parent's state while rendering loops.
+  // Unrestricted items (charter / transfer / airport) are left EMPTY on purpose -
+  // choosing a transfer time for the guest would be inventing one.
+  useEffect(() => {
+    if (!allowed || !onChange) return;
+    if (!value || !allowed.includes(value)) onChange(defaultSlot(category, itemName));
+  }, [allowed, value, onChange, category, itemName]);
+
   return (
     <div>
       <label className={FIELD_LABEL} htmlFor={id}>{label}</label>

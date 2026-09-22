@@ -154,9 +154,32 @@ Jadi file ini berhenti jadi "picker jam di popup konfirmasi" dan jadi **jadwal s
   di `BookConfirmModal` (`singleLine = lines.length === 1 ? ... : null`), jadi itinerary
   3 tour = **NOL** field jam. Row `days[]` juga belum punya slot `time`. Itu langkah
   berikutnya, belum dikerjain.
-- **Angka yang perlu diinget buat desain picker**: karena semua slot tetep ditampilin dan
-  yang gak boleh cuma di-disable ("jam yang lainya matiin aja"), **Ubud Tour = 3 nyala dari
-  48**, Kecak **1 dari 48**. Belum diputusin Wayan mau tetep gitu atau cuma nampilin yang boleh.
+- **Picker-nya = `components/ui/TimeChoice.jsx`, SATU BENTUK buat semua** (Wayan:
+  *"konsisten aja, buat semya dengan style yang sama seperti contoh east bali tour, tapi
+  pilihanya yang di batasi"*): dropdown `Select` yang sama kayak kontrol lain, isinya
+  **CUMA jam yang boleh**. Kecak dapet dropdown isi 1 baris, tour biasa 3, Lempuyang 13,
+  charter/transfer/airport 48.
+  - **Batesin dengan GAK NAMPILIN, jangan di-disable.** Kalau semua 48 ditampilin & yang
+    gak boleh di-grey: Ubud Tour = 3 baris nyala di balik **45 baris mati**, Kecak = daftar
+    48 baris yang cuma 1 bisa dipilih (ke-ukur). Harness-nya nge-assert **nol opsi mati**.
+  - **VERSI 4 BENTUK UDAH DIBIKIN & DITOLAK** (kalimat buat 1 jam, chip buat 2-3, dropdown
+    buat rentang — Wayan sempat minta itu, terus milih konsisten). Kebaca bagus di kit, tapi
+    artinya tamu ketemu **3 kontrol beda buat pertanyaan yang sama** tergantung tour-nya.
+    **Jangan dibalikin** — `verify-timechoice.mjs` gagal kalau chip atau kalimatnya nongol lagi.
+  - Item yang **dibatasi** di-seed ke jam pertama yang boleh, dan nilai yang **udah gak boleh**
+    (tamu tuker tour-nya) dikoreksi otomatis. Yang **bebas** (charter/transfer/airport)
+    sengaja **mulai kosong** — milih jam transfer buat tamu itu ngarang.
+  - Seed-nya di `useEffect`, **jangan di render** — nge-set state parent pas render itu loop.
+  - Jam tampil **12 jam (AM/PM)**, ngikut popup booking + email (`fmtTime12` di API).
+    **Picker charter nulis 24 jam** ("06:00") — beda itu lebih tua dari komponen ini dan
+    belum diputusin.
+  - `components/ui/TimeChoiceKit.jsx` + section di `/ui-kit` cuma buat ngeliat/nge-foto
+    bentuknya lawan item katalog asli. `/ui-kit` noindex, nol pemakai di alur live.
+  - Verifikasi: **`verify-timechoice.mjs`** (248/248, 6 item × 320/390/768/1280) —
+    jumlah opsi persis, nol opsi mati, nol chip, nol kalimat, default ke-seed (yang bebas
+    kosong), tinggi 34 & radius 12 & font 12.8 (sama kayak field lain), dan **tanda tangan
+    kontrolnya cuma SATU** di tiap lebar. Dites pakai bug aslinya (opsi dibalikin ke
+    48-dengan-disable → 40 assertion nyala).
 
 **Field & label — SATU KOTAK, SATU LABEL (Sep 2026, Wayan pilih "opsi 1")**
 Wayan: *"gua cuma pengen ukuran dan standar yang bagus dan konsisten"*. Semuanya di

@@ -13,12 +13,13 @@
 //
 // Block shapes:
 //   { type: 'crumb', html }                                   - breadcrumb line (owned by TW-B3, .guide-crumb*)
-//   { type: 'lead', src, alt, loading, width, height, caption } - lead/inline 4:3 photo (.guide-lead)
 //   { type: 'heading', html }                                  - sub-section H2 (.section__title.section__title--sub)
-//   { type: 'para', html }                                     - plain paragraph (styled via ancestor .guide-article p)
+//   { type: 'para', html }                                     - plain paragraph (Prose sets the body type itself)
 //   { type: 'list', variant: 'yes' | 'no', items: [html, ...] } - checklist (.info__list.info__list--yes|--no)
 //   { type: 'back', html }                                     - closing "back to guide" link (owned by TW-B3, .guide-crumb-back)
 
 // Nothing imports this today - it is documentation that can rot, and it had
 // already fallen behind ('boxes' was added without it). Kept in step on purpose.
-export const PROSE_BLOCK_TYPES = ['crumb', 'lead', 'heading', 'para', 'list', 'boxes', 'facts', 'back'];
+// 'lead' (inline article photo) is GONE - Sep 2026, Wayan: guide articles carry one
+// photo, the hero. Nothing produces or renders one any more.
+export const PROSE_BLOCK_TYPES = ['crumb', 'heading', 'para', 'list', 'boxes', 'facts', 'back'];

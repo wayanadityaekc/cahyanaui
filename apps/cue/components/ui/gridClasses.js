@@ -53,11 +53,15 @@ export const GRID_RELATED =
 
 // .guide-more .experience__grid--home4 (guide "you might also like" / "see our tours"):
 // like xplore (desktop grid wrap, mobile slider) but base gap + 80% mobile card (not .home).
+// Kartu-kartunya sekarang HomepageCard yang sama persis kayak homepage
+// (Wayan, Sep 2026: "samakan ukuranya"), jadi langkah slider HP-nya ikut
+// GRID_XPLORE juga: 70% lalu 88% di bawah 576. Dulu 80% di langkah kedua -
+// satu-satunya slider di web yang beda sendiri.
 export const GRID_GUIDEMORE =
   'max-w-[1200px] mx-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   'min-[993px]:grid min-[993px]:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] min-[993px]:gap-[1.4rem] min-[993px]:overflow-visible min-[993px]:[&>*]:flex-none ' +
   'max-[992px]:flex max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] max-[992px]:gap-4 ' +
-  'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_80%]' + ' ' + BLEED_MOBILE;
+  'max-[992px]:[&>*]:flex-[0_0_70%] max-[992px]:[&>*]:[scroll-snap-align:start] max-[576px]:[&>*]:flex-[0_0_88%]' + ' ' + BLEED_MOBILE;
 
 // GuideHub category grid (guide hub page, Sep 2026 - Wayan): FIXED 4 columns visible
 // on desktop, always sized as 1/4 of the container regardless of how many cards a

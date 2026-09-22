@@ -10,6 +10,19 @@ import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import InfoFacts from '@/components/ui/InfoFacts';
 import { unlinkHiddenTours } from '@/lib/routes';
 
+// Body type for the paragraphs this renders. It used to arrive from the ancestor
+// rule `.guide-article p` (see content/schema/prose.js, which still says so); that
+// rule went with the CSS sweep and nobody noticed, so guide articles have been
+// shipping browser-default 16px/normal in --color-green while every other page's
+// body copy is 12.8px/1.6 in --color-ink. Measured on /guide/ubud.html: the article
+// text was LARGER than its own 14px section headings.
+//
+// It sits on the element, not on a wrapper, so a context that already declares
+// its own [&_p] rhythm (charter, transfer, airport, Our Company's legal + FAQ
+// bodies) keeps winning on specificity (0,1,1 over 0,1,0) and renders byte-identical.
+// The values are the same string those four use, so there is one answer either way.
+const BODY_P = 'm-0 mb-4 text-body leading-[var(--lh-body)] text-ink';
+
 // headingVariant tunes the `--sub` article headings per context (the old
 // `.guide-article-page` / `.company-page .guide-article` descendant overrides):
 //   'legal'   (default) = centered + underline (base .section__title--sub)
@@ -52,19 +65,6 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
     switch (b.type) {
       case 'crumb':
         return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
-      case 'lead':
-        return (
-          <figure className="mb-6" key={i}>
-            <img
-              className="block w-full h-auto aspect-[4/3] object-cover rounded-lg shadow-[0_8px_24px_rgba(31,61,43,0.1)]"
-              src={b.src} alt={b.alt} loading={b.loading} width={b.width} height={b.height}
-            />
-            <figcaption
-              className="mt-2 text-[length:var(--fs-label)] italic text-center text-muted"
-              dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.caption) }}
-            />
-          </figure>
-        );
       case 'heading':
         // Default = sub-section heading (.section__title--sub), unchanged for all
         // guide/legal callers. `sub: false` = a main section heading (plain
@@ -75,7 +75,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
           ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
           : <h2 className={`${SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}${afterBoxes ? ' !mt-0' : ''}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'para':
-        return <p className={PROSE_LINK} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+        return <p className={`${BODY_P} ${PROSE_LINK}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       case 'list':
         return (
           <ul className={`${infoList(b.variant)} ${PROSE_LINK}`} key={i}>
@@ -120,9 +120,9 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
           </InfoBoxes>
         );
       case 'back':
-        // margin-top stays inline: `.guide-article p` (0,1,1) outweighs a mt-* utility
-        // (0,1,0), same as the pre-migration inline style; [&_a]: replaces .guide-crumb-back.
-        return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+        // margin-top stays inline so it outranks BODY_P's m-0 and any ancestor
+        // [&_p] rule a context declares; [&_a]: replaces .guide-crumb-back.
+        return <p style={{ marginTop: '2rem' }} className={`${BODY_P} [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
       default:
         return null;
     }

@@ -36,15 +36,6 @@ export const GUIDE_CONTENT = {
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; What to Do"
    },
    {
-    "type": "lead",
-    "src": "/assets/images/ubud-atv-adventure-card.jpg",
-    "alt": "ATV quad biking through the jungle near Ubud, Bali",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 900,
-    "caption": "ATV riding through the jungle near Ubud."
-   },
-   {
     "type": "para",
     "html": "Bali's interior is an adventure park that happens to also be a landscape: rivers with real rapids, jungle trails made for quad bikes, valleys deep enough to swing over, and a volcano you can summit before breakfast. Almost all of it sits within an hour of Ubud, needs no experience, and comes with gear, briefing, and transport included. Here's the line-up and who each one suits."
    },
@@ -227,15 +218,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "crumb",
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; What to Do"
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/kelingking-beach.jpg",
-    "alt": "Kelingking Beach, Nusa Penida, Bali",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 1157,
-    "caption": "Kelingking Beach, Nusa Penida."
    },
    {
     "type": "para",
@@ -431,15 +413,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "crumb",
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; What to Do"
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/tour-hero.jpg",
-    "alt": "Touring Bali's highlights by car with a local driver",
-    "loading": "lazy",
-    "width": 1920,
-    "height": 1080,
-    "caption": "Seeing Bali's highlights on a guided day tour."
    },
    {
     "type": "para",
@@ -779,15 +752,6 @@ export const GUIDE_CONTENT = {
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; Nature"
    },
    {
-    "type": "lead",
-    "src": "/assets/images/ubud-tour-card.jpg",
-    "alt": "Tegalalang rice terraces near Ubud, Bali",
-    "loading": "lazy",
-    "width": 600,
-    "height": 600,
-    "caption": "The Tegalalang rice terraces near Ubud."
-   },
-   {
     "type": "para",
     "html": "Bali's rice terraces are the island's signature landscape - staircases of green carved into hillsides over the past thousand years. But the view is only half the story. Behind every terrace is the <b>subak</b>, the farmer cooperative that shares irrigation water fairly from mountain lake to final paddy, recognised by UNESCO as a cultural landscape in 2012. Knowing what you're looking at turns a photo stop into one of the most interesting hours of a Bali trip."
    },
@@ -945,15 +909,6 @@ export const GUIDE_CONTENT = {
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; Nature"
    },
    {
-    "type": "lead",
-    "src": "/assets/images/mount-batur-sunrise.webp",
-    "alt": "Sunrise over Mount Batur seen from the trail",
-    "loading": "lazy",
-    "width": 1536,
-    "height": 1025,
-    "caption": "Sunrise from Mount Batur."
-   },
-   {
     "type": "para",
     "html": "Bali exists because of its volcanoes - they built the island, their ash makes the soil that grows three rice crops a year, and their peaks anchor the Balinese compass: <b>kaja</b>, the sacred direction, points at the mountains. Two volcanoes dominate the story - Agung, the holy giant, and Batur, the one you can climb before breakfast."
    },
@@ -1105,15 +1060,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "crumb",
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; Nature"
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/tegenungan-waterfall-hero.jpg",
-    "alt": "Tegenungan waterfall dropping into its plunge pool",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 900,
-    "caption": "Tegenungan Waterfall, near Ubud."
    },
    {
     "type": "para",
@@ -1301,15 +1247,6 @@ export const GUIDE_CONTENT = {
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; People &amp; Culture"
    },
    {
-    "type": "lead",
-    "src": "/assets/images/kecak.jpg",
-    "alt": "Masked monkey dancer in poleng cloth among Kecak chanters at night",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 900,
-    "caption": "The Kecak fire dance at sunset."
-   },
-   {
     "type": "para",
     "html": "Dance in Bali isn't entertainment bolted onto tourism - it's part of how the island worships, tells its stories, and raises its children, and it was being performed in temple courtyards centuries before the first hotel. UNESCO lists Balinese dance as intangible cultural heritage, and on any given evening dozens of troupes perform across the island. Here's what you'll actually see, and how to pick the right show."
    },
@@ -1473,15 +1410,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "crumb",
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; People &amp; Culture"
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/besakih-temple.webp",
-    "alt": "Besakih, Bali's mother temple",
-    "loading": "lazy",
-    "width": 1920,
-    "height": 1284,
-    "caption": "Besakih, Bali's mother temple."
    },
    {
     "type": "para",
@@ -1663,15 +1591,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "crumb",
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; Good to Know"
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/tanahlot-sunset.jpg",
-    "alt": "Sunset at Tanah Lot temple, Bali",
-    "loading": "lazy",
-    "width": 1600,
-    "height": 1095,
-    "caption": "Sunset at Tanah Lot."
    },
    {
     "type": "para",
@@ -2059,15 +1978,6 @@ export const GUIDE_CONTENT = {
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; Good to Know"
    },
    {
-    "type": "lead",
-    "src": "/assets/images/transfer-hero.webp",
-    "alt": "Ngurah Rai International Airport, Bali",
-    "loading": "lazy",
-    "width": 1920,
-    "height": 1080,
-    "caption": "Arriving at Bali's Ngurah Rai airport."
-   },
-   {
     "type": "para",
     "html": "Bali has no trains and no metro, and outside the southern toll road there are no highways - just a web of narrow roads shared by cars, scooters, trucks, and the occasional ceremony procession. How you choose to get around shapes your whole trip, so it's worth deciding early. Here are the real options, with their honest pros and cons."
    },
@@ -2274,15 +2184,6 @@ export const GUIDE_CONTENT = {
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; People &amp; Culture"
    },
    {
-    "type": "lead",
-    "src": "/assets/images/taman-ayun-hero.jpg",
-    "alt": "A candi bentar split gate at a Balinese temple",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 1365,
-    "caption": "A candi bentar - the split gate of a Balinese temple."
-   },
-   {
     "type": "para",
     "html": "Bali's temples are working places of worship - every one of them, including the famous ones with ticket booths. The good news: visiting respectfully is simple, the rules are consistent island-wide, and nobody expects you to know the theology. Get the dress right, move calmly, and you're welcome almost everywhere. Here's the complete visitor's rulebook."
    },
@@ -2473,15 +2374,6 @@ export const GUIDE_CONTENT = {
     "html": "Start early at the <a href=\"/attractions/ubud-market.html\">art market</a>, which is at its best before the tour buses, and cross the road to the <a href=\"/attractions/ubud-royal-palace.html\">Ubud Palace</a>, still home to Ubud's royal family. The <a href=\"/attractions/monkey-forest.html\">Sacred Monkey Forest</a> is a short walk south - a real temple sanctuary, not a petting zoo, so keep bags zipped and don't carry food."
    },
    {
-    "type": "lead",
-    "src": "/assets/images/ubud-palace.jpg",
-    "alt": "Ubud Palace courtyard, still home to Ubud's royal family",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 900,
-    "caption": "Ubud Palace, right in the middle of town."
-   },
-   {
     "type": "para",
     "html": "For a quiet hour, the Campuhan Ridge Walk is a paved path along a ridgeline of tall grass - free, easy, and best before 9 AM or near sunset, when the light is soft and the heat is off. Art lovers have three serious museums within a short drive: Puri Lukisan, Neka, and ARMA, all built around Balinese painting. In the evening, a traditional dance is performed somewhere in town nearly every night; the <a href=\"/attractions/kecak-dance.html\">Ubud Kecak</a> runs Tuesdays and Sundays at 7 PM."
    },
@@ -2492,15 +2384,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "para",
     "html": "The countryside is the point. The <a href=\"/attractions/tegalalang-rice-terrace.html\">Tegalalang rice terraces</a> are 20 minutes north; the craft villages - silver in Celuk, painting in Batuan, woodcarving in Mas - line the road south. The holy springs of <a href=\"/attractions/tirta-empul.html\">Tirta Empul</a> and the carved cliffs of <a href=\"/attractions/gunung-kawi.html\">Gunung Kawi</a> make a good half-day east."
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/tirta-empul-hero.jpg",
-    "alt": "Tirta Empul holy water temple, east of Ubud",
-    "loading": "lazy",
-    "width": 1200,
-    "height": 900,
-    "caption": "Tirta Empul's holy springs, a good half-day trip east of Ubud."
    },
    {
     "type": "para",
@@ -2657,15 +2540,6 @@ export const GUIDE_CONTENT = {
    {
     "type": "crumb",
     "html": "<a href=\"/bali-guide.html\">Bali Guide</a> &rsaquo; About the Island"
-   },
-   {
-    "type": "lead",
-    "src": "/assets/images/south-coast-sunset-kecak-card.jpg",
-    "alt": "Uluwatu temple on the cliffs above the Indian Ocean",
-    "loading": "lazy",
-    "width": 600,
-    "height": 600,
-    "caption": "Uluwatu Temple on the southern cliffs."
    },
    {
     "type": "para",

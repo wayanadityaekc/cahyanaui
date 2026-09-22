@@ -718,11 +718,52 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
     beda peran. Daftar isi "On this page" dari heading artikel sendiri masih mungkin
     ditambah nanti di kolom yang sama (list vertikal muat 5-9 heading panjang, pill track
     nggak) — belum diputusin Wayan.
-  - Isi artikel + sidebar + blok "You might also like"/"See our tours" **isinya TIDAK diubah**.
+  - **BLOK "Our tours" PAKAI `HomepageCard`** (Sep 2026, Wayan: "Our tours card masih card
+  lama, pakai card homepage dan samakan ukuranya"). Dulu `ExperienceCard` (kartu putih 4:3,
+  judul di bawah foto) — jadi blok terakhir yang dibaca tamu di artikel guide itu satu-satunya
+  tempat di web yang masih nawarin tour pakai bentuk kartu lain.
+  - **Datanya diambil UTUH dari `EXPLORE_TOURS`** (`content/shared/home.js`) lewat nama
+    `program`, bukan disalin lagi. `guide-more.js` dulu nulis salinannya sendiri dan salinan
+    itu **UDAH BASI**: `$45`/`$55` di sini lawan `$40`/`$49` di homepage — 15 halaman guide
+    nyetak harga lebih mahal dari yang ditagih sampai katalog API nyampe. **`check-prices`
+    gak nyisir file itu**, jadi gak ada yang bakal ngadu. Kalau nama programnya gak ketemu,
+    `byProgram()` sengaja **THROW** (build merah) — bukan diem-diem ngasih daftar pendek.
+  - Ukurannya ikut sendiri: `GRID_GUIDEMORE` lebarnya sama persis sama grid homepage
+    (1152px, `auto-fill minmax(260px,1fr)`). Langkah slider HP-nya **80% → 88%** biar
+    sama sama `GRID_XPLORE`.
+  - Judul blok pakai **`CAROUSEL_TITLE`** (string yang sama dipakai "You might also like"
+    di halaman tour), bukan salinan yang ketinggalan `leading-[var(--lh-heading)]`.
+  - Kartu guide di blok "You might also like": tag-nya dulu `<span>` **tanpa class sama
+    sekali** = 16px hitam, lebih gede dari judul kartunya. Sekarang `--fs-label` tracked
+    uppercase muted + judul `--fs-h3`, sama kayak `GuideCard`.
+  - **`ExperienceCard` sekarang nol pemakai di alur live** — sisanya cuma `/ui-kit`
+    (galeri komponen, noindex). Belum dihapus; tanya Wayan dulu kalau mau dibuang.
+- Isi artikel + sidebar **isinya TIDAK diubah**.
   - Verifikasi: `verify-guidehero.mjs` di scratchpad (34/34) — 15 halaman semuanya punya foto,
     3 hook & CTA; foto/judul posisi + ukurannya **identik sama `/ubud-tour.html`**; di HP
     judulnya hitam di sheet putih (bukan putih di atas foto lagi); artikel & sidebar utuh.
-- Body semua halaman guide punya class **`.guide-article-page`** (beda dari `.guide-article` yang
+- **TYPOGRAFI ARTIKEL DULU LEPAS DARI TANGGA GLOBAL — UDAH DIBENERIN** (Sep 2026, Wayan:
+  "typography nya, makes sure konsisten dengan global web"). Paragraf artikel guide
+  ke-render **16px / line-height `normal` / `--color-green`**: lebih GEDE dari judul
+  section-nya sendiri (14px), sementara body copy di seluruh web lain 12.8px/1.6/`--color-ink`.
+  - Sebabnya: dulu gaya-nya dateng dari rule ancestor **`.guide-article p`** (masih ketulis
+    di header `content/schema/prose.js`), dan rule itu ikut kehapus pas sapuan CSS. Gak ada
+    yang ngadu karena `<p>` tanpa style itu sah-sah aja. `INFO_CONTAINER_ARTICLE` di
+    `infoClasses.js` yang harusnya mbawa gaya itu **nol pemakai** — sisa dari migrasi.
+  - Sekarang **`Prose` sendiri yang bawa body type** (`BODY_P`, dipasang di blok `para`
+    & `back`), BUKAN di wrapper. Alasannya penting: 4 pemakai `Prose` yang lain (charter,
+    transfer, airport, legal+FAQ Our Company) udah punya rule `[&_p]` sendiri di wrapper-nya,
+    dan wrapper (0,1,1) selalu menang atas class di elemen (0,1,0) — jadi mereka **byte-identik**,
+    yang berubah cuma guide yang emang gak punya wrapper. Nilainya sama persis sama string
+    yang keempat wrapper itu pakai.
+  - **Judul `--sub` TETEP `--fs-h3` 14px** — itu konvensi yang sama dipakai charter/transfer/
+    legal, jangan digedein cuma di guide.
+- **SATU FOTO PER ARTIKEL: HERO DOANG** (Sep 2026, Wayan: "make sure cuma ada satu foto yaitu
+  di hero"). **14 blok `{type:'lead'}`** (foto 4:3 + caption di sela paragraf) UDAH DIHAPUS dari
+  `content/guides/index.js`, dan `case 'lead'` ikut dibuang dari `Prose` (nol produsen =
+  kode mati). `PROSE_BLOCK_TYPES` udah gak nyebut `lead`. Kartu di blok "You might also like"
+  / "Our tours" **BUKAN** foto artikel — itu navigasi, tetep ada.
+- Body semua halaman guide punya class **`.guide-article-page` (beda dari `.guide-article` yang
   numpang dipake juga di Terms/Privacy/Cancellation/Charter buat kolom-baca-polos yang sama -
   jangan scope hal khusus-guide ke `.guide-article`, salah sasaran kena 4 halaman itu juga).
   **Awalnya namanya `.guide-page`** — ternyata itu udah dipake `bali-guide.html` buat
@@ -1965,6 +2006,15 @@ Order **must be kept** (declarations first, run last):
       strip-nya **turun sendiri 33px dalam ~150ms** sementara konten di belakangnya
       tetep jalan ikut scroll. Diukur di scrollY yang SAMA PERSIS (1400 dua kali):
       strip pindah **53 → 68px** padahal halamannya gak gerak sama sekali.
+    - **DUA AMBANG, bukan satu** (Sep 2026, Wayan: "masih ada loncatan bug ketika trip bar
+      menghilang"). `scrollY > 80` polos itu nge-flip state di TIAP lintasan, jadi jempol yang
+      nempel di dekat atas bikin header **kedip 53 <-> 86px berulang**: diukur pakai 8 sentilan
+      wheel 4-6px di sekitar 80, **kedelapan-delapannya** nge-toggle. Pita 33px yang buka-tutup
+      persis di bawah navbar itu yang kebaca sebagai loncatan.
+      **TUTUP tetep di 80, BUKA di 8.** Jadi begitu bar-nya nutup dia tetep nutup sampai tamu
+      beneran balik ke atas; di antara 8 dan 80 gak ada yang berubah dan satu sentilan gak
+      mungkin ngelewatin dua-duanya. Dia **tetep gak pernah kebuka di tengah halaman** (itu
+      lurch yang Wayan udah tolak), soalnya 8px itu ya ujung atas halaman.
     - Sekarang header **satu tinggi buat seluruh scroll** — yang nempel ke dia gak
       pernah gerak di tengah halaman. Strip emang baca `--header-h` (bukan
       `--header-h-max`) supaya nempel tanpa celah pas bar-nya kebuka di atas; itu

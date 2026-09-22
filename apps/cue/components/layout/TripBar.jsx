@@ -57,8 +57,18 @@ export default function TripBar() {
   // This also keeps the strip glued to the navbar with no gap, which is why it
   // reads --header-h rather than the frozen --header-h-max in the first place.
   // The bar is an announcement, and it is still there when a guest arrives.
+  // TWO thresholds, not one (Sep 2026, Wayan: "masih ada loncatan bug ketika trip
+  // bar menghilang"). A single `scrollY > 80` flips state on EVERY crossing, so a
+  // thumb resting near the top made the header flap 53 <-> 86px over and over:
+  // measured with 4px wheel nudges around 80, it toggled on all eight of them.
+  // That 33px band opening and shutting under the navbar is the jump.
+  //
+  // CLOSE stays at 80. OPEN is 8, so once the bar is shut it stays shut until the
+  // guest is genuinely back at the top - between 8 and 80 nothing changes, and a
+  // nudge cannot cross both. It still never reopens mid-page (that was the lurch
+  // Wayan had already rejected), because 8px IS the top of the page.
   useEffect(() => {
-    const onScroll = () => setHidden(window.scrollY > 80);
+    const onScroll = () => setHidden((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
     onScroll(); // a page opened at an anchor starts already scrolled
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);

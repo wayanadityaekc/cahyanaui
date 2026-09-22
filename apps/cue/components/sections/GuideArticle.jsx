@@ -1,17 +1,16 @@
 import JsonLd from '@/components/JsonLd';
-import { CARD, CARD_WRAP } from '@/components/ui/detailCardClasses';
 import GuideCatNav from '@/components/sections/GuideCatNav';
-import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
+import { RAIL_PAGE_BOX, RAIL_FRAME_CARD, RAIL_MAIN_CARD, RAIL_READ } from '@/components/ui/railClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
 import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 
-// The prose keeps a readable measure inside the wide card: it starts at the card's
-// left edge (so it lines up with a tour page's content) but stops well short of the
-// right one. --container-read is the width CLAUDE.md pins for reading columns - a
-// full 950px line at 12.8px would run ~145 characters.
-const PROSE = 'max-w-[var(--container-read)]';
+// The gap under the hero is the number it always was, at every width: the old
+// layout paid 1.6rem of padding plus the card wrapper's margin, and that margin
+// was 1.25rem normally but 1rem under 560px. Measured: dropping the 560px step
+// pushed the first line down 4px on a phone.
+const BOX = `${RAIL_PAGE_BOX} pt-[2.85rem] max-[560px]:pt-[2.6rem]`;
 
 export default function GuideArticle({ data }) {
   const slug = (data.__page || '').replace(/^guide\//, '');
@@ -47,19 +46,18 @@ export default function GuideArticle({ data }) {
         ctaHref="/tour.html"
       />
 
-      <div className={TOUR_LAYOUT_BOOK}>
-        <div className={TOUR_LAYOUT_MAIN}>
-          <div className={CARD_WRAP}>
-            <div className={CARD}>
-              <GuideCatNav tabs={data.tabs} variant="mobile" />
-              <div className={PROSE}>
-                <Prose blocks={data.body} headingVariant="guide" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={TOUR_LAYOUT_SIDE}>
+      {/* The rail shell Our Company and My Trips use: category rail on the left,
+          article on the right. Below 993px the rail hides itself and the frame is
+          the same white card the page always had - the rail is desktop-only. */}
+      <div className={BOX}>
+        <div className={RAIL_FRAME_CARD}>
           <GuideCatNav tabs={data.tabs} variant="desktop" />
+          <main className={RAIL_MAIN_CARD}>
+            <GuideCatNav tabs={data.tabs} variant="mobile" />
+            <div className={RAIL_READ}>
+              <Prose blocks={data.body} headingVariant="guide" />
+            </div>
+          </main>
         </div>
       </div>
 

@@ -706,6 +706,37 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
     ketauan ada. Dropdown Our Company nunjukin semuanya sekali tap. `TRACK_SCROLL`/
     `segmentLink` UDAH DIHAPUS dari `detailCardClasses.js` (dead) — kalau mau balik ke
     pill, tulis ulang, jangan cari sisanya.
+  - **DESKTOP SEKARANG PAKAI RAIL YANG SAMA KAYAK OUR COMPANY & MY TRIPS** (Sep 2026,
+    Wayan: "kita udah punya side bar kategori yang kepakai di my trip dan our company,
+    pakai itu juga di page guide"). Kolom kategori pindah ke **KIRI** dan dibangun dari
+    `RAIL_ASIDE` + `RAIL_STICK` + `railItem()`, artikelnya di `RAIL_MAIN_CARD`,
+    dua-duanya di `RAIL_FRAME_CARD`. `TOUR_LAYOUT_BOOK/MAIN/SIDE` + `CARD`/`CARD_WRAP`
+    udah gak dipakai halaman guide.
+    - **Ini NGE-OVERRIDE bullet di bawah** ("border-l, kolomnya di KANAN, jangan dipindah ke
+      kiri nanti artikel geser dari 48px"): Wayan minta rail-nya, jadi tepi kiri artikel
+      sekarang duduk di sebelah rail (**306px @1280**), bukan 48px kayak halaman tour lagi.
+    - **HP (<=992px) NOL BERUBAH** - itu yang diminta ("khusus desktop"). Rail-nya
+      `max-[992px]:hidden`, dan frame + kolom kontennya bawa varian `_CARD`: di bawah 993
+      bentuknya balik jadi kartu putih `--r-md` tanpa shadow, padding `px-6 pt-6 pb-8`
+      (`px-4 pt-5 pb-[1.6rem]` di bawah 560) - persis `CARD` yang lama. Dropdown kategori
+      HP gak disentuh.
+    - **Jarak ke hero = `pt-[2.85rem]` + `max-[560px]:pt-[2.6rem]`.** Dulu angkanya dijumlah
+      dari dua tempat (`pt-[1.6rem]` layout + `mt-5`/`max-[560px]:mt-4` wrapper); ke-ukur,
+      lupa step 560-nya bikin baris pertama turun **4px** di 320 & 390.
+    - `RAIL_FRAME`/`RAIL_MAIN` dipecah jadi **paruh desktop bersama (`FRAME_DESK`)** + paruh
+      HP per halaman, jadi dua bentuk itu gak bisa melenceng. **Jangan** nambal pakai utility
+      yang bentrok di samping yang lama - `rounded-none` lawan `rounded-md` specificity-nya
+      sama, yang menang urutan compile.
+    - Blok "You might also like"/"Our tours" di bawah artikel **gak ikut melebar** (masih
+      container 1200) - belum ditanyain ke Wayan.
+    - Verifikasi: **`verify-guiderail.mjs`** di scratchpad (**268/268**, 3 halaman guide ×
+      1024/1280/1440/1920 + 320/390/768): rail ada & 248 & cream & setinggi frame & di KIRI
+      artikel, 5 kategori & gak bergaris bawah & baris aktif pill putih 600, dropdown HP gak
+      nongol di desktop, prosa <=720, menu pin di `--header-h`, halaman gak melar, dan **HP
+      diadu langsung lawan build SEBELUM perubahan** (bg/border/radius/padding kartu, posisi +
+      lebar + tinggi baris pertama, font body). Dites pakai 3 bug: rail dibalikin ke kanan
+      (12 nyala), `overflow-hidden` di frame (2 nyala, sticky mati), step 560px dibuang
+      (6 nyala).
   - **Border-nya `border-l`, BUKAN `border-r`** kayak Our Company: kolom kategori guide
     ada di **KANAN** (Our Company di kiri), jadi garisnya harus di sisi yang ngadep konten.
     Mindahin kolomnya ke kiri = artikel ke-geser dari 48px yang baru aja disamain sama
@@ -1549,6 +1580,33 @@ terus **HP-3** dari sheet 3 bentuk HP.
   - **Rail-nya gak punya tinggi sendiri.** Dia flex child di `items-stretch`, jadi cream-nya
     otomatis ngisi setinggi kotak; yang `sticky` itu MENU di dalamnya. Jangan kasih
     `h-[100vh-...]` ke rail-nya - itu bug lama yang bikin lubang putih di halaman pendek.
+- **KONTAINERNYA HAMPIR SELEBAR LAYAR + RAIL-nya SETINGGI LAYAR** (Sep 2026, Wayan:
+  "gua mau kontainer page yang punya side bar hampir full screen di layar, saat ini margin
+  left right masih gede, gua mau side bar stiky dan full screen cuma kontenya aja di scroll").
+  - `RAIL_PAGE` dulu `max-w-[1180px]`: di 1920 nyisa **394px kosong di tiap sisi** (diukur).
+    Sekarang **1800px**, jadi tepinya tinggal gutter halaman - **24px di 1024/1280/1440**,
+    84px di 1920. Cap-nya tetep ada biar monitor ultra-wide gak dapet baris 2500px.
+  - **Full screen-nya dipasang di FRAME, BUKAN di rail**:
+    `min-[993px]:min-h-[calc(100dvh - var(--header-h-max) - 1.9rem - var(--space-5))]`.
+    Rail itu flex child `items-stretch`, jadi frame yang tumbuh = cream-nya ikut sampai
+    bawah layar. **Ngasih `h-[100vh-...]` ke RAIL-nya itu bug lama**, dan dites lagi:
+    rail 842 lawan frame 1140 di Our Company (lubang putih) DAN sticky menu-nya ikut mati
+    (`stickTop -199`). Dua-duanya nyala di harness.
+  - Yang paling keliatan: **My Trips keranjang kosong frame-nya cuma 176px** - sekarang 729px,
+    cream-nya nyampe bawah layar.
+  - **"Cuma kontennya yang di-scroll" = halaman TETEP scroll normal, rail-nya yang dipin.**
+    Kolom konten SENGAJA gak dijadiin scroll container sendiri: itu bakal nyingkirin footer
+    dari halaman, dan footer itu yang mikul 100 link internal ke `/airport-transfer`
+    (lihat section SEO). Menu-nya udah beneran pin di `--header-h` (dites sesudah scroll 700px).
+  - **Sisa yang JUJUR, belum diputusin Wayan**: prosa tetep di-cap `--container-read` 720px
+    & rata KIRI, jadi kolom konten yang sekarang ~1100px (@1440) nyisain ~380px putih di kanan -
+    paling kentara di guide & legal. Naikin `--container-read` DILARANG (baris kepanjangan).
+    Pilihannya: biarin · prosa di-center di kolomnya · cap kontainer diturunin lagi.
+  - Verifikasi: **`verify-railwide.mjs`** di scratchpad (**111/111**, 1024/1280/1440/1920 +
+    320/390/768): tepi = gutter & ke-center & gak pernah lebih lebar dari sebelumnya, rail 248
+    & cream & setinggi frame, frame nyampe bawah layar, menu pin sesudah scroll, rail gak
+    numpuk konten, HP **nol berubah** (tinggi dokumen + kotak konten), jumlah section & tab
+    sama. Dites pakai 2 bug: cap 1180 dibalikin (7 nyala) & tinggi dipindah ke rail (8 nyala).
 - **JEBAKAN BESAR: `overflow-hidden` DI FRAME BIKIN `position:sticky` MATI TOTAL.**
   Elemen sticky nempel ke **scroll container terdekat**, dan `overflow:hidden` bikin frame-nya
   JADI scroll container - jadi menunya ke-scroll ikut halaman, gak pernah pin di bawah header.

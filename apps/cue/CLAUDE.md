@@ -2307,6 +2307,25 @@ satu layar**, dan di kasus airport isinya 926px di layar 844px (**scroll 285px**
 - Ruang sisa (ke-ukur, judul + Edit details udah dihitung): step 1 134–272px · step 2
   89–124px · My Trip step 2 **41px @320**. **Nol scroll sampai 4 baris keranjang.**
 
+**STEP 3 ITU UTANG, dan sekarang KEPAKAI** (22 Sep 2026). Checkout dinyalain buat semua
+tamu di hari yang sama (`PAY_DEFAULT = true`), jadi **pilihan bayar sekarang ikut di step 2
+buat SEMUA orang** — dan itu nge-override patokan "nol scroll" yang jadi alasan popup ini
+dipecah. Ke-ukur sesudah merge: step 2 butuh scroll **717px @390 · 954px @320 · 554px @768**
+(booking 1 baris; keranjang 3 baris ~sama). Perilakunya utuh — 101 assertion `verify-flow`
+lolos, yang merah **cuma** jatah scroll. Jawabannya bukan nambal geometri lagi: **isi → cek →
+bayar**, tiga step. Wayan udah dikasih angkanya; belum dibikin.
+- **Jangan setel ulang jatah scroll harness biar ijo.** Merah-nya itu tanda utang ini masih ada.
+
+**KERANJANG DIKOSONGIN PAS KARTU KE-CHARGE, bukan pas webhook mendarat.** `onSuccess` (yang
+`save({days:[],...})` di `MyTripsCart`) dipanggil dari `onPaid` punya `PayPalCheckout`.
+- **Kenapa bukan webhook**: sempat gitu, dan itu bolong — `/api/booking-status` belum ke-deploy,
+  jadi poll-nya 404, fase `paid` gak pernah dateng, dan tamu yang **beneran bayar** keranjangnya
+  gak pernah kosong: dia bisa bayar dua kali buat trip yang sama.
+- **Kenapa bukan pas submit** (perilaku sebelum ini): dengan pembayaran nyala, booking ke-simpen
+  `pending` SEBELUM kartu disentuh, jadi tamu yang nutup layar bayar kehilangan seluruh trip-nya.
+- Capture itu titik yang bener: duitnya udah keluar dari kartu & booking-nya udah ada di server;
+  webhook cuma ngasih tau kita. Batal di layar bayar = capture gak kejadian = keranjang utuh.
+
 **TANGGAL + JAM DI SEMUA KASUS** (Wayan: *"date dan time harus ada di semua popup, gunakan
 date dan time yang kita buat tadi, kalo user udah pilih berarti auto fill dan bisa di set ulang"*):
 - Pakai **`DateField withTime`** yang sama kayak seluruh web (popup kalender + `TimeChoice`

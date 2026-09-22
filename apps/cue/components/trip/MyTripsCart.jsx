@@ -173,6 +173,11 @@ export default function MyTripsCart() {
       ...(t.direction ? { direction: t.direction } : null),
       ...(t.pickup ? { pickup: t.pickup } : null),
       ...(t.dropoff ? { dropoff: t.dropoff } : null),
+      // The pick-up time the guest set in the date editor, which writes it to
+      // transfers[i].time. It used to be stored and never read back: the card did
+      // not show it, reopening the editor showed no time, and checkout sent an
+      // empty time for every transfer row. Charters below always carried theirs.
+      ...(t.time ? { time: t.time } : null),
       ...(t.flight_number ? { flight_number: t.flight_number } : null),
       ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
     }));

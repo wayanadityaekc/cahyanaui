@@ -6,7 +6,7 @@ import { Calendar, ChevronDown } from 'lucide-react';
 import Overlay from './Overlay';
 import { CONTROL, CONTROL_RICH, CHEV, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER, CONTROL_IC, CONTROL_STACK, CONTROL_HINT, CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY, HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calDay, CSEL_GROUP, BK_NATIVE, CAL_FOOT, CAL_APPLY } from './hsClasses';
 import TimeChoice from './TimeChoice';
-import { fmtTime } from '@/content/shared/timeSlots';
+import {fmtTime, fmtDate } from '@/content/shared/timeSlots';
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -15,12 +15,6 @@ function iso(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-function fmtLabel(v) {
-  if (!v) return '';
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-}
 
 // withTime folds the start time INTO this panel (Sep 2026, Wayan: "satuin dengan
 // datenya"), the shape shadcn's CalendarWithTime uses - and the footer slot it needs
@@ -66,7 +60,7 @@ export default function DateField({
   // The trigger names both halves of what the panel now holds ("30 Sept 2026 · 8:00 AM").
   // Both variants go through this - the rich one (booking form) used to print the date
   // only, so a guest who picked a time in the panel could not see it from the outside.
-  const label12 = (v) => (withTime && time ? `${fmtLabel(v)} · ${fmtTime(time)}` : fmtLabel(v));
+  const label12 = (v) => (withTime && time ? `${fmtDate(v)} · ${fmtTime(time)}` : fmtDate(v));
 
   const cells = [];
   for (let i = 0; i < lead; i++) cells.push(null);

@@ -95,6 +95,19 @@ export function fmtTime(t) {
 }
 
 // Just the hour, for a picker that keeps hours and minutes apart (flight time).
+// One date label for the whole site, next to the one time formatter. There were
+// two private copies (fmtLabel in DateField, fmtDay in MyTripsCart) and neither was
+// exported, so BookConfirmModal had nothing to call and printed the raw ISO date
+// ("2026-10-12") on its checking screen - caught in a screenshot, not by the
+// harness. MyTripsCart's own copy is deliberately different (no year, it sits in a
+// tight card row), so it stays where it is.
+export function fmtDate(v) {
+  if (!v) return '';
+  const [y, m, d] = String(v).split('-').map(Number);
+  if (!y || !m || !d) return String(v);
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
 export function fmtHour(h) {
   const n = Number(h);
   return `${n % 12 === 0 ? 12 : n % 12} ${n < 12 ? 'AM' : 'PM'}`;

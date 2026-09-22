@@ -15,7 +15,7 @@ import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
 import PayChips from './PayChips';
 import DateTimeField from '@/components/ui/DateTimeField';
 import DateField from '@/components/ui/DateField';
-import { AIRPORT_ROUTE, fmtTime } from '@/content/shared/timeSlots';
+import { AIRPORT_ROUTE, fmtTime, fmtDate } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
@@ -406,7 +406,7 @@ export default function BookConfirmModal() {
                   <div className={ROW}><span>Service</span><span>{view.service}</span></div>
                   {singleLine ? (
                     <>
-                      <div className={ROW}><span>Date</span><span>{dateOf(singleLine, 0) || '-'}</span></div>
+                      <div className={ROW}><span>Date</span><span>{fmtDate(dateOf(singleLine, 0)) || '-'}</span></div>
                       {isAirportRoute ? (
                         <div className={ROW}><span>Flight</span><span>{flightNumberDisplay || '-'}{timeOf(singleLine, 0) ? ' · ' + fmtTime(timeOf(singleLine, 0)) : ''}</span></div>
                       ) : (

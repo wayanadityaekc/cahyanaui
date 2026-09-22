@@ -1,8 +1,9 @@
 'use client';
 import { fmtTime } from '@/content/shared/timeSlots';
+import PayWaiting from '@/components/booking/PayWaiting';
 import { BTN_SM } from '@/components/ui/btnClasses';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CalendarCheck, Car, ChevronDown, Clock, History, MapPin, ShoppingBag } from 'lucide-react';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
@@ -124,6 +125,25 @@ export default function MyTripsCart() {
   const { referral } = useReferral();
   const { openBooking } = useBooking();
   const pricing = usePricing();
+
+  // Coming back from a hosted payment page (the rupiah rail). The guest returns
+  // with a reference in the URL and nothing provable, so this does not believe
+  // it: it shows the same waiting screen as the inline rails, which asks the
+  // server, and only clears the cart once the server says the money cleared.
+  const [returnRef, setReturnRef] = useState('');
+  useEffect(() => {
+    // Read in an effect, never in initial state: this is a static export, so
+    // the first paint has to match the pre-rendered HTML.
+    try {
+      const r = new URLSearchParams(window.location.search).get('ref');
+      if (r) setReturnRef(r);
+    } catch { /* no query string is simply nothing to resume */ }
+  }, []);
+  const clearReturn = () => {
+    setReturnRef('');
+    // Drop the reference so a reload does not reopen a screen the guest closed.
+    try { window.history.replaceState(null, '', window.location.pathname); } catch {}
+  };
 
   const [review, setReview] = useState(null);
   const [adding, setAdding] = useState(false);
@@ -421,7 +441,19 @@ export default function MyTripsCart() {
     { id: 'past', label: 'Past Trip', Icon: History },
   ];
 
+  // Rendered above everything (it is a full-screen portal), so a guest who
+  // just paid sees the outcome before the cart.
+  const payReturn = returnRef ? (
+    <PayWaiting
+      bookingRef={returnRef}
+      onClose={clearReturn}
+      onConfirmed={() => save({ days: [], transfers: [], charters: [] })}
+    />
+  ) : null;
+
   return (
+    <>
+      {payReturn}
     <div data-mytrips-cart>
       <RailLayout
         label="My trips"
@@ -529,5 +561,6 @@ export default function MyTripsCart() {
         itemName={editDate ? editDate.row.service : null}
       />
     </div>
+    </>
   );
 }

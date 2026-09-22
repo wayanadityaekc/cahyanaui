@@ -34,7 +34,7 @@ const POLL_MS = 4000;
 // screen that never resolves is worse than one that hands back control.
 const GIVE_UP_MS = 120000;
 
-export default function PayWaiting({ bookingRef, onClose }) {
+export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   const [phase, setPhase] = useState('waiting'); // waiting | paid | mismatch | slow | blind
   const [idx, setIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -72,7 +72,15 @@ export default function PayWaiting({ bookingRef, onClose }) {
         if (r.status === 401 || r.status === 404) { setPhase('blind'); return; }
         const d = await r.json().catch(() => null);
         if (stop) return;
-        if (d && d.payment === 'paid') { setPhase('paid'); return; }
+        if (d && d.payment === 'paid') {
+          setPhase('paid');
+          // Only the rails that LEAVE the site need this: the guest comes back
+          // with nothing provable, so "the server said paid" is the first
+          // moment it is safe to clear their cart. The inline rails pass
+          // nothing and are unaffected.
+          if (typeof onConfirmed === 'function') onConfirmed();
+          return;
+        }
         // A mismatch is NOT paid: the amount or currency disagreed and a person
         // has to look at it. Telling the guest it is confirmed would be a lie.
         if (d && d.payment === 'mismatch') { setPhase('mismatch'); return; }
@@ -85,7 +93,7 @@ export default function PayWaiting({ bookingRef, onClose }) {
     };
     timer.current = setTimeout(ask, POLL_MS);
     return () => { stop = true; clearTimeout(timer.current); };
-  }, [bookingRef]);
+  }, [bookingRef, onConfirmed]);
 
   if (!mounted) return null;
 

@@ -20,8 +20,10 @@ import { withSymbol } from '@/components/Price';
 import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
+import { railFor } from '@/lib/rails';
 import { baseTotal, PAY_COPY } from '@/lib/payment';
 import PayPalCheckout from './PayPalCheckout';
+import DokuCheckout from './DokuCheckout';
 import PayWaiting from './PayWaiting';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
@@ -551,7 +553,16 @@ export default function BookConfirmModal() {
                   Your booking is saved{bookingRef ? ` (${bookingRef})` : ''}. It is confirmed once this payment
                   goes through. Nothing is lost if you close this - you can pay later.
                 </p>
-                {bookingRef ? (
+                {bookingRef && railFor(currency) === 'doku' ? (
+                  // The rupiah rail is hosted, so there is no onPaid here: the
+                  // guest leaves, and My Trips asks the server what happened
+                  // when they come back. Clearing the cart on the way OUT would
+                  // lose the trip of anyone who changes their mind on DOKU.
+                  <DokuCheckout
+                    bookingRef={bookingRef}
+                    option={payOption}
+                  />
+                ) : bookingRef ? (
                   <PayPalCheckout
                     bookingRef={bookingRef}
                     option={payOption}

@@ -2463,10 +2463,35 @@ Tamu sekarang bisa bayar di halaman kita sendiri. Ini bagian yang kalau salah an
 **Rail: IDR → DOKU, selain itu → PayPal** (`cahyana-api/providers.js`, cermin
 `CUE/lib/rails.js`). **PayPal gak bisa settle rupiah sama sekali** — itu alasan
 DOKU ada, bukan preferensi.
-- **DOKU masih PLACEHOLDER** (`cahyana-api/doku.js`) — akunnya ada, kartunya masih
-  di-review. Selama `DOKU_CLIENT_ID`/`DOKU_SECRET` kosong, booking IDR jatuh ke
-  PayPal dalam USD, dan tamunya **dikasih tau di layar sebelum ngetik kartu**
-  (`noteFor()` di `lib/rails.js` → satu baris di `PaymentStep`).
+- **DOKU UDAH DIBANGUN, TAPI MASIH MATI** (Sep 2026). Server-nya lengkap
+  (`cahyana-api/doku.js` + `doku-routes.js`, detailnya di CLAUDE.md sana); di sini
+  saklarnya **`DOKU_READY = false` di `lib/rails.js`**. Selama itu false, booking IDR
+  jatuh ke PayPal dalam USD dan tamunya **dikasih tau di layar sebelum ngetik kartu**
+  (`noteFor()` → satu baris di `PaymentStep`).
+  - **Nyalainnya = `DOKU_READY = true` + env DOKU di Railway.** Dua-duanya, bareng:
+    flag nyala tanpa env = tamu dapet 503 "belum switched on" (di-handle, tapi jelek);
+    env nyala tanpa flag = rail-nya gak pernah kepilih.
+  - **Jangan nyalain sebelum satu pembayaran sandbox beneran tembus.** Alasannya persis
+    sama kayak `PAY_DEFAULT` dulu, dan itu bukan teori — lihat section saklar pembayaran.
+- **Bentuk DOKU BEDA dari PayPal, dan itu ngubah alurnya**: halaman DOKU itu **hosted**,
+  jadi tamu **KELUAR** dari situs. Konsekuensi yang gampang kelewat:
+  - **`DokuCheckout` GAK PUNYA `onPaid`** dan **gak ngosongin keranjang**. Pergi ke DOKU
+    itu bukan bayar; tamu yang berubah pikiran di sana harus masih punya trip-nya.
+  - Yang ngosongin keranjang = **`onConfirmed` punya `PayWaiting`**, dipanggil pas server
+    bilang `paid`. Prop itu **opsional** — rail inline gak ngasih apa-apa, jadi jalur
+    PayPal byte-identik.
+  - **Jalan baliknya `/my-trips.html?ref=CUE-0xx`** (dari `SITE_URL` di server).
+    `MyTripsCart` baca `?ref` **di `useEffect`** (static export — aturan yang sama kayak
+    `charterDraft`/`payFlag`) terus nge-render `PayWaiting` yang SAMA. Balik dari DOKU =
+    layar tunggu yang sama persis kayak bayar inline, bukan layar kedua yang harus
+    dipelajarin lagi.
+  - Tombol **back** ngapus `?ref` (`replaceState`) — kalau nggak, reload bakal mbuka lagi
+    layar yang barusan ditutup.
+- Verifikasi frontend: **`dokuui.mjs`** di scratchpad (9/9, dijalanin dengan
+  `DOKU_READY` sementara di-`true`): di IDR yang ke-render **DOKU, bukan PayPal** (nol
+  iframe PayPal), tombolnya nyebut bayar, `create-payment` ke-panggil bawa
+  **ref + option doang TANPA nominal**, dan tamunya beneran dianterin ke URL hosted-nya.
+  Dites pakai keadaan sebaliknya: `DOKU_READY = false` → 3 assertion langsung merah.
 - `doku.js` sengaja **NOLAK jalan**, bukan pura-pura sukses: `configured()` false
   dan tiap fungsi throw. Rail pembayaran yang diem-diem no-op itu bug terburuk yang
   bisa ada di repo ini — tamu ngira udah bayar, kita ngira belum.

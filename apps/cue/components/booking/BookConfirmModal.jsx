@@ -32,7 +32,7 @@ export default function BookConfirmModal() {
   const { ctx, closeBooking } = useBooking();
   const { currency, stay, displayGuests } = useTripPrefs();
   const { referral, apply } = useReferral();
-  const { setAccount } = useAccount();
+  const { account, setAccount } = useAccount();
   const pricing = usePricing();
 
   const [f, setF] = useState(EMPTY);
@@ -89,6 +89,27 @@ export default function BookConfirmModal() {
       .catch(() => {});
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
+
+  // Autofill from the signed-in account (Wayan: "kalo user udah naruh email dan
+  // udah login, semua yang pernah dia input tentang akunya pas dia mau book udah
+  // auto fill"). This modal already imported useAccount but only ever WROTE to it,
+  // so a signed-in guest still typed their name, phone and email into every booking.
+  //
+  // Only fills what is still EMPTY, and runs again when `account` arrives: it is
+  // fetched after mount, so a version that overwrote would wipe whatever the guest
+  // had already started typing.
+  useEffect(() => {
+    if (!ctx) return;
+    setF((v) => ({
+      ...v,
+      name: v.name || (account && account.name) || '',
+      phone: v.phone || (account && account.phone) || '',
+      email: v.email || (account && account.email) || '',
+      // Addresses are not on the account, so they come from this device.
+      pickup: v.pickup || readLocal(KEY.pickup, ''),
+      dropoff: v.dropoff || readLocal(KEY.dropoff, ''),
+    }));
+  }, [ctx, account]);
 
   // Checkpoint 1: the guest's payment choice is held here so the step can be
   // driven and screenshotted. Nothing acts on it yet.
@@ -248,6 +269,9 @@ export default function BookConfirmModal() {
     try {
       const d = await submitInquiry(payload());
       if (!d || d.status !== 'saved') throw new Error((d && d.detail) || '');
+      // Remember the addresses so the next booking on this device starts filled in.
+      if (f.pickup) writeLocal(KEY.pickup, f.pickup);
+      if (f.dropoff) writeLocal(KEY.dropoff, f.dropoff);
       if (d.token && !readLocal(KEY.token, '')) {
         writeLocal(KEY.token, d.token);
         if (d.account) setAccount(d.account);

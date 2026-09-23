@@ -1,6 +1,8 @@
 import JsonLd from '@/components/JsonLd';
 import GuideCatNav from '@/components/sections/GuideCatNav';
 import RailLayout from '@/components/ui/RailLayout';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import { guideCrumbs } from '@/lib/crumbs';
 import { RAIL_PAGE_BOX, RAIL_FRAME_CARD, RAIL_MAIN_CARD, RAIL_READ } from '@/components/ui/railClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
@@ -14,6 +16,8 @@ import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 const BOX = `${RAIL_PAGE_BOX} pt-[2.85rem] max-[560px]:pt-[2.6rem]`;
 
 export default function GuideArticle({ data }) {
+  // One trail, rendered on screen AND emitted as JSON-LD.
+  const crumbs = guideCrumbs(data.tabs, data.title);
   const slug = (data.__page || '').replace(/^guide\//, '');
   const card = guideCard(slug) || {};
   const hooks = [
@@ -24,7 +28,7 @@ export default function GuideArticle({ data }) {
 
   return (
     <div className="guide-article-page">
-      <JsonLd page={data.__page} />
+      <JsonLd page={data.__page} crumbs={crumbs} />
       {/* Same split hero the tour and attraction pages open with (Sep 2026, Wayan:
           "ubah semua page articles, pakai layout seperti tour destination dan
           experience, biar punya ciri khasnya"). It replaces the old dark full-bleed
@@ -63,7 +67,12 @@ export default function GuideArticle({ data }) {
           mobileNav={<GuideCatNav tabs={data.tabs} />}
         >
           <div className={RAIL_READ}>
-            <Prose blocks={data.body} headingVariant="guide" />
+            {/* One trail, and it now names the article itself. The prose block that
+                used to print it stopped at the category and was a bare <p> at
+                10.24px; the JSON-LD named the article but never said Home. Both
+                come from guideCrumbs() now, so they cannot disagree again. */}
+            <Breadcrumb items={crumbs} className="mb-[1.25rem]" />
+            <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="guide" />
           </div>
         </RailLayout>
       </div>

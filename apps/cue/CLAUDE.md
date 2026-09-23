@@ -1042,6 +1042,69 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
   - **TETEP bukan gate CI** — dia butuh clone `cahyana-api` di sebelah, dan CI cuma punya `out/`.
     Jalanin tangan tiap nyentuh harga.
 
+## Breadcrumbs — SATU komponen, satu trail (Sep 2026)
+Wayan: *"coba walk around websites cari page yang belum ada breadcrumbs dong bro, dan
+breadcrumbs di perjelas dan benerin"*. Disapu 97 halaman di browser (bukan grep HTML —
+itu ke-match payload RSC di dalam `<script>`). Yang ketemu:
+- **10 halaman indexable punya BreadcrumbList di JSON-LD tapi NOL yang kebaca tamu**:
+  `/tour` · `/destinations` · `/activities` · `/charter` · `/transfer` ·
+  `/airport-transfer` · `/all-reviews` · `/itinerary` · `/bali-guide` (ini malah nol
+  dua-duanya). Jadi Google dikasih tau ada jalan ke atas, tamunya nggak.
+- **3 renderer beda** yang gak sepakat: halaman detail `<nav>` 12.8px · **15 artikel guide
+  `<p>` polos 10.24px** (tulisan paling kecil di web) · 3 section legal `<p>` ketiga.
+- **Trail-nya sendiri melenceng**: guide di layar berhenti di kategori
+  ("Bali Guide › About the Island"), JSON-LD-nya nyebut artikelnya tapi gak pernah nyebut
+  Home. Dua salinan tangan dari satu jalan.
+- **Nol halaman** yang nandain halaman yang lagi dibuka (`aria-current="page"`).
+
+**Sekarang: `components/ui/Breadcrumb.jsx`, dipakai SEMUA.**
+- `<nav aria-label="Breadcrumb">` + `<ol>` — daftar buat screen reader, bukan sebaris teks
+  bertanda `›`. **12.8px (`--fs-small`)**, bukan 10.24.
+- **Item terakhir = halaman yang lagi dibuka**: gak pernah link, bawa `aria-current="page"`,
+  dan dia yang di-`text-gold` (sisanya muted). Itu bagian "diperjelas"-nya.
+- `itemsFromLegacy()` nerjemahin bentuk lama `[{type,href,text}]` punya 68 halaman detail,
+  jadi yang diubah cuma cara nge-render — isi kontennya gak disentuh.
+- Tour/attraction yang gak pakai hero gallery tetep punya crumb di KAKI halaman
+  (`CRUMB_FOOT`) — yang berubah cuma bingkainya, isinya komponen yang sama.
+
+**`lib/crumbs.js` = satu sumber trail buat halaman yang BUKAN detail.**
+- `crumbsFor(page)` di-key pakai string `page` yang SAMA dioper ke `<JsonLd>`, jadi
+  crumb & schema gak mungkin nunjuk halaman beda.
+- **Sengaja map literal, NOL import berat**: dia di-import halaman listing & form, dan narik
+  `TOUR_CONTENT`/`GUIDE_CONTENT` ke situ bakal nyeret dataset itu ke bundle mereka —
+  jebakan yang sama kayak `TripBar` + `TOUR_CONTENT` dan `PayWaiting` + `LISTINGS`.
+- `guideCrumbs(tabs, title)` = **Home › Bali Guide › kategori › artikel**. `GuideArticle`
+  ngitung SEKALI terus ngoper ke `<Breadcrumb>` DAN `<JsonLd crumbs={...}>`; `JsonLd`
+  nge-DROP BreadcrumbList statis kalau dikasih `crumbs`, jadi halaman gak pernah ngirim dua.
+- `JsonLd` juga nambal BreadcrumbList dari `crumbsFor()` buat halaman yang blok statisnya
+  gak punya — itu yang nutup `/bali-guide`.
+- **Homepage sengaja NOL** (dia akarnya; trail 1 item itu noise & diabaikan Google).
+
+**Yang sengaja DIBIARIN, jangan "dibenerin":**
+- **6 halaman attraction parent-nya TOUR**, bukan Destinations/Experiences (mis.
+  "Home › Lovina Dolphin & Sekumpul Waterfall › Banjar Hot Spring"). Dicek: **5 dari 6 gak
+  ada di listing mana pun**, jadi tour itu emang satu-satunya induknya. Itu bener.
+- **`/our-company` trail di layar ≠ schema** (layar nyebut section yang lagi kebuka,
+  schema nyebut halamannya). Enam section satu URL; ini disengaja & di-exempt di gate.
+- 3 section legal sekarang lewat **Home › Our Company › X** — langkah tengahnya BARU,
+  dulu "Our Company" gak bisa dijangkau dari trail padahal di situ section-nya tinggal.
+- `breadcrumb()` di `lib/schema.js` **nol pemanggil** sejak dulu (kode mati, dibiarin).
+
+**Verifikasi: `verify-crumbs.mjs` di scratchpad (1074/1074, 88 halaman indexable).**
+Per halaman: HTTP 200 (halaman 404 gak punya apa-apa, jadi semua cek "lolos" — jebakan yang
+udah kejadian di `verify-btnsm`), ada `<nav>`+`<ol>`, ukuran diadu lawan **token
+`--fs-small` yang di-resolve halaman itu sendiri** (bukan angka yang diketik di harness),
+trail mulai dari Home, **tepat 1** `aria-current="page"` & dia item terakhir & bukan link,
+BreadcrumbList ada, dan **teks di layar == teks di schema**.
+- Dites pakai 2 bug: crumb halaman listing dibuang (**3 nyala**) dan item terakhir dibalikin
+  jadi link tanpa `aria-current` (**27 nyala** — cuma kena halaman yang item terakhirnya
+  emang punya href; halaman detail terakhirnya emang teks polos, jadi dia ikut aman).
+- **Harness LAIN ikut ke-tabrak, dua-duanya BUKAN regresi** — kalau merah, cek ini dulu:
+  `verify-guiderail` ngitung `a[href*=gcat-]` se-halaman dan kebaca **6** (crumb-nya bawa
+  anchor kategori juga) — sekarang di-scope ke `aside`; dan baris pertama artikel di HP
+  turun **18px** karena trail-nya jadi 2 baris di 320/390 (ke-ukur). Yang kedua di-assert
+  sebagai **aturan**: artikel boleh geser PERSIS sebanyak trail-nya tumbuh, gak lebih.
+
 ## Redirect & sitemap (Sep 2026, sebelum submit GSC)
 - **REDIRECT HIDUPNYA DI `public/.htaccess`, BUKAN `next.config.js`.** Situs ini
   `output: 'export'` (static export) — Next **gak dukung** `redirects()`/`rewrites()`/

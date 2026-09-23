@@ -9,6 +9,7 @@ import { infoList, PROSE_LINK } from '@/components/ui/infoClasses';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import InfoFacts from '@/components/ui/InfoFacts';
 import { unlinkHiddenTours } from '@/lib/routes';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 
 // Body type for the paragraphs this renders. It used to arrive from the ancestor
 // rule `.guide-article p` (see content/schema/prose.js, which still says so); that
@@ -64,7 +65,12 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
     const afterBoxes = i > 0 && blocks[i - 1] && blocks[i - 1].type === 'boxes';
     switch (b.type) {
       case 'crumb':
-        return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+        // The three legal sections carry a structured trail now, so they render the
+        // same <Breadcrumb> as everything else - list markup, 12.8px, aria-current
+        // on the page you are on. It used to be a bare <p> of raw HTML at 10.24px.
+        // The middle step is new: "Our Company" is where these sections actually
+        // live, and it was not reachable from the trail before.
+        return <Breadcrumb items={b.items} className="mb-[1.25rem]" key={i} />;
       case 'heading':
         // Default = sub-section heading (.section__title--sub), unchanged for all
         // guide/legal callers. `sub: false` = a main section heading (plain

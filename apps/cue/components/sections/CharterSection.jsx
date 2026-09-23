@@ -32,6 +32,7 @@ import FormHero from '@/components/sections/FormHero';
 export default function CharterSection({ embedded }) {
   return (
     <FormHero
+      page="charter"
       title={CHARTER.title}
       sub={CHARTER.sub}
       photo="handara-gate.webp"

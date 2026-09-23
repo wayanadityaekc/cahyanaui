@@ -14,7 +14,7 @@ export const LEGAL = {
     "metaTitle": "Terms &amp; Conditions | Cahyana Ubud Experience",
     "metaDesc": "The terms and conditions for booking tours, transfers, and experiences with Cahyana Ubud Experience in Ubud, Bali - booking, payment, changes, and your responsibilities.",
     "body": [
-      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Terms &amp; Conditions" },
+      { "type": "crumb", "items": [{"label":"Home","href":"/"},{"label":"Our Company","href":"/our-company.html"},{"label":"Terms & Conditions"}] },
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "These Terms &amp; Conditions apply to every booking made with Cahyana Ubud Experience. By booking a tour, transfer, or experience with us - through this website, WhatsApp, email, or in person - you agree to the terms below. Please read them before you book." },
       { "type": "heading", "html": "1. Who we are" },
@@ -67,7 +67,7 @@ export const LEGAL = {
     "metaTitle": "Privacy Policy | Cahyana Ubud Experience",
     "metaDesc": "How Cahyana Ubud Experience collects, uses, and protects your information when you book a tour, transfer, or experience in Ubud, Bali.",
     "body": [
-      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Privacy Policy" },
+      { "type": "crumb", "items": [{"label":"Home","href":"/"},{"label":"Our Company","href":"/our-company.html"},{"label":"Privacy Policy"}] },
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "Your privacy matters to us. This policy explains what information Cahyana Ubud Experience collects when you contact or book with us, how we use it, and the choices you have. We only ever ask for what we need to plan and run your trip." },
       { "type": "heading", "html": "1. Who we are" },
@@ -110,7 +110,7 @@ export const LEGAL = {
     "metaTitle": "Cancellation &amp; Refund Policy | Cahyana Ubud Experience",
     "metaDesc": "How to cancel or reschedule a booking with Cahyana Ubud Experience - free-cancellation window, deposits, refunds, no-shows, and bad-weather options.",
     "body": [
-      { "type": "crumb", "html": "<a href=\"/\">Home</a> &rsaquo; Cancellation &amp; Refund Policy" },
+      { "type": "crumb", "items": [{"label":"Home","href":"/"},{"label":"Our Company","href":"/our-company.html"},{"label":"Cancellation & Refund Policy"}] },
       { "type": "para", "html": "<em>Last updated: 1 July 2026</em>" },
       { "type": "para", "html": "We keep cancellations simple and fair, whether you paid a deposit, in full, or nothing yet. Cancelling with enough notice is quick and free - the details below explain the timings, deposits, and refunds so there are no surprises." },
       { "type": "heading", "html": "1. How to cancel or reschedule" },

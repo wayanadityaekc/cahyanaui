@@ -45,6 +45,7 @@ export default function TransferSection({ embedded }) {
           /transfer owns the routes) back on the page as a picture. A coastal road
           says "private car across Bali", which is what the page sells. */}
       <FormHero
+        page="transfer"
         title={TRANSFER.title}
         sub={TRANSFER.desc}
         photo="coastal-road-beach-bali.webp"

@@ -12,8 +12,9 @@ import DetailHero from '@/components/sections/DetailHero';
 import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
-import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_NAV, CRUMB_LINK, CRUMB_SEP } from '@/components/sections/TourPage';
+import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_FOOT } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
+import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
 import TourComparisonBox from '@/components/booking/TourComparisonBox';
 import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
 
@@ -102,17 +103,7 @@ export default function AttractionPage({ data }) {
       {/* With the gallery hero the breadcrumb prints at the TOP of the page, so
           the foot copy is dropped rather than shown twice - same as TourPage. */}
       {data.crumb && !gallery.length && (
-        <nav className={CRUMB_NAV} aria-label="Breadcrumb">
-          {data.crumb.map((p, i) =>
-            p.type === 'link' && !isHiddenTour(p.href) ? (
-              <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
-            ) : p.type === 'sep' ? (
-              <span className={CRUMB_SEP} key={i}>{p.text}</span>
-            ) : (
-              <span key={i}>{p.text}</span>
-            ),
-          )}
-        </nav>
+        <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />
       )}
     </>
   );

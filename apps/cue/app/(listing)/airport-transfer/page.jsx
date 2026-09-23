@@ -36,6 +36,7 @@ export default function Page() {
     <>
       <JsonLd page="airport-transfer" />
       <FormHero
+        page="airport-transfer"
         title={AIRPORT.title}
         sub={AIRPORT.sub}
         photo="transfer-hero.webp"

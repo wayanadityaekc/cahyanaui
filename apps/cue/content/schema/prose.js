@@ -12,7 +12,10 @@
 // TW-B3 own those families) and would be a second, independent change.
 //
 // Block shapes:
-//   { type: 'crumb', html }                                   - breadcrumb line (owned by TW-B3, .guide-crumb*)
+//   { type: 'crumb', items: [{label, href?}] }              - breadcrumb; renders <Breadcrumb>.
+//        The last item is the page you are on and carries no href. Only the three
+//        legal sections produce this now - the guide articles build their trail
+//        from lib/crumbs.js so the screen and the JSON-LD cannot disagree.
 //   { type: 'heading', html }                                  - sub-section H2 (.section__title.section__title--sub)
 //   { type: 'para', html }                                     - plain paragraph (Prose sets the body type itself)
 //   { type: 'list', variant: 'yes' | 'no', items: [html, ...] } - checklist (.info__list.info__list--yes|--no)

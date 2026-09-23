@@ -15,7 +15,7 @@ export default function Page() {
   return (
     <>
       <JsonLd page="destinations" />
-      <ListingPage data={withAttractionCards(LISTINGS.destinations, ATTRACTION_CONTENT)} />
+      <ListingPage data={withAttractionCards(LISTINGS.destinations, ATTRACTION_CONTENT)} page="destinations" />
     </>
   );
 }

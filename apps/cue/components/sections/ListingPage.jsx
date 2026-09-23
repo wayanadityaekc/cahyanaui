@@ -1,5 +1,7 @@
 'use client';
 import { BTN_SM } from '@/components/ui/btnClasses';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import { crumbsFor } from '@/lib/crumbs';
 
 import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
 import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
@@ -24,7 +26,7 @@ const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
 // Search placeholder noun per listing page.
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };
 
-export default function ListingPage({ data }) {
+export default function ListingPage({ data, page }) {
   const { heroBg, title, sub, listTitle, sectionId, chips, cats, info } = data;
   const [query, setQuery] = useState('');
   const [zone, setZone] = useState('all'); // 'all' | category id (desktop dim filter)
@@ -74,6 +76,9 @@ export default function ListingPage({ data }) {
         <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
+          {/* These three pages carried a BreadcrumbList in their JSON-LD and showed a
+              guest nothing. It hides while a search is open, like the title does. */}
+          {!q && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-center min-[769px]:self-start" />}
           {!q && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
           {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}

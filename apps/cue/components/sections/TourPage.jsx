@@ -18,6 +18,7 @@ import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { isHiddenTour } from '@/lib/routes';
+import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
 
 // Tailwind-native (migrasi Fase 2): teks stop (.stop__num/.stop__name/.stop__desc)
 // -> utilities; .stop__body (tanpa CSS) -> drop class; .stop--link (link + hover
@@ -30,9 +31,9 @@ export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-norm
 // [&_.stop]:max-w-none) plus link-only styling.
 // Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
 // sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
-export const CRUMB_NAV = 'crumb max-w-none m-0 py-5 px-6 text-center [border-top:1px_solid_#e0ddd4] [border-bottom:1px_solid_#e0ddd4] text-h3 text-muted';
-export const CRUMB_LINK = 'text-gold no-underline font-medium hover:underline';
-export const CRUMB_SEP = 'mx-[0.4rem] opacity-[0.55]';
+// The foot crumb on a page WITHOUT the gallery hero: the band around it is this
+// page's business, the trail's own type and colour are the shared component's.
+export const CRUMB_FOOT = 'crumb max-w-none m-0 py-5 px-6 [border-top:1px_solid_var(--line)] [border-bottom:1px_solid_var(--line)] [&>ol]:justify-center';
 // The hero itself now lives in DetailHero (shared with AttractionPage and the guide
 // articles). Its class names are re-exported here because other modules already import
 // them from this file.
@@ -141,17 +142,7 @@ export default function TourPage({ data }) {
       )}
 
       {data.crumb && !gallery.length && (
-        <nav className={CRUMB_NAV} aria-label="Breadcrumb">
-          {data.crumb.map((p, i) =>
-            p.type === 'link' && !isHiddenTour(p.href) ? (
-              <a className={CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
-            ) : p.type === 'sep' ? (
-              <span className={CRUMB_SEP} key={i}>{p.text}</span>
-            ) : (
-              <span key={i}>{p.text}</span>
-            ),
-          )}
-        </nav>
+        <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />
       )}
     </>
   );

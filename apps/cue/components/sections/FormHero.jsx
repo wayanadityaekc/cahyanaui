@@ -1,4 +1,6 @@
 import Img from '@/components/ui/Img';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import { crumbsFor } from '@/lib/crumbs';
 import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { INFO_CARD_BODY } from '@/components/ui/infoClasses';
 
@@ -90,13 +92,15 @@ const DETAILS =
   `mt-[var(--section-gap)] ${INFO_CARD_BODY} [&_p]:max-w-[var(--container-read)] ` +
   '[&>h2]:!text-left';
 
-export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', half = false, embedded, details, children }) {
+export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', half = false, embedded, details, children, page }) {
   // On /programs this renders inside a tab under that page's own H1, so the title
   // steps down to an H2 rather than giving the page a second H1.
   const H = embedded ? 'h2' : 'h1';
   return (
     <section className={embedded ? HEAD : `${HEAD} ${HEAD_TOP}`} data-formhero>
       <div className={INNER}>
+        {/* Not on the /programs tabs: that page has its own trail and its own H1. */}
+        {!embedded && <Breadcrumb items={crumbsFor(page)} className="mb-2" />}
         <H className={`${SUBHERO_TITLE} m-0 text-left`}>{title}</H>
         <p className={SUB}>{sub}</p>
         <div className={`${GRID} ${half ? GRID_COLS_HALF : GRID_COLS}`}>

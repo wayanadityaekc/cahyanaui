@@ -5,6 +5,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import HeroMosaic from '@/components/sections/HeroMosaic';
 import Rating from '@/components/Rating';
 import { isHiddenTour } from '@/lib/routes';
+import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
 import { CHIP, CHIP_OK } from '@/components/ui/chipClasses';
 
 // The split hero every "detail" page opens with: photo on one side, a white sheet
@@ -53,7 +54,8 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 // Sits BELOW the price row now (Wayan, Sep 2026: "breadcrumbs taruh di bawah harga
 // yang di atas"), so the margin is on top. On desktop the price row is display:none,
 // so it trails the chips instead - same spacing either way.
-export const HERO_CRUMB = 'font-body text-small text-muted mt-[1.1rem] mx-0 mb-0';
+// Position only: what the crumb LOOKS like is the shared component's business now.
+export const HERO_CRUMB = 'mt-[1.1rem] mx-0 mb-0';
 export const HERO_CRUMB_LINK = 'text-muted no-underline hover:underline';
 export const HERO_CRUMB_SEP = 'mx-[0.35rem] opacity-[0.55]';
 // Star sized explicitly - Lucide renders width/height=24, so an unsized icon blows
@@ -138,19 +140,7 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
             row in here, so it inherits this section's container padding instead of
             re-declaring it and drifting out of line with the gallery. */}
         {belowChips}
-        {crumb && (
-          <nav className={HERO_CRUMB} aria-label="Breadcrumb">
-            {crumb.map((p, i) =>
-              p.type === 'link' && !isHiddenTour(p.href) ? (
-                <a className={HERO_CRUMB_LINK} href={p.href} key={i}>{p.text}</a>
-              ) : p.type === 'sep' ? (
-                <span className={HERO_CRUMB_SEP} key={i}>{p.text}</span>
-              ) : (
-                <span key={i}>{p.text}</span>
-              ),
-            )}
-          </nav>
-        )}
+        {crumb && <Breadcrumb items={itemsFromLegacy(crumb)} className={HERO_CRUMB} />}
       </section>
     );
   }

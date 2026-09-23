@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <>
       <JsonLd page="tour" />
-      <ListingPage data={LISTINGS.tour} />
+      <ListingPage data={LISTINGS.tour} page="tour" />
     </>
   );
 }

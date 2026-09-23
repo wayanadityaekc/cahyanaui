@@ -1,4 +1,6 @@
 import ItineraryBuilder from '@/components/trip/ItineraryBuilder';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import { crumbsFor } from '@/lib/crumbs';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { SUBHERO_OVERLAP, SUBHERO_OVERLAP_NEXT, SUBHERO_CONTENT, SUBHERO_TITLE, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
 import JsonLd from '@/components/JsonLd';
@@ -16,6 +18,7 @@ export default function Page() {
       <JsonLd page="itinerary" />
       <section className={SUBHERO_OVERLAP}>
         <div className={SUBHERO_CONTENT}>
+          <Breadcrumb items={crumbsFor('itinerary')} className="mb-2" />
           <h1 className={SUBHERO_TITLE}>Build Your Own Bali Itinerary</h1>
           <p className={SUBHERO_TEXT}>
             Combine tours, activities, performances, and transfers into your perfect multi-day trip - up to 7 days,

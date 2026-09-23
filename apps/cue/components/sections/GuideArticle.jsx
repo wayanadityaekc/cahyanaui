@@ -1,5 +1,6 @@
 import JsonLd from '@/components/JsonLd';
 import GuideCatNav from '@/components/sections/GuideCatNav';
+import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_PAGE_BOX, RAIL_FRAME_CARD, RAIL_MAIN_CARD, RAIL_READ } from '@/components/ui/railClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
@@ -46,19 +47,25 @@ export default function GuideArticle({ data }) {
         ctaHref="/tour.html"
       />
 
-      {/* The rail shell Our Company and My Trips use: category rail on the left,
-          article on the right. Below 993px the rail hides itself and the frame is
-          the same white card the page always had - the rail is desktop-only. */}
+      {/* The SAME component Our Company and My Trips render: category rail on the
+          left, content on the right, one page box around it. The categories go in
+          as link items, so the rows are the rail's rows rather than a second copy
+          of them. Below 993px the rail hides itself, the frame stays the white
+          card this page always had, and the phone control is the dropdown - so
+          the rail is desktop-only, as asked. */}
       <div className={BOX}>
-        <div className={RAIL_FRAME_CARD}>
-          <GuideCatNav tabs={data.tabs} variant="desktop" />
-          <main className={RAIL_MAIN_CARD}>
-            <GuideCatNav tabs={data.tabs} variant="mobile" />
-            <div className={RAIL_READ}>
-              <Prose blocks={data.body} headingVariant="guide" />
-            </div>
-          </main>
-        </div>
+        <RailLayout
+          label="Bali Guide"
+          items={data.tabs.map((t) => ({ id: t.href, href: t.href, label: t.label }))}
+          active={(data.tabs.find((t) => t.active) || data.tabs[0] || {}).href}
+          frameClass={RAIL_FRAME_CARD}
+          mainClass={RAIL_MAIN_CARD}
+          mobileNav={<GuideCatNav tabs={data.tabs} />}
+        >
+          <div className={RAIL_READ}>
+            <Prose blocks={data.body} headingVariant="guide" />
+          </div>
+        </RailLayout>
       </div>
 
       {data.more.map((m, i) => (

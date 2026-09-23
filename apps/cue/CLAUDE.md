@@ -706,12 +706,27 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
     ketauan ada. Dropdown Our Company nunjukin semuanya sekali tap. `TRACK_SCROLL`/
     `segmentLink` UDAH DIHAPUS dari `detailCardClasses.js` (dead) — kalau mau balik ke
     pill, tulis ulang, jangan cari sisanya.
-  - **DESKTOP SEKARANG PAKAI RAIL YANG SAMA KAYAK OUR COMPANY & MY TRIPS** (Sep 2026,
-    Wayan: "kita udah punya side bar kategori yang kepakai di my trip dan our company,
-    pakai itu juga di page guide"). Kolom kategori pindah ke **KIRI** dan dibangun dari
-    `RAIL_ASIDE` + `RAIL_STICK` + `railItem()`, artikelnya di `RAIL_MAIN_CARD`,
-    dua-duanya di `RAIL_FRAME_CARD`. `TOUR_LAYOUT_BOOK/MAIN/SIDE` + `CARD`/`CARD_WRAP`
-    udah gak dipakai halaman guide.
+  - **DESKTOP PAKAI `RailLayout` YANG SAMA PERSIS KAYAK OUR COMPANY & MY TRIPS**
+    (Sep 2026, Wayan: "kita udah punya side bar kategori yang kepakai di my trip dan our
+    company, pakai itu juga di page guide", terus "reuse komponen container dan side bar
+    ... samakan styling margin containernya dan behavior sticky nya"). Kolom kategori
+    pindah ke **KIRI**, dan bukan cuma minjem string: halaman ini nge-render
+    **`<RailLayout>`** dan ngoper kategorinya sebagai **item ber-`href`**.
+    `TOUR_LAYOUT_BOOK/MAIN/SIDE` + `CARD`/`CARD_WRAP` udah gak dipakai halaman guide.
+    - **Varian `desktop` di `GuideCatNav` UDAH DIHAPUS.** Dia dulu nulis `<aside>` +
+      `RAIL_STICK`-nya SENDIRI - salinan kedua rail, jadi walau string-nya sama
+      dua-duanya masih bisa melenceng. File itu sekarang cuma kontrol HP, dioper ke
+      `RailLayout` lewat prop `mobileNav`.
+    - **Cuma 3 hal yang boleh beda antar pemakai `RailLayout`**, sisanya satu kode:
+      item ber-`href` (link, bukan tab) · `frameClass`/`mainClass` (yang ditukar CUMA
+      paruh HP-nya) · `mobileNav` (halaman guide wajib nampilin ARTIKEL pas mendarat,
+      bukan menu, jadi daftar HP + baris back di-skip).
+    - **Beda yang KE-UKUR sesudahnya: NOL** (selain 2 yang disengaja). Rail-nya diadu
+      lawan Our Company di 1024/1280/1440/1920: kotak halaman, frame, aside, sticky,
+      baris, baris aktif, label - semuanya identik. Yang sengaja beda: baris guide itu
+      **`<a>` bukan `<button>`** (kategori itu pindah halaman, section itu ganti di
+      tempat) dan **kategorinya belum punya ikon** (Our Company & My Trips punya).
+      Mau dikasih ikon juga = keputusan Wayan, belum ditanyain.
     - **Ini NGE-OVERRIDE bullet di bawah** ("border-l, kolomnya di KANAN, jangan dipindah ke
       kiri nanti artikel geser dari 48px"): Wayan minta rail-nya, jadi tepi kiri artikel
       sekarang duduk di sebelah rail (**306px @1280**), bukan 48px kayak halaman tour lagi.
@@ -1584,7 +1599,9 @@ sama ... gua mau page our company kayak page email di desktop, memiliki stiky si
 sidebarnya kelihatan strong dengan konten di tengah". Dia pilih **opsi A** dari sheet 3 rail,
 terus **HP-3** dari sheet 3 bentuk HP.
 - **Cangkangnya = KOMPONEN, `components/ui/RailLayout.jsx`** (class-nya di `railClasses.js`).
-  Dipakai **`OurCompany.jsx` DAN `MyTripsCart.jsx`**. Yang wajib sama itu **URUTAN + PERILAKU**
+  Dipakai **`OurCompany.jsx`, `MyTripsCart.jsx` DAN artikel guide** (Sep 2026, Wayan:
+  "reuse komponen container dan side bar di our company dan pakai container dan side bar
+  di guide, samakan styling margin containernya dan behavior sticky nya"). Yang wajib sama itu **URUTAN + PERILAKU**
   (rail lalu konten; di HP daftar lalu section; back ngapus jejak), dan itu gak bisa dijaga cuma
   dengan berbagi string - alasan yang persis sama kenapa `DetailHero` & `FormHero` ada.
   State-nya dipegang pemanggil: Our Company nyetir section dari hash URL, My Trips cuma tab.
@@ -1628,6 +1645,18 @@ terus **HP-3** dari sheet 3 bentuk HP.
       urutan compile (jebakan yang sama kayak `BTN_SM`).
     - Diukur di 4 halaman × 390/768/1280/1440/1920: tiap blok yang punya kotak mulai &
       berhenti di tepi yang SAMA kayak frame-nya.
+  - Verifikasi: **`verify-railshare.mjs`** di scratchpad (**101/101**, 4 halaman ×
+    1024/1280/1440/1920 + HP 390/768) - tanda tangan rail tiap halaman **diadu lawan Our
+    Company** dan wajib nol beda kecuali daftar `INTENDED` (link-vs-tab & ikon); menu
+    beneran pin sesudah scroll 800px; rail 248 & `position:sticky`; tepi kotak halaman
+    sama di semua halaman; di HP rail-nya gak bocor, dropdown-nya ada, dan guide gak
+    dapet baris back.
+    - **Angka yang diturunin token GAK diadu antar-halaman** (`--header-h` itu 58 di Our
+      Company yang gak punya trip bar, 91 di dua lainnya) - itu pelajaran lama di section
+      ini. Yang di-assert **aturannya**: `stickTop == --header-h` halaman itu sendiri, dan
+      `min-height` frame diadu lawan calc-nya sendiri lewat elemen bayangan.
+    - Dites pakai 2 bug: frame di-copy tanpa `min-height` (**8 nyala**) dan padding kolom
+      konten guide digeser (**8 nyala**).
   - Verifikasi: **`verify-onebox.mjs`** di scratchpad (**83/83**) - tiap blok level-halaman
     diadu lawan **frame-nya sendiri** (bukan angka yang diketik di harness, itu cuma bakal
     ngebuktiin harness setuju sama dirinya sendiri), judul & **baris kartunya** ikut dicek,

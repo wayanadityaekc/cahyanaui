@@ -14,7 +14,7 @@ import SectionSwitcher from '@/components/ui/SectionSwitcher';
 import ProgramPromoSlider from '@/components/sections/ProgramPromoSlider';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { isHiddenTour } from '@/lib/routes';
-import { SECTION_TITLE } from '@/components/ui/sectionTitle';
+import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 
 const SearchIcon = () => <Search strokeWidth={1.8} aria-hidden="true" />;
 const CloseIcon = () => <X aria-hidden="true" />;
@@ -73,9 +73,9 @@ export default function ListingPage({ data, page }) {
           className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 max-[768px]:[.tourprog_&]:relative max-[768px]:[.tourprog_&]:after:content-[''] max-[768px]:[.tourprog_&]:after:absolute max-[768px]:[.tourprog_&]:after:inset-0 max-[768px]:[.tourprog_&]:after:[background:linear-gradient(to_bottom,rgba(0,0,0,0.34)_0%,rgba(0,0,0,0)_32%,rgba(0,0,0,0.58)_100%)]"
           style={{ backgroundImage: `url(/assets/images/${heroBg})` }}
         />
-        <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
-          min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
-          min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
+        <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
+          min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc(50vw_-_var(--container)/2_+_var(--container-x)))]
+          min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
           {/* These three pages carried a BreadcrumbList in their JSON-LD and showed a
               guest nothing. It hides while a search is open, like the title does. */}
           {!q && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
@@ -113,8 +113,8 @@ export default function ListingPage({ data, page }) {
       </section>
 
       <section className="bg-white py-[var(--section-gap)] px-6" id={sectionId}>
-        <div className="max-w-[1200px] mx-auto mb-[1.6rem] pt-2 text-center max-[768px]:hidden">
-          <h2 className={`${SECTION_TITLE} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
+        <div className="max-w-[calc(var(--container)-2*var(--container-x))] mx-auto mb-[1.6rem] pt-2 text-left max-[768px]:hidden">
+          <h2 className={`${SECTION_TITLE} ${ST_LEFT} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>
 
         {/* Floating sticky nav (bawah). DESKTOP: segmented tab (.zfilter) - pilih
@@ -163,7 +163,7 @@ export default function ListingPage({ data, page }) {
       {info && (
         <section className={INFO_SECTION_DETAIL}>
           <div className={INFO_CARD}>
-            <h2 className={SECTION_TITLE}>{info.title}</h2>
+            <h2 className={`${SECTION_TITLE} ${ST_LEFT}`}>{info.title}</h2>
             {/* The same chips transfer and airport use - this page had its own
                 copy of the old bordered grid, so the two drifted as soon as one
                 changed (Sep 2026). One component now. */}

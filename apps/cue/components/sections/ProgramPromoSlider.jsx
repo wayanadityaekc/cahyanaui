@@ -42,6 +42,7 @@ export default function ProgramPromoSlider() {
   return (
     <section
       className="group relative overflow-hidden min-h-[320px] text-white touch-pan-y"
+      data-promo=""
       aria-roledescription="carousel"
       aria-label="Other Cahyana programs"
       onTouchStart={(e) => {

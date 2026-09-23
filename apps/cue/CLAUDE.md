@@ -1119,6 +1119,34 @@ jarak 8px, rata kiri, lurus sama kontainer halaman itu sendiri.** Nol pengecuali
   persis sama H1" udah ditawarin & **gak dipilih**. Di HP crumb listing rata kiri sementara
   judul + sub-nya masih ke-center — Wayan: *"listing gapapa"*.
 
+**JARAK KE NAVBAR = SATU `--container-x`, BUKAN NOL** (Sep 2026, Wayan: *"lihat navbar dan
+breadcrumb yang lumayan deket di beberapa halaman, seperti tour, destination, experience"*).
+Padding atas hero varian **gallery** (`DetailHero`, dipakai 68 halaman detail) cuma
+`var(--header-h-max)` - itu **cuma mesen ruang setinggi header**, nol napas di bawahnya. Crumb
+itu baris pertama di dalamnya, jadi dia mendarat **0,2px** di bawah tepi navbar (ke-ukur, 390
+DAN 1280). Sekarang `calc(var(--header-h-max) + var(--container-x))`.
+- **`--container-x`, bukan angka baru**: crumb jadi berjarak sama dari navbar kayak dari tepi
+  kiri layar - **16px di HP, 24px di desktop** - dan ikut sendiri kalau gutter-nya diubah.
+  Di 1280 dia mendarat persis sama kayak `/charter` (24,4px), yang emang udah bener dari dulu.
+- **Varian split (guide) GAK disentuh**: crumb-nya di dalam sheet putih, jaraknya udah 48px.
+  Halaman lain juga nol berubah (listing 61 · legal 57 · charter 24 - diadu before/after, identik).
+- Verifikasi: **`verify-crumbgap.mjs`** di scratchpad (**1700/1700**, 68 halaman detail ×
+  320/390/768/1280/1440). Patokannya **aturan**: gap == `--container-x` yang di-resolve halaman
+  itu sendiri (lewat elemen bayangan), crumb & h1 satu tepi kiri, halaman gak melar, nol page
+  error. Dites pakai bug aslinya (padding lama dibalikin di sumber + build ulang) - nyala.
+  - **DUA JEBAKAN HARNESS, dua-duanya bikin angka palsu**: (1) `parseFloat(1.5rem)` = **1**,
+    jadi patokan gutter-nya kebaca 1px - token WAJIB di-resolve lewat elemen bayangan.
+    (2) `domcontentloaded` itu **SEBELUM hydration**, dan `--header-h-max` baru ditulis
+    `Navbar` sesudah mount - jadi yang ke-ukur nilai fallback (`92px`/`98px`), bukan yang asli
+    (86/91). Itu bikin gap kebaca **22/31** dan keliatan kayak "tour beda sama attraction"
+    padahal dua-duanya sama. Wajib `waitForFunction` sampai var-nya keisi.
+- **Sisa yang JUJUR, BUKAN dari perubahan ini**: fallback `92px`/`98px` itu ~6-7px lebih gede
+  dari header asli (86/91), jadi konten **naik 7px** pas hydration mendarat. Udah gitu dari dulu.
+  Gak bisa dibikin pas dengan satu angka - tinggi header beda-beda tergantung halaman itu punya
+  promo trip bar apa nggak. Belum ditanyain ke Wayan.
+- **`/ui-kit.html` sengaja dikecualikan** dari sapuan: dia nge-render contoh `.booksidebar`, jadi
+  ke-detect sebagai halaman detail padahal dia galeri komponen (noindex, nol pemakai, nol crumb).
+
 **SEO: JSON-LD NOL BERUBAH pas posisi dipindah.** Ke-buktiin, bukan diklaim: blok
 `ld+json` 100 halaman di-dump sebelum & sesudah, **diff 0 baris**. Yang pindah cuma posisi
 DOM-nya; trail, urutan, dan URL-nya sama persis.

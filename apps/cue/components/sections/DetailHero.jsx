@@ -125,7 +125,13 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
       // Viator's order. The intro paragraph is gone from here on purpose: it moved
       // into the Overview section ("deskripsi di bawah title taruh di overview aja"),
       // so the hero is title, photos, facts, CTA.
-      <section className="pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
+      // The top padding adds ONE --container-x on top of the header height. The
+      // header height alone only reserves room for the bar, so the crumb - the
+      // first line in here - landed 0.2px under it (measured, 390 and 1280).
+      // --container-x, not a new number: the crumb then sits the same distance
+      // from the header as it does from the left edge, 16px on a phone and 24px
+      // on desktop, and it follows if that gutter ever changes.
+      <section className="pt-[calc(var(--header-h-max,92px)_+_var(--container-x))] min-[769px]:pt-[calc(var(--header-h-max,98px)_+_var(--container-x))] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
         {crumb && <Breadcrumb items={itemsFromLegacy(crumb)} className={HERO_CRUMB} />}
         <h1 className={`${SUBHERO_TITLE} mb-2 text-left`}>{title}</h1>
         {ratingName && (

@@ -1746,8 +1746,9 @@ terus **HP-3** dari sheet 3 bentuk HP.
     beneran pin sesudah scroll 800px; rail 248 & `position:sticky`; tepi kotak halaman
     sama di semua halaman; di HP rail-nya gak bocor, dropdown-nya ada, dan guide gak
     dapet baris back.
-    - **Angka yang diturunin token GAK diadu antar-halaman** (`--header-h` itu 58 di Our
-      Company yang gak punya trip bar, 91 di dua lainnya) - itu pelajaran lama di section
+    - **Angka yang diturunin token GAK diadu antar-halaman** (dulu `--header-h` itu 58 di
+      Our Company yang gak punya trip bar dan 91 di dua lainnya; sejak bar-nya pindah ke
+      ATAS navbar dia 58 di mana-mana) - itu pelajaran lama di section
       ini. Yang di-assert **aturannya**: `stickTop == --header-h` halaman itu sendiri, dan
       `min-height` frame diadu lawan calc-nya sendiri lewat elemen bayangan.
     - Dites pakai 2 bug: frame di-copy tanpa `min-height` (**8 nyala**) dan padding kolom
@@ -2250,50 +2251,74 @@ Order **must be kept** (declarations first, run last):
   hero melar & foto "zoom"). **Ubah isi partial booking/footer/search → ukur ulang & update
   angkanya** (navbar nggak perlu: position fixed). Search form juga fade+slide masuk
   (`@keyframes heroCardIn`) — placeholder yang nahan ruangnya jadi nol shift.
-- **Trip bar (`components/layout/TripBar.jsx`, strip di bawah navbar)** — Sep 2026, Wayan
+- **Trip bar (`components/layout/TripBar.jsx`, strip DI ATAS navbar)** — Sep 2026, Wayan
   minta **dibalikin ke SEMUA halaman** (sempat homepage-only). Di-render dari `Navbar`, isinya
   promo dari `PROMO` (`content/shared/promo.js`: `{active, text, cta, href}`) — cuma muncul
   kalau `active:true` & `text` keisi (default off, no fake content).
   - **Teksnya sengaja kecil & tipis**: `text-[0.72rem] font-normal text-muted` (≤12px, dulu
     12.8 HP / 14 PC dan warnanya `--color-green`). Ini pengumuman, bukan headline — jangan
     dibikin setebal nav.
-  - **KEBUKA CUMA DI ATAS, arah scroll gak ngaruh** (Sep 2026, Wayan: "Gas A bro").
-    `scrollY > 80` = nutup, titik. Animasinya `grid-template-rows` **0fr ↔ 1fr**
-    (anaknya `overflow-hidden`) — gak usah ngukur tinggi apa pun.
-    - **Dulu**: nutup pas scroll turun, **balik pas scroll naik** (+ ambang jitter 6px).
-      Bukanya itu yang bikin loncatan pas Wayan scroll balik ke atas ngelewatin hero:
-      header tumbuh **53 → 86px**, dan strip tab sticky dipatok ke `--header-h`, jadi
-      strip-nya **turun sendiri 33px dalam ~150ms** sementara konten di belakangnya
-      tetep jalan ikut scroll. Diukur di scrollY yang SAMA PERSIS (1400 dua kali):
-      strip pindah **53 → 68px** padahal halamannya gak gerak sama sekali.
-    - **DUA AMBANG, bukan satu** (Sep 2026, Wayan: "masih ada loncatan bug ketika trip bar
-      menghilang"). `scrollY > 80` polos itu nge-flip state di TIAP lintasan, jadi jempol yang
-      nempel di dekat atas bikin header **kedip 53 <-> 86px berulang**: diukur pakai 8 sentilan
-      wheel 4-6px di sekitar 80, **kedelapan-delapannya** nge-toggle. Pita 33px yang buka-tutup
-      persis di bawah navbar itu yang kebaca sebagai loncatan.
-      **TUTUP tetep di 80, BUKA di 8.** Jadi begitu bar-nya nutup dia tetep nutup sampai tamu
-      beneran balik ke atas; di antara 8 dan 80 gak ada yang berubah dan satu sentilan gak
-      mungkin ngelewatin dua-duanya. Dia **tetep gak pernah kebuka di tengah halaman** (itu
-      lurch yang Wayan udah tolak), soalnya 8px itu ya ujung atas halaman.
-    - Sekarang header **satu tinggi buat seluruh scroll** — yang nempel ke dia gak
-      pernah gerak di tengah halaman. Strip emang baca `--header-h` (bukan
-      `--header-h-max`) supaya nempel tanpa celah pas bar-nya kebuka di atas; itu
-      sebabnya tingginya gak boleh berubah pas lagi di tengah halaman.
-    - Verifikasi: **`verify-tripbar-a.mjs`** di scratchpad (54/54) — 390 & 1280 di
-      4 jenis halaman: bar kebuka pas mendarat (scrollY 0), nutup lewat 80px, balik
-      pas balik ke atas, `--header-h` **beku** selama scroll naik ngelewatin hero,
-      `--header-h-max` gak gerak sama sekali, dan yang paling penting: elemen yang
-      dipatok ke `--header-h` **drift ≤1px di scrollY yang sama**. Gate-nya udah
-      dites pakai bug aslinya (handler lama dibalikin → 12 gagal, drift 15px).
-  - **DUA var tinggi header, jangan ketuker:**
-    - `--header-h` = tinggi header **live** (di-update `ResizeObserver` di `Navbar`), jadi
-      ikut mengecil pas trip bar nutup. Dipakai elemen yang harus **nempel** ke bawah navbar
-      (strip tab sticky di listing/guide) — kalau pakai yang beku, nanti nyisa celah.
-    - `--header-h-max` = **plafon**, cuma naik, gak pernah turun (reset pas resize). Dipakai
-      `padding-top` halaman (hero `TourPage`/`AttractionPage`, `OurCompany`). Kalau padding
-      halaman dipatok ke `--header-h`, seluruh dokumen **lompat naik ~39px** persis pas trip
-      bar nutup — itu bug-nya, dan itu sebabnya var-nya dipisah. Fallback-nya = tinggi header
-      penuh hasil ukur (92px HP / 98px desktop), biar paint pertama gak kepotong.
+  - **DI ATAS NAVBAR, DAN HEADER-NYA YANG GESER** (Sep 2026, Wayan: *"kayaknya trip bar
+    ngebuat scroll tidak mulus deh, coba trip bar di taruh di atas navbar dan hilang saat
+    di scroll"*). Bar-nya sekarang anak PERTAMA `<header>`, dan yang bergerak itu
+    **`top` punya header** (0 → `-var(--tripbar-h)`). Tinggi header **gak pernah
+    berubah**, jadi `ResizeObserver` di `Navbar` gak pernah nulis ulang apa pun selama
+    tamu scroll. Bar-nya gak punya kelakuan scroll sendiri lagi — dia strip polos.
+    - **KENAPA scroll-nya kerasa kasar (diukur, bukan dugaan)**: versi lama nge-collapse
+      bar-nya di tempat (`grid-template-rows` 0fr↔1fr) di BAWAH nav. Tiap frame animasi
+      itu tinggi header berubah → `ResizeObserver` nulis `--header-h` di `:root` →
+      dan custom property di root itu **diwariskan**, jadi SELURUH dokumen di-recalc.
+      Diukur pakai counter Chrome sendiri (`Performance.getMetrics`), nyebrang ambang 80px
+      di 390 & 1280: **style recalc +62 s/d +139 ms** dan **+10 s/d +23 layout** dibanding
+      pita kontrol yang gak ngapa-ngapain. Halaman yang emang **gak punya bar**
+      (`/our-company`, promo-nya `null`) = **+0ms**. Di `/guide/ubud.html` @1280 udah
+      ada **2 frame >32ms (terburuk 47,5ms)** bahkan di headless — di HP beneran (CPU 3-5x
+      lebih lambat) itu jelas kerasa.
+    - **Yang mahal itu VARIABEL-nya, bukan animasinya.** Dipisah pakai eksperimen sendiri
+      (`varcost.mjs`): 12 frame nulis `--header-h` di root = **48-121ms** recalc ·
+      12 frame diem = **~1ms** · **satu** kali nulis = 6-13ms. Layout-nya sendiri cuma
+      1,3-4,3ms. Jadi obatnya bukan "animasinya dibikin lebih ringan", tapi **berhenti
+      nulis var itu pas scroll**.
+    - **SESUDAH: +0,1 s/d +0,7 ms style recalc** (sama kayak halaman yang gak punya bar
+      sama sekali), nol frame >32ms. Layout sisa 12x ~1ms = `top` punya header doang.
+  - **TIGA var, dan NOL dari mereka berubah pas scroll:**
+    - `--header-h` = **BARIS NAV doang** (header dikurangi bar). Dipakai elemen sticky
+      (`STRIP` di listing/detail, `RAIL_STICK` di rail) — begitu header-nya geser,
+      tepi bawah nav emang mendarat di angka itu. **Sekarang konstan**; dulu dia yang
+      mengecil 33px pas bar collapse dan bikin seluruh dokumen ke-recalc.
+    - `--header-h-max` = nav + bar, **plafon** (cuma naik, reset pas resize). Dipakai
+      `padding-top` halaman (`DetailHero`, `FormHero`, `RAIL_PAGE`). **Nilainya
+      GAK berubah** sama perubahan ini, jadi nol halaman yang kegeser — ke-ukur, lihat
+      bawah.
+    - `--tripbar-h` = tinggi bar (0 kalau halamannya gak punya promo, jadi header-nya
+      gak geser sama sekali di situ — otomatis, gak perlu kondisi).
+  - **DUA AMBANG, dipertahanin dari versi collapse**: tutup di **80**, buka di **8**.
+    Satu ambang nge-flip state di tiap lintasan, jadi jempol yang nempel di dekat atas
+    bikin bar-nya kedip (dulu diukur: 8 sentilan wheel 4-6px di sekitar 80 → 8x toggle).
+    Sekarang ongkos toggle-nya nyaris nol, tapi kedip tetep jelek.
+  - **Sisa yang JUJUR**: di antara scrollY 8-80 header-nya belum geser (bar masih
+    keliatan) sementara elemen sticky dipatok di `--header-h` (= nav doang). Ke-cek di
+    8 halaman × 3 lebar × 10 posisi scroll: **nol elemen sticky yang beneran nempel**
+    di rentang itu (semuanya mulai nempel jauh di bawah), jadi gak ada yang kesembunyi.
+    Kalau nanti ada strip sticky yang mulai di ~80px dari atas, cek ulang.
+  - Verifikasi: **`verify-slide.mjs`** di scratchpad (**651/651**, 8 halaman ×
+    390/768/1280 × 10 posisi scroll naik-turun): bar = anak pertama header,
+    `--header-h` == baris nav & **beku di semua posisi scroll**, `--header-h-max` ==
+    tinggi header penuh, header rata atas pas mendarat & geser `-tripbar-h` sesudah
+    120px & balik lagi pas balik ke atas, **nol elemen sticky yang mendarat DI BAWAH
+    header**, nol elemen sticky yang pindah di scrollY yang sama, halaman gak melar,
+    nol page error. Dites pakai 2 bug: `--header-h` dibalikin ke tinggi header penuh
+    (**21 nyala**) dan bar ditaro di bawah nav lagi (**8 nyala**).
+    - Plus **geometri 20 halaman × 390/1280 diadu before/after** (`geo-snap.mjs` +
+      `geo-diff.mjs`): 2032 field, **cuma 3 yang berubah** dan ketiganya emang yang
+      diminta (`--header-h`, posisi `top` header, tinggi kotak header pas ke-scroll).
+      h1, breadcrumb, section pertama, footer, tinggi dokumen, overflow, dan
+      `--header-h-max` **identik di 40 kombinasi**.
+    - Ongkos scroll-nya sendiri diukur `jank2.mjs` (counter Chrome, bukan mata).
+  - **Catatan buat next time**: kalau ada yang kepikiran nulis var di `:root` tiap frame
+    animasi — jangan. Itu recalc se-dokumen per frame. Tulis sekali pas state-nya berubah,
+    atau pindahin yang gerak ke properti yang gak nyentuh style dokumen (`top` /
+    `transform` di elemen itu sendiri).
   - **ISINYA BEDA PER HALAMAN** (Sep 2026, Wayan: "gua mau tiap halaman beda") — semua
     di **`content/shared/promo.js`**, di-resolve `promoFor(pathname)`:
     - Key = pathname **tanpa `.html`** (itu yang dikasih `usePathname` di static export).
@@ -2347,8 +2372,7 @@ Order **must be kept** (declarations first, run last):
     teks baru ke-paint langsung di opacity 1 → nyentak, bukan fade. Pola yang bener:
     fade-out → `setTimeout(FADE_MS)` → ganti index → `requestAnimationFrame` → fade-in.
   - Verifikasi: `verify-tripbar.mjs` + **`verify-promo.mjs`** di scratchpad — patokannya
-    bar ada di 6 jenis halaman, font ≤12px, `--header-h` mengecil TAPI `--header-h-max`
-    enggak, **posisi hero di dokumen gak geser**, tiap halaman teksnya beda (≥8 unik),
+    bar ada di 6 jenis halaman, font ≤12px, **posisi hero di dokumen gak geser**, tiap halaman teksnya beda (≥8 unik),
     homepage muter 2 pesan + href-nya ikut ganti, dan halaman 1-pesan **gak kedip**.
     Cek ketumpuk seluruh web = `overlap-sweep.mjs` (22 halaman × 2 lebar: konten ketutupan
     header, celah strip sticky, dan jumlah bar yang nempel di bawah).

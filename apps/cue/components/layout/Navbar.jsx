@@ -83,14 +83,21 @@ export default function Navbar() {
   const navRef = useRef(null);
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
+  const barRef = useRef(null);
   const pathname = usePathname();
 
-  // Two heights, because they answer two different questions:
-  //   --header-h     = how tall the header is RIGHT NOW. Sticky tab strips sit at
-  //                    this, so they follow the trip bar up as it retracts.
-  //   --header-h-max = how tall it gets with the trip bar open. Page top padding
-  //                    uses this, so the document does not jump 39px under the
-  //                    reader the moment the bar collapses mid-scroll.
+  // Three numbers, and NONE of them changes while the guest is scrolling - that is
+  // the whole point of this block now:
+  //   --header-h     = the NAV ROW only. Sticky tab strips sit at this. It used to be
+  //                    the whole header, so it shrank 33px while the trip bar retracted
+  //                    and every element in the document had its style invalidated on
+  //                    each of the ~12 frames of that animation (measured: 48-139ms of
+  //                    style recalc per collapse, against ~1ms on a page with no bar -
+  //                    a custom property on :root is inherited, so touching it recalcs
+  //                    the whole tree). That was the "scroll tidak mulus".
+  //   --header-h-max = nav row + trip bar. Page top padding uses this, so a page
+  //                    reserves the space the header takes at rest.
+  //   --tripbar-h    = how far the header slides up once the guest starts scrolling.
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return undefined;
@@ -98,7 +105,9 @@ export default function Navbar() {
     let max = 0;
     const set = () => {
       const h = el.offsetHeight;
-      root.style.setProperty('--header-h', `${h}px`);
+      const bar = barRef.current ? barRef.current.offsetHeight : 0;
+      root.style.setProperty('--header-h', `${h - bar}px`);
+      root.style.setProperty('--tripbar-h', `${bar}px`);
       if (h > max) {
         max = h;
         root.style.setProperty('--header-h-max', `${h}px`);
@@ -115,6 +124,24 @@ export default function Navbar() {
       ro.disconnect();
       window.removeEventListener('resize', onResize);
     };
+  }, []);
+
+  // THE TRIP BAR SITS ABOVE THE NAV AND THE HEADER SLIDES IT AWAY (Sep 2026, Wayan:
+  // "coba trip bar di taruh di atas navbar dan hilang saat di scroll"). The header
+  // keeps its height; only its `top` moves, from 0 to -(bar height). Nothing is
+  // measured, nothing on :root is rewritten, and no element outside this header is
+  // touched - so the browser does no style work at all while the bar goes away.
+  //
+  // TWO THRESHOLDS, kept from the collapse it replaces: close at 80, open at 8. One
+  // threshold flips state on every crossing, and a thumb resting near the top made
+  // the bar flap (measured: eight 4-6px nudges around 80 toggled it eight times).
+  // Once it is gone it stays gone until the guest is genuinely back at the top.
+  const [slid, setSlid] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
+    onScroll(); // a page opened at an anchor starts already scrolled
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const isActive = (href) => {
@@ -153,9 +180,12 @@ export default function Navbar() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-[100] w-full bg-white shadow-[0_2px_12px_rgba(31,61,43,0.07)] animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none"
+      className={`fixed left-0 right-0 z-[100] w-full bg-white shadow-[0_2px_12px_rgba(31,61,43,0.07)] animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${slid ? 'top-[calc(-1_*_var(--tripbar-h,0px))]' : 'top-0'}`}
       ref={headerRef}
     >
+      {/* Above the nav row, so sliding the header up takes the bar off the screen
+          and leaves the nav flush at the top. */}
+      <div ref={barRef}><TripBar /></div>
       <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-6">
         <a href="/" className="mr-auto">
           <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-[-0.25rem]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
@@ -342,7 +372,6 @@ export default function Navbar() {
       </div>
 
       <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />
-      <TripBar />
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </header>
   );

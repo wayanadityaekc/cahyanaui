@@ -28,8 +28,18 @@ export const RAIL_LABEL = {
   paypal: 'Card or PayPal',
 };
 
+// Off by default: send EVERY booking to DOKU, not just rupiah ones.
+//
+// Mirrors DOKU_ALL_CURRENCIES on the server, and the two must be flipped
+// TOGETHER - check-pay-agree compares them and goes red otherwise. It exists to
+// answer one question that can only be answered with a real card: does DOKU
+// accept a foreign-issued one? Settlement is still rupiah either way; a guest
+// quoted in dollars is billed the rupiah figure and their bank converts.
+export const DOKU_ALL = false;
+
 // The rail we want for a currency, whether or not it is switched on.
 export function preferredRail(currency) {
+  if (DOKU_ALL) return 'doku';
   return String(currency || '').toUpperCase() === 'IDR' ? 'doku' : 'paypal';
 }
 
@@ -44,7 +54,10 @@ export function railFor(currency) {
 // cannot settle it.
 export function chargeCurrency(currency) {
   const cur = String(currency || 'USD').toUpperCase();
-  if (railFor(cur) === 'doku') return cur;
+  // DOKU settles rupiah and only rupiah. While it takes only IDR bookings that
+  // is the guest's own currency; opened to all of them it is not, and saying so
+  // is what lets the payment step warn before a card is typed.
+  if (railFor(cur) === 'doku') return DOKU_ALL ? 'IDR' : cur;
   return PAYPAL_SETTLES.has(cur) ? cur : PAYPAL_FALLBACK;
 }
 

@@ -2,7 +2,7 @@
 // must never disagree - a guest who agreed to $5 and is charged $15 is the
 // whole failure mode this feature has.
 import { payOptions } from '/home/user/CUE/lib/payment.js';
-import { railFor, chargeCurrency, DOKU_READY } from '/home/user/CUE/lib/rails.js';
+import { railFor, chargeCurrency, DOKU_READY, DOKU_ALL } from '/home/user/CUE/lib/rails.js';
 import { createRequire } from 'node:module';
 const req = createRequire(import.meta.url);
 const SRV = req('/home/user/cahyana-api/payment.js');
@@ -64,6 +64,10 @@ for (const { usd, idr } of CASES) {
 const envWas = { ...process.env };
 process.env.PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || 'harness';
 process.env.PAYPAL_SECRET = process.env.PAYPAL_SECRET || 'harness';
+// The server reads this one too, and the two sides only agree when both are
+// standing in the same world.
+if (DOKU_ALL) process.env.DOKU_ALL_CURRENCIES = 'true';
+else delete process.env.DOKU_ALL_CURRENCIES;
 if (DOKU_READY) {
   process.env.DOKU_CLIENT_ID = process.env.DOKU_CLIENT_ID || 'harness';
   process.env.DOKU_SECRET = process.env.DOKU_SECRET || 'harness';
@@ -86,7 +90,7 @@ for (const cur of ['USD', 'IDR', 'AUD', 'EUR', 'GBP']) {
 process.env = envWas;
 
 console.log(`kombinasi dicek : ${checked}`);
-console.log(`rail dicek      : ${rails} (DOKU ${DOKU_READY ? 'ON' : 'OFF'})`);
+console.log(`rail dicek      : ${rails} (DOKU ${DOKU_READY ? 'ON' : 'OFF'}, semua mata uang ${DOKU_ALL ? 'ON' : 'OFF'})`);
 console.log(`beda            : ${bad.length}`);
 bad.slice(0, 12).forEach((b) => console.log('  ' + b));
 process.exit(bad.length ? 1 : 0);

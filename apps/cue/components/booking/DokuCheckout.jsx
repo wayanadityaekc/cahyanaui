@@ -40,6 +40,45 @@ function loadScript(src) {
   });
 }
 
+// Make DOKU's overlay look like it belongs to this site.
+//
+// The payment page itself is DOKU's, in a cross-origin iframe, and nothing here
+// can style its inside - that is the same browser rule that keeps card details
+// away from us and this server out of PCI scope. What DOKU's script DOES put in
+// our page is the shell around it: a backdrop and a container. Those are ours.
+//
+// It is adopted by watching what appears rather than by guessing DOKU's class
+// names: a selector that stops matching after one of their releases is dead CSS
+// that fails silently, which is exactly the failure this repo keeps getting
+// bitten by. Anything new at the top of <body> gets our tokens; if nothing
+// appears, nothing happens.
+function adoptShell(before) {
+  const added = [...document.body.children].filter((el) => !before.has(el));
+  for (const el of added) {
+    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') continue;
+    el.dataset.dokuShell = '1';
+    const cs = getComputedStyle(el);
+    // The backdrop is the full-bleed layer; the container is the panel. Telling
+    // them apart by SHAPE rather than by name survives a rename too.
+    const wide = el.offsetWidth >= window.innerWidth - 2;
+    if (wide) {
+      // Same scrim the site's own modals use, so two dimmed layers never read
+      // as two different weights of "this is a dialog".
+      el.style.background = 'rgba(34,32,28,0.55)';
+      el.style.backdropFilter = 'blur(2px)';
+    }
+    const frame = el.tagName === 'IFRAME' ? el : el.querySelector('iframe');
+    if (frame) {
+      frame.style.borderRadius = 'var(--r-xl)';
+      frame.style.border = '0';
+      // Modal elevation, the site's token - not a shadow invented here.
+      frame.style.boxShadow = 'var(--shadow-xl)';
+      if (cs.position === 'fixed' || cs.position === 'absolute') el.style.borderRadius = 'var(--r-xl)';
+    }
+  }
+  return added.length;
+}
+
 export default function DokuCheckout({ bookingRef, option, amountText }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -74,7 +113,13 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         try {
           await loadScript(d.checkout_js);
           if (typeof window.loadJokulCheckout === 'function') {
+            const before = new Set(document.body.children);
             window.loadJokulCheckout(d.url);
+            // The script builds its shell synchronously in the versions we have
+            // seen, but a frame of slack costs nothing and covers the case where
+            // it does not.
+            adoptShell(before);
+            requestAnimationFrame(() => adoptShell(before));
             setBusy(false);
             return;
           }

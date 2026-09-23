@@ -136,8 +136,22 @@ export default function MyTripsCart() {
     // the first paint has to match the pre-rendered HTML.
     try {
       const r = new URLSearchParams(window.location.search).get('ref');
-      if (r) setReturnRef(r);
-    } catch { /* no query string is simply nothing to resume */ }
+      if (!r) return;
+      // DOKU can render its payment page as an overlay ON this site instead of
+      // navigating away. When it does, the page it returns to - this one - is
+      // loaded INSIDE that overlay's frame, so the guest would end up looking
+      // at our whole site shrunk into a box. Climb out and let the real page
+      // show the waiting screen.
+      //
+      // Same origin, because the return address is ours, so reading top is
+      // allowed; it is still wrapped, since a browser that disagrees must not
+      // take the page down with it.
+      if (window.top && window.top !== window.self) {
+        window.top.location.replace(window.location.href);
+        return;
+      }
+      setReturnRef(r);
+    } catch { /* no query string, or a frame we cannot read: carry on */ }
   }, []);
   const clearReturn = () => {
     setReturnRef('');

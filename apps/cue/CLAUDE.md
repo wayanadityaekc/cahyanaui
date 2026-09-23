@@ -768,7 +768,47 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
       lebar + tinggi baris pertama, font body). Dites pakai 3 bug: rail dibalikin ke kanan
       (12 nyala), `overflow-hidden` di frame (2 nyala, sticky mati), step 560px dibuang
       (6 nyala).
-  - **Border-nya `border-l`, BUKAN `border-r`** kayak Our Company: kolom kategori guide
+  **ARTIKEL GUIDE DI HP — HERO-NYA GAK PERNAH RATA KIRI (Sep 2026, Wayan: "page article
+guide khusus mobile bro")**
+- **Yang rusak: blok-nya di-CENTER, bukan teksnya.** Sheet HP di varian split `DetailHero`
+  itu `flex flex-col items-center text-center` — `text-align` emang left di dalam tiap
+  blok, jadi **grep class bilang halamannya udah kiri**. Yang salah: tiap anak di-center
+  sebagai KOTAK, jadi masing-masing mendarat di x sendiri. Ke-ukur di `/guide/ubud.html`
+  **@560: crumb 73 · judul 96 · blurb 50**. Di 320/390 keliatan lurus cuma karena judulnya
+  kebetulan selebar layar.
+  - Markup-nya **persis sama** kayak hero listing sebelum dibenerin — disalin, terus
+    dua-duanya ketinggalan waktu listing dikirikan.
+  - **Varian split itu praktis punya guide doang**: semua tour & attraction ngoper
+    `gallery`, jadi mereka lewat cabang gallery. Jadi perubahan ini nyentuh 15 halaman
+    guide, bukan 68 halaman detail.
+- **Kartu putih di HP DIBUANG.** Artikel guide dulu satu-satunya halaman rail yang masih
+  mbungkus isinya pakai kartu berbingkai di bawah 993px, jadi teksnya duduk di
+  **16 (frame) + 16 (padding kartu) = 33**, sementara hero-nya di 16. Sekarang dia pakai
+  `RAIL_FRAME`/`RAIL_MAIN` yang SAMA kayak Our Company & My Trips (di bawah 993 dua-duanya
+  emang udah nol kartu). `RAIL_FRAME_CARD` + `RAIL_MAIN_CARD` **UDAH DIHAPUS** (dead).
+  - Ini nge-override catatan lama "HP NOL BERUBAH / kartu putih --r-md dipertahanin" —
+    itu bener waktu rail baru dipasang buat desktop; Wayan minta HP-nya sekarang.
+- **SATU GUTTER DI HP, `--container-x` (16px).** Halaman listing masih hardcode `px-6`
+  (24) — jadi listing 24, guide 16, dan itu yang bikin "belum samain". Sekarang listing
+  ikut token: hero + section + lantai `pl` desktop semuanya `var(--container-x)`.
+  Desktop **NOL berubah** (token-nya emang 24 di ≥993).
+- Sesudahnya, **ke-ukur di 320/390/430/560/768: spread 0** di artikel guide (crumb, judul,
+  blurb, dropdown kategori, isi artikel, judul section, kartu "Our tours" — semuanya 16),
+  dan listing + guide hub juga 16. Tiga jenis halaman, satu tepi.
+- **JEBAKAN yang ketemu pas ngukur ini (site-wide, BUKAN dari perubahan ini):** Tailwind
+  nge-compile `max-[992px]` jadi **`@media not all and (min-width:992px)`**, yang
+  **GAK match di tepat 992px**. Jadi di viewport 992 pas, `max-[992px]:` DAN
+  `min-[993px]:` dua-duanya mati dan yang kepakai nilai base — rail-nya nongol padahal
+  gutter-nya masih HP (ke-ukur: rail muncul di 992, `matchMedia('(max-width:992px)')`
+  tetep `true`). Kena SEMUA pasangan `max-[992px]`/`min-[993px]` di repo ini. Belum
+  disentuh; kalau mau dibenerin, pasangannya harus `max-[993px]`/`min-[993px]`.
+- Verifikasi: **`verify-left.mjs`** naik ke **412/412** (6 halaman × 7 lebar) — nambah
+  2 halaman guide + assertion baru **"tiap baris hero mulai di x yang sama"** (itu yang
+  beneran rusak; cek `text-align` doang gak nangkep). Di atas 992 body artikel emang
+  sengaja masuk ke dalam (rail), jadi assertion tepi-nya di-skip di situ. Dites pakai
+  2 bug: hero di-center lagi (**54 nyala**) dan kartu HP dibalikin (**6 nyala**).
+
+- **Border-nya `border-l`, BUKAN `border-r`** kayak Our Company: kolom kategori guide
     ada di **KANAN** (Our Company di kiri), jadi garisnya harus di sisi yang ngadep konten.
     Mindahin kolomnya ke kiri = artikel ke-geser dari 48px yang baru aja disamain sama
     halaman tour — jangan.

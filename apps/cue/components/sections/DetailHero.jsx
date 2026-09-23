@@ -156,9 +156,9 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
           style={{ backgroundImage: `url(/assets/images/${heroBg})` }}
         />
       )}
-      <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
+      <div className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
         min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
-        min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
+        min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
         <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} crumb={crumb} />
       </div>
     </section>

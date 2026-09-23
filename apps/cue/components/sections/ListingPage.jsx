@@ -73,8 +73,8 @@ export default function ListingPage({ data, page }) {
           className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 max-[768px]:[.tourprog_&]:relative max-[768px]:[.tourprog_&]:after:content-[''] max-[768px]:[.tourprog_&]:after:absolute max-[768px]:[.tourprog_&]:after:inset-0 max-[768px]:[.tourprog_&]:after:[background:linear-gradient(to_bottom,rgba(0,0,0,0.34)_0%,rgba(0,0,0,0)_32%,rgba(0,0,0,0.58)_100%)]"
           style={{ backgroundImage: `url(/assets/images/${heroBg})` }}
         />
-        <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
-          min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc(50vw_-_var(--container)/2_+_var(--container-x)))]
+        <div className="relative z-[1] -mt-7 pt-9 px-[var(--container-x)] pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-start text-left
+          min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(var(--container-x),calc(50vw_-_var(--container)/2_+_var(--container-x)))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
           {/* These three pages carried a BreadcrumbList in their JSON-LD and showed a
               guest nothing. It hides while a search is open, like the title does. */}
@@ -112,7 +112,7 @@ export default function ListingPage({ data, page }) {
         </div>
       </section>
 
-      <section className="bg-white py-[var(--section-gap)] px-6" id={sectionId}>
+      <section className="bg-white py-[var(--section-gap)] px-[var(--container-x)]" id={sectionId}>
         <div className="max-w-[calc(var(--container)-2*var(--container-x))] mx-auto mb-[1.6rem] pt-2 text-left max-[768px]:hidden">
           <h2 className={`${SECTION_TITLE} ${ST_LEFT} !text-[1.5rem] max-[768px]:hidden`}>{listTitle}</h2>
         </div>

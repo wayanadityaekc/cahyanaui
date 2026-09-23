@@ -3,7 +3,7 @@ import GuideCatNav from '@/components/sections/GuideCatNav';
 import RailLayout from '@/components/ui/RailLayout';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { guideCrumbs } from '@/lib/crumbs';
-import { RAIL_PAGE_BOX, RAIL_FRAME_CARD, RAIL_MAIN_CARD, RAIL_READ } from '@/components/ui/railClasses';
+import { RAIL_PAGE_BOX, RAIL_FRAME, RAIL_MAIN, RAIL_READ } from '@/components/ui/railClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
@@ -63,8 +63,8 @@ export default function GuideArticle({ data }) {
           label="Bali Guide"
           items={data.tabs.map((t) => ({ id: t.href, href: t.href, label: t.label }))}
           active={(data.tabs.find((t) => t.active) || data.tabs[0] || {}).href}
-          frameClass={RAIL_FRAME_CARD}
-          mainClass={RAIL_MAIN_CARD}
+          frameClass={RAIL_FRAME}
+          mainClass={RAIL_MAIN}
           mobileNav={<GuideCatNav tabs={data.tabs} />}
         >
           <div className={RAIL_READ}>

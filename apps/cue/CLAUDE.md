@@ -1057,7 +1057,39 @@ itu ke-match payload RSC di dalam `<script>`). Yang ketemu:
   Home. Dua salinan tangan dari satu jalan.
 - **Nol halaman** yang nandain halaman yang lagi dibuka (`aria-current="page"`).
 
-**Sekarang: `components/ui/Breadcrumb.jsx`, dipakai SEMUA.**
+**POSISI = POLA A, SATU ATURAN SE-WEB** (Sep 2026, Wayan: *"Gass A, semua rata kiri"*,
+sesudah lihat screenshot 5 jenis halaman). **Crumb SELALU tepat di atas judul halaman,
+jarak 8px, rata kiri, lurus sama kontainer halaman itu sendiri.** Nol pengecualian.
+- Sebelumnya ada **4 pola** (diukur @390 & @1280): 9 halaman udah di atas judul · **68
+  halaman detail 609px DI BAWAH judul** (di dalam hero gallery, bawah baris harga) ·
+  **15 guide 457px di bawah** (di dalam kartu artikel) · 3 section legal di bawah judulnya.
+- **Ini NGE-OVERRIDE penempatan gaya GYG** ("breadcrumbs taruh di bawah harga") di halaman
+  detail. Wayan lihat dua-duanya berdampingan terus milih A. Alasannya: di posisi lama
+  crumb baru kebaca sesudah galeri + chip + harga, padahal gunanya buat orang yang mendarat
+  dari Google dan mau tau dia lagi di mana.
+- `HERO_CRUMB` sekarang **posisi doang** (`m-0 mb-2`) — bentuknya punya komponen.
+  Varian split `DetailHero` (dipakai guide) dapet slot `crumb` juga, dan dia nerima DUA
+  bentuk: item terstruktur (guide) atau bentuk legacy `{type,href,text}` (detail).
+- **Sisa yang DISENGAJA, udah ditunjukin ke Wayan & dia bilang lanjut**: di guide & legal
+  item terakhir crumb **ngulang H1 persis di bawahnya** (8px). Halaman tour lolos karena
+  crumb-nya pakai nama katalog yang pendek. Opsi "item terakhir gak usah dicetak kalau sama
+  persis sama H1" udah ditawarin & **gak dipilih**. Di HP crumb listing rata kiri sementara
+  judul + sub-nya masih ke-center — Wayan: *"listing gapapa"*.
+
+**SEO: JSON-LD NOL BERUBAH pas posisi dipindah.** Ke-buktiin, bukan diklaim: blok
+`ld+json` 100 halaman di-dump sebelum & sesudah, **diff 0 baris**. Yang pindah cuma posisi
+DOM-nya; trail, urutan, dan URL-nya sama persis.
+
+**BUG SEO YANG KETEMU PAS NGECEK ITU (udah dibenerin):** node TERAKHIR BreadcrumbList di
+**15 halaman guide** nunjuk ke **HOMEPAGE**. Sebabnya `item: SITE + (t.href || )` —
+item terakhir emang sengaja gak punya `href` (dia halaman yang lagi dibuka, gak boleh
+jadi link), jadi fallback-nya jatuh ke string kosong = akar situs. Jadi Google dikasih tau
+tiap artikel guide itu homepage. Sekarang self-reference (`/${page}.html`), dan
+**di-assert lawan `<link rel=canonical>` halaman itu sendiri**, bukan URL yang dirakit di
+harness. Halaman lain gak kena — schema mereka dari `PAGE_SCHEMA` tulis tangan yang
+URL-nya emang udah bener.
+
+
 - `<nav aria-label="Breadcrumb">` + `<ol>` — daftar buat screen reader, bukan sebaris teks
   bertanda `›`. **12.8px (`--fs-small`)**, bukan 10.24.
 - **Item terakhir = halaman yang lagi dibuka**: gak pernah link, bawa `aria-current="page"`,

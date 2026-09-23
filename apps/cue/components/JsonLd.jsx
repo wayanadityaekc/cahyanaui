@@ -84,7 +84,14 @@ export default async function JsonLd({ page, crumbs }) {
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
           itemListElement: trail.map((t, i) => ({
-            '@type': 'ListItem', position: i + 1, name: t.label, item: SITE + (t.href || ''),
+            '@type': 'ListItem',
+            position: i + 1,
+            name: t.label,
+            // The LAST item carries no href - it is the page you are on, and the
+            // visible trail must not link it. Falling back to SITE + '' pointed
+            // every guide article's final node at the HOMEPAGE, which is what
+            // Google was being told the article is. Self-reference instead.
+            item: SITE + (t.href || `/${page}.html`),
           })),
         },
       }]

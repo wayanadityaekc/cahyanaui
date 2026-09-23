@@ -70,7 +70,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         // on the page you are on. It used to be a bare <p> of raw HTML at 10.24px.
         // The middle step is new: "Our Company" is where these sections actually
         // live, and it was not reachable from the trail before.
-        return <Breadcrumb items={b.items} className="mb-[1.25rem]" key={i} />;
+        return <Breadcrumb items={b.items} className="mb-2" key={i} />;
       case 'heading':
         // Default = sub-section heading (.section__title--sub), unchanged for all
         // guide/legal callers. `sub: false` = a main section heading (plain

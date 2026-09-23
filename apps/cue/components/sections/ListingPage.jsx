@@ -78,7 +78,7 @@ export default function ListingPage({ data, page }) {
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
           {/* These three pages carried a BreadcrumbList in their JSON-LD and showed a
               guest nothing. It hides while a search is open, like the title does. */}
-          {!q && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-center min-[769px]:self-start" />}
+          {!q && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
           {!q && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
           {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}

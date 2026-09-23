@@ -35,8 +35,12 @@ const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:tex
 function LegalBody({ data }) {
   return (
     <div className={BODY_TEXT}>
+      {/* Pattern A: the trail sits above the heading, not under it. It arrives as
+          the first prose block, so it is pulled out here rather than rendered in
+          place. */}
+      <Prose blocks={data.body.filter((b) => b.type === 'crumb')} headingVariant="company" />
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
-      <Prose blocks={data.body} headingVariant="company" />
+      <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="company" />
     </div>
   );
 }

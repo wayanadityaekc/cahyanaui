@@ -55,7 +55,8 @@ export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769p
 // yang di atas"), so the margin is on top. On desktop the price row is display:none,
 // so it trails the chips instead - same spacing either way.
 // Position only: what the crumb LOOKS like is the shared component's business now.
-export const HERO_CRUMB = 'mt-[1.1rem] mx-0 mb-0';
+// Pattern A - straight above the page title, 8px clear of it.
+export const HERO_CRUMB = 'm-0 mb-2';
 export const HERO_CRUMB_LINK = 'text-muted no-underline hover:underline';
 export const HERO_CRUMB_SEP = 'mx-[0.35rem] opacity-[0.55]';
 // Star sized explicitly - Lucide renders width/height=24, so an unsized icon blows
@@ -83,9 +84,10 @@ function Chip({ icon: Icon, text, ok }) {
 }
 
 
-function HeroBody({ title, desc, hooks, cta, ctaHref }) {
+function HeroBody({ title, desc, hooks, cta, ctaHref, crumb }) {
   return (
     <>
+      {crumb && <Breadcrumb items={crumb[0] && crumb[0].type ? itemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />}
       <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
       <p className={HERO_DESC}>{desc}</p>
       <ul className={HOOK_UL}>
@@ -124,6 +126,7 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
       // into the Overview section ("deskripsi di bawah title taruh di overview aja"),
       // so the hero is title, photos, facts, CTA.
       <section className="pt-[var(--header-h-max,92px)] min-[769px]:pt-[var(--header-h-max,98px)] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
+        {crumb && <Breadcrumb items={itemsFromLegacy(crumb)} className={HERO_CRUMB} />}
         <h1 className={`${SUBHERO_TITLE} mb-2 text-left`}>{title}</h1>
         {ratingName && (
           <div className="mb-[0.9rem]">
@@ -140,7 +143,6 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
             row in here, so it inherits this section's container padding instead of
             re-declaring it and drifting out of line with the gallery. */}
         {belowChips}
-        {crumb && <Breadcrumb items={itemsFromLegacy(crumb)} className={HERO_CRUMB} />}
       </section>
     );
   }
@@ -157,7 +159,7 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
       <div className="relative z-[1] -mt-7 pt-9 px-6 pb-3 bg-white rounded-t-[var(--r-xl)] flex flex-col items-center text-center
         min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(1.5rem,calc((100vw-1280px)/2))]
         min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center min-[769px]:items-start min-[769px]:text-left">
-        <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} />
+        <HeroBody title={title} desc={desc} hooks={hooks} cta={cta} ctaHref={ctaHref} crumb={crumb} />
       </div>
     </section>
   );

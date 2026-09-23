@@ -47,6 +47,7 @@ export default function GuideArticle({ data }) {
         title={data.title}
         desc={data.sub}
         hooks={hooks}
+        crumb={crumbs}
         cta="Our tours"
         ctaHref="/tour.html"
       />
@@ -67,11 +68,6 @@ export default function GuideArticle({ data }) {
           mobileNav={<GuideCatNav tabs={data.tabs} />}
         >
           <div className={RAIL_READ}>
-            {/* One trail, and it now names the article itself. The prose block that
-                used to print it stopped at the category and was a bare <p> at
-                10.24px; the JSON-LD named the article but never said Home. Both
-                come from guideCrumbs() now, so they cannot disagree again. */}
-            <Breadcrumb items={crumbs} className="mb-[1.25rem]" />
             <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="guide" />
           </div>
         </RailLayout>

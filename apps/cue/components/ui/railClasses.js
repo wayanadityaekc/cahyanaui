@@ -60,11 +60,10 @@ export const RAIL_FRAME =
   `${FRAME_DESK} max-[992px]:border-none ` +
   'max-[992px]:rounded-none max-[992px]:shadow-none max-[992px]:bg-transparent';
 
-// The guide articles used to have a second frame here - a white bordered card on
-// phones - so their body text sat 16px (frame) + 16px (card padding) in while the
-// hero above it sat on the page gutter. Wayan, Sep 2026: "page article guide khusus
-// mobile bro". They use RAIL_FRAME now, the same phone shape as Our Company and
-// My Trips: no card, content on the page's own left edge.
+// Guide articles keep their phone shape exactly as it was - a white bordered card,
+// --r-md corners, no shadow (Wayan asked for the rail on DESKTOP only). The desktop
+// half is the same string, so the two pages cannot drift apart.
+export const RAIL_FRAME_CARD = `${FRAME_DESK} max-[992px]:rounded-md max-[992px]:shadow-none`;
 
 // --- desktop rail -----------------------------------------------------------
 export const RAIL_ASIDE =
@@ -96,6 +95,12 @@ export const RAIL_SPLIT = 'block h-px bg-line my-[var(--space-2)] mx-[0.75rem]';
 
 // --- content column ---------------------------------------------------------
 export const RAIL_MAIN = 'flex-1 min-w-0 p-[1.6rem_2.1rem] max-[992px]:p-0';
+// Same column, but below 993px it keeps the guide card's own padding instead of
+// dropping to zero (that padding is what draws the card on a phone).
+export const RAIL_MAIN_CARD =
+  'flex-1 min-w-0 p-[1.6rem_2.1rem] max-[992px]:px-6 max-[992px]:pt-6 max-[992px]:pb-8 ' +
+  'max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
+
 // Prose is capped for line length but sits flush left, the same compromise the
 // guide articles make: the left edge lines up with everything else on the page,
 // the lines stay readable.

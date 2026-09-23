@@ -781,20 +781,23 @@ guide khusus mobile bro")**
   - **Varian split itu praktis punya guide doang**: semua tour & attraction ngoper
     `gallery`, jadi mereka lewat cabang gallery. Jadi perubahan ini nyentuh 15 halaman
     guide, bukan 68 halaman detail.
-- **Kartu putih di HP DIBUANG.** Artikel guide dulu satu-satunya halaman rail yang masih
-  mbungkus isinya pakai kartu berbingkai di bawah 993px, jadi teksnya duduk di
-  **16 (frame) + 16 (padding kartu) = 33**, sementara hero-nya di 16. Sekarang dia pakai
-  `RAIL_FRAME`/`RAIL_MAIN` yang SAMA kayak Our Company & My Trips (di bawah 993 dua-duanya
-  emang udah nol kartu). `RAIL_FRAME_CARD` + `RAIL_MAIN_CARD` **UDAH DIHAPUS** (dead).
-  - Ini nge-override catatan lama "HP NOL BERUBAH / kartu putih --r-md dipertahanin" —
-    itu bener waktu rail baru dipasang buat desktop; Wayan minta HP-nya sekarang.
+- **KARTU PUTIH DI HP TETEP ADA (Wayan pilih "opsi A").** Gua sempat buangnya biar teks
+  artikel mendarat di tepi halaman, terus Wayan nanya *"kok container di artikel jadi
+  hilang?"* dan milih kartunya balik. Yang dibenerin CUMA hero-nya. Jadi di HP:
+  **hero 16 = tepi KARTU 16**, dan teks di dalam kartu masuk ke **33**
+  (16 + border 1 + padding 16) — itu kerjaan kartu nge-inset isinya, bukan tepi ketiga.
+  `RAIL_FRAME_CARD` + `RAIL_MAIN_CARD` **TETEP DIPAKAI** (jangan dihapus, gua sempat
+  hapus terus dibalikin).
+  - **Hero-nya turun dari 24 ke 16 dan itu DISENGAJA**: kalau tetep 24, satu layar HP
+    punya TIGA angka (hero 24 · kartu 16 · teks 33). Di 16 tinggal dua, dan yang dua itu
+    nempel — hero lurus sama tepi kartu di bawahnya.
 - **SATU GUTTER DI HP, `--container-x` (16px).** Halaman listing masih hardcode `px-6`
   (24) — jadi listing 24, guide 16, dan itu yang bikin "belum samain". Sekarang listing
   ikut token: hero + section + lantai `pl` desktop semuanya `var(--container-x)`.
   Desktop **NOL berubah** (token-nya emang 24 di ≥993).
-- Sesudahnya, **ke-ukur di 320/390/430/560/768: spread 0** di artikel guide (crumb, judul,
-  blurb, dropdown kategori, isi artikel, judul section, kartu "Our tours" — semuanya 16),
-  dan listing + guide hub juga 16. Tiga jenis halaman, satu tepi.
+- Sesudahnya, ke-ukur di 320/390/430/560/768: **ketiga baris hero mulai di 16 semua**
+  (dulu 73/96/50 @560), tepi kartunya juga 16, dan listing + guide hub juga 16. Yang
+  masih masuk ke dalam cuma teks DI DALAM kartu (33) — itu padding-nya kartu.
 - **JEBAKAN yang ketemu pas ngukur ini (site-wide, BUKAN dari perubahan ini):** Tailwind
   nge-compile `max-[992px]` jadi **`@media not all and (min-width:992px)`**, yang
   **GAK match di tepat 992px**. Jadi di viewport 992 pas, `max-[992px]:` DAN
@@ -804,9 +807,9 @@ guide khusus mobile bro")**
   disentuh; kalau mau dibenerin, pasangannya harus `max-[993px]`/`min-[993px]`.
 - Verifikasi: **`verify-left.mjs`** naik ke **412/412** (6 halaman × 7 lebar) — nambah
   2 halaman guide + assertion baru **"tiap baris hero mulai di x yang sama"** (itu yang
-  beneran rusak; cek `text-align` doang gak nangkep). Di atas 992 body artikel emang
-  sengaja masuk ke dalam (rail), jadi assertion tepi-nya di-skip di situ. Dites pakai
-  2 bug: hero di-center lagi (**54 nyala**) dan kartu HP dibalikin (**6 nyala**).
+  beneran rusak; cek `text-align` doang gak nangkep). Buat halaman artikel yang diadu itu **tepi KARTU-nya**, bukan tepi teks — kartu emang
+  nge-inset isinya. Di atas 992 body-nya sengaja masuk ke dalam (rail), jadi assertion
+  tepi-nya di-skip di situ. Dites pakai bug aslinya: hero di-center lagi = **54 nyala**.
 
 - **Border-nya `border-l`, BUKAN `border-r`** kayak Our Company: kolom kategori guide
     ada di **KANAN** (Our Company di kiri), jadi garisnya harus di sisi yang ngadep konten.

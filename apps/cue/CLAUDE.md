@@ -1258,6 +1258,43 @@ BreadcrumbList ada, dan **teks di layar == teks di schema**.
   (Sep 2026, Wayan: "desktop biarin") — layar lega, semua kategori keliatan sekaligus.
   Jangan "dirapihin" biar sama sama HP tanpa nanya.
 
+**JUDUL RATA KIRI — LISTING + GUIDE HUB (Sep 2026, Wayan: "page listing dan guide yang
+punya title tengah coba aliin kiri bro")**
+- Yang dulu ke-center & sekarang KIRI: **hero listing di HP** (judul + blurb; desktop dari
+  dulu udah kiri), **judul daftar** ("All Bali Tours" dkk), **judul blok info**
+  (`/activities`), dan **hero guide hub** (`/bali-guide`: judul + blurb + kotak search).
+- **Rata kiri cuma jadi rapi kalau tepinya SATU.** Begitu dibikin kiri, ketahuan halaman
+  listing punya **TIGA tepi** di desktop (ke-ukur @1280): hero di **24**, judul daftar di
+  **40**, kartu di **64**. Selama ini gak keliatan karena hero-nya ke-center di HP dan di
+  desktop dia satu-satunya yang rata kiri. Sekarang ketiganya ikut **`CATSEC`** (kotak yang
+  emang dipakai grid kartunya): **24 @390/768/1024 · 64 @1280 · 144 @1440**.
+  - Rumus tepi kartu = `max(1.5rem, calc(50vw - var(--container)/2 + var(--container-x)))`
+    — itu turunan dari `CATSEC` sendiri (`max-w: calc(--container - 2*--container-x)` +
+    `mx-auto`, di dalam section ber-`px-6`). Hero listing pakai rumus itu di `pl`-nya, dan
+    judul daftar pakai `max-w` yang sama persis kayak `CATSEC`. **Ganti lebar kontainer =
+    ketiganya ikut sendiri**, gak ada angka yang disalin.
+  - Hero listing dulu `calc((100vw-1280px)/2)` — dia ngikut kotak **1280** sementara semua
+    yang lain ngikut **1200**. Itu sumber selisih 24px-nya.
+- **Guide hub**: `SUBHERO` dipakai bareng legal/FAQ/itinerary/all-reviews, jadi alignment-nya
+  di-override **di pemakainya** (`GuideHub.jsx`), bukan di string bersama — empat halaman itu
+  sengaja gak kesentuh. Kotak isinya naik dari 720 ke lebar kontainer halaman biar tepinya
+  lurus sama baris kategori di bawahnya, TAPI **blurb-nya tetep di-cap `--container-read`**
+  (kalau nggak barisnya jadi ~150 karakter).
+- **Band promo di kaki halaman listing (`ProgramPromoSlider`) SENGAJA MASIH KE-CENTER.**
+  Itu **band**, bentuknya sama persis sama section Airport di homepage — ngirikan dia doang
+  bikin listing beda sama homepage. Dia dikasih hook `data-promo` biar harness bisa
+  ngecualiin. Mau dikirikan juga = keputusan Wayan, belum ditanyain.
+- **Yang masih ke-center & BELUM ditanyain**: `/programs.html` (h1 "All Programs"),
+  `/itinerary`, `/all-reviews`, `/faq` + 3 section legal (semuanya lewat `SUBHERO`).
+- Verifikasi: **`verify-left.mjs`** di scratchpad (**252/252**, 4 halaman ×
+  320/390/768/1024/1280/1440/1920). Patokannya **aturan, bukan angka**: `text-align` h1 =
+  left · crumb & blurb mulai di tepi yang SAMA kayak h1 · **h1 mulai persis di tepi blok
+  konten di bawahnya** (dibaca dari halaman itu sendiri, bukan angka yang diketik di
+  harness) · nol h1/h2 yang masih ke-center di luar band promo · halaman gak melar · nol
+  page error. Dites pakai 2 bug: hero dibalikin ke-center (**71 nyala**) dan tepi hero
+  dibalikin ke kotak 1280 (**9 nyala**, cuma di 1280/1440 — persis lebar yang selisihnya
+  emang ada).
+
 **Isi kartu listing (`ListingRow`) — tour / experience / destinasi WAJIB seragam:**
 - Barisnya: `N stops` (ikon pin) · durasi (jam) · [area, ikon PETA — destinasi doang] ·
   `Private driver` · badge `Free cancellation` · harga. Wayan minta ketiganya sama

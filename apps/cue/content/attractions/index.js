@@ -3,6 +3,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "atv-ride-jungle.webp",
   "title": "ATV Quad Bike Ride",
+  "heading": "ATV Quad Bike Ride: Jungle Tracks, a River Crossing and a Cave Tunnel",
   "desc": "A two-hour quad bike ride through jungle tracks, working rice fields, a shallow river crossing, and a hand-carved cave tunnel near Ubud. No licence or experience needed, and expect to finish covered in mud.",
   "hooks": [
    {
@@ -127,6 +128,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "surfers-beach.webp",
   "title": "Balangan Beach",
+  "heading": "Balangan Beach: A Cliff-Backed Reef Break on the Bukit",
   "desc": "A long, narrow beach beneath limestone cliffs near Pecatu on Bali's Bukit Peninsula, lined with simple warungs. It is known for a left-hand reef break and is one of the easier Bukit beaches to reach.",
   "hooks": [
    {
@@ -251,6 +253,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "pelican-bali.webp",
   "title": "Bali Bird Park",
+  "heading": "Bali Bird Park: Over 1,000 Birds in Walk-In Aviaries near Ubud",
   "desc": "Bali Bird Park sits in Singapadu, south of Ubud, with more than 1,000 birds across landscaped walk-in aviaries. It runs daily free-flight shows and feeding sessions, and paths are mostly flat and shaded. Allow two to three hours.",
   "hooks": [
    {
@@ -375,6 +378,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "elephant-bali-safari.webp",
   "title": "Bali Zoo",
+  "heading": "Bali Zoo: Elephants, Orangutans and Sun Bears near Ubud",
   "desc": "Bali Zoo sits in Singapadu, south of Ubud, with elephants, orangutans, sun bears, and hundreds of animals across shaded jungle grounds. It offers optional feeding and encounter experiences and a night safari after dark. Allow two to three hours.",
   "hooks": [
    {
@@ -499,6 +503,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "guest-hot-spring.jpg",
   "title": "Banjar Hot Spring",
+  "heading": "Banjar Hot Spring: Sulphur Pools and Dragon Spouts near Lovina",
   "desc": "Air Panas Banjar is a set of sacred hot springs near Lovina in north Bali, where warm sulphur water pours from carved stone dragon spouts into jungle-fringed bathing pools. It sits well inland from the busy south.",
   "hooks": [
    {
@@ -627,6 +632,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "waterfall.jpg",
   "title": "Banyumala Twin Waterfall",
+  "heading": "Banyumala Twin Waterfall: A Swimmable Pool Below a Steep Jungle Trek",
   "desc": "A twin waterfall in Bali's northern highlands near Wanagiri, dropping down a wide, moss-green rock face into a clear pool calm enough to swim in. A short but steep jungle trek keeps the crowds down.",
   "hooks": [
    {
@@ -751,6 +757,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "barong-dance-card.webp",
   "title": "Barong Dance",
+  "heading": "Barong Dance: Bali's Oldest Dance-Drama, with Live Gamelan",
   "desc": "The Barong is one of Bali's oldest dance-dramas, staging the endless struggle between the lion-like protector Barong and the witch Rangda. Performances run about an hour with live gamelan music and hand-carved sacred masks.",
   "hooks": [
    {
@@ -875,6 +882,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "batur-breakfast-hero.webp",
   "title": "Breakfast with a Volcano View",
+  "heading": "Breakfast with a Volcano View, on the Batur Caldera Rim",
   "desc": "After the pre-dawn Batur trek, breakfast is served on the caldera rim, looking across the volcano and Lake Batur below. It gets cold up there before the sun climbs, so bring a light layer for the wait.",
   "hooks": [
    {
@@ -1003,6 +1011,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "batur-hot-spring-water.webp",
   "title": "Batur Natural Hot Spring",
+  "heading": "Batur Natural Hot Spring: A Warm Soak on the Shore of Lake Batur",
   "desc": "Natural volcanic hot springs on the shore of Lake Batur, warmed underground by the mountain. A warm soak to ease tired legs after the sunrise trek, with the caldera walls rising around you. Bring swimwear and a towel.",
   "hooks": [
    {
@@ -1130,7 +1139,8 @@ export const ATTRACTION_CONTENT = {
  "besakih": {
   "type": "destination",
   "heroBg": "besakih-temple-bali.webp",
-  "title": "Besakih - The Mother Temple",
+  "title": "Besakih",
+  "heading": "Besakih - The Mother Temple: Over 20 Temples on Mount Agung",
   "desc": "Pura Besakih is Bali's largest and holiest temple complex, more than 20 temples set in terraces up the slopes of Mount Agung. Expect stairs to climb and fast-changing mountain weather; a sarong is included.",
   "hooks": [
    {
@@ -1255,6 +1265,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "kelingking-beach.jpg",
   "title": "Bingin Beach",
+  "heading": "Bingin Beach: A Tide-Dependent Cove Down Cliffside Steps",
   "desc": "A small, tide-dependent beach on the Bukit peninsula near Pecatu, reached only on foot down steep cliffside steps past cafes and surf shops. There's no vehicle access, and the sand shrinks at high tide, so come at low water.",
   "hooks": [
    {
@@ -1378,7 +1389,8 @@ export const ATTRACTION_CONTENT = {
  "coffee-plantation": {
   "type": "destination",
   "heroBg": "coffee-plantation-hero.jpg",
-  "title": "Coffee Plantation & Tasting",
+  "title": "Coffee Plantation",
+  "heading": "Coffee Plantation & Tasting: Hand-Roasted Beans and a Brew Flight",
   "desc": "Walk a working Bali coffee and spice plantation near Ubud, see the beans roasted by hand over a wood fire, and taste a flight of local brews. The standard tasting is free; a cup of kopi luwak costs extra.",
   "hooks": [
    {
@@ -1503,6 +1515,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "cooking-class-card.webp",
   "title": "Balinese Cooking Class",
+  "heading": "Balinese Cooking Class: From the Morning Market to Your Own Spice Paste",
   "desc": "Start at a working morning market, grind your own spice paste, then cook a full Balinese meal over an open flame in a family compound kitchen and sit down to eat what you made. Around five hours from pick-up.",
   "hooks": [
    {
@@ -1626,7 +1639,8 @@ export const ATTRACTION_CONTENT = {
  "garuda-wisnu-kencana": {
   "type": "destination",
   "heroBg": "gwk-statue-bali.webp",
-  "title": "Garuda Wisnu Kencana (GWK)",
+  "title": "Garuda Wisnu Kencana",
+  "heading": "Garuda Wisnu Kencana (GWK): A 121-Metre Statue Above a Limestone Park",
   "desc": "A colossal statue of Vishnu riding the Garuda, 121 metres tall and among the tallest statues on earth, standing over a cultural park carved from local limestone on the Bukit peninsula. It's open and exposed, so bring sun protection.",
   "hooks": [
    {
@@ -1751,6 +1765,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "waterfall.webp",
   "title": "Git Git Waterfall",
+  "heading": "Git Git Waterfall: A 35-Metre Drop on an Easy Paved Path",
   "desc": "Git Git is one of North Bali's taller single-drop waterfalls, about 35 metres into a rainforest pool. An easy paved path through coffee and clove trees makes it far gentler to reach than Sekumpul.",
   "hooks": [
    {
@@ -1874,7 +1889,8 @@ export const ATTRACTION_CONTENT = {
  "goa-gajah": {
   "type": "destination",
   "heroBg": "goa-gajah-hero.jpg",
-  "title": "Goa Gajah - The Elephant Cave",
+  "title": "Goa Gajah",
+  "heading": "Goa Gajah - The Elephant Cave: A 9th-Century Sanctuary near Ubud",
   "desc": "Goa Gajah, the Elephant Cave, is a cave sanctuary near Ubud dating to around the 9th to 11th century. A demon-face doorway leads into a rock passage, with old bathing pools and jungle shrines outside.",
   "hooks": [
    {
@@ -1999,6 +2015,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "cliff-beach.webp",
   "title": "Green Bowl Beach",
+  "heading": "Green Bowl Beach: Sea Caves at the Foot of a Clifftop Staircase",
   "desc": "Green Bowl sits at the foot of a long clifftop staircase near Ungasan, on the Bukit peninsula. Several hundred steps keep it among the quietest beaches down here, with sea caves at low tide and a reef break offshore.",
   "hooks": [
    {
@@ -2123,6 +2140,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "gunung-kawi-hero.jpg",
   "title": "Gunung Kawi Temple",
+  "heading": "Gunung Kawi Temple: 11th-Century Shrines Carved into a River Valley",
   "desc": "Gunung Kawi is an 11th-century group of shrines carved into the cliffs of the Pakerisan river valley near Tampaksiring. A stone stairway of around 300 steps runs down through rice terraces to reach them.",
   "hooks": [
    {
@@ -2247,6 +2265,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "handara-gate.webp",
   "title": "Handara Gate",
+  "heading": "Handara Gate: A Split Gate Framing the Northern Hills",
   "desc": "Handara Gate is a traditional split gate at the entrance to a highland golf resort near Bedugul. There is no temple behind it; the draw is the two stone halves framing a path against the northern mountains.",
   "hooks": [
    {
@@ -2371,6 +2390,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "jatiluwih.webp",
   "title": "Jatiluwih Rice Terraces",
+  "heading": "Jatiluwih Rice Terraces: A UNESCO Subak Landscape Below Batukaru",
   "desc": "Jatiluwih is a broad expanse of rice terraces on the slopes below Mount Batukaru in West Bali, part of a UNESCO World Heritage landscape. It is still farmed the traditional subak way, with walking trails running through the paddies.",
   "hooks": [
    {
@@ -2495,6 +2515,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "jeep-sunrise-mount-batur-view.jpg",
   "title": "Mount Batur Jeep Sunrise",
+  "heading": "Mount Batur Jeep Sunrise: A 4x4 to the Caldera Rim, No Trek",
   "desc": "A 4x4 drives you up Mount Batur's hardened lava field before dawn, so you reach the sunrise viewpoint over the caldera and Lake Batur without the usual two-hour trek. An early start from Ubud, coffee at the top.",
   "hooks": [
    {
@@ -2615,6 +2636,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "jungle-swing-valley.jpg",
   "title": "Bali Jungle Swing",
+  "heading": "Bali Jungle Swing: A Harnessed Seat Out Over the Rice Terraces",
   "desc": "The swing is a modern Bali attraction: a harnessed seat that arcs out over the rice terraces near Ubud. It's built for photos as much as thrills, and the harness makes it less alarming than it looks.",
   "hooks": [
    {
@@ -2739,6 +2761,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "kecak-dance.jpg",
   "title": "Kecak Fire Dance",
+  "heading": "Kecak Fire Dance: Fifty Voices and the Ramayana Around a Ring of Fire",
   "desc": "The Kecak is a Balinese performance built entirely from the human voice - over fifty men chanting in interlocking rhythm while the Ramayana plays out around a ring of fire. Shaped in the 1930s, it runs about an hour.",
   "hooks": [
    {
@@ -2858,7 +2881,8 @@ export const ATTRACTION_CONTENT = {
  "lempuyang-temple": {
   "type": "destination",
   "heroBg": "lempuyang.webp",
-  "title": "Lempuyang Temple - Gates of Heaven",
+  "title": "Lempuyang Temple",
+  "heading": "Lempuyang Temple - Gates of Heaven: A Split Gate Framing Mount Agung",
   "desc": "Pura Lempuyang is one of Bali's oldest and highest temples, in the far east of the island. Its split gate frames sacred Mount Agung, and the well-known \"gates of heaven\" photo means a long queue unless you arrive early.",
   "hooks": [
    {
@@ -2983,6 +3007,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "lovina-dolphin-sekumpul-card.jpg",
   "title": "Lovina Dolphin Sunrise",
+  "heading": "Lovina Dolphin Sunrise: An Outrigger Out to Wild Spinner Dolphins",
   "desc": "Lovina is a quiet resort area on Bali's black-sand north coast, known for dawn boat trips to see wild spinner dolphins. A traditional outrigger heads out before sunrise; the dolphins are wild, so sightings are common rather than guaranteed.",
   "hooks": [
    {
@@ -3110,7 +3135,8 @@ export const ATTRACTION_CONTENT = {
  "monkey-forest": {
   "type": "destination",
   "heroBg": "monkey-forest-hero.jpg",
-  "title": "Sacred Monkey Forest Sanctuary",
+  "title": "Monkey Forest",
+  "heading": "Sacred Monkey Forest Sanctuary: Macaques Around 14th-Century Temples",
   "desc": "The Sacred Monkey Forest is a temple sanctuary in Padangtegal, central Ubud, run by the local village. Set across shaded jungle around three 14th-century temples, it is home to hundreds of Balinese long-tailed macaques that roam freely among visitors.",
   "hooks": [
    {
@@ -3234,7 +3260,8 @@ export const ATTRACTION_CONTENT = {
  "mount-batur-trekking": {
   "type": "experience",
   "heroBg": "batur-sunrise.webp",
-  "title": "Mount Batur Sunrise Trekking",
+  "title": "Mount Batur Trekking",
+  "heading": "Mount Batur Trekking: Two Hours Up a 1,717-Metre Volcano for Sunrise",
   "desc": "Mount Batur is an active volcano of 1,717 metres in the Kintamani caldera, northeast of Ubud. Its pre-dawn hike takes about two hours up volcanic rock to the rim for sunrise over Lake Batur, and pick-up is around 2 AM.",
   "hooks": [
    {
@@ -3355,6 +3382,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tibumana.webp",
   "title": "Munduk Waterfalls",
+  "heading": "Munduk Waterfalls: Jungle Falls Among Coffee and Clove Plantations",
   "desc": "Munduk sits high in Bali's northern hills, where a string of jungle waterfalls hides in valleys among coffee, clove, and cacao plantations. The air is cool, the roads wind, and the views run toward the north coast.",
   "hooks": [
    {
@@ -3479,6 +3507,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "green-cliff-coast-bali.webp",
   "title": "Pandawa Beach",
+  "heading": "Pandawa Beach: White Sand Below a Cut Through the Limestone",
   "desc": "Pandawa sits below the limestone cliffs of the Bukit peninsula in South Bali. Once hard to reach, it opens up now through a cut carved into the rock and lined with statues of the Pandawa brothers from the Mahabharata.",
   "hooks": [
    {
@@ -3603,6 +3632,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "penglipuran-village-view.jpg",
   "title": "Penglipuran Village",
+  "heading": "Penglipuran Village: A Living Bali Aga Village in the Bangli Highlands",
   "desc": "Penglipuran is a Bali Aga village in the cool Bangli highlands, regularly rated among the cleanest villages in the world. It remains a living community, so the swept lanes and matching gates are people's homes, not a museum set.",
   "hooks": [
    {
@@ -3727,6 +3757,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "pura-batuan-temple.jpg",
   "title": "Pura Batuan Temple",
+  "heading": "Pura Batuan Temple: Fine Paras-Stone Carving in a Painting Village",
   "desc": "Pura Puseh Batuan is the village temple of Batuan, a settlement known for its painting tradition. Founded around the 11th century, it is covered in fine paras-stone carving and remains an active place of worship today.",
   "hooks": [
    {
@@ -3851,6 +3882,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "rafting.webp",
   "title": "Ayung River Rafting",
+  "heading": "Ayung River Rafting: Two Hours of Class II-III Through a Rainforest Gorge",
   "desc": "About two hours down the Ayung, Bali's longest river, through a rainforest gorge near Ubud - class II-III rapids that are fine for first-timers, with hand-carved stone reliefs and waterfalls along the banks.",
   "hooks": [
    {
@@ -3975,6 +4007,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "monkey.jpg",
   "title": "Sangeh Monkey Forest",
+  "heading": "Sangeh Monkey Forest: Macaques in a Grove of Tall Nutmeg Trees",
   "desc": "Sangeh is a protected grove of tall nutmeg trees in Badung, north-west of Ubud, wrapped around the 17th-century Pura Bukit Sari. Hundreds of grey long-tailed macaques live here, and the shaded forest walk is flat and easy.",
   "hooks": [
    {
@@ -4099,6 +4132,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "lovina-dolphin-sekumpul-card.jpg",
   "title": "Sekumpul Waterfall",
+  "heading": "Sekumpul Waterfall: A Group of Tall Falls in a North Bali Valley",
   "desc": "Often called Bali's most beautiful waterfall, Sekumpul is a group of tall falls dropping into a jungle valley in the north. Reaching the base means a hike down and back up, including a river crossing, so come ready to walk.",
   "hooks": [
    {
@@ -4223,6 +4257,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "kids-snorkeling.webp",
   "title": "Snorkeling in East Bali",
+  "heading": "Snorkeling in East Bali: Calm, Clear Water off Amed and the Blue Lagoon",
   "desc": "The sheltered east coast around Amed and the Blue Lagoon has calm, clear water with coral and reef fish a short swim from shore. Gear is provided and the shallows suit first-timers, an easy break between temples and hills.",
   "hooks": [
    {
@@ -4351,6 +4386,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "taman-ayun-hero.jpg",
   "title": "Taman Ayun Royal Temple",
+  "heading": "Taman Ayun Royal Temple: Tiered Meru Towers Inside a Wide Moat",
   "desc": "Taman Ayun was the state temple of the Mengwi kingdom, its rows of tiered meru towers set on an island inside a wide moat. It sits in Mengwi on the way west, an easy stop on a West Bali day.",
   "hooks": [
    {
@@ -4475,6 +4511,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "ujung-water-palace-lake-bali.webp",
   "title": "Taman Ujung Water Palace",
+  "heading": "Taman Ujung Water Palace: Ponds and Pavilions Below Mount Agung",
   "desc": "Built by the last raja of Karangasem in the early 1900s, Taman Ujung spreads reflecting ponds, bridges, and pavilions across a hillside in East Bali, with Mount Agung behind and the sea below on a clear day.",
   "hooks": [
    {
@@ -4599,6 +4636,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tanah-lot.webp",
   "title": "Tanah Lot Sunset Temple",
+  "heading": "Tanah Lot Sunset Temple: A Sea Temple Cut Off at High Tide",
   "desc": "A sea temple built on a rock just off Bali's southwest coast, cut off by the water at high tide. It belongs to a chain of coastal temples ringing the island, and draws its largest crowds at sunset.",
   "hooks": [
    {
@@ -4723,6 +4761,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "kelingking-beach.jpg",
   "title": "Tegal Wangi Beach",
+  "heading": "Tegal Wangi Beach: Tide Pools in a Quiet Cove near Jimbaran",
   "desc": "A small cove below the cliffs near Jimbaran, reached by a steep path that keeps it quiet. Shallow pools form in the volcanic rock at low tide, and the west-facing bay catches the late-afternoon sun.",
   "hooks": [
    {
@@ -4847,6 +4886,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tegalalang-rice-terrace-hero.jpg",
   "title": "Tegalalang Rice Terrace",
+  "heading": "Tegalalang Rice Terrace: Stepped Paddies Watered by the Subak System",
   "desc": "A valley of stepped rice fields north of Ubud, carved over generations and still watered by the subak system. Walk the paths between the paddies, then stop nearby for a coffee tasting that includes kopi luwak.",
   "hooks": [
    {
@@ -4971,6 +5011,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "tegenungan-waterfall-hero.jpg",
   "title": "Tegenungan Waterfall",
+  "heading": "Tegenungan Waterfall: A Wide Curtain South of Ubud, No Trek",
   "desc": "One of the few big waterfalls near Ubud you can reach without a long trek. Tegenungan drops in a wide curtain through the jungle just to the south, gathering into a natural pool at the base where you can swim.",
   "hooks": [
    {
@@ -5094,7 +5135,8 @@ export const ATTRACTION_CONTENT = {
  "tirta-empul": {
   "type": "destination",
   "heroBg": "tirta-empul-hero.jpg",
-  "title": "Tirta Empul Holy Water Temple",
+  "title": "Tirta Empul",
+  "heading": "Tirta Empul Holy Water Temple: A Thousand-Year-Old Purification Spring",
   "desc": "A temple built around a natural spring that Balinese Hindus have treated as holy for over a thousand years. At its bathing pools, worshippers move along the stone spouts in the melukat purification ritual, which visitors can join respectfully.",
   "hooks": [
    {
@@ -5218,7 +5260,8 @@ export const ATTRACTION_CONTENT = {
  "tirta-gangga": {
   "type": "destination",
   "heroBg": "tirtagangga.jpg",
-  "title": "Tirta Gangga Water Garden",
+  "title": "Tirta Gangga",
+  "heading": "Tirta Gangga Water Garden: Tiered Fountains, Koi Ponds and Stepping Stones",
   "desc": "Built by the last king of Karangasem, Tirta Gangga is a water garden of tiered fountains, koi ponds, and stepping stones across the pond. It sits in the hills of East Bali, green and quiet away from the crowds.",
   "hooks": [
    {
@@ -5342,7 +5385,8 @@ export const ATTRACTION_CONTENT = {
  "twin-lakes": {
   "type": "destination",
   "heroBg": "batur-lake.webp",
-  "title": "Buyan & Tamblingan Twin Lakes",
+  "title": "Twin Lakes",
+  "heading": "Buyan & Tamblingan Twin Lakes: Two Lakes in One Volcanic Caldera",
   "desc": "Lakes Buyan and Tamblingan sit side by side in an old volcanic caldera, seen from a ridge-top viewpoint in Bali's cool northern highlands. A quick roadside stop, clearest and least misty in the early morning.",
   "hooks": [
    {
@@ -5467,6 +5511,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "ubud-arts-crafts-hero.jpg",
   "title": "Ubud Arts & Crafts",
+  "heading": "Ubud Arts & Crafts: Silver in Celuk, Batik, and Batuan Painting",
   "desc": "Bali's craft villages around Ubud in one loop - hand-worked silver in Celuk, wax-and-dye batik you can try yourself, and the detailed Batuan painting style. Flat, easy walking, and nothing you have to buy.",
   "hooks": [
    {
@@ -5591,6 +5636,7 @@ export const ATTRACTION_CONTENT = {
   "type": "destination",
   "heroBg": "ubud-market-hero.jpg",
   "title": "Ubud Traditional Market",
+  "heading": "Ubud Traditional Market: Offerings at Dawn, Textiles and Carving After",
   "desc": "Pasar Ubud, the traditional market in the heart of town: fresh produce and flowers for offerings early in the morning, then textiles, woodcarving, and souvenir stalls through the rest of the day.",
   "hooks": [
    {
@@ -5714,7 +5760,8 @@ export const ATTRACTION_CONTENT = {
  "ubud-royal-palace": {
   "type": "destination",
   "heroBg": "ubud-saraswati-temple.jpg",
-  "title": "Ubud Royal Palace & Art Market",
+  "title": "Ubud Royal Palace",
+  "heading": "Ubud Royal Palace & Art Market: Three Landmarks a Short Walk Apart",
   "desc": "Three landmarks at the centre of Ubud, a short walk apart: the lotus-pond water temple of Puri Saraswati, the royal palace of Puri Saren Agung, and the art market across the road.",
   "hooks": [
    {
@@ -5838,7 +5885,8 @@ export const ATTRACTION_CONTENT = {
  "ulun-danu-beratan": {
   "type": "destination",
   "heroBg": "ulun-danu-beratan-hero.webp",
-  "title": "Ulun Danu Beratan Lake Temple",
+  "title": "Ulun Danu Beratan",
+  "heading": "Ulun Danu Beratan Lake Temple: Tiered Shrines on a Highland Lake",
   "desc": "Pura Ulun Danu Beratan, whose tiered shrines seem to float when Lake Beratan is high, sits in Bali's cool central highlands. Dedicated to the lake goddess, it's the temple pictured on the 50,000 rupiah note.",
   "hooks": [
    {
@@ -5963,6 +6011,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "kecak-dance-hero.webp",
   "title": "Uluwatu Kecak Fire Dance",
+  "heading": "Uluwatu Kecak Fire Dance: Seventy Voices on a Clifftop at Sunset",
   "desc": "The Kecak is a Balinese dance told entirely by voice - more than seventy men chanting in interlocking rhythm. At Uluwatu it's staged on a clifftop above the Indian Ocean, every evening as the sun goes down.",
   "hooks": [
    {
@@ -6086,7 +6135,8 @@ export const ATTRACTION_CONTENT = {
  "uluwatu-temple": {
   "type": "destination",
   "heroBg": "uluwatu-temple-top.webp",
-  "title": "Uluwatu Cliff Temple",
+  "title": "Uluwatu Temple",
+  "heading": "Uluwatu Temple: A Sea Temple 70 Metres Above the Ocean",
   "desc": "Pura Luhur Uluwatu is a sea temple on a cliff 70 metres above the ocean, one of Bali's six directional temples. The clifftop path has the widest coastal views in the south, with a Kecak dance staged nearby at sunset.",
   "hooks": [
    {
@@ -6211,6 +6261,7 @@ export const ATTRACTION_CONTENT = {
   "type": "experience",
   "heroBg": "watersport-jetski.webp",
   "title": "Watersport",
+  "heading": "Watersport: Jet Ski, Parasail and Banana Boat at Tanjung Benoa",
   "desc": "Tanjung Benoa, on Bali's southern peninsula, is the island's main watersports beach. From its calm bay you can ride a jet ski, go up on a parasail, or take a banana boat, picking what you like on the day.",
   "hooks": [
    {

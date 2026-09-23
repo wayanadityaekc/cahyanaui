@@ -29,19 +29,23 @@ export default function AttractionPage({ data }) {
   // built from this page's own hero photo and section photos, and a hand-picked
   // `gallery` in the content file overrides it.
   const gallery = galleryFrom(data);
+  // The last crumb step used to be a second hand-typed copy of the title, so the two
+  // could drift. It reads the short name straight off `title` now.
+  const crumb = (data.crumb || []).map((p, i, a) =>
+    i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p);
   return (
     <>
-      <JsonLd page={data.__page} />
+      <JsonLd page={data.__page} crumbs={itemsFromLegacy(crumb)} />
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
         gallery={gallery}
-        title={data.title}
+        title={data.heading || data.title}
         desc={data.desc}
         hooks={data.hooks}
         cta={data.cta}
         ctaHref={data.ctaHref}
-        crumb={gallery.length ? data.crumb : undefined}
+        crumb={gallery.length ? crumb : undefined}
         ratingName={data.bookItem}
         belowChips={
           gallery.length && data.bookItem ? (
@@ -78,7 +82,11 @@ export default function AttractionPage({ data }) {
         bookType={bookType}
         included={data.included}
         excluded={data.excluded}
-        reviewService={data.title}
+        /* The key a review is WRITTEN under has to be the key the rating is READ
+           under, and that is the catalog name (bookItem) - it is also what pricing
+           uses, so it never moves. This read data.title until the short names were
+           introduced, at which point the two would have drifted apart on 13 pages. */
+        reviewService={data.bookItem || data.title}
       />
       </div>
       {data.bookItem && (

@@ -1,7 +1,8 @@
 export const GUIDE_CONTENT = {
  "bali-adventure-activities": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Adventure and Shows in Bali",
+  "title": "Adventure Activities",
+  "heading": "Adventure Activities and Shows in Bali: Rafting, ATV and the Batur Trek",
   "sub": "Rafting, ATV rides, jungle swings, and the Batur sunrise trek all sit within an hour of Ubud. None of them need experience, and gear, briefing, and transport are included. Evening dance shows too.",
   "tags": [
    "What to Do",
@@ -185,7 +186,8 @@ export const GUIDE_CONTENT = {
  },
  "bali-beaches-surf": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Bali's Beaches & Surf",
+  "title": "Beaches & Surf",
+  "heading": "Bali's Beaches & Surf: White Sand in the South, Black Sand North and East",
   "sub": "The south has the white sand and the surf, the Bukit has cliff-backed coves, the west is black-sand surf country, and the east is calm and clear. Which coast suits which day.",
   "tags": [
    "What to Do",
@@ -380,7 +382,8 @@ export const GUIDE_CONTENT = {
  },
  "bali-day-tours": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Bali Day Tours Explained",
+  "title": "Guided Day Tours",
+  "heading": "Guided Day Tours in Bali: One Region, One Car, One Local Driver",
   "sub": "One region, one car, one local who knows the way. How a private day tour works here, which route fits which traveller, how to pace a week of them, and what booking involves.",
   "tags": [
    "What to Do",
@@ -549,7 +552,8 @@ export const GUIDE_CONTENT = {
  },
  "bali-money-sim-visa": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Bali Money, SIM Cards & Visas",
+  "title": "Money, SIM & Visas",
+  "heading": "Money, SIM & Visas in Bali: Rupiah, Cash or Card, and eSIMs",
   "sub": "The practical layer of a Bali trip: rupiah and whether to carry cash, local SIM cards and eSIMs, and where to check current visa rules. All of it easier decided before you land.",
   "tags": [
    "Good to Know",
@@ -717,7 +721,8 @@ export const GUIDE_CONTENT = {
  },
  "bali-rice-terraces": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Bali's Rice Terraces & the Subak System",
+  "title": "Rice Terraces & Subak",
+  "heading": "Bali's Rice Terraces & Subak System: Tegalalang and Jatiluwih",
   "sub": "Staircases of green carved into hillsides over a thousand years, and the subak cooperative that shares the water behind them. Which terrace to visit, Tegalalang or Jatiluwih, and when the fields look best.",
   "tags": [
    "Nature",
@@ -874,7 +879,8 @@ export const GUIDE_CONTENT = {
  },
  "bali-volcanoes": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Bali's Volcanoes: Agung & Batur",
+  "title": "Volcanoes: Agung & Batur",
+  "heading": "Bali's Volcanoes: Agung & Batur, and the Sunrise Trek Over the Caldera",
   "sub": "Bali exists because of its volcanoes. Agung is the sacred giant; Batur is the one you can summit before breakfast, on foot or by jeep - and what sunrise up there is actually like.",
   "tags": [
    "Nature",
@@ -1027,7 +1033,8 @@ export const GUIDE_CONTENT = {
  },
  "bali-waterfalls": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "The Best Waterfalls in Bali",
+  "title": "Waterfalls of Bali",
+  "heading": "Waterfalls of Bali: From Tegenungan near Ubud to Sekumpul in the North",
   "sub": "By some counts over a hundred, from roadside cascades near Ubud to the multi-tier trek at Sekumpul in the north. Which ones pair well in a day, what to bring, and when to go.",
   "tags": [
    "Nature",
@@ -1212,7 +1219,8 @@ export const GUIDE_CONTENT = {
  },
  "balinese-dance": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Balinese Dance: Kecak, Barong & Legong",
+  "title": "Traditional Dance",
+  "heading": "Traditional Dance in Bali: Kecak, Barong and Legong, to Live Gamelan",
   "sub": "Dance here is part of how the island worships, not a show bolted onto tourism. The three you are most likely to see, where Kecak is best watched, and what an evening performance is like.",
   "tags": [
    "Culture",
@@ -1377,7 +1385,8 @@ export const GUIDE_CONTENT = {
  },
  "balinese-hinduism": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Balinese Hinduism & Daily Offerings",
+  "title": "Balinese Hinduism",
+  "heading": "Balinese Hinduism & Daily Offerings: Tri Hita Karana and Canang Sari",
   "sub": "Around ninety percent of Balinese follow a form of Hinduism found nowhere else. The one idea behind it, why the flowers on the pavement are offerings, and the ceremonies you might walk into.",
   "tags": [
    "Culture",
@@ -1558,7 +1567,8 @@ export const GUIDE_CONTENT = {
  },
  "best-time-to-visit-bali": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Best Time to Visit Bali",
+  "title": "Best Time to Visit",
+  "heading": "Best Time to Visit Bali: Month by Month on Rain, Crowds and Prices",
   "sub": "It is 27 to 31 C every month of the year, so what actually changes is the rain, the crowds, and the prices. Month by month, plus Nyepi and the rest of the calendar.",
   "tags": [
    "Good to Know",
@@ -1771,7 +1781,8 @@ export const GUIDE_CONTENT = {
  },
  "canggu": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Canggu - Bali's Surf & Cafe Town",
+  "title": "Canggu",
+  "heading": "Canggu - Bali's Surf & Cafe Town: Black-Sand Breaks and Sunset Bars",
   "sub": "Rice fields a decade ago, now the centre of Bali's surf, cafe, and remote-work scene. Black-sand beach breaks, sunset bars, the honest downsides, and how it pairs with a few days in Ubud.",
   "tags": [
    "About the Island",
@@ -1944,6 +1955,7 @@ export const GUIDE_CONTENT = {
  "getting-around-bali": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
   "title": "Getting Around Bali",
+  "heading": "Getting Around Bali: Private Drivers, Scooters, and Why Journeys Take Longer",
   "sub": "No trains, no metro, and almost no highways - just narrow roads shared with scooters, trucks, and ceremony processions. Drivers, charters, scooters, and ride-hailing compared, with realistic travel times from Ubud.",
   "tags": [
    "Good to Know",
@@ -2149,7 +2161,8 @@ export const GUIDE_CONTENT = {
  },
  "temple-etiquette": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Temple Etiquette & Dress Code in Bali",
+  "title": "Temple Etiquette & Dress",
+  "heading": "Temple Etiquette & Dress Code in Bali: Sarong, Sash, and How to Move",
   "sub": "Every temple here is a working place of worship, including the ones with ticket booths. The dress code, how to move through a courtyard, and the few rules visitors rarely see coming.",
   "tags": [
    "Culture",
@@ -2318,7 +2331,8 @@ export const GUIDE_CONTENT = {
  },
  "ubud": {
   "heroStyle": "background-image: linear-gradient(rgba(0,0,0,0.15),rgba(0,0,0,0.15)), url('/assets/images/campuhan-ridge.jpg')",
-  "title": "Ubud - Bali's Cultural Heart",
+  "title": "Ubud",
+  "heading": "Ubud - Bali's Cultural Heart: Art, Temples and Rice Terraces",
   "sub": "An hour from the airport and a world away from the beach towns: Bali's painting, carving, and dance traditions, ringed by rice terraces and river valleys. What to do in town and around it.",
   "tags": [
    "Culture",
@@ -2507,7 +2521,8 @@ export const GUIDE_CONTENT = {
  },
  "uluwatu-bukit": {
   "heroStyle": "background-image: linear-gradient(135deg, rgba(31, 61, 43, 0.96), rgba(46, 90, 64, 0.94));",
-  "title": "Uluwatu & the Bukit Peninsula",
+  "title": "Uluwatu & the Bukit",
+  "heading": "Uluwatu & the Bukit Peninsula: Clifftop Temple, Surf and Hidden Coves",
   "sub": "The limestone table at Bali's southern tip: white cliffs with small beaches at their feet, a clifftop temple at the western point, and some of the best-known surf breaks in Asia offshore.",
   "tags": [
    "About the Island",

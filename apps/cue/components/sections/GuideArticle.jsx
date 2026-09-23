@@ -44,7 +44,7 @@ export default function GuideArticle({ data }) {
           article's own words. */}
       <DetailHero
         heroBg={card.img}
-        title={data.title}
+        title={data.heading || data.title}
         desc={data.sub}
         hooks={hooks}
         crumb={crumbs}

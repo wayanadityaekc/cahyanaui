@@ -20,7 +20,7 @@ export default function AllReviews() {
       <section className={SUBHERO}>
         <div className={SUBHERO_CONTENT}>
           <Breadcrumb items={crumbsFor('all-reviews')} className="mb-2" />
-          <h1 className={SUBHERO_TITLE}>Guest Reviews</h1>
+          <h1 className={SUBHERO_TITLE}>Guest Reviews: From Travellers With a Completed Booking</h1>
           <p className={SUBHERO_TEXT}>
             Every review here comes from a guest with a real, completed booking - no invitations, no incentives, just
             what they told us after their trip.

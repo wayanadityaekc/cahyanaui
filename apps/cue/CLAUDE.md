@@ -1180,6 +1180,64 @@ BreadcrumbList ada, dan **teks di layar == teks di schema**.
   turun **18px** karena trail-nya jadi 2 baris di 320/390 (ke-ukur). Yang kedua di-assert
   sebagai **aturan**: artikel boleh geser PERSIS sebanyak trail-nya tumbuh, gak lebih.
 
+## DUA NAMA PER HALAMAN — `title` pendek, `heading` panjang (Sep 2026, Wayan)
+Wayan: *"judul nya buat lebih pendek yang di tulis di breadcrumb tapi semua h1 bikin
+panjang dan deskriptif bro, misal uluwatu, judulnya uluwatu temple aja, h1nya baru
+panjang"*. Sebelum ini **65 dari 88 halaman indexable nyetak kalimat yang sama dua kali**
+(item crumb terakhir == H1, jaraknya 8px) — ke-ukur di browser: 49 destinasi + 15 guide + 1.
+- **`title` = NAMA PENDEK.** Dia yang dibaca **crumb**, **nama kartu listing**,
+  **`reviewService`**, **`alt` foto**, dan **JSON-LD**. Jangan dipanjangin — empat benda
+  itu ikut kebawa.
+- **`heading` = H1 panjang & deskriptif.** Field BARU, **cuma dibaca hero**
+  (`data.heading || data.title`, jadi halaman yang belum punya tetep jalan).
+- **Polanya: `<nama pendek>: <2-3 fakta dari halaman itu sendiri>`.** Faktanya diambil
+  dari `desc`/`metaDesc`/hook halaman itu — 70 metres, Singapadu, sun bears, "no trek",
+  Tegenungan→Sekumpul semuanya udah ketulis di sana. **Nol yang dikarang.**
+- **Nama pendek guide ngambil dari LABEL KARTU yang udah ada.** Kartu "You might also
+  like" dari dulu udah nyebut guide pakai nama pendek ("Waterfalls of Bali",
+  "Traditional Dance", "Rice Terraces & Subak"). 7 dari 15 kebetulan udah cocok sama
+  tulisan gua; **8 sisanya gua ganti ke label kartunya**, bukan sebaliknya — jadi crumb
+  nyebut hal yang sama persis kayak kartu yang nganterin ke situ.
+- **Destinasi: 13 `title` dipendekin** (mis. "Uluwatu Cliff Temple" → "Uluwatu Temple",
+  "Lempuyang Temple - Gates of Heaven" → "Lempuyang Temple"). Sisanya udah pendek.
+
+**YANG NYARIS KE-RUSAK, DAN INI YANG PALING PENTING:**
+- **`priceName` & `bookItem` = KEY KATALOG API, BUKAN nama tampilan.** Dua-duanya kebetulan
+  sering sama persis sama `title` lama, jadi "sapu semua nama lama" bakal **mutusin harga**.
+  Dicek sesudah rename: **nol `bookItem`/`priceName` yang berubah**.
+- **`reviewService` DULU baca `title`, `ratingName` baca `bookItem`.** Selama dua-duanya
+  sama, gak ada yang nyadar. Begitu 13 nama dipendekin, review yang DITULIS bakal masuk ke
+  key yang beda dari yang DIBACA. Sekarang dua-duanya **`bookItem`** — key yang sama yang
+  dipakai harga, jadi gak bisa geser lagi.
+- **JSON-LD halaman destinasi sekarang dibangun dari trail yang SAMA kayak di layar.**
+  `AttractionPage` ngoper `crumbs={itemsFromLegacy(crumb)}` ke `JsonLd` (pola yang udah
+  dipakai artikel guide), dan `JsonLd` nge-DROP BreadcrumbList statis kalau dikasih itu.
+  Dulu `schema.js` nyimpen salinan tangan kedua dan **langsung melenceng** begitu nama
+  dipendekin (ke-tangkep `verify-crumbs`, 2 halaman). Sekarang gak ada salinan kedua.
+  Nama `Product`/`TouristAttraction` di `schema.js` ikut disamain ke `title` baru.
+- **Item crumb terakhir berhenti jadi salinan tangan**: `AttractionPage` nulis ulang teks
+  langkah terakhir dari `data.title`, jadi crumb & judul gak bisa beda lagi.
+
+**Sisa yang JUJUR (belum ditanyain ke Wayan):**
+- **`metaTitle` masih nama lama** di 13 destinasi yang di-rename (mis. `<title>` nulis
+  "Uluwatu Cliff Temple | ..." sementara H1 "Uluwatu Temple: ..."). Itu **sengaja** —
+  `metaTitle` itu judul di Google dan ngubahnya keputusan SEO sendiri. Halaman tour dari
+  dulu juga H1-nya beda dari `metaTitle`.
+- **Nama kartu di `/destinations` gak ikut berubah** — dia salinan sendiri di
+  `listings.js` dan isinya udah panjang-deskriptif ("Uluwatu Cliff Temple: 70m Above the
+  Ocean"). Jadi kartu & H1 sekarang dua kalimat panjang yang beda buat halaman yang sama.
+  Ke-ukur: **nol nama kartu berubah** di seluruh web kecuali 3 kartu terkait di
+  `/ubud-tour.html` yang emang ngikut `title`.
+
+Verifikasi: **`verify-notwice.mjs`** di scratchpad (**830/830**, 87 halaman punya crumb+h1).
+Patokannya **aturan, dibaca dari halaman jadi**: (1) langkah crumb terakhir gak pernah sama
+persis sama H1 · (2) di halaman detail H1 wajib **ngandung** nama pendeknya (biar kebaca satu
+benda, bukan dua nama) · (3) H1 lebih panjang dari crumb-nya · (4) nol kata glorify, nol
+em-dash, nol apostrof keriting di dua-duanya. Dites pakai 2 bug: satu halaman dibalikin ke
+keadaan lama (**2 nyala**) dan satu kata glorify diselipin (**1 nyala**).
+Plus `verify-crumbs` **1250/1250** (teks di layar == teks di schema) dan `verify-left`
+**412/412** masih ijo.
+
 ## Redirect & sitemap (Sep 2026, sebelum submit GSC)
 - **REDIRECT HIDUPNYA DI `public/.htaccess`, BUKAN `next.config.js`.** Situs ini
   `output: 'export'` (static export) — Next **gak dukung** `redirects()`/`rewrites()`/

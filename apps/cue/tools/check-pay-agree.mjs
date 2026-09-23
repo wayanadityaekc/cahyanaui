@@ -2,7 +2,7 @@
 // must never disagree - a guest who agreed to $5 and is charged $15 is the
 // whole failure mode this feature has.
 import { payOptions } from '/home/user/CUE/lib/payment.js';
-import { railFor, chargeCurrency } from '/home/user/CUE/lib/rails.js';
+import { railFor, chargeCurrency, DOKU_READY } from '/home/user/CUE/lib/rails.js';
 import { createRequire } from 'node:module';
 const req = createRequire(import.meta.url);
 const SRV = req('/home/user/cahyana-api/payment.js');
@@ -56,13 +56,21 @@ for (const { usd, idr } of CASES) {
 // promises rupiah while the server bills dollars is the same class of bug as a
 // wrong amount.
 //
-// The server reads env vars to decide what is switched on, so the comparison is
-// run under the env the site's mirror assumes (DOKU off today, PayPal on).
+// The server reads env vars to decide what is switched on, so the comparison has
+// to run under the env the site's mirror assumes. That state is not a constant:
+// it is DOKU_READY. Hard-coding "DOKU is off" here was right while the flag was
+// false and became a harness testing a world that no longer exists the moment it
+// was flipped - the same trap payflag.mjs fell into. So it follows the flag.
 const envWas = { ...process.env };
 process.env.PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID || 'harness';
 process.env.PAYPAL_SECRET = process.env.PAYPAL_SECRET || 'harness';
-delete process.env.DOKU_CLIENT_ID;
-delete process.env.DOKU_SECRET;
+if (DOKU_READY) {
+  process.env.DOKU_CLIENT_ID = process.env.DOKU_CLIENT_ID || 'harness';
+  process.env.DOKU_SECRET = process.env.DOKU_SECRET || 'harness';
+} else {
+  delete process.env.DOKU_CLIENT_ID;
+  delete process.env.DOKU_SECRET;
+}
 
 let rails = 0;
 for (const cur of ['USD', 'IDR', 'AUD', 'EUR', 'GBP']) {
@@ -78,7 +86,7 @@ for (const cur of ['USD', 'IDR', 'AUD', 'EUR', 'GBP']) {
 process.env = envWas;
 
 console.log(`kombinasi dicek : ${checked}`);
-console.log(`rail dicek      : ${rails}`);
+console.log(`rail dicek      : ${rails} (DOKU ${DOKU_READY ? 'ON' : 'OFF'})`);
 console.log(`beda            : ${bad.length}`);
 bad.slice(0, 12).forEach((b) => console.log('  ' + b));
 process.exit(bad.length ? 1 : 0);

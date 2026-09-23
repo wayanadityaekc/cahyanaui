@@ -6,16 +6,17 @@
 // PayPal. PayPal cannot settle rupiah at all, so without a local rail an IDR
 // guest is billed a converted number in dollars.
 //
-// DOKU is not switched on yet - card acceptance is still under review on the
-// account - so an IDR booking falls back to PayPal in USD today. That is not
-// hidden: `noteFor` is the sentence the guest reads before they type a card
-// number, rather than finding out from the amount.
+// DOKU is on as of 23 Sep 2026: the account has live credentials on the
+// server, so a rupiah booking is charged in rupiah. `noteFor` still exists for
+// the case where a currency has no rail of its own - the guest is told before
+// they type a card number, rather than finding out from the amount.
 
 export const RAILS = ['doku', 'paypal'];
 
-// Flip to true the day DOKU has credentials on the server. Nothing else in this
-// file changes - the routing already points rupiah at it.
-export const DOKU_READY = false;
+// On since 23 Sep 2026. Set this back to false to send every rupiah booking to
+// PayPal in dollars again - it is the one switch, and nothing else in this file
+// changes, because the routing already points rupiah at DOKU either way.
+export const DOKU_READY = true;
 
 // Mirrors SUPPORTED in cahyana-api/paypal.js, trimmed to the currencies this
 // site actually offers. IDR is absent on purpose: PayPal does not settle it.

@@ -35,7 +35,7 @@ export const RAIL_LABEL = {
 // answer one question that can only be answered with a real card: does DOKU
 // accept a foreign-issued one? Settlement is still rupiah either way; a guest
 // quoted in dollars is billed the rupiah figure and their bank converts.
-export const DOKU_ALL = false;
+export const DOKU_ALL = true;
 
 // The rail we want for a currency, whether or not it is switched on.
 export function preferredRail(currency) {

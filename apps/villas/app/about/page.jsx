@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Button } from '@cahyana/ui';
 
 // /about is LIVE TODAY and its content moved into the Our Company page's About
 // tab. Deleting the route outright would have turned a working public URL into
@@ -27,7 +28,7 @@ export default function AboutRedirect() {
       <p className="mt-3 text-body text-muted">
         About Us now lives on our company page.
       </p>
-      <Link href={TARGET} className="btn btn-cta mt-6">Go to About Us</Link>
+      <Button as={Link} href={TARGET} className="mt-6">Go to About Us</Button>
     </div>
   );
 }

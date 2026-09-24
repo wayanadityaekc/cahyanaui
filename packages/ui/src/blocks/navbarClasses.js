@@ -29,10 +29,14 @@ export const NAV_ICON =
   'inline-flex items-center text-gold mr-[1.3rem] ' +
   'transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]';
 
-// The count that rides a cart icon.
-export const NAV_BADGE =
-  'absolute top-[-7px] right-[-9px] bg-gold inline-flex items-center justify-center ' +
-  'min-w-[18px] h-[18px] px-[5px] rounded-pill text-white text-label font-semibold leading-none [&[hidden]]:hidden';
+// The count on a cart icon or a menu row. Two exports, because the badge sits
+// in two places: pinned to the corner of the navbar's icon, and inline at the
+// right-hand end of a drawer row.
+export const NAV_BADGE_BASE =
+  'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill ' +
+  'text-white text-label font-semibold leading-none [&[hidden]]:hidden';
+
+export const NAV_BADGE = `absolute top-[-7px] right-[-9px] bg-gold ${NAV_BADGE_BASE}`;
 
 // The drawer. It is a PANEL COVERING the bar, not content starting below it -
 // fixed, full height, higher z - which is why its first row sits at the top of
@@ -59,15 +63,60 @@ export const NAV_DRAWER_HEAD =
 export const NAV_SCRIM =
   'fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)]';
 
-// Each link is a full-width block carrying its own vertical padding, so the
-// spacing between links comes from the links rather than from borders.
+/**
+ * A MENU ROW. Ported from CUE (components/ui/railClasses.js MENU_ROW_BOX) - the
+ * same string its navbar drawer and its Our Company / My Trips rails use, so a
+ * row of navigation looks the same wherever either site puts one.
+ *
+ * Icon size lives IN here rather than at each call site, because Lucide renders
+ * width/height=24 when given none: "what a menu row looks like" and "how big
+ * its icon is" are one decision, not two places to forget.
+ */
+export const MENU_ROW_BOX =
+  'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)] ' +
+  '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0';
+
+/**
+ * The row's 12px inner padding has to come back out of the drawer's own 22px,
+ * or every label shifts 12px right and stops lining up with the head row above
+ * it. So the PILL grows outward; the text does not move in. Change this and the
+ * submenu indent below has to change with it.
+ */
+export const NAV_LI = '-mx-3';
+
+/** Submenu indent: 0.9rem of its own, plus the 0.75rem NAV_LI borrowed back. */
+export const NAV_SUBLIST = 'list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block';
+
+// A link is the row shape plus its state colour. Active reads as a raised cream
+// pill, which is what "you are here" looks like on both sites now.
 export const navLink = (active) =>
-  active
-    ? 'block w-full py-3 text-left text-strong font-medium no-underline text-green max-[992px]:text-gold-d'
-    : 'block w-full py-3 text-left text-strong font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d';
+  `${MENU_ROW_BOX} text-strong no-underline ` +
+  (active
+    ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
+    : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d');
+
+// The same row, as a <button>, for a submenu trigger.
+export const NAV_SUBTRIGGER =
+  `${MENU_ROW_BOX} text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer hover:bg-cream hover:text-green`;
+
+// The drawer's close button. The drawer has no other way to say "close me": the
+// hamburger is COVERED by it (measured - drawer is fixed right-0 at z-120, the
+// header sits at z-100, and a hit-test at the hamburger's centre lands inside
+// the drawer at both 390 and 1280), so the hamburger's morph into an X is never
+// visible while the menu is open.
+//
+// No `transition` of its own, deliberately: that lets the global press-feedback
+// rule apply instead of being overridden by a narrower one.
+export const NAV_CLOSE =
+  'ml-auto flex-none grid place-items-center w-[34px] h-[34px] rounded-[var(--r-md)] ' +
+  '[border:1px_solid_var(--line)] bg-white text-gold cursor-pointer [&>svg]:w-4 [&>svg]:h-4 ' +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 
 export const NAV_SUBLINK =
   'block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d';
+
+// A badge or chevron riding the right-hand end of a row.
+export const NAV_ROW_END = 'ml-auto';
 
 // The hamburger's three bars, which morph into an X.
 export const NAV_BURGER_BAR =

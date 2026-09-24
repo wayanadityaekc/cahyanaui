@@ -122,6 +122,10 @@
   --container-x: 1.5rem;
 
   --field-h: 2.1rem;
+  /* Buttons get their OWN height token even though it is the same number as
+     --field-h today. Split deliberately: change how tall a form field is and
+     every button on both sites must not silently move with it. */
+  --btn-h: 2.1rem;
   --icon-sm: 16px;
   --icon-md: 20px;
   --icon-lg: 24px;

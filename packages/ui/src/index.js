@@ -29,12 +29,14 @@ export { default as useRevealWhenAway } from './lib/useRevealWhenAway.js';
 
 /* --- layer 2: primitives --- */
 export { default as Button } from './primitives/Button.jsx';
+export * from './primitives/btnClasses.js';
 export { default as Badge } from './primitives/Badge.jsx';
 export { default as Eyebrow, EYEBROW } from './primitives/Eyebrow.jsx';
 export { default as Field } from './primitives/Field.jsx';
 export { default as Input, Textarea } from './primitives/Input.jsx';
 export { default as Select } from './primitives/Select.jsx';
 export { default as DateField } from './primitives/DateField.jsx';
+export { default as DateRangeField } from './primitives/DateRangeField.jsx';
 export { default as Overlay } from './primitives/Overlay.jsx';
 export { default as CurrencyPicker } from './primitives/CurrencyPicker.jsx';
 export { default as FlagDefs } from './primitives/FlagDefs.jsx';
@@ -44,6 +46,7 @@ export { default as Container } from './blocks/Container.jsx';
 export { default as Section } from './blocks/Section.jsx';
 export { default as SectionHeading } from './blocks/SectionHeading.jsx';
 export { default as Hero } from './blocks/Hero.jsx';
+export { default as SplitFeature } from './blocks/SplitFeature.jsx';
 export { default as Card } from './blocks/Card.jsx';
 export { default as MediaCard } from './blocks/MediaCard.jsx';
 export { default as Collapse } from './blocks/Collapse.jsx';

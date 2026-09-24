@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Hero } from '@cahyana/ui';
+import { Button, Hero } from '@cahyana/ui';
 import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
 
@@ -77,7 +77,7 @@ export default function ServiceDetail({
           <h2 className="text-h2 font-semibold text-white">{bottomHeading}</h2>
           <p className="mt-2 text-small text-white/75">{bottomText}</p>
           <div className="flex justify-center mt-6">
-            {bottomCta || <Link href="/villas" className="btn btn-cta">See both villas</Link>}
+            {bottomCta || <Button as={Link} href="/villas">See both villas</Button>}
           </div>
         </div>
       </section>

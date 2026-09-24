@@ -8,6 +8,8 @@ import {
   FOOT_GRID,
   FOOT_ROOT,
   FOOT_SOCIAL_A,
+  FOOT_SOCIAL_A_AIRBNB,
+  FOOT_SOCIAL_ICON_AIRBNB,
 } from './footerClasses.js';
 
 /**
@@ -68,18 +70,21 @@ export default function FooterShell({
           <div>
             <h4 className={FOOT_COL_H}>{social.heading || 'Follow'}</h4>
             <div className="flex gap-[0.6rem]">
-              {social.links.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.href || '#'}
-                  aria-label={s.name}
-                  aria-disabled={s.href ? undefined : 'true'}
-                  {...(s.href ? { target: '_blank', rel: 'noopener' } : {})}
-                  className={FOOT_SOCIAL_A}
-                >
-                  <BrandIcon name={s.name} />
-                </a>
-              ))}
+              {social.links.map((s) => {
+                const brand = s.name === 'Airbnb';
+                return (
+                  <a
+                    key={s.name}
+                    href={s.href || '#'}
+                    aria-label={s.name}
+                    aria-disabled={s.href ? undefined : 'true'}
+                    {...(s.href ? { target: '_blank', rel: 'noopener' } : {})}
+                    className={brand ? FOOT_SOCIAL_A_AIRBNB : FOOT_SOCIAL_A}
+                  >
+                    <BrandIcon name={s.name} className={brand ? FOOT_SOCIAL_ICON_AIRBNB : undefined} />
+                  </a>
+                );
+              })}
             </div>
           </div>
         ) : null}

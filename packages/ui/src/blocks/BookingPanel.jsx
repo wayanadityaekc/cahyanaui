@@ -2,6 +2,7 @@
 
 import { cn } from '../lib/cn.js';
 import Card from './Card.jsx';
+import { BTN_SM } from '../primitives/btnClasses.js';
 
 /**
  * The booking panel that rides alongside a stay or a tour: price, the dates,
@@ -32,11 +33,11 @@ import Card from './Card.jsx';
  * unlike a social icon in a footer where aria-disabled is enough.
  */
 
-// Full-width, outlined, stacked under the CTA. Same height as the CTA so the
-// stack reads as one block of choices rather than three unrelated buttons.
+// Full-width, outlined, stacked under the CTA. It takes BTN_SM like every other
+// button, so the stack reads as one block of choices - this was the last 46px
+// pill left on the site after the button sweep.
 export const SECONDARY_BTN =
-  'flex items-center justify-center gap-2 w-full h-[2.9rem] rounded-pill ' +
-  '[border:1px_solid_var(--line)] bg-transparent text-gold font-body font-semibold text-small ' +
+  `flex w-full gap-2 ${BTN_SM} [border:1px_solid_var(--line)] bg-transparent text-gold font-body ` +
   'no-underline cursor-pointer transition-[color,border-color,scale] duration-200 ease-in-out ' +
   'hover:[border-color:var(--color-cta)] hover:text-cta active:scale-[0.97]';
 

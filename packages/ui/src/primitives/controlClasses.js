@@ -142,3 +142,38 @@ export const HS_OPT_FLAG = 'w-5 h-[14px] flex-none object-cover rounded-[2px] [b
 export const HS_OPT_NM = 'flex-1 font-body font-medium text-[1rem] text-green [&_small]:block [&_small]:font-normal [&_small]:text-[length:var(--fs-label)] [&_small]:text-muted';
 export const HS_OPT_PR = 'font-body font-semibold text-[length:var(--fs-small)] text-gold-d whitespace-nowrap';
 export const HS_OPT_IC = 'flex-none w-[38px] h-[38px] rounded-[50%] [border:1.5px_solid_var(--color-gold)] text-gold-d flex items-center justify-center [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';
+
+/**
+ * A day inside a RANGE calendar. The plain `calDay` only knows "selected" or
+ * not, which cannot say the three things a stay needs to show at once: where it
+ * starts, where it ends, and everything in between.
+ *
+ *   state  'start' | 'end' | 'in' | null
+ *
+ * The two ENDS are solid, the nights BETWEEN them are a tint. That is the whole
+ * readable difference between "these two dates" and "this stay": the tint is
+ * what tells a guest they booked four nights rather than two separate days.
+ *
+ * The tint is drawn on the CELL, not as a bar behind the row, because the grid
+ * has a 2px gap - a continuous bar would need to bleed through the gap and
+ * would break at every week boundary anyway. Small visible gaps between the
+ * days are the honest compromise and read fine at this size.
+ */
+export const calRangeDay = (off, state) =>
+  `aspect-square flex items-center justify-center font-body text-small border-none rounded-sm ${
+    state === 'start' || state === 'end'
+      ? 'bg-gold text-white font-semibold cursor-pointer hover:bg-gold-d'
+      : state === 'in'
+        ? 'bg-cream text-ink font-normal cursor-pointer hover:bg-[#f1efe9]'
+        : off
+          ? 'bg-transparent text-[#cfccc4] font-normal cursor-default'
+          : 'bg-transparent text-ink font-normal cursor-pointer hover:bg-[#f1efe9]'
+  }`;
+
+// The two triggers of a range field, side by side, sharing one panel. They are
+// two buttons and not one, because a guest taps the end they want to change.
+export const RANGE_ROW = 'grid grid-cols-2 gap-2';
+
+// The panel's footer: nights count on the left, the done button on the right.
+export const RANGE_FOOT =
+  'flex items-center justify-between gap-3 px-4 pt-3 pb-4 [border-top:1px_solid_var(--line)]';

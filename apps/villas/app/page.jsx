@@ -8,7 +8,7 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { UBUD_GUIDE_LINK } from '@/lib/constants';
-import { GRID_PAIR, GRID_TRIO, Hero } from '@cahyana/ui';
+import { Button, GRID_PAIR, GRID_TRIO, Hero, SplitFeature } from '@cahyana/ui';
 
 export const metadata = {
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
@@ -19,6 +19,40 @@ const WHY_STAY = [
   { title: 'Private Pool', desc: 'Enjoy your own pool, surrounded by tropical greenery.', Icon: Waves },
   { title: 'Local Hosting', desc: 'Our family is here to make your stay feel like home.', Icon: Users },
   { title: 'Transparent Pricing', desc: 'No hidden fees. What you see is what you pay.', Icon: ShieldCheck },
+];
+
+// Three of the four "at your villa" services, in Wayan's order. Live Dinner is
+// deliberately not here: four bands is the point where a homepage stops
+// introducing things and starts listing them, and the drawer, the footer and
+// every service page already link to it.
+const SERVICES_HOME = [
+  {
+    href: '/services/spa',
+    img: 'https://picsum.photos/seed/spa9/1200/900',
+    alt: 'Massage set up on a villa terrace in Ubud',
+    eyebrow: 'At Your Villa',
+    title: 'Spa & Massage',
+    lede: 'Local therapists come to you. Book a Balinese massage on your own terrace instead of going out for one - no taxi afterwards.',
+    cta: 'Spa & Massage',
+  },
+  {
+    href: '/services/breakfast',
+    img: 'https://picsum.photos/seed/bfast9/1200/900',
+    alt: 'Balinese breakfast laid out at the villa',
+    eyebrow: 'At Your Villa',
+    title: 'Breakfast',
+    lede: 'Cooked fresh in your own kitchen each morning, Balinese or western, at whatever hour suits you. Floating breakfast in the pool on request.',
+    cta: 'See breakfast',
+  },
+  {
+    href: '/services/scooter-rental',
+    img: 'https://picsum.photos/seed/scooter9/1200/900',
+    alt: 'Scooter parked at a villa entrance in Ubud',
+    eyebrow: 'Getting Around',
+    title: 'Scooter Rental',
+    lede: 'A scooter delivered to the villa and collected at the end, with helmets. The easiest way to reach the rice fields and the warungs off the main road.',
+    cta: 'Rent a scooter',
+  },
 ];
 
 export default function HomePage() {
@@ -35,8 +69,8 @@ export default function HomePage() {
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
         actions={(
           <>
-            <CheckAvailabilityButton className="btn btn-cta" />
-            <Link href="/villas" className="btn btn-outline-light">Explore villas</Link>
+            <CheckAvailabilityButton />
+            <Button as={Link} variant="light" href="/villas">Explore villas</Button>
           </>
         )}
         below={(
@@ -97,7 +131,7 @@ export default function HomePage() {
         title="Experience the real Ubud"
         lede="Combine your villa stay with our curated experiences, from cultural tours to wellness and adventure."
       >
-        <Link href="/experiences" className="btn btn-outline-light mt-5">Explore experiences</Link>
+        <Button as={Link} variant="light" href="/experiences" className="mt-5">Explore experiences</Button>
 
         <Link
           href="/experiences"
@@ -112,6 +146,27 @@ export default function HomePage() {
           </span>
         </Link>
       </Hero>
+
+
+      {/* Services, in the order Wayan asked for: villas, then Cahyana Ubud
+          Experience, then spa, breakfast and the scooter, then the reviews.
+          Each is a SplitFeature - one thing at a time, photo alternating sides
+          so three in a row do not read as one list. The copy is lifted from
+          each service's own page rather than written fresh, so the homepage
+          cannot promise something the page it links to does not say. */}
+      {SERVICES_HOME.map((sv, i) => (
+        <SplitFeature
+          key={sv.href}
+          tone={i % 2 === 0 ? 'cream' : 'plain'}
+          reverse={i % 2 === 1}
+          image={sv.img}
+          alt={sv.alt}
+          eyebrow={sv.eyebrow}
+          title={sv.title}
+          lede={sv.lede}
+          actions={<Button as={Link} href={sv.href}>{sv.cta}</Button>}
+        />
+      ))}
 
       {/* Reviews */}
       <section className="section">
@@ -143,8 +198,8 @@ export default function HomePage() {
               Airport pickup, day tours, temple runs and rice terrace mornings - booked through our sister brand, with every price upfront. Most guests do a full-day Ubud tour and cover 7 or 8 stops.
             </p>
             <div className="flex flex-wrap gap-3 mt-5">
-              <a href="https://cahyanaubudexperience.com" target="_blank" rel="noopener" className="btn btn-cta">Visit Cahyana Ubud Experience</a>
-              <a href={UBUD_GUIDE_LINK} target="_blank" rel="noopener" className="btn btn-outline">Read the Ubud guide</a>
+              <Button as="a" href="https://cahyanaubudexperience.com" target="_blank" rel="noopener">Visit Cahyana Ubud Experience</Button>
+              <Button as="a" variant="ghost" href={UBUD_GUIDE_LINK} target="_blank" rel="noopener">Read the Ubud guide</Button>
             </div>
           </div>
           {/* Real photo, reused from CUE's own asset
@@ -170,8 +225,8 @@ export default function HomePage() {
             Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <CheckAvailabilityButton className="btn btn-cta" />
-            <Link href="/services/scooter-rental" className="btn btn-outline-light">Renting a scooter too?</Link>
+            <CheckAvailabilityButton />
+            <Button as={Link} variant="light" href="/services/scooter-rental">Renting a scooter too?</Button>
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import { ChevronLeft, MessageCircle, X } from 'lucide-react';
 import { useEffect } from 'react';
-import DateField from '@/components/ui/DateField';
+import { Button, DateRangeField } from '@cahyana/ui';
 import DragSheet from '@/components/ui/DragSheet';
 import SheetPresence from '@/components/ui/SheetPresence';
 import useMobile from '@/components/ui/useMobile';
@@ -125,29 +125,14 @@ export default function BookingSheet() {
 
             <div>
               <p className="eyebrow">Stay dates</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="min-w-0">
-                  <label className="" htmlFor="bk-checkin">Check-in</label>
-                  <DateField
-                    id="bk-checkin"
-                    label="Check-in"
-                    value={booking.checkIn}
-                    onChange={(v) => updateBooking({ checkIn: v })}
-                    placeholder="Add date"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <label className="" htmlFor="bk-checkout">Check-out</label>
-                  <DateField
-                    id="bk-checkout"
-                    label="Check-out"
-                    value={booking.checkOut}
-                    min={booking.checkIn || undefined}
-                    onChange={(v) => updateBooking({ checkOut: v })}
-                    placeholder="Add date"
-                  />
-                </div>
-              </div>
+              {/* One range picker, not two date fields: the guest is choosing a
+                  STAY, and the number that decides it - the nights between - is
+                  the one thing two independent fields cannot show. */}
+              <DateRangeField
+                id="bk-checkin"
+                value={{ checkIn: booking.checkIn, checkOut: booking.checkOut }}
+                onChange={updateBooking}
+              />
             </div>
 
             <div>
@@ -161,14 +146,9 @@ export default function BookingSheet() {
               />
             </div>
 
-            <button
-              type="button"
-              className="btn btn-cta btn-full disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={!canContinue}
-              onClick={goToSummary}
-            >
+            <Button full disabled={!canContinue} onClick={goToSummary} className="disabled:opacity-50 disabled:cursor-not-allowed">
               Check availability
-            </button>
+            </Button>
             {!canContinue && (
               <p className="text-label text-muted text-center -mt-3">Pick check-in and check-out dates to continue.</p>
             )}
@@ -200,15 +180,10 @@ export default function BookingSheet() {
             </div>
             <p className="text-label text-muted -mt-3">(approx. {formatApproxIDR(breakdown.total)})</p>
 
-            <a
-              href={whatsappLink(message)}
-              target="_blank"
-              rel="noopener"
-              className="btn btn-cta btn-full"
-            >
+            <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
               <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />
               Continue to WhatsApp
-            </a>
+            </Button>
             <p className="text-label text-muted text-center">
               This sends your request to our team on WhatsApp — no payment is taken here.
             </p>

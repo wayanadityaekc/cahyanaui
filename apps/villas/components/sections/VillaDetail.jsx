@@ -6,8 +6,7 @@ import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
-import DateField from '@/components/ui/DateField';
-import { BookingPanel, PriceBlock, SECONDARY_BTN, StickyBar, useRevealWhenAway } from '@cahyana/ui';
+import { Button, BookingPanel, DateRangeField, PriceBlock, SECONDARY_BTN, StickyBar, useRevealWhenAway } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { WHATSAPP_LINK, CUE_LINK } from '@/lib/constants';
@@ -114,38 +113,17 @@ export default function VillaDetail({ villa }) {
             panelRef={cardRef}
             price={<PriceBlock amount={format(villa.nightlyRate)} unit="/ night" />}
             fields={(
-              <div className="grid grid-cols-2 gap-2">
-                <div className="min-w-0">
-                  <label htmlFor={`${villa.slug}-checkin`}>Check-in</label>
-                  <DateField
-                    id={`${villa.slug}-checkin`}
-                    label="Check-in"
-                    value={checkIn}
-                    onChange={setCheckIn}
-                    placeholder="Add date"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <label htmlFor={`${villa.slug}-checkout`}>Check-out</label>
-                  <DateField
-                    id={`${villa.slug}-checkout`}
-                    label="Check-out"
-                    value={checkOut}
-                    min={checkIn || undefined}
-                    onChange={setCheckOut}
-                    placeholder="Add date"
-                  />
-                </div>
-              </div>
+              <DateRangeField
+                id={`${villa.slug}-dates`}
+                value={{ checkIn, checkOut }}
+                onChange={(r) => { setCheckIn(r.checkIn); setCheckOut(r.checkOut); }}
+              />
             )}
             cta={(
-              <button
-                type="button"
-                className="btn btn-cta btn-full"
-                onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
+              <Button full onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
               >
                 Check availability
-              </button>
+              </Button>
             )}
             secondary={(
               <>
@@ -194,7 +172,7 @@ export default function VillaDetail({ villa }) {
           <h2 className="text-h2 font-semibold text-white">{villa.name}, your dates</h2>
           <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
           <div className="flex justify-center mt-6">
-            <CheckAvailabilityButton villaSlug={villa.slug} className="btn btn-cta" />
+            <CheckAvailabilityButton villaSlug={villa.slug} />
           </div>
         </div>
       </section>
@@ -214,13 +192,9 @@ export default function VillaDetail({ villa }) {
           >
             <MessageCircle className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
           </a>
-          <button
-            type="button"
-            onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
-            className="btn btn-cta btn-sm whitespace-nowrap"
-          >
+          <Button onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}>
             Check availability
-          </button>
+          </Button>
         </div>
       </StickyBar>
     </>

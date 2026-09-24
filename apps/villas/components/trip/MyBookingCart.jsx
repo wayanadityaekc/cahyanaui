@@ -9,6 +9,7 @@ import { SERVICES, serviceById } from '@/lib/bookingCart';
 import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatApproxIDR, formatCurrency } from '@/lib/currency';
 import { whatsappLink } from '@/lib/constants';
+import { Button } from '@cahyana/ui';
 
 // My Booking — CUE's My Trips, fitted to what this site sells: one stay plus
 // the villa services you want ready when you arrive, built up over a visit and
@@ -36,8 +37,8 @@ function EmptyState() {
         Pick your dates on a villa and they will show up here, with whatever services you want waiting.
       </p>
       <div className="flex flex-wrap justify-center gap-3 mt-6">
-        <Link href="/villas" className="btn btn-cta">See both villas</Link>
-        <Link href="/experiences" className="btn btn-outline">Browse experiences</Link>
+        <Button as={Link} href="/villas">See both villas</Button>
+        <Button as={Link} variant="ghost" href="/experiences">Browse experiences</Button>
       </div>
     </div>
   );
@@ -182,16 +183,18 @@ export default function MyBookingCart() {
               </div>
             )}
 
-            <a
+            <Button
+              as="a"
+              full
               href={whatsappLink(message)}
               target="_blank"
               rel="noopener"
               onClick={() => setSent(true)}
-              className="btn btn-cta btn-full mt-6"
+              className="mt-6"
             >
               <MessageCircle className={IC} strokeWidth={1.8} aria-hidden="true" />
               Send to WhatsApp
-            </a>
+            </Button>
             <p className="mt-3 text-label text-muted text-center">
               Opens WhatsApp with this already written out. Nothing is sent until you press send there.
             </p>

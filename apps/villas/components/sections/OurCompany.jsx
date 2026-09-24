@@ -6,6 +6,7 @@ import CatDropdown, { CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 import Prose from '@/components/prose/Prose';
 import { ABOUT, FAQ, PRIVACY } from '@/content/company';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
+import { Button } from '@cahyana/ui';
 
 // CUE's Our Company (components/sections/OurCompany.jsx there), reused shell and
 // all: sticky text sidebar on desktop, the shared CatDropdown on mobile, and
@@ -56,17 +57,17 @@ function ContactBody() {
         <div className={CONTACT_CARD}>
           <h2 className={CONTACT_H}><MessageCircle className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />WhatsApp</h2>
           <p className="text-small text-muted my-3">Fastest way to reach us. Dates, questions, or a photo of the road if you&rsquo;re lost.</p>
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-cta">Message us</a>
+          <Button as="a" href={WHATSAPP_LINK} target="_blank" rel="noopener">Message us</Button>
         </div>
         <div className={CONTACT_CARD}>
           <h2 className={CONTACT_H}><Mail className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />Email</h2>
           <p className="text-small text-muted my-3">Longer questions, long stays, or if you own a villa and want it managed.</p>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="btn btn-outline">{CONTACT_EMAIL}</a>
+          <Button as="a" variant="ghost" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</Button>
         </div>
         <div className={CONTACT_CARD}>
           <h2 className={CONTACT_H}><MapPin className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />Where we are</h2>
           <p className="text-small text-muted my-3">North Ubud, Gianyar, Bali. Ten minutes from Ubud Palace, Monkey Forest and Tegallalang.</p>
-          <a href={CUE_LINK} target="_blank" rel="noopener" className="btn btn-outline">Arrange a transfer</a>
+          <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Arrange a transfer</Button>
         </div>
       </div>
     </div>

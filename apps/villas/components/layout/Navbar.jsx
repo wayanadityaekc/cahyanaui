@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BedDouble, MessageCircle, ShoppingBag } from 'lucide-react';
-import { FlagDefs, NavbarShell, NAV_BADGE, NAV_ICON } from '@cahyana/ui';
+import { BedDouble, BookOpen, Building2, Compass, House, Mail, MessageCircle, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { Button, FlagDefs, NavbarShell, NAV_BADGE, NAV_BADGE_BASE, NAV_ICON, NAV_ROW_END } from '@cahyana/ui';
 import CurrencyPicker from '@/components/ui/CurrencyPicker';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { useCart } from '@/components/providers/CartProvider';
@@ -33,13 +33,20 @@ import { WHATSAPP_LINK } from '@/lib/constants';
 // repeat the logo sitting a centimetre above it.
 const BRAND = { title: 'Plan your stay', sub: 'Two private pool villas in Ubud' };
 
+// One icon per row, CUE's arrangement. Every icon is Lucide and every one is
+// the icon that already means that thing elsewhere on the site: BedDouble is
+// the villa mark in the drawer head, ShoppingBag is the navbar's own cart,
+// Building2 is what CUE's Our Company rail uses for "About Us".
+const ICON = { strokeWidth: 1.7, 'aria-hidden': 'true' };
+
 const LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/villas', label: 'Villas' },
-  { href: '/experiences', label: 'Experiences' },
-  { href: '/guide', label: 'Guide' },
+  { href: '/', label: 'Home', icon: <House {...ICON} /> },
+  { href: '/villas', label: 'Villas', icon: <BedDouble {...ICON} /> },
+  { href: '/experiences', label: 'Experiences', icon: <Compass {...ICON} /> },
+  { href: '/guide', label: 'Guide', icon: <BookOpen {...ICON} /> },
   {
     label: 'Services',
+    icon: <Sparkles {...ICON} />,
     items: [
       { href: '/services/breakfast', label: 'Breakfast' },
       { href: '/services/spa', label: 'Spa & Massage' },
@@ -47,8 +54,9 @@ const LINKS = [
       { href: '/services/scooter-rental', label: 'Scooter Rental' },
     ],
   },
-  { href: '/our-company', label: 'Our Company' },
-  { href: '/our-company#contact', label: 'Contact' },
+  { href: '/my-booking', label: 'My Booking', icon: <ShoppingBag {...ICON} /> },
+  { href: '/our-company', label: 'Our Company', icon: <Building2 {...ICON} /> },
+  { href: '/our-company#contact', label: 'Contact', icon: <Mail {...ICON} /> },
 ];
 
 export default function Navbar() {
@@ -108,28 +116,32 @@ export default function Navbar() {
         icon: <BedDouble className="w-5 h-5" strokeWidth={1.6} />,
         title: BRAND.title,
         sub: BRAND.sub,
-        aside: <CurrencyPicker variant="navbar" />,
       }}
-      cta={(close) => (
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 w-full h-[2.6rem] border-0 rounded-pill bg-cta text-white font-body font-semibold text-strong cursor-pointer transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d"
-          onClick={() => { close(); openBooking(); }}
-        >
-          Check availability
-        </button>
+      closeIcon={<X strokeWidth={2} aria-hidden="true" />}
+      /* Currency sits in the field row, not in the head. It is a trip
+         preference like guests and dates, and the head row cannot carry a
+         fourth thing: CUE measured the name wrapping onto a second line at
+         390px once the close button joined it. This site has only the one
+         preference, so the row holds one field. */
+      fields={(
+        <div className="flex flex-col gap-1 min-w-0 col-span-2">
+          <label className="text-label font-medium tracking-[0.14em] uppercase text-muted" htmlFor="nav-cur">Currency</label>
+          <CurrencyPicker />
+        </div>
       )}
-      links={LINKS}
+      cta={(close) => (
+        <Button full onClick={() => { close(); openBooking(); }}>
+          Check availability
+        </Button>
+      )}
+      links={LINKS.map((l) => (l.href === '/my-booking'
+        ? { ...l, end: <span className={`${NAV_ROW_END} bg-gold ${NAV_BADGE_BASE}`} hidden={!count}>{count}</span> }
+        : l))}
       drawerFoot={(
-        <a
-          href={WHATSAPP_LINK}
-          target="_blank"
-          rel="noopener"
-          className="flex items-center justify-center gap-2 w-full h-[2.5rem] border-0 bg-cta rounded-pill text-strong font-medium no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d"
-        >
-          <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
+        <Button as="a" full href={WHATSAPP_LINK} target="_blank" rel="noopener">
+          <MessageCircle className="w-4 h-4 flex-none" strokeWidth={1.8} aria-hidden="true" />
           Chat on WhatsApp
-        </a>
+        </Button>
       )}
     />
   );

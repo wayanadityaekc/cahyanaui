@@ -1,5 +1,5 @@
 import { Flower2, Landmark, Mountain, Trees } from 'lucide-react';
-import { Hero } from '@cahyana/ui';
+import { Button, Hero } from '@cahyana/ui';
 import { GRID_QUAD } from '@/components/ui/gridClasses';
 import { CUE_LINK, UBUD_GUIDE_LINK } from '@/lib/constants';
 
@@ -80,8 +80,8 @@ export default function ExperiencesPage() {
             See real tours, upfront pricing and availability on Cahyana Ubud Experience, or start with our Ubud guide.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <a href={CUE_LINK} target="_blank" rel="noopener" className="btn btn-cta">Browse tours &amp; experiences</a>
-            <a href={UBUD_GUIDE_LINK} target="_blank" rel="noopener" className="btn btn-outline">Read the Ubud guide</a>
+            <Button as="a" href={CUE_LINK} target="_blank" rel="noopener">Browse tours &amp; experiences</Button>
+            <Button as="a" variant="ghost" href={UBUD_GUIDE_LINK} target="_blank" rel="noopener">Read the Ubud guide</Button>
           </div>
         </div>
       </section>

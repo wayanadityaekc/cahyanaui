@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { SearchBar, SEARCH_LABEL } from '@cahyana/ui';
-import DateField from '@/components/ui/DateField';
+import { Button, DateRangeField, SearchBar, SEARCH_LABEL } from '@cahyana/ui';
 import Select from '@/components/ui/Select';
 import { useBooking } from '@/components/providers/BookingProvider';
 
@@ -29,36 +28,21 @@ export default function SearchCard() {
     <SearchBar
       variant="hero"
       action={(
-        <button
-          type="button"
-          className="btn btn-cta"
-          onClick={() => openBooking({ checkIn, checkOut, guests })}
+        <Button onClick={() => openBooking({ checkIn, checkOut, guests })}
         >
           <Search className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
           Search
-        </button>
+        </Button>
       )}
     >
-      <div className="min-w-0">
-        <label className={SEARCH_LABEL} htmlFor="search-checkin">Check-in</label>
-        <DateField
+      {/* The range picker spans the two date columns: it renders its own pair
+          of triggers, so the grid cell it sits in is two columns wide. */}
+      <div className="min-w-0 sm:col-span-2">
+        <label className={SEARCH_LABEL}>Dates</label>
+        <DateRangeField
           id="search-checkin"
-          label="Check-in"
-          value={checkIn}
-          onChange={setCheckIn}
-          placeholder="Add date"
-        />
-      </div>
-
-      <div className="min-w-0">
-        <label className={SEARCH_LABEL} htmlFor="search-checkout">Check-out</label>
-        <DateField
-          id="search-checkout"
-          label="Check-out"
-          value={checkOut}
-          onChange={setCheckOut}
-          min={checkIn || undefined}
-          placeholder="Add date"
+          value={{ checkIn, checkOut }}
+          onChange={(r) => { setCheckIn(r.checkIn); setCheckOut(r.checkOut); }}
         />
       </div>
 

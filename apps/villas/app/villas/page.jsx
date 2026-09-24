@@ -3,6 +3,7 @@ import { GRID_PAIR } from '@/components/ui/gridClasses';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
 import { VILLA_LIST } from '@/lib/villas';
 import { WHATSAPP_LINK } from '@/lib/constants';
+import { Button } from '@cahyana/ui';
 
 export const metadata = {
   title: 'Our Villas in Ubud | Ubud Private Villas by Cahyana Ubud',
@@ -84,8 +85,8 @@ export default function VillasPage() {
             Tell us who&apos;s coming and when - we&apos;ll say which villa suits you, even if it&apos;s the smaller one.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-cta">Ask us on WhatsApp</a>
-            <CheckAvailabilityButton className="btn btn-outline-light" />
+            <Button as="a" href={WHATSAPP_LINK} target="_blank" rel="noopener">Ask us on WhatsApp</Button>
+            <CheckAvailabilityButton variant="light" />
           </div>
         </div>
       </section>

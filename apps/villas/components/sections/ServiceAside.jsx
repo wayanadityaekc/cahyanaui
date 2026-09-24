@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import AddToBooking from '@/components/ui/AddToBooking';
 import { WHATSAPP_LINK } from '@/lib/constants';
+import { Button } from '@cahyana/ui';
 
 export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherServices, serviceId }) {
   return (
@@ -15,9 +16,9 @@ export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherSer
             </li>
           ))}
         </ul>
-        <Link href="/villas" className="btn btn-cta btn-full">Pick your villa</Link>
+        <Button as={Link} full href="/villas">Pick your villa</Button>
         {serviceId && <AddToBooking serviceId={serviceId} />}
-        <a href={ctaHref || WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-outline btn-full mt-2">{ctaLabel}</a>
+        <Button as="a" variant="ghost" full href={ctaHref || WHATSAPP_LINK} target="_blank" rel="noopener" className="mt-2">{ctaLabel}</Button>
       </div>
 
       <div className="card p-6 bg-cream">

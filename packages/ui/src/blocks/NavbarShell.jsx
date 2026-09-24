@@ -6,6 +6,11 @@ import useBodyLock from '../lib/useBodyLock.js';
 import Collapse from './Collapse.jsx';
 import {
   NAV_BURGER_BAR,
+  NAV_CLOSE,
+  NAV_LI,
+  NAV_ROW_END,
+  NAV_SUBLIST,
+  NAV_SUBTRIGGER,
   NAV_DRAWER,
   NAV_DRAWER_HEAD,
   NAV_HEADER,
@@ -22,7 +27,13 @@ import {
  *
  *   logo          node - the brand link at the left
  *   actions       node - the icon cluster (chat, cart). Use NAV_ICON on each.
- *   drawerHead    { icon, title, sub, aside } - the drawer's top row.
+ *   drawerHead    { icon, title, sub, aside } - the drawer's top row. `aside`
+ *                 is anything that must sit at its right-hand end BESIDE the
+ *                 close button.
+ *   fields        node - a row of controls under the head (CUE puts Guests,
+ *                 Pickup area and Currency here). Currency belongs in this row
+ *                 rather than in the head: measured on CUE, four things in the
+ *                 head row at 390px wrapped the name onto a second line.
  *                 CUE puts an account there and a currency picker in `aside`;
  *                 the villa site puts a heading. Same row, same measurements.
  *   cta           node, or (close) => node - the drawer's one primary button.
@@ -30,7 +41,9 @@ import {
  *                 drawer: opening a booking sheet while the drawer still sits
  *                 over it is a state nobody asked for, and the shell owns
  *                 `close`, so it has to hand it out.
- *   links         [{ href, label }] | [{ label, items: [...] }] for a submenu
+ *   links         [{ href, label, icon, end }] | [{ label, icon, items: [...] }]
+ *                 `icon` is a node - an icon per row, sized by MENU_ROW_BOX.
+ *                 `end` rides the right-hand end of the row (a count badge).
  *   drawerFoot    node - pinned to the bottom of the drawer
  *   isActive      (href) => boolean - the app owns routing, so it owns this
  *   linkAs        the link component (pass next/link's Link); defaults to 'a'
@@ -50,11 +63,13 @@ export default function NavbarShell({
   actions = null,
   extras = null,
   drawerHead,
+  fields = null,
   cta = null,
   links = [],
   drawerFoot = null,
   isActive = () => false,
   linkAs: Link = 'a',
+  closeIcon = null,
   drawerId = 'nav-menu',
   className,
 }) {
@@ -148,30 +163,36 @@ export default function NavbarShell({
                   </span>
                 </span>
                 {drawerHead.aside}
+                <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
+                  {closeIcon}
+                </button>
               </li>
             ) : null}
 
-            {cta ? <li className="pt-[0.9rem] pb-4">{slot(cta)}</li> : null}
+            {fields ? <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem]">{fields}</li> : null}
+
+            {cta ? <li className={fields ? 'pb-4' : 'pt-[0.9rem] pb-4'}>{slot(cta)}</li> : null}
 
             {links.map((l) => {
               if (l.items) {
                 const open = openSub === l.label;
                 return (
-                  <li key={l.label} className="relative">
+                  <li key={l.label} className={cn('relative', NAV_LI)}>
                     <button
                       type="button"
                       data-submenu
-                      className="block w-full py-3 text-left text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer gap-1 items-center hover:text-green"
+                      className={NAV_SUBTRIGGER}
                       aria-expanded={open}
                       onClick={() => setOpenSub(open ? null : l.label)}
                     >
+                      {l.icon}
                       {l.label}
-                      <span className={cn('inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>
+                      <span className={cn(NAV_ROW_END, 'inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>
                         &rsaquo;
                       </span>
                     </button>
                     <Collapse open={open}>
-                      <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[0.9rem] block">
+                      <ul className={NAV_SUBLIST}>
                         {l.items.map((s) => (
                           <li key={s.href} className="py-[0.4rem]">
                             <Link href={s.href} onClick={close} className={NAV_SUBLINK}>{s.label}</Link>
@@ -183,8 +204,12 @@ export default function NavbarShell({
                 );
               }
               return (
-                <li key={l.href}>
-                  <Link href={l.href} onClick={close} className={navLink(isActive(l.href))}>{l.label}</Link>
+                <li key={l.href} className={NAV_LI}>
+                  <Link href={l.href} onClick={close} className={navLink(isActive(l.href))}>
+                    {l.icon}
+                    {l.label}
+                    {l.end}
+                  </Link>
                 </li>
               );
             })}

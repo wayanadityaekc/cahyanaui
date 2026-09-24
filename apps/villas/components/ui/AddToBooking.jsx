@@ -1,6 +1,7 @@
 'use client';
 
 import { Check, Plus } from 'lucide-react';
+import { Button } from '@cahyana/ui';
 import { useCart } from '@/components/providers/CartProvider';
 import { serviceById } from '@/lib/bookingCart';
 
@@ -11,7 +12,7 @@ import { serviceById } from '@/lib/bookingCart';
 // Nothing here quotes a price. Services are carried on the booking as requests
 // (see lib/bookingCart.js) because the service pages say prices are confirmed
 // with us, so the label promises a conversation, not a charge.
-export default function AddToBooking({ serviceId, className = 'btn btn-outline btn-full mt-2' }) {
+export default function AddToBooking({ serviceId, variant = 'ghost', className = 'mt-2' }) {
   const { cart, ready, toggleService } = useCart();
   const service = serviceById(serviceId);
   if (!service) return null;
@@ -19,8 +20,9 @@ export default function AddToBooking({ serviceId, className = 'btn btn-outline b
   const on = ready && cart.services.includes(serviceId);
 
   return (
-    <button
-      type="button"
+    <Button
+      variant={variant}
+      full
       onClick={() => toggleService(serviceId)}
       aria-pressed={on}
       className={className}
@@ -28,6 +30,6 @@ export default function AddToBooking({ serviceId, className = 'btn btn-outline b
       {on
         ? <><Check className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Added to My Booking</>
         : <><Plus className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Add to My Booking</>}
-    </button>
+    </Button>
   );
 }

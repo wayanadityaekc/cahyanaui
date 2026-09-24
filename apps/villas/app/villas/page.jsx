@@ -43,21 +43,25 @@ export default function VillasPage() {
               <thead>
                 <tr className="bg-cream">
                   <th className="text-left p-4"></th>
-                  <th className="text-left p-4 text-h3 font-semibold text-gold">Cahyana House</th>
-                  <th className="text-left p-4 text-h3 font-semibold text-gold">Cahyana Tibuah</th>
+                  {VILLA_LIST.map((v) => (
+                    <th key={v.slug} className="text-left p-4 text-h3 font-semibold text-gold">{v.name}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {[
-                  ['Best for', 'Families and groups', 'Couples and small families'],
-                  ['Guests', 'Up to 6', 'Up to 4'],
-                  ['Bedrooms', '3 king, all ensuite', '2 king, both ensuite'],
-                  ['Bathrooms', '4.5', '2'],
-                  ['Setting', 'Family compound, garden', 'Rice fields, 3 min walk in'],
-                  ['Pool', 'Private', 'Private, outdoor shower'],
-                  ['Check-in', 'Welcomed by the family', 'Self check-in'],
-                  ['Rating', '★ 4.96 · 221 reviews', '★ 4.96 · 85 reviews'],
-                ].map((row) => (
+                {(() => {
+                  const [h, t] = VILLA_LIST;
+                  return [
+                    ['Best for', 'Families and groups', 'Couples and small families'],
+                    ['Guests', `Up to ${h.guests}`, `Up to ${t.guests}`],
+                    ['Bedrooms', `${h.beds}, all ensuite`, `${t.beds}, both ensuite`],
+                    ['Bathrooms', String(h.bathrooms), String(t.bathrooms)],
+                    ['Setting', 'Family compound, garden', 'Rice fields, 3 min walk in'],
+                    ['Pool', 'Private', 'Private, outdoor shower'],
+                    ['Check-in', 'Welcomed by the family', 'Self check-in'],
+                    ['Rating', `★ ${h.rating} · ${h.reviews} reviews`, `★ ${t.rating} · ${t.reviews} reviews`],
+                  ];
+                })().map((row) => (
                   <tr key={row[0]} className="border-t border-line">
                     <td className="p-4 caps text-muted">{row[0]}</td>
                     <td className="p-4 text-gold">{row[1]}</td>

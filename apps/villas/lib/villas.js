@@ -18,7 +18,7 @@ export const VILLAS = {
     nightlyRate: 120,
     guests: 6,
     bedrooms: 3,
-    bathrooms: 4.5,
+    bathrooms: 3,
     beds: '3 king',
     rating: '4.96',
     reviews: 221,
@@ -44,7 +44,7 @@ export const VILLAS = {
     ],
     spaceList: [
       { title: 'Three bedrooms', desc: 'Each with a king bed and a direct view of the pool.' },
-      { title: 'Ensuite bathrooms', desc: 'One in every bedroom, 4.5 bathrooms in total.' },
+      { title: 'Ensuite bathrooms', desc: 'One in every bedroom, 3 bathrooms in total.' },
       { title: 'Living area', desc: 'Comfortable lounge with a smart TV.' },
       { title: 'Kitchen & dining', desc: 'Fully equipped kitchen with its own dining area.' },
       { title: 'Outside', desc: 'Private pool and home garden.' },

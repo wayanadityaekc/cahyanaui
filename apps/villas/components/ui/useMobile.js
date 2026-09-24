@@ -1,15 +1,5 @@
-'use client';
+// Moved into @cahyana/ui - this file is a re-export so the ~20 call sites
+// keep working while the library becomes the single implementation.
+// Import from '@cahyana/ui' directly in anything new.
 
-import { useEffect, useState } from 'react';
-
-export default function useMobile(query = '(max-width: 768px)') {
-  const [is, setIs] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const on = () => setIs(mq.matches);
-    on();
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, [query]);
-  return is;
-}
+export { useMobile as default } from '@cahyana/ui';

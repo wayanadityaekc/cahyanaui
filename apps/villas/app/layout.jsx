@@ -21,9 +21,12 @@ export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
 };
 
+// data-brand picks the surface out of the library's token file: this site sits
+// on light grey, CUE on white, and nothing else about the brand differs. One
+// attribute, so a component never has to know which site it is rendering in.
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" data-brand="villas" className={inter.variable}>
       <body>
         <LoadingScreen />
         <CurrencyProvider>

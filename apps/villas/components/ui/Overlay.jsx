@@ -1,19 +1,5 @@
-'use client';
+// Moved into @cahyana/ui - this file is a re-export so the ~20 call sites
+// keep working while the library becomes the single implementation.
+// Import from '@cahyana/ui' directly in anything new.
 
-import { createPortal } from 'react-dom';
-import { overlay } from './hsClasses';
-import useBodyLock from './useBodyLock';
-
-export default function Overlay({ open, elevated = false, onClose }) {
-  useBodyLock(open);
-
-  if (typeof document === 'undefined') return null;
-  return createPortal(
-    <div
-      className={overlay(open, elevated)}
-      data-portal="overlay"
-      onClick={onClose}
-    />,
-    document.body,
-  );
-}
+export { Overlay as default } from '@cahyana/ui';

@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Layer 1 - TOKENS
+   ==========================================================================
+   The only file in the library that is allowed to hold a raw value. Every
+   primitive and block reads from here, so a brand change is an edit in one
+   place rather than a search across two sites.
+
+   Values come from CUE as the parent brand - this is CUE's palette and type
+   scale, lifted out rather than reinvented.
+
+   HOW A SITE USES IT
+     @import "@cahyana/ui/tokens.css";
+     @source "../../../packages/ui/src";   <- so Tailwind sees library classes
+
+   The @source line is not optional. Tailwind v4 only generates the utilities
+   it can find in scanned files; without it every class used *inside* a library
+   component is dropped from the build and the component renders unstyled.
+   ========================================================================== */
+
+@theme {
+  /* --- Colour ------------------------------------------------------------
+     One palette for both sites. They are told apart by their SURFACE, not by
+     different colours - see the brand block further down. */
+  --color-green: #5c5c5c;       /* secondary text, body colour on CUE */
+  --color-gold: #22201c;        /* the accent. Named gold, IS soft black:     */
+  --color-gold-d: #16140f;      /* Wayan replaced the real gold with black in */
+  --color-gold-l: #cfc9ba;      /* Aug 2026 and kept the name. Do not "fix"   */
+                                /* it to a yellow - it is deliberate.         */
+  --color-cta: #3d5c46;         /* primary action green - buttons only */
+  --color-cta-d: #2f4737;
+  --color-amber: #c9a45c;       /* the REAL gold. Three jobs only: prices,    */
+  --color-amber-d: #b08d43;     /* rating stars, "Popular" badges.            */
+  --color-cream: #f8f8f8;
+  --color-line: #e7e4dd;
+  --color-ok: #2e7d54;
+  --color-err: #9a4a3f;
+  --color-ink: #46453f;
+  --color-muted: #7a7466;
+
+  /* Surface is a pointer, not a value - it is what each site swaps. */
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+
+  /* --- Type --------------------------------------------------------------
+     ONE typeface. Playfair Display was tried in Aug 2026 and dropped - Wayan
+     found it overwrought - so headings and body are both Inter. If it is ever
+     revisited, --font-head is the single line to change. */
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-head: "Inter", system-ui, sans-serif;
+
+  --text-display: clamp(1.75rem, 4vw, 2.5rem);  /* H1, 28-40px */
+  --text-h2: 1.125rem;                          /* section heading, 18px */
+  --text-h3: 0.875rem;                          /* card title, 14px */
+  --text-strong: 0.875rem;
+  --text-body: 0.8rem;                          /* 12.8px */
+  --text-field: 0.8rem;
+  --text-small: 0.8rem;
+  --text-label: 0.64rem;                        /* 10.24px, uppercase labels */
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
+
+  --ease-DEFAULT: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);    /* entrances */
+}
+
+/* --- Aliases -------------------------------------------------------------
+   Tailwind generates its utilities from the LONG names above (--color-line,
+   --radius-md). Components are written against these SHORT ones. Both exist
+   on purpose: the long names feed `border-line` / `rounded-md`, the short
+   ones feed `var(--line)` / `var(--r-md)` inside an arbitrary value.
+
+   A missing alias does not fail loudly. A var() that resolves to nothing
+   inside a `transition:` shorthand makes the whole declaration invalid, and
+   it silently falls back to `all 0s` - no animation, green build. That cost
+   CUE three weeks across 43 usages, so the full set is declared up front.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Surface: white. The villa brand overrides this and nothing else. */
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+
+  --fs-display: var(--text-display);
+  --fs-h2: var(--text-h2);
+  --fs-h3: var(--text-h3);
+  --fs-strong: var(--text-strong);
+  --fs-body: var(--text-body);
+  --fs-field: var(--text-field);
+  --fs-small: var(--text-small);
+  --fs-label: var(--text-label);
+  --lh-body: 1.6;
+  --lh-heading: 1.15;
+
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-xl: var(--radius-xl);
+  --r-pill: var(--radius-pill);
+
+  --line: var(--color-line);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --section-gap: 2.25rem;
+
+  --container-wide: 1200px;
+  --container-mid: 1080px;
+  --container-read: 720px;
+  --container: var(--container-wide);
+  --container-x: 1.5rem;
+
+  --field-h: 2.1rem;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  --dur-fast: 0.15s;
+  --dur: 0.2s;
+  --dur-slow: 0.3s;
+  --ease: var(--ease-DEFAULT);
+
+  --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
+}
+
+/* Phone gutter. 992px is not arbitrary: it is the width the full-bleed card
+   tracks turn on at, and a track insets its first card by 1rem. A 24px gutter
+   against a 16px card inset is visibly out by a hair at every section. */
+@media (max-width: 992px) {
+  :root { --container-x: 1rem; }
+}
+
+/* --- Brands --------------------------------------------------------------
+   Same palette, same type, told apart by the surface underneath. Set on
+   <html data-brand="villas">; leaving it off gives the CUE (white) default.
+
+   Cards keep a white surface on the villa site so they lift off the grey
+   instead of dissolving into it. That is the whole point of the pairing.
+   -------------------------------------------------------------------------- */
+[data-brand="villas"] {
+  --surface: var(--color-cream);
+  --surface-raised: #ffffff;
+}

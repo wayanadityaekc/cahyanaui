@@ -1,4 +1,8 @@
 const nextConfig = {
+  // @cahyana/ui ships as source (JSX), not as a built bundle - that is what
+  // keeps it editable in place while the two sites are still being shaped.
+  // Next has to compile it like app code, which is what this does.
+  transpilePackages: ['@cahyana/ui'],
   output: 'export',
   images: { unoptimized: true },
   // trailingSlash:false exports every route as both "route.html" AND a

@@ -1,136 +1,26 @@
 @import "tailwindcss";
 
-/* =====================================================================
-   Design tokens — ported 1:1 from Cahyana Ubud Experience (CUE)'s own
-   established design system (see CUE's CLAUDE.md / app/globals.css),
-   per Wayan's explicit direction: this sister site should share CUE's
-   real brand values rather than a separately-invented palette.
-   Tailwind v4 auto-generates utilities from these (bg-cta, text-amber,
-   rounded-lg, shadow-md, text-h2, ...) so components below mostly just
-   use those utilities directly.
-   ===================================================================== */
-@theme {
-  --color-green: #5c5c5c;
-  --color-gold: #22201c;
-  --color-gold-d: #16140f;
-  --color-gold-l: #cfc9ba;
-  --color-cta: #3d5c46;
-  --color-cta-d: #2f4737;
-  --color-amber: #c9a45c;
-  --color-amber-d: #b08d43;
-  --color-cream: #f8f8f8;
-  --color-line: #e7e4dd;
-  --color-ok: #2e7d54;
-  --color-err: #9a4a3f;
-  --color-ink: #46453f;
-  --color-muted: #7a7466;
-
-  --text-display: clamp(1.75rem, 4vw, 2.5rem);
-  --text-h2: 1.125rem;
-  --text-h3: 0.875rem;
-  --text-strong: 0.875rem;
-  --text-body: 0.8rem;
-  --text-field: 0.8rem;
-  --text-small: 0.8rem;
-  --text-label: 0.64rem;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-pill: 999px;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
-
-  --ease-DEFAULT: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --font-display: var(--font-inter), sans-serif;
-  --font-body: var(--font-inter), sans-serif;
-  --font-head: var(--font-inter), sans-serif;
-}
+/* The shared library: its tokens, and the files Tailwind must scan to find the
+   classes used inside its components. Without @source those classes are not in
+   any file Tailwind looks at, so they never reach the stylesheet. */
+@import "@cahyana/ui/tokens.css";
+@source "../../../packages/ui/src";
 
 /* =====================================================================
-   :root alias layer — ported from CUE's own app/globals.css.
+   TOKENS LIVE IN THE LIBRARY.
 
-   Why this exists: CUE's shared components are written against SHORT token
-   names (var(--dur), var(--line), var(--r-md), var(--space-1), var(--icon-sm),
-   var(--lh-body), ...), while Tailwind v4's @theme above generates its
-   utilities from the LONG names (--radius-md, --color-line, ...). Porting a
-   CUE component without this layer makes every one of those var() calls
-   resolve to nothing — and a failed var() inside a `transition:` shorthand is
-   invalid at computed-value time, so the whole declaration silently falls back
-   to `all 0s` and the animation just never runs. That exact bug (a self-
-   referencing --dur-fast) went unnoticed in CUE for three weeks across 43 uses
-   with a green build, which is why the aliases are declared up front here
-   rather than added one at a time as components get ported.
+   This file used to carry its own @theme block, its own :root aliases and
+   its own mobile container override - a full copy of what CUE had. They
+   are gone: @cahyana/ui/tokens.css above is the single definition for both
+   sites now, so a brand change happens once instead of twice and cannot
+   half-land.
 
-   Values mirror @theme above — change a brand value there, not here.
+   What stays below is genuinely this site's: the base layer, its layout
+   helpers (.wrap / .section / .caps / .btn), prose helpers, the loading
+   splash, and the press-feedback rule. Those move into the library as
+   Layer 3 blocks land, not before.
    ===================================================================== */
-:root {
-  /* Container widths — not a Tailwind v4 auto-utility namespace. */
-  --container-wide: 1200px;
-  --container-mid: 1080px;
-  --container-read: 720px;
-  --container: var(--container-wide);
-  --container-x: 1.5rem;
 
-  /* Type */
-  --fs-display: var(--text-display);
-  --fs-h2: var(--text-h2);
-  --fs-h3: var(--text-h3);
-  --fs-strong: var(--text-strong);
-  --fs-body: var(--text-body);
-  --fs-field: var(--text-field);
-  --fs-small: var(--text-small);
-  --fs-label: var(--text-label);
-  --lh-body: 1.6;
-  --lh-heading: 1.15;
-
-  /* Radius */
-  --r-sm: var(--radius-sm);
-  --r-md: var(--radius-md);
-  --r-lg: var(--radius-lg);
-  --r-xl: var(--radius-xl);
-  --r-pill: var(--radius-pill);
-
-  /* Hairline border colour */
-  --line: var(--color-line);
-
-  /* Spacing scale */
-  --space-1: 0.5rem;
-  --space-2: 1rem;
-  --space-3: 1.5rem;
-  --space-4: 2rem;
-  --space-5: 3rem;
-  --space-6: 4rem;
-  --section-gap: 2.25rem;
-
-  /* Controls & icons */
-  --field-h: 2.1rem;
-  --icon-sm: 16px;
-  --icon-md: 20px;
-  --icon-lg: 24px;
-
-  /* Motion. --ease is the name CUE components use; --ease-DEFAULT is the name
-     Tailwind v4 needs in @theme to generate the `ease-*` utility. Same curve. */
-  --dur-fast: 0.15s;
-  --dur: 0.2s;
-  --dur-slow: 0.3s;
-  --ease: var(--ease-DEFAULT);
-
-  --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
-}
-
-/* Mobile gutter, same 992px breakpoint CUE uses — it has to match the band the
-   full-bleed sliders (BLEED_MOBILE in components/ui/gridClasses.js) turn on at,
-   or a section heading and the first card in the slider under it stop lining up. */
-@media (max-width: 992px) {
-  :root { --container-x: 1rem; }
-}
 
 /* =====================================================================
    Base
@@ -175,7 +65,12 @@
     font-weight: 400;
     line-height: 1.6;
     color: var(--color-ink);
-    background: #fff;
+    /* The surface token, not a literal. This is the one line that makes the
+       brand switch real: the library decides that data-brand="villas" means
+       light grey and CUE means white, and the page just asks for whichever it
+       was given. Hard-coding #fff here would leave the token defined and
+       ignored - which is exactly what it was doing until this was measured. */
+    background: var(--surface);
     overflow-x: clip;
   }
 

@@ -21,8 +21,19 @@ const HOVER_LIFT =
   'hover:[box-shadow:var(--shadow-lg)]';
 
 export const CARD_FRAMED =
-  'relative rounded-lg overflow-hidden bg-white [border:1px_solid_var(--line)] ' +
+  'relative rounded-lg overflow-hidden [border:1px_solid_var(--line)] ' +
   '[box-shadow:var(--shadow-md)] no-underline text-inherit';
+
+// The card's own surface. Kept OUT of the shape strings above and applied by
+// the component, because a caller appending `bg-cream` after a `bg-white`
+// baked into the shape is a coin flip - between two utilities the winner is
+// the compiled stylesheet's order, not the order they were written in. Two
+// cards on the villa detail page are cream; they must not depend on luck.
+export const CARD_TONES = {
+  white: 'bg-white',
+  cream: 'bg-cream',
+  none: '',
+};
 
 export const CARD_INSET =
   'relative rounded-lg p-[5px] overflow-hidden bg-white ' +

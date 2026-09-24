@@ -8,7 +8,7 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { UBUD_GUIDE_LINK } from '@/lib/constants';
-import { Button, GRID_PAIR, GRID_TRIO, Hero, SplitFeature } from '@cahyana/ui';
+import { Button, Card, Container, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, STARS, Section, SplitFeature } from '@cahyana/ui';
 
 export const metadata = {
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
@@ -74,48 +74,46 @@ export default function HomePage() {
           </>
         )}
         below={(
-          <div className="wrap">
+          <Container>
             <SearchCard />
-          </div>
+          </Container>
         )}
       />
 
       {/* Villas */}
-      <section className="section bg-cream">
-        <div className="wrap">
-          <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
-            <div>
-              <p className="eyebrow">Our Villas</p>
-              <h2 className="text-h2 font-semibold text-gold">
-                Two unique villas, one unforgettable stay
-              </h2>
-            </div>
-            <p className="text-small text-muted">
-              Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
-            </p>
+      <Section tone="cream">
+        <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
+          <div>
+            <p className={EYEBROW_LINE}>Our Villas</p>
+            <h2 className="text-h2 font-semibold text-gold">
+              Two unique villas, one unforgettable stay
+            </h2>
           </div>
-          <div className={GRID_PAIR}>
-            {VILLA_LIST.map((villa) => (
-              <VillaCard key={villa.slug} villa={villa} />
-            ))}
-          </div>
-
-          {/* Why stay with us */}
-          <div className="mt-10 rounded-xl p-7 sm:p-9 bg-white grid sm:grid-cols-3 gap-8">
-            {WHY_STAY.map((item) => (
-              <div key={item.title} className="flex items-start gap-4">
-                <span className="icon-circle">
-                  <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
-                </span>
-                <div>
-                  <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
-                  <p className="text-small text-muted mt-1">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <p className="text-small text-muted">
+            Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
+          </p>
         </div>
-      </section>
+        <div className={GRID_PAIR}>
+          {VILLA_LIST.map((villa) => (
+            <VillaCard key={villa.slug} villa={villa} />
+          ))}
+        </div>
+
+        {/* Why stay with us */}
+        <div className="mt-10 rounded-xl p-7 sm:p-9 bg-white grid sm:grid-cols-3 gap-8">
+          {WHY_STAY.map((item) => (
+            <div key={item.title} className="flex items-start gap-4">
+              <span className={ICON_CIRCLE}>
+                <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
+                <p className="text-small text-muted mt-1">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+</Section>
 
       {/* Experience the real Ubud. Same Hero shell as the page's own hero,
           one step down the height ladder - and now the same scrim, which this
@@ -133,18 +131,15 @@ export default function HomePage() {
       >
         <Button as={Link} variant="light" href="/experiences" className="mt-5">Explore experiences</Button>
 
-        <Link
-          href="/experiences"
-          className="card mt-8 inline-flex items-center gap-3 p-4 max-w-xs bg-white"
-        >
-          <span className="icon-circle">
+        <Card as={Link} href="/experiences" className="mt-8 inline-flex items-center gap-3 p-4 max-w-xs">
+          <span className={ICON_CIRCLE}>
             <Mountain className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
           </span>
           <span>
             <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>
             <span className="block text-label text-muted">Temples, rice terraces, waterfalls &amp; more</span>
           </span>
-        </Link>
+        </Card>
       </Hero>
 
 
@@ -169,30 +164,28 @@ export default function HomePage() {
       ))}
 
       {/* Reviews */}
-      <section className="section">
-        <div className="wrap">
-          <p className="eyebrow">Guest Reviews</p>
-          <h2 className="text-h2 font-semibold text-gold">What our guests say</h2>
-          <p className="mt-2 text-small text-muted">Real experiences from people who stayed with us.</p>
-          <p className="mt-4 flex items-center gap-2 text-h3 font-semibold text-gold">
-            {OVERALL_RATING}/5
-            <span className="stars-amber">★★★★★</span>
-            <span className="text-small text-muted font-normal">from {OVERALL_REVIEW_COUNT}+ reviews</span>
-          </p>
+      <Section>
+        <p className={EYEBROW_LINE}>Guest Reviews</p>
+        <h2 className="text-h2 font-semibold text-gold">What our guests say</h2>
+        <p className="mt-2 text-small text-muted">Real experiences from people who stayed with us.</p>
+        <p className="mt-4 flex items-center gap-2 text-h3 font-semibold text-gold">
+          {OVERALL_RATING}/5
+          <span className={STARS}>★★★★★</span>
+          <span className="text-small text-muted font-normal">from {OVERALL_REVIEW_COUNT}+ reviews</span>
+        </p>
 
-          <div className={`${GRID_TRIO} mt-7`}>
-            {REVIEW_CARDS.map((card, i) => (
-              <ReviewCard key={i} card={card} />
-            ))}
-          </div>
+        <div className={`${GRID_TRIO} mt-7`}>
+          {REVIEW_CARDS.map((card, i) => (
+            <ReviewCard key={i} card={card} />
+          ))}
         </div>
-      </section>
+</Section>
 
       {/* Neighbourhood / sister brand */}
-      <section className="section bg-cream">
-        <div className="wrap grid md:grid-cols-2 gap-8 items-center">
+      <Section tone="cream" bare>
+        <Container className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <p className="eyebrow">Same Family</p>
+            <p className={EYEBROW_LINE}>Same Family</p>
             <h2 className="text-h2 font-semibold text-gold">Need a driver while you stay?</h2>
             <p className="mt-2 text-small text-muted max-w-md">
               Airport pickup, day tours, temple runs and rice terrace mornings - booked through our sister brand, with every price upfront. Most guests do a full-day Ubud tour and cover 7 or 8 stops.
@@ -214,22 +207,20 @@ export default function HomePage() {
             loading="lazy"
             className="w-full rounded-xl object-cover aspect-[4/3]"
           />
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* CTA */}
-      <section className="section text-center bg-gold">
-        <div className="wrap">
-          <h2 className="text-h2 font-semibold text-white">Dates in mind?</h2>
-          <p className="mt-2 text-small text-white/75">
-            Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <CheckAvailabilityButton />
-            <Button as={Link} variant="light" href="/services/scooter-rental">Renting a scooter too?</Button>
-          </div>
+      <Section tone="dark" className="text-center">
+        <h2 className="text-h2 font-semibold text-white">Dates in mind?</h2>
+        <p className="mt-2 text-small text-white/75">
+          Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
+          <CheckAvailabilityButton />
+          <Button as={Link} variant="light" href="/services/scooter-rental">Renting a scooter too?</Button>
         </div>
-      </section>
+</Section>
     </>
   );
 }

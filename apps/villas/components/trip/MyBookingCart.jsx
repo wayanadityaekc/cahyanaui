@@ -9,7 +9,7 @@ import { SERVICES, serviceById } from '@/lib/bookingCart';
 import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatApproxIDR, formatCurrency } from '@/lib/currency';
 import { whatsappLink } from '@/lib/constants';
-import { Button } from '@cahyana/ui';
+import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 
 // My Booking — CUE's My Trips, fitted to what this site sells: one stay plus
 // the villa services you want ready when you arrive, built up over a visit and
@@ -78,8 +78,8 @@ export default function MyBookingCart() {
   ].filter(Boolean).join('\n');
 
   return (
-    <div className="wrap py-10">
-      <p className="eyebrow">My Booking</p>
+    <Container className="py-10">
+      <p className={EYEBROW_LINE}>My Booking</p>
       <h1 className="text-display font-bold text-gold">Your stay so far</h1>
       <p className="mt-3 max-w-xl text-body text-muted">
         Everything you have picked, in one place. Nothing is reserved until we confirm it with you.
@@ -206,6 +206,6 @@ export default function MyBookingCart() {
           </div>
         </div>
       )}
-    </div>
+    </Container>
   );
 }

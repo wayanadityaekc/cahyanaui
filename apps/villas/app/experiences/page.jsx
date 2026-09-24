@@ -1,5 +1,5 @@
 import { Flower2, Landmark, Mountain, Trees } from 'lucide-react';
-import { Button, Hero } from '@cahyana/ui';
+import { Button, Card, EYEBROW_LINE, Hero, ICON_CIRCLE, Section } from '@cahyana/ui';
 import { GRID_QUAD } from '@/components/ui/gridClasses';
 import { CUE_LINK, UBUD_GUIDE_LINK } from '@/lib/constants';
 
@@ -51,40 +51,36 @@ export default function ExperiencesPage() {
         lede="Discover the beauty of Ubud with curated experiences, from cultural tours to wellness and adventure - run by our sister brand, Cahyana Ubud Experience."
       />
 
-      <section className="section">
-        <div className="wrap">
-          <p className="eyebrow">Popular Categories</p>
-          <h2 className="text-h2 font-semibold text-gold">What guests usually add on</h2>
-          <p className="mt-2 max-w-2xl text-small text-muted">
-            These are illustrative categories, not a live booking list — exact tours, prices and availability are confirmed directly with Cahyana Ubud Experience, the local driver-and-tour team our family also runs.
-          </p>
+      <Section>
+        <p className={EYEBROW_LINE}>Popular Categories</p>
+        <h2 className="text-h2 font-semibold text-gold">What guests usually add on</h2>
+        <p className="mt-2 max-w-2xl text-small text-muted">
+          These are illustrative categories, not a live booking list — exact tours, prices and availability are confirmed directly with Cahyana Ubud Experience, the local driver-and-tour team our family also runs.
+        </p>
 
-          <div className={`${GRID_QUAD} mt-8`}>
-            {CATEGORIES.map((c) => (
-              <div key={c.title} className="card p-6">
-                <span className="icon-circle">
-                  <c.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
-                </span>
-                <h3 className="text-h3 font-semibold mt-4 text-gold">{c.title}</h3>
-                <p className="text-small text-muted mt-1.5">{c.desc}</p>
-              </div>
-            ))}
-          </div>
+        <div className={`${GRID_QUAD} mt-8`}>
+          {CATEGORIES.map((c) => (
+            <Card key={c.title} className="p-6">
+              <span className={ICON_CIRCLE}>
+                <c.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
+              </span>
+              <h3 className="text-h3 font-semibold mt-4 text-gold">{c.title}</h3>
+              <p className="text-small text-muted mt-1.5">{c.desc}</p>
+            </Card>
+          ))}
         </div>
-      </section>
+</Section>
 
-      <section className="section text-center bg-cream">
-        <div className="wrap">
-          <h2 className="text-h2 font-semibold text-gold">Ready to plan your Ubud stay?</h2>
-          <p className="mt-2 text-small text-muted max-w-md mx-auto">
-            See real tours, upfront pricing and availability on Cahyana Ubud Experience, or start with our Ubud guide.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <Button as="a" href={CUE_LINK} target="_blank" rel="noopener">Browse tours &amp; experiences</Button>
-            <Button as="a" variant="ghost" href={UBUD_GUIDE_LINK} target="_blank" rel="noopener">Read the Ubud guide</Button>
-          </div>
+      <Section tone="cream" className="text-center">
+        <h2 className="text-h2 font-semibold text-gold">Ready to plan your Ubud stay?</h2>
+        <p className="mt-2 text-small text-muted max-w-md mx-auto">
+          See real tours, upfront pricing and availability on Cahyana Ubud Experience, or start with our Ubud guide.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
+          <Button as="a" href={CUE_LINK} target="_blank" rel="noopener">Browse tours &amp; experiences</Button>
+          <Button as="a" variant="ghost" href={UBUD_GUIDE_LINK} target="_blank" rel="noopener">Read the Ubud guide</Button>
         </div>
-      </section>
+</Section>
     </>
   );
 }

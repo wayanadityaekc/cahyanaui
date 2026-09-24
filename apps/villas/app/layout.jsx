@@ -7,6 +7,7 @@ import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { BookingProvider } from '@/components/providers/BookingProvider';
 import { CartProvider } from '@/components/providers/CartProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
+import { BAR_BODY_PAD } from '@cahyana/ui';
 
 const inter = localFont({
   src: '../public/fonts/inter-latin.woff2',
@@ -27,7 +28,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-brand="villas" className={inter.variable}>
-      <body>
+      {/* The bottom bar is fixed, so the page has to reserve its height or the
+          last of the content sits under it - measured, it covered the footer at
+          every mobile width. The number lives with the bar, in the library. */}
+      <body className={BAR_BODY_PAD}>
         <LoadingScreen />
         <CurrencyProvider>
           <CartProvider>

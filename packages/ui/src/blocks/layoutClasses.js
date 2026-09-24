@@ -44,5 +44,34 @@ export const SECTION_TONES = {
   plain: '',
   cream: 'bg-cream',
   white: 'bg-white',
-  dark: 'bg-gold text-white',
+  // Surface only, no text colour: a band that also sets `text-white` changes
+  // what every child inherits, including ones that had never asked. The two
+  // dark bands on the villa site already colour their own heading and copy.
+  dark: 'bg-gold',
 };
+
+/**
+ * Small helpers that were CSS classes in the villa app and are shared enough to
+ * belong here. Each is a string rather than a component: there is no behaviour
+ * and no shape to hold together, just a bundle of utilities with a name.
+ */
+
+// A circle holding a small icon - the "why stay with us" rows, a card's glyph.
+export const ICON_CIRCLE =
+  'inline-flex items-center justify-center w-11 h-11 rounded-pill bg-cream text-cta flex-none';
+
+// A row of ★ characters. Amber, because rating stars are one of only three
+// jobs the real gold has site-wide. The extra tracking is what stops the stars
+// running into each other at small sizes.
+export const STARS = 'text-amber tracking-[0.1em]';
+
+/**
+ * Running body copy: paragraphs take the body size, the muted colour and a gap.
+ *
+ * This is a CLASS NAME, not a bundle of utilities, and that is deliberate - the
+ * rule lives in tokens.css inside @layer components so that it LOSES to any
+ * paragraph that states its own size or colour. See the comment there; it was
+ * ported as a utility string first and quietly overruled a gold review quote
+ * and nine eyebrows.
+ */
+export const PROSE_COPY = 'prose-copy';

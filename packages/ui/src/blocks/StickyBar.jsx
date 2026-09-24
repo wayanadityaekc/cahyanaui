@@ -79,3 +79,24 @@ export default function StickyBar({
     </div>
   );
 }
+
+/**
+ * What a page must add to <body> so the bar does not cover the last of the
+ * content. The number lives here, beside the bar whose height it is - a page
+ * that has to re-derive it will get it wrong the first time the bar's contents
+ * change.
+ *
+ * Measured with the bar on screen: it needs 86px of clearance, and 95px at
+ * 320px, where the CTA label wraps and the card grows a row. One number, the
+ * larger, plus a pixel - 94 was tried and left the footer covered at 320 by
+ * exactly 1px.
+ *
+ * SCOPE IT TO THE WIDTHS WHERE THE BAR IS VISIBLE. The element stays in the
+ * DOM at every width - it is only `display:none` above the breakpoint - so a
+ * bare `:has(.stickybar)` matches on desktop too and pads a page that has no
+ * bar on it. `lg:hidden` hides it from 1024px, hence max-[1023px] here.
+ *
+ * Before this existed the marker was shipped with nothing reading it, and the
+ * bar sat on top of the footer at every mobile width. Measured, not guessed.
+ */
+export const BAR_BODY_PAD = 'max-[1023px]:has-[.stickybar]:pb-[96px]';

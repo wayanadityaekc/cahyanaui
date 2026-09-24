@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@cahyana/ui';
+import { Button, Container } from '@cahyana/ui';
 
 // /about is LIVE TODAY and its content moved into the Our Company page's About
 // tab. Deleting the route outright would have turned a working public URL into
@@ -23,12 +23,12 @@ export const metadata = {
 
 export default function AboutRedirect() {
   return (
-    <div className="wrap py-20 text-center">
+    <Container className="py-20 text-center">
       <h1 className="text-h2 font-semibold text-gold">This page has moved</h1>
       <p className="mt-3 text-body text-muted">
         About Us now lives on our company page.
       </p>
       <Button as={Link} href={TARGET} className="mt-6">Go to About Us</Button>
-    </div>
+    </Container>
   );
 }

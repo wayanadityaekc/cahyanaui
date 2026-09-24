@@ -156,3 +156,30 @@
   --surface: var(--color-cream);
   --surface-raised: #ffffff;
 }
+
+/* ---------------------------------------------------------------------------
+   The ONE component rule the library ships as CSS rather than as a utility
+   string, and the reason is worth knowing.
+
+   `.prose-copy` sets the size, colour and rhythm of every <p> inside running
+   copy - but it has to LOSE to any paragraph that states its own. A review
+   quote in gold, an eyebrow at label size: those say what they are, and the
+   wrapper must not overrule them.
+
+   A rule in @layer components loses to every utility, whatever the specificity.
+   That is exactly the behaviour wanted here, and it is not reproducible with a
+   `[&_p]:` string: two utilities are settled by the compiled stylesheet's
+   order, and the wrapper's variant wins. Ported as a string first and measured:
+   a gold quote turned muted and nine eyebrows jumped from 10.24px to 12.8px.
+
+   So this stays CSS. Everything else in the library is a string, because
+   everything else wants to win.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .prose-copy p {
+    margin-bottom: 0.9rem;
+    color: var(--color-muted);
+    font-size: var(--text-body);
+  }
+  .prose-copy p:last-child { margin-bottom: 0; }
+}

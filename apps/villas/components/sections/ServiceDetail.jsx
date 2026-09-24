@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Hero } from '@cahyana/ui';
+import { Button, CAPS, Container, EYEBROW_LINE, Hero, PROSE_COPY, Section } from '@cahyana/ui';
 import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
 
@@ -34,14 +34,14 @@ export default function ServiceDetail({
         lede={subtitle}
       />
 
-      <section className="section">
-        <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
-          <div className="prose-copy">
-            <p className="eyebrow">At a Glance</p>
+      <Section bare>
+        <Container className="grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
+          <div className={PROSE_COPY}>
+            <p className={EYEBROW_LINE}>At a Glance</p>
             <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
               {glance.map((g) => (
                 <li key={g.label} className="flex flex-col py-4 pr-4 text-small">
-                  <span className="caps text-muted">{g.label}</span>
+                  <span className={`${CAPS} text-muted`}>{g.label}</span>
                   <span className="text-gold">{g.value}</span>
                 </li>
               ))}
@@ -69,18 +69,16 @@ export default function ServiceDetail({
           </div>
 
           <ServiceAside {...aside} serviceId={serviceId} />
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section className="section text-center bg-gold">
-        <div className="wrap">
-          <h2 className="text-h2 font-semibold text-white">{bottomHeading}</h2>
-          <p className="mt-2 text-small text-white/75">{bottomText}</p>
-          <div className="flex justify-center mt-6">
-            {bottomCta || <Button as={Link} href="/villas">See both villas</Button>}
-          </div>
+      <Section tone="dark" className="text-center">
+        <h2 className="text-h2 font-semibold text-white">{bottomHeading}</h2>
+        <p className="mt-2 text-small text-white/75">{bottomText}</p>
+        <div className="flex justify-center mt-6">
+          {bottomCta || <Button as={Link} href="/villas">See both villas</Button>}
         </div>
-      </section>
+</Section>
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { ChevronLeft, MessageCircle, X } from 'lucide-react';
 import { useEffect } from 'react';
-import { Button, DateRangeField } from '@cahyana/ui';
+import { Button, DateRangeField, EYEBROW_LINE } from '@cahyana/ui';
 import DragSheet from '@/components/ui/DragSheet';
 import SheetPresence from '@/components/ui/SheetPresence';
 import useMobile from '@/components/ui/useMobile';
@@ -112,7 +112,7 @@ export default function BookingSheet() {
 
             {VILLA_LIST.length > 1 && (
               <div>
-                <p className="eyebrow">Villa</p>
+                <p className={EYEBROW_LINE}>Villa</p>
                 <Select
                   id="bk-villa"
                   label="Villa"
@@ -124,7 +124,7 @@ export default function BookingSheet() {
             )}
 
             <div>
-              <p className="eyebrow">Stay dates</p>
+              <p className={EYEBROW_LINE}>Stay dates</p>
               {/* One range picker, not two date fields: the guest is choosing a
                   STAY, and the number that decides it - the nights between - is
                   the one thing two independent fields cannot show. */}
@@ -136,7 +136,7 @@ export default function BookingSheet() {
             </div>
 
             <div>
-              <p className="eyebrow">Guests</p>
+              <p className={EYEBROW_LINE}>Guests</p>
               <Select
                 id="bk-guests"
                 label="Guests"

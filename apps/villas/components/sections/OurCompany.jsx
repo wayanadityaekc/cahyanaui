@@ -6,7 +6,7 @@ import CatDropdown, { CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 import Prose from '@/components/prose/Prose';
 import { ABOUT, FAQ, PRIVACY } from '@/content/company';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
-import { Button } from '@cahyana/ui';
+import { Button, Card } from '@cahyana/ui';
 
 // CUE's Our Company (components/sections/OurCompany.jsx there), reused shell and
 // all: sticky text sidebar on desktop, the shared CatDropdown on mobile, and
@@ -44,7 +44,7 @@ const H1 = 'font-head text-h2 font-bold text-gold mb-4';
 const FAQ_CARD = 'mb-3 border border-line rounded-md p-4';
 const FAQ_Q = 'font-body text-[1rem] font-semibold text-green cursor-pointer';
 
-const CONTACT_CARD = 'card p-6';
+
 const CONTACT_H = 'flex items-center gap-2 text-h3 font-semibold text-gold';
 const CONTACT_IC = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold';
 
@@ -54,21 +54,21 @@ function ContactBody() {
       <h1 className={H1}>Get in touch</h1>
       <p>One family, two villas, and the person who answers is the person who hosts you.</p>
       <div className="grid sm:grid-cols-3 gap-5 mt-6">
-        <div className={CONTACT_CARD}>
+        <Card className="p-6">
           <h2 className={CONTACT_H}><MessageCircle className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />WhatsApp</h2>
           <p className="text-small text-muted my-3">Fastest way to reach us. Dates, questions, or a photo of the road if you&rsquo;re lost.</p>
           <Button as="a" href={WHATSAPP_LINK} target="_blank" rel="noopener">Message us</Button>
-        </div>
-        <div className={CONTACT_CARD}>
+        </Card>
+        <Card className="p-6">
           <h2 className={CONTACT_H}><Mail className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />Email</h2>
           <p className="text-small text-muted my-3">Longer questions, long stays, or if you own a villa and want it managed.</p>
           <Button as="a" variant="ghost" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</Button>
-        </div>
-        <div className={CONTACT_CARD}>
+        </Card>
+        <Card className="p-6">
           <h2 className={CONTACT_H}><MapPin className={CONTACT_IC} strokeWidth={1.8} aria-hidden="true" />Where we are</h2>
           <p className="text-small text-muted my-3">North Ubud, Gianyar, Bali. Ten minutes from Ubud Palace, Monkey Forest and Tegallalang.</p>
           <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Arrange a transfer</Button>
-        </div>
+        </Card>
       </div>
     </div>
   );

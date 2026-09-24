@@ -6,7 +6,7 @@ import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
-import { Button, BookingPanel, DateRangeField, PriceBlock, SECONDARY_BTN, StickyBar, useRevealWhenAway } from '@cahyana/ui';
+import { BookingPanel, Button, CAPS, Card, Container, DateRangeField, EYEBROW_LINE, PROSE_COPY, PriceBlock, SECONDARY_BTN, STARS, Section, StickyBar, useRevealWhenAway } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { WHATSAPP_LINK, CUE_LINK } from '@/lib/constants';
@@ -28,15 +28,15 @@ export default function VillaDetail({ villa }) {
   return (
     <>
       <section className="pt-6 sm:pt-10">
-        <div className="wrap">
+        <Container>
           <VillaGallery images={villa.gallery} />
-        </div>
+        </Container>
       </section>
 
-      <section className="section pt-8">
-        <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
-          <div className="prose-copy">
-            <p className="eyebrow">{villa.tagline}</p>
+      <Section bare className="!pt-8">
+        <Container className="grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
+          <div className={PROSE_COPY}>
+            <p className={EYEBROW_LINE}>{villa.tagline}</p>
             <h1 ref={titleRef} className="text-display font-bold text-gold">{villa.name}</h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-small text-muted">
               <span>Up to {villa.guests} guests</span>
@@ -45,7 +45,7 @@ export default function VillaDetail({ villa }) {
               <span>·</span>
               <span>Private pool</span>
               <span>·</span>
-              <span className="stars-amber font-semibold">★ {villa.rating}</span>
+              <span className={`${STARS} font-semibold`}>★ {villa.rating}</span>
               <span>({villa.reviews} reviews)</span>
             </div>
 
@@ -91,18 +91,18 @@ export default function VillaDetail({ villa }) {
               ))}
             </div>
             {villa.reviewQuote && (
-              <blockquote className="card p-6 mt-6">
-                <p className="stars-amber text-small mb-2">★★★★★</p>
+              <Card as="blockquote" className="p-6 mt-6">
+                <p className={`${STARS} text-small mb-2`}>★★★★★</p>
                 <p className="text-gold">&ldquo;{villa.reviewQuote.text}&rdquo;</p>
                 <cite className="block mt-3 text-label text-muted not-italic">{villa.reviewQuote.source}</cite>
-              </blockquote>
+              </Card>
             )}
 
             <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Good to know</h2>
             <ul className="border-t border-line">
               {villa.goodToKnow.map((g) => (
                 <li key={g.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
-                  <span className="min-w-[120px] caps text-muted">{g.label}</span>
+                  <span className={`${CAPS} min-w-[120px] text-muted`}>{g.label}</span>
                   <span className="text-gold">{g.value}</span>
                 </li>
               ))}
@@ -139,8 +139,8 @@ export default function VillaDetail({ villa }) {
             )}
             note="Rates change by season — message us for a season-specific quote."
           >
-            <div className="card p-6 bg-cream">
-              <p className="caps text-muted mb-3">Add to your stay</p>
+            <Card tone="cream" className="p-6">
+              <p className={`${CAPS} text-muted mb-3`}>Add to your stay</p>
               <ul className="flex flex-col">
                 {[
                   { href: '/services/breakfast', label: 'Breakfast' },
@@ -162,20 +162,18 @@ export default function VillaDetail({ villa }) {
                   </a>
                 </li>
               </ul>
-            </div>
+            </Card>
           </BookingPanel>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section className="section text-center bg-gold">
-        <div className="wrap">
-          <h2 className="text-h2 font-semibold text-white">{villa.name}, your dates</h2>
-          <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
-          <div className="flex justify-center mt-6">
-            <CheckAvailabilityButton villaSlug={villa.slug} />
-          </div>
+      <Section tone="dark" className="text-center">
+        <h2 className="text-h2 font-semibold text-white">{villa.name}, your dates</h2>
+        <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
+        <div className="flex justify-center mt-6">
+          <CheckAvailabilityButton villaSlug={villa.slug} />
         </div>
-      </section>
+</Section>
 
       {/* Mobile-only book bar - lg:hidden, since the sticky panel above already
           covers desktop. 'floating' is this site's variant of the shared shell:

@@ -8,6 +8,7 @@ import { CARD, CARD_WRAP } from '@/components/ui/detailCardClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
 import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
+import { CAPS, Card, Container, EYEBROW_LINE, Section } from '@cahyana/ui';
 
 // A guide article, on CUE's article layout: the same white content card and
 // two-column shell its tour and guide pages use, with the category list in the
@@ -58,8 +59,8 @@ export default function ArticlePage({ article }) {
   return (
     <article>
       <header className="bg-cream border-b border-line">
-        <div className="wrap py-10">
-          <p className="eyebrow">{categoryLabel(article.cat)}</p>
+        <Container className="py-10">
+          <p className={EYEBROW_LINE}>{categoryLabel(article.cat)}</p>
           <h1 className="text-display font-bold text-gold max-w-3xl">{article.title}</h1>
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>
           <p className={`${META} mt-4`}>
@@ -68,7 +69,7 @@ export default function ArticlePage({ article }) {
               ~{article.read} min read
             </span>
           </p>
-        </div>
+        </Container>
       </header>
 
       <div className={TOUR_LAYOUT_BOOK}>
@@ -95,7 +96,7 @@ export default function ArticlePage({ article }) {
             className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] pl-[var(--space-3)] border-l border-line"
             aria-label="Guide categories"
           >
-            <p className="caps text-muted">Guide</p>
+            <p className={`${CAPS} text-muted`}>Guide</p>
             <CatList activeId={article.cat} />
             <Link href="/guide" className="inline-flex items-center gap-1.5 mt-2 text-body text-gold hover:text-cta">
               All articles <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
@@ -105,23 +106,21 @@ export default function ArticlePage({ article }) {
       </div>
 
       {more.length > 0 && (
-        <section className="section bg-cream">
-          <div className="wrap">
-            <h2 className="text-h2 font-semibold text-gold mb-6">Keep reading</h2>
-            <div className={GRID_CARDS}>
-              {more.map((a) => (
-                <Link key={a.slug} href={`/guide/${a.slug}`} className="card card-hover p-5 flex flex-col gap-2 no-underline">
-                  <p className="eyebrow !mb-0">{categoryLabel(a.cat)}</p>
-                  <h3 className="text-h3 font-semibold text-gold">{a.title}</h3>
-                  <p className="text-small text-muted">{a.sub}</p>
-                  <span className="mt-auto pt-3 inline-flex items-center gap-1.5 caps text-cta">
-                    Read <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
-                  </span>
-                </Link>
-              ))}
-            </div>
+        <Section tone="cream">
+          <h2 className="text-h2 font-semibold text-gold mb-6">Keep reading</h2>
+          <div className={GRID_CARDS}>
+            {more.map((a) => (
+              <Card as={Link} hover key={a.slug} href={`/guide/${a.slug}`} className="p-5 flex flex-col gap-2 no-underline">
+                <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(a.cat)}</p>
+                <h3 className="text-h3 font-semibold text-gold">{a.title}</h3>
+                <p className="text-small text-muted">{a.sub}</p>
+                <span className={`${CAPS} mt-auto pt-3 inline-flex items-center gap-1.5 text-cta`}>
+                  Read <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
+                </span>
+              </Card>
+            ))}
           </div>
-        </section>
+</Section>
       )}
     </article>
   );

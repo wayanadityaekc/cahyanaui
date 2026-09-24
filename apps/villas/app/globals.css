@@ -110,85 +110,14 @@
      card at 16px is visibly out by a hair, and that is exactly the kind of
      not-quite-aligned that reads as sloppy without being obviously broken.
      Same reason CUE pins this to a token and checks it at 390px. */
-  .wrap {
-    width: 100%;
-    max-width: var(--container-wide);
-    margin-inline: auto;
-    padding-inline: var(--container-x);
-  }
-  .wrap-mid {
-    width: 100%;
-    max-width: var(--container-mid);
-    margin-inline: auto;
-    padding-inline: var(--container-x);
-  }
-  .wrap-read {
-    width: 100%;
-    max-width: var(--container-read);
-    margin-inline: auto;
-    padding-inline: var(--container-x);
-  }
+  /* The page box (.wrap/.wrap-mid/.wrap-read), the vertical rhythm (.section),
+     the caps treatment (.eyebrow/.caps), the card surface (.card/.card-hover)
+     and the badge all moved into @cahyana/ui. They are NOT re-declared here:
+     one shape defined in two places is the drift the library exists to remove,
+     and CSS cannot read the library's strings.
 
-  /* Vertical rhythm: --section-gap (36px) on a phone, where 56px of dead space
-     between every band meant a guest scrolled past more nothing than content.
-     Desktop keeps the roomier 5rem — it has the width to carry it. CUE runs the
-     same 36px on every content section. */
-  .section { padding-block: var(--section-gap); }
-  @media (min-width: 768px) { .section { padding-block: 5rem; } }
+     Import Container, Section, Card, Badge, Eyebrow / EYEBROW_LINE / CAPS. */
 
-  /* The one caps treatment on the site. Measured against CUE's own labels,
-     which compute to 10.24px / weight 500 / 0.14em tracking everywhere they
-     appear. This was 10.24px / weight 600 / 0.18em: the same size on paper,
-     but a heavier stroke spread over more width, which is what made the
-     uppercase lines read as oversized next to everything around them.
-     CLAUDE.md's weight ladder says it outright - label is 500, and 600 is
-     reserved for prices and buttons. */
-  .eyebrow,
-  .caps {
-    font-size: var(--text-label);
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-  .eyebrow {
-    display: block;
-    margin-bottom: 0.6rem;
-  }
-
-  /* Buttons moved to @cahyana/ui (primitives/btnClasses.js + Button.jsx).
-     They are NOT re-declared here as CSS: two definitions of one shape is the
-     drift this library exists to remove, and a CSS class cannot read the
-     library's string. Import { Button } from '@cahyana/ui'.
-
-     What changed when they moved: one size (33.6px, was 46px), 8px corners
-     (was a pill), and no .btn-sm - the size question is closed. See
-     btnClasses.js for the census that closed it. */
-
-  /* ===== Cards ===== */
-  .card {
-    background: #fff;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    transition: box-shadow 0.25s var(--ease-DEFAULT), transform 0.25s var(--ease-DEFAULT);
-  }
-  .card-hover:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.3rem 0.75rem;
-    font-size: var(--text-label);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    border-radius: var(--radius-pill);
-    background: #fff;
-    color: var(--color-gold);
-    box-shadow: var(--shadow-sm);
-  }
-  .badge-amber { background: var(--color-amber); color: #fff; }
-  .badge-cta { background: var(--color-cta); color: #fff; }
 
 }
 
@@ -196,24 +125,10 @@
    Prose helpers reused across restyled content pages
    ===================================================================== */
 @layer components {
-  .prose-copy p:not(.eyebrow):not(.caps) { margin-bottom: 0.9rem; color: var(--color-muted); font-size: var(--text-body); }
-  .prose-copy p:last-child { margin-bottom: 0; }
+  /* .prose-copy, .divider-line, .icon-circle and .stars-amber moved to
+     @cahyana/ui as PROSE_COPY, ICON_CIRCLE and STARS. .divider-line had no
+     call sites left and is simply gone. */
 
-  .divider-line { border-top: 1px solid var(--color-line); }
-
-  .icon-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 999px;
-    background: var(--color-cream);
-    color: var(--color-cta);
-    flex-shrink: 0;
-  }
-
-  .stars-amber { color: var(--color-amber); letter-spacing: 0.1em; }
 }
 
 /* =====================================================================

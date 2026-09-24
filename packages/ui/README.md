@@ -82,6 +82,18 @@ their keep where there is behaviour or a shape to hold together.
 its place where an element must animate OUT before unmounting (modals); a menu
 is not that, and the navbar is on every page.
 
+### What is NOT a string
+
+One rule ships as CSS, in tokens.css: `.prose-copy`. It sets the size and
+colour of every <p> inside running copy and it has to LOSE to a paragraph that
+states its own - a gold review quote, an eyebrow at label size. A rule in
+`@layer components` loses to every utility whatever its specificity, which is
+exactly that behaviour; a `[&_p]:` string does the opposite. Ported as a
+string first and measured: a gold quote turned muted and nine eyebrows jumped
+from 10.24px to 12.8px.
+
+Everything else in here is a string, because everything else wants to win.
+
 ## Using it
 
 ```js

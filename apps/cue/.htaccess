@@ -1,0 +1,77 @@
+# ============================================================
+#  Cahyana Ubud Experience — performance (cache + kompres)
+# ============================================================
+
+# --- Sumber Next.js jangan dilayanin publik ---
+# Repo ini isinya situs lama (dilayanin) DAN sumber Next.js (nggak). Hostinger
+# nyajiin root repo apa adanya, jadi tanpa ini folder app/, components/, docs/
+# dkk kebuka. Pakai RedirectMatch (mod_alias) yang udah kebukti jalan di sini,
+# bukan mod_rewrite - biar nggak diem-diem mati kalau modulnya nggak ada.
+RedirectMatch 404 ^/(app|components|content|lib|state|tools|docs|node_modules|\.github|\.next|\.claude|out)/
+RedirectMatch 404 ^/(package(-lock)?\.json|next\.config\.[mc]?js|jsconfig\.json|vercel\.json|CLAUDE\.md|MIGRATION_BRIEF\.md)$
+
+# --- Satu host kanonik: www -> apex (301) ---
+# www ngelayanin situs langsung, nggak redirect, jadi tamu yang mendarat di www
+# kena blokir CORS di API: harga live, review, login, booking, contact semua mati
+# padahal halamannya keliatan normal. Canonical + og:url juga nunjuk ke apex.
+# Dibungkus IfModule: kalau mod_rewrite nggak ada, ini no-op (nggak error).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# --- Redirect URL lama -> baru (301 permanen, jaga SEO) ---
+Redirect 301 /ubud-jeep-sunrise.html /kintamani-sunrise-penglipuran.html
+Redirect 301 /taste-of-ubud.html /attractions/cooking-class.html
+Redirect 301 /ubud-cooking-market.html /attractions/cooking-class.html
+Redirect 301 /attractions/celuk-silver.html /attractions/ubud-arts-crafts.html
+Redirect 301 /attractions/batik.html /attractions/ubud-arts-crafts.html
+
+# --- GZIP: kompres file teks di server (hemat ~70-80% ukuran transfer) ---
+# Pengganti "minify" tanpa ngerusak file sumber yang rapi/berkomentar.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Cache lifetime: browser nyimpen file statis biar kunjungan balik lebih cepat ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # CSS & JS -> 1 tahun. AMAN karena pakai ?v= cache-busting:
+  # tiap style.css/script.js berubah, nomor ?v= dinaikin -> URL ganti -> browser ambil versi baru.
+  ExpiresByType text/css                 "access plus 1 year"
+  ExpiresByType application/javascript   "access plus 1 year"
+  ExpiresByType text/javascript          "access plus 1 year"
+
+  # Font -> 1 tahun (jarang berubah)
+  ExpiresByType font/woff2               "access plus 1 year"
+  ExpiresByType font/woff                "access plus 1 year"
+
+  # Gambar & favicon -> 1 bulan.
+  # Sengaja nggak 1 tahun: gambar nggak pakai ?v=, jadi kalau ganti foto (nama file sama)
+  # update-nya tetap kepropagasi dalam waktu wajar. Mau langsung? tambahin ?v= di URL gambarnya.
+  ExpiresByType image/jpeg               "access plus 1 month"
+  ExpiresByType image/png                "access plus 1 month"
+  ExpiresByType image/webp               "access plus 1 month"
+  ExpiresByType image/svg+xml            "access plus 1 month"
+  ExpiresByType image/x-icon             "access plus 1 month"
+
+  # HTML -> jangan di-cache, biar perubahan konten (harga, teks) langsung kelihatan.
+  ExpiresByType text/html                "access plus 0 seconds"
+</IfModule>
+
+# --- Cache-Control tambahan (fallback kalau mod_expires nggak aktif) ---
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>

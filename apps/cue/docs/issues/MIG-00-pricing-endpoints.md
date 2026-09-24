@@ -1,0 +1,101 @@
+# [MIG-00] cahyana-api: move pricing server-side
+
+**Agent:** Engine · **Lane:** Gate 0 · **Blocks:** MIG-20, MIG-21, MIG-30/31/32/33, and anything that renders a price
+
+## Objective
+Make cahyana-api the single source of truth for prices. The frontend must display API-returned prices and never calculate or be trusted for a price.
+
+## Scope
+**First: `git pull` in the `cahyana-api` repo.** The local checkout is 33 commits behind `origin/main`; the `server.js` on disk is not what is deployed. Build against `origin/main`.
+
+1. Port the pricing data out of the frontend `data.js` into a server module (`pricing.js`): `prices`, `CHARTER`, `transport`, `TICKETS`, `TOUR_TICKETS`, `tourExclusive`, `EXCLUSIVE_FEE`, `SURCHARGE_FACTOR`, `TRANSFER_ZONE`, `ITEM_ZONE`, `CURRENCIES`, `CUR_RATE`, `CUR_SYMBOL`, `REFERRAL`.
+2. Port the calculation functions verbatim from `script.js`: `carPrice`, `exclusivePrice`, `charterPrice`, `surchargeFor`, `applyReferral`, `cartDayPrice`, `cartTransferPrice`, `toCurrency`, `roundCur`.
+3. New endpoints:
+   - `GET /api/pricing/catalog?currency=&guests=&stay=` → every sellable item with server-computed display price (standard + exclusive where applicable), charter tiers, transfer routes, `active` flags, currency symbols.
+   - `POST /api/pricing/quote` `{ lines:[{type,service,date,guests,mode,pickup}], currency, stay, referral }` → per-line prices + total.
+   - `POST /api/referral/validate` `{ code }` → `{ valid, pct }`.
+4. Change `POST /api/inquiry` to recompute every line server-side and **ignore** any client-supplied `price_usd`/`price_idr`. Return the authoritative price in the response.
+
+## Out of scope
+- Moving prices into database tables (possible later; a JS module is fine now).
+- Changing any price *value*. `CEK WAYAN` placeholders move across holding their current values.
+- Frontend changes.
+
+## Input
+- `data.js` (frontend) — the current source of every number.
+- `script.js` lines ~210–230, 386–392, 435–449, 595–630, 963–995, 1125–1160 — the calculation functions.
+- `cahyana-api` `origin/main:server.js`.
+
+## Dependencies
+None, and it does **not** need MIG-01a. Run these two in parallel.
+
+## Acceptance criteria
+1. **Golden-value test, non-negotiable:** a script computes every item × 5 currencies (USD/IDR/AUD/EUR/GBP) × guest counts 1–10 × standard and exclusive modes, old (`data.js` + `script.js`) vs new (API). **Every value must match exactly**, including `Math.ceil` to whole USD / 10k IDR, `guests > 5 → 2 cars`, per-car vs per-person by category, and return transfer ×2 −10%.
+2. `GET /api/pricing/catalog` never returns `EXCLUSIVE_FEE`, `TICKETS`, or the referral code table.
+3. `POST /api/inquiry` with a tampered `price_usd` stores the correct server-computed price, not the tampered one — proven with a test request.
+4. Existing `/api/inquiry` behaviour is otherwise unchanged: same `lines[]` payload shape, same `booking_ref` sequence, same account auto-link, same emails.
+5. Rate limiting and CORS applied consistently with the existing public endpoints.
+
+## Definition of done
+- Golden-value test output attached to the issue showing zero mismatches.
+- Endpoints live on Railway and reachable.
+- **Existing booking data untouched** — additive changes only, no dropped or rewritten rows.
+- QA notified: this touches money, so it is tested immediately, not batched.
+
+---
+
+# RESULT — DONE, but shipped in shadow mode on purpose (2 Sep 2026, Architect)
+
+## Important deviation from this issue's original scope
+
+The issue said `/api/inquiry` should "recompute every line server-side and **IGNORE** any client-supplied price". **Doing that today would have undercharged guests.**
+
+The live frontend's `payload()` sends only `type, service, date, time, guests, pickup, dropoff, price_usd, price_idr, day_no, flight_number, flight_datetime`. It does **not** send `mode` (Standard/Exclusive), charter `duration`/`area`/`extra`, or the transfer `return` flag. Without those the server cannot reconstruct the right number, so a blind override would have priced every Exclusive tour as Standard, every charter as 0, and every return transfer as one-way.
+
+So MIG-00 ships the full engine plus a switch:
+
+- **Default (now):** the server computes every line in parallel, stores its own number in `server_price_usd` / `server_price_idr`, tags each row via `price_source` (`client-agrees` / `client-mismatch` / `client-only`), and logs any disagreement. **What the guest is charged does not change.**
+- **After MIG-20** ships the missing fields, set `PRICING_AUTHORITATIVE=true` in Railway and the server price becomes the stored price. One env var, no redeploy of logic.
+
+This gives real production evidence that the port is correct *before* it is trusted with money. **MIG-20 must add `mode`, `area`, `duration`, `extra` and `return` to the booking payload, and this issue cannot be closed until the flag is flipped.**
+
+## Built
+- `pricing-data.js` — generated by **copying `CUE/data.js` verbatim** and appending `module.exports`. Not one number was retyped, so transcription error is impossible. The derived `tourExclusive` (built from `TOUR_TICKETS` × `TICKETS` ÷ `TICKET_IDR_PER_USD`) recomputes identically. En-dash keys such as `"Airport – Ubud"` survive intact — verified.
+- `pricing.js` — `roundCur`, `toCurrency`, `itemInfo`, `isProgramActive`, `carPrice`, `exclusivePrice`, `charterPrice`, `surchargeFor`, `transferPrice`, `itemPrice`, `referralPct`, `applyReferral`, plus `catalog()` and `quote()`.
+- `GET /api/pricing/catalog?currency=&guests=&stay=` — 66 items + 10 transfers + charter tiers, `Cache-Control: public, max-age=300`.
+- `POST /api/pricing/quote` — per-line + total, rate-limited, capped at 60 lines, `no-store`.
+- `POST /api/referral/validate` — returns `{valid, pct}` only.
+- `GET /api/pricing/mismatches` (admin) — every row where client and server disagreed.
+- Migration adds `server_price_usd`, `server_price_idr`, `price_source`. Additive only; no existing row is touched.
+
+## Verified
+
+**1. Golden-value test — the acceptance criterion.** `tools/golden-price-test.js` loads the real `CUE/data.js` + `CUE/script.js` in a `vm` sandbox with browser stubs, so it compares against **the actual code running on the live site**, not a reimplementation.
+
+```
+Items: 66 | currencies: 5 | guests 1-10 | standard + exclusive
+Comparisons run : 4542
+Mismatches      : 0
+GOLDEN TEST PASSED
+```
+
+Coverage: every item × guests 1–10 standard and exclusive; every item × 5 currencies; every item × 11 pickup areas × guests 1/5/6/10 (both sides of the 2-car split); every transfer route one-way and return; charter × 2 areas × 4 durations × 4 extra-hour values; every referral code including lowercase and bogus.
+
+**2. Full booking path, with the database mocked** (`tools/test-inquiry-pricing.js`) so the whole `/api/inquiry` handler actually runs:
+
+| Case | Shadow mode (default) | `PRICING_AUTHORITATIVE=true` |
+|---|---|---|
+| tampered `$5` | stores 5, records server 45, `client-mismatch`, logs it | **stores 45** |
+| correct `$45` | stores 45, `client-agrees`, no log noise | stores 45 |
+| `$0` | stores 0, records server 45, `client-mismatch` | **stores 45** |
+
+Both modes pass.
+
+**3. Leak test — this is what closes the security finding.** `GET /api/pricing/catalog` returns 16,676 bytes containing **none** of: `EXCLUSIVE_FEE`, `TICKETS`, `SURCHARGE_FACTOR`, `TICKET_IDR_PER_USD`, `GOWITHCAHYANA`, `CAHYANA10`, `UBUD5`. Referral codes are only ever confirmed one at a time via `/api/referral/validate`, never enumerated.
+
+**4. Spot-checks against the live site's own numbers** — Ubud Tour 2 pax `$45`; 6 pax `Rp1,400,000` (the >5-pax two-car rule); Exclusive 2 pax `$90` (car 45 + 280,000 IDR of tickets ÷ 15,500 × 2, +10% fee, ceil); Canggu pickup `$62` (45 + 60% of the $28 Canggu transfer); with `CAHYANA10` `$56`; Airport return transfer `$36` (20 × 2 × 0.9); charter full day Ubud `$60`.
+
+## Deploy notes
+1. Push, then run `GET /api/migrate` (Basic auth) to add the three columns.
+2. Leave `PRICING_AUTHORITATIVE` unset. Watch `GET /api/pricing/mismatches` — with the current frontend, Exclusive/charter/return rows will legitimately show as mismatches, because the client sends a price the server cannot yet reconstruct. That is the expected signal, not a bug.
+3. `data.js` stays on the frontend until MIG-20/21 stop reading it. Deleting it is part of those issues, not this one.

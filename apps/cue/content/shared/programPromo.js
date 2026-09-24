@@ -1,0 +1,85 @@
+// Cross-sell slides for the auto-sliding promo band on listing pages (Sep 2026,
+// Wayan item #5). Copy/images reused verbatim from each program's own page/home
+// section (LISTINGS.tour/activities/destinations, CHARTER, TRANSFER, AIRPORT,
+// GUIDE_HUB, ABOUT) rather than invented, so it stays consistent site-wide.
+export const PROGRAM_PROMO = [
+  {
+    id: 'tour',
+    kicker: 'Tours',
+    title: 'Private Bali Tours with Your Own Ubud Driver',
+    text: 'Fully customizable day trips from Ubud - rice terraces, temples, waterfalls, and beaches, with your own local driver.',
+    img: 'goa-gajah-hero.webp',
+    href: '/tour.html',
+    cta: 'All tours',
+  },
+  {
+    id: 'activities',
+    kicker: 'Experiences',
+    title: 'Bali Activities & Performances in Ubud',
+    text: 'ATV rides, Ayung rafting, jungle swings, Mount Batur sunrise, Kecak and Barong dance - authentic activities from Ubud.',
+    img: 'jungle-swing-card.jpg',
+    href: '/activities.html',
+    cta: 'All experiences',
+  },
+  {
+    id: 'charter',
+    kicker: 'Charter',
+    title: 'Private Car Charter in Bali',
+    // Mirrors CHARTER.sub again (Sep 2026, Wayan: "gas samain teksnya juga bro").
+    // The old line kept "go anywhere, stop anywhere, at your own pace" - the slogan
+    // the charter page itself dropped for a fact you can use. Same trim as the
+    // transfer card: the page's first two sentences, without its hours/deposit clause.
+    text: 'Your own car and local driver for the day. You choose the route, your driver knows the roads.',
+    // Same photo as the charter page itself (Sep 2026, Wayan: "gas samain foto
+    // promo charter bro"). road-ubud was a traffic jam, and this card sits on
+    // three listing pages selling the opposite.
+    img: 'handara-gate.webp',
+    href: '/charter.html',
+    cta: 'Build charter',
+  },
+  {
+    id: 'transfer',
+    kicker: 'Transfer',
+    title: 'Private Car Transfers in Bali',
+    text: 'Fixed price per car, professional local drivers, door to door, 24/7.',
+    img: 'south-bali-beach-sunset.webp',
+    href: '/transfer.html',
+    cta: 'See routes',
+  },
+  {
+    id: 'airport',
+    kicker: 'Airport Pickup',
+    title: "Land in Bali, we're already there",
+    text: 'Private car from Ngurah Rai (DPS) to your Ubud stay. Fixed price, meet & greet at arrivals.',
+    img: 'transfer-hero.webp',
+    href: '/airport-transfer.html',
+    cta: 'Airport transfer',
+  },
+  {
+    id: 'destinations',
+    kicker: 'Destinations',
+    title: 'Bali Attractions & Destinations from Ubud',
+    text: 'Temples, waterfalls, rice terraces, and beaches - the individual places behind our tours.',
+    img: 'tanah-lot-hero.webp',
+    href: '/destinations.html',
+    cta: 'All destinations',
+  },
+  {
+    id: 'guide',
+    kicker: 'Travel Guide',
+    title: 'Bali Travel Guide',
+    text: 'Everything worth knowing before you go - the island, the culture, and the practical bits that make a trip smooth.',
+    img: 'bali-highlands-hero.webp',
+    href: '/bali-guide.html',
+    cta: 'Bali guide',
+  },
+  {
+    id: 'company',
+    kicker: 'Our Company',
+    title: 'Local Drivers in Ubud',
+    text: 'Tours, driver, activities and villa from one team - plan it once, ask one person, and see every price before you commit.',
+    img: 'tegalalang-rice-terrace-hero.jpg',
+    href: '/our-company.html',
+    cta: 'About us',
+  },
+];

@@ -1,0 +1,139 @@
+# Verified against Apache 2.4.66. Everything except the www redirect works with
+# mod_rewrite DISABLED, so it cannot depend on a module Hostinger might not have.
+# The one rewrite is wrapped in IfModule, so it is a no-op where that is missing.
+#
+# Goes in public/.htaccess so the Next build copies it into out/.
+# Merge with the existing gzip + cache blocks from the current .htaccess.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<FilesMatch "\.txt$">
+  Require all denied
+</FilesMatch>
+<Files "robots.txt">
+  Require all granted
+</Files>
+
+
+# --- Cache ---
+# Situs lama punya blok ini di .htaccess-nya; export Next kehilangan, jadi
+# Hostinger pakai default sendiri (CSS 7 hari, HTML tanpa aturan). Akibatnya
+# style.css yang ke-cache rusak nyangkut seminggu dan nggak bisa diperbaiki.
+#
+# HTML WAJIB no-cache: itu satu-satunya file yang nunjuk ke URL ber-hash di
+# bawahnya. Kalau HTML ikut ke-cache, build baru nggak pernah nyampe.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Aman dicache lama: chunk _next/ namanya ber-hash, style.css dipanggil
+  # dengan ?v=<hash isi file> - dua-duanya ganti URL tiap kali isinya berubah.
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  <FilesMatch "\.(woff2?|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+  # Gambar nggak pakai versi, jadi sebulan - biar ganti foto tetap kepropagasi.
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|ico|avif)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Satu host kanonik: www -> apex (301) ---
+# www ngelayanin situs langsung, nggak redirect, jadi tamu yang mendarat di www
+# kena blokir CORS di API: harga live, review, login, booking, contact semua mati
+# padahal halamannya keliatan normal. Canonical + og:url juga nunjuk ke apex.
+# Dibungkus IfModule: kalau mod_rewrite nggak ada, ini no-op (nggak error).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+Redirect 301 /ubud-jeep-sunrise.html /kintamani-sunrise-penglipuran.html
+Redirect 301 /taste-of-ubud.html /attractions/cooking-class.html
+Redirect 301 /ubud-cooking-market.html /attractions/cooking-class.html
+Redirect 301 /attractions/celuk-silver.html /attractions/ubud-arts-crafts.html
+Redirect 301 /attractions/batik.html /attractions/ubud-arts-crafts.html
+Redirect 301 /south-bali-tour.html /hidden-beaches-cliffs.html
+
+# About/Contact/FAQ/Terms/Privacy/Cancellation folded into Our Company sections (Sep 2026).
+Redirect 301 /about-us.html /our-company.html#about
+Redirect 301 /contact.html /our-company.html#contact
+Redirect 301 /faq.html /our-company.html#faq
+Redirect 301 /terms-conditions.html /our-company.html#terms
+Redirect 301 /privacy-policy.html /our-company.html#privacy
+Redirect 301 /cancellation-policy.html /our-company.html#cancellation
+
+# Besakih & Taman Ujung merged into the East Bali tour (Sep 2026, Wayan).
+Redirect 301 /besakih-taman-ujung.html /lempuyang-tirta-gangga.html
+
+# Ulun Danu Beratan & Handara Gate merged into the Bedugul highlands tour, and
+# Sangeh Monkey Forest & Tanah Lot into the West Bali sunset tour (Sep 2026, Wayan).
+Redirect 301 /ulun-danu-tanah-lot.html /jatiluwih-tour.html
+Redirect 301 /sangeh-tanah-lot.html /tanah-lot-taman-ayun.html
+
+# The 31 attraction pages lived at the ROOT on the old static site before they
+# moved into /attractions/ (audited Sep 2026, before submitting the sitemap to
+# Search Console): every one of these was a live URL and every one has been a 404
+# since the move. Same slug, same page - mechanical, nothing judged.
+Redirect 301 /atv-ride.html /attractions/atv-ride.html
+Redirect 301 /banyumala-waterfall.html /attractions/banyumala-waterfall.html
+Redirect 301 /barong-dance.html /attractions/barong-dance.html
+Redirect 301 /besakih.html /attractions/besakih.html
+Redirect 301 /cooking-class.html /attractions/cooking-class.html
+Redirect 301 /garuda-wisnu-kencana.html /attractions/garuda-wisnu-kencana.html
+Redirect 301 /gitgit-waterfall.html /attractions/gitgit-waterfall.html
+Redirect 301 /goa-gajah.html /attractions/goa-gajah.html
+Redirect 301 /gunung-kawi.html /attractions/gunung-kawi.html
+Redirect 301 /handara-gate.html /attractions/handara-gate.html
+Redirect 301 /jatiluwih-rice-terrace.html /attractions/jatiluwih-rice-terrace.html
+Redirect 301 /jeep-sunrise.html /attractions/jeep-sunrise.html
+Redirect 301 /jungle-swing.html /attractions/jungle-swing.html
+Redirect 301 /kecak-dance.html /attractions/kecak-dance.html
+Redirect 301 /lempuyang-temple.html /attractions/lempuyang-temple.html
+Redirect 301 /lovina-dolphin.html /attractions/lovina-dolphin.html
+Redirect 301 /monkey-forest.html /attractions/monkey-forest.html
+Redirect 301 /mount-batur-trekking.html /attractions/mount-batur-trekking.html
+Redirect 301 /munduk.html /attractions/munduk.html
+Redirect 301 /pandawa-beach.html /attractions/pandawa-beach.html
+Redirect 301 /rafting.html /attractions/rafting.html
+Redirect 301 /sekumpul-waterfall.html /attractions/sekumpul-waterfall.html
+Redirect 301 /snorkeling-east-bali.html /attractions/snorkeling-east-bali.html
+Redirect 301 /tanah-lot.html /attractions/tanah-lot.html
+Redirect 301 /tegalalang-rice-terrace.html /attractions/tegalalang-rice-terrace.html
+Redirect 301 /tegenungan-waterfall.html /attractions/tegenungan-waterfall.html
+Redirect 301 /tirta-empul.html /attractions/tirta-empul.html
+Redirect 301 /tirta-gangga.html /attractions/tirta-gangga.html
+Redirect 301 /twin-lakes.html /attractions/twin-lakes.html
+Redirect 301 /ulun-danu-beratan.html /attractions/ulun-danu-beratan.html
+Redirect 301 /uluwatu-temple.html /attractions/uluwatu-temple.html
+
+# Retired pages with no successor page of their own (Sep 2026, pre-GSC 404 audit).
+# The three "region" tours were split into named tours; the two that map onto a
+# live tour one-for-one go straight there, the north one goes to the tour index
+# because every north tour is currently parked. The South Bali stops lost their
+# own pages when the tour they belonged to was parked, so they go to the
+# destinations index rather than a page that is not sold.
+Redirect 301 /east-bali-tour.html /lempuyang-tirta-gangga.html
+Redirect 301 /west-bali-tour.html /jatiluwih-tour.html
+Redirect 301 /north-bali-tour.html /tour.html
+Redirect 301 /melasti-beach.html /destinations.html
+Redirect 301 /attractions/melasti-beach.html /destinations.html
+Redirect 301 /padang-padang-beach.html /destinations.html
+Redirect 301 /attractions/padang-padang-beach.html /destinations.html
+Redirect 301 /jimbaran-seafood.html /destinations.html
+Redirect 301 /attractions/jimbaran-seafood.html /destinations.html
+
+# Scooter rental is no longer a service we offer. The getting-around guide is
+# the page that now answers "how do I get around Bali on a scooter".
+Redirect 301 /scooter.html /guide/getting-around-bali.html

@@ -2825,8 +2825,42 @@ Order **must be kept** (declarations first, run last):
   - **Gotcha harness**: span harga bawa utility `PLAN_PRICE_LEAD`, **bukan class `.price`** —
     nyari `.price` hasilnya nihil. Sama juga `.info__list--yes/--no` & `.info__card`: udah
     di-migrasi ke utility, jadi cek hasilnya (warna li yang di-mute) bukan nama class-nya.
-  - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;
-    kalau di-stub `'$'` harness-nya ngukur "$1.000.000" — string yang gak pernah dilihat tamu.
+  - **Gotcha harness**: mata uang default situs = **USD** sejak 24 Sep 2026 (dulu IDR).
+    Stub katalog ngikutin mata uang yang lagi dites — `symbol:'$'` buat default, `'Rp'`
+    kalau harness-nya emang lagi nyetel `cue_currency` ke IDR. Salah stub = harness-nya
+    ngukur string yang gak pernah dilihat tamu (dulu kebalikannya: di-stub `'$'` padahal
+    default-nya rupiah, jadi kebaca "$1.000.000").
+
+## MATA UANG DEFAULT = USD (24 Sep 2026, Wayan) — dan itu KEPUTUSAN RAIL, bukan tampilan
+`DEFAULT_CURRENCY` di `lib/constants.js`. Cuma ngefek ke **paint pertama** tamu baru;
+yang udah pernah milih tetep kebawa pilihannya (`cue_currency` di localStorage).
+
+**Kenapa diubah**: default itu diem-diem nentuin **rail pembayaran**. `railFor('IDR')`
+→ DOKU, dan **DOKU nolak kartu terbitan luar** (dibuktiin 24 Sep 2026, lihat CLAUDE.md
+`cahyana-api`). Jadi turis asing yang gak pernah nyentuh currency picker: lihat harga
+rupiah → dikirim ke rail yang nawarin QRIS / transfer bank / e-wallet (yang dia gak
+punya) → form kartunya nolak dia. **Gak bisa bayar sama sekali**, dan nol lapisan di
+sini yang bisa lihat itu kejadian. Situs ini jualan ke turis asing, jadi default-nya
+harus yang kartunya bisa jalan.
+
+- **Tamu Indonesia gak rugi apa-apa selain satu tap** — pilih IDR, dapet DOKU, yang
+  justru rail paling murah buat kita settle.
+- **JSON-LD gak kesentuh**: `priceCurrency` di `content/shared/schema.js` emang udah
+  `"USD"` ditulis tangan, gak pernah ngikutin mata uang tampilan.
+- **`priceFallback` di kartu listing juga gak kesentuh** — itu string USD (`"$40"`) dari
+  dulu, dan dia yang keliatan sebelum katalog API balas.
+- **Cuma `TripPrefsProvider` yang baca `DEFAULT_CURRENCY`** (dicek: nol pemakai lain).
+- Verifikasi: **`defaultcur.mjs`** di scratchpad (11/11) di halaman hasil build — tamu
+  baru lihat `$` & katalog diminta `currency=USD`, tamu lama yang milih IDR **tetep
+  lihat `Rp`** (ganti default JANGAN nimpa pilihan orang), tamu lama USD gak berubah,
+  nol page error, dan tamu baru **gak dikasih `cue_currency` yang gak pernah dia pilih**.
+  Dites pakai bug aslinya (default dibalikin ke IDR) → 2 nyala.
+- **Yang BELUM diputusin**: biarin tamu milih **rail**-nya sendiri di booking rupiah
+  ("kartu, ditagih USD" vs "QRIS/transfer/e-wallet, rupiah"). Itu jawaban produk yang
+  paling bener — rail ngikutin ALAT BAYAR, bukan cuma mata uang — tapi butuh kerjaan
+  server juga (`create-order` sekarang nolak booking IDR). Perubahan default ini
+  **ngecilin** masalahnya, gak ngilangin: tamu asing yang sengaja milih IDR masih kena,
+  dan buat dia ada catatan + tombol switch di `PaymentStep` (`railInfo()` di `lib/rails.js`).
 
 ## POPUP KONFIRMASI = 3 STEP kalau pembayaran NYALA (Sep 2026, Wayan)
 Wayan: *"kalo misalnya ada input dan summary mending bikin 2 step bro, pertama step input

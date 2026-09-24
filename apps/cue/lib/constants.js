@@ -43,4 +43,18 @@ export const DISPLAY_GUESTS = 2;
 // their saved localStorage choice loads) - the single place to flip this site-wide.
 // Read by TripPrefsProvider only; a visitor's own manual choice always overrides it
 // and persists as before, this only controls the starting point.
-export const DEFAULT_CURRENCY = 'IDR';
+// What a first-time visitor sees, before they touch the currency picker. A
+// returning one keeps whatever they chose - this only ever decides the first
+// paint.
+//
+// USD since 24 Sep 2026 (Wayan). It was IDR, and that quietly decided which
+// PAYMENT RAIL a guest landed on: rupiah routes to DOKU, and DOKU refused a
+// card issued outside Indonesia. So a foreign guest who never opened the picker
+// was shown rupiah, sent to a rail offering QRIS, bank transfer and e-wallets -
+// none of which they hold - and then refused at the card form. This site sells
+// to foreign travellers, so the default that works for most of them is the one
+// their card can pay on.
+//
+// Indonesian guests still pick IDR in one tap and get DOKU, which is the
+// cheaper rail to settle on, so nothing is lost there beyond one tap.
+export const DEFAULT_CURRENCY = 'USD';

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Hero } from '@cahyana/ui';
 import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
 
@@ -22,18 +23,16 @@ export default function ServiceDetail({
 }) {
   return (
     <>
-      <section className="relative">
-        <div className="relative min-h-[38vh] flex items-end overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={heroImg} alt={heroAlt} className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.1), rgba(20,20,16,0.65))' }} />
-          <div className="wrap relative z-10 py-10">
-            <p className="eyebrow text-gold-l">{kicker}</p>
-            <h1 className="text-display font-bold text-white">{title}</h1>
-            <p className="mt-2 max-w-md text-small text-white/85">{subtitle}</p>
-          </div>
-        </div>
-      </section>
+      <Hero
+        size="compact"
+        align="end"
+        image={heroImg}
+        alt={heroAlt}
+        eyebrow={kicker}
+        title={title}
+        titleClassName=""
+        lede={subtitle}
+      />
 
       <section className="section">
         <div className="wrap grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">

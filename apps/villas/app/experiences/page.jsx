@@ -1,4 +1,5 @@
 import { Flower2, Landmark, Mountain, Trees } from 'lucide-react';
+import { Hero } from '@cahyana/ui';
 import { GRID_QUAD } from '@/components/ui/gridClasses';
 import { CUE_LINK, UBUD_GUIDE_LINK } from '@/lib/constants';
 
@@ -40,24 +41,15 @@ const CATEGORIES = [
 export default function ExperiencesPage() {
   return (
     <>
-      <section className="relative">
-        <div className="relative min-h-[42vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://picsum.photos/seed/ubudwalk9/1800/900"
-            alt="Rice terraces near Ubud"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.2), rgba(20,20,16,0.6))' }} />
-          <div className="wrap relative z-10 py-14">
-            <p className="eyebrow text-gold-l">More Than Just A Stay</p>
-            <h1 className="text-display font-bold max-w-lg text-white">Experience the real Ubud</h1>
-            <p className="mt-3 max-w-md text-small text-white/85">
-              Discover the beauty of Ubud with curated experiences, from cultural tours to wellness and adventure - run by our sister brand, Cahyana Ubud Experience.
-            </p>
-          </div>
-        </div>
-      </section>
+      <Hero
+        size="sub"
+        image="https://picsum.photos/seed/ubudwalk9/1800/900"
+        alt="Rice terraces near Ubud"
+        eyebrow="More Than Just A Stay"
+        title="Experience the real Ubud"
+        titleClassName="max-w-lg"
+        lede="Discover the beauty of Ubud with curated experiences, from cultural tours to wellness and adventure - run by our sister brand, Cahyana Ubud Experience."
+      />
 
       <section className="section">
         <div className="wrap">

@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "exports": {
     ".": "./src/index.js",
     "./tokens.css": "./src/tokens/tokens.css",
-    "./primitives/*": "./src/primitives/*.jsx"
+    "./primitives/*": "./src/primitives/*",
+    "./blocks/*": "./src/blocks/*",
+    "./lib/*": "./src/lib/*"
   },
   "peerDependencies": {
     "react": ">=19",

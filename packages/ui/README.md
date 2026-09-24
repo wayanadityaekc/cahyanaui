@@ -22,7 +22,7 @@ tailwind-merge. Cahyana's components are written from CUE's own patterns.
 ```
 src/tokens/       Layer 1  colour, type, spacing, radius, shadow, motion
 src/primitives/   Layer 2  Button, Badge, Field, Input, Select, DateField...
-src/blocks/       Layer 3  Hero, Navbar shell, Footer shell, Card shell  (Phase 2)
+src/blocks/       Layer 3  Hero, Section, Card, Navbar/Footer shells, booking
 ```
 
 ### Layer 1 - tokens
@@ -51,11 +51,36 @@ Small, presentational, no opinions about data. `CurrencyPicker` takes `value`,
 moment a primitive reaches into a site's React context, the other site can no
 longer use it.
 
-### Layer 3 - blocks (Phase 2)
+### Layer 3 - blocks
 
 Composed from primitives. Shells that take content through props. Where a block
 genuinely differs between the sites, **both variants live here** and each site
 picks one - the variants do not get scattered back into the apps.
+
+| | what it is | variants |
+|---|---|---|
+| `Container` / `Section` | the page's side edges and its vertical rhythm | 3 widths, 4 tones |
+| `SectionHeading` | eyebrow / heading / lede | light, dark |
+| `Hero` | photo band with words on it | page, band, sub, compact |
+| `Card` / `MediaCard` | a card's surface; photo-on-top card | framed, inset |
+| `VillaCard` | a villa, as a card | - |
+| `Collapse` | an inline menu that pushes content down | - |
+| `NavbarShell` | the header, drawer and hamburger | content-driven |
+| `FooterShell` | five columns, one hairline | content-driven |
+| `StickyBar` | the one thing at the bottom of a phone screen | **flush** (CUE), **floating** (villas) |
+| `BookingPanel` | the sticky panel beside a stay | - |
+| `SearchBar` | dates + guests + the button | hero, panel, stack |
+| `PriceBlock` | "From Rp… / night" | amber, gold |
+
+Class strings ship beside the components (`gridClasses`, `cardClasses`,
+`navbarClasses`, `footerClasses`, `layoutClasses`). A row of cards is a div with
+one className - wrapping that in a component buys nothing. Components earn
+their keep where there is behaviour or a shape to hold together.
+
+**No animation library.** `Collapse` animates `grid-template-rows` from `0fr` to
+`1fr`, which reaches the child's natural height in pure CSS. Framer Motion earns
+its place where an element must animate OUT before unmounting (modals); a menu
+is not that, and the navbar is on every page.
 
 ## Using it
 

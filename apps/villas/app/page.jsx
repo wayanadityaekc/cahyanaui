@@ -8,7 +8,7 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { UBUD_GUIDE_LINK } from '@/lib/constants';
-import { GRID_PAIR, GRID_TRIO } from '@/components/ui/gridClasses';
+import { GRID_PAIR, GRID_TRIO, Hero } from '@cahyana/ui';
 
 export const metadata = {
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
@@ -24,43 +24,27 @@ const WHY_STAY = [
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative">
-        <div className="relative min-h-[58vh] sm:min-h-[72vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/cahyana-tibuah.webp"
-            alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* TWO scrims, because the two layouts need opposite things.
-              Desktop puts the copy in the left third, so a left-to-right gradient
-              darkens exactly where the words are and leaves the photo clear.
-              On a phone the copy spans the FULL width, and that same gradient
-              left the right-hand end of every line sitting on a lit window — the
-              subhead was genuinely hard to read. Below 993px it becomes a
-              top-to-bottom scrim instead, dark at both ends, with the bottom end
-              carrying the search card that overlaps it. */}
-          <div className="absolute inset-0 [background:linear-gradient(180deg,rgba(20,20,16,0.5)_0%,rgba(20,20,16,0.34)_40%,rgba(20,20,16,0.68)_100%)] min-[993px]:[background:linear-gradient(100deg,rgba(20,20,16,0.62)_0%,rgba(20,20,16,0.28)_48%,rgba(20,20,16,0.05)_75%)]" />
-          <div className="wrap relative z-10 py-14 sm:py-24">
-            <p className="eyebrow text-gold-l">Ubud Private Villas</p>
-            <h1 className="text-display font-bold max-w-xl text-white">
-              A private retreat in the heart of Ubud
-            </h1>
-            <p className="mt-4 max-w-md text-body text-white/88">
-              Two exclusive villas, designed for comfort, privacy and a true Balinese experience.
-            </p>
-            <div className="flex flex-wrap gap-3 mt-7">
-              <CheckAvailabilityButton className="btn btn-cta" />
-              <Link href="/villas" className="btn btn-outline-light">Explore villas</Link>
-            </div>
+      {/* Hero. The shell - the height ladder, the two scrims, the container,
+          the eyebrow/title/lede stack - is Hero in @cahyana/ui. */}
+      <Hero
+        size="page"
+        image="/images/cahyana-tibuah.webp"
+        alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
+        eyebrow="Ubud Private Villas"
+        title="A private retreat in the heart of Ubud"
+        lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
+        actions={(
+          <>
+            <CheckAvailabilityButton className="btn btn-cta" />
+            <Link href="/villas" className="btn btn-outline-light">Explore villas</Link>
+          </>
+        )}
+        below={(
+          <div className="wrap">
+            <SearchCard />
           </div>
-        </div>
-
-        <div className="wrap">
-          <SearchCard />
-        </div>
-      </section>
+        )}
+      />
 
       {/* Villas */}
       <section className="section bg-cream">
@@ -99,39 +83,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Experience the real Ubud */}
-      <section className="relative">
-        <div className="relative min-h-[46vh] flex items-center overflow-hidden [background:linear-gradient(150deg,var(--color-gold),#2f2b24)]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://picsum.photos/seed/ubudwalk9/1800/900"
-            alt="Rice terraces near Ubud at sunrise"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(20,20,16,0.15), rgba(20,20,16,0.55))' }} />
-          <div className="wrap relative z-10 py-16">
-            <p className="eyebrow text-gold-l">More Than Just A Stay</p>
-            <h2 className="text-h2 font-semibold max-w-md text-white">Experience the real Ubud</h2>
-            <p className="mt-2 max-w-md text-small text-white/85">
-              Combine your villa stay with our curated experiences, from cultural tours to wellness and adventure.
-            </p>
-            <Link href="/experiences" className="btn btn-outline-light mt-5">Explore experiences</Link>
+      {/* Experience the real Ubud. Same Hero shell as the page's own hero,
+          one step down the height ladder - and now the same scrim, which this
+          band used to hand-roll with an inline style. */}
+      <Hero
+        size="band"
+        as="h2"
+        titleSize="h2"
+        titleClassName="max-w-md"
+        image="https://picsum.photos/seed/ubudwalk9/1800/900"
+        alt="Rice terraces near Ubud at sunrise"
+        eyebrow="More Than Just A Stay"
+        title="Experience the real Ubud"
+        lede="Combine your villa stay with our curated experiences, from cultural tours to wellness and adventure."
+      >
+        <Link href="/experiences" className="btn btn-outline-light mt-5">Explore experiences</Link>
 
-            <Link
-              href="/experiences"
-              className="card mt-8 inline-flex items-center gap-3 p-4 max-w-xs bg-white"
-            >
-              <span className="icon-circle">
-                <Mountain className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
-              </span>
-              <span>
-                <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>
-                <span className="block text-label text-muted">Temples, rice terraces, waterfalls &amp; more</span>
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
+        <Link
+          href="/experiences"
+          className="card mt-8 inline-flex items-center gap-3 p-4 max-w-xs bg-white"
+        >
+          <span className="icon-circle">
+            <Mountain className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
+          </span>
+          <span>
+            <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>
+            <span className="block text-label text-muted">Temples, rice terraces, waterfalls &amp; more</span>
+          </span>
+        </Link>
+      </Hero>
 
       {/* Reviews */}
       <section className="section">

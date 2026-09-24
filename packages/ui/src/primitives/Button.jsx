@@ -17,7 +17,7 @@ import { cn } from '../lib/cn.js';
  */
 const BASE =
   'inline-flex items-center justify-center gap-2 font-body font-semibold leading-none ' +
-  'border cursor-pointer no-underline ' +
+  'border cursor-pointer no-underline whitespace-nowrap ' +
   'transition-[color,background-color,border-color,scale] duration-200 ease-in-out ' +
   'active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed';
 

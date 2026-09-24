@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
 import DateField from '@/components/ui/DateField';
-import { BAR_SHELL, BAR_CARD } from '@/components/ui/stickyBar';
+import { BookingPanel, PriceBlock, SECONDARY_BTN, StickyBar, useRevealWhenAway } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { WHATSAPP_LINK, CUE_LINK } from '@/lib/constants';
@@ -18,36 +18,13 @@ export default function VillaDetail({ villa }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  // Mobile floating book bar (CUE's own "book-bar" system: desktop keeps the
-  // sticky sidebar, mobile gets a persistent bottom bar instead - here styled
-  // as a floating rounded card rather than CUE's edge-to-edge flat one).
-  // Shown only once BOTH the page title and the booking card have scrolled
-  // out of view, same "neither anchor visible" logic as CUE's, so it never
-  // doubles up with a CTA already on screen.
+  // The mobile book bar shows only once BOTH the page title and the booking
+  // card have scrolled out of view - the "no CTA on screen" rule, which is why
+  // it never doubles up with a button the guest can already see. The hook is
+  // useRevealWhenAway in @cahyana/ui; CUE runs the same rule on its book bar.
   const titleRef = useRef(null);
   const cardRef = useRef(null);
-  const [showBookBar, setShowBookBar] = useState(false);
-
-  useEffect(() => {
-    const title = titleRef.current;
-    const card = cardRef.current;
-    if (!title || !card) return undefined;
-
-    let titleOn = true;
-    let cardOn = false;
-    const sync = () => setShowBookBar(!titleOn && !cardOn);
-
-    const io = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.target === title) titleOn = entry.isIntersecting;
-        if (entry.target === card) cardOn = entry.isIntersecting;
-      }
-      sync();
-    });
-    io.observe(title);
-    io.observe(card);
-    return () => io.disconnect();
-  }, []);
+  const showBookBar = useRevealWhenAway([titleRef, cardRef]);
 
   return (
     <>
@@ -133,19 +110,13 @@ export default function VillaDetail({ villa }) {
             </ul>
           </div>
 
-          <aside className="lg:sticky lg:top-24 flex flex-col gap-5">
-            <div ref={cardRef} className="card p-6">
-              <div className="flex items-end justify-between">
-                <p>
-                  <span className="text-label text-muted block">From</span>
-                  <span className="text-h2 font-bold text-amber">{format(villa.nightlyRate)}</span>
-                  <span className="text-label text-muted"> / night</span>
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 mt-5">
+          <BookingPanel
+            panelRef={cardRef}
+            price={<PriceBlock amount={format(villa.nightlyRate)} unit="/ night" />}
+            fields={(
+              <div className="grid grid-cols-2 gap-2">
                 <div className="min-w-0">
-                  <label className="" htmlFor={`${villa.slug}-checkin`}>Check-in</label>
+                  <label htmlFor={`${villa.slug}-checkin`}>Check-in</label>
                   <DateField
                     id={`${villa.slug}-checkin`}
                     label="Check-in"
@@ -155,7 +126,7 @@ export default function VillaDetail({ villa }) {
                   />
                 </div>
                 <div className="min-w-0">
-                  <label className="" htmlFor={`${villa.slug}-checkout`}>Check-out</label>
+                  <label htmlFor={`${villa.slug}-checkout`}>Check-out</label>
                   <DateField
                     id={`${villa.slug}-checkout`}
                     label="Check-out"
@@ -166,18 +137,30 @@ export default function VillaDetail({ villa }) {
                   />
                 </div>
               </div>
-
+            )}
+            cta={(
               <button
                 type="button"
-                className="btn btn-cta btn-full mt-4"
+                className="btn btn-cta btn-full"
                 onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
               >
                 Check availability
               </button>
-              <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className="btn btn-outline btn-full mt-2">Ask about dates</a>
-              <p className="text-label text-muted text-center mt-3">Rates change by season — message us for a season-specific quote.</p>
-            </div>
-
+            )}
+            secondary={(
+              <>
+                <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>Ask about dates</a>
+                {/* The Airbnb hand-off goes here, as a second SECONDARY_BTN, the
+                    moment there is a listing URL to send guests to. Both villas
+                    are on Airbnb and some guests trust that checkout more, so
+                    this is a real booking, not a leak. Left out until the URL
+                    exists: a booking button that goes nowhere is a broken
+                    promise. See the TODO in components/layout/Footer.jsx - the
+                    same missing link. */}
+              </>
+            )}
+            note="Rates change by season — message us for a season-specific quote."
+          >
             <div className="card p-6 bg-cream">
               <p className="caps text-muted mb-3">Add to your stay</p>
               <ul className="flex flex-col">
@@ -202,7 +185,7 @@ export default function VillaDetail({ villa }) {
                 </li>
               </ul>
             </div>
-          </aside>
+          </BookingPanel>
         </div>
       </section>
 
@@ -216,37 +199,30 @@ export default function VillaDetail({ villa }) {
         </div>
       </section>
 
-      {/* Mobile-only floating book bar - lg:hidden since the sidebar above
-          already covers desktop. Slides up from the bottom as a rounded,
-          elevated card (shadow-xl) rather than CUE's flush edge-to-edge bar,
-          per Wayan's ask to keep the same system but not the identical look. */}
-      <div className={`${BAR_SHELL} ${showBookBar ? 'translate-y-0' : 'translate-y-[150%]'}`}>
-        <div className={BAR_CARD}>
-          <p className="leading-tight">
-            <span className="block text-label text-muted">From</span>
-            <span className="text-h3 font-bold text-amber">{format(villa.nightlyRate)}</span>
-            <span className="text-label text-muted"> / night</span>
-          </p>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <a
-              href={WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener"
-              aria-label="Chat on WhatsApp"
-              className="flex items-center justify-center w-11 h-11 rounded-full bg-cta text-white flex-shrink-0"
-            >
-              <MessageCircle className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
-            </a>
-            <button
-              type="button"
-              onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
-              className="btn btn-cta btn-sm whitespace-nowrap"
-            >
-              Check availability
-            </button>
-          </div>
+      {/* Mobile-only book bar - lg:hidden, since the sticky panel above already
+          covers desktop. 'floating' is this site's variant of the shared shell:
+          an inset rounded card rather than CUE's flush edge-to-edge bar. */}
+      <StickyBar variant="floating" show={showBookBar}>
+        <PriceBlock tight amount={format(villa.nightlyRate)} unit="/ night" size="sm" />
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener"
+            aria-label="Chat on WhatsApp"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-cta text-white flex-shrink-0"
+          >
+            <MessageCircle className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+          </a>
+          <button
+            type="button"
+            onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}
+            className="btn btn-cta btn-sm whitespace-nowrap"
+          >
+            Check availability
+          </button>
         </div>
-      </div>
+      </StickyBar>
     </>
   );
 }

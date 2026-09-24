@@ -1,0 +1,447 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   Design tokens — ported 1:1 from Cahyana Ubud Experience (CUE)'s own
+   established design system (see CUE's CLAUDE.md / app/globals.css),
+   per Wayan's explicit direction: this sister site should share CUE's
+   real brand values rather than a separately-invented palette.
+   Tailwind v4 auto-generates utilities from these (bg-cta, text-amber,
+   rounded-lg, shadow-md, text-h2, ...) so components below mostly just
+   use those utilities directly.
+   ===================================================================== */
+@theme {
+  --color-green: #5c5c5c;
+  --color-gold: #22201c;
+  --color-gold-d: #16140f;
+  --color-gold-l: #cfc9ba;
+  --color-cta: #3d5c46;
+  --color-cta-d: #2f4737;
+  --color-amber: #c9a45c;
+  --color-amber-d: #b08d43;
+  --color-cream: #f8f8f8;
+  --color-line: #e7e4dd;
+  --color-ok: #2e7d54;
+  --color-err: #9a4a3f;
+  --color-ink: #46453f;
+  --color-muted: #7a7466;
+
+  --text-display: clamp(1.75rem, 4vw, 2.5rem);
+  --text-h2: 1.125rem;
+  --text-h3: 0.875rem;
+  --text-strong: 0.875rem;
+  --text-body: 0.8rem;
+  --text-field: 0.8rem;
+  --text-small: 0.8rem;
+  --text-label: 0.64rem;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
+
+  --ease-DEFAULT: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --font-display: var(--font-inter), sans-serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-head: var(--font-inter), sans-serif;
+}
+
+/* =====================================================================
+   :root alias layer — ported from CUE's own app/globals.css.
+
+   Why this exists: CUE's shared components are written against SHORT token
+   names (var(--dur), var(--line), var(--r-md), var(--space-1), var(--icon-sm),
+   var(--lh-body), ...), while Tailwind v4's @theme above generates its
+   utilities from the LONG names (--radius-md, --color-line, ...). Porting a
+   CUE component without this layer makes every one of those var() calls
+   resolve to nothing — and a failed var() inside a `transition:` shorthand is
+   invalid at computed-value time, so the whole declaration silently falls back
+   to `all 0s` and the animation just never runs. That exact bug (a self-
+   referencing --dur-fast) went unnoticed in CUE for three weeks across 43 uses
+   with a green build, which is why the aliases are declared up front here
+   rather than added one at a time as components get ported.
+
+   Values mirror @theme above — change a brand value there, not here.
+   ===================================================================== */
+:root {
+  /* Container widths — not a Tailwind v4 auto-utility namespace. */
+  --container-wide: 1200px;
+  --container-mid: 1080px;
+  --container-read: 720px;
+  --container: var(--container-wide);
+  --container-x: 1.5rem;
+
+  /* Type */
+  --fs-display: var(--text-display);
+  --fs-h2: var(--text-h2);
+  --fs-h3: var(--text-h3);
+  --fs-strong: var(--text-strong);
+  --fs-body: var(--text-body);
+  --fs-field: var(--text-field);
+  --fs-small: var(--text-small);
+  --fs-label: var(--text-label);
+  --lh-body: 1.6;
+  --lh-heading: 1.15;
+
+  /* Radius */
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-xl: var(--radius-xl);
+  --r-pill: var(--radius-pill);
+
+  /* Hairline border colour */
+  --line: var(--color-line);
+
+  /* Spacing scale */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --section-gap: 2.25rem;
+
+  /* Controls & icons */
+  --field-h: 2.1rem;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  /* Motion. --ease is the name CUE components use; --ease-DEFAULT is the name
+     Tailwind v4 needs in @theme to generate the `ease-*` utility. Same curve. */
+  --dur-fast: 0.15s;
+  --dur: 0.2s;
+  --dur-slow: 0.3s;
+  --ease: var(--ease-DEFAULT);
+
+  --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
+}
+
+/* Mobile gutter, same 992px breakpoint CUE uses — it has to match the band the
+   full-bleed sliders (BLEED_MOBILE in components/ui/gridClasses.js) turn on at,
+   or a section heading and the first card in the slider under it stop lining up. */
+@media (max-width: 992px) {
+  :root { --container-x: 1rem; }
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+/* Explicitly layered as `base` — Tailwind's cascade layer order is
+   theme, base, components, utilities. Un-layered CSS beats ALL of those
+   regardless of specificity, so an un-layered `a { color: inherit }` here
+   would silently win over `.btn-cta { color: #fff }` from @layer
+   components (this bit us once: filled CTA buttons rendered as <a>/<Link>
+   showed washed-out inherited text instead of white — buttons were fine
+   since the selector only targets <a>). Keeping these in @layer base
+   keeps the intended precedence: components > base > theme.
+   ===================================================================== */
+@layer base {
+  /* overflow-x: CLIP, not hidden — ported from CUE's style.css.
+
+     Two reasons it has to be here, on BOTH html and body:
+
+     1. The closed navbar drawer is a position:fixed panel parked off the right
+        edge with translate-x-full. Chrome counts it in
+        documentElement.scrollWidth even though it never actually scrolls, so
+        every page here reported ~340px of phantom horizontal overflow. That
+        makes `scrollWidth - innerWidth === 0` — the guard a full-bleed slider
+        has to be checked with — useless, since a real overflow and the drawer's
+        phantom one look the same.
+     2. components/ui/gridClasses.js BLEED_MOBILE breaks a slider track out to
+        both screen edges with calc(50% - 50vw). If the browser paints a classic
+        scrollbar, 50vw is wider than half of innerWidth and the page really
+        does grow sideways. clip stops that from ever reaching the guest.
+
+     CLIP and not HIDDEN: `hidden` on an ancestor turns every descendant
+     position:sticky into a no-op, and the navbar here is sticky. `clip` blocks
+     the scrolling without creating a scroll container, so sticky keeps working. */
+  html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--color-ink);
+    background: #fff;
+    overflow-x: clip;
+  }
+
+  img { display: block; max-width: 100%; }
+  a { text-decoration: none; color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cta);
+    outline-offset: 3px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--color-gold);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* =====================================================================
+   Layout primitives
+   ===================================================================== */
+@layer components {
+  /* Named "wrap*" (not "container*") on purpose: Tailwind v4 auto-generates
+     its own ".container" utility (width:100%, breakpoint max-widths, no
+     margin) in @layer utilities, which beats anything in @layer components
+     regardless of source order or specificity — that collision was silently
+     nuking left/right page padding on mobile (below the first breakpoint,
+     Tailwind's version resolves to width:100% with no centering). */
+  /* Gutter is a TOKEN now, not a percentage — 16px on a phone, 24px from 993px
+     up, which is CUE's --container-x. The old `width: min(1200px, 92%)` made
+     the gutter scale with the viewport (15.6px at 390, 34px at 430, 50px at
+     620), so nothing on the page ever lined up with anything else at two
+     different widths. It also could not agree with a full-bleed slider, which
+     insets its first card by a fixed 1rem: a section heading at 15.6px above a
+     card at 16px is visibly out by a hair, and that is exactly the kind of
+     not-quite-aligned that reads as sloppy without being obviously broken.
+     Same reason CUE pins this to a token and checks it at 390px. */
+  .wrap {
+    width: 100%;
+    max-width: var(--container-wide);
+    margin-inline: auto;
+    padding-inline: var(--container-x);
+  }
+  .wrap-mid {
+    width: 100%;
+    max-width: var(--container-mid);
+    margin-inline: auto;
+    padding-inline: var(--container-x);
+  }
+  .wrap-read {
+    width: 100%;
+    max-width: var(--container-read);
+    margin-inline: auto;
+    padding-inline: var(--container-x);
+  }
+
+  /* Vertical rhythm: --section-gap (36px) on a phone, where 56px of dead space
+     between every band meant a guest scrolled past more nothing than content.
+     Desktop keeps the roomier 5rem — it has the width to carry it. CUE runs the
+     same 36px on every content section. */
+  .section { padding-block: var(--section-gap); }
+  @media (min-width: 768px) { .section { padding-block: 5rem; } }
+
+  /* The one caps treatment on the site. Measured against CUE's own labels,
+     which compute to 10.24px / weight 500 / 0.14em tracking everywhere they
+     appear. This was 10.24px / weight 600 / 0.18em: the same size on paper,
+     but a heavier stroke spread over more width, which is what made the
+     uppercase lines read as oversized next to everything around them.
+     CLAUDE.md's weight ladder says it outright - label is 500, and 600 is
+     reserved for prices and buttons. */
+  .eyebrow,
+  .caps {
+    font-size: var(--text-label);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .eyebrow {
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  /* ===== Buttons =====
+     Height fixed at 2.9rem (md) to match CUE's real shared Button atom
+     (components/ui/Button.jsx: SIZES.md = "h-[2.9rem]") — CTA buttons on
+     both sister sites render the same height, not just the same color. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    height: 2.9rem;
+    padding: 0 1.6rem;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+    text-align: center;
+    border-radius: var(--radius-pill);
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s var(--ease-DEFAULT), color 0.2s var(--ease-DEFAULT),
+      border-color 0.2s var(--ease-DEFAULT), transform 0.2s var(--ease-DEFAULT);
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-cta { background: var(--color-cta); color: #fff; }
+  .btn-cta:hover { background: var(--color-cta-d); }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--color-line);
+    color: var(--color-gold);
+  }
+  .btn-outline:hover { border-color: var(--color-cta); color: var(--color-cta); }
+  .btn-outline-light {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: #fff;
+    backdrop-filter: blur(2px);
+  }
+  .btn-outline-light:hover { background: #fff; color: var(--color-gold); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--color-gold); }
+  .btn-ghost:hover { color: var(--color-cta); }
+  .btn-sm { height: 2.25rem; padding: 0 1.15rem; font-size: var(--text-small); }
+  .btn-full { display: flex; width: 100%; }
+
+  /* ===== Cards ===== */
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.25s var(--ease-DEFAULT), transform 0.25s var(--ease-DEFAULT);
+  }
+  .card-hover:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    border-radius: var(--radius-pill);
+    background: #fff;
+    color: var(--color-gold);
+    box-shadow: var(--shadow-sm);
+  }
+  .badge-amber { background: var(--color-amber); color: #fff; }
+  .badge-cta { background: var(--color-cta); color: #fff; }
+
+}
+
+/* =====================================================================
+   Prose helpers reused across restyled content pages
+   ===================================================================== */
+@layer components {
+  .prose-copy p:not(.eyebrow):not(.caps) { margin-bottom: 0.9rem; color: var(--color-muted); font-size: var(--text-body); }
+  .prose-copy p:last-child { margin-bottom: 0; }
+
+  .divider-line { border-top: 1px solid var(--color-line); }
+
+  .icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-cream);
+    color: var(--color-cta);
+    flex-shrink: 0;
+  }
+
+  .stars-amber { color: var(--color-amber); letter-spacing: 0.1em; }
+}
+
+/* =====================================================================
+   Loading splash (components/ui/LoadingScreen.jsx) - ported token-for-token
+   from CUE's own .loadscreen* rules (style.css), so the sister sites show
+   the same branded cream splash + spinner.
+   ===================================================================== */
+@layer components {
+  .loadscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    background: var(--color-cream);
+    transition: opacity 0.45s var(--ease-DEFAULT), visibility 0.45s var(--ease-DEFAULT);
+  }
+  .loadscreen--out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .loadscreen__logo {
+    width: min(200px, 45vw);
+    height: auto;
+  }
+  .loadscreen__spin {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 3px solid var(--color-line);
+    border-top-color: var(--color-gold);
+    animation: loadscreen-spin 0.7s linear infinite;
+  }
+}
+@keyframes loadscreen-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================================================================
+   Scroll lock (components/ui/useBodyLock.js)
+   Toggled on <html> AND <body>: Chrome/desktop scroll the page via <body>,
+   but iOS Safari very often scrolls <html> (documentElement) instead, so
+   locking only one leaves the page scrollable under a popup on iPhone.
+   Deliberately overflow-only — no position:fixed, which is what makes the
+   page jump to the top when a modal opens.
+   ===================================================================== */
+.hs-locked { overflow: hidden !important; }
+
+/* Header entrance, from CUE's style.css. */
+@keyframes navbarIn {
+  from { opacity: 0; }
+}
+
+/* =====================================================================
+   Press feedback — ported from CUE's style.css.
+
+   Uses the standalone `scale` property, NOT `transform: scale()`: cards and
+   CTAs already animate `transform` on hover (a translateY lift) and the two
+   would overwrite each other. `scale` composes with `transform` instead.
+
+   The transition sits at ELEMENT specificity on purpose (0,0,1), so a component
+   that declares its own transition (0,1,0) still wins and simply gets an
+   instant press instead of an eased one. The :active rule is 0,1,1 so the
+   feedback itself always lands, whatever the component declares.
+   ===================================================================== */
+@layer base {
+  button,
+  [role="button"],
+  a[class~="rounded-pill"] {
+    transition-property: scale;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
+  button:not(:disabled):active,
+  [role="button"]:active,
+  a[class~="rounded-pill"]:active {
+    scale: 0.97;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button:not(:disabled):active,
+    [role="button"]:active,
+    a[class~="rounded-pill"]:active {
+      scale: 1;
+    }
+  }
+}

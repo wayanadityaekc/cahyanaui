@@ -85,6 +85,16 @@ export default function BookConfirmModal() {
     setLineDT((ctx.lines || []).map((l) => ({ date: l.date || '', time: l.time || '' })));
     setStep(1);
     setDtErr({});
+  }, [ctx, referral]);
+
+  // The quote is SEPARATE from the reset above. Both used to live in one effect
+  // keyed on currency, which meant changing currency mid-checkout sent the guest
+  // back to step 1 and threw away the times they had set per line. Refetching a
+  // price is not the same event as a new booking arriving, and only the second
+  // one should reset anything - the payment step now offers a currency switch,
+  // so this stopped being hypothetical.
+  useEffect(() => {
+    if (!ctx) return undefined;
     let cancelled = false;
     quote({ lines: ctx.lines, currency, stay, referral: (referral && referral.code) || '' })
       .then((d) => !cancelled && d && d.lines && setPriced(d))

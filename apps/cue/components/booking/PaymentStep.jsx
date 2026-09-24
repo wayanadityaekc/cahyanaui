@@ -6,7 +6,8 @@ import { withSymbol } from '@/components/Price';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
 import { PAY_COPY, payOptions } from '@/lib/payment';
-import { noteFor } from '@/lib/rails';
+import { noteFor, railInfo } from '@/lib/rails';
+import { useTripPrefs } from '@/state/TripPrefsProvider';
 
 // The three ways to pay, each showing what it costs right now.
 //
@@ -50,6 +51,14 @@ const AMOUNT = 'font-semibold text-amber text-[1rem] whitespace-nowrap';
 const BADGE =
   'inline-block ml-2 px-[0.45rem] py-[0.1rem] rounded-sm bg-[rgba(201,164,92,0.16)] text-amber-d text-small font-semibold align-middle';
 const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.6rem]';
+// Tinted, not bordered: another framed box would read as a fourth option in a
+// list of three. This is a note about all of them.
+const RAIL_BOX = 'mb-2 p-[0.7rem] rounded-md bg-cream';
+// A text link, not a button: it changes what the guest is reading, it does not
+// submit anything. No `transition` of its own, so the site-wide press feedback
+// still applies (the SNAP rule in check-motion).
+const RAIL_SWITCH =
+  'bg-transparent border-none p-0 text-small text-gold-d font-semibold underline underline-offset-2 cursor-pointer';
 const FINE = 'text-small text-green leading-[var(--lh-body)]';
 const FINE_DIM = 'text-small text-muted leading-[var(--lh-body)]';
 const MORE =
@@ -88,6 +97,10 @@ export default function PaymentStep({
   // will take the payment - said here, before a card number is typed, rather
   // than appearing as a surprise amount at the card form.
   const railNote = noteFor(currency);
+  // What this rail can actually be paid with, and the way out when it is not
+  // what the guest holds. See railInfo() for why this is here at all.
+  const rail = railInfo(currency);
+  const { setCurrency } = useTripPrefs();
   const money = (v) =>
     withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
 
@@ -111,6 +124,21 @@ export default function PaymentStep({
   return (
     <div className="my-5">
       <p className={HEAD}>{PAY_COPY.heading}</p>
+
+      {/* Before the three options, not after: a guest holding an overseas card
+          needs this before they pick an amount, not once the card form has
+          already refused them. */}
+      {rail && (
+        <div className={RAIL_BOX} data-rail-info>
+          <p className={FINE_DIM}>{rail.accepts}</p>
+          <p className={`${FINE_DIM} mt-[0.3rem]`}>
+            {rail.ask}{' '}
+            <button type="button" className={RAIL_SWITCH} onClick={() => setCurrency(rail.to)}>
+              {rail.action}
+            </button>
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
         {options.map((o) => {

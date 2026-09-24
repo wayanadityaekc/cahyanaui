@@ -61,6 +61,32 @@ export function chargeCurrency(currency) {
   return PAYPAL_SETTLES.has(cur) ? cur : PAYPAL_FALLBACK;
 }
 
+// What the guest can actually pay WITH on the rail their currency lands on, and
+// the way out when it is not what they hold. Null when there is nothing to say.
+//
+// This exists because of a live refusal, not a guess: on 24 Sep 2026 a card
+// issued outside Indonesia was turned away at DOKU's card form ("Your card is
+// not allowed to be used for this transaction"). IDR is this site's DEFAULT
+// currency, so a foreign guest who never touches the currency picker was being
+// sent to a rail that offers QRIS, bank transfer and e-wallets - none of which
+// they have - and a card form that refuses them. Nothing on screen said why, or
+// that switching currency would work.
+//
+// The claim is deliberately narrow: it says what IS offered, and that overseas
+// cards are refused. It does NOT claim Indonesian cards work, because that has
+// not been tested. If DOKU confirms overseas cards can be enabled, this whole
+// function goes.
+export function railInfo(currency) {
+  const cur = String(currency || 'USD').toUpperCase();
+  if (railFor(cur) !== 'doku') return null;
+  return {
+    accepts: 'Rupiah payments use QRIS, bank transfer or an e-wallet. Cards issued outside Indonesia are not accepted on this rail.',
+    ask: 'Paying with an overseas card?',
+    action: 'Switch to USD',
+    to: 'USD',
+  };
+}
+
 // One sentence, or null when there is nothing to warn about. Only says anything
 // when the guest is about to be charged in a currency other than the one every
 // price on the page is shown in.

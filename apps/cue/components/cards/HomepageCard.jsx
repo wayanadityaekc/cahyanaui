@@ -40,7 +40,7 @@ const FRAME =
 const IMG = 'absolute inset-0 w-full h-full object-cover';
 const CAT_BASE =
   'absolute top-3 left-3 z-[3] inline-flex items-center gap-[6px] px-3 py-[6px] rounded-sm text-label font-semibold ' +
-  'tracking-[0.06em] uppercase text-white backdrop-blur-[6px] border border-[rgba(255,255,255,0.2)] ' +
+  'tracking-[0.06em] uppercase text-white bg-[rgba(12,14,10,0.52)] border border-[rgba(255,255,255,0.2)] ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:shrink-0';
 const RATE =
   'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-sm ' +
@@ -50,8 +50,8 @@ const OV = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
 const TITLE = 'mt-0 mb-[9px] font-semibold text-h2 leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';
 const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
-  'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(255,255,255,0.13)] ' +
-  'backdrop-blur-[12px] border border-[rgba(255,255,255,0.2)]';
+  'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(12,14,10,0.42)] ' +
+  'border border-[rgba(255,255,255,0.2)]';
 // Wayan (14 Sep 2026): the meta row (duration + "Private Tour") could shrink
 // (min-w-0 flex-[0_1_auto] above) but its text never did - every child was
 // pinned flex-[0_0_auto], so a long duration ("10-11 hours") plus "Private

@@ -125,7 +125,7 @@ export default function PricesPanel({ token, onExpired }) {
           onChange={(e) => setQ(e.target.value)}
           aria-label="Search prices"
         />
-        <span className={NOTE}>Rp 1 = ${'≈'} {rp(data.rate)} per USD</span>
+        <span className={NOTE}>{'≈'} Rp {rp(data.rate)} per USD</span>
       </div>
 
       {rows.length === 0 && <p className={NOTE}>Nothing matches that search.</p>}

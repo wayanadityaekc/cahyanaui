@@ -8,7 +8,7 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { SERVICES, serviceById } from '@/lib/bookingCart';
 import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatApproxIDR, formatCurrency } from '@/lib/currency';
-import { whatsappLink } from '@/lib/constants';
+import { CUE_LINK, whatsappLink } from '@/lib/constants';
 import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 
 // My Booking — CUE's My Trips, fitted to what this site sells: one stay plus
@@ -37,8 +37,10 @@ function EmptyState() {
         Pick your dates on a villa and they will show up here, with whatever services you want waiting.
       </p>
       <div className="flex flex-wrap justify-center gap-3 mt-6">
-        <Button as={Link} href="/villas">See both villas</Button>
-        <Button as={Link} variant="ghost" href="/experiences">Browse experiences</Button>
+        <Button as={Link} href="/#villas">See both villas</Button>
+        {/* Tours are the sister site's, so this one leaves: /experiences was our
+            own page of category cards nobody could book, and it is gone. */}
+        <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Tours in Bali</Button>
       </div>
     </div>
   );

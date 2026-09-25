@@ -14,8 +14,6 @@ export const SITE = 'https://ubudprivatevillas.com';
 
 const STATIC_PATHS = [
   '/',
-  '/villas',
-  '/experiences',
   '/guide',
   '/our-company',
   '/services/breakfast',

@@ -16,7 +16,7 @@ export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherSer
             </li>
           ))}
         </ul>
-        <Button as={Link} full href="/villas">Pick your villa</Button>
+        <Button as={Link} full href="/#villas">Pick your villa</Button>
         {serviceId && <AddToBooking serviceId={serviceId} />}
         <Button as="a" variant="ghost" full href={ctaHref || WHATSAPP_LINK} target="_blank" rel="noopener" className="mt-2">{ctaLabel}</Button>
       </Card>

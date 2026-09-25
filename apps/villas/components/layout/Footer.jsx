@@ -31,8 +31,6 @@ const COLUMNS = [
     items: [
       { href: '/villas/cahyana-house', label: 'Cahyana House' },
       { href: '/villas/cahyana-tibuah', label: 'Cahyana Tibuah' },
-      { href: '/villas', label: 'All villas' },
-      { href: '/experiences', label: 'Experiences' },
       { href: '/guide', label: 'Ubud guide' },
     ],
   },

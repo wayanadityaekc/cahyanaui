@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mountain, ShieldCheck, Users, Waves } from 'lucide-react';
+import { ShieldCheck, Users, Waves } from 'lucide-react';
 import VillaCard from '@/components/cards/VillaCard';
 import ServiceCard from '@/components/cards/ServiceCard';
 import ReviewCard from '@/components/cards/ReviewCard';
@@ -7,8 +7,7 @@ import SearchCard from '@/components/sections/SearchCard';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
-import { UBUD_GUIDE_LINK } from '@/lib/constants';
-import { Button, CAPS, Card, Container, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
+import { Button, CAPS, Container, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
 
 export const metadata = {
@@ -71,7 +70,7 @@ export default function HomePage() {
         actions={(
           <>
             <CheckAvailabilityButton />
-            <Button as={Link} variant="light" href="/villas">Explore villas</Button>
+            <Button as={Link} variant="light" href="/#villas">Explore villas</Button>
           </>
         )}
         below={(
@@ -81,8 +80,10 @@ export default function HomePage() {
         )}
       />
 
-      {/* Villas */}
-      <Section tone="cream">
+      {/* Villas. id="villas" because /villas the PAGE is gone (Wayan) and this
+          band is what took over its job - every "see both villas" link on the
+          site now lands here. */}
+      <Section id="villas" tone="cream">
         <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
           <div>
             <p className={EYEBROW_LINE}>Our Villas</p>
@@ -116,32 +117,39 @@ export default function HomePage() {
         </div>
 </Section>
 
-      {/* Experience the real Ubud. Same Hero shell as the page's own hero,
-          one step down the height ladder - and now the same scrim, which this
-          band used to hand-roll with an inline style. */}
+      {/* CAHYANA UBUD EXPERIENCE. One photo band with one button out to the
+          sister site (Wayan: "section experience the real ubud dan pagenya
+          hapus, ganti cuma jadi satu section foto dengan button ke
+          cahyanaubudexperience.com").
+
+          It sits here, straight after the villas, because that is the order
+          Wayan set for this page: villas, then Cahyana Ubud Experience, then
+          spa, breakfast, the scooter, then the reviews.
+
+          THIS REPLACES TWO THINGS, not one. The old band pointed at our own
+          /experiences page - four illustrative category cards that could not
+          be booked - and a second CUE band further down the page said the
+          same thing again with the same link. One band, one link, no page in
+          between: the copy is EXPLORE_MORE from content/crossSell.js, so the
+          tours hand-off still has one source.
+
+          Real photo, not a placeholder: Tegalalang is an actual stop on the
+          full-day tour this button leads to. */}
       <Hero
         size="band"
         as="h2"
         titleSize="h2"
-        titleClassName="max-w-md"
-        image="https://picsum.photos/seed/ubudwalk9/1800/900"
-        alt="Rice terraces near Ubud at sunrise"
-        eyebrow="More Than Just A Stay"
-        title="Experience the real Ubud"
-        lede="Combine your villa stay with our curated experiences, from cultural tours to wellness and adventure."
-      >
-        <Button as={Link} variant="light" href="/experiences" className="mt-5">Explore experiences</Button>
-
-        <Card as={Link} href="/experiences" className="mt-8 inline-flex items-center gap-3 p-4 max-w-xs">
-          <span className={ICON_CIRCLE}>
-            <Mountain className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
-          </span>
-          <span>
-            <span className="block text-h3 font-semibold text-gold">Ubud Highlights</span>
-            <span className="block text-label text-muted">Temples, rice terraces, waterfalls &amp; more</span>
-          </span>
-        </Card>
-      </Hero>
+        image="/images/tegalalang-rice-terrace.jpg"
+        alt="Tegalalang Rice Terrace, a stop on a full-day Ubud tour with our sister brand"
+        eyebrow={EXPLORE_MORE.eyebrow}
+        title={EXPLORE_MORE.title}
+        lede={EXPLORE_MORE.lede}
+        actions={(
+          <Button as="a" variant="light" href={EXPLORE_MORE.href} target="_blank" rel="noopener">
+            {EXPLORE_MORE.cta}
+          </Button>
+        )}
+      />
 
 
       {/* Services, in the order Wayan asked for: villas, then Cahyana Ubud
@@ -219,32 +227,6 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Neighbourhood / sister brand */}
-      <Section tone="cream" bare>
-        <Container className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <p className={EYEBROW_LINE}>{EXPLORE_MORE.eyebrow}</p>
-            <h2 className="text-h2 font-semibold text-gold">{EXPLORE_MORE.title}</h2>
-            <p className="mt-2 text-small text-muted max-w-md">{EXPLORE_MORE.lede}</p>
-            <div className="flex flex-wrap gap-3 mt-5">
-              <Button as="a" href={EXPLORE_MORE.href} target="_blank" rel="noopener">{EXPLORE_MORE.cta}</Button>
-              <Button as="a" variant="ghost" href={UBUD_GUIDE_LINK} target="_blank" rel="noopener">Read the Ubud guide</Button>
-            </div>
-          </div>
-          {/* Real photo, reused from CUE's own asset
-              (assets/images/tegalalang-rice-terrace-hero.jpg) — an actual
-              destination guests visit, not a stock/placeholder shot. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/tegalalang-rice-terrace.jpg"
-            alt="Tegalalang Rice Terrace, one of the stops on a full-day Ubud tour with our sister brand"
-            width={800}
-            height={560}
-            loading="lazy"
-            className="w-full rounded-xl object-cover aspect-[4/3]"
-          />
-        </Container>
-      </Section>
 
       {/* CTA */}
       <Section tone="dark" className="text-center">

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BedDouble, BookOpen, Building2, Compass, House, Mail, MessageCircle, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { BedDouble, BookOpen, Building2, House, Mail, MessageCircle, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { Button, FlagDefs, NavbarShell, NAV_BADGE, NAV_BADGE_BASE, NAV_ICON, NAV_ROW_END } from '@cahyana/ui';
 import CurrencyPicker from '@/components/ui/CurrencyPicker';
 import { useBooking } from '@/components/providers/BookingProvider';
@@ -22,7 +22,7 @@ import { WHATSAPP_LINK } from '@/lib/constants';
 //   drawer "Welcome, <account>" row  site name + tagline row
 //   Guests / Pickup area selects     (omitted - no site-wide trip prefs)
 //   "Sign in / Sign up" button       "Check availability"
-//   Home / Program▾ / Guide / …      Home / Villas / Experiences / Services▾ / …
+//   Home / Program▾ / Guide / …      Home / Villas▾ / Guide / Services▾ / …
 //   "Chat on WhatsApp" pinned        same
 
 // The drawer's top row is CUE's ACCOUNT row. There are no accounts here, so it
@@ -41,8 +41,19 @@ const ICON = { strokeWidth: 1.7, 'aria-hidden': 'true' };
 
 const LINKS = [
   { href: '/', label: 'Home', icon: <House {...ICON} /> },
-  { href: '/villas', label: 'Villas', icon: <BedDouble {...ICON} /> },
-  { href: '/experiences', label: 'Experiences', icon: <Compass {...ICON} /> },
+  // VILLAS IS A DROPDOWN, NOT A PAGE (Wayan: "di menu gaada page villa yang isi
+  // nya 2, ubah menjadi cuma ada satu dropdown villa bukan page, dan kalo di klik
+  // keluar nya page cahyana house dan cahyana tibuah terpisah"). With two villas a
+  // listing page is a stop on the way to the thing the guest actually wants, so
+  // the menu hands them the two villas directly. /villas is gone.
+  {
+    label: 'Villas',
+    icon: <BedDouble {...ICON} />,
+    items: [
+      { href: '/villas/cahyana-house', label: 'Cahyana House' },
+      { href: '/villas/cahyana-tibuah', label: 'Cahyana Tibuah' },
+    ],
+  },
   { href: '/guide', label: 'Guide', icon: <BookOpen {...ICON} /> },
   {
     label: 'Services',

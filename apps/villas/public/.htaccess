@@ -1,0 +1,20 @@
+# Apache config for Hostinger. Everything in public/ is copied into out/, and
+# out/ is what gets force-pushed to the deploy branch - so this file ships.
+#
+# REDIRECTS LIVE HERE, NOT IN next.config.js. This site is output: 'export'
+# (static), and Next does not support redirects() in that mode: the block would
+# sit there looking correct and do nothing at all. CUE learnt this the same way.
+
+# Two pages were retired in Sep 2026 (Wayan):
+#   /villas      the listing of two villas - the menu now opens the two villa
+#                pages directly, and the homepage band took over the "see both"
+#                job, which is where this points.
+#   /experiences four illustrative category cards nobody could book - the real
+#                tours are on the sister site, and the homepage band links out.
+#
+# RedirectMatch WITH ANCHORS, never plain `Redirect`: mod_alias's Redirect
+# matches a path PREFIX, so `Redirect 301 /villas /` would also catch
+# /villas/cahyana-house/ and send both live villa pages to the homepage.
+# ^/villas/?$ matches the retired page and nothing below it.
+RedirectMatch 301 ^/villas/?$ /#villas
+RedirectMatch 301 ^/experiences/?$ /

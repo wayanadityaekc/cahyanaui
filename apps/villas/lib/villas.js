@@ -23,7 +23,6 @@ export const VILLAS = {
     rating: '4.96',
     reviews: 221,
     host: 'Made · Superhost, 3 years hosting, replies within an hour',
-    registration: 'NIB 2501220013924 · KBLI 55193',
     shortDesc: 'A spacious villa with a private pool and tropical garden. Perfect for couples or small families.',
     // Real photo, reused from CUE's own asset (assets/images/cahyana-house.webp) —
     // same villa, so it's the actual property, not a stock/placeholder shot.
@@ -73,7 +72,6 @@ export const VILLAS = {
       { label: 'Check-in', value: 'Through a Balinese family compound - a real welcome, full privacy inside' },
       { label: 'Geckos', value: 'Small lizards are normal here, harmless, and considered good luck' },
       { label: 'Host', value: 'Made · Superhost, 3 years hosting, replies within an hour' },
-      { label: 'Registration', value: 'NIB 2501220013924 · KBLI 55193' },
     ],
   },
 
@@ -91,7 +89,6 @@ export const VILLAS = {
     rating: '4.96',
     reviews: 85,
     host: 'Wayan · Superhost, replies within an hour, speaks English & Indonesian',
-    registration: 'NIB 2501220013924',
     shortDesc: 'A serene escape with a private pool, open living space and a calming view of the tropical garden.',
     // Real photo, reused from CUE's own asset (assets/images/cahyana-tibuah.webp) —
     // same villa, so it's the actual property, not a stock/placeholder shot.
@@ -138,7 +135,6 @@ export const VILLAS = {
       { label: 'Access', value: 'Three-minute walk down a small path by the rice fields' },
       { label: 'Privacy', value: 'The villa is entirely yours, each room separately keyed' },
       { label: 'Host', value: 'Wayan · Superhost, replies within an hour, speaks English & Indonesian' },
-      { label: 'Registration', value: 'NIB 2501220013924' },
     ],
   },
 };

@@ -3134,6 +3134,98 @@ beneran di USD & IDR terus baca teksnya (nol janji 48 jam, window 24 jam masih
 disebut, baris full jualan harinya bukan diskon, peringatan settle-USD cuma nongol
 di IDR).
 
+## DASHBOARD OWNER — `/dashboard.html` (Sep 2026, Wayan)
+Wayan: *"gua mau dasboardnya kayak web frontend nya punya page tapi isinya data kita
+dan gak semua orang bisa masuk, harus login dulu"*. Jadi dia **halaman di CUE**, pakai
+design system situs ini, bukan halaman HTML sendiri di backend.
+- **YANG DIJAGA ITU DATANYA, BUKAN HALAMANNYA.** Ini static export — halamannya
+  **publik**, siapa pun bisa buka `/dashboard.html` dan bakal ketemu **form login**.
+  Itu bukan kelalaian, itu satu-satunya desain yang jujur: gak ada yang bisa
+  disembunyiin dari pengunjung di build statis. Yang digerbang itu **angkanya**:
+  tiap data di halaman ini dateng dari endpoint di balik `requireAuth` di
+  `cahyana-api`, jadi tanpa sesi valid halamannya gak punya apa-apa buat ditampilin.
+  **Jangan pernah naro data asli di halaman ini pas build** — itu langsung bocor.
+- **Login = tuker password jadi token sesi**, `POST /api/admin/login` → baris di
+  `admin_sessions`, **30 hari**. **Password-nya sendiri gak pernah disimpen** di
+  device (di-assert harness). Token di `localStorage` key `KEY.adminToken`
+  (`cue_admin_token`) — **beda dari `KEY.token` punya akun tamu**: dua pintu beda,
+  jangan sampai ketuker.
+  - Dibaca di **`useEffect`, jangan di initial state** (aturan static export yang sama
+    kayak `charterDraft`/`payFlag`). `token === null` = belum dilihat, `''` = gak ada sesi.
+  - **Sign out beneran nge-DELETE barisnya**, bukan cuma lupa di device. Token yang
+    dibiarin hidup itu token yang masih mbuka data kalau pernah ke-copy.
+  - `requireAuth` nerima **Bearer DI SAMPING Basic** — URL admin lama & tool yang udah
+    ada gak kesentuh.
+  - **Rate limit login 5 per 15 menit per IP** (`loginLimiter`, yang sama dipakai
+    magic-link tamu). Ini kena ke HARNESS juga: 3 lebar × 2 percobaan = 6, langsung
+    429 dan semua assertion sesudahnya merah tanpa alasan yang keliatan. Harness-nya
+    sekarang hidup DI DALAM jatah itu (wrong-password dicek sekali doang, tiap lebar
+    login sekali) dan **limiter-nya di-assert sendiri** di akhir. Restart API tiap run.
+- **Cangkangnya `RailLayout`** — shell yang sama dipakai Our Company, My Trips &
+  artikel guide. Section = 4 ember yang dibikin API: **Needs attention · Upcoming ·
+  Past · No date**, masing-masing bawa jumlahnya.
+  - **Di HP mendarat LANGSUNG di booking (`reading` initial `true`)**, bukan di menu —
+    keputusan yang sama kayak My Trips, alesannya sama: halaman ini **punya default
+    yang jelas** (Upcoming). Our Company mulai di daftar karena dia gak punya.
+  - **SIGN OUT DI BARIS TOOL, BUKAN DI KARTU HELP RAIL.** Ke-ukur: di kartu rail dia
+    duduk di daftar section, jadi di **390 DAN 768 dia gak kejangkau** tanpa nge-tap
+    back dulu. Sign out dari tampilan admin gak boleh dikubur. (Dites pakai bug itu:
+    2 assertion nyala, persis di dua lebar HP.)
+- **Satu booking ≠ satu baris.** `inquiries` nyimpen **satu baris per hari**, digabung
+  `booking_ref` — jadi trip 3 hari itu 3 baris. Grouping-nya di **`cahyana-api/dashboard.js`**
+  (bukan di halaman), biar halaman gak bisa melenceng dari aturannya.
+- **ATURAN UANG — JANGAN DILANGGAR**: angka di kartu **gak pernah dihitung ulang di sini**.
+  Kalau ada baris `booking_payments`, itu yang dipakai, **di mata uang yang tamu emang
+  di-quote** (ngonversi balik bakal mendarat di angka lain — pembulatannya `ceil`).
+  Kalau **gak ada**, harga server-nya dijumlah dan **wajib dilabelin
+  "our price - not charged online"** — booking yang gak ditagih online gak boleh
+  kebaca kayak duit masuk. Dites pakai bug itu (labelnya diganti "paid" → 3 nyala).
+- **Status `new` ditulis "Confirmed"** di layar. Di database itu kata buat booking yang
+  gak ditagih online (mayoritas, dan semua yang dari sebelum ada pembayaran online);
+  ditulis mentah dia kebaca kayak ada yang belum dikerjain.
+- **"Needs attention" = `mismatch` ATAU `pending` > 60 menit.** Sweep tiap jam cuma
+  nyentuh pembayaran umur >20 menit, jadi yang masih `pending` sesudah sejam udah
+  pernah ditawarin ke dia dan gak ke-recover. Tiap barisnya bawa **`why`**-nya.
+- **Promo trip bar DIMATIIN di halaman ini** (`'/dashboard': null` di `promo.js`):
+  default-nya pesan halaman DETAIL, yang ditujuin ke pembeli.
+- **noindex + nol link internal + gak ada di dua-duanya sitemap.** Itu bukan
+  pengamanannya — itu cuma biar form login-nya gak nongol di hasil Google.
+  `check-urls` nge-skip halaman noindex, jadi gate-nya aman.
+- Verifikasi: **`verify-dash.mjs`** di scratchpad (**82/82**, 390/768/1280) — dijalanin
+  di halaman HASIL BUILD lawan **server API asli** (cuma database-nya yang di-stub,
+  bukan auth-nya, bukan grouping-nya). Patokannya: orang asing cuma dapet form login &
+  nol data · password ke-mask · password salah gak mbuka apa-apa & pesannya gak nyebut
+  half mana yang salah · token ke-simpen tapi password nggak · trip 2 hari = **1 kartu** ·
+  jam 12-jam · label "not charged online" · mismatch di Needs attention bawa alasannya ·
+  search · rail 248 di desktop & gak ada di HP · HP mendarat di booking · sign out
+  kejangkau tanpa buka menu · **token yang udah di-revoke & token karangan dua-duanya
+  401** · halaman gak melar · nol page error · limiter beneran gigit.
+  - **Dites pakai 4 bug asli, satu-satu**: `adminTokenValid` selalu true (**9 nyala**) ·
+    grouping dibuang (**24 nyala**) · label uang diganti "paid" (**3 nyala**) · sign out
+    dibalikin ke kartu rail (**2 nyala**, cuma di HP).
+  - **GOTCHA HARNESS (4, semuanya bikin hasil palsu):**
+    1. **Playwright NOLAK `route.continue({url})` dari https ke http**, jadi host Railway
+       yang ke-bake di build gak bisa dibelokin gitu aja. Di-forward TANGAN pakai
+       `route.fulfill` + `fetch` — tetep mendarat di server asli, cuma hostname-nya
+       yang ditukar. Preflight `OPTIONS` wajib dijawab sendiri.
+    2. **`innerText` ngikut `text-transform`**, dan pill status itu `uppercase` — jadi
+       `/Confirmed/` gak pernah cocok sama "CONFIRMED". Pakai flag `i`.
+    3. **Nge-klik tanpa ngecek dulu = crash 30 detik, bukan assertion merah**, dan crash
+       nyembunyiin semua assertion sesudahnya. Sabotase sign-out awalnya kebaca sebagai
+       TimeoutError doang. Sekarang kejangkau-nya di-assert DULU, baru di-klik.
+    4. **`pgrep -f "<pola>"` nge-match SHELL-nya sendiri** (polanya ikut ke command line),
+       jadi `kill`-nya bunuh sesi — kejadian 3x. Start/stop API pakai **pidfile**
+       (`api-ctl.sh`), jangan pgrep pola.
+  - **PELAJARAN yang paling mahal di sesi ini**: satu blok bash ke-kill di tengah dan
+    ninggalin `server.js` dalam keadaan **TERSABOTASE**. Blok berikutnya nge-`cp server.js`
+    jadi "backup bersih" — jadi backup-nya isi sabotase, dan "restore" masang balik
+    bug-nya. Gejalanya: sabotase kedua nyala di assertion yang gak ada hubungannya.
+    **Backup buat sabotase ambil dari `git checkout`, jangan dari `cp` file kerja.**
+- **BELUM DIBIKIN, nunggu Wayan** (dia minta 4 hal, ini baru yang pertama): settingan
+  listing (konten doang, tanpa foto — konten tetep di git, jadi dashboard nulisnya lewat
+  GitHub API), settingan harga + diskon, dan Google Search Console API (yang ini
+  ke-blok: sitemap-nya belum pernah di-submit).
+
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,
   ATV, rafting, Zoo, Bird Park) — angka riset, Wayan koreksi.

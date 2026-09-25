@@ -1,13 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { AlertTriangle, CalendarDays, History, HelpCircle, RefreshCw, LogOut } from 'lucide-react';
+import { AlertTriangle, CalendarDays, History, HelpCircle, RefreshCw, LogOut, Tag } from 'lucide-react';
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_PAGE } from '@/components/ui/railClasses';
 import { BTN_SM } from '@/components/ui/btnClasses';
 import { FIELD_INPUT } from '@/components/ui/formClasses';
 import AdminLogin from './AdminLogin';
 import BookingCard from './BookingCard';
+import PricesPanel from './PricesPanel';
 import { readToken, logout, getJson, Unauthorized } from './adminApi';
 
 // The owner's view of the bookings, on the site's own shell (Wayan: "gua mau
@@ -24,7 +25,11 @@ const SECTIONS = [
   { id: 'upcoming', label: 'Upcoming', Icon: CalendarDays },
   { id: 'past', label: 'Past', Icon: History },
   { id: 'undated', label: 'No date', Icon: HelpCircle, split: true },
+  // Separated from the four booking buckets: those are one list seen four ways,
+  // this is a different job. Same reason the rail splits About from Legal.
+  { id: 'prices', label: 'Prices', Icon: Tag, split: true },
 ];
+const BOOKING_TABS = ['attention', 'upcoming', 'past', 'undated'];
 
 const H1 = 'font-head font-medium tracking-[-0.01em] text-display text-green m-0 mb-[0.3rem]';
 const SUB = 'font-body text-body text-muted m-0 mb-[var(--space-3)]';
@@ -96,14 +101,15 @@ export default function OwnerDashboard() {
     );
   }
 
+  const isBookings = BOOKING_TABS.includes(tab);
   const query = q.trim().toLowerCase();
-  const rows = data ? (data[tab] || []).filter((g) => matches(g, query)) : [];
+  const rows = data && isBookings ? (data[tab] || []).filter((g) => matches(g, query)) : [];
   const items = SECTIONS.map((s) => ({
     ...s,
     label: (
       <>
         {s.label}
-        {data && <span className={COUNT}>{(data[s.id] || []).length}</span>}
+        {data && data[s.id] && <span className={COUNT}>{(data[s.id] || []).length}</span>}
       </>
     ),
   }));
@@ -112,7 +118,9 @@ export default function OwnerDashboard() {
     <div className={RAIL_PAGE}>
       <h1 className={H1}>Dashboard</h1>
       <p className={SUB}>
-        Bookings as they stand{data?.today ? ` - today in Bali is ${data.today}` : ''}.
+        {isBookings
+          ? `Bookings as they stand${data?.today ? ` - today in Bali is ${data.today}` : ''}.`
+          : 'Change a price here and it applies straight away, no deploy.'}
       </p>
 
       <RailLayout
@@ -124,17 +132,21 @@ export default function OwnerDashboard() {
         onBack={() => setReading(false)}
       >
         <div className={TOOLS}>
-          <input
-            className={`${FIELD_INPUT} !w-auto flex-1 min-w-[180px]`}
-            placeholder="Search ref, name, phone"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            aria-label="Search bookings"
-          />
-          <button type="button" className={GHOST} onClick={() => load(token)} disabled={busy}>
-            <RefreshCw strokeWidth={1.7} aria-hidden="true" />
-            {busy ? 'Loading' : 'Refresh'}
-          </button>
+          {isBookings && (
+            <>
+              <input
+                className={`${FIELD_INPUT} !w-auto flex-1 min-w-[180px]`}
+                placeholder="Search ref, name, phone"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                aria-label="Search bookings"
+              />
+              <button type="button" className={GHOST} onClick={() => load(token)} disabled={busy}>
+                <RefreshCw strokeWidth={1.7} aria-hidden="true" />
+                {busy ? 'Loading' : 'Refresh'}
+              </button>
+            </>
+          )}
           {/* Sign out lives HERE, not in the rail's help card, because on a phone
               that card sits on the section list - so it would be hidden behind a
               menu tap. Measured: unreachable at 390 and 768. Signing out of an
@@ -149,14 +161,16 @@ export default function OwnerDashboard() {
           </button>
         </div>
 
-        {err && <p className={ERR}>{err}</p>}
-        {!err && !data && <p className={EMPTY}>Loading bookings...</p>}
-        {!err && data && rows.length === 0 && (
+        {!isBookings && <PricesPanel token={token} onExpired={() => setToken('')} />}
+
+        {isBookings && err && <p className={ERR}>{err}</p>}
+        {isBookings && !err && !data && <p className={EMPTY}>Loading bookings...</p>}
+        {isBookings && !err && data && rows.length === 0 && (
           <p className={EMPTY}>
             {query ? 'Nothing matches that search.' : 'Nothing here.'}
           </p>
         )}
-        {rows.map((g) => <BookingCard key={g.ref || g.id} g={g} />)}
+        {isBookings && rows.map((g) => <BookingCard key={g.ref || g.id} g={g} />)}
       </RailLayout>
     </div>
   );

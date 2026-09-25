@@ -3221,10 +3221,61 @@ design system situs ini, bukan halaman HTML sendiri di backend.
     jadi "backup bersih" — jadi backup-nya isi sabotase, dan "restore" masang balik
     bug-nya. Gejalanya: sabotase kedua nyala di assertion yang gak ada hubungannya.
     **Backup buat sabotase ambil dari `git checkout`, jangan dari `cp` file kerja.**
-- **BELUM DIBIKIN, nunggu Wayan** (dia minta 4 hal, ini baru yang pertama): settingan
-  listing (konten doang, tanpa foto — konten tetep di git, jadi dashboard nulisnya lewat
-  GitHub API), settingan harga + diskon, dan Google Search Console API (yang ini
-  ke-blok: sitemap-nya belum pernah di-submit).
+**SETTINGAN HARGA — section "Prices" di rail** (25 Sep 2026, Wayan: *"lanjut settingan harga"*).
+Ganti harga tanpa deploy. Angkanya langsung kepake buat tamu berikutnya.
+- **KENAPA CUMA SATU TUAS.** Semua harga di web ini dibaca dari **SATU objek**
+  (`pricing-data.prices`, lewat `itemInfo()` di `pricing.js`): katalog yang dibaca
+  kartu, total yang di-quote pas booking, DAN nominal yang dibikin buat pembayaran.
+  Jadi override dipasang di objek itu, **bukan ditambal per jalur** — kalau ditambal
+  satu-satu, cepat atau lambat ada yang kelewat, dan yang kelewat itu jalur yang
+  **nagih kartu**. Yang di-assert harness: angka baru nyampe ke **`server_price_idr`**.
+- **INPUT-nya RUPIAH, dan itu disengaja.** IDR sumber kebenaran; USD & mata uang lain
+  diturunin. Panel nampilin USD di sebelahnya **read-only** — kolom mata uang kedua
+  yang bisa diedit = angka kedua yang bisa nyimpang.
+- **File tetep jadi BASE**, di-snapshot pas load. Jadi **Reset selalu balik** ke angka
+  yang di-ship, dan harga lama tetep kecetak (kecoret) di baris yang diubah.
+- **Perubahan >3x WAJIB dikonfirmasi.** Nol yang kelewat (700.000 → 70.000) itu
+  kesalahan yang paling mungkin kejadian, dan **nol lapisan di bawahnya bakal curiga**.
+  Field-nya juga nampilin **pemisah ribuan pas diketik** — `90,000` di sebelah
+  `900,000` kebaca, `90000` di sebelah `900000` nggak.
+- **YANG GAK IKUT BERUBAH, dan ini dikasih tau di layar**: situs nyimpen SALINAN
+  sebagian harga pas build — `priceFallback` kartu listing, JSON-LD yang dibaca Google,
+  band airport. Tamu **ditagih harga baru**, tapi salinan itu tetep angka lama sampai
+  CUE di-build ulang. Endpoint-nya ngitung `drift` dan panel nyetak banner "N harga
+  udah diubah tapi di web-nya masih lama". **Jangan dihapus banner itu** — tanpa dia,
+  ongkosnya jadi sunyi.
+- **Cache 30 detik + refresh sesudah tiap tulis.** Railway bisa jalanin lebih dari satu
+  instance dan mereka gak berbagi memori; tanpa refresh, instance kedua nge-quote harga
+  kemarin. TTL-nya bisa di-set lewat `PRICE_OVERRIDES_TTL_MS` **khusus buat tes**.
+- **Tarif charter GAK ikut** di sini (sengaja): `long` = `full` + 2 jam, jadi ngubah
+  satu tanpa yang lain ngerusak invariant yang dipatok `pricing-spec-test`. Sama juga
+  paket 3 hari = jumlah 3 tour-nya. Mau charter bisa diubah juga = keputusan Wayan,
+  dan aturannya harus ikut dipasang.
+- Verifikasi: **`verify-prices.mjs`** di scratchpad (**40/40**, 390 & 1280) di halaman
+  hasil build lawan server API asli — field mulai di harga file, Save nge-ubah **katalog
+  yang dipakai situs buat ngitung**, harga lama kecetak, USD ikut, banner drift nongol,
+  turun 10x **minta konfirmasi dulu** & gak ke-apply sebelum dikonfirmasi, Reset balik,
+  search nyaring, sign out tetep kejangkau di section ini, halaman gak melar, nol page
+  error. Dites pakai 2 bug: nominal gak ikut kekirim (**6 nyala**) & banner drift
+  dibuang (**2 nyala**).
+  - Gate server-nya: **`node tools/price-settings-test.js`** di `cahyana-api` (35/35),
+    dites pakai **7 sabotase, 6 nyala** — yang ke-7 (filter baris basi) **gak nyala dan
+    itu bener**: `apply()` jalan dari daftar file, jadi key asing gak pernah dibaca.
+    Assertion-nya udah diganti; filternya dibiarin sebagai pengaman, bukan diklaim
+    kejaga.
+  - **PELAJARAN HARNESS (2, dua-duanya bikin lampu ijo palsu):**
+    1. **Assertion bisa saling nutupin.** Tiga cek "instance lain ngubah harga" awalnya
+       pakai SATU angka, dan cek katalog yang jalan duluan nyegerin cache — jadi cek
+       booking lolos padahal refresh-nya udah dibuang (**35/35 dengan bug-nya**).
+       Sekarang tiap jalur dapet **angka sendiri** dan dicek sebelum jalur lain disentuh.
+    2. **`git checkout` ngapus kerjaan yang belum di-commit.** Gua nge-restore sabotase
+       pakai `git checkout -- <file>` padahal editan tes yang baru belum ke-commit —
+       ikut kehapus. **Commit dulu, baru sabotase.**
+
+- **BELUM DIBIKIN, nunggu Wayan**: **diskon** (kode referral sekarang ke-hardcode di
+  `REFERRAL` di `pricing-data.js` — bentuk UI-nya belum diputusin), settingan listing
+  (konten doang, tanpa foto — konten tetep di git, jadi dashboard nulisnya lewat GitHub
+  API), dan Google Search Console API (ke-blok: sitemap-nya belum pernah di-submit).
 
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,

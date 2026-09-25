@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { BookingProvider } from '@/components/providers/BookingProvider';
+import { TripPrefsProvider } from '@/components/providers/TripPrefsProvider';
 import { CartProvider } from '@/components/providers/CartProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
 import { BAR_BODY_PAD } from '@cahyana/ui';
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
       <body className={BAR_BODY_PAD}>
         <LoadingScreen />
         <CurrencyProvider>
+          <TripPrefsProvider>
           <CartProvider>
           <BookingProvider>
             <Navbar />
@@ -47,6 +49,7 @@ export default function RootLayout({ children }) {
             <BookingSheet />
           </BookingProvider>
           </CartProvider>
+          </TripPrefsProvider>
         </CurrencyProvider>
       </body>
     </html>

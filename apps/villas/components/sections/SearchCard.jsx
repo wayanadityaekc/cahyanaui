@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 import { Button, DateRangeField, SearchBar, SEARCH_LABEL } from '@cahyana/ui';
 import Select from '@/components/ui/Select';
 import { useBooking } from '@/components/providers/BookingProvider';
+import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 
 // Hero "Search" card. Feeds straight into the booking flow rather than a
 // results page - with two villas, "search" means "open Book Your Stay with
@@ -20,9 +21,9 @@ const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
 
 export default function SearchCard() {
   const { openBooking } = useBooking();
+  const { guests, setGuests } = useTripPrefs();
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
-  const [guests, setGuests] = useState(2);
 
   return (
     <SearchBar

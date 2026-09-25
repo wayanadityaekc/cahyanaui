@@ -8,7 +8,8 @@ import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButto
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { UBUD_GUIDE_LINK } from '@/lib/constants';
-import { Button, Card, Container, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, STARS, Section, SplitFeature } from '@cahyana/ui';
+import { Button, CAPS, Card, Container, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
+import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
 
 export const metadata = {
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
@@ -181,17 +182,52 @@ export default function HomePage() {
         </div>
 </Section>
 
+
+      {/* ADD-ONS, framed as things you add to a reservation rather than as a
+          second menu to shop from (Wayan). Mixed on purpose: two of ours, one of
+          Cahyana Ubud Experience's. A guest thinks in terms of their trip, not
+          in terms of which company owns which service - so each card just says
+          where it goes. */}
+      <Section>
+        <SectionHeading
+          eyebrow="Add to your reservation"
+          title="Make it more than a room"
+          lede="Booked with your stay, arranged before you land. Nothing here needs a second conversation."
+          className="mb-8"
+        />
+        <div className={GRID_TRIO}>
+          {STAY_ADDONS.map((a) => (
+            <MediaCard
+              key={a.id}
+              as={a.external ? 'a' : Link}
+              href={a.href}
+              {...(a.external ? { target: '_blank', rel: 'noopener' } : {})}
+              zoom
+              image={{ src: a.img, alt: a.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
+              footer={(
+                <span className={`${CAPS} text-cta`}>
+                  {a.cta}
+                  <span aria-hidden="true"> &rsaquo;</span>
+                </span>
+              )}
+            >
+              <p className={`${CAPS} text-muted`}>{a.eyebrow}</p>
+              <h3 className="text-h3 font-semibold text-gold">{a.label}</h3>
+              <p className="text-small text-muted">{a.blurb}</p>
+            </MediaCard>
+          ))}
+        </div>
+      </Section>
+
       {/* Neighbourhood / sister brand */}
       <Section tone="cream" bare>
         <Container className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <p className={EYEBROW_LINE}>Same Family</p>
-            <h2 className="text-h2 font-semibold text-gold">Need a driver while you stay?</h2>
-            <p className="mt-2 text-small text-muted max-w-md">
-              Airport pickup, day tours, temple runs and rice terrace mornings - booked through our sister brand, with every price upfront. Most guests do a full-day Ubud tour and cover 7 or 8 stops.
-            </p>
+            <p className={EYEBROW_LINE}>{EXPLORE_MORE.eyebrow}</p>
+            <h2 className="text-h2 font-semibold text-gold">{EXPLORE_MORE.title}</h2>
+            <p className="mt-2 text-small text-muted max-w-md">{EXPLORE_MORE.lede}</p>
             <div className="flex flex-wrap gap-3 mt-5">
-              <Button as="a" href="https://cahyanaubudexperience.com" target="_blank" rel="noopener">Visit Cahyana Ubud Experience</Button>
+              <Button as="a" href={EXPLORE_MORE.href} target="_blank" rel="noopener">{EXPLORE_MORE.cta}</Button>
               <Button as="a" variant="ghost" href={UBUD_GUIDE_LINK} target="_blank" rel="noopener">Read the Ubud guide</Button>
             </div>
           </div>

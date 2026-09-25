@@ -6,9 +6,12 @@ import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
-import { BookingPanel, Button, CAPS, Card, Container, DateRangeField, EYEBROW_LINE, PROSE_COPY, PriceBlock, SECONDARY_BTN, STARS, Section, StickyBar, useRevealWhenAway } from '@cahyana/ui';
+import { BookingPanel, Button, CAPS, Card, Container, DateRangeField, EYEBROW_LINE, LinkList, PROSE_COPY, PriceBlock, SECONDARY_BTN, STARS, Section, StickyBar, useRevealWhenAway } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
+import BookingTerms from '@/components/booking/BookingTerms';
+import { CUE_TOURS } from '@/content/crossSell';
+import { SERVICES } from '@/lib/bookingCart';
 import { WHATSAPP_LINK, CUE_LINK } from '@/lib/constants';
 
 export default function VillaDetail({ villa }) {
@@ -137,31 +140,34 @@ export default function VillaDetail({ villa }) {
                     same missing link. */}
               </>
             )}
-            note="Rates change by season — message us for a season-specific quote."
+            /* The terms replace the old season-rate note: a guest at the point
+               of booking needs to know what they are paying and what happens if
+               they cancel, which the note never said. */
+            note={<BookingTerms />}
           >
             <Card tone="cream" className="p-6">
               <p className={`${CAPS} text-muted mb-3`}>Add to your stay</p>
-              <ul className="flex flex-col">
-                {[
-                  { href: '/services/breakfast', label: 'Breakfast' },
-                  { href: '/services/spa', label: 'Spa & Massage' },
-                  { href: '/services/live-dinner', label: 'Live Dinner' },
-                  { href: '/services/scooter-rental', label: 'Scooter Rental' },
-                ].map((s) => (
-                  <li key={s.href} className="border-b border-line last:border-b-0">
-                    <Link href={s.href} className="flex items-center justify-between py-2.5 text-small text-gold">
-                      {s.label}
-                      <span>›</span>
-                    </Link>
-                  </li>
-                ))}
-                <li>
-                  <a href={CUE_LINK} target="_blank" rel="noopener" className="flex items-center justify-between py-2.5 text-small text-gold">
-                    Driver &amp; tours
-                    <span>›</span>
-                  </a>
-                </li>
-              </ul>
+              <LinkList linkAs={Link} items={SERVICES} />
+            </Card>
+
+            {/* THE TOURS SIT IN THE BOOKING FLOW, not in a band further down the
+                page (Wayan). A guest who has just picked their dates is the one
+                deciding what to do with those days; the same four cards at the
+                bottom of the page are read by somebody who has already decided
+                to leave.
+
+                FOUR, NOT THE CATALOG. These are what a guest staying in Ubud
+                actually books. The rest of Cahyana Ubud Experience is one link
+                away, and that is the right amount of it to put here. */}
+            <Card tone="cream" className="p-6">
+              <p className={`${CAPS} text-muted mb-1`}>Add a driver or a tour</p>
+              <p className="text-label text-muted mb-3">
+                Run by Cahyana Ubud Experience - the same family, every price upfront.
+              </p>
+              <LinkList items={CUE_TOURS.map((t) => ({ ...t, external: true }))} />
+              <a href={CUE_LINK} target="_blank" rel="noopener" className="inline-block mt-3 text-label text-gold underline">
+                Explore more tours in Bali
+              </a>
             </Card>
           </BookingPanel>
         </Container>

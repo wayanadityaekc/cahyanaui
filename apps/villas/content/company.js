@@ -2,11 +2,9 @@
 // site or in its real Airbnb listings — nothing about how the business operates
 // is invented.
 //
-// DELIBERATELY ABSENT: Terms & Conditions and a Cancellation & Refund policy.
-// CUE's Our Company carries both, but those are commitments only Wayan can set,
-// and writing plausible-sounding ones would put promises on the site that
-// nobody agreed to. The tab list below is the whole page — add the two entries
-// to TABS in OurCompany.jsx and a block here once the real policy exists.
+// Booking Terms and Cancellation & Refunds are no longer absent: Wayan set them
+// in Sep 2026 and they live in content/policies.js, which is the ONLY place the
+// numbers appear. This file holds the pages that are purely editorial.
 
 export const ABOUT = [
   { type: 'heading', html: 'Who we are' },
@@ -20,8 +18,14 @@ export const ABOUT = [
 ];
 
 // Answers stick to what the villa pages, services pages and listings already
-// say. Anything that would be a new commitment (deposit size, refund windows,
-// minimum stay) is left out rather than guessed at.
+// say, plus the booking terms Wayan set in Sep 2026 - payment in full, the
+// Airbnb "Firm" refund bands, and the check-in and check-out times. Those live
+// in content/policies.js and are restated here in a guest's words; change them
+// there and change them here in the same edit, or the FAQ and the policy page
+// will quietly disagree.
+//
+// Still left out rather than guessed at: minimum stay, and anything about how
+// the scooter security deposit works.
 export const FAQ = [
   {
     cat: 'The villas',
@@ -39,6 +43,10 @@ export const FAQ = [
       ['Is the price on the site what I pay?', 'The nightly rate and the service fee are both shown before you send anything, and the total is worked out on your dates. Rates do change by season - if the dates you picked fall in a different season we tell you before you commit, not after.'],
       ['Can I pay in my own currency?', 'The prices switch between USD, IDR, EUR, AUD and GBP from the currency picker in the menu. Those conversions are for reading only - the amount actually charged is settled in the conversation.'],
       ['Do you take bookings outside Airbnb?', 'Yes, and booking direct with us is why this site exists. Both villas are also on Airbnb if you would rather book there.'],
+      ['Do I pay a deposit, or the whole thing?', 'The whole thing, when you book. There is no deposit-only option, for a villa or for a scooter. We only have two villas, so a held date that does not turn up costs us the whole booking - paying in full is what keeps the calendar honest.'],
+      ['What if I need to cancel?', 'Cancel 30 days or more before check-in and you get everything back. Between 7 and 30 days, half. Inside 7 days there is no refund. That is the same as the Airbnb "Firm" policy, on purpose - booking direct should not be stricter than booking through the listing.'],
+      ['Can I move my dates instead of cancelling?', 'Usually yes, and it is not treated as a cancellation. If the villa is free on your new dates and you tell us more than 7 days out, we move it at no charge. Inside 7 days it depends on whether we can still fill the original nights - ask and we will tell you straight.'],
+      ['What time is check-in and check-out?', 'Check-in is from 2:00 PM and check-out is by 11:00 AM, Bali time. Earlier or later is sometimes possible - ask, and we will tell you honestly whether the villa is free.'],
     ],
   },
   {

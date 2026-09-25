@@ -12,6 +12,7 @@ import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
 import { formatApproxIDR, formatCurrency } from '@/lib/currency';
+import BookingTerms from '@/components/booking/BookingTerms';
 import { whatsappLink } from '@/lib/constants';
 
 // Full-screen mobile sheet / centered modal booking flow, per the mockup's
@@ -184,6 +185,7 @@ export default function BookingSheet() {
               <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />
               Continue to WhatsApp
             </Button>
+            <BookingTerms className="text-center [&_ul]:inline-block [&_ul]:text-left" />
             <p className="text-label text-muted text-center">
               This sends your request to our team on WhatsApp — no payment is taken here.
             </p>

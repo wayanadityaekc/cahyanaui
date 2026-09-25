@@ -15,7 +15,8 @@ import { BTN_SM } from '../primitives/btnClasses.js';
  *   cta        node - the single primary action
  *   secondary  node - quieter actions under it (ask on WhatsApp, and the
  *              Airbnb hand-off; see SECONDARY_BTN below)
- *   note       node - the fine print under the buttons
+ *   note       node - the fine print under the buttons. Rendered in a div, so
+ *              it can be a block of terms rather than only a sentence.
  *   sticky     desktop only: the panel follows the reader down the page
  *
  * WHY `sticky` IS ON THE PANEL AND NOT ON A WRAPPER. `position: sticky` binds
@@ -64,7 +65,11 @@ export default function BookingPanel({
         {fields ? <div className="mt-5">{fields}</div> : null}
         {cta ? <div className="mt-4">{cta}</div> : null}
         {secondary ? <div className="mt-2 flex flex-col gap-2">{secondary}</div> : null}
-        {note ? <p className="text-label text-muted text-center mt-3">{note}</p> : null}
+        {/* A div, not a p. The fine print started as one sentence and is now a
+           small block of terms; nesting that inside a <p> is invalid HTML that
+           browsers silently "fix" by splitting the paragraph, which reorders
+           what is on screen. */}
+        {note ? <div className="text-label text-muted text-center mt-3">{note}</div> : null}
       </Card>
       {children}
     </aside>

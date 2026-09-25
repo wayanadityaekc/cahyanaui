@@ -5,6 +5,7 @@ import { Mail, MapPin, MessageCircle } from 'lucide-react';
 import CatDropdown, { CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 import Prose from '@/components/prose/Prose';
 import { ABOUT, FAQ, PRIVACY } from '@/content/company';
+import { CANCELLATION_BLOCKS, TERMS_BLOCKS } from '@/content/policies';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { Button, Card } from '@cahyana/ui';
 
@@ -19,14 +20,19 @@ import { Button, Card } from '@cahyana/ui';
 // is kept in sync both ways so the footer's /our-company#faq style links land
 // on the right one.
 //
-// FOUR TABS, NOT CUE'S SIX. Terms & Conditions and Cancellation & Refund are
-// missing on purpose: they are commitments only Wayan can make, and inventing
-// convincing ones would put promises on the site nobody agreed to. Add them to
-// TABS and to content/company.js when the real policy exists.
+// SIX TABS. Booking Terms and Cancellation were deliberately absent until now -
+// they are commitments only Wayan can make, and plausible-sounding invented ones
+// would have put promises on the site nobody agreed to. He set them in Sep 2026;
+// they live in content/policies.js, which is the only place the numbers appear.
+//
+// They sit BEFORE Privacy Policy: a guest looking for them is mid-booking, and
+// Privacy is the one nobody reads until they have to.
 const TABS = [
   { id: 'about', label: 'About Us' },
   { id: 'contact', label: 'Contact' },
   { id: 'faq', label: 'FAQ' },
+  { id: 'terms', label: 'Booking Terms' },
+  { id: 'cancellation', label: 'Cancellation' },
   { id: 'privacy', label: 'Privacy Policy' },
 ];
 
@@ -180,6 +186,12 @@ export default function OurCompany() {
           </section>
           <section id="faq" hidden={tab !== 'faq'}>
             <FAQBody />
+          </section>
+          <section id="terms" hidden={tab !== 'terms'}>
+            <ProseBody title="Booking Terms" blocks={TERMS_BLOCKS} />
+          </section>
+          <section id="cancellation" hidden={tab !== 'cancellation'}>
+            <ProseBody title="Cancellation &amp; Refunds" blocks={CANCELLATION_BLOCKS} />
           </section>
           <section id="privacy" hidden={tab !== 'privacy'}>
             <ProseBody title="Privacy Policy" blocks={PRIVACY} />

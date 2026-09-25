@@ -37,12 +37,29 @@ const copyDir = (from, to) => {
   fs.cpSync(from, to, { recursive: true });
 };
 
-// Source trees. `public/` is deliberately NOT synced: the live repo owns the
-// photographs, and copying over them from a checkout that may be missing some
-// would delete them.
+// Source trees. These are REPLACED - the monorepo owns the code, and a file
+// deleted here has to disappear there too.
 for (const d of ['app', 'components', 'lib', 'content']) {
   copyDir(path.join(APP, d), path.join(DEST, d));
 }
+
+// public/ is MERGED, never replaced, and the difference matters: photographs
+// are the one thing that might exist in the live repo and not in this checkout
+// (they arrive by upload, not by code), and replacing the directory would
+// delete them. So files are copied ON TOP - added and overwritten, never
+// removed. That makes apps/villas/public the place to put a new photo and have
+// it reach the site, without making this script able to lose one.
+const mergeDir = (from, to) => {
+  if (!fs.existsSync(from)) return;
+  fs.mkdirSync(to, { recursive: true });
+  for (const e of fs.readdirSync(from, { withFileTypes: true })) {
+    const src = path.join(from, e.name);
+    const dst = path.join(to, e.name);
+    if (e.isDirectory()) mergeDir(src, dst);
+    else fs.copyFileSync(src, dst);
+  }
+};
+mergeDir(path.join(APP, 'public'), path.join(DEST, 'public'));
 for (const f of ['next.config.js', 'jsconfig.json', 'postcss.config.mjs']) {
   const src = path.join(APP, f);
   if (fs.existsSync(src)) fs.copyFileSync(src, path.join(DEST, f));

@@ -1,13 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BedDouble, BookOpen, Building2, House, Mail, MessageCircle, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { BedDouble, BookOpen, Building2, House, Mail, MessageCircle, ShoppingBag, Sparkles, UserRound, UserRoundPlus, X } from 'lucide-react';
 import { Button, FlagDefs, NavbarShell, NAV_BADGE, NAV_BADGE_BASE, NAV_ICON, NAV_ROW_END } from '@cahyana/ui';
 import CurrencyPicker from '@/components/ui/CurrencyPicker';
 import Select from '@/components/ui/Select';
 import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
-import { useBooking } from '@/components/providers/BookingProvider';
+import { useAccount } from '@/components/providers/AccountProvider';
+import AuthSheet from '@/components/account/AuthSheet';
 import { useCart } from '@/components/providers/CartProvider';
 import { WHATSAPP_LINK } from '@/lib/constants';
 
@@ -89,8 +91,9 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { openBooking } = useBooking();
   const { guests, setGuests } = useTripPrefs();
+  const { account, logout } = useAccount();
+  const [authOpen, setAuthOpen] = useState(false);
   const { count } = useCart();
 
   const isActive = (href) => {
@@ -100,6 +103,7 @@ export default function Navbar() {
   };
 
   return (
+    <>
     <NavbarShell
       linkAs={Link}
       isActive={isActive}
@@ -141,10 +145,16 @@ export default function Navbar() {
         </>
       )}
       extras={<FlagDefs />}
+      /* Signed in, the head row is the guest - CUE's arrangement. Signed out
+         it stays the brand line this site already had, rather than CUE's
+         "Welcome, Guest": there is no guest to greet yet, and the line that is
+         there says something true about the place. */
       drawerHead={{
-        icon: <BedDouble className="w-5 h-5" strokeWidth={1.6} />,
-        title: BRAND.title,
-        sub: BRAND.sub,
+        icon: account
+          ? <UserRound className="w-5 h-5" strokeWidth={1.6} />
+          : <BedDouble className="w-5 h-5" strokeWidth={1.6} />,
+        title: account ? `Welcome, ${(account.name || '').split(' ')[0] || 'friend'}` : BRAND.title,
+        sub: account ? (account.email || BRAND.sub) : BRAND.sub,
       }}
       closeIcon={<X strokeWidth={2} aria-hidden="true" />}
       /* THE FIELD ROW, CUE'S (Wayan: "lihat menu login cue, ikutin itu, pakai
@@ -184,9 +194,17 @@ export default function Navbar() {
           </div>
         </>
       )}
+      /* SIGN IN, where "Check availability" used to be (Wayan: "ganti check
+         availability jadi sign in") - CUE's drawer button, in CUE's slot. The
+         account is the SAME account as on the tour site: one family, one guest
+         record, so a guest who has one there is already known here.
+         Availability has not lost its button - every villa page, the hero and
+         the book bar all carry one. */
       cta={(close) => (
-        <Button full onClick={() => { close(); openBooking(); }}>
-          Check availability
+        <Button full onClick={() => { close(); if (account) logout(); else setAuthOpen(true); }}>
+          {account ? <UserRound className="w-4 h-4 flex-none" strokeWidth={1.8} aria-hidden="true" />
+                   : <UserRoundPlus className="w-4 h-4 flex-none" strokeWidth={1.8} aria-hidden="true" />}
+          {account ? 'Sign out' : 'Sign in'}
         </Button>
       )}
       links={LINKS.map((l) => (l.href === '/my-booking'
@@ -199,5 +217,10 @@ export default function Navbar() {
         </Button>
       )}
     />
+    {/* Lives next to the shell, not inside the drawer: the drawer closes on the
+        way in (a panel over a dialog is a state nobody asked for), and the
+        sheet has to outlive it. */}
+    <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+    </>
   );
 }

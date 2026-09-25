@@ -46,6 +46,7 @@ export { default as Container } from './blocks/Container.jsx';
 export { default as Section } from './blocks/Section.jsx';
 export { default as SectionHeading } from './blocks/SectionHeading.jsx';
 export { default as Hero } from './blocks/Hero.jsx';
+export { default as LoadingScreen } from './blocks/LoadingScreen.jsx';
 export { default as SplitFeature } from './blocks/SplitFeature.jsx';
 export { default as Card } from './blocks/Card.jsx';
 export { default as MediaCard } from './blocks/MediaCard.jsx';

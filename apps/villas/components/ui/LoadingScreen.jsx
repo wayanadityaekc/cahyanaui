@@ -1,38 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { LoadingScreen as Splash } from '@cahyana/ui';
 
-// Branded cream splash (logo + spinner) shown on arrival, fading out once
-// the page has loaded - matches CUE's sister-brand LoadingScreen look
-// exactly (same layout/CSS, ported token-for-token). CUE's version also
-// re-shows itself on link clicks, because CUE still navigates via full
-// document reloads there. This site routes client-side with next/link,
-// which (confirmed by testing) repaints the next page before any effect
-// here could even react to the route change, so there's no real gap left
-// to cover on in-app navigation - only the true arrival case applies.
+// The splash now appears on EVERY page change, not just on arrival - Wayan:
+// "ubah behavior pergantian page seperti CUE, samain seperti CUE".
+//
+// CUE navigates with full document loads, so its splash covers a real wait.
+// This site routes client-side: a page change takes 87-91ms on a desktop and
+// 198-236ms on a mid phone (measured on the built site). There is no wait to
+// cover, so the splash is a deliberate brand moment and it makes navigation
+// slower than it is - see minVisible in the library component, which is the
+// dial. Set it to 0 and the splash only appears where there is a genuine wait.
+//
+// `usePathname` is what tells the splash the new page exists; nothing fires
+// `load` on a client-side route change, so without it the overlay would sit
+// there until its safety timeout.
 export default function LoadingScreen() {
-  const [out, setOut] = useState(false);
-
-  useEffect(() => {
-    const hide = () => setOut(true);
-    let cap;
-    if (document.readyState === 'complete') {
-      cap = setTimeout(hide, 350);
-    } else {
-      window.addEventListener('load', hide);
-      cap = setTimeout(hide, 1400); // safety cap - don't wait on slow images
-    }
-    return () => {
-      window.removeEventListener('load', hide);
-      clearTimeout(cap);
-    };
-  }, []);
-
-  return (
-    <div className={`loadscreen${out ? ' loadscreen--out' : ''}`} aria-hidden="true">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="loadscreen__logo" src="/images/logo.webp" alt="" width="1005" height="324" />
-      <span className="loadscreen__spin" />
-    </div>
-  );
+  const pathname = usePathname();
+  return <Splash logo="/images/logo.webp" routeKey={pathname} />;
 }

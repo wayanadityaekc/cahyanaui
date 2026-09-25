@@ -183,3 +183,10 @@
   }
   .prose-copy p:last-child { margin-bottom: 0; }
 }
+
+/* The splash spinner's rotation. Defined here rather than relying on
+   Tailwind's own `spin` keyframes: the library must render the same whether or
+   not the consuming app happens to have generated that utility. */
+@keyframes cahyana-spin {
+  to { transform: rotate(360deg); }
+}

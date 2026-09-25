@@ -9,10 +9,12 @@ const OUT = process.argv[2];
 const RETIRED = ['wrap', 'wrap-mid', 'wrap-read', 'section', 'card', 'card-hover',
   'badge', 'badge-amber', 'badge-cta', 'eyebrow', 'caps', 'btn', 'btn-cta',
   'btn-outline', 'btn-outline-light', 'btn-ghost', 'btn-sm', 'btn-full',
-  'icon-circle', 'stars-amber', 'divider-line'];
+  'icon-circle', 'stars-amber', 'divider-line',
+  // The splash became a library component; its CSS class and keyframes are gone.
+  'loadscreen', 'loadscreen--out', 'loadscreen__logo', 'loadscreen__spin'];
 // Kept on purpose: prose-copy has to sit in @layer components so it LOSES to a
 // paragraph's own utilities; the loading screen is app chrome.
-const KEPT = ['prose-copy', 'loadscreen', 'hs-locked', 'stickybar'];
+const KEPT = ['prose-copy', 'hs-locked', 'stickybar'];
 
 const walk = (d, out = []) => {
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {

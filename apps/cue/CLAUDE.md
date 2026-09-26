@@ -2041,6 +2041,82 @@ Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu
     sabotase model itu bisa gak pernah ke-render (kejadian, lihat pelajaran harness di
     section rail).
 
+## PWA / APP MODE (26 Sep 2026, Wayan: "biar bisa dijadiin webapp, cuma bedanya di app homescreen ada bottom bar aja")
+Situs bisa di-install ke home screen. Yang berubah pas dibuka dari ikon home
+screen (bukan dari tab): ada **bottom bar**, dan navbar **nyerahin** dua ikonnya
+ke situ. Di tab browser & di desktop: **NOL berubah**.
+- **`public/manifest.webmanifest`** + meta iOS di `app/layout.jsx`. Ikonnya
+  `icon-192`/`icon-512` yang UDAH ADA - emang dibikin persis buat ini (lihat
+  section favicon: ubin emas **opaque**, bulatannya sengaja tumpah keluar tepi).
+  Itu juga alasan dua-duanya didaftarin **`maskable`**: ubin full-bleed itu persis
+  yang dimau mask. Chrome gak bakal nawarin install tanpa 192 DAN 512.
+- **`components/ui/pwaClasses.js` = SATU tempat kondisi app mode.**
+  `APP_ONLY` (nongol cuma di app mode) + `APP_HIDE` (ilang di app mode).
+  - **DITULIS PENUH, dan itu WAJIB.** Versi pertama ngerangkai dari konstanta
+    `PHONE` - **dua-duanya gak pernah ke-generate** Tailwind, jadi bar-nya tetep
+    `display:none` di app mode dan navbar gak nyerahin apa-apa, **tanpa error**.
+    Ini jebakan yang PERSIS SAMA yang udah ketulis buat `GRID_COLS`. Kalau butuh
+    varian ketiga, **salin barisnya**, jangan di-interpolasi.
+  - **`APP_HIDE` pakai `!hidden`, bukan `hidden`** - dia nempel di SAMPING
+    `inline-flex` punya ikon navbar, dan dua utility display specificity-nya sama
+    (yang menang urutan compile, bukan maksud kita).
+- **`@custom-variant standalone` di `app/globals.css` = DUA selector, sengaja:**
+  `@media (display-mode: standalone)` (Chrome/Android + iOS 16.4+) **DAN**
+  `html[data-standalone]` (iPhone lebih tua, yang cuma punya
+  `navigator.standalone`; atributnya ditulis `PwaRegister` pas mount). Satu
+  definisi, jadi gak ada device yang ketinggalan cuma di satu tempat.
+- **Isi bar: Home · Program · My Trip · Chat** (Wayan). Guide / Our Company /
+  Settings TETEP di hamburger - itu yang dibaca sekali, bukan yang dibalikin.
+  **Bar ini BUKAN salinan navbar**: yang dia beli itu **jumlah tap**, bukan link.
+  Makanya navbar **nyerahin** ikon chat + keranjangnya (`APP_HIDE`), biar gak ada
+  yang nongol dua kali.
+- **TETEP CUMA SATU BENDA NEMPEL DI BAWAH.** Wayan pilih **"Book bar menang"**,
+  jadi app bar yang ngalah - lewat **DUA rule, bukan satu**, dan pembagiannya
+  hasil UKUR:
+  - `[body:has(.bookbar)_&]:hidden` - BookBar nongol di bawah 993, persis rentang
+    app bar sendiri, jadi ngalah di semua lebar.
+  - `max-md:[body:has(.stickybar)_&]:hidden` - SectionSwitcher berhenti di 767.
+    Ngalah ke dia di atas itu bikin halaman listing di **768-992 gak punya bar
+    sama sekali** (dua-duanya ilang). `:has()` cocok ke elemen **walau
+    `display:none`** - itu sumber bug-nya.
+- **Yang KE-UKUR dan bikin asumsi awal gua salah** (dua-duanya bukan bug):
+  - **BookBar mulai ke-translate KELUAR** (`translate: 0px 150%`) di puncak
+    halaman detail, baru masuk pas di-scroll. Jadi di puncak 68 halaman detail
+    **NOL bar** - app bar-nya udah ngalah, BookBar-nya belum masuk. Itu ongkos
+    dari pilihan "Book bar menang", bukan regresi.
+  - **`SectionSwitcher` baru ke-MOUNT sesudah hero lewat** (`showStickyNav =
+    !q && !heroInView`), jadi `/tour.html` di puncak **gak punya `.stickybar` sama
+    sekali** dan app bar-nya nongol. Itu bener.
+  - Jadi aturan yang dijaga harness = **JANGAN PERNAH DUA**, dicek di puncak DAN
+    sesudah scroll - bukan "selalu tepat satu".
+- **Service worker (`public/sw.js`) SENGAJA GAK NGE-CACHE HTML.** Situs ini
+  **push = live**; worker cache-first bakal ngunci tiap tamu yang udah install di
+  markup waktu dia install, dan **gak ada yang kita push bisa nyampe dia** - itu
+  masalah cache favicon di doc ini, tapi seluruh situs. Cache-first CUMA buat
+  `/_next/static/` + font (namanya udah bawa content hash). **Foto TIDAK
+  di-cache**: namanya tetap dan Wayan nimpa foto di tempat.
+  - Update worker = naikin `VERSION`. Gak ada invalidasi per-file yang bisa salah.
+  - `app/offline/page.jsx` -> `out/offline.html`, satu-satunya HTML yang disimpen,
+    dan cuma kebaca kalau jaringannya sendiri gagal. `noindex`.
+- **Desktop app mode sengaja NOL berubah** (Chrome bisa install di desktop):
+  navbar-nya gak sempit, dan mindahin ikonnya bakal ninggalin lubang.
+- Verifikasi: **`verify-pwa.mjs` di root repo (192/192)**.
+  - **YANG HARNESS INI GAK BISA, dan ini penting**: Chromium di sini **ngabaikan
+    `Emulation.setEmulatedMedia` buat `display-mode`** (ke-ukur: `prefers-color-scheme`
+    lewat jalur yang sama balik `true`, jadi mekanismenya jalan - fiturnya yang gak
+    ada), dan `--app` headless gak ngasih page yang bisa disetir. Jadi **perilakunya
+    dites lewat cabang `html[data-standalone]`**, dan cabang media-query-nya dijamin
+    dengan cara lain: harness **ngadu CSS HASIL BUILD** - tiap class `standalone:*`
+    wajib punya DUA rule yang **deklarasinya sama persis dan lebar-scope-nya sama**.
+    Buang satu slot dari `@custom-variant` -> nyala.
+  - **Dites pakai 3 bug asli**: interpolasi dibalikin (**23 nyala**), cabang
+    iPhone lama dibuang (**45 nyala**), app bar berhenti ngalah ke BookBar
+    (**6 nyala**).
+  - **`tail -20` sempat NIPU**: run pertama keliatan "media/390 lolos" padahal
+    cabang media gak pernah jalan sama sekali - yang gagal ke-potong di atas
+    layar. Kalau satu grup kelihatan lolos dan grup lain rata merah, **baca
+    output penuhnya dulu**.
+
 ## CHAT: PERTANYAAN ANEH LANGSUNG KE WAYAN (26 Sep 2026)
 Wayan, sesudah nyoba chat-nya di HP sendiri: *"kalo pertanyaan aneh langsung
 connect ke gua aja"*.

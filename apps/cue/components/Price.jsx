@@ -1,7 +1,7 @@
 'use client';
 
 import { usePricing } from '@/state/PricingProvider';
-import { PRICE, PRICE_SYM, PRICE_TAIL } from '@/components/ui/priceClasses';
+import { PRICE, PRICE_SYM, PRICE_TAIL, PRICE_WAS } from '@/components/ui/priceClasses';
 
 // IDR only: the trailing ".000" thousands group shown smaller (see PRICE_TAIL)
 // instead of full-size, so long amounts ("Rp1.300.000") read clearly and take
@@ -60,8 +60,23 @@ export default function Price({ name, mode = 'standard', fallback, className = `
   const value = band.display;
   const num = value.toLocaleString(isIdr ? 'id-ID' : 'en-US');
 
+  // The pre-sale price, when there is one. The catalog sends it for every item,
+  // equal to the current price when nothing is on sale - so the test is "do they
+  // differ", never "is a sale running". That way a card cannot strike a number
+  // through because a flag was set somewhere; it strikes it through because the
+  // guest is genuinely paying less than that.
+  const listBand = mode === 'exclusive' && item.listExclusive ? item.listExclusive : item.listStandard;
+  const was = listBand && listBand.display !== value ? listBand.display : null;
+  const wasNum = was == null ? null : was.toLocaleString(isIdr ? 'id-ID' : 'en-US');
+
   return (
     <Tag className={className} data-price={name} data-mode={mode}>
+      {wasNum != null && (
+        <span className={PRICE_WAS} data-price-was>
+          <span className={`${PRICE_SYM} price__sym`}>{symbol}</span>
+          {isIdr ? withDeemphasizedThousands(wasNum) : wasNum}
+        </span>
+      )}
       <span className={`${PRICE_SYM} price__sym`}>{symbol}</span>{isIdr ? withDeemphasizedThousands(num) : num}
     </Tag>
   );

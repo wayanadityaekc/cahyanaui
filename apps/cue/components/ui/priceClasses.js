@@ -13,3 +13,17 @@ export const PRICE_FROM = 'text-[length:var(--fs-small)] text-muted font-normal'
 // (Wayan, 14 Sep 2026 - fixes price text overlapping HomepageCard's meta row
 // on long amounts like "Rp1.300.000").
 export const PRICE_TAIL = 'text-[0.55em] [vertical-align:0.05em]';
+
+// The pre-sale price, struck through, shown just before the sale price.
+//
+// A struck-through number was DELIBERATELY not copied from GetYourGuide when
+// BookBar was built (see CLAUDE.md): with no list price of our own, any crossed
+// number would have been an invented discount. A seasonal sale gives us a real
+// one, so the strike is now the honest thing rather than the dishonest one - and
+// it is only ever rendered when the two numbers actually differ.
+//
+// Muted and smaller on purpose: it is the number the guest is NOT paying, so it
+// must not compete with the one they are. Weight stays normal so it never reads
+// as the price itself.
+export const PRICE_WAS =
+  'text-[0.78em] font-normal text-muted line-through [text-decoration-thickness:1px] mr-[0.35em]';

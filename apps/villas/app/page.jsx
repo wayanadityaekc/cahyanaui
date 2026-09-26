@@ -95,25 +95,36 @@ export default function HomePage() {
             Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
           </p>
         </div>
-        <div className={GRID_PAIR}>
-          {VILLA_LIST.map((villa) => (
-            <VillaCard key={villa.slug} villa={villa} />
-          ))}
-        </div>
+        {/* ONE GRID, THREE BLOCKS: villa, why-stay, villa.
+            On a phone that is the order Wayan asked for - Cahyana House, then
+            the three reasons, then Cahyana Tibuah - so the second card is not
+            two full-height photographs deep, which is where a reader stops.
+            On desktop the cards sit side by side and the panel spans both,
+            exactly as before, and the panel is moved there with `order`
+            rather than by rendering it twice: a second copy would be the same
+            three promises in the DOM twice, read out twice by a screen reader
+            and counted twice by a crawler.
 
-        {/* Why stay with us */}
-        <div className="mt-10 rounded-xl p-7 sm:p-9 bg-white grid sm:grid-cols-3 gap-8">
-          {WHY_STAY.map((item) => (
-            <div key={item.title} className="flex items-start gap-4">
-              <span className={ICON_CIRCLE}>
-                <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
-              </span>
-              <div>
-                <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
-                <p className="text-small text-muted mt-1">{item.desc}</p>
+            Desktop spacing is unchanged on purpose - the row gap (1.4rem) plus
+            the panel's own top margin (1.1rem) is the 2.5rem it had as mt-10. */}
+        <div className={GRID_PAIR}>
+          <VillaCard villa={VILLA_LIST[0]} className="min-[993px]:order-1" />
+
+          <div className="rounded-xl p-7 sm:p-9 bg-white grid sm:grid-cols-3 gap-8 min-[993px]:order-3 min-[993px]:col-span-2 min-[993px]:mt-[1.1rem]">
+            {WHY_STAY.map((item) => (
+              <div key={item.title} className="flex items-start gap-4">
+                <span className={ICON_CIRCLE}>
+                  <item.Icon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.6} aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="text-h3 font-semibold text-gold">{item.title}</h3>
+                  <p className="text-small text-muted mt-1">{item.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <VillaCard villa={VILLA_LIST[1]} className="min-[993px]:order-2" />
         </div>
 </Section>
 

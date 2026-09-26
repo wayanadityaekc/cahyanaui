@@ -133,14 +133,20 @@ export default function VillaCard({
             there is not. The break is at 560px because below it the three
             facts alone already fill the width. */}
         <div className="mt-5 flex flex-col gap-4 min-[560px]:flex-row min-[560px]:items-end min-[560px]:justify-between min-[560px]:gap-6">
-          {/* TWO LINES PER FACT, which is the mock's own trick and the only
-              reason three facts and a price fit across one card: "Up to 6
-              guests" on one line measures 104px, and three of those plus
-              their dividers wrapped onto a second row inside a 570px card.
-              Split, each fact is about 70px. A fact given one line still
-              renders as one line. */}
+          {/* TWO SHAPES, because a phone card and a desktop card have opposite
+              problems here.
+                desktop - the facts share the row with the price, so they get
+                  about 300px and have to be stacked two lines to fit
+                phone - they own the full width, but three two-line stacks side
+                  by side READ as piled up (Wayan: "tulisan up to guest, private
+                  pool dan bedroom di mobile numpuk bro"). Measured: the three
+                  came to 239px inside a 248px row at 320.
+              So below 560 each fact is ONE short line at label size and the
+              stack is hidden. The short line carries the accessible text and
+              the stack is aria-hidden, so a screen reader reads each fact
+              exactly once at either width. */}
           {facts.length ? (
-            <ul className="list-none flex items-center gap-x-2 min-[560px]:gap-x-4 m-0 p-0 text-small text-white/90 [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] min-[560px]:[&_svg]:w-[var(--icon-md)] min-[560px]:[&_svg]:h-[var(--icon-md)]">
+            <ul className="list-none flex items-center gap-x-2 min-[560px]:gap-x-4 m-0 p-0 text-label min-[560px]:text-small text-white/90 [&_svg]:w-3.5 [&_svg]:h-3.5 min-[560px]:[&_svg]:w-[var(--icon-md)] min-[560px]:[&_svg]:h-[var(--icon-md)]">
               {facts.map((f, i) => (
                 <li
                   key={f.label}
@@ -151,9 +157,14 @@ export default function VillaCard({
                 >
                   {f.icon}
                   <span className="leading-[1.25]">
-                    {(f.lines || [f.label]).map((l) => (
-                      <span key={l} className="block whitespace-nowrap">{l}</span>
-                    ))}
+                    {f.short ? (
+                      <span className="block whitespace-nowrap min-[560px]:hidden">{f.short}</span>
+                    ) : null}
+                    <span className={f.short ? 'max-[559px]:hidden' : undefined} aria-hidden={f.short ? 'true' : undefined}>
+                      {(f.lines || [f.label]).map((l) => (
+                        <span key={l} className="block whitespace-nowrap">{l}</span>
+                      ))}
+                    </span>
                   </span>
                 </li>
               ))}

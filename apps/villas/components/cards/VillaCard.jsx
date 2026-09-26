@@ -22,13 +22,15 @@ export default function VillaCard({ villa }) {
       place="Ubud, Bali"
       price={format(villa.nightlyRate)}
       ctaIcon={<ArrowRight className="w-4 h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />}
-      /* `lines` is what lets three facts and a price share one row - see the
-         note in the block. `label` stays as the single-line fallback and as the
-         key, so a fact can be given one line wherever it fits. */
+      /* Three shapes of one fact, each for a measured reason: `lines` (two
+         lines) is what makes them fit beside the price on desktop, `short` is
+         the one-line phone version - "3 beds", not "3 bedrooms", because the
+         full words came to 239px inside a 248px row at 320 - and `label` is
+         the plain fallback and the React key. */
       facts={[
-        { icon: <Users strokeWidth={1.7} aria-hidden="true" />, label: `Up to ${villa.guests} guests`, lines: ['Up to', `${villa.guests} guests`] },
-        { icon: <BedDouble strokeWidth={1.7} aria-hidden="true" />, label: `${villa.bedrooms} bedrooms`, lines: [String(villa.bedrooms), 'bedrooms'] },
-        { icon: <Waves strokeWidth={1.7} aria-hidden="true" />, label: 'Private pool', lines: ['Private', 'pool'] },
+        { icon: <Users strokeWidth={1.7} aria-hidden="true" />, label: `Up to ${villa.guests} guests`, lines: ['Up to', `${villa.guests} guests`], short: `${villa.guests} guests` },
+        { icon: <BedDouble strokeWidth={1.7} aria-hidden="true" />, label: `${villa.bedrooms} bedrooms`, lines: [String(villa.bedrooms), 'bedrooms'], short: `${villa.bedrooms} beds` },
+        { icon: <Waves strokeWidth={1.7} aria-hidden="true" />, label: 'Private pool', lines: ['Private', 'pool'], short: 'Private pool' },
       ]}
       /* THE HEART IS IN THE MOCK AND IT IS NOT WIRED TO ANYTHING YET. It is
          drawn because Wayan drew it; tapping it does nothing until there is

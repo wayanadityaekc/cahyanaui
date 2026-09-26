@@ -45,30 +45,17 @@ for (const w of [390, 768, 1280]) {
   await ctx.route('**/api/pricing/catalog*', (r) =>
     r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));
 
-  // Stands in for cahyana-api's chat routes. It records what the panel sends,
-  // which is the half that matters: a handover that loses the question or the
-  // email is useless even though the screen looks right.
-  const chat = { started: [], sent: [], reply: null, id: 'a'.repeat(48) };
-  await ctx.route('**/api/chat/**', async (r) => {
-    const req = r.request();
-    const url = new URL(req.url());
-    const json = (b) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) });
-
-    if (req.method() === 'POST' && url.pathname.endsWith('/chat/start')) {
-      chat.started.push(JSON.parse(req.postData() || '{}'));
-      return json({ status: 'ok', thread: chat.id });
-    }
-    if (req.method() === 'POST' && url.pathname.endsWith('/message')) {
-      chat.sent.push(JSON.parse(req.postData() || '{}'));
-      return json({ status: 'ok', message: { id: 10 + chat.sent.length, sender: 'guest', body: '', created_at: new Date().toISOString() } });
-    }
-    // Poll. Wayan's reply appears only once the test sets it.
-    const messages = chat.reply
-      ? [{ id: 99, sender: 'owner', body: chat.reply, created_at: new Date().toISOString() }]
-      : [];
-    const since = Number(url.searchParams.get('since') || 0);
-    return json({ status: 'ok', thread: chat.id, messages: messages.filter((m) => m.id > since) });
-  });
+  // In this pass the handover is made to FAIL on purpose. Two reasons:
+  //
+  // 1. A successful handover stores the thread, and the next page in the same
+  //    context would then correctly be talking to Wayan instead of answering -
+  //    which broke the canned-answer checks on working code, twice.
+  // 2. It is worth testing. A guest whose handover cannot reach the server must
+  //    be told, not left looking at a line that says "give me a moment" forever.
+  //
+  // The happy path gets its own context at the end of each width.
+  await ctx.route('**/api/chat/**', (r) =>
+    r.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ status: 'error', detail: 'Could not reach Wayan just now.' }) }));
 
   for (const path of PAGES) {
     const page = await ctx.newPage();
@@ -189,7 +176,7 @@ for (const w of [390, 768, 1280]) {
     // so a plain waitFor passes even when the second question was answered with a
     // price list. That is how the first version of this check passed against a
     // deliberately broken build.
-    const handoffs = () => panel.getByText('better answered by Wayan', { exact: false }).count();
+    const handoffs = () => panel.getByText('Give me a moment', { exact: false }).count();
     for (const q of ['my wife is in a wheelchair, can she do the tour',
                      'my mother is elderly, how much walking is there']) {
       const before = await handoffs();
@@ -203,14 +190,14 @@ for (const w of [390, 768, 1280]) {
       ok(after > before, `${w}${path}: "${q}" did not reach a person`);
     }
 
-    const send = panel.locator('[data-handoff]');
-    ok(await send.count() >= 1, `${w}${path}: the handoff offers no way to reach Wayan`);
-    ok(await panel.getByPlaceholder('Email (optional)').count() >= 1,
-       `${w}${path}: the handoff never asks for an email`);
-    // WhatsApp stays as the second door for anyone who would rather use it.
-    const alt = panel.getByRole('link', { name: /WhatsApp/ });
-    const href = await alt.last().getAttribute('href');
-    ok(/wa\.me\/\d/.test(href || ''), `${w}${path}: the WhatsApp fallback goes nowhere (${href})`);
+    // Nothing is asked before the handover any more - it connects on the spot.
+    ok(await panel.getByText('Give me a moment', { exact: false }).count() >= 1,
+       `${w}${path}: the guest is not told they are being connected`);
+    ok(await panel.locator('input[type=email]').count() === 0,
+       `${w}${path}: an email is being asked for before the handover`);
+    // The server is refusing here. That must be said out loud.
+    ok(await seen(panel, 'Could not reach Wayan', 8000),
+       `${w}${path}: a handover that failed left the guest waiting silently`);
 
     // Nothing the guest could read as a quote for that question.
     const after = await panel.innerText();
@@ -271,18 +258,18 @@ for (const w of [390, 768, 1280]) {
 
     await input.fill('my mother is elderly, how much walking is there');
     await input.press('Enter');
-    await panel.locator('[data-handoff]').waitFor({ state: 'visible', timeout: 10000 });
+    ok(await seen(panel, 'Give me a moment', 10000), `${w}: the guest is not told they are being connected`);
+    ok(await seen(panel, 'You are with Wayan now', 10000), `${w}: the handover never completed`);
 
-  {
-    await panel.getByPlaceholder('Email (optional)').fill('rui@example.com');
-    await panel.locator('[data-handoff]').click();
-
-    await panel.getByText('Wayan has it', { exact: false }).waitFor({ state: 'visible', timeout: 10000 });
     ok(chat.started.length === 1, `${w}: expected one handover, got ${chat.started.length}`);
     const started = chat.started[0];
-    ok(started.email === 'rui@example.com', `${w}: the email was not passed on`);
     ok(/walking/.test(started.question || ''), `${w}: the guest's actual question was not passed on`);
     ok(started.page === '/index.html', `${w}: Wayan is not told which page they were on`);
+    // Nothing was asked before connecting - that is the whole point of this
+    // change: no name, no email, no form in front of the question.
+    ok(!started.email && !started.name, `${w}: the handover still collected contact details up front`);
+    ok(await panel.locator('input[type=email]').count() === 0,
+       `${w}: an email is asked for while Wayan is around and has not had a chance to reply`);
 
     // The panel says who is reading now, and when to expect an answer.
     const afterSend = await panel.innerText();
@@ -308,15 +295,61 @@ for (const w of [390, 768, 1280]) {
     const again = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await again.waitFor({ state: 'visible', timeout: 10000 });
     ok(await seen(again, chat.reply, 15000), `${w}: the conversation did not survive a reload`);
-  }
-
-
 
     const over2 = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     ok(over2 <= 0, `${w}: handover page overflows by ${over2}px`);
     ok(errs.length === 0, `${w}: handover page errors ${errs.join(' | ')}`);
     await hctx.close();
   }
+
+  // ---- the same handover, but at 2am in Bali ----
+  // This is the branch the email exists for. Inside his hours nothing is asked,
+  // because he is about to reply; outside them the wait is certain, so the
+  // offer comes straight away - and it is skippable.
+  {
+    const nctx = await b.newContext({ viewport: { width: w, height: 880 } });
+    await nctx.clock.install({ time: new Date('2026-09-26T18:00:00Z') });  // 02:00 in Bali
+    await nctx.route('**/api/pricing/catalog*', (r) =>
+      r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));
+    const night = { contact: [], id: 'c'.repeat(48) };
+    await nctx.route('**/api/chat/**', async (r) => {
+      const req = r.request();
+      const url = new URL(req.url());
+      const json = (x) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(x) });
+      if (req.method() === 'POST' && url.pathname.endsWith('/chat/start')) return json({ status: 'ok', thread: night.id });
+      if (req.method() === 'POST' && url.pathname.endsWith('/contact')) {
+        night.contact.push(JSON.parse(req.postData() || '{}'));
+        return json({ status: 'ok' });
+      }
+      if (req.method() === 'POST') return json({ status: 'ok', message: { id: 7, sender: 'guest', body: '', created_at: new Date().toISOString() } });
+      return json({ status: 'ok', thread: night.id, messages: [] });
+    });
+
+    const page = await nctx.newPage();
+    await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await page.locator('button[aria-label="Chat with us"]').click();
+    const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
+    await panel.waitFor({ state: 'visible', timeout: 10000 });
+    const input = panel.getByLabel('Your question');
+    await input.fill('my mother is elderly, how much walking is there');
+    await input.press('Enter');
+    ok(await seen(panel, 'You are with Wayan now', 10000), `${w}: the night handover never completed`);
+
+    // Told the truth about the hour, and offered the way out.
+    ok(await seen(panel, 'probably asleep', 8000), `${w}: at 2am the guest is not told he is asleep`);
+    const mailBox = panel.locator('input[type=email]');
+    ok(await mailBox.count() === 1, `${w}: no email offered when the reply cannot come tonight`);
+
+    await mailBox.fill('rui@example.com');
+    await panel.locator('[data-mailsend]').click();
+    for (let i = 0; i < 40 && !night.contact.length; i += 1) await page.waitForTimeout(150);
+    ok(night.contact.length === 1, `${w}: the email never reached the server`);
+    ok((night.contact[0] || {}).email === 'rui@example.com', `${w}: a different address was sent`);
+    ok(await seen(panel, 'He will reach you there', 8000), `${w}: nothing confirms the email was kept`);
+
+    await nctx.close();
+  }
+
 }
 
 await b.close();

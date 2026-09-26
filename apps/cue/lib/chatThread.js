@@ -64,3 +64,17 @@ export async function pollThread(id, since) {
   if (!res.ok) throw new Error(body.detail || 'Could not check for replies.');
   return { gone: false, messages: body.messages || [] };
 }
+
+// Attaches an address to a conversation that has already started. Deliberately
+// a separate call from startThread: nothing is asked before the handover, and
+// this only happens if the guest chooses to leave one afterwards.
+export async function setContact(id, email) {
+  const res = await fetch(`${API_BASE}/chat/${id}/contact`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.detail || 'Could not save that.');
+  return true;
+}

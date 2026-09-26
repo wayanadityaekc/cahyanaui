@@ -181,17 +181,24 @@ export const CHAT_COPY = {
   moreCta: 'Ask something else',
   hello: 'Hi! What can I help you with?',
   thanks: "You're welcome. Anything else you want to check before you book?",
-  // The handover form. Short on purpose: the guest already typed their
-  // question, so asking for a second one would be asking twice.
-  handoffIntro: 'I can pass this to Wayan. Leave an email and he can reach you even if you close this.',
-  handoffName: 'Your name',
-  handoffEmail: 'Email (optional)',
-  handoffSend: 'Ask Wayan',
-  handoffSent: 'Sent. Wayan has it.',
+  // Nothing is asked before the handover. A form in front of somebody who just
+  // wanted to ask a question is a brake, and the email only actually matters
+  // when the conversation cannot finish live - so it is asked then, if at all.
+  connecting: 'Will connect you to Wayan for this one. Give me a moment.',
+  connected: 'You are with Wayan now.',
+  // Shown only when it is needed: outside his hours, or after a wait with no
+  // reply. Skippable, because a guest who is happy to wait should not be nagged.
+  emailAsk: 'Want his answer by email too, in case you close this?',
+  emailField: 'Your email',
+  emailSend: 'Send',
+  emailSkip: 'No thanks',
+  emailDone: 'Got it. He will reach you there.',
+  emailBad: 'That does not look like an email address.',
   // Two versions of the same fact, picked by the clock.
   hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
-  hoursClosed: `It is outside ${REPLY_HOURS.label} in Bali now, so he is probably asleep. He answers in the morning, and your email means you will get it either way.`,
-  connected: 'You are talking to Wayan now.',
-  handoffAlt: 'WhatsApp',
+  hoursClosed: `It is outside his hours in Bali right now, so he is probably asleep. He answers from ${REPLY_HOURS.from}am Bali time.`,
+  connectedStrip: 'You are talking to Wayan now.',
+  // How long to wait, inside his hours, before offering email at all.
+  quietMs: 120000,
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',
 };

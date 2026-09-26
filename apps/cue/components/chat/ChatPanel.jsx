@@ -5,9 +5,8 @@ import { Send, MessageCircle } from 'lucide-react';
 import { usePricing } from '@/state/PricingProvider';
 import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { PANEL_CLOSE } from '@/components/ui/hsClasses';
-import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { SUGGESTIONS, CHAT_COPY, wayanIsAround } from '@/content/shared/chat';
-import { readThread, writeThread, startThread, sendToThread, pollThread } from '@/lib/chatThread';
+import { readThread, startThread, sendToThread, pollThread, setContact } from '@/lib/chatThread';
 import { answerFor } from '@/lib/chatAnswers';
 import {
   PANEL, SCRIM, HEAD, HEAD_AVATAR, HEAD_STACK, HEAD_TITLE, HEAD_SUB, BODY,
@@ -42,9 +41,16 @@ export default function ChatPanel({ open, onClose }) {
   // the matcher. Deliberately one or the other: a panel that sometimes answers
   // and sometimes forwards would leave the guest unsure who is reading.
   const [thread, setThread] = useState(null);
-  const [form, setForm] = useState(null);     // the question waiting to be sent
   const [sending, setSending] = useState(false);
+  // The email is asked AFTER the handover, and only when it would change
+  // anything: outside Wayan's hours, or once a wait has gone by with no reply.
+  // 'idle' = not asked, 'ask' = on screen, 'done' | 'skip' = settled.
+  const [mail, setMail] = useState('idle');
+  const [mailDraft, setMailDraft] = useState('');
+  const [mailErr, setMailErr] = useState('');
+  const [quiet, setQuiet] = useState(false);
   const lastSeen = useRef(0);
+  const heard = useRef(false);
 
   const ctx = useMemo(
     () => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }),
@@ -76,6 +82,7 @@ export default function ChatPanel({ open, onClose }) {
         const fresh = messages.filter((m) => m.sender === 'owner');
         if (messages.length) lastSeen.current = messages[messages.length - 1].id;
         if (fresh.length) {
+          heard.current = true;
           setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
         }
       } catch {
@@ -123,34 +130,59 @@ export default function ChatPanel({ open, onClose }) {
       // Handoff and off-topic both end in something to do next: one offers
       // Wayan, the other offers the questions this can actually answer. A dead
       // end is the one outcome that is never acceptable.
-      if (res.kind === 'handoff') { msg.handoff = true; setForm({ question: q, name: '', email: '' }); }
+      if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(q); }
       if (res.kind === 'offtopic') { msg.chips = SUGGESTIONS; msg.nudge = CHAT_COPY.offtopicNudge; }
       setLog((prev) => [...prev, msg]);
       setThinking(false);
     }, THINK_MS);
   }, [ctx, thinking, sending, thread]);
 
-  async function handOver(e) {
-    e.preventDefault();
-    if (!form || sending) return;
+  // Hands over straight away. Nothing is asked first - the guest already typed
+  // the question, and a form in front of somebody mid-sentence is a brake.
+  const connect = useCallback(async (question) => {
+    if (sending) return;
     setSending(true);
     try {
       const id = await startThread({
-        name: form.name,
-        email: form.email,
-        question: form.question,
+        question,
         page: typeof window !== 'undefined' ? window.location.pathname : '',
       });
       setThread(id);
-      setForm(null);
       setLog((prev) => [...prev, {
         id: uid(), from: 'bot',
-        text: CHAT_COPY.handoffSent + ' ' + (wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed),
+        text: `${CHAT_COPY.connected} ${wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed}`,
       }]);
     } catch (err) {
       setLog((prev) => [...prev, { id: uid(), from: 'bot', text: err.message || 'Could not reach Wayan just now.' }]);
     }
     setSending(false);
+  }, [sending]);
+
+  // Outside his hours the wait is certain, so the offer comes right away. Inside
+  // them it waits, and never appears at all if he answers first.
+  useEffect(() => {
+    if (!thread || mail !== 'idle') return undefined;
+    if (!wayanIsAround()) { setMail('ask'); return undefined; }
+    const t = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
+    return () => clearTimeout(t);
+  }, [thread, mail]);
+
+  useEffect(() => {
+    if (quiet && mail === 'idle' && !heard.current) setMail('ask');
+  }, [quiet, mail]);
+
+  async function saveEmail(e) {
+    e.preventDefault();
+    const v = mailDraft.trim();
+    if (!v || !thread) return;
+    setMailErr('');
+    try {
+      await setContact(thread, v);
+      setMail('done');
+      setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.emailDone }]);
+    } catch (err) {
+      setMailErr(err.message || CHAT_COPY.emailBad);
+    }
   }
 
   return (
@@ -186,41 +218,29 @@ export default function ChatPanel({ open, onClose }) {
             return <BotReply key={m.id} m={m} onAsk={ask} />;
           })}
 
-          {form && (
-            <form className={HANDOFF_FORM} onSubmit={handOver}>
-              <p className={NOTE}>{CHAT_COPY.handoffIntro}</p>
+          {mail === 'ask' && (
+            <form className={HANDOFF_FORM} onSubmit={saveEmail}>
+              <p className={NOTE}>{CHAT_COPY.emailAsk}</p>
               <span className={HANDOFF_ROW}>
                 <input
                   className={FIELD_INPUT}
-                  value={form.name}
-                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                  placeholder={CHAT_COPY.handoffName}
-                  aria-label={CHAT_COPY.handoffName}
-                  maxLength={120}
-                />
-                <input
-                  className={FIELD_INPUT}
                   type="email"
-                  value={form.email}
-                  onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-                  placeholder={CHAT_COPY.handoffEmail}
-                  aria-label={CHAT_COPY.handoffEmail}
+                  value={mailDraft}
+                  onChange={(e) => setMailDraft(e.target.value)}
+                  placeholder={CHAT_COPY.emailField}
+                  aria-label={CHAT_COPY.emailField}
                   maxLength={200}
                 />
               </span>
-              <button type="submit" className={HANDOFF_BTN} data-cta data-handoff disabled={sending}>
-                <MessageCircle strokeWidth={1.8} aria-hidden="true" />
-                {sending ? 'Sending...' : CHAT_COPY.handoffSend}
-              </button>
-              <p className={NOTE}>{wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed}</p>
-              <a
-                className={ALT_LINK}
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                target="_blank"
-                rel="noopener"
-              >
-                {CHAT_COPY.handoffAlt}
-              </a>
+              {mailErr && <p className={NOTE}>{mailErr}</p>}
+              <span className="flex items-center gap-[0.6rem]">
+                <button type="submit" className={HANDOFF_BTN} data-cta data-mailsend disabled={!mailDraft.trim()}>
+                  {CHAT_COPY.emailSend}
+                </button>
+                <button type="button" className={ALT_LINK} onClick={() => setMail('skip')}>
+                  {CHAT_COPY.emailSkip}
+                </button>
+              </span>
             </form>
           )}
 
@@ -234,7 +254,7 @@ export default function ChatPanel({ open, onClose }) {
         {thread && (
           <p className={CONNECTED}>
             <MessageCircle strokeWidth={2} aria-hidden="true" />
-            {CHAT_COPY.connected}
+            {CHAT_COPY.connectedStrip}
           </p>
         )}
 

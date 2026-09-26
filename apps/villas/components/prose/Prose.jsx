@@ -34,7 +34,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         return (
           <figure className="mb-6" key={i}>
             <img
-              className="block w-full h-auto aspect-[4/3] object-cover shadow-[0_8px_24px_rgba(31,61,43,0.1)]"
+              className="block w-full h-auto aspect-[4/3] object-cover"
               src={b.src} alt={b.alt} loading={b.loading} width={b.width} height={b.height}
             />
             <figcaption

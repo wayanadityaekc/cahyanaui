@@ -72,7 +72,7 @@ export default function BookingSheet() {
         enabled={isPhone}
         onDismiss={closeBooking}
         handleClassName="absolute top-0 left-0 right-0 h-5 z-20 [touch-action:none] cursor-grab active:cursor-grabbing"
-        className="relative bg-white rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto max-[639px]:pt-5"
+        className="relative bg-surface-raised rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto max-[639px]:pt-5"
       >
         {/* The grab pill the handle sits over. Mobile only - there is nothing
             to grab on a centred card.
@@ -84,7 +84,7 @@ export default function BookingSheet() {
             harness - the swipe-to-dismiss test failed while everything looked
             right on screen. */}
         {isPhone && <span className="absolute top-2 left-1/2 -translate-x-1/2 z-30 w-10 h-1 rounded-pill bg-line pointer-events-none" aria-hidden="true" />}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 max-[639px]:top-5 bg-white z-10">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 max-[639px]:top-5 bg-surface-raised z-10">
           <div className="flex items-center gap-2">
             {step === 'summary' && (
               <button type="button" onClick={goToDetails} aria-label="Back" className="text-gold cursor-pointer">

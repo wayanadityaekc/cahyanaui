@@ -61,7 +61,7 @@ const FLAG =
 // the price uses - the two things on this card the guest chose.
 const SAVE =
   'absolute top-4 right-4 z-[3] grid place-items-center w-9 h-9 rounded-[50%] bg-white ' +
-  'shadow-md cursor-pointer [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
+  'cursor-pointer [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 const SAVE_ON = 'text-amber [&_svg]:fill-current';
 const SAVE_OFF = 'text-gold';
 

@@ -78,8 +78,8 @@ export default function AuthSheet({ open, onClose }) {
       shell="fixed inset-0 z-[130] flex items-end sm:items-center justify-center bg-black/45"
       box="relative w-full sm:max-w-md"
     >
-      <div className="relative bg-white rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 bg-white z-10">
+      <div className="relative bg-surface-raised rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 bg-surface-raised z-10">
           <h3 className="text-h3 font-semibold text-gold">{TITLE[view]}</h3>
           <button type="button" onClick={close} aria-label="Close" className="text-gold cursor-pointer">
             <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />

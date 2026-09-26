@@ -20,7 +20,7 @@ import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 // do not: every service page says prices are confirmed with us, so they are
 // listed as requests and the summary says so. A tidy-looking number beside
 // "Spa & Massage" would be a price nobody set.
-const CARD = 'bg-white border border-line [box-shadow:var(--shadow-md)]';
+const CARD = 'bg-surface-raised border border-line [box-shadow:var(--shadow-md)]';
 const ROW_H = 'text-h3 font-semibold text-gold';
 const LABEL = 'caps text-muted';
 const LINE = 'flex items-center justify-between gap-4 text-body';
@@ -133,7 +133,7 @@ export default function MyBookingCart() {
                         aria-pressed={on}
                         className={on
                           ? 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 border-none bg-cta text-white text-small font-semibold cursor-pointer'
-                          : 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-white text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-cta)]'}
+                          : 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-surface-raised text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-cta)]'}
                       >
                         {on
                           ? <><Trash2 className={IC} strokeWidth={1.8} aria-hidden="true" /> Remove</>

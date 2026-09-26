@@ -67,7 +67,7 @@ const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 // while every other button on the site moved to 14/20.
 const MORE_BTN =
   `absolute bottom-3 right-3 z-[6] inline-flex ${BTN_SM} ` +
-  'bg-white [border:1px_solid_var(--line)] shadow-md text-gold cursor-pointer ' +
+  'bg-white [border:1px_solid_var(--line)] text-gold cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 
 export default function PhotoMosaic({

@@ -30,7 +30,10 @@
   --color-cta-d: #2f4737;
   --color-amber: #c9a45c;       /* the REAL gold. Three jobs only: prices,    */
   --color-amber-d: #b08d43;     /* rating stars, "Popular" badges.            */
-  --color-cream: #f8f8f8;
+  /* Warmed from #f8f8f8 to sit in the same family as the villa site's bone
+     page. A neutral grey-white tint on warm paper reads as a colour mistake;
+     this is still lighter than the page, so a tinted pill or band still lifts. */
+  --color-cream: #f7f4ee;
   --color-line: #e7e4dd;
   --color-ok: #2e7d54;
   --color-err: #9a4a3f;
@@ -68,10 +71,17 @@
   --radius-xl: 22px;
   --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
+  /* NO SHADOWS ON THE VILLA SITE (Sep 2026, Wayan sent an aman.com screenshot:
+     "hilangin semua shadow biar seperti ini"). The four steps are kept as names
+     so nothing has to be rewritten to turn depth back on - set them here and it
+     returns everywhere at once.
+     --focus-ring below is NOT one of these. It is drawn with box-shadow, but it
+     is the keyboard focus indicator, not decoration, and removing it would take
+     away the only thing telling a keyboard user where they are. */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
 
   --ease-DEFAULT: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);    /* entrances */
@@ -163,8 +173,17 @@
    instead of dissolving into it. That is the whole point of the pairing.
    -------------------------------------------------------------------------- */
 [data-brand="villas"] {
-  --surface: var(--color-cream);
-  --surface-raised: #ffffff;
+  /* Warm bone, sampled from the aman.com page Wayan sent (Sep 2026, "coba pakai
+     background gini bro") - #f2eee8 is the dominant colour in that screenshot by
+     a wide margin, not a guess at it.
+     ONE surface, not two. It used to be cream underneath with white cards on
+     top, so a card lifted off the page. With the shadows gone that pairing has
+     nothing left to say: the reference is a single sheet of warm paper, and
+     what separates a block from the page is space and a hairline, not a change
+     of colour. Setting --surface-raised back to #ffffff is the one-line way
+     back if the flat version turns out to be too flat. */
+  --surface: #f2eee8;
+  --surface-raised: #f2eee8;
 }
 
 /* ---------------------------------------------------------------------------

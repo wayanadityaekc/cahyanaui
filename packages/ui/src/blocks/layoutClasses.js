@@ -43,7 +43,7 @@ export const SECTION = 'py-[var(--section-gap)] md:py-20';
 export const SECTION_TONES = {
   plain: '',
   cream: 'bg-cream',
-  white: 'bg-white',
+  white: 'bg-surface-raised',
   // Surface only, no text colour: a band that also sets `text-white` changes
   // what every child inherits, including ones that had never asked. The two
   // dark bands on the villa site already colour their own heading and copy.

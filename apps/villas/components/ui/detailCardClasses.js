@@ -4,16 +4,16 @@
 //
 // CARD: white panel with the inset edge shadow, centred, narrower padding on small
 // phones. STRIP: the sticky wrapper - its pt-[10px] bakes the breathing room in as
-// OPAQUE padding (bg-white) rather than an empty gap, so nothing peeks through once
+// OPAQUE padding (bg-surface-raised) rather than an empty gap, so nothing peeks through once
 // the strip is stuck. TRACK: one elongated pill holding the segments (Wayan, 14 Sep
 // 2026: "1 box memanjang dengan border radius, bukan pill kecil-kecil") - same
 // pattern as BookingForm's Standard/Exclusive toggle. w-full + flex-1 segments so the
 // opaque track spans the whole row; a narrower row would let content scroll through
 // beside it.
 export const CARD =
-  'bg-white px-6 pt-6 pb-8 [box-shadow:inset_0_8px_11px_-10px_rgba(34,32,28,0.3),inset_7px_0_9px_-9px_rgba(34,32,28,0.1),inset_-7px_0_9px_-9px_rgba(34,32,28,0.1)] max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
+  'bg-surface-raised px-6 pt-6 pb-8 max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
 export const CARD_WRAP = 'max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4';
-export const STRIP = 'sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-white';
+export const STRIP = 'sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-surface-raised';
 export const TRACK = 'mb-6 flex w-full gap-1 p-1 rounded-pill bg-[rgba(34,32,28,0.08)]';
 export const segment = (on) =>
   `flex-1 text-center whitespace-nowrap font-body text-small font-semibold border-none rounded-pill py-[0.55rem] px-2 cursor-pointer transition-[background-color,color,scale] duration-[var(--dur-fast)] ease-[ease] ${on ? 'bg-gold text-white' : 'bg-transparent text-muted hover:text-green'}`;

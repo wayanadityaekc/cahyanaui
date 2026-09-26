@@ -16,8 +16,8 @@
 // (46.4px vs 41px). Pinning the subtree keeps the bar identical on both sites
 // without touching body copy anywhere else.
 export const NAV_HEADER =
-  'fixed top-0 left-0 right-0 z-[100] w-full leading-[normal] text-green bg-white ' +
-  'shadow-[0_2px_12px_rgba(31,61,43,0.07)] animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none';
+  'fixed top-0 left-0 right-0 z-[100] w-full leading-[normal] text-green bg-surface-raised ' +
+  'animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none';
 
 export const NAV_ROW = 'flex justify-between items-center max-w-[var(--container-wide)] mx-auto py-[0.55rem] px-6';
 
@@ -48,7 +48,7 @@ export const NAV_BADGE = `absolute top-[-7px] right-[-9px] bg-gold ${NAV_BADGE_B
 // CUE in five separate places.
 export const NAV_DRAWER =
   'fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] ' +
-  'bg-white shadow-[-14px_0_40px_rgba(26,26,26,0.2)] px-[22px] pb-[30px] overflow-y-auto ' +
+  'bg-surface-raised px-[22px] pb-[30px] overflow-y-auto ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain ' +
   'transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none ' +
   'z-[120] flex flex-col items-stretch text-left gap-0 list-none';
@@ -57,7 +57,7 @@ export const NAV_DRAWER =
 // width, and it is the ONLY border in the drawer: per-link borders read as too
 // many lines, which is why CUE dropped them.
 export const NAV_DRAWER_HEAD =
-  'flex items-center gap-[10px] bg-white [border-bottom:1px_solid_var(--line)] [border-color:var(--line)] ' +
+  'flex items-center gap-[10px] bg-surface-raised [border-bottom:1px_solid_var(--line)] [border-color:var(--line)] ' +
   'mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem]';
 
 export const NAV_SCRIM =
@@ -109,7 +109,7 @@ export const NAV_SUBTRIGGER =
 // rule apply instead of being overridden by a narrower one.
 export const NAV_CLOSE =
   'ml-auto flex-none grid place-items-center w-[34px] h-[34px] rounded-[var(--r-md)] ' +
-  '[border:1px_solid_var(--line)] bg-white text-gold cursor-pointer [&>svg]:w-4 [&>svg]:h-4 ' +
+  '[border:1px_solid_var(--line)] bg-surface-raised text-gold cursor-pointer [&>svg]:w-4 [&>svg]:h-4 ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 
 export const NAV_SUBLINK =

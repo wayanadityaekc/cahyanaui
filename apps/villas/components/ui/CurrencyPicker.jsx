@@ -17,7 +17,7 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 // `variant`: 'navbar' (sits at the end of the drawer's header row) / 'hero'
 // (sized to match a form field) / 'default'.
 const wrap = (v) => `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`;
-const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body text-field text-green cursor-pointer';
+const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
 const curbtn = (v) =>
   v === 'hero'
     ? `${CURBTN_BASE} py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
@@ -27,7 +27,7 @@ const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_v
 // The list stays mounted and only toggles opacity/transform/pointer-events, so
 // the transition actually plays — a `hidden` attribute would snap.
 const curlist = (v, open) =>
-  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_#e4dcc8] [box-shadow:0_10px_24px_rgba(31,61,43,0.16)] z-10 ` +
+  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-surface-raised [border:1px_solid_#e4dcc8] z-10 ` +
   `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
   `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
   `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;

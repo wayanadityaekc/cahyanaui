@@ -50,8 +50,7 @@ const SHELLS = {
 
 const CARDS = {
   flush:
-    'bg-white rounded-t-[var(--r-xl)] [border-top:1px_solid_var(--line)] ' +
-    '[box-shadow:0_-6px_22px_rgba(26,26,26,0.12)] ' +
+    'bg-surface-raised rounded-t-[var(--r-xl)] [border-top:1px_solid_var(--line)] ' +
     'flex items-center justify-between gap-3 px-4 pt-3 ' +
     '[padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]',
   // rounded-lg, not rounded-xl: defining --radius-* in @theme does NOT clear
@@ -59,7 +58,7 @@ const CARDS = {
   // 16px while `rounded-xl` resolves to this project's --r-xl (22px). --r-lg IS
   // 16px, so rounded-lg is both on-token and pixel-identical to what shipped.
   floating:
-    'bg-white rounded-lg [border:1px_solid_var(--line)] [box-shadow:var(--shadow-xl)] ' +
+    'bg-surface-raised rounded-lg [border:1px_solid_var(--line)] [box-shadow:var(--shadow-xl)] ' +
     'flex items-center justify-between gap-3 px-4 py-3',
 };
 

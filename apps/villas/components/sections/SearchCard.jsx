@@ -64,7 +64,7 @@ export default function SearchCard({ layout = 'bar' }) {
   // one field per row, instead of the wide bar that overlaps the hero's edge.
   if (panel) {
     return (
-      <div className="w-full bg-white/92 backdrop-blur-md p-5 sm:p-6 shadow-lg">
+      <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6">
         <p className="text-label font-medium tracking-[0.14em] uppercase text-muted">Book your stay</p>
         <h2 className="text-h3 font-semibold text-gold mt-1 mb-4">Check your dates</h2>
         <div className="grid grid-cols-1 gap-3">

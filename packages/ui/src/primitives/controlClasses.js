@@ -13,7 +13,7 @@
 
 // ===== Control (trigger button) =====
 const CONTROL_COMMON =
-  'w-full bg-white font-body font-normal text-field text-green text-left cursor-pointer rounded-md ' +
+  'w-full bg-surface-raised font-body font-normal text-field text-green text-left cursor-pointer rounded-md ' +
   '[border:1px_solid_var(--line)] ' +
   '[transition:border-color_var(--dur-fast)_ease,box-shadow_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ' +
   'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
@@ -56,7 +56,7 @@ const PANEL_MOBILE_TRANSITION =
   '[@media(max-width:768px)]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]';
 const PANEL_POPUP_STATIC =
   'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
-  'bg-white [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
+  'bg-surface-raised [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
   'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
   PANEL_MOBILE_TRANSITION;
@@ -64,7 +64,7 @@ export const panelPopup = (open) =>
   `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
 export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
-export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-white text-green text-[1.2rem] leading-none cursor-pointer';
+export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-surface-raised text-green text-[1.2rem] leading-none cursor-pointer';
 // Scrollbar disembunyiin (Wayan) - dulu keliatan pas opsi kepanjangan buat area
 // popup (Guests/Pickup area di navbar, dst); tetep bisa di-scroll (touch/drag),
 // cuma track/thumb-nya gak digambar. Pola sama kayak slider (`[scrollbar-width:none]
@@ -100,24 +100,24 @@ export const CHEV_CAL = 'w-[17px] h-[17px] shrink-0 text-muted [transition:trans
 // scale), overflow-y auto, head sticky.
 const PANEL_BOOKDATE_STATIC =
   'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
-  'bg-white [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
+  'bg-surface-raised [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
   'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
   PANEL_MOBILE_TRANSITION + ' ' +
   'min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh] min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden';
 export const panelBookdate = (open) =>
   `${PANEL_BOOKDATE_STATIC} ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${open ? '[transform:translate(-50%,-50%)_scale(1)] min-[769px]:[transform:translate(-50%,-50%)]' : '[transform:translate(-50%,-50%)_scale(0.96)] min-[769px]:[transform:translate(-50%,-48%)]'}`;
-// Head bookdate: flex-none (popup) + sticky/top-0/bg-white di HP (dari @media max-768)
+// Head bookdate: flex-none (popup) + sticky/top-0/bg-surface-raised di HP (dari @media max-768)
 // DAN desktop (dari bookdate min-769); z-1 cuma desktop.
 export const PANEL_HEAD_BOOKDATE =
   'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none ' +
-  'sticky top-0 bg-white min-[769px]:z-[1]';
+  'sticky top-0 bg-surface-raised min-[769px]:z-[1]';
 
 // Kalender (.hs-cal*). HP: cal max-h none + overflow visible (panel body yg scroll).
 export const HS_CAL = 'pt-4 px-4 pb-[6px] max-h-[340px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [overscroll-behavior:contain] [@media(max-width:768px)]:max-h-none [@media(max-width:768px)]:overflow-visible';
 export const CAL_CAP = 'flex items-center justify-between gap-[0.5rem] font-body font-semibold text-[1rem] text-green mb-3';
 export const CAL_CAP_SPAN = 'flex-[1_1_auto] text-center';
-export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-white text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';
+export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-surface-raised text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';
 // grid-cols-7 Tailwind = repeat(7,minmax(0,1fr)); asli pakai repeat(7,1fr) (min auto) ->
 // beda sub-pixel, jadi pakai arbitrary biar persis.
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';

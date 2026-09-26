@@ -162,3 +162,44 @@ it passed with the old height put back - which is why there is also an absolute
 misses `VillaCard` entirely, because that card is a flat tint with an absolutely
 positioned photo clipped by its own overflow. It now counts any surface that
 contains an `<img>` as a picture.
+
+## The villa site is warm paper, and nothing casts a shadow
+
+Sep 2026, Wayan sent an aman.com screenshot: *"coba pakai background gini bro
+dan, hilangin semua shadow biar seperti ini"*.
+
+**The colour is sampled, not chosen.** `#f2eee8` is the dominant colour in that
+screenshot by a wide margin - a histogram of it, not a guess at what it looked
+like.
+
+**One surface, not two.** `[data-brand="villas"]` used to pair a cream page with
+white cards on top, so a card lifted off it. With the shadows gone that pairing
+had nothing left to say, so `--surface` and `--surface-raised` are now the same
+bone: the page is a single sheet, and what separates a block from it is space
+and a hairline. Setting `--surface-raised` back to `#ffffff` is the one line
+back if flat turns out to be too flat.
+
+That only works because surfaces read the token. Every bare `bg-white` in both
+the library and the villa app was pointed at `bg-surface-raised`. Four kept
+their white on purpose, and the rule is the same for all four: **white that sits
+on a photograph stays white** - the save heart, the "Show all photos" pill, the
+`light` button's hover, and the hairline on the villa card's place line. The
+page's bone would sink into whatever the photo happens to be doing there.
+
+**Shadows are off at the token.** All four steps are `none`, so every
+`var(--shadow-*)` user went flat at once and depth can be turned back on in one
+place. The hand-written ones - the navbar, the drawer, the sticky bar, the
+currency panel, the info card, article images, the search panel, the inset card
+edge, the card hover lift - were swept separately, because a token cannot reach
+those. Two things that use `box-shadow` and are NOT depth stayed: `--focus-ring`
+(the keyboard focus indicator - removing it takes away the only thing telling a
+keyboard user where they are) and the `0 0 0 1px` hairlines on flag images,
+which are borders drawn the other way round.
+
+`--color-cream` was warmed from `#f8f8f8` to `#f7f4ee` at the same time. A
+neutral grey-white tint on warm paper reads as a mistake; it is still lighter
+than the page, so a tinted pill or band still lifts.
+
+Gated by `verify-round4.mjs`: nothing on any page casts a shadow, and `<body>`
+is exactly that bone. Both proved by putting the bug back - one shadow token
+restored, then the white surface restored - 15 assertions each.

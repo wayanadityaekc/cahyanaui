@@ -108,7 +108,7 @@ export default function HomePage() {
         <div className={GRID_PAIR}>
           <VillaCard villa={VILLA_LIST[0]} className="min-[993px]:order-1" />
 
-          <div className="p-7 sm:p-9 bg-white grid sm:grid-cols-3 gap-8 min-[993px]:order-3 min-[993px]:col-span-2 min-[993px]:mt-[1.1rem]">
+          <div className="p-7 sm:p-9 bg-surface-raised grid sm:grid-cols-3 gap-8 min-[993px]:order-3 min-[993px]:col-span-2 min-[993px]:mt-[1.1rem]">
             {WHY_STAY.map((item) => (
               <div key={item.title} className="flex items-start gap-4">
                 <span className={ICON_CIRCLE}>

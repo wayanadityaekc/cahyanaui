@@ -50,7 +50,7 @@ const CARET =
 const list = (v, open) =>
   cn(
     'absolute left-0 right-0 mt-1 p-1 list-none bg-surface-raised z-10',
-    '[border:1px_solid_#e4dcc8] [box-shadow:0_10px_24px_rgba(31,61,43,0.16)]',
+    '[border:1px_solid_#e4dcc8]',
     'transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none',
     open
       ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]'

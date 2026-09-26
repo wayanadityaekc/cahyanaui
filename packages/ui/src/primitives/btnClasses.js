@@ -39,7 +39,7 @@ export const BTN_SM =
  */
 export const BTN_PILL =
   `inline-flex ${BTN_SM} [border:1px_solid_var(--color-gold)] ` +
-  'bg-white text-gold-d font-body no-underline ' +
+  'bg-surface-raised text-gold-d font-body no-underline ' +
   '[transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] ' +
   'hover:bg-gold hover:text-white';
 

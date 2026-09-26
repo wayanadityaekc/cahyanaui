@@ -67,7 +67,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
   return (
     <div
       className={cn(
-        'fixed inset-0 z-[300] bg-white',
+        'fixed inset-0 z-[300] bg-surface-raised',
         '[transition:opacity_var(--dur)_var(--ease),visibility_var(--dur)_var(--ease)]',
         open ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none',
       )}

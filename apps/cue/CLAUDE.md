@@ -2992,6 +2992,35 @@ Order **must be kept** (declarations first, run last):
     ngukur string yang gak pernah dilihat tamu (dulu kebalikannya: di-stub `'$'` padahal
     default-nya rupiah, jadi kebaca "$1.000.000").
 
+## DISKON MUSIMAN - HARGA CORET (26 Sep 2026, Wayan)
+Aturannya, angka-angkanya, dan gerbangnya ada di **`cahyana-api`** (`promo.js` +
+section "DISKON MUSIMAN" di CLAUDE.md sana). Di sini cuma **tampilannya**.
+
+- Katalog sekarang ngirim **`listStandard`/`listExclusive`** buat TIAP item -
+  **sama persis sama harga sekarang kalau gak ada sale**. `quote()` juga ngirim
+  **`list`** per baris.
+- **`<Price>` nyoret harga lama CUMA kalau dua angkanya BEDA**, bukan kalau
+  "lagi ada sale". Itu bedanya sama diskon karangan: kartu yang nyoret angka
+  gara-gara ada flag itu persis yang **sengaja GAK ditiru** dari GetYourGuide
+  waktu `BookBar` dibikin. Nyoret karena tamu emang bayar lebih murah dari angka
+  itu = kebalikannya.
+  - Catatan lama di doc ini ("harga coret = diskon karangan, jangan dipasang")
+    berlaku **cuma selama kita gak punya harga asli**. Sekarang punya.
+- **`PRICE_WAS`** di `priceClasses.js`: muted, lebih kecil, **bobot normal**, dan
+  **DI DEPAN** angka barunya. Itu angka yang TIDAK dibayar, jadi gak boleh
+  berantem sama yang dibayar - dan naro dia di belakang bikin kalimatnya kebalik.
+  Hook-nya **`[data-price-was]`**.
+- **BATAS YANG JUJUR**: coretannya nongol di mana pun harga di-render lewat
+  `<Price>` - kartu, book bar, kartu booking. **Keranjang & checkout nyusun
+  string "Rp..." sendiri** (lihat komentar di `Price.jsx`), jadi di situ yang
+  keliatan cuma harga sale-nya, tanpa coretan. **Angka yang ditagih tetep bener**
+  di dua-duanya; yang kurang cuma baris coretnya.
+- Verifikasi: **`verify-sale.mjs` di root repo (91/91)** - USD & IDR, 390 & 1280,
+  halaman listing & detail, plus satu putaran **tanpa sale** yang nge-assert
+  **nol** angka kecoret di mana pun. Dites pakai 3 bug: coret dipasang tiap ada
+  harga list (11 nyala) · coretan ditaro sesudah harga baru (8) · coretan
+  di-style setebal harga aslinya (16).
+
 ## MATA UANG DEFAULT = USD (24 Sep 2026, Wayan) — dan itu KEPUTUSAN RAIL, bukan tampilan
 `DEFAULT_CURRENCY` di `lib/constants.js`. Cuma ngefek ke **paint pertama** tamu baru;
 yang udah pernah milih tetep kebawa pilihannya (`cue_currency` di localStorage).

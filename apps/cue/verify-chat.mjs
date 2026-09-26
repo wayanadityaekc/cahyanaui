@@ -64,8 +64,11 @@ for (const w of [390, 768, 1280]) {
       ok(Math.abs(box.width - w) <= 1, `${w}${path}: phone sheet should span the width, got ${box.width}`);
       ok(Math.abs(box.y + box.height - 880) <= 1, `${w}${path}: phone sheet should sit on the bottom edge`);
     } else {
-      ok(box.width > 300 && box.width < 460, `${w}${path}: desktop panel width ${box.width}`);
-      ok(box.x + box.width < w, `${w}${path}: desktop panel runs past the right edge`);
+      // Desktop is a full-height drawer off the right edge, like the navbar menu.
+      ok(box.width >= 340 && box.width <= 420, `${w}${path}: drawer width ${box.width}`);
+      ok(Math.abs(box.x + box.width - w) <= 1, `${w}${path}: drawer is not flush to the right edge`);
+      ok(Math.abs(box.height - 880) <= 1, `${w}${path}: drawer is not full height (${box.height})`);
+      ok(Math.abs(box.y) <= 1, `${w}${path}: drawer does not start at the top`);
     }
 
     // The suggested questions are what make this read as support.

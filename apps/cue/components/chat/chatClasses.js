@@ -5,25 +5,42 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 // the select panels already use, so it is not a fourth kind of surface.
 export const PANEL = (open) => [
   'fixed z-[130] flex flex-col bg-white overflow-hidden',
-  '[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
   'motion-reduce:transition-none',
-  // desktop: anchored under the navbar, right edge lined up with the page gutter
-  '[@media(min-width:769px)]:top-[calc(var(--header-h)+8px)] [@media(min-width:769px)]:right-[var(--container-x)]',
-  '[@media(min-width:769px)]:w-[380px] [@media(min-width:769px)]:h-[min(560px,calc(100dvh-var(--header-h)-32px))]',
-  '[@media(min-width:769px)]:rounded-[var(--r-lg)] [@media(min-width:769px)]:[border:1px_solid_var(--line)] [@media(min-width:769px)]:[box-shadow:var(--shadow-xl)]',
-  // phone: a sheet, top corners only, shadow thrown upward
+  // Desktop: a full-height drawer off the right edge, the same shape and the
+  // same slide as the navbar menu (Sep 2026, Wayan: "di desktop buat tampilanya
+  // full di kanan seperti menu"). It replaced a small popup hanging under the
+  // icon - a conversation with price lines in it needs the height, and the site
+  // already has one way of showing a panel on the right.
+  //
+  // Geometry copied from that menu on purpose: same width cap, same 100dvh,
+  // same shadow thrown left, same 300ms translate. Two right-hand drawers that
+  // move differently would read as two different systems.
+  '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
+  '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
+  '[@media(min-width:769px)]:[box-shadow:-14px_0_40px_rgba(26,26,26,0.2)]',
+  '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
+  open
+    ? '[@media(min-width:769px)]:translate-x-0'
+    : '[@media(min-width:769px)]:translate-x-full',
+  // Phone: unchanged - a sheet off the bottom, which Wayan signed off on.
   '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
   '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
   '[@media(max-width:768px)]:[box-shadow:0_-12px_48px_rgba(26,26,26,0.28)]',
+  '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
   open
-    ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]'
-    : 'opacity-0 invisible pointer-events-none [@media(max-width:768px)]:[transform:translateY(100%)] [@media(min-width:769px)]:[transform:translateY(-8px)]',
+    ? '[@media(max-width:768px)]:opacity-100 [@media(max-width:768px)]:[transform:translateY(0)]'
+    : '[@media(max-width:768px)]:opacity-0 [@media(max-width:768px)]:[transform:translateY(100%)]',
+  open ? 'visible pointer-events-auto' : 'invisible pointer-events-none',
 ].join(' ');
 
+// The scrim now runs at every width, because the desktop panel became a drawer
+// that covers part of the page rather than a popup floating over it. Same
+// colour and timing as the navbar menu's scrim; it sits under the panel and
+// closes on a tap.
 export const SCRIM = (open) =>
-  'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.42)] [@media(min-width:769px)]:hidden ' +
-  '[transition:opacity_var(--dur-slow)_var(--ease-out)] motion-reduce:transition-none ' +
-  (open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none');
+  'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ' +
+  '[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ' +
+  (open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none');
 
 export const HEAD =
   'flex items-center gap-[0.7rem] flex-none pt-4 px-4 pb-3 [border-bottom:1px_solid_var(--line)]';

@@ -119,6 +119,57 @@ for (const w of [390, 768, 1280]) {
     ok(body.includes('How much is a day tour?'), `${w}${path}: the tapped question is not shown as the guest's message`);
     ok(/\$\d/.test(body), `${w}${path}: a price answer with no price in it`);
 
+    // ---- the buttons, against the site's own contract ----
+    // verify-btnsm.mjs CANNOT see any of these. It censuses what is on screen at
+    // page load, and this panel only mounts after a tap - so six new buttons
+    // shipped without ever meeting BTN_SM. Two of them were 14.8px and 16px tall
+    // against a 33.6px standard: nothing overrode the height, they were squashed,
+    // because a flex item in a scrolling column shrinks by default.
+    const std = await page.evaluate(() => {
+      const el = document.createElement('div');
+      el.style.cssText = 'height:var(--btn-h);font-size:var(--text-small);border-radius:var(--radius-sm)';
+      document.body.appendChild(el);
+      const cs = getComputedStyle(el);
+      const out = { h: parseFloat(cs.height), fs: parseFloat(cs.fontSize), r: parseFloat(cs.borderRadius) };
+      el.remove();
+      return out;
+    });
+    const ctas = await panel.evaluate((root) => [...root.querySelectorAll('[data-cta]')].map((el) => {
+      const r = el.getBoundingClientRect(); const cs = getComputedStyle(el);
+      const label = (el.innerText || el.getAttribute('aria-label') || '').trim();
+      return { label, words: label ? label.split(/\s+/).length : 0, h: r.height,
+        fs: parseFloat(cs.fontSize), rad: parseFloat(cs.borderTopLeftRadius),
+        pt: parseFloat(cs.paddingTop), pb: parseFloat(cs.paddingBottom) };
+    }), await panel.elementHandle());
+    ok(ctas.length >= 2, `${w}${path}: expected action buttons in the panel, found ${ctas.length}`);
+    for (const c of ctas) {
+      ok(Math.abs(c.h - std.h) < 0.5, `${w}${path}: "${c.label}" is ${c.h}px, not ${std.h}`);
+      ok(c.fs === std.fs, `${w}${path}: "${c.label}" font ${c.fs}, not ${std.fs}`);
+      ok(c.rad === std.r, `${w}${path}: "${c.label}" radius ${c.rad}, not ${std.r}`);
+      ok(c.pt === 0 && c.pb === 0, `${w}${path}: "${c.label}" has vertical padding`);
+      // The site's 1-2 word rule. Chips are exempt - they are questions.
+      ok(c.words <= 2, `${w}${path}: "${c.label}" is ${c.words} words, the rule is 2`);
+    }
+
+    // One control height in the panel: the chips keep the pill, not a fourth size.
+    const chipBox = await panel.evaluate((root) => [...root.querySelectorAll('[data-chip]')].map((el) => {
+      const cs = getComputedStyle(el);
+      return { h: el.getBoundingClientRect().height, fs: parseFloat(cs.fontSize), rad: parseFloat(cs.borderTopLeftRadius) };
+    }), await panel.elementHandle());
+    for (const c of chipBox) {
+      ok(Math.abs(c.h - std.h) < 0.5, `${w}${path}: a chip is ${c.h}px, not ${std.h}`);
+      ok(c.fs === std.fs, `${w}${path}: a chip font is ${c.fs}, not ${std.fs}`);
+      ok(c.rad > 100, `${w}${path}: a chip lost its pill shape (${c.rad})`);
+    }
+
+    // Anything new has to declare what it is, or this fails.
+    const stray = await panel.evaluate((root) =>
+      [...root.querySelectorAll('button')].filter((el) =>
+        !el.hasAttribute('data-cta') && !el.hasAttribute('data-chip') &&
+        el.getAttribute('aria-label') !== 'Close chat').length,
+      await panel.elementHandle());
+    ok(stray === 0, `${w}${path}: ${stray} button(s) in the panel are neither an action nor a chip`);
+
     // Off topic: declines politely, offers what it CAN do, and quotes nothing.
     const input = panel.getByLabel('Your question');
     await input.fill('who won the world cup');
@@ -152,7 +203,7 @@ for (const w of [390, 768, 1280]) {
       ok(after > before, `${w}${path}: "${q}" did not reach a person`);
     }
 
-    const send = panel.getByRole('button', { name: /Send to Wayan/ });
+    const send = panel.locator('[data-handoff]');
     ok(await send.count() >= 1, `${w}${path}: the handoff offers no way to reach Wayan`);
     ok(await panel.getByPlaceholder('Email (optional)').count() >= 1,
        `${w}${path}: the handoff never asks for an email`);
@@ -220,11 +271,11 @@ for (const w of [390, 768, 1280]) {
 
     await input.fill('my mother is elderly, how much walking is there');
     await input.press('Enter');
-    await panel.getByRole('button', { name: /Send to Wayan/ }).waitFor({ state: 'visible', timeout: 10000 });
+    await panel.locator('[data-handoff]').waitFor({ state: 'visible', timeout: 10000 });
 
   {
     await panel.getByPlaceholder('Email (optional)').fill('rui@example.com');
-    await panel.getByRole('button', { name: /Send to Wayan/ }).click();
+    await panel.locator('[data-handoff]').click();
 
     await panel.getByText('Wayan has it', { exact: false }).waitFor({ state: 'visible', timeout: 10000 });
     ok(chat.started.length === 1, `${w}: expected one handover, got ${chat.started.length}`);

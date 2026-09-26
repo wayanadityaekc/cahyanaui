@@ -67,18 +67,18 @@ export const BUBBLE_ME =
 // A price line inside an answer. Tappable, because a guest who just asked the
 // price of a tour is one tap from the page that sells it.
 export const ROW =
-  'flex items-center gap-[0.6rem] w-full px-[0.7rem] py-[0.5rem] rounded-[var(--r-sm)] bg-white ' +
-  '[border:1px_solid_var(--line)] no-underline text-left cursor-pointer ' +
+  'flex flex-none items-center gap-[0.6rem] w-full px-[0.7rem] py-[0.5rem] rounded-[var(--r-sm)] bg-white ' +
+  '[border:1px_solid_var(--line)] no-underline text-left cursor-pointer text-small ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 export const ROW_NAME = 'flex-1 min-w-0 font-body text-small text-green';
 export const ROW_NOTE = 'block font-body text-label text-muted truncate';
 export const ROW_PRICE = 'flex-none font-body text-small font-semibold text-amber tabular-nums';
 
 export const LINK =
-  `inline-flex ${BTN_SM} self-start bg-white text-gold [border:1px_solid_var(--line)] no-underline cursor-pointer ` +
+  `inline-flex flex-none ${BTN_SM} self-start bg-white text-gold [border:1px_solid_var(--line)] no-underline cursor-pointer ` +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 export const HANDOFF_BTN =
-  `inline-flex ${BTN_SM} self-start gap-[0.4rem] bg-cta text-white border-none no-underline cursor-pointer ` +
+  `inline-flex flex-none ${BTN_SM} self-start gap-[0.4rem] bg-cta text-white border-none no-underline cursor-pointer ` +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 
@@ -86,7 +86,7 @@ export const HANDOFF_BTN =
 // reads as asking rather than as picking from a menu.
 export const CHIPS = 'flex flex-wrap gap-[0.4rem] self-start mt-[0.15rem]';
 export const CHIP_Q =
-  'inline-flex items-center px-[0.7rem] py-[0.4rem] rounded-[var(--r-pill)] bg-white ' +
+  'inline-flex flex-none items-center h-[var(--btn-h)] px-[0.8rem] py-0 rounded-[var(--r-pill)] bg-white ' +
   '[border:1px_solid_var(--line)] font-body text-small text-green cursor-pointer text-left ' +
   '[transition:background-color_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] ' +
   'hover:bg-cream hover:[border-color:var(--color-gold)]';
@@ -94,7 +94,7 @@ export const CHIP_Q =
 export const FOOT =
   'flex-none flex items-center gap-[0.5rem] px-4 py-3 [border-top:1px_solid_var(--line)] bg-white';
 export const SEND =
-  'flex-none inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-[var(--r-sm)] ' +
+  'flex-none inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-[var(--r-sm)] text-small ' +
   'bg-cta text-white border-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
@@ -116,10 +116,10 @@ export const WHO = 'block font-body text-label font-medium tracking-[0.06em] upp
 export const HANDOFF_FORM =
   'self-start w-full max-w-[86%] flex flex-col gap-[0.4rem] p-[0.7rem] rounded-[var(--r-md)] ' +
   'bg-cream [border:1px_solid_var(--line)]';
-export const HANDOFF_ROW = 'flex gap-[0.4rem] [&>*]:flex-1';
+export const HANDOFF_ROW = 'flex flex-col min-[420px]:flex-row gap-[0.4rem] [&>*]:flex-1 [&>*]:min-w-0';
 export const NOTE = 'font-body text-label text-muted m-0';
 export const ALT_LINK =
-  'font-body text-label text-muted underline underline-offset-2 cursor-pointer bg-transparent border-none p-0 self-start';
+  'font-body text-small text-muted underline underline-offset-2 cursor-pointer bg-transparent border-none p-0 self-start';
 // Shown once the conversation belongs to Wayan, so nobody wonders whether the
 // panel is still the one reading.
 export const CONNECTED =

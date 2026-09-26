@@ -183,7 +183,7 @@ export default function ChatPanel({ open, onClose }) {
                 </p>
               );
             }
-            return <BotReply key={m.id} m={m} onAsk={ask} thread={thread} />;
+            return <BotReply key={m.id} m={m} onAsk={ask} />;
           })}
 
           {form && (
@@ -208,7 +208,7 @@ export default function ChatPanel({ open, onClose }) {
                   maxLength={200}
                 />
               </span>
-              <button type="submit" className={HANDOFF_BTN} disabled={sending}>
+              <button type="submit" className={HANDOFF_BTN} data-cta data-handoff disabled={sending}>
                 <MessageCircle strokeWidth={1.8} aria-hidden="true" />
                 {sending ? 'Sending...' : CHAT_COPY.handoffSend}
               </button>
@@ -251,7 +251,7 @@ export default function ChatPanel({ open, onClose }) {
             aria-label="Your question"
             maxLength={300}
           />
-          <button type="submit" className={SEND} disabled={!draft.trim() || thinking || sending} aria-label="Send">
+          <button type="submit" className={SEND} data-cta disabled={!draft.trim() || thinking || sending} aria-label="Send">
             <Send strokeWidth={1.8} aria-hidden="true" />
           </button>
         </form>
@@ -262,13 +262,13 @@ export default function ChatPanel({ open, onClose }) {
 
 // One reply from us: the sentence, then whatever it came with - price lines,
 // a page to open, the way to reach Wayan, or the questions worth asking next.
-function BotReply({ m, onAsk, thread }) {
+function BotReply({ m, onAsk }) {
   return (
     <>
       <p className={BUBBLE_BOT}>{m.text}</p>
 
       {m.rows && m.rows.map((r) => (
-        <a key={r.label} className={ROW} href={r.href}>
+        <a key={r.label} className={ROW} data-pricerow href={r.href}>
           <span className={ROW_NAME}>
             {r.label}
             {r.note && <small className={ROW_NOTE}>{r.note}</small>}
@@ -277,26 +277,14 @@ function BotReply({ m, onAsk, thread }) {
         </a>
       ))}
 
-      {m.link && <a className={LINK} href={m.link.href}>{m.link.label}</a>}
-
-      {m.handoff && !thread && (
-        <a
-          className={HANDOFF_BTN}
-          href={`https://wa.me/${WHATSAPP_NUMBER}`}
-          target="_blank"
-          rel="noopener"
-        >
-          <MessageCircle strokeWidth={1.8} aria-hidden="true" />
-          {CHAT_COPY.handoffCta}
-        </a>
-      )}
+      {m.link && <a className={LINK} data-cta href={m.link.href}>{m.link.label}</a>}
 
       {m.nudge && <p className={BUBBLE_BOT}>{m.nudge}</p>}
 
       {m.chips && (
         <span className={CHIPS}>
           {m.chips.map((q) => (
-            <button key={q} type="button" className={CHIP_Q} onClick={() => onAsk(q)}>{q}</button>
+            <button key={q} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(q)}>{q}</button>
           ))}
         </span>
       )}

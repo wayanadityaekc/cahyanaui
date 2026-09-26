@@ -178,7 +178,6 @@ export const CHAT_COPY = {
   offtopic:
     "I can only help with Cahyana tours, transfers and bookings, so I'd rather not guess at that one.",
   offtopicNudge: 'Here is what I can help with:',
-  handoffCta: 'Connect with Wayan',
   moreCta: 'Ask something else',
   hello: 'Hi! What can I help you with?',
   thanks: "You're welcome. Anything else you want to check before you book?",
@@ -187,12 +186,12 @@ export const CHAT_COPY = {
   handoffIntro: 'I can pass this to Wayan. Leave an email and he can reach you even if you close this.',
   handoffName: 'Your name',
   handoffEmail: 'Email (optional)',
-  handoffSend: 'Send to Wayan',
+  handoffSend: 'Ask Wayan',
   handoffSent: 'Sent. Wayan has it.',
   // Two versions of the same fact, picked by the clock.
   hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
   hoursClosed: `It is outside ${REPLY_HOURS.label} in Bali now, so he is probably asleep. He answers in the morning, and your email means you will get it either way.`,
   connected: 'You are talking to Wayan now.',
-  handoffAlt: 'Or message on WhatsApp',
+  handoffAlt: 'WhatsApp',
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',
 };

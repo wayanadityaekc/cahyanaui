@@ -82,7 +82,7 @@ function tourPrices(ctx) {
   return {
     text: 'Day tours are priced per car for up to 5 people, so a bigger group pays less each. A few of ours:',
     rows: picks,
-    link: { href: '/tour.html', label: 'See all tours' },
+    link: { href: '/tour.html', label: 'All tours' },
   };
 }
 
@@ -93,7 +93,7 @@ function airportPrice(ctx) {
     text: price
       ? `Airport pickup to Ubud is ${price} per car, up to 5 people with luggage. Your driver meets you at arrivals, and we ask for your flight number so the timing follows your actual landing.`
       : 'We run airport pickups to Ubud and back, and we ask for your flight number so the timing follows your actual landing.',
-    link: { href: '/airport-transfer.html', label: 'Book an airport transfer' },
+    link: { href: '/airport-transfer.html', label: 'Airport transfer' },
   };
 }
 
@@ -107,7 +107,7 @@ function charterPrices(ctx) {
       ? 'You can take the car and driver for the day and decide the route as you go:'
       : 'You can take the car and driver for the day and decide the route as you go.',
     rows,
-    link: { href: '/charter.html', label: 'Build a charter' },
+    link: { href: '/charter.html', label: 'Book charter' },
   };
 }
 
@@ -116,7 +116,7 @@ function startTimes() {
   return {
     text:
       'Most day tours start at 8:00, 8:30 or 9:00 in the morning. Some are fixed by what you are going to see: Lempuyang runs from 3:00 for the light at the gates, Batur trekking and the sunrise jeep leave at 2:00 or 3:00, and Kecak starts at 19:00. Transfers and charters you can set to any hour.',
-    link: { href: '/tour.html', label: 'See all tours' },
+    link: { href: '/tour.html', label: 'All tours' },
   };
 }
 
@@ -215,7 +215,7 @@ export function answerFor(question, ctx = {}) {
       text: price
         ? `${item.name} is ${price}${item.section === 'tour' || item.section === 'destinations' ? ' per car for up to 5 people' : ''}.${bits ? ` ${bits}.` : ''}`
         : `${item.name}${bits ? ` - ${bits}.` : '.'}`,
-      link: { href: item.href, label: `Open ${item.name}` },
+      link: { href: item.href, label: 'View details' },
     };
   }
 

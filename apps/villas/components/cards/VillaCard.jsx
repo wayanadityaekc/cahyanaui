@@ -20,6 +20,8 @@ export default function VillaCard({ villa }) {
   return (
     <VillaCardBlock
       villa={villa}
+      /* No zoom on hover: the block scales its photo on group-hover, this cancels it. */
+      className="[&>img]:scale-100!"
       linkAs={Link}
       place="Ubud, Bali"
       price={format(villa.nightlyRate)}

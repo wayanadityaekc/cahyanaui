@@ -7,7 +7,7 @@ import SearchCard from '@/components/sections/SearchCard';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
-import { Button, CAPS, Container, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
+import { Button, CAPS, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
 
 export const metadata = {
@@ -68,17 +68,15 @@ export default function HomePage() {
         title="A private retreat in the heart of Ubud"
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
         actions={(
-          <>
-            <CheckAvailabilityButton />
-            <Button as={Link} variant="light" href="/#villas">Explore villas</Button>
-          </>
+          <Button as={Link} variant="light" href="/#villas">Explore villas</Button>
         )}
-        below={(
-          <Container>
-            <SearchCard />
-          </Container>
-        )}
-      />
+      >
+        {/* The booking form sits inside the hero: under the copy on a phone, a
+            tall panel on the right from 993px. */}
+        <div className="mt-8 min-[993px]:mt-0 min-[993px]:absolute min-[993px]:top-1/2 min-[993px]:-translate-y-1/2 min-[993px]:right-[var(--container-x)] min-[993px]:w-[22rem]">
+          <SearchCard layout="panel" />
+        </div>
+      </Hero>
 
       {/* Villas. id="villas" because /villas the PAGE is gone (Wayan) and this
           band is what took over its job - every "see both villas" link on the
@@ -221,7 +219,6 @@ export default function HomePage() {
               as={a.external ? 'a' : Link}
               href={a.href}
               {...(a.external ? { target: '_blank', rel: 'noopener' } : {})}
-              zoom
               image={{ src: a.img, alt: a.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
               footer={(
                 <span className={`${CAPS} text-cta`}>

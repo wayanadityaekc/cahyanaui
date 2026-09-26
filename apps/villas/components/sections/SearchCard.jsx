@@ -19,26 +19,26 @@ import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 // set before check-in, because DateField takes a `min`.
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
 
-export default function SearchCard() {
+export default function SearchCard({ layout = 'bar' }) {
   const { openBooking } = useBooking();
   const { guests, setGuests } = useTripPrefs();
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  return (
-    <SearchBar
-      variant="hero"
-      action={(
-        <Button onClick={() => openBooking({ checkIn, checkOut, guests })}
-        >
-          <Search className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
-          Search
-        </Button>
-      )}
-    >
+  const panel = layout === 'panel';
+  const search = (
+    <Button full={panel} onClick={() => openBooking({ checkIn, checkOut, guests })}>
+      <Search className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
+      Search
+    </Button>
+  );
+
+  const fields = (
+    <>
       {/* The range picker spans the two date columns: it renders its own pair
-          of triggers, so the grid cell it sits in is two columns wide. */}
-      <div className="min-w-0 sm:col-span-2">
+          of triggers, so the grid cell it sits in is two columns wide. In the
+          panel there is one column, so it spans nothing. */}
+      <div className={panel ? 'min-w-0' : 'min-w-0 sm:col-span-2'}>
         <label className={SEARCH_LABEL}>Dates</label>
         <DateRangeField
           id="search-checkin"
@@ -57,6 +57,27 @@ export default function SearchCard() {
           options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
         />
       </div>
+    </>
+  );
+
+  // 'panel' is the booking form living INSIDE the hero: a tall frosted card,
+  // one field per row, instead of the wide bar that overlaps the hero's edge.
+  if (panel) {
+    return (
+      <div className="w-full bg-white/92 backdrop-blur-md p-5 sm:p-6 shadow-lg">
+        <p className="text-label font-medium tracking-[0.14em] uppercase text-muted">Book your stay</p>
+        <h2 className="text-h3 font-semibold text-gold mt-1 mb-4">Check your dates</h2>
+        <div className="grid grid-cols-1 gap-3">
+          {fields}
+          {search}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <SearchBar variant="hero" action={search}>
+      {fields}
     </SearchBar>
   );
 }

@@ -2041,6 +2041,35 @@ Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu
     sabotase model itu bisa gak pernah ke-render (kejadian, lihat pelajaran harness di
     section rail).
 
+## CHAT: PERTANYAAN ANEH LANGSUNG KE WAYAN (26 Sep 2026)
+Wayan, sesudah nyoba chat-nya di HP sendiri: *"kalo pertanyaan aneh langsung
+connect ke gua aja"*.
+- **`answerFor()` sekarang cuma punya DUA hasil**: `answer` (dijawab di tempat dari
+  FAQ/katalog) atau `handoff` (nyambung ke Wayan). Hasil ketiga, `offtopic`, **UDAH
+  DIHAPUS** - dulu dia nyetak *"I can only help with Cahyana tours, transfers and
+  bookings, so I'd rather not guess at that one."* + chip saran, dan **gak pernah
+  manggil `connect()`**. Itu yang Wayan alamin: dia nanya sesuatu yang gak ke-match,
+  panelnya nolak sopan, dan gak ada apa pun yang nyampe ke dia.
+- **`IN_SCOPE_WORDS` IKUT DIHAPUS** dari `content/shared/chat.js`. Dia satu-satunya
+  yang mutusin handoff-vs-decline, dan begitu decline-nya gak ada dia gak dibaca
+  siapa-siapa. Alasan dia dibuang, bukan cuma dibiarin nganggur: daftar kata itu
+  salah justru di arah yang paling mahal - tamu yang pertanyaannya **gak** kedengeran
+  kayak pertanyaan orang lain itu persis tamu yang paling layak diajak ngomong.
+- **`CHAT_COPY.offtopic` + `offtopicNudge` dihapus.** Kalau nemu kalimat decline itu
+  lagi di mana pun, itu regresi, bukan fitur - `verify-chat.mjs` nge-assert dia
+  **gak ada di layar** (dites: dibalikin ke sumbernya + build ulang -> **18 nyala**).
+- **Yang TETEP dijawab sendiri gak berubah**: sapaan, terima kasih, harga dari
+  katalog, jam mulai, FAQ. Yang berubah cuma ekornya - dan `HUMAN_WORDS` (situasi,
+  bukan lookup) tetep nyegat DULUAN, jadi pertanyaan kursi roda gak pernah ke-jawab
+  daftar harga.
+- **Ongkos yang jujur**: tiap pertanyaan yang gak ke-match sekarang bikin thread +
+  email ke Wayan, termasuk spam bot. Yang nahan cuma `publicLimiter` di
+  `/api/chat/start` (**20 request / 15 menit per IP**). Kalau nanti kebanjiran,
+  obatnya **BUKAN** balikin decline-nya - lebih baik naikin ambang limiter atau
+  saring di sisi server, biar tamu asli tetep nyampe.
+- Verifikasi: **`verify-chat.mjs` 618/618** (dari 600 - nambah 2 assertion per
+  halaman x lebar: pertanyaan aneh nyampe ke orang, dan decline-nya gak ada).
+
 ## CHAT LIVE - WEBSOCKET (Sep 2026, Wayan: "gua mau web socket bro biar makin proper")
 Panel chat dulu polling tiap 5 detik. Sekarang dia pegang **WebSocket** selama
 kebuka: balesan Wayan mendarat pas dia ngirim, plus dua hal yang polling emang

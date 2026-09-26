@@ -186,28 +186,13 @@ for (const w of [390, 768, 1280]) {
       await panel.elementHandle());
     ok(stray === 0, `${w}${path}: ${stray} button(s) in the panel are neither an action nor a chip`);
 
-    // Off topic: declines politely, offers what it CAN do, and quotes nothing.
+    // Reaching a person is COUNTED, never waited for: after the first handover
+    // that sentence is already on screen, so a plain waitFor passes even when the
+    // next question was answered with a price list. That is how the first version
+    // of this check passed against a deliberately broken build.
     const input = panel.getByLabel('Your question');
-    await input.fill('who won the world cup');
-    await input.press('Enter');
-    await panel.getByText('I can only help with Cahyana', { exact: false })
-      .waitFor({ state: 'visible', timeout: 10000 });
-
-    // A situation, not a lookup: must reach a person, not a price list.
-    //
-    // BOTH phrasings are probed on purpose. "wheelchair" is already caught by the
-    // topic threshold, so testing only that one let the whole human-question guard
-    // be deleted with this gate still reporting 126/126 - measured. The elderly
-    // phrasing is the one that actually depends on the guard.
-    //
-    // And each probe COUNTS the handoff replies rather than waiting for the text
-    // to be present: after the first handoff that sentence is already on screen,
-    // so a plain waitFor passes even when the second question was answered with a
-    // price list. That is how the first version of this check passed against a
-    // deliberately broken build.
     const handoffs = () => panel.getByText('Give me a moment', { exact: false }).count();
-    for (const q of ['my wife is in a wheelchair, can she do the tour',
-                     'my mother is elderly, how much walking is there']) {
+    const reaches = async (q) => {
       const before = await handoffs();
       await input.fill(q);
       await input.press('Enter');
@@ -216,7 +201,28 @@ for (const w of [390, 768, 1280]) {
         await page.waitForTimeout(150);
         after = await handoffs();
       }
-      ok(after > before, `${w}${path}: "${q}" did not reach a person`);
+      return after > before;
+    };
+
+    // An odd question is a question for Wayan, not a closed door (Sep 2026,
+    // Wayan: "kalo pertanyaan aneh langsung connect ke gua aja"). Both halves
+    // are asserted: it reaches him, AND the decline that used to sit here is
+    // gone - putting that sentence back fails this gate.
+    ok(await reaches('who won the world cup'),
+       `${w}${path}: an off-topic question did not reach a person`);
+    ok((await panel.getByText('I can only help with Cahyana', { exact: false }).count()) === 0,
+       `${w}${path}: the polite decline is back - odd questions are a dead end again`);
+
+    // A situation, not a lookup: must reach a person, not a price list.
+    //
+    // BOTH phrasings are probed on purpose. "wheelchair" is already caught by the
+    // topic threshold, so testing only that one let the whole human-question guard
+    // be deleted with this gate still reporting 126/126 - measured. The elderly
+    // phrasing is the one that actually depends on the guard.
+    //
+    for (const q of ['my wife is in a wheelchair, can she do the tour',
+                     'my mother is elderly, how much walking is there']) {
+      ok(await reaches(q), `${w}${path}: "${q}" did not reach a person`);
     }
 
     // Nothing is asked before the handover any more - it connects on the spot.

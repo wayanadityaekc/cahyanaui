@@ -9,7 +9,7 @@
 import { FAQ } from '@/content/shared/faq';
 import { LISTINGS } from '@/content/shared/listings';
 import { CHARTER } from '@/content/shared/charter';
-import { TOPICS, IN_SCOPE_WORDS, HUMAN_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/shared/chat';
+import { TOPICS, HUMAN_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/shared/chat';
 
 // FAQ answers are stored as HTML because the FAQ page renders them. A chat
 // bubble wants sentences, so the tags come off - but the text inside <strong>
@@ -186,13 +186,18 @@ function answerTopic(topic, ctx) {
 
 /**
  * The only entry point. Returns one of:
- *   { kind: 'answer',   text, rows?, link? }
- *   { kind: 'handoff',  text }   - ours to answer, but not by this code
- *   { kind: 'offtopic', text }   - nothing to do with what we sell
+ *   { kind: 'answer',  text, rows?, link? }
+ *   { kind: 'handoff', text }   - not answerable here, so it goes to Wayan
+ *
+ * There is no third outcome. A question this file cannot answer is a question
+ * for a person, whatever it was about (Sep 2026, Wayan: "kalo pertanyaan aneh
+ * langsung connect ke gua aja"). The polite decline that used to sit here read
+ * as a closed door to the one guest who most needed answering.
  */
 export function answerFor(question, ctx = {}) {
   const q = String(question || '').trim();
-  if (!q) return { kind: 'offtopic', text: CHAT_COPY.offtopic };
+  // Only reachable from a caller that is not the panel; the panel drops empties.
+  if (!q) return { kind: 'answer', text: CHAT_COPY.greeting };
 
   const bare = norm(q);
   if (GREETINGS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.hello };
@@ -222,12 +227,10 @@ export function answerFor(question, ctx = {}) {
   const topic = matchTopic(q);
   if (topic) return { kind: 'answer', ...answerTopic(topic, ctx) };
 
-  // Nothing matched. The question is still OURS if it speaks our vocabulary -
-  // that is a real question this code just cannot answer, and it belongs with
-  // Wayan. A question sharing no words with what we sell is not ours at all.
-  const qw = words(q);
-  const ours = qw.some((w) => IN_SCOPE_WORDS.includes(w));
-  return ours
-    ? { kind: 'handoff', text: CHAT_COPY.handoff }
-    : { kind: 'offtopic', text: CHAT_COPY.offtopic };
+  // Nothing matched, so it goes to Wayan. We deliberately do NOT try to judge
+  // whether the question was "about us" first: that judgement was a word list,
+  // and a word list gets the odd question wrong in the expensive direction -
+  // the guest whose question does not sound like the other ones is exactly the
+  // guest worth talking to.
+  return { kind: 'handoff', text: CHAT_COPY.handoff };
 }

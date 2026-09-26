@@ -250,11 +250,9 @@ export default function ChatPanel({ open, onClose }) {
     setTimeout(() => {
       const res = answerFor(q, ctx);
       const msg = { id: uid(), from: 'bot', text: res.text, rows: res.rows, link: res.link };
-      // Handoff and off-topic both end in something to do next: one offers
-      // Wayan, the other offers the questions this can actually answer. A dead
-      // end is the one outcome that is never acceptable.
+      // Two outcomes only: answered here, or handed to Wayan. A dead end is
+      // the one outcome that is never acceptable, and a polite decline is one.
       if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(q); }
-      if (res.kind === 'offtopic') { msg.chips = SUGGESTIONS; msg.nudge = CHAT_COPY.offtopicNudge; }
       setLog((prev) => [...prev, msg]);
       setThinking(false);
     }, THINK_MS);

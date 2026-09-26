@@ -102,18 +102,6 @@ export const TOPICS = [
     words: ['fee', 'fees', 'commission', 'hidden', 'extra charge', 'service charge'] },
 ];
 
-// Words that mean "this is about us" even when no topic matched well enough to
-// answer. They decide handoff vs polite decline: a question using our own
-// vocabulary is a real question we just cannot answer, and it goes to Wayan.
-export const IN_SCOPE_WORDS = [
-  'tour', 'tours', 'driver', 'transfer', 'charter', 'trip', 'booking', 'book',
-  'price', 'cost', 'pay', 'deposit', 'cancel', 'pickup', 'pick', 'itinerary',
-  'bali', 'ubud', 'waterfall', 'temple', 'rice', 'terrace', 'volcano', 'batur',
-  'kecak', 'lempuyang', 'besakih', 'tegalalang', 'monkey', 'uluwatu', 'jatiluwih',
-  'sunrise', 'snorkel', 'rafting', 'atv', 'swing', 'guide', 'airport', 'car',
-  'hotel', 'villa', 'guest', 'guests', 'people', 'day', 'days', 'time', 'schedule',
-];
-
 // Questions only a person should answer. These are situations, not lookups -
 // and answering one with a price list is worse than not answering at all,
 // because it reads as "we did not listen".
@@ -170,14 +158,10 @@ export const CHAT_COPY = {
   greeting:
     "Hi! Ask me about our tours, prices, pickup or payment and I'll answer straight from our price list. Anything I can't answer goes to Wayan.",
   placeholder: 'Ask about tours, prices, pickup...',
-  // Used when the question is clearly about us but has no canned answer.
+  // Used for every question this code cannot answer itself, whatever it was
+  // about. There is no second, more-polite version that declines instead.
   handoff:
     "That one is better answered by Wayan himself - he knows the roads, the timing and what is realistic on the day.",
-  // Used when the question has nothing to do with what we sell. Polite, short,
-  // and it does not pretend to be sorry twice.
-  offtopic:
-    "I can only help with Cahyana tours, transfers and bookings, so I'd rather not guess at that one.",
-  offtopicNudge: 'Here is what I can help with:',
   moreCta: 'Ask something else',
   // The sign-in offer. A guest can chat without it, so this is worded as
   // something they gain, not something they are missing.

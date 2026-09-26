@@ -142,6 +142,25 @@ export const HUMAN_WORDS = [
 export const GREETINGS = ['hi', 'hey', 'hello', 'halo', 'hai', 'good morning', 'good afternoon', 'good evening', 'morning', 'evening'];
 export const THANKS = ['thanks', 'thank you', 'thankyou', 'makasih', 'terima kasih', 'ok thanks', 'cheers', 'great thanks'];
 
+// When Wayan actually answers (Sep 2026, Wayan: "jam segitu aja dulu coba").
+// Bali time, because that is the clock he is on - a guest in Europe asking at
+// 3pm their time is asking at 9pm his.
+//
+// This is not a promise of a reply inside the window, it is the honest shape of
+// the day: outside it the panel says he is probably asleep instead of leaving a
+// guest watching a screen that never changes. Change the numbers here and both
+// sentences follow.
+export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
+
+// True when Bali is inside the window right now. Computed from the guest's own
+// clock converted to Bali, so it is right wherever they are.
+export function wayanIsAround(now = new Date()) {
+  const h = Number(new Intl.DateTimeFormat('en-GB', {
+    timeZone: REPLY_HOURS.tz, hour: '2-digit', hour12: false,
+  }).format(now));
+  return h >= REPLY_HOURS.from && h < REPLY_HOURS.to;
+}
+
 export const CHAT_COPY = {
   title: 'Cahyana Support',
   // Honest about what this is. It answers instantly from the site's own data,
@@ -163,4 +182,17 @@ export const CHAT_COPY = {
   moreCta: 'Ask something else',
   hello: 'Hi! What can I help you with?',
   thanks: "You're welcome. Anything else you want to check before you book?",
+  // The handover form. Short on purpose: the guest already typed their
+  // question, so asking for a second one would be asking twice.
+  handoffIntro: 'I can pass this to Wayan. Leave an email and he can reach you even if you close this.',
+  handoffName: 'Your name',
+  handoffEmail: 'Email (optional)',
+  handoffSend: 'Send to Wayan',
+  handoffSent: 'Sent. Wayan has it.',
+  // Two versions of the same fact, picked by the clock.
+  hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
+  hoursClosed: `It is outside ${REPLY_HOURS.label} in Bali now, so he is probably asleep. He answers in the morning, and your email means you will get it either way.`,
+  connected: 'You are talking to Wayan now.',
+  handoffAlt: 'Or message on WhatsApp',
+  threadGone: 'That conversation has expired. Ask again and I will start a new one.',
 };

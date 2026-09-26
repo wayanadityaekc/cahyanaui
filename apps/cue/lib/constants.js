@@ -17,6 +17,10 @@ export const KEY = {
   // different doors, and one must never be mistaken for the other.
   adminToken: 'cue_admin_token',
   referral: 'cue_referral',
+  // The chat thread a guest was handed over to. It is a capability - whoever
+  // holds it can read that one conversation - so it lives beside the account
+  // token, not in anything that gets shared or logged.
+  chatThread: 'cue_chat_thread',
   charter: 'cue_charter_v1',
   // The pick-up / drop-off address the guest last booked with. NOT on the account
   // (that holds name/email/phone plus the guest-count and area preferences), so it

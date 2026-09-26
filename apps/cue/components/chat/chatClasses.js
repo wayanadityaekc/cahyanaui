@@ -101,3 +101,27 @@ export const SEND =
 
 export const DOTS = 'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
 export const DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
+
+// Wayan's own replies. Same side as ours so the conversation reads as one
+// thread, but named and tinted so a guest can tell a person from the panel -
+// that difference matters most in the message that says "we cannot do that".
+export const BUBBLE_WAYAN =
+  'self-start max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-white ' +
+  '[border:1px_solid_var(--color-cta)] font-body text-body leading-[var(--lh-body)] text-ink';
+export const WHO = 'block font-body text-label font-medium tracking-[0.06em] uppercase text-cta mb-[0.2rem]';
+
+// The handover form: two optional fields and the button that sends. It sits in
+// the conversation rather than in a modal, because the guest is mid-sentence
+// and a dialog would make it feel like starting over.
+export const HANDOFF_FORM =
+  'self-start w-full max-w-[86%] flex flex-col gap-[0.4rem] p-[0.7rem] rounded-[var(--r-md)] ' +
+  'bg-cream [border:1px_solid_var(--line)]';
+export const HANDOFF_ROW = 'flex gap-[0.4rem] [&>*]:flex-1';
+export const NOTE = 'font-body text-label text-muted m-0';
+export const ALT_LINK =
+  'font-body text-label text-muted underline underline-offset-2 cursor-pointer bg-transparent border-none p-0 self-start';
+// Shown once the conversation belongs to Wayan, so nobody wonders whether the
+// panel is still the one reading.
+export const CONNECTED =
+  'flex-none flex items-center gap-[0.4rem] px-4 py-[0.4rem] bg-cream [border-top:1px_solid_var(--line)] ' +
+  'font-body text-label text-cta [&>svg]:w-[12px] [&>svg]:h-[12px] [&>svg]:shrink-0';

@@ -46,7 +46,15 @@ const b = await chromium.launch({
 const PAGES = ['/index.html', '/tour.html', '/ubud-tour.html'];
 
 for (const w of [390, 768, 1280]) {
+  // The chat now opens a WebSocket once a thread exists. Every context here
+  // stubs the HTTP routes, so leaving the socket alone would send it to the LIVE
+  // API over the internet - slow, flaky, and it would mean these assertions
+  // depended on production being up. Refused instead, which is also the case
+  // worth checking: with no socket the panel falls back to polling, and
+  // everything below has to pass exactly as it did before any of this existed.
+  // The socket's own behaviour is verify-live.mjs's job.
   const ctx = await b.newContext({ viewport: { width: w, height: 880 } });
+  await ctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
   await ctx.route('**/api/pricing/catalog*', (r) =>
     r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));
 
@@ -245,6 +253,7 @@ for (const w of [390, 768, 1280]) {
   // cannot share a browser with the checks that expect canned answers.
   {
     const hctx = await b.newContext({ viewport: { width: w, height: 880 } });
+    await hctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
     await hctx.route('**/api/pricing/catalog*', (r) =>
       r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));
     const chat = { started: [], sent: [], reply: null, id: 'a'.repeat(48) };
@@ -334,6 +343,7 @@ for (const w of [390, 768, 1280]) {
   // login langsung sambut mereka hi name user").
   {
     const sctx = await b.newContext({ viewport: { width: w, height: 880 } });
+    await sctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
     await sctx.addInitScript(() => { try { localStorage.setItem('cue_token', 'stub-token'); } catch {} });
     await sctx.route('**/api/account/session*', (r) => r.fulfill({ status: 200, contentType: 'application/json',
       body: JSON.stringify({ status: 'ok', account: { id: 1, name: 'Hannah Wills', email: 'hannah@example.com' } }) }));
@@ -388,6 +398,7 @@ for (const w of [390, 768, 1280]) {
   // offer comes straight away - and it is skippable.
   {
     const nctx = await b.newContext({ viewport: { width: w, height: 880 } });
+    await nctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
     await nctx.clock.install({ time: new Date('2026-09-26T18:00:00Z') });  // 02:00 in Bali
     await nctx.route('**/api/pricing/catalog*', (r) =>
       r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));

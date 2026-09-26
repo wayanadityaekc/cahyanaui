@@ -2041,6 +2041,62 @@ Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu
     sabotase model itu bisa gak pernah ke-render (kejadian, lihat pelajaran harness di
     section rail).
 
+## CHAT LIVE - WEBSOCKET (Sep 2026, Wayan: "gua mau web socket bro biar makin proper")
+Panel chat dulu polling tiap 5 detik. Sekarang dia pegang **WebSocket** selama
+kebuka: balesan Wayan mendarat pas dia ngirim, plus dua hal yang polling emang
+gak bisa bawa - **dia lagi ngetik**, dan **dia beneran lagi di dashboard**.
+- **`lib/chatSocket.js`** = koneksinya. URL-nya diturunin dari `API_BASE` yang sama
+  (http->ws), jadi gak ada env kedua yang bisa nunjuk host lain.
+- **KIRIM TETEP HTTP.** Soket itu kanal kabar, bukan jalur tulis - itu yang bikin
+  frame yang ke-drop gak berbahaya. Aturan yang sama dipegang server (lihat
+  CLAUDE.md `cahyana-api`).
+- **`onOpen` DIPANGGIL TIAP CONNECT, TERMASUK TIAP RECONNECT**, dan panel-nya nge-fetch
+  semua yang lewat dari id terakhir. Ini bagian yang paling penting: **tanpa itu,
+  pesan yang dikirim selagi soket mati GAK PERNAH NYAMPE SAMA SEKALI** - ke-ukur,
+  20 detik nol. Polling fallback gak nutup itu, karena dia ke-unmount lagi begitu
+  soketnya balik, sebelum tick 5 detiknya pertama jalan. Jadi dua-duanya perlu, dan
+  **tugasnya beda**: catch-up buat putus sebentar, polling buat tamu yang emang gak
+  pernah dapet soket.
+- **Polling fallback masih ada, 5 detik, cuma jalan kalau soket mati.** Tamu di
+  balik proxy yang mblokir WebSocket dapet **persis kelakuan yang lama**, bukan
+  panel yang diem-diem berhenti update.
+- **Ping tiap 25 detik dengan batas waktu jawabannya.** Cara normal soket mati itu
+  keliatan kebuka tapi gak ada yang baca; tanpa ini panel megang soket mati
+  berjam-jam. Server-nya sendiri ping tiap 30 detik dari sisi sana.
+- **Pesan di-dedupe pakai id database**, karena soket sama catch-up bisa sah-sah aja
+  mbawa yang sama.
+- **`data-live` di panel** = lagi pakai soket apa lagi polling. Gak ditampilin & gak
+  di-style: dari sisi tamu dua-duanya emang sengaja keliatan sama, jadi harness
+  butuh cara mbedain.
+- Copy baru di `content/shared/chat.js`: `ownerHere` ("Wayan is online right now.",
+  gantiin strip biasa), `hoursHere` (dipake di baris handover kalau dia emang lagi
+  ada - presence ngalahin jadwal), `typing`.
+- **Verifikasi: `verify-live.mjs` (29/29)** - ini cek PERTAMA di chat ini yang gak
+  pakai mock. Dia nyalain `cahyana-api` beneran (cuma database-nya di memori, lewat
+  `tools/chat-dev-server.js` di repo sana), browser asli, soket asli. Buat jalanin:
+  ```
+  node ../cahyana-api/tools/chat-dev-server.js              # port 4599
+  NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api npm run build
+  node tools/serve-out.js                                    # port 4000
+  node verify-live.mjs
+  ```
+  **Habis itu WAJIB build ulang tanpa env itu**, kalau nggak `out/` bawa localhost.
+- **TIGA JEBAKAN HARNESS, semuanya bikin assertion yang gak bisa gagal:**
+  1. **`ctx.setOffline(true)` GAK NUTUP WebSocket di Chromium.** Ke-ukur: `data-live`
+     tetep 1 selama "putus", dan balesannya nyampe lewat soket **13ms** sesudah
+     online. Jadi tes "celah"-nya gak pernah punya celah, dan dia **lolos** padahal
+     catch-up-nya udah sengaja dibuang. Sekarang soketnya diputus beneran lewat
+     **`ctx.routeWebSocket`** (proxy ke server asli, dan kita pegang kabelnya).
+  2. **Replay buat maksa duplikat itu no-op**, karena `replay` ke-reassign sama
+     handler reconnect yang belum nangkep frame apa-apa. Dipindah ke SEBELUM
+     diputus, dan sekarang dia **ngelaporin** dia beneran ngirim apa nggak -
+     assertion lamanya cuma ngecek ada fungsinya.
+  3. **`waitFor` yang throw = run-nya mati**, dan tiap assertion sesudahnya jadi nol
+     informasi. Semua diganti helper yang mbalikin boolean.
+- `verify-chat.mjs` (600/600) **nge-refuse soketnya** (`routeWebSocket` -> close) di
+  keempat context-nya: dia nge-stub route HTTP, jadi kalau soketnya dibiarin dia
+  bakal nembak API PRODUCTION lewat internet. Sekalian itu jadi tes jalur fallback.
+
 ## Navbar
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**

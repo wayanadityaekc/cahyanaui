@@ -7,6 +7,18 @@ const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
 // Waits for text, but returns false instead of throwing. A thrown timeout ends
 // the run and hides every later assertion - which is how the first version of
 // this gate reported a disabled poll as a crash rather than as a failure.
+// The panel opens on the intro now. Every path has to cross it, and crossing
+// it the same way everywhere keeps the rest of the gate about the chat rather
+// than about the form.
+async function enterChat(panel, mode = 'skip', who = {}) {
+  const skip = panel.locator('[data-introskip]');
+  if (!(await skip.count())) return;                 // already crossed, or signed in
+  if (mode === 'skip') { await skip.click(); return; }
+  await panel.getByPlaceholder('Your name').fill(who.name || 'Hannah');
+  await panel.getByPlaceholder('Your email').fill(who.email || 'hannah@example.com');
+  await panel.locator('[data-introgo]').click();
+}
+
 async function seen(root, text, ms) {
   try {
     await root.getByText(text, { exact: false }).first().waitFor({ state: 'visible', timeout: ms });
@@ -80,6 +92,21 @@ for (const w of [390, 768, 1280]) {
     await btn.click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
+
+    // ---- the intro ----
+    if (path === PAGES[0]) {
+      ok(await panel.locator('[data-introgo]').count() === 1, `${w}${path}: no intro before the first chat`);
+      ok(await panel.getByPlaceholder('Your name').count() === 1, `${w}${path}: the intro does not ask for a name`);
+      ok(await panel.getByPlaceholder('Your email').count() === 1, `${w}${path}: the intro does not ask for an email`);
+      // Not forcing anyone was the instruction, so there has to be a way past.
+      ok(await panel.locator('[data-introskip]').count() === 1, `${w}${path}: the intro cannot be skipped`);
+      ok(await panel.getByLabel('Your question').count() === 0, `${w}${path}: the chat input is live behind the intro`);
+      await enterChat(panel, 'skip');
+      ok(await panel.getByLabel('Your question').count() === 1, `${w}${path}: skipping the intro did not open the chat`);
+    } else {
+      // Asked once, not on every page. A form that comes back is the pushy kind.
+      ok(await panel.locator('[data-introgo]').count() === 0, `${w}${path}: the intro came back after it was skipped`);
+    }
 
     const box = await panel.boundingBox();
     if (w <= 768) {
@@ -227,6 +254,12 @@ for (const w of [390, 768, 1280]) {
     await hctx.route('**/api/pricing/catalog*', (r) =>
       r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));
     const chat = { started: [], sent: [], reply: null, id: 'a'.repeat(48) };
+    const acct = [];
+    await hctx.route('**/api/account', async (r) => {
+      acct.push(JSON.parse(r.request().postData() || '{}'));
+      return r.fulfill({ status: 200, contentType: 'application/json',
+        body: JSON.stringify({ status: 'ok', token: 'stub-token', account: { name: 'Hannah', email: 'hannah@example.com' } }) });
+    });
     await hctx.route('**/api/chat/**', async (r) => {
       const req = r.request();
       const url = new URL(req.url());
@@ -254,6 +287,7 @@ for (const w of [390, 768, 1280]) {
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
+    await enterChat(panel, 'join', { name: 'Hannah', email: 'hannah@example.com' });
     const input = panel.getByLabel('Your question');
 
     await input.fill('my mother is elderly, how much walking is there');
@@ -261,15 +295,24 @@ for (const w of [390, 768, 1280]) {
     ok(await seen(panel, 'Give me a moment', 10000), `${w}: the guest is not told they are being connected`);
     ok(await seen(panel, 'You are with Wayan now', 10000), `${w}: the handover never completed`);
 
+    // Filling the intro creates the account through the site's own door - the
+    // same call the sign-up modal makes, so there is one account and one
+    // welcome email, not a second kind of guest.
+    ok(acct.length === 1, `${w}: the intro did not create an account (${acct.length} calls)`);
+    ok((acct[0] || {}).email === 'hannah@example.com', `${w}: the account was created with a different email`);
+    ok((acct[0] || {}).name === 'Hannah', `${w}: the account was created without the name`);
+
     ok(chat.started.length === 1, `${w}: expected one handover, got ${chat.started.length}`);
     const started = chat.started[0];
     ok(/walking/.test(started.question || ''), `${w}: the guest's actual question was not passed on`);
     ok(started.page === '/index.html', `${w}: Wayan is not told which page they were on`);
     // Nothing was asked before connecting - that is the whole point of this
     // change: no name, no email, no form in front of the question.
-    ok(!started.email && !started.name, `${w}: the handover still collected contact details up front`);
+    // The intro was filled in, so Wayan opens the thread knowing who it is.
+    ok(started.email === 'hannah@example.com', `${w}: the handover did not carry the email the guest gave`);
+    ok(started.name === 'Hannah', `${w}: the handover did not carry the name the guest gave`);
     ok(await panel.locator('input[type=email]').count() === 0,
-       `${w}: an email is asked for while Wayan is around and has not had a chance to reply`);
+       `${w}: an email is asked for again after the guest already gave one`);
 
     // The panel says who is reading now, and when to expect an answer.
     const afterSend = await panel.innerText();
@@ -330,6 +373,7 @@ for (const w of [390, 768, 1280]) {
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
+    await enterChat(panel, 'skip');
     const input = panel.getByLabel('Your question');
     await input.fill('my mother is elderly, how much walking is there');
     await input.press('Enter');

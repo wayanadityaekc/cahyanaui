@@ -21,6 +21,9 @@ export const KEY = {
   // holds it can read that one conversation - so it lives beside the account
   // token, not in anything that gets shared or logged.
   chatThread: 'cue_chat_thread',
+  // Remembers that a guest chose to skip the intro. Without it the form would
+  // reappear on every page, which is the definition of pushy.
+  chatSkip: 'cue_chat_skip',
   charter: 'cue_charter_v1',
   // The pick-up / drop-off address the guest last booked with. NOT on the account
   // (that holds name/email/phone plus the guest-count and area preferences), so it

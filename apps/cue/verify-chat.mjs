@@ -10,14 +10,7 @@ const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
 // The panel opens on the intro now. Every path has to cross it, and crossing
 // it the same way everywhere keeps the rest of the gate about the chat rather
 // than about the form.
-async function enterChat(panel, mode = 'skip', who = {}) {
-  const skip = panel.locator('[data-introskip]');
-  if (!(await skip.count())) return;                 // already crossed, or signed in
-  if (mode === 'skip') { await skip.click(); return; }
-  await panel.getByPlaceholder('Your name').fill(who.name || 'Hannah');
-  await panel.getByPlaceholder('Your email').fill(who.email || 'hannah@example.com');
-  await panel.locator('[data-introgo]').click();
-}
+async function enterChat() { /* nothing to cross: the chat opens straight away */ }
 
 async function seen(root, text, ms) {
   try {
@@ -93,20 +86,21 @@ for (const w of [390, 768, 1280]) {
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
 
-    // ---- the intro ----
+    // ---- a guest can chat, and is offered a way in ----
+    ok(await panel.getByLabel('Your question').count() === 1, `${w}${path}: a guest cannot type`);
+    ok(await panel.locator('[data-signin]').count() === 1, `${w}${path}: no sign-in offered to a guest`);
+    ok(await panel.getByText('Chatting as a guest', { exact: false }).count() === 1,
+       `${w}${path}: nothing says they are chatting as a guest`);
     if (path === PAGES[0]) {
-      ok(await panel.locator('[data-introgo]').count() === 1, `${w}${path}: no intro before the first chat`);
-      ok(await panel.getByPlaceholder('Your name').count() === 1, `${w}${path}: the intro does not ask for a name`);
-      ok(await panel.getByPlaceholder('Your email').count() === 1, `${w}${path}: the intro does not ask for an email`);
-      // Not forcing anyone was the instruction, so there has to be a way past.
-      ok(await panel.locator('[data-introskip]').count() === 1, `${w}${path}: the intro cannot be skipped`);
-      ok(await panel.getByLabel('Your question').count() === 0, `${w}${path}: the chat input is live behind the intro`);
-      await enterChat(panel, 'skip');
-      ok(await panel.getByLabel('Your question').count() === 1, `${w}${path}: skipping the intro did not open the chat`);
-    } else {
-      // Asked once, not on every page. A form that comes back is the pushy kind.
-      ok(await panel.locator('[data-introgo]').count() === 0, `${w}${path}: the intro came back after it was skipped`);
+      await panel.locator('[data-signin]').click();
+      ok(await seen(page.locator('[role=dialog][aria-label="Sign in"]').last(), 'Sign in', 6000),
+         `${w}${path}: the sign-in button does not open the sign-in`);
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(300);
     }
+    // The offer is an offer: nothing is blocked behind it.
+    ok(await panel.getByRole('button', { name: 'How much is a day tour?' }).count() === 1,
+       `${w}${path}: the suggestions are gated behind signing in`);
 
     const box = await panel.boundingBox();
     if (w <= 768) {
@@ -287,7 +281,6 @@ for (const w of [390, 768, 1280]) {
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
-    await enterChat(panel, 'join', { name: 'Hannah', email: 'hannah@example.com' });
     const input = panel.getByLabel('Your question');
 
     await input.fill('my mother is elderly, how much walking is there');
@@ -295,24 +288,15 @@ for (const w of [390, 768, 1280]) {
     ok(await seen(panel, 'Give me a moment', 10000), `${w}: the guest is not told they are being connected`);
     ok(await seen(panel, 'You are with Wayan now', 10000), `${w}: the handover never completed`);
 
-    // Filling the intro creates the account through the site's own door - the
-    // same call the sign-up modal makes, so there is one account and one
-    // welcome email, not a second kind of guest.
-    ok(acct.length === 1, `${w}: the intro did not create an account (${acct.length} calls)`);
-    ok((acct[0] || {}).email === 'hannah@example.com', `${w}: the account was created with a different email`);
-    ok((acct[0] || {}).name === 'Hannah', `${w}: the account was created without the name`);
-
     ok(chat.started.length === 1, `${w}: expected one handover, got ${chat.started.length}`);
     const started = chat.started[0];
     ok(/walking/.test(started.question || ''), `${w}: the guest's actual question was not passed on`);
     ok(started.page === '/index.html', `${w}: Wayan is not told which page they were on`);
     // Nothing was asked before connecting - that is the whole point of this
     // change: no name, no email, no form in front of the question.
-    // The intro was filled in, so Wayan opens the thread knowing who it is.
-    ok(started.email === 'hannah@example.com', `${w}: the handover did not carry the email the guest gave`);
-    ok(started.name === 'Hannah', `${w}: the handover did not carry the name the guest gave`);
-    ok(await panel.locator('input[type=email]').count() === 0,
-       `${w}: an email is asked for again after the guest already gave one`);
+    // A guest handover carries no identity, which is exactly why the email is
+    // offered afterwards.
+    ok(!started.email && !started.name, `${w}: a guest handover carried contact details from nowhere`);
 
     // The panel says who is reading now, and when to expect an answer.
     const afterSend = await panel.innerText();
@@ -345,6 +329,59 @@ for (const w of [390, 768, 1280]) {
     await hctx.close();
   }
 
+  // ---- somebody who is already signed in ----
+  // No offer, and greeted by name the moment the panel opens (Wayan: "sehabis
+  // login langsung sambut mereka hi name user").
+  {
+    const sctx = await b.newContext({ viewport: { width: w, height: 880 } });
+    await sctx.addInitScript(() => { try { localStorage.setItem('cue_token', 'stub-token'); } catch {} });
+    await sctx.route('**/api/account/session*', (r) => r.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ status: 'ok', account: { id: 1, name: 'Hannah Wills', email: 'hannah@example.com' } }) }));
+    await sctx.route('**/api/bookings/mine*', (r) => r.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ upcoming: [], past: [] }) }));
+    await sctx.route('**/api/pricing/catalog*', (r) =>
+      r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATALOG) }));
+    const started = [];
+    await sctx.route('**/api/chat/**', (r) => {
+      const req = r.request();
+      if (req.method() === 'POST' && req.url().includes('/chat/start')) {
+        started.push(JSON.parse(req.postData() || '{}'));
+        return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'ok', thread: 'd'.repeat(48) }) });
+      }
+      return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'ok', messages: [] }) });
+    });
+
+    const page = await sctx.newPage();
+    await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await page.locator('button[aria-label="Chat with us"]').click();
+    const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
+    await panel.waitFor({ state: 'visible', timeout: 10000 });
+
+    ok(await seen(panel, 'Hi Hannah!', 10000), `${w}: a signed-in guest is not greeted by name`);
+    ok(await panel.locator('[data-signin]').count() === 0, `${w}: a signed-in guest is still offered a sign-in`);
+    // First name only - "Hi Hannah Wills!" reads like a form letter.
+    ok(!(await panel.innerText()).includes('Hi Hannah Wills'), `${w}: greeted with the full name`);
+    // One greeting, not the generic one plus a personal one with a second set
+    // of chips under it.
+    const greetings = await panel.getByText('What can I help you with', { exact: false }).count();
+    ok(greetings === 1, `${w}: ${greetings} greetings on screen for a signed-in guest`);
+    ok(!(await panel.innerText()).includes("Ask me about our tours"),
+       `${w}: the generic opener is still there under the personal one`);
+    const chipRuns = await panel.getByRole('button', { name: 'How much is a day tour?' }).count();
+    ok(chipRuns === 1, `${w}: the suggestions are shown ${chipRuns} times`);
+
+    // And Wayan gets the name without anyone typing it.
+    const i2 = panel.getByLabel('Your question');
+    await i2.fill('my mother is elderly, how much walking is there');
+    await i2.press('Enter');
+    for (let k = 0; k < 40 && !started.length; k += 1) await page.waitForTimeout(150);
+    ok(started.length === 1, `${w}: the signed-in handover never started`);
+    ok((started[0] || {}).name === 'Hannah Wills', `${w}: the handover did not carry the account name`);
+    ok((started[0] || {}).email === 'hannah@example.com', `${w}: the handover did not carry the account email`);
+
+    await sctx.close();
+  }
+
   // ---- the same handover, but at 2am in Bali ----
   // This is the branch the email exists for. Inside his hours nothing is asked,
   // because he is about to reply; outside them the wait is certain, so the
@@ -373,7 +410,6 @@ for (const w of [390, 768, 1280]) {
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
-    await enterChat(panel, 'skip');
     const input = panel.getByLabel('Your question');
     await input.fill('my mother is elderly, how much walking is there');
     await input.press('Enter');

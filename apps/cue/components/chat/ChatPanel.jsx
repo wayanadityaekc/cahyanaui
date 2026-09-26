@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Send, MessageCircle } from 'lucide-react';
 import { usePricing } from '@/state/PricingProvider';
 import { useAccount } from '@/state/AccountProvider';
-import { KEY } from '@/lib/constants';
+import AuthModal from '@/components/account/AuthModal';
 import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { PANEL_CLOSE } from '@/components/ui/hsClasses';
 import { SUGGESTIONS, CHAT_COPY, wayanIsAround } from '@/content/shared/chat';
@@ -15,7 +15,7 @@ import {
   BUBBLE_BOT, BUBBLE_ME, ROW, ROW_NAME, ROW_NOTE, ROW_PRICE, LINK, HANDOFF_BTN,
   CHIPS, CHIP_Q, FOOT, SEND, DOTS, DOT,
   HANDOFF_FORM, HANDOFF_ROW, NOTE, ALT_LINK, BUBBLE_WAYAN, WHO, CONNECTED,
-  INTRO, INTRO_TITLE, INTRO_BODY, INTRO_NOTE, INTRO_ERR, INTRO_ROW, INTRO_ACTIONS,
+  SIGNIN_BAR, SIGNIN_TEXT, SIGNIN_BTN,
 } from './chatClasses';
 
 // The support panel. Every answer comes out of lib/chatAnswers, which can only
@@ -30,18 +30,9 @@ const THINK_MS = 400;
 let seq = 0;
 const uid = () => `m${(seq += 1)}`;
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const readSkip = () => {
-  try { return localStorage.getItem(KEY.chatSkip) === '1'; } catch { return false; }
-};
-const writeSkip = () => {
-  try { localStorage.setItem(KEY.chatSkip, '1'); } catch { /* private mode */ }
-};
-
 export default function ChatPanel({ open, onClose }) {
   const pricing = usePricing();
-  const { account, createAccount, hydrated } = useAccount();
+  const { account, hydrated } = useAccount();
   const [log, setLog] = useState(() => [
     { id: uid(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS },
   ]);
@@ -53,12 +44,12 @@ export default function ChatPanel({ open, onClose }) {
   // Once a guest has been handed over, typed messages go to Wayan instead of to
   // the matcher. Deliberately one or the other: a panel that sometimes answers
   // and sometimes forwards would leave the guest unsure who is reading.
-  // null = not decided yet. Decided in an effect, never during render: this is
-  // a static export, and the flag lives in localStorage.
-  const [intro, setIntro] = useState(null);
-  const [who, setWho] = useState({ name: '', email: '' });
-  const [introErr, setIntroErr] = useState('');
-  const [joining, setJoining] = useState(false);
+  // The sign-in popup, mounted here the way ReviewGate mounts its own. A guest
+  // can chat without it - it is an offer, not a door.
+  const [authOpen, setAuthOpen] = useState(false);
+  // Whether we have already said hello by name, so signing in mid-conversation
+  // greets once rather than on every re-render.
+  const greeted = useRef(false);
 
   const [thread, setThread] = useState(null);
   const [sending, setSending] = useState(false);
@@ -77,14 +68,21 @@ export default function ChatPanel({ open, onClose }) {
     [pricing],
   );
 
-  // Who is asked, and who is not. Anyone already signed in is not asked at all -
-  // we know them. Neither is anyone who already skipped, or who is coming back
-  // to a conversation that is already open.
+  // Wayan: "sehabis login langsung sambut mereka hi name user". Fires on open
+  // for anyone already signed in, and the moment a guest signs in without
+  // leaving the panel. Once per conversation, never on a re-render.
   useEffect(() => {
-    if (!hydrated) return;
-    if (account || readSkip() || readThread()) setIntro('done');
-    else setIntro('ask');
-  }, [hydrated, account]);
+    const name = account && String(account.name || '').trim().split(/\s+/)[0];
+    if (!name || greeted.current) return;
+    greeted.current = true;
+    const line = { id: uid(), from: 'bot', text: CHAT_COPY.hello.replace('{name}', name), chips: SUGGESTIONS };
+    setLog((prev) => (
+      // Opened while already signed in: the opener has not been read yet, so it
+      // is REPLACED. Appending gave two greetings and two sets of chips.
+      // Signed in mid-conversation: appended, because then it is news.
+      prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]
+    ));
+  }, [account]);
 
   // A thread from an earlier visit. Read in an effect, never during render -
   // this is a static export, so the first paint has to match the prerendered
@@ -132,10 +130,10 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     if (!open) return undefined;
     const t = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e) => { if (e.key === 'Escape' && !authOpen) onClose(); };
     document.addEventListener('keydown', onKey);
     return () => { clearTimeout(t); document.removeEventListener('keydown', onKey); };
-  }, [open, onClose]);
+  }, [open, onClose, authOpen]);
 
   // Hands over straight away. Nothing is asked first - the guest already typed
   // the question, and a form in front of somebody mid-sentence is a brake.
@@ -147,8 +145,8 @@ export default function ChatPanel({ open, onClose }) {
         question,
         // Whoever we already know. Wayan opens the thread with a name on it
         // instead of "Guest", and can answer by email if the tab is gone.
-        name: (account && account.name) || who.name,
-        email: (account && account.email) || who.email,
+        name: (account && account.name) || '',
+        email: (account && account.email) || '',
         page: typeof window !== 'undefined' ? window.location.pathname : '',
       });
       setThread(id);
@@ -160,7 +158,7 @@ export default function ChatPanel({ open, onClose }) {
       setLog((prev) => [...prev, { id: uid(), from: 'bot', text: err.message || 'Could not reach Wayan just now.' }]);
     }
     setSending(false);
-  }, [sending, account, who]);
+  }, [sending, account]);
 
   const ask = useCallback((question) => {
     const q = String(question || '').trim();
@@ -191,36 +189,16 @@ export default function ChatPanel({ open, onClose }) {
     }, THINK_MS);
   }, [ctx, thinking, sending, thread, connect]);
 
-  async function join(e) {
-    e.preventDefault();
-    const email = who.email.trim();
-    const name = who.name.trim();
-    if (!EMAIL_RE.test(email)) { setIntroErr(CHAT_COPY.introBad); return; }
-    setIntroErr('');
-    setJoining(true);
-    // The site's own account door - the same call the sign-up modal makes, so
-    // there is one account and one welcome email, not a second kind of guest.
-    const r = await createAccount({ name, email });
-    setJoining(false);
-    if (!r.ok) { setIntroErr(CHAT_COPY.introFailed); return; }
-    setIntro('done');
-  }
-
-  function skipIntro() {
-    writeSkip();
-    setIntro('done');
-  }
-
   // Outside his hours the wait is certain, so the offer comes right away. Inside
   // them it waits, and never appears at all if he answers first.
   useEffect(() => {
     if (!thread || mail !== 'idle') return undefined;
     // We already have an address - nothing to ask for.
-    if ((account && account.email) || who.email) { setMail('skip'); return undefined; }
+    if (account && account.email) { setMail('skip'); return undefined; }
     if (!wayanIsAround()) { setMail('ask'); return undefined; }
     const t = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
     return () => clearTimeout(t);
-  }, [thread, mail, account, who.email]);
+  }, [thread, mail, account]);
 
   useEffect(() => {
     if (quiet && mail === 'idle' && !heard.current) setMail('ask');
@@ -242,6 +220,7 @@ export default function ChatPanel({ open, onClose }) {
 
   return (
     <>
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
       <div className={SCRIM(open)} onClick={onClose} aria-hidden="true" />
       <div
         className={PANEL(open)}
@@ -264,45 +243,19 @@ export default function ChatPanel({ open, onClose }) {
               rather than covering it, so the guest can see what they opened.
               "Skip for now" is not decoration: a form with no way past is a
               gate, and the instruction was explicitly not to force anyone. */}
-          {intro === 'ask' && (
-            <form className={INTRO} onSubmit={join}>
-              <p className={INTRO_TITLE}>{CHAT_COPY.introTitle}</p>
-              <p className={INTRO_BODY}>{CHAT_COPY.introBody}</p>
-              <span className={INTRO_ROW}>
-                <input
-                  className={FIELD_INPUT}
-                  value={who.name}
-                  onChange={(e) => setWho((p) => ({ ...p, name: e.target.value }))}
-                  placeholder={CHAT_COPY.introName}
-                  aria-label={CHAT_COPY.introName}
-                  maxLength={120}
-                  autoComplete="name"
-                />
-                <input
-                  className={FIELD_INPUT}
-                  type="email"
-                  value={who.email}
-                  onChange={(e) => setWho((p) => ({ ...p, email: e.target.value }))}
-                  placeholder={CHAT_COPY.introEmail}
-                  aria-label={CHAT_COPY.introEmail}
-                  maxLength={200}
-                  autoComplete="email"
-                />
-              </span>
-              {introErr && <p className={INTRO_ERR}>{introErr}</p>}
-              <p className={INTRO_NOTE}>{CHAT_COPY.introAccount}</p>
-              <span className={INTRO_ACTIONS}>
-                <button type="submit" className={HANDOFF_BTN} data-cta data-introgo disabled={joining}>
-                  {joining ? 'Saving...' : CHAT_COPY.introGo}
-                </button>
-                <button type="button" className={ALT_LINK} data-introskip onClick={skipIntro}>
-                  {CHAT_COPY.introSkip}
-                </button>
-              </span>
-            </form>
+          {/* Guests chat freely; this is the offer to sign in, not a gate
+              (Sep 2026, Wayan: "kalo belum login bisa juga ngchat tapi as a
+              guest, cuma kasi user tombol buat login"). It disappears the
+              moment they are signed in. */}
+          {hydrated && !account && (
+            <p className={SIGNIN_BAR}>
+              <span className={SIGNIN_TEXT}>{CHAT_COPY.signedOut}</span>
+              <button type="button" className={SIGNIN_BTN} data-cta data-signin onClick={() => setAuthOpen(true)}>
+                {CHAT_COPY.signIn}
+              </button>
+            </p>
           )}
 
-          {intro === 'done' && (<>
           {log.map((m) => {
             if (m.from === 'me') return <p key={m.id} className={BUBBLE_ME}>{m.text}</p>;
             if (m.from === 'wayan') {
@@ -342,23 +295,20 @@ export default function ChatPanel({ open, onClose }) {
             </form>
           )}
 
-          </>)}
-
-          {intro === 'done' && thinking && (
+          {thinking && (
             <span className={DOTS} aria-label="Typing">
               <i className={DOT} /><i className={DOT} /><i className={DOT} />
             </span>
           )}
         </div>
 
-        {intro === 'done' && thread && (
+        {thread && (
           <p className={CONNECTED}>
             <MessageCircle strokeWidth={2} aria-hidden="true" />
             {CHAT_COPY.connectedStrip}
           </p>
         )}
 
-        {intro === 'done' && (
         <form
           className={FOOT}
           onSubmit={(e) => { e.preventDefault(); ask(draft); }}
@@ -376,7 +326,6 @@ export default function ChatPanel({ open, onClose }) {
             <Send strokeWidth={1.8} aria-hidden="true" />
           </button>
         </form>
-        )}
       </div>
     </>
   );

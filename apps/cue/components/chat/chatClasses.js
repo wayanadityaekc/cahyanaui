@@ -126,13 +126,13 @@ export const CONNECTED =
   'flex-none flex items-center gap-[0.4rem] px-4 py-[0.4rem] bg-cream [border-top:1px_solid_var(--line)] ' +
   'font-body text-label text-cta [&>svg]:w-[12px] [&>svg]:h-[12px] [&>svg]:shrink-0';
 
-// The intro screen. It sits in the message column rather than over it: the
-// guest should see the panel they opened, not a gate in front of it.
-export const INTRO =
-  'flex flex-col gap-[0.5rem] p-[0.9rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
-export const INTRO_TITLE = 'font-body font-semibold text-h3 text-gold m-0';
-export const INTRO_BODY = 'font-body text-body leading-[var(--lh-body)] text-ink m-0';
-export const INTRO_NOTE = 'font-body text-label text-muted m-0';
-export const INTRO_ERR = 'font-body text-label text-err m-0';
-export const INTRO_ROW = 'flex flex-col gap-[0.4rem] [&>*]:min-w-0';
-export const INTRO_ACTIONS = 'flex items-center gap-[0.7rem] mt-[0.2rem]';
+// The sign-in offer, sitting above the conversation. A quiet strip rather than
+// a card: a guest who does not want an account should be able to ignore it
+// without it looking like an unfinished step.
+export const SIGNIN_BAR =
+  'flex flex-none items-center gap-[0.6rem] px-[0.8rem] py-[0.5rem] rounded-[var(--r-md)] ' +
+  'bg-cream [border:1px_solid_var(--line)] m-0';
+export const SIGNIN_TEXT = 'flex-1 min-w-0 font-body text-label text-muted';
+export const SIGNIN_BTN =
+  `inline-flex flex-none ${BTN_SM} bg-white text-gold [border:1px_solid_var(--line)] cursor-pointer ` +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';

@@ -162,23 +162,6 @@ export function wayanIsAround(now = new Date()) {
 }
 
 export const CHAT_COPY = {
-  // The intro, shown once before the first chat (Sep 2026, Wayan: "sebelum
-  // mereka chat suruh input email nama dan sekalian di jadiin akun tapi bilang
-  // dengan halus dan gak maksa").
-  //
-  // "Gak maksa" is a design constraint, not a tone: a form with no way past IS
-  // forcing. So it has a skip, the skip is remembered, and it never appears
-  // again for that guest. It is also skipped entirely for anyone already
-  // signed in - we know them already.
-  introTitle: 'Before we start',
-  introBody: 'Leave your name and email and I will keep this chat with them, so Wayan can answer even if you close the tab.',
-  introAccount: 'It also sets up your Cahyana account - no password, just this email - so your saved trips follow you to any device.',
-  introName: 'Your name',
-  introEmail: 'Your email',
-  introGo: 'Start chat',
-  introSkip: 'Skip for now',
-  introBad: 'That does not look like an email address.',
-  introFailed: 'Could not save that just now. You can still ask your question.',
   title: 'Cahyana Support',
   // Honest about what this is. It answers instantly from the site's own data,
   // and hands over when it cannot - saying so up front is what stops a guest
@@ -196,7 +179,13 @@ export const CHAT_COPY = {
     "I can only help with Cahyana tours, transfers and bookings, so I'd rather not guess at that one.",
   offtopicNudge: 'Here is what I can help with:',
   moreCta: 'Ask something else',
-  hello: 'Hi! What can I help you with?',
+  // The sign-in offer. A guest can chat without it, so this is worded as
+  // something they gain, not something they are missing.
+  signedOut: 'Chatting as a guest.',
+  signIn: 'Sign in',
+  // Said once, by name, the moment we know it (Sep 2026, Wayan: "sehabis login
+  // langsung sambut mereka hi name user").
+  hello: 'Hi {name}! What can I help you with?',
   thanks: "You're welcome. Anything else you want to check before you book?",
   // Nothing is asked before the handover. A form in front of somebody who just
   // wanted to ask a question is a brake, and the email only actually matters

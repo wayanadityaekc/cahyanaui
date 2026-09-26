@@ -20,6 +20,20 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
+// The second face, and the ONLY place it is used is a villa's name and its
+// price - see --font-serif in the library's tokens. Self-hosted like Inter
+// (38KB, latin subset, variable 400-700): this site has never loaded a font
+// from a third party and should not start, since that is a request to someone
+// else's server on every first paint.
+const playfair = localFont({
+  src: '../public/fonts/playfair-latin.woff2',
+  weight: '400 700',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-playfair',
+  fallback: ['Iowan Old Style', 'Georgia', 'serif'],
+});
+
 export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
 };
@@ -29,7 +43,7 @@ export const metadata = {
 // attribute, so a component never has to know which site it is rendering in.
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" data-brand="villas" className={inter.variable}>
+    <html lang="en" data-brand="villas" className={`${inter.variable} ${playfair.variable}`}>
       {/* The bottom bar is fixed, so the page has to reserve its height or the
           last of the content sits under it - measured, it covered the footer at
           every mobile width. The number lives with the bar, in the library. */}

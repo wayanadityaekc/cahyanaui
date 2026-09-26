@@ -83,7 +83,11 @@
   }
 
   h1, h2, h3 {
-    font-family: var(--font-display);
+    /* --font-display was never defined anywhere - headings have been inheriting
+       body's family this whole time, which happens to be right. Pointed at the
+       real token so a library that ever defines --font-display cannot silently
+       restyle every heading on the site. */
+    font-family: var(--font-head);
     font-weight: 600;
     line-height: 1.15;
     color: var(--color-gold);

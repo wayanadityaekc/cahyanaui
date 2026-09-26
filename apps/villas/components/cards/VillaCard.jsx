@@ -1,20 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, BedDouble, Users, Waves } from 'lucide-react';
+import { ArrowRight, BedDouble, Heart, Users, Waves } from 'lucide-react';
 import { VillaCard as VillaCardBlock } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 
 // The block lives in @cahyana/ui (blocks/VillaCard.jsx). This file supplies the
-// two things the library must not hold: the formatted price (which comes from
-// this app's currency provider) and the fact row (which is editorial).
+// three things the library must not hold: the formatted price (which comes from
+// this app's currency provider), the facts (which are editorial), and the icons.
 //
 // Lucide, per CUE's rule that new icons come from the set and are never drawn by
-// hand again - hand-drawn is reserved for marks Lucide does not carry, like
-// payment logos and the Airbnb Bélo. Size is always explicit: Lucide renders
-// width/height=24, so an icon given no size class balloons to 24px.
-const META_ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
-
+// hand again. The block sizes them itself, so the row can shrink them on a
+// phone without this file knowing about breakpoints.
 export default function VillaCard({ villa }) {
   const { format } = useCurrency();
 
@@ -22,21 +19,23 @@ export default function VillaCard({ villa }) {
     <VillaCardBlock
       villa={villa}
       linkAs={Link}
+      place="Ubud, Bali"
       price={format(villa.nightlyRate)}
-      ctaIcon={<ArrowRight className={META_ICON} strokeWidth={1.6} aria-hidden="true" />}
-      meta={(
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-small text-muted [&>span]:whitespace-nowrap">
-          <span className="flex items-center gap-1.5">
-            <Users className={META_ICON} strokeWidth={1.8} aria-hidden="true" />Up to {villa.guests} guests
-          </span>
-          <span className="flex items-center gap-1.5">
-            <BedDouble className={META_ICON} strokeWidth={1.8} aria-hidden="true" />{villa.bedrooms} bedrooms
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Waves className={META_ICON} strokeWidth={1.8} aria-hidden="true" />Private pool
-          </span>
-        </div>
-      )}
+      ctaIcon={<ArrowRight className="w-4 h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />}
+      /* `lines` is what lets three facts and a price share one row - see the
+         note in the block. `label` stays as the single-line fallback and as the
+         key, so a fact can be given one line wherever it fits. */
+      facts={[
+        { icon: <Users strokeWidth={1.7} aria-hidden="true" />, label: `Up to ${villa.guests} guests`, lines: ['Up to', `${villa.guests} guests`] },
+        { icon: <BedDouble strokeWidth={1.7} aria-hidden="true" />, label: `${villa.bedrooms} bedrooms`, lines: [String(villa.bedrooms), 'bedrooms'] },
+        { icon: <Waves strokeWidth={1.7} aria-hidden="true" />, label: 'Private pool', lines: ['Private', 'pool'] },
+      ]}
+      /* THE HEART IS IN THE MOCK AND IT IS NOT WIRED TO ANYTHING YET. It is
+         drawn because Wayan drew it; tapping it does nothing until there is
+         somewhere for a saved villa to live. Say the word and it becomes real
+         (localStorage now, the guest's account once villa bookings reach the
+         API) - or drop this prop and the control is not drawn at all. */
+      saveIcon={<Heart className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />}
     />
   );
 }

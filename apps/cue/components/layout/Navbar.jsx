@@ -10,6 +10,7 @@ import {
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
+import { APP_HIDE } from '@/components/ui/pwaClasses';
 import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { Collapse } from '@/components/ui/Reveal';
@@ -202,9 +203,9 @@ export default function Navbar() {
             bisa dijawab dioper ke Wayan - jadi gak ada jawaban karangan. Tombolnya
             sengaja TETEP di sini & bentuknya sama persis kayak ikon keranjang di
             sebelahnya; yang berubah cuma apa yang kejadian pas di-tap. */}
-        <ChatLauncher className="inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]" />
+        <ChatLauncher className={`${APP_HIDE} inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]`} />
 
-        <a href="/my-trips.html" className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]" aria-label="My Trips">
+        <a href="/my-trips.html" className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`} aria-label="My Trips">
           <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
         </a>

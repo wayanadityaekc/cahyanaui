@@ -11,7 +11,10 @@ import { MessageCircle } from 'lucide-react';
 // TOUR_CONTENT.
 const ChatPanel = dynamic(() => import('./ChatPanel'), { ssr: false });
 
-export default function ChatLauncher({ className }) {
+// `label` + `iconClass` exist for the app bottom bar, which needs a caption
+// under a larger glyph. Left out, this renders exactly what the navbar has
+// always rendered - so the navbar copy is untouched.
+export default function ChatLauncher({ className, label, iconClass = 'w-5 h-5' }) {
   const [open, setOpen] = useState(false);
   // Stays mounted after the first open so closing can animate instead of
   // vanishing - the same reason the date panels stay in the tree.
@@ -26,7 +29,8 @@ export default function ChatLauncher({ className }) {
         aria-expanded={open}
         onClick={() => { setTouched(true); setOpen((v) => !v); }}
       >
-        <MessageCircle className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+        <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />
+        {label}
       </button>
       {touched && <ChatPanel open={open} onClose={() => setOpen(false)} />}
     </>

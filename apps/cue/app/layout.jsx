@@ -6,6 +6,8 @@ import './globals.css';
 import Providers from '@/state/Providers';
 import Navbar from '@/components/layout/Navbar';
 import IosZoomFix from '@/components/layout/IosZoomFix';
+import PwaRegister from '@/components/layout/PwaRegister';
+import AppBottomNav from '@/components/layout/AppBottomNav';
 import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
@@ -50,6 +52,21 @@ export default function RootLayout({ children }) {
         <link rel="icon" href={`/assets/icons/favicon.ico?v=${ICON_ICO_V}`} sizes="any" />
         <link rel="apple-touch-icon" sizes="180x180" href={`/assets/icons/apple-touch-icon.png?v=${ICON_APPLE_V}`} />
         <link rel="stylesheet" href={`/style.css?v=${STYLE_V}`} />
+
+        {/* Installable from the home screen. The icons this points at were already
+            built for exactly this (CLAUDE.md, favicon section): icon-192/512 are
+            OPAQUE gold tiles with the mark bled past the edge, because iOS and
+            Android composite a transparent icon themselves - usually onto black -
+            and round the corners for you. That is also why both are declared
+            `maskable`: a full-bleed tile is what a mask wants. */}
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#ffffff" />
+        {/* iOS reads its own pair. `mobile-web-app-capable` is the standard one;
+            the apple- prefix is still what older iPhones honour, so both ship. */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Cahyana" />
       </head>
       {/* Space reserved for whichever sticky bar is on screen. The two rules are
           kept MUTUALLY EXCLUSIVE on purpose (see CLAUDE.md): stacked, they would
@@ -57,14 +74,20 @@ export default function RootLayout({ children }) {
           class order rather than by intent. The bookbar rule tracks the bar's own
           breakpoint - and a Tailwind v4 `max-[N]` is width < N, so 993 here means
           "up to and including 992". SectionSwitcher still stops at 767. */}
-      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px]">
+      {/* Third rule, and it cannot overlap the first two: the app bottom bar only
+          renders on a page that has NO sticky bar (see AppBottomNav), so the
+          reservation it needs is scoped the same way. Height measured in the
+          browser, not guessed. */}
+      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px] standalone:max-[993px]:not-has-[.bookbar]:pb-[56px]">
         <LoadingScreen />
         <Providers>
           <IosZoomFix />
+          <PwaRegister />
           <Navbar />
           {children}
           <Footer />
           <BookConfirmModal />
+          <AppBottomNav />
         </Providers>
       </body>
     </html>

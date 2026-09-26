@@ -217,6 +217,16 @@ body {
   to { opacity: 1; transform: none; }
 }
 
+/* The chat's "Wayan is typing" dots. A keyframe rather than a transition because
+   there is no state change to transition FROM - the row appears already running,
+   and it is the only thing on screen telling the guest this is live. Opacity
+   only: a transform here would fight the press-feedback `scale` rule that
+   applies to everything. */
+@keyframes chatdot {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+}
+
 /* ===== Global element / behaviour rules (the "reset" half of this file) ===== */
 /* Scroll-lock toggled by JS while a bottom-sheet / dropdown is open (overflow:hidden
    only - NOT position:fixed, which makes the page jump). Both <html> AND <body> get

@@ -23,7 +23,6 @@ export const KEY = {
   chatThread: 'cue_chat_thread',
   // Remembers that a guest chose to skip the intro. Without it the form would
   // reappear on every page, which is the definition of pushy.
-  chatSkip: 'cue_chat_skip',
   charter: 'cue_charter_v1',
   // The pick-up / drop-off address the guest last booked with. NOT on the account
   // (that holds name/email/phone plus the guest-count and area preferences), so it

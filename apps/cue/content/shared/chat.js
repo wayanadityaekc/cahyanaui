@@ -204,6 +204,14 @@ export const CHAT_COPY = {
   hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
   hoursClosed: `It is outside his hours in Bali right now, so he is probably asleep. He answers from ${REPLY_HOURS.from}am Bali time.`,
   connectedStrip: 'You are talking to Wayan now.',
+  // Presence, and it is a FACT rather than a timetable: the dashboard has a live
+  // socket open right now. That is why this outranks the two lines above - they
+  // are a guess about when he usually answers, this is this minute.
+  ownerHere: 'Wayan is online right now.',
+  hoursHere: 'He is at the dashboard right now, so this should be quick.',
+  // Ephemeral, shown while a typing frame is unexpired. Named rather than a bare
+  // row of dots: three dots with nobody's name on them could be either of us.
+  typing: 'Wayan is typing',
   // How long to wait, inside his hours, before offering email at all.
   quietMs: 120000,
   threadGone: 'That conversation has expired. Ask again and I will start a new one.',

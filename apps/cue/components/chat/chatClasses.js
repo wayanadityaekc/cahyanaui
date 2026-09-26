@@ -101,6 +101,16 @@ export const SEND =
 
 export const DOTS = 'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
 export const DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
+// Wayan typing. Same bubble shell as the panel's own dots so it sits on the
+// conversation's rhythm, with his name in front - unlabelled dots could be
+// either of us, and only one of the two is a person waiting on.
+export const TYPING_ROW = `${DOTS} items-center gap-[0.45rem]`;
+export const TYPING_WHO = 'font-body text-label font-medium tracking-[0.06em] uppercase text-cta';
+// The animation is the only thing on screen that says this is live rather than a
+// static row, so it is not decoration. Honouring reduced motion leaves the row
+// legible: the name is what carries the meaning.
+export const DOT_LIVE = (i) =>
+  `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${i * 0.15}s]`;
 
 // Wayan's own replies. Same side as ours so the conversation reads as one
 // thread, but named and tinted so a guest can tell a person from the panel -

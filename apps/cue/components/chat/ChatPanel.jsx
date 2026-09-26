@@ -9,11 +9,12 @@ import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { PANEL_CLOSE } from '@/components/ui/hsClasses';
 import { SUGGESTIONS, CHAT_COPY, wayanIsAround } from '@/content/shared/chat';
 import { readThread, startThread, sendToThread, pollThread, setContact } from '@/lib/chatThread';
+import { openChatSocket } from '@/lib/chatSocket';
 import { answerFor } from '@/lib/chatAnswers';
 import {
   PANEL, SCRIM, HEAD, HEAD_AVATAR, HEAD_STACK, HEAD_TITLE, HEAD_SUB, BODY,
   BUBBLE_BOT, BUBBLE_ME, ROW, ROW_NAME, ROW_NOTE, ROW_PRICE, LINK, HANDOFF_BTN,
-  CHIPS, CHIP_Q, FOOT, SEND, DOTS, DOT,
+  CHIPS, CHIP_Q, FOOT, SEND, DOTS, DOT, TYPING_ROW, TYPING_WHO, DOT_LIVE,
   HANDOFF_FORM, HANDOFF_ROW, NOTE, ALT_LINK, BUBBLE_WAYAN, WHO, CONNECTED,
   SIGNIN_BAR, SIGNIN_TEXT, SIGNIN_BTN,
 } from './chatClasses';
@@ -63,6 +64,23 @@ export default function ChatPanel({ open, onClose }) {
   const lastSeen = useRef(0);
   const heard = useRef(false);
 
+  // The live channel. `live` is whether the socket is up, and it is the switch
+  // between "the socket tells us" and "we poll like before" - not a thing the
+  // guest is ever shown. A guest behind a proxy that blocks WebSockets gets the
+  // old behaviour rather than silence.
+  const [live, setLive] = useState(false);
+  const [ownerHere, setOwnerHere] = useState(false);
+  const [typingUntil, setTypingUntil] = useState(0);
+  const sock = useRef(null);
+  // Deduped by the database id, because both paths can carry the same message:
+  // the socket pushes it, and a catch-up fetch after a reconnect reads it again.
+  const seenIds = useRef(new Set());
+  // Read inside connect() without putting presence in its dependency list -
+  // re-memoising connect() re-memoises ask(), and a stale ask() is exactly the
+  // bug that once sent handovers to Wayan with no name on them.
+  const ownerHereRef = useRef(false);
+  const lastTyped = useRef(0);
+
   const ctx = useMemo(
     () => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }),
     [pricing],
@@ -92,34 +110,82 @@ export default function ChatPanel({ open, onClose }) {
     if (id) setThread(id);
   }, []);
 
-  // While the panel is open and a thread exists, watch for Wayan's reply. Only
-  // while open: a tab left on another page should not poll all afternoon.
+  // One place turns a message from Wayan into a line on screen, whichever way it
+  // arrived. Everything advances lastSeen, including the guest's own messages, so
+  // a catch-up asks for as little as possible.
+  const takeOwner = useCallback((list) => {
+    const fresh = [];
+    for (const m of list) {
+      if (m.id > lastSeen.current) lastSeen.current = m.id;
+      if (m.sender !== 'owner' || seenIds.current.has(m.id)) continue;
+      seenIds.current.add(m.id);
+      fresh.push(m);
+    }
+    if (!fresh.length) return;
+    heard.current = true;
+    setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
+  }, []);
+
+  // Everything said since the last id we saw. Called on EVERY socket connect,
+  // including reconnects, and that is what makes a dead socket cost one request
+  // instead of a lost reply.
+  const catchUp = useCallback(async () => {
+    try {
+      const { gone, messages } = await pollThread(thread, lastSeen.current);
+      if (gone) {
+        setThread(null);
+        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.threadGone, chips: SUGGESTIONS }]);
+        return;
+      }
+      takeOwner(messages);
+    } catch {
+      /* a dropped read is not worth a message on screen; the next one retries */
+    }
+  }, [thread, takeOwner]);
+
+  // The socket, only while the panel is open and only once there is a thread:
+  // before the handover there is nothing for anyone to say.
   useEffect(() => {
     if (!open || !thread) return undefined;
-    let stop = false;
-    const tick = async () => {
-      try {
-        const { gone, messages } = await pollThread(thread, lastSeen.current);
-        if (stop) return;
-        if (gone) {
-          setThread(null);
-          setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.threadGone, chips: SUGGESTIONS }]);
-          return;
-        }
-        const fresh = messages.filter((m) => m.sender === 'owner');
-        if (messages.length) lastSeen.current = messages[messages.length - 1].id;
-        if (fresh.length) {
-          heard.current = true;
-          setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
-        }
-      } catch {
-        /* a dropped poll is not worth a message on screen; the next one retries */
-      }
-    };
-    tick();
-    const t = setInterval(tick, 5000);
-    return () => { stop = true; clearInterval(t); };
-  }, [open, thread]);
+    const s = openChatSocket(thread, {
+      onOpen: catchUp,
+      onLive: setLive,
+      onPresence: (v) => { ownerHereRef.current = v; setOwnerHere(v); },
+      onTyping: (ms) => setTypingUntil(Date.now() + ms),
+      onMessage: (m) => takeOwner([m]),
+    });
+    sock.current = s;
+    return () => { sock.current = null; s.close(); };
+  }, [open, thread, catchUp, takeOwner]);
+
+  // The fallback, and it is not a formality: this is the whole behaviour for a
+  // guest whose network will not carry a WebSocket. It stops the moment the
+  // socket is up and comes back if it drops.
+  useEffect(() => {
+    if (!open || !thread || live) return undefined;
+    catchUp();
+    const t = setInterval(catchUp, 5000);
+    return () => clearInterval(t);
+  }, [open, thread, live, catchUp]);
+
+  // A phone that slept has a socket that looks open and is not, and the ping
+  // takes up to 25s to notice. Coming back to the tab is a better moment to ask.
+  useEffect(() => {
+    if (!open || !thread) return undefined;
+    const onShow = () => { if (document.visibilityState === 'visible') catchUp(); };
+    document.addEventListener('visibilitychange', onShow);
+    return () => document.removeEventListener('visibilitychange', onShow);
+  }, [open, thread, catchUp]);
+
+  // Typing expires on its own. A "typing" left on screen because the last frame
+  // was the last one he sent is worse than never showing it.
+  const wayanTyping = typingUntil > Date.now();
+  useEffect(() => {
+    const ms = typingUntil - Date.now();
+    if (ms <= 0) return undefined;
+    const t = setTimeout(() => setTypingUntil(0), ms);
+    return () => clearTimeout(t);
+  }, [typingUntil]);
 
   // New message, or the dots appearing: keep the newest line in view.
   useEffect(() => {
@@ -152,7 +218,12 @@ export default function ChatPanel({ open, onClose }) {
       setThread(id);
       setLog((prev) => [...prev, {
         id: uid(), from: 'bot',
-        text: `${CHAT_COPY.connected} ${wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed}`,
+        // Presence beats the timetable when we have it: the hours line is a guess
+        // about when he usually answers, an open dashboard is this minute.
+        text: `${CHAT_COPY.connected} ${
+          ownerHereRef.current ? CHAT_COPY.hoursHere
+            : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
+        }`,
       }]);
     } catch (err) {
       setLog((prev) => [...prev, { id: uid(), from: 'bot', text: err.message || 'Could not reach Wayan just now.' }]);
@@ -204,6 +275,18 @@ export default function ChatPanel({ open, onClose }) {
     if (quiet && mail === 'idle' && !heard.current) setMail('ask');
   }, [quiet, mail]);
 
+  // Announced at most every two seconds. A frame per keystroke is a frame per
+  // keystroke, and one every two seconds keeps the other end's indicator alive
+  // for the whole time somebody is writing.
+  function onDraft(v) {
+    setDraft(v);
+    if (!thread || !sock.current) return;
+    const t = Date.now();
+    if (t - lastTyped.current < 2000) return;
+    lastTyped.current = t;
+    sock.current.typing();
+  }
+
   async function saveEmail(e) {
     e.preventDefault();
     const v = mailDraft.trim();
@@ -218,6 +301,9 @@ export default function ChatPanel({ open, onClose }) {
     }
   }
 
+  // data-live on the panel says whether this guest is on a socket or has fallen
+  // back to polling. Not shown and not styled: from the guest's side the two are
+  // meant to look identical, so a harness needs a way to tell them apart.
   return (
     <>
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
@@ -225,6 +311,7 @@ export default function ChatPanel({ open, onClose }) {
       <div
         className={PANEL(open)}
         role="dialog"
+        data-live={live ? '1' : '0'}
         aria-label={CHAT_COPY.title}
         aria-modal="false"
         {...(open ? {} : { inert: '' })}
@@ -300,12 +387,19 @@ export default function ChatPanel({ open, onClose }) {
               <i className={DOT} /><i className={DOT} /><i className={DOT} />
             </span>
           )}
+
+          {wayanTyping && (
+            <span className={TYPING_ROW} data-typing aria-live="polite">
+              <small className={TYPING_WHO}>{CHAT_COPY.typing}</small>
+              <i className={DOT_LIVE(0)} /><i className={DOT_LIVE(1)} /><i className={DOT_LIVE(2)} />
+            </span>
+          )}
         </div>
 
         {thread && (
           <p className={CONNECTED}>
             <MessageCircle strokeWidth={2} aria-hidden="true" />
-            {CHAT_COPY.connectedStrip}
+            {ownerHere ? CHAT_COPY.ownerHere : CHAT_COPY.connectedStrip}
           </p>
         )}
 
@@ -317,7 +411,7 @@ export default function ChatPanel({ open, onClose }) {
             ref={inputRef}
             className={`${FIELD_INPUT} flex-1`}
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
+            onChange={(e) => onDraft(e.target.value)}
             placeholder={thread ? 'Write to Wayan...' : CHAT_COPY.placeholder}
             aria-label="Your question"
             maxLength={300}

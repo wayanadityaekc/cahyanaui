@@ -13,9 +13,6 @@ export const KEY = {
   itinerary: 'cue_itinerary_v1',
   itnSynced: 'cue_itn_synced',
   token: 'cue_token',
-  // Owner dashboard session. Separate from `token` (a guest account): they are
-  // different doors, and one must never be mistaken for the other.
-  adminToken: 'cue_admin_token',
   referral: 'cue_referral',
   // The chat thread a guest was handed over to. It is a capability - whoever
   // holds it can read that one conversation - so it lives beside the account

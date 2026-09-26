@@ -109,9 +109,6 @@ export const PROMO = {
   '/my-trips': PLAN_LOCAL,
   '/itinerary': PLAN_LOCAL,
   '/settings': null,
-  // Owner-only page. A guest promo on the owner's own dashboard is noise, and
-  // the default here is the DETAIL-page message, which is aimed at a buyer.
-  '/dashboard': null,
   '/ui-kit': null,
   '/our-company': null, // Wayan belum mutusin isinya - jangan diisi karangan.
 };

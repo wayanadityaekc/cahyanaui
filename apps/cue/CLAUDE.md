@@ -3190,148 +3190,29 @@ beneran di USD & IDR terus baca teksnya (nol janji 48 jam, window 24 jam masih
 disebut, baris full jualan harinya bukan diskon, peringatan settle-USD cuma nongol
 di IDR).
 
-## DASHBOARD OWNER — `/dashboard.html` (Sep 2026, Wayan)
-Wayan: *"gua mau dasboardnya kayak web frontend nya punya page tapi isinya data kita
-dan gak semua orang bisa masuk, harus login dulu"*. Jadi dia **halaman di CUE**, pakai
-design system situs ini, bukan halaman HTML sendiri di backend.
-- **YANG DIJAGA ITU DATANYA, BUKAN HALAMANNYA.** Ini static export — halamannya
-  **publik**, siapa pun bisa buka `/dashboard.html` dan bakal ketemu **form login**.
-  Itu bukan kelalaian, itu satu-satunya desain yang jujur: gak ada yang bisa
-  disembunyiin dari pengunjung di build statis. Yang digerbang itu **angkanya**:
-  tiap data di halaman ini dateng dari endpoint di balik `requireAuth` di
-  `cahyana-api`, jadi tanpa sesi valid halamannya gak punya apa-apa buat ditampilin.
-  **Jangan pernah naro data asli di halaman ini pas build** — itu langsung bocor.
-- **Login = tuker password jadi token sesi**, `POST /api/admin/login` → baris di
-  `admin_sessions`, **30 hari**. **Password-nya sendiri gak pernah disimpen** di
-  device (di-assert harness). Token di `localStorage` key `KEY.adminToken`
-  (`cue_admin_token`) — **beda dari `KEY.token` punya akun tamu**: dua pintu beda,
-  jangan sampai ketuker.
-  - Dibaca di **`useEffect`, jangan di initial state** (aturan static export yang sama
-    kayak `charterDraft`/`payFlag`). `token === null` = belum dilihat, `''` = gak ada sesi.
-  - **Sign out beneran nge-DELETE barisnya**, bukan cuma lupa di device. Token yang
-    dibiarin hidup itu token yang masih mbuka data kalau pernah ke-copy.
-  - `requireAuth` nerima **Bearer DI SAMPING Basic** — URL admin lama & tool yang udah
-    ada gak kesentuh.
-  - **Rate limit login 5 per 15 menit per IP** (`loginLimiter`, yang sama dipakai
-    magic-link tamu). Ini kena ke HARNESS juga: 3 lebar × 2 percobaan = 6, langsung
-    429 dan semua assertion sesudahnya merah tanpa alasan yang keliatan. Harness-nya
-    sekarang hidup DI DALAM jatah itu (wrong-password dicek sekali doang, tiap lebar
-    login sekali) dan **limiter-nya di-assert sendiri** di akhir. Restart API tiap run.
-- **Cangkangnya `RailLayout`** — shell yang sama dipakai Our Company, My Trips &
-  artikel guide. Section = 4 ember yang dibikin API: **Needs attention · Upcoming ·
-  Past · No date**, masing-masing bawa jumlahnya.
-  - **Di HP mendarat LANGSUNG di booking (`reading` initial `true`)**, bukan di menu —
-    keputusan yang sama kayak My Trips, alesannya sama: halaman ini **punya default
-    yang jelas** (Upcoming). Our Company mulai di daftar karena dia gak punya.
-  - **SIGN OUT DI BARIS TOOL, BUKAN DI KARTU HELP RAIL.** Ke-ukur: di kartu rail dia
-    duduk di daftar section, jadi di **390 DAN 768 dia gak kejangkau** tanpa nge-tap
-    back dulu. Sign out dari tampilan admin gak boleh dikubur. (Dites pakai bug itu:
-    2 assertion nyala, persis di dua lebar HP.)
-- **Satu booking ≠ satu baris.** `inquiries` nyimpen **satu baris per hari**, digabung
-  `booking_ref` — jadi trip 3 hari itu 3 baris. Grouping-nya di **`cahyana-api/dashboard.js`**
-  (bukan di halaman), biar halaman gak bisa melenceng dari aturannya.
-- **ATURAN UANG — JANGAN DILANGGAR**: angka di kartu **gak pernah dihitung ulang di sini**.
-  Kalau ada baris `booking_payments`, itu yang dipakai, **di mata uang yang tamu emang
-  di-quote** (ngonversi balik bakal mendarat di angka lain — pembulatannya `ceil`).
-  Kalau **gak ada**, harga server-nya dijumlah dan **wajib dilabelin
-  "our price - not charged online"** — booking yang gak ditagih online gak boleh
-  kebaca kayak duit masuk. Dites pakai bug itu (labelnya diganti "paid" → 3 nyala).
-- **Status `new` ditulis "Confirmed"** di layar. Di database itu kata buat booking yang
-  gak ditagih online (mayoritas, dan semua yang dari sebelum ada pembayaran online);
-  ditulis mentah dia kebaca kayak ada yang belum dikerjain.
-- **"Needs attention" = `mismatch` ATAU `pending` > 60 menit.** Sweep tiap jam cuma
-  nyentuh pembayaran umur >20 menit, jadi yang masih `pending` sesudah sejam udah
-  pernah ditawarin ke dia dan gak ke-recover. Tiap barisnya bawa **`why`**-nya.
-- **Promo trip bar DIMATIIN di halaman ini** (`'/dashboard': null` di `promo.js`):
-  default-nya pesan halaman DETAIL, yang ditujuin ke pembeli.
-- **noindex + nol link internal + gak ada di dua-duanya sitemap.** Itu bukan
-  pengamanannya — itu cuma biar form login-nya gak nongol di hasil Google.
-  `check-urls` nge-skip halaman noindex, jadi gate-nya aman.
-- Verifikasi: **`verify-dash.mjs`** di scratchpad (**82/82**, 390/768/1280) — dijalanin
-  di halaman HASIL BUILD lawan **server API asli** (cuma database-nya yang di-stub,
-  bukan auth-nya, bukan grouping-nya). Patokannya: orang asing cuma dapet form login &
-  nol data · password ke-mask · password salah gak mbuka apa-apa & pesannya gak nyebut
-  half mana yang salah · token ke-simpen tapi password nggak · trip 2 hari = **1 kartu** ·
-  jam 12-jam · label "not charged online" · mismatch di Needs attention bawa alasannya ·
-  search · rail 248 di desktop & gak ada di HP · HP mendarat di booking · sign out
-  kejangkau tanpa buka menu · **token yang udah di-revoke & token karangan dua-duanya
-  401** · halaman gak melar · nol page error · limiter beneran gigit.
-  - **Dites pakai 4 bug asli, satu-satu**: `adminTokenValid` selalu true (**9 nyala**) ·
-    grouping dibuang (**24 nyala**) · label uang diganti "paid" (**3 nyala**) · sign out
-    dibalikin ke kartu rail (**2 nyala**, cuma di HP).
-  - **GOTCHA HARNESS (4, semuanya bikin hasil palsu):**
-    1. **Playwright NOLAK `route.continue({url})` dari https ke http**, jadi host Railway
-       yang ke-bake di build gak bisa dibelokin gitu aja. Di-forward TANGAN pakai
-       `route.fulfill` + `fetch` — tetep mendarat di server asli, cuma hostname-nya
-       yang ditukar. Preflight `OPTIONS` wajib dijawab sendiri.
-    2. **`innerText` ngikut `text-transform`**, dan pill status itu `uppercase` — jadi
-       `/Confirmed/` gak pernah cocok sama "CONFIRMED". Pakai flag `i`.
-    3. **Nge-klik tanpa ngecek dulu = crash 30 detik, bukan assertion merah**, dan crash
-       nyembunyiin semua assertion sesudahnya. Sabotase sign-out awalnya kebaca sebagai
-       TimeoutError doang. Sekarang kejangkau-nya di-assert DULU, baru di-klik.
-    4. **`pgrep -f "<pola>"` nge-match SHELL-nya sendiri** (polanya ikut ke command line),
-       jadi `kill`-nya bunuh sesi — kejadian 3x. Start/stop API pakai **pidfile**
-       (`api-ctl.sh`), jangan pgrep pola.
-  - **PELAJARAN yang paling mahal di sesi ini**: satu blok bash ke-kill di tengah dan
-    ninggalin `server.js` dalam keadaan **TERSABOTASE**. Blok berikutnya nge-`cp server.js`
-    jadi "backup bersih" — jadi backup-nya isi sabotase, dan "restore" masang balik
-    bug-nya. Gejalanya: sabotase kedua nyala di assertion yang gak ada hubungannya.
-    **Backup buat sabotase ambil dari `git checkout`, jangan dari `cp` file kerja.**
-**SETTINGAN HARGA — section "Prices" di rail** (25 Sep 2026, Wayan: *"lanjut settingan harga"*).
-Ganti harga tanpa deploy. Angkanya langsung kepake buat tamu berikutnya.
-- **KENAPA CUMA SATU TUAS.** Semua harga di web ini dibaca dari **SATU objek**
-  (`pricing-data.prices`, lewat `itemInfo()` di `pricing.js`): katalog yang dibaca
-  kartu, total yang di-quote pas booking, DAN nominal yang dibikin buat pembayaran.
-  Jadi override dipasang di objek itu, **bukan ditambal per jalur** — kalau ditambal
-  satu-satu, cepat atau lambat ada yang kelewat, dan yang kelewat itu jalur yang
-  **nagih kartu**. Yang di-assert harness: angka baru nyampe ke **`server_price_idr`**.
-- **INPUT-nya RUPIAH, dan itu disengaja.** IDR sumber kebenaran; USD & mata uang lain
-  diturunin. Panel nampilin USD di sebelahnya **read-only** — kolom mata uang kedua
-  yang bisa diedit = angka kedua yang bisa nyimpang.
-- **File tetep jadi BASE**, di-snapshot pas load. Jadi **Reset selalu balik** ke angka
-  yang di-ship, dan harga lama tetep kecetak (kecoret) di baris yang diubah.
-- **Perubahan >3x WAJIB dikonfirmasi.** Nol yang kelewat (700.000 → 70.000) itu
-  kesalahan yang paling mungkin kejadian, dan **nol lapisan di bawahnya bakal curiga**.
-  Field-nya juga nampilin **pemisah ribuan pas diketik** — `90,000` di sebelah
-  `900,000` kebaca, `90000` di sebelah `900000` nggak.
-- **YANG GAK IKUT BERUBAH, dan ini dikasih tau di layar**: situs nyimpen SALINAN
-  sebagian harga pas build — `priceFallback` kartu listing, JSON-LD yang dibaca Google,
-  band airport. Tamu **ditagih harga baru**, tapi salinan itu tetep angka lama sampai
-  CUE di-build ulang. Endpoint-nya ngitung `drift` dan panel nyetak banner "N harga
-  udah diubah tapi di web-nya masih lama". **Jangan dihapus banner itu** — tanpa dia,
-  ongkosnya jadi sunyi.
-- **Cache 30 detik + refresh sesudah tiap tulis.** Railway bisa jalanin lebih dari satu
-  instance dan mereka gak berbagi memori; tanpa refresh, instance kedua nge-quote harga
-  kemarin. TTL-nya bisa di-set lewat `PRICE_OVERRIDES_TTL_MS` **khusus buat tes**.
-- **Tarif charter GAK ikut** di sini (sengaja): `long` = `full` + 2 jam, jadi ngubah
-  satu tanpa yang lain ngerusak invariant yang dipatok `pricing-spec-test`. Sama juga
-  paket 3 hari = jumlah 3 tour-nya. Mau charter bisa diubah juga = keputusan Wayan,
-  dan aturannya harus ikut dipasang.
-- Verifikasi: **`verify-prices.mjs`** di scratchpad (**40/40**, 390 & 1280) di halaman
-  hasil build lawan server API asli — field mulai di harga file, Save nge-ubah **katalog
-  yang dipakai situs buat ngitung**, harga lama kecetak, USD ikut, banner drift nongol,
-  turun 10x **minta konfirmasi dulu** & gak ke-apply sebelum dikonfirmasi, Reset balik,
-  search nyaring, sign out tetep kejangkau di section ini, halaman gak melar, nol page
-  error. Dites pakai 2 bug: nominal gak ikut kekirim (**6 nyala**) & banner drift
-  dibuang (**2 nyala**).
-  - Gate server-nya: **`node tools/price-settings-test.js`** di `cahyana-api` (35/35),
-    dites pakai **7 sabotase, 6 nyala** — yang ke-7 (filter baris basi) **gak nyala dan
-    itu bener**: `apply()` jalan dari daftar file, jadi key asing gak pernah dibaca.
-    Assertion-nya udah diganti; filternya dibiarin sebagai pengaman, bukan diklaim
-    kejaga.
-  - **PELAJARAN HARNESS (2, dua-duanya bikin lampu ijo palsu):**
-    1. **Assertion bisa saling nutupin.** Tiga cek "instance lain ngubah harga" awalnya
-       pakai SATU angka, dan cek katalog yang jalan duluan nyegerin cache — jadi cek
-       booking lolos padahal refresh-nya udah dibuang (**35/35 dengan bug-nya**).
-       Sekarang tiap jalur dapet **angka sendiri** dan dicek sebelum jalur lain disentuh.
-    2. **`git checkout` ngapus kerjaan yang belum di-commit.** Gua nge-restore sabotase
-       pakai `git checkout -- <file>` padahal editan tes yang baru belum ke-commit —
-       ikut kehapus. **Commit dulu, baru sabotase.**
+## DASHBOARD OWNER — PINDAH KE REPO SENDIRI (26 Sep 2026, Wayan pilih "A")
+Halaman `/dashboard.html` di repo ini **UDAH DIHAPUS**, bareng `components/admin/`
+(5 file), `KEY.adminToken`, dan entry `'/dashboard': null` di `promo.js`.
+Dashboard-nya sekarang **aplikasi Next.js sendiri**: repo `cahyana-dashboard`,
+di-deploy ke Vercel (`https://cahyana-dashboard.vercel.app`). Dokumentasinya di
+README repo itu.
 
-- **BELUM DIBIKIN, nunggu Wayan**: **diskon** (kode referral sekarang ke-hardcode di
-  `REFERRAL` di `pricing-data.js` — bentuk UI-nya belum diputusin), settingan listing
-  (konten doang, tanpa foto — konten tetep di git, jadi dashboard nulisnya lewat GitHub
-  API), dan Google Search Console API (ke-blok: sitemap-nya belum pernah di-submit).
+**Kenapa dipindah, dan kenapa jangan dibalikin ke sini:** repo ini static export,
+jadi halamannya WAJIB publik dan token sesinya WAJIB di `localStorage` — yang
+digerbang cuma datanya. Itu satu-satunya desain yang jujur di build statis, tapi
+di server beneran dua-duanya bisa lebih ketat: halamannya di-gate **sebelum
+dikirim**, dan tokennya di cookie `httpOnly` yang JS halaman itu sendiri gak bisa
+baca. Plus yang di sini gak punya chat sama sekali.
+
+**Alasan sebenernya dihapus: DUA SALINAN BAKAL MELENCENG.** Ini pelajaran yang
+sama yang bikin dashboard HTML di `cahyana-api` dibuang sebulan lalu — dan waktu
+itu yang tersisa justru yang di sini. Sekarang tinggal SATU. Kalau butuh halaman
+admin baru, taro di `cahyana-dashboard`, jangan di sini.
+
+**Backend-nya GAK ikut pindah** dan masih hidup: `/api/admin/bookings`,
+`/api/admin/prices`, `/api/admin/login`, `/api/admin/chats` — semuanya di
+`cahyana-api`, dan aturan grouping booking + label uang masih di `dashboard.js`
+sana. Yang kehapus cuma halamannya.
 
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,

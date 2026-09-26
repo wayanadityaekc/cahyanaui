@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
+import ChatLauncher from '@/components/chat/ChatLauncher';
 import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { Collapse } from '@/components/ui/Reveal';
@@ -194,16 +195,14 @@ export default function Navbar() {
         {/* Chat pindah ke sini (Sep 2026, Wayan) - dulu nempel di sticky bar bawah
             + tombol ngambang. Di navbar dia keliatan di semua halaman & semua lebar
             tanpa makan ruang di bawah layar. Yang di dalam drawer (tombol hijau
-            "Chat on WhatsApp") tetep ada - itu buat yang udah buka menu. */}
-        <a
-          href={`https://wa.me/${WHATSAPP_NUMBER}`}
-          target="_blank"
-          rel="noopener"
-          className="inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]"
-          aria-label="Chat on WhatsApp"
-        >
-          <MessageCircle className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
-        </a>
+            "Chat on WhatsApp") tetep ada - itu buat yang udah buka menu.
+
+            Sep 2026: dari link wa.me jadi panel support beneran. Jawabannya dari
+            data situs sendiri (katalog harga + 15 FAQ + aturan jam), dan yang gak
+            bisa dijawab dioper ke Wayan - jadi gak ada jawaban karangan. Tombolnya
+            sengaja TETEP di sini & bentuknya sama persis kayak ikon keranjang di
+            sebelahnya; yang berubah cuma apa yang kejadian pas di-tap. */}
+        <ChatLauncher className="inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]" />
 
         <a href="/my-trips.html" className="relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]" aria-label="My Trips">
           <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />

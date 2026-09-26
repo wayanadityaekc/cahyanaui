@@ -1,0 +1,86 @@
+import { BTN_SM } from '@/components/ui/btnClasses';
+
+// The chat panel's shape. Desktop: a popup hanging under the navbar icon that
+// opened it. Phone: a sheet off the bottom, the same shape the hero search and
+// the select panels already use, so it is not a fourth kind of surface.
+export const PANEL = (open) => [
+  'fixed z-[130] flex flex-col bg-white overflow-hidden',
+  '[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
+  'motion-reduce:transition-none',
+  // desktop: anchored under the navbar, right edge lined up with the page gutter
+  '[@media(min-width:769px)]:top-[calc(var(--header-h)+8px)] [@media(min-width:769px)]:right-[var(--container-x)]',
+  '[@media(min-width:769px)]:w-[380px] [@media(min-width:769px)]:h-[min(560px,calc(100dvh-var(--header-h)-32px))]',
+  '[@media(min-width:769px)]:rounded-[var(--r-lg)] [@media(min-width:769px)]:[border:1px_solid_var(--line)] [@media(min-width:769px)]:[box-shadow:var(--shadow-xl)]',
+  // phone: a sheet, top corners only, shadow thrown upward
+  '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
+  '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
+  '[@media(max-width:768px)]:[box-shadow:0_-12px_48px_rgba(26,26,26,0.28)]',
+  open
+    ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]'
+    : 'opacity-0 invisible pointer-events-none [@media(max-width:768px)]:[transform:translateY(100%)] [@media(min-width:769px)]:[transform:translateY(-8px)]',
+].join(' ');
+
+export const SCRIM = (open) =>
+  'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.42)] [@media(min-width:769px)]:hidden ' +
+  '[transition:opacity_var(--dur-slow)_var(--ease-out)] motion-reduce:transition-none ' +
+  (open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none');
+
+export const HEAD =
+  'flex items-center gap-[0.7rem] flex-none pt-4 px-4 pb-3 [border-bottom:1px_solid_var(--line)]';
+export const HEAD_AVATAR =
+  'flex-none w-9 h-9 rounded-[50%] bg-cream [border:1px_solid_var(--line)] flex items-center justify-center ' +
+  '[&>svg]:w-[var(--icon-md)] [&>svg]:h-[var(--icon-md)] [&>svg]:text-gold';
+export const HEAD_STACK = 'flex-1 min-w-0 flex flex-col leading-[1.25]';
+export const HEAD_TITLE = 'font-body font-semibold text-h3 text-gold m-0';
+export const HEAD_SUB = 'font-body text-label text-muted m-0 truncate';
+
+export const BODY =
+  'flex-[1_1_auto] overflow-y-auto [overscroll-behavior:contain] px-4 py-4 flex flex-col gap-[0.6rem] ' +
+  '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
+
+// Bubbles. The guest's own words sit on the right in the CTA green already used
+// for "this is you / this is the action"; ours sit left on cream.
+export const BUBBLE_BOT =
+  'self-start max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-cream ' +
+  '[border:1px_solid_var(--line)] font-body text-body leading-[var(--lh-body)] text-ink';
+export const BUBBLE_ME =
+  'self-end max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-cta ' +
+  'font-body text-body leading-[var(--lh-body)] text-white';
+
+// A price line inside an answer. Tappable, because a guest who just asked the
+// price of a tour is one tap from the page that sells it.
+export const ROW =
+  'flex items-center gap-[0.6rem] w-full px-[0.7rem] py-[0.5rem] rounded-[var(--r-sm)] bg-white ' +
+  '[border:1px_solid_var(--line)] no-underline text-left cursor-pointer ' +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
+export const ROW_NAME = 'flex-1 min-w-0 font-body text-small text-green';
+export const ROW_NOTE = 'block font-body text-label text-muted truncate';
+export const ROW_PRICE = 'flex-none font-body text-small font-semibold text-amber tabular-nums';
+
+export const LINK =
+  `inline-flex ${BTN_SM} self-start bg-white text-gold [border:1px_solid_var(--line)] no-underline cursor-pointer ` +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
+export const HANDOFF_BTN =
+  `inline-flex ${BTN_SM} self-start gap-[0.4rem] bg-cta text-white border-none no-underline cursor-pointer ` +
+  '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
+
+// The suggested questions. Written as things a guest would say, so tapping one
+// reads as asking rather than as picking from a menu.
+export const CHIPS = 'flex flex-wrap gap-[0.4rem] self-start mt-[0.15rem]';
+export const CHIP_Q =
+  'inline-flex items-center px-[0.7rem] py-[0.4rem] rounded-[var(--r-pill)] bg-white ' +
+  '[border:1px_solid_var(--line)] font-body text-small text-green cursor-pointer text-left ' +
+  '[transition:background-color_var(--dur)_var(--ease),border-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] ' +
+  'hover:bg-cream hover:[border-color:var(--color-gold)]';
+
+export const FOOT =
+  'flex-none flex items-center gap-[0.5rem] px-4 py-3 [border-top:1px_solid_var(--line)] bg-white';
+export const SEND =
+  'flex-none inline-flex items-center justify-center w-[var(--btn-h)] h-[var(--btn-h)] rounded-[var(--r-sm)] ' +
+  'bg-cta text-white border-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ' +
+  '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] ' +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
+
+export const DOTS = 'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
+export const DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';

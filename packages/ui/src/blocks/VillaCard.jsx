@@ -121,7 +121,7 @@ export default function VillaCard({
           </p>
         ) : null}
 
-        <h3 className="font-serif font-medium text-white leading-[1.05] [letter-spacing:-0.01em] text-[1.75rem] min-[560px]:text-[2.15rem]">
+        <h3 className="font-semibold text-white leading-[1.05] [letter-spacing:-0.01em] text-[1.75rem] min-[560px]:text-[2.15rem]">
           {villa.name}
         </h3>
 
@@ -164,7 +164,7 @@ export default function VillaCard({
             {price ? (
               <p className="m-0 text-left min-[560px]:text-right leading-none">
                 <span className="block text-label text-white/75 mb-1">{fromLabel}</span>
-                <span className="font-serif font-semibold text-[1.9rem] text-amber">{price}</span>
+                <span className="font-semibold text-[1.75rem] text-amber">{price}</span>
                 <span className="ml-1.5 text-small text-white/80">{unit}</span>
               </p>
             ) : <span />}

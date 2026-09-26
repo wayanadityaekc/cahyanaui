@@ -47,17 +47,11 @@
      revisited, --font-head is the single line to change. */
   --font-body: "Inter", system-ui, sans-serif;
   --font-head: "Inter", system-ui, sans-serif;
-  /* A SECOND FACE, and only the villa site loads it (Sep 2026, Wayan's card
-     mock). It is for a villa's NAME and its PRICE and nothing else - the two
-     places a stay wants to read like a property rather than a product. CUE
-     never loads the file, so its pages are unchanged and its "Playfair is
-     overwrought" verdict above still stands where it was made. A site that
-     does not ship the font falls back to the platform serif. */
-  /* var() first: Next renames a self-hosted family to its own hashed name and
-     exposes it as a variable, so the literal below would never match the face
-     the app actually loaded. The literal stays as the fallback for a site that
-     loads the font some other way, then the platform serif. */
-  --font-serif: var(--font-playfair, "Playfair Display"), "Iowan Old Style", Georgia, serif;
+  /* A SERIF WAS TRIED HERE TWICE AND DROPPED TWICE. CUE tried Playfair for
+     headings in Aug 2026; the villa card tried it for a villa's name and price
+     in Sep 2026 after Wayan's mock drew one. Both times the answer was the
+     same - "font pakai font global" - so both sites are Inter, everywhere, and
+     --font-head above stays the single line that would change it. */
 
   --text-display: clamp(1.75rem, 4vw, 2.5rem);  /* H1, 28-40px */
   --text-h2: 1.125rem;                          /* section heading, 18px */

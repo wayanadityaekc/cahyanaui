@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRight, BedDouble, Heart, Users, Waves } from 'lucide-react';
 import { VillaCard as VillaCardBlock } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
+import { useSavedVillas } from '@/components/providers/SavedVillasProvider';
 
 // The block lives in @cahyana/ui (blocks/VillaCard.jsx). This file supplies the
 // three things the library must not hold: the formatted price (which comes from
@@ -14,6 +15,7 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 // phone without this file knowing about breakpoints.
 export default function VillaCard({ villa }) {
   const { format } = useCurrency();
+  const { isSaved, toggleSave } = useSavedVillas();
 
   return (
     <VillaCardBlock
@@ -32,12 +34,13 @@ export default function VillaCard({ villa }) {
         { icon: <BedDouble strokeWidth={1.7} aria-hidden="true" />, label: `${villa.bedrooms} bedrooms`, lines: [String(villa.bedrooms), 'bedrooms'], short: `${villa.bedrooms} beds` },
         { icon: <Waves strokeWidth={1.7} aria-hidden="true" />, label: 'Private pool', lines: ['Private', 'pool'], short: 'Private pool' },
       ]}
-      /* THE HEART IS IN THE MOCK AND IT IS NOT WIRED TO ANYTHING YET. It is
-         drawn because Wayan drew it; tapping it does nothing until there is
-         somewhere for a saved villa to live. Say the word and it becomes real
-         (localStorage now, the guest's account once villa bookings reach the
-         API) - or drop this prop and the control is not drawn at all. */
+      /* The heart now saves (Wayan: "yang sambungin ke local storage"). The
+         shortlist is a list of SLUGS in this browser - see SavedVillasProvider
+         for why it holds pointers rather than copies, and why it is read after
+         mount rather than during render. */
       saveIcon={<Heart className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />}
+      saved={isSaved(villa.slug)}
+      onSave={() => toggleSave(villa.slug)}
     />
   );
 }

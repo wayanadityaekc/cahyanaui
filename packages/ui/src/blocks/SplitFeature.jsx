@@ -41,7 +41,7 @@ export default function SplitFeature({
         'grid gap-8 items-center min-[993px]:grid-cols-2 min-[993px]:gap-12',
         reverse && 'min-[993px]:[&>*:first-child]:order-2',
       )}>
-        <div className={cn('relative overflow-hidden rounded-lg bg-green', ratio)}>
+        <div className={cn('relative overflow-hidden bg-green', ratio)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={image} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
         </div>

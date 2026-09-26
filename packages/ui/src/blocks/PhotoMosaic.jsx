@@ -2,6 +2,7 @@
 
 import { cn } from '../lib/cn.js';
 import { BLEED_MOBILE } from './gridClasses.js';
+import { BTN_SM } from '../primitives/btnClasses.js';
 
 /**
  * THE PHOTO MOSAIC that opens a detail page: one large photograph, then a
@@ -61,9 +62,11 @@ const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 // A corner pill rather than a dark wash over a tile: a wash lands on whatever
 // the photograph's subject happens to be. `scale` has to be in this element's
 // own transition list, or the global press feedback snaps instead of easing.
+// Geometry from BTN_SM, not re-typed. It WAS re-typed here, and the copy went
+// stale the moment the button size changed: this one stayed at 12.8px/16px
+// while every other button on the site moved to 14/20.
 const MORE_BTN =
-  'absolute bottom-3 right-3 z-[6] inline-flex items-center justify-center text-center leading-none whitespace-nowrap ' +
-  'h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold ' +
+  `absolute bottom-3 right-3 z-[6] inline-flex ${BTN_SM} ` +
   'bg-white [border:1px_solid_var(--line)] shadow-md text-gold cursor-pointer ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 

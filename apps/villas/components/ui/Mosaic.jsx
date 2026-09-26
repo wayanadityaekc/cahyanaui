@@ -10,7 +10,7 @@ export default function Mosaic({ images }) {
           width={500}
           height={360}
           loading="lazy"
-          className="w-full aspect-[4/3] object-cover rounded-lg"
+          className="w-full aspect-[4/3] object-cover"
         />
       ))}
     </div>

@@ -10,7 +10,7 @@ export const INFO_SECTION_ARTICLE = 'py-9 px-6 bg-white';      // .info (guide-a
 
 // .info__container:not(.guide-article) — white card.
 export const INFO_CARD =
-  'max-w-[var(--container-mid)] mx-auto bg-white rounded-[var(--r-lg)] p-[2.5rem_2rem] ' +
+  'max-w-[var(--container-mid)] mx-auto bg-white p-[2.5rem_2rem] ' +
   '[box-shadow:0_10px_30px_rgba(31,61,43,0.06)] max-[576px]:p-[1.75rem_1.25rem] ' +
   '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
 

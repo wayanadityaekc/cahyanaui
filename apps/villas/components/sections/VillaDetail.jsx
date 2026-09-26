@@ -85,7 +85,7 @@ export default function VillaDetail({ villa }) {
             </ul>
 
             <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Guest ratings</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-px rounded-lg overflow-hidden border border-line bg-line">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-px overflow-hidden border border-line bg-line">
               {villa.scores.map(([label, value]) => (
                 <div key={label} className="bg-white text-center py-4 px-2">
                   <strong className="block text-h2 font-bold text-gold">{value}</strong>

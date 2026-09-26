@@ -21,7 +21,7 @@ const HOVER_LIFT =
   'hover:[box-shadow:var(--shadow-lg)]';
 
 export const CARD_FRAMED =
-  'relative rounded-lg overflow-hidden [border:1px_solid_var(--line)] ' +
+  'relative overflow-hidden [border:1px_solid_var(--line)] ' +
   '[box-shadow:var(--shadow-md)] no-underline text-inherit';
 
 // The card's own surface. Kept OUT of the shape strings above and applied by
@@ -36,7 +36,7 @@ export const CARD_TONES = {
 };
 
 export const CARD_INSET =
-  'relative rounded-lg p-[5px] overflow-hidden bg-white ' +
+  'relative p-[5px] overflow-hidden bg-white ' +
   '[box-shadow:var(--shadow-md)] no-underline text-inherit';
 
 export const CARD_SHAPES = { framed: CARD_FRAMED, inset: CARD_INSET };
@@ -56,7 +56,8 @@ export const CARD_HOVER_LG = `${HOVER_LIFT} hover:[transform:translateY(-4px)]`;
  * attribute (which you want, for CLS) quietly wins over the CSS.
  */
 export const CARD_MEDIA = 'relative overflow-hidden bg-green';
-export const CARD_MEDIA_INSET = `${CARD_MEDIA} rounded-md`;
+// The mat still insets the photo; it just no longer rounds it.
+export const CARD_MEDIA_INSET = CARD_MEDIA;
 export const CARD_IMG = 'absolute inset-0 w-full h-full object-cover object-center';
 
 // A dark wash rising from the bottom of the photo, so white text laid over it

@@ -20,7 +20,7 @@ import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 // do not: every service page says prices are confirmed with us, so they are
 // listed as requests and the summary says so. A tidy-looking number beside
 // "Spa & Massage" would be a price nobody set.
-const CARD = 'bg-white border border-line rounded-lg [box-shadow:var(--shadow-md)]';
+const CARD = 'bg-white border border-line [box-shadow:var(--shadow-md)]';
 const ROW_H = 'text-h3 font-semibold text-gold';
 const LABEL = 'caps text-muted';
 const LINE = 'flex items-center justify-between gap-4 text-body';
@@ -96,7 +96,7 @@ export default function MyBookingCart() {
               <div className={`${CARD} p-5`}>
                 <div className="flex items-start gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={villa.cardImg} alt="" width={72} height={72} className="w-[72px] h-[72px] rounded-md object-cover shrink-0" />
+                  <img src={villa.cardImg} alt="" width={72} height={72} className="w-[72px] h-[72px] object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
                     <h2 className={ROW_H}>{villa.name}</h2>
                     <p className="mt-1 text-body text-muted">

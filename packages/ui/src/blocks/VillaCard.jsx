@@ -1,4 +1,5 @@
 import { cn } from '../lib/cn.js';
+import { BTN_SM } from '../primitives/btnClasses.js';
 
 /**
  * A villa, as a card - Wayan's mock, Sep 2026: one photograph, everything
@@ -29,8 +30,12 @@ import { cn } from '../lib/cn.js';
  *   facts     [{ icon, label }] - which facts matter is editorial, and the
  *             icons are nodes so the library takes no dependency on Lucide
  *   saveIcon  the heart. Passed in for the same reason; omit it and the
- *             control is not drawn at all, which is the honest state until
- *             there is somewhere for a saved villa to go.
+ *             control is not drawn at all, which is the honest state when
+ *             there is nowhere for a saved villa to go.
+ *   saved     whether this one is on the guest's shortlist, plus onSave to
+ *             toggle it. WHERE that list lives is the app's business - today a
+ *             per-browser key, one day the guest's account - and the card does
+ *             not need to know which.
  */
 
 // The scrim. Two stops rather than a flat wash: the words sit in the bottom
@@ -47,13 +52,26 @@ const FLAG =
   '[background:linear-gradient(105deg,var(--color-amber-d),var(--color-amber))] ' +
   'text-white text-small font-semibold [text-shadow:0_1px_1px_rgba(0,0,0,0.18)]';
 
+// The heart. STILL A CIRCLE - "hilangin border radius" is about cards and
+// pictures; a round control is a shape, not a corner.
+//
+// Saved is shown by COLOUR AND FILL, never by fill alone: the icon is handed in
+// by the app, so this cannot swap it for a solid one. `fill-current` makes
+// whatever outline heart arrives read as solid, and the amber is the same token
+// the price uses - the two things on this card the guest chose.
 const SAVE =
-  'absolute top-4 right-4 z-[3] grid place-items-center w-9 h-9 rounded-[50%] bg-white text-gold ' +
-  'shadow-md cursor-pointer [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
+  'absolute top-4 right-4 z-[3] grid place-items-center w-9 h-9 rounded-[50%] bg-white ' +
+  'shadow-md cursor-pointer [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
+const SAVE_ON = 'text-amber [&_svg]:fill-current';
+const SAVE_OFF = 'text-gold';
 
+// Geometry comes from BTN_SM, which this card no longer gets to disagree with.
+// It used to spell out its own h-2.6rem / px-5 / text-strong, and for a while
+// that made it the ONLY button on the site at 41.6px while every other one sat
+// at 33.6 - two sizes, and the odd one out was the most important control on
+// the page. Now BTN_SM is that size and the card just asks for it.
 const CTA =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap h-[2.6rem] px-5 rounded-sm ' +
-  'bg-cta text-white text-strong font-semibold leading-none ' +
+  `inline-flex ${BTN_SM} gap-2 bg-cta text-white ` +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] group-hover:bg-cta-d';
 
 export default function VillaCard({
@@ -65,6 +83,7 @@ export default function VillaCard({
   facts = [],
   saveIcon = null,
   onSave = null,
+  saved = false,
   href,
   linkAs: Link = 'a',
   cta = 'View details',
@@ -72,7 +91,7 @@ export default function VillaCard({
   className,
 }) {
   return (
-    <div className={cn('group relative isolate overflow-hidden rounded-lg bg-gold min-h-[27rem] min-[560px]:min-h-[30rem]', className)}>
+    <div className={cn('group relative isolate overflow-hidden bg-gold min-h-[27rem] min-[560px]:min-h-[30rem]', className)}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={villa.cardImg}
@@ -96,7 +115,16 @@ export default function VillaCard({
           anchor is invalid HTML, and browsers resolve it by guessing - usually
           by following the link the moment the guest tries to save. */}
       {saveIcon ? (
-        <button type="button" className={SAVE} aria-label={`Save ${villa.name}`} onClick={onSave || undefined}>
+        <button
+          type="button"
+          className={cn(SAVE, saved ? SAVE_ON : SAVE_OFF)}
+          // aria-pressed, not a changed label: this is one control that toggles,
+          // and a screen reader should hear its STATE rather than be handed a
+          // different button each time it is pressed.
+          aria-pressed={saved}
+          aria-label={`Save ${villa.name}`}
+          onClick={onSave || undefined}
+        >
           {saveIcon}
         </button>
       ) : null}

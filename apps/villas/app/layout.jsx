@@ -8,6 +8,7 @@ import { BookingProvider } from '@/components/providers/BookingProvider';
 import { TripPrefsProvider } from '@/components/providers/TripPrefsProvider';
 import { AccountProvider } from '@/components/providers/AccountProvider';
 import { CartProvider } from '@/components/providers/CartProvider';
+import { SavedVillasProvider } from '@/components/providers/SavedVillasProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
 import { BAR_BODY_PAD } from '@cahyana/ui';
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
           <AccountProvider>
           <TripPrefsProvider>
           <CartProvider>
+          <SavedVillasProvider>
           <BookingProvider>
             <Navbar />
             {/* The header is FIXED (CUE's), so the page reserves its height here.
@@ -50,6 +52,7 @@ export default function RootLayout({ children }) {
             <Footer />
             <BookingSheet />
           </BookingProvider>
+          </SavedVillasProvider>
           </CartProvider>
           </TripPrefsProvider>
           </AccountProvider>

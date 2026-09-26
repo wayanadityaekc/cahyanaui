@@ -104,7 +104,7 @@ export default function BookingSheet() {
           <div className="p-5 flex flex-col gap-5">
             <div className="flex items-center gap-3 p-3 rounded-lg bg-cream">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 rounded-md object-cover" />
+              <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
               <div className="flex-1">
                 <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                 <p className="text-small text-muted">{format(villa.nightlyRate)} / night</p>
@@ -158,7 +158,7 @@ export default function BookingSheet() {
           <div className="p-5 flex flex-col gap-5">
             <div className="flex items-center gap-3 p-3 rounded-lg bg-cream">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 rounded-md object-cover" />
+              <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
               <div className="flex-1">
                 <p className="text-h3 font-semibold text-gold">{villa.name}</p>
                 <p className="text-small text-muted">{booking.checkIn} → {booking.checkOut} · {booking.guests} guest{booking.guests > 1 ? 's' : ''}</p>

@@ -128,3 +128,37 @@ restyle the host document's `<html>`.
   fields, handlers and content in.
 - No raw values outside `tokens.css`.
 - A layer never imports upwards.
+
+## Two decisions that are easy to undo by accident
+
+**One button size, and the villa site's is not CUE's.** Every action button is
+`BTN_SM`: `--btn-h` tall, `--text-strong`, `px-5`, `rounded-sm`. The villa site
+sets `--btn-h: 2.6rem` (41.6px); CUE sits at `2.1rem` (33.6px). That divergence
+is deliberate (Sep 2026, Wayan: *"buttonya kayaknya masih kecil bnget"*) and
+41.6px is not a new number - it is what the villa card's CTA had been since the
+mock, which is the one button on that site he had looked at and not called
+small. `--field-h` stayed at 2.1rem: form fields did not grow with the buttons,
+which is exactly why the two tokens are separate.
+
+Never re-type BTN_SM's numbers into a component. `PhotoMosaic` did, and the copy
+went stale the moment the size changed - its "Show all N photos" button was left
+at 12.8px/16px while every other button on the site had moved on. Import it.
+And when you convert an old button, DELETE its `h-`/`px-`/`text-`/`rounded-`
+classes: adding `BTN_SM` beside them overrides nothing, because the winner is
+the compiled stylesheet's order, not the order the classes were written in.
+
+**Cards and pictures have square corners; controls do not.** Sep 2026, Wayan:
+*"card atau image hilangin border radiusnya"*. So `CARD_FRAMED`, `CARD_INSET`,
+`CARD_MEDIA_INSET`, `SplitFeature`'s photo and `VillaCard` draw no radius, and
+neither do the apps' own card surfaces. Buttons, fields, dropdown panels, the
+sticky bar and the sheets keep theirs - a sheet is not a card. The test that
+separates them is shape, not name: a control that floats is `position: fixed`,
+a card is in the flow.
+
+The gate for both is `verify-round4.mjs`. Two things it learned the hard way:
+"every button matches `--btn-h`" is a **tautology** - it holds at any value, so
+it passed with the old height put back - which is why there is also an absolute
+40px floor; and a rounded-corner sweep that looks for a border or a shadow
+misses `VillaCard` entirely, because that card is a flat tint with an absolutely
+positioned photo clipped by its own overflow. It now counts any surface that
+contains an `<img>` as a picture.

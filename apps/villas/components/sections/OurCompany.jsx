@@ -47,7 +47,7 @@ function idFromHash() {
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 const H1 = 'font-head text-h2 font-bold text-gold mb-4';
 
-const FAQ_CARD = 'mb-3 border border-line rounded-md p-4';
+const FAQ_CARD = 'mb-3 border border-line p-4';
 const FAQ_Q = 'font-body text-[1rem] font-semibold text-green cursor-pointer';
 
 

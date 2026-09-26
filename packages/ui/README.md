@@ -203,3 +203,37 @@ than the page, so a tinted pill or band still lifts.
 Gated by `verify-round4.mjs`: nothing on any page casts a shadow, and `<body>`
 is exactly that bone. Both proved by putting the bug back - one shadow token
 restored, then the white surface restored - 15 assertions each.
+
+## Black buttons, and the one place they invert
+
+Sep 2026, Wayan: *"warna button green jadi black bro"*. `--color-cta` /
+`--color-cta-d` are overridden **inside `[data-brand="villas"]`**, not at the
+token, because that token is CUE's green and CUE is the other half of this
+palette. The values are `--color-gold` / `--color-gold-d` - the soft black this
+palette already calls its accent - so the site has one dark, not two.
+
+**A colour change turned three buttons invisible, and only measurement caught
+it.** The villa card and the `tone="dark"` closing bands ARE `--color-gold`. A
+primary button on them came out at a **1:1** contrast against its own backdrop:
+the shape vanished completely and left the white label floating. Nothing was
+broken, nothing errored, and it reads as "a slightly odd label" rather than as a
+bug.
+
+So `Button` has an **`onDark`** variant - bone fill, dark label - used by the
+villa card's CTA and by every `Section tone="dark"`. It is an inversion, not a
+third colour: bone on dark says exactly what black says on bone. Measured after:
+1:1 → **14.07:1**.
+
+`verify-round4.mjs` now checks every action button's fill against the first
+opaque ancestor behind it and fails under 1.4:1. Two notes on that check:
+it found two MORE 1:1 buttons than the ones spotted by eye (the villa detail
+band and the service bands), and its first version reported two false ones -
+the frosted search panel and the `light` button - because it parsed `oklab()`
+and translucent fills as if they were `rgb()`. It now refuses to compare
+anything that is not an opaque `rgb()`, since a translucent fill is a stack
+rather than a colour, and both of those are drawn by a border and a blur anyway.
+
+**One rounded surface survives**: the hero's booking form, at `--r-sm` (Wayan:
+*"di booking form kasi border radius dikit"*). Everything else is square, so
+rounding only the thing the guest is meant to act on is what marks it out now
+that no shadow can.

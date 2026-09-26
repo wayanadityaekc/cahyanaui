@@ -63,8 +63,13 @@ export default function SearchCard({ layout = 'bar' }) {
   // 'panel' is the booking form living INSIDE the hero: a tall frosted card,
   // one field per row, instead of the wide bar that overlaps the hero's edge.
   if (panel) {
+    // THE ONE ROUNDED SURFACE ON THE PAGE (Wayan: "di booking form kasi border
+    // radius dikit"). Everything else went square; this is the one thing the
+    // guest is meant to act on, and rounding only it is what marks it out now
+    // that no shadow can. --r-sm is the smallest step the scale has, which is
+    // what "dikit" asks for.
     return (
-      <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6">
+      <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6 rounded-sm">
         <p className="text-label font-medium tracking-[0.14em] uppercase text-muted">Book your stay</p>
         <h2 className="text-h3 font-semibold text-gold mt-1 mb-4">Check your dates</h2>
         <div className="grid grid-cols-1 gap-3">

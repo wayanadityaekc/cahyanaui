@@ -184,6 +184,14 @@
      back if the flat version turns out to be too flat. */
   --surface: #f2eee8;
   --surface-raised: #f2eee8;
+
+  /* BUTTONS ARE BLACK HERE (Sep 2026, Wayan: "warna button green jadi black
+     bro"). Not a new colour - it is --color-gold, the soft black this palette
+     already calls its accent, so the site still has one dark and not two.
+     Scoped to the brand rather than changed at the token, because --color-cta
+     is CUE's green and CUE is the other half of this palette. */
+  --color-cta: #22201c;
+  --color-cta-d: #16140f;
 }
 
 /* ---------------------------------------------------------------------------

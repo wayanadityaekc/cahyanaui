@@ -177,7 +177,8 @@ export default function VillaDetail({ villa }) {
         <h2 className="text-h2 font-semibold text-white">{villa.name}, your dates</h2>
         <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
         <div className="flex justify-center mt-6">
-          <CheckAvailabilityButton villaSlug={villa.slug} />
+          {/* onDark - this band IS the action colour now. */}
+          <CheckAvailabilityButton villaSlug={villa.slug} variant="onDark" />
         </div>
 </Section>
 

@@ -71,8 +71,8 @@ const SAVE_OFF = 'text-gold';
 // at 33.6 - two sizes, and the odd one out was the most important control on
 // the page. Now BTN_SM is that size and the card just asks for it.
 const CTA =
-  `inline-flex ${BTN_SM} gap-2 bg-cta text-white ` +
-  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] group-hover:bg-cta-d';
+  `inline-flex ${BTN_SM} gap-2 bg-surface-raised text-gold ` +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] group-hover:bg-cream';
 
 export default function VillaCard({
   villa,

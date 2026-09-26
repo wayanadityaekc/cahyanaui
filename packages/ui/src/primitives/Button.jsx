@@ -37,6 +37,13 @@ const BASE_LINK = `inline-flex items-center gap-2 p-0 h-auto text-small font-sem
 
 const VARIANTS = {
   primary: 'border-transparent bg-cta text-white hover:bg-cta-d',
+  // THE SAME BUTTON, INVERTED, for the two places that sit on the dark surface
+  // - the villa card and the closing band. Since the action colour became the
+  // soft black, a primary button there is the exact colour of what is behind
+  // it: measured at 1:1, so the shape disappeared completely and only the white
+  // label was left floating. Bone on dark says the same thing black says on
+  // bone, which is why this is an inversion and not a third colour.
+  onDark: 'border-transparent bg-surface-raised text-gold hover:bg-cream',
   ghost: 'border-line bg-transparent text-gold hover:bg-cream',
   // On a photograph, where neither white nor the green reads reliably against
   // whatever happens to be behind it. The blur is what keeps the label legible

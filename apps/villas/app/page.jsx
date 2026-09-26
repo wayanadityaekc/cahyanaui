@@ -64,8 +64,11 @@ export default function HomePage() {
         size="page"
         image="/images/cahyana-tibuah.webp"
         alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
-        eyebrow="Ubud Private Villas"
-        title="A private retreat in the heart of Ubud"
+        /* Wayan, Sep 2026. The eyebrow now hands off to the H1 - it ends on
+           "by", so the two lines are one sentence and the brand attribution
+           reads as the parent company rather than as a second site. */
+        eyebrow="Ubud Private Villas by"
+        title="Cahyana Ubud Experience - A private retreat in the heart of Bali"
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
         actions={(
           <Button as={Link} variant="light" href="/#villas">Explore villas</Button>
@@ -243,7 +246,9 @@ export default function HomePage() {
           Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
         </p>
         <div className="flex flex-wrap justify-center gap-3 mt-6">
-          <CheckAvailabilityButton />
+          {/* onDark: this band IS the action colour, so a primary button on it
+              measured 1:1 against its own background. */}
+          <CheckAvailabilityButton variant="onDark" />
           <Button as={Link} variant="light" href="/services/scooter-rental">Renting a scooter too?</Button>
         </div>
 </Section>

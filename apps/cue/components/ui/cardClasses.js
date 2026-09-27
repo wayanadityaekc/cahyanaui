@@ -14,7 +14,7 @@ export const BADGE_POPULAR =
 // softer entry into the hover state, not an abrupt snap (Sep 2026, Wayan: card hover
 // shouldn't feel harsh).
 export const CARD_FRAME =
-  'relative rounded-lg p-[5px] overflow-hidden bg-white no-underline text-inherit ' +
+  'relative rounded-lg p-[5px] overflow-hidden bg-white no-underline text-inherit shadow-card ' +
   '[transition:transform_var(--dur-slow)_var(--ease-out)] hover:[transform:translateY(-4px)]';
 
 // Foto kartu persegi (dulu `.experience__image` + ::after gradient). Wrapper pegang

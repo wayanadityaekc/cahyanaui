@@ -2612,6 +2612,43 @@ Order **must be kept** (declarations first, run last):
   di-token (`var(--r-xl) var(--r-xl) 0 0`). **DIBIARIN** (jangan ikut di-token): `50%`
   (bulat/avatar), `2px`/`3px` (bar tipis), `0`. (Contoh lama buat `2px`/`3px` itu underline
   judul section - **udah gak ada**, lihat "Judul section" di Design system.)
+**KARTU DAPET BAYANGANNYA BALIK - SATU TOKEN, `--shadow-card` (27 Sep 2026, Wayan:
+"pakai shadow aja dah bro, tapi setipis mungkin ya")**
+Sapuan shadow di hari yang sama ninggalin kartu listing **tanpa batas sama sekali**. Ke-ukur,
+bukan dikira: kartu `#fff` di atas section `#fff` di atas body `#fff`, `border: 0px none`,
+`box-shadow: none` - jadi radius 16px-nya pun gak ngegambar apa-apa. Yang keliatan cuma foto
++ teks ngambang. Ditawarin 4 opsi (garis rambut `--line` · latar cream · cream+garis · kartu
+cream), Wayan milih **bayangan balik**, bukan garis.
+- **NGE-OVERRIDE bullet di bawah ini** buat KARTU doang. Sisanya tetep: nol elevasi di navbar,
+  di panel, di mana pun. Yang balik cuma **satu token buat satu peran**.
+- **ANGKANYA HASIL UKUR, bukan selera**: piksel paling gelap tepat di bawah tepi kartu lawan
+  putih halaman, di 1280. **none = 0** (beneran gak keliatan) · .06 = 10 · **.09 = 15** ·
+  .12 = 18 · dua-lapis = 21. `.09` itu **paling tipis yang masih kebaca sebagai kartu**.
+  Mau lebih tipis lagi = ganti **satu angka** itu, dia satu-satunya definisi.
+- **Ditulis di `style.css` DAN `app/globals.css`** (mirror, aturan lama). Yang di
+  `globals.css` ada di dalam `@theme`, jadi Tailwind nge-generate utility **`shadow-card`** -
+  dicek di CSS hasil build, bukan diasumsiin (`.shadow-card{--tw-shadow:0 1px 2px #22201c17}`).
+- **TIGA keluarga kartu doang**, biar listing / homepage / guide gak bisa melenceng:
+  `CARD` di `ListingRow` · `CARD_FRAME` di `cardClasses` · `FRAME` di `HomepageCard`.
+  **`ReviewCard` SENGAJA nggak** - dia udah bawa `border border-line` dari dulu; dikasih
+  dua-duanya bikin dia satu-satunya tepi dobel di web ini.
+- **Yang sebenernya ilang cuma kartu LISTING.** Ke-ukur: `HomepageCard` & `GuideCard` fotonya
+  ngisi hampir seluruh kartu (guide: foto 261px dari 271px), jadi **fotonya sendiri yang jadi
+  kartu**. Mereka ikut dikasih biar satu bahasa, bukan karena rusak.
+- **NOL ongkos layout, dibuktiin**: 172 kotak kartu di 6 halaman x 390/1280 diadu before/after -
+  **nol yang geser**, tinggi dokumen nol berubah, nol halaman melar. (Opsi garis `--line` ongkosnya
+  +2px tinggi per kartu - `box-sizing:border-box` bikin lebarnya aman tapi tingginya `auto`.)
+- **Gate: `verify-design3.mjs` (107/107, dari 95).** Aturannya sekarang **dua arah**, dan paruh
+  keduanya sama pentingnya: (1) nol `box-shadow` ber-offset/blur **KECUALI** yang cocok sama
+  `--shadow-card` **yang di-resolve halaman itu sendiri** (angka yang diketik di harness cuma
+  ngebuktiin harness setuju sama dirinya sendiri), dan (2) **bayangan kartunya WAJIB masih ADA**
+  di 5 halaman. Tanpa (2), "nol shadow di mana-mana" jadi cara buat LOLOS - dan itu persis cara
+  kartunya jadi tembus pandang kemarin, dengan semua gate ijo.
+  - Dites pakai 2 bug asli, **SATU-SATU**: `shadow-card` dibuang lagi dari `ListingRow`
+    (**6 nyala**, tepat 3 halaman listing x 2 lebar - homepage & guide hub tetep ijo karena
+    komponennya lain, jadi cek-nya presisi) · shadow navbar dibalikin (**2 nyala**, mastiin
+    loop yang gua tulis ulang masih nangkep elevasi beneran).
+
 - **SHADOW UDAH GAK ADA SAMA SEKALI (27 Sep 2026, Wayan: "hilangin shadow di semua web
   gaada lagi shadow di bawah navbar, di bawah card")**. Ini NGE-OVERRIDE bullet token
   shadow Agu 2026 yang dulu di sini (4 tingkat `--shadow-sm/md/lg/xl` + daftar bayangan

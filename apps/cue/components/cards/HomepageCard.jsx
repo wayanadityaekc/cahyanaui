@@ -32,7 +32,7 @@ const CATS = {
 // Rule visual .hcard*/.hcard__* lama dihapus dari style.css (produksi cuma dipake
 // komponen ini). Grid/slider + ExperienceCard klasik = stage berikutnya.
 const FRAME =
-  "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] " +
+  "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] shadow-card " +
   'transition-[translate] duration-200 ease-[var(--ease-out)] hover:-translate-y-[3px] ' +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';

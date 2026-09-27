@@ -16,10 +16,20 @@ const PAGES = ['/', '/tour.html', '/ubud-tour.html', '/attractions/monkey-forest
   '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
   '/guide/ubud.html', '/my-trips.html', '/settings.html', '/activities.html', '/destinations.html'];
 
-// ---------- 1. ZERO ELEVATION SHADOWS ----------
+// ---------- 1. ZERO ELEVATION SHADOWS, EXCEPT THE CARD ----------
 // The rule, not a list of selectors: a computed box-shadow may not have a real offset
 // or blur. That still allows 0-offset/0-blur rings (focus, invalid field, flag
 // hairlines, the charter inset border) and the 2px dot halo, all deliberate.
+//
+// ONE exception since 27 Sep 2026: --shadow-card. The shadow sweep left the listing
+// card with no boundary at all (white on white, border 0), so Wayan asked for a
+// shadow back "setipis mungkin". It is matched against the page's OWN --shadow-card,
+// never against a number typed in here - a hardcoded number would only prove this
+// harness agrees with itself.
+//
+// And the second half matters as much as the first: the card shadow must still BE
+// there. A sweep quietly deleting it is exactly how the cards went invisible, with
+// every gate green, so "no shadows anywhere" must not be a way to pass this check.
 for (const w of [390, 1280]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   await ctx.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
@@ -27,15 +37,19 @@ for (const w of [390, 1280]) {
   await page.route('**/api/**', api);
   const errs = [];
   page.on('pageerror', (e) => errs.push(String(e).slice(0, 110)));
-  let seen = 0;
+  let seen = 0, token = '';
   const bad = [];
+  const cards = {};
   for (const p of PAGES) {
     const r = await page.goto(B + p, { waitUntil: 'load' });
     ok(r.status() === 200, `${w} ${p}: HTTP 200`);
     await page.waitForTimeout(350);
     const res = await page.evaluate(() => {
+      // Resolved from the page, not typed here - see the note above this loop.
+      const tok = getComputedStyle(document.documentElement).getPropertyValue('--shadow-card').trim();
+      const tokNums = tok.replace(/rgba?\([^)]*\)/g, '').trim().split(/\s+/).filter(Boolean).map(parseFloat);
       const out = [];
-      let n = 0;
+      let n = 0, card = 0;
       for (const el of document.querySelectorAll('*')) {
         const c = getComputedStyle(el);
         const sh = c.boxShadow;
@@ -55,25 +69,38 @@ for (const w of [390, 1280]) {
           if (ch === ',' && depth === 0) { layers.push(cur); cur = ''; } else cur += ch;
         }
         layers.push(cur);
-        const elevation = layers.some((L) => {
+        let elevation = false;
+        for (const L of layers) {
           const nums = (L.match(/-?[\d.]+px/g) || []).map(parseFloat);
           const [ox = 0, oy = 0, blur = 0] = nums;
           // fully transparent layers paint nothing
           const m = L.match(/rgba?\([^)]*\)/);
-          if (m && /,\s*0\s*\)$/.test(m[0])) return false;
-          return Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2;
-        });
+          if (m && /,\s*0\s*\)$/.test(m[0])) continue;
+          // the one deliberate exception, matched against the page's own token
+          const isCard = tokNums.length >= 3 && nums.length >= 3 &&
+            nums[0] === tokNums[0] && nums[1] === tokNums[1] && nums[2] === tokNums[2];
+          if (isCard) { card++; continue; }
+          if (Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2) elevation = true;
+        }
         if (elevation) {
           out.push(`<${el.tagName.toLowerCase()} class="${(el.className || '').toString().slice(0, 55)}"> ${sh.slice(0, 60)}`);
         }
       }
-      return { n, out };
+      return { n, out, card, tok };
     });
     seen += res.n;
+    cards[p] = res.card;
+    token = res.tok;
     for (const b of res.out) if (bad.length < 8) bad.push(`${p} ${b}`);
   }
   ok(bad.length === 0, `${w}: nol shadow elevasi se-web${bad.length ? '\n        :: ' + bad.join('\n        :: ') : ''}`);
   ok(seen > 0, `${w}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
+  // The card shadow must still exist. Every page below renders cards, so a zero here
+  // means it was removed - the failure this whole section was rewritten to catch.
+  ok(/\d/.test(token), `${w}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
+  for (const p of ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html']) {
+    ok(cards[p] > 0, `${w} ${p}: kartu masih bawa --shadow-card (${cards[p]} elemen)`);
+  }
   ok(errs.length === 0, `${w}: nol page error${errs[0] ? ' :: ' + errs[0] : ''}`);
   await ctx.close();
 }

@@ -19,7 +19,7 @@ const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
 // Semua .lrow* -> utilities 1:1. Breakpoint 769px pakai min-[769px]:. Rule .lrow*
 // lama jadi dead di produksi (komponen ini satu-satunya user).
 const CARD =
-  'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink ' +
+  'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink shadow-card ' +
   'transition-[opacity] duration-200 ease-in-out ' +
   'min-[769px]:flex-col min-[769px]:p-2';
 const IMG =

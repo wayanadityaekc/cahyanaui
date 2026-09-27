@@ -204,10 +204,11 @@ for (const w of [390, 1280]) {
       icons: icons.map((r) => ({ w: +r.width.toFixed(1), h: +r.height.toFixed(1), l: +r.left.toFixed(1), r: +r.right.toFixed(1) })),
     };
   });
-  console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · baris mulai ${g.rowL}+${g.padL}`);
-  ok(g.br <= g.ll, `${w}: burger di KIRI logo (burger kanan ${g.br} <= logo kiri ${g.ll})`);
-  ok(g.bl - (g.rowL + g.padL) < 3, `${w}: burger nempel di gutter baris (${g.bl - (g.rowL + g.padL)}px)`);
-  ok(g.ll - g.br >= 6, `${w}: ada jarak burger-logo (${g.ll - g.br}px)`);
+  console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · baris berhenti ${g.rowR}-${g.padR}`);
+  ok(g.bl >= g.lr, `${w}: burger di KANAN logo (burger kiri ${g.bl} >= logo kanan ${g.lr})`);
+  ok((g.rowR - g.padR) - g.br < 3, `${w}: burger nempel di gutter KANAN baris (${Math.round((g.rowR - g.padR) - g.br)}px)`);
+  // It is the last thing in the row, so nothing in the right cluster may sit past it.
+  ok(g.icons.every((r) => r.r <= g.br + 1), `${w}: burger paling kanan di klusternya`);
 
   // GUTTER LUAR TURUN SENOTCH (27 Sep 2026, Wayan: "padding di luar kiri kanan kecilin
   // dikit"). Dulu `px-6` hardcoded = 24 rata di semua lebar. Sekarang 16 di HP (token
@@ -221,11 +222,15 @@ for (const w of [390, 1280]) {
   // emitted only on phones: a `w > 992 ||` short-circuit passes at desktop while
   // PRINTING a phone-only claim next to desktop numbers, which reads like a real check.
   if (w <= 992) ok(Math.abs(g.padL - g.gutter) < 0.5, `${w}: di HP gutter nav == --container-x (${g.padL} vs ${g.gutter})`);
-  if (w <= 992 && g.crumbL !== null) ok(Math.abs(g.bl - g.crumbL) < 2, `${w}: burger satu tepi sama isi halaman (${g.bl} vs crumb ${g.crumbL})`);
+  // Mirror of the old crumb check. The burger used to sit on the left, so it could be
+  // compared against the breadcrumb's left inset; on the right the equivalent claim is
+  // that it stops one gutter short of the viewport edge. Still measured against the
+  // page's own --container-x, never a number typed here.
+  if (w <= 992) ok(Math.abs((w - g.br) - g.gutter) < 2, `${w}: burger berhenti satu gutter dari tepi kanan (${Math.round(w - g.br)} vs ${g.gutter})`);
 
-  // THE DRAWER OPENS FROM THE LEFT (27 Sep 2026). That is the opposite of what this
-  // block asserted before, and deliberately so: the panel now grows out of the button
-  // that opened it, which means it COVERS that button. The x is the close affordance.
+  // THE DRAWER OPENS FROM THE RIGHT AGAIN (27 Sep 2026). It was flipped to the left
+  // earlier the same day and flipped back after Wayan saw it. Either way the panel
+  // covers the button that opened it, so the x stays the close affordance.
   await page.click('#hamburger');
   await page.waitForTimeout(400);
   const d = await page.evaluate(() => {
@@ -242,7 +247,7 @@ for (const w of [390, 1280]) {
       panel: `${Math.round(pr.left)}-${Math.round(pr.right)}`,
       burger: `${Math.round(b.left)}-${Math.round(b.right)}`,
       w: Math.round(pr.width),
-      panelL: Math.round(pr.left),
+      panelR: Math.round(pr.right),
       closeVisible: !!document.querySelector('#nav-menu button[aria-label="Close menu"]')?.getBoundingClientRect().width,
       hit: el ? (el.id || el.tagName) : 'none',
       hitCls: el ? (el.className || '').toString().slice(0, 40) : '',
@@ -250,15 +255,15 @@ for (const w of [390, 1280]) {
   });
   console.log(`     drawer ${d.panel} · burger ${d.burger} · hit-test ${d.hit} "${d.hitCls}"`);
   ok(d.w > 100, `${w}: panel drawer beneran ke-ukur (lebar ${d.w}) - rect kosong = harness rusak, bukan lolos`);
-  ok(d.panelL < 1, `${w}: panel drawer nempel tepi KIRI (kiri ${d.panelL})`);
+  ok(w - d.panelR < 1, `${w}: panel drawer nempel tepi KANAN (kanan ${d.panelR} dari ${w})`);
   ok(d.overlaps, `${w}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${d.burger} vs ${d.panel})`);
   ok(d.hit !== 'hamburger', `${w}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${d.hit})`);
   // so the x is load-bearing: it is the only close affordance the guest can see
   ok(d.closeVisible, `${w}: tombol x keliatan di dalam drawer`);
   await page.click('#nav-menu button[aria-label="Close menu"]');
   await page.waitForTimeout(400);
-  const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().right);
-  ok(shut <= 1, `${w}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
+  const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().left);
+  ok(shut >= w - 1, `${w}: x beneran nutup - panel balik ke luar layar KANAN (kiri ${Math.round(shut)} dari ${w})`);
   await ctx.close();
 }
 

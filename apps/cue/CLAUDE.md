@@ -2447,35 +2447,46 @@ gak bisa bawa - **dia lagi ngetik**, dan **dia beneran lagi di dashboard**.
   **tetep ketuck** kalau balik dari bawah. Dites pakai bug aslinya (header disuruh ilang
   lagi) → **10 nyala**.
 
-**HAMBURGER PINDAH KE KIRI LOGO (27 Sep 2026, Wayan: "menu humberger pindahin kiri di kiri
-logo bro")** - dulu anak TERAKHIR baris nav, mentok di tepi kanan.
-- Dua hal yang ikut, dan gampang kelewat:
-  - **Jaraknya pindah sisi**: `max-[992px]:ml-1` (dulu misahin dia dari keranjang di
-    KIRI-nya) jadi `mr-3 max-[992px]:mr-2` - sekarang yang dipisah burger ke logo.
-  - **Logo kehilangan margin kiri negatifnya** (`ml-[0.1rem]` / `max-[992px]:ml-[-0.25rem]`).
-    Itu dulu ada buat narik logo mentok ke tepi kontainer; sekarang **burger** yang megang
-    tepi itu, jadi kalau dibiarin logonya justru nabrak burger.
-- **Drawer sempat TETEP dari KANAN** (gak ditanyain, jadi gak gua ubah waktu itu) -
-  **UDAH GAK BERLAKU**, Wayan minta pindah ke kiri beberapa jam kemudian. Lihat section
-  "NAVBAR IKUT POLA FACEBOOK" di atas: panel sekarang dari KIRI dan **nutupin burger
-  lagi**, jadi tombol x di baris Welcome itu satu-satunya penanda tutup yang kelihatan.
-**DRAWER PINDAH KE KIRI + GUTTER LUAR DIKECILIN (27 Sep 2026, Wayan)**
-- **DRAWER DARI KIRI.** Burger di kiri tapi panel dari kanan itu setengah pola: panelnya
-  dateng dari sisi layar yang berlawanan sama tombol yang manggil dia. Yang diubah cuma
-  2 class: `right-0/left-auto` jadi `left-0/right-auto`, dan `translate-x-full` jadi
-  **`-translate-x-full`**. Transisinya udah `transition-[translate]` jadi `check-motion`
-  tetep ijo (aturan DEAD).
-  - **Burger jadi KETUTUPAN panel lagi** - itu bener, bukan regresi. Catatan lama
-    ("burger udah di LUAR panel, yang nutup cuma scrim") **UDAH GAK BERLAKU**. Makanya
-    **tombol x di baris Welcome itu WAJIB**: dia satu-satunya penanda tutup yang kelihatan
-    tamu. Jangan dihapus.
+**HAMBURGER & DRAWER BALIK KE KANAN (27 Sep 2026, Wayan: "pindahin balik navbar
+humberger menu ke kanan lagi, dan kalo di buka menunya keluar di sisi kanan")**
+Pagi harinya dua-duanya sempat dipindah ke KIRI atas permintaan dia juga; dia lihat
+hasilnya live terus minta dibalikin. **Yang berlaku: burger anak TERAKHIR baris nav
+(mentok tepi kanan), panel keluar dari KANAN.** Jangan dipindah ke kiri lagi tanpa
+nanya - itu keputusan yang udah dia lihat hasilnya dua kali.
+- **Dua hal yang ikut pindah bareng tombolnya, dan gampang kelewat:**
+  - **Jaraknya pindah sisi**: `mr-3 max-[992px]:mr-2` (misahin burger ke logo waktu dia
+    di kiri) balik jadi **`max-[992px]:ml-1`** - sekarang yang dipisah burger ke
+    KERANJANG di kirinya.
+  - **Logo dapet margin kiri negatifnya balik** (`ml-[0.1rem]` /
+    `max-[992px]:ml-[-0.25rem]`). Itu narik logo mentok ke tepi kontainer, dan tepi itu
+    nganggur lagi begitu burger pergi.
+- **Yang TIDAK ikut balik: ukuran burger.** Lebar 28px & gap bar 5px yang lama **jangan
+  dibalikin** - Wayan ngecilin ke **24/4** di permintaan terpisah yang gak dia revert.
+- **Panel tetep NUTUPIN burger** (drawer sesisi, mau kiri atau kanan sama aja), jadi
+  **tombol x di baris Welcome tetep WAJIB** - dia satu-satunya penanda tutup yang
+  kelihatan tamu. Jangan dihapus.
+- Dijaga `verify-design3.mjs` section 3 (**119/119**): burger di KANAN logo & nempel
+  gutter kanan & paling kanan di klusternya & di HP berhenti **satu `--container-x`**
+  dari tepi kanan (dibaca dari halaman, bukan angka yang diketik di harness), panel
+  nempel tepi KANAN & nutupin burger, x ada & **beneran nutup** (panel balik ke luar
+  layar KANAN).
+  - **Gate lamanya nangkep perubahan ini duluan** - begitu kodenya diubah, 11 assertion
+    "burger di KIRI" langsung merah. Itu bukti gate-nya emang ngukur sisi, bukan sekadar
+    ada-nya elemen. Sesudah aturannya ditulis ulang, dites pakai keadaan lama SATU-SATU:
+    drawer dibalikin ke kiri (**6 nyala**) · burger dibalikin ke kiri (**9**).
+  - **Satu assertion diganti, bukan dibuang**: dulu "burger satu tepi sama crumb"
+    (dua-duanya di kiri). Di kanan itu gak berarti apa-apa lagi, jadi cerminannya:
+    **burger berhenti satu gutter dari tepi KANAN viewport**. Tetep diadu lawan token
+    halaman itu sendiri.
+
 - **GUTTER LUAR: 24 rata -> 16 HP / 20 desktop** (Wayan: "padding di luar kiri kanan
   kecilin dikit"). Baris nav dulu nulis **`px-6` hardcoded** - padahal doc ini sendiri
   yang nulis "Section wrapper JANGAN hardcode px-6 lagi", jadi navbar emang kelewat waktu
   sapuan `--container-x` dulu. Sekarang
   `px-[var(--container-x)] min-[993px]:px-5`.
-  - **Efek samping yang bagus**: di HP burger jadi duduk di **16 = tepi crumb & h1 halaman
-    yang sama** (dulu 24 lawan 16, navbar satu-satunya yang nyempil).
+  - **Efek sampingnya ikut pindah sisi**: waktu burger masih di kiri, gutter 16 bikin dia
+    lurus sama crumb & h1. Sekarang burger di kanan, jadi yang dia lurusin itu **tepi
+    KANAN** - sama-sama 16 di HP, cuma cerminannya.
   - **Dua utility padding itu specificity-nya SAMA**, jadi yang menang urutan compile, bukan
     maksud kita - jebakan yang udah ketulis berkali-kali di doc ini. Makanya angkanya
     **diukur dari halaman** (16 & 20 kebukti ke-render), bukan dipercaya dari class-nya.
@@ -2491,8 +2502,9 @@ logo bro")** - dulu anak TERAKHIR baris nav, mentok di tepi kanan.
     ikon **1,08x & rata** · burger->logo **0,60x** · bar burger celah = **3x** tebal.
     Punya kita: 0,83x · 0,57-0,87x · 0,33-0,50x · 2x.
 - Dijaga `verify-design3.mjs`: gutter kiri == kanan, gutter < 24 & >= 14, di HP gutter
-  nav == `--container-x` & burger satu tepi sama crumb, panel drawer nempel tepi KIRI &
-  nutupin burger, tombol x ada & **beneran nutup** (panel balik ke luar layar kiri).
+  nav == `--container-x`. Sisi burger & drawer di-assert di section "HAMBURGER & DRAWER
+  BALIK KE KANAN" di atas - **dua-duanya KANAN sekarang**, jadi kalau nemu catatan lain
+  di doc ini yang bilang kiri, yang berlaku itu section tadi.
 
 **HAMBURGER DIKECILIN SENOTCH (27 Sep 2026, Wayan: "humberger bisa size kecilin lagi dikit?")**
 - **28 → 24px lebar**, gap bar **5 → 4px**, bar HP **22 → 20px**. Tinggi bar tetep 2px

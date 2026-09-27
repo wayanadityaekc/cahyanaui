@@ -209,39 +209,8 @@ export default function Navbar() {
           and leaves the nav flush at the top. */}
       <div ref={barRef}><TripBar /></div>
       <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)] min-[993px]:px-5">
-{/* HAMBURGER FIRST, LEFT OF THE LOGO (27 Sep 2026, Wayan: "menu humberger pindahin
-            kiri di kiri logo bro"). It used to be the last child, hard against the right
-            edge. Two things follow from the move:
-            - the gap moved sides (mr, not ml): it now separates burger from logo.
-            - the logo lost its negative left margin. That existed to pull the logo out to
-              the container edge; the burger holds that edge now, so keeping it would have
-              shoved the logo INTO the burger.
-            THE DRAWER OPENS FROM THE LEFT TOO (27 Sep 2026, Wayan: "pindahin menu kebuka
-            di kiri"). Burger left with the panel flying in from the right was half a
-            pattern: it arrived from the opposite side of the screen to the button that
-            summoned it. Both on the left, the panel grows out of its own control.
-            The cost is that the burger sits UNDER the panel while the menu is open. That
-            is the point of the x button in the Welcome row, and it is why that button is
-            not optional: it is the only close affordance the guest can see. */}
-        <button
-          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] mr-3 max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
-          id="hamburger"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          ref={burgerRef}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
-          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
-              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
-              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
-              jadi titik hijau pas migrasi Tailwind ini.) */}
-          <span className="absolute top-[-2px] right-[-2px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
-        </button>
-
         <a href="/" className="mr-auto">
-          <img className="h-10 w-auto block mr-4 max-[992px]:h-[34px]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+          <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-[-0.25rem]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
 
         {/* Chat pindah ke sini (Sep 2026, Wayan) - dulu nempel di sticky bar bawah
@@ -265,7 +234,7 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 left-0 bottom-0 right-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
             {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
@@ -404,7 +373,38 @@ export default function Navbar() {
           </ul>
         </nav>
 
-
+        {/* HAMBURGER BACK ON THE RIGHT, AND THE DRAWER WITH IT (27 Sep 2026, Wayan:
+            "pindahin balik navbar humberger menu ke kanan lagi, dan kalo di buka
+            menunya keluar di sisi kanan"). Earlier the same day it had moved to the
+            left of the logo, and the panel with it; he saw both live and asked for
+            the original back. This is the state that holds - do not move it left
+            again without asking, it is a decision he has now seen twice.
+            Two details travel with the button and are easy to miss:
+            - the gap is ml, not mr: it separates the burger from the cart on its
+              LEFT. Left of the logo it was mr, separating burger from logo.
+            - the logo gets its negative left margin back. That pulls it out to the
+              container edge, which is free again now the burger has left it.
+            What does NOT come back: the burger's old 28px width and 5px bar gap.
+            Wayan shrank those to 24/4 in a separate request he has not reverted.
+            The cost of a right-hand drawer is the same as a left-hand one: the panel
+            covers the burger while the menu is open, so the x in the Welcome row is
+            the only close affordance a guest can see. It is not optional. */}
+        <button
+          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
+          id="hamburger"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          ref={burgerRef}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
+          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
+              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
+              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
+              jadi titik hijau pas migrasi Tailwind ini.) */}
+          <span className="absolute top-[-2px] right-[-2px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
+        </button>
       </div>
 
       <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />

@@ -381,7 +381,14 @@ export default function Navbar() {
             again without asking, it is a decision he has now seen twice.
             Two details travel with the button and are easy to miss:
             - the gap is ml, not mr: it separates the burger from the cart on its
-              LEFT. Left of the logo it was mr, separating burger from logo.
+              LEFT. Left of the logo it was mr, separating burger from logo. On phones it
+              is NEGATIVE (-2px), and that is not a fudge: what the eye compares is the
+              three 20px GLYPHS, and this button is the only one whose glyph does not fill
+              its box - the bars are 20px inside a 24px hit area, so the ink sits 2px in on
+              each side. Measured, the old ml-1 made the cart-to-burger gap 19.6 against
+              13.6 everywhere else; -2px lands all three on 13.6. The box keeps its 24px
+              width, so the thumb target is untouched. Desktop needs none of this - there
+              the bars fill the button, so the gaps were already equal at 20.8.
             - the logo gets its negative left margin back. That pulls it out to the
               container edge, which is free again now the burger has left it.
             What does NOT come back: the burger's old 28px width and 5px bar gap.
@@ -390,7 +397,7 @@ export default function Navbar() {
             covers the burger while the menu is open, so the x in the Welcome row is
             the only close affordance a guest can see. It is not optional. */}
         <button
-          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
+          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] max-[992px]:-ml-[2px] max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}

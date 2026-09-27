@@ -228,6 +228,42 @@ for (const w of [390, 1280]) {
   // page's own --container-x, never a number typed here.
   if (w <= 992) ok(Math.abs((w - g.br) - g.gutter) < 2, `${w}: burger berhenti satu gutter dari tepi kanan (${Math.round(w - g.br)} vs ${g.gutter})`);
 
+  // JARAK ANTAR IKON WAJIB SAMA (27 Sep 2026, Wayan: "jarak antar icon disamakan, jarak
+  // antara my trip dan humberger kayaknya beda dari jarak my trip dan message"). He was
+  // right, and only on phones: 13.6 between chat and cart, 19.6 between cart and burger.
+  //
+  // Measured INK to INK, not box to box, and that distinction is the whole point. The
+  // burger is the one control whose glyph does not fill its own box - 20px of bars inside
+  // a 24px hit area - so equalising the boxes would still leave the eye seeing 2px more
+  // air on that side. Box gaps are 13.6/11.6 now and that is correct: they are unequal on
+  // purpose so the ink comes out even.
+  const gaps = await page.evaluate(() => {
+    const row = document.getElementById('hamburger').parentElement;
+    const ink = (el) => {
+      const svg = el.querySelector('svg');
+      if (svg) return svg.getBoundingClientRect();
+      // the burger: its three bars, ignoring the absolutely-positioned status dot
+      const bars = [...el.querySelectorAll('span')]
+        .filter((s) => getComputedStyle(s).position === 'static')
+        .map((s) => s.getBoundingClientRect());
+      if (!bars.length) return null;
+      return { left: Math.min(...bars.map((b) => b.left)), right: Math.max(...bars.map((b) => b.right)) };
+    };
+    const out = [];
+    for (const el of row.children) {
+      if (el.getBoundingClientRect().width === 0) continue;
+      if (el.querySelector('img')) continue; // the logo is not an icon
+      const i = ink(el);
+      if (i) out.push({ tag: el.id || el.getAttribute('aria-label') || el.tagName, l: i.left, r: i.right });
+    }
+    out.sort((a, b) => a.l - b.l);
+    return out.slice(1).map((c, n) => ({ from: out[n].tag, to: c.tag, gap: +(c.l - out[n].r).toFixed(1) }));
+  });
+  console.log(`     celah tinta ikon: ${gaps.map((x) => `${x.from}->${x.to} ${x.gap}`).join(' · ')}`);
+  ok(gaps.length >= 2, `${w}: minimal 2 celah ke-ukur (${gaps.length}) - kurang = harness rusak, bukan lolos`);
+  const spread = Math.max(...gaps.map((x) => x.gap)) - Math.min(...gaps.map((x) => x.gap));
+  ok(spread < 0.6, `${w}: celah antar ikon SAMA semua (spread ${spread.toFixed(1)}px :: ${gaps.map((x) => x.gap).join(', ')})`);
+
   // THE DRAWER OPENS FROM THE RIGHT AGAIN (27 Sep 2026). It was flipped to the left
   // earlier the same day and flipped back after Wayan saw it. Either way the panel
   // covers the button that opened it, so the x stays the close affordance.

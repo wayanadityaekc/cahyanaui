@@ -2460,6 +2460,24 @@ nanya - itu keputusan yang udah dia lihat hasilnya dua kali.
   - **Logo dapet margin kiri negatifnya balik** (`ml-[0.1rem]` /
     `max-[992px]:ml-[-0.25rem]`). Itu narik logo mentok ke tepi kontainer, dan tepi itu
     nganggur lagi begitu burger pergi.
+- **JARAK ANTAR IKON DISAMAIN (27 Sep 2026, Wayan: "jarak antar icon disamakan, jarak
+  antara my trip dan humberger kayaknya beda dari jarak my trip dan message")** - dia bener,
+  dan **cuma di HP**: ke-ukur 13,6 chat->cart lawan **19,6** cart->burger. Desktop dari
+  dulu udah rata 20,8.
+  - **Dua sebab numpuk, bukan satu**: burger bawa `max-[992px]:ml-1` (**+4px**) DAN
+    tintanya (bar 20px) duduk di dalam kotak 24px, jadi ke-inset **+2px** lagi.
+  - Diperbaikin jadi `max-[992px]:-ml-[2px]` - **negatif, dan itu bukan akal-akalan**:
+    yang diadu mata itu **TIGA GLYPH 20px**, dan burger satu-satunya yang tintanya gak
+    ngisi penuh kotaknya. Nyamain KOTAK bakal tetep nyisain 2px lebih di sisi itu.
+    Sesudahnya: **13,6 / 13,6** di HP, 20,8 / 20,8 di desktop.
+  - **Kotaknya tetep 24px**, jadi target jempol gak dikorbanin. Tepi kanan burger juga gak
+    gerak (ke-ukur: 374 di 390px = tetep pas di gutter 16) - yang ketarik cuma tepi kirinya.
+  - **Celah KOTAK-nya sekarang sengaja BEDA** (13,6 vs 11,6 di HP). Itu bener, jangan
+    "dibenerin" - beda 2px itu yang bikin tintanya rata.
+  - Gate-nya **gak punya aturan ini** sebelumnya, makanya lolos berbulan-bulan. Sekarang
+    `verify-design3.mjs` ngukur **tinta ke tinta** (svg, atau tiga bar buat burger; titik
+    status `absolute` di-skip) dan nge-assert spread < 0,6px. Dites pakai bug aslinya
+    (`ml-1` dibalikin) -> **nyala, spread 6,0px, cuma di 390**. **123/123.**
 - **Yang TIDAK ikut balik: ukuran burger.** Lebar 28px & gap bar 5px yang lama **jangan
   dibalikin** - Wayan ngecilin ke **24/4** di permintaan terpisah yang gak dia revert.
 - **Panel tetep NUTUPIN burger** (drawer sesisi, mau kiri atau kanan sama aja), jadi

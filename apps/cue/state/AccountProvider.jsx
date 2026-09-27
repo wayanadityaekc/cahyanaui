@@ -128,6 +128,9 @@ export function AccountProvider({ children }) {
         setAccount(d.account || null);
         return { ok: true };
       }
+      // The email already has an account. The server does not hand this browser
+      // its login - it emails a sign-in link to that inbox instead.
+      if (r.ok && d.signin_sent) return { ok: false, signin: true, email: d.email || email };
       return { ok: false, error: (d && d.error) || '' };
     } catch {
       return { ok: false };

@@ -3964,3 +3964,33 @@ satu review yang masuk - lewat semua jalan tutup (Done, ×, klik luar).
   nampilin daftar centang sama sekali, jadi "Ubud Tour gak ada di teks" bakal lolos
   dengan sendirinya. Dites pakai bug aslinya (refresh dibuang): **10 nyala**, termasuk
   `second submit sent ["Ubud Tour","Kecak Dance"]`.
+
+## "UDAH PUNYA AKUN? CEK EMAIL LU" (28 Sep 2026, Wayan)
+Aturan & alasannya di `cahyana-api` (section "LOGIN CUMA LEWAT INBOX, KECUALI AKUN
+BARU"). Singkatnya: server **gak lagi ngasih login** ke browser buat akun yang udah
+ada - dia ngirim link sign-in ke inbox akun itu, dan situs yang ngasih tau tamunya.
+- **`BookConfirmModal`**: respons booking bawa `signin_sent` + `signin_email`. Di dua
+  layar akhir ("Booking Received!" dan "Almost there - just the payment") nongol satu
+  baris: *"You already have an account with X. We've emailed you a sign-in link -
+  open it to see this booking in My Trips."* Hook `[data-signin-note]`.
+  - Yang ditampilin **email yang tamu ketik sendiri**, bukan nama akun. Contoh Wayan
+    nulis "log in as A account" - tapi kalau pakai nama, orang yang ngetik email
+    orang lain bakal dikasih tau nama pemiliknya.
+- **Form udah ke-isi dari akun** kalau udah login (itu udah ada dari dulu). Wayan
+  sempat nawarin toggle "book sebagai akun / sebagai customer baru" - **gak dibikin**:
+  field-nya tetep bisa diedit, dan booking yang dibikin sambil login selalu nempel
+  ke akun yang login (pesan buat temen = ganti nama/email-nya aja). Toggle = satu
+  keputusan lagi buat SEMUA tamu demi kasus yang jarang.
+- **`AuthModal` "Create account"** dengan email yang udah terdaftar: modal tetep
+  kebuka dan nyetak *"You already have an account with X. We've sent you a sign-in
+  link - check your email."* (`createAccount()` balikin `{signin:true}`). Dulu
+  tampilan Create gak punya slot pesan sukses sama sekali - cuma tampilan Sign in.
+- **Tamu lama yang gak login dan bayar online** gak bisa lihat layar "Booking
+  confirmed" (layar itu nanya server pakai login). Dia dapet cabang **"Payment sent"**
+  yang udah ada di `PayWaiting` - konfirmasinya tetep nyampe lewat email.
+- Verifikasi: **`verify-account.mjs`** di root repo (**34/34**, 390 & 1280): create
+  account akun lama/baru + booking akun lama/baru lewat My Trips (`?pay=0`). Patokan:
+  pesan nyebut email yang bener, **localStorage gak pernah megang token** buat akun
+  lama, akun baru tetep auto-login, nyampe layar sukses, nol page error, gak melar.
+  Dites pakai 2 bug: modal booking gak nyimpen `signin_email` (**2 nyala**) dan
+  `createAccount` gak ngerti `signin_sent` (**2 nyala**).

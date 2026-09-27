@@ -66,6 +66,7 @@ export default function BookConfirmModal() {
       setF(EMPTY);
       setPriced(null);
       setDone(false);
+      setSigninEmail('');
       setStep(1);
       setLineDT([]);
       setDtErr({});
@@ -129,6 +130,11 @@ export default function BookConfirmModal() {
   // Set once the booking is saved as pending; switches the modal to the payment
   // step. The booking exists from this point whether or not payment succeeds.
   const [bookingRef, setBookingRef] = useState('');
+  // Set when the email typed belongs to an account that already existed. The
+  // server no longer hands such a browser a login (a phone or email is not
+  // proof of anything), so it emails a sign-in link to that account instead -
+  // and the guest has to be told where to look.
+  const [signinEmail, setSigninEmail] = useState('');
   const [paid, setPaid] = useState(false);
   // Is this visitor being offered online payment at all? Off for everyone until
   // the chain is proven live - see lib/payFlag.js. Read in an effect, never in
@@ -296,6 +302,7 @@ export default function BookConfirmModal() {
       // happens when PayPal's webhook says the money cleared - so the modal moves
       // to the payment step rather than showing a success screen.
       setBookingRef(d.ref || '');
+      setSigninEmail(d.signin_sent && d.signin_email ? d.signin_email : '');
       setDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
@@ -579,6 +586,12 @@ export default function BookConfirmModal() {
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Booking Received!</h3>
             <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
+            {signinEmail ? (
+              <p data-signin-note className="-mt-3 mb-6 text-small text-muted leading-[var(--lh-body)]">
+                You already have an account with <strong className="text-green">{signinEmail}</strong>. We&apos;ve
+                emailed you a sign-in link - open it to see this booking in My Trips.
+              </p>
+            ) : null}
             <button className={BTN} onClick={closeBooking}>Done</button>
           </div>
         ) : (
@@ -599,6 +612,12 @@ export default function BookConfirmModal() {
                   Your booking is saved{bookingRef ? ` (${bookingRef})` : ''}. It is confirmed once this payment
                   goes through. Nothing is lost if you close this - you can pay later.
                 </p>
+                {signinEmail ? (
+                  <p data-signin-note className="-mt-3 mb-6 text-small text-muted leading-[var(--lh-body)]">
+                    You already have an account with <strong className="text-green">{signinEmail}</strong>. We&apos;ve
+                    emailed you a sign-in link - open it to see this booking in My Trips.
+                  </p>
+                ) : null}
                 {bookingRef && railFor(currency) === 'doku' ? (
                   // The rupiah rail is hosted, so there is no onPaid here: the
                   // guest leaves, and My Trips asks the server what happened

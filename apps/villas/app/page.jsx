@@ -72,9 +72,10 @@ export default function HomePage() {
         eyebrow="Ubud Private Villas by Cahyana Ubud Experience"
         title="A private retreat in the heart of Bali"
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
-        actions={(
-          <Button as={Link} variant="light" href="/#villas">Explore villas</Button>
-        )}
+        /* No `actions`. The hero's one control is the booking form below, and
+           "Explore villas" only scrolled to the band the guest reaches anyway
+           (Wayan, Sep 2026). Hero renders the row conditionally, so dropping the
+           prop leaves no empty gap where it used to sit. */
       >
         {/* The booking form sits inside the hero: under the copy on a phone, a
             tall panel on the right from 993px. */}

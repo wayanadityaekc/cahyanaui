@@ -64,3 +64,11 @@ export const DISPLAY_GUESTS = 2;
 // Indonesian guests still pick IDR in one tap and get DOKU, which is the
 // cheaper rail to settle on, so nothing is lost there beyond one tap.
 export const DEFAULT_CURRENCY = 'USD';
+
+// The `service` string a charter booking stores on the server, and therefore the
+// key its reviews are filed under. It was written out by hand in three places
+// (the cart's row builder, the itinerary builder, and now the charter page's
+// review strip); three copies of one key is how a page quietly stops finding its
+// own reviews. Transfer and airport do not need one - their service IS the route
+// name, which already comes from the catalog.
+export const CHARTER_SERVICE = 'Charter';

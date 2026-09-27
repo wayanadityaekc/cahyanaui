@@ -20,7 +20,7 @@ import DatePopup from '@/components/booking/DatePopup';
 import { cascadeFrom, setItemTime } from '@/lib/cart';
 import { usePricing } from '@/state/PricingProvider';
 import { readLocal } from '@/lib/storage';
-import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
+import { KEY, WHATSAPP_NUMBER, CHARTER_SERVICE } from '@/lib/constants';
 import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
@@ -160,6 +160,11 @@ export default function MyTripsCart() {
   };
 
   const [review, setReview] = useState(null);
+  // The post-trip email's button says "Leave a review", so ?review=1 has to land
+  // ON the review: Past trips, popup open. Two effects, because the popup cannot
+  // be filled until the trips have actually arrived - opening it on an empty
+  // checklist teaches the guest the link is broken.
+  const [wantReview, setWantReview] = useState(false);
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
   const [tab, setTab] = useState('custom');
@@ -169,6 +174,34 @@ export default function MyTripsCart() {
   // through a menu first. Back still reaches the list.
   const [reading, setReading] = useState(true);
   const [openRef, setOpenRef] = useState(null);
+
+  useEffect(() => {
+    // Effect, never initial state: this is a static export, so the first paint
+    // has to match the pre-rendered HTML.
+    try {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('review') !== '1') return;
+      setWantReview(true);
+      setTab('past');
+      setReading(true);
+      // Drop the flag - and ONLY the flag - so a reload does not reopen a popup
+      // the guest closed. ?token= is left alone; the account provider reads it.
+      p.delete('review');
+      const q = p.toString();
+      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''));
+    } catch { /* no query string: nothing to do */ }
+  }, []);
+
+  useEffect(() => {
+    // trips is null until the fetch lands, so this waits rather than guessing.
+    if (!wantReview || !trips) return;
+    setWantReview(false);   // one shot, whichever way it goes
+    // Signed out, or everything already reviewed: stay on Past trips and let the
+    // panel say so. An empty popup would be worse than no popup.
+    if (!reviewableItems.length) return;
+    setReview({ name: (account && account.name) || '', items: reviewableItems });
+  }, [wantReview, trips, reviewableItems, account]);
+
 
   const rows = useMemo(() => {
     const out = [];
@@ -216,7 +249,7 @@ export default function MyTripsCart() {
       ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
     }));
     (state.charters || []).forEach((c, ci) => out.push({
-      kind: 'charter', type: 'charter', service: 'Charter', date: c.date || '',
+      kind: 'charter', type: 'charter', service: CHARTER_SERVICE, date: c.date || '',
       guests: parseInt(c.guests, 10) || displayGuests, area: c.area || 'Ubud',
       duration: c.dur || c.duration, extra: c.extra || 0, localIndex: ci,
       // The pick-up time the guest chose in the builder. Carried like the

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { normalizePath } from '@/lib/pathname';
 import { House, Compass, ShoppingBag } from 'lucide-react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
@@ -48,7 +49,7 @@ const CELL =
 const on = (active) => `${CELL} ${active ? 'text-gold' : 'text-muted'}`;
 
 export default function AppBottomNav() {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   const { count } = useItinerary();
   const is = (href) => (href === '/' ? pathname === '/' : pathname.startsWith(href.replace('.html', '')));
 

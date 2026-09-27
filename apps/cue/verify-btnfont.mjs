@@ -113,7 +113,7 @@ for (const w of [320, 390, 768, 1280]) {
   const errs = [];
   page.on('pageerror', (e) => errs.push(String(e)));
   await page.route('**/api/**', api);
-  const pages = ['/index.html', '/tour.html', '/ubud-tour.html', '/charter.html', '/transfer.html',
+  const pages = ['/', '/index.html', '/tour.html', '/ubud-tour.html', '/charter.html', '/transfer.html',
     '/airport-transfer.html', '/our-company.html', '/my-trips.html', '/bali-guide.html',
     '/itinerary.html', '/settings.html', '/activities.html', '/destinations.html'];
   let seen = 0;
@@ -139,13 +139,27 @@ for (const w of [320, 390, 768, 1280]) {
   }
   ok(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
   ok(odd.length === 0, `sweep: nol tombol aksi pakai font browser${odd.length ? ' :: ' + odd.join(' | ') : ''}`);
-  // The homepage throws a hydration mismatch (React #418) and has done since
-  // before this change - verified by stashing the diff, rebuilding at HEAD and
-  // reproducing it. It is NOT excused, it is NAMED, so a NEW page error still fails
-  // this assertion instead of hiding behind a known one.
-  const fresh = errs.filter((e) => !/#418/.test(e));
-  ok(fresh.length === 0, `sweep: nol page error BARU${fresh[0] ? ' :: ' + fresh[0] : ''}`);
-  ok(errs.some((e) => /#418/.test(e)), 'sweep: #418 homepage masih ada (bug lama, belum dibenerin - kalau assertion INI gagal berarti udah kelar, hapus pengecualiannya)');
+  // No exceptions left. This used to carry a named #418 exception for /index.html;
+  // the cause is fixed (lib/pathname.js), so a page error here is a real one again.
+  ok(errs.length === 0, `sweep: nol page error${errs[0] ? ' :: ' + errs[0] : ''}`);
+
+  // Homepage CTA under the program grid.
+  await page.goto(B + '/index.html', { waitUntil: 'load' });
+  const cta = page.locator('#explore a').last();
+  const href = await cta.getAttribute('href');
+  const label = (await cta.textContent()).trim();
+  console.log(`     CTA #explore: "${label}" -> ${href}`);
+  ok(href === '/tour.html', `CTA #explore nunjuk /tour.html (dapet ${href})`);
+  ok(href !== '/programs.html', 'CTA #explore BUKAN /programs.html (itu noindex & sengaja gak di-link)');
+  ok(label.split(/\s+/).length <= 2, `label CTA <=2 kata ("${label}")`);
+  // Prove the target is a page guests can actually land on, not a parked one.
+  const tr = await page.goto(B + '/tour.html', { waitUntil: 'load' });
+  ok(tr.status() === 200, 'target CTA HTTP 200');
+  const robots = await page.evaluate(() => {
+    const m = document.querySelector('meta[name="robots"]');
+    return m ? m.getAttribute('content') : '';
+  });
+  ok(!/noindex/.test(robots || ''), `target CTA indexable (robots="${robots}")`);
   await ctx.close();
 }
 

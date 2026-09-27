@@ -11,8 +11,15 @@ import { BTN_PILL } from '@/components/ui/btnClasses';
 // mobile, two rows of four on desktop. No tab state left, so this is a plain server
 // component again - it does not ship any JS.
 //
-// One CTA instead of two: /programs.html is the page that actually lists both kinds
-// together, which is the whole point of merging them here.
+// CTA goes to /tour.html (Sep 2026, Wayan: "tombol see all tour di homepage arahin ke
+// page listing tour bukan all program"). It used to point at /programs.html, and that
+// was wrong in a way nothing warned about: that page carries robots:{index:false} and
+// explore-options.js says in writing it is "not ready to publish, so it stays unlinked" -
+// so the homepage's only CTA here was sending guests to an unpublished, noindex page.
+//
+// KNOWN TRADE-OFF, Wayan's call: the grid above is 4 tours + 4 experiences, so this one
+// link covers half of it. Experiences have their own listing (/activities.html) if a
+// second CTA is ever wanted; ask before adding one.
 const CARDS = [...EXPLORE_TOURS, ...EXPLORE_EXPERIENCES];
 
 export default function Explore() {
@@ -29,7 +36,7 @@ export default function Explore() {
         ))}
       </div>
       <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">
-        <a href="/programs.html" className={BTN_PILL}>All programs</a>
+        <a href="/tour.html" className={BTN_PILL}>All tours</a>
       </div>
     </section>
   );

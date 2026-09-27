@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { normalizePath } from '@/lib/pathname';
 import { Tag, ShieldCheck, CalendarDays, Info, Car } from 'lucide-react';
 import { promoFor } from '@/content/shared/promo';
 
@@ -37,7 +38,7 @@ const ROTATE_MS = 7000;
 const FADE_MS = 200;
 
 export default function TripBar() {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   const messages = promoFor(pathname);
   const [idx, setIdx] = useState(0);
   const [dim, setDim] = useState(false);

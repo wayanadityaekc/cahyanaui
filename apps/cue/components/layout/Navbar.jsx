@@ -4,6 +4,7 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { normalizePath } from '@/lib/pathname';
 import {
   Building2, Compass, BookOpen, House, MessageCircle, Settings, ShoppingBag, UserRound, UserRoundPlus, X,
 } from 'lucide-react';
@@ -86,7 +87,7 @@ export default function Navbar() {
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
   const barRef = useRef(null);
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
 
   // Three numbers, and NONE of them changes while the guest is scrolling - that is
   // the whole point of this block now:
@@ -147,7 +148,14 @@ export default function Navbar() {
   }, []);
 
   const isActive = (href) => {
-    if (href === '/') return pathname === '/';
+    // '/index.html' counts as home. Static export PRERENDERS this page at pathname '/',
+    // so a browser sitting on /index.html used to compute a DIFFERENT class here than
+    // the server wrote - a hydration mismatch (React #418), which makes React throw away
+    // the server HTML and re-render that page on the client. Measured: /index.html threw,
+    // '/' did not. It also fixes the older symptom that the drawer's Home row simply did
+    // not light up there. Nothing links to /index.html, so this only reaches people who
+    // type or bookmark it - but it costs one comparison.
+    if (href === '/') return pathname === '/' || pathname === '/index.html';
     return pathname === href.replace(/\.html$/, '') || pathname === href;
   };
 

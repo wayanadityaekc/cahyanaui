@@ -557,11 +557,47 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
     Pola yang bener sama kayak tombol Done: CTA = tombol yang **bukan** `[aria-haspopup]`.
     (3) `--btn-h` resolve ke **33,5938**, jadi `===` lawan `33.6` selalu gagal —
     bandingin pakai toleransi.
-- **Sisa yang JUJUR, BUKAN dari perubahan ini**: **homepage nge-throw hydration mismatch
-  React #418**, dan itu **udah ke-live**. Dibuktiin, bukan diduga: diff-nya di-stash, build
-  ulang di HEAD, error-nya **kejadian lagi**. Di harness dia **DINAMAIN**, bukan
-  dimaafin — jadi page error BARU tetep bikin merah, dan kalau #418-nya kelar assertion
-  penandanya yang gagal (biar pengecualiannya dihapus). Belum diusut.
+- **UDAH DIBENERIN, dan catatan pertama gua SALAH** - lihat section "HOMEPAGE PUNYA DUA
+  EJAAN PATHNAME" di bawah. Gua sempat nulis di sini bahwa "homepage nge-throw #418 dan
+  udah live"; yang bener **cuma `/index.html`**, bukan `/` yang dilihat tamu. Harness gua
+  sendiri yang milih URL itu, jadi gua sendiri yang bikin kondisinya.
+
+**HOMEPAGE PUNYA DUA EJAAN PATHNAME - `lib/pathname.js` (27 Sep 2026)**
+- **Gejalanya: `/index.html` nge-throw React #418 (hydration mismatch), `/` nggak.** Efeknya
+  bukan kosmetik: React **buang HTML dari server** dan nge-render ulang halaman itu di
+  browser - jadi halaman yang tadinya statis mendadak jadi client-rendered.
+- **Penyebabnya: static export nge-PRERENDER homepage di pathname `/`.** Browser yang duduk
+  di `/index.html` ngelaporin `/index.html`, jadi komponen apa pun yang nurunin markup dari
+  pathname ngitung beda dari HTML yang udah ditulis server.
+  - Yang beneran mecahin: **`TripBar`**. `promoFor()` mbuang `.html`, jadi `/index.html`
+    jadi **`/index`** - key yang gak ada di map mana pun - terus jatuh ke promo **default
+    halaman detail**, sementara server udah nulis pasangan promo homepage yang muter.
+  - **`isActive('/')` di `Navbar` KEBETULAN jalan bareng** dan itu jebakannya: gua benerin
+    itu duluan, build, dan **error-nya masih ada**. Kalau gua berhenti di situ gua bakal
+    lapor "udah dibenerin" padahal belum. **Ukur lagi sesudah tiap perbaikan.**
+- **Diperbaikin di SATU tempat, bukan 3 tambalan**: `normalizePath()` di `lib/pathname.js`,
+  dipakai ketiga pemakai `usePathname` (`TripBar`, `Navbar`, `AppBottomNav`). Yang ketiga
+  gak ke-ukur rusak - dia dikasih perlakuan sama karena bacanya sama.
+  - **NOL import** di file itu, sengaja: dia ke-pull `Navbar`, dan `Navbar` ada di SEMUA
+    halaman. Alasan yang sama kenapa `lib/crumbs.js` tetep map literal.
+- **Bonus yang ikut kelar**: catatan lama "`isActive('/')` cuma cocok sama `/`, jadi baris
+  Home gak nyala di `/index.html`" - sekarang nyala.
+- **Nol link internal ke `/index.html`** (dicek), jadi ini cuma nyentuh orang yang ngetik
+  atau nge-bookmark URL itu. Tetep dibenerin: gagalnya SUNYI, ongkosnya seluruh halaman
+  turun ke client rendering, dan gak ada gate yang bakal nangkep komponen BERIKUTNYA yang
+  baca pathname.
+- **Cara nemunya (buat next time)**: bisect. Komentarin section homepage separuh-separuh,
+  build, cek error-nya masih ada apa nggak. Nyampe **NOL section** error-nya tetep ada -
+  itu yang ngebuktiin masalahnya di level layout, bukan di section mana pun. Terus adu
+  `/` lawan `/index.html`, dan ke situ ketemunya.
+- **Gua sempat salah diagnosa 2x sebelum ketemu**: (1) nyangka nesting HTML gak valid
+  (`<div>` di dalam `<p>`) - di-scan, **nol**; (2) nyangka `isActive` (lihat atas). Yang
+  nutup itu diff **HTML server lawan DOM sesudah hydration** (`javaScriptEnabled:false`
+  buat sisi server), bukan baca kode.
+- Dijaga `verify-btnfont.mjs`: `/index.html` **masuk sweep**-nya, dan patokannya **nol page
+  error** (pengecualian #418 yang sempat gua tulis udah DIHAPUS - bug-nya udah gak ada,
+  jadi penandanya bakal jadi assertion yang gagal selamanya). Dites pakai bug aslinya
+  (`normalizePath` dilepas dari `TripBar`) - nyala.
 - **Ikon = `lucide-react`** (Sep 2026, Wayan pilih opsi "full Lucide" setelah lihat sheet
   perbandingan lama-vs-Lucide). Ikon baru = import dari `lucide-react`, **JANGAN gambar SVG
   manual lagi**. Aturannya:
@@ -1508,9 +1544,20 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
   digabung (Sep 2026, Wayan: "keluarin card dari kategori, tour dan experience jadi satu").
   Dulu 2 tab (Tours | Experiences) — separuh kartu kesembunyi di balik tap, dan section-nya
   keliatan lebih kurus dari katalog aslinya. 8 kartu = jumlah yang sama kayak Destinations,
-  jadi `GRID_XPLORE` nata-nya persis sama: **HP 1 slider, desktop 2 baris × 4**. CTA-nya
-  tinggal satu → `/programs.html` (halaman yang emang gabungin dua-duanya). Gak ada state
-  tab lagi → `Explore.jsx` balik jadi **server component** (gak ngirim JS).
+  jadi `GRID_XPLORE` nata-nya persis sama: **HP 1 slider, desktop 2 baris × 4**. Gak ada
+  state tab lagi → `Explore.jsx` balik jadi **server component** (gak ngirim JS).
+  - **CTA-nya `/tour.html`, BUKAN `/programs.html`** (27 Sep 2026, Wayan: *"tombol see all
+    tour di homepage arahin ke page listing tour bukan all program"*). Yang lama itu salah
+    dengan cara yang gak ada yang ngadu: `/programs.html` bawa **`robots:{index:false}`**
+    dan `explore-options.js` nulis hitam-putih dia *"not ready to publish, so it stays
+    unlinked and noindexed"* - jadi CTA satu-satunya di section ini nganterin tamu ke
+    halaman yang sengaja belum dipublish. Labelnya ikut jadi **"All tours"** (aturan 1-2 kata).
+  - **ONGKOS YANG DISENGAJA, keputusan Wayan**: grid di atasnya 4 tour + 4 experience, jadi
+    satu link ini cuma nutup separuhnya. Experience punya listing sendiri
+    (`/activities.html`) kalau mau CTA kedua - **tanya dulu**, jangan ditambahin sendiri.
+  - **`AppBottomNav` MASIH nunjuk `/programs.html`** (tab "Program" di app mode). Itu
+    **belum ditanyain** - dia navigasi, bukan CTA, tapi tujuannya halaman yang sama-sama
+    belum dipublish. Kalau mau disamain, itu keputusan Wayan.
 - **Trip Planner band (`.plan` / `#plan`) DIHAPUS dari homepage** (Wayan: kebanyakan tulisan; hero
   udah "trip planner" sendiri). CSS `.plan*` masih ada (dipakai halaman lain? cek dulu kalau mau buang).
 - **Driver cards DIHAPUS dari homepage** (section `.habout-people` + `#drivers-placeholder` +

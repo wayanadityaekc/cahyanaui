@@ -2649,6 +2649,31 @@ cream), Wayan milih **bayangan balik**, bukan garis.
     komponennya lain, jadi cek-nya presisi) · shadow navbar dibalikin (**2 nyala**, mastiin
     loop yang gua tulis ulang masih nangkep elevasi beneran).
 
+**HERO HALAMAN DETAIL GAK NGE-ZOOM PAS DI-HOVER (27 Sep 2026, Wayan: "di page tour,
+destination, experience sekarang ada howver untuk heronya, gua gamau ada itu kalo di howver
+hero no zoom")**
+Ubin `HeroMosaic` dulu nge-scale fotonya ke **1.04** pas kursor nempel. Udah **DIHAPUS**.
+- **DUA-DUANYA dibuang, bukan cuma scale-nya**: `hover:[&>img]:[transform:scale(1.04)]` DAN
+  `[&>img]:[transition:transform ...]`. Transition itu **cuma ada buat nganimasiin zoom
+  itu**; ditinggal = transition yang nembak properti yang gak ada yang nge-set = persis
+  kelas bug yang `check-motion` (rule DEAD) dibikin buat nangkep. Ini aturan yang sama
+  kayak sapuan shadow: **buang token = buang prefix/baris-nya sekalian.**
+- Sesudahnya `TILE_BASE` **gak nulis `transition` sendiri sama sekali**, jadi yang kepakai
+  press feedback global di `style.css` (aturan SNAP otomatis kepenuhan).
+- **Hover di TOMBOL hero TETEP** (CTA + tombol galeri: `hover:bg-cream` /
+  `hover:bg-[rgba(255,255,255,0.26)]`). Yang gak dia mau itu **foto-nya nge-zoom**, bukan
+  tombol kehilangan respons.
+- **Kartu juga NOL hover baru** (Wayan: "gausah ada howver") - waktu bayangan kartu dipasang
+  gua nawarin hover border/bayangan naik, **ditolak**. Jangan ditambahin nanti.
+- **Gate: section 5 di `verify-design3.mjs` (119/119).** Diukur di **FOTONYA**, bukan dibaca
+  dari class: `getBoundingClientRect` ikut kena transform, jadi kalau kotaknya identik pas
+  kursor nempel berarti emang gak ada yang nge-zoom, apa pun kata class-nya. Dicek di
+  **ketiga jenis halaman** yang Wayan sebut (tour/destination/experience) - mereka 3 komponen
+  halaman beda walau hero-nya satu. Dites pakai bug aslinya (zoom dibalikin) -> **6 nyala**,
+  dan angkanya nunjukin bug-nya telanjang: **763.8 -> 794.4**.
+  - **Guard "rect kosong = harness rusak" beneran kepakai**: URL experience gua salah ketik,
+    harness-nya mendarat di 404, nyomot ikon **17px**, dan **ngadu** - bukan diem-diem lolos.
+
 - **SHADOW UDAH GAK ADA SAMA SEKALI (27 Sep 2026, Wayan: "hilangin shadow di semua web
   gaada lagi shadow di bawah navbar, di bawah card")**. Ini NGE-OVERRIDE bullet token
   shadow Agu 2026 yang dulu di sini (4 tingkat `--shadow-sm/md/lg/xl` + daftar bayangan

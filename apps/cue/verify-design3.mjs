@@ -314,6 +314,43 @@ for (const w of [390, 1280]) {
   await ctx.close();
 }
 
+// ---------- 5. HERO DOES NOT ZOOM ON HOVER ----------
+// 27 Sep 2026, Wayan: "di page tour, destination, experience sekarang ada howver untuk
+// heronya, gua gamau ada itu kalo di howver hero no zoom". The mosaic tiles used to
+// scale their photo to 1.04.
+//
+// The rule is measured on the PHOTO, not read off a class: getBoundingClientRect
+// reflects transforms, so a scale of 1.04 on a 700px tile is a 28px change - if the
+// box is identical with the pointer on it, nothing zoomed, whatever the class says.
+// Checked on all three page types Wayan named, because they are three different page
+// components even though they share one hero.
+for (const [label, url] of [['tour', '/ubud-tour.html'], ['destination', '/attractions/monkey-forest.html'], ['experience', '/attractions/atv-ride.html']]) {
+  const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  await page.route('**/api/**', api);
+  const r = await page.goto(B + url, { waitUntil: 'load' });
+  ok(r.status() === 200, `hero ${label}: HTTP 200`);
+  await page.waitForTimeout(500);
+  const shot = () => page.evaluate(() => {
+    const img = document.querySelector('header ~ * img, main img') ||
+      document.querySelector('img');
+    if (!img) return null;
+    const b = img.getBoundingClientRect();
+    return { w: +b.width.toFixed(1), h: +b.height.toFixed(1), tr: getComputedStyle(img).transform };
+  });
+  const before = await shot();
+  ok(before && before.w > 200, `hero ${label}: foto hero ke-ukur (${before ? before.w : 'NULL'}) - rect kosong = harness rusak, bukan lolos`);
+  const box = await page.locator('img').first().boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.waitForTimeout(650); // lebih lama dari --dur-slow, jadi zoom sempat jalan kalau ada
+  const after = await shot();
+  ok(before.w === after.w && before.h === after.h,
+    `hero ${label}: foto NOL berubah pas di-hover (${before.w}x${before.h} -> ${after.w}x${after.h})`);
+  ok(after.tr === 'none' || after.tr === before.tr,
+    `hero ${label}: nol transform nyangkut pas hover (${after.tr})`);
+  await ctx.close();
+}
+
 await br.close();
 console.log(`\n${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

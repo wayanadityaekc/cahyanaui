@@ -43,10 +43,18 @@ const PILL_FROM = 10;
 // the crop holds at every width) and every child stretches into it.
 //
 // NO RADIUS on the tiles (Wayan: "grid nya gausah kasi border radius").
+//
+// NO HOVER ZOOM either (27 Sep 2026, Wayan: "di page tour, destination, experience
+// sekarang ada howver untuk heronya, gua gamau ada itu kalo di howver hero no zoom").
+// The tiles used to scale their photo to 1.04 on hover. Both halves went, not just the
+// scale: the [&>img] transform transition existed ONLY to animate it, and a transition
+// left pointing at a property nothing sets is the dead-transition class of bug that
+// check-motion exists to catch. Do not put either back without asking - it is a
+// decision, not a gap. Tiles now declare no transition of their own, so the global
+// press feedback in style.css is what a tap gets.
 const TILE_BASE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
-  '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center ' +
-  '[&>img]:[transition:transform_var(--dur-slow)_var(--ease)] hover:[&>img]:[transform:scale(1.04)]';
+  '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
 const BIG = `${TILE_BASE} flex-[0_0_62%] [scroll-snap-align:start]`;
 // A column of two stacked small photos. One photo in it (the tail of an odd
 // count) fills the column height instead of leaving a hole - it is the only

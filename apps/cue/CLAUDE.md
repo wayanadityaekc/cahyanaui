@@ -1771,6 +1771,61 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
     (`**/api/pricing/catalog*`), kalau nggak semua harga em dash & Book Now mati - itu
     bukan bug, itu emang state "API belum jawab".
 
+## KONTEN PINDAH KE .json (27 Sep 2026) — 5 file lagi
+`charter.js` · `transfer.js` · `airport.js` · `attractions/index.js` · `guides/index.js`
+sekarang tinggal `import X from './x.json'`, pola yang sama kayak `legal.json` &
+`tours.json`. Alasannya satu: **dashboard nulis DATA, JANGAN PERNAH KODE** — satu
+karakter nyasar di `.js` matiin build buat 102 halaman; paling jelek dari `.json`
+yang salah ya teksnya jelek.
+- **Dibuktiin, bukan diklaim**: 102 halaman hasil build di-fingerprint before/after,
+  **0 berubah**. Payload RSC di dalam `<script>` + path aset ber-hash **wajib
+  dinormalisasi dulu** — tanpa itu sha1 mentah lapor 102 halaman berubah tiap build
+  dan lu ngejar hantu seharian.
+- **Komentarnya dipindah ke wrapper, bukan dihapus.** JSON gak bisa nampung komentar,
+  dan komentar di file-file itu = catatan KENAPA. Dia kehilangan kedekatan sama baris
+  yang dia jelasin; itu ongkosnya, dan lebih kecil daripada ngilangin alasannya.
+- Aturan apa yang boleh diedit ada di `cahyana-api/content.js`, BUKAN di sini.
+
+## REVIEW DI CHARTER / TRANSFER / AIRPORT (27 Sep 2026, Wayan)
+Gerbang review di server **udah generik dari dulu** — dia baca `inquiries.service`,
+apa pun isinya. Jadi tamu charter/transfer/airport **selalu bisa** nulis review; yang
+gak ada cuma tempat bacanya. Sekarang ada: `components/reviews/ServiceReviews.jsx`,
+dipasang dari ketiga `page.jsx`-nya (**bukan** dari `*Section`, biar tab /programs
+gak ikut kebagian).
+- **Nanyanya beda tergantung halamannya jual apa:**
+  - charter → `service` **`CHARTER_SERVICE`** (`lib/constants.js`). Dulu string
+    `'Charter'` ditulis tangan di 2 tempat dan mau jadi 3 — **tiga salinan satu key
+    itu cara sebuah halaman diem-diem berhenti nemu review-nya sendiri.**
+  - airport → `service` **`AIRPORT_ROUTE`**, di-import, bukan diketik ulang.
+  - transfer → **`group="transfers"`**, karena dia jual **10 route** dan tamu nge-review
+    ROUTE yang dia naikin. Set-nya di-resolve server dari **katalog harga**, jadi route
+    baru ikut sendiri hari dia dihargain.
+- **Group yang gak dikenal = NOL review**, bukan semua. Kalau jatuh ke daftar penuh,
+  review tiap tour nongol di halaman transfer.
+- Verifikasi: **`verify-reviews3.mjs`** (59/59, 390 & 1280). Dia nge-assert **REQUEST
+  yang dikirim halaman**, bukan markup-nya: DOM-nya keliatan sama persis entah halaman
+  itu minta set yang bener atau minta semuanya.
+
+## EMAIL REVIEW MENDARAT DI REVIEW-nya (27 Sep 2026, Wayan)
+Tombol di email post-trip nulis "Leave a review", jadi dia harus **mendarat di
+review**: Past trips, popup kebuka. Link-nya sekarang `?review=1` (dirakit **sekali**
+di `postTripLink()` server, dipakai versi HTML & teks — dua salinan itu cara pembaca
+plain-text nyasar ke tempat lain).
+- Di `MyTripsCart`: **DUA `useEffect`**, dan itu perlu. Yang pertama baca flag →
+  tab `past` + buang flag-nya. Yang kedua **nunggu `trips` dateng** baru mbuka popup;
+  `trips` itu `null` sampai fetch-nya mendarat, dan **popup dengan checklist kosong
+  ngajarin tamu kalau link-nya rusak**.
+- **Gak ada yang bisa di-review (belum login / udah di-review semua) = berhenti di
+  tab-nya, NOL popup.**
+- Flag-nya dibuang dari URL biar reload gak mbuka lagi popup yang barusan ditutup —
+  **dan cuma flag-nya**; `?token=` itu punya `AccountProvider` (dia emang udah
+  ngapus sendiri sesudah dipakai, dan dua rewrite itu gak saling nimpa — dipatok).
+- **Dibaca di `useEffect`, JANGAN di initial state** — static export, paint pertama
+  wajib sama persis sama HTML hasil pre-render.
+- **JEBAKAN yang ke-tangkep pas build**: dua efek itu ditaro **di atas** state yang
+  mereka sentuh → compile lolos, **prerender `/my-trips` MATI** di temporal dead zone
+  (`Cannot access 'ae' before initialization`). Taro di bawah blok state.
+
 ## Sticky bottom bar (Sep 2026)
 **Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
 yang sama di **`components/ui/stickyBar.jsx`** (`BAR_SHELL`) — ganti bentuk/warna bar =

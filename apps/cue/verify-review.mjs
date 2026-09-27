@@ -38,6 +38,10 @@ for (const w of [390, 1280]) {
     page.on('pageerror', (e) => errs.push(String(e)));
 
     const posted = [];
+    // What the server has accepted, so /bookings/mine answers the way the real
+    // one does: a reviewed trip stops being offered.
+    const reviewed = new Set();
+    let mineHits = 0;
     // ONE branching handler. A catch-all registered later wins in Playwright, so
     // separate route() calls for /api/** would swallow the specific ones.
     await ctx.route('**/api/**', async (route) => {
@@ -45,11 +49,17 @@ for (const w of [390, 1280]) {
       if (url.includes('/account/me') || url.includes('/account/session')) {
         return route.fulfill({ json: { status: 'ok', account: { id: 7, name: 'Anna', email: 'a@e.com' } } });
       }
-      if (url.includes('/bookings/mine')) return route.fulfill({ json: MINE });
+      if (url.includes('/bookings/mine')) {
+        mineHits += 1;
+        const history = MINE.history.map((t) => ({ ...t,
+          review_items: t.review_items.filter((svc) => !reviewed.has(t.ref + '::' + svc)) }));
+        return route.fulfill({ json: { ...MINE, history } });
+      }
       if (url.includes('/reviews') && route.request().method() === 'POST') {
         const body = JSON.parse(route.request().postData() || '{}');
         posted.push(body.service);
         const refuse = mode === 'partial' && body.booking_ref === 'CUE-103';
+        if (!refuse) reviewed.add(body.booking_ref + '::' + body.service);
         return route.fulfill({ json: refuse
           ? { ok: false, reason: "This booking isn't confirmed yet, so there's nothing to review." }
           : { ok: true } });
@@ -109,6 +119,35 @@ for (const w of [390, 1280]) {
       ok(/isn't confirmed yet/.test(txt), `${w}/${mode}: the server's reason is not passed on`);
       ok(!/Ubud Tour/.test(txt.split('could not be included')[1] || ''),
          `${w}/${mode}: the trip that SUCCEEDED is listed as a failure`);
+    }
+
+    // Close, then look again. Before refreshTrips the list was read once per page
+    // load, so a trip reviewed a moment ago was still offered - tick it again and
+    // the gate answered "you've already submitted a review for this tour".
+    const hitsBefore = mineHits;
+    await shell.locator('button', { hasText: 'Done' }).click();
+    await page.waitForFunction(() => !document.querySelector('[data-step="write"]'), { timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(600);
+    ok(mineHits > hitsBefore, `${w}/${mode}: closing the popup did not re-read My Trips`);
+    const again = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
+    if (mode === 'all-ok') {
+      ok(await again.count() === 0, `${w}/${mode}: every trip is reviewed but the review button is still there`);
+    } else {
+      ok(await again.count() > 0, `${w}/${mode}: the trip that was NOT reviewed lost its button`);
+      if (await again.count()) {
+        await again.click();
+        await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
+        // With one trip left the popup shows no checklist at all, so reading its
+        // text proves nothing. What it SENDS is the truth.
+        const n = posted.length;
+        await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
+        await page.fill('#rvm-message', 'Second try for the one that was left.');
+        await page.locator('[data-step="write"] button', { hasText: /Submit review/ }).click();
+        await page.waitForTimeout(800);
+        const sentNow = posted.slice(n);
+        ok(!sentNow.includes('Ubud Tour'), `${w}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
+        ok(sentNow.length === 1 && sentNow[0] === 'Kecak Dance', `${w}/${mode}: second submit sent ${JSON.stringify(sentNow)}`);
+      }
     }
 
     // The page must not grow sideways with the modal open.

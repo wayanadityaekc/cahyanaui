@@ -3950,3 +3950,17 @@ dibalikin (**4 nyala**) dan copy "once approved" dibalikin (**4 nyala**).
   back di HP labelnya **`My trips`** (t kecil), jadi regex `/My Trips/` yang
   case-sensitive **diem-diem gak match apa-apa**. Di HP My Trips mendarat di
   keranjang, jadi daftar section-nya emang di balik back - harness WAJIB lewat situ.
+
+**SUSULAN 28 Sep - `refreshTrips` UDAH DIPASANG** (yang di atas ditulis "belum
+dibenerin"). `AccountProvider` sekarang punya `refreshTrips()` (fetch yang sama yang
+jalan pas mount), dan `ReviewModal` manggil dia **pas popup DITUTUP** kalau ada minimal
+satu review yang masuk - lewat semua jalan tutup (Done, ×, klik luar).
+- **Pas ditutup, BUKAN pas sukses**: `ReviewGate` ngoper `prefill` sebagai objek baru
+  tiap render, jadi re-read di tengah popup bakal ngejalanin ulang effect reset dan
+  **ngelempar layar Thank you balik ke form**.
+- `verify-review.mjs` **54/54**: stub `/bookings/mine`-nya ngikutin review yang udah
+  keterima (kayak server asli), terus harness **nutup, buka lagi, dan submit ulang** -
+  yang diadu itu **apa yang KEKIRIM**, bukan teks popup: sisa satu trip = popup gak
+  nampilin daftar centang sama sekali, jadi "Ubud Tour gak ada di teks" bakal lolos
+  dengan sendirinya. Dites pakai bug aslinya (refresh dibuang): **10 nyala**, termasuk
+  `second submit sent ["Ubud Tour","Kecak Dance"]`.

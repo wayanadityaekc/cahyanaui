@@ -11,6 +11,7 @@ import { validateWith } from '@/lib/validate';
 import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
+import { useAccount } from '@/state/AccountProvider';
 
 const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
 
@@ -37,6 +38,12 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [partial, setPartial] = useState([]);
+  const { refreshTrips } = useAccount() || {};
+  // Set once any review went through. The trip list is re-read when the popup
+  // CLOSES, not the moment a review lands: ReviewGate passes prefill as a fresh
+  // object each render, so a re-read mid-popup would re-run the reset below and
+  // throw the thank-you screen back to the form.
+  const sent = useRef(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -53,6 +60,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
     setError('');
     setPartial([]);
     setDone(false);
+    sent.current = false;
   }, [open, prefill]);
 
   const lastPrefill = useRef(null);
@@ -64,6 +72,11 @@ export default function ReviewModal({ open, prefill, onClose }) {
   if (prefill) lastPrefill.current = prefill;
   const view = prefill || lastPrefill.current;
   if (!mounted || !view) return null;
+
+  const close = () => {
+    if (sent.current && refreshTrips) { sent.current = false; refreshTrips(); }
+    onClose();
+  };
 
   const items = view.items || [];
   const multi = items.length > 1;
@@ -109,6 +122,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
       }
     }
     setBusy(false);
+    if (results.some((r) => r.ok)) sent.current = true;
     const failed = results.filter((r) => !r.ok);
     if (failed.length === results.length) { setError(failed[0].reason); return; }
     // Some went through: say thank you for those, and name the ones that did not
@@ -128,8 +142,8 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
 
   return createPortal(
-    <ModalPresence open={!!open && !!prefill} onClose={onClose} box={BOX}>
-        <button className={CLOSE} aria-label="Close" onClick={onClose}>&times;</button>
+    <ModalPresence open={!!open && !!prefill} onClose={close} box={BOX}>
+        <button className={CLOSE} aria-label="Close" onClick={close}>&times;</button>
         <h3 className={TITLE}>Leave a Review</h3>
 
         {!done ? (
@@ -243,7 +257,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                 ))}
               </ul>
             ) : null}
-            <button type="button" className={BTN} onClick={onClose}>Done</button>
+            <button type="button" className={BTN} onClick={close}>Done</button>
           </div>
         )}
     </ModalPresence>,

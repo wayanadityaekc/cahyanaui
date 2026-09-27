@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { readLocal, writeLocal, removeLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 
@@ -16,6 +16,19 @@ export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
   const [hydrated, setHydrated] = useState(false);
+
+  // Re-read My Trips. Called on mount, and again after a review is sent: the
+  // list of what can still be reviewed comes from the server, and without a
+  // re-read a trip reviewed a moment ago stays offered until the page reloads -
+  // tick it again and the gate answers "you've already submitted a review".
+  const refreshTrips = useCallback(() => {
+    const token = readLocal(KEY.token, '');
+    if (!token) return Promise.resolve();
+    return fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d && Array.isArray(d.upcoming)) setTrips(d); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,17 +60,12 @@ export function AccountProvider({ children }) {
         if (!cancelled) setHydrated(true);
       });
 
-    fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (!cancelled && d && Array.isArray(d.upcoming)) setTrips(d);
-      })
-      .catch(() => {});
+    refreshTrips();
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [refreshTrips]);
 
   const hasUpcoming = !!(trips && Array.isArray(trips.upcoming) && trips.upcoming.length > 0);
 
@@ -127,7 +135,7 @@ export function AccountProvider({ children }) {
   };
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, logout, requestLogin, createAccount, hydrated }}>
+    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, createAccount, hydrated }}>
       {children}
     </AccountContext.Provider>
   );

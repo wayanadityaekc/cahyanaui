@@ -13,11 +13,11 @@ export const PANEL = (open) => [
   // already has one way of showing a panel on the right.
   //
   // Geometry copied from that menu on purpose: same width cap, same 100dvh,
-  // same shadow thrown left, same 300ms translate. Two right-hand drawers that
-  // move differently would read as two different systems.
+  // same 300ms translate. Two right-hand drawers that move differently would
+  // read as two different systems. (The shadow both used to carry went with the
+  // rest of the elevation, Sep 2026.)
   '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
   '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
-  '[@media(min-width:769px)]:',
   '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
   open
     ? '[@media(min-width:769px)]:translate-x-0'
@@ -25,7 +25,6 @@ export const PANEL = (open) => [
   // Phone: unchanged - a sheet off the bottom, which Wayan signed off on.
   '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
   '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
-  '[@media(max-width:768px)]:',
   '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
   open
     ? '[@media(max-width:768px)]:opacity-100 [@media(max-width:768px)]:[transform:translateY(0)]'

@@ -20,7 +20,7 @@ const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
 // lama jadi dead di produksi (komponen ini satu-satunya user).
 const CARD =
   'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink ' +
-  'transition-[box-shadow,opacity] duration-200 ease-in-out hover:' +
+  'transition-[opacity] duration-200 ease-in-out ' +
   'min-[769px]:flex-col min-[769px]:p-2';
 const IMG =
   'relative flex-[0_0_124px] self-stretch min-h-[158px] rounded-md bg-cover bg-center bg-cream ' +

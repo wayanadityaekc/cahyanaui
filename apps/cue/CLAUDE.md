@@ -23,8 +23,9 @@ When unsure, ask first (keep it short).
 > `?v=`/`PARTIALS_VERSION` bump, `initX()` (`initBooking`/`initNavbar`/dst), `renderPrices`,
 > atau file `.html` = **KONTEKS LAMA / historis**, gak berlaku lagi. Yang hidup cuma app React
 > (`app/`+`components/`, state di `state/`, konten di `content/`, harga dari API `cahyana-api`).
-> Gate CI yang tersisa (jalan atas `out/`): `check-urls`, `check-detail`, `check-assets`,
-> `check-motion`. Plus 1 cek manual (bukan gate): `check-prices` — lihat section harga.
+> Gate CI: `check-urls`, `check-detail`, `check-assets`, `check-motion` (jalan atas `out/`)
+> + **`check-classes`** (jalan atas SUMBER - class salah eja gak ke-generate CSS, jadi `out/`
+> gak bisa nunjukin dia; lihat section shadow). Plus 1 cek manual (bukan gate): `check-prices` — lihat section harga.
 
 **Styling = Tailwind (migrasi Sep 2026, JALAN → target FULL portable):**
 - **Arah baru (Sep 2026, Wayan): SEMUA komponen self-contained.** Tiap komponen bawa style-nya
@@ -2628,6 +2629,43 @@ Order **must be kept** (declarations first, run last):
     titik slider hero `0 0 2px` (titik putih di atas foto terang).
   - **`text-shadow` GAK IKUT DIBUANG** (4 tempat): itu buat teks putih di atas foto, dan
     permintaannya soal elevasi ("di bawah navbar, di bawah card"). Beda benda.
+  - **SAPUANNYA NGERUSAK 11 CLASS, DAN NOL GATE NANGKEP** (ketemu 27 Sep 2026, Wayan:
+    *"di desktop page listing hancur bro ... tadi waktu gua suruh lu hilangin shadow jadi
+    hancur dia"*). Ini bagian paling penting di section ini.
+    - Sapuannya mbuang token shadow tapi **ninggalin PREFIX VARIAN-nya**. Tiga bentuk:
+      (a) `hover:` nyantol tanpa utility · (b) prefix **DOBEL** (`hover:hover:bg-cta-d`,
+      `max-[992px]:max-[992px]:[transition:...]`) · (c) `var(--)` kosong.
+    - **DUA di antaranya bukan cuma mati - dia bikin class yang SALAH.** Di string yang
+      di-concat, `'... hover:' +` nempel ke potongan BERIKUTNYA:
+      - `ListingRow`: `min-[769px]:flex-col` jadi **`hover:min-[769px]:flex-col`** - kartu
+        listing desktop baru jadi kolom **kalau di-hover**. Itu "hancur"-nya Wayan.
+      - `HomepageCard`: `after:content-['']` jadi `hover:after:content-['']` - tanpa
+        `content`, `::after` **gak ke-generate**, jadi scrim gradient di kartu homepage
+        ilang dan teks putihnya duduk langsung di atas foto.
+      - Sisanya diam-diam mati: hover CTA tombol search hero, transition tombol
+        "Plan trip" di hero HP, 3 entry panel chat/hs, dan shadow overlay DOKU.
+    - **KENAPA SEMUANYA LOLOS**: class yang salah eja **gak ke-generate CSS sama sekali**.
+      Jadi dia gak ada di stylesheet hasil build, gak ada elemennya buat diukur browser,
+      dan `verify-noshadow` yang nyisir `box-shadow` yang KE-COMPUTE jelas gak bakal
+      nemu - dia emang lagi nyari benda yang udah gak ada. **Empat gate CI + tiga
+      harness browser semuanya ijo di atas kerusakan ini.**
+    - **Gate barunya: `node tools/check-classes.js`** (gate CI ke-5). Dia baca **SUMBER**,
+      bukan `out/` - itu satu-satunya tempat kerusakan ini kelihatan. Dites pakai
+      keadaan rusak aslinya: **11/11 nyala**.
+      - Dua kali harus dibenerin sebelum bener: (1) `[k]:` (computed key JS) ke-flag
+        sebagai varian - pola arbitrary Tailwind WAJIB ngandung `&` atau `@`;
+        (2) splitter-nya motong di kurung, jadi `[@media(min-width:769px)]:` pecah dan
+        **3 dari 11 kelewat**. Nilai arbitrary penuh kurung, jadi kurung gak boleh
+        jadi pemisah.
+    - **ATURAN BUAT SAPUAN CLASS BERIKUTNYA**: mbuang token yang punya prefix varian =
+      **buang prefix-nya juga**; token yang isinya satu baris/entry array penuh = buang
+      BARISNYA. Dan sesudah sapuan, **jalanin `check-classes`** - grep tebakan gak cukup,
+      grep pertama gua cuma nemu 5 dari 11.
+    - **YANG GUA LEWATIN**: doc ini sendiri nulis "styling berubah -> verify computed-style
+      diff = 0". Buat sapuan 53-pemakaian-34-file itu gua **gak** ngukur before/after,
+      gua cuma ngecek shadow-nya ilang. Ngukur geometri before/after bakal langsung
+      nunjukin kartu listing desktop berubah bentuk.
+
   - Gate: **`verify-noshadow.mjs`** (bagian dari `verify-design3.mjs` di root repo).
     Patokannya **aturan**: tiap `box-shadow` yang ke-compute di 14 halaman × 390/1280 gak
     boleh punya offset atau blur > 2px. Dia juga nge-assert ring/hairline yang disengaja
@@ -3711,7 +3749,7 @@ exlude gitu"*.
 ## Before calling it "done" (checklist)
 1. `npm run build` passes (this is the real syntax/build check now — no more `node --check script.js`).
 2. All active CI gates pass: `node tools/check-urls.js`, `node tools/check-detail.js`,
-   `node tools/check-assets.js`, `node tools/check-motion.js`. **Gate the commit on these**
+   `node tools/check-assets.js`, `node tools/check-motion.js`, `node tools/check-classes.js`. **Gate the commit on these**
    (jangan commit kalau ada yang merah).
    Marker class yang WAJIB ada di detail page (check-detail): `booksidebar`, `bookcard__cta`,
    `tour-layout--book`, `tour-hook`, `review-cta` — jangan dihapus pas convert.

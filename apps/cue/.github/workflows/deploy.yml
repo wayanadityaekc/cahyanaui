@@ -47,6 +47,9 @@ jobs:
       - name: Verify every declared transition actually animates something
         run: node tools/check-motion.js
 
+      - name: Verify no malformed utility classes (they generate no CSS at all)
+        run: node tools/check-classes.js
+
       - name: Publish out/ to the deploy branch
         run: |
           cd out

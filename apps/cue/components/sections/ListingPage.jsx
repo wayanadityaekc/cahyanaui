@@ -82,7 +82,7 @@ export default function ListingPage({ data, page }) {
           {!q && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
           {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
-          <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-md max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none max-[768px]:">
+          <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-md max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none">
             <input
               type="search"
               className="flex-1 min-w-0 [border:0] bg-transparent outline-none [font-family:inherit] text-field text-ink placeholder:text-muted [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-decoration]:hidden"

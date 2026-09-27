@@ -160,7 +160,7 @@ export const panelMenu = (open) => [
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]', PANEL_MOBILE_TRANSITION,
   open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-8px)]',
   '[@media(max-width:768px)]:fixed [@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
-  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0] [@media(max-width:768px)]:',
+  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
   '[@media(max-width:768px)]:max-h-[calc(100dvh-100px)] [@media(max-width:768px)]:overflow-y-auto [@media(max-width:768px)]:[scrollbar-width:none] [@media(max-width:768px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:768px)]:block [@media(max-width:768px)]:opacity-100',
   open ? '[@media(max-width:768px)]:[transform:translateY(0)]' : '[@media(max-width:768px)]:[transform:translateY(100%)]',
 ].join(' ');

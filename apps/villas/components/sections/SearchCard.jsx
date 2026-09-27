@@ -114,8 +114,10 @@ export default function SearchCard({ layout = 'bar' }) {
     // what "dikit" asks for.
     return (
       <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6 rounded-sm">
-        <p className="text-label font-medium tracking-[0.14em] uppercase text-muted">Book your stay</p>
-        <h2 className="text-h3 font-semibold text-gold mt-1 mb-4">Check your dates</h2>
+        {/* No uppercase kicker above the heading (Wayan, Sep 2026: "book your
+            stay yang uppercase itu delete aja"). "Book your stay" over "Check
+            your dates" was two labels for one panel. */}
+        <h2 className="text-h3 font-semibold text-gold mb-4">Check your dates</h2>
         <div className="grid grid-cols-1 gap-[0.6rem]">
           {panelFields}
           {search}

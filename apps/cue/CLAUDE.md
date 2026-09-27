@@ -2426,30 +2426,25 @@ gak bisa bawa - **dia lagi ngetik**, dan **dia beneran lagi di dashboard**.
   - **Sisa yang BUKAN dari perubahan ini**: `isActive('/')` cuma cocok sama pathname `/`,
     jadi kalau ada yang mendarat di `/index.html` baris Home gak nyala (nol link internal
     ke situ, jadi praktis gak ada efeknya). Belum ditanyain ke Wayan.
-**NAVBAR SEMBUNYI PAS SCROLL TURUN, MUNCUL PAS SCROLL NAIK (27 Sep 2026, Wayan: "buat
-navbar gak sticky bro dia akan muncul kalo di scroll berlawanan arah ... kayak facebook")**
-- **TIGA posisi, disetir ARAH scroll** (`HEADER_TOP` di `Navbar.jsx`):
-  - `full` - di puncak (`y <= 8`): trip bar + baris nav dua-duanya keliatan.
-  - `nav` - udah ke-scroll, gerakan terakhir NAIK: baris nav keliatan, trip bar ketuck.
-  - `hidden` - udah ke-scroll, gerakan terakhir TURUN: header ilang total
-    (`top: -(--header-h + --tripbar-h)`).
-- **Keputusan trip bar yang lama TETEP UTUH.** Scroll naik gak nge-munculin trip bar-nya
-  lagi, cuma nav-nya - jadi fitur ini NAMBAH di atas perilaku Sep 2026, bukan ngegantiin.
-- **NOL yang ditulis ke `:root` selama scroll**, sama kayak sebelumnya. Cuma `top` punya
-  header ini yang gerak. Itu inti kenapa scroll-nya mulus (lihat catatan `--header-h`:
-  nulis custom property yang diwarisin per frame = **48-139ms** style recalc). Nambahin
-  arah gak ngubah itu sama sekali.
-- **FLIP ARAH BUTUH 8px PERJALANAN, bukan satu event.** Trackpad & jempol sama-sama ngirim
-  delta kecil berlawanan; kalau flip di event pertama header-nya kedip. Akumulatornya
-  di-reset tiap arahnya beneran ganti. Nyembunyiin juga butuh `y > 80` biar header gak
-  ilang pas tamu masih ngeliatin bagian atas halaman.
-- **Sisa yang JUJUR, ke-ukur**: elemen `sticky` (menu rail Our Company/guide, sidebar
-  booking) tetep dipatok di `--header-h` **58px** walau header-nya lagi ilang - jadi mereka
-  duduk 58px lebih rendah dari yang perlu. **Gak ada yang rusak** (mereka di dalam kolom
-  yang punya background sendiri, jadi gak ada bar ngambang), cuma ruang nganggur.
-  Benerinnya = nulis `--header-h` tiap flip arah, dan itu **persis recalc se-dokumen** yang
-  kerjaan trip bar kemarin habis-habisan dibuang (6-13ms sekali tulis). **Gak sepadan buat
-  58px** - tapi kalau Wayan ngerasa keliatan, itu tuasnya.
+**NAVBAR TETEP STICKY — HIDE-ON-SCROLL DIBIKIN TERUS DI-REVERT (27 Sep 2026)**
+- Wayan minta dulu: *"buat navbar gak sticky bro dia akan muncul kalo di scroll berlawanan
+  arah ... kayak facebook"*. Ke-ship (3 posisi, disetir arah scroll), dia lihat live, terus
+  minta dibalikin: *"Sticky navbar biarin sticky"*. **Jadi yang berlaku: header sticky,
+  dan yang gerak cuma TRIP BAR** — persis kayak sebelum perubahan itu.
+- **Jangan dipasang lagi tanpa nanya.** Itu keputusan Wayan yang udah dia lihat hasilnya,
+  bukan fitur yang kelupaan. `HEADER_TOP` (map 3 posisi) + akumulator arah **UDAH DIHAPUS**;
+  mau balik = tulis ulang, jangan cari sisanya.
+- Yang tinggal = dua state `slid` + **dua ambang** (tutup di 80, buka di 8). Alasan dua
+  ambang tetep sama: satu ambang nge-flip state di tiap lintasan, jadi jempol yang nempel
+  di dekat atas bikin bar-nya kedip.
+- **Bonus yang ikut kelar pas di-revert**: catatan "elemen sticky dipatok di
+  `--header-h` walau header-nya lagi ilang, jadi duduk 58px lebih rendah" **udah gak
+  berlaku** — header-nya gak pernah ilang lagi, jadi angkanya selalu bener.
+- Dijaga `verify-design3.mjs`: di 390 & 1280, scroll turun 600px header **WAJIB tetep
+  keliatan** & yang ketuck cuma setinggi `--tripbar-h`, scroll balik ke atas gak ngubah
+  apa-apa, dan di 40px (lewat 8, kurang dari 80) bar-nya masih utuh pas pertama turun tapi
+  **tetep ketuck** kalau balik dari bawah. Dites pakai bug aslinya (header disuruh ilang
+  lagi) → **10 nyala**.
 
 **HAMBURGER PINDAH KE KIRI LOGO (27 Sep 2026, Wayan: "menu humberger pindahin kiri di kiri
 logo bro")** - dulu anak TERAKHIR baris nav, mentok di tepi kanan.
@@ -2466,9 +2461,32 @@ logo bro")** - dulu anak TERAKHIR baris nav, mentok di tepi kanan.
   nutup menu). Ini **ngoreksi setengah** catatan lama "hamburger ketutupan drawer": yang
   nutup sekarang scrim, bukan panelnya. Naikin tombolnya di atas scrim = 1 class, belum
   ditanyain.
-- Verifikasi: **`verify-design3.mjs`** di root repo (**62/62**, 390 & 1280). Dites pakai
-  3 bug aslinya, SATU-SATU: shadow navbar dibalikin (**2 nyala**) · header berhenti
-  nyembunyi pas scroll turun (**4 nyala**) · burger dibalikin ke kanan (**8 nyala**).
+**HAMBURGER DIKECILIN SENOTCH (27 Sep 2026, Wayan: "humberger bisa size kecilin lagi dikit?")**
+- **28 → 24px lebar**, gap bar **5 → 4px**, bar HP **22 → 20px**. Tinggi bar tetep 2px
+  (1px kebaca blur di layar non-retina).
+- **OFFSET X ITU TURUNAN, BUKAN PILIHAN**: bar luar jalan sejauh `tinggi bar + gap` biar
+  ketemu di tengah, jadi gap 4 = `translate-y-[6px]` (dulu gap 5 = 7px). **Ganti gap atau
+  tinggi bar = ganti angka itu bareng**, kalau nggak X-nya gak pernah nutup — dan itu gagal
+  diam-diam, keliatannya cuma "ada yang aneh dikit".
+- **TARGET JEMPOL HP SENGAJA GAK IKUT DIKECILIN** (`max-[992px]:h-[2.2rem]` = 35,2px).
+  Itu ukuran jempol, bukan ukuran gambar; ngecilin dia bikin tombolnya lebih susah kena.
+- Dijaga `verify-design3.mjs`: lebar tombol ≤24 & ≥18, bar muat di tombol & ≥16px, jarak
+  bar == tinggi bar + gap (**dibaca dari halaman**, bukan angka yang diketik di harness),
+  target jempol ≥32px, dan **X-nya beneran nutup** — 3 titik tengah bar wajib jadi satu
+  (spread <1,2px).
+  - **SABOTASE PERTAMA GAK NYALA, DAN ITU HARNESS-NYA YANG RUSAK**: offset dibalikin ke
+    7px, gate-nya lapor `spread 0.0` **81/81**. Sebabnya bar yang udah muter 45° rect-nya
+    jadi ~18px tinggi, jadi filter `height <= 4` nyisihin DUA dari tiga bar dan spread-nya
+    ngukur **satu benda lawan dirinya sendiri**. Sesudah difilter pakai `position: static`
+    (titik dot-nya `absolute`) + di-assert **3 bar masih ke-ukur pas kebuka** → nyala,
+    spread 2,0. Ini jebakan yang sama kayak tombol Done & `verify-btnfont`: **kalau
+    harness bilang dua benda cocok sempurna, cek dulu dia gak lagi ngukur satu benda.**
+
+- Verifikasi: **`verify-design3.mjs`** di root repo (**81/81**, 390 & 1280). Dites pakai
+  4 bug aslinya, SATU-SATU: shadow navbar dibalikin (**2 nyala**) · burger dibalikin ke
+  kanan (**8 nyala**) · header disuruh ilang lagi pas scroll turun (**10 nyala**) · offset X
+  ketinggalan di angka gap lama (**2 nyala, TAPI cuma sesudah filter bar-nya dibenerin** -
+  lihat bullet di section hamburger di atas).
   - **DUA ASSERTION SEMPAT TAUTOLOGI, dua-duanya lolos dengan ngukur kotak 0x0.**
     "burger di luar panel drawer" pakai `nav[aria-label]` - itu nyomot `AppBottomNav`
     ("App") yang `display:none` di luar app mode, rect-nya 0x0. Diganti `header nav`:

@@ -106,17 +106,26 @@ for (const w of [390, 1280]) {
   ok(atTop.top === 0, `${w}: di puncak header rata atas (top ${atTop.top})`);
   ok(atTop.bottom > 0, `${w}: di puncak header keliatan`);
 
+  // STICKY, and that is a reverted decision (27 Sep 2026) - the header used to hide on
+  // the way down. If someone re-adds that, these four fail, which is the point.
+  await scrollTo(40);                  // past 8, short of the 80 that tucks the bar
+  ok((await box()).top === 0, `${w}: 40px = masih utuh, ambang tuck itu 80 (top ${(await box()).top})`);
+
   await scrollTo(600);                 // one long move down
   const down = await box();
-  ok(down.bottom <= 0, `${w}: scroll ke BAWAH = header ilang total (bottom ${down.bottom})`);
+  ok(down.bottom > 0, `${w}: scroll ke BAWAH header TETEP keliatan - sticky (bottom ${down.bottom})`);
+  ok(Math.abs(down.top + down.barH) < 2, `${w}: yang ketuck cuma trip bar (top ${down.top} vs -${down.barH})`);
 
-  await by(-200);                      // reverse
+  await by(-200);                      // reverse: nothing may change
   const up = await box();
-  ok(up.bottom > 0, `${w}: scroll ke ATAS = header muncul lagi (bottom ${up.bottom})`);
-  ok(Math.abs(up.top + up.barH) < 2, `${w}: yang muncul NAV doang, trip bar tetep ketuck (top ${up.top} vs -${up.barH})`);
+  ok(Math.abs(up.top - down.top) < 2, `${w}: scroll ke ATAS gak ngubah apa-apa lagi (top ${up.top})`);
 
   await by(300);
-  ok((await box()).bottom <= 0, `${w}: balik scroll bawah = ilang lagi`);
+  ok((await box()).bottom > 0, `${w}: turun lagi tetep keliatan`);
+
+  await scrollTo(40);                  // hysteresis: reopens at 8, not at 80
+  ok((await box()).bottom > 0, `${w}: di 40 nav masih keliatan`);
+  ok(Math.abs((await box()).top + up.barH) < 2, `${w}: turun-balik ke 40 bar TETEP ketuck (ambang buka 8)`);
 
   await scrollTo(0);
   const back = await box();
@@ -179,6 +188,58 @@ for (const w of [390, 1280]) {
   // Measured, not assumed: the scrim (z-95, a child of <header>) still sits over the
   // burger, so the X shows through it dimmed and a tap closes the menu via the scrim.
   ok(d.hit !== 'hamburger', `${w}: scrim masih nutupin burger - itu yang nutup menu pas di-tap (hit: ${d.hit})`);
+  await ctx.close();
+}
+
+// ---------- 4. HAMBURGER SIZE, AND THE X THAT HAS TO CLOSE ----------
+// Sizes are read off the page, never typed in here: what is asserted is the RULE -
+// the outer bars travel exactly far enough to meet the middle one. An offset that no
+// longer matches the gap leaves a visibly broken X, and nothing else would catch it.
+for (const w of [390, 1280]) {
+  const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
+  const page = await ctx.newPage();
+  page.on('pageerror', (e) => ok(false, `${w}: page error ${e.message}`));
+  await page.route('**/api/**', api);
+  await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
+
+  const read = () => page.evaluate(() => {
+    const b = document.getElementById('hamburger');
+    // The bars are the STATIC spans; the badge dot is the absolute one. Do NOT filter by
+    // height: an open bar is rotated 45deg, so its rect is ~18px tall, and a height filter
+    // silently drops two of the three and leaves spread measuring ONE element against
+    // itself - which is how a stale offset passed this gate the first time.
+    const bars = [...b.querySelectorAll(':scope > span')]
+      .filter((s) => getComputedStyle(s).position === 'static');
+    const br = b.getBoundingClientRect();
+    return {
+      btnW: +br.width.toFixed(1), btnH: +br.height.toFixed(1),
+      gap: parseFloat(getComputedStyle(b).rowGap) || 0,
+      bars: bars.map((s) => {
+        const r = s.getBoundingClientRect();
+        return { w: +r.width.toFixed(1), h: +r.height.toFixed(1), mid: +(r.top + r.height / 2).toFixed(1) };
+      }),
+    };
+  });
+
+  const shut = await read();
+  console.log(`  ${w}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((x) => x.w + 'x' + x.h).join(' ')}`);
+  ok(shut.bars.length === 3, `${w}: tepat 3 bar ke-ukur (${shut.bars.length}) - kurang/lebih = harness rusak`);
+  ok(shut.btnW <= 24.5 && shut.btnW >= 18, `${w}: tombol udah dikecilin & gak kekecilan (${shut.btnW})`);
+  ok(shut.bars.every((x) => x.w <= shut.btnW + 0.5 && x.w >= 16), `${w}: bar muat di tombol & masih kebaca`);
+  if (w <= 992) ok(shut.btnH >= 32, `${w}: target jempol SENGAJA gak ikut dikecilin, >=32px (${shut.btnH})`);
+
+  const step = +(shut.bars[1].mid - shut.bars[0].mid).toFixed(1);
+  ok(Math.abs(step - (shut.bars[0].h + shut.gap)) < 0.6,
+    `${w}: jarak bar == tinggi bar + gap (${step} vs ${shut.bars[0].h + shut.gap})`);
+
+  await page.click('#hamburger');
+  await page.waitForTimeout(420);
+  const open = await read();
+  ok(open.bars.length === 3, `${w}: 3 bar masih ke-ukur pas kebuka (${open.bars.length}) - kalau kurang, spread-nya bohong`);
+  const mids = open.bars.map((x) => x.mid);
+  const spread = Math.max(...mids) - Math.min(...mids);
+  console.log(`         X: titik tengah ${mids.join(' / ')} · spread ${spread.toFixed(1)}`);
+  ok(spread < 1.2, `${w}: X beneran nutup - 3 bar satu titik tengah (spread ${spread.toFixed(1)}px)`);
   await ctx.close();
 }
 

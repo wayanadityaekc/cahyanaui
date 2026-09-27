@@ -33,19 +33,17 @@ import AuthModal from '@/components/account/AuthModal';
 // numpuk di 1 elemen (mis. `.navbar__menu > li > a` menang atas display flex
 // tiap link) - hasil flatten-nya diverifikasi lewat computed-style diff.
 
-// Where the header sits in each of its three positions. --header-h is the nav row and
-// --tripbar-h the strip above it; both are written once after mount and never change
-// while scrolling, so 'hidden' is exactly the header's own height.
-const HEADER_TOP = {
-  full: 'top-0',
-  nav: 'top-[calc(-1_*_var(--tripbar-h,0px))]',
-  hidden: 'top-[calc(-1_*_(var(--header-h,0px)_+_var(--tripbar-h,0px)))]',
-};
-
 // Hamburger bars. They morph into an X while the drawer is open so the button
 // itself reacts to the tap, instead of three lines sitting there unchanged.
+//
+// THE X OFFSET IS DERIVED, NOT CHOSEN: the outer bars travel bar-height + gap to meet
+// in the middle (2 + 4 = 6px). Change `gap-` or `h-` on the bars and the
+// `translate-y-[6px]` below has to move with it, or the X never closes.
+// Sizes came down a notch 27 Sep 2026 (Wayan: "humberger bisa size kecilin lagi dikit")
+// - 28->24px wide, gap 5->4. The mobile TAP TARGET (h-[2.2rem]) was left alone: that is
+// thumb size, not visual size, and shrinking it makes the button harder to hit.
 const BURGER_BAR =
-  'w-full h-[2px] bg-gold max-[992px]:w-[22px] ' +
+  'w-full h-[2px] bg-gold max-[992px]:w-[20px] ' +
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
   'motion-reduce:transition-none';
 
@@ -148,38 +146,14 @@ export default function Navbar() {
   // threshold flips state on every crossing, and a thumb resting near the top made
   // the bar flap (measured: eight 4-6px nudges around 80 toggled it eight times).
   // Once it is gone it stays gone until the guest is genuinely back at the top.
-  // THREE POSITIONS, driven by scroll DIRECTION (27 Sep 2026, Wayan: "buat navbar gak
-  // sticky bro dia akan muncul kalo di scroll berlawanan arah ... kayak facebook"):
-  //   'full'   - at the very top: trip bar + nav row both showing.
-  //   'nav'    - scrolled, last movement UP: nav row showing, trip bar tucked away.
-  //              This keeps the older trip-bar decision intact instead of replacing it.
-  //   'hidden' - scrolled, last movement DOWN: the whole header is off screen.
-  //
-  // Still nothing on :root is written while the guest scrolls - only this header's own
-  // `top` moves, which is the whole reason the scroll got smooth in the first place
-  // (see the --header-h note above; writing an inherited custom property per frame cost
-  // 48-139ms of style recalc). Adding direction did not change that.
-  //
-  // A DIRECTION FLIP NEEDS 8px OF TRAVEL, not one event. A trackpad and a thumb both
-  // emit tiny opposite deltas, and flipping on the first of them makes the header
-  // flicker; the accumulator resets whenever the direction genuinely changes.
-  // Hiding also needs y > 80 so the header never vanishes while the guest is still
-  // looking at the top of the page.
-  const [mode, setMode] = useState('full');
+  // HIDE-ON-SCROLL-DOWN WAS BUILT AND REVERTED (27 Sep 2026). Wayan asked for it
+  // ("navbar gak sticky ... muncul kalo di scroll berlawanan arah, kayak facebook"),
+  // saw it live, and asked for it back: "Sticky navbar biarin sticky". So the header is
+  // sticky again and only the trip bar moves, exactly as it was before that change.
+  // Do not re-add the direction logic without asking - it is a decision, not a gap.
+  const [slid, setSlid] = useState(false);
   useEffect(() => {
-    let last = window.scrollY;
-    let run = 0; // px travelled in the current direction
-    const onScroll = () => {
-      const y = window.scrollY;
-      const d = y - last;
-      last = y;
-      if (y <= 8) { run = 0; setMode('full'); return; }
-      if (!d) return;
-      if ((d > 0) !== (run > 0)) run = 0;
-      run += d;
-      if (run > 8 && y > 80) setMode('hidden');
-      else if (run < -8) setMode('nav');
-    };
+    const onScroll = () => setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
     onScroll(); // a page opened at an anchor starts already scrolled
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -228,7 +202,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed left-0 right-0 z-[100] w-full bg-white animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${HEADER_TOP[mode]}`}
+      className={`fixed left-0 right-0 z-[100] w-full bg-white animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${slid ? 'top-[calc(-1_*_var(--tripbar-h,0px))]' : 'top-0'}`}
       ref={headerRef}
     >
       {/* Above the nav row, so sliding the header up takes the bar off the screen
@@ -249,15 +223,15 @@ export default function Navbar() {
             tap there hits the scrim, which closes the menu anyway. Lifting the button
             above the scrim is one class; not doing it unasked. */}
         <button
-          className="relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] mr-3 max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
+          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] mr-3 max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
           <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
           {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
               .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
               span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin

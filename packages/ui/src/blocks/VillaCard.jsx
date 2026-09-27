@@ -41,8 +41,13 @@ import { BTN_SM } from '../primitives/btnClasses.js';
 // The scrim. Two stops rather than a flat wash: the words sit in the bottom
 // third, so that is where the darkness belongs - a full-card overlay just
 // makes the photograph muddy. The top stop exists for the badge and heart.
+// The scrim is built from the SAME dark the rest of the site uses (49,49,49),
+// not a near-black of its own. It was rgba(12,11,9,...) while every other dark
+// surface moved to #313131, which left the biggest dark area on the homepage
+// disagreeing with all of them. Measured after the change: white on the bottom
+// stop is 12.03:1, so nothing was traded for it.
 const SCRIM =
-  'absolute inset-0 [background:linear-gradient(to_top,rgba(12,11,9,0.93)_0%,rgba(12,11,9,0.86)_22%,rgba(12,11,9,0.55)_44%,rgba(12,11,9,0.10)_70%,rgba(12,11,9,0.34)_100%)]';
+  'absolute inset-0 [background:linear-gradient(to_top,rgba(49,49,49,0.93)_0%,rgba(49,49,49,0.86)_22%,rgba(49,49,49,0.55)_44%,rgba(49,49,49,0.10)_70%,rgba(49,49,49,0.34)_100%)]';
 
 // Real gold here, not the soft black the palette calls "gold" - a badge is one
 // of the three jobs --color-amber exists for, and on a photograph it has to

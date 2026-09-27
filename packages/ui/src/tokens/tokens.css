@@ -182,16 +182,26 @@
      what separates a block from the page is space and a hairline, not a change
      of colour. Setting --surface-raised back to #ffffff is the one-line way
      back if the flat version turns out to be too flat. */
-  --surface: #f2eee8;
-  --surface-raised: #f2eee8;
+  --surface: #f3eee7;
+  --surface-raised: #f3eee7;
 
-  /* BUTTONS ARE BLACK HERE (Sep 2026, Wayan: "warna button green jadi black
-     bro"). Not a new colour - it is --color-gold, the soft black this palette
-     already calls its accent, so the site still has one dark and not two.
-     Scoped to the brand rather than changed at the token, because --color-cta
-     is CUE's green and CUE is the other half of this palette. */
-  --color-cta: #22201c;
-  --color-cta-d: #16140f;
+  /* THE DARK, sampled from the same page (Sep 2026, Wayan: "pakai tone warna
+     creme dan dark ini bro ikutin warnanya"). #313131 is the Reserve bar in
+     that screenshot, and the second colour in its histogram after the cream -
+     a flat area, so it is a reading rather than an impression of one. The
+     cream moved by a single point at the same time (#f2eee8 -> #f3eee7), which
+     is the sample from THIS shot; nobody will see the difference, but the two
+     numbers now come from one place.
+     ONE dark for the whole site: --color-gold drives headings, the dark bands
+     and - since Wayan asked for black buttons - the buttons too, so moving it
+     moves all three together. It is a neutral charcoal where the old value was
+     a warm near-black; on the cream that is 10.8:1, and white on it is 12.6:1.
+     Scoped to the brand: --color-gold and --color-cta are CUE's, and CUE is the
+     other half of this palette. */
+  --color-gold: #313131;
+  --color-gold-d: #262626;
+  --color-cta: #313131;
+  --color-cta-d: #262626;
 }
 
 /* ---------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+import ServiceReviews from '@/components/reviews/ServiceReviews';
+import { AIRPORT_ROUTE } from '@/content/shared/timeSlots';
 import AirportTransferForm from '@/components/sections/AirportTransferForm';
 import JsonLd from '@/components/JsonLd';
 import Prose from '@/components/prose/Prose';
@@ -57,6 +59,16 @@ export default function Page() {
       >
         <AirportTransferForm />
       </FormHero>
+      {/* ONE route, so it asks by name. An airport booking is stored as a
+          transfer row whose service IS the route, so the constant the form books
+          with is the same one the reviews are filed under - imported rather than
+          retyped, because a second copy of that string is a page that quietly
+          finds no reviews. */}
+      <ServiceReviews
+        service={AIRPORT_ROUTE}
+        title="What guests say about our airport transfers"
+        emptyText="No airport transfer reviews yet - be the first to tell other travellers how your pickup went."
+      />
     </>
   );
 }

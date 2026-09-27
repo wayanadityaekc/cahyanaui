@@ -5,14 +5,17 @@ import { API_BASE } from '@/lib/constants';
 import ReviewCard from '@/components/cards/ReviewCard';
 import ReviewCta from '@/components/reviews/ReviewCta';
 
-export default function ReviewsStrip({ service, emptyText, showEmpty = true, emptyCta = false }) {
+export default function ReviewsStrip({ service, group, emptyText, showEmpty = true, emptyCta = false }) {
   const [rows, setRows] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    const url = service
-      ? `${API_BASE}/reviews?service=${encodeURIComponent(service)}`
-      : `${API_BASE}/reviews`;
+    // A page that sells MANY services asks by group - /transfer lists ten
+    // routes and the guest reviewed the one they took, so no single name
+    // answers for it. The server resolves the set from the pricing catalog.
+    const q = group ? `?group=${encodeURIComponent(group)}`
+      : (service ? `?service=${encodeURIComponent(service)}` : "");
+    const url = `${API_BASE}/reviews${q}`;
     fetch(url)
       .then((r) => (r.ok ? r.json() : []))
       .then((d) => {
@@ -24,7 +27,7 @@ export default function ReviewsStrip({ service, emptyText, showEmpty = true, emp
     return () => {
       cancelled = true;
     };
-  }, [service]);
+  }, [service, group]);
 
   const list = rows || [];
 

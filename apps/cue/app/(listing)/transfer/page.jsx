@@ -1,3 +1,4 @@
+import ServiceReviews from '@/components/reviews/ServiceReviews';
 import TransferSection from '@/components/sections/TransferSection';
 import JsonLd from '@/components/JsonLd';
 
@@ -21,6 +22,14 @@ export default function Page() {
     <>
       <JsonLd page="transfer" />
       <TransferSection />
+      {/* GROUP, not a service: this page sells ten routes and a guest reviews
+          the route they took. The server resolves the set from the pricing
+          catalog, so a new route is covered the day it is priced. */}
+      <ServiceReviews
+        group="transfers"
+        title="What guests say about our transfers"
+        emptyText="No transfer reviews yet - be the first to tell other travellers how your ride went."
+      />
     </>
   );
 }

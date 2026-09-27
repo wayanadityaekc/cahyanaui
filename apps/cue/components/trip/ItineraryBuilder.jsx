@@ -1,4 +1,5 @@
 'use client';
+import { CHARTER_SERVICE } from '@/lib/constants';
 import { FIELD_LABEL, FIELD_INPUT } from '@/components/ui/formClasses';
 import { BTN_SM } from '@/components/ui/btnClasses';
 
@@ -144,7 +145,7 @@ export default function ItineraryBuilder() {
       });
     });
     (state.transfers || []).forEach((t) => out.push({ type: 'transfer', service: t.route, date: t.date || '', guests: displayGuests, return: !!t.return }));
-    (state.charters || []).forEach((c) => out.push({ type: 'charter', service: 'Charter', date: c.date || '', guests: displayGuests, area: c.area || 'Ubud', duration: c.dur || c.duration, extra: c.extra || 0, ...(c.time ? { time: c.time } : null) }));
+    (state.charters || []).forEach((c) => out.push({ type: 'charter', service: CHARTER_SERVICE, date: c.date || '', guests: displayGuests, area: c.area || 'Ubud', duration: c.dur || c.duration, extra: c.extra || 0, ...(c.time ? { time: c.time } : null) }));
     return out;
   }, [state, days, displayGuests]);
 

@@ -3901,3 +3901,52 @@ exlude gitu"*.
     kayak gitu = harness keilangan alurnya. Kalau flag-nya yang beneran rusak, yang merah
     cuma sisi NYALA-nya (udah dibuktiin: `PAY_DEFAULT=false` → 4 merah, sisi `?pay=0`
     tetep ijo).
+
+## POPUP REVIEW - SUBMIT GAK BOLEH SETENGAH JALAN (27 Sep 2026)
+Aturan siapa yang boleh review ada di **`cahyana-api`** (section "SIAPA YANG BOLEH
+REVIEW = SIAPA YANG DAPET EMAIL KONFIRMASI"), bukan di sini. Di sini cuma popup-nya.
+
+- **`ReviewModal` nge-POST SATU KALI PER TRIP yang dicentang**, karena review
+  ditandain per tour (`booking_ref` + `service`), dan satu tamu bisa punya trip
+  dari beberapa booking. Itu disengaja.
+- **Dulu dia `throw` di kegagalan PERTAMA.** Akibatnya: review yang udah keterima
+  **hidup di situs** (auto-publish, `status: 'approved'`) sementara layarnya cuma
+  nunjukin satu baris merah - jadi tamu bacanya "gak ada yang kejadian", coba lagi,
+  terus dapet *"You've already submitted a review for this tour."*
+- Sekarang **semua** dicoba, hasilnya dikumpulin, baru dilaporin:
+  - semua lolos -> layar Thank you biasa.
+  - **sebagian lolos -> TETEP Thank you**, plus daftar yang gagal + alasan
+    server-nya. Review yang udah terbit **gak pernah** dilaporin sebagai gagal.
+  - semua gagal -> error, kayak dulu.
+- **Copy layar sukses dibenerin**: dulu nulis *"will appear once approved"*, padahal
+  review **auto-publish** sejak Sep 2026 - gak ada yang di-approve, jadi tamu
+  disuruh nungguin sesuatu yang udah kejadian. Sekarang *"Your review is now live
+  on the site."*
+
+**Sisa yang JUJUR, belum dibenerin:** `AccountProvider` narik `/bookings/mine`
+**sekali pas mount** dan gak di-refresh sesudah submit. Jadi tamu yang nutup popup
+terus mbuka lagi **tanpa reload** masih lihat trip yang barusan dia review; centang
+lagi -> *"You've already submitted a review for this tour."* Pesannya jelas dan
+gak ada yang salah kesimpen, tapi itu kelas bug yang sama (daftar gak sepakat sama
+gerbang). Benerinnya = `refreshTrips` di provider + dipanggil 2 pemakai
+(`MyTripsCart`, `ReviewGate`). Belum ditanyain ke Wayan.
+
+Verifikasi: **`node verify-review.mjs`** di root repo (**42/42**, 390 & 1280 x
+2 keadaan), jalan di atas halaman hasil build (`npm run build && npm run serve`).
+Patokannya: **tiap trip yang dicentang beneran dicoba** (bukan berhenti di yang
+pertama), layar sukses nyebut yang gagal + namanya + alasan server-nya, yang
+SUKSES gak ikut kedaftar sebagai gagal, nol "once approved", halaman gak melar,
+nol page error. Dites pakai 2 bug aslinya, satu-satu: `throw` di kegagalan pertama
+dibalikin (**4 nyala**) dan copy "once approved" dibalikin (**4 nyala**).
+- **DUA JEBAKAN HARNESS, dua-duanya bikin harness nyalahin aplikasi yang bener:**
+  1. `page.innerText('div.fixed.inset-0')` nyomot cangkang **`AuthModal`**, yang
+     ke-mount opacity 0 di SEMUA halaman - jadi harness lapor "no thank-you"
+     padahal screenshot-nya jelas nunjukin layar Thank you. Sekarang shell-nya
+     di-filter `hasText: 'Leave a Review'` + ada assertion **"HARNESS READ THE
+     WRONG BOX"** biar salah-baca gagal sebagai harness rusak, bukan lolos.
+  2. Route `**/api/**` yang nangkep `/reviews` ikut nelen **GET**-nya
+     `ReviewsStrip`, jadi "2 review dicoba" kebaca **3**. Filter `method === 'POST'`.
+- Dan satu lagi yang bikin 390 kebaca "aplikasinya gak punya tombol review": baris
+  back di HP labelnya **`My trips`** (t kecil), jadi regex `/My Trips/` yang
+  case-sensitive **diem-diem gak match apa-apa**. Di HP My Trips mendarat di
+  keranjang, jadi daftar section-nya emang di balik back - harness WAJIB lewat situ.

@@ -36,6 +36,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const [partial, setPartial] = useState([]);
 
   useEffect(() => setMounted(true), []);
 
@@ -50,6 +51,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
     setMessage('');
     setErrors({});
     setError('');
+    setPartial([]);
     setDone(false);
   }, [open, prefill]);
 
@@ -76,11 +78,19 @@ export default function ReviewModal({ open, prefill, onClose }) {
     setErrors(fieldErrors);
     if (!ok) { setError(''); return; }
     setError('');
+    setPartial([]);
     setBusy(true);
-    try {
-      const token = readLocal(KEY.token, '');
-      const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
-      for (const it of picked) {
+    const token = readLocal(KEY.token, '');
+    const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
+    const results = [];
+    // One POST per ticked tour, and EVERY one is attempted. This used to throw on
+    // the first refusal, which meant the reviews already accepted were live on the
+    // site while the screen showed a single red error - so the guest read it as
+    // "nothing went through", tried again, and got "you've already submitted a
+    // review for this tour". A review that was published is never reported as a
+    // failure here.
+    for (const it of picked) {
+      try {
         const d = await fetch(`${API_BASE}/reviews`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -93,14 +103,18 @@ export default function ReviewModal({ open, prefill, onClose }) {
             message: message.trim(),
           }),
         }).then((r) => r.json());
-        if (!d || !d.ok) throw new Error((d && d.reason) || 'Something went wrong. Please try again.');
+        results.push({ it, ok: !!(d && d.ok), reason: (d && d.reason) || 'Something went wrong. Please try again.' });
+      } catch {
+        results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });
       }
-      setDone(true);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setBusy(false);
     }
+    setBusy(false);
+    const failed = results.filter((r) => !r.ok);
+    if (failed.length === results.length) { setError(failed[0].reason); return; }
+    // Some went through: say thank you for those, and name the ones that did not
+    // rather than hiding them behind a success screen.
+    setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
+    setDone(true);
   };
 
   // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/title/group/btn/success
@@ -212,7 +226,23 @@ export default function ReviewModal({ open, prefill, onClose }) {
           <div className="text-center">
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Thank you!</h3>
-            <p className={SUCCESS_TEXT}>Your review has been submitted and will appear once approved.</p>
+            {/* Reviews go live the moment they clear the server gate (inserted with
+                status 'approved'), so "will appear once approved" told the guest to
+                wait for something that had already happened. */}
+            <p className={SUCCESS_TEXT}>
+              {partial.length
+                ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`
+                : 'Your review is now live on the site.'}
+            </p>
+            {partial.length ? (
+              <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
+                {partial.map((p) => (
+                  <li key={p.service} className="text-small text-muted py-[0.35rem] [border-bottom:1px_solid_var(--line)] last:border-b-0">
+                    <span className="font-semibold text-green">{p.service}</span> - {p.reason}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             <button type="button" className={BTN} onClick={onClose}>Done</button>
           </div>
         )}

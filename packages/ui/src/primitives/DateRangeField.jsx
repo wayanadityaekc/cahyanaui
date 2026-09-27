@@ -10,6 +10,8 @@ import {
   panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY,
   HS_CAL, CAL_CAP, CAL_CAP_SPAN, CAL_CAP_BTN, CAL_GRID, CAL_DOW, calRangeDay,
   CSEL_GROUP, BK_NATIVE, RANGE_ROW, RANGE_FOOT,
+  CONTROL_RICH, CONTROL_IC, CONTROL_STACK, CONTROL_HINT,
+  CONTROL_VAL_RICH, CONTROL_VAL_RICH_PLACEHOLDER, CHEV,
 } from './controlClasses.js';
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -66,6 +68,13 @@ export default function DateRangeField({
   id,
   name,
   panelLabel = 'Select dates',
+  // ONE ROW INSTEAD OF TWO (Wayan, Sep 2026, pointing at CUE's booking card:
+  // "pakai kolom date, satu kolom dan pakai sistem date picker range"). The
+  // control was already a range picker - it just drew two triggers side by
+  // side, so it READ as two questions. `hint` + `icon` switch it to the same
+  // rich row the other fields use: icon, small label, value, chevron.
+  hint = '',
+  icon = null,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
   const [open, setOpen] = useState(false);
@@ -86,6 +95,15 @@ export default function DateRangeField({
 
   const minDate = min || iso(new Date());
   const nights = nightsBetween(checkIn, checkOut);
+  const single = !!(hint || icon);
+  // One line for the whole range, and it says what has been answered so far:
+  // nothing, a check-in waiting on its check-out, or both plus the nights - the
+  // number the guest is actually choosing.
+  const rangeLabel = !checkIn
+    ? placeholders.start
+    : !checkOut
+      ? `${fmt(checkIn)} - add check-out`
+      : `${fmt(checkIn)} - ${fmt(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
 
   const cells = useMemo(() => {
     const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
@@ -194,10 +212,28 @@ export default function DateRangeField({
       <input type="date" className={BK_NATIVE} name={name && `${name}-in`} id={id} value={checkIn} min={minDate} onChange={(e) => onChange({ checkIn: e.target.value, checkOut })} tabIndex={-1} aria-hidden="true" />
       <input type="date" className={BK_NATIVE} name={name && `${name}-out`} value={checkOut} min={checkIn || minDate} onChange={(e) => onChange({ checkIn, checkOut: e.target.value })} tabIndex={-1} aria-hidden="true" />
 
-      <div className={RANGE_ROW}>
-        {trigger('start', labels.start, checkIn, placeholders.start)}
-        {trigger('end', labels.end, checkOut, placeholders.end)}
-      </div>
+      {single ? (
+        <button
+          type="button"
+          className={CONTROL_RICH}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-label={hint || panelLabel}
+          onClick={() => openAt(checkIn && !checkOut ? 'end' : 'start')}
+        >
+          {icon ? <span className={CONTROL_IC} aria-hidden="true">{icon}</span> : null}
+          <span className={CONTROL_STACK}>
+            {hint ? <span className={CONTROL_HINT}>{hint}</span> : null}
+            <span className={checkIn ? CONTROL_VAL_RICH : CONTROL_VAL_RICH_PLACEHOLDER}>{rangeLabel}</span>
+          </span>
+          <Calendar className={CHEV} strokeWidth={1.8} aria-hidden="true" />
+        </button>
+      ) : (
+        <div className={RANGE_ROW}>
+          {trigger('start', labels.start, checkIn, placeholders.start)}
+          {trigger('end', labels.end, checkOut, placeholders.end)}
+        </div>
+      )}
 
       {mounted && createPortal(panel, document.body)}
       {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}

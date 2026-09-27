@@ -17,7 +17,7 @@ export const PANEL = (open) => [
   // move differently would read as two different systems.
   '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
   '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
-  '[@media(min-width:769px)]:[box-shadow:-14px_0_40px_rgba(26,26,26,0.2)]',
+  '[@media(min-width:769px)]:',
   '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
   open
     ? '[@media(min-width:769px)]:translate-x-0'
@@ -25,7 +25,7 @@ export const PANEL = (open) => [
   // Phone: unchanged - a sheet off the bottom, which Wayan signed off on.
   '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
   '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
-  '[@media(max-width:768px)]:[box-shadow:0_-12px_48px_rgba(26,26,26,0.28)]',
+  '[@media(max-width:768px)]:',
   '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
   open
     ? '[@media(max-width:768px)]:opacity-100 [@media(max-width:768px)]:[transform:translateY(0)]'

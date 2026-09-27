@@ -7,7 +7,7 @@ const SOURCE_LOGO = {
 // neutral) karena itu nilai khusus yang disengaja. Bintang rating dikecilin di
 // <=992px persis seperti override .rev__stars di media query lama.
 const CLS = {
-  card: 'relative flex flex-col gap-2 bg-white border border-line rounded-lg shadow-[0_6px_20px_rgba(31,61,43,0.06)] px-[1.3rem] pt-[1.4rem] pb-[2.3rem]',
+  card: 'relative flex flex-col gap-2 bg-white border border-line rounded-lg px-[1.3rem] pt-[1.4rem] pb-[2.3rem]',
   head: 'flex items-center gap-2',
   name: 'font-semibold text-small text-green',
   flag: 'w-[18px] h-[13px] object-cover rounded-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.08)]',

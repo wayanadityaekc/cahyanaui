@@ -20,7 +20,7 @@ export default function RegistrationBlock({ company = false }) {
   const sec = company ? 'max-w-none mx-0 px-0 pb-0' : 'max-w-[760px] mx-auto px-[var(--container-x)] pb-[var(--section-gap)]';
   const card = company
     ? 'bg-transparent border-0 [border-top:1px_solid_var(--line)] rounded-none shadow-none pt-[1.6rem] px-0 pb-0'
-    : 'bg-white border border-line rounded-lg shadow-md py-[1.4rem] px-6';
+    : 'bg-white border border-line rounded-lg py-[1.4rem] px-6';
   return (
     <section className={sec}>
       <div className={card}>

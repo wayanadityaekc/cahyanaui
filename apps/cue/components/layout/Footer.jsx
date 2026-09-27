@@ -32,7 +32,7 @@ const CONTACT_SVG = 'w-4 h-4 shrink-0 text-gold';
 const SOCIAL_A =
   'flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-green bg-[rgba(0,0,0,0.06)] hover:text-white hover:bg-gold';
 const PAY_CHIP =
-  'inline-flex items-center justify-center h-5 min-w-[34px] px-[0.3rem] bg-white rounded-sm shadow-sm ' +
+  'inline-flex items-center justify-center h-5 min-w-[34px] px-[0.3rem] bg-white rounded-sm ' +
   'transition-[transform] duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]';
 const COL_A = 'no-underline text-green hover:text-gold';
 const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';

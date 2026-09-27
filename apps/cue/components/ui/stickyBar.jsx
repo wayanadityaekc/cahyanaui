@@ -13,9 +13,10 @@
 // persis kayak GYG"). Notes on what that changes:
 //   - No side/bottom inset, so only the top border is on screen; the sides and
 //     bottom ones would be drawn off the viewport.
-//   - The shadow points UP (negative Y). `--shadow-xl` casts downward, which a
-//     bar sitting on the bottom edge hides entirely - same reason the old CSS
-//     kept a directional shadow for this bar (see CLAUDE.md, shadow tokens).
+//   - It used to carry a shadow pointing UP (negative Y): a downward cast is
+//     swallowed by the screen edge, so a flush bar would read as having no
+//     elevation at all. That shadow is GONE now (27 Sep 2026, Wayan asked for no
+//     shadows anywhere); the top border is what separates the bar from the page.
 //   - `env(safe-area-inset-bottom)` via max(): on an iPhone the home indicator
 //     sits in that strip, and a flush bar would otherwise put the CTA under it.
 //     It reads 0 everywhere else, so the bar keeps its normal padding there.
@@ -48,4 +49,4 @@ export const BAR_SHELL =
   `${BAR_MARK} fixed inset-x-0 bottom-0 z-[95] items-center gap-3 ` +
   'pt-[0.55rem] pl-[1.1rem] pr-[0.9rem] pb-[max(0.55rem,env(safe-area-inset-bottom))] ' +
   'bg-white [border-top:1px_solid_var(--color-line)] rounded-t-[var(--r-xl)] ' +
-  '[box-shadow:0_-6px_22px_rgba(0,0,0,0.08)]';
+  '';

@@ -59,7 +59,7 @@ const PANEL_MOBILE_TRANSITION =
   '[@media(max-width:768px)]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]';
 const PANEL_POPUP_STATIC =
   'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
-  'bg-white [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
+  'bg-white [border:1px_solid_var(--line)] rounded-xl z-[340] ' +
   'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
   PANEL_MOBILE_TRANSITION;
@@ -103,7 +103,7 @@ export const CHEV_CAL = 'w-[17px] h-[17px] shrink-0 text-muted [transition:trans
 // scale), overflow-y auto, head sticky.
 const PANEL_BOOKDATE_STATIC =
   'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
-  'bg-white [border:1px_solid_var(--line)] rounded-xl [box-shadow:var(--shadow-xl)] z-[340] ' +
+  'bg-white [border:1px_solid_var(--line)] rounded-xl z-[340] ' +
   'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
   PANEL_MOBILE_TRANSITION + ' ' +
@@ -156,11 +156,11 @@ export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;
 // ngambang (base .hs-panel absolute), HP = bottom-sheet. Head KE-HIDE di desktop
 // (base .hs-panel__head display:none, gak ada override). =====
 export const panelMenu = (open) => [
-  'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:var(--shadow-xl)] overflow-hidden [overscroll-behavior:contain]',
+  'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden [overscroll-behavior:contain]',
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]', PANEL_MOBILE_TRANSITION,
   open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-8px)]',
   '[@media(max-width:768px)]:fixed [@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
-  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0] [@media(max-width:768px)]:[box-shadow:0_-12px_48px_rgba(26,26,26,0.28)]',
+  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0] [@media(max-width:768px)]:',
   '[@media(max-width:768px)]:max-h-[calc(100dvh-100px)] [@media(max-width:768px)]:overflow-y-auto [@media(max-width:768px)]:[scrollbar-width:none] [@media(max-width:768px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:768px)]:block [@media(max-width:768px)]:opacity-100',
   open ? '[@media(max-width:768px)]:[transform:translateY(0)]' : '[@media(max-width:768px)]:[transform:translateY(100%)]',
 ].join(' ');

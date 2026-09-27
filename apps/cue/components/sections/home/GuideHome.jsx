@@ -29,7 +29,7 @@ export default function GuideHome() {
         </div>
 
         <div className="relative max-w-[560px] mt-6 mx-auto mb-[1.7rem]">
-          <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white [box-shadow:var(--shadow-md)]">
+          <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white">
             <Search className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" aria-hidden="true" />
             <input
               type="text"
@@ -41,7 +41,7 @@ export default function GuideHome() {
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:0_16px_40px_rgba(31,61,43,0.14)] overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
+          <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
         </div>
 
         <Slider gridClassName={GRID_SLIDER}>

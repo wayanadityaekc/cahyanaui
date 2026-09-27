@@ -82,10 +82,21 @@
      `rgba(31,61,43,x)` (kehangatan brand: booksidebar, driver hover, navbar), directional/
      offset-negatif (trip-bar, panel akun geser, book-bar - nyorot ke atas/samping), animasi
      glow booksidebar, focus-ring error merah, hairline `0 0 0 1px`. */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
+  /* NO ELEVATION SHADOWS ANYWHERE (27 Sep 2026, Wayan: "hilangin shadow di semua
+     web gaada lagi shadow di bawah navbar, di bawah card"). The --shadow-sm/md/lg/xl
+     tokens are DELETED, not set to none: a token set to none leaves dozens of
+     shadow-md classes reading like they do something. 53 usages were removed from
+     34 files in the same commit.
+
+     What is deliberately still drawn with box-shadow, because none of it is
+     elevation: --focus-ring below (keyboard focus - accessibility, not decoration),
+     the invalid-field ring in formClasses.js, the charter row inset 1px (a border),
+     three flag hairlines (0 offset / 0 blur / 1px spread), and the hero slider dot
+     halo (0 0 2px, keeps a white dot readable on a bright photo).
+
+     Guarded by verify-noshadow.mjs, which sweeps the built pages and fails on any
+     computed box-shadow that has a real offset or blur. Re-adding one needs a
+     decision, not a stray class. */
   --focus-ring: 0 0 0 3px rgba(34, 32, 28, 0.18);
   /* ---- Motion (Agu 2026): durasi transisi + easing dipusatin biar animasi satu ritme.
      Cuma buat `transition:` (feedback interaksi: hover/focus/state). DIBIARIN: durasi

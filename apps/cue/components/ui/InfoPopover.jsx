@@ -14,7 +14,7 @@ const BTN =
   'hover:text-green hover:bg-[rgba(34,32,28,0.15)] aria-expanded:text-green aria-expanded:bg-[rgba(34,32,28,0.15)] ' +
   '[&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]';
 const POP_BASE =
-  "absolute z-[60] w-[min(272px,82vw)] py-[0.85rem] px-[0.9rem] bg-white [border:1px_solid_#ece6d8] rounded-md [box-shadow:var(--shadow-lg)] " +
+  "absolute z-[60] w-[min(272px,82vw)] py-[0.85rem] px-[0.9rem] bg-white [border:1px_solid_#ece6d8] rounded-md " +
   'text-left normal-case tracking-normal [transition:opacity_var(--dur-fast)_var(--ease),visibility_var(--dur-fast)] motion-reduce:[transition:none] ' +
   "before:content-[''] before:absolute before:top-[-6px] before:w-[11px] before:h-[11px] before:bg-white " +
   'before:[border-left:1px_solid_#ece6d8] before:[border-top:1px_solid_#ece6d8] before:[transform:rotate(45deg)] ' +

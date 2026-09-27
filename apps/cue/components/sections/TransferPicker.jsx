@@ -76,7 +76,7 @@ export default function TransferPicker() {
   // komponen shared. `.tpick__field` gak punya CSS sendiri (cuma wrapper).
   const BTN = `flex ${BTN_SM} border border-gold cursor-pointer font-body disabled:opacity-50 disabled:cursor-not-allowed`;
   return (
-    <div ref={pickerRef} className="bg-white border border-line rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
+    <div ref={pickerRef} className="bg-white border border-line rounded-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left">
       {/* From | swap | To. HP (<=600): ditumpuk vertikal, panah muter 90deg. */}
       <div className="grid grid-cols-[1fr_auto_1fr] [align-items:end] gap-[0.55rem] [@media(max-width:600px)]:grid-cols-[1fr] [@media(max-width:600px)]:items-stretch [@media(max-width:600px)]:gap-2 [@media(max-width:600px)]:justify-items-stretch">
         <div>

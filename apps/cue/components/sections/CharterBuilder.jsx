@@ -84,7 +84,7 @@ export default function CharterBuilder() {
   const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];
 
   return (
-    <div className="bg-white rounded-xl shadow-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
+    <div className="bg-white rounded-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
       <h2 className="font-head text-h2 font-semibold text-gold text-center m-0 mb-[var(--space-2)]">{CHARTER.boxTitle}</h2>
 
       {/* Two columns from 993px: the plans on the left, the trip on the right

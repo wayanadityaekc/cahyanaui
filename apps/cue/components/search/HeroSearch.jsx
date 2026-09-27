@@ -125,13 +125,13 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     <DragSheet
       enabled={isMobile && sheetOpen}
       onDismiss={onClose}
-      className={`relative flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
+      className={`relative flex-shrink-0 w-[420px] bg-white rounded-lg p-6 text-green
         animate-[heroCardIn_0.5s_var(--ease)_backwards] motion-reduce:animate-none
         max-[992px]:fixed max-[992px]:left-0 max-[992px]:right-0 max-[992px]:bottom-0 max-[992px]:z-[45] max-[992px]:w-auto
         max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:[scrollbar-width:none] max-[992px]:[&::-webkit-scrollbar]:hidden max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
         max-[992px]:pt-[1.9rem] max-[992px]:animate-none
         max-[992px]:[transition:translate_var(--dur-slow)_var(--ease-out),visibility_var(--dur-slow)]
-        max-[992px]:shadow-[0_-12px_48px_rgba(26,26,26,0.28)]
+       
         max-[992px]:before:content-[''] max-[992px]:before:absolute max-[992px]:before:top-[0.6rem] max-[992px]:before:left-1/2
         max-[992px]:before:[transform:translateX(-50%)] max-[992px]:before:w-10 max-[992px]:before:h-1 max-[992px]:before:rounded-full
         max-[992px]:before:bg-[#d9d5cc]
@@ -234,7 +234,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <button
         type="button"
         className="flex w-full mt-[0.4rem] items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small bg-cta text-white border-none font-body font-semibold cursor-pointer
-          [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
+          [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:hover:bg-cta-d"
         onClick={go}
       >
         Explore

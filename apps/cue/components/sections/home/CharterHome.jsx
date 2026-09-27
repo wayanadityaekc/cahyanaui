@@ -39,7 +39,7 @@ export default function CharterHome({ paired = false }) {
 
   return (
     <section className={paired ? SECTION_PAIRED : SECTION} id="charter-promo">
-      <div className={`bg-white border border-line rounded-lg shadow-md p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)] ${paired ? 'min-[993px]:h-full' : ''}`}>
+      <div className={`bg-white border border-line rounded-lg p-[var(--space-5)] max-[560px]:p-[var(--space-4)_var(--space-3)] ${paired ? 'min-[993px]:h-full' : ''}`}>
         <div className="text-center mb-[var(--space-3)]">
           <span className="block uppercase tracking-[0.14em] text-label text-muted mb-[0.4rem]">One more way to explore</span>
           <h2 className="font-head text-h2 font-medium tracking-[-0.01em] mb-[0.6rem] text-gold">Charter a car for the whole day</h2>

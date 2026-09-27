@@ -2426,6 +2426,59 @@ gak bisa bawa - **dia lagi ngetik**, dan **dia beneran lagi di dashboard**.
   - **Sisa yang BUKAN dari perubahan ini**: `isActive('/')` cuma cocok sama pathname `/`,
     jadi kalau ada yang mendarat di `/index.html` baris Home gak nyala (nol link internal
     ke situ, jadi praktis gak ada efeknya). Belum ditanyain ke Wayan.
+**NAVBAR SEMBUNYI PAS SCROLL TURUN, MUNCUL PAS SCROLL NAIK (27 Sep 2026, Wayan: "buat
+navbar gak sticky bro dia akan muncul kalo di scroll berlawanan arah ... kayak facebook")**
+- **TIGA posisi, disetir ARAH scroll** (`HEADER_TOP` di `Navbar.jsx`):
+  - `full` - di puncak (`y <= 8`): trip bar + baris nav dua-duanya keliatan.
+  - `nav` - udah ke-scroll, gerakan terakhir NAIK: baris nav keliatan, trip bar ketuck.
+  - `hidden` - udah ke-scroll, gerakan terakhir TURUN: header ilang total
+    (`top: -(--header-h + --tripbar-h)`).
+- **Keputusan trip bar yang lama TETEP UTUH.** Scroll naik gak nge-munculin trip bar-nya
+  lagi, cuma nav-nya - jadi fitur ini NAMBAH di atas perilaku Sep 2026, bukan ngegantiin.
+- **NOL yang ditulis ke `:root` selama scroll**, sama kayak sebelumnya. Cuma `top` punya
+  header ini yang gerak. Itu inti kenapa scroll-nya mulus (lihat catatan `--header-h`:
+  nulis custom property yang diwarisin per frame = **48-139ms** style recalc). Nambahin
+  arah gak ngubah itu sama sekali.
+- **FLIP ARAH BUTUH 8px PERJALANAN, bukan satu event.** Trackpad & jempol sama-sama ngirim
+  delta kecil berlawanan; kalau flip di event pertama header-nya kedip. Akumulatornya
+  di-reset tiap arahnya beneran ganti. Nyembunyiin juga butuh `y > 80` biar header gak
+  ilang pas tamu masih ngeliatin bagian atas halaman.
+- **Sisa yang JUJUR, ke-ukur**: elemen `sticky` (menu rail Our Company/guide, sidebar
+  booking) tetep dipatok di `--header-h` **58px** walau header-nya lagi ilang - jadi mereka
+  duduk 58px lebih rendah dari yang perlu. **Gak ada yang rusak** (mereka di dalam kolom
+  yang punya background sendiri, jadi gak ada bar ngambang), cuma ruang nganggur.
+  Benerinnya = nulis `--header-h` tiap flip arah, dan itu **persis recalc se-dokumen** yang
+  kerjaan trip bar kemarin habis-habisan dibuang (6-13ms sekali tulis). **Gak sepadan buat
+  58px** - tapi kalau Wayan ngerasa keliatan, itu tuasnya.
+
+**HAMBURGER PINDAH KE KIRI LOGO (27 Sep 2026, Wayan: "menu humberger pindahin kiri di kiri
+logo bro")** - dulu anak TERAKHIR baris nav, mentok di tepi kanan.
+- Dua hal yang ikut, dan gampang kelewat:
+  - **Jaraknya pindah sisi**: `max-[992px]:ml-1` (dulu misahin dia dari keranjang di
+    KIRI-nya) jadi `mr-3 max-[992px]:mr-2` - sekarang yang dipisah burger ke logo.
+  - **Logo kehilangan margin kiri negatifnya** (`ml-[0.1rem]` / `max-[992px]:ml-[-0.25rem]`).
+    Itu dulu ada buat narik logo mentok ke tepi kontainer; sekarang **burger** yang megang
+    tepi itu, jadi kalau dibiarin logonya justru nabrak burger.
+- **Drawer TETEP dari KANAN** (gak ditanyain ke Wayan, jadi gak gua ubah). Akibatnya,
+  ke-ukur @390: panel drawer **78-390**, burger **24-50** - burger udah **di luar panel**.
+  Tapi **scrim** (`rgba(26,26,26,0.45)`, `z-95`, anak `<header>`) masih nutupin dia, jadi
+  morph hamburger->X kebaca lewat wash 45% gelap, dan nge-tap di situ kena scrim (yang juga
+  nutup menu). Ini **ngoreksi setengah** catatan lama "hamburger ketutupan drawer": yang
+  nutup sekarang scrim, bukan panelnya. Naikin tombolnya di atas scrim = 1 class, belum
+  ditanyain.
+- Verifikasi: **`verify-design3.mjs`** di root repo (**62/62**, 390 & 1280). Dites pakai
+  3 bug aslinya, SATU-SATU: shadow navbar dibalikin (**2 nyala**) · header berhenti
+  nyembunyi pas scroll turun (**4 nyala**) · burger dibalikin ke kanan (**8 nyala**).
+  - **DUA ASSERTION SEMPAT TAUTOLOGI, dua-duanya lolos dengan ngukur kotak 0x0.**
+    "burger di luar panel drawer" pakai `nav[aria-label]` - itu nyomot `AppBottomNav`
+    ("App") yang `display:none` di luar app mode, rect-nya 0x0. Diganti `header nav`:
+    **masih** 0x0, karena `<nav>` di header itu cuma pembungkus dan anaknya `position:fixed`
+    jadi dia collapse. Panel drawer-nya **`<ul>`**, bukan `<nav>`. Sekarang harness-nya
+    **nolak rect < 100px** sebagai harness rusak, bukan lolos.
+  - **Gotcha ketiga**: `html` punya `scroll-behavior: smooth`, jadi `scrollTo(0)` dari 600px
+    itu ANIMASI - nunggu 450ms bikin header ke-ukur pas masih di tengah jalan dan lapor
+    "balik ke puncak" gagal. Wajib `waitForFunction` sampai `scrollY` beneran nyampe.
+
 - **Spacing icon kluster kanan** (akun/cart/menu): `.acct` margin-right 0.9rem,
   `.navbar__cart` margin-right 1.3rem (Sep 2026, dulu 0.3rem/0.85rem — kerasa mepet).
   Gap besar logo↔kluster (`.navbar__logo{margin-right:auto}`) itu disengaja (standar
@@ -2499,17 +2552,40 @@ Order **must be kept** (declarations first, run last):
   di-token (`var(--r-xl) var(--r-xl) 0 0`). **DIBIARIN** (jangan ikut di-token): `50%`
   (bulat/avatar), `2px`/`3px` (bar tipis), `0`. (Contoh lama buat `2px`/`3px` itu underline
   judul section - **udah gak ada**, lihat "Judul section" di Design system.)
-- **Shadow (token, Agu 2026, Wayan minta subtle)**: 4 tingkat elevasi neutral + focus-ring,
-  sengaja HALUS (opacity rendah) biar kartu "nempel halus", bukan ngambang berat:
-  `--shadow-sm` `0 1px 2px /.04` (chip/kontrol kecil) · `--shadow-md` `0 2px 8px /.05`
-  (kartu default, gantiin `--shadow-card` lama) · `--shadow-lg` `0 6px 18px /.06` (dropdown/
-  popover/hover) · `--shadow-xl` `0 14px 34px /.08` (modal/overlay/panel) · `--focus-ring`
-  `0 0 0 3px rgba(34,32,28,.18)` (fokus field). **DIBIARIN** (disengaja, jangan di-merge):
-  bayangan **green-tint** `rgba(31,61,43,x)` (kehangatan brand — booksidebar, driver hover,
-  navbar), **directional/offset-negatif** (trip-bar, panel akun geser, book-bar — nyorot ke
-  atas/samping), **animasi glow booksidebar** (`booksidebarGlow` keyframes), **focus-ring
-  error** merah, **hairline** `0 0 0 1px`. Sama filosofinya kayak amber/gold: satuin yang
-  kebetulan duplikat, jaga yang punya makna.
+- **SHADOW UDAH GAK ADA SAMA SEKALI (27 Sep 2026, Wayan: "hilangin shadow di semua web
+  gaada lagi shadow di bawah navbar, di bawah card")**. Ini NGE-OVERRIDE bullet token
+  shadow Agu 2026 yang dulu di sini (4 tingkat `--shadow-sm/md/lg/xl` + daftar bayangan
+  green-tint/directional yang "sengaja dibiarin") - **semuanya udah dibuang**.
+  - **Token-nya DIHAPUS, bukan di-set `none`.** Token yang nilainya `none` ninggalin
+    puluhan class `shadow-md` yang kebaca kayak ngapa-ngapain. **53 pemakaian dibuang dari
+    34 file**, terus `--shadow-*` dicabut dari `style.css` DAN `app/globals.css`.
+  - **`shadow-[...]` arbitrary TETEP JALAN** sesudah token-nya dicabut (dites: shadow
+    navbar dibalikin, dia ke-render). Jadi gak ada "mati otomatis" yang bisa diandelin -
+    yang nahan cuma gate di bawah.
+  - **ENAM yang SENGAJA MASIH box-shadow, dan semuanya BUKAN elevasi** - jangan ikut
+    dibuang kalau nemu: `--focus-ring` (fokus keyboard, itu aksesibilitas) · ring field
+    invalid di `formClasses.js` · `inset 0 0 0 1px` baris charter (itu **border**) ·
+    **3 hairline bendera** `0 0 0 1px` (bendera putih gak punya tepi tanpa itu) · halo
+    titik slider hero `0 0 2px` (titik putih di atas foto terang).
+  - **`text-shadow` GAK IKUT DIBUANG** (4 tempat): itu buat teks putih di atas foto, dan
+    permintaannya soal elevasi ("di bawah navbar, di bawah card"). Beda benda.
+  - Gate: **`verify-noshadow.mjs`** (bagian dari `verify-design3.mjs` di root repo).
+    Patokannya **aturan**: tiap `box-shadow` yang ke-compute di 14 halaman × 390/1280 gak
+    boleh punya offset atau blur > 2px. Dia juga nge-assert ring/hairline yang disengaja
+    **masih ke-render** (93-96 elemen), jadi "semua shadow ilang" gak bisa lolos dengan
+    cara ngematiin semuanya.
+    - **JEBAKAN PARSER YANG BIKIN VERSI PERTAMA LOLOS PALSU**: Tailwind v4 nyusun
+      `box-shadow` dari **5 layer** (`inset-shadow, inset-ring, ring-offset, ring, shadow`),
+      jadi nilai computed-nya `rgba(0,0,0,0) 0px 0px 0px 0px, ...×4, <yang asli>`. Versi
+      pertama ngambil **4 angka px pertama dari SELURUH string** - itu layer kosong, jadi
+      dia baca `0 0 0 0` dan **lapor bersih padahal shadow navbar udah gua balikin**.
+      Sekarang string-nya dipecah per layer dulu (koma yang di LUAR `rgba(...)`), tiap
+      layer dinilai sendiri, dan layer yang alpha-nya 0 di-skip.
+    - **Parser yang bener itu langsung nemu 1 shadow yang kelewat**: sheet hero HP pakai
+      **`max-[992px]:shadow-[...]`** - shadow dengan **prefix varian**. Sapuan pertama
+      kelewat karena survey gua bilang "nol shadow ber-varian", dan itu SALAH: grep-nya
+      yang kurang teliti. Cara survey yang bener = pecah sumber per token dipisah spasi
+      (`grep -ohE "[^ '\"\`]*shadow[^ '\"\`]*"`), jangan ngarang pola prefix.
 - **Motion (token, Agu 2026)**: durasi transisi + easing dipusatin biar animasi satu ritme.
   **BUG 3 MINGGU (dibetulin Sep 2026)**: `--dur-fast` di `style.css` ketulis
   `--dur-fast: var(--dur-fast)` - nunjuk dirinya sendiri, jadi tokennya resolve ke KOSONG. Tiap

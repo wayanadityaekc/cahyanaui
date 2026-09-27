@@ -33,7 +33,7 @@ export const CAT_ITEM_TAP = (active) => `${CAT_ITEM(active)} py-[var(--space-1)]
 // desktop columns' gap, so both variants read identically.
 const PANEL =
   'absolute left-0 right-0 top-[calc(100%+var(--space-1))] z-30 flex flex-col p-[var(--space-1)] ' +
-  'bg-white [border:1px_solid_var(--line)] rounded-md [box-shadow:var(--shadow-lg)]';
+  'bg-white [border:1px_solid_var(--line)] rounded-md';
 
 const TRIGGER =
   'flex items-center justify-between w-full gap-2 p-0 bg-transparent border-none cursor-pointer ' +

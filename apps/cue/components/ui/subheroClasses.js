@@ -14,7 +14,7 @@ export const SUBHERO_OVERLAP = SUBHERO;
 // (was `.subhero--overlap + section`). Applied on the next <section> in the 3 consumers
 // (LegalPage, faq, itinerary).
 export const SUBHERO_OVERLAP_NEXT =
-  'relative z-[2] mt-[-5rem] rounded-t-[var(--r-xl)] bg-white [box-shadow:0_-12px_30px_rgba(0,0,0,0.06)]';
+  'relative z-[2] mt-[-5rem] rounded-t-[var(--r-xl)] bg-white';
 export const SUBHERO_CONTENT =
   'relative z-[1] w-full max-w-[720px] animate-[heroFadeIn_0.6s_ease_both] motion-reduce:animate-none';
 // H1 tier: font-head 700, gold. (base .subhero__title + the grouped typography rule.)

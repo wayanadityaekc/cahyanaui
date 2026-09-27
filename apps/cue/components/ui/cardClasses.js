@@ -6,7 +6,7 @@
 export const BADGE_POPULAR =
   'absolute top-[0.8rem] right-[0.8rem] bg-amber text-gold text-label font-semibold tracking-[0.04em] uppercase rounded-sm py-[0.2rem] px-[0.7rem]';
 
-// Frame kartu (dulu base `.experience__card`): putih inset radius + shadow-md + hover
+// Frame kartu (dulu base `.experience__card`): putih inset radius + hover
 // lift. DISPLAY sengaja gak diikutin di sini - ditambah per komponen (`flex flex-col`
 // buat kartu standar, `block` buat kartu tourprog "See our tours"). Dipake
 // ExperienceCard / GuideCard / GuideMore (you-might) / GuideHome (CTA more).
@@ -14,8 +14,8 @@ export const BADGE_POPULAR =
 // softer entry into the hover state, not an abrupt snap (Sep 2026, Wayan: card hover
 // shouldn't feel harsh).
 export const CARD_FRAME =
-  'relative rounded-lg p-[5px] overflow-hidden bg-white [box-shadow:var(--shadow-md)] no-underline text-inherit ' +
-  '[transition:transform_var(--dur-slow)_var(--ease-out),box-shadow_var(--dur-slow)_var(--ease-out)] hover:[transform:translateY(-4px)] hover:[box-shadow:var(--shadow-lg)]';
+  'relative rounded-lg p-[5px] overflow-hidden bg-white no-underline text-inherit ' +
+  '[transition:transform_var(--dur-slow)_var(--ease-out),box-shadow_var(--dur-slow)_var(--ease-out)] hover:[transform:translateY(-4px)] hover:';
 
 // Foto kartu persegi (dulu `.experience__image` + ::after gradient). Wrapper pegang
 // rasio/radius/overflow; gradient gelap dari bawah biar teks putih (kalau ada) kebaca.

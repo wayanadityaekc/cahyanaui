@@ -16,9 +16,9 @@ import Price from '@/components/Price';
 // Renders nothing when the attraction is on no tour.
 const BTN =
   'group flex items-center gap-3 w-full py-[0.7rem] px-[0.85rem] rounded-md no-underline text-left ' +
-  'bg-white [border:1px_solid_var(--line)] shadow-sm cursor-pointer ' +
+  'bg-white [border:1px_solid_var(--line)] cursor-pointer ' +
   'transition-[border-color,box-shadow,scale] duration-[var(--dur)] ease-[ease] ' +
-  'hover:[border-color:var(--color-cta)] hover:shadow-md';
+  'hover:[border-color:var(--color-cta)] hover:';
 
 export default function TourComparisonBox({ tours }) {
   if (!tours || !tours.length) return null;

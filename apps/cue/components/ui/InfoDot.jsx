@@ -10,14 +10,14 @@ import { PopMenu } from '@/components/ui/Reveal';
 // deskripsi yang panjang ... pindahin kesana, akan muncul kalau di klik").
 //
 // It FLOATS, like every other panel on the site: an opaque surface, a border and
-// --shadow-lg, or the text under it reads through; and tap-outside plus Escape to
+// a shadow (removed Sep 2026 - the border carries it now); and tap-outside plus Escape to
 // close, because a floating panel has no way of getting out of the way on its own.
 const BTN =
   'shrink-0 flex items-center p-0 bg-transparent border-none cursor-pointer text-muted ' +
   '[transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold';
 const PANEL =
   'absolute left-0 top-[calc(100%+var(--space-1))] z-30 w-[min(16rem,72vw)] p-[var(--space-1)] ' +
-  'bg-white [border:1px_solid_var(--line)] rounded-md [box-shadow:var(--shadow-lg)] ' +
+  'bg-white [border:1px_solid_var(--line)] rounded-md ' +
   'font-body text-body leading-[var(--lh-body)] text-ink text-left';
 
 export default function InfoDot({ label = 'More information', children }) {

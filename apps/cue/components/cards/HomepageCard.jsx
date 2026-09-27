@@ -32,9 +32,9 @@ const CATS = {
 // Rule visual .hcard*/.hcard__* lama dihapus dari style.css (produksi cuma dipake
 // komponen ini). Grid/slider + ExperienceCard klasik = stage berikutnya.
 const FRAME =
-  "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl shadow-md aspect-[4/5] " +
+  "hcard relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] " +
   'transition-[translate,box-shadow] duration-200 ease-[var(--ease-out)] hover:-translate-y-[3px] ' +
-  'hover:shadow-[0_16px_38px_rgba(31,61,43,0.16)] ' +
+  'hover:' +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
 const IMG = 'absolute inset-0 w-full h-full object-cover';
@@ -44,7 +44,7 @@ const CAT_BASE =
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:shrink-0';
 const RATE =
   'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-sm ' +
-  'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold shadow-sm ' +
+  'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
 const OV = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
 const TITLE = 'mt-0 mb-[9px] font-semibold text-h2 leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';

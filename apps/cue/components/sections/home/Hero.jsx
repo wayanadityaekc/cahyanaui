@@ -47,7 +47,7 @@ export default function Hero() {
               max-[992px]:leading-none max-[992px]:whitespace-nowrap max-[992px]:mt-6
               max-[992px]:w-auto max-[992px]:h-[var(--btn-h)] max-[992px]:py-0 max-[992px]:px-4 max-[992px]:border-none max-[992px]:rounded-sm
               max-[992px]:bg-cta max-[992px]:text-white max-[992px]:font-body max-[992px]:font-semibold max-[992px]:text-small max-[992px]:cursor-pointer
-              max-[992px]:shadow-lg max-[992px]:[transition:background_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cta-d"
+              max-[992px]:max-[992px]:[transition:background_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cta-d"
             onClick={() => setSheetOpen(true)}
           >
             Plan trip

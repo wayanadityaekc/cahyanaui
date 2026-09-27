@@ -72,7 +72,7 @@ function adoptShell(before) {
       frame.style.borderRadius = 'var(--r-xl)';
       frame.style.border = '0';
       // Modal elevation, the site's token - not a shadow invented here.
-      frame.style.boxShadow = 'var(--shadow-xl)';
+      frame.style.boxShadow = 'var(--)';
       if (cs.position === 'fixed' || cs.position === 'absolute') el.style.borderRadius = 'var(--r-xl)';
     }
   }

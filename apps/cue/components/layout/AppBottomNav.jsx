@@ -38,7 +38,7 @@ const BAR =
   'fixed inset-x-0 bottom-0 z-[95] items-stretch ' +
   'pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] ' +
   'bg-white [border-top:1px_solid_var(--color-line)] ' +
-  '[box-shadow:0_-6px_22px_rgba(0,0,0,0.08)]';
+  '';
 
 const CELL =
   'flex-1 flex flex-col items-center justify-center gap-[3px] ' +

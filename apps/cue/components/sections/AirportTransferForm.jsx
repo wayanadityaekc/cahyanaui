@@ -92,7 +92,7 @@ export default function AirportTransferForm() {
   // FIELD_LABEL went with the Date field it belonged to - every label here is
   // now a full-width one, so there is one label style again.
   return (
-    <div className="bg-white rounded-xl shadow-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left" id={AIRPORT.boxId}>
+    <div className="bg-white rounded-xl pt-6 px-[1.4rem] pb-[1.6rem] text-left" id={AIRPORT.boxId}>
       <h2 className="font-head text-[1.15rem] text-green text-center mt-0 mb-[1.1rem]">{AIRPORT.boxTitle}</h2>
 
       <div className="mb-[1.3rem]">

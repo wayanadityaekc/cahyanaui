@@ -54,7 +54,7 @@ export const RAIL_PAGE = `${RAIL_PAGE_BOX} pt-[calc(var(--header-h-max,104px)+1.
 const FRAME_DESK =
   'flex items-stretch bg-white [border:1px_solid_var(--line)] rounded-[var(--r-lg)] ' +
   'min-[993px]:min-h-[calc(100dvh_-_var(--header-h-max,104px)_-_1.9rem_-_var(--space-5))] ' +
-  'overflow-clip [box-shadow:var(--shadow-md)] max-[992px]:block';
+  'overflow-clip max-[992px]:block';
 
 export const RAIL_FRAME =
   `${FRAME_DESK} max-[992px]:border-none ` +
@@ -86,7 +86,7 @@ export const railItem = (active) =>
   'bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   (active
-    ? 'font-semibold text-gold bg-white [border:1px_solid_var(--line)] [box-shadow:var(--shadow-sm)] p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'
+    ? 'font-semibold text-gold bg-white [border:1px_solid_var(--line)] p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'
     : 'text-muted [&>svg]:opacity-75 hover:text-gold');
 
 // Splits "about us" from "the legal small print" - two different reasons to be

@@ -145,23 +145,65 @@ for (const w of [390, 1280]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   const page = await ctx.newPage();
   await page.route('**/api/**', api);
-  await page.goto(`${B}/`, { waitUntil: 'load' });
+  // NOT the homepage: it deliberately has no breadcrumb, so the "same edge as the
+  // page body" assertion below silently skipped and tested nothing (caught by a
+  // sabotage that only fired once instead of twice).
+  await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForTimeout(300);
   const g = await page.evaluate(() => {
     const b = document.getElementById('hamburger').getBoundingClientRect();
     const l = document.querySelector('header a[href="/"] img').getBoundingClientRect();
     const row = document.getElementById('hamburger').parentElement.getBoundingClientRect();
     const cs = getComputedStyle(document.getElementById('hamburger').parentElement);
+    // the right cluster: every icon in the row that is NOT inside the drawer panel
+    const icons = [...document.getElementById('hamburger').parentElement.querySelectorAll('svg')]
+      .filter((e) => !e.closest('#nav-menu') && e.getBoundingClientRect().width > 0)
+      .map((e) => e.getBoundingClientRect())
+      .filter((r) => r.left >= 0)
+      .sort((a, c) => a.left - c.left);
+    // the page's own gutter, resolved by the page rather than typed in here
+    const probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;width:var(--container-x)';
+    document.body.appendChild(probe);
+    const gutter = probe.getBoundingClientRect().width;
+    probe.remove();
+    const crumb = document.querySelector('nav[aria-label="Breadcrumb"] li');
     return {
       bl: Math.round(b.left), br: Math.round(b.right), ll: Math.round(l.left), lr: Math.round(l.right),
       rowL: Math.round(row.left), padL: parseFloat(cs.paddingLeft),
+      rowR: Math.round(row.right), padR: parseFloat(cs.paddingRight),
+      gutter,
+      crumbL: crumb ? Math.round(crumb.getBoundingClientRect().left) : null,
+      icons: icons.map((r) => ({ w: +r.width.toFixed(1), h: +r.height.toFixed(1), l: +r.left.toFixed(1), r: +r.right.toFixed(1) })),
     };
   });
   console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · baris mulai ${g.rowL}+${g.padL}`);
   ok(g.br <= g.ll, `${w}: burger di KIRI logo (burger kanan ${g.br} <= logo kiri ${g.ll})`);
   ok(g.bl - (g.rowL + g.padL) < 3, `${w}: burger nempel di gutter baris (${g.bl - (g.rowL + g.padL)}px)`);
   ok(g.ll - g.br >= 6, `${w}: ada jarak burger-logo (${g.ll - g.br}px)`);
-  // the drawer opens from the right, so the burger must NOT be covered any more
+
+  // FACEBOOK PATTERN (27 Sep 2026, Wayan sent their navbar as the reference). What was
+  // measured off that screenshot, as ratios so the scale does not matter: the right
+  // icons are the same size as the hamburger, the gaps between them equal one icon, and
+  // the last icon lands on the same gutter the hamburger starts from.
+  const right = g.icons.filter((i) => i.l > g.lr);          // everything past the logo
+  console.log(`     kluster kanan: ${right.map((i) => i.w + 'x' + i.h).join(' ')} · gutter ${g.gutter}`);
+  ok(right.length >= 2, `${w}: kluster kanan ke-ukur (${right.length} ikon) - nol = harness rusak`);
+  ok(right.every((i) => Math.abs(i.w - (g.br - g.bl)) < 1.5),
+    `${w}: ikon kanan seukuran burger (${right.map((i) => i.w).join('/')} vs ${g.br - g.bl})`);
+  ok(right.every((i) => Math.abs(i.w - i.h) < 1), `${w}: ikon kanan persegi`);
+  const gaps = right.slice(1).map((i, n) => +(i.l - right[n].r).toFixed(1));
+  ok(gaps.every((x) => Math.abs(x - gaps[0]) < 1), `${w}: celah kluster kanan RATA (${gaps.join(' / ')})`);
+  ok(gaps.every((x) => Math.abs(x - right[0].w) < 2), `${w}: celah == satu ikon (${gaps.join('/')} vs ${right[0].w})`);
+  // symmetry: the burger starts a gutter in from the left, the last icon ends a gutter in from the right
+  const tailPad = +(g.rowR - g.padR - right[right.length - 1].r).toFixed(1);
+  ok(Math.abs(tailPad) < 2, `${w}: ikon terakhir duduk di gutter, gak ada margin ekor (${tailPad}px)`);
+  // one gutter per page: at phone widths the navbar must line up with the page body
+  ok(Math.abs(g.padL - g.gutter) < 1, `${w}: baris nav pakai --container-x (${g.padL} vs ${g.gutter})`);
+  if (w <= 992 && g.crumbL !== null) ok(Math.abs(g.bl - g.crumbL) < 2, `${w}: burger satu tepi sama isi halaman (${g.bl} vs crumb ${g.crumbL})`);
+  // THE DRAWER OPENS FROM THE LEFT (27 Sep 2026). That is the opposite of what this
+  // block asserted before, and deliberately so: the panel now grows out of the button
+  // that opened it, which means it COVERS that button. The x is the close affordance.
   await page.click('#hamburger');
   await page.waitForTimeout(400);
   const d = await page.evaluate(() => {
@@ -178,16 +220,23 @@ for (const w of [390, 1280]) {
       panel: `${Math.round(pr.left)}-${Math.round(pr.right)}`,
       burger: `${Math.round(b.left)}-${Math.round(b.right)}`,
       w: Math.round(pr.width),
+      panelL: Math.round(pr.left),
+      closeVisible: !!document.querySelector('#nav-menu button[aria-label="Close menu"]')?.getBoundingClientRect().width,
       hit: el ? (el.id || el.tagName) : 'none',
       hitCls: el ? (el.className || '').toString().slice(0, 40) : '',
     };
   });
   console.log(`     drawer ${d.panel} · burger ${d.burger} · hit-test ${d.hit} "${d.hitCls}"`);
   ok(d.w > 100, `${w}: panel drawer beneran ke-ukur (lebar ${d.w}) - rect kosong = harness rusak, bukan lolos`);
-  ok(!d.overlaps, `${w}: burger di LUAR panel drawer (${d.burger} vs ${d.panel})`);
-  // Measured, not assumed: the scrim (z-95, a child of <header>) still sits over the
-  // burger, so the X shows through it dimmed and a tap closes the menu via the scrim.
-  ok(d.hit !== 'hamburger', `${w}: scrim masih nutupin burger - itu yang nutup menu pas di-tap (hit: ${d.hit})`);
+  ok(d.panelL < 1, `${w}: panel drawer nempel tepi KIRI (kiri ${d.panelL})`);
+  ok(d.overlaps, `${w}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${d.burger} vs ${d.panel})`);
+  ok(d.hit !== 'hamburger', `${w}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${d.hit})`);
+  // so the x is load-bearing: it is the only close affordance the guest can see
+  ok(d.closeVisible, `${w}: tombol x keliatan di dalam drawer`);
+  await page.click('#nav-menu button[aria-label="Close menu"]');
+  await page.waitForTimeout(400);
+  const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().right);
+  ok(shut <= 1, `${w}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
   await ctx.close();
 }
 

@@ -182,25 +182,20 @@ for (const w of [390, 1280]) {
   ok(g.bl - (g.rowL + g.padL) < 3, `${w}: burger nempel di gutter baris (${g.bl - (g.rowL + g.padL)}px)`);
   ok(g.ll - g.br >= 6, `${w}: ada jarak burger-logo (${g.ll - g.br}px)`);
 
-  // FACEBOOK PATTERN (27 Sep 2026, Wayan sent their navbar as the reference). What was
-  // measured off that screenshot, as ratios so the scale does not matter: the right
-  // icons are the same size as the hamburger, the gaps between them equal one icon, and
-  // the last icon lands on the same gutter the hamburger starts from.
-  const right = g.icons.filter((i) => i.l > g.lr);          // everything past the logo
-  console.log(`     kluster kanan: ${right.map((i) => i.w + 'x' + i.h).join(' ')} · gutter ${g.gutter}`);
-  ok(right.length >= 2, `${w}: kluster kanan ke-ukur (${right.length} ikon) - nol = harness rusak`);
-  ok(right.every((i) => Math.abs(i.w - (g.br - g.bl)) < 1.5),
-    `${w}: ikon kanan seukuran burger (${right.map((i) => i.w).join('/')} vs ${g.br - g.bl})`);
-  ok(right.every((i) => Math.abs(i.w - i.h) < 1), `${w}: ikon kanan persegi`);
-  const gaps = right.slice(1).map((i, n) => +(i.l - right[n].r).toFixed(1));
-  ok(gaps.every((x) => Math.abs(x - gaps[0]) < 1), `${w}: celah kluster kanan RATA (${gaps.join(' / ')})`);
-  ok(gaps.every((x) => Math.abs(x - right[0].w) < 2), `${w}: celah == satu ikon (${gaps.join('/')} vs ${right[0].w})`);
-  // symmetry: the burger starts a gutter in from the left, the last icon ends a gutter in from the right
-  const tailPad = +(g.rowR - g.padR - right[right.length - 1].r).toFixed(1);
-  ok(Math.abs(tailPad) < 2, `${w}: ikon terakhir duduk di gutter, gak ada margin ekor (${tailPad}px)`);
-  // one gutter per page: at phone widths the navbar must line up with the page body
-  ok(Math.abs(g.padL - g.gutter) < 1, `${w}: baris nav pakai --container-x (${g.padL} vs ${g.gutter})`);
+  // GUTTER LUAR TURUN SENOTCH (27 Sep 2026, Wayan: "padding di luar kiri kanan kecilin
+  // dikit"). Dulu `px-6` hardcoded = 24 rata di semua lebar. Sekarang 16 di HP (token
+  // --container-x, jadi burger lurus sama isi halaman) dan 20 di desktop.
+  // Dua utility padding itu specificity-nya SAMA, jadi yang menang urutan compile - itu
+  // sebabnya angkanya dibaca dari halaman, bukan dipercaya dari class-nya.
+  console.log(`     gutter baris nav: kiri ${g.padL} · kanan ${g.padR} · token ${g.gutter}`);
+  ok(Math.abs(g.padL - g.padR) < 0.5, `${w}: gutter kiri == kanan (${g.padL} vs ${g.padR})`);
+  ok(g.padL < 24, `${w}: gutter udah dikecilin dari 24 (${g.padL})`);
+  ok(g.padL >= 14, `${w}: tapi gak kekecilan (${g.padL})`);
+  // emitted only on phones: a `w > 992 ||` short-circuit passes at desktop while
+  // PRINTING a phone-only claim next to desktop numbers, which reads like a real check.
+  if (w <= 992) ok(Math.abs(g.padL - g.gutter) < 0.5, `${w}: di HP gutter nav == --container-x (${g.padL} vs ${g.gutter})`);
   if (w <= 992 && g.crumbL !== null) ok(Math.abs(g.bl - g.crumbL) < 2, `${w}: burger satu tepi sama isi halaman (${g.bl} vs crumb ${g.crumbL})`);
+
   // THE DRAWER OPENS FROM THE LEFT (27 Sep 2026). That is the opposite of what this
   // block asserted before, and deliberately so: the panel now grows out of the button
   // that opened it, which means it COVERS that button. The x is the close affordance.

@@ -208,7 +208,7 @@ export default function Navbar() {
       {/* Above the nav row, so sliding the header up takes the bar off the screen
           and leaves the nav flush at the top. */}
       <div ref={barRef}><TripBar /></div>
-      <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)]">
+      <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)] min-[993px]:px-5">
 {/* HAMBURGER FIRST, LEFT OF THE LOGO (27 Sep 2026, Wayan: "menu humberger pindahin
             kiri di kiri logo bro"). It used to be the last child, hard against the right
             edge. Two things follow from the move:
@@ -216,17 +216,15 @@ export default function Navbar() {
             - the logo lost its negative left margin. That existed to pull the logo out to
               the container edge; the burger holds that edge now, so keeping it would have
               shoved the logo INTO the burger.
-            THE DRAWER NOW OPENS FROM THE LEFT TOO (27 Sep 2026, Wayan: "menu terbuka
-            pindah ke kiri", with a Facebook navbar as the reference). Burger left and
-            drawer right was half a pattern: the panel flew in from the far side of the
-            screen from the button that summoned it. Both on the left, the panel grows
-            out of the control - which is what every drawer that opens beside its own
-            button does, Facebook included.
-            So the burger sits UNDER the panel again while the menu is open. That is the
-            point of the x button in the Welcome row, and it is why that button is not
-            optional: it is the only close affordance the guest can see. */}
+            THE DRAWER OPENS FROM THE LEFT TOO (27 Sep 2026, Wayan: "pindahin menu kebuka
+            di kiri"). Burger left with the panel flying in from the right was half a
+            pattern: it arrived from the opposite side of the screen to the button that
+            summoned it. Both on the left, the panel grows out of its own control.
+            The cost is that the burger sits UNDER the panel while the menu is open. That
+            is the point of the x button in the Welcome row, and it is why that button is
+            not optional: it is the only close affordance the guest can see. */}
         <button
-          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] mr-[0.9rem] max-[992px]:items-center max-[992px]:justify-center"
+          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] mr-3 max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}
@@ -256,10 +254,10 @@ export default function Navbar() {
             bisa dijawab dioper ke Wayan - jadi gak ada jawaban karangan. Tombolnya
             sengaja TETEP di sini & bentuknya sama persis kayak ikon keranjang di
             sebelahnya; yang berubah cuma apa yang kejadian pas di-tap. */}
-        <ChatLauncher iconClass="w-6 h-6" className={`${APP_HIDE} inline-flex items-center text-gold mr-6 bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d`} />
+        <ChatLauncher className={`${APP_HIDE} inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]`} />
 
-        <a href="/my-trips.html" className={`${APP_HIDE} relative inline-flex items-center text-gold transition-[color] duration-200 ease-[ease] hover:text-gold-d`} aria-label="My Trips">
-          <ShoppingBag className="w-6 h-6" strokeWidth={1.6} aria-hidden="true" />
+        <a href="/my-trips.html" className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`} aria-label="My Trips">
+          <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
         </a>
 
@@ -287,12 +285,12 @@ export default function Navbar() {
                 <b className="text-strong font-semibold text-gold leading-[1.25]"><span>Welcome,</span> {account ? account.name || 'Guest' : 'Guest'}</b>
                 <span className="text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account ? account.email : 'Plan your Bali trip'}</span>
               </span>
-              {/* TOMBOL × (Wayan, sesudah lihat mock A). Drawer gak punya penanda
-                  tutup lain: hamburger-nya KETUTUPAN panel drawer (z-120 lawan header
-                  z-100, dan sejak 27 Sep 2026 dua-duanya di sisi KIRI, jadi panelnya
-                  mendarat persis di atas tombolnya), jadi morph jadi X itu gak pernah
-                  keliatan pas menu kebuka. Tanpa tombol ini tutupnya cuma tap scrim /
-                  Escape, dan gak ada apa pun di layar yang bilang gitu.
+              {/* TOMBOL × (Wayan, sesudah lihat mock A). Sampai sekarang drawer gak
+                  punya penanda tutup lain: hamburger-nya KETUTUPAN panel drawer
+                  (z-120 lawan header z-100, dan sejak 27 Sep 2026 dua-duanya di sisi
+                  KIRI jadi panelnya mendarat persis di atas tombolnya), jadi
+                  morph jadi X itu gak pernah keliatan pas menu kebuka. Tutupnya cuma
+                  tap scrim / Escape, dan gak ada apa pun di layar yang bilang gitu.
                   Gak nulis `transition` sendiri buat scale - biar press feedback
                   global di style.css yang kepakai (lihat aturan SNAP check-motion). */}
               <button

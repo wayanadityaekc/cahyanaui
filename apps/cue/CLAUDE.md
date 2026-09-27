@@ -2458,46 +2458,40 @@ logo bro")** - dulu anak TERAKHIR baris nav, mentok di tepi kanan.
   **UDAH GAK BERLAKU**, Wayan minta pindah ke kiri beberapa jam kemudian. Lihat section
   "NAVBAR IKUT POLA FACEBOOK" di atas: panel sekarang dari KIRI dan **nutupin burger
   lagi**, jadi tombol x di baris Welcome itu satu-satunya penanda tutup yang kelihatan.
-**NAVBAR IKUT POLA FACEBOOK + DRAWER PINDAH KE KIRI (27 Sep 2026, Wayan ngirim
-screenshot navbar Facebook: "sebagai contoh pola layout dan ukuranya bro, terus menu
-terbuka pindah ke kiri")**
-- **Gambarnya DIUKUR, bukan dikira-kira** (canvas, scan kolom ber-tinta). Hasilnya dipakai
-  sebagai **RASIO** biar gak tergantung skala screenshot-nya - patokannya lebar burger:
-  ikon kanan **1,10x** · celah antar ikon kanan **1,08x** (dan RATA) · celah burger->logo
-  **0,60x** · bar burger tebal 6 celah 18 (**celah = 3x tebal**).
-- Yang ke-ukur di kita SEBELUM: ikon kanan **0,83x** (lebih kecil dari burger, FB lebih
-  gede) · celah kluster kanan **13,6px di HP lawan 20,8px di desktop** - gak rata, dan
-  ikon terakhir masih bawa **margin ekor**, jadi tepi kanannya 20,8px lebih masuk dari
-  tepi kiri burger. **SESUDAH**: ikon 24 = seukuran burger · celah 24 (= satu ikon, sama
-  di semua lebar) · margin ekor dibuang jadi ikon terakhir duduk pas di gutter ·
-  burger->logo 8/12 jadi **14,4** (satu nilai).
-- **DRAWER SEKARANG DARI KIRI.** Burger di kiri tapi panel dari kanan itu setengah pola:
-  panelnya terbang dari sisi layar yang berlawanan sama tombol yang manggil dia.
-  - **Konsekuensinya burger ketutupan panel LAGI** - dan itu bener, bukan regresi. Catatan
-    lama di section bawah ("burger udah di LUAR panel, yang nutup cuma scrim") **UDAH GAK
-    BERLAKU**. Makanya **tombol x di baris Welcome itu WAJIB**: dia satu-satunya penanda
-    tutup yang kelihatan tamu. Jangan dihapus.
-  - Yang diubah cuma 2 hal: `right-0/left-auto` jadi `left-0/right-auto`, dan
-    `translate-x-full` jadi **`-translate-x-full`**. Transisinya udah
-    `transition-[translate]` jadi `check-motion` tetep ijo (aturan DEAD).
-- **BONUS yang ketemu pas ngukur, BUKAN dari Facebook**: baris nav nulis **`px-6`
-  hardcoded**, jadi di 390px burger duduk di **24** sementara breadcrumb & h1 di halaman
-  yang SAMA di **16**. Navbar kelewat waktu sapuan `--container-x` dulu - padahal doc
-  ini sendiri yang nulis "Section wrapper JANGAN hardcode px-6 lagi". Sekarang
-  `px-[var(--container-x)]`: **desktop nol berubah** (token-nya emang 24), HP 24 -> 16.
-- **YANG SENGAJA GAK DIUBAH** (ke-ukur, tapi keputusan Wayan): (1) **bar burger** kita
-  celah/tebal 2,0 lawan FB 3,0 - nyamain bikin burger-nya lebih TINGGI, dan dia baru aja
-  minta dikecilin; (2) **logo** kita 1,42-1,67x lebar burger lawan FB 1,13x - itu aset
-  brand, bukan spasi.
-- Dijaga `verify-design3.mjs`: ikon kanan seukuran burger & persegi, celah rata &
-  == satu ikon, ikon terakhir nol margin ekor, baris nav == `--container-x` yang
-  di-resolve halaman itu sendiri, burger satu tepi sama crumb di HP, panel drawer nempel
-  tepi KIRI & nutupin burger, tombol x ada & **beneran nutup**.
-  - **SABOTASE KETIGA CUMA NYALA 1 DARI 2, DAN ITU NGEBUKTIIN ADA ASSERTION MATI**:
-    section itu buka **homepage**, dan homepage **sengaja gak punya breadcrumb**, jadi cek
-    "burger satu tepi sama isi halaman" **di-skip diam-diam dan gak pernah nguji apa pun**.
-    Dipindah ke `/ubud-tour.html` -> nyala 2. **Kalau sabotase nyala lebih sedikit dari
-    yang lu harapin, cek dulu assertion-nya kejalan.**
+**DRAWER PINDAH KE KIRI + GUTTER LUAR DIKECILIN (27 Sep 2026, Wayan)**
+- **DRAWER DARI KIRI.** Burger di kiri tapi panel dari kanan itu setengah pola: panelnya
+  dateng dari sisi layar yang berlawanan sama tombol yang manggil dia. Yang diubah cuma
+  2 class: `right-0/left-auto` jadi `left-0/right-auto`, dan `translate-x-full` jadi
+  **`-translate-x-full`**. Transisinya udah `transition-[translate]` jadi `check-motion`
+  tetep ijo (aturan DEAD).
+  - **Burger jadi KETUTUPAN panel lagi** - itu bener, bukan regresi. Catatan lama
+    ("burger udah di LUAR panel, yang nutup cuma scrim") **UDAH GAK BERLAKU**. Makanya
+    **tombol x di baris Welcome itu WAJIB**: dia satu-satunya penanda tutup yang kelihatan
+    tamu. Jangan dihapus.
+- **GUTTER LUAR: 24 rata -> 16 HP / 20 desktop** (Wayan: "padding di luar kiri kanan
+  kecilin dikit"). Baris nav dulu nulis **`px-6` hardcoded** - padahal doc ini sendiri
+  yang nulis "Section wrapper JANGAN hardcode px-6 lagi", jadi navbar emang kelewat waktu
+  sapuan `--container-x` dulu. Sekarang
+  `px-[var(--container-x)] min-[993px]:px-5`.
+  - **Efek samping yang bagus**: di HP burger jadi duduk di **16 = tepi crumb & h1 halaman
+    yang sama** (dulu 24 lawan 16, navbar satu-satunya yang nyempil).
+  - **Dua utility padding itu specificity-nya SAMA**, jadi yang menang urutan compile, bukan
+    maksud kita - jebakan yang udah ketulis berkali-kali di doc ini. Makanya angkanya
+    **diukur dari halaman** (16 & 20 kebukti ke-render), bukan dipercaya dari class-nya.
+- **POLA UKURAN FACEBOOK UDAH DICOBA & DI-REVERT.** Wayan sempat ngirim screenshot navbar
+  Facebook ("contoh pola layout dan ukuranya"), gua ukur gambarnya, terus ikon kanan
+  digedein ke 24 (= seukuran burger), celah kluster disamain 24, margin ekor dibuang, dan
+  burger->logo jadi 14,4. Dia lihat hasilnya terus bilang **"undo, pakai punya kita yang
+  sebelumnya"**. Jadi yang berlaku = angka lama: **ikon 20** · celah **13,6 HP / 20,8
+  desktop** (termasuk margin ekor di ikon terakhir) · burger->logo **8/12**.
+  - **Jangan "dibenerin" lagi ke pola FB.** Itu keputusan yang udah dia lihat hasilnya.
+  - Buat konteks kalau nanti ditanya lagi, ini yang ke-ukur dari screenshot-nya (rasio
+    ke lebar burger, jadi skala gambar gak ngaruh): ikon kanan **1,10x** · celah antar
+    ikon **1,08x & rata** · burger->logo **0,60x** · bar burger celah = **3x** tebal.
+    Punya kita: 0,83x · 0,57-0,87x · 0,33-0,50x · 2x.
+- Dijaga `verify-design3.mjs`: gutter kiri == kanan, gutter < 24 & >= 14, di HP gutter
+  nav == `--container-x` & burger satu tepi sama crumb, panel drawer nempel tepi KIRI &
+  nutupin burger, tombol x ada & **beneran nutup** (panel balik ke luar layar kiri).
 
 **HAMBURGER DIKECILIN SENOTCH (27 Sep 2026, Wayan: "humberger bisa size kecilin lagi dikit?")**
 - **28 → 24px lebar**, gap bar **5 → 4px**, bar HP **22 → 20px**. Tinggi bar tetep 2px
@@ -2520,13 +2514,20 @@ terbuka pindah ke kiri")**
     spread 2,0. Ini jebakan yang sama kayak tombol Done & `verify-btnfont`: **kalau
     harness bilang dua benda cocok sempurna, cek dulu dia gak lagi ngukur satu benda.**
 
-- Verifikasi: **`verify-design3.mjs`** di root repo (**102/102**, 390 & 1280). Dites pakai
-  7 bug aslinya, SATU-SATU: shadow navbar dibalikin (**2 nyala**) · burger dibalikin ke
-  kanan (**8 nyala**) · header disuruh ilang lagi pas scroll turun (**10 nyala**) · offset X
-  ketinggalan di angka gap lama (**2 nyala, TAPI cuma sesudah filter bar-nya dibenerin** -
-  lihat bullet di section hamburger di atas) · drawer dibalikin ke kanan (**6**) · margin
-  ekor dibalikin ke ikon terakhir (**2**) · `px-6` hardcoded dibalikin (**2, sesudah
-  assertion matinya dibenerin** - lihat bullet sabotase di section Facebook di atas).
+- Verifikasi: **`verify-design3.mjs`** di root repo (**95/95**, 390 & 1280). Dites pakai
+  6 bug aslinya, SATU-SATU: shadow navbar dibalikin (**2 nyala**) · burger dibalikin ke
+  kanan (**8**) · header disuruh ilang lagi pas scroll turun (**10**) · offset X ketinggalan
+  di angka gap lama (**2, TAPI cuma sesudah filter bar-nya dibenerin**) · drawer dibalikin
+  ke kanan (**6**) · gutter dibalikin ke `px-6` (**4**).
+  - **DUA ASSERTION SEMPAT GAK KEJALAN SAMA SEKALI, dua-duanya ketangkep gara-gara sabotase
+    nyala LEBIH SEDIKIT dari yang diharapin.** (1) Cek "burger satu tepi sama isi halaman"
+    buka **homepage**, dan homepage **sengaja gak punya breadcrumb**, jadi dia di-skip
+    diam-diam - dipindah ke `/ubud-tour.html`. (2) Cek gutter HP ditulis
+    `ok(w > 992 || ...)`: di desktop dia lolos lewat short-circuit sambil **NYETAK klaim
+    khusus-HP di sebelah angka desktop**, jadi kebacanya kayak cek beneran - sekarang
+    di-`if (w <= 992)` biar gak nongol sama sekali di desktop.
+    **Kalau sabotase nyala lebih sedikit dari yang lu harapin, cek dulu assertion-nya
+    kejalan - bukan langsung nambah assertion baru.**
   - **DUA ASSERTION SEMPAT TAUTOLOGI, dua-duanya lolos dengan ngukur kotak 0x0.**
     "burger di luar panel drawer" pakai `nav[aria-label]` - itu nyomot `AppBottomNav`
     ("App") yang `display:none` di luar app mode, rect-nya 0x0. Diganti `header nav`:

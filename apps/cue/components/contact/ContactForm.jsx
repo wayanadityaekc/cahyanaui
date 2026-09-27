@@ -7,6 +7,7 @@ import { validateWith } from '@/lib/validate';
 import { FIELD_ERR, REFMSG_ERR } from '@/components/ui/modalClasses';
 import { CONTACT_GROUP, CONTACT_INPUT, CONTACT_TEXTAREA } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
+import { BTN_CTA } from '@/components/ui/btnClasses';
 
 export default function ContactForm({ company = false }) {
   const [f, setF] = useState({ name: '', email: '', message: '' });
@@ -65,7 +66,7 @@ export default function ContactForm({ company = false }) {
         {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
       </div>
       {error && <small className={REFMSG_ERR}>{error}</small>}
-        <button className="flex w-full items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold border-none text-white bg-cta cursor-pointer hover:bg-cta-d" id="c-send" onClick={send} disabled={busy}>
+        <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={send} disabled={busy}>
           {busy ? 'Sending...' : 'Send Message'}
         </button>
       </div>

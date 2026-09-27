@@ -518,6 +518,50 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
     bukan 404, dan **ada minimal 1 tombol ke-ukur**. Itu yang akhirnya nemu tombol WhatsApp
     di `ContactSection` yang belum ke-konversi — ke-hide di halaman itu, jadi census browser
     gak pernah lihat. **Halaman yang sectionnya di-`hidden` WAJIB dibuka lewat hash.**
+
+**TOMBOL CTA PRIMARY — `BTN_CTA`, DAN FONT-NYA WAJIB DITULIS (27 Sep 2026, Wayan:
+"di account setting masih ada tombol nge bug")**
+- **Yang rusak: `className="contact__btn"` di `AccountSettings` — class yang NOL rule-nya.**
+  Dia sisa situs lama dan ikut kesapu waktu CSS-nya dibuang, jadi tombol "Save changes"
+  di `/settings.html` ke-render **mentah**: ke-ukur **19px** (yang lain 33,6) · bg abu
+  `#efefef` · radius **0** · **13,33px Arial** · bobot 400 — persis di sebelah "Sign out"
+  yang bener. **Gak ada yang teriak buat class yang gak ada rule-nya.** Ini jebakan yang
+  SAMA kayak `.tinfo` di halaman airport: **kalau nulis `className` string mentah,
+  `grep` dulu rule-nya beneran ada.**
+- **`BTN_CTA` di `btnClasses.js`** = geometri `BTN_SM` + hijau `--color-cta` + hover.
+  **`display` SENGAJA gak di dalemnya** (aturan yang sama kayak `BTN_SM`): settings
+  pakai `inline-flex`, form contact `flex w-full`. Pemanggil yang bawa.
+  - Dia juga **ngeganti salinan tangan** di `ContactForm`, yang nulis ULANG seluruh string
+    geometri `BTN_SM` inline. Dibuktiin string-nya **byte-identik** sebelum ditukar, jadi
+    form contact nol berubah selain font-nya (lihat bawah).
+- **`font-body` WAJIB, dan ini yang paling gampang kelewat**: tombol **gak mewarisi font
+  halaman** (Preflight OFF, dan reset di `style.css` gak nyentuh `button` font-family),
+  jadi CTA tanpa `font-body` ke-render pakai **font BROWSER**. Ke-ukur di 13 halaman:
+  **58 tombol aksi Inter, dan yang Arial cuma yang kurang class ini** — `Book charter`,
+  `Book transfer`, plus 2 di `/itinerary.html`. `BTN_BOOK` ikut dikasih `font-body`;
+  itu **4 tombol** yang dibenerin, bukan 2 (2 yang di itinerary ketemu gara-gara sweep
+  harness-nya, survey pertama gak buka halaman itu).
+- **`BTN_CTA` dan `BTN_BOOK` itu peran yang SAMA ditulis dua kali** (primary hijau).
+  Bedanya nyata hari ini — `BTN_BOOK` gak punya hover, bawa `mt-4` + state disabled —
+  jadi **belum digabung; itu keputusan Wayan, bukan refactor diem-diem.**
+- Verifikasi: **`verify-btnfont.mjs`** di root repo (**109/109**, 320/390/768/1280 + sweep
+  13 halaman). Patokannya **token yang di-resolve halaman itu sendiri** (lewat elemen
+  bayangan), bukan angka yang diketik di harness; plus aturan se-web **nol tombol aksi
+  (34px/bobot 600) yang pakai font browser**. Dites pakai 2 bug aslinya, SATU-SATU:
+  class mati dibalikin (**56 nyala**) · `font-body` dibuang dari dua string (**9 nyala**).
+  - **JEBAKAN HARNESS (3, semuanya bikin angka palsu):** (1) **route Playwright yang
+    didaftar BELAKANGAN yang menang**, jadi catch-all `**/api/**` nelen stub
+    `/account/session\* — panel-nya cuma nulis "Sign in" dan harness-nya **nyalahin
+    aplikasi**. Pakai SATU handler bercabang. (2) `nth(0)` di `[data-settings] button`
+    itu **trigger dropdown Guests**, bukan CTA — dia lapor tombolnya putih & rata kiri.
+    Pola yang bener sama kayak tombol Done: CTA = tombol yang **bukan** `[aria-haspopup]`.
+    (3) `--btn-h` resolve ke **33,5938**, jadi `===` lawan `33.6` selalu gagal —
+    bandingin pakai toleransi.
+- **Sisa yang JUJUR, BUKAN dari perubahan ini**: **homepage nge-throw hydration mismatch
+  React #418**, dan itu **udah ke-live**. Dibuktiin, bukan diduga: diff-nya di-stash, build
+  ulang di HEAD, error-nya **kejadian lagi**. Di harness dia **DINAMAIN**, bukan
+  dimaafin — jadi page error BARU tetep bikin merah, dan kalau #418-nya kelar assertion
+  penandanya yang gagal (biar pengecualiannya dihapus). Belum diusut.
 - **Ikon = `lucide-react`** (Sep 2026, Wayan pilih opsi "full Lucide" setelah lihat sheet
   perbandingan lama-vs-Lucide). Ikon baru = import dari `lucide-react`, **JANGAN gambar SVG
   manual lagi**. Aturannya:

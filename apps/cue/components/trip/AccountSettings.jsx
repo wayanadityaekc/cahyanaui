@@ -7,7 +7,7 @@ import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
-import { BTN_PILL } from '@/components/ui/btnClasses';
+import { BTN_PILL, BTN_CTA } from '@/components/ui/btnClasses';
 import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
 
@@ -84,7 +84,13 @@ export default function AccountSettings() {
         <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
       {msg && <small className={REFMSG}>{msg}</small>}
-      <button className="contact__btn" onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
+      {/* Was className="contact__btn" - a class from the retired static site that
+          was swept out of style.css with the rest of it. Nothing warns about a
+          class with no rule, so this rendered as a RAW browser button: 19px tall
+          against everything else's 33.6, grey, square, 13.3px Arial. Measured,
+          not guessed. If you write a bare className string, grep that the rule
+          exists - same trap as .tinfo on the airport page. */}
+      <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
       <button className={BTN_PILL} onClick={logout}>Sign out</button>
     </div>
   );

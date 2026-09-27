@@ -31,6 +31,20 @@ export const BTN_SM =
   'items-center justify-center text-center leading-none whitespace-nowrap ' +
   'h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold';
 
+// BTN_CTA = the PRIMARY action on a form ("Save changes", "Send message"). Green
+// (--color-cta), which is the site's "do the thing" colour - gold/soft-black is
+// for prices and secondary actions (see the Design system section in CLAUDE.md).
+//
+// Geometry comes from BTN_SM, and `display` deliberately does NOT: one caller
+// wants a full-width flex button, another an inline one, and in Tailwind the
+// winner is CSS order, not class order - so the caller brings its own.
+// font-body is NOT optional here: buttons do not inherit the page font (Preflight
+// is OFF and the reset does not touch button font-family), so a CTA without it
+// renders in the BROWSER's font. Measured across 9 pages: 58 action buttons are
+// Inter, and the only 2 in Arial were the ones missing this class.
+export const BTN_CTA =
+  `${BTN_SM} font-body border-none text-white bg-cta cursor-pointer hover:bg-cta-d`;
+
 // BTN_PILL = ghost/secondary pill ("View all …", "Add a program", "Sign out",
 // review CTA). Mirror 1:1 dari `.btn-pill` (+ :hover) di style.css: outline gold,
 // bg putih, teks gold-d, isi gold pas hover. (border butuh warna eksplisit —

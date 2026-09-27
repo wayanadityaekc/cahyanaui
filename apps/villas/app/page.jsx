@@ -64,11 +64,13 @@ export default function HomePage() {
         size="page"
         image="/images/cahyana-tibuah.webp"
         alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
-        /* Wayan, Sep 2026. The eyebrow now hands off to the H1 - it ends on
-           "by", so the two lines are one sentence and the brand attribution
-           reads as the parent company rather than as a second site. */
-        eyebrow="Ubud Private Villas by"
-        title="Cahyana Ubud Experience - A private retreat in the heart of Bali"
+        /* The attribution lives in the EYEBROW, the promise in the H1 (Wayan,
+           Sep 2026, after seeing it the other way round). Same words, better
+           split: the H1 is the sentence a guest reads first and the one Google
+           prints, so it says what the place IS rather than who runs it - and
+           at 38 characters it holds two lines on a phone instead of three. */
+        eyebrow="Ubud Private Villas by Cahyana Ubud Experience"
+        title="A private retreat in the heart of Bali"
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
         actions={(
           <Button as={Link} variant="light" href="/#villas">Explore villas</Button>

@@ -34,6 +34,13 @@ for (const w of [390, 1280]) {
     ok(!/Explore/i.test(text), `${w}${path}: full footer's "Explore" column heading still showing`);
     const h = await footer.evaluate((el) => el.getBoundingClientRect().height);
     ok(h < 140, `${w}${path}: compact footer measured ${h}px tall, expected under 140`);
+    // Mobile: no taller than the navbar itself (Wayan: "shorter, at least
+    // same height with navbar") - compared against the navbar's OWN measured
+    // height on this page, not a number typed into the harness.
+    if (w <= 560) {
+      const navH = await page.evaluate(() => document.querySelector('header').getBoundingClientRect().height);
+      ok(h <= navH + 1, `${w}${path}: compact footer (${h}px) is taller than the navbar (${navH}px)`);
+    }
     ok(errs.length === 0, `${w}${path}: page errors ${errs.join(' | ')}`);
   }
 

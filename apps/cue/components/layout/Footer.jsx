@@ -109,28 +109,36 @@ const SOCIAL = [
 // their own, so this is the only bottom bar in play on them.
 // pb- uses max() with the safe-area inset, same as BookBar/AppBottomNav: an
 // iPhone's home-indicator strip sits right where the CTA would otherwise
-// land. Baseline height is unchanged where that inset is 0 (measured before/
-// after: 60px >=561px, 107px below it, matched by body's compensating pb-
-// in app/layout.jsx so page content never lands underneath it).
+// land.
+//
+// MOBILE HEIGHT MATCHES THE NAVBAR (Wayan, Sep 2026: "at least same height
+// with navbar"). It used to wrap to 3 stacked rows under 561px (measured
+// 107px against a 52.8px navbar - more than double). Now it never wraps: the
+// two contact links drop their text label to an icon under 561px (the icon
+// alone is still a real tap target, same as the navbar's own chat/cart
+// icons), and the copyright line - which the navbar doesn't carry either -
+// hides there too. Baseline height >=561px is unchanged (60px, already
+// within 2.4px of that width's own 57.6px navbar). Measured after: 49px
+// mobile, under the 52.8px navbar there rather than matching it exactly -
+// the icon-only row still needs a little of its own breathing room.
 function CompactFooter() {
   return (
-    <footer className="footerbar fixed inset-x-0 bottom-0 z-[90] px-6 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">
-      <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-between gap-x-6 gap-y-2
-                      max-[560px]:flex-col max-[560px]:text-center">
-        <a href="/" className="no-underline text-green font-body text-[0.95rem] font-semibold shrink-0">
+    <footer className="footerbar fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 min-[561px]:pb-[max(1.25rem,env(safe-area-inset-bottom))] pb-[max(1rem,env(safe-area-inset-bottom))] text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">
+      <div className="max-w-[1100px] mx-auto flex items-center justify-between gap-x-4">
+        <a href="/" className="no-underline text-green font-body text-[0.8rem] min-[561px]:text-[0.95rem] font-semibold shrink-0 truncate">
           Cahyana Ubud Experience
         </a>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
-          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={CONTACT_LINK}>
+        <div className="flex items-center gap-x-4 min-[561px]:gap-x-5 shrink-0">
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" aria-label="WhatsApp" className={CONTACT_LINK}>
             <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
-            WhatsApp
+            <span className="max-[560px]:hidden">WhatsApp</span>
           </a>
-          <a href="mailto:cahyanabaliexperience@gmail.com" className={CONTACT_LINK}>
+          <a href="mailto:cahyanabaliexperience@gmail.com" aria-label="Email" className={CONTACT_LINK}>
             <Mail className={CONTACT_SVG} strokeWidth={1.8} />
-            Email
+            <span className="max-[560px]:hidden">Email</span>
           </a>
         </div>
-        <p className="text-small opacity-70 m-0 shrink-0">&copy; 2026 Cahyana Ubud Experience.</p>
+        <p className="max-[560px]:hidden text-small opacity-70 m-0 shrink-0">&copy; 2026 Cahyana Ubud Experience.</p>
       </div>
     </footer>
   );

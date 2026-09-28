@@ -10,7 +10,6 @@ import {
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_HIDE } from '@/components/ui/pwaClasses';
-import { useAccount } from '@/state/AccountProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { Collapse } from '@/components/ui/Reveal';
 import { MENU_ROW_BOX } from '@/components/ui/railClasses';
@@ -81,7 +80,6 @@ const BADGE_BASE =
 
 export default function Navbar() {
   const { count } = useItinerary();
-  const { hasUpcoming } = useAccount();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
@@ -222,11 +220,6 @@ export default function Navbar() {
           <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
           <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
           <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
-          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
-              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
-              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
-              jadi titik hijau pas migrasi Tailwind ini.) */}
-          <span className="absolute top-[3px] right-[-4px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
         </button>
 
         <a href="/" className="max-[992px]:mr-auto">

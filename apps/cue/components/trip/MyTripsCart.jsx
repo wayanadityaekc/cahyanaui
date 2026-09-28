@@ -25,6 +25,7 @@ import { imageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 import RailLayout from '@/components/ui/RailLayout';
+import SignInPrompt from '@/components/account/SignInPrompt';
 
 // Tailwind-native (migrasi Fase 2): sub-family kecil my-trips cart -> utilities.
 // `mtc-empty` DIPERTAHANKAN sbg marker: anchor `.mtc-empty .btn-pill` (reset
@@ -445,12 +446,10 @@ export default function MyTripsCart() {
   const bookingPanel = (isPast) => {
     if (!readLocal(KEY.token, '')) {
       return (
-        <div className={MTC_EMPTY}>
-          <p className={MTC_EMPTY_LEAD}>Sign in to see your trips.</p>
-          <p className={MTC_EMPTY_SUB}>
-            Open the account menu and sign in with your email - your booked and past trips show up here.
-          </p>
-        </div>
+        <SignInPrompt
+          lead="Sign in to see your trips."
+          sub="Your booked and past trips show up here once you're signed in with your email."
+        />
       );
     }
     if (!trips) {

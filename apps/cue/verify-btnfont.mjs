@@ -62,12 +62,15 @@ for (const w of [320, 390, 768, 1280]) {
   // harness in CLAUDE.md: the CTA is the button that is NOT [aria-haspopup].
   const acts = page.locator('[data-settings] button:not([aria-haspopup])');
   const n = await acts.count();
-  ok(n === 2, `${w}: settings punya 2 tombol aksi (dapet ${n})`);
+  // WO3 (Sep 2026): settings grew a third action, "Delete account" - was 2.
+  ok(n === 3, `${w}: settings punya 3 tombol aksi (dapet ${n})`);
 
   const save = acts.filter({ hasText: 'Save changes' });
   const out = acts.filter({ hasText: 'Sign out' });
+  const del = acts.filter({ hasText: 'Delete account' });
   ok(await save.count() === 1, `${w}: ketemu tepat 1 tombol Save changes`);
   ok(await out.count() === 1, `${w}: ketemu tepat 1 tombol Sign out`);
+  ok(await del.count() === 1, `${w}: ketemu tepat 1 tombol Delete account`);
 
   const s = await shot(save), o = await shot(out);
   console.log(`     save=${JSON.stringify(s)}`);
@@ -94,6 +97,23 @@ for (const w of [320, 390, 768, 1280]) {
   ok(s.weight === o.weight, `${w}: bobot sama (${s.weight})`);
   // ...but primary and secondary must still READ as different roles.
   ok(s.bg !== o.bg, `${w}: warna primary != secondary (${s.bg} vs ${o.bg})`);
+
+  // Delete account: same geometry family (BTN_SM), own colour (danger, not
+  // primary/secondary) - same checks the other two get, not a free pass.
+  const d = await shot(del);
+  console.log(`     del =${JSON.stringify(d)}`);
+  ok(near(d.h, T.h), `${w}: Delete tingginya --btn-h (${T.h}, dapet ${d.h})`);
+  ok(d.font === T.font, `${w}: Delete font --fs-small (${T.font})`);
+  ok(d.family === 'Inter', `${w}: Delete font Inter, bukan font browser (dapet ${d.family})`);
+  ok(d.weight === '600', `${w}: Delete bobot 600 (dapet ${d.weight})`);
+  ok(d.align === 'center' && d.justify === 'center' && d.textAlign === 'center',
+    `${w}: Delete ke-center dua arah (${d.align}/${d.justify}/${d.textAlign})`);
+  ok(d.oneLine, `${w}: label Delete 1 baris`);
+  // Delete is a ghost/outline button too, same white bg as Sign out (both are
+  // secondary in SHAPE) - what has to differ is the TEXT colour, since that's
+  // what actually reads as "this one is dangerous".
+  ok(d.bg !== s.bg, `${w}: warna latar Delete != Save (${d.bg})`);
+  ok(d.color !== o.color, `${w}: warna teks Delete != Sign out (${d.color})`);
 
   const bs = await save.boundingBox(), bo = await out.boundingBox();
   ok(bo.x >= bs.x + bs.width - 0.5 || bo.y >= bs.y + bs.height - 0.5,

@@ -15,6 +15,10 @@ function fmtDay(ds) {
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
+  // The guest's own reviews (Settings page, WO3). Unlike trips, this is
+  // never needed outside Settings - lazy-fetched by refreshMyReviews rather
+  // than on every page load for every signed-in guest.
+  const [myReviews, setMyReviews] = useState(null);
   const [hydrated, setHydrated] = useState(false);
   // True when THIS page load arrived through a sign-in link (?token=). The booking
   // gate uses it to send a guest back to the page they were booking from - the
@@ -91,10 +95,46 @@ export function AccountProvider({ children }) {
     return out;
   }, [trips]);
 
+  // Settings page only - the guest's own reviews, all statuses (their private
+  // view, not the public feed). Same shape as refreshTrips.
+  const refreshMyReviews = useCallback(() => {
+    const token = readLocal(KEY.token, '');
+    if (!token) { setMyReviews([]); return Promise.resolve(); }
+    return fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((d) => setMyReviews(Array.isArray(d) ? d : []))
+      .catch(() => setMyReviews([]));
+  }, []);
+
   const logout = () => {
     removeLocal(KEY.token);
     setAccount(null);
     setTrips(null);
+    setMyReviews(null);
+  };
+
+  // Delete the account (Settings page, WO3). Bookings and reviews survive on
+  // the server - this only clears what THIS browser is holding, same as
+  // logout, once the server confirms the account is actually gone.
+  const deleteAccount = async () => {
+    try {
+      const token = readLocal(KEY.token, '');
+      const r = await fetch(`${API_BASE}/account`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.status === 'ok') {
+        removeLocal(KEY.token);
+        setAccount(null);
+        setTrips(null);
+        setMyReviews(null);
+        return { ok: true };
+      }
+      return { ok: false, error: (d && d.detail) || '' };
+    } catch {
+      return { ok: false, error: '' };
+    }
   };
 
   // Ask the backend to email a 6-digit sign-in code (28 Sep 2026 - was a link;
@@ -167,7 +207,7 @@ export function AccountProvider({ children }) {
   };
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, verifyCode, createAccount, hydrated, justSignedIn }}>
+    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, myReviews, refreshMyReviews, deleteAccount, logout, requestLogin, verifyCode, createAccount, hydrated, justSignedIn }}>
       {children}
     </AccountContext.Provider>
   );

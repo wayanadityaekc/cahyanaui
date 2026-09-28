@@ -37,7 +37,7 @@ function Flag({ code }) {
   );
 }
 
-export default function CurrencyPicker({ variant = 'default' }) {
+export default function CurrencyPicker({ variant = 'default', id = 'acct-cur' }) {
   const { currency, setCurrency } = useTripPrefs();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -56,7 +56,7 @@ export default function CurrencyPicker({ variant = 'default' }) {
       <button
         type="button"
         className={curbtn(variant)}
-        id="acct-cur"
+        id={id}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}

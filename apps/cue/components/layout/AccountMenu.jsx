@@ -6,10 +6,18 @@ import { useAccount } from '@/state/AccountProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { PopMenu } from '@/components/ui/Reveal';
 import { MENU_ROW_BOX } from '@/components/ui/railClasses';
+import TripPrefsFields from './TripPrefsFields';
+import { BTN_CTA } from '@/components/ui/btnClasses';
 
 // ACCOUNT SLOT - far right of the navbar at every width (WO1, Sep 2026).
 // One slot, two states: logged out = "Log in"; logged in = initials circle
 // (+ first name on desktop) that opens a small menu: My Trips, Settings, Sign out.
+//
+// DESKTOP ALSO CARRIES GUESTS / PICKUP / CURRENCY (Wayan: prefs go in the account
+// menu). Desktop has no drawer any more, so this is their only home there - which is
+// why on desktop the logged-out "Log in" opens the menu too (Log in button + prefs)
+// instead of jumping straight to the modal. Phones keep the prefs in the drawer, so
+// there the menu has none and "Log in" goes straight to the modal.
 //
 // Shape borrowed from the standard user dropdown (shadcn DropdownMenu / Flowbite
 // "user menu"): header with name + email, separator, items, separator, sign out.
@@ -41,8 +49,16 @@ export default function AccountMenu({ onLogin }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const onDoc = (e) => { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    const onDoc = (e) => {
+      // Select popups are portaled to <body>; picking an option must not close this menu.
+      if (e.target.closest && e.target.closest('[data-portal]')) return;
+      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      if (document.querySelector('[data-portal="select"][data-open]')) return;
+      setOpen(false);
+    };
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -55,16 +71,36 @@ export default function AccountMenu({ onLogin }) {
   // otherwise a signed-in guest sees "Log in" flash on every page load.
   const pending = !hydrated;
 
+  const PREFS = (
+    <div className="max-[992px]:hidden px-3 pt-3 pb-3 border-t border-line mt-1">
+      <TripPrefsFields idPrefix="menu" />
+    </div>
+  );
+
   if (!account) {
+    const isDesktop = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 993px)').matches;
     return (
-      <button
-        type="button"
-        data-account-slot="out"
-        onClick={onLogin}
-        className={`${pending ? 'invisible' : ''} inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream max-[992px]:px-[0.6rem]`}
-      >
-        Log in
-      </button>
+      <div className={`relative ${pending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
+        <button
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          onClick={() => (isDesktop() ? setOpen((v) => !v) : onLogin())}
+          className="inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream max-[992px]:px-[0.6rem]"
+        >
+          Log in
+        </button>
+        <PopMenu open={open}>
+          <div role="menu" className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] w-[18rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
+            <div className="px-3 pt-2 pb-3">
+              <b className="block text-small font-semibold text-gold">Plan your Bali trip</b>
+              <span className="block text-small text-muted mb-3">Sign in with your email. No password needed.</span>
+              <button type="button" className={`flex w-full ${BTN_CTA}`} onClick={() => { setOpen(false); onLogin(); }}>Log in</button>
+            </div>
+            {PREFS}
+          </div>
+        </PopMenu>
+      </div>
     );
   }
 
@@ -86,7 +122,7 @@ export default function AccountMenu({ onLogin }) {
         <ChevronDown className={`max-[992px]:hidden w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`} strokeWidth={1.8} aria-hidden="true" />
       </button>
       <PopMenu open={open}>
-        <div role="menu" className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] w-[15rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
+        <div role="menu" className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] min-[993px]:w-[18rem] w-[15rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
           <div className="px-3 pt-2 pb-3 border-b border-line mb-1">
             <b className="block text-small font-semibold text-gold overflow-hidden text-ellipsis whitespace-nowrap">{account.name || first}</b>
             <span className="block text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account.email}</span>
@@ -98,6 +134,7 @@ export default function AccountMenu({ onLogin }) {
           <a role="menuitem" href="/settings.html" className={ROW}>
             <Settings strokeWidth={1.7} aria-hidden="true" />Settings
           </a>
+          {PREFS}
           <div className="border-t border-line mt-1 pt-1">
             <button role="menuitem" type="button" className={ROW} onClick={() => { setOpen(false); logout(); }}>
               <LogOut strokeWidth={1.7} aria-hidden="true" />Sign out

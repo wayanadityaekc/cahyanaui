@@ -5,6 +5,7 @@ import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle, 
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_PAGE, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
+import { crumbsFor } from '@/lib/crumbs';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -125,6 +126,11 @@ function HelpCard({ className = '' }) {
   );
 }
 
+// Terms/Privacy/Cancellation already print their own trail at the top of
+// their own content (Pattern A, LegalBody above) - the header breadcrumb
+// would just repeat it right above, so those three tabs skip it.
+const LEGAL_TABS = new Set(['terms', 'privacy', 'cancellation']);
+
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
   // The phone has no room for a column, so the rail IS the first screen and a
@@ -166,6 +172,8 @@ export default function OurCompany() {
         reading={reading}
         onBack={goBack}
         help={<HelpCard />}
+        collapsible
+        breadcrumb={LEGAL_TABS.has(tab) ? null : crumbsFor('our-company')}
       >
         <div className={RAIL_READ}>
           <section id="about" hidden={tab !== 'about'}>

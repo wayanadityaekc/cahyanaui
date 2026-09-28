@@ -30,6 +30,10 @@ export const KEY = {
   // put them back into the booking form. Expires, see BookingProvider.
   resumeBook: 'cue_resume_book',
   dropoff: 'cue_dropoff',
+  // Rail collapse (My Trips/Our Company/Settings, Sep 2026): a chrome
+  // preference, not a per-page setting, so one key shared across all three -
+  // collapsing it on My Trips should still be collapsed on Settings.
+  railCollapsed: 'cue_rail_collapsed',
 };
 
 // Saved trips in localStorage hold product NAMES, not ids, so renaming a

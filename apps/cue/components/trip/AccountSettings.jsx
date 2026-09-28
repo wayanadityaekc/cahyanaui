@@ -1,16 +1,20 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { UserRound } from 'lucide-react';
 import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
+import { crumbsFor } from '@/lib/crumbs';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
 import { BTN_PILL, BTN_CTA, BTN_SM } from '@/components/ui/btnClasses';
 import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { initialsOf } from '@/components/layout/AccountMenu';
+import RailLayout from '@/components/ui/RailLayout';
+import { RAIL_READ } from '@/components/ui/railClasses';
 import MyReviews from './MyReviews';
 import DeleteAccountModal from './DeleteAccountModal';
 import SignInPrompt from '@/components/account/SignInPrompt';
@@ -21,6 +25,37 @@ import SignInPrompt from '@/components/account/SignInPrompt';
 const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
 const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
 const HR = 'my-6 border-0 [border-top:1px_solid_var(--line)]';
+
+// Same rail shell as My Trips + Our Company (Sep 2026, Wayan: "make it like
+// shadcn's sidebar-08" - collapsible sidebar + a breadcrumb in the header,
+// applied to all three account pages). Settings only ever has ONE section, so
+// the rail's real job here is chrome consistency - and a place a future
+// settings sub-section (notifications, payment methods, ...) would slot into
+// without a second shell to build. `mobileNav={true}` skips RailLayout's
+// phone list+back screen entirely (there is only one item to list); the
+// title/description that used to live in the page above this component now
+// lives here, so it shows in every auth state, matching what it always did.
+const RAIL_ITEMS = [{ id: 'account', label: 'Account Settings', Icon: UserRound }];
+
+function SettingsShell({ children }) {
+  return (
+    <RailLayout
+      label="Account Settings"
+      items={RAIL_ITEMS}
+      active="account"
+      onSelect={() => {}}
+      mobileNav={true}
+      collapsible
+      breadcrumb={crumbsFor('settings')}
+    >
+      <div className={RAIL_READ}>
+        <h1 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-green m-0 mb-[0.3rem]">Account Settings</h1>
+        <p className="text-muted text-body m-0 mb-[1.6rem]">Update your details and saved trip preferences.</p>
+        {children}
+      </div>
+    </RailLayout>
+  );
+}
 
 export default function AccountSettings() {
   const { account, setAccount, logout, deleteAccount } = useAccount();
@@ -49,21 +84,25 @@ export default function AccountSettings() {
 
   if (deleted) {
     return (
-      <div id="settings-root" data-settings>
-        <p className="text-body text-green m-0">Your account has been deleted. You can close this page, or
-          {' '}<a href="/" className="text-gold-d font-medium">return home</a>.</p>
-      </div>
+      <SettingsShell>
+        <div id="settings-root" data-settings>
+          <p className="text-body text-green m-0">Your account has been deleted. You can close this page, or
+            {' '}<a href="/" className="text-gold-d font-medium">return home</a>.</p>
+        </div>
+      </SettingsShell>
     );
   }
 
   if (!account) {
     return (
-      <div id="settings-root" data-settings>
-        <SignInPrompt
-          lead="Sign in to manage your details."
-          sub="Your name, contact info, and trip preferences live here once you're signed in."
-        />
-      </div>
+      <SettingsShell>
+        <div id="settings-root" data-settings>
+          <SignInPrompt
+            lead="Sign in to manage your details."
+            sub="Your name, contact info, and trip preferences live here once you're signed in."
+          />
+        </div>
+      </SettingsShell>
     );
   }
 
@@ -92,6 +131,7 @@ export default function AccountSettings() {
   const set = (k) => (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
 
   return (
+    <SettingsShell>
     <div id="settings-root" data-settings>
       {/* Large avatar (WO3: "default / initials only - no photo upload"). Same
           initialsOf() the navbar's small circle uses, so the initials are never
@@ -156,5 +196,6 @@ export default function AccountSettings() {
       <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>Delete account</button>
       <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
     </div>
+    </SettingsShell>
   );
 }

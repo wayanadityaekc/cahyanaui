@@ -67,7 +67,18 @@ export const RAIL_FRAME_CARD = `${FRAME_DESK} max-[992px]:rounded-md max-[992px]
 
 // --- desktop rail -----------------------------------------------------------
 export const RAIL_ASIDE =
-  'max-[992px]:hidden flex-none w-[248px] bg-cream [border-right:1px_solid_var(--line)]';
+  'max-[992px]:hidden flex-none w-[248px] bg-cream [border-right:1px_solid_var(--line)] ' +
+  'transition-[width] duration-200 ease-[ease]';
+
+// Collapsed rail (Sep 2026, Wayan: "make it like shadcn's sidebar-08" -
+// picked "collapsible sidebar toggle"). 64px: wide enough for the icon +
+// its own row padding, narrow enough to read as "tucked away" next to the
+// 248px expanded rail. Same base string as RAIL_ASIDE otherwise - only the
+// width differs, so a collapsed rail never drifts from the expanded one in
+// anything but that one number.
+export const RAIL_ASIDE_COLLAPSED =
+  'max-[992px]:hidden flex-none w-[64px] bg-cream [border-right:1px_solid_var(--line)] ' +
+  'transition-[width] duration-200 ease-[ease]';
 
 // Sticks to the bottom of the live header, so it keeps its place while the
 // content column scrolls. --header-h (live) not --header-h-max: the frozen one
@@ -76,18 +87,39 @@ export const RAIL_STICK =
   'sticky top-[var(--header-h,104px)] flex flex-col p-[1.35rem_0.9rem] ' +
   'max-h-[calc(100vh-var(--header-h,104px))] overflow-y-auto';
 
+// Collapsed: no side padding (a 64px column has no room to spare) - the icon
+// centers itself instead.
+export const RAIL_STICK_COLLAPSED =
+  'sticky top-[var(--header-h,104px)] flex flex-col items-center p-[1.35rem_0.5rem] ' +
+  'max-h-[calc(100vh-var(--header-h,104px))] overflow-y-auto';
+
 export const RAIL_LABEL =
   'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
 
 // One row of the rail. The active row is a raised white pill - the rail is
 // already cream, so "lifted out of the tint" is what reads as selected here.
-export const railItem = (active) =>
-  'flex items-center gap-[0.65rem] w-full text-left p-[0.55rem_0.75rem] rounded-[var(--r-md)] ' +
-  'bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
+// `collapsed` centers the icon and drops the row to a square instead of a
+// full-width bar - the label is still IN THE DOM (title attribute carries it
+// for a hover tooltip and screen readers), just not painted.
+export const railItem = (active, collapsed = false) =>
+  `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
+  'rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   (active
-    ? 'font-semibold text-gold bg-white [border:1px_solid_var(--line)] p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'
+    ? `font-semibold text-gold bg-white [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
     : 'text-muted [&>svg]:opacity-75 hover:text-gold');
+
+// --- header row: collapse trigger + breadcrumb (Sep 2026) -------------------
+// Desktop only, same as the rest of the rail chrome - mobile never had a
+// sidebar to collapse, and its own list+back screen already names the
+// section. Sits above `children` inside <main>, matching where sidebar-08's
+// own header lives (in the content column, not the sidebar).
+export const RAIL_HEADER =
+  'max-[992px]:hidden flex items-center gap-3 pb-4 mb-[1.2rem] [border-bottom:1px_solid_var(--line)]';
+export const RAIL_TRIGGER =
+  'flex items-center justify-center w-8 h-8 -ml-1 rounded-[var(--r-md)] bg-transparent border-none cursor-pointer ' +
+  'text-muted hover:bg-white hover:text-gold [&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)]';
+export const RAIL_HEADER_SEP = 'w-px h-4 bg-line shrink-0';
 
 // Splits "about us" from "the legal small print" - two different reasons to be
 // on this page, so they should not read as one run of six.

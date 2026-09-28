@@ -3,14 +3,14 @@ import { fmtTime } from '@/content/shared/timeSlots';
 import PayWaiting from '@/components/booking/PayWaiting';
 import { BTN_SM } from '@/components/ui/btnClasses';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { CalendarCheck, Car, ChevronDown, Clock, History, MapPin, ShoppingBag } from 'lucide-react';
 import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { useReferral } from '@/state/ReferralProvider';
-import { useBooking } from '@/state/BookingProvider';
+import { useBooking, useResumeBooking } from '@/state/BookingProvider';
 import useQuote from '@/hooks/useQuote';
 import useMoney from '@/hooks/useMoney';
 import ReviewModal from '@/components/reviews/ReviewModal';
@@ -124,6 +124,7 @@ export default function MyTripsCart() {
   const { account, trips, reviewableItems } = useAccount();
   const { referral } = useReferral();
   const { openBooking } = useBooking();
+  const checkoutRef = useRef(null);
   const pricing = usePricing();
 
   // Coming back from a hosted payment page (the rupiah rail). The guest returns
@@ -278,6 +279,13 @@ export default function MyTripsCart() {
   });
   const { format } = useMoney();
 
+  // WO2: a guest sent off to sign in from this page comes back here holding a
+  // resume marker - open the booking form for them, as if they had tapped again.
+  // Called ABOVE the early return (hooks must run on every render - below it this
+  // threw React #310 and took the whole page down); `checkout` is defined further
+  // down, so it is handed over through a ref.
+  useResumeBooking(hydrated && rows.length > 0 && rows.every((r) => r.date), () => checkoutRef.current && checkoutRef.current());
+
   if (!hydrated) return <div data-mytrips-cart />;
 
   const undated = rows.some((r) => !r.date);
@@ -333,6 +341,7 @@ export default function MyTripsCart() {
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
   };
+  checkoutRef.current = checkout;
 
   // Bookings are a record of what was charged, so they show the amount stored
   // against them rather than a live conversion.

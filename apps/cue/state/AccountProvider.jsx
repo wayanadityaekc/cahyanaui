@@ -16,6 +16,10 @@ export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
   const [hydrated, setHydrated] = useState(false);
+  // True when THIS page load arrived through a sign-in link (?token=). The booking
+  // gate uses it to send a guest back to the page they were booking from - the
+  // email link always lands on the homepage.
+  const [justSignedIn, setJustSignedIn] = useState(false);
 
   // Re-read My Trips. Called on mount, and again after a review is sent: the
   // list of what can still be reviewed comes from the server, and without a
@@ -37,6 +41,7 @@ export function AccountProvider({ children }) {
     const magic = params.get('token');
     if (magic) {
       writeLocal(KEY.token, magic);
+      setJustSignedIn(true);
       params.delete('token');
       const qs = params.toString();
       window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
@@ -138,7 +143,7 @@ export function AccountProvider({ children }) {
   };
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, createAccount, hydrated }}>
+    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, createAccount, hydrated, justSignedIn }}>
       {children}
     </AccountContext.Provider>
   );

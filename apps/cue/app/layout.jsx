@@ -11,6 +11,7 @@ import AppBottomNav from '@/components/layout/AppBottomNav';
 import Footer from '@/components/layout/Footer';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import BookConfirmModal from '@/components/booking/BookConfirmModal';
+import BookingGate from '@/components/booking/BookingGate';
 
 const inter = localFont({
   src: '../public/assets/fonts/inter-latin.woff2',
@@ -87,6 +88,7 @@ export default function RootLayout({ children }) {
           {children}
           <Footer />
           <BookConfirmModal />
+          <BookingGate />
           <AppBottomNav />
         </Providers>
       </body>

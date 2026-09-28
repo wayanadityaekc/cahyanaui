@@ -9,7 +9,12 @@ import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasse
 import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 
-export default function AuthModal({ open, onClose }) {
+// `reason="book"` = opened by the booking gate (WO2): same form, copy that says why
+// we are asking and that the trip is safe. `onSignedIn` fires instead of onClose when
+// a NEW account signs straight in, so the gate can open the held booking instead of
+// treating the popup closing as "never mind".
+export default function AuthModal({ open, onClose, reason, onSignedIn }) {
+  const forBook = reason === 'book';
   const { requestLogin, createAccount } = useAccount();
   const [view, setView] = useState('signin'); // 'signin' | 'create'
   const [f, setF] = useState({ name: '', email: '', phone: '' });
@@ -46,7 +51,7 @@ export default function AuthModal({ open, onClose }) {
     setBusy(true);
     const res = await createAccount({ name: data.name, email: data.email, phone: data.phone });
     setBusy(false);
-    if (res.ok) close();
+    if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); (onSignedIn || onClose)(); }
     else if (res.signin) setOk(`You already have an account as ${res.email}. Check your email to sign in.`);
     else setMsg(res.error || 'Sorry, we could not create your account. Please try again.');
   };
@@ -54,10 +59,14 @@ export default function AuthModal({ open, onClose }) {
   const swap = (v) => { setView(v); reset(); };
 
   return (
-    <Modal open={open} onClose={close} title={view === 'signin' ? 'Sign in' : 'Create your account'}>
+    <Modal open={open} onClose={close} title={view === 'signin' ? (forBook ? 'Sign in to book' : 'Sign in') : 'Create your account'}>
       {view === 'signin' ? (
         <>
-          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">Enter your email and we&apos;ll send you a secure sign-in link. No password needed.</p>
+          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
+            {forBook
+              ? <>Your trip is saved. Enter your email and we&apos;ll send a sign-in link - open it on this device and you&apos;ll land back in your booking. No password needed.</>
+              : <>Enter your email and we&apos;ll send you a secure sign-in link. No password needed.</>}
+          </p>
           <div className={CONTACT_GROUP}>
             <label className={FIELD_LABEL} htmlFor="auth-email">Email</label>
             <input className={CONTACT_INPUT} type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />

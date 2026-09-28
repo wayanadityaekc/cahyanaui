@@ -25,6 +25,10 @@ export const KEY = {
   // (that holds name/email/phone plus the guest-count and area preferences), so it
   // is remembered on this device, next to the cart and the trip preferences.
   pickup: 'cue_pickup',
+  // WO2 booking gate: "this guest was about to book on <path> when we asked them to
+  // sign in" - {path, at}. Lets the magic-link return (which lands on the homepage)
+  // put them back into the booking form. Expires, see BookingProvider.
+  resumeBook: 'cue_resume_book',
   dropoff: 'cue_dropoff',
 };
 

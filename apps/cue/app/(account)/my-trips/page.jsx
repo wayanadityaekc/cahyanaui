@@ -11,12 +11,12 @@ export default function Page() {
   return (
     <div className="tourprog pb-20">
       <JsonLd page="my-trips" />
-    {/* Same shell as Our Company (rail + content). The h1 sits ABOVE the frame
-        rather than inside the content column: it names the whole page and all
-        three sections sit under it - in the column it would read as one
-        section's title. */}
+    {/* Same shell as Our Company (rail + content). Wayan, Sep 2026: "my trips
+        punya dua judul numpuk, hapus yang gede, sisain yang kecil" - the big
+        page h1 that used to sit here duplicated the rail's own "My trips"
+        label right below it. Dropped; Our Company (same shell) has never had
+        a page-level h1 either - each section carries its own heading. */}
     <div className={RAIL_PAGE}>
-      <h1 className="font-head font-medium tracking-[-0.01em] text-display leading-[var(--lh-heading)] text-green m-0 mb-[1.2rem]">My Trips</h1>
       <MyTripsCart />
     </div>
     </div>

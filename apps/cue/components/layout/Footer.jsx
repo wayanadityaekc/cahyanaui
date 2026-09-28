@@ -1,7 +1,29 @@
+'use client';
+
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as R } from '@/content/shared/registration';
 import FooterPayChips from './FooterPayChips';
+
+// Compact footer for the account/utility pages (WO5, Sep 2026, Wayan: "guests
+// shouldn't scroll past a full footer on Settings, My Trips, or the legal
+// pages"). Settings and My Trips are single-purpose pages a signed-in guest
+// is already using the site to finish a task on; Terms/Privacy/Cancellation
+// are all sections of Our Company (their standalone pages were retired), so
+// the whole page gets the compact shell rather than only one hash of it.
+const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
+
+// Same trick Navbar's isActive() already uses, not lib/pathname.js's
+// normalizePath: static export PRERENDERS these routes at their clean path
+// ('/settings'), but a browser sitting on the final '/settings.html' file
+// hydrates with the extension - so checking pathname against ONE spelling of
+// COMPACT_PATHS disagrees between server and client and throws React #418
+// (measured: it did, on all three pages, the first time this shipped without
+// this check). Matching either spelling makes the two renders agree no
+// matter which one the pathname happens to be.
+const isCompactPath = (pathname) =>
+  COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, ''));
 
 // Tailwind-native (migrasi Fase 2): footer (semua halaman). Dulu keluarga
 // .footer* di style.css - sekarang utilities 1:1. Footer punya ukuran teks
@@ -71,7 +93,37 @@ const SOCIAL = [
   ['Facebook', 'facebook.webp'],
 ];
 
+// Single row: brand name, the two contact links (no map pin - that's the one
+// fact the full footer's grid had room for and this doesn't), copyright.
+// Same brand/contact colors as the full footer, none of its columns.
+function CompactFooter() {
+  return (
+    <footer className="px-6 py-5 text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">
+      <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-between gap-x-6 gap-y-2
+                      max-[560px]:flex-col max-[560px]:text-center">
+        <a href="/" className="no-underline text-green font-body text-[0.95rem] font-semibold shrink-0">
+          Cahyana Ubud Experience
+        </a>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={CONTACT_LINK}>
+            <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
+            WhatsApp
+          </a>
+          <a href="mailto:cahyanabaliexperience@gmail.com" className={CONTACT_LINK}>
+            <Mail className={CONTACT_SVG} strokeWidth={1.8} />
+            Email
+          </a>
+        </div>
+        <p className="text-small opacity-70 m-0 shrink-0">&copy; 2026 Cahyana Ubud Experience.</p>
+      </div>
+    </footer>
+  );
+}
+
 export default function Footer() {
+  const pathname = usePathname();
+  if (isCompactPath(pathname)) return <CompactFooter />;
+
   return (
     <footer className="px-6 pt-10 pb-5 text-green bg-[#ebe8e2]">
       <div

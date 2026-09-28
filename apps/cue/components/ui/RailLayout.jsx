@@ -1,9 +1,16 @@
 'use client';
 
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ChevronRight, ChevronLeft, PanelLeft } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
+import { readLocal, writeLocal } from '@/lib/storage';
+import { KEY } from '@/lib/constants';
 import {
-  RAIL_FRAME, RAIL_ASIDE, RAIL_STICK, RAIL_LABEL, railItem, RAIL_SPLIT,
+  RAIL_FRAME, RAIL_ASIDE, RAIL_ASIDE_COLLAPSED, RAIL_STICK, RAIL_STICK_COLLAPSED,
+  RAIL_LABEL, railItem, RAIL_SPLIT,
   RAIL_MAIN, RAIL_MLIST, RAIL_MLABEL, railMobileItem, RAIL_MCHEV, RAIL_BACK,
+  RAIL_HEADER, RAIL_TRIGGER, RAIL_HEADER_SEP, RAIL_HEADER_PAD,
+  RAIL_FRAME_SCROLL, RAIL_MAIN_SCROLL, RAIL_SCROLL_BODY,
 } from './railClasses';
 
 // The "mail app" shell shared by Our Company, My Trips and the guide articles
@@ -48,25 +55,59 @@ export default function RailLayout({
   frameClass = RAIL_FRAME,
   mainClass = RAIL_MAIN,
   mobileNav = null,
+  // Both opt-in (Sep 2026, "make it like shadcn's sidebar-08" - collapsible
+  // rail + a breadcrumb in the header): the guide articles share this same
+  // component and asked for neither, so a caller that doesn't pass these
+  // renders exactly as before.
+  collapsible = false,
+  breadcrumb = null,
+  // Opt-in (Sep 2026, Wayan sketched it: "focus on bottom border of the
+  // container wrapper, I want that container shows at the screen" - only the
+  // content column should scroll, not the whole page, so the frame's own
+  // bottom border never scrolls out of view). Overrides frameClass/mainClass
+  // with the capped-height variants when true; the guide articles never pass
+  // this (their long-form content is exactly the case a capped frame would
+  // break), so their frame keeps growing with the page as before.
+  scrollContent = false,
 }) {
+  // One preference, not per-page (see KEY.railCollapsed) - collapsing it on
+  // My Trips should still read collapsed on Settings. Read in useEffect, not
+  // initial state: this is a static export, so the first paint has to match
+  // the server's HTML (expanded) before a stored "collapsed" can apply.
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    if (collapsible) setCollapsed(readLocal(KEY.railCollapsed, '') === '1');
+  }, [collapsible]);
+  const toggleCollapsed = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    writeLocal(KEY.railCollapsed, next ? '1' : '0');
+  };
+  const railCollapsed = collapsible && collapsed;
+  const effectiveFrameClass = scrollContent ? RAIL_FRAME_SCROLL : frameClass;
+  const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
+
   const rows = (mobile) =>
     items.map((t) => {
       const on = active === t.id;
-      const cls = mobile ? railMobileItem(on) : railItem(on);
+      const cls = mobile ? railMobileItem(on) : railItem(on, railCollapsed);
       const inner = (
         <>
           {t.Icon && <t.Icon strokeWidth={1.7} aria-hidden="true" />}
-          {t.label}
+          {(!railCollapsed || mobile) && t.label}
           {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
         </>
       );
+      // Collapsed: the label is still the accessible name (title + aria-label),
+      // it just isn't painted - a screen reader or a hover tooltip still gets it.
+      const a11y = !mobile && railCollapsed ? { title: t.label, 'aria-label': t.label } : {};
       return (
         <div key={t.id} className="contents">
           {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
           {t.href ? (
             // no-underline is the only thing added on top of railItem: that string
             // never sets a decoration, so an <a> would otherwise arrive underlined.
-            <a href={t.href} className={`${cls} no-underline`} aria-current={on || undefined}>
+            <a href={t.href} className={`${cls} no-underline`} aria-current={on || undefined} {...a11y}>
               {inner}
             </a>
           ) : (
@@ -75,6 +116,7 @@ export default function RailLayout({
               {...(mobile ? {} : { role: 'tab', 'aria-selected': on })}
               onClick={() => onSelect(t.id)}
               className={cls}
+              {...a11y}
             >
               {inner}
             </button>
@@ -84,16 +126,16 @@ export default function RailLayout({
     });
 
   return (
-    <div className={frameClass}>
+    <div className={effectiveFrameClass}>
       {/* Desktop rail. It carries no height of its own: the flex row stretches
           it so the cream fills the box, and the menu inside is what sticks. */}
-      <aside className={RAIL_ASIDE} aria-label={label}>
-        <div className={RAIL_STICK}>
-          <p className={RAIL_LABEL}>{label}</p>
+      <aside className={railCollapsed ? RAIL_ASIDE_COLLAPSED : RAIL_ASIDE} aria-label={label}>
+        <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
+          {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
           <nav className="flex flex-col" {...(items.some((t) => t.href) ? {} : { role: 'tablist' })} aria-label={label}>
             {rows(false)}
           </nav>
-          {help}
+          {!railCollapsed && help}
         </div>
       </aside>
 
@@ -108,14 +150,38 @@ export default function RailLayout({
         </div>
       )}
 
-      <main className={`${mainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}>
+      <main className={`${effectiveMainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}>
+        {/* Header row: collapse trigger + breadcrumb (desktop only - mobile
+            never had a sidebar to collapse, and its own back row already
+            names the section, so this would just say the same thing twice).
+            In scroll mode <main> carries no padding of its own, so the header
+            brings its own (RAIL_HEADER_PAD) instead of inheriting it. */}
+        {(collapsible || breadcrumb) && (
+          <div className={scrollContent ? `${RAIL_HEADER} ${RAIL_HEADER_PAD}` : RAIL_HEADER}>
+            {collapsible && (
+              <button
+                type="button"
+                className={RAIL_TRIGGER}
+                onClick={toggleCollapsed}
+                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                aria-expanded={!collapsed}
+              >
+                <PanelLeft strokeWidth={1.7} aria-hidden="true" />
+              </button>
+            )}
+            {collapsible && breadcrumb && <span className={RAIL_HEADER_SEP} aria-hidden="true" />}
+            {breadcrumb && <Breadcrumb items={breadcrumb} className="m-0" />}
+          </div>
+        )}
         {mobileNav || (
           <button type="button" className={RAIL_BACK} onClick={onBack}>
             <ChevronLeft strokeWidth={1.7} aria-hidden="true" />
             {label}
           </button>
         )}
-        {children}
+        {/* Only this piece scrolls in scroll mode - the header above stays
+            put. Plain children otherwise, unchanged from before. */}
+        {scrollContent ? <div className={RAIL_SCROLL_BODY}>{children}</div> : children}
       </main>
     </div>
   );

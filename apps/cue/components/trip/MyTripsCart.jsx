@@ -26,6 +26,7 @@ import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 import RailLayout from '@/components/ui/RailLayout';
 import SignInPrompt from '@/components/account/SignInPrompt';
+import { crumbsFor } from '@/lib/crumbs';
 
 // Tailwind-native (migrasi Fase 2): sub-family kecil my-trips cart -> utilities.
 // `mtc-empty` DIPERTAHANKAN sbg marker: anchor `.mtc-empty .btn-pill` (reset
@@ -517,6 +518,9 @@ export default function MyTripsCart() {
         onSelect={(id) => { setTab(id); setReading(true); }}
         reading={reading}
         onBack={() => setReading(false)}
+        collapsible
+        breadcrumb={crumbsFor('my-trips')}
+        scrollContent
       >
       {tab === 'custom' && (rows.length === 0 ? (
         <div className={MTC_EMPTY}>

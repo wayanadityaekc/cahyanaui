@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle, ChevronDown } from 'lucide-react';
 import RailLayout from '@/components/ui/RailLayout';
-import { RAIL_PAGE, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
+import { RAIL_PAGE_SCROLL, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
+import { crumbsFor } from '@/lib/crumbs';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -35,10 +36,12 @@ const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:tex
 function LegalBody({ data }) {
   return (
     <div className={BODY_TEXT}>
-      {/* Pattern A: the trail sits above the heading, not under it. It arrives as
-          the first prose block, so it is pulled out here rather than rendered in
-          place. */}
-      <Prose blocks={data.body.filter((b) => b.type === 'crumb')} headingVariant="company" />
+      {/* The rail's own header breadcrumb is the only trail on this page now
+          (Sep 2026, Wayan: "breadcrumb ... follow the breadcrumb in the account
+          setting, no breadcrumb inside the content") - the legal-only "Pattern
+          A" trail that used to print here, above this h1, is gone. The crumb
+          block still lives in legal.json (content the dashboard could still
+          write to); it is just never rendered. */}
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
       <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="company" />
     </div>
@@ -157,7 +160,7 @@ export default function OurCompany() {
   };
 
   return (
-    <div className={RAIL_PAGE}>
+    <div className={RAIL_PAGE_SCROLL}>
       <RailLayout
         label="Our company"
         items={TABS}
@@ -166,6 +169,9 @@ export default function OurCompany() {
         reading={reading}
         onBack={goBack}
         help={<HelpCard />}
+        collapsible
+        breadcrumb={crumbsFor('our-company')}
+        scrollContent
       >
         <div className={RAIL_READ}>
           <section id="about" hidden={tab !== 'about'}>

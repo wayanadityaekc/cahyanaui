@@ -96,9 +96,25 @@ const SOCIAL = [
 // Single row: brand name, the two contact links (no map pin - that's the one
 // fact the full footer's grid had room for and this doesn't), copyright.
 // Same brand/contact colors as the full footer, none of its columns.
+//
+// PINNED to the bottom of the viewport (Wayan, Sep 2026: "the footer needs to
+// be sticky at the bottom, only the content scrolled") - `fixed`, not the
+// classic sticky-footer-in-flow trick (a flex column + margin-top:auto only
+// pins it once the page is shorter than the viewport; here it has to stay on
+// screen from the first paint, on a page that can be much taller than the
+// viewport, e.g. a long My Trips cart). `.footerbar` is the marker
+// AppBottomNav yields to (app.layout.jsx body padding + AppBottomNav.jsx),
+// the same "only one thing sticks to the bottom" rule BookBar/SectionSwitcher
+// already follow - these three pages never carry a bookbar/stickybar of
+// their own, so this is the only bottom bar in play on them.
+// pb- uses max() with the safe-area inset, same as BookBar/AppBottomNav: an
+// iPhone's home-indicator strip sits right where the CTA would otherwise
+// land. Baseline height is unchanged where that inset is 0 (measured before/
+// after: 60px >=561px, 107px below it, matched by body's compensating pb-
+// in app/layout.jsx so page content never lands underneath it).
 function CompactFooter() {
   return (
-    <footer className="px-6 py-5 text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">
+    <footer className="footerbar fixed inset-x-0 bottom-0 z-[90] px-6 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">
       <div className="max-w-[1100px] mx-auto flex flex-wrap items-center justify-between gap-x-6 gap-y-2
                       max-[560px]:flex-col max-[560px]:text-center">
         <a href="/" className="no-underline text-green font-body text-[0.95rem] font-semibold shrink-0">

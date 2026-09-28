@@ -2350,6 +2350,44 @@ gak bisa bawa - **dia lagi ngetik**, dan **dia beneran lagi di dashboard**.
   bakal nembak API PRODUCTION lewat internet. Sekalian itu jadi tes jalur fallback.
 
 ## Navbar
+**NAVBAR SEKARANG = WO1 (28 Sep 2026, Wayan APPROVED). Ini NGE-OVERRIDE semua catatan
+navbar di bawah yang bertentangan** - khususnya "drawer di SEMUA lebar", "HAMBURGER &
+DRAWER BALIK KE KANAN", baris Welcome/Sign in/My Trip/Account Settings di drawer, dan
+"Order: Home · Itinerary ...". Catatan di bawah tetep disimpen sebagai sejarah.
+- **DESKTOP (>=993)**: logo · link halaman **di bar** (`components/layout/DesktopNav.jsx`:
+  Home · Program▾ (Tours/Destinations/Experiences/Transfer/Charter, buka pas hover/klik) ·
+  Guide · Our Company) · chat · cart · **slot akun**. **Gak ada hamburger.**
+- **HP (<=992)**: **hamburger KIRI logo** · logo · chat · cart · **slot akun di kanan**.
+  **Drawer keluar dari KIRI.** Burger nempel gutter kiri (16px, satu tepi sama crumb),
+  slot akun berhenti satu gutter dari kanan. Hamburger udah pindah sisi 3x (kanan -> kiri
+  -> kanan 27 Sep -> **kiri 28 Sep**); yang berlaku ini, jangan dipindah tanpa nanya.
+- **Slot akun = `components/layout/AccountMenu.jsx`**, dua keadaan:
+  - **Logout**: desktop tombol "Log in" (border) yang buka menu kecil (tombol Log in hijau +
+    Guests/Pickup/Currency); HP ikon orang (`UserRound`) yang langsung buka `AuthModal`.
+  - **Login**: lingkaran inisial (gak ada upload foto) + nama depan di desktop. Menu:
+    header nama+email · **Settings** · Guests/Pickup/Currency (desktop doang) · Sign out.
+  - **My Trips SENGAJA GAK ADA di menu akun** (Wayan) - ikon cart di bar yang jadi pintunya.
+- **Guests/Pickup/Currency = SATU komponen, `TripPrefsFields.jsx`**, dipakai drawer DAN menu
+  akun desktop. `idPrefix` wajib beda (`acct` / `menu`): drawer ke-mount di semua lebar, jadi
+  dua salinan ada bareng di halaman desktop. `CurrencyPicker` dapet prop `id` buat itu.
+  Menu akun gak boleh nutup pas opsi `Select` dipilih - popup-nya di-portal, jadi
+  outside-click ngecualiin `[data-portal]` (dites: pilih "4 guests" -> menu tetep kebuka).
+- **Drawer (HP)**: header "Menu" + tombol × (satu-satunya penutup yang keliatan - panel
+  nutupin burger) · Guests/Pickup/Currency · Home/Program/Guide/Our Company · WhatsApp.
+  Welcome/avatar, tombol Sign in, baris My Trip & Account Settings **UDAH DIHAPUS** (Wayan:
+  "remove dupes" - semuanya ada di slot akun).
+- **Opsi yang udah dicoba & DITOLAK**: pill gabungan `[ burger | akun ]` (opsi D) - dipakai
+  satu ronde, bubar begitu burger pindah ke kiri. Opsi lain yang ditawarin (tombol "Log in"
+  ber-border / teks polos di HP) gak dipilih.
+- **Chat + cart TETEP di bar** (Wayan pilih "keep both").
+- Dijaga `verify-design3.mjs` (**115/115**): burger kiri logo & di gutter kiri & satu tepi
+  sama crumb (HP), desktop nol burger & link halaman keliatan, slot akun paling kanan & di
+  gutter kanan, celah tinta chat/cart/akun sama, drawer nempel tepi KIRI & nutupin burger
+  & × beneran nutup ke kiri. Dites pakai bug aslinya (drawer dibalikin ke kanan): **3 nyala**.
+- **Sisa jujur**: ikon akun HP tap-target-nya seukuran ikon (20-28px), sama kayak chat/cart
+  - belum dikasih padding tak-kelihatan, belum ditanyain.
+
+**--- CATATAN NAVBAR LAMA (sebelum WO1) ---**
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**
   (Sep 2026) ditambah di navbar (link ke `contact.html`) — gantiin floating WhatsApp

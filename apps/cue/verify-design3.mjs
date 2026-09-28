@@ -182,6 +182,7 @@ for (const w of [390, 1280]) {
     const l = document.querySelector('header a[href="/"] img').getBoundingClientRect();
     const row = document.getElementById('hamburger').parentElement.getBoundingClientRect();
     const cs = getComputedStyle(document.getElementById('hamburger').parentElement);
+    const slot = document.querySelector('[data-account-slot]').getBoundingClientRect();
     // the right cluster: every icon in the row that is NOT inside the drawer panel
     const icons = [...document.getElementById('hamburger').parentElement.querySelectorAll('svg')]
       .filter((e) => !e.closest('#nav-menu') && e.getBoundingClientRect().width > 0)
@@ -200,15 +201,28 @@ for (const w of [390, 1280]) {
       rowL: Math.round(row.left), padL: parseFloat(cs.paddingLeft),
       rowR: Math.round(row.right), padR: parseFloat(cs.paddingRight),
       gutter,
+      sl: Math.round(slot.left), sr: Math.round(slot.right), bw: Math.round(b.width),
+      deskNav: !!document.querySelector('[data-desktop-nav]')?.getBoundingClientRect().width,
       crumbL: crumb ? Math.round(crumb.getBoundingClientRect().left) : null,
       icons: icons.map((r) => ({ w: +r.width.toFixed(1), h: +r.height.toFixed(1), l: +r.left.toFixed(1), r: +r.right.toFixed(1) })),
     };
   });
-  console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · baris berhenti ${g.rowR}-${g.padR}`);
-  ok(g.bl >= g.lr, `${w}: burger di KANAN logo (burger kiri ${g.bl} >= logo kanan ${g.lr})`);
-  ok((g.rowR - g.padR) - g.br < 3, `${w}: burger nempel di gutter KANAN baris (${Math.round((g.rowR - g.padR) - g.br)}px)`);
-  // It is the last thing in the row, so nothing in the right cluster may sit past it.
-  ok(g.icons.every((r) => r.r <= g.br + 1), `${w}: burger paling kanan di klusternya`);
+  // WO1 (28 Sep 2026, Wayan approved): burger LEFT of the logo on phones, drawer from
+  // the LEFT, account slot on its own at the far right. Desktop: no burger, page links
+  // in the bar, account slot at the far right. This replaces the 27 Sep "burger back on
+  // the right" rules that used to live here.
+  console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · akun ${g.sl}-${g.sr} · baris ${g.rowL}+${g.padL} .. ${g.rowR}-${g.padR}`);
+  if (w <= 992) {
+    ok(g.bw > 0, `${w}: burger keliatan di HP (lebar ${g.bw})`);
+    ok(g.br <= g.ll, `${w}: burger di KIRI logo (burger kanan ${g.br} <= logo kiri ${g.ll})`);
+    ok(Math.abs(g.bl - (g.rowL + g.padL)) < 3, `${w}: burger nempel di gutter KIRI baris (${g.bl} vs ${g.rowL + g.padL})`);
+    if (g.crumbL != null) ok(Math.abs(g.bl - g.crumbL) < 2, `${w}: burger satu tepi sama crumb (${g.bl} vs ${g.crumbL})`);
+  } else {
+    ok(g.bw === 0, `${w}: desktop gak punya burger (lebar ${g.bw})`);
+    ok(g.deskNav, `${w}: link halaman keliatan di bar desktop`);
+  }
+  ok((g.rowR - g.padR) - g.sr < 3, `${w}: slot akun nempel di gutter KANAN baris (${Math.round((g.rowR - g.padR) - g.sr)}px)`);
+  ok(g.icons.every((r) => r.r <= g.sr + 1), `${w}: slot akun paling kanan di klusternya`);
 
   // GUTTER LUAR TURUN SENOTCH (27 Sep 2026, Wayan: "padding di luar kiri kanan kecilin
   // dikit"). Dulu `px-6` hardcoded = 24 rata di semua lebar. Sekarang 16 di HP (token
@@ -226,7 +240,7 @@ for (const w of [390, 1280]) {
   // compared against the breadcrumb's left inset; on the right the equivalent claim is
   // that it stops one gutter short of the viewport edge. Still measured against the
   // page's own --container-x, never a number typed here.
-  if (w <= 992) ok(Math.abs((w - g.br) - g.gutter) < 2, `${w}: burger berhenti satu gutter dari tepi kanan (${Math.round(w - g.br)} vs ${g.gutter})`);
+  if (w <= 992) ok(Math.abs((w - g.sr) - g.gutter) < 2, `${w}: slot akun berhenti satu gutter dari tepi kanan (${Math.round(w - g.sr)} vs ${g.gutter})`);
 
   // JARAK ANTAR IKON WAJIB SAMA (27 Sep 2026, Wayan: "jarak antar icon disamakan, jarak
   // antara my trip dan humberger kayaknya beda dari jarak my trip dan message"). He was
@@ -253,7 +267,12 @@ for (const w of [390, 1280]) {
     for (const el of row.children) {
       if (el.getBoundingClientRect().width === 0) continue;
       if (el.querySelector('img')) continue; // the logo is not an icon
-      const i = ink(el);
+      if (el.id === 'hamburger') continue; // left of the logo now - not in the right cluster
+      if (el.matches('[data-desktop-nav], nav')) continue; // page links / drawer
+      // the account slot: its icon on phones, its "Log in" box on desktop
+      const visSvg = [...el.querySelectorAll('svg')].some((v) => v.getBoundingClientRect().width > 0);
+      const i = el.matches('[data-account-slot]') && !visSvg
+        ? el.querySelector('button').getBoundingClientRect() : ink(el);
       if (i) out.push({ tag: el.id || el.getAttribute('aria-label') || el.tagName, l: i.left, r: i.right });
     }
     out.sort((a, b) => a.l - b.l);
@@ -264,9 +283,10 @@ for (const w of [390, 1280]) {
   const spread = Math.max(...gaps.map((x) => x.gap)) - Math.min(...gaps.map((x) => x.gap));
   ok(spread < 0.6, `${w}: celah antar ikon SAMA semua (spread ${spread.toFixed(1)}px :: ${gaps.map((x) => x.gap).join(', ')})`);
 
-  // THE DRAWER OPENS FROM THE RIGHT AGAIN (27 Sep 2026). It was flipped to the left
-  // earlier the same day and flipped back after Wayan saw it. Either way the panel
-  // covers the button that opened it, so the x stays the close affordance.
+  // THE DRAWER OPENS FROM THE LEFT (WO1, 28 Sep 2026), from the burger's side. The panel
+  // covers the button that opened it, so the x stays the close affordance. Phones only:
+  // desktop has no burger.
+  if (w > 992) { await ctx.close(); continue; }
   await page.click('#hamburger');
   await page.waitForTimeout(400);
   const d = await page.evaluate(() => {
@@ -284,6 +304,7 @@ for (const w of [390, 1280]) {
       burger: `${Math.round(b.left)}-${Math.round(b.right)}`,
       w: Math.round(pr.width),
       panelR: Math.round(pr.right),
+      panelL: Math.round(pr.left),
       closeVisible: !!document.querySelector('#nav-menu button[aria-label="Close menu"]')?.getBoundingClientRect().width,
       hit: el ? (el.id || el.tagName) : 'none',
       hitCls: el ? (el.className || '').toString().slice(0, 40) : '',
@@ -291,15 +312,15 @@ for (const w of [390, 1280]) {
   });
   console.log(`     drawer ${d.panel} · burger ${d.burger} · hit-test ${d.hit} "${d.hitCls}"`);
   ok(d.w > 100, `${w}: panel drawer beneran ke-ukur (lebar ${d.w}) - rect kosong = harness rusak, bukan lolos`);
-  ok(w - d.panelR < 1, `${w}: panel drawer nempel tepi KANAN (kanan ${d.panelR} dari ${w})`);
+  ok(d.panelL > -1 && d.panelL < 1, `${w}: panel drawer nempel tepi KIRI (kiri ${d.panelL})`);
   ok(d.overlaps, `${w}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${d.burger} vs ${d.panel})`);
   ok(d.hit !== 'hamburger', `${w}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${d.hit})`);
   // so the x is load-bearing: it is the only close affordance the guest can see
   ok(d.closeVisible, `${w}: tombol x keliatan di dalam drawer`);
   await page.click('#nav-menu button[aria-label="Close menu"]');
   await page.waitForTimeout(400);
-  const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().left);
-  ok(shut >= w - 1, `${w}: x beneran nutup - panel balik ke luar layar KANAN (kiri ${Math.round(shut)} dari ${w})`);
+  const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().right);
+  ok(shut <= 1, `${w}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
   await ctx.close();
 }
 
@@ -307,7 +328,8 @@ for (const w of [390, 1280]) {
 // Sizes are read off the page, never typed in here: what is asserted is the RULE -
 // the outer bars travel exactly far enough to meet the middle one. An offset that no
 // longer matches the gap leaves a visibly broken X, and nothing else would catch it.
-for (const w of [390, 1280]) {
+// Phones only since WO1 (28 Sep 2026): desktop has no hamburger.
+for (const w of [390]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 900 } });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => ok(false, `${w}: page error ${e.message}`));

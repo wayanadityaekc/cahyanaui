@@ -7,9 +7,16 @@ let pass = 0, fail = 0;
 const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
 
 // Pages with no sticky bar of their own - the app bar belongs to them.
-const FREE = ['/', '/bali-guide.html', '/my-trips.html', '/our-company.html', '/charter.html'];
+const FREE = ['/', '/bali-guide.html', '/charter.html'];
 const DETAIL = '/ubud-tour.html';   // BookBar, shows below 993
 const LISTING = '/tour.html';       // SectionSwitcher, shows below 768
+// My Trips + Our Company (WO5+, Sep 2026, Wayan: "the footer needs to be
+// sticky at the bottom") moved OUT of FREE and in here: the compact footer on
+// those two pages is `.footerbar`, fixed at the bottom at every width, so the
+// app bar now yields to it there exactly like it yields to BookBar/
+// SectionSwitcher elsewhere. They used to be the two pages the app bar owned
+// outright - now neither is.
+const FOOTERBAR = ['/my-trips.html', '/our-company.html'];
 
 // WHAT THIS HARNESS CANNOT DO, said plainly.
 // App mode reaches the CSS down two paths: `@media (display-mode: standalone)`
@@ -40,7 +47,7 @@ const box = (page, sel) => page.evaluate((s) => {
 // Exactly one thing stuck to the bottom of the screen. Two is the collision
 // Wayan decided against; zero is what the first cut of this shipped at 768-992
 // on a listing page, where the app bar yielded to a bar that was not displayed.
-const bottomBars = (page) => page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar')]
+const bottomBars = (page) => page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')]
   .filter((el) => {
     const cs = getComputedStyle(el);
     const r = el.getBoundingClientRect();
@@ -87,7 +94,7 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
 // ---- 2. a browser tab: nothing may change ----
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
-  for (const path of [...FREE, DETAIL, LISTING]) {
+  for (const path of [...FREE, DETAIL, LISTING, ...FOOTERBAR]) {
     const page = await ctx.newPage();
     const errs = [];
     page.on('pageerror', (e) => errs.push(e.message));
@@ -200,7 +207,7 @@ for (const w of [390, 768]) {
   // and /tour.html has no .stickybar in the DOM at all.
   //   So the invariant is NEVER TWO, checked at the top AND after scrolling, plus
   // the specific hand-over each page owes.
-  for (const path of [...FREE, DETAIL, LISTING]) {
+  for (const path of [...FREE, DETAIL, LISTING, ...FOOTERBAR]) {
     const page = await ctx.newPage();
     await appMode(page);
     await page.goto(BASE + path, { waitUntil: 'load' });
@@ -228,6 +235,15 @@ for (const w of [390, 768]) {
       const sw = await box(page, '.stickybar');
       ok(sw && sw.display !== 'none', `${w}${LISTING}: SectionSwitcher never appeared after scrolling`);
       ok(nav && nav.display === 'none', `${w}${LISTING}: app bar did not yield to SectionSwitcher`);
+    }
+    if (FOOTERBAR.includes(path)) {
+      // Unlike BookBar/SectionSwitcher, the compact footer runs at EVERY
+      // width and is on screen from the first paint, not just after
+      // scrolling - so this checks it before AND after scroll, both times.
+      const footer = await box(page, '.footerbar');
+      const nav = await box(page, '[data-appnav]');
+      ok(footer && footer.display !== 'none' && footer.bottom === 844, `${w}${path}: compact footer is not pinned to the bottom (bottom ${footer && footer.bottom})`);
+      ok(nav && nav.display === 'none', `${w}${path}: app bar did not yield to the compact footer`);
     }
     await page.close();
   }

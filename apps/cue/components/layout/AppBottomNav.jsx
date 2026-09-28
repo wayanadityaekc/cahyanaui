@@ -33,8 +33,13 @@ import { APP_ONLY } from '@/components/ui/pwaClasses';
 // it everywhere. SectionSwitcher stops at 767 - yielding to it above that left a
 // listing page at 768-992 with NO bar at all, both of them hidden. Caught by the
 // harness, invisible on a phone.
+// Third yield (WO5+, Sep 2026): the compact footer on Settings/My Trips/Our
+// Company is fixed at the bottom too - Wayan asked for it pinned there. Not
+// width-scoped like the other two: the compact footer runs at every width, so
+// this bar has to give way at every width on those three pages, same as it
+// would to a bookbar/stickybar.
 const BAR =
-  `${APP_ONLY} [body:has(.bookbar)_&]:hidden max-md:[body:has(.stickybar)_&]:hidden ` +
+  `${APP_ONLY} [body:has(.bookbar)_&]:hidden max-md:[body:has(.stickybar)_&]:hidden [body:has(.footerbar)_&]:hidden ` +
   'fixed inset-x-0 bottom-0 z-[95] items-stretch ' +
   'pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] ' +
   'bg-white [border-top:1px_solid_var(--color-line)] ' +

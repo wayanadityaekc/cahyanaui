@@ -13,6 +13,7 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { initialsOf } from '@/components/layout/AccountMenu';
 import MyReviews from './MyReviews';
 import DeleteAccountModal from './DeleteAccountModal';
+import SignInPrompt from '@/components/account/SignInPrompt';
 
 // Danger-zone button, same shape as the rest of the page's own local
 // BTN_DANGER pattern in DeleteAccountModal - kept ghost-red here since this
@@ -58,7 +59,10 @@ export default function AccountSettings() {
   if (!account) {
     return (
       <div id="settings-root" data-settings>
-        <p>Sign in to manage your details.</p>
+        <SignInPrompt
+          lead="Sign in to manage your details."
+          sub="Your name, contact info, and trip preferences live here once you're signed in."
+        />
       </div>
     );
   }

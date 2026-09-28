@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { normalizePath } from '@/lib/pathname';
 import {
-  Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, X,
+  Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X,
 } from 'lucide-react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
@@ -309,6 +309,7 @@ export default function Navbar() {
               </Collapse>
             </li>
             <li className={NAV_LI}><a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}><BookOpen strokeWidth={1.7} aria-hidden="true" />Guide</a></li>
+            <li className={NAV_LI}><a href="/all-reviews.html" className={navLink(isActive('/all-reviews.html'))}><Star strokeWidth={1.7} aria-hidden="true" />Reviews</a></li>
             {/* Building2 = ikon yang sama dipakai rail Our Company buat "About Us". */}
             <li className={NAV_LI}><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}><Building2 strokeWidth={1.7} aria-hidden="true" />Our Company</a></li>
             {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}

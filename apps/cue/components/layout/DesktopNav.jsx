@@ -67,6 +67,7 @@ export default function DesktopNav({ isActive }) {
         </PopMenu>
       </li>
       <li><a href="/bali-guide.html" className={LINK(isActive('/bali-guide.html'))}>Guide</a></li>
+      <li><a href="/all-reviews.html" className={LINK(isActive('/all-reviews.html'))}>Reviews</a></li>
       <li><a href="/our-company.html" className={LINK(isActive('/our-company.html'))}>Our Company</a></li>
     </ul>
   );

@@ -23,6 +23,8 @@ import useBodyLock from '@/components/ui/useBodyLock';
 import Select from '@/components/ui/Select';
 import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import AuthModal from '@/components/account/AuthModal';
+import AccountMenu from './AccountMenu';
+import DesktopNav from './DesktopNav';
 
 // Tailwind-native (migrasi Fase 2): navbar (semua halaman). Dulu keluarga
 // .navbar*/.acct__dot/.itn-badge di style.css - sekarang utilities 1:1.
@@ -209,9 +211,11 @@ export default function Navbar() {
           and leaves the nav flush at the top. */}
       <div ref={barRef}><TripBar /></div>
       <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)] min-[993px]:px-5">
-        <a href="/" className="mr-auto">
+        <a href="/" className="max-[992px]:mr-auto">
           <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-[-0.25rem]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
+
+        <DesktopNav isActive={isActive} />
 
         {/* Chat pindah ke sini (Sep 2026, Wayan) - dulu nempel di sticky bar bawah
             + tombol ngambang. Di navbar dia keliatan di semua halaman & semua lebar
@@ -229,6 +233,9 @@ export default function Navbar() {
           <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
         </a>
+
+        {/* WO1: account slot, far right at every width (left of the burger on phones). */}
+        <div className="flex items-center max-[992px]:mr-[0.85rem]"><AccountMenu onLogin={() => setAuthOpen(true)} /></div>
 
         <FlagDefs />
 
@@ -397,7 +404,7 @@ export default function Navbar() {
             covers the burger while the menu is open, so the x in the Welcome row is
             the only close affordance a guest can see. It is not optional. */}
         <button
-          className="relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] max-[992px]:-ml-[2px] max-[992px]:items-center max-[992px]:justify-center"
+          className="min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] max-[992px]:-ml-[2px] max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}

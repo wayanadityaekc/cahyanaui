@@ -1,6 +1,6 @@
 import AccountSettings from '@/components/trip/AccountSettings';
 import JsonLd from '@/components/JsonLd';
-import { RAIL_PAGE } from '@/components/ui/railClasses';
+import { RAIL_PAGE_SCROLL } from '@/components/ui/railClasses';
 
 export const metadata = {
   title: 'Account Settings | Cahyana Ubud Experience',
@@ -19,7 +19,7 @@ export default function Page() {
     // stacking a third 80px pushed the page 80px past 100dvh.
     <div className="tourprog">
       <JsonLd page="settings" />
-      <div className={RAIL_PAGE}>
+      <div className={RAIL_PAGE_SCROLL}>
         <AccountSettings />
       </div>
     </div>

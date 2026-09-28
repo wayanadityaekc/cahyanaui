@@ -38,6 +38,19 @@ export const RAIL_PAGE_BOX = `${PAGE_WIDE} pb-[var(--space-5)]`;
 
 export const RAIL_PAGE = `${RAIL_PAGE_BOX} pt-[calc(var(--header-h-max,104px)+1.9rem)]`;
 
+// Tighter navbar/frame/footer margin, scrollContent pages only (Sep 2026,
+// Wayan: "margin antara navbar -> konten <- footer terlalu lebar, buat
+// sedikit lebih sempit"). A SEPARATE constant from RAIL_PAGE/RAIL_PAGE_BOX,
+// not a change to either: guide articles share RAIL_PAGE_BOX's own bottom
+// padding for their long-form reading page, and My Trips/Settings share
+// RAIL_PAGE's own top padding with nothing else - narrowing either in place
+// would tighten a page nobody asked to touch. --space-3 (24px) both sides,
+// down from 1.9rem (30.4px) top / --space-5 (48px) bottom - RAIL_FRAME_SCROLL's
+// own calc below has to shrink by the same two amounts or the frame overshoots
+// the viewport by the difference.
+export const RAIL_PAGE_SCROLL =
+  `${PAGE_WIDE} pb-[var(--space-3)] pt-[calc(var(--header-h-max,104px)+var(--space-3))]`;
+
 // overflow-CLIP, not overflow-hidden. Both clip the rail's cream to the rounded
 // corner, but `hidden` also makes the frame a scroll container, and a sticky child
 // sticks to its nearest scrolling ancestor - so the menu would scroll away with
@@ -91,9 +104,13 @@ export const RAIL_FRAME_CARD = `${FRAME_DESK} max-[992px]:rounded-md max-[992px]
 // guess about who else might use it - it is hardcoded to their one shared
 // footer height (>=561px value; scrollContent never runs below that width,
 // so the mobile 49px figure does not apply here).
+//
+// The two `--space-3` terms mirror RAIL_PAGE_SCROLL's own top/bottom padding
+// (24px each, down from 1.9rem/--space-5) - shrink one without the other and
+// the frame either overshoots the viewport again or leaves dead space back.
 export const RAIL_FRAME_SCROLL =
   'flex items-stretch bg-white [border:1px_solid_var(--line)] rounded-[var(--r-lg)] ' +
-  'min-[993px]:h-[calc(100dvh_-_var(--header-h-max,104px)_-_1.9rem_-_var(--space-5)_-_60px_-_env(safe-area-inset-bottom))] ' +
+  'min-[993px]:h-[calc(100dvh_-_var(--header-h-max,104px)_-_var(--space-3)_-_var(--space-3)_-_60px_-_env(safe-area-inset-bottom))] ' +
   'overflow-clip max-[992px]:block';
 
 // --- desktop rail -----------------------------------------------------------

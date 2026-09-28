@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle, ChevronDown } from 'lucide-react';
 import RailLayout from '@/components/ui/RailLayout';
-import { RAIL_PAGE, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
+import { RAIL_PAGE_SCROLL, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { crumbsFor } from '@/lib/crumbs';
 import AboutPage from './AboutPage';
@@ -163,7 +163,7 @@ export default function OurCompany() {
   };
 
   return (
-    <div className={RAIL_PAGE}>
+    <div className={RAIL_PAGE_SCROLL}>
       <RailLayout
         label="Our company"
         items={TABS}

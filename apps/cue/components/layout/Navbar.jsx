@@ -228,8 +228,6 @@ export default function Navbar() {
           <span className={`absolute top-[-7px] right-[-9px] bg-gold ${BADGE_BASE}`} hidden={!count}>{count}</span>
         </a>
 
-        {/* WO1: account slot, far right at every width (left of the burger on phones). */}
-        <div className="flex items-center max-[992px]:mr-[0.85rem]"><AccountMenu onLogin={() => setAuthOpen(true)} /></div>
 
         <FlagDefs />
 
@@ -333,22 +331,31 @@ export default function Navbar() {
             The cost of a right-hand drawer is the same as a left-hand one: the panel
             covers the burger while the menu is open, so the x in the Welcome row is
             the only close affordance a guest can see. It is not optional. */}
-        <button
-          className="min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-6 max-[992px]:h-[2.2rem] max-[992px]:-ml-[2px] max-[992px]:items-center max-[992px]:justify-center"
-          id="hamburger"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          ref={burgerRef}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
-          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
-          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
-              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
-              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
-              jadi titik hijau pas migrasi Tailwind ini.) */}
-          <span className="absolute top-[-2px] right-[-2px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
-        </button>
+        {/* WO1 OPTION D (Wayan): on phones the burger and the account slot share ONE pill,
+            [ burger | account ] - still two separate taps, two panels. Desktop has no
+            burger, so the pill styles are phone-only and the account slot stands alone.
+            The pill is 2.2rem (35.2px) so each half keeps a >=32px thumb target.
+            No overflow-hidden on the pill: the account menu hangs out of it. */}
+        <div className="flex items-center max-[992px]:h-[2.2rem] max-[992px]:border max-[992px]:border-line max-[992px]:rounded-full" data-nav-pill>
+          <button
+            className={`min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-auto max-[992px]:h-full max-[992px]:pl-[0.7rem] max-[992px]:pr-[0.55rem] max-[992px]:rounded-l-full max-[992px]:items-center max-[992px]:justify-center [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cream max-[992px]:active:bg-cream ${menuOpen ? 'max-[992px]:bg-cream' : ''}`}
+            id="hamburger"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            ref={burgerRef}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+            <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+            <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
+            {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
+                .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
+                span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
+                jadi titik hijau pas migrasi Tailwind ini.) */}
+            <span className="absolute top-[3px] right-[5px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
+          </button>
+          <span className="min-[993px]:hidden w-px h-[18px] bg-line" aria-hidden="true" />
+          <AccountMenu onLogin={() => setAuthOpen(true)} />
+        </div>
       </div>
 
       <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />

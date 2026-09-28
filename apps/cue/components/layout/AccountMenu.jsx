@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, LogOut, Settings, ShoppingBag } from 'lucide-react';
+import { ChevronDown, LogOut, Settings, ShoppingBag, UserRound } from 'lucide-react';
 import { useAccount } from '@/state/AccountProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { PopMenu } from '@/components/ui/Reveal';
@@ -23,9 +23,18 @@ import { BTN_CTA } from '@/components/ui/btnClasses';
 // "user menu"): header with name + email, separator, items, separator, sign out.
 // Rebuilt in Cahyana tokens - no library code, no dependency.
 //
+// PHONES = OPTION D (Wayan): this button is the RIGHT HALF of a pill whose left half
+// is the hamburger (the pill itself lives in Navbar). Still two separate taps. Logged
+// out it is a person icon, logged in the initials circle. The half turns cream while
+// its menu is open, so the guest can see which of the two they opened.
+// `HALF_R` is the shape; Navbar's burger carries the mirror-image left half.
+//
 // Floating panel rules (same as CatDropdown): solid bg + border, z-index, tap
 // outside + Escape close it. The `relative` wrapper hugs the trigger (PopMenu
 // containing-block trap - see CLAUDE.md).
+
+const HALF_R =
+  'max-[992px]:h-full max-[992px]:border-none max-[992px]:bg-transparent max-[992px]:rounded-l-none max-[992px]:rounded-r-full max-[992px]:hover:bg-cream max-[992px]:active:bg-cream';
 
 const ROW = `${MENU_ROW_BOX} text-small font-medium text-gold no-underline bg-transparent border-none cursor-pointer font-body hover:bg-cream`;
 
@@ -80,15 +89,17 @@ export default function AccountMenu({ onLogin }) {
   if (!account) {
     const isDesktop = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 993px)').matches;
     return (
-      <div className={`relative ${pending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
+      <div className={`relative max-[992px]:h-full ${pending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
         <button
           type="button"
           aria-haspopup="menu"
           aria-expanded={open}
+          aria-label="Log in"
           onClick={() => (isDesktop() ? setOpen((v) => !v) : onLogin())}
-          className="inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream max-[992px]:px-[0.6rem]"
+          className={`inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${HALF_R} max-[992px]:pl-[0.55rem] max-[992px]:pr-[0.7rem]`}
         >
-          Log in
+          <span className="max-[992px]:hidden">Log in</span>
+          <UserRound className="min-[993px]:hidden w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
         </button>
         <PopMenu open={open}>
           <div role="menu" className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] w-[18rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
@@ -106,16 +117,16 @@ export default function AccountMenu({ onLogin }) {
 
   const first = firstNameOf(account.name, account.email);
   return (
-    <div className="relative" ref={boxRef} data-account-slot="in">
+    <div className="relative max-[992px]:h-full" ref={boxRef} data-account-slot="in">
       <button
         type="button"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Account menu for ${first}`}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold [transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold-d"
+        className={`inline-flex items-center gap-2 bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold-d ${HALF_R} max-[992px]:pl-[0.45rem] max-[992px]:pr-[4px] ${open ? 'max-[992px]:bg-cream' : ''}`}
       >
-        <span className="w-[30px] h-[30px] rounded-[50%] bg-gold text-white grid place-items-center text-label font-semibold tracking-[0.02em]" aria-hidden="true">
+        <span className="w-[30px] h-[30px] max-[992px]:w-[26px] max-[992px]:h-[26px] rounded-[50%] bg-gold text-white grid place-items-center text-label font-semibold tracking-[0.02em]" aria-hidden="true">
           {initialsOf(account.name, account.email)}
         </span>
         <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>

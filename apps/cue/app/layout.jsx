@@ -83,11 +83,13 @@ export default function RootLayout({ children }) {
           WO5+, Sep 2026) is `fixed` at the bottom too - see .footerbar in
           Footer.jsx. It cannot collide with the other three either: those three
           pages never carry a bookbar or stickybar of their own. Two heights, not
-          one - the compact footer wraps to a 3rd row under 561px (measured 107px
-          vs 60px at/above it, same breakpoint the footer's own flex-col switch
-          uses) - and `env(safe-area-inset-bottom)` matches the footer's own pb-,
-          so the reservation and the bar's real height never drift apart. */}
-      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px] standalone:max-[993px]:not-has-[.bookbar]:pb-[56px] max-[560px]:has-[.footerbar]:pb-[calc(107px+env(safe-area-inset-bottom))] min-[561px]:has-[.footerbar]:pb-[calc(60px+env(safe-area-inset-bottom))]">
+          one - the mobile footer shrank to icons-only content (Wayan: "at
+          least same height with navbar") and measures 49px below 561px,
+          under that width's 52.8px navbar; 60px at/above it (already within
+          2.4px of that width's navbar) - and `env(safe-area-inset-bottom)`
+          matches the footer's own pb-, so the reservation and the bar's real
+          height never drift apart. */}
+      <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px] standalone:max-[993px]:not-has-[.bookbar]:pb-[56px] max-[560px]:has-[.footerbar]:pb-[calc(49px+env(safe-area-inset-bottom))] min-[561px]:has-[.footerbar]:pb-[calc(60px+env(safe-area-inset-bottom))]">
         <LoadingScreen />
         <Providers>
           <IosZoomFix />

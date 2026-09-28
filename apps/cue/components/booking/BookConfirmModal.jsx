@@ -588,8 +588,7 @@ export default function BookConfirmModal() {
             <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
             {signinEmail ? (
               <p data-signin-note className="-mt-3 mb-6 text-small text-muted leading-[var(--lh-body)]">
-                You already have an account with <strong className="text-green">{signinEmail}</strong>. We&apos;ve
-                emailed you a sign-in link - open it to see this booking in My Trips.
+                You booked as <strong className="text-green">{signinEmail}</strong>. Check your email to sign in.
               </p>
             ) : null}
             <button className={BTN} onClick={closeBooking}>Done</button>
@@ -614,8 +613,7 @@ export default function BookConfirmModal() {
                 </p>
                 {signinEmail ? (
                   <p data-signin-note className="-mt-3 mb-6 text-small text-muted leading-[var(--lh-body)]">
-                    You already have an account with <strong className="text-green">{signinEmail}</strong>. We&apos;ve
-                    emailed you a sign-in link - open it to see this booking in My Trips.
+                    You booked as <strong className="text-green">{signinEmail}</strong>. Check your email to sign in.
                   </p>
                 ) : null}
                 {bookingRef && railFor(currency) === 'doku' ? (

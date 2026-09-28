@@ -3971,8 +3971,8 @@ BARU"). Singkatnya: server **gak lagi ngasih login** ke browser buat akun yang u
 ada - dia ngirim link sign-in ke inbox akun itu, dan situs yang ngasih tau tamunya.
 - **`BookConfirmModal`**: respons booking bawa `signin_sent` + `signin_email`. Di dua
   layar akhir ("Booking Received!" dan "Almost there - just the payment") nongol satu
-  baris: *"You already have an account with X. We've emailed you a sign-in link -
-  open it to see this booking in My Trips."* Hook `[data-signin-note]`.
+  baris: *"You booked as X. Check your email to sign in."* (dipendekin 28 Sep,
+  Wayan: *"biar bahasanya lebih singkat"*) Hook `[data-signin-note]`.
   - Yang ditampilin **email yang tamu ketik sendiri**, bukan nama akun. Contoh Wayan
     nulis "log in as A account" - tapi kalau pakai nama, orang yang ngetik email
     orang lain bakal dikasih tau nama pemiliknya.
@@ -3982,8 +3982,8 @@ ada - dia ngirim link sign-in ke inbox akun itu, dan situs yang ngasih tau tamun
   ke akun yang login (pesan buat temen = ganti nama/email-nya aja). Toggle = satu
   keputusan lagi buat SEMUA tamu demi kasus yang jarang.
 - **`AuthModal` "Create account"** dengan email yang udah terdaftar: modal tetep
-  kebuka dan nyetak *"You already have an account with X. We've sent you a sign-in
-  link - check your email."* (`createAccount()` balikin `{signin:true}`). Dulu
+  kebuka dan nyetak *"You already have an account as X. Check your email to sign in."*
+  (`createAccount()` balikin `{signin:true}`). Dulu
   tampilan Create gak punya slot pesan sukses sama sekali - cuma tampilan Sign in.
 - **Tamu lama yang gak login dan bayar online** gak bisa lihat layar "Booking
   confirmed" (layar itu nanya server pakai login). Dia dapet cabang **"Payment sent"**

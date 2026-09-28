@@ -51,7 +51,7 @@ for (const w of [390, 1280]) {
     const token = await page.evaluate(() => localStorage.getItem('cue_token'));
     if (kind === 'existing') {
       const note = await page.locator('[data-signin-note]:visible').first().innerText().catch(() => '');
-      ok(/already have an account/i.test(note) && note.includes('andras@example.com'),
+      ok(/already have an account as/i.test(note) && /check your email/i.test(note) && note.includes('andras@example.com'),
         `${w}/create-existing: the guest is not told to check that inbox (got "${note}")`);
       ok(!token, `${w}/create-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
       ok(await page.locator('#auth-cemail').isVisible(), `${w}/create-existing: the modal closed as if it had signed in`);
@@ -91,7 +91,7 @@ for (const w of [390, 1280]) {
     const token = await page.evaluate(() => localStorage.getItem('cue_token'));
     const note = await page.locator('[data-signin-note]:visible').first().innerText().catch(() => '');
     if (kind === 'existing') {
-      ok(/already have an account/i.test(note) && note.includes('andras@example.com'),
+      ok(/you booked as/i.test(note) && /check your email/i.test(note) && note.includes('andras@example.com'),
         `${w}/book-existing: the guest is not told where the sign-in link went (got "${note}")`);
       ok(!token, `${w}/book-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
     } else {

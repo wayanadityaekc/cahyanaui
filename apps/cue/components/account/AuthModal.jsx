@@ -47,7 +47,7 @@ export default function AuthModal({ open, onClose }) {
     const res = await createAccount({ name: data.name, email: data.email, phone: data.phone });
     setBusy(false);
     if (res.ok) close();
-    else if (res.signin) setOk(`You already have an account with ${res.email}. We've sent you a sign-in link - check your email.`);
+    else if (res.signin) setOk(`You already have an account as ${res.email}. Check your email to sign in.`);
     else setMsg(res.error || 'Sorry, we could not create your account. Please try again.');
   };
 

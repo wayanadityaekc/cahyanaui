@@ -9,7 +9,12 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="tourprog pb-20">
+    // No pb-20 here (unlike other .tourprog pages): RailLayout's scrollContent
+    // mode caps the frame to fit the viewport and the fixed footer already
+    // reserves its own space via body's has-[.footerbar] padding - a second
+    // 80px on top of both is what pushed the page 80px past 100dvh and let
+    // the whole page scroll instead of just the frame's content.
+    <div className="tourprog">
       <JsonLd page="my-trips" />
     {/* Same shell as Our Company (rail + content). Wayan, Sep 2026: "my trips
         punya dua judul numpuk, hapus yang gede, sisain yang kecil" - the big

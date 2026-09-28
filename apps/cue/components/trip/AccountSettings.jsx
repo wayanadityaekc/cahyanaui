@@ -47,6 +47,7 @@ function SettingsShell({ children }) {
       mobileNav={true}
       collapsible
       breadcrumb={crumbsFor('settings')}
+      scrollContent
     >
       <div className={RAIL_READ}>
         <h1 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-green m-0 mb-[0.3rem]">Account Settings</h1>

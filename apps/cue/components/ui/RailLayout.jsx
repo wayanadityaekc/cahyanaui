@@ -9,7 +9,8 @@ import {
   RAIL_FRAME, RAIL_ASIDE, RAIL_ASIDE_COLLAPSED, RAIL_STICK, RAIL_STICK_COLLAPSED,
   RAIL_LABEL, railItem, RAIL_SPLIT,
   RAIL_MAIN, RAIL_MLIST, RAIL_MLABEL, railMobileItem, RAIL_MCHEV, RAIL_BACK,
-  RAIL_HEADER, RAIL_TRIGGER, RAIL_HEADER_SEP,
+  RAIL_HEADER, RAIL_TRIGGER, RAIL_HEADER_SEP, RAIL_HEADER_PAD,
+  RAIL_FRAME_SCROLL, RAIL_MAIN_SCROLL, RAIL_SCROLL_BODY,
 } from './railClasses';
 
 // The "mail app" shell shared by Our Company, My Trips and the guide articles
@@ -60,6 +61,14 @@ export default function RailLayout({
   // renders exactly as before.
   collapsible = false,
   breadcrumb = null,
+  // Opt-in (Sep 2026, Wayan sketched it: "focus on bottom border of the
+  // container wrapper, I want that container shows at the screen" - only the
+  // content column should scroll, not the whole page, so the frame's own
+  // bottom border never scrolls out of view). Overrides frameClass/mainClass
+  // with the capped-height variants when true; the guide articles never pass
+  // this (their long-form content is exactly the case a capped frame would
+  // break), so their frame keeps growing with the page as before.
+  scrollContent = false,
 }) {
   // One preference, not per-page (see KEY.railCollapsed) - collapsing it on
   // My Trips should still read collapsed on Settings. Read in useEffect, not
@@ -75,6 +84,8 @@ export default function RailLayout({
     writeLocal(KEY.railCollapsed, next ? '1' : '0');
   };
   const railCollapsed = collapsible && collapsed;
+  const effectiveFrameClass = scrollContent ? RAIL_FRAME_SCROLL : frameClass;
+  const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
 
   const rows = (mobile) =>
     items.map((t) => {
@@ -115,7 +126,7 @@ export default function RailLayout({
     });
 
   return (
-    <div className={frameClass}>
+    <div className={effectiveFrameClass}>
       {/* Desktop rail. It carries no height of its own: the flex row stretches
           it so the cream fills the box, and the menu inside is what sticks. */}
       <aside className={railCollapsed ? RAIL_ASIDE_COLLAPSED : RAIL_ASIDE} aria-label={label}>
@@ -139,12 +150,14 @@ export default function RailLayout({
         </div>
       )}
 
-      <main className={`${mainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}>
+      <main className={`${effectiveMainClass} ${mobileNav || reading ? '' : 'max-[992px]:hidden'}`}>
         {/* Header row: collapse trigger + breadcrumb (desktop only - mobile
             never had a sidebar to collapse, and its own back row already
-            names the section, so this would just say the same thing twice). */}
+            names the section, so this would just say the same thing twice).
+            In scroll mode <main> carries no padding of its own, so the header
+            brings its own (RAIL_HEADER_PAD) instead of inheriting it. */}
         {(collapsible || breadcrumb) && (
-          <div className={RAIL_HEADER}>
+          <div className={scrollContent ? `${RAIL_HEADER} ${RAIL_HEADER_PAD}` : RAIL_HEADER}>
             {collapsible && (
               <button
                 type="button"
@@ -166,7 +179,9 @@ export default function RailLayout({
             {label}
           </button>
         )}
-        {children}
+        {/* Only this piece scrolls in scroll mode - the header above stays
+            put. Plain children otherwise, unchanged from before. */}
+        {scrollContent ? <div className={RAIL_SCROLL_BODY}>{children}</div> : children}
       </main>
     </div>
   );

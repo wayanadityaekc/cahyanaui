@@ -65,6 +65,37 @@ export const RAIL_FRAME =
 // half is the same string, so the two pages cannot drift apart.
 export const RAIL_FRAME_CARD = `${FRAME_DESK} max-[992px]:rounded-md max-[992px]:shadow-none`;
 
+// Capped, not just a minimum (Sep 2026, Wayan sketched it: "focus on bottom
+// border of the container wrapper, I want that container shows at the
+// screen" - the frame must never grow past the first screen, or its own
+// bottom border scrolls out of view). `h-` instead of `min-h-`: same calc as
+// FRAME_DESK otherwise, so a page opting into this still measures identically
+// when its content happens to be short.
+//
+// A SEPARATE constant from FRAME_DESK on purpose, not a change to it: the
+// guide articles share that same base for their own desktop frame, and their
+// content is long-form reading - capping THEIR frame would just force guide
+// articles into an internal scrollbar nobody asked for. Opt-in per page
+// (RailLayout's `scrollContent` prop), not a site-wide default.
+//
+// The extra `- 60px` subtracts the compact footer's OWN reserved height
+// (see app/layout.jsx's body padding for `.footerbar`). Without it the
+// frame still measured correctly, but the PAGE gained exactly that much
+// extra scroll range on top of it - scrolling revealed blank space between
+// the frame and the fixed footer, with the navbar scrolling away too.
+// Measured, not guessed: caught by scrolling the page directly (not the
+// content column) after this shipped without the subtraction - `documentElement.
+// scrollHeight` was 940 against an 800px viewport, a 140px dead range that
+// matched nothing on screen. `scrollContent` is only ever used by the three
+// footerbar pages (Settings/My Trips/Our Company), so this number is not a
+// guess about who else might use it - it is hardcoded to their one shared
+// footer height (>=561px value; scrollContent never runs below that width,
+// so the mobile 49px figure does not apply here).
+export const RAIL_FRAME_SCROLL =
+  'flex items-stretch bg-white [border:1px_solid_var(--line)] rounded-[var(--r-lg)] ' +
+  'min-[993px]:h-[calc(100dvh_-_var(--header-h-max,104px)_-_1.9rem_-_var(--space-5)_-_60px_-_env(safe-area-inset-bottom))] ' +
+  'overflow-clip max-[992px]:block';
+
 // --- desktop rail -----------------------------------------------------------
 export const RAIL_ASIDE =
   'max-[992px]:hidden flex-none w-[248px] bg-cream [border-right:1px_solid_var(--line)] ' +
@@ -120,6 +151,12 @@ export const RAIL_TRIGGER =
   'flex items-center justify-center w-8 h-8 -ml-1 rounded-[var(--r-md)] bg-transparent border-none cursor-pointer ' +
   'text-muted hover:bg-white hover:text-gold [&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)]';
 export const RAIL_HEADER_SEP = 'w-px h-4 bg-line shrink-0';
+// Only needed in scroll mode: normally the header sits inside <main>, which
+// carries its own padding (RAIL_MAIN) and pushes every child in from the
+// edge for free. Scroll mode moves that padding OFF <main> and onto the
+// header + the scrolling body individually (see RAIL_MAIN_SCROLL below), so
+// the header has to bring its own horizontal inset here instead.
+export const RAIL_HEADER_PAD = 'min-[993px]:px-[2.1rem] min-[993px]:pt-[1.6rem]';
 
 // Splits "about us" from "the legal small print" - two different reasons to be
 // on this page, so they should not read as one run of six.
@@ -132,6 +169,26 @@ export const RAIL_MAIN = 'flex-1 min-w-0 p-[1.6rem_2.1rem] max-[992px]:p-0';
 export const RAIL_MAIN_CARD =
   'flex-1 min-w-0 p-[1.6rem_2.1rem] max-[992px]:px-6 max-[992px]:pt-6 max-[992px]:pb-8 ' +
   'max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
+
+// --- scroll mode (Sep 2026) --------------------------------------------------
+// <main> itself carries NO padding here (that moved to the header and the
+// body wrapper below) and becomes a flex column that is not allowed to grow
+// past its parent frame (`overflow-hidden` + `min-h-0`) - the frame is what
+// is actually capped (RAIL_FRAME_SCROLL), this just stops <main> from
+// silently re-introducing the overflow the frame was capped to prevent.
+// Mobile is untouched: `max-[992px]:p-0` matches RAIL_MAIN's own mobile
+// value, since mobile relies on the page's own gutter, not this column's.
+export const RAIL_MAIN_SCROLL =
+  'flex-1 min-w-0 min-[993px]:flex min-[993px]:flex-col min-[993px]:min-h-0 ' +
+  'min-[993px]:overflow-hidden max-[992px]:p-0';
+// The part that actually scrolls. `min-h-0` on a flex child is REQUIRED for
+// overflow-y-auto to ever kick in - without it, a flex item defaults to a
+// minimum height of its content's natural size, so it just grows the parent
+// instead of scrolling (measured: dropped this once while testing, the frame
+// grew past the viewport exactly as if RAIL_MAIN_SCROLL had never applied).
+export const RAIL_SCROLL_BODY =
+  'min-[993px]:flex-1 min-[993px]:min-h-0 min-[993px]:overflow-y-auto ' +
+  'min-[993px]:px-[2.1rem] min-[993px]:pb-[1.6rem]';
 
 // Prose is capped for line length but sits flush left, the same compromise the
 // guide articles make: the left edge lines up with everything else on the page,

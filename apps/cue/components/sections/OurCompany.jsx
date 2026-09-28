@@ -174,6 +174,7 @@ export default function OurCompany() {
         help={<HelpCard />}
         collapsible
         breadcrumb={LEGAL_TABS.has(tab) ? null : crumbsFor('our-company')}
+        scrollContent
       >
         <div className={RAIL_READ}>
           <section id="about" hidden={tab !== 'about'}>

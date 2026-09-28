@@ -14,7 +14,10 @@ export const metadata = {
 // rather than its page.jsx.
 export default function Page() {
   return (
-    <div className="tourprog pb-20">
+    // No pb-20 (see my-trips/page.jsx) - scrollContent's frame calc and the
+    // fixed footer's own body padding already account for bottom clearance;
+    // stacking a third 80px pushed the page 80px past 100dvh.
+    <div className="tourprog">
       <JsonLd page="settings" />
       <div className={RAIL_PAGE}>
         <AccountSettings />

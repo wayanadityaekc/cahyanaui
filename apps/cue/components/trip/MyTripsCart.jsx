@@ -520,6 +520,7 @@ export default function MyTripsCart() {
         onBack={() => setReading(false)}
         collapsible
         breadcrumb={crumbsFor('my-trips')}
+        scrollContent
       >
       {tab === 'custom' && (rows.length === 0 ? (
         <div className={MTC_EMPTY}>

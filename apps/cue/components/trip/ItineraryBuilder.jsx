@@ -11,7 +11,7 @@ import { PRICE } from '@/components/ui/priceClasses';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useReferral } from '@/state/ReferralProvider';
-import { useBooking } from '@/state/BookingProvider';
+import { useBooking, useResumeBooking } from '@/state/BookingProvider';
 import { quote } from '@/lib/api';
 import { cascadeFrom, clashDates, setItemMode, setItemTime, removeItem, removeDay, suggestState } from '@/lib/cart';
 import { SUGGEST, PKG_AIRPORT, PKG_AIRPORT_PLACE } from '@/content/shared/suggest';
@@ -192,6 +192,10 @@ export default function ItineraryBuilder() {
       onSuccess: () => clearAll(),
     });
   };
+
+  // WO2: a guest sent off to sign in from this page comes back here holding a
+  // resume marker - open the booking form for them, as if they had tapped again.
+  useResumeBooking(rows.length > 0 && rows.every((r) => r.date), book);
 
   return (
     <div className={ITN2}>

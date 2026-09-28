@@ -16,6 +16,10 @@ export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
   const [hydrated, setHydrated] = useState(false);
+  // True when THIS page load arrived through a sign-in link (?token=). The booking
+  // gate uses it to send a guest back to the page they were booking from - the
+  // email link always lands on the homepage.
+  const [justSignedIn, setJustSignedIn] = useState(false);
 
   // Re-read My Trips. Called on mount, and again after a review is sent: the
   // list of what can still be reviewed comes from the server, and without a
@@ -37,6 +41,7 @@ export function AccountProvider({ children }) {
     const magic = params.get('token');
     if (magic) {
       writeLocal(KEY.token, magic);
+      setJustSignedIn(true);
       params.delete('token');
       const qs = params.toString();
       window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
@@ -92,8 +97,10 @@ export function AccountProvider({ children }) {
     setTrips(null);
   };
 
-  // Ask the backend to email a magic sign-in link. Backend never reveals whether
-  // the email exists, so any completed request counts as success.
+  // Ask the backend to email a 6-digit sign-in code (28 Sep 2026 - was a link;
+  // Wayan: a code works wherever the guest reads the email, same device or not,
+  // which a link never could). Backend never reveals whether the email exists,
+  // so any completed request counts as success.
   const requestLogin = async (email) => {
     try {
       const r = await fetch(`${API_BASE}/account/login`, {
@@ -104,6 +111,28 @@ export function AccountProvider({ children }) {
       return r.ok;
     } catch {
       return false;
+    }
+  };
+
+  // Check that code. The session is issued server-side only on a match - unlike
+  // the old link, nothing here is already valid before this call succeeds.
+  const verifyCode = async (email, code) => {
+    try {
+      const r = await fetch(`${API_BASE}/account/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.status === 'ok' && d.token) {
+        writeLocal(KEY.token, d.token);
+        setAccount(d.account || null);
+        refreshTrips();
+        return { ok: true };
+      }
+      return { ok: false, error: (d && d.detail) || '' };
+    } catch {
+      return { ok: false, error: '' };
     }
   };
 
@@ -138,7 +167,7 @@ export function AccountProvider({ children }) {
   };
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, createAccount, hydrated }}>
+    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, verifyCode, createAccount, hydrated, justSignedIn }}>
       {children}
     </AccountContext.Provider>
   );

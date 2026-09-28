@@ -17,7 +17,8 @@ import DateTimeField from '@/components/ui/DateTimeField';
 import DateField from '@/components/ui/DateField';
 import { AIRPORT_ROUTE, fmtTime, fmtDate } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
-import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
+import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT, REFMSG_ERR } from '@/components/ui/modalClasses';
+import OtpFields from '@/components/account/OtpFields';
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
 import { railFor } from '@/lib/rails';
@@ -29,12 +30,15 @@ import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
+// Same cooldown as AuthModal's - not a security control, just stops hammering
+// "Resend" while the first code is still in flight.
+const RESEND_SECONDS = 30;
 
 export default function BookConfirmModal() {
   const { ctx, closeBooking } = useBooking();
   const { currency, stay, displayGuests } = useTripPrefs();
   const { referral, apply } = useReferral();
-  const { account, setAccount } = useAccount();
+  const { account, setAccount, requestLogin, verifyCode } = useAccount();
   const pricing = usePricing();
 
   const [f, setF] = useState(EMPTY);
@@ -67,6 +71,10 @@ export default function BookConfirmModal() {
       setPriced(null);
       setDone(false);
       setSigninEmail('');
+      setOtpCode('');
+      setOtpMsg('');
+      setOtpVerified(false);
+      setOtpCooldown(0);
       setStep(1);
       setLineDT([]);
       setDtErr({});
@@ -132,9 +140,41 @@ export default function BookConfirmModal() {
   const [bookingRef, setBookingRef] = useState('');
   // Set when the email typed belongs to an account that already existed. The
   // server no longer hands such a browser a login (a phone or email is not
-  // proof of anything), so it emails a sign-in link to that account instead -
-  // and the guest has to be told where to look.
+  // proof of anything) - it emails that account a 6-digit code instead, the
+  // same one AuthModal uses, and the guest enters it right here (28 Sep 2026,
+  // wired in alongside AuthModal's own code stage - was a passive "check your
+  // email" line, now the same interactive entry).
   const [signinEmail, setSigninEmail] = useState('');
+  const [otpCode, setOtpCode] = useState('');
+  const [otpMsg, setOtpMsg] = useState('');
+  const [otpBusy, setOtpBusy] = useState(false);
+  // The booking itself does not depend on this - it is already saved. This
+  // only signs the guest in so My Trips recognises them without a reload.
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpCooldown, setOtpCooldown] = useState(0);
+  useEffect(() => {
+    if (otpCooldown <= 0) return undefined;
+    const t = setInterval(() => setOtpCooldown((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(t);
+  }, [otpCooldown]);
+  const doOtpVerify = async (code) => {
+    setOtpMsg('');
+    setOtpBusy(true);
+    const res = await verifyCode(signinEmail, code);
+    setOtpBusy(false);
+    if (res.ok) { setOtpVerified(true); setOtpCode(''); return; }
+    setOtpCode('');
+    setOtpMsg(res.error || 'Sorry, something went wrong. Please try again.');
+  };
+  const resendOtp = async () => {
+    if (otpCooldown > 0 || otpBusy) return;
+    setOtpBusy(true);
+    await requestLogin(signinEmail);
+    setOtpBusy(false);
+    setOtpCode('');
+    setOtpMsg('');
+    setOtpCooldown(RESEND_SECONDS);
+  };
   const [paid, setPaid] = useState(false);
   // Is this visitor being offered online payment at all? Off for everyone until
   // the chain is proven live - see lib/payFlag.js. Read in an effect, never in
@@ -302,7 +342,8 @@ export default function BookConfirmModal() {
       // happens when PayPal's webhook says the money cleared - so the modal moves
       // to the payment step rather than showing a success screen.
       setBookingRef(d.ref || '');
-      setSigninEmail(d.signin_sent && d.signin_email ? d.signin_email : '');
+      if (d.signin_sent && d.signin_email) { setSigninEmail(d.signin_email); setOtpCooldown(RESEND_SECONDS); }
+      else setSigninEmail('');
       setDone(true);
     } catch (e) {
       setError(e.message || 'Sorry, we could not send your booking. Please try again, or reach us on WhatsApp.');
@@ -357,6 +398,38 @@ export default function BookConfirmModal() {
   const DETAILS_LI_ROW = "relative py-[0.5rem] pr-0 pl-[1.1rem] [border-bottom:1px_solid_#eee] text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.15rem] [&::before]:text-gold last:[border-bottom:none]";
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
+  // Shared by both success screens below (payment off / payment on): the
+  // booking is already saved either way, and this only signs the guest in.
+  const signinNote = () => (
+    <div data-signin-note className="-mt-3 mb-6">
+      {otpVerified ? (
+        <p className="text-small text-muted leading-[var(--lh-body)]">
+          Signed in as <strong className="text-green">{signinEmail}</strong>.
+        </p>
+      ) : (
+        <>
+          <p className="mb-3 text-small text-muted leading-[var(--lh-body)] text-center">
+            You booked as <strong className="text-green">{signinEmail}</strong>. Enter the
+            6-digit code we sent that inbox to sign in.
+          </p>
+          <OtpFields
+            length={6}
+            value={otpCode}
+            onChange={setOtpCode}
+            onComplete={doOtpVerify}
+            error={!!otpMsg}
+            disabled={otpBusy}
+          />
+          {otpMsg && <small className={`${REFMSG_ERR} text-center mt-3`}>{otpMsg}</small>}
+          <p className="mt-3 text-center text-small text-muted">
+            {otpCooldown > 0 ? `Resend code in ${otpCooldown}s` : (
+              <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={resendOtp}>Resend code</button>
+            )}
+          </p>
+        </>
+      )}
+    </div>
+  );
   return createPortal(
     <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} box={BOX_WIDE} shellClass={SHELL_WIDE}>
         {!paid && <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>}
@@ -586,11 +659,7 @@ export default function BookConfirmModal() {
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Booking Received!</h3>
             <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
-            {signinEmail ? (
-              <p data-signin-note className="-mt-3 mb-6 text-small text-muted leading-[var(--lh-body)]">
-                You booked as <strong className="text-green">{signinEmail}</strong>. Check your email to sign in.
-              </p>
-            ) : null}
+            {signinEmail ? signinNote() : null}
             <button className={BTN} onClick={closeBooking}>Done</button>
           </div>
         ) : (
@@ -611,11 +680,7 @@ export default function BookConfirmModal() {
                   Your booking is saved{bookingRef ? ` (${bookingRef})` : ''}. It is confirmed once this payment
                   goes through. Nothing is lost if you close this - you can pay later.
                 </p>
-                {signinEmail ? (
-                  <p data-signin-note className="-mt-3 mb-6 text-small text-muted leading-[var(--lh-body)]">
-                    You booked as <strong className="text-green">{signinEmail}</strong>. Check your email to sign in.
-                  </p>
-                ) : null}
+                {signinEmail ? signinNote() : null}
                 {bookingRef && railFor(currency) === 'doku' ? (
                   // The rupiah rail is hosted, so there is no onPaid here: the
                   // guest leaves, and My Trips asks the server what happened

@@ -36,10 +36,12 @@ const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:tex
 function LegalBody({ data }) {
   return (
     <div className={BODY_TEXT}>
-      {/* Pattern A: the trail sits above the heading, not under it. It arrives as
-          the first prose block, so it is pulled out here rather than rendered in
-          place. */}
-      <Prose blocks={data.body.filter((b) => b.type === 'crumb')} headingVariant="company" />
+      {/* The rail's own header breadcrumb is the only trail on this page now
+          (Sep 2026, Wayan: "breadcrumb ... follow the breadcrumb in the account
+          setting, no breadcrumb inside the content") - the legal-only "Pattern
+          A" trail that used to print here, above this h1, is gone. The crumb
+          block still lives in legal.json (content the dashboard could still
+          write to); it is just never rendered. */}
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
       <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="company" />
     </div>
@@ -126,11 +128,6 @@ function HelpCard({ className = '' }) {
   );
 }
 
-// Terms/Privacy/Cancellation already print their own trail at the top of
-// their own content (Pattern A, LegalBody above) - the header breadcrumb
-// would just repeat it right above, so those three tabs skip it.
-const LEGAL_TABS = new Set(['terms', 'privacy', 'cancellation']);
-
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
   // The phone has no room for a column, so the rail IS the first screen and a
@@ -173,7 +170,7 @@ export default function OurCompany() {
         onBack={goBack}
         help={<HelpCard />}
         collapsible
-        breadcrumb={LEGAL_TABS.has(tab) ? null : crumbsFor('our-company')}
+        breadcrumb={crumbsFor('our-company')}
         scrollContent
       >
         <div className={RAIL_READ}>

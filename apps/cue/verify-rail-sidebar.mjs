@@ -73,17 +73,23 @@ for (const { path, crumb } of PAGES) {
   await ctx.close();
 }
 
-// ---- Terms/Privacy/Cancellation skip the header breadcrumb (already have
-// their own, right above the H1 - Pattern A) - no duplicate trail on screen.
+// ---- Terms/Privacy/Cancellation get the SAME header breadcrumb as every
+// other tab now (Sep 2026, Wayan: "follow the breadcrumb in the account
+// setting, no breadcrumb inside the content") - the legal-only inline
+// "Pattern A" trail that used to print above the H1 is gone, and the header
+// one is never suppressed. Exactly one breadcrumb on screen, always the
+// header's.
 {
   const ctx = await loggedInCtx(1280);
   const page = await ctx.newPage();
   await page.goto('http://127.0.0.1:4000/our-company.html#terms', { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
   const headerCrumbCount = await page.locator('main > div > nav[aria-label="Breadcrumb"]:visible').count();
-  ok(headerCrumbCount === 0, `terms tab: header breadcrumb should be suppressed (Pattern A crumb already prints inline), found ${headerCrumbCount}`);
+  ok(headerCrumbCount === 1, `terms tab: header breadcrumb should always show, found ${headerCrumbCount}`);
   const inlineCrumb = await page.locator('h1', { hasText: 'Terms & Conditions' }).locator('xpath=preceding-sibling::nav[1]').count();
-  ok(inlineCrumb === 1, 'terms tab: the inline Pattern A breadcrumb above the H1 is missing');
+  ok(inlineCrumb === 0, 'terms tab: no breadcrumb should print inside the content anymore');
+  const totalCrumbs = await page.locator('nav[aria-label="Breadcrumb"]:visible').count();
+  ok(totalCrumbs === 1, `terms tab: exactly one breadcrumb should be visible on screen, found ${totalCrumbs}`);
   await ctx.close();
 }
 

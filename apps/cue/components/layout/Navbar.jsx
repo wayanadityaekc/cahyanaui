@@ -205,8 +205,32 @@ export default function Navbar() {
           and leaves the nav flush at the top. */}
       <div ref={barRef}><TripBar /></div>
       <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)] min-[993px]:px-5">
+        {/* HAMBURGER LEFT OF THE LOGO, DRAWER FROM THE LEFT (Wayan, 28 Sep 2026, WO1:
+            "move the humberger to the left of the logo, and also when menu open is from
+            left, and account is in the right"). Phones only - desktop has no burger.
+            This reverses the 27 Sep "burger back on the right" note below; that was the
+            last word until Wayan asked again here, with the account slot now taking the
+            right-hand corner. The panel still covers the burger when open, so the x in
+            the drawer header stays the only visible close control. */}
+        <button
+          className="min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:h-[2.2rem] max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
+          id="hamburger"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          ref={burgerRef}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+          <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
+          {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
+              .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
+              span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
+              jadi titik hijau pas migrasi Tailwind ini.) */}
+          <span className="absolute top-[3px] right-[-4px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
+        </button>
+
         <a href="/" className="max-[992px]:mr-auto">
-          <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-[-0.25rem]" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
+          <img className="h-10 w-auto block mr-4 ml-[0.1rem] max-[992px]:h-[34px] max-[992px]:ml-0" src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
         </a>
 
         <DesktopNav isActive={isActive} />
@@ -233,7 +257,7 @@ export default function Navbar() {
 
         <nav ref={navRef}>
           <ul
-            className={`fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+            className={`fixed top-0 left-0 bottom-0 right-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
             {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
@@ -331,31 +355,10 @@ export default function Navbar() {
             The cost of a right-hand drawer is the same as a left-hand one: the panel
             covers the burger while the menu is open, so the x in the Welcome row is
             the only close affordance a guest can see. It is not optional. */}
-        {/* WO1 OPTION D (Wayan): on phones the burger and the account slot share ONE pill,
-            [ burger | account ] - still two separate taps, two panels. Desktop has no
-            burger, so the pill styles are phone-only and the account slot stands alone.
-            The pill is 2.2rem (35.2px) so each half keeps a >=32px thumb target.
-            No overflow-hidden on the pill: the account menu hangs out of it. */}
-        <div className="flex items-center max-[992px]:h-[2.2rem] max-[992px]:border max-[992px]:border-line max-[992px]:rounded-full" data-nav-pill>
-          <button
-            className={`min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:w-auto max-[992px]:h-full max-[992px]:pl-[0.7rem] max-[992px]:pr-[0.55rem] max-[992px]:rounded-l-full max-[992px]:items-center max-[992px]:justify-center [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cream max-[992px]:active:bg-cream ${menuOpen ? 'max-[992px]:bg-cream' : ''}`}
-            id="hamburger"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            ref={burgerRef}
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
-            <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
-            <span className={`${BURGER_BAR} ${menuOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
-            {/* Titik hijau "ada booking mendatang" - titik bulat 8px sesuai maksud
-                .acct__dot lama. (Di CSS lama sempet ke-override `.navbar__toggle
-                span:not(.itn-badge)` jadi bar emas tipis - bug; Wayan minta dibenerin
-                jadi titik hijau pas migrasi Tailwind ini.) */}
-            <span className="absolute top-[3px] right-[5px] w-2 h-2 bg-[#3fae5a] rounded-[50%] border-2 border-white [&[hidden]]:hidden" hidden={!hasUpcoming} />
-          </button>
-          <span className="min-[993px]:hidden w-px h-[18px] bg-line" aria-hidden="true" />
-          <AccountMenu onLogin={() => setAuthOpen(true)} />
-        </div>
+        {/* WO1 (Wayan, 28 Sep 2026): account slot on its own at the far right. It was
+            one half of a [ burger | account ] pill (option D) for one round; Wayan then
+            moved the burger to the left of the logo, so the pill has nothing to join. */}
+        <AccountMenu onLogin={() => setAuthOpen(true)} />
       </div>
 
       <div className={`fixed inset-0 bg-[rgba(26,26,26,0.45)] z-[95] transition-[opacity,visibility] duration-300 ease-[var(--ease)] ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={() => setMenuOpen(false)} />

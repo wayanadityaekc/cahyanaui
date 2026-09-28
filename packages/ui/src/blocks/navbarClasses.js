@@ -46,8 +46,15 @@ export const NAV_BADGE = `absolute top-[-7px] right-[-9px] bg-gold ${NAV_BADGE_B
 // standalone `translate:` property and NOT into `transform:`, so a transition
 // naming `transform` animates nothing and the drawer teleports. This has bitten
 // CUE in five separate places.
+//
+// The SIDE is not in here: NAV_DRAWER_RIGHT / NAV_DRAWER_LEFT carry it, so
+// NavbarShell's `burgerSide` can swap it without two same-specificity utilities
+// fighting (right-0 vs right-auto - the winner would be compile order).
+export const NAV_DRAWER_RIGHT = 'right-0 left-auto';
+export const NAV_DRAWER_LEFT = 'left-0 right-auto';
+
 export const NAV_DRAWER =
-  'fixed top-0 right-0 bottom-0 left-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] ' +
+  'fixed top-0 bottom-0 w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] ' +
   'bg-surface-raised px-[22px] pb-[30px] overflow-y-auto ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain ' +
   'transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none ' +

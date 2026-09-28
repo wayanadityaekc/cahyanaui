@@ -12,6 +12,8 @@ import {
   NAV_SUBLIST,
   NAV_SUBTRIGGER,
   NAV_DRAWER,
+  NAV_DRAWER_LEFT,
+  NAV_DRAWER_RIGHT,
   NAV_DRAWER_HEAD,
   NAV_HEADER,
   NAV_ICON,
@@ -47,6 +49,14 @@ import {
  *   drawerFoot    node - pinned to the bottom of the drawer
  *   isActive      (href) => boolean - the app owns routing, so it owns this
  *   linkAs        the link component (pass next/link's Link); defaults to 'a'
+ *   desktopNav    node - page links IN the bar on wide screens (DesktopNav). When
+ *                 given, the hamburger hides from 993px up: desktop has no drawer.
+ *   account       node - the account slot (AccountMenu), last in the row.
+ *   burgerSide    'right' (default) | 'left'. 'left' puts the hamburger before the
+ *                 logo and slides the drawer in from the left - CUE, WO1, 28 Sep
+ *                 2026. The drawer comes from the burger's side either way, so it
+ *                 always covers the burger: the close button in drawerHead is the
+ *                 only visible close control and must stay.
  *
  * WHY A SHELL AND NOT TWO NAVBARS. What has to match between the sister sites
  * is not the wording - it is the drawer's width, its one hairline, the
@@ -70,6 +80,9 @@ export default function NavbarShell({
   isActive = () => false,
   linkAs: Link = 'a',
   closeIcon = null,
+  desktopNav = null,
+  account = null,
+  burgerSide = 'right',
   drawerId = 'nav-menu',
   className,
 }) {
@@ -126,13 +139,36 @@ export default function NavbarShell({
   useBodyLock(menuOpen);
 
   const close = () => setMenuOpen(false);
+  const left = burgerSide === 'left';
+  const burger = (
+      <button
+        type="button"
+        id="hamburger"
+        ref={burgerRef}
+        className={cn(
+          'relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] max-[992px]:items-center max-[992px]:justify-center',
+          left ? 'max-[992px]:mr-2' : 'max-[992px]:ml-1',
+          desktopNav && 'min-[993px]:hidden',
+        )}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+        aria-controls={drawerId}
+        onClick={() => setMenuOpen((v) => !v)}
+      >
+        <span className={cn(NAV_BURGER_BAR, menuOpen && 'translate-y-[7px] rotate-45')} />
+        <span className={cn(NAV_BURGER_BAR, menuOpen ? 'opacity-0' : 'opacity-100')} />
+        <span className={cn(NAV_BURGER_BAR, menuOpen && '-translate-y-[7px] -rotate-45')} />
+      </button>
+  );
   // A slot may be a node, or a render function that wants `close`.
   const slot = (v) => (typeof v === 'function' ? v(close) : v);
 
   return (
     <header ref={headerRef} className={cn(NAV_HEADER, className)}>
       <div className={NAV_ROW}>
+        {left ? burger : null}
         {logo}
+        {desktopNav}
         {actions}
         {extras}
 
@@ -141,7 +177,10 @@ export default function NavbarShell({
             id={drawerId}
             className={cn(
               NAV_DRAWER,
-              menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none',
+              left ? NAV_DRAWER_LEFT : NAV_DRAWER_RIGHT,
+              menuOpen
+                ? 'translate-x-0 pointer-events-auto'
+                : cn(left ? '-translate-x-full' : 'translate-x-full', 'pointer-events-none'),
             )}
           >
             {drawerHead ? (
@@ -218,20 +257,8 @@ export default function NavbarShell({
           </ul>
         </nav>
 
-        <button
-          type="button"
-          id="hamburger"
-          ref={burgerRef}
-          className="relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          aria-controls={drawerId}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span className={cn(NAV_BURGER_BAR, menuOpen && 'translate-y-[7px] rotate-45')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen ? 'opacity-0' : 'opacity-100')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen && '-translate-y-[7px] -rotate-45')} />
-        </button>
+        {left ? null : burger}
+        {account}
       </div>
 
       <div className={cn(NAV_SCRIM, menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')} onClick={close} />

@@ -65,7 +65,9 @@ picks one - the variants do not get scattered back into the apps.
 | `Card` / `MediaCard` | a card's surface; photo-on-top card | framed, inset |
 | `VillaCard` | a villa, as a card | - |
 | `Collapse` | an inline menu that pushes content down | - |
-| `NavbarShell` | the header, drawer and hamburger | content-driven |
+| `NavbarShell` | the header, drawer and hamburger | content-driven; `burgerSide` right (villas) / left (CUE) |
+| `DesktopNav` | page links in the bar from 993px, one hover/click dropdown | - |
+| `AccountMenu` | the account slot: "Log in" or initials + a small menu | with / without `prefs` |
 | `FooterShell` | five columns, one hairline | content-driven |
 | `StickyBar` | the one thing at the bottom of a phone screen | **flush** (CUE), **floating** (villas) |
 | `BookingPanel` | the sticky panel beside a stay | - |
@@ -76,6 +78,11 @@ Class strings ship beside the components (`gridClasses`, `cardClasses`,
 `navbarClasses`, `footerClasses`, `layoutClasses`). A row of cards is a div with
 one className - wrapping that in a component buys nothing. Components earn
 their keep where there is behaviour or a shape to hold together.
+
+**CUE navbar, WO1 (approved 28 Sep 2026).** `DesktopNav`, `AccountMenu` and
+`NavbarShell`'s `desktopNav` / `account` / `burgerSide` props are copied from CUE's
+approved navbar. All three props default to off, so the villa site's navbar is
+unchanged (its built classes were diffed before/after: identical).
 
 **No animation library.** `Collapse` animates `grid-template-rows` from `0fr` to
 `1fr`, which reaches the child's natural height in pure CSS. Framer Motion earns

@@ -52,11 +52,15 @@ for (const w of [390, 1280]) {
     await page.waitForTimeout(700);
     const token = await page.evaluate(() => localStorage.getItem('cue_token'));
     if (kind === 'existing') {
+      // 28 Sep 2026: the account door is a 6-digit code now, not a passive
+      // "check your email" - the server already emailed one, and the modal
+      // moves straight to the same code-entry stage a plain sign-in uses.
       const note = await page.locator('[data-signin-note]:visible').first().innerText().catch(() => '');
-      ok(/already have an account as/i.test(note) && /check your email/i.test(note) && note.includes('andras@example.com'),
-        `${w}/create-existing: the guest is not told to check that inbox (got "${note}")`);
+      ok(/already have an account as/i.test(note) && note.includes('andras@example.com'),
+        `${w}/create-existing: the guest is not told which account this is (got "${note}")`);
       ok(!token, `${w}/create-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
-      ok(await page.locator('#auth-cemail:visible').isVisible(), `${w}/create-existing: the modal closed as if it had signed in`);
+      ok(!(await page.locator('#auth-cemail:visible').count()), `${w}/create-existing: sign-up form still showing instead of the code stage`);
+      ok(await page.locator('input[inputmode="numeric"]:visible').count() === 6, `${w}/create-existing: did not land on the 6-box code entry`);
     } else {
       ok(token === 'tok-new', `${w}/create-new: a new guest is no longer signed in (${token})`);
       ok(!(await page.locator('#auth-cemail:visible').count()), `${w}/create-new: the modal stayed open after a real sign-up`);

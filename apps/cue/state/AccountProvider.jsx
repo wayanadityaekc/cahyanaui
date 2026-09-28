@@ -97,8 +97,10 @@ export function AccountProvider({ children }) {
     setTrips(null);
   };
 
-  // Ask the backend to email a magic sign-in link. Backend never reveals whether
-  // the email exists, so any completed request counts as success.
+  // Ask the backend to email a 6-digit sign-in code (28 Sep 2026 - was a link;
+  // Wayan: a code works wherever the guest reads the email, same device or not,
+  // which a link never could). Backend never reveals whether the email exists,
+  // so any completed request counts as success.
   const requestLogin = async (email) => {
     try {
       const r = await fetch(`${API_BASE}/account/login`, {
@@ -109,6 +111,28 @@ export function AccountProvider({ children }) {
       return r.ok;
     } catch {
       return false;
+    }
+  };
+
+  // Check that code. The session is issued server-side only on a match - unlike
+  // the old link, nothing here is already valid before this call succeeds.
+  const verifyCode = async (email, code) => {
+    try {
+      const r = await fetch(`${API_BASE}/account/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.status === 'ok' && d.token) {
+        writeLocal(KEY.token, d.token);
+        setAccount(d.account || null);
+        refreshTrips();
+        return { ok: true };
+      }
+      return { ok: false, error: (d && d.detail) || '' };
+    } catch {
+      return { ok: false, error: '' };
     }
   };
 
@@ -143,7 +167,7 @@ export function AccountProvider({ children }) {
   };
 
   return (
-    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, createAccount, hydrated, justSignedIn }}>
+    <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, logout, requestLogin, verifyCode, createAccount, hydrated, justSignedIn }}>
       {children}
     </AccountContext.Provider>
   );

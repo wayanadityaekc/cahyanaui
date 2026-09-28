@@ -104,3 +104,17 @@ export const GRID_CAROUSEL_4UP =
   'max-[992px]:gap-[1.4rem] max-[768px]:gap-[0.9rem] ' +
   'max-[992px]:[&>*]:flex-[0_0_70%] max-[576px]:[&>*]:flex-[0_0_88%] [&>*]:[scroll-snap-align:start]' + ' ' + BLEED_MOBILE;
 
+// Homepage Guest Reviews (Sep 2026, Wayan: "reviews section need to be as a
+// slider ... not scrolling to bottom because it's too long"). A slider at
+// EVERY width (unlike GRID_XPLORE, which wraps to a grid on desktop) - a
+// review list has no natural card count like Destinations' 6, so wrapping
+// would just make the section as tall as however many reviews exist. Fixed
+// card width (not "one column of four" like GRID_CAROUSEL_4UP) because a
+// review card's content doesn't scale with the container the way a tour
+// photo does - 320px keeps the box the same regardless of how wide the row is.
+export const GRID_REVIEWS =
+  'flex max-w-[1200px] mx-auto pb-4 items-stretch overflow-x-auto overflow-y-hidden ' +
+  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'min-[993px]:gap-[1.4rem] max-[992px]:gap-4 ' + BLEED_MOBILE + ' ' +
+  '[&>*]:[scroll-snap-align:start] [&>*]:flex-none [&>*]:w-[300px] max-[576px]:[&>*]:w-[82%]';
+

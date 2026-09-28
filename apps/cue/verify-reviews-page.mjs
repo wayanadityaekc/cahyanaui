@@ -37,12 +37,20 @@ for (const w of [390, 1280]) {
 
   const h1 = page.locator('h1');
   ok((await h1.innerText()).trim() === 'Guest Reviews', `${w}: unexpected H1 text "${(await h1.innerText()).trim()}"`);
-  const color = await h1.evaluate((el) => getComputedStyle(el).color);
-  ok(color === 'rgb(255, 255, 255)', `${w}: H1 is not white (${color})`);
+
+  // No hero photo (Wayan: "gausah isi hero image cukup h1 dan deskripsi singkat dan
+  // breadcrumb") - the section holding the H1 must not carry a background image.
+  const heroBg = await page.evaluate(() => {
+    const h1 = document.querySelector('h1');
+    const section = h1 && h1.closest('section');
+    return section ? getComputedStyle(section).backgroundImage : null;
+  });
+  ok(heroBg === 'none', `${w}: hero section still has a background image (${heroBg})`);
 
   const bodyText = await page.locator('body').innerText();
   ok(!/no invitations, no incentives/i.test(bodyText), `${w}: the old marketing paragraph is still on the page`);
   ok(!/completed booking/i.test(await h1.innerText()), `${w}: H1 still carries the old long copy`);
+  ok(/What guests say after booking/i.test(bodyText), `${w}: the short description line is missing`);
 
   // Content section lines up with a REAL listing page's own left edge - not
   // a formula re-typed into this harness (CATSEC centers within the whole

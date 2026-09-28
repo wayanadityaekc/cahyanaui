@@ -2,7 +2,7 @@ import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { crumbsFor } from '@/lib/crumbs';
 import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
-import { SUBHERO, SUBHERO_CONTENT, SUBHERO_TEXT } from '@/components/ui/subheroClasses';
+import { SUBHERO_TITLE } from '@/components/ui/subheroClasses';
 import { CATSEC } from '@/components/ui/listingClasses';
 import JsonLd from '@/components/JsonLd';
 import ReviewCta from '@/components/reviews/ReviewCta';
@@ -14,23 +14,22 @@ export const metadata = {
   alternates: { canonical: '/all-reviews.html' },
 };
 
-// H1 white, not the shared SUBHERO_TITLE's --color-gold (soft-black - near
-// invisible against this hero's own dark photo overlay, measured before this
-// change: text barely readable while the paragraph under it, already
-// text-cream, was fine). Local to this page - SUBHERO_TITLE is shared by
-// legal/FAQ/itinerary/guide-hub, whose own backgrounds were not audited here.
-const HERO_TITLE_WHITE =
-  'font-head text-[length:var(--fs-display)] leading-[var(--lh-heading)] text-white font-bold tracking-[-0.01em]';
-
 export default function AllReviews() {
   return (
     <>
       <JsonLd page="all-reviews" />
-      <section className={SUBHERO}>
-        <div className={SUBHERO_CONTENT}>
-          <Breadcrumb items={crumbsFor('all-reviews')} className="mb-2" />
-          <h1 className={HERO_TITLE_WHITE}>Guest Reviews</h1>
-          <p className={SUBHERO_TEXT}>What guests say after booking with Cahyana Ubud Experience.</p>
+      {/* No photo (Wayan, Sep 2026: "gausah isi hero image cukup h1 dan deskripsi
+          singkat dan breadcrumb") - plain text header instead of the SUBHERO photo
+          band. pt- clears the fixed header the same way DetailHero's own crumb
+          block does; SUBHERO_TITLE reads fine here (soft-black on white/cream, the
+          same combination the listing pages already use for their own H1). */}
+      <section className="px-[var(--container-x)] pt-[calc(var(--header-h-max,92px)_+_var(--container-x))] min-[769px]:pt-[calc(var(--header-h-max,98px)_+_var(--container-x))] pb-6">
+        <div className={CATSEC}>
+          <Breadcrumb items={crumbsFor('all-reviews')} className="m-0 mb-2" />
+          <h1 className={SUBHERO_TITLE}>Guest Reviews</h1>
+          <p className="mt-4 max-w-[560px] m-0 font-body text-[length:var(--fs-body)] leading-[var(--lh-body)] text-muted">
+            What guests say after booking with Cahyana Ubud Experience.
+          </p>
         </div>
       </section>
 

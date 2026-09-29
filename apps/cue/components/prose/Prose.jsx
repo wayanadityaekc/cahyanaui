@@ -63,74 +63,78 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
     // between its explainer columns and "Charter or guided tour?" (measured). The
     // row already spaces itself, so drop the heading's own top margin there.
     const afterBoxes = i > 0 && blocks[i - 1] && blocks[i - 1].type === 'boxes';
-    switch (b.type) {
-      case 'crumb':
-        // The three legal sections carry a structured trail now, so they render the
-        // same <Breadcrumb> as everything else - list markup, 12.8px, aria-current
-        // on the page you are on. It used to be a bare <p> of raw HTML at 10.24px.
-        // The middle step is new: "Our Company" is where these sections actually
-        // live, and it was not reachable from the trail before.
-        return <Breadcrumb items={b.items} className="mb-2" key={i} />;
-      case 'heading':
-        // Default = sub-section heading (.section__title--sub), unchanged for all
-        // guide/legal callers. `sub: false` = a main section heading (plain
-        // .section__title), used by the detail-page info bodies (TW-B4 #337:
-        // charter/airport "How a Charter Day Works" etc.). Class kept as-is -
-        // .section__title base is B-FINAL's to convert.
-        return b.sub === false
-          ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
-          : <h2 className={`${SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}${afterBoxes ? ' !mt-0' : ''}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
-      case 'para':
-        return <p className={`${BODY_P} ${PROSE_LINK}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
-      case 'list':
-        return (
-          <ul className={`${infoList(b.variant)} ${PROSE_LINK}`} key={i}>
-            {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
-          </ul>
-        );
-      case 'facts':
-        // The spec strip that opens the transfer / airport details card
-        // (Sep 2026). A block type rather than page markup so those two pages
-        // compose their card the same way the charter page does.
-        return <InfoFacts key={i} items={b.items} />;
-      case 'boxes':
-        // Option B boxes (Sep 2026): a row of bordered boxes instead of marker
-        // lists / loose headings. Each item is { title, variant?, paras?, list? };
-        // variant 'no' tints it cream. Desktop two columns, mobile stacked.
-        return (
-          <InfoBoxes key={i}>
-            {b.items.map((box, k) =>
-              // An item may hold a STACK of blocks instead of one, which puts two
-              // blocks in the same grid cell (Sep 2026, Wayan picked option a for
-              // levelling the charter row: "Charter or guided tour?" moved out of
-              // its own full-width heading and under "How the day works"). The gap
-              // between the two matches the grid's own column gap.
-              box.stack ? (
-                // display:contents below the grid's own breakpoint, so the stacked
-                // blocks become grid items in their own right once the row is a
-                // single column - which lets the trailing ones take order-last and
-                // keep the phone's reading order (the two main blocks first, the
-                // closing note after them) exactly as it was before the stack
-                // existed. On desktop the wrapper is a real flex column again.
-                <div className="flex flex-col gap-[var(--space-4)] max-[768px]:contents" key={k}>
-                  {box.stack.map((sub, s2) => (
-                    <div className={s2 === 0 ? undefined : 'max-[768px]:order-last'} key={s2}>
-                      <Box box={sub} />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <Box box={box} key={k} />
-              ),
-            )}
-          </InfoBoxes>
-        );
-      case 'back':
-        // margin-top stays inline so it outranks BODY_P's m-0 and any ancestor
-        // [&_p] rule a context declares; [&_a]: replaces .guide-crumb-back.
-        return <p style={{ marginTop: '2rem' }} className={`${BODY_P} [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
-      default:
-        return null;
+    if (b.type === 'crumb') {
+      // The three legal sections carry a structured trail now, so they render the
+      // same <Breadcrumb> as everything else - list markup, 12.8px, aria-current
+      // on the page you are on. It used to be a bare <p> of raw HTML at 10.24px.
+      // The middle step is new: "Our Company" is where these sections actually
+      // live, and it was not reachable from the trail before.
+      return <Breadcrumb items={b.items} className="mb-2" key={i} />;
     }
+    if (b.type === 'heading') {
+      // Default = sub-section heading (.section__title--sub), unchanged for all
+      // guide/legal callers. `sub: false` = a main section heading (plain
+      // .section__title), used by the detail-page info bodies (TW-B4 #337:
+      // charter/airport "How a Charter Day Works" etc.). Class kept as-is -
+      // .section__title base is B-FINAL's to convert.
+      return b.sub === false
+        ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />
+        : <h2 className={`${SUB_VARIANT[headingVariant] || SUB_VARIANT.legal}${afterBoxes ? ' !mt-0' : ''}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+    }
+    if (b.type === 'para') {
+      return <p className={`${BODY_P} ${PROSE_LINK}`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+    }
+    if (b.type === 'list') {
+      return (
+        <ul className={`${infoList(b.variant)} ${PROSE_LINK}`} key={i}>
+          {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />)}
+        </ul>
+      );
+    }
+    if (b.type === 'facts') {
+      // The spec strip that opens the transfer / airport details card
+      // (Sep 2026). A block type rather than page markup so those two pages
+      // compose their card the same way the charter page does.
+      return <InfoFacts key={i} items={b.items} />;
+    }
+    if (b.type === 'boxes') {
+      // Option B boxes (Sep 2026): a row of bordered boxes instead of marker
+      // lists / loose headings. Each item is { title, variant?, paras?, list? };
+      // variant 'no' tints it cream. Desktop two columns, mobile stacked.
+      return (
+        <InfoBoxes key={i}>
+          {b.items.map((box, k) =>
+            // An item may hold a STACK of blocks instead of one, which puts two
+            // blocks in the same grid cell (Sep 2026, Wayan picked option a for
+            // levelling the charter row: "Charter or guided tour?" moved out of
+            // its own full-width heading and under "How the day works"). The gap
+            // between the two matches the grid's own column gap.
+            box.stack ? (
+              // display:contents below the grid's own breakpoint, so the stacked
+              // blocks become grid items in their own right once the row is a
+              // single column - which lets the trailing ones take order-last and
+              // keep the phone's reading order (the two main blocks first, the
+              // closing note after them) exactly as it was before the stack
+              // existed. On desktop the wrapper is a real flex column again.
+              <div className="flex flex-col gap-[var(--space-4)] max-[768px]:contents" key={k}>
+                {box.stack.map((sub, s2) => (
+                  <div className={s2 === 0 ? undefined : 'max-[768px]:order-last'} key={s2}>
+                    <Box box={sub} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Box box={box} key={k} />
+            ),
+          )}
+        </InfoBoxes>
+      );
+    }
+    if (b.type === 'back') {
+      // margin-top stays inline so it outranks BODY_P's m-0 and any ancestor
+      // [&_p] rule a context declares; [&_a]: replaces .guide-crumb-back.
+      return <p style={{ marginTop: '2rem' }} className={`${BODY_P} [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium`} key={i} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(b.html) }} />;
+    }
+    return null;
   });
 }

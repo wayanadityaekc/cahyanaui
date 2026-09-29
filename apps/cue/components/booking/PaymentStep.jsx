@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CreditCard } from 'lucide-react';
+import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
@@ -53,13 +54,15 @@ const BADGE =
 const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.6rem]';
 // Tinted, not bordered: another framed box would read as a fourth option in a
 // list of three. This is a note about all of them.
-const RAIL_BOX = 'mb-2 p-[0.7rem] rounded-md bg-cream';
 // The rail choice (Card / PayPal): two equal halves, same border language as
 // the option cards so the step reads as one control family. No `transition`
 // of its own on the button (SNAP rule in check-motion).
 const METHODS = 'grid grid-cols-2 gap-2 mb-2';
-const METHOD = 'rounded-md bg-white text-left p-[0.7rem] cursor-pointer';
-const METHOD_LABEL = 'block font-semibold text-green text-[1rem] leading-tight';
+// Icon only: the name is the aria-label, the explanation is behind the (i).
+const METHOD = 'flex items-center justify-center h-[2.9rem] rounded-md bg-white cursor-pointer';
+const METHOD_ICON = 'w-[var(--icon-lg)] h-[var(--icon-lg)]';
+const INFO_ROW = 'flex items-center gap-[var(--space-1)] mb-[0.6rem]';
+const INFO_TERM = 'block font-semibold text-green';
 // Under the amount when the rail charges another currency: the guest's own
 // figure, marked as the estimate it is.
 const APPROX = 'block text-small text-muted font-normal whitespace-nowrap text-right';
@@ -78,6 +81,23 @@ const FINE_TITLE = 'mb-3 font-body text-h3 font-semibold tracking-normal';
 // is documented to be geometry only.
 const FINE_CLOSE =
   'mt-5 w-full flex items-center justify-center text-center leading-none h-[var(--btn-h)] px-4 py-0 rounded-sm text-small font-semibold text-white bg-cta border-none cursor-pointer';
+
+// PayPal's double-P mark, drawn by hand like the other payment logos
+// (PayChips) - Lucide has no brand icons.
+function PayPalMark({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        fill="#003087"
+        d="M7.3 21.4H3.9a.5.5 0 0 1-.5-.6L6.2 3a.7.7 0 0 1 .7-.6h6.4c3.4 0 5.4 1.7 4.9 4.9-.6 3.7-3.1 5.5-6.7 5.5H9.6a.7.7 0 0 0-.7.6z"
+      />
+      <path
+        fill="#009cde"
+        d="M18.9 7.7c.6.8.8 1.9.6 3.3-.6 3.6-3 5.3-6.4 5.3h-1.4a.7.7 0 0 0-.7.6l-.8 4.8a.5.5 0 0 1-.5.4H7.3l.3-1.6 1.3-8.1a.7.7 0 0 1 .7-.6h1.9c3.6 0 6.1-1.8 6.7-5.5l.1-.7c.3.6.5 1.3.6 2.1z"
+      />
+    </svg>
+  );
+}
 
 function Radio({ on, dim }) {
   return (
@@ -139,7 +159,22 @@ export default function PaymentStep({
 
   return (
     <div className="my-5">
-      <p className={HEAD}>{PAY_COPY.heading}</p>
+      <div className={INFO_ROW}>
+        <p className={`${HEAD} !mb-0`}>{PAY_COPY.heading}</p>
+        <InfoDot label="How the payment methods work" align="end">
+          <span className="flex flex-col gap-[var(--space-1)]" data-rail-info>
+            {RAIL_CHOICES.map((m) => (
+              <span key={m.id}>
+                <span className={INFO_TERM}>{m.label}</span>
+                {m.how}
+              </span>
+            ))}
+            {/* Only when it applies to THIS guest: the chosen rail charges a
+                currency other than the one the page is shown in. */}
+            {railNote && <span className="text-muted">{railNote}</span>}
+          </span>
+        </InfoDot>
+      </div>
 
       {/* How, then how much. Card (DOKU) is the default for every currency
           (Wayan, 29 Sep 2026); PayPal is the guest's alternative. */}
@@ -153,20 +188,20 @@ export default function PaymentStep({
               role="radio"
               aria-checked={on}
               data-rail={m.id}
+              aria-label={m.label}
+              title={m.label}
               className={`${METHOD} ${on ? CARD_ON : CARD_OFF}`}
               onClick={() => onRail && onRail(m.id)}
             >
-              <span className={METHOD_LABEL}>{m.label}</span>
-              <span className={SUB}>{m.sub}</span>
+              {m.id === 'doku' ? (
+                <CreditCard strokeWidth={1.7} className={`${METHOD_ICON} text-green`} aria-hidden="true" />
+              ) : (
+                <PayPalMark className={METHOD_ICON} />
+              )}
             </button>
           );
         })}
       </div>
-      {railNote && (
-        <div className={RAIL_BOX} data-rail-info>
-          <p className={FINE_DIM}>{railNote}</p>
-        </div>
-      )}
 
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
         {options.map((o) => {

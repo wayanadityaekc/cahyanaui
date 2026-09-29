@@ -4086,6 +4086,12 @@ pakai card atau paypal"*, sesudah DOKU nge-approve kartu luar negeri di akunnya.
 semuanya UDAH DIHAPUS. Kalau nemu catatan lama yang bilang kebalikannya, yang
 berlaku ini.
 - **Langkah bayar punya "Pay with": Card | PayPal**, di ATAS tiga opsi nominal.
+  **Tombolnya IKON DOANG** (Wayan: *"icon, no text"*): Lucide `CreditCard` + mark PayPal
+  tulis tangan (`PayPalMark`, Lucide gak punya logo brand); namanya di `aria-label`.
+  **Penjelasan tiap rail + catatan rupiah/estimasi pindah ke balik (i)** di samping
+  "How would you like to pay?" (`InfoDot align="end"` - kebuka ke KIRI; default-nya
+  ke kanan dan di 390px nembus tepi layar, ke-tangkep `verify-rail`). Popup-nya ngambang,
+  Book Now nol gerak (di-assert).
   Card kepilih default. State-nya `payRail` di `BookConfirmModal`; checkout yang
   ke-mount sesudah Book Now = rail yang DIPILIH (`railFor(payRail)`).
 - **Card SELALU nagih rupiah.** Tamu yang lihat mata uang lain dapet angka **Rp

@@ -40,11 +40,20 @@ export function chargeCurrency(currency, rail = DEFAULT_RAIL) {
   return PAYPAL_SETTLES.has(cur) ? cur : PAYPAL_FALLBACK;
 }
 
-// The two choices at the payment step. Short, plain - the amounts below them
-// already say the rest.
+// The two choices at the payment step. On screen they are ICONS ONLY (Wayan,
+// 29 Sep 2026: "icon, no text"); `label` is the accessible name, and `how` is
+// the explanation that lives behind the (i) beside the heading.
 export const RAIL_CHOICES = [
-  { id: 'doku', label: 'Card', sub: 'Card, QRIS, bank transfer or e-wallet. Charged in rupiah.' },
-  { id: 'paypal', label: 'PayPal', sub: 'PayPal balance or card, charged in your own currency.' },
+  {
+    id: 'doku',
+    label: 'Card',
+    how: 'Card, QRIS, bank transfer or e-wallet, through DOKU. Always charged in rupiah.',
+  },
+  {
+    id: 'paypal',
+    label: 'PayPal',
+    how: 'PayPal balance or card, charged in your own currency (rupiah is charged as USD).',
+  },
 ];
 
 // One sentence, or null when there is nothing to warn about: said when the

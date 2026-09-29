@@ -15,12 +15,21 @@ import { PopMenu } from '@/components/ui/Reveal';
 const BTN =
   'shrink-0 flex items-center p-0 bg-transparent border-none cursor-pointer text-muted ' +
   '[transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold';
-const PANEL =
-  'absolute left-0 top-[calc(100%+var(--space-1))] z-30 w-[min(16rem,72vw)] p-[var(--space-1)] ' +
+const PANEL_BASE =
+  'absolute top-[calc(100%+var(--space-1))] z-30 p-[var(--space-1)] ' +
   'bg-white [border:1px_solid_var(--line)] rounded-md ' +
   'font-body text-body leading-[var(--lh-body)] text-ink text-left';
+// Which way the panel opens from the button. 'start' (default) grows rightward -
+// right for a button at the left of its row. 'end' grows LEFTWARD from the
+// button's right edge: for a button that sits mid-row on a phone, where a
+// rightward panel runs off the screen (measured: the payment step's (i) at 390px).
+// Written out in full - Tailwind never generates an interpolated class.
+const PANEL_ALIGN = {
+  start: 'left-0 w-[min(16rem,72vw)]',
+  end: 'right-0 w-[min(16rem,58vw)]',
+};
 
-export default function InfoDot({ label = 'More information', children }) {
+export default function InfoDot({ label = 'More information', align = 'start', children }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -54,7 +63,7 @@ export default function InfoDot({ label = 'More information', children }) {
         <Info strokeWidth={1.7} className="w-[var(--icon-sm)] h-[var(--icon-sm)]" aria-hidden="true" />
       </button>
       <PopMenu open={open}>
-        <span className={PANEL} role="note">{children}</span>
+        <span className={`${PANEL_BASE} ${PANEL_ALIGN[align] || PANEL_ALIGN.start}`} role="note">{children}</span>
       </PopMenu>
     </span>
   );

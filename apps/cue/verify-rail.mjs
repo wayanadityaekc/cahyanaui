@@ -69,6 +69,17 @@ async function toPayStep(cur, w, rail) {
   return { ctx, page, errs, dokuCalls };
 }
 
+// The rail explanation lives behind the (i) beside the heading; open it, read
+// it, close it (Escape - the same way a guest would dismiss it).
+async function railInfo(page) {
+  await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
+  await page.waitForTimeout(350);
+  const t = await page.locator('[data-rail-info]').innerText().catch(() => '');
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  return t;
+}
+
 for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]]) {
   const cat = await (await fetch(`${API}/pricing/catalog?currency=${cur}&guests=2&stay=`)).json();
   const q = await (await fetch(`${API}/pricing/quote`, {
@@ -83,6 +94,26 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   const choice = page.locator('[data-rail-choice] [role="radio"]');
   ok((await choice.count()) === 2, `${tag}: two rail choices (${await choice.count()})`);
   ok((await page.locator('[data-rail="doku"]').getAttribute('aria-checked')) === 'true', `${tag}: Card is checked by default`);
+  // Icon only (Wayan: "icon, no text"), still named for screen readers.
+  const railBtns = await page.locator('[data-rail-choice] [role="radio"]').evaluateAll((els) =>
+    els.map((e) => ({ text: e.innerText.trim(), svg: !!e.querySelector('svg'), name: e.getAttribute('aria-label') })));
+  ok(railBtns.every((b) => b.text === '' && b.svg && b.name), `${tag}: rail buttons are icon-only & named (${JSON.stringify(railBtns)})`);
+  ok((await page.locator('[data-rail-info]').count()) === 0, `${tag}: no explanation printed until the (i) is tapped`);
+  // The popup floats: opening it must not move Book Now.
+  const bookBox = async () => (await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).boundingBox());
+  const before = await bookBox();
+  await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
+  await page.waitForTimeout(350);
+  const after = await bookBox();
+  const infoTxt = await page.locator('[data-rail-info]').innerText().catch(() => '');
+  ok(/Card/.test(infoTxt) && /QRIS/.test(infoTxt) && /PayPal/.test(infoTxt), `${tag}: (i) explains both methods`);
+  ok(before && after && Math.abs(before.y - after.y) < 1, `${tag}: opening the (i) does not move Book Now (${before && before.y} -> ${after && after.y})`);
+  const pb = await page.locator('[data-rail-info]').boundingBox();
+  ok(pb && pb.x >= 0 && pb.x + pb.width <= w + 1, `${tag}: popup stays on screen`);
+  await page.screenshot({ path: `${SHOT}/rail-info-${cur}-${w}.png` });
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  ok((await page.locator('[data-rail-info]').count()) === 0 || !(await page.locator('[data-rail-info]').isVisible()), `${tag}: Escape closes it`);
   const rowAmt = async (label) => {
     const card = page.locator('[role="radiogroup"][aria-label] > div', { hasText: label }).first();
     return card.locator('button').first().innerText();
@@ -97,10 +128,10 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
     ok(digits(fullIdr) === totalIdr, `${tag}: full rupiah ${digits(fullIdr)} = server ${totalIdr}`);
     const est = (full.split('≈')[1] || '');
     ok(digits(est) === q.total.display, `${tag}: estimate ${digits(est)} = ${cur} total ${q.total.display}`);
-    ok(/charged in rupiah/i.test(await page.locator('[data-rail-info]').innerText().catch(() => '')), `${tag}: note says card is charged in rupiah`);
+    ok(/rupiah amount is exact/i.test(await railInfo(page)), `${tag}: (i) says the rupiah amount is exact`);
   } else {
     ok(!dep.includes('≈'), `${tag}: rupiah guest gets no estimate`);
-    ok((await page.locator('[data-rail-info]').count()) === 0, `${tag}: rupiah guest gets no note`);
+    ok(!/estimate/i.test(await railInfo(page)), `${tag}: rupiah guest gets no estimate note`);
   }
   await page.screenshot({ path: `${SHOT}/rail-card-${cur}-${w}.png` });
 
@@ -111,8 +142,9 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   const depP = await rowAmt('Pay a deposit');
   if (cur === 'IDR') ok(/\$10\b/.test(depP) && depP.includes('≈'), `${tag}: rupiah on PayPal shows the exact USD it is billed ("${depP.replace(/\n/g, ' | ')}")`);
   else ok(!depP.includes('≈') && !/Rp/.test(depP), `${tag}: PayPal shows the guest's own currency ("${depP.replace(/\n/g, ' | ')}")`);
-  if (cur === 'IDR') ok(/charged as USD/.test(await page.locator('[data-rail-info]').innerText().catch(() => '')), `${tag}: rupiah on PayPal is told USD`);
-  else ok((await page.locator('[data-rail-info]').count()) === 0, `${tag}: no note on PayPal in own currency`);
+  const ppInfo = await railInfo(page);
+  if (cur === 'IDR') ok(/PayPal cannot charge IDR/.test(ppInfo), `${tag}: rupiah on PayPal is told USD`);
+  else ok(!/cannot charge|estimate/.test(ppInfo), `${tag}: no extra note on PayPal in own currency`);
   await page.screenshot({ path: `${SHOT}/rail-paypal-${cur}-${w}.png` });
 
   // Back to Card and book: the DOKU checkout must be what mounts.

@@ -11,7 +11,7 @@ export default function HeroSlider({ slides = [] }) {
 
   if (!slides.length) return null;
 
-  function go(n) { return setCur((n + slides.length) % slides.length); }
+  function goTo(n) { return setCur((n + slides.length) % slides.length); }
 
   const total = slides.length;
   const count = Math.min(DOT_MAX, total);
@@ -34,9 +34,9 @@ export default function HeroSlider({ slides = [] }) {
         touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }}
       onTouchEnd={(e) => {
-        const dx = e.changedTouches[0].clientX - touch.current.x;
-        const dy = e.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(dx < 0 ? cur + 1 : cur - 1);
+        const deltaX = e.changedTouches[0].clientX - touch.current.x;
+        const deltaY = e.changedTouches[0].clientY - touch.current.y;
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(deltaX < 0 ? cur + 1 : cur - 1);
       }}
     >
       {slides.map((s, i) => (
@@ -56,8 +56,8 @@ export default function HeroSlider({ slides = [] }) {
       {total > 1 && (
         <>
           <div className="absolute bottom-[12px] right-[14px] z-[2] hidden gap-1.5 min-[769px]:flex">
-            <button type="button" className={ARROW} aria-label="Previous photo" onClick={() => go(cur - 1)}>&lsaquo;</button>
-            <button type="button" className={ARROW} aria-label="Next photo" onClick={() => go(cur + 1)}>&rsaquo;</button>
+            <button type="button" className={ARROW} aria-label="Previous photo" onClick={() => goTo(cur - 1)}>&lsaquo;</button>
+            <button type="button" className={ARROW} aria-label="Next photo" onClick={() => goTo(cur + 1)}>&rsaquo;</button>
           </div>
           <div className="hero-slider__dots absolute left-0 right-0 bottom-[16px] max-[768px]:left-auto max-[768px]:right-[14px] max-[768px]:bottom-[2.6rem] z-[2] flex justify-center items-center max-[768px]:justify-end gap-1.5 pointer-events-none">
             {Array.from({ length: count }, (_, j) => {

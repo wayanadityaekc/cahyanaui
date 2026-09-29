@@ -40,11 +40,11 @@ export default function LoadingScreen() {
       // Same-page hash jump is not a page change.
       if (url.pathname === window.location.pathname && url.hash) return;
       // Show it synchronously in the click tick with transitions off, so no frame shows the old page uncovered.
-      const el = elRef.current;
-      if (el) {
-        el.style.transition = 'none';
+      const overlay = elRef.current;
+      if (overlay) {
+        overlay.style.transition = 'none';
         // Drop the hidden-state utilities directly (snap); setOut(false) then syncs React's className.
-        el.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+        overlay.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
       }
       setOut(false);
       // Safety net: hide the overlay again after 3s if the click never navigated.

@@ -31,7 +31,7 @@ export default function ListingPage({ data, page }) {
   const [query, setQuery] = useState('');
   const [zone, setZone] = useState('all'); // 'all' | category id (desktop dim filter)
 
-  const q = query.trim().toLowerCase();
+  const term = query.trim().toLowerCase();
   const noun = NOUN[sectionId] || 'programs';
 
   // One flat grid; the first shown card of each category carries the anchor id for the switcher.
@@ -41,20 +41,20 @@ export default function ListingPage({ data, page }) {
     const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
     shown.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null }));
   });
-  const shownCards = q ? allCards.filter((x) => x.card.name.toLowerCase().includes(q)) : allCards;
+  const shownCards = term ? allCards.filter((x) => x.card.name.toLowerCase().includes(term)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
   // Sticky nav only shows once the hero's Browse-all button scrolls away, so they never show together.
   const browseRef = useRef(null);
   const [heroInView, setHeroInView] = useState(true);
   useEffect(() => {
-    const el = browseRef.current;
-    if (!el) { setHeroInView(true); return undefined; }
-    const io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting));
-    io.observe(el);
-    return () => io.disconnect();
-  }, [q]);
-  const showStickyNav = !q && !heroInView;
+    const browse = browseRef.current;
+    if (!browse) { setHeroInView(true); return undefined; }
+    const observer = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting));
+    observer.observe(browse);
+    return () => observer.disconnect();
+  }, [term]);
+  const showStickyNav = !term && !heroInView;
 
   return (
     <div className="tourprog pb-20">
@@ -69,10 +69,10 @@ export default function ListingPage({ data, page }) {
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(var(--container-x),calc(50vw_-_var(--container)/2_+_var(--container-x)))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center">
           {/* Visible breadcrumb matching the JSON-LD trail; hidden while a search is open, like the title. */}
-          {!q && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
-          {!q && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
+          {!term && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
+          {!term && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {/* was .tour-hero__desc (CSS dihapus, migrasi Fase 2) -> utilities inline */}
-          {!q && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
+          {!term && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
           <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-md max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none">
             <input
               type="search"
@@ -85,13 +85,13 @@ export default function ListingPage({ data, page }) {
             <button
               type="button"
               className="flex-none w-[2.1rem] h-[2.1rem] flex items-center justify-center [border:0] rounded-[50%] bg-cta text-white cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d [&_svg]:w-4 [&_svg]:h-4"
-              aria-label={q ? 'Clear search' : 'Search'}
-              onClick={() => q && setQuery('')}
+              aria-label={term ? 'Clear search' : 'Search'}
+              onClick={() => term && setQuery('')}
             >
-              {q ? <CloseIcon /> : <SearchIcon />}
+              {term ? <CloseIcon /> : <SearchIcon />}
             </button>
           </div>
-          {!q && (
+          {!term && (
             <ul className="list-none mt-6 p-0 flex flex-col gap-[0.7rem] text-left self-start [&>li]:flex [&>li]:items-center [&>li]:gap-[10px] [&>li]:text-[0.82rem] [&>li]:font-medium [&>li]:leading-[1.3] [&>li]:whitespace-nowrap [&>li]:text-ink [&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:text-cta [&_svg]:flex-none">
               <li><CarIcon />Fixed price per car (standard or exclusive)</li>
               <li><UserIcon />Private driver, just for your group</li>
@@ -99,7 +99,7 @@ export default function ListingPage({ data, page }) {
               <li><CheckIcon />Free cancellation up to 24h before your tour</li>
             </ul>
           )}
-          {!q && <a ref={browseRef} href={`#${sectionId}`} className={`inline-flex mt-4 ${BTN_SM} bg-cta text-white no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:flex max-[768px]:w-full max-[768px]:mt-[1.25rem]`}>All {noun}</a>}
+          {!term && <a ref={browseRef} href={`#${sectionId}`} className={`inline-flex mt-4 ${BTN_SM} bg-cta text-white no-underline [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d max-[768px]:flex max-[768px]:w-full max-[768px]:mt-[1.25rem]`}>All {noun}</a>}
         </div>
       </section>
 
@@ -129,7 +129,7 @@ export default function ListingPage({ data, page }) {
         <section className={CATSEC}>
           <div className={LROW_LIST}>
             {shownCards.map(({ card, catId, anchor }) => {
-              const dim = !q && zone !== 'all' && catId !== zone;
+              const dim = !term && zone !== 'all' && catId !== zone;
               return (
                 <ListingRow
                   key={card.href + card.name}
@@ -141,7 +141,7 @@ export default function ListingPage({ data, page }) {
               );
             })}
           </div>
-          {q && shownCards.length === 0 && (
+          {term && shownCards.length === 0 && (
             <p className="mt-6 text-muted text-center text-[0.9rem]">No {noun} match &ldquo;{query.trim()}&rdquo;.</p>
           )}
         </section>

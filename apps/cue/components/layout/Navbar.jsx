@@ -58,12 +58,12 @@ export default function Navbar() {
 
   // Header heights on :root (nav row, nav + trip bar, trip bar); set on resize only, never on scroll.
   useEffect(() => {
-    const el = headerRef.current;
-    if (!el) return undefined;
+    const header = headerRef.current;
+    if (!header) return undefined;
     const root = document.documentElement;
     let max = 0;
     function set() {
-      const h = el.offsetHeight;
+      const h = header.offsetHeight;
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
       root.style.setProperty('--header-h', `${h - bar}px`);
       root.style.setProperty('--tripbar-h', `${bar}px`);
@@ -75,11 +75,11 @@ export default function Navbar() {
     // A viewport change resets the max so a rotated phone re-measures.
     function onResize() { max = 0; set(); }
     set();
-    const ro = new ResizeObserver(set);
-    ro.observe(el);
+    const resizeObserver = new ResizeObserver(set);
+    resizeObserver.observe(header);
     window.addEventListener('resize', onResize);
     return () => {
-      ro.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener('resize', onResize);
     };
   }, []);

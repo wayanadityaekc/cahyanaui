@@ -20,15 +20,15 @@ const GC_MENU_A = 'flex items-center gap-[0.6rem] py-[0.7rem] px-4 no-underline 
 
 export default function GuideHub() {
   const [open, setOpen] = useState(false);
-  const [q, setQ] = useState('');
+  const [query, setQuery] = useState('');
 
   const cats = useMemo(() => {
-    const term = q.trim().toLowerCase();
+    const term = query.trim().toLowerCase();
     if (!term) return GUIDE_HUB.cats;
     return GUIDE_HUB.cats
       .map((c) => ({ ...c, cards: c.cards.filter((x) => x.title.toLowerCase().includes(term) || (x.kw || '').includes(term)) }))
       .filter((c) => c.cards.length);
-  }, [q]);
+  }, [query]);
 
   return (
     <>
@@ -65,7 +65,7 @@ export default function GuideHub() {
             <div className="relative flex-1 max-w-[560px] mt-6 mx-auto mb-0">
               <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] min-h-[var(--field-h)] box-border [border:none] rounded-none bg-transparent [box-shadow:none]">
                 <Search className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" aria-hidden="true" />
-                <input type="text" className="flex-1 border-none border-current [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted" placeholder="Search" aria-label="Search guides" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} />
+                <input type="text" className="flex-1 border-none border-current [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted" placeholder="Search" aria-label="Search guides" autoComplete="off" value={query} onChange={(e) => setQuery(e.target.value)} />
               </div>
               <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
             </div>

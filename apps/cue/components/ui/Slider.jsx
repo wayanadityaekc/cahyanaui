@@ -17,31 +17,31 @@ export default function Slider({ children, className = '', gridClassName = GRID_
   const [canNext, setCanNext] = useState(false);
 
   const measure = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const overflowing = el.scrollWidth - el.clientWidth > 4;
-    setCanPrev(overflowing && el.scrollLeft > 4);
-    setCanNext(overflowing && el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    const track = trackRef.current;
+    if (!track) return;
+    const overflowing = track.scrollWidth - track.clientWidth > 4;
+    setCanPrev(overflowing && track.scrollLeft > 4);
+    setCanNext(overflowing && track.scrollLeft + track.clientWidth < track.scrollWidth - 4);
   }, []);
 
   useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
+    const track = trackRef.current;
+    if (!track) return;
     measure();
-    el.addEventListener('scroll', measure, { passive: true });
+    track.addEventListener('scroll', measure, { passive: true });
     window.addEventListener('resize', measure);
     return () => {
-      el.removeEventListener('scroll', measure);
+      track.removeEventListener('scroll', measure);
       window.removeEventListener('resize', measure);
     };
   }, [measure]);
 
   function step(dir) {
-    const el = trackRef.current;
-    if (!el) return;
-    const card = el.querySelector(':scope > *');
-    const by = card ? card.getBoundingClientRect().width + 16 : el.clientWidth * 0.8;
-    el.scrollBy({ left: dir * by, behavior: 'smooth' });
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector(':scope > *');
+    const by = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
+    track.scrollBy({ left: dir * by, behavior: 'smooth' });
   }
 
   return (

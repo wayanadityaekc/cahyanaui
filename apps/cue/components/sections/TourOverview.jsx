@@ -31,11 +31,11 @@ export default function TourOverview({ intro, items = [] }) {
   return (
     <div>
       {intro && <p className={INTRO}>{intro}</p>}
-      {groups.map((g, gi) => (
-        <div key={g.heading || gi} className={gi ? 'mt-7' : undefined}>
-          {g.heading && <h3 className={DAY}>{g.heading}</h3>}
+      {groups.map((group, groupIndex) => (
+        <div key={group.heading || groupIndex} className={groupIndex ? 'mt-7' : undefined}>
+          {group.heading && <h3 className={DAY}>{group.heading}</h3>}
           <ol className="list-none m-0 p-0">
-            {g.stops.map((s, i) => (
+            {group.stops.map((s, i) => (
               <li className={ROW} key={s.refId || s.name}>
                 <span className={DOT}>{i + 1}</span>
                 <div>

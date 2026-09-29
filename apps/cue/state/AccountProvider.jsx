@@ -6,9 +6,9 @@ import { KEY, API_BASE } from '@/lib/constants';
 
 const AccountContext = createContext(null);
 
-function fmtDay(ds) {
-  if (!ds) return 'date TBD';
-  const [y, m, d] = ds.split('-').map(Number);
+function fmtDay(dateStr) {
+  if (!dateStr) return 'date TBD';
+  const [y, m, d] = dateStr.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
@@ -41,8 +41,8 @@ export function AccountProvider({ children }) {
       writeLocal(KEY.token, magic);
       setJustSignedIn(true);
       params.delete('token');
-      const qs = params.toString();
-      window.history.replaceState({}, '', `${window.location.pathname}${qs ? `?${qs}` : ''}`);
+      const query = params.toString();
+      window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
     }
 
     const token = readLocal(KEY.token, '');

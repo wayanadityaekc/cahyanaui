@@ -105,8 +105,8 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
       const line = headerH + stripH + 12;
       let cur = ids[0];
       ids.forEach((id) => {
-        const el = secRefs.current[id];
-        if (el && el.getBoundingClientRect().top <= line) cur = id;
+        const section = secRefs.current[id];
+        if (section && section.getBoundingClientRect().top <= line) cur = id;
       });
       setActive(cur);
     }
@@ -121,12 +121,12 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   }, []);
 
   function pick(id) {
-    const el = secRefs.current[id];
-    if (!el) return;
+    const section = secRefs.current[id];
+    if (!section) return;
     const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
     const header = document.querySelector('header');
     const headerH = header ? header.getBoundingClientRect().height : 0;
-    const top = el.getBoundingClientRect().top + window.scrollY - headerH - stripH - 8;
+    const top = section.getBoundingClientRect().top + window.scrollY - headerH - stripH - 8;
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
@@ -157,7 +157,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
           <section
             key={s.id}
             id={`dsec-${s.id}`}
-            ref={(el) => { secRefs.current[s.id] = el; }}
+            ref={(section) => { secRefs.current[s.id] = section; }}
             className={SEC}
             aria-label={s.heading === false ? s.label : undefined}
           >

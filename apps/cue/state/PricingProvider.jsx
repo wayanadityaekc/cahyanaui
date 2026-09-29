@@ -24,11 +24,11 @@ export function PricingProvider({ children, initialCatalog = null }) {
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
-    const qs = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
+    const query = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
     // load the live catalog for this currency / group / pickup
     async function load() {
       try {
-        const r = await fetch(`${API_BASE}/pricing/catalog?${qs}`);
+        const r = await fetch(`${API_BASE}/pricing/catalog?${query}`);
         const d = r.ok ? await r.json() : null;
         const c = normalizeCatalog(d);
         if (!cancelled && c) setCatalog(c);

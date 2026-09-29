@@ -23,9 +23,9 @@ export default function ReviewsStrip({
   useEffect(() => {
     let cancelled = false;
     // Multi-service pages (e.g. /transfer) ask by group; the server resolves the set from the pricing catalog.
-    const q = group ? `?group=${encodeURIComponent(group)}`
+    const query = group ? `?group=${encodeURIComponent(group)}`
       : (service ? `?service=${encodeURIComponent(service)}` : "");
-    const url = `${API_BASE}/reviews${q}`;
+    const url = `${API_BASE}/reviews${query}`;
     // load the reviews for this page
     async function load() {
       try {

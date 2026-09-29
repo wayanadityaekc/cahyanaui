@@ -22,9 +22,9 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
   function spread(i, raw) {
     const next = digits.slice();
     let pos = i;
-    for (const ch of raw) {
+    for (const char of raw) {
       if (pos >= length) break;
-      next[pos] = ch;
+      next[pos] = char;
       pos += 1;
     }
     commit(next);
@@ -75,7 +75,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
         <input
           // eslint-disable-next-line react/no-array-index-key
           key={i}
-          ref={(el) => { refs.current[i] = el; }}
+          ref={(input) => { refs.current[i] = input; }}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"

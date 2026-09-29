@@ -68,11 +68,11 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     };
     Object.entries(sets).forEach(([cat, arr]) => {
       if (!arr.length) return;
-      const lo = Math.min(...arr);
-      const hi = Math.max(...arr);
+      const low = Math.min(...arr);
+      const high = Math.max(...arr);
       // Only the low end carries the currency symbol; the high end still gets IDR small-thousands styling.
-      const hiText = isIdr ? withDeemphasizedThousands(hi.toLocaleString(loc)) : hi.toLocaleString(loc);
-      out[cat] = lo === hi ? <>from {fmt(lo)}</> : <>{fmt(lo)}–{hiText}</>;
+      const hiText = isIdr ? withDeemphasizedThousands(high.toLocaleString(loc)) : high.toLocaleString(loc);
+      out[cat] = low === high ? <>from {fmt(low)}</> : <>{fmt(low)}–{hiText}</>;
     });
     return out;
   }, [catalog, symbol, currency]);
@@ -82,7 +82,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
-  function go() {
+  function openPicked() {
     if (picked) window.location.href = picked.href;
   }
 
@@ -232,7 +232,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         type="button"
         className="flex w-full mt-[0.4rem] items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small bg-cta text-white border-none font-body font-semibold cursor-pointer
           [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:bg-cta-d"
-        onClick={go}
+        onClick={openPicked}
       >
         Explore
       </button>

@@ -13,23 +13,23 @@ function sdkNs(cur) { return `paypal_${cur}`; }
 
 function loadSdk({ clientId, currency }) {
   const id = sdkId(currency);
-  const ns = sdkNs(currency);
+  const sdkNamespace = sdkNs(currency);
   return new Promise((resolve, reject) => {
     const existing = document.getElementById(id);
-    if (existing && window[ns]) return resolve(window[ns]);
+    if (existing && window[sdkNamespace]) return resolve(window[sdkNamespace]);
     if (existing) {
-      existing.addEventListener('load', () => resolve(window[ns]));
+      existing.addEventListener('load', () => resolve(window[sdkNamespace]));
       existing.addEventListener('error', reject);
       return;
     }
     const s = document.createElement('script');
     s.id = id;
-    s.setAttribute('data-namespace', ns);
+    s.setAttribute('data-namespace', sdkNamespace);
     // card-fields is always requested; on an ineligible account isEligible() is false and buttons are used instead.
     s.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
-    s.onload = () => resolve(window[ns]);
+    s.onload = () => resolve(window[sdkNamespace]);
     s.onerror = () => reject(new Error('Could not load PayPal.'));
     document.head.appendChild(s);
   });
@@ -117,7 +117,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           .render(buttonsRef.current);
 
         // Card Fields, when the account is allowed them.
-        const cf = sdk.CardFields
+        const cardFields = sdk.CardFields
           ? sdk.CardFields({
               createOrder,
               onApprove: async (data) => { try { succeed(await capture(data.orderID)); } catch (e) { fail(e); } },
@@ -125,11 +125,11 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
             })
           : null;
 
-        if (cf && cf.isEligible() && !cancelled) {
-          cf.NumberField().render('#pp-card-number');
-          cf.ExpiryField().render('#pp-card-expiry');
-          cf.CVVField().render('#pp-card-cvv');
-          cardRef.current = cf;
+        if (cardFields && cardFields.isEligible() && !cancelled) {
+          cardFields.NumberField().render('#pp-card-number');
+          cardFields.ExpiryField().render('#pp-card-expiry');
+          cardFields.CVVField().render('#pp-card-cvv');
+          cardRef.current = cardFields;
           setCardsOn(true);
         }
         if (!cancelled) setState('ready');

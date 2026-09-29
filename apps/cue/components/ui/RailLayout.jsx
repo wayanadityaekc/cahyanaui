@@ -48,8 +48,8 @@ export default function RailLayout({
 
   function rows(mobile) {
     return items.map((t) => {
-        const on = active === t.id;
-        const cls = mobile ? railMobileItem(on) : railItem(on, railCollapsed);
+        const selected = active === t.id;
+        const cls = mobile ? railMobileItem(selected) : railItem(selected, railCollapsed);
         const inner = (
           <>
             {t.Icon && <t.Icon strokeWidth={1.7} aria-hidden="true" />}
@@ -64,13 +64,13 @@ export default function RailLayout({
             {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
             {t.href ? (
               // no-underline because railItem sets no decoration and an <a> would otherwise be underlined.
-              <a href={t.href} className={`${cls} no-underline`} aria-current={on || undefined} {...a11y}>
+              <a href={t.href} className={`${cls} no-underline`} aria-current={selected || undefined} {...a11y}>
                 {inner}
               </a>
             ) : (
               <button
                 type="button"
-                aria-current={on ? 'true' : undefined}
+                aria-current={selected ? 'true' : undefined}
                 onClick={() => onSelect(t.id)}
                 className={cls}
                 {...a11y}

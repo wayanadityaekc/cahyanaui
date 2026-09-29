@@ -51,17 +51,17 @@ export default function CharterPlans({ value, onChange, area = '', heading }) {
       <div className={ROWS} role="radiogroup" aria-label="Charter length">
         {CHARTER.durations.map((d) => {
           const v = tier(d.dur);
-          const on = d.dur === value;
+          const selected = d.dur === value;
           return (
             <button
               type="button"
               key={d.dur}
               role="radio"
-              aria-checked={on}
-              className={`${on ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
+              aria-checked={selected}
+              className={`${selected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
               onClick={() => onChange(d.dur)}
             >
-              {on && <span className={FLAG} data-plan-flag>Selected</span>}
+              {selected && <span className={FLAG} data-plan-flag>Selected</span>}
               {/* One DOM order: phone stacks name, price, sub; from 993px the grid puts the price in a right column. */}
               <span className={PLAN_GRID} data-plan-grid>
                 {/* Name never wraps; the badge wraps to the next line instead (narrow rupiah prices at 320px). */}

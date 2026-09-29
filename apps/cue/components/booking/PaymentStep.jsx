@@ -138,17 +138,17 @@ export default function PaymentStep({
       {/* Rail choice first, then amount; Card (DOKU) is the default for every currency, PayPal the alternative. */}
       <div className={METHODS} role="radiogroup" aria-label={PAY_COPY.methodHeading} data-rail-choice>
         {RAIL_CHOICES.map((m) => {
-          const on = rail === m.id;
+          const selected = rail === m.id;
           return (
             <button
               key={m.id}
               type="button"
               role="radio"
-              aria-checked={on}
+              aria-checked={selected}
               data-rail={m.id}
               aria-label={m.label}
               title={m.label}
-              className={`${METHOD} ${on ? CARD_ON : CARD_OFF}`}
+              className={`${METHOD} ${selected ? CARD_ON : CARD_OFF}`}
               onClick={() => onRail && onRail(m.id)}
             >
               {m.id === 'doku' ? (
@@ -163,21 +163,21 @@ export default function PaymentStep({
 
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={PAY_COPY.heading}>
         {options.map((o) => {
-          const on = option === o.id;
+          const selected = option === o.id;
           const dim = !o.available;
           const isRef = o.id === 'referral';
           return (
-            <div key={o.id} className={`${CARD} ${dim ? CARD_DIM : on ? CARD_ON : CARD_OFF}`}>
+            <div key={o.id} className={`${CARD} ${dim ? CARD_DIM : selected ? CARD_ON : CARD_OFF}`}>
               <button
                 type="button"
                 role="radio"
-                aria-checked={on}
+                aria-checked={selected}
                 aria-disabled={dim}
                 disabled={dim}
                 className={`${PICK} ${isRef ? PICK_TIGHT : ''} ${dim ? PICK_DIM : ''}`}
                 onClick={() => !dim && onOption(o.id)}
               >
-                <Radio on={on} dim={dim} />
+                <Radio on={selected} dim={dim} />
                 <span className="flex-1 min-w-0">
                   <span className={LABEL}>
                     {o.label}

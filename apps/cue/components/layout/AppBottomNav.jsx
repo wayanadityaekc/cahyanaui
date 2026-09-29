@@ -21,26 +21,26 @@ const CELL =
   'text-[0.62rem] font-medium leading-none text-center ' +
   '[transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
 
-function on(active) { return `${CELL} ${active ? 'text-gold' : 'text-muted'}`; }
+function cellClass(active) { return `${CELL} ${active ? 'text-gold' : 'text-muted'}`; }
 
 export default function AppBottomNav() {
   const pathname = normalizePath(usePathname());
   const { count } = useItinerary();
-  function is(href) { return (href === '/' ? pathname === '/' : pathname.startsWith(href.replace('.html', ''))); }
+  function isCurrent(href) { return (href === '/' ? pathname === '/' : pathname.startsWith(href.replace('.html', ''))); }
 
   return (
     <nav className={BAR} aria-label="App" data-appnav>
-      <a href="/" className={on(is('/'))}>
-        <House className="w-[22px] h-[22px]" strokeWidth={is('/') ? 2 : 1.7} aria-hidden="true" />
+      <a href="/" className={cellClass(isCurrent('/'))}>
+        <House className="w-[22px] h-[22px]" strokeWidth={isCurrent('/') ? 2 : 1.7} aria-hidden="true" />
         Home
       </a>
-      <a href="/tour.html" className={on(is('/tour.html'))}>
-        <Compass className="w-[22px] h-[22px]" strokeWidth={is('/tour.html') ? 2 : 1.7} aria-hidden="true" />
+      <a href="/tour.html" className={cellClass(isCurrent('/tour.html'))}>
+        <Compass className="w-[22px] h-[22px]" strokeWidth={isCurrent('/tour.html') ? 2 : 1.7} aria-hidden="true" />
         Program
       </a>
-      <a href="/my-trips.html" className={`relative ${on(is('/my-trips.html'))}`}>
+      <a href="/my-trips.html" className={`relative ${cellClass(isCurrent('/my-trips.html'))}`}>
         <span className="relative">
-          <ShoppingBag className="w-[22px] h-[22px]" strokeWidth={is('/my-trips.html') ? 2 : 1.7} aria-hidden="true" />
+          <ShoppingBag className="w-[22px] h-[22px]" strokeWidth={isCurrent('/my-trips.html') ? 2 : 1.7} aria-hidden="true" />
           <span
             className="absolute top-[-6px] right-[-8px] bg-gold text-white rounded-[999px] min-w-[16px] h-4 px-1 text-[0.58rem] font-semibold leading-4 text-center"
             hidden={!count}
@@ -51,7 +51,7 @@ export default function AppBottomNav() {
         My Trip
       </a>
       {/* Only one chat launcher is reachable at a time (navbar in a tab, this in app mode), so the panel never mounts twice. */}
-      <ChatLauncher className={on(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
+      <ChatLauncher className={cellClass(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
     </nav>
   );
 }

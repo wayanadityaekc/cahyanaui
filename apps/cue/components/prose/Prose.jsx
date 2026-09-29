@@ -71,8 +71,8 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
             box.stack ? (
               // display:contents on phones so stacked boxes become grid items and trailing ones go order-last.
               <div className="flex flex-col gap-[var(--space-4)] max-[768px]:contents" key={k}>
-                {box.stack.map((sub, s2) => (
-                  <div className={s2 === 0 ? undefined : 'max-[768px]:order-last'} key={s2}>
+                {box.stack.map((sub, stackIndex) => (
+                  <div className={stackIndex === 0 ? undefined : 'max-[768px]:order-last'} key={stackIndex}>
                     <Box box={sub} />
                   </div>
                 ))}

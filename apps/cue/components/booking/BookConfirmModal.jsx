@@ -194,7 +194,7 @@ export default function BookConfirmModal() {
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   // The airport leg gets no second date control: its flight date/time is the pick-up time, with real minutes.
   const needsFlight = isAirportRoute;
-  function dt(i) { return lineDT[i] || { date: '', time: '' }; }
+  function lineDateTime(i) { return lineDT[i] || { date: '', time: '' }; }
   function setDT(i, k, v) {
     setLineDT((prev) => {
       const next = prev.length ? [...prev] : lines.map((l) => ({ date: l.date || '', time: l.time || '' }));
@@ -204,8 +204,8 @@ export default function BookConfirmModal() {
     setDtErr((prev) => (prev[i] ? { ...prev, [i]: undefined } : prev));
   }
   // Date/time each line carries: the airport leg reads the flight field, others their own date control.
-  function dateOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : dt(i).date); }
-  function timeOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : dt(i).time); }
+  function dateOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : lineDateTime(i).date); }
+  function timeOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : lineDateTime(i).time); }
   const flightNumberDisplay = needsFlight ? f.flightNumber || singleLine.flight_number || '' : '';
 
   // Schema built per render from the same flags that show the fields; Book Now and WhatsApp both run this.
@@ -222,14 +222,14 @@ export default function BookConfirmModal() {
     );
     setErrors(fieldErrors);
     // Per-line date and time check (the schema can only hold one time field).
-    const de = {};
+    const dateErrors = {};
     (ctx.lines || []).forEach((l, i) => {
       if (isAirportLine(l) && i === 0 && needsFlight) return; // covered by the flight field
-      if (!dateOf(l, i)) de[i] = 'Please pick a date.';
-      else if (!timeOf(l, i)) de[i] = 'Please pick a start time.';
+      if (!dateOf(l, i)) dateErrors[i] = 'Please pick a date.';
+      else if (!timeOf(l, i)) dateErrors[i] = 'Please pick a start time.';
     });
-    setDtErr(de);
-    return ok && Object.keys(de).length === 0;
+    setDtErr(dateErrors);
+    return ok && Object.keys(dateErrors).length === 0;
   }
 
   // Send the fetched quote with the booking, or the server stores nothing and the email shows $0.
@@ -330,7 +330,7 @@ export default function BookConfirmModal() {
   const lastStep = payOn ? 3 : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const STEPS = 'flex gap-[6px] mb-2';
-  function stepBar(on) { return `flex-1 h-[3px] rounded-[2px] ${on ? 'bg-cta' : 'bg-line'}`; }
+  function stepBar(active) { return `flex-1 h-[3px] rounded-[2px] ${active ? 'bg-cta' : 'bg-line'}`; }
   const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
   const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
   const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
@@ -445,11 +445,11 @@ export default function BookConfirmModal() {
                       <DateField
                         id={`bk-dt-${i}`}
                         label="Date & time"
-                        value={dt(i).date}
+                        value={lineDateTime(i).date}
                         onChange={(v) => setDT(i, 'date', v)}
                         placeholder="Select date"
                         withTime
-                        time={dt(i).time}
+                        time={lineDateTime(i).time}
                         onTimeChange={(v) => setDT(i, 'time', v)}
                         category={categoryOfLine(l)}
                         itemName={l.service}

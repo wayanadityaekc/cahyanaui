@@ -20,8 +20,8 @@ export function galleryFrom(data) {
   (data.heroSlides || []).forEach((s) => {
     const f = FILE(s.src || s.img || s);
     if (!f) return;
-    const at = meta.get(f) || {};
-    meta.set(f, { ...at, title: at.title || s.title, alt: at.alt || s.title });
+    const existing = meta.get(f) || {};
+    meta.set(f, { ...existing, title: existing.title || s.title, alt: existing.alt || s.title });
   });
 
   const order = [

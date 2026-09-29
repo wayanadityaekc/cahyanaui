@@ -115,7 +115,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
   }
 
   // Star buttons and checklist rows for this modal; shell/box/title strings come from modalClasses.
-  function star(on) { return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`; }
+  function star(active) { return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${active ? 'text-amber' : 'text-[#d8d2c4]'}`; }
   const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
   const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
   const CHECK_SVC = 'font-semibold text-green text-body';

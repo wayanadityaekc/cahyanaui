@@ -70,7 +70,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   if (!mounted) return null;
 
   const waiting = phase === 'waiting';
-  const wa = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     `Hello, I just paid for booking ${bookingRef || ''} and I'd like to check it came through.`,
   )}`;
 
@@ -150,7 +150,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           <div className="w-full max-w-[320px] mt-6">
             <button type="button" className={BTN} onClick={onClose}>Done</button>
             {(phase === 'mismatch' || phase === 'slow') && (
-              <a className={`${BTN_WA} ${STACK}`} href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <a className={`${BTN_WA} ${STACK}`} href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a>
             )}
           </div>
         )}

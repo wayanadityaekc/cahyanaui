@@ -121,7 +121,7 @@ export default function ChatPanel({ open, onClose }) {
       onOpen: catchUp,
       onLive: setLive,
       onPresence: (v) => { ownerHereRef.current = v; setOwnerHere(v); },
-      onTyping: (ms) => setTypingUntil(Date.now() + ms),
+      onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
       onMessage: (m) => takeOwner([m]),
     });
     sock.current = s;
@@ -147,16 +147,16 @@ export default function ChatPanel({ open, onClose }) {
   // Typing indicator expires on its own so a stale 'typing' never stays on screen.
   const wayanTyping = typingUntil > Date.now();
   useEffect(() => {
-    const ms = typingUntil - Date.now();
-    if (ms <= 0) return undefined;
-    const t = setTimeout(() => setTypingUntil(0), ms);
+    const remainingMs = typingUntil - Date.now();
+    if (remainingMs <= 0) return undefined;
+    const t = setTimeout(() => setTypingUntil(0), remainingMs);
     return () => clearTimeout(t);
   }, [typingUntil]);
 
   // New message, or the dots appearing: keep the newest line in view.
   useEffect(() => {
-    const el = bodyRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    const body = bodyRef.current;
+    if (body) body.scrollTop = body.scrollHeight;
   }, [log, thinking]);
 
   useEffect(() => {
@@ -195,14 +195,14 @@ export default function ChatPanel({ open, onClose }) {
   }, [sending, account]);
 
   const ask = useCallback((question) => {
-    const q = String(question || '').trim();
-    if (!q || thinking || sending) return;
+    const text = String(question || '').trim();
+    if (!text || thinking || sending) return;
     setDraft('');
-    setLog((prev) => [...prev, { id: uid(), from: 'me', text: q }]);
+    setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
 
     // Handed over already: this goes to Wayan, not to the matcher.
     if (thread) {
-      sendToThread(thread, q).catch(() => {
+      sendToThread(thread, text).catch(() => {
         setLog((prev) => [...prev, { id: uid(), from: 'bot', text: 'That did not send. Try again in a moment.' }]);
       });
       return;
@@ -211,10 +211,10 @@ export default function ChatPanel({ open, onClose }) {
     setThinking(true);
 
     setTimeout(() => {
-      const res = answerFor(q, ctx);
+      const res = answerFor(text, ctx);
       const msg = { id: uid(), from: 'bot', text: res.text, rows: res.rows, link: res.link };
       // Only two outcomes: answered here or handed to Wayan; never a dead end or a polite decline.
-      if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(q); }
+      if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(text); }
       setLog((prev) => [...prev, msg]);
       setThinking(false);
     }, THINK_MS);
@@ -395,8 +395,8 @@ function BotReply({ m, onAsk }) {
 
       {m.chips && (
         <span className={CHIPS}>
-          {m.chips.map((q) => (
-            <button key={q} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(q)}>{q}</button>
+          {m.chips.map((chip) => (
+            <button key={chip} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(chip)}>{chip}</button>
           ))}
         </span>
       )}

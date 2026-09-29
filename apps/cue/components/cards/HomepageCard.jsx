@@ -35,7 +35,7 @@ const RATE =
   'absolute top-3 right-3 z-[3] inline-flex items-center gap-[3px] px-[10px] py-[5px] rounded-sm ' +
   'bg-[rgba(255,255,255,0.92)] text-ink text-small font-semibold ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';
-const OV = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
+const OVERLAY = 'absolute left-0 right-0 bottom-0 z-[2] px-[15px] pb-[14px]';
 const TITLE = 'mt-0 mb-[9px] font-semibold text-h2 leading-[1.2] text-white line-clamp-2 [text-shadow:0_2px_12px_rgba(0,0,0,0.5)]';
 const ACCENT = 'block w-[38px] h-[3px] rounded-[2px] mb-3';
 const BAR =
@@ -72,7 +72,7 @@ export default function HomepageCard({
         </span>
       )}
       <Rating name={priceName} className={RATE} />
-      <div className={OV}>
+      <div className={OVERLAY}>
         <h3 className={TITLE}>{name}</h3>
         <span className={`${ACCENT} ${accentTone}`} />
         <div className={BAR}>

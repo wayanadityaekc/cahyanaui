@@ -74,9 +74,9 @@ const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
 const CAL_MASK = "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='3'%20y='5'%20width='18'%20height='16'%20rx='2'/%3E%3Cpath%20d='M8%203v4M16%203v4M3%2010h18'/%3E%3C/svg%3E\")";
 const MTC_DATEBTN = `inline-flex items-center whitespace-nowrap gap-[0.4rem] mt-[0.35rem] py-[0.3rem] px-[0.6rem] bg-white text-left cursor-pointer border border-line rounded-md font-body text-[length:var(--fs-field)] text-green before:content-[''] before:flex-none before:w-[14px] before:h-[14px] before:bg-current before:opacity-70 before:[-webkit-mask-image:${CAL_MASK}] before:[mask-image:${CAL_MASK}] before:[-webkit-mask-repeat:no-repeat] before:[mask-repeat:no-repeat] before:[-webkit-mask-position:center] before:[mask-position:center] before:[-webkit-mask-size:contain] before:[mask-size:contain]`;
 
-function fmtDay(ds) {
-  if (!ds) return 'date TBD';
-  const [y, m, d] = ds.split('-').map(Number);
+function fmtDay(dateStr) {
+  if (!dateStr) return 'date TBD';
+  const [y, m, d] = dateStr.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
@@ -148,8 +148,8 @@ export default function MyTripsCart() {
       setReading(true);
       // Remove only ?review so a reload doesn't reopen it; ?token belongs to the account provider.
       p.delete('review');
-      const q = p.toString();
-      window.history.replaceState(null, '', `${window.location.pathname}${q ? `?${q}` : ''}`);
+      const search = p.toString();
+      window.history.replaceState(null, '', `${window.location.pathname}${search ? `?${search}` : ''}`);
     } catch (e) { /* no query string: nothing to do */ }
   }, []);
 
@@ -183,9 +183,9 @@ export default function MyTripsCart() {
         });
       });
     });
-    (state.transfers || []).forEach((t, ti) => out.push({
+    (state.transfers || []).forEach((t, transferIndex) => out.push({
       kind: 'transfer', type: 'transfer', service: t.route, date: t.date || '',
-      guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return, localIndex: ti,
+      guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return, localIndex: transferIndex,
       // Carry airport-transfer extras into the row so checkout forwards them per line.
       ...(t.direction ? { direction: t.direction } : null),
       ...(t.pickup ? { pickup: t.pickup } : null),
@@ -195,10 +195,10 @@ export default function MyTripsCart() {
       ...(t.flight_number ? { flight_number: t.flight_number } : null),
       ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
     }));
-    (state.charters || []).forEach((c, ci) => out.push({
+    (state.charters || []).forEach((c, charterIndex) => out.push({
       kind: 'charter', type: 'charter', service: CHARTER_SERVICE, date: c.date || '',
       guests: parseInt(c.guests, 10) || displayGuests, area: c.area || 'Ubud',
-      duration: c.dur || c.duration, extra: c.extra || 0, localIndex: ci,
+      duration: c.dur || c.duration, extra: c.extra || 0, localIndex: charterIndex,
       // Charter pick-up time: shown and sent at checkout, ignored by pricing.
       ...(c.time ? { time: c.time } : null),
     }));
@@ -238,7 +238,7 @@ export default function MyTripsCart() {
       let d = next.days[day_no - 1];
       // Fallback: if the expected day lacks the item, search every day so delete never no-ops.
       if (!d || !(d.items || []).includes(service)) {
-        d = (next.days || []).find((dd) => (dd.items || []).includes(service));
+        d = (next.days || []).find((day) => (day.items || []).includes(service));
       }
       if (d) {
         const k = d.items.indexOf(service);
@@ -254,12 +254,12 @@ export default function MyTripsCart() {
   function checkout() {
     if (!rows.length || undated) return;
     const parts = [];
-    const nD = new Set(rows.filter((r) => r.kind === 'day').map((r) => r.day_no)).size;
-    const nT = rows.filter((r) => r.kind === 'transfer').length;
-    const nC = rows.filter((r) => r.kind === 'charter').length;
-    if (nD) parts.push(`${nD} day${nD > 1 ? 's' : ''}`);
-    if (nT) parts.push(`${nT} transfer${nT > 1 ? 's' : ''}`);
-    if (nC) parts.push(`${nC} charter`);
+    const dayCount = new Set(rows.filter((r) => r.kind === 'day').map((r) => r.day_no)).size;
+    const transferCount = rows.filter((r) => r.kind === 'transfer').length;
+    const charterCount = rows.filter((r) => r.kind === 'charter').length;
+    if (dayCount) parts.push(`${dayCount} day${dayCount > 1 ? 's' : ''}`);
+    if (transferCount) parts.push(`${transferCount} transfer${transferCount > 1 ? 's' : ''}`);
+    if (charterCount) parts.push(`${charterCount} charter`);
     openBooking({
       type: 'itinerary',
       service: `My Trip (${parts.join(' + ')})`,

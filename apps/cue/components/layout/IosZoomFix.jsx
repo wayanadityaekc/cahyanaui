@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 export default function IosZoomFix() {
   useEffect(() => {
     try {
-      const ua = navigator.userAgent;
+      const userAgent = navigator.userAgent;
       // iPadOS reports a Mac UA, so it is caught by the touch-point count instead.
-      const ios = /iP(hone|od|ad)/.test(ua) || (/Mac/.test(ua) && navigator.maxTouchPoints > 1);
+      const ios = /iP(hone|od|ad)/.test(userAgent) || (/Mac/.test(userAgent) && navigator.maxTouchPoints > 1);
       if (!ios) return;
       const m = document.querySelector('meta[name=viewport]');
       if (!m || m.content.includes('maximum-scale')) return;

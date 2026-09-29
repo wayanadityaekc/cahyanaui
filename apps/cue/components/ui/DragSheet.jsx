@@ -30,18 +30,18 @@ export default function DragSheet({ enabled, onDismiss, className, children, ...
     const d = drag.current;
     if (!d || !ref.current) return;
     drag.current = null;
-    const el = ref.current;
+    const sheet = ref.current;
     const velocity = d.dy / Math.max(1, e.timeStamp - d.t0);
 
     // Hand the resting position back to CSS, and let the finger offset ease out.
-    el.style.transition = SPRING_BACK;
-    el.style.transform = 'translateY(0px)';
+    sheet.style.transition = SPRING_BACK;
+    sheet.style.transform = 'translateY(0px)';
     function clear() {
-      el.style.transition = '';
-      el.style.transform = '';
-      el.removeEventListener('transitionend', clear);
+      sheet.style.transition = '';
+      sheet.style.transform = '';
+      sheet.removeEventListener('transitionend', clear);
     }
-    el.addEventListener('transitionend', clear);
+    sheet.addEventListener('transitionend', clear);
 
     if (d.dy > CLOSE_DISTANCE || velocity > CLOSE_VELOCITY) onDismiss?.();
   }

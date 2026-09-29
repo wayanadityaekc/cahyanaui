@@ -1,10 +1,10 @@
 // Cart rules only; all money comes from POST /api/pricing/quote, never from here.
 
-export function addDaysStr(ds, n) {
-  if (!ds) return '';
-  const [y, m, d] = ds.split('-').map(Number);
-  const dt = new Date(y, m - 1, d + n);
-  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+export function addDaysStr(dateStr, n) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const shifted = new Date(y, m - 1, d + n);
+  return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}-${String(shifted.getDate()).padStart(2, '0')}`;
 }
 
 // Setting a day's date moves every later day to follow on consecutive dates.
@@ -79,14 +79,14 @@ export function removeDay(state, dayIndex) {
 
 // Suggested plan: active programme i on day i with timeFor(name) as start time, plus airport pickup and drop-off.
 export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive, timeFor }) {
-  const g = guests ? String(guests) : '';
+  const guestCount = guests ? String(guests) : '';
   const days = suggest
     .filter((name) => (isActive ? isActive(name) : true))
     .slice(0, nDays)
-    .map((name) => ({ items: [name], itemModes: ['standard'], itemTimes: [(timeFor && timeFor(name)) || ''], date: '', guests: g }));
+    .map((name) => ({ items: [name], itemModes: ['standard'], itemTimes: [(timeFor && timeFor(name)) || ''], date: '', guests: guestCount }));
   const transfers = [
-    { route: airportRoute, direction: 'to', pickup: airportPlace, dropoff: '', date: '', guests: g },
-    { route: airportRoute, direction: 'from', pickup: '', dropoff: airportPlace, date: '', guests: g },
+    { route: airportRoute, direction: 'to', pickup: airportPlace, dropoff: '', date: '', guests: guestCount },
+    { route: airportRoute, direction: 'from', pickup: '', dropoff: airportPlace, date: '', guests: guestCount },
   ];
   return { days, transfers, charters: [] };
 }

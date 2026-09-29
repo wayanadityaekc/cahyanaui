@@ -112,17 +112,17 @@ const BUILDERS = { tourPrices, airportPrice, charterPrices, startTimes };
 // ---- matching ----
 
 // Match a named item by how many of its own name words the question repeats; a bare 'tour' matches nothing.
-function matchItem(q) {
-  const qw = words(q);
-  if (!qw.length) return null;
+function matchItem(question) {
+  const questionWords = words(question);
+  if (!questionWords.length) return null;
   let best = null;
   itemIndex().forEach((item) => {
     const iw = words(item.name);
     if (!iw.length) return;
     let hits = 0;
-    iw.forEach((w) => { if (qw.includes(w)) hits += 1; });
+    iw.forEach((w) => { if (questionWords.includes(w)) hits += 1; });
     // Needs two of the item's words, or one distinctive word of 7+ letters.
-    const strong = iw.some((w) => w.length >= 7 && qw.includes(w));
+    const strong = iw.some((w) => w.length >= 7 && questionWords.includes(w));
     if (hits >= 2 || (hits === 1 && strong)) {
       const score = hits + (strong ? 1 : 0);
       if (!best || score > best.score) best = { item, score };
@@ -131,9 +131,9 @@ function matchItem(q) {
   return best ? best.item : null;
 }
 
-function matchTopic(q) {
-  const n = norm(q);
-  const qw = words(q);
+function matchTopic(question) {
+  const n = norm(question);
+  const questionWords = words(question);
   let best = null;
   TOPICS.forEach((t) => {
     let score = 0;
@@ -141,10 +141,10 @@ function matchTopic(q) {
     t.words.forEach((w) => {
       if (w.includes(' ')) {
         if (n.includes(w)) score += 3;          // a phrase is worth more than a word
-      } else if (qw.includes(w)) score += 1;
+      } else if (questionWords.includes(w)) score += 1;
     });
     (t.strong || []).forEach((w) => {
-      if (w.includes(' ') ? n.includes(w) : qw.includes(w)) { strong = true; score += 3; }
+      if (w.includes(' ') ? n.includes(w) : questionWords.includes(w)) { strong = true; score += 3; }
     });
     if (!score) return;
     // A topic matching one of its own distinctive words beats one that only matched generic words.
@@ -166,21 +166,21 @@ function answerTopic(topic, ctx) {
 
 // Entry point; returns { kind: 'answer', text, rows?, link? } or { kind: 'handoff', text } - no third outcome.
 export function answerFor(question, ctx = {}) {
-  const q = String(question || '').trim();
+  const text = String(question || '').trim();
   // Only reachable from a caller that is not the panel; the panel drops empties.
-  if (!q) return { kind: 'answer', text: CHAT_COPY.greeting };
+  if (!text) return { kind: 'answer', text: CHAT_COPY.greeting };
 
-  const bare = norm(q);
+  const bare = norm(text);
   if (GREETINGS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.hello };
   if (THANKS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
   // Situations (HUMAN_WORDS) go to a person before any lookup can answer them.
-  const n = norm(q);
-  const qw0 = words(q);
+  const n = norm(text);
+  const qw0 = words(text);
   const human = HUMAN_WORDS.some((w) => (w.includes(' ') ? n.includes(w) : qw0.includes(w)));
   if (human) return { kind: 'handoff', text: CHAT_COPY.handoff };
 
-  const item = matchItem(q);
+  const item = matchItem(text);
   if (item) {
     const price = priceOf(item, ctx);
     const bits = [item.meta, item.stops ? `${item.stops} stops` : ''].filter(Boolean).join(' · ');
@@ -193,7 +193,7 @@ export function answerFor(question, ctx = {}) {
     };
   }
 
-  const topic = matchTopic(q);
+  const topic = matchTopic(text);
   if (topic) return { kind: 'answer', ...answerTopic(topic, ctx) };
 
   // Nothing matched, so hand off to Wayan; do not add a word-list 'off topic' decline.

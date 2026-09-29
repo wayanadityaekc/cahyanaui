@@ -10,15 +10,15 @@ import { CARD_FRAME } from '@/components/ui/cardClasses';
 import { GUIDE_CARDS } from '@/content/shared/home';
 
 export default function GuideHome() {
-  const [q, setQ] = useState('');
+  const [query, setQuery] = useState('');
 
   const shown = useMemo(() => {
-    const term = q.trim().toLowerCase();
+    const term = query.trim().toLowerCase();
     if (!term) return GUIDE_CARDS;
     return GUIDE_CARDS.filter(
       (c) => c.more || c.title.toLowerCase().includes(term) || (c.kw || '').includes(term),
     );
-  }, [q]);
+  }, [query]);
 
   return (
     <section className="px-[var(--container-x)]" id="guides" aria-labelledby="guide-home-title">
@@ -36,8 +36,8 @@ export default function GuideHome() {
               placeholder="Search"
               aria-label="Search guides"
               autoComplete="off"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
           </div>
           <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />

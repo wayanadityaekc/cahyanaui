@@ -23,7 +23,7 @@ export default function ProgramPromoSlider() {
 
   if (!total) return null;
 
-  function go(n) {
+  function goTo(n) {
     setAuto(false);
     setCur((n + total) % total);
   }
@@ -42,9 +42,9 @@ export default function ProgramPromoSlider() {
         touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }}
       onTouchEnd={(e) => {
-        const dx = e.changedTouches[0].clientX - touch.current.x;
-        const dy = e.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
+        const deltaX = e.changedTouches[0].clientX - touch.current.x;
+        const deltaY = e.changedTouches[0].clientY - touch.current.y;
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(cur + (deltaX < 0 ? 1 : -1));
       }}
     >
       {slides.map((s, i) => (
@@ -73,10 +73,10 @@ export default function ProgramPromoSlider() {
 
       {total > 1 && (
         <>
-          <button type="button" className={`${ARROW} left-3`} aria-label="Previous program" onClick={() => go(cur - 1)}>
+          <button type="button" className={`${ARROW} left-3`} aria-label="Previous program" onClick={() => goTo(cur - 1)}>
             &lsaquo;
           </button>
-          <button type="button" className={`${ARROW} right-3`} aria-label="Next program" onClick={() => go(cur + 1)}>
+          <button type="button" className={`${ARROW} right-3`} aria-label="Next program" onClick={() => goTo(cur + 1)}>
             &rsaquo;
           </button>
           <div className="absolute left-0 right-0 bottom-3 z-[2] flex justify-center items-center gap-[6px]">
@@ -86,7 +86,7 @@ export default function ProgramPromoSlider() {
                 type="button"
                 aria-label={`Go to ${s.kicker}`}
                 aria-current={i === cur}
-                onClick={() => go(i)}
+                onClick={() => goTo(i)}
                 className={`rounded-[50%] transition-[all] duration-200 ease-[ease] ${i === cur ? 'w-[7px] h-[7px] bg-white' : 'w-[5px] h-[5px] bg-[rgba(255,255,255,0.6)]'}`}
               />
             ))}

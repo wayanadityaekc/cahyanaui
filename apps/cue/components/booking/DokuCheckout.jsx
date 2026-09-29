@@ -13,35 +13,35 @@ function loadScript(src) {
       had.addEventListener('error', () => reject(new Error('script failed')));
       return;
     }
-    const el = document.createElement('script');
-    el.src = src;
-    el.async = true;
-    el.dataset.doku = src;
-    el.addEventListener('load', () => { el.dataset.ready = '1'; resolve(); });
-    el.addEventListener('error', () => reject(new Error('script failed')));
-    document.head.appendChild(el);
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = true;
+    script.dataset.doku = src;
+    script.addEventListener('load', () => { script.dataset.ready = '1'; resolve(); });
+    script.addEventListener('error', () => reject(new Error('script failed')));
+    document.head.appendChild(script);
   });
 }
 
 // Styles the backdrop/container DOKU injects by diffing body children, never by DOKU class names (they can change).
 function adoptShell(before) {
-  const added = [...document.body.children].filter((el) => !before.has(el));
-  added.forEach((el) => {
-    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
-    el.dataset.dokuShell = '1';
-    const cs = getComputedStyle(el);
+  const added = [...document.body.children].filter((node) => !before.has(node));
+  added.forEach((node) => {
+    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+    node.dataset.dokuShell = '1';
+    const style = getComputedStyle(node);
     // Tell backdrop from panel by shape (full-width or not), not by name, so a DOKU rename can't break it.
-    const wide = el.offsetWidth >= window.innerWidth - 2;
+    const wide = node.offsetWidth >= window.innerWidth - 2;
     if (wide) {
       // Same scrim colour as the site's own modals.
-      el.style.background = 'rgba(34,32,28,0.55)';
-      el.style.backdropFilter = 'blur(2px)';
+      node.style.background = 'rgba(34,32,28,0.55)';
+      node.style.backdropFilter = 'blur(2px)';
     }
-    const frame = el.tagName === 'IFRAME' ? el : el.querySelector('iframe');
+    const frame = node.tagName === 'IFRAME' ? node : node.querySelector('iframe');
     if (frame) {
       frame.style.borderRadius = 'var(--r-xl)';
       frame.style.border = '0';
-      if (cs.position === 'fixed' || cs.position === 'absolute') el.style.borderRadius = 'var(--r-xl)';
+      if (style.position === 'fixed' || style.position === 'absolute') node.style.borderRadius = 'var(--r-xl)';
     }
   });
   return added.length;
@@ -51,7 +51,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
-  async function go() {
+  async function startPayment() {
     setBusy(true);
     setErr('');
     try {
@@ -102,7 +102,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       <button
         type="button"
         className={`flex w-full ${BTN_SM} border-none font-body no-underline text-white bg-cta cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d disabled:opacity-60`}
-        onClick={go}
+        onClick={startPayment}
         disabled={busy || !bookingRef}
       >
         {busy ? 'Opening...' : `Pay ${amountText || 'now'}`}

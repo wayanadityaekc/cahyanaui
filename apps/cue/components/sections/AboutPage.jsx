@@ -25,10 +25,10 @@ export default function AboutPage() {
 
           {row.steps && (
             <ol className="list-none m-0 p-0">
-              {row.steps.map((st) => (
-                <li className="mb-3" key={st.n}>
-                  <strong className="text-body font-semibold text-green">{st.n}. {st.title}</strong>
-                  <p className="m-0 mt-[0.15rem] text-small leading-[1.5] text-muted">{st.text}</p>
+              {row.steps.map((step) => (
+                <li className="mb-3" key={step.n}>
+                  <strong className="text-body font-semibold text-green">{step.n}. {step.title}</strong>
+                  <p className="m-0 mt-[0.15rem] text-small leading-[1.5] text-muted">{step.text}</p>
                 </li>
               ))}
             </ol>

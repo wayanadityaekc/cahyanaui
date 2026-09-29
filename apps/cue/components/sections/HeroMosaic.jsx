@@ -41,16 +41,16 @@ const LB_ICON_BTN =
   '[transition:background-color_var(--dur)_var(--ease)] hover:bg-[rgba(255,255,255,0.26)]';
 
 export default function HeroMosaic({ photos = [], title }) {
-  const [at, setAt] = useState(null);
-  const open = at !== null;
+  const [openIndex, setOpenIndex] = useState(null);
+  const open = openIndex !== null;
   useBodyLock(open);
 
   useEffect(() => {
     if (!open) return undefined;
     function onKey(e) {
-      if (e.key === 'Escape') setAt(null);
-      else if (e.key === 'ArrowRight') setAt((i) => (i + 1) % photos.length);
-      else if (e.key === 'ArrowLeft') setAt((i) => (i - 1 + photos.length) % photos.length);
+      if (e.key === 'Escape') setOpenIndex(null);
+      else if (e.key === 'ArrowRight') setOpenIndex((i) => (i + 1) % photos.length);
+      else if (e.key === 'ArrowLeft') setOpenIndex((i) => (i - 1 + photos.length) % photos.length);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -65,7 +65,7 @@ export default function HeroMosaic({ photos = [], title }) {
         type="button"
         key={p.src}
         className={cls}
-        onClick={() => setAt(i)}
+        onClick={() => setOpenIndex(i)}
         aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
       >
         <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
@@ -101,7 +101,7 @@ export default function HeroMosaic({ photos = [], title }) {
       <div className="relative">
         {gallery}
         {photos.length >= PILL_FROM && (
-          <button type="button" className={MORE_BTN} onClick={() => setAt(0)}>
+          <button type="button" className={MORE_BTN} onClick={() => setOpenIndex(0)}>
             Show all {photos.length} photos
           </button>
         )}
@@ -118,9 +118,9 @@ export default function HeroMosaic({ photos = [], title }) {
           >
             <div className="flex items-center justify-between flex-none py-3 px-4">
               <span className="font-body text-small text-[rgba(255,255,255,0.75)]">
-                {at + 1} / {photos.length}
+                {openIndex + 1} / {photos.length}
               </span>
-              <button type="button" className={LB_ICON_BTN} onClick={() => setAt(null)} aria-label="Close photos">
+              <button type="button" className={LB_ICON_BTN} onClick={() => setOpenIndex(null)} aria-label="Close photos">
                 &times;
               </button>
             </div>
@@ -128,22 +128,22 @@ export default function HeroMosaic({ photos = [], title }) {
             <div className="flex-[1_1_auto] min-h-0 grid place-items-center overflow-hidden px-4">
               {/* Cap height in viewport units; max-h-full does not constrain here. 12rem reserves header and caption rows. */}
               <img
-                src={photos[at].src}
-                alt={photos[at].alt || ''}
+                src={photos[openIndex].src}
+                alt={photos[openIndex].alt || ''}
                 className="max-w-full max-h-[calc(100dvh-12rem)] w-auto h-auto object-contain rounded-sm"
               />
             </div>
 
             <div className="flex-none py-4 px-4 text-center">
-              {photos[at].title && (
-                <p className="font-body text-small text-[rgba(255,255,255,0.8)] m-0 mb-3">{photos[at].title}</p>
+              {photos[openIndex].title && (
+                <p className="font-body text-small text-[rgba(255,255,255,0.8)] m-0 mb-3">{photos[openIndex].title}</p>
               )}
               {photos.length > 1 && (
                 <div className="flex justify-center gap-3">
                   <button
                     type="button"
                     className={LB_ICON_BTN}
-                    onClick={() => setAt((i) => (i - 1 + photos.length) % photos.length)}
+                    onClick={() => setOpenIndex((i) => (i - 1 + photos.length) % photos.length)}
                     aria-label="Previous photo"
                   >
                     &lsaquo;
@@ -151,7 +151,7 @@ export default function HeroMosaic({ photos = [], title }) {
                   <button
                     type="button"
                     className={LB_ICON_BTN}
-                    onClick={() => setAt((i) => (i + 1) % photos.length)}
+                    onClick={() => setOpenIndex((i) => (i + 1) % photos.length)}
                     aria-label="Next photo"
                   >
                     &rsaquo;

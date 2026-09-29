@@ -10,7 +10,7 @@ const FOCUSABLE =
 // Open dialogs, oldest first. Only the last one answers Escape and Tab.
 const stack = [];
 
-function visible(el) { return el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden'; }
+function visible(node) { return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden'; }
 
 export default function useDialog({ shown, onClose, escape = true }) {
   const ref = useRef(null);
@@ -76,8 +76,8 @@ export default function useDialog({ shown, onClose, escape = true }) {
       cancelAnimationFrame(raf);
       clearTimeout(timer);
       document.removeEventListener('keydown', onKey);
-      const at = stack.indexOf(token);
-      if (at >= 0) stack.splice(at, 1);
+      const index = stack.indexOf(token);
+      if (index >= 0) stack.splice(index, 1);
       if (opener && opener !== document.body && document.contains(opener) && opener.focus) {
         opener.focus({ preventScroll: true });
       }

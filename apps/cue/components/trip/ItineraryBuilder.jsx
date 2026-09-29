@@ -73,16 +73,16 @@ const ITN_FIELD_INPUT = `min-w-0 ${FIELD_INPUT} font-body text-[length:var(--fs-
 // One start time per item, not per day (a day can hold two programmes); width-capped as a small control.
 const ITN_ITEM_TIME = 'mt-[0.6rem] max-w-[190px]';
 
-function addDays(ds, n) {
-  if (!ds) return '';
-  const [y, m, d] = ds.split('-').map(Number);
-  const dt = new Date(y, m - 1, d + n);
-  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+function addDays(dateStr, n) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const shifted = new Date(y, m - 1, d + n);
+  return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}-${String(shifted.getDate()).padStart(2, '0')}`;
 }
 
-function fmtDay(ds) {
-  if (!ds) return 'date TBD';
-  const [y, m, d] = ds.split('-').map(Number);
+function fmtDay(dateStr) {
+  if (!dateStr) return 'date TBD';
+  const [y, m, d] = dateStr.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 

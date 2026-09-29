@@ -10,7 +10,7 @@
    "name": "Airport → Ubud",
    "meta": "~1.5 hrs · per car",
    "priceName": "Airport – Ubud",
-   "priceFallback": "$26"
+   "priceFallback": "$28"
   },
   {
    "key": "Canggu Area",
@@ -18,7 +18,7 @@
    "name": "Canggu → Ubud",
    "meta": "~1.25 hrs · per car",
    "priceName": "Canggu Area – Ubud",
-   "priceFallback": "$25"
+   "priceFallback": "$26"
   },
   {
    "key": "Kintamani Area",
@@ -26,7 +26,7 @@
    "name": "Kintamani → Ubud",
    "meta": "~1 hr · per car",
    "priceName": "Kintamani Area – Ubud",
-   "priceFallback": "$26"
+   "priceFallback": "$28"
   },
   {
    "key": "Amed Area",
@@ -34,7 +34,7 @@
    "name": "Amed → Ubud",
    "meta": "~2.5 hrs · per car",
    "priceName": "Amed Area – Ubud",
-   "priceFallback": "$40"
+   "priceFallback": "$42"
   },
   {
    "key": "Seminyak Area",
@@ -42,7 +42,7 @@
    "name": "Seminyak → Ubud",
    "meta": "~1.25 hrs · per car",
    "priceName": "Seminyak Area – Ubud",
-   "priceFallback": "$26"
+   "priceFallback": "$28"
   },
   {
    "key": "Buleleng Area",
@@ -50,7 +50,7 @@
    "name": "Buleleng → Ubud",
    "meta": "~2.5 hrs · per car",
    "priceName": "Buleleng Area – Ubud",
-   "priceFallback": "$45"
+   "priceFallback": "$48"
   }
  ],
  "tinfo": {

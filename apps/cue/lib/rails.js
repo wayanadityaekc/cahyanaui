@@ -20,7 +20,7 @@ export const DOKU_READY = true;
 
 // Mirrors SUPPORTED in cahyana-api/paypal.js, trimmed to the currencies this
 // site actually offers. IDR is absent on purpose: PayPal does not settle it.
-const PAYPAL_SETTLES = new Set(['USD', 'AUD', 'EUR', 'GBP']);
+const PAYPAL_SETTLES = new Set(['USD', 'AUD', 'EUR', 'GBP', 'SGD', 'NZD', 'CAD', 'CHF', 'JPY', 'MYR', 'HKD']);
 const PAYPAL_FALLBACK = 'USD';
 
 export const RAIL_LABEL = {

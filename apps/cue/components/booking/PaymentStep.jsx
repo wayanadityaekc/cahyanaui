@@ -6,6 +6,7 @@ import { withSymbol } from '@/components/Price';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
 import { PAY_COPY, payOptions } from '@/lib/payment';
+import { usePricing } from '@/state/PricingProvider';
 import { noteFor, railInfo } from '@/lib/rails';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 
@@ -91,7 +92,13 @@ export default function PaymentStep({
   total, symbol = '$', currency = 'USD', stay = '', hasReferral = false,
   referral, onReferral, onApplyReferral, refMsg,
 }) {
-  const options = payOptions({ total, currency, stay, hasReferral });
+  // The deposit in this currency comes from the catalog - the server's live rate -
+  // so the site never holds an exchange rate of its own. Only trusted when the
+  // catalog is for THIS currency (it can lag one fetch behind a currency switch).
+  const pricing = usePricing();
+  const cat = pricing && pricing.catalog;
+  const deposit = cat && cat.currency === currency && cat.deposit ? cat.deposit.display : null;
+  const options = payOptions({ total, currency, stay, hasReferral, deposit });
   const [openFine, setOpenFine] = useState(false);
   // Only ever set when the guest's currency cannot be settled on the rail that
   // will take the payment - said here, before a card number is typed, rather

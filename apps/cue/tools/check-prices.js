@@ -15,7 +15,7 @@ const { execFileSync } = require("child_process");
 
 const ROOT = path.join(__dirname, "..");
 const API_REPO = path.join(ROOT, "..", "cahyana-api");
-const API = path.join(API_REPO, "pricing-data.js");
+const API = path.join(API_REPO, "pricing.js");
 
 // A stale clone makes this check lie in the most convincing way: it reports
 // drift against prices that were fixed hours ago, or calls a destination
@@ -77,7 +77,9 @@ async function checkCopies(api) {
   };
 
   // 1. /transfer route cards.
-  const { TRANSFER } = await import("../content/shared/transfer.js");
+  // The data lives in transfer.json since 27 Sep 2026; transfer.js is a one-line
+  // ESM re-export Node will not load without an import attribute. Read the data.
+  const TRANSFER = require("../content/shared/transfer.json");
   for (const r of TRANSFER.routes) {
     const live = api[r.priceName];
     if (!live) { problems.push(`transfer.js: "${r.priceName}" is not sold by the API`); continue; }
@@ -129,9 +131,26 @@ async function main() {
     return 2;
   }
 
-  const { prices } = require(API);
+  // What a card SHOWS: the USD catalog at the site's display guest count. Since
+  // 29 Sep 2026 USD is not a stored number - it is rupiah x the live rate x 1.03,
+  // rounded up to the price ladder (cahyana-api/fx.js). With no database the
+  // module prices at its baseline rate, so this compares the COPIES against the
+  // API's rule at that rate. On the live site the build ships the real catalog
+  // (app/layout.jsx), so these copies only ever show if the build could not
+  // reach the API.
+  const pricing = require(API);
+  const cat = pricing.catalog({ currency: "USD", guests: 2, stay: "" });
   const api = {};
-  for (const cat of Object.keys(prices)) for (const [name, v] of Object.entries(prices[cat])) api[name] = v;
+  // Per-person items (experience/performance) keep their per-person figure as
+  // the card fallback - that is what the copy has always meant. (The catalog's
+  // own display for them is the 2-guest total; see the note in CLAUDE.md.)
+  const fx = require(path.join(API_REPO, "fx.js"));
+  for (const i of cat.items) {
+    const perPerson = i.category === "experience" || i.category === "performance";
+    const unit = pricing.itemInfo(i.name);
+    api[i.name] = { usd: perPerson && unit ? fx.display(unit.price.idr, "USD") : i.standard.display };
+  }
+  for (const t of cat.transfers) api[t.route] = { usd: t.display };
 
   const { LISTINGS } = await import("../content/shared/listings.js");
 

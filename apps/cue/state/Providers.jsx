@@ -8,13 +8,13 @@ import { PricingProvider } from './PricingProvider';
 import { BookingProvider } from './BookingProvider';
 import { ReviewsProvider } from './ReviewsProvider';
 
-export default function Providers({ children }) {
+export default function Providers({ children, initialCatalog = null }) {
   return (
     <TripPrefsProvider>
       <ReferralProvider>
         <AccountProvider>
           <ItineraryProvider>
-            <PricingProvider>
+            <PricingProvider initialCatalog={initialCatalog}>
               <ReviewsProvider>
                 <BookingProvider>{children}</BookingProvider>
               </ReviewsProvider>

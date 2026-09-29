@@ -7,24 +7,27 @@ import { createRequire } from 'node:module';
 const req = createRequire(import.meta.url);
 const SRV = req('/home/user/cahyana-api/payment.js');
 const PROV = req('/home/user/cahyana-api/providers.js');
+// The server's live-rate module. With no database it prices at its baseline -
+// which is fine here: this compares the two SIDES' arithmetic, and the site
+// takes every rate-derived number (totals AND the deposit) from the server.
+const FX = req('/home/user/cahyana-api/fx.js');
+const CURS = FX.CURRENCIES;
 
 let checked = 0;
 const bad = [];
 
-const CASES = [
-  { usd: 40, idr: 700000 },
-  { usd: 26, idr: 450000 },
-  { usd: 74, idr: 1300000 },
-  { usd: 57, idr: 1000000 },
-  { usd: 11, idr: 200000 },
-];
+const CASES = [700000, 450000, 1300000, 1000000, 200000];
 
-for (const { usd, idr } of CASES) {
-  for (const cur of ['USD', 'IDR', 'AUD', 'EUR', 'GBP']) {
+for (const idr of CASES) {
+  // USD is derived from rupiah like every other currency now.
+  const usd = FX.display(idr, 'USD');
+  for (const cur of CURS) {
     for (const stay of ['ubud', '', 'canggu', 'kuta']) {
       for (const ref of [false, true]) {
-        const base = cur === 'IDR' ? idr : Math.ceil(usd * ({ USD: 1, AUD: 1.4, EUR: 0.86, GBP: 0.74 })[cur]);
-        const site = payOptions({ total: base, currency: cur, stay, hasReferral: ref });
+        const base = FX.display(idr, cur);
+        // What the catalog hands the payment step (catalog.deposit.display).
+        const deposit = FX.fromUsd(10, cur);
+        const site = payOptions({ total: base, currency: cur, stay, hasReferral: ref, deposit });
         const srv = SRV.quotePayment({ baseUsd: usd, baseIdr: idr, baseDisplay: base, currency: cur, stay, hasReferral: ref });
 
         for (const id of ['deposit', 'full', 'referral']) {
@@ -77,7 +80,7 @@ if (DOKU_READY) {
 }
 
 let rails = 0;
-for (const cur of ['USD', 'IDR', 'AUD', 'EUR', 'GBP']) {
+for (const cur of CURS) {
   const srv = PROV.routeFor(cur);
   rails++;
   if (srv.provider !== railFor(cur)) {

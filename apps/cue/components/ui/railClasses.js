@@ -27,10 +27,12 @@ export const RAIL_FRAME =
 export const RAIL_FRAME_CARD = `${FRAME_DESK} max-[992px]:rounded-md max-[992px]:shadow-none`;
 
 // Frame capped to the first screen for scrollContent pages; the -60px is the footerbar and must match it.
+// Phones keep the border, so the frame pads its content (same inset as the guide card, RAIL_MAIN_CARD).
 export const RAIL_FRAME_SCROLL =
   'flex items-stretch bg-white [border:1px_solid_var(--line)] rounded-[var(--r-lg)] ' +
   'min-[993px]:h-[calc(100dvh_-_var(--header-h-max,104px)_-_var(--space-3)_-_var(--space-3)_-_60px_-_env(safe-area-inset-bottom))] ' +
-  'overflow-clip max-[992px]:block';
+  'overflow-clip max-[992px]:block max-[992px]:px-6 max-[992px]:pt-6 max-[992px]:pb-8 ' +
+  'max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
 
 // --- desktop rail -----------------------------------------------------------
 export const RAIL_ASIDE =

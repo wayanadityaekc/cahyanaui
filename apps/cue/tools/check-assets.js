@@ -42,7 +42,7 @@ console.log(`Assets referenced    : ${referenced.size}`);
 console.log(`Referenced but absent: ${missing.length}`);
 if (missing.length) {
   console.error("\nMISSING ASSETS:");
-  missing.slice(0, 30).forEach((m) => console.error("  " + m));
+  missing.slice(0, 30).forEach((m) => console.error(`  ${m}`));
   if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
   process.exit(1);
 }
@@ -52,7 +52,7 @@ const noIcon = pages.filter((p) => !/rel="icon"/.test(fs.readFileSync(p, "utf8")
 console.log(`Pages without a favicon: ${noIcon.length}`);
 if (noIcon.length) {
   console.error("\nPAGES MISSING THE FAVICON LINK:");
-  noIcon.slice(0, 10).forEach((p) => console.error("  " + p.replace(OUT + "/", "")));
+  noIcon.slice(0, 10).forEach((p) => console.error(`  ${p.replace(`${OUT}/`, "")}`));
   process.exit(1);
 }
 

@@ -24,5 +24,5 @@ for (const vw of Object.keys(B)) {
 }
 if (diffs === 0) { console.log('IDENTICAL'); process.exit(0); }
 console.log(`DIFF (${diffs}):`);
-samples.forEach((s) => console.log('  ' + s));
+samples.forEach((s) => console.log(`  ${s}`));
 process.exit(1);

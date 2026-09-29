@@ -93,7 +93,7 @@ for (const w of [390, 1280]) {
     token = res.tok;
     for (const b of res.out) if (bad.length < 8) bad.push(`${p} ${b}`);
   }
-  ok(bad.length === 0, `${w}: nol shadow elevasi se-web${bad.length ? '\n        :: ' + bad.join('\n        :: ') : ''}`);
+  ok(bad.length === 0, `${w}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`);
   ok(seen > 0, `${w}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
   // The card shadow must still exist. Every page below renders cards, so a zero here
   // means it was removed - the failure this whole section was rewritten to catch.
@@ -101,7 +101,7 @@ for (const w of [390, 1280]) {
   for (const p of ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html']) {
     ok(cards[p] > 0, `${w} ${p}: kartu masih bawa --shadow-card (${cards[p]} elemen)`);
   }
-  ok(errs.length === 0, `${w}: nol page error${errs[0] ? ' :: ' + errs[0] : ''}`);
+  ok(errs.length === 0, `${w}: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
   await ctx.close();
 }
 
@@ -360,7 +360,7 @@ for (const w of [390]) {
   }
 
   const shut = await read();
-  console.log(`  ${w}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((x) => x.w + 'x' + x.h).join(' ')}`);
+  console.log(`  ${w}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((x) => `${x.w}x${x.h}`).join(' ')}`);
   ok(shut.bars.length === 3, `${w}: tepat 3 bar ke-ukur (${shut.bars.length}) - kurang/lebih = harness rusak`);
   ok(shut.btnW <= 24.5 && shut.btnW >= 18, `${w}: tombol udah dikecilin & gak kekecilan (${shut.btnW})`);
   ok(shut.bars.every((x) => x.w <= shut.btnW + 0.5 && x.w >= 16), `${w}: bar muat di tombol & masih kebaca`);

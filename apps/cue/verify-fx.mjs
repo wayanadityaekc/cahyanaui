@@ -59,11 +59,11 @@ for (const w of [390, 1280]) {
   if (w <= 992) await page.click('button[aria-label="Open menu"]');
   else await page.click('header button:has-text("Log in")');
   await page.waitForTimeout(600);
-  const trig = page.locator('#' + id);
+  const trig = page.locator(`#${id}`);
   await trig.scrollIntoViewIfNeeded();
   await trig.click();
   await page.waitForTimeout(400);
-  const list = page.locator('#' + id + ' + ul[role="listbox"]');
+  const list = page.locator(`#${id} + ul[role="listbox"]`);
   const opts = await list.locator('li[role="option"]').allInnerTexts();
   ok(opts.map((t) => t.trim()).join(',') === WANT.join(','), `${w}: picker offers the 12 currencies in order (${opts.join(',')})`);
   const flags = await list.evaluate((ul) =>

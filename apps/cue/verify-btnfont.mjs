@@ -124,7 +124,7 @@ for (const w of [320, 390, 768, 1280]) {
     `${w}: dua tombol gak ketumpuk`);
   ok(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth) <= 0,
     `${w}: /settings gak melar`);
-  ok(errs.length === 0, `${w}: /settings nol page error${errs[0] ? ' :: ' + errs[0] : ''}`);
+  ok(errs.length === 0, `${w}: /settings nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
   await ctx.close();
 }
 
@@ -162,13 +162,13 @@ for (const w of [320, 390, 768, 1280]) {
     for (const x of rows) if (x.fam !== 'Inter') odd.push(`${p} "${x.t}" -> ${x.fam}`);
   }
   ok(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
-  ok(odd.length === 0, `sweep: nol tombol aksi pakai font browser${odd.length ? ' :: ' + odd.join(' | ') : ''}`);
+  ok(odd.length === 0, `sweep: nol tombol aksi pakai font browser${odd.length ? ` :: ${odd.join(' | ')}` : ''}`);
   // No exceptions left. This used to carry a named #418 exception for /index.html;
   // the cause is fixed (lib/pathname.js), so a page error here is a real one again.
-  ok(errs.length === 0, `sweep: nol page error${errs[0] ? ' :: ' + errs[0] : ''}`);
+  ok(errs.length === 0, `sweep: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
 
   // Homepage CTA under the program grid.
-  await page.goto(B + '/index.html', { waitUntil: 'load' });
+  await page.goto(`${B}/index.html`, { waitUntil: 'load' });
   const cta = page.locator('#explore a').last();
   const href = await cta.getAttribute('href');
   const label = (await cta.textContent()).trim();
@@ -176,7 +176,7 @@ for (const w of [320, 390, 768, 1280]) {
   ok(href === '/tour.html', `CTA #explore nunjuk /tour.html (dapet ${href})`);
   ok(label.split(/\s+/).length <= 2, `label CTA <=2 kata ("${label}")`);
   // Prove the target is a page guests can actually land on, not a parked one.
-  const tr = await page.goto(B + '/tour.html', { waitUntil: 'load' });
+  const tr = await page.goto(`${B}/tour.html`, { waitUntil: 'load' });
   ok(tr.status() === 200, 'target CTA HTTP 200');
   const robots = await page.evaluate(() => {
     const m = document.querySelector('meta[name="robots"]');

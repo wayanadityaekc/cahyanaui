@@ -16,7 +16,7 @@ const REVIEWS = Array.from({ length: 8 }, (_, i) => ({
   rating: 5 - (i % 2),
   message: (i % 2 === 0 ? 'Great trip, our driver was on time and friendly.' : 'This trip was absolutely fantastic from start to finish. Our driver was on time, friendly, and knew all the best spots to stop for photos. The itinerary was well paced and never felt rushed. We saw waterfalls, rice terraces, and a beautiful temple. Highly recommend booking with Cahyana - communication was clear and pricing was upfront the whole way through, no surprises at the end of the day.'),
   country: 'Australia',
-  created_at: '2026-09-' + (10 + i),
+  created_at: `2026-09-${10 + i}`,
 }));
 
 let pass = 0, fail = 0;

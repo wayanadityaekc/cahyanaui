@@ -52,14 +52,14 @@ for (const w of [390, 1280]) {
       if (url.includes('/bookings/mine')) {
         mineHits += 1;
         const history = MINE.history.map((t) => ({ ...t,
-          review_items: t.review_items.filter((svc) => !reviewed.has(t.ref + '::' + svc)) }));
+          review_items: t.review_items.filter((svc) => !reviewed.has(`${t.ref}::${svc}`)) }));
         return route.fulfill({ json: { ...MINE, history } });
       }
       if (url.includes('/reviews') && route.request().method() === 'POST') {
         const body = JSON.parse(route.request().postData() || '{}');
         posted.push(body.service);
         const refuse = mode === 'partial' && body.booking_ref === 'CUE-103';
-        if (!refuse) reviewed.add(body.booking_ref + '::' + body.service);
+        if (!refuse) reviewed.add(`${body.booking_ref}::${body.service}`);
         return route.fulfill({ json: refuse
           ? { ok: false, reason: "This booking isn't confirmed yet, so there's nothing to review." }
           : { ok: true } });
@@ -73,7 +73,7 @@ for (const w of [390, 1280]) {
       localStorage.setItem('cue_token', 'tok-anna');
     });
 
-    await page.goto(BASE + '/my-trips.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
 
     // Open the popup from Past trips.
     if (w < 1024) {

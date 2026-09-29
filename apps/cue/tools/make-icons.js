@@ -95,14 +95,14 @@ async function inkBox() {
     e.writeUInt32LE(buf.length, 8); e.writeUInt32LE(offset, 12);
     dir.push(e); body.push(buf); offset += buf.length;
   }
-  fs.writeFileSync(OUT + 'favicon.ico', Buffer.concat([head, ...dir, ...body]));
+  fs.writeFileSync(`${OUT}favicon.ico`, Buffer.concat([head, ...dir, ...body]));
 
   // The SVG is a shell around a raster, same as the file it replaces - the
   // monogram is a custom glyph and there is no honest vector of it. Transparent
   // corners on purpose here: a browser tab may be dark, and the disc should read
   // as a disc rather than as a white tile.
   const png = await disc().resize(128, 128).png(PNG).toBuffer();
-  fs.writeFileSync(OUT + 'favicon.svg',
+  fs.writeFileSync(`${OUT}favicon.svg`,
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <image width="100" height="100" href="data:image/png;base64,${png.toString('base64')}"/>
 </svg>

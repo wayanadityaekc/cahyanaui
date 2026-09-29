@@ -66,7 +66,7 @@ for (const w of [390, 1280]) {
   const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
   await page.route('**/api/**', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '[]' }));
-  await page.goto(BASE + '/ubud-tour.html', { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/ubud-tour.html`, { waitUntil: 'networkidle' });
   const bands = await page.locator('.review-cta').count();
   ok(bands === 1, `tour page now has ${bands} review bands`);
   await ctx.close();

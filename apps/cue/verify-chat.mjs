@@ -292,7 +292,7 @@ for (const w of [390, 768, 1280]) {
     const errs = [];
     const KNOWN = /Minified React error #418/;
     page.on('pageerror', (e) => { if (!KNOWN.test(String(e))) errs.push(String(e)); });
-    await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
@@ -368,7 +368,7 @@ for (const w of [390, 768, 1280]) {
     });
 
     const page = await sctx.newPage();
-    await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
@@ -423,7 +423,7 @@ for (const w of [390, 768, 1280]) {
     });
 
     const page = await nctx.newPage();
-    await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
     await page.locator('button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });

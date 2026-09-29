@@ -24,7 +24,7 @@ import { chromium } from 'playwright-core';
 
 const BASE = process.env.BASE || 'http://127.0.0.1:4000';
 const API = process.env.API || 'http://127.0.0.1:4599/api';
-const AUTH = 'Basic ' + Buffer.from(`${process.env.ADMIN_USER || 'owner'}:${process.env.ADMIN_PASS || 'pw'}`).toString('base64');
+const AUTH = `Basic ${Buffer.from(`${process.env.ADMIN_USER || 'owner'}:${process.env.ADMIN_PASS || 'pw'}`).toString('base64')}`;
 const EXEC = process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 let pass = 0, fail = 0;
@@ -159,7 +159,7 @@ async function main() {
     const tk = await api('/admin/ws-ticket', { method: 'POST', body: '{}' });
     ok(!!(tk.json && tk.json.ticket), 'could not mint a ws ticket');
     const WS = (await import('../cahyana-api/node_modules/ws/index.js')).default;
-    const owner = new WS(API.replace(/^http/, 'ws').replace(/\/api$/, '') + `/ws/admin?ticket=${tk.json.ticket}`);
+    const owner = new WS(`${API.replace(/^http/, 'ws').replace(/\/api$/, '')}/ws/admin?ticket=${tk.json.ticket}`);
     await new Promise((r, j) => { owner.once('open', r); owner.once('error', j); });
     owner.send(JSON.stringify({ type: 'typing', threadId: id }));
     const typed = await seen(panel(page).locator('[data-typing]'), 3000);

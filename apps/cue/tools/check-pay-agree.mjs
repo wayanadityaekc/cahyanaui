@@ -100,5 +100,5 @@ process.env = envWas;
 console.log(`kombinasi dicek : ${checked}`);
 console.log(`rail dicek      : ${rails} (default ${DEFAULT_RAIL})`);
 console.log(`beda            : ${bad.length}`);
-bad.slice(0, 12).forEach((b) => console.log('  ' + b));
+bad.slice(0, 12).forEach((b) => console.log(`  ${b}`));
 process.exit(bad.length ? 1 : 0);

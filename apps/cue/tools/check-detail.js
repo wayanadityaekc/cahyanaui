@@ -8,7 +8,7 @@ const ROOT = path.join(__dirname, '..');
 
 const routes = fs.readFileSync(path.join(ROOT, 'lib/routes.js'), 'utf8');
 function list(name) {
-  const m = routes.match(new RegExp('export const ' + name + ' = \\[([\\s\\S]*?)\\];'));
+  const m = routes.match(new RegExp(`export const ${name} = \\[([\\s\\S]*?)\\];`));
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
 }
 

@@ -121,7 +121,7 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
   }
 
   const page = await ctx.newPage();
-  await page.goto(BASE + '/', { waitUntil: 'load' });
+  await page.goto(`${BASE}/`, { waitUntil: 'load' });
   const head = await page.evaluate(() => ({
     manifest: document.querySelector('link[rel=manifest]')?.getAttribute('href') || '',
     theme: document.querySelector('meta[name=theme-color]')?.content || '',
@@ -263,7 +263,7 @@ for (const w of [390, 768]) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await ctx.newPage();
   await appMode(page);
-  await page.goto(BASE + '/', { waitUntil: 'load' });
+  await page.goto(`${BASE}/`, { waitUntil: 'load' });
   await page.waitForTimeout(200);
   const nav = await box(page, '[data-appnav]');
   ok(nav && nav.display === 'none', '1280: app bar showing on desktop');
@@ -279,7 +279,7 @@ for (const w of [390, 768]) {
   const page = await ctx.newPage();
   await appMode(page);
   await page.route('**/api/chat/**', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{}' }));
-  await page.goto(BASE + '/', { waitUntil: 'load' });
+  await page.goto(`${BASE}/`, { waitUntil: 'load' });
   await page.waitForTimeout(250);
   // Never throw: a thrown click ends the run and hides every later assertion.
   const clicked = await page.click('[data-appnav] button[aria-label="Chat with us"]', { timeout: 8000 })

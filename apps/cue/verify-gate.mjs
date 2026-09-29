@@ -81,7 +81,7 @@ for (const w of [390, 1280]) {
   // A + C: logged out, code round trip (wrong then right), same tab throughout
   {
     const { ctx, page, errs } = await setup(w);
-    await page.goto(BASE + '/my-trips.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page); await page.waitForTimeout(500);
     ok(await gateOpen(page), `${w}/A: Pay now logged out did not show "Sign in to book"`);
     ok(!(await formOpen(page)), `${w}/A: THE BOOKING FORM OPENED WITHOUT AN ACCOUNT`);
@@ -118,7 +118,7 @@ for (const w of [390, 1280]) {
   // B: create account on an email that already has one -> same code stage
   {
     const { ctx, page, errs } = await setup(w);
-    await page.goto(BASE + '/my-trips.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page); await page.waitForTimeout(400);
     await page.locator('button:visible', { hasText: 'Create an account' }).click();
     await page.fill('#auth-name:visible', 'Wayan Aditya');
@@ -138,7 +138,7 @@ for (const w of [390, 1280]) {
   // G: a genuinely new account still signs in immediately, no code
   {
     const { ctx, page, errs } = await setup(w);
-    await page.goto(BASE + '/my-trips.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page); await page.waitForTimeout(400);
     await page.locator('button:visible', { hasText: 'Create an account' }).click();
     await page.fill('#auth-name:visible', 'Fresh Guest');
@@ -154,7 +154,7 @@ for (const w of [390, 1280]) {
   // D: already signed in
   {
     const { ctx, page, errs } = await setup(w, { signedIn: true });
-    await page.goto(BASE + '/my-trips.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page); await page.waitForTimeout(500);
     ok(await formOpen(page), `${w}/D: signed-in Pay now did not open the form`);
     ok(!(await gateOpen(page)), `${w}/D: signed-in guest was asked to sign in`);
@@ -164,7 +164,7 @@ for (const w of [390, 1280]) {
   // E: dismiss
   {
     const { ctx, page, errs } = await setup(w);
-    await page.goto(BASE + '/my-trips.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html`, { waitUntil: 'networkidle' });
     await payNow(page); await page.waitForTimeout(400);
     await page.keyboard.press('Escape'); await page.waitForTimeout(500);
     ok(!(await gateOpen(page)), `${w}/E: Escape did not close the popup`);
@@ -176,7 +176,7 @@ for (const w of [390, 1280]) {
   // F: stale marker (see file header - this is regression insurance on dead code)
   {
     const { ctx, page, errs } = await setup(w, { marker: { path: '/my-trips.html', at: Date.now() - 2 * 3600000 } });
-    await page.goto(BASE + '/?token=tok-link', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/?token=tok-link`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1200);
     ok(new URL(page.url()).pathname === '/', `${w}/F: stale marker still redirected (${page.url()})`);
     ok(errs.length === 0, `${w}/F: page errors ${errs.join(' | ')}`);

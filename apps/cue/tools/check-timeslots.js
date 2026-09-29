@@ -35,7 +35,7 @@ function behindUpstream() {
 
 let fails = 0;
 function ok(cond, msg) {
-  if (!cond) { console.error("  FAIL  " + msg); fails++; }
+  if (!cond) { console.error(`  FAIL  ${msg}`); fails++; }
 }
 function eq(got, want, msg) {
   return ok(

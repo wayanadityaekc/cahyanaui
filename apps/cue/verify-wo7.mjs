@@ -36,7 +36,7 @@ function serve(root, port) {
       let p = decodeURIComponent(req.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
       if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); return rsp.end('nf'); }
       rsp.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
       rsp.end(fs.readFileSync(f));
@@ -84,7 +84,7 @@ async function open(base, url, w, { loggedIn = false, h = 900 } = {}) {
 // ---------------------------------------------------------------- 1. borders
 console.log('1. border colours + layout, before vs after');
 const HEX = /rgb\((\d+), (\d+), (\d+)\)/;
-function hex(c) { const m = HEX.exec(c); return m ? '#' + [1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('') : c; }
+function hex(c) { const m = HEX.exec(c); return m ? `#${[1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('')}` : c; }
 const PAGES = ['/', '/tour.html', '/destinations.html', '/activities.html', '/ubud-tour.html', '/attractions/monkey-forest.html',
   '/charter.html', '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
   '/guide/ubud.html', '/my-trips.html', '/settings.html', '/itinerary.html'];
@@ -95,8 +95,8 @@ async function measure(base, url, w) {
     for (const el of document.querySelectorAll('body *')) {
       const cs = getComputedStyle(el);
       for (const s of ['Top', 'Right', 'Bottom', 'Left']) {
-        if (parseFloat(cs['border' + s + 'Width']) > 0 && cs['border' + s + 'Style'] !== 'none') {
-          const k = cs['border' + s + 'Color'] + '|' + cs['border' + s + 'Style'];
+        if (parseFloat(cs[`border${s}Width`]) > 0 && cs[`border${s}Style`] !== 'none') {
+          const k = `${cs[`border${s}Color`]}|${cs[`border${s}Style`]}`;
           hist[k] = (hist[k] || 0) + 1;
         }
       }
@@ -114,16 +114,16 @@ for (const w of [390, 1280]) {
   for (const url of PAGES) {
     const a = await measure(OLD, url, w);
     const b = await measure(NEW, url, w);
-    function H(h) { return Object.fromEntries(Object.entries(h).map(([k, v]) => { const [c, st] = k.split('|'); return [hex(c) + '|' + st, v]; })); }
+    function H(h) { return Object.fromEntries(Object.entries(h).map(([k, v]) => { const [c, st] = k.split('|'); return [`${hex(c)}|${st}`, v]; })); }
     const ha = H(a.hist), hb = H(b.hist);
     let lost = 0, gained = 0;
-    for (const o of OFF) for (const k of Object.keys(ha)) if (k.startsWith(o + '|')) lost += (ha[k] || 0) - (hb[k] || 0);
+    for (const o of OFF) for (const k of Object.keys(ha)) if (k.startsWith(`${o}|`)) lost += (ha[k] || 0) - (hb[k] || 0);
     const lineA = Object.entries(ha).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
     const lineB = Object.entries(hb).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
     gained = lineB - lineA;
     lostTotal += lost; gainedTotal += gained;
     // No off-token hairline may remain on any page.
-    for (const o of OFF) ok(!Object.keys(hb).some((k) => k.startsWith(o + '|')), `${url}@${w}: no ${o} border left`);
+    for (const o of OFF) ok(!Object.keys(hb).some((k) => k.startsWith(`${o}|`)), `${url}@${w}: no ${o} border left`);
     // /settings swaps two <hr> (which drew their line as a BORDER) for Separators (a
     // background): those two --line borders disappear by design.
     const expect = url === '/settings.html' ? lost - 2 : lost;
@@ -131,7 +131,7 @@ for (const w of [390, 1280]) {
     if (a.h !== b.h) heightDiffs.push(`${url}@${w}: ${a.h} -> ${b.h}`);
     ok(b.over <= 0, `${url}@${w}: no horizontal overflow (${b.over})`);
     // Everything else must be identical, count for count.
-    function rest(h) { return Object.fromEntries(Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(o + '|')) && !k.startsWith(LINE))); }
+    function rest(h) { return Object.fromEntries(Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(`${o}|`)) && !k.startsWith(LINE))); }
     ok(JSON.stringify(rest(ha)) === JSON.stringify(rest(hb)), `${url}@${w}: every other border unchanged`);
   }
 }
@@ -182,7 +182,7 @@ for (const loggedIn of [false, true]) {
   }));
   const ctl = await slot.getAttribute('aria-controls');
   ok(s.menus === 0 && s.haspopup === 0, `account (${loggedIn ? 'in' : 'out'}): no role=menu/menuitem/haspopup`);
-  ok((await slot.getAttribute('aria-expanded')) === 'true' && !!ctl && (await page.locator('[id="' + ctl + '"]').count()) === 1, `account (${loggedIn ? 'in' : 'out'}): aria-expanded + aria-controls -> real panel`);
+  ok((await slot.getAttribute('aria-expanded')) === 'true' && !!ctl && (await page.locator(`[id="${ctl}"]`).count()) === 1, `account (${loggedIn ? 'in' : 'out'}): aria-expanded + aria-controls -> real panel`);
   await page.screenshot({ path: `${SHOT}/menu-${loggedIn ? 'in' : 'out'}-1280.png`, clip: { x: 780, y: 0, width: 500, height: 520 } });
   if (loggedIn) {
     const seps = await page.locator(`[id="${ctl}"] [role="none"]`).count();
@@ -205,7 +205,7 @@ for (const loggedIn of [false, true]) {
   await page.keyboard.press('Enter');
   await page.waitForTimeout(400);
   const pid = await prog.getAttribute('aria-controls');
-  ok((await page.locator('[id="' + pid + '"] a').count()) >= 4, 'Program list: links in the aria-controls panel');
+  ok((await page.locator(`[id="${pid}"] a`).count()) >= 4, 'Program list: links in the aria-controls panel');
   ok((await page.locator('[data-desktop-nav] [role]').count()) === 0, 'Program list: no ARIA roles on the desktop nav');
   await page.screenshot({ path: `${SHOT}/program-1280.png`, clip: { x: 0, y: 0, width: 700, height: 340 } });
   await page.keyboard.press('Escape');

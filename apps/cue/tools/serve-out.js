@@ -40,7 +40,7 @@ http
     let file = path.join(ROOT, p);
 
     // Serve both /x.html (how the site links) and /x (convenience).
-    if (!fs.existsSync(file) && !path.extname(file)) file = path.join(ROOT, p + ".html");
+    if (!fs.existsSync(file) && !path.extname(file)) file = path.join(ROOT, `${p}.html`);
     // Never serve outside out/, whatever the URL says.
     if (!path.resolve(file).startsWith(path.resolve(ROOT))) {
       res.writeHead(403); return res.end("Forbidden");

@@ -34,7 +34,7 @@ async function run(w) {
   }, DAY);
   const page = await ctx.newPage();
   const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
-  await page.goto(BASE + '/my-trips.html?pay=0', { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/my-trips.html?pay=0`, { waitUntil: 'networkidle' });
   await page.locator('button:visible', { hasText: /Pay now|Book now|Checkout/i }).first().click();
   await page.fill('input[type=text]:visible >> nth=0', 'Someone');
   await page.locator('input[type=tel]:visible').first().fill('+61412345678');

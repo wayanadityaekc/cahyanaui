@@ -10,7 +10,7 @@ function walk(dir, base = '') {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === '_next') continue;
     const full = path.join(dir, entry.name);
-    const url = base + '/' + entry.name;
+    const url = `${base}/${entry.name}`;
     if (entry.isDirectory()) found = found.concat(walk(full, url));
     else if (entry.name.endsWith('.html')) found.push(url);
   }
@@ -31,7 +31,7 @@ const missing = expected.filter((u) => !built.has(u));
 
 if (missing.length) {
   console.error(`URL CHECK FAILED - ${missing.length} live URL(s) missing from the build:`);
-  missing.forEach((u) => console.error('  ' + u));
+  missing.forEach((u) => console.error(`  ${u}`));
   process.exit(1);
 }
 
@@ -56,20 +56,20 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     for (const m of src.matchAll(/(src|href)=(\\?")([^"\\]+)/g)) {
       const u = m[3];
       if (/^(https?:|\/|#|mailto:|tel:|data:|\{)/.test(u)) continue;
-      bad.push(file + "  " + m[1] + '="' + u + '"');
+      bad.push(`${file}  ${m[1]}="${u}"`);
     }
     // Inline styles hide the same problem inside CSS url(), which the attribute
     // scan above cannot see.
     for (const m of src.matchAll(/url\(\s*(\\?['"]?)([^'")\\]+)/g)) {
       const u = m[2];
       if (/^(https?:|\/|#|data:)/.test(u)) continue;
-      bad.push(file + "  url(" + u + ")");
+      bad.push(`${file}  url(${u})`);
     }
   }
   if (bad.length) {
     console.error("\nRELATIVE URLS IN EXTRACTED HTML (must be root-absolute):");
-    bad.slice(0, 20).forEach((b) => console.error("  " + b));
-    if (bad.length > 20) console.error("  ... and " + (bad.length - 20) + " more");
+    bad.slice(0, 20).forEach((b) => console.error(`  ${b}`));
+    if (bad.length > 20) console.error(`  ... and ${bad.length - 20} more`);
     process.exitCode = 1;
   } else {
     console.log("Relative URLs in extracted HTML : none");
@@ -91,7 +91,7 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
       // assets/ holds a favicon <head> snippet, not a page
       if (e.name === "_next" || e.name === "assets") continue;
       const p = path.join(d, e.name);
-      if (e.isDirectory()) w(p, rel + e.name + "/");
+      if (e.isDirectory()) w(p, `${rel}${e.name}/`);
       else if (e.name.endsWith(".html")) pages.push(rel + e.name);
     }
   })(OUT, "");
@@ -101,14 +101,14 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     const html = fs.readFileSync(path.join(OUT, p), "utf8");
     if (/name="robots"[^>]*noindex/.test(html)) continue;
     if (p === "index.html") {
-      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(p + " (homepage)");
+      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(`${p} (homepage)`);
       continue;
     }
-    if (!sitemap.includes("/" + p + "<")) missing.push(p);
+    if (!sitemap.includes(`/${p}<`)) missing.push(p);
   }
   if (missing.length) {
     console.error("\nINDEXABLE PAGES MISSING FROM sitemap.xml:");
-    missing.forEach((m) => console.error("  " + m));
+    missing.forEach((m) => console.error(`  ${m}`));
     process.exitCode = 1;
   } else {
     console.log("Indexable pages missing from sitemap : none");
@@ -143,8 +143,8 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   const onlyRoot = [...rootLocs].filter((u) => !builtLocs.has(u));
   if (onlyBuilt.length || onlyRoot.length) {
     console.error("\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:");
-    onlyBuilt.forEach((u) => console.error("  shipped but not in the root checklist: " + u));
-    onlyRoot.forEach((u) => console.error("  in the root checklist but not shipped: " + u));
+    onlyBuilt.forEach((u) => console.error(`  shipped but not in the root checklist: ${u}`));
+    onlyRoot.forEach((u) => console.error(`  in the root checklist but not shipped: ${u}`));
     process.exitCode = 1;
   } else {
     console.log(`Sitemaps agree : ${rootLocs.size} URLs in both`);

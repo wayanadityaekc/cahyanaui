@@ -38,7 +38,7 @@ for (const w of [390, 1280]) {
     });
     const page = await ctx.newPage();
     const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
-    await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
     // Open the sign-in modal the way a guest does since WO1: the account slot at the
     // right of the navbar. Phones open the modal straight away; desktop opens a small
     // menu first, whose green "Log in" opens it.
@@ -89,7 +89,7 @@ for (const w of [390, 1280]) {
     }, DAY);
     // ?pay=0: the booking is taken with nothing charged online, so the modal
     // lands on its own success screen rather than PayPal's iframe.
-    await page.goto(BASE + '/my-trips.html?pay=0', { waitUntil: 'networkidle' });
+    await page.goto(`${BASE}/my-trips.html?pay=0`, { waitUntil: 'networkidle' });
     await page.locator('button:visible', { hasText: /Pay now|Book now|Checkout/i }).first().click();
     await page.fill('input[type=text]:visible >> nth=0', 'Someone');
     await page.locator('input[type=tel]:visible').first().fill('+36306563875');

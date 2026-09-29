@@ -34,7 +34,8 @@ export default function Slider({ children, className = '', gridClassName = GRID_
       track.removeEventListener('scroll', measure);
       window.removeEventListener('resize', measure);
     };
-  }, [measure]);
+    // children in deps: cards that arrive after mount (reviews) must re-measure, or Next never appears.
+  }, [measure, children]);
 
   function step(dir) {
     const track = trackRef.current;
@@ -46,27 +47,20 @@ export default function Slider({ children, className = '', gridClassName = GRID_
 
   return (
     <div className={clsx('group relative', className)}>
-      <button
-        type="button"
-        className={`${ARROW} left-[-6px]`}
-        aria-label="Previous"
-        hidden={!canPrev}
-        onClick={() => step(-1)}
-      >
-        &lsaquo;
-      </button>
+      {/* Rendered only when it can move: the hidden attribute loses to the arrow's own min-[993px]:flex. */}
+      {canPrev && (
+        <button type="button" className={`${ARROW} left-[-6px]`} aria-label="Previous" onClick={() => step(-1)}>
+          &lsaquo;
+        </button>
+      )}
       <div className={gridClassName} ref={trackRef}>
         {children}
       </div>
-      <button
-        type="button"
-        className={`${ARROW} right-[-6px]`}
-        aria-label="Next"
-        hidden={!canNext}
-        onClick={() => step(1)}
-      >
-        &rsaquo;
-      </button>
+      {canNext && (
+        <button type="button" className={`${ARROW} right-[-6px]`} aria-label="Next" onClick={() => step(1)}>
+          &rsaquo;
+        </button>
+      )}
     </div>
   );
 }

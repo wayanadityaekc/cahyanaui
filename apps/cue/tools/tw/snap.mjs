@@ -70,7 +70,7 @@ for (const vw of [1280, 560, 390]) {
     const roots = [...document.querySelectorAll(selAll)];
     const els = [];
     roots.forEach((rt) => { els.push(rt); els.push(...rt.querySelectorAll('*')); });
-    return els.map((e) => { const c = getComputedStyle(e); const o = { _t: e.tagName }; for (const p of PROPS) o[p] = c[p]; return o; });
+    return els.map((e) => { const c = getComputedStyle(e); const o = { _t: e.tagName }; PROPS.forEach((p) => { o[p] = c[p]; }); return o; });
   }, { selAll, PROPS });
   await pg.close();
 }

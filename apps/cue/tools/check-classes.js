@@ -33,11 +33,11 @@ const VARIANT = /^(hover|focus|focus-within|focus-visible|active|visited|target|
 function segments(tok) {
   const out = [];
   let depth = 0, cur = '';
-  for (const ch of tok) {
+  [...tok].forEach((ch) => {
     if (ch === '[' || ch === '(') depth++;
     else if (ch === ']' || ch === ')') depth--;
     if (ch === ':' && depth === 0) { out.push(cur); cur = ''; } else cur += ch;
-  }
+  });
   out.push(cur);
   return out;
 }
@@ -56,28 +56,28 @@ const files = execSync(
 ).trim().split('\n').filter(Boolean);
 
 const bad = [];
-for (const f of files) {
+files.forEach((f) => {
   const lines = stripComments(readFileSync(f, 'utf8')).split('\n');
   lines.forEach((line, i) => {
     // Split on whitespace and string punctuation only - NOT on parens or brackets.
     // Arbitrary values are full of both (var(--x), [@media(min-width:769px)]), and
     // splitting there tears the token in half so the gate sees nothing wrong.
-    for (const tok of line.split(/[\s'"`{};,]+/).filter(Boolean)) {
-      if (!tok.includes(':')) continue;
+    line.split(/[\s'"`{};,]+/).filter(Boolean).forEach((tok) => {
+      if (!tok.includes(':')) return;
       const parts = segments(tok);
       const last = parts.pop();
-      if (!parts.length || !parts.every((p) => VARIANT.test(p))) continue;
+      if (!parts.length || !parts.every((p) => VARIANT.test(p))) return;
       if (last === '') bad.push([f, i + 1, tok, 'variant prefix with no utility after it']);
       else if (new Set(parts).size !== parts.length) bad.push([f, i + 1, tok, 'the same variant prefix twice']);
-    }
+    });
     if (/var\(--\)/.test(line)) bad.push([f, i + 1, 'var(--)', 'empty custom property']);
   });
-}
+});
 
 if (!bad.length) {
   console.log(`check-classes: OK (${files.length} files, no malformed utilities)`);
   process.exit(0);
 }
 console.error(`check-classes: ${bad.length} malformed utilit${bad.length > 1 ? 'ies' : 'y'}\n`);
-for (const [f, l, tok, why] of bad) console.error(`  ${f}:${l}\n    ${tok}\n    ${why} - it generates no CSS at all\n`);
+bad.forEach(([f, l, tok, why]) => { console.error(`  ${f}:${l}\n    ${tok}\n    ${why} - it generates no CSS at all\n`); });
 process.exit(1);

@@ -18,12 +18,12 @@ const bad = [];
 
 const CASES = [700000, 450000, 1300000, 1000000, 200000];
 
-for (const idr of CASES) {
+CASES.forEach((idr) => {
   // USD is derived from rupiah like every other currency now.
   const usd = FX.display(idr, 'USD');
-  for (const cur of CURS) {
-    for (const stay of ['ubud', '', 'canggu', 'kuta']) {
-      for (const ref of [false, true]) {
+  CURS.forEach((cur) => {
+    ['ubud', '', 'canggu', 'kuta'].forEach((stay) => {
+      [false, true].forEach((ref) => {
         const base = FX.display(idr, cur);
         // What the catalog hands the payment step (catalog.deposit.display).
         const deposit = FX.fromUsd(10, cur);
@@ -32,7 +32,7 @@ for (const idr of CASES) {
         const site = payOptions({ total: base, currency: cur, stay, hasReferral: ref, deposit, totalIdr: idr, depositIdr: FX.fromUsd(10, 'IDR'), totalUsd: usd });
         const srv = SRV.quotePayment({ baseUsd: usd, baseIdr: idr, baseDisplay: base, currency: cur, stay, hasReferral: ref });
 
-        for (const id of ['deposit', 'full', 'referral']) {
+        ['deposit', 'full', 'referral'].forEach((id) => {
           const a = site.find((o) => o.id === id);
           const b = srv.options.find((o) => o.id === id);
           // Availability must agree too: an option the site offers but the
@@ -42,9 +42,9 @@ for (const idr of CASES) {
           checked++;
           if (aAvail !== bAvail) {
             bad.push(`${id} availability ${cur}/${stay || 'ubud'}/ref=${ref}: site=${aAvail} server=${bAvail}`);
-            continue;
+            return;
           }
-          if (!aAvail) continue;
+          if (!aAvail) return;
           const aAmt = a.amount;
           const bAmt = b.amount ? b.amount.display : null;
           if (aAmt !== bAmt) {
@@ -66,11 +66,11 @@ for (const idr of CASES) {
             const bUsd = pp && pp.amount ? pp.amount.display : null;
             if (a.amountUsd !== bUsd) bad.push(`${id} paypal-usd idr=${idr} ref=${ref}: site=${a.amountUsd} server=${bUsd}`);
           }
-        }
-      }
-    }
-  }
-}
+        });
+      });
+    });
+  });
+});
 
 // Rails: the guest picks one (Card = DOKU by default, or PayPal) and the
 // server must honour exactly that choice, billing in the currency the site
@@ -84,17 +84,17 @@ process.env.DOKU_SECRET = process.env.DOKU_SECRET || 'harness';
 
 let rails = 0;
 if (PROV.DEFAULT_RAIL !== DEFAULT_RAIL) bad.push(`default rail: site=${DEFAULT_RAIL} server=${PROV.DEFAULT_RAIL}`);
-for (const cur of CURS) {
+CURS.forEach((cur) => {
   if (PROV.routeFor(cur).provider !== DEFAULT_RAIL) bad.push(`no choice ${cur}: server=${PROV.routeFor(cur).provider}`);
-  for (const rail of RAILS) {
+  RAILS.forEach((rail) => {
     const srv = PROV.routeFor(cur, rail);
     rails++;
     if (srv.provider !== rail) bad.push(`rail ${cur}/${rail}: server=${srv.provider}`);
     if (srv.chargeCurrency !== chargeCurrency(cur, rail)) {
       bad.push(`charge currency ${cur}/${rail}: site=${chargeCurrency(cur, rail)} server=${srv.chargeCurrency}`);
     }
-  }
-}
+  });
+});
 process.env = envWas;
 
 console.log(`kombinasi dicek : ${checked}`);

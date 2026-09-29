@@ -13,8 +13,8 @@ function livePrices() {
       .then((d) => {
         if (!d || !Array.isArray(d.items)) return null;
         const byName = {};
-        for (const i of d.items) byName[i.name] = i.standard.usd;
-        for (const t of d.transfers || []) byName[t.route] = t.usd;
+        d.items.forEach((i) => { byName[i.name] = i.standard.usd; });
+        (d.transfers || []).forEach((t) => { byName[t.route] = t.usd; });
         // Kept as a group as well, for the aggregate offer on /transfer: that
         // page sells every route in the picker, not a list written here, so the
         // range has to follow the catalog rather than a copy of it.

@@ -25,9 +25,10 @@ const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 // what reads the same to every nationality that books here.
 const TIMES = (() => {
   const out = [];
-  for (let m = 6 * 60; m <= 17 * 60; m += 30) {
+  // 06:00 to 17:00, every 30 minutes
+  [...Array(23).keys()].map((k) => 6 * 60 + k * 30).forEach((m) => {
     out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
-  }
+  });
   return out;
 })();
 

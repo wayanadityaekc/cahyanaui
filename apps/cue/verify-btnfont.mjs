@@ -148,18 +148,18 @@ for (const w of [320, 390, 768, 1280]) {
     await page.waitForTimeout(500);
     const rows = await page.evaluate(() => {
       const out = [];
-      for (const b of document.querySelectorAll('button, a')) {
+      document.querySelectorAll('button, a').forEach((b) => {
         const bb = b.getBoundingClientRect();
-        if (bb.width < 40 || bb.height < 20) continue;
+        if (bb.width < 40 || bb.height < 20) return;
         const c = getComputedStyle(b);
-        if (c.visibility === 'hidden' || c.display === 'none') continue;
-        if (Math.round(parseFloat(c.height)) !== 34 || c.fontWeight !== '600') continue;
+        if (c.visibility === 'hidden' || c.display === 'none') return;
+        if (Math.round(parseFloat(c.height)) !== 34 || c.fontWeight !== '600') return;
         out.push({ fam: c.fontFamily.split(',')[0].replace(/["']/g, ''), t: (b.textContent || '').trim().slice(0, 24) });
-      }
+      });
       return out;
     });
     seen += rows.length;
-    for (const x of rows) if (x.fam !== 'Inter') odd.push(`${p} "${x.t}" -> ${x.fam}`);
+    rows.forEach((x) => { if (x.fam !== 'Inter') odd.push(`${p} "${x.t}" -> ${x.fam}`); });
   }
   ok(seen > 40, `sweep: ada tombol aksi yang ke-ukur (${seen})`);
   ok(odd.length === 0, `sweep: nol tombol aksi pakai font browser${odd.length ? ` :: ${odd.join(' | ')}` : ''}`);

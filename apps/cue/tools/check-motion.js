@@ -34,12 +34,11 @@ function tokenize(s) { return s.split(/\s+/).filter(Boolean); }
 // cutting into an arbitrary value, whose brackets may themselves contain ":".
 function baseOf(token) {
   let depth = 0, last = -1;
-  for (let i = 0; i < token.length; i++) {
-    const c = token[i];
+  token.split("").forEach((c, i) => {
     if (c === "[") depth++;
     else if (c === "]") depth--;
     else if (c === ":" && depth === 0) last = i;
-  }
+  });
   return {
     base: last === -1 ? token : token.slice(last + 1),
     scope: last === -1 ? "" : token.slice(0, last),
@@ -84,12 +83,12 @@ function transitionList(base) {
 function walk(dir) {
   const found = [];
   (function w(d) {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      if (e.name === "_next") continue;
+    fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
+      if (e.name === "_next") return;
       const p = path.join(d, e.name);
       if (e.isDirectory()) w(p);
       else if (e.name.endsWith(".html")) found.push(p);
-    }
+    });
   })(dir);
   return found;
 }
@@ -106,18 +105,18 @@ let elements = 0;
 // computed-value time, which silently falls back to the initial value `all 0s`.
 // 43 usages animated nothing and the build was green throughout. One regex is a
 // cheap price for never repeating that.
-for (const css of fs.readdirSync(OUT).filter((n) => n.endsWith(".css")).map((n) => path.join(OUT, n))) {
+fs.readdirSync(OUT).filter((n) => n.endsWith(".css")).map((n) => path.join(OUT, n)).forEach((css) => {
   const text = fs.readFileSync(css, "utf8");
-  for (const m of text.matchAll(/(--[\w-]+)\s*:\s*var\(\s*\1\s*[,)]/g)) {
+  [...text.matchAll(/(--[\w-]+)\s*:\s*var\(\s*\1\s*[,)]/g)].forEach((m) => {
     cycles.push(`${path.relative(OUT, css)}: ${m[1]} is defined as var(${m[1]}) - it resolves to nothing`);
-  }
-}
+  });
+});
 
-for (const p of pages) {
+pages.forEach((p) => {
   const html = fs.readFileSync(p, "utf8");
   const page = path.relative(OUT, p);
   // Element opening tags, so the tag name can be read alongside the classes.
-  for (const m of html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sclass="([^"]*)"/g)) {
+  [...html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sclass="([^"]*)"/g)].forEach((m) => {
     const [, tag, attrs, cls] = m;
     const tokens = tokenize(cls.replace(/&quot;/g, '"'));
     elements++;
@@ -129,7 +128,7 @@ for (const p of pages) {
     // "" is the unprefixed scope, and every scope also inherits from it.
     const setBy = new Map();     // scope -> Set(properties the classes set)
     const transBy = new Map();   // scope -> transition-property list
-    for (const t of tokens) {
+    tokens.forEach((t) => {
       const { base, scope } = baseOf(t);
       const prop = setsProperty(base);
       if (prop) {
@@ -138,14 +137,14 @@ for (const p of pages) {
       }
       const list = transitionList(base);
       if (list) transBy.set(scope, list);
-    }
+    });
 
     const baseSet = setBy.get("") || new Set();
     const baseTrans = transBy.get("") || null;
 
-    for (const [scope, list] of [["", baseTrans], ...transBy]) {
-      if (!list || !list.length) continue;
-      if (scope === "motion-reduce") continue;   // deliberately turns motion off
+    [["", baseTrans], ...transBy].forEach(([scope, list]) => {
+      if (!list || !list.length) return;
+      if (scope === "motion-reduce") return;   // deliberately turns motion off
       const trans = list;
       const set = new Set([...baseSet, ...(setBy.get(scope) || [])]);
       function has(p2) { return trans.includes(p2) || trans.includes("all"); }
@@ -165,9 +164,9 @@ for (const p of pages) {
         const key = `${tag} transitions [${trans.join(",")}] with no 'scale' - the press feedback will snap`;
         if (!snap.has(key)) snap.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);
       }
-    }
-  }
-}
+    });
+  });
+});
 
 console.log(`Pages scanned        : ${pages.length}`);
 console.log(`Elements with classes: ${elements}`);
@@ -176,9 +175,9 @@ console.log(`Snapping clickables  : ${snap.size}`);
 console.log(`Self-referencing vars: ${cycles.length}`);
 
 if (dead.size || snap.size || cycles.length) {
-  for (const [why, where] of dead) console.log(`\n  DEAD  ${why}\n        first seen: ${where}`);
-  for (const [why, where] of snap) console.log(`\n  SNAP  ${why}\n        first seen: ${where}`);
-  for (const c of cycles) console.log(`\n  CYCLE ${c}`);
+  [...dead].forEach(([why, where]) => { console.log(`\n  DEAD  ${why}\n        first seen: ${where}`); });
+  [...snap].forEach(([why, where]) => { console.log(`\n  SNAP  ${why}\n        first seen: ${where}`); });
+  cycles.forEach((c) => { console.log(`\n  CYCLE ${c}`); });
   console.log("\nMotion check FAILED.");
   process.exit(1);
 }

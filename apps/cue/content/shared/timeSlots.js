@@ -28,9 +28,9 @@
 // - the times the sunrise trips actually leave - did not exist in the picker at all.
 export const TIME_SLOTS = (() => {
   const out = [];
-  for (let m = 0; m < 24 * 60; m += 30) {
+  [...Array(48).keys()].map((k) => k * 30).forEach((m) => {
     out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
-  }
+  });
   return out;
 })();
 

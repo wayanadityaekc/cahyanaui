@@ -115,12 +115,12 @@ export default function ChatPanel({ open, onClose }) {
   // a catch-up asks for as little as possible.
   const takeOwner = useCallback((list) => {
     const fresh = [];
-    for (const m of list) {
+    list.forEach((m) => {
       if (m.id > lastSeen.current) lastSeen.current = m.id;
-      if (m.sender !== 'owner' || seenIds.current.has(m.id)) continue;
+      if (m.sender !== 'owner' || seenIds.current.has(m.id)) return;
       seenIds.current.add(m.id);
       fresh.push(m);
-    }
+    });
     if (!fresh.length) return;
     heard.current = true;
     setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);

@@ -25,14 +25,14 @@ async function inkBox() {
   const { data, info } = await sharp(SRC).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const { width: W, height: H, channels: C } = info;
   let minX = W, minY = H, maxX = -1, maxY = -1;
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+  [...Array(H).keys()].forEach((y) => [...Array(W).keys()].forEach((x) => {
     const i = (y * W + x) * C;
     const [r, g, b, a] = [data[i], data[i + 1], data[i + 2], data[i + 3]];
     if (a > 10 && !(r > 245 && g > 245 && b > 245)) {
       if (x < minX) minX = x; if (x > maxX) maxX = x;
       if (y < minY) minY = y; if (y > maxY) maxY = y;
     }
-  }
+  }));
   if (maxX < 0) throw new Error('the source looks empty');
   // square it off around the ink's centre, clamped to the canvas
   const side = Math.max(maxX - minX + 1, maxY - minY + 1);
@@ -88,13 +88,13 @@ async function inkBox() {
   head.writeUInt16LE(1, 2); head.writeUInt16LE(frames.length, 4);
   let offset = 6 + frames.length * 16;
   const dir = [], body = [];
-  for (const { size, buf } of frames) {
+  frames.forEach(({ size, buf }) => {
     const e = Buffer.alloc(16);
     e[0] = size; e[1] = size;
     e.writeUInt16LE(1, 4); e.writeUInt16LE(32, 6);
     e.writeUInt32LE(buf.length, 8); e.writeUInt32LE(offset, 12);
     dir.push(e); body.push(buf); offset += buf.length;
-  }
+  });
   fs.writeFileSync(`${OUT}favicon.ico`, Buffer.concat([head, ...dir, ...body]));
 
   // The SVG is a shell around a raster, same as the file it replaces - the
@@ -107,7 +107,6 @@ async function inkBox() {
   <image width="100" height="100" href="data:image/png;base64,${png.toString('base64')}"/>
 </svg>
 `);
-  for (const f of ['favicon.svg', 'favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png',
-                   'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'])
-    console.log(' ', f, fs.statSync(OUT + f).size, 'bytes');
+  ['favicon.svg', 'favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png',
+                   'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'].forEach((f) => { console.log(' ', f, fs.statSync(OUT + f).size, 'bytes'); });
 })();

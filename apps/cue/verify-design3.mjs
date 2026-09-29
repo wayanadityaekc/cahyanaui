@@ -50,10 +50,10 @@ for (const w of [390, 1280]) {
       const tokNums = tok.replace(/rgba?\([^)]*\)/g, '').trim().split(/\s+/).filter(Boolean).map(parseFloat);
       const out = [];
       let n = 0, card = 0;
-      for (const el of document.querySelectorAll('*')) {
+      document.querySelectorAll('*').forEach((el) => {
         const c = getComputedStyle(el);
         const sh = c.boxShadow;
-        if (!sh || sh === 'none') continue;
+        if (!sh || sh === 'none') return;
         n++;
         // Tailwind v4 composes box-shadow from FIVE layers (inset-shadow, inset-ring,
         // ring-offset, ring, shadow), so the computed value is a comma-separated list
@@ -63,44 +63,44 @@ for (const w of [390, 1280]) {
         // Split per layer - on commas that are NOT inside rgb()/rgba().
         const layers = [];
         let depth = 0, cur = '';
-        for (const ch of sh) {
+        [...sh].forEach((ch) => {
           if (ch === '(') depth++;
           else if (ch === ')') depth--;
           if (ch === ',' && depth === 0) { layers.push(cur); cur = ''; } else cur += ch;
-        }
+        });
         layers.push(cur);
         let elevation = false;
-        for (const L of layers) {
+        layers.forEach((L) => {
           const nums = (L.match(/-?[\d.]+px/g) || []).map(parseFloat);
           const [ox = 0, oy = 0, blur = 0] = nums;
           // fully transparent layers paint nothing
           const m = L.match(/rgba?\([^)]*\)/);
-          if (m && /,\s*0\s*\)$/.test(m[0])) continue;
+          if (m && /,\s*0\s*\)$/.test(m[0])) return;
           // the one deliberate exception, matched against the page's own token
           const isCard = tokNums.length >= 3 && nums.length >= 3 &&
             nums[0] === tokNums[0] && nums[1] === tokNums[1] && nums[2] === tokNums[2];
-          if (isCard) { card++; continue; }
+          if (isCard) { card++; return; }
           if (Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2) elevation = true;
-        }
+        });
         if (elevation) {
           out.push(`<${el.tagName.toLowerCase()} class="${(el.className || '').toString().slice(0, 55)}"> ${sh.slice(0, 60)}`);
         }
-      }
+      });
       return { n, out, card, tok };
     });
     seen += res.n;
     cards[p] = res.card;
     token = res.tok;
-    for (const b of res.out) if (bad.length < 8) bad.push(`${p} ${b}`);
+    res.out.forEach((b) => { if (bad.length < 8) bad.push(`${p} ${b}`); });
   }
   ok(bad.length === 0, `${w}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`);
   ok(seen > 0, `${w}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
   // The card shadow must still exist. Every page below renders cards, so a zero here
   // means it was removed - the failure this whole section was rewritten to catch.
   ok(/\d/.test(token), `${w}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
-  for (const p of ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html']) {
+  ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html'].forEach((p) => {
     ok(cards[p] > 0, `${w} ${p}: kartu masih bawa --shadow-card (${cards[p]} elemen)`);
-  }
+  });
   ok(errs.length === 0, `${w}: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
   await ctx.close();
 }
@@ -266,17 +266,17 @@ for (const w of [390, 1280]) {
       return { left: Math.min(...bars.map((b) => b.left)), right: Math.max(...bars.map((b) => b.right)) };
     }
     const out = [];
-    for (const el of row.children) {
-      if (el.getBoundingClientRect().width === 0) continue;
-      if (el.querySelector('img')) continue; // the logo is not an icon
-      if (el.id === 'hamburger') continue; // left of the logo now - not in the right cluster
-      if (el.matches('[data-desktop-nav], nav')) continue; // page links / drawer
+    [...row.children].forEach((el) => {
+      if (el.getBoundingClientRect().width === 0) return;
+      if (el.querySelector('img')) return; // the logo is not an icon
+      if (el.id === 'hamburger') return; // left of the logo now - not in the right cluster
+      if (el.matches('[data-desktop-nav], nav')) return; // page links / drawer
       // the account slot: its icon on phones, its "Log in" box on desktop
       const visSvg = [...el.querySelectorAll('svg')].some((v) => v.getBoundingClientRect().width > 0);
       const i = el.matches('[data-account-slot]') && !visSvg
         ? el.querySelector('button').getBoundingClientRect() : ink(el);
       if (i) out.push({ tag: el.id || el.getAttribute('aria-label') || el.tagName, l: i.left, r: i.right });
-    }
+    });
     out.sort((a, b) => a.l - b.l);
     return out.slice(1).map((c, n) => ({ from: out[n].tag, to: c.tag, gap: +(c.l - out[n].r).toFixed(1) }));
   });

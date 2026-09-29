@@ -37,18 +37,18 @@ let INDEX = null;
 export function itemIndex() {
   if (INDEX) return INDEX;
   const out = [];
-  for (const section of Object.keys(LISTINGS)) {
-    for (const cat of LISTINGS[section].cats || []) {
-      for (const c of cat.cards || []) {
-        if (!c.name || !c.href) continue;
+  Object.keys(LISTINGS).forEach((section) => {
+    (LISTINGS[section].cats || []).forEach((cat) => {
+      (cat.cards || []).forEach((c) => {
+        if (!c.name || !c.href) return;
         out.push({
           name: c.name, href: c.href, meta: c.meta || '',
           priceName: c.priceName || '', fallback: c.priceFallback || '',
           stops: c.stops || 0, section,
         });
-      }
-    }
-  }
+      });
+    });
+  });
   INDEX = out;
   return out;
 }
@@ -131,11 +131,11 @@ function matchItem(q) {
   const qw = words(q);
   if (!qw.length) return null;
   let best = null;
-  for (const item of itemIndex()) {
+  itemIndex().forEach((item) => {
     const iw = words(item.name);
-    if (!iw.length) continue;
+    if (!iw.length) return;
     let hits = 0;
-    for (const w of iw) if (qw.includes(w)) hits += 1;
+    iw.forEach((w) => { if (qw.includes(w)) hits += 1; });
     // Needs at least two of the item's own words, or one word long enough to be
     // distinctive ("lempuyang", "jatiluwih"). One short shared word is noise.
     const strong = iw.some((w) => w.length >= 7 && qw.includes(w));
@@ -143,7 +143,7 @@ function matchItem(q) {
       const score = hits + (strong ? 1 : 0);
       if (!best || score > best.score) best = { item, score };
     }
-  }
+  });
   return best ? best.item : null;
 }
 
@@ -151,18 +151,18 @@ function matchTopic(q) {
   const n = norm(q);
   const qw = words(q);
   let best = null;
-  for (const t of TOPICS) {
+  TOPICS.forEach((t) => {
     let score = 0;
     let strong = false;
-    for (const w of t.words) {
+    t.words.forEach((w) => {
       if (w.includes(' ')) {
         if (n.includes(w)) score += 3;          // a phrase is worth more than a word
       } else if (qw.includes(w)) score += 1;
-    }
-    for (const w of t.strong || []) {
+    });
+    (t.strong || []).forEach((w) => {
       if (w.includes(' ') ? n.includes(w) : qw.includes(w)) { strong = true; score += 3; }
-    }
-    if (!score) continue;
+    });
+    if (!score) return;
     // A topic that matched one of ITS OWN distinctive words beats one that only
     // caught generic vocabulary, whatever the raw scores are. Without this,
     // "how much is the airport pickup" answers with the tour price list:
@@ -171,7 +171,7 @@ function matchTopic(q) {
       || (strong && !best.strong)
       || (strong === best.strong && score > best.score);
     if (better) best = { topic: t, score, strong };
-  }
+  });
   // One generic word on its own is noise, not a question. Needs a phrase, a
   // distinctive word, or two generic words agreeing.
   return best && best.score >= 2 ? best.topic : null;

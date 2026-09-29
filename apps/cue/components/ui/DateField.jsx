@@ -63,8 +63,8 @@ export default function DateField({
   function label12(v) { return (withTime && time ? `${fmtDate(v)} · ${fmtTime(time)}` : fmtDate(v)); }
 
   const cells = [];
-  for (let i = 0; i < lead; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), d));
+  [...Array(lead).keys()].forEach(() => cells.push(null));
+  [...Array(daysInMonth).keys()].forEach((i) => cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i + 1)));
 
   const panel = (
     <div className={panelBookdate(open)}>

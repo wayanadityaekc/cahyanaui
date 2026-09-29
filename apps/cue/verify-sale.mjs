@@ -70,7 +70,7 @@ for (const symbol of ['$', 'Rp']) {
 
       const read = await page.evaluate((name) => {
         const out = { sale: null, others: 0, othersWithStrike: 0 };
-        for (const el of document.querySelectorAll('[data-price]')) {
+        document.querySelectorAll('[data-price]').forEach((el) => {
           const was = el.querySelector('[data-price-was]');
           if (el.getAttribute('data-price') === name) {
             if (!out.sale && was) {
@@ -94,7 +94,7 @@ for (const symbol of ['$', 'Rp']) {
             out.others += 1;
             if (was) out.othersWithStrike += 1;
           }
-        }
+        });
         return out;
       }, ON_SALE);
 
@@ -128,7 +128,7 @@ for (const symbol of ['$', 'Rp']) {
 {
   const plain = catalogFor('$');
   plain.promo = null;
-  for (const i of plain.items) i.listStandard = { display: i.standard.display };
+  plain.items.forEach((i) => { i.listStandard = { display: i.standard.display }; });
   const ctx = await b.newContext({ viewport: { width: 390, height: 900 } });
   await ctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
   await ctx.route('**/api/pricing/catalog*', (r) =>

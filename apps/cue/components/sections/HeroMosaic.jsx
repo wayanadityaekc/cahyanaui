@@ -126,7 +126,7 @@ export default function HeroMosaic({ photos = [], title }) {
   // past the third photo, so a mid-scroll position can show two smalls, a big,
   // and two more smalls at once.
   const children = [];
-  for (let i = 0; i < photos.length; i += 3) {
+  [...Array(Math.ceil(photos.length / 3)).keys()].map((k) => k * 3).forEach((i) => {
     children.push(tile(i, BIG));
     const pair = [i + 1, i + 2].filter((n) => n < photos.length);
     if (pair.length) {
@@ -136,7 +136,7 @@ export default function HeroMosaic({ photos = [], title }) {
         </div>,
       );
     }
-  }
+  });
 
   const gallery =
     photos.length === 1 ? (

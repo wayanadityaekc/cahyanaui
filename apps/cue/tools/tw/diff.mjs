@@ -22,17 +22,17 @@ function normShadow(v) { return (typeof v === 'string' ? v.replace(/rgba\(0, 0, 
 
 let diffs = 0;
 const samples = [];
-for (const vw of Object.keys(B)) {
+Object.keys(B).forEach((vw) => {
   const bv = B[vw] || [], av = A[vw] || [];
-  if (bv.length !== av.length) { diffs += 999; samples.push(`@${vw} ELEMENT COUNT ${bv.length} != ${av.length}`); continue; }
-  for (let i = 0; i < bv.length; i++) {
-    for (const k of Object.keys(bv[i])) {
+  if (bv.length !== av.length) { diffs += 999; samples.push(`@${vw} ELEMENT COUNT ${bv.length} != ${av.length}`); return; }
+  bv.forEach((_, i) => {
+    Object.keys(bv[i]).forEach((k) => {
       let x = bv[i][k], y = av[i][k];
       if (k === 'boxShadow') { x = normShadow(x); y = normShadow(y); }
       if (x !== y) { diffs++; if (samples.length < 40) samples.push(`@${vw} el${i}(${bv[i]._t}) ${k}: ${JSON.stringify(x)} -> ${JSON.stringify(y)}`); }
-    }
-  }
-}
+    });
+  });
+});
 if (diffs === 0) { console.log('IDENTICAL'); process.exit(0); }
 console.log(`DIFF (${diffs}):`);
 samples.forEach((s) => console.log(`  ${s}`));

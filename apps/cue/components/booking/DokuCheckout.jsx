@@ -54,8 +54,8 @@ function loadScript(src) {
 // appears, nothing happens.
 function adoptShell(before) {
   const added = [...document.body.children].filter((el) => !before.has(el));
-  for (const el of added) {
-    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') continue;
+  added.forEach((el) => {
+    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
     el.dataset.dokuShell = '1';
     const cs = getComputedStyle(el);
     // The backdrop is the full-bleed layer; the container is the panel. Telling
@@ -73,7 +73,7 @@ function adoptShell(before) {
       frame.style.border = '0';
       if (cs.position === 'fixed' || cs.position === 'absolute') el.style.borderRadius = 'var(--r-xl)';
     }
-  }
+  });
   return added.length;
 }
 

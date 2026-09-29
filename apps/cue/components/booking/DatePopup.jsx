@@ -69,8 +69,8 @@ export default function DatePopup({
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const total = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const cells = [];
-  for (let i = 0; i < first.getDay(); i++) cells.push(null);
-  for (let d = 1; d <= total; d++) cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), d));
+  [...Array(first.getDay()).keys()].forEach(() => cells.push(null));
+  [...Array(total).keys()].forEach((i) => cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i + 1)));
 
   return createPortal(
     <>

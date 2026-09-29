@@ -17,13 +17,13 @@ const parked = new Set(HIDDEN_TOURS);
 function isPackage(t) { return (t.items || []).some((i) => i.type === 'sub'); }
 
 const INDEX = {};
-for (const [slug, t] of Object.entries(TOUR_CONTENT)) {
-  if (parked.has(slug) || isPackage(t)) continue;
-  for (const it of t.items || []) {
-    if (!it.refId) continue;
+Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {
+  if (parked.has(slug) || isPackage(t)) return;
+  (t.items || []).forEach((it) => {
+    if (!it.refId) return;
     (INDEX[it.refId] = INDEX[it.refId] || []).push({ slug, href: tourPath(slug), name: t.bookItem });
-  }
-}
+  });
+});
 
 export function toursForAttraction(slug) {
   return INDEX[slug] || [];
@@ -63,7 +63,7 @@ export function withAttractionCards(listing, attractions = {}) {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
     const next = {};
-    for (const [k, v] of Object.entries(node)) next[k] = walk(v);
+    Object.entries(node).forEach(([k, v]) => { next[k] = walk(v); });
     const m = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
     if (next.variant === 'incl') {
       const label = m ? inclLabel(m[1]) : undefined;
@@ -138,8 +138,8 @@ export function priceFallbackFor(name) {
 }
 
 const CONTAINS = {};
-for (const [slug, t] of Object.entries(TOUR_CONTENT)) {
-  if (parked.has(slug)) continue;
+Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {
+  if (parked.has(slug)) return;
   const href = tourPath(slug);
   const card = TOUR_CARDS[href];
   const entry = {
@@ -152,11 +152,11 @@ for (const [slug, t] of Object.entries(TOUR_CONTENT)) {
     priceFallback: card ? card.priceFallback : undefined,
     isPackage: isPackage(t),
   };
-  for (const it of t.items || []) {
-    if (!it.refId) continue;
+  (t.items || []).forEach((it) => {
+    if (!it.refId) return;
     (CONTAINS[it.refId] = CONTAINS[it.refId] || []).push(entry);
-  }
-}
+  });
+});
 
 // Day tours before multi-day packages: the package is the upsell, not the
 // obvious answer to "how else can I see this place".
@@ -171,10 +171,10 @@ export function tourDestinations(tourSlug, attractions) {
   const t = TOUR_CONTENT[tourSlug];
   if (!t) return [];
   const out = [];
-  for (const it of t.items || []) {
-    if (!it.refId || out.some((x) => x.refId === it.refId)) continue;
+  (t.items || []).forEach((it) => {
+    if (!it.refId || out.some((x) => x.refId === it.refId)) return;
     const a = attractions[it.refId];
-    if (!a) continue;
+    if (!a) return;
     out.push({
       refId: it.refId,
       href: `/attractions/${it.refId}.html`,
@@ -185,6 +185,6 @@ export function tourDestinations(tourSlug, attractions) {
       // the same as it does on the Destinations listing.
       meta: ((a.hooks || []).find((h) => h.label === 'Area') || (a.facts || []).find((f) => f.label === 'Area') || {}).value || '',
     });
-  }
+  });
   return out;
 }

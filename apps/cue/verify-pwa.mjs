@@ -76,7 +76,7 @@ function bottomBars(page) {
 
   ok(classes.length >= 3, `css: only ${classes.length} standalone utilities compiled - interpolated class names never reach Tailwind`);
 
-  for (const c of classes) {
+  classes.forEach((c) => {
     const re = new RegExp(`${esc(c)}(?:[^{,]*)\\{([^}]*)\\}`, 'g');
     let m;
     const branches = { media: [], attr: [] };
@@ -94,7 +94,7 @@ function bottomBars(page) {
       ok(mediaHit.decl === attrHit.decl, `css ${c}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`);
       ok(mediaHit.scoped && attrHit.scoped, `css ${c}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`);
     }
-  }
+  });
 }
 
 const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });

@@ -66,8 +66,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       transfer: catalog.transfers.map((t) => t.display),
       charter: catalog.charters.map((c) => c.display),
     };
-    for (const [cat, arr] of Object.entries(sets)) {
-      if (!arr.length) continue;
+    Object.entries(sets).forEach(([cat, arr]) => {
+      if (!arr.length) return;
       const lo = Math.min(...arr);
       const hi = Math.max(...arr);
       // Only the low end carries the "Rp"/"$" symbol (unchanged shape) - the
@@ -75,7 +75,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       // so both ends of the range read consistently.
       const hiText = isIdr ? withDeemphasizedThousands(hi.toLocaleString(loc)) : hi.toLocaleString(loc);
       out[cat] = lo === hi ? <>from {fmt(lo)}</> : <>{fmt(lo)}–{hiText}</>;
-    }
+    });
     return out;
   }, [catalog, symbol, currency]);
 

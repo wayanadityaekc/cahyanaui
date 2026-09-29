@@ -12,11 +12,9 @@ export function addDaysStr(ds, n) {
 // stays in order. Transfers keep their own date and are skipped in the count.
 export function cascadeFrom(state, dayIndex, date) {
   const days = (state.days || []).map((d) => ({ ...d }));
-  let step = 0;
-  for (let i = dayIndex; i < days.length; i++) {
-    days[i].date = addDaysStr(date, step);
-    step++;
-  }
+  days.forEach((day, i) => {
+    if (i >= dayIndex) day.date = addDaysStr(date, i - dayIndex);
+  });
   return { ...state, days };
 }
 
@@ -34,11 +32,11 @@ export function hasClash(state, isFullDay) {
 export function clashDates(state, isFullDay) {
   const seen = {};
   const out = [];
-  for (const d of state.days || []) {
-    if (!d.date || !(d.items || []).some(isFullDay)) continue;
+  (state.days || []).forEach((d) => {
+    if (!d.date || !(d.items || []).some(isFullDay)) return;
     if (seen[d.date]) out.push(d.date);
     seen[d.date] = true;
-  }
+  });
   return out;
 }
 

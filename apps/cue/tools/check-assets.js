@@ -12,12 +12,12 @@ if (!fs.existsSync(OUT)) { console.error("out/ missing - run the build first"); 
 function walk(dir, test) {
   const found = [];
   (function w(d) {
-    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
-      if (e.name === "_next") continue;
+    fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
+      if (e.name === "_next") return;
       const p = path.join(d, e.name);
       if (e.isDirectory()) w(p);
       else if (test(e.name)) found.push(p);
-    }
+    });
   })(dir);
   return found;
 }
@@ -27,15 +27,15 @@ const referenced = new Set();
 // &-stop matters: an inline style writes url(&#x27;/assets/...&#x27;), so the
 // entity would otherwise be swallowed into the filename.
 const RX = [/(?:src|href)="(\/assets\/[^"?#&]+)/g, /url\((?:&#x27;|')?(\/assets\/[^'")#?&]+)/g];
-for (const p of pages) {
+pages.forEach((p) => {
   const s = fs.readFileSync(p, "utf8");
-  for (const rx of RX) for (const m of s.matchAll(rx)) referenced.add(decodeURIComponent(m[1]));
-}
+  RX.forEach((rx) => { [...s.matchAll(rx)].forEach((m) => { referenced.add(decodeURIComponent(m[1])); }); });
+});
 
 const missing = [];
-for (const r of referenced) {
+referenced.forEach((r) => {
   if (!fs.existsSync(path.join(OUT, r.replace(/^\//, "")))) missing.push(r);
-}
+});
 
 console.log(`Pages scanned        : ${pages.length}`);
 console.log(`Assets referenced    : ${referenced.size}`);

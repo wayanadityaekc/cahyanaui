@@ -33,10 +33,10 @@ export function observeBookCtas(self, onChange) {
   const onScreen = new Set();
   const io = new IntersectionObserver(
     (entries) => {
-      for (const en of entries) {
+      entries.forEach((en) => {
         if (en.isIntersecting && en.intersectionRect.height >= ENOUGH(en.boundingClientRect)) onScreen.add(en.target);
         else onScreen.delete(en.target);
-      }
+      });
       onChange(onScreen.size > 0);
     },
     // Several thresholds so the callback fires as the visible slice grows, not just

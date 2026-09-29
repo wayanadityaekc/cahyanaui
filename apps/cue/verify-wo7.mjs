@@ -92,15 +92,15 @@ async function measure(base, url, w) {
   const { ctx, page } = await open(base, url, w, { loggedIn: true });
   const r = await page.evaluate(() => {
     const hist = {};
-    for (const el of document.querySelectorAll('body *')) {
+    document.querySelectorAll('body *').forEach((el) => {
       const cs = getComputedStyle(el);
-      for (const s of ['Top', 'Right', 'Bottom', 'Left']) {
+      ['Top', 'Right', 'Bottom', 'Left'].forEach((s) => {
         if (parseFloat(cs[`border${s}Width`]) > 0 && cs[`border${s}Style`] !== 'none') {
           const k = `${cs[`border${s}Color`]}|${cs[`border${s}Style`]}`;
           hist[k] = (hist[k] || 0) + 1;
         }
-      }
-    }
+      });
+    });
     return { hist, h: document.documentElement.scrollHeight, over: document.documentElement.scrollWidth - innerWidth };
   });
   await ctx.close();
@@ -117,13 +117,13 @@ for (const w of [390, 1280]) {
     function H(h) { return Object.fromEntries(Object.entries(h).map(([k, v]) => { const [c, st] = k.split('|'); return [`${hex(c)}|${st}`, v]; })); }
     const ha = H(a.hist), hb = H(b.hist);
     let lost = 0, gained = 0;
-    for (const o of OFF) for (const k of Object.keys(ha)) if (k.startsWith(`${o}|`)) lost += (ha[k] || 0) - (hb[k] || 0);
+    OFF.forEach((o) => { Object.keys(ha).forEach((k) => { if (k.startsWith(`${o}|`)) lost += (ha[k] || 0) - (hb[k] || 0); }); });
     const lineA = Object.entries(ha).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
     const lineB = Object.entries(hb).filter(([k]) => k.startsWith(LINE)).reduce((s, [, v]) => s + v, 0);
     gained = lineB - lineA;
     lostTotal += lost; gainedTotal += gained;
     // No off-token hairline may remain on any page.
-    for (const o of OFF) ok(!Object.keys(hb).some((k) => k.startsWith(`${o}|`)), `${url}@${w}: no ${o} border left`);
+    OFF.forEach((o) => { ok(!Object.keys(hb).some((k) => k.startsWith(`${o}|`)), `${url}@${w}: no ${o} border left`); });
     // /settings swaps two <hr> (which drew their line as a BORDER) for Separators (a
     // background): those two --line borders disappear by design.
     const expect = url === '/settings.html' ? lost - 2 : lost;

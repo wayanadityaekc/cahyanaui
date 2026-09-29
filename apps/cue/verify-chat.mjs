@@ -158,25 +158,25 @@ for (const w of [390, 768, 1280]) {
         pt: parseFloat(cs.paddingTop), pb: parseFloat(cs.paddingBottom) };
     }), await panel.elementHandle());
     ok(ctas.length >= 2, `${w}${path}: expected action buttons in the panel, found ${ctas.length}`);
-    for (const c of ctas) {
+    ctas.forEach((c) => {
       ok(Math.abs(c.h - std.h) < 0.5, `${w}${path}: "${c.label}" is ${c.h}px, not ${std.h}`);
       ok(c.fs === std.fs, `${w}${path}: "${c.label}" font ${c.fs}, not ${std.fs}`);
       ok(c.rad === std.r, `${w}${path}: "${c.label}" radius ${c.rad}, not ${std.r}`);
       ok(c.pt === 0 && c.pb === 0, `${w}${path}: "${c.label}" has vertical padding`);
       // The site's 1-2 word rule. Chips are exempt - they are questions.
       ok(c.words <= 2, `${w}${path}: "${c.label}" is ${c.words} words, the rule is 2`);
-    }
+    });
 
     // One control height in the panel: the chips keep the pill, not a fourth size.
     const chipBox = await panel.evaluate((root) => [...root.querySelectorAll('[data-chip]')].map((el) => {
       const cs = getComputedStyle(el);
       return { h: el.getBoundingClientRect().height, fs: parseFloat(cs.fontSize), rad: parseFloat(cs.borderTopLeftRadius) };
     }), await panel.elementHandle());
-    for (const c of chipBox) {
+    chipBox.forEach((c) => {
       ok(Math.abs(c.h - std.h) < 0.5, `${w}${path}: a chip is ${c.h}px, not ${std.h}`);
       ok(c.fs === std.fs, `${w}${path}: a chip font is ${c.fs}, not ${std.fs}`);
       ok(c.rad > 100, `${w}${path}: a chip lost its pill shape (${c.rad})`);
-    }
+    });
 
     // Anything new has to declare what it is, or this fails.
     const stray = await panel.evaluate((root) =>

@@ -8,7 +8,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 // My Trips lands on the cart tab by default (a local cart, no sign-in
 // needed there) - the sign-in gate only lives under Booked/Past Trip.

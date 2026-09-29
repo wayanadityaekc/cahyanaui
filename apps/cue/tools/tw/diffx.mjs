@@ -6,7 +6,7 @@ const [, , bF, aF] = process.argv;
 if (!bF || !aF) { console.error('usage: node tools/tw/diffx.mjs <before.json> <after.json>'); process.exit(2); }
 const B = JSON.parse(fs.readFileSync(bF, 'utf8'));
 const A = JSON.parse(fs.readFileSync(aF, 'utf8'));
-const normShadow = (v) => (typeof v === 'string' ? v.replace(/rgba\(0, 0, 0, 0\) 0px 0px 0px 0px(, )?/g, '') : v);
+function normShadow(v) { return (typeof v === 'string' ? v.replace(/rgba\(0, 0, 0, 0\) 0px 0px 0px 0px(, )?/g, '') : v); }
 let diffs = 0; const samples = [];
 for (const vw of Object.keys(B)) {
   const bv = B[vw] || [], av = A[vw] || [];

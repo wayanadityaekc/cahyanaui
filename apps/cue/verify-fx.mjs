@@ -22,22 +22,22 @@ const SHOT = process.env.SHOT_DIR || '/tmp';
 
 let pass = 0;
 let fail = 0;
-const ok = (c, m) => (c ? pass++ : (fail++, console.log('  FAIL:', m)));
+function ok(c, m) { return (c ? pass++ : (fail++, console.log('  FAIL:', m))); }
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
 // What the API itself says, so nothing here is a number typed into the harness.
-const apiCat = async (cur) => (await fetch(`${API}/pricing/catalog?currency=${cur}&guests=2&stay=`)).json();
+async function apiCat(cur) { return (await fetch(`${API}/pricing/catalog?currency=${cur}&guests=2&stay=`)).json(); }
 const usd = await apiCat('USD');
 const ubudUsd = usd.items.find((i) => i.name === 'Ubud Tour').standard.display;
 
 // Is n on the ladder fx.js uses? (<=10 whole; else a mantissa step of its decade)
 const M = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.2, 2.4, 2.5, 2.6, 2.8, 3, 3.2, 3.5, 3.8, 4, 4.2, 4.5, 4.8, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10];
-const onLadder = (n) => {
+function onLadder(n) {
   if (n <= 10) return Number.isInteger(n);
   const d = 10 ** Math.floor(Math.log10(n));
   return M.some((m) => Math.round(m * d) === n);
-};
+}
 
 for (const w of [390, 1280]) {
   const ctx = await b.newContext({ viewport: { width: w, height: 844 } });

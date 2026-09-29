@@ -9,22 +9,24 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 // refused to copy from GetYourGuide.
 const BASE = process.env.BASE || 'http://localhost:4000';
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 // One item on sale, the rest not - so both branches are exercised on the same
 // page, in the same render, with the same code.
 const ON_SALE = 'Ubud Tour';
 const SALE = 40, LIST = 45;
 
-const catalogFor = (symbol) => {
+function catalogFor(symbol) {
   const cur = symbol === 'Rp' ? 'IDR' : 'USD';
-  const n = (usd) => (symbol === 'Rp' ? usd * 17600 : usd);
-  const item = (name, price, list) => ({
-    name,
-    standard: { display: n(price) },
-    listStandard: { display: n(list == null ? price : list) },
-    exclusive: null, listExclusive: null, hasExclusive: false,
-  });
+  function n(usd) { return (symbol === 'Rp' ? usd * 17600 : usd); }
+  function item(name, price, list) {
+    return ({
+      name,
+      standard: { display: n(price) },
+      listStandard: { display: n(list == null ? price : list) },
+      exclusive: null, listExclusive: null, hasExclusive: false,
+    });
+  }
   return {
     symbol, currency: cur,
     promo: { pct: 10, endsOn: '2099-01-01', label: 'Low season' },
@@ -38,7 +40,7 @@ const catalogFor = (symbol) => {
     transfers: [{ route: 'Airport – Ubud', display: n(26) }],
     charters: [{ duration: 'half', display: n(35) }, { duration: 'full', display: n(57) }, { duration: 'long', display: n(64) }],
   };
-};
+}
 
 const b = await chromium.launch({
   executablePath: process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
@@ -105,7 +107,7 @@ for (const symbol of ['$', 'Rp']) {
         ok(s.size < s.parentSize, `${tag}: the old price is not smaller (${s.size} vs ${s.parentSize})`);
         ok(s.weight === '400', `${tag}: the old price is bold (${s.weight}) and competes with the real one`);
         // Both numbers on screen, and the cheaper one is the one NOT struck.
-        const digits = (t) => t.replace(/[^\d]/g, '');
+        function digits(t) { return t.replace(/[^\d]/g, ''); }
         ok(digits(s.wasText).length > 0, `${tag}: the struck element has no number in it`);
         ok(digits(s.text).length > digits(s.wasText).length, `${tag}: the sale price is missing next to the struck one`);
       }

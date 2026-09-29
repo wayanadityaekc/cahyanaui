@@ -30,17 +30,19 @@ fs.mkdirSync(SHOT, { recursive: true });
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.json': 'application/json',
   '.txt': 'text/plain', '.xml': 'application/xml', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg',
   '.webp': 'image/webp', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff' };
-const serve = (root, port) => new Promise((res) => {
-  const s = http.createServer((req, rsp) => {
-    let p = decodeURIComponent(req.url.split('?')[0]);
-    if (p.endsWith('/')) p += 'index.html';
-    let f = path.join(root, p);
-    if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
-    if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); return rsp.end('nf'); }
-    rsp.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
-    rsp.end(fs.readFileSync(f));
-  }).listen(port, () => res(s));
-});
+function serve(root, port) {
+  return new Promise((res) => {
+    const s = http.createServer((req, rsp) => {
+      let p = decodeURIComponent(req.url.split('?')[0]);
+      if (p.endsWith('/')) p += 'index.html';
+      let f = path.join(root, p);
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); return rsp.end('nf'); }
+      rsp.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
+      rsp.end(fs.readFileSync(f));
+    }).listen(port, () => res(s));
+  });
+}
 const sB = await serve(BEFORE, 4711);
 const sA = await serve(AFTER, 4712);
 const OLD = 'http://127.0.0.1:4711';
@@ -50,22 +52,24 @@ const NEW = 'http://127.0.0.1:4712';
 const UNDER = process.env.UNDER === 'before' ? OLD : NEW;
 
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
-const info = (m) => console.log('  ..', m);
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+function info(m) { return console.log('  ..', m); }
 const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
 // ONE branching handler (a later route() would swallow an earlier one).
 const MINE = { upcoming: [], history: [
   { ref: 'CUE-100', name: 'Ubud Tour', start_date: '2026-08-20', end_date: '2026-08-20', guests: '2', price_usd: 40, price_idr: 700000,
     status: 'new', upcoming: false, review_items: ['Ubud Tour'], lines: [{ type: 'tour', service: 'Ubud Tour', date: '2026-08-20', guests: '2' }] } ] };
-const api = (loggedIn) => async (route) => {
-  const u = route.request().url();
-  const j = (b) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) });
-  if (u.includes('/account/session') || u.includes('/account/me')) return j(loggedIn ? { status: 'ok', account: { id: 7, name: 'Wayan', email: 'w@e.com', phone: '' } } : { account: null });
-  if (u.includes('/bookings/mine')) return j(MINE);
-  return j({});
-};
-const open = async (base, url, w, { loggedIn = false, h = 900 } = {}) => {
+function api(loggedIn) {
+  return async (route) => {
+    const u = route.request().url();
+    function j(b) { return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) }); }
+    if (u.includes('/account/session') || u.includes('/account/me')) return j(loggedIn ? { status: 'ok', account: { id: 7, name: 'Wayan', email: 'w@e.com', phone: '' } } : { account: null });
+    if (u.includes('/bookings/mine')) return j(MINE);
+    return j({});
+  };
+}
+async function open(base, url, w, { loggedIn = false, h = 900 } = {}) {
   const ctx = await br.newContext({ viewport: { width: w, height: h } });
   if (loggedIn) await ctx.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
   await ctx.route('**/api/**', api(loggedIn));
@@ -75,16 +79,16 @@ const open = async (base, url, w, { loggedIn = false, h = 900 } = {}) => {
   await page.goto(base + url, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   return { ctx, page, errs };
-};
+}
 
 // ---------------------------------------------------------------- 1. borders
 console.log('1. border colours + layout, before vs after');
 const HEX = /rgb\((\d+), (\d+), (\d+)\)/;
-const hex = (c) => { const m = HEX.exec(c); return m ? '#' + [1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('') : c; };
+function hex(c) { const m = HEX.exec(c); return m ? '#' + [1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('') : c; }
 const PAGES = ['/', '/tour.html', '/destinations.html', '/activities.html', '/ubud-tour.html', '/attractions/monkey-forest.html',
   '/charter.html', '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
   '/guide/ubud.html', '/my-trips.html', '/settings.html', '/itinerary.html'];
-const measure = async (base, url, w) => {
+async function measure(base, url, w) {
   const { ctx, page } = await open(base, url, w, { loggedIn: true });
   const r = await page.evaluate(() => {
     const hist = {};
@@ -101,7 +105,7 @@ const measure = async (base, url, w) => {
   });
   await ctx.close();
   return r;
-};
+}
 const OFF = ['#f2efe7', '#eeeeee', '#ece6d8', '#e6dfce', '#e2ddd0', '#ececec', '#e6e6e6', '#e4dcc8', '#e0ddd4'];
 const LINE = '#e7e4dd';
 let gainedTotal = 0, lostTotal = 0;
@@ -110,7 +114,7 @@ for (const w of [390, 1280]) {
   for (const url of PAGES) {
     const a = await measure(OLD, url, w);
     const b = await measure(NEW, url, w);
-    const H = (h) => Object.fromEntries(Object.entries(h).map(([k, v]) => { const [c, st] = k.split('|'); return [hex(c) + '|' + st, v]; }));
+    function H(h) { return Object.fromEntries(Object.entries(h).map(([k, v]) => { const [c, st] = k.split('|'); return [hex(c) + '|' + st, v]; })); }
     const ha = H(a.hist), hb = H(b.hist);
     let lost = 0, gained = 0;
     for (const o of OFF) for (const k of Object.keys(ha)) if (k.startsWith(o + '|')) lost += (ha[k] || 0) - (hb[k] || 0);
@@ -127,7 +131,7 @@ for (const w of [390, 1280]) {
     if (a.h !== b.h) heightDiffs.push(`${url}@${w}: ${a.h} -> ${b.h}`);
     ok(b.over <= 0, `${url}@${w}: no horizontal overflow (${b.over})`);
     // Everything else must be identical, count for count.
-    const rest = (h) => Object.fromEntries(Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(o + '|')) && !k.startsWith(LINE)));
+    function rest(h) { return Object.fromEntries(Object.entries(h).filter(([k]) => !OFF.some((o) => k.startsWith(o + '|')) && !k.startsWith(LINE))); }
     ok(JSON.stringify(rest(ha)) === JSON.stringify(rest(hb)), `${url}@${w}: every other border unchanged`);
   }
 }
@@ -136,7 +140,7 @@ ok(heightDiffs.length === 0, `document heights unchanged (${heightDiffs.join('; 
 
 // ---------------------------------------------------------------- 2. cards
 console.log('2. cards do not move on hover');
-const hoverShift = async (base, url, w, sel) => {
+async function hoverShift(base, url, w, sel) {
   const { ctx, page } = await open(base, url, w);
   const els = page.locator(sel);
   const n = Math.min(await els.count(), 3);
@@ -154,7 +158,7 @@ const hoverShift = async (base, url, w, sel) => {
   }
   await ctx.close();
   return out;
-};
+}
 const CARD_SELS = [['/', '.hcard'], ['/bali-guide.html', '[class*="shadow-card"]'], ['/ubud-tour.html', '[class*="shadow-card"]']];
 let movedBefore = 0;
 for (const [url, sel] of CARD_SELS) {

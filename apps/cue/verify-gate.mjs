@@ -19,7 +19,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 const CART = JSON.stringify({ days: [{ items: ['Ubud Tour'], itemModes: ['standard'], itemTimes: ['08:00'], date: DAY, guests: '2' }], transfers: [], charters: [] });
@@ -63,19 +63,19 @@ async function setup(w, { signedIn = false, marker = null } = {}) {
   const errs = []; page.on('pageerror', (e) => errs.push(String(e)));
   return { ctx, page, errs };
 }
-const payNow = (p) => p.locator('button:visible', { hasText: /^\s*Pay now\s*$/ }).first().click();
-const gateOpen = (p) => p.locator('text=Sign in to book').isVisible();
-const codeOpen = (p) => p.locator('text=Enter your code').isVisible();
-const formOpen = (p) => p.locator('text=Booking Confirmation').isVisible();
-const marker = (p) => p.evaluate(() => localStorage.getItem('cue_resume_book'));
-const cartLen = (p) => p.evaluate(() => (JSON.parse(localStorage.getItem('cue_itinerary_v1') || '{}').days || []).length);
+function payNow(p) { return p.locator('button:visible', { hasText: /^\s*Pay now\s*$/ }).first().click(); }
+function gateOpen(p) { return p.locator('text=Sign in to book').isVisible(); }
+function codeOpen(p) { return p.locator('text=Enter your code').isVisible(); }
+function formOpen(p) { return p.locator('text=Booking Confirmation').isVisible(); }
+function marker(p) { return p.evaluate(() => localStorage.getItem('cue_resume_book')); }
+function cartLen(p) { return p.evaluate(() => (JSON.parse(localStorage.getItem('cue_itinerary_v1') || '{}').days || []).length); }
 // The 6 boxes fill left-to-right as one field each (OtpFields), so typing into
 // the first one and letting auto-advance carry it is how a guest actually
 // uses it - not Playwright's .fill() on a single input.
-const typeCode = async (p, digits) => {
+async function typeCode(p, digits) {
   await p.locator('input[inputmode="numeric"]:visible').first().click();
   await p.keyboard.type(digits, { delay: 20 });
-};
+}
 
 for (const w of [390, 1280]) {
   // A + C: logged out, code round trip (wrong then right), same tab throughout

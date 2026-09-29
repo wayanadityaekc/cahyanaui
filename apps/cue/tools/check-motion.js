@@ -28,7 +28,7 @@ if (!fs.existsSync(OUT)) { console.error("out/ missing - run the build first"); 
 // --- helpers ---------------------------------------------------------------
 
 // Splits a class attribute into tokens, keeping [...] arbitrary values intact.
-const tokenize = (s) => s.split(/\s+/).filter(Boolean);
+function tokenize(s) { return s.split(/\s+/).filter(Boolean); }
 
 // Strips variant prefixes (hover:, group-hover:, max-[992px]: ...) without
 // cutting into an arbitrary value, whose brackets may themselves contain ":".
@@ -46,7 +46,7 @@ function baseOf(token) {
   };
 }
 
-const inner = (t) => t.slice(t.indexOf("[") + 1, t.lastIndexOf("]"));
+function inner(t) { return t.slice(t.indexOf("[") + 1, t.lastIndexOf("]")); }
 
 // Which CSS property does this utility actually set?
 function setsProperty(base) {
@@ -81,7 +81,7 @@ function transitionList(base) {
 
 // --- scan ------------------------------------------------------------------
 
-const walk = (dir) => {
+function walk(dir) {
   const found = [];
   (function w(d) {
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
@@ -92,7 +92,7 @@ const walk = (dir) => {
     }
   })(dir);
   return found;
-};
+}
 
 const pages = walk(OUT);
 const dead = new Map();   // rule 1
@@ -148,7 +148,7 @@ for (const p of pages) {
       if (scope === "motion-reduce") continue;   // deliberately turns motion off
       const trans = list;
       const set = new Set([...baseSet, ...(setBy.get(scope) || [])]);
-      const has = (p2) => trans.includes(p2) || trans.includes("all");
+      function has(p2) { return trans.includes(p2) || trans.includes("all"); }
       const where = scope ? ` (under ${scope}:)` : "";
 
       // Rule 1

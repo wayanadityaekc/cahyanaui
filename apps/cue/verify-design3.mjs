@@ -1,16 +1,16 @@
 import { chromium } from 'playwright-core';
 const B = 'http://127.0.0.1:4000';
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : fail++; console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`); };
+function ok(c, m) { c ? pass++ : fail++; console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`); }
 const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
-const api = (r) => {
+function api(r) {
   const u = r.request().url();
-  const j = (b) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) });
+  function j(b) { return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) }); }
   if (u.includes('/account/session')) return j({ account: { name: 'Wayan', email: 'w@e.com', phone: '' } });
   if (u.includes('/bookings/mine')) return j({ bookings: [] });
   return j({});
-};
+}
 
 const PAGES = ['/', '/tour.html', '/ubud-tour.html', '/attractions/monkey-forest.html', '/charter.html',
   '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
@@ -112,22 +112,24 @@ for (const w of [390, 1280]) {
   await page.route('**/api/**', api);
   await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForFunction(() => getComputedStyle(document.documentElement).getPropertyValue('--header-h').trim() !== '');
-  const box = () => page.evaluate(() => {
-    const h = document.querySelector('header');
-    const r = h.getBoundingClientRect();
-    const cs = getComputedStyle(document.documentElement);
-    return {
-      top: Math.round(r.top), bottom: Math.round(r.bottom), h: Math.round(r.height),
-      navH: parseFloat(cs.getPropertyValue('--header-h')),
-      barH: parseFloat(cs.getPropertyValue('--tripbar-h')),
-    };
-  });
-  const scrollTo = async (y) => {
+  function box() {
+    return page.evaluate(() => {
+      const h = document.querySelector('header');
+      const r = h.getBoundingClientRect();
+      const cs = getComputedStyle(document.documentElement);
+      return {
+        top: Math.round(r.top), bottom: Math.round(r.bottom), h: Math.round(r.height),
+        navH: parseFloat(cs.getPropertyValue('--header-h')),
+        barH: parseFloat(cs.getPropertyValue('--tripbar-h')),
+      };
+    });
+  }
+  async function scrollTo(y) {
     await page.evaluate((v) => window.scrollTo(0, v), y);
     await page.waitForFunction((v) => Math.abs(window.scrollY - v) < 2, y, { timeout: 5000 });
     await page.waitForTimeout(450); // then let the header's own transition land
-  };
-  const by = async (d) => { await page.evaluate((v) => window.scrollBy(0, v), d); await page.waitForTimeout(450); };
+  }
+  async function by(d) { await page.evaluate((v) => window.scrollBy(0, v), d); await page.waitForTimeout(450); }
 
   const atTop = await box();
   ok(atTop.top === 0, `${w}: di puncak header rata atas (top ${atTop.top})`);
@@ -253,7 +255,7 @@ for (const w of [390, 1280]) {
   // purpose so the ink comes out even.
   const gaps = await page.evaluate(() => {
     const row = document.getElementById('hamburger').parentElement;
-    const ink = (el) => {
+    function ink(el) {
       const svg = el.querySelector('svg');
       if (svg) return svg.getBoundingClientRect();
       // the burger: its three bars, ignoring the absolutely-positioned status dot
@@ -262,7 +264,7 @@ for (const w of [390, 1280]) {
         .map((s) => s.getBoundingClientRect());
       if (!bars.length) return null;
       return { left: Math.min(...bars.map((b) => b.left)), right: Math.max(...bars.map((b) => b.right)) };
-    };
+    }
     const out = [];
     for (const el of row.children) {
       if (el.getBoundingClientRect().width === 0) continue;
@@ -336,24 +338,26 @@ for (const w of [390]) {
   await page.route('**/api/**', api);
   await page.goto(`${B}/ubud-tour.html`, { waitUntil: 'load' });
 
-  const read = () => page.evaluate(() => {
-    const b = document.getElementById('hamburger');
-    // The bars are the STATIC spans; the badge dot is the absolute one. Do NOT filter by
-    // height: an open bar is rotated 45deg, so its rect is ~18px tall, and a height filter
-    // silently drops two of the three and leaves spread measuring ONE element against
-    // itself - which is how a stale offset passed this gate the first time.
-    const bars = [...b.querySelectorAll(':scope > span')]
-      .filter((s) => getComputedStyle(s).position === 'static');
-    const br = b.getBoundingClientRect();
-    return {
-      btnW: +br.width.toFixed(1), btnH: +br.height.toFixed(1),
-      gap: parseFloat(getComputedStyle(b).rowGap) || 0,
-      bars: bars.map((s) => {
-        const r = s.getBoundingClientRect();
-        return { w: +r.width.toFixed(1), h: +r.height.toFixed(1), mid: +(r.top + r.height / 2).toFixed(1) };
-      }),
-    };
-  });
+  function read() {
+    return page.evaluate(() => {
+      const b = document.getElementById('hamburger');
+      // The bars are the STATIC spans; the badge dot is the absolute one. Do NOT filter by
+      // height: an open bar is rotated 45deg, so its rect is ~18px tall, and a height filter
+      // silently drops two of the three and leaves spread measuring ONE element against
+      // itself - which is how a stale offset passed this gate the first time.
+      const bars = [...b.querySelectorAll(':scope > span')]
+        .filter((s) => getComputedStyle(s).position === 'static');
+      const br = b.getBoundingClientRect();
+      return {
+        btnW: +br.width.toFixed(1), btnH: +br.height.toFixed(1),
+        gap: parseFloat(getComputedStyle(b).rowGap) || 0,
+        bars: bars.map((s) => {
+          const r = s.getBoundingClientRect();
+          return { w: +r.width.toFixed(1), h: +r.height.toFixed(1), mid: +(r.top + r.height / 2).toFixed(1) };
+        }),
+      };
+    });
+  }
 
   const shut = await read();
   console.log(`  ${w}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((x) => x.w + 'x' + x.h).join(' ')}`);
@@ -394,13 +398,15 @@ for (const [label, url] of [['tour', '/ubud-tour.html'], ['destination', '/attra
   const r = await page.goto(B + url, { waitUntil: 'load' });
   ok(r.status() === 200, `hero ${label}: HTTP 200`);
   await page.waitForTimeout(500);
-  const shot = () => page.evaluate(() => {
-    const img = document.querySelector('header ~ * img, main img') ||
-      document.querySelector('img');
-    if (!img) return null;
-    const b = img.getBoundingClientRect();
-    return { w: +b.width.toFixed(1), h: +b.height.toFixed(1), tr: getComputedStyle(img).transform };
-  });
+  function shot() {
+    return page.evaluate(() => {
+      const img = document.querySelector('header ~ * img, main img') ||
+        document.querySelector('img');
+      if (!img) return null;
+      const b = img.getBoundingClientRect();
+      return { w: +b.width.toFixed(1), h: +b.height.toFixed(1), tr: getComputedStyle(img).transform };
+    });
+  }
   const before = await shot();
   ok(before && before.w > 200, `hero ${label}: foto hero ke-ukur (${before ? before.w : 'NULL'}) - rect kosong = harness rusak, bukan lolos`);
   const box = await page.locator('img').first().boundingBox();

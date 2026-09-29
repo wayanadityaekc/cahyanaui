@@ -18,7 +18,7 @@ const A = JSON.parse(fs.readFileSync(afterF, 'utf8'));
 // boxShadow via Tailwind shadow utilities gets transparent ring layers prepended
 // (visually identical). Normalize so those don't read as diffs. Prefer [box-shadow:...]
 // arbitrary property if you want byte-identical, but this keeps the check honest.
-const normShadow = (v) => (typeof v === 'string' ? v.replace(/rgba\(0, 0, 0, 0\) 0px 0px 0px 0px(, )?/g, '') : v);
+function normShadow(v) { return (typeof v === 'string' ? v.replace(/rgba\(0, 0, 0, 0\) 0px 0px 0px 0px(, )?/g, '') : v); }
 
 let diffs = 0;
 const samples = [];

@@ -23,8 +23,7 @@ const API = path.join(API_REPO, "pricing-data.js");
 // Same guard as check-prices: a stale clone makes this lie convincingly - it would
 // call a real item name a typo because the commit that added it is not pulled.
 function behindUpstream() {
-  const git = (...args) =>
-    execFileSync("git", ["-C", API_REPO, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  function git(...args) { return execFileSync("git", ["-C", API_REPO, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); }
   try {
     try { git("fetch", "-q", "origin", "main"); } catch { /* offline: use the last fetch */ }
     const n = Number(git("rev-list", "--count", "HEAD..origin/main"));
@@ -35,13 +34,15 @@ function behindUpstream() {
 }
 
 let fails = 0;
-const ok = (cond, msg) => {
+function ok(cond, msg) {
   if (!cond) { console.error("  FAIL  " + msg); fails++; }
-};
-const eq = (got, want, msg) => ok(
-  JSON.stringify(got) === JSON.stringify(want),
-  `${msg}\n          dapet: ${JSON.stringify(got)}\n          mau  : ${JSON.stringify(want)}`
-);
+}
+function eq(got, want, msg) {
+  return ok(
+    JSON.stringify(got) === JSON.stringify(want),
+    `${msg}\n          dapet: ${JSON.stringify(got)}\n          mau  : ${JSON.stringify(want)}`
+  );
+}
 
 (async () => {
   if (!fs.existsSync(API)) {
@@ -77,7 +78,7 @@ const eq = (got, want, msg) => ok(
   // ---- Wayan's rules, pinned ------------------------------------------------
   const MORNING = ["08:00", "08:30", "09:00"];
   const PRE_DAWN = ["02:00", "03:00"];
-  const r = (a, b) => TIME_SLOTS.filter((t) => t >= a && t <= b);
+  function r(a, b) { return TIME_SLOTS.filter((t) => t >= a && t <= b); }
 
   // "tour normal selain lempuyang, trekking itu pilihanya jam 8.00,8.30, 9.00 am"
   for (const n of ["Ubud Tour", "West Bali Tour", "Bedugul Highlands Tour", "Bali Hidden Beaches and Cliffs",

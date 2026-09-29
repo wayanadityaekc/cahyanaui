@@ -4,7 +4,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 
 const BASE = process.env.BASE || 'http://localhost:4000';
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 // Pages with no sticky bar of their own - the app bar belongs to them.
 const FREE = ['/', '/bali-guide.html', '/charter.html'];
@@ -30,40 +30,48 @@ const FOOTERBAR = ['/my-trips.html', '/our-company.html'];
 // covered by proving in the BUILT CSS that it declares the same thing for the
 // same classes at the same widths. If someone drops a slot from the custom
 // variant, that check fires.
-const appMode = (page) => page.addInitScript(() => {
-  const mark = () => { document.documentElement.dataset.standalone = '1'; };
-  if (document.documentElement) mark();
-  else document.addEventListener('readystatechange', mark, { once: true });
-});
+function appMode(page) {
+  return page.addInitScript(() => {
+    function mark() { document.documentElement.dataset.standalone = '1'; }
+    if (document.documentElement) mark();
+    else document.addEventListener('readystatechange', mark, { once: true });
+  });
+}
 
-const box = (page, sel) => page.evaluate((s) => {
-  const el = document.querySelector(s);
-  if (!el) return null;
-  const cs = getComputedStyle(el);
-  const r = el.getBoundingClientRect();
-  return { display: cs.display, h: Math.round(r.height), bottom: Math.round(r.bottom) };
-}, sel);
+function box(page, sel) {
+  return page.evaluate((s) => {
+    const el = document.querySelector(s);
+    if (!el) return null;
+    const cs = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    return { display: cs.display, h: Math.round(r.height), bottom: Math.round(r.bottom) };
+  }, sel);
+}
 
 // Exactly one thing stuck to the bottom of the screen. Two is the collision
 // Wayan decided against; zero is what the first cut of this shipped at 768-992
 // on a listing page, where the app bar yielded to a bar that was not displayed.
-const bottomBars = (page) => page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')]
-  .filter((el) => {
-    const cs = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    return cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0
-      && Math.abs(r.bottom - window.innerHeight) < 2;
-  }).length);
+function bottomBars(page) {
+  return page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')]
+    .filter((el) => {
+      const cs = getComputedStyle(el);
+      const r = el.getBoundingClientRect();
+      return cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0
+        && Math.abs(r.bottom - window.innerHeight) < 2;
+    }).length);
+}
 
 // ---- 1. the two CSS branches must agree ----
 {
   const root = 'out/_next/static';
-  const walk = (d) => readdirSync(d).flatMap((f) => {
-    const p = join(d, f);
-    return statSync(p).isDirectory() ? walk(p) : [p];
-  });
+  function walk(d) {
+    return readdirSync(d).flatMap((f) => {
+      const p = join(d, f);
+      return statSync(p).isDirectory() ? walk(p) : [p];
+    });
+  }
   const css = walk(root).filter((p) => p.endsWith('.css')).map((p) => readFileSync(p, 'utf8')).join('\n');
-  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   const classes = [...new Set(css.match(/\.standalone\\:[^{\s,]+/g) || [])];
 
   ok(classes.length >= 3, `css: only ${classes.length} standalone utilities compiled - interpolated class names never reach Tailwind`);
@@ -130,7 +138,7 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
     const r = await fetch('/manifest.webmanifest');
     if (!r.ok) return { status: r.status };
     const j = await r.json();
-    const by = (p) => (j.icons || []).filter((i) => i.purpose === p).map((i) => i.sizes).sort().join(',');
+    function by(p) { return (j.icons || []).filter((i) => i.purpose === p).map((i) => i.sizes).sort().join(','); }
     return { status: r.status, display: j.display, start: j.start_url, any: by('any'), maskable: by('maskable') };
   });
   ok(mf.status === 200, `manifest: HTTP ${mf.status}`);

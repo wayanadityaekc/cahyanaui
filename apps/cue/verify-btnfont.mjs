@@ -1,48 +1,52 @@
 import { chromium } from 'playwright-core';
 const B = 'http://127.0.0.1:4000';
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : fail++; console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`); };
-const near = (a, b) => Math.abs(a - b) < 0.5;   // --btn-h resolves to 33.5938
+function ok(c, m) { c ? pass++ : fail++; console.log(`${c ? 'ok  ' : 'FAIL'} ${m}`); }
+function near(a, b) { return Math.abs(a - b) < 0.5; }   // --btn-h resolves to 33.5938
 
 const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
 // Read the tokens the PAGE resolves, via a throwaway element - hard-coding the
 // numbers here would only prove the harness agrees with itself.
-const tokens = (p) => p.evaluate(() => {
-  const d = document.createElement('div');
-  d.style.cssText = 'position:absolute;height:var(--btn-h);font-size:var(--fs-small);border-radius:var(--r-sm);color:var(--color-cta)';
-  document.body.appendChild(d);
-  const c = getComputedStyle(d);
-  const t = { h: parseFloat(c.height), font: c.fontSize, radius: c.borderTopLeftRadius, cta: c.color };
-  d.remove();
-  return t;
-});
+function tokens(p) {
+  return p.evaluate(() => {
+    const d = document.createElement('div');
+    d.style.cssText = 'position:absolute;height:var(--btn-h);font-size:var(--fs-small);border-radius:var(--r-sm);color:var(--color-cta)';
+    document.body.appendChild(d);
+    const c = getComputedStyle(d);
+    const t = { h: parseFloat(c.height), font: c.fontSize, radius: c.borderTopLeftRadius, cta: c.color };
+    d.remove();
+    return t;
+  });
+}
 
-const shot = (el) => el.evaluate((n) => {
-  const c = getComputedStyle(n), r = n.getBoundingClientRect();
-  return {
-    h: Math.round(r.height * 10) / 10, bg: c.backgroundColor, color: c.color,
-    radius: c.borderTopLeftRadius, font: c.fontSize,
-    family: c.fontFamily.split(',')[0].replace(/["']/g, ''), weight: c.fontWeight,
-    display: c.display, align: c.alignItems, justify: c.justifyContent,
-    textAlign: c.textAlign, padTop: c.paddingTop, padBottom: c.paddingBottom,
-    oneLine: n.scrollWidth <= n.clientWidth + 1,
-  };
-});
+function shot(el) {
+  return el.evaluate((n) => {
+    const c = getComputedStyle(n), r = n.getBoundingClientRect();
+    return {
+      h: Math.round(r.height * 10) / 10, bg: c.backgroundColor, color: c.color,
+      radius: c.borderTopLeftRadius, font: c.fontSize,
+      family: c.fontFamily.split(',')[0].replace(/["']/g, ''), weight: c.fontWeight,
+      display: c.display, align: c.alignItems, justify: c.justifyContent,
+      textAlign: c.textAlign, padTop: c.paddingTop, padBottom: c.paddingBottom,
+      oneLine: n.scrollWidth <= n.clientWidth + 1,
+    };
+  });
+}
 
 const acc = { name: 'Wayan', email: 'w@example.com', phone: '' };
-const json = (body) => ({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+function json(body) { return ({ status: 200, contentType: 'application/json', body: JSON.stringify(body) }); }
 // ONE handler that branches, not several patterns: in Playwright the route
 // registered LAST wins, so a catch-all added after the specific ones swallows
 // them - which is how the first run of this harness measured a page that only
 // said "Sign in" and blamed the app. The catch-all matters on its own too: a
 // harness that reaches the real production API measures someone else's data.
-const api = (r) => {
+function api(r) {
   const u = r.request().url();
   if (u.includes('/account/session')) return r.fulfill(json({ account: acc }));
   if (u.includes('/bookings/mine')) return r.fulfill(json({ bookings: [] }));
   return r.fulfill(json({}));
-};
+}
 
 for (const w of [320, 390, 768, 1280]) {
   const ctx = await br.newContext({ viewport: { width: w, height: 880 } });

@@ -45,7 +45,7 @@ async function inkBox() {
 (async () => {
   const box = await inkBox();
   console.log('cropped to', box);
-  const disc = () => sharp(SRC).extract(box);
+  function disc() { return sharp(SRC).extract(box); }
   // A two-colour mark: a palette PNG is visually identical and a fraction of the
   // size (raw RGBA came out 4x bigger at 512).
   const PNG = { palette: true, colours: 128, compressionLevel: 9, effort: 10 };
@@ -54,7 +54,7 @@ async function inkBox() {
   // putih"). A white square behind the disc is invisible on a light tab strip and
   // a white tile on a dark one - transparency is the only setting that reads as a
   // disc on both, and every browser here handles a transparent PNG/ICO.
-  const onClear = (size) => disc().resize(size, size, { fit: 'cover' }).png(PNG);
+  function onClear(size) { return disc().resize(size, size, { fit: 'cover' }).png(PNG); }
 
   // HOME-SCREEN ICONS must be opaque - iOS and Android composite transparency
   // themselves, usually onto black, and they round the corners for you. So the
@@ -66,13 +66,13 @@ async function inkBox() {
   // gold has a slight gradient and no flat fill matches it exactly. The flatten
   // stays as a backstop for sub-pixel edges.
   const GOLD = '#b4975f';
-  const onGold = async (size) => {
+  async function onGold(size) {
     const z = Math.round(size * 1.45);
     const zoomed = await disc().resize(z, z).png().toBuffer();
     const off = Math.round((z - size) / 2);
     return sharp(zoomed).extract({ left: off, top: off, width: size, height: size })
       .flatten({ background: GOLD }).png(PNG);
-  };
+  }
 
   for (const [name, size] of [['favicon-16x16.png', 16], ['favicon-32x32.png', 32]]) {
     await onClear(size).toFile(OUT + name);

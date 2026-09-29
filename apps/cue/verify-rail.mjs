@@ -23,8 +23,8 @@ const SITE = 'http://127.0.0.1:4000';
 const SHOT = '/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scratchpad';
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 let pass = 0, fail = 0;
-const ok = (c, m) => (c ? pass++ : (fail++, console.log('  FAIL:', m)));
-const digits = (t) => Number(String(t).replace(/[^0-9]/g, ''));
+function ok(c, m) { return (c ? pass++ : (fail++, console.log('  FAIL:', m))); }
+function digits(t) { return Number(String(t).replace(/[^0-9]/g, '')); }
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
@@ -101,7 +101,7 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   ok(railBtns.every((b) => b.text === '' && b.svg && b.name), `${tag}: rail buttons are icon-only & named (${JSON.stringify(railBtns)})`);
   ok((await page.locator('[data-rail-info]').count()) === 0, `${tag}: no explanation printed until the (i) is tapped`);
   // The popup floats: opening it must not move Book Now.
-  const bookBox = async () => (await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).boundingBox());
+  async function bookBox() { return (await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).boundingBox()); }
   const before = await bookBox();
   await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
   await page.waitForTimeout(350);
@@ -115,10 +115,10 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   ok((await page.locator('[data-rail-info]').count()) === 0 || !(await page.locator('[data-rail-info]').isVisible()), `${tag}: Escape closes it`);
-  const rowAmt = async (label) => {
+  async function rowAmt(label) {
     const card = page.locator('[role="radiogroup"][aria-label] > div', { hasText: label }).first();
     return card.locator('button').first().innerText();
-  };
+  }
   const dep = await rowAmt('Pay a deposit');
   const full = await rowAmt('Pay in full');
   if (cur !== 'IDR') {

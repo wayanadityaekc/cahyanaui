@@ -7,10 +7,10 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 const routes = fs.readFileSync(path.join(ROOT, 'lib/routes.js'), 'utf8');
-const list = (name) => {
+function list(name) {
   const m = routes.match(new RegExp('export const ' + name + ' = \\[([\\s\\S]*?)\\];'));
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
-};
+}
 
 const pages = [
   ...list('TOURS').map((s) => `${s}.html`),

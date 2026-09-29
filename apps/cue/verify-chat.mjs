@@ -2,7 +2,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 
 const BASE = process.env.BASE || 'http://localhost:4000';
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 // Waits for text, but returns false instead of throwing. A thrown timeout ends
 // the run and hides every later assertion - which is how the first version of
@@ -191,8 +191,8 @@ for (const w of [390, 768, 1280]) {
     // next question was answered with a price list. That is how the first version
     // of this check passed against a deliberately broken build.
     const input = panel.getByLabel('Your question');
-    const handoffs = () => panel.getByText('Give me a moment', { exact: false }).count();
-    const reaches = async (q) => {
+    function handoffs() { return panel.getByText('Give me a moment', { exact: false }).count(); }
+    async function reaches(q) {
       const before = await handoffs();
       await input.fill(q);
       await input.press('Enter');
@@ -202,7 +202,7 @@ for (const w of [390, 768, 1280]) {
         after = await handoffs();
       }
       return after > before;
-    };
+    }
 
     // An odd question is a question for Wayan, not a closed door (Sep 2026,
     // Wayan: "kalo pertanyaan aneh langsung connect ke gua aja"). Both halves
@@ -272,7 +272,7 @@ for (const w of [390, 768, 1280]) {
     await hctx.route('**/api/chat/**', async (r) => {
       const req = r.request();
       const url = new URL(req.url());
-      const json = (x) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(x) });
+      function json(x) { return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(x) }); }
       if (req.method() === 'POST' && url.pathname.endsWith('/chat/start')) {
         chat.started.push(JSON.parse(req.postData() || '{}'));
         return json({ status: 'ok', thread: chat.id });
@@ -412,7 +412,7 @@ for (const w of [390, 768, 1280]) {
     await nctx.route('**/api/chat/**', async (r) => {
       const req = r.request();
       const url = new URL(req.url());
-      const json = (x) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(x) });
+      function json(x) { return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(x) }); }
       if (req.method() === 'POST' && url.pathname.endsWith('/chat/start')) return json({ status: 'ok', thread: night.id });
       if (req.method() === 'POST' && url.pathname.endsWith('/contact')) {
         night.contact.push(JSON.parse(req.postData() || '{}'));

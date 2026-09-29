@@ -28,22 +28,22 @@ const AUTH = 'Basic ' + Buffer.from(`${process.env.ADMIN_USER || 'owner'}:${proc
 const EXEC = process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
+function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 // Waits that REPORT instead of throwing. A throwing wait turns one failing
 // assertion into a crashed run and every assertion after it into no information
 // at all - which is how the first version of this harness "caught" a sabotage
 // while hiding eight other results.
-const seen = async (loc, ms = 4000) => { try { await loc.first().waitFor({ timeout: ms }); return true; } catch { return false; } };
-const untilTrue = async (page, fn, ms = 8000) => { try { await page.waitForFunction(fn, null, { timeout: ms }); return true; } catch { return false; } };
+async function seen(loc, ms = 4000) { try { await loc.first().waitFor({ timeout: ms }); return true; } catch { return false; } }
+async function untilTrue(page, fn, ms = 8000) { try { await page.waitForFunction(fn, null, { timeout: ms }); return true; } catch { return false; } }
 
-const api = async (path, init = {}) => {
+async function api(path, init = {}) {
   const res = await fetch(API + path, {
     ...init,
     headers: { Authorization: AUTH, ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...(init.headers || {}) },
   });
   return { status: res.status, json: await res.json().catch(() => null) };
-};
+}
 
 // A question the answer engine deliberately cannot answer, so the panel hands
 // over and a real thread is created. Taken from the same list the engine's own
@@ -64,7 +64,7 @@ async function handOver(page) {
   ok(await seen(page.locator('text=/with Wayan now|Will connect you/i'), 6000), 'the handover line never appeared');
 }
 
-const panel = (page) => page.locator('[role="dialog"][aria-label*="Support"]');
+function panel(page) { return page.locator('[role="dialog"][aria-label*="Support"]'); }
 
 // The newest thread on the owner's side, matched on the question rather than
 // "the last row": two browser contexts in one run each make one.

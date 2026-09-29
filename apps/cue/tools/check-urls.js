@@ -127,15 +127,16 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   if (!fs.existsSync(root) || !fs.existsSync(built)) return;
   // Commented-out entries are deliberately-parked URLs (e.g. a parked tour), not
   // live ones - strip comments first or they read as present in the checklist.
-  const locs = (file) =>
-    new Set(
-      [
-        ...fs
-          .readFileSync(file, "utf8")
-          .replace(/<!--[\s\S]*?-->/g, "")
-          .matchAll(/<loc>([^<]+)<\/loc>/g),
-      ].map((m) => m[1].trim()),
-    );
+  function locs(file) {
+    return new Set(
+        [
+          ...fs
+            .readFileSync(file, "utf8")
+            .replace(/<!--[\s\S]*?-->/g, "")
+            .matchAll(/<loc>([^<]+)<\/loc>/g),
+        ].map((m) => m[1].trim()),
+      );
+  }
   const rootLocs = locs(root);
   const builtLocs = locs(built);
   const onlyBuilt = [...builtLocs].filter((u) => !rootLocs.has(u));

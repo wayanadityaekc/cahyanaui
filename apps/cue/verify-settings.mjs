@@ -12,7 +12,7 @@ const MY_REVIEWS = [
 ];
 
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 async function mkCtx(w, { loggedIn = true, deleteFails = false } = {}) {
   const ctx = await b.newContext({ viewport: { width: w, height: 1100 } });

@@ -7,7 +7,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 const PAGES = ['/settings.html', '/my-trips.html', '/our-company.html'];
 
@@ -101,7 +101,7 @@ for (const w of [390, 1280]) {
   // failure is SILENT (the attribute is just never set, no exception surfaces
   // to Node). Same fallback verify-pwa.mjs's own appMode() uses.
   await ctx.addInitScript(() => {
-    const mark = () => { document.documentElement.dataset.standalone = '1'; };
+    function mark() { document.documentElement.dataset.standalone = '1'; }
     if (document.documentElement) mark();
     else document.addEventListener('readystatechange', mark, { once: true });
   });

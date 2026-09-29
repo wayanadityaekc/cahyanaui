@@ -9,8 +9,8 @@ import { chromium } from 'playwright-core';
 const API = 'http://127.0.0.1:4599/api';
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 let pass = 0, fail = 0;
-const ok = (c, m) => (c ? pass++ : (fail++, console.log('  FAIL:', m)));
-const digits = (t) => Number(String(t).replace(/[^0-9]/g, ''));
+function ok(c, m) { return (c ? pass++ : (fail++, console.log('  FAIL:', m))); }
+function digits(t) { return Number(String(t).replace(/[^0-9]/g, '')); }
 
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 for (const [cur, w] of [['AUD', 390], ['JPY', 1280]]) {
@@ -47,10 +47,10 @@ for (const [cur, w] of [['AUD', 390], ['JPY', 1280]]) {
   const cont2 = page.locator('button:visible', { hasText: /^\s*Continue\s*$/ });
   if (await cont2.count()) await cont2.first().click();
   await page.waitForTimeout(700);
-  const rowText = async (re) => {
+  async function rowText(re) {
     const row = page.locator('div:visible', { hasText: re }).filter({ has: page.locator('span') }).last();
     return row.innerText();
-  };
+  }
   const body = await page.locator('body').innerText();
   const depRow = body.split('\n').find((l) => /deposit/i.test(l) && /\d/.test(l)) || '';
   const depLine = await rowText(/Pay a deposit/);

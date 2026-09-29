@@ -9,7 +9,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 
 let pass = 0, fail = 0;
-const ok = (c, m) => { c ? pass++ : (fail++, console.log('  FAIL:', m)); };
+function ok(c, m) { c ? pass++ : (fail++, console.log('  FAIL:', m)); }
 
 for (const w of [390, 1280]) {
   const ctx = await b.newContext({ viewport: { width: w, height: 1100 } });

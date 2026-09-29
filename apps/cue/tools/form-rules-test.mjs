@@ -14,7 +14,7 @@ const STRINGS = ['', '   ', 'x', 'Wayan Aditya'];
 const EMAILS = ['', '  ', 'nope', 'a@b', 'a@b.c', ' a@b.co '];
 let checked = 0; const bad = [];
 
-const cmp = (label, oldMsg, res, field) => {
+function cmp(label, oldMsg, res, field) {
   checked++;
   const newMsg = res.ok ? '' : (res.errors[field] || '');
   const oldOk = !oldMsg;
@@ -22,7 +22,7 @@ const cmp = (label, oldMsg, res, field) => {
   // rule was about; per-field mode legitimately reports the others at the same time.
   if (oldOk !== (newMsg === '')) bad.push(`${label}: old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
   else if (oldMsg && oldMsg !== newMsg) bad.push(`${label}: message differs old=${JSON.stringify(oldMsg)} new=${JSON.stringify(newMsg)}`);
-};
+}
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
 

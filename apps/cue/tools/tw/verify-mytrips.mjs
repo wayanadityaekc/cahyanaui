@@ -32,7 +32,7 @@ const port = 8000 + Math.floor(Math.random() * 1500);
 const s = await serve(ROOT, port);
 const b = await chromium.launch({ executablePath: EXE });
 let pass = 0, fail = 0;
-const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } };
+function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } }
 
 // ---- 1) TripBar gone on my-trips, present on another page ----
 {

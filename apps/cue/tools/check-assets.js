@@ -9,7 +9,7 @@ const ROOT = path.join(__dirname, "..");
 const OUT = path.join(ROOT, "out");
 if (!fs.existsSync(OUT)) { console.error("out/ missing - run the build first"); process.exit(2); }
 
-const walk = (dir, test) => {
+function walk(dir, test) {
   const found = [];
   (function w(d) {
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
@@ -20,7 +20,7 @@ const walk = (dir, test) => {
     }
   })(dir);
   return found;
-};
+}
 
 const pages = walk(OUT, (n) => n.endsWith(".html"));
 const referenced = new Set();

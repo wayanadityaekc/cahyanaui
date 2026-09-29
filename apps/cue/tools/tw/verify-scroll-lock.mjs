@@ -32,14 +32,16 @@ const port = 8000 + Math.floor(Math.random() * 1500);
 const s = await serve(ROOT, port);
 const b = await chromium.launch({ executablePath: EXE });
 let pass = 0, fail = 0;
-const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } };
+function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } }
 
-const lockState = (pg) => pg.evaluate(() => ({
-  html: document.documentElement.classList.contains('hs-locked'),
-  body: document.body.classList.contains('hs-locked'),
-  htmlOv: getComputedStyle(document.documentElement).overflowY,
-  bodyOv: getComputedStyle(document.body).overflowY,
-}));
+function lockState(pg) {
+  return pg.evaluate(() => ({
+    html: document.documentElement.classList.contains('hs-locked'),
+    body: document.body.classList.contains('hs-locked'),
+    htmlOv: getComputedStyle(document.documentElement).overflowY,
+    bodyOv: getComputedStyle(document.body).overflowY,
+  }));
+}
 
 // ---- 1) Add Program popup (My Trips) - the exact reported bug ----
 {

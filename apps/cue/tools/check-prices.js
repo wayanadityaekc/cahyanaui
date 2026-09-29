@@ -22,7 +22,7 @@ const API = path.join(API_REPO, "pricing.js");
 // "not sold" because the commit that priced it has not been pulled. That has
 // already happened once (a whole category read as unpriced). So say so.
 function behindUpstream() {
-  const git = (...args) => execFileSync("git", ["-C", API_REPO, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  function git(...args) { return execFileSync("git", ["-C", API_REPO, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); }
   try {
     try { git("fetch", "-q", "origin", "main"); } catch { /* offline: fall back to the last fetch */ }
     const n = Number(git("rev-list", "--count", "HEAD..origin/main"));
@@ -32,13 +32,13 @@ function behindUpstream() {
   }
 }
 
-const cards = (node, out = []) => {
+function cards(node, out = []) {
   if (Array.isArray(node)) { node.forEach((n) => cards(n, out)); return out; }
   if (!node || typeof node !== "object") return out;
   if (node.priceName) out.push(node);
   Object.values(node).forEach((v) => cards(v, out));
   return out;
-};
+}
 
 // ---------------------------------------------------------------------------
 // The copies that live OUTSIDE listings.js.
@@ -53,7 +53,7 @@ const cards = (node, out = []) => {
 // The JSON-LD ones matter more than they look: JsonLd patches Product prices
 // from the live catalog, but only when the build can REACH it. When it cannot,
 // the number written in schema.js is what ships to Google.
-const num = (v) => Number(String(v).replace(/[^0-9]/g, ""));
+function num(v) { return Number(String(v).replace(/[^0-9]/g, "")); }
 
 function readSchemaProducts() {
   const HEAD = "export const PAGE_SCHEMA = ";
@@ -71,10 +71,10 @@ function readSchemaProducts() {
 async function checkCopies(api) {
   const problems = [];
   let ok = 0;
-  const cmp = (where, shown, live) => {
+  function cmp(where, shown, live) {
     if (shown === live) ok++;
     else problems.push(`${where}: says ${shown}, API says ${live}`);
-  };
+  }
 
   // 1. /transfer route cards.
   // The data lives in transfer.json since 27 Sep 2026; transfer.js is a one-line

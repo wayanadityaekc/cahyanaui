@@ -75,6 +75,7 @@ async function railInfo(page) {
   await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
   await page.waitForTimeout(350);
   const t = await page.locator('[data-rail-info]').innerText().catch(() => '');
+  if (process.env.SHOTINFO) await page.screenshot({ path: `${SHOT}/info-${Date.now()}.png` });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   return t;
@@ -133,6 +134,13 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
     ok(!dep.includes('≈'), `${tag}: rupiah guest gets no estimate`);
     ok(!/estimate/i.test(await railInfo(page)), `${tag}: rupiah guest gets no estimate note`);
   }
+  const cardInfo = await railInfo(page);
+  await page.mouse.move(0, 0);
+  await page.evaluate(() => document.activeElement?.blur());
+  await page.waitForTimeout(300);
+  ok(!/\bUSD\b|dollar/i.test(cardInfo), `${tag}: (i) never names USD ("${cardInfo.replace(/\n/g, " | ")}")`);
+  const dot = await page.evaluate(() => { const b = document.querySelector("[data-rail-info]")?.closest("span.relative")?.querySelector("[data-infodot]") || [...document.querySelectorAll("[data-infodot]")].find((x) => x.getAttribute("aria-label") === "How the payment methods work"); const r = b.querySelector("svg").getBoundingClientRect(); return { w: r.width, op: +getComputedStyle(b).opacity }; });
+  ok(dot.w > 8 && dot.w < 16 && dot.op < 0.8 && dot.op > 0.3, `${tag}: (i) smaller + faint (${dot.w}px, opacity ${dot.op})`);
   await page.screenshot({ path: `${SHOT}/rail-card-${cur}-${w}.png` });
 
   // --- PayPal ------------------------------------------------------------
@@ -143,7 +151,8 @@ for (const [cur, w] of [['USD', 390], ['AUD', 1280], ['IDR', 390], ['USD', 1280]
   if (cur === 'IDR') ok(/\$10\b/.test(depP) && depP.includes('≈'), `${tag}: rupiah on PayPal shows the exact USD it is billed ("${depP.replace(/\n/g, ' | ')}")`);
   else ok(!depP.includes('≈') && !/Rp/.test(depP), `${tag}: PayPal shows the guest's own currency ("${depP.replace(/\n/g, ' | ')}")`);
   const ppInfo = await railInfo(page);
-  if (cur === 'IDR') ok(/PayPal cannot charge IDR/.test(ppInfo), `${tag}: rupiah on PayPal is told USD`);
+  ok(!/\bUSD\b/.test(ppInfo), `${tag}: PayPal (i) never names USD`);
+  if (cur === 'IDR') ok(/PayPal cannot charge rupiah/.test(ppInfo), `${tag}: rupiah on PayPal is told it converts`);
   else ok(!/cannot charge|estimate/.test(ppInfo), `${tag}: no extra note on PayPal in own currency`);
   await page.screenshot({ path: `${SHOT}/rail-paypal-${cur}-${w}.png` });
 

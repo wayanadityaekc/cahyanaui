@@ -161,7 +161,7 @@ export default function PaymentStep({
     <div className="my-5">
       <div className={INFO_ROW}>
         <p className={`${HEAD} !mb-0`}>{PAY_COPY.heading}</p>
-        <InfoDot label="How the payment methods work" align="end">
+        <InfoDot label="How the payment methods work" align="end" subtle>
           <span className="flex flex-col gap-[var(--space-1)]" data-rail-info>
             {RAIL_CHOICES.map((m) => (
               <span key={m.id}>

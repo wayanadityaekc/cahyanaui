@@ -4094,6 +4094,7 @@ berlaku ini.
   Book Now nol gerak (di-assert).
   Card kepilih default. State-nya `payRail` di `BookConfirmModal`; checkout yang
   ke-mount sesudah Book Now = rail yang DIPILIH (`railFor(payRail)`).
+- **(i)-nya `subtle`** (Wayan: *"smaller and a bit more transparent"*): ikon 12,8px + `opacity-55`, balik penuh pas hover/fokus/kebuka. Prop di `InfoDot`, jadi charter gak kesentuh. **Teks popup-nya gak nyebut USD** (Wayan: *"its all for whatever chosen currency"*): "the currency you chose" / "the amount in your currency"; PayPal+rupiah = "converted at today's rate". Dijaga `verify-rail` (103/103).
 - **Card SELALU nagih rupiah.** Tamu yang lihat mata uang lain dapet angka **Rp
   yang EXACT** di tiap opsi + `≈ $xx` sebagai estimasi, plus satu baris "bank lu
   yang konversi". Angka Rp-nya dari `payOptions({ totalIdr, depositIdr })`

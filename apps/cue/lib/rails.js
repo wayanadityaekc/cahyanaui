@@ -52,7 +52,7 @@ export const RAIL_CHOICES = [
   {
     id: 'paypal',
     label: 'PayPal',
-    how: 'PayPal balance or card, charged in your own currency (rupiah is charged as USD).',
+    how: 'PayPal balance or card, charged in the currency you chose.',
   },
 ];
 
@@ -64,7 +64,7 @@ export function noteFor(currency, rail = DEFAULT_RAIL) {
   const bill = chargeCurrency(cur, rail);
   if (bill === cur) return null;
   if (bill === 'IDR') {
-    return `Card payments are charged in rupiah. The rupiah amount is exact; the ${cur} figure is an estimate, and your bank converts it (it may add a card fee).`;
+    return `Card payments are charged in rupiah. The rupiah amount is exact; the amount in your currency is an estimate, and your bank converts it (it may add a card fee).`;
   }
-  return `PayPal cannot charge ${cur}, so this is charged as ${bill} at today's rate.`;
+  return `PayPal cannot charge ${cur === 'IDR' ? 'rupiah' : cur}, so the amount shown is converted at today's rate.`;
 }

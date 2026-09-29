@@ -17,11 +17,12 @@ export function ReferralProvider({ children }) {
     const clean = String(code || '').trim().toUpperCase();
     if (!clean) return 0;
     try {
-      const d = await fetch(`${API_BASE}/referral/validate`, {
+      const res = await fetch(`${API_BASE}/referral/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: clean }),
-      }).then((r) => r.json());
+      });
+      const d = await res.json();
       if (d && d.valid) {
         const entry = { code: clean, pct: d.pct };
         setReferral(entry);

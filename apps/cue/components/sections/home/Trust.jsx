@@ -29,12 +29,15 @@ export default function Trust({ showStat = true, showSocials = false, cream = fa
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}/accounts/count`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
+    // fetch the live account count once
+    async function load() {
+      try {
+        const r = await fetch(`${API_BASE}/accounts/count`);
+        const d = r.ok ? await r.json() : null;
         if (!cancelled && d && typeof d.count === 'number') setCount(d.count);
-      })
-      .catch(() => {});
+      } catch (e) {}
+    }
+    load();
     return () => {
       cancelled = true;
     };

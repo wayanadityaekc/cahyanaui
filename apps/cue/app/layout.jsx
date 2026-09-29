@@ -59,10 +59,15 @@ let buildCatalog = null;
 function catalogForBuild() {
   if (!buildCatalog) {
     const qs = new URLSearchParams({ currency: 'USD', guests: String(DISPLAY_GUESTS), stay: '' });
-    buildCatalog = fetch(`${API_BASE}/pricing/catalog?${qs}`, { signal: AbortSignal.timeout(10000) })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((d) => (d && Array.isArray(d.items) ? d : null))
-      .catch(() => null);
+    buildCatalog = (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/pricing/catalog?${qs}`, { signal: AbortSignal.timeout(10000) });
+        const d = res.ok ? await res.json() : null;
+        return d && Array.isArray(d.items) ? d : null;
+      } catch (e) {
+        return null;
+      }
+    })();
   }
   return buildCatalog;
 }

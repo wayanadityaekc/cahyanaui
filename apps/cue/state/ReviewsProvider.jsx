@@ -14,15 +14,18 @@ export function ReviewsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_BASE}/reviews/summary`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
+    // load the star summary for every service
+    async function load() {
+      try {
+        const res = await fetch(`${API_BASE}/reviews/summary`);
+        const d = res.ok ? await res.json() : null;
         if (cancelled || !Array.isArray(d)) return;
         const map = {};
         d.forEach((r) => { map[r.service] = r; });
         setSummary(map);
-      })
-      .catch(() => {});
+      } catch (e) {}
+    }
+    load();
     return () => {
       cancelled = true;
     };

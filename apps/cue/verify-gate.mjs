@@ -127,7 +127,7 @@ for (const w of [390, 1280]) {
     await page.locator('button:visible', { hasText: 'Create Account' }).click();
     await page.waitForTimeout(700);
     ok(await codeOpen(page), `${w}/B: duplicate-email create did not land on the code stage`);
-    ok(!(await page.locator('#auth-cemail:visible').count().then((n) => n > 0)), `${w}/B: sign-up form still showing under the code stage`);
+    ok(!((await page.locator('#auth-cemail:visible').count()) > 0), `${w}/B: sign-up form still showing under the code stage`);
     await typeCode(page, '246810');
     await page.waitForTimeout(700);
     ok(await formOpen(page), `${w}/B: booking form did not open after verifying`);

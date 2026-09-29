@@ -31,13 +31,16 @@ export function PricingProvider({ children, initialCatalog = null }) {
     if (!hydrated) return;
     let cancelled = false;
     const qs = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
-    fetch(`${API_BASE}/pricing/catalog?${qs}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
+    // load the live catalog for this currency / group / pickup
+    async function load() {
+      try {
+        const r = await fetch(`${API_BASE}/pricing/catalog?${qs}`);
+        const d = r.ok ? await r.json() : null;
         const c = normalizeCatalog(d);
         if (!cancelled && c) setCatalog(c);
-      })
-      .catch(() => {});
+      } catch (e) {}
+    }
+    load();
     return () => {
       cancelled = true;
     };

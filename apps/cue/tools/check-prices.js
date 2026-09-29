@@ -186,4 +186,13 @@ async function main() {
   return 0;
 }
 
-main().then((code) => process.exit(code), (err) => { console.error(err); process.exit(2); });
+(async () => {
+  let code;
+  try {
+    code = await main();
+  } catch (err) {
+    console.error(err);
+    process.exit(2);
+  }
+  process.exit(code);
+})();

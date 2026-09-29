@@ -34,14 +34,17 @@ export default function ReviewsStrip({
     const q = group ? `?group=${encodeURIComponent(group)}`
       : (service ? `?service=${encodeURIComponent(service)}` : "");
     const url = `${API_BASE}/reviews${q}`;
-    fetch(url)
-      .then((r) => (r.ok ? r.json() : []))
-      .then((d) => {
+    // load the reviews for this page
+    async function load() {
+      try {
+        const r = await fetch(url);
+        const d = r.ok ? await r.json() : [];
         if (!cancelled) setRows(Array.isArray(d) ? d : []);
-      })
-      .catch(() => {
+      } catch (e) {
         if (!cancelled) setRows([]);
-      });
+      }
+    }
+    load();
     return () => {
       cancelled = true;
     };

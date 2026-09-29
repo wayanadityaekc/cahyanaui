@@ -282,11 +282,20 @@ for (const w of [390, 768]) {
   await page.goto(`${BASE}/`, { waitUntil: 'load' });
   await page.waitForTimeout(250);
   // Never throw: a thrown click ends the run and hides every later assertion.
-  const clicked = await page.click('[data-appnav] button[aria-label="Chat with us"]', { timeout: 8000 })
-    .then(() => true).catch(() => false);
+  let clicked = true;
+  try {
+    await page.click('[data-appnav] button[aria-label="Chat with us"]', { timeout: 8000 });
+  } catch (e) {
+    clicked = false;
+  }
   ok(clicked, 'app bar: the chat button was not clickable');
-  const opened = clicked
-    && await page.waitForSelector('text=Ask me about our tours', { timeout: 8000 }).then(() => true).catch(() => false);
+  let opened = false;
+  if (clicked) {
+    try {
+      await page.waitForSelector('text=Ask me about our tours', { timeout: 8000 });
+      opened = true;
+    } catch (e) {}
+  }
   ok(opened, 'app bar: the chat button did not open the panel');
   await page.close();
   await ctx.close();

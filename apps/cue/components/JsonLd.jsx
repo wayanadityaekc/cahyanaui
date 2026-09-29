@@ -9,8 +9,9 @@ import { catalog } from '@/lib/api';
 let catalogPromise = null;
 function livePrices() {
   if (!catalogPromise) {
-    catalogPromise = catalog({ currency: 'USD', guests: 2, stay: '' })
-      .then((d) => {
+    catalogPromise = (async () => {
+      try {
+        const d = await catalog({ currency: 'USD', guests: 2, stay: '' });
         if (!d || !Array.isArray(d.items)) return null;
         const byName = {};
         d.items.forEach((i) => { byName[i.name] = i.standard.usd; });
@@ -20,8 +21,10 @@ function livePrices() {
         // range has to follow the catalog rather than a copy of it.
         const transfers = (d.transfers || []).map((t) => t.usd).filter((n) => n > 0);
         return { byName, transfers };
-      })
-      .catch(() => null);
+      } catch (e) {
+        return null;
+      }
+    })();
   }
   return catalogPromise;
 }

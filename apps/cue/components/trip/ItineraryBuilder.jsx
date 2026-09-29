@@ -152,9 +152,14 @@ export default function ItineraryBuilder() {
   useEffect(() => {
     if (!hydrated || !rows.length) { setPriced(null); return; }
     let cancelled = false;
-    quote({ lines: rows, currency, stay, referral: (referral && referral.code) || '' })
-      .then((d) => { if (!cancelled && d && d.lines) setPriced(d); })
-      .catch(() => {});
+    // price the plan
+    async function load() {
+      try {
+        const d = await quote({ lines: rows, currency, stay, referral: (referral && referral.code) || '' });
+        if (!cancelled && d && d.lines) setPriced(d);
+      } catch (e) {}
+    }
+    load();
     return () => { cancelled = true; };
   }, [rows, currency, stay, referral, hydrated]);
 

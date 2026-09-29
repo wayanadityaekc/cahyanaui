@@ -17,11 +17,14 @@ export default function useQuote({ lines, currency, stay, referral = '', enabled
       return;
     }
     let cancelled = false;
-    quote({ lines, currency, stay, referral: referral || '' })
-      .then((d) => {
+    // price the lines
+    async function load() {
+      try {
+        const d = await quote({ lines, currency, stay, referral: referral || '' });
         if (!cancelled && d && d.lines) setPriced(d);
-      })
-      .catch(() => {});
+      } catch (e) {}
+    }
+    load();
     return () => {
       cancelled = true;
     };

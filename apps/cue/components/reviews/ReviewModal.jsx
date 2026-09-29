@@ -105,7 +105,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
     // failure here.
     for (const it of picked) {
       try {
-        const d = await fetch(`${API_BASE}/reviews`, {
+        const res = await fetch(`${API_BASE}/reviews`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
@@ -116,7 +116,8 @@ export default function ReviewModal({ open, prefill, onClose }) {
             rating,
             message: message.trim(),
           }),
-        }).then((r) => r.json());
+        });
+        const d = await res.json();
         results.push({ it, ok: !!(d && d.ok), reason: (d && d.reason) || 'Something went wrong. Please try again.' });
       } catch {
         results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });

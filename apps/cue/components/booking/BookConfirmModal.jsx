@@ -105,9 +105,14 @@ export default function BookConfirmModal() {
   useEffect(() => {
     if (!ctx) return undefined;
     let cancelled = false;
-    quote({ lines: ctx.lines, currency, stay, referral: (referral && referral.code) || '' })
-      .then((d) => !cancelled && d && d.lines && setPriced(d))
-      .catch(() => {});
+    // price the lines in the popup
+    async function load() {
+      try {
+        const d = await quote({ lines: ctx.lines, currency, stay, referral: (referral && referral.code) || '' });
+        if (!cancelled && d && d.lines) setPriced(d);
+      } catch (e) {}
+    }
+    load();
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
 

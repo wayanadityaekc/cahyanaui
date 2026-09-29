@@ -111,11 +111,12 @@ export default function AccountSettings() {
     setBusy(true);
     setMsg('');
     try {
-      const d = await fetch(`${API_BASE}/account`, {
+      const res = await fetch(`${API_BASE}/account`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${readLocal(KEY.token, '')}` },
         body: JSON.stringify({ ...form, guest_count_pref: String(guests || ''), stay_area_pref: stay || '' }),
-      }).then((r) => r.json());
+      });
+      const d = await res.json();
       if (d && d.account) {
         setAccount(d.account);
         setMsg('Saved.');

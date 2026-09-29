@@ -29,13 +29,14 @@ export function AccountProvider({ children }) {
   // list of what can still be reviewed comes from the server, and without a
   // re-read a trip reviewed a moment ago stays offered until the page reloads -
   // tick it again and the gate answers "you've already submitted a review".
-  const refreshTrips = useCallback(() => {
+  const refreshTrips = useCallback(async () => {
     const token = readLocal(KEY.token, '');
-    if (!token) return Promise.resolve();
-    return fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d && Array.isArray(d.upcoming)) setTrips(d); })
-      .catch(() => {});
+    if (!token) return;
+    try {
+      const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } });
+      const d = r.ok ? await r.json() : null;
+      if (d && Array.isArray(d.upcoming)) setTrips(d);
+    } catch (e) {}
   }, []);
 
   useEffect(() => {
@@ -57,17 +58,21 @@ export function AccountProvider({ children }) {
       return;
     }
 
-    fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
+    // check the stored session is still valid
+    async function load() {
+      try {
+        const r = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
+        const d = r.ok ? await r.json() : null;
         if (cancelled) return;
         if (d && d.account) setAccount(d.account);
         else removeLocal(KEY.token);
-      })
-      .catch(() => {})
-      .finally(() => {
+      } catch (e) {
+        // offline or API down: keep the token, try again next visit
+      } finally {
         if (!cancelled) setHydrated(true);
-      });
+      }
+    }
+    load();
 
     refreshTrips();
 
@@ -97,13 +102,16 @@ export function AccountProvider({ children }) {
 
   // Settings page only - the guest's own reviews, all statuses (their private
   // view, not the public feed). Same shape as refreshTrips.
-  const refreshMyReviews = useCallback(() => {
+  const refreshMyReviews = useCallback(async () => {
     const token = readLocal(KEY.token, '');
-    if (!token) { setMyReviews([]); return Promise.resolve(); }
-    return fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : []))
-      .then((d) => setMyReviews(Array.isArray(d) ? d : []))
-      .catch(() => setMyReviews([]));
+    if (!token) { setMyReviews([]); return; }
+    try {
+      const r = await fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } });
+      const d = r.ok ? await r.json() : [];
+      setMyReviews(Array.isArray(d) ? d : []);
+    } catch (e) {
+      setMyReviews([]);
+    }
   }, []);
 
   function logout() {

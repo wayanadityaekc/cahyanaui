@@ -11,7 +11,7 @@ import { STOP_NUM, STOP_NAME, STOP_DESC } from '@/components/sections/TourPage';
 // Type styles are the same three the photo rows used (STOP_NUM / STOP_NAME /
 // STOP_DESC), so dropping the photo changed the layout and nothing else.
 const ROWS = 'flex flex-col gap-6';
-const ROW = '[&+&]:pt-6 [&+&]:[border-top:1px_solid_var(--color-line)]';
+const ROW = '[&+&]:pt-6 [&+&]:[border-top:1px_solid_var(--line)]';
 const TEXT = `${STOP_DESC} max-w-[68ch]`;
 
 export default function AttractionOverview({ stops = [], id }) {

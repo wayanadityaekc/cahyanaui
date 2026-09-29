@@ -170,7 +170,6 @@ for (const w of [320, 390, 768, 1280]) {
   const label = (await cta.textContent()).trim();
   console.log(`     CTA #explore: "${label}" -> ${href}`);
   ok(href === '/tour.html', `CTA #explore nunjuk /tour.html (dapet ${href})`);
-  ok(href !== '/programs.html', 'CTA #explore BUKAN /programs.html (itu noindex & sengaja gak di-link)');
   ok(label.split(/\s+/).length <= 2, `label CTA <=2 kata ("${label}")`);
   // Prove the target is a page guests can actually land on, not a parked one.
   const tr = await page.goto(B + '/tour.html', { waitUntil: 'load' });

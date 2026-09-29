@@ -53,19 +53,19 @@ export default function ContactForm({ company = false }) {
       <div className={CONTACT_GROUP}>
         <label className={FIELD_LABEL} htmlFor="c-name">Your Name</label>
         <input className={CONTACT_INPUT} type="text" id="c-name" placeholder="Enter your name" value={f.name} onChange={set('name')} aria-invalid={!!errors.name} />
-        {errors.name && <small className={FIELD_ERR}>{errors.name}</small>}
+        {errors.name && <small role="alert" className={FIELD_ERR}>{errors.name}</small>}
       </div>
       <div className={CONTACT_GROUP}>
         <label className={FIELD_LABEL} htmlFor="c-email">Email</label>
         <input className={CONTACT_INPUT} type="email" id="c-email" placeholder="you@email.com" value={f.email} onChange={set('email')} aria-invalid={!!errors.email} />
-        {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
+        {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
       </div>
       <div className={CONTACT_GROUP}>
         <label className={FIELD_LABEL} htmlFor="c-message">Message</label>
         <textarea className={CONTACT_TEXTAREA} id="c-message" placeholder="Tell us what you need - dates, group size, custom requests..." value={f.message} onChange={set('message')} aria-invalid={!!errors.message} />
-        {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
+        {errors.message && <small role="alert" className={FIELD_ERR}>{errors.message}</small>}
       </div>
-      {error && <small className={REFMSG_ERR}>{error}</small>}
+      {error && <small role="alert" className={REFMSG_ERR}>{error}</small>}
         <button className={`flex w-full ${BTN_CTA}`} id="c-send" onClick={send} disabled={busy}>
           {busy ? 'Sending...' : 'Send Message'}
         </button>

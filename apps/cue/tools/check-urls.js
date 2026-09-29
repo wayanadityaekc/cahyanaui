@@ -77,7 +77,7 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
 })();
 
 // A new page that never reaches sitemap.xml is invisible to search, and nothing
-// else notices - our-company.html and programs.html both shipped without it.
+// else notices - our-company.html once shipped without it.
 // Pages marked noindex are meant to be absent, so they are skipped.
 (function checkSitemap() {
   const path = require("path");
@@ -125,7 +125,7 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   const root = path.join(__dirname, "..", "sitemap.xml");
   const built = path.join(__dirname, "..", "out", "sitemap.xml");
   if (!fs.existsSync(root) || !fs.existsSync(built)) return;
-  // Commented-out entries are deliberately-parked URLs (e.g. programs.html), not
+  // Commented-out entries are deliberately-parked URLs (e.g. a parked tour), not
   // live ones - strip comments first or they read as present in the checklist.
   const locs = (file) =>
     new Set(

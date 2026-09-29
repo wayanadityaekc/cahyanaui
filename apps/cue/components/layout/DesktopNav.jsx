@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PopMenu } from '@/components/ui/Reveal';
 
@@ -25,12 +25,14 @@ const LINK = (active) =>
 export default function DesktopNav({ isActive }) {
   const [open, setOpen] = useState(false);
   const boxRef = useRef(null);
+  const btnRef = useRef(null);
+  const panelId = useId();
   const programActive = PROGRAM_LINKS.some(([h]) => isActive(h));
 
   useEffect(() => {
     if (!open) return undefined;
     const onDoc = (e) => { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') { setOpen(false); btnRef.current?.focus(); } };
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -48,7 +50,7 @@ export default function DesktopNav({ isActive }) {
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
-        <button type="button" aria-haspopup="menu" aria-expanded={open} className={LINK(programActive)} onClick={() => setOpen((v) => !v)}>
+        <button type="button" ref={btnRef} aria-expanded={open} aria-controls={panelId} className={LINK(programActive)} onClick={() => setOpen((v) => !v)}>
           Program
           <ChevronDown className={`w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`} strokeWidth={1.8} aria-hidden="true" />
         </button>
@@ -56,10 +58,10 @@ export default function DesktopNav({ isActive }) {
           {/* pt instead of a gap, so the pointer can travel from the trigger into
               the panel without leaving the hover area. */}
           <div className="absolute left-0 top-full pt-[var(--space-1)] z-[130]">
-            <ul role="menu" className="list-none m-0 w-[12rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
+            <ul id={panelId} className="list-none m-0 w-[12rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
               {PROGRAM_LINKS.map(([href, label]) => (
                 <li key={href}>
-                  <a role="menuitem" href={href} className={`flex w-full px-3 py-[0.55rem] rounded-[var(--r-md)] text-small no-underline hover:bg-cream ${isActive(href) ? 'font-semibold text-green bg-cream' : 'font-medium text-gold'}`}>{label}</a>
+                  <a href={href} className={`flex w-full px-3 py-[0.55rem] rounded-[var(--r-md)] text-small no-underline hover:bg-cream ${isActive(href) ? 'font-semibold text-green bg-cream' : 'font-medium text-gold'}`}>{label}</a>
                 </li>
               ))}
             </ul>

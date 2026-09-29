@@ -65,7 +65,7 @@ const PANEL_POPUP_STATIC =
   PANEL_MOBILE_TRANSITION;
 export const panelPopup = (open) =>
   `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
-export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none';
+export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
 export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-white text-green text-[1.2rem] leading-none cursor-pointer';
 // Scrollbar disembunyiin (Wayan) - dulu keliatan pas opsi kepanjangan buat area
@@ -79,7 +79,7 @@ export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar
 // `disabled` (Sep 2026, time-slot picker #TIME-1): opsi tetep KELIATAN (guest ngerti ada
 // slot itu tapi gak bisa dipilih) - dimuting + no hover/cursor, bukan disembunyiin.
 export const opt = (sel, disabled) =>
-  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_#f2efe7] ${
+  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
     disabled
       ? 'cursor-not-allowed opacity-40 bg-transparent'
       : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
@@ -113,7 +113,7 @@ export const panelBookdate = (open) =>
 // Head bookdate: flex-none (popup) + sticky/top-0/bg-white di HP (dari @media max-768)
 // DAN desktop (dari bookdate min-769); z-1 cuma desktop.
 export const PANEL_HEAD_BOOKDATE =
-  'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none ' +
+  'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none ' +
   'sticky top-0 bg-white min-[769px]:z-[1]';
 
 // Kalender (.hs-cal*). HP: cal max-h none + overflow visible (panel body yg scroll).
@@ -142,7 +142,7 @@ export const calDay = (off, sel) =>
 // pakai `panelBookdate` yang sama kayak DateField, jadi panel tanggal cuma satu bentuk
 // di seluruh web. `PANEL_CLOSE_SHEET` TETEP — HeroSearch masih sheet beneran.)
 // Footer kalender (Apply) - sticky bottom di HP & desktop.
-export const CAL_FOOT = 'flex items-center justify-between gap-[14px] py-3 px-[18px] [border-top:1px_solid_#f2efe7] sticky bottom-0 bg-white';
+export const CAL_FOOT = 'flex items-center justify-between gap-[14px] py-3 px-[18px] [border-top:1px_solid_var(--line)] sticky bottom-0 bg-white';
 export const CAL_HINT = 'font-body font-normal text-small text-muted';
 // Apply = tombol CTA (bg-nya di-override grup .hs-cal__apply/.hsearch__go/dst jadi
 // --color-cta, bukan --color-green; hover cta-d). border-color cta walau style none.
@@ -166,14 +166,14 @@ export const panelMenu = (open) => [
 ].join(' ');
 // Head menu: hidden di desktop, muncul jadi sheet-head di HP.
 export const PANEL_HEAD_MENU =
-  'hidden [@media(max-width:768px)]:flex [@media(max-width:768px)]:items-center [@media(max-width:768px)]:justify-between [@media(max-width:768px)]:pt-4 [@media(max-width:768px)]:px-5 [@media(max-width:768px)]:pb-3 [@media(max-width:768px)]:[border-bottom:1px_solid_#f2efe7] [@media(max-width:768px)]:sticky [@media(max-width:768px)]:top-0 [@media(max-width:768px)]:bg-white';
+  'hidden [@media(max-width:768px)]:flex [@media(max-width:768px)]:items-center [@media(max-width:768px)]:justify-between [@media(max-width:768px)]:pt-4 [@media(max-width:768px)]:px-5 [@media(max-width:768px)]:pb-3 [@media(max-width:768px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:768px)]:sticky [@media(max-width:768px)]:top-0 [@media(max-width:768px)]:bg-white';
 // Body menu: max-h 500 di SEMUA layar. `.hs-panel--menu .hs-panel__body` (0,2,0)
 // menang atas @media(max-768) .hs-panel__body none (0,1,0), jadi 500 terus.
 export const PANEL_BODY_MENU = 'max-h-[500px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 // Opt HeroSearch: padding base .hs-opt (0.85rem 1rem, TANPA .bk-opt). Konten (ic/nm/pr)
 // tetep class shared. is-sel sama kaya Select.
 export const optMenu = (sel) =>
-  `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_#f2efe7] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
+  `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_var(--line)] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
 
 // Custom-select shell + option-item primitives (B-FINAL). Wrapper, hidden native,
 // and the flag / name / price / icon parts of option rows and the selected-value display.

@@ -4,17 +4,13 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import useBodyLock from './useBodyLock';
+import useDialog from './useDialog';
 
 export default function Modal({ open, onClose, title, children, className = '' }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && onClose && onClose();
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  const boxRef = useDialog({ shown: open && mounted, onClose });
 
   useBodyLock(open);
 
@@ -32,11 +28,8 @@ export default function Modal({ open, onClose, title, children, className = '' }
         className,
       )}
       onClick={(e) => e.target === e.currentTarget && onClose && onClose()}
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
     >
-      <div className={`relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white transition-[opacity,transform] duration-[0.36s] ease-[var(--ease-out)] motion-reduce:transition-none ${open ? 'opacity-100 [transform:translateY(0)_scale(1)]' : 'opacity-0 [transform:translateY(14px)_scale(0.96)]'}`}>
+      <div ref={boxRef} role="dialog" aria-modal="true" aria-label={title} className={`outline-none relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white transition-[opacity,transform] duration-[0.36s] ease-[var(--ease-out)] motion-reduce:transition-none ${open ? 'opacity-100 [transform:translateY(0)_scale(1)]' : 'opacity-0 [transform:translateY(14px)_scale(0.96)]'}`}>
         <button type="button" className="absolute top-3 right-4 text-[1.6rem] leading-none text-green bg-transparent border-none cursor-pointer" aria-label="Close" onClick={onClose}>
           &times;
         </button>

@@ -43,7 +43,7 @@ for (const w of [390, 1280]) {
     // right of the navbar. Phones open the modal straight away; desktop opens a small
     // menu first, whose green "Log in" opens it.
     await page.locator('[data-account-slot="out"] > button').click();
-    if (w > 992) await page.locator('[data-account-slot="out"] [role="menu"] button', { hasText: 'Log in' }).click();
+    if (w > 992) await page.locator('[data-account-slot="out"] div[id] button', { hasText: 'Log in' }).click();
     await page.locator('button:visible', { hasText: 'Create an account' }).click();
     await page.fill('#auth-name:visible', 'Someone');
     await page.fill('#auth-cemail:visible', kind === 'existing' ? 'andras@example.com' : 'fresh@example.com');

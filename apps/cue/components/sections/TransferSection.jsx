@@ -34,7 +34,7 @@ import { TRANSFER } from '@/content/shared/transfer';
 // The provider wraps both sections because the routes in the card drive the
 // form in the hero (see TransferRouteProvider). It renders no element, so this
 // stays a server component and only the two interactive pieces ship JS.
-export default function TransferSection({ embedded }) {
+export default function TransferSection() {
   return (
     <TransferRouteProvider>
       {/* NOT transfer-hero.webp any more. That photo is a terminal facade with
@@ -50,7 +50,6 @@ export default function TransferSection({ embedded }) {
         sub={TRANSFER.desc}
         photo="coastal-road-beach-bali.webp"
         alt="A coastal road running along a beach on the south Bali cliffs"
-        embedded={embedded}
         details={
           <>
             {/* Routes stay page markup, not a Prose block: they are priced,

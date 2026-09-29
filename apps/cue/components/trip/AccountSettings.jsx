@@ -13,6 +13,7 @@ import { BTN_PILL, BTN_CTA, BTN_SM } from '@/components/ui/btnClasses';
 import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { initialsOf } from '@/components/layout/AccountMenu';
+import Separator from '@/components/ui/Separator';
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_READ } from '@/components/ui/railClasses';
 import MyReviews from './MyReviews';
@@ -24,7 +25,6 @@ import SignInPrompt from '@/components/account/SignInPrompt';
 // one just OPENS the confirmation, it isn't the destructive action itself.
 const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
 const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
-const HR = 'my-6 border-0 [border-top:1px_solid_var(--line)]';
 
 // Same rail shell as My Trips + Our Company (Sep 2026, Wayan: "make it like
 // shadcn's sidebar-08" - collapsible sidebar + a breadcrumb in the header,
@@ -177,7 +177,7 @@ export default function AccountSettings() {
         <label className={FIELD_LABEL} htmlFor="st-stay">Pickup area</label>
         <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
-      {msg && <small className={REFMSG}>{msg}</small>}
+      {msg && <small role="status" className={REFMSG}>{msg}</small>}
       {/* Was className="contact__btn" - a class from the retired static site that
           was swept out of style.css with the rest of it. Nothing warns about a
           class with no rule, so this rendered as a RAW browser button: 19px tall
@@ -187,11 +187,11 @@ export default function AccountSettings() {
       <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
       <button className={BTN_PILL} onClick={logout}>Sign out</button>
 
-      <hr className={HR} />
+      <Separator className="my-6" />
       <h2 className={SECTION_TITLE}>My reviews</h2>
       <MyReviews />
 
-      <hr className={HR} />
+      <Separator className="my-6" />
       <h2 className={SECTION_TITLE}>Danger zone</h2>
       <p className="text-body text-muted m-0 mb-3">Delete your account. Your bookings and any reviews you&apos;ve written stay on record.</p>
       <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>Delete account</button>

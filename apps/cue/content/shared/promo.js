@@ -72,7 +72,6 @@ export const PROMO = {
 
   // Selling pages - answer the doubt that stops the booking.
   '/tour': PRIVATE_TOUR,
-  '/programs': PRIVATE_TOUR,
   '/activities': { text: 'Gear and licensed guide included', icon: 'shield' },
   '/destinations': {
     text: 'Exclusive includes entrance tickets',

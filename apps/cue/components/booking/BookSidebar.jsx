@@ -9,6 +9,7 @@ import BookingForm from './BookingForm';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 export default function BookSidebar({ item, presetType = 'tour', perPerson = false, belowPrice }) {
@@ -72,7 +73,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
         itemName={pending ? pending.name : null}
       />
 
-      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} box={BOX_SM}>
+      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} label="Two full-day tours?" box={BOX_SM}>
         {confirm && (
           <>
             <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
@@ -84,7 +85,8 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
         )}
       </ModalPresence>
 
-      {toast && <div className={CART_TOAST}>{toast}</div>}
+      <LiveRegion>{toast}</LiveRegion>
+      {toast && <div className={CART_TOAST} aria-hidden="true">{toast}</div>}
     </div>
   );
 }

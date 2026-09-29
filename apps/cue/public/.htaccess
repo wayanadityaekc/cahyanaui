@@ -137,3 +137,6 @@ Redirect 301 /attractions/jimbaran-seafood.html /destinations.html
 # Scooter rental is no longer a service we offer. The getting-around guide is
 # the page that now answers "how do I get around Bali on a scooter".
 Redirect 301 /scooter.html /guide/getting-around-bali.html
+
+# The All Programs tab page was removed (single listing pages replace it).
+Redirect 301 /programs.html /tour.html

@@ -190,23 +190,22 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
             through the moment the track is stuck (Wayan caught this on the
             Reviews tab: the tail end of Included's list showed through). */}
         <div ref={stripRef} className={STRIP}>
-          <div
+          <nav
             className={TRACK}
-            role="tablist"
             aria-label="Jump to section"
           >
             {sections.map((s) => (
               <button
                 key={s.id}
                 type="button"
-                aria-current={active === s.id}
+                aria-current={active === s.id ? 'true' : undefined}
                 className={segment(active === s.id)}
                 onClick={() => pick(s.id)}
               >
                 {s.label}
               </button>
             ))}
-          </div>
+          </nav>
         </div>
         {sections.map((s) => (
           <section

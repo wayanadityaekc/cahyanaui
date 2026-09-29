@@ -441,15 +441,18 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
 - Diukur before/after, 15 halaman × 390 & 1280: **bar 60 → 0**, **861 elemen gak gerak**,
   1 geser 1px (pembulatan), **tinggi dokumen gak berubah di semua halaman**.
 
-**Section dividers:**
-- Thin gold **inset** line (margin on the sides) — via a `::before` pseudo-element,
-  width `min(1100px, 90%)` centered, color `rgba(201,164,92,0.4)`.
-- **NOT** full-width, **NOT** an `<hr>`.
-- Applied automatically via `section + section`, `[id$="-placeholder"] > section`,
-  `[id$="-placeholder"] + section`. Excluded: `.hero`, `.subhero`, `.booking`, and the
-  section immediately after a subhero.
-- If you add a section that already has its own border → check it doesn't **double up**
-  with this divider.
+**Section dividers - REMOVED ON PURPOSE (Wayan, 29 Sep 2026, WO7):**
+- The gold inset line between sections (`section + section::before`, `min(1100px,90%)`,
+  `rgba(201,164,92,0.4)`) **no longer exists**: there is no such rule in `style.css`
+  or `app/globals.css`. This doc kept describing it after it was gone. **Nothing to
+  bring back** - do not re-add it, and do not go looking for the rule.
+- Sections are separated by **spacing and background bands**, not a drawn line.
+- The ONE inset rule still in code is the top edge of the two card carousels at the
+  bottom of tour pages (`CAROUSEL_SECTION` in `ui/carouselSection.js`, soft-black
+  `rgba(34,32,28,0.4)`, not gold). It is a leftover, not a system - left as is because
+  nobody asked for it to go. Ask Wayan before removing it.
+- Every OTHER line on the site (rows, panel edges, menu groups, vertical rules) is a
+  separator, governed by the WO7 section at the end of this file.
 
 **Misc:**
 - Buttons: primary CTA (Book Now, Book this program, Apply, Make Payment, dll) pakai
@@ -460,7 +463,9 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
   gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
   Bentuk & ukuran tombol = **`BTN_SM`**, lihat section "Tombol" di bawah. **BUKAN pill lagi**
   (radius 999px) — itu keputusan lama yang udah diganti Sep 2026.
-- Hover lift: keep it subtle, not harsh.
+- **Cards do NOT move on hover** (Wayan, 29 Sep 2026, WO7). `CARD_FRAME` and `HomepageCard`
+  used to lift 4px / 3px; both lifts AND their transitions are removed. Do not add a hover
+  lift, scale or shadow change to a card. Buttons keep hover colour and press feedback.
 
 **Tombol — SATU UKURAN, radius 8px (Sep 2026, Wayan pilih "A")**
 - Wayan: *"A, make sure semua text align center, margin bottom top center juga"*, sesudah
@@ -1556,9 +1561,8 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
   - **ONGKOS YANG DISENGAJA, keputusan Wayan**: grid di atasnya 4 tour + 4 experience, jadi
     satu link ini cuma nutup separuhnya. Experience punya listing sendiri
     (`/activities.html`) kalau mau CTA kedua - **tanya dulu**, jangan ditambahin sendiri.
-  - **`AppBottomNav` MASIH nunjuk `/programs.html`** (tab "Program" di app mode). Itu
-    **belum ditanyain** - dia navigasi, bukan CTA, tapi tujuannya halaman yang sama-sama
-    belum dipublish. Kalau mau disamain, itu keputusan Wayan.
+  - **`AppBottomNav` tab "Program" sekarang nunjuk `/tour.html`** (29 Sep 2026, waktu halaman
+    `/programs` dihapus - lihat "PROGRAMS PAGE DIHAPUS" di bawah).
 - **Trip Planner band (`.plan` / `#plan`) DIHAPUS dari homepage** (Wayan: kebanyakan tulisan; hero
   udah "trip planner" sendiri). CSS `.plan*` masih ada (dipakai halaman lain? cek dulu kalau mau buang).
 - **Driver cards DIHAPUS dari homepage** (section `.habout-people` + `#drivers-placeholder` +
@@ -1635,7 +1639,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
 harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 
-    <FormHero title sub photo alt [photoPos] details [embedded]>
+    <FormHero title sub photo alt [photoPos] details>
       {form halaman itu}                        <- judul, sub, FORM, FOTO, DETAILS
 
 - **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
@@ -1675,8 +1679,8 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   **min-content**, jadi form yang bentuk tersempitnya lebih lebar dari layar bakal
   ndorong track lewat viewport dan `body{overflow-x:clip}` motong tepi kanannya
   **diam-diam**. Form airport persis gitu di 320px (form 316px di kolom 288px).
-- **Judul turun jadi `<h2>` kalau `embedded`** (tab /programs punya H1 sendiri). Tanpa
-  itu /programs punya 2 H1.
+- **Prop `embedded` (judul jadi `<h2>`, tanpa crumb) UDAH DIHAPUS** bareng tab /programs -
+  `FormHero` selalu render H1 + crumb.
 - **Foto `/transfer` DIGANTI** `transfer-hero.webp` → `coastal-road-beach-bali.webp`.
   Foto lama itu fasad terminal dengan tulisan "BALI International Airport" kebaca jelas.
   Dulu aman karena ke-gelapin di belakang teks putih; jadi panel terang dia naro balik
@@ -2731,7 +2735,7 @@ Ubin `HeroMosaic` dulu nge-scale fotonya ke **1.04** pas kursor nempel. Udah **D
 - **Hover di TOMBOL hero TETEP** (CTA + tombol galeri: `hover:bg-cream` /
   `hover:bg-[rgba(255,255,255,0.26)]`). Yang gak dia mau itu **foto-nya nge-zoom**, bukan
   tombol kehilangan respons.
-- **Kartu juga NOL hover baru** (Wayan: "gausah ada howver") - waktu bayangan kartu dipasang
+- **Kartu NOL hover, titik** (Wayan: "gausah ada howver"; 29 Sep 2026 lift lama di `CARD_FRAME` + `HomepageCard` ikut DIHAPUS, lihat WO7) - waktu bayangan kartu dipasang
   gua nawarin hover border/bayangan naik, **ditolak**. Jangan ditambahin nanti.
 - **Gate: section 5 di `verify-design3.mjs` (119/119).** Diukur di **FOTONYA**, bukan dibaca
   dari class: `getBoundingClientRect` ikut kena transform, jadi kalau kotaknya identik pas
@@ -4131,3 +4135,61 @@ ATV 2 tamu Rp1.340.000, 6 tamu Rp3.820.000). Wayan setuju label **"for 2 guests"
 - **Chip hero "Group" di 11 halaman experience** dulu nulis `"Per person"` (klaim yang sama
   salahnya) - sekarang `"Ticket per guest + transport"` (`attractions.json`, label-nya tetep
   `Group` karena label = pemilih ikon).
+
+## WO7 - COMPONENT AUDIT FIXES (29 Sep 2026, Wayan approved the audit and its fixes)
+Audit report: WO7-component-audit (session scratchpad, not in the repo). Compared against
+shadcn/ui source (read from GitHub) and Preline behaviour (read from the npm package);
+the shadcn/Flowbite/Preline docs sites are blocked from the sandbox, so nothing here
+claims a Flowbite class-level match.
+
+**1. Separators + border token.**
+- `components/ui/Separator.jsx` + `ui/separatorClasses.js` are the one way to draw a line:
+  `SEP_H`/`SEP_V` (standalone, `bg-line`), `ROW_RULE` (line under a row, none under the
+  last), `ROW_RULE_TOP`, `RULE_TOP`/`RULE_BOTTOM` (panel edges). Colour is ALWAYS `--line`.
+- 22 hard-coded near-line hex hairlines (#f2efe7 #eee #ece6d8 #e6dfce #e2ddd0 #ececec
+  #e6e6e6 #e4dcc8 #e0ddd4) were moved onto `var(--line)`, and `var(--color-line)` (8 sites)
+  was respelled `var(--line)` (same value). **A new hex hairline is a bug.**
+- **Left alone on purpose, ask Wayan**: `#d8d2c4` on `ITN_GHOSTBTN` and the dashed empty
+  state in `ReviewsStrip` (button/dropzone borders, already flagged undecided), the
+  star-off colour, and `#cfc9ba` on the payment radio dot (that value is the `gold-l` token).
+- Dashed borders stay a deliberate exception (dropzone / add-row).
+
+**2. Menus are DISCLOSURES, not `role="menu"`.** `AccountMenu` and the Program list in
+`DesktopNav` are a button with `aria-expanded` + `aria-controls` and a plain group of
+links. `role="menu"` / `menuitem` / `aria-haspopup="menu"` are GONE: they promise arrow-key
+roving focus these panels never had. Escape closes and returns focus to the trigger. Do
+not put `role="menu"` back without also building arrow-key navigation.
+
+**3. Tabs - only where they really are tabs.**
+- **No real tab set is left on the site** (`AllPrograms` was deleted 29 Sep 2026, and its
+  `ui/useTabKeys.js` with it). If a real tab set is added again: `tab` + `tabpanel`
+  (`aria-controls`/`aria-labelledby`), roving `tabIndex`, arrows/Home/End - rebuild the hook.
+- `DetailTabs` "Jump to section" and `RailLayout`'s in-page sections were `role="tablist"`
+  with no panels (DetailTabs' buttons were not even `role="tab"`). They are navigation, so
+  they are `<nav>` + `aria-current="true"` now. The two verify scripts that selected
+  `[role=tab]` on the rail (`tools/tw/verify-mytrips.mjs`, `verify-rail-sidebar.mjs`) were updated.
+- The Standard/Exclusive toggle in `ItineraryBuilder` is `radiogroup`/`radio` + `aria-checked`.
+
+**4. One dialog behaviour.** `ui/useDialog.js`, used by `Modal.jsx` AND `ModalPresence.jsx`
+(every booking / review / confirm / payment-details popup): `role="dialog"` +
+`aria-modal` + `aria-label` on the BOX, focus moves onto the box on open (never onto a
+field - that would raise the phone keyboard and trigger the iOS zoom), Tab is trapped,
+Escape closes the TOPMOST dialog only (skipped while a `[data-portal][data-open]` Select
+popup is up), focus returns to the opener. **`ModalPresence` needs a `label` prop.**
+A dialog whose `onClose` is a no-op stays locked - BookConfirmModal passes a no-op while
+the paid-waiting screen shows, so Escape does nothing there. This ADDS Escape to the
+booking and review modals (they had none).
+The mobile drawer in `Navbar.jsx` is still hand-rolled (no focus trap) - not part of WO7.
+
+**5. Announcements.** `ui/LiveRegion.jsx` (always-mounted `role="status"`); the three cart
+toasts render it and mark the visual toast `aria-hidden`. Every field/form error
+(`FIELD_ERR`, `REFMSG_ERR`, 24 sites) carries `role="alert"`; the sign-in note and the
+settings "saved" message are `role="status"`.
+
+## PROGRAMS PAGE DIHAPUS (29 Sep 2026, Wayan: "delete all program page, I use single listing page right now")
+`/programs.html` (`AllPrograms`: tab Tours/Experiences/Transfer/Charter) dulu noindex & gak di-link
+dari mana pun kecuali tab "Program" di `AppBottomNav`. Udah dihapus: route, komponen, `useTabKeys`,
+prop `embedded` di `FormHero`/`CharterSection`/`TransferSection`, entri sitemap/routes/crumbs/promo.
+- `public/.htaccess`: `Redirect 301 /programs.html /tour.html` (target hidup, bukan rantai, bukan
+  awalan URL hidup). Tab Program di app bar -> `/tour.html`.
+- Catatan lama di atas soal `/programs` (h1 "All Programs", tab di /programs, dst) = sejarah.

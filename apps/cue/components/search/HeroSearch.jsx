@@ -155,7 +155,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         <label className={FIELD_LABEL}>
           How do you want to explore?
           <InfoPopover variant="hero">
-            <p className="!mb-[0.6rem] pb-[0.6rem] [border-bottom:1px_solid_#f2efe7] !font-semibold !text-green">
+            <p className="!mb-[0.6rem] pb-[0.6rem] [border-bottom:1px_solid_var(--line)] !font-semibold !text-green">
               Pick what you want to do, choose your dates, set how many guests and where we pick you up, then choose
               your currency. Tap Explore to see the options with real prices.
             </p>

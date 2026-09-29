@@ -22,7 +22,7 @@ const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_v
 // Capped + scrollable since the list grew to 12 currencies (Sep 2026): uncapped it
 // ran past the bottom of the account menu and the phone drawer.
 const curlist = (v, open) =>
-  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_#e4dcc8] z-10 max-h-[15rem] overflow-y-auto overscroll-contain ` +
+  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_var(--line)] z-10 max-h-[15rem] overflow-y-auto overscroll-contain ` +
   `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
   `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
   `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;

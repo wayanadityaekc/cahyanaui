@@ -10,6 +10,7 @@ import { reviewSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
+import { ROW_RULE } from '@/components/ui/separatorClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 import { useAccount } from '@/state/AccountProvider';
 
@@ -136,13 +137,13 @@ export default function ReviewModal({ open, prefill, onClose }) {
   // utility, isolated ke komponen ini.
   const star = (on) =>
     `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`;
-  const CHECK_ROW = 'flex items-start gap-[0.6rem] py-[0.5rem] [border-bottom:1px_solid_var(--line)] last:border-b-0 cursor-pointer';
+  const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
   const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
   const CHECK_SVC = 'font-semibold text-green text-body';
   const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
 
   return createPortal(
-    <ModalPresence open={!!open && !!prefill} onClose={close} box={BOX}>
+    <ModalPresence open={!!open && !!prefill} onClose={close} label="Leave a review" box={BOX}>
         <button className={CLOSE} aria-label="Close" onClick={close}>&times;</button>
         <h3 className={TITLE}>Leave a Review</h3>
 
@@ -195,7 +196,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                     );
                   })}
                 </div>
-                {errors.picked && <small className={FIELD_ERR}>{errors.picked}</small>}
+                {errors.picked && <small role="alert" className={FIELD_ERR}>{errors.picked}</small>}
               </div>
             )}
 
@@ -214,7 +215,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                   </button>
                 ))}
               </div>
-              {errors.rating && <small className={FIELD_ERR}>{errors.rating}</small>}
+              {errors.rating && <small role="alert" className={FIELD_ERR}>{errors.rating}</small>}
             </div>
 
             <div className={GROUP}>
@@ -228,7 +229,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                 onChange={(e) => { setMessage(e.target.value); setErrors((v) => (v.message ? { ...v, message: undefined } : v)); }}
                 aria-invalid={!!errors.message}
               />
-              {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
+              {errors.message && <small role="alert" className={FIELD_ERR}>{errors.message}</small>}
             </div>
 
             {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}
@@ -251,7 +252,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
             {partial.length ? (
               <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
                 {partial.map((p) => (
-                  <li key={p.service} className="text-small text-muted py-[0.35rem] [border-bottom:1px_solid_var(--line)] last:border-b-0">
+                  <li key={p.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
                     <span className="font-semibold text-green">{p.service}</span> - {p.reason}
                   </li>
                 ))}

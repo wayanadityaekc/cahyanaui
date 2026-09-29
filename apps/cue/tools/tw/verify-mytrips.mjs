@@ -163,7 +163,7 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
   });
   await pg.addInitScript(() => { try { localStorage.setItem('cue_token', 'fake-token-for-test'); } catch {} });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
-  await pg.click('button[role="tab"]:has-text("Booked Trip")');
+  await pg.click('aside nav button:has-text("Booked Trip")');
   await pg.waitForTimeout(500);
   const cancelLink = await pg.$('a:has-text("Contact us to cancel")');
   check('Booked trip card has a cancellation-contact button', cancelLink !== null);
@@ -171,7 +171,7 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
   check(`Cancellation link opens WhatsApp with the booking ref, got ${href}`, href.includes('wa.me') && href.includes('CUE-100'));
 
   // ---- 6) Past tab: single global "Leave a Review" (no per-card button) ----
-  await pg.click('button[role="tab"]:has-text("Past Trip")');
+  await pg.click('aside nav button:has-text("Past Trip")');
   await pg.waitForTimeout(500);
   const reviewBtns = await pg.$$('button:has-text("Leave a Review")');
   check(`Exactly one global "Leave a Review" button on Past tab, got ${reviewBtns.length}`, reviewBtns.length === 1);

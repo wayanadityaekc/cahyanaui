@@ -383,7 +383,7 @@ export default function BookConfirmModal() {
   // btn(+wa)/success pakai konstanta shared (modalClasses.js). Yang ISOLATED ke modal
   // ini (summary/row, details accordion) di-inline utility + CSS-nya DIHAPUS. Referral
   // input-group + msg pindah ke modalClasses juga, karena PaymentStep ikut pakai.
-  const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_#eee] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
+  const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_var(--line)] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
   // Two-step chrome. Isolated to this modal, same as ROW below.
   const lastStep = payOn ? 3 : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
@@ -391,7 +391,7 @@ export default function BookConfirmModal() {
   const stepBar = (on) => 'flex-1 h-[3px] rounded-[2px] ' + (on ? 'bg-cta' : 'bg-line');
   const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
   const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
-  const ROWSET = 'mb-4 [border-top:1px_solid_#eee]';
+  const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
   // The total sits in its own bar, not in the row list: on the checking screen it
   // is the one number the guest is agreeing to.
   const PBAR = 'flex items-center justify-between gap-[10px] py-[10px] px-3 rounded-md bg-cream [border:1px_solid_var(--line)]';
@@ -399,7 +399,7 @@ export default function BookConfirmModal() {
   const PBAR_V = 'text-[1.15rem] font-semibold text-amber';
   const BACK_LINK = 'block w-full pt-[10px] text-center text-body font-medium text-green bg-transparent border-none cursor-pointer';
   const HINT = 'block mt-[0.35rem] text-small text-muted';
-  const DETAILS_LI_ROW = "relative py-[0.5rem] pr-0 pl-[1.1rem] [border-bottom:1px_solid_#eee] text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.15rem] [&::before]:text-gold last:[border-bottom:none]";
+  const DETAILS_LI_ROW = "relative py-[0.5rem] pr-0 pl-[1.1rem] [border-bottom:1px_solid_var(--line)] text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.15rem] [&::before]:text-gold last:[border-bottom:none]";
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
   // Shared by both success screens below (payment off / payment on): the
@@ -424,7 +424,7 @@ export default function BookConfirmModal() {
             error={!!otpMsg}
             disabled={otpBusy}
           />
-          {otpMsg && <small className={`${REFMSG_ERR} text-center mt-3`}>{otpMsg}</small>}
+          {otpMsg && <small role="alert" className={`${REFMSG_ERR} text-center mt-3`}>{otpMsg}</small>}
           <p className="mt-3 text-center text-small text-muted">
             {otpCooldown > 0 ? `Resend code in ${otpCooldown}s` : (
               <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={resendOtp}>Resend code</button>
@@ -435,7 +435,7 @@ export default function BookConfirmModal() {
     </div>
   );
   return createPortal(
-    <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} box={BOX_WIDE} shellClass={SHELL_WIDE}>
+    <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} label="Booking confirmation" box={BOX_WIDE} shellClass={SHELL_WIDE}>
         {!paid && <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>}
         <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 
@@ -454,35 +454,35 @@ export default function BookConfirmModal() {
                 <div className={GROUP}>
                   <label className={LABEL} htmlFor="booker-name">Your Name</label>
                   <input className={INPUT} type="text" id="booker-name" placeholder="Enter your name" value={f.name} onChange={set('name')} aria-invalid={!!errors.name} />
-                  {errors.name && <small className={FIELD_ERR}>{errors.name}</small>}
+                  {errors.name && <small role="alert" className={FIELD_ERR}>{errors.name}</small>}
                 </div>
                 <div className={GROUP}>
                   <label className={LABEL} htmlFor="booker-phone">Phone Number</label>
                   <input className={INPUT} type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" value={f.phone} onChange={set('phone')} aria-invalid={!!errors.phone} />
-                  {errors.phone && <small className={FIELD_ERR}>{errors.phone}</small>}
+                  {errors.phone && <small role="alert" className={FIELD_ERR}>{errors.phone}</small>}
                 </div>
                 <div className={GROUP}>
                   <label className={LABEL} htmlFor="booker-email">Email</label>
                   <input className={INPUT} type="email" id="booker-email" placeholder="you@email.com" value={f.email} onChange={set('email')} aria-invalid={!!errors.email} />
-                  {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
+                  {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
                 </div>
                 <div className={GROUP}>
                   <label className={LABEL} htmlFor="pickup">Pick-up Location</label>
                   <input className={INPUT} type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} aria-invalid={!!errors.pickup} />
-                  {errors.pickup && <small className={FIELD_ERR}>{errors.pickup}</small>}
+                  {errors.pickup && <small role="alert" className={FIELD_ERR}>{errors.pickup}</small>}
                 </div>
                 {view.dropoffRequired !== false && (
                   <div className={GROUP}>
                     <label className={LABEL} htmlFor="dropoff">Drop-off Location</label>
                     <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} aria-invalid={!!errors.dropoff} />
-                    {errors.dropoff && <small className={FIELD_ERR}>{errors.dropoff}</small>}
+                    {errors.dropoff && <small role="alert" className={FIELD_ERR}>{errors.dropoff}</small>}
                   </div>
                 )}
                 {needsFlight && (
                   <div className={GROUP}>
                     <label className={LABEL} htmlFor="flight-number">Flight Number</label>
                     <input className={INPUT} type="text" id="flight-number" placeholder="e.g. QZ7501" value={f.flightNumber} onChange={set('flightNumber')} aria-invalid={!!errors.flightNumber} />
-                    {errors.flightNumber && <small className={FIELD_ERR}>{errors.flightNumber}</small>}
+                    {errors.flightNumber && <small role="alert" className={FIELD_ERR}>{errors.flightNumber}</small>}
                   </div>
                 )}
 
@@ -495,7 +495,7 @@ export default function BookConfirmModal() {
                       <label className={LABEL} htmlFor="flight-datetime">Flight date &amp; time</label>
                       <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={setValue('flightDatetime')} />
                       <small className={HINT}>We use this as your pick-up time, so you are collected for this flight.</small>
-                      {errors.flightDatetime && <small className={FIELD_ERR}>{errors.flightDatetime}</small>}
+                      {errors.flightDatetime && <small role="alert" className={FIELD_ERR}>{errors.flightDatetime}</small>}
                     </div>
                   ) : (
                     <div className={GROUP} key={'dt' + i}>
@@ -514,7 +514,7 @@ export default function BookConfirmModal() {
                         category={categoryOfLine(l)}
                         itemName={l.service}
                       />
-                      {dtErr[i] && <small className={FIELD_ERR}>{dtErr[i]}</small>}
+                      {dtErr[i] && <small role="alert" className={FIELD_ERR}>{dtErr[i]}</small>}
                     </div>
                   ),
                 )}
@@ -590,7 +590,7 @@ export default function BookConfirmModal() {
                 <PayChips
                   className="mt-[1.1rem] mb-[1.35rem] text-center"
                   logosClass="flex flex-wrap items-center justify-center gap-2"
-                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
+                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_var(--line)] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
                   svgClass="block h-[var(--icon-sm)] w-auto"
                 />
 
@@ -641,7 +641,7 @@ export default function BookConfirmModal() {
                 <PayChips
                   className="mt-[1.1rem] mb-[1.35rem] text-center"
                   logosClass="flex flex-wrap items-center justify-center gap-2"
-                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_#e2ddd0] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
+                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_var(--line)] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
                   svgClass="block h-[var(--icon-sm)] w-auto"
                 />
 

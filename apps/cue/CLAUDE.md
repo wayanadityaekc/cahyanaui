@@ -3851,16 +3851,11 @@ exlude gitu"*.
 - Foto nganggur: 13 duplikat/sisa lama (hapus?) + stok belum kepasang (`ubud-palace.jpg` dkk
   buat slot TODO) — keputusan Wayan.
 - Google Search Console: submit sitemap (belum pernah).
-- **`/itinerary.html` jadi halaman yatim** (ketemu Sep 2026): navbar (ikon desktop +
-  menu HP) semuanya nunjuk `/my-trips.html`, dan **nol** link internal ke
-  `itinerary.html` di seluruh repo. Halamannya tetep di-build + masuk sitemap +
-  bisa diindeks Google. Isinya BUKAN duplikat My Trips: `/itinerary.html` =
-  builder rencana multi-hari (`ItineraryBuilder`, judul "Build Your Own Bali
-  Itinerary"), `/my-trips.html` = keranjang (`MyTripsCart`, noindex). Dua-duanya
-  baca simpanan yang SAMA (`cue_itinerary_v1` lewat `useItinerary`) - jadi
-  storage-nya jelas masih kepakai, yang nganggur cuma halamannya. Pilihan buat
-  Wayan: (a) biarin, (b) pasang link lagi (keyword "build your own bali
-  itinerary" lumayan), (c) pensiunin -> 301 ke my-trips + keluarin dari sitemap.
+- ~~`/itinerary.html` jadi halaman yatim~~ **UDAH DIHAPUS** (29 Sep 2026, Wayan pilih (c)): page +
+  `ItineraryBuilder` + `itnClasses.js` + `content/shared/suggest.js` + `suggestState`/`removeDay`
+  dibuang, `Redirect 301 /itinerary.html /my-trips.html` di `.htaccess`, keluar dari sitemap +
+  routes + crumbs + promo + JSON-LD. 2 link guide "itinerary builder" jadi "My Trips page".
+  Storage `cue_itinerary_v1` TETEP (My Trips yang pakai). Catatan lama soal builder di doc ini = sejarah.
 - **Broadcast/newsletter promo + update Bali** (DITUNDA — Wayan mau lanjut nanti):
   pakai **Resend Audiences + Broadcasts** (Cara A). Rencana: auto-daftarin email
   akun baru ke Audience Resend (1 fungsi di `cahyana-api` POST /api/account), terus

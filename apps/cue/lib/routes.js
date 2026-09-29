@@ -112,7 +112,6 @@ export const BESPOKE = [
   'bali-guide',
   'charter',
   'destinations',
-  'itinerary',
   'our-company',
   'my-trips',
   'settings',

@@ -140,3 +140,4 @@ Redirect 301 /scooter.html /guide/getting-around-bali.html
 
 # The All Programs tab page was removed (single listing pages replace it).
 Redirect 301 /programs.html /tour.html
+Redirect 301 /itinerary.html /my-trips.html

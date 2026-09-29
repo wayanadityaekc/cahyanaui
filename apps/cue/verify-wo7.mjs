@@ -87,7 +87,7 @@ const HEX = /rgb\((\d+), (\d+), (\d+)\)/;
 function hex(c) { const m = HEX.exec(c); return m ? `#${[1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('')}` : c; }
 const PAGES = ['/', '/tour.html', '/destinations.html', '/activities.html', '/ubud-tour.html', '/attractions/monkey-forest.html',
   '/charter.html', '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
-  '/guide/ubud.html', '/my-trips.html', '/settings.html', '/itinerary.html'];
+  '/guide/ubud.html', '/my-trips.html', '/settings.html'];
 async function measure(base, url, w) {
   const { ctx, page } = await open(base, url, w, { loggedIn: true });
   const r = await page.evaluate(() => {

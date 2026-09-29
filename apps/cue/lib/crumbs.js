@@ -10,7 +10,6 @@ const SECTION = {
   'airport-transfer': 'Airport Transfer',
   'bali-guide': 'Bali Guide',
   'all-reviews': 'Guest Reviews',
-  itinerary: 'Itinerary',
   'our-company': 'Our Company',
   'about-us': 'About Us',
   'my-trips': 'My Trips',

@@ -139,7 +139,7 @@ for (const w of [320, 390, 768, 1280]) {
   await page.route('**/api/**', api);
   const pages = ['/', '/index.html', '/tour.html', '/ubud-tour.html', '/charter.html', '/transfer.html',
     '/airport-transfer.html', '/our-company.html', '/my-trips.html', '/bali-guide.html',
-    '/itinerary.html', '/settings.html', '/activities.html', '/destinations.html'];
+    '/settings.html', '/activities.html', '/destinations.html'];
   let seen = 0;
   const odd = [];
   for (const p of pages) {

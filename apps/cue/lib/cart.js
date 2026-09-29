@@ -73,24 +73,6 @@ export function removeItem(state, dayIndex, itemIndex) {
   return { ...state, days };
 }
 
-export function removeDay(state, dayIndex) {
-  return { ...state, days: (state.days || []).filter((_, i) => i !== dayIndex) };
-}
-
-// Suggested plan: active programme i on day i with timeFor(name) as start time, plus airport pickup and drop-off.
-export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive, timeFor }) {
-  const guestCount = guests ? String(guests) : '';
-  const days = suggest
-    .filter((name) => (isActive ? isActive(name) : true))
-    .slice(0, nDays)
-    .map((name) => ({ items: [name], itemModes: ['standard'], itemTimes: [(timeFor && timeFor(name)) || ''], date: '', guests: guestCount }));
-  const transfers = [
-    { route: airportRoute, direction: 'to', pickup: airportPlace, dropoff: '', date: '', guests: guestCount },
-    { route: airportRoute, direction: 'from', pickup: '', dropoff: airportPlace, date: '', guests: guestCount },
-  ];
-  return { days, transfers, charters: [] };
-}
-
 // Removes one My Trips row; transfers/charters by their own list index, day items by name.
 export function removeRow(state, { kind, localIndex, day_no, service }) {
   const next = JSON.parse(JSON.stringify(state));

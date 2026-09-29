@@ -73,7 +73,6 @@ export const PROMO = {
 
   // Tool pages - system info, or nothing. A promo here is just noise.
   '/my-trips': PLAN_LOCAL,
-  '/itinerary': PLAN_LOCAL,
   '/settings': null,
   '/ui-kit': null,
   '/our-company': null, // Wayan belum mutusin isinya - jangan diisi karangan.

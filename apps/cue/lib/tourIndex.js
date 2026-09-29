@@ -35,7 +35,7 @@ export function toursForAttraction(slug) {
 export function inclLabel(slug) {
   const names = toursForAttraction(slug).map((t) => t.name);
   if (!names.length) return undefined;
-  const list = names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+  const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
   return `Included in |${list}|`;
 }
 

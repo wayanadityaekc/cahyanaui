@@ -26,7 +26,7 @@ const PAIRED =
 export default function About({ paired = false }) {
   return (
     <section
-      className={`${CLS.section}${paired ? ' ' + PAIRED : ''}`}
+      className={`${CLS.section}${paired ? ` ${PAIRED}` : ''}`}
       id="about"
       style={{ backgroundImage: 'url(/assets/images/tegalalang-rice-terrace-hero.jpg)' }}
     >

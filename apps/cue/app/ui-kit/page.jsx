@@ -42,7 +42,7 @@ export default function Kit() {
             {CARDS.map((c) => <ExperienceCard key={c.href} {...c} />)}
           </div>
           <h2 className={SECTION_TITLE}>Slider</h2>
-          <Slider>{CARDS.map((c) => <ExperienceCard key={'s' + c.href} {...c} />)}</Slider>
+          <Slider>{CARDS.map((c) => <ExperienceCard key={`s${c.href}`} {...c} />)}</Slider>
         </div>
       </section>
       <BookingForm />

@@ -367,7 +367,7 @@ export default function BookConfirmModal() {
       .map((l, i) => {
         const d = dateOf(l, i) || l.date || 'TBD';
         const t = timeOf(l, i);
-        return `- ${l.day_no ? 'Day ' + l.day_no + ' · ' : ''}${d}${t ? ' · ' + fmtTime(t) : ''} · ${l.service} · ${l.guests || displayGuests} pax`;
+        return `- ${l.day_no ? `Day ${l.day_no} · ` : ''}${d}${t ? ` · ${fmtTime(t)}` : ''} · ${l.service} · ${l.guests || displayGuests} pax`;
       })
       .join('\n');
     const flightLine = flightNumberDisplay ? `\nFlight: ${flightNumberDisplay} (${f.flightDatetime || singleLine.flight_datetime || 'TBD'})` : '';
@@ -394,7 +394,7 @@ export default function BookConfirmModal() {
   const lastStep = payOn ? 3 : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const STEPS = 'flex gap-[6px] mb-2';
-  function stepBar(on) { return 'flex-1 h-[3px] rounded-[2px] ' + (on ? 'bg-cta' : 'bg-line'); }
+  function stepBar(on) { return `flex-1 h-[3px] rounded-[2px] ${on ? 'bg-cta' : 'bg-line'}`; }
   const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
   const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
   const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
@@ -499,19 +499,19 @@ export default function BookConfirmModal() {
                     /* The airport leg: ONE control, and it keeps real minutes.
                        A second "Date & time" here would ask the same question
                        twice - the bug already fixed on the airport page. */
-                    <div className={GROUP} key={'dt' + i}>
+                    <div className={GROUP} key={`dt${i}`}>
                       <label className={LABEL} htmlFor="flight-datetime">Flight date &amp; time</label>
                       <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={setValue('flightDatetime')} />
                       <small className={HINT}>We use this as your pick-up time, so you are collected for this flight.</small>
                       {errors.flightDatetime && <small role="alert" className={FIELD_ERR}>{errors.flightDatetime}</small>}
                     </div>
                   ) : (
-                    <div className={GROUP} key={'dt' + i}>
-                      <label className={LABEL} htmlFor={'bk-dt-' + i}>
-                        {lines.length > 1 ? (l.day_no ? 'Day ' + l.day_no + ' · ' : '') + l.service : 'Date & time'}
+                    <div className={GROUP} key={`dt${i}`}>
+                      <label className={LABEL} htmlFor={`bk-dt-${i}`}>
+                        {lines.length > 1 ? `${l.day_no ? `Day ${l.day_no} · ` : ''}${l.service}` : 'Date & time'}
                       </label>
                       <DateField
-                        id={'bk-dt-' + i}
+                        id={`bk-dt-${i}`}
                         label="Date & time"
                         value={dt(i).date}
                         onChange={(v) => setDT(i, 'date', v)}
@@ -538,7 +538,7 @@ export default function BookConfirmModal() {
                     <>
                       <div className={ROW}><span>Date</span><span>{fmtDate(dateOf(singleLine, 0)) || '-'}</span></div>
                       {isAirportRoute ? (
-                        <div className={ROW}><span>Flight</span><span>{flightNumberDisplay || '-'}{timeOf(singleLine, 0) ? ' · ' + fmtTime(timeOf(singleLine, 0)) : ''}</span></div>
+                        <div className={ROW}><span>Flight</span><span>{flightNumberDisplay || '-'}{timeOf(singleLine, 0) ? ` · ${fmtTime(timeOf(singleLine, 0))}` : ''}</span></div>
                       ) : (
                         <div className={ROW}><span>Time</span><span>{timeOf(singleLine, 0) ? fmtTime(timeOf(singleLine, 0)) : '-'}</span></div>
                       )}
@@ -561,14 +561,14 @@ export default function BookConfirmModal() {
                       <div className="mb-4">
                         <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
                           <span>{view.detailLines.length} items</span>
-                          <span className={"text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] " + (detailsOpen ? '[transform:rotate(90deg)]' : '')}>&rsaquo;</span>
+                          <span className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? '[transform:rotate(90deg)]' : ''}`}>&rsaquo;</span>
                         </button>
-                        <ul className={'list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ' + (detailsOpen ? 'max-h-[320px]' : 'max-h-0')}>
+                        <ul className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? 'max-h-[320px]' : 'max-h-0'}`}>
                           {view.detailLines.map((d, i) => <li className={DETAILS_LI} key={i}>{d}</li>)}
                         </ul>
                       </div>
                     ) : (
-                      <ul className={ROWSET + ' list-none'}>
+                      <ul className={`${ROWSET} list-none`}>
                         {view.detailLines.map((d, i) => <li className={DETAILS_LI_ROW} key={i}>{d}</li>)}
                       </ul>
                     )}
@@ -590,7 +590,7 @@ export default function BookConfirmModal() {
                 </div>
 
                 {payOn && (
-                  <button className={BTN + ' ' + STACK} onClick={() => { setError(''); setStep(3); }}>Continue</button>
+                  <button className={`${BTN} ${STACK}`} onClick={() => { setError(''); setStep(3); }}>Continue</button>
                 )}
 
                 {!payOn && (
@@ -606,10 +606,10 @@ export default function BookConfirmModal() {
 
                 <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
                 <button
-                  className={BTN_WA + ' ' + STACK}
+                  className={`${BTN_WA} ${STACK}`}
                   onClick={() => {
                     if (!validate()) { setError(''); setStep(1); return; }
-                    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waText()), '_blank');
+                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
                   }}
                 >
                   Discuss via WhatsApp
@@ -657,10 +657,10 @@ export default function BookConfirmModal() {
 
                 <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
                 <button
-                  className={BTN_WA + ' ' + STACK}
+                  className={`${BTN_WA} ${STACK}`}
                   onClick={() => {
                     if (!validate()) { setError(''); setStep(1); return; }
-                    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waText()), '_blank');
+                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
                   }}
                 >
                   Discuss via WhatsApp

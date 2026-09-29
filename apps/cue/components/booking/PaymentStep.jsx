@@ -136,8 +136,8 @@ export default function PaymentStep({
   // every price on the page is shown in - said before a card number is typed.
   const railNote = noteFor(currency, rail);
   function money(v) { return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US')); }
-  function rupiah(v) { return withSymbol('Rp' + v.toLocaleString('id-ID')); }
-  function dollars(v) { return withSymbol('$' + v.toLocaleString('en-US')); }
+  function rupiah(v) { return withSymbol(`Rp${v.toLocaleString('id-ID')}`); }
+  function dollars(v) { return withSymbol(`$${v.toLocaleString('en-US')}`); }
 
   // An option that is no longer available must not stay selected. hasReferral
   // can go back to false when the quote refreshes without the code - leaving

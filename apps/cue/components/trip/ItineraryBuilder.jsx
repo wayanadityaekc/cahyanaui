@@ -94,7 +94,7 @@ const ITN_FIELD_FULL = `${ITN_FIELD} [grid-column:1/-1]`;
 // base (border/radius/font/color) + .itn-day__fields .field input (w/min-w/height/pad
 // 0.55rem 0.65rem/bg). Date input additionally hits .field input[type="date"]
 // (line-height 1.4 + appearance:none) - same padding wins by source order.
-const ITN_FIELD_INPUT = `min-w-0 ${FIELD_INPUT}` + ' font-body text-[length:var(--fs-field)] text-green';
+const ITN_FIELD_INPUT = `min-w-0 ${FIELD_INPUT} font-body text-[length:var(--fs-field)] text-green`;
 // One start time PER ITEM, not per day: a day can hold two programmes and Wayan's
 // rule is that each gets its own hour. Capped in width so it reads as a small control
 // inside the item row, not as another full-width field.
@@ -187,7 +187,7 @@ export default function ItineraryBuilder() {
       pickupOptional: true,
       dropoffRequired: false,
       detailsTitle: 'Trip details',
-      detailLines: rows.map((r) => `${r.day_no ? 'Day ' + r.day_no + ' · ' : ''}${fmtDay(r.date)} · ${r.service}`),
+      detailLines: rows.map((r) => `${r.day_no ? `Day ${r.day_no} · ` : ''}${fmtDay(r.date)} · ${r.service}`),
       lines: rows.map((r) => ({ ...r, pickup: hotel, dropoff: hotel })),
       onSuccess: () => clearAll(),
     });
@@ -360,8 +360,8 @@ export default function ItineraryBuilder() {
         <div className={ITN2_PANEL}>
           <h3 className={`${ITN_SUBTITLE} mb-4`}>Transfers &amp; Charter</h3>
           <div id="itn-transfers-list">
-            {(state.transfers || []).map((t, i) => <p key={'t' + i}>{t.route} · {fmtDay(t.date)}</p>)}
-            {(state.charters || []).map((c, i) => <p key={'c' + i}>Charter · {fmtDay(c.date)}</p>)}
+            {(state.transfers || []).map((t, i) => <p key={`t${i}`}>{t.route} · {fmtDay(t.date)}</p>)}
+            {(state.charters || []).map((c, i) => <p key={`c${i}`}>Charter · {fmtDay(c.date)}</p>)}
           </div>
         </div>
       </div>

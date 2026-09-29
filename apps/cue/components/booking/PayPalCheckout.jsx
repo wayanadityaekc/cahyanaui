@@ -23,8 +23,8 @@ import { chargeCurrency } from '@/lib/rails';
 // and one page can legitimately need two: the guest's own currency, or USD when
 // theirs cannot be settled. Loading once under `window.paypal` meant whichever
 // currency got there first won, and the second guest's checkout simply failed.
-function sdkId(cur) { return 'paypal-sdk-' + cur; }
-function sdkNs(cur) { return 'paypal_' + cur; }
+function sdkId(cur) { return `paypal-sdk-${cur}`; }
+function sdkNs(cur) { return `paypal_${cur}`; }
 
 function loadSdk({ clientId, currency }) {
   const id = sdkId(currency);

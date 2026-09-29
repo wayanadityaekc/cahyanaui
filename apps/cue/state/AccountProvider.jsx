@@ -48,7 +48,7 @@ export function AccountProvider({ children }) {
       setJustSignedIn(true);
       params.delete('token');
       const qs = params.toString();
-      window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
+      window.history.replaceState({}, '', `${window.location.pathname}${qs ? `?${qs}` : ''}`);
     }
 
     const token = readLocal(KEY.token, '');

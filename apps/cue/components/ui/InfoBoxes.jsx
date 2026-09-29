@@ -26,7 +26,7 @@ export const BOX_GRID =
 import { PROSE_LINK } from '@/components/ui/infoClasses';
 
 const BOX_TEXT =
-  '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0 ' + PROSE_LINK;
+  `[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0 ${PROSE_LINK}`;
 // The FRAME (outline + radius + padding) belongs to the included/excluded pair
 // ONLY (Sep 2026, Wayan: "garis di luar kontainer juga selain include not include
 // juga hilangin"). Everything else in a row is a plain COLUMN - which is what he
@@ -61,7 +61,7 @@ const ROWS_RULED =
 export function InfoBoxList({ items, variant, render }) {
   const ruled = variant === 'yes' || variant === 'no';
   return (
-    <ul className={`${ROWS_BASE} ${ruled ? ROWS_RULED + ' ' : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
+    <ul className={`${ROWS_BASE} ${ruled ? `${ROWS_RULED} ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
       {items.map((item, i) => <li key={i}>{render ? render(item) : item}</li>)}
     </ul>
   );

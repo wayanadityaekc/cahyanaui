@@ -191,7 +191,7 @@ export default function MyTripsCart() {
       // the guest closed. ?token= is left alone; the account provider reads it.
       p.delete('review');
       const q = p.toString();
-      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''));
+      window.history.replaceState(null, '', `${window.location.pathname}${q ? `?${q}` : ''}`);
     } catch { /* no query string: nothing to do */ }
   }, []);
 
@@ -327,18 +327,18 @@ export default function MyTripsCart() {
     const nD = new Set(rows.filter((r) => r.kind === 'day').map((r) => r.day_no)).size;
     const nT = rows.filter((r) => r.kind === 'transfer').length;
     const nC = rows.filter((r) => r.kind === 'charter').length;
-    if (nD) parts.push(nD + ' day' + (nD > 1 ? 's' : ''));
-    if (nT) parts.push(nT + ' transfer' + (nT > 1 ? 's' : ''));
-    if (nC) parts.push(nC + ' charter');
+    if (nD) parts.push(`${nD} day${nD > 1 ? 's' : ''}`);
+    if (nT) parts.push(`${nT} transfer${nT > 1 ? 's' : ''}`);
+    if (nC) parts.push(`${nC} charter`);
     openBooking({
       type: 'itinerary',
-      service: 'My Trip (' + parts.join(' + ') + ')',
+      service: `My Trip (${parts.join(' + ')})`,
       guests: String(displayGuests),
       date: '',
       pickupOptional: true,
       dropoffRequired: false,
       detailsTitle: 'Trip details',
-      detailLines: rows.map((r) => `${r.day_no ? 'Day ' + r.day_no + ' · ' : ''}${fmtDay(r.date)}${r.time ? ' · ' + fmtTime(r.time) : ''} · ${r.service}`),
+      detailLines: rows.map((r) => `${r.day_no ? `Day ${r.day_no} · ` : ''}${fmtDay(r.date)}${r.time ? ` · ${fmtTime(r.time)}` : ''} · ${r.service}`),
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
@@ -349,13 +349,13 @@ export default function MyTripsCart() {
   // against them rather than a live conversion.
   function bookedMoney(usd, idr) {
     return currency === 'IDR'
-        ? 'Rp' + Number(idr || 0).toLocaleString('id-ID')
-        : '$' + Number(usd || 0).toLocaleString('en-US');
+        ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`
+        : `$${Number(usd || 0).toLocaleString('en-US')}`;
   }
 
   function fmtRange(from, to) {
     if (!from) return 'Date TBD';
-    if (to && to !== from) return fmtDay(from) + ' - ' + fmtDay(to);
+    if (to && to !== from) return `${fmtDay(from)} - ${fmtDay(to)}`;
     return fmtDay(from);
   }
 
@@ -376,7 +376,7 @@ export default function MyTripsCart() {
           {img ? (
             <span
               className={MTC_ITEM_ICON_PHOTO}
-              style={{ backgroundImage: 'url(/assets/images/' + img + ')' }}
+              style={{ backgroundImage: `url(/assets/images/${img})` }}
               aria-hidden="true"
             />
           ) : (
@@ -386,7 +386,7 @@ export default function MyTripsCart() {
             <p className={MTC_ITEM_TITLE}>{t.name}</p>
             <p className={MTC_ITEM_DESC}>{status} · {t.guests || '-'} guests</p>
             <p className={MTC_ITEM_DATE}>
-              {fmtRange(t.start_date, t.end_date)}{t.ref ? ' · ' + t.ref : ''}
+              {fmtRange(t.start_date, t.end_date)}{t.ref ? ` · ${t.ref}` : ''}
             </p>
           </div>
           <span className={MTC_ITEM_PRICE}>
@@ -404,7 +404,7 @@ export default function MyTripsCart() {
             >
               {open
                 ? 'Hide details'
-                : 'View details (' + items.length + (items.length > 1 ? ' items)' : ' item)')}
+                : `View details (${items.length}${items.length > 1 ? ' items)' : ' item)'}`}
               <ChevronDown className={MTC_DET_CHEV} strokeWidth={1.6} aria-hidden="true" />
             </button>
             {open && (
@@ -412,11 +412,11 @@ export default function MyTripsCart() {
                 {items.map((l, i) => (
                   <li className={MTC_DET_LINE} key={i}>
                     <span className={MTC_DET_NAME}>
-                      {l.day_no ? 'Day ' + l.day_no + ' · ' : ''}{l.service}
+                      {l.day_no ? `Day ${l.day_no} · ` : ''}{l.service}
                       <span className={MTC_DET_META}>
                         {fmtDay(l.date)}
-                        {l.guests ? ' · ' + l.guests + ' pax' : ''}
-                        {l.pickup_time ? ' · ' + l.pickup_time : ''}
+                        {l.guests ? ` · ${l.guests} pax` : ''}
+                        {l.pickup_time ? ` · ${l.pickup_time}` : ''}
                       </span>
                     </span>
                     <span className={MTC_DET_AMT}>{withSymbol(bookedMoney(l.price_usd, l.price_idr))}</span>
@@ -432,7 +432,7 @@ export default function MyTripsCart() {
             <a
               className={MTC_CANCEL_BTN}
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hi, I'd like to ask about cancelling or changing my booking${t.ref ? ' (' + t.ref + ')' : ''} - ${t.name || 'my trip'}${t.start_date ? ' on ' + fmtRange(t.start_date, t.end_date) : ''}.`,
+                `Hi, I'd like to ask about cancelling or changing my booking${t.ref ? ` (${t.ref})` : ''} - ${t.name || 'my trip'}${t.start_date ? ` on ${fmtRange(t.start_date, t.end_date)}` : ''}.`,
               )}`}
               target="_blank"
               rel="noopener"

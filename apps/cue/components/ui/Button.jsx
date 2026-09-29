@@ -1,22 +1,5 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
-/**
- * Button - the shared action atom. One place for the site's button shape,
- * weight, and colour roles so new UI doesn't hand-roll classes.
- *   variant: "primary" (green CTA) | "ghost" (soft-black outline) | "plain"
- *   as:      render as a different tag/component (e.g. "a") - defaults to button.
- *
- * ONE SIZE (Sep 2026, Wayan pilih "A" dari sheet hasil ukur): every action button
- * is BTN_SM - 33.6px tall, 12.8px text, 8px corners, label centred on both axes.
- * The `size` prop is GONE; md/lg do not exist any more. The shape lives in BTN_SM
- * (btnClasses.js), so this primitive and the ~20 hand-written buttons cannot drift
- * apart again - that drift is exactly what the census found (11 heights for one role).
- *
- * "plain" is NOT a button: it is a text link, so it takes BASE_LINK instead and
- * never gets BTN_SM. Giving it the button geometry and then cancelling the parts
- * again (h-auto, p-0, rounded-none) does not work: in Tailwind the winner is CSS
- * order, not class order, so `rounded-sm` from BTN_SM beat `rounded-none` and the
- * text link rendered with 8px corners on a transparent background.
- */
+// Shared button: primary | ghost use BTN_SM; plain is a text link on BASE_LINK and must never get BTN_SM (CSS order wins).
 const SHARED = 'font-body border cursor-pointer no-underline ' +
   'transition-[color,background-color,border-color,scale] duration-200 ease-in-out';
 

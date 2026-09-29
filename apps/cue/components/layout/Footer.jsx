@@ -1,30 +1,18 @@
+'use client';
+
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as R } from '@/content/shared/registration';
 import FooterPayChips from './FooterPayChips';
 
-// Tailwind-native (migrasi Fase 2): footer (semua halaman). Dulu keluarga
-// .footer* di style.css - sekarang utilities 1:1. Footer punya ukuran teks
-// sendiri (0.8rem body, bukan --fs-body) - dipetakan eksplisit ke text-[0.8rem].
-//
-// BENTUK (Sep 2026, Wayan minta "lebih ramping" terus milih layout ini dari 3
-// yang dibangun & diukur): SATU baris grid, lima kolom di desktop -
-// brand+kontak / Explore / Company / Featured On + Follow / We Accept. Di
-// bawah 900px jadi 2 kolom dan brand-nya makan lebar penuh.
-// Hasil ukur: desktop 535 -> 274px, HP 836 -> 636px.
-//
-// Yang dibuang biar ramping: paragraf deskripsi (Wayan), dan band full-width
-// "Featured On" + "We Accept" yang masing-masing punya divider sendiri -
-// sekarang dua-duanya jadi kolom biasa, jadi footer cuma punya SATU garis
-// (copyright + baris registrasi digabung di bar bawah).
-//
-// "Featured On" DIPISAH dari "Follow" - dulu satu label nutupin Viator +
-// Tripadvisor (tempat kita di-feature) SEKALIGUS Instagram/WhatsApp/Facebook
-// (akun kita sendiri). Dua hal beda, jangan digabung lagi.
-//
-// Ukuran ikon sengaja kecil (Wayan): logo featured 18px, bulatan sosmed 22px,
-// chip bayar 20px. Ini di bawah tangga --icon-sm/md/lg - disengaja, footer itu
-// bagian paling akhir yang dibaca orang, bukan tempat narik perhatian.
+// Pages that get the compact fixed footer instead of the full one.
+const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
+
+// Match both '/x' and '/x.html' so server and client renders agree (avoids hydration error #418).
+function isCompactPath(pathname) { return COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, '')); }
+
+// Full footer: one 5-column grid (2 columns under 900px); Featured On and Follow stay separate columns.
 
 const CONTACT_ITEM = 'flex items-center gap-[0.55rem] text-[0.8rem] text-green opacity-90 no-underline';
 const CONTACT_LINK = `${CONTACT_ITEM} hover:opacity-100 hover:text-gold`;
@@ -32,18 +20,13 @@ const CONTACT_SVG = 'w-4 h-4 shrink-0 text-gold';
 const SOCIAL_A =
   'flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-green bg-[rgba(0,0,0,0.06)] hover:text-white hover:bg-gold';
 const PAY_CHIP =
-  'inline-flex items-center justify-center h-5 min-w-[34px] px-[0.3rem] bg-white rounded-sm shadow-sm ' +
+  'inline-flex items-center justify-center h-5 min-w-[34px] px-[0.3rem] bg-white rounded-sm ' +
   'transition-[transform] duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]';
 const COL_A = 'no-underline text-green hover:text-gold';
 const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';
 const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 
-// "Airport Transfer" sits here, right under Transfer, as the ONE site-wide link
-// to that page (Sep 2026, Wayan: "gas footer aja bro"). /airport-transfer owns
-// the "bali airport transfer" query but was reachable from only 5 pages, while
-// /transfer had 100 through this footer and the navbar - so the page Google is
-// meant to rank had almost no internal support. The label doubles as the anchor
-// text, which is why it is the full phrase and not "Airport".
+// 'Airport Transfer' is the site-wide link to /airport-transfer; keep the full phrase, it is the SEO anchor text.
 const EXPLORE = [
   ['/tour.html', 'Tours'],
   ['/activities.html', 'Experiences'],
@@ -53,9 +36,7 @@ const EXPLORE = [
   ['/my-trips.html', 'My Trips'],
 ];
 
-// About/Contact/FAQ/Terms/Privacy/Cancellation are all sections of the Our
-// Company page now (Sep 2026, Wayan - their standalone pages are retired).
-// Each link lands directly on its section (OurCompany.jsx reads the hash).
+// Company links land on Our Company sections by hash (OurCompany.jsx reads it).
 const COMPANY = [
   ['/our-company.html#contact', 'Contact Us'],
   ['/our-company.html#about', 'About Us'],
@@ -71,7 +52,34 @@ const SOCIAL = [
   ['Facebook', 'facebook.webp'],
 ];
 
+// Compact footer, fixed to the bottom; .footerbar is what body padding and AppBottomNav key off. Icons only under 561px.
+function CompactFooter() {
+  return (
+    <footer className="footerbar fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 min-[561px]:pb-[max(1.25rem,env(safe-area-inset-bottom))] pb-[max(1rem,env(safe-area-inset-bottom))] text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">
+      <div className="max-w-[1100px] mx-auto flex items-center justify-between gap-x-4">
+        <a href="/" className="no-underline text-green font-body text-[0.8rem] min-[561px]:text-[0.95rem] font-semibold shrink-0 truncate">
+          Cahyana Ubud Experience
+        </a>
+        <div className="flex items-center gap-x-4 min-[561px]:gap-x-5 shrink-0">
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" aria-label="WhatsApp" className={CONTACT_LINK}>
+            <MessageCircle className={CONTACT_SVG} strokeWidth={1.8} />
+            <span className="max-[560px]:hidden">WhatsApp</span>
+          </a>
+          <a href="mailto:cahyanabaliexperience@gmail.com" aria-label="Email" className={CONTACT_LINK}>
+            <Mail className={CONTACT_SVG} strokeWidth={1.8} />
+            <span className="max-[560px]:hidden">Email</span>
+          </a>
+        </div>
+        <p className="max-[560px]:hidden text-small opacity-70 m-0 shrink-0">&copy; 2026 Cahyana Ubud Experience.</p>
+      </div>
+    </footer>
+  );
+}
+
 export default function Footer() {
+  const pathname = usePathname();
+  if (isCompactPath(pathname)) return <CompactFooter />;
+
   return (
     <footer className="px-6 pt-10 pb-5 text-green bg-[#ebe8e2]">
       <div

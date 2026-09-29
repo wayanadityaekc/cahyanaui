@@ -5,56 +5,38 @@ import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 
-// The PayPal checkout, rendered inside our own page - no redirect, no new tab.
-//
-// Two ways to pay, both tied to the SAME server-created order:
-//   - hosted Card Fields (card number/expiry/CVV live in PayPal's iframes, so
-//     the digits never touch our React state or our server, which is what keeps
-//     us out of PCI scope)
-//   - the PayPal button, for guests who would rather log in
-//
-// Card Fields need Advanced Card Payments on the account. If the SDK says they
-// are not eligible, the buttons render on their own - those still offer a guest
-// "Debit or Credit Card" option, so a card is always payable either way.
+// Inline PayPal checkout: hosted Card Fields (card data stays in PayPal iframes) plus PayPal buttons as fallback.
 
-// The SDK is loaded PER CURRENCY, under its own namespace.
-//
-// PayPal refuses an order whose currency is not the one the SDK was loaded with,
-// and one page can legitimately need two: the guest's own currency, or USD when
-// theirs cannot be settled. Loading once under `window.paypal` meant whichever
-// currency got there first won, and the second guest's checkout simply failed.
-const sdkId = (cur) => 'paypal-sdk-' + cur;
-const sdkNs = (cur) => 'paypal_' + cur;
+// SDK is loaded per currency under its own namespace; PayPal rejects orders in a currency the SDK wasn't loaded with.
+function sdkId(cur) { return `paypal-sdk-${cur}`; }
+function sdkNs(cur) { return `paypal_${cur}`; }
 
 function loadSdk({ clientId, currency }) {
   const id = sdkId(currency);
-  const ns = sdkNs(currency);
+  const sdkNamespace = sdkNs(currency);
   return new Promise((resolve, reject) => {
     const existing = document.getElementById(id);
-    if (existing && window[ns]) return resolve(window[ns]);
+    if (existing && window[sdkNamespace]) return resolve(window[sdkNamespace]);
     if (existing) {
-      existing.addEventListener('load', () => resolve(window[ns]));
+      existing.addEventListener('load', () => resolve(window[sdkNamespace]));
       existing.addEventListener('error', reject);
       return;
     }
     const s = document.createElement('script');
     s.id = id;
-    s.setAttribute('data-namespace', ns);
-    // card-fields is requested alongside buttons; asking for it on an
-    // ineligible account is harmless, paypal.CardFields() just reports
-    // isEligible() false and we fall back.
+    s.setAttribute('data-namespace', sdkNamespace);
+    // card-fields is always requested; on an ineligible account isEligible() is false and buttons are used instead.
     s.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
-    s.onload = () => resolve(window[ns]);
+    s.onload = () => resolve(window[sdkNamespace]);
     s.onerror = () => reject(new Error('Could not load PayPal.'));
     document.head.appendChild(s);
   });
 }
 
 const LABEL = 'block text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.4rem]';
-// The box is ours; the input inside it is PayPal's iframe. Same field box as
-// everything else - it used to carry the button corner and a hardcoded grey.
+// Box around PayPal's card field iframe; uses the shared field style.
 const FIELD = FIELD_INPUT;
 const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
@@ -71,9 +53,8 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
   useEffect(() => {
     let cancelled = false;
 
-    // The amount is never passed from here. The server reads what it priced the
-    // booking at and creates the order from that; this only names the option.
-    const createOrder = async () => {
+    // Never send an amount from here: the server prices the booking itself, this only names the option.
+    async function createOrder() {
       const r = await fetch(`${API_BASE}/paypal/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,12 +66,10 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         setMsg(`PayPal cannot charge ${d.converted.from}, so this is billed as ${d.currency} ${d.amount}.`);
       }
       return d.id;
-    };
+    }
 
-    // Capture, then wait. The booking is confirmed by PayPal's webhook, not by
-    // this response - so the guest is told the payment went through, and the
-    // page does not claim the booking is confirmed on its own say-so.
-    const capture = async (orderId) => {
+    // Capture only; the booking is confirmed by the webhook, so don't claim it is confirmed from this response.
+    async function capture(orderId) {
       const r = await fetch(`${API_BASE}/paypal/capture-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,30 +81,28 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         throw Object.assign(new Error((d && d.detail) || copy.failed), { soft: true });
       }
       return d;
-    };
+    }
 
-    const fail = (e) => {
+    function fail(e) {
       if (cancelled || !mounted.current) return;
       setState('ready');
       setMsg(e.message || copy.failed);
       if (onError) onError(e);
-    };
+    }
 
-    const succeed = (d) => {
+    function succeed(d) {
       if (cancelled || !mounted.current) return;
       setState('done');
       setMsg('');
       if (onPaid) onPaid(d);
-    };
+    }
 
     (async () => {
       try {
         const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
         if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
-        // What the order will actually be created in - the guest's own currency
-        // unless the rail cannot settle it. Loading the SDK with anything else
-        // makes every order bounce.
-        const billCurrency = chargeCurrency(currency);
+        // Load the SDK in the currency the order is billed in (USD for rupiah), or every order is rejected.
+        const billCurrency = chargeCurrency(currency, 'paypal');
         const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
         if (cancelled) return;
 
@@ -140,7 +117,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
           .render(buttonsRef.current);
 
         // Card Fields, when the account is allowed them.
-        const cf = sdk.CardFields
+        const cardFields = sdk.CardFields
           ? sdk.CardFields({
               createOrder,
               onApprove: async (data) => { try { succeed(await capture(data.orderID)); } catch (e) { fail(e); } },
@@ -148,11 +125,11 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
             })
           : null;
 
-        if (cf && cf.isEligible() && !cancelled) {
-          cf.NumberField().render('#pp-card-number');
-          cf.ExpiryField().render('#pp-card-expiry');
-          cf.CVVField().render('#pp-card-cvv');
-          cardRef.current = cf;
+        if (cardFields && cardFields.isEligible() && !cancelled) {
+          cardFields.NumberField().render('#pp-card-number');
+          cardFields.ExpiryField().render('#pp-card-expiry');
+          cardFields.CVVField().render('#pp-card-cvv');
+          cardRef.current = cardFields;
           setCardsOn(true);
         }
         if (!cancelled) setState('ready');
@@ -164,7 +141,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     return () => { cancelled = true; };
   }, [bookingRef, option, copy, currency, onPaid, onError]);
 
-  const payByCard = async () => {
+  async function payByCard() {
     if (!cardRef.current) return;
     setState('paying');
     setMsg('');
@@ -174,7 +151,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     } catch (e) {
       if (mounted.current) { setState('ready'); setMsg(copy.declined); }
     }
-  };
+  }
 
   if (state === 'error') {
     return <p className={`${NOTE} text-err`}>{msg}</p>;

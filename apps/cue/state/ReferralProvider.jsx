@@ -13,15 +13,16 @@ export function ReferralProvider({ children }) {
     setReferral(readLocalJSON(KEY.referral, null));
   }, []);
 
-  const apply = async (code) => {
+  async function apply(code) {
     const clean = String(code || '').trim().toUpperCase();
     if (!clean) return 0;
     try {
-      const d = await fetch(`${API_BASE}/referral/validate`, {
+      const res = await fetch(`${API_BASE}/referral/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: clean }),
-      }).then((r) => r.json());
+      });
+      const d = await res.json();
       if (d && d.valid) {
         const entry = { code: clean, pct: d.pct };
         setReferral(entry);
@@ -30,12 +31,12 @@ export function ReferralProvider({ children }) {
       }
     } catch (e) {}
     return 0;
-  };
+  }
 
-  const clear = () => {
+  function clear() {
     setReferral(null);
     removeLocal(KEY.referral);
-  };
+  }
 
   return (
     <ReferralContext.Provider value={{ referral, pct: (referral && referral.pct) || 0, apply, clear }}>

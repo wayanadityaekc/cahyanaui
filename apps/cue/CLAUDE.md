@@ -23,8 +23,9 @@ When unsure, ask first (keep it short).
 > `?v=`/`PARTIALS_VERSION` bump, `initX()` (`initBooking`/`initNavbar`/dst), `renderPrices`,
 > atau file `.html` = **KONTEKS LAMA / historis**, gak berlaku lagi. Yang hidup cuma app React
 > (`app/`+`components/`, state di `state/`, konten di `content/`, harga dari API `cahyana-api`).
-> Gate CI yang tersisa (jalan atas `out/`): `check-urls`, `check-detail`, `check-assets`,
-> `check-motion`. Plus 1 cek manual (bukan gate): `check-prices` — lihat section harga.
+> Gate CI: `check-urls`, `check-detail`, `check-assets`, `check-motion` (jalan atas `out/`)
+> + **`check-classes`** (jalan atas SUMBER - class salah eja gak ke-generate CSS, jadi `out/`
+> gak bisa nunjukin dia; lihat section shadow). Plus 1 cek manual (bukan gate): `check-prices` — lihat section harga.
 
 **Styling = Tailwind (migrasi Sep 2026, JALAN → target FULL portable):**
 - **Arah baru (Sep 2026, Wayan): SEMUA komponen self-contained.** Tiap komponen bawa style-nya
@@ -440,15 +441,18 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
 - Diukur before/after, 15 halaman × 390 & 1280: **bar 60 → 0**, **861 elemen gak gerak**,
   1 geser 1px (pembulatan), **tinggi dokumen gak berubah di semua halaman**.
 
-**Section dividers:**
-- Thin gold **inset** line (margin on the sides) — via a `::before` pseudo-element,
-  width `min(1100px, 90%)` centered, color `rgba(201,164,92,0.4)`.
-- **NOT** full-width, **NOT** an `<hr>`.
-- Applied automatically via `section + section`, `[id$="-placeholder"] > section`,
-  `[id$="-placeholder"] + section`. Excluded: `.hero`, `.subhero`, `.booking`, and the
-  section immediately after a subhero.
-- If you add a section that already has its own border → check it doesn't **double up**
-  with this divider.
+**Section dividers - REMOVED ON PURPOSE (Wayan, 29 Sep 2026, WO7):**
+- The gold inset line between sections (`section + section::before`, `min(1100px,90%)`,
+  `rgba(201,164,92,0.4)`) **no longer exists**: there is no such rule in `style.css`
+  or `app/globals.css`. This doc kept describing it after it was gone. **Nothing to
+  bring back** - do not re-add it, and do not go looking for the rule.
+- Sections are separated by **spacing and background bands**, not a drawn line.
+- The ONE inset rule still in code is the top edge of the two card carousels at the
+  bottom of tour pages (`CAROUSEL_SECTION` in `ui/carouselSection.js`, soft-black
+  `rgba(34,32,28,0.4)`, not gold). It is a leftover, not a system - left as is because
+  nobody asked for it to go. Ask Wayan before removing it.
+- Every OTHER line on the site (rows, panel edges, menu groups, vertical rules) is a
+  separator, governed by the WO7 section at the end of this file.
 
 **Misc:**
 - Buttons: primary CTA (Book Now, Book this program, Apply, Make Payment, dll) pakai
@@ -459,7 +463,9 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
   gold/soft-black — bedain "aksi utama" vs "lihat lebih banyak".
   Bentuk & ukuran tombol = **`BTN_SM`**, lihat section "Tombol" di bawah. **BUKAN pill lagi**
   (radius 999px) — itu keputusan lama yang udah diganti Sep 2026.
-- Hover lift: keep it subtle, not harsh.
+- **Cards do NOT move on hover** (Wayan, 29 Sep 2026, WO7). `CARD_FRAME` and `HomepageCard`
+  used to lift 4px / 3px; both lifts AND their transitions are removed. Do not add a hover
+  lift, scale or shadow change to a card. Buttons keep hover colour and press feedback.
 
 **Tombol — SATU UKURAN, radius 8px (Sep 2026, Wayan pilih "A")**
 - Wayan: *"A, make sure semua text align center, margin bottom top center juga"*, sesudah
@@ -518,6 +524,86 @@ title section bro ... semua page yang ada itu hapus aja bro kita gak pakai garis
     bukan 404, dan **ada minimal 1 tombol ke-ukur**. Itu yang akhirnya nemu tombol WhatsApp
     di `ContactSection` yang belum ke-konversi — ke-hide di halaman itu, jadi census browser
     gak pernah lihat. **Halaman yang sectionnya di-`hidden` WAJIB dibuka lewat hash.**
+
+**TOMBOL CTA PRIMARY — `BTN_CTA`, DAN FONT-NYA WAJIB DITULIS (27 Sep 2026, Wayan:
+"di account setting masih ada tombol nge bug")**
+- **Yang rusak: `className="contact__btn"` di `AccountSettings` — class yang NOL rule-nya.**
+  Dia sisa situs lama dan ikut kesapu waktu CSS-nya dibuang, jadi tombol "Save changes"
+  di `/settings.html` ke-render **mentah**: ke-ukur **19px** (yang lain 33,6) · bg abu
+  `#efefef` · radius **0** · **13,33px Arial** · bobot 400 — persis di sebelah "Sign out"
+  yang bener. **Gak ada yang teriak buat class yang gak ada rule-nya.** Ini jebakan yang
+  SAMA kayak `.tinfo` di halaman airport: **kalau nulis `className` string mentah,
+  `grep` dulu rule-nya beneran ada.**
+- **`BTN_CTA` di `btnClasses.js`** = geometri `BTN_SM` + hijau `--color-cta` + hover.
+  **`display` SENGAJA gak di dalemnya** (aturan yang sama kayak `BTN_SM`): settings
+  pakai `inline-flex`, form contact `flex w-full`. Pemanggil yang bawa.
+  - Dia juga **ngeganti salinan tangan** di `ContactForm`, yang nulis ULANG seluruh string
+    geometri `BTN_SM` inline. Dibuktiin string-nya **byte-identik** sebelum ditukar, jadi
+    form contact nol berubah selain font-nya (lihat bawah).
+- **`font-body` WAJIB, dan ini yang paling gampang kelewat**: tombol **gak mewarisi font
+  halaman** (Preflight OFF, dan reset di `style.css` gak nyentuh `button` font-family),
+  jadi CTA tanpa `font-body` ke-render pakai **font BROWSER**. Ke-ukur di 13 halaman:
+  **58 tombol aksi Inter, dan yang Arial cuma yang kurang class ini** — `Book charter`,
+  `Book transfer`, plus 2 di `/itinerary.html`. `BTN_BOOK` ikut dikasih `font-body`;
+  itu **4 tombol** yang dibenerin, bukan 2 (2 yang di itinerary ketemu gara-gara sweep
+  harness-nya, survey pertama gak buka halaman itu).
+- **`BTN_CTA` dan `BTN_BOOK` itu peran yang SAMA ditulis dua kali** (primary hijau).
+  Bedanya nyata hari ini — `BTN_BOOK` gak punya hover, bawa `mt-4` + state disabled —
+  jadi **belum digabung; itu keputusan Wayan, bukan refactor diem-diem.**
+- Verifikasi: **`verify-btnfont.mjs`** di root repo (**109/109**, 320/390/768/1280 + sweep
+  13 halaman). Patokannya **token yang di-resolve halaman itu sendiri** (lewat elemen
+  bayangan), bukan angka yang diketik di harness; plus aturan se-web **nol tombol aksi
+  (34px/bobot 600) yang pakai font browser**. Dites pakai 2 bug aslinya, SATU-SATU:
+  class mati dibalikin (**56 nyala**) · `font-body` dibuang dari dua string (**9 nyala**).
+  - **JEBAKAN HARNESS (3, semuanya bikin angka palsu):** (1) **route Playwright yang
+    didaftar BELAKANGAN yang menang**, jadi catch-all `**/api/**` nelen stub
+    `/account/session\* — panel-nya cuma nulis "Sign in" dan harness-nya **nyalahin
+    aplikasi**. Pakai SATU handler bercabang. (2) `nth(0)` di `[data-settings] button`
+    itu **trigger dropdown Guests**, bukan CTA — dia lapor tombolnya putih & rata kiri.
+    Pola yang bener sama kayak tombol Done: CTA = tombol yang **bukan** `[aria-haspopup]`.
+    (3) `--btn-h` resolve ke **33,5938**, jadi `===` lawan `33.6` selalu gagal —
+    bandingin pakai toleransi.
+- **UDAH DIBENERIN, dan catatan pertama gua SALAH** - lihat section "HOMEPAGE PUNYA DUA
+  EJAAN PATHNAME" di bawah. Gua sempat nulis di sini bahwa "homepage nge-throw #418 dan
+  udah live"; yang bener **cuma `/index.html`**, bukan `/` yang dilihat tamu. Harness gua
+  sendiri yang milih URL itu, jadi gua sendiri yang bikin kondisinya.
+
+**HOMEPAGE PUNYA DUA EJAAN PATHNAME - `lib/pathname.js` (27 Sep 2026)**
+- **Gejalanya: `/index.html` nge-throw React #418 (hydration mismatch), `/` nggak.** Efeknya
+  bukan kosmetik: React **buang HTML dari server** dan nge-render ulang halaman itu di
+  browser - jadi halaman yang tadinya statis mendadak jadi client-rendered.
+- **Penyebabnya: static export nge-PRERENDER homepage di pathname `/`.** Browser yang duduk
+  di `/index.html` ngelaporin `/index.html`, jadi komponen apa pun yang nurunin markup dari
+  pathname ngitung beda dari HTML yang udah ditulis server.
+  - Yang beneran mecahin: **`TripBar`**. `promoFor()` mbuang `.html`, jadi `/index.html`
+    jadi **`/index`** - key yang gak ada di map mana pun - terus jatuh ke promo **default
+    halaman detail**, sementara server udah nulis pasangan promo homepage yang muter.
+  - **`isActive('/')` di `Navbar` KEBETULAN jalan bareng** dan itu jebakannya: gua benerin
+    itu duluan, build, dan **error-nya masih ada**. Kalau gua berhenti di situ gua bakal
+    lapor "udah dibenerin" padahal belum. **Ukur lagi sesudah tiap perbaikan.**
+- **Diperbaikin di SATU tempat, bukan 3 tambalan**: `normalizePath()` di `lib/pathname.js`,
+  dipakai ketiga pemakai `usePathname` (`TripBar`, `Navbar`, `AppBottomNav`). Yang ketiga
+  gak ke-ukur rusak - dia dikasih perlakuan sama karena bacanya sama.
+  - **NOL import** di file itu, sengaja: dia ke-pull `Navbar`, dan `Navbar` ada di SEMUA
+    halaman. Alasan yang sama kenapa `lib/crumbs.js` tetep map literal.
+- **Bonus yang ikut kelar**: catatan lama "`isActive('/')` cuma cocok sama `/`, jadi baris
+  Home gak nyala di `/index.html`" - sekarang nyala.
+- **Nol link internal ke `/index.html`** (dicek), jadi ini cuma nyentuh orang yang ngetik
+  atau nge-bookmark URL itu. Tetep dibenerin: gagalnya SUNYI, ongkosnya seluruh halaman
+  turun ke client rendering, dan gak ada gate yang bakal nangkep komponen BERIKUTNYA yang
+  baca pathname.
+- **Cara nemunya (buat next time)**: bisect. Komentarin section homepage separuh-separuh,
+  build, cek error-nya masih ada apa nggak. Nyampe **NOL section** error-nya tetep ada -
+  itu yang ngebuktiin masalahnya di level layout, bukan di section mana pun. Terus adu
+  `/` lawan `/index.html`, dan ke situ ketemunya.
+- **Gua sempat salah diagnosa 2x sebelum ketemu**: (1) nyangka nesting HTML gak valid
+  (`<div>` di dalam `<p>`) - di-scan, **nol**; (2) nyangka `isActive` (lihat atas). Yang
+  nutup itu diff **HTML server lawan DOM sesudah hydration** (`javaScriptEnabled:false`
+  buat sisi server), bukan baca kode.
+- Dijaga `verify-btnfont.mjs`: `/index.html` **masuk sweep**-nya, dan patokannya **nol page
+  error** (pengecualian #418 yang sempat gua tulis udah DIHAPUS - bug-nya udah gak ada,
+  jadi penandanya bakal jadi assertion yang gagal selamanya). Dites pakai bug aslinya
+  (`normalizePath` dilepas dari `TripBar`) - nyala.
 - **Ikon = `lucide-react`** (Sep 2026, Wayan pilih opsi "full Lucide" setelah lihat sheet
   perbandingan lama-vs-Lucide). Ikon baru = import dari `lucide-react`, **JANGAN gambar SVG
   manual lagi**. Aturannya:
@@ -1464,9 +1550,19 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
   digabung (Sep 2026, Wayan: "keluarin card dari kategori, tour dan experience jadi satu").
   Dulu 2 tab (Tours | Experiences) — separuh kartu kesembunyi di balik tap, dan section-nya
   keliatan lebih kurus dari katalog aslinya. 8 kartu = jumlah yang sama kayak Destinations,
-  jadi `GRID_XPLORE` nata-nya persis sama: **HP 1 slider, desktop 2 baris × 4**. CTA-nya
-  tinggal satu → `/programs.html` (halaman yang emang gabungin dua-duanya). Gak ada state
-  tab lagi → `Explore.jsx` balik jadi **server component** (gak ngirim JS).
+  jadi `GRID_XPLORE` nata-nya persis sama: **HP 1 slider, desktop 2 baris × 4**. Gak ada
+  state tab lagi → `Explore.jsx` balik jadi **server component** (gak ngirim JS).
+  - **CTA-nya `/tour.html`, BUKAN `/programs.html`** (27 Sep 2026, Wayan: *"tombol see all
+    tour di homepage arahin ke page listing tour bukan all program"*). Yang lama itu salah
+    dengan cara yang gak ada yang ngadu: `/programs.html` bawa **`robots:{index:false}`**
+    dan `explore-options.js` nulis hitam-putih dia *"not ready to publish, so it stays
+    unlinked and noindexed"* - jadi CTA satu-satunya di section ini nganterin tamu ke
+    halaman yang sengaja belum dipublish. Labelnya ikut jadi **"All tours"** (aturan 1-2 kata).
+  - **ONGKOS YANG DISENGAJA, keputusan Wayan**: grid di atasnya 4 tour + 4 experience, jadi
+    satu link ini cuma nutup separuhnya. Experience punya listing sendiri
+    (`/activities.html`) kalau mau CTA kedua - **tanya dulu**, jangan ditambahin sendiri.
+  - **`AppBottomNav` tab "Program" sekarang nunjuk `/tour.html`** (29 Sep 2026, waktu halaman
+    `/programs` dihapus - lihat "PROGRAMS PAGE DIHAPUS" di bawah).
 - **Trip Planner band (`.plan` / `#plan`) DIHAPUS dari homepage** (Wayan: kebanyakan tulisan; hero
   udah "trip planner" sendiri). CSS `.plan*` masih ada (dipakai halaman lain? cek dulu kalau mau buang).
 - **Driver cards DIHAPUS dari homepage** (section `.habout-people` + `#drivers-placeholder` +
@@ -1543,7 +1639,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
 harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 
-    <FormHero title sub photo alt [photoPos] details [embedded]>
+    <FormHero title sub photo alt [photoPos] details>
       {form halaman itu}                        <- judul, sub, FORM, FOTO, DETAILS
 
 - **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
@@ -1583,8 +1679,8 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   **min-content**, jadi form yang bentuk tersempitnya lebih lebar dari layar bakal
   ndorong track lewat viewport dan `body{overflow-x:clip}` motong tepi kanannya
   **diam-diam**. Form airport persis gitu di 320px (form 316px di kolom 288px).
-- **Judul turun jadi `<h2>` kalau `embedded`** (tab /programs punya H1 sendiri). Tanpa
-  itu /programs punya 2 H1.
+- **Prop `embedded` (judul jadi `<h2>`, tanpa crumb) UDAH DIHAPUS** bareng tab /programs -
+  `FormHero` selalu render H1 + crumb.
 - **Foto `/transfer` DIGANTI** `transfer-hero.webp` → `coastal-road-beach-bali.webp`.
   Foto lama itu fasad terminal dengan tulisan "BALI International Airport" kebaca jelas.
   Dulu aman karena ke-gelapin di belakang teks putih; jadi panel terang dia naro balik
@@ -1770,6 +1866,61 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
     label di tombol `[aria-haspopup="listbox"]`. Dan katalog WAJIB di-stub
     (`**/api/pricing/catalog*`), kalau nggak semua harga em dash & Book Now mati - itu
     bukan bug, itu emang state "API belum jawab".
+
+## KONTEN PINDAH KE .json (27 Sep 2026) — 5 file lagi
+`charter.js` · `transfer.js` · `airport.js` · `attractions/index.js` · `guides/index.js`
+sekarang tinggal `import X from './x.json'`, pola yang sama kayak `legal.json` &
+`tours.json`. Alasannya satu: **dashboard nulis DATA, JANGAN PERNAH KODE** — satu
+karakter nyasar di `.js` matiin build buat 102 halaman; paling jelek dari `.json`
+yang salah ya teksnya jelek.
+- **Dibuktiin, bukan diklaim**: 102 halaman hasil build di-fingerprint before/after,
+  **0 berubah**. Payload RSC di dalam `<script>` + path aset ber-hash **wajib
+  dinormalisasi dulu** — tanpa itu sha1 mentah lapor 102 halaman berubah tiap build
+  dan lu ngejar hantu seharian.
+- **Komentarnya dipindah ke wrapper, bukan dihapus.** JSON gak bisa nampung komentar,
+  dan komentar di file-file itu = catatan KENAPA. Dia kehilangan kedekatan sama baris
+  yang dia jelasin; itu ongkosnya, dan lebih kecil daripada ngilangin alasannya.
+- Aturan apa yang boleh diedit ada di `cahyana-api/content.js`, BUKAN di sini.
+
+## REVIEW DI CHARTER / TRANSFER / AIRPORT (27 Sep 2026, Wayan)
+Gerbang review di server **udah generik dari dulu** — dia baca `inquiries.service`,
+apa pun isinya. Jadi tamu charter/transfer/airport **selalu bisa** nulis review; yang
+gak ada cuma tempat bacanya. Sekarang ada: `components/reviews/ServiceReviews.jsx`,
+dipasang dari ketiga `page.jsx`-nya (**bukan** dari `*Section`, biar tab /programs
+gak ikut kebagian).
+- **Nanyanya beda tergantung halamannya jual apa:**
+  - charter → `service` **`CHARTER_SERVICE`** (`lib/constants.js`). Dulu string
+    `'Charter'` ditulis tangan di 2 tempat dan mau jadi 3 — **tiga salinan satu key
+    itu cara sebuah halaman diem-diem berhenti nemu review-nya sendiri.**
+  - airport → `service` **`AIRPORT_ROUTE`**, di-import, bukan diketik ulang.
+  - transfer → **`group="transfers"`**, karena dia jual **10 route** dan tamu nge-review
+    ROUTE yang dia naikin. Set-nya di-resolve server dari **katalog harga**, jadi route
+    baru ikut sendiri hari dia dihargain.
+- **Group yang gak dikenal = NOL review**, bukan semua. Kalau jatuh ke daftar penuh,
+  review tiap tour nongol di halaman transfer.
+- Verifikasi: **`verify-reviews3.mjs`** (59/59, 390 & 1280). Dia nge-assert **REQUEST
+  yang dikirim halaman**, bukan markup-nya: DOM-nya keliatan sama persis entah halaman
+  itu minta set yang bener atau minta semuanya.
+
+## EMAIL REVIEW MENDARAT DI REVIEW-nya (27 Sep 2026, Wayan)
+Tombol di email post-trip nulis "Leave a review", jadi dia harus **mendarat di
+review**: Past trips, popup kebuka. Link-nya sekarang `?review=1` (dirakit **sekali**
+di `postTripLink()` server, dipakai versi HTML & teks — dua salinan itu cara pembaca
+plain-text nyasar ke tempat lain).
+- Di `MyTripsCart`: **DUA `useEffect`**, dan itu perlu. Yang pertama baca flag →
+  tab `past` + buang flag-nya. Yang kedua **nunggu `trips` dateng** baru mbuka popup;
+  `trips` itu `null` sampai fetch-nya mendarat, dan **popup dengan checklist kosong
+  ngajarin tamu kalau link-nya rusak**.
+- **Gak ada yang bisa di-review (belum login / udah di-review semua) = berhenti di
+  tab-nya, NOL popup.**
+- Flag-nya dibuang dari URL biar reload gak mbuka lagi popup yang barusan ditutup —
+  **dan cuma flag-nya**; `?token=` itu punya `AccountProvider` (dia emang udah
+  ngapus sendiri sesudah dipakai, dan dua rewrite itu gak saling nimpa — dipatok).
+- **Dibaca di `useEffect`, JANGAN di initial state** — static export, paint pertama
+  wajib sama persis sama HTML hasil pre-render.
+- **JEBAKAN yang ke-tangkep pas build**: dua efek itu ditaro **di atas** state yang
+  mereka sentuh → compile lolos, **prerender `/my-trips` MATI** di temporal dead zone
+  (`Cannot access 'ae' before initialization`). Taro di bawah blok state.
 
 ## Sticky bottom bar (Sep 2026)
 **Cuma boleh ada SATU benda yang nempel di bawah layar.** Dua-duanya berbagi cangkang
@@ -2041,7 +2192,206 @@ Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu
     sabotase model itu bisa gak pernah ke-render (kejadian, lihat pelajaran harness di
     section rail).
 
+## PWA / APP MODE (26 Sep 2026, Wayan: "biar bisa dijadiin webapp, cuma bedanya di app homescreen ada bottom bar aja")
+Situs bisa di-install ke home screen. Yang berubah pas dibuka dari ikon home
+screen (bukan dari tab): ada **bottom bar**, dan navbar **nyerahin** dua ikonnya
+ke situ. Di tab browser & di desktop: **NOL berubah**.
+- **`public/manifest.webmanifest`** + meta iOS di `app/layout.jsx`. Ikonnya
+  `icon-192`/`icon-512` yang UDAH ADA - emang dibikin persis buat ini (lihat
+  section favicon: ubin emas **opaque**, bulatannya sengaja tumpah keluar tepi).
+  Itu juga alasan dua-duanya didaftarin **`maskable`**: ubin full-bleed itu persis
+  yang dimau mask. Chrome gak bakal nawarin install tanpa 192 DAN 512.
+- **`components/ui/pwaClasses.js` = SATU tempat kondisi app mode.**
+  `APP_ONLY` (nongol cuma di app mode) + `APP_HIDE` (ilang di app mode).
+  - **DITULIS PENUH, dan itu WAJIB.** Versi pertama ngerangkai dari konstanta
+    `PHONE` - **dua-duanya gak pernah ke-generate** Tailwind, jadi bar-nya tetep
+    `display:none` di app mode dan navbar gak nyerahin apa-apa, **tanpa error**.
+    Ini jebakan yang PERSIS SAMA yang udah ketulis buat `GRID_COLS`. Kalau butuh
+    varian ketiga, **salin barisnya**, jangan di-interpolasi.
+  - **`APP_HIDE` pakai `!hidden`, bukan `hidden`** - dia nempel di SAMPING
+    `inline-flex` punya ikon navbar, dan dua utility display specificity-nya sama
+    (yang menang urutan compile, bukan maksud kita).
+- **`@custom-variant standalone` di `app/globals.css` = DUA selector, sengaja:**
+  `@media (display-mode: standalone)` (Chrome/Android + iOS 16.4+) **DAN**
+  `html[data-standalone]` (iPhone lebih tua, yang cuma punya
+  `navigator.standalone`; atributnya ditulis `PwaRegister` pas mount). Satu
+  definisi, jadi gak ada device yang ketinggalan cuma di satu tempat.
+- **Isi bar: Home · Program · My Trip · Chat** (Wayan). Guide / Our Company /
+  Settings TETEP di hamburger - itu yang dibaca sekali, bukan yang dibalikin.
+  **Bar ini BUKAN salinan navbar**: yang dia beli itu **jumlah tap**, bukan link.
+  Makanya navbar **nyerahin** ikon chat + keranjangnya (`APP_HIDE`), biar gak ada
+  yang nongol dua kali.
+- **TETEP CUMA SATU BENDA NEMPEL DI BAWAH.** Wayan pilih **"Book bar menang"**,
+  jadi app bar yang ngalah - lewat **DUA rule, bukan satu**, dan pembagiannya
+  hasil UKUR:
+  - `[body:has(.bookbar)_&]:hidden` - BookBar nongol di bawah 993, persis rentang
+    app bar sendiri, jadi ngalah di semua lebar.
+  - `max-md:[body:has(.stickybar)_&]:hidden` - SectionSwitcher berhenti di 767.
+    Ngalah ke dia di atas itu bikin halaman listing di **768-992 gak punya bar
+    sama sekali** (dua-duanya ilang). `:has()` cocok ke elemen **walau
+    `display:none`** - itu sumber bug-nya.
+- **Yang KE-UKUR dan bikin asumsi awal gua salah** (dua-duanya bukan bug):
+  - **BookBar mulai ke-translate KELUAR** (`translate: 0px 150%`) di puncak
+    halaman detail, baru masuk pas di-scroll. Jadi di puncak 68 halaman detail
+    **NOL bar** - app bar-nya udah ngalah, BookBar-nya belum masuk. Itu ongkos
+    dari pilihan "Book bar menang", bukan regresi.
+  - **`SectionSwitcher` baru ke-MOUNT sesudah hero lewat** (`showStickyNav =
+    !q && !heroInView`), jadi `/tour.html` di puncak **gak punya `.stickybar` sama
+    sekali** dan app bar-nya nongol. Itu bener.
+  - Jadi aturan yang dijaga harness = **JANGAN PERNAH DUA**, dicek di puncak DAN
+    sesudah scroll - bukan "selalu tepat satu".
+- **Service worker (`public/sw.js`) SENGAJA GAK NGE-CACHE HTML.** Situs ini
+  **push = live**; worker cache-first bakal ngunci tiap tamu yang udah install di
+  markup waktu dia install, dan **gak ada yang kita push bisa nyampe dia** - itu
+  masalah cache favicon di doc ini, tapi seluruh situs. Cache-first CUMA buat
+  `/_next/static/` + font (namanya udah bawa content hash). **Foto TIDAK
+  di-cache**: namanya tetap dan Wayan nimpa foto di tempat.
+  - Update worker = naikin `VERSION`. Gak ada invalidasi per-file yang bisa salah.
+  - `app/offline/page.jsx` -> `out/offline.html`, satu-satunya HTML yang disimpen,
+    dan cuma kebaca kalau jaringannya sendiri gagal. `noindex`.
+- **Desktop app mode sengaja NOL berubah** (Chrome bisa install di desktop):
+  navbar-nya gak sempit, dan mindahin ikonnya bakal ninggalin lubang.
+- Verifikasi: **`verify-pwa.mjs` di root repo (192/192)**.
+  - **YANG HARNESS INI GAK BISA, dan ini penting**: Chromium di sini **ngabaikan
+    `Emulation.setEmulatedMedia` buat `display-mode`** (ke-ukur: `prefers-color-scheme`
+    lewat jalur yang sama balik `true`, jadi mekanismenya jalan - fiturnya yang gak
+    ada), dan `--app` headless gak ngasih page yang bisa disetir. Jadi **perilakunya
+    dites lewat cabang `html[data-standalone]`**, dan cabang media-query-nya dijamin
+    dengan cara lain: harness **ngadu CSS HASIL BUILD** - tiap class `standalone:*`
+    wajib punya DUA rule yang **deklarasinya sama persis dan lebar-scope-nya sama**.
+    Buang satu slot dari `@custom-variant` -> nyala.
+  - **Dites pakai 3 bug asli**: interpolasi dibalikin (**23 nyala**), cabang
+    iPhone lama dibuang (**45 nyala**), app bar berhenti ngalah ke BookBar
+    (**6 nyala**).
+  - **`tail -20` sempat NIPU**: run pertama keliatan "media/390 lolos" padahal
+    cabang media gak pernah jalan sama sekali - yang gagal ke-potong di atas
+    layar. Kalau satu grup kelihatan lolos dan grup lain rata merah, **baca
+    output penuhnya dulu**.
+
+## CHAT: PERTANYAAN ANEH LANGSUNG KE WAYAN (26 Sep 2026)
+Wayan, sesudah nyoba chat-nya di HP sendiri: *"kalo pertanyaan aneh langsung
+connect ke gua aja"*.
+- **`answerFor()` sekarang cuma punya DUA hasil**: `answer` (dijawab di tempat dari
+  FAQ/katalog) atau `handoff` (nyambung ke Wayan). Hasil ketiga, `offtopic`, **UDAH
+  DIHAPUS** - dulu dia nyetak *"I can only help with Cahyana tours, transfers and
+  bookings, so I'd rather not guess at that one."* + chip saran, dan **gak pernah
+  manggil `connect()`**. Itu yang Wayan alamin: dia nanya sesuatu yang gak ke-match,
+  panelnya nolak sopan, dan gak ada apa pun yang nyampe ke dia.
+- **`IN_SCOPE_WORDS` IKUT DIHAPUS** dari `content/shared/chat.js`. Dia satu-satunya
+  yang mutusin handoff-vs-decline, dan begitu decline-nya gak ada dia gak dibaca
+  siapa-siapa. Alasan dia dibuang, bukan cuma dibiarin nganggur: daftar kata itu
+  salah justru di arah yang paling mahal - tamu yang pertanyaannya **gak** kedengeran
+  kayak pertanyaan orang lain itu persis tamu yang paling layak diajak ngomong.
+- **`CHAT_COPY.offtopic` + `offtopicNudge` dihapus.** Kalau nemu kalimat decline itu
+  lagi di mana pun, itu regresi, bukan fitur - `verify-chat.mjs` nge-assert dia
+  **gak ada di layar** (dites: dibalikin ke sumbernya + build ulang -> **18 nyala**).
+- **Yang TETEP dijawab sendiri gak berubah**: sapaan, terima kasih, harga dari
+  katalog, jam mulai, FAQ. Yang berubah cuma ekornya - dan `HUMAN_WORDS` (situasi,
+  bukan lookup) tetep nyegat DULUAN, jadi pertanyaan kursi roda gak pernah ke-jawab
+  daftar harga.
+- **Ongkos yang jujur**: tiap pertanyaan yang gak ke-match sekarang bikin thread +
+  email ke Wayan, termasuk spam bot. Yang nahan cuma `publicLimiter` di
+  `/api/chat/start` (**20 request / 15 menit per IP**). Kalau nanti kebanjiran,
+  obatnya **BUKAN** balikin decline-nya - lebih baik naikin ambang limiter atau
+  saring di sisi server, biar tamu asli tetep nyampe.
+- Verifikasi: **`verify-chat.mjs` 618/618** (dari 600 - nambah 2 assertion per
+  halaman x lebar: pertanyaan aneh nyampe ke orang, dan decline-nya gak ada).
+
+## CHAT LIVE - WEBSOCKET (Sep 2026, Wayan: "gua mau web socket bro biar makin proper")
+Panel chat dulu polling tiap 5 detik. Sekarang dia pegang **WebSocket** selama
+kebuka: balesan Wayan mendarat pas dia ngirim, plus dua hal yang polling emang
+gak bisa bawa - **dia lagi ngetik**, dan **dia beneran lagi di dashboard**.
+- **`lib/chatSocket.js`** = koneksinya. URL-nya diturunin dari `API_BASE` yang sama
+  (http->ws), jadi gak ada env kedua yang bisa nunjuk host lain.
+- **KIRIM TETEP HTTP.** Soket itu kanal kabar, bukan jalur tulis - itu yang bikin
+  frame yang ke-drop gak berbahaya. Aturan yang sama dipegang server (lihat
+  CLAUDE.md `cahyana-api`).
+- **`onOpen` DIPANGGIL TIAP CONNECT, TERMASUK TIAP RECONNECT**, dan panel-nya nge-fetch
+  semua yang lewat dari id terakhir. Ini bagian yang paling penting: **tanpa itu,
+  pesan yang dikirim selagi soket mati GAK PERNAH NYAMPE SAMA SEKALI** - ke-ukur,
+  20 detik nol. Polling fallback gak nutup itu, karena dia ke-unmount lagi begitu
+  soketnya balik, sebelum tick 5 detiknya pertama jalan. Jadi dua-duanya perlu, dan
+  **tugasnya beda**: catch-up buat putus sebentar, polling buat tamu yang emang gak
+  pernah dapet soket.
+- **Polling fallback masih ada, 5 detik, cuma jalan kalau soket mati.** Tamu di
+  balik proxy yang mblokir WebSocket dapet **persis kelakuan yang lama**, bukan
+  panel yang diem-diem berhenti update.
+- **Ping tiap 25 detik dengan batas waktu jawabannya.** Cara normal soket mati itu
+  keliatan kebuka tapi gak ada yang baca; tanpa ini panel megang soket mati
+  berjam-jam. Server-nya sendiri ping tiap 30 detik dari sisi sana.
+- **Pesan di-dedupe pakai id database**, karena soket sama catch-up bisa sah-sah aja
+  mbawa yang sama.
+- **`data-live` di panel** = lagi pakai soket apa lagi polling. Gak ditampilin & gak
+  di-style: dari sisi tamu dua-duanya emang sengaja keliatan sama, jadi harness
+  butuh cara mbedain.
+- Copy baru di `content/shared/chat.js`: `ownerHere` ("Wayan is online right now.",
+  gantiin strip biasa), `hoursHere` (dipake di baris handover kalau dia emang lagi
+  ada - presence ngalahin jadwal), `typing`.
+- **Verifikasi: `verify-live.mjs` (29/29)** - ini cek PERTAMA di chat ini yang gak
+  pakai mock. Dia nyalain `cahyana-api` beneran (cuma database-nya di memori, lewat
+  `tools/chat-dev-server.js` di repo sana), browser asli, soket asli. Buat jalanin:
+  ```
+  node ../cahyana-api/tools/chat-dev-server.js              # port 4599
+  NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api npm run build
+  node tools/serve-out.js                                    # port 4000
+  node verify-live.mjs
+  ```
+  **Habis itu WAJIB build ulang tanpa env itu**, kalau nggak `out/` bawa localhost.
+- **TIGA JEBAKAN HARNESS, semuanya bikin assertion yang gak bisa gagal:**
+  1. **`ctx.setOffline(true)` GAK NUTUP WebSocket di Chromium.** Ke-ukur: `data-live`
+     tetep 1 selama "putus", dan balesannya nyampe lewat soket **13ms** sesudah
+     online. Jadi tes "celah"-nya gak pernah punya celah, dan dia **lolos** padahal
+     catch-up-nya udah sengaja dibuang. Sekarang soketnya diputus beneran lewat
+     **`ctx.routeWebSocket`** (proxy ke server asli, dan kita pegang kabelnya).
+  2. **Replay buat maksa duplikat itu no-op**, karena `replay` ke-reassign sama
+     handler reconnect yang belum nangkep frame apa-apa. Dipindah ke SEBELUM
+     diputus, dan sekarang dia **ngelaporin** dia beneran ngirim apa nggak -
+     assertion lamanya cuma ngecek ada fungsinya.
+  3. **`waitFor` yang throw = run-nya mati**, dan tiap assertion sesudahnya jadi nol
+     informasi. Semua diganti helper yang mbalikin boolean.
+- `verify-chat.mjs` (600/600) **nge-refuse soketnya** (`routeWebSocket` -> close) di
+  keempat context-nya: dia nge-stub route HTTP, jadi kalau soketnya dibiarin dia
+  bakal nembak API PRODUCTION lewat internet. Sekalian itu jadi tes jalur fallback.
+
 ## Navbar
+**NAVBAR SEKARANG = WO1 (28 Sep 2026, Wayan APPROVED). Ini NGE-OVERRIDE semua catatan
+navbar di bawah yang bertentangan** - khususnya "drawer di SEMUA lebar", "HAMBURGER &
+DRAWER BALIK KE KANAN", baris Welcome/Sign in/My Trip/Account Settings di drawer, dan
+"Order: Home · Itinerary ...". Catatan di bawah tetep disimpen sebagai sejarah.
+- **DESKTOP (>=993)**: logo · link halaman **di bar** (`components/layout/DesktopNav.jsx`:
+  Home · Program▾ (Tours/Destinations/Experiences/Transfer/Charter, buka pas hover/klik) ·
+  Guide · Our Company) · chat · cart · **slot akun**. **Gak ada hamburger.**
+- **HP (<=992)**: **hamburger KIRI logo** · logo · chat · cart · **slot akun di kanan**.
+  **Drawer keluar dari KIRI.** Burger nempel gutter kiri (16px, satu tepi sama crumb),
+  slot akun berhenti satu gutter dari kanan. Hamburger udah pindah sisi 3x (kanan -> kiri
+  -> kanan 27 Sep -> **kiri 28 Sep**); yang berlaku ini, jangan dipindah tanpa nanya.
+- **Slot akun = `components/layout/AccountMenu.jsx`**, dua keadaan:
+  - **Logout**: desktop tombol "Log in" (border) yang buka menu kecil (tombol Log in hijau +
+    Guests/Pickup/Currency); HP ikon orang (`UserRound`) yang langsung buka `AuthModal`.
+  - **Login**: lingkaran inisial (gak ada upload foto) + nama depan di desktop. Menu:
+    header nama+email · **Settings** · Guests/Pickup/Currency (desktop doang) · Sign out.
+  - **My Trips SENGAJA GAK ADA di menu akun** (Wayan) - ikon cart di bar yang jadi pintunya.
+- **Guests/Pickup/Currency = SATU komponen, `TripPrefsFields.jsx`**, dipakai drawer DAN menu
+  akun desktop. `idPrefix` wajib beda (`acct` / `menu`): drawer ke-mount di semua lebar, jadi
+  dua salinan ada bareng di halaman desktop. `CurrencyPicker` dapet prop `id` buat itu.
+  Menu akun gak boleh nutup pas opsi `Select` dipilih - popup-nya di-portal, jadi
+  outside-click ngecualiin `[data-portal]` (dites: pilih "4 guests" -> menu tetep kebuka).
+- **Drawer (HP)**: header "Menu" + tombol × (satu-satunya penutup yang keliatan - panel
+  nutupin burger) · Guests/Pickup/Currency · Home/Program/Guide/Our Company · WhatsApp.
+  Welcome/avatar, tombol Sign in, baris My Trip & Account Settings **UDAH DIHAPUS** (Wayan:
+  "remove dupes" - semuanya ada di slot akun).
+- **Opsi yang udah dicoba & DITOLAK**: pill gabungan `[ burger | akun ]` (opsi D) - dipakai
+  satu ronde, bubar begitu burger pindah ke kiri. Opsi lain yang ditawarin (tombol "Log in"
+  ber-border / teks polos di HP) gak dipilih.
+- **Chat + cart TETEP di bar** (Wayan pilih "keep both").
+- Dijaga `verify-design3.mjs` (**115/115**): burger kiri logo & di gutter kiri & satu tepi
+  sama crumb (HP), desktop nol burger & link halaman keliatan, slot akun paling kanan & di
+  gutter kanan, celah tinta chat/cart/akun sama, drawer nempel tepi KIRI & nutupin burger
+  & × beneran nutup ke kiri. Dites pakai bug aslinya (drawer dibalikin ke kanan): **3 nyala**.
+- **Sisa jujur**: ikon akun HP tap-target-nya seukuran ikon (20-28px), sama kayak chat/cart
+  - belum dikasih padding tak-kelihatan, belum ditanyain.
+
+**--- CATATAN NAVBAR LAMA (sebelum WO1) ---**
 - Order: **Home · Itinerary (badge) · Program▾ · About · Contact Us** + account icon.
   Program dropdown holds: Tours / Experiences / Transfer / Charter. **Contact Us**
   (Sep 2026) ditambah di navbar (link ke `contact.html`) — gantiin floating WhatsApp
@@ -2119,6 +2469,148 @@ Wayan ngirim snippet accordion terus minta diadu sama halaman FAQ kita, abis itu
   - **Sisa yang BUKAN dari perubahan ini**: `isActive('/')` cuma cocok sama pathname `/`,
     jadi kalau ada yang mendarat di `/index.html` baris Home gak nyala (nol link internal
     ke situ, jadi praktis gak ada efeknya). Belum ditanyain ke Wayan.
+**NAVBAR TETEP STICKY — HIDE-ON-SCROLL DIBIKIN TERUS DI-REVERT (27 Sep 2026)**
+- Wayan minta dulu: *"buat navbar gak sticky bro dia akan muncul kalo di scroll berlawanan
+  arah ... kayak facebook"*. Ke-ship (3 posisi, disetir arah scroll), dia lihat live, terus
+  minta dibalikin: *"Sticky navbar biarin sticky"*. **Jadi yang berlaku: header sticky,
+  dan yang gerak cuma TRIP BAR** — persis kayak sebelum perubahan itu.
+- **Jangan dipasang lagi tanpa nanya.** Itu keputusan Wayan yang udah dia lihat hasilnya,
+  bukan fitur yang kelupaan. `HEADER_TOP` (map 3 posisi) + akumulator arah **UDAH DIHAPUS**;
+  mau balik = tulis ulang, jangan cari sisanya.
+- Yang tinggal = dua state `slid` + **dua ambang** (tutup di 80, buka di 8). Alasan dua
+  ambang tetep sama: satu ambang nge-flip state di tiap lintasan, jadi jempol yang nempel
+  di dekat atas bikin bar-nya kedip.
+- **Bonus yang ikut kelar pas di-revert**: catatan "elemen sticky dipatok di
+  `--header-h` walau header-nya lagi ilang, jadi duduk 58px lebih rendah" **udah gak
+  berlaku** — header-nya gak pernah ilang lagi, jadi angkanya selalu bener.
+- Dijaga `verify-design3.mjs`: di 390 & 1280, scroll turun 600px header **WAJIB tetep
+  keliatan** & yang ketuck cuma setinggi `--tripbar-h`, scroll balik ke atas gak ngubah
+  apa-apa, dan di 40px (lewat 8, kurang dari 80) bar-nya masih utuh pas pertama turun tapi
+  **tetep ketuck** kalau balik dari bawah. Dites pakai bug aslinya (header disuruh ilang
+  lagi) → **10 nyala**.
+
+**HAMBURGER & DRAWER BALIK KE KANAN (27 Sep 2026, Wayan: "pindahin balik navbar
+humberger menu ke kanan lagi, dan kalo di buka menunya keluar di sisi kanan")**
+Pagi harinya dua-duanya sempat dipindah ke KIRI atas permintaan dia juga; dia lihat
+hasilnya live terus minta dibalikin. **Yang berlaku: burger anak TERAKHIR baris nav
+(mentok tepi kanan), panel keluar dari KANAN.** Jangan dipindah ke kiri lagi tanpa
+nanya - itu keputusan yang udah dia lihat hasilnya dua kali.
+- **Dua hal yang ikut pindah bareng tombolnya, dan gampang kelewat:**
+  - **Jaraknya pindah sisi**: `mr-3 max-[992px]:mr-2` (misahin burger ke logo waktu dia
+    di kiri) balik jadi **`max-[992px]:ml-1`** - sekarang yang dipisah burger ke
+    KERANJANG di kirinya.
+  - **Logo dapet margin kiri negatifnya balik** (`ml-[0.1rem]` /
+    `max-[992px]:ml-[-0.25rem]`). Itu narik logo mentok ke tepi kontainer, dan tepi itu
+    nganggur lagi begitu burger pergi.
+- **JARAK ANTAR IKON DISAMAIN (27 Sep 2026, Wayan: "jarak antar icon disamakan, jarak
+  antara my trip dan humberger kayaknya beda dari jarak my trip dan message")** - dia bener,
+  dan **cuma di HP**: ke-ukur 13,6 chat->cart lawan **19,6** cart->burger. Desktop dari
+  dulu udah rata 20,8.
+  - **Dua sebab numpuk, bukan satu**: burger bawa `max-[992px]:ml-1` (**+4px**) DAN
+    tintanya (bar 20px) duduk di dalam kotak 24px, jadi ke-inset **+2px** lagi.
+  - Diperbaikin jadi `max-[992px]:-ml-[2px]` - **negatif, dan itu bukan akal-akalan**:
+    yang diadu mata itu **TIGA GLYPH 20px**, dan burger satu-satunya yang tintanya gak
+    ngisi penuh kotaknya. Nyamain KOTAK bakal tetep nyisain 2px lebih di sisi itu.
+    Sesudahnya: **13,6 / 13,6** di HP, 20,8 / 20,8 di desktop.
+  - **Kotaknya tetep 24px**, jadi target jempol gak dikorbanin. Tepi kanan burger juga gak
+    gerak (ke-ukur: 374 di 390px = tetep pas di gutter 16) - yang ketarik cuma tepi kirinya.
+  - **Celah KOTAK-nya sekarang sengaja BEDA** (13,6 vs 11,6 di HP). Itu bener, jangan
+    "dibenerin" - beda 2px itu yang bikin tintanya rata.
+  - Gate-nya **gak punya aturan ini** sebelumnya, makanya lolos berbulan-bulan. Sekarang
+    `verify-design3.mjs` ngukur **tinta ke tinta** (svg, atau tiga bar buat burger; titik
+    status `absolute` di-skip) dan nge-assert spread < 0,6px. Dites pakai bug aslinya
+    (`ml-1` dibalikin) -> **nyala, spread 6,0px, cuma di 390**. **123/123.**
+- **Yang TIDAK ikut balik: ukuran burger.** Lebar 28px & gap bar 5px yang lama **jangan
+  dibalikin** - Wayan ngecilin ke **24/4** di permintaan terpisah yang gak dia revert.
+- **Panel tetep NUTUPIN burger** (drawer sesisi, mau kiri atau kanan sama aja), jadi
+  **tombol x di baris Welcome tetep WAJIB** - dia satu-satunya penanda tutup yang
+  kelihatan tamu. Jangan dihapus.
+- Dijaga `verify-design3.mjs` section 3 (**119/119**): burger di KANAN logo & nempel
+  gutter kanan & paling kanan di klusternya & di HP berhenti **satu `--container-x`**
+  dari tepi kanan (dibaca dari halaman, bukan angka yang diketik di harness), panel
+  nempel tepi KANAN & nutupin burger, x ada & **beneran nutup** (panel balik ke luar
+  layar KANAN).
+  - **Gate lamanya nangkep perubahan ini duluan** - begitu kodenya diubah, 11 assertion
+    "burger di KIRI" langsung merah. Itu bukti gate-nya emang ngukur sisi, bukan sekadar
+    ada-nya elemen. Sesudah aturannya ditulis ulang, dites pakai keadaan lama SATU-SATU:
+    drawer dibalikin ke kiri (**6 nyala**) · burger dibalikin ke kiri (**9**).
+  - **Satu assertion diganti, bukan dibuang**: dulu "burger satu tepi sama crumb"
+    (dua-duanya di kiri). Di kanan itu gak berarti apa-apa lagi, jadi cerminannya:
+    **burger berhenti satu gutter dari tepi KANAN viewport**. Tetep diadu lawan token
+    halaman itu sendiri.
+
+- **GUTTER LUAR: 24 rata -> 16 HP / 20 desktop** (Wayan: "padding di luar kiri kanan
+  kecilin dikit"). Baris nav dulu nulis **`px-6` hardcoded** - padahal doc ini sendiri
+  yang nulis "Section wrapper JANGAN hardcode px-6 lagi", jadi navbar emang kelewat waktu
+  sapuan `--container-x` dulu. Sekarang
+  `px-[var(--container-x)] min-[993px]:px-5`.
+  - **Efek sampingnya ikut pindah sisi**: waktu burger masih di kiri, gutter 16 bikin dia
+    lurus sama crumb & h1. Sekarang burger di kanan, jadi yang dia lurusin itu **tepi
+    KANAN** - sama-sama 16 di HP, cuma cerminannya.
+  - **Dua utility padding itu specificity-nya SAMA**, jadi yang menang urutan compile, bukan
+    maksud kita - jebakan yang udah ketulis berkali-kali di doc ini. Makanya angkanya
+    **diukur dari halaman** (16 & 20 kebukti ke-render), bukan dipercaya dari class-nya.
+- **POLA UKURAN FACEBOOK UDAH DICOBA & DI-REVERT.** Wayan sempat ngirim screenshot navbar
+  Facebook ("contoh pola layout dan ukuranya"), gua ukur gambarnya, terus ikon kanan
+  digedein ke 24 (= seukuran burger), celah kluster disamain 24, margin ekor dibuang, dan
+  burger->logo jadi 14,4. Dia lihat hasilnya terus bilang **"undo, pakai punya kita yang
+  sebelumnya"**. Jadi yang berlaku = angka lama: **ikon 20** · celah **13,6 HP / 20,8
+  desktop** (termasuk margin ekor di ikon terakhir) · burger->logo **8/12**.
+  - **Jangan "dibenerin" lagi ke pola FB.** Itu keputusan yang udah dia lihat hasilnya.
+  - Buat konteks kalau nanti ditanya lagi, ini yang ke-ukur dari screenshot-nya (rasio
+    ke lebar burger, jadi skala gambar gak ngaruh): ikon kanan **1,10x** · celah antar
+    ikon **1,08x & rata** · burger->logo **0,60x** · bar burger celah = **3x** tebal.
+    Punya kita: 0,83x · 0,57-0,87x · 0,33-0,50x · 2x.
+- Dijaga `verify-design3.mjs`: gutter kiri == kanan, gutter < 24 & >= 14, di HP gutter
+  nav == `--container-x`. Sisi burger & drawer di-assert di section "HAMBURGER & DRAWER
+  BALIK KE KANAN" di atas - **dua-duanya KANAN sekarang**, jadi kalau nemu catatan lain
+  di doc ini yang bilang kiri, yang berlaku itu section tadi.
+
+**HAMBURGER DIKECILIN SENOTCH (27 Sep 2026, Wayan: "humberger bisa size kecilin lagi dikit?")**
+- **28 → 24px lebar**, gap bar **5 → 4px**, bar HP **22 → 20px**. Tinggi bar tetep 2px
+  (1px kebaca blur di layar non-retina).
+- **OFFSET X ITU TURUNAN, BUKAN PILIHAN**: bar luar jalan sejauh `tinggi bar + gap` biar
+  ketemu di tengah, jadi gap 4 = `translate-y-[6px]` (dulu gap 5 = 7px). **Ganti gap atau
+  tinggi bar = ganti angka itu bareng**, kalau nggak X-nya gak pernah nutup — dan itu gagal
+  diam-diam, keliatannya cuma "ada yang aneh dikit".
+- **TARGET JEMPOL HP SENGAJA GAK IKUT DIKECILIN** (`max-[992px]:h-[2.2rem]` = 35,2px).
+  Itu ukuran jempol, bukan ukuran gambar; ngecilin dia bikin tombolnya lebih susah kena.
+- Dijaga `verify-design3.mjs`: lebar tombol ≤24 & ≥18, bar muat di tombol & ≥16px, jarak
+  bar == tinggi bar + gap (**dibaca dari halaman**, bukan angka yang diketik di harness),
+  target jempol ≥32px, dan **X-nya beneran nutup** — 3 titik tengah bar wajib jadi satu
+  (spread <1,2px).
+  - **SABOTASE PERTAMA GAK NYALA, DAN ITU HARNESS-NYA YANG RUSAK**: offset dibalikin ke
+    7px, gate-nya lapor `spread 0.0` **81/81**. Sebabnya bar yang udah muter 45° rect-nya
+    jadi ~18px tinggi, jadi filter `height <= 4` nyisihin DUA dari tiga bar dan spread-nya
+    ngukur **satu benda lawan dirinya sendiri**. Sesudah difilter pakai `position: static`
+    (titik dot-nya `absolute`) + di-assert **3 bar masih ke-ukur pas kebuka** → nyala,
+    spread 2,0. Ini jebakan yang sama kayak tombol Done & `verify-btnfont`: **kalau
+    harness bilang dua benda cocok sempurna, cek dulu dia gak lagi ngukur satu benda.**
+
+- Verifikasi: **`verify-design3.mjs`** di root repo (**95/95**, 390 & 1280). Dites pakai
+  6 bug aslinya, SATU-SATU: shadow navbar dibalikin (**2 nyala**) · burger dibalikin ke
+  kanan (**8**) · header disuruh ilang lagi pas scroll turun (**10**) · offset X ketinggalan
+  di angka gap lama (**2, TAPI cuma sesudah filter bar-nya dibenerin**) · drawer dibalikin
+  ke kanan (**6**) · gutter dibalikin ke `px-6` (**4**).
+  - **DUA ASSERTION SEMPAT GAK KEJALAN SAMA SEKALI, dua-duanya ketangkep gara-gara sabotase
+    nyala LEBIH SEDIKIT dari yang diharapin.** (1) Cek "burger satu tepi sama isi halaman"
+    buka **homepage**, dan homepage **sengaja gak punya breadcrumb**, jadi dia di-skip
+    diam-diam - dipindah ke `/ubud-tour.html`. (2) Cek gutter HP ditulis
+    `ok(w > 992 || ...)`: di desktop dia lolos lewat short-circuit sambil **NYETAK klaim
+    khusus-HP di sebelah angka desktop**, jadi kebacanya kayak cek beneran - sekarang
+    di-`if (w <= 992)` biar gak nongol sama sekali di desktop.
+    **Kalau sabotase nyala lebih sedikit dari yang lu harapin, cek dulu assertion-nya
+    kejalan - bukan langsung nambah assertion baru.**
+  - **DUA ASSERTION SEMPAT TAUTOLOGI, dua-duanya lolos dengan ngukur kotak 0x0.**
+    "burger di luar panel drawer" pakai `nav[aria-label]` - itu nyomot `AppBottomNav`
+    ("App") yang `display:none` di luar app mode, rect-nya 0x0. Diganti `header nav`:
+    **masih** 0x0, karena `<nav>` di header itu cuma pembungkus dan anaknya `position:fixed`
+    jadi dia collapse. Panel drawer-nya **`<ul>`**, bukan `<nav>`. Sekarang harness-nya
+    **nolak rect < 100px** sebagai harness rusak, bukan lolos.
+  - **Gotcha ketiga**: `html` punya `scroll-behavior: smooth`, jadi `scrollTo(0)` dari 600px
+    itu ANIMASI - nunggu 450ms bikin header ke-ukur pas masih di tengah jalan dan lapor
+    "balik ke puncak" gagal. Wajib `waitForFunction` sampai `scrollY` beneran nyampe.
+
 - **Spacing icon kluster kanan** (akun/cart/menu): `.acct` margin-right 0.9rem,
   `.navbar__cart` margin-right 1.3rem (Sep 2026, dulu 0.3rem/0.85rem — kerasa mepet).
   Gap besar logo↔kluster (`.navbar__logo{margin-right:auto}`) itu disengaja (standar
@@ -2192,17 +2684,139 @@ Order **must be kept** (declarations first, run last):
   di-token (`var(--r-xl) var(--r-xl) 0 0`). **DIBIARIN** (jangan ikut di-token): `50%`
   (bulat/avatar), `2px`/`3px` (bar tipis), `0`. (Contoh lama buat `2px`/`3px` itu underline
   judul section - **udah gak ada**, lihat "Judul section" di Design system.)
-- **Shadow (token, Agu 2026, Wayan minta subtle)**: 4 tingkat elevasi neutral + focus-ring,
-  sengaja HALUS (opacity rendah) biar kartu "nempel halus", bukan ngambang berat:
-  `--shadow-sm` `0 1px 2px /.04` (chip/kontrol kecil) · `--shadow-md` `0 2px 8px /.05`
-  (kartu default, gantiin `--shadow-card` lama) · `--shadow-lg` `0 6px 18px /.06` (dropdown/
-  popover/hover) · `--shadow-xl` `0 14px 34px /.08` (modal/overlay/panel) · `--focus-ring`
-  `0 0 0 3px rgba(34,32,28,.18)` (fokus field). **DIBIARIN** (disengaja, jangan di-merge):
-  bayangan **green-tint** `rgba(31,61,43,x)` (kehangatan brand — booksidebar, driver hover,
-  navbar), **directional/offset-negatif** (trip-bar, panel akun geser, book-bar — nyorot ke
-  atas/samping), **animasi glow booksidebar** (`booksidebarGlow` keyframes), **focus-ring
-  error** merah, **hairline** `0 0 0 1px`. Sama filosofinya kayak amber/gold: satuin yang
-  kebetulan duplikat, jaga yang punya makna.
+**KARTU DAPET BAYANGANNYA BALIK - SATU TOKEN, `--shadow-card` (27 Sep 2026, Wayan:
+"pakai shadow aja dah bro, tapi setipis mungkin ya")**
+Sapuan shadow di hari yang sama ninggalin kartu listing **tanpa batas sama sekali**. Ke-ukur,
+bukan dikira: kartu `#fff` di atas section `#fff` di atas body `#fff`, `border: 0px none`,
+`box-shadow: none` - jadi radius 16px-nya pun gak ngegambar apa-apa. Yang keliatan cuma foto
++ teks ngambang. Ditawarin 4 opsi (garis rambut `--line` · latar cream · cream+garis · kartu
+cream), Wayan milih **bayangan balik**, bukan garis.
+- **NGE-OVERRIDE bullet di bawah ini** buat KARTU doang. Sisanya tetep: nol elevasi di navbar,
+  di panel, di mana pun. Yang balik cuma **satu token buat satu peran**.
+- **ANGKANYA HASIL UKUR, bukan selera**: piksel paling gelap tepat di bawah tepi kartu lawan
+  putih halaman, di 1280. **none = 0** (beneran gak keliatan) · .06 = 10 · **.09 = 15** ·
+  .12 = 18 · dua-lapis = 21. `.09` itu **paling tipis yang masih kebaca sebagai kartu**.
+  Mau lebih tipis lagi = ganti **satu angka** itu, dia satu-satunya definisi.
+- **Ditulis di `style.css` DAN `app/globals.css`** (mirror, aturan lama). Yang di
+  `globals.css` ada di dalam `@theme`, jadi Tailwind nge-generate utility **`shadow-card`** -
+  dicek di CSS hasil build, bukan diasumsiin (`.shadow-card{--tw-shadow:0 1px 2px #22201c17}`).
+- **TIGA keluarga kartu doang**, biar listing / homepage / guide gak bisa melenceng:
+  `CARD` di `ListingRow` · `CARD_FRAME` di `cardClasses` · `FRAME` di `HomepageCard`.
+  **`ReviewCard` SENGAJA nggak** - dia udah bawa `border border-line` dari dulu; dikasih
+  dua-duanya bikin dia satu-satunya tepi dobel di web ini.
+- **Yang sebenernya ilang cuma kartu LISTING.** Ke-ukur: `HomepageCard` & `GuideCard` fotonya
+  ngisi hampir seluruh kartu (guide: foto 261px dari 271px), jadi **fotonya sendiri yang jadi
+  kartu**. Mereka ikut dikasih biar satu bahasa, bukan karena rusak.
+- **NOL ongkos layout, dibuktiin**: 172 kotak kartu di 6 halaman x 390/1280 diadu before/after -
+  **nol yang geser**, tinggi dokumen nol berubah, nol halaman melar. (Opsi garis `--line` ongkosnya
+  +2px tinggi per kartu - `box-sizing:border-box` bikin lebarnya aman tapi tingginya `auto`.)
+- **Gate: `verify-design3.mjs` (107/107, dari 95).** Aturannya sekarang **dua arah**, dan paruh
+  keduanya sama pentingnya: (1) nol `box-shadow` ber-offset/blur **KECUALI** yang cocok sama
+  `--shadow-card` **yang di-resolve halaman itu sendiri** (angka yang diketik di harness cuma
+  ngebuktiin harness setuju sama dirinya sendiri), dan (2) **bayangan kartunya WAJIB masih ADA**
+  di 5 halaman. Tanpa (2), "nol shadow di mana-mana" jadi cara buat LOLOS - dan itu persis cara
+  kartunya jadi tembus pandang kemarin, dengan semua gate ijo.
+  - Dites pakai 2 bug asli, **SATU-SATU**: `shadow-card` dibuang lagi dari `ListingRow`
+    (**6 nyala**, tepat 3 halaman listing x 2 lebar - homepage & guide hub tetep ijo karena
+    komponennya lain, jadi cek-nya presisi) · shadow navbar dibalikin (**2 nyala**, mastiin
+    loop yang gua tulis ulang masih nangkep elevasi beneran).
+
+**HERO HALAMAN DETAIL GAK NGE-ZOOM PAS DI-HOVER (27 Sep 2026, Wayan: "di page tour,
+destination, experience sekarang ada howver untuk heronya, gua gamau ada itu kalo di howver
+hero no zoom")**
+Ubin `HeroMosaic` dulu nge-scale fotonya ke **1.04** pas kursor nempel. Udah **DIHAPUS**.
+- **DUA-DUANYA dibuang, bukan cuma scale-nya**: `hover:[&>img]:[transform:scale(1.04)]` DAN
+  `[&>img]:[transition:transform ...]`. Transition itu **cuma ada buat nganimasiin zoom
+  itu**; ditinggal = transition yang nembak properti yang gak ada yang nge-set = persis
+  kelas bug yang `check-motion` (rule DEAD) dibikin buat nangkep. Ini aturan yang sama
+  kayak sapuan shadow: **buang token = buang prefix/baris-nya sekalian.**
+- Sesudahnya `TILE_BASE` **gak nulis `transition` sendiri sama sekali**, jadi yang kepakai
+  press feedback global di `style.css` (aturan SNAP otomatis kepenuhan).
+- **Hover di TOMBOL hero TETEP** (CTA + tombol galeri: `hover:bg-cream` /
+  `hover:bg-[rgba(255,255,255,0.26)]`). Yang gak dia mau itu **foto-nya nge-zoom**, bukan
+  tombol kehilangan respons.
+- **Kartu NOL hover, titik** (Wayan: "gausah ada howver"; 29 Sep 2026 lift lama di `CARD_FRAME` + `HomepageCard` ikut DIHAPUS, lihat WO7) - waktu bayangan kartu dipasang
+  gua nawarin hover border/bayangan naik, **ditolak**. Jangan ditambahin nanti.
+- **Gate: section 5 di `verify-design3.mjs` (119/119).** Diukur di **FOTONYA**, bukan dibaca
+  dari class: `getBoundingClientRect` ikut kena transform, jadi kalau kotaknya identik pas
+  kursor nempel berarti emang gak ada yang nge-zoom, apa pun kata class-nya. Dicek di
+  **ketiga jenis halaman** yang Wayan sebut (tour/destination/experience) - mereka 3 komponen
+  halaman beda walau hero-nya satu. Dites pakai bug aslinya (zoom dibalikin) -> **6 nyala**,
+  dan angkanya nunjukin bug-nya telanjang: **763.8 -> 794.4**.
+  - **Guard "rect kosong = harness rusak" beneran kepakai**: URL experience gua salah ketik,
+    harness-nya mendarat di 404, nyomot ikon **17px**, dan **ngadu** - bukan diem-diem lolos.
+
+- **SHADOW UDAH GAK ADA SAMA SEKALI (27 Sep 2026, Wayan: "hilangin shadow di semua web
+  gaada lagi shadow di bawah navbar, di bawah card")**. Ini NGE-OVERRIDE bullet token
+  shadow Agu 2026 yang dulu di sini (4 tingkat `--shadow-sm/md/lg/xl` + daftar bayangan
+  green-tint/directional yang "sengaja dibiarin") - **semuanya udah dibuang**.
+  - **Token-nya DIHAPUS, bukan di-set `none`.** Token yang nilainya `none` ninggalin
+    puluhan class `shadow-md` yang kebaca kayak ngapa-ngapain. **53 pemakaian dibuang dari
+    34 file**, terus `--shadow-*` dicabut dari `style.css` DAN `app/globals.css`.
+  - **`shadow-[...]` arbitrary TETEP JALAN** sesudah token-nya dicabut (dites: shadow
+    navbar dibalikin, dia ke-render). Jadi gak ada "mati otomatis" yang bisa diandelin -
+    yang nahan cuma gate di bawah.
+  - **ENAM yang SENGAJA MASIH box-shadow, dan semuanya BUKAN elevasi** - jangan ikut
+    dibuang kalau nemu: `--focus-ring` (fokus keyboard, itu aksesibilitas) · ring field
+    invalid di `formClasses.js` · `inset 0 0 0 1px` baris charter (itu **border**) ·
+    **3 hairline bendera** `0 0 0 1px` (bendera putih gak punya tepi tanpa itu) · halo
+    titik slider hero `0 0 2px` (titik putih di atas foto terang).
+  - **`text-shadow` GAK IKUT DIBUANG** (4 tempat): itu buat teks putih di atas foto, dan
+    permintaannya soal elevasi ("di bawah navbar, di bawah card"). Beda benda.
+  - **SAPUANNYA NGERUSAK 11 CLASS, DAN NOL GATE NANGKEP** (ketemu 27 Sep 2026, Wayan:
+    *"di desktop page listing hancur bro ... tadi waktu gua suruh lu hilangin shadow jadi
+    hancur dia"*). Ini bagian paling penting di section ini.
+    - Sapuannya mbuang token shadow tapi **ninggalin PREFIX VARIAN-nya**. Tiga bentuk:
+      (a) `hover:` nyantol tanpa utility · (b) prefix **DOBEL** (`hover:hover:bg-cta-d`,
+      `max-[992px]:max-[992px]:[transition:...]`) · (c) `var(--)` kosong.
+    - **DUA di antaranya bukan cuma mati - dia bikin class yang SALAH.** Di string yang
+      di-concat, `'... hover:' +` nempel ke potongan BERIKUTNYA:
+      - `ListingRow`: `min-[769px]:flex-col` jadi **`hover:min-[769px]:flex-col`** - kartu
+        listing desktop baru jadi kolom **kalau di-hover**. Itu "hancur"-nya Wayan.
+      - `HomepageCard`: `after:content-['']` jadi `hover:after:content-['']` - tanpa
+        `content`, `::after` **gak ke-generate**, jadi scrim gradient di kartu homepage
+        ilang dan teks putihnya duduk langsung di atas foto.
+      - Sisanya diam-diam mati: hover CTA tombol search hero, transition tombol
+        "Plan trip" di hero HP, 3 entry panel chat/hs, dan shadow overlay DOKU.
+    - **KENAPA SEMUANYA LOLOS**: class yang salah eja **gak ke-generate CSS sama sekali**.
+      Jadi dia gak ada di stylesheet hasil build, gak ada elemennya buat diukur browser,
+      dan `verify-noshadow` yang nyisir `box-shadow` yang KE-COMPUTE jelas gak bakal
+      nemu - dia emang lagi nyari benda yang udah gak ada. **Empat gate CI + tiga
+      harness browser semuanya ijo di atas kerusakan ini.**
+    - **Gate barunya: `node tools/check-classes.js`** (gate CI ke-5). Dia baca **SUMBER**,
+      bukan `out/` - itu satu-satunya tempat kerusakan ini kelihatan. Dites pakai
+      keadaan rusak aslinya: **11/11 nyala**.
+      - Dua kali harus dibenerin sebelum bener: (1) `[k]:` (computed key JS) ke-flag
+        sebagai varian - pola arbitrary Tailwind WAJIB ngandung `&` atau `@`;
+        (2) splitter-nya motong di kurung, jadi `[@media(min-width:769px)]:` pecah dan
+        **3 dari 11 kelewat**. Nilai arbitrary penuh kurung, jadi kurung gak boleh
+        jadi pemisah.
+    - **ATURAN BUAT SAPUAN CLASS BERIKUTNYA**: mbuang token yang punya prefix varian =
+      **buang prefix-nya juga**; token yang isinya satu baris/entry array penuh = buang
+      BARISNYA. Dan sesudah sapuan, **jalanin `check-classes`** - grep tebakan gak cukup,
+      grep pertama gua cuma nemu 5 dari 11.
+    - **YANG GUA LEWATIN**: doc ini sendiri nulis "styling berubah -> verify computed-style
+      diff = 0". Buat sapuan 53-pemakaian-34-file itu gua **gak** ngukur before/after,
+      gua cuma ngecek shadow-nya ilang. Ngukur geometri before/after bakal langsung
+      nunjukin kartu listing desktop berubah bentuk.
+
+  - Gate: **`verify-noshadow.mjs`** (bagian dari `verify-design3.mjs` di root repo).
+    Patokannya **aturan**: tiap `box-shadow` yang ke-compute di 14 halaman × 390/1280 gak
+    boleh punya offset atau blur > 2px. Dia juga nge-assert ring/hairline yang disengaja
+    **masih ke-render** (93-96 elemen), jadi "semua shadow ilang" gak bisa lolos dengan
+    cara ngematiin semuanya.
+    - **JEBAKAN PARSER YANG BIKIN VERSI PERTAMA LOLOS PALSU**: Tailwind v4 nyusun
+      `box-shadow` dari **5 layer** (`inset-shadow, inset-ring, ring-offset, ring, shadow`),
+      jadi nilai computed-nya `rgba(0,0,0,0) 0px 0px 0px 0px, ...×4, <yang asli>`. Versi
+      pertama ngambil **4 angka px pertama dari SELURUH string** - itu layer kosong, jadi
+      dia baca `0 0 0 0` dan **lapor bersih padahal shadow navbar udah gua balikin**.
+      Sekarang string-nya dipecah per layer dulu (koma yang di LUAR `rgba(...)`), tiap
+      layer dinilai sendiri, dan layer yang alpha-nya 0 di-skip.
+    - **Parser yang bener itu langsung nemu 1 shadow yang kelewat**: sheet hero HP pakai
+      **`max-[992px]:shadow-[...]`** - shadow dengan **prefix varian**. Sapuan pertama
+      kelewat karena survey gua bilang "nol shadow ber-varian", dan itu SALAH: grep-nya
+      yang kurang teliti. Cara survey yang bener = pecah sumber per token dipisah spasi
+      (`grep -ohE "[^ '\"\`]*shadow[^ '\"\`]*"`), jangan ngarang pola prefix.
 - **Motion (token, Agu 2026)**: durasi transisi + easing dipusatin biar animasi satu ritme.
   **BUG 3 MINGGU (dibetulin Sep 2026)**: `--dur-fast` di `style.css` ketulis
   `--dur-fast: var(--dur-fast)` - nunjuk dirinya sendiri, jadi tokennya resolve ke KOSONG. Tiap
@@ -2825,8 +3439,71 @@ Order **must be kept** (declarations first, run last):
   - **Gotcha harness**: span harga bawa utility `PLAN_PRICE_LEAD`, **bukan class `.price`** —
     nyari `.price` hasilnya nihil. Sama juga `.info__list--yes/--no` & `.info__card`: udah
     di-migrasi ke utility, jadi cek hasilnya (warna li yang di-mute) bukan nama class-nya.
-  - **Gotcha harness**: mata uang default situs = **IDR**, jadi stub katalog WAJIB `symbol:'Rp'`;
-    kalau di-stub `'$'` harness-nya ngukur "$1.000.000" — string yang gak pernah dilihat tamu.
+  - **Gotcha harness**: mata uang default situs = **USD** sejak 24 Sep 2026 (dulu IDR).
+    Stub katalog ngikutin mata uang yang lagi dites — `symbol:'$'` buat default, `'Rp'`
+    kalau harness-nya emang lagi nyetel `cue_currency` ke IDR. Salah stub = harness-nya
+    ngukur string yang gak pernah dilihat tamu (dulu kebalikannya: di-stub `'$'` padahal
+    default-nya rupiah, jadi kebaca "$1.000.000").
+
+## DISKON MUSIMAN - HARGA CORET (26 Sep 2026, Wayan)
+Aturannya, angka-angkanya, dan gerbangnya ada di **`cahyana-api`** (`promo.js` +
+section "DISKON MUSIMAN" di CLAUDE.md sana). Di sini cuma **tampilannya**.
+
+- Katalog sekarang ngirim **`listStandard`/`listExclusive`** buat TIAP item -
+  **sama persis sama harga sekarang kalau gak ada sale**. `quote()` juga ngirim
+  **`list`** per baris.
+- **`<Price>` nyoret harga lama CUMA kalau dua angkanya BEDA**, bukan kalau
+  "lagi ada sale". Itu bedanya sama diskon karangan: kartu yang nyoret angka
+  gara-gara ada flag itu persis yang **sengaja GAK ditiru** dari GetYourGuide
+  waktu `BookBar` dibikin. Nyoret karena tamu emang bayar lebih murah dari angka
+  itu = kebalikannya.
+  - Catatan lama di doc ini ("harga coret = diskon karangan, jangan dipasang")
+    berlaku **cuma selama kita gak punya harga asli**. Sekarang punya.
+- **`PRICE_WAS`** di `priceClasses.js`: muted, lebih kecil, **bobot normal**, dan
+  **DI DEPAN** angka barunya. Itu angka yang TIDAK dibayar, jadi gak boleh
+  berantem sama yang dibayar - dan naro dia di belakang bikin kalimatnya kebalik.
+  Hook-nya **`[data-price-was]`**.
+- **BATAS YANG JUJUR**: coretannya nongol di mana pun harga di-render lewat
+  `<Price>` - kartu, book bar, kartu booking. **Keranjang & checkout nyusun
+  string "Rp..." sendiri** (lihat komentar di `Price.jsx`), jadi di situ yang
+  keliatan cuma harga sale-nya, tanpa coretan. **Angka yang ditagih tetep bener**
+  di dua-duanya; yang kurang cuma baris coretnya.
+- Verifikasi: **`verify-sale.mjs` di root repo (91/91)** - USD & IDR, 390 & 1280,
+  halaman listing & detail, plus satu putaran **tanpa sale** yang nge-assert
+  **nol** angka kecoret di mana pun. Dites pakai 3 bug: coret dipasang tiap ada
+  harga list (11 nyala) · coretan ditaro sesudah harga baru (8) · coretan
+  di-style setebal harga aslinya (16).
+
+## MATA UANG DEFAULT = USD (24 Sep 2026, Wayan) — dan itu KEPUTUSAN RAIL, bukan tampilan
+`DEFAULT_CURRENCY` di `lib/constants.js`. Cuma ngefek ke **paint pertama** tamu baru;
+yang udah pernah milih tetep kebawa pilihannya (`cue_currency` di localStorage).
+
+**Kenapa diubah**: default itu diem-diem nentuin **rail pembayaran**. `railFor('IDR')`
+→ DOKU, dan **DOKU nolak kartu terbitan luar** (dibuktiin 24 Sep 2026, lihat CLAUDE.md
+`cahyana-api`). Jadi turis asing yang gak pernah nyentuh currency picker: lihat harga
+rupiah → dikirim ke rail yang nawarin QRIS / transfer bank / e-wallet (yang dia gak
+punya) → form kartunya nolak dia. **Gak bisa bayar sama sekali**, dan nol lapisan di
+sini yang bisa lihat itu kejadian. Situs ini jualan ke turis asing, jadi default-nya
+harus yang kartunya bisa jalan.
+
+- **Tamu Indonesia gak rugi apa-apa selain satu tap** — pilih IDR, dapet DOKU, yang
+  justru rail paling murah buat kita settle.
+- **JSON-LD gak kesentuh**: `priceCurrency` di `content/shared/schema.js` emang udah
+  `"USD"` ditulis tangan, gak pernah ngikutin mata uang tampilan.
+- **`priceFallback` di kartu listing juga gak kesentuh** — itu string USD (`"$40"`) dari
+  dulu, dan dia yang keliatan sebelum katalog API balas.
+- **Cuma `TripPrefsProvider` yang baca `DEFAULT_CURRENCY`** (dicek: nol pemakai lain).
+- Verifikasi: **`defaultcur.mjs`** di scratchpad (11/11) di halaman hasil build — tamu
+  baru lihat `$` & katalog diminta `currency=USD`, tamu lama yang milih IDR **tetep
+  lihat `Rp`** (ganti default JANGAN nimpa pilihan orang), tamu lama USD gak berubah,
+  nol page error, dan tamu baru **gak dikasih `cue_currency` yang gak pernah dia pilih**.
+  Dites pakai bug aslinya (default dibalikin ke IDR) → 2 nyala.
+- **Yang BELUM diputusin**: biarin tamu milih **rail**-nya sendiri di booking rupiah
+  ("kartu, ditagih USD" vs "QRIS/transfer/e-wallet, rupiah"). Itu jawaban produk yang
+  paling bener — rail ngikutin ALAT BAYAR, bukan cuma mata uang — tapi butuh kerjaan
+  server juga (`create-order` sekarang nolak booking IDR). Perubahan default ini
+  **ngecilin** masalahnya, gak ngilangin: tamu asing yang sengaja milih IDR masih kena,
+  dan buat dia ada catatan + tombol switch di `PaymentStep` (`railInfo()` di `lib/rails.js`).
 
 ## POPUP KONFIRMASI = 3 STEP kalau pembayaran NYALA (Sep 2026, Wayan)
 Wayan: *"kalo misalnya ada input dan summary mending bikin 2 step bro, pertama step input
@@ -3100,6 +3777,70 @@ beneran di USD & IDR terus baca teksnya (nol janji 48 jam, window 24 jam masih
 disebut, baris full jualan harinya bukan diskon, peringatan settle-USD cuma nongol
 di IDR).
 
+## DASHBOARD OWNER — PINDAH KE REPO SENDIRI (26 Sep 2026, Wayan pilih "A")
+Halaman `/dashboard.html` di repo ini **UDAH DIHAPUS**, bareng `components/admin/`
+(5 file), `KEY.adminToken`, dan entry `'/dashboard': null` di `promo.js`.
+Dashboard-nya sekarang **aplikasi Next.js sendiri**: repo `cahyana-dashboard`,
+di-deploy ke Vercel (`https://cahyana-dashboard.vercel.app`). Dokumentasinya di
+README repo itu.
+
+**Kenapa dipindah, dan kenapa jangan dibalikin ke sini:** repo ini static export,
+jadi halamannya WAJIB publik dan token sesinya WAJIB di `localStorage` — yang
+digerbang cuma datanya. Itu satu-satunya desain yang jujur di build statis, tapi
+di server beneran dua-duanya bisa lebih ketat: halamannya di-gate **sebelum
+dikirim**, dan tokennya di cookie `httpOnly` yang JS halaman itu sendiri gak bisa
+baca. Plus yang di sini gak punya chat sama sekali.
+
+**Alasan sebenernya dihapus: DUA SALINAN BAKAL MELENCENG.** Ini pelajaran yang
+sama yang bikin dashboard HTML di `cahyana-api` dibuang sebulan lalu — dan waktu
+itu yang tersisa justru yang di sini. Sekarang tinggal SATU. Kalau butuh halaman
+admin baru, taro di `cahyana-dashboard`, jangan di sini.
+
+**Backend-nya GAK ikut pindah** dan masih hidup: `/api/admin/bookings`,
+`/api/admin/prices`, `/api/admin/login`, `/api/admin/chats` — semuanya di
+`cahyana-api`, dan aturan grouping booking + label uang masih di `dashboard.js`
+sana. Yang kehapus cuma halamannya.
+
+## EDIT KONTEN DARI DASHBOARD (26 Sep 2026, Wayan pilih "jalur git")
+Wayan: *"Ok git, aja buat dulu ya nanti gua pelajarin biar bisa benerin kalo ada
+apa-apa"* - sesudah dia nanya kenapa ribet, dan nyebut yang dia MAKSUD: *"kontenya
+cuma details nya aja kok, miss ubud tour kan ada cerita dan detailsnya tuh, include
+exlude gitu"*.
+- **Edit = COMMIT ke repo ini, bukan tulis ke database.** Alasannya satu dan gak
+  bisa ditawar: situs ini **static export**, jadi tiap kata di-bake ke HTML pas
+  build. **Tulisan yang diambil browser pas halaman dibuka = tulisan yang GAK
+  ADA di hasil Google.** Jadi alurnya: dashboard -> commit -> CI build (~3 menit,
+  lewat 4 gate) -> Hostinger. Ongkosnya gak instan; untungnya tiap edit punya
+  git history sebagai tombol undo.
+- **DASHBOARD NULIS DATA, JANGAN PERNAH KODE.** Itu kenapa dua file dipecah ke
+  `.json`: **`content/shared/legal.json`** + **`content/tours/tours.json`**
+  (dua-duanya cuma di-`import` dari `index.js` sebelahnya). Satu karakter
+  nyasar di file `.js` bikin build MATI buat semua halaman; yang paling jelek
+  bisa dilakuin `.json` rusak cuma kebaca aneh.
+  - **Dua-duanya hasil PINDAH, bukan tulis ulang** - `JSON.parse(JSON.stringify(...))`
+    balik identik dulu, baru dipindah. Diverifikasi, bukan diklaim: HTML jadi
+    **102 halaman di-fingerprint before/after, 0 berubah** (payload RSC di dalam
+    `<script>` + path aset ber-hash dinormalisasi dulu - tanpa itu raw sha1
+    lapor 102 halaman berubah tiap build, dan itu bikin lu ngejar hantu).
+- **Yang boleh diedit ditentuin di `cahyana-api/content.js` (`EDITABLE`), BUKAN
+  di sini.** Buat tour: `desc`, `metaDesc`, `items[].name`, `items[].highlight`,
+  `included`, `excluded`. **`included`/`excluded` BOLEH ditambah & dihapus**
+  (1-20 baris) - itu persis edit yang Wayan minta, dan daftar string polos gak
+  punya struktur buat dirusak. Stop **nggak**: dia bawa foto + ukuran + refId.
+- **YANG DIKUNCI, DAN INI SOAL DUIT**: **`bookItem` itu KEY KATALOG HARGA, bukan
+  nama tampilan.** Di-rename dari dashboard, harganya bukan ganti nama - dia
+  **ILANG**. `title` juga dikunci (dibaca crumb + kartu listing + key review +
+  JSON-LD - lihat section "DUA NAMA PER HALAMAN"), begitu juga `img`/`refId`/
+  `ogImage`/`heroStyle`. Aturannya **allowlist**, jadi field yang gak kepikiran
+  otomatis DITOLAK, bukan diem-diem bisa ditulis.
+- **Kalau nambah field yang bisa diedit**: daftarin di `EDITABLE.<kind>.fields`
+  di API. **Jangan** "benerin" penolakan dengan nge-lebarin form di dashboard -
+  form itu lapis kedua, server yang nahan.
+- Panduan bahasa Indonesia buat Wayan: **`EDIT-KONTEN.md` di repo
+  `cahyana-dashboard`** (cara pakai + urutan ngecek kalau error + langkah token).
+- Verifikasi: `node tools/content-test.js` di API (**56 assertion**) +
+  `verify-content.mjs` di repo dashboard (**56/56**, 390 & 1280).
+
 ## Yang masih nunggu Wayan (update terakhir: Agu 2026)
 - Harga bertanda `CEK WAYAN` di **data.js** (paket operator: watersport, trek Batur, jeep,
   ATV, rafting, Zoo, Bird Park) — angka riset, Wayan koreksi.
@@ -3110,16 +3851,11 @@ di IDR).
 - Foto nganggur: 13 duplikat/sisa lama (hapus?) + stok belum kepasang (`ubud-palace.jpg` dkk
   buat slot TODO) — keputusan Wayan.
 - Google Search Console: submit sitemap (belum pernah).
-- **`/itinerary.html` jadi halaman yatim** (ketemu Sep 2026): navbar (ikon desktop +
-  menu HP) semuanya nunjuk `/my-trips.html`, dan **nol** link internal ke
-  `itinerary.html` di seluruh repo. Halamannya tetep di-build + masuk sitemap +
-  bisa diindeks Google. Isinya BUKAN duplikat My Trips: `/itinerary.html` =
-  builder rencana multi-hari (`ItineraryBuilder`, judul "Build Your Own Bali
-  Itinerary"), `/my-trips.html` = keranjang (`MyTripsCart`, noindex). Dua-duanya
-  baca simpanan yang SAMA (`cue_itinerary_v1` lewat `useItinerary`) - jadi
-  storage-nya jelas masih kepakai, yang nganggur cuma halamannya. Pilihan buat
-  Wayan: (a) biarin, (b) pasang link lagi (keyword "build your own bali
-  itinerary" lumayan), (c) pensiunin -> 301 ke my-trips + keluarin dari sitemap.
+- ~~`/itinerary.html` jadi halaman yatim~~ **UDAH DIHAPUS** (29 Sep 2026, Wayan pilih (c)): page +
+  `ItineraryBuilder` + `itnClasses.js` + `content/shared/suggest.js` + `suggestState`/`removeDay`
+  dibuang, `Redirect 301 /itinerary.html /my-trips.html` di `.htaccess`, keluar dari sitemap +
+  routes + crumbs + promo + JSON-LD. 2 link guide "itinerary builder" jadi "My Trips page".
+  Storage `cue_itinerary_v1` TETEP (My Trips yang pakai). Catatan lama soal builder di doc ini = sejarah.
 - **Broadcast/newsletter promo + update Bali** (DITUNDA — Wayan mau lanjut nanti):
   pakai **Resend Audiences + Broadcasts** (Cara A). Rencana: auto-daftarin email
   akun baru ke Audience Resend (1 fungsi di `cahyana-api` POST /api/account), terus
@@ -3142,7 +3878,7 @@ di IDR).
 ## Before calling it "done" (checklist)
 1. `npm run build` passes (this is the real syntax/build check now — no more `node --check script.js`).
 2. All active CI gates pass: `node tools/check-urls.js`, `node tools/check-detail.js`,
-   `node tools/check-assets.js`, `node tools/check-motion.js`. **Gate the commit on these**
+   `node tools/check-assets.js`, `node tools/check-motion.js`, `node tools/check-classes.js`. **Gate the commit on these**
    (jangan commit kalau ada yang merah).
    Marker class yang WAJIB ada di detail page (check-detail): `booksidebar`, `bookcard__cta`,
    `tour-layout--book`, `tour-hook`, `review-cta` — jangan dihapus pas convert.
@@ -3202,3 +3938,253 @@ di IDR).
     kayak gitu = harness keilangan alurnya. Kalau flag-nya yang beneran rusak, yang merah
     cuma sisi NYALA-nya (udah dibuktiin: `PAY_DEFAULT=false` → 4 merah, sisi `?pay=0`
     tetep ijo).
+
+## POPUP REVIEW - SUBMIT GAK BOLEH SETENGAH JALAN (27 Sep 2026)
+Aturan siapa yang boleh review ada di **`cahyana-api`** (section "SIAPA YANG BOLEH
+REVIEW = SIAPA YANG DAPET EMAIL KONFIRMASI"), bukan di sini. Di sini cuma popup-nya.
+
+- **`ReviewModal` nge-POST SATU KALI PER TRIP yang dicentang**, karena review
+  ditandain per tour (`booking_ref` + `service`), dan satu tamu bisa punya trip
+  dari beberapa booking. Itu disengaja.
+- **Dulu dia `throw` di kegagalan PERTAMA.** Akibatnya: review yang udah keterima
+  **hidup di situs** (auto-publish, `status: 'approved'`) sementara layarnya cuma
+  nunjukin satu baris merah - jadi tamu bacanya "gak ada yang kejadian", coba lagi,
+  terus dapet *"You've already submitted a review for this tour."*
+- Sekarang **semua** dicoba, hasilnya dikumpulin, baru dilaporin:
+  - semua lolos -> layar Thank you biasa.
+  - **sebagian lolos -> TETEP Thank you**, plus daftar yang gagal + alasan
+    server-nya. Review yang udah terbit **gak pernah** dilaporin sebagai gagal.
+  - semua gagal -> error, kayak dulu.
+- **Copy layar sukses dibenerin**: dulu nulis *"will appear once approved"*, padahal
+  review **auto-publish** sejak Sep 2026 - gak ada yang di-approve, jadi tamu
+  disuruh nungguin sesuatu yang udah kejadian. Sekarang *"Your review is now live
+  on the site."*
+
+**Sisa yang JUJUR, belum dibenerin:** `AccountProvider` narik `/bookings/mine`
+**sekali pas mount** dan gak di-refresh sesudah submit. Jadi tamu yang nutup popup
+terus mbuka lagi **tanpa reload** masih lihat trip yang barusan dia review; centang
+lagi -> *"You've already submitted a review for this tour."* Pesannya jelas dan
+gak ada yang salah kesimpen, tapi itu kelas bug yang sama (daftar gak sepakat sama
+gerbang). Benerinnya = `refreshTrips` di provider + dipanggil 2 pemakai
+(`MyTripsCart`, `ReviewGate`). Belum ditanyain ke Wayan.
+
+Verifikasi: **`node verify-review.mjs`** di root repo (**42/42**, 390 & 1280 x
+2 keadaan), jalan di atas halaman hasil build (`npm run build && npm run serve`).
+Patokannya: **tiap trip yang dicentang beneran dicoba** (bukan berhenti di yang
+pertama), layar sukses nyebut yang gagal + namanya + alasan server-nya, yang
+SUKSES gak ikut kedaftar sebagai gagal, nol "once approved", halaman gak melar,
+nol page error. Dites pakai 2 bug aslinya, satu-satu: `throw` di kegagalan pertama
+dibalikin (**4 nyala**) dan copy "once approved" dibalikin (**4 nyala**).
+- **DUA JEBAKAN HARNESS, dua-duanya bikin harness nyalahin aplikasi yang bener:**
+  1. `page.innerText('div.fixed.inset-0')` nyomot cangkang **`AuthModal`**, yang
+     ke-mount opacity 0 di SEMUA halaman - jadi harness lapor "no thank-you"
+     padahal screenshot-nya jelas nunjukin layar Thank you. Sekarang shell-nya
+     di-filter `hasText: 'Leave a Review'` + ada assertion **"HARNESS READ THE
+     WRONG BOX"** biar salah-baca gagal sebagai harness rusak, bukan lolos.
+  2. Route `**/api/**` yang nangkep `/reviews` ikut nelen **GET**-nya
+     `ReviewsStrip`, jadi "2 review dicoba" kebaca **3**. Filter `method === 'POST'`.
+- Dan satu lagi yang bikin 390 kebaca "aplikasinya gak punya tombol review": baris
+  back di HP labelnya **`My trips`** (t kecil), jadi regex `/My Trips/` yang
+  case-sensitive **diem-diem gak match apa-apa**. Di HP My Trips mendarat di
+  keranjang, jadi daftar section-nya emang di balik back - harness WAJIB lewat situ.
+
+**SUSULAN 28 Sep - `refreshTrips` UDAH DIPASANG** (yang di atas ditulis "belum
+dibenerin"). `AccountProvider` sekarang punya `refreshTrips()` (fetch yang sama yang
+jalan pas mount), dan `ReviewModal` manggil dia **pas popup DITUTUP** kalau ada minimal
+satu review yang masuk - lewat semua jalan tutup (Done, ×, klik luar).
+- **Pas ditutup, BUKAN pas sukses**: `ReviewGate` ngoper `prefill` sebagai objek baru
+  tiap render, jadi re-read di tengah popup bakal ngejalanin ulang effect reset dan
+  **ngelempar layar Thank you balik ke form**.
+- `verify-review.mjs` **54/54**: stub `/bookings/mine`-nya ngikutin review yang udah
+  keterima (kayak server asli), terus harness **nutup, buka lagi, dan submit ulang** -
+  yang diadu itu **apa yang KEKIRIM**, bukan teks popup: sisa satu trip = popup gak
+  nampilin daftar centang sama sekali, jadi "Ubud Tour gak ada di teks" bakal lolos
+  dengan sendirinya. Dites pakai bug aslinya (refresh dibuang): **10 nyala**, termasuk
+  `second submit sent ["Ubud Tour","Kecak Dance"]`.
+
+## "UDAH PUNYA AKUN? CEK EMAIL LU" (28 Sep 2026, Wayan)
+Aturan & alasannya di `cahyana-api` (section "LOGIN CUMA LEWAT INBOX, KECUALI AKUN
+BARU"). Singkatnya: server **gak lagi ngasih login** ke browser buat akun yang udah
+ada - dia ngirim link sign-in ke inbox akun itu, dan situs yang ngasih tau tamunya.
+- **`BookConfirmModal`**: respons booking bawa `signin_sent` + `signin_email`. Di dua
+  layar akhir ("Booking Received!" dan "Almost there - just the payment") nongol satu
+  baris: *"You booked as X. Check your email to sign in."* (dipendekin 28 Sep,
+  Wayan: *"biar bahasanya lebih singkat"*) Hook `[data-signin-note]`.
+  - Yang ditampilin **email yang tamu ketik sendiri**, bukan nama akun. Contoh Wayan
+    nulis "log in as A account" - tapi kalau pakai nama, orang yang ngetik email
+    orang lain bakal dikasih tau nama pemiliknya.
+- **Form udah ke-isi dari akun** kalau udah login (itu udah ada dari dulu). Wayan
+  sempat nawarin toggle "book sebagai akun / sebagai customer baru" - **gak dibikin**:
+  field-nya tetep bisa diedit, dan booking yang dibikin sambil login selalu nempel
+  ke akun yang login (pesan buat temen = ganti nama/email-nya aja). Toggle = satu
+  keputusan lagi buat SEMUA tamu demi kasus yang jarang.
+- **`AuthModal` "Create account"** dengan email yang udah terdaftar: modal tetep
+  kebuka dan nyetak *"You already have an account as X. Check your email to sign in."*
+  (`createAccount()` balikin `{signin:true}`). Dulu
+  tampilan Create gak punya slot pesan sukses sama sekali - cuma tampilan Sign in.
+- **Tamu lama yang gak login dan bayar online** gak bisa lihat layar "Booking
+  confirmed" (layar itu nanya server pakai login). Dia dapet cabang **"Payment sent"**
+  yang udah ada di `PayWaiting` - konfirmasinya tetep nyampe lewat email.
+- Verifikasi: **`verify-account.mjs`** di root repo (**34/34**, 390 & 1280): create
+  account akun lama/baru + booking akun lama/baru lewat My Trips (`?pay=0`). Patokan:
+  pesan nyebut email yang bener, **localStorage gak pernah megang token** buat akun
+  lama, akun baru tetep auto-login, nyampe layar sukses, nol page error, gak melar.
+  Dites pakai 2 bug: modal booking gak nyimpen `signin_email` (**2 nyala**) dan
+  `createAccount` gak ngerti `signin_sent` (**2 nyala**).
+
+## KURS LIVE + 12 MATA UANG (29 Sep 2026, Wayan)
+Aturannya + mesinnya di **`cahyana-api/fx.js`** (lihat CLAUDE.md sana: "ATURAN HARGA MATA
+UANG"). Singkatnya: **rupiah = satu-satunya harga asli**; mata uang lain = rate TERTINGGI
+7 hari terakhir x **1.03 (buffer, SEMUA rail)**, dibulatin ke atas ke **tangga harga rapi**
+($40, $42, $45, $48 ...; gak ada celah > 10%). Naik = hari itu juga, turun = sesudah 7 hari
+berturut-turut. Di sini cuma sisi tampilannya:
+- **12 mata uang**: USD IDR AUD EUR GBP SGD NZD CAD CHF JPY MYR HKD. `CURRENCIES` di
+  `lib/constants.js` = cermin `fx.CURRENCIES` (urutan = urutan picker). `PAYPAL_SETTLES`
+  di `lib/rails.js` ikut. **Situs gak nyimpen kurs apa pun lagi** - `IDR_PER_USD`/`RATE`
+  di `lib/payment.js` UDAH DIHAPUS.
+- **7 bendera baru** di `FlagDefs.jsx` (SGD NZD CAD CHF JPY MYR HKD), tulis tangan kayak
+  5 yang lama, disederhanain di 20x14 - bukan heraldik persis. List picker sekarang
+  **`max-h-[15rem]` + scroll** (12 baris kalau gak di-cap tembus bawah drawer/menu akun).
+- **Deposit di langkah bayar dateng dari catalog** (`catalog.deposit.display`, kurs yang
+  SAMA kayak harga lain). Catalog belum jawab / beda mata uang = deposit `-`, BUKAN
+  ditebak (kecuali USD: $10 itu definisinya). `payOptions({... deposit})`.
+- **HTML hasil build udah bawa harga API hari itu**: `app/layout.jsx` nge-fetch catalog USD
+  SEKALI per build (timeout 10 detik) dan dioper jadi `initialCatalog` ke `PricingProvider`.
+  Jadi paint pertama = angka yang lagi ditagih, bukan `priceFallback` basi. API gak
+  kejangkau pas build = balik ke `priceFallback` (perilaku lama). Ongkos: ±23 KB mentah /
+  2,5 KB gzip per halaman.
+- **Build ulang TIAP HARI**: `deploy.yml` punya `schedule: '45 23 * * *'` (07:45 WITA,
+  sesudah fetch kurs 06:15 WITA di API). JSON-LD (`JsonLd.jsx`) juga ambil `usd` dari
+  catalog pas build, jadi Google ikut kurs yang sama.
+- **`priceFallback` & salinan harga lain** (listings.js, home.js, related.js, transfer.json,
+  Airport.jsx, schema.js) disamain ke aturan baru di kurs BASELINE (17.600) - mereka cuma
+  kepakai kalau build gak nyampe API. `check-prices` sekarang ngadu lawan
+  `pricing.catalog()` beneran (bukan `pricing-data.usd` mentah), dan **dibenerin**: dia
+  crash sejak 27 Sep gara-gara `transfer.js` jadi re-export `.json`.
+- **BUG LAMA YANG KETEMU (belum disentuh, keputusan Wayan)**: kartu/book bar
+  **experience** nulis **"per person"** tapi angka dari catalog itu **total 2 tamu**
+  (catalog di-fetch `guests=2`): ATV kebaca $80 "per person", padahal per orangnya $38.
+  Sebelum hari ini sama aja (fallback-nya per orang, begitu catalog nyampe jadi total 2
+  orang); sekarang cuma lebih cepet keliatan karena catalog udah ada di HTML.
+  `check-prices` sengaja tetep ngadu kartu experience lawan harga PER ORANG.
+- **`MyTripsCart` baris ~352 masih nyetak `$`/`Rp` sendiri** dari `usd`/`idr` - itu
+  ringkasan lama, gak ikut mata uang tamu. Belum disentuh.
+- Verifikasi: **`verify-fx.mjs`** (20/20, 390 & 1280: HTML statis udah bawa harga API ·
+  12 mata uang urut + bendera kegambar · list gak tembus layar & scroll · ganti ke JPY =
+  semua harga ¥ & di tangga · gak melar · nol page error) + **`verify-fx-pay.mjs`**
+  (8/8: deposit & bayar-penuh di langkah bayar = angka API, AUD & JPY). Dua-duanya butuh
+  `cahyana-api/tools/chat-dev-server.js` di 4599 + build pakai
+  `NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api` - **habis itu build ulang tanpa env itu**.
+- `check-pay-agree` sekarang jalan di 12 mata uang x deposit dari fx (1440 kombinasi).
+
+## CARD (DOKU) = RAIL DEFAULT, PAYPAL = PILIHAN TAMU (29 Sep 2026, Wayan)
+Wayan: *"default card payment dari doku bukan paypal, tapi kasih opsi ke tamu bayar
+pakai card atau paypal"*, sesudah DOKU nge-approve kartu luar negeri di akunnya.
+**Ini NGE-OVERRIDE** aturan "IDR -> DOKU, sisanya -> PayPal", `DOKU_READY`,
+`DOKU_ALL` / `DOKU_ALL_CURRENCIES`, dan `railInfo()` ("kartu luar ditolak") -
+semuanya UDAH DIHAPUS. Kalau nemu catatan lama yang bilang kebalikannya, yang
+berlaku ini.
+- **Langkah bayar punya "Pay with": Card | PayPal**, di ATAS tiga opsi nominal.
+  **Tombolnya IKON DOANG** (Wayan: *"icon, no text"*): Lucide `CreditCard` + mark PayPal
+  tulis tangan (`PayPalMark`, Lucide gak punya logo brand); namanya di `aria-label`.
+  **Penjelasan tiap rail + catatan rupiah/estimasi pindah ke balik (i)** di samping
+  "How would you like to pay?" (`InfoDot align="end"` - kebuka ke KIRI; default-nya
+  ke kanan dan di 390px nembus tepi layar, ke-tangkep `verify-rail`). Popup-nya ngambang,
+  Book Now nol gerak (di-assert).
+  Card kepilih default. State-nya `payRail` di `BookConfirmModal`; checkout yang
+  ke-mount sesudah Book Now = rail yang DIPILIH (`railFor(payRail)`).
+- **(i)-nya `subtle`** (Wayan: *"smaller and a bit more transparent"*): ikon 12,8px + `opacity-55`, balik penuh pas hover/fokus/kebuka. Prop di `InfoDot`, jadi charter gak kesentuh. **Teks popup-nya gak nyebut USD** (Wayan: *"its all for whatever chosen currency"*): "the currency you chose" / "the amount in your currency"; PayPal+rupiah = "converted at today's rate". Dijaga `verify-rail` (103/103).
+- **Card SELALU nagih rupiah.** Tamu yang lihat mata uang lain dapet angka **Rp
+  yang EXACT** di tiap opsi + `≈ $xx` sebagai estimasi, plus satu baris "bank lu
+  yang konversi". Angka Rp-nya dari `payOptions({ totalIdr, depositIdr })`
+  (`baseTotalIdr(priced)` + `catalog.deposit.idr`) - aturan yang SAMA kayak
+  `payment.js` server (deposit, full, referral dibulatin ke bawah per 1000).
+  **PayPal** = mata uang tamu sendiri, exact; rupiah -> USD dan tamu dikasih tau.
+  Ini cermin aturan email di `payment-display.js`, jadi halaman & email ngomong sama.
+- **Cerminnya juga ada**: tamu RUPIAH yang milih PayPal dapet angka **$ EXACT** (yang
+  PayPal tagih, dari `was.usd` baris + deposit $10) + `≈ Rp` estimasi. `baseTotalUsd()` +
+  `payOptions({ totalUsd })` -> `amountUsd`; `check-pay-agree` ngadu itu lawan
+  `quotePayment({ baseDisplay:null, currency:'USD' })` - persis yang `paypal-routes` tagih.
+- **Server GAK PERNAH nuker pilihan tamu.** `providers.routeFor(cur, rail)` - rail
+  yang dipilih tapi gak nyala = ditolak (`wrong_rail` / 503) + email owner, BUKAN
+  dipindah diam-diam ke rail satunya (nominal & mata uangnya bakal berubah di
+  bawah tamu). Tanpa pilihan (`providerFor`) = DOKU, jatuh ke PayPal kalau DOKU mati.
+- `check-pay-agree` sekarang ngadu juga **angka rupiah** tiap opsi (site vs server,
+  1440 kombinasi) + rail default + mata uang tagihan per rail (24). Sabotase angka
+  rupiah -> 440 merah; dijalanin lawan server lama -> merah.
+- Verifikasi: **`verify-rail.mjs`** di root repo (USD/AUD/IDR x 390/1280, checkout
+  beneran lawan API lokal - cara jalanin di kepala file).
+
+## HARGA EXPERIENCE = TOTAL BUAT N TAMU, BUKAN "PER PERSON" (29 Sep 2026, Wayan)
+Rumusnya (server, `pricing.js`): **tiket per orang x jumlah tamu + Rp100.000
+transport flat per booking**. Jadi angkanya bukan per orang (dulu labelnya
+"per person" di atas total 2 tamu) dan **bukan per mobil** juga (naik tiap tamu -
+ATV 2 tamu Rp1.340.000, 6 tamu Rp3.820.000). Wayan setuju label **"for 2 guests"**.
+- Satu helper **`lib/priceUnit.js`** (`priceUnit(perPerson, guests)`) dipakai book
+  bar, baris Book now, dan booking form. Jumlahnya ngikut `displayGuests` (katalog
+  di-fetch pakai angka yang sama), jadi label & angka gak bisa beda.
+- **Fallback experience di kartu/home/JSON-LD sekarang total 2 tamu** ($80 ATV, bukan
+  $38). `check-prices` ngadu SEMUA kartu lawan `i.standard.display` katalog (guests=2),
+  pengecualian per-person-nya udah dibuang.
+- FAQ "per person or per car?" + JSON-LD FAQ-nya ditulis ulang ke rumus yang bener.
+- **Chip hero "Group" di 11 halaman experience** dulu nulis `"Per person"` (klaim yang sama
+  salahnya) - sekarang `"Ticket per guest + transport"` (`attractions.json`, label-nya tetep
+  `Group` karena label = pemilih ikon).
+
+## WO7 - COMPONENT AUDIT FIXES (29 Sep 2026, Wayan approved the audit and its fixes)
+Audit report: WO7-component-audit (session scratchpad, not in the repo). Compared against
+shadcn/ui source (read from GitHub) and Preline behaviour (read from the npm package);
+the shadcn/Flowbite/Preline docs sites are blocked from the sandbox, so nothing here
+claims a Flowbite class-level match.
+
+**1. Separators + border token.**
+- `components/ui/Separator.jsx` + `ui/separatorClasses.js` are the one way to draw a line:
+  `SEP_H`/`SEP_V` (standalone, `bg-line`), `ROW_RULE` (line under a row, none under the
+  last), `ROW_RULE_TOP`, `RULE_TOP`/`RULE_BOTTOM` (panel edges). Colour is ALWAYS `--line`.
+- 22 hard-coded near-line hex hairlines (#f2efe7 #eee #ece6d8 #e6dfce #e2ddd0 #ececec
+  #e6e6e6 #e4dcc8 #e0ddd4) were moved onto `var(--line)`, and `var(--color-line)` (8 sites)
+  was respelled `var(--line)` (same value). **A new hex hairline is a bug.**
+- **Left alone on purpose, ask Wayan**: `#d8d2c4` on `ITN_GHOSTBTN` and the dashed empty
+  state in `ReviewsStrip` (button/dropzone borders, already flagged undecided), the
+  star-off colour, and `#cfc9ba` on the payment radio dot (that value is the `gold-l` token).
+- Dashed borders stay a deliberate exception (dropzone / add-row).
+
+**2. Menus are DISCLOSURES, not `role="menu"`.** `AccountMenu` and the Program list in
+`DesktopNav` are a button with `aria-expanded` + `aria-controls` and a plain group of
+links. `role="menu"` / `menuitem` / `aria-haspopup="menu"` are GONE: they promise arrow-key
+roving focus these panels never had. Escape closes and returns focus to the trigger. Do
+not put `role="menu"` back without also building arrow-key navigation.
+
+**3. Tabs - only where they really are tabs.**
+- **No real tab set is left on the site** (`AllPrograms` was deleted 29 Sep 2026, and its
+  `ui/useTabKeys.js` with it). If a real tab set is added again: `tab` + `tabpanel`
+  (`aria-controls`/`aria-labelledby`), roving `tabIndex`, arrows/Home/End - rebuild the hook.
+- `DetailTabs` "Jump to section" and `RailLayout`'s in-page sections were `role="tablist"`
+  with no panels (DetailTabs' buttons were not even `role="tab"`). They are navigation, so
+  they are `<nav>` + `aria-current="true"` now. The two verify scripts that selected
+  `[role=tab]` on the rail (`tools/tw/verify-mytrips.mjs`, `verify-rail-sidebar.mjs`) were updated.
+- The Standard/Exclusive toggle in `ItineraryBuilder` is `radiogroup`/`radio` + `aria-checked`.
+
+**4. One dialog behaviour.** `ui/useDialog.js`, used by `Modal.jsx` AND `ModalPresence.jsx`
+(every booking / review / confirm / payment-details popup): `role="dialog"` +
+`aria-modal` + `aria-label` on the BOX, focus moves onto the box on open (never onto a
+field - that would raise the phone keyboard and trigger the iOS zoom), Tab is trapped,
+Escape closes the TOPMOST dialog only (skipped while a `[data-portal][data-open]` Select
+popup is up), focus returns to the opener. **`ModalPresence` needs a `label` prop.**
+A dialog whose `onClose` is a no-op stays locked - BookConfirmModal passes a no-op while
+the paid-waiting screen shows, so Escape does nothing there. This ADDS Escape to the
+booking and review modals (they had none).
+The mobile drawer in `Navbar.jsx` is still hand-rolled (no focus trap) - not part of WO7.
+
+**5. Announcements.** `ui/LiveRegion.jsx` (always-mounted `role="status"`); the three cart
+toasts render it and mark the visual toast `aria-hidden`. Every field/form error
+(`FIELD_ERR`, `REFMSG_ERR`, 24 sites) carries `role="alert"`; the sign-in note and the
+settings "saved" message are `role="status"`.
+
+## PROGRAMS PAGE DIHAPUS (29 Sep 2026, Wayan: "delete all program page, I use single listing page right now")
+`/programs.html` (`AllPrograms`: tab Tours/Experiences/Transfer/Charter) dulu noindex & gak di-link
+dari mana pun kecuali tab "Program" di `AppBottomNav`. Udah dihapus: route, komponen, `useTabKeys`,
+prop `embedded` di `FormHero`/`CharterSection`/`TransferSection`, entri sitemap/routes/crumbs/promo.
+- `public/.htaccess`: `Redirect 301 /programs.html /tour.html` (target hidup, bukan rantai, bukan
+  awalan URL hidup). Tab Program di app bar -> `/tour.html`.
+- Catatan lama di atas soal `/programs` (h1 "All Programs", tab di /programs, dst) = sejarah.

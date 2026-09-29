@@ -1,3 +1,5 @@
+import ServiceReviews from '@/components/reviews/ServiceReviews';
+import { CHARTER_SERVICE } from '@/lib/constants';
 import CharterSection from '@/components/sections/CharterSection';
 import JsonLd from '@/components/JsonLd';
 
@@ -13,6 +15,12 @@ export default function Page() {
     <>
       <JsonLd page="charter" />
       <CharterSection />
+      {/* Every charter booking stores the same service key (CHARTER_SERVICE), so one query covers the page. */}
+      <ServiceReviews
+        service={CHARTER_SERVICE}
+        title="What guests say about our charters"
+        emptyText="No charter reviews yet - be the first to tell other travellers how your day went."
+      />
     </>
   );
 }

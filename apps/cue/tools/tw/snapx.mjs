@@ -19,7 +19,7 @@ function serve(root, port) {
       let p = decodeURIComponent(q.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
       if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; }
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
@@ -40,7 +40,7 @@ for (const vw of [1280, 560, 390]) {
     const roots = [...document.querySelectorAll(selAll)];
     const els = [];
     roots.forEach((rt) => { els.push(rt); els.push(...rt.querySelectorAll('*')); });
-    const grab = (e, pseudo) => { const c = getComputedStyle(e, pseudo || undefined); const o = {}; for (const p of PROPS) o[p] = c[p]; return o; };
+    function grab(e, pseudo) { const c = getComputedStyle(e, pseudo || undefined); const o = {}; PROPS.forEach((p) => { o[p] = c[p]; }); return o; }
     return els.map((e) => ({ _t: e.tagName, main: grab(e), before: grab(e, '::before'), after: grab(e, '::after') }));
   }, { selAll, PROPS });
   await pg.close();

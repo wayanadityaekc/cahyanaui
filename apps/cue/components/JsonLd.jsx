@@ -3,42 +3,34 @@ import { crumbsFor } from '@/lib/crumbs';
 import { SITE } from '@/lib/routes';
 import { catalog } from '@/lib/api';
 
-// Product/Offer carries a price, so it cannot be shipped frozen at extraction
-// time - that is what tools/sync-prices.js used to prevent. Every other type is
-// static and is emitted exactly as extracted.
+// Product/Offer prices come from the live catalog at build time; every other type ships as written.
 let catalogPromise = null;
 function livePrices() {
   if (!catalogPromise) {
-    catalogPromise = catalog({ currency: 'USD', guests: 2, stay: '' })
-      .then((d) => {
+    catalogPromise = (async () => {
+      try {
+        const d = await catalog({ currency: 'USD', guests: 2, stay: '' });
         if (!d || !Array.isArray(d.items)) return null;
         const byName = {};
-        for (const i of d.items) byName[i.name] = i.standard.usd;
-        for (const t of d.transfers || []) byName[t.route] = t.usd;
-        // Kept as a group as well, for the aggregate offer on /transfer: that
-        // page sells every route in the picker, not a list written here, so the
-        // range has to follow the catalog rather than a copy of it.
+        d.items.forEach((i) => { byName[i.name] = i.standard.usd; });
+        (d.transfers || []).forEach((t) => { byName[t.route] = t.usd; });
+        // Transfer prices kept as a group so /transfer's aggregate offer range follows the catalog.
         const transfers = (d.transfers || []).map((t) => t.usd).filter((n) => n > 0);
         return { byName, transfers };
-      })
-      .catch(() => null);
+      } catch (e) {
+        return null;
+      }
+    })();
   }
   return catalogPromise;
 }
 
-// A block may name the catalog entry its price comes from, which is what lets a
-// Product be TITLED for a reader ("Bali Airport Transfer") while still pricing
-// off the route key the API knows it by ("Airport – Ubud"). `priceKey` and
-// `priceGroup` live on the BLOCK, never inside `json` - anything inside `json`
-// is emitted verbatim as JSON-LD, and those are not schema.org fields.
-//
-// Everything written in the static file is a fallback for the build where the
-// API cannot be reached; when it answers, the live number wins.
-function withLivePrice(block, prices) {
-  const node = block.json;
+// priceKey/priceGroup sit on the block, never inside json (json is emitted verbatim); live price wins.
+function withLivePrice({ json, priceGroup, priceKey }, prices) {
+  const node = json;
   if (!prices || !node || node['@type'] !== 'Product' || !node.offers) return node;
 
-  if (block.priceGroup === 'transfers') {
+  if (priceGroup === 'transfers') {
     const all = prices.transfers;
     if (!all || !all.length) return node;
     return {
@@ -52,24 +44,20 @@ function withLivePrice(block, prices) {
     };
   }
 
-  const usd = prices.byName[block.priceKey || node.name];
+  const usd = prices.byName[priceKey || node.name];
   if (usd == null) return node;
   return { ...node, offers: { ...node.offers, price: String(usd) } };
 }
 
-// `crumbs` lets a page hand in the SAME trail it renders on screen, which is how
-// the guide articles stop having two hand-kept copies of one path: the visible one
-// used to stop at the category, the JSON-LD named the article but never said Home.
-// When it is passed, any BreadcrumbList sitting in the static blocks is dropped so
-// the page cannot ship two.
-const isCrumb = (n) => n && n['@type'] === 'BreadcrumbList';
-const stripCrumb = (b) => {
+// Passing crumbs drops any static BreadcrumbList so the page never ships two.
+function isCrumb(n) { return n && n['@type'] === 'BreadcrumbList'; }
+function stripCrumb(b) {
   if (Array.isArray(b.json)) {
     const kept = b.json.filter((n) => !isCrumb(n));
     return kept.length ? { ...b, json: kept } : null;
   }
   return isCrumb(b.json) ? null : b;
-};
+}
 
 export default async function JsonLd({ page, crumbs }) {
   const raw = PAGE_SCHEMA[page] || [];
@@ -87,10 +75,7 @@ export default async function JsonLd({ page, crumbs }) {
             '@type': 'ListItem',
             position: i + 1,
             name: t.label,
-            // The LAST item carries no href - it is the page you are on, and the
-            // visible trail must not link it. Falling back to SITE + '' pointed
-            // every guide article's final node at the HOMEPAGE, which is what
-            // Google was being told the article is. Self-reference instead.
+            // Last crumb has no href: self-reference the page, never fall back to SITE (that meant the homepage).
             item: SITE + (t.href || `/${page}.html`),
           })),
         },

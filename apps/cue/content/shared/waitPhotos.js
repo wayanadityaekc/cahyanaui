@@ -1,12 +1,4 @@
-// Photos for the "waiting for your confirmation" screen after a payment.
-//
-// A hand-written list, NOT `imageForProgram()`: that helper imports the whole
-// LISTINGS dataset, and this screen is reached from BookConfirmModal, which is
-// mounted on every page - importing the dataset here would ship it to all of
-// them (the same trap documented for TripBar and TOUR_CONTENT).
-//
-// Every file is a real photo already used elsewhere on the site, of a place we
-// actually take guests. Do not add stock photography or a place we don't visit.
+// Hand-written list, not imageForProgram() (it would ship LISTINGS to every page); real photos of places we visit only.
 export const WAIT_PHOTOS = [
   { src: '/assets/images/lempuyang-edited.webp', alt: 'Lempuyang Temple gates with Mount Agung behind' },
   { src: '/assets/images/ulun-danu-beratan-temple-bali.webp', alt: 'Ulun Danu Beratan temple on Lake Bratan' },

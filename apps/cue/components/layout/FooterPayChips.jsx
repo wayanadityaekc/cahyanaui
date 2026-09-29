@@ -1,10 +1,4 @@
-// The 7 payment marks in the footer. Hand-drawn SVG on purpose - Lucide has no
-// brand logos, and these have to stay recognisable (CLAUDE.md, "Ikon").
-// Lifted out of Footer.jsx (Sep 2026) where they were ~60 lines of inline
-// markup: the footer's own layout was impossible to read around them.
-// NOTE: components/booking/PayChips.jsx is a DIFFERENT, shorter set (Visa,
-// Mastercard, PayPal) used inside the booking modal. Don't merge the two
-// without checking both callers - they show different things on purpose.
+// Footer payment logos, hand-drawn SVG (Lucide has no brand logos); differs from booking/PayChips.jsx on purpose.
 export default function FooterPayChips({ chipClass, svgClass = 'block h-[13px] w-auto' }) {
   return (
     <>

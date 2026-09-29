@@ -17,12 +17,12 @@ export const FAQ = [
   {
     cat: `Pricing & Payment`,
     q: `How does payment work?`,
-    a: `<p>A <strong>$10 deposit</strong> confirms your booking - pay online by card (secured via a third-party payment provider), or settle the balance in cash or by transfer at the end of your tour. Guests staying at one of <strong>our villas</strong> enjoy a special privilege: <strong>no upfront payment at all</strong>, you simply settle everything afterwards.</p>`,
+    a: `<p>A <strong>$10 deposit</strong> confirms your booking - pay online by card, QRIS or bank transfer (charged in rupiah), or with PayPal in your own currency, or settle the balance in cash or by transfer at the end of your tour. Guests staying at one of <strong>our villas</strong> enjoy a special privilege: <strong>no upfront payment at all</strong>, you simply settle everything afterwards.</p>`,
   },
   {
     cat: `Pricing & Payment`,
     q: `Are prices per person or per car?`,
-    a: `<p>Tours and route transfers are priced <strong>per car</strong> (up to 5 passengers), so bringing more people lowers the cost per head. Activities and performances are <strong>per person</strong>, since each guest needs their own entrance ticket.</p>`,
+    a: `<p>Tours and route transfers are priced <strong>per car</strong> (up to 5 passengers), so bringing more people lowers the cost per head. Activities and performances are priced by <strong>group size</strong>: an entrance ticket for each guest plus one transport fee, so the price shown is the total for the number of guests you pick.</p>`,
   },
   {
     cat: `Pricing & Payment`,

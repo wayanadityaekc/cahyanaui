@@ -3,11 +3,7 @@
 import { usePricing } from '@/state/PricingProvider';
 import { withSymbol } from '@/components/Price';
 
-// Renders the live "+$6" / "+Rp100.000" pick-up-outside-Ubud charter surcharge
-// from catalog.charterSurcharge (cahyana-api/pricing.js), so CharterHome's copy
-// stays currency-correct and never drifts from CHARTER.surchargeUsd/Idr again -
-// it used to be a hardcoded "+$7" that was both USD-only and stale (real value
-// is 6, not 7).
+// Live pick-up-outside-Ubud charter surcharge from catalog.charterSurcharge; never hardcode the amount here.
 export default function CharterSurcharge({ fallback = '+$6' }) {
   const ctx = usePricing();
   const catalog = ctx && ctx.catalog;

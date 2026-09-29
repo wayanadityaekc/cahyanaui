@@ -5,29 +5,24 @@ import { Check, Clock, Map, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
 import Rating from '@/components/Rating';
 
-const CheckIcon = () => <Check strokeWidth={2.4} aria-hidden="true" />;
-const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
-const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
+function CheckIcon() { return <Check strokeWidth={2.4} aria-hidden="true" />; }
+function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
+function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
 // A region, not a point - so not the pin the stop count already uses.
-const AreaIcon = () => <Map strokeWidth={1.7} aria-hidden="true" />;
-const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
+function AreaIcon() { return <Map strokeWidth={1.7} aria-hidden="true" />; }
+function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
 
-// Tailwind-native (migrasi Fase 2, keluarga kartu - stage 2): kartu listing
-// (tour/activities/destinations). MOBILE = baris horizontal (foto kiri + panel
-// kanan); >=769px = di-"flip" jadi kartu vertikal (foto atas, panel bawah) di
-// grid 4-kolom (container .lrow-list masih legacy, di-convert stage grid nanti).
-// Semua .lrow* -> utilities 1:1. Breakpoint 769px pakai min-[769px]:. Rule .lrow*
-// lama jadi dead di produksi (komponen ini satu-satunya user).
+// Listing card: horizontal row on phones, flips to a vertical card at 769px and up.
 const CARD =
-  'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink shadow-[0_6px_20px_rgba(31,61,43,0.08)] ' +
-  'transition-[box-shadow,opacity] duration-200 ease-in-out hover:shadow-[0_12px_28px_rgba(31,61,43,0.14)] ' +
+  'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink shadow-card ' +
+  'transition-[opacity] duration-200 ease-in-out ' +
   'min-[769px]:flex-col min-[769px]:p-2';
 const IMG =
   'relative flex-[0_0_124px] self-stretch min-h-[158px] rounded-md bg-cover bg-center bg-cream ' +
   'min-[769px]:flex-[0_0_auto] min-[769px]:w-full min-[769px]:aspect-[4/3] min-[769px]:min-h-0';
 const RATE =
   'absolute top-[7px] right-[7px] inline-flex items-center gap-[3px] px-[6px] py-[2px] rounded-sm ' +
-  'bg-[rgba(255,255,255,0.94)] text-ink text-[0.56rem] font-semibold shadow-sm ' +
+  'bg-[rgba(255,255,255,0.94)] text-ink text-[0.56rem] font-semibold ' +
   '[&>svg]:w-[9px] [&>svg]:h-[9px] [&>svg]:text-amber-d';
 const BODY =
   'flex-1 min-w-0 pt-[6px] pr-2 pb-[6px] pl-[15px] flex flex-col min-[769px]:pt-3 min-[769px]:px-2 min-[769px]:pb-2';

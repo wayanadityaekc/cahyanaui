@@ -10,22 +10,18 @@ import { reviewSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
+import LoadFallback from '@/components/ui/LoadFallback';
+import { ROW_RULE } from '@/components/ui/separatorClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
+import { useAccount } from '@/state/AccountProvider';
 
 const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
 
-// Unique key for a reviewable tour: (booking_ref, service) - the same pair the
-// server uses to de-dupe reviews. Needed because "Leave a Review" now aggregates
-// across ALL past bookings (Wayan, Sep 2026), not just the tours in one trip, so
-// two different bookings can carry the same service name.
-const itemKey = (it) => `${it.ref}::${it.service}`;
+// Item key = (booking_ref, service), the pair the server de-dupes on; a service can repeat across bookings.
+function itemKey({ ref, service }) { return `${ref}::${service}`; }
 
-// Login-only, exactly as the server gate requires: opened only from My Trips (Past
-// Trip), with each item's own booking_ref carried along. One overall rating +
-// message, submitted to every tour the guest checks - not a separate rating/message
-// per tour (that was the old per-item flow; Wayan asked for one simple form that
-// fans out to whatever's ticked).
-export default function ReviewModal({ open, prefill, onClose }) {
+// Login-only review popup: one rating + message posted to every ticked past trip.
+export default function ReviewModal({ open = false, prefill = null, onClose = () => {} }) {
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
   const [countryCode, setCountryCode] = useState('');
@@ -36,6 +32,10 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const [partial, setPartial] = useState([]);
+  const { refreshTrips } = useAccount() || {};
+  // Trips are re-read on CLOSE, not on success: prefill is a new object each render, so a mid-popup re-read resets the form.
+  const sent = useRef(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -43,30 +43,34 @@ export default function ReviewModal({ open, prefill, onClose }) {
     if (!open || !prefill) return;
     setName(view.name || '');
     setCountryCode('');
-    // Pre-check everything - most guests reviewing after a trip want to cover all
-    // of it; unchecking a tour they'd rather skip is one tap.
+    // Every trip starts checked; the guest unticks what to skip.
     setChecked((view.items || []).map(itemKey));
     setRating(0);
     setMessage('');
     setErrors({});
     setError('');
+    setPartial([]);
     setDone(false);
+    sent.current = false;
   }, [open, prefill]);
 
   const lastPrefill = useRef(null);
   useBodyLock(open);
 
-  // While closing, `open` is already false but the card is still on screen for
-  // the length of its exit animation - so render from the last prefill we saw
-  // rather than from the live one, which mayalready be gone.
+  // Render from the last prefill while the exit animation runs, since the live one is already gone.
   if (prefill) lastPrefill.current = prefill;
   const view = prefill || lastPrefill.current;
   if (!mounted || !view) return null;
 
+  function close() {
+    if (sent.current && refreshTrips) { sent.current = false; refreshTrips(); }
+    onClose();
+  }
+
   const items = view.items || [];
   const multi = items.length > 1;
 
-  const submit = async () => {
+  async function submit() {
     const picked = items.filter((it) => checked.includes(itemKey(it)));
     const { ok, errors: fieldErrors } = validateWith(reviewSchema, {
       picked: picked.map(itemKey),
@@ -76,12 +80,15 @@ export default function ReviewModal({ open, prefill, onClose }) {
     setErrors(fieldErrors);
     if (!ok) { setError(''); return; }
     setError('');
+    setPartial([]);
     setBusy(true);
-    try {
-      const token = readLocal(KEY.token, '');
-      const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
-      for (const it of picked) {
-        const d = await fetch(`${API_BASE}/reviews`, {
+    const token = readLocal(KEY.token, '');
+    const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
+    const results = [];
+    // One POST per ticked trip, all attempted; never stop at the first refusal (earlier ones are already live).
+    for (const it of picked) {
+      try {
+        const res = await fetch(`${API_BASE}/reviews`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
@@ -92,33 +99,41 @@ export default function ReviewModal({ open, prefill, onClose }) {
             rating,
             message: message.trim(),
           }),
-        }).then((r) => r.json());
-        if (!d || !d.ok) throw new Error((d && d.reason) || 'Something went wrong. Please try again.');
+        });
+        const d = await res.json();
+        results.push({ it, ok: !!(d && d.ok), reason: (d && d.reason) || 'Something went wrong. Please try again.' });
+      } catch (e) {
+        results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });
       }
-      setDone(true);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setBusy(false);
     }
-  };
+    setBusy(false);
+    if (results.some((r) => r.ok)) sent.current = true;
+    const failed = results.filter((r) => !r.ok);
+    if (failed.length === results.length) { setError(failed[0].reason); return; }
+    // Partial success: show thank-you and list the trips that failed with the server's reason.
+    setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
+    setDone(true);
+  }
 
-  // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/title/group/btn/success
-  // pakai konstanta shared (modalClasses.js). Star row + checklist row -> inline
-  // utility, isolated ke komponen ini.
-  const star = (on) =>
-    `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`;
-  const CHECK_ROW = 'flex items-start gap-[0.6rem] py-[0.5rem] [border-bottom:1px_solid_var(--line)] last:border-b-0 cursor-pointer';
+  // Star buttons and checklist rows for this modal; shell/box/title strings come from modalClasses.
+  function star(active) { return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${active ? 'text-amber' : 'text-[#d8d2c4]'}`; }
+  const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
   const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
   const CHECK_SVC = 'font-semibold text-green text-body';
   const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
 
   return createPortal(
-    <ModalPresence open={!!open && !!prefill} onClose={onClose} box={BOX}>
-        <button className={CLOSE} aria-label="Close" onClick={onClose}>&times;</button>
+    <ModalPresence open={!!open && !!prefill} onClose={close} label="Leave a review" box={BOX}>
+        <button className={CLOSE} aria-label="Close" onClick={close}>&times;</button>
         <h3 className={TITLE}>Leave a Review</h3>
 
-        {!done ? (
+        {!done && !items.length ? (
+          // No trips to review (callers never open it empty): say so instead of a form that cannot submit.
+          <div className="text-center">
+            <LoadFallback className="mb-4" />
+            <button type="button" className={BTN} onClick={close}>Close</button>
+          </div>
+        ) : !done ? (
           <div data-step="write">
             <div className={GROUP}>
               <label className={LABEL} htmlFor="rvm-name">Your name</label>
@@ -167,7 +182,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                     );
                   })}
                 </div>
-                {errors.picked && <small className={FIELD_ERR}>{errors.picked}</small>}
+                {errors.picked && <small role="alert" className={FIELD_ERR}>{errors.picked}</small>}
               </div>
             )}
 
@@ -186,7 +201,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                   </button>
                 ))}
               </div>
-              {errors.rating && <small className={FIELD_ERR}>{errors.rating}</small>}
+              {errors.rating && <small role="alert" className={FIELD_ERR}>{errors.rating}</small>}
             </div>
 
             <div className={GROUP}>
@@ -200,7 +215,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
                 onChange={(e) => { setMessage(e.target.value); setErrors((v) => (v.message ? { ...v, message: undefined } : v)); }}
                 aria-invalid={!!errors.message}
               />
-              {errors.message && <small className={FIELD_ERR}>{errors.message}</small>}
+              {errors.message && <small role="alert" className={FIELD_ERR}>{errors.message}</small>}
             </div>
 
             {error && <p className="mt-[-0.4rem] mb-4 text-small text-err">{error}</p>}
@@ -212,8 +227,22 @@ export default function ReviewModal({ open, prefill, onClose }) {
           <div className="text-center">
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Thank you!</h3>
-            <p className={SUCCESS_TEXT}>Your review has been submitted and will appear once approved.</p>
-            <button type="button" className={BTN} onClick={onClose}>Done</button>
+            {/* Reviews publish immediately once accepted, so never say "once approved". */}
+            <p className={SUCCESS_TEXT}>
+              {partial.length
+                ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`
+                : 'Your review is now live on the site.'}
+            </p>
+            {partial.length ? (
+              <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
+                {partial.map((p) => (
+                  <li key={p.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
+                    <span className="font-semibold text-green">{p.service}</span> - {p.reason}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            <button type="button" className={BTN} onClick={close}>Done</button>
           </div>
         )}
     </ModalPresence>,

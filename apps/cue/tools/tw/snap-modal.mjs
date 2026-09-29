@@ -10,7 +10,7 @@ const [, , page, outfile] = process.argv;
 if (!page || !outfile) { console.error('usage: node tools/tw/snap-modal.mjs <page.html> <out.json>'); process.exit(2); }
 const ROOT = 'out';
 function findShell() {
-  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch {}
+  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch (e) {}
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();
@@ -21,7 +21,7 @@ function serve(root, port) {
       let p = decodeURIComponent(q.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
       if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; }
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
@@ -45,7 +45,7 @@ for (const vw of [1280, 560, 390]) {
     const roots = [...document.querySelectorAll(SEL)];
     const els = [];
     roots.forEach((rt) => { els.push(rt); els.push(...rt.querySelectorAll('*')); });
-    return els.map((e) => { const c = getComputedStyle(e); const o = { _t: e.tagName }; for (const p of PROPS) o[p] = c[p]; return o; });
+    return els.map((e) => { const c = getComputedStyle(e); const o = { _t: e.tagName }; PROPS.forEach((p) => { o[p] = c[p]; }); return o; });
   }, { SEL, PROPS });
   await pg.close();
 }

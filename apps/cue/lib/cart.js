@@ -1,29 +1,25 @@
-// Cart rules ported verbatim from script.js. Behaviour only - all money comes
-// from POST /api/pricing/quote, never from here.
+// Cart rules only; all money comes from POST /api/pricing/quote, never from here.
 
-export function addDaysStr(ds, n) {
-  if (!ds) return '';
-  const [y, m, d] = ds.split('-').map(Number);
-  const dt = new Date(y, m - 1, d + n);
-  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+export function addDaysStr(dateStr, n) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const shifted = new Date(y, m - 1, d + n);
+  return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}-${String(shifted.getDate()).padStart(2, '0')}`;
 }
 
-// Setting a day's date pushes every later day forward one day each, so the trip
-// stays in order. Transfers keep their own date and are skipped in the count.
+// Setting a day's date moves every later day to follow on consecutive dates.
 export function cascadeFrom(state, dayIndex, date) {
   const days = (state.days || []).map((d) => ({ ...d }));
-  let step = 0;
-  for (let i = dayIndex; i < days.length; i++) {
-    days[i].date = addDaysStr(date, step);
-    step++;
-  }
+  days.forEach((day, i) => {
+    if (i >= dayIndex) day.date = addDaysStr(date, i - dayIndex);
+  });
   return { ...state, days };
 }
 
 // Two full-day programmes cannot share a date.
-export function hasClash(state, isFullDay) {
+export function hasClash({ days }, isFullDay) {
   const seen = {};
-  return (state.days || []).some((d) => {
+  return (days || []).some((d) => {
     if (!d.date || !(d.items || []).some(isFullDay)) return false;
     if (seen[d.date]) return true;
     seen[d.date] = true;
@@ -31,14 +27,14 @@ export function hasClash(state, isFullDay) {
   });
 }
 
-export function clashDates(state, isFullDay) {
+export function clashDates({ days }, isFullDay) {
   const seen = {};
   const out = [];
-  for (const d of state.days || []) {
-    if (!d.date || !(d.items || []).some(isFullDay)) continue;
+  (days || []).forEach((d) => {
+    if (!d.date || !(d.items || []).some(isFullDay)) return;
     if (seen[d.date]) out.push(d.date);
     seen[d.date] = true;
-  }
+  });
   return out;
 }
 
@@ -52,10 +48,7 @@ export function setItemMode(state, dayIndex, itemIndex, mode) {
   return { ...state, days };
 }
 
-// Start time is stored PER ITEM, parallel to itemModes - not per day (Sep 2026,
-// Wayan: "item yang berisikan 2 tour dalam sehari ... jadi bakalan ada 2 jam soalnya
-// beda program"). A day holds items[], so one time on the day row could only ever be
-// right for the first of them.
+// Start time is stored per item in itemTimes (parallel to itemModes), not per day.
 export function setItemTime(state, dayIndex, itemIndex, time) {
   const days = (state.days || []).map((d, i) => {
     if (i !== dayIndex) return d;
@@ -80,25 +73,42 @@ export function removeItem(state, dayIndex, itemIndex) {
   return { ...state, days };
 }
 
-export function removeDay(state, dayIndex) {
-  return { ...state, days: (state.days || []).filter((_, i) => i !== dayIndex) };
+// Removes one My Trips row; transfers/charters by their own list index, day items by name.
+export function removeRow(state, { kind, localIndex, day_no, service }) {
+  const next = JSON.parse(JSON.stringify(state));
+  if (kind === 'transfer') next.transfers.splice(localIndex, 1);
+  else if (kind === 'charter') next.charters.splice(localIndex, 1);
+  else {
+    let d = next.days[day_no - 1];
+    // Fallback: if the expected day lacks the item, search every day so delete never no-ops.
+    if (!d || !(d.items || []).includes(service)) {
+      d = (next.days || []).find((day) => (day.items || []).includes(service));
+    }
+    if (d) {
+      const k = d.items.indexOf(service);
+      if (k >= 0) {
+        d.items.splice(k, 1);
+        if (d.itemModes) d.itemModes.splice(k, 1);
+      }
+    }
+  }
+  return next;
 }
 
-// Suggested plan: tour i on day i, plus an airport pickup and drop-off.
-// Ported from suggestState() - inactive programmes are skipped, exactly as
-// isProgramActive did.
-// timeFor(name) = the default start time for that programme (defaultSlot via the
-// pricing catalog, supplied by the caller so this file stays free of catalog logic).
-// Without it the suggested days land in the cart with no time at all.
-export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive, timeFor }) {
-  const g = guests ? String(guests) : '';
-  const days = suggest
-    .filter((name) => (isActive ? isActive(name) : true))
-    .slice(0, nDays)
-    .map((name) => ({ items: [name], itemModes: ['standard'], itemTimes: [(timeFor && timeFor(name)) || ''], date: '', guests: g }));
-  const transfers = [
-    { route: airportRoute, direction: 'to', pickup: airportPlace, dropoff: '', date: '', guests: g },
-    { route: airportRoute, direction: 'from', pickup: '', dropoff: airportPlace, date: '', guests: g },
-  ];
-  return { days, transfers, charters: [] };
+// Moves one My Trips row to a new date/time; null when the row is no longer in the cart.
+export function setRowDate(state, row, date, time) {
+  if (row.kind === 'day' && row.day_no) {
+    // cascadeFrom only moves dates, so the time is written onto its result (one state, one save).
+    const moved = cascadeFrom(state, row.day_no - 1, date);
+    return setItemTime(moved, row.day_no - 1, row.itemIndex || 0, time || '');
+  }
+  const next = JSON.parse(JSON.stringify(state));
+  const list = row.kind === 'transfer' ? next.transfers : next.charters;
+  const idx = row.kind === 'transfer'
+    ? (state.transfers || []).findIndex((t) => t.route === row.service && t.date === row.date)
+    : (state.charters || []).findIndex((c) => c.date === row.date);
+  if (idx < 0) return null;
+  list[idx].date = date;
+  list[idx].time = time || '';
+  return next;
 }

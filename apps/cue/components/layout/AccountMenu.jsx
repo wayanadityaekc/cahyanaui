@@ -1,0 +1,140 @@
+'use client';
+
+import { useEffect, useId, useRef, useState } from 'react';
+import { ChevronDown, LogOut, Settings, UserRound } from 'lucide-react';
+import { useAccount } from '@/state/AccountProvider';
+import { PopMenu } from '@/components/ui/Reveal';
+import { MENU_ROW_BOX } from '@/components/ui/railClasses';
+import TripPrefsFields from './TripPrefsFields';
+import { BTN_CTA } from '@/components/ui/btnClasses';
+import Separator from '@/components/ui/Separator';
+
+// Navbar account slot; a disclosure (aria-expanded), not role=menu - don't add menu roles without arrow-key navigation.
+
+const PHONE =
+  'max-[992px]:h-auto max-[992px]:p-0 max-[992px]:border-none max-[992px]:bg-transparent max-[992px]:hover:bg-transparent';
+
+const ROW = `${MENU_ROW_BOX} text-small font-medium text-gold no-underline bg-transparent border-none cursor-pointer font-body hover:bg-cream`;
+
+export function initialsOf(name, email) {
+  const src = (name || '').trim() || (email || '').split('@')[0] || '';
+  const parts = src.split(/\s+/).filter(Boolean);
+  const s = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : src.slice(0, 2);
+  return s.toUpperCase() || '?';
+}
+
+export function firstNameOf(name, email) {
+  const n = (name || '').trim().split(/\s+/)[0];
+  return n || (email || '').split('@')[0] || 'Account';
+}
+
+export default function AccountMenu({ onLogin }) {
+  const { account, hydrated, logout } = useAccount();
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef(null);
+  const btnRef = useRef(null);
+  const panelId = useId();
+
+  useEffect(() => {
+    if (!open) return undefined;
+    function onDoc(e) {
+      // Select popups are portaled to <body>; picking an option must not close this menu.
+      if (e.target.closest && e.target.closest('[data-portal]')) return;
+      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    }
+    function onKey(e) {
+      if (e.key !== 'Escape') return;
+      if (document.querySelector('[data-portal="select"][data-open]')) return;
+      setOpen(false);
+      btnRef.current?.focus();
+    }
+    document.addEventListener('click', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('click', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  // Render nothing until the session check answers, so signed-in guests don't see 'Log in' flash.
+  const pending = !hydrated;
+
+  const PREFS = (
+    <div className="max-[992px]:hidden mt-1">
+      <Separator />
+      <div className="px-3 pt-3 pb-3">
+        <TripPrefsFields idPrefix="menu" />
+      </div>
+    </div>
+  );
+
+  if (!account) {
+    function isDesktop() { return typeof window !== 'undefined' && window.matchMedia('(min-width: 993px)').matches; }
+    return (
+      <div className={`relative ${pending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
+        <button
+          type="button"
+          ref={btnRef}
+          aria-expanded={open}
+          aria-controls={panelId}
+          aria-label="Log in"
+          onClick={() => (isDesktop() ? setOpen((v) => !v) : onLogin())}
+          className={`inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${PHONE}`}
+        >
+          <span className="max-[992px]:hidden">Log in</span>
+          <UserRound className="min-[993px]:hidden w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
+        </button>
+        <PopMenu open={open}>
+          <div id={panelId} className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] w-[18rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
+            <div className="px-3 pt-2 pb-3">
+              <b className="block text-small font-semibold text-gold">Plan your Bali trip</b>
+              <span className="block text-small text-muted mb-3">Sign in with your email. No password needed.</span>
+              <button type="button" className={`flex w-full ${BTN_CTA}`} onClick={() => { setOpen(false); onLogin(); }}>Log in</button>
+            </div>
+            {PREFS}
+          </div>
+        </PopMenu>
+      </div>
+    );
+  }
+
+  const first = firstNameOf(account.name, account.email);
+  return (
+    <div className="relative" ref={boxRef} data-account-slot="in">
+      <button
+        type="button"
+        ref={btnRef}
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-label={`Account menu for ${first}`}
+        onClick={() => setOpen((v) => !v)}
+        className={`inline-flex items-center gap-2 bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold-d ${PHONE}`}
+      >
+        <span className="w-[30px] h-[30px] max-[992px]:w-[28px] max-[992px]:h-[28px] rounded-[50%] bg-gold text-white grid place-items-center text-label font-semibold tracking-[0.02em]" aria-hidden="true">
+          {initialsOf(account.name, account.email)}
+        </span>
+        <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>
+        <ChevronDown className={`max-[992px]:hidden w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200 ${open ? 'rotate-180' : ''}`} strokeWidth={1.8} aria-hidden="true" />
+      </button>
+      <PopMenu open={open}>
+        <div id={panelId} className="absolute right-0 top-[calc(100%+var(--space-1))] z-[130] min-[993px]:w-[18rem] w-[15rem] bg-white border border-line rounded-[var(--r-md)] p-[var(--space-1)]">
+          <div className="px-3 pt-2 pb-3">
+            <b className="block text-small font-semibold text-gold overflow-hidden text-ellipsis whitespace-nowrap">{account.name || first}</b>
+            <span className="block text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account.email}</span>
+          </div>
+          <Separator className="mb-1" />
+          <a href="/settings.html" className={ROW}>
+            <Settings strokeWidth={1.7} aria-hidden="true" />Settings
+          </a>
+          {PREFS}
+          <Separator className="mt-1" />
+          <div className="pt-1">
+            <button type="button" className={ROW} onClick={() => { setOpen(false); logout(); }}>
+              <LogOut strokeWidth={1.7} aria-hidden="true" />Sign out
+            </button>
+          </div>
+        </div>
+      </PopMenu>
+    </div>
+  );
+}

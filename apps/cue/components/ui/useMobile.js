@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react';
 
 export default function useMobile(query = '(max-width: 768px)') {
-  const [is, setIs] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(query);
-    const on = () => setIs(mq.matches);
-    on();
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
+    function update() { return setIsMobile(mq.matches); }
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, [query]);
-  return is;
+  return isMobile;
 }

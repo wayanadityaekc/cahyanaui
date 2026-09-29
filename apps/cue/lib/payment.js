@@ -1,59 +1,31 @@
-// What the guest sees at checkout.
-//
-// A display mirror of payment.js in cahyana-api. The server decides what is
-// actually charged - this decides what the guest is shown BEFORE they commit, so
-// the two must agree. They are compared by a harness; change one, change both.
-//
-// Model (Wayan, 20 Sep 2026):
-//
-//   1. deposit   - FLAT $10, every booking, every pick-up area.
-//   2. full      - the whole amount, NO discount and NO change to the
-//                  cancellation window. What it buys is the day itself being
-//                  simpler: no cash to carry, no money changer, and the guest
-//                  pays in their own currency at a rate they can see now.
-//   3. referral  - 5% off, and no deposit. Only offered with a valid code.
-//
-// Two earlier models are recorded so they do not come back: the deposit is not
-// 20%, and it does not vary by pick-up area.
+// Display mirror of cahyana-api payment.js (deposit $10 flat, full, referral 5%); change one, change both.
 
 export const DEPOSIT_USD = 10;
 export const REFERRAL_DISCOUNT_PCT = 5;
-// One window, every booking, however it was paid. A longer window was drafted
-// as a perk for paying in full and dropped (Wayan, 20 Sep 2026): a longer notice
-// period is a STRICTER deadline, not a better one, so it would have punished the
-// guests who paid the most. Free cancellation is 24 hours for everyone.
+// Free cancellation window, the same for every booking however it was paid.
 export const FREE_CANCEL_HOURS = 24;
 
-// Mirrors TICKET_IDR_PER_USD / CUR_RATE in the API. Only used to show the flat
-// USD deposit in the guest's currency; the charge itself is always the server's.
-const IDR_PER_USD = 17600;
-const RATE = { USD: 1, AUD: 1.4, EUR: 0.86, GBP: 0.74 };
+// No exchange rates here: non-USD deposits come from the catalog (catalog.deposit) and are passed in as `deposit`.
 
 export const PAY_OPTIONS = ['deposit', 'full', 'referral'];
 
-// Flat, so the pick-up area is not consulted. Callers still pass `stay` because
-// the booking records it for other reasons; it has no say in the deposit.
+// Deposit is flat; the pick-up area has no say in it.
 export function depositUsd() {
   return DEPOSIT_USD;
 }
 
-function roundUp(v, cur) {
-  return cur === 'IDR' ? Math.ceil(v / 1000) * 1000 : Math.ceil(v);
-}
 function roundDown(v, cur) {
-  // Discounts round DOWN - rounding a discounted total up shrinks the discount
-  // the row just advertised.
+  // Discounts round down so a rounded total never shrinks the advertised discount.
   return cur === 'IDR' ? Math.floor(v / 1000) * 1000 : Math.floor(v);
 }
 
-function depositIn(cur) {
-  const usd = depositUsd();
-  return cur === 'IDR' ? roundUp(usd * IDR_PER_USD, cur) : roundUp(usd * (RATE[cur] || 1), cur);
+// Deposit in `cur` from the catalog, or USD's fixed value; otherwise null, never guessed.
+function depositIn(cur, deposit) {
+  if (deposit != null) return deposit;
+  return cur === 'USD' ? depositUsd() : null;
 }
 
-// The full price of the trip before any of this, taken from the quote. Uses
-// `was` (pre-referral) so a code is never counted twice: the quote already
-// subtracts it, and here a code is its own option.
+// Trip total before payment options, from each line's `was` (pre-referral) so a code isn't counted twice.
 export function baseTotal(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
   const lines = priced.lines.filter((l) => l && l.ok && l.was);
@@ -61,13 +33,41 @@ export function baseTotal(priced) {
   return lines.reduce((sum, l) => sum + (l.was.display || 0), 0);
 }
 
-// One entry per option: what is charged now, what is left for the day, and the
-// copy that goes with it. `currency` is the ISO code; `symbol` is for display.
-export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false }) {
+// Rupiah total of the same lines: what DOKU charges when the guest sees another currency.
+export function baseTotalIdr(priced) {
+  if (!priced || !Array.isArray(priced.lines)) return null;
+  const lines = priced.lines.filter((l) => l && l.ok && l.was && l.was.idr != null);
+  if (!lines.length) return priced.total && priced.total.idr != null ? priced.total.idr : null;
+  return lines.reduce((sum, l) => sum + (l.was.idr || 0), 0);
+}
+
+// Dollar total of the same lines: what PayPal charges a rupiah guest (it can't settle IDR).
+export function baseTotalUsd(priced) {
+  if (!priced || !Array.isArray(priced.lines)) return null;
+  const lines = priced.lines.filter((l) => l && l.ok && l.was && l.was.usd != null);
+  if (!lines.length) return priced.total && priced.total.usd != null ? priced.total.usd : null;
+  return lines.reduce((sum, l) => sum + (l.was.usd || 0), 0);
+}
+
+// One entry per option (charged now, left for the day, copy); optional IDR/USD totals add the exact rail amounts.
+export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false, deposit = null, totalIdr = null, depositIdr = null, totalUsd = null }) {
   const cur = String(currency || 'USD').toUpperCase();
   const known = total != null;
-  const dep = depositIn(cur);
+  const dep = depositIn(cur, deposit);
   const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, cur) : null;
+  const idrKnown = totalIdr != null;
+  const idr = {
+    deposit: depositIdr != null ? depositIdr : null,
+    full: idrKnown ? totalIdr : null,
+    referral: idrKnown ? roundDown((totalIdr * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'IDR') : null,
+  };
+  // Same idea for PayPal billing a rupiah guest in dollars: `amountUsd`.
+  const usdKnown = totalUsd != null;
+  const usd = {
+    deposit: DEPOSIT_USD,
+    full: usdKnown ? totalUsd : null,
+    referral: usdKnown ? roundDown((totalUsd * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'USD') : null,
+  };
 
   return [
     {
@@ -75,16 +75,20 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
       label: 'Pay a deposit',
       sub: 'Holds your date.',
       badge: 'Deposit',
-      amount: known ? dep : null,
-      balance: known ? total - dep : null,
+      amount: known && dep != null ? dep : null,
+      amountIdr: idr.deposit,
+      amountUsd: usd.deposit,
+      balance: known && dep != null ? total - dep : null,
       available: true,
     },
     {
       id: 'full',
       label: 'Pay in full',
-      sub: 'Nothing to pay on the day. Your own currency, at the rate shown.',
+      sub: 'Nothing to pay on the day, no cash to carry.',
       badge: null,
       amount: known ? total : null,
+      amountIdr: idr.full,
+      amountUsd: usd.full,
       balance: null,
       available: true,
     },
@@ -94,6 +98,8 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
       sub: `${REFERRAL_DISCOUNT_PCT}% off, and no deposit to pay.`,
       badge: `Save ${REFERRAL_DISCOUNT_PCT}%`,
       amount: known ? disc : null,
+      amountIdr: idr.referral,
+      amountUsd: usd.referral,
       balance: null,
       available: !!hasReferral,
     },
@@ -112,21 +118,19 @@ export const PAY_COPY = {
   referralHint: 'Got a code? Enter it here to unlock the third option below.',
   referralOk: `Code applied. You can now pay ${REFERRAL_DISCOUNT_PCT}% less, with no deposit.`,
   referralBad: 'Code not valid.',
-  // Why the third row is there but not selectable. Short on purpose: it is the
-  // one line that has to be readable without opening anything, because a row
-  // that is greyed out with no reason given reads as broken.
+  // Reason the referral row is greyed out; a disabled row with no reason reads as broken.
   referralLocked: 'Enter a valid code to use this.',
   detailsMore: 'Details',
   detailsTitle: 'What happens when you pay',
   detailsClose: 'Got it',
-  // ONE short line stays on screen; everything else is behind the Details
-  // button (Wayan, Sep 2026: "yang tulisan card payment itu loh, itu hide
-  // dulu, terus kasi button details"). The 24-hour window is the fact that
-  // changes a decision, so it is the line that is never hidden.
+  // The one line kept on screen; the rest of the fine print sits behind Details.
   cancelShort: `Free cancellation up to ${FREE_CANCEL_HOURS} hours before pickup.`,
-  // What actually happens after the card goes through. Every line is
-  // something the system really does - the card form is PayPal's iframe, the
-  // booking is confirmed by the webhook, and the emails wait for it.
+  // What happens after paying, per rail; every line must be something the system really does.
+  whatHappensDoku: [
+    'DOKU, our Indonesian payment provider, takes the card or QRIS details on its own secure page. They never reach our site.',
+    'We wait for the payment to clear, then your booking is confirmed.',
+    'You get a confirmation email with the trip and the amount paid.',
+  ],
   whatHappens: [
     'PayPal takes the card details in their own secure field. They never reach our site.',
     'We wait for the payment to clear, then your booking is confirmed.',

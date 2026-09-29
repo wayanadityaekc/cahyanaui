@@ -10,26 +10,25 @@ import { CARD_FRAME } from '@/components/ui/cardClasses';
 import { GUIDE_CARDS } from '@/content/shared/home';
 
 export default function GuideHome() {
-  const [q, setQ] = useState('');
+  const [query, setQuery] = useState('');
 
   const shown = useMemo(() => {
-    const term = q.trim().toLowerCase();
+    const term = query.trim().toLowerCase();
     if (!term) return GUIDE_CARDS;
     return GUIDE_CARDS.filter(
       (c) => c.more || c.title.toLowerCase().includes(term) || (c.kw || '').includes(term),
     );
-  }, [q]);
+  }, [query]);
 
   return (
     <section className="px-[var(--container-x)]" id="guides" aria-labelledby="guide-home-title">
       <div className="max-w-[1200px] mx-auto">
         <div className="text-left mb-7">
           <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">Guides &amp; Information</h2>
-          <p className="max-w-[600px] mt-[0.6rem] text-left text-muted text-body leading-[var(--lh-body)]">Free local guides to Bali - search a topic, or swipe through below.</p>
         </div>
 
         <div className="relative max-w-[560px] mt-6 mx-auto mb-[1.7rem]">
-          <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white [box-shadow:var(--shadow-md)]">
+          <div className="flex items-center gap-[0.7rem] py-[0.85rem] px-[1.1rem] [border:1.5px_solid_var(--color-gold)] rounded-lg bg-white">
             <Search className="w-[var(--icon-md)] h-[var(--icon-md)] shrink-0 text-gold-d" aria-hidden="true" />
             <input
               type="text"
@@ -37,11 +36,11 @@ export default function GuideHome() {
               placeholder="Search"
               aria-label="Search guides"
               autoComplete="off"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg [box-shadow:0_16px_40px_rgba(31,61,43,0.14)] overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
+          <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden z-[6] [&[hidden]]:hidden" role="listbox" hidden />
         </div>
 
         <Slider gridClassName={GRID_SLIDER}>

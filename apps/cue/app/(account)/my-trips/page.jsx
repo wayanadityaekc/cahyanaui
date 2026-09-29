@@ -1,6 +1,6 @@
 import MyTripsCart from '@/components/trip/MyTripsCart';
 import JsonLd from '@/components/JsonLd';
-import { RAIL_PAGE } from '@/components/ui/railClasses';
+import { RAIL_PAGE_SCROLL } from '@/components/ui/railClasses';
 
 export const metadata = {
   title: 'My Trips | Cahyana Ubud Experience',
@@ -9,14 +9,11 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="tourprog pb-20">
+    // No pb-20 here: RailLayout scrollContent sizes the frame to the viewport and body already pads for the footer.
+    <div className="tourprog">
       <JsonLd page="my-trips" />
-    {/* Same shell as Our Company (rail + content). The h1 sits ABOVE the frame
-        rather than inside the content column: it names the whole page and all
-        three sections sit under it - in the column it would read as one
-        section's title. */}
-    <div className={RAIL_PAGE}>
-      <h1 className="font-head font-medium tracking-[-0.01em] text-display leading-[var(--lh-heading)] text-green m-0 mb-[1.2rem]">My Trips</h1>
+    {/* Same rail shell as Our Company; no page-level h1 (the rail's "My trips" label is the title). */}
+    <div className={RAIL_PAGE_SCROLL}>
       <MyTripsCart />
     </div>
     </div>

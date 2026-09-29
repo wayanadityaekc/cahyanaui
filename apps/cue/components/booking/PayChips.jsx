@@ -1,13 +1,4 @@
-// The card brands accepted at the booking step.
-//
-// Changed Sep 2026 when the deposit step was added: this used to show Visa,
-// Mastercard and PayPal, from back when the modal was an enquiry form and the
-// chips were decorative. The DOKU card integration accepts Visa, Mastercard, JCB
-// and American Express, and NOT PayPal - leaving PayPal here would promise a
-// method the payment window does not offer. The JCB and Amex marks are the ones
-// already hand-drawn in the footer, reused rather than redrawn.
-//
-// Brand marks stay hand-drawn (never Lucide) - see CLAUDE.md.
+// Card brands shown at the booking step (Visa, Mastercard, JCB, Amex); brand marks stay hand-drawn, not Lucide.
 export default function PayChips({ className = '', logosClass = '', chipClass = '', svgClass = '' }) {
   return (
     <div className={className}>

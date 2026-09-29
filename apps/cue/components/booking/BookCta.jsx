@@ -9,14 +9,10 @@ import { clashDates } from '@/lib/cart';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Wayan's flow (3 Sep 2026), which differs from the old site:
-//   Save trip -> pick a date, add to the cart, stay on the page.
-//   Book Now       -> pick a date, add to the cart, go to My Trips to pay.
-// The old site kept the guest on the page for both. The date is still asked
-// for first, otherwise the row lands in My Trips undated and Make Payment
-// stays disabled - a dead end.
+// Save trip = pick date, add to cart, stay; Book Now = same then go to My Trips. The date is asked first, never undated.
 export default function BookCta({ item, perPerson = false }) {
   const { displayGuests } = useTripPrefs();
   const { state, save } = useItinerary();
@@ -26,10 +22,10 @@ export default function BookCta({ item, perPerson = false }) {
   const [toast, setToast] = useState('');
   const [confirm, setConfirm] = useState(null);
 
-  const isFullDay = (name) => {
+  function isFullDay(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return !!c && (c.category === 'tour' || c.category === 'combo');
-  };
+  }
 
   useEffect(() => {
     if (!item) return;
@@ -37,8 +33,8 @@ export default function BookCta({ item, perPerson = false }) {
     if (!root) return;
     const bookBtn = root.querySelector('.program-cta__btn--book');
     const addBtn = root.querySelector('.program-cta__btn--add');
-    const onBook = (e) => { e.preventDefault(); setAsk('book'); };
-    const onAdd = (e) => { e.preventDefault(); setAsk('add'); };
+    function onBook(e) { e.preventDefault(); setAsk('book'); }
+    function onAdd(e) { e.preventDefault(); setAsk('add'); }
     if (bookBtn) bookBtn.addEventListener('click', onBook);
     if (addBtn) addBtn.addEventListener('click', onAdd);
     return () => {
@@ -53,14 +49,13 @@ export default function BookCta({ item, perPerson = false }) {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // The real category, for the start-time rules (see BookSidebar for why the page
-  // type cannot be used).
-  const categoryOf = (name) => {
+  // Real category from the pricing catalog for start-time rules (the page type is not reliable).
+  function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;
-  };
+  }
 
-  const pick = (date, time) => {
+  function pick(date, time) {
     const goto = ask === 'book';
     // Same guard the old cartAddChecked used: two full-day programmes on one date.
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
@@ -69,13 +64,13 @@ export default function BookCta({ item, perPerson = false }) {
       return;
     }
     add(date, goto, time);
-  };
+  }
 
-  const add = (date, goto, time) => {
+  function add(date, goto, time) {
     save({ ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], itemTimes: [time || ''], date, guests: '' }] });
     if (goto) window.location.href = '/my-trips.html';
     else setToast('Added to My Trips');
-  };
+  }
 
   useBodyLock(!!confirm);
 
@@ -93,7 +88,7 @@ export default function BookCta({ item, perPerson = false }) {
         itemName={item}
       />
 
-      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} box={BOX_SM}>
+      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} label="Two full-day tours?" box={BOX_SM}>
         {confirm && (
           <>
             <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
@@ -107,7 +102,8 @@ export default function BookCta({ item, perPerson = false }) {
         )}
       </ModalPresence>
 
-      {toast && <div className={CART_TOAST}>{toast}</div>}
+      <LiveRegion>{toast}</LiveRegion>
+      {toast && <div className={CART_TOAST} aria-hidden="true">{toast}</div>}
     </>
   );
 }

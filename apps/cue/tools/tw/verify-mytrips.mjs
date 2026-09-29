@@ -8,7 +8,7 @@ import { chromium } from 'playwright-core';
 
 const ROOT = 'out';
 function findShell() {
-  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch {}
+  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch (e) {}
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();
@@ -19,7 +19,7 @@ function serve(root, port) {
       let p = decodeURIComponent(q.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
       if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; }
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
@@ -32,7 +32,7 @@ const port = 8000 + Math.floor(Math.random() * 1500);
 const s = await serve(ROOT, port);
 const b = await chromium.launch({ executablePath: EXE });
 let pass = 0, fail = 0;
-const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } };
+function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } }
 
 // ---- 1) TripBar gone on my-trips, present on another page ----
 {
@@ -75,7 +75,7 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
         transfers: [{ route: 'Airport - Ubud', date: '2026-10-14', guests: '2' }],
         charters: [],
       }));
-    } catch {}
+    } catch (e) {}
   });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(500);
@@ -108,7 +108,7 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
         ],
         transfers: [], charters: [],
       }));
-    } catch {}
+    } catch (e) {}
   });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(500);
@@ -161,9 +161,9 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
     }
     return route.continue();
   });
-  await pg.addInitScript(() => { try { localStorage.setItem('cue_token', 'fake-token-for-test'); } catch {} });
+  await pg.addInitScript(() => { try { localStorage.setItem('cue_token', 'fake-token-for-test'); } catch (e) {} });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
-  await pg.click('button[role="tab"]:has-text("Booked Trip")');
+  await pg.click('aside nav button:has-text("Booked Trip")');
   await pg.waitForTimeout(500);
   const cancelLink = await pg.$('a:has-text("Contact us to cancel")');
   check('Booked trip card has a cancellation-contact button', cancelLink !== null);
@@ -171,7 +171,7 @@ const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`
   check(`Cancellation link opens WhatsApp with the booking ref, got ${href}`, href.includes('wa.me') && href.includes('CUE-100'));
 
   // ---- 6) Past tab: single global "Leave a Review" (no per-card button) ----
-  await pg.click('button[role="tab"]:has-text("Past Trip")');
+  await pg.click('aside nav button:has-text("Past Trip")');
   await pg.waitForTimeout(500);
   const reviewBtns = await pg.$$('button:has-text("Leave a Review")');
   check(`Exactly one global "Leave a Review" button on Past tab, got ${reviewBtns.length}`, reviewBtns.length === 1);

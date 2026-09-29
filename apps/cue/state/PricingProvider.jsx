@@ -6,13 +6,7 @@ import { useTripPrefs } from './TripPrefsProvider';
 
 const PricingContext = createContext(null);
 
-// A valid catalog needs an `items` array; a partial response (e.g. `transfers`
-// or `charters` missing) must NOT reach consumers as-is — several of them do
-// `catalog.transfers.map(...)` / `catalog.charters.find(...)` with no per-call
-// guard, so one malformed 200 would crash whole pages to the error boundary.
-// Normalize here (the single source) so a partial catalog degrades to empty
-// price data instead of a white screen. Returns null for a non-catalog (keeps
-// the "leave prices null" path), which is why callers only set on a truthy result.
+// Normalize the catalog so missing transfers/charters become [] instead of crashing consumers; null if no items.
 function normalizeCatalog(c) {
   if (!c || !Array.isArray(c.items)) return null;
   return {
@@ -30,36 +24,31 @@ export function PricingProvider({ children, initialCatalog = null }) {
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
-    const qs = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
-    fetch(`${API_BASE}/pricing/catalog?${qs}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
+    const query = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
+    // load the live catalog for this currency / group / pickup
+    async function load() {
+      try {
+        const r = await fetch(`${API_BASE}/pricing/catalog?${query}`);
+        const d = r.ok ? await r.json() : null;
         const c = normalizeCatalog(d);
         if (!cancelled && c) setCatalog(c);
-      })
-      .catch(() => {});
+      } catch (e) {}
+    }
+    load();
     return () => {
       cancelled = true;
     };
   }, [currency, displayGuests, stay, hydrated]);
 
-  // `name` is usually a catalog.items name (tour/experience/performance/combo/
-  // villa), but a few <Price> callers (e.g. the homepage Airport band) pass a
-  // transfer route instead ("Airport – Ubud") - transfers live in a separate
-  // catalog.transfers array with a flat {route,usd,idr,display} shape (no
-  // .standard/.exclusive nesting), so a plain catalog.items.find() never
-  // matches it and <Price> falls back to its hardcoded placeholder forever,
-  // in every currency (found while verifying the IDR-default change: the
-  // Airport price stayed "$20" even after the catalog loaded). Normalized to
-  // the items shape here so <Price> doesn't need its own transfer branch.
-  const lookup = (name) => {
+  // Look up a catalog item, or a transfer route normalized to the item shape so <Price> works for both.
+  function lookup(name) {
     if (!catalog) return null;
     const item = catalog.items.find((i) => i.name === name);
     if (item) return item;
     const transfer = catalog.transfers.find((t) => t.route === name);
     if (transfer) return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
     return null;
-  };
+  }
 
   return (
     <PricingContext.Provider value={{ catalog, lookup, symbol: (catalog && catalog.symbol) || '$' }}>

@@ -14,6 +14,19 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css";
 
+/* app mode = halaman ini dibuka dari ikon home screen, bukan dari tab browser.
+   DUA selector, sengaja, karena satu gak nutup semua device:
+     - @media (display-mode: standalone) = Chrome/Android dan Safari iOS 16.4+.
+     - html[data-standalone] = iPhone yang lebih tua, yang cuma punya
+       navigator.standalone dan gak pernah match media query di atas. Atribut
+       itu ditulis PwaRegister pas mount.
+   Ditulis sekali di sini, bukan dua kali di tiap komponen, biar device yang
+   ketinggalan gak bisa ketinggalan di satu tempat doang. */
+@custom-variant standalone {
+  @media (display-mode: standalone) { @slot; }
+  html[data-standalone] & { @slot; }
+}
+
 @theme {
   --color-green: #5c5c5c;
   --color-gold: #22201c;
@@ -48,11 +61,42 @@
   --radius-xl: 22px;
   --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 6px 18px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 14px 34px rgba(0, 0, 0, 0.08);
+  /* NO ELEVATION SHADOWS, WITH EXACTLY ONE EXCEPTION: --shadow-card (27 Sep 2026).
+     Earlier that day every shadow came out (Wayan: "hilangin shadow di semua web
+     gaada lagi shadow di bawah navbar, di bawah card") and --shadow-sm/md/lg/xl were
+     DELETED, not set to none - a token set to none leaves dozens of shadow-md classes
+     reading like they do something. 53 usages went in that commit.
 
+     Then the listing card turned out to have had no OTHER boundary. Measured: #fff
+     card on a #fff section on a #fff body, border 0px none - so it stopped being
+     visible as a card at all, and its 16px radius had nothing to round. Asked whether
+     he wanted a hairline border or a shadow back, Wayan picked the shadow: "pakai
+     shadow aja dah bro, tapi setipis mungkin ya". So this one token exists and no
+     other does.
+
+     The value is MEASURED, not taste - darkest pixel just below the card edge against
+     the page white, at 1280: none = 0 (literally invisible), .06 = 10, .09 = 15,
+     .12 = 18. .09 is the thinnest that still reads as a card. Want it thinner again:
+     change this one number, it is the only definition.
+
+     Used by exactly three card families, so listing / homepage / guide cards cannot
+     drift apart: CARD in ListingRow, CARD_FRAME in cardClasses, FRAME in HomepageCard.
+     ReviewCard is deliberately NOT one of them - it already carries border-line and
+     reads as a card without help; giving it both would be the only doubled edge on
+     the site.
+
+     Everything else still drawn with box-shadow, because none of it is elevation:
+     --focus-ring below (keyboard focus - accessibility, not decoration), the
+     invalid-field ring in formClasses.js, the charter row inset 1px (a border), three
+     flag hairlines (0 offset / 0 blur / 1px spread), and the hero slider dot halo
+     (0 0 2px, keeps a white dot readable on a bright photo).
+
+     Guarded by verify-noshadow.mjs: no computed box-shadow anywhere may carry a real
+     offset or blur EXCEPT this one, AND the card shadow must still be THERE. That
+     second half matters - a sweep quietly deleting it is exactly how the cards went
+     invisible the first time, with every gate green. Re-adding any other shadow is a
+     decision, not a stray class. */
+  --shadow-card: 0 1px 2px rgba(34, 32, 28, 0.09);
   --container-wide: 1200px;
   --container-mid: 1080px;
   --container-read: 720px;

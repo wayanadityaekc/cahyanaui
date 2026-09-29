@@ -2,11 +2,7 @@
 
 import { useAccount } from '@/state/AccountProvider';
 
-/**
- * useAuth - thin read-model over the account context: who is signed in and
- * whether they have an upcoming trip. Keeps components from reaching into the
- * provider shape directly.
- */
+// Thin read-model over the account context: signed-in flag, name and email.
 export default function useAuth() {
   const ctx = useAccount();
   const account = ctx && ctx.account;

@@ -1,6 +1,5 @@
 export const WHATSAPP_NUMBER = '6285974650011';
-// Overridable so a preview build can point at a local API; production keeps
-// the Railway default when the variable is unset.
+// Override with NEXT_PUBLIC_API_BASE for a local API; defaults to the Railway production API.
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
 
@@ -14,19 +13,20 @@ export const KEY = {
   itnSynced: 'cue_itn_synced',
   token: 'cue_token',
   referral: 'cue_referral',
+  // Chat thread id is a capability (reads that conversation); keep it private like the account token.
+  chatThread: 'cue_chat_thread',
+  // Charter plan picked on the homepage, carried to the charter page (lib/charterDraft.js).
   charter: 'cue_charter_v1',
-  // The pick-up / drop-off address the guest last booked with. NOT on the account
-  // (that holds name/email/phone plus the guest-count and area preferences), so it
-  // is remembered on this device, next to the cart and the trip preferences.
+  // Last pick-up / drop-off address, kept on this device (not on the account).
   pickup: 'cue_pickup',
+  // {path, at} of a booking interrupted by sign-in, so the magic-link return can resume it; expires (BookingProvider).
+  resumeBook: 'cue_resume_book',
   dropoff: 'cue_dropoff',
+  // Rail collapsed state, one key shared by My Trips, Our Company and Settings.
+  railCollapsed: 'cue_rail_collapsed',
 };
 
-// Saved trips in localStorage hold product NAMES, not ids, so renaming a
-// product would leave anyone mid-planning with an item the API can no longer
-// price. Trips are migrated through this map on load; cahyana-api keeps the
-// matching LEGACY_ITEM_NAMES for requests that arrive from a page cached
-// before the rename. Keep both, and add to them rather than renaming in place.
+// Old product names in saved trips mapped to current ones; mirror of cahyana-api LEGACY_ITEM_NAMES, add, never rename.
 export const LEGACY_ITEM_NAMES = {
   'Lempuyang & Tirta Gangga': 'East Bali Tour',
   'Besakih & Taman Ujung': 'East Bali Tour',
@@ -36,11 +36,12 @@ export const LEGACY_ITEM_NAMES = {
   'Sangeh Monkey Forest & Tanah Lot': 'West Bali Tour',
 };
 
-export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP'];
+// Mirrors fx.CURRENCIES in cahyana-api (order = picker order); rates come from the API, none stored here.
+export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP', 'SGD', 'NZD', 'CAD', 'CHF', 'JPY', 'MYR', 'HKD'];
 export const DISPLAY_GUESTS = 2;
 
-// Currency a first-time visitor sees before they pick one themselves (or before
-// their saved localStorage choice loads) - the single place to flip this site-wide.
-// Read by TripPrefsProvider only; a visitor's own manual choice always overrides it
-// and persists as before, this only controls the starting point.
-export const DEFAULT_CURRENCY = 'IDR';
+// First-visit currency (TripPrefsProvider only); USD because IDR routes to rupiah-only payment options.
+export const DEFAULT_CURRENCY = 'USD';
+
+// Server `service` key for charter bookings and their reviews; use this constant, never retype the string.
+export const CHARTER_SERVICE = 'Charter';

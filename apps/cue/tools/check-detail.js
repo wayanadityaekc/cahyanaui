@@ -7,10 +7,10 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 const routes = fs.readFileSync(path.join(ROOT, 'lib/routes.js'), 'utf8');
-const list = (name) => {
-  const m = routes.match(new RegExp('export const ' + name + ' = \\[([\\s\\S]*?)\\];'));
+function list(name) {
+  const m = routes.match(new RegExp(`export const ${name} = \\[([\\s\\S]*?)\\];`));
   return m ? [...m[1].matchAll(/'([^']+)'/g)].map((x) => x[1]) : [];
-};
+}
 
 const pages = [
   ...list('TOURS').map((s) => `${s}.html`),
@@ -33,24 +33,24 @@ let bad = 0;
 let sliders = 0;
 let related = 0;
 
-for (const p of pages) {
+pages.forEach((p) => {
   const f = path.join(ROOT, 'out', p);
   if (!fs.existsSync(f)) {
     console.error(`  MISSING BUILD  ${p}`);
     bad++;
-    continue;
+    return;
   }
   const html = fs.readFileSync(f, 'utf8');
   const problems = [];
-  for (const [needle, label] of MUST_HAVE) if (!html.includes(needle)) problems.push(`missing ${label}`);
-  for (const [needle, label] of MUST_NOT) if (html.includes(needle)) problems.push(`still has ${label}`);
+  MUST_HAVE.forEach(([needle, label]) => { if (!html.includes(needle)) problems.push(`missing ${label}`); });
+  MUST_NOT.forEach(([needle, label]) => { if (html.includes(needle)) problems.push(`still has ${label}`); });
   if (html.includes('hero-slider__dots')) sliders++;
   if (html.includes('related__title')) related++;
   if (problems.length) {
     console.error(`  ${p}: ${problems.join(', ')}`);
     bad++;
   }
-}
+});
 
 console.log(`Detail pages checked : ${pages.length}`);
 console.log(`With a hero slider   : ${sliders}`);

@@ -8,8 +8,7 @@ const ItineraryContext = createContext(null);
 
 const EMPTY = { days: [], transfers: [], charters: [] };
 
-// A trip saved before a product was renamed still names the old one, and the
-// API prices by name - so carry those entries over to the current name on load.
+// Map renamed products in old saved trips to their current name; the API prices by name.
 function currentName(name) {
   return LEGACY_ITEM_NAMES[name] || name;
 }
@@ -34,11 +33,11 @@ export function ItineraryProvider({ children }) {
     setHydrated(true);
   }, []);
 
-  const save = (next) => {
+  function save(next) {
     const clean = normalise(next);
     setState(clean);
     writeLocal(KEY.itinerary, clean);
-  };
+  }
 
   const count =
     state.days.reduce((n, d) => n + ((d.items && d.items.length) || 0), 0) +

@@ -1,10 +1,7 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 import { ArrowUpRight } from 'lucide-react';
 
-// Tailwind-native (migrasi): .vpromo* -> utilities 1:1 dari style.css. Overlay
-// (dulu ::after) pakai variant after:*. 2 foto villa side-by-side (grid 2 kolom)
-// jadi tumpuk atas-bawah di <=768px persis media query lama. Judul level-halaman
-// (2.1rem, sengaja non-token) -> text-[2.1rem], mengecil ke 1.7rem di HP.
+// Villa promo band: two photos side by side (stacked at <=768px) under an after: overlay.
 const CLS = {
   section:
     "relative min-h-[420px] flex items-center justify-center text-center px-[var(--container-x)] py-12 max-[768px]:min-h-[380px] " +

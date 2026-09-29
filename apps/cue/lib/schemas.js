@@ -1,17 +1,10 @@
 import { z } from 'zod';
 
-// Form validation rules, one declarative place instead of if-chains spread across
-// the modals. The booking schema is the one the server (cahyana-api) should mirror:
-// it defines what counts as a bookable enquiry.
-//
-// Email uses the project's own regex rather than z.email(). Zod's built-in check is
-// stricter, so switching would start rejecting addresses the site accepts today -
-// a silent behaviour change in the booking flow, which is not what this refactor is
-// for. Keep them identical unless that change is made deliberately.
+// Zod form rules; email uses EMAIL_RE, not z.email() (stricter), so accepted addresses don't change.
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
-const email = (msg = 'Please enter a valid email address.') => z.string().trim().regex(EMAIL_RE, msg);
-const required = (msg) => z.string().trim().min(1, msg);
+function email(msg = 'Please enter a valid email address.') { return z.string().trim().regex(EMAIL_RE, msg); }
+function required(msg) { return z.string().trim().min(1, msg); }
 
 export const contactSchema = z.object({
   name: required('Please enter your name.'),
@@ -35,10 +28,7 @@ export const reviewSchema = z.object({
   message: required('Please write your review.'),
 });
 
-// Booking rules are conditional on the booking context, so the schema is built per
-// open rather than being a single constant. Flags mirror BookConfirmModal's derived
-// values: pickupOptional/dropoffRequired come from the booking context, needsTime
-// and needsFlight from the catalog category and whether the route is the airport one.
+// Booking schema is built per open; flags mirror BookConfirmModal's derived booking context.
 export function bookingSchema({ pickupOptional = false, dropoffRequired = false, needsTime = false, needsFlight = false } = {}) {
   return z.object({
     name: required('Please enter your name.'),

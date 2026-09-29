@@ -1,16 +1,10 @@
 import { Check, ShieldCheck } from 'lucide-react';
 import { REGISTRATION as R } from '@/content/shared/registration';
 
-const SealIcon = ({ className }) => <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />;
-const CheckIcon = ({ className }) => <Check className={className} aria-hidden="true" />;
+function SealIcon({ className }) { return <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />; }
+function CheckIcon({ className }) { return <Check className={className} aria-hidden="true" />; }
 
-// "Registered business" trust block for the About page. Business registration
-// details only (no personal ID numbers); verification points to the official
-// portal rather than hosting the certificate.
-// Tailwind-native (migrasi Fase 2): dulu keluarga .reg* di style.css -> utilities.
-// Varian `.company-page .reg` gak kepake React (blok ini cuma di about-us).
-// `company` = varian buat Our Company (borderless, nempel kolom) — dulu
-// `.company-page .reg-sec` + `.company-page .reg` di style.css.
+// Registered-business trust block (no personal IDs); `company` = the borderless Our Company variant.
 export default function RegistrationBlock({ company = false }) {
   const rows = [
     ['Ministry of Law Decree', R.decree],
@@ -20,7 +14,7 @@ export default function RegistrationBlock({ company = false }) {
   const sec = company ? 'max-w-none mx-0 px-0 pb-0' : 'max-w-[760px] mx-auto px-[var(--container-x)] pb-[var(--section-gap)]';
   const card = company
     ? 'bg-transparent border-0 [border-top:1px_solid_var(--line)] rounded-none shadow-none pt-[1.6rem] px-0 pb-0'
-    : 'bg-white border border-line rounded-lg shadow-md py-[1.4rem] px-6';
+    : 'bg-white border border-line rounded-lg py-[1.4rem] px-6';
   return (
     <section className={sec}>
       <div className={card}>

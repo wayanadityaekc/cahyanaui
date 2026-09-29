@@ -8,30 +8,9 @@ import { readLocal } from '@/lib/storage';
 import { BTN, BTN_WA, STACK } from '@/components/ui/modalClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-/**
- * PayWaiting - the locked screen between "the card went through" and "the
- * booking is confirmed" (Sep 2026, Wayan: "selagi menunggu email masuk dan
- * backend nerima notif dari webhook, lock layar dan kasi loading ... background
- * nya itu foto destinasi auto slide").
- *
- * Why it has to exist: capturing the card is NOT what confirms a booking here.
- * The money clearing is announced by PayPal's webhook, and only that flips the
- * booking to paid and sends the emails (see confirmPayment in cahyana-api).
- * Between those two moments the guest used to get a success screen that claimed
- * more than we knew.
- *
- * It asks the server rather than counting seconds: GET /api/booking-status/:ref
- * returns one word for a booking the caller has proved is theirs. A spinner on
- * a timer would either lie or spin forever.
- *
- * Nothing here can be dismissed while we are still waiting: no close button, and
- * the caller keeps the modal's own close disabled. The buttons only appear once
- * there is something true to say.
- */
+// Locked screen after payment: polls /booking-status/:ref until the webhook marks it paid; no way to close while waiting.
 const POLL_MS = 4000;
-// After this we stop asking and tell the guest the truth: it is saved, the email
-// will follow. Two minutes is far longer than a webhook normally takes, and a
-// screen that never resolves is worse than one that hands back control.
+// Stop polling after two minutes and tell the guest the booking is saved and the email will follow.
 const GIVE_UP_MS = 120000;
 
 export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
@@ -43,9 +22,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   useEffect(() => setMounted(true), []);
   useBodyLock(true);
 
-  // --- background slideshow -------------------------------------------------
-  // Honour the OS setting: a photo that changes by itself is exactly what
-  // prefers-reduced-motion is asking us not to do, so it holds on the first one.
+  // Background slideshow; holds on the first photo when prefers-reduced-motion is set.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,12 +35,11 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   useEffect(() => {
     if (!bookingRef) { setPhase('blind'); return; }
     const token = readLocal(KEY.token, '');
-    // No session token means we cannot prove the booking is ours, so the server
-    // will refuse - say so honestly instead of spinning against a 401.
+    // Without a session token the server can't verify ownership, so show the honest 'payment sent' state.
     if (!token) { setPhase('blind'); return; }
     let stop = false;
     const started = Date.now();
-    const ask = async () => {
+    async function ask() {
       try {
         const r = await fetch(`${API_BASE}/booking-status/${encodeURIComponent(bookingRef)}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -74,23 +50,19 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         if (stop) return;
         if (d && d.payment === 'paid') {
           setPhase('paid');
-          // Only the rails that LEAVE the site need this: the guest comes back
-          // with nothing provable, so "the server said paid" is the first
-          // moment it is safe to clear their cart. The inline rails pass
-          // nothing and are unaffected.
+          // onConfirmed is for rails that leave the site (DOKU): clear the cart only once the server says paid.
           if (typeof onConfirmed === 'function') onConfirmed();
           return;
         }
-        // A mismatch is NOT paid: the amount or currency disagreed and a person
-        // has to look at it. Telling the guest it is confirmed would be a lie.
+        // A mismatch is not paid (amount or currency disagreed); never tell the guest it is confirmed.
         if (d && d.payment === 'mismatch') { setPhase('mismatch'); return; }
-      } catch {
+      } catch (e) {
         // A dropped request is not an answer - keep asking until we give up.
       }
       if (stop) return;
       if (Date.now() - started > GIVE_UP_MS) { setPhase('slow'); return; }
       timer.current = setTimeout(ask, POLL_MS);
-    };
+    }
     timer.current = setTimeout(ask, POLL_MS);
     return () => { stop = true; clearTimeout(timer.current); };
   }, [bookingRef, onConfirmed]);
@@ -98,7 +70,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   if (!mounted) return null;
 
   const waiting = phase === 'waiting';
-  const wa = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     `Hello, I just paid for booking ${bookingRef || ''} and I'd like to check it came through.`,
   )}`;
 
@@ -139,8 +111,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-live="polite">
-      {/* Photos of places we actually take guests. Only the current slide and
-          the next one are mounted, so five files are not fetched at once. */}
+      {/* Destination photos; only the current and next slide are mounted so not every file loads at once. */}
       {WAIT_PHOTOS.map((p, i) =>
         i <= idx + 1 || i === WAIT_PHOTOS.length - 1 ? (
           <img
@@ -174,13 +145,12 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
           </p>
         )}
 
-        {/* No way out while we are still waiting - the buttons appear only when
-            there is something true to act on. */}
+        {/* Buttons appear only once there is a real outcome; no way out while still waiting. */}
         {!waiting && (
           <div className="w-full max-w-[320px] mt-6">
             <button type="button" className={BTN} onClick={onClose}>Done</button>
             {(phase === 'mismatch' || phase === 'slow') && (
-              <a className={`${BTN_WA} ${STACK}`} href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <a className={`${BTN_WA} ${STACK}`} href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a>
             )}
           </div>
         )}

@@ -38,24 +38,23 @@ export default function Select({
 
   useEffect(() => {
     if (!open || asPortal) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (groupRef.current && !groupRef.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, [open, asPortal]);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    function onKey(e) { return e.key === 'Escape' && setOpen(false); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
   const selected = options.find((o) => String(o.value) === String(value));
 
-  // Panel = mode popup (default; semua pemakaian Select popup). Kalau nanti butuh
-  // popup=false (dropdown nempel field / bottom-sheet), mode itu perlu ditambah lagi.
+  // Panel is always popup mode; a dropdown/bottom-sheet mode (popup=false) would need to be added back.
   const panel = (
     <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
       <div className={PANEL_HEAD}>
@@ -121,10 +120,7 @@ export default function Select({
         <Chevron />
       </button>
 
-      {/* Panel is portal-mounted as soon as it's a portal context, not just while
-          open - otherwise it renders straight into its "open" state on first paint
-          (no prior "closed" frame for the CSS transition to animate from), which is
-          what made it pop in instantly instead of transitioning in smoothly. */}
+      {/* Keep the portal panel mounted while closed so the open transition has a closed frame to animate from. */}
       {mounted && asPortal && createPortal(panel, document.body)}
       {mounted && asPortal && <Overlay open={open} elevated={popup} onClose={() => setOpen(false)} />}
       {(!asPortal || !mounted) && panel}

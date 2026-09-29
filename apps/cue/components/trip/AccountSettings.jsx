@@ -1,44 +1,107 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { UserRound } from 'lucide-react';
 import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
+import { crumbsFor } from '@/lib/crumbs';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
-import { BTN_PILL } from '@/components/ui/btnClasses';
+import { BTN_PILL, BTN_CTA, BTN_SM } from '@/components/ui/btnClasses';
 import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
+import { initialsOf } from '@/components/layout/AccountMenu';
+import Separator from '@/components/ui/Separator';
+import RailLayout from '@/components/ui/RailLayout';
+import { RAIL_READ } from '@/components/ui/railClasses';
+import MyReviews from './MyReviews';
+import DeleteAccountModal from './DeleteAccountModal';
+import SignInPrompt from '@/components/account/SignInPrompt';
+
+// Ghost red button that only opens the delete confirmation; the destructive button is in DeleteAccountModal.
+const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
+const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
+
+// Same RailLayout shell as My Trips and Our Company; one item, so mobileNav skips the phone list/back screen.
+const RAIL_ITEMS = [{ id: 'account', label: 'Account Settings', Icon: UserRound }];
+
+function SettingsShell({ children }) {
+  return (
+    <RailLayout
+      label="Account Settings"
+      items={RAIL_ITEMS}
+      active="account"
+      onSelect={() => {}}
+      mobileNav={true}
+      collapsible
+      breadcrumb={crumbsFor('settings')}
+      scrollContent
+    >
+      <div className={RAIL_READ}>
+        <h1 className="font-head font-medium tracking-[-0.01em] text-h2 leading-[var(--lh-heading)] text-green m-0 mb-[0.3rem]">Account Settings</h1>
+        <p className="text-muted text-body m-0 mb-[1.6rem]">Update your details and saved trip preferences.</p>
+        {children}
+      </div>
+    </RailLayout>
+  );
+}
 
 export default function AccountSettings() {
-  const { account, setAccount, logout } = useAccount();
+  const { account, setAccount, logout, deleteAccount } = useAccount();
   const { guests, setGuests, stay, setStay } = useTripPrefs();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  // Keeps a confirmation screen after delete, since clearing `account` would otherwise swap to the sign-in prompt.
+  const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
     if (account) setForm({ name: account.name || '', email: account.email || '', phone: account.phone || '' });
   }, [account]);
 
-  if (!account) {
+  async function confirmDelete() {
+    const res = await deleteAccount();
+    if (res.ok) setDeleted(true);
+    return res;
+  }
+
+  if (deleted) {
     return (
-      <div id="settings-root" data-settings>
-        <p>Sign in to manage your details.</p>
-      </div>
+      <SettingsShell>
+        <div id="settings-root" data-settings>
+          <p className="text-body text-green m-0">Your account has been deleted. You can close this page, or
+            {' '}<a href="/" className="text-gold-d font-medium">return home</a>.</p>
+        </div>
+      </SettingsShell>
     );
   }
 
-  const save = async () => {
+  if (!account) {
+    return (
+      <SettingsShell>
+        <div id="settings-root" data-settings>
+          <SignInPrompt
+            lead="Sign in to manage your details."
+            sub="Your name, contact info, and trip preferences live here once you're signed in."
+          />
+        </div>
+      </SettingsShell>
+    );
+  }
+
+  async function save() {
     setBusy(true);
     setMsg('');
     try {
-      const d = await fetch(`${API_BASE}/account`, {
+      const res = await fetch(`${API_BASE}/account`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${readLocal(KEY.token, '')}` },
         body: JSON.stringify({ ...form, guest_count_pref: String(guests || ''), stay_area_pref: stay || '' }),
-      }).then((r) => r.json());
+      });
+      const d = await res.json();
       if (d && d.account) {
         setAccount(d.account);
         setMsg('Saved.');
@@ -50,12 +113,27 @@ export default function AccountSettings() {
     } finally {
       setBusy(false);
     }
-  };
+  }
 
-  const set = (k) => (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
+  function set(k) { return (e) => setForm((v) => ({ ...v, [k]: e.target.value })); }
 
   return (
+    <SettingsShell>
     <div id="settings-root" data-settings>
+      {/* Initials avatar (no photo upload), using the same initialsOf() as the navbar. */}
+      <div className="flex items-center gap-4 mb-6">
+        <span
+          className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
+          aria-hidden="true"
+        >
+          {initialsOf(account.name, account.email)}
+        </span>
+        <div className="min-w-0">
+          <div className="font-semibold text-h3 text-green overflow-hidden text-ellipsis whitespace-nowrap">{account.name || 'Your account'}</div>
+          <div className="text-body text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account.email}</div>
+        </div>
+      </div>
+
       <div className={CONTACT_GROUP}>
         <label className={FIELD_LABEL} htmlFor="st-name">Name</label>
         <input className={CONTACT_INPUT} type="text" id="st-name" value={form.name} onChange={set('name')} />
@@ -83,9 +161,21 @@ export default function AccountSettings() {
         <label className={FIELD_LABEL} htmlFor="st-stay">Pickup area</label>
         <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
-      {msg && <small className={REFMSG}>{msg}</small>}
-      <button className="contact__btn" onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
+      {msg && <small role="status" className={REFMSG}>{msg}</small>}
+      {/* Use BTN_CTA, not a bare className: a class with no CSS rule renders as a raw browser button with no warning. */}
+      <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
       <button className={BTN_PILL} onClick={logout}>Sign out</button>
+
+      <Separator className="my-6" />
+      <h2 className={SECTION_TITLE}>My reviews</h2>
+      <MyReviews />
+
+      <Separator className="my-6" />
+      <h2 className={SECTION_TITLE}>Danger zone</h2>
+      <p className="text-body text-muted m-0 mb-3">Delete your account. Your bookings and any reviews you&apos;ve written stay on record.</p>
+      <button type="button" className={BTN_DANGER_GHOST} onClick={() => setDeleteOpen(true)}>Delete account</button>
+      <DeleteAccountModal open={deleteOpen} onClose={() => setDeleteOpen(false)} onConfirm={confirmDelete} />
     </div>
+    </SettingsShell>
   );
 }

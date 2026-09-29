@@ -10,7 +10,7 @@ const [, , outfile] = process.argv;
 if (!outfile) { console.error('usage: node tools/tw/snap-cart.mjs <out.json>'); process.exit(2); }
 const ROOT = 'out';
 function findShell() {
-  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch {}
+  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch (e) {}
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();
@@ -21,7 +21,7 @@ function serve(root, port) {
       let p = decodeURIComponent(q.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
       if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; }
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
@@ -44,14 +44,14 @@ const b = await chromium.launch({ executablePath: EXE });
 const all = {};
 for (const vw of [1280, 560, 390]) {
   const pg = await b.newPage({ viewport: { width: vw, height: 1400 } });
-  await pg.addInitScript((seed) => { try { localStorage.setItem('cue_itinerary_v1', seed); } catch {} }, SEED);
+  await pg.addInitScript((seed) => { try { localStorage.setItem('cue_itinerary_v1', seed); } catch (e) {} }, SEED);
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(700);
   all[vw] = await pg.evaluate(({ SEL, PROPS }) => {
     const roots = [...document.querySelectorAll(SEL)];
     const els = [];
     roots.forEach((rt) => { els.push(rt); els.push(...rt.querySelectorAll('*')); });
-    return els.map((e) => { const c = getComputedStyle(e); const o = { _t: e.tagName }; for (const p of PROPS) o[p] = c[p]; return o; });
+    return els.map((e) => { const c = getComputedStyle(e); const o = { _t: e.tagName }; PROPS.forEach((p) => { o[p] = c[p]; }); return o; });
   }, { SEL, PROPS });
   await pg.close();
 }

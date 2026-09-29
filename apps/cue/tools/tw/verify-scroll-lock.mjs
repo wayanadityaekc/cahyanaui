@@ -9,7 +9,7 @@ import { chromium } from 'playwright-core';
 
 const ROOT = 'out';
 function findShell() {
-  try { return execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); } catch { return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'; }
+  try { return execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); } catch (e) { return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'; }
 }
 const EXE = findShell();
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.json': 'application/json' };
@@ -19,7 +19,7 @@ function serve(root, port) {
       let p = decodeURIComponent(q.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
       let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, p + '.html');
+      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
       if (!fs.existsSync(f)) { r.writeHead(404); r.end(); return; }
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
@@ -32,14 +32,16 @@ const port = 8000 + Math.floor(Math.random() * 1500);
 const s = await serve(ROOT, port);
 const b = await chromium.launch({ executablePath: EXE });
 let pass = 0, fail = 0;
-const check = (label, cond) => { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } };
+function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); } else { fail++; console.log(`FAIL ${label}`); } }
 
-const lockState = (pg) => pg.evaluate(() => ({
-  html: document.documentElement.classList.contains('hs-locked'),
-  body: document.body.classList.contains('hs-locked'),
-  htmlOv: getComputedStyle(document.documentElement).overflowY,
-  bodyOv: getComputedStyle(document.body).overflowY,
-}));
+function lockState(pg) {
+  return pg.evaluate(() => ({
+    html: document.documentElement.classList.contains('hs-locked'),
+    body: document.body.classList.contains('hs-locked'),
+    htmlOv: getComputedStyle(document.documentElement).overflowY,
+    bodyOv: getComputedStyle(document.body).overflowY,
+  }));
+}
 
 // ---- 1) Add Program popup (My Trips) - the exact reported bug ----
 {

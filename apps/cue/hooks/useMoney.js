@@ -3,11 +3,7 @@
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 
-/**
- * useMoney - one place to format prices in the guest's chosen currency.
- * Symbol comes from the live pricing context (falls back to "$"), locale
- * from the selected currency. `format(n)` returns a display string.
- */
+// Format prices in the guest's currency: symbol from the pricing context (fallback '$'), locale from currency.
 export default function useMoney() {
   const { currency } = useTripPrefs();
   const pricing = usePricing();
@@ -16,6 +12,6 @@ export default function useMoney() {
     (pricing && pricing.catalog && pricing.catalog.symbol) ||
     '$';
   const locale = currency === 'IDR' ? 'id-ID' : 'en-US';
-  const format = (n) => (n == null ? '-' : symbol + Number(n).toLocaleString(locale));
+  function format(n) { return (n == null ? '-' : symbol + Number(n).toLocaleString(locale)); }
   return { symbol, currency, locale, format };
 }

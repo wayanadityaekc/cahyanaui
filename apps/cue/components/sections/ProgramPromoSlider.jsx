@@ -6,13 +6,7 @@ import { PROGRAM_PROMO } from '@/content/shared/programPromo';
 
 const AUTO_MS = 3000;
 
-// Cross-sell band for listing pages (Sep 2026, item #5): same "dark band, bg photo,
-// kicker/title/lead/CTA" shape as the homepage Airport section, but auto-slides
-// through every program every 3s. Stacked-slide crossfade (same technique as
-// HeroSlider, already verified) rather than transitioning `background-image`
-// directly - that property doesn't animate smoothly across browsers.
-// Any manual interaction (swipe, arrow, dot) stops the interval for good - the
-// user takes over, autoplay doesn't fight them.
+// Auto-sliding promo band for listing pages; stacked-slide crossfade, and any manual interaction stops autoplay for good.
 export default function ProgramPromoSlider() {
   const slides = PROGRAM_PROMO;
   const [cur, setCur] = useState(0);
@@ -29,13 +23,12 @@ export default function ProgramPromoSlider() {
 
   if (!total) return null;
 
-  const go = (n) => {
+  function goTo(n) {
     setAuto(false);
     setCur((n + total) % total);
-  };
+  }
 
-  // Arrows are desktop hover-only (site convention: mobile navigates by swipe/dots,
-  // not visible arrows - showing them always on mobile overlapped the centered text).
+  // Arrows appear on desktop hover only; phones navigate by swipe and dots.
   const ARROW =
     'absolute top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.32)] text-white text-[1.4rem] leading-none cursor-pointer opacity-0 transition-[opacity,scale] duration-200 ease-[ease] group-hover:opacity-100 hover:bg-[rgba(0,0,0,0.52)] max-[768px]:hidden';
 
@@ -49,9 +42,9 @@ export default function ProgramPromoSlider() {
         touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }}
       onTouchEnd={(e) => {
-        const dx = e.changedTouches[0].clientX - touch.current.x;
-        const dy = e.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
+        const deltaX = e.changedTouches[0].clientX - touch.current.x;
+        const deltaY = e.changedTouches[0].clientY - touch.current.y;
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(cur + (deltaX < 0 ? 1 : -1));
       }}
     >
       {slides.map((s, i) => (
@@ -80,10 +73,10 @@ export default function ProgramPromoSlider() {
 
       {total > 1 && (
         <>
-          <button type="button" className={`${ARROW} left-3`} aria-label="Previous program" onClick={() => go(cur - 1)}>
+          <button type="button" className={`${ARROW} left-3`} aria-label="Previous program" onClick={() => goTo(cur - 1)}>
             &lsaquo;
           </button>
-          <button type="button" className={`${ARROW} right-3`} aria-label="Next program" onClick={() => go(cur + 1)}>
+          <button type="button" className={`${ARROW} right-3`} aria-label="Next program" onClick={() => goTo(cur + 1)}>
             &rsaquo;
           </button>
           <div className="absolute left-0 right-0 bottom-3 z-[2] flex justify-center items-center gap-[6px]">
@@ -93,7 +86,7 @@ export default function ProgramPromoSlider() {
                 type="button"
                 aria-label={`Go to ${s.kicker}`}
                 aria-current={i === cur}
-                onClick={() => go(i)}
+                onClick={() => goTo(i)}
                 className={`rounded-[50%] transition-[all] duration-200 ease-[ease] ${i === cur ? 'w-[7px] h-[7px] bg-white' : 'w-[5px] h-[5px] bg-[rgba(255,255,255,0.6)]'}`}
               />
             ))}

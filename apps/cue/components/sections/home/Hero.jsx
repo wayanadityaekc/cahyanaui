@@ -10,7 +10,7 @@ export default function Hero() {
 
   useEffect(() => {
     if (!sheetOpen) return;
-    const onKey = (e) => e.key === 'Escape' && setSheetOpen(false);
+    function onKey(e) { return e.key === 'Escape' && setSheetOpen(false); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [sheetOpen]);
@@ -18,8 +18,7 @@ export default function Hero() {
   useBodyLock(sheetOpen);
 
   return (
-    // Homepage hero. No marker class needed anymore: the section-gap engine keys off
-    // :first-of-type (this is the first <section> child) and the old divider is gone.
+    // Homepage hero; the section-gap rule skips it via :first-of-type, so it needs no marker class.
     <section
       className="relative flex items-center min-h-[88vh] pt-28 px-[var(--container-x)] pb-12 bg-green
         min-[993px]:min-h-[92vh] min-[993px]:pt-36 min-[993px]:pb-20
@@ -30,8 +29,7 @@ export default function Hero() {
         max-[992px]:after:bg-[image:linear-gradient(rgba(0,0,0,0.18),rgba(0,0,0,0.3)_45%,rgba(0,0,0,0.6)),url(/assets/images/ubud-saraswati-temple-hero-mobile.webp)]"
       id="hero"
     >
-      {/* Homepage-only hero inner (no .hero__inner marker; the mobile sheet-open z-bump
-          is conditioned on the sheetOpen state). */}
+      {/* Hero inner; z-index is raised on mobile while the plan sheet is open. */}
       <div className={clsx(
         'relative z-[1] w-full max-w-[1200px] mx-auto flex items-center gap-8 min-[993px]:gap-12 max-[992px]:flex-col max-[992px]:items-stretch',
         sheetOpen && 'max-[992px]:z-[46]',
@@ -47,7 +45,7 @@ export default function Hero() {
               max-[992px]:leading-none max-[992px]:whitespace-nowrap max-[992px]:mt-6
               max-[992px]:w-auto max-[992px]:h-[var(--btn-h)] max-[992px]:py-0 max-[992px]:px-4 max-[992px]:border-none max-[992px]:rounded-sm
               max-[992px]:bg-cta max-[992px]:text-white max-[992px]:font-body max-[992px]:font-semibold max-[992px]:text-small max-[992px]:cursor-pointer
-              max-[992px]:shadow-lg max-[992px]:[transition:background_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cta-d"
+              max-[992px]:[transition:background_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] max-[992px]:hover:bg-cta-d"
             onClick={() => setSheetOpen(true)}
           >
             Plan trip

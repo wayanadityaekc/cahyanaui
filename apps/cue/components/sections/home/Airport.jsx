@@ -1,11 +1,7 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 import Price from '@/components/Price';
 
-// Tailwind-native (migrasi): utilities dipetakan 1:1 dari .airport* di style.css.
-// Overlay gelap (dulu ::after) pakai variant after:* - gradient horizontal di
-// desktop, ganti ke vertikal lebih gelap di <=560px persis media query lama.
-// (.airport__price .price-unit di CSS lama = dead di React: <Price> gak render
-// .price-unit, cuma renderPrices JS situs lama yang nambahin.)
+// Airport band: dark photo overlay via after:, horizontal gradient on desktop, darker vertical one at <=560px.
 const CLS = {
   section:
     "relative overflow-hidden bg-cover bg-center py-8 text-white " +
@@ -47,11 +43,9 @@ export default function Airport() {
           </div>
           <div className={CLS.row}>
             <span className={CLS.price}>
-              from <Price name="Airport – Ubud" fallback="$26" className={CLS.amt} as="b" />
+              from <Price name="Airport – Ubud" fallback="$28" className={CLS.amt} as="b" />
             </span>
-            {/* Anchor text carries the keyword on purpose: this band is the main
-                internal link to /airport-transfer, and "Book a transfer" told
-                Google nothing about what is on the other end. */}
+            {/* Anchor text must say 'airport': this is a main internal link to /airport-transfer. */}
             <a className={CLS.btn} href="/airport-transfer.html">
               Airport transfer &rsaquo;
             </a>

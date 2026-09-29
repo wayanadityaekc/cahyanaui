@@ -3,11 +3,7 @@
 import { useEffect, useState } from 'react';
 import { quote } from '@/lib/api';
 
-/**
- * useQuote - fetch a live server price for a set of cart lines. Handles the
- * request lifecycle (debounced by deps, cancel on unmount) so components just
- * read the priced result. Returns null until a quote is available.
- */
+// useQuote - live server quote for cart lines; refetches when inputs change, ignores stale responses; null until ready.
 export default function useQuote({ lines, currency, stay, referral = '', enabled = true }) {
   const [priced, setPriced] = useState(null);
 
@@ -17,11 +13,14 @@ export default function useQuote({ lines, currency, stay, referral = '', enabled
       return;
     }
     let cancelled = false;
-    quote({ lines, currency, stay, referral: referral || '' })
-      .then((d) => {
+    // price the lines
+    async function load() {
+      try {
+        const d = await quote({ lines, currency, stay, referral: referral || '' });
         if (!cancelled && d && d.lines) setPriced(d);
-      })
-      .catch(() => {});
+      } catch (e) {}
+    }
+    load();
     return () => {
       cancelled = true;
     };

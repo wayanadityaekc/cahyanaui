@@ -9,16 +9,15 @@ const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 
 export default function DateTimeField({ label = 'Date & time', value, onChange, min, id }) {
   const [datePart = '', timePart = ''] = (value || '').split('T');
-  const hh = timePart.slice(0, 2);
-  const mm = timePart.slice(3, 5);
+  const hour = timePart.slice(0, 2);
+  const minute = timePart.slice(3, 5);
 
-  const emit = (d, h, m) => {
+  function emit(d, h, m) {
     if (!d) return onChange('');
     onChange(`${d}T${h || '00'}:${m || '00'}`);
-  };
+  }
 
-  // Tailwind-native (full-portable): .dtf* -> utilities. Kolom jam/menit = Select
-  // shared, di-stretch lewat className prop (nempel ke .csel-group wrapper-nya).
+  // Hour and minute Selects share the row equally.
   const TIMESEL = 'flex-[1_1_0] min-w-0';
   return (
     <div className="flex flex-col gap-2">
@@ -26,7 +25,7 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
         id={id ? `${id}-date` : undefined}
         label={label}
         value={datePart}
-        onChange={(d) => emit(d, hh, mm)}
+        onChange={(d) => emit(d, hour, minute)}
         min={min}
         placeholder="Select date"
       />
@@ -34,8 +33,8 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
         <Select
           id={id ? `${id}-hour` : undefined}
           label="Hour"
-          value={hh}
-          onChange={(h) => emit(datePart, h, mm)}
+          value={hour}
+          onChange={(h) => emit(datePart, h, minute)}
           options={HOURS.map((v) => ({ value: v, label: fmtHour(v) }))}
           placeholder="Hour"
           className={TIMESEL}
@@ -44,8 +43,8 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
         <Select
           id={id ? `${id}-minute` : undefined}
           label="Minute"
-          value={mm}
-          onChange={(m) => emit(datePart, hh, m)}
+          value={minute}
+          onChange={(m) => emit(datePart, hour, m)}
           options={MINUTES.map((v) => ({ value: v, label: v }))}
           placeholder="MM"
           className={TIMESEL}

@@ -1,14 +1,9 @@
 export const SITE = 'https://cahyanaubudexperience.com';
 
-// Kept out of the generated sitemap. my-trips/settings are private tools;
-// programs.html sets robots:noindex in its own metadata, so listing it would
-// send Google both "here is my URL" and "do not index it".
-export const NOINDEX = ['my-trips', 'settings', 'programs'];
+// Kept out of the generated sitemap. my-trips/settings are private tools.
+export const NOINDEX = ['my-trips', 'settings'];
 
-// Tours parked as "not ready to sell yet" (Wayan). Their content stays in
-// content/tours/index.js so they can be switched back on by deleting a line
-// here. This list keeps them out of the shipped sitemap; sitemap.xml at the
-// root marks the same slugs NONAKTIF.
+// Parked tours: page kept, dropped from the sitemap and card lists; delete a line to switch one back on.
 export const HIDDEN_TOURS = [
   'banyumala-twin-lakes',
   'gwk-pandawa-beach',
@@ -109,10 +104,7 @@ export const GUIDES = [
   'uluwatu-bukit',
 ];
 
-// about-us / contact / faq / terms-conditions / privacy-policy /
-// cancellation-policy were folded into our-company.html (Sep 2026) and now only
-// exist as 301s in public/.htaccess - listing them here kept them in the shipped
-// sitemap, pointing Google at six redirects.
+// Pages folded into our-company.html are 301s in .htaccess; listing them here would put redirects in the sitemap.
 export const BESPOKE = [
   'activities',
   'airport-transfer',
@@ -120,9 +112,7 @@ export const BESPOKE = [
   'bali-guide',
   'charter',
   'destinations',
-  'itinerary',
   'our-company',
-  'programs',
   'my-trips',
   'settings',
   'tour',
@@ -144,17 +134,12 @@ export function tourPath(slug) {
   return `/${slug}.html`;
 }
 
-// True for a link pointing at a parked tour. Card lists filter on this so a
-// hidden tour stops being offered anywhere, while its page still resolves for
-// anyone holding the link (no 404s) and its content stays put for the day
-// Wayan switches it back on.
+// True for a link to a parked tour; card lists filter these out while the page still resolves.
 export function isHiddenTour(href) {
   return HIDDEN_TOURS.some((slug) => href === tourPath(slug));
 }
 
-// Same switch, applied to editorial HTML: an anchor pointing at a parked tour
-// is unwrapped so the sentence reads the same but stops being a way through to
-// a page that still has a Book Now on it.
+// Unwraps editorial links to parked tours so the text reads the same without linking to them.
 export function unlinkHiddenTours(html) {
   if (!html || !HIDDEN_TOURS.length) return html;
   const slugs = HIDDEN_TOURS.join('|');

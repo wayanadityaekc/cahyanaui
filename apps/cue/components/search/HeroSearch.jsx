@@ -42,9 +42,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
 
   useEffect(() => {
     if (!open || isMobile) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (ddRef.current && !ddRef.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, [open, isMobile]);
@@ -57,8 +57,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     if (!catalog) return out;
     const isIdr = currency === 'IDR';
     const loc = isIdr ? 'id-ID' : 'en-US';
-    const fmt = (n) => withSymbol(symbol + n.toLocaleString(loc));
-    const byCat = (cats) => catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
+    function fmt(n) { return withSymbol(symbol + n.toLocaleString(loc)); }
+    function byCat(cats) { return catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display); }
     const sets = {
       tour: byCat(['tour', 'combo']),
       experience: byCat(['experience']),
@@ -66,27 +66,25 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       transfer: catalog.transfers.map((t) => t.display),
       charter: catalog.charters.map((c) => c.display),
     };
-    for (const [cat, arr] of Object.entries(sets)) {
-      if (!arr.length) continue;
-      const lo = Math.min(...arr);
-      const hi = Math.max(...arr);
-      // Only the low end carries the "Rp"/"$" symbol (unchanged shape) - the
-      // bare high-end number still gets the small-thousands treatment for IDR
-      // so both ends of the range read consistently.
-      const hiText = isIdr ? withDeemphasizedThousands(hi.toLocaleString(loc)) : hi.toLocaleString(loc);
-      out[cat] = lo === hi ? <>from {fmt(lo)}</> : <>{fmt(lo)}–{hiText}</>;
-    }
+    Object.entries(sets).forEach(([cat, arr]) => {
+      if (!arr.length) return;
+      const low = Math.min(...arr);
+      const high = Math.max(...arr);
+      // Only the low end carries the currency symbol; the high end still gets IDR small-thousands styling.
+      const hiText = isIdr ? withDeemphasizedThousands(high.toLocaleString(loc)) : high.toLocaleString(loc);
+      out[cat] = low === high ? <>from {fmt(low)}</> : <>{fmt(low)}–{hiText}</>;
+    });
     return out;
   }, [catalog, symbol, currency]);
 
-  const applyCode = async () => {
+  async function applyCode() {
     const pct = await apply(code);
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
-  };
+  }
 
-  const go = () => {
+  function openPicked() {
     if (picked) window.location.href = picked.href;
-  };
+  }
 
   const panel = (
     <div className={panelMenu(open)}>
@@ -125,13 +123,13 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     <DragSheet
       enabled={isMobile && sheetOpen}
       onDismiss={onClose}
-      className={`relative flex-shrink-0 w-[420px] bg-white rounded-lg shadow-xl p-6 text-green
+      className={`relative flex-shrink-0 w-[420px] bg-white rounded-lg p-6 text-green
         animate-[heroCardIn_0.5s_var(--ease)_backwards] motion-reduce:animate-none
         max-[992px]:fixed max-[992px]:left-0 max-[992px]:right-0 max-[992px]:bottom-0 max-[992px]:z-[45] max-[992px]:w-auto
         max-[992px]:max-h-[90vh] max-[992px]:overflow-y-auto max-[992px]:[scrollbar-width:none] max-[992px]:[&::-webkit-scrollbar]:hidden max-[992px]:rounded-t-[var(--r-xl)] max-[992px]:rounded-b-none
         max-[992px]:pt-[1.9rem] max-[992px]:animate-none
         max-[992px]:[transition:translate_var(--dur-slow)_var(--ease-out),visibility_var(--dur-slow)]
-        max-[992px]:shadow-[0_-12px_48px_rgba(26,26,26,0.28)]
+       
         max-[992px]:before:content-[''] max-[992px]:before:absolute max-[992px]:before:top-[0.6rem] max-[992px]:before:left-1/2
         max-[992px]:before:[transform:translateX(-50%)] max-[992px]:before:w-10 max-[992px]:before:h-1 max-[992px]:before:rounded-full
         max-[992px]:before:bg-[#d9d5cc]
@@ -155,7 +153,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         <label className={FIELD_LABEL}>
           How do you want to explore?
           <InfoPopover variant="hero">
-            <p className="!mb-[0.6rem] pb-[0.6rem] [border-bottom:1px_solid_#f2efe7] !font-semibold !text-green">
+            <p className="!mb-[0.6rem] pb-[0.6rem] [border-bottom:1px_solid_var(--line)] !font-semibold !text-green">
               Pick what you want to do, choose your dates, set how many guests and where we pick you up, then choose
               your currency. Tap Explore to see the options with real prices.
             </p>
@@ -172,8 +170,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
           <ChevronDown className={CHEV} />
         </button>
-        {/* Portal-mounted once mobile+mounted (not gated on `open`) so the sheet has a
-            "closed" frame to transition FROM instead of popping in already-open. */}
+        {/* Portal-mounted once mobile and mounted (not gated on `open`) so the sheet has a closed frame to animate from. */}
         {mounted && isMobile && createPortal(panel, document.body)}
         {mounted && isMobile && <Overlay open={open} onClose={() => setOpen(false)} />}
         {(!isMobile || !mounted) && panel}
@@ -234,8 +231,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       <button
         type="button"
         className="flex w-full mt-[0.4rem] items-center justify-center text-center leading-none whitespace-nowrap h-[var(--btn-h)] py-0 px-4 rounded-sm text-small bg-cta text-white border-none font-body font-semibold cursor-pointer
-          [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:shadow-lg hover:bg-cta-d"
-        onClick={go}
+          [transition:translate_var(--dur)_var(--ease-out),box-shadow_var(--dur)_var(--ease-out),background-color_var(--dur)_var(--ease-out),scale_var(--dur-fast)_var(--ease)] hover:-translate-y-0.5 hover:bg-cta-d"
+        onClick={openPicked}
       >
         Explore
       </button>

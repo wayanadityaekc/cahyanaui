@@ -71,18 +71,18 @@ function processBlock(s) {
     const t = prelude.replace(/^\s*(?:\/\*[\s\S]*?\*\/\s*)*/, '').trim();
     if (/^@media|^@supports/.test(t)) {
       const inner = processBlock(body);
-      if (inner.replace(/\/\*[\s\S]*?\*\//g, '').trim() !== '') out += prelude + '{' + inner + '}';
+      if (inner.replace(/\/\*[\s\S]*?\*\//g, '').trim() !== '') out += `${prelude}{${inner}}`;
     } else if (/^@/.test(t)) {
-      out += prelude + '{' + body + '}';
+      out += `${prelude}{${body}}`;
     } else {
       const clean = prelude.replace(/\/\*[\s\S]*?\*\//g, '');
       const sels = clean.split(',').map((x) => x.replace(/\n/g, ' ').trim()).filter(Boolean);
       const keep = sels.filter((sx) => !selectorIsDead(sx));
       if (keep.length === 0) { /* whole rule dead -> drop */ }
-      else if (keep.length === sels.length) out += prelude + '{' + body + '}';
+      else if (keep.length === sels.length) out += `${prelude}{${body}}`;
       else {
         const lead = (prelude.match(/^(\s*(?:\/\*[\s\S]*?\*\/\s*)*)/) || [''])[0];
-        out += lead + keep.join(',\n') + ' {' + body + '}';
+        out += `${lead}${keep.join(',\n')} {${body}}`;
       }
     }
     i = close + 1;

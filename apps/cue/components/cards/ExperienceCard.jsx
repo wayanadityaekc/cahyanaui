@@ -7,11 +7,7 @@ import { BADGE_POPULAR, CARD_FRAME, CARD_IMG } from '@/components/ui/cardClasses
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-// Tailwind-native PENUH (migrasi Fase 2 - keluarga kartu, stage final). Dulu numpang
-// .experience__card + .experience__image/body/name/meta/footer/price + override
-// .tourprog .experience__* - sekarang SEMUA utilities. Layout = kartu "See our tours"
-// (tourprog): foto 4:3, body grid 2 baris (title/rating, meta/price). Frame pakai
-// CARD_FRAME shared. Keluarga CSS .experience__* (kecuali grid engine) udah dihapus.
+// Photo 4:3 card on CARD_FRAME with a 2-row body grid (title/rating, meta/price).
 const IMG_WRAP =
   'relative aspect-[4/3] rounded-md overflow-hidden bg-green bg-cover bg-center ' +
   "after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,transparent_55%,rgba(31,61,43,0.45))]";
@@ -23,10 +19,7 @@ const BODY_INCL =
   'gap-x-[0.55rem] gap-y-[0.4rem] pt-[0.6rem] px-[0.9rem] pb-[0.8rem] grow';
 const NAME =
   '[grid-area:title] m-0 text-strong max-[992px]:text-small font-semibold leading-[1.25] line-clamp-2';
-// New (Sep 2026) - this grid cell existed in the layout ('title_rating') but
-// nothing ever rendered into it; wired up alongside real review data. Same
-// star + amber-d treatment as HomepageCard/ListingRow's rating badge, just
-// inline instead of an absolute pill (no photo underneath to float over here).
+// Rating cell in the title row: same star + amber-d as HomepageCard's badge, inline instead of a pill.
 const RATING =
   '[grid-area:rating] flex items-center gap-[3px] self-start justify-self-end text-small font-semibold text-amber-d whitespace-nowrap ' +
   '[&>svg]:w-[13px] [&>svg]:h-[13px] [&>svg]:text-amber-d';

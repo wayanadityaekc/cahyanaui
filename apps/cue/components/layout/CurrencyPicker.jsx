@@ -5,25 +5,23 @@ import { ChevronDown } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { CURRENCIES } from '@/lib/constants';
 
-// Tailwind-native (full-portable). `variant`: 'navbar' (ml-auto di kluster akun) /
-// 'hero' (tombol seukuran field di search form) / 'default'. Catatan: opsi aktif
-// dulu di-scope `.acct__curopt.is-active` tapi JSX nge-set aria-selected -> highlight
-// gak pernah muncul (bug lama). Direplikasi apa adanya (no active bg) biar zero-diff.
-const wrap = (v) => `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`;
+// Currency dropdown; variants 'navbar' (ml-auto), 'hero' (field-sized) and 'default'. Active option has no highlight.
+function wrap(v) { return `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`; }
 const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body text-field text-green cursor-pointer';
-const curbtn = (v) =>
-  v === 'hero'
-    ? `${CURBTN_BASE} py-0 px-3 h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
-    : `${CURBTN_BASE} py-0 px-3 h-[var(--field-h)] rounded-md font-semibold [border:1px_solid_var(--line)]`;
+function curbtn(v) {
+  return v === 'hero'
+      ? `${CURBTN_BASE} py-0 px-3 h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
+      : `${CURBTN_BASE} py-0 px-3 h-[var(--field-h)] rounded-md font-semibold [border:1px_solid_var(--line)]`;
+}
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-// Was an instant `hidden` attribute snap - now fades+lifts in (element stays mounted,
-// only opacity/transform/pointer-events toggle, so the transition actually plays).
-const curlist = (v, open) =>
-  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_#e4dcc8] [box-shadow:0_10px_24px_rgba(31,61,43,0.16)] z-10 ` +
-  `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
-  `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
-  `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
+// List fades in (stays mounted so the transition plays) and is capped + scrollable for 12 currencies.
+function curlist(v, open) {
+  return `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_var(--line)] z-10 max-h-[15rem] overflow-y-auto overscroll-contain ` +
+    `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
+    `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
+    `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
+}
 const CUROPT = 'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
 const FLAG = 'inline-block w-5 h-[14px] rounded-[2px] overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
 
@@ -37,16 +35,16 @@ function Flag({ code }) {
   );
 }
 
-export default function CurrencyPicker({ variant = 'default' }) {
+export default function CurrencyPicker({ variant = 'default', id = 'acct-cur' }) {
   const { currency, setCurrency } = useTripPrefs();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
     if (!open) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, [open]);
@@ -56,7 +54,7 @@ export default function CurrencyPicker({ variant = 'default' }) {
       <button
         type="button"
         className={curbtn(variant)}
-        id="acct-cur"
+        id={id}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}

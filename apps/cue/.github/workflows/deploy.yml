@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Daily rebuild (29 Sep 2026): prices follow a live exchange rate, and the
+  # build bakes today's catalog into the HTML (app/layout.jsx) and into the
+  # JSON-LD Google reads. 23:45 UTC = 07:45 Bali, after cahyana-api's 06:15
+  # rate fetch. A rebuild with no rate change produces the same site.
+  schedule:
+    - cron: '45 23 * * *'
 
 # The publish step force-pushes the built out/ to the deploy branch, so the
 # workflow token needs write access to repo contents (default is read-only).
@@ -46,6 +52,9 @@ jobs:
 
       - name: Verify every declared transition actually animates something
         run: node tools/check-motion.js
+
+      - name: Verify no malformed utility classes (they generate no CSS at all)
+        run: node tools/check-classes.js
 
       - name: Publish out/ to the deploy branch
         run: |

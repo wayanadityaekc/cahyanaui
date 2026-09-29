@@ -12,8 +12,8 @@ const GRID = 'grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-a
 
 export default function ReviewsStrip({
   service, group, emptyText, showEmpty = true, emptyCta = false,
-  // 'grid' = 3-column list (all-reviews, service pages); 'slider' = homepage card row with the same popup.
-  variant = 'grid',
+  // 'slider' = sideways card row (every review section); 'grid' = full list, only /all-reviews.
+  variant = 'slider',
   // Optional cap on how many reviews to show (homepage); /all-reviews renders with no limit.
   limit,
 }) {

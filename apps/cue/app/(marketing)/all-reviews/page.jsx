@@ -36,7 +36,7 @@ export default function AllReviews() {
             <h2 className={`${SECTION_TITLE} ${ST_LEFT} !mb-0`}>All Reviews</h2>
             <ReviewCta />
           </div>
-          <ReviewsStrip />
+          <ReviewsStrip variant="grid" />
         </div>
       </section>
     </>

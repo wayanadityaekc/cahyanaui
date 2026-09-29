@@ -9,6 +9,7 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 import Select from '@/components/ui/Select';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import LiveRegion from '@/components/ui/LiveRegion';
 import { withSymbol } from '@/components/Price';
 import { useTransferRoute } from '@/components/sections/TransferRouteProvider';
 
@@ -133,7 +134,8 @@ export default function TransferPicker() {
         <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener">ask us on WhatsApp</a>.
       </p>
 
-      {toast && <div className={CART_TOAST}>{toast}</div>}
+      <LiveRegion>{toast}</LiveRegion>
+      {toast && <div className={CART_TOAST} aria-hidden="true">{toast}</div>}
     </div>
   );
 }

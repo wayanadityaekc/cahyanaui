@@ -2,6 +2,7 @@
 
 import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
 import { SHELL, BOX } from './modalClasses';
+import useDialog from './useDialog';
 
 // The one job CSS genuinely cannot do: animating a modal OUT.
 //
@@ -19,7 +20,9 @@ const EASE_OUT = [0.16, 1, 0.3, 1];
 const BOX_FROM = { opacity: 0, y: 14, scale: 0.96 };
 const BOX_TO = { opacity: 1, y: 0, scale: 1 };
 
-export default function ModalPresence({ open, onClose, box = BOX, shellClass = SHELL, children }) {
+// `label` is the dialog's accessible name (read out when it opens). Every caller passes one.
+export default function ModalPresence({ open, onClose, label, box = BOX, shellClass = SHELL, children }) {
+  const boxRef = useDialog({ shown: open, onClose });
   const reduced = useReducedMotion();
   const shell = reduced ? 0 : 0.25;
   const card = reduced ? 0 : 0.32;
@@ -46,7 +49,11 @@ export default function ModalPresence({ open, onClose, box = BOX, shellClass = S
           >
             <m.div
               key="box"
-              className={box}
+              ref={boxRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={label}
+              className={`${box} outline-none`}
               initial={BOX_FROM}
               animate={BOX_TO}
               exit={BOX_FROM}

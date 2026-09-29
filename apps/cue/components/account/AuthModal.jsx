@@ -126,8 +126,8 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             disabled={busy}
             autoFocus
           />
-          {msg && <small className={`${REFMSG_ERR} block text-center mt-3`}>{msg}</small>}
-          {ok && <small data-signin-note className={`${REFMSG} block text-center mt-3`}>{ok}</small>}
+          {msg && <small role="alert" className={`${REFMSG_ERR} block text-center mt-3`}>{msg}</small>}
+          {ok && <small role="status" data-signin-note className={`${REFMSG} block text-center mt-3`}>{ok}</small>}
           <button type="button" className={`${BTN} mt-4`} onClick={() => doVerify(code)} disabled={busy || code.length < 6}>
             {busy ? 'Checking...' : 'Verify'}
           </button>
@@ -149,9 +149,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
           <div className={CONTACT_GROUP}>
             <label className={FIELD_LABEL} htmlFor="auth-email">Email</label>
             <input className={CONTACT_INPUT} type="email" id="auth-email" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />
-            {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
+            {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
           </div>
-          {msg && <small className={REFMSG_ERR}>{msg}</small>}
+          {msg && <small role="alert" className={REFMSG_ERR}>{msg}</small>}
           <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
             {busy ? 'Sending...' : 'Send code'}
           </button>
@@ -166,19 +166,19 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
           <div className={CONTACT_GROUP}>
             <label className={FIELD_LABEL} htmlFor="auth-name">Your Name</label>
             <input className={CONTACT_INPUT} type="text" id="auth-name" placeholder="Enter your name" value={f.name} onChange={set('name')} autoComplete="name" aria-invalid={!!errors.name} />
-            {errors.name && <small className={FIELD_ERR}>{errors.name}</small>}
+            {errors.name && <small role="alert" className={FIELD_ERR}>{errors.name}</small>}
           </div>
           <div className={CONTACT_GROUP}>
             <label className={FIELD_LABEL} htmlFor="auth-cemail">Email</label>
             <input className={CONTACT_INPUT} type="email" id="auth-cemail" placeholder="you@email.com" value={f.email} onChange={set('email')} autoComplete="email" aria-invalid={!!errors.email} />
-            {errors.email && <small className={FIELD_ERR}>{errors.email}</small>}
+            {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
           </div>
           <div className={CONTACT_GROUP}>
             <label className={FIELD_LABEL} htmlFor="auth-phone">Phone / WhatsApp</label>
             <input className={CONTACT_INPUT} type="tel" id="auth-phone" placeholder="+62 ..." value={f.phone} onChange={set('phone')} autoComplete="tel" aria-invalid={!!errors.phone} />
-            {errors.phone && <small className={FIELD_ERR}>{errors.phone}</small>}
+            {errors.phone && <small role="alert" className={FIELD_ERR}>{errors.phone}</small>}
           </div>
-          {msg && <small className={REFMSG_ERR}>{msg}</small>}
+          {msg && <small role="alert" className={REFMSG_ERR}>{msg}</small>}
           <button type="button" className={BTN} onClick={doCreate} disabled={busy}>
             {busy ? 'Creating...' : 'Create Account'}
           </button>

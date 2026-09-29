@@ -48,7 +48,7 @@ const CTA =
 // component below.
 const ROW =
   'booknowrow flex items-center justify-between gap-4 mt-[1.1rem] py-[0.85rem] px-4 rounded-md bg-white ' +
-  '[border:1px_solid_var(--color-line)] min-[993px]:hidden';
+  '[border:1px_solid_var(--line)] min-[993px]:hidden';
 
 // This row has NO hide logic, on purpose. It used to mirror the sticky bar's rule
 // and stand down while the booking card was on screen - but the two can never be on

@@ -49,7 +49,7 @@ const ITN_TRIP_S = 'mt-0 mb-[0.8rem] text-[length:var(--fs-label)] text-muted';
 const ITN_TRIP_GUESTS = 'flex items-center gap-[0.4rem] mt-[0.7rem] mb-0 text-[length:var(--fs-label)] text-muted [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)] [&_svg]:text-gold [&_svg]:flex-none [&_b]:text-green';
 const ITN_PANEL_HEAD = 'flex items-center justify-between flex-wrap gap-2 mb-4';
 const ITN_GHOSTBTN = `inline-flex ${BTN_SM} border border-[#d8d2c4] bg-white font-body text-[length:var(--fs-small)] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[#efe9db]`;
-const ITN_DAY = 'itn-day relative p-[1.1rem] mb-4 border border-[#e6dfce] rounded-md bg-white last:mb-0';
+const ITN_DAY = 'itn-day relative p-[1.1rem] mb-4 border border-line rounded-md bg-white last:mb-0';
 const ITN_DAY_TITLE = 'font-body text-[1rem] font-semibold text-green';
 const ITN_DAY_EMPTY = 'flex items-center gap-[0.6rem] py-2 px-[0.2rem] mb-4 text-[length:var(--fs-small)] text-[#9a9382]';
 const ITN_SUMMARY = 'py-6 px-6 pb-[1.4rem] rounded-md text-center text-cream bg-green max-[992px]:p-[1.25rem] [order:5]';
@@ -315,11 +315,12 @@ export default function ItineraryBuilder() {
                         {it}
                         {isFullDay(it) && (
                           <span className={TT_CARD}>
-                            <span className={TT_TOGGLE} role="tablist" aria-label="Tour type">
+                            <span className={TT_TOGGLE} role="radiogroup" aria-label="Tour type">
                               <button
                                 type="button"
                                 className={((d.itemModes || [])[k] || 'standard') === 'standard' ? TT_BTN_ON : TT_BTN}
-                                role="tab"
+                                role="radio"
+                                aria-checked={((d.itemModes || [])[k] || 'standard') === 'standard'}
                                 onClick={() => save(setItemMode(state, i, k, 'standard'))}
                               >
                                 Standard
@@ -327,7 +328,8 @@ export default function ItineraryBuilder() {
                               <button
                                 type="button"
                                 className={(d.itemModes || [])[k] === 'exclusive' ? TT_BTN_ON : TT_BTN}
-                                role="tab"
+                                role="radio"
+                                aria-checked={(d.itemModes || [])[k] === 'exclusive'}
                                 onClick={() => save(setItemMode(state, i, k, 'exclusive'))}
                               >
                                 Exclusive

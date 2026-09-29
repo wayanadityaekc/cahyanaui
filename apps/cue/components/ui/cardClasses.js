@@ -6,16 +6,15 @@
 export const BADGE_POPULAR =
   'absolute top-[0.8rem] right-[0.8rem] bg-amber text-gold text-label font-semibold tracking-[0.04em] uppercase rounded-sm py-[0.2rem] px-[0.7rem]';
 
-// Frame kartu (dulu base `.experience__card`): putih inset radius + hover
+// Frame kartu (dulu base `.experience__card`): putih inset radius, TANPA hover
 // lift. DISPLAY sengaja gak diikutin di sini - ditambah per komponen (`flex flex-col`
 // buat kartu standar, `block` buat kartu tourprog "See our tours"). Dipake
 // ExperienceCard / GuideCard / GuideMore (you-might) / GuideHome (CTA more).
-// Hover lift uses --ease-out (gentle deceleration) instead of the old plain `ease` -
-// softer entry into the hover state, not an abrupt snap (Sep 2026, Wayan: card hover
-// shouldn't feel harsh).
+// NO hover lift (WO7, 29 Sep 2026, Wayan: cards must not move on hover). The old
+// translateY(-4px) and its transition were removed together - a transition with
+// nothing left to animate is the dead-code shape check-motion exists to catch.
 export const CARD_FRAME =
-  'relative rounded-lg p-[5px] overflow-hidden bg-white no-underline text-inherit shadow-card ' +
-  '[transition:transform_var(--dur-slow)_var(--ease-out)] hover:[transform:translateY(-4px)]';
+  'relative rounded-lg p-[5px] overflow-hidden bg-white no-underline text-inherit shadow-card';
 
 // Foto kartu persegi (dulu `.experience__image` + ::after gradient). Wrapper pegang
 // rasio/radius/overflow; gradient gelap dari bawah biar teks putih (kalau ada) kebaca.

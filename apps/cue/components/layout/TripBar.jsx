@@ -23,7 +23,7 @@ import { promoFor } from '@/content/shared/promo';
 // bar-nya juga diklem di sini: `whitespace-nowrap` + `truncate` (butuh `min-w-0`
 // di flex parent, kalau nggak anaknya gak mau nyusut). Efeknya kalau kepanjangan
 // dia kepotong "...", BUKAN turun ke baris kedua & bikin header melar.
-const BAR = 'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-bottom:1px_solid_#ececec] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
+const BAR = 'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-bottom:1px_solid_var(--line)] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
 const CTA = 'ml-2 shrink-0 text-gold underline [@media(max-width:560px)]:ml-[0.3rem]';
 // The fade only carries the text swap on a rotating bar; a single-message page
 // never triggers it. motion-reduce kills the fade, the swap itself still happens

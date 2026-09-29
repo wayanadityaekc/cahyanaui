@@ -42,7 +42,7 @@ const BAR =
   `${APP_ONLY} [body:has(.bookbar)_&]:hidden max-md:[body:has(.stickybar)_&]:hidden [body:has(.footerbar)_&]:hidden ` +
   'fixed inset-x-0 bottom-0 z-[95] items-stretch ' +
   'pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] ' +
-  'bg-white [border-top:1px_solid_var(--color-line)] ' +
+  'bg-white [border-top:1px_solid_var(--line)] ' +
   '';
 
 const CELL =

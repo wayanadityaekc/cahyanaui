@@ -17,7 +17,7 @@
 // opaque track spans the whole row; a narrower row would let content scroll through
 // beside it.
 export const CARD =
-  'bg-white rounded-md [border:1px_solid_var(--color-line)] px-6 pt-6 pb-8 ' +
+  'bg-white rounded-md [border:1px_solid_var(--line)] px-6 pt-6 pb-8 ' +
   'max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
 export const CARD_WRAP = 'max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4';
 export const STRIP = 'sticky top-[var(--header-h,52.8px)] min-[769px]:top-[var(--header-h,57.6px)] z-20 pt-[10px] bg-white';

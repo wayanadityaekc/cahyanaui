@@ -14,10 +14,10 @@ const BTN =
   'hover:text-green hover:bg-[rgba(34,32,28,0.15)] aria-expanded:text-green aria-expanded:bg-[rgba(34,32,28,0.15)] ' +
   '[&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]';
 const POP_BASE =
-  "absolute z-[60] w-[min(272px,82vw)] py-[0.85rem] px-[0.9rem] bg-white [border:1px_solid_#ece6d8] rounded-md " +
+  "absolute z-[60] w-[min(272px,82vw)] py-[0.85rem] px-[0.9rem] bg-white [border:1px_solid_var(--line)] rounded-md " +
   'text-left normal-case tracking-normal [transition:opacity_var(--dur-fast)_var(--ease),visibility_var(--dur-fast)] motion-reduce:[transition:none] ' +
   "before:content-[''] before:absolute before:top-[-6px] before:w-[11px] before:h-[11px] before:bg-white " +
-  'before:[border-left:1px_solid_#ece6d8] before:[border-top:1px_solid_#ece6d8] before:[transform:rotate(45deg)] ' +
+  'before:[border-left:1px_solid_var(--line)] before:[border-top:1px_solid_var(--line)] before:[transform:rotate(45deg)] ' +
   '[&_p]:m-0 [&_p]:text-small [&_p]:leading-[1.45] [&_p]:font-normal [&_p]:text-[#6b6456]';
 // Note: styling khusus baris "lead" (border-bottom + bold + green) di-set di konsumen
 // (pola self-contained), pakai `!` biar ngalahin [&_p] (descendant, specificity 0,1,1).

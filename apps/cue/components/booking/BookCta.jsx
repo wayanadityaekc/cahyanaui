@@ -9,6 +9,7 @@ import { clashDates } from '@/lib/cart';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
+import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 // Wayan's flow (3 Sep 2026), which differs from the old site:
@@ -93,7 +94,7 @@ export default function BookCta({ item, perPerson = false }) {
         itemName={item}
       />
 
-      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} box={BOX_SM}>
+      <ModalPresence open={!!confirm} onClose={() => setConfirm(null)} label="Two full-day tours?" box={BOX_SM}>
         {confirm && (
           <>
             <button className={CLOSE} aria-label="Close" onClick={() => setConfirm(null)}>&times;</button>
@@ -107,7 +108,8 @@ export default function BookCta({ item, perPerson = false }) {
         )}
       </ModalPresence>
 
-      {toast && <div className={CART_TOAST}>{toast}</div>}
+      <LiveRegion>{toast}</LiveRegion>
+      {toast && <div className={CART_TOAST} aria-hidden="true">{toast}</div>}
     </>
   );
 }

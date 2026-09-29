@@ -1,3 +1,4 @@
+import { ROW_RULE } from './separatorClasses';
 // Shared tour/attraction "stops" layout (B-FINAL). Photo-left / text-right rows.
 // These always render inside DetailTabs' Overview panel, whose SEC wrapper applies
 // context overrides ([&_.stops]:p-0, [&_.stop]:max-w-none) that target the `stops`/
@@ -7,7 +8,7 @@
 export const STOPS = 'stops py-[var(--section-gap)] px-6';
 export const STOP =
   'stop grid grid-cols-[1fr_1.1fr] gap-10 items-center max-w-[1000px] mx-auto py-8 ' +
-  '[border-bottom:1px_solid_#e0ddd4] last:[border-bottom:none] ' +
+  ROW_RULE + ' ' +
   'max-[768px]:grid-cols-[1fr] max-[768px]:gap-5';
 // NB: a later style.css rule zeroed .stop__image border-radius unconditionally, so the
 // effective radius is 0 (base r-md was dead) — no rounded utility here.

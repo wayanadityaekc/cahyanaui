@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAccount } from '@/state/AccountProvider';
+import { ROW_RULE } from '@/components/ui/separatorClasses';
 
 // The guest's own reviews on the Settings page (WO3, Sep 2026: "Show the
 // guest's own reviews on this page"). A private management list, not the
@@ -34,7 +35,7 @@ export default function MyReviews() {
         const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
         const stars = '★'.repeat(n) + '☆'.repeat(5 - n);
         return (
-          <li key={r.id} className="py-3 [border-bottom:1px_solid_var(--line)] last:[border-bottom:none]">
+          <li key={r.id} className={`py-3 ${ROW_RULE}`}>
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <span className="font-semibold text-small text-green">{r.service}</span>
               <span className="text-label text-muted">{fmtDate(r.created_at)}</span>

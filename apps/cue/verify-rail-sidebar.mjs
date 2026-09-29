@@ -50,7 +50,7 @@ for (const { path, crumb } of PAGES) {
 
   // The item's label text is gone from the painted row, but the page is
   // still navigable - title/aria-label still carry it.
-  const activeRow = page.locator('aside [role="tab"][aria-selected="true"], aside a[aria-current="true"]').first();
+  const activeRow = page.locator('aside [aria-current="true"]').first();
   const rowText = await activeRow.innerText().catch(() => '');
   ok(rowText.trim() === '', `${path}: collapsed row still paints its label ("${rowText}")`);
 

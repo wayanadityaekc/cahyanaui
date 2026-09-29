@@ -29,7 +29,7 @@ export const HERO_CTA =
 // ([&>li]) to stay DRY - one context, the hero.
 export const HOOK_UL =
   'tour-hook list-none flex justify-center mt-6 mx-0 mb-0 p-0 [&>li]:flex [&>li]:flex-col [&>li]:px-4 ' +
-  'min-[769px]:[&>li]:px-[22px] [&>li+li]:[border-left:1px_solid_#e6e6e6]';
+  'min-[769px]:[&>li]:px-[22px] [&>li+li]:[border-left:1px_solid_var(--line)]';
 export const HOOK_LABEL = 'text-small font-normal tracking-[0] normal-case text-muted';
 export const HOOK_VALUE = 'mt-[0.2rem] text-small font-medium text-ink min-[769px]:text-h3 min-[769px]:whitespace-nowrap';
 

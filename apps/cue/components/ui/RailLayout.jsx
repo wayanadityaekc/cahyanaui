@@ -113,7 +113,7 @@ export default function RailLayout({
           ) : (
             <button
               type="button"
-              {...(mobile ? {} : { role: 'tab', 'aria-selected': on })}
+              aria-current={on ? 'true' : undefined}
               onClick={() => onSelect(t.id)}
               className={cls}
               {...a11y}
@@ -132,7 +132,7 @@ export default function RailLayout({
       <aside className={railCollapsed ? RAIL_ASIDE_COLLAPSED : RAIL_ASIDE} aria-label={label}>
         <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
           {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
-          <nav className="flex flex-col" {...(items.some((t) => t.href) ? {} : { role: 'tablist' })} aria-label={label}>
+          <nav className="flex flex-col" aria-label={label}>
             {rows(false)}
           </nav>
           {!railCollapsed && help}

@@ -2,6 +2,7 @@
 
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { useState } from 'react';
+import tabKeys from '@/components/ui/useTabKeys';
 import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import ListingRow from '@/components/cards/ListingRow';
 import CharterSection from '@/components/sections/CharterSection';
@@ -42,13 +43,16 @@ export default function AllPrograms() {
       <section className="bg-white py-[var(--section-gap)] px-6">
         <div className={APHEAD}>
           <h1 className={`${SECTION_TITLE} !mb-[1.4rem]`}>All Programs</h1>
-          <div className={ZFILTER} role="tablist" aria-label="Program categories">
+          <div className={ZFILTER} role="tablist" aria-label="Program categories" onKeyDown={tabKeys()}>
             {TABS.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 role="tab"
+                id={`apt-${t.id}`}
                 aria-selected={tab === t.id}
+                aria-controls="apt-panel"
+                tabIndex={tab === t.id ? 0 : -1}
                 className={tab === t.id ? ZC_ON : ZC}
                 onClick={() => setTab(t.id)}
               >
@@ -58,6 +62,7 @@ export default function AllPrograms() {
           </div>
         </div>
 
+        <div role="tabpanel" id="apt-panel" aria-labelledby={`apt-${tab}`}>
         {tab === 'charter' && <CharterSection embedded />}
         {tab === 'transfer' && <TransferSection embedded />}
         {!isForm && (
@@ -69,6 +74,7 @@ export default function AllPrograms() {
             </div>
           </section>
         )}
+        </div>
       </section>
     </div>
   );

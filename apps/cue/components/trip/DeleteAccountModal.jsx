@@ -47,7 +47,7 @@ export default function DeleteAccountModal({ open, onClose, onConfirm }) {
       <p className="m-0 mb-5 text-body text-green leading-[var(--lh-body)]">
         If you book again later, it starts as a new account - we won&apos;t reconnect it to this one.
       </p>
-      {msg && <small className={`${REFMSG_ERR} block mb-3`}>{msg}</small>}
+      {msg && <small role="alert" className={`${REFMSG_ERR} block mb-3`}>{msg}</small>}
       <div className="flex gap-2 max-[480px]:flex-col">
         <button type="button" className={BTN_GHOST} onClick={onClose} disabled={busy}>Keep my account</button>
         <button type="button" className={BTN_DANGER} onClick={confirm} disabled={busy}>

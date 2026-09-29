@@ -294,6 +294,7 @@ export default function PaymentStep({
       <ModalPresence
         open={openFine}
         onClose={() => setOpenFine(false)}
+        label={PAY_COPY.detailsTitle}
         box={FINE_BOX}
         shellClass={FINE_SHELL}
       >

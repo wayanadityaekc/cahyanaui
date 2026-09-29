@@ -1,29 +1,7 @@
-// The guest's live connection to a handed-over chat.
-//
-// WHAT IT IS FOR: Wayan's reply landing the moment he sends it instead of
-// whenever the next poll happened to be due, plus the two things a poll cannot
-// carry at all - that he is typing, and that he is actually at the dashboard
-// right now.
-//
-// WHAT IT IS NOT: the way messages are sent, and not the only way they arrive.
-// Sending still goes over HTTP (see chatThread.js) because that is where the
-// caps, the validation and an error the guest can read all live. And a socket
-// is not a delivery guarantee: a phone changing network, a lid closing, a
-// corporate proxy that drops idle connections and a deploy on the API all leave
-// this either dead or missing frames, usually with no event to say so.
-//
-// So the contract has two halves, and BOTH are load-bearing:
-//   onOpen  - called on every connect, INCLUDING every reconnect. The caller
-//             fetches everything since the last id it saw, which is what makes a
-//             gap in the socket cost one request instead of a lost message.
-//   onLive  - the socket is up, or it is not. While it is not, the caller polls
-//             exactly as it did before this file existed. A guest behind a proxy
-//             that blocks WebSockets gets the old behaviour, not silence.
+// Live chat socket (replies, typing, presence); sends stay HTTP, onOpen fires on each reconnect, poll while not live.
 import { API_BASE } from '@/lib/constants';
 
-// The API base is an /api path; the socket lives at the origin's /ws/chat. Built
-// from the same constant rather than a second env var, so a staging API cannot
-// end up with the site talking HTTP to one host and sockets to another.
+// Socket URL derived from API_BASE (no second env var), so HTTP and WS always hit the same host.
 export function chatSocketUrl(thread) {
   const u = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
   u.protocol = u.protocol === 'http:' ? 'ws:' : 'wss:';
@@ -32,12 +10,9 @@ export function chatSocketUrl(thread) {
   return u.toString();
 }
 
-// The server pings every 30s. This is shorter on purpose: a proxy that closes
-// idle connections counts silence in either direction, and a client ping also
-// gets an answer, which is how we learn a socket is dead rather than quiet.
+// Client ping every 25s (server pings at 30s); an unanswered ping is how a dead socket is detected.
 const PING_MS = 25000;
-// A dead ping is only conclusive once the answer is overdue by more than the
-// round trip could plausibly be.
+// How long past a ping before the socket counts as dead.
 const PONG_GRACE_MS = 10000;
 const BACKOFF_MS = [1000, 2000, 4000, 8000, 15000, 20000];
 
@@ -72,9 +47,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
       try { ws.send(JSON.stringify({ type: 'ping' })); } catch (e) { return; }
-      // No answer in time means this socket is half-open: it looks connected
-      // from here and nothing is reading it. Closing it is what triggers a
-      // reconnect, and the reconnect is what triggers the catch-up fetch.
+      // No pong in time = half-open socket; closing it triggers the reconnect and its catch-up fetch.
       clearTimeout(pongTimer);
       pongTimer = setTimeout(() => { try { ws.close(); } catch (e) { /* already gone */ } }, PONG_GRACE_MS);
     }, PING_MS);
@@ -90,8 +63,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       tries = 0;
       setLive(true);
       beat();
-      // Every connect, not just the first. Anything said while we were away is
-      // read back here, so a dropped socket is never a dropped message.
+      // Runs on every connect, not just the first, so messages missed while disconnected are fetched.
       if (onOpen) onOpen();
     };
 
@@ -106,8 +78,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       if (msg.type === 'message' && msg.message && onMessage) onMessage(msg.message);
     };
 
-    // A refused handshake arrives as an error then a close, so the retry lives in
-    // one place.
+    // A refused handshake fires error then close, so retry is handled only in onclose.
     sock.onerror = () => {};
     sock.onclose = () => {
       stopTimers();
@@ -118,15 +89,13 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     return undefined;
   }
 
-  // Never gives up, and never hammers. While it is retrying the caller is
-  // polling, so "still trying" costs the guest nothing.
+  // Reconnect forever with backoff; the caller polls meanwhile.
   function schedule() {
     if (closedByUs) return;
     const wait = BACKOFF_MS[Math.min(tries, BACKOFF_MS.length - 1)];
     tries += 1;
     clearTimeout(retryTimer);
-    // Jitter so a deploy that drops every socket at once does not bring them all
-    // back in the same millisecond.
+    // Jitter so sockets dropped by a deploy don't all reconnect at once.
     retryTimer = setTimeout(connect, wait + Math.floor(Math.random() * 400));
   }
 
@@ -140,9 +109,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       setLive(false);
       if (ws) { ws.onclose = null; try { ws.close(); } catch (e) { /* already gone */ } }
     },
-    // Ephemeral and best-effort by design: if the socket is down, the guest's
-    // typing simply is not announced. Nothing is queued - a "typing" that
-    // arrives after the message would be nonsense.
+    // Best-effort typing ping: sent only while open, never queued.
     typing() {
       if (ws && ws.readyState === WebSocket.OPEN) {
         try { ws.send(JSON.stringify({ type: 'typing' })); } catch (e) { /* dropped, and that is fine */ }

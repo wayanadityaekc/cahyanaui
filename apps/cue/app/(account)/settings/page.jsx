@@ -7,16 +7,10 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-// Same rail shell as My Trips + Our Company now (Sep 2026, "make it like
-// shadcn's sidebar-08" applied to all three account pages) - the title,
-// description and the rest of the chrome moved into AccountSettings itself
-// (SettingsShell), the same way My Trips' own h1 lives in its component
-// rather than its page.jsx.
+// Rail shell like My Trips and Our Company; the title and chrome live in AccountSettings, not here.
 export default function Page() {
   return (
-    // No pb-20 (see my-trips/page.jsx) - scrollContent's frame calc and the
-    // fixed footer's own body padding already account for bottom clearance;
-    // stacking a third 80px pushed the page 80px past 100dvh.
+    // No pb-20: the scroll frame calc and the footer's body padding already give bottom clearance.
     <div className="tourprog">
       <JsonLd page="settings" />
       <div className={RAIL_PAGE_SCROLL}>

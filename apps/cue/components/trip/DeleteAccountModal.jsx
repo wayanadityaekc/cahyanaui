@@ -5,18 +5,7 @@ import Modal from '@/components/ui/Modal';
 import { BTN_SM } from '@/components/ui/btnClasses';
 import { REFMSG_ERR } from '@/components/ui/modalClasses';
 
-// Destructive confirmation for "Delete account" (WO3, Sep 2026). Reference
-// note: ui.shadcn.com / preline.co / flowbite.com were all unreachable from
-// this session (network policy) - built from the well-known common shape
-// (shadcn AlertDialog "destructive" variant / Flowbite & Preline's own
-// danger-confirm modals: plain text, one red confirm, one neutral cancel),
-// not from a fetched spec. Happy to match a specific screenshot if given one.
-//
-// Reuses the site's own Modal shell (same one AuthModal/ReviewModal use) -
-// no new modal chrome, just the content inside it.
-//
-// BTN_DANGER is local, not in btnClasses.js: this is the one destructive
-// button on the site today. If a second one shows up, promote it there.
+// Delete-account confirm in the shared Modal; BTN_DANGER is local, move it to btnClasses if reused.
 const BTN_DANGER = `inline-flex ${BTN_SM} font-body border-none text-white bg-err cursor-pointer hover:brightness-90`;
 const BTN_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--line)] bg-white text-green cursor-pointer hover:bg-cream`;
 

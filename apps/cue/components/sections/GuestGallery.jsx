@@ -14,9 +14,7 @@ const GUESTS = [
 // Track duplicated so translateX(-50%) loops seamlessly (matches vanilla partials/guest-gallery.html).
 const TRACK = [...GUESTS, ...GUESTS];
 
-// Tailwind-native (migrasi Fase 2): .guest-gallery*/.guest-marquee/.guest-track ->
-// utilities. Keyframe guestScroll tetep di style.css (dipakai animate-[...]).
-// .section__title dibiarin (primitif shared) + override padding/margin lewat utilities.
+// Guest photo marquee; the guestScroll keyframe still lives in style.css.
 export default function GuestGallery() {
   return (
     <section className="pt-12 pb-[3.2rem] bg-white" id="guest-gallery" aria-label="Photos with our guests">

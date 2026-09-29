@@ -45,8 +45,7 @@ export default function FlagDefs() {
           <path d="M30 0 V40 M0 20 H60" stroke="#fff" strokeWidth="12" />
           <path d="M30 0 V40 M0 20 H60" stroke="#cf142b" strokeWidth="7" />
         </symbol>
-        {/* Sep 2026: seven more currencies. Same approach as the five above -
-            simplified at 20x14, recognisable, not heraldically exact. */}
+        {/* Flags for the seven added currencies, simplified at 20x14 like the ones above. */}
         <symbol id="flag-sgd" viewBox="0 0 60 40">
           <rect width="60" height="20" fill="#ef3340" />
           <rect y="20" width="60" height="20" fill="#fff" />

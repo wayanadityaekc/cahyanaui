@@ -6,10 +6,7 @@ import Select from '@/components/ui/Select';
 import PickupAreaSelect from '@/components/ui/PickupAreaSelect';
 import CurrencyPicker from './CurrencyPicker';
 
-// Guests / Pickup area / Currency. The phone drawer and the desktop account menu
-// both render THIS, so the two places cannot drift (WO1, Wayan: prefs go in the
-// account menu on desktop). `idPrefix` keeps ids unique - the drawer stays in the
-// DOM at every width, so both copies exist on a desktop page at once.
+// Guests/Pickup/Currency shared by the drawer and account menu; idPrefix must differ (both render on desktop).
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export default function TripPrefsFields({ idPrefix, className = '' }) {

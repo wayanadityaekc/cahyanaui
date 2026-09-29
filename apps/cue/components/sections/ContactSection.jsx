@@ -3,10 +3,7 @@ import { MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
 
-// Tailwind-native (migrasi Fase 2): .contact* -> utilities. `company` = dirender
-// di dalam Our Company (.company-page) -> padding-top 0 + heading bold/gold (dulu
-// `.company-page .contact` / `.company-page .contact__heading`). Shared yg dibiarin:
-// .contact__group (field wrapper, kepake AuthModal + field base) + .modal__referral-msg.
+// Contact section; `company` renders it inside Our Company (no top padding, bold gold heading).
 export default function ContactSection({ company = false }) {
   return (
     <>

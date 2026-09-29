@@ -3,11 +3,7 @@
 import { useRef } from 'react';
 import Modal from '@/components/ui/Modal';
 
-// The full text behind a clicked ReviewCard (Sep 2026, Wayan: "fix box per
-// review and it can see details when got clicked"). Reuses the same Modal
-// shell every other popup on the site uses (AuthModal, ReviewModal) rather
-// than a one-off dialog - one modal language, one close/Escape/backdrop
-// behaviour, for free.
+// Full text of a clicked ReviewCard, in the shared Modal shell.
 function fmtDate(iso) {
   if (!iso) return '';
   try {
@@ -19,10 +15,7 @@ function fmtDate(iso) {
 
 export default function ReviewDetailModal({ review, onClose }) {
   const open = !!review;
-  // Modal.jsx fades out over 300ms rather than unmounting instantly - reading
-  // straight off `review` would blank the text mid-fade the moment it goes
-  // null. Keep the last one on screen while it closes, same pattern as
-  // BookConfirmModal's lastCtx.
+  // Keep the last review on screen while the modal fades out, or the text blanks mid-fade.
   const lastRef = useRef(null);
   if (review) lastRef.current = review;
   const r = review || lastRef.current || {};

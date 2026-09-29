@@ -10,35 +10,12 @@ import { PAY_COPY, payOptions } from '@/lib/payment';
 import { usePricing } from '@/state/PricingProvider';
 import { noteFor, railFor, RAIL_CHOICES } from '@/lib/rails';
 
-// The three ways to pay, each showing what it costs right now.
-//
-// Amounts here are for the guest to READ. The server recomputes every one of
-// them before PayPal is told anything, so a number edited in the browser buys
-// nothing - see paypal-routes.js.
-//
-// THE ROWS ARE PLAIN: label, one short line, amount. Nothing to open.
-// A per-row "Details" toggle was built and REJECTED (Wayan, Sep 2026: "text di
-// dalam pilihan pembayaran fine, isi text singkat dan jelas jangan bisa di klik
-// details gitu") - a guest choosing between three prices should not have to
-// open three things to compare them.
-//
-// WHAT IS HIDDEN is the fine print UNDER the options (the card-settlement note
-// and the refund terms), behind one Details button. Same request, other half:
-// "yang tulisan card payment itu loh, itu hide dulu, terus kasi button details".
-// One short line stays visible so the block never reads as empty, and the rest
-// opens as a POPUP rather than unfolding in place: measured, unfolding pushes
-// Book Now ~300px down the scroll, so reading the terms would move the button
-// the guest was reaching for. Escape and a tap outside close it - the booking
-// modal itself has no Escape handler, so nothing fights over the key.
-//
-// The card is a <div>, not the radio button: the referral row carries the code
-// field, and an <input> cannot live inside a <button>.
+// Pay option rows stay plain (no per-row toggles); amounts are display only, the server recomputes every charge.
 const CARD = 'rounded-md bg-white [transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease]';
 const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
 const CARD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
 const CARD_DIM = '[border:1.5px_solid_var(--line)] opacity-55';
-// No `transition` of its own: that keeps the site-wide :active press feedback
-// in style.css (the SNAP rule in check-motion is about buttons that override it).
+// No transition of its own, so the global :active press feedback in style.css still applies (check-motion SNAP).
 const PICK =
   'w-full flex items-start gap-3 text-left bg-transparent border-none p-[0.85rem] cursor-pointer';
 const PICK_TIGHT = 'pb-[0.35rem]';
@@ -52,19 +29,14 @@ const AMOUNT = 'font-semibold text-amber text-[1rem] whitespace-nowrap';
 const BADGE =
   'inline-block ml-2 px-[0.45rem] py-[0.1rem] rounded-sm bg-[rgba(201,164,92,0.16)] text-amber-d text-small font-semibold align-middle';
 const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.6rem]';
-// Tinted, not bordered: another framed box would read as a fourth option in a
-// list of three. This is a note about all of them.
-// The rail choice (Card / PayPal): two equal halves, same border language as
-// the option cards so the step reads as one control family. No `transition`
-// of its own on the button (SNAP rule in check-motion).
+// Rail choice (Card / PayPal): two equal halves in the option cards' border style; no own transition (SNAP rule).
 const METHODS = 'grid grid-cols-2 gap-2 mb-2';
 // Icon only: the name is the aria-label, the explanation is behind the (i).
 const METHOD = 'flex items-center justify-center h-[2.9rem] rounded-md bg-white cursor-pointer';
 const METHOD_ICON = 'w-[var(--icon-lg)] h-[var(--icon-lg)]';
 const INFO_ROW = 'flex items-center gap-[var(--space-1)] mb-[0.6rem]';
 const INFO_TERM = 'block font-semibold text-green';
-// Under the amount when the rail charges another currency: the guest's own
-// figure, marked as the estimate it is.
+// Guest's own-currency figure under the amount when the rail charges another currency, marked as an estimate.
 const APPROX = 'block text-small text-muted font-normal whitespace-nowrap text-right';
 const FINE = 'text-small text-green leading-[var(--lh-body)]';
 const FINE_DIM = 'text-small text-muted leading-[var(--lh-body)]';
@@ -77,13 +49,11 @@ const FINE_SHELL =
 const FINE_BOX =
   'relative w-full max-w-[420px] max-h-[calc(100dvh-24px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-5 rounded-md bg-white';
 const FINE_TITLE = 'mb-3 font-body text-h3 font-semibold tracking-normal';
-// Geometry from BTN_SM; colour and width stay with the caller, as that string
-// is documented to be geometry only.
+// Button geometry copied from BTN_SM; colour and width set here since BTN_SM is geometry only.
 const FINE_CLOSE =
   'mt-5 w-full flex items-center justify-center text-center leading-none h-[var(--btn-h)] px-4 py-0 rounded-sm text-small font-semibold text-white bg-cta border-none cursor-pointer';
 
-// PayPal's double-P mark, drawn by hand like the other payment logos
-// (PayChips) - Lucide has no brand icons.
+// PayPal mark drawn by hand like the other payment logos (Lucide has no brand icons).
 function PayPalMark({ className }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -115,9 +85,7 @@ export default function PaymentStep({
   total, totalIdr = null, totalUsd = null, symbol = '$', currency = 'USD', stay = '', hasReferral = false,
   referral, onReferral, onApplyReferral, refMsg,
 }) {
-  // The deposit in this currency comes from the catalog - the server's live rate -
-  // so the site never holds an exchange rate of its own. Only trusted when the
-  // catalog is for THIS currency (it can lag one fetch behind a currency switch).
+  // Deposit comes from the catalog (server rate); only trusted when the catalog is for this currency.
   const pricing = usePricing();
   const cat = pricing && pricing.catalog;
   const deposit = cat && cat.currency === currency && cat.deposit ? cat.deposit.display : null;
@@ -125,25 +93,18 @@ export default function PaymentStep({
   const depositIdr = cat && cat.deposit && cat.deposit.idr != null ? cat.deposit.idr : null;
   const options = payOptions({ total, currency, stay, hasReferral, deposit, totalIdr, depositIdr, totalUsd });
   const rail = railFor(railChoice);
-  // Card (DOKU) always charges rupiah. For a guest shown another currency the
-  // rupiah figure is the exact one and theirs is an estimate - said, not hidden.
+  // Card (DOKU) always charges rupiah, so for non-IDR guests the rupiah figure is exact and theirs an estimate.
   const inRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
-  // And the mirror: PayPal cannot charge rupiah, so a rupiah guest there is
-  // billed dollars - the dollar figure is the exact one.
+  // PayPal cannot charge rupiah, so a rupiah guest there is billed dollars and the dollar figure is exact.
   const inUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
   const [openFine, setOpenFine] = useState(false);
-  // Only ever set when the chosen rail charges another currency than the one
-  // every price on the page is shown in - said before a card number is typed.
+  // Set only when the chosen rail charges a currency other than the one prices are shown in.
   const railNote = noteFor(currency, rail);
   function money(v) { return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US')); }
   function rupiah(v) { return withSymbol(`Rp${v.toLocaleString('id-ID')}`); }
   function dollars(v) { return withSymbol(`$${v.toLocaleString('en-US')}`); }
 
-  // An option that is no longer available must not stay selected. hasReferral
-  // can go back to false when the quote refreshes without the code - leaving
-  // 'referral' chosen while its row is greyed out, and a discount asked for on
-  // submit. The server recomputes either way, but the guest should see what
-  // they are about to pay.
+  // Fall back to deposit if the selected option becomes unavailable (e.g. referral lost on a quote refresh).
   useEffect(() => {
     const picked = options.find((o) => o.id === option);
     if (picked && !picked.available) onOption('deposit');
@@ -168,15 +129,13 @@ export default function PaymentStep({
                 {m.how}
               </span>
             ))}
-            {/* Only when it applies to THIS guest: the chosen rail charges a
-                currency other than the one the page is shown in. */}
+            {/* Only when the chosen rail charges a currency other than the page's display currency. */}
             {railNote && <span className="text-muted">{railNote}</span>}
           </span>
         </InfoDot>
       </div>
 
-      {/* How, then how much. Card (DOKU) is the default for every currency
-          (Wayan, 29 Sep 2026); PayPal is the guest's alternative. */}
+      {/* Rail choice first, then amount; Card (DOKU) is the default for every currency, PayPal the alternative. */}
       <div className={METHODS} role="radiogroup" aria-label={PAY_COPY.methodHeading} data-rail-choice>
         {RAIL_CHOICES.map((m) => {
           const on = rail === m.id;
@@ -226,9 +185,7 @@ export default function PaymentStep({
                   </span>
                   <span className={SUB}>
                     {o.sub}
-                    {/* What is left for the day, stated rather than left to be
-                        worked out - a deposit with an unnamed balance is the
-                        thing guests ask about. */}
+                    {/* Spell out the balance left to pay the driver on the day. */}
                     {o.balance != null && <> Then {money(o.balance)} cash to your driver on the day.</>}
                   </span>
                 </span>

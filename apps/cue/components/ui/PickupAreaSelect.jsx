@@ -5,19 +5,12 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import Select from './Select';
 
-// Turns a transfer-route key ("Kuta Area – Ubud", "Airport – Ubud") into the bare
-// area name guests should see ("Kuta", "Airport") - the full route string stays
-// the underlying value (still used server-side to price the pick-up surcharge as
-// the "area to Ubud" transfer price), only the dropdown label is cleaned (Wayan,
-// 12 Sep 2026: guests shouldn't see "Kuta to Ubud", just "Kuta").
+// Label shows the bare area ('Kuta'); the value stays the full route key used to price the pick-up.
 function areaName(route) {
   return route.replace(/ – Ubud$/, '').replace(/ Area$/, '');
 }
 
-// Self-contained pickup-area picker: reads/writes TripPrefs' `stay` itself, so a
-// caller just drops it in - no options-building or value/onChange plumbing needed.
-// Replaces near-identical stayOptions logic that used to be duplicated in Navbar
-// and HeroSearch (both showed the raw route string as the label).
+// Self-contained pickup-area picker that reads and writes TripPrefs' `stay` itself.
 export default function PickupAreaSelect({ id, className = '' }) {
   const { stay, setStay } = useTripPrefs();
   const pricing = usePricing();

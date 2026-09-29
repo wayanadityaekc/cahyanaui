@@ -30,8 +30,7 @@ import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
 const EMPTY = { name: '', phone: '', email: '', pickup: '', dropoff: '', referral: '', time: '', flightNumber: '', flightDatetime: '' };
-// Same cooldown as AuthModal's - not a security control, just stops hammering
-// "Resend" while the first code is still in flight.
+// Seconds before the sign-in code can be resent; same cooldown as AuthModal.
 const RESEND_SECONDS = 30;
 
 export default function BookConfirmModal() {
@@ -43,16 +42,9 @@ export default function BookConfirmModal() {
 
   const [f, setF] = useState(EMPTY);
   const [priced, setPriced] = useState(null);
-  // Two screens, not one (Sep 2026, Wayan: "kalo misalnya ada input dan summary
-  // mending bikin 2 step"). Step 1 asks, step 2 reads it back for checking - the
-  // same values on one screen read as printed twice.
+  // Current step: 1 = details, 2 = check, 3 = payment (only when payment is on).
   const [step, setStep] = useState(1);
-  // Date AND time for every line, seeded from what the guest already picked and
-  // editable here (Wayan: "date dan time harus ada di semua popup ... kalo user
-  // udah pilih berarti auto fill dan bisa di set ulang"). Held PER LINE because a
-  // start time is per item: one control could only ever be right for the first
-  // row of a cart. This also retires the standalone "Pickup Time" select, which
-  // only existed to patch the one case that arrived without a time.
+  // Date and time held PER LINE (a start time belongs to an item), seeded from each line and editable here.
   const [lineDT, setLineDT] = useState([]);
   const [dtErr, setDtErr] = useState({});
   const [refMsg, setRefMsg] = useState(null);
@@ -96,12 +88,7 @@ export default function BookConfirmModal() {
     setDtErr({});
   }, [ctx, referral]);
 
-  // The quote is SEPARATE from the reset above. Both used to live in one effect
-  // keyed on currency, which meant changing currency mid-checkout sent the guest
-  // back to step 1 and threw away the times they had set per line. Refetching a
-  // price is not the same event as a new booking arriving, and only the second
-  // one should reset anything - the payment step now offers a currency switch,
-  // so this stopped being hypothetical.
+  // Quote fetch is kept separate from the reset effect: a currency change must reprice, not send the guest back to step 1.
   useEffect(() => {
     if (!ctx) return undefined;
     let cancelled = false;
@@ -116,14 +103,7 @@ export default function BookConfirmModal() {
     return () => { cancelled = true; };
   }, [ctx, currency, stay, referral]);
 
-  // Autofill from the signed-in account (Wayan: "kalo user udah naruh email dan
-  // udah login, semua yang pernah dia input tentang akunya pas dia mau book udah
-  // auto fill"). This modal already imported useAccount but only ever WROTE to it,
-  // so a signed-in guest still typed their name, phone and email into every booking.
-  //
-  // Only fills what is still EMPTY, and runs again when `account` arrives: it is
-  // fetched after mount, so a version that overwrote would wipe whatever the guest
-  // had already started typing.
+  // Autofill contact fields from the account, only where still empty (account loads after mount, so never overwrite).
   useEffect(() => {
     if (!ctx) return;
     setF((v) => ({
@@ -137,28 +117,18 @@ export default function BookConfirmModal() {
     }));
   }, [ctx, account]);
 
-  // Checkpoint 1: the guest's payment choice is held here so the step can be
-  // driven and screenshotted. Nothing acts on it yet.
+  // Payment option the guest picked; only the choice is sent (pay_option), the server computes the amount.
   const [payOption, setPayOption] = useState('deposit');
-  // Which rail takes the money: Card (DOKU) by default, PayPal if the guest
-  // prefers (Wayan, 29 Sep 2026). The server honours the choice - see
-  // providers.js - and never swaps it for the other rail.
+  // Payment rail: Card (DOKU) by default, PayPal if chosen; the server never swaps the chosen rail.
   const [payRail, setPayRail] = useState(DEFAULT_RAIL);
-  // Set once the booking is saved as pending; switches the modal to the payment
-  // step. The booking exists from this point whether or not payment succeeds.
+  // Booking ref once saved; the booking exists from here whether or not payment succeeds.
   const [bookingRef, setBookingRef] = useState('');
-  // Set when the email typed belongs to an account that already existed. The
-  // server no longer hands such a browser a login (a phone or email is not
-  // proof of anything) - it emails that account a 6-digit code instead, the
-  // same one AuthModal uses, and the guest enters it right here (28 Sep 2026,
-  // wired in alongside AuthModal's own code stage - was a passive "check your
-  // email" line, now the same interactive entry).
+  // Existing-account email: the server sends that inbox a 6-digit code instead of a login, entered here.
   const [signinEmail, setSigninEmail] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [otpMsg, setOtpMsg] = useState('');
   const [otpBusy, setOtpBusy] = useState(false);
-  // The booking itself does not depend on this - it is already saved. This
-  // only signs the guest in so My Trips recognises them without a reload.
+  // Code entry only signs the guest in; the booking is already saved and does not depend on it.
   const [otpVerified, setOtpVerified] = useState(false);
   const [otpCooldown, setOtpCooldown] = useState(0);
   useEffect(() => {
@@ -185,19 +155,13 @@ export default function BookConfirmModal() {
     setOtpCooldown(RESEND_SECONDS);
   }
   const [paid, setPaid] = useState(false);
-  // Is this visitor being offered online payment at all? Off for everyone until
-  // the chain is proven live - see lib/payFlag.js. Read in an effect, never in
-  // initial state: this is a static export and the first paint has to match the
-  // pre-rendered HTML.
+  // Online payment on/off (lib/payFlag.js); read in an effect, not initial state, so first paint matches the static HTML.
   const [payOn, setPayOn] = useState(PAY_DEFAULT);
   useEffect(() => { setPayOn(readPayFlag()); }, []);
   const lastCtx = useRef(null);
   useBodyLock(!!ctx);
 
-  // While closing, ctx is already null but the card is still on screen for the
-  // length of its exit animation, so the markup reads from the last ctx we saw.
-  // Everything that ACTS - validate, submit, the WhatsApp text - still reads the
-  // live ctx, unchanged.
+  // While closing, markup reads the last ctx for the exit animation; anything that ACTS must still read the live ctx.
   if (ctx) lastCtx.current = ctx;
   const view = ctx || lastCtx.current;
   if (!mounted || !view) return null;
@@ -217,31 +181,18 @@ export default function BookConfirmModal() {
     };
   }
 
-  // Pickup time is now chosen AT THE DATE (Sep 2026, Wayan: "kalo user milih date di
-  // booking form udah langsung milih jam"), so every line arrives carrying its own
-  // `time` and this popup asks for nothing. The field below is the fallback for the
-  // one case that still has no time: a single line whose category is free all day
-  // (transfer / charter), where TimeChoice deliberately starts empty rather than
-  // inventing a pick-up hour. A multi-line checkout is never asked - one field here
-  // could only ever be right for one of its rows; each row has its own editor in
-  // My Trips.
+  // Every line carries its own date and time, edited per line in step 1; there is no separate pickup-time field.
   const catalog = pricing && pricing.catalog;
   const lines = view.lines || [];
   const singleLine = lines.length === 1 ? lines[0] : null;
-  // The category drives which start times an item may use. `line.type` alone is
-  // not reliable - BookSidebar hardcodes `type:'tour'` for every detail-page item
-  // (tour / experience / performance alike), so the REAL category comes from the
-  // pricing catalog.
+  // Start-time category comes from the pricing catalog, not line.type (cart and detail pages send 'tour' for everything).
   function categoryOfLine({ service, type }) {
     const c = catalog && catalog.items.find((i) => i.name === service);
     return c ? c.category : type || null;
   }
   function isAirportLine({ service }) { return service === AIRPORT_ROUTE; }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
-  // The airport leg is the one case that does NOT get a second date control: its
-  // flight date & time IS the pick-up date and time (same rule as the airport
-  // page, where asking twice was the bug Wayan had fixed). It also keeps real
-  // minutes - a plane lands at 2:35 PM, not on a half-hour grid.
+  // The airport leg gets no second date control: its flight date/time is the pick-up time, with real minutes.
   const needsFlight = isAirportRoute;
   function dt(i) { return lineDT[i] || { date: '', time: '' }; }
   function setDT(i, k, v) {
@@ -252,30 +203,25 @@ export default function BookConfirmModal() {
     });
     setDtErr((prev) => (prev[i] ? { ...prev, [i]: undefined } : prev));
   }
-  // What each line ends up carrying: the airport leg reads its date and time off
-  // the flight field, everything else off its own date control.
+  // Date/time each line carries: the airport leg reads the flight field, others their own date control.
   function dateOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : dt(i).date); }
   function timeOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : dt(i).time); }
   const flightNumberDisplay = needsFlight ? f.flightNumber || singleLine.flight_number || '' : '';
 
-  // Which fields are required depends on the booking being confirmed, so the schema
-  // is built per render from the same flags the fields themselves are shown by.
-  // Both the Book Now button and the WhatsApp button run this - they must agree.
+  // Schema built per render from the same flags that show the fields; Book Now and WhatsApp both run this.
   function validate() {
     const { ok, errors: fieldErrors } = validateWith(
       bookingSchema({
         pickupOptional: !!ctx.pickupOptional,
         dropoffRequired: !!ctx.dropoffRequired,
-        // The time is no longer a field of its own, so the schema never asks for
-        // one - it is validated per line below, where it actually lives.
+        // Time is not a schema field; it is validated per line below.
         needsTime: false,
         needsFlight,
       }),
       f,
     );
     setErrors(fieldErrors);
-    // Per-line date & time. The old schema could only check ONE time field, which
-    // is why a cart never used to be asked at all; each row is checked here.
+    // Per-line date and time check (the schema can only hold one time field).
     const de = {};
     (ctx.lines || []).forEach((l, i) => {
       if (isAirportLine(l) && i === 0 && needsFlight) return; // covered by the flight field
@@ -286,9 +232,7 @@ export default function BookConfirmModal() {
     return ok && Object.keys(de).length === 0;
   }
 
-  // The quote already fetched above is what the guest sees, so send it with the
-  // booking. Without it the server stores nothing and the confirmation email
-  // reads "$0 / Rp0" - which is what happened to CUE-007.
+  // Send the fetched quote with the booking, or the server stores nothing and the email shows $0.
   function payload() {
     return ({
       type: ctx.type,
@@ -297,20 +241,14 @@ export default function BookConfirmModal() {
       phone: f.phone,
       email: f.email,
       referral: (referral && referral.code) || '',
-      // Which of the two options the guest picked. The server does NOT trust an
-      // amount from here - it recomputes what is owed from its own prices. This is
-      // the choice only, so the invoice matches the row the guest actually tapped.
+      // Only the option the guest picked; the server never trusts an amount from the browser.
       pay_option: payOn ? payOption : '',
-      // The currency the guest was quoted in. Without it the server can only
-      // record USD/IDR, and an invoice sent in the wrong currency is a different
-      // number from the one they agreed to.
+      // Quoted currency, so the server invoices the same number the guest agreed to.
       currency: currency || 'USD',
       stay: stay || '',
       lines: ctx.lines.map((l, i) => {
         const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
-        // Each line sends the date and time from its OWN control, falling back to
-        // whatever it arrived with. The flight fields still only apply to a single
-        // airport line - that is the only row this popup asks a flight number for.
+        // Each line sends its own date/time (falling back to what it arrived with); flight fields only for a single airport line.
         const isTarget = !!singleLine && i === 0;
         return {
           type: l.type,
@@ -349,13 +287,9 @@ export default function BookConfirmModal() {
         writeLocal(KEY.token, d.token);
         if (d.account) setAccount(d.account);
       }
-      // Only when nothing is being collected online. When it is, the cart is
-      // cleared the moment the card is charged (see onPaid below) - not here,
-      // where the booking is still pending and the guest may never pay.
+      // Clear the cart only when nothing is paid online; with payment on it clears in onPaid, not while still pending.
       if (!payOn && typeof ctx.onSuccess === 'function') ctx.onSuccess();
-      // The booking is saved as 'pending'. It is NOT confirmed yet - that only
-      // happens when PayPal's webhook says the money cleared - so the modal moves
-      // to the payment step rather than showing a success screen.
+      // With payment on the booking is saved pending (confirmed only by the provider webhook), so show the payment step.
       setBookingRef(d.ref || '');
       if (d.signin_sent && d.signin_email) { setSigninEmail(d.signin_email); setOtpCooldown(RESEND_SECONDS); }
       else setSigninEmail('');
@@ -390,10 +324,7 @@ export default function BookConfirmModal() {
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
-  // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/logo/title/group/input/
-  // btn(+wa)/success pakai konstanta shared (modalClasses.js). Yang ISOLATED ke modal
-  // ini (summary/row, details accordion) di-inline utility + CSS-nya DIHAPUS. Referral
-  // input-group + msg pindah ke modalClasses juga, karena PaymentStep ikut pakai.
+  // Shared chrome comes from modalClasses.js; strings used only by this modal are defined inline below.
   const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_var(--line)] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
   // Two-step chrome. Isolated to this modal, same as ROW below.
   const lastStep = payOn ? 3 : 2;
@@ -403,8 +334,7 @@ export default function BookConfirmModal() {
   const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
   const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
   const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
-  // The total sits in its own bar, not in the row list: on the checking screen it
-  // is the one number the guest is agreeing to.
+  // Total gets its own bar on the check screen: it is the number the guest agrees to.
   const PBAR = 'flex items-center justify-between gap-[10px] py-[10px] px-3 rounded-md bg-cream [border:1px_solid_var(--line)]';
   const PBAR_L = 'text-body font-medium text-green';
   const PBAR_V = 'text-[1.15rem] font-semibold text-amber';
@@ -413,8 +343,7 @@ export default function BookConfirmModal() {
   const DETAILS_LI_ROW = "relative py-[0.5rem] pr-0 pl-[1.1rem] [border-bottom:1px_solid_var(--line)] text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.15rem] [&::before]:text-gold last:[border-bottom:none]";
   const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
-  // Shared by both success screens below (payment off / payment on): the
-  // booking is already saved either way, and this only signs the guest in.
+  // Sign-in code entry shown on both success screens; the booking is already saved either way.
   function signinNote() {
     return (
       <div data-signin-note className="-mt-3 mb-6">
@@ -501,9 +430,7 @@ export default function BookConfirmModal() {
 
                 {lines.map((l, i) =>
                   isAirportLine(l) && i === 0 && needsFlight ? (
-                    /* The airport leg: ONE control, and it keeps real minutes.
-                       A second "Date & time" here would ask the same question
-                       twice - the bug already fixed on the airport page. */
+                    // Airport leg: one flight date/time control with real minutes; do not add a second date field here.
                     <div className={GROUP} key={`dt${i}`}>
                       <label className={LABEL} htmlFor="flight-datetime">Flight date &amp; time</label>
                       <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={setValue('flightDatetime')} />
@@ -558,10 +485,7 @@ export default function BookConfirmModal() {
                 {view.detailLines && view.detailLines.length > 0 && (
                   <>
                     <p className={GROUP_LABEL}>{view.detailsTitle || "What's included"}</p>
-                    {/* Open by default - at checkout the list of what is being
-                        booked should not be hidden behind a tap. Past 4 rows it
-                        folds, because that is measured to be where the screen
-                        runs out (5 rows needed 45px of scroll at 320px). */}
+                    {/* Item list is open by default; above 4 rows it folds behind a toggle to avoid scrolling on small phones. */}
                     {view.detailLines.length > 4 ? (
                       <div className="mb-4">
                         <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
@@ -621,15 +545,12 @@ export default function BookConfirmModal() {
                 </button>
                   </>
                 )}
-                {/* Last, and a text link rather than a third button: three stacked
-                    buttons read as three equal choices when Book Now is the one. */}
+                {/* Edit details goes last as a text link, so Book Now stays the one primary action. */}
                 <button type="button" className={BACK_LINK} onClick={() => setStep(1)}>&lsaquo; Edit details</button>
               </>
             ) : (
               <>
-                {/* Step 3: the payment on its own screen. The trip total was read
-                    and agreed on step 2; what is chosen here is how much of it to
-                    pay now, and each row carries its own amount. */}
+                {/* Step 3: choose how much of the agreed total to pay now; each option shows its own amount. */}
                 <PaymentStep
                   option={payOption}
                   onOption={setPayOption}
@@ -637,9 +558,7 @@ export default function BookConfirmModal() {
                   onRail={setPayRail}
                   totalIdr={baseTotalIdr(priced)}
                   totalUsd={baseTotalUsd(priced)}
-                  /* baseTotal, not priced.total: the quote already subtracts the
-                     code's own percentage, and here the code is its own option -
-                     counting it in both places would discount twice. */
+                  // baseTotal, not priced.total: the quote already applies the referral discount, which is its own option here.
                   total={baseTotal(priced)}
                   symbol={(priced && priced.symbol) || '$'}
                   currency={currency || 'USD'}
@@ -686,10 +605,7 @@ export default function BookConfirmModal() {
         ) : (
           <div>
             {paid ? (
-              // The card went through, but a booking is only confirmed when the
-              // webhook says the money cleared (confirmPayment in cahyana-api).
-              // This screen locks and asks the server until it knows, instead of
-              // claiming "confirmed" on the strength of the capture alone.
+              // Card charged but not yet confirmed: lock the screen and poll the server until the webhook marks it paid.
               <PayWaiting
                 bookingRef={bookingRef}
                 onClose={closeBooking}
@@ -703,10 +619,7 @@ export default function BookConfirmModal() {
                 </p>
                 {signinEmail ? signinNote() : null}
                 {bookingRef && railFor(payRail) === 'doku' ? (
-                  // The rupiah rail is hosted, so there is no onPaid here: the
-                  // guest leaves, and My Trips asks the server what happened
-                  // when they come back. Clearing the cart on the way OUT would
-                  // lose the trip of anyone who changes their mind on DOKU.
+                  // DOKU is hosted, so no onPaid: do not clear the cart on the way out; My Trips checks status on return.
                   <DokuCheckout
                     bookingRef={bookingRef}
                     option={payOption}
@@ -719,10 +632,7 @@ export default function BookConfirmModal() {
                     currency={currency}
                     onPaid={() => {
                       setPaid(true);
-                      // Charged, so the trip is booked and paid for: clear the
-                      // cart here. Not on the webhook - if we cannot reach the
-                      // status route the webhook phase never arrives and a guest
-                      // who paid could pay again.
+                      // Clear the cart on capture, not on the webhook, so a guest whose status poll fails cannot pay twice.
                       if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
                     }}
                   />

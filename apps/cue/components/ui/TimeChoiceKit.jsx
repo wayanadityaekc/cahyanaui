@@ -5,12 +5,7 @@ import TimeChoice from './TimeChoice';
 import DateField from './DateField';
 import { allowedSlots, defaultSlot } from '@/content/shared/timeSlots';
 
-/**
- * Demo strip for the /ui-kit page ONLY - it exists so the four shapes of TimeChoice
- * can be seen (and screenshotted) side by side against real catalog items, instead of
- * being drawn by hand in a mock. Nothing in the live flow imports this.
- * /ui-kit is noindexed (see the page's metadata).
- */
+// Demo for the noindexed /ui-kit page only: TimeChoice against real catalog items; unused in the live flow.
 const ITEMS = [
   ['performance', 'Kecak Dance', 'satu jam saja'],
   ['experience', 'Mount Batur Trekking', 'dua jam'],

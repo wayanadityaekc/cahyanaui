@@ -2,27 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-/**
- * 6-box verification-code input (WO2, Sep 2026 - sign-in by code, not a link:
- * Wayan, "kirim kode konfirmasi ... 6 angka untuk dimasukkan"). One box per
- * digit - the common bank/GitHub-2FA/Stripe shape, and Flowbite's own OTP
- * pattern is the same boxes. Reference note: ui.shadcn.com and flowbite.com
- * were both unreachable from this session (network policy blocks them), so
- * this is built from that well-known shape rather than a fetched spec - happy
- * to match a specific screenshot if Wayan has one. (shadcn's InputOTP is a
- * different technique - one hidden input overlaid with rendered "slots" - which
- * would be a fair alternative to build later, but isn't reachable to copy
- * today either.)
- *
- * Auto-advances on entry, backspace clears then steps back, arrow keys move
- * focus, and pasting a full code (from the keyboard's "paste code from
- * Messages/Mail" suggestion, or a password manager) fills every box at once
- * from wherever the paste lands.
- *
- * `flex-1` + a `max-w` cap (not a fixed width) so the row shrinks to fit a
- * 320px popup without overlapping the modal's own padding, and does not
- * balloon on a wide screen either.
- */
+// 6-box code input: auto-advance, backspace steps back, arrows move, paste fills all; flex-1 + max-w fits 320px.
 export default function OtpFields({ length = 6, value, onChange, onComplete, error, disabled, autoFocus }) {
   const refs = useRef([]);
   const digits = Array.from({ length }, (_, i) => value[i] || '');
@@ -34,15 +14,11 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
   function commit(next) {
     const joined = next.join('');
     onChange(joined);
-    // next.every(Boolean), NOT joined.includes('') - every string "includes"
-    // the empty string, so that check was always true and onComplete never
-    // fired on a real 6th digit; only Verify (which reads `code` directly)
-    // ever completed a code.
+    // Use next.every(Boolean), not joined.includes('') - every string includes '', so that never completed.
     if (joined.length === length && next.every(Boolean)) onComplete && onComplete(joined);
   }
 
-  // A paste, autofill, or fast IME input can land several digits in one box at
-  // once - spread them across this box and the ones after it.
+  // Paste, autofill or IME can land several digits in one box; spread them across the following boxes.
   function spread(i, raw) {
     const next = digits.slice();
     let pos = i;

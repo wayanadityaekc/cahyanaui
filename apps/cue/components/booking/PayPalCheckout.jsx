@@ -5,24 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 
-// The PayPal checkout, rendered inside our own page - no redirect, no new tab.
-//
-// Two ways to pay, both tied to the SAME server-created order:
-//   - hosted Card Fields (card number/expiry/CVV live in PayPal's iframes, so
-//     the digits never touch our React state or our server, which is what keeps
-//     us out of PCI scope)
-//   - the PayPal button, for guests who would rather log in
-//
-// Card Fields need Advanced Card Payments on the account. If the SDK says they
-// are not eligible, the buttons render on their own - those still offer a guest
-// "Debit or Credit Card" option, so a card is always payable either way.
+// Inline PayPal checkout: hosted Card Fields (card data stays in PayPal iframes) plus PayPal buttons as fallback.
 
-// The SDK is loaded PER CURRENCY, under its own namespace.
-//
-// PayPal refuses an order whose currency is not the one the SDK was loaded with,
-// and one page can legitimately need two: the guest's own currency, or USD when
-// theirs cannot be settled. Loading once under `window.paypal` meant whichever
-// currency got there first won, and the second guest's checkout simply failed.
+// SDK is loaded per currency under its own namespace; PayPal rejects orders in a currency the SDK wasn't loaded with.
 function sdkId(cur) { return `paypal-sdk-${cur}`; }
 function sdkNs(cur) { return `paypal_${cur}`; }
 
@@ -40,9 +25,7 @@ function loadSdk({ clientId, currency }) {
     const s = document.createElement('script');
     s.id = id;
     s.setAttribute('data-namespace', ns);
-    // card-fields is requested alongside buttons; asking for it on an
-    // ineligible account is harmless, paypal.CardFields() just reports
-    // isEligible() false and we fall back.
+    // card-fields is always requested; on an ineligible account isEligible() is false and buttons are used instead.
     s.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
@@ -53,8 +36,7 @@ function loadSdk({ clientId, currency }) {
 }
 
 const LABEL = 'block text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.4rem]';
-// The box is ours; the input inside it is PayPal's iframe. Same field box as
-// everything else - it used to carry the button corner and a hardcoded grey.
+// Box around PayPal's card field iframe; uses the shared field style.
 const FIELD = FIELD_INPUT;
 const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
@@ -71,8 +53,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
   useEffect(() => {
     let cancelled = false;
 
-    // The amount is never passed from here. The server reads what it priced the
-    // booking at and creates the order from that; this only names the option.
+    // Never send an amount from here: the server prices the booking itself, this only names the option.
     async function createOrder() {
       const r = await fetch(`${API_BASE}/paypal/create-order`, {
         method: 'POST',
@@ -87,9 +68,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       return d.id;
     }
 
-    // Capture, then wait. The booking is confirmed by PayPal's webhook, not by
-    // this response - so the guest is told the payment went through, and the
-    // page does not claim the booking is confirmed on its own say-so.
+    // Capture only; the booking is confirmed by the webhook, so don't claim it is confirmed from this response.
     async function capture(orderId) {
       const r = await fetch(`${API_BASE}/paypal/capture-order`, {
         method: 'POST',
@@ -122,9 +101,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       try {
         const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
         if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
-        // What the order will actually be created in - the guest's own currency
-        // unless the rail cannot settle it. Loading the SDK with anything else
-        // makes every order bounce.
+        // Load the SDK in the currency the order is billed in (USD for rupiah), or every order is rejected.
         const billCurrency = chargeCurrency(currency, 'paypal');
         const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
         if (cancelled) return;

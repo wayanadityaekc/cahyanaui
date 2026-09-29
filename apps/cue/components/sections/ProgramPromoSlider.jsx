@@ -6,13 +6,7 @@ import { PROGRAM_PROMO } from '@/content/shared/programPromo';
 
 const AUTO_MS = 3000;
 
-// Cross-sell band for listing pages (Sep 2026, item #5): same "dark band, bg photo,
-// kicker/title/lead/CTA" shape as the homepage Airport section, but auto-slides
-// through every program every 3s. Stacked-slide crossfade (same technique as
-// HeroSlider, already verified) rather than transitioning `background-image`
-// directly - that property doesn't animate smoothly across browsers.
-// Any manual interaction (swipe, arrow, dot) stops the interval for good - the
-// user takes over, autoplay doesn't fight them.
+// Auto-sliding promo band for listing pages; stacked-slide crossfade, and any manual interaction stops autoplay for good.
 export default function ProgramPromoSlider() {
   const slides = PROGRAM_PROMO;
   const [cur, setCur] = useState(0);
@@ -34,8 +28,7 @@ export default function ProgramPromoSlider() {
     setCur((n + total) % total);
   }
 
-  // Arrows are desktop hover-only (site convention: mobile navigates by swipe/dots,
-  // not visible arrows - showing them always on mobile overlapped the centered text).
+  // Arrows appear on desktop hover only; phones navigate by swipe and dots.
   const ARROW =
     'absolute top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.32)] text-white text-[1.4rem] leading-none cursor-pointer opacity-0 transition-[opacity,scale] duration-200 ease-[ease] group-hover:opacity-100 hover:bg-[rgba(0,0,0,0.52)] max-[768px]:hidden';
 

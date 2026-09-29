@@ -9,10 +9,7 @@ import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
 import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
 
-// The gap under the hero is the number it always was, at every width: the old
-// layout paid 1.6rem of padding plus the card wrapper's margin, and that margin
-// was 1.25rem normally but 1rem under 560px. Measured: dropping the 560px step
-// pushed the first line down 4px on a phone.
+// Gap under the hero; keep the 560px step or the first line shifts on phones.
 const BOX = `${RAIL_PAGE_BOX} pt-[2.85rem] max-[560px]:pt-[2.6rem]`;
 
 export default function GuideArticle({ data }) {
@@ -29,19 +26,7 @@ export default function GuideArticle({ data }) {
   return (
     <div className="guide-article-page">
       <JsonLd page={data.__page} crumbs={crumbs} />
-      {/* Same split hero the tour and attraction pages open with (Sep 2026, Wayan:
-          "ubah semua page articles, pakai layout seperti tour destination dan
-          experience, biar punya ciri khasnya"). It replaces the old dark full-bleed
-          banner with the centered title.
-
-          The photo comes from this guide's HUB CARD, not from data.heroStyle: 14 of
-          the 15 guides only ever had a gradient there, and the split hero needs a real
-          image. The card photo is the one already representing this guide everywhere
-          else on the site, so nothing is invented.
-
-          The three facts replace the tag pills the old banner carried - category and
-          topic say the same thing the pills did, and reading time is counted from the
-          article's own words. */}
+      {/* Split hero shared with tour/attraction pages; photo comes from the guide's hub card, not heroStyle. */}
       <DetailHero
         heroBg={card.img}
         title={data.heading || data.title}
@@ -52,12 +37,7 @@ export default function GuideArticle({ data }) {
         ctaHref="/tour.html"
       />
 
-      {/* The SAME component Our Company and My Trips render: category rail on the
-          left, content on the right, one page box around it. The categories go in
-          as link items, so the rows are the rail's rows rather than a second copy
-          of them. Below 993px the rail hides itself, the frame stays the white
-          card this page always had, and the phone control is the dropdown - so
-          the rail is desktop-only, as asked. */}
+      {/* Same RailLayout as Our Company/My Trips; categories are link items, desktop-only rail, phones get the dropdown. */}
       <div className={BOX}>
         <RailLayout
           label="Bali Guide"

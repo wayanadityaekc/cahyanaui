@@ -3,19 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-/**
- * LoadingScreen - branded cream splash (logo + spinner) shown on EVERY page.
- * Navigation on this site is full document loads (plain <a href>), so each
- * click means a fresh page. Two moments would otherwise show a blank/half-drawn
- * screen, and this covers both:
- *   1. Arrival  - the overlay is in the static HTML, so it paints before the
- *      page content and fades out once the page has loaded.
- *   2. Leaving  - a click on a same-origin link re-shows the overlay right
- *      away, so the wait between click and the next page painting is covered
- *      instead of the old page just sitting there.
- * The element stays mounted and is toggled via `--out` (it never unmounts), so
- * it can be shown again on the way out.
- */
+// Branded splash on every page: covers arrival and re-shows on link clicks; always mounted, toggled by state.
 export default function LoadingScreen() {
   const [out, setOut] = useState(false);
   const safety = useRef(null);
@@ -37,8 +25,7 @@ export default function LoadingScreen() {
     };
   }, []);
 
-  // Re-show the splash the moment a real navigation starts, so the gap before
-  // the next page paints is never blank.
+  // Re-show the splash as soon as a same-origin navigation starts.
   useEffect(() => {
     function onClick(e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -52,28 +39,20 @@ export default function LoadingScreen() {
       if (url.origin !== window.location.origin) return; // external -> new context, let it be
       // Same-page hash jump is not a page change.
       if (url.pathname === window.location.pathname && url.hash) return;
-      // Show it NOW, in this same click tick - not via React's async render,
-      // and with the fade-in transition disabled so it snaps up instantly.
-      // Otherwise there is a frame or two where the old page still shows with
-      // no overlay, which is exactly the gap that reads as "slow". React state
-      // is synced right after so its model matches the DOM we just touched.
+      // Show it synchronously in the click tick with transitions off, so no frame shows the old page uncovered.
       const el = elRef.current;
       if (el) {
         el.style.transition = 'none';
-        // Sama kaya remove class `.loadscreen--out` lama: buang token state "out"-nya
-        // langsung (snap), terus setOut(false) nge-sync className React.
+        // Drop the hidden-state utilities directly (snap); setOut(false) then syncs React's className.
         el.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
       }
       setOut(false);
-      // Safety net: if the click turns out NOT to navigate (a link some other
-      // handler cancels later, or a failed/blocked request), the real page
-      // never unloads - so hide the overlay again instead of leaving it stuck.
+      // Safety net: hide the overlay again after 3s if the click never navigated.
       clearTimeout(safety.current);
       safety.current = setTimeout(() => setOut(true), 3000);
     }
     document.addEventListener('click', onClick, true);
-    // Coming back via the browser's back/forward cache restores this page with
-    // the overlay still up - hide it so the restored page isn't stuck behind it.
+    // Back/forward cache restores the page with the overlay up; hide it on pageshow.
     function onShow() { return setOut(true); }
     window.addEventListener('pageshow', onShow);
     return () => {
@@ -83,8 +62,7 @@ export default function LoadingScreen() {
     };
   }, []);
 
-  // Tailwind-native (full-portable). State "out" = 3 token (opacity/visibility/pointer),
-  // ditoggle React + di-remove imperatif di handler klik. Keyframe `spin` global di style.css.
+  // Hidden state = opacity/visibility/pointer-events utilities; the spin keyframe lives in style.css.
   const BASE = 'fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-[1.2rem] bg-cream [transition:opacity_0.45s_var(--ease),visibility_0.45s_var(--ease)]';
   const OUT = 'opacity-0 invisible pointer-events-none';
   return (

@@ -3,14 +3,7 @@
 import { usePricing } from '@/state/PricingProvider';
 import { PRICE, PRICE_SYM, PRICE_TAIL, PRICE_WAS } from '@/components/ui/priceClasses';
 
-// IDR only: the trailing ".000" thousands group shown smaller (see PRICE_TAIL)
-// instead of full-size, so long amounts ("Rp1.300.000") read clearly and take
-// less width. Splits after the LAST dot, keeping it with the (normal-size)
-// leading digits - e.g. "1.300.000" -> "1.300." + small "000".
-// Exported for the rare spot that needs to shrink a bare (already
-// symbol-less) IDR number - e.g. HeroSearch's price-range hint, where only
-// the low end of "Rp700.000-1.300.000" carries the "Rp" prefix withSymbol()
-// looks for.
+// IDR only: shows the last '.000' group smaller; exported for bare numbers like HeroSearch's range.
 export function withDeemphasizedThousands(num) {
   const i = num.lastIndexOf('.');
   if (i === -1) return num;
@@ -22,15 +15,7 @@ export function withDeemphasizedThousands(num) {
   );
 }
 
-// Render "$40" / "Rp700.000" with the currency symbol as its own span so it can
-// be shown smaller than the number (PRICE_SYM + the price__sym hook). Only splits
-// when the string actually has a number, so placeholders like "-" pass through.
-// Wayan (14 Sep 2026): "pakai style harga rupiah di semua page" - every other
-// price spot on the site (booking summary, itinerary/cart totals, charter,
-// airport transfer, ...) formats its own "Rp" + toLocaleString() text and
-// renders it through this helper rather than the <Price> component, so the
-// small-thousands treatment has to live here too, not just in <Price>'s own
-// render path below.
+// Splits a price string into a small symbol span + number (IDR thousands shrunk) for self-formatted prices.
 export function withSymbol(text) {
   const m = String(text).match(/^(\D+)(\d.*)$/);
   if (!m) return text;
@@ -44,8 +29,7 @@ export function withSymbol(text) {
   );
 }
 
-// Default keeps a bare `price` hook (no CSS) alongside the PRICE utilities so
-// ExperienceCard's card-footer mobile shrink ([&_.price]:text-small) still targets it.
+// Default className keeps the bare `price` hook next to PRICE; ExperienceCard's [&_.price] mobile shrink targets it.
 export default function Price({ name, mode = 'standard', fallback, className = `${PRICE} price`, as: Tag = 'span' }) {
   const ctx = usePricing();
   const item = ctx && ctx.lookup ? ctx.lookup(name) : null;
@@ -60,11 +44,7 @@ export default function Price({ name, mode = 'standard', fallback, className = `
   const value = band.display;
   const num = value.toLocaleString(isIdr ? 'id-ID' : 'en-US');
 
-  // The pre-sale price, when there is one. The catalog sends it for every item,
-  // equal to the current price when nothing is on sale - so the test is "do they
-  // differ", never "is a sale running". That way a card cannot strike a number
-  // through because a flag was set somewhere; it strikes it through because the
-  // guest is genuinely paying less than that.
+  // Strike the list price only when it differs from the current price, never because a sale flag is set.
   const listBand = mode === 'exclusive' && item.listExclusive ? item.listExclusive : item.listStandard;
   const was = listBand && listBand.display !== value ? listBand.display : null;
   const wasNum = was == null ? null : was.toLocaleString(isIdr ? 'id-ID' : 'en-US');

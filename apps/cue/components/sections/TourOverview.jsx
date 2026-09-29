@@ -1,19 +1,4 @@
-// Text-only overview (Wayan, Sep 2026): a short intro plus the itinerary as a
-// numbered timeline. All the photos live in the hero gallery now, so a stop no
-// longer needs a photo OF that place to look finished - which is what used to
-// force a lookalike photo in when a place had nothing available online.
-//
-// Reads `highlight`, and only that. The pilot briefly had a second field
-// (`summary`) holding a shorter rewrite; the rewrite has since been applied to
-// every tour and folded back into `highlight`, so there is one field per stop
-// again. Don't reintroduce the pair - two fields meant two versions of the same
-// paragraph and only one of them was ever on screen.
-//
-// Stop names are PLAIN TEXT, deliberately not linked: linking them to
-// /attractions/<refId>.html dropped a guest mid-decision onto a page quoting a
-// second, single-destination price. Same reason the photo-per-stop layout in
-// TourPage dropped its links - the destination carousel lower down is the way
-// through. Do not re-add them here.
+// Tour intro plus numbered stop timeline; reads only `highlight`, and stop names stay unlinked on purpose.
 const INTRO = 'font-body text-body leading-[var(--lh-body)] text-green m-0 mb-6 max-w-[68ch]';
 const ROW =
   "relative grid grid-cols-[1.55rem_1fr] gap-x-[0.85rem] pb-[1.15rem] last:pb-0 " +
@@ -26,16 +11,11 @@ const OPTIONAL =
   'inline-block ml-2 py-[0.1rem] px-[0.45rem] rounded-sm align-middle ' +
   'font-body text-label font-medium tracking-[0.08em] uppercase text-muted [border:1px_solid_var(--line)]';
 const TEXT = 'font-body text-body leading-[var(--lh-body)] text-green m-0 max-w-[68ch]';
-// Sub-headings ("Day 1 - Ubud"). Only the 3-day package has them, and dropping
-// them would turn 13 stops into one undifferentiated list, so the walk below
-// keeps them AND restarts the numbering under each - which is how an itinerary
-// reads. Tours without sub-headings number straight through, unchanged.
+// Day sub-heading (multi-day packages only); numbering restarts under each day.
 const DAY = 'font-body text-h3 font-semibold tracking-[0.02em] text-gold m-0 mt-2 mb-4 first:mt-0';
 
 export default function TourOverview({ intro, items = [] }) {
-  // One pass over the page's own order, so a day heading never loses the stops
-  // that belong under it. Each heading opens a fresh <ol>, which is also what
-  // restarts the count.
+  // Group stops under their day heading in page order; each group renders its own <ol>.
   const groups = [];
   items.forEach((it) => {
     if (!it) return;

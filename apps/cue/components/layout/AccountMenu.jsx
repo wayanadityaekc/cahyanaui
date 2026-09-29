@@ -9,35 +9,7 @@ import TripPrefsFields from './TripPrefsFields';
 import { BTN_CTA } from '@/components/ui/btnClasses';
 import Separator from '@/components/ui/Separator';
 
-// ACCOUNT SLOT - far right of the navbar at every width (WO1, Sep 2026).
-// One slot, two states: logged out = "Log in"; logged in = initials circle
-// (+ first name on desktop) that opens a small menu: Settings, Sign out.
-//
-// DESKTOP ALSO CARRIES GUESTS / PICKUP / CURRENCY (Wayan: prefs go in the account
-// menu). Desktop has no drawer any more, so this is their only home there - which is
-// why on desktop the logged-out "Log in" opens the menu too (Log in button + prefs)
-// instead of jumping straight to the modal. Phones keep the prefs in the drawer, so
-// there the menu has none and "Log in" goes straight to the modal.
-//
-// Shape borrowed from the standard user dropdown (shadcn DropdownMenu / Flowbite
-// "user menu"): header with name + email, separator, items, separator, sign out.
-// Rebuilt in Cahyana tokens - no library code, no dependency.
-//
-// PHONES: a bare icon at the far right, sized like the chat + cart icons next to it
-// - a person icon logged out, the initials circle logged in. (It was half of a
-// [ burger | account ] pill for one round; Wayan moved the burger to the left of the
-// logo, 28 Sep 2026.) `PHONE` strips the desktop button shape below 993px.
-// NO My Trips row in the menu (Wayan, 28 Sep 2026) - the cart icon in the bar is it.
-//
-// DISCLOSURE, NOT A MENU (WO7 fix 2, Wayan 29 Sep 2026). The trigger is a button with
-// aria-expanded + aria-controls and the panel is a plain group of links and buttons.
-// It used to carry role="menu"/"menuitem", which promises arrow-key navigation the
-// panel never had - a screen reader announced a menu that then did not behave like
-// one. Links are reachable with Tab; Escape closes and puts focus back on the trigger.
-//
-// Floating panel rules (same as CatDropdown): solid bg + border, z-index, tap
-// outside + Escape close it. The `relative` wrapper hugs the trigger (PopMenu
-// containing-block trap - see CLAUDE.md).
+// Navbar account slot; a disclosure (aria-expanded), not role=menu - don't add menu roles without arrow-key navigation.
 
 const PHONE =
   'max-[992px]:h-auto max-[992px]:p-0 max-[992px]:border-none max-[992px]:bg-transparent max-[992px]:hover:bg-transparent';
@@ -84,8 +56,7 @@ export default function AccountMenu({ onLogin }) {
     };
   }, [open]);
 
-  // Until the session check answers, keep the slot's space but show nothing -
-  // otherwise a signed-in guest sees "Log in" flash on every page load.
+  // Render nothing until the session check answers, so signed-in guests don't see 'Log in' flash.
   const pending = !hydrated;
 
   const PREFS = (

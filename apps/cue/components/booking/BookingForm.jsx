@@ -18,11 +18,7 @@ const SERVICE_TYPES = [
   { value: 'transfer', label: 'Route Transfer' },
 ];
 
-// A single destination is category 'place' on the server but books exactly like a
-// tour - per car, same Standard/Exclusive split - so it lives under Tour Program.
-// Leaving it out meant a destination page's preset item matched nothing in the
-// list and got cleared by the effect below, which blanked the price and disabled
-// Book Now on all 34 of them.
+// Picker categories; 'place' belongs under tour, or destination presets get cleared and Book Now dies.
 const CATEGORY_OF = { tour: ['tour', 'combo', 'place'], experience: ['experience'], performance: ['performance'], transfer: ['transfer'] };
 
 const MODE_INFO = {
@@ -30,10 +26,7 @@ const MODE_INFO = {
   exclusive: { label: 'Exclusive', desc: 'Everything in Standard, plus all entrance tickets prepaid.' },
 };
 
-// Single activities & performances (ATV, Kecak Dance, etc.) have no "pay tickets
-// separately" tier - the price is always ticket + transport, so Exclusive is the
-// only real option. Standard still shows (visual consistency with tour pages) but
-// is locked - see `isActivity` below.
+// Activities/performances have no ticket-less tier: Exclusive is the only option, Standard shows locked.
 const ACTIVITY_MODE_INFO = {
   exclusive: { label: 'Exclusive', desc: 'Entrance ticket and return transport are already included in this price.' },
 };
@@ -57,8 +50,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const [mode, setMode] = useState('standard');
 
   const catalog = pricing && pricing.catalog;
-  // Detail pages preset the item -> the service pickers are redundant, hide them
-  // for the clean price-first card. Generic use (ui-kit) keeps them.
+  // A preset item (detail pages) hides the service pickers; generic use (ui-kit) keeps them.
   const locked = !!presetItem;
 
   const itemOptions = useMemo(() => {
@@ -68,9 +60,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     return catalog.items.filter((i) => cats.includes(i.category) && i.active).map((i) => ({ value: i.name, label: i.name }));
   }, [catalog, type]);
 
-  // Clearing an item that is not in the list belongs to the generic picker. A
-  // detail page presets its item and hides the pickers, so there is nothing for
-  // the guest to correct - wiping it there just breaks the page silently.
+  // Only the generic picker clears an item missing from the list; never clear a preset item.
   useEffect(() => {
     if (locked) return;
     if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
@@ -79,9 +69,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;
   const transferEntry = catalog && item ? catalog.transfers.find((t) => t.route === item) : null;
   const hasExclusive = !!(entry && entry.hasExclusive);
-  // Single activities/performances: no Standard-without-ticket tier exists, so the
-  // toggle is shown locked on Exclusive rather than hidden - keeps the booking card
-  // visually consistent with tour pages instead of silently dropping a section.
+  // Activities show the toggle locked on Exclusive rather than hiding it, to match tour pages.
   const isActivity = !!(entry && (entry.category === 'experience' || entry.category === 'performance'));
   const showToggle = hasExclusive || isActivity;
   const effectiveMode = isActivity ? 'exclusive' : mode;
@@ -96,14 +84,10 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
 
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
-  // Which start times this item may use. The REAL category comes from the catalog
-  // entry, never from `type` - the Tour Program picker holds tour, combo AND place,
-  // and a detail page presets `type:'tour'` for experiences and performances too,
-  // so reading `type` would hand Kecak Dance a tour's morning window.
+  // Time-slot category comes from the catalog entry, never from `type` (detail pages preset 'tour' for all).
   const timeCategory = entry ? entry.category : type === 'transfer' ? 'transfer' : null;
 
-  // "per car · 2 guests" for a tour; "for 2 guests" for an experience, whose
-  // figure already IS the total for that many (lib/priceUnit.js).
+  // Price unit: 'per car' for tours; for experiences the figure is already the total for N guests.
   const unit = priceUnit(perPerson, displayGuests);
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
   const unitLine = perPerson ? unit : `${unit} · ${displayGuests} ${guestWord}`;
@@ -134,13 +118,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
     });
   }
 
-  // Tailwind-native (migrasi #322): SELURUH family `.booking*`/`.bookcard*` -> utilities,
-  // CSS-nya dihapus. `variant` gantiin context-selector CSS lama (`.booksidebar .booking*`
-  // vs base standalone) yang gak bisa direach dari dalam komponen:
-  //   - 'sidebar'   = dipakai BookSidebar (halaman detail) = konteks produksi/acceptance.
-  //   - 'standalone'= base (ui-kit/demo): card putih + shadow + max-width.
-  // Marker check-detail `bookcard__cta` DIPERTAHANKAN sbg class (hook, no CSS lagi).
-  // Toggle Standard/Exclusive full utility (isolated). Active = HIJAU (--color-cta).
+  // variant 'sidebar' (BookSidebar) vs standalone card; keep the bookcard__cta class, check-detail needs it.
   const isSidebar = variant === 'sidebar';
   const sectionCls = isSidebar
     ? 'relative z-10 p-0 m-0 bg-transparent min-h-0'
@@ -170,9 +148,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
           <span className="block mt-[0.45rem] text-small text-muted">{unitLine}</span>
         </div>
 
-        {/* Slot directly under the price: the attraction pages put the tour
-            comparison here, so the guest reads "this place alone costs X" and
-            "the day that includes it costs Y" as one thought. */}
+        {/* Slot under the price; attraction pages put the tour comparison here. */}
         {belowPrice}
 
         {showToggle && (

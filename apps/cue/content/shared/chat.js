@@ -1,16 +1,6 @@
-// What the chat can answer, and the words a guest is likely to use for it.
-//
-// THE COPY IS NOT WRITTEN HERE. Every answer either comes from `FAQ` (the same
-// 15 entries the FAQ page shows) or is built from the live catalog. That is
-// deliberate: a second copy of "how does payment work" would drift from the
-// page within a month, and the site's own rule is one source per fact.
-//
-// So what lives here is the ROUTING - which words point at which answer - plus
-// the handful of sentences the chat itself says (greeting, handoff, off-topic).
+// Chat routing and the chat's own lines; answers come from FAQ or the live catalog, never copied here.
 
-// The questions offered as chips. Phrased the way a guest would actually type
-// them to a person, not as menu labels ("Pricing"), because the chips are what
-// make this read as support rather than as a FAQ with extra steps.
+// Suggestion chips, phrased the way a guest would type them.
 export const SUGGESTIONS = [
   'How much is a day tour?',
   'What time do tours start?',
@@ -20,10 +10,7 @@ export const SUGGESTIONS = [
   'What if I need to cancel?',
 ];
 
-// Each topic points at an existing FAQ question by its EXACT text, or names a
-// builder that reads the live catalog. A `faq` string that no longer matches
-// throws at load rather than silently answering nothing - same rule the guide
-// cards follow.
+// Each topic names an exact FAQ question or a catalog builder; a stale faq string throws at load.
 export const TOPICS = [
   { id: 'price-tour', build: 'tourPrices',
     strong: ['day tour', 'tour price', 'how much is a tour'],
@@ -102,14 +89,7 @@ export const TOPICS = [
     words: ['fee', 'fees', 'commission', 'hidden', 'extra charge', 'service charge'] },
 ];
 
-// Questions only a person should answer. These are situations, not lookups -
-// and answering one with a price list is worse than not answering at all,
-// because it reads as "we did not listen".
-//
-// The list errs toward handing over: a word missing here costs a guest one
-// canned answer they would not have had at all before this existed, while a
-// word wrongly included just sends a question to Wayan, which is where the
-// hard ones belong anyway.
+// Situations only a person should answer; err toward adding words here (they hand over to Wayan).
 export const HUMAN_WORDS = [
   'wheelchair', 'disabled', 'disability', 'accessible', 'accessibility',
   'baby', 'infant', 'toddler', 'newborn', 'stroller', 'pram', 'pregnant',
@@ -124,24 +104,14 @@ export const HUMAN_WORDS = [
   'complaint', 'complain', 'problem with', 'went wrong', 'lost', 'left behind',
 ];
 
-// A bare "hi" is not an off-topic question, and answering it with "I'd rather
-// not guess at that" reads as a door closing. It gets the opening line again
-// plus the chips, which is what a person would do.
+// Greetings and thanks get a friendly canned reply instead of a handoff.
 export const GREETINGS = ['hi', 'hey', 'hello', 'halo', 'hai', 'good morning', 'good afternoon', 'good evening', 'morning', 'evening'];
 export const THANKS = ['thanks', 'thank you', 'thankyou', 'makasih', 'terima kasih', 'ok thanks', 'cheers', 'great thanks'];
 
-// When Wayan actually answers (Sep 2026, Wayan: "jam segitu aja dulu coba").
-// Bali time, because that is the clock he is on - a guest in Europe asking at
-// 3pm their time is asking at 9pm his.
-//
-// This is not a promise of a reply inside the window, it is the honest shape of
-// the day: outside it the panel says he is probably asleep instead of leaving a
-// guest watching a screen that never changes. Change the numbers here and both
-// sentences follow.
+// Wayan's reply window in Bali time; both sentences that mention it follow these numbers.
 export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
 
-// True when Bali is inside the window right now. Computed from the guest's own
-// clock converted to Bali, so it is right wherever they are.
+// True when Bali time is inside the reply window, wherever the guest is.
 export function wayanIsAround(now = new Date()) {
   const h = Number(new Intl.DateTimeFormat('en-GB', {
     timeZone: REPLY_HOURS.tz, hour: '2-digit', hour12: false,
@@ -151,33 +121,25 @@ export function wayanIsAround(now = new Date()) {
 
 export const CHAT_COPY = {
   title: 'Cahyana Support',
-  // Honest about what this is. It answers instantly from the site's own data,
-  // and hands over when it cannot - saying so up front is what stops a guest
-  // typing a paragraph and feeling ignored.
+  // Panel header: says up front that it answers instantly and hands the rest to Wayan.
   sub: 'Instant answers. Wayan takes the rest.',
   greeting:
     "Hi! Ask me about our tours, prices, pickup or payment and I'll answer straight from our price list. Anything I can't answer goes to Wayan.",
   placeholder: 'Ask about tours, prices, pickup...',
-  // Used for every question this code cannot answer itself, whatever it was
-  // about. There is no second, more-polite version that declines instead.
+  // Reply for anything the code can't answer; there is deliberately no decline message.
   handoff:
     "That one is better answered by Wayan himself - he knows the roads, the timing and what is realistic on the day.",
   moreCta: 'Ask something else',
-  // The sign-in offer. A guest can chat without it, so this is worded as
-  // something they gain, not something they are missing.
+  // Sign-in offer, worded as a gain since chatting works without it.
   signedOut: 'Chatting as a guest.',
   signIn: 'Sign in',
-  // Said once, by name, the moment we know it (Sep 2026, Wayan: "sehabis login
-  // langsung sambut mereka hi name user").
+  // Greeting by name, shown once as soon as the name is known.
   hello: 'Hi {name}! What can I help you with?',
   thanks: "You're welcome. Anything else you want to check before you book?",
-  // Nothing is asked before the handover. A form in front of somebody who just
-  // wanted to ask a question is a brake, and the email only actually matters
-  // when the conversation cannot finish live - so it is asked then, if at all.
+  // Handover asks nothing first; email is only asked if the chat can't finish live.
   connecting: 'Will connect you to Wayan for this one. Give me a moment.',
   connected: 'You are with Wayan now.',
-  // Shown only when it is needed: outside his hours, or after a wait with no
-  // reply. Skippable, because a guest who is happy to wait should not be nagged.
+  // Email offer, shown only outside hours or after a quiet wait; skippable.
   emailAsk: 'Want his answer by email too, in case you close this?',
   emailField: 'Your email',
   emailSend: 'Send',
@@ -188,13 +150,10 @@ export const CHAT_COPY = {
   hoursOpen: `He usually replies between ${REPLY_HOURS.label}. Keep this open and his answer lands right here.`,
   hoursClosed: `It is outside his hours in Bali right now, so he is probably asleep. He answers from ${REPLY_HOURS.from}am Bali time.`,
   connectedStrip: 'You are talking to Wayan now.',
-  // Presence, and it is a FACT rather than a timetable: the dashboard has a live
-  // socket open right now. That is why this outranks the two lines above - they
-  // are a guess about when he usually answers, this is this minute.
+  // Live presence (dashboard socket open) outranks the reply-hours lines above.
   ownerHere: 'Wayan is online right now.',
   hoursHere: 'He is at the dashboard right now, so this should be quick.',
-  // Ephemeral, shown while a typing frame is unexpired. Named rather than a bare
-  // row of dots: three dots with nobody's name on them could be either of us.
+  // Typing indicator names Wayan instead of showing bare dots.
   typing: 'Wayan is typing',
   // How long to wait, inside his hours, before offering email at all.
   quietMs: 120000,

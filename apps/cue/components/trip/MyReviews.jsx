@@ -4,10 +4,7 @@ import { useEffect } from 'react';
 import { useAccount } from '@/state/AccountProvider';
 import { ROW_RULE } from '@/components/ui/separatorClasses';
 
-// The guest's own reviews on the Settings page (WO3, Sep 2026: "Show the
-// guest's own reviews on this page"). A private management list, not the
-// public marketing feed - so plain rows rather than ReviewCard's fixed-box
-// slider styling, and a status note the public never sees.
+// The guest's own reviews on Settings: plain rows with a status note, not the public ReviewCard slider.
 function fmtDate(iso) {
   if (!iso) return '';
   try {

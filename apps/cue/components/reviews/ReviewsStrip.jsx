@@ -12,15 +12,9 @@ const GRID = 'grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-a
 
 export default function ReviewsStrip({
   service, group, emptyText, showEmpty = true, emptyCta = false,
-  // 'grid' (default) = the plain 3-column list this component always was,
-  // used on /all-reviews and the charter/transfer/airport pages. 'slider' =
-  // the homepage's horizontal card row (Sep 2026, Wayan: "as a slider, not
-  // scrolling to bottom because it's too long") - same cards, same click-to-
-  // detail popup, just a Slider wrapper + fixed-width cards instead of a grid.
+  // 'grid' = 3-column list (all-reviews, service pages); 'slider' = homepage card row with the same popup.
   variant = 'grid',
-  // Homepage only needs a handful, not every review the server has (up to 30) -
-  // the rest live on /all-reviews.html, which this same component renders
-  // with no limit.
+  // Optional cap on how many reviews to show (homepage); /all-reviews renders with no limit.
   limit,
 }) {
   const [rows, setRows] = useState(null);
@@ -28,9 +22,7 @@ export default function ReviewsStrip({
 
   useEffect(() => {
     let cancelled = false;
-    // A page that sells MANY services asks by group - /transfer lists ten
-    // routes and the guest reviewed the one they took, so no single name
-    // answers for it. The server resolves the set from the pricing catalog.
+    // Multi-service pages (e.g. /transfer) ask by group; the server resolves the set from the pricing catalog.
     const q = group ? `?group=${encodeURIComponent(group)}`
       : (service ? `?service=${encodeURIComponent(service)}` : "");
     const url = `${API_BASE}/reviews${q}`;

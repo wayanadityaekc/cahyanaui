@@ -17,8 +17,7 @@ export async function generateMetadata({ params }) {
     description: d.metaDesc,
     alternates: { canonical: tourPath(tourSlug) },
     openGraph: { title: d.metaTitle, description: d.metaDesc, images: d.ogImage ? [d.ogImage] : undefined },
-    // Parked tours keep their page (anyone holding the link still lands on
-    // something) but drop out of search along with the sitemap.
+    // Parked tours keep their page for existing links but are noindexed and left out of the sitemap.
     ...(HIDDEN_TOURS.includes(tourSlug) ? { robots: { index: false, follow: false } } : {}),
   };
 }

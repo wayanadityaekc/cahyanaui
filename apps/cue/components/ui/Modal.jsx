@@ -16,10 +16,7 @@ export default function Modal({ open, onClose, title, children, className = '' }
 
   if (!mounted) return null;
 
-  // Tailwind-native (migrasi Fase 2): shell modal (.modal/.modal__box/close/logo/
-  // title) -> utilities. `.modal*` CSS TETEP di style.css karena masih dipakai
-  // modal inline lain (ReviewModal/BookConfirmModal) + konten modal lain - baru
-  // dihapus kalau SEMUA pemakai .modal* udah di-convert.
+  // Scrim + dialog box, faded and scaled by `open`; useDialog handles focus and Escape.
   return createPortal(
     <div
       className={clsx(

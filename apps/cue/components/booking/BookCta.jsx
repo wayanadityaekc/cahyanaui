@@ -12,12 +12,7 @@ import { CART_TOAST } from '@/components/ui/cartToastClasses';
 import LiveRegion from '@/components/ui/LiveRegion';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Wayan's flow (3 Sep 2026), which differs from the old site:
-//   Save trip -> pick a date, add to the cart, stay on the page.
-//   Book Now       -> pick a date, add to the cart, go to My Trips to pay.
-// The old site kept the guest on the page for both. The date is still asked
-// for first, otherwise the row lands in My Trips undated and Make Payment
-// stays disabled - a dead end.
+// Save trip = pick date, add to cart, stay; Book Now = same then go to My Trips. The date is asked first, never undated.
 export default function BookCta({ item, perPerson = false }) {
   const { displayGuests } = useTripPrefs();
   const { state, save } = useItinerary();
@@ -54,8 +49,7 @@ export default function BookCta({ item, perPerson = false }) {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // The real category, for the start-time rules (see BookSidebar for why the page
-  // type cannot be used).
+  // Real category from the pricing catalog for start-time rules (the page type is not reliable).
   function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;

@@ -1,13 +1,8 @@
-// The guest's side of a handed-over chat.
-//
-// A thread's id is the whole credential (see cahyana-api/chat.js): it opens
-// that one conversation and nothing else. It is kept in this browser only, and
-// it is the reason a guest who reloads the page still sees Wayan's reply.
+// Guest side of a handed-over chat; the thread id is the credential and is kept in this browser only.
 import { API_BASE, KEY } from '@/lib/constants';
 
 export function readThread() {
-  // Static export: this is only ever read from an effect, never during render,
-  // or the first paint would differ from the prerendered HTML.
+  // Only call from an effect, never during render, or the first paint differs from the prerendered HTML.
   try {
     const v = localStorage.getItem(KEY.chatThread);
     return /^[a-f0-9]{48}$/.test(v || '') ? v : null;
@@ -49,14 +44,11 @@ export async function sendToThread(id, body) {
   return json.message;
 }
 
-// Polled while the panel is open. `since` keeps the reply small once the
-// conversation has a few messages in it.
+// Fetch replies since a given id (fallback polling and catch-up); `since` keeps the response small.
 export async function pollThread(id, since) {
   const res = await fetch(`${API_BASE}/chat/${id}?since=${Number(since) || 0}`);
   if (res.status === 404) {
-    // The thread is gone (cleared server-side, or this browser kept an id from
-    // a database that has since been reset). Forget it rather than polling a
-    // dead id forever.
+    // Thread no longer exists server-side: forget it instead of polling a dead id.
     writeThread(null);
     return { gone: true, messages: [] };
   }
@@ -65,9 +57,7 @@ export async function pollThread(id, since) {
   return { gone: false, messages: body.messages || [] };
 }
 
-// Attaches an address to a conversation that has already started. Deliberately
-// a separate call from startThread: nothing is asked before the handover, and
-// this only happens if the guest chooses to leave one afterwards.
+// Attach a contact email to an existing thread; separate from startThread because it's optional and asked after.
 export async function setContact(id, email) {
   const res = await fetch(`${API_BASE}/chat/${id}/contact`, {
     method: 'POST',

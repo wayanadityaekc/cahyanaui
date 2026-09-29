@@ -1,24 +1,8 @@
 import { FIELD_INPUT, FIELD_AREA } from '@/components/ui/formClasses';
 import { BTN_SM } from '@/components/ui/btnClasses';
-// Tailwind utility strings mirroring the legacy `.modal*` CSS family (migrasi Fase 2,
-// opsi B - Wayan: modal full-utility). Didefinisiin SEKALI di sini, di-import tiap
-// komponen modal biar gak keduplikat 12x tapi tetep utility murni (bukan class CSS).
-//
-// Nilai = mirror PERSIS computed style lama, termasuk rule global yang numpuk di atas
-// blok `.modal*`:
-//   - .modal__btn: bg/hover-nya SEBENERNYA dari grup CTA di style.css (~7488),
-//     bukan hijau .color-green di blok 3129 -> jadi bg-cta / hover:bg-cta-d.
-//   - .modal__title / .modal__group label: weight/letter-spacing dari grup global (7450/7470).
-//   - .modal__group input/textarea/select: border/radius/font/color dari shared
-//     form-field base (~1527) + padding/height dari blok modal.
-// `.modal*` CSS baru dihapus dari style.css kalau SEMUA pemakainya udah pindah ke sini.
+// Shared utility strings for every modal, imported instead of copied.
 
-// Shell + box: these modals mount fresh only while open (ReviewModal/BookConfirm/
-// BookSidebar/BookCta confirm-dialogs). They used to carry a mount-triggered keyframe
-// here (heroFadeIn / popCardIn) because a CSS *transition* never gets a "closed" frame
-// to animate from. That solved the way IN and left the way OUT abrupt - on close the
-// element left the DOM immediately. Both directions now live in <ModalPresence>
-// (AnimatePresence), so these strings are pure layout/appearance: no animation here.
+// Layout/appearance only: open and close animation lives in ModalPresence, so add no animation here.
 export const SHELL =
   'fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)] pointer-events-auto';
 export const BOX =
@@ -26,18 +10,10 @@ export const BOX =
 // .modal__box--sm: the same box, narrower (430px) and centre-aligned (confirm dialogs).
 export const BOX_SM =
   'relative w-full max-w-[430px] max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-8 rounded-md bg-white text-center';
-// The booking popup only (Sep 2026, Wayan picked "A" from the measured sheet):
-// a 12px gutter instead of 24 and 20px of padding instead of 32, which is 48px
-// more content width and 24px less height at 390px. Scoped rather than applied to
-// SHELL/BOX because those are shared with the review / auth / confirm dialogs,
-// and none of those has been measured at the tighter geometry.
+// Booking popup only: 12px gutter and 20px padding; SHELL/BOX stay as-is for the other dialogs.
 export const SHELL_WIDE =
   'fixed inset-0 z-[200] flex items-center justify-center p-3 bg-[rgba(0,0,0,0.55)] pointer-events-auto';
-// max-h is the shell's gutter, not a percentage: 95vh left 42px of the screen
-// unused while the shell only needs its own 12px, which was exactly the 18px of
-// scroll a single-line booking needed at 390 AND 768 (identical at both widths -
-// the giveaway that it was the cap, not wrapping). dvh, not vh: mobile browser
-// chrome moves, and the rest of this codebase uses dvh for the same reason.
+// Max height = viewport minus the shell's 12px gutters, in dvh because mobile browser chrome moves.
 export const BOX_WIDE =
   'relative w-full max-w-[560px] max-h-[calc(100dvh-24px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-5 rounded-md bg-white';
 
@@ -50,45 +26,35 @@ export const SUB = 'mb-[1.1rem] text-body text-muted';
 export const GROUP = 'flex flex-col mb-4';
 // LABEL dipindah ke formClasses.FIELD_LABEL (satu label buat seluruh web).
 export { FIELD_LABEL as LABEL } from '@/components/ui/formClasses';
-// One field box for the whole site - these three used to run 10.4px / 11.2px
-// padding of their own, and the modal textarea a 110px floor instead of 130px.
+// Modal fields reuse the site-wide field box from formClasses.
 export const INPUT = FIELD_INPUT;
 export const TEXTAREA = FIELD_AREA;
 export const SELECT = FIELD_INPUT;
 
-// Primary button = the site CTA (green fill, white text) - NOT the dead green in the
-// 3129 block. Stacked buttons keep a 0.6rem gap (STACK), applied to the 2nd+ button.
+// Primary modal button in CTA green; STACK adds the gap on the 2nd+ stacked button.
 export const BTN =
   `flex w-full ${BTN_SM} border-none text-white bg-cta no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] hover:bg-cta-d hover:text-white`;
 export const STACK = 'mt-[0.6rem]';
 export const BTN_GHOST =
   `flex w-full ${BTN_SM} no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] mt-[0.6rem] bg-white [border:1.5px_solid_var(--color-green)] text-green hover:bg-green hover:text-cream hover:[border-color:var(--color-green)]`;
-// WhatsApp button: base layout + WA brand green. NO top margin baked in - the gap
-// to the button above is context (the .modal__btn + .modal__btn adjacency = STACK,
-// 0.6rem, which wins over .modal__btn--wa's own 0.75rem when stacked). Callers add
-// the margin they actually render with (STACK when it follows another button).
+// WhatsApp button in brand green; no top margin baked in, callers add STACK when it follows a button.
 export const BTN_WA =
   `flex w-full ${BTN_SM} border-none no-underline cursor-pointer transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] text-white bg-[#25d366] hover:bg-[#1fb457] hover:text-white`;
 
-// Inline message under a form (.modal__referral-msg): base has no colour (inherits);
-// .error -> red, .success -> green. Used by auth / account / contact / hero-search.
+// Inline message under a form: neutral, error (red) or success (green).
 export const REFMSG = 'block mt-[0.4rem] text-small';
 export const REFMSG_ERR = 'block mt-[0.4rem] text-small text-err';
 export const REFMSG_OK = 'block mt-[0.4rem] text-small text-ok';
 
-// Per-field validation message - sits directly under the input it belongs to, so a
-// guest sees every missing field at once instead of one message per submit attempt.
+// Per-field error directly under its input, so every missing field shows at once.
 export const FIELD_ERR = 'block mt-[0.3rem] text-small text-err';
 
-// Success state (.modal__success + icon + p). display:none default is handled by
-// conditional render in React, so only the visible styles are mirrored here.
+// Success icon and text; visibility is handled by conditional render.
 export const SUCCESS_ICON =
   'flex items-center justify-center w-14 h-14 mx-auto mb-4 rounded-[50%] text-[1.6rem] text-white bg-[#25d366]';
 export const SUCCESS_TEXT = 'mb-6 text-body leading-[var(--lh-body)]';
 
-// Referral code field - lives here rather than inline in one component now that
-// both the booking modal and the payment step render it (DRY rule in CLAUDE.md:
-// used by more than one component means one module, imported, not copy-pasted).
+// Referral code field, shared by the booking modal and the payment step.
 export const REFERRAL_INPUT = `flex-1 ${FIELD_INPUT}`;
 export const REFERRAL_BTN =
   'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer ' +

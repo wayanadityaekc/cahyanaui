@@ -16,17 +16,10 @@ import { useAccount } from '@/state/AccountProvider';
 
 const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
 
-// Unique key for a reviewable tour: (booking_ref, service) - the same pair the
-// server uses to de-dupe reviews. Needed because "Leave a Review" now aggregates
-// across ALL past bookings (Wayan, Sep 2026), not just the tours in one trip, so
-// two different bookings can carry the same service name.
+// Item key = (booking_ref, service), the pair the server de-dupes on; a service can repeat across bookings.
 function itemKey({ ref, service }) { return `${ref}::${service}`; }
 
-// Login-only, exactly as the server gate requires: opened only from My Trips (Past
-// Trip), with each item's own booking_ref carried along. One overall rating +
-// message, submitted to every tour the guest checks - not a separate rating/message
-// per tour (that was the old per-item flow; Wayan asked for one simple form that
-// fans out to whatever's ticked).
+// Login-only review popup: one rating + message posted to every ticked past trip.
 export default function ReviewModal({ open, prefill, onClose }) {
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
@@ -40,10 +33,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const [done, setDone] = useState(false);
   const [partial, setPartial] = useState([]);
   const { refreshTrips } = useAccount() || {};
-  // Set once any review went through. The trip list is re-read when the popup
-  // CLOSES, not the moment a review lands: ReviewGate passes prefill as a fresh
-  // object each render, so a re-read mid-popup would re-run the reset below and
-  // throw the thank-you screen back to the form.
+  // Trips are re-read on CLOSE, not on success: prefill is a new object each render, so a mid-popup re-read resets the form.
   const sent = useRef(false);
 
   useEffect(() => setMounted(true), []);
@@ -52,8 +42,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
     if (!open || !prefill) return;
     setName(view.name || '');
     setCountryCode('');
-    // Pre-check everything - most guests reviewing after a trip want to cover all
-    // of it; unchecking a tour they'd rather skip is one tap.
+    // Every trip starts checked; the guest unticks what to skip.
     setChecked((view.items || []).map(itemKey));
     setRating(0);
     setMessage('');
@@ -67,9 +56,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const lastPrefill = useRef(null);
   useBodyLock(open);
 
-  // While closing, `open` is already false but the card is still on screen for
-  // the length of its exit animation - so render from the last prefill we saw
-  // rather than from the live one, which mayalready be gone.
+  // Render from the last prefill while the exit animation runs, since the live one is already gone.
   if (prefill) lastPrefill.current = prefill;
   const view = prefill || lastPrefill.current;
   if (!mounted || !view) return null;
@@ -97,12 +84,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
     const token = readLocal(KEY.token, '');
     const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
     const results = [];
-    // One POST per ticked tour, and EVERY one is attempted. This used to throw on
-    // the first refusal, which meant the reviews already accepted were live on the
-    // site while the screen showed a single red error - so the guest read it as
-    // "nothing went through", tried again, and got "you've already submitted a
-    // review for this tour". A review that was published is never reported as a
-    // failure here.
+    // One POST per ticked trip, all attempted; never stop at the first refusal (earlier ones are already live).
     for (const it of picked) {
       try {
         const res = await fetch(`${API_BASE}/reviews`, {
@@ -127,15 +109,12 @@ export default function ReviewModal({ open, prefill, onClose }) {
     if (results.some((r) => r.ok)) sent.current = true;
     const failed = results.filter((r) => !r.ok);
     if (failed.length === results.length) { setError(failed[0].reason); return; }
-    // Some went through: say thank you for those, and name the ones that did not
-    // rather than hiding them behind a success screen.
+    // Partial success: show thank-you and list the trips that failed with the server's reason.
     setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
     setDone(true);
   }
 
-  // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/title/group/btn/success
-  // pakai konstanta shared (modalClasses.js). Star row + checklist row -> inline
-  // utility, isolated ke komponen ini.
+  // Star buttons and checklist rows for this modal; shell/box/title strings come from modalClasses.
   function star(on) { return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`; }
   const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
   const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
@@ -241,9 +220,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
           <div className="text-center">
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Thank you!</h3>
-            {/* Reviews go live the moment they clear the server gate (inserted with
-                status 'approved'), so "will appear once approved" told the guest to
-                wait for something that had already happened. */}
+            {/* Reviews publish immediately once accepted, so never say "once approved". */}
             <p className={SUCCESS_TEXT}>
               {partial.length
                 ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`

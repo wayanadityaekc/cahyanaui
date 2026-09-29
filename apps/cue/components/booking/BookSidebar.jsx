@@ -25,8 +25,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
     return !!c && (c.category === 'tour' || c.category === 'combo');
   }
 
-  // The real category, for the start-time rules. `presetType` is 'tour' on every
-  // detail page (experiences and performances included), so it cannot be used here.
+  // Category for start-time rules comes from the catalog; presetType is 'tour' on every detail page.
   function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;

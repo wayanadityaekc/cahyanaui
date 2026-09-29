@@ -8,62 +8,19 @@ import Slider from '@/components/ui/Slider';
 import { BLEED_MOBILE } from '@/components/ui/gridClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 
-// Gallery hero - the Viator / GetYourGuide shape: one large photo, then pairs of
-// stacked thumbnails, and the next column peeking at the right edge because the
-// whole thing SLIDES (Wayan, Sep 2026: "jangan isi show all photos di depan tapi
-// bisa di slide biar semua gambar bisa di slide, nanti kalo kebanyakan baru isi
-// itu"). Every photo is reachable by sliding, so the "Show all N photos" pill
-// only appears once there are more than a guest would want to swipe through.
-//
-// Why a photo POOL instead of one photo per named stop: photo availability per
-// place is uneven - some Bali sites have plenty online, others none - so a fixed
-// one-photo-per-stop layout fails in both directions at once. A hole opens where
-// a place has no photo, and the 2nd or 3rd photo of a place that has several gets
-// no seat at all (46 usable photos sat unused in the repo for exactly that
-// reason). A pool is elastic: it absorbs the surplus, and never demands a photo
-// of one specific place, so a gap never has to be filled with a lookalike from
-// somewhere else. Captions stay attached per photo in the lightbox, so no photo
-// claims to be a place it isn't.
-//
-// Layouts degrade by count so every tour looks finished with what it has:
-// 1 photo = one wide tile, 2 = side by side, 3+ = the sliding mosaic.
+// Sliding gallery hero built from a photo pool; 1 photo = wide tile, 2 = side by side, 3+ = mosaic.
 
-// Past this many, sliding stops being the nice way through and a grid overview
-// earns its place. Judgment call, not a measurement - tune it freely.
+// Show the 'all photos' pill only from this many photos; a judgment call, tune freely.
 const PILL_FROM = 10;
 
-// The track ALTERNATES, continuously: big photo, a column of two small, big
-// photo, a column of two small... (Wayan, Sep 2026, pointing at Viator: "3 kalo
-// habis foto besar foto kecil yang 2 itu"). Because there are no group
-// boundaries, a mid-scroll position shows `2 small | BIG | 2 small` exactly like
-// the reference - a locked 3-photo group only ever showed one big photo at the
-// front, which is what was wrong with the previous take.
-//
-// Tiles carry no aspect of their own - the TRACK owns the height (via aspect, so
-// the crop holds at every width) and every child stretches into it.
-//
-// NO RADIUS on the tiles (Wayan: "grid nya gausah kasi border radius").
-//
-// NO HOVER ZOOM either (27 Sep 2026, Wayan: "di page tour, destination, experience
-// sekarang ada howver untuk heronya, gua gamau ada itu kalo di howver hero no zoom").
-// The tiles used to scale their photo to 1.04 on hover. Both halves went, not just the
-// scale: the [&>img] transform transition existed ONLY to animate it, and a transition
-// left pointing at a property nothing sets is the dead-transition class of bug that
-// check-motion exists to catch. Do not put either back without asking - it is a
-// decision, not a gap. Tiles now declare no transition of their own, so the global
-// press feedback in style.css is what a tap gets.
+// Tiles fill a track that owns the height; no radius and no hover zoom/transition on purpose (ask before adding).
 const TILE_BASE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
   '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
 const BIG = `${TILE_BASE} flex-[0_0_62%] [scroll-snap-align:start]`;
-// A column of two stacked small photos. One photo in it (the tail of an odd
-// count) fills the column height instead of leaving a hole - it is the only
-// flex-1 child.
+// Column of two small photos; a lone tail photo fills the whole column.
 const PAIR = 'flex-[0_0_35%] h-full flex flex-col gap-1 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
-// Track aspect sets the crop. Mobile 1.6/1 puts the big photo at ~1.0, matching
-// Viator's phone gallery; desktop 2.7/1 puts it at ~1.67, the landscape Wayan
-// asked for. Never a pixel height - a stepped height gave a 1.24 big photo at a
-// 993px viewport.
+// Track aspect sets the crop (1.6/1 phone, 2.7/1 desktop); never a pixel height.
 const TRACK =
   'flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ' +
   'overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
@@ -73,11 +30,7 @@ const TRACK =
 // Static (non-sliding) layouts for 1 and 2 photos - no track, so no snap needed.
 const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
 const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
-// Corner pill rather than a dark overlay across a tile - an overlay lands on
-// whatever the photo's subject happens to be (it sat right on the macaque's
-// face), and Viator/Airbnb put this control in the corner for the same reason.
-// `scale` belongs in every clickable's own transition list, or the global press
-// feedback in style.css snaps instead of easing (check-motion rule 2).
+// Corner pill, not an overlay; keep scale in its transition list or press feedback snaps (check-motion).
 const MORE_BTN =
   `absolute bottom-3 right-3 z-[6] inline-flex ${BTN_SM} bg-white [border:1px_solid_var(--line)] ` +
   'font-body text-gold cursor-pointer ' +
@@ -120,11 +73,7 @@ export default function HeroMosaic({ photos = [], title }) {
     );
   }
 
-  // Flat, alternating children: big, pair, big, pair... The pair is the only
-  // wrapper (it stacks two photos), and it sits as a SIBLING of the big tile
-  // rather than inside a group with it - that is what keeps the rhythm running
-  // past the third photo, so a mid-scroll position can show two smalls, a big,
-  // and two more smalls at once.
+  // Flat alternating children (big, pair, big, pair) so the rhythm continues past the third photo.
   const children = [];
   [...Array(Math.ceil(photos.length / 3)).keys()].map((k) => k * 3).forEach((i) => {
     children.push(tile(i, BIG));
@@ -177,11 +126,7 @@ export default function HeroMosaic({ photos = [], title }) {
             </div>
 
             <div className="flex-[1_1_auto] min-h-0 grid place-items-center overflow-hidden px-4">
-              {/* Height capped in viewport units, not max-h-full: a percentage
-                  max-height against an auto-height flex item does not constrain,
-                  so the photo rendered at its natural 1200x900 and pushed past
-                  the viewport with the caption landing on top of it. The 12rem
-                  reserves the header and caption/arrow rows. */}
+              {/* Cap height in viewport units; max-h-full does not constrain here. 12rem reserves header and caption rows. */}
               <img
                 src={photos[at].src}
                 alt={photos[at].alt || ''}

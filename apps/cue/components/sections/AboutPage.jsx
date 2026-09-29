@@ -2,11 +2,7 @@ import { ABOUT } from '@/content/shared/about';
 import RegistrationBlock from '@/components/sections/RegistrationBlock';
 import { infoList } from '@/components/ui/infoClasses';
 
-// Plain-text rewrite (Sep 2026, Wayan): about-us.html standalone is gone, this
-// only renders inside Our Company now - so it's one plain version, not the old
-// company/standalone toggle. Fact strip, driver cards (+ their click-to-open
-// modal), and the hidden gallery placeholder are all dropped - just heading +
-// paragraphs telling the story, no boxes.
+// About Us section for Our Company: heading and story paragraphs only.
 export default function AboutPage() {
   return (
     <div>

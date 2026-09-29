@@ -12,10 +12,7 @@ import { LEGAL } from '@/content/shared/legal';
 import { FAQ } from '@/content/shared/faq';
 import Prose from '@/components/prose/Prose';
 
-// Every section stays in the DOM at once (good for crawlers - they read all six,
-// not just the default) but only one is visible, via the `hidden` attribute.
-// `split: true` starts the second group: the first three are about us, the last
-// three are the small print, and six unbroken rows read as one long list.
+// All six sections stay in the DOM for crawlers, one shown via `hidden`; `split` starts the legal group.
 const TABS = [
   { id: 'about', label: 'About Us', Icon: Building2 },
   { id: 'contact', label: 'Contact', Icon: Mail },
@@ -36,46 +33,25 @@ const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:tex
 function LegalBody({ data }) {
   return (
     <div className={BODY_TEXT}>
-      {/* The rail's own header breadcrumb is the only trail on this page now
-          (Sep 2026, Wayan: "breadcrumb ... follow the breadcrumb in the account
-          setting, no breadcrumb inside the content") - the legal-only "Pattern
-          A" trail that used to print here, above this h1, is gone. The crumb
-          block still lives in legal.json (content the dashboard could still
-          write to); it is just never rendered. */}
+      {/* No in-content breadcrumb here: the rail header trail is the only one, and the crumb block in legal.json is filtered out. */}
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
       <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="company" />
     </div>
   );
 }
 
-// FAQ grouped by category (Sep 2026, Wayan: tambah pertanyaan + kategori buat SEO).
-// FAQ.cat udah urut per kelompok di faq.js, jadi ngambil kategori unik dalam
-// urutan kemunculan cukup buat bikin heading per grup - gak perlu sort/data baru.
+// FAQ categories in first-appearance order (faq.js is already grouped by category).
 const FAQ_CATS = [...new Set(FAQ.map((item) => item.cat))];
 
-// Native <details>, deliberately - not an accordion library (Sep 2026, Wayan sent a
-// React Aria accordion snippet and asked how it compared). Everything that snippet
-// adds over <details> is either free here or not worth a dependency: one-open-at-a-time
-// is the HTML `name` attribute, the chevron and the sizes are CSS. What <details>
-// gives back is what a FAQ page actually needs - it works before hydration, and
-// browser find-in-page opens a collapsed answer, which a JS accordion hides from
-// Ctrl+F. The two things we give up are an open/close animation (native only
-// animates in Chrome) and arrow-key movement between questions.
-//
-// Typography is all tokens, no raw sizes (Wayan: "typography ngikutin global"):
-// category = the site's group-label (same as the rail's "OUR COMPANY"), question =
-// --fs-h3 at 600, answer = --fs-body. Three tiers, each already used elsewhere.
+// FAQ uses native <details> (no accordion library): works before hydration and Ctrl+F finds collapsed answers.
 const FAQ_CAT = 'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-1)]';
 
-// list-none + the webkit rule kill the browser's default triangle; it was the one
-// place on the site not using a Lucide chevron.
+// list-none plus the webkit rule remove the browser's default disclosure triangle.
 const FAQ_Q =
   'list-none [&::-webkit-details-marker]:hidden flex items-center gap-[var(--space-2)] ' +
   'cursor-pointer py-[0.85rem] font-body text-h3 font-semibold text-gold';
 
-// Transition `rotate`, not `transform`: Tailwind v4 compiles rotate-180 to the
-// standalone rotate property, so naming transform here would animate nothing.
-// Same string CatDropdown uses.
+// Transition `rotate`, not `transform`: Tailwind v4 compiles rotate-180 to the standalone rotate property.
 const FAQ_CHEV =
   'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted ' +
   'transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] group-open:rotate-180';
@@ -95,8 +71,7 @@ function FAQBody() {
         <div className="mb-[var(--space-4)]" key={cat}>
           <h2 className={FAQ_CAT}>{cat}</h2>
           {FAQ.filter((item) => item.cat === cat).map((item, i) => (
-            // One shared name across all four groups: opening any answer closes the
-            // one before it, so the page never becomes a wall of open text.
+            // Shared name="faq" means opening one answer closes the previous one.
             <details className={FAQ_ROW} name="faq" key={i}>
               <summary className={FAQ_Q}>
                 {item.q}
@@ -130,10 +105,7 @@ function HelpCard({ className = '' }) {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  // The phone has no room for a column, so the rail IS the first screen and a
-  // section opens over it. false = the list. It must start the same on the
-  // server and the client (this is a static export, one HTML for both widths),
-  // so the hash is read in an effect, not in the initial value.
+  // Phone view: false = section list; must start false and read the hash in an effect, or hydration breaks.
   const [reading, setReading] = useState(false);
 
   useEffect(() => {
@@ -152,8 +124,7 @@ export default function OurCompany() {
     window.history.replaceState(null, '', `#${id}`);
   }
 
-  // Back drops the hash too, so a reload (or a shared link) lands on the list
-  // rather than silently reopening the section the guest just left.
+  // Back also clears the hash, so a reload or shared link lands on the list.
   function goBack() {
     setReading(false);
     window.history.replaceState(null, '', window.location.pathname);

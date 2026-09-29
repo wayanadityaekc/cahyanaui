@@ -28,23 +28,15 @@ import RailLayout from '@/components/ui/RailLayout';
 import SignInPrompt from '@/components/account/SignInPrompt';
 import { crumbsFor } from '@/lib/crumbs';
 
-// Tailwind-native (migrasi Fase 2): sub-family kecil my-trips cart -> utilities.
-// `mtc-empty` DIPERTAHANKAN sbg marker: anchor `.mtc-empty .btn-pill` (reset
-// full-width [data-mytrips-cart] .btn-pill). `.mtc-total__val .price-cur` DIHAPUS
-// (redundant - .price-cur udah amber default), jadi mtc-total__val full convert.
+// Empty-cart styles; keep the `mtc-empty` marker class.
 const MTC_EMPTY = 'text-center pt-2 px-0 pb-0';
 const MTC_EMPTY_LEAD = 'font-head font-medium tracking-[-0.01em] text-[1rem] text-green m-0 mb-[0.4rem]';
-// Hint/explanation text: needs the site's body-text size explicitly (text-body) -
-// without it a bare <p> falls back to the browser default (16px), which reads
-// noticeably bigger/inconsistent next to every other page's 0.8rem body copy.
+// Hint text needs text-body explicitly, or a bare <p> falls back to 16px.
 const MTC_EMPTY_SUB = 'text-body text-muted max-w-[44ch] mx-auto mt-0 mb-[1.8rem]';
 const MTC_TOTAL = 'flex justify-between items-center bg-cream rounded-lg py-4 px-[1.2rem] mt-[1.4rem]';
 const MTC_TOTAL_LABEL = 'font-medium text-small tracking-[0.14em] uppercase text-green';
 const MTC_TOTAL_VAL = 'text-[1.4rem] font-semibold text-amber-d';
-// Leaf kartu item -> utilities. Container `.mtc-item` (+ `--booked`, + context
-// `.mtc-book .mtc-item`) TETEP CSS (punya varian read-only, anchor). `.mtc-item__datebtn`
-// juga TETEP CSS (bagian dari base rule field shared, Bucket A). Foto & ikon-svg =
-// string terpisah (bukan di-layer) biar w/h 40 vs 56 gak konflik urutan utility.
+// Cart item icon strings; photo and svg variants are separate strings so w/h utilities don't conflict.
 const MTC_ITEM_ICON = 'flex-[0_0_auto] w-10 h-10 grid place-items-center rounded-md bg-cream text-gold-d [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';
 const MTC_ITEM_ICON_PHOTO = 'flex-[0_0_auto] w-[56px] h-[56px] grid place-items-center rounded-md bg-cream bg-cover bg-center text-gold-d';
 const MTC_ITEM_BODY = 'flex-[1_1_auto] min-w-0';
@@ -53,9 +45,7 @@ const MTC_ITEM_DESC = 'text-small text-muted mt-[0.15rem] mx-0 mb-0';
 const MTC_ITEM_PRICE = 'flex-[0_0_auto] text-right whitespace-nowrap font-semibold text-amber-d';
 const MTC_ITEM_DEL = 'flex-[0_0_auto] border-none bg-transparent text-muted text-[1.35rem] leading-none cursor-pointer py-0 px-[0.15rem] hover:text-err';
 const MTC_ITEM_DATE = 'text-label font-medium tracking-[0.14em] uppercase text-muted mt-[0.3rem] mx-0 mb-0';
-// Rincian booked-trip (.mtc-det*) -> utilities. Kontainer .mtc-det (+ context
-// .mtc-book .mtc-det) TETEP CSS. Chev muter pas toggle aria-expanded=true (arbitrary
-// variant), transisi ke `transform` biar animasinya sama.
+// Booked-trip detail toggle; the chevron rotates via arbitrary transform when aria-expanded=true.
 const MTC_DET_TOGGLE = 'flex items-center gap-[0.35rem] border-none bg-transparent py-[0.35rem] px-0 font-body text-small font-medium text-muted cursor-pointer hover:text-gold';
 const MTC_DET_CHEV = 'w-[15px] h-[15px] [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
 const MTC_DET_LIST = 'list-none mt-[0.2rem] mx-0 mb-0 p-0 [border-top:1px_solid_var(--line)]';
@@ -63,36 +53,24 @@ const MTC_DET_LINE = 'flex items-baseline justify-between gap-[0.75rem] py-2 px-
 const MTC_DET_NAME = 'flex flex-col gap-[0.15rem] min-w-0 text-green';
 const MTC_DET_META = 'text-label text-muted';
 const MTC_DET_AMT = 'flex-[0_0_auto] whitespace-nowrap font-semibold text-amber-d';
-// Notes/policy -> utilities. Varian --warn = string penuh (bukan di-layer) biar
-// text-muted vs text-err gak konflik urutan. `.mtc-policy a` -> utility di tiap <a>.
+// Notes; the warn variant is a full separate string so text-muted and text-err don't conflict.
 const MTC_NOTE = 'text-small text-muted text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]';
 const MTC_NOTE_WARN = 'text-small text-err text-center mt-[0.7rem] mx-auto mb-0 max-w-[46ch]';
 const MTC_POLICY_LINK = 'text-gold-d underline';
-// Container/variant classes (migrasi #324): were the last `.mtc*` rules in
-// style.css. Cart-list item (standalone) vs booked-card item (inside .mtc-book,
-// read-only). `.mtc-book` card + its context overrides -> flat utilities. Booked/
-// past cards only render with server data (not reachable in the static export
-// harness) so those are exact 1:1 CSS maps, flagged in the PR.
+// Item rows: cart item (standalone) vs booked-card item (read-only, inside the booking card).
 const MTC_ITEM = 'flex items-center gap-[0.85rem] bg-white border border-line rounded-md py-[0.8rem] px-[0.95rem] mb-[0.6rem]';
 const MTC_ITEM_BOOKED = 'flex items-center gap-[0.85rem] py-[0.8rem] px-[0.95rem] bg-transparent border-0 rounded-none mb-0 cursor-default';
 const MTC_BOOK = 'bg-white border border-line rounded-lg mb-[0.9rem] overflow-hidden';
 const MTC_DET_BOX = 'm-0 pt-0 px-[0.95rem] pb-[0.55rem]';
-// Leave a Review (Wayan, Sep 2026): rombak dari 1 tombol PER kartu past-trip jadi
-// SATU tombol global di bawah tab Past Trip, yang ngumpulin item review-able dari
-// SEMUA past booking - user centang mana aja yang mau di-review dalam satu form
-// (lihat ReviewModal.jsx). Constant di bawah dipake buat box/tombol global itu.
+// One Leave-a-review button under Past trips, covering every reviewable item.
 const MTC_REVIEW_BOX = 'flex justify-center mt-[1.4rem]';
 const MTC_REVIEW_BTN = 'w-full';
-// Cancellation contact (Wayan, Sep 2026): a bottom action on each BOOKED (upcoming)
-// trip card - ghost/gold outline (secondary action, CLAUDE.md: primary CTA stays
-// green, "look at more / secondary" stays gold) vs the green primary review CTA.
+// Cancellation contact bar on each upcoming booked card; ghost gold button, not the green primary.
 const MTC_CANCEL_BOX = 'flex justify-end m-0 py-[0.7rem] px-[0.95rem] border-t border-line bg-cream';
 const MTC_CANCEL_BTN = `inline-flex w-auto ${BTN_SM} [border:1px_solid_var(--color-gold)] bg-white text-gold-d font-body font-semibold text-small no-underline [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-gold hover:text-white max-[600px]:w-full max-[600px]:justify-center`;
-// Cart action buttons: shared .btn-pill was forced full-width via
-// `[data-mytrips-cart] .btn-pill` (removed); set per-button now.
+// Full-width add button.
 const MTC_ADD_FULL = `${BTN_PILL} w-full mt-4`;
-// datebtn: base field look (shared rule) + button specifics + calendar ::before
-// (mask, %20-encoded so it survives as a Tailwind arbitrary value).
+// Calendar icon mask for the date button, %20-encoded so it survives as a Tailwind arbitrary value.
 const CAL_MASK = "url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20x='3'%20y='5'%20width='18'%20height='16'%20rx='2'/%3E%3Cpath%20d='M8%203v4M16%203v4M3%2010h18'/%3E%3C/svg%3E\")";
 const MTC_DATEBTN = `inline-flex items-center whitespace-nowrap gap-[0.4rem] mt-[0.35rem] py-[0.3rem] px-[0.6rem] bg-white text-left cursor-pointer border border-line rounded-md font-body text-[length:var(--fs-field)] text-green before:content-[''] before:flex-none before:w-[14px] before:h-[14px] before:bg-current before:opacity-70 before:[-webkit-mask-image:${CAL_MASK}] before:[mask-image:${CAL_MASK}] before:[-webkit-mask-repeat:no-repeat] before:[mask-repeat:no-repeat] before:[-webkit-mask-position:center] before:[mask-position:center] before:[-webkit-mask-size:contain] before:[mask-size:contain]`;
 
@@ -129,26 +107,14 @@ export default function MyTripsCart() {
   const checkoutRef = useRef(null);
   const pricing = usePricing();
 
-  // Coming back from a hosted payment page (the rupiah rail). The guest returns
-  // with a reference in the URL and nothing provable, so this does not believe
-  // it: it shows the same waiting screen as the inline rails, which asks the
-  // server, and only clears the cart once the server says the money cleared.
+  // Return from the hosted payment page: show PayWaiting, which asks the server; never trust the URL.
   const [returnRef, setReturnRef] = useState('');
   useEffect(() => {
-    // Read in an effect, never in initial state: this is a static export, so
-    // the first paint has to match the pre-rendered HTML.
+    // Read in an effect, never initial state: the first paint must match the pre-rendered HTML.
     try {
       const r = new URLSearchParams(window.location.search).get('ref');
       if (!r) return;
-      // DOKU can render its payment page as an overlay ON this site instead of
-      // navigating away. When it does, the page it returns to - this one - is
-      // loaded INSIDE that overlay's frame, so the guest would end up looking
-      // at our whole site shrunk into a box. Climb out and let the real page
-      // show the waiting screen.
-      //
-      // Same origin, because the return address is ours, so reading top is
-      // allowed; it is still wrapped, since a browser that disagrees must not
-      // take the page down with it.
+      // If loaded inside the DOKU overlay frame, reload the top window so the waiting screen isn't boxed in.
       if (window.top && window.top !== window.self) {
         window.top.location.replace(window.location.href);
         return;
@@ -163,32 +129,24 @@ export default function MyTripsCart() {
   }
 
   const [review, setReview] = useState(null);
-  // The post-trip email's button says "Leave a review", so ?review=1 has to land
-  // ON the review: Past trips, popup open. Two effects, because the popup cannot
-  // be filled until the trips have actually arrived - opening it on an empty
-  // checklist teaches the guest the link is broken.
+  // ?review=1 opens Past trips and the review popup, but only after trips arrive (never an empty checklist).
   const [wantReview, setWantReview] = useState(false);
   const [adding, setAdding] = useState(false);
   const [editDate, setEditDate] = useState(null);
   const [tab, setTab] = useState('custom');
-  // Phone: which of the shell's two screens is showing. This page opens straight
-  // on the cart rather than on the section list - unlike Our Company it has an
-  // obvious default, and a guest who came here to pay should not have to tap
-  // through a menu first. Back still reaches the list.
+  // Phone opens straight on the cart, not the section list; Back still reaches the list.
   const [reading, setReading] = useState(true);
   const [openRef, setOpenRef] = useState(null);
 
   useEffect(() => {
-    // Effect, never initial state: this is a static export, so the first paint
-    // has to match the pre-rendered HTML.
+    // Effect, never initial state: the first paint must match the pre-rendered HTML.
     try {
       const p = new URLSearchParams(window.location.search);
       if (p.get('review') !== '1') return;
       setWantReview(true);
       setTab('past');
       setReading(true);
-      // Drop the flag - and ONLY the flag - so a reload does not reopen a popup
-      // the guest closed. ?token= is left alone; the account provider reads it.
+      // Remove only ?review so a reload doesn't reopen it; ?token belongs to the account provider.
       p.delete('review');
       const q = p.toString();
       window.history.replaceState(null, '', `${window.location.pathname}${q ? `?${q}` : ''}`);
@@ -199,8 +157,7 @@ export default function MyTripsCart() {
     // trips is null until the fetch lands, so this waits rather than guessing.
     if (!wantReview || !trips) return;
     setWantReview(false);   // one shot, whichever way it goes
-    // Signed out, or everything already reviewed: stay on Past trips and let the
-    // panel say so. An empty popup would be worse than no popup.
+    // Nothing reviewable (signed out or all done): stay on Past trips, no popup.
     if (!reviewableItems.length) return;
     setReview({ name: (account && account.name) || '', items: reviewableItems });
   }, [wantReview, trips, reviewableItems, account]);
@@ -208,14 +165,7 @@ export default function MyTripsCart() {
 
   const rows = useMemo(() => {
     const out = [];
-    // Bug fix (Sep 2026, Wayan - proof screenshot, X still stuck on a single day
-    // item): day_no used to be the position in the FILTERED list (skipping empty
-    // days), but remove()/date-edit index into the RAW state.days array with it.
-    // An empty day slot anywhere before this one (e.g. left behind by "+ Add Day"
-    // on /itinerary, which shares this same localStorage state) shifts the two
-    // out of sync - remove() then hits the wrong day (often empty) and silently
-    // no-ops. Iterate the RAW array and skip empties inline so day_no always
-    // matches its real state.days index.
+    // Iterate the raw days array (skip empties) so day_no matches the real state.days index for remove/edit.
     (state.days || []).forEach((d, i) => {
       if (!d.items || !d.items.length) return;
       d.items.forEach((name, k) => {
@@ -226,8 +176,7 @@ export default function MyTripsCart() {
           date: d.date || '',
           guests: parseInt(d.guests, 10) || displayGuests,
           mode: (d.itemModes && d.itemModes[k]) || 'standard',
-          // Start time is per ITEM, not per day - two programmes on one date have two
-          // start times (Wayan). `itemIndex` is what the date editor writes back with.
+          // Start time is per item, not per day; itemIndex is what the date editor writes back to.
           time: (d.itemTimes && d.itemTimes[k]) || '',
           itemIndex: k,
           day_no: i + 1,
@@ -237,16 +186,11 @@ export default function MyTripsCart() {
     (state.transfers || []).forEach((t, ti) => out.push({
       kind: 'transfer', type: 'transfer', service: t.route, date: t.date || '',
       guests: parseInt(t.guests, 10) || displayGuests, return: !!t.return, localIndex: ti,
-      // Airport-transfer extras (AirportTransferForm) - carried through so they
-      // survive into `lines` at checkout; BookConfirmModal.payload() already
-      // forwards pickup/dropoff/flight_number/flight_datetime per line.
+      // Carry airport-transfer extras into the row so checkout forwards them per line.
       ...(t.direction ? { direction: t.direction } : null),
       ...(t.pickup ? { pickup: t.pickup } : null),
       ...(t.dropoff ? { dropoff: t.dropoff } : null),
-      // The pick-up time the guest set in the date editor, which writes it to
-      // transfers[i].time. It used to be stored and never read back: the card did
-      // not show it, reopening the editor showed no time, and checkout sent an
-      // empty time for every transfer row. Charters below always carried theirs.
+      // Transfer pick-up time from the date editor; must be read back here or checkout sends it empty.
       ...(t.time ? { time: t.time } : null),
       ...(t.flight_number ? { flight_number: t.flight_number } : null),
       ...(t.flight_datetime ? { flight_datetime: t.flight_datetime } : null),
@@ -255,17 +199,13 @@ export default function MyTripsCart() {
       kind: 'charter', type: 'charter', service: CHARTER_SERVICE, date: c.date || '',
       guests: parseInt(c.guests, 10) || displayGuests, area: c.area || 'Ubud',
       duration: c.dur || c.duration, extra: c.extra || 0, localIndex: ci,
-      // The pick-up time the guest chose in the builder. Carried like the
-      // transfer fields above it: shown in the cart and forwarded at checkout,
-      // ignored by the pricing call, which prices a charter off area/duration/extra.
+      // Charter pick-up time: shown and sent at checkout, ignored by pricing.
       ...(c.time ? { time: c.time } : null),
     }));
     return out;
   }, [state, displayGuests]);
 
-  // The real category for a row, so the date editor offers the right start times.
-  // A transfer or charter row is free all day, which is what a null/own-kind category
-  // gives - allowedSlots() only restricts the bookable programme categories.
+  // Row category from the catalog for time slots; transfer/charter rows are unrestricted.
   function categoryOfRow({ kind, service }) {
     if (kind !== 'day') return kind;
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === service);
@@ -281,11 +221,7 @@ export default function MyTripsCart() {
   });
   const { format } = useMoney();
 
-  // WO2: a guest sent off to sign in from this page comes back here holding a
-  // resume marker - open the booking form for them, as if they had tapped again.
-  // Called ABOVE the early return (hooks must run on every render - below it this
-  // threw React #310 and took the whole page down); `checkout` is defined further
-  // down, so it is handed over through a ref.
+  // Resume a booking after sign-in; must run above the early return (hooks order), checkout via a ref.
   useResumeBooking(hydrated && rows.length > 0 && rows.every((r) => r.date), () => checkoutRef.current && checkoutRef.current());
 
   if (!hydrated) return <div data-mytrips-cart />;
@@ -293,20 +229,14 @@ export default function MyTripsCart() {
   const undated = rows.some((r) => !r.date);
   const totalText = priced ? format(priced.total.display) : '-';
 
-  // Bug fix (Sep 2026, Wayan: "X gak berfungsi"): dulu di-splice pakai index GLOBAL
-  // di `rows` (gabungan days+transfers+charters) - begitu ada day item sebelum
-  // transfer/charter, index itu udah gak match posisi asli di state.transfers/
-  // .charters, jadi splice-nya no-op alias silently gagal. Row day-item TETEP
-  // di-cari via indexOf(service) di hari-nya, itu udah bener dari dulu.
+  // Transfers/charters splice by their own list index (not the combined rows index); day items by name.
   function remove({ kind, localIndex, day_no, service }) {
     const next = JSON.parse(JSON.stringify(state));
     if (kind === 'transfer') next.transfers.splice(localIndex, 1);
     else if (kind === 'charter') next.charters.splice(localIndex, 1);
     else {
       let d = next.days[day_no - 1];
-      // Defensive fallback: if the expected day doesn't actually hold this item
-      // (an index mismatch we've been bitten by twice now), search every day
-      // instead of no-op'ing - a delete tap should never just do nothing.
+      // Fallback: if the expected day lacks the item, search every day so delete never no-ops.
       if (!d || !(d.items || []).includes(service)) {
         d = (next.days || []).find((dd) => (dd.items || []).includes(service));
       }
@@ -345,8 +275,7 @@ export default function MyTripsCart() {
   }
   checkoutRef.current = checkout;
 
-  // Bookings are a record of what was charged, so they show the amount stored
-  // against them rather than a live conversion.
+  // Booked trips show the stored charged amount, not a live conversion.
   function bookedMoney(usd, idr) {
     return currency === 'IDR'
         ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`
@@ -498,8 +427,7 @@ export default function MyTripsCart() {
     { id: 'past', label: 'Past Trip', Icon: History },
   ];
 
-  // Rendered above everything (it is a full-screen portal), so a guest who
-  // just paid sees the outcome before the cart.
+  // Payment-return waiting screen, a full-screen portal shown above the cart.
   const payReturn = returnRef ? (
     <PayWaiting
       bookingRef={returnRef}
@@ -601,8 +529,7 @@ export default function MyTripsCart() {
           if (!editDate) return;
           const r = editDate.row;
           if (r.kind === 'day' && r.day_no) {
-            // cascadeFrom only moves dates, so the time is written on top of its
-            // result - one save, or the second would overwrite the first.
+            // cascadeFrom only moves dates, so write the time onto its result in one save (two saves overwrite).
             const moved = cascadeFrom(state, r.day_no - 1, date);
             save(setItemTime(moved, r.day_no - 1, r.itemIndex || 0, time || ''));
           } else {

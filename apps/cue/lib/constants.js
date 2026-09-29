@@ -1,6 +1,5 @@
 export const WHATSAPP_NUMBER = '6285974650011';
-// Overridable so a preview build can point at a local API; production keeps
-// the Railway default when the variable is unset.
+// Override with NEXT_PUBLIC_API_BASE for a local API; defaults to the Railway production API.
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE || 'https://cahyana-api-production.up.railway.app/api';
 
@@ -14,33 +13,20 @@ export const KEY = {
   itnSynced: 'cue_itn_synced',
   token: 'cue_token',
   referral: 'cue_referral',
-  // The chat thread a guest was handed over to. It is a capability - whoever
-  // holds it can read that one conversation - so it lives beside the account
-  // token, not in anything that gets shared or logged.
+  // Chat thread id is a capability (reads that conversation); keep it private like the account token.
   chatThread: 'cue_chat_thread',
-  // Remembers that a guest chose to skip the intro. Without it the form would
-  // reappear on every page, which is the definition of pushy.
+  // Charter plan picked on the homepage, carried to the charter page (lib/charterDraft.js).
   charter: 'cue_charter_v1',
-  // The pick-up / drop-off address the guest last booked with. NOT on the account
-  // (that holds name/email/phone plus the guest-count and area preferences), so it
-  // is remembered on this device, next to the cart and the trip preferences.
+  // Last pick-up / drop-off address, kept on this device (not on the account).
   pickup: 'cue_pickup',
-  // WO2 booking gate: "this guest was about to book on <path> when we asked them to
-  // sign in" - {path, at}. Lets the magic-link return (which lands on the homepage)
-  // put them back into the booking form. Expires, see BookingProvider.
+  // {path, at} of a booking interrupted by sign-in, so the magic-link return can resume it; expires (BookingProvider).
   resumeBook: 'cue_resume_book',
   dropoff: 'cue_dropoff',
-  // Rail collapse (My Trips/Our Company/Settings, Sep 2026): a chrome
-  // preference, not a per-page setting, so one key shared across all three -
-  // collapsing it on My Trips should still be collapsed on Settings.
+  // Rail collapsed state, one key shared by My Trips, Our Company and Settings.
   railCollapsed: 'cue_rail_collapsed',
 };
 
-// Saved trips in localStorage hold product NAMES, not ids, so renaming a
-// product would leave anyone mid-planning with an item the API can no longer
-// price. Trips are migrated through this map on load; cahyana-api keeps the
-// matching LEGACY_ITEM_NAMES for requests that arrive from a page cached
-// before the rename. Keep both, and add to them rather than renaming in place.
+// Old product names in saved trips mapped to current ones; mirror of cahyana-api LEGACY_ITEM_NAMES, add, never rename.
 export const LEGACY_ITEM_NAMES = {
   'Lempuyang & Tirta Gangga': 'East Bali Tour',
   'Besakih & Taman Ujung': 'East Bali Tour',
@@ -50,35 +36,12 @@ export const LEGACY_ITEM_NAMES = {
   'Sangeh Monkey Forest & Tanah Lot': 'West Bali Tour',
 };
 
-// Mirrors fx.CURRENCIES in cahyana-api (same order = the picker's order). Prices
-// in every one of them come from the API's live rate; the site keeps no rates.
+// Mirrors fx.CURRENCIES in cahyana-api (order = picker order); rates come from the API, none stored here.
 export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP', 'SGD', 'NZD', 'CAD', 'CHF', 'JPY', 'MYR', 'HKD'];
 export const DISPLAY_GUESTS = 2;
 
-// Currency a first-time visitor sees before they pick one themselves (or before
-// their saved localStorage choice loads) - the single place to flip this site-wide.
-// Read by TripPrefsProvider only; a visitor's own manual choice always overrides it
-// and persists as before, this only controls the starting point.
-// What a first-time visitor sees, before they touch the currency picker. A
-// returning one keeps whatever they chose - this only ever decides the first
-// paint.
-//
-// USD since 24 Sep 2026 (Wayan). It was IDR, and that quietly decided which
-// PAYMENT RAIL a guest landed on: rupiah routes to DOKU, and DOKU refused a
-// card issued outside Indonesia. So a foreign guest who never opened the picker
-// was shown rupiah, sent to a rail offering QRIS, bank transfer and e-wallets -
-// none of which they hold - and then refused at the card form. This site sells
-// to foreign travellers, so the default that works for most of them is the one
-// their card can pay on.
-//
-// Indonesian guests still pick IDR in one tap and get DOKU, which is the
-// cheaper rail to settle on, so nothing is lost there beyond one tap.
+// First-visit currency (TripPrefsProvider only); USD because IDR routes to rupiah-only payment options.
 export const DEFAULT_CURRENCY = 'USD';
 
-// The `service` string a charter booking stores on the server, and therefore the
-// key its reviews are filed under. It was written out by hand in three places
-// (the cart's row builder, the itinerary builder, and now the charter page's
-// review strip); three copies of one key is how a page quietly stops finding its
-// own reviews. Transfer and airport do not need one - their service IS the route
-// name, which already comes from the catalog.
+// Server `service` key for charter bookings and their reviews; use this constant, never retype the string.
 export const CHARTER_SERVICE = 'Charter';

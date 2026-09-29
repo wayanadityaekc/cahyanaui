@@ -10,14 +10,7 @@ function Chevron({ dir }) {
   return <Ic aria-hidden="true" />;
 }
 
-// Category switcher for the listing pages: shows the section currently in view
-// and steps to the previous / next section with the arrows.
-//
-// Wayan, Sep 2026: it used to be its own pill floating in the middle of the
-// screen, which on a phone overlapped the floating chat button in the corner.
-// It is now the same bar as BookBar - chat on the left, the arrows sitting
-// where Book now sits on a detail page - so only one thing is ever stuck to
-// the bottom of the screen.
+// Mobile listing bar: current category name with prev/next arrows; shares BookBar's shell so only one bar is pinned.
 export default function SectionSwitcher({ zones = [] }) {
   const [idx, setIdx] = useState(0);
 

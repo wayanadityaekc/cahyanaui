@@ -4,8 +4,7 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useState } from 'react';
 import { BTN_BOOK } from '@/components/ui/btnBookClasses';
-// The plan list is its own component, shared with the homepage section: same
-// markup, same prices, one file. This page adds the trip fields beside it.
+// Plan list shared with the homepage charter section; this page adds the trip fields.
 import CharterPlans, { useCharterTier } from '@/components/sections/CharterPlans';
 import { readCharterDraft, saveCharterDraft } from '@/lib/charterDraft';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
@@ -20,9 +19,7 @@ import { withSymbol } from '@/components/Price';
 
 const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-// Pick-up times, every half hour across the window a charter day realistically
-// starts in. 24-hour clock, which is what the rest of the site's times use and
-// what reads the same to every nationality that books here.
+// Pick-up times 06:00-17:00 every 30 min; values stay 24-hour, labels are shown 12-hour via fmtTime.
 const TIMES = (() => {
   const out = [];
   // 06:00 to 17:00, every 30 minutes
@@ -41,15 +38,10 @@ export default function CharterBuilder() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [guests, setLocalGuests] = useState('');
-  // The plan is picked in the list and booked by the ONE button under the fields
-  // (Wayan, Sep 2026: "button cuma satu di bawah input yaitu book"). That brings
-  // back a selected-duration state, which an earlier pass had removed when every
-  // card carried its own Book button - deliberate, not a regression.
+  // Selected plan, booked by the single Book button under the fields.
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
-  // Pick up whatever was chosen on the homepage. In an effect, not in the
-  // initial state: this is a static export, and reading localStorage during the
-  // first render would make it disagree with the pre-rendered HTML.
+  // Seed the plan from the homepage draft; in an effect, not initial state, or hydration breaks.
   useEffect(() => {
     const d = readCharterDraft();
     if (!d) return;
@@ -65,8 +57,7 @@ export default function CharterBuilder() {
   const selected = CHARTER.durations.find((d) => d.dur === dur) || CHARTER.durations[0];
   const total = tier(dur);
 
-  // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
-  // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto=true)`).
+  // Adds a charters row to the cart and goes to My Trips, like every booking flow.
   function book() {
     if (!ready || total == null) return;
     save({
@@ -88,27 +79,17 @@ export default function CharterBuilder() {
     <div className="bg-white rounded-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
       <h2 className="font-head text-h2 font-semibold text-gold text-center m-0 mb-[var(--space-2)]">{CHARTER.boxTitle}</h2>
 
-      {/* Two columns from 993px: the plans on the left, the trip on the right
-          (Wayan, Sep 2026: "di desktop jadiin 2 kolom, di kiri list charternya di
-          kanan kolom inputnya"). On a phone they stack in DOM order, which is the
-          order he asked for - the list first, the fields after it.
-          993px, not 769: below that there is not enough width for a 340px field
-          column and a readable plan row side by side. FormHero only splits the
-          page into form + photo from 1200px for the same reason, one level up -
-          see the note there. */}
+      {/* Plans left, fields right from 993px (not 769: too narrow for a 340px field column); stacked on phones. */}
       <div className="flex flex-col gap-[var(--space-2)] min-[993px]:grid min-[993px]:grid-cols-[1fr_340px] min-[993px]:gap-[var(--space-3)] min-[993px]:items-start">
 
-        {/* 1 - the plan. The same list the homepage shows; here it drives the
-            Book button under the fields. */}
+        {/* 1 - the plan list (same as the homepage); it drives the Book button below. */}
         <CharterPlans value={dur} onChange={pick} area={area} heading="How long do you need the car?" />
 
         {/* 2 - the trip, then the one Book button. */}
         <div>
           <div className="flex items-center gap-[var(--space-1)] mb-[var(--space-1)]">
             <h3 className="m-0 text-h3 font-semibold text-gold">Your trip</h3>
-            {/* The surcharge note used to be two lines of grey text sitting under the
-                fields. It is an answer to a question, not something every guest needs
-                to read, so it lives behind this dot now. */}
+            {/* Surcharge note lives behind the info dot instead of under the fields. */}
             <InfoDot label="About charter prices">
               Pick-up outside Ubud adds a small surcharge. It is already counted in the prices shown.
             </InfoDot>
@@ -153,9 +134,7 @@ export default function CharterBuilder() {
             </div>
           </div>
 
-          {/* Which plan the button books, restated where the button is. On a phone
-              the list is above the fields, so by the time a guest reaches Book the
-              row they picked can be off screen. */}
+          {/* Restates the picked plan and total next to Book, since on phones the list may be off screen. */}
           <div className="mt-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-1)] [border-top:1px_solid_var(--line)] pt-[var(--space-1)]">
             <span className="text-small text-muted">{selected.name}</span>
             <span className="text-gold font-semibold text-[1.05rem] whitespace-nowrap">

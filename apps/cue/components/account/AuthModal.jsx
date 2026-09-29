@@ -10,22 +10,10 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { useAccount } from '@/state/AccountProvider';
 import OtpFields from './OtpFields';
 
-// Guests can ask for another code this often. Not a security control (the
-// server's own loginLimiter is that) - just stops a guest hammering "Resend"
-// while the first email is still in flight.
+// Resend cooldown for the code; UX only, the server's loginLimiter is the real rate limit.
 const RESEND_SECONDS = 30;
 
-// `reason="book"` = opened by the booking gate (WO2): same form, copy that says why
-// we are asking and that the trip is safe. `onSignedIn` fires instead of onClose when
-// a guest signs in (a NEW account, or a code verified), so the gate can open the held
-// booking instead of treating the popup closing as "never mind".
-//
-// STAGE, sitting alongside `view`: 'email' (the address form) or 'code' (six
-// boxes). Both `view`s ('signin' and 'create' landing on an email that already
-// has an account) go through the same 'code' stage and the same verifyCode()
-// call - one door, one mechanic, whichever way the guest arrived (28 Sep 2026,
-// Wayan: send a 6-digit code instead of a sign-in link - it works wherever the
-// guest reads the email, same device or not, which a link never could).
+// Sign-in/create modal; both views share one email -> 6-digit code stage; reason='book' fires onSignedIn.
 export default function AuthModal({ open, onClose, reason, onSignedIn }) {
   const forBook = reason === 'book';
   const { requestLogin, verifyCode, createAccount } = useAccount();
@@ -85,8 +73,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     const res = await createAccount({ name: data.name, email: data.email, phone: data.phone });
     setBusy(false);
     if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); (onSignedIn || onClose)(); return; }
-    // The email already has an account: the server already emailed it a code
-    // (same as an explicit sign-in) rather than handing this browser a login.
+    // Email already has an account: the server emailed a code, so go to the code stage (no login handed over).
     if (res.signin) { setCodeEmail(res.email); setCode(''); setStage('code'); setCooldown(RESEND_SECONDS); setOk(`You already have an account as ${res.email}.`); return; }
     setMsg(res.error || 'Sorry, we could not create your account. Please try again.');
   }

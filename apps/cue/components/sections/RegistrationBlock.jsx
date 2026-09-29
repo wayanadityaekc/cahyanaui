@@ -4,13 +4,7 @@ import { REGISTRATION as R } from '@/content/shared/registration';
 function SealIcon({ className }) { return <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />; }
 function CheckIcon({ className }) { return <Check className={className} aria-hidden="true" />; }
 
-// "Registered business" trust block for the About page. Business registration
-// details only (no personal ID numbers); verification points to the official
-// portal rather than hosting the certificate.
-// Tailwind-native (migrasi Fase 2): dulu keluarga .reg* di style.css -> utilities.
-// Varian `.company-page .reg` gak kepake React (blok ini cuma di about-us).
-// `company` = varian buat Our Company (borderless, nempel kolom) — dulu
-// `.company-page .reg-sec` + `.company-page .reg` di style.css.
+// Registered-business trust block (no personal IDs); `company` = the borderless Our Company variant.
 export default function RegistrationBlock({ company = false }) {
   const rows = [
     ['Ministry of Law Decree', R.decree],

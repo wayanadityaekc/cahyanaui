@@ -4,12 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { GRID_SLIDER } from '@/components/ui/gridClasses';
 
-// Tailwind-native (migrasi Fase 2, keluarga kartu - stage 4a: slider wrapper).
-// .slider-holder -> `group relative` (group buat hover-reveal panah). .slider-arrow
-// -> utilities 1:1: sembunyi di HP, muncul >=993px pas holder di-hover (opacity 0->1).
-// Panah cuma dari komponen Slider ini (charter/guide home/ui-kit); rule context
-// .xplore/.catsec/.guide-more .slider-arrow itu buat panah JS lama (dead di React).
-// gridClassName (.experience__grid*) MASIH legacy - di-convert stage grid berikutnya.
+// Slider arrows: hidden on phones, fade in on hover from 993px.
 const ARROW =
   'absolute top-[calc(50%-0.5rem)] [transform:translateY(-50%)] z-[5] hidden items-center justify-center w-11 h-11 ' +
   'border-none rounded-[50%] text-[1.7rem] leading-none text-green bg-[rgba(255,255,255,0.96)] ' +

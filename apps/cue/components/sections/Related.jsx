@@ -5,8 +5,7 @@ import Slider from '@/components/ui/Slider';
 import { CAROUSEL_SECTION, CAROUSEL_TITLE } from '@/components/ui/carouselSection';
 import { isHiddenTour } from '@/lib/routes';
 
-// Ported from initRelated: same type, same zone first, then the closest by
-// price. Renders nothing when fewer than 4 qualify, exactly as before.
+// Same type, same zone first, then closest by price; renders nothing when fewer than 4 qualify.
 export default function Related({ href }) {
   const me = RELATED_ITEMS.find((it) => it.href === href);
   if (!me) return null;
@@ -21,10 +20,7 @@ export default function Related({ href }) {
 
   const all = RELATED_ALL[me.type];
 
-  // Full Tailwind (B-FINAL): .related section -> utilities. Its ::before top divider
-  // is always shown (the `.crumb + .related` off-switch never matched - Related renders
-  // BEFORE the crumb on every detail page), so it's baked unconditionally. The grid
-  // context override went with the .experience__grid engine, so no marker is kept.
+  // Carousel section (with its top divider) rendered before the page crumb.
   return (
     <section className={CAROUSEL_SECTION}>
       <h2 className={CAROUSEL_TITLE}>You might also like</h2>

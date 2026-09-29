@@ -6,46 +6,13 @@ import { WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION as R } from '@/content/shared/registration';
 import FooterPayChips from './FooterPayChips';
 
-// Compact footer for the account/utility pages (WO5, Sep 2026, Wayan: "guests
-// shouldn't scroll past a full footer on Settings, My Trips, or the legal
-// pages"). Settings and My Trips are single-purpose pages a signed-in guest
-// is already using the site to finish a task on; Terms/Privacy/Cancellation
-// are all sections of Our Company (their standalone pages were retired), so
-// the whole page gets the compact shell rather than only one hash of it.
+// Pages that get the compact fixed footer instead of the full one.
 const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
 
-// Same trick Navbar's isActive() already uses, not lib/pathname.js's
-// normalizePath: static export PRERENDERS these routes at their clean path
-// ('/settings'), but a browser sitting on the final '/settings.html' file
-// hydrates with the extension - so checking pathname against ONE spelling of
-// COMPACT_PATHS disagrees between server and client and throws React #418
-// (measured: it did, on all three pages, the first time this shipped without
-// this check). Matching either spelling makes the two renders agree no
-// matter which one the pathname happens to be.
+// Match both '/x' and '/x.html' so server and client renders agree (avoids hydration error #418).
 function isCompactPath(pathname) { return COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, '')); }
 
-// Tailwind-native (migrasi Fase 2): footer (semua halaman). Dulu keluarga
-// .footer* di style.css - sekarang utilities 1:1. Footer punya ukuran teks
-// sendiri (0.8rem body, bukan --fs-body) - dipetakan eksplisit ke text-[0.8rem].
-//
-// BENTUK (Sep 2026, Wayan minta "lebih ramping" terus milih layout ini dari 3
-// yang dibangun & diukur): SATU baris grid, lima kolom di desktop -
-// brand+kontak / Explore / Company / Featured On + Follow / We Accept. Di
-// bawah 900px jadi 2 kolom dan brand-nya makan lebar penuh.
-// Hasil ukur: desktop 535 -> 274px, HP 836 -> 636px.
-//
-// Yang dibuang biar ramping: paragraf deskripsi (Wayan), dan band full-width
-// "Featured On" + "We Accept" yang masing-masing punya divider sendiri -
-// sekarang dua-duanya jadi kolom biasa, jadi footer cuma punya SATU garis
-// (copyright + baris registrasi digabung di bar bawah).
-//
-// "Featured On" DIPISAH dari "Follow" - dulu satu label nutupin Viator +
-// Tripadvisor (tempat kita di-feature) SEKALIGUS Instagram/WhatsApp/Facebook
-// (akun kita sendiri). Dua hal beda, jangan digabung lagi.
-//
-// Ukuran ikon sengaja kecil (Wayan): logo featured 18px, bulatan sosmed 22px,
-// chip bayar 20px. Ini di bawah tangga --icon-sm/md/lg - disengaja, footer itu
-// bagian paling akhir yang dibaca orang, bukan tempat narik perhatian.
+// Full footer: one 5-column grid (2 columns under 900px); Featured On and Follow stay separate columns.
 
 const CONTACT_ITEM = 'flex items-center gap-[0.55rem] text-[0.8rem] text-green opacity-90 no-underline';
 const CONTACT_LINK = `${CONTACT_ITEM} hover:opacity-100 hover:text-gold`;
@@ -59,12 +26,7 @@ const COL_A = 'no-underline text-green hover:text-gold';
 const COL_H = 'mb-[0.9rem] font-body text-h3 font-semibold tracking-normal text-gold';
 const COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 
-// "Airport Transfer" sits here, right under Transfer, as the ONE site-wide link
-// to that page (Sep 2026, Wayan: "gas footer aja bro"). /airport-transfer owns
-// the "bali airport transfer" query but was reachable from only 5 pages, while
-// /transfer had 100 through this footer and the navbar - so the page Google is
-// meant to rank had almost no internal support. The label doubles as the anchor
-// text, which is why it is the full phrase and not "Airport".
+// 'Airport Transfer' is the site-wide link to /airport-transfer; keep the full phrase, it is the SEO anchor text.
 const EXPLORE = [
   ['/tour.html', 'Tours'],
   ['/activities.html', 'Experiences'],
@@ -74,9 +36,7 @@ const EXPLORE = [
   ['/my-trips.html', 'My Trips'],
 ];
 
-// About/Contact/FAQ/Terms/Privacy/Cancellation are all sections of the Our
-// Company page now (Sep 2026, Wayan - their standalone pages are retired).
-// Each link lands directly on its section (OurCompany.jsx reads the hash).
+// Company links land on Our Company sections by hash (OurCompany.jsx reads it).
 const COMPANY = [
   ['/our-company.html#contact', 'Contact Us'],
   ['/our-company.html#about', 'About Us'],
@@ -92,34 +52,7 @@ const SOCIAL = [
   ['Facebook', 'facebook.webp'],
 ];
 
-// Single row: brand name, the two contact links (no map pin - that's the one
-// fact the full footer's grid had room for and this doesn't), copyright.
-// Same brand/contact colors as the full footer, none of its columns.
-//
-// PINNED to the bottom of the viewport (Wayan, Sep 2026: "the footer needs to
-// be sticky at the bottom, only the content scrolled") - `fixed`, not the
-// classic sticky-footer-in-flow trick (a flex column + margin-top:auto only
-// pins it once the page is shorter than the viewport; here it has to stay on
-// screen from the first paint, on a page that can be much taller than the
-// viewport, e.g. a long My Trips cart). `.footerbar` is the marker
-// AppBottomNav yields to (app.layout.jsx body padding + AppBottomNav.jsx),
-// the same "only one thing sticks to the bottom" rule BookBar/SectionSwitcher
-// already follow - these three pages never carry a bookbar/stickybar of
-// their own, so this is the only bottom bar in play on them.
-// pb- uses max() with the safe-area inset, same as BookBar/AppBottomNav: an
-// iPhone's home-indicator strip sits right where the CTA would otherwise
-// land.
-//
-// MOBILE HEIGHT MATCHES THE NAVBAR (Wayan, Sep 2026: "at least same height
-// with navbar"). It used to wrap to 3 stacked rows under 561px (measured
-// 107px against a 52.8px navbar - more than double). Now it never wraps: the
-// two contact links drop their text label to an icon under 561px (the icon
-// alone is still a real tap target, same as the navbar's own chat/cart
-// icons), and the copyright line - which the navbar doesn't carry either -
-// hides there too. Baseline height >=561px is unchanged (60px, already
-// within 2.4px of that width's own 57.6px navbar). Measured after: 49px
-// mobile, under the 52.8px navbar there rather than matching it exactly -
-// the icon-only row still needs a little of its own breathing room.
+// Compact footer, fixed to the bottom; .footerbar is what body padding and AppBottomNav key off. Icons only under 561px.
 function CompactFooter() {
   return (
     <footer className="footerbar fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 min-[561px]:pb-[max(1.25rem,env(safe-area-inset-bottom))] pb-[max(1rem,env(safe-area-inset-bottom))] text-green bg-[#ebe8e2] [border-top:1px_solid_rgba(0,0,0,0.08)]">

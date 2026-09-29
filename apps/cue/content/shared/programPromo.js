@@ -1,7 +1,4 @@
-// Cross-sell slides for the auto-sliding promo band on listing pages (Sep 2026,
-// Wayan item #5). Copy/images reused verbatim from each program's own page/home
-// section (LISTINGS.tour/activities/destinations, CHARTER, TRANSFER, AIRPORT,
-// GUIDE_HUB, ABOUT) rather than invented, so it stays consistent site-wide.
+// Cross-sell slides for the listing promo band; copy and images reused from each program's own page.
 export const PROGRAM_PROMO = [
   {
     id: 'tour',
@@ -25,14 +22,9 @@ export const PROGRAM_PROMO = [
     id: 'charter',
     kicker: 'Charter',
     title: 'Private Car Charter in Bali',
-    // Mirrors CHARTER.sub again (Sep 2026, Wayan: "gas samain teksnya juga bro").
-    // The old line kept "go anywhere, stop anywhere, at your own pace" - the slogan
-    // the charter page itself dropped for a fact you can use. Same trim as the
-    // transfer card: the page's first two sentences, without its hours/deposit clause.
+    // Mirrors the first two sentences of CHARTER.sub; update both together.
     text: 'Your own car and local driver for the day. You choose the route, your driver knows the roads.',
-    // Same photo as the charter page itself (Sep 2026, Wayan: "gas samain foto
-    // promo charter bro"). road-ubud was a traffic jam, and this card sits on
-    // three listing pages selling the opposite.
+    // Same photo as the charter page itself.
     img: 'handara-gate.webp',
     href: '/charter.html',
     cta: 'Build charter',

@@ -6,29 +6,17 @@ import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
-// Options (was "Details") - the two ways every program can be booked. This
-// replaces a facts grid that just repeated the hero hooks; the choice between
-// Standard and Exclusive is the genuinely useful, page-specific decision. Prices
-// are live and currency-correct (Price component), not hardcoded.
+// Icons for the Standard / Exclusive rows in the Details list.
 function CarIcon() { return <Car strokeWidth={1.7} aria-hidden="true" />; }
 function TicketIcon() { return <Banknote strokeWidth={1.7} aria-hidden="true" />; }
 
-// Informational cards: the two ways every program can be booked. Choosing the
-// actual mode happens in the booking form's Standard/Exclusive toggle - these
-// cards just explain the difference.
+// Icons for the practical notes rows in the Details list.
 function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
 function BagIcon() { return <Backpack strokeWidth={1.7} aria-hidden="true" />; }
 function InfoIcon() { return <Info strokeWidth={1.7} aria-hidden="true" />; }
 function CardIcon() { return <CreditCard strokeWidth={1.7} aria-hidden="true" />; }
 
-// Details - the two booking options plus practical, generic-but-real notes that
-// hold for every day tour (pick-up, what to bring, things to note, payment), all
-// in one list. Deliberately not per-tour specifics, so nothing here is invented.
-//
-// Single activities/performances (ATV, Kecak Dance, etc.) have no car-tour
-// Standard/Exclusive split - the ticket is always in the price - so they get a
-// one-row "included" explanation instead of the two tour tiers, and skip the
-// temple/sarong line, which isn't true for every activity.
+// Details list: tour tiers plus generic pick-up/bring/notes rows; activities get one 'included' row and no temple line.
 function GoodToKnow({ isActivity }) {
   const rows = isActivity
     ? [
@@ -60,19 +48,7 @@ function GoodToKnow({ isActivity }) {
   );
 }
 
-// Included / excluded - the SAME <InfoBoxes> the charter, transfer and airport
-// pages use (Sep 2026, Wayan: "include dan not included yang ada di semua page
-// ubah bro, samain kayak styling charter"). Two framed boxes side by side, the
-// "not" half tinted cream, no per-row marker - the radio bullet this used to
-// draw is gone from tour and destination pages with it. The uppercase label
-// heading went too; the box title is the shared one now.
-//
-// variant goes to BOTH <InfoBox> (frame + tint) and <InfoBoxList> (row rules +
-// muted text). Passing it to only one is a real bug that already happened once
-// on the transfer page and is invisible to the eye - see CLAUDE.md.
-//
-// The length guards stay: today every tour and destination has both lists, but a
-// lone box would sit at half width in the two-column grid rather than break.
+// Shared InfoBoxes pair; pass variant to BOTH InfoBox (frame, tint) and InfoBoxList (row rules, muted text).
 function Inclusions({ included, excluded }) {
   return (
     <InfoBoxes>
@@ -90,10 +66,7 @@ function Inclusions({ included, excluded }) {
   );
 }
 
-// Detail page sections (Overview / Details / Included / Reviews). Everything is
-// on one scrollable page - the sections are stacked and always visible - and the
-// sticky tab strip is a jump nav: clicking a tab scrolls to its section, and the
-// active tab follows the section currently in view (scrollspy).
+// Detail page sections stacked on one page; the sticky strip is a jump nav whose active item follows scroll.
 export default function DetailTabs({ overview, priceItem, bookType, included, excluded, reviewService }) {
   const sections = [{ id: 'overview', label: 'Overview', content: overview }];
   if (priceItem) {
@@ -104,12 +77,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     });
   }
   if ((included && included.length) || (excluded && excluded.length)) {
-    // heading:false - the two boxes already say "What's included" / "Not included",
-    // so an "Included" h2 on top of them just says it a third time (Sep 2026,
-    // Wayan: "title 'include' itu seharusnya di hapus bro, sudah jelas dengan
-    // container include dan not included aja"). The label stays on the jump tab,
-    // and the section carries it as aria-label so the heading is only gone
-    // visually, not for a screen reader.
+    // No visible heading (the boxes already say it); the label stays on the jump nav and as the section aria-label.
     sections.push({
       id: 'included',
       label: 'Included',
@@ -127,22 +95,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   const stripRef = useRef(null);
   const secRefs = useRef({});
 
-  // Wayan (14 Sep 2026): dropped the sticky-card-with-internal-scroll design
-  // (2 attempts, see git history) - nesting a second scrollable region inside
-  // a sticky card kept feeling "locked" on scroll (a nested overflow region
-  // can swallow the scroll gesture, especially on touch). Back to a simple,
-  // proven mechanic: only the pill-shaped tab strip is sticky (bound to this
-  // component's own height via normal position:sticky - it un-sticks once its
-  // parent's bottom edge scrolls past), the card underneath just scrolls with
-  // the page like everything else. No internal overflow, no scroll traps.
-  //
-  // stripRef is the OUTER sticky wrapper (top: headerH, flush against the
-  // navbar), not the visible pill track - its `pt-[10px]` bakes the "jangan
-  // nempel banget, kasi space dikit" breathing room in as opaque padding
-  // (bg-white) instead of an empty gap, so nothing peeks through that gap
-  // once the strip is stuck. Its offsetHeight already includes that padding,
-  // so headerH + stripH alone is the full occluded height - no separate gap
-  // constant to add on top.
+  // Scrollspy; only the strip is sticky (no nested scroll area), and stripRef includes its opaque top padding.
   useEffect(() => {
     const ids = sections.map((s) => s.id);
     function onScroll() {
@@ -177,18 +130,11 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  // Tailwind-native (full-portable): wrapper/strip/tab/section-heading + section
-  // wrapper -> utilities. Section pakai [&+&] (jarak antar-section) + [&_.stops]/
-  // [&_.stop] (context override buat engine .stop yg masih CSS). .info__list*
-  // (checklist bullet, kosakata konten) tetep shared - dikonversi di pass-nya.
+  // Card with the sticky jump-nav strip on top and the stacked sections below.
   return (
     <div className={CARD_WRAP}>
       <div className={CARD}>
-        {/* Wraps the visible pill track with the small breathing-room gap baked
-            in as opaque padding (bg-white), not an empty gap above it - a
-            transparent gap there let whatever section is mid-scroll peek
-            through the moment the track is stuck (Wayan caught this on the
-            Reviews tab: the tail end of Included's list showed through). */}
+        {/* Breathing room above the track is opaque padding (bg-white), so content never shows through once it sticks. */}
         <div ref={stripRef} className={STRIP}>
           <nav
             className={TRACK}

@@ -5,10 +5,7 @@ import { API_BASE } from '@/lib/constants';
 
 const ReviewsContext = createContext(null);
 
-// Star ratings shown on tour cards site-wide pull from here - one fetch of
-// /reviews/summary (approved reviews only, grouped per service - avg_rating +
-// count), instead of every card fetching its own. Mirrors PricingProvider's
-// lookup(name) pattern. No currency/guests dependency, just fetch on mount.
+// One fetch of /reviews/summary for every card's star rating, looked up by service name.
 export function ReviewsProvider({ children }) {
   const [summary, setSummary] = useState(null);
 

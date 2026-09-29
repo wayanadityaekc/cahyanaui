@@ -2,20 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-// The behaviour every dialog on the site shares (WO7 fix 3, 29 Sep 2026). Shape
-// borrowed from shadcn Dialog / Radix and Preline overlay: what makes a dialog a
-// dialog for a keyboard or screen-reader user is not the look, it is these four things:
-//   1. focus moves INTO it when it opens (onto the box itself, not a field - focusing
-//      an input would raise the phone keyboard and trip the iOS focus zoom),
-//   2. Tab cycles inside it and cannot reach the page behind,
-//   3. Escape closes it - the TOPMOST dialog only, and never when a Select/Overlay
-//      popup is open (that popup closes first),
-//   4. focus goes back to whatever opened it when it closes.
-// Both dialog shells (Modal.jsx, ModalPresence.jsx) call this; nothing else should
-// re-implement any of it.
-//
-// A dialog whose onClose is a no-op stays locked: BookConfirmModal passes a no-op while
-// the paid-waiting screen is up, so Escape does nothing there - exactly as intended.
+// Shared dialog behaviour for Modal and ModalPresence: focus the box, trap Tab, Escape closes topmost only, restore focus.
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -40,10 +27,7 @@ export default function useDialog({ shown, onClose, escape = true }) {
     stack.push(token);
 
     if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '-1');
-    // A shell that fades in with a CSS `visibility` transition (Modal.jsx) is still
-    // visibility:hidden on the very first frame, and a hidden element refuses focus -
-    // measured: the first call silently did nothing. Try now, then again once the
-    // transition has started.
+    // Retry focus after a frame: a shell still visibility:hidden on the first frame refuses focus.
     function focusBox() { node.focus({ preventScroll: true }); return document.activeElement === node; }
     let raf = 0;
     let timer = 0;

@@ -16,10 +16,7 @@ function iso(d) {
 }
 
 
-// withTime folds the start time INTO this panel (Sep 2026, Wayan: "satuin dengan
-// datenya"), the shape shadcn's CalendarWithTime uses - and the footer slot it needs
-// already existed here, DatePopup has been using it for its Apply row.
-// Default OFF, so the four callers that only want a date are untouched.
+// withTime adds a TimeChoice footer and Done button to the panel; default off for date-only callers.
 export default function DateField({
   label = 'Date',
   value,
@@ -57,9 +54,7 @@ export default function DateField({
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
 
-  // The trigger names both halves of what the panel now holds ("30 Sept 2026 · 8:00 AM").
-  // Both variants go through this - the rich one (booking form) used to print the date
-  // only, so a guest who picked a time in the panel could not see it from the outside.
+  // Trigger label shows date and time together in both variants when withTime is on.
   function label12(v) { return (withTime && time ? `${fmtDate(v)} · ${fmtTime(time)}` : fmtDate(v)); }
 
   const cells = [];
@@ -112,11 +107,7 @@ export default function DateField({
               id={id ? `${id}-time` : undefined}
             />
           </div>
-          {/* self-end, NOT the row's items-center: the time column carries a label
-              above its field and the button does not, so centering against the whole
-              stack puts the button 11.5px (half the label + its margin) above the
-              field it sits next to. Both are --btn-h/--field-h, so aligning the
-              bottoms lines them up exactly instead of nudging by a magic number. */}
+          {/* self-end, not items-center: the time column has a label above it, so bottom-align Done with the field. */}
           <button type="button" className={`${CAL_APPLY} self-end`} disabled={!value} onClick={() => setOpen(false)}>
             Done
           </button>
@@ -144,8 +135,7 @@ export default function DateField({
           <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
         )}
       </button>
-      {/* Always portal-mounted once mounted (not gated on `open`) so the panel has a
-          "closed" frame to transition FROM - see Select.jsx for the same fix. */}
+      {/* Panel stays portal-mounted after first mount so it has a closed frame to transition from. */}
       {mounted && createPortal(panel, document.body)}
       {mounted && <Overlay open={open} onClose={() => setOpen(false)} />}
     </div>

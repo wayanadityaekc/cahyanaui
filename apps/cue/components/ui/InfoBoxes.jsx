@@ -1,23 +1,6 @@
-// Included / Not included and the explanation blocks under it, as BOXES.
-//
-// Sep 2026, Wayan picked option B from the marker sheet: the per-row marker is
-// gone entirely. The old radio bullet (filled circle / empty circle) borrowed the
-// shape of a form control and sat in the middle of a reading column; here the box
-// itself says "this is a group", so nothing has to be repeated on every row. Rows
-// are separated by a hairline instead.
-//
-// SHARED ON PURPOSE (Wayan: "biar bisa di pakai juga di page transfer"): the
-// charter details body (via the Prose 'boxes' block) and the transfer/airport
-// "Good to know" block render THIS component, so there is one shape to change,
-// not two that drift apart. Anything that needs the boxes gets them from here.
-//
-// Desktop = two columns, mobile = stacked rows. 768 is the same breakpoint the
-// old two-column checklist used (INFO_LISTS / DetailTinfo), kept so these blocks
-// still turn at the width the rest of the site turns at.
+// Shared included/not-included boxes and explanation columns (charter, transfer, airport, detail pages, listings).
 
-// mb matches the column gap on purpose: when two rows of boxes sit under each
-// other (charter), the space between the rows reads the same as the space
-// between the columns instead of the rows touching.
+// Two-column box grid, stacked under 768px; bottom margin equals the column gap so stacked rows space evenly.
 export const BOX_GRID =
   'grid grid-cols-2 gap-[var(--space-4)] mb-[var(--space-4)] ' +
   'max-[768px]:grid-cols-1 max-[768px]:gap-[var(--space-3)]';
@@ -27,33 +10,20 @@ import { PROSE_LINK } from '@/components/ui/infoClasses';
 
 const BOX_TEXT =
   `[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0 ${PROSE_LINK}`;
-// The FRAME (outline + radius + padding) belongs to the included/excluded pair
-// ONLY (Sep 2026, Wayan: "garis di luar kontainer juga selain include not include
-// juga hilangin"). Everything else in a row is a plain COLUMN - which is what he
-// asked for in the first place ("pakai kolom"). A column carries no padding
-// either, so its text lines up with the card's own left edge and with the
-// headings above and below it, instead of sitting 1.2rem in from nothing.
+// Frame (border, radius, padding) is only for the included/excluded pair; other boxes are plain columns.
 const BOX_FRAMED =
   `${BOX_TEXT} [border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[1.1rem_1.2rem]`;
-// variant 'no' = the "not included" half: cream so the pair reads as two states
-// at a glance, which is the job the empty circle used to do.
+// The 'no' variant is tinted cream so the pair reads as two states.
 const BOX_NO = `${BOX_FRAMED} bg-cream`;
 
 export const BOX_TITLE = 'font-body text-h3 font-semibold text-gold mb-[0.7rem]';
 
-// Rows carry no marker. The muted colour on the 'no' variant is the SAME muted
-// token the rest of the site uses - deliberately not the old washed-out #8a8578,
-// which read as disabled rather than as information.
+// Rows have no marker; the 'no' variant uses the --color-muted token, not the old #8a8578.
 const ROWS_BASE =
   'list-none m-0 p-0 [&_li]:font-body [&_li]:text-body [&_li]:font-normal ' +
   '[&_li]:leading-[var(--lh-body)] [&_li]:py-2 ' + PROSE_LINK;
 
-// The hairline between rows belongs to the INCLUDED/EXCLUDED pair ONLY (Sep 2026,
-// Wayan: "gua mau komponen include dan exclude aja yang isi border line yang lain
-// jangan"). Those two are a spec you read line by line, so the rules help; any
-// other list in a box (route ideas, etc.) is closer to prose and the rules just
-// made it look like a table. That is exactly what `variant` marks, so the rules
-// follow it - a box with no variant gets no rules, no extra flag to remember.
+// Row hairlines only when a variant is set (the included/excluded pair); other lists stay unruled.
 const ROWS_RULED =
   '[&_li]:[border-bottom:1px_solid_var(--line)] [&_li:last-child]:[border-bottom:none] ' +
   '[&_li:last-child]:pb-0';

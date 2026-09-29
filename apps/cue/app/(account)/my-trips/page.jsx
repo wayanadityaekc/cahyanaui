@@ -9,18 +9,10 @@ export const metadata = {
 
 export default function Page() {
   return (
-    // No pb-20 here (unlike other .tourprog pages): RailLayout's scrollContent
-    // mode caps the frame to fit the viewport and the fixed footer already
-    // reserves its own space via body's has-[.footerbar] padding - a second
-    // 80px on top of both is what pushed the page 80px past 100dvh and let
-    // the whole page scroll instead of just the frame's content.
+    // No pb-20 here: RailLayout scrollContent sizes the frame to the viewport and body already pads for the footer.
     <div className="tourprog">
       <JsonLd page="my-trips" />
-    {/* Same shell as Our Company (rail + content). Wayan, Sep 2026: "my trips
-        punya dua judul numpuk, hapus yang gede, sisain yang kecil" - the big
-        page h1 that used to sit here duplicated the rail's own "My trips"
-        label right below it. Dropped; Our Company (same shell) has never had
-        a page-level h1 either - each section carries its own heading. */}
+    {/* Same rail shell as Our Company; no page-level h1 (the rail's "My trips" label is the title). */}
     <div className={RAIL_PAGE_SCROLL}>
       <MyTripsCart />
     </div>

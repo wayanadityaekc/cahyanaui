@@ -1,26 +1,9 @@
-// Which rail a payment goes through - the display mirror of providers.js in
-// cahyana-api. The server decides; this decides what the guest is TOLD before
-// they commit, so the two must agree (tools/check-pay-agree.mjs compares them).
-//
-// The rule (Wayan, 29 Sep 2026): DOKU is the DEFAULT for every currency, and
-// the guest may choose PayPal instead. Overseas cards were approved on the DOKU
-// account, so the rail that settles locally is the one we lead with.
-//
-//   doku   - card, QRIS, bank transfer, e-wallet. ALWAYS charged in rupiah. For
-//            a guest shown another currency the rupiah figure is the exact one
-//            and their own currency is an estimate - their bank converts.
-//   paypal - charged in the guest's own currency, exactly. Rupiah falls back to
-//            USD because PayPal cannot settle it.
-//
-// This replaces "rupiah -> DOKU, everything else -> PayPal" (20 Sep 2026) and
-// the DOKU_ALL / DOKU_READY switches. The choice is the guest's now, so the
-// site and the server can no longer disagree about where a currency belongs.
+// Display mirror of cahyana-api providers.js: DOKU default (always IDR), PayPal by choice; check-pay-agree compares them.
 
 export const RAILS = ['doku', 'paypal'];
 export const DEFAULT_RAIL = 'doku';
 
-// Mirrors SUPPORTED in cahyana-api/paypal.js, trimmed to the currencies this
-// site actually offers. IDR is absent on purpose: PayPal does not settle it.
+// Mirrors SUPPORTED in cahyana-api/paypal.js; IDR is absent because PayPal can't settle it.
 const PAYPAL_SETTLES = new Set(['USD', 'AUD', 'EUR', 'GBP', 'SGD', 'NZD', 'CAD', 'CHF', 'JPY', 'MYR', 'HKD']);
 const PAYPAL_FALLBACK = 'USD';
 
@@ -40,9 +23,7 @@ export function chargeCurrency(currency, rail = DEFAULT_RAIL) {
   return PAYPAL_SETTLES.has(cur) ? cur : PAYPAL_FALLBACK;
 }
 
-// The two choices at the payment step. On screen they are ICONS ONLY (Wayan,
-// 29 Sep 2026: "icon, no text"); `label` is the accessible name, and `how` is
-// the explanation that lives behind the (i) beside the heading.
+// Payment-rail choices: icons on screen, `label` is the accessible name, `how` is the (i) explanation.
 export const RAIL_CHOICES = [
   {
     id: 'doku',
@@ -56,9 +37,7 @@ export const RAIL_CHOICES = [
   },
 ];
 
-// One sentence, or null when there is nothing to warn about: said when the
-// guest is about to be charged in a currency other than the one every price on
-// the page is shown in.
+// One-sentence note when the charge currency differs from the displayed one, else null.
 export function noteFor(currency, rail = DEFAULT_RAIL) {
   const cur = String(currency || 'USD').toUpperCase();
   const bill = chargeCurrency(cur, rail);

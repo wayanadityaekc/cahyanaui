@@ -1,19 +1,10 @@
-// The chat's brain. No model, no network of its own: every answer is either an
-// FAQ entry the site already publishes or a figure read from the live catalog.
-//
-// WHY THAT MATTERS MORE THAN IT SOUNDS. This site sells on clear, upfront
-// pricing. An assistant that composes a plausible-looking price is the one
-// failure that damages the actual product, so this file is built so that it
-// CANNOT compose one: it either has a catalog figure to show or it says it
-// does not know and offers Wayan.
+// Chat answers from published FAQ or the live catalog only; it must never compose a price, else it hands off to Wayan.
 import { FAQ } from '@/content/shared/faq';
 import { LISTINGS } from '@/content/shared/listings';
 import { CHARTER } from '@/content/shared/charter';
 import { TOPICS, HUMAN_WORDS, GREETINGS, THANKS, CHAT_COPY } from '@/content/shared/chat';
 
-// FAQ answers are stored as HTML because the FAQ page renders them. A chat
-// bubble wants sentences, so the tags come off - but the text inside <strong>
-// stays, because that is where the numbers live ("$10 deposit").
+// Strip HTML from FAQ answers for chat bubbles, keeping the text inside tags (that is where the numbers are).
 function stripTags(html) {
   return String(html)
     .replace(/<[^>]+>/g, ' ')
@@ -23,9 +14,7 @@ function stripTags(html) {
     .trim();
 }
 
-// Keyed by the question text, and it THROWS when that text no longer exists.
-// A topic quietly pointing at a deleted FAQ entry would answer nothing at all,
-// which is exactly the kind of failure nobody notices for months.
+// Throws when the FAQ question text no longer exists, so a topic cannot silently point at a deleted entry.
 function faqAnswer(question) {
   const hit = FAQ.find((f) => f.q === question);
   if (!hit) throw new Error(`chat: no FAQ entry titled "${question}"`);
@@ -64,9 +53,7 @@ const STOP = new Set([
 function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
 function words(s) { return norm(s).split(' ').filter((w) => w.length > 2 && !STOP.has(w)); }
 
-// A price the guest can trust, or nothing. `fallback` is the figure printed on
-// the card in the same build, so it is never invented - but the catalog wins
-// whenever it has answered, because that is what the guest is actually charged.
+// Catalog price if it has answered, else the card's fallback from the same build; never invented.
 function priceOf({ priceName, fallback }, ctx) {
   const live = priceName && ctx.lookup ? ctx.lookup(priceName) : null;
   return (live && live.standard && live.standard.display) || fallback || '';
@@ -124,9 +111,7 @@ const BUILDERS = { tourPrices, airportPrice, charterPrices, startTimes };
 
 // ---- matching ----
 
-// One named thing the guest asked about, or null. Scored on how much of the
-// item's own name the question repeats, so "monkey forest" finds the Ubud tour
-// while a bare "tour" matches nothing (and falls through to the price topic).
+// Match a named item by how many of its own name words the question repeats; a bare 'tour' matches nothing.
 function matchItem(q) {
   const qw = words(q);
   if (!qw.length) return null;
@@ -136,8 +121,7 @@ function matchItem(q) {
     if (!iw.length) return;
     let hits = 0;
     iw.forEach((w) => { if (qw.includes(w)) hits += 1; });
-    // Needs at least two of the item's own words, or one word long enough to be
-    // distinctive ("lempuyang", "jatiluwih"). One short shared word is noise.
+    // Needs two of the item's words, or one distinctive word of 7+ letters.
     const strong = iw.some((w) => w.length >= 7 && qw.includes(w));
     if (hits >= 2 || (hits === 1 && strong)) {
       const score = hits + (strong ? 1 : 0);
@@ -163,17 +147,13 @@ function matchTopic(q) {
       if (w.includes(' ') ? n.includes(w) : qw.includes(w)) { strong = true; score += 3; }
     });
     if (!score) return;
-    // A topic that matched one of ITS OWN distinctive words beats one that only
-    // caught generic vocabulary, whatever the raw scores are. Without this,
-    // "how much is the airport pickup" answers with the tour price list:
-    // "how much" outscores "airport" and the guest is told the wrong number.
+    // A topic matching one of its own distinctive words beats one that only matched generic words.
     const better = !best
       || (strong && !best.strong)
       || (strong === best.strong && score > best.score);
     if (better) best = { topic: t, score, strong };
   });
-  // One generic word on its own is noise, not a question. Needs a phrase, a
-  // distinctive word, or two generic words agreeing.
+  // Need a score of at least 2; one generic word alone is noise.
   return best && best.score >= 2 ? best.topic : null;
 }
 
@@ -184,16 +164,7 @@ function answerTopic(topic, ctx) {
   return build(ctx);
 }
 
-/**
- * The only entry point. Returns one of:
- *   { kind: 'answer',  text, rows?, link? }
- *   { kind: 'handoff', text }   - not answerable here, so it goes to Wayan
- *
- * There is no third outcome. A question this file cannot answer is a question
- * for a person, whatever it was about (Sep 2026, Wayan: "kalo pertanyaan aneh
- * langsung connect ke gua aja"). The polite decline that used to sit here read
- * as a closed door to the one guest who most needed answering.
- */
+// Entry point; returns { kind: 'answer', text, rows?, link? } or { kind: 'handoff', text } - no third outcome.
 export function answerFor(question, ctx = {}) {
   const q = String(question || '').trim();
   // Only reachable from a caller that is not the panel; the panel drops empties.
@@ -203,9 +174,7 @@ export function answerFor(question, ctx = {}) {
   if (GREETINGS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.hello };
   if (THANKS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
-  // A situation, not a lookup. Checked before anything else can answer it:
-  // "my wife is in a wheelchair, can she do the tour" matched the price topic
-  // and got a price list back, which reads as not having listened at all.
+  // Situations (HUMAN_WORDS) go to a person before any lookup can answer them.
   const n = norm(q);
   const qw0 = words(q);
   const human = HUMAN_WORDS.some((w) => (w.includes(' ') ? n.includes(w) : qw0.includes(w)));
@@ -227,10 +196,6 @@ export function answerFor(question, ctx = {}) {
   const topic = matchTopic(q);
   if (topic) return { kind: 'answer', ...answerTopic(topic, ctx) };
 
-  // Nothing matched, so it goes to Wayan. We deliberately do NOT try to judge
-  // whether the question was "about us" first: that judgement was a word list,
-  // and a word list gets the odd question wrong in the expensive direction -
-  // the guest whose question does not sound like the other ones is exactly the
-  // guest worth talking to.
+  // Nothing matched, so hand off to Wayan; do not add a word-list 'off topic' decline.
   return { kind: 'handoff', text: CHAT_COPY.handoff };
 }

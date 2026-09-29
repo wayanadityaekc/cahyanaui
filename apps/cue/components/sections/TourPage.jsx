@@ -20,23 +20,13 @@ import DetailTabs from '@/components/sections/DetailTabs';
 import { isHiddenTour } from '@/lib/routes';
 import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
 
-// Tailwind-native (migrasi Fase 2): teks stop (.stop__num/.stop__name/.stop__desc)
-// -> utilities; .stop__body (tanpa CSS) -> drop class; .stop--link (link + hover
-// lift) -> utilities. DIPERTAHANKAN sbg CSS: .stop (grid layout engine, di-scope
-// .dtabs__sec .stop) + .stop__image (primitif foto shared, .stop__image > img).
+// Stop text styles (number, name, description); the stop grid and image strings live in ui/stopClasses.
 export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
 export const STOP_DESC = 'font-body text-body leading-[var(--lh-body)] font-normal';
-// Linked stop = the same STOP grid layout (incl. its `stop` hook for DetailTabs'
-// [&_.stop]:max-w-none) plus link-only styling.
-// Breadcrumb (migrasi Fase 2): presentasi -> utilities. Kelas `crumb` DIPERTAHANKAN
-// sbg marker: dipakai anchor sibling `.crumb + .related::before` (matiin divider dobel).
-// The foot crumb on a page WITHOUT the gallery hero: the band around it is this
-// page's business, the trail's own type and colour are the shared component's.
+// Foot breadcrumb band for pages without the gallery hero; the trail's own type and colour belong to Breadcrumb.
 export const CRUMB_FOOT = 'crumb max-w-none m-0 py-5 px-6 [border-top:1px_solid_var(--line)] [border-bottom:1px_solid_var(--line)] [&>ol]:justify-center';
-// The hero itself now lives in DetailHero (shared with AttractionPage and the guide
-// articles). Its class names are re-exported here because other modules already import
-// them from this file.
+// Hero class strings re-exported from DetailHero because other modules import them from here.
 export { HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/DetailHero';
 
 function Stop({ s }) {
@@ -56,25 +46,14 @@ function Stop({ s }) {
       </div>
     </>
   );
-  // Stops are plain text. They used to link to /attractions/<refId>.html, which
-  // dropped a guest mid-decision onto a page quoting a second, single-destination
-  // price - the confusion this change exists to remove. The way through is the
-  // destination carousel at the bottom, so the tour sidebar stays the only price
-  // on screen while they read.
+  // Stops are plain text on purpose: linking them would show a second, single-destination price mid-decision.
   return <article className={STOP}>{inner}</article>;
 }
 
 export default function TourPage({ data }) {
   const slug = (data.__page || '').replace(/^\//, '');
   const destinations = tourDestinations(slug, ATTRACTION_CONTENT);
-  // With the gallery hero the breadcrumb moves to the TOP of the page, where Viator
-  // and GetYourGuide put it and where Google usually surfaces it - so the foot copy
-  // is dropped rather than printed twice. Nothing else depends on it: the
-  // BreadcrumbList JSON-LD is generated separately, and the `.crumb + .related`
-  // divider off-switch it used to anchor never matched (see Related.jsx).
-  // Every tour now opens with the gallery hero (Wayan, Sep 2026: "Rollout bro").
-  // The photos are the page's own - see lib/galleryFrom. A page that later gets a
-  // hand-picked `gallery` in its content file overrides this automatically.
+  // Every tour uses the gallery hero (crumb on top, none at the foot); photos from galleryFrom unless `gallery` is set.
   const gallery = galleryFrom(data);
   return (
     <>
@@ -104,8 +83,7 @@ export default function TourPage({ data }) {
         overview={gallery.length ? (
           // Gallery hero carries the photos, so the overview is text only.
           <div id={data.stopsId}>
-            {/* `desc` is the hero intro line; with the gallery hero it moves down
-                here (Wayan: "deskripsi di bawah title taruh di overview aja"). */}
+            {/* The hero intro (`desc`) is shown here as the Overview intro. */}
             <TourOverview intro={data.desc} items={data.items} />
           </div>
         ) : (

@@ -20,21 +20,11 @@ import MyReviews from './MyReviews';
 import DeleteAccountModal from './DeleteAccountModal';
 import SignInPrompt from '@/components/account/SignInPrompt';
 
-// Danger-zone button, same shape as the rest of the page's own local
-// BTN_DANGER pattern in DeleteAccountModal - kept ghost-red here since this
-// one just OPENS the confirmation, it isn't the destructive action itself.
+// Ghost red button that only opens the delete confirmation; the destructive button is in DeleteAccountModal.
 const BTN_DANGER_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--color-err)] bg-white text-err cursor-pointer hover:bg-err hover:text-white`;
 const SECTION_TITLE = 'font-head font-medium text-h3 text-green m-0 mb-3';
 
-// Same rail shell as My Trips + Our Company (Sep 2026, Wayan: "make it like
-// shadcn's sidebar-08" - collapsible sidebar + a breadcrumb in the header,
-// applied to all three account pages). Settings only ever has ONE section, so
-// the rail's real job here is chrome consistency - and a place a future
-// settings sub-section (notifications, payment methods, ...) would slot into
-// without a second shell to build. `mobileNav={true}` skips RailLayout's
-// phone list+back screen entirely (there is only one item to list); the
-// title/description that used to live in the page above this component now
-// lives here, so it shows in every auth state, matching what it always did.
+// Same RailLayout shell as My Trips and Our Company; one item, so mobileNav skips the phone list/back screen.
 const RAIL_ITEMS = [{ id: 'account', label: 'Account Settings', Icon: UserRound }];
 
 function SettingsShell({ children }) {
@@ -65,12 +55,7 @@ export default function AccountSettings() {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  // Deleting clears `account` (deleteAccount() in AccountProvider), which
-  // would otherwise unmount this component straight into the generic
-  // "Sign in to manage your details" line the instant the modal's own
-  // request succeeds - the confirmation popup just vanishing mid-action.
-  // This flag survives that transition so there's a real confirmation
-  // screen instead.
+  // Keeps a confirmation screen after delete, since clearing `account` would otherwise swap to the sign-in prompt.
   const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
@@ -135,9 +120,7 @@ export default function AccountSettings() {
   return (
     <SettingsShell>
     <div id="settings-root" data-settings>
-      {/* Large avatar (WO3: "default / initials only - no photo upload"). Same
-          initialsOf() the navbar's small circle uses, so the initials are never
-          computed two different ways. */}
+      {/* Initials avatar (no photo upload), using the same initialsOf() as the navbar. */}
       <div className="flex items-center gap-4 mb-6">
         <span
           className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
@@ -179,12 +162,7 @@ export default function AccountSettings() {
         <input className={CONTACT_INPUT} type="text" id="st-stay" value={stay} onChange={(e) => setStay(e.target.value)} placeholder="Ubud & nearby" />
       </div>
       {msg && <small role="status" className={REFMSG}>{msg}</small>}
-      {/* Was className="contact__btn" - a class from the retired static site that
-          was swept out of style.css with the rest of it. Nothing warns about a
-          class with no rule, so this rendered as a RAW browser button: 19px tall
-          against everything else's 33.6, grey, square, 13.3px Arial. Measured,
-          not guessed. If you write a bare className string, grep that the rule
-          exists - same trap as .tinfo on the airport page. */}
+      {/* Use BTN_CTA, not a bare className: a class with no CSS rule renders as a raw browser button with no warning. */}
       <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>{busy ? 'Saving...' : 'Save changes'}</button>
       <button className={BTN_PILL} onClick={logout}>Sign out</button>
 

@@ -1,18 +1,11 @@
-// Subhero (page hero) -> utilities (B-FINAL). Fully self-contained now: the old
-// `subhero`/`subhero--overlap` marker classes are gone (their CSS mechanics - the gold
-// divider ::before/exclusions and the overlap next-section rule - were removed/converted).
-// The default bg image is overridden by an inline backgroundImage on consumers that set
-// one (GuideHub, LegalPage).
+// Page subhero, self-contained; consumers may override the default bg image inline.
 export const SUBHERO =
   'relative flex items-center justify-center min-h-[60vh] pt-28 px-[var(--space-3)] pb-[var(--space-6)] ' +
   'text-center bg-green bg-cover bg-center ' +
   'bg-[image:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.55)),url(/assets/images/homepage_hero.webp)]';
-// Overlap subhero: identical to SUBHERO now (no marker needed). The following section
-// pulls up over it via SUBHERO_OVERLAP_NEXT applied to that section directly.
+// Overlap subhero is identical to SUBHERO; the next section pulls up via SUBHERO_OVERLAP_NEXT.
 export const SUBHERO_OVERLAP = SUBHERO;
-// The section that follows an overlap subhero: -5rem pull-up, rounded top, white sheet
-// (was `.subhero--overlap + section`). Applied on the next <section> in the 3 consumers
-// (LegalPage, faq, itinerary).
+// Section after an overlap subhero: -5rem pull-up, rounded top, white sheet.
 export const SUBHERO_OVERLAP_NEXT =
   'relative z-[2] mt-[-5rem] rounded-t-[var(--r-xl)] bg-white';
 export const SUBHERO_CONTENT =

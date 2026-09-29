@@ -70,9 +70,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       if (!arr.length) return;
       const lo = Math.min(...arr);
       const hi = Math.max(...arr);
-      // Only the low end carries the "Rp"/"$" symbol (unchanged shape) - the
-      // bare high-end number still gets the small-thousands treatment for IDR
-      // so both ends of the range read consistently.
+      // Only the low end carries the currency symbol; the high end still gets IDR small-thousands styling.
       const hiText = isIdr ? withDeemphasizedThousands(hi.toLocaleString(loc)) : hi.toLocaleString(loc);
       out[cat] = lo === hi ? <>from {fmt(lo)}</> : <>{fmt(lo)}–{hiText}</>;
     });
@@ -172,8 +170,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
           <ChevronDown className={CHEV} />
         </button>
-        {/* Portal-mounted once mobile+mounted (not gated on `open`) so the sheet has a
-            "closed" frame to transition FROM instead of popping in already-open. */}
+        {/* Portal-mounted once mobile and mounted (not gated on `open`) so the sheet has a closed frame to animate from. */}
         {mounted && isMobile && createPortal(panel, document.body)}
         {mounted && isMobile && <Overlay open={open} onClose={() => setOpen(false)} />}
         {(!isMobile || !mounted) && panel}

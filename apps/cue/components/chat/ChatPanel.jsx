@@ -19,13 +19,7 @@ import {
   SIGNIN_BAR, SIGNIN_TEXT, SIGNIN_BTN,
 } from './chatClasses';
 
-// The support panel. Every answer comes out of lib/chatAnswers, which can only
-// return something the site already publishes - so nothing here can invent a
-// price or promise a tour we do not run.
-//
-// The short pause before an answer is deliberate: an instant swap reads as a
-// page updating, a beat reads as somebody replying. It is 400ms, not a
-// pretend-typing delay long enough to waste the guest's time.
+// Support chat panel; answers only come from lib/chatAnswers (published facts), shown after a short 400ms pause.
 const THINK_MS = 400;
 
 let seq = 0;
@@ -42,21 +36,14 @@ export default function ChatPanel({ open, onClose }) {
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Once a guest has been handed over, typed messages go to Wayan instead of to
-  // the matcher. Deliberately one or the other: a panel that sometimes answers
-  // and sometimes forwards would leave the guest unsure who is reading.
-  // The sign-in popup, mounted here the way ReviewGate mounts its own. A guest
-  // can chat without it - it is an offer, not a door.
+  // Sign-in popup for the chat; optional, guests can chat without signing in.
   const [authOpen, setAuthOpen] = useState(false);
-  // Whether we have already said hello by name, so signing in mid-conversation
-  // greets once rather than on every re-render.
+  // Tracks whether we've greeted by name so a mid-conversation sign-in greets only once.
   const greeted = useRef(false);
 
   const [thread, setThread] = useState(null);
   const [sending, setSending] = useState(false);
-  // The email is asked AFTER the handover, and only when it would change
-  // anything: outside Wayan's hours, or once a wait has gone by with no reply.
-  // 'idle' = not asked, 'ask' = on screen, 'done' | 'skip' = settled.
+  // Email ask after handover, only when useful: 'idle' not asked, 'ask' on screen, 'done' | 'skip' settled.
   const [mail, setMail] = useState('idle');
   const [mailDraft, setMailDraft] = useState('');
   const [mailErr, setMailErr] = useState('');
@@ -64,20 +51,14 @@ export default function ChatPanel({ open, onClose }) {
   const lastSeen = useRef(0);
   const heard = useRef(false);
 
-  // The live channel. `live` is whether the socket is up, and it is the switch
-  // between "the socket tells us" and "we poll like before" - not a thing the
-  // guest is ever shown. A guest behind a proxy that blocks WebSockets gets the
-  // old behaviour rather than silence.
+  // Socket state: `live` switches between socket updates and the polling fallback; never shown to the guest.
   const [live, setLive] = useState(false);
   const [ownerHere, setOwnerHere] = useState(false);
   const [typingUntil, setTypingUntil] = useState(0);
   const sock = useRef(null);
-  // Deduped by the database id, because both paths can carry the same message:
-  // the socket pushes it, and a catch-up fetch after a reconnect reads it again.
+  // Dedupe messages by database id; the socket and a reconnect catch-up can both deliver the same one.
   const seenIds = useRef(new Set());
-  // Read inside connect() without putting presence in its dependency list -
-  // re-memoising connect() re-memoises ask(), and a stale ask() is exactly the
-  // bug that once sent handovers to Wayan with no name on them.
+  // Presence kept in a ref so connect() and ask() are not re-memoised (a stale ask() once sent nameless handovers).
   const ownerHereRef = useRef(false);
   const lastTyped = useRef(0);
 
@@ -86,33 +67,25 @@ export default function ChatPanel({ open, onClose }) {
     [pricing],
   );
 
-  // Wayan: "sehabis login langsung sambut mereka hi name user". Fires on open
-  // for anyone already signed in, and the moment a guest signs in without
-  // leaving the panel. Once per conversation, never on a re-render.
+  // Greet a signed-in guest by first name once per conversation, on open or right after signing in.
   useEffect(() => {
     const name = account && String(account.name || '').trim().split(/\s+/)[0];
     if (!name || greeted.current) return;
     greeted.current = true;
     const line = { id: uid(), from: 'bot', text: CHAT_COPY.hello.replace('{name}', name), chips: SUGGESTIONS };
     setLog((prev) => (
-      // Opened while already signed in: the opener has not been read yet, so it
-      // is REPLACED. Appending gave two greetings and two sets of chips.
-      // Signed in mid-conversation: appended, because then it is news.
+      // Replace the unread opener when opened signed-in (avoids two greetings); append when signing in mid-chat.
       prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]
     ));
   }, [account]);
 
-  // A thread from an earlier visit. Read in an effect, never during render -
-  // this is a static export, so the first paint has to match the prerendered
-  // HTML.
+  // Restore an earlier thread in an effect, not during render, so first paint matches the static HTML.
   useEffect(() => {
     const id = readThread();
     if (id) setThread(id);
   }, []);
 
-  // One place turns a message from Wayan into a line on screen, whichever way it
-  // arrived. Everything advances lastSeen, including the guest's own messages, so
-  // a catch-up asks for as little as possible.
+  // Turns owner messages into log lines from any source; every message advances lastSeen to keep catch-ups small.
   const takeOwner = useCallback((list) => {
     const fresh = [];
     list.forEach((m) => {
@@ -126,9 +99,7 @@ export default function ChatPanel({ open, onClose }) {
     setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
   }, []);
 
-  // Everything said since the last id we saw. Called on EVERY socket connect,
-  // including reconnects, and that is what makes a dead socket cost one request
-  // instead of a lost reply.
+  // Fetch everything since the last seen id; must run on EVERY socket connect, or replies sent while it was down are lost.
   const catchUp = useCallback(async () => {
     try {
       const { gone, messages } = await pollThread(thread, lastSeen.current);
@@ -143,8 +114,7 @@ export default function ChatPanel({ open, onClose }) {
     }
   }, [thread, takeOwner]);
 
-  // The socket, only while the panel is open and only once there is a thread:
-  // before the handover there is nothing for anyone to say.
+  // Open the socket only while the panel is open and a thread exists.
   useEffect(() => {
     if (!open || !thread) return undefined;
     const s = openChatSocket(thread, {
@@ -158,9 +128,7 @@ export default function ChatPanel({ open, onClose }) {
     return () => { sock.current = null; s.close(); };
   }, [open, thread, catchUp, takeOwner]);
 
-  // The fallback, and it is not a formality: this is the whole behaviour for a
-  // guest whose network will not carry a WebSocket. It stops the moment the
-  // socket is up and comes back if it drops.
+  // Polling fallback every 5s whenever the socket is down; this is the whole behaviour for guests without WebSockets.
   useEffect(() => {
     if (!open || !thread || live) return undefined;
     catchUp();
@@ -168,8 +136,7 @@ export default function ChatPanel({ open, onClose }) {
     return () => clearInterval(t);
   }, [open, thread, live, catchUp]);
 
-  // A phone that slept has a socket that looks open and is not, and the ping
-  // takes up to 25s to notice. Coming back to the tab is a better moment to ask.
+  // Catch up when the tab becomes visible again; a slept phone's socket looks open but isn't.
   useEffect(() => {
     if (!open || !thread) return undefined;
     function onShow() { if (document.visibilityState === 'visible') catchUp(); }
@@ -177,8 +144,7 @@ export default function ChatPanel({ open, onClose }) {
     return () => document.removeEventListener('visibilitychange', onShow);
   }, [open, thread, catchUp]);
 
-  // Typing expires on its own. A "typing" left on screen because the last frame
-  // was the last one he sent is worse than never showing it.
+  // Typing indicator expires on its own so a stale 'typing' never stays on screen.
   const wayanTyping = typingUntil > Date.now();
   useEffect(() => {
     const ms = typingUntil - Date.now();
@@ -201,16 +167,14 @@ export default function ChatPanel({ open, onClose }) {
     return () => { clearTimeout(t); document.removeEventListener('keydown', onKey); };
   }, [open, onClose, authOpen]);
 
-  // Hands over straight away. Nothing is asked first - the guest already typed
-  // the question, and a form in front of somebody mid-sentence is a brake.
+  // Hand the question to Wayan straight away, without asking for details first.
   const connect = useCallback(async (question) => {
     if (sending) return;
     setSending(true);
     try {
       const id = await startThread({
         question,
-        // Whoever we already know. Wayan opens the thread with a name on it
-        // instead of "Guest", and can answer by email if the tab is gone.
+        // Send whatever we know about the guest so the thread opens with a name and email.
         name: (account && account.name) || '',
         email: (account && account.email) || '',
         page: typeof window !== 'undefined' ? window.location.pathname : '',
@@ -218,8 +182,7 @@ export default function ChatPanel({ open, onClose }) {
       setThread(id);
       setLog((prev) => [...prev, {
         id: uid(), from: 'bot',
-        // Presence beats the timetable when we have it: the hours line is a guess
-        // about when he usually answers, an open dashboard is this minute.
+        // Owner presence beats the office-hours guess when choosing the status line.
         text: `${CHAT_COPY.connected} ${
           ownerHereRef.current ? CHAT_COPY.hoursHere
             : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
@@ -250,16 +213,14 @@ export default function ChatPanel({ open, onClose }) {
     setTimeout(() => {
       const res = answerFor(q, ctx);
       const msg = { id: uid(), from: 'bot', text: res.text, rows: res.rows, link: res.link };
-      // Two outcomes only: answered here, or handed to Wayan. A dead end is
-      // the one outcome that is never acceptable, and a polite decline is one.
+      // Only two outcomes: answered here or handed to Wayan; never a dead end or a polite decline.
       if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(q); }
       setLog((prev) => [...prev, msg]);
       setThinking(false);
     }, THINK_MS);
   }, [ctx, thinking, sending, thread, connect]);
 
-  // Outside his hours the wait is certain, so the offer comes right away. Inside
-  // them it waits, and never appears at all if he answers first.
+  // Ask for an email right away outside Wayan's hours; inside them only after a wait with no reply.
   useEffect(() => {
     if (!thread || mail !== 'idle') return undefined;
     // We already have an address - nothing to ask for.
@@ -273,9 +234,7 @@ export default function ChatPanel({ open, onClose }) {
     if (quiet && mail === 'idle' && !heard.current) setMail('ask');
   }, [quiet, mail]);
 
-  // Announced at most every two seconds. A frame per keystroke is a frame per
-  // keystroke, and one every two seconds keeps the other end's indicator alive
-  // for the whole time somebody is writing.
+  // Send a typing frame at most every 2s, enough to keep the other side's indicator alive.
   function onDraft(v) {
     setDraft(v);
     if (!thread || !sock.current) return;
@@ -299,9 +258,7 @@ export default function ChatPanel({ open, onClose }) {
     }
   }
 
-  // data-live on the panel says whether this guest is on a socket or has fallen
-  // back to polling. Not shown and not styled: from the guest's side the two are
-  // meant to look identical, so a harness needs a way to tell them apart.
+  // data-live marks socket vs polling for tests; not shown or styled, both look identical to the guest.
   return (
     <>
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
@@ -324,14 +281,7 @@ export default function ChatPanel({ open, onClose }) {
         </div>
 
         <div className={BODY} ref={bodyRef}>
-          {/* Shown once, before the first chat. It replaces the conversation
-              rather than covering it, so the guest can see what they opened.
-              "Skip for now" is not decoration: a form with no way past is a
-              gate, and the instruction was explicitly not to force anyone. */}
-          {/* Guests chat freely; this is the offer to sign in, not a gate
-              (Sep 2026, Wayan: "kalo belum login bisa juga ngchat tapi as a
-              guest, cuma kasi user tombol buat login"). It disappears the
-              moment they are signed in. */}
+          {/* Optional sign-in offer for guests; chatting works without it and it disappears once signed in. */}
           {hydrated && !account && (
             <p className={SIGNIN_BAR}>
               <span className={SIGNIN_TEXT}>{CHAT_COPY.signedOut}</span>
@@ -423,8 +373,7 @@ export default function ChatPanel({ open, onClose }) {
   );
 }
 
-// One reply from us: the sentence, then whatever it came with - price lines,
-// a page to open, the way to reach Wayan, or the questions worth asking next.
+// One bot reply: the sentence plus any price rows, page link, handoff or suggested questions.
 function BotReply({ m, onAsk }) {
   return (
     <>

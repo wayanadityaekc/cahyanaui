@@ -24,9 +24,6 @@ export default function GuideHome() {
     <section className="px-[var(--container-x)]" id="guides" aria-labelledby="guide-home-title">
       <div className="max-w-[1200px] mx-auto">
         <div className="text-left mb-7">
-          {/* Wayan, Sep 2026: "trim the extra body text under Guides & Information,
-              it's too wordy" - dropped, title + the search box right below already
-              say what this is. Trim only, section otherwise untouched. */}
           <h2 className={`${SECTION_TITLE} ${ST_LEFT}`} id="guide-home-title">Guides &amp; Information</h2>
         </div>
 

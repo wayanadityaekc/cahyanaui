@@ -21,16 +21,12 @@ import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const perPerson = bookType === 'experience' || bookType === 'performance';
-  // Which tours stop here, for the comparison box in the booking card. Reverse lookup
-  // on refId, so a stop added to a tour shows up on this page by itself.
+  // Tours that stop here (reverse lookup on refId), for the comparison box in the booking card.
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = toursContaining(slug);
-  // Same rollout as the tours (Wayan, Sep 2026: "Rollout bro") - the gallery is
-  // built from this page's own hero photo and section photos, and a hand-picked
-  // `gallery` in the content file overrides it.
+  // Gallery built from the hero and section photos; a hand-picked `gallery` in content overrides it.
   const gallery = galleryFrom(data);
-  // The last crumb step used to be a second hand-typed copy of the title, so the two
-  // could drift. It reads the short name straight off `title` now.
+  // Last crumb step reads the short name from data.title so crumb and title can't drift.
   const crumb = (data.crumb || []).map((p, i, a) =>
     i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p);
   return (
@@ -82,10 +78,7 @@ export default function AttractionPage({ data }) {
         bookType={bookType}
         included={data.included}
         excluded={data.excluded}
-        /* The key a review is WRITTEN under has to be the key the rating is READ
-           under, and that is the catalog name (bookItem) - it is also what pricing
-           uses, so it never moves. This read data.title until the short names were
-           introduced, at which point the two would have drifted apart on 13 pages. */
+        // Reviews are written and read under the catalog key (bookItem), not the display title.
         reviewService={data.bookItem || data.title}
       />
       </div>
@@ -102,14 +95,12 @@ export default function AttractionPage({ data }) {
       )}
       </div>
       <BookCta item={data.bookItem} />
-      {/* perPerson: the same flag the sidebar gets, so the bar's unit and the
-          form's unit can never disagree (experiences show the total for the guest count, tours per car). */}
+      {/* Pass the same perPerson flag as the sidebar so the bar's unit matches the form's. */}
       <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
-      {/* With the gallery hero the breadcrumb prints at the TOP of the page, so
-          the foot copy is dropped rather than shown twice - same as TourPage. */}
+      {/* With the gallery hero the crumb is at the top, so the footer crumb only renders without one. */}
       {data.crumb && !gallery.length && (
         <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />
       )}

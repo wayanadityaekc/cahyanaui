@@ -7,37 +7,7 @@ import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_ONLY } from '@/components/ui/pwaClasses';
 
-// The bottom bar an installed app gets. It is NOT a second copy of the navbar:
-// in app mode the navbar hands its chat and cart icons over to this (see
-// APP_HIDE in Navbar), so nothing is in two places at once. What it buys is one
-// tap instead of two - today the main destinations sit behind the hamburger.
-//
-// Wayan picked the four: Home, Program, My Trip, Chat. Guide / Our Company /
-// Settings stay in the hamburger, which stays in the navbar - they are read
-// once, not returned to.
-//
-// WHY IT DISAPPEARS ON SOME PAGES. Only one thing may be stuck to the bottom of
-// the screen (CLAUDE.md), and 71 pages already have a sticky bar: BookBar on 68
-// detail pages, SectionSwitcher on 3 listings. Wayan chose "Book bar menang", so
-// this yields to them.
-//   The condition is "the PAGE has a bar", not "the bar is on screen right now".
-//   BookBar already hides itself while the booking form is in view, so tying
-//   this to its visibility would make the two swap places as the guest scrolls.
-//   `:has(.stickybar)` matches the element whether or not it is displayed, which
-//   is exactly the stable per-page answer we want. That selector also outranks
-//   the display utility below on specificity (0,2,1 vs 0,1,0), so no `!` is
-//   needed to win - verified in the browser, not assumed.
-// TWO yield rules, not one, and the reason is measured: `:has()` matches an element
-// whether or not it is DISPLAYED, and the two bars do not cover the same widths.
-// BookBar shows below 993, which is exactly this bar's own range, so it yields to
-// it everywhere. SectionSwitcher stops at 767 - yielding to it above that left a
-// listing page at 768-992 with NO bar at all, both of them hidden. Caught by the
-// harness, invisible on a phone.
-// Third yield (WO5+, Sep 2026): the compact footer on Settings/My Trips/Our
-// Company is fixed at the bottom too - Wayan asked for it pinned there. Not
-// width-scoped like the other two: the compact footer runs at every width, so
-// this bar has to give way at every width on those three pages, same as it
-// would to a bookbar/stickybar.
+// Installed-app bottom bar (navbar hands it chat/cart); hidden on pages with a bookbar, stickybar (<768) or footerbar.
 const BAR =
   `${APP_ONLY} [body:has(.bookbar)_&]:hidden max-md:[body:has(.stickybar)_&]:hidden [body:has(.footerbar)_&]:hidden ` +
   'fixed inset-x-0 bottom-0 z-[95] items-stretch ' +
@@ -80,9 +50,7 @@ export default function AppBottomNav() {
         </span>
         My Trip
       </a>
-      {/* The navbar's launcher is display:none in app mode and this one is
-          display:none in a tab, so exactly one is reachable at a time and the
-          panel is never mounted twice (two panels would mean two sockets). */}
+      {/* Only one chat launcher is reachable at a time (navbar in a tab, this in app mode), so the panel never mounts twice. */}
       <ChatLauncher className={on(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
     </nav>
   );

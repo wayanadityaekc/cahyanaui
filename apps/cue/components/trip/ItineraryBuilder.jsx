@@ -26,16 +26,7 @@ import { defaultSlot } from '@/content/shared/timeSlots';
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-// Presentational `.itn-*` classes -> utilities (B-FINAL). The itn2 layout engine,
-// #itn-days slider, field/day/trip families are ALL utilities now; the old CSS is
-// removed from style.css. Only `.itn-badge` (rendered in Navbar) lives elsewhere.
-// The itn2 order-reflow is done with [order:N] + [display:contents] utilities on the
-// elements directly (no anchor classes needed); `.itn-day` is kept ONLY as a marker so
-// the desktop day-slider child selector `[&>.itn-day]` in ITN_DAYS can target the cards.
-// text-[length:...] so a var font-size isn't parsed as a color.
-// bg image via inline style (not bg-[url(...)]) so the bundler doesn't hash/move
-// the asset to /_next/static/media - keeps the exact /assets/images path the old
-// CSS used (background-position/size stay as utilities).
+// Builder styles; `.itn-day` is only a marker for ITN_DAYS [&>.itn-day], bg image inline to keep its path.
 const ITN_SUGGEST = 'relative overflow-hidden py-[1.25rem] px-[1.35rem] rounded-lg bg-cover bg-center before:content-[""] before:absolute before:inset-0 before:[background:linear-gradient(180deg,rgba(18,32,22,0.68),rgba(18,32,22,0.8))] [&>*]:relative [order:1]';
 const ITN_SUGGEST_BG = { backgroundImage: 'url(/assets/images/ubud-tour-card.jpg)' };
 const ITN_SUGGEST_T = 'font-body text-[length:var(--fs-h3)] font-semibold text-white min-[993px]:text-[length:var(--fs-body)] min-[993px]:pb-[0.55rem] min-[993px]:mb-[0.6rem] min-[993px]:border-b min-[993px]:border-b-[rgba(247,243,234,0.35)]';
@@ -57,22 +48,13 @@ const ITN_SUMMARY_LABEL = 'text-[length:var(--fs-small)] font-medium text-gold-l
 const ITN_SUMMARY_AMT = 'mt-[0.15rem] mb-[0.1rem] text-[2rem] leading-[1.15] min-[993px]:text-[1.6rem]';
 const ITN_SUMMARY_SUB = 'text-[length:var(--fs-small)] text-[rgba(247,243,234,0.72)]';
 
-// .tour-type* Standard/Exclusive toggle (B-FINAL). Only consumer is this builder.
-// Dead in old CSS (not reproduced): .tour-type__toggle--static + :disabled (no static
-// toggle rendered). `.tourprog .tour-type--card{display:none}` kept as [.tourprog_&]:hidden.
-// Active state = full string swap (not base+is-active) so no font-weight/color/bg order clash.
+// Standard/Exclusive toggle; active state is a full string swap to avoid utility order clashes.
 const TT_CARD = 'flex flex-wrap items-center gap-[0.4rem_0.7rem] mt-3 [.tourprog_&]:hidden';
 const TT_TOGGLE = 'inline-flex p-[3px] border border-[rgba(34,32,28,0.5)] rounded-md bg-[rgba(34,32,28,0.08)]';
 const TT_BTN = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-sm font-body text-[length:var(--fs-label)] font-medium text-green bg-transparent cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
 const TT_BTN_ON = 'py-[0.3rem] px-[0.85rem] [border:none] rounded-sm font-body text-[length:var(--fs-label)] font-semibold text-white bg-gold cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
 
-// .itn2* itinerary layout engine (B-FINAL). Mobile: single flex column, order reflow
-// (side becomes display:contents so its children reorder among the itn2 flex items:
-// suggest 1, trip 2, days/main 3, add 4, total 5). Desktop (>=993): grid 380 + 1fr, side
-// = a card column. The order values are KEPT at every breakpoint (no desktop reset) to
-// match HEAD exactly: the old `.itn2__side > *{order:0}` desktop reset was defeated by
-// specificity (`.itn2__side > .itn-trip` at 0,2,0 beats `> *` at 0,1,0), so add(4) sits
-// above total(5) in the side column on desktop too. #itn-days is the desktop day slider.
+// Layout: mobile flex column reordered via [order:N] (side is display:contents); desktop grid 380px + 1fr.
 const ITN2 = 'max-w-[760px] mx-auto flex flex-col gap-6 min-[993px]:max-w-[1320px] min-[993px]:grid min-[993px]:grid-cols-[380px_minmax(0,1fr)] min-[993px]:[align-items:start]';
 const ITN2_SIDE = '[display:contents] min-[993px]:flex min-[993px]:flex-col min-[993px]:gap-5';
 const ITN2_MAIN = '[order:3] flex flex-col gap-6 min-w-0';
@@ -80,24 +62,15 @@ const ITN2_PANEL = 'p-0 bg-transparent';
 const ITN2_ADD = 'block w-full mt-[1.25rem] p-[0.95rem] [border:1.5px_dashed_var(--color-green)] rounded-md bg-white font-body text-[1rem] font-semibold text-green cursor-pointer [transition:background-color_var(--dur)_ease,color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-green hover:text-white [order:4] min-[993px]:mt-0';
 // #itn-days desktop slider (mobile: days stack normally).
 const ITN_DAYS = 'min-[993px]:flex min-[993px]:gap-4 min-[993px]:overflow-x-auto min-[993px]:overflow-y-hidden min-[993px]:[scroll-snap-type:x_mandatory] min-[993px]:[touch-action:pan-x_pan-y] min-[993px]:pb-3 min-[993px]:[scrollbar-width:none] min-[993px]:[&::-webkit-scrollbar]:hidden min-[993px]:[&>.itn-day]:flex-[0_0_300px] min-[993px]:[&>.itn-day]:[scroll-snap-align:start] min-[993px]:[&>.itn-day]:mb-0';
-// .itn-day__fields grid + .field wrapper (in-itn context: mb-0, min-w-0) + label + the
-// raw input/select styling (.itn-day__fields .field input/select). .itn-ovr is dead.
-// Trip fields: 2-col mobile, 1-col desktop in the side (.itn2__side .itn-trip__fields).
+// Day and trip field grids: two columns, trip fields go to one column in the desktop side panel.
 const ITN_DAY_FIELDS = 'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-[0.8rem] mb-[0.9rem]';
 const ITN_TRIP_FIELDS = 'grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-[0.8rem] mb-0 min-[993px]:grid-cols-[1fr]';
-// The label used to be styled from here with [&_label]: - one more copy of the
-// same four numbers. It carries FIELD_LABEL itself now.
+// Field wrapper; labels use FIELD_LABEL directly.
 const ITN_FIELD = 'mb-0 min-w-0';
 const ITN_FIELD_FULL = `${ITN_FIELD} [grid-column:1/-1]`;
-// Effective style of a field control inside `.itn-day__fields .field` (the trip-fields
-// wrapper had BOTH itn-day__fields+itn-trip__fields, so both text + date inputs hit it):
-// base (border/radius/font/color) + .itn-day__fields .field input (w/min-w/height/pad
-// 0.55rem 0.65rem/bg). Date input additionally hits .field input[type="date"]
-// (line-height 1.4 + appearance:none) - same padding wins by source order.
+// Field control inside the day/trip field grids, built on FIELD_INPUT.
 const ITN_FIELD_INPUT = `min-w-0 ${FIELD_INPUT} font-body text-[length:var(--fs-field)] text-green`;
-// One start time PER ITEM, not per day: a day can hold two programmes and Wayan's
-// rule is that each gets its own hour. Capped in width so it reads as a small control
-// inside the item row, not as another full-width field.
+// One start time per item, not per day (a day can hold two programmes); width-capped as a small control.
 const ITN_ITEM_TIME = 'mt-[0.6rem] max-w-[190px]';
 
 function addDays(ds, n) {
@@ -198,8 +171,7 @@ export default function ItineraryBuilder() {
     });
   }
 
-  // WO2: a guest sent off to sign in from this page comes back here holding a
-  // resume marker - open the booking form for them, as if they had tapped again.
+  // A guest sent to sign in from here comes back with a resume marker; reopen the booking form for them.
   useResumeBooking(rows.length > 0 && rows.every((r) => r.date), book);
 
   return (

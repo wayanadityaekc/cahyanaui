@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { API_BASE } from '@/lib/constants';
 
-// Tailwind-native (migrasi): .trust* -> utilities 1:1 dari style.css.
-// - Divider emas otomatis dimatiin lewat before:content-none (dulu .trust::before).
-// - Padding vertikal = --section-gap (2.25rem=py-9) dari grup padding global lama.
-// - bg cream cuma di homepage (.home .trust) -> jadi prop `cream`, bukan di-bake.
-// - Margin homepage tetep di-drive parent .home>section (tag-based, masih jalan).
+// Featured-on / stats band; the cream background is opt-in via the `cream` prop.
 const CLS = {
   base:
     "max-w-[1100px] mx-auto mt-0 mb-6 py-9 px-[var(--container-x)] text-center flex flex-wrap items-center justify-center " +

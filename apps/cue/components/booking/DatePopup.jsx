@@ -13,19 +13,7 @@ function iso(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-// SATU BENTUK PANEL TANGGAL BUAT SELURUH WEB (Sep 2026, Wayan: "buat default date
-// pickernya kalo di klik itu sebagai pop up bukan muncul dari bawah"). Dia dulu
-// `panelDateSheet`: bottom-sheet di bawah 768px, popup ke-center di desktop — jadi
-// tamu HP ketemu DUA bentuk buat pertanyaan yang sama, tergantung dia nge-tap tanggal
-// di form booking (`DateField`, selalu popup) atau di My Trips / Book Now (ini).
-// Sekarang dua-duanya pakai `panelBookdate` yang sama. `panelDateSheet` +
-// `PANEL_HEAD_SHEET` UDAH DIHAPUS (dead) — kalau mau balik ke sheet, tulis ulang.
-//
-// withTime asks for the start time in the SAME panel (Sep 2026, Wayan: "ini pake di
-// tiap date, kalo user milih date di booking form udah langsung milih jam"), the same
-// prop DateField takes and the same TimeChoice control - the Apply row it sits next to
-// was already here. onPick then hands back (date, time); callers that ignore the second
-// argument keep working.
+// Centred date popup (same panelBookdate as DateField); withTime adds a start-time control, and onPick gets (date, time).
 export default function DatePopup({
   open,
   title = 'Select date',
@@ -60,9 +48,7 @@ export default function DatePopup({
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  // Stay portal-mounted once mounted (not gated on `open`) so the sheet/backdrop have
-  // a "closed" frame to transition FROM - `overlay`/`panelBookdate` already carry the
-  // open/closed classes, they just weren't getting a chance to animate between them.
+  // Stays portal-mounted after first open (not gated on `open`) so the panel has a closed frame to animate from.
   if (!mounted) return null;
 
   const today = iso(new Date());
@@ -78,9 +64,7 @@ export default function DatePopup({
       <div className={panelBookdate(open)}>
         <div className={PANEL_HEAD_BOOKDATE}>
           <h3 className={PANEL_HEAD_H3}>{title}</h3>
-          {/* PANEL_CLOSE, bukan PANEL_CLOSE_SHEET: yang itu ke-hide di atas 768px
-              (bener buat sheet, karena sheet cuma ada di HP). Popup ke-center butuh
-              tombol tutup di SEMUA lebar. */}
+          {/* PANEL_CLOSE, not PANEL_CLOSE_SHEET: the sheet variant hides above 768px, but this popup needs close at every width. */}
           <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={onClose}>&times;</button>
         </div>
         <div className={PANEL_BODY}>
@@ -120,9 +104,7 @@ export default function DatePopup({
           ) : (
             <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
           )}
-          {/* self-end only with the time control: it brings a label the button does
-              not have, so the row's items-center would sit the button 11.5px high.
-              The plain hint row has no label and stays centred. */}
+          {/* self-end only with the time control: its label would otherwise leave Apply sitting higher than the field. */}
           <button type="button" className={`${CAL_APPLY}${withTime ? ' self-end' : ''}`} disabled={!sel} onClick={() => { onPick(sel, time); onClose(); }}>
             Apply
           </button>

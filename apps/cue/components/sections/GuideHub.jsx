@@ -12,10 +12,7 @@ import { useMemo, useState } from 'react';
 import GuideCard from '@/components/cards/GuideCard';
 import { GUIDE_HUB } from '@/content/shared/guide-hub';
 
-// Tailwind-native (migrasi Fase 2): section kategori + nav container + menu dropdown.
-// DIPERTAHANKAN CSS: .guide-cat-toggle (nempel ke shared .hs-chev, ada aria state) &
-// .guide-cat__title (override shared .section__title -> kena source-order trap).
-// Menu di-hide via atribut `hidden` (UA [hidden]{display:none}).
+// Guide hub category section, nav container and floating category menu (PopMenu).
 const GC_SECTION = 'mt-[2.4rem] [scroll-margin-top:80px]';
 const GC_NAV = 'relative flex-[0_0_auto] flex order-2 [border-left:1px_solid_var(--line)]';
 const GC_MENU = 'absolute right-0 top-[calc(100%_+_6px)] min-w-[220px] bg-white [border:1px_solid_var(--line)] rounded-md overflow-hidden z-20';

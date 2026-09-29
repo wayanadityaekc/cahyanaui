@@ -13,8 +13,7 @@ const PICK_CATS_SRC = [
   { key: 'experience', label: 'Activities & Performances', cats: ['experience', 'performance'] },
 ];
 
-// Tailwind-native (migrasi Fase 2): .pick-cats/.pick-cat (isolated ke komponen ini)
-// -> utilities, CSS-nya dihapus.
+// Category picker styles, local to this component.
 const PICK_CATS = 'flex flex-col gap-[0.6rem]';
 const PICK_CAT = 'block w-full py-[0.95rem] px-4 text-center [border:1px_solid_var(--line)] rounded-md bg-cream font-body font-semibold text-green no-underline transition-[border-color,background-color,scale] duration-[var(--dur)] ease-[ease] hover:border-gold hover:bg-[#efe9db]';
 const PICK_CAT_BTN = `${PICK_CAT} cursor-pointer [font-size:inherit]`;
@@ -23,15 +22,7 @@ const LINK_ICON = 'flex-none w-9 h-9 grid place-items-center rounded-[50%] bg-wh
 const LINK_NAME = 'font-semibold text-green';
 const LINK_SUB = 'block text-small text-muted mt-[0.1rem]';
 
-// Rombak (Sep 2026, Wayan) - dua mode:
-//   mode="link" (default, My Trips): kategori -> diarahin ke halaman listing beneran
-//     (foto/harga/detail). User pilih item di sana, buka detail page, klik Book ->
-//     BookSidebar.jsx otomatis redirect balik ke /my-trips.html. Dulu popup nge-list
-//     item LANGSUNG di dalam modal (instant-add tanpa tanggal/foto/detail) - diganti
-//     karena user gak sempet liat apa yang mereka tambahin.
-//   mode="pick" (ItineraryBuilder, "add to THIS day"): TETEP in-modal 2-step lama
-//     (kategori -> item -> onPick(name)) - halaman itinerary nyimpen konteks "hari
-//     keberapa" yang ilang kalau di-redirect keluar, jadi mode ini gak diubah.
+// mode 'link' sends a category to its listing page; mode 'pick' picks an item in-modal (keeps the itinerary day context).
 export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) {
   const pricing = usePricing();
   const [cat, setCat] = useState(null);

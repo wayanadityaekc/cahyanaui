@@ -16,8 +16,7 @@ export default function ContactForm({ company = false }) {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
-  // Clearing the field's own error as it is typed in keeps the message from sitting
-  // there contradicting what the guest just fixed.
+  // Clear a field's error as the guest types in it.
   function set(k) {
     return (e) => {
       const { value } = e.target;

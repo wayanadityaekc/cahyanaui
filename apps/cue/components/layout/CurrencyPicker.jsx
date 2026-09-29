@@ -5,10 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { CURRENCIES } from '@/lib/constants';
 
-// Tailwind-native (full-portable). `variant`: 'navbar' (ml-auto di kluster akun) /
-// 'hero' (tombol seukuran field di search form) / 'default'. Catatan: opsi aktif
-// dulu di-scope `.acct__curopt.is-active` tapi JSX nge-set aria-selected -> highlight
-// gak pernah muncul (bug lama). Direplikasi apa adanya (no active bg) biar zero-diff.
+// Currency dropdown; variants 'navbar' (ml-auto), 'hero' (field-sized) and 'default'. Active option has no highlight.
 function wrap(v) { return `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`; }
 const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-white font-body text-field text-green cursor-pointer';
 function curbtn(v) {
@@ -18,10 +15,7 @@ function curbtn(v) {
 }
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-// Was an instant `hidden` attribute snap - now fades+lifts in (element stays mounted,
-// only opacity/transform/pointer-events toggle, so the transition actually plays).
-// Capped + scrollable since the list grew to 12 currencies (Sep 2026): uncapped it
-// ran past the bottom of the account menu and the phone drawer.
+// List fades in (stays mounted so the transition plays) and is capped + scrollable for 12 currencies.
 function curlist(v, open) {
   return `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-white [border:1px_solid_var(--line)] z-10 max-h-[15rem] overflow-y-auto overscroll-contain ` +
     `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +

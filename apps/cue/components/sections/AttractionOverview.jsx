@@ -1,15 +1,6 @@
 import { STOP_NUM, STOP_NAME, STOP_DESC } from '@/components/sections/TourPage';
 
-// Text-only overview for attraction pages, the twin of TourOverview - the gallery
-// hero carries the photos now, so the sections no longer need one each.
-//
-// NOT numbered, unlike a tour's. An attraction's sections are TOPICS, not stops:
-// "The Macaques", "Getting there", "What it costs". Numbering them would claim an
-// order the day does not have. The page's own kicker (`num`) stays, because that is
-// what it always was - a label, not a count.
-//
-// Type styles are the same three the photo rows used (STOP_NUM / STOP_NAME /
-// STOP_DESC), so dropping the photo changed the layout and nothing else.
+// Text-only attraction sections, deliberately unnumbered (topics, not stops); reuses the STOP_* type styles.
 const ROWS = 'flex flex-col gap-6';
 const ROW = '[&+&]:pt-6 [&+&]:[border-top:1px_solid_var(--line)]';
 const TEXT = `${STOP_DESC} max-w-[68ch]`;

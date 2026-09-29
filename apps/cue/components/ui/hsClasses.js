@@ -1,18 +1,5 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
-// Tailwind utility strings mirroring the legacy `.hs-*` custom control system
-// (migrasi Fase 2, opsi A - Wayan: komponen self-contained). Didefinisiin SEKALI di
-// sini, di-import Select / DateField / DatePopup / HeroSearch biar gak keduplikat.
-//
-// Nilai = mirror PERSIS computed style lama di style.css. State (open / selected /
-// keyboard / kalender range) = fungsi atau varian kondisional, BUKAN class CSS.
-// `.hs-*`/`.bk-*` CSS baru dihapus dari style.css kalau SEMUA pemakainya udah pindah.
-//
-// Catatan sumber:
-//   - .bk-control REDUNDANT (height/pt-pb/weight udah sama kaya .hs-control base) -> di-drop.
-//   - State `.is-open` di control + rotate chevron itu DEAD di React (komponen gak pernah
-//     nge-set class `.is-open` di .hs-control) -> SENGAJA gak di-utility-in (zero-diff =
-//     nyamain render sekarang, bukan ngidupin behavior mati). hover/focus-visible tetep
-//     jalan (pseudo). Border tetep line; hover/focus override warnanya lewat pseudo.
+// Shared utility strings for Select, DateField, DatePopup and HeroSearch; state goes in as function args, not CSS classes.
 
 // ===== Control (trigger button) =====
 const CONTROL_COMMON =
@@ -33,8 +20,7 @@ export const CONTROL_RICH =
 // .hs-control__val (plain): teks kepotong ellipsis. placeholder -> muted.
 export const CONTROL_VAL = 'overflow-hidden text-ellipsis whitespace-nowrap';
 export const CONTROL_VAL_PLACEHOLDER = `${CONTROL_VAL} text-muted`;
-// .hs-control__val--flag: bendera + nama sejajar. Ellipsis pindah ke child .hs-opt__nm
-// -> di-apply langsung di caller (CONTROL_FLAG_NM), biar gak main escape variant.
+// Flag + name value row; the name's ellipsis is applied by the caller via CONTROL_FLAG_NM.
 export const CONTROL_VAL_FLAG = 'flex items-center gap-[0.5rem]';
 export const CONTROL_FLAG_NM = 'overflow-hidden text-ellipsis whitespace-nowrap';
 
@@ -45,16 +31,10 @@ export const CONTROL_HINT = 'text-label font-medium tracking-[0.04em] text-muted
 export const CONTROL_VAL_RICH = 'overflow-hidden text-ellipsis whitespace-nowrap text-field font-medium text-ink';
 export const CONTROL_VAL_RICH_PLACEHOLDER = 'overflow-hidden text-ellipsis whitespace-nowrap text-field font-normal text-muted';
 
-// .hs-chev — rotate on open itu DEAD di React (is-open gak pernah di-set), jadi gak
-// dimasukin. transition tetep (mirror computed).
+// Select chevron; it does not rotate on open.
 export const CHEV = 'w-[18px] h-[18px] shrink-0 text-muted [transition:transform_var(--dur)_ease]';
 
-// ===== Panel: mode POPUP (kartu ke-center, SAMA di semua layar). Select selalu popup
-// (popup default true, gak ada pemakaian popup=false), jadi cukup 1 layout - bottom-sheet
-// & floating-dropdown gak kepake buat Select. Base .hs-panel (bg/border/overscroll/
-// transisi) + override .hs-panel--popup (fixed center/size/radius/shadow/flex). =====
-// HP (<=768): transition di-override sama @media(max-768) .hs-panel jadi transform/
-// visibility 0.3s (tanpa opacity) - berlaku juga ke popup center. Direplikasi biar sama.
+// Centred popup panel used by Select at every width; on phones the transition drops opacity.
 const PANEL_MOBILE_TRANSITION =
   '[@media(max-width:768px)]:[transition:transform_var(--dur-slow)_var(--ease),visibility_var(--dur-slow)]';
 const PANEL_POPUP_STATIC =
@@ -67,16 +47,10 @@ export function panelPopup(open) { return `${PANEL_POPUP_STATIC} ${open ? 'opaci
 export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
 export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-white text-green text-[1.2rem] leading-none cursor-pointer';
-// Scrollbar disembunyiin (Wayan) - dulu keliatan pas opsi kepanjangan buat area
-// popup (Guests/Pickup area di navbar, dst); tetep bisa di-scroll (touch/drag),
-// cuma track/thumb-nya gak digambar. Pola sama kayak slider (`[scrollbar-width:none]
-// [&::-webkit-scrollbar]:hidden`, lihat Modal.jsx/gridClasses.js).
+// Panel body scrolls with a hidden scrollbar.
 export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
-// .hs-opt (+ .bk-opt padding 12/16 + .is-sel + hover + divider antar-opt). Selected TIDAK
-// berubah pas hover (specificity is-sel > :hover di asli), jadi bg-nya di cabang.
-// `disabled` (Sep 2026, time-slot picker #TIME-1): opsi tetep KELIATAN (guest ngerti ada
-// slot itu tapi gak bisa dipilih) - dimuting + no hover/cursor, bukan disembunyiin.
+// Option row; the selected background does not change on hover, disabled options stay visible but muted.
 export function opt(sel, disabled) {
   return `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
       disabled
@@ -85,23 +59,17 @@ export function opt(sel, disabled) {
     }`;
 }
 
-// .hs-overlay (scrim; cuma tampil pas open). --elevated = z lebih tinggi (dibuka dari modal).
-// Fades in/out (was an instant block/hidden snap) - the consumers that render this
-// (<Overlay>, DatePopup) are always mounted once open has ever been true, so the
-// transition always has a "closed" frame to animate from.
+// Scrim that fades in and out; consumers stay mounted once opened so there is a closed frame to animate from.
 export function overlay(open, elevated) {
   return `fixed inset-0 bg-[rgba(26,26,26,0.42)] ${elevated ? 'z-[300]' : 'z-[55]'} ` +
     `transition-opacity duration-[var(--dur-slow)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
     `${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`;
 }
 
-// ===== DateField: chevron kalender + panel bookdate + kalender =====
-// .hs-chev--cal (17px, gak muter).
+// Calendar chevron (17px, does not rotate).
 export const CHEV_CAL = 'w-[17px] h-[17px] shrink-0 text-muted [transition:transform_var(--dur)_ease]';
 
-// Panel .bookdate-panel (= .hs-panel--popup + override desktop min-769). HP: popup center
-// (w 440/85vw, transform scale). Desktop: w 430/92vw, transform translate -48->-50 (tanpa
-// scale), overflow-y auto, head sticky.
+// Date panel: centred popup at every width (scaled on phones, slight slide on desktop), used by DateField and DatePopup.
 const PANEL_BOOKDATE_STATIC =
   'fixed top-1/2 left-1/2 [right:auto] [bottom:auto] w-[min(440px,85vw)] max-h-[85vh] ' +
   'bg-white [border:1px_solid_var(--line)] rounded-xl z-[340] ' +
@@ -110,8 +78,7 @@ const PANEL_BOOKDATE_STATIC =
   PANEL_MOBILE_TRANSITION + ' ' +
   'min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh] min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden';
 export function panelBookdate(open) { return `${PANEL_BOOKDATE_STATIC} ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${open ? '[transform:translate(-50%,-50%)_scale(1)] min-[769px]:[transform:translate(-50%,-50%)]' : '[transform:translate(-50%,-50%)_scale(0.96)] min-[769px]:[transform:translate(-50%,-48%)]'}`; }
-// Head bookdate: flex-none (popup) + sticky/top-0/bg-white di HP (dari @media max-768)
-// DAN desktop (dari bookdate min-769); z-1 cuma desktop.
+// Date panel header, sticky at the top.
 export const PANEL_HEAD_BOOKDATE =
   'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none ' +
   'sticky top-0 bg-white min-[769px]:z-[1]';
@@ -121,13 +88,10 @@ export const HS_CAL = 'pt-4 px-4 pb-[6px] max-h-[420px] overflow-y-auto [scrollb
 export const CAL_CAP = 'flex items-center justify-between gap-[0.5rem] font-body font-semibold text-[1rem] text-green mb-3';
 export const CAL_CAP_SPAN = 'flex-[1_1_auto] text-center';
 export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-white text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';
-// grid-cols-7 Tailwind = repeat(7,minmax(0,1fr)); asli pakai repeat(7,1fr) (min auto) ->
-// beda sub-pixel, jadi pakai arbitrary biar persis.
+// repeat(7,1fr) rather than grid-cols-7 (minmax(0,1fr)) to keep the exact day widths.
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
 export const CAL_DOW = 'font-body font-medium text-label tracking-[0.14em] uppercase text-muted text-center py-1';
-// Hari: sel (tanggal kepilih, prioritas) = gold/soft-black + putih (konvensi active-state
-// design system) · off (muted, gak bisa klik) · normal (hover bg abu tipis). Dulu tanggal
-// kepilih gak ke-highlight (CSS `.sel` vs JSX `is-sel` mismatch) - sekarang di-wire lewat flag.
+// Calendar day: selected = gold fill, off = muted and inert, otherwise hover tint.
 export function calDay(off, sel) {
   return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
       sel
@@ -138,24 +102,15 @@ export function calDay(off, sel) {
     }`;
 }
 
-// ===== Footer kalender, dipakai DateField DAN DatePopup =====
-// (`panelDateSheet` + `PANEL_HEAD_SHEET` UDAH DIHAPUS Sep 2026: DatePopup sekarang
-// pakai `panelBookdate` yang sama kayak DateField, jadi panel tanggal cuma satu bentuk
-// di seluruh web. `PANEL_CLOSE_SHEET` TETEP — HeroSearch masih sheet beneran.)
-// Footer kalender (Apply) - sticky bottom di HP & desktop.
+// Calendar footer (hint/time + Apply/Done), sticky at the bottom; shared by DateField and DatePopup.
 export const CAL_FOOT = 'flex items-center justify-between gap-[14px] py-3 px-[18px] [border-top:1px_solid_var(--line)] sticky bottom-0 bg-white';
 export const CAL_HINT = 'font-body font-normal text-small text-muted';
-// Apply = tombol CTA (bg-nya di-override grup .hs-cal__apply/.hsearch__go/dst jadi
-// --color-cta, bukan --color-green; hover cta-d). border-color cta walau style none.
+// Apply/Done button in the site CTA green.
 export const CAL_APPLY = `inline-flex ${BTN_SM} font-body bg-cta text-white border-none [border-color:var(--color-cta)] cursor-pointer hover:bg-cta-d hover:[border-color:var(--color-cta-d)] hover:text-white disabled:opacity-50 disabled:cursor-default`;
-// Close sheet HP: keliatan di HP, DI-HIDE di atas 768px - bener buat panel yang cuma
-// JADI sheet di HP. Sekarang pemakainya CUMA HeroSearch; DatePopup udah pindah ke
-// PANEL_CLOSE (popup butuh tombol tutup di semua lebar).
+// Close button hidden above 768px, only for panels that are a sheet on phones (HeroSearch); popups use PANEL_CLOSE.
 export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;
 
-// ===== HeroSearch: dropdown "How to explore" (.hs-panel--menu). Desktop = dropdown
-// ngambang (base .hs-panel absolute), HP = bottom-sheet. Head KE-HIDE di desktop
-// (base .hs-panel__head display:none, gak ada override). =====
+// HeroSearch menu: floating dropdown on desktop, bottom sheet at 768px and below.
 export function panelMenu(open) {
   return [
     'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden [overscroll-behavior:contain]',
@@ -170,15 +125,12 @@ export function panelMenu(open) {
 // Head menu: hidden di desktop, muncul jadi sheet-head di HP.
 export const PANEL_HEAD_MENU =
   'hidden [@media(max-width:768px)]:flex [@media(max-width:768px)]:items-center [@media(max-width:768px)]:justify-between [@media(max-width:768px)]:pt-4 [@media(max-width:768px)]:px-5 [@media(max-width:768px)]:pb-3 [@media(max-width:768px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:768px)]:sticky [@media(max-width:768px)]:top-0 [@media(max-width:768px)]:bg-white';
-// Body menu: max-h 500 di SEMUA layar. `.hs-panel--menu .hs-panel__body` (0,2,0)
-// menang atas @media(max-768) .hs-panel__body none (0,1,0), jadi 500 terus.
+// HeroSearch menu body, capped at 500px on every screen.
 export const PANEL_BODY_MENU = 'max-h-[500px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
-// Opt HeroSearch: padding base .hs-opt (0.85rem 1rem, TANPA .bk-opt). Konten (ic/nm/pr)
-// tetep class shared. is-sel sama kaya Select.
+// HeroSearch option row (slightly more padding than Select's); same selected state.
 export function optMenu(sel) { return `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_var(--line)] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`; }
 
-// Custom-select shell + option-item primitives (B-FINAL). Wrapper, hidden native,
-// and the flag / name / price / icon parts of option rows and the selected-value display.
+// Custom-select wrapper, hidden native select, and the flag/name/price/icon parts of option rows.
 export const CSEL_GROUP = 'relative block w-full';
 export const BK_NATIVE = '!hidden';
 export const HS_OPT_FLAG = 'w-5 h-[14px] flex-none object-cover rounded-[2px] [box-shadow:0_0_0_1px_rgba(0,0,0,0.08)]';

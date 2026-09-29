@@ -1,5 +1,4 @@
-// Cart rules ported verbatim from script.js. Behaviour only - all money comes
-// from POST /api/pricing/quote, never from here.
+// Cart rules only; all money comes from POST /api/pricing/quote, never from here.
 
 export function addDaysStr(ds, n) {
   if (!ds) return '';
@@ -8,8 +7,7 @@ export function addDaysStr(ds, n) {
   return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 }
 
-// Setting a day's date pushes every later day forward one day each, so the trip
-// stays in order. Transfers keep their own date and are skipped in the count.
+// Setting a day's date moves every later day to follow on consecutive dates.
 export function cascadeFrom(state, dayIndex, date) {
   const days = (state.days || []).map((d) => ({ ...d }));
   days.forEach((day, i) => {
@@ -50,10 +48,7 @@ export function setItemMode(state, dayIndex, itemIndex, mode) {
   return { ...state, days };
 }
 
-// Start time is stored PER ITEM, parallel to itemModes - not per day (Sep 2026,
-// Wayan: "item yang berisikan 2 tour dalam sehari ... jadi bakalan ada 2 jam soalnya
-// beda program"). A day holds items[], so one time on the day row could only ever be
-// right for the first of them.
+// Start time is stored per item in itemTimes (parallel to itemModes), not per day.
 export function setItemTime(state, dayIndex, itemIndex, time) {
   const days = (state.days || []).map((d, i) => {
     if (i !== dayIndex) return d;
@@ -82,12 +77,7 @@ export function removeDay(state, dayIndex) {
   return { ...state, days: (state.days || []).filter((_, i) => i !== dayIndex) };
 }
 
-// Suggested plan: tour i on day i, plus an airport pickup and drop-off.
-// Ported from suggestState() - inactive programmes are skipped, exactly as
-// isProgramActive did.
-// timeFor(name) = the default start time for that programme (defaultSlot via the
-// pricing catalog, supplied by the caller so this file stays free of catalog logic).
-// Without it the suggested days land in the cart with no time at all.
+// Suggested plan: active programme i on day i with timeFor(name) as start time, plus airport pickup and drop-off.
 export function suggestState({ nDays, guests, suggest, airportRoute, airportPlace, isActive, timeFor }) {
   const g = guests ? String(guests) : '';
   const days = suggest

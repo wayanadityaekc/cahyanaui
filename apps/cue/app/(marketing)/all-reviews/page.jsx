@@ -18,11 +18,7 @@ export default function AllReviews() {
   return (
     <>
       <JsonLd page="all-reviews" />
-      {/* No photo (Wayan, Sep 2026: "gausah isi hero image cukup h1 dan deskripsi
-          singkat dan breadcrumb") - plain text header instead of the SUBHERO photo
-          band. pt- clears the fixed header the same way DetailHero's own crumb
-          block does; SUBHERO_TITLE reads fine here (soft-black on white/cream, the
-          same combination the listing pages already use for their own H1). */}
+      {/* Text-only header (crumb, h1, blurb), no photo band; pt- clears the fixed header like DetailHero's crumb. */}
       <section className="px-[var(--container-x)] pt-[calc(var(--header-h-max,92px)_+_var(--container-x))] min-[769px]:pt-[calc(var(--header-h-max,98px)_+_var(--container-x))] pb-6">
         <div className={CATSEC}>
           <Breadcrumb items={crumbsFor('all-reviews')} className="m-0 mb-2" />
@@ -33,14 +29,7 @@ export default function AllReviews() {
         </div>
       </section>
 
-      {/* CATSEC: same container width + vertical rhythm as the listing pages
-          (tour/activities/destinations), not this page's own ad hoc
-          max-w-[1100px]/py-16 - Wayan, Sep 2026: "use the template of listing
-          page ... hero and layout". CATSEC's own max-w already assumes it is
-          sitting inside a padded ancestor (ListingPage nests it that way) -
-          putting `px` on the SAME element as CATSEC's max-w double-counts
-          the gutter (measured: 32px, not 16). Outer section carries the
-          padding, CATSEC goes on the inner div, same split ListingPage uses. */}
+      {/* Listing-page layout: padding on the outer section, CATSEC on the inner div (px on CATSEC doubles the gutter). */}
       <section className="px-[var(--container-x)]" id="all-reviews">
         <div className={CATSEC}>
           <div className="flex justify-between items-end gap-6 flex-wrap mb-[1.6rem] pb-[0.8rem]">

@@ -7,11 +7,7 @@ import ReviewModal from '@/components/reviews/ReviewModal';
 import Modal from '@/components/ui/Modal';
 import { BTN } from '@/components/ui/modalClasses';
 
-// Shared "Leave a review" trigger for every bookable page (tour/attraction detail,
-// reviews list) plus My Trips - opens the review popup right where it's clicked
-// instead of sending the guest to My Trips first (Wayan, Sep 2026). Gates on the
-// same two conditions the server does: signed in, and at least one completed
-// booking still open for review (booking_ref + service pair not yet reviewed).
+// 'Write review' trigger that opens the review popup in place; gates on sign-in and an open reviewable booking.
 export default function ReviewGate({ className, children = 'Write review' }) {
   const { account, hydrated, reviewableItems } = useAccount();
   const [authOpen, setAuthOpen] = useState(false);

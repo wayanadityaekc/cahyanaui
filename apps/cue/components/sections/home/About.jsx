@@ -1,6 +1,5 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
-// Tailwind-native (migrasi): .habout* -> utilities 1:1 dari style.css. Overlay
-// gelap (dulu ::before) pakai variant before:*. space-6/space-3 -> py-16/px-6.
+// Full-bleed photo band with a dark gradient overlay.
 const CLS = {
   section:
     "relative flex items-center justify-center min-h-[360px] px-[var(--container-x)] py-16 text-center bg-cover bg-center " +
@@ -12,12 +11,7 @@ const CLS = {
   btn: `inline-flex ${BTN_SM} font-body no-underline text-white bg-cta border border-cta hover:bg-cta-d`,
 };
 
-// paired = the right half of the homepage's charter row (desktop only). The band
-// stops being full-bleed there and becomes a card in its column: rounded, no
-// forced height, and its text left-aligned because a narrow column reads better
-// ragged-right than centred. Below 993px NOTHING changes - it is the full-width
-// photo band it has always been, and that band is what gives the bottom of the
-// homepage its rhythm (the gold dividers are off on this page).
+// paired: becomes a rounded, left-aligned card in the homepage charter row from 993px; unchanged below.
 const PAIRED =
   'min-[993px]:min-h-0 min-[993px]:h-full min-[993px]:rounded-lg min-[993px]:overflow-hidden ' +
   'min-[993px]:justify-start min-[993px]:text-left min-[993px]:p-[var(--space-5)] ' +

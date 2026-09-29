@@ -12,12 +12,7 @@ function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
 function AreaIcon() { return <Map strokeWidth={1.7} aria-hidden="true" />; }
 function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
 
-// Tailwind-native (migrasi Fase 2, keluarga kartu - stage 2): kartu listing
-// (tour/activities/destinations). MOBILE = baris horizontal (foto kiri + panel
-// kanan); >=769px = di-"flip" jadi kartu vertikal (foto atas, panel bawah) di
-// grid 4-kolom (container .lrow-list masih legacy, di-convert stage grid nanti).
-// Semua .lrow* -> utilities 1:1. Breakpoint 769px pakai min-[769px]:. Rule .lrow*
-// lama jadi dead di produksi (komponen ini satu-satunya user).
+// Listing card: horizontal row on phones, flips to a vertical card at 769px and up.
 const CARD =
   'scroll-mt-[110px] flex bg-white rounded-lg p-[10px] no-underline text-ink shadow-card ' +
   'transition-[opacity] duration-200 ease-in-out ' +

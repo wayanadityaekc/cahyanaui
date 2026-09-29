@@ -1,15 +1,7 @@
-// Tailwind-native (migrasi Fase 2, keluarga kartu - stage 3): kartu guide
-// (Guides & Information homepage + guide hub). Foto persegi, JUDUL di dalam foto
-// (bagian bawah, putih + gradient), tag di strip putih bawahnya. Dulu numpang
-// .experience__card + .guide-home__card + .experience__image/body/name + CardImage
-// - sekarang inner-nya utilities mandiri (lepas dari CardImage & tema
-// .experience__*). Class `experience__card` DIPERTAHANKAN sbg frame kartu (putih
-// inset radius/shadow) + hook sizing grid-slider. desc di-drop (dulu display:none).
+// Guide card: square photo with the title over a gradient, tag below (or overlaid); frame is CARD_FRAME.
 import { CARD_FRAME } from '@/components/ui/cardClasses';
 
-// `overlayTag` (guide hub grid, Sep 2026 - Wayan): tag pindah ke dalam foto bareng
-// judul (dua-duanya putih), bukan di strip putih di bawah - card jadi full-bleed foto.
-// Default false = perilaku lama (dipertahankan di GuideHome/GuideMore, belum diminta ganti).
+// overlayTag puts the tag inside the photo with the title (guide hub); default keeps it in the strip below.
 export default function GuideCard({ href, img, alt, title, tag, cat, w = 600, hgt = 600, overlayTag = false }) {
   return (
     <a className={`${CARD_FRAME} flex flex-col`} data-cat={cat} href={href}>

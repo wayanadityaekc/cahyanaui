@@ -15,20 +15,13 @@ function fmtDay(ds) {
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [trips, setTrips] = useState(null);
-  // The guest's own reviews (Settings page, WO3). Unlike trips, this is
-  // never needed outside Settings - lazy-fetched by refreshMyReviews rather
-  // than on every page load for every signed-in guest.
+  // Guest's own reviews, lazy-fetched by refreshMyReviews (Settings only), not on every page load.
   const [myReviews, setMyReviews] = useState(null);
   const [hydrated, setHydrated] = useState(false);
-  // True when THIS page load arrived through a sign-in link (?token=). The booking
-  // gate uses it to send a guest back to the page they were booking from - the
-  // email link always lands on the homepage.
+  // True when this load arrived via a ?token= sign-in link, so the booking gate can send the guest back.
   const [justSignedIn, setJustSignedIn] = useState(false);
 
-  // Re-read My Trips. Called on mount, and again after a review is sent: the
-  // list of what can still be reviewed comes from the server, and without a
-  // re-read a trip reviewed a moment ago stays offered until the page reloads -
-  // tick it again and the gate answers "you've already submitted a review".
+  // Re-read My Trips; called on mount and after a review is sent, so reviewed trips stop being offered.
   const refreshTrips = useCallback(async () => {
     const token = readLocal(KEY.token, '');
     if (!token) return;
@@ -83,9 +76,7 @@ export function AccountProvider({ children }) {
 
   const hasUpcoming = !!(trips && Array.isArray(trips.upcoming) && trips.upcoming.length > 0);
 
-  // Every still-reviewable tour across ALL past bookings (not just one trip) - feeds
-  // any "Leave a Review" trigger site-wide (My Trips button + ReviewGate on bookable
-  // pages), so it's computed once here instead of re-fetched per consumer.
+  // Every still-reviewable item across past bookings, computed once for all review triggers.
   const reviewableItems = useMemo(() => {
     if (!trips || !trips.history) return [];
     const out = [];
@@ -100,8 +91,7 @@ export function AccountProvider({ children }) {
     return out;
   }, [trips]);
 
-  // Settings page only - the guest's own reviews, all statuses (their private
-  // view, not the public feed). Same shape as refreshTrips.
+  // Settings only: the guest's own reviews in every status (private view).
   const refreshMyReviews = useCallback(async () => {
     const token = readLocal(KEY.token, '');
     if (!token) { setMyReviews([]); return; }
@@ -121,9 +111,7 @@ export function AccountProvider({ children }) {
     setMyReviews(null);
   }
 
-  // Delete the account (Settings page, WO3). Bookings and reviews survive on
-  // the server - this only clears what THIS browser is holding, same as
-  // logout, once the server confirms the account is actually gone.
+  // Delete the account, then clear local session state once the server confirms; bookings and reviews stay server-side.
   async function deleteAccount() {
     try {
       const token = readLocal(KEY.token, '');
@@ -145,10 +133,7 @@ export function AccountProvider({ children }) {
     }
   }
 
-  // Ask the backend to email a 6-digit sign-in code (28 Sep 2026 - was a link;
-  // Wayan: a code works wherever the guest reads the email, same device or not,
-  // which a link never could). Backend never reveals whether the email exists,
-  // so any completed request counts as success.
+  // Ask the backend to email a sign-in code; it never reveals whether the email exists, so any completed request is success.
   async function requestLogin(email) {
     try {
       const r = await fetch(`${API_BASE}/account/login`, {
@@ -162,8 +147,7 @@ export function AccountProvider({ children }) {
     }
   }
 
-  // Check that code. The session is issued server-side only on a match - unlike
-  // the old link, nothing here is already valid before this call succeeds.
+  // Verify the code; the session token is issued only on a match.
   async function verifyCode(email, code) {
     try {
       const r = await fetch(`${API_BASE}/account/verify`, {
@@ -184,8 +168,7 @@ export function AccountProvider({ children }) {
     }
   }
 
-  // Create an account (no password) - on success the backend returns a token we
-  // store, logging the guest straight in.
+  // Create an account (no password); a new account gets a token and is signed in straight away.
   async function createAccount({ name, email, phone }) {
     try {
       const r = await fetch(`${API_BASE}/account`, {
@@ -205,8 +188,7 @@ export function AccountProvider({ children }) {
         setAccount(d.account || null);
         return { ok: true };
       }
-      // The email already has an account. The server does not hand this browser
-      // its login - it emails a sign-in link to that inbox instead.
+      // Email already has an account: no login is handed to this browser, the server emails that inbox instead.
       if (r.ok && d.signin_sent) return { ok: false, signin: true, email: d.email || email };
       return { ok: false, error: (d && d.error) || '' };
     } catch (e) {

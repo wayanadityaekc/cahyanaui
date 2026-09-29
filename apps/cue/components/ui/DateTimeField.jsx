@@ -17,8 +17,7 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
     onChange(`${d}T${h || '00'}:${m || '00'}`);
   }
 
-  // Tailwind-native (full-portable): .dtf* -> utilities. Kolom jam/menit = Select
-  // shared, di-stretch lewat className prop (nempel ke .csel-group wrapper-nya).
+  // Hour and minute Selects share the row equally.
   const TIMESEL = 'flex-[1_1_0] min-w-0';
   return (
     <div className="flex flex-col gap-2">

@@ -42,7 +42,7 @@ export default function IosZoomFix() {
       const m = document.querySelector('meta[name=viewport]');
       if (!m || m.content.includes('maximum-scale')) return;
       m.content = `${m.content},maximum-scale=1`;
-    } catch {
+    } catch (e) {
       /* a zoom nicety is never worth throwing over */
     }
   }, []);

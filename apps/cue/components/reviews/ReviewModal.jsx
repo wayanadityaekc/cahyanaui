@@ -119,7 +119,7 @@ export default function ReviewModal({ open, prefill, onClose }) {
         });
         const d = await res.json();
         results.push({ it, ok: !!(d && d.ok), reason: (d && d.reason) || 'Something went wrong. Please try again.' });
-      } catch {
+      } catch (e) {
         results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });
       }
     }

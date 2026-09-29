@@ -25,10 +25,10 @@ const API = path.join(API_REPO, "pricing-data.js");
 function behindUpstream() {
   function git(...args) { return execFileSync("git", ["-C", API_REPO, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); }
   try {
-    try { git("fetch", "-q", "origin", "main"); } catch { /* offline: use the last fetch */ }
+    try { git("fetch", "-q", "origin", "main"); } catch (e) { /* offline: use the last fetch */ }
     const n = Number(git("rev-list", "--count", "HEAD..origin/main"));
     return Number.isFinite(n) && n > 0 ? n : 0;
-  } catch {
+  } catch (e) {
     return 0;
   }
 }

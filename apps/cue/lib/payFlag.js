@@ -38,7 +38,7 @@ export function readPayFlag() {
     }
     const saved = localStorage.getItem(KEY);
     if (saved === '1' || saved === '0') return saved === '1';
-  } catch {
+  } catch (e) {
     // Private mode, or storage blocked. Fall through to the default - the safe
     // direction is OFF, never on.
   }

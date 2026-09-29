@@ -9,7 +9,7 @@ import { chromium } from 'playwright-core';
 
 const ROOT = 'out';
 function findShell() {
-  try { return execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); } catch { return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'; }
+  try { return execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); } catch (e) { return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell'; }
 }
 const EXE = findShell();
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.json': 'application/json' };

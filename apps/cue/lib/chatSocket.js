@@ -71,19 +71,19 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     stopTimers();
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
-      try { ws.send(JSON.stringify({ type: 'ping' })); } catch { return; }
+      try { ws.send(JSON.stringify({ type: 'ping' })); } catch (e) { return; }
       // No answer in time means this socket is half-open: it looks connected
       // from here and nothing is reading it. Closing it is what triggers a
       // reconnect, and the reconnect is what triggers the catch-up fetch.
       clearTimeout(pongTimer);
-      pongTimer = setTimeout(() => { try { ws.close(); } catch { /* already gone */ } }, PONG_GRACE_MS);
+      pongTimer = setTimeout(() => { try { ws.close(); } catch (e) { /* already gone */ } }, PONG_GRACE_MS);
     }, PING_MS);
   }
 
   function connect() {
     if (closedByUs) return;
     let sock;
-    try { sock = new WebSocket(chatSocketUrl(thread)); } catch { return schedule(); }
+    try { sock = new WebSocket(chatSocketUrl(thread)); } catch (e) { return schedule(); }
     ws = sock;
 
     sock.onopen = () => {
@@ -97,7 +97,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
 
     sock.onmessage = (ev) => {
       let msg = null;
-      try { msg = JSON.parse(ev.data); } catch { return; }
+      try { msg = JSON.parse(ev.data); } catch (e) { return; }
       if (!msg || typeof msg.type !== 'string') return;
       if (msg.type === 'pong') { clearTimeout(pongTimer); pongTimer = null; return; }
       if (msg.type === 'ready') { if (onPresence) onPresence(!!msg.ownerHere); return; }
@@ -138,14 +138,14 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       stopTimers();
       clearTimeout(retryTimer);
       setLive(false);
-      if (ws) { ws.onclose = null; try { ws.close(); } catch { /* already gone */ } }
+      if (ws) { ws.onclose = null; try { ws.close(); } catch (e) { /* already gone */ } }
     },
     // Ephemeral and best-effort by design: if the socket is down, the guest's
     // typing simply is not announced. Nothing is queued - a "typing" that
     // arrives after the message would be nonsense.
     typing() {
       if (ws && ws.readyState === WebSocket.OPEN) {
-        try { ws.send(JSON.stringify({ type: 'typing' })); } catch { /* dropped, and that is fine */ }
+        try { ws.send(JSON.stringify({ type: 'typing' })); } catch (e) { /* dropped, and that is fine */ }
       }
     },
     live: () => live,

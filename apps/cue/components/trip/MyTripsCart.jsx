@@ -154,12 +154,12 @@ export default function MyTripsCart() {
         return;
       }
       setReturnRef(r);
-    } catch { /* no query string, or a frame we cannot read: carry on */ }
+    } catch (e) { /* no query string, or a frame we cannot read: carry on */ }
   }, []);
   function clearReturn() {
     setReturnRef('');
     // Drop the reference so a reload does not reopen a screen the guest closed.
-    try { window.history.replaceState(null, '', window.location.pathname); } catch {}
+    try { window.history.replaceState(null, '', window.location.pathname); } catch (e) {}
   }
 
   const [review, setReview] = useState(null);
@@ -192,7 +192,7 @@ export default function MyTripsCart() {
       p.delete('review');
       const q = p.toString();
       window.history.replaceState(null, '', `${window.location.pathname}${q ? `?${q}` : ''}`);
-    } catch { /* no query string: nothing to do */ }
+    } catch (e) { /* no query string: nothing to do */ }
   }, []);
 
   useEffect(() => {

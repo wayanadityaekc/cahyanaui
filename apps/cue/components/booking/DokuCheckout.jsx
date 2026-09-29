@@ -121,14 +121,14 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
             setBusy(false);
             return;
           }
-        } catch {
+        } catch (e) {
           /* falls through to the redirect below */
         }
       }
       // Full navigation, not a new tab: a popup blocker must not be able to
       // swallow the only way to pay.
       window.location.href = d.url;
-    } catch {
+    } catch (e) {
       setErr('We could not reach the payment page. Please check your connection and try again.');
       setBusy(false);
     }

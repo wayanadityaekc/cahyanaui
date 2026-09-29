@@ -53,7 +53,7 @@ for (const symbol of ['$', 'Rp']) {
     await ctx.route('**/api/pricing/catalog*', (r) =>
       r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(catalogFor(symbol)) }));
     if (symbol === 'Rp') {
-      await ctx.addInitScript(() => { try { localStorage.setItem('cue_currency', 'IDR'); } catch {} });
+      await ctx.addInitScript(() => { try { localStorage.setItem('cue_currency', 'IDR'); } catch (e) {} });
     }
 
     for (const path of ['/tour.html', '/ubud-tour.html']) {

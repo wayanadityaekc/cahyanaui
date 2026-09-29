@@ -16,7 +16,7 @@ async function seen(root, text, ms) {
   try {
     await root.getByText(text, { exact: false }).first().waitFor({ state: 'visible', timeout: ms });
     return true;
-  } catch { return false; }
+  } catch (e) { return false; }
 }
 
 // The catalog must be stubbed or every price is an em dash and the price
@@ -352,7 +352,7 @@ for (const w of [390, 768, 1280]) {
   {
     const sctx = await b.newContext({ viewport: { width: w, height: 880 } });
     await sctx.routeWebSocket(/\/ws\//, (ws) => ws.close());
-    await sctx.addInitScript(() => { try { localStorage.setItem('cue_token', 'stub-token'); } catch {} });
+    await sctx.addInitScript(() => { try { localStorage.setItem('cue_token', 'stub-token'); } catch (e) {} });
     await sctx.route('**/api/account/session*', (r) => r.fulfill({ status: 200, contentType: 'application/json',
       body: JSON.stringify({ status: 'ok', account: { id: 1, name: 'Hannah Wills', email: 'hannah@example.com' } }) }));
     await sctx.route('**/api/bookings/mine*', (r) => r.fulfill({ status: 200, contentType: 'application/json',

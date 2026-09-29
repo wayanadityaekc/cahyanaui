@@ -84,7 +84,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         // A mismatch is NOT paid: the amount or currency disagreed and a person
         // has to look at it. Telling the guest it is confirmed would be a lie.
         if (d && d.payment === 'mismatch') { setPhase('mismatch'); return; }
-      } catch {
+      } catch (e) {
         // A dropped request is not an answer - keep asking until we give up.
       }
       if (stop) return;

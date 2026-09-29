@@ -140,7 +140,7 @@ export function AccountProvider({ children }) {
         return { ok: true };
       }
       return { ok: false, error: (d && d.detail) || '' };
-    } catch {
+    } catch (e) {
       return { ok: false, error: '' };
     }
   }
@@ -157,7 +157,7 @@ export function AccountProvider({ children }) {
         body: JSON.stringify({ email }),
       });
       return r.ok;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -179,7 +179,7 @@ export function AccountProvider({ children }) {
         return { ok: true };
       }
       return { ok: false, error: (d && d.detail) || '' };
-    } catch {
+    } catch (e) {
       return { ok: false, error: '' };
     }
   }
@@ -209,7 +209,7 @@ export function AccountProvider({ children }) {
       // its login - it emails a sign-in link to that inbox instead.
       if (r.ok && d.signin_sent) return { ok: false, signin: true, email: d.email || email };
       return { ok: false, error: (d && d.error) || '' };
-    } catch {
+    } catch (e) {
       return { ok: false };
     }
   }

@@ -11,7 +11,7 @@ export function readThread() {
   try {
     const v = localStorage.getItem(KEY.chatThread);
     return /^[a-f0-9]{48}$/.test(v || '') ? v : null;
-  } catch {
+  } catch (e) {
     return null;
   }
 }
@@ -20,7 +20,7 @@ export function writeThread(id) {
   try {
     if (id) localStorage.setItem(KEY.chatThread, id);
     else localStorage.removeItem(KEY.chatThread);
-  } catch {
+  } catch (e) {
     /* private mode: the conversation still works, it just will not survive a reload */
   }
 }

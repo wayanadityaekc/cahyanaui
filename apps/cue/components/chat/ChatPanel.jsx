@@ -138,7 +138,7 @@ export default function ChatPanel({ open, onClose }) {
         return;
       }
       takeOwner(messages);
-    } catch {
+    } catch (e) {
       /* a dropped read is not worth a message on screen; the next one retries */
     }
   }, [thread, takeOwner]);
@@ -225,8 +225,8 @@ export default function ChatPanel({ open, onClose }) {
             : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
         }`,
       }]);
-    } catch (err) {
-      setLog((prev) => [...prev, { id: uid(), from: 'bot', text: err.message || 'Could not reach Wayan just now.' }]);
+    } catch (e) {
+      setLog((prev) => [...prev, { id: uid(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' }]);
     }
     setSending(false);
   }, [sending, account]);
@@ -294,8 +294,8 @@ export default function ChatPanel({ open, onClose }) {
       await setContact(thread, v);
       setMail('done');
       setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.emailDone }]);
-    } catch (err) {
-      setMailErr(err.message || CHAT_COPY.emailBad);
+    } catch (e) {
+      setMailErr(e.message || CHAT_COPY.emailBad);
     }
   }
 

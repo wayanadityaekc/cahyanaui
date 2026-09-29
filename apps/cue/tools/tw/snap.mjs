@@ -34,7 +34,7 @@ function findShell() {
   try {
     const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim();
     if (hit) return hit;
-  } catch { /* ignore */ }
+  } catch (e) { /* ignore */ }
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();

@@ -24,10 +24,10 @@ const API = path.join(API_REPO, "pricing.js");
 function behindUpstream() {
   function git(...args) { return execFileSync("git", ["-C", API_REPO, ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); }
   try {
-    try { git("fetch", "-q", "origin", "main"); } catch { /* offline: fall back to the last fetch */ }
+    try { git("fetch", "-q", "origin", "main"); } catch (e) { /* offline: fall back to the last fetch */ }
     const n = Number(git("rev-list", "--count", "HEAD..origin/main"));
     return Number.isFinite(n) && n > 0 ? n : 0;
-  } catch {
+  } catch (e) {
     return 0; // not a git checkout, or no origin - nothing to compare against
   }
 }
@@ -190,8 +190,8 @@ async function main() {
   let code;
   try {
     code = await main();
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
+    console.error(e);
     process.exit(2);
   }
   process.exit(code);

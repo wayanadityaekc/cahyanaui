@@ -34,8 +34,8 @@ function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 // assertion into a crashed run and every assertion after it into no information
 // at all - which is how the first version of this harness "caught" a sabotage
 // while hiding eight other results.
-async function seen(loc, ms = 4000) { try { await loc.first().waitFor({ timeout: ms }); return true; } catch { return false; } }
-async function untilTrue(page, fn, ms = 8000) { try { await page.waitForFunction(fn, null, { timeout: ms }); return true; } catch { return false; } }
+async function seen(loc, ms = 4000) { try { await loc.first().waitFor({ timeout: ms }); return true; } catch (e) { return false; } }
+async function untilTrue(page, fn, ms = 8000) { try { await page.waitForFunction(fn, null, { timeout: ms }); return true; } catch (e) { return false; } }
 
 async function api(path, init = {}) {
   const res = await fetch(API + path, {
@@ -107,8 +107,8 @@ async function main() {
       // "no duplicate appeared" passed on a build with the dedupe removed.
       replay = () => { if (!lastMsg) return false; client.send(lastMsg); return true; };
       sever = () => {
-        try { server.close(); } catch { /* already gone */ }
-        try { client.close(); } catch { /* already gone */ }
+        try { server.close(); } catch (e) { /* already gone */ }
+        try { client.close(); } catch (e) { /* already gone */ }
       };
     });
     const page = await ctx.newPage();

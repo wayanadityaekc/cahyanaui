@@ -82,7 +82,7 @@ async function myTrips({ url, trips }) {
   const page = await ctx.newPage();
   const errs = [];
   page.on('pageerror', (e) => errs.push(String(e)));
-  await page.addInitScript(() => { try { localStorage.setItem('cue_token', 'tok-test'); } catch {} });
+  await page.addInitScript(() => { try { localStorage.setItem('cue_token', 'tok-test'); } catch (e) {} });
   await page.route('**/api/**', async (route) => {
     const u = route.request().url();
     if (/\/account\/session/.test(u)) {

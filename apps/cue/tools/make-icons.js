@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 let sharp;
 try { sharp = require('sharp'); }
-catch { console.error('sharp not installed - run: npm i -D sharp'); process.exit(2); }
+catch (e) { console.error('sharp not installed - run: npm i -D sharp'); process.exit(2); }
 
 const SRC = process.argv[2];
 if (!SRC || !fs.existsSync(SRC)) { console.error('usage: node tools/make-icons.js <logo.png>'); process.exit(2); }

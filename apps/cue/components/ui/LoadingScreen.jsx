@@ -48,7 +48,7 @@ export default function LoadingScreen() {
       const href = a.getAttribute('href');
       if (!href || href.startsWith('#') || /^(mailto:|tel:|javascript:|https?:\/\/wa\.me)/i.test(href)) return;
       let url;
-      try { url = new URL(a.href); } catch { return; }
+      try { url = new URL(a.href); } catch (e) { return; }
       if (url.origin !== window.location.origin) return; // external -> new context, let it be
       // Same-page hash jump is not a page change.
       if (url.pathname === window.location.pathname && url.hash) return;

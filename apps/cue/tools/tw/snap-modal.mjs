@@ -10,7 +10,7 @@ const [, , page, outfile] = process.argv;
 if (!page || !outfile) { console.error('usage: node tools/tw/snap-modal.mjs <page.html> <out.json>'); process.exit(2); }
 const ROOT = 'out';
 function findShell() {
-  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch {}
+  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch (e) {}
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();

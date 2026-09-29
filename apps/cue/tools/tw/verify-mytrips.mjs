@@ -8,7 +8,7 @@ import { chromium } from 'playwright-core';
 
 const ROOT = 'out';
 function findShell() {
-  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch {}
+  try { const hit = execSync('ls -d /opt/pw-browsers/*/chrome-linux/headless_shell 2>/dev/null | head -1').toString().trim(); if (hit) return hit; } catch (e) {}
   return '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 }
 const EXE = findShell();
@@ -75,7 +75,7 @@ function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); 
         transfers: [{ route: 'Airport - Ubud', date: '2026-10-14', guests: '2' }],
         charters: [],
       }));
-    } catch {}
+    } catch (e) {}
   });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(500);
@@ -108,7 +108,7 @@ function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); 
         ],
         transfers: [], charters: [],
       }));
-    } catch {}
+    } catch (e) {}
   });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(500);
@@ -161,7 +161,7 @@ function check(label, cond) { if (cond) { pass++; console.log(`OK   ${label}`); 
     }
     return route.continue();
   });
-  await pg.addInitScript(() => { try { localStorage.setItem('cue_token', 'fake-token-for-test'); } catch {} });
+  await pg.addInitScript(() => { try { localStorage.setItem('cue_token', 'fake-token-for-test'); } catch (e) {} });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.click('aside nav button:has-text("Booked Trip")');
   await pg.waitForTimeout(500);

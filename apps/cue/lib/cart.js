@@ -90,3 +90,43 @@ export function suggestState({ nDays, guests, suggest, airportRoute, airportPlac
   ];
   return { days, transfers, charters: [] };
 }
+
+// Removes one My Trips row; transfers/charters by their own list index, day items by name.
+export function removeRow(state, { kind, localIndex, day_no, service }) {
+  const next = JSON.parse(JSON.stringify(state));
+  if (kind === 'transfer') next.transfers.splice(localIndex, 1);
+  else if (kind === 'charter') next.charters.splice(localIndex, 1);
+  else {
+    let d = next.days[day_no - 1];
+    // Fallback: if the expected day lacks the item, search every day so delete never no-ops.
+    if (!d || !(d.items || []).includes(service)) {
+      d = (next.days || []).find((day) => (day.items || []).includes(service));
+    }
+    if (d) {
+      const k = d.items.indexOf(service);
+      if (k >= 0) {
+        d.items.splice(k, 1);
+        if (d.itemModes) d.itemModes.splice(k, 1);
+      }
+    }
+  }
+  return next;
+}
+
+// Moves one My Trips row to a new date/time; null when the row is no longer in the cart.
+export function setRowDate(state, row, date, time) {
+  if (row.kind === 'day' && row.day_no) {
+    // cascadeFrom only moves dates, so the time is written onto its result (one state, one save).
+    const moved = cascadeFrom(state, row.day_no - 1, date);
+    return setItemTime(moved, row.day_no - 1, row.itemIndex || 0, time || '');
+  }
+  const next = JSON.parse(JSON.stringify(state));
+  const list = row.kind === 'transfer' ? next.transfers : next.charters;
+  const idx = row.kind === 'transfer'
+    ? (state.transfers || []).findIndex((t) => t.route === row.service && t.date === row.date)
+    : (state.charters || []).findIndex((c) => c.date === row.date);
+  if (idx < 0) return null;
+  list[idx].date = date;
+  list[idx].time = time || '';
+  return next;
+}

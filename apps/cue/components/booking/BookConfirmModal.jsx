@@ -12,20 +12,19 @@ import { bookingSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
-import PayChips from './PayChips';
-import DateTimeField from '@/components/ui/DateTimeField';
-import DateField from '@/components/ui/DateField';
-import { AIRPORT_ROUTE, fmtTime, fmtDate } from '@/content/shared/timeSlots';
-import { withSymbol } from '@/components/Price';
-import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN_WA, STACK, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT, REFMSG_ERR } from '@/components/ui/modalClasses';
-import OtpFields from '@/components/account/OtpFields';
+import { AIRPORT_ROUTE } from '@/content/shared/timeSlots';
+import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, BTN, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
-import { railFor, DEFAULT_RAIL } from '@/lib/rails';
+import { DEFAULT_RAIL } from '@/lib/rails';
 import { baseTotal, baseTotalIdr, baseTotalUsd, PAY_COPY } from '@/lib/payment';
-import PayPalCheckout from './PayPalCheckout';
-import DokuCheckout from './DokuCheckout';
-import PayWaiting from './PayWaiting';
+import { bookingPayload, priceText as quotedPrice, whatsappText } from '@/lib/bookingPayload';
+import DetailsStep from './DetailsStep';
+import CheckStep from './CheckStep';
+import BookActions from './BookActions';
+import SigninNote from './SigninNote';
+import PaymentScreen from './PaymentScreen';
+import { STEPS, stepBar, STEP_LABEL, BACK_LINK } from './bookingModalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -232,47 +231,10 @@ export default function BookConfirmModal() {
     return ok && Object.keys(dateErrors).length === 0;
   }
 
-  // Send the fetched quote with the booking, or the server stores nothing and the email shows $0.
+  // Booking request for the server (pure builder in lib/bookingPayload.js).
   function payload() {
-    return ({
-      type: ctx.type,
-      service: ctx.service,
-      name: f.name,
-      phone: f.phone,
-      email: f.email,
-      referral: (referral && referral.code) || '',
-      // Only the option the guest picked; the server never trusts an amount from the browser.
-      pay_option: payOn ? payOption : '',
-      // Quoted currency, so the server invoices the same number the guest agreed to.
-      currency: currency || 'USD',
-      stay: stay || '',
-      lines: ctx.lines.map((l, i) => {
-        const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
-        // Each line sends its own date/time (falling back to what it arrived with); flight fields only for a single airport line.
-        const isTarget = !!singleLine && i === 0;
-        return {
-          type: l.type,
-          service: l.service,
-          date: dateOf(l, i) || l.date || '',
-          time: timeOf(l, i) || l.time || '',
-          guests: String(l.guests || displayGuests),
-          pickup: l.pickup || f.pickup,
-          dropoff: l.dropoff || f.dropoff,
-          day_no: l.day_no != null ? l.day_no : null,
-          flight_number: (isTarget && needsFlight ? f.flightNumber || l.flight_number : l.flight_number) || '',
-          flight_datetime: (isTarget && needsFlight ? f.flightDatetime || l.flight_datetime : l.flight_datetime) || '',
-          mode: l.mode || 'standard',
-          area: l.area || '',
-          duration: l.duration || '',
-          extra: l.extra != null ? l.extra : 0,
-          return: !!l.return,
-          price_usd: p ? p.price_usd : null,
-          price_idr: p ? p.price_idr : null,
-        };
-      }),
-    });
+    return bookingPayload({ ctx, f, referral, payOn, payOption, currency, stay, priced, displayGuests, singleLine, needsFlight, dateOf, timeOf });
   }
-
   async function submit() {
     if (!validate()) { setError(''); return; }
     setError('');
@@ -302,80 +264,40 @@ export default function BookConfirmModal() {
   }
 
   function waText() {
-    const rowText = ctx.lines
-      .map((l, i) => {
-        const d = dateOf(l, i) || l.date || 'TBD';
-        const t = timeOf(l, i);
-        return `- ${l.day_no ? `Day ${l.day_no} · ` : ''}${d}${t ? ` · ${fmtTime(t)}` : ''} · ${l.service} · ${l.guests || displayGuests} pax`;
-      })
-      .join('\n');
-    const flightLine = flightNumberDisplay ? `\nFlight: ${flightNumberDisplay} (${f.flightDatetime || singleLine.flight_datetime || 'TBD'})` : '';
-    return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${rowText}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}${flightLine}\nPrice: ${priceText()}`;
+    return whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDisplay, dateOf, timeOf, price: priceText() });
   }
 
-  function priceText() {
-    if (!priced) return '-';
-    const s = priced.symbol || '$';
-    return s + priced.total.display.toLocaleString(s === 'Rp' ? 'id-ID' : 'en-US');
-  }
+  function priceText() { return quotedPrice(priced); }
 
   async function applyRef() {
     const pct = await apply(f.referral);
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
-  // Shared chrome comes from modalClasses.js; strings used only by this modal are defined inline below.
-  const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_var(--line)] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
-  // Two-step chrome. Isolated to this modal, same as ROW below.
+
+  // WhatsApp fallback: validate first (back to step 1 if something is missing), then open the prefilled chat.
+  function openWhatsApp() {
+    if (!validate()) { setError(''); setStep(1); return; }
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
+  }
+
+  // Step-count chrome: three steps with payment on, two without.
   const lastStep = payOn ? 3 : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
-  const STEPS = 'flex gap-[6px] mb-2';
-  function stepBar(active) { return `flex-1 h-[3px] rounded-[2px] ${active ? 'bg-cta' : 'bg-line'}`; }
-  const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
-  const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
-  const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
-  // Total gets its own bar on the check screen: it is the number the guest agrees to.
-  const PBAR = 'flex items-center justify-between gap-[10px] py-[10px] px-3 rounded-md bg-cream [border:1px_solid_var(--line)]';
-  const PBAR_L = 'text-body font-medium text-green';
-  const PBAR_V = 'text-[1.15rem] font-semibold text-amber';
-  const BACK_LINK = 'block w-full pt-[10px] text-center text-body font-medium text-green bg-transparent border-none cursor-pointer';
-  const HINT = 'block mt-[0.35rem] text-small text-muted';
-  const DETAILS_LI_ROW = "relative py-[0.5rem] pr-0 pl-[1.1rem] [border-bottom:1px_solid_var(--line)] text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.15rem] [&::before]:text-gold last:[border-bottom:none]";
-  const DETAILS_TOGGLE = 'flex items-center justify-between w-full py-[0.85rem] px-0 font-body text-[1rem] font-semibold text-green bg-transparent border-none cursor-pointer';
-  const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
-  // Sign-in code entry shown on both success screens; the booking is already saved either way.
-  function signinNote() {
-    return (
-      <div data-signin-note className="-mt-3 mb-6">
-        {otpVerified ? (
-          <p className="text-small text-muted leading-[var(--lh-body)]">
-            Signed in as <strong className="text-green">{signinEmail}</strong>.
-          </p>
-        ) : (
-          <>
-            <p className="mb-3 text-small text-muted leading-[var(--lh-body)] text-center">
-              You booked as <strong className="text-green">{signinEmail}</strong>. Enter the
-              6-digit code we sent that inbox to sign in.
-            </p>
-            <OtpFields
-              length={6}
-              value={otpCode}
-              onChange={setOtpCode}
-              onComplete={doOtpVerify}
-              error={!!otpMsg}
-              disabled={otpBusy}
-            />
-            {otpMsg && <small role="alert" className={`${REFMSG_ERR} text-center mt-3`}>{otpMsg}</small>}
-            <p className="mt-3 text-center text-small text-muted">
-              {otpCooldown > 0 ? `Resend code in ${otpCooldown}s` : (
-                <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={resendOtp}>Resend code</button>
-              )}
-            </p>
-          </>
-        )}
-      </div>
-    );
-  }
+  // Sign-in code entry, shown on both success screens when the server emailed a code.
+  const signinNote = signinEmail ? (
+    <SigninNote
+      otpVerified={otpVerified}
+      signinEmail={signinEmail}
+      otpCode={otpCode}
+      setOtpCode={setOtpCode}
+      doOtpVerify={doOtpVerify}
+      otpMsg={otpMsg}
+      otpBusy={otpBusy}
+      otpCooldown={otpCooldown}
+      resendOtp={resendOtp}
+    />
+  ) : null;
   return createPortal(
     <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} label="Booking confirmation" box={BOX_WIDE} shellClass={SHELL_WIDE}>
         {!paid && <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>}
@@ -392,162 +314,43 @@ export default function BookConfirmModal() {
             </p>
 
             {step === 1 ? (
-              <>
-                <div className={GROUP}>
-                  <label className={LABEL} htmlFor="booker-name">Your Name</label>
-                  <input className={INPUT} type="text" id="booker-name" placeholder="Enter your name" value={f.name} onChange={set('name')} aria-invalid={!!errors.name} />
-                  {errors.name && <small role="alert" className={FIELD_ERR}>{errors.name}</small>}
-                </div>
-                <div className={GROUP}>
-                  <label className={LABEL} htmlFor="booker-phone">Phone Number</label>
-                  <input className={INPUT} type="tel" id="booker-phone" placeholder="e.g. +61 412 345 678" value={f.phone} onChange={set('phone')} aria-invalid={!!errors.phone} />
-                  {errors.phone && <small role="alert" className={FIELD_ERR}>{errors.phone}</small>}
-                </div>
-                <div className={GROUP}>
-                  <label className={LABEL} htmlFor="booker-email">Email</label>
-                  <input className={INPUT} type="email" id="booker-email" placeholder="you@email.com" value={f.email} onChange={set('email')} aria-invalid={!!errors.email} />
-                  {errors.email && <small role="alert" className={FIELD_ERR}>{errors.email}</small>}
-                </div>
-                <div className={GROUP}>
-                  <label className={LABEL} htmlFor="pickup">Pick-up Location</label>
-                  <input className={INPUT} type="text" id="pickup" placeholder="Hotel / villa name or area" value={f.pickup} onChange={set('pickup')} aria-invalid={!!errors.pickup} />
-                  {errors.pickup && <small role="alert" className={FIELD_ERR}>{errors.pickup}</small>}
-                </div>
-                {view.dropoffRequired !== false && (
-                  <div className={GROUP}>
-                    <label className={LABEL} htmlFor="dropoff">Drop-off Location</label>
-                    <input className={INPUT} type="text" id="dropoff" placeholder="Where should we drop you off?" value={f.dropoff} onChange={set('dropoff')} aria-invalid={!!errors.dropoff} />
-                    {errors.dropoff && <small role="alert" className={FIELD_ERR}>{errors.dropoff}</small>}
-                  </div>
-                )}
-                {needsFlight && (
-                  <div className={GROUP}>
-                    <label className={LABEL} htmlFor="flight-number">Flight Number</label>
-                    <input className={INPUT} type="text" id="flight-number" placeholder="e.g. QZ7501" value={f.flightNumber} onChange={set('flightNumber')} aria-invalid={!!errors.flightNumber} />
-                    {errors.flightNumber && <small role="alert" className={FIELD_ERR}>{errors.flightNumber}</small>}
-                  </div>
-                )}
-
-                {lines.map((l, i) =>
-                  isAirportLine(l) && i === 0 && needsFlight ? (
-                    // Airport leg: one flight date/time control with real minutes; do not add a second date field here.
-                    <div className={GROUP} key={`dt${i}`}>
-                      <label className={LABEL} htmlFor="flight-datetime">Flight date &amp; time</label>
-                      <DateTimeField id="flight-datetime" label="Flight date & time" value={f.flightDatetime} onChange={setValue('flightDatetime')} />
-                      <small className={HINT}>We use this as your pick-up time, so you are collected for this flight.</small>
-                      {errors.flightDatetime && <small role="alert" className={FIELD_ERR}>{errors.flightDatetime}</small>}
-                    </div>
-                  ) : (
-                    <div className={GROUP} key={`dt${i}`}>
-                      <label className={LABEL} htmlFor={`bk-dt-${i}`}>
-                        {lines.length > 1 ? `${l.day_no ? `Day ${l.day_no} · ` : ''}${l.service}` : 'Date & time'}
-                      </label>
-                      <DateField
-                        id={`bk-dt-${i}`}
-                        label="Date & time"
-                        value={lineDateTime(i).date}
-                        onChange={(v) => setDT(i, 'date', v)}
-                        placeholder="Select date"
-                        withTime
-                        time={lineDateTime(i).time}
-                        onTimeChange={(v) => setDT(i, 'time', v)}
-                        category={categoryOfLine(l)}
-                        itemName={l.service}
-                      />
-                      {dtErr[i] && <small role="alert" className={FIELD_ERR}>{dtErr[i]}</small>}
-                    </div>
-                  ),
-                )}
-
-                <button className={BTN} onClick={() => { if (validate()) { setError(''); setStep(2); } }}>Continue</button>
-              </>
+              <DetailsStep
+                f={f}
+                errors={errors}
+                set={set}
+                setValue={setValue}
+                view={view}
+                lines={lines}
+                needsFlight={needsFlight}
+                isAirportLine={isAirportLine}
+                lineDateTime={lineDateTime}
+                setDT={setDT}
+                categoryOfLine={categoryOfLine}
+                dtErr={dtErr}
+                onContinue={() => { if (validate()) { setError(''); setStep(2); } }}
+              />
             ) : step === 2 ? (
-              <>
-                <p className={GROUP_LABEL}>Your trip</p>
-                <div className={ROWSET}>
-                  <div className={ROW}><span>Service</span><span>{view.service}</span></div>
-                  {singleLine ? (
-                    <>
-                      <div className={ROW}><span>Date</span><span>{fmtDate(dateOf(singleLine, 0)) || '-'}</span></div>
-                      {isAirportRoute ? (
-                        <div className={ROW}><span>Flight</span><span>{flightNumberDisplay || '-'}{timeOf(singleLine, 0) ? ` · ${fmtTime(timeOf(singleLine, 0))}` : ''}</span></div>
-                      ) : (
-                        <div className={ROW}><span>Time</span><span>{timeOf(singleLine, 0) ? fmtTime(timeOf(singleLine, 0)) : '-'}</span></div>
-                      )}
-                    </>
-                  ) : null}
-                  <div className={ROW}><span>Guests</span><span>{view.guests || displayGuests}</span></div>
-                  {priced && priced.referral && (
-                    <div className={ROW}><span>Referral</span><span>{priced.referral.code} ({priced.referral.pct}%)</span></div>
-                  )}
-                </div>
-
-                {view.detailLines && view.detailLines.length > 0 && (
-                  <>
-                    <p className={GROUP_LABEL}>{view.detailsTitle || "What's included"}</p>
-                    {/* Item list is open by default; above 4 rows it folds behind a toggle to avoid scrolling on small phones. */}
-                    {view.detailLines.length > 4 ? (
-                      <div className="mb-4">
-                        <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
-                          <span>{view.detailLines.length} items</span>
-                          <span className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? '[transform:rotate(90deg)]' : ''}`}>&rsaquo;</span>
-                        </button>
-                        <ul className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? 'max-h-[320px]' : 'max-h-0'}`}>
-                          {view.detailLines.map((d, i) => <li className={DETAILS_LI} key={i}>{d}</li>)}
-                        </ul>
-                      </div>
-                    ) : (
-                      <ul className={`${ROWSET} list-none`}>
-                        {view.detailLines.map((d, i) => <li className={DETAILS_LI_ROW} key={i}>{d}</li>)}
-                      </ul>
-                    )}
-                  </>
-                )}
-
-                <p className={GROUP_LABEL}>You</p>
-                <div className={ROWSET}>
-                  <div className={ROW}><span>Name</span><span>{f.name}</span></div>
-                  <div className={ROW}><span>Phone</span><span>{f.phone}</span></div>
-                  <div className={ROW}><span>Email</span><span>{f.email}</span></div>
-                  {f.pickup && <div className={ROW}><span>Pick-up</span><span>{f.pickup}</span></div>}
-                  {f.dropoff && <div className={ROW}><span>Drop-off</span><span>{f.dropoff}</span></div>}
-                </div>
-
-                <div className={PBAR}>
-                  <span className={PBAR_L}>Total</span>
-                  <span className={PBAR_V} id="sum-price">{withSymbol(priceText())}</span>
-                </div>
-
-                {payOn && (
-                  <button className={`${BTN} ${STACK}`} onClick={() => { setError(''); setStep(3); }}>Continue</button>
-                )}
-
-                {!payOn && (
-                  <>
-                <PayChips
-                  className="mt-[1.1rem] mb-[1.35rem] text-center"
-                  logosClass="flex flex-wrap items-center justify-center gap-2"
-                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_var(--line)] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
-                  svgClass="block h-[var(--icon-sm)] w-auto"
-                />
-
-                {error && <small className="block mt-[0.4rem] text-small text-err">{error}</small>}
-
-                <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
-                <button
-                  className={`${BTN_WA} ${STACK}`}
-                  onClick={() => {
-                    if (!validate()) { setError(''); setStep(1); return; }
-                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
-                  }}
-                >
-                  Discuss via WhatsApp
-                </button>
-                  </>
-                )}
-                {/* Edit details goes last as a text link, so Book Now stays the one primary action. */}
-                <button type="button" className={BACK_LINK} onClick={() => setStep(1)}>&lsaquo; Edit details</button>
-              </>
+              <CheckStep
+                view={view}
+                singleLine={singleLine}
+                dateOf={dateOf}
+                timeOf={timeOf}
+                isAirportRoute={isAirportRoute}
+                flightNumberDisplay={flightNumberDisplay}
+                displayGuests={displayGuests}
+                priced={priced}
+                detailsOpen={detailsOpen}
+                setDetailsOpen={setDetailsOpen}
+                f={f}
+                price={priceText()}
+                payOn={payOn}
+                onContinue={() => { setError(''); setStep(3); }}
+                error={error}
+                busy={busy}
+                submit={submit}
+                openWhatsApp={openWhatsApp}
+                onEdit={() => setStep(1)}
+              />
             ) : (
               <>
                 {/* Step 3: choose how much of the agreed total to pay now; each option shows its own amount. */}
@@ -570,25 +373,7 @@ export default function BookConfirmModal() {
                   refMsg={refMsg}
                 />
 
-                <PayChips
-                  className="mt-[1.1rem] mb-[1.35rem] text-center"
-                  logosClass="flex flex-wrap items-center justify-center gap-2"
-                  chipClass="inline-flex items-center justify-center h-[30px] min-w-[46px] px-[0.55rem] bg-white [border:1px_solid_var(--line)] rounded-sm transition-transform duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]"
-                  svgClass="block h-[var(--icon-sm)] w-auto"
-                />
-
-                {error && <small className="block mt-[0.4rem] text-small text-err">{error}</small>}
-
-                <button className={BTN} onClick={submit} disabled={busy}>{busy ? 'Sending...' : 'Book Now'}</button>
-                <button
-                  className={`${BTN_WA} ${STACK}`}
-                  onClick={() => {
-                    if (!validate()) { setError(''); setStep(1); return; }
-                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
-                  }}
-                >
-                  Discuss via WhatsApp
-                </button>
+                <BookActions error={error} busy={busy} submit={submit} openWhatsApp={openWhatsApp} />
                 <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>&lsaquo; Back</button>
               </>
             )}
@@ -599,49 +384,24 @@ export default function BookConfirmModal() {
             <div className={SUCCESS_ICON}>&#10003;</div>
             <h3 className={TITLE}>Booking Received!</h3>
             <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
-            {signinEmail ? signinNote() : null}
+            {signinNote}
             <button className={BTN} onClick={closeBooking}>Done</button>
           </div>
         ) : (
-          <div>
-            {paid ? (
-              // Card charged but not yet confirmed: lock the screen and poll the server until the webhook marks it paid.
-              <PayWaiting
-                bookingRef={bookingRef}
-                onClose={closeBooking}
-              />
-            ) : (
-              <>
-                <h3 className={TITLE}>Almost there - just the payment</h3>
-                <p className={SUCCESS_TEXT}>
-                  Your booking is saved{bookingRef ? ` (${bookingRef})` : ''}. It is confirmed once this payment
-                  goes through. Nothing is lost if you close this - you can pay later.
-                </p>
-                {signinEmail ? signinNote() : null}
-                {bookingRef && railFor(payRail) === 'doku' ? (
-                  // DOKU is hosted, so no onPaid: do not clear the cart on the way out; My Trips checks status on return.
-                  <DokuCheckout
-                    bookingRef={bookingRef}
-                    option={payOption}
-                  />
-                ) : bookingRef ? (
-                  <PayPalCheckout
-                    bookingRef={bookingRef}
-                    option={payOption}
-                    copy={PAY_COPY}
-                    currency={currency}
-                    onPaid={() => {
-                      setPaid(true);
-                      // Clear the cart on capture, not on the webhook, so a guest whose status poll fails cannot pay twice.
-                      if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
-                    }}
-                  />
-                ) : (
-                  <p className="text-small text-err">We could not read your booking reference. Please contact us.</p>
-                )}
-              </>
-            )}
-          </div>
+          <PaymentScreen
+            paid={paid}
+            bookingRef={bookingRef}
+            closeBooking={closeBooking}
+            signinNote={signinNote}
+            payRail={payRail}
+            payOption={payOption}
+            currency={currency}
+            onPaid={() => {
+              setPaid(true);
+              // Clear the cart on capture, not on the webhook, so a guest whose status poll fails cannot pay twice.
+              if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
+            }}
+          />
         )}
     </ModalPresence>,
     document.body,

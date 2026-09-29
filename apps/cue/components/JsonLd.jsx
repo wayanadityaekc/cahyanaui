@@ -34,11 +34,11 @@ function livePrices() {
 //
 // Everything written in the static file is a fallback for the build where the
 // API cannot be reached; when it answers, the live number wins.
-function withLivePrice(block, prices) {
-  const node = block.json;
+function withLivePrice({ json, priceGroup, priceKey }, prices) {
+  const node = json;
   if (!prices || !node || node['@type'] !== 'Product' || !node.offers) return node;
 
-  if (block.priceGroup === 'transfers') {
+  if (priceGroup === 'transfers') {
     const all = prices.transfers;
     if (!all || !all.length) return node;
     return {
@@ -52,7 +52,7 @@ function withLivePrice(block, prices) {
     };
   }
 
-  const usd = prices.byName[block.priceKey || node.name];
+  const usd = prices.byName[priceKey || node.name];
   if (usd == null) return node;
   return { ...node, offers: { ...node.offers, price: String(usd) } };
 }

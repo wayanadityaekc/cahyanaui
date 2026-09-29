@@ -14,9 +14,9 @@ const STRINGS = ['', '   ', 'x', 'Wayan Aditya'];
 const EMAILS = ['', '  ', 'nope', 'a@b', 'a@b.c', ' a@b.co '];
 let checked = 0; const bad = [];
 
-function cmp(label, oldMsg, res, field) {
+function cmp(label, oldMsg, { ok, errors }, field) {
   checked++;
-  const newMsg = res.ok ? '' : (res.errors[field] || '');
+  const newMsg = ok ? '' : (errors[field] || '');
   const oldOk = !oldMsg;
   // Old code stops at the FIRST failing rule, so only compare the field the old
   // rule was about; per-field mode legitimately reports the others at the same time.

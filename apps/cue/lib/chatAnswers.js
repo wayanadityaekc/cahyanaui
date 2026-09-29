@@ -67,9 +67,9 @@ function words(s) { return norm(s).split(' ').filter((w) => w.length > 2 && !STO
 // A price the guest can trust, or nothing. `fallback` is the figure printed on
 // the card in the same build, so it is never invented - but the catalog wins
 // whenever it has answered, because that is what the guest is actually charged.
-function priceOf(item, ctx) {
-  const live = item.priceName && ctx.lookup ? ctx.lookup(item.priceName) : null;
-  return (live && live.standard && live.standard.display) || item.fallback || '';
+function priceOf({ priceName, fallback }, ctx) {
+  const live = priceName && ctx.lookup ? ctx.lookup(priceName) : null;
+  return (live && live.standard && live.standard.display) || fallback || '';
 }
 
 // ---- builders: answers that FAQ does not cover because they are data ----
@@ -86,8 +86,8 @@ function tourPrices(ctx) {
   };
 }
 
-function airportPrice(ctx) {
-  const t = ctx.catalog ? (ctx.catalog.transfers || []).find((x) => /airport/i.test(x.route)) : null;
+function airportPrice({ catalog }) {
+  const t = catalog ? (catalog.transfers || []).find((x) => /airport/i.test(x.route)) : null;
   const price = t ? t.display : '';
   return {
     text: price
@@ -97,9 +97,9 @@ function airportPrice(ctx) {
   };
 }
 
-function charterPrices(ctx) {
+function charterPrices({ catalog }) {
   const rows = (CHARTER.durations || []).map((d) => {
-    const c = ctx.catalog ? (ctx.catalog.charters || []).find((x) => x.duration === d.dur) : null;
+    const c = catalog ? (catalog.charters || []).find((x) => x.duration === d.dur) : null;
     return { label: d.name, note: d.sub, price: (c && c.display) || '', href: '/charter.html' };
   }).filter((r) => r.price);
   return {

@@ -17,15 +17,15 @@
 // Box titles are charter's exact wording - "What's included" / "Not included".
 // Transfer and airport used to say "What's excluded", which is the same idea in
 // different words on pages a guest reads back to back.
-export function detailBlocks(title, tinfo, rest = []) {
+export function detailBlocks(title, { facts, included, excluded }, rest = []) {
   return [
     { type: 'heading', sub: false, html: title },
-    { type: 'facts', items: tinfo.facts },
+    { type: 'facts', items: facts },
     {
       type: 'boxes',
       items: [
-        { title: "What's included", variant: 'yes', list: tinfo.included },
-        { title: 'Not included', variant: 'no', list: tinfo.excluded },
+        { title: "What's included", variant: 'yes', list: included },
+        { title: 'Not included', variant: 'no', list: excluded },
       ],
     },
     ...rest,

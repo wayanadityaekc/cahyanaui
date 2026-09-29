@@ -14,7 +14,7 @@ import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 // SERVER-SIDE ONLY: pulls in the whole tour dataset, so it must not be imported
 // from a client component (ListingPage is one).
 const parked = new Set(HIDDEN_TOURS);
-function isPackage(t) { return (t.items || []).some((i) => i.type === 'sub'); }
+function isPackage({ items }) { return (items || []).some((i) => i.type === 'sub'); }
 
 const INDEX = {};
 Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {

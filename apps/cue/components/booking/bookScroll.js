@@ -23,7 +23,7 @@ export function scrollToBookCard(e) {
 // So a target counts as "on screen" only once enough of it is visible to be usable:
 // 160px, or half the element when it is shorter than that (the inline price row is
 // only ~79px tall, so a flat 160 would never let it count).
-function ENOUGH(rect) { return Math.min(160, rect.height * 0.5); }
+function ENOUGH({ height }) { return Math.min(160, height * 0.5); }
 
 // One observer, shared wiring: report whether anything matching `selector` is on
 // screen, ignoring the element that asked (a bar must not hide because of itself).

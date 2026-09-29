@@ -19,9 +19,9 @@ export function cascadeFrom(state, dayIndex, date) {
 }
 
 // Two full-day programmes cannot share a date.
-export function hasClash(state, isFullDay) {
+export function hasClash({ days }, isFullDay) {
   const seen = {};
-  return (state.days || []).some((d) => {
+  return (days || []).some((d) => {
     if (!d.date || !(d.items || []).some(isFullDay)) return false;
     if (seen[d.date]) return true;
     seen[d.date] = true;
@@ -29,10 +29,10 @@ export function hasClash(state, isFullDay) {
   });
 }
 
-export function clashDates(state, isFullDay) {
+export function clashDates({ days }, isFullDay) {
   const seen = {};
   const out = [];
-  (state.days || []).forEach((d) => {
+  (days || []).forEach((d) => {
     if (!d.date || !(d.items || []).some(isFullDay)) return;
     if (seen[d.date]) out.push(d.date);
     seen[d.date] = true;

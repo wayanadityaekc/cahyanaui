@@ -20,7 +20,7 @@ const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, fl
 // server uses to de-dupe reviews. Needed because "Leave a Review" now aggregates
 // across ALL past bookings (Wayan, Sep 2026), not just the tours in one trip, so
 // two different bookings can carry the same service name.
-function itemKey(it) { return `${it.ref}::${it.service}`; }
+function itemKey({ ref, service }) { return `${ref}::${service}`; }
 
 // Login-only, exactly as the server gate requires: opened only from My Trips (Past
 // Trip), with each item's own booking_ref carried along. One overall rating +

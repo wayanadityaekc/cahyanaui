@@ -266,9 +266,9 @@ export default function MyTripsCart() {
   // The real category for a row, so the date editor offers the right start times.
   // A transfer or charter row is free all day, which is what a null/own-kind category
   // gives - allowedSlots() only restricts the bookable programme categories.
-  function categoryOfRow(r) {
-    if (r.kind !== 'day') return r.kind;
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === r.service);
+  function categoryOfRow({ kind, service }) {
+    if (kind !== 'day') return kind;
+    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === service);
     return c ? c.category : null;
   }
 
@@ -298,20 +298,20 @@ export default function MyTripsCart() {
   // transfer/charter, index itu udah gak match posisi asli di state.transfers/
   // .charters, jadi splice-nya no-op alias silently gagal. Row day-item TETEP
   // di-cari via indexOf(service) di hari-nya, itu udah bener dari dulu.
-  function remove(row) {
+  function remove({ kind, localIndex, day_no, service }) {
     const next = JSON.parse(JSON.stringify(state));
-    if (row.kind === 'transfer') next.transfers.splice(row.localIndex, 1);
-    else if (row.kind === 'charter') next.charters.splice(row.localIndex, 1);
+    if (kind === 'transfer') next.transfers.splice(localIndex, 1);
+    else if (kind === 'charter') next.charters.splice(localIndex, 1);
     else {
-      let d = next.days[row.day_no - 1];
+      let d = next.days[day_no - 1];
       // Defensive fallback: if the expected day doesn't actually hold this item
       // (an index mismatch we've been bitten by twice now), search every day
       // instead of no-op'ing - a delete tap should never just do nothing.
-      if (!d || !(d.items || []).includes(row.service)) {
-        d = (next.days || []).find((dd) => (dd.items || []).includes(row.service));
+      if (!d || !(d.items || []).includes(service)) {
+        d = (next.days || []).find((dd) => (dd.items || []).includes(service));
       }
       if (d) {
-        const k = d.items.indexOf(row.service);
+        const k = d.items.indexOf(service);
         if (k >= 0) {
           d.items.splice(k, 1);
           if (d.itemModes) d.itemModes.splice(k, 1);

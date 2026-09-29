@@ -227,11 +227,11 @@ export default function BookConfirmModal() {
   // not reliable - BookSidebar hardcodes `type:'tour'` for every detail-page item
   // (tour / experience / performance alike), so the REAL category comes from the
   // pricing catalog.
-  function categoryOfLine(l) {
-    const c = catalog && catalog.items.find((i) => i.name === l.service);
-    return c ? c.category : l.type || null;
+  function categoryOfLine({ service, type }) {
+    const c = catalog && catalog.items.find((i) => i.name === service);
+    return c ? c.category : type || null;
   }
-  function isAirportLine(l) { return l.service === AIRPORT_ROUTE; }
+  function isAirportLine({ service }) { return service === AIRPORT_ROUTE; }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   // The airport leg is the one case that does NOT get a second date control: its
   // flight date & time IS the pick-up date and time (same rule as the airport

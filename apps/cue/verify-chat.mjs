@@ -81,8 +81,10 @@ for (const w of [390, 768, 1280]) {
     page.on('pageerror', (e) => { if (!KNOWN.test(String(e))) errs.push(String(e)); });
     await page.goto(BASE + path, { waitUntil: 'networkidle' });
 
-    const btn = page.locator('button[aria-label="Chat with us"]');
-    ok(await btn.count() === 1, `${w}${path}: expected exactly 1 chat button, got ${await btn.count()}`);
+    // the app bottom bar renders a second launcher, hidden outside app mode: only one may show
+    const btn = page.locator('header button[aria-label="Chat with us"]');
+    const shown = await page.locator('button[aria-label="Chat with us"]:visible').count();
+    ok(shown === 1, `${w}${path}: expected exactly 1 visible chat button, got ${shown}`);
     ok(await btn.isVisible(), `${w}${path}: chat button not visible`);
 
     // The panel is lazy: nothing of it exists until the button is pressed.
@@ -293,7 +295,7 @@ for (const w of [390, 768, 1280]) {
     const KNOWN = /Minified React error #418/;
     page.on('pageerror', (e) => { if (!KNOWN.test(String(e))) errs.push(String(e)); });
     await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
-    await page.locator('button[aria-label="Chat with us"]').click();
+    await page.locator('header button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
     const input = panel.getByLabel('Your question');
@@ -333,7 +335,7 @@ for (const w of [390, 768, 1280]) {
     // And the conversation is still there after a reload - that is what the
     // stored thread id is for.
     await page.reload({ waitUntil: 'networkidle' });
-    await page.locator('button[aria-label="Chat with us"]').click();
+    await page.locator('header button[aria-label="Chat with us"]').click();
     const again = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await again.waitFor({ state: 'visible', timeout: 10000 });
     ok(await seen(again, chat.reply, 15000), `${w}: the conversation did not survive a reload`);
@@ -369,7 +371,7 @@ for (const w of [390, 768, 1280]) {
 
     const page = await sctx.newPage();
     await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
-    await page.locator('button[aria-label="Chat with us"]').click();
+    await page.locator('header button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
 
@@ -424,7 +426,7 @@ for (const w of [390, 768, 1280]) {
 
     const page = await nctx.newPage();
     await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
-    await page.locator('button[aria-label="Chat with us"]').click();
+    await page.locator('header button[aria-label="Chat with us"]').click();
     const panel = page.locator('[role=dialog][aria-label="Cahyana Support"]');
     await panel.waitFor({ state: 'visible', timeout: 10000 });
     const input = panel.getByLabel('Your question');

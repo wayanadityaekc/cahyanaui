@@ -64,4 +64,4 @@ const LIST_BASE =
 export const INFO_LIST_YES = `${LIST_BASE} [&_li]:text-ink [&_li]:before:bg-gold`;
 // Kept, though nothing renders it today: a muted dot for a muted list.
 export const INFO_LIST_NO = `${LIST_BASE} [&_li]:text-muted [&_li]:before:bg-muted`;
-export const infoList = (v) => (String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES);
+export function infoList(v) { return (String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES); }

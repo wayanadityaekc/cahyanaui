@@ -23,7 +23,7 @@ const FOCUSABLE =
 // Open dialogs, oldest first. Only the last one answers Escape and Tab.
 const stack = [];
 
-const visible = (el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+function visible(el) { return el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden'; }
 
 export default function useDialog({ shown, onClose, escape = true }) {
   const ref = useRef(null);
@@ -44,14 +44,14 @@ export default function useDialog({ shown, onClose, escape = true }) {
     // visibility:hidden on the very first frame, and a hidden element refuses focus -
     // measured: the first call silently did nothing. Try now, then again once the
     // transition has started.
-    const focusBox = () => { node.focus({ preventScroll: true }); return document.activeElement === node; };
+    function focusBox() { node.focus({ preventScroll: true }); return document.activeElement === node; }
     let raf = 0;
     let timer = 0;
     if (!focusBox()) {
       raf = requestAnimationFrame(() => { if (!focusBox()) timer = setTimeout(focusBox, 120); });
     }
 
-    const onKey = (e) => {
+    function onKey(e) {
       if (stack[stack.length - 1] !== token) return;
 
       if (e.key === 'Escape') {
@@ -85,7 +85,7 @@ export default function useDialog({ shown, onClose, escape = true }) {
         e.preventDefault();
         first.focus();
       }
-    };
+    }
 
     document.addEventListener('keydown', onKey);
     return () => {

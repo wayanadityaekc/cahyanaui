@@ -48,14 +48,14 @@ export default function TransferPicker() {
 
   // Straight swap: with one side always Ubud this just turns "X to Ubud" into
   // "Ubud to X", which is the same price and the same row, the other way round.
-  const swap = () => { pickFrom(to); pickTo(from); };
+  function swap() { pickFrom(to); pickTo(from); }
 
   // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
   // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto)`).
   // "Book Now" adds + redirects; "Save trip" adds + stays on the page.
   // No date field on this form (unlike Charter/Airport) - the row lands in My
   // Trips undated, same "tap to set date" fallback as adding a tour undated.
-  const addToTrip = (goto) => {
+  function addToTrip(goto) {
     if (!entry) return;
     save({
       ...state,
@@ -70,7 +70,7 @@ export default function TransferPicker() {
       setToast('Added to My Trips');
       setTimeout(() => setToast(''), 2600);
     }
-  };
+  }
 
   // Tailwind-native (migrasi Fase 2): .tpick* -> utilities. Toggle return pakai
   // pola `peer` (input hidden = peer, switch pakai peer-checked:). Select tetep

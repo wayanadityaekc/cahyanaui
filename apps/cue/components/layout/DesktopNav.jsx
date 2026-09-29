@@ -17,10 +17,11 @@ export const PROGRAM_LINKS = [
   ['/charter.html', 'Charter'],
 ];
 
-const LINK = (active) =>
-  'inline-flex items-center gap-1 h-[var(--btn-h)] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ' +
-  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ' +
-  (active ? 'font-semibold text-green bg-cream' : 'font-medium text-gold');
+function LINK(active) {
+  return 'inline-flex items-center gap-1 h-[var(--btn-h)] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ' +
+    '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ' +
+    (active ? 'font-semibold text-green bg-cream' : 'font-medium text-gold');
+}
 
 export default function DesktopNav({ isActive }) {
   const [open, setOpen] = useState(false);
@@ -31,8 +32,8 @@ export default function DesktopNav({ isActive }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const onDoc = (e) => { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') { setOpen(false); btnRef.current?.focus(); } };
+    function onDoc(e) { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); }
+    function onKey(e) { if (e.key === 'Escape') { setOpen(false); btnRef.current?.focus(); } }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {

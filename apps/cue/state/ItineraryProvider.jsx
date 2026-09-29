@@ -34,11 +34,11 @@ export function ItineraryProvider({ children }) {
     setHydrated(true);
   }, []);
 
-  const save = (next) => {
+  function save(next) {
     const clean = normalise(next);
     setState(clean);
     writeLocal(KEY.itinerary, clean);
-  };
+  }
 
   const count =
     state.days.reduce((n, d) => n + ((d.items && d.items.length) || 0), 0) +

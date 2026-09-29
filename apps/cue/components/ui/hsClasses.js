@@ -63,8 +63,7 @@ const PANEL_POPUP_STATIC =
   'flex flex-col overflow-hidden [overscroll-behavior:contain] ' +
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
   PANEL_MOBILE_TRANSITION;
-export const panelPopup = (open) =>
-  `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
+export function panelPopup(open) { return `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`; }
 export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
 export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-white text-green text-[1.2rem] leading-none cursor-pointer';
@@ -78,21 +77,23 @@ export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar
 // berubah pas hover (specificity is-sel > :hover di asli), jadi bg-nya di cabang.
 // `disabled` (Sep 2026, time-slot picker #TIME-1): opsi tetep KELIATAN (guest ngerti ada
 // slot itu tapi gak bisa dipilih) - dimuting + no hover/cursor, bukan disembunyiin.
-export const opt = (sel, disabled) =>
-  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
-    disabled
-      ? 'cursor-not-allowed opacity-40 bg-transparent'
-      : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
-  }`;
+export function opt(sel, disabled) {
+  return `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
+      disabled
+        ? 'cursor-not-allowed opacity-40 bg-transparent'
+        : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
+    }`;
+}
 
 // .hs-overlay (scrim; cuma tampil pas open). --elevated = z lebih tinggi (dibuka dari modal).
 // Fades in/out (was an instant block/hidden snap) - the consumers that render this
 // (<Overlay>, DatePopup) are always mounted once open has ever been true, so the
 // transition always has a "closed" frame to animate from.
-export const overlay = (open, elevated) =>
-  `fixed inset-0 bg-[rgba(26,26,26,0.42)] ${elevated ? 'z-[300]' : 'z-[55]'} ` +
-  `transition-opacity duration-[var(--dur-slow)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
-  `${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`;
+export function overlay(open, elevated) {
+  return `fixed inset-0 bg-[rgba(26,26,26,0.42)] ${elevated ? 'z-[300]' : 'z-[55]'} ` +
+    `transition-opacity duration-[var(--dur-slow)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
+    `${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`;
+}
 
 // ===== DateField: chevron kalender + panel bookdate + kalender =====
 // .hs-chev--cal (17px, gak muter).
@@ -108,8 +109,7 @@ const PANEL_BOOKDATE_STATIC =
   '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] ' +
   PANEL_MOBILE_TRANSITION + ' ' +
   'min-[769px]:w-[min(430px,92vw)] min-[769px]:max-h-[86vh] min-[769px]:overflow-y-auto min-[769px]:[scrollbar-width:none] min-[769px]:[&::-webkit-scrollbar]:hidden';
-export const panelBookdate = (open) =>
-  `${PANEL_BOOKDATE_STATIC} ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${open ? '[transform:translate(-50%,-50%)_scale(1)] min-[769px]:[transform:translate(-50%,-50%)]' : '[transform:translate(-50%,-50%)_scale(0.96)] min-[769px]:[transform:translate(-50%,-48%)]'}`;
+export function panelBookdate(open) { return `${PANEL_BOOKDATE_STATIC} ${open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'} ${open ? '[transform:translate(-50%,-50%)_scale(1)] min-[769px]:[transform:translate(-50%,-50%)]' : '[transform:translate(-50%,-50%)_scale(0.96)] min-[769px]:[transform:translate(-50%,-48%)]'}`; }
 // Head bookdate: flex-none (popup) + sticky/top-0/bg-white di HP (dari @media max-768)
 // DAN desktop (dari bookdate min-769); z-1 cuma desktop.
 export const PANEL_HEAD_BOOKDATE =
@@ -128,14 +128,15 @@ export const CAL_DOW = 'font-body font-medium text-label tracking-[0.14em] upper
 // Hari: sel (tanggal kepilih, prioritas) = gold/soft-black + putih (konvensi active-state
 // design system) · off (muted, gak bisa klik) · normal (hover bg abu tipis). Dulu tanggal
 // kepilih gak ke-highlight (CSS `.sel` vs JSX `is-sel` mismatch) - sekarang di-wire lewat flag.
-export const calDay = (off, sel) =>
-  `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
-    sel
-      ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
-      : off
-        ? 'bg-transparent text-[#cfccc4] cursor-default'
-        : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
-  }`;
+export function calDay(off, sel) {
+  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
+      sel
+        ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
+        : off
+          ? 'bg-transparent text-[#cfccc4] cursor-default'
+          : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
+    }`;
+}
 
 // ===== Footer kalender, dipakai DateField DAN DatePopup =====
 // (`panelDateSheet` + `PANEL_HEAD_SHEET` UDAH DIHAPUS Sep 2026: DatePopup sekarang
@@ -155,15 +156,17 @@ export const PANEL_CLOSE_SHEET = `${PANEL_CLOSE} min-[769px]:hidden`;
 // ===== HeroSearch: dropdown "How to explore" (.hs-panel--menu). Desktop = dropdown
 // ngambang (base .hs-panel absolute), HP = bottom-sheet. Head KE-HIDE di desktop
 // (base .hs-panel__head display:none, gak ada override). =====
-export const panelMenu = (open) => [
-  'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden [overscroll-behavior:contain]',
-  '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]', PANEL_MOBILE_TRANSITION,
-  open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-8px)]',
-  '[@media(max-width:768px)]:fixed [@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
-  '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
-  '[@media(max-width:768px)]:max-h-[calc(100dvh-100px)] [@media(max-width:768px)]:overflow-y-auto [@media(max-width:768px)]:[scrollbar-width:none] [@media(max-width:768px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:768px)]:block [@media(max-width:768px)]:opacity-100',
-  open ? '[@media(max-width:768px)]:[transform:translateY(0)]' : '[@media(max-width:768px)]:[transform:translateY(100%)]',
-].join(' ');
+export function panelMenu(open) {
+  return [
+    'absolute top-[calc(100%_+_8px)] left-0 right-0 z-[60] bg-white [border:1px_solid_var(--line)] rounded-lg overflow-hidden [overscroll-behavior:contain]',
+    '[transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s]', PANEL_MOBILE_TRANSITION,
+    open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-8px)]',
+    '[@media(max-width:768px)]:fixed [@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
+    '[@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
+    '[@media(max-width:768px)]:max-h-[calc(100dvh-100px)] [@media(max-width:768px)]:overflow-y-auto [@media(max-width:768px)]:[scrollbar-width:none] [@media(max-width:768px)]:[&::-webkit-scrollbar]:hidden [@media(max-width:768px)]:block [@media(max-width:768px)]:opacity-100',
+    open ? '[@media(max-width:768px)]:[transform:translateY(0)]' : '[@media(max-width:768px)]:[transform:translateY(100%)]',
+  ].join(' ');
+}
 // Head menu: hidden di desktop, muncul jadi sheet-head di HP.
 export const PANEL_HEAD_MENU =
   'hidden [@media(max-width:768px)]:flex [@media(max-width:768px)]:items-center [@media(max-width:768px)]:justify-between [@media(max-width:768px)]:pt-4 [@media(max-width:768px)]:px-5 [@media(max-width:768px)]:pb-3 [@media(max-width:768px)]:[border-bottom:1px_solid_var(--line)] [@media(max-width:768px)]:sticky [@media(max-width:768px)]:top-0 [@media(max-width:768px)]:bg-white';
@@ -172,8 +175,7 @@ export const PANEL_HEAD_MENU =
 export const PANEL_BODY_MENU = 'max-h-[500px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 // Opt HeroSearch: padding base .hs-opt (0.85rem 1rem, TANPA .bk-opt). Konten (ic/nm/pr)
 // tetep class shared. is-sel sama kaya Select.
-export const optMenu = (sel) =>
-  `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_var(--line)] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`;
+export function optMenu(sel) { return `w-full flex items-center gap-[0.8rem] py-[0.85rem] px-4 border-none text-left cursor-pointer [&+&]:[border-top:1px_solid_var(--line)] ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`; }
 
 // Custom-select shell + option-item primitives (B-FINAL). Wrapper, hidden native,
 // and the flag / name / price / icon parts of option rows and the selected-value display.

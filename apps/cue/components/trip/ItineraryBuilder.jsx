@@ -120,10 +120,10 @@ export default function ItineraryBuilder() {
   const { openBooking } = useBooking();
   const pricing = usePricing();
 
-  const isFullDay = (name) => {
+  function isFullDay(name) {
     const cat = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return !!cat && (cat.category === 'tour' || cat.category === 'combo');
-  };
+  }
 
   const [sgDays, setSgDays] = useState(3);
   const [sgGuests, setSgGuests] = useState(2);
@@ -163,21 +163,21 @@ export default function ItineraryBuilder() {
   const dayCount = days.filter((d) => d.items && d.items.length).length;
 
   // Real category for the start-time rules (same catalog lookup isFullDay does).
-  const categoryOf = (name) => {
+  function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;
-  };
+  }
 
-  const addDay = () => save({ ...state, days: [...days, { items: [], itemModes: [], date: '' }] });
-  const clearAll = () => save({ days: [], transfers: [], charters: [] });
+  function addDay() { return save({ ...state, days: [...days, { items: [], itemModes: [], date: '' }] }); }
+  function clearAll() { return save({ days: [], transfers: [], charters: [] }); }
 
-  const setStart = (v) => {
+  function setStart(v) {
     setDateRange(v, dateFrom ? '' : '');
     const next = days.map((d, i) => ({ ...d, date: v ? addDays(v, i) : '' }));
     save({ ...state, days: next });
-  };
+  }
 
-  const book = () => {
+  function book() {
     if (!rows.length || rows.some((r) => !r.date)) return;
     openBooking({
       type: 'itinerary',
@@ -191,7 +191,7 @@ export default function ItineraryBuilder() {
       lines: rows.map((r) => ({ ...r, pickup: hotel, dropoff: hotel })),
       onSuccess: () => clearAll(),
     });
-  };
+  }
 
   // WO2: a guest sent off to sign in from this page comes back here holding a
   // resume marker - open the booking form for them, as if they had tapped again.

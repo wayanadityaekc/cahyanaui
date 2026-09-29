@@ -29,10 +29,10 @@ export default function ProgramPromoSlider() {
 
   if (!total) return null;
 
-  const go = (n) => {
+  function go(n) {
     setAuto(false);
     setCur((n + total) % total);
-  };
+  }
 
   // Arrows are desktop hover-only (site convention: mobile navigates by swipe/dots,
   // not visible arrows - showing them always on mobile overlapped the centered text).

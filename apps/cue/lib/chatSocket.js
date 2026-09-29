@@ -56,11 +56,11 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
   let pongTimer = null;
   let retryTimer = null;
 
-  const setLive = (v) => {
+  function setLive(v) {
     if (live === v) return;
     live = v;
     if (onLive) onLive(v);
-  };
+  }
 
   function stopTimers() {
     clearInterval(pingTimer); pingTimer = null;

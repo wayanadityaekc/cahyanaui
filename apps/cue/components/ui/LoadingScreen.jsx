@@ -23,7 +23,7 @@ export default function LoadingScreen() {
 
   // Fade the arrival splash once the page has loaded.
   useEffect(() => {
-    const hide = () => setOut(true);
+    function hide() { return setOut(true); }
     let cap;
     if (document.readyState === 'complete') {
       cap = setTimeout(hide, 350);
@@ -40,7 +40,7 @@ export default function LoadingScreen() {
   // Re-show the splash the moment a real navigation starts, so the gap before
   // the next page paints is never blank.
   useEffect(() => {
-    const onClick = (e) => {
+    function onClick(e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = e.target.closest && e.target.closest('a[href]');
       if (!a) return;
@@ -70,11 +70,11 @@ export default function LoadingScreen() {
       // never unloads - so hide the overlay again instead of leaving it stuck.
       clearTimeout(safety.current);
       safety.current = setTimeout(() => setOut(true), 3000);
-    };
+    }
     document.addEventListener('click', onClick, true);
     // Coming back via the browser's back/forward cache restores this page with
     // the overlay still up - hide it so the restored page isn't stuck behind it.
-    const onShow = () => setOut(true);
+    function onShow() { return setOut(true); }
     window.addEventListener('pageshow', onShow);
     return () => {
       document.removeEventListener('click', onClick, true);

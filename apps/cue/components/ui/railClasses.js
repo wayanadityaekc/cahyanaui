@@ -149,13 +149,14 @@ export const RAIL_LABEL =
 // `collapsed` centers the icon and drops the row to a square instead of a
 // full-width bar - the label is still IN THE DOM (title attribute carries it
 // for a hover tooltip and screen readers), just not painted.
-export const railItem = (active, collapsed = false) =>
-  `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
-  'rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
-  '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
-  (active
-    ? `font-semibold text-gold bg-white [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
-    : 'text-muted [&>svg]:opacity-75 hover:text-gold');
+export function railItem(active, collapsed = false) {
+  return `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
+    'rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
+    '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
+    (active
+      ? `font-semibold text-gold bg-white [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
+      : 'text-muted [&>svg]:opacity-75 hover:text-gold');
+}
 
 // --- header row: collapse trigger + breadcrumb (Sep 2026) -------------------
 // Desktop only, same as the rest of the rail chrome - mobile never had a
@@ -234,10 +235,11 @@ export const MENU_ROW_BOX =
   'flex items-center gap-[0.65rem] w-full text-left p-[0.7rem_0.75rem] rounded-[var(--r-md)] ' +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0';
 
-export const railMobileItem = (active) =>
-  `${MENU_ROW_BOX} ` +
-  'bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
-  (active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');
+export function railMobileItem(active) {
+  return `${MENU_ROW_BOX} ` +
+    'bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ' +
+    (active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');
+}
 
 export const RAIL_MCHEV = 'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted opacity-70';
 

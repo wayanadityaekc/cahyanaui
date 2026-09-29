@@ -4,15 +4,15 @@ import Rating from '@/components/Rating';
 
 const PLACEHOLDER_GRADIENT = 'linear-gradient(135deg, rgba(31, 61, 43, 0.92), rgba(46, 90, 64, 0.86))';
 
-const ClockIcon = () => <Clock strokeWidth={1.7} />;
-const PinIcon = () => <MapPin strokeWidth={1.7} />;
-const UserIcon = () => <UserRound strokeWidth={1.7} />;
+function ClockIcon() { return <Clock strokeWidth={1.7} />; }
+function PinIcon() { return <MapPin strokeWidth={1.7} />; }
+function UserIcon() { return <UserRound strokeWidth={1.7} />; }
 // Category badges were solid shapes before Lucide, so they keep `fill` -
 // outline-only would read as a different badge style.
-const LeafIcon = () => <Leaf fill="currentColor" aria-hidden="true" />;
-const MaskIcon = () => <VenetianMask fill="currentColor" aria-hidden="true" />;
-const MountainIcon = () => <Mountain fill="currentColor" aria-hidden="true" />;
-const TempleIcon = () => <Landmark fill="currentColor" aria-hidden="true" />;
+function LeafIcon() { return <Leaf fill="currentColor" aria-hidden="true" />; }
+function MaskIcon() { return <VenetianMask fill="currentColor" aria-hidden="true" />; }
+function MountainIcon() { return <Mountain fill="currentColor" aria-hidden="true" />; }
+function TempleIcon() { return <Landmark fill="currentColor" aria-hidden="true" />; }
 
 // Category -> badge tone + icon. Labels are the real category (no invented
 // "Popular" tags), tone reuses the brand gold/green.

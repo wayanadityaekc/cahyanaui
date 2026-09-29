@@ -77,11 +77,11 @@ export default function AccountSettings() {
     if (account) setForm({ name: account.name || '', email: account.email || '', phone: account.phone || '' });
   }, [account]);
 
-  const confirmDelete = async () => {
+  async function confirmDelete() {
     const res = await deleteAccount();
     if (res.ok) setDeleted(true);
     return res;
-  };
+  }
 
   if (deleted) {
     return (
@@ -107,7 +107,7 @@ export default function AccountSettings() {
     );
   }
 
-  const save = async () => {
+  async function save() {
     setBusy(true);
     setMsg('');
     try {
@@ -127,9 +127,9 @@ export default function AccountSettings() {
     } finally {
       setBusy(false);
     }
-  };
+  }
 
-  const set = (k) => (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
+  function set(k) { return (e) => setForm((v) => ({ ...v, [k]: e.target.value })); }
 
   return (
     <SettingsShell>

@@ -14,7 +14,7 @@ import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 // SERVER-SIDE ONLY: pulls in the whole tour dataset, so it must not be imported
 // from a client component (ListingPage is one).
 const parked = new Set(HIDDEN_TOURS);
-const isPackage = (t) => (t.items || []).some((i) => i.type === 'sub');
+function isPackage(t) { return (t.items || []).some((i) => i.type === 'sub'); }
 
 const INDEX = {};
 for (const [slug, t] of Object.entries(TOUR_CONTENT)) {
@@ -59,7 +59,7 @@ export function inclLabel(slug) {
 // pages, which are server components: ListingPage itself is 'use client', so
 // importing this there would ship the whole tour dataset to the browser.
 export function withAttractionCards(listing, attractions = {}) {
-  const walk = (node) => {
+  function walk(node) {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
     const next = {};
@@ -98,7 +98,7 @@ export function withAttractionCards(listing, attractions = {}) {
       }
     }
     return next;
-  };
+  }
   return walk(listing);
 }
 

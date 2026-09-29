@@ -35,7 +35,7 @@ export const TIME_SLOTS = (() => {
 })();
 
 // Inclusive half-hour range, e.g. range('03:00', '09:00').
-const range = (from, to) => TIME_SLOTS.filter((t) => t >= from && t <= to);
+function range(from, to) { return TIME_SLOTS.filter((t) => t >= from && t <= to); }
 
 const PRE_DAWN = ['02:00', '03:00'];            // trekking + jeep sunrise: those two, nothing else
 const MORNING = ['08:00', '08:30', '09:00'];    // the normal tour departure window

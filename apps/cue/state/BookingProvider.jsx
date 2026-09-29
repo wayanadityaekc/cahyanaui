@@ -11,11 +11,11 @@ const BookingContext = createContext(null);
 // and came back tomorrow should land where the link says, not be thrown into a form.
 const RESUME_MS = 60 * 60 * 1000;
 
-const here = () => window.location.pathname;
-const readMarker = () => {
+function here() { return window.location.pathname; }
+function readMarker() {
   const m = readLocalJSON(KEY.resumeBook, null);
   return m && m.path && Date.now() - (m.at || 0) < RESUME_MS ? m : null;
-};
+}
 
 /**
  * WO2 (Sep 2026, Wayan): BOOKING NEEDS AN ACCOUNT. Browsing and the cart do not.

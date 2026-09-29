@@ -27,10 +27,10 @@ export default function BookCta({ item, perPerson = false }) {
   const [toast, setToast] = useState('');
   const [confirm, setConfirm] = useState(null);
 
-  const isFullDay = (name) => {
+  function isFullDay(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return !!c && (c.category === 'tour' || c.category === 'combo');
-  };
+  }
 
   useEffect(() => {
     if (!item) return;
@@ -38,8 +38,8 @@ export default function BookCta({ item, perPerson = false }) {
     if (!root) return;
     const bookBtn = root.querySelector('.program-cta__btn--book');
     const addBtn = root.querySelector('.program-cta__btn--add');
-    const onBook = (e) => { e.preventDefault(); setAsk('book'); };
-    const onAdd = (e) => { e.preventDefault(); setAsk('add'); };
+    function onBook(e) { e.preventDefault(); setAsk('book'); }
+    function onAdd(e) { e.preventDefault(); setAsk('add'); }
     if (bookBtn) bookBtn.addEventListener('click', onBook);
     if (addBtn) addBtn.addEventListener('click', onAdd);
     return () => {
@@ -56,12 +56,12 @@ export default function BookCta({ item, perPerson = false }) {
 
   // The real category, for the start-time rules (see BookSidebar for why the page
   // type cannot be used).
-  const categoryOf = (name) => {
+  function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;
-  };
+  }
 
-  const pick = (date, time) => {
+  function pick(date, time) {
     const goto = ask === 'book';
     // Same guard the old cartAddChecked used: two full-day programmes on one date.
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
@@ -70,13 +70,13 @@ export default function BookCta({ item, perPerson = false }) {
       return;
     }
     add(date, goto, time);
-  };
+  }
 
-  const add = (date, goto, time) => {
+  function add(date, goto, time) {
     save({ ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], itemTimes: [time || ''], date, guests: '' }] });
     if (goto) window.location.href = '/my-trips.html';
     else setToast('Added to My Trips');
-  };
+  }
 
   useBodyLock(!!confirm);
 

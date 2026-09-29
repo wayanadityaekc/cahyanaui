@@ -60,14 +60,14 @@ export function useCharterTier({ area = '' } = {}) {
   const symbol = (catalog && catalog.symbol) || '$';
   const isIdr = currency === 'IDR';
 
-  const fmt = (n) => symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US');
-  const tier = (d) => {
+  function fmt(n) { return symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US'); }
+  function tier(d) {
     if (!catalog) return null;
     const base = catalog.charters.find((c) => c.duration === d);
     if (!base) return null;
     const sur = catalog.charterSurcharge;
     return base.display + (area && area !== 'Ubud' && sur ? sur.display : 0);
-  };
+  }
   return { tier, fmt };
 }
 

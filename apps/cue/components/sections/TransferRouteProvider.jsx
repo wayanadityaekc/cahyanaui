@@ -19,7 +19,7 @@ const UBUD = 'Ubud';
 // it depends on nothing but v, so the setters below can keep an empty dep list.
 // An empty v only reaches it from the picker's swap(), which is setting both
 // sides in the same tick - so leave the other side alone rather than forcing Ubud.
-const facing = (v) => (other) => (!v ? other : v === UBUD ? (other === UBUD ? '' : other) : UBUD);
+function facing(v) { return (other) => (!v ? other : v === UBUD ? (other === UBUD ? '' : other) : UBUD); }
 
 const Ctx = createContext(null);
 

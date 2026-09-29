@@ -16,6 +16,6 @@ export default function useMoney() {
     (pricing && pricing.catalog && pricing.catalog.symbol) ||
     '$';
   const locale = currency === 'IDR' ? 'id-ID' : 'en-US';
-  const format = (n) => (n == null ? '-' : symbol + Number(n).toLocaleString(locale));
+  function format(n) { return (n == null ? '-' : symbol + Number(n).toLocaleString(locale)); }
   return { symbol, currency, locale, format };
 }

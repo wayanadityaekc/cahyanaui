@@ -24,13 +24,13 @@ export default function DeleteAccountModal({ open, onClose, onConfirm }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
 
-  const confirm = async () => {
+  async function confirm() {
     setBusy(true);
     setMsg('');
     const res = await onConfirm();
     setBusy(false);
     if (!res || !res.ok) setMsg((res && res.error) || 'Could not delete your account. Please try again.');
-  };
+  }
 
   return (
     <Modal open={open} onClose={busy ? () => {} : onClose} title="Delete your account?">

@@ -94,18 +94,18 @@ export default function HeroMosaic({ photos = [], title }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (e) => {
+    function onKey(e) {
       if (e.key === 'Escape') setAt(null);
       else if (e.key === 'ArrowRight') setAt((i) => (i + 1) % photos.length);
       else if (e.key === 'ArrowLeft') setAt((i) => (i - 1 + photos.length) % photos.length);
-    };
+    }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, photos.length]);
 
   if (!photos.length) return null;
 
-  const tile = (i, cls) => {
+  function tile(i, cls) {
     const p = photos[i];
     return (
       <button
@@ -118,7 +118,7 @@ export default function HeroMosaic({ photos = [], title }) {
         <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
       </button>
     );
-  };
+  }
 
   // Flat, alternating children: big, pair, big, pair... The pair is the only
   // wrapper (it stacks two photos), and it sits as a SIBLING of the big tile

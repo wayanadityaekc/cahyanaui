@@ -7,7 +7,7 @@ import { Info } from 'lucide-react';
 // nyetir posisi popover + panah: 'default' (nempel bawah ikon, ke-center), 'hero'
 // (search form: anchor kiri field), 'booking' (kolom Price). Konten (p / .binfo__lead)
 // di-style lewat [&_p]/[&_.binfo__lead] di container popover.
-const wrap = (v) => `inline-flex align-middle ${v === 'default' ? 'relative' : 'static'}`;
+function wrap(v) { return `inline-flex align-middle ${v === 'default' ? 'relative' : 'static'}`; }
 const BTN =
   'inline-flex items-center justify-center w-[18px] h-[18px] p-0 border-none border-current bg-none text-gold cursor-pointer rounded-[50%] ' +
   '[transition:color_var(--dur-fast)_ease,background_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] ' +
@@ -35,10 +35,10 @@ export default function InfoPopover({ children, label = 'How to use this form', 
 
   useEffect(() => {
     if (!open) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    }
+    function onKey(e) { return e.key === 'Escape' && setOpen(false); }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {

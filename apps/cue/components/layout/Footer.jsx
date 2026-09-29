@@ -22,8 +22,7 @@ const COMPACT_PATHS = ['/settings.html', '/my-trips.html', '/our-company.html'];
 // (measured: it did, on all three pages, the first time this shipped without
 // this check). Matching either spelling makes the two renders agree no
 // matter which one the pathname happens to be.
-const isCompactPath = (pathname) =>
-  COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, ''));
+function isCompactPath(pathname) { return COMPACT_PATHS.some((p) => pathname === p || pathname === p.replace(/\.html$/, '')); }
 
 // Tailwind-native (migrasi Fase 2): footer (semua halaman). Dulu keluarga
 // .footer* di style.css - sekarang utilities 1:1. Footer punya ukuran teks

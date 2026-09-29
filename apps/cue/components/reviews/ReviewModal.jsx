@@ -20,7 +20,7 @@ const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, fl
 // server uses to de-dupe reviews. Needed because "Leave a Review" now aggregates
 // across ALL past bookings (Wayan, Sep 2026), not just the tours in one trip, so
 // two different bookings can carry the same service name.
-const itemKey = (it) => `${it.ref}::${it.service}`;
+function itemKey(it) { return `${it.ref}::${it.service}`; }
 
 // Login-only, exactly as the server gate requires: opened only from My Trips (Past
 // Trip), with each item's own booking_ref carried along. One overall rating +
@@ -74,15 +74,15 @@ export default function ReviewModal({ open, prefill, onClose }) {
   const view = prefill || lastPrefill.current;
   if (!mounted || !view) return null;
 
-  const close = () => {
+  function close() {
     if (sent.current && refreshTrips) { sent.current = false; refreshTrips(); }
     onClose();
-  };
+  }
 
   const items = view.items || [];
   const multi = items.length > 1;
 
-  const submit = async () => {
+  async function submit() {
     const picked = items.filter((it) => checked.includes(itemKey(it)));
     const { ok, errors: fieldErrors } = validateWith(reviewSchema, {
       picked: picked.map(itemKey),
@@ -130,13 +130,12 @@ export default function ReviewModal({ open, prefill, onClose }) {
     // rather than hiding them behind a success screen.
     setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
     setDone(true);
-  };
+  }
 
   // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/title/group/btn/success
   // pakai konstanta shared (modalClasses.js). Star row + checklist row -> inline
   // utility, isolated ke komponen ini.
-  const star = (on) =>
-    `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`;
+  function star(on) { return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${on ? 'text-amber' : 'text-[#d8d2c4]'}`; }
   const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
   const CHECK_INPUT = 'mt-[0.2rem] w-4 h-4 flex-none accent-[var(--color-cta)]';
   const CHECK_SVC = 'font-semibold text-green text-body';

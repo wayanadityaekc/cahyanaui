@@ -13,14 +13,14 @@ import { EXPLORE_TOURS } from '@/content/shared/home';
 // homepage-nya langsung bikin salinan keduanya gak ada lagi.
 const PICK = ['Ubud Tour', 'Ubud Culture Day'];
 
-const byProgram = (program) => {
+function byProgram(program) {
   const card = EXPLORE_TOURS.find((c) => c.program === program);
   // Sengaja MELEDAK, bukan diem-diem ngasih daftar pendek: kalau nama programnya
   // berubah di home.js, blok "Our tours" bakal kehilangan kartu tanpa satu pun
   // pesan - persis jenis drift yang bikin harga di atas basi berbulan-bulan.
   if (!card) throw new Error(`guide-more: EXPLORE_TOURS has no program "${program}"`);
   return card;
-};
+}
 
 export const SEE_OUR_TOURS = {
   kind: 'tours',

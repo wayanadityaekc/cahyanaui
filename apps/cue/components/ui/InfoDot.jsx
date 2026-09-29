@@ -48,8 +48,8 @@ export default function InfoDot({ label = 'More information', align = 'start', s
 
   useEffect(() => {
     if (!open) return undefined;
-    const onDown = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false); }
+    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
     return () => {

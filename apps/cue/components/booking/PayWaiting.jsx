@@ -63,7 +63,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     if (!token) { setPhase('blind'); return; }
     let stop = false;
     const started = Date.now();
-    const ask = async () => {
+    async function ask() {
       try {
         const r = await fetch(`${API_BASE}/booking-status/${encodeURIComponent(bookingRef)}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -90,7 +90,7 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
       if (stop) return;
       if (Date.now() - started > GIVE_UP_MS) { setPhase('slow'); return; }
       timer.current = setTimeout(ask, POLL_MS);
-    };
+    }
     timer.current = setTimeout(ask, POLL_MS);
     return () => { stop = true; clearTimeout(timer.current); };
   }, [bookingRef, onConfirmed]);

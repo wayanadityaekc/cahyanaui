@@ -38,16 +38,16 @@ export default function Select({
 
   useEffect(() => {
     if (!open || asPortal) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (groupRef.current && !groupRef.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, [open, asPortal]);
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    function onKey(e) { return e.key === 'Escape' && setOpen(false); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);

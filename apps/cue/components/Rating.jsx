@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 import { useReviews } from '@/state/ReviewsProvider';
 
 // Rating star stays solid - fill makes it read as a filled badge, not an outline.
-const StarIcon = () => <Star fill="currentColor" stroke="none" aria-hidden="true" />;
+function StarIcon() { return <Star fill="currentColor" stroke="none" aria-hidden="true" />; }
 
 // Twin of <Price name="..." /> - looks up the live review average for a tour by
 // its service name (the same name used for data-price / booking), falls back to

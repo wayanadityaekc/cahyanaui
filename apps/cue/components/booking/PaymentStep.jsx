@@ -135,10 +135,9 @@ export default function PaymentStep({
   // Only ever set when the chosen rail charges another currency than the one
   // every price on the page is shown in - said before a card number is typed.
   const railNote = noteFor(currency, rail);
-  const money = (v) =>
-    withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
-  const rupiah = (v) => withSymbol('Rp' + v.toLocaleString('id-ID'));
-  const dollars = (v) => withSymbol('$' + v.toLocaleString('en-US'));
+  function money(v) { return withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US')); }
+  function rupiah(v) { return withSymbol('Rp' + v.toLocaleString('id-ID')); }
+  function dollars(v) { return withSymbol('$' + v.toLocaleString('en-US')); }
 
   // An option that is no longer available must not stay selected. hasReferral
   // can go back to false when the quote refreshes without the code - leaving
@@ -152,7 +151,7 @@ export default function PaymentStep({
 
   useEffect(() => {
     if (!openFine) return undefined;
-    const onKey = (e) => { if (e.key === 'Escape') setOpenFine(false); };
+    function onKey(e) { if (e.key === 'Escape') setOpenFine(false); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [openFine]);

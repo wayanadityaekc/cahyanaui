@@ -47,7 +47,7 @@ export default function DateField({
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    function onKey(e) { return e.key === 'Escape' && setOpen(false); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
@@ -60,7 +60,7 @@ export default function DateField({
   // The trigger names both halves of what the panel now holds ("30 Sept 2026 · 8:00 AM").
   // Both variants go through this - the rich one (booking form) used to print the date
   // only, so a guest who picked a time in the panel could not see it from the outside.
-  const label12 = (v) => (withTime && time ? `${fmtDate(v)} · ${fmtTime(time)}` : fmtDate(v));
+  function label12(v) { return (withTime && time ? `${fmtDate(v)} · ${fmtTime(time)}` : fmtDate(v)); }
 
   const cells = [];
   for (let i = 0; i < lead; i++) cells.push(null);

@@ -42,9 +42,9 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
 
   useEffect(() => {
     if (!open || isMobile) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (ddRef.current && !ddRef.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, [open, isMobile]);
@@ -57,8 +57,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     if (!catalog) return out;
     const isIdr = currency === 'IDR';
     const loc = isIdr ? 'id-ID' : 'en-US';
-    const fmt = (n) => withSymbol(symbol + n.toLocaleString(loc));
-    const byCat = (cats) => catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
+    function fmt(n) { return withSymbol(symbol + n.toLocaleString(loc)); }
+    function byCat(cats) { return catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display); }
     const sets = {
       tour: byCat(['tour', 'combo']),
       experience: byCat(['experience']),
@@ -79,14 +79,14 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     return out;
   }, [catalog, symbol, currency]);
 
-  const applyCode = async () => {
+  async function applyCode() {
     const pct = await apply(code);
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
-  };
+  }
 
-  const go = () => {
+  function go() {
     if (picked) window.location.href = picked.href;
-  };
+  }
 
   const panel = (
     <div className={panelMenu(open)}>

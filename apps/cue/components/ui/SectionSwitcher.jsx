@@ -23,7 +23,7 @@ export default function SectionSwitcher({ zones = [] }) {
 
   useEffect(() => {
     if (!zones.length) return;
-    const probe = () => {
+    function probe() {
       const y = window.scrollY + 160;
       let cur = 0;
       zones.forEach((z, i) => {
@@ -32,7 +32,7 @@ export default function SectionSwitcher({ zones = [] }) {
         if (el.getBoundingClientRect().top + window.scrollY <= y) cur = i;
       });
       setIdx(cur);
-    };
+    }
     probe();
     window.addEventListener('scroll', probe, { passive: true });
     window.addEventListener('resize', probe);
@@ -44,11 +44,11 @@ export default function SectionSwitcher({ zones = [] }) {
 
   if (!zones.length) return null;
 
-  const go = (delta) => {
+  function go(delta) {
     const n = Math.min(zones.length - 1, Math.max(0, idx + delta));
     const el = document.getElementById(zones[n].id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  }
 
   const arrow =
     'w-[34px] h-[34px] flex-none flex items-center justify-center border-0 rounded-[50%] bg-cream text-ink cursor-pointer transition-[background-color,scale] duration-200 ease-[ease] enabled:hover:bg-line disabled:opacity-[0.35] disabled:cursor-default [&>svg]:w-[18px] [&>svg]:h-[18px]';

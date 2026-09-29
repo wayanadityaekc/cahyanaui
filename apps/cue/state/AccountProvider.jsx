@@ -106,17 +106,17 @@ export function AccountProvider({ children }) {
       .catch(() => setMyReviews([]));
   }, []);
 
-  const logout = () => {
+  function logout() {
     removeLocal(KEY.token);
     setAccount(null);
     setTrips(null);
     setMyReviews(null);
-  };
+  }
 
   // Delete the account (Settings page, WO3). Bookings and reviews survive on
   // the server - this only clears what THIS browser is holding, same as
   // logout, once the server confirms the account is actually gone.
-  const deleteAccount = async () => {
+  async function deleteAccount() {
     try {
       const token = readLocal(KEY.token, '');
       const r = await fetch(`${API_BASE}/account`, {
@@ -135,13 +135,13 @@ export function AccountProvider({ children }) {
     } catch {
       return { ok: false, error: '' };
     }
-  };
+  }
 
   // Ask the backend to email a 6-digit sign-in code (28 Sep 2026 - was a link;
   // Wayan: a code works wherever the guest reads the email, same device or not,
   // which a link never could). Backend never reveals whether the email exists,
   // so any completed request counts as success.
-  const requestLogin = async (email) => {
+  async function requestLogin(email) {
     try {
       const r = await fetch(`${API_BASE}/account/login`, {
         method: 'POST',
@@ -152,11 +152,11 @@ export function AccountProvider({ children }) {
     } catch {
       return false;
     }
-  };
+  }
 
   // Check that code. The session is issued server-side only on a match - unlike
   // the old link, nothing here is already valid before this call succeeds.
-  const verifyCode = async (email, code) => {
+  async function verifyCode(email, code) {
     try {
       const r = await fetch(`${API_BASE}/account/verify`, {
         method: 'POST',
@@ -174,11 +174,11 @@ export function AccountProvider({ children }) {
     } catch {
       return { ok: false, error: '' };
     }
-  };
+  }
 
   // Create an account (no password) - on success the backend returns a token we
   // store, logging the guest straight in.
-  const createAccount = async ({ name, email, phone }) => {
+  async function createAccount({ name, email, phone }) {
     try {
       const r = await fetch(`${API_BASE}/account`, {
         method: 'POST',
@@ -204,7 +204,7 @@ export function AccountProvider({ children }) {
     } catch {
       return { ok: false };
     }
-  };
+  }
 
   return (
     <AccountContext.Provider value={{ account, setAccount, hasUpcoming, trips, reviewableItems, refreshTrips, myReviews, refreshMyReviews, deleteAccount, logout, requestLogin, verifyCode, createAccount, hydrated, justSignedIn }}>

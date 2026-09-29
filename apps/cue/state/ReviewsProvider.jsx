@@ -28,7 +28,7 @@ export function ReviewsProvider({ children }) {
     };
   }, []);
 
-  const lookup = (service) => (summary && summary[service]) || null;
+  function lookup(service) { return (summary && summary[service]) || null; }
 
   return <ReviewsContext.Provider value={{ lookup }}>{children}</ReviewsContext.Provider>;
 }

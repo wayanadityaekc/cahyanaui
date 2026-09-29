@@ -81,7 +81,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
-  const go = async () => {
+  async function go() {
     setBusy(true);
     setErr('');
     try {
@@ -132,7 +132,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       setErr('We could not reach the payment page. Please check your connection and try again.');
       setBusy(false);
     }
-  };
+  }
 
   return (
     <div>

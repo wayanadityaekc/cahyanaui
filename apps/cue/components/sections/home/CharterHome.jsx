@@ -35,7 +35,7 @@ export default function CharterHome({ paired = false }) {
     if (d && CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
   }, []);
 
-  const pick = (d) => { setDur(d); saveCharterDraft({ dur: d }); };
+  function pick(d) { setDur(d); saveCharterDraft({ dur: d }); }
 
   return (
     <section className={paired ? SECTION_PAIRED : SECTION} id="charter-promo">

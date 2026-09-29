@@ -10,16 +10,16 @@ import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components
 // replaces a facts grid that just repeated the hero hooks; the choice between
 // Standard and Exclusive is the genuinely useful, page-specific decision. Prices
 // are live and currency-correct (Price component), not hardcoded.
-const CarIcon = () => <Car strokeWidth={1.7} aria-hidden="true" />;
-const TicketIcon = () => <Banknote strokeWidth={1.7} aria-hidden="true" />;
+function CarIcon() { return <Car strokeWidth={1.7} aria-hidden="true" />; }
+function TicketIcon() { return <Banknote strokeWidth={1.7} aria-hidden="true" />; }
 
 // Informational cards: the two ways every program can be booked. Choosing the
 // actual mode happens in the booking form's Standard/Exclusive toggle - these
 // cards just explain the difference.
-const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
-const BagIcon = () => <Backpack strokeWidth={1.7} aria-hidden="true" />;
-const InfoIcon = () => <Info strokeWidth={1.7} aria-hidden="true" />;
-const CardIcon = () => <CreditCard strokeWidth={1.7} aria-hidden="true" />;
+function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
+function BagIcon() { return <Backpack strokeWidth={1.7} aria-hidden="true" />; }
+function InfoIcon() { return <Info strokeWidth={1.7} aria-hidden="true" />; }
+function CardIcon() { return <CreditCard strokeWidth={1.7} aria-hidden="true" />; }
 
 // Details - the two booking options plus practical, generic-but-real notes that
 // hold for every day tour (pick-up, what to bring, things to note, payment), all
@@ -145,7 +145,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
   // constant to add on top.
   useEffect(() => {
     const ids = sections.map((s) => s.id);
-    const onScroll = () => {
+    function onScroll() {
       const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
       const header = document.querySelector('header');
       const headerH = header ? header.getBoundingClientRect().height : 0;
@@ -156,7 +156,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
         if (el && el.getBoundingClientRect().top <= line) cur = id;
       });
       setActive(cur);
-    };
+    }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
@@ -167,7 +167,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const pick = (id) => {
+  function pick(id) {
     const el = secRefs.current[id];
     if (!el) return;
     const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
@@ -175,7 +175,7 @@ export default function DetailTabs({ overview, priceItem, bookType, included, ex
     const headerH = header ? header.getBoundingClientRect().height : 0;
     const top = el.getBoundingClientRect().top + window.scrollY - headerH - stripH - 8;
     window.scrollTo({ top, behavior: 'smooth' });
-  };
+  }
 
   // Tailwind-native (full-portable): wrapper/strip/tab/section-heading + section
   // wrapper -> utilities. Section pakai [&+&] (jarak antar-section) + [&_.stops]/

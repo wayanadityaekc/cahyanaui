@@ -26,4 +26,4 @@ const ICONS = {
   'Meet & greet': UserCheck,
   Language: Languages,
 };
-export const chipIcon = (label) => ICONS[label] || Info;
+export function chipIcon(label) { return ICONS[label] || Info; }

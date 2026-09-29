@@ -18,13 +18,15 @@ export default function ContactForm({ company = false }) {
 
   // Clearing the field's own error as it is typed in keeps the message from sitting
   // there contradicting what the guest just fixed.
-  const set = (k) => (e) => {
-    const { value } = e.target;
-    setF((v) => ({ ...v, [k]: value }));
-    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
-  };
+  function set(k) {
+    return (e) => {
+      const { value } = e.target;
+      setF((v) => ({ ...v, [k]: value }));
+      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+    };
+  }
 
-  const send = async () => {
+  async function send() {
     const { ok, errors: fieldErrors, data } = validateWith(contactSchema, f);
     setErrors(fieldErrors);
     if (!ok) { setError(''); return; }
@@ -39,7 +41,7 @@ export default function ContactForm({ company = false }) {
     } finally {
       setBusy(false);
     }
-  };
+  }
 
   return (
     <>

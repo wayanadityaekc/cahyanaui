@@ -16,12 +16,12 @@ import { CATSEC, LROW_LIST } from '@/components/ui/listingClasses';
 import { isHiddenTour } from '@/lib/routes';
 import { SECTION_TITLE, ST_LEFT } from '@/components/ui/sectionTitle';
 
-const SearchIcon = () => <Search strokeWidth={1.8} aria-hidden="true" />;
-const CloseIcon = () => <X aria-hidden="true" />;
-const CarIcon = () => <Car strokeWidth={1.7} aria-hidden="true" />;
-const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
-const CheckIcon = () => <Check aria-hidden="true" />;
-const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
+function SearchIcon() { return <Search strokeWidth={1.8} aria-hidden="true" />; }
+function CloseIcon() { return <X aria-hidden="true" />; }
+function CarIcon() { return <Car strokeWidth={1.7} aria-hidden="true" />; }
+function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
+function CheckIcon() { return <Check aria-hidden="true" />; }
+function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
 
 // Search placeholder noun per listing page.
 const NOUN = { tours: 'tours', activities: 'experiences', destinations: 'destinations' };

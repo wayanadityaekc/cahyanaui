@@ -65,17 +65,17 @@ export default function AccountMenu({ onLogin }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const onDoc = (e) => {
+    function onDoc(e) {
       // Select popups are portaled to <body>; picking an option must not close this menu.
       if (e.target.closest && e.target.closest('[data-portal]')) return;
       if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
-    };
-    const onKey = (e) => {
+    }
+    function onKey(e) {
       if (e.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setOpen(false);
       btnRef.current?.focus();
-    };
+    }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -98,7 +98,7 @@ export default function AccountMenu({ onLogin }) {
   );
 
   if (!account) {
-    const isDesktop = () => typeof window !== 'undefined' && window.matchMedia('(min-width: 993px)').matches;
+    function isDesktop() { return typeof window !== 'undefined' && window.matchMedia('(min-width: 993px)').matches; }
     return (
       <div className={`relative ${pending ? 'invisible' : ''}`} ref={boxRef} data-account-slot="out">
         <button

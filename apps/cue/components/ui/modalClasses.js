@@ -93,4 +93,4 @@ export const REFERRAL_INPUT = `flex-1 ${FIELD_INPUT}`;
 export const REFERRAL_BTN =
   'px-[1.1rem] py-0 border-none rounded-sm font-semibold text-cream bg-green cursor-pointer ' +
   '[transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)]';
-export const refMsgCls = (ok) => `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`;
+export function refMsgCls(ok) { return `block mt-[0.4rem] text-small ${ok ? 'text-ok' : 'text-err'}`; }

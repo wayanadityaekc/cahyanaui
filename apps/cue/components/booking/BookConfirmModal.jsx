@@ -161,7 +161,7 @@ export default function BookConfirmModal() {
     const t = setInterval(() => setOtpCooldown((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(t);
   }, [otpCooldown]);
-  const doOtpVerify = async (code) => {
+  async function doOtpVerify(code) {
     setOtpMsg('');
     setOtpBusy(true);
     const res = await verifyCode(signinEmail, code);
@@ -169,8 +169,8 @@ export default function BookConfirmModal() {
     if (res.ok) { setOtpVerified(true); setOtpCode(''); return; }
     setOtpCode('');
     setOtpMsg(res.error || 'Sorry, something went wrong. Please try again.');
-  };
-  const resendOtp = async () => {
+  }
+  async function resendOtp() {
     if (otpCooldown > 0 || otpBusy) return;
     setOtpBusy(true);
     await requestLogin(signinEmail);
@@ -178,7 +178,7 @@ export default function BookConfirmModal() {
     setOtpCode('');
     setOtpMsg('');
     setOtpCooldown(RESEND_SECONDS);
-  };
+  }
   const [paid, setPaid] = useState(false);
   // Is this visitor being offered online payment at all? Off for everyone until
   // the chain is proven live - see lib/payFlag.js. Read in an effect, never in
@@ -197,16 +197,20 @@ export default function BookConfirmModal() {
   const view = ctx || lastCtx.current;
   if (!mounted || !view) return null;
 
-  const set = (k) => (e) => {
-    const { value } = e.target;
-    setF((v) => ({ ...v, [k]: value }));
-    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
-  };
+  function set(k) {
+    return (e) => {
+      const { value } = e.target;
+      setF((v) => ({ ...v, [k]: value }));
+      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+    };
+  }
   // Custom controls (Select / DateTimeField) hand back a value, not an event.
-  const setValue = (k) => (value) => {
-    setF((v) => ({ ...v, [k]: value }));
-    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
-  };
+  function setValue(k) {
+    return (value) => {
+      setF((v) => ({ ...v, [k]: value }));
+      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+    };
+  }
 
   // Pickup time is now chosen AT THE DATE (Sep 2026, Wayan: "kalo user milih date di
   // booking form udah langsung milih jam"), so every line arrives carrying its own
@@ -223,36 +227,36 @@ export default function BookConfirmModal() {
   // not reliable - BookSidebar hardcodes `type:'tour'` for every detail-page item
   // (tour / experience / performance alike), so the REAL category comes from the
   // pricing catalog.
-  const categoryOfLine = (l) => {
+  function categoryOfLine(l) {
     const c = catalog && catalog.items.find((i) => i.name === l.service);
     return c ? c.category : l.type || null;
-  };
-  const isAirportLine = (l) => l.service === AIRPORT_ROUTE;
+  }
+  function isAirportLine(l) { return l.service === AIRPORT_ROUTE; }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   // The airport leg is the one case that does NOT get a second date control: its
   // flight date & time IS the pick-up date and time (same rule as the airport
   // page, where asking twice was the bug Wayan had fixed). It also keeps real
   // minutes - a plane lands at 2:35 PM, not on a half-hour grid.
   const needsFlight = isAirportRoute;
-  const dt = (i) => lineDT[i] || { date: '', time: '' };
-  const setDT = (i, k, v) => {
+  function dt(i) { return lineDT[i] || { date: '', time: '' }; }
+  function setDT(i, k, v) {
     setLineDT((prev) => {
       const next = prev.length ? [...prev] : lines.map((l) => ({ date: l.date || '', time: l.time || '' }));
       next[i] = { ...next[i], [k]: v };
       return next;
     });
     setDtErr((prev) => (prev[i] ? { ...prev, [i]: undefined } : prev));
-  };
+  }
   // What each line ends up carrying: the airport leg reads its date and time off
   // the flight field, everything else off its own date control.
-  const dateOf = (l, i) => (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : dt(i).date);
-  const timeOf = (l, i) => (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : dt(i).time);
+  function dateOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : dt(i).date); }
+  function timeOf(l, i) { return (isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : dt(i).time); }
   const flightNumberDisplay = needsFlight ? f.flightNumber || singleLine.flight_number || '' : '';
 
   // Which fields are required depends on the booking being confirmed, so the schema
   // is built per render from the same flags the fields themselves are shown by.
   // Both the Book Now button and the WhatsApp button run this - they must agree.
-  const validate = () => {
+  function validate() {
     const { ok, errors: fieldErrors } = validateWith(
       bookingSchema({
         pickupOptional: !!ctx.pickupOptional,
@@ -275,56 +279,58 @@ export default function BookConfirmModal() {
     });
     setDtErr(de);
     return ok && Object.keys(de).length === 0;
-  };
+  }
 
   // The quote already fetched above is what the guest sees, so send it with the
   // booking. Without it the server stores nothing and the confirmation email
   // reads "$0 / Rp0" - which is what happened to CUE-007.
-  const payload = () => ({
-    type: ctx.type,
-    service: ctx.service,
-    name: f.name,
-    phone: f.phone,
-    email: f.email,
-    referral: (referral && referral.code) || '',
-    // Which of the two options the guest picked. The server does NOT trust an
-    // amount from here - it recomputes what is owed from its own prices. This is
-    // the choice only, so the invoice matches the row the guest actually tapped.
-    pay_option: payOn ? payOption : '',
-    // The currency the guest was quoted in. Without it the server can only
-    // record USD/IDR, and an invoice sent in the wrong currency is a different
-    // number from the one they agreed to.
-    currency: currency || 'USD',
-    stay: stay || '',
-    lines: ctx.lines.map((l, i) => {
-      const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
-      // Each line sends the date and time from its OWN control, falling back to
-      // whatever it arrived with. The flight fields still only apply to a single
-      // airport line - that is the only row this popup asks a flight number for.
-      const isTarget = !!singleLine && i === 0;
-      return {
-        type: l.type,
-        service: l.service,
-        date: dateOf(l, i) || l.date || '',
-        time: timeOf(l, i) || l.time || '',
-        guests: String(l.guests || displayGuests),
-        pickup: l.pickup || f.pickup,
-        dropoff: l.dropoff || f.dropoff,
-        day_no: l.day_no != null ? l.day_no : null,
-        flight_number: (isTarget && needsFlight ? f.flightNumber || l.flight_number : l.flight_number) || '',
-        flight_datetime: (isTarget && needsFlight ? f.flightDatetime || l.flight_datetime : l.flight_datetime) || '',
-        mode: l.mode || 'standard',
-        area: l.area || '',
-        duration: l.duration || '',
-        extra: l.extra != null ? l.extra : 0,
-        return: !!l.return,
-        price_usd: p ? p.price_usd : null,
-        price_idr: p ? p.price_idr : null,
-      };
-    }),
-  });
+  function payload() {
+    return ({
+      type: ctx.type,
+      service: ctx.service,
+      name: f.name,
+      phone: f.phone,
+      email: f.email,
+      referral: (referral && referral.code) || '',
+      // Which of the two options the guest picked. The server does NOT trust an
+      // amount from here - it recomputes what is owed from its own prices. This is
+      // the choice only, so the invoice matches the row the guest actually tapped.
+      pay_option: payOn ? payOption : '',
+      // The currency the guest was quoted in. Without it the server can only
+      // record USD/IDR, and an invoice sent in the wrong currency is a different
+      // number from the one they agreed to.
+      currency: currency || 'USD',
+      stay: stay || '',
+      lines: ctx.lines.map((l, i) => {
+        const p = priced && priced.lines && priced.lines[i] && priced.lines[i].ok ? priced.lines[i] : null;
+        // Each line sends the date and time from its OWN control, falling back to
+        // whatever it arrived with. The flight fields still only apply to a single
+        // airport line - that is the only row this popup asks a flight number for.
+        const isTarget = !!singleLine && i === 0;
+        return {
+          type: l.type,
+          service: l.service,
+          date: dateOf(l, i) || l.date || '',
+          time: timeOf(l, i) || l.time || '',
+          guests: String(l.guests || displayGuests),
+          pickup: l.pickup || f.pickup,
+          dropoff: l.dropoff || f.dropoff,
+          day_no: l.day_no != null ? l.day_no : null,
+          flight_number: (isTarget && needsFlight ? f.flightNumber || l.flight_number : l.flight_number) || '',
+          flight_datetime: (isTarget && needsFlight ? f.flightDatetime || l.flight_datetime : l.flight_datetime) || '',
+          mode: l.mode || 'standard',
+          area: l.area || '',
+          duration: l.duration || '',
+          extra: l.extra != null ? l.extra : 0,
+          return: !!l.return,
+          price_usd: p ? p.price_usd : null,
+          price_idr: p ? p.price_idr : null,
+        };
+      }),
+    });
+  }
 
-  const submit = async () => {
+  async function submit() {
     if (!validate()) { setError(''); return; }
     setError('');
     setBusy(true);
@@ -354,9 +360,9 @@ export default function BookConfirmModal() {
     } finally {
       setBusy(false);
     }
-  };
+  }
 
-  const waText = () => {
+  function waText() {
     const rowText = ctx.lines
       .map((l, i) => {
         const d = dateOf(l, i) || l.date || 'TBD';
@@ -366,18 +372,18 @@ export default function BookConfirmModal() {
       .join('\n');
     const flightLine = flightNumberDisplay ? `\nFlight: ${flightNumberDisplay} (${f.flightDatetime || singleLine.flight_datetime || 'TBD'})` : '';
     return `Hello, I'd like to book:\nService: ${ctx.service}\nName: ${f.name}\nPhone: ${f.phone}\nEmail: ${f.email}\n${rowText}\nPick-up: ${f.pickup || '-'}\nDrop-off: ${f.dropoff || '-'}${flightLine}\nPrice: ${priceText()}`;
-  };
+  }
 
-  const priceText = () => {
+  function priceText() {
     if (!priced) return '-';
     const s = priced.symbol || '$';
     return s + priced.total.display.toLocaleString(s === 'Rp' ? 'id-ID' : 'en-US');
-  };
+  }
 
-  const applyRef = async () => {
+  async function applyRef() {
     const pct = await apply(f.referral);
     setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
-  };
+  }
 
   // Tailwind-native (migrasi Fase 2, opsi B): shell/box/close/logo/title/group/input/
   // btn(+wa)/success pakai konstanta shared (modalClasses.js). Yang ISOLATED ke modal
@@ -388,7 +394,7 @@ export default function BookConfirmModal() {
   const lastStep = payOn ? 3 : 2;
   const STEP_NAMES = payOn ? ['Your details', 'Check', 'Payment'] : ['Your details', 'Check & book'];
   const STEPS = 'flex gap-[6px] mb-2';
-  const stepBar = (on) => 'flex-1 h-[3px] rounded-[2px] ' + (on ? 'bg-cta' : 'bg-line');
+  function stepBar(on) { return 'flex-1 h-[3px] rounded-[2px] ' + (on ? 'bg-cta' : 'bg-line'); }
   const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
   const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
   const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
@@ -404,36 +410,38 @@ export default function BookConfirmModal() {
   const DETAILS_LI = "relative pt-[0.4rem] pr-0 pb-[0.4rem] pl-5 text-body leading-[var(--lh-body)] text-muted [&::before]:content-['•'] [&::before]:absolute [&::before]:left-[0.25rem] [&::before]:text-gold";
   // Shared by both success screens below (payment off / payment on): the
   // booking is already saved either way, and this only signs the guest in.
-  const signinNote = () => (
-    <div data-signin-note className="-mt-3 mb-6">
-      {otpVerified ? (
-        <p className="text-small text-muted leading-[var(--lh-body)]">
-          Signed in as <strong className="text-green">{signinEmail}</strong>.
-        </p>
-      ) : (
-        <>
-          <p className="mb-3 text-small text-muted leading-[var(--lh-body)] text-center">
-            You booked as <strong className="text-green">{signinEmail}</strong>. Enter the
-            6-digit code we sent that inbox to sign in.
+  function signinNote() {
+    return (
+      <div data-signin-note className="-mt-3 mb-6">
+        {otpVerified ? (
+          <p className="text-small text-muted leading-[var(--lh-body)]">
+            Signed in as <strong className="text-green">{signinEmail}</strong>.
           </p>
-          <OtpFields
-            length={6}
-            value={otpCode}
-            onChange={setOtpCode}
-            onComplete={doOtpVerify}
-            error={!!otpMsg}
-            disabled={otpBusy}
-          />
-          {otpMsg && <small role="alert" className={`${REFMSG_ERR} text-center mt-3`}>{otpMsg}</small>}
-          <p className="mt-3 text-center text-small text-muted">
-            {otpCooldown > 0 ? `Resend code in ${otpCooldown}s` : (
-              <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={resendOtp}>Resend code</button>
-            )}
-          </p>
-        </>
-      )}
-    </div>
-  );
+        ) : (
+          <>
+            <p className="mb-3 text-small text-muted leading-[var(--lh-body)] text-center">
+              You booked as <strong className="text-green">{signinEmail}</strong>. Enter the
+              6-digit code we sent that inbox to sign in.
+            </p>
+            <OtpFields
+              length={6}
+              value={otpCode}
+              onChange={setOtpCode}
+              onComplete={doOtpVerify}
+              error={!!otpMsg}
+              disabled={otpBusy}
+            />
+            {otpMsg && <small role="alert" className={`${REFMSG_ERR} text-center mt-3`}>{otpMsg}</small>}
+            <p className="mt-3 text-center text-small text-muted">
+              {otpCooldown > 0 ? `Resend code in ${otpCooldown}s` : (
+                <button type="button" className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d" onClick={resendOtp}>Resend code</button>
+              )}
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
   return createPortal(
     <ModalPresence open={!!ctx} onClose={paid ? () => {} : closeBooking} label="Booking confirmation" box={BOX_WIDE} shellClass={SHELL_WIDE}>
         {!paid && <button className={CLOSE} aria-label="Close" onClick={closeBooking}>&times;</button>}

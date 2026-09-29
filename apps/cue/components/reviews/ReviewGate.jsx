@@ -18,12 +18,12 @@ export default function ReviewGate({ className, children = 'Write review' }) {
   const [blockedOpen, setBlockedOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
 
-  const onClick = () => {
+  function onClick() {
     if (!hydrated) return;
     if (!account) { setAuthOpen(true); return; }
     if (!reviewableItems.length) { setBlockedOpen(true); return; }
     setReviewOpen(true);
-  };
+  }
 
   return (
     <>

@@ -41,13 +41,13 @@ export default function Slider({ children, className = '', gridClassName = GRID_
     };
   }, [measure]);
 
-  const step = (dir) => {
+  function step(dir) {
     const el = trackRef.current;
     if (!el) return;
     const card = el.querySelector(':scope > *');
     const by = card ? card.getBoundingClientRect().width + 16 : el.clientWidth * 0.8;
     el.scrollBy({ left: dir * by, behavior: 'smooth' });
-  };
+  }
 
   return (
     <div className={clsx('group relative', className)}>

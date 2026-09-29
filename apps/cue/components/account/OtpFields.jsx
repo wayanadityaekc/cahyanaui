@@ -31,7 +31,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     if (autoFocus) refs.current[0]?.focus();
   }, [autoFocus]);
 
-  const commit = (next) => {
+  function commit(next) {
     const joined = next.join('');
     onChange(joined);
     // next.every(Boolean), NOT joined.includes('') - every string "includes"
@@ -39,11 +39,11 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     // fired on a real 6th digit; only Verify (which reads `code` directly)
     // ever completed a code.
     if (joined.length === length && next.every(Boolean)) onComplete && onComplete(joined);
-  };
+  }
 
   // A paste, autofill, or fast IME input can land several digits in one box at
   // once - spread them across this box and the ones after it.
-  const spread = (i, raw) => {
+  function spread(i, raw) {
     const next = digits.slice();
     let pos = i;
     for (const ch of raw) {
@@ -53,39 +53,45 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     }
     commit(next);
     refs.current[Math.min(pos, length - 1)]?.focus();
-  };
+  }
 
-  const handleChange = (i) => (e) => {
-    const raw = e.target.value.replace(/\D/g, '');
-    if (!raw) { const next = digits.slice(); next[i] = ''; commit(next); return; }
-    if (raw.length > 1) { spread(i, raw); return; }
-    const next = digits.slice();
-    next[i] = raw;
-    commit(next);
-    if (i < length - 1) refs.current[i + 1]?.focus();
-  };
-
-  const handleKeyDown = (i) => (e) => {
-    if (e.key === 'Backspace' && !digits[i] && i > 0) {
+  function handleChange(i) {
+    return (e) => {
+      const raw = e.target.value.replace(/\D/g, '');
+      if (!raw) { const next = digits.slice(); next[i] = ''; commit(next); return; }
+      if (raw.length > 1) { spread(i, raw); return; }
       const next = digits.slice();
-      next[i - 1] = '';
+      next[i] = raw;
       commit(next);
-      refs.current[i - 1]?.focus();
-    } else if (e.key === 'ArrowLeft' && i > 0) {
-      e.preventDefault();
-      refs.current[i - 1]?.focus();
-    } else if (e.key === 'ArrowRight' && i < length - 1) {
-      e.preventDefault();
-      refs.current[i + 1]?.focus();
-    }
-  };
+      if (i < length - 1) refs.current[i + 1]?.focus();
+    };
+  }
 
-  const handlePaste = (i) => (e) => {
-    const raw = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-    if (!raw) return;
-    e.preventDefault();
-    spread(i, raw);
-  };
+  function handleKeyDown(i) {
+    return (e) => {
+      if (e.key === 'Backspace' && !digits[i] && i > 0) {
+        const next = digits.slice();
+        next[i - 1] = '';
+        commit(next);
+        refs.current[i - 1]?.focus();
+      } else if (e.key === 'ArrowLeft' && i > 0) {
+        e.preventDefault();
+        refs.current[i - 1]?.focus();
+      } else if (e.key === 'ArrowRight' && i < length - 1) {
+        e.preventDefault();
+        refs.current[i + 1]?.focus();
+      }
+    };
+  }
+
+  function handlePaste(i) {
+    return (e) => {
+      const raw = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      if (!raw) return;
+      e.preventDefault();
+      spread(i, raw);
+    };
+  }
 
   return (
     <div className="flex gap-2 justify-center" role="group" aria-label="Verification code">

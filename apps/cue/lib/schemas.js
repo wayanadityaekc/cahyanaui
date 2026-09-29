@@ -10,8 +10,8 @@ import { z } from 'zod';
 // for. Keep them identical unless that change is made deliberately.
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
-const email = (msg = 'Please enter a valid email address.') => z.string().trim().regex(EMAIL_RE, msg);
-const required = (msg) => z.string().trim().min(1, msg);
+function email(msg = 'Please enter a valid email address.') { return z.string().trim().regex(EMAIL_RE, msg); }
+function required(msg) { return z.string().trim().min(1, msg); }
 
 export const contactSchema = z.object({
   name: required('Please enter your name.'),

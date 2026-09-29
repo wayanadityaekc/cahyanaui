@@ -55,7 +55,7 @@ export default function CharterBuilder() {
     if (CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
   }, []);
 
-  const pick = (d) => { setDur(d); saveCharterDraft({ dur: d }); };
+  function pick(d) { setDur(d); saveCharterDraft({ dur: d }); }
 
   const { tier, fmt } = useCharterTier({ area });
   const catalog = usePricing()?.catalog;
@@ -66,7 +66,7 @@ export default function CharterBuilder() {
 
   // All booking flows go through the cart -> My Trips -> Make Payment (Wayan,
   // Sep 2026) - same as tours (BookSidebar/BookCta's `add(date, goto=true)`).
-  const book = () => {
+  function book() {
     if (!ready || total == null) return;
     save({
       ...state,
@@ -79,7 +79,7 @@ export default function CharterBuilder() {
       }],
     });
     window.location.href = '/my-trips.html';
-  };
+  }
 
   const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];
 

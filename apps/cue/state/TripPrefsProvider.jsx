@@ -24,37 +24,37 @@ export function TripPrefsProvider({ children }) {
     setHydrated(true);
   }, []);
 
-  const setCurrency = (cur) => {
+  function setCurrency(cur) {
     if (!CURRENCIES.includes(cur)) return;
     setCurrencyState(cur);
     writeLocal(KEY.currency, cur);
-  };
+  }
 
-  const setGuests = (n) => {
+  function setGuests(n) {
     const v = parseInt(n, 10) || 0;
     setGuestsState(v);
     if (v) writeLocal(KEY.guests, String(v));
     else removeLocal(KEY.guests);
-  };
+  }
 
-  const resetGuests = () => {
+  function resetGuests() {
     setGuestsState(0);
     removeLocal(KEY.guests);
-  };
+  }
 
-  const setStay = (pk) => {
+  function setStay(pk) {
     const v = pk && pk !== 'ubud' ? pk : '';
     setStayState(v);
     if (v) writeLocal(KEY.stay, v);
     else removeLocal(KEY.stay);
-  };
+  }
 
-  const setDateRange = (from, to) => {
+  function setDateRange(from, to) {
     setDateFromState(from || '');
     setDateToState(to || '');
     if (from) writeLocal(KEY.dateFrom, from); else removeLocal(KEY.dateFrom);
     if (to) writeLocal(KEY.dateTo, to); else removeLocal(KEY.dateTo);
-  };
+  }
 
   return (
     <TripPrefsContext.Provider

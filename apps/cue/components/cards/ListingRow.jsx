@@ -5,12 +5,12 @@ import { Check, Clock, Map, MapPin, UserRound } from 'lucide-react';
 import Price from '@/components/Price';
 import Rating from '@/components/Rating';
 
-const CheckIcon = () => <Check strokeWidth={2.4} aria-hidden="true" />;
-const PinIcon = () => <MapPin strokeWidth={1.7} aria-hidden="true" />;
-const ClockIcon = () => <Clock strokeWidth={1.7} aria-hidden="true" />;
+function CheckIcon() { return <Check strokeWidth={2.4} aria-hidden="true" />; }
+function PinIcon() { return <MapPin strokeWidth={1.7} aria-hidden="true" />; }
+function ClockIcon() { return <Clock strokeWidth={1.7} aria-hidden="true" />; }
 // A region, not a point - so not the pin the stop count already uses.
-const AreaIcon = () => <Map strokeWidth={1.7} aria-hidden="true" />;
-const UserIcon = () => <UserRound strokeWidth={1.7} aria-hidden="true" />;
+function AreaIcon() { return <Map strokeWidth={1.7} aria-hidden="true" />; }
+function UserIcon() { return <UserRound strokeWidth={1.7} aria-hidden="true" />; }
 
 // Tailwind-native (migrasi Fase 2, keluarga kartu - stage 2): kartu listing
 // (tour/activities/destinations). MOBILE = baris horizontal (foto kiri + panel

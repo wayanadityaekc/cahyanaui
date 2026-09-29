@@ -62,11 +62,12 @@ const BURGER_BAR =
 // dilepas. Ikonnya bukan selera Flowbite: ukurannya `--icon-sm` lewat
 // MENU_ROW_BOX yang sama, dan Our Company pakai `Building2` - ikon yang PERSIS
 // dipakai rail Our Company buat section "About Us".
-const navLink = (active) =>
-  `${MENU_ROW_BOX} text-strong no-underline ` +
-  (active
-    ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
-    : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d');
+function navLink(active) {
+  return `${MENU_ROW_BOX} text-strong no-underline ` +
+    (active
+      ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
+      : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d');
+}
 
 // Pill-nya butuh padding 12px (0.75rem) di dalam, dan drawer-nya sendiri udah
 // px-[22px]. Tanpa narik <li>-nya keluar 12px, SEMUA label geser 12px ke kanan
@@ -107,7 +108,7 @@ export default function Navbar() {
     if (!el) return undefined;
     const root = document.documentElement;
     let max = 0;
-    const set = () => {
+    function set() {
       const h = el.offsetHeight;
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
       root.style.setProperty('--header-h', `${h - bar}px`);
@@ -116,10 +117,10 @@ export default function Navbar() {
         max = h;
         root.style.setProperty('--header-h-max', `${h}px`);
       }
-    };
+    }
     // A viewport change gives a different natural height (and rotating a phone
     // shouldn't keep the desktop maximum), so the ceiling is re-measured there.
-    const onResize = () => { max = 0; set(); };
+    function onResize() { max = 0; set(); }
     set();
     const ro = new ResizeObserver(set);
     ro.observe(el);
@@ -147,13 +148,13 @@ export default function Navbar() {
   // Do not re-add the direction logic without asking - it is a decision, not a gap.
   const [slid, setSlid] = useState(false);
   useEffect(() => {
-    const onScroll = () => setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
+    function onScroll() { return setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80)); }
     onScroll(); // a page opened at an anchor starts already scrolled
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const isActive = (href) => {
+  function isActive(href) {
     // '/index.html' counts as home. Static export PRERENDERS this page at pathname '/',
     // so a browser sitting on /index.html used to compute a DIFFERENT class here than
     // the server wrote - a hydration mismatch (React #418), which makes React throw away
@@ -163,12 +164,12 @@ export default function Navbar() {
     // type or bookmark it - but it costs one comparison.
     if (href === '/') return pathname === '/' || pathname === '/index.html';
     return pathname === href.replace(/\.html$/, '') || pathname === href;
-  };
+  }
 
   // Tapping outside, or Escape, closes the single drawer.
   useEffect(() => {
     if (!menuOpen) return undefined;
-    const onDoc = (e) => {
+    function onDoc(e) {
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
       // Select popups + their overlay are portaled to <body> (outside navRef). Clicking
@@ -177,13 +178,13 @@ export default function Navbar() {
       // emit it as their own contract — no leftover .hs-* class after the Tailwind migrasi).
       const inPopup = e.target.closest && e.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
-    };
-    const onKey = (e) => {
+    }
+    function onKey(e) {
       if (e.key !== 'Escape') return;
       // If a Select popup is open, let it handle Escape (close itself) — don't close the drawer.
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setMenuOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {

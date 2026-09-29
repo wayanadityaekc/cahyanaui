@@ -55,7 +55,7 @@ export default function DatePopup({
   useBodyLock(open);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && onClose();
+    function onKey(e) { return e.key === 'Escape' && onClose(); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);

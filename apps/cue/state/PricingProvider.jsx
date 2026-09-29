@@ -52,14 +52,14 @@ export function PricingProvider({ children, initialCatalog = null }) {
   // in every currency (found while verifying the IDR-default change: the
   // Airport price stayed "$20" even after the catalog loaded). Normalized to
   // the items shape here so <Price> doesn't need its own transfer branch.
-  const lookup = (name) => {
+  function lookup(name) {
     if (!catalog) return null;
     const item = catalog.items.find((i) => i.name === name);
     if (item) return item;
     const transfer = catalog.transfers.find((t) => t.route === name);
     if (transfer) return { name: transfer.route, standard: { display: transfer.display }, exclusive: null, hasExclusive: false };
     return null;
-  };
+  }
 
   return (
     <PricingContext.Provider value={{ catalog, lookup, symbol: (catalog && catalog.symbol) || '$' }}>

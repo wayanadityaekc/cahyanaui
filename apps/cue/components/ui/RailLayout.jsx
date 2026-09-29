@@ -78,52 +78,53 @@ export default function RailLayout({
   useEffect(() => {
     if (collapsible) setCollapsed(readLocal(KEY.railCollapsed, '') === '1');
   }, [collapsible]);
-  const toggleCollapsed = () => {
+  function toggleCollapsed() {
     const next = !collapsed;
     setCollapsed(next);
     writeLocal(KEY.railCollapsed, next ? '1' : '0');
-  };
+  }
   const railCollapsed = collapsible && collapsed;
   const effectiveFrameClass = scrollContent ? RAIL_FRAME_SCROLL : frameClass;
   const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
 
-  const rows = (mobile) =>
-    items.map((t) => {
-      const on = active === t.id;
-      const cls = mobile ? railMobileItem(on) : railItem(on, railCollapsed);
-      const inner = (
-        <>
-          {t.Icon && <t.Icon strokeWidth={1.7} aria-hidden="true" />}
-          {(!railCollapsed || mobile) && t.label}
-          {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
-        </>
-      );
-      // Collapsed: the label is still the accessible name (title + aria-label),
-      // it just isn't painted - a screen reader or a hover tooltip still gets it.
-      const a11y = !mobile && railCollapsed ? { title: t.label, 'aria-label': t.label } : {};
-      return (
-        <div key={t.id} className="contents">
-          {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
-          {t.href ? (
-            // no-underline is the only thing added on top of railItem: that string
-            // never sets a decoration, so an <a> would otherwise arrive underlined.
-            <a href={t.href} className={`${cls} no-underline`} aria-current={on || undefined} {...a11y}>
-              {inner}
-            </a>
-          ) : (
-            <button
-              type="button"
-              aria-current={on ? 'true' : undefined}
-              onClick={() => onSelect(t.id)}
-              className={cls}
-              {...a11y}
-            >
-              {inner}
-            </button>
-          )}
-        </div>
-      );
-    });
+  function rows(mobile) {
+    return items.map((t) => {
+        const on = active === t.id;
+        const cls = mobile ? railMobileItem(on) : railItem(on, railCollapsed);
+        const inner = (
+          <>
+            {t.Icon && <t.Icon strokeWidth={1.7} aria-hidden="true" />}
+            {(!railCollapsed || mobile) && t.label}
+            {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
+          </>
+        );
+        // Collapsed: the label is still the accessible name (title + aria-label),
+        // it just isn't painted - a screen reader or a hover tooltip still gets it.
+        const a11y = !mobile && railCollapsed ? { title: t.label, 'aria-label': t.label } : {};
+        return (
+          <div key={t.id} className="contents">
+            {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
+            {t.href ? (
+              // no-underline is the only thing added on top of railItem: that string
+              // never sets a decoration, so an <a> would otherwise arrive underlined.
+              <a href={t.href} className={`${cls} no-underline`} aria-current={on || undefined} {...a11y}>
+                {inner}
+              </a>
+            ) : (
+              <button
+                type="button"
+                aria-current={on ? 'true' : undefined}
+                onClick={() => onSelect(t.id)}
+                className={cls}
+                {...a11y}
+              >
+                {inner}
+              </button>
+            )}
+          </div>
+        );
+      });
+  }
 
   return (
     <div className={effectiveFrameClass}>

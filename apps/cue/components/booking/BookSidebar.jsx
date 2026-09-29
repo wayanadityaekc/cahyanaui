@@ -20,42 +20,44 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
   const { state, save } = useItinerary();
   const pricing = usePricing();
 
-  const isFullDay = (name) => {
+  function isFullDay(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return !!c && (c.category === 'tour' || c.category === 'combo');
-  };
+  }
 
   // The real category, for the start-time rules. `presetType` is 'tour' on every
   // detail page (experiences and performances included), so it cannot be used here.
-  const categoryOf = (name) => {
+  function categoryOf(name) {
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
     return c ? c.category : null;
-  };
+  }
 
-  const addRow = (name, date, mode, goto, time) => {
+  function addRow(name, date, mode, goto, time) {
     save({ ...state, days: [...(state.days || []), { items: [name], itemModes: [mode || 'standard'], itemTimes: [time || ''], date, guests: '' }] });
     if (goto) window.location.href = '/my-trips.html';
     else {
       setToast('Added to My Trips');
       setTimeout(() => setToast(''), 2600);
     }
-  };
+  }
 
-  const commit = (name, date, mode, goto, time) => {
+  function commit(name, date, mode, goto, time) {
     const probe = { ...state, days: [...(state.days || []), { items: [name], itemModes: [mode], date }] };
     if (isFullDay(name) && clashDates(probe, isFullDay).length > 0) {
       setConfirm({ name, date, mode, goto, time });
       return;
     }
     addRow(name, date, mode, goto, time);
-  };
+  }
 
-  const start = (goto) => (name, date, mode, time) => {
-    if (!name) return;
-    if (date) return commit(name, date, mode, goto, time);
-    setPending({ name, mode, goto });
-    setAsk(true);
-  };
+  function start(goto) {
+    return (name, date, mode, time) => {
+      if (!name) return;
+      if (date) return commit(name, date, mode, goto, time);
+      setPending({ name, mode, goto });
+      setAsk(true);
+    };
+  }
 
   useBodyLock(!!confirm);
 

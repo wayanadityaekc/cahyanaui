@@ -61,8 +61,8 @@ const STOP = new Set([
   'have', 'has', 'get', 'got', 'this', 'that', 'any', 'all',
 ]);
 
-const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
-const words = (s) => norm(s).split(' ').filter((w) => w.length > 2 && !STOP.has(w));
+function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
+function words(s) { return norm(s).split(' ').filter((w) => w.length > 2 && !STOP.has(w)); }
 
 // A price the guest can trust, or nothing. `fallback` is the figure printed on
 // the card in the same build, so it is never invented - but the catalog wins

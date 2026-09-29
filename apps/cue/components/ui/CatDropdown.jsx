@@ -19,11 +19,10 @@ import { PopMenu } from '@/components/ui/Reveal';
 // leading is the site's body line-height rather than the browser's `normal`: it is
 // what every other run of --fs-body text on the site sits on, and it is also what
 // lifts a panel row to a thumb-sized 36px instead of 31.
-export const CAT_ITEM = (active) =>
-  `text-left font-body text-body leading-[var(--lh-body)] no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`;
+export function CAT_ITEM(active) { return `text-left font-body text-body leading-[var(--lh-body)] no-underline ${active ? 'font-semibold text-gold' : 'text-muted'}`; }
 // Rows inside the floating panel. The padding is not decoration: at --fs-body the
 // text box is only ~20px tall, which is a thin thing to hit with a thumb.
-export const CAT_ITEM_TAP = (active) => `${CAT_ITEM(active)} py-[var(--space-1)]`;
+export function CAT_ITEM_TAP(active) { return `${CAT_ITEM(active)} py-[var(--space-1)]`; }
 
 // Floating, so it needs its own surface - an opaque background, a border and an
 // elevation, or the article's text reads straight through it.
@@ -47,8 +46,8 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
   // would otherwise stay open over the article while they scroll or tap past it.
   useEffect(() => {
     if (!open) return undefined;
-    const onDown = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false); }
+    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
     return () => {

@@ -137,27 +137,27 @@ export default function OurCompany() {
   const [reading, setReading] = useState(false);
 
   useEffect(() => {
-    const applyHash = () => {
+    function applyHash() {
       const id = idFromHash();
       if (id) { setTab(id); setReading(true); }
-    };
+    }
     applyHash();
     window.addEventListener('hashchange', applyHash);
     return () => window.removeEventListener('hashchange', applyHash);
   }, []);
 
-  const goTo = (id) => {
+  function goTo(id) {
     setTab(id);
     setReading(true);
     window.history.replaceState(null, '', `#${id}`);
-  };
+  }
 
   // Back drops the hash too, so a reload (or a shared link) lands on the list
   // rather than silently reopening the section the guest just left.
-  const goBack = () => {
+  function goBack() {
     setReading(false);
     window.history.replaceState(null, '', window.location.pathname);
-  };
+  }
 
   return (
     <div className={RAIL_PAGE_SCROLL}>

@@ -1,8 +1,8 @@
 import { Check, ShieldCheck } from 'lucide-react';
 import { REGISTRATION as R } from '@/content/shared/registration';
 
-const SealIcon = ({ className }) => <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />;
-const CheckIcon = ({ className }) => <Check className={className} aria-hidden="true" />;
+function SealIcon({ className }) { return <ShieldCheck className={className} strokeWidth={1.7} aria-hidden="true" />; }
+function CheckIcon({ className }) { return <Check className={className} aria-hidden="true" />; }
 
 // "Registered business" trust block for the About page. Business registration
 // details only (no personal ID numbers); verification points to the official

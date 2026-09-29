@@ -16,7 +16,7 @@
 // Captions and alt text come from wherever the page already stated them - a stop's
 // `alt`/`name`, or a slide's `title`. Never from a filename: a made-up caption is
 // the same problem as a made-up photo.
-const FILE = (s) => String(s || '').replace(/^\/?assets\/images\//, '').replace(/^images\//, '').trim();
+function FILE(s) { return String(s || '').replace(/^\/?assets\/images\//, '').replace(/^images\//, '').trim(); }
 
 export function galleryFrom(data) {
   if (!data) return [];

@@ -51,12 +51,12 @@ const CELL =
   'text-[0.62rem] font-medium leading-none text-center ' +
   '[transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
 
-const on = (active) => `${CELL} ${active ? 'text-gold' : 'text-muted'}`;
+function on(active) { return `${CELL} ${active ? 'text-gold' : 'text-muted'}`; }
 
 export default function AppBottomNav() {
   const pathname = normalizePath(usePathname());
   const { count } = useItinerary();
-  const is = (href) => (href === '/' ? pathname === '/' : pathname.startsWith(href.replace('.html', '')));
+  function is(href) { return (href === '/' ? pathname === '/' : pathname.startsWith(href.replace('.html', ''))); }
 
   return (
     <nav className={BAR} aria-label="App" data-appnav>

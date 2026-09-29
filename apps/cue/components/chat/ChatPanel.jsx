@@ -29,7 +29,7 @@ import {
 const THINK_MS = 400;
 
 let seq = 0;
-const uid = () => `m${(seq += 1)}`;
+function uid() { return `m${(seq += 1)}`; }
 
 export default function ChatPanel({ open, onClose }) {
   const pricing = usePricing();
@@ -172,7 +172,7 @@ export default function ChatPanel({ open, onClose }) {
   // takes up to 25s to notice. Coming back to the tab is a better moment to ask.
   useEffect(() => {
     if (!open || !thread) return undefined;
-    const onShow = () => { if (document.visibilityState === 'visible') catchUp(); };
+    function onShow() { if (document.visibilityState === 'visible') catchUp(); }
     document.addEventListener('visibilitychange', onShow);
     return () => document.removeEventListener('visibilitychange', onShow);
   }, [open, thread, catchUp]);
@@ -196,7 +196,7 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     if (!open) return undefined;
     const t = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
-    const onKey = (e) => { if (e.key === 'Escape' && !authOpen) onClose(); };
+    function onKey(e) { if (e.key === 'Escape' && !authOpen) onClose(); }
     document.addEventListener('keydown', onKey);
     return () => { clearTimeout(t); document.removeEventListener('keydown', onKey); };
   }, [open, onClose, authOpen]);

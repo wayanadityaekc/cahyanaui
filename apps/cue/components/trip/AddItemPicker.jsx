@@ -42,10 +42,10 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
     return catalog.items.filter((i) => cat.cats.includes(i.category) && i.active);
   }, [catalog, cat]);
 
-  const close = () => {
+  function close() {
     setCat(null);
     onClose();
-  };
+  }
 
   if (mode === 'link') {
     return (

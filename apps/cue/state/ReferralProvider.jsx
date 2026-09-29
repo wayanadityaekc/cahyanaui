@@ -13,7 +13,7 @@ export function ReferralProvider({ children }) {
     setReferral(readLocalJSON(KEY.referral, null));
   }, []);
 
-  const apply = async (code) => {
+  async function apply(code) {
     const clean = String(code || '').trim().toUpperCase();
     if (!clean) return 0;
     try {
@@ -30,12 +30,12 @@ export function ReferralProvider({ children }) {
       }
     } catch (e) {}
     return 0;
-  };
+  }
 
-  const clear = () => {
+  function clear() {
     setReferral(null);
     removeLocal(KEY.referral);
-  };
+  }
 
   return (
     <ReferralContext.Provider value={{ referral, pct: (referral && referral.pct) || 0, apply, clear }}>

@@ -12,10 +12,10 @@ export default function DateTimeField({ label = 'Date & time', value, onChange, 
   const hh = timePart.slice(0, 2);
   const mm = timePart.slice(3, 5);
 
-  const emit = (d, h, m) => {
+  function emit(d, h, m) {
     if (!d) return onChange('');
     onChange(`${d}T${h || '00'}:${m || '00'}`);
-  };
+  }
 
   // Tailwind-native (full-portable): .dtf* -> utilities. Kolom jam/menit = Select
   // shared, di-stretch lewat className prop (nempel ke .csel-group wrapper-nya).

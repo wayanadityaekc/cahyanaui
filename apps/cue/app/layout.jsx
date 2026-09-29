@@ -32,10 +32,12 @@ const inter = localFont({
 // tab icon harder than almost anything else - swapping the file alone can leave
 // the old mark on screen for days. Hash each one the way style.css is hashed, so
 // the link changes exactly when the file does and nobody has to bump anything.
-const assetV = (...rel) => createHash('sha1')
-  .update(readFileSync(join(process.cwd(), 'public', ...rel)))
-  .digest('hex')
-  .slice(0, 8);
+function assetV(...rel) {
+  return createHash('sha1')
+    .update(readFileSync(join(process.cwd(), 'public', ...rel)))
+    .digest('hex')
+    .slice(0, 8);
+}
 
 const STYLE_V = assetV('style.css');
 const ICON_SVG_V = assetV('assets', 'icons', 'favicon.svg');

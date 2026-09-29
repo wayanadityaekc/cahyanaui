@@ -62,14 +62,14 @@ function withLivePrice(block, prices) {
 // used to stop at the category, the JSON-LD named the article but never said Home.
 // When it is passed, any BreadcrumbList sitting in the static blocks is dropped so
 // the page cannot ship two.
-const isCrumb = (n) => n && n['@type'] === 'BreadcrumbList';
-const stripCrumb = (b) => {
+function isCrumb(n) { return n && n['@type'] === 'BreadcrumbList'; }
+function stripCrumb(b) {
   if (Array.isArray(b.json)) {
     const kept = b.json.filter((n) => !isCrumb(n));
     return kept.length ? { ...b, json: kept } : null;
   }
   return isCrumb(b.json) ? null : b;
-};
+}
 
 export default async function JsonLd({ page, crumbs }) {
   const raw = PAGE_SCHEMA[page] || [];

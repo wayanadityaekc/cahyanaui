@@ -68,7 +68,7 @@ export default function AirportTransferForm() {
   // them through to `lines`, and BookConfirmModal.payload() already forwards
   // pickup/dropoff/flight_number/flight_datetime per line - no popup change needed
   // for this data path).
-  const book = () => {
+  function book() {
     if (!ready) return;
     save({
       ...state,
@@ -85,7 +85,7 @@ export default function AirportTransferForm() {
       }],
     });
     window.location.href = '/my-trips.html';
-  };
+  }
 
   // Tailwind-native (full-portable): field pakai FIELD_INPUT shared (formClasses.js).
   // Kept sbg shared primitive: Select/DateTimeField, .price-cur, .btn-book.

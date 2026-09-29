@@ -23,8 +23,8 @@ import { chargeCurrency } from '@/lib/rails';
 // and one page can legitimately need two: the guest's own currency, or USD when
 // theirs cannot be settled. Loading once under `window.paypal` meant whichever
 // currency got there first won, and the second guest's checkout simply failed.
-const sdkId = (cur) => 'paypal-sdk-' + cur;
-const sdkNs = (cur) => 'paypal_' + cur;
+function sdkId(cur) { return 'paypal-sdk-' + cur; }
+function sdkNs(cur) { return 'paypal_' + cur; }
 
 function loadSdk({ clientId, currency }) {
   const id = sdkId(currency);
@@ -73,7 +73,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
 
     // The amount is never passed from here. The server reads what it priced the
     // booking at and creates the order from that; this only names the option.
-    const createOrder = async () => {
+    async function createOrder() {
       const r = await fetch(`${API_BASE}/paypal/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,12 +85,12 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         setMsg(`PayPal cannot charge ${d.converted.from}, so this is billed as ${d.currency} ${d.amount}.`);
       }
       return d.id;
-    };
+    }
 
     // Capture, then wait. The booking is confirmed by PayPal's webhook, not by
     // this response - so the guest is told the payment went through, and the
     // page does not claim the booking is confirmed on its own say-so.
-    const capture = async (orderId) => {
+    async function capture(orderId) {
       const r = await fetch(`${API_BASE}/paypal/capture-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,21 +102,21 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         throw Object.assign(new Error((d && d.detail) || copy.failed), { soft: true });
       }
       return d;
-    };
+    }
 
-    const fail = (e) => {
+    function fail(e) {
       if (cancelled || !mounted.current) return;
       setState('ready');
       setMsg(e.message || copy.failed);
       if (onError) onError(e);
-    };
+    }
 
-    const succeed = (d) => {
+    function succeed(d) {
       if (cancelled || !mounted.current) return;
       setState('done');
       setMsg('');
       if (onPaid) onPaid(d);
-    };
+    }
 
     (async () => {
       try {
@@ -164,7 +164,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     return () => { cancelled = true; };
   }, [bookingRef, option, copy, currency, onPaid, onError]);
 
-  const payByCard = async () => {
+  async function payByCard() {
     if (!cardRef.current) return;
     setState('paying');
     setMsg('');
@@ -174,7 +174,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     } catch (e) {
       if (mounted.current) { setState('ready'); setMsg(copy.declined); }
     }
-  };
+  }
 
   if (state === 'error') {
     return <p className={`${NOTE} text-err`}>{msg}</p>;

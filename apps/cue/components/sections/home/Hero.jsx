@@ -10,7 +10,7 @@ export default function Hero() {
 
   useEffect(() => {
     if (!sheetOpen) return;
-    const onKey = (e) => e.key === 'Escape' && setSheetOpen(false);
+    function onKey(e) { return e.key === 'Escape' && setSheetOpen(false); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [sheetOpen]);

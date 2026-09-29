@@ -13,7 +13,7 @@ export default function HeroSlider({ slides = [] }) {
 
   if (!slides.length) return null;
 
-  const go = (n) => setCur((n + slides.length) % slides.length);
+  function go(n) { return setCur((n + slides.length) % slides.length); }
 
   const total = slides.length;
   const count = Math.min(DOT_MAX, total);
@@ -24,13 +24,13 @@ export default function HeroSlider({ slides = [] }) {
   // by check-detail). Fade between slides via transition opacity 0.5s.
   const ARROW =
     'w-[30px] h-[30px] flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.3)] p-0 text-white text-[1.25rem] leading-none cursor-pointer hover:bg-[rgba(0,0,0,0.5)]';
-  const dotCls = (idx, j) => {
+  function dotCls(idx, j) {
     let c = 'rounded-[50%] shadow-[0_0_2px_rgba(0,0,0,0.4)] transition-[all] duration-200 ease-[ease] ';
     if (idx === cur) c += 'w-[7px] h-[7px] bg-white';
     else if (total > DOT_MAX && ((j === 0 && start > 0) || (j === count - 1 && start + count < total))) c += 'w-[3px] h-[3px] opacity-70 bg-[rgba(255,255,255,0.6)]';
     else c += 'w-[5px] h-[5px] bg-[rgba(255,255,255,0.6)]';
     return c;
-  };
+  }
   return (
     <div
       className="min-h-[48vh] bg-green bg-cover bg-center min-[769px]:order-1 min-[769px]:min-h-0 relative overflow-hidden touch-pan-y"

@@ -3,43 +3,46 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 // The chat panel's shape. Desktop: a popup hanging under the navbar icon that
 // opened it. Phone: a sheet off the bottom, the same shape the hero search and
 // the select panels already use, so it is not a fourth kind of surface.
-export const PANEL = (open) => [
-  'fixed z-[130] flex flex-col bg-white overflow-hidden',
-  'motion-reduce:transition-none',
-  // Desktop: a full-height drawer off the right edge, the same shape and the
-  // same slide as the navbar menu (Sep 2026, Wayan: "di desktop buat tampilanya
-  // full di kanan seperti menu"). It replaced a small popup hanging under the
-  // icon - a conversation with price lines in it needs the height, and the site
-  // already has one way of showing a panel on the right.
-  //
-  // Geometry copied from that menu on purpose: same width cap, same 100dvh,
-  // same 300ms translate. Two right-hand drawers that move differently would
-  // read as two different systems. (The shadow both used to carry went with the
-  // rest of the elevation, Sep 2026.)
-  '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
-  '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
-  '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
-  open
-    ? '[@media(min-width:769px)]:translate-x-0'
-    : '[@media(min-width:769px)]:translate-x-full',
-  // Phone: unchanged - a sheet off the bottom, which Wayan signed off on.
-  '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
-  '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
-  '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
-  open
-    ? '[@media(max-width:768px)]:opacity-100 [@media(max-width:768px)]:[transform:translateY(0)]'
-    : '[@media(max-width:768px)]:opacity-0 [@media(max-width:768px)]:[transform:translateY(100%)]',
-  open ? 'visible pointer-events-auto' : 'invisible pointer-events-none',
-].join(' ');
+export function PANEL(open) {
+  return [
+    'fixed z-[130] flex flex-col bg-white overflow-hidden',
+    'motion-reduce:transition-none',
+    // Desktop: a full-height drawer off the right edge, the same shape and the
+    // same slide as the navbar menu (Sep 2026, Wayan: "di desktop buat tampilanya
+    // full di kanan seperti menu"). It replaced a small popup hanging under the
+    // icon - a conversation with price lines in it needs the height, and the site
+    // already has one way of showing a panel on the right.
+    //
+    // Geometry copied from that menu on purpose: same width cap, same 100dvh,
+    // same 300ms translate. Two right-hand drawers that move differently would
+    // read as two different systems. (The shadow both used to carry went with the
+    // rest of the elevation, Sep 2026.)
+    '[@media(min-width:769px)]:top-0 [@media(min-width:769px)]:right-0 [@media(min-width:769px)]:bottom-0',
+    '[@media(min-width:769px)]:h-[100dvh] [@media(min-width:769px)]:w-[38%] [@media(min-width:769px)]:max-w-[420px] [@media(min-width:769px)]:min-w-[340px]',
+    '[@media(min-width:769px)]:[transition:translate_300ms_var(--ease),visibility_300ms]',
+    open
+      ? '[@media(min-width:769px)]:translate-x-0'
+      : '[@media(min-width:769px)]:translate-x-full',
+    // Phone: unchanged - a sheet off the bottom, which Wayan signed off on.
+    '[@media(max-width:768px)]:left-0 [@media(max-width:768px)]:right-0 [@media(max-width:768px)]:bottom-0 [@media(max-width:768px)]:top-auto',
+    '[@media(max-width:768px)]:h-[86dvh] [@media(max-width:768px)]:[border-radius:var(--r-xl)_var(--r-xl)_0_0]',
+    '[@media(max-width:768px)]:[transition:opacity_var(--dur)_var(--ease-out),transform_var(--dur)_var(--ease-out),visibility_var(--dur)]',
+    open
+      ? '[@media(max-width:768px)]:opacity-100 [@media(max-width:768px)]:[transform:translateY(0)]'
+      : '[@media(max-width:768px)]:opacity-0 [@media(max-width:768px)]:[transform:translateY(100%)]',
+    open ? 'visible pointer-events-auto' : 'invisible pointer-events-none',
+  ].join(' ');
+}
 
 // The scrim now runs at every width, because the desktop panel became a drawer
 // that covers part of the page rather than a popup floating over it. Same
 // colour and timing as the navbar menu's scrim; it sits under the panel and
 // closes on a tap.
-export const SCRIM = (open) =>
-  'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ' +
-  '[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ' +
-  (open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none');
+export function SCRIM(open) {
+  return 'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)] ' +
+    '[transition:opacity_300ms_var(--ease),visibility_300ms] motion-reduce:transition-none ' +
+    (open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none');
+}
 
 export const HEAD =
   'flex items-center gap-[0.7rem] flex-none pt-4 px-4 pb-3 [border-bottom:1px_solid_var(--line)]';
@@ -108,8 +111,7 @@ export const TYPING_WHO = 'font-body text-label font-medium tracking-[0.06em] up
 // The animation is the only thing on screen that says this is live rather than a
 // static row, so it is not decoration. Honouring reduced motion leaves the row
 // legible: the name is what carries the meaning.
-export const DOT_LIVE = (i) =>
-  `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${i * 0.15}s]`;
+export function DOT_LIVE(i) { return `${DOT} motion-safe:animate-[chatdot_1.1s_ease-in-out_infinite] [animation-delay:${i * 0.15}s]`; }
 
 // Wayan's own replies. Same side as ours so the conversation reads as one
 // thread, but named and tinted so a guest can tell a person from the panel -

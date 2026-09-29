@@ -156,11 +156,11 @@ export default function MyTripsCart() {
       setReturnRef(r);
     } catch { /* no query string, or a frame we cannot read: carry on */ }
   }, []);
-  const clearReturn = () => {
+  function clearReturn() {
     setReturnRef('');
     // Drop the reference so a reload does not reopen a screen the guest closed.
     try { window.history.replaceState(null, '', window.location.pathname); } catch {}
-  };
+  }
 
   const [review, setReview] = useState(null);
   // The post-trip email's button says "Leave a review", so ?review=1 has to land
@@ -266,11 +266,11 @@ export default function MyTripsCart() {
   // The real category for a row, so the date editor offers the right start times.
   // A transfer or charter row is free all day, which is what a null/own-kind category
   // gives - allowedSlots() only restricts the bookable programme categories.
-  const categoryOfRow = (r) => {
+  function categoryOfRow(r) {
     if (r.kind !== 'day') return r.kind;
     const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === r.service);
     return c ? c.category : null;
-  };
+  }
 
   const priced = useQuote({
     lines: rows,
@@ -298,7 +298,7 @@ export default function MyTripsCart() {
   // transfer/charter, index itu udah gak match posisi asli di state.transfers/
   // .charters, jadi splice-nya no-op alias silently gagal. Row day-item TETEP
   // di-cari via indexOf(service) di hari-nya, itu udah bener dari dulu.
-  const remove = (row) => {
+  function remove(row) {
     const next = JSON.parse(JSON.stringify(state));
     if (row.kind === 'transfer') next.transfers.splice(row.localIndex, 1);
     else if (row.kind === 'charter') next.charters.splice(row.localIndex, 1);
@@ -319,9 +319,9 @@ export default function MyTripsCart() {
       }
     }
     save(next);
-  };
+  }
 
-  const checkout = () => {
+  function checkout() {
     if (!rows.length || undated) return;
     const parts = [];
     const nD = new Set(rows.filter((r) => r.kind === 'day').map((r) => r.day_no)).size;
@@ -342,23 +342,24 @@ export default function MyTripsCart() {
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
-  };
+  }
   checkoutRef.current = checkout;
 
   // Bookings are a record of what was charged, so they show the amount stored
   // against them rather than a live conversion.
-  const bookedMoney = (usd, idr) =>
-    currency === 'IDR'
-      ? 'Rp' + Number(idr || 0).toLocaleString('id-ID')
-      : '$' + Number(usd || 0).toLocaleString('en-US');
+  function bookedMoney(usd, idr) {
+    return currency === 'IDR'
+        ? 'Rp' + Number(idr || 0).toLocaleString('id-ID')
+        : '$' + Number(usd || 0).toLocaleString('en-US');
+  }
 
-  const fmtRange = (from, to) => {
+  function fmtRange(from, to) {
     if (!from) return 'Date TBD';
     if (to && to !== from) return fmtDay(from) + ' - ' + fmtDay(to);
     return fmtDay(from);
-  };
+  }
 
-  const bookingCard = (t, isPast) => {
+  function bookingCard(t, isPast) {
     const img =
       imageForProgram(t.name) ||
       imageForProgram((t.lines && t.lines[0] && t.lines[0].service) || '');
@@ -442,9 +443,9 @@ export default function MyTripsCart() {
         )}
       </div>
     );
-  };
+  }
 
-  const bookingPanel = (isPast) => {
+  function bookingPanel(isPast) {
     if (!readLocal(KEY.token, '')) {
       return (
         <SignInPrompt
@@ -489,7 +490,7 @@ export default function MyTripsCart() {
         )}
       </div>
     );
-  };
+  }
 
   const TABS = [
     { id: 'custom', label: 'My Trip', Icon: ShoppingBag },

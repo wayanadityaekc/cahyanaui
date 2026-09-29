@@ -8,7 +8,7 @@ export default function ServiceReviews({ service, group, title = 'Guest reviews'
     <section className="experience">
       <div className="max-w-[var(--container)] mx-auto px-[var(--container-x)]">
         <h2 className={`${SECTION_TITLE} ${ST_LEFT}`}>{title}</h2>
-        <ReviewsStrip service={service} group={group} emptyText={emptyText} emptyCta />
+        <ReviewsStrip service={service} group={group} emptyText={emptyText} />
       </div>
       <ReviewCtaBand />
     </section>

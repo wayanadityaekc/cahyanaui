@@ -100,7 +100,7 @@ export default function TourPage({ data }) {
         priceItem={data.bookItem}
         included={data.included}
         excluded={data.excluded}
-        reviewService={data.title}
+        reviewService={data.bookItem || data.title}
       />
       </div>
       {data.bookItem && (

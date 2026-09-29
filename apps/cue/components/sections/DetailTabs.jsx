@@ -89,7 +89,7 @@ export default function DetailTabs({ overview = null, priceItem = '', bookType =
   sections.push({
     id: 'reviews',
     label: 'Reviews',
-    content: <ReviewsStrip service={reviewService} emptyText="No reviews yet for this program - be the first to share your trip." emptyCta />,
+    content: <ReviewsStrip service={reviewService} emptyText="No reviews yet for this program - be the first to share your trip." />,
   });
 
   const [active, setActive] = useState(sections[0].id);

@@ -24,7 +24,6 @@ const SECTION = {
   itinerary: 'Itinerary',
   'our-company': 'Our Company',
   'about-us': 'About Us',
-  programs: 'All Programs',
   'my-trips': 'My Trips',
   settings: 'Settings',
 };

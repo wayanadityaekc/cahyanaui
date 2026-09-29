@@ -29,7 +29,7 @@ import FormHero from '@/components/sections/FormHero';
 // ideas this page already lists ("Full day north: Handara Gate"), so it is not a
 // photo of somewhere we do not go, and its centred composition survives the tall
 // narrow crop.
-export default function CharterSection({ embedded }) {
+export default function CharterSection() {
   return (
     <FormHero
       page="charter"
@@ -37,7 +37,6 @@ export default function CharterSection({ embedded }) {
       sub={CHARTER.sub}
       photo="handara-gate.webp"
       alt="The Handara Gate on the road north, with the Bedugul hills behind it"
-      embedded={embedded}
       details={<Prose blocks={CHARTER.info} headingVariant="company" />}
     >
       <CharterBuilder />

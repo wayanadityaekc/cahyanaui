@@ -12,7 +12,7 @@
 //   2. cards     - hover a card: it must not move (and on the BEFORE build it DID -
 //                  proves the check can fail).
 //   3. menus     - disclosure, not role=menu; aria-expanded/controls; Escape returns focus.
-//   4. tabs      - /programs has a real tab set (panel, roving tabindex, arrows);
+//   4. tabs      - the programs tab page is gone, so the site has no role=tab at all;
 //                  jump-nav and rail are navigation, not tabs.
 //   5. dialogs   - role/label, focus lands inside, Tab trapped, Escape closes,
 //                  focus returns to the opener. Modal (AuthModal) + ModalPresence (review).
@@ -82,7 +82,7 @@ console.log('1. border colours + layout, before vs after');
 const HEX = /rgb\((\d+), (\d+), (\d+)\)/;
 const hex = (c) => { const m = HEX.exec(c); return m ? '#' + [1, 2, 3].map((i) => (+m[i]).toString(16).padStart(2, '0')).join('') : c; };
 const PAGES = ['/', '/tour.html', '/destinations.html', '/activities.html', '/ubud-tour.html', '/attractions/monkey-forest.html',
-  '/charter.html', '/transfer.html', '/airport-transfer.html', '/programs.html', '/our-company.html', '/bali-guide.html',
+  '/charter.html', '/transfer.html', '/airport-transfer.html', '/our-company.html', '/bali-guide.html',
   '/guide/ubud.html', '/my-trips.html', '/settings.html', '/itinerary.html'];
 const measure = async (base, url, w) => {
   const { ctx, page } = await open(base, url, w, { loggedIn: true });
@@ -212,34 +212,6 @@ for (const loggedIn of [false, true]) {
 
 // ---------------------------------------------------------------- 4. tabs
 console.log('4. tabs only where they are tabs');
-{
-  const { ctx, page } = await open(UNDER, '/programs.html', 1280);
-  const tabs = page.locator('[role="tablist"] [role="tab"]');
-  const n = await tabs.count();
-  ok(n >= 3, `programs: ${n} real tabs`);
-  const tabIdx = await tabs.evaluateAll((els) => els.map((e) => e.tabIndex));
-  ok(tabIdx.filter((t) => t === 0).length === 1 && tabIdx.filter((t) => t === -1).length === n - 1, `programs: roving tabindex (${tabIdx})`);
-  const panel = page.locator('[role="tabpanel"]');
-  ok((await panel.count()) === 1, 'programs: exactly one tabpanel');
-  const sel = async () => page.evaluate(() => document.querySelector('[role="tab"][aria-selected="true"]').id);
-  const lab = async () => panel.getAttribute('aria-labelledby');
-  ok((await lab()) === (await sel()), 'programs: panel labelled by the selected tab');
-  ok((await tabs.first().getAttribute('aria-controls')) === (await panel.getAttribute('id')), 'programs: tab aria-controls -> panel id');
-  await tabs.first().focus();
-  const start = await sel();
-  await page.keyboard.press('ArrowRight');
-  await page.waitForTimeout(250);
-  const second = await sel();
-  ok(second !== start && (await lab()) === second, `programs: ArrowRight selects the next tab and relabels the panel (${start} -> ${second})`);
-  await page.keyboard.press('End');
-  await page.waitForTimeout(200);
-  ok((await sel()) === (await tabs.last().getAttribute('id')), 'programs: End selects the last tab');
-  await page.keyboard.press('Home');
-  await page.waitForTimeout(200);
-  ok((await sel()) === (await tabs.first().getAttribute('id')), 'programs: Home selects the first tab');
-  await page.screenshot({ path: `${SHOT}/programs-tabs-1280.png`, clip: { x: 0, y: 60, width: 1280, height: 420 } });
-  await ctx.close();
-}
 {
   const { ctx, page } = await open(UNDER, '/ubud-tour.html', 1280);
   ok((await page.locator('[role="tablist"], [role="tab"]').count()) === 0, 'tour page: no fake tablist');

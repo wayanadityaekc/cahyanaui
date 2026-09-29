@@ -1,7 +1,5 @@
 import { Bus, CarFront, CarTaxiFront, MapPin, TreePalm } from 'lucide-react';
 
-// The "All Programs" (/programs.html) entry is intentionally omitted here - the
-// page exists but is not ready to publish, so it stays unlinked and noindexed.
 export const EXPLORE_OPTIONS = [
   {
     href: '/tour.html',

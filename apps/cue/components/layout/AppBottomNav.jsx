@@ -64,8 +64,8 @@ export default function AppBottomNav() {
         <House className="w-[22px] h-[22px]" strokeWidth={is('/') ? 2 : 1.7} aria-hidden="true" />
         Home
       </a>
-      <a href="/programs.html" className={on(is('/programs.html'))}>
-        <Compass className="w-[22px] h-[22px]" strokeWidth={is('/programs.html') ? 2 : 1.7} aria-hidden="true" />
+      <a href="/tour.html" className={on(is('/tour.html'))}>
+        <Compass className="w-[22px] h-[22px]" strokeWidth={is('/tour.html') ? 2 : 1.7} aria-hidden="true" />
         Program
       </a>
       <a href="/my-trips.html" className={`relative ${on(is('/my-trips.html'))}`}>

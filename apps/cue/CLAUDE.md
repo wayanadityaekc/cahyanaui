@@ -1561,9 +1561,8 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
   - **ONGKOS YANG DISENGAJA, keputusan Wayan**: grid di atasnya 4 tour + 4 experience, jadi
     satu link ini cuma nutup separuhnya. Experience punya listing sendiri
     (`/activities.html`) kalau mau CTA kedua - **tanya dulu**, jangan ditambahin sendiri.
-  - **`AppBottomNav` MASIH nunjuk `/programs.html`** (tab "Program" di app mode). Itu
-    **belum ditanyain** - dia navigasi, bukan CTA, tapi tujuannya halaman yang sama-sama
-    belum dipublish. Kalau mau disamain, itu keputusan Wayan.
+  - **`AppBottomNav` tab "Program" sekarang nunjuk `/tour.html`** (29 Sep 2026, waktu halaman
+    `/programs` dihapus - lihat "PROGRAMS PAGE DIHAPUS" di bawah).
 - **Trip Planner band (`.plan` / `#plan`) DIHAPUS dari homepage** (Wayan: kebanyakan tulisan; hero
   udah "trip planner" sendiri). CSS `.plan*` masih ada (dipakai halaman lain? cek dulu kalau mau buang).
 - **Driver cards DIHAPUS dari homepage** (section `.habout-people` + `#drivers-placeholder` +
@@ -1640,7 +1639,7 @@ Guides (`#guides`) → Villas (`#villas`) → **Charter** (`#charter-promo`) →
 Wayan: "selaraskan styling layout sama charter bro, page transfer, airport dan charter
 harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
 
-    <FormHero title sub photo alt [photoPos] details [embedded]>
+    <FormHero title sub photo alt [photoPos] details>
       {form halaman itu}                        <- judul, sub, FORM, FOTO, DETAILS
 
 - **BENTUK BARU (Sep 2026, Wayan): "di atas judul abis itu formnya abis itu baru foto,
@@ -1680,8 +1679,8 @@ harus identik". Ketiganya **cuma punya 1 section**, dan cangkangnya sama persis:
   **min-content**, jadi form yang bentuk tersempitnya lebih lebar dari layar bakal
   ndorong track lewat viewport dan `body{overflow-x:clip}` motong tepi kanannya
   **diam-diam**. Form airport persis gitu di 320px (form 316px di kolom 288px).
-- **Judul turun jadi `<h2>` kalau `embedded`** (tab /programs punya H1 sendiri). Tanpa
-  itu /programs punya 2 H1.
+- **Prop `embedded` (judul jadi `<h2>`, tanpa crumb) UDAH DIHAPUS** bareng tab /programs -
+  `FormHero` selalu render H1 + crumb.
 - **Foto `/transfer` DIGANTI** `transfer-hero.webp` → `coastal-road-beach-bali.webp`.
   Foto lama itu fasad terminal dengan tulisan "BALI International Airport" kebaca jelas.
   Dulu aman karena ke-gelapin di belakang teks putih; jadi panel terang dia naro balik
@@ -4162,9 +4161,9 @@ roving focus these panels never had. Escape closes and returns focus to the trig
 not put `role="menu"` back without also building arrow-key navigation.
 
 **3. Tabs - only where they really are tabs.**
-- Real tab set (swaps a panel): `AllPrograms` - full pattern now: `tab` + `tabpanel`
-  (`aria-controls`/`aria-labelledby`), roving `tabIndex`, arrows/Home/End via
-  `ui/useTabKeys.js`.
+- **No real tab set is left on the site** (`AllPrograms` was deleted 29 Sep 2026, and its
+  `ui/useTabKeys.js` with it). If a real tab set is added again: `tab` + `tabpanel`
+  (`aria-controls`/`aria-labelledby`), roving `tabIndex`, arrows/Home/End - rebuild the hook.
 - `DetailTabs` "Jump to section" and `RailLayout`'s in-page sections were `role="tablist"`
   with no panels (DetailTabs' buttons were not even `role="tab"`). They are navigation, so
   they are `<nav>` + `aria-current="true"` now. The two verify scripts that selected
@@ -4186,3 +4185,11 @@ The mobile drawer in `Navbar.jsx` is still hand-rolled (no focus trap) - not par
 toasts render it and mark the visual toast `aria-hidden`. Every field/form error
 (`FIELD_ERR`, `REFMSG_ERR`, 24 sites) carries `role="alert"`; the sign-in note and the
 settings "saved" message are `role="status"`.
+
+## PROGRAMS PAGE DIHAPUS (29 Sep 2026, Wayan: "delete all program page, I use single listing page right now")
+`/programs.html` (`AllPrograms`: tab Tours/Experiences/Transfer/Charter) dulu noindex & gak di-link
+dari mana pun kecuali tab "Program" di `AppBottomNav`. Udah dihapus: route, komponen, `useTabKeys`,
+prop `embedded` di `FormHero`/`CharterSection`/`TransferSection`, entri sitemap/routes/crumbs/promo.
+- `public/.htaccess`: `Redirect 301 /programs.html /tour.html` (target hidup, bukan rantai, bukan
+  awalan URL hidup). Tab Program di app bar -> `/tour.html`.
+- Catatan lama di atas soal `/programs` (h1 "All Programs", tab di /programs, dst) = sejarah.

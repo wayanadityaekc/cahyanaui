@@ -1,9 +1,7 @@
 export const SITE = 'https://cahyanaubudexperience.com';
 
-// Kept out of the generated sitemap. my-trips/settings are private tools;
-// programs.html sets robots:noindex in its own metadata, so listing it would
-// send Google both "here is my URL" and "do not index it".
-export const NOINDEX = ['my-trips', 'settings', 'programs'];
+// Kept out of the generated sitemap. my-trips/settings are private tools.
+export const NOINDEX = ['my-trips', 'settings'];
 
 // Tours parked as "not ready to sell yet" (Wayan). Their content stays in
 // content/tours/index.js so they can be switched back on by deleting a line
@@ -122,7 +120,6 @@ export const BESPOKE = [
   'destinations',
   'itinerary',
   'our-company',
-  'programs',
   'my-trips',
   'settings',
   'tour',

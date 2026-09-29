@@ -25,9 +25,6 @@ import { INFO_CARD_BODY } from '@/components/ui/infoClasses';
 // column is ~713px, so the plans get ~349px and the row still reads. Below 1200
 // everything stacks in DOM order, which is the phone order Wayan asked for.
 //
-// `embedded` is for /programs, where these sections render inside a tab that
-// already has its own heading and padding: the top clearance under the fixed
-// header would be a dead gap there.
 const HEAD = 'bg-white pb-[var(--section-gap)] px-[var(--container-x)]';
 const HEAD_TOP = 'pt-[calc(var(--header-h-max,92px)+var(--space-3))] min-[769px]:pt-[calc(var(--header-h-max,98px)+var(--space-3))]';
 const INNER = 'max-w-[var(--container)] mx-auto';
@@ -92,16 +89,12 @@ const DETAILS =
   `mt-[var(--section-gap)] ${INFO_CARD_BODY} [&_p]:max-w-[var(--container-read)] ` +
   '[&>h2]:!text-left';
 
-export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', half = false, embedded, details, children, page }) {
-  // On /programs this renders inside a tab under that page's own H1, so the title
-  // steps down to an H2 rather than giving the page a second H1.
-  const H = embedded ? 'h2' : 'h1';
+export default function FormHero({ title, sub, photo, alt, photoPos = '[&>img]:object-center', half = false, details, children, page }) {
   return (
-    <section className={embedded ? HEAD : `${HEAD} ${HEAD_TOP}`} data-formhero>
+    <section className={`${HEAD} ${HEAD_TOP}`} data-formhero>
       <div className={INNER}>
-        {/* Not on the /programs tabs: that page has its own trail and its own H1. */}
-        {!embedded && <Breadcrumb items={crumbsFor(page)} className="mb-2" />}
-        <H className={`${SUBHERO_TITLE} m-0 text-left`}>{title}</H>
+        <Breadcrumb items={crumbsFor(page)} className="mb-2" />
+        <h1 className={`${SUBHERO_TITLE} m-0 text-left`}>{title}</h1>
         <p className={SUB}>{sub}</p>
         <div className={`${GRID} ${half ? GRID_COLS_HALF : GRID_COLS}`}>
           <div className="min-w-0" data-formhero-form>{children}</div>

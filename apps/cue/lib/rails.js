@@ -64,7 +64,7 @@ export function noteFor(currency, rail = DEFAULT_RAIL) {
   const bill = chargeCurrency(cur, rail);
   if (bill === cur) return null;
   if (bill === 'IDR') {
-    return `Card payments are charged in rupiah. The rupiah amount is exact; the amount in your currency is an estimate, and your bank converts it (it may add a card fee).`;
+    return `Card payments are charged in rupiah. The rupiah amount is exact; the amount in your currency is an estimate, and your bank converts it.`;
   }
   return `PayPal cannot charge ${cur === 'IDR' ? 'rupiah' : cur}, so the amount shown is converted at today's rate.`;
 }

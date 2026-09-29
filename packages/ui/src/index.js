@@ -26,6 +26,7 @@ export { cn } from './lib/cn.js';
 export { default as useMobile } from './lib/useMobile.js';
 export { default as useBodyLock } from './lib/useBodyLock.js';
 export { default as useRevealWhenAway } from './lib/useRevealWhenAway.js';
+export { default as groupReviews } from './lib/groupReviews.js';
 
 /* --- layer 2: primitives --- */
 export { default as Button } from './primitives/Button.jsx';
@@ -40,6 +41,8 @@ export { default as DateRangeField } from './primitives/DateRangeField.jsx';
 export { default as Overlay } from './primitives/Overlay.jsx';
 export { default as CurrencyPicker } from './primitives/CurrencyPicker.jsx';
 export { default as FlagDefs } from './primitives/FlagDefs.jsx';
+export { default as Separator } from './primitives/Separator.jsx';
+export { default as LoadFallback } from './primitives/LoadFallback.jsx';
 
 /* --- layer 3: blocks --- */
 export { default as Container } from './blocks/Container.jsx';
@@ -62,6 +65,11 @@ export { default as BookingPanel, SECONDARY_BTN } from './blocks/BookingPanel.js
 export { default as SearchBar, SEARCH_LABEL } from './blocks/SearchBar.jsx';
 export { default as PriceBlock } from './blocks/PriceBlock.jsx';
 export { default as VillaCard } from './blocks/VillaCard.jsx';
+export { default as Slider } from './blocks/Slider.jsx';
+export { default as ReviewCard } from './blocks/ReviewCard.jsx';
+export { default as ReviewDetail } from './blocks/ReviewDetail.jsx';
+export { default as ReviewList } from './blocks/ReviewList.jsx';
+export { default as RailLayout } from './blocks/RailLayout.jsx';
 
 /* Shared class strings, for a page that needs the look without the component. */
 export * from './primitives/controlClasses.js';
@@ -70,3 +78,6 @@ export * from './blocks/gridClasses.js';
 export * from './blocks/cardClasses.js';
 export * from './blocks/navbarClasses.js';
 export * from './blocks/footerClasses.js';
+export * from './primitives/separatorClasses.js';
+export * from './blocks/reviewClasses.js';
+export * from './blocks/railClasses.js';

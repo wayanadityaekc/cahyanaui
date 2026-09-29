@@ -71,6 +71,10 @@ picks one - the variants do not get scattered back into the apps.
 | `BookingPanel` | the sticky panel beside a stay | - |
 | `SearchBar` | dates + guests + the button | hero, panel, stack |
 | `PriceBlock` | "From Rp… / night" | amber, gold |
+| `Slider` | a card row that scrolls sideways, arrows on desktop | track class is a prop |
+| `ReviewCard` / `ReviewDetail` | one review as a fixed-size card; its full text in a dialog | - |
+| `ReviewList` | reviews as cards + the detail dialog | **slider** (a review section), **grid** (the full list) |
+| `RailLayout` | sticky side menu + content column; on phones the menu is the first screen | default, card (phones keep the frame), scrollContent |
 
 Class strings ship beside the components (`gridClasses`, `cardClasses`,
 `navbarClasses`, `footerClasses`, `layoutClasses`). A row of cards is a div with
@@ -119,6 +123,32 @@ Two things a consuming site must do:
 The site also needs `.hs-locked { overflow: hidden !important }` if it uses
 `useBodyLock`. The library does not ship it: a library should not reach out and
 restyle the host document's `<html>`.
+
+### Ported from CUE, 29 Sep 2026
+
+`Separator` + `separatorClasses`, `LoadFallback`, `groupReviews`, `Slider`, the review
+blocks and `RailLayout` came over from CUE (`apps/cue`) once they were settled there.
+CUE still renders its own copies; these are the shared versions for the next site
+that needs them. What changed on the way in, on purpose:
+
+- **Nothing fetches.** CUE's `ReviewsStrip` calls its API; `ReviewList` takes
+  `reviews` (null while loading renders nothing, so the empty state never flashes).
+- **`group`** merges one review posted for several trips into one card
+  ("Ubud Tour + 2 more"; the dialog lists every trip). On for lists that mix
+  trips, off on one trip's own page, which shows its own copy.
+- **`RailLayout` stores nothing.** CUE remembers the collapsed rail in
+  localStorage; here `collapsed` + `onCollapsedChange` hand that to the site.
+  Links go through `linkAs`, the breadcrumb is a node, and the content column
+  is a `div` unless `contentAs="main"` - the site's layout usually owns `<main>`,
+  and a second one inside it is a duplicate landmark.
+- **Square frames.** The rail frame and the review card follow this library's
+  card rule (no radius); the active rail row and the dialog keep theirs.
+- **Slider arrows are rendered only when they can move.** CUE hides them with
+  the `hidden` attribute, which loses to the arrow's own `flex` class on desktop.
+- **`ReviewDetail` renders nothing until it opens.** Portaling its backdrop on
+  the first render broke hydration of a static page (React #418).
+- `RAIL_FRAME_SCROLL` subtracts `--footerbar-h` (0 unless the site sets it)
+  instead of CUE's hard-coded 60px footer bar.
 
 ## Rules
 

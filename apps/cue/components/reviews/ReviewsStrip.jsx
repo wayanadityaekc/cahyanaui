@@ -7,6 +7,7 @@ import ReviewCta from '@/components/reviews/ReviewCta';
 import ReviewDetailModal from '@/components/reviews/ReviewDetailModal';
 import Slider from '@/components/ui/Slider';
 import { GRID_REVIEWS } from '@/components/ui/gridClasses';
+import { groupReviews } from '@/lib/groupReviews';
 
 const GRID = 'grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-auto mt-6';
 
@@ -42,7 +43,8 @@ export default function ReviewsStrip({
     };
   }, [service, group]);
 
-  const all = rows || [];
+  // Single-service pages keep their own copy; mixed lists (homepage, all reviews, transfer routes) merge copies.
+  const all = service ? rows || [] : groupReviews(rows || []);
   const list = limit ? all.slice(0, limit) : all;
 
   if (list.length === 0) {

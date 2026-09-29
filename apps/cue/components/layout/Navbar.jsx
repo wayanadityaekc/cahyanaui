@@ -21,47 +21,16 @@ import AccountMenu from './AccountMenu';
 import TripPrefsFields from './TripPrefsFields';
 import DesktopNav from './DesktopNav';
 
-// Tailwind-native (migrasi Fase 2): navbar (semua halaman). Dulu keluarga
-// .navbar*/.acct__dot/.itn-badge di style.css - sekarang utilities 1:1.
-// Navbar = drawer geser dari kanan di SEMUA lebar (keputusan Wayan Sep 2026),
-// dibuka via hamburger. Struktur DOM sengaja dijaga identik supaya diff
-// computed-style old vs new bisa per-elemen. .navbar* CSS DIBIARIN di style.css
-// karena partial legacy (partials/nav*.html) masih pakai. Beberapa aturan
-// numpuk di 1 elemen (mis. `.navbar__menu > li > a` menang atas display flex
-// tiap link) - hasil flatten-nya diverifikasi lewat computed-style diff.
+// Site header: trip bar, nav row, phone drawer and account slot.
 
-// Hamburger bars. They morph into an X while the drawer is open so the button
-// itself reacts to the tap, instead of three lines sitting there unchanged.
-//
-// THE X OFFSET IS DERIVED, NOT CHOSEN: the outer bars travel bar-height + gap to meet
-// in the middle (2 + 4 = 6px). Change `gap-` or `h-` on the bars and the
-// `translate-y-[6px]` below has to move with it, or the X never closes.
-// Sizes came down a notch 27 Sep 2026 (Wayan: "humberger bisa size kecilin lagi dikit")
-// - 28->24px wide, gap 5->4. The mobile TAP TARGET (h-[2.2rem]) was left alone: that is
-// thumb size, not visual size, and shrinking it makes the button harder to hit.
+// Burger bar; the X offset (6px) is bar height 2 + gap 4, so change them together.
 const BURGER_BAR =
   'w-full h-[2px] bg-gold max-[992px]:w-[20px] ' +
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
   'motion-reduce:transition-none';
 
 
-// Link nav utama (Home/Program/Guide/My Trip/Our Company/Account Settings).
-//
-// BARIS = PILL, bentuknya DIPINJEM dari rail (Sep 2026, Wayan pilih "B" dari
-// sheet 3 opsi - dia bilang "gass B, tombol X nya hilangin"). Sebelum ini
-// baris drawer itu teks polos yang hover-nya cuma ganti warna, sementara rail
-// Our Company & My Trips barisnya udah pill - satu web, dua macem baris menu.
-// Sekarang GEOMETRI-nya satu string (`MENU_ROW_BOX`), jadi gak bisa melenceng
-// lagi; warna & ukuran teksnya tetep punya drawer sendiri.
-//
-// Yang dioper dari mock: baris kepilih = pill cream (rail juga gitu di HP),
-// hover = pill cream, badge & chevron ke tepi KANAN.
-//
-// TERUS JADI OPSI A (Wayan ngirim balik screenshot mock A: "gua mau ini") -
-// jadi IKON PER BARIS + tombol × ikut masuk, dua-duanya yang tadinya dia minta
-// dilepas. Ikonnya bukan selera Flowbite: ukurannya `--icon-sm` lewat
-// MENU_ROW_BOX yang sama, dan Our Company pakai `Building2` - ikon yang PERSIS
-// dipakai rail Our Company buat section "About Us".
+// Drawer nav row: shared pill geometry (MENU_ROW_BOX), the drawer's own colours.
 function navLink(active) {
   return `${MENU_ROW_BOX} text-strong no-underline ` +
     (active
@@ -69,11 +38,7 @@ function navLink(active) {
       : 'font-medium text-gold hover:bg-cream hover:text-green max-[992px]:hover:text-gold-d');
 }
 
-// Pill-nya butuh padding 12px (0.75rem) di dalam, dan drawer-nya sendiri udah
-// px-[22px]. Tanpa narik <li>-nya keluar 12px, SEMUA label geser 12px ke kanan
-// dan gak lurus lagi sama baris Welcome + label Guests di atasnya (diukur:
-// tepi kiri teks harus tetep 100px @390). Jadi pill-nya yang mekar keluar,
-// bukan teksnya yang masuk.
+// Pulls each row out 12px so the pill's padding doesn't shift the labels right.
 const NAV_LI = '-mx-3';
 
 const BADGE_BASE =
@@ -91,18 +56,7 @@ export default function Navbar() {
   const barRef = useRef(null);
   const pathname = normalizePath(usePathname());
 
-  // Three numbers, and NONE of them changes while the guest is scrolling - that is
-  // the whole point of this block now:
-  //   --header-h     = the NAV ROW only. Sticky tab strips sit at this. It used to be
-  //                    the whole header, so it shrank 33px while the trip bar retracted
-  //                    and every element in the document had its style invalidated on
-  //                    each of the ~12 frames of that animation (measured: 48-139ms of
-  //                    style recalc per collapse, against ~1ms on a page with no bar -
-  //                    a custom property on :root is inherited, so touching it recalcs
-  //                    the whole tree). That was the "scroll tidak mulus".
-  //   --header-h-max = nav row + trip bar. Page top padding uses this, so a page
-  //                    reserves the space the header takes at rest.
-  //   --tripbar-h    = how far the header slides up once the guest starts scrolling.
+  // Header heights on :root (nav row, nav + trip bar, trip bar); set on resize only, never on scroll.
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return undefined;
@@ -118,8 +72,7 @@ export default function Navbar() {
         root.style.setProperty('--header-h-max', `${h}px`);
       }
     }
-    // A viewport change gives a different natural height (and rotating a phone
-    // shouldn't keep the desktop maximum), so the ceiling is re-measured there.
+    // A viewport change resets the max so a rotated phone re-measures.
     function onResize() { max = 0; set(); }
     set();
     const ro = new ResizeObserver(set);
@@ -131,21 +84,7 @@ export default function Navbar() {
     };
   }, []);
 
-  // THE TRIP BAR SITS ABOVE THE NAV AND THE HEADER SLIDES IT AWAY (Sep 2026, Wayan:
-  // "coba trip bar di taruh di atas navbar dan hilang saat di scroll"). The header
-  // keeps its height; only its `top` moves, from 0 to -(bar height). Nothing is
-  // measured, nothing on :root is rewritten, and no element outside this header is
-  // touched - so the browser does no style work at all while the bar goes away.
-  //
-  // TWO THRESHOLDS, kept from the collapse it replaces: close at 80, open at 8. One
-  // threshold flips state on every crossing, and a thumb resting near the top made
-  // the bar flap (measured: eight 4-6px nudges around 80 toggled it eight times).
-  // Once it is gone it stays gone until the guest is genuinely back at the top.
-  // HIDE-ON-SCROLL-DOWN WAS BUILT AND REVERTED (27 Sep 2026). Wayan asked for it
-  // ("navbar gak sticky ... muncul kalo di scroll berlawanan arah, kayak facebook"),
-  // saw it live, and asked for it back: "Sticky navbar biarin sticky". So the header is
-  // sticky again and only the trip bar moves, exactly as it was before that change.
-  // Do not re-add the direction logic without asking - it is a decision, not a gap.
+  // Trip bar slides away past 80px and back under 8px (two thresholds stop flicker); the header stays sticky.
   const [slid, setSlid] = useState(false);
   useEffect(() => {
     function onScroll() { return setSlid((was) => (was ? window.scrollY > 8 : window.scrollY > 80)); }
@@ -155,13 +94,7 @@ export default function Navbar() {
   }, []);
 
   function isActive(href) {
-    // '/index.html' counts as home. Static export PRERENDERS this page at pathname '/',
-    // so a browser sitting on /index.html used to compute a DIFFERENT class here than
-    // the server wrote - a hydration mismatch (React #418), which makes React throw away
-    // the server HTML and re-render that page on the client. Measured: /index.html threw,
-    // '/' did not. It also fixes the older symptom that the drawer's Home row simply did
-    // not light up there. Nothing links to /index.html, so this only reaches people who
-    // type or bookmark it - but it costs one comparison.
+    // '/index.html' counts as home, matching the prerendered '/' (avoids a hydration mismatch).
     if (href === '/') return pathname === '/' || pathname === '/index.html';
     return pathname === href.replace(/\.html$/, '') || pathname === href;
   }
@@ -172,10 +105,7 @@ export default function Navbar() {
     function onDoc(e) {
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      // Select popups + their overlay are portaled to <body> (outside navRef). Clicking
-      // inside one (an option, the × close, or the dim overlay) must close only the
-      // popup, never the drawer underneath it. Both carry data-portal (Select/Overlay
-      // emit it as their own contract — no leftover .hs-* class after the Tailwind migrasi).
+      // Clicks inside a portaled Select popup close only the popup, not the drawer.
       const inPopup = e.target.closest && e.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     }
@@ -200,17 +130,10 @@ export default function Navbar() {
       className={`fixed left-0 right-0 z-[100] w-full bg-white animate-[navbarIn_0.4s_ease-out] motion-reduce:animate-none [transition:top_var(--dur)_var(--ease)] motion-reduce:transition-none ${slid ? 'top-[calc(-1_*_var(--tripbar-h,0px))]' : 'top-0'}`}
       ref={headerRef}
     >
-      {/* Above the nav row, so sliding the header up takes the bar off the screen
-          and leaves the nav flush at the top. */}
+      {/* Trip bar above the nav row, so sliding the header up hides only the bar. */}
       <div ref={barRef}><TripBar /></div>
       <div className="flex justify-between items-center max-w-[1200px] mx-auto py-[0.55rem] px-[var(--container-x)] min-[993px]:px-5">
-        {/* HAMBURGER LEFT OF THE LOGO, DRAWER FROM THE LEFT (Wayan, 28 Sep 2026, WO1:
-            "move the humberger to the left of the logo, and also when menu open is from
-            left, and account is in the right"). Phones only - desktop has no burger.
-            This reverses the 27 Sep "burger back on the right" note below; that was the
-            last word until Wayan asked again here, with the account slot now taking the
-            right-hand corner. The panel still covers the burger when open, so the x in
-            the drawer header stays the only visible close control. */}
+        {/* Burger left of the logo, phones only; the open drawer covers it, so the x inside closes it. */}
         <button
           className="min-[993px]:hidden relative flex flex-col gap-[4px] w-6 bg-transparent border-none cursor-pointer max-[992px]:h-[2.2rem] max-[992px]:mr-2 max-[992px]:items-center max-[992px]:justify-center"
           id="hamburger"
@@ -229,16 +152,7 @@ export default function Navbar() {
 
         <DesktopNav isActive={isActive} />
 
-        {/* Chat pindah ke sini (Sep 2026, Wayan) - dulu nempel di sticky bar bawah
-            + tombol ngambang. Di navbar dia keliatan di semua halaman & semua lebar
-            tanpa makan ruang di bawah layar. Yang di dalam drawer (tombol hijau
-            "Chat on WhatsApp") tetep ada - itu buat yang udah buka menu.
-
-            Sep 2026: dari link wa.me jadi panel support beneran. Jawabannya dari
-            data situs sendiri (katalog harga + 15 FAQ + aturan jam), dan yang gak
-            bisa dijawab dioper ke Wayan - jadi gak ada jawaban karangan. Tombolnya
-            sengaja TETEP di sini & bentuknya sama persis kayak ikon keranjang di
-            sebelahnya; yang berubah cuma apa yang kejadian pas di-tap. */}
+        {/* Chat launcher: opens the support panel, same shape as the cart icon beside it. */}
         <ChatLauncher className={`${APP_HIDE} inline-flex items-center text-gold mr-[1.3rem] bg-transparent border-none p-0 cursor-pointer [transition:color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:text-gold-d max-[992px]:mr-[0.85rem]`} />
 
         <a href="/my-trips.html" className={`${APP_HIDE} relative inline-flex items-center text-gold mr-[1.3rem] transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]`} aria-label="My Trips">
@@ -254,19 +168,7 @@ export default function Navbar() {
             className={`fixed top-0 left-0 bottom-0 right-auto w-4/5 max-w-[340px] max-[992px]:max-w-[360px] h-[100dvh] bg-white px-[22px] pb-[30px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden overscroll-contain transition-[translate] duration-300 ease-[var(--ease)] motion-reduce:transition-none z-[120] flex flex-col items-stretch text-left gap-0 list-none ${menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'}`}
             id="nav-menu"
           >
-            {/* Welcome header — NO top offset on the drawer <ul> above (revert dari
-                pt-[var(--header-h)]): konsepnya drawer BUKAN konten yang mulai DI
-                BAWAH navbar+tripbar, tapi panel yang nutup di level YANG SAMA (drawer
-                ini `fixed inset` full-height z-120, di ATAS header z-100) - Welcome
-                jadi baris paling atas drawer, pas di ketinggian navbar, gak digeser
-                turun. Sekarang scroll SATU BLOK sama link di bawahnya (NOT sticky -
-                dulu sticky top-0 bikin menu jalan DI BAWAH-nya pas di-scroll, kesan
-                kepisah). border-b di sini = SATU-SATUNYA garis pembatas di drawer
-                (lihat komentar di bawah). */}
-            {/* WO1 (Wayan: "remove dupes"): the Welcome/avatar header, the Sign in button
-                and the My Trip + Account Settings rows moved to the account slot in the
-                bar. The x stays - the panel covers the burger while it is open, so this is
-                the only close affordance a guest can see (see CLAUDE.md). */}
+            {/* Drawer header: the x is the only visible close control while the drawer covers the burger. */}
             <li className="flex items-center gap-[10px] bg-white border-b border-line mx-[-22px] pt-[0.8rem] px-[22px] pb-[0.8rem] min-h-[65px]">
               <b className="text-strong font-semibold text-gold">Menu</b>
               <button
@@ -281,9 +183,7 @@ export default function Navbar() {
 
             <li className="pt-[0.9rem] pb-4"><TripPrefsFields idPrefix="acct" /></li>
 
-            {/* Nav — WAJIB cuma satu garis di drawer (di bawah Welcome, di atas); antar
-                link nggak dikasih border lagi, kerasa kebanyakan garis (Wayan). Jarak
-                antar-link murni dari padding baris (sekarang lewat MENU_ROW_BOX). */}
+            {/* Nav rows: one divider only (under the header); spacing comes from MENU_ROW_BOX. */}
             <li className={NAV_LI}><a href="/" className={navLink(isActive('/'))}><House strokeWidth={1.7} aria-hidden="true" />Home</a></li>
             <li className={`relative ${NAV_LI}`}>
               <button
@@ -292,14 +192,11 @@ export default function Navbar() {
                 aria-expanded={dropOpen}
                 onClick={() => setDropOpen((v) => !v)}
               >
-                {/* ml-auto: chevron duduk di tepi kanan baris, sama kayak
-                    chevron rail di HP (RAIL_MCHEV) - dulu dia nempel di teksnya. */}
+                {/* ml-auto keeps the chevron at the row's right edge, like the rail's. */}
                 <Compass strokeWidth={1.7} aria-hidden="true" />Program<span className={`ml-auto inline-block transition-[rotate] duration-200 ease-[ease] ${dropOpen ? 'rotate-90' : ''}`}>&rsaquo;</span>
               </button>
               <Collapse open={dropOpen}>
-              {/* pl = 0.9rem indent + 0.75rem yang dipinjem NAV_LI, biar sub-item
-                  tetep mendarat di tempat yang sama (diukur: x=114 @390, sebelum
-                  & sesudah). Ubah NAV_LI = ubah ini bareng. */}
+              {/* pl includes NAV_LI's 0.75rem pull-out; change NAV_LI and this together. */}
               <ul className="list-none mt-[0.1rem] mb-[0.2rem] pt-[0.2rem] pb-[0.5rem] pl-[1.65rem] block">
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/tour.html">Tours</a></li>
                 <li className="py-[0.4rem]"><a className="block text-small font-medium no-underline text-gold hover:text-green max-[992px]:hover:text-gold-d" href="/destinations.html">Destinations</a></li>
@@ -315,10 +212,7 @@ export default function Navbar() {
             <li className={NAV_LI}><a href="/our-company.html" className={navLink(isActive('/our-company.html'))}><Building2 strokeWidth={1.7} aria-hidden="true" />Our Company</a></li>
             {/* Footer: Chat WA - mt-auto nge-pin ke bawah drawer. */}
             <li className="mt-auto pt-4">
-              {/* Bug lama: `block` + `items-center justify-center` itu no-op tanpa
-                  `flex` (icon+text numpuk kiri, gak center) + `text-gold` di atas bg
-                  hijau (nyaris gak kebaca). Fix: flex biar align beneran + text-white
-                  (icon currentColor ikut putih, samain gaya sama tombol Sign in). */}
+              {/* flex centres icon + text; white text on the green button. */}
               <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener" className={`flex w-full gap-2 ${BTN_SM} border-0 bg-cta no-underline text-white transition-[background,scale] duration-200 ease-[var(--ease)] hover:bg-cta-d`}>
                 <MessageCircle className="w-[18px] h-[18px] flex-none" strokeWidth={1.7} aria-hidden="true" />
                 WhatsApp
@@ -327,32 +221,7 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* HAMBURGER BACK ON THE RIGHT, AND THE DRAWER WITH IT (27 Sep 2026, Wayan:
-            "pindahin balik navbar humberger menu ke kanan lagi, dan kalo di buka
-            menunya keluar di sisi kanan"). Earlier the same day it had moved to the
-            left of the logo, and the panel with it; he saw both live and asked for
-            the original back. This is the state that holds - do not move it left
-            again without asking, it is a decision he has now seen twice.
-            Two details travel with the button and are easy to miss:
-            - the gap is ml, not mr: it separates the burger from the cart on its
-              LEFT. Left of the logo it was mr, separating burger from logo. On phones it
-              is NEGATIVE (-2px), and that is not a fudge: what the eye compares is the
-              three 20px GLYPHS, and this button is the only one whose glyph does not fill
-              its box - the bars are 20px inside a 24px hit area, so the ink sits 2px in on
-              each side. Measured, the old ml-1 made the cart-to-burger gap 19.6 against
-              13.6 everywhere else; -2px lands all three on 13.6. The box keeps its 24px
-              width, so the thumb target is untouched. Desktop needs none of this - there
-              the bars fill the button, so the gaps were already equal at 20.8.
-            - the logo gets its negative left margin back. That pulls it out to the
-              container edge, which is free again now the burger has left it.
-            What does NOT come back: the burger's old 28px width and 5px bar gap.
-            Wayan shrank those to 24/4 in a separate request he has not reverted.
-            The cost of a right-hand drawer is the same as a left-hand one: the panel
-            covers the burger while the menu is open, so the x in the Welcome row is
-            the only close affordance a guest can see. It is not optional. */}
-        {/* WO1 (Wayan, 28 Sep 2026): account slot on its own at the far right. It was
-            one half of a [ burger | account ] pill (option D) for one round; Wayan then
-            moved the burger to the left of the logo, so the pill has nothing to join. */}
+        {/* Account slot, far right. */}
         <AccountMenu onLogin={() => setAuthOpen(true)} />
       </div>
 

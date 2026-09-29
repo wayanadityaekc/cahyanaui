@@ -4,6 +4,7 @@ import { Backpack, Banknote, Car, Clock, CreditCard, Info } from 'lucide-react';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
+import LoadFallback from '@/components/ui/LoadFallback';
 import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
 // Icons for the Standard / Exclusive rows in the Details list.
@@ -67,8 +68,8 @@ function Inclusions({ included, excluded }) {
 }
 
 // Detail page sections stacked on one page; the sticky strip is a jump nav whose active item follows scroll.
-export default function DetailTabs({ overview, priceItem, bookType, included, excluded, reviewService }) {
-  const sections = [{ id: 'overview', label: 'Overview', content: overview }];
+export default function DetailTabs({ overview = null, priceItem = '', bookType = 'tour', included = [], excluded = [], reviewService = '' }) {
+  const sections = [{ id: 'overview', label: 'Overview', content: overview || <LoadFallback /> }];
   if (priceItem) {
     sections.push({
       id: 'details',

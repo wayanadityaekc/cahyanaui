@@ -10,6 +10,7 @@ import { reviewSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { SHELL, BOX, CLOSE, TITLE, GROUP, LABEL, INPUT, TEXTAREA, BTN, FIELD_ERR, SUCCESS_ICON, SUCCESS_TEXT } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
+import LoadFallback from '@/components/ui/LoadFallback';
 import { ROW_RULE } from '@/components/ui/separatorClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 import { useAccount } from '@/state/AccountProvider';
@@ -20,7 +21,7 @@ const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, fl
 function itemKey({ ref, service }) { return `${ref}::${service}`; }
 
 // Login-only review popup: one rating + message posted to every ticked past trip.
-export default function ReviewModal({ open, prefill, onClose }) {
+export default function ReviewModal({ open = false, prefill = null, onClose = () => {} }) {
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
   const [countryCode, setCountryCode] = useState('');
@@ -126,7 +127,13 @@ export default function ReviewModal({ open, prefill, onClose }) {
         <button className={CLOSE} aria-label="Close" onClick={close}>&times;</button>
         <h3 className={TITLE}>Leave a Review</h3>
 
-        {!done ? (
+        {!done && !items.length ? (
+          // No trips to review (callers never open it empty): say so instead of a form that cannot submit.
+          <div className="text-center">
+            <LoadFallback className="mb-4" />
+            <button type="button" className={BTN} onClick={close}>Close</button>
+          </div>
+        ) : !done ? (
           <div data-step="write">
             <div className={GROUP}>
               <label className={LABEL} htmlFor="rvm-name">Your name</label>

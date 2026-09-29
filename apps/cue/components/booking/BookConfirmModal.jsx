@@ -21,8 +21,8 @@ import { SHELL_WIDE, BOX_WIDE, CLOSE, LOGO, TITLE, GROUP, LABEL, INPUT, BTN, BTN
 import OtpFields from '@/components/account/OtpFields';
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
-import { railFor } from '@/lib/rails';
-import { baseTotal, PAY_COPY } from '@/lib/payment';
+import { railFor, DEFAULT_RAIL } from '@/lib/rails';
+import { baseTotal, baseTotalIdr, baseTotalUsd, PAY_COPY } from '@/lib/payment';
 import PayPalCheckout from './PayPalCheckout';
 import DokuCheckout from './DokuCheckout';
 import PayWaiting from './PayWaiting';
@@ -135,6 +135,10 @@ export default function BookConfirmModal() {
   // Checkpoint 1: the guest's payment choice is held here so the step can be
   // driven and screenshotted. Nothing acts on it yet.
   const [payOption, setPayOption] = useState('deposit');
+  // Which rail takes the money: Card (DOKU) by default, PayPal if the guest
+  // prefers (Wayan, 29 Sep 2026). The server honours the choice - see
+  // providers.js - and never swaps it for the other rail.
+  const [payRail, setPayRail] = useState(DEFAULT_RAIL);
   // Set once the booking is saved as pending; switches the modal to the payment
   // step. The booking exists from this point whether or not payment succeeds.
   const [bookingRef, setBookingRef] = useState('');
@@ -616,6 +620,10 @@ export default function BookConfirmModal() {
                 <PaymentStep
                   option={payOption}
                   onOption={setPayOption}
+                  rail={payRail}
+                  onRail={setPayRail}
+                  totalIdr={baseTotalIdr(priced)}
+                  totalUsd={baseTotalUsd(priced)}
                   /* baseTotal, not priced.total: the quote already subtracts the
                      code's own percentage, and here the code is its own option -
                      counting it in both places would discount twice. */
@@ -681,7 +689,7 @@ export default function BookConfirmModal() {
                   goes through. Nothing is lost if you close this - you can pay later.
                 </p>
                 {signinEmail ? signinNote() : null}
-                {bookingRef && railFor(currency) === 'doku' ? (
+                {bookingRef && railFor(payRail) === 'doku' ? (
                   // The rupiah rail is hosted, so there is no onPaid here: the
                   // guest leaves, and My Trips asks the server what happened
                   // when they come back. Clearing the cart on the way OUT would

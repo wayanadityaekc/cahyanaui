@@ -63,11 +63,47 @@ export function baseTotal(priced) {
 
 // One entry per option: what is charged now, what is left for the day, and the
 // copy that goes with it. `currency` is the ISO code; `symbol` is for display.
-export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false, deposit = null }) {
+// The rupiah total of the same lines - what DOKU charges when the guest is shown
+// another currency. Same lines as baseTotal, so the two can never describe
+// different bookings.
+export function baseTotalIdr(priced) {
+  if (!priced || !Array.isArray(priced.lines)) return null;
+  const lines = priced.lines.filter((l) => l && l.ok && l.was && l.was.idr != null);
+  if (!lines.length) return priced.total && priced.total.idr != null ? priced.total.idr : null;
+  return lines.reduce((sum, l) => sum + (l.was.idr || 0), 0);
+}
+
+// The dollar total of the same lines - what PayPal charges a rupiah guest (it
+// cannot settle rupiah, so it bills USD from each line's stored usd).
+export function baseTotalUsd(priced) {
+  if (!priced || !Array.isArray(priced.lines)) return null;
+  const lines = priced.lines.filter((l) => l && l.ok && l.was && l.was.usd != null);
+  if (!lines.length) return priced.total && priced.total.usd != null ? priced.total.usd : null;
+  return lines.reduce((sum, l) => sum + (l.was.usd || 0), 0);
+}
+
+// `totalIdr`/`depositIdr` are optional: when given, each option also carries
+// `amountIdr`, the exact rupiah figure the card rail (DOKU) is told to charge -
+// the server's own rule in payment.js (deposit = the flat deposit in rupiah,
+// full = the rupiah total, referral = 5% off, rounded down to the thousand).
+export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false, deposit = null, totalIdr = null, depositIdr = null, totalUsd = null }) {
   const cur = String(currency || 'USD').toUpperCase();
   const known = total != null;
   const dep = depositIn(cur, deposit);
   const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, cur) : null;
+  const idrKnown = totalIdr != null;
+  const idr = {
+    deposit: depositIdr != null ? depositIdr : null,
+    full: idrKnown ? totalIdr : null,
+    referral: idrKnown ? roundDown((totalIdr * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'IDR') : null,
+  };
+  // Same idea for PayPal billing a rupiah guest in dollars: `amountUsd`.
+  const usdKnown = totalUsd != null;
+  const usd = {
+    deposit: DEPOSIT_USD,
+    full: usdKnown ? totalUsd : null,
+    referral: usdKnown ? roundDown((totalUsd * (100 - REFERRAL_DISCOUNT_PCT)) / 100, 'USD') : null,
+  };
 
   return [
     {
@@ -76,15 +112,19 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
       sub: 'Holds your date.',
       badge: 'Deposit',
       amount: known && dep != null ? dep : null,
+      amountIdr: idr.deposit,
+      amountUsd: usd.deposit,
       balance: known && dep != null ? total - dep : null,
       available: true,
     },
     {
       id: 'full',
       label: 'Pay in full',
-      sub: 'Nothing to pay on the day. Your own currency, at the rate shown.',
+      sub: 'Nothing to pay on the day, no cash to carry.',
       badge: null,
       amount: known ? total : null,
+      amountIdr: idr.full,
+      amountUsd: usd.full,
       balance: null,
       available: true,
     },
@@ -94,6 +134,8 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
       sub: `${REFERRAL_DISCOUNT_PCT}% off, and no deposit to pay.`,
       badge: `Save ${REFERRAL_DISCOUNT_PCT}%`,
       amount: known ? disc : null,
+      amountIdr: idr.referral,
+      amountUsd: usd.referral,
       balance: null,
       available: !!hasReferral,
     },
@@ -127,6 +169,12 @@ export const PAY_COPY = {
   // What actually happens after the card goes through. Every line is
   // something the system really does - the card form is PayPal's iframe, the
   // booking is confirmed by the webhook, and the emails wait for it.
+  // Per rail: the first line names whoever actually holds the card details.
+  whatHappensDoku: [
+    'DOKU, our Indonesian payment provider, takes the card or QRIS details on its own secure page. They never reach our site.',
+    'We wait for the payment to clear, then your booking is confirmed.',
+    'You get a confirmation email with the trip and the amount paid.',
+  ],
   whatHappens: [
     'PayPal takes the card details in their own secure field. They never reach our site.',
     'We wait for the payment to clear, then your booking is confirmed.',

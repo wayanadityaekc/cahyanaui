@@ -4077,3 +4077,50 @@ berturut-turut. Di sini cuma sisi tampilannya:
   `cahyana-api/tools/chat-dev-server.js` di 4599 + build pakai
   `NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api` - **habis itu build ulang tanpa env itu**.
 - `check-pay-agree` sekarang jalan di 12 mata uang x deposit dari fx (1440 kombinasi).
+
+## CARD (DOKU) = RAIL DEFAULT, PAYPAL = PILIHAN TAMU (29 Sep 2026, Wayan)
+Wayan: *"default card payment dari doku bukan paypal, tapi kasih opsi ke tamu bayar
+pakai card atau paypal"*, sesudah DOKU nge-approve kartu luar negeri di akunnya.
+**Ini NGE-OVERRIDE** aturan "IDR -> DOKU, sisanya -> PayPal", `DOKU_READY`,
+`DOKU_ALL` / `DOKU_ALL_CURRENCIES`, dan `railInfo()` ("kartu luar ditolak") -
+semuanya UDAH DIHAPUS. Kalau nemu catatan lama yang bilang kebalikannya, yang
+berlaku ini.
+- **Langkah bayar punya "Pay with": Card | PayPal**, di ATAS tiga opsi nominal.
+  Card kepilih default. State-nya `payRail` di `BookConfirmModal`; checkout yang
+  ke-mount sesudah Book Now = rail yang DIPILIH (`railFor(payRail)`).
+- **Card SELALU nagih rupiah.** Tamu yang lihat mata uang lain dapet angka **Rp
+  yang EXACT** di tiap opsi + `≈ $xx` sebagai estimasi, plus satu baris "bank lu
+  yang konversi". Angka Rp-nya dari `payOptions({ totalIdr, depositIdr })`
+  (`baseTotalIdr(priced)` + `catalog.deposit.idr`) - aturan yang SAMA kayak
+  `payment.js` server (deposit, full, referral dibulatin ke bawah per 1000).
+  **PayPal** = mata uang tamu sendiri, exact; rupiah -> USD dan tamu dikasih tau.
+  Ini cermin aturan email di `payment-display.js`, jadi halaman & email ngomong sama.
+- **Cerminnya juga ada**: tamu RUPIAH yang milih PayPal dapet angka **$ EXACT** (yang
+  PayPal tagih, dari `was.usd` baris + deposit $10) + `≈ Rp` estimasi. `baseTotalUsd()` +
+  `payOptions({ totalUsd })` -> `amountUsd`; `check-pay-agree` ngadu itu lawan
+  `quotePayment({ baseDisplay:null, currency:'USD' })` - persis yang `paypal-routes` tagih.
+- **Server GAK PERNAH nuker pilihan tamu.** `providers.routeFor(cur, rail)` - rail
+  yang dipilih tapi gak nyala = ditolak (`wrong_rail` / 503) + email owner, BUKAN
+  dipindah diam-diam ke rail satunya (nominal & mata uangnya bakal berubah di
+  bawah tamu). Tanpa pilihan (`providerFor`) = DOKU, jatuh ke PayPal kalau DOKU mati.
+- `check-pay-agree` sekarang ngadu juga **angka rupiah** tiap opsi (site vs server,
+  1440 kombinasi) + rail default + mata uang tagihan per rail (24). Sabotase angka
+  rupiah -> 440 merah; dijalanin lawan server lama -> merah.
+- Verifikasi: **`verify-rail.mjs`** di root repo (USD/AUD/IDR x 390/1280, checkout
+  beneran lawan API lokal - cara jalanin di kepala file).
+
+## HARGA EXPERIENCE = TOTAL BUAT N TAMU, BUKAN "PER PERSON" (29 Sep 2026, Wayan)
+Rumusnya (server, `pricing.js`): **tiket per orang x jumlah tamu + Rp100.000
+transport flat per booking**. Jadi angkanya bukan per orang (dulu labelnya
+"per person" di atas total 2 tamu) dan **bukan per mobil** juga (naik tiap tamu -
+ATV 2 tamu Rp1.340.000, 6 tamu Rp3.820.000). Wayan setuju label **"for 2 guests"**.
+- Satu helper **`lib/priceUnit.js`** (`priceUnit(perPerson, guests)`) dipakai book
+  bar, baris Book now, dan booking form. Jumlahnya ngikut `displayGuests` (katalog
+  di-fetch pakai angka yang sama), jadi label & angka gak bisa beda.
+- **Fallback experience di kartu/home/JSON-LD sekarang total 2 tamu** ($80 ATV, bukan
+  $38). `check-prices` ngadu SEMUA kartu lawan `i.standard.display` katalog (guests=2),
+  pengecualian per-person-nya udah dibuang.
+- FAQ "per person or per car?" + JSON-LD FAQ-nya ditulis ulang ke rumus yang bener.
+- **Chip hero "Group" di 11 halaman experience** dulu nulis `"Per person"` (klaim yang sama
+  salahnya) - sekarang `"Ticket per guest + transport"` (`attractions.json`, label-nya tetep
+  `Group` karena label = pemilih ikon).

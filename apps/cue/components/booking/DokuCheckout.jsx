@@ -96,7 +96,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         // guest to a page that will not load.
         setErr(
           d && d.code === 'not_ready'
-            ? 'Rupiah payments are not switched on yet. Please pay your driver on the day, or contact us.'
+            ? 'Card payments are not available right now. Please go back and choose PayPal, or contact us.'
             : (d && d.detail) || 'We could not start the payment. Please try again.',
         );
         setBusy(false);
@@ -145,7 +145,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         {busy ? 'Opening...' : `Pay ${amountText || 'now'}`}
       </button>
       <p className="mt-2 text-small text-muted">
-        DOKU's secure payment opens here - bank transfer, QRIS or e-wallet.
+        DOKU's secure payment opens here - card, QRIS, bank transfer or e-wallet, charged in rupiah.
       </p>
       {err ? <p className="mt-2 text-small text-err">{err}</p> : null}
     </div>

@@ -65,7 +65,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "Bali's famous fire-and-chant ritual, performed at sunset.",
       "priceName": "Kecak Dance",
-      "priceFallback": "$9",
+      "priceFallback": "$24",
       "href": "/attractions/kecak-dance.html"
     },
     {
@@ -77,7 +77,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "Soar over the jungle on Bali's famous swing.",
       "priceName": "Swing",
-      "priceFallback": "$24",
+      "priceFallback": "$55",
       "href": "/attractions/jungle-swing.html"
     },
     {
@@ -89,7 +89,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "Quad-bike through jungle trails, mud, and a cave tunnel.",
       "priceName": "ATV",
-      "priceFallback": "$38",
+      "priceFallback": "$80",
       "href": "/attractions/atv-ride.html"
     },
     {
@@ -101,7 +101,7 @@ export const EXPLORE_EXPERIENCES = [
       "metaIcon": "clock",
       "desc": "White-water rafting down the scenic Ayung River gorge.",
       "priceName": "Rafting",
-      "priceFallback": "$35",
+      "priceFallback": "$75",
       "href": "/attractions/rafting.html"
     }
   ];

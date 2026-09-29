@@ -103,7 +103,7 @@ export default function AttractionPage({ data }) {
       </div>
       <BookCta item={data.bookItem} />
       {/* perPerson: the same flag the sidebar gets, so the bar's unit and the
-          form's unit can never disagree (experiences are per person, tours per car). */}
+          form's unit can never disagree (experiences show the total for the guest count, tours per car). */}
       <BookBar item={data.bookItem} priceFallback={priceFallbackFor(data.bookItem)} perPerson={perPerson} />
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}

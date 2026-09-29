@@ -1,98 +1,61 @@
-// Which rail a currency is paid on - the display mirror of providers.js in
+// Which rail a payment goes through - the display mirror of providers.js in
 // cahyana-api. The server decides; this decides what the guest is TOLD before
 // they commit, so the two must agree (tools/check-pay-agree.mjs compares them).
 //
-// The rule (Wayan, 20 Sep 2026): rupiah goes to DOKU, everything else goes to
-// PayPal. PayPal cannot settle rupiah at all, so without a local rail an IDR
-// guest is billed a converted number in dollars.
+// The rule (Wayan, 29 Sep 2026): DOKU is the DEFAULT for every currency, and
+// the guest may choose PayPal instead. Overseas cards were approved on the DOKU
+// account, so the rail that settles locally is the one we lead with.
 //
-// DOKU is on as of 23 Sep 2026: the account has live credentials on the
-// server, so a rupiah booking is charged in rupiah. `noteFor` still exists for
-// the case where a currency has no rail of its own - the guest is told before
-// they type a card number, rather than finding out from the amount.
+//   doku   - card, QRIS, bank transfer, e-wallet. ALWAYS charged in rupiah. For
+//            a guest shown another currency the rupiah figure is the exact one
+//            and their own currency is an estimate - their bank converts.
+//   paypal - charged in the guest's own currency, exactly. Rupiah falls back to
+//            USD because PayPal cannot settle it.
+//
+// This replaces "rupiah -> DOKU, everything else -> PayPal" (20 Sep 2026) and
+// the DOKU_ALL / DOKU_READY switches. The choice is the guest's now, so the
+// site and the server can no longer disagree about where a currency belongs.
 
 export const RAILS = ['doku', 'paypal'];
-
-// On since 23 Sep 2026. Set this back to false to send every rupiah booking to
-// PayPal in dollars again - it is the one switch, and nothing else in this file
-// changes, because the routing already points rupiah at DOKU either way.
-export const DOKU_READY = true;
+export const DEFAULT_RAIL = 'doku';
 
 // Mirrors SUPPORTED in cahyana-api/paypal.js, trimmed to the currencies this
 // site actually offers. IDR is absent on purpose: PayPal does not settle it.
 const PAYPAL_SETTLES = new Set(['USD', 'AUD', 'EUR', 'GBP', 'SGD', 'NZD', 'CAD', 'CHF', 'JPY', 'MYR', 'HKD']);
 const PAYPAL_FALLBACK = 'USD';
 
-export const RAIL_LABEL = {
-  doku: 'Pay in Rupiah',
-  paypal: 'Card or PayPal',
-};
-
-// Off by default: send EVERY booking to DOKU, not just rupiah ones.
-//
-// Mirrors DOKU_ALL_CURRENCIES on the server, and the two must be flipped
-// TOGETHER - check-pay-agree compares them and goes red otherwise. It exists to
-// answer one question that can only be answered with a real card: does DOKU
-// accept a foreign-issued one? Settlement is still rupiah either way; a guest
-// quoted in dollars is billed the rupiah figure and their bank converts.
-export const DOKU_ALL = false;
-
-// The rail we want for a currency, whether or not it is switched on.
-export function preferredRail(currency) {
-  if (DOKU_ALL) return 'doku';
-  return String(currency || '').toUpperCase() === 'IDR' ? 'doku' : 'paypal';
+export function isRail(id) {
+  return RAILS.includes(id);
 }
 
-// The rail that will actually take the money today.
-export function railFor(currency) {
-  const want = preferredRail(currency);
-  if (want === 'doku' && !DOKU_READY) return 'paypal';
-  return want;
+// The rail a payment lands on: the guest's choice, or the default.
+export function railFor(choice) {
+  return isRail(choice) ? choice : DEFAULT_RAIL;
 }
 
-// What the guest will be billed in. Equal to their own currency unless the rail
-// cannot settle it.
-export function chargeCurrency(currency) {
+// What the guest will be billed in on that rail.
+export function chargeCurrency(currency, rail = DEFAULT_RAIL) {
   const cur = String(currency || 'USD').toUpperCase();
-  // DOKU settles rupiah and only rupiah. While it takes only IDR bookings that
-  // is the guest's own currency; opened to all of them it is not, and saying so
-  // is what lets the payment step warn before a card is typed.
-  if (railFor(cur) === 'doku') return DOKU_ALL ? 'IDR' : cur;
+  if (railFor(rail) === 'doku') return 'IDR';
   return PAYPAL_SETTLES.has(cur) ? cur : PAYPAL_FALLBACK;
 }
 
-// What the guest can actually pay WITH on the rail their currency lands on, and
-// the way out when it is not what they hold. Null when there is nothing to say.
-//
-// This exists because of a live refusal, not a guess: on 24 Sep 2026 a card
-// issued outside Indonesia was turned away at DOKU's card form ("Your card is
-// not allowed to be used for this transaction"). IDR is this site's DEFAULT
-// currency, so a foreign guest who never touches the currency picker was being
-// sent to a rail that offers QRIS, bank transfer and e-wallets - none of which
-// they have - and a card form that refuses them. Nothing on screen said why, or
-// that switching currency would work.
-//
-// The claim is deliberately narrow: it says what IS offered, and that overseas
-// cards are refused. It does NOT claim Indonesian cards work, because that has
-// not been tested. If DOKU confirms overseas cards can be enabled, this whole
-// function goes.
-export function railInfo(currency) {
-  const cur = String(currency || 'USD').toUpperCase();
-  if (railFor(cur) !== 'doku') return null;
-  return {
-    accepts: 'Rupiah payments use QRIS, bank transfer or an e-wallet. Cards issued outside Indonesia are not accepted on this rail.',
-    ask: 'Paying with an overseas card?',
-    action: 'Switch to USD',
-    to: 'USD',
-  };
-}
+// The two choices at the payment step. Short, plain - the amounts below them
+// already say the rest.
+export const RAIL_CHOICES = [
+  { id: 'doku', label: 'Card', sub: 'Card, QRIS, bank transfer or e-wallet. Charged in rupiah.' },
+  { id: 'paypal', label: 'PayPal', sub: 'PayPal balance or card, charged in your own currency.' },
+];
 
-// One sentence, or null when there is nothing to warn about. Only says anything
-// when the guest is about to be charged in a currency other than the one every
-// price on the page is shown in.
-export function noteFor(currency) {
+// One sentence, or null when there is nothing to warn about: said when the
+// guest is about to be charged in a currency other than the one every price on
+// the page is shown in.
+export function noteFor(currency, rail = DEFAULT_RAIL) {
   const cur = String(currency || 'USD').toUpperCase();
-  const bill = chargeCurrency(cur);
+  const bill = chargeCurrency(cur, rail);
   if (bill === cur) return null;
-  return `Card payments are settled in ${bill}, so this is charged as ${bill} at today's rate. Prefer rupiah? Pay your driver on the day instead.`;
+  if (bill === 'IDR') {
+    return `Card payments are charged in rupiah. The rupiah amount is exact; the ${cur} figure is an estimate, and your bank converts it (it may add a card fee).`;
+  }
+  return `PayPal cannot charge ${cur}, so this is charged as ${bill} at today's rate.`;
 }

@@ -7,8 +7,7 @@ import ModalPresence from '@/components/ui/ModalPresence';
 import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
 import { PAY_COPY, payOptions } from '@/lib/payment';
 import { usePricing } from '@/state/PricingProvider';
-import { noteFor, railInfo } from '@/lib/rails';
-import { useTripPrefs } from '@/state/TripPrefsProvider';
+import { noteFor, railFor, RAIL_CHOICES } from '@/lib/rails';
 
 // The three ways to pay, each showing what it costs right now.
 //
@@ -55,11 +54,15 @@ const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[
 // Tinted, not bordered: another framed box would read as a fourth option in a
 // list of three. This is a note about all of them.
 const RAIL_BOX = 'mb-2 p-[0.7rem] rounded-md bg-cream';
-// A text link, not a button: it changes what the guest is reading, it does not
-// submit anything. No `transition` of its own, so the site-wide press feedback
-// still applies (the SNAP rule in check-motion).
-const RAIL_SWITCH =
-  'bg-transparent border-none p-0 text-small text-gold-d font-semibold underline underline-offset-2 cursor-pointer';
+// The rail choice (Card / PayPal): two equal halves, same border language as
+// the option cards so the step reads as one control family. No `transition`
+// of its own on the button (SNAP rule in check-motion).
+const METHODS = 'grid grid-cols-2 gap-2 mb-2';
+const METHOD = 'rounded-md bg-white text-left p-[0.7rem] cursor-pointer';
+const METHOD_LABEL = 'block font-semibold text-green text-[1rem] leading-tight';
+// Under the amount when the rail charges another currency: the guest's own
+// figure, marked as the estimate it is.
+const APPROX = 'block text-small text-muted font-normal whitespace-nowrap text-right';
 const FINE = 'text-small text-green leading-[var(--lh-body)]';
 const FINE_DIM = 'text-small text-muted leading-[var(--lh-body)]';
 const MORE =
@@ -88,8 +91,8 @@ function Radio({ on, dim }) {
 }
 
 export default function PaymentStep({
-  option, onOption,
-  total, symbol = '$', currency = 'USD', stay = '', hasReferral = false,
+  option, onOption, rail: railChoice, onRail,
+  total, totalIdr = null, totalUsd = null, symbol = '$', currency = 'USD', stay = '', hasReferral = false,
   referral, onReferral, onApplyReferral, refMsg,
 }) {
   // The deposit in this currency comes from the catalog - the server's live rate -
@@ -98,18 +101,24 @@ export default function PaymentStep({
   const pricing = usePricing();
   const cat = pricing && pricing.catalog;
   const deposit = cat && cat.currency === currency && cat.deposit ? cat.deposit.display : null;
-  const options = payOptions({ total, currency, stay, hasReferral, deposit });
+  // The flat deposit in rupiah is the same in every catalog (rupiah is the base).
+  const depositIdr = cat && cat.deposit && cat.deposit.idr != null ? cat.deposit.idr : null;
+  const options = payOptions({ total, currency, stay, hasReferral, deposit, totalIdr, depositIdr, totalUsd });
+  const rail = railFor(railChoice);
+  // Card (DOKU) always charges rupiah. For a guest shown another currency the
+  // rupiah figure is the exact one and theirs is an estimate - said, not hidden.
+  const inRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
+  // And the mirror: PayPal cannot charge rupiah, so a rupiah guest there is
+  // billed dollars - the dollar figure is the exact one.
+  const inUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
   const [openFine, setOpenFine] = useState(false);
-  // Only ever set when the guest's currency cannot be settled on the rail that
-  // will take the payment - said here, before a card number is typed, rather
-  // than appearing as a surprise amount at the card form.
-  const railNote = noteFor(currency);
-  // What this rail can actually be paid with, and the way out when it is not
-  // what the guest holds. See railInfo() for why this is here at all.
-  const rail = railInfo(currency);
-  const { setCurrency } = useTripPrefs();
+  // Only ever set when the chosen rail charges another currency than the one
+  // every price on the page is shown in - said before a card number is typed.
+  const railNote = noteFor(currency, rail);
   const money = (v) =>
     withSymbol(symbol + v.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
+  const rupiah = (v) => withSymbol('Rp' + v.toLocaleString('id-ID'));
+  const dollars = (v) => withSymbol('$' + v.toLocaleString('en-US'));
 
   // An option that is no longer available must not stay selected. hasReferral
   // can go back to false when the quote refreshes without the code - leaving
@@ -132,18 +141,30 @@ export default function PaymentStep({
     <div className="my-5">
       <p className={HEAD}>{PAY_COPY.heading}</p>
 
-      {/* Before the three options, not after: a guest holding an overseas card
-          needs this before they pick an amount, not once the card form has
-          already refused them. */}
-      {rail && (
-        <div className={RAIL_BOX} data-rail-info>
-          <p className={FINE_DIM}>{rail.accepts}</p>
-          <p className={`${FINE_DIM} mt-[0.3rem]`}>
-            {rail.ask}{' '}
-            <button type="button" className={RAIL_SWITCH} onClick={() => setCurrency(rail.to)}>
-              {rail.action}
+      {/* How, then how much. Card (DOKU) is the default for every currency
+          (Wayan, 29 Sep 2026); PayPal is the guest's alternative. */}
+      <div className={METHODS} role="radiogroup" aria-label={PAY_COPY.methodHeading} data-rail-choice>
+        {RAIL_CHOICES.map((m) => {
+          const on = rail === m.id;
+          return (
+            <button
+              key={m.id}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              data-rail={m.id}
+              className={`${METHOD} ${on ? CARD_ON : CARD_OFF}`}
+              onClick={() => onRail && onRail(m.id)}
+            >
+              <span className={METHOD_LABEL}>{m.label}</span>
+              <span className={SUB}>{m.sub}</span>
             </button>
-          </p>
+          );
+        })}
+      </div>
+      {railNote && (
+        <div className={RAIL_BOX} data-rail-info>
+          <p className={FINE_DIM}>{railNote}</p>
         </div>
       )}
 
@@ -177,7 +198,19 @@ export default function PaymentStep({
                     {o.balance != null && <> Then {money(o.balance)} cash to your driver on the day.</>}
                   </span>
                 </span>
-                <span className={AMOUNT}>{o.amount != null ? money(o.amount) : '-'}</span>
+                {inRupiah ? (
+                  <span className={AMOUNT} data-amount-idr>
+                    {o.amountIdr != null ? rupiah(o.amountIdr) : '-'}
+                    {o.amount != null && <span className={APPROX}>≈ {money(o.amount)}</span>}
+                  </span>
+                ) : inUsd ? (
+                  <span className={AMOUNT} data-amount-usd>
+                    {o.amountUsd != null ? dollars(o.amountUsd) : '-'}
+                    {o.amount != null && <span className={APPROX}>≈ {money(o.amount)}</span>}
+                  </span>
+                ) : (
+                  <span className={AMOUNT}>{o.amount != null ? money(o.amount) : '-'}</span>
+                )}
               </button>
 
               {/* The code lives in the row it unlocks, not in a block of its own. */}
@@ -231,12 +264,11 @@ export default function PaymentStep({
       >
         <h4 className={FINE_TITLE}>{PAY_COPY.detailsTitle}</h4>
         <ol className="m-0 pl-5 flex flex-col gap-[0.4rem]">
-          {PAY_COPY.whatHappens.map((line) => (
+          {(rail === 'doku' ? PAY_COPY.whatHappensDoku : PAY_COPY.whatHappens).map((line) => (
             <li key={line} className={FINE_DIM}>{line}</li>
           ))}
         </ol>
         <div className="mt-4 flex flex-col gap-[0.5rem]">
-          {railNote && <p className={FINE_DIM}>{railNote}</p>}
           <p className={FINE_DIM}>
             {PAY_COPY.cancelShort} {PAY_COPY.cancel} {PAY_COPY.late}{' '}
             <a className="text-gold-d underline underline-offset-2" href="/our-company.html#cancellation">

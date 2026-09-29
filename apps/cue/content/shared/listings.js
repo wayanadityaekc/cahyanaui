@@ -340,7 +340,7 @@ export const LISTINGS = {
             "meta": "~2 hours",
             "metaIcon": "clock",
             "priceName": "ATV",
-            "priceFallback": "$38"
+            "priceFallback": "$80"
           },
           {
             "href": "/attractions/rafting.html",
@@ -353,7 +353,7 @@ export const LISTINGS = {
             "meta": "~2 hours",
             "metaIcon": "clock",
             "priceName": "Rafting",
-            "priceFallback": "$35"
+            "priceFallback": "$75"
           },
           {
             "href": "/attractions/jungle-swing.html",
@@ -366,7 +366,7 @@ export const LISTINGS = {
             "meta": "~1–2 hours",
             "metaIcon": "clock",
             "priceName": "Swing",
-            "priceFallback": "$24"
+            "priceFallback": "$55"
           },
           {
             "href": "/attractions/jeep-sunrise.html",
@@ -379,7 +379,7 @@ export const LISTINGS = {
             "meta": "~7 hours",
             "metaIcon": "clock",
             "priceName": "Jeep Sunrise",
-            "priceFallback": "$48"
+            "priceFallback": "$100"
           },
           {
             "href": "/attractions/mount-batur-trekking.html",
@@ -392,7 +392,7 @@ export const LISTINGS = {
             "meta": "~8 hours",
             "metaIcon": "clock",
             "priceName": "Mount Batur Trekking",
-            "priceFallback": "$50"
+            "priceFallback": "$110"
           },
           {
             "href": "/attractions/watersport.html",
@@ -404,7 +404,7 @@ export const LISTINGS = {
             "name": "Watersport Adventure: Jet Ski & Parasailing",
             "metaIcon": "clock",
             "priceName": "Watersport",
-            "priceFallback": "$42"
+            "priceFallback": "$90"
           }
         ]
       },
@@ -423,7 +423,7 @@ export const LISTINGS = {
             "meta": "~1 hour",
             "metaIcon": "clock",
             "priceName": "Barong Dance",
-            "priceFallback": "$9"
+            "priceFallback": "$24"
           },
           {
             "href": "/attractions/cooking-class.html",
@@ -436,7 +436,7 @@ export const LISTINGS = {
             "meta": "~5 hours",
             "metaIcon": "clock",
             "priceName": "Cooking Class",
-            "priceFallback": "$35"
+            "priceFallback": "$75"
           },
           {
             "href": "/attractions/bali-zoo.html",
@@ -449,7 +449,7 @@ export const LISTINGS = {
             "meta": "~2–3 hours",
             "metaIcon": "clock",
             "priceName": "Bali Zoo",
-            "priceFallback": "$38"
+            "priceFallback": "$80"
           },
           {
             "href": "/attractions/bali-bird-park.html",
@@ -462,7 +462,7 @@ export const LISTINGS = {
             "meta": "~2–3 hours",
             "metaIcon": "clock",
             "priceName": "Bali Bird Park",
-            "priceFallback": "$26"
+            "priceFallback": "$60"
           }
         ]
       }

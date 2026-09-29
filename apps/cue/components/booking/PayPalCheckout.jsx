@@ -125,7 +125,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
         // What the order will actually be created in - the guest's own currency
         // unless the rail cannot settle it. Loading the SDK with anything else
         // makes every order bounce.
-        const billCurrency = chargeCurrency(currency);
+        const billCurrency = chargeCurrency(currency, 'paypal');
         const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
         if (cancelled) return;
 

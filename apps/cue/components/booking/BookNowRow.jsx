@@ -2,6 +2,8 @@
 import { BTN_SM } from '@/components/ui/btnClasses';
 
 import Price from '@/components/Price';
+import { priceUnit } from '@/lib/priceUnit';
+import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { scrollToBookCard } from './bookScroll';
 
 // Inline price + Book now, directly under the hero chips (Wayan, Sep 2026, picking
@@ -66,6 +68,7 @@ const ROW =
 // ever showing at once, and it is the right direction for the rule, because the bar
 // is the one that can hide without moving anything.
 export default function BookNowRow({ item, priceFallback, perPerson = false }) {
+  const { displayGuests } = useTripPrefs();
   if (!item) return null;
 
   return (
@@ -74,7 +77,7 @@ export default function BookNowRow({ item, priceFallback, perPerson = false }) {
         <span className={KICKER}>From</span>
         <span className="flex items-baseline gap-2 mt-[0.2rem] whitespace-nowrap">
           <Price name={item} fallback={priceFallback} className={AMOUNT} />
-          <span className={UNIT}>{perPerson ? 'per person' : 'per car'}</span>
+          <span className={UNIT}>{priceUnit(perPerson, displayGuests)}</span>
         </span>
       </span>
       <button type="button" className={CTA} onClick={scrollToBookCard} aria-label="Book now - go to the booking form">

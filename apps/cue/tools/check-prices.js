@@ -141,15 +141,11 @@ async function main() {
   const pricing = require(API);
   const cat = pricing.catalog({ currency: "USD", guests: 2, stay: "" });
   const api = {};
-  // Per-person items (experience/performance) keep their per-person figure as
-  // the card fallback - that is what the copy has always meant. (The catalog's
-  // own display for them is the 2-guest total; see the note in CLAUDE.md.)
-  const fx = require(path.join(API_REPO, "fx.js"));
-  for (const i of cat.items) {
-    const perPerson = i.category === "experience" || i.category === "performance";
-    const unit = pricing.itemInfo(i.name);
-    api[i.name] = { usd: perPerson && unit ? fx.display(unit.price.idr, "USD") : i.standard.display };
-  }
+  // Every card copies the catalog's own figure at 2 guests - including
+  // experiences and performances, whose price is ticket x guests + transport,
+  // so their figure is the 2-guest TOTAL and the page labels it "for 2 guests"
+  // (29 Sep 2026; they used to say "per person" over this same number).
+  for (const i of cat.items) api[i.name] = { usd: i.standard.display };
   for (const t of cat.transfers) api[t.route] = { usd: t.display };
 
   const { LISTINGS } = await import("../content/shared/listings.js");

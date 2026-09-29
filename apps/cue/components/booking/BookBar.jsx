@@ -3,6 +3,8 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 
 import { useEffect, useState } from 'react';
 import Price from '@/components/Price';
+import { priceUnit } from '@/lib/priceUnit';
+import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { BAR_SHELL, BAR_UPTO_LG } from '@/components/ui/stickyBar';
 import { observeBookCtas, scrollToBookCard } from './bookScroll';
 
@@ -49,6 +51,7 @@ const CTA =
   `flex-none flex ${BTN_SM} bg-cta text-white no-underline whitespace-nowrap hover:bg-cta-d`;
 
 export default function BookBar({ item, priceFallback, perPerson = false }) {
+  const { displayGuests } = useTripPrefs();
   // STARTS HIDDEN (Wayan, Sep 2026, after the entrance was measured: "1. Ok gass").
   // It used to start visible, and because this is a static export that meant the
   // bar shipped in the HTML already on screen - measured, it sat there fully
@@ -89,9 +92,9 @@ export default function BookBar({ item, priceFallback, perPerson = false }) {
         <span className={KICKER}>From</span>
         <span className="flex items-baseline gap-1.5 mt-[0.28rem]">
           <Price name={item} fallback={priceFallback} className={AMOUNT} />
-          {/* Tours are sold per car, experiences per person - same wording
-              BookingForm uses, so the bar and the form never disagree. */}
-          <span className={UNIT}>{perPerson ? 'per person' : 'per car'}</span>
+          {/* Tours are sold per car, experiences as the total for the guest count -
+              lib/priceUnit.js, shared with BookingForm so the two never disagree. */}
+          <span className={UNIT}>{priceUnit(perPerson, displayGuests)}</span>
         </span>
       </div>
       <a href="#booking" className={CTA} onClick={scrollToBookCard}>

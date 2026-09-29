@@ -8,6 +8,7 @@ import { usePricing } from '@/state/PricingProvider';
 import { useBooking } from '@/state/BookingProvider';
 import Select from '@/components/ui/Select';
 import DateField from '@/components/ui/DateField';
+import { priceUnit } from '@/lib/priceUnit';
 import { withSymbol } from '@/components/Price';
 
 const SERVICE_TYPES = [
@@ -101,8 +102,11 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
   // so reading `type` would hand Kecak Dance a tour's morning window.
   const timeCategory = entry ? entry.category : type === 'transfer' ? 'transfer' : null;
 
-  const unit = perPerson ? 'per person' : 'per car';
+  // "per car · 2 guests" for a tour; "for 2 guests" for an experience, whose
+  // figure already IS the total for that many (lib/priceUnit.js).
+  const unit = priceUnit(perPerson, displayGuests);
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
+  const unitLine = perPerson ? unit : `${unit} · ${displayGuests} ${guestWord}`;
 
   const line = () => ({
     type: type === 'transfer' ? 'transfer' : type || 'tour',
@@ -162,7 +166,7 @@ export default function BookingForm({ presetItem = '', presetType = '', perPerso
 
         <div className="mb-[1.1rem]">
           <span className="block font-head text-[clamp(2.4rem,8vw,3.1rem)] font-bold leading-none tracking-[-0.02em] text-gold [&_.price__sym]:text-[0.55em] [&_.price__sym]:font-semibold [&_.price__sym]:[vertical-align:0.26em] [&_.price__sym]:mr-[0.04em]">{withSymbol(priceText)}</span>
-          <span className="block mt-[0.45rem] text-small text-muted">{unit} · {displayGuests} {guestWord}</span>
+          <span className="block mt-[0.45rem] text-small text-muted">{unitLine}</span>
         </div>
 
         {/* Slot directly under the price: the attraction pages put the tour

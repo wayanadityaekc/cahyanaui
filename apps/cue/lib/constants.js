@@ -50,7 +50,9 @@ export const LEGACY_ITEM_NAMES = {
   'Sangeh Monkey Forest & Tanah Lot': 'West Bali Tour',
 };
 
-export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP'];
+// Mirrors fx.CURRENCIES in cahyana-api (same order = the picker's order). Prices
+// in every one of them come from the API's live rate; the site keeps no rates.
+export const CURRENCIES = ['USD', 'IDR', 'AUD', 'EUR', 'GBP', 'SGD', 'NZD', 'CAD', 'CHF', 'JPY', 'MYR', 'HKD'];
 export const DISPLAY_GUESTS = 2;
 
 // Currency a first-time visitor sees before they pick one themselves (or before

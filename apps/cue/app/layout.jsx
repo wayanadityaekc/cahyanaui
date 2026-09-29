@@ -4,6 +4,7 @@ import { join } from 'path';
 import localFont from 'next/font/local';
 import './globals.css';
 import Providers from '@/state/Providers';
+import { API_BASE, DISPLAY_GUESTS } from '@/lib/constants';
 import Navbar from '@/components/layout/Navbar';
 import IosZoomFix from '@/components/layout/IosZoomFix';
 import PwaRegister from '@/components/layout/PwaRegister';
@@ -45,7 +46,27 @@ export const metadata = {
   metadataBase: new URL('https://cahyanaubudexperience.com'),
 };
 
-export default function RootLayout({ children }) {
+// The live USD catalog, fetched ONCE per build and shipped inside the HTML.
+// Prices follow a live exchange rate now (cahyana-api/fx.js), so the "$40"
+// written into content files would be a day - or a rate move - out of date; with
+// this, first paint already shows the price the API is charging today, and the
+// site is rebuilt daily (deploy.yml schedule) to keep it that way. The content
+// fallbacks only show when the build could not reach the API at all.
+// Fetched with a timeout: a slow API must not hang the build.
+let buildCatalog = null;
+function catalogForBuild() {
+  if (!buildCatalog) {
+    const qs = new URLSearchParams({ currency: 'USD', guests: String(DISPLAY_GUESTS), stay: '' });
+    buildCatalog = fetch(`${API_BASE}/pricing/catalog?${qs}`, { signal: AbortSignal.timeout(10000) })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((d) => (d && Array.isArray(d.items) ? d : null))
+      .catch(() => null);
+  }
+  return buildCatalog;
+}
+
+export default async function RootLayout({ children }) {
+  const initialCatalog = await catalogForBuild();
   return (
     <html lang="en" className={inter.variable}>
       <head>
@@ -91,7 +112,7 @@ export default function RootLayout({ children }) {
           height never drift apart. */}
       <body className="max-md:not-has-[.bookbar]:has-[.stickybar]:pb-[60px] max-[993px]:has-[.bookbar]:pb-[72px] standalone:max-[993px]:not-has-[.bookbar]:pb-[56px] max-[560px]:has-[.footerbar]:pb-[calc(49px+env(safe-area-inset-bottom))] min-[561px]:has-[.footerbar]:pb-[calc(60px+env(safe-area-inset-bottom))]">
         <LoadingScreen />
-        <Providers>
+        <Providers initialCatalog={initialCatalog}>
           <IosZoomFix />
           <PwaRegister />
           <Navbar />

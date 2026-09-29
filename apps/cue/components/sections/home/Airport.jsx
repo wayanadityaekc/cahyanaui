@@ -47,7 +47,7 @@ export default function Airport() {
           </div>
           <div className={CLS.row}>
             <span className={CLS.price}>
-              from <Price name="Airport – Ubud" fallback="$26" className={CLS.amt} as="b" />
+              from <Price name="Airport – Ubud" fallback="$28" className={CLS.amt} as="b" />
             </span>
             {/* Anchor text carries the keyword on purpose: this band is the main
                 internal link to /airport-transfer, and "Book a transfer" told

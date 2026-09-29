@@ -24,10 +24,10 @@ export const REFERRAL_DISCOUNT_PCT = 5;
 // guests who paid the most. Free cancellation is 24 hours for everyone.
 export const FREE_CANCEL_HOURS = 24;
 
-// Mirrors TICKET_IDR_PER_USD / CUR_RATE in the API. Only used to show the flat
-// USD deposit in the guest's currency; the charge itself is always the server's.
-const IDR_PER_USD = 17600;
-const RATE = { USD: 1, AUD: 1.4, EUR: 0.86, GBP: 0.74 };
+// No exchange rates live on the site any more (29 Sep 2026): prices follow a live
+// rate on the server (cahyana-api/fx.js). The flat USD deposit in the guest's own
+// currency comes from the catalog (`catalog.deposit.display`), computed with the
+// SAME rate as every other number on the page - pass it in as `deposit`.
 
 export const PAY_OPTIONS = ['deposit', 'full', 'referral'];
 
@@ -37,18 +37,18 @@ export function depositUsd() {
   return DEPOSIT_USD;
 }
 
-function roundUp(v, cur) {
-  return cur === 'IDR' ? Math.ceil(v / 1000) * 1000 : Math.ceil(v);
-}
 function roundDown(v, cur) {
   // Discounts round DOWN - rounding a discounted total up shrinks the discount
   // the row just advertised.
   return cur === 'IDR' ? Math.floor(v / 1000) * 1000 : Math.floor(v);
 }
 
-function depositIn(cur) {
-  const usd = depositUsd();
-  return cur === 'IDR' ? roundUp(usd * IDR_PER_USD, cur) : roundUp(usd * (RATE[cur] || 1), cur);
+// The deposit in `cur`: what the catalog said, or - before it has answered - the
+// one currency it is defined in. Anything else is unknown, never guessed: a
+// guessed deposit is a number the guest could be charged differently from.
+function depositIn(cur, deposit) {
+  if (deposit != null) return deposit;
+  return cur === 'USD' ? depositUsd() : null;
 }
 
 // The full price of the trip before any of this, taken from the quote. Uses
@@ -63,10 +63,10 @@ export function baseTotal(priced) {
 
 // One entry per option: what is charged now, what is left for the day, and the
 // copy that goes with it. `currency` is the ISO code; `symbol` is for display.
-export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false }) {
+export function payOptions({ total, currency = 'USD', stay = '', hasReferral = false, deposit = null }) {
   const cur = String(currency || 'USD').toUpperCase();
   const known = total != null;
-  const dep = depositIn(cur);
+  const dep = depositIn(cur, deposit);
   const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, cur) : null;
 
   return [
@@ -75,8 +75,8 @@ export function payOptions({ total, currency = 'USD', stay = '', hasReferral = f
       label: 'Pay a deposit',
       sub: 'Holds your date.',
       badge: 'Deposit',
-      amount: known ? dep : null,
-      balance: known ? total - dep : null,
+      amount: known && dep != null ? dep : null,
+      balance: known && dep != null ? total - dep : null,
       available: true,
     },
     {

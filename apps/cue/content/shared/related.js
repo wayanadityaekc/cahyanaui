@@ -6,7 +6,7 @@ export const RELATED_ITEMS = [
   "name": "Ubud Tour",
   "img": "tegallalang-girl.jpg",
   "meta": "5–7 hours",
-  "p": 45,
+  "p": 42,
   "priceName": "Ubud Tour"
  },
  {
@@ -16,7 +16,7 @@ export const RELATED_ITEMS = [
   "name": "Ubud Culture Day",
   "img": "ubud-culture-day-card.jpg",
   "meta": "6–8 hours",
-  "p": 55,
+  "p": 50,
   "priceName": "Ubud Culture Day"
  },
  {
@@ -26,7 +26,7 @@ export const RELATED_ITEMS = [
   "name": "Ubud Rafting Adventure",
   "img": "rafting-card.webp",
   "meta": "6–8 hours",
-  "p": 75,
+  "p": 70,
   "priceName": "Ubud Rafting Adventure"
  },
  {
@@ -36,7 +36,7 @@ export const RELATED_ITEMS = [
   "name": "Ubud ATV Adventure",
   "img": "ubud-atv-adventure-card.webp",
   "meta": "6–8 hours",
-  "p": 80,
+  "p": 75,
   "priceName": "Ubud ATV Adventure"
  },
  {
@@ -46,7 +46,7 @@ export const RELATED_ITEMS = [
   "name": "Uluwatu & Sunset Kecak",
   "img": "south-coast-sunset-kecak-card.jpg",
   "meta": "4–6 hours",
-  "p": 55,
+  "p": 50,
   "priceName": "Uluwatu & Sunset Kecak"
  },
  {
@@ -56,7 +56,7 @@ export const RELATED_ITEMS = [
   "name": "GWK & Pandawa Beach",
   "img": "gwk-statue-view.webp",
   "meta": "4–6 hours",
-  "p": 55,
+  "p": 50,
   "priceName": "GWK & Pandawa Beach"
  },
  {
@@ -66,7 +66,7 @@ export const RELATED_ITEMS = [
   "name": "Bali Hidden Beaches and Cliffs",
   "img": "south-bali-tour-card.jpg",
   "meta": "6–8 hours",
-  "p": 45,
+  "p": 42,
   "priceName": "Bali Hidden Beaches and Cliffs"
  },
  {
@@ -76,7 +76,7 @@ export const RELATED_ITEMS = [
   "name": "East Bali: Lempuyang, Besakih & Tirta Gangga",
   "img": "east-bali-tour-card.jpg",
   "meta": "10–12 hours",
-  "p": 52,
+  "p": 55,
   "priceName": "East Bali Tour"
  },
  {
@@ -86,7 +86,7 @@ export const RELATED_ITEMS = [
   "name": "Kintamani Sunrise & Penglipuran",
   "img": "jeep-batur-card.webp",
   "meta": "9–10 hours",
-  "p": 85,
+  "p": 80,
   "priceName": "Kintamani Sunrise & Penglipuran"
  },
  {
@@ -96,7 +96,7 @@ export const RELATED_ITEMS = [
   "name": "Batur Sunrise & Adrenaline",
   "img": "batur-sunrise-adrenaline-card.jpg",
   "meta": "8–10 hours",
-  "p": 85,
+  "p": 80,
   "priceName": "Batur Sunrise & Adrenaline"
  },
  {
@@ -106,7 +106,7 @@ export const RELATED_ITEMS = [
   "name": "West Bali Tour",
   "img": "tanah-lot.webp",
   "meta": "8–10 hours",
-  "p": 57,
+  "p": 60,
   "priceName": "West Bali Tour"
  },
  {
@@ -116,7 +116,7 @@ export const RELATED_ITEMS = [
   "name": "Bedugul Highlands Tour",
   "img": "jatiluwih.webp",
   "meta": "9–11 hours",
-  "p": 57,
+  "p": 60,
   "priceName": "Bedugul Highlands Tour"
  },
  {
@@ -126,7 +126,7 @@ export const RELATED_ITEMS = [
   "name": "Banyumala & Twin Lakes",
   "img": "tibumana.webp",
   "meta": "8–10 hours",
-  "p": 55,
+  "p": 50,
   "priceName": "Banyumala & Twin Lakes"
  },
  {
@@ -136,7 +136,7 @@ export const RELATED_ITEMS = [
   "name": "Munduk Waterfall Tour",
   "img": "north-bali-tour-card.jpg",
   "meta": "8–10 hours",
-  "p": 55,
+  "p": 50,
   "priceName": "Munduk Waterfall Tour"
  },
  {
@@ -146,7 +146,7 @@ export const RELATED_ITEMS = [
   "name": "Lovina Dolphin & Sekumpul Waterfall",
   "img": "lovina-dolphin-sekumpul-card.jpg",
   "meta": "11–12 hours",
-  "p": 95,
+  "p": 85,
   "priceName": "Lovina Dolphin & Sekumpul Waterfall"
  },
  {
@@ -156,7 +156,7 @@ export const RELATED_ITEMS = [
   "name": "3-Day Best of Bali Package",
   "img": "besakih-temple.webp",
   "meta": "3 days / 2 nights",
-  "p": 148,
+  "p": 160,
   "priceName": "3-Day Best of Bali Package"
  },
  {
@@ -166,7 +166,7 @@ export const RELATED_ITEMS = [
   "name": "Full Adventure: Rafting & ATV",
   "img": "rafting-card.webp",
   "meta": "7–9 hours",
-  "p": 130,
+  "p": 120,
   "priceName": "Full Adventure: Rafting & ATV"
  },
  {
@@ -176,7 +176,7 @@ export const RELATED_ITEMS = [
   "name": "ATV Ride",
   "img": "ubud-atv-adventure-card.webp",
   "meta": "~2 hours",
-  "p": 40,
+  "p": 38,
   "priceName": "ATV"
  },
  {
@@ -196,7 +196,7 @@ export const RELATED_ITEMS = [
   "name": "Swing",
   "img": "jungle-swing-valley.jpg",
   "meta": "~1–2 hours",
-  "p": 25,
+  "p": 24,
   "priceName": "Swing"
  },
  {
@@ -206,7 +206,7 @@ export const RELATED_ITEMS = [
   "name": "Jeep Sunrise",
   "img": "jeep-batur-card.webp",
   "meta": "~7 hours",
-  "p": 50,
+  "p": 48,
   "priceName": "Jeep Sunrise"
  },
  {
@@ -216,7 +216,7 @@ export const RELATED_ITEMS = [
   "name": "Mount Batur Trekking",
   "img": "mount-batur-sunrise.webp",
   "meta": "~8 hours",
-  "p": 55,
+  "p": 50,
   "priceName": "Mount Batur Trekking"
  },
  {
@@ -226,7 +226,7 @@ export const RELATED_ITEMS = [
   "name": "Watersport",
   "img": "watersport-card.jpg",
   "meta": "",
-  "p": 45,
+  "p": 42,
   "priceName": "Watersport"
  },
  {
@@ -236,7 +236,7 @@ export const RELATED_ITEMS = [
   "name": "Barong Dance",
   "img": "barong-dance-card.webp",
   "meta": "~1 hour",
-  "p": 10,
+  "p": 9,
   "priceName": "Barong Dance"
  },
  {
@@ -256,7 +256,7 @@ export const RELATED_ITEMS = [
   "name": "Bali Zoo",
   "img": "bali-zoo-card.webp",
   "meta": "~2–3 hours",
-  "p": 40,
+  "p": 38,
   "priceName": "Bali Zoo"
  },
  {
@@ -266,7 +266,7 @@ export const RELATED_ITEMS = [
   "name": "Bali Bird Park",
   "img": "bali-bird-park-card.webp",
   "meta": "~2–3 hours",
-  "p": 28,
+  "p": 26,
   "priceName": "Bali Bird Park"
  },
  {

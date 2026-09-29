@@ -4032,3 +4032,48 @@ ada - dia ngirim link sign-in ke inbox akun itu, dan situs yang ngasih tau tamun
   lama, akun baru tetep auto-login, nyampe layar sukses, nol page error, gak melar.
   Dites pakai 2 bug: modal booking gak nyimpen `signin_email` (**2 nyala**) dan
   `createAccount` gak ngerti `signin_sent` (**2 nyala**).
+
+## KURS LIVE + 12 MATA UANG (29 Sep 2026, Wayan)
+Aturannya + mesinnya di **`cahyana-api/fx.js`** (lihat CLAUDE.md sana: "ATURAN HARGA MATA
+UANG"). Singkatnya: **rupiah = satu-satunya harga asli**; mata uang lain = rate TERTINGGI
+7 hari terakhir x **1.03 (buffer, SEMUA rail)**, dibulatin ke atas ke **tangga harga rapi**
+($40, $42, $45, $48 ...; gak ada celah > 10%). Naik = hari itu juga, turun = sesudah 7 hari
+berturut-turut. Di sini cuma sisi tampilannya:
+- **12 mata uang**: USD IDR AUD EUR GBP SGD NZD CAD CHF JPY MYR HKD. `CURRENCIES` di
+  `lib/constants.js` = cermin `fx.CURRENCIES` (urutan = urutan picker). `PAYPAL_SETTLES`
+  di `lib/rails.js` ikut. **Situs gak nyimpen kurs apa pun lagi** - `IDR_PER_USD`/`RATE`
+  di `lib/payment.js` UDAH DIHAPUS.
+- **7 bendera baru** di `FlagDefs.jsx` (SGD NZD CAD CHF JPY MYR HKD), tulis tangan kayak
+  5 yang lama, disederhanain di 20x14 - bukan heraldik persis. List picker sekarang
+  **`max-h-[15rem]` + scroll** (12 baris kalau gak di-cap tembus bawah drawer/menu akun).
+- **Deposit di langkah bayar dateng dari catalog** (`catalog.deposit.display`, kurs yang
+  SAMA kayak harga lain). Catalog belum jawab / beda mata uang = deposit `-`, BUKAN
+  ditebak (kecuali USD: $10 itu definisinya). `payOptions({... deposit})`.
+- **HTML hasil build udah bawa harga API hari itu**: `app/layout.jsx` nge-fetch catalog USD
+  SEKALI per build (timeout 10 detik) dan dioper jadi `initialCatalog` ke `PricingProvider`.
+  Jadi paint pertama = angka yang lagi ditagih, bukan `priceFallback` basi. API gak
+  kejangkau pas build = balik ke `priceFallback` (perilaku lama). Ongkos: ±23 KB mentah /
+  2,5 KB gzip per halaman.
+- **Build ulang TIAP HARI**: `deploy.yml` punya `schedule: '45 23 * * *'` (07:45 WITA,
+  sesudah fetch kurs 06:15 WITA di API). JSON-LD (`JsonLd.jsx`) juga ambil `usd` dari
+  catalog pas build, jadi Google ikut kurs yang sama.
+- **`priceFallback` & salinan harga lain** (listings.js, home.js, related.js, transfer.json,
+  Airport.jsx, schema.js) disamain ke aturan baru di kurs BASELINE (17.600) - mereka cuma
+  kepakai kalau build gak nyampe API. `check-prices` sekarang ngadu lawan
+  `pricing.catalog()` beneran (bukan `pricing-data.usd` mentah), dan **dibenerin**: dia
+  crash sejak 27 Sep gara-gara `transfer.js` jadi re-export `.json`.
+- **BUG LAMA YANG KETEMU (belum disentuh, keputusan Wayan)**: kartu/book bar
+  **experience** nulis **"per person"** tapi angka dari catalog itu **total 2 tamu**
+  (catalog di-fetch `guests=2`): ATV kebaca $80 "per person", padahal per orangnya $38.
+  Sebelum hari ini sama aja (fallback-nya per orang, begitu catalog nyampe jadi total 2
+  orang); sekarang cuma lebih cepet keliatan karena catalog udah ada di HTML.
+  `check-prices` sengaja tetep ngadu kartu experience lawan harga PER ORANG.
+- **`MyTripsCart` baris ~352 masih nyetak `$`/`Rp` sendiri** dari `usd`/`idr` - itu
+  ringkasan lama, gak ikut mata uang tamu. Belum disentuh.
+- Verifikasi: **`verify-fx.mjs`** (20/20, 390 & 1280: HTML statis udah bawa harga API ·
+  12 mata uang urut + bendera kegambar · list gak tembus layar & scroll · ganti ke JPY =
+  semua harga ¥ & di tangga · gak melar · nol page error) + **`verify-fx-pay.mjs`**
+  (8/8: deposit & bayar-penuh di langkah bayar = angka API, AUD & JPY). Dua-duanya butuh
+  `cahyana-api/tools/chat-dev-server.js` di 4599 + build pakai
+  `NEXT_PUBLIC_API_BASE=http://127.0.0.1:4599/api` - **habis itu build ulang tanpa env itu**.
+- `check-pay-agree` sekarang jalan di 12 mata uang x deposit dari fx (1440 kombinasi).

@@ -37,22 +37,22 @@ export default function DragSheet({
   const ref = useRef(null);
   const drag = useRef(null);
 
-  const onPointerDown = (e) => {
+  function onPointerDown(e) {
     if (!enabled || !ref.current) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     drag.current = { y0: e.clientY, t0: e.timeStamp, dy: 0 };
     ref.current.style.transition = 'none';
-  };
+  }
 
-  const onPointerMove = (e) => {
+  function onPointerMove(e) {
     const d = drag.current;
     if (!d || !ref.current) return;
     // Downward only - pulling up must not lift the sheet off the screen edge.
     d.dy = Math.max(0, e.clientY - d.y0);
     ref.current.style.transform = `translateY(${d.dy}px)`;
-  };
+  }
 
-  const onPointerUp = (e) => {
+  function onPointerUp(e) {
     const d = drag.current;
     if (!d || !ref.current) return;
     drag.current = null;
@@ -62,15 +62,15 @@ export default function DragSheet({
     // Hand the resting position back to CSS, and let the finger offset ease out.
     el.style.transition = SPRING_BACK;
     el.style.transform = 'translateY(0px)';
-    const clear = () => {
+    function clear() {
       el.style.transition = '';
       el.style.transform = '';
       el.removeEventListener('transitionend', clear);
-    };
+    }
     el.addEventListener('transitionend', clear);
 
     if (d.dy > CLOSE_DISTANCE || velocity > CLOSE_VELOCITY) onDismiss?.();
-  };
+  }
 
   return (
     <div ref={ref} className={className} {...rest}>

@@ -17,15 +17,15 @@ import { API_BASE, API_SITE, TOKEN_KEY } from '@/lib/constants';
 // trip prefs.
 const AccountContext = createContext(null);
 
-const read = () => {
+function read() {
   try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; }
-};
-const write = (v) => {
+}
+function write(v) {
   try { window.localStorage.setItem(TOKEN_KEY, v); } catch { /* ignore */ }
-};
-const drop = () => {
+}
+function drop() {
   try { window.localStorage.removeItem(TOKEN_KEY); } catch { /* ignore */ }
-};
+}
 
 export function AccountProvider({ children }) {
   const [account, setAccount] = useState(null);
@@ -67,7 +67,7 @@ export function AccountProvider({ children }) {
   // Ask for a sign-in link. The server never says whether the address is
   // registered - answering that question is how you let a stranger find out who
   // has an account - so any completed request counts as sent.
-  const requestLogin = async (email) => {
+  async function requestLogin(email) {
     try {
       const r = await fetch(`${API_BASE}/account/login`, {
         method: 'POST',
@@ -78,9 +78,9 @@ export function AccountProvider({ children }) {
     } catch {
       return false;
     }
-  };
+  }
 
-  const createAccount = async ({ name, email, phone }) => {
+  async function createAccount({ name, email, phone }) {
     try {
       const r = await fetch(`${API_BASE}/account`, {
         method: 'POST',
@@ -97,9 +97,9 @@ export function AccountProvider({ children }) {
     } catch {
       return { ok: false };
     }
-  };
+  }
 
-  const logout = () => { drop(); setAccount(null); };
+  function logout() { drop(); setAccount(null); }
 
   return (
     <AccountContext.Provider value={{ account, hydrated, requestLogin, createAccount, logout }}>

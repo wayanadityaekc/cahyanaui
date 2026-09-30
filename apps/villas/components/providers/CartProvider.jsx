@@ -26,9 +26,9 @@ export function CartProvider({ children }) {
 
   // Another tab is the same guest with the same booking, so keep them level.
   useEffect(() => {
-    const onStorage = (e) => {
+    function onStorage(e) {
       if (e.key === null || e.key === 'upv_booking_v1') setCart(readCart());
-    };
+    }
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
   }, []);

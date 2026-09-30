@@ -16,21 +16,23 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 //
 // `variant`: 'navbar' (sits at the end of the drawer's header row) / 'hero'
 // (sized to match a form field) / 'default'.
-const wrap = (v) => `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`;
+function wrap(v) { return `relative${v === 'navbar' ? ' ml-auto flex-none' : ''}`; }
 const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
-const curbtn = (v) =>
-  v === 'hero'
+function curbtn(v) {
+  return v === 'hero'
     ? `${CURBTN_BASE} py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
     : `${CURBTN_BASE} py-2 px-[0.65rem] rounded-pill font-semibold [border:1px_solid_#d8d2c4]`;
+}
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
 // The list stays mounted and only toggles opacity/transform/pointer-events, so
 // the transition actually plays — a `hidden` attribute would snap.
-const curlist = (v, open) =>
-  `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-surface-raised [border:1px_solid_#e4dcc8] z-10 ` +
-  `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
-  `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
-  `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
+function curlist(v, open) {
+  return `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-surface-raised [border:1px_solid_#e4dcc8] z-10 ` +
+    `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
+    `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
+    `${v === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
+}
 const CUROPT = 'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
 const FLAG = 'inline-block w-5 h-[14px] rounded-[2px] overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
 
@@ -51,9 +53,9 @@ export default function CurrencyPicker({ variant = 'default' }) {
 
   useEffect(() => {
     if (!open) return;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
+    }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, [open]);

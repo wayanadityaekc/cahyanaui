@@ -39,7 +39,7 @@ export function SavedVillasProvider({ children }) {
     }
   }, []);
 
-  const write = (next) => {
+  function write(next) {
     setSlugs(next);
     try {
       window.localStorage.setItem(KEY, JSON.stringify(next));
@@ -47,14 +47,14 @@ export function SavedVillasProvider({ children }) {
       // Storage full or blocked. The heart still fills for this visit; it just
       // will not survive a reload. Better than swallowing the tap entirely.
     }
-  };
+  }
 
-  const isSaved = (slug) => slugs.includes(slug);
+  function isSaved(slug) { return slugs.includes(slug); }
 
-  const toggleSave = (slug) => {
+  function toggleSave(slug) {
     if (!slug) return;
     write(slugs.includes(slug) ? slugs.filter((s) => s !== slug) : [...slugs, slug]);
-  };
+  }
 
   return (
     <SavedContext.Provider value={{ slugs, isSaved, toggleSave }}>{children}</SavedContext.Provider>

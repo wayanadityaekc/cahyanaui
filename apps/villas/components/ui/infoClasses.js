@@ -45,4 +45,4 @@ export const INFO_LIST_YES =
 export const INFO_LIST_NO =
   `${LIST_BASE} [&_li]:text-[#8a8578] [&_li]:before:[border:1.5px_solid_#cfc9ba] [&_li]:before:bg-transparent`;
 // Pick a checklist variant from a 'yes'/'no' hint (or a legacy 'info__list--no' string).
-export const infoList = (v) => (String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES);
+export function infoList(v) { return (String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES); }

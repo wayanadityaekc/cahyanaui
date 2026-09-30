@@ -13,7 +13,7 @@
 
 import { CUE_LINK } from '@/lib/constants';
 
-const cue = (path) => `${CUE_LINK}${path}`;
+function cue(path) { return `${CUE_LINK}${path}`; }
 
 export const CUE_TOURS = [
   {

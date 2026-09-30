@@ -117,19 +117,19 @@ export default function OurCompany() {
   const active = TABS.find((t) => t.id === tab);
 
   useEffect(() => {
-    const applyHash = () => {
+    function applyHash() {
       const id = idFromHash();
       if (id) setTab(id);
-    };
+    }
     applyHash();
     window.addEventListener('hashchange', applyHash);
     return () => window.removeEventListener('hashchange', applyHash);
   }, []);
 
-  const goTo = (id) => {
+  function goTo(id) {
     setTab(id);
     window.history.replaceState(null, '', `#${id}`);
-  };
+  }
 
   return (
     <div className="max-w-[1180px] mx-auto px-[var(--container-x)] pt-[1.9rem] pb-[var(--space-5)]">

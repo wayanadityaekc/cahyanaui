@@ -96,11 +96,11 @@ export default function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
   const { count } = useCart();
 
-  const isActive = (href) => {
+  function isActive(href) {
     const base = href.split('#')[0];
     if (base === '/') return pathname === '/';
     return pathname?.startsWith(base);
-  };
+  }
 
   return (
     <>

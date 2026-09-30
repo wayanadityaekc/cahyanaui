@@ -28,28 +28,30 @@ export default function AuthSheet({ open, onClose }) {
   const [msg, setMsg] = useState('');
   const [sent, setSent] = useState('');
 
-  const set = (k) => (e) => {
-    const { value } = e.target;
-    setF((v) => ({ ...v, [k]: value }));
-    setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
-  };
-  const reset = () => { setErrors({}); setMsg(''); setSent(''); };
-  const swap = (v) => { setView(v); reset(); };
-  const close = () => { reset(); setF({ name: '', email: '', phone: '' }); setView('signin'); onClose(); };
+  function set(k) {
+    return (e) => {
+      const { value } = e.target;
+      setF((v) => ({ ...v, [k]: value }));
+      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+    };
+  }
+  function reset() { setErrors({}); setMsg(''); setSent(''); }
+  function swap(v) { setView(v); reset(); }
+  function close() { reset(); setF({ name: '', email: '', phone: '' }); setView('signin'); onClose(); }
 
   // One validator for both views. Zod DROPS keys it does not know about, so a
   // field has to be in the schema even when it has no rule of its own or its
   // value disappears on the way through.
-  const check = (schema) => {
+  function check(schema) {
     const r = schema.safeParse(f);
     if (r.success) return r.data;
     const next = {};
     r.error.issues.forEach((i) => { if (!next[i.path[0]]) next[i.path[0]] = i.message; });
     setErrors(next);
     return null;
-  };
+  }
 
-  const doSignIn = async () => {
+  async function doSignIn() {
     reset();
     const data = check(signInSchema);
     if (!data) return;
@@ -58,9 +60,9 @@ export default function AuthSheet({ open, onClose }) {
     setBusy(false);
     if (okSent) setSent('Check your email for a sign-in link. It signs you in - no password needed.');
     else setMsg('We could not send the link. Please try again, or message us on WhatsApp.');
-  };
+  }
 
-  const doCreate = async () => {
+  async function doCreate() {
     reset();
     const data = check(createAccountSchema);
     if (!data) return;
@@ -69,7 +71,7 @@ export default function AuthSheet({ open, onClose }) {
     setBusy(false);
     if (res.ok) close();
     else setMsg(res.error || 'We could not create your account. Please try again.');
-  };
+  }
 
   return (
     <SheetPresence

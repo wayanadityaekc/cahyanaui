@@ -35,7 +35,7 @@ export function TripPrefsProvider({ children }) {
     }
   }, []);
 
-  const setGuests = (n) => {
+  function setGuests(n) {
     const v = Number(n) || DEFAULT_GUESTS;
     setGuestsState(v);
     try {
@@ -43,7 +43,7 @@ export function TripPrefsProvider({ children }) {
     } catch {
       // ignore
     }
-  };
+  }
 
   return <TripPrefsContext.Provider value={{ guests, setGuests }}>{children}</TripPrefsContext.Provider>;
 }

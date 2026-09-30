@@ -25,23 +25,23 @@ export function BookingProvider({ children }) {
 
   // Guests comes from the site-wide preference unless the caller names one
   // (the search card does, because the guest just set it there).
-  const openBooking = (overrides = {}) => {
+  function openBooking(overrides = {}) {
     setBooking((prev) => ({ ...prev, guests, ...overrides }));
     setStep('details');
     setIsOpen(true);
-  };
+  }
 
-  const closeBooking = () => setIsOpen(false);
+  function closeBooking() { return setIsOpen(false); }
 
-  const updateBooking = (patch) => {
+  function updateBooking(patch) {
     setBooking((prev) => ({ ...prev, ...patch }));
     // Changing the count inside the sheet updates the preference too, so the
     // drawer, the search card and the next booking all agree with it.
     if (patch.guests != null) setGuests(patch.guests);
-  };
+  }
 
-  const goToSummary = () => setStep('summary');
-  const goToDetails = () => setStep('details');
+  function goToSummary() { return setStep('summary'); }
+  function goToDetails() { return setStep('details'); }
 
   const value = {
     isOpen,

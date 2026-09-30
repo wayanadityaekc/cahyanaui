@@ -21,14 +21,14 @@ export function CurrencyProvider({ children }) {
     }
   }, []);
 
-  const changeCurrency = (code) => {
+  function changeCurrency(code) {
     setCurrency(code);
     try {
       window.localStorage.setItem(CURRENCY_STORAGE_KEY, code);
     } catch {
       // ignore
     }
-  };
+  }
 
   const value = {
     currency,

@@ -45,6 +45,7 @@ export { default as FlagDefs } from './primitives/FlagDefs.jsx';
 export { default as Separator } from './primitives/Separator.jsx';
 export { default as LoadFallback } from './primitives/LoadFallback.jsx';
 export { default as LiveRegion } from './primitives/LiveRegion.jsx';
+export { default as OtpFields } from './primitives/OtpFields.jsx';
 
 /* --- layer 3: blocks --- */
 export { default as Container } from './blocks/Container.jsx';

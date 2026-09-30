@@ -57,7 +57,7 @@ export const FAQ = [
 // Written from what this site actually does in a browser, not from a template.
 export const PRIVACY = [
   { type: 'heading', html: 'What this site collects' },
-  { type: 'para', html: 'This site has no accounts, no sign-up and no tracking pixels. Nothing you type into it is sent to a server by the site itself.' },
+  { type: 'para', html: 'This site has no tracking pixels. If you create an account or sign in, your name, email and phone number are sent to our booking server, run by PT Cahyana Ubud Experience, so we can keep your account and send you sign-in codes.' },
   { type: 'para', html: 'The dates, guest count, currency and booking you build are saved in your own browser&rsquo;s local storage so the site remembers them if you come back. That data never leaves your device, and clearing your browser data removes it.' },
   { type: 'heading', html: 'What happens when you book' },
   { type: 'para', html: 'Sending a booking opens WhatsApp with a message already written out - your villa, dates, guests and the total. Nothing is transmitted until you press send in WhatsApp yourself. From that point the conversation is covered by WhatsApp&rsquo;s own privacy terms as well as ours.' },

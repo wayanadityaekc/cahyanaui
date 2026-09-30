@@ -1,9 +1,9 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
 
-// CEK WAYAN: scooter types, rates and terms below are placeholders; nothing here is a bookable rate until Wayan confirms.
+// CEK WAYAN: details hidden until Wayan confirms models, rates, licence and deposit terms; say nothing unconfirmed here.
 export const metadata = {
   title: 'Scooter Rental in Ubud | Ubud Private Villas by Cahyana Ubud',
-  description: 'Rent a scooter for your stay at Cahyana House or Cahyana Tibuah — delivered to your villa. Rates and terms to be confirmed.',
+  description: 'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
 };
 
 export default function ScooterRentalPage() {
@@ -12,43 +12,22 @@ export default function ScooterRentalPage() {
       serviceId="scooter-rental"
       kicker="At Your Villa"
       title="Scooter Rental"
-      subtitle="A scooter delivered to your villa, so you can explore Ubud at your own pace."
+      subtitle="A scooter for getting around Ubud at your own pace. Details are being confirmed."
       heroImg="https://picsum.photos/seed/scooter9/1800/900"
       heroAlt="Scooter parked outside a villa in Ubud"
-      glance={[
-        // CEK WAYAN — placeholder facts, confirm real details before this goes live
-        { label: 'Delivery', value: 'To your villa' },
-        { label: 'Rental', value: 'Daily or per stay' },
-        { label: 'Daily rate', value: 'TBC — ask us' },
-        { label: 'Deposit', value: 'TBC — ask us' },
-      ]}
+      glance={[{ label: 'Availability', value: 'Ask us' }]}
       sections={[
         {
-          heading: 'How it works',
+          heading: 'Details coming soon',
           body: [
-            "Tell us you'd like a scooter when you book, or any time during your stay. One is dropped off at the villa with a helmet, and picked up again when you check out.",
-          ],
-          note: 'CEK WAYAN — placeholder description. Confirm: which scooter models are actually available, whether an International Driving Permit or Indonesian licence is required, minimum age, and how the deposit works before this copy goes live.',
-        },
-        {
-          heading: 'Scooter types',
-          list: [
-            // CEK WAYAN — placeholder line-up, confirm real models/rates
-            { title: 'Automatic scooter (110-125cc)', desc: 'Rate to be confirmed — ask us for the current daily price.' },
-            { title: 'Larger automatic (150cc+)', desc: 'Rate to be confirmed — ask us for the current daily price.' },
-          ],
-        },
-        {
-          heading: 'Good to know',
-          body: [
-            'CEK WAYAN — this section needs real, confirmed requirements (licence, helmet law, insurance/liability, fuel policy, what happens if the scooter is damaged) before publishing. Placeholder text only, do not treat as final terms.',
+            "We're confirming the scooters, rates and rental terms. Message us with your dates and we'll tell you what's available.",
           ],
         },
       ]}
       aside={{
-        title: 'Scooter rental — rates TBC',
-        facts: ['Delivered to your villa', 'Helmet included', 'Daily rate: ask us', 'Deposit: ask us'],
-        ctaLabel: 'Ask about scooter rental',
+        title: 'Scooter rental',
+        facts: ['Ask us for availability'],
+        ctaLabel: 'Ask about scooters',
         otherServices: [
           { href: '/services/breakfast', label: 'Breakfast' },
           { href: '/services/spa', label: 'Spa & Massage' },

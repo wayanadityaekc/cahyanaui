@@ -1,5 +1,5 @@
 // Site-wide constants (not prices); real contact channels only, do not invent new ones.
-export const WHATSAPP_NUMBER = '61401657862';
+export const WHATSAPP_NUMBER = '6285974650011';
 export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const CONTACT_EMAIL = 'hello@ubudprivatevillas.com';
 export const CUE_LINK = 'https://cahyanaubudexperience.com';

@@ -1,3 +1,6 @@
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import localFont from 'next/font/local';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
@@ -21,8 +24,21 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
+// Content hash for files in public/, so a replaced icon gets a new URL and browsers drop the cached one.
+function assetV(...rel) {
+  return createHash('sha1').update(readFileSync(join(process.cwd(), 'public', ...rel))).digest('hex').slice(0, 8);
+}
+
+// Same icon set as CUE (same Cahyana logo): round tab icons, opaque tiles for home screens.
 export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
+  icons: {
+    icon: [
+      { url: `/assets/icons/favicon.svg?v=${assetV('assets', 'icons', 'favicon.svg')}`, type: 'image/svg+xml' },
+      { url: `/assets/icons/favicon.ico?v=${assetV('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
+    ],
+    apple: [{ url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`, sizes: '180x180' }],
+  },
 };
 
 // data-brand picks this site's surface from the library tokens, so no component needs to know which site it is in.

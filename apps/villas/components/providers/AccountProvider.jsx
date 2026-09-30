@@ -69,6 +69,26 @@ export function AccountProvider({ children }) {
     }
   }
 
+  // Check the emailed code; the session token is issued only on a match.
+  async function verifyCode(email, code) {
+    try {
+      const response = await fetch(`${API_BASE}/account/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.status === 'ok' && data.token) {
+        write(data.token);
+        setAccount(data.account || null);
+        return { ok: true };
+      }
+      return { ok: false, error: (data && data.detail) || '' };
+    } catch (e) {
+      return { ok: false, error: '' };
+    }
+  }
+
   async function createAccount({ name, email, phone }) {
     try {
       const response = await fetch(`${API_BASE}/account`, {
@@ -82,6 +102,8 @@ export function AccountProvider({ children }) {
         setAccount(data.account || null);
         return { ok: true };
       }
+      // Email already has an account: the server emailed that inbox a code instead of handing over a login.
+      if (response.ok && data.signin_sent) return { ok: false, signin: true, email: data.email || email };
       return { ok: false, error: (data && data.detail) || (data && data.error) || '' };
     } catch (e) {
       return { ok: false };
@@ -91,7 +113,7 @@ export function AccountProvider({ children }) {
   function logout() { drop(); setAccount(null); }
 
   return (
-    <AccountContext.Provider value={{ account, hydrated, requestLogin, createAccount, logout }}>
+    <AccountContext.Provider value={{ account, hydrated, requestLogin, verifyCode, createAccount, logout }}>
       {children}
     </AccountContext.Provider>
   );

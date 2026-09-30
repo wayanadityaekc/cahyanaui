@@ -11,14 +11,14 @@ import { useBooking } from '@/components/providers/BookingProvider';
 import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
-import { formatApproxIDR, formatCurrency } from '@/lib/currency';
+import { formatRupiah } from '@/lib/currency';
 import BookingTerms from '@/components/booking/BookingTerms';
 import { whatsappLink } from '@/lib/constants';
 
 // Booking sheet with no backend on purpose: step 2 opens a pre-filled wa.me link so a person continues on WhatsApp.
 export default function BookingSheet() {
   const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
-  const { currency, format } = useCurrency();
+  const { currency, format, formatAmount, breakdown: convert } = useCurrency();
   const { setStay } = useCart();
   const isPhone = useMobile('(max-width: 639px)');
 
@@ -35,6 +35,8 @@ export default function BookingSheet() {
 
   const villa = VILLAS[booking.villaSlug] || VILLA_LIST[0];
   const breakdown = priceBreakdown(villa.slug, booking.checkIn, booking.checkOut);
+  const shown = convert(breakdown);
+  const inRupiah = currency === 'IDR';
   const canContinue = booking.checkIn && booking.checkOut && breakdown && breakdown.nights > 0;
 
   const message = breakdown
@@ -43,9 +45,9 @@ export default function BookingSheet() {
         `Check-in: ${booking.checkIn || '—'}`,
         `Check-out: ${booking.checkOut || '—'}`,
         `Guests: ${booking.guests}`,
-        `${breakdown.nights} night(s) x ${formatCurrency(villa.nightlyRate, currency)} = ${formatCurrency(breakdown.subtotal, currency)}`,
-        `Service fee: ${formatCurrency(breakdown.serviceFee, currency)}`,
-        `Total: ${formatCurrency(breakdown.total, currency)} (approx. ${formatApproxIDR(breakdown.total)})`,
+        `${shown.nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`,
+        `Service fee: ${formatAmount(shown.serviceFee)}`,
+        `Total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
       ].join('\n')
     : `Hi! I'd like to ask about booking ${villa.name}.`;
 
@@ -89,7 +91,7 @@ export default function BookingSheet() {
               <img src={villa.cardImg} alt="" width={64} height={64} className="w-16 h-16 object-cover" />
               <div className="flex-1">
                 <p className="text-h3 font-semibold text-gold">{villa.name}</p>
-                <p className="text-small text-muted">{format(villa.nightlyRate)} / night</p>
+                <p className="text-small text-muted">{format(villa.nightlyRateIdr)} / night</p>
               </div>
             </div>
 
@@ -148,18 +150,18 @@ export default function BookingSheet() {
             <div className="divide-y divide-line text-small">
               <div className="flex justify-between py-2.5">
                 <span className="text-muted">{breakdown.nights} night{breakdown.nights > 1 ? 's' : ''}</span>
-                <span className="text-gold">{format(breakdown.subtotal)}</span>
+                <span className="text-gold">{formatAmount(shown.subtotal)}</span>
               </div>
               <div className="flex justify-between py-2.5">
                 <span className="text-muted">Service fee</span>
-                <span className="text-gold">{format(breakdown.serviceFee)}</span>
+                <span className="text-gold">{formatAmount(shown.serviceFee)}</span>
               </div>
               <div className="flex justify-between py-3">
                 <span className="text-h3 font-semibold text-gold">Total</span>
-                <span className="text-h3 font-bold text-amber">{format(breakdown.total)}</span>
+                <span className="text-h3 font-bold text-amber">{formatAmount(shown.total)}</span>
               </div>
             </div>
-            <p className="text-label text-muted -mt-3">(approx. {formatApproxIDR(breakdown.total)})</p>
+            {inRupiah ? null : <p className="text-label text-muted -mt-3">Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.</p>}
 
             <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
               <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />

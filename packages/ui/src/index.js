@@ -33,6 +33,7 @@ export { default as groupReviews } from './lib/groupReviews.js';
 export { default as useChat } from './lib/useChat.js';
 export { openChatSocket, chatSocketUrl } from './lib/chatSocket.js';
 export { createChatThread } from './lib/chatThread.js';
+export { CURRENCIES, CURRENCY_SYMBOL, BASELINE_FX, ladder, perIdr, displayFromIdr, formatMoney } from './lib/money.js';
 
 /* --- layer 2: primitives --- */
 export { default as Button } from './primitives/Button.jsx';

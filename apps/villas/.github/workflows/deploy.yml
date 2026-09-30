@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Daily rebuild at 07:50 WITA (after cahyana-api fetches the day's rates at 06:15) so baked-in prices follow the live rate.
+  schedule:
+    - cron: '50 23 * * *'
 
 permissions:
   contents: write

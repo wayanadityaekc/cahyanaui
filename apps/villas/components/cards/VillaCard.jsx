@@ -18,7 +18,7 @@ export default function VillaCard({ villa }) {
       className="[&>img]:scale-100!"
       linkAs={Link}
       place="Ubud, Bali"
-      price={format(villa.nightlyRate)}
+      price={format(villa.nightlyRateIdr)}
       ctaIcon={<ArrowRight className="w-4 h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />}
       /* `lines` fits beside the price on desktop, `short` is the phone line ("3 beds": full words overflowed at 320), `label` is the key. */
       facts={[

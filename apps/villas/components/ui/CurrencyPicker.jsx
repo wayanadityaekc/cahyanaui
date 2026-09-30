@@ -13,7 +13,7 @@ export default function CurrencyPicker({ id = 'acct-cur', variant = 'default' })
       variant={variant}
       value={currency}
       onChange={setCurrency}
-      options={CURRENCIES.map((option) => option.code)}
+      options={CURRENCIES}
     />
   );
 }

@@ -1,21 +1,42 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { CURRENCY_STORAGE_KEY, DEFAULT_CURRENCY, convertFromUSD, formatCurrency } from '@/lib/currency';
+import { BASELINE_FX, formatMoney } from '@cahyana/ui';
+import { API_BASE } from '@/lib/constants';
+import { CURRENCIES, CURRENCY_STORAGE_KEY, DEFAULT_CURRENCY, displayBreakdown, formatCurrency } from '@/lib/currency';
 
-// Site-wide display currency saved in localStorage; no live FX feed, rates are hardcoded in lib/currency.js.
+// Display currency (saved in localStorage) plus the live rates; the build bakes in that day's rates, the page refreshes them.
 const CurrencyContext = createContext(null);
 
-export function CurrencyProvider({ children }) {
+async function fetchRates() {
+  try {
+    const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`);
+    if (!response.ok) return null;
+    const catalog = await response.json();
+    return catalog?.fx?.perUsd && catalog.fx.idrPerUsd ? catalog.fx : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function CurrencyProvider({ initialFx = null, children }) {
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
+  const [fx, setFx] = useState(initialFx || BASELINE_FX);
 
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem(CURRENCY_STORAGE_KEY);
-      if (saved) setCurrency(saved);
+      if (saved && CURRENCIES.includes(saved)) setCurrency(saved);
     } catch (e) {
-      // localStorage unavailable — fall back to the default silently.
+      // localStorage unavailable: keep the default.
     }
+    let alive = true;
+    async function refresh() {
+      const live = await fetchRates();
+      if (alive && live) setFx(live);
+    }
+    refresh();
+    return () => { alive = false; };
   }, []);
 
   function changeCurrency(code) {
@@ -23,22 +44,24 @@ export function CurrencyProvider({ children }) {
     try {
       window.localStorage.setItem(CURRENCY_STORAGE_KEY, code);
     } catch (e) {
-      // ignore
+      // Not saved; the choice still applies on this page.
     }
   }
 
   const value = {
     currency,
+    fx,
     setCurrency: changeCurrency,
-    convert: (usd) => convertFromUSD(usd, currency),
-    format: (usd) => formatCurrency(usd, currency),
+    format: (idr) => formatCurrency(idr, currency, fx),
+    formatAmount: (amount) => formatMoney(amount, currency),
+    breakdown: (priced) => displayBreakdown(priced, currency, fx),
   };
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>;
 }
 
 export function useCurrency() {
-  const ctx = useContext(CurrencyContext);
-  if (!ctx) throw new Error('useCurrency must be used within CurrencyProvider');
-  return ctx;
+  const context = useContext(CurrencyContext);
+  if (!context) throw new Error('useCurrency must be used within CurrencyProvider');
+  return context;
 }

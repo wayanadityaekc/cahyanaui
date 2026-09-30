@@ -10,6 +10,7 @@ import { CurrencyProvider } from '@/components/providers/CurrencyProvider';
 import { BookingProvider } from '@/components/providers/BookingProvider';
 import { TripPrefsProvider } from '@/components/providers/TripPrefsProvider';
 import { AccountProvider } from '@/components/providers/AccountProvider';
+import { API_BASE } from '@/lib/constants';
 import { CartProvider } from '@/components/providers/CartProvider';
 import { SavedVillasProvider } from '@/components/providers/SavedVillasProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
@@ -42,15 +43,28 @@ export const metadata = {
   manifest: '/manifest.webmanifest',
 };
 
+// The day's exchange rates from cahyana-api, fetched once per build; no answer within 10s means the page fetches them itself.
+async function buildFx() {
+  try {
+    const response = await fetch(`${API_BASE}/pricing/catalog?currency=USD`, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) return null;
+    const catalog = await response.json();
+    return catalog?.fx?.perUsd && catalog.fx.idrPerUsd ? catalog.fx : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 // data-brand picks this site's surface from the library tokens, so no component needs to know which site it is in.
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const initialFx = await buildFx();
   return (
     <html lang="en" data-brand="villas" className={inter.variable}>
       {/* The fixed bottom bar needs its height reserved, or it covers the footer on mobile. */}
       <body className={BAR_BODY_PAD}>
         <IosZoomFix />
         <LoadingScreen />
-        <CurrencyProvider>
+        <CurrencyProvider initialFx={initialFx}>
           <AccountProvider>
           <TripPrefsProvider>
           <CartProvider>

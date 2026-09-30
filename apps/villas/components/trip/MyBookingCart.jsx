@@ -7,7 +7,7 @@ import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { SERVICES, serviceById } from '@/lib/bookingCart';
 import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
-import { formatApproxIDR, formatCurrency } from '@/lib/currency';
+import { formatRupiah } from '@/lib/currency';
 import { CUE_LINK, whatsappLink } from '@/lib/constants';
 import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 
@@ -39,7 +39,7 @@ function EmptyState() {
 // My Booking: the stay has a real total, services are listed as requests with no price, on purpose.
 export default function MyBookingCart() {
   const { cart, ready, clearStay, toggleService, clear } = useCart();
-  const { currency, format } = useCurrency();
+  const { currency, formatAmount, breakdown: convert } = useCurrency();
   const [sent, setSent] = useState(false);
 
   // Draw nothing until the stored booking is read, or 'nothing here yet' flashes at guests who have one.
@@ -49,6 +49,8 @@ export default function MyBookingCart() {
   const breakdown = stay ? priceBreakdown(stay.villaSlug, stay.checkIn, stay.checkOut) : null;
   const villa = stay ? VILLAS[stay.villaSlug] : null;
   const nights = stay ? nightsBetween(stay.checkIn, stay.checkOut) : 0;
+  const shown = convert(breakdown);
+  const inRupiah = currency === 'IDR';
   const chosen = cart.services.map(serviceById).filter(Boolean);
   const isEmpty = !stay && chosen.length === 0;
 
@@ -58,11 +60,11 @@ export default function MyBookingCart() {
     stay ? `Check-out: ${stay.checkOut || '-'}` : null,
     stay ? `Guests: ${stay.guests}` : null,
     breakdown && nights > 0
-      ? `${nights} night(s) x ${formatCurrency(villa.nightlyRate, currency)} = ${formatCurrency(breakdown.subtotal, currency)}`
+      ? `${nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`
       : null,
-    breakdown && nights > 0 ? `Service fee: ${formatCurrency(breakdown.serviceFee, currency)}` : null,
+    breakdown && nights > 0 ? `Service fee: ${formatAmount(shown.serviceFee)}` : null,
     breakdown && nights > 0
-      ? `Stay total: ${formatCurrency(breakdown.total, currency)} (approx. ${formatApproxIDR(breakdown.total)})`
+      ? `Stay total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`
       : null,
     chosen.length ? `Services I'd like: ${chosen.map((service) => service.label).join(', ')}` : null,
     chosen.length ? '(Happy to hear the prices for those.)' : null,
@@ -141,18 +143,18 @@ export default function MyBookingCart() {
             {breakdown && nights > 0 ? (
               <div className="mt-4 flex flex-col gap-2">
                 <p className={LINE}>
-                  <span className="text-muted">{nights} {nights === 1 ? 'night' : 'nights'} x {format(villa.nightlyRate)}</span>
-                  <span>{format(breakdown.subtotal)}</span>
+                  <span className="text-muted">{nights} {nights === 1 ? 'night' : 'nights'} x {formatAmount(shown.nightly)}</span>
+                  <span>{formatAmount(shown.subtotal)}</span>
                 </p>
                 <p className={LINE}>
                   <span className="text-muted">Service fee</span>
-                  <span>{format(breakdown.serviceFee)}</span>
+                  <span>{formatAmount(shown.serviceFee)}</span>
                 </p>
                 <p className={`${LINE} pt-3 mt-1 border-t border-line`}>
                   <span className={LABEL}>Stay total</span>
-                  <span className="text-h2 font-bold text-amber">{format(breakdown.total)}</span>
+                  <span className="text-h2 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </p>
-                <p className="text-label text-muted">approx. {formatApproxIDR(breakdown.total)}</p>
+                {inRupiah ? null : <p className="text-label text-muted">Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.</p>}
               </div>
             ) : (
               <p className="mt-3 text-body text-muted">

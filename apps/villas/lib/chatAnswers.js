@@ -41,7 +41,7 @@ function villaRow(villa, format) {
   return {
     label: villa.name,
     note: villaNote(villa),
-    price: `${format(villa.nightlyRate)} / night`,
+    price: `${format(villa.nightlyRateIdr)} / night`,
     href: `/villas/${villa.slug}`,
   };
 }
@@ -74,7 +74,7 @@ function villaAnswer(question, questionWords, ctx) {
   if (askedPrice) {
     return {
       kind: 'answer',
-      text: `${villa.name} is ${ctx.format(villa.nightlyRate)} a night before the service fee, as shown on its page. The exact total shows once you pick your dates.`,
+      text: `${villa.name} is ${ctx.format(villa.nightlyRateIdr)} a night before the service fee, as shown on its page. The exact total shows once you pick your dates.`,
       link: { href: `/villas/${villa.slug}`, label: 'View villa' },
     };
   }

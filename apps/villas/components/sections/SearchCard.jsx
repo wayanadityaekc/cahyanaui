@@ -7,7 +7,7 @@ import Select from '@/components/ui/Select';
 import { useBooking } from '@/components/providers/BookingProvider';
 import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
-import { CURRENCIES } from '@/lib/currency';
+import { CURRENCIES, CURRENCY_NAMES } from '@/lib/currency';
 
 // Hero search card: opens the booking flow prefilled; custom controls, since native date inputs show "mm/dd/yyyy".
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
@@ -57,7 +57,7 @@ export default function SearchCard({ layout = 'bar' }) {
         icon={<Coins className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
         value={currency}
         onChange={setCurrency}
-        options={CURRENCIES.map((option) => ({ value: option.code, label: `${option.code} - ${option.name}` }))}
+        options={CURRENCIES.map((code) => ({ value: code, label: `${code} - ${CURRENCY_NAMES[code]}` }))}
       />
     </>
   );

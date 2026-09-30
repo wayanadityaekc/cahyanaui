@@ -1,7 +1,7 @@
 // CEK WAYAN: placeholder service fee %, confirm the real figure.
 export const SERVICE_FEE_RATE = 0.05;
 
-// All copy here is real (ported from the old site); only nightlyRate is a placeholder from Wayan's mockup.
+// All copy here is real (ported from the old site); nightly rates are rupiah, set by Wayan (Sep 2026).
 export const VILLAS = {
   'cahyana-house': {
     slug: 'cahyana-house',
@@ -9,7 +9,7 @@ export const VILLAS = {
     badge: 'Most Popular',
     tagline: 'North Ubud · Entire house',
     // CEK WAYAN — placeholder rate from the mockup, confirm real per-night pricing
-    nightlyRate: 120,
+    nightlyRateIdr: 2500000,
     guests: 6,
     bedrooms: 3,
     bathrooms: 3,
@@ -75,7 +75,7 @@ export const VILLAS = {
     badge: null,
     tagline: 'North Ubud · Entire villa',
     // CEK WAYAN — placeholder rate from the mockup, confirm real per-night pricing
-    nightlyRate: 150,
+    nightlyRateIdr: 1700000,
     guests: 4,
     bedrooms: 2,
     bathrooms: 2,
@@ -205,8 +205,9 @@ export function priceBreakdown(slug, checkIn, checkOut) {
   const villa = VILLAS[slug];
   if (!villa) return null;
   const nights = nightsBetween(checkIn, checkOut);
-  const subtotal = villa.nightlyRate * nights;
-  const serviceFee = Math.round(subtotal * SERVICE_FEE_RATE);
-  const total = subtotal + serviceFee;
-  return { villa, nights, subtotal, serviceFee, total };
+  const nightlyIdr = villa.nightlyRateIdr;
+  const subtotalIdr = nightlyIdr * nights;
+  // Rounded up to whole thousands, like every rupiah price on CUE.
+  const serviceFeeIdr = Math.ceil((subtotalIdr * SERVICE_FEE_RATE) / 1000) * 1000;
+  return { villa, nights, nightlyIdr, subtotalIdr, serviceFeeIdr, totalIdr: subtotalIdr + serviceFeeIdr };
 }

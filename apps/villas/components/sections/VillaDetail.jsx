@@ -110,7 +110,7 @@ export default function VillaDetail({ villa }) {
 
           <BookingPanel
             panelRef={cardRef}
-            price={<PriceBlock amount={format(villa.nightlyRate)} unit="/ night" />}
+            price={<PriceBlock amount={format(villa.nightlyRateIdr)} unit="/ night" />}
             fields={(
               <DateRangeField
                 id={`${villa.slug}-dates`}
@@ -164,7 +164,7 @@ export default function VillaDetail({ villa }) {
 
       {/* Mobile-only book bar, flush like CUE's; chat lives in the navbar, so the bar holds one action. */}
       <StickyBar variant="flush" show={showBookBar}>
-        <PriceBlock tight amount={format(villa.nightlyRate)} unit="/ night" size="sm" />
+        <PriceBlock tight amount={format(villa.nightlyRateIdr)} unit="/ night" size="sm" />
         <Button className="flex-shrink-0" onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}>
           Check availability
         </Button>

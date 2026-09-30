@@ -20,12 +20,12 @@ import { cn } from '../lib/cn.js';
  */
 const SIZES = {
   display: 'text-display font-bold',
-  h2: 'text-h2 font-semibold',
+  h2: 'text-h2 font-medium',
   h3: 'text-h3 font-semibold',
 };
 
 const TONES = {
-  light: { eyebrow: 'text-muted', title: 'text-gold', lede: 'text-muted' },
+  light: { eyebrow: 'text-muted', title: 'text-gold', lede: 'text-green' },
   dark: { eyebrow: 'text-gold-l', title: 'text-white', lede: 'text-white/85' },
 };
 
@@ -55,7 +55,7 @@ export default function SectionHeading({
       <Tag className={cn(SIZES[size] || SIZES.h2, 'leading-[var(--lh-heading)]', t.title, titleClassName)}>
         {title}
       </Tag>
-      {lede ? <p className={cn('mt-2 text-small', t.lede, ledeClassName)}>{lede}</p> : null}
+      {lede ? <p className={cn('mt-2 text-small leading-[1.45]', t.lede, ledeClassName)}>{lede}</p> : null}
       {children}
     </div>
   );

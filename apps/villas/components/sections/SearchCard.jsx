@@ -93,7 +93,7 @@ export default function SearchCard({ layout = 'bar' }) {
     return (
       <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6 rounded-sm">
         {/* No uppercase kicker above the heading: it made two labels for one panel (Wayan, Sep 2026). */}
-        <h2 className="text-h3 font-semibold text-gold mb-4">Check your dates</h2>
+        <h2 className="text-h3 font-medium text-gold mb-4">Check your dates</h2>
         <div className="grid grid-cols-1 gap-[0.6rem]">
           {panelFields}
           {search}

@@ -30,7 +30,7 @@ export default function ReviewCard({ card }) {
   return (
     <Card className="relative p-6 pb-[2.3rem] flex flex-col">
       <Stars count={card.stars} />
-      <p className="text-h3 leading-relaxed flex-1 text-gold">&ldquo;{card.text}&rdquo;</p>
+      <p className="flex-1 m-0 text-body leading-[var(--lh-body,1.6)] text-green">&ldquo;{card.text}&rdquo;</p>
       <p className="mt-4 pr-8 text-label text-muted">{card.source}</p>
       <SourceMark platform={card.platform} />
     </Card>

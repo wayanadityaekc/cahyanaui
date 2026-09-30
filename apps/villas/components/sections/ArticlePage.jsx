@@ -93,7 +93,7 @@ export default function ArticlePage({ article }) {
 
       {more.length > 0 && (
         <Section tone="cream">
-          <h2 className="text-h2 font-semibold text-gold mb-6">Keep reading</h2>
+          <h2 className="text-h2 font-medium text-gold mb-6">Keep reading</h2>
           <div className={GRID_CARDS}>
             {more.map((related) => (
               <Card as={Link} hover key={related.slug} href={`/guide/${related.slug}`} className="p-5 flex flex-col gap-2 no-underline">

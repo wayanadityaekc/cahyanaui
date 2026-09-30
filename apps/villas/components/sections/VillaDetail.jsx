@@ -57,10 +57,10 @@ export default function VillaDetail({ villa }) {
               ))}
             </div>
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">About the villa</h2>
+            <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">About the villa</h2>
             {villa.about.map((para, i) => <p key={i}>{para}</p>)}
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">The space</h2>
+            <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">The space</h2>
             <ul className="grid sm:grid-cols-2 gap-x-8">
               {villa.spaceList.map((space) => (
                 <li key={space.title} className="py-3 border-b border-line text-small">
@@ -70,7 +70,7 @@ export default function VillaDetail({ villa }) {
               ))}
             </ul>
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Getting around</h2>
+            <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">Getting around</h2>
             <ul className="border-t border-line">
               {villa.gettingAround.map((tip) => (
                 <li key={tip.label} className="flex justify-between py-3 border-b border-line text-small">
@@ -80,7 +80,7 @@ export default function VillaDetail({ villa }) {
               ))}
             </ul>
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Guest ratings</h2>
+            <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">Guest ratings</h2>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-px overflow-hidden border border-line bg-line">
               {villa.scores.map(([label, value]) => (
                 <div key={label} className="bg-surface-raised text-center py-4 px-2">
@@ -98,7 +98,7 @@ export default function VillaDetail({ villa }) {
               </Card>
             )}
 
-            <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Good to know</h2>
+            <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">Good to know</h2>
             <ul className="border-t border-line">
               {villa.goodToKnow.map((note) => (
                 <li key={note.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
@@ -155,7 +155,7 @@ export default function VillaDetail({ villa }) {
       </Section>
 
       <Section tone="dark" className="text-center">
-        <h2 className="text-h2 font-semibold text-white">{villa.name}, your dates</h2>
+        <h2 className="text-h2 font-medium text-white">{villa.name}, your dates</h2>
         <p className="mt-2 text-small text-white/75">See if the villa is free when you are.</p>
         <div className="flex justify-center mt-6">
           {/* onDark - this band IS the action colour now. */}

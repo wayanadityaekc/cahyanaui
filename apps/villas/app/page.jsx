@@ -76,11 +76,11 @@ export default function HomePage() {
         <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
           <div>
             <p className={EYEBROW_LINE}>Our Villas</p>
-            <h2 className="text-h2 font-semibold text-gold">
+            <h2 className="text-h2 font-medium text-gold">
               Two private villas in north Ubud
             </h2>
           </div>
-          <p className="text-small text-muted">
+          <p className="text-small leading-[1.45] text-green">
             Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
           </p>
         </div>
@@ -142,8 +142,8 @@ export default function HomePage() {
       {/* Reviews */}
       <Section>
         <p className={EYEBROW_LINE}>Guest Reviews</p>
-        <h2 className="text-h2 font-semibold text-gold">What our guests say</h2>
-        <p className="mt-2 text-small text-muted">Real experiences from people who stayed with us.</p>
+        <h2 className="text-h2 font-medium text-gold">What our guests say</h2>
+        <p className="mt-2 text-small leading-[1.45] text-green">Real experiences from people who stayed with us.</p>
         <p className="mt-4 flex items-center gap-2 text-h3 font-semibold text-gold">
           {OVERALL_RATING}/5
           <span className={STARS}>★★★★★</span>
@@ -192,7 +192,7 @@ export default function HomePage() {
 
       {/* CTA */}
       <Section tone="dark" className="text-center">
-        <h2 className="text-h2 font-semibold text-white">Dates in mind?</h2>
+        <h2 className="text-h2 font-medium text-white">Dates in mind?</h2>
         <p className="mt-2 text-small text-white/75">
           Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
         </p>

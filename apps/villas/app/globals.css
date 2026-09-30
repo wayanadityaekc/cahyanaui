@@ -16,8 +16,9 @@
     font-family: var(--font-body);
     font-size: 16px;
     font-weight: 400;
-    line-height: 1.6;
-    color: var(--color-ink);
+    /* CUE's body: green text and the browser's normal line-height (preflight would make it 1.5); copy sets its own 1.6. */
+    line-height: normal;
+    color: var(--color-green);
     /* The surface token, not a literal: it is what lets the library switch brand background per site. */
     background: var(--surface);
     overflow-x: clip;
@@ -34,9 +35,12 @@
   h1, h2, h3 {
     /* --font-head, not the never-defined --font-display, so a library change cannot silently restyle headings. */
     font-family: var(--font-head);
-    font-weight: 600;
-    line-height: 1.15;
     color: var(--color-gold);
+  }
+
+  /* CUE's h1 and h2 are set tight; its h3 keep the normal line-height and tracking. */
+  h1, h2 {
+    line-height: 1.15;
     letter-spacing: -0.01em;
   }
 }

@@ -38,7 +38,7 @@ export default function GuideHubPage() {
             id={cat.id}
             className="scroll-mt-[calc(var(--header-h,58px)+1.5rem)]"
           >
-              <h2 className="text-h2 font-semibold text-gold mb-6">{cat.label}</h2>
+              <h2 className="text-h2 font-medium text-gold mb-6">{cat.label}</h2>
               <div className={GRID_CARDS}>
                 {items.map((article) => (
                   <Card as={Link} hover key={article.slug} href={`/guide/${article.slug}`} className="p-5 flex flex-col gap-2 no-underline">

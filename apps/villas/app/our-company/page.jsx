@@ -1,5 +1,7 @@
 import OurCompany from '@/components/sections/OurCompany';
+import { JsonLd } from '@cahyana/ui';
 import { pageMeta } from '@/lib/seo';
+import { COMPANY_CRUMBS, breadcrumbList } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Our Company | Ubud Private Villas',
@@ -8,5 +10,10 @@ export const metadata = pageMeta({
 });
 
 export default function OurCompanyPage() {
-  return <OurCompany />;
+  return (
+    <>
+      <JsonLd data={breadcrumbList(COMPANY_CRUMBS)} />
+      <OurCompany />
+    </>
+  );
 }

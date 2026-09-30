@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { ArrowRight, Clock } from 'lucide-react';
 import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
-import { CAPS, Card, Container, EYEBROW_LINE, Section } from '@cahyana/ui';
+import { CAPS, Card, Container, EYEBROW_LINE, JsonLd, Section } from '@cahyana/ui';
 import { pageMeta } from '@/lib/seo';
+import { GUIDE_CRUMBS, breadcrumbList } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Ubud Guide | Ubud Private Villas',
@@ -16,6 +17,7 @@ const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 export default function GuideHubPage() {
   return (
     <>
+      <JsonLd data={breadcrumbList(GUIDE_CRUMBS)} />
       <section className="pt-14 pb-10 border-b border-line bg-cream">
         <Container>
           <p className={EYEBROW_LINE}>Ubud Guide</p>

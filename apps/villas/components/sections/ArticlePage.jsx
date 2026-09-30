@@ -8,7 +8,8 @@ import { CARD, CARD_WRAP } from '@/components/ui/detailCardClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
 import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
-import { CAPS, Card, Container, EYEBROW_LINE, Section } from '@cahyana/ui';
+import { CAPS, Card, Container, EYEBROW_LINE, Section, Breadcrumb } from '@cahyana/ui';
+import { articleCrumbs } from '@/lib/crumbs';
 
 // Paragraph spacing lives here, not in Prose; max-w keeps lines readable (a full 950px line is ~145 chars).
 const PROSE =
@@ -44,6 +45,7 @@ export default function ArticlePage({ article }) {
     <article>
       <header className="bg-cream border-b border-line">
         <Container className="py-10">
+          <Breadcrumb items={articleCrumbs(article)} linkAs={Link} className="mb-2" />
           <p className={EYEBROW_LINE}>{categoryLabel(article.cat)}</p>
           <h1 className="text-display font-bold text-gold max-w-3xl">{article.title}</h1>
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>

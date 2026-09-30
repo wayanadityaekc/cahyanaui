@@ -1,6 +1,8 @@
 import VillaDetail from '@/components/sections/VillaDetail';
 import { VILLAS } from '@/lib/villas';
+import { JsonLd } from '@cahyana/ui';
 import { pageMeta } from '@/lib/seo';
+import { breadcrumbList, villaCrumbs, villaSchema } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Cahyana House: 3-Bedroom Private Pool Villa in Ubud',
@@ -10,5 +12,11 @@ export const metadata = pageMeta({
 });
 
 export default function CahyanaHousePage() {
-  return <VillaDetail villa={VILLAS['cahyana-house']} />;
+  const villa = VILLAS['cahyana-house'];
+  return (
+    <>
+      <JsonLd data={[villaSchema(villa), breadcrumbList(villaCrumbs(villa))]} />
+      <VillaDetail villa={villa} />
+    </>
+  );
 }

@@ -29,16 +29,11 @@ src/blocks/       Layer 3  Hero, Section, Card, Navbar/Footer shells, booking
 
 One CSS file. The only place a raw value is allowed to appear.
 
-Two sites, **one palette and one typeface**. They are told apart by their
-**surface**:
-
-| | surface | cards |
-|---|---|---|
-| CUE (default) | white | white |
-| Villas (`data-brand="villas"`) | light grey `#f8f8f8` | white |
-
-A site sets `data-brand` on `<html>` and changes nothing else. Components use
-`bg-surface` / `bg-surface-raised` and never learn which site they are in.
+Two sites, **one palette and one typeface**: CUE's, on both (Wayan, 30 Sep
+2026 - the villa site dropped its own cream, charcoal and 41.6px buttons).
+`data-brand` stays on `<html>` as the hook if a brand ever needs its own value;
+today it overrides nothing. Components use `bg-surface` / `bg-surface-raised`
+and never learn which site they are in.
 
 Note the two naming systems, both deliberate: Tailwind generates utilities from
 the **long** names (`--color-line` → `border-line`), and components read the
@@ -69,7 +64,9 @@ picks one - the variants do not get scattered back into the apps.
 | `NavDesktop` | the bar's page links; dropdowns are disclosures (hover + click, Escape returns focus) | - |
 | `AccountMenu` | the navbar's account slot: Log in / initials menu; site passes account, handlers, fields | optional rows (CUE: Settings) |
 | `FooterShell` | five columns, one hairline | content-driven |
-| `StickyBar` | the one thing at the bottom of a phone screen | **flush** (CUE), **floating** (villas) |
+| `StickyBar` | the one thing at the bottom of a phone screen | **flush** (both sites), floating (unused) |
+| `Breadcrumb` | CUE's trail: nav + ol, last item is the current page | - |
+| `JsonLd` | one structured-data script, `<` escaped | - |
 | `BookingPanel` | the sticky panel beside a stay | - |
 | `SearchBar` | dates + guests + the button | hero, panel, stack |
 | `PriceBlock` | "From Rp… / night" | amber, gold |
@@ -216,6 +213,10 @@ contains an `<img>` as a picture.
 
 ## The villa site is warm paper, and nothing casts a shadow
 
+**Superseded 30 Sep 2026 (G6):** the villa site now uses CUE's white surface and
+`--color-cream` is CUE's `#f8f8f8` again (Wayan: match CUE on the shared chrome).
+The no-shadow part still holds. Kept below as history.
+
 Sep 2026, Wayan sent an aman.com screenshot: *"coba pakai background gini bro
 dan, hilangin semua shadow biar seperti ini"*.
 
@@ -256,6 +257,9 @@ is exactly that bone. Both proved by putting the bug back - one shadow token
 restored, then the white surface restored - 15 assertions each.
 
 ## Black buttons, and the one place they invert
+
+**Superseded 30 Sep 2026 (G6):** the villa buttons are CUE's green again; the
+`onDark` inversion is still used on dark bands. Kept below as history.
 
 Sep 2026, Wayan: *"warna button green jadi black bro"*. `--color-cta` /
 `--color-cta-d` are overridden **inside `[data-brand="villas"]`**, not at the

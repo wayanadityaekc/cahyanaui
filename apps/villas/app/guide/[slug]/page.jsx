@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 import ArticlePage from '@/components/sections/ArticlePage';
 import { ARTICLES, articleBySlug } from '@/content/articles';
+import { JsonLd } from '@cahyana/ui';
 import { pageMeta } from '@/lib/seo';
+import { articleCrumbs, articleSchema, breadcrumbList } from '@/lib/schema';
 
 // Static export, so every article path is enumerated at build time.
 export function generateStaticParams() {
@@ -20,5 +22,10 @@ export default async function GuideArticleRoute({ params }) {
   const { slug } = await params;
   const article = articleBySlug(slug);
   if (!article) notFound();
-  return <ArticlePage article={article} />;
+  return (
+    <>
+      <JsonLd data={[articleSchema(article), breadcrumbList(articleCrumbs(article))]} />
+      <ArticlePage article={article} />
+    </>
+  );
 }

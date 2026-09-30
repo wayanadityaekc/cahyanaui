@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
 import CatDropdown, { CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
@@ -7,7 +8,8 @@ import Prose from '@/components/prose/Prose';
 import { ABOUT, FAQ, PRIVACY } from '@/content/company';
 import { CANCELLATION_BLOCKS, TERMS_BLOCKS } from '@/content/policies';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
-import { Button, Card } from '@cahyana/ui';
+import { Button, Card, Breadcrumb } from '@cahyana/ui';
+import { COMPANY_CRUMBS } from '@/lib/crumbs';
 
 // Every section stays in the DOM (one shown via `hidden`) so crawlers read it all; do not simplify to one mounted tab.
 const TABS = [
@@ -155,6 +157,7 @@ export default function OurCompany() {
         </CatDropdown>
 
         <div className="flex-1 min-w-0">
+          <Breadcrumb items={COMPANY_CRUMBS} linkAs={Link} className="mb-2" />
           <section id="about" hidden={tab !== 'about'}>
             <ProseBody title="One family, two villas" blocks={ABOUT} />
           </section>

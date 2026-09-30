@@ -7,9 +7,10 @@ import SearchCard from '@/components/sections/SearchCard';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
-import { Button, CAPS, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
+import { Button, CAPS, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, JsonLd, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
 import { pageMeta } from '@/lib/seo';
+import { siteSchema } from '@/lib/schema';
 
 export const metadata = pageMeta({
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas',
@@ -52,6 +53,7 @@ const SERVICES_HOME = [
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={siteSchema(VILLA_LIST)} />
       {/* Hero: the shell (height ladder, scrims, container, text stack) is Hero in @cahyana/ui. */}
       <Hero
         size="page"

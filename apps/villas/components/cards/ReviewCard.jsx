@@ -1,4 +1,4 @@
-import { CAPS, Card, STARS } from '@cahyana/ui';
+import { CAPS, Card, SourceMark, STARS } from '@cahyana/ui';
 // No reviewer name or photo: the real review data has none, and we do not invent guests.
 function Stars({ count }) {
   return (
@@ -11,7 +11,7 @@ function Stars({ count }) {
 export default function ReviewCard({ card }) {
   if (card.type === 'themes') {
     return (
-      <Card className="p-6">
+      <Card className="relative p-6 pb-[2.3rem]">
         <p className={`${CAPS} text-muted mb-3`}>{card.heading}</p>
         <ul className="flex flex-col gap-2">
           {card.themes.map(([label, count]) => (
@@ -21,16 +21,18 @@ export default function ReviewCard({ card }) {
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-label text-muted">{card.source}</p>
+        <p className="mt-3 pr-8 text-label text-muted">{card.source}</p>
+        <SourceMark platform={card.platform} />
       </Card>
     );
   }
 
   return (
-    <Card className="p-6 flex flex-col">
+    <Card className="relative p-6 pb-[2.3rem] flex flex-col">
       <Stars count={card.stars} />
       <p className="text-h3 leading-relaxed flex-1 text-gold">&ldquo;{card.text}&rdquo;</p>
-      <p className="mt-4 text-label text-muted">{card.source}</p>
+      <p className="mt-4 pr-8 text-label text-muted">{card.source}</p>
+      <SourceMark platform={card.platform} />
     </Card>
   );
 }

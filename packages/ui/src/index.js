@@ -74,6 +74,7 @@ export { default as BrandIcon } from './blocks/BrandIcon.jsx';
 export { default as Breadcrumb, CRUMB_NAV, CRUMB_OL, CRUMB_LINK, CRUMB_HERE, CRUMB_SEP } from './blocks/Breadcrumb.jsx';
 export { default as JsonLd } from './blocks/JsonLd.jsx';
 export { default as PopPanel } from './blocks/PopPanel.jsx';
+export { default as SourceMark } from './blocks/SourceMark.jsx';
 export { default as StickyBar, BAR_MARK, BAR_SHELL, BAR_CARD, BAR_BODY_PAD } from './blocks/StickyBar.jsx';
 export { default as BookingPanel, SECONDARY_BTN } from './blocks/BookingPanel.jsx';
 export { default as SearchBar, SEARCH_LABEL } from './blocks/SearchBar.jsx';

@@ -58,6 +58,7 @@ export const VILLAS = {
     reviewQuote: {
       text: "We had a wonderful stay! The place is very clean, comfortable, and peaceful - perfect for a family getaway. There are many great cafes and restaurants near the villa. The owners, Pak Made and his wife, are incredibly kind.",
       source: 'Airbnb guest',
+      platform: 'Airbnb',
     },
     goodToKnow: [
       { label: 'Check-in', value: 'Through a Balinese family compound - a real welcome, full privacy inside' },

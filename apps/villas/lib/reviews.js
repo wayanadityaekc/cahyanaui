@@ -17,6 +17,7 @@ export const REVIEW_CARDS = [
     stars: 5,
     text: 'The place is very clean, comfortable, and peaceful - perfect for a family getaway. There are many great cafes and restaurants near the villa. The owners, Pak Made and his wife, are incredibly kind.',
     source: 'Airbnb guest · Cahyana House',
+    platform: 'Airbnb',
   },
   {
     type: 'themes',
@@ -29,11 +30,13 @@ export const REVIEW_CARDS = [
       ['Location', 89],
     ],
     source: 'Across both listings',
+    platform: 'Airbnb',
   },
   {
     type: 'quote',
     stars: 5,
     text: '100% of guests from Australia rated Cahyana Tibuah five stars in the past year - one of the reasons Airbnb marks it as top rated.',
     source: 'Airbnb listing highlight · Cahyana Tibuah',
+    platform: 'Airbnb',
   },
 ];

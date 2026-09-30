@@ -5,7 +5,7 @@ import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
-import { BookingPanel, Button, CAPS, Card, Container, DateRangeField, EYEBROW_LINE, LinkList, PROSE_COPY, PriceBlock, SECONDARY_BTN, STARS, Section, StickyBar, useRevealWhenAway } from '@cahyana/ui';
+import { BookingPanel, Button, CAPS, Card, Container, DateRangeField, EYEBROW_LINE, LinkList, PROSE_COPY, PriceBlock, SECONDARY_BTN, STARS, Section, StickyBar, useRevealWhenAway, SourceMark } from '@cahyana/ui';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { useBooking } from '@/components/providers/BookingProvider';
 import BookingTerms from '@/components/booking/BookingTerms';
@@ -90,10 +90,11 @@ export default function VillaDetail({ villa }) {
               ))}
             </div>
             {villa.reviewQuote && (
-              <Card as="blockquote" className="p-6 mt-6">
+              <Card as="blockquote" className="relative p-6 pb-[2.3rem] mt-6">
                 <p className={`${STARS} text-small mb-2`}>★★★★★</p>
                 <p className="text-gold">&ldquo;{villa.reviewQuote.text}&rdquo;</p>
-                <cite className="block mt-3 text-label text-muted not-italic">{villa.reviewQuote.source}</cite>
+                <cite className="block mt-3 pr-8 text-label text-muted not-italic">{villa.reviewQuote.source}</cite>
+                <SourceMark platform={villa.reviewQuote.platform} />
               </Card>
             )}
 

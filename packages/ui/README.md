@@ -67,6 +67,8 @@ picks one - the variants do not get scattered back into the apps.
 | `StickyBar` | the one thing at the bottom of a phone screen | **flush** (both sites), floating (unused) |
 | `Breadcrumb` | CUE's trail: nav + ol, last item is the current page | - |
 | `JsonLd` | one structured-data script, `<` escaped | - |
+| `PopPanel` | a dropdown panel: the site's own animation component via `pop`, else a CSS fade | - |
+| `SourceMark` | a review's source platform mark, bottom-right like CUE's | - |
 | `BookingPanel` | the sticky panel beside a stay | - |
 | `SearchBar` | dates + guests + the button | hero, panel, stack |
 | `PriceBlock` | "From Rp… / night" | amber, gold |

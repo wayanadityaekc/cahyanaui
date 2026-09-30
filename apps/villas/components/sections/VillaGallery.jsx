@@ -15,7 +15,7 @@ export default function VillaGallery({ images = [] }) {
       <PhotoMosaic
         images={images}
         onOpen={setOpenIndex}
-        moreLabel={`Show all ${images.length} photos`}
+        moreLabel="All photos"
       />
       <PhotoGrid
         images={images}

@@ -52,7 +52,7 @@ export default function BreakfastPage() {
         aside={{
           title: 'Breakfast at your villa',
           facts: ['Balinese or western', 'Your time, your table', 'Floating tray on request', 'Vegetarian & vegan versions'],
-          ctaLabel: 'Ask about the menu',
+          ctaLabel: 'Ask us',
           otherServices: [
             { href: '/services/spa', label: 'Spa & Massage' },
             { href: '/services/live-dinner', label: 'Live Dinner' },

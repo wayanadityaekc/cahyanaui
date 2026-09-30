@@ -32,7 +32,7 @@ export default function ScooterRentalPage() {
         aside={{
           title: 'Scooter rental',
           facts: ['Ask us for availability'],
-          ctaLabel: 'Ask about scooters',
+          ctaLabel: 'Ask us',
           otherServices: [
             { href: '/services/breakfast', label: 'Breakfast' },
             { href: '/services/spa', label: 'Spa & Massage' },

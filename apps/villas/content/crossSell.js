@@ -65,6 +65,6 @@ export const EXPLORE_MORE = {
   eyebrow: 'Same family',
   title: 'More to do in Bali',
   lede: 'Drivers, day tours and transfers across the island are run by Cahyana Ubud Experience - the same family that hosts you here, with every price upfront.',
-  cta: 'Explore tours in Bali',
+  cta: 'Bali tours',
   href: CUE_LINK,
 };

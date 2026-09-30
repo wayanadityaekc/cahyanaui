@@ -30,8 +30,8 @@ export default function AddToBooking({ serviceId, variant = 'ghost', className =
         className={className}
       >
         {on
-          ? <><Check className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Added to My Booking</>
-          : <><Plus className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Add to My Booking</>}
+          ? <><Check className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Added</>
+          : <><Plus className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={2} aria-hidden="true" /> Add service</>}
       </Button>
       <LiveRegion>{announcement}</LiveRegion>
     </>

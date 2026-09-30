@@ -53,7 +53,7 @@ export default function LiveDinnerPage() {
         aside={{
           title: 'Dinner at your villa',
           facts: ['Chef cooks in your kitchen', 'Book a day ahead', 'Ingredients & clean-up included', 'Cooking class available'],
-          ctaLabel: 'Plan a dinner',
+          ctaLabel: 'Plan dinner',
           otherServices: [
             { href: '/services/breakfast', label: 'Breakfast' },
             { href: '/services/spa', label: 'Spa & Massage' },

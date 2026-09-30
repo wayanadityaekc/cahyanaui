@@ -42,8 +42,8 @@ export default function BookingSheet() {
   const message = breakdown
     ? [
         `Hi! I'd like to book ${villa.name}.`,
-        `Check-in: ${booking.checkIn || '—'}`,
-        `Check-out: ${booking.checkOut || '—'}`,
+        `Check-in: ${booking.checkIn || '-'}`,
+        `Check-out: ${booking.checkOut || '-'}`,
         `Guests: ${booking.guests}`,
         `${shown.nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`,
         `Service fee: ${formatAmount(shown.serviceFee)}`,
@@ -169,7 +169,7 @@ export default function BookingSheet() {
             </Button>
             <BookingTerms className="text-center [&_ul]:inline-block [&_ul]:text-left" />
             <p className="text-label text-muted text-center">
-              This sends your request to our team on WhatsApp — no payment is taken here.
+              This sends your request to our team on WhatsApp - no payment is taken here.
             </p>
           </div>
         )}

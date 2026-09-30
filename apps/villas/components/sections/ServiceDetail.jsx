@@ -78,7 +78,7 @@ export default function ServiceDetail({
         <h2 className="text-h2 font-semibold text-white">{bottomHeading}</h2>
         <p className="mt-2 text-small text-white/75">{bottomText}</p>
         <div className="flex justify-center mt-6">
-          {bottomCta || <Button as={Link} variant="onDark" href="/#villas">See both villas</Button>}
+          {bottomCta || <Button as={Link} variant="onDark" href="/#villas">See villas</Button>}
         </div>
 </Section>
     </>

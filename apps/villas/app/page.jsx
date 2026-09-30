@@ -46,7 +46,7 @@ const SERVICES_HOME = [
     eyebrow: 'Getting Around',
     title: 'Scooter Rental',
     lede: 'A scooter delivered to the villa and collected at the end, with helmets. The easiest way to reach the rice fields and the warungs off the main road.',
-    cta: 'Rent a scooter',
+    cta: 'Scooter rental',
   },
 ];
 
@@ -77,7 +77,7 @@ export default function HomePage() {
           <div>
             <p className={EYEBROW_LINE}>Our Villas</p>
             <h2 className="text-h2 font-semibold text-gold">
-              Two unique villas, one unforgettable stay
+              Two private villas in north Ubud
             </h2>
           </div>
           <p className="text-small text-muted">
@@ -199,7 +199,7 @@ export default function HomePage() {
         <div className="flex flex-wrap justify-center gap-3 mt-6">
           {/* onDark: this band is the action colour, so a primary button would vanish against it. */}
           <CheckAvailabilityButton variant="onDark" />
-          <Button as={Link} variant="light" href="/services/scooter-rental">Renting a scooter too?</Button>
+          <Button as={Link} variant="light" href="/services/scooter-rental">Scooter rental</Button>
         </div>
 </Section>
     </>

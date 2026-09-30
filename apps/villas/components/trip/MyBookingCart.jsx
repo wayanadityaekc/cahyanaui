@@ -28,9 +28,9 @@ function EmptyState() {
         Pick your dates on a villa and they will show up here, with whatever services you want waiting.
       </p>
       <div className="flex flex-wrap justify-center gap-3 mt-6">
-        <Button as={Link} href="/#villas">See both villas</Button>
+        <Button as={Link} href="/#villas">See villas</Button>
         {/* Tours belong to the sister site, so this button leaves the site. */}
-        <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Tours in Bali</Button>
+        <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Bali tours</Button>
       </div>
     </div>
   );

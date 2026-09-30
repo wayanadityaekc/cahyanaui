@@ -126,7 +126,7 @@ export default function VillaDetail({ villa }) {
             )}
             secondary={(
               <>
-                <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>Ask about dates</a>
+                <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>WhatsApp</a>
                 {/* TODO: add the Airbnb hand-off as a second SECONDARY_BTN once a listing URL exists (same gap as Footer.jsx). */}
               </>
             )}

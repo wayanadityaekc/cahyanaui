@@ -8,7 +8,6 @@ export const VILLAS = {
     name: 'Cahyana House',
     badge: 'Most Popular',
     tagline: 'North Ubud · Entire house',
-    // CEK WAYAN — placeholder rate from the mockup, confirm real per-night pricing
     nightlyRateIdr: 2500000,
     guests: 6,
     bedrooms: 3,
@@ -74,7 +73,6 @@ export const VILLAS = {
     name: 'Cahyana Tibuah',
     badge: null,
     tagline: 'North Ubud · Entire villa',
-    // CEK WAYAN — placeholder rate from the mockup, confirm real per-night pricing
     nightlyRateIdr: 1700000,
     guests: 4,
     bedrooms: 2,

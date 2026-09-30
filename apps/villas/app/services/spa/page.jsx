@@ -47,7 +47,7 @@ export default function SpaPage() {
         aside={{
           title: 'Spa at your villa',
           facts: ['Therapist comes to you', 'Poolside or indoors', 'Book on the day, with notice', 'For staying guests'],
-          ctaLabel: 'Book a treatment',
+          ctaLabel: 'Book massage',
           otherServices: [
             { href: '/services/breakfast', label: 'Breakfast' },
             { href: '/services/live-dinner', label: 'Live Dinner' },

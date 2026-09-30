@@ -1,6 +1,6 @@
 import { cn } from '../lib/cn.js';
 import Card from './Card.jsx';
-import { CARD_IMG, CARD_MEDIA, CARD_SCRIM } from './cardClasses.js';
+import { CARD_IMG, CARD_MEDIA, CARD_SCRIM, MEDIA_FALLBACK } from './cardClasses.js';
 
 /**
  * Photo on top, content below, optional footer pinned to the bottom. This is
@@ -43,9 +43,9 @@ export default function MediaCard({
       {...rest}
     >
       {image ? (
-        <div className={cn(CARD_MEDIA, ratio, scrim && CARD_SCRIM)}>
+        <div className={cn(CARD_MEDIA, ratio, scrim && CARD_SCRIM, !image.src && MEDIA_FALLBACK)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {image.src ? <img
             src={image.src}
             alt={image.alt}
             width={image.width}
@@ -55,7 +55,7 @@ export default function MediaCard({
               CARD_IMG,
               zoom && 'transition-transform duration-500 group-hover:scale-105',
             )}
-          />
+          /> : null}
           {badges}
         </div>
       ) : null}

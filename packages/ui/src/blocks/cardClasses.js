@@ -57,6 +57,8 @@ export const CARD_HOVER_LG = `${HOVER_LIFT} hover:[transform:translateY(-4px)]`;
 export const CARD_MEDIA = 'relative overflow-hidden bg-green';
 // The mat still insets the photo; it just no longer rounds it.
 export const CARD_MEDIA_INSET = CARD_MEDIA;
+// What a photo slot shows with no photo: the same dark band as a hero without an image.
+export const MEDIA_FALLBACK = '[background:linear-gradient(150deg,var(--color-gold),#2f2b24)]';
 export const CARD_IMG = 'absolute inset-0 w-full h-full object-cover object-center';
 
 // A dark wash rising from the bottom of the photo, so white text laid over it

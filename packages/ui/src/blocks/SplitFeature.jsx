@@ -1,6 +1,7 @@
 import { cn } from '../lib/cn.js';
 import Section from './Section.jsx';
 import SectionHeading from './SectionHeading.jsx';
+import { MEDIA_FALLBACK } from './cardClasses.js';
 
 /**
  * A photo on one side, a short pitch on the other. The shape a homepage uses
@@ -41,9 +42,9 @@ export default function SplitFeature({
         'grid gap-8 items-center min-[993px]:grid-cols-2 min-[993px]:gap-12',
         reverse && 'min-[993px]:[&>*:first-child]:order-2',
       )}>
-        <div className={cn('relative overflow-hidden bg-green', ratio)}>
+        <div className={cn('relative overflow-hidden bg-green', ratio, !image && MEDIA_FALLBACK)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={image} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+          {image ? <img src={image} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" /> : null}
         </div>
         <div>
           <SectionHeading eyebrow={eyebrow} title={title} lede={lede} as={as} size="h2" titleClassName="" />

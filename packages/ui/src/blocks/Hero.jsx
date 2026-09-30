@@ -1,6 +1,7 @@
 import { cn } from '../lib/cn.js';
 import Container from './Container.jsx';
 import SectionHeading from './SectionHeading.jsx';
+import { MEDIA_FALLBACK } from './cardClasses.js';
 
 /**
  * A photo band with words on it. Four of these had been hand-typed across the
@@ -35,7 +36,7 @@ const SIZES = {
   compact: { band: 'min-h-[38vh]', pad: 'py-10' },
 };
 
-const FALLBACK = '[background:linear-gradient(150deg,var(--color-gold),#2f2b24)]';
+const FALLBACK = MEDIA_FALLBACK;
 
 const SCRIM =
   '[background:linear-gradient(180deg,rgba(20,20,16,0.5)_0%,rgba(20,20,16,0.34)_40%,rgba(20,20,16,0.68)_100%)] ' +

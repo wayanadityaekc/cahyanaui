@@ -30,6 +30,7 @@ export const CUE_TOURS = [
   },
 ];
 
+// CEK WAYAN: photos hidden until Wayan supplies real ones; each card shows the dark fallback.
 // Homepage row, ours and CUE's mixed on purpose; airport pickup leads because it is the one guests regret missing.
 export const STAY_ADDONS = [
   {
@@ -39,8 +40,6 @@ export const STAY_ADDONS = [
     blurb: 'Someone waiting at arrivals with your name, and a fixed price before you land.',
     href: cue('/airport-transfer.html'),
     external: true,
-    img: 'https://picsum.photos/seed/airport9/1200/900',
-    alt: 'Driver waiting at Bali airport arrivals',
     cta: 'Airport transfer',
   },
   {
@@ -49,8 +48,6 @@ export const STAY_ADDONS = [
     label: 'Spa & Massage',
     blurb: 'A Balinese massage on your own terrace, booked for whenever suits you.',
     href: '/services/spa',
-    img: 'https://picsum.photos/seed/spa9/1200/900',
-    alt: 'Massage set up on a villa terrace in Ubud',
     cta: 'Spa & Massage',
   },
   {
@@ -60,8 +57,6 @@ export const STAY_ADDONS = [
     blurb: 'Rice terraces, temples, waterfalls - with the same family that hosts you.',
     href: cue('/ubud-tour.html'),
     external: true,
-    img: 'https://picsum.photos/seed/ubudwalk9/1200/900',
-    alt: 'Rice terraces near Ubud',
     cta: 'See the tours',
   },
 ];

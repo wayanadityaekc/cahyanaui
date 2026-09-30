@@ -23,12 +23,11 @@ const WHY_STAY = [
   { title: 'Transparent Pricing', desc: 'No hidden fees. What you see is what you pay.', Icon: ShieldCheck },
 ];
 
+// CEK WAYAN: photos hidden until Wayan supplies real ones; each band shows the dark fallback.
 // Three of the four at-villa services; Live Dinner is left out on purpose: four bands starts to read as a list.
 const SERVICES_HOME = [
   {
     href: '/services/spa',
-    img: 'https://picsum.photos/seed/spa9/1200/900',
-    alt: 'Massage set up on a villa terrace in Ubud',
     eyebrow: 'At Your Villa',
     title: 'Spa & Massage',
     lede: 'Local therapists come to you. Book a Balinese massage on your own terrace instead of going out for one - no taxi afterwards.',
@@ -36,8 +35,6 @@ const SERVICES_HOME = [
   },
   {
     href: '/services/breakfast',
-    img: 'https://picsum.photos/seed/bfast9/1200/900',
-    alt: 'Balinese breakfast laid out at the villa',
     eyebrow: 'At Your Villa',
     title: 'Breakfast',
     lede: 'Cooked fresh in your own kitchen each morning, Balinese or western, at whatever hour suits you. Floating breakfast in the pool on request.',
@@ -45,8 +42,6 @@ const SERVICES_HOME = [
   },
   {
     href: '/services/scooter-rental',
-    img: 'https://picsum.photos/seed/scooter9/1200/900',
-    alt: 'Scooter parked at a villa entrance in Ubud',
     eyebrow: 'Getting Around',
     title: 'Scooter Rental',
     lede: 'A scooter delivered to the villa and collected at the end, with helmets. The easiest way to reach the rice fields and the warungs off the main road.',

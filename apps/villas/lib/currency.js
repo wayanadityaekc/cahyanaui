@@ -25,9 +25,8 @@ export function formatRupiah(idr) {
 // Each line converts on its own and the total is their sum, so a converted breakdown always adds up (CUE's rule).
 export function displayBreakdown(breakdown, currency, fx) {
   if (!breakdown) return null;
-  const { nights, nightlyIdr, serviceFeeIdr } = breakdown;
+  const { nights, nightlyIdr } = breakdown;
   const nightly = displayFromIdr(nightlyIdr, currency, fx);
-  const serviceFee = displayFromIdr(serviceFeeIdr, currency, fx);
   const subtotal = nightly * nights;
-  return { nights, nightly, subtotal, serviceFee, total: subtotal + serviceFee };
+  return { nights, nightly, subtotal, total: subtotal };
 }

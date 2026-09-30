@@ -1,5 +1,3 @@
-// CEK WAYAN: placeholder service fee %, confirm the real figure.
-export const SERVICE_FEE_RATE = 0.05;
 
 // All copy here is real (ported from the old site); nightly rates are rupiah, set by Wayan (Sep 2026).
 export const VILLAS = {
@@ -205,7 +203,6 @@ export function priceBreakdown(slug, checkIn, checkOut) {
   const nights = nightsBetween(checkIn, checkOut);
   const nightlyIdr = villa.nightlyRateIdr;
   const subtotalIdr = nightlyIdr * nights;
-  // Rounded up to whole thousands, like every rupiah price on CUE.
-  const serviceFeeIdr = Math.ceil((subtotalIdr * SERVICE_FEE_RATE) / 1000) * 1000;
-  return { villa, nights, nightlyIdr, subtotalIdr, serviceFeeIdr, totalIdr: subtotalIdr + serviceFeeIdr };
+  // No service fee (Wayan, 1 Oct 2026): the nightly rate is the whole price.
+  return { villa, nights, nightlyIdr, subtotalIdr, totalIdr: subtotalIdr };
 }

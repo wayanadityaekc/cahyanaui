@@ -46,7 +46,6 @@ export default function BookingSheet() {
         `Check-out: ${booking.checkOut || '-'}`,
         `Guests: ${booking.guests}`,
         `${shown.nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`,
-        `Service fee: ${formatAmount(shown.serviceFee)}`,
         `Total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`,
       ].join('\n')
     : `Hi! I'd like to ask about booking ${villa.name}.`;
@@ -151,10 +150,6 @@ export default function BookingSheet() {
               <div className="flex justify-between py-2.5">
                 <span className="text-muted">{breakdown.nights} night{breakdown.nights > 1 ? 's' : ''}</span>
                 <span className="text-gold">{formatAmount(shown.subtotal)}</span>
-              </div>
-              <div className="flex justify-between py-2.5">
-                <span className="text-muted">Service fee</span>
-                <span className="text-gold">{formatAmount(shown.serviceFee)}</span>
               </div>
               <div className="flex justify-between py-3">
                 <span className="text-h3 font-semibold text-gold">Total</span>

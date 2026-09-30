@@ -50,7 +50,7 @@ function villaRow(villa, format) {
 
 function villaPrices({ format }) {
   return {
-    text: 'These are the nightly rates shown on each villa page, before the service fee. Rates change by season, and the exact total shows once you pick your dates:',
+    text: 'These are the nightly rates shown on each villa page, with no service fee on top. The exact total shows once you pick your dates:',
     rows: Object.values(VILLAS).map((villa) => villaRow(villa, format)),
   };
 }
@@ -74,7 +74,7 @@ function villaAnswer(question, questionWords, ctx) {
   if (askedPrice) {
     return {
       kind: 'answer',
-      text: `${villa.name} is ${ctx.format(villa.nightlyRateIdr)} a night before the service fee, as shown on its page. The exact total shows once you pick your dates.`,
+      text: `${villa.name} is ${ctx.format(villa.nightlyRateIdr)} a night, as shown on its page, with no service fee on top. The exact total shows once you pick your dates.`,
       link: { href: `/villas/${villa.slug}`, label: 'View villa' },
     };
   }

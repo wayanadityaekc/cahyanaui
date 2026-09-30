@@ -62,7 +62,6 @@ export default function MyBookingCart() {
     breakdown && nights > 0
       ? `${nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`
       : null,
-    breakdown && nights > 0 ? `Service fee: ${formatAmount(shown.serviceFee)}` : null,
     breakdown && nights > 0
       ? `Stay total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`
       : null,
@@ -145,10 +144,6 @@ export default function MyBookingCart() {
                 <p className={LINE}>
                   <span className="text-muted">{nights} {nights === 1 ? 'night' : 'nights'} x {formatAmount(shown.nightly)}</span>
                   <span>{formatAmount(shown.subtotal)}</span>
-                </p>
-                <p className={LINE}>
-                  <span className="text-muted">Service fee</span>
-                  <span>{formatAmount(shown.serviceFee)}</span>
                 </p>
                 <p className={`${LINE} pt-3 mt-1 border-t border-line`}>
                   <span className={LABEL}>Stay total</span>

@@ -25,7 +25,7 @@ export const FAQ = [
     cat: 'Booking and payment',
     items: [
       ['How do I book?', 'Pick your dates on any villa page and add them to your booking. When you are ready, the booking opens a WhatsApp message with your dates, guests and the price already filled in, and we confirm from there.'],
-      ['Is the price on the site what I pay?', 'The nightly rate and the service fee are both shown before you send anything, and the total is worked out on your dates. Rates do change by season - if the dates you picked fall in a different season we tell you before you commit, not after.'],
+      ['Is the price on the site what I pay?', 'Yes. The nightly rate is the whole price, with no service fee on top, and the total for your dates is shown before you send anything.'],
       ['Can I pay in my own currency?', 'Our prices are set in rupiah. The currency picker shows them in 12 currencies at today\'s exchange rate, the same rates Cahyana Ubud Experience uses. The rupiah figure is the exact price, and the amount actually charged is settled in the conversation.'],
       ['Do you take bookings outside Airbnb?', 'Yes, and booking direct with us is why this site exists. Both villas are also on Airbnb if you would rather book there.'],
       ['Do I pay a deposit, or the whole thing?', 'The whole thing, when you book. There is no deposit-only option, for a villa or for a scooter. We only have two villas, so a held date that does not turn up costs us the whole booking - paying in full is what keeps the calendar honest.'],

@@ -11,15 +11,6 @@ import { formatApproxIDR, formatCurrency } from '@/lib/currency';
 import { CUE_LINK, whatsappLink } from '@/lib/constants';
 import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 
-// My Booking — CUE's My Trips, fitted to what this site sells: one stay plus
-// the villa services you want ready when you arrive, built up over a visit and
-// handed over in a single WhatsApp message.
-//
-// The two kinds of line are shown differently ON PURPOSE. The stay has a real
-// total (nights x rate, plus the service fee from lib/villas.js). The services
-// do not: every service page says prices are confirmed with us, so they are
-// listed as requests and the summary says so. A tidy-looking number beside
-// "Spa & Massage" would be a price nobody set.
 const CARD = 'bg-surface-raised border border-line [box-shadow:var(--shadow-md)]';
 const ROW_H = 'text-h3 font-semibold text-gold';
 const LABEL = 'caps text-muted';
@@ -38,22 +29,20 @@ function EmptyState() {
       </p>
       <div className="flex flex-wrap justify-center gap-3 mt-6">
         <Button as={Link} href="/#villas">See both villas</Button>
-        {/* Tours are the sister site's, so this one leaves: /experiences was our
-            own page of category cards nobody could book, and it is gone. */}
+        {/* Tours belong to the sister site, so this button leaves the site. */}
         <Button as="a" variant="ghost" href={CUE_LINK} target="_blank" rel="noopener">Tours in Bali</Button>
       </div>
     </div>
   );
 }
 
+// My Booking: the stay has a real total, services are listed as requests with no price, on purpose.
 export default function MyBookingCart() {
   const { cart, ready, clearStay, toggleService, clear } = useCart();
   const { currency, format } = useCurrency();
   const [sent, setSent] = useState(false);
 
-  // Before the stored booking has been read there is nothing truthful to draw -
-  // rendering the empty state here would flash "nothing here yet" at a guest
-  // who does have a booking saved.
+  // Draw nothing until the stored booking is read, or 'nothing here yet' flashes at guests who have one.
   if (!ready) return <div className="min-h-[40vh]" aria-busy="true" />;
 
   const stay = cart.stay;

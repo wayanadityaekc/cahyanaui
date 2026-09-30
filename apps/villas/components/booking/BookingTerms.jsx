@@ -1,13 +1,7 @@
 import Link from 'next/link';
 import { BOOKING_TERMS } from '@/content/policies';
 
-// The three things a guest is agreeing to, shown before they commit rather than
-// on a page they would have to go looking for. Read from content/policies.js, so
-// the booking sheet, the villa panel and Our Company cannot state different
-// terms.
-//
-// Deliberately NOT bulleted: at this size the markers are most of the ink.
-// Hairlines between the rows group them just as well and stay quiet.
+// Booking terms shown before commit, read from content/policies.js; hairlines, not bullets, on purpose.
 export default function BookingTerms({ className = '' }) {
   return (
     <div className={`text-label text-muted ${className}`}>

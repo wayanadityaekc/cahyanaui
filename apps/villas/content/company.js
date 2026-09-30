@@ -1,11 +1,4 @@
-// Our Company content. Every line here is a fact already established on this
-// site or in its real Airbnb listings — nothing about how the business operates
-// is invented.
-//
-// Booking Terms and Cancellation & Refunds are no longer absent: Wayan set them
-// in Sep 2026 and they live in content/policies.js, which is the ONLY place the
-// numbers appear. This file holds the pages that are purely editorial.
-
+// Our Company copy: every line is a fact already on this site or its Airbnb listings; booking terms live in policies.js.
 export const ABOUT = [
   { type: 'heading', html: 'Who we are' },
   { type: 'para', html: 'Cahyana Ubud is a family operation in north Ubud. Made and his wife opened Cahyana House first - three bedrooms around a private pool, inside the family compound. Wayan, born and raised here, followed with Cahyana Tibuah out in the rice fields.' },
@@ -17,15 +10,7 @@ export const ABOUT = [
   { type: 'para', html: 'Two villas today. The plan is to look after other people&rsquo;s villas the same way - owners in Ubud who want their place hosted properly rather than listed and forgotten. If that&rsquo;s you, get in touch.' },
 ];
 
-// Answers stick to what the villa pages, services pages and listings already
-// say, plus the booking terms Wayan set in Sep 2026 - payment in full, the
-// Airbnb "Firm" refund bands, and the check-in and check-out times. Those live
-// in content/policies.js and are restated here in a guest's words; change them
-// there and change them here in the same edit, or the FAQ and the policy page
-// will quietly disagree.
-//
-// Still left out rather than guessed at: minimum stay, and anything about how
-// the scooter security deposit works.
+// Booking terms are restated from content/policies.js: change both in the same edit or the FAQ and policy page disagree.
 export const FAQ = [
   {
     cat: 'The villas',

@@ -13,58 +13,23 @@ import AuthSheet from '@/components/account/AuthSheet';
 import { useCart } from '@/components/providers/CartProvider';
 import { WHATSAPP_LINK } from '@/lib/constants';
 
-// The site header. The SHELL - the drawer, the hamburger that morphs into an X,
-// the two header-height variables, the one hairline, the spacing pair on the
-// icons - lives in @cahyana/ui (blocks/NavbarShell.jsx) and is shared with CUE.
-// This file is only what goes in the slots.
-//
-// The slot mapping, for anyone comparing the two sites:
-//
-//   CUE                              here
-//   ───────────────────────────────  ─────────────────────────────────────
-//   logo + chat + cart               logo + chat + My Booking
-//   drawer "Welcome, <account>" row  site name + tagline row
-//   Guests / Pickup area selects     (omitted - no site-wide trip prefs)
-//   "Sign in / Sign up" button       "Check availability"
-//   Home / Program▾ / Guide / …      Home / Villas▾ / Guide / Services▾ / …
-//   "Chat on WhatsApp" pinned        same
-
-// The drawer's top row is CUE's ACCOUNT row. There are no accounts here, so it
-// carries a heading instead - and it has to be SHORT. The row is
-// [icon][text][currency] and at 390px that leaves the text column ~118px;
-// "Ubud Private Villas" measures ~130px at 14px/600, so it wrapped and made the
-// row 12px taller than CUE's (76.6px vs 64.6px, measured). It would also just
-// repeat the logo sitting a centimetre above it.
+// Short drawer title: "Ubud Private Villas" wrapped at 390px and made the row 12px taller than CUE's.
 const BRAND = { title: 'Plan your stay', sub: 'Two private pool villas in Ubud' };
 
-// One icon per row, CUE's arrangement. Every icon is Lucide and every one is
-// the icon that already means that thing elsewhere on the site: BedDouble is
-// the villa mark in the drawer head, ShoppingBag is the navbar's own cart,
-// Building2 is what CUE's Our Company rail uses for "About Us".
+// One Lucide icon per row, each the icon that already means that thing elsewhere on the site.
 const ICON = { strokeWidth: 1.7, 'aria-hidden': 'true' };
 
-// Six is the largest villa (Cahyana House sleeps 6) - offering more would be
-// offering something neither villa has.
+// Six is the largest villa (Cahyana House sleeps 6): more would offer something neither villa has.
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
 
-// The site's own field label, the one the hero search card uses (SEARCH_LABEL).
-// CUE's drawer labels are its own FIELD_LABEL; each site keeps the label it
-// already had, since what travels between the two is the ROW, not the type.
+// The site's own field label (same as the hero SEARCH_LABEL); what travels from CUE is the row, not the type.
 const NAV_FIELD_LABEL = 'block mb-1 text-label font-medium tracking-[0.14em] uppercase text-muted';
-// max-[361px], not max-[360px]: Tailwind compiles max-[N] to
-// `@media not all and (min-width:N)`, which does NOT match at exactly N - so a
-// 360px-wide phone would fall through to the two-column layout with zero slack
-// left in the guests control. Stacking through 360 and splitting from 361 has
-// no such hole. (CUE documents the same trap on its 992/993 pairs.)
+// max-[361px], not 360: Tailwind's max-[N] does not match at exactly N, so a 360px phone would get two columns.
 const FIELD_CELL = 'flex flex-col gap-1 min-w-0 max-[361px]:col-span-2';
 
 const LINKS = [
   { href: '/', label: 'Home', icon: <House {...ICON} /> },
-  // VILLAS IS A DROPDOWN, NOT A PAGE (Wayan: "di menu gaada page villa yang isi
-  // nya 2, ubah menjadi cuma ada satu dropdown villa bukan page, dan kalo di klik
-  // keluar nya page cahyana house dan cahyana tibuah terpisah"). With two villas a
-  // listing page is a stop on the way to the thing the guest actually wants, so
-  // the menu hands them the two villas directly. /villas is gone.
+  // Villas is a dropdown, not a page (Wayan): with two villas a listing page is just a stop on the way.
   {
     label: 'Villas',
     icon: <BedDouble {...ICON} />,
@@ -88,7 +53,7 @@ const LINKS = [
   { href: '/our-company', label: 'Our Company', icon: <Building2 {...ICON} /> },
   { href: '/our-company#contact', label: 'Contact', icon: <Mail {...ICON} /> },
 ];
-
+// Header slots only: the drawer, burger, header-height vars and spacing live in @cahyana/ui NavbarShell, shared with CUE.
 export default function Navbar() {
   const pathname = usePathname();
   const { guests, setGuests } = useTripPrefs();
@@ -121,10 +86,7 @@ export default function Navbar() {
       )}
       actions={(
         <>
-          {/* Chat lives in the navbar, CUE's arrangement since Sep 2026: visible
-              on every page at every width without taking a slot at the bottom of
-              the screen. The green button inside the drawer stays - that one is
-              for a guest who already opened the menu. */}
+          {/* Chat lives in the navbar like CUE: visible on every page and width without taking the bottom of the screen. */}
           <a
             href={WHATSAPP_LINK}
             target="_blank"
@@ -135,9 +97,7 @@ export default function Navbar() {
             <MessageCircle className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
           </a>
 
-          {/* My Booking, CUE's cart slot: same icon size, same spacing pair,
-              same badge. The number only shows once there is something in the
-              booking - an empty badge is noise. */}
+          {/* My Booking in CUE's cart slot; the badge only shows once the booking has something in it. */}
           <Link href="/my-booking" className={`relative ${NAV_ICON}`} aria-label="My Booking">
             <ShoppingBag className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
             <span className={NAV_BADGE} hidden={!count}>{count}</span>
@@ -145,10 +105,7 @@ export default function Navbar() {
         </>
       )}
       extras={<FlagDefs />}
-      /* Signed in, the head row is the guest - CUE's arrangement. Signed out
-         it stays the brand line this site already had, rather than CUE's
-         "Welcome, Guest": there is no guest to greet yet, and the line that is
-         there says something true about the place. */
+      /* Signed in, the head row greets the guest like CUE; signed out it keeps the brand line, as there is no guest to greet. */
       drawerHead={{
         icon: account
           ? <UserRound className="w-5 h-5" strokeWidth={1.6} />
@@ -157,27 +114,10 @@ export default function Navbar() {
         sub: account ? (account.email || BRAND.sub) : BRAND.sub,
       }}
       closeIcon={<X strokeWidth={2} aria-hidden="true" />}
-      /* THE FIELD ROW, CUE'S (Wayan: "lihat menu login cue, ikutin itu, pakai
-         jumlah guest dan currency juga"). Two trip preferences side by side,
-         the same pair and the same two-column grid CUE's account drawer uses -
-         minus its Pickup area, which is a tour thing and means nothing at a
-         villa you are staying in.
-
-         GUESTS IS NOT DECORATION HERE. It is the site-wide count from
-         TripPrefsProvider, so setting it in the drawer sets it in the hero
-         search card and in Book Your Stay - before this the site carried three
-         separate counts that never spoke to each other.
-
-         Both live in the field row rather than the head: CUE measured the head
-         wrapping the name onto a second line at 390px once a fourth thing
-         joined it. */
+      /* CUE's field row minus Pickup: Guests is the site-wide count from TripPrefsProvider, shared with hero search and booking. */
       fields={(
         <>
-          {/* THEY STACK BELOW 361px. Measured at 320: two columns leave the
-              guests control 99px, and "2 guests" needs 52px of text inside a
-              44px box - the value renders as "2 gu...", which is the one thing
-              a count must never do. Full width below the step, CUE side by side
-              above it. */}
+          {/* Stack below 361px: at 320 two columns cut "2 guests" to "2 gu...", which a count must never do. */}
           <div className={FIELD_CELL}>
             <label className={NAV_FIELD_LABEL} htmlFor="nav-guests">Guests</label>
             <Select
@@ -194,12 +134,7 @@ export default function Navbar() {
           </div>
         </>
       )}
-      /* SIGN IN, where "Check availability" used to be (Wayan: "ganti check
-         availability jadi sign in") - CUE's drawer button, in CUE's slot. The
-         account is the SAME account as on the tour site: one family, one guest
-         record, so a guest who has one there is already known here.
-         Availability has not lost its button - every villa page, the hero and
-         the book bar all carry one. */
+      /* Sign in sits in CUE's drawer button slot (Wayan); it is the same account as the tour site, one guest record. */
       cta={(close) => (
         <Button full onClick={() => { close(); if (account) logout(); else setAuthOpen(true); }}>
           {account ? <UserRound className="w-4 h-4 flex-none" strokeWidth={1.8} aria-hidden="true" />
@@ -217,9 +152,7 @@ export default function Navbar() {
         </Button>
       )}
     />
-    {/* Lives next to the shell, not inside the drawer: the drawer closes on the
-        way in (a panel over a dialog is a state nobody asked for), and the
-        sheet has to outlive it. */}
+    {/* Outside the drawer: the drawer closes on the way in, and the sign-in sheet has to outlive it. */}
     <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );

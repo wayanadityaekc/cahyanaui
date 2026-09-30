@@ -1,8 +1,4 @@
-// Real guest-review content for the homepage reviews section, ported as-is
-// from the original site. There are no reviewer names or photos in the real
-// source data (Airbnb reviews there are only ever attributed as "Airbnb
-// guest") — the mockup's named/pictured reviewer cards are illustrative, not
-// real guests, so this data intentionally has no name/photo fields to fill.
+// Real reviews ported as-is: the source has no reviewer names or photos, so these fields are left out on purpose.
 export const OVERALL_RATING = '4.96';
 export const OVERALL_REVIEW_COUNT = 306;
 

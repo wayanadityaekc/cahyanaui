@@ -1,20 +1,8 @@
-// The hand-off to Cahyana Ubud Experience - the sister brand, same family, that
-// runs the drivers and tours.
-//
-// NO PRICES HERE, deliberately. Every tour price already lives in CUE's own
-// catalog, and CUE's notes are explicit that a copied price goes stale the day
-// the real one moves - it has happened to them four times. A card that says
-// what the thing is and links to where the live price is cannot be wrong.
-//
-// FOUR TOURS, NOT THE CATALOG (Wayan): Ubud tour, Ubud culture, charter,
-// airport transfer. These are the ones a guest ALREADY STAYING IN UBUD actually
-// books - the rest of CUE's catalog is a different decision on a different day,
-// and putting it here turns a villa booking into a browse.
-
 import { CUE_LINK } from '@/lib/constants';
 
 function cue(path) { return `${CUE_LINK}${path}`; }
 
+// No prices on purpose: copied prices go stale, so each card links to the live price on CUE. Four tours only (Wayan).
 export const CUE_TOURS = [
   {
     id: 'ubud-tour',
@@ -42,14 +30,7 @@ export const CUE_TOURS = [
   },
 ];
 
-/**
- * The homepage row. MIXED ON PURPOSE - two of ours and one of CUE's - because
- * that is how a guest thinks about it: things to add to the stay, not things
- * belonging to two companies. Each card says where it goes.
- *
- * Airport pickup leads the row: it is the only one with a deadline attached to
- * it, and the one a guest regrets not booking.
- */
+// Homepage row, ours and CUE's mixed on purpose; airport pickup leads because it is the one guests regret missing.
 export const STAY_ADDONS = [
   {
     id: 'airport-pickup',

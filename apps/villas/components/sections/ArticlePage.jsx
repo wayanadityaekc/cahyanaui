@@ -10,24 +10,7 @@ import { GRID_CARDS } from '@/components/ui/gridClasses';
 import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
 import { CAPS, Card, Container, EYEBROW_LINE, Section } from '@cahyana/ui';
 
-// A guide article, on CUE's article layout: the same white content card and
-// two-column shell its tour and guide pages use, with the category list in the
-// right-hand column on desktop and behind the shared CatDropdown on mobile.
-//
-// The category column is on the RIGHT and its border is border-l, not border-r
-// like Our Company's. That is not a copy error: Our Company's list sits on the
-// left, so its rule faces the content from the other side. Move this column and
-// the article shifts off the left edge everything else lines up on.
-//
-// The prose keeps a readable measure inside the wide card - it starts at the
-// card's left edge but stops well short of the right one. At --fs-body a full
-// 950px line runs about 145 characters, which is not a column anyone reads.
-// Paragraph rhythm lives HERE, not in Prose. Prose emits bare <p> elements on
-// purpose - CUE gives them their spacing from whichever container they land
-// in, because the same blocks are used in a narrow reading column, a detail
-// card and a legal page, each wanting different air. Without this the
-// article's paragraphs ran together into one wall (the reset zeroes every
-// margin, and Preflight would too).
+// Paragraph spacing lives here, not in Prose; max-w keeps lines readable (a full 950px line is ~145 chars).
 const PROSE =
   'max-w-[var(--container-read)] ' +
   '[&_p]:m-0 [&_p]:mb-4 [&_p]:text-body [&_p]:text-ink [&_p]:leading-[var(--lh-body)] ' +
@@ -53,6 +36,7 @@ function CatList({ activeId, onPick }) {
   });
 }
 
+// Guide article on CUE's layout: category column on the RIGHT (border-l on purpose), CatDropdown on mobile.
 export default function ArticlePage({ article }) {
   const more = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
 

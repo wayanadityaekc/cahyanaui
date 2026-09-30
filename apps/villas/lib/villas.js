@@ -1,13 +1,7 @@
-// Villa data. Ratings, review counts, host names, amenities, and all
-// descriptive copy below are the real content already established on this
-// site (ported from the original ubudprivatevillas.com HTML) — nothing here
-// is invented. The one genuinely new/placeholder field is nightlyRate: the
-// old site never had in-house pricing (every booking went straight to the
-// live Airbnb calendar), so the flat per-night numbers used to power the new
-// on-site booking flow are provisional example figures from Wayan's own
-// mockup, clearly flagged below for him to confirm.
-export const SERVICE_FEE_RATE = 0.05; // CEK WAYAN — placeholder service fee %, confirm real figure
+// CEK WAYAN: placeholder service fee %, confirm the real figure.
+export const SERVICE_FEE_RATE = 0.05;
 
+// All copy here is real (ported from the old site); only nightlyRate is a placeholder from Wayan's mockup.
 export const VILLAS = {
   'cahyana-house': {
     slug: 'cahyana-house',
@@ -24,8 +18,7 @@ export const VILLAS = {
     reviews: 221,
     host: 'Made · Superhost, 3 years hosting, replies within an hour',
     shortDesc: 'A spacious villa with a private pool and tropical garden. Perfect for couples or small families.',
-    // Real photo, reused from CUE's own asset (assets/images/cahyana-house.webp) —
-    // same villa, so it's the actual property, not a stock/placeholder shot.
+    // Real photo of this villa, reused from CUE's own asset (not a stock shot).
     heroImg: '/images/cahyana-house.webp',
     cardImg: '/images/cahyana-house.webp',
     gallery: [
@@ -91,8 +84,7 @@ export const VILLAS = {
     reviews: 85,
     host: 'Wayan · Superhost, replies within an hour, speaks English & Indonesian',
     shortDesc: 'A serene escape with a private pool, open living space and a calming view of the tropical garden.',
-    // Real photo, reused from CUE's own asset (assets/images/cahyana-tibuah.webp) —
-    // same villa, so it's the actual property, not a stock/placeholder shot.
+    // Real photo of this villa, reused from CUE's own asset (not a stock shot).
     heroImg: '/images/cahyana-tibuah.webp',
     cardImg: '/images/cahyana-tibuah.webp',
     gallery: [

@@ -25,15 +25,11 @@ export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
 };
 
-// data-brand picks the surface out of the library's token file: this site sits
-// on light grey, CUE on white, and nothing else about the brand differs. One
-// attribute, so a component never has to know which site it is rendering in.
+// data-brand picks this site's surface from the library tokens, so no component needs to know which site it is in.
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-brand="villas" className={inter.variable}>
-      {/* The bottom bar is fixed, so the page has to reserve its height or the
-          last of the content sits under it - measured, it covered the footer at
-          every mobile width. The number lives with the bar, in the library. */}
+      {/* The fixed bottom bar needs its height reserved, or it covers the footer on mobile. */}
       <body className={BAR_BODY_PAD}>
         <LoadingScreen />
         <CurrencyProvider>
@@ -43,11 +39,7 @@ export default function RootLayout({ children }) {
           <SavedVillasProvider>
           <BookingProvider>
             <Navbar />
-            {/* The header is FIXED (CUE's), so the page reserves its height here.
-                --header-h-max is the ceiling the navbar publishes — it only ever
-                grows, so the document cannot jump under the reader if the bar's
-                contents shrink. The literal is the measured full height, used for
-                the first paint before the observer has run. */}
+            {/* Reserve the fixed header's height: --header-h-max only grows, so the page never jumps under the reader. */}
             <main className="pt-[var(--header-h-max,53px)]">{children}</main>
             <Footer />
             <BookingSheet />

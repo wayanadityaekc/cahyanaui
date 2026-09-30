@@ -3,31 +3,15 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
 
-// Open/close animations for menus that used to be toggled with `display`, which
-// cannot be animated at all - that is why they popped open and shut while the
-// drawer sliding them in was smooth.
-//
-// LazyMotion + `m` rather than the full `motion` component: that is the leanest
-// way to ship this library. Measured (gzip, JS the homepage actually loads):
-//   no motion .................. 295.3 KB
-//   LazyMotion + domAnimation .. 332.0 KB   <- what we ship
-//   + features code-split ...... 338.9 KB
-// Code-splitting the feature set is LARGER, not smaller: the async chunk ends up
-// duplicating core runtime that LazyMotion needs eagerly anyway. Don't "optimise"
-// it back into a dynamic import without re-measuring.
-//
-// Timing mirrors the CSS tokens the rest of the site animates on (--dur /
-// --ease-out) so this does not read as a second, unrelated motion system.
+// Mirrors the CSS --ease-out token so menus and CSS transitions share one motion rhythm.
 const EASE_OUT = [0.16, 1, 0.3, 1];
 
+// LazyMotion + m is the leanest setup; code-splitting features measured larger, so re-measure before changing.
 function Shell({ children }) {
   return <LazyMotion features={domAnimation}>{children}</LazyMotion>;
 }
 
-// Inline menus that push the content below them down (navbar Program submenu,
-// the mobile category list). Animating height needs overflow hidden, which is
-// why this must NOT be used on an absolutely-positioned dropdown - it would clip
-// the panel to nothing.
+// Inline menu that pushes content down; never use it on an absolute dropdown, overflow hidden clips it to nothing.
 export function Collapse({ open, children }) {
   const reduced = useReducedMotion();
   const duration = reduced ? 0 : 0.24;
@@ -52,9 +36,7 @@ export function Collapse({ open, children }) {
   );
 }
 
-// Floating panels that sit on top of the page (the guide-hub category dropdown).
-// Fade plus a short rise - no height animation, so nothing clips, and the child
-// keeps whatever `absolute` positioning it already had.
+// Floating panel over the page: fade and short rise, no height animation, so an absolute child is not clipped.
 export function PopMenu({ open, children }) {
   const reduced = useReducedMotion();
   const duration = reduced ? 0 : 0.18;
@@ -77,26 +59,12 @@ export function PopMenu({ open, children }) {
   );
 }
 
-// Entry animation for a list whose contents change while the guest watches - the
-// guide-hub grid as a search filter narrows it and widens again. Without this,
-// cards blink in at full opacity and it is hard to see what changed.
-//
-// Deliberately NOT a Framer Motion `layout` animation (cards gliding between grid
-// positions): `layout` ships in the domMax feature set together with drag, and
-// pulling that in measured +12 KB gzip on EVERY page - motion/react already sits
-// in the shared chunk via the navbar, so extra features land there rather than on
-// the one page using them. A staggered fade uses the set already loaded and costs
-// nothing (measured: +0.1 KB).
-//
-// No AnimatePresence here, and that is deliberate. Wrapping the grid in
-// <AnimatePresence initial={false}> looked right but animated nothing: the flag
-// is passed down through context, so it suppressed the initial animation of every
-// descendant forever, not just on first paint. Instead the provider below flips
-// AFTER its own mount, so items rendered with the page start instantly while items
-// mounted later - the ones the guest is actually watching appear - animate.
-const STAGGER_STEP = 0.025;   // seconds between cards
-const STAGGER_CAP = 0.2;      // ...capped, so a long list does not crawl
+// Seconds between cards in a staggered fade (not `layout`, which costs +12 KB gzip on every page).
+const STAGGER_STEP = 0.025;
+// Cap on the total delay, so a long list does not crawl.
+const STAGGER_CAP = 0.2;
 
+// No AnimatePresence initial={false}: it suppresses every descendant forever, so this flips after mount instead.
 const Entered = createContext(false);
 
 export function Stagger({ children, className }) {
@@ -117,8 +85,7 @@ export function StaggerItem({ index = 0, children }) {
   if (reduced) return children;
   return (
     <m.div
-      // `initial` is only read when the element mounts: false for the cards that
-      // arrive with the page, a real starting state for cards that appear later.
+      // initial is read only on mount: false for cards that arrive with the page, a real start for later ones.
       initial={entered ? { opacity: 0, y: 8 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.18, ease: EASE_OUT, delay: Math.min(index * STAGGER_STEP, STAGGER_CAP) }}

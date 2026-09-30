@@ -1,10 +1,6 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
 
-// Scooter Rental is a genuinely new offering with no real content yet.
-// Every specific (scooter types, daily rate, deposit/requirements) below is
-// a clearly-flagged placeholder — CEK WAYAN — matching the sister CUE
-// codebase's convention for provisional prices. Nothing here should read as
-// an authoritative, bookable rate until Wayan confirms it.
+// CEK WAYAN: scooter types, rates and terms below are placeholders; nothing here is a bookable rate until Wayan confirms.
 export const metadata = {
   title: 'Scooter Rental in Ubud | Ubud Private Villas by Cahyana Ubud',
   description: 'Rent a scooter for your stay at Cahyana House or Cahyana Tibuah — delivered to your villa. Rates and terms to be confirmed.',

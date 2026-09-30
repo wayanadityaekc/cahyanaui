@@ -9,16 +9,7 @@ import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { CURRENCIES } from '@/lib/currency';
 
-// Hero "Search" card. Feeds straight into the booking flow rather than a
-// results page - with two villas, "search" means "open Book Your Stay with
-// these dates and guests already in it".
-//
-// The shell (the overlap onto the hero, the four-column row, the bottom-edge
-// alignment) is SearchBar in @cahyana/ui. The controls are the library's own
-// custom ones, not native <select> / <input type="date">: a native date input
-// shows an American "mm/dd/yyyy" hint to guests who do not write dates that
-// way, and renders as a different widget on every platform. Check-out cannot be
-// set before check-in, because DateField takes a `min`.
+// Hero search card: opens the booking flow prefilled; custom controls, since native date inputs show "mm/dd/yyyy".
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6];
 
 export default function SearchCard({ layout = 'bar' }) {
@@ -36,16 +27,11 @@ export default function SearchCard({ layout = 'bar' }) {
     </Button>
   );
 
-  // THE PANEL'S COLUMNS, in the shape of CUE's booking card (Wayan sent a shot
-  // of it: "ambil pola nya kolom nya dan pakai global collor lu sendiri").
-  // Every row is the same rich control - icon, small label, value, chevron - so
-  // the form reads as one list of questions rather than as three widgets. The
-  // colours are ours; only the pattern is borrowed.
+  // Panel rows follow CUE's booking card: icon, label, value, chevron on every row, so it reads as one list of questions.
   const iconCls = 'w-[var(--icon-md)] h-[var(--icon-md)]';
   const panelFields = (
     <>
-      {/* ONE row for the whole stay. It was already a range picker, but it drew
-          two triggers side by side, so it read as two questions. */}
+      {/* One row for the whole stay, so the dates read as one question instead of two. */}
       <DateRangeField
         id="search-checkin"
         hint="Dates"
@@ -63,8 +49,7 @@ export default function SearchCard({ layout = 'bar' }) {
         onChange={(value) => setGuests(Number(value))}
         options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
       />
-      {/* Currency belongs next to the price the guest is about to be quoted, not
-          only in the drawer. Same five CUE sells in - the list already matches. */}
+      {/* Currency sits next to the price the guest is about to be quoted, not only in the drawer. */}
       <Select
         id="search-currency"
         label="Currency"
@@ -79,9 +64,7 @@ export default function SearchCard({ layout = 'bar' }) {
 
   const fields = (
     <>
-      {/* The range picker spans the two date columns: it renders its own pair
-          of triggers, so the grid cell it sits in is two columns wide. In the
-          panel there is one column, so it spans nothing. */}
+      {/* The range picker draws two triggers, so it spans two grid columns in the bar and one in the panel. */}
       <div className={panel ? 'min-w-0' : 'min-w-0 sm:col-span-2'}>
         <label className={SEARCH_LABEL}>Dates</label>
         <DateRangeField
@@ -104,19 +87,12 @@ export default function SearchCard({ layout = 'bar' }) {
     </>
   );
 
-  // 'panel' is the booking form living INSIDE the hero: a tall frosted card,
-  // one field per row, instead of the wide bar that overlaps the hero's edge.
+  // 'panel' is the booking form inside the hero: one field per row instead of the wide bar.
   if (panel) {
-    // THE ONE ROUNDED SURFACE ON THE PAGE (Wayan: "di booking form kasi border
-    // radius dikit"). Everything else went square; this is the one thing the
-    // guest is meant to act on, and rounding only it is what marks it out now
-    // that no shadow can. --r-sm is the smallest step the scale has, which is
-    // what "dikit" asks for.
+    // The one rounded surface on the page: it is what the guest acts on, and with no shadows rounding is what marks it.
     return (
       <div className="w-full bg-surface-raised/92 backdrop-blur-md p-5 sm:p-6 rounded-sm">
-        {/* No uppercase kicker above the heading (Wayan, Sep 2026: "book your
-            stay yang uppercase itu delete aja"). "Book your stay" over "Check
-            your dates" was two labels for one panel. */}
+        {/* No uppercase kicker above the heading: it made two labels for one panel (Wayan, Sep 2026). */}
         <h2 className="text-h3 font-semibold text-gold mb-4">Check your dates</h2>
         <div className="grid grid-cols-1 gap-[0.6rem]">
           {panelFields}

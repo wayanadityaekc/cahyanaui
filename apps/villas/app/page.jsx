@@ -21,10 +21,7 @@ const WHY_STAY = [
   { title: 'Transparent Pricing', desc: 'No hidden fees. What you see is what you pay.', Icon: ShieldCheck },
 ];
 
-// Three of the four "at your villa" services, in Wayan's order. Live Dinner is
-// deliberately not here: four bands is the point where a homepage stops
-// introducing things and starts listing them, and the drawer, the footer and
-// every service page already link to it.
+// Three of the four at-villa services; Live Dinner is left out on purpose: four bands starts to read as a list.
 const SERVICES_HOME = [
   {
     href: '/services/spa',
@@ -58,35 +55,24 @@ const SERVICES_HOME = [
 export default function HomePage() {
   return (
     <>
-      {/* Hero. The shell - the height ladder, the two scrims, the container,
-          the eyebrow/title/lede stack - is Hero in @cahyana/ui. */}
+      {/* Hero: the shell (height ladder, scrims, container, text stack) is Hero in @cahyana/ui. */}
       <Hero
         size="page"
         image="/images/cahyana-tibuah.webp"
         alt="Cahyana Tibuah pool at dusk, surrounded by rice fields"
-        /* The attribution lives in the EYEBROW, the promise in the H1 (Wayan,
-           Sep 2026, after seeing it the other way round). Same words, better
-           split: the H1 is the sentence a guest reads first and the one Google
-           prints, so it says what the place IS rather than who runs it - and
-           at 38 characters it holds two lines on a phone instead of three. */
+        /* Attribution goes in the eyebrow, the promise in the H1: the H1 is what guests read first and what Google prints. */
         eyebrow="Ubud Private Villas by Cahyana Ubud Experience"
         title="A private retreat in the heart of Bali"
         lede="Two exclusive villas, designed for comfort, privacy and a true Balinese experience."
-        /* No `actions`. The hero's one control is the booking form below, and
-           "Explore villas" only scrolled to the band the guest reaches anyway
-           (Wayan, Sep 2026). Hero renders the row conditionally, so dropping the
-           prop leaves no empty gap where it used to sit. */
+        /* No actions: the hero's one control is the booking form below, and Hero skips the empty row. */
       >
-        {/* The booking form sits inside the hero: under the copy on a phone, a
-            tall panel on the right from 993px. */}
+        {/* Booking form inside the hero: under the copy on a phone, a tall panel on the right from 993px. */}
         <div className="mt-8 min-[993px]:mt-0 min-[993px]:absolute min-[993px]:top-1/2 min-[993px]:-translate-y-1/2 min-[993px]:right-[var(--container-x)] min-[993px]:w-[22rem]">
           <SearchCard layout="panel" />
         </div>
       </Hero>
 
-      {/* Villas. id="villas" because /villas the PAGE is gone (Wayan) and this
-          band is what took over its job - every "see both villas" link on the
-          site now lands here. */}
+      {/* id="villas": the /villas page is gone, so every "see both villas" link on the site lands on this band. */}
       <Section id="villas" tone="cream">
         <div className="grid md:grid-cols-[1fr_1fr] gap-8 items-end mb-9">
           <div>
@@ -99,18 +85,7 @@ export default function HomePage() {
             Each villa is thoughtfully designed with a private pool, open living space and a calming view of the tropical gardens. Whether you&apos;re here for a romantic escape or a family getaway, you&apos;ll find your place in Ubud.
           </p>
         </div>
-        {/* ONE GRID, THREE BLOCKS: villa, why-stay, villa.
-            On a phone that is the order Wayan asked for - Cahyana House, then
-            the three reasons, then Cahyana Tibuah - so the second card is not
-            two full-height photographs deep, which is where a reader stops.
-            On desktop the cards sit side by side and the panel spans both,
-            exactly as before, and the panel is moved there with `order`
-            rather than by rendering it twice: a second copy would be the same
-            three promises in the DOM twice, read out twice by a screen reader
-            and counted twice by a crawler.
-
-            Desktop spacing is unchanged on purpose - the row gap (1.4rem) plus
-            the panel's own top margin (1.1rem) is the 2.5rem it had as mt-10. */}
+        {/* Villa, why-stay, villa: on desktop `order` moves the panel; never render it twice or screen readers read it twice. */}
         <div className={GRID_PAIR}>
           <VillaCard villa={VILLA_LIST[0]} className="min-[993px]:order-1" />
 
@@ -132,24 +107,7 @@ export default function HomePage() {
         </div>
 </Section>
 
-      {/* CAHYANA UBUD EXPERIENCE. One photo band with one button out to the
-          sister site (Wayan: "section experience the real ubud dan pagenya
-          hapus, ganti cuma jadi satu section foto dengan button ke
-          cahyanaubudexperience.com").
-
-          It sits here, straight after the villas, because that is the order
-          Wayan set for this page: villas, then Cahyana Ubud Experience, then
-          spa, breakfast, the scooter, then the reviews.
-
-          THIS REPLACES TWO THINGS, not one. The old band pointed at our own
-          /experiences page - four illustrative category cards that could not
-          be booked - and a second CUE band further down the page said the
-          same thing again with the same link. One band, one link, no page in
-          between: the copy is EXPLORE_MORE from content/crossSell.js, so the
-          tours hand-off still has one source.
-
-          Real photo, not a placeholder: Tegalalang is an actual stop on the
-          full-day tour this button leads to. */}
+      {/* One photo band out to Cahyana Ubud Experience, replacing both old CUE bands; the copy lives in EXPLORE_MORE. */}
       <Hero
         size="band"
         as="h2"
@@ -167,12 +125,7 @@ export default function HomePage() {
       />
 
 
-      {/* Services, in the order Wayan asked for: villas, then Cahyana Ubud
-          Experience, then spa, breakfast and the scooter, then the reviews.
-          Each is a SplitFeature - one thing at a time, photo alternating sides
-          so three in a row do not read as one list. The copy is lifted from
-          each service's own page rather than written fresh, so the homepage
-          cannot promise something the page it links to does not say. */}
+      {/* Services: photo sides alternate, and copy is lifted from each service page so the homepage never over-promises. */}
       {SERVICES_HOME.map((service, i) => (
         <SplitFeature
           key={service.href}
@@ -206,11 +159,7 @@ export default function HomePage() {
 </Section>
 
 
-      {/* ADD-ONS, framed as things you add to a reservation rather than as a
-          second menu to shop from (Wayan). Mixed on purpose: two of ours, one of
-          Cahyana Ubud Experience's. A guest thinks in terms of their trip, not
-          in terms of which company owns which service - so each card just says
-          where it goes. */}
+      {/* Add-ons framed as extras to a reservation; mixed on purpose, and each card says where it goes. */}
       <Section>
         <SectionHeading
           eyebrow="Add to your reservation"
@@ -249,8 +198,7 @@ export default function HomePage() {
           Open the booking flow, or message us and we&apos;ll tell you straight if it&apos;s free.
         </p>
         <div className="flex flex-wrap justify-center gap-3 mt-6">
-          {/* onDark: this band IS the action colour, so a primary button on it
-              measured 1:1 against its own background. */}
+          {/* onDark: this band is the action colour, so a primary button would vanish against it. */}
           <CheckAvailabilityButton variant="onDark" />
           <Button as={Link} variant="light" href="/services/scooter-rental">Renting a scooter too?</Button>
         </div>

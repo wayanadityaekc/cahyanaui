@@ -3,10 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { CURRENCY_STORAGE_KEY, DEFAULT_CURRENCY, convertFromUSD, formatCurrency } from '@/lib/currency';
 
-// Site-wide display currency, shared by the navbar picker, villa cards,
-// villa detail pages and the booking flow. Persisted per-browser only
-// (localStorage) — this never talks to a real FX rate service, see
-// lib/currency.js for the approximate, hardcoded rates.
+// Site-wide display currency saved in localStorage; no live FX feed, rates are hardcoded in lib/currency.js.
 const CurrencyContext = createContext(null);
 
 export function CurrencyProvider({ children }) {

@@ -1,11 +1,6 @@
 import { z } from 'zod';
 
-// Form rules, in one place so they can be read against the server's own.
-//
-// EMAIL USES OUR OWN REGEX, not z.email(): Zod's built-in is stricter and would
-// start rejecting addresses the API accepts today. CUE learnt this and left the
-// same note - if the two disagree, the guest is told their real address is
-// invalid by a form that then cannot be submitted.
+// Own email regex, not z.email(): Zod's is stricter and would reject addresses the API accepts today.
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
 function email(msg = 'Please enter a valid email address.') { return z.string().trim().regex(EMAIL_RE, msg); }
@@ -15,8 +10,7 @@ export const signInSchema = z.object({
   email: email(),
 });
 
-// Phone is required because it is how the family recognises a guest when the
-// email bounces - the same rule the tour site's account form uses.
+// Phone is required: it is how the family finds a guest when the email bounces (same rule as the tour site).
 export const createAccountSchema = z.object({
   name: required('Please enter your name.'),
   email: email(),

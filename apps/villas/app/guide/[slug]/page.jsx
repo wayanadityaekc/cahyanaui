@@ -7,12 +7,7 @@ export function generateStaticParams() {
   return ARTICLES.map((article) => ({ slug: article.slug }));
 }
 
-// `params` is a PROMISE in this version of Next, not a plain object. Read
-// synchronously it is not undefined — it is a thenable whose .slug is
-// undefined — so articleBySlug found nothing, notFound() fired, and every
-// article exported as the 404 page with a build that still reported success.
-// Awaiting it is the whole fix. Caught by the design audit: the article URLs
-// came back with no headings and an h1 reading "404".
+// `params` is a Promise in this Next: read without await, every article silently exported as the 404 page.
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = articleBySlug(slug);

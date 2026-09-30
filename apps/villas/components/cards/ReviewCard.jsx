@@ -1,7 +1,5 @@
 import { CAPS, Card, STARS } from '@cahyana/ui';
-// Renders one of the two real review-content shapes from lib/reviews.js.
-// No reviewer name or photo is shown because none exist in the real source
-// data — see lib/reviews.js for why (guardrail against fabricating guests).
+// No reviewer name or photo: the real review data has none, and we do not invent guests.
 function Stars({ count }) {
   return (
     <p className={`${STARS} text-small mb-3`} aria-label={`${count} out of 5 stars`}>

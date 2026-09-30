@@ -1,5 +1,2 @@
-// Moved into @cahyana/ui - this file is a re-export so the ~20 call sites
-// keep working while the library becomes the single implementation.
-// Import from '@cahyana/ui' directly in anything new.
-
+// Re-export of @cahyana/ui so the call sites keep working; import from '@cahyana/ui' directly in new code.
 export { Overlay as default } from '@cahyana/ui';

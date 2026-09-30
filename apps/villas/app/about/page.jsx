@@ -1,17 +1,7 @@
 import Link from 'next/link';
 import { Button, Container } from '@cahyana/ui';
 
-// /about is LIVE TODAY and its content moved into the Our Company page's About
-// tab. Deleting the route outright would have turned a working public URL into
-// a 404 for every bookmark and inbound link pointing at it.
-//
-// A static export cannot emit a real 301 — there is no server to send one — so
-// this is the static-host answer: a meta refresh, a canonical pointing at the
-// destination so search engines consolidate rather than index a duplicate, and
-// noindex so this shim never competes in results. The visible link is the
-// fallback for anyone whose browser blocks the refresh.
-//
-// Delete this once the old URL has stopped getting traffic.
+// Old /about URL kept as a meta-refresh shim (no 301 in a static export); delete once traffic stops.
 const TARGET = '/our-company#about';
 
 export const metadata = {

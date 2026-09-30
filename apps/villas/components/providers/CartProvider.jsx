@@ -6,10 +6,7 @@ import { EMPTY, countItems, readCart, writeCart } from '@/lib/bookingCart';
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
-  // Starts EMPTY and is filled in an effect, never from localStorage directly.
-  // This is a static export: reading stored state during the first render makes
-  // the client's first paint disagree with the prerendered HTML, and React
-  // throws away the mismatch. Hydrating on the next tick is the whole fix.
+  // Starts empty and fills in an effect: the static export's first paint must match the prerendered HTML.
   const [cart, setCart] = useState(EMPTY);
   const [ready, setReady] = useState(false);
 
@@ -18,8 +15,7 @@ export function CartProvider({ children }) {
     setReady(true);
   }, []);
 
-  // Only persist once the initial read has happened, or the empty starting
-  // state would immediately overwrite a booking saved on a previous visit.
+  // Save only after the first read, or the empty start state overwrites a booking saved last visit.
   useEffect(() => {
     if (ready) writeCart(cart);
   }, [cart, ready]);
@@ -33,12 +29,7 @@ export function CartProvider({ children }) {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
-  // Every action is a useCallback with NO dependency on `cart` - each one uses
-  // the functional form of setCart, so none of them needs to read it. That is
-  // not tidiness: these callbacks are consumed inside useEffect dependency
-  // arrays (BookingSheet saves the stay from one). If their identity changed
-  // whenever the cart changed, the effect would fire, set the cart, get a fresh
-  // callback, and fire again - an endless loop.
+  // Callbacks must not depend on cart: they sit in effect deps (BookingSheet), and a new identity would loop forever.
   const setStay = useCallback((stay) => setCart((prev) => ({ ...prev, stay })), []);
   const clearStay = useCallback(() => setCart((prev) => ({ ...prev, stay: null })), []);
   const addService = useCallback((id) => setCart((prev) => (prev.services.includes(id) ? prev : { ...prev, services: [...prev.services, id] })), []);

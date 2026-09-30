@@ -3,11 +3,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 
-// Drives the in-site booking flow (replaces the old villa-selection context
-// used only to pick which Airbnb link a button opened). Holds the sheet's
-// open/closed state, which step it's on, and the guest's chosen villa /
-// dates / guest count so the price-summary step and the WhatsApp handoff
-// message can be built from one shared source of truth.
+// Booking sheet state (open, step, villa, dates, guests): one source for the summary step and the WhatsApp message.
 const BookingContext = createContext(null);
 
 const INITIAL_STATE = {
@@ -20,11 +16,11 @@ const INITIAL_STATE = {
 export function BookingProvider({ children }) {
   const { guests, setGuests } = useTripPrefs();
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState('details'); // 'details' | 'summary'
+  // 'details' | 'summary'
+  const [step, setStep] = useState('details');
   const [booking, setBooking] = useState(INITIAL_STATE);
 
-  // Guests comes from the site-wide preference unless the caller names one
-  // (the search card does, because the guest just set it there).
+  // Guests come from the site-wide preference unless the caller passes one (the search card does).
   function openBooking(overrides = {}) {
     setBooking((prev) => ({ ...prev, guests, ...overrides }));
     setStep('details');
@@ -35,8 +31,7 @@ export function BookingProvider({ children }) {
 
   function updateBooking(patch) {
     setBooking((prev) => ({ ...prev, ...patch }));
-    // Changing the count inside the sheet updates the preference too, so the
-    // drawer, the search card and the next booking all agree with it.
+    // Keep the site-wide guest preference in sync so the drawer, search card and next booking agree.
     if (patch.guests != null) setGuests(patch.guests);
   }
 

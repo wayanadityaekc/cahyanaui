@@ -1,16 +1,4 @@
-// Guide articles.
-//
-// House style, same as CUE's: plain and useful, not poetic. Short sentences,
-// concrete facts a guest can act on - distances, timings, trade-offs, what it
-// actually costs you. No glorify words (stunning, breathtaking, magical,
-// unforgettable, paradise...). Say the awkward parts out loud; that is the bit
-// people believe.
-//
-// Everything below is either general Bali/Ubud knowledge or a fact already on
-// this site (north Ubud location, ~10 min to Ubud Palace, ~1.5h from DPS, the
-// two villas' sizes, the services we run). Nothing claims a price, a partner
-// or a guarantee that has not been set.
-
+// Guide articles: plain and useful like CUE, no glorify words, and no price, partner or guarantee that is not set.
 export const CATEGORIES = [
   { id: 'getting-around', label: 'Getting around' },
   { id: 'the-area', label: 'The area' },

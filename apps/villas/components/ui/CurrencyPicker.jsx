@@ -5,17 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { CURRENCIES } from '@/lib/currency';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 
-// CUE's CurrencyPicker (components/layout/CurrencyPicker.jsx there), class for
-// class. Only the data source changed: this site's useCurrency() hook and its
-// CURRENCIES list in place of CUE's TripPrefs context.
-//
-// The flags are CUE's SVG sprite (FlagDefs), not the emoji this site used
-// before — CUE's rule is SVG and no emoji anywhere, and emoji flags render as
-// two-letter boxes on most of Windows, so a guest on a laptop saw "US" instead
-// of a flag.
-//
-// `variant`: 'navbar' (sits at the end of the drawer's header row) / 'hero'
-// (sized to match a form field) / 'default'.
+// CUE's CurrencyPicker class for class, fed by useCurrency(); flags are SVG because emoji flags show "US" on Windows.
 function wrap(variant) { return `relative${variant === 'navbar' ? ' ml-auto flex-none' : ''}`; }
 const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
 function curbtn(variant) {
@@ -25,8 +15,7 @@ function curbtn(variant) {
 }
 const CURCODE = 'flex-[1_1_auto] text-left';
 const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-// The list stays mounted and only toggles opacity/transform/pointer-events, so
-// the transition actually plays — a `hidden` attribute would snap.
+// The list stays mounted and animates opacity/transform, since a hidden attribute would snap.
 function curlist(variant, open) {
   return `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-surface-raised [border:1px_solid_#e4dcc8] z-10 ` +
     `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +

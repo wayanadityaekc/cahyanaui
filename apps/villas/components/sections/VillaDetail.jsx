@@ -20,10 +20,7 @@ export default function VillaDetail({ villa }) {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
-  // The mobile book bar shows only once BOTH the page title and the booking
-  // card have scrolled out of view - the "no CTA on screen" rule, which is why
-  // it never doubles up with a button the guest can already see. The hook is
-  // useRevealWhenAway in @cahyana/ui; CUE runs the same rule on its book bar.
+  // Mobile book bar shows only when both the title and the booking card are off screen, so it never doubles a CTA.
   const titleRef = useRef(null);
   const cardRef = useRef(null);
   const showBookBar = useRevealWhenAway([titleRef, cardRef]);
@@ -131,18 +128,10 @@ export default function VillaDetail({ villa }) {
             secondary={(
               <>
                 <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={SECONDARY_BTN}>Ask about dates</a>
-                {/* The Airbnb hand-off goes here, as a second SECONDARY_BTN, the
-                    moment there is a listing URL to send guests to. Both villas
-                    are on Airbnb and some guests trust that checkout more, so
-                    this is a real booking, not a leak. Left out until the URL
-                    exists: a booking button that goes nowhere is a broken
-                    promise. See the TODO in components/layout/Footer.jsx - the
-                    same missing link. */}
+                {/* TODO: add the Airbnb hand-off as a second SECONDARY_BTN once a listing URL exists (same gap as Footer.jsx). */}
               </>
             )}
-            /* The terms replace the old season-rate note: a guest at the point
-               of booking needs to know what they are paying and what happens if
-               they cancel, which the note never said. */
+            // Booking terms replace the old season-rate note: at checkout a guest needs to know the payment and cancel rules.
             note={<BookingTerms />}
           >
             <Card tone="cream" className="p-6">
@@ -150,15 +139,7 @@ export default function VillaDetail({ villa }) {
               <LinkList linkAs={Link} items={SERVICES} />
             </Card>
 
-            {/* THE TOURS SIT IN THE BOOKING FLOW, not in a band further down the
-                page (Wayan). A guest who has just picked their dates is the one
-                deciding what to do with those days; the same four cards at the
-                bottom of the page are read by somebody who has already decided
-                to leave.
-
-                FOUR, NOT THE CATALOG. These are what a guest staying in Ubud
-                actually books. The rest of Cahyana Ubud Experience is one link
-                away, and that is the right amount of it to put here. */}
+            {/* Tours sit in the booking flow on purpose (Wayan): the guest who just picked dates is deciding those days. */}
             <Card tone="cream" className="p-6">
               <p className={`${CAPS} text-muted mb-1`}>Add a driver or a tour</p>
               <p className="text-label text-muted mb-3">
@@ -182,9 +163,7 @@ export default function VillaDetail({ villa }) {
         </div>
 </Section>
 
-      {/* Mobile-only book bar - lg:hidden, since the sticky panel above already
-          covers desktop. 'floating' is this site's variant of the shared shell:
-          an inset rounded card rather than CUE's flush edge-to-edge bar. */}
+      {/* Mobile-only book bar; 'floating' is this site's inset card variant of CUE's flush bar. */}
       <StickyBar variant="floating" show={showBookBar}>
         <PriceBlock tight amount={format(villa.nightlyRate)} unit="/ night" size="sm" />
         <div className="flex items-center gap-2 flex-shrink-0">

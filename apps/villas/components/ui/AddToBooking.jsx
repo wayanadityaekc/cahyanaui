@@ -5,13 +5,7 @@ import { Button } from '@cahyana/ui';
 import { useCart } from '@/components/providers/CartProvider';
 import { serviceById } from '@/lib/bookingCart';
 
-// "Add to My Booking" for a service page. It is a toggle, not a one-way add:
-// a guest who taps it twice expects the second tap to undo the first, and a
-// button that only ever adds silently stacks duplicates.
-//
-// Nothing here quotes a price. Services are carried on the booking as requests
-// (see lib/bookingCart.js) because the service pages say prices are confirmed
-// with us, so the label promises a conversation, not a charge.
+// Toggle, not one-way add, so a second tap undoes the first; no price, services are requests.
 export default function AddToBooking({ serviceId, variant = 'ghost', className = 'mt-2' }) {
   const { cart, ready, toggleService } = useCart();
   const service = serviceById(serviceId);

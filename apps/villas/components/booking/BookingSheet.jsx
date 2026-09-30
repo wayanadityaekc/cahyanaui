@@ -15,22 +15,14 @@ import { formatApproxIDR, formatCurrency } from '@/lib/currency';
 import BookingTerms from '@/components/booking/BookingTerms';
 import { whatsappLink } from '@/lib/constants';
 
-// Full-screen mobile sheet / centered modal booking flow, per the mockup's
-// "Book Your Stay" -> price-summary -> "Continue to WhatsApp" screens.
-// There is no backend here on purpose: step 2's WhatsApp button just opens
-// a wa.me link with a pre-filled summary so the conversation (and any real
-// booking) continues with a person on WhatsApp.
+// Booking sheet with no backend on purpose: step 2 opens a pre-filled wa.me link so a person continues on WhatsApp.
 export default function BookingSheet() {
   const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
   const { currency, format } = useCurrency();
   const { setStay } = useCart();
   const isPhone = useMobile('(max-width: 639px)');
 
-  // Reaching the summary is the guest settling on a villa and dates, so that is
-  // the moment the stay belongs in My Booking - not on every keystroke in step
-  // one, which would fill the badge while they are still browsing. Runs in an
-  // effect, never during render: writing to another provider mid-render is what
-  // makes React complain about updating one component while rendering another.
+  // Save the stay only on reaching the summary, and in an effect: writing another provider mid-render makes React complain.
   useEffect(() => {
     if (!isOpen || step !== 'summary') return;
     setStay({
@@ -64,25 +56,14 @@ export default function BookingSheet() {
       shell="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/45"
       box="relative w-full sm:max-w-md"
     >
-      {/* enabled only where this actually IS a bottom sheet. Above 640px it
-          becomes a centred card, and dragging a centred card downwards to
-          dismiss reads as a bug, not a gesture. DragSheet's own handle hides
-          at 993px, which is CUE's sheet breakpoint, not this one. */}
+      {/* Drag only where this is a bottom sheet: dragging the centred card above 640px reads as a bug. */}
       <DragSheet
         enabled={isPhone}
         onDismiss={closeBooking}
         handleClassName="absolute top-0 left-0 right-0 h-5 z-20 [touch-action:none] cursor-grab active:cursor-grabbing"
         className="relative bg-surface-raised rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto max-[639px]:pt-5"
       >
-        {/* The grab pill the handle sits over. Mobile only - there is nothing
-            to grab on a centred card.
-
-            pointer-events-none is load-bearing, not tidiness: DragSheet's
-            invisible grab area is z-[2] and this pill sat above it at z-[3],
-            so a finger landing on the one visible thing that says "drag me"
-            hit the decoration and the gesture never started. Caught by the
-            harness - the swipe-to-dismiss test failed while everything looked
-            right on screen. */}
+        {/* Mobile grab pill; pointer-events-none is required, or it sits above the grab area and swallows the swipe. */}
         {isPhone && <span className="absolute top-2 left-1/2 -translate-x-1/2 z-30 w-10 h-1 rounded-pill bg-line pointer-events-none" aria-hidden="true" />}
         <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 max-[639px]:top-5 bg-surface-raised z-10">
           <div className="flex items-center gap-2">
@@ -126,9 +107,7 @@ export default function BookingSheet() {
 
             <div>
               <p className={EYEBROW_LINE}>Stay dates</p>
-              {/* One range picker, not two date fields: the guest is choosing a
-                  STAY, and the number that decides it - the nights between - is
-                  the one thing two independent fields cannot show. */}
+              {/* One range picker, not two date fields: only a range can show the nights between, which decide the stay. */}
               <DateRangeField
                 id="bk-checkin"
                 value={{ checkIn: booking.checkIn, checkOut: booking.checkOut }}

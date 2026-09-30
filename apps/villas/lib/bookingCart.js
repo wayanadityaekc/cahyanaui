@@ -1,27 +1,9 @@
-// The booking a guest is putting together, kept in their own browser.
-//
-// This is CUE's My Trips idea (an itinerary you build up, then hand over in one
-// message) fitted to what this site actually sells: one stay, plus whichever
-// villa services you want waiting when you arrive.
-//
-// TWO KINDS OF LINE, and the difference is not cosmetic. The stay is PRICED —
-// lib/villas.js has a nightly rate and a service-fee rate, so nights x rate is
-// a real number we can show. The services are NOT: every service page says
-// "message us for current prices", so they go on the booking as REQUESTS with
-// no figure. Inventing a number for them would be the site quoting a price
-// nobody set. If real service prices ever land in the content, give each entry
-// a `price` and total them in with the stay.
-//
-// Storage is localStorage and nothing else: no account, no server, no id that
-// follows anyone. It survives a reload, and it never leaves the device until
-// the guest presses send in WhatsApp.
+// Guest's booking in localStorage only: the stay is priced, services are requests with no price (never invent one).
 export const CART_KEY = 'upv_booking_v1';
 
 export const EMPTY = { stay: null, services: [] };
 
-// Every read is wrapped: localStorage throws in a private window and comes back
-// empty with site data cleared, and a half-written value should not take the
-// page down with it.
+// Every read is wrapped: localStorage throws in private windows, and bad data must not crash the page.
 export function readCart() {
   if (typeof window === 'undefined') return EMPTY;
   try {

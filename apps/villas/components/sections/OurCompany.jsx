@@ -9,24 +9,7 @@ import { CANCELLATION_BLOCKS, TERMS_BLOCKS } from '@/content/policies';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 import { Button, Card } from '@cahyana/ui';
 
-// CUE's Our Company (components/sections/OurCompany.jsx there), reused shell and
-// all: sticky text sidebar on desktop, the shared CatDropdown on mobile, and
-// EVERY section in the DOM at once with only one visible via `hidden`.
-//
-// That last part is the bit worth not "simplifying" later. All the copy is in
-// the markup so a crawler reads the whole page rather than just the default
-// tab, but a hidden section is zero-height, so a guest cannot scroll from one
-// into the next — moving between them is always a deliberate tap. The URL hash
-// is kept in sync both ways so the footer's /our-company#faq style links land
-// on the right one.
-//
-// SIX TABS. Booking Terms and Cancellation were deliberately absent until now -
-// they are commitments only Wayan can make, and plausible-sounding invented ones
-// would have put promises on the site nobody agreed to. He set them in Sep 2026;
-// they live in content/policies.js, which is the only place the numbers appear.
-//
-// They sit BEFORE Privacy Policy: a guest looking for them is mid-booking, and
-// Privacy is the one nobody reads until they have to.
+// Every section stays in the DOM (one shown via `hidden`) so crawlers read it all; do not simplify to one mounted tab.
 const TABS = [
   { id: 'about', label: 'About Us' },
   { id: 'contact', label: 'Contact' },
@@ -42,8 +25,7 @@ function idFromHash() {
   return TABS.some((item) => item.id === id) ? id : null;
 }
 
-// Same width as the contact panel rather than the narrower reading column, so
-// the right-hand padding is the same on every tab.
+// Same width as the contact panel, so the right-hand padding matches on every tab.
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
 const HEADING = 'font-head text-h2 font-bold text-gold mb-4';
 
@@ -80,8 +62,7 @@ function ContactBody() {
   );
 }
 
-// Grouped by category, CUE's arrangement: the group headings are what make a
-// long list scannable, and they come straight from the data's own order.
+// Grouped by category, CUE's arrangement: the group headings keep a long list scannable.
 const FAQ_CATS = FAQ.map((group) => group.cat);
 
 function FAQBody() {
@@ -154,9 +135,7 @@ export default function OurCompany() {
           ))}
         </nav>
 
-        {/* Mobile: the active tab, tapped to reach the rest. Same control the
-            guide articles use, and floating rather than inline so opening it
-            does not shove the section you were reading down the page. */}
+        {/* Mobile: shared CatDropdown, floating so opening it does not push the section you are reading down. */}
         <CatDropdown
           className="min-[993px]:hidden w-full pb-[var(--space-1)] border-b border-line"
           label={active.label}

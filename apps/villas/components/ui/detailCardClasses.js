@@ -1,15 +1,4 @@
-// The card + sticky pill track every detail page's content sits in. Extracted from
-// DetailTabs so the guide articles can use the exact same shell (Sep 2026, Wayan:
-// "tab nya buat seperti tab tour, layout kontenya juga, se mirip mungkin").
-//
-// CARD: white panel with the inset edge shadow, centred, narrower padding on small
-// phones. STRIP: the sticky wrapper - its pt-[10px] bakes the breathing room in as
-// OPAQUE padding (bg-surface-raised) rather than an empty gap, so nothing peeks through once
-// the strip is stuck. TRACK: one elongated pill holding the segments (Wayan, 14 Sep
-// 2026: "1 box memanjang dengan border radius, bukan pill kecil-kecil") - same
-// pattern as BookingForm's Standard/Exclusive toggle. w-full + flex-1 segments so the
-// opaque track spans the whole row; a narrower row would let content scroll through
-// beside it.
+// Card + sticky pill track shared by detail pages and guides; STRIP's opaque padding stops content peeking through.
 export const CARD =
   'bg-surface-raised px-6 pt-6 pb-8 max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
 export const CARD_WRAP = 'max-w-[1000px] mt-5 mx-auto max-[560px]:mt-4';

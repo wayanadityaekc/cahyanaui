@@ -1,8 +1,4 @@
-// The shared Cahyana Ubud brand mark (same file as CUE's navbar logo) —
-// Wayan wants one consistent logo across both sister sites, not a
-// site-specific icon. No "Private Villas" text alongside it in the navbar
-// per his instruction; the logo's own alt text carries the site name for
-// accessibility/SEO.
+// Shared Cahyana Ubud logo, same as CUE's; no "Private Villas" text beside it, the alt text carries the site name.
 export default function Logo({ size = 30 }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element

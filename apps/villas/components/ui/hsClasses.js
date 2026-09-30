@@ -1,5 +1,2 @@
-// Moved into @cahyana/ui - this file is a re-export so the ~20 call sites
-// keep working while the library becomes the single implementation.
-// Import from '@cahyana/ui' directly in anything new.
-
+// Re-export kept so old call sites work; import from '@cahyana/ui' directly in anything new.
 export * from '@cahyana/ui';

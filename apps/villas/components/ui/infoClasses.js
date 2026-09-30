@@ -1,12 +1,7 @@
-// Shared detail-page "info" utility strings (B-FINAL full-Tailwind). Mirror of the
-// live `.info*` CSS. Dead vanilla-era bits (info__facts--hero, info__fact--price,
-// info__cta, is-exclusive/data-only ticket toggle, info__fact .price) are dropped,
-// not reproduced (0 renders). Context (detail cream card vs guide-article reading
-// column vs booking-sidebar transparent) is applied at the usage site.
-
-// .info section — vertical rhythm = --section-gap (36px), px 1.5rem. bg per context.
-export const INFO_SECTION_DETAIL = 'py-9 px-6 bg-cream';       // .info:has(>.info__container:not(.guide-article))
-export const INFO_SECTION_ARTICLE = 'py-9 px-6 bg-surface-raised';      // .info (guide-article child)
+// Shared "info" section strings mirroring the old .info CSS; detail variant: .info:has(>.info__container:not(.guide-article)).
+export const INFO_SECTION_DETAIL = 'py-9 px-6 bg-cream';
+// .info section, guide-article variant.
+export const INFO_SECTION_ARTICLE = 'py-9 px-6 bg-surface-raised';
 
 // .info__container:not(.guide-article) — white card.
 export const INFO_CARD =
@@ -14,9 +9,7 @@ export const INFO_CARD =
   'max-[576px]:p-[1.75rem_1.25rem] ' +
   '[&>p]:m-0 [&>p]:mb-4 [&>p]:leading-[var(--lh-body)] [&>p]:text-body [&>p:last-child]:mb-0';
 
-// .info__container article variant = the .guide-article reading column (narrow read
-// width, left-aligned, bare <p> styling for Prose 'para' blocks). Merged in so the
-// separate .guide-article class isn't needed on the 3 consumers.
+// Article variant: the narrow, left-aligned .guide-article reading column, merged in so consumers skip that class.
 export const INFO_CONTAINER_ARTICLE =
   'mx-auto max-w-[var(--container-read)] text-left ' +
   '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';

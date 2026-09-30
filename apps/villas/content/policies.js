@@ -1,23 +1,6 @@
-// THE BOOKING TERMS. Every number here was set by Wayan (Sep 2026) - none of it
-// is inferred from how the site reads, and none of it should be edited to make
-// a page flow better. This file is the single source: the villa pages, the
-// booking sheet, Our Company and the FAQ all read from it, so the site cannot
-// promise two different things in two places.
-//
-// It exists because the site was shipping WITHOUT a stated policy. Our Company
-// deliberately had no Terms or Cancellation tab, on the grounds that inventing
-// plausible ones would put promises on the site nobody agreed to. These are the
-// real ones.
+// Booking terms set by Wayan (Sep 2026), the single source for every page: never edit a number to make a page read better.
 
-/**
- * FULL PAYMENT UP FRONT. There is no deposit-only option, for a villa stay or
- * for a scooter.
- *
- * The reason is worth keeping next to the rule, because "pay it all now" reads
- * as unfriendly until you know it: a deposit-only booking holds the calendar.
- * Two villas is the entire inventory - a held date that never turns up is not a
- * small loss, it is that villa's whole week.
- */
+// Full payment up front, no deposit option: with only two villas, a held date that never turns up costs a whole week.
 export const PAYMENT = {
   mode: 'full',
   headline: 'Full payment when you book',
@@ -26,15 +9,7 @@ export const PAYMENT = {
   appliesTo: ['Villa stays', 'Scooter rental'],
 };
 
-/**
- * CANCELLATION - this is Airbnb's "Firm" tier, matched deliberately so a guest
- * who found us on Airbnb and books direct is not agreeing to something stricter
- * than they expected.
- *
- * ORDER MATTERS: the bands are listed longest-notice first, which is the order
- * a guest reads them in ("how much notice do I have?"), and `refund` is the
- * percentage RETURNED, not withheld.
- */
+// Airbnb "Firm" tier on purpose; bands run longest notice first, and refund is the percent RETURNED, not withheld.
 export const CANCELLATION = {
   name: 'Firm',
   basis: 'Matches the Airbnb "Firm" policy, so booking direct is not stricter than booking through the listing.',
@@ -53,10 +28,7 @@ export const TIMES = {
   note: 'Earlier check-in or a later check-out is sometimes possible - ask, and we will tell you honestly whether the villa is free.',
 };
 
-/**
- * The three lines a guest should see before they pay, in the order they matter.
- * Used by the booking sheet and the villa panel so both say the same thing.
- */
+// The three lines a guest sees before paying, shared by the booking sheet and villa panel so both say the same.
 export const BOOKING_TERMS = [
   PAYMENT.short,
   `Free cancellation up to 30 days before check-in, 50% up to 7 days.`,

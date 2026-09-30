@@ -7,16 +7,7 @@ import SheetPresence from '@/components/ui/SheetPresence';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { createAccountSchema, signInSchema } from '@/lib/schemas';
 
-// Sign in / create an account. The same passwordless account the tour site
-// uses, because it is one family and one guest record.
-//
-// SAME SHELL AS BOOK YOUR STAY, deliberately: SheetPresence, the same scrim,
-// the same bottom-sheet-on-a-phone / centred-card-on-a-desktop pair. A second
-// dialog shape is a second thing to learn for no reason - this site has one.
-//
-// NO PASSWORD FIELD, and none is coming: creating an account signs you in on
-// the spot, and signing in again mails a link that carries the session. There
-// is nothing to store, forget or leak.
+// Passwordless sign-in shared with the tour site, in the same sheet shell as Book Your Stay on purpose.
 const TITLE = { signin: 'Sign in', create: 'Create your account' };
 
 export default function AuthSheet({ open, onClose }) {
@@ -39,9 +30,7 @@ export default function AuthSheet({ open, onClose }) {
   function swap(nextView) { setView(nextView); reset(); }
   function close() { reset(); setForm({ name: '', email: '', phone: '' }); setView('signin'); onClose(); }
 
-  // One validator for both views. Zod DROPS keys it does not know about, so a
-  // field has to be in the schema even when it has no rule of its own or its
-  // value disappears on the way through.
+  // Zod drops unknown keys, so every field must be in the schema even without a rule, or its value vanishes.
   function check(schema) {
     const result = schema.safeParse(form);
     if (result.success) return result.data;

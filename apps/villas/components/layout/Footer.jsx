@@ -10,18 +10,7 @@ import {
 } from '@cahyana/ui';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
 
-// The footer. The SHELL - one grid row of five columns, the one hairline above
-// the copyright, the 22px social circles, the line-height pin - lives in
-// @cahyana/ui (blocks/FooterShell.jsx) and is shared with CUE. This file is the
-// five columns' contents.
-//
-// COLUMN MAPPING (CUE -> here):
-//   brand + contact        -> brand + contact
-//   Explore                -> Stay
-//   Company                -> Services
-//   Featured On + Follow   -> Company + Follow   (no press logos here, so the
-//                             slot carries the second heading pair instead)
-//   We Accept              -> (dropped: no payment chips on this site)
+// Footer contents only; the five-column shell lives in @cahyana/ui FooterShell and is shared with CUE.
 
 const BRAND = 'Ubud Private Villas';
 
@@ -44,10 +33,7 @@ const COLUMNS = [
     ],
   },
   {
-    // The standalone /about page is gone: its copy now lives in the Our Company
-    // page's About tab, and running both would have been the same words on two
-    // URLs competing with each other in search. CUE retired its standalone
-    // About/Contact/FAQ pages into Our Company for the same reason.
+    // No standalone /about page: its copy lives in Our Company, so two URLs do not compete in search.
     heading: 'Company',
     id: 'contact',
     items: [
@@ -60,16 +46,16 @@ const COLUMNS = [
   },
 ];
 
-// ONE PLACE TO PUT THE REAL LINKS IN. Every one of these is an account that
-// exists in life but has no URL on file yet. `href: null` makes the shell render
-// it aria-disabled rather than as a bare href="#" that silently jumps to the top
-// of the page. Fill the href in and the attribute goes away on its own.
+// href: null renders aria-disabled instead of a dead "#" link; fill in the real URL and it turns on by itself.
 const SOCIAL = {
   heading: 'Follow',
   links: [
-    { name: 'Airbnb', href: null },     // TODO: the two villas' Airbnb listing or host page
-    { name: 'Instagram', href: null },  // TODO
-    { name: 'Facebook', href: null },   // TODO
+    // TODO: the two villas' Airbnb listing or host page
+    { name: 'Airbnb', href: null },
+    // TODO
+    { name: 'Instagram', href: null },
+    // TODO
+    { name: 'Facebook', href: null },
   ],
 };
 

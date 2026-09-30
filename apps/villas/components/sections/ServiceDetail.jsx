@@ -3,9 +3,7 @@ import { Button, CAPS, Container, EYEBROW_LINE, Hero, PROSE_COPY, Section } from
 import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
 
-// Shared layout for every "at your villa" service page (Breakfast, Spa,
-// Live Dinner, and the new Scooter Rental) — one structure, content-driven,
-// so styling only has to be maintained in one place.
+// Shared layout for every 'at your villa' service page, so styling lives in one place.
 export default function ServiceDetail({
   kicker,
   title,

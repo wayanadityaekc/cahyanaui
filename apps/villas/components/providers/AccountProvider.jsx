@@ -3,18 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { API_BASE, API_SITE, TOKEN_KEY } from '@/lib/constants';
 
-// THE GUEST'S ACCOUNT - the same account as on cahyanaubudexperience.com,
-// because it is one family and one guest record. This is the villa site's own
-// copy of CUE's AccountProvider, cut down to what this site can honestly do:
-// no trips list and no reviews, since villa bookings do not reach the API yet.
-//
-// PASSWORDLESS, and that is the whole design: creating an account signs you in
-// on the spot, and signing in again mails a link that carries the token. There
-// is no password to store, lose or leak.
-//
-// READ IN AN EFFECT, never in initial state - this is a static export, so the
-// first paint has to match the pre-rendered HTML. Same rule as currency and
-// trip prefs.
+// Passwordless account shared with CUE; read in an effect, never initial state, so first paint matches the static HTML.
 const AccountContext = createContext(null);
 
 function read() {
@@ -34,9 +23,7 @@ export function AccountProvider({ children }) {
   useEffect(() => {
     let cancelled = false;
 
-    // The sign-in email lands the guest back here with ?token=... . Take it,
-    // store it, and STRIP IT FROM THE URL: a token left in the address bar is
-    // a token that gets shared, bookmarked and put in someone's history.
+    // Take the ?token= from the sign-in email and strip it from the URL, or it gets shared, bookmarked and kept in history.
     const params = new URLSearchParams(window.location.search);
     const magic = params.get('token');
     if (magic) {
@@ -55,8 +42,7 @@ export function AccountProvider({ children }) {
         const data = response.ok ? await response.json() : null;
         if (cancelled) return;
         if (data && data.account) setAccount(data.account);
-        // A token the server does not recognise any more is worse than no
-        // token: it makes every later call fail silently.
+        // A token the server no longer knows makes every later call fail silently, so drop it.
         else drop();
       } catch (e) {
         // Offline or API down: keep the token and try again next visit.
@@ -69,9 +55,7 @@ export function AccountProvider({ children }) {
     return () => { cancelled = true; };
   }, []);
 
-  // Ask for a sign-in link. The server never says whether the address is
-  // registered - answering that question is how you let a stranger find out who
-  // has an account - so any completed request counts as sent.
+  // The server never says if an address is registered (that would leak who has an account), so any completed request counts as sent.
   async function requestLogin(email) {
     try {
       const response = await fetch(`${API_BASE}/account/login`, {

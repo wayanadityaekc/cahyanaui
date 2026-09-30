@@ -49,17 +49,22 @@ export function AccountProvider({ children }) {
     const token = read();
     if (!token) { setHydrated(true); return undefined; }
 
-    fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
+    async function load() {
+      try {
+        const r = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
+        const d = r.ok ? await r.json() : null;
         if (cancelled) return;
         if (d && d.account) setAccount(d.account);
         // A token the server does not recognise any more is worse than no
         // token: it makes every later call fail silently.
         else drop();
-      })
-      .catch(() => {})
-      .finally(() => { if (!cancelled) setHydrated(true); });
+      } catch (e) {
+        // Offline or API down: keep the token and try again next visit.
+      } finally {
+        if (!cancelled) setHydrated(true);
+      }
+    }
+    load();
 
     return () => { cancelled = true; };
   }, []);

@@ -7,8 +7,10 @@ import {
   FOOT_CONTACT_SVG,
   FOOT_BOTTOM_TEXT,
   FOOT_COL_A,
+  FOOT_REG,
 } from '@cahyana/ui';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_LINK } from '@/lib/constants';
+import { REGISTRATION } from '@/content/registration';
 
 // Footer contents only; the five-column shell lives in @cahyana/ui FooterShell and is shared with CUE.
 
@@ -46,18 +48,14 @@ const COLUMNS = [
   },
 ];
 
-// href: null renders aria-disabled instead of a dead "#" link; fill in the real URL and it turns on by itself.
+// CEK WAYAN: Instagram stays hidden until there is a real account URL (CUE's is still "#"); no Facebook.
 const SOCIAL = {
   heading: 'Follow',
-  links: [
-    // TODO: the two villas' Airbnb listing or host page
-    { name: 'Airbnb', href: null },
-    // TODO
-    { name: 'Instagram', href: null },
-    // TODO
-    { name: 'Facebook', href: null },
-  ],
+  links: [{ name: 'WhatsApp', href: WHATSAPP_LINK }],
 };
+
+// Text wordmarks: no partner logo files or listing URLs yet.
+const FEATURED = { heading: 'Featured On', names: ['Airbnb', 'Booking.com'] };
 
 export default function Footer() {
   return (
@@ -65,6 +63,7 @@ export default function Footer() {
       linkAs={Link}
       columns={COLUMNS}
       social={SOCIAL}
+      featured={FEATURED}
       brand={(
         <>
           <Link href="/" className="inline-block no-underline text-green">
@@ -89,6 +88,13 @@ export default function Footer() {
       bottom={(
         <>
           <p className={FOOT_BOTTOM_TEXT}>&copy; 2026 {BRAND}. All rights reserved.</p>
+          <p className={FOOT_REG}>
+            <span className="whitespace-nowrap">{REGISTRATION.name}</span>
+            <span aria-hidden="true">·</span>
+            <span className="whitespace-nowrap">Ministry of Law <a href={REGISTRATION.verifyUrl} target="_blank" rel="noopener" className="text-inherit underline">{REGISTRATION.decreeShort}</a></span>
+            <span aria-hidden="true">·</span>
+            <span className="whitespace-nowrap">NIB {REGISTRATION.nib}</span>
+          </p>
           <a href={CUE_LINK} target="_blank" rel="noopener" className={`${FOOT_BOTTOM_TEXT} ${FOOT_COL_A}`}>
             Part of Cahyana Ubud Experience
           </a>

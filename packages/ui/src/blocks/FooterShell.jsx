@@ -5,6 +5,7 @@ import {
   FOOT_COL_A,
   FOOT_COL_H,
   FOOT_COL_LI,
+  FOOT_FEATURED,
   FOOT_GRID,
   FOOT_ROOT,
   FOOT_SOCIAL_A,
@@ -18,6 +19,7 @@ import {
  *   brand     node - the wordmark and whatever sits under it (contact lines)
  *   columns   [{ heading, items: [{ href, label, external }] }]
  *   social    { heading, links: [{ name, href }] }
+ *   featured  { heading, names: [string] } - text wordmarks above Follow, CUE's order
  *   bottom    node - overrides the default copyright row
  *   surface   the band's background. The villa site runs a LIGHT footer
  *             (#ebe8e2); CUE's is darker. Passed in rather than themed, because
@@ -36,6 +38,7 @@ export default function FooterShell({
   brand,
   columns = [],
   social = null,
+  featured = null,
   bottom = null,
   surface = 'bg-[#ebe8e2]',
   linkAs: Link = 'a',
@@ -66,26 +69,38 @@ export default function FooterShell({
           </div>
         ))}
 
-        {social ? (
+        {social || featured ? (
           <div>
-            <h4 className={FOOT_COL_H}>{social.heading || 'Follow'}</h4>
-            <div className="flex gap-[0.6rem]">
-              {social.links.map((s) => {
-                const brand = s.name === 'Airbnb';
-                return (
-                  <a
-                    key={s.name}
-                    href={s.href || '#'}
-                    aria-label={s.name}
-                    aria-disabled={s.href ? undefined : 'true'}
-                    {...(s.href ? { target: '_blank', rel: 'noopener' } : {})}
-                    className={brand ? FOOT_SOCIAL_A_AIRBNB : FOOT_SOCIAL_A}
-                  >
-                    <BrandIcon name={s.name} className={brand ? FOOT_SOCIAL_ICON_AIRBNB : undefined} />
-                  </a>
-                );
-              })}
-            </div>
+            {featured ? (
+              <>
+                <h4 className={FOOT_COL_H}>{featured.heading || 'Featured On'}</h4>
+                <ul className="list-none flex flex-wrap items-center gap-x-4 gap-y-1">
+                  {featured.names.map((name) => <li key={name} className={FOOT_FEATURED}>{name}</li>)}
+                </ul>
+              </>
+            ) : null}
+            {social ? (
+              <>
+                <h4 className={cn(FOOT_COL_H, featured && 'mt-6')}>{social.heading || 'Follow'}</h4>
+                <div className="flex gap-[0.6rem]">
+                  {social.links.map((s) => {
+                    const brand = s.name === 'Airbnb';
+                    return (
+                      <a
+                        key={s.name}
+                        href={s.href || '#'}
+                        aria-label={s.name}
+                        aria-disabled={s.href ? undefined : 'true'}
+                        {...(s.href ? { target: '_blank', rel: 'noopener' } : {})}
+                        className={brand ? FOOT_SOCIAL_A_AIRBNB : FOOT_SOCIAL_A}
+                      >
+                        <BrandIcon name={s.name} className={brand ? FOOT_SOCIAL_ICON_AIRBNB : undefined} />
+                      </a>
+                    );
+                  })}
+                </div>
+              </>
+            ) : null}
           </div>
         ) : null}
 

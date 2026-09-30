@@ -34,6 +34,8 @@ const PATHS = {
       <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
     </>
   ),
+  // Same bubble CUE uses for WhatsApp (Lucide message-circle), so both footers draw one mark.
+  WhatsApp: <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />,
   Facebook: <path d="M14 9h2V6h-2c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.2l.8-3H14V9.6c0-.3.3-.6.6-.6H16" />,
 };
 

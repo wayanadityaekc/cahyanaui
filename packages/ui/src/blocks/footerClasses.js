@@ -44,6 +44,11 @@ export const FOOT_BOTTOM =
 
 export const FOOT_BOTTOM_TEXT = 'text-small opacity-70';
 
+// Featured On names as text wordmarks: no partner logo files exist for them.
+export const FOOT_FEATURED = 'text-[0.8rem] font-semibold tracking-[0.01em] text-green opacity-[0.85]';
+// CUE's registration line: the PT, decree and NIB, deliberately small and quiet.
+export const FOOT_REG = 'flex flex-wrap items-center gap-x-[7px] gap-y-1 max-[700px]:justify-center text-[length:0.58rem] font-normal text-muted opacity-40';
+
 // A mark that carries its own colour (Airbnb) cannot use the shared gold hover:
 // its red on gold is unreadable. The circle takes the brand colour instead and
 // the mark goes white - and the mark is FILLED, so the override is `fill`, not

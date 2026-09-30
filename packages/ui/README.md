@@ -65,7 +65,9 @@ picks one - the variants do not get scattered back into the apps.
 | `Card` / `MediaCard` | a card's surface; photo-on-top card | framed, inset |
 | `VillaCard` | a villa, as a card | - |
 | `Collapse` | an inline menu that pushes content down | - |
-| `NavbarShell` | the header, drawer and hamburger | content-driven |
+| `NavbarShell` | the header: burger + left drawer on phones, links in the bar on desktop (CUE WO1) | content-driven |
+| `NavDesktop` | the bar's page links; dropdowns are disclosures (hover + click, Escape returns focus) | - |
+| `AccountMenu` | the navbar's account slot: Log in / initials menu; site passes account, handlers, fields | optional rows (CUE: Settings) |
 | `FooterShell` | five columns, one hairline | content-driven |
 | `StickyBar` | the one thing at the bottom of a phone screen | **flush** (CUE), **floating** (villas) |
 | `BookingPanel` | the sticky panel beside a stay | - |

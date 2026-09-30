@@ -1,86 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { CurrencyPicker as LibraryCurrencyPicker } from '@cahyana/ui';
 import { CURRENCIES } from '@/lib/currency';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 
-// CUE's CurrencyPicker class for class, fed by useCurrency(); flags are SVG because emoji flags show "US" on Windows.
-function wrap(variant) { return `relative${variant === 'navbar' ? ' ml-auto flex-none' : ''}`; }
-const CURBTN_BASE = 'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
-function curbtn(variant) {
-  return variant === 'hero'
-    ? `${CURBTN_BASE} py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal [border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]`
-    : `${CURBTN_BASE} py-2 px-[0.65rem] rounded-pill font-semibold [border:1px_solid_#d8d2c4]`;
-}
-const CURCODE = 'flex-[1_1_auto] text-left';
-const CURCARET = 'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] [[aria-expanded=true]_&]:[transform:rotate(180deg)]';
-// The list stays mounted and animates opacity/transform, since a hidden attribute would snap.
-function curlist(variant, open) {
-  return `absolute left-0 right-0 mt-1 mx-0 mb-0 p-1 list-none bg-surface-raised [border:1px_solid_#e4dcc8] z-10 ` +
-    `transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none ` +
-    `${open ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]' : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]'} ` +
-    `${variant === 'hero' ? 'rounded-md' : 'rounded-sm'}`;
-}
-const CUROPT = 'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
-const FLAG = 'inline-block w-5 h-[14px] rounded-[2px] overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
-
-function Flag({ code }) {
-  return (
-    <span className={FLAG}>
-      <svg viewBox="0 0 60 40" aria-hidden="true">
-        <use href={`#flag-${code.toLowerCase()}`} />
-      </svg>
-    </span>
-  );
-}
-
-export default function CurrencyPicker({ variant = 'default' }) {
+// The library's field-shaped picker (CUE's shape), fed by this site's currency context; id must differ per copy.
+export default function CurrencyPicker({ id = 'acct-cur', variant = 'default' }) {
   const { currency, setCurrency } = useCurrency();
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (!open) return;
-    function onDoc(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
-  }, [open]);
-
   return (
-    <div className={wrap(variant)} data-cur ref={ref}>
-      <button
-        type="button"
-        className={curbtn(variant)}
-        id="acct-cur"
-        aria-label="Select currency"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
-      >
-        <Flag code={currency} />
-        <span className={CURCODE}>{currency}</span>
-        <ChevronDown className={CURCARET} aria-hidden="true" />
-      </button>
-      <ul className={curlist(variant, open)} role="listbox" aria-label="Currency">
-        {CURRENCIES.map((option) => (
-          <li
-            key={option.code}
-            className={CUROPT}
-            role="option"
-            aria-selected={option.code === currency}
-            onClick={() => {
-              setCurrency(option.code);
-              setOpen(false);
-            }}
-          >
-            <Flag code={option.code} />
-            {option.code}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <LibraryCurrencyPicker
+      id={id}
+      variant={variant}
+      value={currency}
+      onChange={setCurrency}
+      options={CURRENCIES.map((option) => option.code)}
+    />
   );
 }

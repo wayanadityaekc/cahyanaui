@@ -1,107 +1,77 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { X } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import useBodyLock from '../lib/useBodyLock.js';
 import Collapse from './Collapse.jsx';
+import NavDesktop from './NavDesktop.jsx';
 import {
+  NAV_BURGER,
   NAV_BURGER_BAR,
   NAV_CLOSE,
-  NAV_LI,
-  NAV_ROW_END,
-  NAV_SUBLIST,
-  NAV_SUBTRIGGER,
   NAV_DRAWER,
   NAV_DRAWER_HEAD,
   NAV_HEADER,
-  NAV_ICON,
+  NAV_LI,
   NAV_ROW,
+  NAV_ROW_END,
   NAV_SCRIM,
   NAV_SUBLINK,
+  NAV_SUBLIST,
+  NAV_SUBTRIGGER,
   navLink,
 } from './navbarClasses.js';
 
-/**
- * The site header, as a shell. It owns the behaviour and the shape; a site
- * passes in what goes in the slots.
- *
- *   logo          node - the brand link at the left
- *   actions       node - the icon cluster (chat, cart). Use NAV_ICON on each.
- *   drawerHead    { icon, title, sub, aside } - the drawer's top row. `aside`
- *                 is anything that must sit at its right-hand end BESIDE the
- *                 close button.
- *   fields        node - a row of controls under the head (CUE puts Guests,
- *                 Pickup area and Currency here). Currency belongs in this row
- *                 rather than in the head: measured on CUE, four things in the
- *                 head row at 390px wrapped the name onto a second line.
- *                 CUE puts an account there and a currency picker in `aside`;
- *                 the villa site puts a heading. Same row, same measurements.
- *   cta           node, or (close) => node - the drawer's one primary button.
- *                 Use the function form when the action must also shut the
- *                 drawer: opening a booking sheet while the drawer still sits
- *                 over it is a state nobody asked for, and the shell owns
- *                 `close`, so it has to hand it out.
- *   links         [{ href, label, icon, end }] | [{ label, icon, items: [...] }]
- *                 `icon` is a node - an icon per row, sized by MENU_ROW_BOX.
- *                 `end` rides the right-hand end of the row (a count badge).
- *   drawerFoot    node - pinned to the bottom of the drawer
- *   isActive      (href) => boolean - the app owns routing, so it owns this
- *   linkAs        the link component (pass next/link's Link); defaults to 'a'
- *
- * WHY A SHELL AND NOT TWO NAVBARS. What has to match between the sister sites
- * is not the wording - it is the drawer's width, its one hairline, the
- * hamburger that becomes an X, the spacing pair on the icons, and the two
- * height variables. Those live here once. Two copies of a navbar diverge by a
- * few pixels per edit until they stop looking like one brand, which is exactly
- * what happened before this existed.
- *
- * NO next/link IMPORT. A UI library that imports the framework can only be used
- * by that framework, and a plain <a> is the correct default for a shell.
- */
+// The site header as a shell (CUE's WO1 navbar): burger + drawer on phones, links in the bar on desktop, account slot last.
+// Slots: logo, actions (chat/cart), extras, account, topBar (promo strip), fields, links, drawerFoot; no next/link import, pass linkAs.
 export default function NavbarShell({
   logo,
   actions = null,
   extras = null,
-  drawerHead,
+  account = null,
+  topBar = null,
   fields = null,
-  cta = null,
   links = [],
   drawerFoot = null,
+  drawerTitle = 'Menu',
   isActive = () => false,
-  linkAs: Link = 'a',
-  closeIcon = null,
+  linkAs = 'a',
   drawerId = 'nav-menu',
   className,
 }) {
+  const Link = linkAs;
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSub, setOpenSub] = useState(null);
   const navRef = useRef(null);
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
+  const barRef = useRef(null);
 
-  // Publish the bar's height so the page below can reserve room for it.
+  // Header heights on :root (nav row, nav + top bar, top bar); set on resize only, never on scroll.
   useEffect(() => {
-    const el = headerRef.current;
-    if (!el) return undefined;
+    const header = headerRef.current;
+    if (!header) return undefined;
     const root = document.documentElement;
     let max = 0;
-    const set = () => {
-      const h = el.offsetHeight;
-      root.style.setProperty('--header-h', `${h}px`);
-      if (h > max) {
-        max = h;
-        root.style.setProperty('--header-h-max', `${h}px`);
+    function set() {
+      const height = header.offsetHeight;
+      const bar = barRef.current ? barRef.current.offsetHeight : 0;
+      root.style.setProperty('--header-h', `${height - bar}px`);
+      root.style.setProperty('--tripbar-h', `${bar}px`);
+      if (height > max) {
+        max = height;
+        root.style.setProperty('--header-h-max', `${height}px`);
       }
-    };
-    // A viewport change gives a different natural height, and rotating a phone
-    // must not keep a desktop maximum, so the ceiling is re-measured there.
-    const onResize = () => { max = 0; set(); };
+    }
+    // A viewport change resets the max so a rotated phone re-measures.
+    function onResize() { max = 0; set(); }
     set();
-    const ro = new ResizeObserver(set);
-    ro.observe(el);
+    const resizeObserver = new ResizeObserver(set);
+    resizeObserver.observe(header);
     window.addEventListener('resize', onResize);
     return () => {
-      ro.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener('resize', onResize);
     };
   }, []);
@@ -109,12 +79,19 @@ export default function NavbarShell({
   // Tapping outside, or Escape, closes the drawer.
   useEffect(() => {
     if (!menuOpen) return undefined;
-    const onDoc = (e) => {
+    function onDoc(e) {
       const inNav = navRef.current && navRef.current.contains(e.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      if (!inNav && !onBurger) setMenuOpen(false);
-    };
-    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+      // Clicks inside a portaled Select popup close only the popup, not the drawer.
+      const inPopup = e.target.closest && e.target.closest('[data-portal]');
+      if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
+    }
+    function onKey(e) {
+      if (e.key !== 'Escape') return;
+      // An open Select popup takes this Escape to close itself first.
+      if (document.querySelector('[data-portal="select"][data-open]')) return;
+      setMenuOpen(false);
+    }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -125,77 +102,70 @@ export default function NavbarShell({
 
   useBodyLock(menuOpen);
 
-  const close = () => setMenuOpen(false);
-  // A slot may be a node, or a render function that wants `close`.
-  const slot = (v) => (typeof v === 'function' ? v(close) : v);
+  function close() { setMenuOpen(false); }
 
   return (
     <header ref={headerRef} className={cn(NAV_HEADER, className)}>
+      {topBar ? <div ref={barRef}>{topBar}</div> : null}
       <div className={NAV_ROW}>
+        <button
+          type="button"
+          id="hamburger"
+          ref={burgerRef}
+          className={NAV_BURGER}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          aria-controls={drawerId}
+          onClick={() => setMenuOpen((wasOpen) => !wasOpen)}
+        >
+          <span className={cn(NAV_BURGER_BAR, menuOpen && 'translate-y-[6px] rotate-45')} />
+          <span className={cn(NAV_BURGER_BAR, menuOpen ? 'opacity-0' : 'opacity-100')} />
+          <span className={cn(NAV_BURGER_BAR, menuOpen && '-translate-y-[6px] -rotate-45')} />
+        </button>
+
         {logo}
+        <NavDesktop links={links} isActive={isActive} linkAs={Link} />
         {actions}
         {extras}
 
         <nav ref={navRef}>
           <ul
             id={drawerId}
-            className={cn(
-              NAV_DRAWER,
-              menuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none',
-            )}
+            className={cn(NAV_DRAWER, menuOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none')}
           >
-            {drawerHead ? (
-              <li className={NAV_DRAWER_HEAD}>
-                {drawerHead.icon ? (
-                  <span
-                    className="w-[38px] h-[38px] rounded-[50%] bg-cream [border:1px_solid_var(--line)] grid place-items-center text-gold flex-none"
-                    aria-hidden="true"
-                  >
-                    {drawerHead.icon}
-                  </span>
-                ) : null}
-                <span className="flex flex-col min-w-0">
-                  <b className="text-strong font-semibold text-gold leading-[1.25]">{drawerHead.title}</b>
-                  {/* nowrap + ellipsis: this line is a subtitle, and a second
-                      line here makes the whole row taller than CUE's. */}
-                  <span className="text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">
-                    {drawerHead.sub}
-                  </span>
-                </span>
-                {drawerHead.aside}
-                <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
-                  {closeIcon}
-                </button>
-              </li>
-            ) : null}
+            {/* The x is the only visible close control while the drawer covers the burger. */}
+            <li className={NAV_DRAWER_HEAD}>
+              <b className="text-strong font-semibold text-gold">{drawerTitle}</b>
+              <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
+                <X strokeWidth={2} aria-hidden="true" />
+              </button>
+            </li>
 
-            {fields ? <li className="grid grid-cols-2 gap-[10px] pt-[0.9rem] pb-[0.4rem]">{fields}</li> : null}
+            {fields ? <li className="pt-[0.9rem] pb-4">{fields}</li> : null}
 
-            {cta ? <li className={fields ? 'pb-4' : 'pt-[0.9rem] pb-4'}>{slot(cta)}</li> : null}
-
-            {links.map((l) => {
-              if (l.items) {
-                const open = openSub === l.label;
+            {links.map((link) => {
+              if (link.items) {
+                const open = openSub === link.label;
                 return (
-                  <li key={l.label} className={cn('relative', NAV_LI)}>
+                  <li key={link.label} className={cn('relative', NAV_LI)}>
                     <button
                       type="button"
                       data-submenu
                       className={NAV_SUBTRIGGER}
                       aria-expanded={open}
-                      onClick={() => setOpenSub(open ? null : l.label)}
+                      onClick={() => setOpenSub(open ? null : link.label)}
                     >
-                      {l.icon}
-                      {l.label}
+                      {link.icon}
+                      {link.label}
                       <span className={cn(NAV_ROW_END, 'inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>
                         &rsaquo;
                       </span>
                     </button>
                     <Collapse open={open}>
                       <ul className={NAV_SUBLIST}>
-                        {l.items.map((s) => (
-                          <li key={s.href} className="py-[0.4rem]">
-                            <Link href={s.href} onClick={close} className={NAV_SUBLINK}>{s.label}</Link>
+                        {link.items.map((item) => (
+                          <li key={item.href} className="py-[0.4rem]">
+                            <Link href={item.href} onClick={close} className={NAV_SUBLINK}>{item.label}</Link>
                           </li>
                         ))}
                       </ul>
@@ -204,34 +174,21 @@ export default function NavbarShell({
                 );
               }
               return (
-                <li key={l.href} className={NAV_LI}>
-                  <Link href={l.href} onClick={close} className={navLink(isActive(l.href))}>
-                    {l.icon}
-                    {l.label}
-                    {l.end}
+                <li key={link.href} className={NAV_LI}>
+                  <Link href={link.href} onClick={close} className={navLink(isActive(link.href))}>
+                    {link.icon}
+                    {link.label}
+                    {link.end}
                   </Link>
                 </li>
               );
             })}
 
-            {drawerFoot ? <li className="mt-auto pt-4">{slot(drawerFoot)}</li> : null}
+            {drawerFoot ? <li className="mt-auto pt-4">{typeof drawerFoot === 'function' ? drawerFoot(close) : drawerFoot}</li> : null}
           </ul>
         </nav>
 
-        <button
-          type="button"
-          id="hamburger"
-          ref={burgerRef}
-          className="relative flex flex-col gap-[5px] w-7 bg-transparent border-none cursor-pointer max-[992px]:w-[1.65rem] max-[992px]:h-[2.2rem] max-[992px]:ml-1 max-[992px]:items-center max-[992px]:justify-center"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          aria-controls={drawerId}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span className={cn(NAV_BURGER_BAR, menuOpen && 'translate-y-[7px] rotate-45')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen ? 'opacity-0' : 'opacity-100')} />
-          <span className={cn(NAV_BURGER_BAR, menuOpen && '-translate-y-[7px] -rotate-45')} />
-        </button>
+        {account}
       </div>
 
       <div className={cn(NAV_SCRIM, menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible')} onClick={close} />

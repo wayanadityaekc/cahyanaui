@@ -22,7 +22,7 @@ import { cn } from '../lib/cn.js';
  *            hero    sized to match a form field on a search bar
  *            default
  */
-const wrap = (v) => cn('relative', v === 'navbar' && 'ml-auto flex-none');
+function wrap(variant) { return cn('relative', variant === 'navbar' && 'ml-auto flex-none'); }
 
 const BTN_BASE =
   'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
@@ -33,30 +33,31 @@ const BTN_BASE =
 // rather than performing an action. CUE made the same call. The border colour
 // was also a hardcoded #d8d2c4 in the pill branch, the one place on either site
 // not using the --line token.
-const btn = (v) =>
-  cn(
+function btn() {
+  return cn(
     BTN_BASE,
     'py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal',
     '[border:1px_solid_var(--line)] hover:[border-color:var(--color-gold)]',
   );
+}
 
 const CODE = 'flex-[1_1_auto] text-left';
 const CARET =
   'w-[14px] h-[14px] text-muted flex-none [transition:transform_var(--dur-fast)_ease] ' +
   '[[aria-expanded=true]_&]:[transform:rotate(180deg)]';
 
-// The list stays mounted and only toggles opacity/transform/pointer-events, so
-// the transition has a frame to play from. A `hidden` attribute would snap.
-const list = (v, open) =>
-  cn(
-    'absolute left-0 right-0 mt-1 p-1 list-none bg-surface-raised z-10',
-    '[border:1px_solid_#e4dcc8]',
+// Stays mounted so it can animate; CUE's shape: --line border, capped at 15rem and scrolling.
+function list(variant, open) {
+  return cn(
+    'absolute left-0 right-0 mt-1 p-1 list-none bg-surface-raised z-10 max-h-[15rem] overflow-y-auto overscroll-contain',
+    '[border:1px_solid_var(--line)]',
     'transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none',
     open
       ? 'opacity-100 visible pointer-events-auto [transform:translateY(0)]'
       : 'opacity-0 invisible pointer-events-none [transform:translateY(-4px)]',
-    v === 'hero' ? 'rounded-md' : 'rounded-sm',
+    variant === 'hero' ? 'rounded-md' : 'rounded-sm',
   );
+}
 
 const OPT =
   'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm font-body text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
@@ -79,6 +80,7 @@ export default function CurrencyPicker({
   options = [],
   variant = 'default',
   label = 'Select currency',
+  id,
   className,
 }) {
   const [open, setOpen] = useState(false);
@@ -86,10 +88,10 @@ export default function CurrencyPicker({
 
   useEffect(() => {
     if (!open) return undefined;
-    const onDoc = (e) => {
+    function onDoc(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    }
+    function onKey(e) { if (e.key === 'Escape') setOpen(false); }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -102,19 +104,20 @@ export default function CurrencyPicker({
     <div className={cn(wrap(variant), className)} data-cur ref={ref}>
       <button
         type="button"
-        className={btn(variant)}
+        id={id}
+        className={btn()}
         aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
       >
         <Flag code={value} />
         <span className={CODE}>{value}</span>
         <ChevronDown className={CARET} aria-hidden="true" />
       </button>
       <ul className={list(variant, open)} role="listbox" aria-label="Currency">
-        {options.map((o) => {
-          const code = typeof o === 'string' ? o : o.code;
+        {options.map((option) => {
+          const code = typeof option === 'string' ? option : option.code;
           return (
             <li
               key={code}

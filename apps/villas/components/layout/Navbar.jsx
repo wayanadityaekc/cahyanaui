@@ -9,6 +9,7 @@ import { useAccount } from '@/components/providers/AccountProvider';
 import AuthSheet from '@/components/account/AuthSheet';
 import { useCart } from '@/components/providers/CartProvider';
 import { WHATSAPP_LINK } from '@/lib/constants';
+import ChatLauncher from '@/components/chat/ChatLauncher';
 import TripPrefsFields from './TripPrefsFields';
 
 // One Lucide icon per drawer row, each the icon that already means that thing elsewhere on the site.
@@ -73,10 +74,8 @@ export default function Navbar() {
         )}
         actions={(
           <>
-            {/* Chat lives in the navbar like CUE: visible on every page and width without taking the bottom of the screen. */}
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener" className={NAV_ICON} aria-label="Chat on WhatsApp">
-              <MessageCircle className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" />
-            </a>
+            {/* Chat lives in the navbar like CUE: it opens the live chat in place; WhatsApp is a switch inside the panel. */}
+            <ChatLauncher className={NAV_ICON} />
 
             {/* My Booking in CUE's cart slot; the badge only shows once the booking has something in it. */}
             <Link href="/my-booking" className={`relative ${NAV_ICON}`} aria-label="My Booking">

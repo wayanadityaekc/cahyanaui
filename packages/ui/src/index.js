@@ -30,6 +30,9 @@ export { default as useDisclosure } from './lib/useDisclosure.js';
 export { default as IosZoomFix } from './lib/IosZoomFix.jsx';
 export { default as useRevealWhenAway } from './lib/useRevealWhenAway.js';
 export { default as groupReviews } from './lib/groupReviews.js';
+export { default as useChat } from './lib/useChat.js';
+export { openChatSocket, chatSocketUrl } from './lib/chatSocket.js';
+export { createChatThread } from './lib/chatThread.js';
 
 /* --- layer 2: primitives --- */
 export { default as Button } from './primitives/Button.jsx';
@@ -77,6 +80,9 @@ export { default as ReviewCard } from './blocks/ReviewCard.jsx';
 export { default as ReviewDetail } from './blocks/ReviewDetail.jsx';
 export { default as ReviewList } from './blocks/ReviewList.jsx';
 export { default as RailLayout } from './blocks/RailLayout.jsx';
+export { default as ChatLauncher } from './blocks/ChatLauncher.jsx';
+export { default as ChatPanel } from './blocks/ChatPanel.jsx';
+export { default as ChatMessages } from './blocks/ChatMessages.jsx';
 
 /* Shared class strings, for a page that needs the look without the component. */
 export * from './primitives/controlClasses.js';
@@ -88,3 +94,4 @@ export * from './blocks/footerClasses.js';
 export * from './primitives/separatorClasses.js';
 export * from './blocks/reviewClasses.js';
 export * from './blocks/railClasses.js';
+export * from './blocks/chatClasses.js';

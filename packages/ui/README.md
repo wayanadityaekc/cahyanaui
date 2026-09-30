@@ -77,6 +77,9 @@ picks one - the variants do not get scattered back into the apps.
 | `ReviewCard` / `ReviewDetail` | one review as a fixed-size card; its full text in a dialog | - |
 | `ReviewList` | reviews as cards + the detail dialog | **slider** (a review section), **grid** (the full list) |
 | `RailLayout` | sticky side menu + content column; on phones the menu is the first screen | default, card (phones keep the frame), scrollContent |
+| `ChatLauncher` | the navbar's chat icon, a button that opens the panel in place | optional label (app bar) |
+| `ChatPanel` | inside of CUE's live chat: head, conversation, email ask, input, a way out (WhatsApp) | - |
+| `ChatMessages` | the conversation: guest right, bot left with rows/link/chips, owner replies named | - |
 
 Class strings ship beside the components (`gridClasses`, `cardClasses`,
 `navbarClasses`, `footerClasses`, `layoutClasses`). A row of cards is a div with
@@ -151,6 +154,22 @@ that needs them. What changed on the way in, on purpose:
   the first render broke hydration of a static page (React #418).
 - `RAIL_FRAME_SCROLL` subtracts `--footerbar-h` (0 unless the site sets it)
   instead of CUE's hard-coded 60px footer bar.
+
+### Live chat, ported from CUE, 30 Sep 2026
+
+`useChat` (lib) holds CUE's conversation state; `chatSocket` and `chatThread` are its
+clients. This is the one place the library talks to a network, on purpose: the
+socket rules (catch-up on EVERY connect, 5s polling only while the socket is
+down, ping every 25s with a timeout, dedupe by database id, sending stays HTTP)
+are what made CUE's chat reliable, and a second copy per site is how they drift.
+Everything site-specific comes in as a parameter: `apiBase`, `storageKey`,
+`answerFor(question)` (the site's own answers; the only two outcomes are
+`answer` and `handoff`, there is no decline), `copy`, `suggestions`,
+`page()` (what the owner sees as the source), `account` and `isAround()`.
+
+The panel's frame (`CHAT_FRAME`, `CHAT_SCRIM`) is a class string, not a
+component: its open/close motion is Framer Motion, which lives in the site, and
+the dialog behaviour comes from `useDialog` on the site's frame.
 
 ## Rules
 

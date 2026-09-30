@@ -237,3 +237,9 @@
 @keyframes cahyana-spin {
   to { transform: rotate(360deg); }
 }
+
+/* The chat typing dots (CUE chatdot): opacity only, so it never fights the press-feedback scale. */
+@keyframes cahyana-chatdot {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+}

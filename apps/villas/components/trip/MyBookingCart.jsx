@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowRight, MessageCircle, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
@@ -10,6 +10,8 @@ import { extraProblem, extrasTotals } from '@/lib/extras';
 import { bookingMessage } from '@/lib/bookingMessage';
 import ExtrasSection from '@/components/trip/ExtrasSection';
 import useExtrasCatalog from '@/components/trip/useExtrasCatalog';
+import CheckoutSheet from '@/components/booking/CheckoutSheet';
+import PayWaiting from '@/components/booking/PayWaiting';
 import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
 import { CUE_LINK, whatsappLink } from '@/lib/constants';
@@ -46,6 +48,25 @@ export default function MyBookingCart() {
   const { currency, formatAmount, breakdown: convert } = useCurrency();
   const [sent, setSent] = useState(false);
   const catalog = useExtrasCatalog(currency, cart.stay?.guests || 2);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [waitingRef, setWaitingRef] = useState('');
+
+  // Back from DOKU (?ref=): climb out of its iframe if we landed inside it, then wait for the server to say paid.
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get('ref');
+    if (!ref) return;
+    try {
+      if (window.top !== window.self) { window.top.location.replace(window.location.href); return; }
+    } catch (e) {
+      // A browser that refuses the climb keeps the page where it is.
+    }
+    setWaitingRef(ref);
+  }, []);
+
+  function closeWaiting() {
+    setWaitingRef('');
+    window.history.replaceState({}, '', window.location.pathname);
+  }
 
   // Draw nothing until the stored booking is read, or 'nothing here yet' flashes at guests who have one.
   if (!ready) return <div className="min-h-[40vh]" aria-busy="true" />;
@@ -170,22 +191,26 @@ export default function MyBookingCart() {
               </div>
             )}
 
+            <Button full onClick={() => setCheckoutOpen(true)} disabled={blocked || !breakdown || nights < 1} className="mt-6 disabled:opacity-50 disabled:cursor-not-allowed">
+              Book now
+            </Button>
             <Button
               as="a"
               full
+              variant="ghost"
               href={blocked ? undefined : whatsappLink(message)}
               aria-disabled={blocked || undefined}
               target="_blank"
               rel="noopener"
               onClick={(event) => { if (blocked) { event.preventDefault(); return; } setSent(true); }}
-              className={`mt-6 ${blocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`mt-2 ${blocked ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
-              Send to WhatsApp
+              Ask on WhatsApp
             </Button>
             {blocked && <p className="mt-3 text-label text-err text-center" role="status">Add a date and time for each extra first.</p>}
             <p className="mt-3 text-label text-muted text-center">
-              Opens WhatsApp with this already written out. Nothing is sent until you press send there.
+              Book now to pay online and confirm straight away, or ask us first on WhatsApp.
             </p>
             {sent && (
               <button type="button" onClick={clear} className="mt-4 w-full text-body text-muted hover:text-err bg-transparent border-none cursor-pointer">
@@ -195,6 +220,13 @@ export default function MyBookingCart() {
           </div>
         </div>
       )}
+      <CheckoutSheet
+        open={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        cart={cart}
+        onPaid={(ref) => { setCheckoutOpen(false); setWaitingRef(ref); }}
+      />
+      {waitingRef && <PayWaiting bookingRef={waitingRef} onClose={closeWaiting} onConfirmed={clear} />}
     </Container>
   );
 }

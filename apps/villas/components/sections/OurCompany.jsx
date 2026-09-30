@@ -73,7 +73,7 @@ function FAQBody() {
         <div className="mb-8" key={group.cat}>
           <h2 className="m-0 mb-3 font-head text-h3 font-semibold text-green">{group.cat}</h2>
           {group.items.map(([question, answer], i) => (
-            <details className={FAQ_CARD} key={i}>
+            <details className={FAQ_CARD} key={i} name="faq">
               <summary className={FAQ_Q}>{question}</summary>
               <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]"><p>{answer}</p></div>
             </details>
@@ -118,15 +118,13 @@ export default function OurCompany() {
         {/* Desktop: plain sticky sidebar, no pills. */}
         <nav
           className="max-[992px]:hidden flex flex-col gap-[var(--space-2)] flex-none w-[200px] sticky top-[calc(var(--header-h,58px)+1.5rem)] self-start max-h-[calc(100vh-var(--header-h,58px)-3rem)] overflow-y-auto pr-[var(--space-3)] border-r border-line"
-          role="tablist"
           aria-label="Our company"
         >
           {TABS.map((item) => (
             <button
               key={item.id}
               type="button"
-              role="tab"
-              aria-selected={tab === item.id}
+              aria-current={tab === item.id || undefined}
               onClick={() => goTo(item.id)}
               className={`p-0 bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === item.id ? 'font-semibold text-gold' : 'text-muted'}`}
             >

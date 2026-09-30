@@ -80,10 +80,7 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 const cssPath = path.join(DEST, 'app', 'globals.css');
 let css = fs.readFileSync(cssPath, 'utf8');
 const MONO = '@source "../../../packages/ui/src";';
-const LIVE = `/* The library is VENDORED here (see packages/ui/VENDORED.md), so this path is
-   one level shorter than the monorepo's. It is the one line the sync has to
-   rewrite, and it fails SILENTLY if it is wrong: every class used inside a
-   library component is simply purged and the component renders unstyled. */
+const LIVE = `/* Vendored library path: if wrong, every library class is purged SILENTLY and components render unstyled. */
 @source "../packages/ui/src";`;
 if (!css.includes(MONO)) {
   console.error('the @source line was not where it was expected - check globals.css by hand');

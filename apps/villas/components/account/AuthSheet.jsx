@@ -66,6 +66,7 @@ export default function AuthSheet({ open, onClose }) {
     <SheetPresence
       open={open}
       onClose={close}
+      label={TITLE[view]}
       shell="fixed inset-0 z-[130] flex items-end sm:items-center justify-center bg-black/45"
       box="relative w-full sm:max-w-md"
     >

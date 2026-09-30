@@ -53,6 +53,7 @@ export default function BookingSheet() {
     <SheetPresence
       open={isOpen}
       onClose={closeBooking}
+      label={step === 'details' ? 'Book Your Stay' : 'Price Summary'}
       shell="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/45"
       box="relative w-full sm:max-w-md"
     >

@@ -25,6 +25,7 @@
 export { cn } from './lib/cn.js';
 export { default as useMobile } from './lib/useMobile.js';
 export { default as useBodyLock } from './lib/useBodyLock.js';
+export { default as useDialog } from './lib/useDialog.js';
 export { default as useRevealWhenAway } from './lib/useRevealWhenAway.js';
 export { default as groupReviews } from './lib/groupReviews.js';
 
@@ -43,6 +44,7 @@ export { default as CurrencyPicker } from './primitives/CurrencyPicker.jsx';
 export { default as FlagDefs } from './primitives/FlagDefs.jsx';
 export { default as Separator } from './primitives/Separator.jsx';
 export { default as LoadFallback } from './primitives/LoadFallback.jsx';
+export { default as LiveRegion } from './primitives/LiveRegion.jsx';
 
 /* --- layer 3: blocks --- */
 export { default as Container } from './blocks/Container.jsx';

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { cn } from '../lib/cn.js';
 import useBodyLock from '../lib/useBodyLock.js';
+import useDialog from '../lib/useDialog.js';
 
 /**
  * FULL-SCREEN PHOTO GRID. Tap a photo anywhere and this opens over the whole
@@ -31,6 +32,8 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
   const pushed = useRef(false);
 
   useBodyLock(open);
+  // Escape stays with the handler below, which also unwinds the pushed history entry.
+  const dialogRef = useDialog({ shown: open, onClose, escape: false });
 
   // Open on the photo that was tapped, not at the top - the guest pointed at
   // something and expects to land on it.
@@ -66,6 +69,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
 
   return (
     <div
+      ref={dialogRef}
       className={cn(
         'fixed inset-0 z-[300] bg-surface-raised',
         '[transition:opacity_var(--dur)_var(--ease),visibility_var(--dur)_var(--ease)]',

@@ -1,9 +1,11 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Private Chef Live Dinner in Ubud | Ubud Private Villas by Cahyana Ubud',
-  description: 'A private chef cooks dinner in your Ubud villa — romantic tables for two, Balinese megibung feasts and BBQ nights. Prices upfront.',
-};
+export const metadata = pageMeta({
+  title: 'Private Chef Live Dinner in Ubud',
+  description: 'A private chef cooks dinner in your Ubud villa: romantic tables for two, Balinese megibung feasts and BBQ nights. Prices upfront.',
+  path: '/services/live-dinner/',
+});
 
 export default function LiveDinnerPage() {
   return (

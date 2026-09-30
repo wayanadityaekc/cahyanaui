@@ -1,9 +1,12 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Breakfast at Your Villa in Ubud | Ubud Private Villas by Cahyana Ubud',
-  description: 'Breakfast cooked fresh at your Ubud villa each morning — Balinese and western options, plus floating breakfast in your private pool.',
-};
+export const metadata = pageMeta({
+  title: 'Breakfast at Your Villa in Ubud',
+  description: 'Breakfast cooked fresh at your Ubud villa each morning: Balinese and western options, plus floating breakfast in your private pool.',
+  path: '/services/breakfast/',
+  image: '/images/breakfast-served-poolside.jpg',
+});
 
 export default function BreakfastPage() {
   return (

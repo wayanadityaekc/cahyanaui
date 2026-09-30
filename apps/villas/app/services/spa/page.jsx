@@ -1,9 +1,11 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata = {
-  title: 'In-Villa Spa & Massage in Ubud | Ubud Private Villas by Cahyana Ubud',
+export const metadata = pageMeta({
+  title: 'In-Villa Spa & Massage in Ubud',
   description: 'Balinese massage, aromatherapy, couples treatments and flower baths, delivered to your private villa in Ubud. Prices upfront.',
-};
+  path: '/services/spa/',
+});
 
 export default function SpaPage() {
   return (

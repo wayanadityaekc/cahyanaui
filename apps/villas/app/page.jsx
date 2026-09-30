@@ -9,11 +9,13 @@ import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { Button, CAPS, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas by Cahyana Ubud',
-  description: 'Two private pool villas in north Ubud, Bali — a 3-bedroom family house and a 2-bedroom ricefield villa. Both rated 4.96 on Airbnb, 10 minutes from Ubud Palace.',
-};
+export const metadata = pageMeta({
+  title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas',
+  description: 'Two private pool villas in north Ubud, Bali: a 3-bedroom family house and a 2-bedroom ricefield villa. Both rated 4.96 on Airbnb, 10 minutes from Ubud Palace.',
+  path: '/',
+});
 
 const WHY_STAY = [
   { title: 'Private Pool', desc: 'Enjoy your own pool, surrounded by tropical greenery.', Icon: Waves },

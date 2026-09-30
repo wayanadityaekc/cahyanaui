@@ -13,7 +13,7 @@ import { AccountProvider } from '@/components/providers/AccountProvider';
 import { CartProvider } from '@/components/providers/CartProvider';
 import { SavedVillasProvider } from '@/components/providers/SavedVillasProvider';
 import BookingSheet from '@/components/booking/BookingSheet';
-import { BAR_BODY_PAD } from '@cahyana/ui';
+import { BAR_BODY_PAD, IosZoomFix } from '@cahyana/ui';
 
 const inter = localFont({
   src: '../public/fonts/inter-latin.woff2',
@@ -39,6 +39,7 @@ export const metadata = {
     ],
     apple: [{ url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`, sizes: '180x180' }],
   },
+  manifest: '/manifest.webmanifest',
 };
 
 // data-brand picks this site's surface from the library tokens, so no component needs to know which site it is in.
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
     <html lang="en" data-brand="villas" className={inter.variable}>
       {/* The fixed bottom bar needs its height reserved, or it covers the footer on mobile. */}
       <body className={BAR_BODY_PAD}>
+        <IosZoomFix />
         <LoadingScreen />
         <CurrencyProvider>
           <AccountProvider>

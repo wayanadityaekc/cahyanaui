@@ -14,10 +14,11 @@ const STATIC_PATHS = [
   '/services/scooter-rental',
 ];
 
+// Trailing slash on every path: the export writes folder/index.html, so /guide would be a 301 to /guide/.
 export function indexablePaths() {
   return [
     ...STATIC_PATHS,
     ...VILLA_LIST.map((villa) => `/villas/${villa.slug}`),
     ...ARTICLES.map((article) => `/guide/${article.slug}`),
-  ];
+  ].map((path) => (path.endsWith('/') ? path : `${path}/`));
 }

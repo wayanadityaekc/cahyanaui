@@ -26,6 +26,7 @@ export { cn } from './lib/cn.js';
 export { default as useMobile } from './lib/useMobile.js';
 export { default as useBodyLock } from './lib/useBodyLock.js';
 export { default as useDialog } from './lib/useDialog.js';
+export { default as IosZoomFix } from './lib/IosZoomFix.jsx';
 export { default as useRevealWhenAway } from './lib/useRevealWhenAway.js';
 export { default as groupReviews } from './lib/groupReviews.js';
 

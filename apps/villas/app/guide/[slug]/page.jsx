@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import ArticlePage from '@/components/sections/ArticlePage';
 import { ARTICLES, articleBySlug } from '@/content/articles';
+import { pageMeta } from '@/lib/seo';
 
 // Static export, so every article path is enumerated at build time.
 export function generateStaticParams() {
@@ -12,10 +13,7 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = articleBySlug(slug);
   if (!article) return {};
-  return {
-    title: `${article.title} | Ubud Private Villas`,
-    description: article.sub,
-  };
+  return pageMeta({ title: article.metaTitle || article.title, description: article.metaDesc || article.sub, path: `/guide/${slug}/` });
 }
 
 export default async function GuideArticleRoute({ params }) {

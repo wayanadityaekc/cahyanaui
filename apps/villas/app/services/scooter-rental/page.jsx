@@ -1,10 +1,12 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
+import { pageMeta } from '@/lib/seo';
 
 // CEK WAYAN: details hidden until Wayan confirms models, rates, licence and deposit terms; say nothing unconfirmed here.
-export const metadata = {
-  title: 'Scooter Rental in Ubud | Ubud Private Villas by Cahyana Ubud',
+export const metadata = pageMeta({
+  title: 'Scooter Rental in Ubud',
   description: 'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
-};
+  path: '/services/scooter-rental/',
+});
 
 export default function ScooterRentalPage() {
   return (

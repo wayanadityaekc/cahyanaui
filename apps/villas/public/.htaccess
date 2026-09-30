@@ -18,3 +18,8 @@
 # ^/villas/?$ matches the retired page and nothing below it.
 RedirectMatch 301 ^/villas/?$ /#villas
 RedirectMatch 301 ^/experiences/?$ /
+# /about moved into Our Company; a real 301 instead of the page's meta refresh.
+RedirectMatch 301 ^/about/?$ /our-company/#about
+
+# Serve this site's own 404 page, not Hostinger's.
+ErrorDocument 404 /404.html

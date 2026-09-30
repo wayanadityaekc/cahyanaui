@@ -12,6 +12,8 @@ export const ARTICLES = [
     cat: 'getting-around',
     title: 'Getting around Ubud when you are staying north of town',
     sub: 'Scooter, driver, or on foot - what each one is actually like from this side of Ubud, and when you need which.',
+    metaTitle: 'Getting Around Ubud from North of Town',
+    metaDesc: 'Scooter, driver, or on foot - what each one is actually like from the north side of Ubud, and when you need which.',
     read: 6,
     body: [
       { type: 'para', html: 'North Ubud is quiet, which is the point of staying here. It is also not a walk-everywhere address. Ubud Palace, the Monkey Forest and the main restaurant streets are about ten minutes away by car, and that ten minutes is the thing to plan around.' },
@@ -41,6 +43,7 @@ export const ARTICLES = [
     cat: 'the-area',
     title: 'What is actually near the villas',
     sub: 'Coffee, dinner, a swim, a supermarket - what is within walking distance of north Ubud and what needs the ten-minute ride.',
+    metaTitle: 'What Is Actually Near the Villas',
     read: 5,
     body: [
       { type: 'para', html: 'This is the question guests ask most often before they book, and the honest answer has two halves: a fair amount is walkable, and the famous things are not.' },
@@ -67,6 +70,8 @@ export const ARTICLES = [
     cat: 'planning',
     title: 'The best time to visit Bali, and what each season is really like',
     sub: 'Dry season, wet season, the crowded months and the cheap ones - with the trade-off each one asks of you.',
+    metaTitle: 'Best Time to Visit Bali: What Each Season Is Like',
+    metaDesc: 'Dry season, wet season, the crowded months and the cheap ones in Bali - with the trade-off each one asks of you.',
     read: 6,
     body: [
       { type: 'para', html: 'Bali has two seasons and about four different experiences inside them. There is no single best month; there is a best month for what you want.' },
@@ -97,6 +102,8 @@ export const ARTICLES = [
     cat: 'staying',
     title: 'Villa or hotel in Ubud: which one suits your trip',
     sub: 'What you get and what you give up with each - written by people who run villas, so read it with that in mind.',
+    metaTitle: 'Villa or Hotel in Ubud: Which Suits Your Trip',
+    metaDesc: 'What you get and what you give up with a villa or a hotel in Ubud - written by people who run villas, so read it with that in mind.',
     read: 5,
     body: [
       { type: 'para', html: 'We rent villas, so take the framing for what it is. What follows is still the comparison we would give a friend, including the cases where a hotel is the better answer.' },

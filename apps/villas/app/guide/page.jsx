@@ -3,11 +3,13 @@ import { ArrowRight, Clock } from 'lucide-react';
 import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
 import { CAPS, Card, Container, EYEBROW_LINE, Section } from '@cahyana/ui';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Ubud Guide | Ubud Private Villas by Cahyana Ubud',
+export const metadata = pageMeta({
+  title: 'Ubud Guide | Ubud Private Villas',
   description: 'Getting around Ubud, what is near the villas, when to visit Bali, and whether a villa or a hotel suits your trip - written by the family who hosts here.',
-};
+  path: '/guide/',
+});
 
 const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 

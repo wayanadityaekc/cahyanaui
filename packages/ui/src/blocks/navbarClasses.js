@@ -12,7 +12,7 @@ export const NAV_ROW =
 // The icon spacing pair (chat, cart); no `relative`, only the icon with a badge needs one.
 export const NAV_ICON =
   'inline-flex items-center text-gold mr-[1.3rem] ' +
-  'transition-[color] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]';
+  'transition-[color,scale] duration-200 ease-[ease] hover:text-gold-d max-[992px]:mr-[0.85rem]';
 
 export const NAV_BADGE_BASE =
   'inline-flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-pill ' +

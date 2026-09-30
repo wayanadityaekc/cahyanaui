@@ -30,6 +30,21 @@ jobs:
 
       - run: npm run build
 
+      - name: Verify links, sitemap, canonicals and robots.txt agree with the build
+        run: node tools/check-urls.js
+
+      - name: Verify the villa pages keep their booking panel, book bar, h1 and schema
+        run: node tools/check-detail.js
+
+      - name: Verify every referenced asset exists and pages carry a favicon
+        run: node tools/check-assets.js
+
+      - name: Verify every declared transition actually animates something
+        run: node tools/check-motion.js
+
+      - name: Verify no malformed utility classes (they generate no CSS at all)
+        run: node tools/check-classes.js
+
       - name: Publish out/ to the deploy branch
         run: |
           cd out

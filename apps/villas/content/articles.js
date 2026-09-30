@@ -22,7 +22,7 @@ export const ARTICLES = [
       { type: 'heading', html: 'Scooter' },
       { type: 'para', html: 'A scooter is the cheapest and fastest way to move, and it is what most long-stay guests end up on. Ten minutes into town, and you park for almost nothing instead of circling for a car space on Jalan Raya.' },
       { type: 'para', html: 'The honest version: Bali traffic does not forgive inexperience, the roads north of town have gravel and dogs on them, and rain turns the surface slick within seconds. If you have never ridden, Ubud is a poor place to learn. Ride with a helmet on, and carry a licence that actually covers you in Indonesia - your travel insurance will ask for it if anything happens.' },
-      { type: 'para', html: 'We can arrange a scooter for your stay. The <a href="/services/scooter-rental">scooter rental page</a> covers what to expect.' },
+      { type: 'para', html: 'We can arrange a scooter for your stay. The <a href="/services/scooter-rental/">scooter rental page</a> covers what to expect.' },
 
       { type: 'heading', html: 'A driver for the day' },
       { type: 'para', html: 'If you are doing temples, waterfalls or rice terraces, hire a car and driver for the day rather than stringing rides together. It works out cheaper than four separate trips, you leave your bags in the car, and somebody who knows the roads decides when to skip a spot because three coaches just pulled in.' },

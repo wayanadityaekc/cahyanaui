@@ -1,4 +1,5 @@
 // Booking terms set by Wayan (Sep 2026), the single source for every page: never edit a number to make a page read better.
+import { REGISTRATION } from '@/content/registration';
 
 // Full payment up front, no deposit option: with only two villas, a held date that never turns up costs a whole week.
 export const PAYMENT = {
@@ -37,6 +38,9 @@ export const BOOKING_TERMS = [
 
 /** Long form, for Our Company. Same facts, room to explain them. */
 export const TERMS_BLOCKS = [
+  { type: 'heading', html: 'Who you are booking with' },
+  { type: 'para', html: `Stays are booked with <strong>${REGISTRATION.name}</strong> (${REGISTRATION.type}, NIB ${REGISTRATION.nib}), based in ${REGISTRATION.location}. Cahyana House and Cahyana Tibuah are both run by the company.` },
+
   { type: 'heading', html: 'Booking and payment' },
   { type: 'para', html: `Stays are paid <strong>in full when you book</strong>. There is no deposit-only option, for a villa or for a scooter.` },
   { type: 'para', html: PAYMENT.why },

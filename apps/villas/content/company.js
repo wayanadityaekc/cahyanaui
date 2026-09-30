@@ -1,7 +1,7 @@
 // Our Company copy: every line is a fact already on this site or its Airbnb listings; booking terms live in policies.js.
 export const ABOUT = [
   { type: 'heading', html: 'Who we are' },
-  { type: 'para', html: 'Cahyana Ubud is a family operation in north Ubud. Made and his wife opened Cahyana House first - three bedrooms around a private pool, inside the family compound. Wayan, born and raised here, followed with Cahyana Tibuah out in the rice fields.' },
+  { type: 'para', html: 'Cahyana Ubud is a family operation in north Ubud. Cahyana House came first - three bedrooms around a private pool, inside the family compound. Wayan, born and raised here, followed with Cahyana Tibuah out in the rice fields. Both villas are run by PT Cahyana Ubud Experience, the company behind Cahyana Ubud Experience.' },
   { type: 'para', html: 'Between them the two villas have collected over 300 reviews and a 4.96 average, and both carry Airbnb&rsquo;s Superhost and Guest Favourite badges. We still answer the messages ourselves.' },
   { type: 'heading', html: 'How we host' },
   { type: 'para', html: 'There&rsquo;s no reception and no uniform. At Cahyana House you&rsquo;re welcomed through the family compound; at Tibuah you let yourself in. Either way you get a phone number that answers, usually within the hour.' },

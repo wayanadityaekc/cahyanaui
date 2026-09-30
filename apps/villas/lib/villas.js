@@ -16,7 +16,7 @@ export const VILLAS = {
     beds: '3 king',
     rating: '4.96',
     reviews: 221,
-    host: 'Made · Superhost, 3 years hosting, replies within an hour',
+    host: 'PT Cahyana Ubud Experience · replies within an hour',
     shortDesc: 'A spacious villa with a private pool and tropical garden. Perfect for couples or small families.',
     // Real photo of this villa, reused from CUE's own asset (not a stock shot).
     heroImg: '/images/cahyana-house.webp',
@@ -65,7 +65,7 @@ export const VILLAS = {
     goodToKnow: [
       { label: 'Check-in', value: 'Through a Balinese family compound - a real welcome, full privacy inside' },
       { label: 'Geckos', value: 'Small lizards are normal here, harmless, and considered good luck' },
-      { label: 'Host', value: 'Made · Superhost, 3 years hosting, replies within an hour' },
+      { label: 'Host', value: 'PT Cahyana Ubud Experience · replies within an hour' },
     ],
   },
 

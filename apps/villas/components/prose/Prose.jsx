@@ -1,6 +1,7 @@
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import { infoList } from '@/components/ui/infoClasses';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
+import LoadFallback from '@/components/ui/LoadFallback';
 
 // Heading style per context: 'legal' (default) centered, 'guide' and 'company' left-aligned.
 const SUB_VARIANT = {
@@ -11,7 +12,8 @@ const SUB_VARIANT = {
 };
 
 // Port of CUE's Prose: renders the article/legal block schema as real elements (unlinkHiddenTours dropped).
-export default function Prose({ blocks, headingVariant = 'legal' }) {
+export default function Prose({ blocks = [], headingVariant = 'legal' }) {
+  if (!blocks.length) return <LoadFallback />;
   return blocks.map((block, i) => {
     if (block.type === 'crumb') {
       return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;

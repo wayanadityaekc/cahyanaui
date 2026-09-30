@@ -1,4 +1,7 @@
-export default function Mosaic({ images }) {
+import LoadFallback from '@/components/ui/LoadFallback';
+
+export default function Mosaic({ images = [] }) {
+  if (!images.length) return <LoadFallback className="mt-4" />;
   return (
     <div className="grid grid-cols-3 gap-3 mt-4">
       {images.map((img) => (

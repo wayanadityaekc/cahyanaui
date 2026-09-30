@@ -2,22 +2,23 @@ import Link from 'next/link';
 import { Button, CAPS, Container, EYEBROW_LINE, Hero, PROSE_COPY, Section } from '@cahyana/ui';
 import Mosaic from '@/components/ui/Mosaic';
 import ServiceAside from '@/components/sections/ServiceAside';
+import LoadFallback from '@/components/ui/LoadFallback';
 
 // Shared layout for every 'at your villa' service page, so styling lives in one place.
 export default function ServiceDetail({
-  kicker,
-  title,
-  subtitle,
-  heroImg,
-  heroAlt,
-  glance,
-  sections,
-  gallery,
-  aside,
-  serviceId,
-  bottomHeading,
-  bottomText,
-  bottomCta,
+  kicker = '',
+  title = '',
+  subtitle = '',
+  heroImg = '',
+  heroAlt = '',
+  glance = [],
+  sections = [],
+  gallery = null,
+  aside = {},
+  serviceId = '',
+  bottomHeading = '',
+  bottomText = '',
+  bottomCta = null,
 }) {
   return (
     <>
@@ -36,15 +37,18 @@ export default function ServiceDetail({
         <Container className="grid lg:grid-cols-[1.7fr_1fr] gap-10 items-start">
           <div className={PROSE_COPY}>
             <p className={EYEBROW_LINE}>At a Glance</p>
-            <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
-              {glance.map((item) => (
-                <li key={item.label} className="flex flex-col py-4 pr-4 text-small">
-                  <span className={`${CAPS} text-muted`}>{item.label}</span>
-                  <span className="text-gold">{item.value}</span>
-                </li>
-              ))}
-            </ul>
+            {glance.length ? (
+              <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
+                {glance.map((item) => (
+                  <li key={item.label} className="flex flex-col py-4 pr-4 text-small">
+                    <span className={`${CAPS} text-muted`}>{item.label}</span>
+                    <span className="text-gold">{item.value}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : <LoadFallback className="mb-2" />}
 
+            {!sections.length && <LoadFallback className="mt-9" />}
             {sections.map((section) => (
               <div key={section.heading}>
                 <h2 className="text-h2 font-semibold mt-9 mb-3 text-gold">{section.heading}</h2>

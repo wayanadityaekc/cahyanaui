@@ -1,3 +1,5 @@
+import LoadFallback from '@/components/ui/LoadFallback';
+
 // mb matches the column gap so stacked rows of boxes are spaced like the columns.
 export const BOX_GRID =
   'grid grid-cols-2 gap-[var(--space-4)] mb-[var(--space-4)] ' +
@@ -24,7 +26,8 @@ const ROWS_RULED =
   '[&_li]:[border-bottom:1px_solid_var(--line)] [&_li:last-child]:[border-bottom:none] ' +
   '[&_li:last-child]:pb-0';
 
-export function InfoBoxList({ items, variant, render }) {
+export function InfoBoxList({ items = [], variant = '', render = null }) {
+  if (!items.length) return <LoadFallback />;
   const ruled = variant === 'yes' || variant === 'no';
   return (
     <ul className={`${ROWS_BASE} ${ruled ? ROWS_RULED + ' ' : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>

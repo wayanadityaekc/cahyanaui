@@ -1,22 +1,29 @@
-# CLAUDE.md — Cahyana monorepo
+# CLAUDE.md: Cahyana Dev standards
 
-## Cahyana standards (repo consistency, all repos)
+Applies to every repo and every future website. Owner: Wayan (Product Owner).
+Style of this file: checklist, dry. Follow it literally. Ask when something is not covered.
 
-Shared across CUE, cahyanaui, ubud-private-villas and salia-makeup (Sep 2026).
-Where an older note below conflicts with these, THESE win - above all: never push to
-`main` without Wayan explicitly saying so. Repo-specific notes below that do not
-conflict still apply. Source of truth for style is CUE.
+## 1. Order of work (do not reorder)
 
-### Working rules
+- [x] Phase 1, audit (read-only): audit `ubud-private-villas` and `salia-makeup` against the CUE rules in section 3. Report only. Change nothing. Wait for approval.
+- [ ] Phase 2, fix: bring both repos in line with CUE. One rule at a time, one work order per rule. Run tests and check endpoints/pages after each. Commit, then push to the feature branch (see section 2).
+- [ ] Phase 3, library: only after CUE, `ubud-private-villas` and `salia-makeup` are all consistent, move the shared components, blocks and layouts into the Cahyana UI repo (name: Cahyana UI, no dash; local folder `cahyanaui`).
+- [ ] Phase 4, dashboards: `cahyana-dashboard` and Salia's dashboard get the same treatment, but only after Phases 1-3 are done. When Phase 3 is finished, stop and ask Wayan: "Do you want to proceed with the dashboards?" Do not continue automatically.
+- [ ] Separate later task: chase the gap between `ubud-private-villas` and Cahyana Ubud Experience (CUE). Do this after style consistency is finished, not before.
+- [ ] `cahyana-api` (backend) audit is parked. Do not start it until Wayan says so.
+
+Source of truth: CUE (`CUE-main`). Its syntax audit is finished. If another repo differs from CUE, the other repo changes, not CUE.
+
+## 2. Working rules
 
 - [ ] Audit first, then fix. Never fix during an audit.
 - [ ] Report format: rule, hits/files, where most of it is, likely false positives or keep-as-is.
 - [ ] Delete nothing (files, endpoints, components) without Wayan's OK.
 - [ ] Push work-order commits to the feature branch `claude/work-tree-validation-vqexsf` as you go (standing approval, that branch is not live). Never push to `main` until Wayan explicitly says so.
 - [ ] When a rule cannot be applied cleanly (for example a loop with `return`/`break`), list it separately and do it in its own work order.
-- [ ] When a new feature or new site is built, walk Wayan through the QA checklist (QA checklist below) step by step and remind him of small items he may forget.
+- [ ] When a new feature or new site is built, walk Wayan through the QA checklist (section 7) step by step and remind him of small items he may forget.
 
-### Syntax rules (from the finished CUE audit)
+## 3. Syntax rules (from the finished CUE audit)
 
 - [ ] Standalone named helper functions: plain `function name() {}`. Not `const name = () => {}`.
 - [ ] Arrow functions stay for inline callbacks (`.map`, `.forEach`, `.filter`) and short inline event handlers (`onClick={() => {...}}`).
@@ -33,7 +40,7 @@ conflict still apply. Source of truth for style is CUE.
 - [ ] Components with several props get default values (for example `included = []`) plus a friendly fallback message when data is missing ("Sorry, we could not load this information. Please try again.").
 - [ ] Files over about 300 lines: flag for splitting. Pure data files are exempt.
 
-### Stack
+## 4. Stack
 
 Frontend:
 - [ ] React, Next.js, Tailwind
@@ -51,12 +58,12 @@ Backend (plain Express, kept simple on purpose):
 
 Before adding any library not listed here: ask Wayan first.
 
-### Typography
+## 5. Typography
 
 - [ ] Inter only, for headings and body. No second typeface.
 - [ ] Default for every repo and every future site. Follow CUE. Change only when Wayan explicitly asks.
 
-### Animation
+## 6. Animation
 
 - [ ] Framer Motion is the only animation library. Popups, modals, dropdowns, page and section transitions must animate smoothly, not appear abruptly.
 - [ ] On every new feature with an interaction, check whether Framer Motion applies. If it does, ask Wayan once: "Should this use Framer Motion?" If yes, add it.
@@ -64,14 +71,14 @@ Before adding any library not listed here: ask Wayan first.
 - [ ] Known issue in CUE: some interactions (for example a popup on click) appear abruptly. Flag to Wayan; he will double-check CUE later.
 - [ ] Every popup locks background scroll.
 
-### QA checklist (draft: extend it from CUE, then ask Wayan to approve)
+## 7. QA checklist (draft: extend it from CUE, then ask Wayan to approve)
 
 Claude Code: read CUE, propose the full checklist, mark each item Must-have or Nice-to-have, and wait for approval. Starting list:
 
 Must-have
 - [ ] Payment flow works end to end and matches CUE
 - [ ] Favicon and browser tab icon present and correct
-- [ ] Font, colors and animation match CUE (typography and animation above)
+- [ ] Font, colors and animation match CUE (sections 5 and 6)
 - [ ] Syntax matches section 3
 - [ ] Forms validated front and back (Zod on the backend)
 - [ ] Endpoints check ownership (locked, security-by-default)
@@ -88,73 +95,9 @@ Nice-to-have
 - [ ] Lighthouse check, mobile and desktop
 - [ ] Google Search Console verified
 
-## What this is
+## 8. Library-first (Cahyana UI)
 
-```
-apps/cue        cahyanaubudexperience.com   - tours & experiences
-apps/villas     ubudprivatevillas.com       - the villas
-packages/ui     @cahyana/ui                 - the shared library
-```
-
-pnpm workspaces + Turborepo. Node 22, Next 16, React 19, Tailwind v4.
-
-Each app keeps its own `CLAUDE.md` — `apps/cue/CLAUDE.md` is the long one and
-still governs CUE.
-
-## The rule that matters
-
-**The library is the product. Sites are thin consumers.**
-
-Anything a site uses lives in `packages/ui` first and is imported. That holds
-even for a block only one site uses today — a future villa site should drop its
-own content into the same slots and render.
-
-Read `packages/ui/README.md` before adding to the library. Short version:
-three layers (tokens → primitives → blocks), a layer never imports upwards,
-components are presentational and take content through props. Structure is
-borrowed from shadcn/ui; **no shadcn code and no shadcn dependency**.
-
-## CUE is not being migrated
-
-`apps/cue` keeps using its own local components and stays fully working. It
-**donates its patterns** to the library — it does not consume it yet. Do not
-refactor CUE into the library without being asked.
-
-## Deploys — read this before touching CI
-
-Both sites still deploy from their **own separate repos**, not from here:
-
-| site | repo | how |
-|---|---|---|
-| CUE | `wayanadityaekc/CUE` | push `main` → Action → force-push `out/` to `deploy` → Hostinger |
-| Villas | `wayanadityaekc/ubud-private-villas` | same shape |
-
-This monorepo **deploys nothing**. The two apps' old workflow files sit at
-`apps/*/.github/workflows/`, where GitHub does not look — that is deliberate,
-not an oversight.
-
-Cutting a site over means pointing Hostinger at this repo, which is a change in
-the hosting panel that only Wayan can make. Until then, a change that must go
-live still goes through the site's own repo.
-
-## Working here
-
-- `pnpm install` at the root. `.npmrc` sets `node-linker=hoisted` — both apps
-  were built and are live under npm's flat layout, and hoisting avoids a class
-  of "worked before the monorepo" failures. Worth revisiting once both apps are
-  on the library and their dependency lists have been audited.
-- A site consuming the library needs two things, and both fail silently:
-  `@source "../../../packages/ui/src"` in its CSS (or every class used inside a
-  library component is purged and the component renders unstyled), and
-  `transpilePackages: ['@cahyana/ui']` in `next.config.js` (the library ships
-  as JSX source, not a built bundle).
-- Verify styling by measurement, not by eye. playwright-core plus the bundled
-  Chromium at `/opt/pw-browsers/`; serve `out/` over plain `node http`.
-
-## History
-
-Both repos were merged in with `git-filter-repo --to-subdirectory-filter`, so
-`git log` and `git blame` work normally on a path — 1322 commits of CUE and 32
-of the villa site, back to CUE's first commit. A plain `git subtree add` was
-tried first and rejected: it keeps the commits but leaves them pointing at the
-old paths, so a per-file log stops at the merge showing one commit.
+- [ ] Every new piece of UI goes into Cahyana UI first, then the site consumes it.
+- [ ] Three layers: templates, blocks, components. Same shape as shadcn/Flowbite/Preline, but Cahyana's own build.
+- [ ] Library holds the presentational shell; each site passes its own fields, handlers and validation.
+- [ ] Do not build a component inside a site that belongs in the library.

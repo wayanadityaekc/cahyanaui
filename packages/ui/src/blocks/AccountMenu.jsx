@@ -3,6 +3,7 @@
 import { ChevronDown, LogOut, UserRound } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import useDisclosure from '../lib/useDisclosure.js';
+import PopPanel from './PopPanel.jsx';
 import Button from '../primitives/Button.jsx';
 import Separator from '../primitives/Separator.jsx';
 import {
@@ -13,7 +14,6 @@ import {
   ACCOUNT_PANEL,
   ACCOUNT_ROW,
   NAV_CHEVRON,
-  navPop,
 } from './navbarClasses.js';
 
 // Two letters for the avatar: first + last name, else the start of the name or email.
@@ -40,6 +40,7 @@ export default function AccountMenu({
   loginTitle = '',
   loginNote = '',
   linkAs = 'a',
+  pop = null,
 }) {
   const Link = linkAs;
   const { open, setOpen, boxRef, triggerRef, panelId } = useDisclosure();
@@ -69,14 +70,14 @@ export default function AccountMenu({
         >
           Log in
         </button>
-        <div id={panelId} className={cn(ACCOUNT_PANEL, 'w-[18rem]', navPop(open))}>
+        <PopPanel pop={pop} open={open} id={panelId} className={cn(ACCOUNT_PANEL, 'w-[18rem]')}>
           <div className="px-3 pt-2 pb-3">
             {loginTitle ? <b className="block text-small font-semibold text-gold">{loginTitle}</b> : null}
             {loginNote ? <span className="block text-small text-muted mb-3">{loginNote}</span> : null}
             <Button full onClick={() => { setOpen(false); onLogin(); }}>Log in</Button>
           </div>
           {prefsBlock}
-        </div>
+        </PopPanel>
       </div>
     );
   }
@@ -97,7 +98,7 @@ export default function AccountMenu({
         <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>
         <ChevronDown className={cn('max-[992px]:hidden', NAV_CHEVRON, open && 'rotate-180')} strokeWidth={1.8} aria-hidden="true" />
       </button>
-      <div id={panelId} className={cn(ACCOUNT_PANEL, 'w-[15rem] min-[993px]:w-[18rem]', navPop(open))}>
+      <PopPanel pop={pop} open={open} id={panelId} className={cn(ACCOUNT_PANEL, 'w-[15rem] min-[993px]:w-[18rem]')}>
         <div className="px-3 pt-2 pb-3">
           <b className="block text-small font-semibold text-gold overflow-hidden text-ellipsis whitespace-nowrap">{account.name || first}</b>
           <span className="block text-small text-muted overflow-hidden text-ellipsis whitespace-nowrap">{account.email}</span>
@@ -117,7 +118,7 @@ export default function AccountMenu({
             Sign out
           </button>
         </div>
-      </div>
+      </PopPanel>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import AuthSheet from '@/components/account/AuthSheet';
 import { useCart } from '@/components/providers/CartProvider';
 import { WHATSAPP_LINK } from '@/lib/constants';
 import ChatLauncher from '@/components/chat/ChatLauncher';
+import { PopMenu } from '@/components/ui/Reveal';
 import TripPrefsFields from './TripPrefsFields';
 
 // One Lucide icon per drawer row, each the icon that already means that thing elsewhere on the site.
@@ -57,6 +58,7 @@ export default function Navbar() {
   return (
     <>
       <NavbarShell
+        pop={PopMenu}
         linkAs={Link}
         isActive={isActive}
         links={LINKS}
@@ -95,6 +97,7 @@ export default function Navbar() {
         account={(
           /* Same account as the tour site (one guest record); villas has no Settings page, so no Settings row. */
           <AccountMenu
+            pop={PopMenu}
             account={account}
             hydrated={hydrated}
             linkAs={Link}

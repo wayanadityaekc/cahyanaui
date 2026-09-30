@@ -37,6 +37,7 @@ export default function NavbarShell({
   drawerTitle = 'Menu',
   isActive = () => false,
   linkAs = 'a',
+  pop = null,
   drawerId = 'nav-menu',
   className,
 }) {
@@ -124,7 +125,7 @@ export default function NavbarShell({
         </button>
 
         {logo}
-        <NavDesktop links={links} isActive={isActive} linkAs={Link} />
+        <NavDesktop links={links} isActive={isActive} linkAs={Link} pop={pop} />
         {actions}
         {extras}
 

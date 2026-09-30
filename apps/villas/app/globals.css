@@ -1,59 +1,12 @@
 @import "tailwindcss";
 
-/* The shared library: its tokens, and the files Tailwind must scan to find the
-   classes used inside its components. Without @source those classes are not in
-   any file Tailwind looks at, so they never reach the stylesheet. */
+/* Library tokens; tokens are defined once in @cahyana/ui for both sites, never copied here. */
 @import "@cahyana/ui/tokens.css";
 @source "../../../packages/ui/src";
 
-/* =====================================================================
-   TOKENS LIVE IN THE LIBRARY.
-
-   This file used to carry its own @theme block, its own :root aliases and
-   its own mobile container override - a full copy of what CUE had. They
-   are gone: @cahyana/ui/tokens.css above is the single definition for both
-   sites now, so a brand change happens once instead of twice and cannot
-   half-land.
-
-   What stays below is genuinely this site's: the base layer, its layout
-   helpers (.wrap / .section / .caps / .btn), prose helpers, the loading
-   splash, and the press-feedback rule. Those move into the library as
-   Layer 3 blocks land, not before.
-   ===================================================================== */
-
-
-/* =====================================================================
-   Base
-   ===================================================================== */
-/* Explicitly layered as `base` — Tailwind's cascade layer order is
-   theme, base, components, utilities. Un-layered CSS beats ALL of those
-   regardless of specificity, so an un-layered `a { color: inherit }` here
-   would silently win over `.btn-cta { color: #fff }` from @layer
-   components (this bit us once: filled CTA buttons rendered as <a>/<Link>
-   showed washed-out inherited text instead of white — buttons were fine
-   since the selector only targets <a>). Keeping these in @layer base
-   keeps the intended precedence: components > base > theme.
-   ===================================================================== */
+/* Base: kept in @layer base, because un-layered CSS here would beat every component class (white CTA text once lost to a { color: inherit }). */
 @layer base {
-  /* overflow-x: CLIP, not hidden — ported from CUE's style.css.
-
-     Two reasons it has to be here, on BOTH html and body:
-
-     1. The closed navbar drawer is a position:fixed panel parked off the right
-        edge with translate-x-full. Chrome counts it in
-        documentElement.scrollWidth even though it never actually scrolls, so
-        every page here reported ~340px of phantom horizontal overflow. That
-        makes `scrollWidth - innerWidth === 0` — the guard a full-bleed slider
-        has to be checked with — useless, since a real overflow and the drawer's
-        phantom one look the same.
-     2. components/ui/gridClasses.js BLEED_MOBILE breaks a slider track out to
-        both screen edges with calc(50% - 50vw). If the browser paints a classic
-        scrollbar, 50vw is wider than half of innerWidth and the page really
-        does grow sideways. clip stops that from ever reaching the guest.
-
-     CLIP and not HIDDEN: `hidden` on an ancestor turns every descendant
-     position:sticky into a no-op, and the navbar here is sticky. `clip` blocks
-     the scrolling without creating a scroll container, so sticky keeps working. */
+  /* overflow-x CLIP not hidden, on html AND body: hides the off-screen drawer and slider bleed but keeps the sticky navbar working. */
   html {
     scroll-behavior: smooth;
     overflow-x: clip;
@@ -65,11 +18,7 @@
     font-weight: 400;
     line-height: 1.6;
     color: var(--color-ink);
-    /* The surface token, not a literal. This is the one line that makes the
-       brand switch real: the library decides that data-brand="villas" means
-       light grey and CUE means white, and the page just asks for whichever it
-       was given. Hard-coding #fff here would leave the token defined and
-       ignored - which is exactly what it was doing until this was measured. */
+    /* The surface token, not a literal: it is what lets the library switch brand background per site. */
     background: var(--surface);
     overflow-x: clip;
   }
@@ -83,10 +32,7 @@
   }
 
   h1, h2, h3 {
-    /* --font-display was never defined anywhere - headings have been inheriting
-       body's family this whole time, which happens to be right. Pointed at the
-       real token so a library that ever defines --font-display cannot silently
-       restyle every heading on the site. */
+    /* --font-head, not the never-defined --font-display, so a library change cannot silently restyle headings. */
     font-family: var(--font-head);
     font-weight: 600;
     line-height: 1.15;
@@ -95,54 +41,16 @@
   }
 }
 
-/* =====================================================================
-   Layout primitives
-   ===================================================================== */
+/* Layout primitives */
 @layer components {
-  /* Named "wrap*" (not "container*") on purpose: Tailwind v4 auto-generates
-     its own ".container" utility (width:100%, breakpoint max-widths, no
-     margin) in @layer utilities, which beats anything in @layer components
-     regardless of source order or specificity — that collision was silently
-     nuking left/right page padding on mobile (below the first breakpoint,
-     Tailwind's version resolves to width:100% with no centering). */
-  /* Gutter is a TOKEN now, not a percentage — 16px on a phone, 24px from 993px
-     up, which is CUE's --container-x. The old `width: min(1200px, 92%)` made
-     the gutter scale with the viewport (15.6px at 390, 34px at 430, 50px at
-     620), so nothing on the page ever lined up with anything else at two
-     different widths. It also could not agree with a full-bleed slider, which
-     insets its first card by a fixed 1rem: a section heading at 15.6px above a
-     card at 16px is visibly out by a hair, and that is exactly the kind of
-     not-quite-aligned that reads as sloppy without being obviously broken.
-     Same reason CUE pins this to a token and checks it at 390px. */
-  /* The page box (.wrap/.wrap-mid/.wrap-read), the vertical rhythm (.section),
-     the caps treatment (.eyebrow/.caps), the card surface (.card/.card-hover)
-     and the badge all moved into @cahyana/ui. They are NOT re-declared here:
-     one shape defined in two places is the drift the library exists to remove,
-     and CSS cannot read the library's strings.
-
-     Import Container, Section, Card, Badge, Eyebrow / EYEBROW_LINE / CAPS. */
+  /* Page box, rhythm, caps and card live in @cahyana/ui: never redeclare them, and never name a class .container (Tailwind's own wins). */
 
 
 }
 
-/* =====================================================================
-   Prose helpers reused across restyled content pages
-   ===================================================================== */
-/* .prose-copy, .divider-line, .icon-circle and .stars-amber moved to
-   @cahyana/ui as PROSE_COPY, ICON_CIRCLE and STARS. .divider-line had no call
-   sites left and is simply gone.
+/* Prose helpers and the loading splash moved to @cahyana/ui (PROSE_COPY, ICON_CIRCLE, STARS, blocks/LoadingScreen.jsx). */
 
-   The loading splash moved too: it is a library component now
-   (blocks/LoadingScreen.jsx), with its spinner keyframes in tokens.css. */
-
-/* =====================================================================
-   Scroll lock (components/ui/useBodyLock.js)
-   Toggled on <html> AND <body>: Chrome/desktop scroll the page via <body>,
-   but iOS Safari very often scrolls <html> (documentElement) instead, so
-   locking only one leaves the page scrollable under a popup on iPhone.
-   Deliberately overflow-only — no position:fixed, which is what makes the
-   page jump to the top when a modal opens.
-   ===================================================================== */
+/* Scroll lock for useBodyLock.js: on html AND body because iOS scrolls html; overflow only, since position:fixed jumps to top. */
 .hs-locked { overflow: hidden !important; }
 
 /* Header entrance, from CUE's style.css. */
@@ -150,18 +58,7 @@
   from { opacity: 0; }
 }
 
-/* =====================================================================
-   Press feedback — ported from CUE's style.css.
-
-   Uses the standalone `scale` property, NOT `transform: scale()`: cards and
-   CTAs already animate `transform` on hover (a translateY lift) and the two
-   would overwrite each other. `scale` composes with `transform` instead.
-
-   The transition sits at ELEMENT specificity on purpose (0,0,1), so a component
-   that declares its own transition (0,1,0) still wins and simply gets an
-   instant press instead of an eased one. The :active rule is 0,1,1 so the
-   feedback itself always lands, whatever the component declares.
-   ===================================================================== */
+/* Press feedback from CUE: standalone `scale` so it composes with hover transforms; element specificity so components can override. */
 @layer base {
   button,
   [role="button"],

@@ -18,13 +18,13 @@ import { API_BASE, API_SITE, TOKEN_KEY } from '@/lib/constants';
 const AccountContext = createContext(null);
 
 function read() {
-  try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; }
+  try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
 }
 function write(v) {
-  try { window.localStorage.setItem(TOKEN_KEY, v); } catch { /* ignore */ }
+  try { window.localStorage.setItem(TOKEN_KEY, v); } catch (e) { /* ignore */ }
 }
 function drop() {
-  try { window.localStorage.removeItem(TOKEN_KEY); } catch { /* ignore */ }
+  try { window.localStorage.removeItem(TOKEN_KEY); } catch (e) { /* ignore */ }
 }
 
 export function AccountProvider({ children }) {
@@ -80,7 +80,7 @@ export function AccountProvider({ children }) {
         body: JSON.stringify({ email, site: API_SITE }),
       });
       return r.ok;
-    } catch {
+    } catch (e) {
       return false;
     }
   }
@@ -99,7 +99,7 @@ export function AccountProvider({ children }) {
         return { ok: true };
       }
       return { ok: false, error: (d && d.detail) || (d && d.error) || '' };
-    } catch {
+    } catch (e) {
       return { ok: false };
     }
   }

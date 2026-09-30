@@ -34,7 +34,7 @@ export function SavedVillasProvider({ children }) {
       // Anything can be in storage - another tab, an older shape, a person with
       // devtools open. Take only what this actually is, and never throw on it.
       if (Array.isArray(parsed)) setSlugs(parsed.filter((s) => typeof s === 'string'));
-    } catch {
+    } catch (e) {
       // Unreadable or unavailable - an empty shortlist is the honest fallback.
     }
   }, []);
@@ -43,7 +43,7 @@ export function SavedVillasProvider({ children }) {
     setSlugs(next);
     try {
       window.localStorage.setItem(KEY, JSON.stringify(next));
-    } catch {
+    } catch (e) {
       // Storage full or blocked. The heart still fills for this visit; it just
       // will not survive a reload. Better than swallowing the tap entirely.
     }

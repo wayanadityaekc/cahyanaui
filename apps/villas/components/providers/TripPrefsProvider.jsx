@@ -30,7 +30,7 @@ export function TripPrefsProvider({ children }) {
     try {
       const saved = Number(window.localStorage.getItem(KEY));
       if (saved >= 1 && saved <= 12) setGuestsState(saved);
-    } catch {
+    } catch (e) {
       // localStorage unavailable - the default stands.
     }
   }, []);
@@ -40,7 +40,7 @@ export function TripPrefsProvider({ children }) {
     setGuestsState(v);
     try {
       window.localStorage.setItem(KEY, String(v));
-    } catch {
+    } catch (e) {
       // ignore
     }
   }

@@ -48,7 +48,7 @@ export function formatCurrency(amountUsd, code) {
       currency: code,
       maximumFractionDigits: 0,
     }).format(rounded);
-  } catch {
+  } catch (e) {
     return `${code} ${rounded.toLocaleString('en-US')}`;
   }
 }

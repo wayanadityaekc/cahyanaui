@@ -32,7 +32,7 @@ export function readCart() {
       stay: parsed && typeof parsed.stay === 'object' ? parsed.stay : null,
       services: Array.isArray(parsed?.services) ? parsed.services : [],
     };
-  } catch {
+  } catch (e) {
     return EMPTY;
   }
 }
@@ -41,7 +41,7 @@ export function writeCart(cart) {
   if (typeof window === 'undefined') return;
   try {
     window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  } catch {
+  } catch (e) {
     /* private window, or storage full - the page still works, it just forgets */
   }
 }

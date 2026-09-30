@@ -16,7 +16,7 @@ export function CurrencyProvider({ children }) {
     try {
       const saved = window.localStorage.getItem(CURRENCY_STORAGE_KEY);
       if (saved) setCurrency(saved);
-    } catch {
+    } catch (e) {
       // localStorage unavailable — fall back to the default silently.
     }
   }, []);
@@ -25,7 +25,7 @@ export function CurrencyProvider({ children }) {
     setCurrency(code);
     try {
       window.localStorage.setItem(CURRENCY_STORAGE_KEY, code);
-    } catch {
+    } catch (e) {
       // ignore
     }
   }

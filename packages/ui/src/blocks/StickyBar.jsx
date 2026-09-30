@@ -11,8 +11,9 @@ import { cn } from '../lib/cn.js';
  * section switcher fought over the same strip.
  *
  *   variant  'flush'     full width, hard against the bottom edge, top corners
- *                        only. CUE's book bar (the GetYourGuide pattern).
- *            'floating'  an inset rounded card. The villa detail page's bar.
+ *                        only. CUE's book bar (the GetYourGuide pattern), used
+ *                        by both sites.
+ *            'floating'  an inset rounded card. No site uses it any more.
  *   show     false slides it out of view. It stays MOUNTED - unmounting it
  *            makes the body padding that reserves its room flicker.
  *
@@ -20,8 +21,7 @@ import { cn } from '../lib/cn.js';
  * other things, and the pairs are opposites:
  *
  *   flush     border on the TOP only (the sides and bottom are off-screen);
- *             shadow cast UPWARD, because a downward shadow is swallowed by the
- *             screen edge and the bar reads as pasted on with no elevation;
+ *             no shadow (CUE dropped elevation site-wide, Sep 2026);
  *             env(safe-area-inset-bottom) is REQUIRED - on an iPhone the home
  *             indicator lives in that strip and the CTA lands under it.
  *   floating  all four borders and a full radius are on screen, so the normal
@@ -51,8 +51,8 @@ const SHELLS = {
 const CARDS = {
   flush:
     'bg-surface-raised rounded-t-[var(--r-xl)] [border-top:1px_solid_var(--line)] ' +
-    'flex items-center justify-between gap-3 px-4 pt-3 ' +
-    '[padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]',
+    'flex items-center justify-between gap-3 pt-[0.55rem] pl-[1.1rem] pr-[0.9rem] ' +
+    'pb-[max(0.55rem,env(safe-area-inset-bottom))]',
   // rounded-lg, not rounded-xl: defining --radius-* in @theme does NOT clear
   // Tailwind's own radius scale, so `rounded-2xl` keeps resolving to the stock
   // 16px while `rounded-xl` resolves to this project's --r-xl (22px). --r-lg IS
@@ -79,23 +79,7 @@ export default function StickyBar({
   );
 }
 
-/**
- * What a page must add to <body> so the bar does not cover the last of the
- * content. The number lives here, beside the bar whose height it is - a page
- * that has to re-derive it will get it wrong the first time the bar's contents
- * change.
- *
- * Measured with the bar on screen: it needs 86px of clearance, and 95px at
- * 320px, where the CTA label wraps and the card grows a row. One number, the
- * larger, plus a pixel - 94 was tried and left the footer covered at 320 by
- * exactly 1px.
- *
- * SCOPE IT TO THE WIDTHS WHERE THE BAR IS VISIBLE. The element stays in the
- * DOM at every width - it is only `display:none` above the breakpoint - so a
- * bare `:has(.stickybar)` matches on desktop too and pads a page that has no
- * bar on it. `lg:hidden` hides it from 1024px, hence max-[1023px] here.
- *
- * Before this existed the marker was shipped with nothing reading it, and the
- * bar sat on top of the footer at every mobile width. Measured, not guessed.
- */
-export const BAR_BODY_PAD = 'max-[1023px]:has-[.stickybar]:pb-[96px]';
+// Body padding that keeps the bar off the page end, only where the bar shows (lg:hidden hides it from 1024px).
+// max-[1024px], not max-[1023px]: Tailwind compiles max-[N] to "not (min-width:N)", so 1023 would miss exactly 1023px.
+// 64 = the flush bar measured at 60.2px at 320-1023, plus a few pixels.
+export const BAR_BODY_PAD = 'max-[1024px]:has-[.stickybar]:pb-[64px]';

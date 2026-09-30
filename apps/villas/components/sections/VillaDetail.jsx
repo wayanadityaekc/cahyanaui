@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import VillaGallery from '@/components/sections/VillaGallery';
 import AmenityIcon from '@/components/ui/AmenityIcon';
@@ -163,23 +162,12 @@ export default function VillaDetail({ villa }) {
         </div>
 </Section>
 
-      {/* Mobile-only book bar; 'floating' is this site's inset card variant of CUE's flush bar. */}
-      <StickyBar variant="floating" show={showBookBar}>
+      {/* Mobile-only book bar, flush like CUE's; chat lives in the navbar, so the bar holds one action. */}
+      <StickyBar variant="flush" show={showBookBar}>
         <PriceBlock tight amount={format(villa.nightlyRate)} unit="/ night" size="sm" />
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noopener"
-            aria-label="Chat on WhatsApp"
-            className="flex items-center justify-center w-11 h-11 rounded-full bg-cta text-white flex-shrink-0"
-          >
-            <MessageCircle className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
-          </a>
-          <Button onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}>
-            Check availability
-          </Button>
-        </div>
+        <Button className="flex-shrink-0" onClick={() => openBooking({ villaSlug: villa.slug, checkIn, checkOut })}>
+          Check availability
+        </Button>
       </StickyBar>
     </>
   );

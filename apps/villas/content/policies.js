@@ -83,7 +83,7 @@ export const CANCELLATION_BLOCKS = [
   { type: 'para', html: CANCELLATION.basis },
   {
     type: 'list',
-    items: CANCELLATION.bands.map((b) => `<strong>${b.when}:</strong> ${b.label.toLowerCase()}`),
+    items: CANCELLATION.bands.map((band) => `<strong>${band.when}:</strong> ${band.label.toLowerCase()}`),
   },
   { type: 'para', html: CANCELLATION.note },
   { type: 'para', html: 'To cancel, message us on WhatsApp or email - whichever you booked through. We will confirm in writing what is being refunded and when, and the refund goes back the way you paid.' },

@@ -16,20 +16,20 @@ import { PhotoGrid, PhotoMosaic } from '@cahyana/ui';
 // share handler behind them - and over a mosaic they would sit on one arbitrary
 // tile. Say the word and either comes back as a real feature.
 export default function VillaGallery({ images }) {
-  const [at, setAt] = useState(null);
+  const [openIndex, setOpenIndex] = useState(null);
 
   return (
     <>
       <PhotoMosaic
         images={images}
-        onOpen={setAt}
+        onOpen={setOpenIndex}
         moreLabel={`Show all ${images.length} photos`}
       />
       <PhotoGrid
         images={images}
-        open={at !== null}
-        onClose={() => setAt(null)}
-        startAt={at ?? 0}
+        open={openIndex !== null}
+        onClose={() => setOpenIndex(null)}
+        startAt={openIndex ?? 0}
         label="Villa photos"
       />
     </>

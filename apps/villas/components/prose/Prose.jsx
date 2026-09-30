@@ -26,54 +26,54 @@ const SUB_VARIANT = {
 };
 
 export default function Prose({ blocks, headingVariant = 'legal' }) {
-  return blocks.map((b, i) => {
-    if (b.type === 'crumb') {
-      return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(b.html) }} />;
+  return blocks.map((block, i) => {
+    if (block.type === 'crumb') {
+      return <p className="text-label text-muted mb-[1.25rem] [&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
     }
-    if (b.type === 'lead') {
+    if (block.type === 'lead') {
       return (
         <figure className="mb-6" key={i}>
           <img
             className="block w-full h-auto aspect-[4/3] object-cover"
-            src={b.src} alt={b.alt} loading={b.loading} width={b.width} height={b.height}
+            src={block.src} alt={block.alt} loading={block.loading} width={block.width} height={block.height}
           />
           <figcaption
             className="mt-2 text-[length:var(--fs-label)] italic text-center text-muted"
-            dangerouslySetInnerHTML={{ __html: String(b.caption) }}
+            dangerouslySetInnerHTML={{ __html: String(block.caption) }}
           />
         </figure>
       );
     }
-    if (b.type === 'heading') {
+    if (block.type === 'heading') {
       // Default = sub-section heading (.section__title--sub), unchanged for all
       // guide/legal callers. `sub: false` = a main section heading (plain
       // .section__title), used by the detail-page info bodies (TW-B4 #337:
       // charter/airport "How a Charter Day Works" etc.). Class kept as-is -
       // .section__title base is B-FINAL's to convert.
-      return b.sub === false
-        ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: String(b.html) }} />
-        : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: String(b.html) }} />;
+      return block.sub === false
+        ? <h2 className={SECTION_TITLE} key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />
+        : <h2 className={SUB_VARIANT[headingVariant] || SUB_VARIANT.legal} key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
     }
-    if (b.type === 'para') {
-      return <p key={i} dangerouslySetInnerHTML={{ __html: String(b.html) }} />;
+    if (block.type === 'para') {
+      return <p key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
     }
-    if (b.type === 'list') {
+    if (block.type === 'list') {
       return (
-        <ul className={infoList(b.variant)} key={i}>
-          {b.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: String(item) }} />)}
+        <ul className={infoList(block.variant)} key={i}>
+          {block.items.map((item, j) => <li key={j} dangerouslySetInnerHTML={{ __html: String(item) }} />)}
         </ul>
       );
     }
-    if (b.type === 'boxes') {
+    if (block.type === 'boxes') {
       // Option B boxes (Sep 2026): a row of bordered boxes instead of marker
       // lists / loose headings. Each item is { title, variant?, paras?, list? };
       // variant 'no' tints it cream. Desktop two columns, mobile stacked.
       return (
         <InfoBoxes key={i}>
-          {b.items.map((box, k) => (
+          {block.items.map((box, k) => (
             <InfoBox key={k} title={box.title} variant={box.variant}>
-              {(box.paras || []).map((html, p) => (
-                <p key={p} dangerouslySetInnerHTML={{ __html: String(html) }} />
+              {(box.paras || []).map((html, paraIndex) => (
+                <p key={paraIndex} dangerouslySetInnerHTML={{ __html: String(html) }} />
               ))}
               {box.list && (
                 <InfoBoxList
@@ -87,10 +87,10 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
         </InfoBoxes>
       );
     }
-    if (b.type === 'back') {
+    if (block.type === 'back') {
       // margin-top stays inline: `.guide-article p` (0,1,1) outweighs a mt-* utility
       // (0,1,0), same as the pre-migration inline style; [&_a]: replaces .guide-crumb-back.
-      return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(b.html) }} />;
+      return <p style={{ marginTop: '2rem' }} className="[&_a]:text-gold [&_a]:no-underline [&_a]:font-medium" key={i} dangerouslySetInnerHTML={{ __html: String(block.html) }} />;
     }
     return null;
   });

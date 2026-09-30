@@ -20,8 +20,8 @@ const AccountContext = createContext(null);
 function read() {
   try { return window.localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
 }
-function write(v) {
-  try { window.localStorage.setItem(TOKEN_KEY, v); } catch (e) { /* ignore */ }
+function write(token) {
+  try { window.localStorage.setItem(TOKEN_KEY, token); } catch (e) { /* ignore */ }
 }
 function drop() {
   try { window.localStorage.removeItem(TOKEN_KEY); } catch (e) { /* ignore */ }
@@ -42,8 +42,8 @@ export function AccountProvider({ children }) {
     if (magic) {
       write(magic);
       params.delete('token');
-      const qs = params.toString();
-      window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''));
+      const remainingQuery = params.toString();
+      window.history.replaceState({}, '', window.location.pathname + (remainingQuery ? `?${remainingQuery}` : ''));
     }
 
     const token = read();
@@ -51,10 +51,10 @@ export function AccountProvider({ children }) {
 
     async function load() {
       try {
-        const r = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
-        const d = r.ok ? await r.json() : null;
+        const response = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
+        const data = response.ok ? await response.json() : null;
         if (cancelled) return;
-        if (d && d.account) setAccount(d.account);
+        if (data && data.account) setAccount(data.account);
         // A token the server does not recognise any more is worse than no
         // token: it makes every later call fail silently.
         else drop();
@@ -74,12 +74,12 @@ export function AccountProvider({ children }) {
   // has an account - so any completed request counts as sent.
   async function requestLogin(email) {
     try {
-      const r = await fetch(`${API_BASE}/account/login`, {
+      const response = await fetch(`${API_BASE}/account/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, site: API_SITE }),
       });
-      return r.ok;
+      return response.ok;
     } catch (e) {
       return false;
     }
@@ -87,18 +87,18 @@ export function AccountProvider({ children }) {
 
   async function createAccount({ name, email, phone }) {
     try {
-      const r = await fetch(`${API_BASE}/account`, {
+      const response = await fetch(`${API_BASE}/account`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone, site: API_SITE }),
       });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok && d.token) {
-        write(d.token);
-        setAccount(d.account || null);
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.token) {
+        write(data.token);
+        setAccount(data.account || null);
         return { ok: true };
       }
-      return { ok: false, error: (d && d.detail) || (d && d.error) || '' };
+      return { ok: false, error: (data && data.detail) || (data && data.error) || '' };
     } catch (e) {
       return { ok: false };
     }

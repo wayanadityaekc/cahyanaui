@@ -33,7 +33,7 @@ export function SavedVillasProvider({ children }) {
       const parsed = raw ? JSON.parse(raw) : null;
       // Anything can be in storage - another tab, an older shape, a person with
       // devtools open. Take only what this actually is, and never throw on it.
-      if (Array.isArray(parsed)) setSlugs(parsed.filter((s) => typeof s === 'string'));
+      if (Array.isArray(parsed)) setSlugs(parsed.filter((entry) => typeof entry === 'string'));
     } catch (e) {
       // Unreadable or unavailable - an empty shortlist is the honest fallback.
     }
@@ -53,7 +53,7 @@ export function SavedVillasProvider({ children }) {
 
   function toggleSave(slug) {
     if (!slug) return;
-    write(slugs.includes(slug) ? slugs.filter((s) => s !== slug) : [...slugs, slug]);
+    write(slugs.includes(slug) ? slugs.filter((savedSlug) => savedSlug !== slug) : [...slugs, slug]);
   }
 
   return (

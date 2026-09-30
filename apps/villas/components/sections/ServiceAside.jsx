@@ -24,10 +24,10 @@ export default function ServiceAside({ title, facts, ctaLabel, ctaHref, otherSer
       <Card tone="cream" className="p-6">
         <p className={`${CAPS} text-muted mb-3`}>Also at your villa</p>
         <ul className="flex flex-col">
-          {otherServices.map((s) => (
-            <li key={s.href} className="border-b border-line last:border-b-0">
-              <Link href={s.href} className="flex items-center justify-between py-2.5 text-small text-gold">
-                {s.label}
+          {otherServices.map((service) => (
+            <li key={service.href} className="border-b border-line last:border-b-0">
+              <Link href={service.href} className="flex items-center justify-between py-2.5 text-small text-gold">
+                {service.label}
                 <span>›</span>
               </Link>
             </li>

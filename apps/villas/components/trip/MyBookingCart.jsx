@@ -27,7 +27,7 @@ const LINE = 'flex items-center justify-between gap-4 text-body';
 const ICON_BTN =
   'inline-flex items-center gap-1.5 p-0 bg-transparent border-none cursor-pointer text-body text-muted ' +
   '[transition:color_var(--dur)_var(--ease)] hover:text-err';
-const IC = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
+const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 
 function EmptyState() {
   return (
@@ -75,7 +75,7 @@ export default function MyBookingCart() {
     breakdown && nights > 0
       ? `Stay total: ${formatCurrency(breakdown.total, currency)} (approx. ${formatApproxIDR(breakdown.total)})`
       : null,
-    chosen.length ? `Services I'd like: ${chosen.map((s) => s.label).join(', ')}` : null,
+    chosen.length ? `Services I'd like: ${chosen.map((service) => service.label).join(', ')}` : null,
     chosen.length ? '(Happy to hear the prices for those.)' : null,
   ].filter(Boolean).join('\n');
 
@@ -105,10 +105,10 @@ export default function MyBookingCart() {
                     </p>
                     <div className="flex flex-wrap items-center gap-4 mt-3">
                       <Link href={`/villas/${villa.slug}`} className="inline-flex items-center gap-1.5 text-body text-gold hover:text-cta">
-                        Change dates <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
+                        Change dates <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
                       </Link>
                       <button type="button" className={ICON_BTN} onClick={clearStay}>
-                        <Trash2 className={IC} strokeWidth={1.6} aria-hidden="true" /> Remove
+                        <Trash2 className={ICON} strokeWidth={1.6} aria-hidden="true" /> Remove
                       </button>
                     </div>
                   </div>
@@ -122,22 +122,22 @@ export default function MyBookingCart() {
                 Tick whatever you want waiting for you. We confirm the prices when we reply - they are not fixed on this page.
               </p>
               <ul className="list-none mt-4 flex flex-col">
-                {SERVICES.map((s) => {
-                  const on = cart.services.includes(s.id);
+                {SERVICES.map((service) => {
+                  const on = cart.services.includes(service.id);
                   return (
-                    <li key={s.id} className="flex items-center justify-between gap-4 py-3 [&+&]:border-t [&+&]:border-line">
-                      <Link href={s.href} className="min-w-0 text-body font-medium text-gold hover:text-cta">{s.label}</Link>
+                    <li key={service.id} className="flex items-center justify-between gap-4 py-3 [&+&]:border-t [&+&]:border-line">
+                      <Link href={service.href} className="min-w-0 text-body font-medium text-gold hover:text-cta">{service.label}</Link>
                       <button
                         type="button"
-                        onClick={() => toggleService(s.id)}
+                        onClick={() => toggleService(service.id)}
                         aria-pressed={on}
                         className={on
                           ? 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 border-none bg-cta text-white text-small font-semibold cursor-pointer'
                           : 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-surface-raised text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-cta)]'}
                       >
                         {on
-                          ? <><Trash2 className={IC} strokeWidth={1.8} aria-hidden="true" /> Remove</>
-                          : <><Plus className={IC} strokeWidth={1.8} aria-hidden="true" /> Add</>}
+                          ? <><Trash2 className={ICON} strokeWidth={1.8} aria-hidden="true" /> Remove</>
+                          : <><Plus className={ICON} strokeWidth={1.8} aria-hidden="true" /> Add</>}
                       </button>
                     </li>
                   );
@@ -175,9 +175,9 @@ export default function MyBookingCart() {
               <div className="mt-5 pt-4 border-t border-line">
                 <p className={LABEL}>Services requested</p>
                 <ul className="list-none mt-2 flex flex-col gap-1.5">
-                  {chosen.map((s) => (
-                    <li key={s.id} className={LINE}>
-                      <span className="text-muted">{s.label}</span>
+                  {chosen.map((service) => (
+                    <li key={service.id} className={LINE}>
+                      <span className="text-muted">{service.label}</span>
                       <span className="text-muted">price on request</span>
                     </li>
                   ))}
@@ -194,7 +194,7 @@ export default function MyBookingCart() {
               onClick={() => setSent(true)}
               className="mt-6"
             >
-              <MessageCircle className={IC} strokeWidth={1.8} aria-hidden="true" />
+              <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
               Send to WhatsApp
             </Button>
             <p className="mt-3 text-label text-muted text-center">

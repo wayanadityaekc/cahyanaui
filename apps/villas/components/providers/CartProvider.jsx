@@ -39,14 +39,14 @@ export function CartProvider({ children }) {
   // arrays (BookingSheet saves the stay from one). If their identity changed
   // whenever the cart changed, the effect would fire, set the cart, get a fresh
   // callback, and fire again - an endless loop.
-  const setStay = useCallback((stay) => setCart((c) => ({ ...c, stay })), []);
-  const clearStay = useCallback(() => setCart((c) => ({ ...c, stay: null })), []);
-  const addService = useCallback((id) => setCart((c) => (c.services.includes(id) ? c : { ...c, services: [...c.services, id] })), []);
-  const removeService = useCallback((id) => setCart((c) => ({ ...c, services: c.services.filter((s) => s !== id) })), []);
-  const toggleService = useCallback((id) => setCart((c) => (
-    c.services.includes(id)
-      ? { ...c, services: c.services.filter((s) => s !== id) }
-      : { ...c, services: [...c.services, id] }
+  const setStay = useCallback((stay) => setCart((prev) => ({ ...prev, stay })), []);
+  const clearStay = useCallback(() => setCart((prev) => ({ ...prev, stay: null })), []);
+  const addService = useCallback((id) => setCart((prev) => (prev.services.includes(id) ? prev : { ...prev, services: [...prev.services, id] })), []);
+  const removeService = useCallback((id) => setCart((prev) => ({ ...prev, services: prev.services.filter((serviceId) => serviceId !== id) })), []);
+  const toggleService = useCallback((id) => setCart((prev) => (
+    prev.services.includes(id)
+      ? { ...prev, services: prev.services.filter((serviceId) => serviceId !== id) }
+      : { ...prev, services: [...prev.services, id] }
   )), []);
   const clear = useCallback(() => setCart(EMPTY), []);
 

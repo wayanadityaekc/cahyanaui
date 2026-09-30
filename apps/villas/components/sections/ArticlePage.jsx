@@ -34,27 +34,27 @@ const PROSE =
   '[&_p:last-child]:mb-0 [&_a]:text-gold [&_a]:font-medium [&_a]:underline ' +
   '[&_li]:text-body [&_li]:text-ink [&_li]:leading-[var(--lh-body)]';
 const META = 'flex flex-wrap items-center gap-x-4 gap-y-1 text-label text-muted';
-const IC = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
+const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 
 function CatList({ activeId, onPick }) {
-  return CATEGORIES.map((c) => {
-    const on = c.id === activeId;
+  return CATEGORIES.map((category) => {
+    const on = category.id === activeId;
     return (
       <Link
-        key={c.id}
-        href={`/guide#${c.id}`}
+        key={category.id}
+        href={`/guide#${category.id}`}
         onClick={onPick}
         className={onPick ? CAT_ITEM_TAP(on) : CAT_ITEM(on)}
         aria-current={on || undefined}
       >
-        {c.label}
+        {category.label}
       </Link>
     );
   });
 }
 
 export default function ArticlePage({ article }) {
-  const more = ARTICLES.filter((a) => a.slug !== article.slug).slice(0, 3);
+  const more = ARTICLES.filter((other) => other.slug !== article.slug).slice(0, 3);
 
   return (
     <article>
@@ -65,7 +65,7 @@ export default function ArticlePage({ article }) {
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>
           <p className={`${META} mt-4`}>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className={IC} strokeWidth={1.7} aria-hidden="true" />
+              <Clock className={ICON} strokeWidth={1.7} aria-hidden="true" />
               ~{article.read} min read
             </span>
           </p>
@@ -99,7 +99,7 @@ export default function ArticlePage({ article }) {
             <p className={`${CAPS} text-muted`}>Guide</p>
             <CatList activeId={article.cat} />
             <Link href="/guide" className="inline-flex items-center gap-1.5 mt-2 text-body text-gold hover:text-cta">
-              All articles <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
+              All articles <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
             </Link>
           </nav>
         </div>
@@ -109,13 +109,13 @@ export default function ArticlePage({ article }) {
         <Section tone="cream">
           <h2 className="text-h2 font-semibold text-gold mb-6">Keep reading</h2>
           <div className={GRID_CARDS}>
-            {more.map((a) => (
-              <Card as={Link} hover key={a.slug} href={`/guide/${a.slug}`} className="p-5 flex flex-col gap-2 no-underline">
-                <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(a.cat)}</p>
-                <h3 className="text-h3 font-semibold text-gold">{a.title}</h3>
-                <p className="text-small text-muted">{a.sub}</p>
+            {more.map((related) => (
+              <Card as={Link} hover key={related.slug} href={`/guide/${related.slug}`} className="p-5 flex flex-col gap-2 no-underline">
+                <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(related.cat)}</p>
+                <h3 className="text-h3 font-semibold text-gold">{related.title}</h3>
+                <p className="text-small text-muted">{related.sub}</p>
                 <span className={`${CAPS} mt-auto pt-3 inline-flex items-center gap-1.5 text-cta`}>
-                  Read <ArrowRight className={IC} strokeWidth={1.6} aria-hidden="true" />
+                  Read <ArrowRight className={ICON} strokeWidth={1.6} aria-hidden="true" />
                 </span>
               </Card>
             ))}

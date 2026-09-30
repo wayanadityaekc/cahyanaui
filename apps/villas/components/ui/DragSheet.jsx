@@ -45,31 +45,31 @@ export default function DragSheet({
   }
 
   function onPointerMove(e) {
-    const d = drag.current;
-    if (!d || !ref.current) return;
+    const dragState = drag.current;
+    if (!dragState || !ref.current) return;
     // Downward only - pulling up must not lift the sheet off the screen edge.
-    d.dy = Math.max(0, e.clientY - d.y0);
-    ref.current.style.transform = `translateY(${d.dy}px)`;
+    dragState.dy = Math.max(0, e.clientY - dragState.y0);
+    ref.current.style.transform = `translateY(${dragState.dy}px)`;
   }
 
   function onPointerUp(e) {
-    const d = drag.current;
-    if (!d || !ref.current) return;
+    const dragState = drag.current;
+    if (!dragState || !ref.current) return;
     drag.current = null;
-    const el = ref.current;
-    const velocity = d.dy / Math.max(1, e.timeStamp - d.t0);
+    const sheet = ref.current;
+    const velocity = dragState.dy / Math.max(1, e.timeStamp - dragState.t0);
 
     // Hand the resting position back to CSS, and let the finger offset ease out.
-    el.style.transition = SPRING_BACK;
-    el.style.transform = 'translateY(0px)';
+    sheet.style.transition = SPRING_BACK;
+    sheet.style.transform = 'translateY(0px)';
     function clear() {
-      el.style.transition = '';
-      el.style.transform = '';
-      el.removeEventListener('transitionend', clear);
+      sheet.style.transition = '';
+      sheet.style.transform = '';
+      sheet.removeEventListener('transitionend', clear);
     }
-    el.addEventListener('transitionend', clear);
+    sheet.addEventListener('transitionend', clear);
 
-    if (d.dy > CLOSE_DISTANCE || velocity > CLOSE_VELOCITY) onDismiss?.();
+    if (dragState.dy > CLOSE_DISTANCE || velocity > CLOSE_VELOCITY) onDismiss?.();
   }
 
   return (

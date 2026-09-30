@@ -73,7 +73,7 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
           aria-haspopup="true"
           aria-expanded={open}
           className={TRIGGER}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((wasOpen) => !wasOpen)}
         >
           <span className="flex items-center gap-[var(--space-1)]">
             {/* 2x2 grid = categories, not the navbar's three-line hamburger. */}

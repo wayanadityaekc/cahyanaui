@@ -4,7 +4,7 @@ import { ARTICLES, articleBySlug } from '@/content/articles';
 
 // Static export, so every article path is enumerated at build time.
 export function generateStaticParams() {
-  return ARTICLES.map((a) => ({ slug: a.slug }));
+  return ARTICLES.map((article) => ({ slug: article.slug }));
 }
 
 // `params` is a PROMISE in this version of Next, not a plain object. Read

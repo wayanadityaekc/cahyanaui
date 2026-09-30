@@ -22,31 +22,31 @@ const TITLE = { signin: 'Sign in', create: 'Create your account' };
 export default function AuthSheet({ open, onClose }) {
   const { requestLogin, createAccount } = useAccount();
   const [view, setView] = useState('signin');
-  const [f, setF] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
   const [sent, setSent] = useState('');
 
-  function set(k) {
+  function set(field) {
     return (e) => {
       const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+      setForm((prev) => ({ ...prev, [field]: value }));
+      setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
     };
   }
   function reset() { setErrors({}); setMsg(''); setSent(''); }
-  function swap(v) { setView(v); reset(); }
-  function close() { reset(); setF({ name: '', email: '', phone: '' }); setView('signin'); onClose(); }
+  function swap(nextView) { setView(nextView); reset(); }
+  function close() { reset(); setForm({ name: '', email: '', phone: '' }); setView('signin'); onClose(); }
 
   // One validator for both views. Zod DROPS keys it does not know about, so a
   // field has to be in the schema even when it has no rule of its own or its
   // value disappears on the way through.
   function check(schema) {
-    const r = schema.safeParse(f);
-    if (r.success) return r.data;
+    const result = schema.safeParse(form);
+    if (result.success) return result.data;
     const next = {};
-    r.error.issues.forEach((i) => { if (!next[i.path[0]]) next[i.path[0]] = i.message; });
+    result.error.issues.forEach((issue) => { if (!next[issue.path[0]]) next[issue.path[0]] = issue.message; });
     setErrors(next);
     return null;
   }
@@ -95,7 +95,7 @@ export default function AuthSheet({ open, onClose }) {
                 Enter your email and we&apos;ll send you a sign-in link. No password needed.
               </p>
               <Field label="Email" htmlFor="auth-email" error={errors.email}>
-                <Input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={f.email} onChange={set('email')} invalid={!!errors.email} />
+                <Input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
               </Field>
               {msg && <p role="alert" className="text-label text-err">{msg}</p>}
               {sent && <p className="text-label text-cta">{sent}</p>}
@@ -113,13 +113,13 @@ export default function AuthSheet({ open, onClose }) {
                 No password - we&apos;ll recognise you by your email and phone.
               </p>
               <Field label="Your name" htmlFor="auth-name" error={errors.name}>
-                <Input id="auth-name" type="text" autoComplete="name" placeholder="Enter your name" value={f.name} onChange={set('name')} invalid={!!errors.name} />
+                <Input id="auth-name" type="text" autoComplete="name" placeholder="Enter your name" value={form.name} onChange={set('name')} invalid={!!errors.name} />
               </Field>
               <Field label="Email" htmlFor="auth-cemail" error={errors.email}>
-                <Input id="auth-cemail" type="email" autoComplete="email" placeholder="you@email.com" value={f.email} onChange={set('email')} invalid={!!errors.email} />
+                <Input id="auth-cemail" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
               </Field>
               <Field label="Phone / WhatsApp" htmlFor="auth-phone" error={errors.phone}>
-                <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+62 ..." value={f.phone} onChange={set('phone')} invalid={!!errors.phone} />
+                <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+62 ..." value={form.phone} onChange={set('phone')} invalid={!!errors.phone} />
               </Field>
               {msg && <p role="alert" className="text-label text-err">{msg}</p>}
               <Button full onClick={doCreate} disabled={busy}>{busy ? 'Creating...' : 'Create account'}</Button>

@@ -39,13 +39,13 @@ const TABS = [
 function idFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
-  return TABS.some((t) => t.id === id) ? id : null;
+  return TABS.some((item) => item.id === id) ? id : null;
 }
 
 // Same width as the contact panel rather than the narrower reading column, so
 // the right-hand padding is the same on every tab.
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
-const H1 = 'font-head text-h2 font-bold text-gold mb-4';
+const HEADING = 'font-head text-h2 font-bold text-gold mb-4';
 
 const FAQ_CARD = 'mb-3 border border-line p-4';
 const FAQ_Q = 'font-body text-[1rem] font-semibold text-green cursor-pointer';
@@ -57,7 +57,7 @@ const CONTACT_IC = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-gold';
 function ContactBody() {
   return (
     <div className={BODY_TEXT}>
-      <h1 className={H1}>Get in touch</h1>
+      <h1 className={HEADING}>Get in touch</h1>
       <p>One family, two villas, and the person who answers is the person who hosts you.</p>
       <div className="grid sm:grid-cols-3 gap-5 mt-6">
         <Card className="p-6">
@@ -82,19 +82,19 @@ function ContactBody() {
 
 // Grouped by category, CUE's arrangement: the group headings are what make a
 // long list scannable, and they come straight from the data's own order.
-const FAQ_CATS = FAQ.map((g) => g.cat);
+const FAQ_CATS = FAQ.map((group) => group.cat);
 
 function FAQBody() {
   return (
     <div className={BODY_TEXT}>
-      <h1 className={H1}>Frequently Asked Questions</h1>
+      <h1 className={HEADING}>Frequently Asked Questions</h1>
       {FAQ.map((group) => (
         <div className="mb-8" key={group.cat}>
           <h2 className="m-0 mb-3 font-head text-h3 font-semibold text-green">{group.cat}</h2>
-          {group.items.map(([q, a], i) => (
+          {group.items.map(([question, answer], i) => (
             <details className={FAQ_CARD} key={i}>
-              <summary className={FAQ_Q}>{q}</summary>
-              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]"><p>{a}</p></div>
+              <summary className={FAQ_Q}>{question}</summary>
+              <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]"><p>{answer}</p></div>
             </details>
           ))}
         </div>
@@ -106,7 +106,7 @@ function FAQBody() {
 function ProseBody({ title, blocks }) {
   return (
     <div className={BODY_TEXT}>
-      <h1 className={H1}>{title}</h1>
+      <h1 className={HEADING}>{title}</h1>
       <Prose blocks={blocks} headingVariant="company" />
     </div>
   );
@@ -114,7 +114,7 @@ function ProseBody({ title, blocks }) {
 
 export default function OurCompany() {
   const [tab, setTab] = useState('about');
-  const active = TABS.find((t) => t.id === tab);
+  const active = TABS.find((item) => item.id === tab);
 
   useEffect(() => {
     function applyHash() {
@@ -140,16 +140,16 @@ export default function OurCompany() {
           role="tablist"
           aria-label="Our company"
         >
-          {TABS.map((t) => (
+          {TABS.map((item) => (
             <button
-              key={t.id}
+              key={item.id}
               type="button"
               role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => goTo(t.id)}
-              className={`p-0 bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === t.id ? 'font-semibold text-gold' : 'text-muted'}`}
+              aria-selected={tab === item.id}
+              onClick={() => goTo(item.id)}
+              className={`p-0 bg-transparent border-none cursor-pointer text-left font-body text-body ${tab === item.id ? 'font-semibold text-gold' : 'text-muted'}`}
             >
-              {t.label}
+              {item.label}
             </button>
           ))}
         </nav>
@@ -163,15 +163,15 @@ export default function OurCompany() {
           ariaLabel="Our company"
         >
           {(close) =>
-            TABS.map((t) => (
+            TABS.map((item) => (
               <button
-                key={t.id}
+                key={item.id}
                 type="button"
-                aria-current={tab === t.id || undefined}
-                onClick={() => { goTo(t.id); close(); }}
-                className={`p-0 bg-transparent border-none cursor-pointer ${CAT_ITEM_TAP(tab === t.id)}`}
+                aria-current={tab === item.id || undefined}
+                onClick={() => { goTo(item.id); close(); }}
+                className={`p-0 bg-transparent border-none cursor-pointer ${CAT_ITEM_TAP(tab === item.id)}`}
               >
-                {t.label}
+                {item.label}
               </button>
             ))
           }

@@ -59,5 +59,5 @@ export const SERVICES = [
 ];
 
 export function serviceById(id) {
-  return SERVICES.find((s) => s.id === id) || null;
+  return SERVICES.find((service) => service.id === id) || null;
 }

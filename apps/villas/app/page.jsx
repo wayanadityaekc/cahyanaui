@@ -173,17 +173,17 @@ export default function HomePage() {
           so three in a row do not read as one list. The copy is lifted from
           each service's own page rather than written fresh, so the homepage
           cannot promise something the page it links to does not say. */}
-      {SERVICES_HOME.map((sv, i) => (
+      {SERVICES_HOME.map((service, i) => (
         <SplitFeature
-          key={sv.href}
+          key={service.href}
           tone={i % 2 === 0 ? 'cream' : 'plain'}
           reverse={i % 2 === 1}
-          image={sv.img}
-          alt={sv.alt}
-          eyebrow={sv.eyebrow}
-          title={sv.title}
-          lede={sv.lede}
-          actions={<Button as={Link} href={sv.href}>{sv.cta}</Button>}
+          image={service.img}
+          alt={service.alt}
+          eyebrow={service.eyebrow}
+          title={service.title}
+          lede={service.lede}
+          actions={<Button as={Link} href={service.href}>{service.cta}</Button>}
         />
       ))}
 
@@ -219,23 +219,23 @@ export default function HomePage() {
           className="mb-8"
         />
         <div className={GRID_TRIO}>
-          {STAY_ADDONS.map((a) => (
+          {STAY_ADDONS.map((addon) => (
             <MediaCard
-              key={a.id}
-              as={a.external ? 'a' : Link}
-              href={a.href}
-              {...(a.external ? { target: '_blank', rel: 'noopener' } : {})}
-              image={{ src: a.img, alt: a.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
+              key={addon.id}
+              as={addon.external ? 'a' : Link}
+              href={addon.href}
+              {...(addon.external ? { target: '_blank', rel: 'noopener' } : {})}
+              image={{ src: addon.img, alt: addon.alt, width: 700, height: 525, ratio: 'aspect-[4/3]' }}
               footer={(
                 <span className={`${CAPS} text-cta`}>
-                  {a.cta}
+                  {addon.cta}
                   <span aria-hidden="true"> &rsaquo;</span>
                 </span>
               )}
             >
-              <p className={`${CAPS} text-muted`}>{a.eyebrow}</p>
-              <h3 className="text-h3 font-semibold text-gold">{a.label}</h3>
-              <p className="text-small text-muted">{a.blurb}</p>
+              <p className={`${CAPS} text-muted`}>{addon.eyebrow}</p>
+              <h3 className="text-h3 font-semibold text-gold">{addon.label}</h3>
+              <p className="text-small text-muted">{addon.blurb}</p>
             </MediaCard>
           ))}
         </div>

@@ -118,8 +118,8 @@ export default function BookingSheet() {
                   id="bk-villa"
                   label="Villa"
                   value={villa.slug}
-                  onChange={(v) => updateBooking({ villaSlug: v })}
-                  options={VILLA_LIST.map((v) => ({ value: v.slug, label: v.name }))}
+                  onChange={(slug) => updateBooking({ villaSlug: slug })}
+                  options={VILLA_LIST.map((villaEntry) => ({ value: villaEntry.slug, label: villaEntry.name }))}
                 />
               </div>
             )}
@@ -142,8 +142,8 @@ export default function BookingSheet() {
                 id="bk-guests"
                 label="Guests"
                 value={String(booking.guests)}
-                onChange={(v) => updateBooking({ guests: Number(v) })}
-                options={Array.from({ length: villa.guests }, (_, i) => i + 1).map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
+                onChange={(value) => updateBooking({ guests: Number(value) })}
+                options={Array.from({ length: villa.guests }, (_, i) => i + 1).map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
               />
             </div>
 

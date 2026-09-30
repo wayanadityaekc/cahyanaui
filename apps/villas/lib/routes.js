@@ -25,7 +25,7 @@ const STATIC_PATHS = [
 export function indexablePaths() {
   return [
     ...STATIC_PATHS,
-    ...VILLA_LIST.map((v) => `/villas/${v.slug}`),
-    ...ARTICLES.map((a) => `/guide/${a.slug}`),
+    ...VILLA_LIST.map((villa) => `/villas/${villa.slug}`),
+    ...ARTICLES.map((article) => `/guide/${article.slug}`),
   ];
 }

@@ -52,7 +52,7 @@ export default function SearchCard({ layout = 'bar' }) {
         icon={<CalendarDays className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
         placeholders={{ start: 'Select dates', end: 'Add date' }}
         value={{ checkIn, checkOut }}
-        onChange={(r) => { setCheckIn(r.checkIn); setCheckOut(r.checkOut); }}
+        onChange={(range) => { setCheckIn(range.checkIn); setCheckOut(range.checkOut); }}
       />
       <Select
         id="search-guests"
@@ -60,8 +60,8 @@ export default function SearchCard({ layout = 'bar' }) {
         hint="Guests"
         icon={<UserRound className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
         value={String(guests)}
-        onChange={(v) => setGuests(Number(v))}
-        options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
+        onChange={(value) => setGuests(Number(value))}
+        options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
       />
       {/* Currency belongs next to the price the guest is about to be quoted, not
           only in the drawer. Same five CUE sells in - the list already matches. */}
@@ -72,7 +72,7 @@ export default function SearchCard({ layout = 'bar' }) {
         icon={<Coins className={iconCls} strokeWidth={1.7} aria-hidden="true" />}
         value={currency}
         onChange={setCurrency}
-        options={CURRENCIES.map((c) => ({ value: c.code, label: `${c.code} - ${c.name}` }))}
+        options={CURRENCIES.map((option) => ({ value: option.code, label: `${option.code} - ${option.name}` }))}
       />
     </>
   );
@@ -87,7 +87,7 @@ export default function SearchCard({ layout = 'bar' }) {
         <DateRangeField
           id="search-checkin"
           value={{ checkIn, checkOut }}
-          onChange={(r) => { setCheckIn(r.checkIn); setCheckOut(r.checkOut); }}
+          onChange={(range) => { setCheckIn(range.checkIn); setCheckOut(range.checkOut); }}
         />
       </div>
 
@@ -97,8 +97,8 @@ export default function SearchCard({ layout = 'bar' }) {
           id="search-guests"
           label="Guests"
           value={String(guests)}
-          onChange={(v) => setGuests(Number(v))}
-          options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
+          onChange={(value) => setGuests(Number(value))}
+          options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
         />
       </div>
     </>

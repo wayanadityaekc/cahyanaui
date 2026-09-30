@@ -184,8 +184,8 @@ export default function Navbar() {
               id="nav-guests"
               label="Guests"
               value={String(guests)}
-              onChange={(v) => setGuests(Number(v))}
-              options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} guest${n > 1 ? 's' : ''}` }))}
+              onChange={(value) => setGuests(Number(value))}
+              options={GUEST_OPTIONS.map((count) => ({ value: String(count), label: `${count} guest${count > 1 ? 's' : ''}` }))}
             />
           </div>
           <div className={FIELD_CELL}>
@@ -207,9 +207,9 @@ export default function Navbar() {
           {account ? 'Sign out' : 'Sign in'}
         </Button>
       )}
-      links={LINKS.map((l) => (l.href === '/my-booking'
-        ? { ...l, end: <span className={`${NAV_ROW_END} bg-gold ${NAV_BADGE_BASE}`} hidden={!count}>{count}</span> }
-        : l))}
+      links={LINKS.map((link) => (link.href === '/my-booking'
+        ? { ...link, end: <span className={`${NAV_ROW_END} bg-gold ${NAV_BADGE_BASE}`} hidden={!count}>{count}</span> }
+        : link))}
       drawerFoot={(
         <Button as="a" full href={WHATSAPP_LINK} target="_blank" rel="noopener">
           <MessageCircle className="w-4 h-4 flex-none" strokeWidth={1.8} aria-hidden="true" />

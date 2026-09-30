@@ -134,9 +134,9 @@ export const ARTICLES = [
 ];
 
 export function articleBySlug(slug) {
-  return ARTICLES.find((a) => a.slug === slug) || null;
+  return ARTICLES.find((article) => article.slug === slug) || null;
 }
 
 export function categoryLabel(id) {
-  return CATEGORIES.find((c) => c.id === id)?.label || '';
+  return CATEGORIES.find((category) => category.id === id)?.label || '';
 }

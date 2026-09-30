@@ -39,21 +39,21 @@ export default function ServiceDetail({
           <div className={PROSE_COPY}>
             <p className={EYEBROW_LINE}>At a Glance</p>
             <ul className="grid grid-cols-2 sm:grid-cols-4 border-t border-b border-line mb-2">
-              {glance.map((g) => (
-                <li key={g.label} className="flex flex-col py-4 pr-4 text-small">
-                  <span className={`${CAPS} text-muted`}>{g.label}</span>
-                  <span className="text-gold">{g.value}</span>
+              {glance.map((item) => (
+                <li key={item.label} className="flex flex-col py-4 pr-4 text-small">
+                  <span className={`${CAPS} text-muted`}>{item.label}</span>
+                  <span className="text-gold">{item.value}</span>
                 </li>
               ))}
             </ul>
 
-            {sections.map((s) => (
-              <div key={s.heading}>
-                <h2 className="text-h2 font-semibold mt-9 mb-3 text-gold">{s.heading}</h2>
-                {s.body?.map((p, i) => <p key={i}>{p}</p>)}
-                {s.list && (
+            {sections.map((section) => (
+              <div key={section.heading}>
+                <h2 className="text-h2 font-semibold mt-9 mb-3 text-gold">{section.heading}</h2>
+                {section.body?.map((para, i) => <p key={i}>{para}</p>)}
+                {section.list && (
                   <ul className="grid sm:grid-cols-2 gap-x-8">
-                    {s.list.map((item) => (
+                    {section.list.map((item) => (
                       <li key={item.title} className="py-3 border-b border-line text-small">
                         <strong className="block text-gold">{item.title}</strong>
                         <span className="text-muted">{item.desc}</span>
@@ -61,7 +61,7 @@ export default function ServiceDetail({
                     ))}
                   </ul>
                 )}
-                {s.note && <p className="text-small text-muted">{s.note}</p>}
+                {section.note && <p className="text-small text-muted">{section.note}</p>}
               </div>
             ))}
 

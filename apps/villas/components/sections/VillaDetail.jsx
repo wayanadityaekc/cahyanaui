@@ -53,33 +53,33 @@ export default function VillaDetail({ villa }) {
             </div>
 
             <div className="mt-6 flex items-center gap-3 flex-wrap">
-              {villa.amenities.map((a) => (
-                <span key={a} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold">
-                  <span className="text-cta"><AmenityIcon name={a} /></span>
-                  {a}
+              {villa.amenities.map((amenity) => (
+                <span key={amenity} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-line text-small text-gold">
+                  <span className="text-cta"><AmenityIcon name={amenity} /></span>
+                  {amenity}
                 </span>
               ))}
             </div>
 
             <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">About the villa</h2>
-            {villa.about.map((p, i) => <p key={i}>{p}</p>)}
+            {villa.about.map((para, i) => <p key={i}>{para}</p>)}
 
             <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">The space</h2>
             <ul className="grid sm:grid-cols-2 gap-x-8">
-              {villa.spaceList.map((s) => (
-                <li key={s.title} className="py-3 border-b border-line text-small">
-                  <strong className="block text-gold">{s.title}</strong>
-                  <span className="text-muted">{s.desc}</span>
+              {villa.spaceList.map((space) => (
+                <li key={space.title} className="py-3 border-b border-line text-small">
+                  <strong className="block text-gold">{space.title}</strong>
+                  <span className="text-muted">{space.desc}</span>
                 </li>
               ))}
             </ul>
 
             <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Getting around</h2>
             <ul className="border-t border-line">
-              {villa.gettingAround.map((g) => (
-                <li key={g.label} className="flex justify-between py-3 border-b border-line text-small">
-                  <span className="text-muted">{g.label}</span>
-                  <span className="text-gold">{g.value}</span>
+              {villa.gettingAround.map((tip) => (
+                <li key={tip.label} className="flex justify-between py-3 border-b border-line text-small">
+                  <span className="text-muted">{tip.label}</span>
+                  <span className="text-gold">{tip.value}</span>
                 </li>
               ))}
             </ul>
@@ -103,10 +103,10 @@ export default function VillaDetail({ villa }) {
 
             <h2 className="text-h2 font-semibold mt-10 mb-3 text-gold">Good to know</h2>
             <ul className="border-t border-line">
-              {villa.goodToKnow.map((g) => (
-                <li key={g.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
-                  <span className={`${CAPS} min-w-[120px] text-muted`}>{g.label}</span>
-                  <span className="text-gold">{g.value}</span>
+              {villa.goodToKnow.map((note) => (
+                <li key={note.label} className="flex flex-col sm:flex-row sm:gap-6 py-3 border-b border-line text-small">
+                  <span className={`${CAPS} min-w-[120px] text-muted`}>{note.label}</span>
+                  <span className="text-gold">{note.value}</span>
                 </li>
               ))}
             </ul>
@@ -119,7 +119,7 @@ export default function VillaDetail({ villa }) {
               <DateRangeField
                 id={`${villa.slug}-dates`}
                 value={{ checkIn, checkOut }}
-                onChange={(r) => { setCheckIn(r.checkIn); setCheckOut(r.checkOut); }}
+                onChange={(range) => { setCheckIn(range.checkIn); setCheckOut(range.checkOut); }}
               />
             )}
             cta={(
@@ -164,7 +164,7 @@ export default function VillaDetail({ villa }) {
               <p className="text-label text-muted mb-3">
                 Run by Cahyana Ubud Experience - the same family, every price upfront.
               </p>
-              <LinkList items={CUE_TOURS.map((t) => ({ ...t, external: true }))} />
+              <LinkList items={CUE_TOURS.map((tour) => ({ ...tour, external: true }))} />
               <a href={CUE_LINK} target="_blank" rel="noopener" className="inline-block mt-3 text-label text-gold underline">
                 Explore more tours in Bali
               </a>

@@ -35,11 +35,11 @@ export function TripPrefsProvider({ children }) {
     }
   }, []);
 
-  function setGuests(n) {
-    const v = Number(n) || DEFAULT_GUESTS;
-    setGuestsState(v);
+  function setGuests(value) {
+    const nextGuests = Number(value) || DEFAULT_GUESTS;
+    setGuestsState(nextGuests);
     try {
-      window.localStorage.setItem(KEY, String(v));
+      window.localStorage.setItem(KEY, String(nextGuests));
     } catch (e) {
       // ignore
     }

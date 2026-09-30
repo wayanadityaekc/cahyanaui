@@ -1,5 +1,5 @@
 import { cn } from '../lib/cn.js';
-import { EYEBROW } from './Eyebrow.jsx';
+import { FIELD_LABEL } from './controlClasses.js';
 
 /**
  * Label + control + (optional) error, stacked.
@@ -16,7 +16,7 @@ export default function Field({ label, htmlFor, error, hint, className, children
   return (
     <div className={cn('min-w-0', className)}>
       {label && (
-        <label className={cn(EYEBROW, 'block mb-1')} htmlFor={htmlFor}>
+        <label className={FIELD_LABEL} htmlFor={htmlFor}>
           {label}
         </label>
       )}

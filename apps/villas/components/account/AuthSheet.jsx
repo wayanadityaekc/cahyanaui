@@ -114,75 +114,72 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       open={open}
       onClose={close}
       label={title}
-      shell="fixed inset-0 z-[130] flex items-end sm:items-center justify-center bg-black/45"
-      box="relative w-full sm:max-w-md"
+      shell="fixed inset-0 z-[130] flex items-center justify-center p-6 bg-[rgba(0,0,0,0.55)]"
+      box="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto p-8 rounded-md bg-white"
     >
-      <div className="relative bg-surface-raised rounded-t-xl sm:rounded-xl [box-shadow:var(--shadow-xl)] max-h-[92vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-line sticky top-0 bg-surface-raised z-10">
-          <h3 className="text-h3 font-semibold text-gold">{title}</h3>
-          <button type="button" onClick={close} aria-label="Close" className="text-gold cursor-pointer">
-            <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
-          </button>
-        </div>
+      {/* CUE's account modal geometry (modalClasses SHELL/BOX/CLOSE/TITLE). */}
+      <button type="button" onClick={close} aria-label="Close" className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer">
+        <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+      </button>
+      <h3 className="mb-5 font-body text-h3 text-center font-semibold tracking-normal text-gold">{title}</h3>
 
-        <div className="p-5 flex flex-col gap-4">
-          {stage === 'code' && (
-            <>
-              <p className="text-small text-muted text-center">
-                We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10 minutes.
-              </p>
-              <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
-              {msg && <p role="alert" className="text-label text-err text-center">{msg}</p>}
-              {note && <p role="status" data-signin-note className="text-label text-cta text-center">{note}</p>}
-              <Button full onClick={() => doVerify(code)} disabled={busy || code.length < 6}>{busy ? 'Checking...' : 'Verify'}</Button>
-              <p className="text-center text-small text-muted">
-                {cooldown > 0 ? `Resend code in ${cooldown}s` : <button type="button" className={LINK_BUTTON} onClick={resend}>Resend code</button>}
-                {' · '}
-                <button type="button" className={LINK_BUTTON} onClick={backToEmail}>Change email</button>
-              </p>
-            </>
-          )}
+      <div className="flex flex-col gap-4">
+        {stage === 'code' && (
+          <>
+            <p className="text-small text-muted text-center">
+              We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10 minutes.
+            </p>
+            <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
+            {msg && <p role="alert" className="text-label text-err text-center">{msg}</p>}
+            {note && <p role="status" data-signin-note className="text-label text-cta text-center">{note}</p>}
+            <Button full onClick={() => doVerify(code)} disabled={busy || code.length < 6}>{busy ? 'Checking...' : 'Verify'}</Button>
+            <p className="text-center text-small text-muted">
+              {cooldown > 0 ? `Resend code in ${cooldown}s` : <button type="button" className={LINK_BUTTON} onClick={resend}>Resend code</button>}
+              {' · '}
+              <button type="button" className={LINK_BUTTON} onClick={backToEmail}>Change email</button>
+            </p>
+          </>
+        )}
 
-          {stage === 'email' && view === 'signin' && (
-            <>
-              <p className="text-small text-muted">
-                Enter your email and we&apos;ll send you a 6-digit code. No password needed.
-              </p>
-              <Field label="Email" htmlFor="auth-email" error={errors.email}>
-                <Input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
-              </Field>
-              {msg && <p role="alert" className="text-label text-err">{msg}</p>}
-              <Button full onClick={doSignIn} disabled={busy}>{busy ? 'Sending...' : 'Send code'}</Button>
-              <p className="text-center text-small text-muted">
-                New here?{' '}
-                <button type="button" className={LINK_BUTTON} onClick={() => swap('create')}>Create an account</button>
-              </p>
-            </>
-          )}
+        {stage === 'email' && view === 'signin' && (
+          <>
+            <p className="text-small text-muted">
+              Enter your email and we&apos;ll send you a 6-digit code. No password needed.
+            </p>
+            <Field label="Email" htmlFor="auth-email" error={errors.email}>
+              <Input id="auth-email" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
+            </Field>
+            {msg && <p role="alert" className="text-label text-err">{msg}</p>}
+            <Button full onClick={doSignIn} disabled={busy}>{busy ? 'Sending...' : 'Send code'}</Button>
+            <p className="text-center text-small text-muted">
+              New here?{' '}
+              <button type="button" className={LINK_BUTTON} onClick={() => swap('create')}>Create an account</button>
+            </p>
+          </>
+        )}
 
-          {stage === 'email' && view === 'create' && (
-            <>
-              <p className="text-small text-muted">
-                No password - we&apos;ll email you a code whenever you need to sign in.
-              </p>
-              <Field label="Your name" htmlFor="auth-name" error={errors.name}>
-                <Input id="auth-name" type="text" autoComplete="name" placeholder="Enter your name" value={form.name} onChange={set('name')} invalid={!!errors.name} />
-              </Field>
-              <Field label="Email" htmlFor="auth-cemail" error={errors.email}>
-                <Input id="auth-cemail" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
-              </Field>
-              <Field label="Phone / WhatsApp" htmlFor="auth-phone" error={errors.phone}>
-                <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+62 ..." value={form.phone} onChange={set('phone')} invalid={!!errors.phone} />
-              </Field>
-              {msg && <p role="alert" className="text-label text-err">{msg}</p>}
-              <Button full onClick={doCreate} disabled={busy}>{busy ? 'Creating...' : 'Create account'}</Button>
-              <p className="text-center text-small text-muted">
-                Already have an account?{' '}
-                <button type="button" className={LINK_BUTTON} onClick={() => swap('signin')}>Sign in</button>
-              </p>
-            </>
-          )}
-        </div>
+        {stage === 'email' && view === 'create' && (
+          <>
+            <p className="text-small text-muted">
+              No password - we&apos;ll email you a code whenever you need to sign in.
+            </p>
+            <Field label="Your name" htmlFor="auth-name" error={errors.name}>
+              <Input id="auth-name" type="text" autoComplete="name" placeholder="Enter your name" value={form.name} onChange={set('name')} invalid={!!errors.name} />
+            </Field>
+            <Field label="Email" htmlFor="auth-cemail" error={errors.email}>
+              <Input id="auth-cemail" type="email" autoComplete="email" placeholder="you@email.com" value={form.email} onChange={set('email')} invalid={!!errors.email} />
+            </Field>
+            <Field label="Phone / WhatsApp" htmlFor="auth-phone" error={errors.phone}>
+              <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+62 ..." value={form.phone} onChange={set('phone')} invalid={!!errors.phone} />
+            </Field>
+            {msg && <p role="alert" className="text-label text-err">{msg}</p>}
+            <Button full onClick={doCreate} disabled={busy}>{busy ? 'Creating...' : 'Create account'}</Button>
+            <p className="text-center text-small text-muted">
+              Already have an account?{' '}
+              <button type="button" className={LINK_BUTTON} onClick={() => swap('signin')}>Sign in</button>
+            </p>
+          </>
+        )}
       </div>
     </SheetPresence>
   );

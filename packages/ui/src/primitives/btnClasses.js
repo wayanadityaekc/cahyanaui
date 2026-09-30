@@ -30,7 +30,7 @@
  */
 export const BTN_SM =
   'items-center justify-center text-center leading-none whitespace-nowrap ' +
-  'h-[var(--btn-h)] py-0 px-5 rounded-sm text-strong font-semibold';
+  'h-[var(--btn-h)] py-0 px-4 rounded-sm text-small font-semibold';
 
 /**
  * The ghost/secondary pill - "All tours", "View all", a review CTA. Outlined in

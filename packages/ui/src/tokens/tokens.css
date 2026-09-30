@@ -33,7 +33,7 @@
   /* Warmed from #f8f8f8 to sit in the same family as the villa site's bone
      page. A neutral grey-white tint on warm paper reads as a colour mistake;
      this is still lighter than the page, so a tinted pill or band still lifts. */
-  --color-cream: #f7f4ee;
+  --color-cream: #f8f8f8;
   --color-line: #e7e4dd;
   --color-ok: #2e7d54;
   --color-err: #9a4a3f;
@@ -137,15 +137,8 @@
   --container-x: 1.5rem;
 
   --field-h: 2.1rem;
-  /* Buttons get their OWN height token, and this is exactly why the split was
-     worth keeping: the villa site's buttons grew and its form fields did not.
-     Sep 2026, Wayan: "buttonya kayaknya masih kecil bnget".
-     2.6rem (41.6px) is not a new number - it is the height the card CTA has
-     been since the mock, and that is the one button on this site he has looked
-     at and not called small. Bringing every other button up to it means one
-     size again instead of 33.6 everywhere and 41.6 on the card.
-     CUE is still at 2.1rem; this is a deliberate divergence, not a drift. */
-  --btn-h: 2.6rem;
+  /* Buttons have their own token so a field height change never moves them; 2.1rem is CUE's (villas followed it, Sep 2026). */
+  --btn-h: 2.1rem;
   --icon-sm: 16px;
   --icon-md: 20px;
   --icon-lg: 24px;
@@ -165,44 +158,7 @@
   :root { --container-x: 1rem; }
 }
 
-/* --- Brands --------------------------------------------------------------
-   Same palette, same type, told apart by the surface underneath. Set on
-   <html data-brand="villas">; leaving it off gives the CUE (white) default.
-
-   Cards keep a white surface on the villa site so they lift off the grey
-   instead of dissolving into it. That is the whole point of the pairing.
-   -------------------------------------------------------------------------- */
-[data-brand="villas"] {
-  /* Warm bone, sampled from the aman.com page Wayan sent (Sep 2026, "coba pakai
-     background gini bro") - #f2eee8 is the dominant colour in that screenshot by
-     a wide margin, not a guess at it.
-     ONE surface, not two. It used to be cream underneath with white cards on
-     top, so a card lifted off the page. With the shadows gone that pairing has
-     nothing left to say: the reference is a single sheet of warm paper, and
-     what separates a block from the page is space and a hairline, not a change
-     of colour. Setting --surface-raised back to #ffffff is the one-line way
-     back if the flat version turns out to be too flat. */
-  --surface: #f3eee7;
-  --surface-raised: #f3eee7;
-
-  /* THE DARK, sampled from the same page (Sep 2026, Wayan: "pakai tone warna
-     creme dan dark ini bro ikutin warnanya"). #313131 is the Reserve bar in
-     that screenshot, and the second colour in its histogram after the cream -
-     a flat area, so it is a reading rather than an impression of one. The
-     cream moved by a single point at the same time (#f2eee8 -> #f3eee7), which
-     is the sample from THIS shot; nobody will see the difference, but the two
-     numbers now come from one place.
-     ONE dark for the whole site: --color-gold drives headings, the dark bands
-     and - since Wayan asked for black buttons - the buttons too, so moving it
-     moves all three together. It is a neutral charcoal where the old value was
-     a warm near-black; on the cream that is 10.8:1, and white on it is 12.6:1.
-     Scoped to the brand: --color-gold and --color-cta are CUE's, and CUE is the
-     other half of this palette. */
-  --color-gold: #313131;
-  --color-gold-d: #262626;
-  --color-cta: #313131;
-  --color-cta-d: #262626;
-}
+/* Both sites use CUE's palette (Wayan, 30 Sep 2026); data-brand stays on <html> as the hook if a brand ever needs its own value. */
 
 /* ---------------------------------------------------------------------------
    The ONE component rule the library ships as CSS rather than as a utility

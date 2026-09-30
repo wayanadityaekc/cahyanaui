@@ -20,8 +20,11 @@ const CONTROL_COMMON =
   'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
 
 // Plain control (.hs-control): 1 baris, chevron di kanan.
+// CUE's field label (formClasses FIELD_LABEL); leading-normal because CUE's body line-height is normal and villas' is 1.6.
+export const FIELD_LABEL = 'block mb-2 font-body text-small font-medium text-green tracking-normal normal-case leading-[normal]';
+
 export const CONTROL =
-  `${CONTROL_COMMON} flex items-center justify-between gap-[10px] px-[0.85rem] py-0 h-[var(--field-h)]`;
+  `${CONTROL_COMMON} flex items-center justify-between gap-[10px] px-3 py-0 h-[var(--field-h)]`;
 
 // Rich control (.hs-control--rich): ikon + stack (hint+val) + chevron, lebih tinggi.
 export const CONTROL_RICH =
@@ -62,7 +65,7 @@ const PANEL_POPUP_STATIC =
   PANEL_MOBILE_TRANSITION;
 export const panelPopup = (open) =>
   `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
-export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none';
+export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
 export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-surface-raised text-green text-[1.2rem] leading-none cursor-pointer';
 // Scrollbar disembunyiin (Wayan) - dulu keliatan pas opsi kepanjangan buat area
@@ -76,7 +79,7 @@ export const PANEL_BODY = 'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar
 // `disabled` (Sep 2026, time-slot picker #TIME-1): opsi tetep KELIATAN (guest ngerti ada
 // slot itu tapi gak bisa dipilih) - dimuting + no hover/cursor, bukan disembunyiin.
 export const opt = (sel, disabled) =>
-  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_#f2efe7] ${
+  `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
     disabled
       ? 'cursor-not-allowed opacity-40 bg-transparent'
       : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
@@ -110,7 +113,7 @@ export const panelBookdate = (open) =>
 // Head bookdate: flex-none (popup) + sticky/top-0/bg-surface-raised di HP (dari @media max-768)
 // DAN desktop (dari bookdate min-769); z-1 cuma desktop.
 export const PANEL_HEAD_BOOKDATE =
-  'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_#f2efe7] flex-none ' +
+  'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none ' +
   'sticky top-0 bg-surface-raised min-[769px]:z-[1]';
 
 // Kalender (.hs-cal*). HP: cal max-h none + overflow visible (panel body yg scroll).

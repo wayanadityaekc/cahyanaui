@@ -8,6 +8,7 @@ export const metadata = pageMeta({
   image: '/images/breakfast-served-poolside.jpg',
 });
 
+// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function BreakfastPage() {
   return (
     <ServiceDetail
@@ -15,8 +16,6 @@ export default function BreakfastPage() {
       kicker="At Your Villa"
       title="Breakfast"
       subtitle="Cooked fresh in your own villa kitchen each morning."
-      heroImg="https://picsum.photos/seed/bfast9/1800/900"
-      heroAlt="Balinese breakfast served at the villa"
       glance={[
         { label: 'Order', value: 'Night before' },
         { label: 'Where', value: 'Terrace, poolside or in bed' },
@@ -45,11 +44,6 @@ export default function BreakfastPage() {
             "The tray version, floated on your own pool. It's a photo, yes, but the food is the same food and it's genuinely nice to eat in the water at eight in the morning. Order it the night before.",
           ],
         },
-      ]}
-      gallery={[
-        { src: 'https://picsum.photos/seed/bf1c/700/500', alt: 'Floating breakfast tray in the villa pool' },
-        { src: 'https://picsum.photos/seed/bf2c/700/500', alt: 'Nasi goreng plated for breakfast' },
-        { src: 'https://picsum.photos/seed/bf3c/700/500', alt: 'Fruit platter and Bali coffee' },
       ]}
       aside={{
         title: 'Breakfast at your villa',

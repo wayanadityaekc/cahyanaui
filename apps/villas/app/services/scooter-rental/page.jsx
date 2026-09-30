@@ -8,6 +8,7 @@ export const metadata = pageMeta({
   path: '/services/scooter-rental/',
 });
 
+// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function ScooterRentalPage() {
   return (
     <ServiceDetail
@@ -15,8 +16,6 @@ export default function ScooterRentalPage() {
       kicker="At Your Villa"
       title="Scooter Rental"
       subtitle="A scooter for getting around Ubud at your own pace. Details are being confirmed."
-      heroImg="https://picsum.photos/seed/scooter9/1800/900"
-      heroAlt="Scooter parked outside a villa in Ubud"
       glance={[{ label: 'Availability', value: 'Ask us' }]}
       sections={[
         {

@@ -7,6 +7,7 @@ export const metadata = pageMeta({
   path: '/services/spa/',
 });
 
+// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function SpaPage() {
   return (
     <ServiceDetail
@@ -14,8 +15,6 @@ export default function SpaPage() {
       kicker="At Your Villa"
       title="Spa & Massage"
       subtitle="Local therapists, your own villa, no taxi afterwards."
-      heroImg="https://picsum.photos/seed/spa9/1800/900"
-      heroAlt="Massage table set up beside the villa pool"
       glance={[
         { label: 'Where', value: 'Poolside or bedroom' },
         { label: 'Book', value: 'Same day, with notice' },
@@ -40,11 +39,6 @@ export default function SpaPage() {
           ],
           note: 'Message us for current prices and to book a time - treatments are arranged for staying guests.',
         },
-      ]}
-      gallery={[
-        { src: 'https://picsum.photos/seed/sp1c/700/500', alt: 'Massage table set up beside the pool' },
-        { src: 'https://picsum.photos/seed/sp2c/700/500', alt: 'Flower bath with frangipani petals' },
-        { src: 'https://picsum.photos/seed/sp3c/700/500', alt: 'Aromatherapy oils and folded towels' },
       ]}
       aside={{
         title: 'Spa at your villa',

@@ -7,6 +7,7 @@ export const metadata = pageMeta({
   path: '/services/live-dinner/',
 });
 
+// CEK WAYAN: photos hidden until Wayan supplies real ones; the hero falls back to its dark gradient band.
 export default function LiveDinnerPage() {
   return (
     <ServiceDetail
@@ -14,8 +15,6 @@ export default function LiveDinnerPage() {
       kicker="At Your Villa"
       title="Live Dinner"
       subtitle="A chef in your kitchen, a table under the stars, no booking a restaurant."
-      heroImg="https://picsum.photos/seed/dinner9/1800/900"
-      heroAlt="Private chef preparing dinner at the villa"
       glance={[
         { label: 'Where', value: 'Your villa kitchen' },
         { label: 'Book', value: 'A day ahead' },
@@ -46,11 +45,6 @@ export default function LiveDinnerPage() {
             "Same chef, but you're at the counter. A couple of hours through a market basket of Balinese dishes, then you eat what you made. Ask us when you book.",
           ],
         },
-      ]}
-      gallery={[
-        { src: 'https://picsum.photos/seed/dn1c/700/500', alt: 'Candle-lit dinner table beside the villa pool' },
-        { src: 'https://picsum.photos/seed/dn2c/700/500', alt: 'Chef cooking in the villa kitchen' },
-        { src: 'https://picsum.photos/seed/dn3c/700/500', alt: 'Balinese dishes served on shared platters' },
       ]}
       aside={{
         title: 'Dinner at your villa',

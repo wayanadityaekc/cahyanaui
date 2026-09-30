@@ -110,10 +110,44 @@ export function AccountProvider({ children }) {
     }
   }
 
+  // Email is left out on purpose: the server refuses an email change without a code sent to the new inbox.
+  async function updateAccount({ name, phone }) {
+    try {
+      const response = await fetch(`${API_BASE}/account`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${read()}` },
+        body: JSON.stringify({ name, phone }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.account) {
+        setAccount(data.account);
+        return { ok: true };
+      }
+      return { ok: false, error: (data && data.detail) || '' };
+    } catch (e) {
+      return { ok: false, error: '' };
+    }
+  }
+
+  async function deleteAccount() {
+    try {
+      const response = await fetch(`${API_BASE}/account`, { method: 'DELETE', headers: { Authorization: `Bearer ${read()}` } });
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.status === 'ok') {
+        drop();
+        setAccount(null);
+        return { ok: true };
+      }
+      return { ok: false, error: (data && data.detail) || '' };
+    } catch (e) {
+      return { ok: false, error: '' };
+    }
+  }
+
   function logout() { drop(); setAccount(null); }
 
   return (
-    <AccountContext.Provider value={{ account, hydrated, requestLogin, verifyCode, createAccount, logout }}>
+    <AccountContext.Provider value={{ account, hydrated, requestLogin, verifyCode, createAccount, updateAccount, deleteAccount, logout }}>
       {children}
     </AccountContext.Provider>
   );

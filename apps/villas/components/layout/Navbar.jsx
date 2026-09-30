@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BedDouble, BookOpen, Building2, House, MessageCircle, ShoppingBag, Sparkles } from 'lucide-react';
+import { BedDouble, BookOpen, Building2, House, MessageCircle, Settings, ShoppingBag, Sparkles } from 'lucide-react';
 import { AccountMenu, Button, FlagDefs, NavbarShell, NAV_BADGE, NAV_ICON } from '@cahyana/ui';
 import { useAccount } from '@/components/providers/AccountProvider';
 import AuthSheet from '@/components/account/AuthSheet';
@@ -41,6 +41,9 @@ const LINKS = [
   },
   { href: '/our-company', label: 'Our Company', icon: <Building2 {...ICON} /> },
 ];
+
+// My Booking is the cart icon, so Settings is the only row (CUE keeps the same one).
+const ACCOUNT_ROWS = [{ href: '/settings', label: 'Settings', icon: <Settings {...ICON} /> }];
 
 // Header slots only: the drawer, burger, desktop links, account shell and header-height vars live in @cahyana/ui.
 export default function Navbar() {
@@ -106,6 +109,7 @@ export default function Navbar() {
             loginTitle="Plan your stay"
             loginNote="Sign in with your email. No password needed."
             prefs={<TripPrefsFields idPrefix="menu" />}
+            rows={ACCOUNT_ROWS}
           />
         )}
       />

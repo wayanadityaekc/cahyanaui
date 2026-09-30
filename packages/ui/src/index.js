@@ -88,6 +88,7 @@ export { default as RailLayout } from './blocks/RailLayout.jsx';
 export { default as ChatLauncher } from './blocks/ChatLauncher.jsx';
 export { default as ChatPanel } from './blocks/ChatPanel.jsx';
 export { default as ChatMessages } from './blocks/ChatMessages.jsx';
+export { default as AccountSettings } from './blocks/AccountSettings.jsx';
 
 /* Shared class strings, for a page that needs the look without the component. */
 export * from './primitives/controlClasses.js';

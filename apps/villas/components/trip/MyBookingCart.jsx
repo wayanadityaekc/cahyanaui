@@ -2,10 +2,14 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowRight, MessageCircle, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, MessageCircle, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
-import { SERVICES, serviceById } from '@/lib/bookingCart';
+import { serviceById } from '@/lib/bookingCart';
+import { extraProblem, extrasTotals } from '@/lib/extras';
+import { bookingMessage } from '@/lib/bookingMessage';
+import ExtrasSection from '@/components/trip/ExtrasSection';
+import useExtrasCatalog from '@/components/trip/useExtrasCatalog';
 import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
 import { CUE_LINK, whatsappLink } from '@/lib/constants';
@@ -36,11 +40,12 @@ function EmptyState() {
   );
 }
 
-// My Booking: the stay has a real total, services are listed as requests with no price, on purpose.
+// My Booking: the stay (paid in full), CUE extras from the price list (deposit now), villa services paid at the villa.
 export default function MyBookingCart() {
-  const { cart, ready, clearStay, toggleService, clear } = useCart();
+  const { cart, ready, clearStay, toggleService, addExtra, removeExtra, updateExtra, clear } = useCart();
   const { currency, formatAmount, breakdown: convert } = useCurrency();
   const [sent, setSent] = useState(false);
+  const catalog = useExtrasCatalog(currency, cart.stay?.guests || 2);
 
   // Draw nothing until the stored booking is read, or 'nothing here yet' flashes at guests who have one.
   if (!ready) return <div className="min-h-[40vh]" aria-busy="true" />;
@@ -52,22 +57,12 @@ export default function MyBookingCart() {
   const shown = convert(breakdown);
   const inRupiah = currency === 'IDR';
   const chosen = cart.services.map(serviceById).filter(Boolean);
+  const extras = stay ? cart.extras : [];
+  const totals = extrasTotals(extras, catalog);
+  const blocked = extras.some((extra) => extraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) || (extras.length > 0 && !totals);
   const isEmpty = !stay && chosen.length === 0;
 
-  const message = [
-    stay && villa ? `Hi! I'd like to book ${villa.name}.` : "Hi! I'd like to ask about staying with you.",
-    stay ? `Check-in: ${stay.checkIn || '-'}` : null,
-    stay ? `Check-out: ${stay.checkOut || '-'}` : null,
-    stay ? `Guests: ${stay.guests}` : null,
-    breakdown && nights > 0
-      ? `${nights} night(s) x ${formatAmount(shown.nightly)} = ${formatAmount(shown.subtotal)}`
-      : null,
-    breakdown && nights > 0
-      ? `Stay total: ${formatAmount(shown.total)}${inRupiah ? '' : ` (exact price ${formatRupiah(breakdown.totalIdr)})`}`
-      : null,
-    chosen.length ? `Services I'd like: ${chosen.map((service) => service.label).join(', ')}` : null,
-    chosen.length ? '(Happy to hear the prices for those.)' : null,
-  ].filter(Boolean).join('\n');
+  const message = bookingMessage({ stay, villa, nights, shown, breakdown, inRupiah, extras, totals, catalog, services: chosen, formatAmount });
 
   return (
     <Container className="py-10">
@@ -108,31 +103,20 @@ export default function MyBookingCart() {
 
             <div className={`${CARD} p-5`}>
               <h2 className={ROW_H}>Add to your stay</h2>
-              <p className="mt-1 text-body text-muted">
-                Tick whatever you want waiting for you. We confirm the prices when we reply - they are not fixed on this page.
+              <p className="mt-1 mb-4 text-body text-muted">
+                Tours, activities and airport transfers are run by Cahyana Ubud Experience, our sister company, with prices from its price list.
               </p>
-              <ul className="list-none mt-4 flex flex-col">
-                {SERVICES.map((service) => {
-                  const on = cart.services.includes(service.id);
-                  return (
-                    <li key={service.id} className="flex items-center justify-between gap-4 py-3 [&+&]:border-t [&+&]:border-line">
-                      <Link href={service.href} className="min-w-0 text-body font-medium text-gold hover:text-cta">{service.label}</Link>
-                      <button
-                        type="button"
-                        onClick={() => toggleService(service.id)}
-                        aria-pressed={on}
-                        className={on
-                          ? 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 border-none bg-cta text-white text-small font-semibold cursor-pointer'
-                          : 'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-surface-raised text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-cta)]'}
-                      >
-                        {on
-                          ? <><Trash2 className={ICON} strokeWidth={1.8} aria-hidden="true" /> Remove</>
-                          : <><Plus className={ICON} strokeWidth={1.8} aria-hidden="true" /> Add</>}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+              <ExtrasSection
+                stay={stay}
+                extras={extras}
+                services={cart.services}
+                catalog={catalog}
+                formatAmount={formatAmount}
+                onToggleService={toggleService}
+                addExtra={addExtra}
+                removeExtra={removeExtra}
+                updateExtra={updateExtra}
+              />
             </div>
           </div>
 
@@ -146,7 +130,7 @@ export default function MyBookingCart() {
                   <span>{formatAmount(shown.subtotal)}</span>
                 </p>
                 <p className={`${LINE} pt-3 mt-1 border-t border-line`}>
-                  <span className={LABEL}>Stay total</span>
+                  <span className={LABEL}>Stay total, paid in full</span>
                   <span className="text-h2 font-bold text-amber">{formatAmount(shown.total)}</span>
                 </p>
                 {inRupiah ? null : <p className="text-label text-muted">Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.</p>}
@@ -157,14 +141,29 @@ export default function MyBookingCart() {
               </p>
             )}
 
+            {extras.length > 0 && (
+              <div className="mt-5 pt-4 border-t border-line" data-extras-summary>
+                <p className={LABEL}>Extras</p>
+                {totals ? (
+                  <div className="mt-2 flex flex-col gap-1.5">
+                    <p className={LINE}><span className="text-muted">{extras.length} {extras.length === 1 ? 'extra' : 'extras'}</span><span>{formatAmount(totals.total)}</span></p>
+                    <p className={LINE}><span className="text-muted">Deposit now</span><span data-deposit>{formatAmount(totals.deposit)}</span></p>
+                    <p className={LINE}><span className="text-muted">Rest on the day</span><span>{formatAmount(totals.rest)}</span></p>
+                  </div>
+                ) : (
+                  <p className="mt-2 text-body text-muted">Prices are loading. If this stays, please try again in a moment.</p>
+                )}
+              </div>
+            )}
+
             {chosen.length > 0 && (
               <div className="mt-5 pt-4 border-t border-line">
-                <p className={LABEL}>Services requested</p>
+                <p className={LABEL}>At the villa</p>
                 <ul className="list-none mt-2 flex flex-col gap-1.5">
                   {chosen.map((service) => (
                     <li key={service.id} className={LINE}>
                       <span className="text-muted">{service.label}</span>
-                      <span className="text-muted">price on request</span>
+                      <span className="text-muted">paid at the villa</span>
                     </li>
                   ))}
                 </ul>
@@ -174,15 +173,17 @@ export default function MyBookingCart() {
             <Button
               as="a"
               full
-              href={whatsappLink(message)}
+              href={blocked ? undefined : whatsappLink(message)}
+              aria-disabled={blocked || undefined}
               target="_blank"
               rel="noopener"
-              onClick={() => setSent(true)}
-              className="mt-6"
+              onClick={(event) => { if (blocked) { event.preventDefault(); return; } setSent(true); }}
+              className={`mt-6 ${blocked ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <MessageCircle className={ICON} strokeWidth={1.8} aria-hidden="true" />
               Send to WhatsApp
             </Button>
+            {blocked && <p className="mt-3 text-label text-err text-center" role="status">Add a date and time for each extra first.</p>}
             <p className="mt-3 text-label text-muted text-center">
               Opens WhatsApp with this already written out. Nothing is sent until you press send there.
             </p>

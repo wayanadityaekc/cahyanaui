@@ -1,7 +1,7 @@
-// Guest's booking in localStorage only: the stay is priced, services are requests with no price (never invent one).
+// Guest's booking in localStorage only: the stay and extras are priced, villa services are paid at the villa (no price here).
 export const CART_KEY = 'upv_booking_v1';
 
-export const EMPTY = { stay: null, services: [] };
+export const EMPTY = { stay: null, services: [], extras: [] };
 
 // Every read is wrapped: localStorage throws in private windows, and bad data must not crash the page.
 export function readCart() {
@@ -13,6 +13,8 @@ export function readCart() {
     return {
       stay: parsed && typeof parsed.stay === 'object' ? parsed.stay : null,
       services: Array.isArray(parsed?.services) ? parsed.services : [],
+      // Carts saved before extras existed simply have none.
+      extras: Array.isArray(parsed?.extras) ? parsed.extras.filter((extra) => extra && typeof extra === 'object') : [],
     };
   } catch (e) {
     return EMPTY;
@@ -28,9 +30,9 @@ export function writeCart(cart) {
   }
 }
 
-// What the navbar badge counts: the stay is one line, each service is one more.
+// What the navbar badge counts: the stay is one line, each service and each extra one more.
 export function countItems(cart) {
-  return (cart.stay ? 1 : 0) + (cart.services?.length || 0);
+  return (cart.stay ? 1 : 0) + (cart.services?.length || 0) + (cart.extras?.length || 0);
 }
 
 export const SERVICES = [

@@ -1,8 +1,34 @@
-# Bundled bookings on the villa site: design (not built)
+# Bundled bookings on the villa site
 
-Brief #14, new scope item. **Design only.** The live version waits for the
-cahyana-api un-park (brief #14, answer 13): every price and every rule below
-lives in the backend, and the site must never hardcode one.
+Brief #14. Wayan answered the 4 open questions (1 Oct 2026, below). The **site
+side is built**; the server side (one booking reference, online payment,
+availability check) still waits for the cahyana-api un-park.
+
+## Wayan's answers
+
+1. Payment: the villa is paid in full at booking. Tours and activities (CUE
+   programs) take a small deposit now, the rest on the day. Spa, breakfast,
+   scooter and similar are paid at the villa, never charged upfront.
+2. Keep the starting list of 4 tours and 4 activities for now.
+3. Extras can be added after booking too, from My Booking.
+4. Offer both arrival and departure airport transfers.
+
+## What is built (site side)
+
+- Library: `ExtrasPanel` block; `DateField` gained `max`.
+- Villa: `lib/extras.js` (the list, rules, prices, deposit split),
+  `lib/timeSlots.js` (CUE's start-time rules, copied), `lib/bookingMessage.js`,
+  `components/trip/ExtrasSection.jsx` + `useExtrasCatalog.js`, extras in the cart.
+- My Booking shows the extras; the booking sheet links there ("Add extras").
+- Prices come from `/api/pricing/catalog` in the guest's currency and group
+  size; "-" and a blocked send while it has not answered.
+- One flat deposit (the catalog's `deposit`, $10) for all CUE extras together,
+  as on CUE; airport transfers are counted with the CUE extras (flagged to Wayan).
+- Booking still goes out as a WhatsApp message, now listing each extra with its
+  date, start time, flight and price, the deposit split, and the villa services
+  marked "paid at the villa".
+- Not built yet: the private driver (charter) rows below, and exact-minute
+  flight times (the transfer asks for a half-hour time plus the flight number).
 
 ## What the guest does
 
@@ -97,10 +123,3 @@ array, so changing it is a one-line edit.
   total equals the sum of the lines, and each line shows its own cancellation
   rule.
 
-## Open questions
-
-1. Payment in a bundle: (a) all in full, or (b) villa in full plus deposits?
-2. The starting list of 4 tours and 4 activities: keep, or swap some?
-3. Can a guest add extras **after** booking (from My Booking), or only at
-   checkout?
-4. Departure transfer: offer it, or arrival only?

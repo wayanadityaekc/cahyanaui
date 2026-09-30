@@ -20,12 +20,13 @@ function fmtLabel(v) {
   return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-export default function DateField({ label = 'Date', value, onChange, min, placeholder = 'Select date', name, id, icon = null, hint = '' }) {
+export default function DateField({ label = 'Date', value, onChange, min, max, placeholder = 'Select date', name, id, icon = null, hint = '' }) {
   const rich = !!(icon || hint);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [cursor, setCursor] = useState(() => {
-    const base = value ? new Date(value) : new Date();
+    // No value yet: open on the earliest pickable month, so a stay next year does not open on today.
+    const base = value ? new Date(value) : min ? new Date(min) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
@@ -64,7 +65,7 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
             {cells.map((d, i) => {
               if (!d) return <span className={calDay(true)} key={`e${i}`} />;
               const v = iso(d);
-              const disabled = v < minDate;
+              const disabled = v < minDate || (max ? v > max : false);
               return (
                 <button
                   type="button"
@@ -86,7 +87,7 @@ export default function DateField({ label = 'Date', value, onChange, min, placeh
 
   return (
     <div className={CSEL_GROUP}>
-      <input type="date" className={BK_NATIVE} name={name} id={id} value={value || ''} min={minDate} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true" />
+      <input type="date" className={BK_NATIVE} name={name} id={id} value={value || ''} min={minDate} max={max || undefined} onChange={(e) => onChange(e.target.value)} tabIndex={-1} aria-hidden="true" />
       <button type="button" className={rich ? CONTROL_RICH : CONTROL} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>
         {icon && <span className={CONTROL_IC} aria-hidden="true">{icon}</span>}
         {rich ? (

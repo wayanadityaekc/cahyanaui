@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { ChevronLeft, MessageCircle, X } from 'lucide-react';
 import { useEffect } from 'react';
 import { Button, DateRangeField, EYEBROW_LINE } from '@cahyana/ui';
@@ -162,6 +163,9 @@ export default function BookingSheet() {
               <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />
               Continue to WhatsApp
             </Button>
+            {/* Extras live in My Booking, where the saved stay already is; the sheet only points there. */}
+            <Button as={Link} href="/my-booking" variant="ghost" full onClick={closeBooking}>Add extras</Button>
+            <p className="text-label text-muted text-center -mt-3">Tours, activities and airport transfers, with prices, in My Booking.</p>
             <BookingTerms className="text-center [&_ul]:inline-block [&_ul]:text-left" />
             <p className="text-label text-muted text-center">
               This sends your request to our team on WhatsApp - no payment is taken here.

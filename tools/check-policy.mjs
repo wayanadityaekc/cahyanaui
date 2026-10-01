@@ -87,7 +87,8 @@ for (const w of [390, 1280]) {
   const grid = page.locator('[data-photogrid]');
   ok(await grid.count() === 1, `${w} the photo grid is mounted once`);
   ok(await grid.getAttribute('data-photogrid') === 'closed', `${w} and starts closed`);
-  await page.locator('button[aria-label*="View all"]').first().click();
+  // The villa page opens on the photo mosaic (since 25 Sep): tapping a tile opens the full-screen grid.
+  await page.locator('[data-mosaic-tile]:visible').first().click();
   await page.waitForTimeout(500);
   const state = await page.evaluate(() => {
     const el = document.querySelector('[data-photogrid]');

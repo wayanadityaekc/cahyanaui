@@ -72,6 +72,7 @@ picks one - the variants do not get scattered back into the apps.
 | `AccountSettings` | CUE's Account Settings body: avatar, name/phone (email locked), prefs slot, save, sign out, delete trigger | site passes handlers and its delete confirm |
 | `ExtrasPanel` | "Add to your stay": groups of add-on rows with price, Add/Remove, and a fields slot when added | site passes prices, date/time fields, handlers |
 | `PayOptions` | payment step: rail tiles (icon, name in aria-label) + option rows with amounts | site passes rails, options, amounts, handlers |
+| `AvailabilityCalendar` | big stay calendar: booked nights struck through, 1 month on phones / 2 from md, months slide (Framer Motion, needs the `motion` peer) | site passes busy nights, today, min nights, value, onChange |
 | `BookingPanel` | the sticky panel beside a stay | - |
 | `SearchBar` | dates + guests + the button | hero, panel, stack |
 | `PriceBlock` | "From Rp… / night" | amber, gold |

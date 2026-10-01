@@ -32,10 +32,10 @@ function hasType(node, type) {
   return [node['@type']].flat().includes(type);
 }
 
-// The booking panel has no data hook: it is the <aside> that holds this villa's date field and the Check availability button.
+// The booking panel has no data hook: it is the <aside> that holds this villa's date field and the Book now button.
 function bookingPanel(html, slug) {
   return [...html.matchAll(/<aside\b[\s\S]*?<\/aside>/g)].map((match) => match[0])
-    .find((aside) => aside.includes(`id="${slug}-dates"`) && aside.includes('Check availability'));
+    .find((aside) => aside.includes(`id="${slug}-dates"`) && aside.includes('Book now'));
 }
 
 function checkVilla(villa) {
@@ -45,12 +45,14 @@ function checkVilla(villa) {
   const html = fs.readFileSync(file, 'utf8');
   const problems = [];
 
-  if (!bookingPanel(html, villa.slug)) problems.push(`no booking panel (an <aside> holding id="${villa.slug}-dates" and "Check availability")`);
+  if (!bookingPanel(html, villa.slug)) problems.push(`no booking panel (an <aside> holding id="${villa.slug}-dates" and "Book now")`);
+  if (!html.includes('id="availability"')) problems.push('no Availability section (id="availability") for the big calendar');
 
   const bars = [...html.matchAll(/<div[^>]*class="([^"]*\bstickybar\b[^"]*)"[^>]*>/g)];
   if (bars.length !== 1) problems.push(`expected exactly 1 .stickybar book bar, found ${bars.length}`);
   else if (!/\binset-x-0\b/.test(bars[0][1]) || !/\bbottom-0\b/.test(bars[0][1])) problems.push('the .stickybar is not the flush variant (inset-x-0 bottom-0)');
-  else if (!html.slice(bars[0].index, bars[0].index + 4000).includes('Check availability')) problems.push('the .stickybar has no Check availability button');
+  // Before dates are picked the bar says "Pick dates" (it scrolls to the calendar); after, "Book now".
+  else if (!/Pick dates|Book now/.test(html.slice(bars[0].index, bars[0].index + 4000))) problems.push('the .stickybar has no booking button (Pick dates / Book now)');
 
   const h1s = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)].map((match) => decode(match[1].replace(/<[^>]+>/g, '')).trim());
   if (h1s.length !== 1) problems.push(`expected exactly 1 h1, found ${h1s.length}`);

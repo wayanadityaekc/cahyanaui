@@ -15,7 +15,9 @@ import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
 import BookingTerms from '@/components/booking/BookingTerms';
 import { whatsappLink } from '@/lib/constants';
-import { AVAILABILITY_COPY, checkStay } from '@/lib/availability';
+import { AVAILABILITY_COPY, STAY_RULES, baliToday, checkStay } from '@/lib/availability';
+import StayCheckout from '@/components/booking/StayCheckout';
+import useVillaAvailability from '@/components/booking/useVillaAvailability';
 
 // Step 1 asks the Airbnb calendar (via cahyana-api) before the summary; the guest is always told what it said.
 export default function BookingSheet() {
@@ -25,9 +27,19 @@ export default function BookingSheet() {
   const isPhone = useMobile('(max-width: 639px)');
   // '' | 'checking' | 'free' | 'taken' | 'unknown', for the dates currently picked.
   const [availability, setAvailability] = useState('');
+  const [checkoutStay, setCheckoutStay] = useState(null);
+  const [today, setToday] = useState('');
+  useEffect(() => setToday(baliToday()), []);
+  const calendar = useVillaAvailability(isOpen ? booking.villaSlug : '');
 
   // A new villa or new dates make the last answer stale.
   useEffect(() => { setAvailability(''); }, [booking.villaSlug, booking.checkIn, booking.checkOut]);
+
+  function bookNow() {
+    const stay = { villaSlug: villa.slug, checkIn: booking.checkIn, checkOut: booking.checkOut, guests: booking.guests };
+    closeBooking();
+    setCheckoutStay(stay);
+  }
 
   async function checkAvailability() {
     setAvailability('checking');
@@ -65,6 +77,7 @@ export default function BookingSheet() {
     : `Hi! I'd like to ask about booking ${villa.name}.`;
 
   return (
+    <>
     <SheetPresence
       open={isOpen}
       onClose={closeBooking}
@@ -128,6 +141,10 @@ export default function BookingSheet() {
                 id="bk-checkin"
                 value={{ checkIn: booking.checkIn, checkOut: booking.checkOut }}
                 onChange={updateBooking}
+                min={today || undefined}
+                busy={calendar.busy}
+                minNights={STAY_RULES.minNights}
+                maxDaysAhead={STAY_RULES.maxDaysAhead}
               />
             </div>
 
@@ -180,20 +197,29 @@ export default function BookingSheet() {
               </p>
             )}
 
-            <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
-              <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />
-              Continue to WhatsApp
-            </Button>
+            {/* WhatsApp only when the calendar couldn't confirm the nights; open nights go straight to checkout. */}
+            {availability === 'unknown' ? (
+              <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
+                <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />
+                Continue to WhatsApp
+              </Button>
+            ) : (
+              <Button full onClick={bookNow} data-book-now>Book now</Button>
+            )}
             {/* Extras live in My Booking, where the saved stay already is; the sheet only points there. */}
             <Button as={Link} href="/my-booking" variant="ghost" full onClick={closeBooking}>Add extras</Button>
             <p className="text-label text-muted text-center -mt-3">Tours, activities and airport transfers, with prices, in My Booking.</p>
             <BookingTerms className="text-center [&_ul]:inline-block [&_ul]:text-left" />
-            <p className="text-label text-muted text-center">
-              This sends your request to our team on WhatsApp - no payment is taken here.
-            </p>
+            {availability === 'unknown' && (
+              <p className="text-label text-muted text-center">
+                This sends your request to our team on WhatsApp - no payment is taken here.
+              </p>
+            )}
           </div>
         )}
       </DragSheet>
     </SheetPresence>
+    <StayCheckout stay={checkoutStay} open={!!checkoutStay} onClose={() => setCheckoutStay(null)} />
+    </>
   );
 }

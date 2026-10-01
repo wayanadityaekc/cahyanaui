@@ -91,6 +91,8 @@ export { default as ChatMessages } from './blocks/ChatMessages.jsx';
 export { default as AccountSettings } from './blocks/AccountSettings.jsx';
 export { default as ExtrasPanel } from './blocks/ExtrasPanel.jsx';
 export { default as PayOptions } from './blocks/PayOptions.jsx';
+export { default as AvailabilityCalendar } from './blocks/AvailabilityCalendar.jsx';
+export { canCheckIn, canCheckOut, isBookedNight, nightsBetween as stayNights, stayLimits, stayIsOpen, addDays as addStayDays } from './lib/stayRules.js';
 
 /* Shared class strings, for a page that needs the look without the component. */
 export * from './primitives/controlClasses.js';

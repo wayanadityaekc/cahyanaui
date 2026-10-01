@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { Calendar } from 'lucide-react';
 import Overlay from './Overlay.jsx';
 import Button from './Button.jsx';
+import { canCheckIn, canCheckOut, isBookedNight, stayLimits } from '../lib/stayRules.js';
 import {
   CONTROL, CHEV_CAL, CONTROL_VAL, CONTROL_VAL_PLACEHOLDER,
   panelBookdate, PANEL_HEAD_BOOKDATE, PANEL_HEAD_H3, PANEL_CLOSE, PANEL_BODY,
@@ -75,6 +76,10 @@ export default function DateRangeField({
   // rich row the other fields use: icon, small label, value, chevron.
   hint = '',
   icon = null,
+  // Booked nights and stay rules (shared with AvailabilityCalendar): days that can't start or end a stay are disabled.
+  busy = [],
+  minNights = 1,
+  maxDaysAhead = 365,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
   const [open, setOpen] = useState(false);
@@ -94,6 +99,8 @@ export default function DateRangeField({
   }, [open]);
 
   const minDate = min || iso(new Date());
+  const limits = stayLimits({ today: minDate, minNights, maxDaysAhead });
+  const choosingEnd = editing === 'end' && !!checkIn;
   const nights = nightsBetween(checkIn, checkOut);
   const single = !!(hint || icon);
   // One line for the whole range, and it says what has been answered so far:
@@ -120,17 +127,23 @@ export default function DateRangeField({
     return null;
   };
 
+  function selectable(v) {
+    // Once a check-in is set, later days can only end the stay; earlier days restart it.
+    if (choosingEnd) return v > checkIn ? canCheckOut(v, checkIn, { busy, limits }) : canCheckIn(v, { busy, limits });
+    return canCheckIn(v, { busy, limits });
+  }
+
   function pick(v) {
-    // Starting a fresh range: either the guest is on the first tap, or they
-    // tapped a day that cannot end the current one.
-    if (editing === 'start' || !checkIn || v <= checkIn) {
-      onChange({ checkIn: v, checkOut: '' });
-      setEditing('end');
+    if (choosingEnd && canCheckOut(v, checkIn, { busy, limits })) {
+      onChange({ checkIn, checkOut: v });
+      setEditing('start');
+      setOpen(false);
       return;
     }
-    onChange({ checkIn, checkOut: v });
-    setEditing('start');
-    setOpen(false);
+    // Only an earlier day (or a fresh start) restarts the range.
+    if ((choosingEnd && v > checkIn) || !canCheckIn(v, { busy, limits })) return;
+    onChange({ checkIn: v, checkOut: '' });
+    setEditing('end');
   }
 
   function openAt(which) {
@@ -176,13 +189,14 @@ export default function DateRangeField({
             {cells.map((d, i) => {
               if (!d) return <span className={calRangeDay(true, null)} key={`e${i}`} />;
               const v = iso(d);
-              const disabled = v < minDate;
               const st = stateOf(v);
+              const disabled = !st && !selectable(v);
+              const booked = disabled && isBookedNight(busy, v);
               return (
                 <button
                   type="button"
                   key={v}
-                  className={calRangeDay(disabled, st)}
+                  className={`${calRangeDay(disabled, st)}${booked ? ' line-through' : ''}`}
                   aria-pressed={st === 'start' || st === 'end'}
                   disabled={disabled}
                   onClick={() => pick(v)}

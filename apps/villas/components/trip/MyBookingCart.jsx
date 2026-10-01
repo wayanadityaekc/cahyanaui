@@ -9,6 +9,7 @@ import { serviceById } from '@/lib/bookingCart';
 import { extraProblem, extrasTotals } from '@/lib/extras';
 import { bookingMessage } from '@/lib/bookingMessage';
 import ExtrasSection from '@/components/trip/ExtrasSection';
+import CharterCard from '@/components/sections/CharterCard';
 import useExtrasCatalog from '@/components/trip/useExtrasCatalog';
 import CheckoutSheet from '@/components/booking/CheckoutSheet';
 import PayWaiting from '@/components/booking/PayWaiting';
@@ -138,6 +139,10 @@ export default function MyBookingCart() {
                 removeExtra={removeExtra}
                 updateExtra={updateExtra}
               />
+            </div>
+
+            <div className={`${CARD} p-5`}>
+              <CharterCard compact />
             </div>
           </div>
 

@@ -5,6 +5,7 @@ import ServiceCard from '@/components/cards/ServiceCard';
 import ReviewCard from '@/components/cards/ReviewCard';
 import SearchCard from '@/components/sections/SearchCard';
 import CheckAvailabilityButton from '@/components/booking/CheckAvailabilityButton';
+import CharterCard from '@/components/sections/CharterCard';
 import { VILLA_LIST } from '@/lib/villas';
 import { OVERALL_RATING, OVERALL_REVIEW_COUNT, REVIEW_CARDS } from '@/lib/reviews';
 import { Button, CAPS, EYEBROW_LINE, GRID_PAIR, GRID_TRIO, Hero, ICON_CIRCLE, JsonLd, MediaCard, STARS, Section, SectionHeading, SplitFeature } from '@cahyana/ui';
@@ -189,6 +190,13 @@ export default function HomePage() {
         </div>
       </Section>
 
+
+      {/* G8: CUE charter plans, prices live from cahyana-api; booked on CUE, not in this site's booking. */}
+      <Section tone="cream" id="private-driver">
+        <div className="max-w-[44rem]">
+          <CharterCard />
+        </div>
+      </Section>
 
       {/* CTA */}
       <Section tone="dark" className="text-center">

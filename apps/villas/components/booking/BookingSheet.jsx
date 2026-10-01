@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ChevronLeft, MessageCircle, X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, DateRangeField, EYEBROW_LINE } from '@cahyana/ui';
 import DragSheet from '@/components/ui/DragSheet';
 import SheetPresence from '@/components/ui/SheetPresence';
@@ -15,13 +15,26 @@ import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
 import BookingTerms from '@/components/booking/BookingTerms';
 import { whatsappLink } from '@/lib/constants';
+import { AVAILABILITY_COPY, checkStay } from '@/lib/availability';
 
-// Booking sheet with no backend on purpose: step 2 opens a pre-filled wa.me link so a person continues on WhatsApp.
+// Step 1 asks the Airbnb calendar (via cahyana-api) before the summary; the guest is always told what it said.
 export default function BookingSheet() {
   const { isOpen, step, booking, closeBooking, updateBooking, goToSummary, goToDetails } = useBooking();
   const { currency, format, formatAmount, breakdown: convert } = useCurrency();
   const { setStay } = useCart();
   const isPhone = useMobile('(max-width: 639px)');
+  // '' | 'checking' | 'free' | 'taken' | 'unknown', for the dates currently picked.
+  const [availability, setAvailability] = useState('');
+
+  // A new villa or new dates make the last answer stale.
+  useEffect(() => { setAvailability(''); }, [booking.villaSlug, booking.checkIn, booking.checkOut]);
+
+  async function checkAvailability() {
+    setAvailability('checking');
+    const answer = await checkStay(booking.villaSlug, booking.checkIn, booking.checkOut);
+    setAvailability(answer);
+    if (answer !== 'taken') goToSummary();
+  }
 
   // Save the stay only on reaching the summary, and in an effect: writing another provider mid-render makes React complain.
   useEffect(() => {
@@ -129,9 +142,12 @@ export default function BookingSheet() {
               />
             </div>
 
-            <Button full disabled={!canContinue} onClick={goToSummary} className="disabled:opacity-50 disabled:cursor-not-allowed">
-              Check availability
+            <Button full disabled={!canContinue || availability === 'checking'} onClick={checkAvailability} className="disabled:opacity-50 disabled:cursor-not-allowed">
+              {availability === 'checking' ? 'Checking...' : 'Check availability'}
             </Button>
+            {availability === 'taken' && (
+              <p role="alert" className="text-small text-err text-center -mt-2" data-availability="taken">{AVAILABILITY_COPY.taken}</p>
+            )}
             {!canContinue && (
               <p className="text-label text-muted text-center -mt-3">Pick check-in and check-out dates to continue.</p>
             )}
@@ -158,6 +174,11 @@ export default function BookingSheet() {
               </div>
             </div>
             {inRupiah ? null : <p className="text-label text-muted -mt-3">Exact price {formatRupiah(breakdown.totalIdr)}; other currencies follow today's rate.</p>}
+            {(availability === 'free' || availability === 'unknown') && (
+              <p role="status" className={`m-0 p-3 rounded-md text-small ${availability === 'free' ? 'bg-cream text-ok' : 'bg-cream text-green'}`} data-availability={availability}>
+                {AVAILABILITY_COPY[availability]}
+              </p>
+            )}
 
             <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
               <MessageCircle className="w-[var(--icon-sm)] h-[var(--icon-sm)]" strokeWidth={1.8} aria-hidden="true" />

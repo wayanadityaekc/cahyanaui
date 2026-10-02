@@ -72,15 +72,21 @@ picks one - the variants do not get scattered back into the apps.
 | `AccountSettings` | CUE's Account Settings body: avatar, name/phone (email locked), prefs slot, save, sign out, delete trigger | site passes handlers and its delete confirm |
 | `ExtrasPanel` | "Add to your stay": groups of add-on rows with price, Add/Remove, and a fields slot when added | site passes prices, date/time fields, handlers |
 | `PayOptions` | payment step: rail tiles (icon, name in aria-label) + option rows with amounts | site passes rails, options, amounts, handlers |
-| `PlanList` | CUE's charter plan rows, read-only: name, badge, sub, price (dash while loading) | site passes plans with formatted prices |
-| `AvailabilityCalendar` | big stay calendar: booked nights struck through, 1 month on phones / 2 from md, months slide (Framer Motion, needs the `motion` peer) | site passes busy nights, today, min nights, value, onChange |
-| `BookingPanel` | the sticky panel beside a stay | - |
+| `PlanList` | CUE's charter plan rows: name, badge, sub, price (dash while loading) | read-only, or pick one with `value` + `onChange` ("Selected" tab) |
+| `AvailabilityCalendar` | big stay calendar: booked nights struck through, 1 month on phones / 2 from md (`months={1}` keeps one), months slide (Framer Motion, needs the `motion` peer) | site passes busy nights, today, min nights, value, onChange |
+| `BookingPanel` | the sticky panel beside a stay, optional `title` above the price | - |
 | `SearchBar` | dates + guests + the button | hero, panel, stack |
 | `PriceBlock` | "From Rp… / night" | amber, gold |
 | `Slider` | a card row that scrolls sideways, arrows on desktop | track class is a prop |
-| `ReviewCard` / `ReviewDetail` | one review as a fixed-size card; its full text in a dialog | - |
+| `ReviewCard` / `ReviewDetail` | one review as a fixed-size card; its full text in a dialog | `placeholder` (holds a spot for a real review), `mark` (a corner source icon) |
 | `ReviewList` | reviews as cards + the detail dialog | **slider** (a review section), **grid** (the full list) |
 | `RailLayout` | sticky side menu + content column; on phones the menu is the first screen | default, card (phones keep the frame), scrollContent |
+| `PromoSlider` | a full-width photo band that slides one program at a time (no autoplay), port of CUE's program band | `external` for links to another site |
+| `PhotoBand` | full-bleed photo with a dark gradient, centred eyebrow / title / text / one button | `paired`: a rounded left-aligned card from 993px |
+| `GuideCard` | CUE's guide article card, a 4:5 photo with the title on a gradient | `linkAs` for the router's Link |
+| `ProgramCard` | CUE's tour card: photo, title, glass bar with duration, Private Tour and a "from" price | `external` |
+| `StayResults` | the villas free for the picked dates, each with Reserve and Details | site passes items and handlers |
+| `ModalLogo` | the brand logo, centred and 38px high, at the top of a popup | site passes its own file |
 | `ChatLauncher` | the navbar's chat icon, a button that opens the panel in place | optional label (app bar) |
 | `ChatPanel` | inside of CUE's live chat: head, conversation, email ask, input, a way out (WhatsApp) | - |
 | `ChatMessages` | the conversation: guest right, bot left with rows/link/chips, owner replies named | - |

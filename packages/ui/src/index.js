@@ -85,6 +85,8 @@ export { default as ReviewCard } from './blocks/ReviewCard.jsx';
 export { default as ReviewDetail } from './blocks/ReviewDetail.jsx';
 export { default as ReviewList } from './blocks/ReviewList.jsx';
 export { default as RailLayout } from './blocks/RailLayout.jsx';
+export { default as RailHelp } from './blocks/RailHelp.jsx';
+export { default as FaqAccordion } from './blocks/FaqAccordion.jsx';
 export { default as ChatLauncher } from './blocks/ChatLauncher.jsx';
 export { default as ChatPanel } from './blocks/ChatPanel.jsx';
 export { default as ChatMessages } from './blocks/ChatMessages.jsx';

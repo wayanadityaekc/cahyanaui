@@ -126,3 +126,23 @@ export const RAIL_HELP_BTN =
   `${BTN_SM} gap-[0.4rem] no-underline font-body text-surface-raised bg-cta ` +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
+
+// --- content inside a rail page (CUE's Our Company sections) ---
+// Body paragraph rhythm and the section title shared by every rail section.
+export const RAIL_BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
+export const RAIL_TITLE = 'font-head text-h2 font-bold text-gold mb-4';
+
+// FAQ accordion on native <details>: works before hydration and Ctrl+F finds collapsed answers.
+export const FAQ_CAT = 'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-1)]';
+// list-none plus the webkit rule remove the browser's default disclosure triangle.
+export const FAQ_Q =
+  'list-none [&::-webkit-details-marker]:hidden flex items-center gap-[var(--space-2)] ' +
+  'cursor-pointer py-[0.85rem] font-body text-h3 font-semibold text-gold';
+// Transition `rotate`, not `transform`: Tailwind v4 compiles rotate-180 to the standalone rotate property.
+export const FAQ_CHEV =
+  'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted ' +
+  'transition-[rotate] duration-[var(--dur)] ease-[var(--ease)] group-open:rotate-180';
+export const FAQ_ROW = 'group [border-bottom:1px_solid_var(--line)] first-of-type:[border-top:1px_solid_var(--line)]';
+export const FAQ_A =
+  'pb-[var(--space-2)] pr-[var(--space-4)] [&_p]:m-0 [&_p]:text-body ' +
+  '[&_p]:leading-[var(--lh-body)] [&_p]:text-ink [&_a]:text-gold [&_a]:font-medium';

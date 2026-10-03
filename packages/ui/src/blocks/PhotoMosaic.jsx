@@ -2,7 +2,6 @@
 
 import { cn } from '../lib/cn.js';
 import { BLEED_MOBILE } from './gridClasses.js';
-import { BTN_SM } from '../primitives/btnClasses.js';
 
 /**
  * THE PHOTO MOSAIC that opens a detail page: one large photograph, then a
@@ -29,6 +28,8 @@ import { BTN_SM } from '../primitives/btnClasses.js';
  * `aspect`, so the crop holds at every width - never a pixel height, which
  * gave a 1.24 big photo at a 993px viewport when CUE tried it.
  *
+ * NO ZOOM on hover (Wayan, WO10): tiles do not move or scale under the pointer.
+ *
  * NO RADIUS on the tiles, matching CUE (Wayan there: "grid nya gausah kasi
  * border radius"). Pass `className` if a site wants its own.
  *
@@ -37,8 +38,7 @@ import { BTN_SM } from '../primitives/btnClasses.js';
  */
 const TILE =
   'relative block w-full h-full overflow-hidden p-0 bg-cream border-none cursor-pointer ' +
-  '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center ' +
-  '[&>img]:[transition:transform_var(--dur-slow)_var(--ease)] hover:[&>img]:[transform:scale(1.04)]';
+  '[&>img]:absolute [&>img]:inset-0 [&>img]:w-full [&>img]:h-full [&>img]:object-cover [&>img]:object-center';
 
 const BIG = `${TILE} flex-[0_0_62%] [scroll-snap-align:start]`;
 
@@ -59,16 +59,13 @@ const TRACK =
 const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
 const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 
-// A corner pill rather than a dark wash over a tile: a wash lands on whatever
-// the photograph's subject happens to be. `scale` has to be in this element's
-// own transition list, or the global press feedback snaps instead of easing.
-// Geometry from BTN_SM, not re-typed. It WAS re-typed here, and the copy went
-// stale the moment the button size changed: this one stayed at 12.8px/16px
-// while every other button on the site moved to 14/20.
+// A small, semi-transparent corner pill (Wayan, WO10: "too big, smaller and a bit transparent").
+// Own geometry on purpose: BTN_SM is the full-size action button, this is a photo label.
 const MORE_BTN =
-  `absolute bottom-3 right-3 z-[6] inline-flex ${BTN_SM} ` +
-  'bg-white [border:1px_solid_var(--line)] text-gold cursor-pointer ' +
-  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
+  'absolute bottom-3 right-3 z-[6] inline-flex items-center justify-center h-7 px-3 rounded-sm ' +
+  'text-small font-medium leading-none text-gold cursor-pointer bg-white/80 backdrop-blur-[2px] ' +
+  '[border:1px_solid_rgba(255,255,255,0.7)] ' +
+  '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-white';
 
 export default function PhotoMosaic({
   images = [],

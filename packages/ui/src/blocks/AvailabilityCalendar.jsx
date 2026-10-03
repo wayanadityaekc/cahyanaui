@@ -34,7 +34,7 @@ function monthCells(year, month) {
   return cells;
 }
 
-// Airbnb-style stay calendar: big, booked nights struck through, one month on phones and two side by side from md up.
+// Airbnb-style stay calendar: big, booked nights struck through, one month on phones and two side by side from md up (`months={1}` keeps one at every width).
 export default function AvailabilityCalendar({
   value = {},
   onChange = () => {},
@@ -45,6 +45,7 @@ export default function AvailabilityCalendar({
   maxDaysAhead = 365,
   note = null,
   loading = false,
+  months = 2,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
   const base = today || localIso(new Date());
@@ -162,10 +163,10 @@ export default function AvailabilityCalendar({
               animate="center"
               exit="exit"
               transition={{ duration: reduce ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-x-10"
+              className={cn('grid grid-cols-1 gap-x-10', months === 2 && 'md:grid-cols-2')}
             >
               {month(0)}
-              {month(1)}
+              {months === 2 ? month(1) : null}
             </m.div>
           </AnimatePresence>
         </div>

@@ -5,9 +5,10 @@ import Card from './Card.jsx';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
 /**
- * The booking panel that rides alongside a stay or a tour: price, the dates,
+ * The booking panel that rides alongside a stay or a tour: an optional title, price, the dates,
  * the one green CTA, then the quieter ways out.
  *
+ *   title      optional short heading above the price
  *   price      node - the "From Rp… / night" block. Passed in, because what a
  *              price MEANS is the app's business (per night, per car, per
  *              person) and getting that wrong is worse than getting it ugly.
@@ -44,6 +45,7 @@ export const SECONDARY_BTN =
 
 export default function BookingPanel({
   as,
+  title = null,
   price = null,
   fields = null,
   cta = null,
@@ -61,6 +63,7 @@ export default function BookingPanel({
       {...rest}
     >
       <Card as={as} ref={panelRef} className="p-6">
+        {title ? <h2 className="m-0 mb-2 text-strong font-semibold text-gold">{title}</h2> : null}
         {price}
         {fields ? <div className="mt-5">{fields}</div> : null}
         {cta ? <div className="mt-4">{cta}</div> : null}

@@ -28,6 +28,7 @@ export default function ReviewList({
   emptyText = 'No reviews yet - be the first to share your trip.',
   emptyAction = null,
   logo = null,
+  mark = null,
   className = '',
 }) {
   const [selected, setSelected] = useState(null);
@@ -48,7 +49,7 @@ export default function ReviewList({
   }
 
   const cards = list.map((r, i) => (
-    <ReviewCard key={i} {...r} logo={logo} onClick={() => setSelected(r)} />
+    <ReviewCard key={i} {...r} logo={logo} mark={mark} onClick={() => setSelected(r)} />
   ));
 
   return (

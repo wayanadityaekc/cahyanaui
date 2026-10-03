@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronRight, ChevronLeft, PanelLeft } from 'lucide-react';
 import {
   RAIL_FRAME, RAIL_FRAME_SCROLL, RAIL_ASIDE, RAIL_ASIDE_COLLAPSED, RAIL_STICK, RAIL_STICK_COLLAPSED,
@@ -23,6 +23,9 @@ import {
  *   collapsible  adds a collapse trigger. `collapsed` + `onCollapsedChange`
  *             make it controlled (the site decides where to remember it);
  *             without them it keeps its own state.
+ *   storageKey  makes the collapsed state one site-wide preference, kept in
+ *             localStorage under this key and read AFTER mount (CUE's way), so
+ *             the site needs no state of its own.
  *   scrollContent  caps the frame to one screen and scrolls only the content.
  *   contentAs  the content column's element. 'div' by default, because the
  *             site's layout usually owns the page's one <main>; pass 'main'
@@ -47,6 +50,7 @@ export default function RailLayout({
   breadcrumb = null,
   collapsible = false,
   collapsed: collapsedProp,
+  storageKey,
   onCollapsedChange,
   scrollContent = false,
   linkAs: LinkAs = 'a',
@@ -54,9 +58,17 @@ export default function RailLayout({
 }) {
   const [ownCollapsed, setOwnCollapsed] = useState(false);
   const collapsed = collapsedProp ?? ownCollapsed;
+  // Read in an effect, not initial state, so a static export's first paint matches its HTML.
+  useEffect(() => {
+    if (!storageKey) return;
+    try { setOwnCollapsed(window.localStorage.getItem(storageKey) === '1'); } catch (e) { /* ignore */ }
+  }, [storageKey]);
   function toggleCollapsed() {
     const next = !collapsed;
     if (collapsedProp === undefined) setOwnCollapsed(next);
+    if (storageKey) {
+      try { window.localStorage.setItem(storageKey, next ? '1' : '0'); } catch (e) { /* ignore */ }
+    }
     if (onCollapsedChange) onCollapsedChange(next);
   }
   const railCollapsed = collapsible && collapsed;

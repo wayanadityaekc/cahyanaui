@@ -24,6 +24,7 @@ import {
  *   surface   the band's background. The villa site runs a LIGHT footer
  *             (#ebe8e2); CUE's is darker. Passed in rather than themed, because
  *             this is the one place the two brands genuinely differ.
+ *   gridClass the grid row; pass FOOT_GRID_SIX when a sixth column arrives as `children`
  *   linkAs    the link component (pass next/link's Link); defaults to 'a'
  *
  * THE BRAND IS A TEXT WORDMARK, not the logo image. At footer size the mark
@@ -41,13 +42,14 @@ export default function FooterShell({
   featured = null,
   bottom = null,
   surface = 'bg-[#ebe8e2]',
+  gridClass = FOOT_GRID,
   linkAs: Link = 'a',
   className,
   children,
 }) {
   return (
     <footer className={cn(FOOT_ROOT, surface, className)}>
-      <div className={FOOT_GRID}>
+      <div className={gridClass}>
         {/* The brand block spans both columns once the grid drops to two: it is
             a paragraph of contact lines, not a list of links. */}
         <div className="max-[900px]:col-span-full">{brand}</div>

@@ -56,3 +56,18 @@ export const FOOT_REG = 'flex flex-wrap items-center gap-x-[7px] gap-y-1 max-[70
 export const FOOT_SOCIAL_A_AIRBNB =
   'group flex items-center justify-center w-[22px] h-[22px] rounded-[50%] bg-[rgba(0,0,0,0.06)] hover:bg-[#FF5A5F]';
 export const FOOT_SOCIAL_ICON_AIRBNB = 'block w-[13px] h-[13px] group-hover:[fill:#fff]';
+
+// "We accept" chip and heading row (CUE's footer): small white tiles that lift on hover.
+export const FOOT_PAY_CHIP =
+  'inline-flex items-center justify-center h-5 min-w-[34px] px-[0.3rem] bg-surface-raised rounded-sm ' +
+  'transition-[transform] duration-[var(--dur)] ease-[var(--ease-out)] hover:[transform:translateY(-2px)]';
+// Six-column grid for a footer that carries both the link columns and the "We accept" column.
+export const FOOT_GRID_SIX =
+  'grid max-w-[1100px] mx-auto gap-x-8 gap-y-9 ' +
+  'grid-cols-[1.5fr_0.9fr_0.9fr_1fr_1fr_1.1fr] ' +
+  'max-[900px]:grid-cols-2 max-[900px]:gap-y-8';
+// Compact footer: fixed to the bottom of rail pages; `footerbar` is the class body padding keys off.
+export const FOOT_COMPACT =
+  'footerbar fixed inset-x-0 bottom-0 z-[90] px-4 min-[561px]:px-6 py-[1rem] min-[561px]:pt-5 ' +
+  'min-[561px]:pb-[max(1.25rem,env(safe-area-inset-bottom))] pb-[max(1rem,env(safe-area-inset-bottom))] ' +
+  'leading-[normal] text-green [border-top:1px_solid_rgba(0,0,0,0.08)]';

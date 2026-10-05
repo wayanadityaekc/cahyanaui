@@ -56,8 +56,8 @@
      same - "font pakai font global" - so both sites are Inter, everywhere, and
      --font-head above stays the single line that would change it. */
 
-  --text-display: clamp(1.75rem, 4vw, 2.5rem);  /* H1, 28-40px */
-  --text-h2: clamp(1.375rem, 2vw, 1.625rem);            /* section heading, 22-26px */
+  --text-display: clamp(2rem, 4.2vw, 3.25rem);   /* H1, 32-52px */
+  --text-h2: clamp(1.625rem, 2.8vw, 2.25rem);          /* section heading, 26-36px */
   --text-h3: 0.875rem;                          /* card title, 14px */
   --text-strong: 0.875rem;
   --text-body: 0.8rem;                          /* 12.8px */

@@ -34,7 +34,7 @@ export default function VillaFeature({ id, eyebrow = '', name, text = '', photos
       <div className="flex flex-col gap-5 min-[993px]:flex-row min-[993px]:items-end min-[993px]:justify-between">
         <div className="max-w-[60ch]">
           {eyebrow ? <p className="text-small font-medium text-cta mb-2">{eyebrow}</p> : null}
-          <h3 className="text-[clamp(1.5rem,2.6vw,2rem)] font-semibold tracking-[-0.015em] leading-[var(--lh-heading)] text-gold m-0">{name}</h3>
+          <h3 className="text-h2 font-semibold tracking-[-0.015em] leading-[var(--lh-heading)] text-gold m-0">{name}</h3>
           {text ? <p className="mt-3 text-strong leading-[1.6] text-green">{text}</p> : null}
           {facts.length ? (
             <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 list-none p-0 m-0 text-small text-gold">

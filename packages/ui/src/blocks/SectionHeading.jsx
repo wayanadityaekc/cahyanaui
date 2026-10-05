@@ -28,7 +28,7 @@ import { cn } from '../lib/cn.js';
  * Put `mb-8 min-[993px]:mb-12` on it to space it from the content below.
  */
 const SIZES = {
-  section: 'text-[clamp(1.5rem,2.6vw,2rem)] font-semibold tracking-[-0.015em] text-balance',
+  section: 'text-h2 font-semibold tracking-[-0.015em] text-balance',
   display: 'text-display font-bold',
   h2: 'text-h2 font-medium',
   h3: 'text-h3 font-semibold',

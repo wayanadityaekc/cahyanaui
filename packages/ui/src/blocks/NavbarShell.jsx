@@ -39,6 +39,7 @@ export default function NavbarShell({
   linkAs = 'a',
   pop = null,
   drawerId = 'nav-menu',
+  overlay = false,
   className,
 }) {
   const Link = linkAs;
@@ -48,6 +49,8 @@ export default function NavbarShell({
   const burgerRef = useRef(null);
   const headerRef = useRef(null);
   const barRef = useRef(null);
+  // `overlay`: the bar floats clear over the hero at the top of the page and turns solid after a short scroll.
+  const [atTop, setAtTop] = useState(true);
 
   // Header heights on :root (nav row, nav + top bar, top bar); set on resize only, never on scroll.
   useEffect(() => {
@@ -76,6 +79,14 @@ export default function NavbarShell({
       window.removeEventListener('resize', onResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (!overlay) return undefined;
+    function onScroll() { setAtTop(window.scrollY < 40); }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [overlay]);
 
   // Tapping outside, or Escape, closes the drawer.
   useEffect(() => {
@@ -106,7 +117,7 @@ export default function NavbarShell({
   function close() { setMenuOpen(false); }
 
   return (
-    <header ref={headerRef} className={cn(NAV_HEADER, className)}>
+    <header ref={headerRef} className={cn(NAV_HEADER, className)} data-overlay={overlay || undefined} data-clear={overlay && atTop && !menuOpen ? '' : undefined}>
       {topBar ? <div ref={barRef}>{topBar}</div> : null}
       <div className={NAV_ROW}>
         <button

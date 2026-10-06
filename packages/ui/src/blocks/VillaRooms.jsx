@@ -33,10 +33,10 @@ export default function VillaRooms({ id, eyebrow = '', title, text = '', rating 
         </div>
       </div>
       {/* On a phone the three rooms are a swipe slide (snap, next one peeking); from 560px they sit in a row. */}
-      <div className="mt-8 flex gap-4 overflow-x-auto snap-x snap-mandatory -mx-[var(--container-x)] px-[var(--container-x)] scroll-pl-[var(--container-x)] min-[560px]:mx-0 min-[560px]:px-0 min-[560px]:grid min-[560px]:grid-cols-3 min-[560px]:overflow-visible min-[993px]:gap-5">
+      <div className="mt-8 flex gap-2 overflow-x-auto snap-x snap-mandatory -mx-[var(--container-x)] px-[var(--container-x)] scroll-pl-[var(--container-x)] min-[560px]:mx-0 min-[560px]:px-0 min-[560px]:grid min-[560px]:grid-cols-3 min-[560px]:overflow-visible">
         {rooms.map(({ src, alt }) => (
           <figure key={src} className="m-0 shrink-0 basis-[82%] snap-start min-[560px]:basis-auto">
-            <div className="relative overflow-hidden rounded-lg bg-cream aspect-[4/3] min-[993px]:aspect-[5/4]">
+            <div className="relative overflow-hidden rounded-sm bg-cream aspect-[4/3] min-[993px]:aspect-[5/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
             </div>

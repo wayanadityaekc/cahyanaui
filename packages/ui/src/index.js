@@ -103,6 +103,7 @@ export { default as BookedTrips } from './blocks/BookedTrips.jsx';
 export { default as SignInPrompt } from './blocks/SignInPrompt.jsx';
 export { default as FaqAccordion } from './blocks/FaqAccordion.jsx';
 export { default as FeatureStrip } from './blocks/FeatureStrip.jsx';
+export { default as FeaturedList } from './blocks/FeaturedList.jsx';
 export { default as ExpandPanels } from './blocks/ExpandPanels.jsx';
 export { default as VillaRooms } from './blocks/VillaRooms.jsx';
 export { default as FindUsOn } from './blocks/FindUsOn.jsx';

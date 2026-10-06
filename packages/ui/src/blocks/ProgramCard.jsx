@@ -3,7 +3,7 @@ import { cn } from '../lib/cn.js';
 
 // Port of CUE's HomepageCard: a 4:5 photo with a dark gradient, the title and a glass bar (duration, private tour, price) at the bottom.
 const FRAME =
-  "relative block overflow-hidden text-white no-underline bg-white rounded-xl aspect-[4/5] shadow-card " +
+  "relative block overflow-hidden text-white no-underline bg-white rounded-sm aspect-[4/5] shadow-card " +
   "after:content-[''] after:absolute after:inset-0 after:z-[1] " +
   'after:bg-[linear-gradient(to_top,rgba(12,14,10,0.86)_0%,rgba(12,14,10,0.40)_40%,rgba(12,14,10,0)_66%,rgba(12,14,10,0.14)_100%)]';
 const BAR = 'flex items-center justify-between gap-2 px-[11px] py-2 rounded-md bg-[rgba(12,14,10,0.42)] border border-[rgba(255,255,255,0.2)]';
@@ -29,7 +29,7 @@ export default function ProgramCard({ href = '#', image = null, title = '', meta
           {price ? (
             <span className="flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap text-white">
               <small className="block text-[9px] opacity-85 font-medium">from</small>
-              <span className="text-white font-bold text-strong">{price}</span>
+              <span className="text-white font-semibold text-strong">{price}</span>
             </span>
           ) : null}
         </div>

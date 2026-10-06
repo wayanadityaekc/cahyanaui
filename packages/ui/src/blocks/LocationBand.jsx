@@ -15,7 +15,7 @@ export default function LocationBand({ eyebrow = '', title = '', text = '', acti
         <SectionHeading size="section" eyebrow={eyebrow} title={title} lede={text} />
         {action ? <div>{action}</div> : null}
       </div>
-      <div className="relative overflow-hidden rounded-lg bg-cream aspect-[4/3]">
+      <div className="relative overflow-hidden rounded-sm bg-cream aspect-[4/3]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {image ? <img src={image} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" /> : null}
       </div>

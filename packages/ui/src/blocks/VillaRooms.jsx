@@ -20,7 +20,7 @@ export default function VillaRooms({ id, eyebrow = '', title, text = '', rating 
           <h3 className="max-w-[24ch] text-h2 font-semibold tracking-[-0.015em] leading-[var(--lh-heading)] text-gold m-0 text-balance">{title}</h3>
           {text ? <p className="mt-4 max-w-[60ch] text-strong leading-[1.65] text-green">{text}</p> : null}
         </div>
-        <div className="overflow-hidden rounded-lg bg-surface-raised [border:1.5px_solid_var(--color-gold)]">
+        <div className="overflow-hidden rounded-sm bg-surface-raised [border:1.5px_solid_var(--color-gold)]">
           <div className="flex items-baseline justify-between gap-3 bg-gold px-5 py-4 text-white">
             <span className="text-label text-white/85">{priceNote}</span>
             <span className="text-[1.75rem] font-semibold leading-none">{price}</span>

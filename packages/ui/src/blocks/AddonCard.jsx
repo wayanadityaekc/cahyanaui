@@ -13,7 +13,7 @@ import { cn } from '../lib/cn.js';
  */
 export default function AddonCard({ image = '', alt = '', icon = null, title, text, meta = '', action = null, className }) {
   return (
-    <div className={cn('flex flex-row min-[560px]:flex-col overflow-hidden rounded-lg bg-surface-raised [border:1px_solid_var(--line)]', className)}>
+    <div className={cn('flex flex-row min-[560px]:flex-col overflow-hidden rounded-sm bg-surface-raised [border:1px_solid_var(--line)]', className)}>
       <div className="relative shrink-0 w-20 min-[560px]:w-auto min-[560px]:aspect-[4/3] bg-cream flex items-center justify-center text-gold [&>svg]:w-8 [&>svg]:h-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {image ? <img src={image} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" /> : icon}

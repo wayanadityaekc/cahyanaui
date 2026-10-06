@@ -1,12 +1,12 @@
 import { cn } from '../lib/cn.js';
 
 /**
- * One villa as a homepage section: a headline, one rating line, a short
- * paragraph, and three captioned photos (the villa room by room).
+ * One villa as a homepage section: a headline, a short paragraph
+ * and three photos (the villa room by room), with no captions under the photos.
  *
  *   eyebrow, title, text   the small label, the headline and the paragraph
  *   rating                 one rendered line, for example "4.96 across platforms"
- *   rooms                  [{ src, alt, title, text }]  three is the design
+ *   rooms                  [{ src, alt }]  three is the design; the alt text carries the description
  *   price, priceNote       formatted by the app
  *   action, secondaryAction  rendered nodes (the app passes its own links)
  */
@@ -34,16 +34,12 @@ export default function VillaRooms({ id, eyebrow = '', title, text = '', rating 
       </div>
       {/* On a phone the three rooms are a swipe slide (snap, next one peeking); from 560px they sit in a row. */}
       <div className="mt-8 flex gap-4 overflow-x-auto snap-x snap-mandatory -mx-[var(--container-x)] px-[var(--container-x)] scroll-pl-[var(--container-x)] min-[560px]:mx-0 min-[560px]:px-0 min-[560px]:grid min-[560px]:grid-cols-3 min-[560px]:overflow-visible min-[993px]:gap-5">
-        {rooms.map(({ src, alt, title: roomTitle, text: roomText }) => (
+        {rooms.map(({ src, alt }) => (
           <figure key={src} className="m-0 shrink-0 basis-[82%] snap-start min-[560px]:basis-auto">
             <div className="relative overflow-hidden rounded-lg bg-cream aspect-[4/3] min-[993px]:aspect-[5/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={src} alt={alt} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
             </div>
-            <figcaption className="mt-3">
-              <b className="block text-strong font-semibold text-gold">{roomTitle}</b>
-              <span className="block mt-1 text-small leading-[1.55] text-muted">{roomText}</span>
-            </figcaption>
           </figure>
         ))}
       </div>

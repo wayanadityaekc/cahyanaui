@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
 import { cn } from '../lib/cn.js';
 
 // One big photo with the page title on it, then a thumbnail strip (Wayan picked option B, Oct 2026).
@@ -34,6 +35,9 @@ const MORE =
 
 const THUMBS_SHOWN = 6;
 
+// Matches the --dur-slow / --ease tokens so the fade keeps the site rhythm.
+const FADE = { duration: 0.3, ease: [0.4, 0, 0.2, 1] };
+
 export default function PhotoHero({
   images = [],
   onOpen,
@@ -45,6 +49,7 @@ export default function PhotoHero({
   className,
 }) {
   const [active, setActive] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   if (!images.length) return <p className="text-small text-muted">{fallback}</p>;
 
@@ -66,8 +71,23 @@ export default function PhotoHero({
           aria-label={`${photoLabel} ${active + 1} / ${images.length}`}
           data-photo-hero-main
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={main.src} alt={main.alt || ''} width={main.w || 1600} height={main.h || 1000} fetchPriority="high" />
+          {/* The new photo fades in over the old one, so the frame never flashes empty. */}
+          <LazyMotion features={domAnimation}>
+            <AnimatePresence initial={false}>
+              <m.img
+                key={main.src}
+                src={main.src}
+                alt={main.alt || ''}
+                width={main.w || 1600}
+                height={main.h || 1000}
+                fetchPriority={active === 0 ? 'high' : undefined}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={reduceMotion ? { duration: 0 } : FADE}
+              />
+            </AnimatePresence>
+          </LazyMotion>
           <span className={SHADE} />
         </button>
 

@@ -65,6 +65,7 @@ export { default as LinkList } from './blocks/LinkList.jsx';
 export { default as MediaCard } from './blocks/MediaCard.jsx';
 export { default as PhotoGrid } from './blocks/PhotoGrid.jsx';
 export { default as PhotoMosaic } from './blocks/PhotoMosaic.jsx';
+export { default as PhotoHero } from './blocks/PhotoHero.jsx';
 export { default as Collapse } from './blocks/Collapse.jsx';
 export { default as NavbarShell } from './blocks/NavbarShell.jsx';
 export { default as NavDesktop } from './blocks/NavDesktop.jsx';

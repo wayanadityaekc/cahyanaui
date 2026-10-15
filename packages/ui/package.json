@@ -1,6 +1,6 @@
 {
   "name": "@cahyana/ui",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "sideEffects": [
@@ -19,5 +19,14 @@
     "lucide-react": ">=1",
     "clsx": ">=2",
     "motion": ">=12"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wayanadityaekc/cahyanaui.git",
+    "directory": "packages/ui"
   }
 }

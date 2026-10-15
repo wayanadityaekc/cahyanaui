@@ -20,7 +20,7 @@ const HOVER_LIFT =
   '[transition:transform_var(--dur-slow)_var(--ease-out)]';
 
 export const CARD_FRAMED =
-  'relative overflow-hidden [border:1px_solid_var(--line)] ' +
+  'relative overflow-hidden rounded-base [border:1px_solid_var(--line)] ' +
   '[box-shadow:var(--shadow-md)] no-underline text-inherit';
 
 // The card's own surface. Kept OUT of the shape strings above and applied by
@@ -54,8 +54,8 @@ export const CARD_HOVER_LG = `${HOVER_LIFT} hover:[transform:translateY(-4px)]`;
  * absolutely - set the ratio on the <img> instead and an HTML `height`
  * attribute (which you want, for CLS) quietly wins over the CSS.
  */
-export const CARD_MEDIA = 'relative overflow-hidden bg-green';
-// The mat still insets the photo; it just no longer rounds it.
+export const CARD_MEDIA = 'relative overflow-hidden rounded-base bg-green';
+// The mat still insets the photo; the photo keeps the one site-wide radius.
 export const CARD_MEDIA_INSET = CARD_MEDIA;
 // What a photo slot shows with no photo: the same dark band as a hero without an image.
 export const MEDIA_FALLBACK = '[background:linear-gradient(150deg,var(--color-gold),#2f2b24)]';

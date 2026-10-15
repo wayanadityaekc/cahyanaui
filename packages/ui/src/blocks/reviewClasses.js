@@ -1,11 +1,12 @@
 import { BLEED_MOBILE } from './gridClasses.js';
 
-// Review row that slides sideways at every width: 300px cards on desktop, 82% of the screen on small phones.
+// Review row: three-up wrapping grid on desktop (no scroll button), a swipe track on phones.
 export const REVIEW_SLIDER =
-  'flex max-w-[1200px] mx-auto pb-4 items-stretch overflow-x-auto overflow-y-hidden ' +
-  '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
-  'min-[993px]:gap-[1.4rem] max-[992px]:gap-4 ' + BLEED_MOBILE + ' ' +
-  '[&>*]:[scroll-snap-align:start] [&>*]:flex-none [&>*]:w-[300px] max-[576px]:[&>*]:w-[82%]';
+  'max-w-[1200px] mx-auto pb-4 min-[993px]:grid min-[993px]:grid-cols-3 min-[993px]:gap-[1.4rem] min-[993px]:items-stretch ' +
+  'max-[992px]:flex max-[992px]:items-stretch max-[992px]:overflow-x-auto max-[992px]:overflow-y-hidden ' +
+  'max-[992px]:[scroll-snap-type:x_mandatory] max-[992px]:[touch-action:pan-x_pan-y] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'max-[992px]:gap-4 ' + BLEED_MOBILE + ' ' +
+  'max-[992px]:[&>*]:[scroll-snap-align:start] max-[992px]:[&>*]:flex-none max-[992px]:[&>*]:w-[300px] max-[576px]:[&>*]:w-[82%]';
 
 // The full-list layout (an all-reviews page): three columns, one on phones.
 export const REVIEW_GRID = 'grid grid-cols-3 max-[768px]:grid-cols-1 gap-5 max-w-[1100px] mx-auto mt-6';

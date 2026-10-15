@@ -16,7 +16,7 @@ export const CHAT_SCRIM = 'fixed inset-0 z-[125] bg-[rgba(26,26,26,0.45)]';
 export const CHAT_HEAD =
   'flex items-center gap-[0.7rem] flex-none pt-4 px-4 pb-3 [border-bottom:1px_solid_var(--line)]';
 export const CHAT_HEAD_AVATAR =
-  'flex-none w-9 h-9 rounded-[50%] bg-cream [border:1px_solid_var(--line)] flex items-center justify-center ' +
+  'flex-none w-9 h-9 rounded-base bg-cream [border:1px_solid_var(--line)] flex items-center justify-center ' +
   '[&>svg]:w-[var(--icon-md)] [&>svg]:h-[var(--icon-md)] [&>svg]:text-gold';
 export const CHAT_HEAD_STACK = 'flex-1 min-w-0 flex flex-col leading-[1.25]';
 export const CHAT_HEAD_TITLE = 'font-body font-semibold text-h3 text-gold m-0';
@@ -36,8 +36,8 @@ export const CHAT_BUBBLE_ME =
 // The owner's replies: left like ours but bordered and named, so a person reads differently from the bot.
 export const CHAT_BUBBLE_OWNER =
   'self-start max-w-[86%] px-[0.85rem] py-[0.6rem] rounded-[var(--r-md)] bg-surface-raised m-0 ' +
-  '[border:1px_solid_var(--color-cta)] font-body text-body leading-[var(--lh-body)] text-ink';
-export const CHAT_WHO = 'block font-body text-label font-medium tracking-[0.06em] uppercase text-cta mb-[0.2rem]';
+  '[border:1px_solid_var(--color-gold)] font-body text-body leading-[var(--lh-body)] text-ink';
+export const CHAT_WHO = 'block font-body text-small font-medium text-gold mb-[0.2rem]';
 
 // Tappable row inside an answer, linking to the page that has the details.
 export const CHAT_ROW =
@@ -84,7 +84,7 @@ export const CHAT_DOTS =
   'self-start flex gap-[4px] px-[0.85rem] py-[0.7rem] rounded-[var(--r-md)] bg-cream [border:1px_solid_var(--line)]';
 export const CHAT_DOT = 'w-[5px] h-[5px] rounded-[50%] bg-muted';
 export const CHAT_TYPING_ROW = `${CHAT_DOTS} items-center gap-[0.45rem]`;
-export const CHAT_TYPING_WHO = 'font-body text-label font-medium tracking-[0.06em] uppercase text-cta';
+export const CHAT_TYPING_WHO = 'font-body text-small font-medium text-gold';
 // Animated live dot; reduced motion stops it but the name still carries the meaning.
 export function chatDotLive(index) {
   return `${CHAT_DOT} motion-safe:animate-[cahyana-chatdot_1.1s_ease-in-out_infinite] [animation-delay:${index * 0.15}s]`;
@@ -101,7 +101,7 @@ export const CHAT_TEXT_BTN =
 // Strip shown once the conversation is with a person.
 export const CHAT_CONNECTED =
   'flex-none flex items-center gap-[0.4rem] px-4 py-[0.4rem] m-0 bg-cream [border-top:1px_solid_var(--line)] ' +
-  'font-body text-label text-cta [&>svg]:w-[12px] [&>svg]:h-[12px] [&>svg]:shrink-0';
+  'font-body text-label text-gold [&>svg]:w-[12px] [&>svg]:h-[12px] [&>svg]:shrink-0';
 
 // Quiet sign-in strip above the conversation that guests can ignore.
 export const CHAT_SIGNIN_BAR =

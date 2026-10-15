@@ -26,14 +26,14 @@
   --color-gold-d: #16140f;      /* Wayan replaced the real gold with black in */
   --color-gold-l: #cfc9ba;      /* Aug 2026 and kept the name. Do not "fix"   */
                                 /* it to a yellow - it is deliberate.         */
-  --color-cta: #3d5c46;         /* primary action green - buttons only */
-  --color-cta-d: #2f4737;
+  --color-cta: #1a1814;         /* primary action: near-black (Wayan, Oct 2026) */
+  --color-cta-d: #35322b;
   --color-amber: #c9a45c;       /* the REAL gold. Three jobs only: prices,    */
   --color-amber-d: #b08d43;     /* rating stars, "Popular" badges.            */
   /* Warmed from #f8f8f8 to sit in the same family as the villa site's bone
      page. A neutral grey-white tint on warm paper reads as a colour mistake;
      this is still lighter than the page, so a tinted pill or band still lifts. */
-  --color-cream: #f8f8f8;
+  --color-cream: #faf8f3;
   --color-line: #e7e4dd;
   --color-ok: #2e7d54;
   --color-err: #9a4a3f;
@@ -65,11 +65,14 @@
   --text-small: 0.8rem;
   --text-label: 0.64rem;                        /* 10.24px, uppercase labels */
 
+  /* Corner radius: the villa site uses CUE's radius scale (Wayan, 14 Oct 2026), the same five steps as CUE app/globals.css.
+     --radius-base (`rounded-base`, about 57 places) is the small step, 8px like CUE's buttons, so those corners stay on the scale. */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 22px;
   --radius-pill: 999px;
+  --radius-base: var(--radius-sm);
 
   /* NO SHADOWS ON THE VILLA SITE (Sep 2026, Wayan sent an aman.com screenshot:
      "hilangin semua shadow biar seperti ini"). The four steps are kept as names
@@ -199,4 +202,42 @@
 @keyframes cahyana-chatdot {
   0%, 80%, 100% { opacity: 0.3; }
   40% { opacity: 1; }
+}
+
+/* The Cahyana coin (CUE coinRoll): one full turn, then rest for the remaining 70% of the cycle. */
+@keyframes cahyana-coinroll {
+  0% { transform: rotate(0deg); }
+  30%, 100% { transform: rotate(360deg); }
+}
+
+/* The Coin Rewards panel coin (Coin shine): still, a metal shine sweeps the face (2.5s) then rests (2.5s).
+   5s cycle is off the motion scale on purpose (Wayan, 13 Oct 2026). Reduced motion: no shine. */
+@layer components {
+  .cahyana-coin-shine {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    clip-path: circle(47% at 50% 50%);
+  }
+  .cahyana-coin-shine::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    bottom: -20%;
+    left: -60%;
+    width: 35%;
+    background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 236, 190, 0.15) 32%, rgba(255, 246, 222, 0.95) 50%, rgba(255, 236, 190, 0.15) 68%, rgba(255, 255, 255, 0) 100%);
+    transform: skewX(-12deg);
+    mix-blend-mode: plus-lighter;
+    animation: coinShine 3s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cahyana-coin-shine::before { animation: none; display: none; }
+  }
+}
+
+@keyframes coinShine {
+  0% { left: -60%; }
+  50%, 100% { left: 130%; }
 }

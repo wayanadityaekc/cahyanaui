@@ -8,7 +8,7 @@ import { canCheckIn, canCheckOut, isBookedNight, nightsBetween, stayLimits } fro
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const ARROW = 'w-10 h-10 inline-flex items-center justify-center rounded-[50%] [border:1px_solid_var(--line)] bg-white text-gold cursor-pointer hover:[border-color:var(--color-gold)] disabled:opacity-30 disabled:cursor-not-allowed';
+const ARROW = 'w-10 h-10 inline-flex items-center justify-center rounded-base [border:1px_solid_var(--line)] bg-white text-gold cursor-pointer hover:[border-color:var(--color-gold)] disabled:opacity-30 disabled:cursor-not-allowed';
 // Square cells on phones (big thumb targets); a fixed 56px row from md up, or two months would stand ~900px tall.
 const DAY = 'relative w-full aspect-square md:w-14 md:h-14 md:mx-auto flex items-center justify-center font-body text-[1rem] border-none p-0';
 
@@ -99,9 +99,9 @@ export default function AvailabilityCalendar({
           data-status={status}
           className={cn(
             DAY,
-            'rounded-[50%]',
+            'rounded-base',
             // Background set per state only: bg-transparent next to bg-gold is a coin flip on CSS order.
-            edge ? 'bg-gold text-white font-semibold' : 'bg-transparent',
+            edge ? 'bg-gold text-white' : 'bg-transparent',
             !edge && ok && 'text-green cursor-pointer hover:[box-shadow:inset_0_0_0_1.5px_var(--color-gold)]',
             !edge && booked && 'text-muted line-through opacity-50 cursor-not-allowed',
             !edge && !ok && !booked && 'text-muted opacity-35 cursor-not-allowed',
@@ -121,7 +121,7 @@ export default function AvailabilityCalendar({
       <div key={index} className={cn('min-w-0', offset === 1 && 'hidden md:block')} data-calendar-month={`${year}-${String(monthIndex + 1).padStart(2, '0')}`}>
         <p className="m-0 mb-3 text-center font-body text-h3 font-semibold text-gold">{MONTHS[monthIndex]} {year}</p>
         <div className="grid [grid-template-columns:repeat(7,1fr)]">
-          {DOW.map((day) => <span key={day} className="py-2 text-center text-label font-medium tracking-[0.08em] uppercase text-muted">{day}</span>)}
+          {DOW.map((day) => <span key={day} className="py-2 text-center text-label font-medium text-muted">{day}</span>)}
           {monthCells(year, monthIndex).map(dayCell)}
         </div>
       </div>
@@ -173,7 +173,7 @@ export default function AvailabilityCalendar({
       </LazyMotion>
       <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-line">
         <div className="flex items-center gap-4 text-small text-muted">
-          <span className="inline-flex items-center gap-2"><span className="w-4 h-4 rounded-[50%] [border:1.5px_solid_var(--color-gold)]" aria-hidden="true" />Open</span>
+          <span className="inline-flex items-center gap-2"><span className="w-4 h-4 rounded-base [border:1.5px_solid_var(--color-gold)]" aria-hidden="true" />Open</span>
           <span className="inline-flex items-center gap-2"><span className="text-muted line-through opacity-50" aria-hidden="true">12</span>Booked</span>
         </div>
         {checkIn ? (

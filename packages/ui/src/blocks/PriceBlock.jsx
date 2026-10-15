@@ -29,9 +29,9 @@ import { cn } from '../lib/cn.js';
  * three places.
  */
 const SIZES = {
-  sm: 'text-h3 font-bold',
-  md: 'text-h2 font-bold',
-  lg: 'text-h2 font-bold',
+  sm: 'text-h3 font-semibold',
+  md: 'text-h2 font-semibold',
+  lg: 'text-h2 font-semibold',
 };
 
 export default function PriceBlock({

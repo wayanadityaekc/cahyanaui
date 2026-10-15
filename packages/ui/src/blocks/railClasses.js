@@ -24,7 +24,7 @@ export const RAIL_PAGE = `${PAGE_WIDE} pb-[var(--space-5)] pt-[calc(var(--header
 export const RAIL_PAGE_SCROLL = `${PAGE_WIDE} pb-[var(--space-3)] pt-[calc(var(--header-h-max,104px)+var(--space-3))]`;
 
 const FRAME_DESK =
-  'flex items-stretch bg-surface-raised [border:1px_solid_var(--line)] ' +
+  'flex items-stretch rounded-base bg-surface-raised [border:1px_solid_var(--line)] ' +
   'min-[993px]:min-h-[calc(100dvh_-_var(--header-h-max,104px)_-_1.9rem_-_var(--space-5))] ' +
   'overflow-clip max-[992px]:block';
 
@@ -37,7 +37,7 @@ export const RAIL_FRAME_CARD = FRAME_DESK;
 // Frame capped to the first screen, only the content column scrolls. On phones it keeps its border,
 // so it pads its own content. --footerbar-h is the height of anything fixed at the bottom (0 if none).
 export const RAIL_FRAME_SCROLL =
-  'flex items-stretch bg-surface-raised [border:1px_solid_var(--line)] ' +
+  'flex items-stretch rounded-base bg-surface-raised [border:1px_solid_var(--line)] ' +
   'min-[993px]:h-[calc(100dvh_-_var(--header-h-max,104px)_-_var(--space-3)_-_var(--space-3)_-_var(--footerbar-h,0px)_-_env(safe-area-inset-bottom))] ' +
   'overflow-clip max-[992px]:block max-[992px]:px-6 max-[992px]:pt-6 max-[992px]:pb-8 ' +
   'max-[560px]:px-4 max-[560px]:pt-5 max-[560px]:pb-[1.6rem]';
@@ -59,15 +59,15 @@ export const RAIL_STICK_COLLAPSED =
   'max-h-[calc(100vh-var(--header-h,104px))] overflow-y-auto';
 
 export const RAIL_LABEL =
-  'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
+  'font-body text-small font-medium text-muted m-0 mb-[var(--space-2)] px-[0.75rem]';
 
 // Rail row; the active one is a raised bordered pill on the tinted rail. Collapsed = icon only.
 export function railItem(active, collapsed = false) {
   return `flex items-center ${collapsed ? 'justify-center w-9 h-9 p-0' : 'w-full text-left p-[0.55rem_0.75rem] gap-[0.65rem]'} ` +
-    'rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] no-underline ' +
+    'rounded-[var(--r-md)] bg-transparent border-none cursor-pointer font-body font-medium text-body leading-[1.35] no-underline ' +
     '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
     (active
-      ? `font-semibold text-gold bg-surface-raised [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
+      ? `text-gold bg-surface-raised [border:1px_solid_var(--line)] ${collapsed ? '' : 'p-[calc(0.55rem-1px)_calc(0.75rem-1px)]'}`
       : 'text-muted [&>svg]:opacity-75 hover:text-gold');
 }
 
@@ -103,11 +103,11 @@ export const RAIL_READ = 'max-w-[var(--container-read)]';
 // --- phone ---
 export const RAIL_MLIST = 'min-[993px]:hidden';
 export const RAIL_MLABEL =
-  'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-1)] px-[0.75rem]';
+  'font-body text-small font-medium text-muted m-0 mb-[var(--space-1)] px-[0.75rem]';
 // Phone row = the navbar's MENU_ROW_BOX, so navigation rows look the same wherever they appear.
 export function railMobileItem(active) {
   return `${MENU_ROW_BOX} no-underline bg-transparent border-none cursor-pointer font-body text-body leading-[1.35] ` +
-    (active ? 'font-semibold text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');
+    'font-medium ' + (active ? 'text-gold bg-cream' : 'text-muted [&>svg]:opacity-75');
 }
 export const RAIL_MCHEV = 'ml-auto w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0 text-muted opacity-70';
 export const RAIL_BACK =
@@ -117,13 +117,13 @@ export const RAIL_BACK =
 
 // Help card that ends the rail (a question + one button).
 export const RAIL_HELP =
-  'mt-[var(--space-3)] mx-[0.75rem] p-[0.9rem] bg-surface-raised ' +
+  'mt-[var(--space-3)] mx-[0.75rem] p-[0.9rem] rounded-base bg-surface-raised ' +
   '[border:1px_solid_var(--line)] max-[992px]:mt-[var(--space-4)]';
 export const RAIL_HELP_TEXT = 'font-body text-body leading-[1.45] text-muted m-0 mb-[0.6rem]';
 // Full width in the 248px rail so the label cannot overflow the card; inline on phones.
 export const RAIL_HELP_BTN =
   'flex w-full max-[992px]:inline-flex max-[992px]:w-auto ' +
-  `${BTN_SM} gap-[0.4rem] no-underline font-body text-surface-raised bg-cta ` +
+  `${BTN_SM} gap-[0.4rem] no-underline font-body text-white bg-cta ` +
   '[&>svg]:w-[var(--icon-sm)] [&>svg]:h-[var(--icon-sm)] [&>svg]:shrink-0 ' +
   '[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cta-d';
 
@@ -133,7 +133,7 @@ export const RAIL_BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb
 export const RAIL_TITLE = 'font-head text-h2 font-bold text-gold mb-4';
 
 // FAQ accordion on native <details>: works before hydration and Ctrl+F finds collapsed answers.
-export const FAQ_CAT = 'font-body text-label font-medium tracking-[0.14em] uppercase text-muted m-0 mb-[var(--space-1)]';
+export const FAQ_CAT = 'font-body text-small font-medium text-muted m-0 mb-[var(--space-1)]';
 // list-none plus the webkit rule remove the browser's default disclosure triangle.
 export const FAQ_Q =
   'list-none [&::-webkit-details-marker]:hidden flex items-center gap-[var(--space-2)] ' +

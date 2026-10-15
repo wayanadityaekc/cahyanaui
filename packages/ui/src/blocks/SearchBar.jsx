@@ -54,4 +54,4 @@ export default function SearchBar({ variant = 'hero', className, children, actio
 
 // The label above each control. `caps` used to be a CSS class in the app; it is
 // the same 10.24px / 500 / 0.14em as every other label on the sites.
-export const SEARCH_LABEL = 'block mb-1 text-label font-medium tracking-[0.14em] uppercase text-muted';
+export const SEARCH_LABEL = 'block mb-1 text-small font-medium text-muted';

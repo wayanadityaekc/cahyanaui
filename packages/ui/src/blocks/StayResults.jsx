@@ -13,7 +13,7 @@ const STATUS_LINE = {
 function StatusTag({ status }) {
   if (status === 'free') {
     return (
-      <span className={cn(CAPS, 'inline-flex items-center gap-1 text-cta')}>
+      <span className={cn(CAPS, 'inline-flex items-center gap-1 text-gold')}>
         <Check className="w-3.5 h-3.5" aria-hidden="true" />Available
       </span>
     );
@@ -35,7 +35,7 @@ export default function StayResults({ items = [], linkAs = 'a', className }) {
         const line = status === 'small' ? note : STATUS_LINE[status];
         return (
           <li key={key} className="flex flex-col" data-stay={key} data-status={status}>
-            <img src={image} alt={alt} className={cn('w-full aspect-[16/10] object-cover rounded-sm', dim && 'opacity-55')} />
+            <img src={image} alt={alt} className={cn('w-full aspect-[16/10] object-cover', dim && 'opacity-55')} />
             <div className="mt-3 flex items-center justify-between gap-3">
               <h3 className={cn('text-h3 font-semibold text-gold', dim && 'text-muted')}>{name}</h3>
               <StatusTag status={status} />

@@ -58,6 +58,8 @@ export default function Hero({
   ledeClassName,
   className,
   innerClassName,
+  bandClassName,
+  scrimClassName,
   children,
   below = null,
   ...rest
@@ -70,17 +72,20 @@ export default function Hero({
           align === 'end' ? 'items-end' : 'items-center',
           (SIZES[size] || SIZES.page).band,
           FALLBACK,
+          bandClassName,
         )}
       >
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={image} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
         ) : null}
-        <div className={cn('absolute inset-0', SCRIM)} />
+        <span aria-hidden="true" className="absolute inset-0 pointer-events-none mix-blend-multiply [background:linear-gradient(180deg,rgba(214,178,120,0.18),rgba(120,80,40,0.30))]" />
+        <div className={cn('absolute inset-0', SCRIM, scrimClassName)} />
         <Container width={width} className={cn('relative z-10', (SIZES[size] || SIZES.page).pad, innerClassName)}>
           {title ? (
             <SectionHeading
               eyebrow={eyebrow}
+              upper
               title={title}
               as={as}
               size={titleSize}

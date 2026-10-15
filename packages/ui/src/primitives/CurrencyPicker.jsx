@@ -62,7 +62,7 @@ function list(variant, open) {
 const OPT =
   'flex items-center gap-[0.45rem] py-[0.45rem] px-[0.4rem] rounded-sm font-body text-[1rem] font-semibold text-green cursor-pointer hover:bg-cream';
 const FLAG =
-  'inline-block w-5 h-[14px] rounded-[2px] overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
+  'inline-block w-5 h-[14px] rounded-base overflow-hidden flex-none [box-shadow:0_0_0_1px_rgba(0,0,0,0.06)] [&_svg]:block [&_svg]:w-full [&_svg]:h-full';
 
 function Flag({ code }) {
   return (

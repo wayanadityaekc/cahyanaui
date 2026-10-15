@@ -67,7 +67,7 @@ export const panelPopup = (open) =>
   `${PANEL_POPUP_STATIC} ${open ? 'opacity-100 visible pointer-events-auto [transform:translate(-50%,-50%)_scale(1)]' : 'opacity-0 invisible pointer-events-none [transform:translate(-50%,-50%)_scale(0.96)]'}`;
 export const PANEL_HEAD = 'flex items-center justify-between pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] flex-none';
 export const PANEL_HEAD_H3 = 'font-body font-semibold text-[1rem] text-green';
-export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-[50%] [border:1px_solid_var(--line)] bg-surface-raised text-green text-[1.2rem] leading-none cursor-pointer';
+export const PANEL_CLOSE = 'block w-[34px] h-[34px] rounded-base [border:1px_solid_var(--line)] bg-surface-raised text-green text-[1.2rem] leading-none cursor-pointer';
 // Scrollbar disembunyiin (Wayan) - dulu keliatan pas opsi kepanjangan buat area
 // popup (Guests/Pickup area di navbar, dst); tetep bisa di-scroll (touch/drag),
 // cuma track/thumb-nya gak digambar. Pola sama kayak slider (`[scrollbar-width:none]
@@ -124,7 +124,7 @@ export const CAL_CAP_BTN = 'flex-[0_0_auto] w-8 h-8 inline-flex items-center jus
 // grid-cols-7 Tailwind = repeat(7,minmax(0,1fr)); asli pakai repeat(7,1fr) (min auto) ->
 // beda sub-pixel, jadi pakai arbitrary biar persis.
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
-export const CAL_DOW = 'font-body font-medium text-label tracking-[0.14em] uppercase text-muted text-center py-1';
+export const CAL_DOW = 'font-body font-medium text-label text-muted text-center py-1';
 // Hari: sel (tanggal kepilih, prioritas) = gold/soft-black + putih (konvensi active-state
 // design system) · off (muted, gak bisa klik) · normal (hover bg abu tipis). Dulu tanggal
 // kepilih gak ke-highlight (CSS `.sel` vs JSX `is-sel` mismatch) - sekarang di-wire lewat flag.
@@ -141,10 +141,10 @@ export const calDay = (off, sel) =>
 // and the flag / name / price / icon parts of option rows and the selected-value display.
 export const CSEL_GROUP = 'relative block w-full';
 export const BK_NATIVE = '!hidden';
-export const HS_OPT_FLAG = 'w-5 h-[14px] flex-none object-cover rounded-[2px] [box-shadow:0_0_0_1px_rgba(0,0,0,0.08)]';
+export const HS_OPT_FLAG = 'w-5 h-[14px] flex-none object-cover rounded-base [box-shadow:0_0_0_1px_rgba(0,0,0,0.08)]';
 export const HS_OPT_NM = 'flex-1 font-body font-medium text-[1rem] text-green [&_small]:block [&_small]:font-normal [&_small]:text-[length:var(--fs-label)] [&_small]:text-muted';
 export const HS_OPT_PR = 'font-body font-semibold text-[length:var(--fs-small)] text-gold-d whitespace-nowrap';
-export const HS_OPT_IC = 'flex-none w-[38px] h-[38px] rounded-[50%] [border:1.5px_solid_var(--color-gold)] text-gold-d flex items-center justify-center [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';
+export const HS_OPT_IC = 'flex-none w-[38px] h-[38px] rounded-base [border:1.5px_solid_var(--color-gold)] text-gold-d flex items-center justify-center [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';
 
 /**
  * A day inside a RANGE calendar. The plain `calDay` only knows "selected" or

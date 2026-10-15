@@ -29,11 +29,10 @@ export const WRAP_READ = `${BOX} max-w-[var(--container-read)]`;
 export const CONTAINER_WIDTHS = { wide: WRAP, mid: WRAP_MID, read: WRAP_READ };
 
 /**
- * Vertical rhythm. --section-gap (36px) on a phone, where 56px between every
- * band meant a guest scrolled past more nothing than content; 5rem from 768px
- * up, which has the width to carry it.
+ * Vertical rhythm (tightened Oct 2026): 28px between bands on a phone, 56px
+ * from 768px up. Less empty page to scroll past.
  */
-export const SECTION = 'py-[var(--section-gap)] md:py-20';
+export const SECTION = 'py-7 md:py-14';
 
 /**
  * Band surfaces. A section is either the page surface, the tinted one, or
@@ -42,7 +41,8 @@ export const SECTION = 'py-[var(--section-gap)] md:py-20';
  */
 export const SECTION_TONES = {
   plain: '',
-  cream: 'bg-cream',
+  // White with hairlines above and below (Wayan, Oct 2026: only white and cream, cream stays inside tiles and cards).
+  cream: 'bg-surface-raised border-y border-line',
   white: 'bg-surface-raised',
   // Surface only, no text colour: a band that also sets `text-white` changes
   // what every child inherits, including ones that had never asked. The two
@@ -58,7 +58,7 @@ export const SECTION_TONES = {
 
 // A circle holding a small icon - the "why stay with us" rows, a card's glyph.
 export const ICON_CIRCLE =
-  'inline-flex items-center justify-center w-11 h-11 rounded-pill bg-cream text-cta flex-none';
+  'inline-flex items-center justify-center w-11 h-11 rounded-pill bg-cream text-gold flex-none';
 
 // A row of ★ characters. Amber, because rating stars are one of only three
 // jobs the real gold has site-wide. The extra tracking is what stops the stars

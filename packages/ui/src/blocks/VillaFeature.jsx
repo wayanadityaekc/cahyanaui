@@ -11,20 +11,20 @@ import { cn } from '../lib/cn.js';
  */
 export default function VillaFeature({ id, eyebrow = '', name, text = '', photos = [], facts = [], price = '', priceNote = '', action = null, mirrored = false, className }) {
   const [main, ...rest] = photos;
-  const tile = 'relative overflow-hidden rounded-lg bg-cream';
+  const tile = 'relative overflow-hidden bg-cream';
   const img = 'absolute inset-0 w-full h-full object-cover';
   return (
     <div id={id} className={cn('flex flex-col gap-6', className)}>
-      <div className={cn('grid gap-3 min-[993px]:grid-cols-[2fr_1fr] min-[993px]:grid-rows-2 min-[993px]:h-[34rem]', mirrored && 'min-[993px]:grid-cols-[1fr_2fr]')}>
+      <div className={cn('grid gap-2 min-[993px]:grid-cols-[2fr_1fr] min-[993px]:grid-rows-2 min-[993px]:h-[34rem]', mirrored && 'min-[993px]:grid-cols-[1fr_2fr]')}>
         {main ? (
           <div className={cn(tile, 'aspect-[4/3] min-[993px]:aspect-auto min-[993px]:row-span-2', mirrored && 'min-[993px]:col-start-2 min-[993px]:row-start-1')}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={main.src} alt={main.alt} loading="lazy" className={img} />
           </div>
         ) : null}
-        <div className="grid grid-cols-2 gap-3 min-[993px]:contents">
+        <div className="grid grid-cols-2 gap-2 min-[993px]:contents">
           {rest.slice(0, 2).map((photo, index) => (
-            <div key={photo.src} className={cn(tile, 'aspect-[4/3] min-[993px]:aspect-auto', mirrored && 'min-[993px]:col-start-1', mirrored && index === 0 && 'min-[993px]:row-start-1', mirrored && index === 1 && 'min-[993px]:row-start-2')}>
+            <div key={`${photo.src}-${index}`} className={cn(tile, 'aspect-[4/3] min-[993px]:aspect-auto', mirrored && 'min-[993px]:col-start-1', mirrored && index === 0 && 'min-[993px]:row-start-1', mirrored && index === 1 && 'min-[993px]:row-start-2')}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photo.src} alt={photo.alt} loading="lazy" className={img} />
             </div>
@@ -33,7 +33,7 @@ export default function VillaFeature({ id, eyebrow = '', name, text = '', photos
       </div>
       <div className="flex flex-col gap-5 min-[993px]:flex-row min-[993px]:items-end min-[993px]:justify-between">
         <div className="max-w-[60ch]">
-          {eyebrow ? <p className="text-small font-medium text-cta mb-2">{eyebrow}</p> : null}
+          {eyebrow ? <p className="text-small font-medium text-gold mb-2">{eyebrow}</p> : null}
           <h3 className="text-h2 font-semibold tracking-[-0.015em] leading-[var(--lh-heading)] text-gold m-0">{name}</h3>
           {text ? <p className="mt-3 text-strong leading-[1.6] text-green">{text}</p> : null}
           {facts.length ? (

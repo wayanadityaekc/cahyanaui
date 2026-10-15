@@ -65,7 +65,7 @@ const FLAG =
 // whatever outline heart arrives read as solid, and the amber is the same token
 // the price uses - the two things on this card the guest chose.
 const SAVE =
-  'absolute top-4 right-4 z-[3] grid place-items-center w-9 h-9 rounded-[50%] bg-white ' +
+  'absolute top-4 right-4 z-[3] grid place-items-center w-9 h-9 rounded-base bg-white ' +
   'cursor-pointer [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream';
 const SAVE_ON = 'text-amber [&_svg]:fill-current';
 const SAVE_OFF = 'text-gold';
@@ -103,7 +103,7 @@ export default function VillaCard({
         alt={`${villa.name} private pool and garden`}
         width={1200}
         height={900}
-        className="absolute inset-0 -z-[1] w-full h-full object-cover [transition:scale_var(--dur-slow)_var(--ease)] group-hover:scale-[1.04]"
+        className="absolute inset-0 -z-[1] w-full h-full object-cover [transition:scale_var(--dur-slow)_var(--ease)]"
       />
       <div className={SCRIM} aria-hidden="true" />
 
@@ -148,7 +148,7 @@ export default function VillaCard({
 
       <div className="relative z-[2] pointer-events-none flex flex-col justify-end h-full min-h-[inherit] p-5 min-[560px]:p-7">
         {place ? (
-          <p className="flex items-center gap-3 m-0 mb-2 text-label font-medium tracking-[0.18em] uppercase text-white/85">
+          <p className="flex items-center gap-3 m-0 mb-2 text-small font-medium text-white/85">
             {place}
             <span className="h-px flex-1 max-w-[6.5rem] bg-white/40" aria-hidden="true" />
           </p>

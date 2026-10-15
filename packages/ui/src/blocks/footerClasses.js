@@ -35,7 +35,7 @@ export const FOOT_COL_LI = 'mb-[0.55rem] text-[0.8rem] opacity-[0.85]';
 export const FOOT_COL_A = 'no-underline text-green hover:text-gold';
 
 export const FOOT_SOCIAL_A =
-  'group flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-green bg-[rgba(0,0,0,0.06)] hover:text-white hover:bg-gold';
+  'group flex items-center justify-center w-[22px] h-[22px] rounded-base text-green bg-[rgba(0,0,0,0.06)] hover:text-white hover:bg-gold';
 
 export const FOOT_BOTTOM =
   'max-w-[1100px] mx-auto mt-9 pt-5 [border-top:1px_solid_rgba(0,0,0,0.12)] [border-color:rgba(0,0,0,0.12)] ' +
@@ -54,7 +54,7 @@ export const FOOT_REG = 'flex flex-wrap items-center gap-x-[7px] gap-y-1 max-[70
 // the mark goes white - and the mark is FILLED, so the override is `fill`, not
 // `color`.
 export const FOOT_SOCIAL_A_AIRBNB =
-  'group flex items-center justify-center w-[22px] h-[22px] rounded-[50%] bg-[rgba(0,0,0,0.06)] hover:bg-[#FF5A5F]';
+  'group flex items-center justify-center w-[22px] h-[22px] rounded-base bg-[rgba(0,0,0,0.06)] hover:bg-[#FF5A5F]';
 export const FOOT_SOCIAL_ICON_AIRBNB = 'block w-[13px] h-[13px] group-hover:[fill:#fff]';
 
 // "We accept" chip and heading row (CUE's footer): small white tiles that lift on hover.

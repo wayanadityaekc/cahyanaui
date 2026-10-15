@@ -87,7 +87,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
         aria-label="Close photos"
         // The one piece of chrome. Dark disc so it reads against a pale photo
         // and a dark one alike, and inside the safe area on a notched phone.
-        className="fixed z-[310] right-4 [top:max(1rem,env(safe-area-inset-top))] w-10 h-10 rounded-[50%] bg-black/45 text-white grid place-items-center cursor-pointer backdrop-blur-[2px] hover:bg-black/65"
+        className="fixed z-[310] right-4 [top:max(1rem,env(safe-area-inset-top))] w-10 h-10 rounded-base bg-black/45 text-white grid place-items-center cursor-pointer backdrop-blur-[2px] hover:bg-black/65"
       >
         <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <path d="M6 6l12 12M18 6L6 18" />
@@ -97,7 +97,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
       <div ref={scroller} className="h-full overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {/* One column on a phone, two from 768px. Not three: these are rooms,
             and a room at a third of a laptop screen is a thumbnail. */}
-        <div className="grid grid-cols-1 min-[768px]:grid-cols-2 gap-1 min-[768px]:gap-2 p-1 min-[768px]:p-2 pb-16">
+        <div className="grid grid-cols-1 min-[768px]:grid-cols-2 gap-2 p-2 pb-16">
           {images.map((img, i) => (
             <figure key={img.src + i} data-photo={i} className="m-0 scroll-mt-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -107,7 +107,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
                 // `loading` is not lazy for the first few: the guest is looking
                 // at them the moment this opens.
                 loading={i < 3 ? undefined : 'lazy'}
-                className="block w-full h-auto object-cover bg-cream"
+                className="block w-full h-auto object-cover rounded-base bg-cream"
               />
             </figure>
           ))}

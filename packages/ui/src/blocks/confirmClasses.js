@@ -7,11 +7,11 @@ export const CONFIRM_CLOSE = 'absolute top-3 right-4 text-[1.6rem] leading-none 
 export const CONFIRM_TITLE = 'mb-5 font-body text-h3 text-center font-semibold tracking-normal';
 
 export const STEPS = 'flex gap-[6px] mb-2';
-export function stepBar(active) { return `flex-1 h-[3px] rounded-[2px] ${active ? 'bg-cta' : 'bg-line'}`; }
-export const STEP_LABEL = 'mb-[0.9rem] text-center text-label font-medium tracking-[0.1em] uppercase text-muted';
+export function stepBar(active) { return `flex-1 h-[3px] rounded-base ${active ? 'bg-gold' : 'bg-line'}`; }
+export const STEP_LABEL = 'mb-[0.9rem] text-center text-small font-medium text-muted';
 
 export const ROW = 'flex justify-between gap-4 py-[0.65rem] [border-bottom:1px_solid_var(--line)] text-body [&>span:first-child]:font-semibold [&>span:last-child]:text-right [&>span:last-child]:text-gold [&>span:last-child]:font-semibold last:[border-bottom:none]';
-export const GROUP_LABEL = 'mb-[0.4rem] text-label font-medium tracking-[0.12em] uppercase text-muted';
+export const GROUP_LABEL = 'mb-[0.4rem] text-small font-medium text-muted';
 export const ROWSET = 'mb-4 [border-top:1px_solid_var(--line)]';
 // The total gets its own bar: it is the number the guest agrees to.
 export const PBAR = 'flex items-center justify-between gap-[10px] py-[10px] px-3 rounded-md bg-cream [border:1px_solid_var(--line)]';

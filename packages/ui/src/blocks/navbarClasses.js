@@ -84,7 +84,7 @@ export const NAV_DESK = 'max-[992px]:hidden flex items-center gap-1 list-none m-
 // Desktop bar link or dropdown trigger, CUE's 33.6px pill (the bar's own height, not the site's --btn-h).
 export function navDeskLink(active) {
   return 'inline-flex items-center gap-1 h-[2.1rem] px-3 rounded-[var(--r-md)] text-small no-underline font-body bg-transparent border-none cursor-pointer ' +
-    `[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${active ? 'font-semibold text-green bg-cream' : 'font-medium text-gold'}`;
+    `[transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream font-medium ${active ? 'text-green bg-cream' : 'text-gold'}`;
 }
 
 export const NAV_CHEVRON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] transition-[rotate] duration-200';
@@ -100,7 +100,7 @@ export const NAV_POP_WRAP = 'absolute left-0 top-full pt-[var(--space-1)] z-[130
 export const NAV_POP_LIST = 'list-none m-0 w-[12rem] bg-surface-raised [border:1px_solid_var(--line)] rounded-[var(--r-md)] p-[var(--space-1)]';
 
 export function navPopLink(active) {
-  return `flex w-full px-3 py-[0.55rem] rounded-[var(--r-md)] text-small no-underline hover:bg-cream ${active ? 'font-semibold text-green bg-cream' : 'font-medium text-gold'}`;
+  return `flex w-full px-3 py-[0.55rem] rounded-[var(--r-md)] text-small no-underline hover:bg-cream font-medium ${active ? 'text-green bg-cream' : 'text-gold'}`;
 }
 
 // Account menu panel, pinned to the slot's right edge.

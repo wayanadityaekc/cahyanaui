@@ -14,9 +14,9 @@ import {
 } from './navbarClasses.js';
 
 // One bar dropdown: a disclosure that opens on hover and on click.
-function NavDropdown({ label, items = [], isActive, linkAs: Link, pop = null }) {
+function NavDropdown({ label, href = '', items = [], isActive, linkAs: Link, pop = null }) {
   const { open, setOpen, boxRef, triggerRef, panelId } = useDisclosure();
-  const active = items.some((item) => isActive(item.href));
+  const active = (href && isActive(href)) || items.some((item) => isActive(item.href));
 
   return (
     <li
@@ -25,17 +25,35 @@ function NavDropdown({ label, items = [], isActive, linkAs: Link, pop = null }) 
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button
-        type="button"
-        ref={triggerRef}
-        aria-expanded={open}
-        aria-controls={panelId}
-        className={navDeskLink(active)}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
-      >
-        {label}
-        <ChevronDown className={cn(NAV_CHEVRON, open && 'rotate-180')} strokeWidth={1.8} aria-hidden="true" />
-      </button>
+      {/* With an href the label is its own link and only the arrow opens the list. */}
+      {href ? (
+        <span className={cn(navDeskLink(active), 'pr-1')}>
+          <Link href={href} className="no-underline text-inherit">{label}</Link>
+          <button
+            type="button"
+            ref={triggerRef}
+            aria-expanded={open}
+            aria-controls={panelId}
+            aria-label={`${label} list`}
+            className="grid place-items-center w-6 h-6 p-0 border-0 bg-transparent text-inherit cursor-pointer"
+            onClick={() => setOpen((wasOpen) => !wasOpen)}
+          >
+            <ChevronDown className={cn(NAV_CHEVRON, open && 'rotate-180')} strokeWidth={1.8} aria-hidden="true" />
+          </button>
+        </span>
+      ) : (
+        <button
+          type="button"
+          ref={triggerRef}
+          aria-expanded={open}
+          aria-controls={panelId}
+          className={navDeskLink(active)}
+          onClick={() => setOpen((wasOpen) => !wasOpen)}
+        >
+          {label}
+          <ChevronDown className={cn(NAV_CHEVRON, open && 'rotate-180')} strokeWidth={1.8} aria-hidden="true" />
+        </button>
+      )}
       <PopPanel pop={pop} open={open} className={NAV_POP_WRAP}>
         <ul id={panelId} className={NAV_POP_LIST}>
           {items.map((item) => (
@@ -58,7 +76,7 @@ export default function NavDesktop({ links = [], isActive = () => false, linkAs 
   return (
     <ul className={NAV_DESK} data-desktop-nav>
       {links.map((link) => (link.items
-        ? <NavDropdown key={link.label} label={link.label} items={link.items} isActive={isActive} linkAs={Link} pop={pop} />
+        ? <NavDropdown key={link.label} label={link.label} href={link.href} items={link.items} isActive={isActive} linkAs={Link} pop={pop} />
         : (
           <li key={link.href}>
             <Link href={link.href} className={navDeskLink(isActive(link.href))}>{link.label}</Link>

@@ -82,7 +82,12 @@ export default function NavbarShell({
 
   useEffect(() => {
     if (!overlay) return undefined;
-    function onScroll() { setAtTop(window.scrollY < 40); }
+    // Clear while the hero (the first section of the page) is still under the bar; solid white once it has scrolled away.
+    function onScroll() {
+      const hero = document.querySelector('main > section');
+      const barHeight = headerRef.current ? headerRef.current.offsetHeight : 0;
+      setAtTop(hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < 40);
+    }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -160,19 +165,39 @@ export default function NavbarShell({
                 const open = openSub === link.label;
                 return (
                   <li key={link.label} className={cn('relative', NAV_LI)}>
-                    <button
-                      type="button"
-                      data-submenu
-                      className={NAV_SUBTRIGGER}
-                      aria-expanded={open}
-                      onClick={() => setOpenSub(open ? null : link.label)}
-                    >
-                      {link.icon}
-                      {link.label}
-                      <span className={cn(NAV_ROW_END, 'inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>
-                        &rsaquo;
-                      </span>
-                    </button>
+                    {/* With an href the label opens the page and only the arrow opens the list. */}
+                    {link.href ? (
+                      <div className="flex items-center">
+                        <Link href={link.href} onClick={close} className={cn(navLink(isActive(link.href)), 'flex-1')}>
+                          {link.icon}
+                          {link.label}
+                        </Link>
+                        <button
+                          type="button"
+                          data-submenu
+                          className="grid place-items-center w-10 h-10 p-0 border-0 bg-transparent text-gold text-strong cursor-pointer"
+                          aria-expanded={open}
+                          aria-label={`${link.label} list`}
+                          onClick={() => setOpenSub(open ? null : link.label)}
+                        >
+                          <span className={cn('inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>&rsaquo;</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        data-submenu
+                        className={NAV_SUBTRIGGER}
+                        aria-expanded={open}
+                        onClick={() => setOpenSub(open ? null : link.label)}
+                      >
+                        {link.icon}
+                        {link.label}
+                        <span className={cn(NAV_ROW_END, 'inline-block transition-[rotate] duration-200 ease-[ease]', open && 'rotate-90')}>
+                          &rsaquo;
+                        </span>
+                      </button>
+                    )}
                     <Collapse open={open}>
                       <ul className={NAV_SUBLIST}>
                         {link.items.map((item) => (

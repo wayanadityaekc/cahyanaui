@@ -150,8 +150,8 @@ that needs them. What changed on the way in, on purpose:
   Links go through `linkAs`, the breadcrumb is a node, and the content column
   is a `div` unless `contentAs="main"` - the site's layout usually owns `<main>`,
   and a second one inside it is a duplicate landmark.
-- **Square frames.** The rail frame and the review card follow this library's
-  card rule (no radius); the active rail row and the dialog keep theirs.
+- **Corners from the scale.** The rail frame, the review card, the active rail
+  row and the dialog all take their corner from the radius tokens (see below).
 - **Slider arrows are rendered only when they can move.** CUE hides them with
   the `hidden` attribute, which loses to the arrow's own `flex` class on desktop.
 - **`ReviewDetail` renders nothing until it opens.** Portaling its backdrop on
@@ -202,15 +202,18 @@ And when you convert an old button, DELETE its `h-`/`px-`/`text-`/`rounded-`
 classes: adding `BTN_SM` beside them overrides nothing, because the winner is
 the compiled stylesheet's order, not the order the classes were written in.
 
-**Cards and pictures have square corners; controls do not.** Sep 2026, Wayan:
-*"card atau image hilangin border radiusnya"*. So `CARD_FRAMED`, `CARD_INSET`,
-`CARD_MEDIA_INSET`, `SplitFeature`'s photo and `VillaCard` draw no radius, and
-neither do the apps' own card surfaces. Buttons, fields, dropdown panels, the
-sticky bar and the sheets keep theirs - a sheet is not a card. The test that
-separates them is shape, not name: a control that floats is `position: fixed`,
-a card is in the flow.
+**Corners follow CUE's radius scale.** 14 Oct 2026, Wayan: the villa site uses
+the same corner sizes as CUE. In `tokens.css`: `--radius-sm` 8px, `--radius-md`
+12px, `--radius-lg` 16px, `--radius-xl` 22px, `--radius-pill` 999px, the same
+values as CUE's `app/globals.css` (change both together). `--radius-base`
+(`rounded-base`, used by cards, photos, calendar days and most surfaces) reads
+`--radius-sm`, so it is 8px. Every corner is one of these steps or a true
+circle; no component types its own pixel value. The older rule (square cards
+and pictures, Sep 2026) is gone. The gate is `tests/verify-radius.mjs`: every
+corner is 8, 12, 16 or 22px or a circle/pill, and no standalone box, card or
+photo is left square.
 
-The gate for both is `verify-round4.mjs`. Two things it learned the hard way:
+The button gate is `verify-round4.mjs`. Two things it learned the hard way:
 "every button matches `--btn-h`" is a **tautology** - it holds at any value, so
 it passed with the old height put back - which is why there is also an absolute
 40px floor; and a rounded-corner sweep that looks for a border or a shadow
@@ -295,7 +298,6 @@ and translucent fills as if they were `rgb()`. It now refuses to compare
 anything that is not an opaque `rgb()`, since a translucent fill is a stack
 rather than a colour, and both of those are drawn by a border and a blur anyway.
 
-**One rounded surface survives**: the hero's booking form, at `--r-sm` (Wayan:
-*"di booking form kasi border radius dikit"*). Everything else is square, so
-rounding only the thing the guest is meant to act on is what marks it out now
-that no shadow can.
+**Corners**: superseded 14 Oct 2026. The booking form is no longer the one
+rounded surface; every surface takes a step from the radius scale (see "Corners
+follow CUE's radius scale" above).

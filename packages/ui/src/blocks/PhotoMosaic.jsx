@@ -46,18 +46,18 @@ const BIG = `${TILE} flex-[0_0_62%] [scroll-snap-align:start]`;
 // count) it fills the column height instead of leaving a hole - it is the only
 // flex-1 child.
 const PAIR =
-  'flex-[0_0_35%] h-full flex flex-col gap-1 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
+  'flex-[0_0_35%] h-full flex flex-col gap-2 [scroll-snap-align:start] [&>*]:flex-[1_1_0] [&>*]:min-h-0';
 
 // Mobile 1.6/1 puts the big photo at about square, which is what a phone
 // gallery wants; desktop 2.7/1 makes it landscape.
 const TRACK =
-  'flex gap-1 aspect-[1.6/1] min-[769px]:aspect-[2.7/1] ' +
+  'flex gap-2 aspect-[1.1/1] min-[769px]:aspect-[1.9/1] ' +
   'overflow-x-auto overflow-y-hidden overscroll-x-contain ' +
   '[scroll-snap-type:x_mandatory] [touch-action:pan-x_pan-y] ' +
   '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
-const STATIC_1 = 'aspect-[16/10] min-[769px]:aspect-[2.7/1]';
-const STATIC_2 = `flex gap-1 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
+const STATIC_1 = 'aspect-[1.1/1] min-[769px]:aspect-[1.9/1]';
+const STATIC_2 = `flex gap-2 ${STATIC_1} [&>*]:flex-1 [&>*]:min-w-0`;
 
 // A small, semi-transparent corner pill (Wayan, WO10: "too big, smaller and a bit transparent").
 // Own geometry on purpose: BTN_SM is the full-size action button, this is a photo label.

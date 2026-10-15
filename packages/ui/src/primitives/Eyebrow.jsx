@@ -1,10 +1,11 @@
 import { cn } from '../lib/cn.js';
 
 /**
- * The small uppercase line above a heading, and the same treatment used inline
- * as a label.
+ * The small line above a heading, and the same treatment used inline as a
+ * label. Sentence case: uppercase is kept only for the hero kicker and badges
+ * (Wayan, Oct 2026: "put the important only").
  *
- * 10.24px / weight 500 / 0.14em tracking. The weight matters as much as the
+ * 12.8px / weight 500, no tracking. The weight matters as much as the
  * size: at 600 the same text reads noticeably larger and heavier, which is
  * what it was before being measured against CUE and corrected. 600 belongs to
  * prices and buttons.
@@ -18,11 +19,14 @@ import { cn } from '../lib/cn.js';
  *   <Eyebrow>     EYEBROW as a block with its bottom margin.
  *
  * Colour is not baked into CAPS because these labels appear in three colours,
- * and appending `text-cta` after a `text-muted` that is already in the string
+ * and appending `text-gold` after a `text-muted` that is already in the string
  * is a coin flip: between two utilities the winner is the compiled
  * stylesheet's order, not the order they were written in.
  */
-export const CAPS = 'font-body text-label font-medium tracking-[0.14em] uppercase';
+export const CAPS = 'font-body text-small font-medium';
+
+/** The few places that stay uppercase: a hero kicker and badges. */
+export const UPPER = 'text-label tracking-[0.14em] uppercase';
 
 export const EYEBROW = `${CAPS} text-muted`;
 

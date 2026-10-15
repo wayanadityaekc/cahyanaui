@@ -17,7 +17,7 @@ export default function ExpandPanels({ items = [], label = '', className }) {
   if (!items.length) return null;
 
   return (
-    <div role="group" aria-label={label} className={cn('flex flex-col gap-2 min-[993px]:flex-row min-[993px]:gap-3 min-[993px]:h-[28rem]', className)}>
+    <div role="group" aria-label={label} className={cn('flex flex-col gap-2 min-[993px]:flex-row min-[993px]:h-[28rem]', className)}>
       {items.map((item) => {
         const open = item.id === activeId;
         const photo = item.images?.[0];
@@ -28,7 +28,7 @@ export default function ExpandPanels({ items = [], label = '', className }) {
             aria-expanded={open}
             onClick={() => setActiveId(item.id)}
             className={cn(
-              'relative overflow-hidden rounded-sm p-0 border-0 text-left text-white bg-cream cursor-pointer min-w-0',
+              'relative overflow-hidden rounded-base p-0 border-0 text-left text-white bg-cream cursor-pointer min-w-0',
               '[transition:height_var(--dur-slow)_var(--ease),flex-grow_var(--dur-slow)_var(--ease)] motion-reduce:transition-none',
               open ? 'h-[19rem] min-[993px]:h-auto min-[993px]:flex-[5_1_0%]' : 'h-16 min-[993px]:h-auto min-[993px]:flex-[1_1_0%]',
             )}

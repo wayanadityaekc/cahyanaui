@@ -41,7 +41,7 @@ import { BTN_SM } from '../primitives/btnClasses.js';
 export const SECONDARY_BTN =
   `flex w-full gap-2 ${BTN_SM} [border:1px_solid_var(--line)] bg-transparent text-gold font-body ` +
   'no-underline cursor-pointer transition-[color,border-color,scale] duration-200 ease-in-out ' +
-  'hover:[border-color:var(--color-cta)] hover:text-cta active:scale-[0.97]';
+  'hover:[border-color:var(--color-gold)] hover:text-gold';
 
 export default function BookingPanel({
   as,

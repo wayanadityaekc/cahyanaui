@@ -30,7 +30,7 @@ import { BTN_SM } from './btnClasses.js';
 const SHARED =
   'font-body border cursor-pointer no-underline ' +
   'transition-[color,background-color,border-color,scale] duration-200 ease-in-out ' +
-  'active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed';
+  'disabled:opacity-50 disabled:cursor-not-allowed';
 
 const BASE = `inline-flex ${BTN_SM} gap-2 ${SHARED}`;
 const BASE_LINK = `inline-flex items-center gap-2 p-0 h-auto text-small font-semibold rounded-none ${SHARED}`;

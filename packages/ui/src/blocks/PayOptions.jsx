@@ -4,14 +4,14 @@ import { cn } from '../lib/cn.js';
 
 // CUE's PaymentStep look: rail tiles (icon only, name in aria-label) above plain option rows; amounts come from the site.
 const METHOD = 'flex items-center justify-center h-[2.9rem] rounded-md bg-white cursor-pointer';
-const METHOD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
+const METHOD_ON = '[border:1.5px_solid_var(--color-gold)] bg-cream';
 const METHOD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
 const CARD = 'rounded-md bg-white';
-const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
+const CARD_ON = '[border:1.5px_solid_var(--color-gold)] bg-cream';
 const CARD_OFF = '[border:1.5px_solid_var(--line)] hover:[border-color:var(--color-gold)]';
 const PICK = 'w-full flex items-start gap-3 text-left bg-transparent border-none p-[0.85rem] cursor-pointer';
 const DOT = 'flex-none w-[18px] h-[18px] mt-[0.1rem] rounded-[50%] flex items-center justify-center';
-const HEAD = 'text-label font-medium tracking-[0.08em] uppercase text-muted mb-[0.6rem]';
+const HEAD = 'text-small font-medium text-muted mb-[0.6rem]';
 
 export default function PayOptions({
   rails = [],
@@ -23,6 +23,7 @@ export default function PayOptions({
   note = '',
   railsTitle = 'How would you like to pay?',
   optionsTitle = 'How much now?',
+  optionsNote = '',
 }) {
   if (!options.length) return <p className="m-0 text-body text-muted">Sorry, we could not load this information. Please try again.</p>;
   return (
@@ -50,13 +51,14 @@ export default function PayOptions({
         </>
       )}
       <p className={HEAD}>{optionsTitle}</p>
+      {optionsNote ? <p className="m-0 mb-[0.6rem] text-small text-muted leading-[var(--lh-body)]" data-pay-options-note>{optionsNote}</p> : null}
       <div className="flex flex-col gap-2" role="radiogroup" aria-label={optionsTitle}>
         {options.map(({ id, label, sub, amount }) => {
           const on = value === id;
           return (
             <div key={id} className={cn(CARD, on ? CARD_ON : CARD_OFF)} data-pay-option={id}>
               <button type="button" role="radio" aria-checked={on} className={PICK} onClick={() => onChange(id)}>
-                <span className={cn(DOT, on ? 'bg-cta' : '[border:1.5px_solid_var(--line)]')} aria-hidden="true">
+                <span className={cn(DOT, on ? 'bg-gold' : '[border:1.5px_solid_var(--line)]')} aria-hidden="true">
                   {on ? <span className="w-[7px] h-[7px] rounded-[50%] bg-white" /> : null}
                 </span>
                 <span className="flex-1 min-w-0">

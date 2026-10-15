@@ -1,0 +1,51 @@
+name: Publish @cahyana/ui
+
+# Pushing a tag ui-vX.Y.Z publishes packages/ui to GitHub Packages as @wayanadityaekc/ui@X.Y.Z.
+# GitHub Packages only accepts a package scoped to the repo owner, so the name is
+# rewritten here; sites install it under its own name with an npm alias:
+#   "@cahyana/ui": "npm:@wayanadityaekc/ui@1.0.0"
+# A published version can never be changed: fix forward with a new version.
+on:
+  push:
+    tags: ['ui-v*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@wayanadityaekc'
+
+      - name: Tag and package.json version must match
+        working-directory: packages/ui
+        run: |
+          want="${GITHUB_REF_NAME#ui-v}"
+          have="$(node -p "require('./package.json').version")"
+          if [ "$want" != "$have" ]; then
+            echo "Tag says $want but packages/ui/package.json says $have"
+            exit 1
+          fi
+
+      - name: Publish under the owner scope
+        working-directory: packages/ui
+        run: |
+          node -e '
+            const fs = require("fs");
+            const pkg = JSON.parse(fs.readFileSync("package.json"));
+            pkg.name = "@wayanadityaekc/ui";
+            delete pkg.private;
+            pkg.publishConfig = { registry: "https://npm.pkg.github.com" };
+            fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
+          '
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

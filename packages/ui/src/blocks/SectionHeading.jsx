@@ -41,7 +41,7 @@ const TONES = {
 
 // Section hooks take the brand colour on a pale surface, as the three libraries do.
 const SECTION_TONES = {
-  light: { eyebrow: 'text-cta', title: 'text-gold', lede: 'text-green' },
+  light: { eyebrow: 'text-gold', title: 'text-gold', lede: 'text-green' },
   dark: { eyebrow: 'text-gold-l', title: 'text-white', lede: 'text-white/85' },
 };
 
@@ -59,7 +59,7 @@ export default function SectionHeading({
   size = 'h2',
   tone = 'light',
   upper = false,
-  align = 'left',
+  align,
   className,
   titleClassName,
   ledeClassName,
@@ -67,14 +67,16 @@ export default function SectionHeading({
   ...rest
 }) {
   const isSection = size === 'section';
+  // Band titles (size="section") are centred by default; other sizes stay left unless asked.
+  const centered = align ? align === 'center' : isSection;
   const t = (isSection ? SECTION_TONES : TONES)[tone] || TONES.light;
   return (
-    <div className={cn(align === 'center' && 'text-center', className)} {...rest}>
+    <div className={cn(centered && 'text-center', className)} {...rest}>
       {eyebrow ? <p className={cn(upper ? EYEBROW_UPPER : EYEBROW_LINE, isSection && '!mb-2', t.eyebrow)}>{eyebrow}</p> : null}
       <Tag className={cn(SIZES[size] || SIZES.h2, 'leading-[var(--lh-heading)]', t.title, titleClassName)}>
         {title}
       </Tag>
-      {lede ? <p className={cn(isSection ? 'mt-3 max-w-[60ch] text-strong leading-[1.6]' : 'mt-2 text-small leading-[1.45]', isSection && align === 'center' && 'mx-auto', t.lede, ledeClassName)}>{lede}</p> : null}
+      {lede ? <p className={cn(isSection ? 'mt-3 max-w-[60ch] text-strong leading-[1.6]' : 'mt-2 text-small leading-[1.45]', isSection && centered && 'mx-auto', t.lede, ledeClassName)}>{lede}</p> : null}
       {children}
     </div>
   );

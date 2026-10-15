@@ -7,16 +7,17 @@ const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 const TOGGLE_ON =
   'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 border-none bg-cta text-white text-small font-semibold cursor-pointer';
 const TOGGLE_OFF =
-  'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-surface-raised text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-cta)]';
+  'inline-flex items-center gap-1.5 shrink-0 rounded-pill px-3 h-8 [border:1px_solid_var(--line)] bg-surface-raised text-gold text-small font-semibold cursor-pointer hover:[border-color:var(--color-gold)]';
 
-function ExtraRow({ id, title = '', href = '', meta = '', price = null, added = false, onToggle = () => {}, fields = null, linkAs = 'a' }) {
+// `coin` (optional): a Use coin control the site passes, shown under the row once it is added.
+function ExtraRow({ id, title = '', href = '', meta = '', price = null, added = false, onToggle = () => {}, fields = null, coin = null, linkAs = 'a' }) {
   const Link = linkAs;
   return (
     <li className={`py-3 ${ROW_RULE}`} data-extra={id}>
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           {href
-            ? <Link href={href} className="text-body font-medium text-gold hover:text-cta" target={/^https?:/.test(href) ? '_blank' : undefined} rel={/^https?:/.test(href) ? 'noopener' : undefined}>{title}</Link>
+            ? <Link href={href} className="text-body font-medium text-gold hover:text-gold" target={/^https?:/.test(href) ? '_blank' : undefined} rel={/^https?:/.test(href) ? 'noopener' : undefined}>{title}</Link>
             : <span className="text-body font-medium text-gold">{title}</span>}
           {meta ? <p className="m-0 mt-0.5 text-label text-muted">{meta}</p> : null}
         </div>
@@ -29,6 +30,7 @@ function ExtraRow({ id, title = '', href = '', meta = '', price = null, added = 
           </button>
         </div>
       </div>
+      {added && coin ? <div data-extra-coin>{coin}</div> : null}
       {added && fields ? <div className="grid grid-cols-2 max-[480px]:grid-cols-1 gap-3 mt-3">{fields}</div> : null}
     </li>
   );

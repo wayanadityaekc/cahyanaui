@@ -34,7 +34,7 @@ borrowed from shadcn/ui; **no shadcn code and no shadcn dependency**.
 ## Publishing the library (Wayan, 15 Oct 2026)
 
 `packages/ui` is published to GitHub Packages; sites install it instead of copying it.
-- Release: bump `version` in `packages/ui/package.json`, merge, then push the tag `ui-v<version>` (for example `ui-v1.0.1`). `.github/workflows/publish-ui.yml` refuses a tag that does not match the version, then publishes.
+- Release: bump `version` in `packages/ui/package.json`, merge, then publish a GitHub release (Releases → Draft a new release) whose new tag is `ui-v<version>` (for example `ui-v1.0.1`), or push that tag. `.github/workflows/publish-ui.yml` refuses a tag that does not match the version, then publishes.
 - Published name: `@wayanadityaekc/ui` (GitHub Packages only accepts the owner's scope). Inside this repo and in every site the import name stays `@cahyana/ui`, through an npm alias: `"@cahyana/ui": "npm:@wayanadityaekc/ui@1.0.0"`.
 - A site needs a `.npmrc` with `@wayanadityaekc:registry=https://npm.pkg.github.com` and `//npm.pkg.github.com/:_authToken=${NPM_TOKEN}`, and `NPM_TOKEN` set in Vercel and in its GitHub Actions secrets (a classic token with `read:packages`; fine-grained tokens cannot read packages).
 - Each site pins an exact version. Dependabot opens an update pull request in each site when a new version is out; the site's checks run on it and Wayan merges. A broken release therefore never reaches every site at once.

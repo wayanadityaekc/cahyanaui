@@ -1,6 +1,6 @@
 name: Publish @cahyana/ui
 
-# Pushing a tag ui-vX.Y.Z publishes packages/ui to GitHub Packages as @wayanadityaekc/ui@X.Y.Z.
+# A tag ui-vX.Y.Z (pushed, or created by publishing a GitHub release) publishes packages/ui to GitHub Packages as @wayanadityaekc/ui@X.Y.Z.
 # GitHub Packages only accepts a package scoped to the repo owner, so the name is
 # rewritten here; sites install it under its own name with an npm alias:
 #   "@cahyana/ui": "npm:@wayanadityaekc/ui@1.0.0"
@@ -8,6 +8,8 @@ name: Publish @cahyana/ui
 on:
   push:
     tags: ['ui-v*']
+  release:
+    types: [published]
 
 permissions:
   contents: read
@@ -17,6 +19,12 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - name: Only ui-v tags publish the library
+        if: ${{ !startsWith(github.ref_name, 'ui-v') }}
+        run: |
+          echo "Not a ui-v tag: ${GITHUB_REF_NAME}"
+          exit 1
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4

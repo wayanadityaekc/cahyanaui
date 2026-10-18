@@ -20,9 +20,10 @@ import { cn } from '../lib/cn.js';
  *
  *   variant  navbar  pushes itself to the end of a flex row
  *            hero    sized to match a form field on a search bar
+ *            bar     a navbar button: the box of CUE's EN button (32px, 12px corners), list opens to the left
  *            default
  */
-function wrap(variant) { return cn('relative', variant === 'navbar' && 'ml-auto flex-none'); }
+function wrap(variant) { return cn('relative', variant === 'navbar' && 'ml-auto flex-none', variant === 'bar' && 'flex-none'); }
 
 const BTN_BASE =
   'flex items-center gap-[0.45rem] w-full bg-surface-raised font-body text-field text-green cursor-pointer';
@@ -33,7 +34,15 @@ const BTN_BASE =
 // rather than performing an action. CUE made the same call. The border colour
 // was also a hardcoded #d8d2c4 in the pill branch, the one place on either site
 // not using the --line token.
-function btn() {
+// The navbar button beside the My Cahyana pill (Wayan, 18 Oct 2026): same box as the pill and CUE's EN button.
+const BAR_BTN =
+  'flex items-center gap-[0.4rem] h-8 px-[0.6rem] rounded-md bg-surface-raised font-body text-small font-semibold text-gold ' +
+  'cursor-pointer [border:1px_solid_var(--line)] [transition:border-color_var(--dur)_var(--ease)] ' +
+  'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
+  'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
+
+function btn(variant) {
+  if (variant === 'bar') return BAR_BTN;
   return cn(
     BTN_BASE,
     'py-0 px-[0.85rem] h-[var(--field-h)] rounded-md font-normal',
@@ -49,7 +58,8 @@ const CARET =
 // Stays mounted so it can animate; CUE's shape: --line border, capped at 15rem and scrolling.
 function list(variant, open) {
   return cn(
-    'absolute left-0 right-0 mt-1 p-1 list-none bg-surface-raised z-10 max-h-[15rem] overflow-y-auto overscroll-contain',
+    'absolute mt-1 p-1 list-none bg-surface-raised z-10 max-h-[15rem] overflow-y-auto overscroll-contain',
+    variant === 'bar' ? 'right-0 min-w-[9.5rem]' : 'left-0 right-0',
     '[border:1px_solid_var(--line)]',
     'transition-[opacity,transform] duration-[var(--dur)] ease-[var(--ease-out)] motion-reduce:transition-none',
     open
@@ -105,14 +115,14 @@ export default function CurrencyPicker({
       <button
         type="button"
         id={id}
-        className={btn()}
+        className={btn(variant)}
         aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((wasOpen) => !wasOpen)}
       >
         <Flag code={value} />
-        <span className={CODE}>{value}</span>
+        <span className={variant === 'bar' ? undefined : CODE}>{value}</span>
         <ChevronDown className={CARET} aria-hidden="true" />
       </button>
       <ul className={list(variant, open)} role="listbox" aria-label="Currency">

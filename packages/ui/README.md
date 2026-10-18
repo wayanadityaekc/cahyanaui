@@ -63,6 +63,7 @@ picks one - the variants do not get scattered back into the apps.
 | `NavbarShell` | the header: burger + left drawer on phones, links in the bar on desktop (CUE WO1) | content-driven |
 | `NavDesktop` | the bar's page links; dropdowns are disclosures (hover + click, Escape returns focus) | - |
 | `AccountMenu` | the navbar's account slot: Log in / initials menu; site passes account, handlers, fields | optional rows (both sites: Settings) |
+| `MyCahyanaPill` | the store navbar's one link to My Cahyana (my.): person \| bag, the EN button's box, a green dot until seen, no count; site passes `href`, `seen`, `onTap` (test: `tests/my-cahyana-pill-test.mjs`) | - |
 | `FooterShell` | five columns, one hairline | content-driven |
 | `StickyBar` | the one thing at the bottom of a phone screen | **flush** (both sites), floating (unused) |
 | `Breadcrumb` | CUE's trail: nav + ol, last item is the current page | - |

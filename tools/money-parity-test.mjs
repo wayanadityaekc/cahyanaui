@@ -4,6 +4,8 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CURRENCIES, BASELINE_FX, ladder, displayFromIdr } from '../packages/ui/src/lib/money.js';
 
+const TRIAL_COUNT = 300;
+
 const here = dirname(fileURLToPath(import.meta.url));
 const fxPath = resolve(process.env.CAHYANA_API || resolve(here, '../../cahyana-api'), 'fx.js');
 if (!existsSync(fxPath)) {
@@ -45,7 +47,7 @@ function nextRandomFraction() {
   seed = (seed * 16807) % 2147483647;
   return seed / 2147483647;
 }
-for (let trial = 0; trial < 300; trial += 1) {
+Array.from({ length: TRIAL_COUNT }).forEach(() => {
   const idrPerUsd = 15500 + nextRandomFraction() * 3000;
   const rates = { IDR: 1 };
   Object.entries(BASELINE_FX.perUsd).forEach(([code, perUsd]) => {
@@ -65,9 +67,9 @@ for (let trial = 0; trial < 300; trial += 1) {
       );
     }),
   );
-}
+});
 
-const pairs = 300 * prices.length * CURRENCIES.length;
+const pairs = TRIAL_COUNT * prices.length * CURRENCIES.length;
 console.log(
   `${checked - failed}/${checked} passed; site one step above server in ${over}/${pairs} (${((over / pairs) * 100).toFixed(2)}%), never below`,
 );

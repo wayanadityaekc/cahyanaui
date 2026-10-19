@@ -102,10 +102,13 @@ export default function DateField({
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
 
-  const cells = [];
-  for (let leadIndex = 0; leadIndex < lead; leadIndex++) cells.push(null);
-  for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++)
-    cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), dayOfMonth));
+  const cells = [
+    ...Array.from({ length: lead }, () => null),
+    ...Array.from(
+      { length: daysInMonth },
+      (_, dayIndex) => new Date(cursor.getFullYear(), cursor.getMonth(), dayIndex + 1),
+    ),
+  ];
 
   const panel = (
     <div className={panelBookdate(isOpen)}>

@@ -141,17 +141,22 @@ export default function DateRangeField({
     const first = new Date(base.getFullYear(), base.getMonth(), 1);
     const days = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
     const lead = first.getDay();
-    const leadingBlanks = [];
-    for (let leadIndex = lead; leadIndex > 0; leadIndex--)
-      leadingBlanks.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - leadIndex), faded: true });
-    for (let dayOfMonth = 1; dayOfMonth <= days; dayOfMonth++)
-      leadingBlanks.push({ date: new Date(base.getFullYear(), base.getMonth(), dayOfMonth), faded: false });
-    while (leadingBlanks.length % DAYS_PER_WEEK)
-      leadingBlanks.push({
-        date: new Date(base.getFullYear(), base.getMonth(), days + (leadingBlanks.length - lead - days + 1)),
+    const cells = [
+      ...Array.from({ length: lead }, (_, blankIndex) => ({
+        date: new Date(base.getFullYear(), base.getMonth(), 1 - (lead - blankIndex)),
+        faded: true,
+      })),
+      ...Array.from({ length: days }, (_, dayIndex) => ({
+        date: new Date(base.getFullYear(), base.getMonth(), dayIndex + 1),
+        faded: false,
+      })),
+    ];
+    while (cells.length % DAYS_PER_WEEK)
+      cells.push({
+        date: new Date(base.getFullYear(), base.getMonth(), days + (cells.length - lead - days + 1)),
         faded: true,
       });
-    return leadingBlanks;
+    return cells;
   }
   const months = [cursor, new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)];
 

@@ -56,7 +56,11 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
   }
 
   const tileGroups = [];
-  for (let startIndex = 0; startIndex < images.length; startIndex += MOSAIC_GROUP_SIZE) {
+  const groupStarts = Array.from(
+    { length: Math.ceil(images.length / MOSAIC_GROUP_SIZE) },
+    (_, groupIndex) => groupIndex * MOSAIC_GROUP_SIZE,
+  );
+  groupStarts.forEach((startIndex) => {
     tileGroups.push(renderTile(startIndex, BIG));
     const pair = [startIndex + 1, startIndex + 2].filter((imageIndex) => imageIndex < images.length);
     if (pair.length) {
@@ -66,7 +70,7 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
         </div>,
       );
     }
-  }
+  });
 
   function renderPhotoMosaic() {
     if (images.length === 1) return <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{renderTile(0, TILE)}</div>;

@@ -24,7 +24,7 @@ Run before the first change and after every commit:
 |---|---|---|
 | `pnpm build` (both apps) | pass | pass |
 | Built HTML of `apps/cue/out` (100 pages) and `apps/villas/out` (19 pages), scripts and asset hashes removed | baseline | identical |
-| Built CSS | baseline | same rules, except utilities Tailwind had generated only from words inside comments (27 in villas, 5 in cue: `.static`, `.container`, `.pt-8`, ...). None of them is used by any page or script. After Prettier, the unminified `style.css` copy differs only in quote style and line breaks |
+| Built CSS | baseline | same rules, except utilities Tailwind had generated only from words inside comments (27 in villas, 5 in cue). None of them is used by any page or script. After Prettier, the unminified `style.css` copy differs only in quote style and line breaks |
 | Browser smoke (Chromium, 34 cue pages, 19 villas pages: load, page errors, text length) | 0 errors | 0 errors, identical results |
 | `check-urls`, `check-detail`, `check-assets`, `check-motion`, `check-classes` (both apps) | pass | pass |
 | `tools/money-parity-test.mjs` | 58671/58672 (1 failure: currency list) | same, pre-existing |

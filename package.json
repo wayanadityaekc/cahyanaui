@@ -5,9 +5,16 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "lint:code": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:comments": "node tools/eslint/css-comments.mjs",
+    "sync:global": "node tools/sync-global.mjs"
   },
   "devDependencies": {
+    "eslint": "^10.13.0",
+    "prettier": "^3.9.10",
     "turbo": "^2.6.1"
   }
 }

@@ -100,9 +100,14 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
             : [];
         setPrepaid(data && data.payment ? data.payment.prepaid : null);
         setQuote(options.length ? options : 'error');
-        setOption((current) =>
-          options.some((row) => row.id === current) ? current : options.length ? options[0].id : '',
-        );
+        setOption((current) => {
+          function pickValidPaymentOption() {
+            if (options.some((row) => row.id === current)) return current;
+            if (options.length) return options[0].id;
+            return '';
+          }
+          return pickValidPaymentOption();
+        });
       } catch (e) {
         if (alive) setQuote('error');
       }
@@ -160,7 +165,19 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         amount: formatAmount(row.amount.display),
       }))
     : [];
-  const title = step === 'details' ? 'Your details' : step === 'pay' ? 'How to pay' : 'Payment';
+  function pickStepTitle() {
+    if (step === 'details') return 'Your details';
+    if (step === 'pay') return 'How to pay';
+    return 'Payment';
+  }
+
+  const title = pickStepTitle();
+
+  function pickStepNumber() {
+    if (step === 'details') return 1;
+    if (step === 'pay') return 2;
+    return CHECKOUT_STEP_COUNT;
+  }
 
   return (
     <SheetPresence
@@ -183,7 +200,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         />
       </button>
       <p className="m-0 mb-1 text-label font-medium tracking-[0.08em] uppercase text-muted">
-        Step {step === 'details' ? 1 : step === 'pay' ? 2 : CHECKOUT_STEP_COUNT} of 3
+        Step {pickStepNumber()} of 3
       </p>
       <h3 className="m-0 mb-5 font-body text-h3 font-semibold text-gold">{title}</h3>
 

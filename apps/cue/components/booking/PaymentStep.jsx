@@ -174,8 +174,32 @@ export default function PaymentStep({
           const isSelected = option === optionItem.id;
           const isDimmed = !optionItem.available;
           const isRef = optionItem.id === 'referral';
+          function pickCardClasses() {
+            if (isDimmed) return CARD_DIM;
+            if (isSelected) return CARD_ON;
+            return CARD_OFF;
+          }
+
+          function renderAmountLine() {
+            if (isInRupiah)
+              return (
+                <span className={AMOUNT} data-amount-idr>
+                  {optionItem.amountIdr != null ? formatRupiah(optionItem.amountIdr) : '-'}
+                  {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
+                </span>
+              );
+            if (isInUsd)
+              return (
+                <span className={AMOUNT} data-amount-usd>
+                  {optionItem.amountUsd != null ? formatDollars(optionItem.amountUsd) : '-'}
+                  {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
+                </span>
+              );
+            return <span className={AMOUNT}>{optionItem.amount != null ? formatMoney(optionItem.amount) : '-'}</span>;
+          }
+
           return (
-            <div key={optionItem.id} className={`${CARD} ${isDimmed ? CARD_DIM : isSelected ? CARD_ON : CARD_OFF}`}>
+            <div key={optionItem.id} className={`${CARD} ${pickCardClasses()}`}>
               <button
                 type="button"
                 role="radio"
@@ -198,19 +222,7 @@ export default function PaymentStep({
                     )}
                   </span>
                 </span>
-                {isInRupiah ? (
-                  <span className={AMOUNT} data-amount-idr>
-                    {optionItem.amountIdr != null ? formatRupiah(optionItem.amountIdr) : '-'}
-                    {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
-                  </span>
-                ) : isInUsd ? (
-                  <span className={AMOUNT} data-amount-usd>
-                    {optionItem.amountUsd != null ? formatDollars(optionItem.amountUsd) : '-'}
-                    {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
-                  </span>
-                ) : (
-                  <span className={AMOUNT}>{optionItem.amount != null ? formatMoney(optionItem.amount) : '-'}</span>
-                )}
+                {renderAmountLine()}
               </button>
 
               {isRef && (

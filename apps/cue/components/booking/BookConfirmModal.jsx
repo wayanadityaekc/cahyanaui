@@ -364,6 +364,130 @@ export default function BookConfirmModal() {
       resendOtp={resendOtpCode}
     />
   ) : null;
+  function renderBookingContent() {
+    function renderBookingStep() {
+      if (step === 1)
+        return (
+          <DetailsStep
+            f={form}
+            errors={errors}
+            set={set}
+            setValue={setValue}
+            view={view}
+            lines={lines}
+            needsFlight={needsFlight}
+            isAirportLine={isAirportLine}
+            lineDateTime={findLineDateTime}
+            setDT={setDT}
+            categoryOfLine={findLineCategory}
+            dtErr={dtErr}
+            onContinue={() => {
+              if (!validate()) return;
+              setError('');
+              setStep(2);
+            }}
+          />
+        );
+      if (step === 2)
+        return (
+          <CheckStep
+            view={view}
+            singleLine={singleLine}
+            dateOf={findLineDate}
+            timeOf={timeOf}
+            isAirportRoute={isAirportRoute}
+            flightNumberDisplay={flightNumberDisplay}
+            displayGuests={displayGuests}
+            priced={priced}
+            detailsOpen={isDetailsOpen}
+            setDetailsOpen={setIsDetailsOpen}
+            f={form}
+            price={priceText()}
+            payOn={payOn}
+            onContinue={() => {
+              setError('');
+              setStep(PAYMENT_STEP_NUMBER);
+            }}
+            error={error}
+            busy={isBusy}
+            submit={submit}
+            openWhatsApp={openWhatsApp}
+            onEdit={() => setStep(1)}
+          />
+        );
+      return (
+        <>
+          <PaymentStep
+            option={payOption}
+            onOption={setPayOption}
+            rail={payRail}
+            onRail={setPayRail}
+            totalIdr={calculateBaseTotalIdr(priced)}
+            totalUsd={calculateBaseTotalUsd(priced)}
+            total={calculateBaseTotal(priced)}
+            symbol={(priced && priced.symbol) || '$'}
+            currency={currency || 'USD'}
+            stay={stay || ''}
+            hasReferral={!!(priced && priced.referral)}
+            referral={form.referral}
+            onReferral={(referralCode) => setForm((previousForm) => ({ ...previousForm, referral: referralCode }))}
+            onApplyReferral={handleReferralApply}
+            refMsg={refMsg}
+          />
+
+          <BookActions error={error} busy={isBusy} submit={submit} openWhatsApp={openWhatsApp} />
+          <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>
+            &lsaquo; Back
+          </button>
+        </>
+      );
+    }
+
+    if (!isDone)
+      return (
+        <div id="modal-form">
+          <h3 className={TITLE}>Booking Confirmation</h3>
+          <div className={STEPS} aria-hidden="true">
+            {STEP_NAMES.map((stepName, index) => (
+              <span className={stepBar(step >= index + 1)} key={stepName} />
+            ))}
+          </div>
+          <p className={STEP_LABEL}>
+            Step {step} of {lastStep} &middot; {STEP_NAMES[step - 1]}
+          </p>
+
+          {renderBookingStep()}
+        </div>
+      );
+    if (!payOn)
+      return (
+        <div className="text-center">
+          <div className={SUCCESS_ICON}>&#10003;</div>
+          <h3 className={TITLE}>Booking Received!</h3>
+          <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
+          {signinNote}
+          <button className={BTN} onClick={handleBookingClose}>
+            Done
+          </button>
+        </div>
+      );
+    return (
+      <PaymentScreen
+        paid={isPaid}
+        bookingRef={bookingRef}
+        closeBooking={handleBookingClose}
+        signinNote={signinNote}
+        payRail={payRail}
+        payOption={payOption}
+        currency={currency}
+        onPaid={() => {
+          setIsPaid(true);
+          if (bookingContext && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
+        }}
+      />
+    );
+  }
+
   return createPortal(
     <ModalPresence
       open={!!bookingContext}
@@ -379,115 +503,7 @@ export default function BookConfirmModal() {
       )}
       <img className={LOGO} src="/assets/images/logo.webp" alt="The Cahyana Logo" width="1005" height="324" />
 
-      {!isDone ? (
-        <div id="modal-form">
-          <h3 className={TITLE}>Booking Confirmation</h3>
-          <div className={STEPS} aria-hidden="true">
-            {STEP_NAMES.map((stepName, index) => (
-              <span className={stepBar(step >= index + 1)} key={stepName} />
-            ))}
-          </div>
-          <p className={STEP_LABEL}>
-            Step {step} of {lastStep} &middot; {STEP_NAMES[step - 1]}
-          </p>
-
-          {step === 1 ? (
-            <DetailsStep
-              f={form}
-              errors={errors}
-              set={set}
-              setValue={setValue}
-              view={view}
-              lines={lines}
-              needsFlight={needsFlight}
-              isAirportLine={isAirportLine}
-              lineDateTime={findLineDateTime}
-              setDT={setDT}
-              categoryOfLine={findLineCategory}
-              dtErr={dtErr}
-              onContinue={() => {
-                if (!validate()) return;
-                setError('');
-                setStep(2);
-              }}
-            />
-          ) : step === 2 ? (
-            <CheckStep
-              view={view}
-              singleLine={singleLine}
-              dateOf={findLineDate}
-              timeOf={timeOf}
-              isAirportRoute={isAirportRoute}
-              flightNumberDisplay={flightNumberDisplay}
-              displayGuests={displayGuests}
-              priced={priced}
-              detailsOpen={isDetailsOpen}
-              setDetailsOpen={setIsDetailsOpen}
-              f={form}
-              price={priceText()}
-              payOn={payOn}
-              onContinue={() => {
-                setError('');
-                setStep(PAYMENT_STEP_NUMBER);
-              }}
-              error={error}
-              busy={isBusy}
-              submit={submit}
-              openWhatsApp={openWhatsApp}
-              onEdit={() => setStep(1)}
-            />
-          ) : (
-            <>
-              <PaymentStep
-                option={payOption}
-                onOption={setPayOption}
-                rail={payRail}
-                onRail={setPayRail}
-                totalIdr={calculateBaseTotalIdr(priced)}
-                totalUsd={calculateBaseTotalUsd(priced)}
-                total={calculateBaseTotal(priced)}
-                symbol={(priced && priced.symbol) || '$'}
-                currency={currency || 'USD'}
-                stay={stay || ''}
-                hasReferral={!!(priced && priced.referral)}
-                referral={form.referral}
-                onReferral={(referralCode) => setForm((previousForm) => ({ ...previousForm, referral: referralCode }))}
-                onApplyReferral={handleReferralApply}
-                refMsg={refMsg}
-              />
-
-              <BookActions error={error} busy={isBusy} submit={submit} openWhatsApp={openWhatsApp} />
-              <button type="button" className={BACK_LINK} onClick={() => setStep(2)}>
-                &lsaquo; Back
-              </button>
-            </>
-          )}
-        </div>
-      ) : !payOn ? (
-        <div className="text-center">
-          <div className={SUCCESS_ICON}>&#10003;</div>
-          <h3 className={TITLE}>Booking Received!</h3>
-          <p className={SUCCESS_TEXT}>Thank you. We will email you shortly to confirm your booking.</p>
-          {signinNote}
-          <button className={BTN} onClick={handleBookingClose}>
-            Done
-          </button>
-        </div>
-      ) : (
-        <PaymentScreen
-          paid={isPaid}
-          bookingRef={bookingRef}
-          closeBooking={handleBookingClose}
-          signinNote={signinNote}
-          payRail={payRail}
-          payOption={payOption}
-          currency={currency}
-          onPaid={() => {
-            setIsPaid(true);
-            if (bookingContext && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
-          }}
-        />
-      )}
+      {renderBookingContent()}
     </ModalPresence>,
     document.body,
   );

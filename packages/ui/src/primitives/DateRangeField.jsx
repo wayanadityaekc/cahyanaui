@@ -50,17 +50,15 @@ const RANGE_ARROW =
   'w-9 h-9 inline-flex items-center justify-center rounded-base [border:1px_solid_var(--line)] bg-surface-raised text-gold cursor-pointer hover:bg-cream';
 const RANGE_DOW = 'font-body font-medium text-small text-muted text-center py-2';
 function buildRangeDayClasses(off, state, faded) {
-  return `aspect-square flex items-center justify-center font-body text-[1rem] border-none ${
-    state === 'start' || state === 'end'
-      ? 'rounded-base bg-gold text-white font-semibold cursor-pointer'
-      : state === 'in'
-        ? 'rounded-base bg-cream text-ink cursor-pointer'
-        : faded
-          ? 'rounded-base bg-transparent text-[#d9d6ce] cursor-default'
-          : off
-            ? 'rounded-base bg-transparent text-[#cfccc4] cursor-default'
-            : 'rounded-base bg-transparent text-ink cursor-pointer hover:bg-cream'
-  }`;
+  function pickDayClasses() {
+    if (state === 'start' || state === 'end') return 'rounded-base bg-gold text-white font-semibold cursor-pointer';
+    if (state === 'in') return 'rounded-base bg-cream text-ink cursor-pointer';
+    if (faded) return 'rounded-base bg-transparent text-[#d9d6ce] cursor-default';
+    if (off) return 'rounded-base bg-transparent text-[#cfccc4] cursor-default';
+    return 'rounded-base bg-transparent text-ink cursor-pointer hover:bg-cream';
+  }
+
+  return `aspect-square flex items-center justify-center font-body text-[1rem] border-none ${pickDayClasses()}`;
 }
 const MONTHS = [
   'January',
@@ -131,11 +129,13 @@ export default function DateRangeField({
   const isChoosingEnd = editing === 'end' && !!checkIn;
   const nights = countNightsBetween(checkIn, checkOut);
   const hasIconOrHint = !!(hint || icon);
-  const rangeLabel = !checkIn
-    ? placeholders.start
-    : !checkOut
-      ? `${formatDateLabel(checkIn)} - add check-out`
-      : `${formatDateLabel(checkIn)} - ${formatDateLabel(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
+  function buildDateRangeLabel() {
+    if (!checkIn) return placeholders.start;
+    if (!checkOut) return `${formatDateLabel(checkIn)} - add check-out`;
+    return `${formatDateLabel(checkIn)} - ${formatDateLabel(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
+  }
+
+  const rangeLabel = buildDateRangeLabel();
 
   function buildMonthCells(base) {
     const first = new Date(base.getFullYear(), base.getMonth(), 1);

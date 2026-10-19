@@ -58,11 +58,15 @@ CASES.forEach((idr) => {
               `${id} ${current} base=${base} stay=${stay || 'ubud'} ref=${ref}: site=${aAmt} server=${bAmt}`,
             );
           }
-          const bIdr = serverOption.amount
-            ? current === 'IDR'
-              ? serverOption.amount.display
-              : serverOption.amount.idr
-            : null;
+          function pickIdrAmount() {
+            if (serverOption.amount) {
+              if (current === 'IDR') return serverOption.amount.display;
+              return serverOption.amount.idr;
+            }
+            return null;
+          }
+
+          const bIdr = pickIdrAmount();
           const aIdr = current === 'IDR' ? siteOption.amount : siteOption.amountIdr;
           if (aIdr !== bIdr) {
             badRows.push(`${id} rupiah ${current} idr=${idr} ref=${ref}: site=${aIdr} server=${bIdr}`);

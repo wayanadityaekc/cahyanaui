@@ -227,20 +227,21 @@ export default function ChatPanel({ open, onClose }) {
           page: typeof window !== 'undefined' ? window.location.pathname : '',
         });
         setThread(id);
-        setLog((prev) => [
-          ...prev,
-          {
-            id: createMessageId(),
-            from: 'bot',
-            text: `${CHAT_COPY.connected} ${
-              ownerHereRef.current
-                ? CHAT_COPY.hoursHere
-                : checkIsWayanAround()
-                  ? CHAT_COPY.hoursOpen
-                  : CHAT_COPY.hoursClosed
-            }`,
-          },
-        ]);
+        setLog((prev) => {
+          function pickHoursText() {
+            if (ownerHereRef.current) return CHAT_COPY.hoursHere;
+            if (checkIsWayanAround()) return CHAT_COPY.hoursOpen;
+            return CHAT_COPY.hoursClosed;
+          }
+          return [
+            ...prev,
+            {
+              id: createMessageId(),
+              from: 'bot',
+              text: `${CHAT_COPY.connected} ${pickHoursText()}`,
+            },
+          ];
+        });
       } catch (e) {
         setLog((prev) => [
           ...prev,

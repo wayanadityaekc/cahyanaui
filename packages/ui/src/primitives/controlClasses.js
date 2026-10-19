@@ -85,13 +85,13 @@ export const CAL_CAP_BTN =
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
 export const CAL_DOW = 'font-body font-medium text-label text-muted text-center py-1';
 export function calDay(off, selector) {
-  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
-    selector
-      ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
-      : off
-        ? 'bg-transparent text-[#cfccc4] cursor-default'
-        : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
-  }`;
+  function pickOptionClasses() {
+    if (selector) return 'bg-gold text-white cursor-pointer hover:bg-gold-d';
+    if (off) return 'bg-transparent text-[#cfccc4] cursor-default';
+    return 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]';
+  }
+
+  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${pickOptionClasses()}`;
 }
 
 export const CSEL_GROUP = 'relative block w-full';
@@ -104,15 +104,14 @@ export const HS_OPT_IC =
   'flex-none w-[38px] h-[38px] rounded-base [border:1.5px_solid_var(--color-gold)] text-gold-d flex items-center justify-center [&_svg]:w-[var(--icon-md)] [&_svg]:h-[var(--icon-md)]';
 
 export function calRangeDay(off, state) {
-  return `aspect-square flex items-center justify-center font-body text-small border-none rounded-sm ${
-    state === 'start' || state === 'end'
-      ? 'bg-gold text-white font-semibold cursor-pointer hover:bg-gold-d'
-      : state === 'in'
-        ? 'bg-cream text-ink font-normal cursor-pointer hover:bg-[#f1efe9]'
-        : off
-          ? 'bg-transparent text-[#cfccc4] font-normal cursor-default'
-          : 'bg-transparent text-ink font-normal cursor-pointer hover:bg-[#f1efe9]'
-  }`;
+  function pickDayStateClasses() {
+    if (state === 'start' || state === 'end') return 'bg-gold text-white font-semibold cursor-pointer hover:bg-gold-d';
+    if (state === 'in') return 'bg-cream text-ink font-normal cursor-pointer hover:bg-[#f1efe9]';
+    if (off) return 'bg-transparent text-[#cfccc4] font-normal cursor-default';
+    return 'bg-transparent text-ink font-normal cursor-pointer hover:bg-[#f1efe9]';
+  }
+
+  return `aspect-square flex items-center justify-center font-body text-small border-none rounded-sm ${pickDayStateClasses()}`;
 }
 
 export const RANGE_ROW = 'grid grid-cols-2 gap-2';

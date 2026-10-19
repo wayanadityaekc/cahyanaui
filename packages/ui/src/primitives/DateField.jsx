@@ -77,7 +77,13 @@ export default function DateField({
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [cursor, setCursor] = useState(() => {
-    const base = value ? new Date(value) : min ? new Date(min) : new Date();
+    function pickCalendarDate() {
+      if (value) return new Date(value);
+      if (min) return new Date(min);
+      return new Date();
+    }
+
+    const base = pickCalendarDate();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 

@@ -28,18 +28,26 @@ export const CRUMB_FOOT =
 export { HOOK_UL, HOOK_LABEL, HOOK_VALUE, HERO_DESC, HERO_CTA } from '@/components/sections/DetailHero';
 
 function Stop({ s: stop }) {
-  const inner = (
-    <>
-      {stop.img ? (
+  function renderStopImage() {
+    if (stop.img)
+      return (
         <div className={STOP_IMAGE}>
           <Img src={`/assets/images/${stop.img}`} alt={stop.alt} width={stop.w} height={stop.hgt} />
         </div>
-      ) : stop.gradient ? (
+      );
+    if (stop.gradient)
+      return (
         <div
           className={STOP_IMAGE}
           style={{ backgroundImage: stop.gradient.replace(/^background-image:\s*/, '').replace(/;$/, '') }}
         />
-      ) : null}
+      );
+    return null;
+  }
+
+  const inner = (
+    <>
+      {renderStopImage()}
       <div>
         {stop.num && <span className={STOP_NUM}>{stop.num}</span>}
         <h3 className={STOP_NAME}>{stop.name}</h3>

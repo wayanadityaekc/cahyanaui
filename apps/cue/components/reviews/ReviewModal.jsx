@@ -144,21 +144,18 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const CHECK_SVC = 'font-semibold text-green text-body';
   const CHECK_META = 'block text-small text-muted mt-[0.1rem]';
 
-  return createPortal(
-    <ModalPresence open={!!open && !!prefill} onClose={handleClose} label="Leave a review" box={BOX}>
-      <button className={CLOSE} aria-label="Close" onClick={handleClose}>
-        &times;
-      </button>
-      <h3 className={TITLE}>Leave a Review</h3>
-
-      {!isDone && !items.length ? (
+  function renderReviewStep() {
+    if (!isDone && !items.length)
+      return (
         <div className="text-center">
           <LoadFallback className="mb-4" />
           <button type="button" className={BTN} onClick={handleClose}>
             Close
           </button>
         </div>
-      ) : !isDone ? (
+      );
+    if (!isDone)
+      return (
         <div data-step="write">
           <div className={GROUP}>
             <label className={LABEL} htmlFor="rvm-name">
@@ -288,29 +285,40 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
             {isBusy ? 'Sending...' : 'Submit review'}
           </button>
         </div>
-      ) : (
-        <div className="text-center">
-          <div className={SUCCESS_ICON}>&#10003;</div>
-          <h3 className={TITLE}>Thank you!</h3>
-          <p className={SUCCESS_TEXT}>
-            {partial.length
-              ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`
-              : 'Your review is now live on the site.'}
-          </p>
-          {partial.length ? (
-            <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
-              {partial.map((partialFailure) => (
-                <li key={partialFailure.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
-                  <span className="font-semibold text-green">{partialFailure.service}</span> - {partialFailure.reason}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          <button type="button" className={BTN} onClick={handleClose}>
-            Done
-          </button>
-        </div>
-      )}
+      );
+    return (
+      <div className="text-center">
+        <div className={SUCCESS_ICON}>&#10003;</div>
+        <h3 className={TITLE}>Thank you!</h3>
+        <p className={SUCCESS_TEXT}>
+          {partial.length
+            ? `Your review is live on the site. ${partial.length} of the trips you ticked could not be included:`
+            : 'Your review is now live on the site.'}
+        </p>
+        {partial.length ? (
+          <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
+            {partial.map((partialFailure) => (
+              <li key={partialFailure.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
+                <span className="font-semibold text-green">{partialFailure.service}</span> - {partialFailure.reason}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        <button type="button" className={BTN} onClick={handleClose}>
+          Done
+        </button>
+      </div>
+    );
+  }
+
+  return createPortal(
+    <ModalPresence open={!!open && !!prefill} onClose={handleClose} label="Leave a review" box={BOX}>
+      <button className={CLOSE} aria-label="Close" onClick={handleClose}>
+        &times;
+      </button>
+      <h3 className={TITLE}>Leave a Review</h3>
+
+      {renderReviewStep()}
     </ModalPresence>,
     document.body,
   );

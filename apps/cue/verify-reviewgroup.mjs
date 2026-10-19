@@ -40,7 +40,14 @@ async function open(path, viewportWidth) {
         grp = requestUrl.searchParams.get('group');
       const routes = ['Airport – Ubud', 'Canggu Area'];
       return route.fulfill({
-        json: ROWS.filter((review) => (svc ? review.service === svc : grp ? routes.includes(review.service) : true)),
+        json: ROWS.filter((review) => {
+          function filterReviewsByScope() {
+            if (svc) return review.service === svc;
+            if (grp) return routes.includes(review.service);
+            return true;
+          }
+          return filterReviewsByScope();
+        }),
       });
     }
     return route.fulfill({ status: 503, body: '{}' });

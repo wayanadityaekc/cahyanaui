@@ -84,13 +84,13 @@ export const CAL_CAP_BTN =
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
 export const CAL_DOW = 'font-body font-medium text-label tracking-[0.14em] uppercase text-muted text-center py-1';
 export function buildCalendarDayClass(off, selector) {
-  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
-    selector
-      ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
-      : off
-        ? 'bg-transparent text-[#cfccc4] cursor-default'
-        : 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]'
-  }`;
+  function pickRouteFilterValue() {
+    if (selector) return 'bg-gold text-white cursor-pointer hover:bg-gold-d';
+    if (off) return 'bg-transparent text-[#cfccc4] cursor-default';
+    return 'bg-transparent text-ink cursor-pointer hover:bg-[#f1efe9]';
+  }
+
+  return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${pickRouteFilterValue()}`;
 }
 
 export const CAL_FOOT =

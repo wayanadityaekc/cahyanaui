@@ -29,7 +29,13 @@ async function open(path, viewportWidth) {
       const svc = requestUrl.searchParams.get('service'),
         grp = requestUrl.searchParams.get('group');
       askedRequests.push(svc ?? (grp ? `group:${grp}` : '(all)'));
-      return route.fulfill({ json: !svc && !grp ? [REVIEW] : svc === 'Ubud Tour' ? [REVIEW] : [] });
+      function pickReviewsForService() {
+        if (!svc && !grp) return [REVIEW];
+        if (svc === 'Ubud Tour') return [REVIEW];
+        return [];
+      }
+
+      return route.fulfill({ json: pickReviewsForService() });
     }
     return route.fulfill({ status: 503, body: '{}' });
   });

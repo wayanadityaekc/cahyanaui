@@ -25,11 +25,13 @@ export default function ReviewsStrip({
 
   useEffect(() => {
     let cancelled = false;
-    const query = group
-      ? `?group=${encodeURIComponent(group)}`
-      : service
-        ? `?service=${encodeURIComponent(service)}`
-        : '';
+    function buildGroupQuery() {
+      if (group) return `?group=${encodeURIComponent(group)}`;
+      if (service) return `?service=${encodeURIComponent(service)}`;
+      return '';
+    }
+
+    const query = buildGroupQuery();
     const url = `${API_BASE}/reviews${query}`;
     async function load() {
       try {

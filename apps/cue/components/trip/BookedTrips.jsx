@@ -52,11 +52,13 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
     const image =
       findImageForProgram(trip.name) ||
       findImageForProgram((trip.lines && trip.lines[0] && trip.lines[0].service) || '');
-    const status = isPast
-      ? 'Completed'
-      : trip.status
-        ? trip.status.charAt(0).toUpperCase() + trip.status.slice(1)
-        : 'Booked';
+    function pickStatusLabel() {
+      if (isPast) return 'Completed';
+      if (trip.status) return trip.status.charAt(0).toUpperCase() + trip.status.slice(1);
+      return 'Booked';
+    }
+
+    const status = pickStatusLabel();
     const isOpen = openRef === trip.ref;
     const items = trip.lines || [];
     return (

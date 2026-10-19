@@ -68,17 +68,20 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
     }
   }
 
-  return (
-    <div className={cn('relative', className)} data-mosaic={images.length}>
-      {images.length === 1 ? (
-        <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{renderTile(0, TILE)}</div>
-      ) : images.length === 2 ? (
+  function renderPhotoMosaic() {
+    if (images.length === 1) return <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{renderTile(0, TILE)}</div>;
+    if (images.length === 2)
+      return (
         <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>
           {images.map((image, index) => renderTile(index, TILE))}
         </div>
-      ) : (
-        <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{tileGroups}</div>
-      )}
+      );
+    return <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{tileGroups}</div>;
+  }
+
+  return (
+    <div className={cn('relative', className)} data-mosaic={images.length}>
+      {renderPhotoMosaic()}
 
       {moreLabel && onOpen ? (
         <button type="button" className={MORE_BTN} onClick={() => onOpen(0)}>

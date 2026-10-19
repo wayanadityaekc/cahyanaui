@@ -111,6 +111,12 @@ export default function Select({
     </div>
   );
 
+  function pickControlClasses() {
+    if (!selected) return CONTROL_VAL_PLACEHOLDER;
+    if (selected.flag) return `${CONTROL_VAL} ${CONTROL_VAL_FLAG}`;
+    return CONTROL_VAL;
+  }
+
   return (
     <div className={clsx(CSEL_GROUP, className)} ref={groupRef}>
       <select
@@ -150,11 +156,7 @@ export default function Select({
             </span>
           </span>
         ) : (
-          <span
-            className={
-              !selected ? CONTROL_VAL_PLACEHOLDER : selected.flag ? `${CONTROL_VAL} ${CONTROL_VAL_FLAG}` : CONTROL_VAL
-            }
-          >
+          <span className={pickControlClasses()}>
             {selected && selected.flag && (
               <img className={HS_OPT_FLAG} src={`/assets/flags/${selected.flag}.svg`} alt="" />
             )}

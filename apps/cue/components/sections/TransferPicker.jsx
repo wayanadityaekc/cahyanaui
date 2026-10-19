@@ -36,13 +36,25 @@ export default function TransferPicker() {
   const { from, to, pickFrom: handleFromPick, pickTo: handleToPick, pickerRef } = useTransferRoute();
   const [isReturn, setIsReturn] = useState(false);
 
-  const area = from === UBUD ? to : to === UBUD ? from : '';
+  function pickOtherPlace() {
+    if (from === UBUD) return to;
+    if (to === UBUD) return from;
+    return '';
+  }
+
+  const area = pickOtherPlace();
   const routeName = area && area !== UBUD ? `${area} – Ubud` : '';
   const entry = catalog && routeName ? catalog.transfers.find((transfer) => transfer.route === routeName) : null;
 
   const symbol = (catalog && catalog.symbol) || '$';
   const base = entry ? entry.display : null;
-  const amount = base == null ? null : isReturn ? Math.round(base * 2 * RETURN_TRIP_DISCOUNT_FACTOR) : base;
+  function calculateTransferAmount() {
+    if (base == null) return null;
+    if (isReturn) return Math.round(base * 2 * RETURN_TRIP_DISCOUNT_FACTOR);
+    return base;
+  }
+
+  const amount = calculateTransferAmount();
   const priceText = amount == null ? '—' : symbol + amount.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
   const options = [

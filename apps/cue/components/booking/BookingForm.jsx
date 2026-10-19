@@ -95,13 +95,33 @@ export default function BookingForm({
     return amount == null ? '-' : symbol + amount.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US');
   }
 
-  const band = entry ? (effectiveMode === 'exclusive' && entry.exclusive ? entry.exclusive : entry.standard) : null;
-  const display = band ? band.display : transferEntry ? transferEntry.display : null;
+  function pickPriceEntry() {
+    if (entry) {
+      if (effectiveMode === 'exclusive' && entry.exclusive) return entry.exclusive;
+      return entry.standard;
+    }
+    return null;
+  }
+
+  const band = pickPriceEntry();
+  function pickDisplayPrice() {
+    if (band) return band.display;
+    if (transferEntry) return transferEntry.display;
+    return null;
+  }
+
+  const display = pickDisplayPrice();
   const priceText = formatPrice(display);
 
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
-  const timeCategory = entry ? entry.category : type === 'transfer' ? 'transfer' : null;
+  function pickCategory() {
+    if (entry) return entry.category;
+    if (type === 'transfer') return 'transfer';
+    return null;
+  }
+
+  const timeCategory = pickCategory();
 
   const unit = priceUnit(perPerson, displayGuests);
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
@@ -139,7 +159,13 @@ export default function BookingForm({
     ? 'max-w-none m-0 py-6 px-[1.4rem] rounded-none bg-white border-none text-left'
     : 'max-w-[900px] min-[993px]:max-w-[1100px] mx-auto p-8 rounded-md bg-white text-left';
   function typeBtn(active, disabled) {
-    return `flex-1 py-2 px-2 border-none rounded-sm font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${disabled ? 'text-muted bg-transparent cursor-not-allowed opacity-60' : active ? 'text-white bg-cta cursor-pointer' : 'text-green bg-transparent cursor-pointer'}`;
+    function pickTabClasses() {
+      if (disabled) return 'text-muted bg-transparent cursor-not-allowed opacity-60';
+      if (active) return 'text-white bg-cta cursor-pointer';
+      return 'text-green bg-transparent cursor-pointer';
+    }
+
+    return `flex-1 py-2 px-2 border-none rounded-sm font-body text-small font-semibold transition-[background-color,color,scale] duration-[var(--dur)] ease-[ease] ${pickTabClasses()}`;
   }
   return (
     <section className={sectionCls} id="booking">

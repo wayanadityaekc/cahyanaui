@@ -80,11 +80,13 @@ export default function BookedTrips({
         const image = imageFor(trip);
         const lines = trip.lines || [];
         const isOpen = openRef === trip.ref;
-        const status = past
-          ? mergedCopy.completed
-          : trip.status
-            ? STATUS[trip.status] || trip.status.charAt(0).toUpperCase() + trip.status.slice(1)
-            : mergedCopy.booked;
+        function pickStatusLabel() {
+          if (past) return mergedCopy.completed;
+          if (trip.status) return STATUS[trip.status] || trip.status.charAt(0).toUpperCase() + trip.status.slice(1);
+          return mergedCopy.booked;
+        }
+
+        const status = pickStatusLabel();
         return (
           <div className={TRIP_CARD} key={trip.ref}>
             <div className={TRIP_HEAD}>

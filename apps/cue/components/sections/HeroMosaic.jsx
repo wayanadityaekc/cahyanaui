@@ -82,14 +82,14 @@ export default function HeroMosaic({ photos = [], title }) {
       }
     });
 
-  const gallery =
-    photos.length === 1 ? (
-      <div className={STATIC_1}>{renderTile(0, TILE_BASE)}</div>
-    ) : photos.length === 2 ? (
-      <div className={STATIC_2}>{photos.map((photo, index) => renderTile(index, TILE_BASE))}</div>
-    ) : (
-      <Slider gridClassName={TRACK}>{tiles}</Slider>
-    );
+  function renderHeroMosaic() {
+    if (photos.length === 1) return <div className={STATIC_1}>{renderTile(0, TILE_BASE)}</div>;
+    if (photos.length === 2)
+      return <div className={STATIC_2}>{photos.map((photo, index) => renderTile(index, TILE_BASE))}</div>;
+    return <Slider gridClassName={TRACK}>{tiles}</Slider>;
+  }
+
+  const gallery = renderHeroMosaic();
 
   return (
     <>

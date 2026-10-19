@@ -30,7 +30,13 @@ export function InfoBoxList({ items = [], variant = '', render = null }) {
 }
 
 export function InfoBox({ title, variant, children }) {
-  const cls = variant === 'no' ? BOX_NO : variant === 'yes' ? BOX_FRAMED : BOX_TEXT;
+  function pickBoxClasses() {
+    if (variant === 'no') return BOX_NO;
+    if (variant === 'yes') return BOX_FRAMED;
+    return BOX_TEXT;
+  }
+
+  const cls = pickBoxClasses();
   return (
     <div className={cls}>
       {title && <h3 className={BOX_TITLE}>{title}</h3>}

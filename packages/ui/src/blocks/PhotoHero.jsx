@@ -103,11 +103,17 @@ export default function PhotoHero({
         <div className={STRIP} data-photo-hero-strip>
           {thumbs.map((photo, index) => {
             const isMore = hasMore && index === THUMBS_SHOWN - 1;
+            function pickThumbClasses() {
+              if (isMore) return THUMB_OFF;
+              if (index === active) return THUMB_ON;
+              return THUMB_OFF;
+            }
+
             return (
               <button
                 type="button"
                 key={`${photo.src}${index}`}
-                className={cn(THUMB, isMore ? THUMB_OFF : index === active ? THUMB_ON : THUMB_OFF)}
+                className={cn(THUMB, pickThumbClasses())}
                 onClick={() => (isMore ? open(index) : setActive(index))}
                 aria-pressed={isMore ? undefined : index === active}
                 aria-label={isMore ? `${moreLabel} (${images.length})` : `${photoLabel} ${index + 1}`}

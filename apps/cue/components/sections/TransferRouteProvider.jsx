@@ -5,7 +5,17 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState } fro
 const UBUD = 'Ubud';
 
 function pickFacingRoute(value) {
-  return (other) => (!value ? other : value === UBUD ? (other === UBUD ? '' : other) : UBUD);
+  return (other) => {
+    function resolveRouteEnd() {
+      if (!value) return other;
+      if (value === UBUD) {
+        if (other === UBUD) return '';
+        return other;
+      }
+      return UBUD;
+    }
+    return resolveRouteEnd();
+  };
 }
 
 const Ctx = createContext(null);

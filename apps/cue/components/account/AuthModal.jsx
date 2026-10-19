@@ -142,18 +142,20 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     reset();
   }
 
-  const title =
-    stage === 'code'
-      ? 'Enter your code'
-      : view === 'signin'
-        ? isForBooking
-          ? 'Sign in to book'
-          : 'Sign in'
-        : 'Create your account';
+  function pickAuthTitle() {
+    if (stage === 'code') return 'Enter your code';
+    if (view === 'signin') {
+      if (isForBooking) return 'Sign in to book';
+      return 'Sign in';
+    }
+    return 'Create your account';
+  }
 
-  return (
-    <Modal open={open} onClose={handleClose} title={title}>
-      {stage === 'code' ? (
+  const title = pickAuthTitle();
+
+  function renderAuthStage() {
+    if (stage === 'code')
+      return (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5] text-center">
             We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
@@ -207,7 +209,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             </button>
           </p>
         </>
-      ) : view === 'signin' ? (
+      );
+    if (view === 'signin')
+      return (
         <>
           <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
             {isForBooking ? (
@@ -257,91 +261,97 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             </button>
           </p>
         </>
-      ) : (
-        <>
-          <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
-            No password - we&apos;ll recognise you by email &amp; phone.
-          </p>
-          <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-name">
-              Your Name
-            </label>
-            <input
-              className={CONTACT_INPUT}
-              type="text"
-              id="auth-name"
-              placeholder="Enter your name"
-              value={form.name}
-              onChange={set('name')}
-              autoComplete="name"
-              aria-invalid={!!errors.name}
-            />
-            {errors.name && (
-              <small role="alert" className={FIELD_ERR}>
-                {errors.name}
-              </small>
-            )}
-          </div>
-          <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-cemail">
-              Email
-            </label>
-            <input
-              className={CONTACT_INPUT}
-              type="email"
-              id="auth-cemail"
-              placeholder="you@email.com"
-              value={form.email}
-              onChange={set('email')}
-              autoComplete="email"
-              aria-invalid={!!errors.email}
-            />
-            {errors.email && (
-              <small role="alert" className={FIELD_ERR}>
-                {errors.email}
-              </small>
-            )}
-          </div>
-          <div className={CONTACT_GROUP}>
-            <label className={FIELD_LABEL} htmlFor="auth-phone">
-              Phone / WhatsApp
-            </label>
-            <input
-              className={CONTACT_INPUT}
-              type="tel"
-              id="auth-phone"
-              placeholder="+62 ..."
-              value={form.phone}
-              onChange={set('phone')}
-              autoComplete="tel"
-              aria-invalid={!!errors.phone}
-            />
-            {errors.phone && (
-              <small role="alert" className={FIELD_ERR}>
-                {errors.phone}
-              </small>
-            )}
-          </div>
-          {message && (
-            <small role="alert" className={REFMSG_ERR}>
-              {message}
+      );
+    return (
+      <>
+        <p className="m-0 mb-[1.1rem] text-muted text-small leading-[1.5]">
+          No password - we&apos;ll recognise you by email &amp; phone.
+        </p>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="auth-name">
+            Your Name
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="text"
+            id="auth-name"
+            placeholder="Enter your name"
+            value={form.name}
+            onChange={set('name')}
+            autoComplete="name"
+            aria-invalid={!!errors.name}
+          />
+          {errors.name && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.name}
             </small>
           )}
-          <button type="button" className={BTN} onClick={handleAccountCreate} disabled={isBusy}>
-            {isBusy ? 'Creating...' : 'Create Account'}
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="auth-cemail">
+            Email
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="email"
+            id="auth-cemail"
+            placeholder="you@email.com"
+            value={form.email}
+            onChange={set('email')}
+            autoComplete="email"
+            aria-invalid={!!errors.email}
+          />
+          {errors.email && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.email}
+            </small>
+          )}
+        </div>
+        <div className={CONTACT_GROUP}>
+          <label className={FIELD_LABEL} htmlFor="auth-phone">
+            Phone / WhatsApp
+          </label>
+          <input
+            className={CONTACT_INPUT}
+            type="tel"
+            id="auth-phone"
+            placeholder="+62 ..."
+            value={form.phone}
+            onChange={set('phone')}
+            autoComplete="tel"
+            aria-invalid={!!errors.phone}
+          />
+          {errors.phone && (
+            <small role="alert" className={FIELD_ERR}>
+              {errors.phone}
+            </small>
+          )}
+        </div>
+        {message && (
+          <small role="alert" className={REFMSG_ERR}>
+            {message}
+          </small>
+        )}
+        <button type="button" className={BTN} onClick={handleAccountCreate} disabled={isBusy}>
+          {isBusy ? 'Creating...' : 'Create Account'}
+        </button>
+        <p className="mt-4 text-center text-small text-muted">
+          Already have an account?{' '}
+          <button
+            type="button"
+            className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
+            onClick={() => swap('signin')}
+          >
+            Sign in
           </button>
-          <p className="mt-4 text-center text-small text-muted">
-            Already have an account?{' '}
-            <button
-              type="button"
-              className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-              onClick={() => swap('signin')}
-            >
-              Sign in
-            </button>
-          </p>
-        </>
-      )}
+        </p>
+      </>
+    );
+  }
+
+  return (
+    <Modal open={open} onClose={handleClose} title={title}>
+      {renderAuthStage()}
     </Modal>
   );
 }

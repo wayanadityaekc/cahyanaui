@@ -128,7 +128,14 @@ export default function AvailabilityCalendar({
     const booked = !ok && isBookedNight(busy, day);
     const isEdgeDay = day === checkIn || day === checkOut;
     const inside = checkIn && checkOut && day > checkIn && day < checkOut;
-    const status = isEdgeDay ? 'selected' : booked ? 'booked' : ok ? 'available' : 'unavailable';
+    function pickDayState() {
+      if (isEdgeDay) return 'selected';
+      if (booked) return 'booked';
+      if (ok) return 'available';
+      return 'unavailable';
+    }
+
+    const status = pickDayState();
     return (
       <div
         key={day}
@@ -187,13 +194,14 @@ export default function AvailabilityCalendar({
     );
   }
 
-  const hint = loading
-    ? 'Loading availability...'
-    : !checkIn
-      ? 'Pick your check-in date.'
-      : !checkOut
-        ? `Now pick your check-out date (${minNights}-night minimum).`
-        : `${formatShortDate(checkIn)} - ${formatShortDate(checkOut)} · ${nights} night${nights === 1 ? '' : 's'}`;
+  function buildAvailabilityHint() {
+    if (loading) return 'Loading availability...';
+    if (!checkIn) return 'Pick your check-in date.';
+    if (!checkOut) return `Now pick your check-out date (${minNights}-night minimum).`;
+    return `${formatShortDate(checkIn)} - ${formatShortDate(checkOut)} · ${nights} night${nights === 1 ? '' : 's'}`;
+  }
+
+  const hint = buildAvailabilityHint();
 
   return (
     <div className="w-full" data-availability-calendar>

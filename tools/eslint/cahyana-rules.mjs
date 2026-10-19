@@ -42,11 +42,12 @@ function containsLexicalThis(rootNode) {
   return hasLexicalThis;
 }
 
-function isConvertiblePlacement(declaration) {
+function isConvertiblePlacement(declaration, isModule) {
   const holder = declaration.parent.type === 'ExportNamedDeclaration' ? declaration.parent : declaration;
   const container = holder.parent;
   if (container.type === 'Program') return true;
-  return container.type === 'BlockStatement' && isFunctionNode(container.parent);
+  if (container.type !== 'BlockStatement') return false;
+  return isModule || isFunctionNode(container.parent);
 }
 
 function buildFunctionDeclaration(sourceCode, declaration) {
@@ -97,7 +98,7 @@ const functionDeclarationRule = {
         const canFix =
           declaration.kind === 'const' &&
           declaration.declarations.length === 1 &&
-          isConvertiblePlacement(declaration) &&
+          isConvertiblePlacement(declaration, context.languageOptions.sourceType === 'module') &&
           !(isArrow && containsLexicalThis(fn));
         const report = { node: declarator, message: `Use a function declaration for ${declarator.id.name}.` };
         if (canFix) {
@@ -227,9 +228,15 @@ function suggestNameFor(variable) {
     const isFetchResult =
       definition.type === 'Variable' &&
       (isCallTo(definition.node.init, 'fetch') || isCallTo(definition.node.init, 'apiFetch'));
+    const pattern = definition.name.parent && definition.name.parent.parent;
+    const isInPatternWithReq =
+      Boolean(pattern) &&
+      pattern.type === 'ObjectPattern' &&
+      pattern.properties.some((property) => property.key && property.key.name === 'req');
     const isHandlerParam =
       definition.type === 'Parameter' &&
-      definition.node.params.some((param) => param.type === 'Identifier' && param.name === 'req');
+      (isInPatternWithReq ||
+        definition.node.params.some((param) => param.type === 'Identifier' && param.name === 'req'));
     return isFetchResult || isHandlerParam ? 'response' : 'result';
   }
   if (definition.type === 'Variable' && definition.node.id.type === 'Identifier') {
@@ -394,7 +401,17 @@ export const plugin = {
   },
 };
 
-export function cahyanaConfig({ files, globals = {}, sourceType = 'module', ignores = [], extraRules = {} }) {
+export function cahyanaConfig({
+  files,
+  globals = {},
+  sourceType = 'module',
+  ignores = [],
+  extraRules = {},
+  commonjsFiles = [],
+}) {
+  const commonjsBlock = commonjsFiles.length
+    ? [{ files: commonjsFiles, languageOptions: { sourceType: 'commonjs' } }]
+    : [];
   return [
     { ignores: ['**/node_modules/**', '**/.next/**', '**/out/**', '**/public/**', '**/.turbo/**', ...ignores] },
     {
@@ -424,5 +441,6 @@ export function cahyanaConfig({ files, globals = {}, sourceType = 'module', igno
         ...extraRules,
       },
     },
+    ...commonjsBlock,
   ];
 }

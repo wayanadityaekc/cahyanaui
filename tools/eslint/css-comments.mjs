@@ -4,7 +4,6 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 
 const require = createRequire(join(process.cwd(), 'package.json'));
-const postcss = require('postcss');
 const isFixMode = process.argv.includes('--fix');
 const IGNORED_PATHS = /(^|\/)(node_modules|public|out|\.next)\//;
 
@@ -15,7 +14,7 @@ function listCssFiles() {
   return output.split('\n').filter((file) => file && !IGNORED_PATHS.test(file));
 }
 
-function stripComments(cssText) {
+function stripComments(postcss, cssText) {
   const root = postcss.parse(cssText);
   let commentCount = 0;
   root.walkComments((comment) => {
@@ -42,9 +41,11 @@ function stripComments(cssText) {
   return { text: root.toString(), commentCount };
 }
 
-const results = listCssFiles().map((file) => {
+const cssFiles = listCssFiles();
+const postcss = cssFiles.length ? require('postcss') : null;
+const results = cssFiles.map((file) => {
   const original = readFileSync(file, 'utf8');
-  const { text, commentCount } = stripComments(original);
+  const { text, commentCount } = stripComments(postcss, original);
   if (isFixMode && commentCount) writeFileSync(file, text);
   return { file, commentCount };
 });

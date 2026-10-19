@@ -279,6 +279,21 @@ card opens the full text in a popup, "See all reviews" actually links to
 export), and that page's own cards are click-to-detail too.
 Run against the built pages: npm run build && npm run serve (port 4000).
 
+## apps/cue/verify-reviews3.mjs
+
+Reviews on the three pages that are not detail pages, and the email link that
+has to land ON the review rather than near it.
+
+## apps/cue/verify-sale.mjs
+
+The seasonal sale, as a guest sees it. The server side is pinned by
+promo-test.js in cahyana-api; this is only about what reaches the screen.
+
+THE RULE BEING TESTED is "strike it through only when the two numbers really
+differ" - not "a sale is running". A card that crosses a number out because a
+flag was set somewhere is exactly the invented discount BookBar deliberately
+refused to copy from GetYourGuide.
+
 ## apps/cue/verify-settings.mjs
 
 WO3 (Sep 2026): settings page grows a large avatar, "My reviews", and

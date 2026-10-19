@@ -29,14 +29,14 @@ export default function TransferRoutes() {
       <h2 className={`${SECTION_TITLE} ${ST_LEFT}`}>{TRANSFER.routesTitle}</h2>
       <p className="text-muted text-[0.8rem] mt-[0.2rem] mb-[1.4rem]">{TRANSFER.routesNote}</p>
       <div className="grid grid-cols-2 max-[768px]:grid-cols-1 gap-[0.6rem] mb-[var(--space-5)]">
-        {TRANSFER.routes.map((r) =>
-          r.key === 'Airport' ? (
-            <a className={CARD} href="/airport-transfer.html?dir=pickup" key={r.key}>
-              <Face r={r} />
+        {TRANSFER.routes.map((route) =>
+          route.key === 'Airport' ? (
+            <a className={CARD} href="/airport-transfer.html?dir=pickup" key={route.key}>
+              <Face r={route} />
             </a>
           ) : (
-            <button type="button" className={CARD} key={r.key} onClick={() => selectRoute(r.key)}>
-              <Face r={r} />
+            <button type="button" className={CARD} key={route.key} onClick={() => selectRoute(route.key)}>
+              <Face r={route} />
             </button>
           ),
         )}

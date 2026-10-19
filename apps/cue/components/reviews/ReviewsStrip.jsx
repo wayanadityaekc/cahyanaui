@@ -26,8 +26,8 @@ export default function ReviewsStrip({
     const url = `${API_BASE}/reviews${query}`;
     async function load() {
       try {
-        const r = await fetch(url);
-        const d = r.ok ? await r.json() : [];
+        const response = await fetch(url);
+        const d = response.ok ? await response.json() : [];
         if (!cancelled) setRows(Array.isArray(d) ? d : []);
       } catch (e) {
         if (!cancelled) setRows([]);

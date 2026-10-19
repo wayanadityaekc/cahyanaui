@@ -3,8 +3,8 @@ import { API_BASE } from './constants';
 async function post(path, body, token) {
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers.Authorization = `Bearer ${token}`;
-  const r = await fetch(`${API_BASE}${path}`, { method: 'POST', headers, body: JSON.stringify(body) });
-  return r.json();
+  const response = await fetch(`${API_BASE}${path}`, { method: 'POST', headers, body: JSON.stringify(body) });
+  return response.json();
 }
 
 export function quote({ lines, currency, stay, referral }) {
@@ -25,6 +25,6 @@ export function submitContact({ name, email, message }) {
 
 export async function catalog({ currency = 'USD', guests = 2, stay = '' } = {}) {
   const query = new URLSearchParams({ currency, guests: String(guests), stay: stay || '' });
-  const r = await fetch(`${API_BASE}/pricing/catalog?${query}`);
-  return r.ok ? r.json() : null;
+  const response = await fetch(`${API_BASE}/pricing/catalog?${query}`);
+  return response.ok ? response.json() : null;
 }

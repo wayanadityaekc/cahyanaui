@@ -9,7 +9,7 @@ function digits(t) { return Number(String(t).replace(/[^0-9]/g, '')); }
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 for (const [cur, w] of [['AUD', 390], ['JPY', 1280]]) {
   const cat = await (await fetch(`${API}/pricing/catalog?currency=${cur}&guests=2&stay=`)).json();
-  const q = await (await fetch(`${API}/pricing/quote`, {
+  const data = await (await fetch(`${API}/pricing/quote`, {
     method: 'POST', headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ currency: cur, lines: [{ service: 'Ubud Tour', guests: 2 }] }),
   })).json();
@@ -50,7 +50,7 @@ for (const [cur, w] of [['AUD', 390], ['JPY', 1280]]) {
   const depAmt = digits((depLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
   const fullAmt = digits((fullLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
   ok(depAmt === cat.deposit.display, `${cur}/${w}: deposit shown ${depAmt} = catalog ${cat.deposit.display}`);
-  ok(fullAmt === q.total.display, `${cur}/${w}: pay in full shown ${fullAmt} = quote ${q.total.display}`);
+  ok(fullAmt === data.total.display, `${cur}/${w}: pay in full shown ${fullAmt} = quote ${data.total.display}`);
   ok(new RegExp(cat.symbol.trim().replace('$', '\\$')).test(depLine), `${cur}/${w}: deposit in ${cat.symbol}`);
   await page.screenshot({ path: `/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scratchpad/pay-${cur}-${w}.png` });
   ok(errs.length === 0, `${cur}/${w}: no page errors (${errs.join(' | ')})`);

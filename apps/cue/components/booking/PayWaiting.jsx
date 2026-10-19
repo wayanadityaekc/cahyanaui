@@ -36,19 +36,19 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     const started = Date.now();
     async function ask() {
       try {
-        const r = await fetch(`${API_BASE}/booking-status/${encodeURIComponent(bookingRef)}`, {
+        const response = await fetch(`${API_BASE}/booking-status/${encodeURIComponent(bookingRef)}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (stop) return;
-        if (r.status === 401 || r.status === 404) { setPhase('blind'); return; }
-        const d = await r.json().catch(() => null);
+        if (response.status === 401 || response.status === 404) { setPhase('blind'); return; }
+        const data = await response.json().catch(() => null);
         if (stop) return;
-        if (d && d.payment === 'paid') {
+        if (data && data.payment === 'paid') {
           setPhase('paid');
           if (typeof onConfirmed === 'function') onConfirmed();
           return;
         }
-        if (d && d.payment === 'mismatch') { setPhase('mismatch'); return; }
+        if (data && data.payment === 'mismatch') { setPhase('mismatch'); return; }
       } catch (e) {
       }
       if (stop) return;

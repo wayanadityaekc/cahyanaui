@@ -125,11 +125,11 @@ export default function BookConfirmModal() {
   async function doOtpVerify(code) {
     setOtpMsg('');
     setOtpBusy(true);
-    const res = await verifyCode(signinEmail, code);
+    const result = await verifyCode(signinEmail, code);
     setOtpBusy(false);
-    if (res.ok) { setOtpVerified(true); setOtpCode(''); return; }
+    if (result.ok) { setOtpVerified(true); setOtpCode(''); return; }
     setOtpCode('');
-    setOtpMsg(res.error || 'Sorry, something went wrong. Please try again.');
+    setOtpMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
   async function resendOtp() {
     if (otpCooldown > 0 || otpBusy) return;

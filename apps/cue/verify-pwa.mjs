@@ -21,19 +21,19 @@ function appMode(page) {
 
 function box(page, sel) {
   return page.evaluate((s) => {
-    const el = document.querySelector(s);
-    if (!el) return null;
-    const cs = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
+    const element = document.querySelector(s);
+    if (!element) return null;
+    const cs = getComputedStyle(element);
+    const r = element.getBoundingClientRect();
     return { display: cs.display, h: Math.round(r.height), bottom: Math.round(r.bottom) };
   }, sel);
 }
 
 function bottomBars(page) {
   return page.evaluate(() => [...document.querySelectorAll('[data-appnav], .stickybar, .footerbar')]
-    .filter((el) => {
-      const cs = getComputedStyle(el);
-      const r = el.getBoundingClientRect();
+    .filter((element) => {
+      const cs = getComputedStyle(element);
+      const r = element.getBoundingClientRect();
       return cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0
         && Math.abs(r.bottom - window.innerHeight) < 2;
     }).length);
@@ -53,8 +53,8 @@ function bottomBars(page) {
 
   ok(classes.length >= 3, `css: only ${classes.length} standalone utilities compiled - interpolated class names never reach Tailwind`);
 
-  classes.forEach((c) => {
-    const re = new RegExp(`${esc(c)}(?:[^{,]*)\\{([^}]*)\\}`, 'g');
+  classes.forEach((classe) => {
+    const re = new RegExp(`${esc(classe)}(?:[^{,]*)\\{([^}]*)\\}`, 'g');
     let m;
     const branches = { media: [], attr: [] };
     while ((m = re.exec(css)) !== null) {
@@ -65,11 +65,11 @@ function bottomBars(page) {
     }
     const mediaHit = branches.media.find((b) => b.before.includes('display-mode:standalone'));
     const attrHit = branches.attr[0];
-    ok(!!mediaHit, `css ${c}: no (display-mode: standalone) rule - installed Android/iOS 16.4+ would get nothing`);
-    ok(!!attrHit, `css ${c}: no html[data-standalone] rule - older iPhones would get nothing`);
+    ok(!!mediaHit, `css ${classe}: no (display-mode: standalone) rule - installed Android/iOS 16.4+ would get nothing`);
+    ok(!!attrHit, `css ${classe}: no html[data-standalone] rule - older iPhones would get nothing`);
     if (mediaHit && attrHit) {
-      ok(mediaHit.decl === attrHit.decl, `css ${c}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`);
-      ok(mediaHit.scoped && attrHit.scoped, `css ${c}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`);
+      ok(mediaHit.decl === attrHit.decl, `css ${classe}: branches declare different things ("${mediaHit.decl}" vs "${attrHit.decl}")`);
+      ok(mediaHit.scoped && attrHit.scoped, `css ${classe}: one branch is not width-scoped (media ${mediaHit.scoped}, attr ${attrHit.scoped})`);
     }
   });
 }
@@ -86,7 +86,7 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
     const nav = await box(page, '[data-appnav]');
     ok(nav && nav.display === 'none', `tab ${path}: app bar is showing in a browser tab`);
     const navChat = await page.evaluate(() => {
-      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((el) => !el.closest('[data-appnav]'));
+      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((element) => !element.closest('[data-appnav]'));
       return b ? getComputedStyle(b).display : null;
     });
     ok(navChat && navChat !== 'none', `tab ${path}: navbar chat icon vanished in a browser tab`);
@@ -111,11 +111,11 @@ const browser = await chromium.launch({ executablePath: process.env.PW_BIN || '/
   ok(head.title === 'Cahyana', `head: apple app title is "${head.title}"`);
 
   const mf = await page.evaluate(async () => {
-    const r = await fetch('/manifest.webmanifest');
-    if (!r.ok) return { status: r.status };
-    const j = await r.json();
+    const response = await fetch('/manifest.webmanifest');
+    if (!response.ok) return { status: response.status };
+    const j = await response.json();
     function by(p) { return (j.icons || []).filter((i) => i.purpose === p).map((i) => i.sizes).sort().join(','); }
-    return { status: r.status, display: j.display, start: j.start_url, any: by('any'), maskable: by('maskable') };
+    return { status: response.status, display: j.display, start: j.start_url, any: by('any'), maskable: by('maskable') };
   });
   ok(mf.status === 200, `manifest: HTTP ${mf.status}`);
   ok(mf.display === 'standalone', `manifest: display is "${mf.display}"`);
@@ -166,7 +166,7 @@ for (const w of [390, 768]) {
     }
 
     const navChat = await page.evaluate(() => {
-      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((el) => !el.closest('[data-appnav]'));
+      const b = [...document.querySelectorAll('button[aria-label="Chat with us"]')].find((element) => !element.closest('[data-appnav]'));
       return b ? getComputedStyle(b).display : null;
     });
     ok(navChat === 'none', `${w}${path}: navbar chat icon still visible in app mode (${navChat})`);

@@ -12,7 +12,7 @@ const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/jav
   '.txt': 'text/plain', '.xml': 'application/xml', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg',
   '.webp': 'image/webp', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff' };
 function serve(root, port) {
-  return new Promise((res) => {
+  return new Promise((result) => {
     const s = http.createServer((req, rsp) => {
       let p = decodeURIComponent(req.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
@@ -21,7 +21,7 @@ function serve(root, port) {
       if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { rsp.writeHead(404); return rsp.end('nf'); }
       rsp.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' });
       rsp.end(fs.readFileSync(f));
-    }).listen(port, () => res(s));
+    }).listen(port, () => result(s));
   });
 }
 const sB = await serve(BEFORE, 4711);
@@ -69,8 +69,8 @@ async function measure(base, url, w) {
   const { ctx, page } = await open(base, url, w, { loggedIn: true });
   const r = await page.evaluate(() => {
     const hist = {};
-    document.querySelectorAll('body *').forEach((el) => {
-      const cs = getComputedStyle(el);
+    document.querySelectorAll('body *').forEach((element) => {
+      const cs = getComputedStyle(element);
       ['Top', 'Right', 'Bottom', 'Left'].forEach((s) => {
         if (parseFloat(cs[`border${s}Width`]) > 0 && cs[`border${s}Style`] !== 'none') {
           const k = `${cs[`border${s}Color`]}|${cs[`border${s}Style`]}`;
@@ -118,14 +118,14 @@ async function hoverShift(base, url, w, sel) {
   const n = Math.min(await els.count(), 3);
   const out = [];
   for (let i = 0; i < n; i++) {
-    const el = els.nth(i);
-    await el.scrollIntoViewIfNeeded();
+    const element = els.nth(i);
+    await element.scrollIntoViewIfNeeded();
     await page.mouse.move(2, 2);
     await page.waitForTimeout(350);
-    const r0 = await el.boundingBox();
-    await el.hover();
+    const r0 = await element.boundingBox();
+    await element.hover();
     await page.waitForTimeout(450);
-    const r1 = await el.boundingBox();
+    const r1 = await element.boundingBox();
     out.push(Math.abs(r1.y - r0.y) + Math.abs(r1.x - r0.x));
   }
   await ctx.close();

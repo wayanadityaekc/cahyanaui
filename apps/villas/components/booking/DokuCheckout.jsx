@@ -45,34 +45,34 @@ function adoptShell(before) {
 
 export default function DokuCheckout({ bookingRef, option, amountText }) {
   const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState('');
+  const [error, setErr] = useState('');
 
   async function startPayment() {
     setBusy(true);
     setErr('');
     try {
-      const r = await fetch(`${API_BASE}/doku/create-payment`, {
+      const response = await fetch(`${API_BASE}/doku/create-payment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
-      const d = await r.json().catch(() => null);
-      if (!r.ok || !d || !d.url) {
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data || !data.url) {
         setErr(
-          d && d.code === 'not_ready'
+          data && data.code === 'not_ready'
             ? 'Card payments are not available right now. Please go back and choose PayPal, or contact us.'
-            : (d && d.detail) || 'We could not start the payment. Please try again.',
+            : (data && data.detail) || 'We could not start the payment. Please try again.',
         );
         setBusy(false);
         return;
       }
 
-      if (d.checkout_js) {
+      if (data.checkout_js) {
         try {
-          await loadScript(d.checkout_js);
+          await loadScript(data.checkout_js);
           if (typeof window.loadJokulCheckout === 'function') {
             const before = new Set(document.body.children);
-            window.loadJokulCheckout(d.url);
+            window.loadJokulCheckout(data.url);
             adoptShell(before);
             requestAnimationFrame(() => adoptShell(before));
             setBusy(false);
@@ -81,7 +81,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
         } catch (e) {
         }
       }
-      window.location.href = d.url;
+      window.location.href = data.url;
     } catch (e) {
       setErr('We could not reach the payment page. Please check your connection and try again.');
       setBusy(false);
@@ -101,7 +101,7 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
       <p className="mt-2 text-small text-muted">
         DOKU's secure payment opens here - card, QRIS, bank transfer or e-wallet, charged in rupiah.
       </p>
-      {err ? <p className="mt-2 text-small text-err">{err}</p> : null}
+      {error ? <p className="mt-2 text-small text-err">{error}</p> : null}
     </div>
   );
 }

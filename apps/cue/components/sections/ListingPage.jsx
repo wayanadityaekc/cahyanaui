@@ -146,11 +146,11 @@ export default function ListingPage({ data, page }) {
             <h2 className={`${SECTION_TITLE} ${ST_LEFT}`}>{info.title}</h2>
             <InfoFacts items={info.facts} />
             <InfoBoxes>
-              {info.cols.map((c) => {
-                const variant = String(c.cls).includes('no') ? 'no' : 'yes';
+              {info.cols.map((col) => {
+                const variant = String(col.cls).includes('no') ? 'no' : 'yes';
                 return (
-                  <InfoBox key={c.title} title={c.title} variant={variant}>
-                    <InfoBoxList items={c.items} variant={variant} />
+                  <InfoBox key={col.title} title={col.title} variant={variant}>
+                    <InfoBoxList items={col.items} variant={variant} />
                   </InfoBox>
                 );
               })}

@@ -38,7 +38,7 @@ files.forEach((f) => {
       if (!tok.includes(':')) return;
       const parts = segments(tok);
       const last = parts.pop();
-      if (!parts.length || !parts.every((p) => VARIANT.test(p))) return;
+      if (!parts.length || !parts.every((part) => VARIANT.test(part))) return;
       if (last === '') bad.push([f, i + 1, tok, 'variant prefix with no utility after it']);
       else if (new Set(parts).size !== parts.length) bad.push([f, i + 1, tok, 'the same variant prefix twice']);
     });

@@ -83,7 +83,7 @@ export default function HeroMosaic({ photos = [], title }) {
     photos.length === 1 ? (
       <div className={STATIC_1}>{tile(0, TILE_BASE)}</div>
     ) : photos.length === 2 ? (
-      <div className={STATIC_2}>{photos.map((p, i) => tile(i, TILE_BASE))}</div>
+      <div className={STATIC_2}>{photos.map((photo, i) => tile(i, TILE_BASE))}</div>
     ) : (
       <Slider gridClassName={TRACK}>{children}</Slider>
     );

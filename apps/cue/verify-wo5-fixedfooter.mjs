@@ -43,11 +43,11 @@ for (const w of [390, 1280]) {
     const overlap = await page.evaluate(() => {
       const f = document.querySelector('footer');
       const fTop = f.getBoundingClientRect().top;
-      const kids = Array.from(document.body.children).filter((el) =>
-        el.tagName !== 'FOOTER' && getComputedStyle(el).display !== 'none' && getComputedStyle(el).position !== 'fixed');
+      const kids = Array.from(document.body.children).filter((element) =>
+        element.tagName !== 'FOOTER' && getComputedStyle(element).display !== 'none' && getComputedStyle(element).position !== 'fixed');
       let worst = 0;
-      kids.forEach((el) => {
-        const b = el.getBoundingClientRect().bottom;
+      kids.forEach((element) => {
+        const b = element.getBoundingClientRect().bottom;
         if (b > fTop) worst = Math.max(worst, b - fTop);
       });
       return worst;
@@ -73,8 +73,8 @@ for (const w of [390, 1280]) {
     await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
     const navDisplay = await page.evaluate(() => {
-      const el = document.querySelector('[data-appnav]');
-      return el ? getComputedStyle(el).display : null;
+      const element = document.querySelector('[data-appnav]');
+      return element ? getComputedStyle(element).display : null;
     });
     ok(navDisplay === 'none', `standalone/390${path}: app bottom bar did not yield to the fixed footer (display=${navDisplay})`);
     const footerFixed = await page.evaluate(() => {

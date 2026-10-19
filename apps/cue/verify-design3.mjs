@@ -30,13 +30,13 @@ for (const w of [390, 1280]) {
     const r = await page.goto(B + p, { waitUntil: 'load' });
     ok(r.status() === 200, `${w} ${p}: HTTP 200`);
     await page.waitForTimeout(350);
-    const res = await page.evaluate(() => {
+    const result = await page.evaluate(() => {
       const tok = getComputedStyle(document.documentElement).getPropertyValue('--shadow-card').trim();
       const tokNums = tok.replace(/rgba?\([^)]*\)/g, '').trim().split(/\s+/).filter(Boolean).map(parseFloat);
       const out = [];
       let n = 0, card = 0;
-      document.querySelectorAll('*').forEach((el) => {
-        const c = getComputedStyle(el);
+      document.querySelectorAll('*').forEach((element) => {
+        const c = getComputedStyle(element);
         const sh = c.boxShadow;
         if (!sh || sh === 'none') return;
         n++;
@@ -60,15 +60,15 @@ for (const w of [390, 1280]) {
           if (Math.abs(ox) > 0 || Math.abs(oy) > 0 || blur > 2) elevation = true;
         });
         if (elevation) {
-          out.push(`<${el.tagName.toLowerCase()} class="${(el.className || '').toString().slice(0, 55)}"> ${sh.slice(0, 60)}`);
+          out.push(`<${element.tagName.toLowerCase()} class="${(element.className || '').toString().slice(0, 55)}"> ${sh.slice(0, 60)}`);
         }
       });
       return { n, out, card, tok };
     });
-    seen += res.n;
-    cards[p] = res.card;
-    token = res.tok;
-    res.out.forEach((b) => { if (bad.length < 8) bad.push(`${p} ${b}`); });
+    seen += result.n;
+    cards[p] = result.card;
+    token = result.tok;
+    result.out.forEach((b) => { if (bad.length < 8) bad.push(`${p} ${b}`); });
   }
   ok(bad.length === 0, `${w}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`);
   ok(seen > 0, `${w}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
@@ -171,7 +171,7 @@ for (const w of [390, 1280]) {
       sl: Math.round(slot.left), sr: Math.round(slot.right), bw: Math.round(b.width),
       deskNav: !!document.querySelector('[data-desktop-nav]')?.getBoundingClientRect().width,
       crumbL: crumb ? Math.round(crumb.getBoundingClientRect().left) : null,
-      icons: icons.map((r) => ({ w: +r.width.toFixed(1), h: +r.height.toFixed(1), l: +r.left.toFixed(1), r: +r.right.toFixed(1) })),
+      icons: icons.map((icon) => ({ w: +icon.width.toFixed(1), h: +icon.height.toFixed(1), l: +icon.left.toFixed(1), r: +icon.right.toFixed(1) })),
     };
   });
   console.log(`     burger ${g.bl}-${g.br} · logo ${g.ll}-${g.lr} · akun ${g.sl}-${g.sr} · baris ${g.rowL}+${g.padL} .. ${g.rowR}-${g.padR}`);
@@ -185,7 +185,7 @@ for (const w of [390, 1280]) {
     ok(g.deskNav, `${w}: link halaman keliatan di bar desktop`);
   }
   ok((g.rowR - g.padR) - g.sr < 3, `${w}: slot akun nempel di gutter KANAN baris (${Math.round((g.rowR - g.padR) - g.sr)}px)`);
-  ok(g.icons.every((r) => r.r <= g.sr + 1), `${w}: slot akun paling kanan di klusternya`);
+  ok(g.icons.every((icon) => icon.r <= g.sr + 1), `${w}: slot akun paling kanan di klusternya`);
 
   console.log(`     gutter baris nav: kiri ${g.padL} · kanan ${g.padR} · token ${g.gutter}`);
   ok(Math.abs(g.padL - g.padR) < 0.5, `${w}: gutter kiri == kanan (${g.padL} vs ${g.padR})`);
@@ -196,25 +196,25 @@ for (const w of [390, 1280]) {
 
   const gaps = await page.evaluate(() => {
     const row = document.getElementById('hamburger').parentElement;
-    function ink(el) {
-      const svg = el.querySelector('svg');
+    function ink(element) {
+      const svg = element.querySelector('svg');
       if (svg) return svg.getBoundingClientRect();
-      const bars = [...el.querySelectorAll('span')]
+      const bars = [...element.querySelectorAll('span')]
         .filter((s) => getComputedStyle(s).position === 'static')
         .map((s) => s.getBoundingClientRect());
       if (!bars.length) return null;
       return { left: Math.min(...bars.map((b) => b.left)), right: Math.max(...bars.map((b) => b.right)) };
     }
     const out = [];
-    [...row.children].forEach((el) => {
-      if (el.getBoundingClientRect().width === 0) return;
-      if (el.querySelector('img')) return;
-      if (el.id === 'hamburger') return;
-      if (el.matches('[data-desktop-nav], nav')) return;
-      const visSvg = [...el.querySelectorAll('svg')].some((v) => v.getBoundingClientRect().width > 0);
-      const i = el.matches('[data-account-slot]') && !visSvg
-        ? el.querySelector('button').getBoundingClientRect() : ink(el);
-      if (i) out.push({ tag: el.id || el.getAttribute('aria-label') || el.tagName, l: i.left, r: i.right });
+    [...row.children].forEach((element) => {
+      if (element.getBoundingClientRect().width === 0) return;
+      if (element.querySelector('img')) return;
+      if (element.id === 'hamburger') return;
+      if (element.matches('[data-desktop-nav], nav')) return;
+      const visSvg = [...element.querySelectorAll('svg')].some((v) => v.getBoundingClientRect().width > 0);
+      const i = element.matches('[data-account-slot]') && !visSvg
+        ? element.querySelector('button').getBoundingClientRect() : ink(element);
+      if (i) out.push({ tag: element.id || element.getAttribute('aria-label') || element.tagName, l: i.left, r: i.right });
     });
     out.sort((a, b) => a.l - b.l);
     return out.slice(1).map((c, n) => ({ from: out[n].tag, to: c.tag, gap: +(c.l - out[n].r).toFixed(1) }));
@@ -231,7 +231,7 @@ for (const w of [390, 1280]) {
     const b = document.getElementById('hamburger').getBoundingClientRect();
     const panel = document.querySelector('header nav > ul');
     const pr = panel.getBoundingClientRect();
-    const el = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+    const element = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
     return {
       overlaps: b.right > pr.left && b.left < pr.right,
       panel: `${Math.round(pr.left)}-${Math.round(pr.right)}`,
@@ -240,8 +240,8 @@ for (const w of [390, 1280]) {
       panelR: Math.round(pr.right),
       panelL: Math.round(pr.left),
       closeVisible: !!document.querySelector('#nav-menu button[aria-label="Close menu"]')?.getBoundingClientRect().width,
-      hit: el ? (el.id || el.tagName) : 'none',
-      hitCls: el ? (el.className || '').toString().slice(0, 40) : '',
+      hit: element ? (element.id || element.tagName) : 'none',
+      hitCls: element ? (element.className || '').toString().slice(0, 40) : '',
     };
   });
   console.log(`     drawer ${d.panel} · burger ${d.burger} · hit-test ${d.hit} "${d.hitCls}"`);

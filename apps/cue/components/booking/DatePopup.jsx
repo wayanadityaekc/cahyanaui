@@ -73,9 +73,9 @@ export default function DatePopup({
           </div>
           <div className={CAL_GRID}>
             {DOW.map((d) => <span className={CAL_DOW} key={d}>{d}</span>)}
-            {cells.map((d, i) => {
-              if (!d) return <span className={calDay(true)} key={`e${i}`} />;
-              const v = iso(d);
+            {cells.map((cell, i) => {
+              if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
+              const v = iso(cell);
               const past = v < today;
               return (
                 <button
@@ -86,7 +86,7 @@ export default function DatePopup({
                   disabled={past}
                   onClick={() => setSel(v)}
                 >
-                  {d.getDate()}
+                  {cell.getDate()}
                 </button>
               );
             })}

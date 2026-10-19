@@ -73,16 +73,16 @@ for (const w of [390, 1280]) {
   await page.locator('[data-mosaic-tile]:visible').first().click();
   await page.waitForTimeout(500);
   const state = await page.evaluate(() => {
-    const el = document.querySelector('[data-photogrid]');
-    const r = el.getBoundingClientRect();
-    const imgs = el.querySelectorAll('img');
-    const chrome = el.querySelectorAll('button');
+    const element = document.querySelector('[data-photogrid]');
+    const r = element.getBoundingClientRect();
+    const imgs = element.querySelectorAll('img');
+    const chrome = element.querySelectorAll('button');
     return {
-      open: el.dataset.photogrid,
+      open: element.dataset.photogrid,
       full: Math.round(r.width) === innerWidth && Math.round(r.height) === innerHeight,
       photos: imgs.length,
       controls: chrome.length,
-      scrollable: el.querySelector('.overflow-y-auto') !== null,
+      scrollable: element.querySelector('.overflow-y-auto') !== null,
       bodyLocked: getComputedStyle(document.body).overflow === 'hidden',
     };
   });

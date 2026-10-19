@@ -22,8 +22,8 @@ function walk(dir, test) {
 const pages = walk(OUT, (n) => n.endsWith(".html"));
 const referenced = new Set();
 const RX = [/(?:src|href)="(\/assets\/[^"?#&]+)/g, /url\((?:&#x27;|')?(\/assets\/[^'")#?&]+)/g];
-pages.forEach((p) => {
-  const s = fs.readFileSync(p, "utf8");
+pages.forEach((page) => {
+  const s = fs.readFileSync(page, "utf8");
   RX.forEach((rx) => { [...s.matchAll(rx)].forEach((m) => { referenced.add(decodeURIComponent(m[1])); }); });
 });
 
@@ -41,7 +41,7 @@ if (missing.length) {
   if (missing.length > 30) console.error(`  ... and ${missing.length - 30} more`);
   process.exit(1);
 }
-const noIcon = pages.filter((p) => !/rel="icon"/.test(fs.readFileSync(p, "utf8")));
+const noIcon = pages.filter((page) => !/rel="icon"/.test(fs.readFileSync(page, "utf8")));
 console.log(`Pages without a favicon: ${noIcon.length}`);
 if (noIcon.length) {
   console.error("\nPAGES MISSING THE FAVICON LINK:");

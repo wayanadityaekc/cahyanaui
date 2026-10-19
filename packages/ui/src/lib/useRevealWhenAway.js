@@ -6,7 +6,7 @@ export default function useRevealWhenAway(refs = []) {
   const [away, setAway] = useState(false);
 
   useEffect(() => {
-    const nodes = refs.map((r) => r?.current).filter(Boolean);
+    const nodes = refs.map((ref) => ref?.current).filter(Boolean);
     if (!nodes.length) return undefined;
 
     const seen = new Map(nodes.map((n) => [n, false]));
@@ -16,7 +16,7 @@ export default function useRevealWhenAway(refs = []) {
     });
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
-  }, refs.map((r) => r?.current));
+  }, refs.map((ref) => ref?.current));
 
   return away;
 }

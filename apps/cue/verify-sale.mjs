@@ -53,20 +53,20 @@ for (const symbol of ['$', 'Rp']) {
       page.on('pageerror', (e) => errs.push(e.message));
       await page.goto(BASE + path, { waitUntil: 'load' });
       await page.waitForFunction((name) => {
-        const el = document.querySelector(`[data-price="${name}"]`);
-        return el && el.querySelector('[data-price-was]');
+        const element = document.querySelector(`[data-price="${name}"]`);
+        return element && element.querySelector('[data-price-was]');
       }, ON_SALE, { timeout: 15000 }).catch(() => {});
 
       const read = await page.evaluate((name) => {
         const out = { sale: null, others: 0, othersWithStrike: 0 };
-        document.querySelectorAll('[data-price]').forEach((el) => {
-          const was = el.querySelector('[data-price-was]');
-          if (el.getAttribute('data-price') === name) {
+        document.querySelectorAll('[data-price]').forEach((element) => {
+          const was = element.querySelector('[data-price-was]');
+          if (element.getAttribute('data-price') === name) {
             if (!out.sale && was) {
               const cs = getComputedStyle(was);
-              const parent = getComputedStyle(el);
+              const parent = getComputedStyle(element);
               out.sale = {
-                text: el.textContent.trim(),
+                text: element.textContent.trim(),
                 wasText: was.textContent.trim(),
                 line: cs.textDecorationLine,
                 colour: cs.color,
@@ -74,7 +74,7 @@ for (const symbol of ['$', 'Rp']) {
                 size: parseFloat(cs.fontSize),
                 parentSize: parseFloat(parent.fontSize),
                 weight: cs.fontWeight,
-                first: el.firstElementChild === was,
+                first: element.firstElementChild === was,
               };
             }
           } else {

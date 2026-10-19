@@ -1,5 +1,6 @@
-const ABBREVIATION_RENAMES = { el: 'element', res: 'response', err: 'error' };
+const ABBREVIATION_RENAMES = { el: 'element', err: 'error' };
 const BANNED_SHORT_NAMES = ['el', 'dt', 'q', 'r', 'd', 'c', 'p', 'res', 'err'];
+const ARRAY_CALLBACK_METHODS = new Set(['map', 'filter', 'forEach', 'find', 'findIndex', 'some', 'every', 'flatMap', 'findLast']);
 const FUNCTION_TYPES = new Set(['FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression']);
 
 function isFunctionNode(node) {
@@ -171,6 +172,68 @@ const catchParamRule = {
   },
 };
 
+function singularOf(pluralName) {
+  if (/ies$/.test(pluralName)) return pluralName.replace(/ies$/, 'y');
+  if (/(ss|us|is)$/.test(pluralName)) return null;
+  if (/(sh|ch|x|ses)es$/.test(pluralName)) return pluralName.replace(/es$/, '');
+  if (/s$/.test(pluralName)) return pluralName.replace(/s$/, '');
+  return null;
+}
+
+function collectionNameOf(node) {
+  if (node.type === 'Identifier') return node.name;
+  if (node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier') return node.property.name;
+  return null;
+}
+
+function unwrapCall(node) {
+  let call = node && node.type === 'AwaitExpression' ? node.argument : node;
+  const isCatchWrapper =
+    call && call.type === 'CallExpression' && call.callee.type === 'MemberExpression' &&
+    !call.callee.computed && call.callee.property.name === 'catch';
+  if (isCatchWrapper) call = call.callee.object;
+  return call;
+}
+
+function isCallTo(node, calleeName) {
+  const call = unwrapCall(node);
+  if (!call || call.type !== 'CallExpression') return false;
+  const callee = call.callee;
+  if (callee.type === 'Identifier') return callee.name === calleeName;
+  return callee.type === 'MemberExpression' && !callee.computed && callee.property.name === calleeName;
+}
+
+function suggestNameFor(variable) {
+  if (ABBREVIATION_RENAMES[variable.name]) return ABBREVIATION_RENAMES[variable.name];
+  const definition = variable.defs[0];
+  if (!definition) return null;
+  if (variable.name === 'res') {
+    const isFetchResult = definition.type === 'Variable' && (isCallTo(definition.node.init, 'fetch') || isCallTo(definition.node.init, 'apiFetch'));
+    const isHandlerParam = definition.type === 'Parameter' && definition.node.params.some((param) => param.type === 'Identifier' && param.name === 'req');
+    return isFetchResult || isHandlerParam ? 'response' : 'result';
+  }
+  if (definition.type === 'Variable' && definition.node.id.type === 'Identifier') {
+    const init = definition.node.init;
+    if (isCallTo(init, 'fetch') || isCallTo(init, 'apiFetch')) return 'response';
+    if (isCallTo(init, 'json')) return 'data';
+    if (isCallTo(init, 'querySelector') || isCallTo(init, 'getElementById')) return 'element';
+    return null;
+  }
+  if (definition.type !== 'Parameter') return null;
+  const fn = definition.node;
+  if (fn.params[0] !== definition.name) return null;
+  const call = fn.parent;
+  const isArrayCallback =
+    call && call.type === 'CallExpression' && call.arguments[0] === fn &&
+    call.callee.type === 'MemberExpression' && !call.callee.computed &&
+    ARRAY_CALLBACK_METHODS.has(call.callee.property.name);
+  if (!isArrayCallback) return null;
+  const collectionName = collectionNameOf(call.callee.object);
+  const singular = collectionName && singularOf(collectionName);
+  if (!singular || singular.length < 3 || BANNED_SHORT_NAMES.includes(singular)) return null;
+  return singular;
+}
+
 function variableScopeBlock(variable) {
   return variable.scope.block;
 }
@@ -189,7 +252,7 @@ const descriptiveNamesRule = {
         if (!BANNED_SHORT_NAMES.includes(variable.name)) return;
         if (!variable.identifiers.length) return;
         if (variable.defs.some((definition) => definition.type === 'CatchClause')) return;
-        const newName = ABBREVIATION_RENAMES[variable.name];
+        const newName = suggestNameFor(variable);
         const report = { node: variable.identifiers[0], message: `Use a descriptive name instead of ${variable.name}.` };
         const block = variableScopeBlock(variable);
         const isSafe =

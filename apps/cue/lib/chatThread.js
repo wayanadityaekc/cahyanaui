@@ -18,46 +18,46 @@ export function writeThread(id) {
 }
 
 export async function startThread({ name, email, question, page }) {
-  const res = await fetch(`${API_BASE}/chat/start`, {
+  const response = await fetch(`${API_BASE}/chat/start`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, question, page }),
   });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok || !body.thread) throw new Error(body.detail || 'Could not reach Wayan just now.');
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || !body.thread) throw new Error(body.detail || 'Could not reach Wayan just now.');
   writeThread(body.thread);
   return body.thread;
 }
 
 export async function sendToThread(id, body) {
-  const res = await fetch(`${API_BASE}/chat/${id}/message`, {
+  const response = await fetch(`${API_BASE}/chat/${id}/message`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ body }),
   });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.detail || 'Could not send that.');
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(json.detail || 'Could not send that.');
   return json.message;
 }
 
 export async function pollThread(id, since) {
-  const res = await fetch(`${API_BASE}/chat/${id}?since=${Number(since) || 0}`);
-  if (res.status === 404) {
+  const response = await fetch(`${API_BASE}/chat/${id}?since=${Number(since) || 0}`);
+  if (response.status === 404) {
     writeThread(null);
     return { gone: true, messages: [] };
   }
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body.detail || 'Could not check for replies.');
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.detail || 'Could not check for replies.');
   return { gone: false, messages: body.messages || [] };
 }
 
 export async function setContact(id, email) {
-  const res = await fetch(`${API_BASE}/chat/${id}/contact`, {
+  const response = await fetch(`${API_BASE}/chat/${id}/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
   });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body.detail || 'Could not save that.');
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.detail || 'Could not save that.');
   return true;
 }

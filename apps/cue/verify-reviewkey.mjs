@@ -28,9 +28,9 @@ async function open(path, w) {
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
-  const res = await page.goto(SITE + path, { waitUntil: 'networkidle' });
+  const result = await page.goto(SITE + path, { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
-  return { ctx, page, asked, errors, status: res.status() };
+  return { ctx, page, asked, errors, status: result.status() };
 }
 
 function writeButtons(page) {

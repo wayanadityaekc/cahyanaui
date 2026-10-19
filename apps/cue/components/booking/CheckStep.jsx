@@ -41,12 +41,12 @@ export default function CheckStep({
                 <span className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? '[transform:rotate(90deg)]' : ''}`}>&rsaquo;</span>
               </button>
               <ul className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? 'max-h-[320px]' : 'max-h-0'}`}>
-                {view.detailLines.map((d, i) => <li className={DETAILS_LI} key={i}>{d}</li>)}
+                {view.detailLines.map((detailLine, i) => <li className={DETAILS_LI} key={i}>{detailLine}</li>)}
               </ul>
             </div>
           ) : (
             <ul className={`${ROWSET} list-none`}>
-              {view.detailLines.map((d, i) => <li className={DETAILS_LI_ROW} key={i}>{d}</li>)}
+              {view.detailLines.map((detailLine, i) => <li className={DETAILS_LI_ROW} key={i}>{detailLine}</li>)}
             </ul>
           )}
         </>

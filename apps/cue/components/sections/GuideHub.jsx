@@ -25,7 +25,7 @@ export default function GuideHub() {
     const term = query.trim().toLowerCase();
     if (!term) return GUIDE_HUB.cats;
     return GUIDE_HUB.cats
-      .map((c) => ({ ...c, cards: c.cards.filter((x) => x.title.toLowerCase().includes(term) || (x.kw || '').includes(term)) }))
+      .map((cat) => ({ ...cat, cards: cat.cards.filter((x) => x.title.toLowerCase().includes(term) || (x.kw || '').includes(term)) }))
       .filter((c) => c.cards.length);
   }, [query]);
 

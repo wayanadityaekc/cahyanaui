@@ -61,11 +61,11 @@ export default function MyTripsCart() {
   });
   const { format } = useMoney();
 
-  useResumeBooking(hydrated && rows.length > 0 && rows.every((r) => r.date), () => checkoutRef.current && checkoutRef.current());
+  useResumeBooking(hydrated && rows.length > 0 && rows.every((row) => row.date), () => checkoutRef.current && checkoutRef.current());
 
   if (!hydrated) return <div data-mytrips-cart />;
 
-  const undated = rows.some((r) => !r.date);
+  const undated = rows.some((row) => !row.date);
   const totalText = priced ? format(priced.total.display) : '-';
 
   function remove(row) {
@@ -75,9 +75,9 @@ export default function MyTripsCart() {
   function checkout() {
     if (!rows.length || undated) return;
     const parts = [];
-    const dayCount = new Set(rows.filter((r) => r.kind === 'day').map((r) => r.day_no)).size;
-    const transferCount = rows.filter((r) => r.kind === 'transfer').length;
-    const charterCount = rows.filter((r) => r.kind === 'charter').length;
+    const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((r) => r.day_no)).size;
+    const transferCount = rows.filter((row) => row.kind === 'transfer').length;
+    const charterCount = rows.filter((row) => row.kind === 'charter').length;
     if (dayCount) parts.push(`${dayCount} day${dayCount > 1 ? 's' : ''}`);
     if (transferCount) parts.push(`${transferCount} transfer${transferCount > 1 ? 's' : ''}`);
     if (charterCount) parts.push(`${charterCount} charter`);
@@ -89,7 +89,7 @@ export default function MyTripsCart() {
       pickupOptional: true,
       dropoffRequired: false,
       detailsTitle: 'Trip details',
-      detailLines: rows.map((r) => `${r.day_no ? `Day ${r.day_no} · ` : ''}${fmtDay(r.date)}${r.time ? ` · ${fmtTime(r.time)}` : ''} · ${r.service}`),
+      detailLines: rows.map((row) => `${row.day_no ? `Day ${row.day_no} · ` : ''}${fmtDay(row.date)}${row.time ? ` · ${fmtTime(row.time)}` : ''} · ${row.service}`),
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });

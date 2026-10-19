@@ -21,28 +21,28 @@ function combos(lists) {
 
 combos({ name: STRINGS, em: EMAILS, message: STRINGS }).forEach(({ name, em, message }) => {
   const v = { name, email: em, message };
-  const res = validateWith(contactSchema, v);
-  cmp(`contact name=${JSON.stringify(name)}`, !name.trim() ? 'Please enter your name.' : '', res, 'name');
-  cmp(`contact email=${JSON.stringify(em)}`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', res, 'email');
-  cmp(`contact msg=${JSON.stringify(message)}`, !message.trim() ? 'Please enter a message.' : '', res, 'message');
+  const result = validateWith(contactSchema, v);
+  cmp(`contact name=${JSON.stringify(name)}`, !name.trim() ? 'Please enter your name.' : '', result, 'name');
+  cmp(`contact email=${JSON.stringify(em)}`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', result, 'email');
+  cmp(`contact msg=${JSON.stringify(message)}`, !message.trim() ? 'Please enter a message.' : '', result, 'message');
 });
 
 EMAILS.forEach((em) => {
-  const res = validateWith(signInSchema, { email: em });
-  cmp(`signin email=${JSON.stringify(em)}`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', res, 'email');
+  const result = validateWith(signInSchema, { email: em });
+  cmp(`signin email=${JSON.stringify(em)}`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', result, 'email');
 });
 combos({ name: STRINGS, em: EMAILS, phone: STRINGS }).forEach(({ name, em, phone }) => {
-  const res = validateWith(createAccountSchema, { name, email: em, phone });
-  cmp(`create name=${JSON.stringify(name)}`, !name.trim() ? 'Please enter your name.' : '', res, 'name');
-  cmp(`create email=${JSON.stringify(em)}`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', res, 'email');
-  cmp(`create phone=${JSON.stringify(phone)}`, !phone.trim() ? 'Please enter your phone number.' : '', res, 'phone');
+  const result = validateWith(createAccountSchema, { name, email: em, phone });
+  cmp(`create name=${JSON.stringify(name)}`, !name.trim() ? 'Please enter your name.' : '', result, 'name');
+  cmp(`create email=${JSON.stringify(em)}`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', result, 'email');
+  cmp(`create phone=${JSON.stringify(phone)}`, !phone.trim() ? 'Please enter your phone number.' : '', result, 'phone');
 });
 
 combos({ picked: [[], ['a'], ['a', 'b']], rating: [0, 1, 5], message: STRINGS }).forEach(({ picked, rating, message }) => {
-  const res = validateWith(reviewSchema, { picked, rating, message });
-  cmp(`review picked=${picked.length}`, !picked.length ? 'Please pick at least one tour to review.' : '', res, 'picked');
-  cmp(`review rating=${rating}`, !rating ? 'Please give a star rating.' : '', res, 'rating');
-  cmp(`review msg=${JSON.stringify(message)}`, !message.trim() ? 'Please write your review.' : '', res, 'message');
+  const result = validateWith(reviewSchema, { picked, rating, message });
+  cmp(`review picked=${picked.length}`, !picked.length ? 'Please pick at least one tour to review.' : '', result, 'picked');
+  cmp(`review rating=${rating}`, !rating ? 'Please give a star rating.' : '', result, 'rating');
+  cmp(`review msg=${JSON.stringify(message)}`, !message.trim() ? 'Please write your review.' : '', result, 'message');
 });
 
 const FLAGS = combos({ pickupOptional: [false, true], dropoffRequired: [false, true], needsTime: [false, true], needsFlight: [false, true] });
@@ -54,16 +54,16 @@ FLAGS.forEach((flags) => {
     dropoff: ['', 'x'], time: ['', '09:00'], flightNumber: ['', 'QZ7501'], flightDatetime: ['', '2026-10-01T10:00'],
   }).forEach(({ name, phone, em, pickup, dropoff, time, flightNumber, flightDatetime }) => {
     const v = { name, phone, email: em, pickup, dropoff, time, flightNumber, flightDatetime, referral: '' };
-    const res = validateWith(schema, v);
+    const result = validateWith(schema, v);
     const f = JSON.stringify(flags);
-    cmp(`book${f} name`, !name.trim() ? 'Please enter your name.' : '', res, 'name');
-    cmp(`book${f} phone`, !phone.trim() ? 'Please enter your phone number.' : '', res, 'phone');
-    cmp(`book${f} email`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', res, 'email');
-    cmp(`book${f} pickup`, !flags.pickupOptional && !pickup.trim() ? 'Please enter your pick-up location.' : '', res, 'pickup');
-    cmp(`book${f} dropoff`, flags.dropoffRequired && !dropoff.trim() ? 'Please enter your drop-off location.' : '', res, 'dropoff');
-    cmp(`book${f} time`, flags.needsTime && !time ? 'Please select a pickup time.' : '', res, 'time');
-    cmp(`book${f} flightNumber`, flags.needsFlight && !flightNumber.trim() ? 'Please enter your flight number.' : '', res, 'flightNumber');
-    cmp(`book${f} flightDatetime`, flags.needsFlight && !flightDatetime ? 'Please enter your flight date & time.' : '', res, 'flightDatetime');
+    cmp(`book${f} name`, !name.trim() ? 'Please enter your name.' : '', result, 'name');
+    cmp(`book${f} phone`, !phone.trim() ? 'Please enter your phone number.' : '', result, 'phone');
+    cmp(`book${f} email`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', result, 'email');
+    cmp(`book${f} pickup`, !flags.pickupOptional && !pickup.trim() ? 'Please enter your pick-up location.' : '', result, 'pickup');
+    cmp(`book${f} dropoff`, flags.dropoffRequired && !dropoff.trim() ? 'Please enter your drop-off location.' : '', result, 'dropoff');
+    cmp(`book${f} time`, flags.needsTime && !time ? 'Please select a pickup time.' : '', result, 'time');
+    cmp(`book${f} flightNumber`, flags.needsFlight && !flightNumber.trim() ? 'Please enter your flight number.' : '', result, 'flightNumber');
+    cmp(`book${f} flightDatetime`, flags.needsFlight && !flightDatetime ? 'Please enter your flight date & time.' : '', result, 'flightDatetime');
   });
 });
 

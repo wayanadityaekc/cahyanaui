@@ -16,7 +16,7 @@ function normalise(state) {
   if (!state || typeof state !== 'object') return { ...EMPTY };
   return {
     days: Array.isArray(state.days)
-      ? state.days.map((d) => (Array.isArray(d.items) ? { ...d, items: d.items.map(currentName) } : d))
+      ? state.days.map((day) => (Array.isArray(day.items) ? { ...day, items: day.items.map(currentName) } : day))
       : [],
     transfers: Array.isArray(state.transfers) ? state.transfers : [],
     charters: Array.isArray(state.charters) ? state.charters : [],

@@ -13,11 +13,11 @@ async function seen(loc, ms = 4000) { try { await loc.first().waitFor({ timeout:
 async function untilTrue(page, fn, ms = 8000) { try { await page.waitForFunction(fn, null, { timeout: ms }); return true; } catch (e) { return false; } }
 
 async function api(path, init = {}) {
-  const res = await fetch(API + path, {
+  const response = await fetch(API + path, {
     ...init,
     headers: { Authorization: AUTH, ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...(init.headers || {}) },
   });
-  return { status: res.status, json: await res.json().catch(() => null) };
+  return { status: response.status, json: await response.json().catch(() => null) };
 }
 
 const HANDOVER_Q = 'my wife is in a wheelchair, can she do the tour';

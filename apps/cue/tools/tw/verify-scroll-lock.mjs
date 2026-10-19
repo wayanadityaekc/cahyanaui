@@ -11,7 +11,7 @@ function findShell() {
 const EXE = findShell();
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.json': 'application/json' };
 function serve(root, port) {
-  return new Promise((res) => {
+  return new Promise((result) => {
     const s = http.createServer((q, r) => {
       let p = decodeURIComponent(q.url.split('?')[0]);
       if (p.endsWith('/')) p += 'index.html';
@@ -21,7 +21,7 @@ function serve(root, port) {
       r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
       r.end(fs.readFileSync(f));
     });
-    s.listen(port, () => res(s));
+    s.listen(port, () => result(s));
   });
 }
 

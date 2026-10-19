@@ -23,8 +23,8 @@ export function AccountProvider({ children }) {
     const token = readLocal(KEY.token, '');
     if (!token) return;
     try {
-      const r = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } });
-      const d = r.ok ? await r.json() : null;
+      const response = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } });
+      const d = response.ok ? await response.json() : null;
       if (d && Array.isArray(d.upcoming)) setTrips(d);
     } catch (e) {}
   }, []);
@@ -50,8 +50,8 @@ export function AccountProvider({ children }) {
 
     async function load() {
       try {
-        const r = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
-        const d = r.ok ? await r.json() : null;
+        const response = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
+        const d = response.ok ? await response.json() : null;
         if (cancelled) return;
         if (d && d.account) setAccount(d.account);
         else removeLocal(KEY.token);
@@ -89,8 +89,8 @@ export function AccountProvider({ children }) {
     const token = readLocal(KEY.token, '');
     if (!token) { setMyReviews([]); return; }
     try {
-      const r = await fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } });
-      const d = r.ok ? await r.json() : [];
+      const response = await fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } });
+      const d = response.ok ? await response.json() : [];
       setMyReviews(Array.isArray(d) ? d : []);
     } catch (e) {
       setMyReviews([]);
@@ -107,19 +107,19 @@ export function AccountProvider({ children }) {
   async function deleteAccount() {
     try {
       const token = readLocal(KEY.token, '');
-      const r = await fetch(`${API_BASE}/account`, {
+      const response = await fetch(`${API_BASE}/account`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok && d.status === 'ok') {
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.status === 'ok') {
         removeLocal(KEY.token);
         setAccount(null);
         setTrips(null);
         setMyReviews(null);
         return { ok: true };
       }
-      return { ok: false, error: (d && d.detail) || '' };
+      return { ok: false, error: (data && data.detail) || '' };
     } catch (e) {
       return { ok: false, error: '' };
     }
@@ -127,12 +127,12 @@ export function AccountProvider({ children }) {
 
   async function requestLogin(email) {
     try {
-      const r = await fetch(`${API_BASE}/account/login`, {
+      const response = await fetch(`${API_BASE}/account/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      return r.ok;
+      return response.ok;
     } catch (e) {
       return false;
     }
@@ -140,19 +140,19 @@ export function AccountProvider({ children }) {
 
   async function verifyCode(email, code) {
     try {
-      const r = await fetch(`${API_BASE}/account/verify`, {
+      const response = await fetch(`${API_BASE}/account/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code }),
       });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok && d.status === 'ok' && d.token) {
-        writeLocal(KEY.token, d.token);
-        setAccount(d.account || null);
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.status === 'ok' && data.token) {
+        writeLocal(KEY.token, data.token);
+        setAccount(data.account || null);
         refreshTrips();
         return { ok: true };
       }
-      return { ok: false, error: (d && d.detail) || '' };
+      return { ok: false, error: (data && data.detail) || '' };
     } catch (e) {
       return { ok: false, error: '' };
     }
@@ -160,7 +160,7 @@ export function AccountProvider({ children }) {
 
   async function createAccount({ name, email, phone }) {
     try {
-      const r = await fetch(`${API_BASE}/account`, {
+      const response = await fetch(`${API_BASE}/account`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -171,14 +171,14 @@ export function AccountProvider({ children }) {
           stay_area_pref: readLocal(KEY.stay, '') || '',
         }),
       });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok && d.token) {
-        writeLocal(KEY.token, d.token);
-        setAccount(d.account || null);
+      const data = await response.json().catch(() => ({}));
+      if (response.ok && data.token) {
+        writeLocal(KEY.token, data.token);
+        setAccount(data.account || null);
         return { ok: true };
       }
-      if (r.ok && d.signin_sent) return { ok: false, signin: true, email: d.email || email };
-      return { ok: false, error: (d && d.error) || '' };
+      if (response.ok && data.signin_sent) return { ok: false, signin: true, email: data.email || email };
+      return { ok: false, error: (data && data.error) || '' };
     } catch (e) {
       return { ok: false };
     }

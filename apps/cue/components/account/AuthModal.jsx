@@ -68,21 +68,21 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setErrors(fieldErrors);
     if (!valid) return;
     setBusy(true);
-    const res = await createAccount({ name: data.name, email: data.email, phone: data.phone });
+    const result = await createAccount({ name: data.name, email: data.email, phone: data.phone });
     setBusy(false);
-    if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); (onSignedIn || onClose)(); return; }
-    if (res.signin) { setCodeEmail(res.email); setCode(''); setStage('code'); setCooldown(RESEND_SECONDS); setOk(`You already have an account as ${res.email}.`); return; }
-    setMsg(res.error || 'Sorry, we could not create your account. Please try again.');
+    if (result.ok) { reset(); setF({ name: '', email: '', phone: '' }); (onSignedIn || onClose)(); return; }
+    if (result.signin) { setCodeEmail(result.email); setCode(''); setStage('code'); setCooldown(RESEND_SECONDS); setOk(`You already have an account as ${result.email}.`); return; }
+    setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
   async function doVerify(fullCode) {
     reset();
     setBusy(true);
-    const res = await verifyCode(codeEmail, fullCode);
+    const result = await verifyCode(codeEmail, fullCode);
     setBusy(false);
-    if (res.ok) { reset(); setF({ name: '', email: '', phone: '' }); setStage('email'); setCode(''); (onSignedIn || onClose)(); return; }
+    if (result.ok) { reset(); setF({ name: '', email: '', phone: '' }); setStage('email'); setCode(''); (onSignedIn || onClose)(); return; }
     setCode('');
-    setMsg(res.error || 'Sorry, something went wrong. Please try again.');
+    setMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
   async function resend() {

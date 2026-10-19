@@ -20,21 +20,21 @@ if (!fs.existsSync(ROOT)) {
 }
 
 http
-  .createServer((req, res) => {
+  .createServer((req, response) => {
     let p = decodeURIComponent(req.url.split("?")[0]);
     if (p.endsWith("/")) p += "index.html";
     let file = path.join(ROOT, p);
 
     if (!fs.existsSync(file) && !path.extname(file)) file = path.join(ROOT, `${p}.html`);
     if (!path.resolve(file).startsWith(path.resolve(ROOT))) {
-      res.writeHead(403); return res.end("Forbidden");
+      response.writeHead(403); return response.end("Forbidden");
     }
     if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) {
       const nf = path.join(ROOT, "404.html");
-      res.writeHead(404, { "content-type": "text/html" });
-      return res.end(fs.existsSync(nf) ? fs.readFileSync(nf) : "Not found");
+      response.writeHead(404, { "content-type": "text/html" });
+      return response.end(fs.existsSync(nf) ? fs.readFileSync(nf) : "Not found");
     }
-    res.writeHead(200, { "content-type": MIME[path.extname(file)] || "application/octet-stream" });
-    res.end(fs.readFileSync(file));
+    response.writeHead(200, { "content-type": MIME[path.extname(file)] || "application/octet-stream" });
+    response.end(fs.readFileSync(file));
   })
   .listen(PORT, () => console.log(`Serving out/ at http://localhost:${PORT}`));

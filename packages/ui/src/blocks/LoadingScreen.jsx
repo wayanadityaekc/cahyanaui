@@ -62,12 +62,12 @@ export default function LoadingScreen({
       if (url.pathname === window.location.pathname && url.hash) return;
       if (url.pathname === window.location.pathname) return;
 
-      const el = elRef.current;
-      if (el) {
-        el.style.transition = 'none';
-        el.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
-        void el.offsetHeight;
-        el.style.removeProperty('transition');
+      const element = elRef.current;
+      if (element) {
+        element.style.transition = 'none';
+        element.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+        void element.offsetHeight;
+        element.style.removeProperty('transition');
       }
       shownAt.current = Date.now();
       setOut(false);

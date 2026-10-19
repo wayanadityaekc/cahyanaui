@@ -30,10 +30,10 @@ let bad = 0;
 let sliders = 0;
 let related = 0;
 
-pages.forEach((p) => {
-  const f = path.join(ROOT, 'out', p);
+pages.forEach((page) => {
+  const f = path.join(ROOT, 'out', page);
   if (!fs.existsSync(f)) {
-    console.error(`  MISSING BUILD  ${p}`);
+    console.error(`  MISSING BUILD  ${page}`);
     bad++;
     return;
   }
@@ -44,7 +44,7 @@ pages.forEach((p) => {
   if (html.includes('hero-slider__dots')) sliders++;
   if (html.includes('related__title')) related++;
   if (problems.length) {
-    console.error(`  ${p}: ${problems.join(', ')}`);
+    console.error(`  ${page}: ${problems.join(', ')}`);
     bad++;
   }
 });

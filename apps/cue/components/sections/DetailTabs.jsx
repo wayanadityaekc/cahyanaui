@@ -33,12 +33,12 @@ function GoodToKnow({ isActivity }) {
       ];
   return (
     <ul className="list-none mb-[1.6rem] flex flex-col gap-[1.1rem]">
-      {rows.map((r) => (
-        <li className="flex gap-[0.85rem] items-start" key={r.h}>
-          <span className="flex-none grid place-items-center w-[2.2rem] h-[2.2rem] rounded-[50%] bg-cream text-gold [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]">{r.ic}</span>
+      {rows.map((row) => (
+        <li className="flex gap-[0.85rem] items-start" key={row.h}>
+          <span className="flex-none grid place-items-center w-[2.2rem] h-[2.2rem] rounded-[50%] bg-cream text-gold [&_svg]:w-[var(--icon-sm)] [&_svg]:h-[var(--icon-sm)]">{row.ic}</span>
           <div>
-            <span className="block text-strong font-semibold text-gold mb-[0.15rem]">{r.h}</span>
-            <p className="text-small leading-[1.45] text-green m-0">{r.t}</p>
+            <span className="block text-strong font-semibold text-gold mb-[0.15rem]">{row.h}</span>
+            <p className="text-small leading-[1.45] text-green m-0">{row.t}</p>
           </div>
         </li>
       ))}

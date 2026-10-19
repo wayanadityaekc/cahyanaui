@@ -15,9 +15,9 @@ export default function DeleteAccountModal({ open, onClose, onConfirm }) {
   async function confirm() {
     setBusy(true);
     setMsg('');
-    const res = await onConfirm();
+    const result = await onConfirm();
     setBusy(false);
-    if (!res || !res.ok) setMsg((res && res.error) || 'Could not delete your account. Please try again.');
+    if (!result || !result.ok) setMsg((result && result.error) || 'Could not delete your account. Please try again.');
   }
 
   return (

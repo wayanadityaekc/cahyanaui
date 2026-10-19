@@ -87,15 +87,15 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
     });
   })(OUT, "");
   const missing = [];
-  pages.forEach((p) => {
-    if (/^(404|_not-found)\.html$/.test(p)) return;
-    const html = fs.readFileSync(path.join(OUT, p), "utf8");
+  pages.forEach((page) => {
+    if (/^(404|_not-found)\.html$/.test(page)) return;
+    const html = fs.readFileSync(path.join(OUT, page), "utf8");
     if (/name="robots"[^>]*noindex/.test(html)) return;
-    if (p === "index.html") {
-      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(`${p} (homepage)`);
+    if (page === "index.html") {
+      if (!/<loc>https:\/\/cahyanaubudexperience\.com\/<\/loc>/.test(sitemap)) missing.push(`${page} (homepage)`);
       return;
     }
-    if (!sitemap.includes(`/${p}<`)) missing.push(p);
+    if (!sitemap.includes(`/${page}<`)) missing.push(page);
   });
   if (missing.length) {
     console.error("\nINDEXABLE PAGES MISSING FROM sitemap.xml:");

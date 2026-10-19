@@ -26,8 +26,8 @@ export function PricingProvider({ children, initialCatalog = null }) {
     const query = new URLSearchParams({ currency, guests: String(displayGuests), stay: stay || '' });
     async function load() {
       try {
-        const r = await fetch(`${API_BASE}/pricing/catalog?${query}`);
-        const d = r.ok ? await r.json() : null;
+        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`);
+        const d = response.ok ? await response.json() : null;
         const c = normalizeCatalog(d);
         if (!cancelled && c) setCatalog(c);
       } catch (e) {}

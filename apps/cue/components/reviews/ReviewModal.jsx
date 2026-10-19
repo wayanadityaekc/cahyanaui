@@ -82,7 +82,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     const results = [];
     for (const it of picked) {
       try {
-        const res = await fetch(`${API_BASE}/reviews`, {
+        const response = await fetch(`${API_BASE}/reviews`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
@@ -94,15 +94,15 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
             message: message.trim(),
           }),
         });
-        const d = await res.json();
-        results.push({ it, ok: !!(d && d.ok), reason: (d && d.reason) || 'Something went wrong. Please try again.' });
+        const data = await response.json();
+        results.push({ it, ok: !!(data && data.ok), reason: (data && data.reason) || 'Something went wrong. Please try again.' });
       } catch (e) {
         results.push({ it, ok: false, reason: 'Something went wrong. Please try again.' });
       }
     }
     setBusy(false);
-    if (results.some((r) => r.ok)) sent.current = true;
-    const failed = results.filter((r) => !r.ok);
+    if (results.some((result) => result.ok)) sent.current = true;
+    const failed = results.filter((result) => !result.ok);
     if (failed.length === results.length) { setError(failed[0].reason); return; }
     setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
     setDone(true);

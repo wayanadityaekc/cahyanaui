@@ -14,8 +14,8 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
 
   useEffect(() => {
     if (!open) return;
-    const el = scroller.current?.querySelector(`[data-photo="${startAt}"]`);
-    if (el) el.scrollIntoView({ block: 'start', behavior: 'instant' });
+    const element = scroller.current?.querySelector(`[data-photo="${startAt}"]`);
+    if (element) element.scrollIntoView({ block: 'start', behavior: 'instant' });
     else scroller.current?.scrollTo(0, 0);
   }, [open, startAt]);
 

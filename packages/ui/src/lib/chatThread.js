@@ -20,13 +20,13 @@ export function createChatThread({ apiBase, storageKey }) {
   }
 
   async function post(path, payload, fallback) {
-    const res = await fetch(`${apiBase}${path}`, {
+    const response = await fetch(`${apiBase}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    const body = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(body.detail || fallback);
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(body.detail || fallback);
     return body;
   }
 
@@ -43,13 +43,13 @@ export function createChatThread({ apiBase, storageKey }) {
   }
 
   async function poll(id, since) {
-    const res = await fetch(`${apiBase}/chat/${id}?since=${Number(since) || 0}`);
-    if (res.status === 404) {
+    const response = await fetch(`${apiBase}/chat/${id}?since=${Number(since) || 0}`);
+    if (response.status === 404) {
       write(null);
       return { gone: true, messages: [] };
     }
-    const body = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(body.detail || 'Could not check for replies.');
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(body.detail || 'Could not check for replies.');
     return { gone: false, messages: body.messages || [] };
   }
 

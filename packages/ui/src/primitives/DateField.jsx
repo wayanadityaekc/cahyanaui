@@ -63,9 +63,9 @@ export default function DateField({ label = 'Date', value, onChange, min, max, p
           </div>
           <div className={CAL_GRID}>
             {DOW.map((d) => <span className={CAL_DOW} key={d}>{d}</span>)}
-            {cells.map((d, i) => {
-              if (!d) return <span className={calDay(true)} key={`e${i}`} />;
-              const v = iso(d);
+            {cells.map((cell, i) => {
+              if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
+              const v = iso(cell);
               const disabled = v < minDate || (max ? v > max : false);
               return (
                 <button
@@ -76,7 +76,7 @@ export default function DateField({ label = 'Date', value, onChange, min, max, p
                   disabled={disabled}
                   onClick={() => { onChange(v); setOpen(false); }}
                 >
-                  {d.getDate()}
+                  {cell.getDate()}
                 </button>
               );
             })}

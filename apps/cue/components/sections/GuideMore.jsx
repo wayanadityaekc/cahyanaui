@@ -14,15 +14,15 @@ export default function GuideMore({ block }) {
       <h2 className={CAROUSEL_TITLE}>{b.title}</h2>
       <div className={GRID_GUIDEMORE}>
         {b.kind === 'tours'
-          ? b.cards.map((c) => <HomepageCard key={c.href} {...c} />)
-          : b.cards.map((c, i) => (
-              <a className={`${CARD_FRAME} flex flex-col`} href={c.href} key={i}>
+          ? b.cards.map((card) => <HomepageCard key={card.href} {...card} />)
+          : b.cards.map((card, i) => (
+              <a className={`${CARD_FRAME} flex flex-col`} href={card.href} key={i}>
                 <div className={CARD_IMAGE}>
-                  <img className={CARD_IMG} src={`/assets/images/${c.img}`} alt={c.alt} loading="lazy" width={c.w} height={c.hgt} />
+                  <img className={CARD_IMG} src={`/assets/images/${card.img}`} alt={card.alt} loading="lazy" width={card.w} height={card.hgt} />
                 </div>
                 <div className="flex flex-col grow p-4">
-                  <span className="text-label font-medium tracking-[0.14em] uppercase text-muted">{c.tag}</span>
-                  <h3 className="font-body text-h3 font-semibold leading-[1.3] mt-[0.3rem] mb-0">{c.title}</h3>
+                  <span className="text-label font-medium tracking-[0.14em] uppercase text-muted">{card.tag}</span>
+                  <h3 className="font-body text-h3 font-semibold leading-[1.3] mt-[0.3rem] mb-0">{card.title}</h3>
                 </div>
               </a>
             ))}

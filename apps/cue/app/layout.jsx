@@ -45,8 +45,8 @@ function catalogForBuild() {
     const query = new URLSearchParams({ currency: 'USD', guests: String(DISPLAY_GUESTS), stay: '' });
     buildCatalog = (async () => {
       try {
-        const res = await fetch(`${API_BASE}/pricing/catalog?${query}`, { signal: AbortSignal.timeout(10000) });
-        const d = res.ok ? await res.json() : null;
+        const response = await fetch(`${API_BASE}/pricing/catalog?${query}`, { signal: AbortSignal.timeout(10000) });
+        const d = response.ok ? await response.json() : null;
         return d && Array.isArray(d.items) ? d : null;
       } catch (e) {
         return null;

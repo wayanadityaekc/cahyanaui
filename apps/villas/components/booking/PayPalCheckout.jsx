@@ -50,31 +50,31 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
     let cancelled = false;
 
     async function createOrder() {
-      const r = await fetch(`${API_BASE}/paypal/create-order`, {
+      const response = await fetch(`${API_BASE}/paypal/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ booking_ref: bookingRef, option }),
       });
-      const d = await r.json().catch(() => null);
-      if (!r.ok || !d || !d.id) throw new Error((d && d.detail) || 'Could not start the payment.');
-      if (d.converted && !cancelled) {
-        setMsg(`PayPal cannot charge ${d.converted.from}, so this is billed as ${d.currency} ${d.amount}.`);
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data || !data.id) throw new Error((data && data.detail) || 'Could not start the payment.');
+      if (data.converted && !cancelled) {
+        setMsg(`PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`);
       }
-      return d.id;
+      return data.id;
     }
 
     async function capture(orderId) {
-      const r = await fetch(`${API_BASE}/paypal/capture-order`, {
+      const response = await fetch(`${API_BASE}/paypal/capture-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: orderId }),
       });
-      const d = await r.json().catch(() => null);
-      if (r.status === 402) throw Object.assign(new Error(copy.declined), { soft: true });
-      if (!r.ok || !d || d.status !== 'ok') {
-        throw Object.assign(new Error((d && d.detail) || copy.failed), { soft: true });
+      const data = await response.json().catch(() => null);
+      if (response.status === 402) throw Object.assign(new Error(copy.declined), { soft: true });
+      if (!response.ok || !data || data.status !== 'ok') {
+        throw Object.assign(new Error((data && data.detail) || copy.failed), { soft: true });
       }
-      return d;
+      return data;
     }
 
     function fail(e) {

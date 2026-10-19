@@ -101,33 +101,33 @@ for (const w of [390, 768, 1280]) {
     ok(/\$\d/.test(body), `${w}${path}: a price answer with no price in it`);
 
     const std = await page.evaluate(() => {
-      const el = document.createElement('div');
-      el.style.cssText = 'height:var(--btn-h);font-size:var(--text-small);border-radius:var(--radius-sm)';
-      document.body.appendChild(el);
-      const cs = getComputedStyle(el);
+      const element = document.createElement('div');
+      element.style.cssText = 'height:var(--btn-h);font-size:var(--text-small);border-radius:var(--radius-sm)';
+      document.body.appendChild(element);
+      const cs = getComputedStyle(element);
       const out = { h: parseFloat(cs.height), fs: parseFloat(cs.fontSize), r: parseFloat(cs.borderRadius) };
-      el.remove();
+      element.remove();
       return out;
     });
-    const ctas = await panel.evaluate((root) => [...root.querySelectorAll('[data-cta]')].map((el) => {
-      const r = el.getBoundingClientRect(); const cs = getComputedStyle(el);
-      const label = (el.innerText || el.getAttribute('aria-label') || '').trim();
+    const ctas = await panel.evaluate((root) => [...root.querySelectorAll('[data-cta]')].map((element) => {
+      const r = element.getBoundingClientRect(); const cs = getComputedStyle(element);
+      const label = (element.innerText || element.getAttribute('aria-label') || '').trim();
       return { label, words: label ? label.split(/\s+/).length : 0, h: r.height,
         fs: parseFloat(cs.fontSize), rad: parseFloat(cs.borderTopLeftRadius),
         pt: parseFloat(cs.paddingTop), pb: parseFloat(cs.paddingBottom) };
     }), await panel.elementHandle());
     ok(ctas.length >= 2, `${w}${path}: expected action buttons in the panel, found ${ctas.length}`);
-    ctas.forEach((c) => {
-      ok(Math.abs(c.h - std.h) < 0.5, `${w}${path}: "${c.label}" is ${c.h}px, not ${std.h}`);
-      ok(c.fs === std.fs, `${w}${path}: "${c.label}" font ${c.fs}, not ${std.fs}`);
-      ok(c.rad === std.r, `${w}${path}: "${c.label}" radius ${c.rad}, not ${std.r}`);
-      ok(c.pt === 0 && c.pb === 0, `${w}${path}: "${c.label}" has vertical padding`);
-      ok(c.words <= 2, `${w}${path}: "${c.label}" is ${c.words} words, the rule is 2`);
+    ctas.forEach((cta) => {
+      ok(Math.abs(cta.h - std.h) < 0.5, `${w}${path}: "${cta.label}" is ${cta.h}px, not ${std.h}`);
+      ok(cta.fs === std.fs, `${w}${path}: "${cta.label}" font ${cta.fs}, not ${std.fs}`);
+      ok(cta.rad === std.r, `${w}${path}: "${cta.label}" radius ${cta.rad}, not ${std.r}`);
+      ok(cta.pt === 0 && cta.pb === 0, `${w}${path}: "${cta.label}" has vertical padding`);
+      ok(cta.words <= 2, `${w}${path}: "${cta.label}" is ${cta.words} words, the rule is 2`);
     });
 
-    const chipBox = await panel.evaluate((root) => [...root.querySelectorAll('[data-chip]')].map((el) => {
-      const cs = getComputedStyle(el);
-      return { h: el.getBoundingClientRect().height, fs: parseFloat(cs.fontSize), rad: parseFloat(cs.borderTopLeftRadius) };
+    const chipBox = await panel.evaluate((root) => [...root.querySelectorAll('[data-chip]')].map((element) => {
+      const cs = getComputedStyle(element);
+      return { h: element.getBoundingClientRect().height, fs: parseFloat(cs.fontSize), rad: parseFloat(cs.borderTopLeftRadius) };
     }), await panel.elementHandle());
     chipBox.forEach((c) => {
       ok(Math.abs(c.h - std.h) < 0.5, `${w}${path}: a chip is ${c.h}px, not ${std.h}`);
@@ -136,9 +136,9 @@ for (const w of [390, 768, 1280]) {
     });
 
     const stray = await panel.evaluate((root) =>
-      [...root.querySelectorAll('button')].filter((el) =>
-        !el.hasAttribute('data-cta') && !el.hasAttribute('data-chip') &&
-        el.getAttribute('aria-label') !== 'Close chat').length,
+      [...root.querySelectorAll('button')].filter((element) =>
+        !element.hasAttribute('data-cta') && !element.hasAttribute('data-chip') &&
+        element.getAttribute('aria-label') !== 'Close chat').length,
       await panel.elementHandle());
     ok(stray === 0, `${w}${path}: ${stray} button(s) in the panel are neither an action nor a chip`);
 

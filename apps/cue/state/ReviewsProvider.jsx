@@ -12,8 +12,8 @@ export function ReviewsProvider({ children }) {
     let cancelled = false;
     async function load() {
       try {
-        const res = await fetch(`${API_BASE}/reviews/summary`);
-        const d = res.ok ? await res.json() : null;
+        const response = await fetch(`${API_BASE}/reviews/summary`);
+        const d = response.ok ? await response.json() : null;
         if (cancelled || !Array.isArray(d)) return;
         const map = {};
         d.forEach((r) => { map[r.service] = r; });

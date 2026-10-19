@@ -76,7 +76,7 @@ export default function PhotoMosaic({
       {images.length === 1 ? (
         <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{tile(0, TILE)}</div>
       ) : images.length === 2 ? (
-        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>{images.map((p, i) => tile(i, TILE))}</div>
+        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>{images.map((image, i) => tile(i, TILE))}</div>
       ) : (
         <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{children}</div>
       )}

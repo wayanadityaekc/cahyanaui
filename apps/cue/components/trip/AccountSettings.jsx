@@ -60,9 +60,9 @@ export default function AccountSettings() {
   }, [account]);
 
   async function confirmDelete() {
-    const res = await deleteAccount();
-    if (res.ok) setDeleted(true);
-    return res;
+    const result = await deleteAccount();
+    if (result.ok) setDeleted(true);
+    return result;
   }
 
   if (deleted) {
@@ -93,17 +93,17 @@ export default function AccountSettings() {
     setBusy(true);
     setMsg('');
     try {
-      const res = await fetch(`${API_BASE}/account`, {
+      const response = await fetch(`${API_BASE}/account`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${readLocal(KEY.token, '')}` },
         body: JSON.stringify({ ...form, guest_count_pref: String(guests || ''), stay_area_pref: stay || '' }),
       });
-      const d = await res.json();
-      if (d && d.account) {
-        setAccount(d.account);
+      const data = await response.json();
+      if (data && data.account) {
+        setAccount(data.account);
         setMsg('Saved.');
       } else {
-        setMsg((d && d.detail) || 'Could not save. Please try again.');
+        setMsg((data && data.detail) || 'Could not save. Please try again.');
       }
     } catch (e) {
       setMsg('Could not save. Please try again.');

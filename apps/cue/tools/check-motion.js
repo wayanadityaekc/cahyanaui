@@ -136,7 +136,7 @@ console.log(`Self-referencing vars: ${cycles.length}`);
 if (dead.size || snap.size || cycles.length) {
   [...dead].forEach(([why, where]) => { console.log(`\n  DEAD  ${why}\n        first seen: ${where}`); });
   [...snap].forEach(([why, where]) => { console.log(`\n  SNAP  ${why}\n        first seen: ${where}`); });
-  cycles.forEach((c) => { console.log(`\n  CYCLE ${c}`); });
+  cycles.forEach((cycle) => { console.log(`\n  CYCLE ${cycle}`); });
   console.log("\nMotion check FAILED.");
   process.exit(1);
 }

@@ -18,8 +18,8 @@ export default function AboutPage() {
           <span className="block mb-1 text-small font-medium text-muted">{row.kicker}</span>
           <h2 className="m-0 mb-2 font-head text-h2 font-medium text-green">{row.heading}</h2>
 
-          {row.paras.map((p, i) => (
-            <p className="mb-3 text-body leading-[1.6] text-ink" key={i}>{p}</p>
+          {row.paras.map((para, i) => (
+            <p className="mb-3 text-body leading-[1.6] text-ink" key={i}>{para}</p>
           ))}
 
           {row.steps && (
@@ -39,9 +39,9 @@ export default function AboutPage() {
             </ul>
           )}
 
-          {row.drivers && row.drivers.map((d) => (
-            <p className="mb-3 text-body leading-[1.6] text-ink" key={d.name}>
-              <strong className="font-semibold text-green">{d.name}</strong> - {d.tagline}. {d.desc}
+          {row.drivers && row.drivers.map((driver) => (
+            <p className="mb-3 text-body leading-[1.6] text-ink" key={driver.name}>
+              <strong className="font-semibold text-green">{driver.name}</strong> - {driver.tagline}. {driver.desc}
             </p>
           ))}
         </div>

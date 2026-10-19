@@ -78,8 +78,8 @@ export default function DetailHero({ heroBg, heroSlides, gallery, title, desc, h
         )}
         <HeroMosaic photos={gallery} title={title} />
         <ul className={HERO_CHIPS}>
-          {chips.map((c) => (
-            <Chip key={c.key} icon={c.icon} text={c.text} ok={c.ok} />
+          {chips.map((chip) => (
+            <Chip key={chip.key} icon={chip.icon} text={chip.text} ok={chip.ok} />
           ))}
         </ul>
         {belowChips}

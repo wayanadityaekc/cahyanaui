@@ -18,8 +18,8 @@ function tokens(p) {
   });
 }
 
-function shot(el) {
-  return el.evaluate((n) => {
+function shot(element) {
+  return element.evaluate((n) => {
     const c = getComputedStyle(n), r = n.getBoundingClientRect();
     return {
       h: Math.round(r.height * 10) / 10, bg: c.backgroundColor, color: c.color,

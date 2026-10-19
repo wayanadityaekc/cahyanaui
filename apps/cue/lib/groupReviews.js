@@ -4,10 +4,10 @@ function reviewKey(r) {
 
 export function groupReviews(rows = []) {
   const groups = new Map();
-  rows.forEach((r) => {
-    const key = reviewKey(r);
+  rows.forEach((row) => {
+    const key = reviewKey(row);
     if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(r);
+    groups.get(key).push(row);
   });
   return [...groups.values()].map((copies) => {
     const services = [...copies]

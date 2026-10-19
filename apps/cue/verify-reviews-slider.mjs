@@ -36,7 +36,7 @@ for (const w of [390, 1280]) {
   await page.screenshot({ path: `shots/reviews-slider-${w}.png` });
 
   const track = page.locator('#reviews .flex.overflow-x-auto').first();
-  const overflowing = await track.evaluate((el) => el.scrollWidth > el.clientWidth);
+  const overflowing = await track.evaluate((element) => element.scrollWidth > element.clientWidth);
   ok(overflowing, `${w}: track does not overflow (not a slider)`);
 
   await cards.nth(2).click();

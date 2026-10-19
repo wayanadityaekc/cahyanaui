@@ -48,7 +48,7 @@ export default function CharterBuilder() {
   const catalog = usePricing()?.catalog;
 
   const ready = !!(area && date && time && guests);
-  const selected = CHARTER.durations.find((d) => d.dur === dur) || CHARTER.durations[0];
+  const selected = CHARTER.durations.find((duration) => duration.dur === dur) || CHARTER.durations[0];
   const total = tier(dur);
 
   function book() {

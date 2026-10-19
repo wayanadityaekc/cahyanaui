@@ -29,7 +29,7 @@ export function useCharterTier({ area = '' } = {}) {
   function fmt(n) { return symbol + n.toLocaleString(isIdr ? 'id-ID' : 'en-US'); }
   function tier(d) {
     if (!catalog) return null;
-    const base = catalog.charters.find((c) => c.duration === d);
+    const base = catalog.charters.find((charter) => charter.duration === d);
     if (!base) return null;
     const sur = catalog.charterSurcharge;
     return base.display + (area && area !== 'Ubud' && sur ? sur.display : 0);
@@ -44,29 +44,29 @@ export default function CharterPlans({ value, onChange, area = '', heading }) {
     <div>
       {heading && <h3 className="m-0 mb-[var(--space-1)] text-h3 font-semibold text-gold">{heading}</h3>}
       <div className={ROWS} role="radiogroup" aria-label="Charter length">
-        {CHARTER.durations.map((d) => {
-          const v = tier(d.dur);
-          const selected = d.dur === value;
+        {CHARTER.durations.map((duration) => {
+          const v = tier(duration.dur);
+          const selected = duration.dur === value;
           return (
             <button
               type="button"
-              key={d.dur}
+              key={duration.dur}
               role="radio"
               aria-checked={selected}
               className={`${selected ? PLAN_ROW_PICKED : PLAN_ROW} relative items-start min-[993px]:items-center ${ROW_BTN}`}
-              onClick={() => onChange(d.dur)}
+              onClick={() => onChange(duration.dur)}
             >
               {selected && <span className={FLAG} data-plan-flag>Selected</span>}
               <span className={PLAN_GRID} data-plan-grid>
                 <span className={`${PLAN_CELL_NAME} flex flex-wrap items-center gap-x-[6px]`}>
-                  <span className={`${PLAN_NAME} whitespace-nowrap`}>{d.name}</span>
-                  {d.badge && <span className={PLAN_BADGE}>{d.badge}</span>}
+                  <span className={`${PLAN_NAME} whitespace-nowrap`}>{duration.name}</span>
+                  {duration.badge && <span className={PLAN_BADGE}>{duration.badge}</span>}
                 </span>
                 <span className={PLAN_CELL_PRICE}>
                   {area && <span className={`${PLAN_PRICE_KICK} block mt-[2px] min-[993px]:mt-0`}>Total</span>}
                   <span className={PLAN_PRICE_LEAD}>{v == null ? '—' : withSymbol(fmt(v))}</span>
                 </span>
-                <span className={`${PLAN_CELL_SUB} ${PLAN_SUB} mt-[2px] min-[993px]:mt-0`}>{d.sub}</span>
+                <span className={`${PLAN_CELL_SUB} ${PLAN_SUB} mt-[2px] min-[993px]:mt-0`}>{duration.sub}</span>
               </span>
             </button>
           );

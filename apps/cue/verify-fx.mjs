@@ -64,8 +64,8 @@ for (const w of [390, 1280]) {
   const want = jpy.items.find((i) => i.name === 'Ubud Tour').standard.display;
   await page.waitForFunction(
     (v) => {
-      const el = document.querySelector('[data-price="Ubud Tour"]');
-      return el && el.textContent.replace(/[^0-9]/g, '') === String(v) && el.textContent.includes('¥');
+      const element = document.querySelector('[data-price="Ubud Tour"]');
+      return element && element.textContent.replace(/[^0-9]/g, '') === String(v) && element.textContent.includes('¥');
     },
     want,
     { timeout: 8000 },

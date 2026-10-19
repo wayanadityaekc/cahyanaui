@@ -63,7 +63,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
       experience: byCat(['experience']),
       destination: byCat(['place']),
       transfer: catalog.transfers.map((t) => t.display),
-      charter: catalog.charters.map((c) => c.display),
+      charter: catalog.charters.map((charter) => charter.display),
     };
     Object.entries(sets).forEach(([cat, arr]) => {
       if (!arr.length) return;

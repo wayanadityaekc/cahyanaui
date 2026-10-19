@@ -60,7 +60,7 @@ for (const w of [390, 1280]) {
   for (const [path, trip] of [['/ubud-tour.html', 'Ubud Tour'], ['/ubud-culture-day.html', 'Ubud Culture Day'], ['/airport-transfer.html', 'Airport – Ubud']]) {
     const { ctx, page } = await open(path, w);
     const andras = (await cards(page)).filter((c) => c.name === 'Andras');
-    ok(andras.length === 1 && andras[0].trip === trip, `${w} ${path}: Andras cards ${JSON.stringify(andras.map((c) => c.trip))}`);
+    ok(andras.length === 1 && andras[0].trip === trip, `${w} ${path}: Andras cards ${JSON.stringify(andras.map((andra) => andra.trip))}`);
     await ctx.close();
   }
 }

@@ -27,7 +27,7 @@ for (const w of [390, 1280]) {
     ok(!/We Accept/i.test(text), `${w}${path}: full footer's "We Accept" column still showing`);
     ok(!/Featured On/i.test(text), `${w}${path}: full footer's "Featured On" column still showing`);
     ok(!/Explore/i.test(text), `${w}${path}: full footer's "Explore" column heading still showing`);
-    const h = await footer.evaluate((el) => el.getBoundingClientRect().height);
+    const h = await footer.evaluate((element) => element.getBoundingClientRect().height);
     ok(h < 140, `${w}${path}: compact footer measured ${h}px tall, expected under 140`);
     if (w <= 560) {
       const navH = await page.evaluate(() => document.querySelector('header').getBoundingClientRect().height);

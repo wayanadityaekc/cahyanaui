@@ -68,7 +68,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
 
   return (
     <div className="flex gap-2 justify-center" role="group" aria-label="Verification code">
-      {digits.map((d, i) => (
+      {digits.map((digit, i) => (
         <input
           key={i}
           ref={(input) => { refs.current[i] = input; }}
@@ -77,7 +77,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
           pattern="[0-9]*"
           autoComplete={i === 0 ? 'one-time-code' : 'off'}
           maxLength={1}
-          value={d}
+          value={digit}
           disabled={disabled}
           aria-invalid={!!error}
           onChange={handleChange(i)}

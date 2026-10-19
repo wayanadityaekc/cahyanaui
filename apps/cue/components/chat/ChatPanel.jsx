@@ -189,9 +189,9 @@ export default function ChatPanel({ open, onClose }) {
     setThinking(true);
 
     setTimeout(() => {
-      const res = answerFor(text, ctx);
-      const msg = { id: uid(), from: 'bot', text: res.text, rows: res.rows, link: res.link };
-      if (res.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(text); }
+      const result = answerFor(text, ctx);
+      const msg = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
+      if (result.kind === 'handoff') { msg.text = CHAT_COPY.connecting; connect(text); }
       setLog((prev) => [...prev, msg]);
       setThinking(false);
     }, THINK_MS);
@@ -350,13 +350,13 @@ function BotReply({ m, onAsk }) {
     <>
       <p className={BUBBLE_BOT}>{m.text}</p>
 
-      {m.rows && m.rows.map((r) => (
-        <a key={r.label} className={ROW} data-pricerow href={r.href}>
+      {m.rows && m.rows.map((row) => (
+        <a key={row.label} className={ROW} data-pricerow href={row.href}>
           <span className={ROW_NAME}>
-            {r.label}
-            {r.note && <small className={ROW_NOTE}>{r.note}</small>}
+            {row.label}
+            {row.note && <small className={ROW_NOTE}>{row.note}</small>}
           </span>
-          {r.price && <span className={ROW_PRICE}>{r.price}</span>}
+          {row.price && <span className={ROW_PRICE}>{row.price}</span>}
         </a>
       ))}
 

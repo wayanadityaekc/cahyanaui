@@ -38,7 +38,7 @@ check('dot shows before the first tap', fresh.includes('data-my-pill-dot'));
 check('dot gone once seen', !seen.includes('data-my-pill-dot'));
 check('no number on the bag', !/>\s*\d+\s*</.test(fresh));
 check("the EN button's box: 32px high, 12px corners, line border", /\bh-8\b/.test(fresh) && /\brounded-md\b/.test(fresh) && fresh.includes('[border:1px_solid_var(--line)]'));
-const onTap = () => {};
+function onTap() {}
 check('onTap is the click handler', MyCahyanaPill({ href, onTap }).props.onClick === onTap);
 
 fs.rmSync(out, { recursive: true, force: true });

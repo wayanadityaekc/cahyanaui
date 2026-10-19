@@ -27,7 +27,7 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
     if (!open) return undefined;
     const opener = document.activeElement;
     if (boxRef.current) boxRef.current.focus();
-    const onKey = (e) => { if (e.key === 'Escape') closeRef.current(); };
+    function onKey(e) { if (e.key === 'Escape') closeRef.current(); }
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);

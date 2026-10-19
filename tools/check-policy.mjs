@@ -1,7 +1,7 @@
 import { chromium } from 'playwright-core';
 const BASE = process.argv[2];
 let pass = 0, fail = 0;
-const ok = (c, m) => { if (c) pass++; else { fail++; console.log('  FAIL', m); } };
+function ok(c, m) { if (c) pass++; else { fail++; console.log('  FAIL', m); } }
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 

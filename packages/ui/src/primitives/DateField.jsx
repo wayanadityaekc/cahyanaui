@@ -32,7 +32,9 @@ export default function DateField({ label = 'Date', value, onChange, min, max, p
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    function onKey(e) {
+  return (e.key === 'Escape' && setOpen(false));
+}
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);

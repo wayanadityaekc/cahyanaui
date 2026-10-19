@@ -11,16 +11,16 @@ if (!fs.existsSync(path.join(DEST, '.git'))) {
   process.exit(1);
 }
 
-const copyDir = (from, to) => {
+function copyDir(from, to) {
   fs.rmSync(to, { recursive: true, force: true });
   fs.cpSync(from, to, { recursive: true });
-};
+}
 
 for (const d of ['app', 'components', 'lib', 'content']) {
   copyDir(path.join(APP, d), path.join(DEST, d));
 }
 
-const mergeDir = (from, to) => {
+function mergeDir(from, to) {
   if (!fs.existsSync(from)) return;
   fs.mkdirSync(to, { recursive: true });
   for (const e of fs.readdirSync(from, { withFileTypes: true })) {
@@ -29,7 +29,7 @@ const mergeDir = (from, to) => {
     if (e.isDirectory()) mergeDir(src, dst);
     else fs.copyFileSync(src, dst);
   }
-};
+}
 mergeDir(path.join(APP, 'public'), path.join(DEST, 'public'));
 for (const f of ['next.config.js', 'jsconfig.json', 'postcss.config.mjs']) {
   const src = path.join(APP, f);

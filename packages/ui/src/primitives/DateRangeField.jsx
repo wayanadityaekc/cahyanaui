@@ -17,19 +17,20 @@ import {
 
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const panelRange = (open) =>
-  `fixed z-[340] flex flex-col overflow-hidden bg-surface-raised [overscroll-behavior:contain] inset-x-[2%] top-1/2 max-h-[80%] rounded-xl [border:1px_solid_var(--line)] [box-shadow:var(--shadow-xl)] [transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] min-[769px]:inset-auto min-[769px]:max-h-none min-[769px]:top-1/2 min-[769px]:left-1/2 min-[769px]:w-[min(1040px,94vw)] min-[769px]:h-[min(92vh,860px)] min-[769px]:rounded-xl min-[769px]:[border:1px_solid_var(--line)] min-[769px]:[box-shadow:var(--shadow-xl)] ${
+function panelRange(open) {
+  return (`fixed z-[340] flex flex-col overflow-hidden bg-surface-raised [overscroll-behavior:contain] inset-x-[2%] top-1/2 max-h-[80%] rounded-xl [border:1px_solid_var(--line)] [box-shadow:var(--shadow-xl)] [transition:opacity_0.24s_var(--ease),transform_0.24s_var(--ease),visibility_0.24s] min-[769px]:inset-auto min-[769px]:max-h-none min-[769px]:top-1/2 min-[769px]:left-1/2 min-[769px]:w-[min(1040px,94vw)] min-[769px]:h-[min(92vh,860px)] min-[769px]:rounded-xl min-[769px]:[border:1px_solid_var(--line)] min-[769px]:[box-shadow:var(--shadow-xl)] ${
     open
       ? 'opacity-100 visible pointer-events-auto [transform:translateY(-50%)] min-[769px]:[transform:translate(-50%,-50%)]'
       : 'opacity-0 invisible pointer-events-none [transform:translateY(-48%)] min-[769px]:[transform:translate(-50%,-48%)]'
-  }`;
+  }`);
+}
 const PANEL_HEAD_RANGE = 'flex items-center justify-between flex-none pt-4 px-5 pb-3 [border-bottom:1px_solid_var(--line)] bg-surface-raised';
 const RANGE_CAP = 'flex items-center justify-between gap-2 mb-4';
 const RANGE_TITLE = 'm-0 font-body font-semibold text-[1.15rem] text-gold';
 const RANGE_ARROW = 'w-9 h-9 inline-flex items-center justify-center rounded-base [border:1px_solid_var(--line)] bg-surface-raised text-gold cursor-pointer hover:bg-cream';
 const RANGE_DOW = 'font-body font-medium text-small text-muted text-center py-2';
-const rangeDay = (off, state, faded) =>
-  `aspect-square flex items-center justify-center font-body text-[1rem] border-none ${
+function rangeDay(off, state, faded) {
+  return (`aspect-square flex items-center justify-center font-body text-[1rem] border-none ${
     state === 'start' || state === 'end'
       ? 'rounded-base bg-gold text-white font-semibold cursor-pointer'
       : state === 'in'
@@ -39,10 +40,13 @@ const rangeDay = (off, state, faded) =>
           : off
             ? 'rounded-base bg-transparent text-[#cfccc4] cursor-default'
             : 'rounded-base bg-transparent text-ink cursor-pointer hover:bg-cream'
-  }`;
+  }`);
+}
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function iso(d) {
+  return (`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+}
 
 function fmt(v) {
   if (!v) return '';
@@ -82,7 +86,9 @@ export default function DateRangeField({
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    function onKey(e) {
+  return (e.key === 'Escape' && setOpen(false));
+}
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
@@ -110,12 +116,12 @@ export default function DateRangeField({
   }
   const months = [cursor, new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)];
 
-  const stateOf = (v) => {
+  function stateOf(v) {
     if (checkIn && v === checkIn) return 'start';
     if (checkOut && v === checkOut) return 'end';
     if (checkIn && checkOut && v > checkIn && v < checkOut) return 'in';
     return null;
-  };
+  }
 
   function selectable(v) {
     if (choosingEnd) return v > checkIn ? canCheckOut(v, checkIn, { busy, limits }) : canCheckIn(v, { busy, limits });
@@ -139,8 +145,8 @@ export default function DateRangeField({
     setOpen(true);
   }
 
-  const trigger = (which, label, val, placeholder) => (
-    <button
+  function trigger(which, label, val, placeholder) {
+  return (<button
       type="button"
       className={CONTROL}
       aria-haspopup="dialog"
@@ -150,8 +156,8 @@ export default function DateRangeField({
     >
       <span className={val ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{val ? fmt(val) : placeholder}</span>
       <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
-    </button>
-  );
+    </button>);
+}
 
   const panel = (
     <div className={panelRange(open)}>

@@ -9,16 +9,16 @@ const RETIRED = ['wrap', 'wrap-mid', 'wrap-read', 'section', 'card', 'card-hover
   'loadscreen', 'loadscreen--out', 'loadscreen__logo', 'loadscreen__spin'];
 const KEPT = ['prose-copy', 'hs-locked', 'stickybar'];
 
-const walk = (d, out = []) => {
+function walk(d, out = []) {
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, e.name);
     if (e.isDirectory()) walk(p, out); else out.push(p);
   }
   return out;
-};
+}
 const files = walk(OUT);
 let pass = 0, fail = 0;
-const say = (c, m) => { if (c) pass++; else { fail++; console.log('  FAIL', m); } };
+function say(c, m) { if (c) pass++; else { fail++; console.log('  FAIL', m); } }
 
 const css = files.filter((f) => f.endsWith('.css')).map((f) => fs.readFileSync(f, 'utf8')).join('\n');
 for (const c of RETIRED) {

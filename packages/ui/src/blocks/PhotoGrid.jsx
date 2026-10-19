@@ -21,7 +21,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
 
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    function onKey(e) { if (e.key === 'Escape') onClose(); }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
@@ -33,7 +33,7 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
     }
     history.pushState({ photoGrid: true }, '');
     pushed.current = true;
-    const onPop = () => { pushed.current = false; onClose(); };
+    function onPop() { pushed.current = false; onClose(); }
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, [open, onClose]);

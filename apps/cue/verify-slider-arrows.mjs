@@ -1,7 +1,9 @@
 import { chromium } from 'playwright-core';
 
 const SITE = process.env.BASE || 'http://127.0.0.1:4000';
-const review = (i) => ({ name: `Guest ${i}`, country: 'Spain', rating: 5, message: `Review ${i}, on time and friendly.`, service: 'Ubud Tour', source: 'cahyana', created_at: `2026-09-${10 + i}` });
+function review(i) {
+  return ({ name: `Guest ${i}`, country: 'Spain', rating: 5, message: `Review ${i}, on time and friendly.`, service: 'Ubud Tour', source: 'cahyana', created_at: `2026-09-${10 + i}` });
+}
 
 let pass = 0, fail = 0;
 function ok(cond, msg) { if (cond) pass++; else { fail++; process.stdout.write(`FAIL ${msg}\n`); } }
@@ -33,10 +35,12 @@ async function arrows(page, sel) {
   return page.evaluate((s) => {
     const t = document.querySelector(s);
     const holder = t.parentElement;
-    const shown = (label) => [...holder.querySelectorAll(`:scope > button[aria-label="${label}"]`)].some((b) => {
+    function shown(label) {
+  return ([...holder.querySelectorAll(`:scope > button[aria-label="${label}"]`)].some((b) => {
       const cs = getComputedStyle(b); const r = b.getBoundingClientRect();
       return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.5 && r.width > 0;
-    });
+    }));
+}
     return {
       canPrev: t.scrollLeft > 4,
       canNext: t.scrollLeft + t.clientWidth < t.scrollWidth - 4,

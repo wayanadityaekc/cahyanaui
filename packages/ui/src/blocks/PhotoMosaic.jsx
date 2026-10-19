@@ -36,7 +36,7 @@ export default function PhotoMosaic({
 }) {
   if (!images.length) return null;
 
-  const tile = (i, cls) => {
+  function tile(i, cls) {
     const p = images[i];
     return (
       <button
@@ -56,7 +56,7 @@ export default function PhotoMosaic({
         />
       </button>
     );
-  };
+  }
 
   const children = [];
   for (let i = 0; i < images.length; i += 3) {

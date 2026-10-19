@@ -14,7 +14,7 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
     setCurrent((slideIndex + total) % total);
   }
 
-  function near(slideIndex) {
+  function isSlideNear(slideIndex) {
     const gap = Math.abs(slideIndex - current);
     return gap <= 1 || gap === total - 1;
   }
@@ -40,7 +40,7 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
         <div
           key={slide.id}
           className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ease-[ease] ${index === current ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          style={near(index) ? { backgroundImage: `url(${slide.img})` } : undefined}
+          style={isSlideNear(index) ? { backgroundImage: `url(${slide.img})` } : undefined}
           aria-hidden={index !== current}
         >
           <span

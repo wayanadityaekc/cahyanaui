@@ -8,15 +8,15 @@ export const TIME_SLOTS = (() => {
   return out;
 })();
 
-function range(from, to) {
+function filterTimeSlotsInRange(from, to) {
   return TIME_SLOTS.filter((timeSlot) => timeSlot >= from && timeSlot <= to);
 }
 
 const PRE_DAWN = ['02:00', '03:00'];
 const MORNING = ['08:00', '08:30', '09:00'];
-const LEMPUYANG = range('03:00', '09:00');
-const DAYLIGHT = range('07:00', '16:00');
-const AFTERNOON = range('12:00', '16:00');
+const LEMPUYANG = filterTimeSlotsInRange('03:00', '09:00');
+const DAYLIGHT = filterTimeSlotsInRange('07:00', '16:00');
+const AFTERNOON = filterTimeSlotsInRange('12:00', '16:00');
 
 const CATEGORY_SLOTS = {
   tour: MORNING,
@@ -42,13 +42,13 @@ export const RESTRICTED_SLOTS = {
 
 const RESTRICTABLE = new Set(['tour', 'experience', 'performance', 'combo', 'place']);
 
-export function fmtTime(time) {
+export function formatTime(time) {
   if (!time) return '';
   const [hours, minutes] = time.split(':').map(Number);
   return `${hours % 12 === 0 ? 12 : hours % 12}:${String(minutes).padStart(2, '0')} ${hours < 12 ? 'AM' : 'PM'}`;
 }
 
-export function fmtDate(dateValue) {
+export function formatDate(dateValue) {
   if (!dateValue) return '';
   const [year, month, day] = String(dateValue).split('-').map(Number);
   if (!year || !month || !day) return String(dateValue);
@@ -59,27 +59,27 @@ export function fmtDate(dateValue) {
   });
 }
 
-export function fmtHour(hour) {
+export function formatHour(hour) {
   const hourNumber = Number(hour);
   return `${hourNumber % 12 === 0 ? 12 : hourNumber % 12} ${hourNumber < 12 ? 'AM' : 'PM'}`;
 }
 
-export function allowedSlots(category, itemName) {
+export function findAllowedSlots(category, itemName) {
   if (!RESTRICTABLE.has(category)) return null;
   return RESTRICTED_SLOTS[itemName] || CATEGORY_SLOTS[category] || null;
 }
 
 export function timeOptions(category, itemName) {
-  const allowed = allowedSlots(category, itemName);
+  const allowed = findAllowedSlots(category, itemName);
   return TIME_SLOTS.map((timeSlot) => ({
     value: timeSlot,
-    label: fmtTime(timeSlot),
+    label: formatTime(timeSlot),
     disabled: !!allowed && !allowed.includes(timeSlot),
   }));
 }
 
-export function defaultSlot(category, itemName) {
-  const allowed = allowedSlots(category, itemName);
+export function findDefaultSlot(category, itemName) {
+  const allowed = findAllowedSlots(category, itemName);
   return allowed ? allowed[0] : '';
 }
 

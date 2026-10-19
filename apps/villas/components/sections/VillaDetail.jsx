@@ -36,8 +36,8 @@ import { useTripPrefs } from '@/components/providers/TripPrefsProvider';
 import BookingTerms from '@/components/booking/BookingTerms';
 import { CUE_TOURS } from '@/content/crossSell';
 import { SERVICES } from '@/lib/bookingCart';
-import { WHATSAPP_LINK, CUE_LINK, whatsappLink } from '@/lib/constants';
-import { STAY_RULES, baliToday } from '@/lib/availability';
+import { WHATSAPP_LINK, CUE_LINK, buildWhatsappLink } from '@/lib/constants';
+import { STAY_RULES, formatBaliToday } from '@/lib/availability';
 
 function scrollToCalendar() {
   const target = document.getElementById('availability');
@@ -54,7 +54,7 @@ export default function VillaDetail({ villa }) {
   const [guests, setGuests] = useState(Math.min(preferredGuests || 2, villa.guests));
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [today, setToday] = useState('');
-  useEffect(() => setToday(baliToday()), []);
+  useEffect(() => setToday(formatBaliToday()), []);
   const availability = useVillaAvailability(villa.slug);
   const calendar = today ? availability : { status: 'loading', busy: [] };
 
@@ -219,7 +219,7 @@ export default function VillaDetail({ villa }) {
                   <p role="status" className="m-0 text-small text-green" data-availability="unknown">
                     We can&apos;t load the live calendar right now, so our team will confirm your dates by hand.
                   </p>
-                  <Button as="a" full href={whatsappLink(askMessage)} target="_blank" rel="noopener">
+                  <Button as="a" full href={buildWhatsappLink(askMessage)} target="_blank" rel="noopener">
                     Ask on WhatsApp
                   </Button>
                 </div>

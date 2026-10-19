@@ -3,7 +3,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function checkAssertion(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 const browser = await chromium.launch({
@@ -11,7 +11,7 @@ const browser = await chromium.launch({
 });
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 
-async function ctxFor(viewportWidth, api) {
+async function createContextFor(viewportWidth, api) {
   const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
   await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
@@ -25,7 +25,7 @@ async function ctxFor(viewportWidth, api) {
 
 for (const width of [390, 1280]) {
   for (const kind of ['existing', 'new']) {
-    const browserContext = await ctxFor(width, {
+    const browserContext = await createContextFor(width, {
       '/account/session': { status: 'error' },
       '/api/account':
         kind === 'existing'
@@ -51,32 +51,32 @@ for (const width of [390, 1280]) {
         .first()
         .innerText()
         .catch(() => '');
-      ok(
+      checkAssertion(
         /already have an account as/i.test(note) && note.includes('andras@example.com'),
         `${width}/create-existing: the guest is not told which account this is (got "${note}")`,
       );
-      ok(!token, `${width}/create-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
-      ok(
+      checkAssertion(!token, `${width}/create-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
+      checkAssertion(
         !(await page.locator('#auth-cemail:visible').count()),
         `${width}/create-existing: sign-up form still showing instead of the code stage`,
       );
-      ok(
+      checkAssertion(
         (await page.locator('input[inputmode="numeric"]:visible').count()) === 6,
         `${width}/create-existing: did not land on the 6-box code entry`,
       );
     } else {
-      ok(token === 'tok-new', `${width}/create-new: a new guest is no longer signed in (${token})`);
-      ok(
+      checkAssertion(token === 'tok-new', `${width}/create-new: a new guest is no longer signed in (${token})`);
+      checkAssertion(
         !(await page.locator('#auth-cemail:visible').count()),
         `${width}/create-new: the modal stayed open after a real sign-up`,
       );
     }
-    ok(errs.length === 0, `${width}/create-${kind}: page errors ${errs.join(' | ')}`);
+    checkAssertion(errs.length === 0, `${width}/create-${kind}: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 
   for (const kind of ['existing', 'new']) {
-    const browserContext = await ctxFor(width, {
+    const browserContext = await createContextFor(width, {
       '/account/session': { account: { id: 9, name: 'Signed In', email: 'fresh@example.com' } },
       '/inquiry': {
         status: 'saved',
@@ -123,15 +123,15 @@ for (const width of [390, 1280]) {
       .first()
       .innerText()
       .catch(() => '');
-    ok(!note, `${width}/book-${kind}: a signed-in guest was told to check an inbox`);
-    ok(token === 'tok-signed-in', `${width}/book-${kind}: the session was dropped or swapped (${token})`);
-    ok(
+    checkAssertion(!note, `${width}/book-${kind}: a signed-in guest was told to check an inbox`);
+    checkAssertion(token === 'tok-signed-in', `${width}/book-${kind}: the session was dropped or swapped (${token})`);
+    checkAssertion(
       await page.locator('text=Booking Received').isVisible(),
       `${width}/book-${kind}: never reached the success screen`,
     );
     const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(over <= 0, `${width}/book-${kind}: page overflows by ${over}px`);
-    ok(errs.length === 0, `${width}/book-${kind}: page errors ${errs.join(' | ')}`);
+    checkAssertion(over <= 0, `${width}/book-${kind}: page overflows by ${over}px`);
+    checkAssertion(errs.length === 0, `${width}/book-${kind}: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 }

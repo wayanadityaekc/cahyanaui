@@ -8,9 +8,9 @@ import DokuCheckout from '@/components/booking/DokuCheckout';
 import PayPalCheckout from '@/components/booking/PayPalCheckout';
 import { useAccount } from '@/components/providers/AccountProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
-import { bookingBody, bookingLines } from '@/lib/bookingPayload';
+import { buildBookingBody, buildBookingLines } from '@/lib/bookingPayload';
 import { API_BASE, TOKEN_KEY } from '@/lib/constants';
-import { DEFAULT_RAIL, RAIL_CHOICES, noteFor, railFor } from '@/lib/rails';
+import { DEFAULT_RAIL, RAIL_CHOICES, buildRailNote, chooseRail } from '@/lib/rails';
 
 const PAY_COPY = {
   secure: 'Card details go straight to PayPal from a secure field. They never reach our site or our server.',
@@ -44,7 +44,7 @@ function writeToken(token) {
   } catch (e) {}
 }
 
-function guestProblems({ name, email, phone }) {
+function collectGuestProblems({ name, email, phone }) {
   const problems = {};
   if (!name.trim()) problems.name = 'Please enter your name.';
   if (!EMAIL_RE.test(email.trim())) problems.email = 'Please enter a valid email, like you@gmail.com.';
@@ -85,7 +85,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         const response = await fetch(`${API_BASE}/pricing/quote`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ currency, lines: bookingLines(cart), payment: true }),
+          body: JSON.stringify({ currency, lines: buildBookingLines(cart), payment: true }),
         });
         const data = await response.json().catch(() => null);
         if (!alive) return;
@@ -113,7 +113,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
   }
 
   function toPayment() {
-    const problems = guestProblems(guest);
+    const problems = collectGuestProblems(guest);
     setErrors(problems);
     if (!Object.keys(problems).length) setStep('pay');
   }
@@ -126,7 +126,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
       const response = await fetch(`${API_BASE}/inquiry`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify(bookingBody({ cart, guest, currency, payOption: option })),
+        body: JSON.stringify(buildBookingBody({ cart, guest, currency, payOption: option })),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok || data.status !== 'saved') {
@@ -226,7 +226,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
               options={optionRows}
               value={option}
               onChange={setOption}
-              note={noteFor(currency, railFor(rail)) || ''}
+              note={buildRailNote(currency, chooseRail(rail)) || ''}
             />
           )}
           {message && (
@@ -255,7 +255,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
           <p className="m-0 mb-3 text-body text-green">
             Booking <b>{bookingRef}</b> is saved. Pay {formatAmount(chosen.amount.display)} to confirm it.
           </p>
-          {railFor(rail) === 'paypal' ? (
+          {chooseRail(rail) === 'paypal' ? (
             <PayPalCheckout
               bookingRef={bookingRef}
               option={option}

@@ -25,7 +25,7 @@ function decode(value) {
     .replace(/&quot;/g, '"');
 }
 
-function localFile(raw) {
+function resolveLocalFile(raw) {
   let ref = decode(raw)
     .trim()
     .replace(/^['"]|['"]$/g, '');
@@ -42,37 +42,37 @@ function localFile(raw) {
 
 const pages = walk(OUT);
 const referenced = new Map();
-function note(raw, page) {
-  const file = localFile(raw);
+function recordReference(raw, page) {
+  const file = resolveLocalFile(raw);
   if (file && !referenced.has(file)) referenced.set(file, path.relative(OUT, page));
 }
 
 pages.forEach((page) => {
   const html = fs.readFileSync(page, 'utf8');
   [...html.matchAll(/\s(?:src|href|poster)="([^"]+)"/g)].forEach((match) => {
-    note(match[1], page);
+    recordReference(match[1], page);
   });
   [...html.matchAll(/\s(?:srcset|srcSet|imagesrcset)="([^"]+)"/gi)].forEach((match) => {
     match[1].split(',').forEach((candidate) => {
-      note(candidate.trim().split(/\s+/)[0], page);
+      recordReference(candidate.trim().split(/\s+/)[0], page);
     });
   });
   [...html.matchAll(/url\(([^)]+)\)/g)].forEach((match) => {
-    note(match[1], page);
+    recordReference(match[1], page);
   });
   [...html.matchAll(/<meta[^>]*\scontent="(https:\/\/ubudprivatevillas\.com\/[^"]+)"/g)].forEach((match) => {
-    note(match[1], page);
+    recordReference(match[1], page);
   });
 });
 
-function stylesheets(dir) {
+function listStylesheets(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return stylesheets(full);
+    if (entry.isDirectory()) return listStylesheets(full);
     return entry.name.endsWith('.css') ? [full] : [];
   });
 }
-const cssFiles = stylesheets(OUT);
+const cssFiles = listStylesheets(OUT);
 cssFiles.forEach((css) => {
   const text = fs.readFileSync(css, 'utf8');
   [...text.matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)].forEach((match) => {
@@ -84,7 +84,7 @@ cssFiles.forEach((css) => {
           .relative(OUT, path.resolve(path.dirname(css), ref.split(/[?#]/)[0]))
           .split(path.sep)
           .join('/')}`;
-    note(absolute, css);
+    recordReference(absolute, css);
   });
 });
 

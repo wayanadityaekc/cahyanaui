@@ -31,17 +31,17 @@ export default function InfoPopover({ children, label = 'How to use this form', 
 
   useEffect(() => {
     if (!isOpen) return;
-    function onDoc(event) {
+    function handleDocumentClick(event) {
       if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(event) {
+    function handleKeyDown(event) {
       return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 

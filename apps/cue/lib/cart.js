@@ -5,7 +5,7 @@ export function addDaysStr(dateStr, dayOffset) {
   return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}-${String(shifted.getDate()).padStart(2, '0')}`;
 }
 
-export function cascadeFrom(state, dayIndex, date) {
+export function cascadeDates(state, dayIndex, date) {
   const days = (state.days || []).map((day) => ({ ...day }));
   days.forEach((day, index) => {
     if (index >= dayIndex) day.date = addDaysStr(date, index - dayIndex);
@@ -23,7 +23,7 @@ export function hasClash({ days }, isFullDay) {
   });
 }
 
-export function clashDates({ days }, isFullDay) {
+export function findClashDates({ days }, isFullDay) {
   const seen = {};
   const out = [];
   (days || []).forEach((day) => {
@@ -90,7 +90,7 @@ export function removeRow(state, { kind, localIndex, day_no, service }) {
 
 export function setRowDate(state, row, date, time) {
   if (row.kind === 'day' && row.day_no) {
-    const moved = cascadeFrom(state, row.day_no - 1, date);
+    const moved = cascadeDates(state, row.day_no - 1, date);
     return setItemTime(moved, row.day_no - 1, row.itemIndex || 0, time || '');
   }
   const next = JSON.parse(JSON.stringify(state));

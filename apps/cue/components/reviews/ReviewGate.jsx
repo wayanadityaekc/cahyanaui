@@ -13,7 +13,7 @@ export default function ReviewGate({ className, children = 'Write review' }) {
   const [isBlockedOpen, setIsBlockedOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
 
-  function onClick() {
+  function handleReviewClick() {
     if (!hydrated) return;
     if (!account) {
       setIsAuthOpen(true);
@@ -28,7 +28,7 @@ export default function ReviewGate({ className, children = 'Write review' }) {
 
   return (
     <>
-      <button type="button" className={className} onClick={onClick}>
+      <button type="button" className={className} onClick={handleReviewClick}>
         {children}
       </button>
 

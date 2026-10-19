@@ -19,12 +19,12 @@ import {
   CONTROL_HINT,
   CONTROL_VAL_RICH,
   CONTROL_VAL_RICH_PLACEHOLDER,
-  panelPopup,
+  buildPanelPopupClass,
   PANEL_HEAD,
   PANEL_HEAD_H3,
   PANEL_CLOSE,
   PANEL_BODY,
-  opt,
+  buildOptionClass,
   CSEL_GROUP,
   BK_NATIVE,
   HS_OPT_FLAG,
@@ -61,26 +61,26 @@ export default function Select({
 
   useEffect(() => {
     if (!isOpen || asPortal) return;
-    function onDoc(event) {
+    function handleDocumentClick(event) {
       if (groupRef.current && !groupRef.current.contains(event.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
   }, [isOpen, asPortal]);
 
   useEffect(() => {
     if (!isOpen) return;
-    function onKey(event) {
+    function handleKeyDown(event) {
       return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
   const selected = options.find((option) => String(option.value) === String(value));
 
   const panel = (
-    <div className={panelPopup(isOpen)} data-portal="select" data-open={isOpen ? '' : undefined}>
+    <div className={buildPanelPopupClass(isOpen)} data-portal="select" data-open={isOpen ? '' : undefined}>
       <div className={PANEL_HEAD}>
         <h3 className={PANEL_HEAD_H3}>{label}</h3>
         <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
@@ -95,7 +95,7 @@ export default function Select({
             role="option"
             aria-selected={String(option.value) === String(value)}
             aria-disabled={option.disabled || undefined}
-            className={opt(String(option.value) === String(value), option.disabled)}
+            className={buildOptionClass(String(option.value) === String(value), option.disabled)}
             disabled={!!option.disabled}
             onClick={() => {
               if (option.disabled) return;

@@ -5,7 +5,7 @@ const browser = await chromium.launch({
 
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
@@ -39,22 +39,22 @@ for (const width of [390, 1280]) {
       await page.waitForTimeout(400);
     }
 
-    ok((await page.locator('body').innerText()).includes(lead), `${width}${path}: expected lead text missing`);
+    recordCheck((await page.locator('body').innerText()).includes(lead), `${width}${path}: expected lead text missing`);
 
     const button = page.locator('button', { hasText: 'Sign in' }).first();
-    ok((await button.count()) >= 1, `${width}${path}: no "Sign in" button on the page`);
+    recordCheck((await button.count()) >= 1, `${width}${path}: no "Sign in" button on the page`);
 
     await button.click();
     await page.waitForTimeout(400);
     const dlg = page.locator('[role="dialog"]:visible').first();
     const dlgCount = await dlg.count();
-    ok(dlgCount === 1, `${width}${path}: clicking Sign in did not open a visible dialog`);
+    recordCheck(dlgCount === 1, `${width}${path}: clicking Sign in did not open a visible dialog`);
     const dlgText = dlgCount === 1 ? await dlg.innerText() : '';
-    ok(/email/i.test(dlgText), `${width}${path}: opened dialog doesn't look like the sign-in form`);
+    recordCheck(/email/i.test(dlgText), `${width}${path}: opened dialog doesn't look like the sign-in form`);
 
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
-    ok(errs.length === 0, `${width}${path}: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}${path}: page errors ${errs.join(' | ')}`);
   }
 
   await browserContext.close();

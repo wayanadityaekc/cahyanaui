@@ -20,7 +20,7 @@ export default function HeroSlider({ slides = [] }) {
 
   const ARROW =
     'w-[30px] h-[30px] flex items-center justify-center border-none rounded-[50%] bg-[rgba(0,0,0,0.3)] p-0 text-white text-[1.25rem] leading-none cursor-pointer hover:bg-[rgba(0,0,0,0.5)]';
-  function dotCls(index, dotIndex) {
+  function buildDotClass(index, dotIndex) {
     let dotClassName = 'rounded-[50%] shadow-[0_0_2px_rgba(0,0,0,0.4)] transition-[all] duration-200 ease-[ease] ';
     if (index === current) dotClassName += 'w-[7px] h-[7px] bg-white';
     else if (total > DOT_MAX && ((dotIndex === 0 && start > 0) || (dotIndex === count - 1 && start + count < total)))
@@ -67,7 +67,7 @@ export default function HeroSlider({ slides = [] }) {
           <div className="hero-slider__dots absolute left-0 right-0 bottom-[16px] max-[768px]:left-auto max-[768px]:right-[14px] max-[768px]:bottom-[2.6rem] z-[2] flex justify-center items-center max-[768px]:justify-end gap-1.5 pointer-events-none">
             {Array.from({ length: count }, (unusedValue, index) => {
               const indexItem = start + index;
-              return <span className={dotCls(indexItem, index)} key={indexItem} />;
+              return <span className={buildDotClass(indexItem, index)} key={indexItem} />;
             })}
           </div>
         </>

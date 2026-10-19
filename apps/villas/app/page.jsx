@@ -24,10 +24,10 @@ import {
   SplitFeature,
 } from '@cahyana/ui';
 import { EXPLORE_MORE, STAY_ADDONS } from '@/content/crossSell';
-import { pageMeta } from '@/lib/seo';
-import { siteSchema } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { buildSiteSchema } from '@/lib/schema';
 
-export const metadata = pageMeta({
+export const metadata = buildPageMeta({
   title: 'Private Pool Villas in Ubud, Bali | Ubud Private Villas',
   description:
     'Two private pool villas in north Ubud, Bali: a 3-bedroom family house and a 2-bedroom ricefield villa. Both rated 4.96 on Airbnb, 10 minutes from Ubud Palace.',
@@ -67,7 +67,7 @@ const SERVICES_HOME = [
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={siteSchema(VILLA_LIST)} />
+      <JsonLd data={buildSiteSchema(VILLA_LIST)} />
       <Hero
         size="page"
         image="/images/cahyana-tibuah.webp"

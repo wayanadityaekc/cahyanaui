@@ -1,9 +1,9 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
 import { JsonLd } from '@cahyana/ui';
-import { pageMeta } from '@/lib/seo';
-import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { buildBreadcrumbList, serviceCrumbs } from '@/lib/schema';
 
-export const metadata = pageMeta({
+export const metadata = buildPageMeta({
   title: 'Scooter Rental in Ubud',
   description:
     'Scooter rental for guests at Cahyana House and Cahyana Tibuah in Ubud. Details are being confirmed; message us with your dates and we will tell you what is available.',
@@ -13,7 +13,7 @@ export const metadata = pageMeta({
 export default function ScooterRentalPage() {
   return (
     <>
-      <JsonLd data={breadcrumbList(serviceCrumbs('Scooter Rental', 'scooter-rental'))} />
+      <JsonLd data={buildBreadcrumbList(serviceCrumbs('Scooter Rental', 'scooter-rental'))} />
       <ServiceDetail
         serviceId="scooter-rental"
         kicker="At Your Villa"

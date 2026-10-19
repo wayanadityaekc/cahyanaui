@@ -10,11 +10,11 @@ export default function Hero() {
 
   useEffect(() => {
     if (!isSheetOpen) return;
-    function onKey(event) {
+    function handleKeyDown(event) {
       return event.key === 'Escape' && setIsSheetOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isSheetOpen]);
 
   useBodyLock(isSheetOpen);

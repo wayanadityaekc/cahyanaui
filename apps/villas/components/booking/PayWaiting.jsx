@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@cahyana/ui';
-import { API_BASE, TOKEN_KEY, whatsappLink } from '@/lib/constants';
+import { API_BASE, TOKEN_KEY, buildWhatsappLink } from '@/lib/constants';
 import { VILLA_LIST } from '@/lib/villas';
 import useBodyLock from '@/components/ui/useBodyLock';
 
@@ -170,7 +170,7 @@ export default function PayWaiting({ bookingRef = '', onClose = () => {}, onConf
                 as="a"
                 full
                 variant="onDark"
-                href={whatsappLink(
+                href={buildWhatsappLink(
                   `Hello, I just paid for booking ${bookingRef} and I'd like to check it came through.`,
                 )}
                 target="_blank"

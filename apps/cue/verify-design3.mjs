@@ -2,7 +2,7 @@ import { chromium } from 'playwright-core';
 const baseUrl = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function checkAssertion(isPassing, message) {
   isPassing ? pass++ : fail++;
   console.log(`${isPassing ? 'ok  ' : 'FAIL'} ${message}`);
 }
@@ -10,7 +10,7 @@ const br = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 
-function api(route) {
+function handleApiRoute(route) {
   const requestUrl = route.request().url();
   function fulfillJson(body) {
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
@@ -42,7 +42,7 @@ for (const width of [390, 1280]) {
   const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
   await browserContext.addInitScript(() => localStorage.setItem('cue_token', 'stub-token'));
   const page = await browserContext.newPage();
-  await page.route('**/api/**', api);
+  await page.route('**/api/**', handleApiRoute);
   const errs = [];
   page.on('pageerror', (error) => errs.push(String(error).slice(0, 110)));
   let seen = 0,
@@ -51,7 +51,7 @@ for (const width of [390, 1280]) {
   const cards = {};
   for (const pagePath of PAGES) {
     const response = await page.goto(baseUrl + pagePath, { waitUntil: 'load' });
-    ok(response.status() === 200, `${width} ${pagePath}: HTTP 200`);
+    checkAssertion(response.status() === 200, `${width} ${pagePath}: HTTP 200`);
     await page.waitForTimeout(350);
     const result = await page.evaluate(() => {
       const tok = getComputedStyle(document.documentElement).getPropertyValue('--shadow-card').trim();
@@ -114,28 +114,31 @@ for (const width of [390, 1280]) {
       if (bad.length < 8) bad.push(`${pagePath} ${offender}`);
     });
   }
-  ok(
+  checkAssertion(
     bad.length === 0,
     `${width}: nol shadow elevasi se-web${bad.length ? `\n        :: ${bad.join('\n        :: ')}` : ''}`,
   );
-  ok(seen > 0, `${width}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
-  ok(/\d/.test(token), `${width}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
+  checkAssertion(seen > 0, `${width}: ring/hairline yang disengaja masih ke-render (${seen} elemen)`);
+  checkAssertion(/\d/.test(token), `${width}: --shadow-card kedefinisi (${token || 'KOSONG'})`);
   ['/', '/tour.html', '/activities.html', '/destinations.html', '/bali-guide.html'].forEach((pagePath) => {
-    ok(cards[pagePath] > 0, `${width} ${pagePath}: kartu masih bawa --shadow-card (${cards[pagePath]} elemen)`);
+    checkAssertion(
+      cards[pagePath] > 0,
+      `${width} ${pagePath}: kartu masih bawa --shadow-card (${cards[pagePath]} elemen)`,
+    );
   });
-  ok(errs.length === 0, `${width}: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
+  checkAssertion(errs.length === 0, `${width}: nol page error${errs[0] ? ` :: ${errs[0]}` : ''}`);
   await browserContext.close();
 }
 
 for (const width of [390, 1280]) {
   const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
   const page = await browserContext.newPage();
-  await page.route('**/api/**', api);
+  await page.route('**/api/**', handleApiRoute);
   await page.goto(`${baseUrl}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForFunction(
     () => getComputedStyle(document.documentElement).getPropertyValue('--header-h').trim() !== '',
   );
-  function box() {
+  function measureHeaderBox() {
     return page.evaluate(() => {
       const header = document.querySelector('header');
       const boxItem = header.getBoundingClientRect();
@@ -156,52 +159,61 @@ for (const width of [390, 1280]) {
     });
     await page.waitForTimeout(450);
   }
-  async function by(distance) {
+  async function scrollByDistance(distance) {
     await page.evaluate((scrollAmount) => window.scrollBy(0, scrollAmount), distance);
     await page.waitForTimeout(450);
   }
 
-  const atTop = await box();
-  ok(atTop.top === 0, `${width}: di puncak header rata atas (top ${atTop.top})`);
-  ok(atTop.bottom > 0, `${width}: di puncak header keliatan`);
+  const atTop = await measureHeaderBox();
+  checkAssertion(atTop.top === 0, `${width}: di puncak header rata atas (top ${atTop.top})`);
+  checkAssertion(atTop.bottom > 0, `${width}: di puncak header keliatan`);
 
   await scrollTo(40);
-  ok((await box()).top === 0, `${width}: 40px = masih utuh, ambang tuck itu 80 (top ${(await box()).top})`);
+  checkAssertion(
+    (await measureHeaderBox()).top === 0,
+    `${width}: 40px = masih utuh, ambang tuck itu 80 (top ${(await measureHeaderBox()).top})`,
+  );
 
   await scrollTo(600);
-  const down = await box();
-  ok(down.bottom > 0, `${width}: scroll ke BAWAH header TETEP keliatan - sticky (bottom ${down.bottom})`);
-  ok(Math.abs(down.top + down.barH) < 2, `${width}: yang ketuck cuma trip bar (top ${down.top} vs -${down.barH})`);
+  const down = await measureHeaderBox();
+  checkAssertion(down.bottom > 0, `${width}: scroll ke BAWAH header TETEP keliatan - sticky (bottom ${down.bottom})`);
+  checkAssertion(
+    Math.abs(down.top + down.barH) < 2,
+    `${width}: yang ketuck cuma trip bar (top ${down.top} vs -${down.barH})`,
+  );
 
-  await by(-200);
-  const up = await box();
-  ok(Math.abs(up.top - down.top) < 2, `${width}: scroll ke ATAS gak ngubah apa-apa lagi (top ${up.top})`);
+  await scrollByDistance(-200);
+  const up = await measureHeaderBox();
+  checkAssertion(Math.abs(up.top - down.top) < 2, `${width}: scroll ke ATAS gak ngubah apa-apa lagi (top ${up.top})`);
 
-  await by(300);
-  ok((await box()).bottom > 0, `${width}: turun lagi tetep keliatan`);
+  await scrollByDistance(300);
+  checkAssertion((await measureHeaderBox()).bottom > 0, `${width}: turun lagi tetep keliatan`);
 
   await scrollTo(40);
-  ok((await box()).bottom > 0, `${width}: di 40 nav masih keliatan`);
-  ok(Math.abs((await box()).top + up.barH) < 2, `${width}: turun-balik ke 40 bar TETEP ketuck (ambang buka 8)`);
+  checkAssertion((await measureHeaderBox()).bottom > 0, `${width}: di 40 nav masih keliatan`);
+  checkAssertion(
+    Math.abs((await measureHeaderBox()).top + up.barH) < 2,
+    `${width}: turun-balik ke 40 bar TETEP ketuck (ambang buka 8)`,
+  );
 
   await scrollTo(0);
-  const back = await box();
-  ok(back.top === 0, `${width}: balik ke puncak = trip bar + nav utuh (top ${back.top})`);
+  const back = await measureHeaderBox();
+  checkAssertion(back.top === 0, `${width}: balik ke puncak = trip bar + nav utuh (top ${back.top})`);
 
   await scrollTo(600);
-  const before = (await box()).top;
+  const before = (await measureHeaderBox()).top;
   for (const distance of [-3, 3, -2, 2, -3]) {
     await page.evaluate((scrollAmount) => window.scrollBy(0, scrollAmount), distance);
   }
   await page.waitForTimeout(400);
-  ok((await box()).top === before, `${width}: goyangan kecil gak bikin header kedip`);
+  checkAssertion((await measureHeaderBox()).top === before, `${width}: goyangan kecil gak bikin header kedip`);
   await browserContext.close();
 }
 
 for (const width of [390, 1280]) {
   const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
   const page = await browserContext.newPage();
-  await page.route('**/api/**', api);
+  await page.route('**/api/**', handleApiRoute);
   await page.goto(`${baseUrl}/ubud-tour.html`, { waitUntil: 'load' });
   await page.waitForTimeout(300);
   const hamburgerLayout = await page.evaluate(() => {
@@ -248,29 +260,29 @@ for (const width of [390, 1280]) {
     `     burger ${hamburgerLayout.bl}-${hamburgerLayout.br} · logo ${hamburgerLayout.ll}-${hamburgerLayout.lr} · akun ${hamburgerLayout.sl}-${hamburgerLayout.sr} · baris ${hamburgerLayout.rowL}+${hamburgerLayout.padL} .. ${hamburgerLayout.rowR}-${hamburgerLayout.padR}`,
   );
   if (width <= 992) {
-    ok(hamburgerLayout.bw > 0, `${width}: burger keliatan di HP (lebar ${hamburgerLayout.bw})`);
-    ok(
+    checkAssertion(hamburgerLayout.bw > 0, `${width}: burger keliatan di HP (lebar ${hamburgerLayout.bw})`);
+    checkAssertion(
       hamburgerLayout.br <= hamburgerLayout.ll,
       `${width}: burger di KIRI logo (burger kanan ${hamburgerLayout.br} <= logo kiri ${hamburgerLayout.ll})`,
     );
-    ok(
+    checkAssertion(
       Math.abs(hamburgerLayout.bl - (hamburgerLayout.rowL + hamburgerLayout.padL)) < 3,
       `${width}: burger nempel di gutter KIRI baris (${hamburgerLayout.bl} vs ${hamburgerLayout.rowL + hamburgerLayout.padL})`,
     );
     if (hamburgerLayout.crumbL != null)
-      ok(
+      checkAssertion(
         Math.abs(hamburgerLayout.bl - hamburgerLayout.crumbL) < 2,
         `${width}: burger satu tepi sama crumb (${hamburgerLayout.bl} vs ${hamburgerLayout.crumbL})`,
       );
   } else {
-    ok(hamburgerLayout.bw === 0, `${width}: desktop gak punya burger (lebar ${hamburgerLayout.bw})`);
-    ok(hamburgerLayout.deskNav, `${width}: link halaman keliatan di bar desktop`);
+    checkAssertion(hamburgerLayout.bw === 0, `${width}: desktop gak punya burger (lebar ${hamburgerLayout.bw})`);
+    checkAssertion(hamburgerLayout.deskNav, `${width}: link halaman keliatan di bar desktop`);
   }
-  ok(
+  checkAssertion(
     hamburgerLayout.rowR - hamburgerLayout.padR - hamburgerLayout.sr < 3,
     `${width}: slot akun nempel di gutter KANAN baris (${Math.round(hamburgerLayout.rowR - hamburgerLayout.padR - hamburgerLayout.sr)}px)`,
   );
-  ok(
+  checkAssertion(
     hamburgerLayout.icons.every((icon) => icon.r <= hamburgerLayout.sr + 1),
     `${width}: slot akun paling kanan di klusternya`,
   );
@@ -278,26 +290,26 @@ for (const width of [390, 1280]) {
   console.log(
     `     gutter baris nav: kiri ${hamburgerLayout.padL} · kanan ${hamburgerLayout.padR} · token ${hamburgerLayout.gutter}`,
   );
-  ok(
+  checkAssertion(
     Math.abs(hamburgerLayout.padL - hamburgerLayout.padR) < 0.5,
     `${width}: gutter kiri == kanan (${hamburgerLayout.padL} vs ${hamburgerLayout.padR})`,
   );
-  ok(hamburgerLayout.padL < 24, `${width}: gutter udah dikecilin dari 24 (${hamburgerLayout.padL})`);
-  ok(hamburgerLayout.padL >= 14, `${width}: tapi gak kekecilan (${hamburgerLayout.padL})`);
+  checkAssertion(hamburgerLayout.padL < 24, `${width}: gutter udah dikecilin dari 24 (${hamburgerLayout.padL})`);
+  checkAssertion(hamburgerLayout.padL >= 14, `${width}: tapi gak kekecilan (${hamburgerLayout.padL})`);
   if (width <= 992)
-    ok(
+    checkAssertion(
       Math.abs(hamburgerLayout.padL - hamburgerLayout.gutter) < 0.5,
       `${width}: di HP gutter nav == --container-x (${hamburgerLayout.padL} vs ${hamburgerLayout.gutter})`,
     );
   if (width <= 992)
-    ok(
+    checkAssertion(
       Math.abs(width - hamburgerLayout.sr - hamburgerLayout.gutter) < 2,
       `${width}: slot akun berhenti satu gutter dari tepi kanan (${Math.round(width - hamburgerLayout.sr)} vs ${hamburgerLayout.gutter})`,
     );
 
   const gaps = await page.evaluate(() => {
     const row = document.getElementById('hamburger').parentElement;
-    function ink(element) {
+    function measureInk(element) {
       const svg = element.querySelector('svg');
       if (svg) return svg.getBoundingClientRect();
       const bars = [...element.querySelectorAll('span')]
@@ -316,7 +328,7 @@ for (const width of [390, 1280]) {
       const contentBox =
         element.matches('[data-account-slot]') && !hasVisibleSvg
           ? element.querySelector('button').getBoundingClientRect()
-          : ink(element);
+          : measureInk(element);
       if (contentBox)
         out.push({
           tag: element.id || element.getAttribute('aria-label') || element.tagName,
@@ -332,9 +344,12 @@ for (const width of [390, 1280]) {
     }));
   });
   console.log(`     celah tinta ikon: ${gaps.map((gap) => `${gap.from}->${gap.to} ${gap.gap}`).join(' · ')}`);
-  ok(gaps.length >= 2, `${width}: minimal 2 celah ke-ukur (${gaps.length}) - kurang = harness rusak, bukan lolos`);
+  checkAssertion(
+    gaps.length >= 2,
+    `${width}: minimal 2 celah ke-ukur (${gaps.length}) - kurang = harness rusak, bukan lolos`,
+  );
   const spread = Math.max(...gaps.map((gap) => gap.gap)) - Math.min(...gaps.map((gap) => gap.gap));
-  ok(
+  checkAssertion(
     spread < 0.6,
     `${width}: celah antar ikon SAMA semua (spread ${spread.toFixed(1)}px :: ${gaps.map((gap) => gap.gap).join(', ')})`,
   );
@@ -369,35 +384,35 @@ for (const width of [390, 1280]) {
   console.log(
     `     drawer ${menuLayout.panel} · burger ${menuLayout.burger} · hit-test ${menuLayout.hit} "${menuLayout.hitCls}"`,
   );
-  ok(
+  checkAssertion(
     menuLayout.w > 100,
     `${width}: panel drawer beneran ke-ukur (lebar ${menuLayout.w}) - rect kosong = harness rusak, bukan lolos`,
   );
-  ok(
+  checkAssertion(
     menuLayout.panelL > -1 && menuLayout.panelL < 1,
     `${width}: panel drawer nempel tepi KIRI (kiri ${menuLayout.panelL})`,
   );
-  ok(
+  checkAssertion(
     menuLayout.overlaps,
     `${width}: panel nutupin burger - itu konsekuensi drawer sesisi, bukan bug (${menuLayout.burger} vs ${menuLayout.panel})`,
   );
-  ok(
+  checkAssertion(
     menuLayout.hit !== 'hamburger',
     `${width}: yang ke-tap di posisi burger itu panel, bukan burger (hit: ${menuLayout.hit})`,
   );
-  ok(menuLayout.closeVisible, `${width}: tombol x keliatan di dalam drawer`);
+  checkAssertion(menuLayout.closeVisible, `${width}: tombol x keliatan di dalam drawer`);
   await page.click('#nav-menu button[aria-label="Close menu"]');
   await page.waitForTimeout(400);
   const shut = await page.evaluate(() => document.querySelector('header nav > ul').getBoundingClientRect().right);
-  ok(shut <= 1, `${width}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
+  checkAssertion(shut <= 1, `${width}: x beneran nutup - panel balik ke luar layar KIRI (kanan ${Math.round(shut)})`);
   await browserContext.close();
 }
 
 for (const width of [390]) {
   const browserContext = await br.newContext({ viewport: { width: width, height: 900 } });
   const page = await browserContext.newPage();
-  page.on('pageerror', (error) => ok(false, `${width}: page error ${error.message}`));
-  await page.route('**/api/**', api);
+  page.on('pageerror', (error) => checkAssertion(false, `${width}: page error ${error.message}`));
+  await page.route('**/api/**', handleApiRoute);
   await page.goto(`${baseUrl}/ubud-tour.html`, { waitUntil: 'load' });
 
   function read() {
@@ -423,16 +438,23 @@ for (const width of [390]) {
   console.log(
     `  ${width}px  tombol ${shut.btnW}x${shut.btnH} · gap ${shut.gap} · bar ${shut.bars.map((bar) => `${bar.w}x${bar.h}`).join(' ')}`,
   );
-  ok(shut.bars.length === 3, `${width}: tepat 3 bar ke-ukur (${shut.bars.length}) - kurang/lebih = harness rusak`);
-  ok(shut.btnW <= 24.5 && shut.btnW >= 18, `${width}: tombol udah dikecilin & gak kekecilan (${shut.btnW})`);
-  ok(
+  checkAssertion(
+    shut.bars.length === 3,
+    `${width}: tepat 3 bar ke-ukur (${shut.bars.length}) - kurang/lebih = harness rusak`,
+  );
+  checkAssertion(
+    shut.btnW <= 24.5 && shut.btnW >= 18,
+    `${width}: tombol udah dikecilin & gak kekecilan (${shut.btnW})`,
+  );
+  checkAssertion(
     shut.bars.every((bar) => bar.w <= shut.btnW + 0.5 && bar.w >= 16),
     `${width}: bar muat di tombol & masih kebaca`,
   );
-  if (width <= 992) ok(shut.btnH >= 32, `${width}: target jempol SENGAJA gak ikut dikecilin, >=32px (${shut.btnH})`);
+  if (width <= 992)
+    checkAssertion(shut.btnH >= 32, `${width}: target jempol SENGAJA gak ikut dikecilin, >=32px (${shut.btnH})`);
 
   const step = +(shut.bars[1].mid - shut.bars[0].mid).toFixed(1);
-  ok(
+  checkAssertion(
     Math.abs(step - (shut.bars[0].h + shut.gap)) < 0.6,
     `${width}: jarak bar == tinggi bar + gap (${step} vs ${shut.bars[0].h + shut.gap})`,
   );
@@ -440,14 +462,14 @@ for (const width of [390]) {
   await page.click('#hamburger');
   await page.waitForTimeout(420);
   const open = await read();
-  ok(
+  checkAssertion(
     open.bars.length === 3,
     `${width}: 3 bar masih ke-ukur pas kebuka (${open.bars.length}) - kalau kurang, spread-nya bohong`,
   );
   const mids = open.bars.map((bar) => bar.mid);
   const spread = Math.max(...mids) - Math.min(...mids);
   console.log(`         X: titik tengah ${mids.join(' / ')} · spread ${spread.toFixed(1)}`);
-  ok(spread < 1.2, `${width}: X beneran nutup - 3 bar satu titik tengah (spread ${spread.toFixed(1)}px)`);
+  checkAssertion(spread < 1.2, `${width}: X beneran nutup - 3 bar satu titik tengah (spread ${spread.toFixed(1)}px)`);
   await browserContext.close();
 }
 
@@ -458,11 +480,11 @@ for (const [label, url] of [
 ]) {
   const browserContext = await br.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await browserContext.newPage();
-  await page.route('**/api/**', api);
+  await page.route('**/api/**', handleApiRoute);
   const response = await page.goto(baseUrl + url, { waitUntil: 'load' });
-  ok(response.status() === 200, `hero ${label}: HTTP 200`);
+  checkAssertion(response.status() === 200, `hero ${label}: HTTP 200`);
   await page.waitForTimeout(500);
-  function shot() {
+  function measureImage() {
     return page.evaluate(() => {
       const image = document.querySelector('header ~ * img, main img') || document.querySelector('img');
       if (!image) return null;
@@ -470,20 +492,23 @@ for (const [label, url] of [
       return { w: +boxItem.width.toFixed(1), h: +boxItem.height.toFixed(1), tr: getComputedStyle(image).transform };
     });
   }
-  const before = await shot();
-  ok(
+  const before = await measureImage();
+  checkAssertion(
     before && before.w > 200,
     `hero ${label}: foto hero ke-ukur (${before ? before.w : 'NULL'}) - rect kosong = harness rusak, bukan lolos`,
   );
   const box = await page.locator('img').first().boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.waitForTimeout(650);
-  const after = await shot();
-  ok(
+  const after = await measureImage();
+  checkAssertion(
     before.w === after.w && before.h === after.h,
     `hero ${label}: foto NOL berubah pas di-hover (${before.w}x${before.h} -> ${after.w}x${after.h})`,
   );
-  ok(after.tr === 'none' || after.tr === before.tr, `hero ${label}: nol transform nyangkut pas hover (${after.tr})`);
+  checkAssertion(
+    after.tr === 'none' || after.tr === before.tr,
+    `hero ${label}: nol transform nyangkut pas hover (${after.tr})`,
+  );
   await browserContext.close();
 }
 

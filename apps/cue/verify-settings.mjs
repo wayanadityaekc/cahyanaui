@@ -27,11 +27,11 @@ const MY_REVIEWS = [
 
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
-async function mkCtx(viewportWidth, { loggedIn = true, deleteFails = false } = {}) {
+async function createSettingsContext(viewportWidth, { loggedIn = true, deleteFails = false } = {}) {
   const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 1100 } });
   let deleted = false;
   await browserContext.route('**/api/**', (route) => {
@@ -60,49 +60,52 @@ async function mkCtx(viewportWidth, { loggedIn = true, deleteFails = false } = {
 
 for (const width of [390, 1280]) {
   {
-    const browserContext = await mkCtx(width, { loggedIn: false });
+    const browserContext = await createSettingsContext(width, { loggedIn: false });
     const page = await browserContext.newPage();
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
     await page.goto('http://127.0.0.1:4000/settings.html', { waitUntil: 'networkidle' });
     await page.waitForTimeout(500);
-    ok(
+    recordCheck(
       /Sign in to manage/i.test(await page.locator('[data-settings]').innerText()),
       `${width}/loggedout: expected sign-in prompt`,
     );
     await page.screenshot({ path: `shots/settings-loggedout-${width}.png` });
-    ok(errs.length === 0, `${width}/loggedout: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}/loggedout: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 
   {
-    const browserContext = await mkCtx(width, { loggedIn: true });
+    const browserContext = await createSettingsContext(width, { loggedIn: true });
     const page = await browserContext.newPage();
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
     await page.goto('http://127.0.0.1:4000/settings.html', { waitUntil: 'networkidle' });
     await page.waitForTimeout(600);
     const root = page.locator('[data-settings]');
-    ok((await root.innerText()).includes(ACC.name), `${width}/loggedin: name not shown`);
-    ok((await root.innerText()).includes(ACC.email), `${width}/loggedin: email not shown`);
+    recordCheck((await root.innerText()).includes(ACC.name), `${width}/loggedin: name not shown`);
+    recordCheck((await root.innerText()).includes(ACC.email), `${width}/loggedin: email not shown`);
     const avatarText = await page.locator('[data-settings] span.bg-gold').first().innerText();
-    ok(avatarText.trim().length > 0, `${width}/loggedin: avatar initials empty`);
+    recordCheck(avatarText.trim().length > 0, `${width}/loggedin: avatar initials empty`);
     await page.waitForTimeout(300);
-    ok((await root.innerText()).includes('Fantastic trip'), `${width}/loggedin: my review text missing`);
-    ok((await root.innerText()).includes('Not currently shown'), `${width}/loggedin: hidden-review note missing`);
+    recordCheck((await root.innerText()).includes('Fantastic trip'), `${width}/loggedin: my review text missing`);
+    recordCheck(
+      (await root.innerText()).includes('Not currently shown'),
+      `${width}/loggedin: hidden-review note missing`,
+    );
     await page.screenshot({ path: `shots/settings-loggedin-${width}.png`, fullPage: true });
 
     await page.fill('#st-name', 'Wayan Edited');
     await page.locator('button', { hasText: 'Save changes' }).click();
     await page.waitForTimeout(400);
-    ok((await root.innerText()).includes('Saved.'), `${width}/loggedin: save did not confirm`);
+    recordCheck((await root.innerText()).includes('Saved.'), `${width}/loggedin: save did not confirm`);
 
-    ok(errs.length === 0, `${width}/loggedin: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}/loggedin: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 
   {
-    const browserContext = await mkCtx(width, { loggedIn: true });
+    const browserContext = await createSettingsContext(width, { loggedIn: true });
     const page = await browserContext.newPage();
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
@@ -111,26 +114,26 @@ for (const width of [390, 1280]) {
     await page.locator('button', { hasText: 'Delete account' }).click();
     await page.waitForTimeout(400);
     const dlg = page.locator('[role="dialog"][aria-label="Delete your account?"]');
-    ok(await dlg.isVisible(), `${width}/delete-cancel: confirmation modal did not open`);
+    recordCheck(await dlg.isVisible(), `${width}/delete-cancel: confirmation modal did not open`);
     const dlgText = await dlg.innerText();
-    ok(
+    recordCheck(
       /stay published/i.test(dlgText) || /stay on record/i.test(dlgText),
       `${width}/delete-cancel: modal doesn't explain what stays`,
     );
     await page.screenshot({ path: `shots/settings-delete-modal-${width}.png` });
     await page.locator('button', { hasText: 'Keep my account' }).click();
     await page.waitForTimeout(400);
-    ok(!(await dlg.isVisible()), `${width}/delete-cancel: modal did not close on cancel`);
-    ok(
+    recordCheck(!(await dlg.isVisible()), `${width}/delete-cancel: modal did not close on cancel`);
+    recordCheck(
       (await page.locator('[data-settings]').innerText()).includes(ACC.email),
       `${width}/delete-cancel: account got deleted on cancel`,
     );
-    ok(errs.length === 0, `${width}/delete-cancel: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}/delete-cancel: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 
   {
-    const browserContext = await mkCtx(width, { loggedIn: true, deleteFails: true });
+    const browserContext = await createSettingsContext(width, { loggedIn: true, deleteFails: true });
     const page = await browserContext.newPage();
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
@@ -141,14 +144,14 @@ for (const width of [390, 1280]) {
     await page.locator('button', { hasText: 'Delete my account' }).click();
     await page.waitForTimeout(500);
     const dlg = page.locator('[role="dialog"][aria-label="Delete your account?"]');
-    ok(await dlg.isVisible(), `${width}/delete-fail: modal closed even though the server refused`);
-    ok(/Could not delete/i.test(await dlg.innerText()), `${width}/delete-fail: no error message shown`);
-    ok(errs.length === 0, `${width}/delete-fail: page errors ${errs.join(' | ')}`);
+    recordCheck(await dlg.isVisible(), `${width}/delete-fail: modal closed even though the server refused`);
+    recordCheck(/Could not delete/i.test(await dlg.innerText()), `${width}/delete-fail: no error message shown`);
+    recordCheck(errs.length === 0, `${width}/delete-fail: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 
   {
-    const browserContext = await mkCtx(width, { loggedIn: true, deleteFails: false });
+    const browserContext = await createSettingsContext(width, { loggedIn: true, deleteFails: false });
     const page = await browserContext.newPage();
     const errs = [];
     page.on('pageerror', (error) => errs.push(String(error)));
@@ -159,15 +162,18 @@ for (const width of [390, 1280]) {
     await page.locator('button', { hasText: 'Delete my account' }).click();
     await page.waitForTimeout(700);
     const root = page.locator('[data-settings]');
-    ok(/account has been deleted/i.test(await root.innerText()), `${width}/delete-ok: no deletion confirmation shown`);
-    ok(
+    recordCheck(
+      /account has been deleted/i.test(await root.innerText()),
+      `${width}/delete-ok: no deletion confirmation shown`,
+    );
+    recordCheck(
       !/Sign in to manage/i.test(await root.innerText()),
       `${width}/delete-ok: fell through to the generic sign-in message instead of a real confirmation`,
     );
     const tok = await page.evaluate(() => localStorage.getItem('cue_token'));
-    ok(!tok, `${width}/delete-ok: token not cleared after delete (${tok})`);
+    recordCheck(!tok, `${width}/delete-ok: token not cleared after delete (${tok})`);
     await page.screenshot({ path: `shots/settings-deleted-${width}.png` });
-    ok(errs.length === 0, `${width}/delete-ok: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}/delete-ok: page errors ${errs.join(' | ')}`);
     await browserContext.close();
   }
 }

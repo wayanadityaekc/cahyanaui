@@ -21,11 +21,11 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
 
   useEffect(() => {
     if (!open) return undefined;
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       if (event.key === 'Escape') onClose();
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    return () => document.removeEventListener('keydown', handleEscapeKeyDown);
   }, [open, onClose]);
 
   useEffect(() => {
@@ -38,12 +38,12 @@ export default function PhotoGrid({ images = [], open, onClose, startAt = 0, lab
     }
     history.pushState({ photoGrid: true }, '');
     pushed.current = true;
-    function onPop() {
+    function handlePopState() {
       pushed.current = false;
       onClose();
     }
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [open, onClose]);
 
   return (

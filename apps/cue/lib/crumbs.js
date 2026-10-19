@@ -15,14 +15,14 @@ const SECTION = {
   settings: 'Settings',
 };
 
-export function crumbsFor(page) {
+export function buildCrumbs(page) {
   if (!page || page === 'index') return [];
   const label = SECTION[page];
   if (!label) return [];
   return [HOME, { label, href: `/${page}.html` }];
 }
 
-export function guideCrumbs(tabs = [], title = '') {
+export function buildGuideCrumbs(tabs = [], title = '') {
   const cat = tabs.find((tab) => tab.active) || tabs[0];
   return [
     HOME,

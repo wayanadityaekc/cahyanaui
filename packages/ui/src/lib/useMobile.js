@@ -6,12 +6,12 @@ export default function useMobile(query = '(max-width: 768px)') {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(query);
-    function on() {
+    function handleMediaChange() {
       return setIsMobile(mq.matches);
     }
-    on();
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
+    handleMediaChange();
+    mq.addEventListener('change', handleMediaChange);
+    return () => mq.removeEventListener('change', handleMediaChange);
   }, [query]);
   return isMobile;
 }

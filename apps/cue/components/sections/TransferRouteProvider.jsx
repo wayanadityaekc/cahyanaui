@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState } fro
 
 const UBUD = 'Ubud';
 
-function facing(value) {
+function pickFacingRoute(value) {
   return (other) => (!value ? other : value === UBUD ? (other === UBUD ? '' : other) : UBUD);
 }
 
@@ -23,11 +23,11 @@ export default function TransferRouteProvider({ children }) {
 
   const pickFrom = useCallback((fromRoute) => {
     setFrom(fromRoute);
-    setTo(facing(fromRoute));
+    setTo(pickFacingRoute(fromRoute));
   }, []);
   const pickTo = useCallback((toRoute) => {
     setTo(toRoute);
-    setFrom(facing(toRoute));
+    setFrom(pickFacingRoute(toRoute));
   }, []);
 
   const selectRoute = useCallback((area) => {

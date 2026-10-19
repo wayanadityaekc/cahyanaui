@@ -5,7 +5,7 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { usePricing } from '@/state/PricingProvider';
 import Select from './Select';
 
-function areaName(route) {
+function extractAreaName(route) {
   return route.replace(/ – Ubud$/, '').replace(/ Area$/, '');
 }
 
@@ -18,7 +18,7 @@ export default function PickupAreaSelect({ id, className = '' }) {
     const base = [{ value: 'ubud', label: 'Ubud & nearby' }];
     if (!catalog) return base;
     return base.concat(
-      catalog.transfers.map((transfer) => ({ value: transfer.route, label: areaName(transfer.route) })),
+      catalog.transfers.map((transfer) => ({ value: transfer.route, label: extractAreaName(transfer.route) })),
     );
   }, [catalog]);
 

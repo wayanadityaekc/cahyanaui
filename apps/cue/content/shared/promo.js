@@ -71,7 +71,7 @@ export const PROMO = {
 
 export const PROMO_ACTIVE = true;
 
-export function promoFor(pathname) {
+export function findPromosForPath(pathname) {
   if (!PROMO_ACTIVE) return [];
   const path = (pathname || '/').replace(/\.html$/, '').replace(/(.)\/$/, '$1');
   let hit;

@@ -42,7 +42,7 @@ function walk(directoryPath, out = []) {
 const files = walk(OUT);
 let pass = 0,
   fail = 0;
-function say(isPassing, message) {
+function recordCheck(isPassing, message) {
   if (isPassing) pass++;
   else {
     fail++;
@@ -56,11 +56,11 @@ const css = files
   .join('\n');
 for (const retiredClass of RETIRED) {
   const pattern = new RegExp(`\\.${retiredClass.replace(/[-]/g, '\\-')}(?![\\w-])\\s*[,{:]`);
-  say(!pattern.test(css), `stylesheet still defines .${retiredClass}`);
+  recordCheck(!pattern.test(css), `stylesheet still defines .${retiredClass}`);
 }
 for (const keptClass of KEPT) {
   const pattern = new RegExp(`\\.${keptClass}(?![\\w-])`);
-  say(pattern.test(css), `.${keptClass} should still be present and is not`);
+  recordCheck(pattern.test(css), `.${keptClass} should still be present and is not`);
 }
 
 const html = files.filter((file) => file.endsWith('.html'));
@@ -75,7 +75,7 @@ for (const retiredClass of RETIRED) {
       }
     }
   }
-  say(hits.length === 0, `class "${retiredClass}" still in markup: ${hits.slice(0, 3).join(', ')}`);
+  recordCheck(hits.length === 0, `class "${retiredClass}" still in markup: ${hits.slice(0, 3).join(', ')}`);
 }
 
 console.log(`\n${pass}/${pass + fail} | ${html.length} pages, ${(css.length / 1024).toFixed(0)}KB css`);

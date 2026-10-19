@@ -25,7 +25,7 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
-function assetV(...rel) {
+function buildAssetVersion(...rel) {
   return createHash('sha1')
     .update(readFileSync(join(process.cwd(), 'public', ...rel)))
     .digest('hex')
@@ -36,12 +36,15 @@ export const metadata = {
   metadataBase: new URL('https://ubudprivatevillas.com'),
   icons: {
     icon: [
-      { url: `/assets/icons/favicon.svg?v=${assetV('assets', 'icons', 'favicon.svg')}`, type: 'image/svg+xml' },
-      { url: `/assets/icons/favicon.ico?v=${assetV('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
+      {
+        url: `/assets/icons/favicon.svg?v=${buildAssetVersion('assets', 'icons', 'favicon.svg')}`,
+        type: 'image/svg+xml',
+      },
+      { url: `/assets/icons/favicon.ico?v=${buildAssetVersion('assets', 'icons', 'favicon.ico')}`, sizes: 'any' },
     ],
     apple: [
       {
-        url: `/assets/icons/apple-touch-icon.png?v=${assetV('assets', 'icons', 'apple-touch-icon.png')}`,
+        url: `/assets/icons/apple-touch-icon.png?v=${buildAssetVersion('assets', 'icons', 'apple-touch-icon.png')}`,
         sizes: '180x180',
       },
     ],

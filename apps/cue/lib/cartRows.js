@@ -1,6 +1,6 @@
 import { CHARTER_SERVICE } from '@/lib/constants';
 
-export function cartRows(state, displayGuests) {
+export function buildCartRows(state, displayGuests) {
   const out = [];
   (state.days || []).forEach((day, index) => {
     if (!day.items || !day.items.length) return;

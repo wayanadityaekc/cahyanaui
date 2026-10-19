@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { ArrowRight, Clock } from 'lucide-react';
-import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
+import { ARTICLES, CATEGORIES, findCategoryLabel } from '@/content/articles';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
 import { CAPS, Card, Container, EYEBROW_LINE, JsonLd, Section } from '@cahyana/ui';
-import { pageMeta } from '@/lib/seo';
-import { GUIDE_CRUMBS, breadcrumbList } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { GUIDE_CRUMBS, buildBreadcrumbList } from '@/lib/schema';
 
-export const metadata = pageMeta({
+export const metadata = buildPageMeta({
   title: 'Ubud Guide | Ubud Private Villas',
   description:
     'Getting around Ubud, what is near the villas, when to visit Bali, and whether a villa or a hotel suits your trip - written by the family who hosts here.',
@@ -18,7 +18,7 @@ const ICON = 'w-[var(--icon-sm)] h-[var(--icon-sm)] shrink-0';
 export default function GuideHubPage() {
   return (
     <>
-      <JsonLd data={breadcrumbList(GUIDE_CRUMBS)} />
+      <JsonLd data={buildBreadcrumbList(GUIDE_CRUMBS)} />
       <section className="pt-14 pb-10 border-b border-line bg-cream">
         <Container>
           <p className={EYEBROW_LINE}>Ubud Guide</p>
@@ -44,7 +44,7 @@ export default function GuideHubPage() {
                   href={`/guide/${article.slug}`}
                   className="p-5 flex flex-col gap-2 no-underline"
                 >
-                  <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(article.cat)}</p>
+                  <p className={`${EYEBROW_LINE} !mb-0`}>{findCategoryLabel(article.cat)}</p>
                   <h3 className="text-h3 font-semibold text-gold">{article.title}</h3>
                   <p className="text-small text-muted">{article.sub}</p>
                   <span className="mt-auto pt-3 flex items-center justify-between gap-3">

@@ -8,13 +8,13 @@ export function isRail(id) {
   return RAILS.includes(id);
 }
 
-export function railFor(choice) {
+export function chooseRail(choice) {
   return isRail(choice) ? choice : DEFAULT_RAIL;
 }
 
 export function chargeCurrency(currency, rail = DEFAULT_RAIL) {
   const current = String(currency || 'USD').toUpperCase();
-  if (railFor(rail) === 'doku') return 'IDR';
+  if (chooseRail(rail) === 'doku') return 'IDR';
   return PAYPAL_SETTLES.has(current) ? current : PAYPAL_FALLBACK;
 }
 
@@ -31,7 +31,7 @@ export const RAIL_CHOICES = [
   },
 ];
 
-export function noteFor(currency, rail = DEFAULT_RAIL) {
+export function buildRailNote(currency, rail = DEFAULT_RAIL) {
   const current = String(currency || 'USD').toUpperCase();
   const bill = chargeCurrency(current, rail);
   if (bill === current) return null;

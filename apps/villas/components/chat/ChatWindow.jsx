@@ -10,7 +10,7 @@ import { useAccount } from '@/components/providers/AccountProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { answerFor } from '@/lib/chatAnswers';
 import { API_BASE, WHATSAPP_LINK } from '@/lib/constants';
-import { CHAT_COPY, SUGGESTIONS, wayanIsAround } from '@/content/chat';
+import { CHAT_COPY, SUGGESTIONS, isWayanAround } from '@/content/chat';
 
 const THREAD_KEY = 'upv_chat_thread_v1';
 const EASE_OUT = [0.16, 1, 0.3, 1];
@@ -19,7 +19,7 @@ const DRAWER_OFF = { x: '100%', y: 0, opacity: 0 };
 const SHEET_OFF = { x: 0, y: '100%', opacity: 0 };
 const ON = { x: 0, y: 0, opacity: 1 };
 
-function pageLabel() {
+function buildPageLabel() {
   return `ubudprivatevillas.com${window.location.pathname}`;
 }
 
@@ -41,9 +41,9 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
     answerFor: answer,
     copy: CHAT_COPY,
     suggestions: SUGGESTIONS,
-    page: pageLabel,
+    page: buildPageLabel,
     account,
-    isAround: wayanIsAround,
+    isAround: isWayanAround,
   });
 
   const off = isMobile ? SHEET_OFF : DRAWER_OFF;

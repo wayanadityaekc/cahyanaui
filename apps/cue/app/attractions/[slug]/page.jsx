@@ -1,6 +1,6 @@
 import AttractionPage from '@/components/sections/AttractionPage';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
-import { ATTRACTIONS, attractionPath } from '@/lib/routes';
+import { ATTRACTIONS, buildAttractionPath } from '@/lib/routes';
 
 export const dynamicParams = false;
 
@@ -11,11 +11,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const attraction = ATTRACTION_CONTENT[slug];
-  if (!attraction) return { alternates: { canonical: attractionPath(slug) } };
+  if (!attraction) return { alternates: { canonical: buildAttractionPath(slug) } };
   return {
     title: attraction.metaTitle,
     description: attraction.metaDesc,
-    alternates: { canonical: attractionPath(slug) },
+    alternates: { canonical: buildAttractionPath(slug) },
     openGraph: {
       title: attraction.metaTitle,
       description: attraction.metaDesc,

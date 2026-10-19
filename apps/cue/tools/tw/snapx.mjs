@@ -95,7 +95,7 @@ for (const vw of [1280, 560, 390]) {
         elements.push(rt);
         elements.push(...rt.querySelectorAll('*'));
       });
-      function grab(event, pseudo) {
+      function grabStyles(event, pseudo) {
         const computedStyle = getComputedStyle(event, pseudo || undefined);
         const styleSnapshot = {};
         PROPS.forEach((propertyName) => {
@@ -105,9 +105,9 @@ for (const vw of [1280, 560, 390]) {
       }
       return elements.map((event) => ({
         _t: event.tagName,
-        main: grab(event),
-        before: grab(event, '::before'),
-        after: grab(event, '::after'),
+        main: grabStyles(event),
+        before: grabStyles(event, '::before'),
+        after: grabStyles(event, '::after'),
       }));
     },
     { selAll, PROPS },

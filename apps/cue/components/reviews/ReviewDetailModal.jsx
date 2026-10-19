@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import Modal from '@/components/ui/Modal';
 
-function fmtDate(iso) {
+function formatDate(iso) {
   if (!iso) return '';
   try {
     return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -24,7 +24,9 @@ export default function ReviewDetailModal({ review, onClose }) {
     <Modal open={isOpen} onClose={onClose} title="Guest review">
       <div className="flex items-center justify-between gap-3 mb-1">
         <span className="font-semibold text-body text-green">{currentReview.name}</span>
-        {currentReview.created_at && <span className="text-label text-muted">{fmtDate(currentReview.created_at)}</span>}
+        {currentReview.created_at && (
+          <span className="text-label text-muted">{formatDate(currentReview.created_at)}</span>
+        )}
       </div>
       {currentReview.country && <div className="mb-2 text-label text-muted">{currentReview.country}</div>}
       {currentReview.service && (

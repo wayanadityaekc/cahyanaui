@@ -7,7 +7,7 @@ const FOCUSABLE =
 
 const stack = [];
 
-function visible(node) {
+function checkIsVisible(node) {
   return node.getClientRects().length > 0 && getComputedStyle(node).visibility !== 'hidden';
 }
 
@@ -38,7 +38,7 @@ export default function useDialog({ shown, onClose, escape = true }) {
       });
     }
 
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (stack[stack.length - 1] !== token) return;
 
       if (event.key === 'Escape') {
@@ -52,7 +52,7 @@ export default function useDialog({ shown, onClose, escape = true }) {
       const focused = document.activeElement;
       if (focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]')) return;
 
-      const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(visible);
+      const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(checkIsVisible);
       if (!items.length) {
         event.preventDefault();
         node.focus({ preventScroll: true });
@@ -72,11 +72,11 @@ export default function useDialog({ shown, onClose, escape = true }) {
       }
     }
 
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(timer);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('keydown', handleKeyDown);
       const index = stack.indexOf(token);
       if (index >= 0) stack.splice(index, 1);
       if (opener && opener !== document.body && document.contains(opener) && opener.focus) {

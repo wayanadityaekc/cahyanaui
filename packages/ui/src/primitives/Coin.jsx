@@ -1,4 +1,4 @@
-function sizeClass(size) {
+function pickSizeClass(size) {
   if (size === 'sm') return 'w-[var(--icon-md)] h-[var(--icon-md)]';
   if (size === 'lg') return 'w-[64px] h-[64px]';
   if (size === 'xl') return 'w-[40px] h-[40px]';
@@ -9,9 +9,9 @@ const ROLL = 'animate-[cahyana-coinroll_6s_var(--ease)_infinite] motion-reduce:a
 export default function Coin({ size = 'md', still = false, shine = false, src = '/images/cahyana-coin.webp' }) {
   if (shine) {
     return (
-      <span className={`relative block flex-none ${sizeClass(size)}`} data-coin-stage>
+      <span className={`relative block flex-none ${pickSizeClass(size)}`} data-coin-stage>
         <img
-          className={`block rounded-[50%] ${sizeClass(size)}`}
+          className={`block rounded-[50%] ${pickSizeClass(size)}`}
           src={src}
           alt=""
           aria-hidden="true"
@@ -25,7 +25,7 @@ export default function Coin({ size = 'md', still = false, shine = false, src = 
   }
   return (
     <img
-      className={`block flex-none rounded-[50%] ${sizeClass(size)} ${still ? '' : ROLL}`}
+      className={`block flex-none rounded-[50%] ${pickSizeClass(size)} ${still ? '' : ROLL}`}
       src={src}
       alt=""
       aria-hidden="true"

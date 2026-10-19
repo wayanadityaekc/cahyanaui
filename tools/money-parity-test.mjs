@@ -15,7 +15,7 @@ const fx = require(fxPath);
 
 let checked = 0;
 let failed = 0;
-function ok(cond, label) {
+function recordCheck(cond, label) {
   checked += 1;
   if (!cond) {
     failed += 1;
@@ -23,34 +23,34 @@ function ok(cond, label) {
   }
 }
 
-ok(
+recordCheck(
   JSON.stringify(CURRENCIES) === JSON.stringify(fx.CURRENCIES),
   `currency list matches fx.CURRENCIES (${fx.CURRENCIES})`,
 );
-ok(BASELINE_FX.buffer === fx.BUFFER, `buffer ${BASELINE_FX.buffer} = fx.BUFFER ${fx.BUFFER}`);
+recordCheck(BASELINE_FX.buffer === fx.BUFFER, `buffer ${BASELINE_FX.buffer} = fx.BUFFER ${fx.BUFFER}`);
 CURRENCIES.forEach((code) => {
   const want = fx.display(1000000, code);
-  ok(
+  recordCheck(
     displayFromIdr(1000000, code, BASELINE_FX) === want,
     `baseline ${code}: ${displayFromIdr(1000000, code, BASELINE_FX)} = ${want}`,
   );
 });
 
 for (let value = 0.5; value < 5e6; value = value * 1.013 + 0.07)
-  ok(ladder(value) === fx.ladder(value), `ladder(${value})`);
+  recordCheck(ladder(value) === fx.ladder(value), `ladder(${value})`);
 
 const prices = [1000, 150000, 1700000, 2500000, 3400000, 5000000, 7500000, 12500000];
 let over = 0;
 let seed = 7;
-function random() {
+function nextRandomFraction() {
   seed = (seed * 16807) % 2147483647;
   return seed / 2147483647;
 }
 for (let trial = 0; trial < 300; trial += 1) {
-  const idrPerUsd = 15500 + random() * 3000;
+  const idrPerUsd = 15500 + nextRandomFraction() * 3000;
   const rates = { IDR: 1 };
   Object.entries(BASELINE_FX.perUsd).forEach(([code, perUsd]) => {
-    if (code !== 'IDR') rates[code] = (perUsd * (0.9 + random() * 0.2)) / idrPerUsd;
+    if (code !== 'IDR') rates[code] = (perUsd * (0.9 + nextRandomFraction() * 0.2)) / idrPerUsd;
   });
   fx._setRates(rates);
   const snap = fx.snapshot();
@@ -58,9 +58,9 @@ for (let trial = 0; trial < 300; trial += 1) {
     CURRENCIES.forEach((code) => {
       const want = fx.display(idr, code);
       const got = displayFromIdr(idr, code, snap);
-      ok(got >= want, `${code} ${idr} at ${idrPerUsd.toFixed(1)}: site ${got} never below server ${want}`);
+      recordCheck(got >= want, `${code} ${idr} at ${idrPerUsd.toFixed(1)}: site ${got} never below server ${want}`);
       if (got > want) over += 1;
-      ok(
+      recordCheck(
         got === want || fx.ladder(want + 1e-6) === got,
         `${code} ${idr}: site ${got} at most one ladder step above ${want}`,
       );

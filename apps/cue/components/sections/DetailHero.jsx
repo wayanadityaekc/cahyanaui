@@ -5,7 +5,7 @@ import HeroSlider from '@/components/sections/HeroSlider';
 import HeroMosaic from '@/components/sections/HeroMosaic';
 import Rating from '@/components/Rating';
 import { isHiddenTour } from '@/lib/routes';
-import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
+import Breadcrumb, { buildItemsFromLegacy } from '@/components/ui/Breadcrumb';
 import { CHIP, CHIP_OK } from '@/components/ui/chipClasses';
 
 export const HERO_DESC = 'max-w-[460px] m-0 text-[#3d3d3d]';
@@ -43,7 +43,7 @@ function HeroBody({ title, desc, hooks, cta, ctaHref, crumb }) {
   return (
     <>
       {crumb && (
-        <Breadcrumb items={crumb[0] && crumb[0].type ? itemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />
+        <Breadcrumb items={crumb[0] && crumb[0].type ? buildItemsFromLegacy(crumb) : crumb} className={HERO_CRUMB} />
       )}
       <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
       <p className={HERO_DESC}>{desc}</p>
@@ -88,7 +88,7 @@ export default function DetailHero({
     chips.push({ key: 'cancel', icon: ShieldCheck, text: 'Free cancellation', ok: true });
     return (
       <section className="pt-[calc(var(--header-h-max,92px)_+_var(--container-x))] min-[769px]:pt-[calc(var(--header-h-max,98px)_+_var(--container-x))] px-[max(var(--container-x),calc((100%_-_1280px)_/_2))]">
-        {crumb && <Breadcrumb items={itemsFromLegacy(crumb)} className={HERO_CRUMB} />}
+        {crumb && <Breadcrumb items={buildItemsFromLegacy(crumb)} className={HERO_CRUMB} />}
         <h1 className={`${SUBHERO_TITLE} mb-2 text-left`}>{title}</h1>
         {ratingName && (
           <div className="mb-[0.9rem]">

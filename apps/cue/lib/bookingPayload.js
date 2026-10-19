@@ -1,6 +1,6 @@
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 
-export function bookingPayload({
+export function buildBookingPayload({
   ctx: bookingContext,
   f: formValues,
   referral,
@@ -60,7 +60,7 @@ export function priceText(priced) {
   return currencySymbol + priced.total.display.toLocaleString(currencySymbol === 'Rp' ? 'id-ID' : 'en-US');
 }
 
-export function whatsappText({
+export function buildWhatsappText({
   ctx: bookingContext,
   f: formValues,
   displayGuests,
@@ -74,7 +74,7 @@ export function whatsappText({
     .map((line, index) => {
       const dateText = dateOf(line, index) || line.date || 'TBD';
       const timeText = timeOf(line, index);
-      return `- ${line.day_no ? `Day ${line.day_no} · ` : ''}${dateText}${timeText ? ` · ${fmtTime(timeText)}` : ''} · ${line.service} · ${line.guests || displayGuests} pax`;
+      return `- ${line.day_no ? `Day ${line.day_no} · ` : ''}${dateText}${timeText ? ` · ${formatTime(timeText)}` : ''} · ${line.service} · ${line.guests || displayGuests} pax`;
     })
     .join('\n');
   const flightLine = flightNumberDisplay

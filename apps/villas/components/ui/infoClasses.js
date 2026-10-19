@@ -28,6 +28,6 @@ export const INFO_LIST_YES =
   `${LIST_BASE} [&_li]:text-ink [&_li]:before:[border:1.5px_solid_var(--color-green)] ` +
   '[&_li]:before:[background:radial-gradient(circle_at_center,var(--color-green)_0_3.5px,transparent_4px)]';
 export const INFO_LIST_NO = `${LIST_BASE} [&_li]:text-[#8a8578] [&_li]:before:[border:1.5px_solid_#cfc9ba] [&_li]:before:bg-transparent`;
-export function infoList(variant) {
+export function pickInfoListClasses(variant) {
   return String(variant).includes('no') ? INFO_LIST_NO : INFO_LIST_YES;
 }

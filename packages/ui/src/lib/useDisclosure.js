@@ -10,21 +10,21 @@ export default function useDisclosure() {
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    function onDoc(event) {
+    function handleOutsidePointerDown(event) {
       if (event.target.closest && event.target.closest('[data-portal]')) return;
       if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setIsOpen(false);
       if (triggerRef.current) triggerRef.current.focus();
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleOutsidePointerDown);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleOutsidePointerDown);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
     };
   }, [isOpen]);
 

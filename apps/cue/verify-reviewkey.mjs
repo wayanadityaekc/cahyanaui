@@ -8,7 +8,7 @@ const REVIEW = { name: 'Andras', country: 'Hungary', rating: 5, message: MSG, se
 
 let pass = 0,
   fail = 0;
-function ok(cond, message) {
+function recordCheck(cond, message) {
   if (cond) pass++;
   else {
     fail++;
@@ -57,10 +57,13 @@ function writeButtons(page) {
 for (const [slug, tour] of Object.entries(TOURS)) {
   if (!fs.existsSync(`out/${slug}.html`)) continue;
   const { ctx: browserContext, asked, status, errors } = await open(`/${slug}.html`, 1280);
-  ok(status === 200, `${slug}: HTTP ${status}`);
-  ok(asked.includes(tour.bookItem), `${slug}: review list asked for ${JSON.stringify(asked)}, not "${tour.bookItem}"`);
-  ok(!asked.includes(tour.title) || tour.title === tour.bookItem, `${slug}: still asks by long title`);
-  ok(errors.length === 0, `${slug}: page errors ${errors}`);
+  recordCheck(status === 200, `${slug}: HTTP ${status}`);
+  recordCheck(
+    asked.includes(tour.bookItem),
+    `${slug}: review list asked for ${JSON.stringify(asked)}, not "${tour.bookItem}"`,
+  );
+  recordCheck(!asked.includes(tour.title) || tour.title === tour.bookItem, `${slug}: still asks by long title`);
+  recordCheck(errors.length === 0, `${slug}: page errors ${errors}`);
   await browserContext.close();
 }
 
@@ -68,14 +71,20 @@ for (const width of [390, 1280]) {
   {
     const { ctx: browserContext, page } = await open('/ubud-tour.html', width);
     const body = await page.evaluate(() => document.body.innerText);
-    ok(body.includes(MSG), `${width} ubud-tour: review text not on its own page`);
-    ok(!/No reviews yet for this program/.test(body), `${width} ubud-tour: empty state shown despite a review`);
+    recordCheck(body.includes(MSG), `${width} ubud-tour: review text not on its own page`);
+    recordCheck(
+      !/No reviews yet for this program/.test(body),
+      `${width} ubud-tour: empty state shown despite a review`,
+    );
     const hero = await page.evaluate(
       () => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '',
     );
-    ok(/5\.0/.test(hero), `${width} ubud-tour: hero stars read "${hero}"`);
-    ok((await writeButtons(page)) === 1, `${width} ubud-tour: ${await writeButtons(page)} Write review buttons`);
-    ok(
+    recordCheck(/5\.0/.test(hero), `${width} ubud-tour: hero stars read "${hero}"`);
+    recordCheck(
+      (await writeButtons(page)) === 1,
+      `${width} ubud-tour: ${await writeButtons(page)} Write review buttons`,
+    );
+    recordCheck(
       (await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)) <= 0,
       `${width} ubud-tour: page overflows`,
     );
@@ -83,8 +92,8 @@ for (const width of [390, 1280]) {
   }
   {
     const { ctx: browserContext, page, asked } = await open('/', width);
-    ok(asked.includes('(all)'), `${width} home: reviews request was filtered ${JSON.stringify(asked)}`);
-    ok((await page.evaluate(() => document.body.innerText)).includes(MSG), `${width} home: review not shown`);
+    recordCheck(asked.includes('(all)'), `${width} home: reviews request was filtered ${JSON.stringify(asked)}`);
+    recordCheck((await page.evaluate(() => document.body.innerText)).includes(MSG), `${width} home: review not shown`);
     await browserContext.close();
   }
   {
@@ -92,7 +101,7 @@ for (const width of [390, 1280]) {
     const card = await page.evaluate(
       () => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '',
     );
-    ok(/5\.0/.test(card), `${width} tour listing: card stars read "${card}"`);
+    recordCheck(/5\.0/.test(card), `${width} tour listing: card stars read "${card}"`);
     await browserContext.close();
   }
   for (const path of [
@@ -105,9 +114,9 @@ for (const width of [390, 1280]) {
   ]) {
     if (!fs.existsSync(`out${path}`)) continue;
     const { ctx: browserContext, page, status } = await open(path, width);
-    ok(status === 200, `${width} ${path}: HTTP ${status}`);
+    recordCheck(status === 200, `${width} ${path}: HTTP ${status}`);
     const writeButtonCount = await writeButtons(page);
-    ok(writeButtonCount === 1, `${width} ${path}: ${writeButtonCount} Write review buttons`);
+    recordCheck(writeButtonCount === 1, `${width} ${path}: ${writeButtonCount} Write review buttons`);
     await browserContext.close();
   }
 }

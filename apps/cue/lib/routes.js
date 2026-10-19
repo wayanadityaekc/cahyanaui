@@ -127,12 +127,12 @@ export const LEGACY_REDIRECTS = {
   '/sangeh-tanah-lot.html': '/tanah-lot-taman-ayun.html',
 };
 
-export function tourPath(slug) {
+export function buildTourPath(slug) {
   return `/${slug}.html`;
 }
 
 export function isHiddenTour(href) {
-  return HIDDEN_TOURS.some((slug) => href === tourPath(slug));
+  return HIDDEN_TOURS.some((slug) => href === buildTourPath(slug));
 }
 
 export function unlinkHiddenTours(html) {
@@ -141,25 +141,25 @@ export function unlinkHiddenTours(html) {
   return html.replace(new RegExp(`<a\\b[^>]*href="/(?:${slugs})\\.html"[^>]*>([\\s\\S]*?)</a>`, 'gi'), '$1');
 }
 
-export function attractionPath(slug) {
+export function buildAttractionPath(slug) {
   return `/attractions/${slug}.html`;
 }
 
-export function guidePath(slug) {
+export function buildGuidePath(slug) {
   return `/guide/${slug}.html`;
 }
 
-export function allPaths() {
+export function listAllPaths() {
   return [
     '/',
     ...BESPOKE.map((slug) => `/${slug}.html`),
-    ...TOURS.map(tourPath),
-    ...ATTRACTIONS.map(attractionPath),
-    ...GUIDES.map(guidePath),
+    ...TOURS.map(buildTourPath),
+    ...ATTRACTIONS.map(buildAttractionPath),
+    ...GUIDES.map(buildGuidePath),
   ];
 }
 
 export function indexablePaths() {
   const off = new Set([...NOINDEX, ...HIDDEN_TOURS].map((slug) => `/${slug}.html`));
-  return allPaths().filter((allPath) => !off.has(allPath));
+  return listAllPaths().filter((allPath) => !off.has(allPath));
 }

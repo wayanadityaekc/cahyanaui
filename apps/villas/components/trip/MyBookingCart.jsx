@@ -5,17 +5,17 @@ import { useEffect, useState } from 'react';
 import { ArrowRight, MessageCircle, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
-import { serviceById } from '@/lib/bookingCart';
-import { extraProblem, extrasTotals } from '@/lib/extras';
-import { bookingMessage } from '@/lib/bookingMessage';
+import { findServiceById } from '@/lib/bookingCart';
+import { findExtraProblem, calculateExtrasTotals } from '@/lib/extras';
+import { buildBookingMessage } from '@/lib/bookingMessage';
 import ExtrasSection from '@/components/trip/ExtrasSection';
 import CharterCard from '@/components/sections/CharterCard';
 import useExtrasCatalog from '@/components/trip/useExtrasCatalog';
 import CheckoutSheet from '@/components/booking/CheckoutSheet';
 import PayWaiting from '@/components/booking/PayWaiting';
-import { VILLAS, nightsBetween, priceBreakdown } from '@/lib/villas';
+import { VILLAS, countNightsBetween, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
-import { CUE_LINK, whatsappLink } from '@/lib/constants';
+import { CUE_LINK, buildWhatsappLink } from '@/lib/constants';
 import { Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 
 const CARD = 'bg-surface-raised border border-line [box-shadow:var(--shadow-md)]';
@@ -76,18 +76,18 @@ export default function MyBookingCart() {
   const stay = cart.stay;
   const breakdown = stay ? priceBreakdown(stay.villaSlug, stay.checkIn, stay.checkOut) : null;
   const villa = stay ? VILLAS[stay.villaSlug] : null;
-  const nights = stay ? nightsBetween(stay.checkIn, stay.checkOut) : 0;
+  const nights = stay ? countNightsBetween(stay.checkIn, stay.checkOut) : 0;
   const shown = convert(breakdown);
   const isInRupiah = currency === 'IDR';
-  const chosen = cart.services.map(serviceById).filter(Boolean);
+  const chosen = cart.services.map(findServiceById).filter(Boolean);
   const extras = stay ? cart.extras : [];
-  const totals = extrasTotals(extras, catalog);
+  const totals = calculateExtrasTotals(extras, catalog);
   const isBlocked =
-    extras.some((extra) => extraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
+    extras.some((extra) => findExtraProblem(extra, stay, catalog?.items[extra.key]?.category || null)) ||
     (extras.length > 0 && !totals);
   const isEmpty = !stay && chosen.length === 0;
 
-  const message = bookingMessage({
+  const message = buildBookingMessage({
     stay,
     villa,
     nights,
@@ -254,7 +254,7 @@ export default function MyBookingCart() {
               as="a"
               full
               variant="ghost"
-              href={isBlocked ? undefined : whatsappLink(message)}
+              href={isBlocked ? undefined : buildWhatsappLink(message)}
               aria-disabled={isBlocked || undefined}
               target="_blank"
               rel="noopener"

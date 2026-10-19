@@ -3,7 +3,7 @@ import TransferRoutes from '@/components/sections/TransferRoutes';
 import TransferRouteProvider from '@/components/sections/TransferRouteProvider';
 import Prose from '@/components/prose/Prose';
 import FormHero from '@/components/sections/FormHero';
-import { detailBlocks } from '@/lib/detailBlocks';
+import { buildDetailBlocks } from '@/lib/detailBlocks';
 import { TRANSFER } from '@/content/shared/transfer';
 
 export default function TransferSection() {
@@ -18,7 +18,7 @@ export default function TransferSection() {
         details={
           <>
             <TransferRoutes />
-            <Prose blocks={detailBlocks('Transfer Details', TRANSFER.tinfo)} headingVariant="company" />
+            <Prose blocks={buildDetailBlocks('Transfer Details', TRANSFER.tinfo)} headingVariant="company" />
           </>
         }
       >

@@ -69,7 +69,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     reset();
   }
 
-  async function doSignIn() {
+  async function handleSignIn() {
     reset();
     const { ok: valid, errors: fieldErrors, data } = validateWith(signInSchema, form);
     setErrors(fieldErrors);
@@ -77,7 +77,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     await sendCode(data.email);
   }
 
-  async function doCreate() {
+  async function handleAccountCreate() {
     reset();
     const { ok: valid, errors: fieldErrors, data } = validateWith(createAccountSchema, form);
     setErrors(fieldErrors);
@@ -102,7 +102,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
-  async function doVerify(fullCode) {
+  async function handleCodeVerify(fullCode) {
     reset();
     setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
@@ -119,12 +119,12 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
-  async function resend() {
+  async function resendCode() {
     if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
-  function backToEmail() {
+  function returnToEmail() {
     setStage('email');
     setCode('');
     reset();
@@ -156,7 +156,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
           <OtpFields
             value={code}
             onChange={setCode}
-            onComplete={doVerify}
+            onComplete={handleCodeVerify}
             error={!!message}
             disabled={isBusy}
             autoFocus
@@ -174,7 +174,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
           <button
             type="button"
             className={`${BTN} mt-4`}
-            onClick={() => doVerify(code)}
+            onClick={() => handleCodeVerify(code)}
             disabled={isBusy || code.length < 6}
           >
             {isBusy ? 'Checking...' : 'Verify'}
@@ -186,7 +186,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               <button
                 type="button"
                 className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-                onClick={resend}
+                onClick={resendCode}
               >
                 Resend code
               </button>
@@ -195,7 +195,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             <button
               type="button"
               className="bg-transparent border-none p-0 cursor-pointer font-body text-small text-gold font-semibold underline hover:text-gold-d"
-              onClick={backToEmail}
+              onClick={returnToEmail}
             >
               Change email
             </button>
@@ -237,7 +237,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               {message}
             </small>
           )}
-          <button type="button" className={BTN} onClick={doSignIn} disabled={isBusy}>
+          <button type="button" className={BTN} onClick={handleSignIn} disabled={isBusy}>
             {isBusy ? 'Sending...' : 'Send code'}
           </button>
           <p className="mt-4 text-center text-small text-muted">
@@ -321,7 +321,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               {message}
             </small>
           )}
-          <button type="button" className={BTN} onClick={doCreate} disabled={isBusy}>
+          <button type="button" className={BTN} onClick={handleAccountCreate} disabled={isBusy}>
             {isBusy ? 'Creating...' : 'Create Account'}
           </button>
           <p className="mt-4 text-center text-small text-muted">

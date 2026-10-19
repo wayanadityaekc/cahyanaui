@@ -25,17 +25,17 @@ export default function CatDropdown({ label, ariaLabel, className = '', children
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    function onDown(event) {
+    function handlePointerDown(event) {
       if (!ref.current?.contains(event.target)) setIsOpen(false);
     }
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key === 'Escape') setIsOpen(false);
     }
-    document.addEventListener('pointerdown', onDown);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('pointerdown', onDown);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 

@@ -7,9 +7,9 @@ import Prose from '@/components/prose/Prose';
 import { CARD, CARD_WRAP } from '@/components/ui/detailCardClasses';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import { GRID_CARDS } from '@/components/ui/gridClasses';
-import { ARTICLES, CATEGORIES, categoryLabel } from '@/content/articles';
+import { ARTICLES, CATEGORIES, findCategoryLabel } from '@/content/articles';
 import { CAPS, Card, Container, EYEBROW_LINE, Section, Breadcrumb } from '@cahyana/ui';
-import { articleCrumbs } from '@/lib/crumbs';
+import { buildArticleCrumbs } from '@/lib/crumbs';
 
 const PROSE =
   'max-w-[var(--container-read)] ' +
@@ -43,8 +43,8 @@ export default function ArticlePage({ article }) {
     <article>
       <header className="bg-cream border-b border-line">
         <Container className="py-10">
-          <Breadcrumb items={articleCrumbs(article)} linkAs={Link} className="mb-2" />
-          <p className={EYEBROW_LINE}>{categoryLabel(article.cat)}</p>
+          <Breadcrumb items={buildArticleCrumbs(article)} linkAs={Link} className="mb-2" />
+          <p className={EYEBROW_LINE}>{findCategoryLabel(article.cat)}</p>
           <h1 className="text-display font-bold text-gold max-w-3xl">{article.title}</h1>
           <p className="mt-3 max-w-2xl text-body text-muted">{article.sub}</p>
           <p className={`${META} mt-4`}>
@@ -61,7 +61,7 @@ export default function ArticlePage({ article }) {
             <div className={CARD}>
               <CatDropdown
                 className="min-[993px]:hidden w-full pb-[var(--space-1)] mb-5 border-b border-line"
-                label={categoryLabel(article.cat)}
+                label={findCategoryLabel(article.cat)}
                 ariaLabel="Guide categories"
               >
                 {(close) => <CatList activeId={article.cat} onPick={close} />}
@@ -100,7 +100,7 @@ export default function ArticlePage({ article }) {
                 href={`/guide/${related.slug}`}
                 className="p-5 flex flex-col gap-2 no-underline"
               >
-                <p className={`${EYEBROW_LINE} !mb-0`}>{categoryLabel(related.cat)}</p>
+                <p className={`${EYEBROW_LINE} !mb-0`}>{findCategoryLabel(related.cat)}</p>
                 <h3 className="text-h3 font-semibold text-gold">{related.title}</h3>
                 <p className="text-small text-muted">{related.sub}</p>
                 <span className={`${CAPS} mt-auto pt-3 inline-flex items-center gap-1.5 text-cta`}>

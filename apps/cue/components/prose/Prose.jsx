@@ -1,5 +1,5 @@
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
-import { infoList, PROSE_LINK } from '@/components/ui/infoClasses';
+import { pickInfoList, PROSE_LINK } from '@/components/ui/infoClasses';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import InfoFacts from '@/components/ui/InfoFacts';
 import { unlinkHiddenTours } from '@/lib/routes';
@@ -58,7 +58,7 @@ export default function Prose({ blocks, headingVariant = 'legal' }) {
     }
     if (block.type === 'list') {
       return (
-        <ul className={`${infoList(block.variant)} ${PROSE_LINK}`} key={index}>
+        <ul className={`${pickInfoList(block.variant)} ${PROSE_LINK}`} key={index}>
           {block.items.map((item, indexItem) => (
             <li key={indexItem} dangerouslySetInnerHTML={{ __html: unlinkHiddenTours(item) }} />
           ))}

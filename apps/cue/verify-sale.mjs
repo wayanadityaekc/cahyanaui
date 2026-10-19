@@ -3,7 +3,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = process.env.BASE || 'http://localhost:4000';
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
@@ -11,12 +11,12 @@ const ON_SALE = 'Ubud Tour';
 const SALE = 40,
   LIST = 45;
 
-function catalogFor(symbol) {
+function buildCatalog(symbol) {
   const current = symbol === 'Rp' ? 'IDR' : 'USD';
   function convertPrice(usd) {
     return symbol === 'Rp' ? usd * 17600 : usd;
   }
-  function item(name, price, list) {
+  function buildCatalogItem(name, price, list) {
     return {
       name,
       standard: { display: convertPrice(price) },
@@ -31,11 +31,11 @@ function catalogFor(symbol) {
     currency: current,
     promo: { pct: 10, endsOn: '2099-01-01', label: 'Low season' },
     items: [
-      item(ON_SALE, SALE, LIST),
-      item('Ubud Culture Day', 49),
-      item('East Bali Tour', 52),
-      item('Rafting Adventure', 66),
-      item('ATV Adventure', 72),
+      buildCatalogItem(ON_SALE, SALE, LIST),
+      buildCatalogItem('Ubud Culture Day', 49),
+      buildCatalogItem('East Bali Tour', 52),
+      buildCatalogItem('Rafting Adventure', 66),
+      buildCatalogItem('ATV Adventure', 72),
     ],
     transfers: [{ route: 'Airport – Ubud', display: convertPrice(26) }],
     charters: [
@@ -55,7 +55,7 @@ for (const symbol of ['$', 'Rp']) {
     const browserContext = await browser.newContext({ viewport: { width: width, height: 900 } });
     await browserContext.routeWebSocket(/\/ws\//, (ws) => ws.close());
     await browserContext.route('**/api/pricing/catalog*', (route) =>
-      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(catalogFor(symbol)) }),
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(buildCatalog(symbol)) }),
     );
     if (symbol === 'Rp') {
       await browserContext.addInitScript(() => {
@@ -110,40 +110,40 @@ for (const symbol of ['$', 'Rp']) {
       }, ON_SALE);
 
       const tag = `${symbol}/${width}${path}`;
-      ok(!!read.sale, `${tag}: the item on sale shows no struck-through price`);
+      recordCheck(!!read.sale, `${tag}: the item on sale shows no struck-through price`);
       if (read.sale) {
         const saleReading = read.sale;
-        ok(
+        recordCheck(
           saleReading.line.includes('line-through'),
           `${tag}: the old price is not struck through (${saleReading.line})`,
         );
-        ok(saleReading.first, `${tag}: the old price is rendered after the new one`);
-        ok(
+        recordCheck(saleReading.first, `${tag}: the old price is rendered after the new one`);
+        recordCheck(
           saleReading.size < saleReading.parentSize,
           `${tag}: the old price is not smaller (${saleReading.size} vs ${saleReading.parentSize})`,
         );
-        ok(
+        recordCheck(
           saleReading.weight === '400',
           `${tag}: the old price is bold (${saleReading.weight}) and competes with the real one`,
         );
-        function digits(text) {
+        function extractDigits(text) {
           return text.replace(/[^\d]/g, '');
         }
-        ok(digits(saleReading.wasText).length > 0, `${tag}: the struck element has no number in it`);
-        ok(
-          digits(saleReading.text).length > digits(saleReading.wasText).length,
+        recordCheck(extractDigits(saleReading.wasText).length > 0, `${tag}: the struck element has no number in it`);
+        recordCheck(
+          extractDigits(saleReading.text).length > extractDigits(saleReading.wasText).length,
           `${tag}: the sale price is missing next to the struck one`,
         );
       }
-      ok(read.others > 0, `${tag}: no other prices on the page - this case proves nothing`);
-      ok(
+      recordCheck(read.others > 0, `${tag}: no other prices on the page - this case proves nothing`);
+      recordCheck(
         read.othersWithStrike === 0,
         `${tag}: ${read.othersWithStrike} price(s) NOT on sale were struck through anyway`,
       );
 
       const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-      ok(over <= 0, `${tag}: page overflows by ${over}px`);
-      ok(errs.length === 0, `${tag}: page errors ${errs.join(' | ')}`);
+      recordCheck(over <= 0, `${tag}: page overflows by ${over}px`);
+      recordCheck(errs.length === 0, `${tag}: page errors ${errs.join(' | ')}`);
       await page.close();
     }
     await browserContext.close();
@@ -151,7 +151,7 @@ for (const symbol of ['$', 'Rp']) {
 }
 
 {
-  const plain = catalogFor('$');
+  const plain = buildCatalog('$');
   plain.promo = null;
   plain.items.forEach((item) => {
     item.listStandard = { display: item.standard.display };
@@ -166,7 +166,10 @@ for (const symbol of ['$', 'Rp']) {
     await page.goto(BASE + path, { waitUntil: 'load' });
     await page.waitForTimeout(1200);
     const struckPriceCount = await page.$$eval('[data-price-was]', (event) => event.length);
-    ok(struckPriceCount === 0, `no sale ${path}: ${struckPriceCount} struck-through price(s) with nothing on sale`);
+    recordCheck(
+      struckPriceCount === 0,
+      `no sale ${path}: ${struckPriceCount} struck-through price(s) with nothing on sale`,
+    );
     await page.close();
   }
   await browserContext.close();

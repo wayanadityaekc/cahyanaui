@@ -6,7 +6,7 @@ if (!bF || !aF) {
 }
 const beforeSnapshot = JSON.parse(fs.readFileSync(bF, 'utf8'));
 const afterSnapshot = JSON.parse(fs.readFileSync(aF, 'utf8'));
-function normShadow(shadowValue) {
+function normalizeShadow(shadowValue) {
   return typeof shadowValue === 'string'
     ? shadowValue.replace(/rgba\(0, 0, 0, 0\) 0px 0px 0px 0px(, )?/g, '')
     : shadowValue;
@@ -29,8 +29,8 @@ Object.keys(beforeSnapshot).forEach((vw) => {
         let beforeValue = bo[propertyName],
           afterValue = ao[propertyName];
         if (propertyName === 'boxShadow') {
-          beforeValue = normShadow(beforeValue);
-          afterValue = normShadow(afterValue);
+          beforeValue = normalizeShadow(beforeValue);
+          afterValue = normalizeShadow(afterValue);
         }
         if (beforeValue !== afterValue) {
           diffs++;

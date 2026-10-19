@@ -6,10 +6,10 @@ const SHOT = '/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scra
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   return isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-function digits(text) {
+function extractDigits(text) {
   return Number(String(text).replace(/[^0-9]/g, ''));
 }
 
@@ -69,7 +69,7 @@ async function toPayStep(current, viewportWidth, rail) {
   return { ctx: browserContext, page, errs, dokuCalls };
 }
 
-async function railInfo(page) {
+async function readRailInfo(page) {
   await page.locator('[data-infodot][aria-label="How the payment methods work"]').click();
   await page.waitForTimeout(350);
   const infoText = await page
@@ -101,8 +101,8 @@ for (const [current, viewportWidth] of [
 
   const { ctx: browserContext, page, errs, dokuCalls } = await toPayStep(current, viewportWidth);
   const choice = page.locator('[data-rail-choice] [role="radio"]');
-  ok((await choice.count()) === 2, `${tag}: two rail choices (${await choice.count()})`);
-  ok(
+  recordCheck((await choice.count()) === 2, `${tag}: two rail choices (${await choice.count()})`);
+  recordCheck(
     (await page.locator('[data-rail="doku"]').getAttribute('aria-checked')) === 'true',
     `${tag}: Card is checked by default`,
   );
@@ -113,11 +113,14 @@ for (const [current, viewportWidth] of [
       name: event.getAttribute('aria-label'),
     })),
   );
-  ok(
+  recordCheck(
     railBtns.every((railBtn) => railBtn.text === '' && railBtn.svg && railBtn.name),
     `${tag}: rail buttons are icon-only & named (${JSON.stringify(railBtns)})`,
   );
-  ok((await page.locator('[data-rail-info]').count()) === 0, `${tag}: no explanation printed until the (i) is tapped`);
+  recordCheck(
+    (await page.locator('[data-rail-info]').count()) === 0,
+    `${tag}: no explanation printed until the (i) is tapped`,
+  );
   async function bookBox() {
     return await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).boundingBox();
   }
@@ -129,50 +132,62 @@ for (const [current, viewportWidth] of [
     .locator('[data-rail-info]')
     .innerText()
     .catch(() => '');
-  ok(/Card/.test(infoTxt) && /QRIS/.test(infoTxt) && /PayPal/.test(infoTxt), `${tag}: (i) explains both methods`);
-  ok(
+  recordCheck(
+    /Card/.test(infoTxt) && /QRIS/.test(infoTxt) && /PayPal/.test(infoTxt),
+    `${tag}: (i) explains both methods`,
+  );
+  recordCheck(
     before && after && Math.abs(before.y - after.y) < 1,
     `${tag}: opening the (i) does not move Book Now (${before && before.y} -> ${after && after.y})`,
   );
   const pb = await page.locator('[data-rail-info]').boundingBox();
-  ok(pb && pb.x >= 0 && pb.x + pb.width <= viewportWidth + 1, `${tag}: popup stays on screen`);
+  recordCheck(pb && pb.x >= 0 && pb.x + pb.width <= viewportWidth + 1, `${tag}: popup stays on screen`);
   await page.screenshot({ path: `${SHOT}/rail-info-${current}-${viewportWidth}.png` });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
-  ok(
+  recordCheck(
     (await page.locator('[data-rail-info]').count()) === 0 || !(await page.locator('[data-rail-info]').isVisible()),
     `${tag}: Escape closes it`,
   );
-  async function rowAmt(label) {
+  async function readRowAmount(label) {
     const card = page.locator('[role="radiogroup"][aria-label] > div', { hasText: label }).first();
     return card.locator('button').first().innerText();
   }
-  const dep = await rowAmt('Pay a deposit');
-  const full = await rowAmt('Pay in full');
+  const dep = await readRowAmount('Pay a deposit');
+  const full = await readRowAmount('Pay in full');
   if (current !== 'IDR') {
-    ok(
+    recordCheck(
       /Rp/.test(dep) && dep.includes('≈'),
       `${tag}: card deposit shows rupiah + estimate ("${dep.replace(/\n/g, ' | ')}")`,
     );
     const [depIdr] = dep.match(/Rp[\d.]+/) || [''];
     const [fullIdr] = full.match(/Rp[\d.]+/) || [''];
-    ok(digits(depIdr) === cat.deposit.idr, `${tag}: deposit rupiah ${digits(depIdr)} = server ${cat.deposit.idr}`);
-    ok(digits(fullIdr) === totalIdr, `${tag}: full rupiah ${digits(fullIdr)} = server ${totalIdr}`);
-    const est = full.split('≈')[1] || '';
-    ok(
-      digits(est) === quote.total.display,
-      `${tag}: estimate ${digits(est)} = ${current} total ${quote.total.display}`,
+    recordCheck(
+      extractDigits(depIdr) === cat.deposit.idr,
+      `${tag}: deposit rupiah ${extractDigits(depIdr)} = server ${cat.deposit.idr}`,
     );
-    ok(/rupiah amount is exact/i.test(await railInfo(page)), `${tag}: (i) says the rupiah amount is exact`);
+    recordCheck(
+      extractDigits(fullIdr) === totalIdr,
+      `${tag}: full rupiah ${extractDigits(fullIdr)} = server ${totalIdr}`,
+    );
+    const est = full.split('≈')[1] || '';
+    recordCheck(
+      extractDigits(est) === quote.total.display,
+      `${tag}: estimate ${extractDigits(est)} = ${current} total ${quote.total.display}`,
+    );
+    recordCheck(
+      /rupiah amount is exact/i.test(await readRailInfo(page)),
+      `${tag}: (i) says the rupiah amount is exact`,
+    );
   } else {
-    ok(!dep.includes('≈'), `${tag}: rupiah guest gets no estimate`);
-    ok(!/estimate/i.test(await railInfo(page)), `${tag}: rupiah guest gets no estimate note`);
+    recordCheck(!dep.includes('≈'), `${tag}: rupiah guest gets no estimate`);
+    recordCheck(!/estimate/i.test(await readRailInfo(page)), `${tag}: rupiah guest gets no estimate note`);
   }
-  const cardInfo = await railInfo(page);
+  const cardInfo = await readRailInfo(page);
   await page.mouse.move(0, 0);
   await page.evaluate(() => document.activeElement?.blur());
   await page.waitForTimeout(300);
-  ok(!/\bUSD\b|dollar/i.test(cardInfo), `${tag}: (i) never names USD ("${cardInfo.replace(/\n/g, ' | ')}")`);
+  recordCheck(!/\bUSD\b|dollar/i.test(cardInfo), `${tag}: (i) never names USD ("${cardInfo.replace(/\n/g, ' | ')}")`);
   const dot = await page.evaluate(() => {
     const infoButton =
       document.querySelector('[data-rail-info]')?.closest('span.relative')?.querySelector('[data-infodot]') ||
@@ -182,7 +197,7 @@ for (const [current, viewportWidth] of [
     const iconBox = infoButton.querySelector('svg').getBoundingClientRect();
     return { w: iconBox.width, op: +getComputedStyle(infoButton).opacity };
   });
-  ok(
+  recordCheck(
     dot.w > 8 && dot.w < 16 && dot.op < 0.8 && dot.op > 0.3,
     `${tag}: (i) smaller + faint (${dot.w}px, opacity ${dot.op})`,
   );
@@ -190,45 +205,46 @@ for (const [current, viewportWidth] of [
 
   await page.locator('[data-rail="paypal"]').click();
   await page.waitForTimeout(250);
-  ok(
+  recordCheck(
     (await page.locator('[data-rail="paypal"]').getAttribute('aria-checked')) === 'true',
     `${tag}: PayPal can be chosen`,
   );
-  const depP = await rowAmt('Pay a deposit');
+  const depP = await readRowAmount('Pay a deposit');
   if (current === 'IDR')
-    ok(
+    recordCheck(
       /\$10\b/.test(depP) && depP.includes('≈'),
       `${tag}: rupiah on PayPal shows the exact USD it is billed ("${depP.replace(/\n/g, ' | ')}")`,
     );
   else
-    ok(
+    recordCheck(
       !depP.includes('≈') && !/Rp/.test(depP),
       `${tag}: PayPal shows the guest's own currency ("${depP.replace(/\n/g, ' | ')}")`,
     );
-  const ppInfo = await railInfo(page);
-  ok(!/\bUSD\b/.test(ppInfo), `${tag}: PayPal (i) never names USD`);
-  if (current === 'IDR') ok(/PayPal cannot charge rupiah/.test(ppInfo), `${tag}: rupiah on PayPal is told it converts`);
-  else ok(!/cannot charge|estimate/.test(ppInfo), `${tag}: no extra note on PayPal in own currency`);
+  const ppInfo = await readRailInfo(page);
+  recordCheck(!/\bUSD\b/.test(ppInfo), `${tag}: PayPal (i) never names USD`);
+  if (current === 'IDR')
+    recordCheck(/PayPal cannot charge rupiah/.test(ppInfo), `${tag}: rupiah on PayPal is told it converts`);
+  else recordCheck(!/cannot charge|estimate/.test(ppInfo), `${tag}: no extra note on PayPal in own currency`);
   await page.screenshot({ path: `${SHOT}/rail-paypal-${current}-${viewportWidth}.png` });
 
   await page.locator('[data-rail="doku"]').click();
   await page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).click();
   await page.waitForTimeout(1500);
   const final = await page.locator('body').innerText();
-  ok(/DOKU's secure payment/.test(final), `${tag}: Card booking shows the DOKU checkout`);
+  recordCheck(/DOKU's secure payment/.test(final), `${tag}: Card booking shows the DOKU checkout`);
   await page
     .locator('button:visible', { hasText: /^Pay / })
     .last()
     .click()
     .catch(() => {});
   await page.waitForTimeout(600);
-  ok(
+  recordCheck(
     dokuCalls.length === 1 && Object.keys(dokuCalls[0]).sort().join() === 'booking_ref,option',
     `${tag}: DOKU gets ref + option only (${JSON.stringify(dokuCalls)})`,
   );
   const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
-  ok(over <= 0, `${tag}: no horizontal overflow (${over})`);
-  ok(errs.length === 0, `${tag}: no page errors (${errs.join(' | ')})`);
+  recordCheck(over <= 0, `${tag}: no horizontal overflow (${over})`);
+  recordCheck(errs.length === 0, `${tag}: no page errors (${errs.join(' | ')})`);
   await browserContext.close();
 
   const r2 = await toPayStep(current, viewportWidth);
@@ -236,8 +252,11 @@ for (const [current, viewportWidth] of [
   await r2.page.locator('button:visible', { hasText: /^\s*Book Now\s*$/ }).click();
   await r2.page.waitForTimeout(1500);
   const final2 = await r2.page.locator('body').innerText();
-  ok(!/DOKU's secure payment/.test(final2) && /Almost there/.test(final2), `${tag}: PayPal booking does NOT show DOKU`);
-  ok(r2.dokuCalls.length === 0, `${tag}: and never calls DOKU`);
+  recordCheck(
+    !/DOKU's secure payment/.test(final2) && /Almost there/.test(final2),
+    `${tag}: PayPal booking does NOT show DOKU`,
+  );
+  recordCheck(r2.dokuCalls.length === 0, `${tag}: and never calls DOKU`);
   await r2.ctx.close();
 }
 
@@ -246,13 +265,13 @@ for (const width of [390, 1280]) {
   const page = await browserContext.newPage();
   await page.goto(`${SITE}/attractions/atv-ride.html`, { waitUntil: 'networkidle' });
   const txt = await page.locator('body').innerText();
-  ok(/for 2 guests/.test(txt), `${width}: ATV page says "for 2 guests"`);
-  ok(
+  recordCheck(/for 2 guests/.test(txt), `${width}: ATV page says "for 2 guests"`);
+  recordCheck(
     !/per person/i.test(txt.replace(/Entrance ticket per person/gi, '')),
     `${width}: ATV page never says "per person" over a price`,
   );
   const raw = await (await fetch(`${SITE}/attractions/atv-ride.html`)).text();
-  ok(/for 2 guests/.test(raw), `${width}: the static HTML already says "for 2 guests"`);
+  recordCheck(/for 2 guests/.test(raw), `${width}: the static HTML already says "for 2 guests"`);
   await page.screenshot({ path: `${SHOT}/atv-${width}.png` });
   await browserContext.close();
 }

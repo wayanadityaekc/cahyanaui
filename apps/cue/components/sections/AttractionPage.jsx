@@ -3,7 +3,7 @@ import JsonLd from '@/components/JsonLd';
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
 import AttractionOverview from '@/components/sections/AttractionOverview';
 import BookNowRow from '@/components/booking/BookNowRow';
-import { galleryFrom } from '@/lib/galleryFrom';
+import { buildGallery } from '@/lib/galleryFrom';
 import { TOUR_LAYOUT_BOOK, TOUR_LAYOUT_MAIN, TOUR_LAYOUT_SIDE } from '@/components/ui/tourLayoutClasses';
 import BookCta from '@/components/booking/BookCta';
 import BookSidebar from '@/components/booking/BookSidebar';
@@ -14,22 +14,22 @@ import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { STOP_NUM, STOP_NAME, STOP_DESC, CRUMB_FOOT } from '@/components/sections/TourPage';
 import { isHiddenTour } from '@/lib/routes';
-import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
+import Breadcrumb, { buildItemsFromLegacy } from '@/components/ui/Breadcrumb';
 import TourComparisonBox from '@/components/booking/TourComparisonBox';
-import { toursContaining, priceFallbackFor } from '@/lib/tourIndex';
+import { findToursContaining, priceFallbackFor } from '@/lib/tourIndex';
 
 export default function AttractionPage({ data }) {
   const bookType = data.bookDefault || 'tour';
   const isPricedPerPerson = bookType === 'experience' || bookType === 'performance';
   const slug = (data.__page || '').replace('attractions/', '');
-  const onTours = toursContaining(slug);
-  const gallery = galleryFrom(data);
+  const onTours = findToursContaining(slug);
+  const gallery = buildGallery(data);
   const crumb = (data.crumb || []).map((crumbPart, index, crumbParts) =>
     index === crumbParts.length - 1 && crumbPart.type === 'text' ? { ...crumbPart, text: data.title } : crumbPart,
   );
   return (
     <>
-      <JsonLd page={data.__page} crumbs={itemsFromLegacy(crumb)} />
+      <JsonLd page={data.__page} crumbs={buildItemsFromLegacy(crumb)} />
       <DetailHero
         heroBg={data.heroBg}
         heroSlides={data.heroSlides}
@@ -101,7 +101,7 @@ export default function AttractionPage({ data }) {
       <Related href={data.__href} />
       {data.bookItem && <ReviewCtaBand />}
 
-      {data.crumb && !gallery.length && <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
+      {data.crumb && !gallery.length && <Breadcrumb items={buildItemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
     </>
   );
 }

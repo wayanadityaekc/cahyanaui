@@ -5,10 +5,10 @@ import { ChevronDown, CreditCard } from 'lucide-react';
 import InfoDot from '@/components/ui/InfoDot';
 import { withSymbol } from '@/components/Price';
 import ModalPresence from '@/components/ui/ModalPresence';
-import { REFERRAL_INPUT, REFERRAL_BTN, refMsgCls } from '@/components/ui/modalClasses';
+import { REFERRAL_INPUT, REFERRAL_BTN, buildReferralMessageClass } from '@/components/ui/modalClasses';
 import { PAY_COPY, payOptions } from '@/lib/payment';
 import { usePricing } from '@/state/PricingProvider';
-import { noteFor, railFor, RAIL_CHOICES } from '@/lib/rails';
+import { buildRailNote, pickRail, RAIL_CHOICES } from '@/lib/rails';
 
 const CARD = 'rounded-md bg-white [transition:border-color_var(--dur)_ease,background-color_var(--dur)_ease]';
 const CARD_ON = '[border:1.5px_solid_var(--color-cta)] bg-cream';
@@ -92,18 +92,18 @@ export default function PaymentStep({
   const deposit = cat && cat.currency === currency && cat.deposit ? cat.deposit.display : null;
   const depositIdr = cat && cat.deposit && cat.deposit.idr != null ? cat.deposit.idr : null;
   const options = payOptions({ total, currency, stay, hasReferral, deposit, totalIdr, depositIdr, totalUsd });
-  const rail = railFor(railChoice);
+  const rail = pickRail(railChoice);
   const isInRupiah = rail === 'doku' && String(currency).toUpperCase() !== 'IDR';
   const isInUsd = rail === 'paypal' && String(currency).toUpperCase() === 'IDR';
   const [isFinePrintOpen, setIsFinePrintOpen] = useState(false);
-  const railNote = noteFor(currency, rail);
-  function money(amount) {
+  const railNote = buildRailNote(currency, rail);
+  function formatMoney(amount) {
     return withSymbol(symbol + amount.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US'));
   }
-  function rupiah(amount) {
+  function formatRupiah(amount) {
     return withSymbol(`Rp${amount.toLocaleString('id-ID')}`);
   }
-  function dollars(amount) {
+  function formatDollars(amount) {
     return withSymbol(`$${amount.toLocaleString('en-US')}`);
   }
 
@@ -114,11 +114,11 @@ export default function PaymentStep({
 
   useEffect(() => {
     if (!isFinePrintOpen) return undefined;
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key === 'Escape') setIsFinePrintOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isFinePrintOpen]);
 
   return (
@@ -188,22 +188,22 @@ export default function PaymentStep({
                   <span className={SUB}>
                     {optionItem.sub}
                     {optionItem.balance != null && (
-                      <> Then {money(optionItem.balance)} cash to your driver on the day.</>
+                      <> Then {formatMoney(optionItem.balance)} cash to your driver on the day.</>
                     )}
                   </span>
                 </span>
                 {isInRupiah ? (
                   <span className={AMOUNT} data-amount-idr>
-                    {optionItem.amountIdr != null ? rupiah(optionItem.amountIdr) : '-'}
-                    {optionItem.amount != null && <span className={APPROX}>≈ {money(optionItem.amount)}</span>}
+                    {optionItem.amountIdr != null ? formatRupiah(optionItem.amountIdr) : '-'}
+                    {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
                   </span>
                 ) : isInUsd ? (
                   <span className={AMOUNT} data-amount-usd>
-                    {optionItem.amountUsd != null ? dollars(optionItem.amountUsd) : '-'}
-                    {optionItem.amount != null && <span className={APPROX}>≈ {money(optionItem.amount)}</span>}
+                    {optionItem.amountUsd != null ? formatDollars(optionItem.amountUsd) : '-'}
+                    {optionItem.amount != null && <span className={APPROX}>≈ {formatMoney(optionItem.amount)}</span>}
                   </span>
                 ) : (
-                  <span className={AMOUNT}>{optionItem.amount != null ? money(optionItem.amount) : '-'}</span>
+                  <span className={AMOUNT}>{optionItem.amount != null ? formatMoney(optionItem.amount) : '-'}</span>
                 )}
               </button>
 
@@ -223,7 +223,7 @@ export default function PaymentStep({
                       Apply
                     </button>
                   </div>
-                  {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
+                  {refMsg && <small className={buildReferralMessageClass(refMsg.ok)}>{refMsg.text}</small>}
                   {isDimmed && !refMsg && <p className={LOCKED}>{PAY_COPY.referralLocked}</p>}
                 </div>
               )}

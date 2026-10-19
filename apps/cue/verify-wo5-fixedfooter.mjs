@@ -5,7 +5,7 @@ const browser = await chromium.launch({
 
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
@@ -36,8 +36,8 @@ for (const width of [390, 1280]) {
         position: getComputedStyle(footer).position,
       };
     });
-    ok(before.position === 'fixed', `${width}${path}: footer is not position:fixed (${before.position})`);
-    ok(
+    recordCheck(before.position === 'fixed', `${width}${path}: footer is not position:fixed (${before.position})`);
+    recordCheck(
       Math.abs(before.bottom - before.vh) < 1,
       `${width}${path}: footer bottom=${before.bottom}, viewport=${before.vh} - not flush with the bottom edge`,
     );
@@ -50,11 +50,11 @@ for (const width of [390, 1280]) {
       return { top: footerBox.top, bottom: footerBox.bottom, vh: window.innerHeight, scrollY: window.scrollY };
     });
     if (after.scrollY > 0) {
-      ok(
+      recordCheck(
         Math.abs(after.top - before.top) < 1,
         `${width}${path}: footer moved on scroll (top ${before.top} -> ${after.top})`,
       );
-      ok(
+      recordCheck(
         Math.abs(after.bottom - after.vh) < 1,
         `${width}${path}: after scrolling, footer bottom=${after.bottom} != viewport ${after.vh}`,
       );
@@ -76,9 +76,9 @@ for (const width of [390, 1280]) {
       });
       return worst;
     });
-    ok(overlap <= 1, `${width}${path}: page content overlaps the fixed footer by ${overlap}px`);
+    recordCheck(overlap <= 1, `${width}${path}: page content overlaps the fixed footer by ${overlap}px`);
 
-    ok(errs.length === 0, `${width}${path}: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}${path}: page errors ${errs.join(' | ')}`);
   }
 
   await browserContext.close();
@@ -102,7 +102,7 @@ for (const width of [390, 1280]) {
       const element = document.querySelector('[data-appnav]');
       return element ? getComputedStyle(element).display : null;
     });
-    ok(
+    recordCheck(
       navDisplay === 'none',
       `standalone/390${path}: app bottom bar did not yield to the fixed footer (display=${navDisplay})`,
     );
@@ -110,7 +110,7 @@ for (const width of [390, 1280]) {
       const footer = document.querySelector('footer');
       return footer ? getComputedStyle(footer).position : null;
     });
-    ok(footerFixed === 'fixed', `standalone/390${path}: footer lost its fixed position in app mode`);
+    recordCheck(footerFixed === 'fixed', `standalone/390${path}: footer lost its fixed position in app mode`);
   }
   await browserContext.close();
 }

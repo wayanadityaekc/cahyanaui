@@ -4,7 +4,7 @@ export const FREE_CANCEL_HOURS = 24;
 
 export const PAY_OPTIONS = ['deposit', 'full', 'referral'];
 
-export function depositUsd() {
+export function readDepositUsd() {
   return DEPOSIT_USD;
 }
 
@@ -12,26 +12,26 @@ function roundDown(amount, current) {
   return current === 'IDR' ? Math.floor(amount / 1000) * 1000 : Math.floor(amount);
 }
 
-function depositIn(current, deposit) {
+function findDepositIn(current, deposit) {
   if (deposit != null) return deposit;
-  return current === 'USD' ? depositUsd() : null;
+  return current === 'USD' ? readDepositUsd() : null;
 }
 
-export function baseTotal(priced) {
+export function calculateBaseTotal(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
   const lines = priced.lines.filter((line) => line && line.ok && line.was);
   if (!lines.length) return priced.total ? priced.total.display : null;
   return lines.reduce((sum, line) => sum + (line.was.display || 0), 0);
 }
 
-export function baseTotalIdr(priced) {
+export function calculateBaseTotalIdr(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
   const lines = priced.lines.filter((line) => line && line.ok && line.was && line.was.idr != null);
   if (!lines.length) return priced.total && priced.total.idr != null ? priced.total.idr : null;
   return lines.reduce((sum, line) => sum + (line.was.idr || 0), 0);
 }
 
-export function baseTotalUsd(priced) {
+export function calculateBaseTotalUsd(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
   const lines = priced.lines.filter((line) => line && line.ok && line.was && line.was.usd != null);
   if (!lines.length) return priced.total && priced.total.usd != null ? priced.total.usd : null;
@@ -50,7 +50,7 @@ export function payOptions({
 }) {
   const current = String(currency || 'USD').toUpperCase();
   const isTotalKnown = total != null;
-  const dep = depositIn(current, deposit);
+  const dep = findDepositIn(current, deposit);
   const disc = isTotalKnown ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, current) : null;
   const isIdrKnown = totalIdr != null;
   const idr = {
@@ -102,7 +102,7 @@ export function payOptions({
   ];
 }
 
-export function amountFor(optionId, paymentContext) {
+export function findAmountForOption(optionId, paymentContext) {
   const row = payOptions(paymentContext).find((option) => option.id === optionId);
   return row && row.available ? row.amount : null;
 }

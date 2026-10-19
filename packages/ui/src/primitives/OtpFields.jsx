@@ -31,7 +31,7 @@ export default function OtpFields({
     if (joined.length === length && next.every(Boolean) && onComplete) onComplete(joined);
   }
 
-  function spread(start, raw) {
+  function spreadPastedDigits(start, raw) {
     const next = [...digits];
     const fits = raw.slice(0, length - start).split('');
     fits.forEach((char, offset) => {
@@ -51,7 +51,7 @@ export default function OtpFields({
         return;
       }
       if (raw.length > 1) {
-        spread(index, raw);
+        spreadPastedDigits(index, raw);
         return;
       }
       const next = [...digits];
@@ -83,7 +83,7 @@ export default function OtpFields({
       const raw = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
       if (!raw) return;
       event.preventDefault();
-      spread(index, raw);
+      spreadPastedDigits(index, raw);
     };
   }
 

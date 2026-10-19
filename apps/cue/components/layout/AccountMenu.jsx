@@ -14,14 +14,14 @@ const PHONE =
 
 const ROW = `${MENU_ROW_BOX} text-small font-medium text-gold no-underline bg-transparent border-none cursor-pointer font-body hover:bg-cream`;
 
-export function initialsOf(name, email) {
+export function buildInitials(name, email) {
   const src = (name || '').trim() || (email || '').split('@')[0] || '';
   const parts = src.split(/\s+/).filter(Boolean);
   const initials = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : src.slice(0, 2);
   return initials.toUpperCase() || '?';
 }
 
-export function firstNameOf(name, email) {
+export function extractFirstName(name, email) {
   const firstName = (name || '').trim().split(/\s+/)[0];
   return firstName || (email || '').split('@')[0] || 'Account';
 }
@@ -35,21 +35,21 @@ export default function AccountMenu({ onLogin }) {
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    function onDoc(event) {
+    function handleDocumentClick(event) {
       if (event.target.closest && event.target.closest('[data-portal]')) return;
       if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setIsOpen(false);
       btnRef.current?.focus();
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 
@@ -108,7 +108,7 @@ export default function AccountMenu({ onLogin }) {
     );
   }
 
-  const first = firstNameOf(account.name, account.email);
+  const first = extractFirstName(account.name, account.email);
   return (
     <div className="relative" ref={boxRef} data-account-slot="in">
       <button
@@ -124,7 +124,7 @@ export default function AccountMenu({ onLogin }) {
           className="w-[30px] h-[30px] max-[992px]:w-[28px] max-[992px]:h-[28px] rounded-[50%] bg-gold text-white grid place-items-center text-label font-semibold tracking-[0.02em]"
           aria-hidden="true"
         >
-          {initialsOf(account.name, account.email)}
+          {buildInitials(account.name, account.email)}
         </span>
         <span className="max-[992px]:hidden max-w-[9rem] overflow-hidden text-ellipsis whitespace-nowrap">{first}</span>
         <ChevronDown

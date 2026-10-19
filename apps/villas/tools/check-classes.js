@@ -7,23 +7,25 @@ const ROOT = path.join(__dirname, '..');
 const VARIANT =
   /^(hover|focus|focus-within|focus-visible|active|visited|target|disabled|checked|required|invalid|open|group-open|group-hover|group-focus|peer-[\w-]+|first|last|only|odd|even|first-of-type|last-of-type|empty|before|after|placeholder|file|marker|selection|backdrop|motion-reduce|motion-safe|standalone|dark|light|print|portrait|landscape|rtl|ltr|sm|md|lg|xl|2xl|min|max|aria-\[[^\]]*\]|data-\[[^\]]*\]|has-\[[^\]]*\]|not-has-\[[^\]]*\]|group-has-\[[^\]]*\]|peer-has-\[[^\]]*\]|max-\[[^\]]*\]|min-\[[^\]]*\]|supports-\[[^\]]*\]|\[@[^\]]*\]|\[&[^\]]*\])$/;
 
-function libraryDir() {
+function findLibraryDirectory() {
   const vendored = path.join(ROOT, 'packages/ui/src');
   return fs.existsSync(vendored) ? vendored : path.join(ROOT, '../../packages/ui/src');
 }
 
-const SOURCE_DIRS = ['app', 'components', 'lib', 'content'].map((dir) => path.join(ROOT, dir)).concat(libraryDir());
+const SOURCE_DIRS = ['app', 'components', 'lib', 'content']
+  .map((dir) => path.join(ROOT, dir))
+  .concat(findLibraryDirectory());
 
-function sourceFiles(dir) {
+function listSourceFiles(dir) {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return entry.name === 'node_modules' ? [] : sourceFiles(full);
+    if (entry.isDirectory()) return entry.name === 'node_modules' ? [] : listSourceFiles(full);
     return /\.(js|jsx|mjs)$/.test(entry.name) ? [full] : [];
   });
 }
 
-function segments(token) {
+function splitSegments(token) {
   const parts = [];
   let depth = 0;
   let current = '';
@@ -39,7 +41,7 @@ function segments(token) {
   return parts;
 }
 
-function stringLiterals(src) {
+function extractStringLiterals(src) {
   const found = [];
   const stack = [{ kind: 'code', depth: 0 }];
   let chunk = null;
@@ -96,11 +98,11 @@ function stringLiterals(src) {
   return found;
 }
 
-function lineAt(src, index) {
+function findLineNumber(src, index) {
   return src.slice(0, index).split('\n').length;
 }
 
-const files = SOURCE_DIRS.flatMap(sourceFiles);
+const files = SOURCE_DIRS.flatMap(listSourceFiles);
 if (!files.length) {
   console.error('check-classes: scanned 0 source files - the gate is looking in the wrong place');
   process.exit(1);
@@ -111,22 +113,22 @@ let tokensChecked = 0;
 files.forEach((file) => {
   const rel = path.relative(ROOT, file);
   const src = fs.readFileSync(file, 'utf8');
-  stringLiterals(src).forEach(({ text, start }) => {
+  extractStringLiterals(src).forEach(({ text, start }) => {
     let offset = 0;
     text.split(/(\s+)/).forEach((token) => {
       const at = start + offset;
       offset += token.length;
       if (!token.includes(':') || /\s/.test(token)) return;
-      const parts = segments(token);
+      const parts = splitSegments(token);
       const last = parts.pop();
       if (!parts.length || !parts.every((part) => VARIANT.test(part))) return;
       tokensChecked++;
-      if (last === '') bad.push([rel, lineAt(src, at), token, 'variant prefix with no utility after it']);
+      if (last === '') bad.push([rel, findLineNumber(src, at), token, 'variant prefix with no utility after it']);
       else if (new Set(parts).size !== parts.length)
-        bad.push([rel, lineAt(src, at), token, 'the same variant prefix twice']);
+        bad.push([rel, findLineNumber(src, at), token, 'the same variant prefix twice']);
     });
     const empty = text.indexOf('var(--)');
-    if (empty !== -1) bad.push([rel, lineAt(src, start + empty), 'var(--)', 'empty custom property']);
+    if (empty !== -1) bad.push([rel, findLineNumber(src, start + empty), 'var(--)', 'empty custom property']);
   });
 });
 

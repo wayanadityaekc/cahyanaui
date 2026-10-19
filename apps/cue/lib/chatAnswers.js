@@ -12,7 +12,7 @@ function stripTags(html) {
     .trim();
 }
 
-function faqAnswer(question) {
+function findFaqAnswer(question) {
   const hit = FAQ.find((faq) => faq.q === question);
   if (!hit) throw new Error(`chat: no FAQ entry titled "${question}"`);
   return stripTags(hit.a);
@@ -96,15 +96,15 @@ const STOP = new Set([
   'all',
 ]);
 
-function norm(text) {
+function normalizeText(text) {
   return String(text || '')
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
-function words(text) {
-  return norm(text)
+function extractWords(text) {
+  return normalizeText(text)
     .split(' ')
     .filter((word) => word.length > 2 && !STOP.has(word));
 }
@@ -114,7 +114,7 @@ function priceOf({ priceName, fallback }, context) {
   return (live && live.standard && live.standard.display) || fallback || '';
 }
 
-function tourPrices(context) {
+function buildTourPrices(context) {
   const picks = itemIndex()
     .filter((item) => item.section === 'tour')
     .slice(0, 4)
@@ -126,7 +126,7 @@ function tourPrices(context) {
   };
 }
 
-function airportPrice({ catalog }) {
+function findAirportPrice({ catalog }) {
   const airportTransfer = catalog
     ? (catalog.transfers || []).find((transfer) => /airport/i.test(transfer.route))
     : null;
@@ -139,7 +139,7 @@ function airportPrice({ catalog }) {
   };
 }
 
-function charterPrices({ catalog }) {
+function buildCharterPrices({ catalog }) {
   const rows = (CHARTER.durations || [])
     .map((duration) => {
       const charter = catalog
@@ -169,14 +169,19 @@ function startTimes() {
   };
 }
 
-const BUILDERS = { tourPrices, airportPrice, charterPrices, startTimes };
+const BUILDERS = {
+  tourPrices: buildTourPrices,
+  airportPrice: findAirportPrice,
+  charterPrices: buildCharterPrices,
+  startTimes,
+};
 
 function matchItem(question) {
-  const questionWords = words(question);
+  const questionWords = extractWords(question);
   if (!questionWords.length) return null;
   let best = null;
   itemIndex().forEach((item) => {
-    const iw = words(item.name);
+    const iw = extractWords(item.name);
     if (!iw.length) return;
     let hits = 0;
     iw.forEach((word) => {
@@ -192,8 +197,8 @@ function matchItem(question) {
 }
 
 function matchTopic(question) {
-  const normalizedQuestion = norm(question);
-  const questionWords = words(question);
+  const normalizedQuestion = normalizeText(question);
+  const questionWords = extractWords(question);
   let best = null;
   TOPICS.forEach((topic) => {
     let score = 0;
@@ -217,7 +222,7 @@ function matchTopic(question) {
 }
 
 function answerTopic(topic, context) {
-  if (topic.faq) return { text: faqAnswer(topic.faq) };
+  if (topic.faq) return { text: findFaqAnswer(topic.faq) };
   const build = BUILDERS[topic.build];
   if (!build) throw new Error(`chat: topic ${topic.id} names no builder`);
   return build(context);
@@ -227,12 +232,12 @@ export function answerFor(question, context = {}) {
   const text = String(question || '').trim();
   if (!text) return { kind: 'answer', text: CHAT_COPY.greeting };
 
-  const bare = norm(text);
+  const bare = normalizeText(text);
   if (GREETINGS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.hello };
   if (THANKS.includes(bare)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
-  const normalizedText = norm(text);
-  const qw0 = words(text);
+  const normalizedText = normalizeText(text);
+  const qw0 = extractWords(text);
   const isAskingForHuman = HUMAN_WORDS.some((word) =>
     word.includes(' ') ? normalizedText.includes(word) : qw0.includes(word),
   );

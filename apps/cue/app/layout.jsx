@@ -23,24 +23,24 @@ const inter = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
-function assetV(...rel) {
+function hashAsset(...rel) {
   return createHash('sha1')
     .update(readFileSync(join(process.cwd(), 'public', ...rel)))
     .digest('hex')
     .slice(0, 8);
 }
 
-const STYLE_V = assetV('style.css');
-const ICON_SVG_V = assetV('assets', 'icons', 'favicon.svg');
-const ICON_ICO_V = assetV('assets', 'icons', 'favicon.ico');
-const ICON_APPLE_V = assetV('assets', 'icons', 'apple-touch-icon.png');
+const STYLE_V = hashAsset('style.css');
+const ICON_SVG_V = hashAsset('assets', 'icons', 'favicon.svg');
+const ICON_ICO_V = hashAsset('assets', 'icons', 'favicon.ico');
+const ICON_APPLE_V = hashAsset('assets', 'icons', 'apple-touch-icon.png');
 
 export const metadata = {
   metadataBase: new URL('https://cahyanaubudexperience.com'),
 };
 
 let buildCatalog = null;
-function catalogForBuild() {
+function fetchBuildCatalog() {
   if (!buildCatalog) {
     const query = new URLSearchParams({ currency: 'USD', guests: String(DISPLAY_GUESTS), stay: '' });
     buildCatalog = (async () => {
@@ -57,7 +57,7 @@ function catalogForBuild() {
 }
 
 export default async function RootLayout({ children }) {
-  const initialCatalog = await catalogForBuild();
+  const initialCatalog = await fetchBuildCatalog();
   return (
     <html lang="en" className={inter.variable}>
       <head>

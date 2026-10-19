@@ -10,7 +10,7 @@ if (!fs.existsSync(OUT)) {
   process.exit(2);
 }
 
-function builtPages() {
+function listBuiltPages() {
   function walk(dir, base) {
     return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
       if (entry.name === '_next') return [];
@@ -49,7 +49,7 @@ async function run() {
   const indexable = routes.indexablePaths();
   const problems = [];
 
-  const pages = builtPages();
+  const pages = listBuiltPages();
   const builtUrls = new Set(pages.map((page) => page.url));
 
   let linksChecked = 0;

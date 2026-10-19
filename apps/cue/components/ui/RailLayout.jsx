@@ -12,12 +12,12 @@ import {
   RAIL_STICK,
   RAIL_STICK_COLLAPSED,
   RAIL_LABEL,
-  railItem,
+  buildRailItemClass,
   RAIL_SPLIT,
   RAIL_MAIN,
   RAIL_MLIST,
   RAIL_MLABEL,
-  railMobileItem,
+  buildRailMobileItemClass,
   RAIL_MCHEV,
   RAIL_BACK,
   RAIL_HEADER,
@@ -58,10 +58,10 @@ export default function RailLayout({
   const effectiveFrameClass = scrollContent ? RAIL_FRAME_SCROLL : frameClass;
   const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
 
-  function rows(mobile) {
+  function renderRows(mobile) {
     return items.map((item) => {
       const isSelected = active === item.id;
-      const cls = mobile ? railMobileItem(isSelected) : railItem(isSelected, railCollapsed);
+      const cls = mobile ? buildRailMobileItemClass(isSelected) : buildRailItemClass(isSelected, railCollapsed);
       const inner = (
         <>
           {item.Icon && <item.Icon strokeWidth={1.7} aria-hidden="true" />}
@@ -99,7 +99,7 @@ export default function RailLayout({
         <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
           {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
           <nav className="flex flex-col" aria-label={label}>
-            {rows(false)}
+            {renderRows(false)}
           </nav>
           {!railCollapsed && help}
         </div>
@@ -108,7 +108,7 @@ export default function RailLayout({
       {!mobileNav && (
         <div className={reading ? 'hidden' : RAIL_MLIST}>
           <p className={RAIL_MLABEL}>{label}</p>
-          {rows(true)}
+          {renderRows(true)}
           {help}
         </div>
       )}

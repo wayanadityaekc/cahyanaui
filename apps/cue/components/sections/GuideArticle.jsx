@@ -2,21 +2,21 @@ import JsonLd from '@/components/JsonLd';
 import GuideCatNav from '@/components/sections/GuideCatNav';
 import RailLayout from '@/components/ui/RailLayout';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { guideCrumbs } from '@/lib/crumbs';
+import { buildGuideCrumbs } from '@/lib/crumbs';
 import { RAIL_PAGE_BOX, RAIL_FRAME_CARD, RAIL_MAIN_CARD, RAIL_READ } from '@/components/ui/railClasses';
 import GuideMore from '@/components/sections/GuideMore';
 import Prose from '@/components/prose/Prose';
 import DetailHero from '@/components/sections/DetailHero';
-import { guideCard, readMinutes, guideCategory } from '@/lib/guideMeta';
+import { findGuideCard, readMinutes, findGuideCategory } from '@/lib/guideMeta';
 
 const BOX = `${RAIL_PAGE_BOX} pt-[2.85rem] max-[560px]:pt-[2.6rem]`;
 
 export default function GuideArticle({ data }) {
-  const crumbs = guideCrumbs(data.tabs, data.title);
+  const crumbs = buildGuideCrumbs(data.tabs, data.title);
   const slug = (data.__page || '').replace(/^guide\//, '');
-  const card = guideCard(slug) || {};
+  const card = findGuideCard(slug) || {};
   const hooks = [
-    { label: 'Category', value: guideCategory(data.tabs) },
+    { label: 'Category', value: findGuideCategory(data.tabs) },
     { label: 'Topic', value: card.tag },
     { label: 'Read', value: `~${readMinutes(data.body)} min` },
   ].filter((detail) => detail.value);

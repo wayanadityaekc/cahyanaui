@@ -16,7 +16,7 @@ import {
   CONTROL_HINT,
   CONTROL_VAL_RICH,
   CONTROL_VAL_RICH_PLACEHOLDER,
-  panelBookdate,
+  buildPanelBookdateClass,
   PANEL_HEAD_BOOKDATE,
   PANEL_HEAD_H3,
   PANEL_CLOSE,
@@ -27,14 +27,14 @@ import {
   CAL_CAP_BTN,
   CAL_GRID,
   CAL_DOW,
-  calDay,
+  buildCalendarDayClass,
   CSEL_GROUP,
   BK_NATIVE,
   CAL_FOOT,
   CAL_APPLY,
 } from './hsClasses';
 import TimeChoice from './TimeChoice';
-import { fmtTime, fmtDate } from '@/content/shared/timeSlots';
+import { formatTime, formatDate } from '@/content/shared/timeSlots';
 
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = [
@@ -52,7 +52,7 @@ const MONTHS = [
   'December',
 ];
 
-function iso(date) {
+function formatIsoDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
@@ -83,20 +83,20 @@ export default function DateField({
   useEffect(() => setIsMounted(true), []);
   useEffect(() => {
     if (!isOpen) return;
-    function onKey(event) {
+    function handleKeyDown(event) {
       return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  const minDate = min || iso(new Date());
+  const minDate = min || formatIsoDate(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
 
   function label12(timeValue) {
-    return withTime && time ? `${fmtDate(timeValue)} · ${fmtTime(time)}` : fmtDate(timeValue);
+    return withTime && time ? `${formatDate(timeValue)} · ${formatTime(time)}` : formatDate(timeValue);
   }
 
   const cells = [];
@@ -106,7 +106,7 @@ export default function DateField({
   );
 
   const panel = (
-    <div className={panelBookdate(isOpen)}>
+    <div className={buildPanelBookdateClass(isOpen)}>
       <div className={PANEL_HEAD_BOOKDATE}>
         <h3 className={PANEL_HEAD_H3}>{label}</h3>
         <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={() => setIsOpen(false)}>
@@ -143,14 +143,14 @@ export default function DateField({
               </span>
             ))}
             {cells.map((cell, index) => {
-              if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
-              const isoDate = iso(cell);
+              if (!cell) return <span className={buildCalendarDayClass(true)} key={`e${index}`} />;
+              const isoDate = formatIsoDate(cell);
               const isDisabled = isoDate < minDate;
               return (
                 <button
                   type="button"
                   key={isoDate}
-                  className={calDay(isDisabled, isoDate === value)}
+                  className={buildCalendarDayClass(isDisabled, isoDate === value)}
                   aria-pressed={isoDate === value}
                   disabled={isDisabled}
                   onClick={() => {

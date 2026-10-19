@@ -6,7 +6,7 @@ import { KEY, API_BASE } from '@/lib/constants';
 
 const AccountContext = createContext(null);
 
-function fmtDay(dateStr) {
+function formatDay(dateStr) {
   if (!dateStr) return 'date TBD';
   const [year, month, day] = dateStr.split('-').map(Number);
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
@@ -80,7 +80,7 @@ export function AccountProvider({ children }) {
           ref: trip.ref,
           service: reviewItem,
           tripName: trip.name,
-          date: trip.start_date ? fmtDay(trip.start_date) : '',
+          date: trip.start_date ? formatDay(trip.start_date) : '',
         }),
       );
     });

@@ -20,7 +20,7 @@ const ROWS = [
 
 let pass = 0,
   fail = 0;
-function ok(cond, message) {
+function recordCheck(cond, message) {
   if (cond) pass++;
   else {
     fail++;
@@ -54,7 +54,7 @@ async function open(path, viewportWidth) {
   return { ctx: browserContext, page, errors };
 }
 
-function cards(page) {
+function collectReviewCards(page) {
   return page.evaluate(() =>
     [...document.querySelectorAll('button')]
       .filter((button) => button.querySelector('p') && /Read more/.test(button.textContent))
@@ -69,14 +69,14 @@ function cards(page) {
 for (const width of [390, 1280]) {
   for (const path of ['/', '/all-reviews.html']) {
     const { ctx: browserContext, page, errors } = await open(path, width);
-    const list = await cards(page);
+    const list = await collectReviewCards(page);
     const andras = list.filter((card) => card.name === 'Andras');
-    ok(andras.length === 1, `${width} ${path}: ${andras.length} Andras cards`);
-    ok(
+    recordCheck(andras.length === 1, `${width} ${path}: ${andras.length} Andras cards`);
+    recordCheck(
       andras[0] && andras[0].trip === 'Ubud Tour + 2 more',
       `${width} ${path}: trip line "${andras[0] && andras[0].trip}"`,
     );
-    ok(
+    recordCheck(
       list.some((card) => card.name === 'Santos' && card.trip === 'Ubud Tour'),
       `${width} ${path}: single-trip review changed`,
     );
@@ -88,11 +88,11 @@ for (const width of [390, 1280]) {
       );
       return dialog ? dialog.innerText : '';
     });
-    ok(
+    recordCheck(
       modal.includes('Ubud Tour · Ubud Culture Day · Airport – Ubud'),
       `${width} ${path}: popup trip list "${modal.split('\n').slice(0, 4).join(' | ')}"`,
     );
-    ok(errors.length === 0, `${width} ${path}: page errors ${errors}`);
+    recordCheck(errors.length === 0, `${width} ${path}: page errors ${errors}`);
     await browserContext.close();
   }
   for (const [path, trip] of [
@@ -101,8 +101,8 @@ for (const width of [390, 1280]) {
     ['/airport-transfer.html', 'Airport – Ubud'],
   ]) {
     const { ctx: browserContext, page } = await open(path, width);
-    const andras = (await cards(page)).filter((card) => card.name === 'Andras');
-    ok(
+    const andras = (await collectReviewCards(page)).filter((card) => card.name === 'Andras');
+    recordCheck(
       andras.length === 1 && andras[0].trip === trip,
       `${width} ${path}: Andras cards ${JSON.stringify(andras.map((andra) => andra.trip))}`,
     );

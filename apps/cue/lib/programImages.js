@@ -20,6 +20,6 @@ function buildMap() {
 
 const PROGRAM_IMAGES = buildMap();
 
-export function imageForProgram(name) {
+export function findImageForProgram(name) {
   return (name && PROGRAM_IMAGES[name]) || null;
 }

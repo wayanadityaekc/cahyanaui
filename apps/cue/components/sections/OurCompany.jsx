@@ -5,7 +5,7 @@ import { Building2, Mail, HelpCircle, FileText, Shield, XCircle, MessageCircle, 
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_PAGE_SCROLL, RAIL_READ, RAIL_HELP, RAIL_HELP_TEXT, RAIL_HELP_BTN } from '@/components/ui/railClasses';
 import { WHATSAPP_NUMBER } from '@/lib/constants';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import AboutPage from './AboutPage';
 import ContactSection from './ContactSection';
 import { LEGAL } from '@/content/shared/legal';
@@ -21,7 +21,7 @@ const TABS = [
   { id: 'cancellation', label: 'Cancellation & Refund', Icon: XCircle },
 ];
 
-function idFromHash() {
+function readIdFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
   return TABS.some((tab) => tab.id === id) ? id : null;
@@ -96,7 +96,7 @@ export default function OurCompany() {
 
   useEffect(() => {
     function applyHash() {
-      const id = idFromHash();
+      const id = readIdFromHash();
       if (id) {
         setTab(id);
         setIsReading(true);
@@ -129,7 +129,7 @@ export default function OurCompany() {
         onBack={goBack}
         help={<HelpCard />}
         collapsible
-        breadcrumb={crumbsFor('our-company')}
+        breadcrumb={buildCrumbs('our-company')}
         scrollContent
       >
         <div className={RAIL_READ}>

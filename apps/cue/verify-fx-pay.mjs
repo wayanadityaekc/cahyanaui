@@ -4,10 +4,10 @@ const API = 'http://127.0.0.1:4599/api';
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function checkAssertion(isPassing, message) {
   return isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-function digits(text) {
+function extractDigits(text) {
   return Number(String(text).replace(/[^0-9]/g, ''));
 }
 
@@ -65,7 +65,7 @@ for (const [current, viewportWidth] of [
   const cont2 = page.locator('button:visible', { hasText: /^\s*Continue\s*$/ });
   if (await cont2.count()) await cont2.first().click();
   await page.waitForTimeout(700);
-  async function rowText(pattern) {
+  async function readRowText(pattern) {
     const row = page
       .locator('div:visible', { hasText: pattern })
       .filter({ has: page.locator('span') })
@@ -74,26 +74,26 @@ for (const [current, viewportWidth] of [
   }
   const body = await page.locator('body').innerText();
   const depRow = body.split('\n').find((line) => /deposit/i.test(line) && /\d/.test(line)) || '';
-  const depLine = await rowText(/Pay a deposit/);
-  const fullLine = await rowText(/Pay in full/);
-  const depAmt = digits((depLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
-  const fullAmt = digits((fullLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
-  ok(
+  const depLine = await readRowText(/Pay a deposit/);
+  const fullLine = await readRowText(/Pay in full/);
+  const depAmt = extractDigits((depLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
+  const fullAmt = extractDigits((fullLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
+  checkAssertion(
     depAmt === cat.deposit.display,
     `${current}/${viewportWidth}: deposit shown ${depAmt} = catalog ${cat.deposit.display}`,
   );
-  ok(
+  checkAssertion(
     fullAmt === data.total.display,
     `${current}/${viewportWidth}: pay in full shown ${fullAmt} = quote ${data.total.display}`,
   );
-  ok(
+  checkAssertion(
     new RegExp(cat.symbol.trim().replace('$', '\\$')).test(depLine),
     `${current}/${viewportWidth}: deposit in ${cat.symbol}`,
   );
   await page.screenshot({
     path: `/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scratchpad/pay-${current}-${viewportWidth}.png`,
   });
-  ok(errs.length === 0, `${current}/${viewportWidth}: no page errors (${errs.join(' | ')})`);
+  checkAssertion(errs.length === 0, `${current}/${viewportWidth}: no page errors (${errs.join(' | ')})`);
   await browserContext.close();
 }
 await browser.close();

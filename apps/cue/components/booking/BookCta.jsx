@@ -5,7 +5,7 @@ import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { usePricing } from '@/state/PricingProvider';
 import DatePopup from './DatePopup';
-import { clashDates } from '@/lib/cart';
+import { findClashDates } from '@/lib/cart';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
 import { CART_TOAST } from '@/components/ui/cartToastClasses';
@@ -32,19 +32,19 @@ export default function BookCta({ item, perPerson = false }) {
     if (!root) return;
     const bookBtn = root.querySelector('.program-cta__btn--book');
     const addBtn = root.querySelector('.program-cta__btn--add');
-    function onBook(event) {
+    function handleBookClick(event) {
       event.preventDefault();
       setAsk('book');
     }
-    function onAdd(event) {
+    function handleAddClick(event) {
       event.preventDefault();
       setAsk('add');
     }
-    if (bookBtn) bookBtn.addEventListener('click', onBook);
-    if (addBtn) addBtn.addEventListener('click', onAdd);
+    if (bookBtn) bookBtn.addEventListener('click', handleBookClick);
+    if (addBtn) addBtn.addEventListener('click', handleAddClick);
     return () => {
-      if (bookBtn) bookBtn.removeEventListener('click', onBook);
-      if (addBtn) addBtn.removeEventListener('click', onAdd);
+      if (bookBtn) bookBtn.removeEventListener('click', handleBookClick);
+      if (addBtn) addBtn.removeEventListener('click', handleAddClick);
     };
   }, [item]);
 
@@ -54,7 +54,7 @@ export default function BookCta({ item, perPerson = false }) {
     return () => clearTimeout(toastTimer);
   }, [toast]);
 
-  function categoryOf(name) {
+  function findCategory(name) {
     const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
     return catalogItem ? catalogItem.category : null;
   }
@@ -62,7 +62,7 @@ export default function BookCta({ item, perPerson = false }) {
   function pick(date, time) {
     const shouldGoToBooking = ask === 'book';
     const probe = { ...state, days: [...(state.days || []), { items: [item], itemModes: ['standard'], date }] };
-    if (isFullDay(item) && clashDates(probe, isFullDay).length > 0) {
+    if (isFullDay(item) && findClashDates(probe, isFullDay).length > 0) {
       setConfirm({ date, goto: shouldGoToBooking, time });
       return;
     }
@@ -93,7 +93,7 @@ export default function BookCta({ item, perPerson = false }) {
         onPick={pick}
         onClose={() => setAsk(null)}
         withTime
-        category={categoryOf(item)}
+        category={findCategory(item)}
         itemName={item}
       />
 

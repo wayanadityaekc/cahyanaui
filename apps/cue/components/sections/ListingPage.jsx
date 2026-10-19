@@ -1,7 +1,7 @@
 'use client';
 import { BTN_SM } from '@/components/ui/btnClasses';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 
 import { Car, Check, MapPin, Search, UserRound, X as CloseIconItem } from 'lucide-react';
 import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
@@ -79,7 +79,7 @@ export default function ListingPage({ data, page }) {
           min-[769px]:mt-0 min-[769px]:pt-12 min-[769px]:pr-12 min-[769px]:pb-12 min-[769px]:pl-[max(var(--container-x),calc(50vw_-_var(--container)/2_+_var(--container-x)))]
           min-[769px]:bg-transparent min-[769px]:rounded-none min-[769px]:justify-center"
         >
-          {!term && <Breadcrumb items={crumbsFor(page)} className="mb-2 self-start" />}
+          {!term && <Breadcrumb items={buildCrumbs(page)} className="mb-2 self-start" />}
           {!term && <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>}
           {!term && <p className="max-w-[460px] m-0 text-[#3d3d3d]">{sub}</p>}
           <div className="flex items-center gap-[6px] w-full max-w-[430px] mt-6 h-[2.9rem] pl-[18px] pr-[6px] bg-white [border:1px_solid_var(--line)] rounded-md max-[768px]:absolute max-[768px]:left-[1.2rem] max-[768px]:right-[1.2rem] max-[768px]:top-[-3.9rem] max-[768px]:w-auto max-[768px]:z-[4] max-[768px]:mt-0 max-[768px]:max-w-none">

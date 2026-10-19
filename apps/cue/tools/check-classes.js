@@ -5,7 +5,7 @@ const { readFileSync } = require('node:fs');
 const VARIANT =
   /^(hover|focus|focus-within|focus-visible|active|visited|target|disabled|checked|required|invalid|open|group-open|group-hover|group-focus|peer-[\w-]+|first|last|only|odd|even|first-of-type|last-of-type|empty|before|after|placeholder|file|marker|selection|backdrop|motion-reduce|motion-safe|standalone|dark|light|print|portrait|landscape|rtl|ltr|sm|md|lg|xl|2xl|min|max|aria-\[[^\]]*\]|data-\[[^\]]*\]|has-\[[^\]]*\]|not-has-\[[^\]]*\]|group-has-\[[^\]]*\]|peer-has-\[[^\]]*\]|max-\[[^\]]*\]|min-\[[^\]]*\]|supports-\[[^\]]*\]|\[@[^\]]*\]|\[&[^\]]*\])$/;
 
-function segments(tok) {
+function splitSegments(tok) {
   const out = [];
   let depth = 0,
     current = '';
@@ -46,7 +46,7 @@ files.forEach((file) => {
       .filter(Boolean)
       .forEach((tok) => {
         if (!tok.includes(':')) return;
-        const parts = segments(tok);
+        const parts = splitSegments(tok);
         const last = parts.pop();
         if (!parts.length || !parts.every((part) => VARIANT.test(part))) return;
         if (last === '') bad.push([file, index + 1, tok, 'variant prefix with no utility after it']);

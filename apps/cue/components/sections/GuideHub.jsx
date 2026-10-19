@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import { ChevronDown, Menu, Search } from 'lucide-react';
 import { PopMenu, Stagger, StaggerItem } from '@/components/ui/Reveal';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
@@ -45,7 +45,7 @@ export default function GuideHub() {
       >
         <div className={`${SUBHERO_CONTENT} !max-w-[calc(var(--container)_-_2_*_var(--container-x))]`}>
           <Breadcrumb
-            items={crumbsFor('bali-guide')}
+            items={buildCrumbs('bali-guide')}
             className="mb-2 [&_a]:text-white/75 [&_a]:hover:text-white [&_span]:text-white"
           />
           <h1 className={`${SUBHERO_TITLE} !text-white`}>{GUIDE_HUB.title}</h1>

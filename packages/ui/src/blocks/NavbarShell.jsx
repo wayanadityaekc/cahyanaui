@@ -64,50 +64,50 @@ export default function NavbarShell({
         root.style.setProperty('--header-h-max', `${height}px`);
       }
     }
-    function onResize() {
+    function handleWindowResize() {
       max = 0;
       set();
     }
     set();
     const resizeObserver = new ResizeObserver(set);
     resizeObserver.observe(header);
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', handleWindowResize);
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', handleWindowResize);
     };
   }, []);
 
   useEffect(() => {
     if (!overlay) return undefined;
-    function onScroll() {
+    function handleWindowScroll() {
       const hero = document.querySelector('main > section');
       const barHeight = headerRef.current ? headerRef.current.offsetHeight : 0;
       setIsAtTop(hero ? hero.getBoundingClientRect().bottom > barHeight : window.scrollY < 40);
     }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    handleWindowScroll();
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleWindowScroll);
   }, [overlay]);
 
   useEffect(() => {
     if (!isMenuOpen) return undefined;
-    function onDoc(event) {
+    function handleDocumentPointerDown(event) {
       const inNav = navRef.current && navRef.current.contains(event.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
       const inPopup = event.target.closest && event.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setIsMenuOpen(false);
     }
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setIsMenuOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentPointerDown);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentPointerDown);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
     };
   }, [isMenuOpen]);
 

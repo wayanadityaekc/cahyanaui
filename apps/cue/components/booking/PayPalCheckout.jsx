@@ -5,16 +5,16 @@ import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 
-function sdkId(current) {
+function buildSdkId(current) {
   return `paypal-sdk-${current}`;
 }
-function sdkNs(current) {
+function buildSdkNamespace(current) {
   return `paypal_${current}`;
 }
 
 function loadSdk({ clientId, currency }) {
-  const id = sdkId(currency);
-  const sdkNamespace = sdkNs(currency);
+  const id = buildSdkId(currency);
+  const sdkNamespace = buildSdkNamespace(currency);
   return new Promise((resolve, reject) => {
     const existing = document.getElementById(id);
     if (existing && window[sdkNamespace]) return resolve(window[sdkNamespace]);
@@ -94,7 +94,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       if (onError) onError(error);
     }
 
-    function succeed(captureResult) {
+    function handleCaptureSuccess(captureResult) {
       if (cancelled || !mounted.current) return;
       setState('done');
       setMessage('');
@@ -115,7 +115,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
             createOrder,
             onApprove: async (data) => {
               try {
-                succeed(await capture(data.orderID));
+                handleCaptureSuccess(await capture(data.orderID));
               } catch (e) {
                 fail(e);
               }
@@ -135,7 +135,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
               createOrder,
               onApprove: async (data) => {
                 try {
-                  succeed(await capture(data.orderID));
+                  handleCaptureSuccess(await capture(data.orderID));
                 } catch (e) {
                   fail(e);
                 }

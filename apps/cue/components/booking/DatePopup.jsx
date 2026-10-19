@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   overlay,
-  panelBookdate,
+  buildPanelBookdateClass,
   PANEL_HEAD_BOOKDATE,
   PANEL_HEAD_H3,
   PANEL_CLOSE,
@@ -15,7 +15,7 @@ import {
   CAL_CAP_BTN,
   CAL_GRID,
   CAL_DOW,
-  calDay,
+  buildCalendarDayClass,
   CAL_FOOT,
   CAL_HINT,
   CAL_APPLY,
@@ -39,7 +39,7 @@ const MONTHS = [
 ];
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
-function iso(date) {
+function formatIsoDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
@@ -72,16 +72,16 @@ export default function DatePopup({
   useBodyLock(open);
   useEffect(() => {
     if (!open) return;
-    function onKey(event) {
+    function handleKeyDown(event) {
       return event.key === 'Escape' && onClose();
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [open, onClose]);
 
   if (!isMounted) return null;
 
-  const today = iso(new Date());
+  const today = formatIsoDate(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const total = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const cells = [];
@@ -93,7 +93,7 @@ export default function DatePopup({
   return createPortal(
     <>
       <div className={overlay(open, false)} onClick={onClose} />
-      <div className={panelBookdate(open)}>
+      <div className={buildPanelBookdateClass(open)}>
         <div className={PANEL_HEAD_BOOKDATE}>
           <h3 className={PANEL_HEAD_H3}>{title}</h3>
           <button type="button" className={PANEL_CLOSE} aria-label="Close" onClick={onClose}>
@@ -130,14 +130,14 @@ export default function DatePopup({
                 </span>
               ))}
               {cells.map((cell, index) => {
-                if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
-                const isoDate = iso(cell);
+                if (!cell) return <span className={buildCalendarDayClass(true)} key={`e${index}`} />;
+                const isoDate = formatIsoDate(cell);
                 const isPast = isoDate < today;
                 return (
                   <button
                     type="button"
                     key={isoDate}
-                    className={calDay(isPast, isoDate === selector)}
+                    className={buildCalendarDayClass(isPast, isoDate === selector)}
                     aria-pressed={isoDate === selector}
                     disabled={isPast}
                     onClick={() => setSelector(isoDate)}

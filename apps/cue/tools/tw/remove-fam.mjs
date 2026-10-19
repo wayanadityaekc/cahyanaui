@@ -9,7 +9,7 @@ const DEAD = new RegExp(deadSrc);
 const KEEP = keepSrc ? new RegExp(keepSrc) : null;
 let css = fs.readFileSync(file, 'utf8');
 
-function selectorIsDead(selector) {
+function checkIsSelectorDead(selector) {
   if (KEEP && KEEP.test(selector)) return false;
   return DEAD.test(selector);
 }
@@ -91,7 +91,7 @@ function processBlock(blockText) {
         .split(',')
         .map((line) => line.replace(/\n/g, ' ').trim())
         .filter(Boolean);
-      const keep = sels.filter((sx) => !selectorIsDead(sx));
+      const keep = sels.filter((sx) => !checkIsSelectorDead(sx));
       if (keep.length === 0) {
       } else if (keep.length === sels.length) out += `${prelude}{${body}}`;
       else {

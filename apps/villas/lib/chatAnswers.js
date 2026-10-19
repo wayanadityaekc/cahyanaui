@@ -4,14 +4,14 @@ import { TOPICS, HUMAN_WORDS, SERVICE_WORDS, PRICE_WORDS, GREETINGS, THANKS, CHA
 
 const FAQ_ITEMS = FAQ.flatMap((group) => group.items);
 
-function faqAnswer(question) {
+function findFaqAnswer(question) {
   const hit = FAQ_ITEMS.find(([asked]) => asked === question);
   if (!hit) throw new Error(`chat: no FAQ entry titled "${question}"`);
   return hit[1];
 }
 
 TOPICS.forEach((topic) => {
-  if (topic.faq) faqAnswer(topic.faq);
+  if (topic.faq) findFaqAnswer(topic.faq);
 });
 
 const STOP = new Set([
@@ -68,59 +68,59 @@ const STOP = new Set([
   'all',
 ]);
 
-function norm(text) {
+function normalizeText(text) {
   return String(text || '')
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
-function words(text) {
-  return norm(text)
+function extractWords(text) {
+  return normalizeText(text)
     .split(' ')
     .filter((word) => word.length > 2 && !STOP.has(word));
 }
 
-function mentions(term, text, questionWords) {
+function hasMention(term, text, questionWords) {
   return term.includes(' ') ? text.includes(term) : questionWords.includes(term);
 }
 
-function villaNote(villa) {
+function buildVillaNote(villa) {
   return `Up to ${villa.guests} guests · ${villa.bedrooms} bedrooms`;
 }
 
-function villaRow(villa, format) {
+function buildVillaRow(villa, format) {
   return {
     label: villa.name,
-    note: villaNote(villa),
+    note: buildVillaNote(villa),
     price: `${format(villa.nightlyRateIdr)} / night`,
     href: `/villas/${villa.slug}`,
   };
 }
 
-function villaPrices({ format }) {
+function buildVillaPrices({ format }) {
   return {
     text: 'These are the nightly rates shown on each villa page, with no service fee on top. The exact total shows once you pick your dates:',
-    rows: Object.values(VILLAS).map((villa) => villaRow(villa, format)),
+    rows: Object.values(VILLAS).map((villa) => buildVillaRow(villa, format)),
   };
 }
 
-function liveDinner() {
+function buildLiveDinnerAnswer() {
   return {
     text: 'A chef shops that afternoon, arrives around five and cooks in your villa kitchen, for 2 to 6 guests. Book it a day ahead. Menus run from a dinner for two to a Balinese feast or a BBQ by the pool, with vegetarian and vegan versions.',
     link: { href: '/services/live-dinner', label: 'Live Dinner' },
   };
 }
 
-const BUILDERS = { villaPrices, liveDinner };
+const BUILDERS = { villaPrices: buildVillaPrices, liveDinner: buildLiveDinnerAnswer };
 
-function villaAnswer(question, questionWords, chatContext) {
-  const text = norm(question);
+function buildVillaAnswer(question, questionWords, chatContext) {
+  const text = normalizeText(question);
   const villa = Object.values(VILLAS).find(
-    (candidate) => text.includes(norm(candidate.name)) || text.includes(candidate.slug.split('-')[1]),
+    (candidate) => text.includes(normalizeText(candidate.name)) || text.includes(candidate.slug.split('-')[1]),
   );
   if (!villa) return null;
-  const hasAskedPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords)) || text.includes('night');
+  const hasAskedPrice = PRICE_WORDS.some((term) => hasMention(term, text, questionWords)) || text.includes('night');
   if (hasAskedPrice) {
     return {
       kind: 'answer',
@@ -132,17 +132,17 @@ function villaAnswer(question, questionWords, chatContext) {
 }
 
 function matchTopic(question) {
-  const text = norm(question);
-  const questionWords = words(question);
+  const text = normalizeText(question);
+  const questionWords = extractWords(question);
   let best = null;
   TOPICS.forEach((topic) => {
     let score = 0;
     let strong = false;
     topic.words.forEach((term) => {
-      if (mentions(term, text, questionWords)) score += term.includes(' ') ? 3 : 1;
+      if (hasMention(term, text, questionWords)) score += term.includes(' ') ? 3 : 1;
     });
     (topic.strong || []).forEach((term) => {
-      if (mentions(term, text, questionWords)) {
+      if (hasMention(term, text, questionWords)) {
         strong = true;
         score += 3;
       }
@@ -155,7 +155,7 @@ function matchTopic(question) {
 }
 
 function answerTopic(topic, chatContext) {
-  if (topic.faq) return { text: faqAnswer(topic.faq), link: topic.link || null };
+  if (topic.faq) return { text: findFaqAnswer(topic.faq), link: topic.link || null };
   const build = BUILDERS[topic.build];
   if (!build) throw new Error(`chat: topic ${topic.id} names no builder`);
   return build(chatContext);
@@ -166,19 +166,19 @@ export function answerFor(question, chatContext = {}) {
   const raw = String(question || '').trim();
   if (!raw) return { kind: 'answer', text: CHAT_COPY.greeting };
 
-  const text = norm(raw);
+  const text = normalizeText(raw);
   if (GREETINGS.includes(text)) return { kind: 'answer', text: CHAT_COPY.helloAnon };
   if (THANKS.includes(text)) return { kind: 'answer', text: CHAT_COPY.thanks };
 
-  const questionWords = words(raw);
-  if (HUMAN_WORDS.some((term) => mentions(term, text, questionWords)))
+  const questionWords = extractWords(raw);
+  if (HUMAN_WORDS.some((term) => hasMention(term, text, questionWords)))
     return { kind: 'handoff', text: CHAT_COPY.handoff };
 
-  const isAskingAboutService = SERVICE_WORDS.some((term) => mentions(term, text, questionWords));
-  const isAskingAboutPrice = PRICE_WORDS.some((term) => mentions(term, text, questionWords));
+  const isAskingAboutService = SERVICE_WORDS.some((term) => hasMention(term, text, questionWords));
+  const isAskingAboutPrice = PRICE_WORDS.some((term) => hasMention(term, text, questionWords));
   if (isAskingAboutService && isAskingAboutPrice) return { kind: 'handoff', text: CHAT_COPY.handoff };
 
-  const villa = villaAnswer(raw, questionWords, context);
+  const villa = buildVillaAnswer(raw, questionWords, context);
   if (villa) return villa;
 
   const topic = matchTopic(raw);

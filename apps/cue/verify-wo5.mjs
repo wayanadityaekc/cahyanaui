@@ -5,7 +5,7 @@ const browser = await chromium.launch({
 
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
@@ -27,38 +27,44 @@ for (const width of [390, 1280]) {
     await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
     const footer = page.locator('footer');
-    ok((await footer.count()) === 1, `${width}${path}: expected exactly 1 footer, got ${await footer.count()}`);
+    recordCheck(
+      (await footer.count()) === 1,
+      `${width}${path}: expected exactly 1 footer, got ${await footer.count()}`,
+    );
     const text = await footer.innerText();
-    ok(/Cahyana Ubud Experience/i.test(text), `${width}${path}: brand name missing from footer`);
-    ok(!/We Accept/i.test(text), `${width}${path}: full footer's "We Accept" column still showing`);
-    ok(!/Featured On/i.test(text), `${width}${path}: full footer's "Featured On" column still showing`);
-    ok(!/Explore/i.test(text), `${width}${path}: full footer's "Explore" column heading still showing`);
+    recordCheck(/Cahyana Ubud Experience/i.test(text), `${width}${path}: brand name missing from footer`);
+    recordCheck(!/We Accept/i.test(text), `${width}${path}: full footer's "We Accept" column still showing`);
+    recordCheck(!/Featured On/i.test(text), `${width}${path}: full footer's "Featured On" column still showing`);
+    recordCheck(!/Explore/i.test(text), `${width}${path}: full footer's "Explore" column heading still showing`);
     const footerHeight = await footer.evaluate((element) => element.getBoundingClientRect().height);
-    ok(footerHeight < 140, `${width}${path}: compact footer measured ${footerHeight}px tall, expected under 140`);
+    recordCheck(
+      footerHeight < 140,
+      `${width}${path}: compact footer measured ${footerHeight}px tall, expected under 140`,
+    );
     if (width <= 560) {
       const navH = await page.evaluate(() => document.querySelector('header').getBoundingClientRect().height);
-      ok(
+      recordCheck(
         footerHeight <= navH + 1,
         `${width}${path}: compact footer (${footerHeight}px) is taller than the navbar (${navH}px)`,
       );
     }
-    ok(errs.length === 0, `${width}${path}: page errors ${errs.join(' | ')}`);
+    recordCheck(errs.length === 0, `${width}${path}: page errors ${errs.join(' | ')}`);
   }
 
   for (const path of FULL_PAGES) {
     await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
     const text = await page.locator('footer').innerText();
-    ok(/We Accept/i.test(text), `${width}${path}: full footer lost its "We Accept" column`);
-    ok(/Featured On/i.test(text), `${width}${path}: full footer lost its "Featured On" column`);
+    recordCheck(/We Accept/i.test(text), `${width}${path}: full footer lost its "We Accept" column`);
+    recordCheck(/Featured On/i.test(text), `${width}${path}: full footer lost its "Featured On" column`);
   }
 
   await page.goto('http://127.0.0.1:4000/my-trips.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(300);
   const h1Count = await page.locator('h1').count();
-  ok(h1Count === 0, `${width}/my-trips: expected the big h1 gone, found ${h1Count}`);
+  recordCheck(h1Count === 0, `${width}/my-trips: expected the big h1 gone, found ${h1Count}`);
   const smallLabelCount = await page.locator('p', { hasText: 'My trips' }).count();
-  ok(smallLabelCount >= 1, `${width}/my-trips: the small rail label is gone too - nothing names the page`);
+  recordCheck(smallLabelCount >= 1, `${width}/my-trips: the small rail label is gone too - nothing names the page`);
 
   await browserContext.close();
 }
@@ -79,8 +85,8 @@ for (const path of ['/my-trips.html', '/our-company.html']) {
     const menu = aside && aside.firstElementChild;
     return menu ? menu.getBoundingClientRect().top : null;
   });
-  ok(stickTop !== null, `1280${path}: sticky rail menu not found`);
-  ok(
+  recordCheck(stickTop !== null, `1280${path}: sticky rail menu not found`);
+  recordCheck(
     headerH !== null && stickTop !== null && Math.abs(stickTop - headerH) < 2,
     `1280${path}: rail menu top=${stickTop}, expected to pin at --header-h=${headerH}`,
   );

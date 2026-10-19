@@ -17,7 +17,7 @@ const REVIEWS = Array.from({ length: 8 }, (unusedValue, index) => ({
 
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
@@ -39,33 +39,33 @@ for (const width of [390, 1280]) {
   const cards = page.locator('#reviews button:not([aria-label="Previous"]):not([aria-label="Next"])');
   const cardCount = await cards.count();
   console.log(`${width}: cards rendered = ${cardCount}`);
-  ok(cardCount === 8, `${width}: expected 8 review cards, got ${cardCount}`);
+  recordCheck(cardCount === 8, `${width}: expected 8 review cards, got ${cardCount}`);
   const heights = await cards.evaluateAll((elements) =>
     elements.map((event) => Math.round(event.getBoundingClientRect().height)),
   );
-  ok(new Set(heights).size === 1, `${width}: card heights not uniform: ${heights.join(',')}`);
+  recordCheck(new Set(heights).size === 1, `${width}: card heights not uniform: ${heights.join(',')}`);
   await page.screenshot({ path: `shots/reviews-slider-${width}.png` });
 
   const track = page.locator('#reviews .flex.overflow-x-auto').first();
   const overflowing = await track.evaluate((element) => element.scrollWidth > element.clientWidth);
-  ok(overflowing, `${width}: track does not overflow (not a slider)`);
+  recordCheck(overflowing, `${width}: track does not overflow (not a slider)`);
 
   await cards.nth(2).click();
   await page.waitForTimeout(500);
   const reviewDialog = page.locator('[role="dialog"][aria-label="Guest review"]');
   const modalText = await reviewDialog.innerText();
-  ok(modalText.includes(REVIEWS[2].name), `${width}: modal missing clicked review's name`);
-  ok(modalText.length > REVIEWS[2].message.length / 2, `${width}: modal text looks truncated`);
+  recordCheck(modalText.includes(REVIEWS[2].name), `${width}: modal missing clicked review's name`);
+  recordCheck(modalText.length > REVIEWS[2].message.length / 2, `${width}: modal text looks truncated`);
   await page.screenshot({ path: `shots/reviews-modal-${width}.png` });
 
   const href = await page.locator('#reviews a', { hasText: 'See all reviews' }).getAttribute('href');
-  ok(href === '/all-reviews.html', `${width}: See all reviews href is "${href}", not /all-reviews.html`);
+  recordCheck(href === '/all-reviews.html', `${width}: See all reviews href is "${href}", not /all-reviews.html`);
 
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
-  ok(!(await reviewDialog.isVisible()), `${width}: modal did not close on Escape`);
+  recordCheck(!(await reviewDialog.isVisible()), `${width}: modal did not close on Escape`);
 
-  ok(errs.length === 0, `${width}: page errors ${errs.join(' | ')}`);
+  recordCheck(errs.length === 0, `${width}: page errors ${errs.join(' | ')}`);
   await browserContext.close();
 }
 
@@ -80,17 +80,17 @@ for (const width of [390, 1280]) {
   const errs = [];
   page.on('pageerror', (error) => errs.push(String(error)));
   const response = await page.goto('http://127.0.0.1:4000/all-reviews.html', { waitUntil: 'networkidle' });
-  ok(response.status() === 200, `all-reviews.html: status ${response.status()}`);
+  recordCheck(response.status() === 200, `all-reviews.html: status ${response.status()}`);
   const cards = page.locator('[data-reviews-track] button');
-  ok((await cards.count()) === 8, `all-reviews.html: expected 8 cards, got ${await cards.count()}`);
+  recordCheck((await cards.count()) === 8, `all-reviews.html: expected 8 cards, got ${await cards.count()}`);
   await cards.nth(0).click();
   await page.waitForTimeout(400);
-  ok(
+  recordCheck(
     await page.locator('[role="dialog"][aria-label="Guest review"]').isVisible(),
     `all-reviews.html: click did not open modal`,
   );
   await page.screenshot({ path: 'shots/all-reviews-page-1280.png', fullPage: true });
-  ok(errs.length === 0, `all-reviews.html: page errors ${errs.join(' | ')}`);
+  recordCheck(errs.length === 0, `all-reviews.html: page errors ${errs.join(' | ')}`);
   await browserContext.close();
 }
 

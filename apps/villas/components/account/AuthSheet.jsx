@@ -82,14 +82,14 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     toCodeStage(email);
   }
 
-  async function doSignIn() {
+  async function submitSignIn() {
     reset();
     const data = check(signInSchema);
     if (!data) return;
     await sendCode(data.email);
   }
 
-  async function doCreate() {
+  async function submitCreateAccount() {
     reset();
     const data = check(createAccountSchema);
     if (!data) return;
@@ -108,7 +108,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
-  async function doVerify(fullCode) {
+  async function verifyEnteredCode(fullCode) {
     reset();
     setIsBusy(true);
     const result = await verifyCode(codeEmail, fullCode);
@@ -121,12 +121,12 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
-  async function resend() {
+  async function resendCode() {
     if (cooldown > 0 || isBusy) return;
     await sendCode(codeEmail);
   }
 
-  function backToEmail() {
+  function returnToEmailStage() {
     setStage('email');
     setCode('');
     reset();
@@ -169,7 +169,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
             <OtpFields
               value={code}
               onChange={setCode}
-              onComplete={doVerify}
+              onComplete={verifyEnteredCode}
               error={!!message}
               disabled={isBusy}
               autoFocus
@@ -184,19 +184,19 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {note}
               </p>
             )}
-            <Button full onClick={() => doVerify(code)} disabled={isBusy || code.length < 6}>
+            <Button full onClick={() => verifyEnteredCode(code)} disabled={isBusy || code.length < 6}>
               {isBusy ? 'Checking...' : 'Verify'}
             </Button>
             <p className="text-center text-small text-muted">
               {cooldown > 0 ? (
                 `Resend code in ${cooldown}s`
               ) : (
-                <button type="button" className={LINK_BUTTON} onClick={resend}>
+                <button type="button" className={LINK_BUTTON} onClick={resendCode}>
                   Resend code
                 </button>
               )}
               {' · '}
-              <button type="button" className={LINK_BUTTON} onClick={backToEmail}>
+              <button type="button" className={LINK_BUTTON} onClick={returnToEmailStage}>
                 Change email
               </button>
             </p>
@@ -224,7 +224,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {message}
               </p>
             )}
-            <Button full onClick={doSignIn} disabled={isBusy}>
+            <Button full onClick={submitSignIn} disabled={isBusy}>
               {isBusy ? 'Sending...' : 'Send code'}
             </Button>
             <p className="text-center text-small text-muted">
@@ -279,7 +279,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 {message}
               </p>
             )}
-            <Button full onClick={doCreate} disabled={isBusy}>
+            <Button full onClick={submitCreateAccount} disabled={isBusy}>
               {isBusy ? 'Creating...' : 'Create account'}
             </Button>
             <p className="text-center text-small text-muted">

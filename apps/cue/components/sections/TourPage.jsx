@@ -1,8 +1,8 @@
 import Img from '@/components/ui/Img';
 import { SECTION_TITLE, SECTION_TITLE_SUB, ST_LEFT } from '@/components/ui/sectionTitle';
 import TourDestinationCards from '@/components/sections/TourDestinationCards';
-import { tourDestinations, priceFallbackFor } from '@/lib/tourIndex';
-import { galleryFrom } from '@/lib/galleryFrom';
+import { listTourDestinations, priceFallbackFor } from '@/lib/tourIndex';
+import { buildGallery } from '@/lib/galleryFrom';
 import { ATTRACTION_CONTENT } from '@/content/attractions';
 
 import { STOPS, STOP, STOP_IMAGE } from '@/components/ui/stopClasses';
@@ -18,7 +18,7 @@ import Related from '@/components/sections/Related';
 import ReviewCtaBand from '@/components/reviews/ReviewCtaBand';
 import DetailTabs from '@/components/sections/DetailTabs';
 import { isHiddenTour } from '@/lib/routes';
-import Breadcrumb, { itemsFromLegacy } from '@/components/ui/Breadcrumb';
+import Breadcrumb, { buildItemsFromLegacy } from '@/components/ui/Breadcrumb';
 
 export const STOP_NUM = 'inline-block mb-[0.6rem] text-label font-medium tracking-[0.14em] uppercase text-muted';
 export const STOP_NAME = 'mb-[0.6rem] font-body text-h3 font-semibold tracking-[0]';
@@ -52,8 +52,8 @@ function Stop({ s: stop }) {
 
 export default function TourPage({ data }) {
   const slug = (data.__page || '').replace(/^\//, '');
-  const destinations = tourDestinations(slug, ATTRACTION_CONTENT);
-  const gallery = galleryFrom(data);
+  const destinations = listTourDestinations(slug, ATTRACTION_CONTENT);
+  const gallery = buildGallery(data);
   return (
     <>
       <JsonLd page={data.__page} />
@@ -118,7 +118,7 @@ export default function TourPage({ data }) {
 
       {data.bookItem && <div id="book-modal-placeholder" data-default={data.bookDefault} data-item={data.bookItem} />}
 
-      {data.crumb && !gallery.length && <Breadcrumb items={itemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
+      {data.crumb && !gallery.length && <Breadcrumb items={buildItemsFromLegacy(data.crumb)} className={CRUMB_FOOT} />}
     </>
   );
 }

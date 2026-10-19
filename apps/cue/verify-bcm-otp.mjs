@@ -3,7 +3,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function checkAssertion(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 const browser = await chromium.launch({
@@ -73,14 +73,20 @@ async function run(viewportWidth) {
     .last()
     .click();
   await page.waitForTimeout(900);
-  ok(await page.locator('text=Booking Received').isVisible(), `${viewportWidth}: never reached the success screen`);
-  ok(await page.locator('[data-signin-note]:visible').isVisible(), `${viewportWidth}: no signin note shown`);
+  checkAssertion(
+    await page.locator('text=Booking Received').isVisible(),
+    `${viewportWidth}: never reached the success screen`,
+  );
+  checkAssertion(
+    await page.locator('[data-signin-note]:visible').isVisible(),
+    `${viewportWidth}: no signin note shown`,
+  );
   const noteText = await page.locator('[data-signin-note]:visible').innerText();
-  ok(
+  checkAssertion(
     !/check your email/i.test(noteText),
     `${viewportWidth}: still says "check your email" instead of showing the code entry`,
   );
-  ok(
+  checkAssertion(
     (await page.locator('input[inputmode="numeric"]:visible').count()) === 6,
     `${viewportWidth}: no 6-box code entry inside the note`,
   );
@@ -89,24 +95,27 @@ async function run(viewportWidth) {
   await page.locator('input[inputmode="numeric"]:visible').first().click();
   await page.keyboard.type('000000', { delay: 20 });
   await page.waitForTimeout(500);
-  ok(
+  checkAssertion(
     /incorrect|expired/i.test(await page.locator('[data-signin-note]:visible').innerText()),
     `${viewportWidth}: no error for a wrong code`,
   );
   const tokAfterWrong = await page.evaluate(() => localStorage.getItem('cue_token'));
-  ok(tokAfterWrong === 'tok-signed-in', `${viewportWidth}: a WRONG code changed the session (${tokAfterWrong})`);
+  checkAssertion(
+    tokAfterWrong === 'tok-signed-in',
+    `${viewportWidth}: a WRONG code changed the session (${tokAfterWrong})`,
+  );
 
   await page.locator('input[inputmode="numeric"]:visible').first().click();
   await page.keyboard.type('246810', { delay: 20 });
   await page.waitForTimeout(700);
-  ok(
+  checkAssertion(
     /Signed in as/i.test(await page.locator('[data-signin-note]:visible').innerText()),
     `${viewportWidth}: no confirmation after a correct code`,
   );
   const tok = await page.evaluate(() => localStorage.getItem('cue_token'));
-  ok(tok === 'tok-verified', `${viewportWidth}: session not swapped to the verified account (${tok})`);
+  checkAssertion(tok === 'tok-verified', `${viewportWidth}: session not swapped to the verified account (${tok})`);
   await page.screenshot({ path: `shots/bcm-otp-verified-${viewportWidth}.png` });
-  ok(errs.length === 0, `${viewportWidth}: page errors ${errs.join(' | ')}`);
+  checkAssertion(errs.length === 0, `${viewportWidth}: page errors ${errs.join(' | ')}`);
   await browserContext.close();
 }
 for (const width of [390, 1280]) await run(width);

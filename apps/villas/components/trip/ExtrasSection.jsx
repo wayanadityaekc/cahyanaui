@@ -3,16 +3,16 @@
 import Link from 'next/link';
 import { DateField, ExtrasPanel, Field, Input, Select } from '@cahyana/ui';
 import { SERVICES } from '@/lib/bookingCart';
-import { TIME_SLOTS, fmtTime } from '@/lib/timeSlots';
+import { TIME_SLOTS, formatTime } from '@/lib/timeSlots';
 import {
   EXTRA_PROGRAMS,
   TRANSFERS,
   TRANSFER_KEY,
-  extraId,
-  extraProblem,
+  buildExtraId,
+  findExtraProblem,
   isOffered,
   priceFor,
-  slotsFor,
+  findSlots,
 } from '@/lib/extras';
 
 const PROGRAM_GROUPS = [
@@ -28,13 +28,13 @@ const PROGRAM_GROUPS = [
   },
 ];
 
-function fieldNote(problem, word) {
+function buildFieldNote(problem, word) {
   if (!problem.includes(word)) return {};
   return /inside|listed/.test(problem) ? { error: problem } : { hint: problem };
 }
 
 function timeOptions(slots) {
-  return (slots || TIME_SLOTS).map((slot) => ({ value: slot, label: fmtTime(slot) }));
+  return (slots || TIME_SLOTS).map((slot) => ({ value: slot, label: formatTime(slot) }));
 }
 
 export default function ExtrasSection({
@@ -51,7 +51,7 @@ export default function ExtrasSection({
   const hasDates = !!(stay && stay.checkIn && stay.checkOut);
   const lineById = {};
   extras.forEach((line) => {
-    lineById[extraId(line)] = line;
+    lineById[buildExtraId(line)] = line;
   });
 
   function priceLabel(extra) {
@@ -59,15 +59,15 @@ export default function ExtrasSection({
     return price ? formatAmount(price.display) : '-';
   }
 
-  function categoryOf(key) {
+  function findCategory(key) {
     return catalog && catalog.items[key] ? catalog.items[key].category : null;
   }
 
-  function programRow(program) {
-    const id = extraId({ kind: 'program', key: program.key });
+  function renderProgramRow(program) {
+    const id = buildExtraId({ kind: 'program', key: program.key });
     const line = lineById[id];
-    const slots = slotsFor(program.key, categoryOf(program.key));
-    const problem = line ? extraProblem(line, stay, categoryOf(program.key)) : '';
+    const slots = findSlots(program.key, findCategory(program.key));
+    const problem = line ? findExtraProblem(line, stay, findCategory(program.key)) : '';
     function toggle() {
       if (line) {
         removeExtra(id);
@@ -79,13 +79,13 @@ export default function ExtrasSection({
       id,
       title: program.title,
       href: program.href,
-      meta: slots && slots.length === 1 ? `Starts ${fmtTime(slots[0])}` : '',
+      meta: slots && slots.length === 1 ? `Starts ${formatTime(slots[0])}` : '',
       price: priceLabel({ kind: 'program', key: program.key }),
       added: !!line,
       onToggle: toggle,
       fields: line ? (
         <>
-          <Field label="Date" htmlFor={`x-${program.key}-date`} {...fieldNote(problem, 'date')}>
+          <Field label="Date" htmlFor={`x-${program.key}-date`} {...buildFieldNote(problem, 'date')}>
             <DateField
               id={`x-${program.key}-date`}
               label="Date"
@@ -95,7 +95,7 @@ export default function ExtrasSection({
               onChange={(date) => updateExtra(id, { date })}
             />
           </Field>
-          <Field label="Start time" htmlFor={`x-${program.key}-time`} {...fieldNote(problem, 'time')}>
+          <Field label="Start time" htmlFor={`x-${program.key}-time`} {...buildFieldNote(problem, 'time')}>
             <Select
               id={`x-${program.key}-time`}
               label="Start time"
@@ -110,10 +110,10 @@ export default function ExtrasSection({
     };
   }
 
-  function transferRow(transfer) {
-    const id = extraId({ kind: 'transfer', dir: transfer.id });
+  function renderTransferRow(transfer) {
+    const id = buildExtraId({ kind: 'transfer', dir: transfer.id });
     const line = lineById[id];
-    const problem = line ? extraProblem(line, stay, null) : '';
+    const problem = line ? findExtraProblem(line, stay, null) : '';
     function toggle() {
       if (line) {
         removeExtra(id);
@@ -142,7 +142,7 @@ export default function ExtrasSection({
           <Field
             label={transfer.id === 'arrival' ? 'Landing time' : 'Pickup time'}
             htmlFor={`x-${transfer.id}-time`}
-            {...fieldNote(problem, 'time')}
+            {...buildFieldNote(problem, 'time')}
           >
             <Select
               id={`x-${transfer.id}-time`}
@@ -163,14 +163,14 @@ export default function ExtrasSection({
     PROGRAM_GROUPS.forEach((group) => {
       const rows = EXTRA_PROGRAMS.filter(
         (program) => program.group === group.id && isOffered(program.key, catalog),
-      ).map(programRow);
+      ).map(renderProgramRow);
       if (rows.length) groups.push({ ...group, rows });
     });
     groups.push({
       id: 'transfers',
       title: 'Airport transfer',
       note: 'Ngurah Rai airport to your villa and back, a private car for up to 5 guests.',
-      rows: TRANSFERS.map(transferRow),
+      rows: TRANSFERS.map(renderTransferRow),
     });
   }
   groups.push({

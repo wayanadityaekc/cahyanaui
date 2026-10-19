@@ -1,5 +1,5 @@
 'use client';
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
 
 import { useEffect, useState } from 'react';
@@ -124,7 +124,7 @@ export default function CharterBuilder() {
                 label="Pick-up time"
                 value={time}
                 onChange={setTime}
-                options={TIMES.map((timeSlot) => ({ value: timeSlot, label: fmtTime(timeSlot) }))}
+                options={TIMES.map((timeSlot) => ({ value: timeSlot, label: formatTime(timeSlot) }))}
                 placeholder="Time"
               />
             </div>

@@ -8,13 +8,13 @@ const EXEC = process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/
 
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function checkAssertion(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 function sleep(delayMs) {
   return new Promise((resolve) => setTimeout(resolve, delayMs));
 }
-async function seen(loc, timeoutMs = 4000) {
+async function checkIsSeen(loc, timeoutMs = 4000) {
   try {
     await loc.first().waitFor({ timeout: timeoutMs });
     return true;
@@ -22,7 +22,7 @@ async function seen(loc, timeoutMs = 4000) {
     return false;
   }
 }
-async function untilTrue(page, condition, timeoutMs = 8000) {
+async function waitUntilTrue(page, condition, timeoutMs = 8000) {
   try {
     await page.waitForFunction(condition, null, { timeout: timeoutMs });
     return true;
@@ -31,7 +31,7 @@ async function untilTrue(page, condition, timeoutMs = 8000) {
   }
 }
 
-async function api(path, init = {}) {
+async function fetchApi(path, init = {}) {
   const response = await fetch(API + path, {
     ...init,
     headers: {
@@ -55,15 +55,18 @@ async function handOver(page) {
   const input = page.locator('[role="dialog"][aria-label*="Support"] input[aria-label="Your question"]');
   await input.fill(HANDOVER_Q);
   await input.press('Enter');
-  ok(await seen(page.locator('text=/with Wayan now|Will connect you/i'), 6000), 'the handover line never appeared');
+  checkAssertion(
+    await checkIsSeen(page.locator('text=/with Wayan now|Will connect you/i'), 6000),
+    'the handover line never appeared',
+  );
 }
 
-function panel(page) {
+function findPanel(page) {
   return page.locator('[role="dialog"][aria-label*="Support"]');
 }
 
-async function threadFor(question) {
-  const list = await api('/admin/chats');
+async function fetchThreadFor(question) {
+  const list = await fetchApi('/admin/chats');
   const thread = (list.json.threads || []).find(
     (candidateThread) =>
       (candidateThread.last_body || '').includes(question.slice(0, 20)) ||
@@ -113,42 +116,48 @@ async function main() {
     await openPanel(page);
     await handOver(page);
 
-    ok((await panel(page).getAttribute('data-live')) !== null, 'the panel does not report whether it is live');
-    await untilTrue(page, () => document.querySelector('[role="dialog"][aria-label*="Support"]')?.dataset.live === '1');
-    ok(
-      (await panel(page).getAttribute('data-live')) === '1',
+    checkAssertion(
+      (await findPanel(page).getAttribute('data-live')) !== null,
+      'the panel does not report whether it is live',
+    );
+    await waitUntilTrue(
+      page,
+      () => document.querySelector('[role="dialog"][aria-label*="Support"]')?.dataset.live === '1',
+    );
+    checkAssertion(
+      (await findPanel(page).getAttribute('data-live')) === '1',
       'the guest never got a live socket against the real server',
     );
 
-    const id = await threadFor(HANDOVER_Q);
-    ok(!!id, 'the handover did not create a thread on the server');
+    const id = await fetchThreadFor(HANDOVER_Q);
+    checkAssertion(!!id, 'the handover did not create a thread on the server');
 
     const pollsBefore = polls.length;
     const t0 = Date.now();
-    const sent = await api(`/admin/chats/${id}/reply`, {
+    const sent = await fetchApi(`/admin/chats/${id}/reply`, {
       method: 'POST',
       body: JSON.stringify({ body: 'Yes - the easy route works with a wheelchair.' }),
     });
-    ok(sent.status === 200, `the owner reply failed (${sent.status})`);
-    const arrived = await seen(page.locator('text=the easy route works with a wheelchair'));
-    ok(arrived, 'the reply never reached the guest at all');
+    checkAssertion(sent.status === 200, `the owner reply failed (${sent.status})`);
+    const arrived = await checkIsSeen(page.locator('text=the easy route works with a wheelchair'));
+    checkAssertion(arrived, 'the reply never reached the guest at all');
     const took = Date.now() - t0;
-    ok(took < 1500, `the reply took ${took}ms - that is poll speed, not socket speed`);
-    ok(
+    checkAssertion(took < 1500, `the reply took ${took}ms - that is poll speed, not socket speed`);
+    checkAssertion(
       polls.length === pollsBefore,
       `${polls.length - pollsBefore} thread read(s) happened - the reply came from a poll, not the socket`,
     );
 
-    ok(replay() === true, 'no frame was captured, so the dedupe is not being tested at all');
+    checkAssertion(replay() === true, 'no frame was captured, so the dedupe is not being tested at all');
     await sleep(600);
-    const once = await panel(page).innerText();
-    ok(
+    const once = await findPanel(page).innerText();
+    checkAssertion(
       (once.match(/easy route works with a wheelchair/g) || []).length === 1,
       'the same message was shown twice - it is not deduped by its id',
     );
 
-    const tk = await api('/admin/ws-ticket', { method: 'POST', body: '{}' });
-    ok(!!(tk.json && tk.json.ticket), 'could not mint a ws ticket');
+    const tk = await fetchApi('/admin/ws-ticket', { method: 'POST', body: '{}' });
+    checkAssertion(!!(tk.json && tk.json.ticket), 'could not mint a ws ticket');
     const WS = (await import('../cahyana-api/node_modules/ws/index.js')).default;
     const owner = new WS(`${API.replace(/^http/, 'ws').replace(/\/api$/, '')}/ws/admin?ticket=${tk.json.ticket}`);
     await new Promise((resolve, reject) => {
@@ -156,67 +165,76 @@ async function main() {
       owner.once('error', reject);
     });
     owner.send(JSON.stringify({ type: 'typing', threadId: id }));
-    const typed = await seen(panel(page).locator('[data-typing]'), 3000);
-    ok(typed, 'typing never reached the guest');
-    ok(
-      typed && /typing/i.test(await panel(page).locator('[data-typing]').innerText()),
+    const typed = await checkIsSeen(findPanel(page).locator('[data-typing]'), 3000);
+    checkAssertion(typed, 'typing never reached the guest');
+    checkAssertion(
+      typed && /typing/i.test(await findPanel(page).locator('[data-typing]').innerText()),
       'the typing row does not say who is typing',
     );
     await sleep(5000);
-    ok(
-      (await panel(page).locator('[data-typing]').count()) === 0,
+    checkAssertion(
+      (await findPanel(page).locator('[data-typing]').count()) === 0,
       'typing never expired - it would sit on screen after he stopped',
     );
 
-    const strip = await panel(page).innerText();
-    ok(
+    const strip = await findPanel(page).innerText();
+    checkAssertion(
       /online right now/i.test(strip),
       'the guest is not told the owner is actually here while a dashboard is connected',
     );
     owner.close();
-    await untilTrue(
+    await waitUntilTrue(
       page,
       () =>
         !/online right now/i.test(document.querySelector('[role="dialog"][aria-label*="Support"]')?.innerText || ''),
       4000,
     );
-    ok(
-      !/online right now/i.test(await panel(page).innerText()),
+    checkAssertion(
+      !/online right now/i.test(await findPanel(page).innerText()),
       'the guest still thinks he is here after the dashboard closed',
     );
 
-    ok(
+    checkAssertion(
       typeof sever === 'function',
       'the socket was never proxied, so it cannot be severed - this case would test nothing',
     );
     sever();
-    await untilTrue(page, () => document.querySelector('[role="dialog"][aria-label*="Support"]')?.dataset.live === '0');
-    ok((await panel(page).getAttribute('data-live')) === '0', 'severing the socket did not register as a drop');
-    await api(`/admin/chats/${id}/reply`, {
+    await waitUntilTrue(
+      page,
+      () => document.querySelector('[role="dialog"][aria-label*="Support"]')?.dataset.live === '0',
+    );
+    checkAssertion(
+      (await findPanel(page).getAttribute('data-live')) === '0',
+      'severing the socket did not register as a drop',
+    );
+    await fetchApi(`/admin/chats/${id}/reply`, {
       method: 'POST',
       body: JSON.stringify({ body: 'One more thing - bring a hat.' }),
     });
     const dropped = Date.now();
     await sleep(350);
-    ok(
-      (await panel(page).locator('text=bring a hat').count()) === 0,
+    checkAssertion(
+      (await findPanel(page).locator('text=bring a hat').count()) === 0,
       'the page saw a message over a socket that was closed',
     );
 
-    const gapArrived = await seen(page.locator('text=bring a hat'), 20000);
+    const gapArrived = await checkIsSeen(page.locator('text=bring a hat'), 20000);
     const gap = Date.now() - dropped;
-    ok(
+    checkAssertion(
       gapArrived,
       'a message sent while the socket was down NEVER arrived - the reconnect does not read back what it missed',
     );
-    ok(
+    checkAssertion(
       !gapArrived || gap < 4000,
       `the gap message took ${gap}ms - slow enough that it came from the fallback tick, not the reconnect`,
     );
-    ok((await panel(page).getAttribute('data-live')) === '1', 'the socket never reconnected after being severed');
+    checkAssertion(
+      (await findPanel(page).getAttribute('data-live')) === '1',
+      'the socket never reconnected after being severed',
+    );
 
-    const body = await panel(page).innerText();
-    ok(
+    const body = await findPanel(page).innerText();
+    checkAssertion(
       !gapArrived || (body.match(/bring a hat/g) || []).length === 1,
       'the message was shown twice - the socket and the catch-up both added it',
     );
@@ -238,34 +256,40 @@ async function main() {
 
     const grandmotherQuestion = 'can you take my grandmother who cannot walk far';
     await openPanel(page);
-    const input = panel(page).locator('input[aria-label="Your question"]');
+    const input = findPanel(page).locator('input[aria-label="Your question"]');
     await input.fill(grandmotherQuestion);
     await input.press('Enter');
     await page.locator('text=/with Wayan now|Will connect you/i').first().waitFor({ timeout: 6000 });
 
-    ok((await panel(page).getAttribute('data-live')) === '0', 'a page with no WebSocket reported itself as live');
-    const id2 = await threadFor(grandmotherQuestion);
-    ok(!!id2, 'the fallback guest did not create a thread');
+    checkAssertion(
+      (await findPanel(page).getAttribute('data-live')) === '0',
+      'a page with no WebSocket reported itself as live',
+    );
+    const id2 = await fetchThreadFor(grandmotherQuestion);
+    checkAssertion(!!id2, 'the fallback guest did not create a thread');
 
-    await api(`/admin/chats/${id2}/reply`, {
+    await fetchApi(`/admin/chats/${id2}/reply`, {
       method: 'POST',
       body: JSON.stringify({ body: 'We can keep the walking short.' }),
     });
-    ok(
-      await seen(page.locator('text=keep the walking short'), 12000),
+    checkAssertion(
+      await checkIsSeen(page.locator('text=keep the walking short'), 12000),
       'the reply never reached a guest with no WebSocket',
     );
-    ok(polls.length > 0, 'the fallback guest made no thread reads at all - nothing was watching for a reply');
+    checkAssertion(
+      polls.length > 0,
+      'the fallback guest made no thread reads at all - nothing was watching for a reply',
+    );
 
     const n0 = polls.length;
     await sleep(6000);
     const added = polls.length - n0;
-    ok(added >= 1 && added <= 3, `the fallback polled ${added} times in 6s - expected about one`);
+    checkAssertion(added >= 1 && added <= 3, `the fallback polled ${added} times in 6s - expected about one`);
 
     await browserContext.close();
   }
 
-  ok(errors.length === 0, `page errors: ${errors.join(' | ')}`);
+  checkAssertion(errors.length === 0, `page errors: ${errors.join(' | ')}`);
   await browser.close();
   console.log(`\n${pass}/${pass + fail}`);
   process.exit(fail ? 1 : 0);

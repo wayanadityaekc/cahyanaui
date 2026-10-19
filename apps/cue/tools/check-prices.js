@@ -7,8 +7,8 @@ const ROOT = path.join(__dirname, '..');
 const API_REPO = path.join(ROOT, '..', 'cahyana-api');
 const API = path.join(API_REPO, 'pricing.js');
 
-function behindUpstream() {
-  function git(...args) {
+function checkIsBehindUpstream() {
+  function runGit(...args) {
     return execFileSync('git', ['-C', API_REPO, ...args], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
@@ -16,23 +16,23 @@ function behindUpstream() {
   }
   try {
     try {
-      git('fetch', '-q', 'origin', 'main');
+      runGit('fetch', '-q', 'origin', 'main');
     } catch (e) {}
-    const commitsBehind = Number(git('rev-list', '--count', 'HEAD..origin/main'));
+    const commitsBehind = Number(runGit('rev-list', '--count', 'HEAD..origin/main'));
     return Number.isFinite(commitsBehind) && commitsBehind > 0 ? commitsBehind : 0;
   } catch (e) {
     return 0;
   }
 }
 
-function cards(node, out = []) {
+function collectCards(node, out = []) {
   if (Array.isArray(node)) {
-    node.forEach((childNode) => cards(childNode, out));
+    node.forEach((childNode) => collectCards(childNode, out));
     return out;
   }
   if (!node || typeof node !== 'object') return out;
   if (node.priceName) out.push(node);
-  Object.values(node).forEach((childNode) => cards(childNode, out));
+  Object.values(node).forEach((childNode) => collectCards(childNode, out));
   return out;
 }
 
@@ -57,7 +57,7 @@ function readSchemaProducts() {
 async function checkCopies(api) {
   const problems = [];
   let ok = 0;
-  function cmp(where, shown, live) {
+  function compareValues(where, shown, live) {
     if (shown === live) ok++;
     else problems.push(`${where}: says ${shown}, API says ${live}`);
   }
@@ -69,14 +69,14 @@ async function checkCopies(api) {
       problems.push(`transfer.js: "${route.priceName}" is not sold by the API`);
       return;
     }
-    cmp(`transfer.js route "${route.name}"`, parseNumber(route.priceFallback), live.usd);
+    compareValues(`transfer.js route "${route.name}"`, parseNumber(route.priceFallback), live.usd);
   });
 
   const band = fs.readFileSync(path.join(ROOT, 'components/sections/home/Airport.jsx'), 'utf8');
   const match = band.match(/name="([^"]+)"\s+fallback="([^"]+)"/);
   if (!match) problems.push('Airport.jsx: could not find the <Price name=... fallback=...> band');
   else if (!api[match[1]]) problems.push(`Airport.jsx: "${match[1]}" is not sold by the API`);
-  else cmp(`Airport.jsx band "${match[1]}"`, parseNumber(match[2]), api[match[1]].usd);
+  else compareValues(`Airport.jsx band "${match[1]}"`, parseNumber(match[2]), api[match[1]].usd);
 
   const transferUsd = Object.entries(api)
     .filter(([name]) => / – Ubud$/.test(name))
@@ -89,15 +89,15 @@ async function checkCopies(api) {
         problems.push('schema.js: no transfer routes found in the API');
         return;
       }
-      cmp(`schema.js ${page} lowPrice`, parseNumber(offers.lowPrice), Math.min(...transferUsd));
-      cmp(`schema.js ${page} highPrice`, parseNumber(offers.highPrice), Math.max(...transferUsd));
-      cmp(`schema.js ${page} offerCount`, Number(offers.offerCount), transferUsd.length);
+      compareValues(`schema.js ${page} lowPrice`, parseNumber(offers.lowPrice), Math.min(...transferUsd));
+      compareValues(`schema.js ${page} highPrice`, parseNumber(offers.highPrice), Math.max(...transferUsd));
+      compareValues(`schema.js ${page} offerCount`, Number(offers.offerCount), transferUsd.length);
       return;
     }
     const key = block.priceKey || block.json.name;
     const live = api[key];
     if (!live) return;
-    cmp(`schema.js ${page} "${key}"`, parseNumber(offers.price), live.usd);
+    compareValues(`schema.js ${page} "${key}"`, parseNumber(offers.price), live.usd);
   });
 
   return { ok, problems };
@@ -110,7 +110,7 @@ async function main() {
     return 0;
   }
 
-  const behind = behindUpstream();
+  const behind = checkIsBehindUpstream();
   if (behind) {
     console.error(`cahyana-api is ${behind} commit(s) behind origin/main - its prices are stale,`);
     console.error('so anything reported below would be wrong. Pull it first:');
@@ -136,7 +136,7 @@ async function main() {
   let ok = 0;
 
   Object.entries(LISTINGS).forEach(([listing, data]) => {
-    cards(data).forEach((card) => {
+    collectCards(data).forEach((card) => {
       const live = api[card.priceName];
       if (!live) {
         unknown.push(`${listing}: "${card.priceName}" (${card.href}) is not sold by the API`);

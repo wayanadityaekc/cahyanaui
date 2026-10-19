@@ -2,9 +2,16 @@ import { SITE } from '@/lib/routes';
 import { CONTACT_EMAIL, CUE_LINK, WHATSAPP_NUMBER } from '@/lib/constants';
 import { REGISTRATION } from '@/content/registration';
 
-export { HOME_CRUMB, GUIDE_CRUMBS, COMPANY_CRUMBS, villaCrumbs, serviceCrumbs, articleCrumbs } from '@/lib/crumbs';
+export {
+  HOME_CRUMB,
+  GUIDE_CRUMBS,
+  COMPANY_CRUMBS,
+  buildVillaCrumbs as villaCrumbs,
+  buildServiceCrumbs as serviceCrumbs,
+  buildArticleCrumbs as articleCrumbs,
+} from '@/lib/crumbs';
 
-export function breadcrumbList(items = []) {
+export function buildBreadcrumbList(items = []) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -26,7 +33,7 @@ const OPERATOR = {
   identifier: { '@type': 'PropertyValue', propertyID: 'NIB', value: REGISTRATION.nib },
 };
 
-export function siteSchema(villas = []) {
+export function buildSiteSchema(villas = []) {
   const rates = villas.map((villa) => villa.nightlyRateIdr).sort((a, b) => a - b);
   return [
     { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Ubud Private Villas', url: `${SITE}/` },
@@ -45,7 +52,7 @@ export function siteSchema(villas = []) {
   ];
 }
 
-export function villaSchema(villa) {
+export function buildVillaSchema(villa) {
   return {
     '@context': 'https://schema.org',
     '@type': 'LodgingBusiness',
@@ -72,7 +79,7 @@ export function villaSchema(villa) {
   };
 }
 
-export function articleSchema(article) {
+export function buildArticleSchema(article) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',

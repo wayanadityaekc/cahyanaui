@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import { usePricing } from '@/state/PricingProvider';
 import DatePopup from './DatePopup';
-import { clashDates } from '@/lib/cart';
+import { findClashDates } from '@/lib/cart';
 import BookingForm from './BookingForm';
 import { SHELL, BOX_SM, CLOSE, TITLE, SUB, BTN, BTN_GHOST } from '@/components/ui/modalClasses';
 import ModalPresence from '@/components/ui/ModalPresence';
@@ -25,7 +25,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
     return !!catalogItem && (catalogItem.category === 'tour' || catalogItem.category === 'combo');
   }
 
-  function categoryOf(name) {
+  function findCategory(name) {
     const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
     return catalogItem ? catalogItem.category : null;
   }
@@ -47,7 +47,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
 
   function commit(name, date, mode, goto, time) {
     const probe = { ...state, days: [...(state.days || []), { items: [name], itemModes: [mode], date }] };
-    if (isFullDay(name) && clashDates(probe, isFullDay).length > 0) {
+    if (isFullDay(name) && findClashDates(probe, isFullDay).length > 0) {
       setConfirm({ name, date, mode, goto, time });
       return;
     }
@@ -85,7 +85,7 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
           setPending(null);
         }}
         withTime
-        category={pending ? categoryOf(pending.name) : null}
+        category={pending ? findCategory(pending.name) : null}
         itemName={pending ? pending.name : null}
       />
 

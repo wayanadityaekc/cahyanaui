@@ -19,7 +19,7 @@ function decode(value) {
     .replace(/<!-- -->/g, '');
 }
 
-function jsonLdNodes(html, problems) {
+function extractJsonLdNodes(html, problems) {
   const nodes = [];
   [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].forEach((match) => {
     try {
@@ -38,7 +38,7 @@ function hasType(node, type) {
   return [node['@type']].flat().includes(type);
 }
 
-function bookingPanel(html, slug) {
+function findBookingPanel(html, slug) {
   return [...html.matchAll(/<aside\b[\s\S]*?<\/aside>/g)]
     .map((match) => match[0])
     .find((aside) => aside.includes(`id="${slug}-dates"`) && aside.includes('Book now'));
@@ -51,7 +51,7 @@ function checkVilla(villa) {
   const html = fs.readFileSync(file, 'utf8');
   const problems = [];
 
-  if (!bookingPanel(html, villa.slug))
+  if (!findBookingPanel(html, villa.slug))
     problems.push(`no booking panel (an <aside> holding id="${villa.slug}-dates" and "Book now")`);
   if (!html.includes('id="availability"'))
     problems.push('no Availability section (id="availability") for the big calendar');
@@ -69,7 +69,7 @@ function checkVilla(villa) {
   if (h1s.length !== 1) problems.push(`expected exactly 1 h1, found ${h1s.length}`);
   else if (!h1s[0].includes(villa.name)) problems.push(`h1 "${h1s[0]}" does not name ${villa.name}`);
 
-  const nodes = jsonLdNodes(html, problems);
+  const nodes = extractJsonLdNodes(html, problems);
   const lodging = nodes.find((node) => hasType(node, 'LodgingBusiness') && node.name === villa.name);
   if (!lodging) problems.push(`no LodgingBusiness JSON-LD named "${villa.name}"`);
   else {

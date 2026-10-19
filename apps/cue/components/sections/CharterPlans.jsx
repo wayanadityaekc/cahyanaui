@@ -36,14 +36,14 @@ export function useCharterTier({ area = '' } = {}) {
   function formatAmount(amount) {
     return symbol + amount.toLocaleString(isIdr ? 'id-ID' : 'en-US');
   }
-  function tier(durationKey) {
+  function findCharterTier(durationKey) {
     if (!catalog) return null;
     const base = catalog.charters.find((charter) => charter.duration === durationKey);
     if (!base) return null;
     const sur = catalog.charterSurcharge;
     return base.display + (area && area !== 'Ubud' && sur ? sur.display : 0);
   }
-  return { tier, fmt: formatAmount };
+  return { tier: findCharterTier, fmt: formatAmount };
 }
 
 export default function CharterPlans({ value, onChange, area = '', heading }) {

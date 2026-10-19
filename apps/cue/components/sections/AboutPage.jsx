@@ -1,6 +1,6 @@
 import { ABOUT } from '@/content/shared/about';
 import RegistrationBlock from '@/components/sections/RegistrationBlock';
-import { infoList } from '@/components/ui/infoClasses';
+import { pickInfoList } from '@/components/ui/infoClasses';
 
 export default function AboutPage() {
   return (
@@ -39,7 +39,7 @@ export default function AboutPage() {
           )}
 
           {row.list && (
-            <ul className={infoList(row.list.cls)}>
+            <ul className={pickInfoList(row.list.cls)}>
               {row.list.items.map((it, index) => (
                 <li key={index}>{it}</li>
               ))}

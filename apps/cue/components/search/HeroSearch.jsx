@@ -12,7 +12,7 @@ import useMobile from '@/components/ui/useMobile';
 import DragSheet from '@/components/ui/DragSheet';
 import Overlay from '@/components/ui/Overlay';
 import CurrencyPicker from '@/components/layout/CurrencyPicker';
-import { refMsgCls } from '@/components/ui/modalClasses';
+import { buildReferralMessageClass } from '@/components/ui/modalClasses';
 import { PAY_COPY } from '@/lib/payment';
 import FlagDefs from '@/components/layout/FlagDefs';
 import InfoPopover from '@/components/ui/InfoPopover';
@@ -23,12 +23,12 @@ import {
   CHEV,
   CONTROL_VAL,
   CONTROL_VAL_PLACEHOLDER,
-  panelMenu,
+  buildPanelMenuClass,
   PANEL_HEAD_MENU,
   PANEL_HEAD_H3,
   PANEL_CLOSE_SHEET,
   PANEL_BODY_MENU,
-  optMenu,
+  buildOptionMenuClass,
   HS_OPT_IC,
   HS_OPT_NM,
   HS_OPT_PR,
@@ -54,11 +54,11 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
 
   useEffect(() => {
     if (!isOpen || isMobile) return;
-    function onDoc(event) {
+    function handleDocumentClick(event) {
       if (ddRef.current && !ddRef.current.contains(event.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
+    document.addEventListener('click', handleDocumentClick);
+    return () => document.removeEventListener('click', handleDocumentClick);
   }, [isOpen, isMobile]);
 
   const catalog = pricing && pricing.catalog;
@@ -72,15 +72,15 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     function formatPrice(amount) {
       return withSymbol(symbol + amount.toLocaleString(loc));
     }
-    function byCat(cats) {
+    function listItemsByCategories(cats) {
       return catalog.items
         .filter((item) => cats.includes(item.category))
         .map((catalogItem) => catalogItem.standard.display);
     }
     const sets = {
-      tour: byCat(['tour', 'combo']),
-      experience: byCat(['experience']),
-      destination: byCat(['place']),
+      tour: listItemsByCategories(['tour', 'combo']),
+      experience: listItemsByCategories(['experience']),
+      destination: listItemsByCategories(['place']),
       transfer: catalog.transfers.map((transfer) => transfer.display),
       charter: catalog.charters.map((charter) => charter.display),
     };
@@ -111,7 +111,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   }
 
   const panel = (
-    <div className={panelMenu(isOpen)}>
+    <div className={buildPanelMenuClass(isOpen)}>
       <div className={PANEL_HEAD_MENU}>
         <h3 className={PANEL_HEAD_H3}>How to explore</h3>
         <button type="button" className={PANEL_CLOSE_SHEET} aria-label="Close" onClick={() => setIsOpen(false)}>
@@ -123,7 +123,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           <button
             type="button"
             key={exploreOption.href}
-            className={optMenu(picked && picked.href === exploreOption.href)}
+            className={buildOptionMenuClass(picked && picked.href === exploreOption.href)}
             onClick={() => {
               if (exploreOption.all) {
                 window.location.href = exploreOption.href;
@@ -233,7 +233,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             Apply
           </button>
         </div>
-        {refMsg && <small className={refMsgCls(refMsg.ok)}>{refMsg.text}</small>}
+        {refMsg && <small className={buildReferralMessageClass(refMsg.ok)}>{refMsg.text}</small>}
       </div>
 
       <div className="grid grid-cols-[1fr_1fr] gap-[0.8rem]">

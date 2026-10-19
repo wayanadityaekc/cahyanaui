@@ -5,7 +5,7 @@ function FILE(imagePath) {
     .trim();
 }
 
-export function galleryFrom(data) {
+export function buildGallery(data) {
   if (!data) return [];
   if (Array.isArray(data.gallery) && data.gallery.length) return data.gallery;
 

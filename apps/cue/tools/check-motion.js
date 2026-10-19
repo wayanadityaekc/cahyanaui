@@ -9,11 +9,11 @@ if (!fs.existsSync(OUT)) {
   process.exit(2);
 }
 
-function tokenize(source) {
+function splitTokens(source) {
   return source.split(/\s+/).filter(Boolean);
 }
 
-function baseOf(token) {
+function findBaseOfToken(token) {
   let depth = 0,
     last = -1;
   token.split('').forEach((character, index) => {
@@ -27,11 +27,11 @@ function baseOf(token) {
   };
 }
 
-function inner(tokenText) {
+function extractInner(tokenText) {
   return tokenText.slice(tokenText.indexOf('[') + 1, tokenText.lastIndexOf(']'));
 }
 
-function setsProperty(base) {
+function findSetProperty(base) {
   if (/^-?translate(-|$)/.test(base)) return 'translate';
   if (/^-?rotate(-|$)/.test(base)) return 'rotate';
   if (/^-?scale(-|$)/.test(base)) return 'scale';
@@ -49,16 +49,16 @@ const KEYWORD_LISTS = {
   'transition-shadow': ['box-shadow'],
 };
 
-function transitionList(base) {
+function listTransitionProperties(base) {
   if (base in KEYWORD_LISTS) return KEYWORD_LISTS[base];
   if (/^transition-\[/.test(base)) {
-    return inner(base)
+    return extractInner(base)
       .split(',')
       .map((property) => property.trim().split(/[\s_]/)[0])
       .filter(Boolean);
   }
   if (/^\[transition:/.test(base)) {
-    return inner(base)
+    return extractInner(base)
       .replace(/^transition:/, '')
       .split(',')
       .map((property) => property.trim().split(/[\s_]/)[0])
@@ -101,19 +101,19 @@ pages.forEach((pageItem) => {
   const page = path.relative(OUT, pageItem);
   [...html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sclass="([^"]*)"/g)].forEach((match) => {
     const [, tag, attrs, cls] = match;
-    const tokens = tokenize(cls.replace(/&quot;/g, '"'));
+    const tokens = splitTokens(cls.replace(/&quot;/g, '"'));
     elements++;
 
     const setBy = new Map();
     const transBy = new Map();
     tokens.forEach((token) => {
-      const { base, scope } = baseOf(token);
-      const prop = setsProperty(base);
+      const { base, scope } = findBaseOfToken(token);
+      const prop = findSetProperty(base);
       if (prop) {
         if (!setBy.has(scope)) setBy.set(scope, new Set());
         setBy.get(scope).add(prop);
       }
-      const list = transitionList(base);
+      const list = listTransitionProperties(base);
       if (list) transBy.set(scope, list);
     });
 

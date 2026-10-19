@@ -26,7 +26,7 @@ export default function LoadingScreen() {
   }, []);
 
   useEffect(() => {
-    function onClick(event) {
+    function handleLinkClick(event) {
       if (
         event.defaultPrevented ||
         event.button !== 0 ||
@@ -58,14 +58,14 @@ export default function LoadingScreen() {
       clearTimeout(safety.current);
       safety.current = setTimeout(() => setIsFadingOut(true), 3000);
     }
-    document.addEventListener('click', onClick, true);
-    function onShow() {
+    document.addEventListener('click', handleLinkClick, true);
+    function handleShow() {
       return setIsFadingOut(true);
     }
-    window.addEventListener('pageshow', onShow);
+    window.addEventListener('pageshow', handleShow);
     return () => {
-      document.removeEventListener('click', onClick, true);
-      window.removeEventListener('pageshow', onShow);
+      document.removeEventListener('click', handleLinkClick, true);
+      window.removeEventListener('pageshow', handleShow);
       clearTimeout(safety.current);
     };
   }, []);

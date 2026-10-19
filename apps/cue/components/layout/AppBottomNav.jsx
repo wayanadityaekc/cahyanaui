@@ -20,7 +20,7 @@ const CELL =
   'text-[0.62rem] font-medium leading-none text-center ' +
   '[transition:color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)]';
 
-function cellClass(active) {
+function buildCellClass(active) {
   return `${CELL} ${active ? 'text-gold' : 'text-muted'}`;
 }
 
@@ -33,15 +33,15 @@ export default function AppBottomNav() {
 
   return (
     <nav className={BAR} aria-label="App" data-appnav>
-      <a href="/" className={cellClass(isCurrent('/'))}>
+      <a href="/" className={buildCellClass(isCurrent('/'))}>
         <House className="w-[22px] h-[22px]" strokeWidth={isCurrent('/') ? 2 : 1.7} aria-hidden="true" />
         Home
       </a>
-      <a href="/tour.html" className={cellClass(isCurrent('/tour.html'))}>
+      <a href="/tour.html" className={buildCellClass(isCurrent('/tour.html'))}>
         <Compass className="w-[22px] h-[22px]" strokeWidth={isCurrent('/tour.html') ? 2 : 1.7} aria-hidden="true" />
         Program
       </a>
-      <a href="/my-trips.html" className={`relative ${cellClass(isCurrent('/my-trips.html'))}`}>
+      <a href="/my-trips.html" className={`relative ${buildCellClass(isCurrent('/my-trips.html'))}`}>
         <span className="relative">
           <ShoppingBag
             className="w-[22px] h-[22px]"
@@ -57,7 +57,7 @@ export default function AppBottomNav() {
         </span>
         My Trip
       </a>
-      <ChatLauncher className={cellClass(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
+      <ChatLauncher className={buildCellClass(false)} label="Chat" iconClass="w-[22px] h-[22px]" />
     </nav>
   );
 }

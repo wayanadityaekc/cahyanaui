@@ -244,7 +244,7 @@ export const THANKS = [
 
 export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
 
-export function wayanIsAround(now = new Date()) {
+export function isWayanAround(now = new Date()) {
   const hour = Number(
     new Intl.DateTimeFormat('en-GB', {
       timeZone: REPLY_HOURS.tz,

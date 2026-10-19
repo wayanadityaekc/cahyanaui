@@ -1,4 +1,4 @@
-import { fmtTime, fmtDate } from '@/content/shared/timeSlots';
+import { formatTime, formatDate } from '@/content/shared/timeSlots';
 import { withSymbol } from '@/components/Price';
 import { BTN, STACK } from '@/components/ui/modalClasses';
 import BookActions from './BookActions';
@@ -48,20 +48,20 @@ export default function CheckStep({
           <>
             <div className={ROW}>
               <span>Date</span>
-              <span>{fmtDate(dateOf(singleLine, 0)) || '-'}</span>
+              <span>{formatDate(dateOf(singleLine, 0)) || '-'}</span>
             </div>
             {isAirportRoute ? (
               <div className={ROW}>
                 <span>Flight</span>
                 <span>
                   {flightNumberDisplay || '-'}
-                  {timeOf(singleLine, 0) ? ` · ${fmtTime(timeOf(singleLine, 0))}` : ''}
+                  {timeOf(singleLine, 0) ? ` · ${formatTime(timeOf(singleLine, 0))}` : ''}
                 </span>
               </div>
             ) : (
               <div className={ROW}>
                 <span>Time</span>
-                <span>{timeOf(singleLine, 0) ? fmtTime(timeOf(singleLine, 0)) : '-'}</span>
+                <span>{timeOf(singleLine, 0) ? formatTime(timeOf(singleLine, 0)) : '-'}</span>
               </div>
             )}
           </>

@@ -236,10 +236,10 @@ export const ARTICLES = [
   },
 ];
 
-export function articleBySlug(slug) {
+export function findArticleBySlug(slug) {
   return ARTICLES.find((article) => article.slug === slug) || null;
 }
 
-export function categoryLabel(id) {
+export function findCategoryLabel(id) {
   return CATEGORIES.find((category) => category.id === id)?.label || '';
 }

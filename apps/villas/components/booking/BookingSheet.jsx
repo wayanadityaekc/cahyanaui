@@ -14,8 +14,8 @@ import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { VILLAS, VILLA_LIST, priceBreakdown } from '@/lib/villas';
 import { formatRupiah } from '@/lib/currency';
 import BookingTerms from '@/components/booking/BookingTerms';
-import { whatsappLink } from '@/lib/constants';
-import { AVAILABILITY_COPY, STAY_RULES, baliToday, checkStay } from '@/lib/availability';
+import { buildWhatsappLink } from '@/lib/constants';
+import { AVAILABILITY_COPY, STAY_RULES, formatBaliToday, checkStay } from '@/lib/availability';
 import StayCheckout from '@/components/booking/StayCheckout';
 import useVillaAvailability from '@/components/booking/useVillaAvailability';
 
@@ -27,7 +27,7 @@ export default function BookingSheet() {
   const [availability, setAvailability] = useState('');
   const [checkoutStay, setCheckoutStay] = useState(null);
   const [today, setToday] = useState('');
-  useEffect(() => setToday(baliToday()), []);
+  useEffect(() => setToday(formatBaliToday()), []);
   const calendar = useVillaAvailability(isOpen ? booking.villaSlug : '');
 
   useEffect(() => {
@@ -225,7 +225,7 @@ export default function BookingSheet() {
               )}
 
               {availability === 'unknown' ? (
-                <Button as="a" full href={whatsappLink(message)} target="_blank" rel="noopener">
+                <Button as="a" full href={buildWhatsappLink(message)} target="_blank" rel="noopener">
                   <MessageCircle
                     className="w-[var(--icon-sm)] h-[var(--icon-sm)]"
                     strokeWidth={1.8}

@@ -29,7 +29,7 @@ const MORE_BTN =
 export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, bleed = true, className }) {
   if (!images.length) return null;
 
-  function tile(imageIndex, cls) {
+  function renderTile(imageIndex, cls) {
     const image = images[imageIndex];
     return (
       <button
@@ -53,12 +53,12 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
 
   const children = [];
   for (let startIndex = 0; startIndex < images.length; startIndex += 3) {
-    children.push(tile(startIndex, BIG));
+    children.push(renderTile(startIndex, BIG));
     const pair = [startIndex + 1, startIndex + 2].filter((imageIndex) => imageIndex < images.length);
     if (pair.length) {
       children.push(
         <div className={PAIR} key={`pair-${startIndex}`}>
-          {pair.map((imageIndex) => tile(imageIndex, TILE))}
+          {pair.map((imageIndex) => renderTile(imageIndex, TILE))}
         </div>,
       );
     }
@@ -67,9 +67,11 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
   return (
     <div className={cn('relative', className)} data-mosaic={images.length}>
       {images.length === 1 ? (
-        <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{tile(0, TILE)}</div>
+        <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{renderTile(0, TILE)}</div>
       ) : images.length === 2 ? (
-        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>{images.map((image, index) => tile(index, TILE))}</div>
+        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>
+          {images.map((image, index) => renderTile(index, TILE))}
+        </div>
       ) : (
         <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{children}</div>
       )}

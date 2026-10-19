@@ -6,13 +6,13 @@ import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, API_BASE } from '@/lib/constants';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import Select from '@/components/ui/Select';
 import { REFMSG } from '@/components/ui/modalClasses';
 import { BTN_PILL, BTN_CTA, BTN_SM } from '@/components/ui/btnClasses';
 import { CONTACT_GROUP, CONTACT_INPUT } from '@/components/ui/contactFieldClasses';
 import { FIELD_LABEL } from '@/components/ui/formClasses';
-import { initialsOf } from '@/components/layout/AccountMenu';
+import { buildInitials } from '@/components/layout/AccountMenu';
 import Separator from '@/components/ui/Separator';
 import RailLayout from '@/components/ui/RailLayout';
 import { RAIL_READ } from '@/components/ui/railClasses';
@@ -34,7 +34,7 @@ function SettingsShell({ children }) {
       onSelect={() => {}}
       mobileNav={true}
       collapsible
-      breadcrumb={crumbsFor('settings')}
+      breadcrumb={buildCrumbs('settings')}
       scrollContent
     >
       <div className={RAIL_READ}>
@@ -131,7 +131,7 @@ export default function AccountSettings() {
             className="w-[72px] h-[72px] shrink-0 rounded-[50%] bg-gold text-white grid place-items-center text-h2 font-semibold tracking-[0.02em]"
             aria-hidden="true"
           >
-            {initialsOf(account.name, account.email)}
+            {buildInitials(account.name, account.email)}
           </span>
           <div className="min-w-0">
             <div className="font-semibold text-h3 text-green overflow-hidden text-ellipsis whitespace-nowrap">

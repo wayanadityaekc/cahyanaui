@@ -38,19 +38,19 @@ export default function HeroMosaic({ photos = [], title }) {
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key === 'Escape') setOpenIndex(null);
       else if (event.key === 'ArrowRight') setOpenIndex((currentIndex) => (currentIndex + 1) % photos.length);
       else if (event.key === 'ArrowLeft')
         setOpenIndex((currentIndex) => (currentIndex - 1 + photos.length) % photos.length);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, photos.length]);
 
   if (!photos.length) return null;
 
-  function tile(photoIndex, cls) {
+  function renderTile(photoIndex, cls) {
     const photo = photos[photoIndex];
     return (
       <button
@@ -69,12 +69,12 @@ export default function HeroMosaic({ photos = [], title }) {
   [...Array(Math.ceil(photos.length / 3)).keys()]
     .map((groupIndex) => groupIndex * 3)
     .forEach((startIndex) => {
-      children.push(tile(startIndex, BIG));
+      children.push(renderTile(startIndex, BIG));
       const pair = [startIndex + 1, startIndex + 2].filter((photoIndex) => photoIndex < photos.length);
       if (pair.length) {
         children.push(
           <div className={PAIR} key={`pair-${startIndex}`}>
-            {pair.map((photoIndex) => tile(photoIndex, TILE_BASE))}
+            {pair.map((photoIndex) => renderTile(photoIndex, TILE_BASE))}
           </div>,
         );
       }
@@ -82,9 +82,9 @@ export default function HeroMosaic({ photos = [], title }) {
 
   const gallery =
     photos.length === 1 ? (
-      <div className={STATIC_1}>{tile(0, TILE_BASE)}</div>
+      <div className={STATIC_1}>{renderTile(0, TILE_BASE)}</div>
     ) : photos.length === 2 ? (
-      <div className={STATIC_2}>{photos.map((photo, index) => tile(index, TILE_BASE))}</div>
+      <div className={STATIC_2}>{photos.map((photo, index) => renderTile(index, TILE_BASE))}</div>
     ) : (
       <Slider gridClassName={TRACK}>{children}</Slider>
     );

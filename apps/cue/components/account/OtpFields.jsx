@@ -16,7 +16,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     if (joined.length === length && next.every(Boolean)) onComplete && onComplete(joined);
   }
 
-  function spread(digitIndex, raw) {
+  function spreadDigits(digitIndex, raw) {
     const next = digits.slice();
     let pos = digitIndex;
     for (const char of raw) {
@@ -38,7 +38,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
         return;
       }
       if (raw.length > 1) {
-        spread(digitIndex, raw);
+        spreadDigits(digitIndex, raw);
         return;
       }
       const next = digits.slice();
@@ -70,7 +70,7 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
       const raw = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
       if (!raw) return;
       event.preventDefault();
-      spread(digitIndex, raw);
+      spreadDigits(digitIndex, raw);
     };
   }
 

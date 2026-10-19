@@ -1,6 +1,6 @@
 import GuideArticle from '@/components/sections/GuideArticle';
 import { GUIDE_CONTENT } from '@/content/guides';
-import { GUIDES, guidePath } from '@/lib/routes';
+import { GUIDES, buildGuidePath } from '@/lib/routes';
 
 export const dynamicParams = false;
 
@@ -11,11 +11,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const guide = GUIDE_CONTENT[slug];
-  if (!guide) return { alternates: { canonical: guidePath(slug) } };
+  if (!guide) return { alternates: { canonical: buildGuidePath(slug) } };
   return {
     title: guide.metaTitle,
     description: guide.metaDesc,
-    alternates: { canonical: guidePath(slug) },
+    alternates: { canonical: buildGuidePath(slug) },
     openGraph: {
       title: guide.metaTitle,
       description: guide.metaDesc,

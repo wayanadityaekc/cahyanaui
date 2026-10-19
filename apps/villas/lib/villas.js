@@ -339,7 +339,7 @@ export const VILLAS = {
 
 export const VILLA_LIST = Object.values(VILLAS);
 
-export function nightsBetween(checkIn, checkOut) {
+export function countNightsBetween(checkIn, checkOut) {
   if (!checkIn || !checkOut) return 0;
   const inDate = new Date(checkIn);
   const outDate = new Date(checkOut);
@@ -350,7 +350,7 @@ export function nightsBetween(checkIn, checkOut) {
 export function priceBreakdown(slug, checkIn, checkOut) {
   const villa = VILLAS[slug];
   if (!villa) return null;
-  const nights = nightsBetween(checkIn, checkOut);
+  const nights = countNightsBetween(checkIn, checkOut);
   const nightlyIdr = villa.nightlyRateIdr;
   const subtotalIdr = nightlyIdr * nights;
   return { villa, nights, nightlyIdr, subtotalIdr, totalIdr: subtotalIdr };

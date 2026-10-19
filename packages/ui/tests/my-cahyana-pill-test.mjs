@@ -12,7 +12,7 @@ const React = require('react');
 const { renderToStaticMarkup } = require('react-dom/server');
 
 const out = fs.mkdtempSync(path.join(os.tmpdir(), 'pill-'));
-function compile(rel, name) {
+function compileSource(rel, name) {
   const code = fs.readFileSync(path.join(here, '../src', rel), 'utf8');
   let js = swc.transformSync(code, {
     filename: rel,
@@ -31,8 +31,8 @@ function compile(rel, name) {
     .replace(/from ['"]\.\.\/lib\/cn\.js['"]/, "from './cn.js'");
   fs.writeFileSync(path.join(out, name), js);
 }
-compile('lib/cn.js', 'cn.js');
-compile('blocks/MyCahyanaPill.jsx', 'pill.js');
+compileSource('lib/cn.js', 'cn.js');
+compileSource('blocks/MyCahyanaPill.jsx', 'pill.js');
 const { default: MyCahyanaPill } = await import(pathToFileURL(path.join(out, 'pill.js')).href);
 
 let failed = 0;
@@ -56,8 +56,8 @@ check(
   "the EN button's box: 32px high, 12px corners, line border",
   /\bh-8\b/.test(fresh) && /\brounded-md\b/.test(fresh) && fresh.includes('[border:1px_solid_var(--line)]'),
 );
-function onTap() {}
-check('onTap is the click handler', MyCahyanaPill({ href, onTap }).props.onClick === onTap);
+function handleTap() {}
+check('onTap is the click handler', MyCahyanaPill({ href, onTap: handleTap }).props.onClick === handleTap);
 
 fs.rmSync(out, { recursive: true, force: true });
 console.log(failed ? `\n${failed} failed` : '\nall passed');

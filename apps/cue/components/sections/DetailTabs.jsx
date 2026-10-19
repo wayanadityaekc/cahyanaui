@@ -5,7 +5,7 @@ import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
 import { useEffect, useRef, useState } from 'react';
 import ReviewsStrip from '@/components/reviews/ReviewsStrip';
 import LoadFallback from '@/components/ui/LoadFallback';
-import { CARD, CARD_WRAP, STRIP, TRACK, segment, SEC, SEC_H } from '@/components/ui/detailCardClasses';
+import { CARD, CARD_WRAP, STRIP, TRACK, buildSegmentClass, SEC, SEC_H } from '@/components/ui/detailCardClasses';
 
 function CarIcon() {
   return <Car strokeWidth={1.7} aria-hidden="true" />;
@@ -158,7 +158,7 @@ export default function DetailTabs({
 
   useEffect(() => {
     const ids = sections.map((section) => section.id);
-    function onScroll() {
+    function handleScroll() {
       const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
       const header = document.querySelector('header');
       const headerH = header ? header.getBoundingClientRect().height : 0;
@@ -170,12 +170,12 @@ export default function DetailTabs({
       });
       setActive(current);
     }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
@@ -199,7 +199,7 @@ export default function DetailTabs({
                 key={section.id}
                 type="button"
                 aria-current={active === section.id ? 'true' : undefined}
-                className={segment(active === section.id)}
+                className={buildSegmentClass(active === section.id)}
                 onClick={() => pick(section.id)}
               >
                 {section.label}

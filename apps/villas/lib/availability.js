@@ -20,7 +20,7 @@ export async function checkStay(villaSlug, checkIn, checkOut) {
 
 export const STAY_RULES = { minNights: 2, maxNights: 30, maxDaysAhead: 365 };
 
-export function baliToday() {
+export function formatBaliToday() {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Makassar',
     year: 'numeric',

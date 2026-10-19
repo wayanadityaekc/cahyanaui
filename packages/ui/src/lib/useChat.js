@@ -9,12 +9,12 @@ const POLL_MS = 5000;
 const TYPING_FRAME_MS = 2000;
 
 let seq = 0;
-function uid() {
+function createMessageId() {
   seq += 1;
   return `m${seq}`;
 }
 
-function firstName(account) {
+function extractFirstName(account) {
   return account
     ? String(account.name || '')
         .trim()
@@ -34,7 +34,9 @@ export default function useChat({
   isAround = () => true,
 } = {}) {
   const client = useMemo(() => createChatThread({ apiBase, storageKey }), [apiBase, storageKey]);
-  const [log, setLog] = useState(() => [{ id: uid(), from: 'bot', text: copy.greeting, chips: suggestions }]);
+  const [log, setLog] = useState(() => [
+    { id: createMessageId(), from: 'bot', text: copy.greeting, chips: suggestions },
+  ]);
   const [draft, setDraft] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const [thread, setThread] = useState(null);
@@ -56,23 +58,28 @@ export default function useChat({
   const copyRef = useRef(copy);
   copyRef.current = copy;
 
-  function say(text, extra = {}) {
-    setLog((prev) => [...prev, { id: uid(), from: 'bot', text, ...extra }]);
+  function addBotMessage(text, extra = {}) {
+    setLog((prev) => [...prev, { id: createMessageId(), from: 'bot', text, ...extra }]);
   }
 
-  async function deliver(id, text) {
+  async function sendMessage(id, text) {
     try {
       await client.send(id, text);
     } catch (e) {
-      say(copyRef.current.sendFailed);
+      addBotMessage(copyRef.current.sendFailed);
     }
   }
 
   useEffect(() => {
-    const name = firstName(account);
+    const name = extractFirstName(account);
     if (!name || greeted.current) return;
     greeted.current = true;
-    const line = { id: uid(), from: 'bot', text: String(copy.hello || '').replace('{name}', name), chips: suggestions };
+    const line = {
+      id: createMessageId(),
+      from: 'bot',
+      text: String(copy.hello || '').replace('{name}', name),
+      chips: suggestions,
+    };
     setLog((prev) => (prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]));
   }, [account, copy.hello, suggestions]);
 
@@ -91,7 +98,10 @@ export default function useChat({
     });
     if (!fresh.length) return;
     heard.current = true;
-    setLog((prev) => [...prev, ...fresh.map((message) => ({ id: uid(), from: 'owner', text: message.body }))]);
+    setLog((prev) => [
+      ...prev,
+      ...fresh.map((message) => ({ id: createMessageId(), from: 'owner', text: message.body })),
+    ]);
   }, []);
 
   const catchUp = useCallback(async () => {
@@ -100,7 +110,10 @@ export default function useChat({
       const { gone, messages } = await client.poll(thread, lastSeen.current);
       if (gone) {
         setThread(null);
-        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: copyRef.current.threadGone, chips: suggestions }]);
+        setLog((prev) => [
+          ...prev,
+          { id: createMessageId(), from: 'bot', text: copyRef.current.threadGone, chips: suggestions },
+        ]);
         return;
       }
       takeOwner(messages);
@@ -137,11 +150,11 @@ export default function useChat({
 
   useEffect(() => {
     if (!open || !thread) return undefined;
-    function onShow() {
+    function handleVisibilityChange() {
       if (document.visibilityState === 'visible') catchUp();
     }
-    document.addEventListener('visibilitychange', onShow);
-    return () => document.removeEventListener('visibilitychange', onShow);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [open, thread, catchUp]);
 
   const isOwnerTyping = typingUntil > Date.now();
@@ -168,9 +181,9 @@ export default function useChat({
         let hours = words.hoursClosed;
         if (ownerHereRef.current) hours = words.hoursHere;
         else if (isAround()) hours = words.hoursOpen;
-        say(`${words.connected} ${hours}`);
+        addBotMessage(`${words.connected} ${hours}`);
       } catch (e) {
-        say(e.message || words.reachFailed);
+        addBotMessage(e.message || words.reachFailed);
       }
       setIsSending(false);
     },
@@ -182,10 +195,10 @@ export default function useChat({
       const text = String(question || '').trim();
       if (!text || isThinking || isSending) return;
       setDraft('');
-      setLog((prev) => [...prev, { id: uid(), from: 'me', text }]);
+      setLog((prev) => [...prev, { id: createMessageId(), from: 'me', text }]);
 
       if (thread) {
-        deliver(thread, text);
+        sendMessage(thread, text);
         return;
       }
 
@@ -193,7 +206,7 @@ export default function useChat({
       setTimeout(() => {
         const result = answerFor(text) || { kind: 'handoff' };
         const line = {
-          id: uid(),
+          id: createMessageId(),
           from: 'bot',
           text: result.text,
           rows: result.rows,
@@ -229,7 +242,7 @@ export default function useChat({
     if (isQuiet && mail === 'idle' && !heard.current) setMail('ask');
   }, [isQuiet, mail]);
 
-  function onDraft(value) {
+  function handleDraftChange(value) {
     setDraft(value);
     if (!thread || !sock.current) return;
     const now = Date.now();
@@ -246,7 +259,7 @@ export default function useChat({
     try {
       await client.setContact(thread, address);
       setMail('done');
-      say(copyRef.current.emailDone);
+      addBotMessage(copyRef.current.emailDone);
     } catch (e) {
       setMailErr(e.message || copyRef.current.emailBad);
     }
@@ -255,7 +268,7 @@ export default function useChat({
   return {
     log,
     draft,
-    onDraft,
+    onDraft: handleDraftChange,
     ask,
     thinking: isThinking,
     sending: isSending,

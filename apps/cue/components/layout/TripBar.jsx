@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { normalizePath } from '@/lib/pathname';
 import { Tag, ShieldCheck, CalendarDays, Info, Car } from 'lucide-react';
-import { promoFor } from '@/content/shared/promo';
+import { findPromosForPath } from '@/content/shared/promo';
 
 const BAR =
   'flex items-center justify-center gap-2 w-full py-[0.5rem] px-5 [border-bottom:1px_solid_var(--line)] bg-cream text-[0.72rem] font-normal leading-[1.3] text-muted no-underline whitespace-nowrap [@media(max-width:560px)]:gap-[0.35rem] [@media(max-width:560px)]:px-[0.9rem]';
@@ -20,7 +20,7 @@ const FADE_MS = 200;
 
 export default function TripBar() {
   const pathname = normalizePath(usePathname());
-  const messages = promoFor(pathname);
+  const messages = findPromosForPath(pathname);
   const [index, setIndex] = useState(0);
   const [isDimmed, setIsDimmed] = useState(false);
   const timers = useRef([]);

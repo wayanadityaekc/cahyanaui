@@ -111,7 +111,7 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   const root = path.join(__dirname, '..', 'sitemap.xml');
   const built = path.join(__dirname, '..', 'out', 'sitemap.xml');
   if (!fs.existsSync(root) || !fs.existsSync(built)) return;
-  function locs(file) {
+  function collectLocs(file) {
     return new Set(
       [
         ...fs
@@ -121,8 +121,8 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
       ].map((locMatch) => locMatch[1].trim()),
     );
   }
-  const rootLocs = locs(root);
-  const builtLocs = locs(built);
+  const rootLocs = collectLocs(root);
+  const builtLocs = collectLocs(built);
   const onlyBuilt = [...builtLocs].filter((builtLoc) => !rootLocs.has(builtLoc));
   const onlyRoot = [...rootLocs].filter((rootLoc) => !builtLocs.has(rootLoc));
   if (onlyBuilt.length || onlyRoot.length) {

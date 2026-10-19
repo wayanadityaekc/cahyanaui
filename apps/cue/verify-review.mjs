@@ -3,7 +3,7 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
@@ -96,7 +96,7 @@ for (const width of [390, 1280]) {
     const pastTab = page.locator('button:visible', { hasText: 'Past' }).first();
     if (await pastTab.count()) await pastTab.click();
     const trigger = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
-    ok((await trigger.count()) > 0, `${width}/${mode}: no review trigger on Past trips`);
+    recordCheck((await trigger.count()) > 0, `${width}/${mode}: no review trigger on Past trips`);
     if (!(await trigger.count())) {
       await browserContext.close();
       continue;
@@ -107,7 +107,7 @@ for (const width of [390, 1280]) {
     await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
 
     const boxes = page.locator('[data-step="write"] input[type=checkbox]');
-    ok((await boxes.count()) === 2, `${width}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
+    recordCheck((await boxes.count()) === 2, `${width}/${mode}: expected 2 trips ticked, got ${await boxes.count()}`);
 
     await page.locator('[data-step="write"] button[aria-label="5 stars"]').click();
     await page.fill('#rvm-message', 'Driver was early and the day ran exactly as described.');
@@ -121,20 +121,23 @@ for (const width of [390, 1280]) {
 
     const shell = page.locator('div.fixed.inset-0').filter({ hasText: 'Leave a Review' }).last();
     const txt = await shell.innerText();
-    ok(/Leave a Review/.test(txt), `${width}/${mode}: HARNESS READ THE WRONG BOX`);
-    ok(posted.length === 2, `${width}/${mode}: ${posted.length} of 2 reviews were attempted`);
+    recordCheck(/Leave a Review/.test(txt), `${width}/${mode}: HARNESS READ THE WRONG BOX`);
+    recordCheck(posted.length === 2, `${width}/${mode}: ${posted.length} of 2 reviews were attempted`);
 
     if (mode === 'all-ok') {
-      ok(/Thank you/.test(txt), `${width}/${mode}: no thank-you after a clean submit`);
-      ok(/live on the site/.test(txt), `${width}/${mode}: success text does not say the review is live`);
-      ok(!/once approved/.test(txt), `${width}/${mode}: STALE COPY - still promises approval that never comes`);
-      ok(!/could not be included/.test(txt), `${width}/${mode}: a clean submit reported a failure`);
+      recordCheck(/Thank you/.test(txt), `${width}/${mode}: no thank-you after a clean submit`);
+      recordCheck(/live on the site/.test(txt), `${width}/${mode}: success text does not say the review is live`);
+      recordCheck(
+        !/once approved/.test(txt),
+        `${width}/${mode}: STALE COPY - still promises approval that never comes`,
+      );
+      recordCheck(!/could not be included/.test(txt), `${width}/${mode}: a clean submit reported a failure`);
     } else {
-      ok(/Thank you/.test(txt), `${width}/${mode}: the review that WAS published is hidden behind an error`);
-      ok(/could not be included/.test(txt), `${width}/${mode}: the refused trip is not mentioned at all`);
-      ok(/Kecak Dance/.test(txt), `${width}/${mode}: the refused trip is not named`);
-      ok(/isn't confirmed yet/.test(txt), `${width}/${mode}: the server's reason is not passed on`);
-      ok(
+      recordCheck(/Thank you/.test(txt), `${width}/${mode}: the review that WAS published is hidden behind an error`);
+      recordCheck(/could not be included/.test(txt), `${width}/${mode}: the refused trip is not mentioned at all`);
+      recordCheck(/Kecak Dance/.test(txt), `${width}/${mode}: the refused trip is not named`);
+      recordCheck(/isn't confirmed yet/.test(txt), `${width}/${mode}: the server's reason is not passed on`);
+      recordCheck(
         !/Ubud Tour/.test(txt.split('could not be included')[1] || ''),
         `${width}/${mode}: the trip that SUCCEEDED is listed as a failure`,
       );
@@ -144,12 +147,15 @@ for (const width of [390, 1280]) {
     await shell.locator('button', { hasText: 'Done' }).click();
     await page.waitForFunction(() => !document.querySelector('[data-step="write"]'), { timeout: 5000 }).catch(() => {});
     await page.waitForTimeout(600);
-    ok(mineHits > hitsBefore, `${width}/${mode}: closing the popup did not re-read My Trips`);
+    recordCheck(mineHits > hitsBefore, `${width}/${mode}: closing the popup did not re-read My Trips`);
     const again = page.locator('button:visible', { hasText: /Write review|Leave a Review/i }).first();
     if (mode === 'all-ok') {
-      ok((await again.count()) === 0, `${width}/${mode}: every trip is reviewed but the review button is still there`);
+      recordCheck(
+        (await again.count()) === 0,
+        `${width}/${mode}: every trip is reviewed but the review button is still there`,
+      );
     } else {
-      ok((await again.count()) > 0, `${width}/${mode}: the trip that was NOT reviewed lost its button`);
+      recordCheck((await again.count()) > 0, `${width}/${mode}: the trip that was NOT reviewed lost its button`);
       if (await again.count()) {
         await again.click();
         await page.locator('[data-step="write"]').waitFor({ timeout: 10000 });
@@ -159,8 +165,8 @@ for (const width of [390, 1280]) {
         await page.locator('[data-step="write"] button', { hasText: /Submit review/ }).click();
         await page.waitForTimeout(800);
         const sentNow = posted.slice(postedCount);
-        ok(!sentNow.includes('Ubud Tour'), `${width}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
-        ok(
+        recordCheck(!sentNow.includes('Ubud Tour'), `${width}/${mode}: THE TRIP JUST REVIEWED WAS SENT AGAIN`);
+        recordCheck(
           sentNow.length === 1 && sentNow[0] === 'Kecak Dance',
           `${width}/${mode}: second submit sent ${JSON.stringify(sentNow)}`,
         );
@@ -168,8 +174,8 @@ for (const width of [390, 1280]) {
     }
 
     const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(over <= 0, `${width}/${mode}: page overflows by ${over}px`);
-    ok(errs.length === 0, `${width}/${mode}: page errors ${errs.join(' | ')}`);
+    recordCheck(over <= 0, `${width}/${mode}: page overflows by ${over}px`);
+    recordCheck(errs.length === 0, `${width}/${mode}: page errors ${errs.join(' | ')}`);
 
     await page.screenshot({ path: `shots/rv-${mode}-${width}.png` });
     await browserContext.close();

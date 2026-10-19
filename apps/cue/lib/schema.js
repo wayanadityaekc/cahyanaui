@@ -1,10 +1,10 @@
 import { SITE } from './routes';
 
-export function jsonLd(schema) {
+export function buildJsonLd(schema) {
   return { __html: JSON.stringify(schema) };
 }
 
-export function breadcrumb(trail) {
+export function buildBreadcrumbSchema(trail) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -17,7 +17,7 @@ export function breadcrumb(trail) {
   };
 }
 
-export function faqPage(items) {
+export function buildFaqPageSchema(items) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',

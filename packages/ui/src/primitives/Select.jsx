@@ -61,20 +61,20 @@ export default function Select({
 
   useEffect(() => {
     if (!isOpen || asPortal) return;
-    function onDoc(event) {
+    function handleOutsidePointerDown(event) {
       if (groupRef.current && !groupRef.current.contains(event.target)) setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    return () => document.removeEventListener('click', onDoc);
+    document.addEventListener('click', handleOutsidePointerDown);
+    return () => document.removeEventListener('click', handleOutsidePointerDown);
   }, [isOpen, asPortal]);
 
   useEffect(() => {
     if (!isOpen) return;
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    return () => document.removeEventListener('keydown', handleEscapeKeyDown);
   }, [isOpen]);
 
   const selected = options.find((option) => String(option.value) === String(value));

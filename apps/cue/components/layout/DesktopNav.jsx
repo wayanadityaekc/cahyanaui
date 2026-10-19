@@ -30,20 +30,20 @@ export default function DesktopNav({ isActive }) {
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    function onDoc(event) {
+    function handleDocumentClick(event) {
       if (boxRef.current && !boxRef.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key === 'Escape') {
         setIsOpen(false);
         btnRef.current?.focus();
       }
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
 

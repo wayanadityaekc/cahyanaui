@@ -8,7 +8,7 @@ import { useReferral } from '@/state/ReferralProvider';
 import { useAccount } from '@/state/AccountProvider';
 import { usePricing } from '@/state/PricingProvider';
 import { quote, submitInquiry } from '@/lib/api';
-import { bookingSchema } from '@/lib/schemas';
+import { buildBookingSchema } from '@/lib/schemas';
 import { validateWith } from '@/lib/validate';
 import { readLocal, writeLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
@@ -26,8 +26,8 @@ import {
 import PaymentStep from './PaymentStep';
 import { readPayFlag, PAY_DEFAULT } from '@/lib/payFlag';
 import { DEFAULT_RAIL } from '@/lib/rails';
-import { baseTotal, baseTotalIdr, baseTotalUsd, PAY_COPY } from '@/lib/payment';
-import { bookingPayload, priceText as quotedPrice, whatsappText } from '@/lib/bookingPayload';
+import { calculateBaseTotal, calculateBaseTotalIdr, calculateBaseTotalUsd, PAY_COPY } from '@/lib/payment';
+import { buildBookingPayload, priceText as quotedPrice, buildWhatsappText } from '@/lib/bookingPayload';
 import DetailsStep from './DetailsStep';
 import CheckStep from './CheckStep';
 import BookActions from './BookActions';
@@ -148,7 +148,7 @@ export default function BookConfirmModal() {
     const cooldownTimer = setInterval(() => setOtpCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)), 1000);
     return () => clearInterval(cooldownTimer);
   }, [otpCooldown]);
-  async function doOtpVerify(code) {
+  async function verifyOtpCode(code) {
     setOtpMsg('');
     setIsOtpBusy(true);
     const result = await verifyCode(signinEmail, code);
@@ -161,7 +161,7 @@ export default function BookConfirmModal() {
     setOtpCode('');
     setOtpMsg(result.error || 'Sorry, something went wrong. Please try again.');
   }
-  async function resendOtp() {
+  async function resendOtpCode() {
     if (otpCooldown > 0 || isOtpBusy) return;
     setIsOtpBusy(true);
     await requestLogin(signinEmail);
@@ -203,7 +203,7 @@ export default function BookConfirmModal() {
   const catalog = pricing && pricing.catalog;
   const lines = view.lines || [];
   const singleLine = lines.length === 1 ? lines[0] : null;
-  function categoryOfLine({ service, type }) {
+  function findLineCategory({ service, type }) {
     const catalogItem = catalog && catalog.items.find((item) => item.name === service);
     return catalogItem ? catalogItem.category : type || null;
   }
@@ -212,7 +212,7 @@ export default function BookConfirmModal() {
   }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   const needsFlight = isAirportRoute;
-  function lineDateTime(lineIndex) {
+  function findLineDateTime(lineIndex) {
     return lineDT[lineIndex] || { date: '', time: '' };
   }
   function setDT(lineIndex, fieldName, fieldValue) {
@@ -223,21 +223,21 @@ export default function BookConfirmModal() {
     });
     setDtErr((prev) => (prev[lineIndex] ? { ...prev, [lineIndex]: undefined } : prev));
   }
-  function dateOf(line, lineIndex) {
+  function findLineDate(line, lineIndex) {
     return isAirportLine(line) && lineIndex === 0 && needsFlight
       ? (form.flightDatetime || '').slice(0, 10)
-      : lineDateTime(lineIndex).date;
+      : findLineDateTime(lineIndex).date;
   }
   function timeOf(line, lineIndex) {
     return isAirportLine(line) && lineIndex === 0 && needsFlight
       ? (form.flightDatetime || '').slice(11, 16)
-      : lineDateTime(lineIndex).time;
+      : findLineDateTime(lineIndex).time;
   }
   const flightNumberDisplay = needsFlight ? form.flightNumber || singleLine.flight_number || '' : '';
 
   function validate() {
     const { ok, errors: fieldErrors } = validateWith(
-      bookingSchema({
+      buildBookingSchema({
         pickupOptional: !!bookingContext.pickupOptional,
         dropoffRequired: !!bookingContext.dropoffRequired,
         needsTime: false,
@@ -249,15 +249,15 @@ export default function BookConfirmModal() {
     const dateErrors = {};
     (bookingContext.lines || []).forEach((line, index) => {
       if (isAirportLine(line) && index === 0 && needsFlight) return;
-      if (!dateOf(line, index)) dateErrors[index] = 'Please pick a date.';
+      if (!findLineDate(line, index)) dateErrors[index] = 'Please pick a date.';
       else if (!timeOf(line, index)) dateErrors[index] = 'Please pick a start time.';
     });
     setDtErr(dateErrors);
     return ok && Object.keys(dateErrors).length === 0;
   }
 
-  function payload() {
-    return bookingPayload({
+  function buildBookingPayload() {
+    return buildBookingPayload({
       ctx: bookingContext,
       f: form,
       referral,
@@ -269,7 +269,7 @@ export default function BookConfirmModal() {
       displayGuests,
       singleLine,
       needsFlight,
-      dateOf,
+      dateOf: findLineDate,
       timeOf,
     });
   }
@@ -281,7 +281,7 @@ export default function BookConfirmModal() {
     setError('');
     setIsBusy(true);
     try {
-      const inquiryResult = await submitInquiry(payload());
+      const inquiryResult = await submitInquiry(buildBookingPayload());
       if (!inquiryResult || inquiryResult.status !== 'saved')
         throw new Error((inquiryResult && inquiryResult.detail) || '');
       if (form.pickup) writeLocal(KEY.pickup, form.pickup);
@@ -304,14 +304,14 @@ export default function BookConfirmModal() {
     }
   }
 
-  function waText() {
-    return whatsappText({
+  function buildWhatsappText() {
+    return buildWhatsappText({
       ctx: bookingContext,
       f: form,
       displayGuests,
       singleLine,
       flightNumberDisplay,
-      dateOf,
+      dateOf: findLineDate,
       timeOf,
       price: priceText(),
     });
@@ -332,7 +332,7 @@ export default function BookConfirmModal() {
       setStep(1);
       return;
     }
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText())}`, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsappText())}`, '_blank');
   }
 
   const lastStep = payOn ? 3 : 2;
@@ -343,11 +343,11 @@ export default function BookConfirmModal() {
       signinEmail={signinEmail}
       otpCode={otpCode}
       setOtpCode={setOtpCode}
-      doOtpVerify={doOtpVerify}
+      doOtpVerify={verifyOtpCode}
       otpMsg={otpMsg}
       otpBusy={isOtpBusy}
       otpCooldown={otpCooldown}
-      resendOtp={resendOtp}
+      resendOtp={resendOtpCode}
     />
   ) : null;
   return createPortal(
@@ -387,9 +387,9 @@ export default function BookConfirmModal() {
               lines={lines}
               needsFlight={needsFlight}
               isAirportLine={isAirportLine}
-              lineDateTime={lineDateTime}
+              lineDateTime={findLineDateTime}
               setDT={setDT}
-              categoryOfLine={categoryOfLine}
+              categoryOfLine={findLineCategory}
               dtErr={dtErr}
               onContinue={() => {
                 if (validate()) {
@@ -402,7 +402,7 @@ export default function BookConfirmModal() {
             <CheckStep
               view={view}
               singleLine={singleLine}
-              dateOf={dateOf}
+              dateOf={findLineDate}
               timeOf={timeOf}
               isAirportRoute={isAirportRoute}
               flightNumberDisplay={flightNumberDisplay}
@@ -430,9 +430,9 @@ export default function BookConfirmModal() {
                 onOption={setPayOption}
                 rail={payRail}
                 onRail={setPayRail}
-                totalIdr={baseTotalIdr(priced)}
-                totalUsd={baseTotalUsd(priced)}
-                total={baseTotal(priced)}
+                totalIdr={calculateBaseTotalIdr(priced)}
+                totalUsd={calculateBaseTotalUsd(priced)}
+                total={calculateBaseTotal(priced)}
                 symbol={(priced && priced.symbol) || '$'}
                 currency={currency || 'USD'}
                 stay={stay || ''}

@@ -1,9 +1,9 @@
 import { Car, Clock, MapPin } from 'lucide-react';
-import { imageForProgram } from '@/lib/programImages';
+import { findImageForProgram } from '@/lib/programImages';
 import { MTC_ITEM_ICON, MTC_ITEM_ICON_PHOTO } from './myTripsClasses';
 
 export default function ItemIcon({ row }) {
-  const image = row.kind === 'day' ? imageForProgram(row.service) : null;
+  const image = row.kind === 'day' ? findImageForProgram(row.service) : null;
   if (image) {
     return (
       <span

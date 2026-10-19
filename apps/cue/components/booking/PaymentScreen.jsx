@@ -1,5 +1,5 @@
 import { TITLE, SUCCESS_TEXT } from '@/components/ui/modalClasses';
-import { railFor } from '@/lib/rails';
+import { pickRail } from '@/lib/rails';
 import { PAY_COPY } from '@/lib/payment';
 import PayPalCheckout from './PayPalCheckout';
 import DokuCheckout from './DokuCheckout';
@@ -27,7 +27,7 @@ export default function PaymentScreen({
             Nothing is lost if you close this - you can pay later.
           </p>
           {signinNote}
-          {bookingRef && railFor(payRail) === 'doku' ? (
+          {bookingRef && pickRail(payRail) === 'doku' ? (
             <DokuCheckout bookingRef={bookingRef} option={payOption} />
           ) : bookingRef ? (
             <PayPalCheckout

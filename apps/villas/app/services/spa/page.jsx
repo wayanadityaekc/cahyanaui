@@ -1,9 +1,9 @@
 import ServiceDetail from '@/components/sections/ServiceDetail';
 import { JsonLd } from '@cahyana/ui';
-import { pageMeta } from '@/lib/seo';
-import { breadcrumbList, serviceCrumbs } from '@/lib/schema';
+import { buildPageMeta } from '@/lib/seo';
+import { buildBreadcrumbList, serviceCrumbs } from '@/lib/schema';
 
-export const metadata = pageMeta({
+export const metadata = buildPageMeta({
   title: 'In-Villa Spa & Massage in Ubud',
   description:
     'Balinese massage, aromatherapy, couples treatments and flower baths, delivered to your private villa in Ubud. Prices upfront.',
@@ -13,7 +13,7 @@ export const metadata = pageMeta({
 export default function SpaPage() {
   return (
     <>
-      <JsonLd data={breadcrumbList(serviceCrumbs('Spa & Massage', 'spa'))} />
+      <JsonLd data={buildBreadcrumbList(serviceCrumbs('Spa & Massage', 'spa'))} />
       <ServiceDetail
         serviceId="spa"
         kicker="At Your Villa"

@@ -48,11 +48,11 @@ const MONTHS = [
   'December',
 ];
 
-function iso(date) {
+function formatIsoDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function fmtLabel(isoDate) {
+function formatDateLabel(isoDate) {
   if (!isoDate) return '';
   const [year, month, day] = isoDate.split('-').map(Number);
   const labelDate = new Date(year, month - 1, day);
@@ -82,14 +82,14 @@ export default function DateField({
   useEffect(() => setIsMounted(true), []);
   useEffect(() => {
     if (!isOpen) return;
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       return event.key === 'Escape' && setIsOpen(false);
     }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    return () => document.removeEventListener('keydown', handleEscapeKeyDown);
   }, [isOpen]);
 
-  const minDate = min || iso(new Date());
+  const minDate = min || formatIsoDate(new Date());
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
@@ -138,7 +138,7 @@ export default function DateField({
             ))}
             {cells.map((cell, index) => {
               if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
-              const isoDate = iso(cell);
+              const isoDate = formatIsoDate(cell);
               const disabled = isoDate < minDate || (max ? isoDate > max : false);
               return (
                 <button
@@ -192,12 +192,12 @@ export default function DateField({
           <span className={CONTROL_STACK}>
             {hint && <span className={CONTROL_HINT}>{hint}</span>}
             <span className={!value ? CONTROL_VAL_RICH_PLACEHOLDER : CONTROL_VAL_RICH}>
-              {value ? fmtLabel(value) : placeholder}
+              {value ? formatDateLabel(value) : placeholder}
             </span>
           </span>
         ) : (
           <span className={!value ? CONTROL_VAL_PLACEHOLDER : CONTROL_VAL}>
-            {value ? fmtLabel(value) : placeholder}
+            {value ? formatDateLabel(value) : placeholder}
           </span>
         )}
         {hasIconOrHint ? (

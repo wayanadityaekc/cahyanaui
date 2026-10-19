@@ -1,6 +1,6 @@
 import { TOUR_CONTENT } from '@/content/tours';
 import { LISTINGS } from '@/content/shared/listings';
-import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
+import { HIDDEN_TOURS, buildTourPath } from '@/lib/routes';
 
 const parked = new Set(HIDDEN_TOURS);
 function isPackage({ items }) {
@@ -12,22 +12,22 @@ Object.entries(TOUR_CONTENT).forEach(([slug, tour]) => {
   if (parked.has(slug) || isPackage(tour)) return;
   (tour.items || []).forEach((it) => {
     if (!it.refId) return;
-    (INDEX[it.refId] = INDEX[it.refId] || []).push({ slug, href: tourPath(slug), name: tour.bookItem });
+    (INDEX[it.refId] = INDEX[it.refId] || []).push({ slug, href: buildTourPath(slug), name: tour.bookItem });
   });
 });
 
-export function toursForAttraction(slug) {
+export function findToursForAttraction(slug) {
   return INDEX[slug] || [];
 }
 
-export function inclLabel(slug) {
-  const names = toursForAttraction(slug).map((tour) => tour.name);
+export function buildInclusionLabel(slug) {
+  const names = findToursForAttraction(slug).map((tour) => tour.name);
   if (!names.length) return undefined;
   const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
   return `Included in |${list}|`;
 }
 
-export function withAttractionCards(listing, attractions = {}) {
+export function addAttractionCards(listing, attractions = {}) {
   function walk(node) {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
@@ -37,7 +37,7 @@ export function withAttractionCards(listing, attractions = {}) {
     });
     const match = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
     if (next.variant === 'incl') {
-      const label = match ? inclLabel(match[1]) : undefined;
+      const label = match ? buildInclusionLabel(match[1]) : undefined;
       if (label) next.inclText = label;
       else delete next.inclText;
     }
@@ -89,7 +89,7 @@ export function priceFallbackFor(name) {
 const CONTAINS = {};
 Object.entries(TOUR_CONTENT).forEach(([slug, tour]) => {
   if (parked.has(slug)) return;
-  const href = tourPath(slug);
+  const href = buildTourPath(slug);
   const card = TOUR_CARDS[href];
   const entry = {
     slug,
@@ -107,11 +107,11 @@ Object.entries(TOUR_CONTENT).forEach(([slug, tour]) => {
   });
 });
 
-export function toursContaining(refId) {
+export function findToursContaining(refId) {
   return (CONTAINS[refId] || []).slice().sort((a, b) => Number(a.isPackage) - Number(b.isPackage));
 }
 
-export function tourDestinations(tourSlug, attractions) {
+export function listTourDestinations(tourSlug, attractions) {
   const tour = TOUR_CONTENT[tourSlug];
   if (!tour) return [];
   const out = [];

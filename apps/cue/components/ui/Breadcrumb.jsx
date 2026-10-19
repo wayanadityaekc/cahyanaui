@@ -38,7 +38,7 @@ export default function Breadcrumb({ items = [], className = '' }) {
   );
 }
 
-export function itemsFromLegacy(crumb = []) {
+export function buildItemsFromLegacy(crumb = []) {
   return crumb
     .filter((crumbItem) => crumbItem.type !== 'sep')
     .map((crumbItem) => ({ label: crumbItem.text, href: crumbItem.type === 'link' ? crumbItem.href : undefined }));

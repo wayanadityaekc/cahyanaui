@@ -11,7 +11,7 @@ const BOX =
   'max-h-[calc(100dvh-2rem)] overflow-y-auto bg-surface-raised rounded-md px-6 pt-6 pb-7 font-body ' +
   'focus:outline-none';
 
-function fmtDate(iso) {
+function formatReviewDate(iso) {
   if (!iso) return '';
   const reviewDate = new Date(iso);
   return Number.isNaN(reviewDate.getTime())
@@ -29,12 +29,12 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
     if (!isOpen) return undefined;
     const opener = document.activeElement;
     if (boxRef.current) boxRef.current.focus();
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       if (event.key === 'Escape') closeRef.current();
     }
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
       if (opener && typeof opener.focus === 'function') opener.focus();
     };
   }, [isOpen]);
@@ -64,7 +64,7 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
           <div className="flex items-center justify-between gap-3 mb-1">
             <span className="font-semibold text-body text-green">{currentReview.name}</span>
             {currentReview.created_at && (
-              <span className="text-label text-muted">{fmtDate(currentReview.created_at)}</span>
+              <span className="text-label text-muted">{formatReviewDate(currentReview.created_at)}</span>
             )}
           </div>
           {currentReview.country && <div className="mb-2 text-label text-muted">{currentReview.country}</div>}

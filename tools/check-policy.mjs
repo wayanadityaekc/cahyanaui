@@ -2,7 +2,7 @@ import { chromium } from 'playwright-core';
 const BASE = process.argv[2];
 let pass = 0,
   fail = 0;
-function ok(isPassing, message) {
+function recordCheck(isPassing, message) {
   if (isPassing) pass++;
   else {
     fail++;
@@ -22,8 +22,8 @@ for (const width of [390, 1280]) {
   await page.goto(`${BASE}/our-company/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const tabs = await page.$$eval('button, a', (elements) => elements.map((event) => event.textContent.trim()));
-  ok(tabs.includes('Booking Terms'), `${width} Our Company has a Booking Terms tab`);
-  ok(tabs.includes('Cancellation'), `${width} Our Company has a Cancellation tab`);
+  recordCheck(tabs.includes('Booking Terms'), `${width} Our Company has a Booking Terms tab`);
+  recordCheck(tabs.includes('Cancellation'), `${width} Our Company has a Cancellation tab`);
 
   let text = '';
   for (const sectionId of ['terms', 'cancellation']) {
@@ -31,12 +31,12 @@ for (const width of [390, 1280]) {
     await page.waitForTimeout(350);
     text += `\n${await page.evaluate(() => document.body.innerText)}`;
   }
-  ok(/full when you book|in full when you book/i.test(text), `${width} it says payment is in full`);
-  ok(/no deposit-only option/i.test(text), `${width} and that there is no deposit-only option`);
-  ok(/30 days or more/i.test(text) && /full refund/i.test(text), `${width} 30+ days is a full refund`);
-  ok(/7 to 30 days/i.test(text) && /50% refund/i.test(text), `${width} 7-30 days is 50%`);
-  ok(/less than 7 days/i.test(text) && /no refund/i.test(text), `${width} inside 7 days is no refund`);
-  ok(/2:00 PM/.test(text) && /11:00 AM/.test(text), `${width} check-in 2:00 PM and check-out 11:00 AM`);
+  recordCheck(/full when you book|in full when you book/i.test(text), `${width} it says payment is in full`);
+  recordCheck(/no deposit-only option/i.test(text), `${width} and that there is no deposit-only option`);
+  recordCheck(/30 days or more/i.test(text) && /full refund/i.test(text), `${width} 30+ days is a full refund`);
+  recordCheck(/7 to 30 days/i.test(text) && /50% refund/i.test(text), `${width} 7-30 days is 50%`);
+  recordCheck(/less than 7 days/i.test(text) && /no refund/i.test(text), `${width} inside 7 days is no refund`);
+  recordCheck(/2:00 PM/.test(text) && /11:00 AM/.test(text), `${width} check-in 2:00 PM and check-out 11:00 AM`);
 
   const NUMBERS = /(\d+)(?=\s*(?:to\s*\d+\s*)?\s*days?\b)/gi;
   const seen = new Set();
@@ -47,36 +47,37 @@ for (const width of [390, 1280]) {
     for (const numberMatch of pageText.matchAll(NUMBERS)) seen.add(numberMatch[1]);
   }
   const extra = [...seen].filter((number) => !['7', '30'].includes(number));
-  ok(extra.length === 0, `${width} only 7 and 30 day windows appear anywhere (${JSON.stringify([...seen])})`);
+  recordCheck(extra.length === 0, `${width} only 7 and 30 day windows appear anywhere (${JSON.stringify([...seen])})`);
 
   await page.goto(`${BASE}/villas/cahyana-house/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const aside = await page.locator('aside').first().innerText();
-  ok(/Paid in full at booking/i.test(aside), `${width} the booking panel states payment in full`);
-  ok(/Check-in from 2:00 PM/i.test(aside), `${width} and the check-in time`);
-  ok(/Cancellation policy/i.test(aside), `${width} and links to the policy`);
+  recordCheck(/Paid in full at booking/i.test(aside), `${width} the booking panel states payment in full`);
+  recordCheck(/Check-in from 2:00 PM/i.test(aside), `${width} and the check-in time`);
+  recordCheck(/Cancellation policy/i.test(aside), `${width} and links to the policy`);
 
   const asideTours = ['Ubud Tour', 'Ubud Culture Day', 'Private Car Charter', 'Airport Transfer'];
-  for (const tourName of asideTours) ok(aside.includes(tourName), `${width} the booking flow offers ${tourName}`);
-  ok(/Explore more tours in Bali/i.test(aside), `${width} and links out for the rest`);
+  for (const tourName of asideTours)
+    recordCheck(aside.includes(tourName), `${width} the booking flow offers ${tourName}`);
+  recordCheck(/Explore more tours in Bali/i.test(aside), `${width} and links out for the rest`);
   const cueLinks = await page.locator('aside a[href*="cahyanaubudexperience.com"]').count();
-  ok(cueLinks >= 5, `${width} the tour links point at the sister site (${cueLinks})`);
-  ok(!/Kecak|Rafting|Mount Batur|Bali Zoo/i.test(aside), `${width} and not the whole catalog`);
+  recordCheck(cueLinks >= 5, `${width} the tour links point at the sister site (${cueLinks})`);
+  recordCheck(!/Kecak|Rafting|Mount Batur|Bali Zoo/i.test(aside), `${width} and not the whole catalog`);
 
   await page.goto(`${BASE}/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const home = await page.evaluate(() => document.body.innerText);
-  ok(/Add to your reservation/i.test(home), `${width} the homepage frames add-ons as part of the reservation`);
+  recordCheck(/Add to your reservation/i.test(home), `${width} the homepage frames add-ons as part of the reservation`);
   for (const addOnName of ['Airport pickup', 'Spa & Massage', 'A day with a driver']) {
-    ok(home.includes(addOnName), `${width} homepage add-on: ${addOnName}`);
+    recordCheck(home.includes(addOnName), `${width} homepage add-on: ${addOnName}`);
   }
-  ok(/More to do in Bali/i.test(home), `${width} homepage has the explore-more band`);
+  recordCheck(/More to do in Bali/i.test(home), `${width} homepage has the explore-more band`);
 
   await page.goto(`${BASE}/villas/cahyana-house/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   const grid = page.locator('[data-photogrid]');
-  ok((await grid.count()) === 1, `${width} the photo grid is mounted once`);
-  ok((await grid.getAttribute('data-photogrid')) === 'closed', `${width} and starts closed`);
+  recordCheck((await grid.count()) === 1, `${width} the photo grid is mounted once`);
+  recordCheck((await grid.getAttribute('data-photogrid')) === 'closed', `${width} and starts closed`);
   await page.locator('[data-mosaic-tile]:visible').first().click();
   await page.waitForTimeout(500);
   const state = await page.evaluate(() => {
@@ -93,17 +94,17 @@ for (const width of [390, 1280]) {
       bodyLocked: getComputedStyle(document.body).overflow === 'hidden',
     };
   });
-  ok(state.open === 'open', `${width} tapping the photo opens it`);
-  ok(state.full, `${width} it covers the whole screen`);
-  ok(state.photos >= 4, `${width} every photo is in the grid (${state.photos})`);
-  ok(state.controls === 1, `${width} the ONLY control drawn over the photos is close (${state.controls})`);
-  ok(state.scrollable, `${width} the grid scrolls`);
-  ok(state.bodyLocked, `${width} the page behind it does not`);
+  recordCheck(state.open === 'open', `${width} tapping the photo opens it`);
+  recordCheck(state.full, `${width} it covers the whole screen`);
+  recordCheck(state.photos >= 4, `${width} every photo is in the grid (${state.photos})`);
+  recordCheck(state.controls === 1, `${width} the ONLY control drawn over the photos is close (${state.controls})`);
+  recordCheck(state.scrollable, `${width} the grid scrolls`);
+  recordCheck(state.bodyLocked, `${width} the page behind it does not`);
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
-  ok((await grid.getAttribute('data-photogrid')) === 'closed', `${width} Escape closes it`);
+  recordCheck((await grid.getAttribute('data-photogrid')) === 'closed', `${width} Escape closes it`);
 
-  ok(errs.length === 0, `${width} no page errors: ${errs.join(' | ')}`);
+  recordCheck(errs.length === 0, `${width} no page errors: ${errs.join(' | ')}`);
   await browserContext.close();
 }
 await browser.close();

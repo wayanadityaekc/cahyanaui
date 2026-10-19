@@ -43,7 +43,7 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
     } catch (e) {}
   }
 
-  function beat() {
+  function startHeartbeat() {
     stopTimers();
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
@@ -99,7 +99,7 @@ export function openChatSocket({ apiBase, thread, onMessage, onTyping, onPresenc
     sock.onopen = () => {
       tries = 0;
       setLive(true);
-      beat();
+      startHeartbeat();
       if (onOpen) onOpen();
     };
     sock.onmessage = handleFrame;

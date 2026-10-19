@@ -25,7 +25,7 @@ function loadScript(src) {
   });
 }
 
-function adoptShell(before) {
+function adoptShellNodes(before) {
   const added = [...document.body.children].filter((node) => !before.has(node));
   added.forEach((node) => {
     if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
@@ -76,8 +76,8 @@ export default function DokuCheckout({ bookingRef, option, amountText }) {
           if (typeof window.loadJokulCheckout === 'function') {
             const before = new Set(document.body.children);
             window.loadJokulCheckout(data.url);
-            adoptShell(before);
-            requestAnimationFrame(() => adoptShell(before));
+            adoptShellNodes(before);
+            requestAnimationFrame(() => adoptShellNodes(before));
             setIsBusy(false);
             return;
           }

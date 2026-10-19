@@ -1,10 +1,10 @@
 import { PAGE_SCHEMA } from '@/content/shared/schema';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import { SITE } from '@/lib/routes';
 import { catalog } from '@/lib/api';
 
 let catalogPromise = null;
-function livePrices() {
+function fetchLivePrices() {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
@@ -29,7 +29,7 @@ function livePrices() {
   return catalogPromise;
 }
 
-function withLivePrice({ json, priceGroup, priceKey }, prices) {
+function applyLivePrice({ json, priceGroup, priceKey }, prices) {
   const node = json;
   if (!prices || !node || node['@type'] !== 'Product' || !node.offers) return node;
 
@@ -68,7 +68,7 @@ export default async function JsonLd({ page, crumbs }) {
   const given = crumbs && crumbs.length > 1 ? crumbs : null;
   const blocks = given ? raw.map(stripCrumb).filter(Boolean) : raw;
   const hasCrumb = blocks.some((block) => (Array.isArray(block.json) ? block.json.some(isCrumb) : isCrumb(block.json)));
-  const trail = given || (hasCrumb ? [] : crumbsFor(page));
+  const trail = given || (hasCrumb ? [] : buildCrumbs(page));
   const extra =
     trail.length > 1
       ? [
@@ -89,7 +89,7 @@ export default async function JsonLd({ page, crumbs }) {
       : [];
   const all = [...(blocks || []), ...extra];
   if (!all.length) return null;
-  const prices = await livePrices();
+  const prices = await fetchLivePrices();
 
   return (
     <>
@@ -98,7 +98,7 @@ export default async function JsonLd({ page, crumbs }) {
           key={index}
           type="application/ld+json"
           id={block.id || undefined}
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(withLivePrice(block, prices)) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(applyLivePrice(block, prices)) }}
         />
       ))}
     </>

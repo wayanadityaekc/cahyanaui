@@ -8,15 +8,15 @@ const ItineraryContext = createContext(null);
 
 const EMPTY = { days: [], transfers: [], charters: [] };
 
-function currentName(name) {
+function resolveCurrentName(name) {
   return LEGACY_ITEM_NAMES[name] || name;
 }
 
-function normalise(state) {
+function normalizeState(state) {
   if (!state || typeof state !== 'object') return { ...EMPTY };
   return {
     days: Array.isArray(state.days)
-      ? state.days.map((day) => (Array.isArray(day.items) ? { ...day, items: day.items.map(currentName) } : day))
+      ? state.days.map((day) => (Array.isArray(day.items) ? { ...day, items: day.items.map(resolveCurrentName) } : day))
       : [],
     transfers: Array.isArray(state.transfers) ? state.transfers : [],
     charters: Array.isArray(state.charters) ? state.charters : [],
@@ -28,12 +28,12 @@ export function ItineraryProvider({ children }) {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    setState(normalise(readLocalJSON(KEY.itinerary, EMPTY)));
+    setState(normalizeState(readLocalJSON(KEY.itinerary, EMPTY)));
     setIsHydrated(true);
   }, []);
 
   function save(next) {
-    const clean = normalise(next);
+    const clean = normalizeState(next);
     setState(clean);
     writeLocal(KEY.itinerary, clean);
   }

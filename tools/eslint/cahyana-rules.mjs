@@ -116,7 +116,7 @@ const functionDeclarationRule = {
   },
 };
 
-function referencesNameInside(sourceCode, node, name) {
+function isNameReferencedInside(sourceCode, node, name) {
   const pattern = new RegExp(`(^|[^\\w$.])${name.replace('$', '\\$')}(?![\\w$])`);
   return pattern.test(sourceCode.getText(node));
 }
@@ -131,7 +131,7 @@ function isShorthandProperty(identifier) {
   return false;
 }
 
-function renameIdentifierFix(fixer, identifier, oldName, newName) {
+function buildIdentifierRenameFix(fixer, identifier, oldName, newName) {
   if (isShorthandProperty(identifier)) return fixer.replaceText(identifier, `${oldName}: ${newName}`);
   return fixer.replaceText(identifier, newName);
 }
@@ -176,10 +176,10 @@ const catchParamRule = {
         if (oldName === 'e') return;
         const variable = sourceCode.getDeclaredVariables(node)[0];
         const report = { node: node.param, message: `Name the catch error variable e, not ${oldName}.` };
-        const isSafe = variable && !referencesNameInside(sourceCode, node.body, 'e');
+        const isSafe = variable && !isNameReferencedInside(sourceCode, node.body, 'e');
         if (isSafe) {
           report.fix = (fixer) =>
-            collectIdentifiers(variable).map((identifier) => renameIdentifierFix(fixer, identifier, oldName, 'e'));
+            collectIdentifiers(variable).map((identifier) => buildIdentifierRenameFix(fixer, identifier, oldName, 'e'));
         }
         context.report(report);
       },
@@ -187,7 +187,7 @@ const catchParamRule = {
   },
 };
 
-function singularOf(pluralName) {
+function findSingular(pluralName) {
   if (/ies$/.test(pluralName)) return pluralName.replace(/ies$/, 'y');
   if (/(ss|us|is)$/.test(pluralName)) return null;
   if (/(sh|ch|x|ses)es$/.test(pluralName)) return pluralName.replace(/es$/, '');
@@ -195,7 +195,7 @@ function singularOf(pluralName) {
   return null;
 }
 
-function collectionNameOf(node) {
+function findCollectionName(node) {
   if (node.type === 'Identifier') return node.name;
   if (node.type === 'MemberExpression' && !node.computed && node.property.type === 'Identifier')
     return node.property.name;
@@ -260,13 +260,13 @@ function suggestNameFor(variable) {
     !call.callee.computed &&
     ARRAY_CALLBACK_METHODS.has(call.callee.property.name);
   if (!isArrayCallback) return null;
-  const collectionName = collectionNameOf(call.callee.object);
-  const singular = collectionName && singularOf(collectionName);
+  const collectionName = findCollectionName(call.callee.object);
+  const singular = collectionName && findSingular(collectionName);
   if (!singular || singular.length < 3 || BANNED_SHORT_NAMES.includes(singular)) return null;
   return singular;
 }
 
-function variableScopeBlock(variable) {
+function findVariableScopeBlock(variable) {
   return variable.scope.block;
 }
 
@@ -289,11 +289,11 @@ const descriptiveNamesRule = {
           node: variable.identifiers[0],
           message: `Use a descriptive name instead of ${variable.name}.`,
         };
-        const block = variableScopeBlock(variable);
+        const block = findVariableScopeBlock(variable);
         const isSafe =
           newName &&
           !isExportedOrImported(variable) &&
-          !referencesNameInside(sourceCode, block, newName) &&
+          !isNameReferencedInside(sourceCode, block, newName) &&
           variable.references.every((reference) => {
             const parent = reference.identifier.parent;
             return !(parent && parent.type === 'JSXMemberExpression');
@@ -301,7 +301,7 @@ const descriptiveNamesRule = {
         if (isSafe) {
           report.fix = (fixer) =>
             collectIdentifiers(variable).map((identifier) =>
-              renameIdentifierFix(fixer, identifier, variable.name, newName),
+              buildIdentifierRenameFix(fixer, identifier, variable.name, newName),
             );
         }
         context.report(report);
@@ -348,20 +348,20 @@ const noCommentsRule = {
   create(context) {
     const { sourceCode } = context;
     const text = sourceCode.text;
-    function lineBounds(index) {
+    function findLineBounds(index) {
       const lineStart = text.lastIndexOf('\n', index - 1) + 1;
       let lineEnd = text.indexOf('\n', index);
       if (lineEnd === -1) lineEnd = text.length;
       return [lineStart, lineEnd];
     }
-    function removalFor(comment) {
+    function buildCommentRemoval(comment) {
       const found = sourceCode.getNodeByRangeIndex(comment.range[0]);
       const node = found && found.type === 'JSXEmptyExpression' ? found.parent : found;
       const isOnlyJsxChild =
         node && node.type === 'JSXExpressionContainer' && node.expression.type === 'JSXEmptyExpression';
       const range = isOnlyJsxChild ? node.range : comment.range;
-      const [lineStart] = lineBounds(range[0]);
-      const [, lineEnd] = lineBounds(range[1]);
+      const [lineStart] = findLineBounds(range[0]);
+      const [, lineEnd] = findLineBounds(range[1]);
       const before = text.slice(lineStart, range[0]);
       const after = text.slice(range[1], lineEnd);
       if (!before.trim() && !after.trim()) {
@@ -379,7 +379,7 @@ const noCommentsRule = {
       Program() {
         const comments = sourceCode.getAllComments().filter((comment) => comment.type !== 'Shebang');
         comments.forEach((comment) => {
-          const removal = removalFor(comment);
+          const removal = buildCommentRemoval(comment);
           context.report({
             loc: comment.loc,
             message: 'Remove this comment: the code explains itself through its names.',
@@ -403,7 +403,7 @@ export const plugin = {
   },
 };
 
-export function cahyanaConfig({
+export function buildCahyanaConfig({
   files,
   globals = {},
   sourceType = 'module',

@@ -16,7 +16,7 @@ const BAR_BTN =
   'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
   'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
 
-function button(variant) {
+function pickButtonClasses(variant) {
   if (variant === 'bar') return BAR_BTN;
   return cn(
     BTN_BASE,
@@ -72,17 +72,17 @@ export default function CurrencyPicker({
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    function onDoc(event) {
+    function handleOutsidePointerDown(event) {
       if (ref.current && !ref.current.contains(event.target)) setIsOpen(false);
     }
-    function onKey(event) {
+    function handleEscapeKeyDown(event) {
       if (event.key === 'Escape') setIsOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleOutsidePointerDown);
+    document.addEventListener('keydown', handleEscapeKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleOutsidePointerDown);
+      document.removeEventListener('keydown', handleEscapeKeyDown);
     };
   }, [isOpen]);
 
@@ -91,7 +91,7 @@ export default function CurrencyPicker({
       <button
         type="button"
         id={id}
-        className={button(variant)}
+        className={pickButtonClasses(variant)}
         aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={isOpen}

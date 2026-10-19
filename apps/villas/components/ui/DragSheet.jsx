@@ -17,21 +17,21 @@ export default function DragSheet({
   const ref = useRef(null);
   const drag = useRef(null);
 
-  function onPointerDown(event) {
+  function handlePointerDown(event) {
     if (!enabled || !ref.current) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     drag.current = { y0: event.clientY, t0: event.timeStamp, dy: 0 };
     ref.current.style.transition = 'none';
   }
 
-  function onPointerMove(event) {
+  function handlePointerMove(event) {
     const dragState = drag.current;
     if (!dragState || !ref.current) return;
     dragState.dy = Math.max(0, event.clientY - dragState.y0);
     ref.current.style.transform = `translateY(${dragState.dy}px)`;
   }
 
-  function onPointerUp(event) {
+  function handlePointerUp(event) {
     const dragState = drag.current;
     if (!dragState || !ref.current) return;
     drag.current = null;
@@ -56,10 +56,10 @@ export default function DragSheet({
         <span
           className={handleClassName}
           aria-hidden="true"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
         />
       )}
       {children}

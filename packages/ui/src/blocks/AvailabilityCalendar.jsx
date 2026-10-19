@@ -26,16 +26,16 @@ const ARROW =
 const DAY =
   'relative w-full aspect-square md:w-14 md:h-14 md:mx-auto flex items-center justify-center font-body text-[1rem] border-none p-0';
 
-function localIso(date) {
+function formatLocalIso(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function shortDate(value) {
+function formatShortDate(value) {
   const [year, month, day] = value.split('-').map(Number);
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-function longDate(value) {
+function formatLongDate(value) {
   const [year, month, day] = value.split('-').map(Number);
   return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
     weekday: 'long',
@@ -45,12 +45,12 @@ function longDate(value) {
   });
 }
 
-function monthCells(year, month) {
+function buildMonthCells(year, month) {
   const lead = new Date(year, month, 1).getDay();
   const days = new Date(year, month + 1, 0).getDate();
   const cells = new Array(lead).fill(null);
   Array.from({ length: days }, (unusedValue, index) => index + 1).forEach((day) =>
-    cells.push(localIso(new Date(year, month, day))),
+    cells.push(formatLocalIso(new Date(year, month, day))),
   );
   return cells;
 }
@@ -68,7 +68,7 @@ export default function AvailabilityCalendar({
   months = 2,
 }) {
   const { checkIn = '', checkOut = '' } = value || {};
-  const base = today || localIso(new Date());
+  const base = today || formatLocalIso(new Date());
   const limits = stayLimits({ today: base, minNights, maxNights, maxDaysAhead });
   const reduce = useReducedMotion();
   const start = checkIn || base;
@@ -89,7 +89,7 @@ export default function AvailabilityCalendar({
     setCursor({ year: Math.floor(next / 12), month: next % 12, dir: step });
   }
 
-  function selectable(day) {
+  function isDaySelectable(day) {
     if (isChoosingEnd)
       return day > checkIn ? canCheckOut(day, checkIn, { busy, limits }) : canCheckIn(day, { busy, limits });
     return canCheckIn(day, { busy, limits });
@@ -104,9 +104,9 @@ export default function AvailabilityCalendar({
     if (canCheckIn(day, { busy, limits })) onChange({ checkIn: day, checkOut: '' });
   }
 
-  function dayCell(day, index) {
+  function renderDayCell(day, index) {
     if (!day) return <span key={`empty-${index}`} aria-hidden="true" />;
-    const ok = !loading && selectable(day);
+    const ok = !loading && isDaySelectable(day);
     const booked = !ok && isBookedNight(busy, day);
     const isEdgeDay = day === checkIn || day === checkOut;
     const inside = checkIn && checkOut && day > checkIn && day < checkOut;
@@ -126,7 +126,7 @@ export default function AvailabilityCalendar({
           disabled={!ok && !isEdgeDay}
           onClick={() => pick(day)}
           aria-pressed={isEdgeDay}
-          aria-label={`${longDate(day)}, ${status}`}
+          aria-label={`${formatLongDate(day)}, ${status}`}
           data-day={day}
           data-status={status}
           className={cn(
@@ -144,7 +144,7 @@ export default function AvailabilityCalendar({
     );
   }
 
-  function month(offset) {
+  function renderMonth(offset) {
     const index = current + offset;
     const year = Math.floor(index / 12);
     const monthIndex = index % 12;
@@ -163,7 +163,7 @@ export default function AvailabilityCalendar({
               {day}
             </span>
           ))}
-          {monthCells(year, monthIndex).map(dayCell)}
+          {buildMonthCells(year, monthIndex).map(renderDayCell)}
         </div>
       </div>
     );
@@ -175,7 +175,7 @@ export default function AvailabilityCalendar({
       ? 'Pick your check-in date.'
       : !checkOut
         ? `Now pick your check-out date (${minNights}-night minimum).`
-        : `${shortDate(checkIn)} - ${shortDate(checkOut)} · ${nights} night${nights === 1 ? '' : 's'}`;
+        : `${formatShortDate(checkIn)} - ${formatShortDate(checkOut)} · ${nights} night${nights === 1 ? '' : 's'}`;
 
   return (
     <div className="w-full" data-availability-calendar>
@@ -220,8 +220,8 @@ export default function AvailabilityCalendar({
               transition={{ duration: reduce ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
               className={cn('grid grid-cols-1 gap-x-10', months === 2 && 'md:grid-cols-2')}
             >
-              {month(0)}
-              {months === 2 ? month(1) : null}
+              {renderMonth(0)}
+              {months === 2 ? renderMonth(1) : null}
             </motionElement.div>
           </AnimatePresence>
         </div>

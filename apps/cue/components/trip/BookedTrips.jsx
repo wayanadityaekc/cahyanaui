@@ -4,12 +4,12 @@ import { useAccount } from '@/state/AccountProvider';
 import { useTripPrefs } from '@/state/TripPrefsProvider';
 import { readLocal } from '@/lib/storage';
 import { KEY, WHATSAPP_NUMBER } from '@/lib/constants';
-import { imageForProgram } from '@/lib/programImages';
+import { findImageForProgram } from '@/lib/programImages';
 import { withSymbol } from '@/components/Price';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 import SignInPrompt from '@/components/account/SignInPrompt';
 import ItemIcon from './ItemIcon';
-import { fmtDay, fmtRange } from './tripDates';
+import { formatDay, formatRange } from './tripDates';
 import {
   MTC_EMPTY,
   MTC_EMPTY_LEAD,
@@ -40,15 +40,16 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
   const { account, trips, reviewableItems } = useAccount();
   const { currency } = useTripPrefs();
 
-  function bookedMoney(usd, idr) {
+  function formatBookedMoney(usd, idr) {
     return currency === 'IDR'
       ? `Rp${Number(idr || 0).toLocaleString('id-ID')}`
       : `$${Number(usd || 0).toLocaleString('en-US')}`;
   }
 
-  function bookingCard(trip, isPast) {
+  function renderBookingCard(trip, isPast) {
     const image =
-      imageForProgram(trip.name) || imageForProgram((trip.lines && trip.lines[0] && trip.lines[0].service) || '');
+      findImageForProgram(trip.name) ||
+      findImageForProgram((trip.lines && trip.lines[0] && trip.lines[0].service) || '');
     const status = isPast
       ? 'Completed'
       : trip.status
@@ -74,12 +75,12 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
               {status} · {trip.guests || '-'} guests
             </p>
             <p className={MTC_ITEM_DATE}>
-              {fmtRange(trip.start_date, trip.end_date)}
+              {formatRange(trip.start_date, trip.end_date)}
               {trip.ref ? ` · ${trip.ref}` : ''}
             </p>
           </div>
           <span className={MTC_ITEM_PRICE}>
-            <span className={PRICE}>{withSymbol(bookedMoney(trip.price_usd, trip.price_idr))}</span>
+            <span className={PRICE}>{withSymbol(formatBookedMoney(trip.price_usd, trip.price_idr))}</span>
           </span>
         </div>
 
@@ -102,12 +103,12 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
                       {item.day_no ? `Day ${item.day_no} · ` : ''}
                       {item.service}
                       <span className={MTC_DET_META}>
-                        {fmtDay(item.date)}
+                        {formatDay(item.date)}
                         {item.guests ? ` · ${item.guests} pax` : ''}
                         {item.pickup_time ? ` · ${item.pickup_time}` : ''}
                       </span>
                     </span>
-                    <span className={MTC_DET_AMT}>{withSymbol(bookedMoney(item.price_usd, item.price_idr))}</span>
+                    <span className={MTC_DET_AMT}>{withSymbol(formatBookedMoney(item.price_usd, item.price_idr))}</span>
                   </li>
                 ))}
               </ul>
@@ -120,7 +121,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
             <a
               className={MTC_CANCEL_BTN}
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hi, I'd like to ask about cancelling or changing my booking${trip.ref ? ` (${trip.ref})` : ''} - ${trip.name || 'my trip'}${trip.start_date ? ` on ${fmtRange(trip.start_date, trip.end_date)}` : ''}.`,
+                `Hi, I'd like to ask about cancelling or changing my booking${trip.ref ? ` (${trip.ref})` : ''} - ${trip.name || 'my trip'}${trip.start_date ? ` on ${formatRange(trip.start_date, trip.end_date)}` : ''}.`,
               )}`}
               target="_blank"
               rel="noopener"
@@ -163,7 +164,7 @@ export default function BookedTrips({ isPast, openRef, setOpenRef, setReview }) 
   }
   return (
     <div>
-      {tripList.map((trip) => bookingCard(trip, isPast))}
+      {tripList.map((trip) => renderBookingCard(trip, isPast))}
       {isPast && reviewableItems.length > 0 && (
         <div className={MTC_REVIEW_BOX}>
           <button

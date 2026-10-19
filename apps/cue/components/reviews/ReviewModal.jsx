@@ -30,7 +30,7 @@ import { useAccount } from '@/state/AccountProvider';
 
 const COUNTRY_OPTIONS = COUNTRIES.map((country) => ({ value: country.code, label: country.name, flag: country.code }));
 
-function itemKey({ ref, service }) {
+function buildItemKey({ ref, service }) {
   return `${ref}::${service}`;
 }
 
@@ -55,7 +55,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     if (!open || !prefill) return;
     setName(view.name || '');
     setCountryCode('');
-    setChecked((view.items || []).map(itemKey));
+    setChecked((view.items || []).map(buildItemKey));
     setRating(0);
     setMessage('');
     setErrors({});
@@ -84,9 +84,9 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
   const hasMultipleItems = items.length > 1;
 
   async function submit() {
-    const picked = items.filter((it) => checked.includes(itemKey(it)));
+    const picked = items.filter((it) => checked.includes(buildItemKey(it)));
     const { ok, errors: fieldErrors } = validateWith(reviewSchema, {
-      picked: picked.map(itemKey),
+      picked: picked.map(buildItemKey),
       rating,
       message,
     });
@@ -136,7 +136,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     setIsDone(true);
   }
 
-  function star(active) {
+  function buildStarClass(active) {
     return `p-0 border-none bg-transparent text-[1.9rem] leading-none cursor-pointer transition-[color] duration-[var(--dur-fast)] ${active ? 'text-amber' : 'text-[#d8d2c4]'}`;
   }
   const CHECK_ROW = `flex items-start gap-[0.6rem] py-[0.5rem] ${ROW_RULE} cursor-pointer`;
@@ -191,7 +191,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
               <label className={LABEL}>Which trips are you reviewing?</label>
               <div>
                 {items.map((it) => {
-                  const key = itemKey(it);
+                  const key = buildItemKey(it);
                   return (
                     <label key={key} className={CHECK_ROW}>
                       <input
@@ -238,7 +238,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
                 <button
                   type="button"
                   key={starNumber}
-                  className={star(rating >= starNumber)}
+                  className={buildStarClass(rating >= starNumber)}
                   aria-label={`${starNumber} star${starNumber > 1 ? 's' : ''}`}
                   onClick={() => {
                     setRating(starNumber);

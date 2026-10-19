@@ -24,7 +24,7 @@ const BURGER_BAR =
   '[transition:translate_var(--dur)_var(--ease),rotate_var(--dur)_var(--ease),opacity_var(--dur-fast)_var(--ease)] ' +
   'motion-reduce:transition-none';
 
-function navLink(active) {
+function buildNavLinkClass(active) {
   return `${MENU_ROW_BOX} text-strong no-underline ${
     active
       ? 'font-semibold bg-cream text-green max-[992px]:text-gold-d'
@@ -64,28 +64,28 @@ export default function Navbar() {
         root.style.setProperty('--header-h-max', `${headerHeight}px`);
       }
     }
-    function onResize() {
+    function handleResize() {
       max = 0;
       set();
     }
     set();
     const resizeObserver = new ResizeObserver(set);
     resizeObserver.observe(header);
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', handleResize);
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const [isScrolledAway, setIsScrolledAway] = useState(false);
   useEffect(() => {
-    function onScroll() {
+    function handleScroll() {
       return setIsScrolledAway((was) => (was ? window.scrollY > 8 : window.scrollY > 80));
     }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   function isActive(href) {
@@ -95,22 +95,22 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!isMenuOpen) return undefined;
-    function onDoc(event) {
+    function handleDocumentClick(event) {
       const inNav = navRef.current && navRef.current.contains(event.target);
       const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
       const inPopup = event.target.closest && event.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setIsMenuOpen(false);
     }
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setIsMenuOpen(false);
     }
-    document.addEventListener('click', onDoc);
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('click', onDoc);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isMenuOpen]);
 
@@ -188,7 +188,7 @@ export default function Navbar() {
             </li>
 
             <li className={NAV_LI}>
-              <a href="/" className={navLink(isActive('/'))}>
+              <a href="/" className={buildNavLinkClass(isActive('/'))}>
                 <House strokeWidth={1.7} aria-hidden="true" />
                 Home
               </a>
@@ -254,19 +254,19 @@ export default function Navbar() {
               </Collapse>
             </li>
             <li className={NAV_LI}>
-              <a href="/bali-guide.html" className={navLink(isActive('/bali-guide.html'))}>
+              <a href="/bali-guide.html" className={buildNavLinkClass(isActive('/bali-guide.html'))}>
                 <BookOpen strokeWidth={1.7} aria-hidden="true" />
                 Guide
               </a>
             </li>
             <li className={NAV_LI}>
-              <a href="/all-reviews.html" className={navLink(isActive('/all-reviews.html'))}>
+              <a href="/all-reviews.html" className={buildNavLinkClass(isActive('/all-reviews.html'))}>
                 <Star strokeWidth={1.7} aria-hidden="true" />
                 Reviews
               </a>
             </li>
             <li className={NAV_LI}>
-              <a href="/our-company.html" className={navLink(isActive('/our-company.html'))}>
+              <a href="/our-company.html" className={buildNavLinkClass(isActive('/our-company.html'))}>
                 <Building2 strokeWidth={1.7} aria-hidden="true" />
                 Our Company
               </a>

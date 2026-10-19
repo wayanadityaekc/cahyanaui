@@ -102,7 +102,7 @@ export default function BookingForm({
   const guestWord = displayGuests === 1 ? 'guest' : 'guests';
   const unitLine = perPerson ? unit : `${unit} · ${displayGuests} ${guestWord}`;
 
-  function line() {
+  function buildLine() {
     return {
       type: type === 'transfer' ? 'transfer' : type || 'tour',
       service: item,
@@ -124,7 +124,7 @@ export default function BookingForm({
       time,
       pickupOptional: false,
       dropoffRequired: type === 'transfer',
-      lines: [line()],
+      lines: [buildLine()],
     });
   }
 

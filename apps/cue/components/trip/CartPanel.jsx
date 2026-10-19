@@ -1,10 +1,10 @@
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 import { PRICE } from '@/components/ui/priceClasses';
 import { BTN } from '@/components/ui/modalClasses';
 import { BTN_PILL } from '@/components/ui/btnClasses';
 import { withSymbol } from '@/components/Price';
 import ItemIcon from './ItemIcon';
-import { fmtDay } from './tripDates';
+import { formatDay } from './tripDates';
 import {
   MTC_EMPTY,
   MTC_EMPTY_LEAD,
@@ -57,8 +57,8 @@ export default function CartPanel({
                 <p className={MTC_ITEM_DESC}>
                   {row.day_no ? `Day ${row.day_no} · ` : ''}
                   <button type="button" className={MTC_DATEBTN} onClick={() => setEditDate({ row: row, index: index })}>
-                    {fmtDay(row.date)}
-                    {row.time ? ` · ${fmtTime(row.time)}` : ''}
+                    {formatDay(row.date)}
+                    {row.time ? ` · ${formatTime(row.time)}` : ''}
                   </button>
                   {row.mode === 'exclusive' ? ' · Exclusive' : ''}
                   {row.return ? ' · return' : ''}

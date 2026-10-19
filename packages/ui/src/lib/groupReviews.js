@@ -1,4 +1,4 @@
-function reviewKey(review) {
+function buildReviewKey(review) {
   return [review.name, review.country, review.rating, review.message, review.source]
     .map((field) => String(field ?? '').trim())
     .join('\u0001');
@@ -7,7 +7,7 @@ function reviewKey(review) {
 export default function groupReviews(rows = []) {
   const groups = new Map();
   rows.forEach((row) => {
-    const key = reviewKey(row);
+    const key = buildReviewKey(row);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(row);
   });

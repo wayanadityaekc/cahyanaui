@@ -1,6 +1,6 @@
 import { API_BASE } from '@/lib/constants';
 
-export function chatSocketUrl(thread) {
+export function buildChatSocketUrl(thread) {
   const url = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
   url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
   url.pathname = '/ws/chat';
@@ -39,7 +39,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     pongTimer = null;
   }
 
-  function beat() {
+  function startHeartbeat() {
     stopTimers();
     pingTimer = setInterval(() => {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
@@ -61,7 +61,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     if (closedByUs) return;
     let sock;
     try {
-      sock = new WebSocket(chatSocketUrl(thread));
+      sock = new WebSocket(buildChatSocketUrl(thread));
     } catch (e) {
       return schedule();
     }
@@ -70,7 +70,7 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
     sock.onopen = () => {
       tries = 0;
       setLive(true);
-      beat();
+      startHeartbeat();
       if (onOpen) onOpen();
     };
 

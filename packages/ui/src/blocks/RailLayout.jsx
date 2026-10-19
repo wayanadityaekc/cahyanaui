@@ -67,7 +67,7 @@ export default function RailLayout({
   }
   const railCollapsed = collapsible && collapsed;
 
-  function rows(mobile) {
+  function renderRailRows(mobile) {
     return items.map((item) => {
       const isSelected = active === item.id;
       const cls = mobile ? railMobileItem(isSelected) : railItem(isSelected, railCollapsed);
@@ -108,7 +108,7 @@ export default function RailLayout({
         <div className={railCollapsed ? RAIL_STICK_COLLAPSED : RAIL_STICK}>
           {!railCollapsed && <p className={RAIL_LABEL}>{label}</p>}
           <nav className="flex flex-col" aria-label={label}>
-            {rows(false)}
+            {renderRailRows(false)}
           </nav>
           {!railCollapsed && help}
         </div>
@@ -117,7 +117,7 @@ export default function RailLayout({
       {!mobileNav && (
         <div className={reading ? 'hidden' : RAIL_MLIST}>
           <p className={RAIL_MLABEL}>{label}</p>
-          {rows(true)}
+          {renderRailRows(true)}
           {help}
         </div>
       )}

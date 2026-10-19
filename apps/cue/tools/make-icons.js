@@ -16,7 +16,7 @@ if (!SRC || !fs.existsSync(SRC)) {
 }
 const OUT = path.join(__dirname, '..', 'public', 'assets', 'icons') + path.sep;
 
-async function inkBox() {
+async function measureInkBox() {
   const { data, info } = await sharp(SRC).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const { width: imageWidth, height: imageHeight, channels: channelCount } = info;
   let minX = imageWidth,
@@ -50,21 +50,21 @@ async function inkBox() {
 }
 
 (async () => {
-  const box = await inkBox();
+  const box = await measureInkBox();
   console.log('cropped to', box);
-  function disc() {
+  function extractDisc() {
     return sharp(SRC).extract(box);
   }
   const PNG = { palette: true, colours: 128, compressionLevel: 9, effort: 10 };
 
-  function onClear(size) {
-    return disc().resize(size, size, { fit: 'cover' }).png(PNG);
+  function renderClearIcon(size) {
+    return extractDisc().resize(size, size, { fit: 'cover' }).png(PNG);
   }
 
   const GOLD = '#b4975f';
-  async function onGold(size) {
+  async function renderGoldIcon(size) {
     const scaledSize = Math.round(size * 1.45);
-    const zoomed = await disc().resize(scaledSize, scaledSize).png().toBuffer();
+    const zoomed = await extractDisc().resize(scaledSize, scaledSize).png().toBuffer();
     const off = Math.round((scaledSize - size) / 2);
     return sharp(zoomed)
       .extract({ left: off, top: off, width: size, height: size })
@@ -76,18 +76,18 @@ async function inkBox() {
     ['favicon-16x16.png', 16],
     ['favicon-32x32.png', 32],
   ]) {
-    await onClear(size).toFile(OUT + name);
+    await renderClearIcon(size).toFile(OUT + name);
   }
   for (const [name, size] of [
     ['apple-touch-icon.png', 180],
     ['icon-192.png', 192],
     ['icon-512.png', 512],
   ]) {
-    await (await onGold(size)).toFile(OUT + name);
+    await (await renderGoldIcon(size)).toFile(OUT + name);
   }
 
   const frames = [];
-  for (const size of [16, 32, 48]) frames.push({ size, buf: await onClear(size).toBuffer() });
+  for (const size of [16, 32, 48]) frames.push({ size, buf: await renderClearIcon(size).toBuffer() });
   const head = Buffer.alloc(6);
   head.writeUInt16LE(1, 2);
   head.writeUInt16LE(frames.length, 4);
@@ -108,7 +108,7 @@ async function inkBox() {
   });
   fs.writeFileSync(`${OUT}favicon.ico`, Buffer.concat([head, ...dir, ...body]));
 
-  const png = await disc().resize(128, 128).png(PNG).toBuffer();
+  const png = await extractDisc().resize(128, 128).png(PNG).toBuffer();
   fs.writeFileSync(
     `${OUT}favicon.svg`,
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">

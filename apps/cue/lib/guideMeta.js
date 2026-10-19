@@ -11,7 +11,7 @@ const CARD = {};
   Object.values(node).forEach(collect);
 })(GUIDE_HUB);
 
-export function guideCard(slug) {
+export function findGuideCard(slug) {
   return CARD[`/guide/${slug}.html`] || null;
 }
 
@@ -25,7 +25,7 @@ export function readMinutes(body = []) {
   return Math.max(1, Math.round(words / 200));
 }
 
-export function guideCategory(tabs = []) {
+export function findGuideCategory(tabs = []) {
   const hit = tabs.find((tab) => tab.active);
   return hit ? hit.label : null;
 }

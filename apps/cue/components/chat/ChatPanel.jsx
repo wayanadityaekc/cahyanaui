@@ -7,7 +7,7 @@ import { useAccount } from '@/state/AccountProvider';
 import AuthModal from '@/components/account/AuthModal';
 import { FIELD_INPUT } from '@/components/ui/formClasses';
 import { PANEL_CLOSE } from '@/components/ui/hsClasses';
-import { SUGGESTIONS, CHAT_COPY, wayanIsAround } from '@/content/shared/chat';
+import { SUGGESTIONS, CHAT_COPY, checkIsWayanAround } from '@/content/shared/chat';
 import { readThread, startThread, sendToThread, pollThread, setContact } from '@/lib/chatThread';
 import { openChatSocket } from '@/lib/chatSocket';
 import { answerFor } from '@/lib/chatAnswers';
@@ -52,14 +52,16 @@ import {
 const THINK_MS = 400;
 
 let seq = 0;
-function uid() {
+function createMessageId() {
   return `m${(seq += 1)}`;
 }
 
 export default function ChatPanel({ open, onClose }) {
   const pricing = usePricing();
   const { account, hydrated } = useAccount();
-  const [log, setLog] = useState(() => [{ id: uid(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS }]);
+  const [log, setLog] = useState(() => [
+    { id: createMessageId(), from: 'bot', text: CHAT_COPY.greeting, chips: SUGGESTIONS },
+  ]);
   const [draft, setDraft] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const bodyRef = useRef(null);
@@ -98,7 +100,12 @@ export default function ChatPanel({ open, onClose }) {
         .split(/\s+/)[0];
     if (!name || greeted.current) return;
     greeted.current = true;
-    const line = { id: uid(), from: 'bot', text: CHAT_COPY.hello.replace('{name}', name), chips: SUGGESTIONS };
+    const line = {
+      id: createMessageId(),
+      from: 'bot',
+      text: CHAT_COPY.hello.replace('{name}', name),
+      chips: SUGGESTIONS,
+    };
     setLog((prev) => (prev.length === 1 && prev[0].from === 'bot' ? [line] : [...prev, line]));
   }, [account]);
 
@@ -117,7 +124,10 @@ export default function ChatPanel({ open, onClose }) {
     });
     if (!fresh.length) return;
     heard.current = true;
-    setLog((prev) => [...prev, ...fresh.map((message) => ({ id: uid(), from: 'wayan', text: message.body }))]);
+    setLog((prev) => [
+      ...prev,
+      ...fresh.map((message) => ({ id: createMessageId(), from: 'wayan', text: message.body })),
+    ]);
   }, []);
 
   const catchUp = useCallback(async () => {
@@ -125,7 +135,10 @@ export default function ChatPanel({ open, onClose }) {
       const { gone, messages } = await pollThread(thread, lastSeen.current);
       if (gone) {
         setThread(null);
-        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.threadGone, chips: SUGGESTIONS }]);
+        setLog((prev) => [
+          ...prev,
+          { id: createMessageId(), from: 'bot', text: CHAT_COPY.threadGone, chips: SUGGESTIONS },
+        ]);
         return;
       }
       takeOwner(messages);
@@ -160,11 +173,11 @@ export default function ChatPanel({ open, onClose }) {
 
   useEffect(() => {
     if (!open || !thread) return undefined;
-    function onShow() {
+    function handleVisibilityShow() {
       if (document.visibilityState === 'visible') catchUp();
     }
-    document.addEventListener('visibilitychange', onShow);
-    return () => document.removeEventListener('visibilitychange', onShow);
+    document.addEventListener('visibilitychange', handleVisibilityShow);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityShow);
   }, [open, thread, catchUp]);
 
   const isWayanTyping = typingUntil > Date.now();
@@ -183,13 +196,13 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     if (!open) return undefined;
     const focusTimer = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
-    function onKey(event) {
+    function handleKeyDown(event) {
       if (event.key === 'Escape' && !isAuthOpen) onClose();
     }
-    document.addEventListener('keydown', onKey);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       clearTimeout(focusTimer);
-      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [open, onClose, isAuthOpen]);
 
@@ -208,15 +221,22 @@ export default function ChatPanel({ open, onClose }) {
         setLog((prev) => [
           ...prev,
           {
-            id: uid(),
+            id: createMessageId(),
             from: 'bot',
             text: `${CHAT_COPY.connected} ${
-              ownerHereRef.current ? CHAT_COPY.hoursHere : wayanIsAround() ? CHAT_COPY.hoursOpen : CHAT_COPY.hoursClosed
+              ownerHereRef.current
+                ? CHAT_COPY.hoursHere
+                : checkIsWayanAround()
+                  ? CHAT_COPY.hoursOpen
+                  : CHAT_COPY.hoursClosed
             }`,
           },
         ]);
       } catch (e) {
-        setLog((prev) => [...prev, { id: uid(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' }]);
+        setLog((prev) => [
+          ...prev,
+          { id: createMessageId(), from: 'bot', text: e.message || 'Could not reach Wayan just now.' },
+        ]);
       }
       setIsSending(false);
     },
@@ -228,11 +248,14 @@ export default function ChatPanel({ open, onClose }) {
       const text = String(question || '').trim();
       if (!text || isThinking || isSending) return;
       setDraft('');
-      setLog((prev) => [...prev, { id: uid(), from: 'me', text: text }]);
+      setLog((prev) => [...prev, { id: createMessageId(), from: 'me', text: text }]);
 
       if (thread) {
         sendToThread(thread, text).catch(() => {
-          setLog((prev) => [...prev, { id: uid(), from: 'bot', text: 'That did not send. Try again in a moment.' }]);
+          setLog((prev) => [
+            ...prev,
+            { id: createMessageId(), from: 'bot', text: 'That did not send. Try again in a moment.' },
+          ]);
         });
         return;
       }
@@ -241,7 +264,7 @@ export default function ChatPanel({ open, onClose }) {
 
       setTimeout(() => {
         const result = answerFor(text, pricingContext);
-        const message = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
+        const message = { id: createMessageId(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
         if (result.kind === 'handoff') {
           message.text = CHAT_COPY.connecting;
           connect(text);
@@ -259,7 +282,7 @@ export default function ChatPanel({ open, onClose }) {
       setMail('skip');
       return undefined;
     }
-    if (!wayanIsAround()) {
+    if (!checkIsWayanAround()) {
       setMail('ask');
       return undefined;
     }
@@ -271,7 +294,7 @@ export default function ChatPanel({ open, onClose }) {
     if (isQuiet && mail === 'idle' && !heard.current) setMail('ask');
   }, [isQuiet, mail]);
 
-  function onDraft(draftText) {
+  function handleDraftChange(draftText) {
     setDraft(draftText);
     if (!thread || !sock.current) return;
     const now = Date.now();
@@ -288,7 +311,7 @@ export default function ChatPanel({ open, onClose }) {
     try {
       await setContact(thread, emailAddress);
       setMail('done');
-      setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.emailDone }]);
+      setLog((prev) => [...prev, { id: createMessageId(), from: 'bot', text: CHAT_COPY.emailDone }]);
     } catch (e) {
       setMailErr(e.message || CHAT_COPY.emailBad);
     }
@@ -409,7 +432,7 @@ export default function ChatPanel({ open, onClose }) {
             ref={inputRef}
             className={`${FIELD_INPUT} flex-1`}
             value={draft}
-            onChange={(event) => onDraft(event.target.value)}
+            onChange={(event) => handleDraftChange(event.target.value)}
             placeholder={thread ? 'Write to Wayan...' : CHAT_COPY.placeholder}
             aria-label="Your question"
             maxLength={300}

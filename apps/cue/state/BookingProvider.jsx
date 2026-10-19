@@ -9,7 +9,7 @@ const BookingContext = createContext(null);
 
 const RESUME_MS = 60 * 60 * 1000;
 
-function here() {
+function readPathname() {
   return window.location.pathname;
 }
 function readMarker() {
@@ -35,7 +35,7 @@ export function BookingProvider({ children }) {
       }
       held.current = options;
       if (!hydrated) return;
-      writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
+      writeLocal(KEY.resumeBook, { path: readPathname(), at: Date.now() });
       setIsGateOpen(true);
     },
     [account, hydrated],
@@ -57,7 +57,7 @@ export function BookingProvider({ children }) {
       setIsGateOpen(false);
       setBookingContext(options);
     } else if (!isGateOpen) {
-      writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
+      writeLocal(KEY.resumeBook, { path: readPathname(), at: Date.now() });
       setIsGateOpen(true);
     }
   }, [account, hydrated, isGateOpen]);
@@ -65,7 +65,7 @@ export function BookingProvider({ children }) {
   useEffect(() => {
     if (!hydrated || !account || !justSignedIn) return;
     const marker = readMarker();
-    if (marker && marker.path !== here()) window.location.replace(marker.path);
+    if (marker && marker.path !== readPathname()) window.location.replace(marker.path);
   }, [hydrated, account, justSignedIn]);
 
   return (
@@ -87,7 +87,7 @@ export function useResumeBooking(ready, run) {
   useEffect(() => {
     if (done.current || !hydrated || !account || !ready) return;
     const marker = readMarker();
-    if (!marker || marker.path !== here()) return;
+    if (!marker || marker.path !== readPathname()) return;
     done.current = true;
     removeLocal(KEY.resumeBook);
     run();

@@ -1,5 +1,5 @@
 'use client';
-import { fmtTime } from '@/content/shared/timeSlots';
+import { formatTime } from '@/content/shared/timeSlots';
 import PayWaiting from '@/components/booking/PayWaiting';
 
 import { useMemo, useState, useRef } from 'react';
@@ -15,14 +15,14 @@ import ReviewModal from '@/components/reviews/ReviewModal';
 import AddItemPicker from './AddItemPicker';
 import DatePopup from '@/components/booking/DatePopup';
 import { removeRow, setRowDate } from '@/lib/cart';
-import { cartRows } from '@/lib/cartRows';
+import { buildCartRows } from '@/lib/cartRows';
 import { usePricing } from '@/state/PricingProvider';
 import RailLayout from '@/components/ui/RailLayout';
-import { crumbsFor } from '@/lib/crumbs';
+import { buildCrumbs } from '@/lib/crumbs';
 import CartPanel from './CartPanel';
 import BookedTrips from './BookedTrips';
 import { usePaymentReturn, useReviewLink } from './useMyTripsLinks';
-import { fmtDay } from './tripDates';
+import { formatDay } from './tripDates';
 
 export default function MyTripsCart() {
   const { state, save, hydrated } = useItinerary();
@@ -44,9 +44,9 @@ export default function MyTripsCart() {
 
   useReviewLink({ trips, reviewableItems, account, setTab, setReading: setIsReading, setReview });
 
-  const rows = useMemo(() => cartRows(state, displayGuests), [state, displayGuests]);
+  const rows = useMemo(() => buildCartRows(state, displayGuests), [state, displayGuests]);
 
-  function categoryOfRow({ kind, service }) {
+  function findRowCategory({ kind, service }) {
     if (kind !== 'day') return kind;
     const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((item) => item.name === service);
     return catalogItem ? catalogItem.category : null;
@@ -75,7 +75,7 @@ export default function MyTripsCart() {
     save(removeRow(state, row));
   }
 
-  function checkout() {
+  function handleCheckout() {
     if (!rows.length || hasUndatedRow) return;
     const parts = [];
     const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((row) => row.day_no)).size;
@@ -94,13 +94,13 @@ export default function MyTripsCart() {
       detailsTitle: 'Trip details',
       detailLines: rows.map(
         (row) =>
-          `${row.day_no ? `Day ${row.day_no} · ` : ''}${fmtDay(row.date)}${row.time ? ` · ${fmtTime(row.time)}` : ''} · ${row.service}`,
+          `${row.day_no ? `Day ${row.day_no} · ` : ''}${formatDay(row.date)}${row.time ? ` · ${formatTime(row.time)}` : ''} · ${row.service}`,
       ),
       lines: rows,
       onSuccess: () => save({ days: [], transfers: [], charters: [] }),
     });
   }
-  checkoutRef.current = checkout;
+  checkoutRef.current = handleCheckout;
 
   const TABS = [
     { id: 'custom', label: 'My Trip', Icon: ShoppingBag },
@@ -131,7 +131,7 @@ export default function MyTripsCart() {
           reading={isReading}
           onBack={() => setIsReading(false)}
           collapsible
-          breadcrumb={crumbsFor('my-trips')}
+          breadcrumb={buildCrumbs('my-trips')}
           scrollContent
         >
           {tab === 'custom' && (
@@ -144,7 +144,7 @@ export default function MyTripsCart() {
               setAdding={setIsAdding}
               setEditDate={setEditDate}
               remove={remove}
-              checkout={checkout}
+              checkout={handleCheckout}
             />
           )}
 
@@ -176,7 +176,7 @@ export default function MyTripsCart() {
           onClose={() => setEditDate(null)}
           withTime
           initialTime={editDate ? editDate.row.time || '' : ''}
-          category={editDate ? categoryOfRow(editDate.row) : null}
+          category={editDate ? findRowCategory(editDate.row) : null}
           itemName={editDate ? editDate.row.service : null}
         />
       </div>

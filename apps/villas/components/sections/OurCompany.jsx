@@ -20,7 +20,7 @@ const TABS = [
   { id: 'privacy', label: 'Privacy Policy' },
 ];
 
-function idFromHash() {
+function readTabIdFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
   return TABS.some((item) => item.id === id) ? id : null;
@@ -120,7 +120,7 @@ export default function OurCompany() {
 
   useEffect(() => {
     function applyHash() {
-      const id = idFromHash();
+      const id = readTabIdFromHash();
       if (id) setTab(id);
     }
     applyHash();

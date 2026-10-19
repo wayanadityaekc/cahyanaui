@@ -14,8 +14,8 @@ export default function Destinations() {
         </div>
       </div>
       <div className={GRID_XPLORE}>
-        {HOME_DESTINATIONS.map((c) => (
-          <HomepageCard key={c.name} {...c} />
+        {HOME_DESTINATIONS.map((destination) => (
+          <HomepageCard key={destination.name} {...destination} />
         ))}
       </div>
       <div className="mt-8 text-right max-[768px]:mt-[1.6rem]">

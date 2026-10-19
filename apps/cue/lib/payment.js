@@ -8,34 +8,34 @@ export function depositUsd() {
   return DEPOSIT_USD;
 }
 
-function roundDown(v, cur) {
-  return cur === 'IDR' ? Math.floor(v / 1000) * 1000 : Math.floor(v);
+function roundDown(amount, current) {
+  return current === 'IDR' ? Math.floor(amount / 1000) * 1000 : Math.floor(amount);
 }
 
-function depositIn(cur, deposit) {
+function depositIn(current, deposit) {
   if (deposit != null) return deposit;
-  return cur === 'USD' ? depositUsd() : null;
+  return current === 'USD' ? depositUsd() : null;
 }
 
 export function baseTotal(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
-  const lines = priced.lines.filter((l) => l && l.ok && l.was);
+  const lines = priced.lines.filter((line) => line && line.ok && line.was);
   if (!lines.length) return priced.total ? priced.total.display : null;
-  return lines.reduce((sum, l) => sum + (l.was.display || 0), 0);
+  return lines.reduce((sum, line) => sum + (line.was.display || 0), 0);
 }
 
 export function baseTotalIdr(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
-  const lines = priced.lines.filter((l) => l && l.ok && l.was && l.was.idr != null);
+  const lines = priced.lines.filter((line) => line && line.ok && line.was && line.was.idr != null);
   if (!lines.length) return priced.total && priced.total.idr != null ? priced.total.idr : null;
-  return lines.reduce((sum, l) => sum + (l.was.idr || 0), 0);
+  return lines.reduce((sum, line) => sum + (line.was.idr || 0), 0);
 }
 
 export function baseTotalUsd(priced) {
   if (!priced || !Array.isArray(priced.lines)) return null;
-  const lines = priced.lines.filter((l) => l && l.ok && l.was && l.was.usd != null);
+  const lines = priced.lines.filter((line) => line && line.ok && line.was && line.was.usd != null);
   if (!lines.length) return priced.total && priced.total.usd != null ? priced.total.usd : null;
-  return lines.reduce((sum, l) => sum + (l.was.usd || 0), 0);
+  return lines.reduce((sum, line) => sum + (line.was.usd || 0), 0);
 }
 
 export function payOptions({
@@ -48,10 +48,10 @@ export function payOptions({
   depositIdr = null,
   totalUsd = null,
 }) {
-  const cur = String(currency || 'USD').toUpperCase();
+  const current = String(currency || 'USD').toUpperCase();
   const known = total != null;
-  const dep = depositIn(cur, deposit);
-  const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, cur) : null;
+  const dep = depositIn(current, deposit);
+  const disc = known ? roundDown((total * (100 - REFERRAL_DISCOUNT_PCT)) / 100, current) : null;
   const idrKnown = totalIdr != null;
   const idr = {
     deposit: depositIdr != null ? depositIdr : null,
@@ -102,8 +102,8 @@ export function payOptions({
   ];
 }
 
-export function amountFor(optionId, ctx) {
-  const row = payOptions(ctx).find((o) => o.id === optionId);
+export function amountFor(optionId, paymentContext) {
+  const row = payOptions(paymentContext).find((option) => option.id === optionId);
   return row && row.available ? row.amount : null;
 }
 

@@ -114,7 +114,7 @@ function liveDinner() {
 
 const BUILDERS = { villaPrices, liveDinner };
 
-function villaAnswer(question, questionWords, ctx) {
+function villaAnswer(question, questionWords, chatContext) {
   const text = norm(question);
   const villa = Object.values(VILLAS).find(
     (candidate) => text.includes(norm(candidate.name)) || text.includes(candidate.slug.split('-')[1]),
@@ -124,7 +124,7 @@ function villaAnswer(question, questionWords, ctx) {
   if (askedPrice) {
     return {
       kind: 'answer',
-      text: `${villa.name} is ${ctx.format(villa.nightlyRateIdr)} a night, as shown on its page, with no service fee on top. The exact total shows once you pick your dates.`,
+      text: `${villa.name} is ${chatContext.format(villa.nightlyRateIdr)} a night, as shown on its page, with no service fee on top. The exact total shows once you pick your dates.`,
       link: { href: `/villas/${villa.slug}`, label: 'View villa' },
     };
   }
@@ -154,15 +154,15 @@ function matchTopic(question) {
   return best && best.score >= 2 ? best.topic : null;
 }
 
-function answerTopic(topic, ctx) {
+function answerTopic(topic, chatContext) {
   if (topic.faq) return { text: faqAnswer(topic.faq), link: topic.link || null };
   const build = BUILDERS[topic.build];
   if (!build) throw new Error(`chat: topic ${topic.id} names no builder`);
-  return build(ctx);
+  return build(chatContext);
 }
 
-export function answerFor(question, ctx = {}) {
-  const context = { format: (usd) => `$${usd}`, ...ctx };
+export function answerFor(question, chatContext = {}) {
+  const context = { format: (usd) => `$${usd}`, ...chatContext };
   const raw = String(question || '').trim();
   if (!raw) return { kind: 'answer', text: CHAT_COPY.greeting };
 

@@ -29,7 +29,7 @@ export function TripPrefsProvider({ children }) {
 }
 
 export function useTripPrefs() {
-  const ctx = useContext(TripPrefsContext);
-  if (!ctx) throw new Error('useTripPrefs must be used within TripPrefsProvider');
-  return ctx;
+  const context = useContext(TripPrefsContext);
+  if (!context) throw new Error('useTripPrefs must be used within TripPrefsProvider');
+  return context;
 }

@@ -20,9 +20,11 @@ const GUESTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const TIMES = (() => {
   const out = [];
   [...Array(23).keys()]
-    .map((k) => 6 * 60 + k * 30)
-    .forEach((m) => {
-      out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+    .map((slotIndex) => 6 * 60 + slotIndex * 30)
+    .forEach((minutesSinceMidnight) => {
+      out.push(
+        `${String(Math.floor(minutesSinceMidnight / 60)).padStart(2, '0')}:${String(minutesSinceMidnight % 60).padStart(2, '0')}`,
+      );
     });
   return out;
 })();
@@ -38,17 +40,17 @@ export default function CharterBuilder() {
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
   useEffect(() => {
-    const d = readCharterDraft();
-    if (!d) return;
-    if (CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
+    const draft = readCharterDraft();
+    if (!draft) return;
+    if (CHARTER.durations.some((duration) => duration.dur === draft.dur)) setDur(draft.dur);
   }, []);
 
-  function pick(d) {
-    setDur(d);
-    saveCharterDraft({ dur: d });
+  function pick(charterDraft) {
+    setDur(charterDraft);
+    saveCharterDraft({ dur: charterDraft });
   }
 
-  const { tier, fmt } = useCharterTier({ area });
+  const { tier, fmt: formatTierPrice } = useCharterTier({ area });
   const catalog = usePricing()?.catalog;
 
   const ready = !!(area && date && time && guests);
@@ -73,7 +75,9 @@ export default function CharterBuilder() {
     window.location.href = '/my-trips.html';
   }
 
-  const areas = catalog ? ['Ubud', ...catalog.transfers.map((t) => t.route.replace(/\s*–\s*Ubud$/, ''))] : ['Ubud'];
+  const areas = catalog
+    ? ['Ubud', ...catalog.transfers.map((transfer) => transfer.route.replace(/\s*–\s*Ubud$/, ''))]
+    : ['Ubud'];
 
   return (
     <div className="bg-white rounded-xl p-[var(--space-2)] text-left" id={CHARTER.boxId}>
@@ -101,7 +105,7 @@ export default function CharterBuilder() {
                 label="Pick-up area"
                 value={area}
                 onChange={setArea}
-                options={areas.map((a) => ({ value: a, label: a }))}
+                options={areas.map((areaItem) => ({ value: areaItem, label: areaItem }))}
                 placeholder="Where should we collect you?"
               />
             </div>
@@ -120,7 +124,7 @@ export default function CharterBuilder() {
                 label="Pick-up time"
                 value={time}
                 onChange={setTime}
-                options={TIMES.map((t) => ({ value: t, label: fmtTime(t) }))}
+                options={TIMES.map((timeSlot) => ({ value: timeSlot, label: fmtTime(timeSlot) }))}
                 placeholder="Time"
               />
             </div>
@@ -132,11 +136,11 @@ export default function CharterBuilder() {
                 id="ch-guests"
                 label="Guests"
                 value={guests}
-                onChange={(v) => {
-                  setLocalGuests(v);
-                  setGuests(v);
+                onChange={(selectedValue) => {
+                  setLocalGuests(selectedValue);
+                  setGuests(selectedValue);
                 }}
-                options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
+                options={GUESTS.map((guestCount) => ({ value: String(guestCount), label: String(guestCount) }))}
                 placeholder="How many of you?"
               />
             </div>
@@ -145,7 +149,7 @@ export default function CharterBuilder() {
           <div className="mt-[var(--space-2)] flex items-baseline justify-between gap-[var(--space-1)] [border-top:1px_solid_var(--line)] pt-[var(--space-1)]">
             <span className="text-small text-muted">{selected.name}</span>
             <span className="text-gold font-semibold text-[1.05rem] whitespace-nowrap">
-              {total == null ? '—' : withSymbol(fmt(total))}
+              {total == null ? '—' : withSymbol(formatTierPrice(total))}
             </span>
           </div>
 

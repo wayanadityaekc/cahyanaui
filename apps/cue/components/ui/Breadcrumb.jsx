@@ -11,11 +11,11 @@ export default function Breadcrumb({ items = [], className = '' }) {
   return (
     <nav className={`${CRUMB_NAV} ${className}`} aria-label="Breadcrumb">
       <ol className={CRUMB_OL}>
-        {items.map((it, i) => {
-          const last = i === items.length - 1;
+        {items.map((it, index) => {
+          const last = index === items.length - 1;
           const linkable = !last && it.href && !isHiddenTour(it.href);
           return (
-            <li key={`${it.label}-${i}`} className="flex items-center">
+            <li key={`${it.label}-${index}`} className="flex items-center">
               {linkable ? (
                 <a className={CRUMB_LINK} href={it.href}>
                   {it.label}
@@ -40,6 +40,6 @@ export default function Breadcrumb({ items = [], className = '' }) {
 
 export function itemsFromLegacy(crumb = []) {
   return crumb
-    .filter((p) => p.type !== 'sep')
-    .map((p) => ({ label: p.text, href: p.type === 'link' ? p.href : undefined }));
+    .filter((crumbItem) => crumbItem.type !== 'sep')
+    .map((crumbItem) => ({ label: crumbItem.text, href: crumbItem.type === 'link' ? crumbItem.href : undefined }));
 }

@@ -4,38 +4,38 @@ const API = 'http://127.0.0.1:4599/api';
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  return c ? pass++ : (fail++, console.log('  FAIL:', m));
+function ok(isPassing, message) {
+  return isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-function digits(t) {
-  return Number(String(t).replace(/[^0-9]/g, ''));
+function digits(text) {
+  return Number(String(text).replace(/[^0-9]/g, ''));
 }
 
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
-for (const [cur, w] of [
+for (const [current, viewportWidth] of [
   ['AUD', 390],
   ['JPY', 1280],
 ]) {
-  const cat = await (await fetch(`${API}/pricing/catalog?currency=${cur}&guests=2&stay=`)).json();
+  const cat = await (await fetch(`${API}/pricing/catalog?currency=${current}&guests=2&stay=`)).json();
   const data = await (
     await fetch(`${API}/pricing/quote`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ currency: cur, lines: [{ service: 'Ubud Tour', guests: 2 }] }),
+      body: JSON.stringify({ currency: current, lines: [{ service: 'Ubud Tour', guests: 2 }] }),
     })
   ).json();
-  const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
-  await ctx.route('**/api/account/**', (r) =>
-    r.request().url().includes('/account/session')
-      ? r.fulfill({ json: { account: { id: 9, name: 'Test Guest', email: 'guest@example.com' } } })
-      : r.fulfill({ json: {} }),
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
+  await browserContext.route('**/api/account/**', (route) =>
+    route.request().url().includes('/account/session')
+      ? route.fulfill({ json: { account: { id: 9, name: 'Test Guest', email: 'guest@example.com' } } })
+      : route.fulfill({ json: {} }),
   );
-  await ctx.route('**/api/bookings/**', (r) => r.fulfill({ json: { upcoming: [], history: [] } }));
-  await ctx.addInitScript(
-    ([day, c]) => {
-      localStorage.setItem('cue_currency', c);
+  await browserContext.route('**/api/bookings/**', (route) => route.fulfill({ json: { upcoming: [], history: [] } }));
+  await browserContext.addInitScript(
+    ([day, currencyCode]) => {
+      localStorage.setItem('cue_currency', currencyCode);
       localStorage.setItem('cue_token', 'tok-test');
       localStorage.setItem(
         'cue_itinerary_v1',
@@ -44,11 +44,11 @@ for (const [cur, w] of [
         }),
       );
     },
-    [DAY, cur],
+    [DAY, current],
   );
-  const page = await ctx.newPage();
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
+  page.on('pageerror', (error) => errs.push(String(error)));
   await page.goto('http://127.0.0.1:4000/my-trips.html?pay=1', { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
   await page
@@ -65,28 +65,37 @@ for (const [cur, w] of [
   const cont2 = page.locator('button:visible', { hasText: /^\s*Continue\s*$/ });
   if (await cont2.count()) await cont2.first().click();
   await page.waitForTimeout(700);
-  async function rowText(re) {
+  async function rowText(pattern) {
     const row = page
-      .locator('div:visible', { hasText: re })
+      .locator('div:visible', { hasText: pattern })
       .filter({ has: page.locator('span') })
       .last();
     return row.innerText();
   }
   const body = await page.locator('body').innerText();
-  const depRow = body.split('\n').find((l) => /deposit/i.test(l) && /\d/.test(l)) || '';
+  const depRow = body.split('\n').find((line) => /deposit/i.test(line) && /\d/.test(line)) || '';
   const depLine = await rowText(/Pay a deposit/);
   const fullLine = await rowText(/Pay in full/);
   const depAmt = digits((depLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
   const fullAmt = digits((fullLine.match(/[^\s]*\d[\d,.]*\s*$/m) || [''])[0]);
-  ok(depAmt === cat.deposit.display, `${cur}/${w}: deposit shown ${depAmt} = catalog ${cat.deposit.display}`);
-  ok(fullAmt === data.total.display, `${cur}/${w}: pay in full shown ${fullAmt} = quote ${data.total.display}`);
-  ok(new RegExp(cat.symbol.trim().replace('$', '\\$')).test(depLine), `${cur}/${w}: deposit in ${cat.symbol}`);
+  ok(
+    depAmt === cat.deposit.display,
+    `${current}/${viewportWidth}: deposit shown ${depAmt} = catalog ${cat.deposit.display}`,
+  );
+  ok(
+    fullAmt === data.total.display,
+    `${current}/${viewportWidth}: pay in full shown ${fullAmt} = quote ${data.total.display}`,
+  );
+  ok(
+    new RegExp(cat.symbol.trim().replace('$', '\\$')).test(depLine),
+    `${current}/${viewportWidth}: deposit in ${cat.symbol}`,
+  );
   await page.screenshot({
-    path: `/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scratchpad/pay-${cur}-${w}.png`,
+    path: `/tmp/claude-0/-home-user/b39e23b2-cabe-5327-8412-a80a03834acc/scratchpad/pay-${current}-${viewportWidth}.png`,
   });
-  ok(errs.length === 0, `${cur}/${w}: no page errors (${errs.join(' | ')})`);
-  await ctx.close();
+  ok(errs.length === 0, `${current}/${viewportWidth}: no page errors (${errs.join(' | ')})`);
+  await browserContext.close();
 }
-await b.close();
+await browser.close();
 console.log(`\n${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

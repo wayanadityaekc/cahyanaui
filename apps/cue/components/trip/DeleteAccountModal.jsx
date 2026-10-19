@@ -10,14 +10,15 @@ const BTN_GHOST = `inline-flex ${BTN_SM} font-body [border:1px_solid_var(--line)
 
 export default function DeleteAccountModal({ open, onClose, onConfirm }) {
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
 
   async function confirm() {
     setBusy(true);
-    setMsg('');
+    setMessage('');
     const result = await onConfirm();
     setBusy(false);
-    if (!result || !result.ok) setMsg((result && result.error) || 'Could not delete your account. Please try again.');
+    if (!result || !result.ok)
+      setMessage((result && result.error) || 'Could not delete your account. Please try again.');
   }
 
   return (
@@ -39,9 +40,9 @@ export default function DeleteAccountModal({ open, onClose, onConfirm }) {
       <p className="m-0 mb-5 text-body text-green leading-[var(--lh-body)]">
         If you book again later, it starts as a new account - we won&apos;t reconnect it to this one.
       </p>
-      {msg && (
+      {message && (
         <small role="alert" className={`${REFMSG_ERR} block mb-3`}>
-          {msg}
+          {message}
         </small>
       )}
       <div className="flex gap-2 max-[480px]:flex-col">

@@ -54,8 +54,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
 
   useEffect(() => {
     if (!open || isMobile) return;
-    function onDoc(e) {
-      if (ddRef.current && !ddRef.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (ddRef.current && !ddRef.current.contains(event.target)) setOpen(false);
     }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
@@ -69,30 +69,32 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
     if (!catalog) return out;
     const isIdr = currency === 'IDR';
     const loc = isIdr ? 'id-ID' : 'en-US';
-    function fmt(n) {
-      return withSymbol(symbol + n.toLocaleString(loc));
+    function formatPrice(amount) {
+      return withSymbol(symbol + amount.toLocaleString(loc));
     }
     function byCat(cats) {
-      return catalog.items.filter((i) => cats.includes(i.category)).map((i) => i.standard.display);
+      return catalog.items
+        .filter((item) => cats.includes(item.category))
+        .map((catalogItem) => catalogItem.standard.display);
     }
     const sets = {
       tour: byCat(['tour', 'combo']),
       experience: byCat(['experience']),
       destination: byCat(['place']),
-      transfer: catalog.transfers.map((t) => t.display),
+      transfer: catalog.transfers.map((transfer) => transfer.display),
       charter: catalog.charters.map((charter) => charter.display),
     };
-    Object.entries(sets).forEach(([cat, arr]) => {
-      if (!arr.length) return;
-      const low = Math.min(...arr);
-      const high = Math.max(...arr);
+    Object.entries(sets).forEach(([cat, displayPrices]) => {
+      if (!displayPrices.length) return;
+      const low = Math.min(...displayPrices);
+      const high = Math.max(...displayPrices);
       const hiText = isIdr ? withDeemphasizedThousands(high.toLocaleString(loc)) : high.toLocaleString(loc);
       out[cat] =
         low === high ? (
-          <>from {fmt(low)}</>
+          <>from {formatPrice(low)}</>
         ) : (
           <>
-            {fmt(low)}–{hiText}
+            {formatPrice(low)}–{hiText}
           </>
         );
     });
@@ -100,8 +102,8 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
   }, [catalog, symbol, currency]);
 
   async function applyCode() {
-    const pct = await apply(code);
-    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
+    const percent = await apply(code);
+    setRefMsg(percent ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
   function openPicked() {
@@ -117,28 +119,28 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
         </button>
       </div>
       <div className={PANEL_BODY_MENU}>
-        {EXPLORE_OPTIONS.map((o) => (
+        {EXPLORE_OPTIONS.map((exploreOption) => (
           <button
             type="button"
-            key={o.href}
-            className={optMenu(picked && picked.href === o.href)}
+            key={exploreOption.href}
+            className={optMenu(picked && picked.href === exploreOption.href)}
             onClick={() => {
-              if (o.all) {
-                window.location.href = o.href;
+              if (exploreOption.all) {
+                window.location.href = exploreOption.href;
                 return;
               }
-              setPicked(o);
+              setPicked(exploreOption);
               setOpen(false);
             }}
           >
             <span className={HS_OPT_IC}>
-              <o.Icon strokeWidth={1.6} />
+              <exploreOption.Icon strokeWidth={1.6} />
             </span>
             <span className={HS_OPT_NM}>
-              {o.name}
-              <small>{o.sub}</small>
+              {exploreOption.name}
+              <small>{exploreOption.sub}</small>
             </span>
-            <span className={HS_OPT_PR}>{ranges[o.cat] || ''}</span>
+            <span className={HS_OPT_PR}>{ranges[exploreOption.cat] || ''}</span>
           </button>
         ))}
       </div>
@@ -193,7 +195,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
           className={CONTROL}
           aria-haspopup="listbox"
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((wasOpen) => !wasOpen)}
         >
           <span className={picked ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{picked ? picked.name : 'Choose'}</span>
           <ChevronDown className={CHEV} />
@@ -220,7 +222,7 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             autoComplete="off"
             spellCheck="false"
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={(event) => setCode(event.target.value)}
           />
           <button
             type="button"
@@ -244,7 +246,10 @@ export default function HeroSearch({ onClose, sheetOpen = false }) {
             label="Guests"
             value={guests || 2}
             onChange={setGuests}
-            options={GUESTS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+            options={GUESTS.map((guestCount) => ({
+              value: String(guestCount),
+              label: `${guestCount} ${guestCount === 1 ? 'guest' : 'guests'}`,
+            }))}
           />
         </div>
         <div className="mb-[0.8rem]">

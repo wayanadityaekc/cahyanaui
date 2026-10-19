@@ -24,6 +24,6 @@ const LIST_BASE =
   '[&_li]:before:w-[5px] [&_li]:before:h-[5px] [&_li]:before:rounded-[50%]';
 export const INFO_LIST_YES = `${LIST_BASE} [&_li]:text-ink [&_li]:before:bg-gold`;
 export const INFO_LIST_NO = `${LIST_BASE} [&_li]:text-muted [&_li]:before:bg-muted`;
-export function infoList(v) {
-  return String(v).includes('no') ? INFO_LIST_NO : INFO_LIST_YES;
+export function infoList(value) {
+  return String(value).includes('no') ? INFO_LIST_NO : INFO_LIST_YES;
 }

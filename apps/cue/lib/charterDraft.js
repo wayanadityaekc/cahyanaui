@@ -2,8 +2,8 @@ import { readLocalJSON, writeLocal } from '@/lib/storage';
 import { KEY } from '@/lib/constants';
 
 export function readCharterDraft() {
-  const d = readLocalJSON(KEY.charter, null);
-  return d && typeof d === 'object' ? d : null;
+  const draft = readLocalJSON(KEY.charter, null);
+  return draft && typeof draft === 'object' ? draft : null;
 }
 
 export function saveCharterDraft(patch) {

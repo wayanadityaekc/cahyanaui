@@ -18,24 +18,24 @@ function behindUpstream() {
     try {
       git('fetch', '-q', 'origin', 'main');
     } catch (e) {}
-    const n = Number(git('rev-list', '--count', 'HEAD..origin/main'));
-    return Number.isFinite(n) && n > 0 ? n : 0;
+    const commitsBehindCount = Number(git('rev-list', '--count', 'HEAD..origin/main'));
+    return Number.isFinite(commitsBehindCount) && commitsBehindCount > 0 ? commitsBehindCount : 0;
   } catch (e) {
     return 0;
   }
 }
 
 let fails = 0;
-function ok(cond, msg) {
+function ok(cond, message) {
   if (!cond) {
-    console.error(`  FAIL  ${msg}`);
+    console.error(`  FAIL  ${message}`);
     fails++;
   }
 }
-function eq(got, want, msg) {
+function eq(got, want, message) {
   return ok(
     JSON.stringify(got) === JSON.stringify(want),
-    `${msg}\n          dapet: ${JSON.stringify(got)}\n          mau  : ${JSON.stringify(want)}`,
+    `${message}\n          dapet: ${JSON.stringify(got)}\n          mau  : ${JSON.stringify(want)}`,
   );
 }
 
@@ -53,21 +53,21 @@ function eq(got, want, msg) {
   }
 
   const { prices } = require(API);
-  const T = await import('../content/shared/timeSlots.js');
-  const { TIME_SLOTS, RESTRICTED_SLOTS, allowedSlots, timeOptions, defaultSlot } = T;
+  const timeSlotsModule = await import('../content/shared/timeSlots.js');
+  const { TIME_SLOTS, RESTRICTED_SLOTS, allowedSlots, timeOptions, defaultSlot } = timeSlotsModule;
 
   eq(TIME_SLOTS.length, 48, 'TIME_SLOTS harus 48 (tiap 30 menit, 24 jam)');
   eq(TIME_SLOTS[0], '00:00', 'slot pertama');
   eq(TIME_SLOTS.at(-1), '23:30', 'slot terakhir');
-  ['02:00', '03:00', '19:00', '12:00', '16:00', '07:00'].forEach((t) => {
-    ok(TIME_SLOTS.includes(t), `TIME_SLOTS kehilangan ${t} - ada aturan yang butuh jam itu`);
+  ['02:00', '03:00', '19:00', '12:00', '16:00', '07:00'].forEach((slot) => {
+    ok(TIME_SLOTS.includes(slot), `TIME_SLOTS kehilangan ${slot} - ada aturan yang butuh jam itu`);
   });
 
   const CATS = ['tour', 'experience', 'performance', 'combo', 'place', 'transfer'];
   const catOf = {};
-  CATS.forEach((c) => {
-    Object.keys(prices[c] || {}).forEach((n) => {
-      catOf[n] = c;
+  CATS.forEach((category) => {
+    Object.keys(prices[category] || {}).forEach((itemName) => {
+      catOf[itemName] = category;
     });
   });
   Object.keys(RESTRICTED_SLOTS).forEach((key) => {
@@ -76,8 +76,8 @@ function eq(got, want, msg) {
 
   const MORNING = ['08:00', '08:30', '09:00'];
   const PRE_DAWN = ['02:00', '03:00'];
-  function r(a, b) {
-    return TIME_SLOTS.filter((t) => t >= a && t <= b);
+  function filterSlotsBetween(startSlot, endSlot) {
+    return TIME_SLOTS.filter((slot) => slot >= startSlot && slot <= endSlot);
   }
 
   [
@@ -88,28 +88,40 @@ function eq(got, want, msg) {
     'Banyumala & Twin Lakes',
     'Munduk Waterfall Tour',
     '3-Day Best of Bali Package',
-  ].forEach((n) => {
-    eq(allowedSlots('tour', n), MORNING, `tour normal "${n}" harus 08:00/08:30/09:00`);
+  ].forEach((itemName) => {
+    eq(allowedSlots('tour', itemName), MORNING, `tour normal "${itemName}" harus 08:00/08:30/09:00`);
   });
 
-  eq(allowedSlots('tour', 'East Bali Tour'), r('03:00', '09:00'), 'East Bali Tour (= tour Lempuyang) 03:00-09:00');
+  eq(
+    allowedSlots('tour', 'East Bali Tour'),
+    filterSlotsBetween('03:00', '09:00'),
+    'East Bali Tour (= tour Lempuyang) 03:00-09:00',
+  );
   eq(
     allowedSlots('place', 'Lempuyang Temple - Gates of Heaven'),
-    r('03:00', '09:00'),
+    filterSlotsBetween('03:00', '09:00'),
     'Lempuyang (destinasi) 03:00-09:00',
   );
 
   eq(allowedSlots('experience', 'Mount Batur Trekking'), PRE_DAWN, 'Mount Batur Trekking 02:00/03:00');
   eq(allowedSlots('experience', 'Jeep Sunrise'), PRE_DAWN, 'Jeep Sunrise 02:00/03:00');
 
-  ['ATV', 'Rafting', 'Swing', 'Cooking Class', 'Watersport', 'Bali Zoo', 'Bali Bird Park'].forEach((n) => {
-    eq(allowedSlots('experience', n), r('07:00', '16:00'), `experience "${n}" harus daylight 07:00-16:00`);
+  ['ATV', 'Rafting', 'Swing', 'Cooking Class', 'Watersport', 'Bali Zoo', 'Bali Bird Park'].forEach((itemName) => {
+    eq(
+      allowedSlots('experience', itemName),
+      filterSlotsBetween('07:00', '16:00'),
+      `experience "${itemName}" harus daylight 07:00-16:00`,
+    );
   });
 
   eq(allowedSlots('performance', 'Kecak Dance'), ['19:00'], 'Kecak Dance cuma 19:00');
   eq(allowedSlots('performance', 'Barong Dance'), MORNING, 'Barong Dance pagi (sementara)');
 
-  eq(allowedSlots('combo', 'Uluwatu & Sunset Kecak'), r('12:00', '16:00'), 'Uluwatu & Sunset Kecak 12:00-16:00');
+  eq(
+    allowedSlots('combo', 'Uluwatu & Sunset Kecak'),
+    filterSlotsBetween('12:00', '16:00'),
+    'Uluwatu & Sunset Kecak 12:00-16:00',
+  );
   [
     'Ubud Culture Day',
     'GWK & Pandawa Beach',
@@ -117,8 +129,8 @@ function eq(got, want, msg) {
     'Ubud ATV Adventure',
     'Lovina Dolphin & Sekumpul Waterfall',
     'Full Adventure: Rafting & ATV',
-  ].forEach((n) => {
-    eq(allowedSlots('combo', n), MORNING, `combo "${n}" ikut default pagi`);
+  ].forEach((itemName) => {
+    eq(allowedSlots('combo', itemName), MORNING, `combo "${itemName}" ikut default pagi`);
   });
   eq(
     allowedSlots('combo', 'Batur Sunrise & Adrenaline'),
@@ -131,32 +143,50 @@ function eq(got, want, msg) {
     'Kintamani Sunrise & Penglipuran 02:00/03:00 (idem)',
   );
 
-  ['Tanah Lot Sunset Temple', 'Uluwatu Cliff Temple'].forEach((n) => {
-    eq(allowedSlots('place', n), r('12:00', '16:00'), `destinasi sunset "${n}" 12:00-16:00`);
+  ['Tanah Lot Sunset Temple', 'Uluwatu Cliff Temple'].forEach((itemName) => {
+    eq(
+      allowedSlots('place', itemName),
+      filterSlotsBetween('12:00', '16:00'),
+      `destinasi sunset "${itemName}" 12:00-16:00`,
+    );
   });
 
-  ['charter', 'transfer'].forEach((c) => {
-    eq(allowedSlots(c, 'Airport – Ubud'), null, `${c} harus bebas 24 jam (null = semua slot)`);
+  ['charter', 'transfer'].forEach((category) => {
+    eq(allowedSlots(category, 'Airport – Ubud'), null, `${category} harus bebas 24 jam (null = semua slot)`);
   });
-  eq(timeOptions('transfer', 'Airport – Ubud').filter((o) => o.disabled).length, 0, 'transfer: nol slot yang dimatiin');
+  eq(
+    timeOptions('transfer', 'Airport – Ubud').filter((option) => option.disabled).length,
+    0,
+    'transfer: nol slot yang dimatiin',
+  );
 
   let checked = 0;
-  ['tour', 'experience', 'performance', 'combo', 'place'].forEach((c) => {
-    Object.keys(prices[c] || {}).forEach((n) => {
+  ['tour', 'experience', 'performance', 'combo', 'place'].forEach((category) => {
+    Object.keys(prices[category] || {}).forEach((itemName) => {
       checked++;
-      const a = allowedSlots(c, n);
-      ok(a === null || a.length > 0, `"${n}" (${c}) gak punya jam sama sekali - gak bisa di-book`);
-      if (a)
-        a.forEach((t) => {
-          ok(TIME_SLOTS.includes(t), `"${n}": jam ${t} gak ada di TIME_SLOTS`);
-        });
-      const d = defaultSlot(c, n);
-      ok(!a || a.includes(d), `"${n}": default ${d} bukan jam yang diizinin`);
-      const opts = timeOptions(c, n);
-      eq(opts.length, 48, `"${n}": picker harus tetep nampilin 48 slot (yang gak boleh di-disable, bukan dihapus)`);
+      const slots = allowedSlots(category, itemName);
       ok(
-        opts.some((o) => !o.disabled),
-        `"${n}": semua slot ke-disable`,
+        slots === null || slots.length > 0,
+        `"${itemName}" (${category}) gak punya jam sama sekali - gak bisa di-book`,
+      );
+      if (slots)
+        slots.forEach((slot) => {
+          ok(TIME_SLOTS.includes(slot), `"${itemName}": jam ${slot} gak ada di TIME_SLOTS`);
+        });
+      const defaultSlotResult = defaultSlot(category, itemName);
+      ok(
+        !slots || slots.includes(defaultSlotResult),
+        `"${itemName}": default ${defaultSlotResult} bukan jam yang diizinin`,
+      );
+      const options = timeOptions(category, itemName);
+      eq(
+        options.length,
+        48,
+        `"${itemName}": picker harus tetep nampilin 48 slot (yang gak boleh di-disable, bukan dihapus)`,
+      );
+      ok(
+        options.some((opt) => !opt.disabled),
+        `"${itemName}": semua slot ke-disable`,
       );
     });
   });

@@ -55,7 +55,7 @@ export function BookingProvider({ children }) {
 }
 
 export function useBooking() {
-  const ctx = useContext(BookingContext);
-  if (!ctx) throw new Error('useBooking must be used within BookingProvider');
-  return ctx;
+  const context = useContext(BookingContext);
+  if (!context) throw new Error('useBooking must be used within BookingProvider');
+  return context;
 }

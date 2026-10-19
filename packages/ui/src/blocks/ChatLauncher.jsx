@@ -16,9 +16,9 @@ export default function ChatLauncher({
       aria-haspopup="dialog"
       aria-expanded={open}
       data-chat-launcher
-      onClick={(e) => {
-        e.currentTarget.focus();
-        onClick(e);
+      onClick={(event) => {
+        event.currentTarget.focus();
+        onClick(event);
       }}
     >
       <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />

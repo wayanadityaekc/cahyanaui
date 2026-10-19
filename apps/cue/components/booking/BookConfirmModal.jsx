@@ -51,13 +51,13 @@ const EMPTY = {
 const RESEND_SECONDS = 30;
 
 export default function BookConfirmModal() {
-  const { ctx, closeBooking } = useBooking();
+  const { ctx: bookingContext, closeBooking } = useBooking();
   const { currency, stay, displayGuests } = useTripPrefs();
   const { referral, apply } = useReferral();
   const { account, setAccount, requestLogin, verifyCode } = useAccount();
   const pricing = usePricing();
 
-  const [f, setF] = useState(EMPTY);
+  const [form, setForm] = useState(EMPTY);
   const [priced, setPriced] = useState(null);
   const [step, setStep] = useState(1);
   const [lineDT, setLineDT] = useState([]);
@@ -73,8 +73,8 @@ export default function BookConfirmModal() {
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (!ctx) {
-      setF(EMPTY);
+    if (!bookingContext) {
+      setForm(EMPTY);
       setPriced(null);
       setDone(false);
       setSigninEmail('');
@@ -90,44 +90,49 @@ export default function BookConfirmModal() {
       setRefMsg(null);
       return;
     }
-    const only = ctx.lines && ctx.lines.length === 1 ? ctx.lines[0] : null;
-    setF((v) => ({
-      ...v,
+    const only = bookingContext.lines && bookingContext.lines.length === 1 ? bookingContext.lines[0] : null;
+    setForm((previousForm) => ({
+      ...previousForm,
       referral: (referral && referral.code) || '',
       flightNumber: (only && only.flight_number) || '',
       flightDatetime: (only && only.flight_datetime) || '',
     }));
-    setLineDT((ctx.lines || []).map((l) => ({ date: l.date || '', time: l.time || '' })));
+    setLineDT((bookingContext.lines || []).map((line) => ({ date: line.date || '', time: line.time || '' })));
     setStep(1);
     setDtErr({});
-  }, [ctx, referral]);
+  }, [bookingContext, referral]);
 
   useEffect(() => {
-    if (!ctx) return undefined;
+    if (!bookingContext) return undefined;
     let cancelled = false;
     async function load() {
       try {
-        const d = await quote({ lines: ctx.lines, currency, stay, referral: (referral && referral.code) || '' });
-        if (!cancelled && d && d.lines) setPriced(d);
+        const quoteResult = await quote({
+          lines: bookingContext.lines,
+          currency,
+          stay,
+          referral: (referral && referral.code) || '',
+        });
+        if (!cancelled && quoteResult && quoteResult.lines) setPriced(quoteResult);
       } catch (e) {}
     }
     load();
     return () => {
       cancelled = true;
     };
-  }, [ctx, currency, stay, referral]);
+  }, [bookingContext, currency, stay, referral]);
 
   useEffect(() => {
-    if (!ctx) return;
-    setF((v) => ({
-      ...v,
-      name: v.name || (account && account.name) || '',
-      phone: v.phone || (account && account.phone) || '',
-      email: v.email || (account && account.email) || '',
-      pickup: v.pickup || readLocal(KEY.pickup, ''),
-      dropoff: v.dropoff || readLocal(KEY.dropoff, ''),
+    if (!bookingContext) return;
+    setForm((previousForm) => ({
+      ...previousForm,
+      name: previousForm.name || (account && account.name) || '',
+      phone: previousForm.phone || (account && account.phone) || '',
+      email: previousForm.email || (account && account.email) || '',
+      pickup: previousForm.pickup || readLocal(KEY.pickup, ''),
+      dropoff: previousForm.dropoff || readLocal(KEY.dropoff, ''),
     }));
-  }, [ctx, account]);
+  }, [bookingContext, account]);
 
   const [payOption, setPayOption] = useState('deposit');
   const [payRail, setPayRail] = useState(DEFAULT_RAIL);
@@ -140,8 +145,8 @@ export default function BookConfirmModal() {
   const [otpCooldown, setOtpCooldown] = useState(0);
   useEffect(() => {
     if (otpCooldown <= 0) return undefined;
-    const t = setInterval(() => setOtpCooldown((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
+    const cooldownTimer = setInterval(() => setOtpCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)), 1000);
+    return () => clearInterval(cooldownTimer);
   }, [otpCooldown]);
   async function doOtpVerify(code) {
     setOtpMsg('');
@@ -171,23 +176,27 @@ export default function BookConfirmModal() {
     setPayOn(readPayFlag());
   }, []);
   const lastCtx = useRef(null);
-  useBodyLock(!!ctx);
+  useBodyLock(!!bookingContext);
 
-  if (ctx) lastCtx.current = ctx;
-  const view = ctx || lastCtx.current;
+  if (bookingContext) lastCtx.current = bookingContext;
+  const view = bookingContext || lastCtx.current;
   if (!mounted || !view) return null;
 
-  function set(k) {
-    return (e) => {
-      const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  function set(fieldName) {
+    return (event) => {
+      const { value } = event.target;
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
-  function setValue(k) {
+  function setValue(fieldName) {
     return (value) => {
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
 
@@ -195,49 +204,53 @@ export default function BookConfirmModal() {
   const lines = view.lines || [];
   const singleLine = lines.length === 1 ? lines[0] : null;
   function categoryOfLine({ service, type }) {
-    const c = catalog && catalog.items.find((i) => i.name === service);
-    return c ? c.category : type || null;
+    const catalogItem = catalog && catalog.items.find((item) => item.name === service);
+    return catalogItem ? catalogItem.category : type || null;
   }
   function isAirportLine({ service }) {
     return service === AIRPORT_ROUTE;
   }
   const isAirportRoute = !!singleLine && isAirportLine(singleLine);
   const needsFlight = isAirportRoute;
-  function lineDateTime(i) {
-    return lineDT[i] || { date: '', time: '' };
+  function lineDateTime(lineIndex) {
+    return lineDT[lineIndex] || { date: '', time: '' };
   }
-  function setDT(i, k, v) {
+  function setDT(lineIndex, fieldName, fieldValue) {
     setLineDT((prev) => {
-      const next = prev.length ? [...prev] : lines.map((l) => ({ date: l.date || '', time: l.time || '' }));
-      next[i] = { ...next[i], [k]: v };
+      const next = prev.length ? [...prev] : lines.map((line) => ({ date: line.date || '', time: line.time || '' }));
+      next[lineIndex] = { ...next[lineIndex], [fieldName]: fieldValue };
       return next;
     });
-    setDtErr((prev) => (prev[i] ? { ...prev, [i]: undefined } : prev));
+    setDtErr((prev) => (prev[lineIndex] ? { ...prev, [lineIndex]: undefined } : prev));
   }
-  function dateOf(l, i) {
-    return isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(0, 10) : lineDateTime(i).date;
+  function dateOf(line, lineIndex) {
+    return isAirportLine(line) && lineIndex === 0 && needsFlight
+      ? (form.flightDatetime || '').slice(0, 10)
+      : lineDateTime(lineIndex).date;
   }
-  function timeOf(l, i) {
-    return isAirportLine(l) && i === 0 && needsFlight ? (f.flightDatetime || '').slice(11, 16) : lineDateTime(i).time;
+  function timeOf(line, lineIndex) {
+    return isAirportLine(line) && lineIndex === 0 && needsFlight
+      ? (form.flightDatetime || '').slice(11, 16)
+      : lineDateTime(lineIndex).time;
   }
-  const flightNumberDisplay = needsFlight ? f.flightNumber || singleLine.flight_number || '' : '';
+  const flightNumberDisplay = needsFlight ? form.flightNumber || singleLine.flight_number || '' : '';
 
   function validate() {
     const { ok, errors: fieldErrors } = validateWith(
       bookingSchema({
-        pickupOptional: !!ctx.pickupOptional,
-        dropoffRequired: !!ctx.dropoffRequired,
+        pickupOptional: !!bookingContext.pickupOptional,
+        dropoffRequired: !!bookingContext.dropoffRequired,
         needsTime: false,
         needsFlight,
       }),
-      f,
+      form,
     );
     setErrors(fieldErrors);
     const dateErrors = {};
-    (ctx.lines || []).forEach((l, i) => {
-      if (isAirportLine(l) && i === 0 && needsFlight) return;
-      if (!dateOf(l, i)) dateErrors[i] = 'Please pick a date.';
-      else if (!timeOf(l, i)) dateErrors[i] = 'Please pick a start time.';
+    (bookingContext.lines || []).forEach((line, index) => {
+      if (isAirportLine(line) && index === 0 && needsFlight) return;
+      if (!dateOf(line, index)) dateErrors[index] = 'Please pick a date.';
+      else if (!timeOf(line, index)) dateErrors[index] = 'Please pick a start time.';
     });
     setDtErr(dateErrors);
     return ok && Object.keys(dateErrors).length === 0;
@@ -245,8 +258,8 @@ export default function BookConfirmModal() {
 
   function payload() {
     return bookingPayload({
-      ctx,
-      f,
+      ctx: bookingContext,
+      f: form,
       referral,
       payOn,
       payOption,
@@ -268,18 +281,19 @@ export default function BookConfirmModal() {
     setError('');
     setBusy(true);
     try {
-      const d = await submitInquiry(payload());
-      if (!d || d.status !== 'saved') throw new Error((d && d.detail) || '');
-      if (f.pickup) writeLocal(KEY.pickup, f.pickup);
-      if (f.dropoff) writeLocal(KEY.dropoff, f.dropoff);
-      if (d.token && !readLocal(KEY.token, '')) {
-        writeLocal(KEY.token, d.token);
-        if (d.account) setAccount(d.account);
+      const inquiryResult = await submitInquiry(payload());
+      if (!inquiryResult || inquiryResult.status !== 'saved')
+        throw new Error((inquiryResult && inquiryResult.detail) || '');
+      if (form.pickup) writeLocal(KEY.pickup, form.pickup);
+      if (form.dropoff) writeLocal(KEY.dropoff, form.dropoff);
+      if (inquiryResult.token && !readLocal(KEY.token, '')) {
+        writeLocal(KEY.token, inquiryResult.token);
+        if (inquiryResult.account) setAccount(inquiryResult.account);
       }
-      if (!payOn && typeof ctx.onSuccess === 'function') ctx.onSuccess();
-      setBookingRef(d.ref || '');
-      if (d.signin_sent && d.signin_email) {
-        setSigninEmail(d.signin_email);
+      if (!payOn && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
+      setBookingRef(inquiryResult.ref || '');
+      if (inquiryResult.signin_sent && inquiryResult.signin_email) {
+        setSigninEmail(inquiryResult.signin_email);
         setOtpCooldown(RESEND_SECONDS);
       } else setSigninEmail('');
       setDone(true);
@@ -291,7 +305,16 @@ export default function BookConfirmModal() {
   }
 
   function waText() {
-    return whatsappText({ ctx, f, displayGuests, singleLine, flightNumberDisplay, dateOf, timeOf, price: priceText() });
+    return whatsappText({
+      ctx: bookingContext,
+      f: form,
+      displayGuests,
+      singleLine,
+      flightNumberDisplay,
+      dateOf,
+      timeOf,
+      price: priceText(),
+    });
   }
 
   function priceText() {
@@ -299,8 +322,8 @@ export default function BookConfirmModal() {
   }
 
   async function applyRef() {
-    const pct = await apply(f.referral);
-    setRefMsg(pct ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
+    const percent = await apply(form.referral);
+    setRefMsg(percent ? { ok: true, text: PAY_COPY.referralOk } : { ok: false, text: PAY_COPY.referralBad });
   }
 
   function openWhatsApp() {
@@ -329,7 +352,7 @@ export default function BookConfirmModal() {
   ) : null;
   return createPortal(
     <ModalPresence
-      open={!!ctx}
+      open={!!bookingContext}
       onClose={paid ? () => {} : closeBooking}
       label="Booking confirmation"
       box={BOX_WIDE}
@@ -346,8 +369,8 @@ export default function BookConfirmModal() {
         <div id="modal-form">
           <h3 className={TITLE}>Booking Confirmation</h3>
           <div className={STEPS} aria-hidden="true">
-            {STEP_NAMES.map((n, i) => (
-              <span className={stepBar(step >= i + 1)} key={n} />
+            {STEP_NAMES.map((stepName, index) => (
+              <span className={stepBar(step >= index + 1)} key={stepName} />
             ))}
           </div>
           <p className={STEP_LABEL}>
@@ -356,7 +379,7 @@ export default function BookConfirmModal() {
 
           {step === 1 ? (
             <DetailsStep
-              f={f}
+              f={form}
               errors={errors}
               set={set}
               setValue={setValue}
@@ -387,7 +410,7 @@ export default function BookConfirmModal() {
               priced={priced}
               detailsOpen={detailsOpen}
               setDetailsOpen={setDetailsOpen}
-              f={f}
+              f={form}
               price={priceText()}
               payOn={payOn}
               onContinue={() => {
@@ -414,8 +437,8 @@ export default function BookConfirmModal() {
                 currency={currency || 'USD'}
                 stay={stay || ''}
                 hasReferral={!!(priced && priced.referral)}
-                referral={f.referral}
-                onReferral={(v) => setF((x) => ({ ...x, referral: v }))}
+                referral={form.referral}
+                onReferral={(referralCode) => setForm((previousForm) => ({ ...previousForm, referral: referralCode }))}
                 onApplyReferral={applyRef}
                 refMsg={refMsg}
               />
@@ -448,7 +471,7 @@ export default function BookConfirmModal() {
           currency={currency}
           onPaid={() => {
             setPaid(true);
-            if (ctx && typeof ctx.onSuccess === 'function') ctx.onSuccess();
+            if (bookingContext && typeof bookingContext.onSuccess === 'function') bookingContext.onSuccess();
           }}
         />
       )}

@@ -20,8 +20,8 @@ export function CartProvider({ children }) {
   }, [cart, ready]);
 
   useEffect(() => {
-    function onStorage(e) {
-      if (e.key === null || e.key === 'upv_booking_v1') setCart(readCart());
+    function onStorage(event) {
+      if (event.key === null || event.key === 'upv_booking_v1') setCart(readCart());
     }
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
@@ -103,7 +103,7 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error('useCart must be used inside CartProvider');
-  return ctx;
+  const context = useContext(CartContext);
+  if (!context) throw new Error('useCart must be used inside CartProvider');
+  return context;
 }

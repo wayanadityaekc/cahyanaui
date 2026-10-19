@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { useCurrency } from '@/components/providers/CurrencyProvider';
 import { priceBreakdown } from '@/lib/villas';
 
@@ -14,7 +14,7 @@ export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '
     <LazyMotion features={domAnimation}>
       <AnimatePresence initial={false}>
         {shown && (
-          <m.div
+          <motionElement.div
             key={`${checkIn}-${checkOut}`}
             initial={{ opacity: 0, y: reduce ? 0 : 6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -35,7 +35,7 @@ export default function StaySummary({ villaSlug = '', checkIn = '', checkOut = '
                 {formatAmount(shown.total)}
               </span>
             </div>
-          </m.div>
+          </motionElement.div>
         )}
       </AnimatePresence>
     </LazyMotion>

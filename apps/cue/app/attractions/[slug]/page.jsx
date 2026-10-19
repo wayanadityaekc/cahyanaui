@@ -10,13 +10,17 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const d = ATTRACTION_CONTENT[slug];
-  if (!d) return { alternates: { canonical: attractionPath(slug) } };
+  const attraction = ATTRACTION_CONTENT[slug];
+  if (!attraction) return { alternates: { canonical: attractionPath(slug) } };
   return {
-    title: d.metaTitle,
-    description: d.metaDesc,
+    title: attraction.metaTitle,
+    description: attraction.metaDesc,
     alternates: { canonical: attractionPath(slug) },
-    openGraph: { title: d.metaTitle, description: d.metaDesc, images: d.ogImage ? [d.ogImage] : undefined },
+    openGraph: {
+      title: attraction.metaTitle,
+      description: attraction.metaDesc,
+      images: attraction.ogImage ? [attraction.ogImage] : undefined,
+    },
   };
 }
 

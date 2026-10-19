@@ -59,29 +59,29 @@ export default function RailLayout({
   const effectiveMainClass = scrollContent ? RAIL_MAIN_SCROLL : mainClass;
 
   function rows(mobile) {
-    return items.map((t) => {
-      const selected = active === t.id;
+    return items.map((item) => {
+      const selected = active === item.id;
       const cls = mobile ? railMobileItem(selected) : railItem(selected, railCollapsed);
       const inner = (
         <>
-          {t.Icon && <t.Icon strokeWidth={1.7} aria-hidden="true" />}
-          {(!railCollapsed || mobile) && t.label}
+          {item.Icon && <item.Icon strokeWidth={1.7} aria-hidden="true" />}
+          {(!railCollapsed || mobile) && item.label}
           {mobile && <ChevronRight className={RAIL_MCHEV} strokeWidth={1.7} aria-hidden="true" />}
         </>
       );
-      const a11y = !mobile && railCollapsed ? { title: t.label, 'aria-label': t.label } : {};
+      const a11y = !mobile && railCollapsed ? { title: item.label, 'aria-label': item.label } : {};
       return (
-        <div key={t.id} className="contents">
-          {t.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
-          {t.href ? (
-            <a href={t.href} className={`${cls} no-underline`} aria-current={selected || undefined} {...a11y}>
+        <div key={item.id} className="contents">
+          {item.split && <span className={RAIL_SPLIT} aria-hidden="true" />}
+          {item.href ? (
+            <a href={item.href} className={`${cls} no-underline`} aria-current={selected || undefined} {...a11y}>
               {inner}
             </a>
           ) : (
             <button
               type="button"
               aria-current={selected ? 'true' : undefined}
-              onClick={() => onSelect(t.id)}
+              onClick={() => onSelect(item.id)}
               className={cls}
               {...a11y}
             >

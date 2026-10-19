@@ -48,8 +48,8 @@ export default function MyTripsCart() {
 
   function categoryOfRow({ kind, service }) {
     if (kind !== 'day') return kind;
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === service);
-    return c ? c.category : null;
+    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((item) => item.name === service);
+    return catalogItem ? catalogItem.category : null;
   }
 
   const priced = useQuote({
@@ -78,7 +78,7 @@ export default function MyTripsCart() {
   function checkout() {
     if (!rows.length || undated) return;
     const parts = [];
-    const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((r) => r.day_no)).size;
+    const dayCount = new Set(rows.filter((row) => row.kind === 'day').map((row) => row.day_no)).size;
     const transferCount = rows.filter((row) => row.kind === 'transfer').length;
     const charterCount = rows.filter((row) => row.kind === 'charter').length;
     if (dayCount) parts.push(`${dayCount} day${dayCount > 1 ? 's' : ''}`);

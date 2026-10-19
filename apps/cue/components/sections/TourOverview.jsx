@@ -32,15 +32,15 @@ export default function TourOverview({ intro, items = [] }) {
         <div key={group.heading || groupIndex} className={groupIndex ? 'mt-7' : undefined}>
           {group.heading && <h3 className={DAY}>{group.heading}</h3>}
           <ol className="list-none m-0 p-0">
-            {group.stops.map((s, i) => (
-              <li className={ROW} key={s.refId || s.name}>
-                <span className={DOT}>{i + 1}</span>
+            {group.stops.map((stop, index) => (
+              <li className={ROW} key={stop.refId || stop.name}>
+                <span className={DOT}>{index + 1}</span>
                 <div>
                   <h3 className={NAME}>
-                    {s.name}
-                    {s.optional && <span className={OPTIONAL}>Optional</span>}
+                    {stop.name}
+                    {stop.optional && <span className={OPTIONAL}>Optional</span>}
                   </h3>
-                  <p className={TEXT}>{s.highlight}</p>
+                  <p className={TEXT}>{stop.highlight}</p>
                 </div>
               </li>
             ))}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X as CloseIcon } from 'lucide-react';
 import { AccountSettings, Button, Container, EYEBROW_LINE } from '@cahyana/ui';
 import SheetPresence from '@/components/ui/SheetPresence';
 import AuthSheet from '@/components/account/AuthSheet';
@@ -11,14 +11,15 @@ import { useAccount } from '@/components/providers/AccountProvider';
 
 function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () => ({ ok: false }) }) {
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
 
   async function confirm() {
     setBusy(true);
-    setMsg('');
+    setMessage('');
     const result = await onConfirm();
     setBusy(false);
-    if (!result || !result.ok) setMsg((result && result.error) || 'Could not delete your account. Please try again.');
+    if (!result || !result.ok)
+      setMessage((result && result.error) || 'Could not delete your account. Please try again.');
   }
 
   return (
@@ -35,7 +36,7 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>
       <h3 className="mb-4 font-body text-h3 font-semibold text-gold">Delete your account?</h3>
       <p className="m-0 mb-3 text-body text-green leading-[var(--lh-body,1.6)]">
@@ -45,9 +46,9 @@ function DeleteSheet({ open = false, onClose = () => {}, onConfirm = async () =>
       <p className="m-0 mb-5 text-body text-green leading-[var(--lh-body,1.6)]">
         The same account is used on Cahyana Ubud Experience, so it is deleted there too.
       </p>
-      {msg && (
+      {message && (
         <p role="alert" className="m-0 mb-3 text-label text-err">
-          {msg}
+          {message}
         </p>
       )}
       <div className="flex gap-2 max-[480px]:flex-col">

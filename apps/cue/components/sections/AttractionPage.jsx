@@ -24,8 +24,8 @@ export default function AttractionPage({ data }) {
   const slug = (data.__page || '').replace('attractions/', '');
   const onTours = toursContaining(slug);
   const gallery = galleryFrom(data);
-  const crumb = (data.crumb || []).map((p, i, a) =>
-    i === a.length - 1 && p.type === 'text' ? { ...p, text: data.title } : p,
+  const crumb = (data.crumb || []).map((crumbPart, index, crumbParts) =>
+    index === crumbParts.length - 1 && crumbPart.type === 'text' ? { ...crumbPart, text: data.title } : crumbPart,
   );
   return (
     <>
@@ -56,17 +56,17 @@ export default function AttractionPage({ data }) {
                 <AttractionOverview stops={data.stops} id={data.stopsId} />
               ) : (
                 <div className={STOPS} id={data.stopsId}>
-                  {data.stops.map((s, i) => (
-                    <article className={STOP} key={i}>
-                      {s.img && (
+                  {data.stops.map((stop, index) => (
+                    <article className={STOP} key={index}>
+                      {stop.img && (
                         <div className={STOP_IMAGE}>
-                          <Img src={`/assets/images/${s.img}`} alt={s.alt} width={s.w} height={s.hgt} />
+                          <Img src={`/assets/images/${stop.img}`} alt={stop.alt} width={stop.w} height={stop.hgt} />
                         </div>
                       )}
                       <div>
-                        {s.num && <span className={STOP_NUM}>{s.num}</span>}
-                        <h3 className={STOP_NAME}>{s.name}</h3>
-                        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+                        {stop.num && <span className={STOP_NUM}>{stop.num}</span>}
+                        <h3 className={STOP_NAME}>{stop.name}</h3>
+                        <p className={STOP_DESC} dangerouslySetInnerHTML={{ __html: stop.descHtml }} />
                       </div>
                     </article>
                   ))}

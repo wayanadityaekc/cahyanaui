@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CreditCard, X } from 'lucide-react';
+import { CreditCard, X as CloseIcon } from 'lucide-react';
 import { BrandIcon, Button, Field, Input, PayOptions } from '@cahyana/ui';
 import SheetPresence from '@/components/ui/SheetPresence';
 import DokuCheckout from '@/components/booking/DokuCheckout';
@@ -171,7 +171,7 @@ export default function CheckoutSheet({ open = false, onClose = () => {}, cart =
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>
       <p className="m-0 mb-1 text-label font-medium tracking-[0.08em] uppercase text-muted">
         Step {step === 'details' ? 1 : step === 'pay' ? 2 : 3} of 3

@@ -64,7 +64,7 @@ const PRICE_WRAP = 'flex-[0_0_auto] text-right leading-[1.05] whitespace-nowrap 
 export default function HomepageCard({
   href,
   name,
-  img,
+  img: image,
   alt,
   meta,
   metaIcon = 'clock',
@@ -76,17 +76,17 @@ export default function HomepageCard({
   width = 600,
   height = 600,
 }) {
-  const c = (cat && CATS[cat]) || null;
-  const tone = c ? c.tone : 'gold';
+  const category = (cat && CATS[cat]) || null;
+  const tone = category ? category.tone : 'gold';
   const isTour = metaIcon !== 'pin';
   const catTone = tone === 'green' ? 'bg-[rgba(61,92,70,0.84)]' : 'bg-[rgba(176,141,67,0.86)]';
   const accentTone = tone === 'green' ? 'bg-cta' : 'bg-amber';
   return (
     <a className={FRAME} href={href} data-zone={zone}>
-      {img ? (
+      {image ? (
         <img
           className={IMG}
-          src={`/assets/images/${img}`}
+          src={`/assets/images/${image}`}
           alt={alt || name}
           width={width}
           height={height}
@@ -95,9 +95,9 @@ export default function HomepageCard({
       ) : (
         <div className="absolute inset-0" style={{ backgroundImage: PLACEHOLDER_GRADIENT }} />
       )}
-      {c && (
+      {category && (
         <span className={`${CAT_BASE} ${catTone}`}>
-          <c.Icon />
+          <category.Icon />
           {cat}
         </span>
       )}

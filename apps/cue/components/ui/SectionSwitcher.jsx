@@ -10,19 +10,19 @@ function Chevron({ dir }) {
 }
 
 export default function SectionSwitcher({ zones = [] }) {
-  const [idx, setIdx] = useState(0);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     if (!zones.length) return;
     function probe() {
-      const y = window.scrollY + 160;
-      let cur = 0;
-      zones.forEach((zone, i) => {
+      const scrollPosition = window.scrollY + 160;
+      let current = 0;
+      zones.forEach((zone, indexItem) => {
         const section = document.getElementById(zone.id);
         if (!section) return;
-        if (section.getBoundingClientRect().top + window.scrollY <= y) cur = i;
+        if (section.getBoundingClientRect().top + window.scrollY <= scrollPosition) current = indexItem;
       });
-      setIdx(cur);
+      setIndex(current);
     }
     probe();
     window.addEventListener('scroll', probe, { passive: true });
@@ -36,8 +36,8 @@ export default function SectionSwitcher({ zones = [] }) {
   if (!zones.length) return null;
 
   function step(delta) {
-    const n = Math.min(zones.length - 1, Math.max(0, idx + delta));
-    const section = document.getElementById(zones[n].id);
+    const nextIndex = Math.min(zones.length - 1, Math.max(0, index + delta));
+    const section = document.getElementById(zones[nextIndex].id);
     if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -46,13 +46,13 @@ export default function SectionSwitcher({ zones = [] }) {
 
   return (
     <div className={`${BAR_SHELL} ${BAR_UPTO_MD}`} role="navigation" aria-label="Jump to category">
-      <span className="flex-1 min-w-0 truncate font-semibold text-[0.8rem] text-ink">{zones[idx].label}</span>
+      <span className="flex-1 min-w-0 truncate font-semibold text-[0.8rem] text-ink">{zones[index].label}</span>
       <div className="flex-none flex items-center gap-1">
         <button
           type="button"
           className={arrow}
           onClick={() => step(-1)}
-          disabled={idx === 0}
+          disabled={index === 0}
           aria-label="Previous category"
         >
           <Chevron dir="left" />
@@ -61,7 +61,7 @@ export default function SectionSwitcher({ zones = [] }) {
           type="button"
           className={arrow}
           onClick={() => step(1)}
-          disabled={idx === zones.length - 1}
+          disabled={index === zones.length - 1}
           aria-label="Next category"
         >
           <Chevron dir="right" />

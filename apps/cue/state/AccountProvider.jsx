@@ -8,8 +8,8 @@ const AccountContext = createContext(null);
 
 function fmtDay(dateStr) {
   if (!dateStr) return 'date TBD';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
 export function AccountProvider({ children }) {
@@ -24,8 +24,8 @@ export function AccountProvider({ children }) {
     if (!token) return;
     try {
       const response = await fetch(`${API_BASE}/bookings/mine`, { headers: { Authorization: `Bearer ${token}` } });
-      const d = response.ok ? await response.json() : null;
-      if (d && Array.isArray(d.upcoming)) setTrips(d);
+      const tripsData = response.ok ? await response.json() : null;
+      if (tripsData && Array.isArray(tripsData.upcoming)) setTrips(tripsData);
     } catch (e) {}
   }, []);
 
@@ -51,9 +51,9 @@ export function AccountProvider({ children }) {
     async function load() {
       try {
         const response = await fetch(`${API_BASE}/account/session`, { headers: { Authorization: `Bearer ${token}` } });
-        const d = response.ok ? await response.json() : null;
+        const accountData = response.ok ? await response.json() : null;
         if (cancelled) return;
-        if (d && d.account) setAccount(d.account);
+        if (accountData && accountData.account) setAccount(accountData.account);
         else removeLocal(KEY.token);
       } catch (e) {
       } finally {
@@ -74,13 +74,13 @@ export function AccountProvider({ children }) {
   const reviewableItems = useMemo(() => {
     if (!trips || !trips.history) return [];
     const out = [];
-    trips.history.forEach((t) => {
-      (t.review_items || []).forEach((s) =>
+    trips.history.forEach((trip) => {
+      (trip.review_items || []).forEach((reviewItem) =>
         out.push({
-          ref: t.ref,
-          service: s,
-          tripName: t.name,
-          date: t.start_date ? fmtDay(t.start_date) : '',
+          ref: trip.ref,
+          service: reviewItem,
+          tripName: trip.name,
+          date: trip.start_date ? fmtDay(trip.start_date) : '',
         }),
       );
     });
@@ -95,8 +95,8 @@ export function AccountProvider({ children }) {
     }
     try {
       const response = await fetch(`${API_BASE}/reviews/mine`, { headers: { Authorization: `Bearer ${token}` } });
-      const d = response.ok ? await response.json() : [];
-      setMyReviews(Array.isArray(d) ? d : []);
+      const rows = response.ok ? await response.json() : [];
+      setMyReviews(Array.isArray(rows) ? rows : []);
     } catch (e) {
       setMyReviews([]);
     }
@@ -215,7 +215,7 @@ export function AccountProvider({ children }) {
 }
 
 export function useAccount() {
-  const ctx = useContext(AccountContext);
-  if (!ctx) throw new Error('useAccount must be used inside AccountProvider');
-  return ctx;
+  const accountContext = useContext(AccountContext);
+  if (!accountContext) throw new Error('useAccount must be used inside AccountProvider');
+  return accountContext;
 }

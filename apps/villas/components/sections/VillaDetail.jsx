@@ -130,8 +130,8 @@ export default function VillaDetail({ villa }) {
             </div>
 
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">About the villa</h2>
-            {villa.about.map((para, i) => (
-              <p key={i}>{para}</p>
+            {villa.about.map((para, index) => (
+              <p key={index}>{para}</p>
             ))}
 
             <h2 className="text-h2 font-medium mt-10 mb-3 text-gold">The space</h2>
@@ -205,7 +205,7 @@ export default function VillaDetail({ villa }) {
                   label="Guests"
                   value={String(guests)}
                   onChange={(value) => setGuests(Number(value))}
-                  options={Array.from({ length: villa.guests }, (_, index) => index + 1).map((count) => ({
+                  options={Array.from({ length: villa.guests }, (unusedValue, index) => index + 1).map((count) => ({
                     value: String(count),
                     label: `${count} guest${count > 1 ? 's' : ''}`,
                   }))}

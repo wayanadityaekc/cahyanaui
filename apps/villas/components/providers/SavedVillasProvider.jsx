@@ -37,7 +37,7 @@ export function SavedVillasProvider({ children }) {
 }
 
 export function useSavedVillas() {
-  const ctx = useContext(SavedContext);
-  if (!ctx) throw new Error('useSavedVillas must be used within SavedVillasProvider');
-  return ctx;
+  const context = useContext(SavedContext);
+  if (!context) throw new Error('useSavedVillas must be used within SavedVillasProvider');
+  return context;
 }

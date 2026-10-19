@@ -10,13 +10,13 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { tourSlug } = await params;
-  const d = TOUR_CONTENT[tourSlug];
-  if (!d) return { alternates: { canonical: tourPath(tourSlug) } };
+  const tour = TOUR_CONTENT[tourSlug];
+  if (!tour) return { alternates: { canonical: tourPath(tourSlug) } };
   return {
-    title: d.metaTitle,
-    description: d.metaDesc,
+    title: tour.metaTitle,
+    description: tour.metaDesc,
     alternates: { canonical: tourPath(tourSlug) },
-    openGraph: { title: d.metaTitle, description: d.metaDesc, images: d.ogImage ? [d.ogImage] : undefined },
+    openGraph: { title: tour.metaTitle, description: tour.metaDesc, images: tour.ogImage ? [tour.ogImage] : undefined },
     ...(HIDDEN_TOURS.includes(tourSlug) ? { robots: { index: false, follow: false } } : {}),
   };
 }

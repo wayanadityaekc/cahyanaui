@@ -8,92 +8,92 @@ const REVIEW = { name: 'Andras', country: 'Hungary', rating: 5, message: MSG, se
 
 let pass = 0,
   fail = 0;
-function ok(cond, msg) {
+function ok(cond, message) {
   if (cond) pass++;
   else {
     fail++;
-    process.stdout.write(`FAIL ${msg}\n`);
+    process.stdout.write(`FAIL ${message}\n`);
   }
 }
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 
-async function open(path, w) {
-  const ctx = await browser.newContext({ viewport: { width: w, height: 900 } });
+async function open(path, viewportWidth) {
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
   const asked = [];
-  await ctx.route('**/api/**', (r) => {
-    const u = new URL(r.request().url());
-    if (u.pathname.endsWith('/reviews/summary'))
-      return r.fulfill({ json: [{ service: 'Ubud Tour', avg_rating: 5, count: 1 }] });
-    if (u.pathname.endsWith('/reviews')) {
-      const svc = u.searchParams.get('service'),
-        grp = u.searchParams.get('group');
+  await browserContext.route('**/api/**', (route) => {
+    const requestUrl = new URL(route.request().url());
+    if (requestUrl.pathname.endsWith('/reviews/summary'))
+      return route.fulfill({ json: [{ service: 'Ubud Tour', avg_rating: 5, count: 1 }] });
+    if (requestUrl.pathname.endsWith('/reviews')) {
+      const svc = requestUrl.searchParams.get('service'),
+        grp = requestUrl.searchParams.get('group');
       asked.push(svc ?? (grp ? `group:${grp}` : '(all)'));
-      return r.fulfill({ json: !svc && !grp ? [REVIEW] : svc === 'Ubud Tour' ? [REVIEW] : [] });
+      return route.fulfill({ json: !svc && !grp ? [REVIEW] : svc === 'Ubud Tour' ? [REVIEW] : [] });
     }
-    return r.fulfill({ status: 503, body: '{}' });
+    return route.fulfill({ status: 503, body: '{}' });
   });
-  await ctx.routeWebSocket(/.*/, (ws) => ws.close());
-  const page = await ctx.newPage();
+  await browserContext.routeWebSocket(/.*/, (ws) => ws.close());
+  const page = await browserContext.newPage();
   const errors = [];
-  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('pageerror', (error) => errors.push(String(error)));
   const result = await page.goto(SITE + path, { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
-  return { ctx, page, asked, errors, status: result.status() };
+  return { ctx: browserContext, page, asked, errors, status: result.status() };
 }
 
 function writeButtons(page) {
   return page.evaluate(
     () =>
-      [...document.querySelectorAll('button, a')].filter((b) => {
-        if (b.textContent.trim() !== 'Write review') return false;
-        const r = b.getBoundingClientRect();
-        const cs = getComputedStyle(b);
-        return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden';
+      [...document.querySelectorAll('button, a')].filter((button) => {
+        if (button.textContent.trim() !== 'Write review') return false;
+        const box = button.getBoundingClientRect();
+        const cs = getComputedStyle(button);
+        return box.width > 0 && box.height > 0 && cs.visibility !== 'hidden';
       }).length,
   );
 }
 
-for (const [slug, t] of Object.entries(TOURS)) {
+for (const [slug, tour] of Object.entries(TOURS)) {
   if (!fs.existsSync(`out/${slug}.html`)) continue;
-  const { ctx, asked, status, errors } = await open(`/${slug}.html`, 1280);
+  const { ctx: browserContext, asked, status, errors } = await open(`/${slug}.html`, 1280);
   ok(status === 200, `${slug}: HTTP ${status}`);
-  ok(asked.includes(t.bookItem), `${slug}: review list asked for ${JSON.stringify(asked)}, not "${t.bookItem}"`);
-  ok(!asked.includes(t.title) || t.title === t.bookItem, `${slug}: still asks by long title`);
+  ok(asked.includes(tour.bookItem), `${slug}: review list asked for ${JSON.stringify(asked)}, not "${tour.bookItem}"`);
+  ok(!asked.includes(tour.title) || tour.title === tour.bookItem, `${slug}: still asks by long title`);
   ok(errors.length === 0, `${slug}: page errors ${errors}`);
-  await ctx.close();
+  await browserContext.close();
 }
 
-for (const w of [390, 1280]) {
+for (const width of [390, 1280]) {
   {
-    const { ctx, page } = await open('/ubud-tour.html', w);
+    const { ctx: browserContext, page } = await open('/ubud-tour.html', width);
     const body = await page.evaluate(() => document.body.innerText);
-    ok(body.includes(MSG), `${w} ubud-tour: review text not on its own page`);
-    ok(!/No reviews yet for this program/.test(body), `${w} ubud-tour: empty state shown despite a review`);
+    ok(body.includes(MSG), `${width} ubud-tour: review text not on its own page`);
+    ok(!/No reviews yet for this program/.test(body), `${width} ubud-tour: empty state shown despite a review`);
     const hero = await page.evaluate(
       () => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '',
     );
-    ok(/5\.0/.test(hero), `${w} ubud-tour: hero stars read "${hero}"`);
-    ok((await writeButtons(page)) === 1, `${w} ubud-tour: ${await writeButtons(page)} Write review buttons`);
+    ok(/5\.0/.test(hero), `${width} ubud-tour: hero stars read "${hero}"`);
+    ok((await writeButtons(page)) === 1, `${width} ubud-tour: ${await writeButtons(page)} Write review buttons`);
     ok(
       (await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)) <= 0,
-      `${w} ubud-tour: page overflows`,
+      `${width} ubud-tour: page overflows`,
     );
-    await ctx.close();
+    await browserContext.close();
   }
   {
-    const { ctx, page, asked } = await open('/', w);
-    ok(asked.includes('(all)'), `${w} home: reviews request was filtered ${JSON.stringify(asked)}`);
-    ok((await page.evaluate(() => document.body.innerText)).includes(MSG), `${w} home: review not shown`);
-    await ctx.close();
+    const { ctx: browserContext, page, asked } = await open('/', width);
+    ok(asked.includes('(all)'), `${width} home: reviews request was filtered ${JSON.stringify(asked)}`);
+    ok((await page.evaluate(() => document.body.innerText)).includes(MSG), `${width} home: review not shown`);
+    await browserContext.close();
   }
   {
-    const { ctx, page } = await open('/tour.html', w);
+    const { ctx: browserContext, page } = await open('/tour.html', width);
     const card = await page.evaluate(
       () => (document.querySelector('[data-rating="Ubud Tour"]') || {}).textContent || '',
     );
-    ok(/5\.0/.test(card), `${w} tour listing: card stars read "${card}"`);
-    await ctx.close();
+    ok(/5\.0/.test(card), `${width} tour listing: card stars read "${card}"`);
+    await browserContext.close();
   }
   for (const path of [
     '/east-bali-tour-lempuyang.html',
@@ -104,11 +104,11 @@ for (const w of [390, 1280]) {
     '/lempuyang-tirta-gangga.html',
   ]) {
     if (!fs.existsSync(`out${path}`)) continue;
-    const { ctx, page, status } = await open(path, w);
-    ok(status === 200, `${w} ${path}: HTTP ${status}`);
-    const n = await writeButtons(page);
-    ok(n === 1, `${w} ${path}: ${n} Write review buttons`);
-    await ctx.close();
+    const { ctx: browserContext, page, status } = await open(path, width);
+    ok(status === 200, `${width} ${path}: HTTP ${status}`);
+    const writeButtonCount = await writeButtons(page);
+    ok(writeButtonCount === 1, `${width} ${path}: ${writeButtonCount} Write review buttons`);
+    await browserContext.close();
   }
 }
 

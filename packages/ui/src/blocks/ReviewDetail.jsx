@@ -13,10 +13,10 @@ const BOX =
 
 function fmtDate(iso) {
   if (!iso) return '';
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime())
+  const reviewDate = new Date(iso);
+  return Number.isNaN(reviewDate.getTime())
     ? ''
-    : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    : reviewDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export default function ReviewDetail({ review, onClose, title = 'Guest review' }) {
@@ -29,8 +29,8 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
     if (!open) return undefined;
     const opener = document.activeElement;
     if (boxRef.current) boxRef.current.focus();
-    function onKey(e) {
-      if (e.key === 'Escape') closeRef.current();
+    function onKey(event) {
+      if (event.key === 'Escape') closeRef.current();
     }
     document.addEventListener('keydown', onKey);
     return () => {
@@ -40,9 +40,12 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
   }, [open]);
 
   if (!open || typeof document === 'undefined') return null;
-  const r = review;
-  const { n, stars } = starText(r.rating);
-  const trips = r.services && r.services.length > 1 ? r.services.join(' · ') : r.service;
+  const currentReview = review;
+  const { n: starCount, stars } = starText(currentReview.rating);
+  const trips =
+    currentReview.services && currentReview.services.length > 1
+      ? currentReview.services.join(' · ')
+      : currentReview.service;
 
   return (
     <>
@@ -59,15 +62,19 @@ export default function ReviewDetail({ review, onClose, title = 'Guest review' }
           </button>
           <p className="m-0 mb-4 text-center font-semibold text-strong text-green">{title}</p>
           <div className="flex items-center justify-between gap-3 mb-1">
-            <span className="font-semibold text-body text-green">{r.name}</span>
-            {r.created_at && <span className="text-label text-muted">{fmtDate(r.created_at)}</span>}
+            <span className="font-semibold text-body text-green">{currentReview.name}</span>
+            {currentReview.created_at && (
+              <span className="text-label text-muted">{fmtDate(currentReview.created_at)}</span>
+            )}
           </div>
-          {r.country && <div className="mb-2 text-label text-muted">{r.country}</div>}
+          {currentReview.country && <div className="mb-2 text-label text-muted">{currentReview.country}</div>}
           {trips && <div className="mb-2 text-label text-muted">{trips}</div>}
-          <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>
+          <div className="mb-3 text-amber tracking-[2px]" aria-label={`${starCount} out of 5`}>
             {stars}
           </div>
-          <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">{r.message}</p>
+          <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">
+            {currentReview.message}
+          </p>
         </div>,
         document.body,
       )}

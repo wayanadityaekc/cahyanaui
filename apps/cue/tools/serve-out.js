@@ -29,12 +29,12 @@ if (!fs.existsSync(ROOT)) {
 }
 
 http
-  .createServer((req, response) => {
-    let p = decodeURIComponent(req.url.split('?')[0]);
-    if (p.endsWith('/')) p += 'index.html';
-    let file = path.join(ROOT, p);
+  .createServer((request, response) => {
+    let pathname = decodeURIComponent(request.url.split('?')[0]);
+    if (pathname.endsWith('/')) pathname += 'index.html';
+    let file = path.join(ROOT, pathname);
 
-    if (!fs.existsSync(file) && !path.extname(file)) file = path.join(ROOT, `${p}.html`);
+    if (!fs.existsSync(file) && !path.extname(file)) file = path.join(ROOT, `${pathname}.html`);
     if (!path.resolve(file).startsWith(path.resolve(ROOT))) {
       response.writeHead(403);
       return response.end('Forbidden');

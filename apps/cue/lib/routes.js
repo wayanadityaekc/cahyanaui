@@ -152,7 +152,7 @@ export function guidePath(slug) {
 export function allPaths() {
   return [
     '/',
-    ...BESPOKE.map((s) => `/${s}.html`),
+    ...BESPOKE.map((slug) => `/${slug}.html`),
     ...TOURS.map(tourPath),
     ...ATTRACTIONS.map(attractionPath),
     ...GUIDES.map(guidePath),
@@ -160,6 +160,6 @@ export function allPaths() {
 }
 
 export function indexablePaths() {
-  const off = new Set([...NOINDEX, ...HIDDEN_TOURS].map((s) => `/${s}.html`));
-  return allPaths().filter((p) => !off.has(p));
+  const off = new Set([...NOINDEX, ...HIDDEN_TOURS].map((slug) => `/${slug}.html`));
+  return allPaths().filter((allPath) => !off.has(allPath));
 }

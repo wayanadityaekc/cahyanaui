@@ -23,7 +23,7 @@ export function crumbsFor(page) {
 }
 
 export function guideCrumbs(tabs = [], title = '') {
-  const cat = tabs.find((t) => t.active) || tabs[0];
+  const cat = tabs.find((tab) => tab.active) || tabs[0];
   return [
     HOME,
     { label: 'Bali Guide', href: '/bali-guide.html' },

@@ -14,8 +14,8 @@ export default function useQuote({ lines, currency, stay, referral = '', enabled
     let cancelled = false;
     async function load() {
       try {
-        const d = await quote({ lines, currency, stay, referral: referral || '' });
-        if (!cancelled && d && d.lines) setPriced(d);
+        const quoteResult = await quote({ lines, currency, stay, referral: referral || '' });
+        if (!cancelled && quoteResult && quoteResult.lines) setPriced(quoteResult);
       } catch (e) {}
     }
     load();

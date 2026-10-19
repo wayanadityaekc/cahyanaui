@@ -8,23 +8,23 @@ const EXEC = process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/
 
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function ok(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
+function sleep(delayMs) {
+  return new Promise((resolve) => setTimeout(resolve, delayMs));
 }
-async function seen(loc, ms = 4000) {
+async function seen(loc, timeoutMs = 4000) {
   try {
-    await loc.first().waitFor({ timeout: ms });
+    await loc.first().waitFor({ timeout: timeoutMs });
     return true;
   } catch (e) {
     return false;
   }
 }
-async function untilTrue(page, fn, ms = 8000) {
+async function untilTrue(page, condition, timeoutMs = 8000) {
   try {
-    await page.waitForFunction(fn, null, { timeout: ms });
+    await page.waitForFunction(condition, null, { timeout: timeoutMs });
     return true;
   } catch (e) {
     return false;
@@ -64,10 +64,12 @@ function panel(page) {
 
 async function threadFor(question) {
   const list = await api('/admin/chats');
-  const t = (list.json.threads || []).find(
-    (x) => (x.last_body || '').includes(question.slice(0, 20)) || (x.last_body || '').includes(question),
+  const thread = (list.json.threads || []).find(
+    (candidateThread) =>
+      (candidateThread.last_body || '').includes(question.slice(0, 20)) ||
+      (candidateThread.last_body || '').includes(question),
   );
-  return t ? t.id : null;
+  return thread ? thread.id : null;
 }
 
 async function main() {
@@ -75,10 +77,10 @@ async function main() {
   const errors = [];
 
   {
-    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const browserContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
     let sever = null;
     let replay = null;
-    await ctx.routeWebSocket(/\/ws\/chat/, (client) => {
+    await browserContext.routeWebSocket(/\/ws\/chat/, (client) => {
       const server = client.connectToServer();
       let lastMsg = null;
       server.onMessage((frame) => {
@@ -100,12 +102,12 @@ async function main() {
         } catch (e) {}
       };
     });
-    const page = await ctx.newPage();
-    page.on('pageerror', (e) => errors.push(`live: ${e.message}`));
+    const page = await browserContext.newPage();
+    page.on('pageerror', (error) => errors.push(`live: ${error.message}`));
 
     const polls = [];
-    page.on('request', (r) => {
-      if (/\/api\/chat\/[a-f0-9]{48}\?/.test(r.url())) polls.push(Date.now());
+    page.on('request', (request) => {
+      if (/\/api\/chat\/[a-f0-9]{48}\?/.test(request.url())) polls.push(Date.now());
     });
 
     await openPanel(page);
@@ -149,9 +151,9 @@ async function main() {
     ok(!!(tk.json && tk.json.ticket), 'could not mint a ws ticket');
     const WS = (await import('../cahyana-api/node_modules/ws/index.js')).default;
     const owner = new WS(`${API.replace(/^http/, 'ws').replace(/\/api$/, '')}/ws/admin?ticket=${tk.json.ticket}`);
-    await new Promise((r, j) => {
-      owner.once('open', r);
-      owner.once('error', j);
+    await new Promise((resolve, reject) => {
+      owner.once('open', resolve);
+      owner.once('error', reject);
     });
     owner.send(JSON.stringify({ type: 'typing', threadId: id }));
     const typed = await seen(panel(page).locator('[data-typing]'), 3000);
@@ -219,30 +221,30 @@ async function main() {
       'the message was shown twice - the socket and the catch-up both added it',
     );
 
-    await ctx.close();
+    await browserContext.close();
   }
 
   {
-    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
-    await ctx.addInitScript(() => {
+    const browserContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    await browserContext.addInitScript(() => {
       delete window.WebSocket;
     });
-    const page = await ctx.newPage();
-    page.on('pageerror', (e) => errors.push(`fallback: ${e.message}`));
+    const page = await browserContext.newPage();
+    page.on('pageerror', (error) => errors.push(`fallback: ${error.message}`));
     const polls = [];
-    page.on('request', (r) => {
-      if (/\/api\/chat\/[a-f0-9]{48}\?/.test(r.url())) polls.push(Date.now());
+    page.on('request', (request) => {
+      if (/\/api\/chat\/[a-f0-9]{48}\?/.test(request.url())) polls.push(Date.now());
     });
 
-    const Q = 'can you take my grandmother who cannot walk far';
+    const grandmotherQuestion = 'can you take my grandmother who cannot walk far';
     await openPanel(page);
     const input = panel(page).locator('input[aria-label="Your question"]');
-    await input.fill(Q);
+    await input.fill(grandmotherQuestion);
     await input.press('Enter');
     await page.locator('text=/with Wayan now|Will connect you/i').first().waitFor({ timeout: 6000 });
 
     ok((await panel(page).getAttribute('data-live')) === '0', 'a page with no WebSocket reported itself as live');
-    const id2 = await threadFor(Q);
+    const id2 = await threadFor(grandmotherQuestion);
     ok(!!id2, 'the fallback guest did not create a thread');
 
     await api(`/admin/chats/${id2}/reply`, {
@@ -260,7 +262,7 @@ async function main() {
     const added = polls.length - n0;
     ok(added >= 1 && added <= 3, `the fallback polled ${added} times in 6s - expected about one`);
 
-    await ctx.close();
+    await browserContext.close();
   }
 
   ok(errors.length === 0, `page errors: ${errors.join(' | ')}`);
@@ -269,7 +271,7 @@ async function main() {
   process.exit(fail ? 1 : 0);
 }
 
-main().catch((e) => {
-  console.error(e);
+main().catch((error) => {
+  console.error(error);
   process.exit(1);
 });

@@ -4,13 +4,13 @@ export function usePaymentReturn() {
   const [returnRef, setReturnRef] = useState('');
   useEffect(() => {
     try {
-      const r = new URLSearchParams(window.location.search).get('ref');
-      if (!r) return;
+      const bookingRef = new URLSearchParams(window.location.search).get('ref');
+      if (!bookingRef) return;
       if (window.top && window.top !== window.self) {
         window.top.location.replace(window.location.href);
         return;
       }
-      setReturnRef(r);
+      setReturnRef(bookingRef);
     } catch (e) {}
   }, []);
   function clearReturn() {
@@ -27,13 +27,13 @@ export function useReviewLink({ trips, reviewableItems, account, setTab, setRead
 
   useEffect(() => {
     try {
-      const p = new URLSearchParams(window.location.search);
-      if (p.get('review') !== '1') return;
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('review') !== '1') return;
       setWantReview(true);
       setTab('past');
       setReading(true);
-      p.delete('review');
-      const search = p.toString();
+      searchParams.delete('review');
+      const search = searchParams.toString();
       window.history.replaceState(null, '', `${window.location.pathname}${search ? `?${search}` : ''}`);
     } catch (e) {}
   }, []);

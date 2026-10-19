@@ -39,8 +39,8 @@ const MONTHS = [
 ];
 const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function iso(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 export default function DatePopup({
@@ -55,7 +55,7 @@ export default function DatePopup({
   itemName = null,
 }) {
   const [mounted, setMounted] = useState(false);
-  const [sel, setSel] = useState(initial || '');
+  const [selector, setSelector] = useState(initial || '');
   const [time, setTime] = useState(initialTime || '');
   const [cursor, setCursor] = useState(() => {
     const base = initial ? new Date(initial) : new Date();
@@ -64,7 +64,7 @@ export default function DatePopup({
 
   useEffect(() => setMounted(true), []);
   useEffect(() => {
-    if (open) setSel(initial || '');
+    if (open) setSelector(initial || '');
   }, [open, initial]);
   useEffect(() => {
     if (open) setTime(initialTime || '');
@@ -72,8 +72,8 @@ export default function DatePopup({
   useBodyLock(open);
   useEffect(() => {
     if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && onClose();
+    function onKey(event) {
+      return event.key === 'Escape' && onClose();
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -86,7 +86,9 @@ export default function DatePopup({
   const total = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const cells = [];
   [...Array(first.getDay()).keys()].forEach(() => cells.push(null));
-  [...Array(total).keys()].forEach((i) => cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i + 1)));
+  [...Array(total).keys()].forEach((dayIndex) =>
+    cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), dayIndex + 1)),
+  );
 
   return createPortal(
     <>
@@ -122,23 +124,23 @@ export default function DatePopup({
               </button>
             </div>
             <div className={CAL_GRID}>
-              {DOW.map((d) => (
-                <span className={CAL_DOW} key={d}>
-                  {d}
+              {DOW.map((weekday) => (
+                <span className={CAL_DOW} key={weekday}>
+                  {weekday}
                 </span>
               ))}
-              {cells.map((cell, i) => {
-                if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
-                const v = iso(cell);
-                const past = v < today;
+              {cells.map((cell, index) => {
+                if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
+                const isoDate = iso(cell);
+                const past = isoDate < today;
                 return (
                   <button
                     type="button"
-                    key={v}
-                    className={calDay(past, v === sel)}
-                    aria-pressed={v === sel}
+                    key={isoDate}
+                    className={calDay(past, isoDate === selector)}
+                    aria-pressed={isoDate === selector}
                     disabled={past}
-                    onClick={() => setSel(v)}
+                    onClick={() => setSelector(isoDate)}
                   >
                     {cell.getDate()}
                   </button>
@@ -153,14 +155,14 @@ export default function DatePopup({
               <TimeChoice category={category} itemName={itemName} value={time} onChange={setTime} id="datepopup-time" />
             </div>
           ) : (
-            <span className={CAL_HINT}>{sel ? sel : 'Pick a date'}</span>
+            <span className={CAL_HINT}>{selector ? selector : 'Pick a date'}</span>
           )}
           <button
             type="button"
             className={`${CAL_APPLY}${withTime ? ' self-end' : ''}`}
-            disabled={!sel}
+            disabled={!selector}
             onClick={() => {
-              onPick(sel, time);
+              onPick(selector, time);
               onClose();
             }}
           >

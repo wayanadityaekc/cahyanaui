@@ -1,17 +1,27 @@
 import { CARD_FRAME } from '@/components/ui/cardClasses';
 
-export default function GuideCard({ href, img, alt, title, tag, cat, w = 600, hgt = 600, overlayTag = false }) {
+export default function GuideCard({
+  href,
+  img: image,
+  alt,
+  title,
+  tag,
+  cat,
+  w: width = 600,
+  hgt = 600,
+  overlayTag = false,
+}) {
   return (
     <a className={`${CARD_FRAME} flex flex-col`} data-cat={cat} href={href}>
       <div
         className={`relative aspect-square rounded-md overflow-hidden bg-green after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(to_bottom,transparent_${overlayTag ? '25' : '42'}%,rgba(0,0,0,0.6))]`}
       >
-        {img && (
+        {image && (
           <img
             className="absolute inset-0 w-full h-full object-cover object-center"
-            src={`/assets/images/${img}`}
+            src={`/assets/images/${image}`}
             alt={alt || title}
-            width={w}
+            width={width}
             height={hgt}
             loading="lazy"
           />

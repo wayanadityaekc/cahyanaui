@@ -70,14 +70,14 @@ export default function Kit() {
 
           <h2 className={SECTION_TITLE}>Card grid</h2>
           <div className={GRID_RELATED}>
-            {CARDS.map((c) => (
-              <ExperienceCard key={c.href} {...c} />
+            {CARDS.map((card) => (
+              <ExperienceCard key={card.href} {...card} />
             ))}
           </div>
           <h2 className={SECTION_TITLE}>Slider</h2>
           <Slider>
-            {CARDS.map((c) => (
-              <ExperienceCard key={`s${c.href}`} {...c} />
+            {CARDS.map((card) => (
+              <ExperienceCard key={`s${card.href}`} {...card} />
             ))}
           </Slider>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { cn } from '../lib/cn.js';
 
 const MAIN =
@@ -68,7 +68,7 @@ export default function PhotoHero({
         >
           <LazyMotion features={domAnimation}>
             <AnimatePresence initial={false}>
-              <m.img
+              <motionElement.img
                 key={main.src}
                 src={main.src}
                 alt={main.alt || ''}
@@ -95,16 +95,16 @@ export default function PhotoHero({
 
       {images.length > 1 ? (
         <div className={STRIP} data-photo-hero-strip>
-          {thumbs.map((photo, i) => {
-            const isMore = hasMore && i === THUMBS_SHOWN - 1;
+          {thumbs.map((photo, index) => {
+            const isMore = hasMore && index === THUMBS_SHOWN - 1;
             return (
               <button
                 type="button"
-                key={`${photo.src}${i}`}
-                className={cn(THUMB, isMore ? THUMB_OFF : i === active ? THUMB_ON : THUMB_OFF)}
-                onClick={() => (isMore ? open(i) : setActive(i))}
-                aria-pressed={isMore ? undefined : i === active}
-                aria-label={isMore ? `${moreLabel} (${images.length})` : `${photoLabel} ${i + 1}`}
+                key={`${photo.src}${index}`}
+                className={cn(THUMB, isMore ? THUMB_OFF : index === active ? THUMB_ON : THUMB_OFF)}
+                onClick={() => (isMore ? open(index) : setActive(index))}
+                aria-pressed={isMore ? undefined : index === active}
+                aria-label={isMore ? `${moreLabel} (${images.length})` : `${photoLabel} ${index + 1}`}
               >
                 <img src={photo.src} alt="" width={photo.w || 400} height={photo.h || 300} loading="lazy" />
                 {isMore ? <span className={MORE}>+{images.length - THUMBS_SHOWN + 1}</span> : null}

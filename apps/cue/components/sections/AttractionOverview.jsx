@@ -7,11 +7,11 @@ const TEXT = `${STOP_DESC} max-w-[68ch]`;
 export default function AttractionOverview({ stops = [], id }) {
   return (
     <div className={ROWS} id={id}>
-      {stops.map((s, i) => (
-        <section className={ROW} key={s.name || i}>
-          {s.num && <span className={STOP_NUM}>{s.num}</span>}
-          <h3 className={STOP_NAME}>{s.name}</h3>
-          <p className={TEXT} dangerouslySetInnerHTML={{ __html: s.descHtml }} />
+      {stops.map((stop, index) => (
+        <section className={ROW} key={stop.name || index}>
+          {stop.num && <span className={STOP_NUM}>{stop.num}</span>}
+          <h3 className={STOP_NAME}>{stop.name}</h3>
+          <p className={TEXT} dangerouslySetInnerHTML={{ __html: stop.descHtml }} />
         </section>
       ))}
     </div>

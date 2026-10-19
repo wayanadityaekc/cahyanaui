@@ -27,8 +27,8 @@ export default function Trust({ showStat = true, showSocials = false, cream = fa
     async function load() {
       try {
         const response = await fetch(`${API_BASE}/accounts/count`);
-        const d = response.ok ? await response.json() : null;
-        if (!cancelled && d && typeof d.count === 'number') setCount(d.count);
+        const trustStats = response.ok ? await response.json() : null;
+        if (!cancelled && trustStats && typeof trustStats.count === 'number') setCount(trustStats.count);
       } catch (e) {}
     }
     load();

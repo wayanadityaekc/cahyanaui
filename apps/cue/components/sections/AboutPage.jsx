@@ -19,8 +19,8 @@ export default function AboutPage() {
           <span className="block mb-1 text-small font-medium text-muted">{row.kicker}</span>
           <h2 className="m-0 mb-2 font-head text-h2 font-medium text-green">{row.heading}</h2>
 
-          {row.paras.map((para, i) => (
-            <p className="mb-3 text-body leading-[1.6] text-ink" key={i}>
+          {row.paras.map((para, index) => (
+            <p className="mb-3 text-body leading-[1.6] text-ink" key={index}>
               {para}
             </p>
           ))}
@@ -40,8 +40,8 @@ export default function AboutPage() {
 
           {row.list && (
             <ul className={infoList(row.list.cls)}>
-              {row.list.items.map((it, i) => (
-                <li key={i}>{it}</li>
+              {row.list.items.map((it, index) => (
+                <li key={index}>{it}</li>
               ))}
             </ul>
           )}

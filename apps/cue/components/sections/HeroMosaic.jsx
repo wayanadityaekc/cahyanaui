@@ -38,10 +38,11 @@ export default function HeroMosaic({ photos = [], title }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    function onKey(e) {
-      if (e.key === 'Escape') setOpenIndex(null);
-      else if (e.key === 'ArrowRight') setOpenIndex((i) => (i + 1) % photos.length);
-      else if (e.key === 'ArrowLeft') setOpenIndex((i) => (i - 1 + photos.length) % photos.length);
+    function onKey(event) {
+      if (event.key === 'Escape') setOpenIndex(null);
+      else if (event.key === 'ArrowRight') setOpenIndex((currentIndex) => (currentIndex + 1) % photos.length);
+      else if (event.key === 'ArrowLeft')
+        setOpenIndex((currentIndex) => (currentIndex - 1 + photos.length) % photos.length);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -49,31 +50,31 @@ export default function HeroMosaic({ photos = [], title }) {
 
   if (!photos.length) return null;
 
-  function tile(i, cls) {
-    const p = photos[i];
+  function tile(photoIndex, cls) {
+    const photo = photos[photoIndex];
     return (
       <button
         type="button"
-        key={p.src}
+        key={photo.src}
         className={cls}
-        onClick={() => setOpenIndex(i)}
-        aria-label={`Open photo ${i + 1} of ${photos.length}${p.title ? `: ${p.title}` : ''}`}
+        onClick={() => setOpenIndex(photoIndex)}
+        aria-label={`Open photo ${photoIndex + 1} of ${photos.length}${photo.title ? `: ${photo.title}` : ''}`}
       >
-        <Img src={p.src} alt={p.alt || ''} width={p.w} height={p.hgt} priority={i === 0} />
+        <Img src={photo.src} alt={photo.alt || ''} width={photo.w} height={photo.hgt} priority={photoIndex === 0} />
       </button>
     );
   }
 
   const children = [];
   [...Array(Math.ceil(photos.length / 3)).keys()]
-    .map((k) => k * 3)
-    .forEach((i) => {
-      children.push(tile(i, BIG));
-      const pair = [i + 1, i + 2].filter((n) => n < photos.length);
+    .map((groupIndex) => groupIndex * 3)
+    .forEach((startIndex) => {
+      children.push(tile(startIndex, BIG));
+      const pair = [startIndex + 1, startIndex + 2].filter((photoIndex) => photoIndex < photos.length);
       if (pair.length) {
         children.push(
-          <div className={PAIR} key={`pair-${i}`}>
-            {pair.map((n) => tile(n, TILE_BASE))}
+          <div className={PAIR} key={`pair-${startIndex}`}>
+            {pair.map((photoIndex) => tile(photoIndex, TILE_BASE))}
           </div>,
         );
       }
@@ -83,7 +84,7 @@ export default function HeroMosaic({ photos = [], title }) {
     photos.length === 1 ? (
       <div className={STATIC_1}>{tile(0, TILE_BASE)}</div>
     ) : photos.length === 2 ? (
-      <div className={STATIC_2}>{photos.map((photo, i) => tile(i, TILE_BASE))}</div>
+      <div className={STATIC_2}>{photos.map((photo, index) => tile(index, TILE_BASE))}</div>
     ) : (
       <Slider gridClassName={TRACK}>{children}</Slider>
     );
@@ -139,7 +140,7 @@ export default function HeroMosaic({ photos = [], title }) {
                   <button
                     type="button"
                     className={LB_ICON_BTN}
-                    onClick={() => setOpenIndex((i) => (i - 1 + photos.length) % photos.length)}
+                    onClick={() => setOpenIndex((currentIndex) => (currentIndex - 1 + photos.length) % photos.length)}
                     aria-label="Previous photo"
                   >
                     &lsaquo;
@@ -147,7 +148,7 @@ export default function HeroMosaic({ photos = [], title }) {
                   <button
                     type="button"
                     className={LB_ICON_BTN}
-                    onClick={() => setOpenIndex((i) => (i + 1) % photos.length)}
+                    onClick={() => setOpenIndex((currentIndex) => (currentIndex + 1) % photos.length)}
                     aria-label="Next photo"
                   >
                     &rsaquo;

@@ -8,16 +8,18 @@ function livePrices() {
   if (!catalogPromise) {
     catalogPromise = (async () => {
       try {
-        const d = await catalog({ currency: 'USD', guests: 2, stay: '' });
-        if (!d || !Array.isArray(d.items)) return null;
+        const catalogItem = await catalog({ currency: 'USD', guests: 2, stay: '' });
+        if (!catalogItem || !Array.isArray(catalogItem.items)) return null;
         const byName = {};
-        d.items.forEach((i) => {
-          byName[i.name] = i.standard.usd;
+        catalogItem.items.forEach((item) => {
+          byName[item.name] = item.standard.usd;
         });
-        (d.transfers || []).forEach((t) => {
-          byName[t.route] = t.usd;
+        (catalogItem.transfers || []).forEach((transfer) => {
+          byName[transfer.route] = transfer.usd;
         });
-        const transfers = (d.transfers || []).map((t) => t.usd).filter((n) => n > 0);
+        const transfers = (catalogItem.transfers || [])
+          .map((transfer) => transfer.usd)
+          .filter((priceUsd) => priceUsd > 0);
         return { byName, transfers };
       } catch (e) {
         return null;
@@ -50,22 +52,22 @@ function withLivePrice({ json, priceGroup, priceKey }, prices) {
   return { ...node, offers: { ...node.offers, price: String(usd) } };
 }
 
-function isCrumb(n) {
-  return n && n['@type'] === 'BreadcrumbList';
+function isCrumb(schemaNode) {
+  return schemaNode && schemaNode['@type'] === 'BreadcrumbList';
 }
-function stripCrumb(b) {
-  if (Array.isArray(b.json)) {
-    const kept = b.json.filter((n) => !isCrumb(n));
-    return kept.length ? { ...b, json: kept } : null;
+function stripCrumb(block) {
+  if (Array.isArray(block.json)) {
+    const kept = block.json.filter((schemaNode) => !isCrumb(schemaNode));
+    return kept.length ? { ...block, json: kept } : null;
   }
-  return isCrumb(b.json) ? null : b;
+  return isCrumb(block.json) ? null : block;
 }
 
 export default async function JsonLd({ page, crumbs }) {
   const raw = PAGE_SCHEMA[page] || [];
   const given = crumbs && crumbs.length > 1 ? crumbs : null;
   const blocks = given ? raw.map(stripCrumb).filter(Boolean) : raw;
-  const hasCrumb = blocks.some((b) => (Array.isArray(b.json) ? b.json.some(isCrumb) : isCrumb(b.json)));
+  const hasCrumb = blocks.some((block) => (Array.isArray(block.json) ? block.json.some(isCrumb) : isCrumb(block.json)));
   const trail = given || (hasCrumb ? [] : crumbsFor(page));
   const extra =
     trail.length > 1
@@ -75,11 +77,11 @@ export default async function JsonLd({ page, crumbs }) {
             json: {
               '@context': 'https://schema.org',
               '@type': 'BreadcrumbList',
-              itemListElement: trail.map((t, i) => ({
+              itemListElement: trail.map((crumb, index) => ({
                 '@type': 'ListItem',
-                position: i + 1,
-                name: t.label,
-                item: SITE + (t.href || `/${page}.html`),
+                position: index + 1,
+                name: crumb.label,
+                item: SITE + (crumb.href || `/${page}.html`),
               })),
             },
           },
@@ -91,12 +93,12 @@ export default async function JsonLd({ page, crumbs }) {
 
   return (
     <>
-      {all.map((b, i) => (
+      {all.map((block, index) => (
         <script
-          key={i}
+          key={index}
           type="application/ld+json"
-          id={b.id || undefined}
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(withLivePrice(b, prices)) }}
+          id={block.id || undefined}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(withLivePrice(block, prices)) }}
         />
       ))}
     </>

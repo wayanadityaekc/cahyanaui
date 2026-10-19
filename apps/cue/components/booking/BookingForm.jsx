@@ -64,20 +64,21 @@ export default function BookingForm({
 
   const itemOptions = useMemo(() => {
     if (!catalog || !type) return [];
-    if (type === 'transfer') return catalog.transfers.map((t) => ({ value: t.route, label: t.route }));
+    if (type === 'transfer')
+      return catalog.transfers.map((transfer) => ({ value: transfer.route, label: transfer.route }));
     const cats = CATEGORY_OF[type] || [];
     return catalog.items
-      .filter((i) => cats.includes(i.category) && i.active)
-      .map((i) => ({ value: i.name, label: i.name }));
+      .filter((itemItem) => cats.includes(itemItem.category) && itemItem.active)
+      .map((catalogItem) => ({ value: catalogItem.name, label: catalogItem.name }));
   }, [catalog, type]);
 
   useEffect(() => {
     if (locked) return;
-    if (itemOptions.length && item && !itemOptions.some((o) => o.value === item)) setItem('');
+    if (itemOptions.length && item && !itemOptions.some((itemOption) => itemOption.value === item)) setItem('');
   }, [locked, itemOptions, item]);
 
-  const entry = catalog && item ? catalog.items.find((i) => i.name === item) : null;
-  const transferEntry = catalog && item ? catalog.transfers.find((t) => t.route === item) : null;
+  const entry = catalog && item ? catalog.items.find((itemItem) => itemItem.name === item) : null;
+  const transferEntry = catalog && item ? catalog.transfers.find((transfer) => transfer.route === item) : null;
   const hasExclusive = !!(entry && entry.hasExclusive);
   const isActivity = !!(entry && (entry.category === 'experience' || entry.category === 'performance'));
   const showToggle = hasExclusive || isActivity;
@@ -85,13 +86,13 @@ export default function BookingForm({
   const modeInfo = isActivity ? ACTIVITY_MODE_INFO : MODE_INFO;
 
   const symbol = (catalog && catalog.symbol) || '$';
-  function fmt(n) {
-    return n == null ? '-' : symbol + n.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US');
+  function formatPrice(amount) {
+    return amount == null ? '-' : symbol + amount.toLocaleString(symbol === 'Rp' ? 'id-ID' : 'en-US');
   }
 
   const band = entry ? (effectiveMode === 'exclusive' && entry.exclusive ? entry.exclusive : entry.standard) : null;
   const display = band ? band.display : transferEntry ? transferEntry.display : null;
-  const priceText = fmt(display);
+  const priceText = formatPrice(display);
 
   const surcharge = entry && entry.surcharge && entry.surcharge.display ? entry.surcharge.display : 0;
 
@@ -228,7 +229,10 @@ export default function BookingForm({
             icon={PEOPLE_ICON}
             value={String(displayGuests)}
             onChange={setGuests}
-            options={GUEST_OPTIONS.map((n) => ({ value: String(n), label: `${n} ${n === 1 ? 'guest' : 'guests'}` }))}
+            options={GUEST_OPTIONS.map((guestCount) => ({
+              value: String(guestCount),
+              label: `${guestCount} ${guestCount === 1 ? 'guest' : 'guests'}`,
+            }))}
           />
         </div>
 

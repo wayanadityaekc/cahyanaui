@@ -52,8 +52,8 @@ const MONTHS = [
   'December',
 ];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function iso(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 export default function DateField({
@@ -83,8 +83,8 @@ export default function DateField({
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    function onKey(event) {
+      return event.key === 'Escape' && setOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -95,13 +95,15 @@ export default function DateField({
   const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
   const lead = first.getDay();
 
-  function label12(v) {
-    return withTime && time ? `${fmtDate(v)} · ${fmtTime(time)}` : fmtDate(v);
+  function label12(timeValue) {
+    return withTime && time ? `${fmtDate(timeValue)} · ${fmtTime(time)}` : fmtDate(timeValue);
   }
 
   const cells = [];
   [...Array(lead).keys()].forEach(() => cells.push(null));
-  [...Array(daysInMonth).keys()].forEach((i) => cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i + 1)));
+  [...Array(daysInMonth).keys()].forEach((dayIndex) =>
+    cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), dayIndex + 1)),
+  );
 
   const panel = (
     <div className={panelBookdate(open)}>
@@ -135,24 +137,24 @@ export default function DateField({
             </button>
           </div>
           <div className={CAL_GRID}>
-            {DOW.map((d) => (
-              <span className={CAL_DOW} key={d}>
-                {d}
+            {DOW.map((dayName) => (
+              <span className={CAL_DOW} key={dayName}>
+                {dayName}
               </span>
             ))}
-            {cells.map((cell, i) => {
-              if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
-              const v = iso(cell);
-              const disabled = v < minDate;
+            {cells.map((cell, index) => {
+              if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
+              const isoDate = iso(cell);
+              const disabled = isoDate < minDate;
               return (
                 <button
                   type="button"
-                  key={v}
-                  className={calDay(disabled, v === value)}
-                  aria-pressed={v === value}
+                  key={isoDate}
+                  className={calDay(disabled, isoDate === value)}
+                  aria-pressed={isoDate === value}
                   disabled={disabled}
                   onClick={() => {
-                    onChange(v);
+                    onChange(isoDate);
                     if (!withTime) setOpen(false);
                   }}
                 >
@@ -191,7 +193,7 @@ export default function DateField({
         id={id}
         value={value || ''}
         min={minDate}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         tabIndex={-1}
         aria-hidden="true"
       />

@@ -26,7 +26,7 @@ export default function CheckStep({
   priced,
   detailsOpen,
   setDetailsOpen,
-  f,
+  f: form,
   price,
   payOn,
   onContinue,
@@ -85,7 +85,11 @@ export default function CheckStep({
           <p className={GROUP_LABEL}>{view.detailsTitle || "What's included"}</p>
           {view.detailLines.length > 4 ? (
             <div className="mb-4">
-              <button type="button" className={DETAILS_TOGGLE} onClick={() => setDetailsOpen((v) => !v)}>
+              <button
+                type="button"
+                className={DETAILS_TOGGLE}
+                onClick={() => setDetailsOpen((wasDetailsOpen) => !wasDetailsOpen)}
+              >
                 <span>{view.detailLines.length} items</span>
                 <span
                   className={`text-[1.4rem] text-gold transition-transform duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? '[transform:rotate(90deg)]' : ''}`}
@@ -96,8 +100,8 @@ export default function CheckStep({
               <ul
                 className={`list-none overflow-hidden transition-[max-height] duration-[var(--dur-slow)] ease-[ease] ${detailsOpen ? 'max-h-[320px]' : 'max-h-0'}`}
               >
-                {view.detailLines.map((detailLine, i) => (
-                  <li className={DETAILS_LI} key={i}>
+                {view.detailLines.map((detailLine, index) => (
+                  <li className={DETAILS_LI} key={index}>
                     {detailLine}
                   </li>
                 ))}
@@ -105,8 +109,8 @@ export default function CheckStep({
             </div>
           ) : (
             <ul className={`${ROWSET} list-none`}>
-              {view.detailLines.map((detailLine, i) => (
-                <li className={DETAILS_LI_ROW} key={i}>
+              {view.detailLines.map((detailLine, index) => (
+                <li className={DETAILS_LI_ROW} key={index}>
                   {detailLine}
                 </li>
               ))}
@@ -119,26 +123,26 @@ export default function CheckStep({
       <div className={ROWSET}>
         <div className={ROW}>
           <span>Name</span>
-          <span>{f.name}</span>
+          <span>{form.name}</span>
         </div>
         <div className={ROW}>
           <span>Phone</span>
-          <span>{f.phone}</span>
+          <span>{form.phone}</span>
         </div>
         <div className={ROW}>
           <span>Email</span>
-          <span>{f.email}</span>
+          <span>{form.email}</span>
         </div>
-        {f.pickup && (
+        {form.pickup && (
           <div className={ROW}>
             <span>Pick-up</span>
-            <span>{f.pickup}</span>
+            <span>{form.pickup}</span>
           </div>
         )}
-        {f.dropoff && (
+        {form.dropoff && (
           <div className={ROW}>
             <span>Drop-off</span>
-            <span>{f.dropoff}</span>
+            <span>{form.dropoff}</span>
           </div>
         )}
       </div>

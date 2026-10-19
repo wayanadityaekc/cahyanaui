@@ -61,8 +61,8 @@ export default function Select({
 
   useEffect(() => {
     if (!open || asPortal) return;
-    function onDoc(e) {
-      if (groupRef.current && !groupRef.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (groupRef.current && !groupRef.current.contains(event.target)) setOpen(false);
     }
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
@@ -70,14 +70,14 @@ export default function Select({
 
   useEffect(() => {
     if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    function onKey(event) {
+      return event.key === 'Escape' && setOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
-  const selected = options.find((o) => String(o.value) === String(value));
+  const selected = options.find((option) => String(option.value) === String(value));
 
   const panel = (
     <div className={panelPopup(open)} data-portal="select" data-open={open ? '' : undefined}>
@@ -88,23 +88,23 @@ export default function Select({
         </button>
       </div>
       <div className={PANEL_BODY} role="listbox" aria-label={label}>
-        {options.map((o) => (
+        {options.map((option) => (
           <button
-            key={String(o.value)}
+            key={String(option.value)}
             type="button"
             role="option"
-            aria-selected={String(o.value) === String(value)}
-            aria-disabled={o.disabled || undefined}
-            className={opt(String(o.value) === String(value), o.disabled)}
-            disabled={!!o.disabled}
+            aria-selected={String(option.value) === String(value)}
+            aria-disabled={option.disabled || undefined}
+            className={opt(String(option.value) === String(value), option.disabled)}
+            disabled={!!option.disabled}
             onClick={() => {
-              if (o.disabled) return;
-              onChange(o.value);
+              if (option.disabled) return;
+              onChange(option.value);
               setOpen(false);
             }}
           >
-            {o.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${o.flag}.svg`} alt="" />}
-            <span className={HS_OPT_NM}>{o.label}</span>
+            {option.flag && <img className={HS_OPT_FLAG} src={`/assets/flags/${option.flag}.svg`} alt="" />}
+            <span className={HS_OPT_NM}>{option.label}</span>
           </button>
         ))}
       </div>
@@ -118,14 +118,14 @@ export default function Select({
         id={fieldId}
         className={BK_NATIVE}
         value={value ?? ''}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         tabIndex={-1}
         aria-hidden="true"
       >
         {placeholder && <option value="">{placeholder}</option>}
-        {options.map((o) => (
-          <option key={String(o.value)} value={o.value} disabled={o.disabled}>
-            {o.label}
+        {options.map((option) => (
+          <option key={String(option.value)} value={option.value} disabled={option.disabled}>
+            {option.label}
           </option>
         ))}
       </select>
@@ -135,7 +135,7 @@ export default function Select({
         className={rich ? CONTROL_RICH : CONTROL}
         aria-haspopup="listbox"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
       >
         {icon && (
           <span className={CONTROL_IC} aria-hidden="true">

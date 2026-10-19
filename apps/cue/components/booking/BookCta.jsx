@@ -22,8 +22,8 @@ export default function BookCta({ item, perPerson = false }) {
   const [confirm, setConfirm] = useState(null);
 
   function isFullDay(name) {
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
-    return !!c && (c.category === 'tour' || c.category === 'combo');
+    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
+    return !!catalogItem && (catalogItem.category === 'tour' || catalogItem.category === 'combo');
   }
 
   useEffect(() => {
@@ -32,12 +32,12 @@ export default function BookCta({ item, perPerson = false }) {
     if (!root) return;
     const bookBtn = root.querySelector('.program-cta__btn--book');
     const addBtn = root.querySelector('.program-cta__btn--add');
-    function onBook(e) {
-      e.preventDefault();
+    function onBook(event) {
+      event.preventDefault();
       setAsk('book');
     }
-    function onAdd(e) {
-      e.preventDefault();
+    function onAdd(event) {
+      event.preventDefault();
       setAsk('add');
     }
     if (bookBtn) bookBtn.addEventListener('click', onBook);
@@ -50,13 +50,13 @@ export default function BookCta({ item, perPerson = false }) {
 
   useEffect(() => {
     if (!toast) return;
-    const t = setTimeout(() => setToast(''), 2600);
-    return () => clearTimeout(t);
+    const toastTimer = setTimeout(() => setToast(''), 2600);
+    return () => clearTimeout(toastTimer);
   }, [toast]);
 
   function categoryOf(name) {
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
-    return c ? c.category : null;
+    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
+    return catalogItem ? catalogItem.category : null;
   }
 
   function pick(date, time) {
@@ -109,9 +109,9 @@ export default function BookCta({ item, perPerson = false }) {
               type="button"
               className={BTN}
               onClick={() => {
-                const c = confirm;
+                const pendingConfirm = confirm;
                 setConfirm(null);
-                add(c.date, c.goto, c.time);
+                add(pendingConfirm.date, pendingConfirm.goto, pendingConfirm.time);
               }}
             >
               Add anyway

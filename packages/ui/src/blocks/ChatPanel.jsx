@@ -101,7 +101,7 @@ export default function ChatPanel({
             <Input
               type="email"
               value={mailDraft}
-              onChange={(e) => setMailDraft(e.target.value)}
+              onChange={(event) => setMailDraft(event.target.value)}
               placeholder={copy.emailField}
               aria-label={copy.emailField}
               maxLength={200}
@@ -149,15 +149,15 @@ export default function ChatPanel({
 
       <form
         className={CHAT_FOOT}
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={(event) => {
+          event.preventDefault();
           ask(draft);
         }}
       >
         <Input
           className="flex-1 min-w-0"
           value={draft}
-          onChange={(e) => onDraft(e.target.value)}
+          onChange={(event) => onDraft(event.target.value)}
           placeholder={thread ? copy.placeholderLive : copy.placeholder}
           aria-label="Your question"
           maxLength={300}

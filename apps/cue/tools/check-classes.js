@@ -8,16 +8,16 @@ const VARIANT =
 function segments(tok) {
   const out = [];
   let depth = 0,
-    cur = '';
+    current = '';
   [...tok].forEach((ch) => {
     if (ch === '[' || ch === '(') depth++;
     else if (ch === ']' || ch === ')') depth--;
     if (ch === ':' && depth === 0) {
-      out.push(cur);
-      cur = '';
-    } else cur += ch;
+      out.push(current);
+      current = '';
+    } else current += ch;
   });
-  out.push(cur);
+  out.push(current);
   return out;
 }
 
@@ -25,7 +25,7 @@ function stripComments(src) {
   return src
     .replace(/\/\*[\s\S]*?\*\//g, ' ')
     .split('\n')
-    .map((l) => (/^\s*(\/\/|\*)/.test(l) ? '' : l.replace(/\s\/\/.*$/, '')))
+    .map((line) => (/^\s*(\/\/|\*)/.test(line) ? '' : line.replace(/\s\/\/.*$/, '')))
     .join('\n');
 }
 
@@ -38,9 +38,9 @@ const files = execSync(
   .filter(Boolean);
 
 const bad = [];
-files.forEach((f) => {
-  const lines = stripComments(readFileSync(f, 'utf8')).split('\n');
-  lines.forEach((line, i) => {
+files.forEach((file) => {
+  const lines = stripComments(readFileSync(file, 'utf8')).split('\n');
+  lines.forEach((line, index) => {
     line
       .split(/[\s'"`{};,]+/)
       .filter(Boolean)
@@ -49,10 +49,11 @@ files.forEach((f) => {
         const parts = segments(tok);
         const last = parts.pop();
         if (!parts.length || !parts.every((part) => VARIANT.test(part))) return;
-        if (last === '') bad.push([f, i + 1, tok, 'variant prefix with no utility after it']);
-        else if (new Set(parts).size !== parts.length) bad.push([f, i + 1, tok, 'the same variant prefix twice']);
+        if (last === '') bad.push([file, index + 1, tok, 'variant prefix with no utility after it']);
+        else if (new Set(parts).size !== parts.length)
+          bad.push([file, index + 1, tok, 'the same variant prefix twice']);
       });
-    if (/var\(--\)/.test(line)) bad.push([f, i + 1, 'var(--)', 'empty custom property']);
+    if (/var\(--\)/.test(line)) bad.push([file, index + 1, 'var(--)', 'empty custom property']);
   });
 });
 
@@ -61,7 +62,7 @@ if (!bad.length) {
   process.exit(0);
 }
 console.error(`check-classes: ${bad.length} malformed utilit${bad.length > 1 ? 'ies' : 'y'}\n`);
-bad.forEach(([f, l, tok, why]) => {
-  console.error(`  ${f}:${l}\n    ${tok}\n    ${why} - it generates no CSS at all\n`);
+bad.forEach(([file, lineNumber, tok, why]) => {
+  console.error(`  ${file}:${lineNumber}\n    ${tok}\n    ${why} - it generates no CSS at all\n`);
 });
 process.exit(1);

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronLeft, MessageCircle, X } from 'lucide-react';
+import { ChevronLeft, MessageCircle, X as CloseIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button, DateRangeField, EYEBROW_LINE } from '@cahyana/ui';
 import DragSheet from '@/components/ui/DragSheet';
@@ -112,7 +112,7 @@ export default function BookingSheet() {
               </h3>
             </div>
             <button type="button" onClick={closeBooking} aria-label="Close" className="text-gold cursor-pointer">
-              <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+              <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
             </button>
           </div>
 
@@ -159,7 +159,7 @@ export default function BookingSheet() {
                   label="Guests"
                   value={String(booking.guests)}
                   onChange={(value) => updateBooking({ guests: Number(value) })}
-                  options={Array.from({ length: villa.guests }, (_, i) => i + 1).map((count) => ({
+                  options={Array.from({ length: villa.guests }, (unusedValue, index) => index + 1).map((count) => ({
                     value: String(count),
                     label: `${count} guest${count > 1 ? 's' : ''}`,
                   }))}

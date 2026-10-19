@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 export default function OtpFields({ length = 6, value, onChange, onComplete, error, disabled, autoFocus }) {
   const refs = useRef([]);
-  const digits = Array.from({ length }, (_, i) => value[i] || '');
+  const digits = Array.from({ length }, (unusedValue, index) => value[index] || '');
 
   useEffect(() => {
     if (autoFocus) refs.current[0]?.focus();
@@ -16,9 +16,9 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     if (joined.length === length && next.every(Boolean)) onComplete && onComplete(joined);
   }
 
-  function spread(i, raw) {
+  function spread(digitIndex, raw) {
     const next = digits.slice();
-    let pos = i;
+    let pos = digitIndex;
     for (const char of raw) {
       if (pos >= length) break;
       next[pos] = char;
@@ -28,71 +28,71 @@ export default function OtpFields({ length = 6, value, onChange, onComplete, err
     refs.current[Math.min(pos, length - 1)]?.focus();
   }
 
-  function handleChange(i) {
-    return (e) => {
-      const raw = e.target.value.replace(/\D/g, '');
+  function handleChange(digitIndex) {
+    return (event) => {
+      const raw = event.target.value.replace(/\D/g, '');
       if (!raw) {
         const next = digits.slice();
-        next[i] = '';
+        next[digitIndex] = '';
         commit(next);
         return;
       }
       if (raw.length > 1) {
-        spread(i, raw);
+        spread(digitIndex, raw);
         return;
       }
       const next = digits.slice();
-      next[i] = raw;
+      next[digitIndex] = raw;
       commit(next);
-      if (i < length - 1) refs.current[i + 1]?.focus();
+      if (digitIndex < length - 1) refs.current[digitIndex + 1]?.focus();
     };
   }
 
-  function handleKeyDown(i) {
-    return (e) => {
-      if (e.key === 'Backspace' && !digits[i] && i > 0) {
+  function handleKeyDown(digitIndex) {
+    return (event) => {
+      if (event.key === 'Backspace' && !digits[digitIndex] && digitIndex > 0) {
         const next = digits.slice();
-        next[i - 1] = '';
+        next[digitIndex - 1] = '';
         commit(next);
-        refs.current[i - 1]?.focus();
-      } else if (e.key === 'ArrowLeft' && i > 0) {
-        e.preventDefault();
-        refs.current[i - 1]?.focus();
-      } else if (e.key === 'ArrowRight' && i < length - 1) {
-        e.preventDefault();
-        refs.current[i + 1]?.focus();
+        refs.current[digitIndex - 1]?.focus();
+      } else if (event.key === 'ArrowLeft' && digitIndex > 0) {
+        event.preventDefault();
+        refs.current[digitIndex - 1]?.focus();
+      } else if (event.key === 'ArrowRight' && digitIndex < length - 1) {
+        event.preventDefault();
+        refs.current[digitIndex + 1]?.focus();
       }
     };
   }
 
-  function handlePaste(i) {
-    return (e) => {
-      const raw = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+  function handlePaste(digitIndex) {
+    return (event) => {
+      const raw = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
       if (!raw) return;
-      e.preventDefault();
-      spread(i, raw);
+      event.preventDefault();
+      spread(digitIndex, raw);
     };
   }
 
   return (
     <div className="flex gap-2 justify-center" role="group" aria-label="Verification code">
-      {digits.map((digit, i) => (
+      {digits.map((digit, index) => (
         <input
-          key={i}
+          key={index}
           ref={(input) => {
-            refs.current[i] = input;
+            refs.current[index] = input;
           }}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
-          autoComplete={i === 0 ? 'one-time-code' : 'off'}
+          autoComplete={index === 0 ? 'one-time-code' : 'off'}
           maxLength={1}
           value={digit}
           disabled={disabled}
           aria-invalid={!!error}
-          onChange={handleChange(i)}
-          onKeyDown={handleKeyDown(i)}
-          onPaste={handlePaste(i)}
+          onChange={handleChange(index)}
+          onKeyDown={handleKeyDown(index)}
+          onPaste={handlePaste(index)}
           className={
             'flex-1 min-w-0 max-w-[2.6rem] h-[2.8rem] text-center font-body text-h3 font-semibold rounded-md ' +
             '[border:1.5px_solid_var(--line)] bg-white text-green ' +

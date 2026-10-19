@@ -1,33 +1,33 @@
-import { z } from 'zod';
+import { z as zod } from 'zod';
 
 export const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
-function email(msg = 'Please enter a valid email address.') {
-  return z.string().trim().regex(EMAIL_RE, msg);
+function email(message = 'Please enter a valid email address.') {
+  return zod.string().trim().regex(EMAIL_RE, message);
 }
-function required(msg) {
-  return z.string().trim().min(1, msg);
+function required(message) {
+  return zod.string().trim().min(1, message);
 }
 
-export const contactSchema = z.object({
+export const contactSchema = zod.object({
   name: required('Please enter your name.'),
   email: email(),
   message: required('Please enter a message.'),
 });
 
-export const signInSchema = z.object({
+export const signInSchema = zod.object({
   email: email(),
 });
 
-export const createAccountSchema = z.object({
+export const createAccountSchema = zod.object({
   name: required('Please enter your name.'),
   email: email(),
   phone: required('Please enter your phone number.'),
 });
 
-export const reviewSchema = z.object({
-  picked: z.array(z.string()).min(1, 'Please pick at least one tour to review.'),
-  rating: z.number().min(1, 'Please give a star rating.'),
+export const reviewSchema = zod.object({
+  picked: zod.array(zod.string()).min(1, 'Please pick at least one tour to review.'),
+  rating: zod.number().min(1, 'Please give a star rating.'),
   message: required('Please write your review.'),
 });
 
@@ -37,15 +37,15 @@ export function bookingSchema({
   needsTime = false,
   needsFlight = false,
 } = {}) {
-  return z.object({
+  return zod.object({
     name: required('Please enter your name.'),
     phone: required('Please enter your phone number.'),
     email: email(),
-    pickup: pickupOptional ? z.string() : required('Please enter your pick-up location.'),
-    dropoff: dropoffRequired ? required('Please enter your drop-off location.') : z.string(),
-    time: needsTime ? z.string().min(1, 'Please select a pickup time.') : z.string(),
-    flightNumber: needsFlight ? required('Please enter your flight number.') : z.string(),
-    flightDatetime: needsFlight ? z.string().min(1, 'Please enter your flight date & time.') : z.string(),
-    referral: z.string().optional(),
+    pickup: pickupOptional ? zod.string() : required('Please enter your pick-up location.'),
+    dropoff: dropoffRequired ? required('Please enter your drop-off location.') : zod.string(),
+    time: needsTime ? zod.string().min(1, 'Please select a pickup time.') : zod.string(),
+    flightNumber: needsFlight ? required('Please enter your flight number.') : zod.string(),
+    flightDatetime: needsFlight ? zod.string().min(1, 'Please enter your flight date & time.') : zod.string(),
+    referral: zod.string().optional(),
   });
 }

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { MessageCircle } from 'lucide-react';
 import { CHAT_FRAME, CHAT_SCRIM, ChatPanel, useBodyLock, useChat, useDialog, useMobile } from '@cahyana/ui';
 import AuthSheet from '@/components/account/AuthSheet';
@@ -53,7 +53,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
     <LazyMotion features={domAnimation}>
       <AnimatePresence>
         {open && (
-          <m.div
+          <motionElement.div
             key="scrim"
             className={CHAT_SCRIM}
             aria-hidden="true"
@@ -65,7 +65,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
           />
         )}
         {open && (
-          <m.div
+          <motionElement.div
             key="panel"
             ref={dialogRef}
             className={CHAT_FRAME}
@@ -91,7 +91,7 @@ export default function ChatWindow({ open = false, onClose = () => {} }) {
                 icon: <MessageCircle strokeWidth={1.8} aria-hidden="true" />,
               }}
             />
-          </m.div>
+          </motionElement.div>
         )}
       </AnimatePresence>
       <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />

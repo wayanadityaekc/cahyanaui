@@ -18,20 +18,25 @@ const OUT = path.join(__dirname, '..', 'public', 'assets', 'icons') + path.sep;
 
 async function inkBox() {
   const { data, info } = await sharp(SRC).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const { width: W, height: H, channels: C } = info;
-  let minX = W,
-    minY = H,
+  const { width: imageWidth, height: imageHeight, channels: channelCount } = info;
+  let minX = imageWidth,
+    minY = imageHeight,
     maxX = -1,
     maxY = -1;
-  [...Array(H).keys()].forEach((y) =>
-    [...Array(W).keys()].forEach((x) => {
-      const i = (y * W + x) * C;
-      const [r, g, b, a] = [data[i], data[i + 1], data[i + 2], data[i + 3]];
-      if (a > 10 && !(r > 245 && g > 245 && b > 245)) {
-        if (x < minX) minX = x;
-        if (x > maxX) maxX = x;
-        if (y < minY) minY = y;
-        if (y > maxY) maxY = y;
+  [...Array(imageHeight).keys()].forEach((rowIndex) =>
+    [...Array(imageWidth).keys()].forEach((columnIndex) => {
+      const pixelOffset = (rowIndex * imageWidth + columnIndex) * channelCount;
+      const [red, green, blue, alpha] = [
+        data[pixelOffset],
+        data[pixelOffset + 1],
+        data[pixelOffset + 2],
+        data[pixelOffset + 3],
+      ];
+      if (alpha > 10 && !(red > 245 && green > 245 && blue > 245)) {
+        if (columnIndex < minX) minX = columnIndex;
+        if (columnIndex > maxX) maxX = columnIndex;
+        if (rowIndex < minY) minY = rowIndex;
+        if (rowIndex > maxY) maxY = rowIndex;
       }
     }),
   );
@@ -39,8 +44,8 @@ async function inkBox() {
   const side = Math.max(maxX - minX + 1, maxY - minY + 1);
   const cx = (minX + maxX + 1) / 2,
     cy = (minY + maxY + 1) / 2;
-  const left = Math.max(0, Math.min(W - side, Math.round(cx - side / 2)));
-  const top = Math.max(0, Math.min(H - side, Math.round(cy - side / 2)));
+  const left = Math.max(0, Math.min(imageWidth - side, Math.round(cx - side / 2)));
+  const top = Math.max(0, Math.min(imageHeight - side, Math.round(cy - side / 2)));
   return { left, top, width: side, height: side };
 }
 
@@ -58,9 +63,9 @@ async function inkBox() {
 
   const GOLD = '#b4975f';
   async function onGold(size) {
-    const z = Math.round(size * 1.45);
-    const zoomed = await disc().resize(z, z).png().toBuffer();
-    const off = Math.round((z - size) / 2);
+    const scaledSize = Math.round(size * 1.45);
+    const zoomed = await disc().resize(scaledSize, scaledSize).png().toBuffer();
+    const off = Math.round((scaledSize - size) / 2);
     return sharp(zoomed)
       .extract({ left: off, top: off, width: size, height: size })
       .flatten({ background: GOLD })
@@ -90,14 +95,14 @@ async function inkBox() {
   const dir = [],
     body = [];
   frames.forEach(({ size, buf }) => {
-    const e = Buffer.alloc(16);
-    e[0] = size;
-    e[1] = size;
-    e.writeUInt16LE(1, 4);
-    e.writeUInt16LE(32, 6);
-    e.writeUInt32LE(buf.length, 8);
-    e.writeUInt32LE(offset, 12);
-    dir.push(e);
+    const entryBuffer = Buffer.alloc(16);
+    entryBuffer[0] = size;
+    entryBuffer[1] = size;
+    entryBuffer.writeUInt16LE(1, 4);
+    entryBuffer.writeUInt16LE(32, 6);
+    entryBuffer.writeUInt32LE(buf.length, 8);
+    entryBuffer.writeUInt32LE(offset, 12);
+    dir.push(entryBuffer);
     body.push(buf);
     offset += buf.length;
   });
@@ -119,7 +124,7 @@ async function inkBox() {
     'apple-touch-icon.png',
     'icon-192.png',
     'icon-512.png',
-  ].forEach((f) => {
-    console.log(' ', f, fs.statSync(OUT + f).size, 'bytes');
+  ].forEach((iconFile) => {
+    console.log(' ', iconFile, fs.statSync(OUT + iconFile).size, 'bytes');
   });
 })();

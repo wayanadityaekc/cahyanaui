@@ -24,7 +24,10 @@ export default function TransferPicker() {
   const catalog = pricing && pricing.catalog;
   const areas = useMemo(() => {
     if (!catalog) return [];
-    return catalog.transfers.map((t) => ({ route: t.route, area: t.route.replace(/\s*–\s*Ubud$/, '') }));
+    return catalog.transfers.map((transfer) => ({
+      route: transfer.route,
+      area: transfer.route.replace(/\s*–\s*Ubud$/, ''),
+    }));
   }, [catalog]);
 
   const { from, to, pickFrom, pickTo, pickerRef } = useTransferRoute();
@@ -32,14 +35,17 @@ export default function TransferPicker() {
 
   const area = from === UBUD ? to : to === UBUD ? from : '';
   const routeName = area && area !== UBUD ? `${area} – Ubud` : '';
-  const entry = catalog && routeName ? catalog.transfers.find((t) => t.route === routeName) : null;
+  const entry = catalog && routeName ? catalog.transfers.find((transfer) => transfer.route === routeName) : null;
 
   const symbol = (catalog && catalog.symbol) || '$';
   const base = entry ? entry.display : null;
   const amount = base == null ? null : isReturn ? Math.round(base * 2 * 0.9) : base;
   const priceText = amount == null ? '—' : symbol + amount.toLocaleString(currency === 'IDR' ? 'id-ID' : 'en-US');
 
-  const options = [{ value: UBUD, label: 'Ubud' }, ...areas.map((a) => ({ value: a.area, label: a.area }))];
+  const options = [
+    { value: UBUD, label: 'Ubud' },
+    ...areas.map((areaItem) => ({ value: areaItem.area, label: areaItem.area })),
+  ];
 
   function swap() {
     pickFrom(to);
@@ -106,7 +112,7 @@ export default function TransferPicker() {
           type="checkbox"
           className="peer absolute opacity-0 w-0 h-0"
           checked={isReturn}
-          onChange={(e) => setIsReturn(e.target.checked)}
+          onChange={(event) => setIsReturn(event.target.checked)}
         />
         <span className="w-10 h-[23px] rounded-pill bg-line relative shrink-0 transition-[background] duration-200 peer-checked:bg-gold after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[17px] after:h-[17px] after:rounded-[50%] after:bg-white after:transition-[left] after:duration-200 peer-checked:after:left-[20px]" />
         <span>

@@ -34,8 +34,8 @@ export default function ReviewsStrip({
     async function load() {
       try {
         const response = await fetch(url);
-        const d = response.ok ? await response.json() : [];
-        if (!cancelled) setRows(Array.isArray(d) ? d : []);
+        const reviews = response.ok ? await response.json() : [];
+        if (!cancelled) setRows(Array.isArray(reviews) ? reviews : []);
       } catch (e) {
         if (!cancelled) setRows([]);
       }
@@ -61,7 +61,7 @@ export default function ReviewsStrip({
     );
   }
 
-  const cards = list.map((r, i) => <ReviewCard key={i} {...r} onClick={() => setSelected(r)} />);
+  const cards = list.map((review, index) => <ReviewCard key={index} {...review} onClick={() => setSelected(review)} />);
 
   return (
     <>

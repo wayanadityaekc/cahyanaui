@@ -48,15 +48,15 @@ const MONTHS = [
   'December',
 ];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function iso(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function fmtLabel(v) {
-  if (!v) return '';
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+function fmtLabel(isoDate) {
+  if (!isoDate) return '';
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const labelDate = new Date(year, month - 1, day);
+  return labelDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export default function DateField({
@@ -82,8 +82,8 @@ export default function DateField({
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    function onKey(event) {
+      return event.key === 'Escape' && setOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -95,8 +95,9 @@ export default function DateField({
   const lead = first.getDay();
 
   const cells = [];
-  for (let i = 0; i < lead; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), d));
+  for (let leadIndex = 0; leadIndex < lead; leadIndex++) cells.push(null);
+  for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++)
+    cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), dayOfMonth));
 
   const panel = (
     <div className={panelBookdate(open)}>
@@ -130,24 +131,24 @@ export default function DateField({
             </button>
           </div>
           <div className={CAL_GRID}>
-            {DOW.map((d) => (
-              <span className={CAL_DOW} key={d}>
-                {d}
+            {DOW.map((weekday) => (
+              <span className={CAL_DOW} key={weekday}>
+                {weekday}
               </span>
             ))}
-            {cells.map((cell, i) => {
-              if (!cell) return <span className={calDay(true)} key={`e${i}`} />;
-              const v = iso(cell);
-              const disabled = v < minDate || (max ? v > max : false);
+            {cells.map((cell, index) => {
+              if (!cell) return <span className={calDay(true)} key={`e${index}`} />;
+              const isoDate = iso(cell);
+              const disabled = isoDate < minDate || (max ? isoDate > max : false);
               return (
                 <button
                   type="button"
-                  key={v}
-                  className={calDay(disabled, v === value)}
-                  aria-pressed={v === value}
+                  key={isoDate}
+                  className={calDay(disabled, isoDate === value)}
+                  aria-pressed={isoDate === value}
                   disabled={disabled}
                   onClick={() => {
-                    onChange(v);
+                    onChange(isoDate);
                     setOpen(false);
                   }}
                 >
@@ -171,7 +172,7 @@ export default function DateField({
         value={value || ''}
         min={minDate}
         max={max || undefined}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         tabIndex={-1}
         aria-hidden="true"
       />

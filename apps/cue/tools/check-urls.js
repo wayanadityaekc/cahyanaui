@@ -22,16 +22,16 @@ if (!fs.existsSync(OUT)) {
   process.exit(1);
 }
 
-const built = new Set(walk(OUT).map((u) => (u === '/index.html' ? '/' : u)));
-const expected = [...fs.readFileSync(SITEMAP, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) =>
-  m[1].replace('https://cahyanaubudexperience.com', ''),
+const built = new Set(walk(OUT).map((builtPath) => (builtPath === '/index.html' ? '/' : builtPath)));
+const expected = [...fs.readFileSync(SITEMAP, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((locMatch) =>
+  locMatch[1].replace('https://cahyanaubudexperience.com', ''),
 );
 
-const missing = expected.filter((u) => !built.has(u));
+const missing = expected.filter((expectedPath) => !built.has(expectedPath));
 
 if (missing.length) {
   console.error(`URL CHECK FAILED - ${missing.length} live URL(s) missing from the build:`);
-  missing.forEach((u) => console.error(`  ${u}`));
+  missing.forEach((missingPath) => console.error(`  ${missingPath}`));
   process.exit(1);
 }
 
@@ -40,30 +40,30 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
 (function checkRelativeUrls() {
   const path = require('path');
   const files = [];
-  (function w(d) {
-    fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) w(p);
-      else if (/\.jsx?$/.test(e.name)) files.push(p);
+  (function walkDirectory(directory) {
+    fs.readdirSync(directory, { withFileTypes: true }).forEach((event) => {
+      const entryPath = path.join(directory, event.name);
+      if (event.isDirectory()) walkDirectory(entryPath);
+      else if (/\.jsx?$/.test(event.name)) files.push(entryPath);
     });
   })('content');
   const bad = [];
   files.forEach((file) => {
     const src = fs.readFileSync(file, 'utf8');
-    [...src.matchAll(/(src|href)=(\\?")([^"\\]+)/g)].forEach((m) => {
-      const u = m[3];
-      if (/^(https?:|\/|#|mailto:|tel:|data:|\{)/.test(u)) return;
-      bad.push(`${file}  ${m[1]}="${u}"`);
+    [...src.matchAll(/(src|href)=(\\?")([^"\\]+)/g)].forEach((attributeMatch) => {
+      const reference = attributeMatch[3];
+      if (/^(https?:|\/|#|mailto:|tel:|data:|\{)/.test(reference)) return;
+      bad.push(`${file}  ${attributeMatch[1]}="${reference}"`);
     });
-    [...src.matchAll(/url\(\s*(\\?['"]?)([^'")\\]+)/g)].forEach((m) => {
-      const u = m[2];
-      if (/^(https?:|\/|#|data:)/.test(u)) return;
-      bad.push(`${file}  url(${u})`);
+    [...src.matchAll(/url\(\s*(\\?['"]?)([^'")\\]+)/g)].forEach((urlMatch) => {
+      const reference = urlMatch[2];
+      if (/^(https?:|\/|#|data:)/.test(reference)) return;
+      bad.push(`${file}  url(${reference})`);
     });
   });
   if (bad.length) {
     console.error('\nRELATIVE URLS IN EXTRACTED HTML (must be root-absolute):');
-    bad.slice(0, 20).forEach((b) => console.error(`  ${b}`));
+    bad.slice(0, 20).forEach((badReference) => console.error(`  ${badReference}`));
     if (bad.length > 20) console.error(`  ... and ${bad.length - 20} more`);
     process.exitCode = 1;
   } else {
@@ -78,12 +78,12 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   if (!fs.existsSync(OUT) || !fs.existsSync(SITEMAP)) return;
   const sitemap = fs.readFileSync(SITEMAP, 'utf8');
   const pages = [];
-  (function w(d, rel) {
-    fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      if (e.name === '_next' || e.name === 'assets') return;
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) w(p, `${rel}${e.name}/`);
-      else if (e.name.endsWith('.html')) pages.push(rel + e.name);
+  (function walkDirectory(directory, rel) {
+    fs.readdirSync(directory, { withFileTypes: true }).forEach((event) => {
+      if (event.name === '_next' || event.name === 'assets') return;
+      const entryPath = path.join(directory, event.name);
+      if (event.isDirectory()) walkDirectory(entryPath, `${rel}${event.name}/`);
+      else if (event.name.endsWith('.html')) pages.push(rel + event.name);
     });
   })(OUT, '');
   const missing = [];
@@ -99,7 +99,7 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
   });
   if (missing.length) {
     console.error('\nINDEXABLE PAGES MISSING FROM sitemap.xml:');
-    missing.forEach((m) => console.error(`  ${m}`));
+    missing.forEach((missingPath) => console.error(`  ${missingPath}`));
     process.exitCode = 1;
   } else {
     console.log('Indexable pages missing from sitemap : none');
@@ -118,17 +118,17 @@ console.log(`URL check passed - all ${expected.length} live URLs present in out/
           .readFileSync(file, 'utf8')
           .replace(/<!--[\s\S]*?-->/g, '')
           .matchAll(/<loc>([^<]+)<\/loc>/g),
-      ].map((m) => m[1].trim()),
+      ].map((locMatch) => locMatch[1].trim()),
     );
   }
   const rootLocs = locs(root);
   const builtLocs = locs(built);
-  const onlyBuilt = [...builtLocs].filter((u) => !rootLocs.has(u));
-  const onlyRoot = [...rootLocs].filter((u) => !builtLocs.has(u));
+  const onlyBuilt = [...builtLocs].filter((builtLoc) => !rootLocs.has(builtLoc));
+  const onlyRoot = [...rootLocs].filter((rootLoc) => !builtLocs.has(rootLoc));
   if (onlyBuilt.length || onlyRoot.length) {
     console.error('\nSITEMAP MISMATCH - sitemap.xml and out/sitemap.xml disagree:');
-    onlyBuilt.forEach((u) => console.error(`  shipped but not in the root checklist: ${u}`));
-    onlyRoot.forEach((u) => console.error(`  in the root checklist but not shipped: ${u}`));
+    onlyBuilt.forEach((loc) => console.error(`  shipped but not in the root checklist: ${loc}`));
+    onlyRoot.forEach((loc) => console.error(`  in the root checklist but not shipped: ${loc}`));
     process.exitCode = 1;
   } else {
     console.log(`Sitemaps agree : ${rootLocs.size} URLs in both`);

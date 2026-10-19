@@ -1,7 +1,7 @@
 export function fmtDay(dateStr) {
   if (!dateStr) return 'date TBD';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
 export function fmtRange(from, to) {

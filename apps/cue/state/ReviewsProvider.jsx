@@ -13,11 +13,11 @@ export function ReviewsProvider({ children }) {
     async function load() {
       try {
         const response = await fetch(`${API_BASE}/reviews/summary`);
-        const d = response.ok ? await response.json() : null;
-        if (cancelled || !Array.isArray(d)) return;
+        const reviews = response.ok ? await response.json() : null;
+        if (cancelled || !Array.isArray(reviews)) return;
         const map = {};
-        d.forEach((r) => {
-          map[r.service] = r;
+        reviews.forEach((review) => {
+          map[review.service] = review;
         });
         setSummary(map);
       } catch (e) {}

@@ -3,33 +3,33 @@
 import { usePricing } from '@/state/PricingProvider';
 import { PRICE, PRICE_SYM, PRICE_TAIL, PRICE_WAS } from '@/components/ui/priceClasses';
 
-export function withDeemphasizedThousands(num) {
-  const i = num.lastIndexOf('.');
-  if (i === -1) return num;
+export function withDeemphasizedThousands(priceNumber) {
+  const decimalIndex = priceNumber.lastIndexOf('.');
+  if (decimalIndex === -1) return priceNumber;
   return (
     <>
-      {num.slice(0, i + 1)}
-      <span className={PRICE_TAIL}>{num.slice(i + 1)}</span>
+      {priceNumber.slice(0, decimalIndex + 1)}
+      <span className={PRICE_TAIL}>{priceNumber.slice(decimalIndex + 1)}</span>
     </>
   );
 }
 
 export function withSymbol(text) {
-  const m = String(text).match(/^(\D+)(\d.*)$/);
-  if (!m) return text;
-  const symbol = m[1];
-  const num = m[2];
+  const priceMatch = String(text).match(/^(\D+)(\d.*)$/);
+  if (!priceMatch) return text;
+  const symbol = priceMatch[1];
+  const numberText = priceMatch[2];
   return (
     <>
       <span className={`${PRICE_SYM} price__sym`}>{symbol}</span>
-      {symbol === 'Rp' ? withDeemphasizedThousands(num) : num}
+      {symbol === 'Rp' ? withDeemphasizedThousands(numberText) : numberText}
     </>
   );
 }
 
 export default function Price({ name, mode = 'standard', fallback, className = `${PRICE} price`, as: Tag = 'span' }) {
-  const ctx = usePricing();
-  const item = ctx && ctx.lookup ? ctx.lookup(name) : null;
+  const pricing = usePricing();
+  const item = pricing && pricing.lookup ? pricing.lookup(name) : null;
 
   if (!item) {
     return (
@@ -40,10 +40,10 @@ export default function Price({ name, mode = 'standard', fallback, className = `
   }
 
   const band = mode === 'exclusive' && item.exclusive ? item.exclusive : item.standard;
-  const symbol = ctx.symbol || '$';
+  const symbol = pricing.symbol || '$';
   const isIdr = symbol === 'Rp';
   const value = band.display;
-  const num = value.toLocaleString(isIdr ? 'id-ID' : 'en-US');
+  const formattedNumber = value.toLocaleString(isIdr ? 'id-ID' : 'en-US');
 
   const listBand = mode === 'exclusive' && item.listExclusive ? item.listExclusive : item.listStandard;
   const was = listBand && listBand.display !== value ? listBand.display : null;
@@ -58,7 +58,7 @@ export default function Price({ name, mode = 'standard', fallback, className = `
         </span>
       )}
       <span className={`${PRICE_SYM} price__sym`}>{symbol}</span>
-      {isIdr ? withDeemphasizedThousands(num) : num}
+      {isIdr ? withDeemphasizedThousands(formattedNumber) : formattedNumber}
     </Tag>
   );
 }

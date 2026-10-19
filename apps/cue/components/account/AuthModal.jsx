@@ -17,36 +17,38 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
   const { requestLogin, verifyCode, createAccount } = useAccount();
   const [view, setView] = useState('signin');
   const [stage, setStage] = useState('email');
-  const [f, setF] = useState({ name: '', email: '', phone: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [codeEmail, setCodeEmail] = useState('');
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState({});
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
   const [ok, setOk] = useState('');
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     if (cooldown <= 0) return undefined;
-    const t = setInterval(() => setCooldown((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
+    const cooldownTimer = setInterval(() => setCooldown((secondsLeft) => Math.max(0, secondsLeft - 1)), 1000);
+    return () => clearInterval(cooldownTimer);
   }, [cooldown]);
 
-  function set(k) {
-    return (e) => {
-      const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  function set(fieldName) {
+    return (event) => {
+      const { value } = event.target;
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
   function reset() {
-    setMsg('');
+    setMessage('');
     setOk('');
     setErrors({});
   }
   function close() {
     reset();
-    setF({ name: '', email: '', phone: '' });
+    setForm({ name: '', email: '', phone: '' });
     setStage('email');
     setCode('');
     onClose();
@@ -57,7 +59,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     const sent = await requestLogin(email);
     setBusy(false);
     if (!sent) {
-      setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
+      setMessage('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
       return;
     }
     setCodeEmail(email);
@@ -69,7 +71,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
 
   async function doSignIn() {
     reset();
-    const { ok: valid, errors: fieldErrors, data } = validateWith(signInSchema, f);
+    const { ok: valid, errors: fieldErrors, data } = validateWith(signInSchema, form);
     setErrors(fieldErrors);
     if (!valid) return;
     await sendCode(data.email);
@@ -77,7 +79,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
 
   async function doCreate() {
     reset();
-    const { ok: valid, errors: fieldErrors, data } = validateWith(createAccountSchema, f);
+    const { ok: valid, errors: fieldErrors, data } = validateWith(createAccountSchema, form);
     setErrors(fieldErrors);
     if (!valid) return;
     setBusy(true);
@@ -85,7 +87,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setBusy(false);
     if (result.ok) {
       reset();
-      setF({ name: '', email: '', phone: '' });
+      setForm({ name: '', email: '', phone: '' });
       (onSignedIn || onClose)();
       return;
     }
@@ -97,7 +99,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
       setOk(`You already have an account as ${result.email}.`);
       return;
     }
-    setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
+    setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
   async function doVerify(fullCode) {
@@ -107,14 +109,14 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setBusy(false);
     if (result.ok) {
       reset();
-      setF({ name: '', email: '', phone: '' });
+      setForm({ name: '', email: '', phone: '' });
       setStage('email');
       setCode('');
       (onSignedIn || onClose)();
       return;
     }
     setCode('');
-    setMsg(result.error || 'Sorry, something went wrong. Please try again.');
+    setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
   async function resend() {
@@ -127,8 +129,8 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
     setCode('');
     reset();
   }
-  function swap(v) {
-    setView(v);
+  function swap(nextView) {
+    setView(nextView);
     setStage('email');
     setCode('');
     reset();
@@ -151,10 +153,17 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
             We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
             minutes.
           </p>
-          <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
-          {msg && (
+          <OtpFields
+            value={code}
+            onChange={setCode}
+            onComplete={doVerify}
+            error={!!message}
+            disabled={busy}
+            autoFocus
+          />
+          {message && (
             <small role="alert" className={`${REFMSG_ERR} block text-center mt-3`}>
-              {msg}
+              {message}
             </small>
           )}
           {ok && (
@@ -212,7 +221,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               type="email"
               id="auth-email"
               placeholder="you@email.com"
-              value={f.email}
+              value={form.email}
               onChange={set('email')}
               autoComplete="email"
               aria-invalid={!!errors.email}
@@ -223,9 +232,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               </small>
             )}
           </div>
-          {msg && (
+          {message && (
             <small role="alert" className={REFMSG_ERR}>
-              {msg}
+              {message}
             </small>
           )}
           <button type="button" className={BTN} onClick={doSignIn} disabled={busy}>
@@ -256,7 +265,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               type="text"
               id="auth-name"
               placeholder="Enter your name"
-              value={f.name}
+              value={form.name}
               onChange={set('name')}
               autoComplete="name"
               aria-invalid={!!errors.name}
@@ -276,7 +285,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               type="email"
               id="auth-cemail"
               placeholder="you@email.com"
-              value={f.email}
+              value={form.email}
               onChange={set('email')}
               autoComplete="email"
               aria-invalid={!!errors.email}
@@ -296,7 +305,7 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               type="tel"
               id="auth-phone"
               placeholder="+62 ..."
-              value={f.phone}
+              value={form.phone}
               onChange={set('phone')}
               autoComplete="tel"
               aria-invalid={!!errors.phone}
@@ -307,9 +316,9 @@ export default function AuthModal({ open, onClose, reason, onSignedIn }) {
               </small>
             )}
           </div>
-          {msg && (
+          {message && (
             <small role="alert" className={REFMSG_ERR}>
-              {msg}
+              {message}
             </small>
           )}
           <button type="button" className={BTN} onClick={doCreate} disabled={busy}>

@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Info } from 'lucide-react';
 
-function wrap(v) {
-  return `inline-flex align-middle ${v === 'default' ? 'relative' : 'static'}`;
+function wrap(value) {
+  return `inline-flex align-middle ${value === 'default' ? 'relative' : 'static'}`;
 }
 const BTN =
   'inline-flex items-center justify-center w-[18px] h-[18px] p-0 border-none border-current bg-none text-gold cursor-pointer rounded-[50%] ' +
@@ -31,11 +31,11 @@ export default function InfoPopover({ children, label = 'How to use this form', 
 
   useEffect(() => {
     if (!open) return;
-    function onDoc(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
     }
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    function onKey(event) {
+      return event.key === 'Escape' && setOpen(false);
     }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
@@ -52,10 +52,10 @@ export default function InfoPopover({ children, label = 'How to use this form', 
         className={BTN}
         aria-expanded={open}
         aria-label={label}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setOpen((v) => !v);
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen((wasOpen) => !wasOpen);
         }}
       >
         <Info />

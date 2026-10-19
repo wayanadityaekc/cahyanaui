@@ -3,12 +3,12 @@ import { imageForProgram } from '@/lib/programImages';
 import { MTC_ITEM_ICON, MTC_ITEM_ICON_PHOTO } from './myTripsClasses';
 
 export default function ItemIcon({ row }) {
-  const img = row.kind === 'day' ? imageForProgram(row.service) : null;
-  if (img) {
+  const image = row.kind === 'day' ? imageForProgram(row.service) : null;
+  if (image) {
     return (
       <span
         className={MTC_ITEM_ICON_PHOTO}
-        style={{ backgroundImage: `url(/assets/images/${img})` }}
+        style={{ backgroundImage: `url(/assets/images/${image})` }}
         aria-hidden="true"
       />
     );

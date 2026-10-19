@@ -19,14 +19,15 @@ const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
 function combos(lists) {
   return Object.entries(lists).reduce(
-    (acc, [k, vals]) => acc.flatMap((o) => vals.map((v) => ({ ...o, [k]: v }))),
+    (combinations, [key, values]) =>
+      combinations.flatMap((combination) => values.map((val) => ({ ...combination, [key]: val }))),
     [{}],
   );
 }
 
 combos({ name: STRINGS, em: EMAILS, message: STRINGS }).forEach(({ name, em, message }) => {
-  const v = { name, email: em, message };
-  const result = validateWith(contactSchema, v);
+  const formValues = { name, email: em, message };
+  const result = validateWith(contactSchema, formValues);
   cmp(`contact name=${JSON.stringify(name)}`, !name.trim() ? 'Please enter your name.' : '', result, 'name');
   cmp(
     `contact email=${JSON.stringify(em)}`,
@@ -91,33 +92,38 @@ FLAGS.forEach((flags) => {
     flightNumber: ['', 'QZ7501'],
     flightDatetime: ['', '2026-10-01T10:00'],
   }).forEach(({ name, phone, em, pickup, dropoff, time, flightNumber, flightDatetime }) => {
-    const v = { name, phone, email: em, pickup, dropoff, time, flightNumber, flightDatetime, referral: '' };
-    const result = validateWith(schema, v);
-    const f = JSON.stringify(flags);
-    cmp(`book${f} name`, !name.trim() ? 'Please enter your name.' : '', result, 'name');
-    cmp(`book${f} phone`, !phone.trim() ? 'Please enter your phone number.' : '', result, 'phone');
-    cmp(`book${f} email`, !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '', result, 'email');
+    const formValues = { name, phone, email: em, pickup, dropoff, time, flightNumber, flightDatetime, referral: '' };
+    const result = validateWith(schema, formValues);
+    const flagsJson = JSON.stringify(flags);
+    cmp(`book${flagsJson} name`, !name.trim() ? 'Please enter your name.' : '', result, 'name');
+    cmp(`book${flagsJson} phone`, !phone.trim() ? 'Please enter your phone number.' : '', result, 'phone');
     cmp(
-      `book${f} pickup`,
+      `book${flagsJson} email`,
+      !EMAIL_RE.test(em.trim()) ? 'Please enter a valid email address.' : '',
+      result,
+      'email',
+    );
+    cmp(
+      `book${flagsJson} pickup`,
       !flags.pickupOptional && !pickup.trim() ? 'Please enter your pick-up location.' : '',
       result,
       'pickup',
     );
     cmp(
-      `book${f} dropoff`,
+      `book${flagsJson} dropoff`,
       flags.dropoffRequired && !dropoff.trim() ? 'Please enter your drop-off location.' : '',
       result,
       'dropoff',
     );
-    cmp(`book${f} time`, flags.needsTime && !time ? 'Please select a pickup time.' : '', result, 'time');
+    cmp(`book${flagsJson} time`, flags.needsTime && !time ? 'Please select a pickup time.' : '', result, 'time');
     cmp(
-      `book${f} flightNumber`,
+      `book${flagsJson} flightNumber`,
       flags.needsFlight && !flightNumber.trim() ? 'Please enter your flight number.' : '',
       result,
       'flightNumber',
     );
     cmp(
-      `book${f} flightDatetime`,
+      `book${flagsJson} flightDatetime`,
       flags.needsFlight && !flightDatetime ? 'Please enter your flight date & time.' : '',
       result,
       'flightDatetime',

@@ -4,8 +4,8 @@ import { usePricing } from '@/state/PricingProvider';
 import { withSymbol } from '@/components/Price';
 
 export default function CharterSurcharge({ fallback = '+$6' }) {
-  const ctx = usePricing();
-  const catalog = ctx && ctx.catalog;
+  const pricing = usePricing();
+  const catalog = pricing && pricing.catalog;
   const sur = catalog && catalog.charterSurcharge;
 
   if (!sur) return fallback;

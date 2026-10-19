@@ -37,7 +37,7 @@ export default function AirportTransferForm() {
   const [flightTime, setFlightTime] = useState('');
 
   const catalog = pricing && pricing.catalog;
-  const entry = catalog ? catalog.transfers.find((t) => t.route === ROUTE) : null;
+  const entry = catalog ? catalog.transfers.find((transfer) => transfer.route === ROUTE) : null;
   const symbol = (catalog && catalog.symbol) || '$';
   const cars = displayGuests > 5 ? 2 : 1;
   const total = entry ? entry.display * cars : null;
@@ -88,7 +88,7 @@ export default function AirportTransferForm() {
           label="Guests"
           value={displayGuests}
           onChange={setGuests}
-          options={GUESTS.map((n) => ({ value: String(n), label: String(n) }))}
+          options={GUESTS.map((guestCount) => ({ value: String(guestCount), label: String(guestCount) }))}
         />
       </div>
 
@@ -102,7 +102,7 @@ export default function AirportTransferForm() {
           id="at-address"
           placeholder="Hotel / villa name and area"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          onChange={(event) => setAddress(event.target.value)}
         />
       </div>
 
@@ -116,7 +116,7 @@ export default function AirportTransferForm() {
           id="at-flight-number"
           placeholder="e.g. QZ7501"
           value={flightNumber}
-          onChange={(e) => setFlightNumber(e.target.value)}
+          onChange={(event) => setFlightNumber(event.target.value)}
         />
       </div>
 

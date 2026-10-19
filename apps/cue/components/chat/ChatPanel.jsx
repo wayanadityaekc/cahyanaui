@@ -85,7 +85,10 @@ export default function ChatPanel({ open, onClose }) {
   const ownerHereRef = useRef(false);
   const lastTyped = useRef(0);
 
-  const ctx = useMemo(() => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }), [pricing]);
+  const pricingContext = useMemo(
+    () => ({ catalog: pricing && pricing.catalog, lookup: pricing && pricing.lookup }),
+    [pricing],
+  );
 
   useEffect(() => {
     const name =
@@ -106,15 +109,15 @@ export default function ChatPanel({ open, onClose }) {
 
   const takeOwner = useCallback((list) => {
     const fresh = [];
-    list.forEach((m) => {
-      if (m.id > lastSeen.current) lastSeen.current = m.id;
-      if (m.sender !== 'owner' || seenIds.current.has(m.id)) return;
-      seenIds.current.add(m.id);
-      fresh.push(m);
+    list.forEach((message) => {
+      if (message.id > lastSeen.current) lastSeen.current = message.id;
+      if (message.sender !== 'owner' || seenIds.current.has(message.id)) return;
+      seenIds.current.add(message.id);
+      fresh.push(message);
     });
     if (!fresh.length) return;
     heard.current = true;
-    setLog((prev) => [...prev, ...fresh.map((m) => ({ id: uid(), from: 'wayan', text: m.body }))]);
+    setLog((prev) => [...prev, ...fresh.map((message) => ({ id: uid(), from: 'wayan', text: message.body }))]);
   }, []);
 
   const catchUp = useCallback(async () => {
@@ -131,28 +134,28 @@ export default function ChatPanel({ open, onClose }) {
 
   useEffect(() => {
     if (!open || !thread) return undefined;
-    const s = openChatSocket(thread, {
+    const chatSocket = openChatSocket(thread, {
       onOpen: catchUp,
       onLive: setLive,
-      onPresence: (v) => {
-        ownerHereRef.current = v;
-        setOwnerHere(v);
+      onPresence: (isPresent) => {
+        ownerHereRef.current = isPresent;
+        setOwnerHere(isPresent);
       },
       onTyping: (durationMs) => setTypingUntil(Date.now() + durationMs),
-      onMessage: (m) => takeOwner([m]),
+      onMessage: (message) => takeOwner([message]),
     });
-    sock.current = s;
+    sock.current = chatSocket;
     return () => {
       sock.current = null;
-      s.close();
+      chatSocket.close();
     };
   }, [open, thread, catchUp, takeOwner]);
 
   useEffect(() => {
     if (!open || !thread || live) return undefined;
     catchUp();
-    const t = setInterval(catchUp, 5000);
-    return () => clearInterval(t);
+    const pollTimer = setInterval(catchUp, 5000);
+    return () => clearInterval(pollTimer);
   }, [open, thread, live, catchUp]);
 
   useEffect(() => {
@@ -168,8 +171,8 @@ export default function ChatPanel({ open, onClose }) {
   useEffect(() => {
     const remainingMs = typingUntil - Date.now();
     if (remainingMs <= 0) return undefined;
-    const t = setTimeout(() => setTypingUntil(0), remainingMs);
-    return () => clearTimeout(t);
+    const typingTimer = setTimeout(() => setTypingUntil(0), remainingMs);
+    return () => clearTimeout(typingTimer);
   }, [typingUntil]);
 
   useEffect(() => {
@@ -179,13 +182,13 @@ export default function ChatPanel({ open, onClose }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    const t = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
-    function onKey(e) {
-      if (e.key === 'Escape' && !authOpen) onClose();
+    const focusTimer = setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
+    function onKey(event) {
+      if (event.key === 'Escape' && !authOpen) onClose();
     }
     document.addEventListener('keydown', onKey);
     return () => {
-      clearTimeout(t);
+      clearTimeout(focusTimer);
       document.removeEventListener('keydown', onKey);
     };
   }, [open, onClose, authOpen]);
@@ -237,17 +240,17 @@ export default function ChatPanel({ open, onClose }) {
       setThinking(true);
 
       setTimeout(() => {
-        const result = answerFor(text, ctx);
-        const msg = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
+        const result = answerFor(text, pricingContext);
+        const message = { id: uid(), from: 'bot', text: result.text, rows: result.rows, link: result.link };
         if (result.kind === 'handoff') {
-          msg.text = CHAT_COPY.connecting;
+          message.text = CHAT_COPY.connecting;
           connect(text);
         }
-        setLog((prev) => [...prev, msg]);
+        setLog((prev) => [...prev, message]);
         setThinking(false);
       }, THINK_MS);
     },
-    [ctx, thinking, sending, thread, connect],
+    [pricingContext, thinking, sending, thread, connect],
   );
 
   useEffect(() => {
@@ -260,30 +263,30 @@ export default function ChatPanel({ open, onClose }) {
       setMail('ask');
       return undefined;
     }
-    const t = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
-    return () => clearTimeout(t);
+    const quietTimer = setTimeout(() => setQuiet(true), CHAT_COPY.quietMs);
+    return () => clearTimeout(quietTimer);
   }, [thread, mail, account]);
 
   useEffect(() => {
     if (quiet && mail === 'idle' && !heard.current) setMail('ask');
   }, [quiet, mail]);
 
-  function onDraft(v) {
-    setDraft(v);
+  function onDraft(draftText) {
+    setDraft(draftText);
     if (!thread || !sock.current) return;
-    const t = Date.now();
-    if (t - lastTyped.current < 2000) return;
-    lastTyped.current = t;
+    const now = Date.now();
+    if (now - lastTyped.current < 2000) return;
+    lastTyped.current = now;
     sock.current.typing();
   }
 
-  async function saveEmail(e) {
-    e.preventDefault();
-    const v = mailDraft.trim();
-    if (!v || !thread) return;
+  async function saveEmail(event) {
+    event.preventDefault();
+    const emailAddress = mailDraft.trim();
+    if (!emailAddress || !thread) return;
     setMailErr('');
     try {
-      await setContact(thread, v);
+      await setContact(thread, emailAddress);
       setMail('done');
       setLog((prev) => [...prev, { id: uid(), from: 'bot', text: CHAT_COPY.emailDone }]);
     } catch (e) {
@@ -326,22 +329,22 @@ export default function ChatPanel({ open, onClose }) {
             </p>
           )}
 
-          {log.map((m) => {
-            if (m.from === 'me')
+          {log.map((entry) => {
+            if (entry.from === 'me')
               return (
-                <p key={m.id} className={BUBBLE_ME}>
-                  {m.text}
+                <p key={entry.id} className={BUBBLE_ME}>
+                  {entry.text}
                 </p>
               );
-            if (m.from === 'wayan') {
+            if (entry.from === 'wayan') {
               return (
-                <p key={m.id} className={BUBBLE_WAYAN}>
+                <p key={entry.id} className={BUBBLE_WAYAN}>
                   <small className={WHO}>Wayan</small>
-                  {m.text}
+                  {entry.text}
                 </p>
               );
             }
-            return <BotReply key={m.id} m={m} onAsk={ask} />;
+            return <BotReply key={entry.id} m={entry} onAsk={ask} />;
           })}
 
           {mail === 'ask' && (
@@ -352,7 +355,7 @@ export default function ChatPanel({ open, onClose }) {
                   className={FIELD_INPUT}
                   type="email"
                   value={mailDraft}
-                  onChange={(e) => setMailDraft(e.target.value)}
+                  onChange={(event) => setMailDraft(event.target.value)}
                   placeholder={CHAT_COPY.emailField}
                   aria-label={CHAT_COPY.emailField}
                   maxLength={200}
@@ -397,8 +400,8 @@ export default function ChatPanel({ open, onClose }) {
 
         <form
           className={FOOT}
-          onSubmit={(e) => {
-            e.preventDefault();
+          onSubmit={(event) => {
+            event.preventDefault();
             ask(draft);
           }}
         >
@@ -406,7 +409,7 @@ export default function ChatPanel({ open, onClose }) {
             ref={inputRef}
             className={`${FIELD_INPUT} flex-1`}
             value={draft}
-            onChange={(e) => onDraft(e.target.value)}
+            onChange={(event) => onDraft(event.target.value)}
             placeholder={thread ? 'Write to Wayan...' : CHAT_COPY.placeholder}
             aria-label="Your question"
             maxLength={300}
@@ -426,13 +429,13 @@ export default function ChatPanel({ open, onClose }) {
   );
 }
 
-function BotReply({ m, onAsk }) {
+function BotReply({ m: reply, onAsk }) {
   return (
     <>
-      <p className={BUBBLE_BOT}>{m.text}</p>
+      <p className={BUBBLE_BOT}>{reply.text}</p>
 
-      {m.rows &&
-        m.rows.map((row) => (
+      {reply.rows &&
+        reply.rows.map((row) => (
           <a key={row.label} className={ROW} data-pricerow href={row.href}>
             <span className={ROW_NAME}>
               {row.label}
@@ -442,17 +445,17 @@ function BotReply({ m, onAsk }) {
           </a>
         ))}
 
-      {m.link && (
-        <a className={LINK} data-cta href={m.link.href}>
-          {m.link.label}
+      {reply.link && (
+        <a className={LINK} data-cta href={reply.link.href}>
+          {reply.link.label}
         </a>
       )}
 
-      {m.nudge && <p className={BUBBLE_BOT}>{m.nudge}</p>}
+      {reply.nudge && <p className={BUBBLE_BOT}>{reply.nudge}</p>}
 
-      {m.chips && (
+      {reply.chips && (
         <span className={CHIPS}>
-          {m.chips.map((chip) => (
+          {reply.chips.map((chip) => (
             <button key={chip} type="button" className={CHIP_Q} data-chip onClick={() => onAsk(chip)}>
               {chip}
             </button>

@@ -19,7 +19,7 @@ export default function GuideArticle({ data }) {
     { label: 'Category', value: guideCategory(data.tabs) },
     { label: 'Topic', value: card.tag },
     { label: 'Read', value: `~${readMinutes(data.body)} min` },
-  ].filter((h) => h.value);
+  ].filter((detail) => detail.value);
 
   return (
     <div className="guide-article-page">
@@ -37,23 +37,23 @@ export default function GuideArticle({ data }) {
       <div className={BOX}>
         <RailLayout
           label="Bali Guide"
-          items={data.tabs.map((t) => ({ id: t.href, href: t.href, label: t.label }))}
-          active={(data.tabs.find((t) => t.active) || data.tabs[0] || {}).href}
+          items={data.tabs.map((tab) => ({ id: tab.href, href: tab.href, label: tab.label }))}
+          active={(data.tabs.find((tab) => tab.active) || data.tabs[0] || {}).href}
           frameClass={RAIL_FRAME_CARD}
           mainClass={RAIL_MAIN_CARD}
           mobileNav={<GuideCatNav tabs={data.tabs} />}
         >
           <div className={RAIL_READ}>
-            <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="guide" />
+            <Prose blocks={data.body.filter((block) => block.type !== 'crumb')} headingVariant="guide" />
           </div>
         </RailLayout>
       </div>
 
-      {data.more.map((m, i) =>
-        m.kind ? (
-          <GuideMore block={m} key={i} />
+      {data.more.map((moreBlock, index) =>
+        moreBlock.kind ? (
+          <GuideMore block={moreBlock} key={index} />
         ) : (
-          <section className={m.cls} key={i} dangerouslySetInnerHTML={{ __html: m.html }} />
+          <section className={moreBlock.cls} key={index} dangerouslySetInnerHTML={{ __html: moreBlock.html }} />
         ),
       )}
     </div>

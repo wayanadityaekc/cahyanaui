@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { CAPS, Card } from '@cahyana/ui';
 
-export default function ServiceCard({ href, img, alt, name, desc, cta }) {
+export default function ServiceCard({ href, img: image, alt, name, desc, cta }) {
   return (
     <Card as={Link} hover href={href} className="flex flex-col overflow-hidden">
-      <img src={img} alt={alt} width={700} height={460} loading="lazy" className="w-full aspect-[3/2] object-cover" />
+      <img src={image} alt={alt} width={700} height={460} loading="lazy" className="w-full aspect-[3/2] object-cover" />
       <div className="p-5">
         <h3 className="text-h3 font-semibold text-gold">{name}</h3>
         <p className="mt-1.5 text-small text-muted">{desc}</p>

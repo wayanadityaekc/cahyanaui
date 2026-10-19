@@ -9,87 +9,87 @@ const DEAD = new RegExp(deadSrc);
 const KEEP = keepSrc ? new RegExp(keepSrc) : null;
 let css = fs.readFileSync(file, 'utf8');
 
-function selectorIsDead(sel) {
-  if (KEEP && KEEP.test(sel)) return false;
-  return DEAD.test(sel);
+function selectorIsDead(selector) {
+  if (KEEP && KEEP.test(selector)) return false;
+  return DEAD.test(selector);
 }
-function findBrace(s, from) {
-  let i = from;
-  const n = s.length;
-  while (i < n) {
-    const c = s[i];
-    if (c === '/' && s[i + 1] === '*') {
-      const e = s.indexOf('*/', i + 2);
-      i = e === -1 ? n : e + 2;
+function findBrace(cssText, from) {
+  let position = from;
+  const cssLength = cssText.length;
+  while (position < cssLength) {
+    const character = cssText[position];
+    if (character === '/' && cssText[position + 1] === '*') {
+      const commentEnd = cssText.indexOf('*/', position + 2);
+      position = commentEnd === -1 ? cssLength : commentEnd + 2;
       continue;
     }
-    if (c === '"' || c === "'") {
-      let j = i + 1;
-      while (j < n && s[j] !== c) {
-        if (s[j] === '\\') j++;
-        j++;
+    if (character === '"' || character === "'") {
+      let scanPosition = position + 1;
+      while (scanPosition < cssLength && cssText[scanPosition] !== character) {
+        if (cssText[scanPosition] === '\\') scanPosition++;
+        scanPosition++;
       }
-      i = j + 1;
+      position = scanPosition + 1;
       continue;
     }
-    if (c === '{') return i;
-    i++;
+    if (character === '{') return position;
+    position++;
   }
   return -1;
 }
-function matchClose(s, open) {
+function matchClose(cssText, open) {
   let depth = 0,
-    i = open;
-  const n = s.length;
-  while (i < n) {
-    const c = s[i];
-    if (c === '/' && s[i + 1] === '*') {
-      const e = s.indexOf('*/', i + 2);
-      i = e === -1 ? n : e + 2;
+    position = open;
+  const cssLength = cssText.length;
+  while (position < cssLength) {
+    const character = cssText[position];
+    if (character === '/' && cssText[position + 1] === '*') {
+      const commentEnd = cssText.indexOf('*/', position + 2);
+      position = commentEnd === -1 ? cssLength : commentEnd + 2;
       continue;
     }
-    if (c === '"' || c === "'") {
-      let j = i + 1;
-      while (j < n && s[j] !== c) {
-        if (s[j] === '\\') j++;
-        j++;
+    if (character === '"' || character === "'") {
+      let scanPosition = position + 1;
+      while (scanPosition < cssLength && cssText[scanPosition] !== character) {
+        if (cssText[scanPosition] === '\\') scanPosition++;
+        scanPosition++;
       }
-      i = j + 1;
+      position = scanPosition + 1;
       continue;
     }
-    if (c === '{') depth++;
-    else if (c === '}') {
+    if (character === '{') depth++;
+    else if (character === '}') {
       depth--;
-      if (depth === 0) return i;
+      if (depth === 0) return position;
     }
-    i++;
+    position++;
   }
-  return n - 1;
+  return cssLength - 1;
 }
-function processBlock(s) {
+function processBlock(blockText) {
   let out = '';
-  let i = 0;
-  const n = s.length;
-  while (i < n) {
-    const brace = findBrace(s, i);
+  let position = 0;
+  const blockLength = blockText.length;
+  while (position < blockLength) {
+    const brace = findBrace(blockText, position);
     if (brace === -1) {
-      out += s.slice(i);
+      out += blockText.slice(position);
       break;
     }
-    const prelude = s.slice(i, brace);
-    const close = matchClose(s, brace);
-    const body = s.slice(brace + 1, close);
-    const t = prelude.replace(/^\s*(?:\/\*[\s\S]*?\*\/\s*)*/, '').trim();
-    if (/^@media|^@supports/.test(t)) {
+    const prelude = blockText.slice(position, brace);
+    const close = matchClose(blockText, brace);
+    const body = blockText.slice(brace + 1, close);
+    const trimmedPrelude = prelude.replace(/^\s*(?:\/\*[\s\S]*?\*\/\s*)*/, '').trim();
+    if (/^@media|^@supports/.test(trimmedPrelude)) {
       const inner = processBlock(body);
       if (inner.replace(/\/\*[\s\S]*?\*\//g, '').trim() !== '') out += `${prelude}{${inner}}`;
-    } else if (/^@/.test(t)) {
+    } else if (/^@/.test(trimmedPrelude)) {
       out += `${prelude}{${body}}`;
     } else {
       const clean = prelude.replace(/\/\*[\s\S]*?\*\//g, '');
       const sels = clean
         .split(',')
-        .map((x) => x.replace(/\n/g, ' ').trim())
+        .map((line) => line.replace(/\n/g, ' ').trim())
         .filter(Boolean);
       const keep = sels.filter((sx) => !selectorIsDead(sx));
       if (keep.length === 0) {
@@ -99,7 +99,7 @@ function processBlock(s) {
         out += `${lead}${keep.join(',\n')} {${body}}`;
       }
     }
-    i = close + 1;
+    position = close + 1;
   }
   return out;
 }
@@ -107,9 +107,9 @@ function processBlock(s) {
 const before = css.length;
 css = processBlock(css);
 fs.writeFileSync(file, css);
-const o = (css.match(/{/g) || []).length,
-  c = (css.match(/}/g) || []).length;
+const openBraceCount = (css.match(/{/g) || []).length,
+  closeBraceCount = (css.match(/}/g) || []).length;
 console.log(
-  `removed from ${file} | chars ${before} -> ${css.length} | braces ${o === c ? 'OK' : `MISMATCH ${o}/${c}`}`,
+  `removed from ${file} | chars ${before} -> ${css.length} | braces ${openBraceCount === closeBraceCount ? 'OK' : `MISMATCH ${openBraceCount}/${closeBraceCount}`}`,
 );
-if (o !== c) process.exit(1);
+if (openBraceCount !== closeBraceCount) process.exit(1);

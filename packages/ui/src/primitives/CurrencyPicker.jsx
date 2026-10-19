@@ -16,7 +16,7 @@ const BAR_BTN =
   'hover:[border-color:var(--color-gold)] focus-visible:outline-none ' +
   'focus-visible:[border-color:var(--color-gold)] focus-visible:[box-shadow:var(--focus-ring)]';
 
-function btn(variant) {
+function button(variant) {
   if (variant === 'bar') return BAR_BTN;
   return cn(
     BTN_BASE,
@@ -72,11 +72,11 @@ export default function CurrencyPicker({
 
   useEffect(() => {
     if (!open) return undefined;
-    function onDoc(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
     }
-    function onKey(e) {
-      if (e.key === 'Escape') setOpen(false);
+    function onKey(event) {
+      if (event.key === 'Escape') setOpen(false);
     }
     document.addEventListener('click', onDoc);
     document.addEventListener('keydown', onKey);
@@ -91,7 +91,7 @@ export default function CurrencyPicker({
       <button
         type="button"
         id={id}
-        className={btn(variant)}
+        className={button(variant)}
         aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={open}

@@ -29,36 +29,36 @@ const MORE_BTN =
 export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, bleed = true, className }) {
   if (!images.length) return null;
 
-  function tile(i, cls) {
-    const p = images[i];
+  function tile(imageIndex, cls) {
+    const image = images[imageIndex];
     return (
       <button
         type="button"
-        key={(p.src || '') + i}
-        data-mosaic-tile={i}
+        key={(image.src || '') + imageIndex}
+        data-mosaic-tile={imageIndex}
         className={cls}
-        onClick={() => onOpen && onOpen(i)}
-        aria-label={`Open photo ${i + 1} of ${images.length}${p.title ? `: ${p.title}` : ''}`}
+        onClick={() => onOpen && onOpen(imageIndex)}
+        aria-label={`Open photo ${imageIndex + 1} of ${images.length}${image.title ? `: ${image.title}` : ''}`}
       >
         <img
-          src={p.src}
-          alt={p.alt || ''}
-          width={p.w || 1200}
-          height={p.h || 900}
-          loading={i === 0 ? undefined : 'lazy'}
+          src={image.src}
+          alt={image.alt || ''}
+          width={image.w || 1200}
+          height={image.h || 900}
+          loading={imageIndex === 0 ? undefined : 'lazy'}
         />
       </button>
     );
   }
 
   const children = [];
-  for (let i = 0; i < images.length; i += 3) {
-    children.push(tile(i, BIG));
-    const pair = [i + 1, i + 2].filter((n) => n < images.length);
+  for (let startIndex = 0; startIndex < images.length; startIndex += 3) {
+    children.push(tile(startIndex, BIG));
+    const pair = [startIndex + 1, startIndex + 2].filter((imageIndex) => imageIndex < images.length);
     if (pair.length) {
       children.push(
-        <div className={PAIR} key={`pair-${i}`}>
-          {pair.map((n) => tile(n, TILE))}
+        <div className={PAIR} key={`pair-${startIndex}`}>
+          {pair.map((imageIndex) => tile(imageIndex, TILE))}
         </div>,
       );
     }
@@ -69,7 +69,7 @@ export default function PhotoMosaic({ images = [], onOpen, moreLabel = null, ble
       {images.length === 1 ? (
         <div className={cn(STATIC_1, bleed && BLEED_MOBILE)}>{tile(0, TILE)}</div>
       ) : images.length === 2 ? (
-        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>{images.map((image, i) => tile(i, TILE))}</div>
+        <div className={cn(STATIC_2, bleed && BLEED_MOBILE)}>{images.map((image, index) => tile(index, TILE))}</div>
       ) : (
         <div className={cn(TRACK, bleed && BLEED_MOBILE)}>{children}</div>
       )}

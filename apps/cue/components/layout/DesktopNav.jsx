@@ -26,15 +26,15 @@ export default function DesktopNav({ isActive }) {
   const boxRef = useRef(null);
   const btnRef = useRef(null);
   const panelId = useId();
-  const programActive = PROGRAM_LINKS.some(([h]) => isActive(h));
+  const programActive = PROGRAM_LINKS.some(([href]) => isActive(href));
 
   useEffect(() => {
     if (!open) return undefined;
-    function onDoc(e) {
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (boxRef.current && !boxRef.current.contains(event.target)) setOpen(false);
     }
-    function onKey(e) {
-      if (e.key === 'Escape') {
+    function onKey(event) {
+      if (event.key === 'Escape') {
         setOpen(false);
         btnRef.current?.focus();
       }
@@ -61,7 +61,7 @@ export default function DesktopNav({ isActive }) {
           aria-expanded={open}
           aria-controls={panelId}
           className={LINK(programActive)}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((wasOpen) => !wasOpen)}
         >
           Program
           <ChevronDown

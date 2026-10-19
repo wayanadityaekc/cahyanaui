@@ -91,8 +91,8 @@ function FAQBody() {
       {FAQ.map((group) => (
         <div className="mb-8" key={group.cat}>
           <h2 className="m-0 mb-3 font-head text-h3 font-medium text-green">{group.cat}</h2>
-          {group.items.map(([question, answer], i) => (
-            <details className={FAQ_CARD} key={i} name="faq">
+          {group.items.map(([question, answer], index) => (
+            <details className={FAQ_CARD} key={index} name="faq">
               <summary className={FAQ_Q}>{question}</summary>
               <div className="mt-2 [&_p]:text-body [&_p]:leading-[var(--lh-body)]">
                 <p>{answer}</p>

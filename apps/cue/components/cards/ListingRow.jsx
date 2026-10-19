@@ -48,7 +48,7 @@ const PRICE = 'mt-auto self-end flex items-baseline gap-1 whitespace-nowrap';
 export default function ListingRow({
   href,
   name,
-  img,
+  img: image,
   alt,
   meta,
   metaIcon = 'clock',
@@ -63,11 +63,11 @@ export default function ListingRow({
   onReset,
   anchorId,
 }) {
-  const photo = img ? { backgroundImage: `url(/assets/images/${img})` } : undefined;
+  const photo = image ? { backgroundImage: `url(/assets/images/${image})` } : undefined;
   const handleClick =
     dim && onReset
-      ? (e) => {
-          e.preventDefault();
+      ? (event) => {
+          event.preventDefault();
           onReset();
         }
       : undefined;

@@ -72,19 +72,19 @@ const MONTHS = [
   'December',
 ];
 
-function iso(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function iso(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
-function fmt(v) {
-  if (!v) return '';
-  const [y, m, d] = v.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+function formatDateLabel(isoDate) {
+  if (!isoDate) return '';
+  const [year, month, day] = isoDate.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-function nightsBetween(a, b) {
-  if (!a || !b) return 0;
-  return Math.round((new Date(b) - new Date(a)) / 86400000);
+function nightsBetween(startDate, endDate) {
+  if (!startDate || !endDate) return 0;
+  return Math.round((new Date(endDate) - new Date(startDate)) / 86400000);
 }
 
 export default function DateRangeField({
@@ -114,8 +114,8 @@ export default function DateRangeField({
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return undefined;
-    function onKey(e) {
-      return e.key === 'Escape' && setOpen(false);
+    function onKey(event) {
+      return event.key === 'Escape' && setOpen(false);
     }
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -129,17 +129,18 @@ export default function DateRangeField({
   const rangeLabel = !checkIn
     ? placeholders.start
     : !checkOut
-      ? `${fmt(checkIn)} - add check-out`
-      : `${fmt(checkIn)} - ${fmt(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
+      ? `${formatDateLabel(checkIn)} - add check-out`
+      : `${formatDateLabel(checkIn)} - ${formatDateLabel(checkOut)} · ${nights} ${nights === 1 ? 'night' : 'nights'}`;
 
   function monthCells(base) {
     const first = new Date(base.getFullYear(), base.getMonth(), 1);
     const days = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
     const lead = first.getDay();
     const out = [];
-    for (let i = lead; i > 0; i--)
-      out.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - i), faded: true });
-    for (let d = 1; d <= days; d++) out.push({ date: new Date(base.getFullYear(), base.getMonth(), d), faded: false });
+    for (let leadIndex = lead; leadIndex > 0; leadIndex--)
+      out.push({ date: new Date(base.getFullYear(), base.getMonth(), 1 - leadIndex), faded: true });
+    for (let dayOfMonth = 1; dayOfMonth <= days; dayOfMonth++)
+      out.push({ date: new Date(base.getFullYear(), base.getMonth(), dayOfMonth), faded: false });
     while (out.length % 7)
       out.push({
         date: new Date(base.getFullYear(), base.getMonth(), days + (out.length - lead - days + 1)),
@@ -149,27 +150,30 @@ export default function DateRangeField({
   }
   const months = [cursor, new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)];
 
-  function stateOf(v) {
-    if (checkIn && v === checkIn) return 'start';
-    if (checkOut && v === checkOut) return 'end';
-    if (checkIn && checkOut && v > checkIn && v < checkOut) return 'in';
+  function stateOf(isoDate) {
+    if (checkIn && isoDate === checkIn) return 'start';
+    if (checkOut && isoDate === checkOut) return 'end';
+    if (checkIn && checkOut && isoDate > checkIn && isoDate < checkOut) return 'in';
     return null;
   }
 
-  function selectable(v) {
-    if (choosingEnd) return v > checkIn ? canCheckOut(v, checkIn, { busy, limits }) : canCheckIn(v, { busy, limits });
-    return canCheckIn(v, { busy, limits });
+  function selectable(isoDate) {
+    if (choosingEnd)
+      return isoDate > checkIn
+        ? canCheckOut(isoDate, checkIn, { busy, limits })
+        : canCheckIn(isoDate, { busy, limits });
+    return canCheckIn(isoDate, { busy, limits });
   }
 
-  function pick(v) {
-    if (choosingEnd && canCheckOut(v, checkIn, { busy, limits })) {
-      onChange({ checkIn, checkOut: v });
+  function pick(isoDate) {
+    if (choosingEnd && canCheckOut(isoDate, checkIn, { busy, limits })) {
+      onChange({ checkIn, checkOut: isoDate });
       setEditing('start');
       setOpen(false);
       return;
     }
-    if ((choosingEnd && v > checkIn) || !canCheckIn(v, { busy, limits })) return;
-    onChange({ checkIn: v, checkOut: '' });
+    if ((choosingEnd && isoDate > checkIn) || !canCheckIn(isoDate, { busy, limits })) return;
+    onChange({ checkIn: isoDate, checkOut: '' });
     setEditing('end');
   }
 
@@ -178,7 +182,7 @@ export default function DateRangeField({
     setOpen(true);
   }
 
-  function trigger(which, label, val, placeholder) {
+  function trigger(which, label, valueItem, placeholder) {
     return (
       <button
         type="button"
@@ -188,7 +192,9 @@ export default function DateRangeField({
         aria-label={label}
         onClick={() => openAt(which)}
       >
-        <span className={val ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>{val ? fmt(val) : placeholder}</span>
+        <span className={valueItem ? CONTROL_VAL : CONTROL_VAL_PLACEHOLDER}>
+          {valueItem ? formatDateLabel(valueItem) : placeholder}
+        </span>
         <Calendar className={CHEV_CAL} strokeWidth={1.8} aria-hidden="true" />
       </button>
     );
@@ -239,24 +245,24 @@ export default function DateRangeField({
                     </span>
                   ))}
                   {monthCells(base).map(({ date, faded }) => {
-                    const v = iso(date);
+                    const isoDate = iso(date);
                     if (faded)
                       return (
-                        <span className={rangeDay(true, null, true)} key={`f${v}`}>
+                        <span className={rangeDay(true, null, true)} key={`f${isoDate}`}>
                           {date.getDate()}
                         </span>
                       );
-                    const st = stateOf(v);
-                    const disabled = !st && !selectable(v);
-                    const booked = disabled && isBookedNight(busy, v);
+                    const st = stateOf(isoDate);
+                    const disabled = !st && !selectable(isoDate);
+                    const booked = disabled && isBookedNight(busy, isoDate);
                     return (
                       <button
                         type="button"
-                        key={v}
+                        key={isoDate}
                         className={`${rangeDay(disabled, st, false)}${booked ? ' line-through' : ''}`}
                         aria-pressed={st === 'start' || st === 'end'}
                         disabled={disabled}
-                        onClick={() => pick(v)}
+                        onClick={() => pick(isoDate)}
                       >
                         {date.getDate()}
                       </button>
@@ -288,7 +294,7 @@ export default function DateRangeField({
         id={id}
         value={checkIn}
         min={minDate}
-        onChange={(e) => onChange({ checkIn: e.target.value, checkOut })}
+        onChange={(event) => onChange({ checkIn: event.target.value, checkOut })}
         tabIndex={-1}
         aria-hidden="true"
       />
@@ -298,7 +304,7 @@ export default function DateRangeField({
         name={name && `${name}-out`}
         value={checkOut}
         min={checkIn || minDate}
-        onChange={(e) => onChange({ checkIn, checkOut: e.target.value })}
+        onChange={(event) => onChange({ checkIn, checkOut: event.target.value })}
         tabIndex={-1}
         aria-hidden="true"
       />

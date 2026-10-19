@@ -4,7 +4,7 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { normalizePath } from '@/lib/pathname';
-import { Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X } from 'lucide-react';
+import { Building2, Compass, BookOpen, House, MessageCircle, ShoppingBag, Star, X as CloseIcon } from 'lucide-react';
 import { useItinerary } from '@/state/ItineraryProvider';
 import ChatLauncher from '@/components/chat/ChatLauncher';
 import { APP_HIDE } from '@/components/ui/pwaClasses';
@@ -55,13 +55,13 @@ export default function Navbar() {
     const root = document.documentElement;
     let max = 0;
     function set() {
-      const h = header.offsetHeight;
+      const headerHeight = header.offsetHeight;
       const bar = barRef.current ? barRef.current.offsetHeight : 0;
-      root.style.setProperty('--header-h', `${h - bar}px`);
+      root.style.setProperty('--header-h', `${headerHeight - bar}px`);
       root.style.setProperty('--tripbar-h', `${bar}px`);
-      if (h > max) {
-        max = h;
-        root.style.setProperty('--header-h-max', `${h}px`);
+      if (headerHeight > max) {
+        max = headerHeight;
+        root.style.setProperty('--header-h-max', `${headerHeight}px`);
       }
     }
     function onResize() {
@@ -95,14 +95,14 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!menuOpen) return undefined;
-    function onDoc(e) {
-      const inNav = navRef.current && navRef.current.contains(e.target);
-      const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      const inPopup = e.target.closest && e.target.closest('[data-portal]');
+    function onDoc(event) {
+      const inNav = navRef.current && navRef.current.contains(event.target);
+      const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
+      const inPopup = event.target.closest && event.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function onKey(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setMenuOpen(false);
     }
@@ -130,7 +130,7 @@ export default function Navbar() {
           id="hamburger"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           ref={burgerRef}
-          onClick={() => setMenuOpen((v) => !v)}
+          onClick={() => setMenuOpen((wasOpen) => !wasOpen)}
         >
           <span className={`${BURGER_BAR} ${menuOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
           <span className={`${BURGER_BAR} ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
@@ -179,7 +179,7 @@ export default function Navbar() {
                 aria-label="Close menu"
                 onClick={() => setMenuOpen(false)}
               >
-                <X strokeWidth={2} aria-hidden="true" />
+                <CloseIcon strokeWidth={2} aria-hidden="true" />
               </button>
             </li>
 
@@ -198,7 +198,7 @@ export default function Navbar() {
                 type="button"
                 className={`${MENU_ROW_BOX} text-strong font-body font-medium border-none bg-transparent text-gold cursor-pointer hover:bg-cream hover:text-green`}
                 aria-expanded={dropOpen}
-                onClick={() => setDropOpen((v) => !v)}
+                onClick={() => setDropOpen((wasOpen) => !wasOpen)}
               >
                 <Compass strokeWidth={1.7} aria-hidden="true" />
                 Program

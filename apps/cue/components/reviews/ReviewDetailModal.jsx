@@ -16,26 +16,28 @@ export default function ReviewDetailModal({ review, onClose }) {
   const open = !!review;
   const lastRef = useRef(null);
   if (review) lastRef.current = review;
-  const r = review || lastRef.current || {};
-  const n = Math.max(1, Math.min(5, parseInt(r.rating, 10) || 0));
-  const stars = '★'.repeat(n) + '☆'.repeat(5 - n);
+  const currentReview = review || lastRef.current || {};
+  const starCount = Math.max(1, Math.min(5, parseInt(currentReview.rating, 10) || 0));
+  const stars = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
 
   return (
     <Modal open={open} onClose={onClose} title="Guest review">
       <div className="flex items-center justify-between gap-3 mb-1">
-        <span className="font-semibold text-body text-green">{r.name}</span>
-        {r.created_at && <span className="text-label text-muted">{fmtDate(r.created_at)}</span>}
+        <span className="font-semibold text-body text-green">{currentReview.name}</span>
+        {currentReview.created_at && <span className="text-label text-muted">{fmtDate(currentReview.created_at)}</span>}
       </div>
-      {r.country && <div className="mb-2 text-label text-muted">{r.country}</div>}
-      {r.service && (
+      {currentReview.country && <div className="mb-2 text-label text-muted">{currentReview.country}</div>}
+      {currentReview.service && (
         <div className="mb-2 text-label text-muted">
-          {r.services && r.services.length > 1 ? r.services.join(' · ') : r.service}
+          {currentReview.services && currentReview.services.length > 1
+            ? currentReview.services.join(' · ')
+            : currentReview.service}
         </div>
       )}
-      <div className="mb-3 text-amber tracking-[2px]" aria-label={`${n} out of 5`}>
+      <div className="mb-3 text-amber tracking-[2px]" aria-label={`${starCount} out of 5`}>
         {stars}
       </div>
-      <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">{r.message}</p>
+      <p className="m-0 text-body text-green leading-[var(--lh-body)] whitespace-pre-line">{currentReview.message}</p>
     </Modal>
   );
 }

@@ -7,7 +7,7 @@ import { FIELD_LABEL } from './formClasses';
 
 export default function TimeChoice({ category, itemName, value, onChange, label = 'Start time', id }) {
   const allowed = allowedSlots(category, itemName);
-  const list = (allowed || TIME_SLOTS).map((t) => ({ value: t, label: fmtTime(t) }));
+  const list = (allowed || TIME_SLOTS).map((timeSlot) => ({ value: timeSlot, label: fmtTime(timeSlot) }));
 
   useEffect(() => {
     if (!allowed || !onChange) return;

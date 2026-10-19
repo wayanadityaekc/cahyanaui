@@ -4,15 +4,15 @@ import { HIDDEN_TOURS, tourPath } from '@/lib/routes';
 
 const parked = new Set(HIDDEN_TOURS);
 function isPackage({ items }) {
-  return (items || []).some((i) => i.type === 'sub');
+  return (items || []).some((item) => item.type === 'sub');
 }
 
 const INDEX = {};
-Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {
-  if (parked.has(slug) || isPackage(t)) return;
-  (t.items || []).forEach((it) => {
+Object.entries(TOUR_CONTENT).forEach(([slug, tour]) => {
+  if (parked.has(slug) || isPackage(tour)) return;
+  (tour.items || []).forEach((it) => {
     if (!it.refId) return;
-    (INDEX[it.refId] = INDEX[it.refId] || []).push({ slug, href: tourPath(slug), name: t.bookItem });
+    (INDEX[it.refId] = INDEX[it.refId] || []).push({ slug, href: tourPath(slug), name: tour.bookItem });
   });
 });
 
@@ -21,7 +21,7 @@ export function toursForAttraction(slug) {
 }
 
 export function inclLabel(slug) {
-  const names = toursForAttraction(slug).map((t) => t.name);
+  const names = toursForAttraction(slug).map((tour) => tour.name);
   if (!names.length) return undefined;
   const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
   return `Included in |${list}|`;
@@ -32,23 +32,23 @@ export function withAttractionCards(listing, attractions = {}) {
     if (Array.isArray(node)) return node.map(walk);
     if (!node || typeof node !== 'object') return node;
     const next = {};
-    Object.entries(node).forEach(([k, v]) => {
-      next[k] = walk(v);
+    Object.entries(node).forEach(([key, value]) => {
+      next[key] = walk(value);
     });
-    const m = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
+    const match = /^\/attractions\/(.+)\.html$/.exec(next.href || '');
     if (next.variant === 'incl') {
-      const label = m ? inclLabel(m[1]) : undefined;
+      const label = match ? inclLabel(match[1]) : undefined;
       if (label) next.inclText = label;
       else delete next.inclText;
     }
-    if (m) {
-      const place = attractions[m[1]];
+    if (match) {
+      const place = attractions[match[1]];
       if (place) {
         if (next.metaIcon === 'pin' || !next.meta) {
           if (next.metaIcon === 'pin' && next.meta && !next.area) next.area = next.meta;
           const timeHere = (
-            (place.hooks || []).find((h) => /time here|duration/i.test(h.label)) ||
-            (place.facts || []).find((f) => /time here|duration/i.test(f.label)) ||
+            (place.hooks || []).find((hook) => /time here|duration/i.test(hook.label)) ||
+            (place.facts || []).find((fact) => /time here|duration/i.test(fact.label)) ||
             {}
           ).value;
           if (timeHere) {
@@ -87,21 +87,21 @@ export function priceFallbackFor(name) {
 }
 
 const CONTAINS = {};
-Object.entries(TOUR_CONTENT).forEach(([slug, t]) => {
+Object.entries(TOUR_CONTENT).forEach(([slug, tour]) => {
   if (parked.has(slug)) return;
   const href = tourPath(slug);
   const card = TOUR_CARDS[href];
   const entry = {
     slug,
     href,
-    name: t.bookItem,
-    title: t.title,
-    stops: (t.items || []).filter((i) => i.type === 'stop').length,
-    priceName: card ? card.priceName : t.bookItem,
+    name: tour.bookItem,
+    title: tour.title,
+    stops: (tour.items || []).filter((item) => item.type === 'stop').length,
+    priceName: card ? card.priceName : tour.bookItem,
     priceFallback: card ? card.priceFallback : undefined,
-    isPackage: isPackage(t),
+    isPackage: isPackage(tour),
   };
-  (t.items || []).forEach((it) => {
+  (tour.items || []).forEach((it) => {
     if (!it.refId) return;
     (CONTAINS[it.refId] = CONTAINS[it.refId] || []).push(entry);
   });
@@ -112,22 +112,25 @@ export function toursContaining(refId) {
 }
 
 export function tourDestinations(tourSlug, attractions) {
-  const t = TOUR_CONTENT[tourSlug];
-  if (!t) return [];
+  const tour = TOUR_CONTENT[tourSlug];
+  if (!tour) return [];
   const out = [];
-  (t.items || []).forEach((it) => {
-    if (!it.refId || out.some((x) => x.refId === it.refId)) return;
-    const a = attractions[it.refId];
-    if (!a) return;
+  (tour.items || []).forEach((it) => {
+    if (!it.refId || out.some((existing) => existing.refId === it.refId)) return;
+    const attraction = attractions[it.refId];
+    if (!attraction) return;
     out.push({
       refId: it.refId,
       href: `/attractions/${it.refId}.html`,
-      name: a.title,
-      img: it.img || a.heroBg,
-      alt: it.alt || a.title,
+      name: attraction.title,
+      img: it.img || attraction.heroBg,
+      alt: it.alt || attraction.title,
       meta:
-        ((a.hooks || []).find((h) => h.label === 'Area') || (a.facts || []).find((f) => f.label === 'Area') || {})
-          .value || '',
+        (
+          (attraction.hooks || []).find((hook) => hook.label === 'Area') ||
+          (attraction.facts || []).find((fact) => fact.label === 'Area') ||
+          {}
+        ).value || '',
     });
   });
   return out;

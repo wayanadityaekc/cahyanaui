@@ -157,18 +157,18 @@ export default function DetailTabs({
   const secRefs = useRef({});
 
   useEffect(() => {
-    const ids = sections.map((s) => s.id);
+    const ids = sections.map((section) => section.id);
     function onScroll() {
       const stripH = stripRef.current ? stripRef.current.offsetHeight : 0;
       const header = document.querySelector('header');
       const headerH = header ? header.getBoundingClientRect().height : 0;
       const line = headerH + stripH + 12;
-      let cur = ids[0];
+      let current = ids[0];
       ids.forEach((id) => {
         const section = secRefs.current[id];
-        if (section && section.getBoundingClientRect().top <= line) cur = id;
+        if (section && section.getBoundingClientRect().top <= line) current = id;
       });
-      setActive(cur);
+      setActive(current);
     }
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -194,31 +194,31 @@ export default function DetailTabs({
       <div className={CARD}>
         <div ref={stripRef} className={STRIP}>
           <nav className={TRACK} aria-label="Jump to section">
-            {sections.map((s) => (
+            {sections.map((section) => (
               <button
-                key={s.id}
+                key={section.id}
                 type="button"
-                aria-current={active === s.id ? 'true' : undefined}
-                className={segment(active === s.id)}
-                onClick={() => pick(s.id)}
+                aria-current={active === section.id ? 'true' : undefined}
+                className={segment(active === section.id)}
+                onClick={() => pick(section.id)}
               >
-                {s.label}
+                {section.label}
               </button>
             ))}
           </nav>
         </div>
-        {sections.map((s) => (
+        {sections.map((sectionItem) => (
           <section
-            key={s.id}
-            id={`dsec-${s.id}`}
+            key={sectionItem.id}
+            id={`dsec-${sectionItem.id}`}
             ref={(section) => {
-              secRefs.current[s.id] = section;
+              secRefs.current[sectionItem.id] = section;
             }}
             className={SEC}
-            aria-label={s.heading === false ? s.label : undefined}
+            aria-label={sectionItem.heading === false ? sectionItem.label : undefined}
           >
-            {s.heading !== false && <h2 className={SEC_H}>{s.label}</h2>}
-            {s.content}
+            {sectionItem.heading !== false && <h2 className={SEC_H}>{sectionItem.label}</h2>}
+            {sectionItem.content}
           </section>
         ))}
       </div>

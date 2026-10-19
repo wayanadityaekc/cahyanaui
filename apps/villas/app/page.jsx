@@ -130,11 +130,11 @@ export default function HomePage() {
         }
       />
 
-      {SERVICES_HOME.map((service, i) => (
+      {SERVICES_HOME.map((service, index) => (
         <SplitFeature
           key={service.href}
-          tone={i % 2 === 0 ? 'cream' : 'plain'}
-          reverse={i % 2 === 1}
+          tone={index % 2 === 0 ? 'cream' : 'plain'}
+          reverse={index % 2 === 1}
           image={service.img}
           alt={service.alt}
           eyebrow={service.eyebrow}
@@ -159,8 +159,8 @@ export default function HomePage() {
         </p>
 
         <div className={`${GRID_TRIO} mt-7`}>
-          {REVIEW_CARDS.map((card, i) => (
-            <ReviewCard key={i} card={card} />
+          {REVIEW_CARDS.map((card, index) => (
+            <ReviewCard key={index} card={card} />
           ))}
         </div>
       </Section>

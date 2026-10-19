@@ -47,21 +47,29 @@ export default function LoadingScreen({
       return undefined;
     }
     const waited = Date.now() - shownAt.current;
-    const t = setTimeout(() => setOut(true), Math.max(0, minVisible - waited));
-    return () => clearTimeout(t);
+    const hideTimer = setTimeout(() => setOut(true), Math.max(0, minVisible - waited));
+    return () => clearTimeout(hideTimer);
   }, [routeKey, minVisible]);
 
   useEffect(() => {
-    function onClick(e) {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const a = e.target.closest && e.target.closest('a[href]');
-      if (!a) return;
-      if (a.target === '_blank' || a.hasAttribute('download')) return;
-      const href = a.getAttribute('href');
+    function onClick(event) {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const anchor = event.target.closest && event.target.closest('a[href]');
+      if (!anchor) return;
+      if (anchor.target === '_blank' || anchor.hasAttribute('download')) return;
+      const href = anchor.getAttribute('href');
       if (!href || href.startsWith('#') || /^(mailto:|tel:|javascript:)/i.test(href)) return;
       let url;
       try {
-        url = new URL(a.href);
+        url = new URL(anchor.href);
       } catch {
         return;
       }

@@ -1,15 +1,15 @@
 export const TIME_SLOTS = (() => {
   const out = [];
   [...Array(48).keys()]
-    .map((k) => k * 30)
-    .forEach((m) => {
-      out.push(`${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+    .map((slotIndex) => slotIndex * 30)
+    .forEach((minutes) => {
+      out.push(`${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`);
     });
   return out;
 })();
 
 function range(from, to) {
-  return TIME_SLOTS.filter((t) => t >= from && t <= to);
+  return TIME_SLOTS.filter((timeSlot) => timeSlot >= from && timeSlot <= to);
 }
 
 const PRE_DAWN = ['02:00', '03:00'];
@@ -42,22 +42,26 @@ export const RESTRICTED_SLOTS = {
 
 const RESTRICTABLE = new Set(['tour', 'experience', 'performance', 'combo', 'place']);
 
-export function fmtTime(t) {
-  if (!t) return '';
-  const [h, m] = t.split(':').map(Number);
-  return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+export function fmtTime(time) {
+  if (!time) return '';
+  const [hours, minutes] = time.split(':').map(Number);
+  return `${hours % 12 === 0 ? 12 : hours % 12}:${String(minutes).padStart(2, '0')} ${hours < 12 ? 'AM' : 'PM'}`;
 }
 
-export function fmtDate(v) {
-  if (!v) return '';
-  const [y, m, d] = String(v).split('-').map(Number);
-  if (!y || !m || !d) return String(v);
-  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+export function fmtDate(dateValue) {
+  if (!dateValue) return '';
+  const [year, month, day] = String(dateValue).split('-').map(Number);
+  if (!year || !month || !day) return String(dateValue);
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 }
 
-export function fmtHour(h) {
-  const n = Number(h);
-  return `${n % 12 === 0 ? 12 : n % 12} ${n < 12 ? 'AM' : 'PM'}`;
+export function fmtHour(hour) {
+  const hourNumber = Number(hour);
+  return `${hourNumber % 12 === 0 ? 12 : hourNumber % 12} ${hourNumber < 12 ? 'AM' : 'PM'}`;
 }
 
 export function allowedSlots(category, itemName) {
@@ -67,10 +71,10 @@ export function allowedSlots(category, itemName) {
 
 export function timeOptions(category, itemName) {
   const allowed = allowedSlots(category, itemName);
-  return TIME_SLOTS.map((t) => ({
-    value: t,
-    label: fmtTime(t),
-    disabled: !!allowed && !allowed.includes(t),
+  return TIME_SLOTS.map((timeSlot) => ({
+    value: timeSlot,
+    label: fmtTime(timeSlot),
+    disabled: !!allowed && !allowed.includes(timeSlot),
   }));
 }
 

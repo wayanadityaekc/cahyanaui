@@ -47,21 +47,21 @@ export default function CartPanel({
   ) : (
     <>
       <div>
-        {rows.map((r, i) => {
-          const line = priced && priced.lines[i];
+        {rows.map((row, index) => {
+          const line = priced && priced.lines[index];
           return (
-            <div className={MTC_ITEM} key={i}>
-              <ItemIcon row={r} />
+            <div className={MTC_ITEM} key={index}>
+              <ItemIcon row={row} />
               <div className={MTC_ITEM_BODY}>
-                <p className={MTC_ITEM_TITLE}>{r.service}</p>
+                <p className={MTC_ITEM_TITLE}>{row.service}</p>
                 <p className={MTC_ITEM_DESC}>
-                  {r.day_no ? `Day ${r.day_no} · ` : ''}
-                  <button type="button" className={MTC_DATEBTN} onClick={() => setEditDate({ row: r, index: i })}>
-                    {fmtDay(r.date)}
-                    {r.time ? ` · ${fmtTime(r.time)}` : ''}
+                  {row.day_no ? `Day ${row.day_no} · ` : ''}
+                  <button type="button" className={MTC_DATEBTN} onClick={() => setEditDate({ row: row, index: index })}>
+                    {fmtDay(row.date)}
+                    {row.time ? ` · ${fmtTime(row.time)}` : ''}
                   </button>
-                  {r.mode === 'exclusive' ? ' · Exclusive' : ''}
-                  {r.return ? ' · return' : ''}
+                  {row.mode === 'exclusive' ? ' · Exclusive' : ''}
+                  {row.return ? ' · return' : ''}
                 </p>
               </div>
               <span className={MTC_ITEM_PRICE}>
@@ -70,8 +70,8 @@ export default function CartPanel({
               <button
                 type="button"
                 className={MTC_ITEM_DEL}
-                aria-label={`Remove ${r.service}`}
-                onClick={() => remove(r)}
+                aria-label={`Remove ${row.service}`}
+                onClick={() => remove(row)}
               >
                 &times;
               </button>

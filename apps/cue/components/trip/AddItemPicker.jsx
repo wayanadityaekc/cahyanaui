@@ -6,7 +6,7 @@ import { SUB } from '@/components/ui/modalClasses';
 import { usePricing } from '@/state/PricingProvider';
 import { EXPLORE_OPTIONS } from '@/content/shared/explore-options';
 
-const LINK_OPTIONS = EXPLORE_OPTIONS.filter((o) => o.cat !== 'destination');
+const LINK_OPTIONS = EXPLORE_OPTIONS.filter((exploreOption) => exploreOption.cat !== 'destination');
 const PICK_CATS_SRC = [
   { key: 'tour', label: 'Tour Programs', cats: ['tour', 'combo'] },
   { key: 'experience', label: 'Activities & Performances', cats: ['experience', 'performance'] },
@@ -30,7 +30,7 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
   const catalog = pricing && pricing.catalog;
   const items = useMemo(() => {
     if (!catalog || !cat) return [];
-    return catalog.items.filter((i) => cat.cats.includes(i.category) && i.active);
+    return catalog.items.filter((item) => cat.cats.includes(item.category) && item.active);
   }, [catalog, cat]);
 
   function close() {
@@ -45,14 +45,14 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
           Pick what you&apos;d like to add - you&apos;ll browse the real options and pick your item there.
         </p>
         <div className={PICK_CATS}>
-          {LINK_OPTIONS.map((o) => (
-            <a href={o.href} className={LINK_CAT} key={o.href}>
+          {LINK_OPTIONS.map((linkOption) => (
+            <a href={linkOption.href} className={LINK_CAT} key={linkOption.href}>
               <span className={LINK_ICON}>
-                <o.Icon strokeWidth={1.6} />
+                <linkOption.Icon strokeWidth={1.6} />
               </span>
               <span>
-                <span className={LINK_NAME}>{o.name}</span>
-                <span className={LINK_SUB}>{o.sub}</span>
+                <span className={LINK_NAME}>{linkOption.name}</span>
+                <span className={LINK_SUB}>{linkOption.sub}</span>
               </span>
             </a>
           ))}
@@ -67,9 +67,9 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
         <>
           <p className={SUB}>Pick a category to add to your trip.</p>
           <div className={PICK_CATS}>
-            {PICK_CATS_SRC.map((c) => (
-              <button type="button" className={PICK_CAT_BTN} key={c.key} onClick={() => setCat(c)}>
-                {c.label}
+            {PICK_CATS_SRC.map((category) => (
+              <button type="button" className={PICK_CAT_BTN} key={category.key} onClick={() => setCat(category)}>
+                {category.label}
               </button>
             ))}
             <a href="/transfer.html" className={PICK_CAT}>
@@ -84,17 +84,17 @@ export default function AddItemPicker({ open, onClose, onPick, mode = 'link' }) 
         <>
           <p className={SUB}>{cat.label}</p>
           <div className={PICK_CATS}>
-            {items.map((i) => (
+            {items.map((item) => (
               <button
                 type="button"
                 className={PICK_CAT_BTN}
-                key={i.name}
+                key={item.name}
                 onClick={() => {
-                  onPick(i.name);
+                  onPick(item.name);
                   close();
                 }}
               >
-                {i.name}
+                {item.name}
               </button>
             ))}
           </div>

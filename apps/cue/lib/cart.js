@@ -1,24 +1,24 @@
-export function addDaysStr(dateStr, n) {
+export function addDaysStr(dateStr, dayOffset) {
   if (!dateStr) return '';
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const shifted = new Date(y, m - 1, d + n);
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const shifted = new Date(year, month - 1, day + dayOffset);
   return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}-${String(shifted.getDate()).padStart(2, '0')}`;
 }
 
 export function cascadeFrom(state, dayIndex, date) {
-  const days = (state.days || []).map((d) => ({ ...d }));
-  days.forEach((day, i) => {
-    if (i >= dayIndex) day.date = addDaysStr(date, i - dayIndex);
+  const days = (state.days || []).map((day) => ({ ...day }));
+  days.forEach((day, index) => {
+    if (index >= dayIndex) day.date = addDaysStr(date, index - dayIndex);
   });
   return { ...state, days };
 }
 
 export function hasClash({ days }, isFullDay) {
   const seen = {};
-  return (days || []).some((d) => {
-    if (!d.date || !(d.items || []).some(isFullDay)) return false;
-    if (seen[d.date]) return true;
-    seen[d.date] = true;
+  return (days || []).some((day) => {
+    if (!day.date || !(day.items || []).some(isFullDay)) return false;
+    if (seen[day.date]) return true;
+    seen[day.date] = true;
     return false;
   });
 }
@@ -26,44 +26,44 @@ export function hasClash({ days }, isFullDay) {
 export function clashDates({ days }, isFullDay) {
   const seen = {};
   const out = [];
-  (days || []).forEach((d) => {
-    if (!d.date || !(d.items || []).some(isFullDay)) return;
-    if (seen[d.date]) out.push(d.date);
-    seen[d.date] = true;
+  (days || []).forEach((day) => {
+    if (!day.date || !(day.items || []).some(isFullDay)) return;
+    if (seen[day.date]) out.push(day.date);
+    seen[day.date] = true;
   });
   return out;
 }
 
 export function setItemMode(state, dayIndex, itemIndex, mode) {
-  const days = (state.days || []).map((d, i) => {
-    if (i !== dayIndex) return d;
-    const modes = [...(d.itemModes || [])];
+  const days = (state.days || []).map((day, index) => {
+    if (index !== dayIndex) return day;
+    const modes = [...(day.itemModes || [])];
     modes[itemIndex] = mode;
-    return { ...d, itemModes: modes };
+    return { ...day, itemModes: modes };
   });
   return { ...state, days };
 }
 
 export function setItemTime(state, dayIndex, itemIndex, time) {
-  const days = (state.days || []).map((d, i) => {
-    if (i !== dayIndex) return d;
-    const times = [...(d.itemTimes || [])];
+  const days = (state.days || []).map((day, index) => {
+    if (index !== dayIndex) return day;
+    const times = [...(day.itemTimes || [])];
     times[itemIndex] = time;
-    return { ...d, itemTimes: times };
+    return { ...day, itemTimes: times };
   });
   return { ...state, days };
 }
 
 export function removeItem(state, dayIndex, itemIndex) {
-  const days = (state.days || []).map((d, i) => {
-    if (i !== dayIndex) return d;
-    const items = [...(d.items || [])];
-    const modes = [...(d.itemModes || [])];
-    const times = [...(d.itemTimes || [])];
+  const days = (state.days || []).map((day, index) => {
+    if (index !== dayIndex) return day;
+    const items = [...(day.items || [])];
+    const modes = [...(day.itemModes || [])];
+    const times = [...(day.itemTimes || [])];
     items.splice(itemIndex, 1);
     modes.splice(itemIndex, 1);
     times.splice(itemIndex, 1);
-    return { ...d, items, itemModes: modes, itemTimes: times };
+    return { ...day, items, itemModes: modes, itemTimes: times };
   });
   return { ...state, days };
 }
@@ -73,15 +73,15 @@ export function removeRow(state, { kind, localIndex, day_no, service }) {
   if (kind === 'transfer') next.transfers.splice(localIndex, 1);
   else if (kind === 'charter') next.charters.splice(localIndex, 1);
   else {
-    let d = next.days[day_no - 1];
-    if (!d || !(d.items || []).includes(service)) {
-      d = (next.days || []).find((day) => (day.items || []).includes(service));
+    let dayItem = next.days[day_no - 1];
+    if (!dayItem || !(dayItem.items || []).includes(service)) {
+      dayItem = (next.days || []).find((day) => (day.items || []).includes(service));
     }
-    if (d) {
-      const k = d.items.indexOf(service);
-      if (k >= 0) {
-        d.items.splice(k, 1);
-        if (d.itemModes) d.itemModes.splice(k, 1);
+    if (dayItem) {
+      const serviceIndex = dayItem.items.indexOf(service);
+      if (serviceIndex >= 0) {
+        dayItem.items.splice(serviceIndex, 1);
+        if (dayItem.itemModes) dayItem.itemModes.splice(serviceIndex, 1);
       }
     }
   }
@@ -95,12 +95,12 @@ export function setRowDate(state, row, date, time) {
   }
   const next = JSON.parse(JSON.stringify(state));
   const list = row.kind === 'transfer' ? next.transfers : next.charters;
-  const idx =
+  const index =
     row.kind === 'transfer'
-      ? (state.transfers || []).findIndex((t) => t.route === row.service && t.date === row.date)
-      : (state.charters || []).findIndex((c) => c.date === row.date);
-  if (idx < 0) return null;
-  list[idx].date = date;
-  list[idx].time = time || '';
+      ? (state.transfers || []).findIndex((transfer) => transfer.route === row.service && transfer.date === row.date)
+      : (state.charters || []).findIndex((charter) => charter.date === row.date);
+  if (index < 0) return null;
+  list[index].date = date;
+  list[index].time = time || '';
   return next;
 }

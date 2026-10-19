@@ -43,55 +43,55 @@ function stringLiterals(src) {
   const found = [];
   const stack = [{ kind: 'code', depth: 0 }];
   let chunk = null;
-  let i = 0;
+  let charIndex = 0;
   function open(kind) {
     stack.push({ kind });
-    chunk = { text: '', start: i + 1 };
+    chunk = { text: '', start: charIndex + 1 };
   }
   function close() {
     if (chunk) found.push(chunk);
     chunk = null;
     stack.pop();
   }
-  while (i < src.length) {
-    const ch = src[i];
+  while (charIndex < src.length) {
+    const ch = src[charIndex];
     const top = stack[stack.length - 1];
     if (top.kind === 'code') {
-      if (ch === '/' && src[i + 1] === '/') {
-        i = src.indexOf('\n', i);
-        if (i === -1) break;
+      if (ch === '/' && src[charIndex + 1] === '/') {
+        charIndex = src.indexOf('\n', charIndex);
+        if (charIndex === -1) break;
         continue;
       }
-      if (ch === '/' && src[i + 1] === '*') {
-        const end = src.indexOf('*/', i + 2);
-        i = end === -1 ? src.length : end + 2;
+      if (ch === '/' && src[charIndex + 1] === '*') {
+        const end = src.indexOf('*/', charIndex + 2);
+        charIndex = end === -1 ? src.length : end + 2;
         continue;
       }
       if (ch === '"' || ch === "'" || ch === '`') open(ch);
       else if (ch === '{') top.depth++;
       else if (ch === '}' && top.inTemplate && top.depth === 0) {
         stack.pop();
-        chunk = { text: '', start: i + 1 };
+        chunk = { text: '', start: charIndex + 1 };
       } else if (ch === '}') top.depth--;
     } else if (ch === '\\') {
-      if (chunk) chunk.text += src.slice(i, i + 2);
-      i += 2;
+      if (chunk) chunk.text += src.slice(charIndex, charIndex + 2);
+      charIndex += 2;
       continue;
     } else if (ch === top.kind) {
       close();
     } else if (ch === '\n' && top.kind !== '`') {
       chunk = null;
       stack.pop();
-    } else if (top.kind === '`' && ch === '$' && src[i + 1] === '{') {
+    } else if (top.kind === '`' && ch === '$' && src[charIndex + 1] === '{') {
       if (chunk) found.push(chunk);
       chunk = null;
       stack.push({ kind: 'code', depth: 0, inTemplate: true });
-      i += 2;
+      charIndex += 2;
       continue;
     } else if (chunk) {
       chunk.text += ch;
     }
-    i++;
+    charIndex++;
   }
   return found;
 }

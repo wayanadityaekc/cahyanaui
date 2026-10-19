@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionTags, useReducedMotion } from 'motion/react';
 import { SHELL, BOX } from './modalClasses';
 import useDialog from './useDialog';
 
@@ -18,16 +18,16 @@ export default function ModalPresence({ open, onClose, label, box = BOX, shellCl
     <LazyMotion features={domAnimation}>
       <AnimatePresence>
         {open && (
-          <m.div
+          <motionTags.div
             key="shell"
             className={shellClass}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, pointerEvents: 'none' }}
             transition={{ duration: shell, ease: EASE_OUT }}
-            onClick={(e) => e.target === e.currentTarget && onClose?.()}
+            onClick={(event) => event.target === event.currentTarget && onClose?.()}
           >
-            <m.div
+            <motionTags.div
               key="box"
               ref={boxRef}
               role="dialog"
@@ -40,8 +40,8 @@ export default function ModalPresence({ open, onClose, label, box = BOX, shellCl
               transition={{ duration: card, ease: EASE_OUT }}
             >
               {children}
-            </m.div>
-          </m.div>
+            </motionTags.div>
+          </motionTags.div>
         )}
       </AnimatePresence>
     </LazyMotion>

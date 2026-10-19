@@ -3,7 +3,7 @@ import { BTN_SM } from '@/components/ui/btnClasses';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { crumbsFor } from '@/lib/crumbs';
 
-import { Car, Check, MapPin, Search, UserRound, X } from 'lucide-react';
+import { Car, Check, MapPin, Search, UserRound, X as CloseIconItem } from 'lucide-react';
 import { INFO_SECTION_DETAIL, INFO_CARD } from '@/components/ui/infoClasses';
 import InfoFacts from '@/components/ui/InfoFacts';
 import InfoBoxes, { InfoBox, InfoBoxList } from '@/components/ui/InfoBoxes';
@@ -20,7 +20,7 @@ function SearchIcon() {
   return <Search strokeWidth={1.8} aria-hidden="true" />;
 }
 function CloseIcon() {
-  return <X aria-hidden="true" />;
+  return <CloseIconItem aria-hidden="true" />;
 }
 function CarIcon() {
   return <Car strokeWidth={1.7} aria-hidden="true" />;
@@ -48,9 +48,9 @@ export default function ListingPage({ data, page }) {
   const allCards = [];
   cats.forEach((cat) => {
     const shown = cat.cards.filter((card) => !isHiddenTour(card.href));
-    shown.forEach((card, i) => allCards.push({ card, catId: cat.id, anchor: i === 0 ? cat.id : null }));
+    shown.forEach((card, index) => allCards.push({ card, catId: cat.id, anchor: index === 0 ? cat.id : null }));
   });
-  const shownCards = term ? allCards.filter((x) => x.card.name.toLowerCase().includes(term)) : allCards;
+  const shownCards = term ? allCards.filter((allCard) => allCard.card.name.toLowerCase().includes(term)) : allCards;
   const tabs = [{ id: 'all', label: listTitle }, ...chips];
 
   const browseRef = useRef(null);
@@ -61,7 +61,7 @@ export default function ListingPage({ data, page }) {
       setHeroInView(true);
       return undefined;
     }
-    const observer = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting));
+    const observer = new IntersectionObserver(([event]) => setHeroInView(event.isIntersecting));
     observer.observe(browse);
     return () => observer.disconnect();
   }, [term]);
@@ -88,7 +88,7 @@ export default function ListingPage({ data, page }) {
               className="flex-1 min-w-0 [border:0] bg-transparent outline-none [font-family:inherit] text-field text-ink placeholder:text-muted [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-decoration]:hidden"
               placeholder={`Search ${noun}`}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(event) => setQuery(event.target.value)}
               aria-label={`Search ${noun}`}
             />
             <button
@@ -143,15 +143,15 @@ export default function ListingPage({ data, page }) {
             role="tablist"
             aria-label="Filter by area"
           >
-            {tabs.map((t) => (
+            {tabs.map((tab) => (
               <button
-                key={t.id}
+                key={tab.id}
                 type="button"
-                className={`[font-family:inherit] text-[0.78rem] font-semibold rounded-sm py-2 px-4 [border:0] cursor-pointer whitespace-nowrap [transition:color_var(--dur)_ease,background-color_var(--dur)_ease] ${zone === t.id ? 'bg-cta text-white' : 'bg-transparent text-muted hover:text-ink hover:bg-cream'}`}
-                aria-pressed={zone === t.id}
-                onClick={() => setZone(t.id)}
+                className={`[font-family:inherit] text-[0.78rem] font-semibold rounded-sm py-2 px-4 [border:0] cursor-pointer whitespace-nowrap [transition:color_var(--dur)_ease,background-color_var(--dur)_ease] ${zone === tab.id ? 'bg-cta text-white' : 'bg-transparent text-muted hover:text-ink hover:bg-cream'}`}
+                aria-pressed={zone === tab.id}
+                onClick={() => setZone(tab.id)}
               >
-                {t.label}
+                {tab.label}
               </button>
             ))}
           </div>

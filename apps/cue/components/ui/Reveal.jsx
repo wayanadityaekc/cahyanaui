@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionTags, useReducedMotion } from 'motion/react';
 
 const EASE_OUT = [0.16, 1, 0.3, 1];
 
@@ -16,7 +16,7 @@ export function Collapse({ open, children }) {
     <Shell>
       <AnimatePresence initial={false}>
         {open && (
-          <m.div
+          <motionTags.div
             key="collapse"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -25,7 +25,7 @@ export function Collapse({ open, children }) {
             style={{ overflow: 'hidden' }}
           >
             {children}
-          </m.div>
+          </motionTags.div>
         )}
       </AnimatePresence>
     </Shell>
@@ -39,7 +39,7 @@ export function PopMenu({ open, children }) {
     <Shell>
       <AnimatePresence initial={false}>
         {open && (
-          <m.div
+          <motionTags.div
             key="pop"
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
@@ -47,7 +47,7 @@ export function PopMenu({ open, children }) {
             transition={{ duration, ease: EASE_OUT }}
           >
             {children}
-          </m.div>
+          </motionTags.div>
         )}
       </AnimatePresence>
     </Shell>
@@ -76,12 +76,12 @@ export function StaggerItem({ index = 0, children }) {
   const entered = useContext(Entered);
   if (reduced) return children;
   return (
-    <m.div
+    <motionTags.div
       initial={entered ? { opacity: 0, y: 8 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.18, ease: EASE_OUT, delay: Math.min(index * STAGGER_STEP, STAGGER_CAP) }}
     >
       {children}
-    </m.div>
+    </motionTags.div>
   );
 }

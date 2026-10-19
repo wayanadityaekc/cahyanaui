@@ -13,9 +13,9 @@ export function railFor(choice) {
 }
 
 export function chargeCurrency(currency, rail = DEFAULT_RAIL) {
-  const cur = String(currency || 'USD').toUpperCase();
+  const current = String(currency || 'USD').toUpperCase();
   if (railFor(rail) === 'doku') return 'IDR';
-  return PAYPAL_SETTLES.has(cur) ? cur : PAYPAL_FALLBACK;
+  return PAYPAL_SETTLES.has(current) ? current : PAYPAL_FALLBACK;
 }
 
 export const RAIL_CHOICES = [
@@ -32,11 +32,11 @@ export const RAIL_CHOICES = [
 ];
 
 export function noteFor(currency, rail = DEFAULT_RAIL) {
-  const cur = String(currency || 'USD').toUpperCase();
-  const bill = chargeCurrency(cur, rail);
-  if (bill === cur) return null;
+  const current = String(currency || 'USD').toUpperCase();
+  const bill = chargeCurrency(current, rail);
+  if (bill === current) return null;
   if (bill === 'IDR') {
     return `Card payments are charged in rupiah. The rupiah amount is exact; the amount in your currency is an estimate, and your bank converts it.`;
   }
-  return `PayPal cannot charge ${cur === 'IDR' ? 'rupiah' : cur}, so the amount shown is converted at today's rate.`;
+  return `PayPal cannot charge ${current === 'IDR' ? 'rupiah' : current}, so the amount shown is converted at today's rate.`;
 }

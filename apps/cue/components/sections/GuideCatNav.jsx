@@ -4,7 +4,7 @@ import CatDropdown, { CAT_ITEM_TAP } from '@/components/ui/CatDropdown';
 
 export default function GuideCatNav({ tabs = [] }) {
   if (!tabs.length) return null;
-  const active = tabs.find((t) => t.active) || tabs[0];
+  const active = tabs.find((tab) => tab.active) || tabs[0];
 
   return (
     <CatDropdown
@@ -13,15 +13,15 @@ export default function GuideCatNav({ tabs = [] }) {
       ariaLabel="Guide categories"
     >
       {(close) =>
-        tabs.map((t) => (
+        tabs.map((tab) => (
           <a
-            key={t.href}
-            href={t.href}
+            key={tab.href}
+            href={tab.href}
             onClick={close}
-            className={CAT_ITEM_TAP(t.active)}
-            aria-current={t.active || undefined}
+            className={CAT_ITEM_TAP(tab.active)}
+            aria-current={tab.active || undefined}
           >
-            {t.label}
+            {tab.label}
           </a>
         ))
       }

@@ -2,8 +2,8 @@ import { API_BASE, KEY } from '@/lib/constants';
 
 export function readThread() {
   try {
-    const v = localStorage.getItem(KEY.chatThread);
-    return /^[a-f0-9]{48}$/.test(v || '') ? v : null;
+    const threadId = localStorage.getItem(KEY.chatThread);
+    return /^[a-f0-9]{48}$/.test(threadId || '') ? threadId : null;
   } catch (e) {
     return null;
   }

@@ -21,8 +21,8 @@ export function InfoBoxList({ items, variant, render }) {
   const ruled = variant === 'yes' || variant === 'no';
   return (
     <ul className={`${ROWS_BASE} ${ruled ? `${ROWS_RULED} ` : ''}${variant === 'no' ? 'text-muted' : 'text-ink'}`}>
-      {items.map((item, i) => (
-        <li key={i}>{render ? render(item) : item}</li>
+      {items.map((item, index) => (
+        <li key={index}>{render ? render(item) : item}</li>
       ))}
     </ul>
   );

@@ -238,8 +238,8 @@ export default function useChat({
     sock.current.typing();
   }
 
-  async function saveEmail(e) {
-    e.preventDefault();
+  async function saveEmail(event) {
+    event.preventDefault();
     const address = mailDraft.trim();
     if (!address || !thread) return;
     setMailErr('');

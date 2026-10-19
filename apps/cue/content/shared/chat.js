@@ -301,14 +301,14 @@ export const THANKS = [
 export const REPLY_HOURS = { from: 8, to: 21, tz: 'Asia/Makassar', label: '8am and 9pm Bali time' };
 
 export function wayanIsAround(now = new Date()) {
-  const h = Number(
+  const replyHour = Number(
     new Intl.DateTimeFormat('en-GB', {
       timeZone: REPLY_HOURS.tz,
       hour: '2-digit',
       hour12: false,
     }).format(now),
   );
-  return h >= REPLY_HOURS.from && h < REPLY_HOURS.to;
+  return replyHour >= REPLY_HOURS.from && replyHour < REPLY_HOURS.to;
 }
 
 export const CHAT_COPY = {

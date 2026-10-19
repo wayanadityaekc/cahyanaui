@@ -31,7 +31,7 @@ const INCL =
 export default function ExperienceCard({
   href,
   name,
-  img,
+  img: image,
   alt,
   meta,
   metaIcon = 'clock',
@@ -50,9 +50,9 @@ export default function ExperienceCard({
   const incl = variant === 'incl';
   const body = (
     <>
-      <div className={IMG_WRAP} style={img ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
-        {img && (
-          <Img className={CARD_IMG} src={`/assets/images/${img}`} alt={alt || name} width={width} height={height} />
+      <div className={IMG_WRAP} style={image ? undefined : { backgroundImage: PLACEHOLDER_GRADIENT }}>
+        {image && (
+          <Img className={CARD_IMG} src={`/assets/images/${image}`} alt={alt || name} width={width} height={height} />
         )}
         {badge && <span className={BADGE_POPULAR}>{badge}</span>}
       </div>

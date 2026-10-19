@@ -32,26 +32,26 @@ const MIME = {
 };
 function serve(root, port) {
   return new Promise((result) => {
-    const s = http.createServer((q, r) => {
-      let p = decodeURIComponent(q.url.split('?')[0]);
-      if (p.endsWith('/')) p += 'index.html';
-      let f = path.join(root, p);
-      if (!fs.existsSync(f) && !path.extname(f)) f = path.join(root, `${p}.html`);
-      if (!fs.existsSync(f)) {
-        r.writeHead(404);
-        r.end();
+    const httpServer = http.createServer((request, response) => {
+      let pathname = decodeURIComponent(request.url.split('?')[0]);
+      if (pathname.endsWith('/')) pathname += 'index.html';
+      let filePath = path.join(root, pathname);
+      if (!fs.existsSync(filePath) && !path.extname(filePath)) filePath = path.join(root, `${pathname}.html`);
+      if (!fs.existsSync(filePath)) {
+        response.writeHead(404);
+        response.end();
         return;
       }
-      r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'text/html' });
-      r.end(fs.readFileSync(f));
+      response.writeHead(200, { 'content-type': MIME[path.extname(filePath)] || 'text/html' });
+      response.end(fs.readFileSync(filePath));
     });
-    s.listen(port, () => result(s));
+    httpServer.listen(port, () => result(httpServer));
   });
 }
 
 const port = 8000 + Math.floor(Math.random() * 1500);
-const s = await serve(ROOT, port);
-const b = await chromium.launch({ executablePath: EXE });
+const server = await serve(ROOT, port);
+const browser = await chromium.launch({ executablePath: EXE });
 let pass = 0,
   fail = 0;
 function check(label, cond) {
@@ -65,14 +65,14 @@ function check(label, cond) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(300);
   check('TripBar absent on my-trips.html', (await pg.$('#tripbar')) === null);
   await pg.close();
 }
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   await pg.goto(`http://localhost:${port}/tour.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(300);
   check('TripBar still present on tour.html (control)', (await pg.$('#tripbar')) !== null);
@@ -80,7 +80,7 @@ function check(label, cond) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(300);
   const fs_ = await pg.evaluate(() => {
@@ -92,7 +92,7 @@ function check(label, cond) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   await pg.addInitScript(() => {
     try {
       localStorage.setItem(
@@ -125,7 +125,7 @@ function check(label, cond) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   await pg.addInitScript(() => {
     try {
       localStorage.setItem(
@@ -160,15 +160,15 @@ function check(label, cond) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   await pg.goto(`http://localhost:${port}/my-trips.html`, { waitUntil: 'networkidle' });
   await pg.waitForTimeout(300);
   await pg.click('button:has-text("Add a program")');
   await pg.waitForTimeout(300);
-  const hrefs = await pg.$$eval('[role="dialog"] a[href]', (as) => as.map((a) => a.getAttribute('href')));
+  const hrefs = await pg.$$eval('[role="dialog"] a[href]', (as) => as.map((link) => link.getAttribute('href')));
   check(
     `Add-program popup links to the 4 category pages, got ${JSON.stringify(hrefs)}`,
-    ['/tour.html', '/activities.html', '/transfer.html', '/charter.html'].every((h) => hrefs.includes(h)),
+    ['/tour.html', '/activities.html', '/transfer.html', '/charter.html'].every((href) => hrefs.includes(href)),
   );
   const hasCategoryButtons = await pg.$('[role="dialog"] button:has-text("Tour Programs")');
   check('No in-modal category-button step (now direct links)', hasCategoryButtons === null);
@@ -176,7 +176,7 @@ function check(label, cond) {
 }
 
 {
-  const pg = await b.newPage({ viewport: { width: 1280, height: 1200 } });
+  const pg = await browser.newPage({ viewport: { width: 1280, height: 1200 } });
   const posted = [];
   await pg.route('**/bookings/mine', (route) =>
     route.fulfill({
@@ -266,7 +266,7 @@ function check(label, cond) {
   const checkboxes = await pg.$$('input[type="checkbox"]');
   check(`Checklist shows both past-trip items, got ${checkboxes.length}`, checkboxes.length === 2);
   const allChecked = await pg.evaluate(() =>
-    [...document.querySelectorAll('input[type="checkbox"]')].every((c) => c.checked),
+    [...document.querySelectorAll('input[type="checkbox"]')].every((checkbox) => checkbox.checked),
   );
   check('Both items pre-checked by default', allChecked);
 
@@ -276,7 +276,7 @@ function check(label, cond) {
   await pg.click('button:has-text("Submit review")');
   await pg.waitForTimeout(600);
   check(`Submitting fanned out to 2 POSTs, got ${posted.length}`, posted.length === 2);
-  const refs = posted.map((p) => p.booking_ref).sort();
+  const refs = posted.map((postedReview) => postedReview.booking_ref).sort();
   check(
     `Both booking refs used, got ${JSON.stringify(refs)}`,
     JSON.stringify(refs) === JSON.stringify(['CUE-040', 'CUE-050']),
@@ -284,7 +284,10 @@ function check(label, cond) {
   check(
     'Same rating/message reused on both',
     posted.every(
-      (p) => p.rating === 5 && p.message === 'Loved every stop, driver was great.' && p.name === 'Test Guest',
+      (postedReview) =>
+        postedReview.rating === 5 &&
+        postedReview.message === 'Loved every stop, driver was great.' &&
+        postedReview.name === 'Test Guest',
     ),
   );
   const thankYou = await pg.$('h3:has-text("Thank you")');
@@ -293,7 +296,7 @@ function check(label, cond) {
   await pg.close();
 }
 
-await b.close();
-s.close();
+await browser.close();
+server.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

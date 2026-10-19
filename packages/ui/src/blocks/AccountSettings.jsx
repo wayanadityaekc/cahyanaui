@@ -20,7 +20,7 @@ export default function AccountSettings({
   emailNote = 'Your email is how you sign in, so it cannot be changed here.',
 }) {
   const [form, setForm] = useState({ name: '', phone: '' });
-  const [msg, setMsg] = useState(null);
+  const [message, setMessage] = useState(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -32,10 +32,10 @@ export default function AccountSettings({
 
   async function save() {
     setBusy(true);
-    setMsg(null);
+    setMessage(null);
     const result = await onSave(form);
     setBusy(false);
-    setMsg(
+    setMessage(
       result && result.ok
         ? { ok: true, text: 'Saved.' }
         : { ok: false, text: (result && result.error) || 'Could not save. Please try again.' },
@@ -76,9 +76,12 @@ export default function AccountSettings({
         {prefs}
       </div>
 
-      {msg && (
-        <p role={msg.ok ? 'status' : 'alert'} className={`mt-3 mb-0 text-label ${msg.ok ? 'text-ok' : 'text-err'}`}>
-          {msg.text}
+      {message && (
+        <p
+          role={message.ok ? 'status' : 'alert'}
+          className={`mt-3 mb-0 text-label ${message.ok ? 'text-ok' : 'text-err'}`}
+        >
+          {message.text}
         </p>
       )}
       <div className="flex flex-wrap gap-2 mt-5">

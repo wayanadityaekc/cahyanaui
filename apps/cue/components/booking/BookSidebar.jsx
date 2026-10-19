@@ -21,13 +21,13 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
   const pricing = usePricing();
 
   function isFullDay(name) {
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
-    return !!c && (c.category === 'tour' || c.category === 'combo');
+    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
+    return !!catalogItem && (catalogItem.category === 'tour' || catalogItem.category === 'combo');
   }
 
   function categoryOf(name) {
-    const c = pricing && pricing.catalog && pricing.catalog.items.find((i) => i.name === name);
-    return c ? c.category : null;
+    const catalogItem = pricing && pricing.catalog && pricing.catalog.items.find((itemItem) => itemItem.name === name);
+    return catalogItem ? catalogItem.category : null;
   }
 
   function addRow(name, date, mode, goto, time) {
@@ -101,9 +101,15 @@ export default function BookSidebar({ item, presetType = 'tour', perPerson = fal
               type="button"
               className={BTN}
               onClick={() => {
-                const c = confirm;
+                const pendingConfirm = confirm;
                 setConfirm(null);
-                addRow(c.name, c.date, c.mode, c.goto, c.time);
+                addRow(
+                  pendingConfirm.name,
+                  pendingConfirm.date,
+                  pendingConfirm.mode,
+                  pendingConfirm.goto,
+                  pendingConfirm.time,
+                );
               }}
             >
               Add anyway

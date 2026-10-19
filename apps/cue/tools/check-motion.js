@@ -9,17 +9,17 @@ if (!fs.existsSync(OUT)) {
   process.exit(2);
 }
 
-function tokenize(s) {
-  return s.split(/\s+/).filter(Boolean);
+function tokenize(source) {
+  return source.split(/\s+/).filter(Boolean);
 }
 
 function baseOf(token) {
   let depth = 0,
     last = -1;
-  token.split('').forEach((c, i) => {
-    if (c === '[') depth++;
-    else if (c === ']') depth--;
-    else if (c === ':' && depth === 0) last = i;
+  token.split('').forEach((character, index) => {
+    if (character === '[') depth++;
+    else if (character === ']') depth--;
+    else if (character === ':' && depth === 0) last = index;
   });
   return {
     base: last === -1 ? token : token.slice(last + 1),
@@ -27,8 +27,8 @@ function baseOf(token) {
   };
 }
 
-function inner(t) {
-  return t.slice(t.indexOf('[') + 1, t.lastIndexOf(']'));
+function inner(tokenText) {
+  return tokenText.slice(tokenText.indexOf('[') + 1, tokenText.lastIndexOf(']'));
 }
 
 function setsProperty(base) {
@@ -54,14 +54,14 @@ function transitionList(base) {
   if (/^transition-\[/.test(base)) {
     return inner(base)
       .split(',')
-      .map((p) => p.trim().split(/[\s_]/)[0])
+      .map((property) => property.trim().split(/[\s_]/)[0])
       .filter(Boolean);
   }
   if (/^\[transition:/.test(base)) {
     return inner(base)
       .replace(/^transition:/, '')
       .split(',')
-      .map((p) => p.trim().split(/[\s_]/)[0])
+      .map((property) => property.trim().split(/[\s_]/)[0])
       .filter(Boolean);
   }
   return null;
@@ -69,12 +69,12 @@ function transitionList(base) {
 
 function walk(dir) {
   const found = [];
-  (function w(d) {
-    fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
-      if (e.name === '_next') return;
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) w(p);
-      else if (e.name.endsWith('.html')) found.push(p);
+  (function walkDirectory(directory) {
+    fs.readdirSync(directory, { withFileTypes: true }).forEach((event) => {
+      if (event.name === '_next') return;
+      const entryPath = path.join(directory, event.name);
+      if (event.isDirectory()) walkDirectory(entryPath);
+      else if (event.name.endsWith('.html')) found.push(entryPath);
     });
   })(dir);
   return found;
@@ -87,27 +87,27 @@ const cycles = [];
 let elements = 0;
 
 fs.readdirSync(OUT)
-  .filter((n) => n.endsWith('.css'))
-  .map((n) => path.join(OUT, n))
+  .filter((fileName) => fileName.endsWith('.css'))
+  .map((fileName) => path.join(OUT, fileName))
   .forEach((css) => {
     const text = fs.readFileSync(css, 'utf8');
-    [...text.matchAll(/(--[\w-]+)\s*:\s*var\(\s*\1\s*[,)]/g)].forEach((m) => {
-      cycles.push(`${path.relative(OUT, css)}: ${m[1]} is defined as var(${m[1]}) - it resolves to nothing`);
+    [...text.matchAll(/(--[\w-]+)\s*:\s*var\(\s*\1\s*[,)]/g)].forEach((match) => {
+      cycles.push(`${path.relative(OUT, css)}: ${match[1]} is defined as var(${match[1]}) - it resolves to nothing`);
     });
   });
 
-pages.forEach((p) => {
-  const html = fs.readFileSync(p, 'utf8');
-  const page = path.relative(OUT, p);
-  [...html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sclass="([^"]*)"/g)].forEach((m) => {
-    const [, tag, attrs, cls] = m;
+pages.forEach((pageItem) => {
+  const html = fs.readFileSync(pageItem, 'utf8');
+  const page = path.relative(OUT, pageItem);
+  [...html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sclass="([^"]*)"/g)].forEach((match) => {
+    const [, tag, attrs, cls] = match;
     const tokens = tokenize(cls.replace(/&quot;/g, '"'));
     elements++;
 
     const setBy = new Map();
     const transBy = new Map();
-    tokens.forEach((t) => {
-      const { base, scope } = baseOf(t);
+    tokens.forEach((token) => {
+      const { base, scope } = baseOf(token);
       const prop = setsProperty(base);
       if (prop) {
         if (!setBy.has(scope)) setBy.set(scope, new Set());
@@ -130,7 +130,7 @@ pages.forEach((p) => {
       }
       const where = scope ? ` (under ${scope}:)` : '';
 
-      const standalone = ['translate', 'rotate', 'scale'].filter((x) => set.has(x));
+      const standalone = ['translate', 'rotate', 'scale'].filter((transformName) => set.has(transformName));
       if (trans.includes('transform') && !set.has('transform') && standalone.length) {
         const key = `transition names 'transform'${where} but the element sets ${standalone.join('/')} - name it ${standalone.join(',')} instead`;
         if (!dead.has(key)) dead.set(key, `${page}  <${tag} class="…${cls.slice(0, 90)}…">`);

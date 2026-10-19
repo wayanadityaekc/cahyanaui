@@ -25,7 +25,7 @@ export default function GuideHubHero({
   labels = {},
 }) {
   const [open, setOpen] = useState(false);
-  const t = { categories: 'Categories', search: 'Search', searchAria: 'Search guides', ...labels };
+  const mergedLabels = { categories: 'Categories', search: 'Search', searchAria: 'Search guides', ...labels };
   return (
     <section
       className={BAND}
@@ -47,14 +47,14 @@ export default function GuideHubHero({
             <div className="relative flex-[0_0_auto] flex order-2 [border-left:1px_solid_var(--line)]">
               <button
                 type="button"
-                aria-label={t.categories}
+                aria-label={mergedLabels.categories}
                 aria-haspopup="true"
                 aria-expanded={open}
                 onClick={() => setOpen((value) => !value)}
                 className="min-h-[3.15rem] box-border flex items-center gap-[0.35rem] px-[0.95rem] [border:none] [border-radius:0_var(--r-md)_var(--r-md)_0] bg-transparent font-body text-[1rem] font-semibold text-green cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-[rgba(34,32,28,0.08)] [&_span]:hidden"
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
-                <span>{t.categories}</span>
+                <span>{mergedLabels.categories}</span>
                 <ChevronDown
                   className={cn(
                     'w-4 h-4 shrink-0 text-muted [transition:transform_var(--dur)_ease]',
@@ -83,8 +83,8 @@ export default function GuideHubHero({
               <input
                 type="text"
                 className="flex-1 min-w-0 border-none [outline:none] bg-transparent font-body text-field text-green placeholder:text-muted"
-                placeholder={t.search}
-                aria-label={t.searchAria}
+                placeholder={mergedLabels.search}
+                aria-label={mergedLabels.searchAria}
                 autoComplete="off"
                 value={query}
                 onChange={(event) => onQuery(event.target.value)}

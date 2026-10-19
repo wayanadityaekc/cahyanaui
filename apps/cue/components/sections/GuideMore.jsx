@@ -8,15 +8,15 @@ import { SEE_OUR_TOURS } from '@/content/shared/guide-more';
 const BOX = `${PAGE_WIDE} py-[var(--section-gap)]`;
 
 export default function GuideMore({ block }) {
-  const b = block.kind === 'tours' && !block.cards ? SEE_OUR_TOURS : block;
+  const activeBlock = block.kind === 'tours' && !block.cards ? SEE_OUR_TOURS : block;
   return (
     <section className={`guide-more ${BOX}`}>
-      <h2 className={CAROUSEL_TITLE}>{b.title}</h2>
+      <h2 className={CAROUSEL_TITLE}>{activeBlock.title}</h2>
       <div className={GRID_GUIDEMORE}>
-        {b.kind === 'tours'
-          ? b.cards.map((card) => <HomepageCard key={card.href} {...card} />)
-          : b.cards.map((card, i) => (
-              <a className={`${CARD_FRAME} flex flex-col`} href={card.href} key={i}>
+        {activeBlock.kind === 'tours'
+          ? activeBlock.cards.map((card) => <HomepageCard key={card.href} {...card} />)
+          : activeBlock.cards.map((card, index) => (
+              <a className={`${CARD_FRAME} flex flex-col`} href={card.href} key={index}>
                 <div className={CARD_IMAGE}>
                   <img
                     className={CARD_IMG}

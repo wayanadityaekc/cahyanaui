@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { X as CloseIcon } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import useBodyLock from '../lib/useBodyLock.js';
 import Collapse from './Collapse.jsx';
@@ -92,14 +92,14 @@ export default function NavbarShell({
 
   useEffect(() => {
     if (!menuOpen) return undefined;
-    function onDoc(e) {
-      const inNav = navRef.current && navRef.current.contains(e.target);
-      const onBurger = burgerRef.current && burgerRef.current.contains(e.target);
-      const inPopup = e.target.closest && e.target.closest('[data-portal]');
+    function onDoc(event) {
+      const inNav = navRef.current && navRef.current.contains(event.target);
+      const onBurger = burgerRef.current && burgerRef.current.contains(event.target);
+      const inPopup = event.target.closest && event.target.closest('[data-portal]');
       if (!inNav && !onBurger && !inPopup) setMenuOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function onKey(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setMenuOpen(false);
     }
@@ -157,7 +157,7 @@ export default function NavbarShell({
             <li className={NAV_DRAWER_HEAD}>
               <b className="text-strong font-semibold text-gold">{drawerTitle}</b>
               <button type="button" className={NAV_CLOSE} aria-label="Close menu" onClick={close}>
-                <X strokeWidth={2} aria-hidden="true" />
+                <CloseIcon strokeWidth={2} aria-hidden="true" />
               </button>
             </li>
 

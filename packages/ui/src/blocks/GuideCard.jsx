@@ -2,12 +2,12 @@ import { cn } from '../lib/cn.js';
 
 export default function GuideCard({
   href,
-  img,
+  img: image,
   alt = '',
   title,
   tag,
   cat,
-  w = 600,
+  w: viewportWidth = 600,
   hgt = 600,
   overlayTag = false,
   linkAs: LinkAs = 'a',
@@ -33,12 +33,12 @@ export default function GuideCard({
           scrim,
         )}
       >
-        {img ? (
+        {image ? (
           <img
             className="absolute inset-0 w-full h-full object-cover object-center"
-            src={img}
+            src={image}
             alt={alt || title}
-            width={w}
+            width={viewportWidth}
             height={hgt}
             loading="lazy"
           />

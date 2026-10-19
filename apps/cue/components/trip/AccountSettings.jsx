@@ -52,7 +52,7 @@ export default function AccountSettings() {
   const { account, setAccount, logout, deleteAccount } = useAccount();
   const { guests, setGuests, stay, setStay } = useTripPrefs();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
@@ -98,7 +98,7 @@ export default function AccountSettings() {
 
   async function save() {
     setBusy(true);
-    setMsg('');
+    setMessage('');
     try {
       const response = await fetch(`${API_BASE}/account`, {
         method: 'PATCH',
@@ -108,19 +108,19 @@ export default function AccountSettings() {
       const data = await response.json();
       if (data && data.account) {
         setAccount(data.account);
-        setMsg('Saved.');
+        setMessage('Saved.');
       } else {
-        setMsg((data && data.detail) || 'Could not save. Please try again.');
+        setMessage((data && data.detail) || 'Could not save. Please try again.');
       }
     } catch (e) {
-      setMsg('Could not save. Please try again.');
+      setMessage('Could not save. Please try again.');
     } finally {
       setBusy(false);
     }
   }
 
-  function set(k) {
-    return (e) => setForm((v) => ({ ...v, [k]: e.target.value }));
+  function set(fieldName) {
+    return (event) => setForm((previousForm) => ({ ...previousForm, [fieldName]: event.target.value }));
   }
 
   return (
@@ -168,7 +168,10 @@ export default function AccountSettings() {
             label="Guests"
             value={guests || ''}
             onChange={setGuests}
-            options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => ({ value: String(n), label: String(n) }))}
+            options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((guestCount) => ({
+              value: String(guestCount),
+              label: String(guestCount),
+            }))}
             placeholder="Not set"
           />
         </div>
@@ -181,13 +184,13 @@ export default function AccountSettings() {
             type="text"
             id="st-stay"
             value={stay}
-            onChange={(e) => setStay(e.target.value)}
+            onChange={(event) => setStay(event.target.value)}
             placeholder="Ubud & nearby"
           />
         </div>
-        {msg && (
+        {message && (
           <small role="status" className={REFMSG}>
-            {msg}
+            {message}
           </small>
         )}
         <button className={`inline-flex ${BTN_CTA}`} onClick={save} disabled={busy}>

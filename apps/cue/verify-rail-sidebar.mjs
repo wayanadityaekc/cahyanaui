@@ -1,25 +1,25 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function ok(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
 const ACC = { id: 1, name: 'Wayan Aditya', email: 'wayan@example.com' };
 
-async function loggedInCtx(w = 1280) {
-  const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
-  await ctx.route('**/api/**', (route) => {
+async function loggedInCtx(viewportWidth = 1280) {
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
+  await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
     if (url.includes('/account/session')) return route.fulfill({ json: { status: 'ok', account: ACC } });
     return route.fulfill({ json: {} });
   });
-  await ctx.addInitScript(() => localStorage.setItem('cue_token', 'tok-x'));
-  return ctx;
+  await browserContext.addInitScript(() => localStorage.setItem('cue_token', 'tok-x'));
+  return browserContext;
 }
 
 const PAGES = [
@@ -29,10 +29,10 @@ const PAGES = [
 ];
 
 for (const { path, crumb } of PAGES) {
-  const ctx = await loggedInCtx(1280);
-  const page = await ctx.newPage();
+  const browserContext = await loggedInCtx(1280);
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
+  page.on('pageerror', (error) => errs.push(String(error)));
   await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
 
@@ -57,29 +57,29 @@ for (const { path, crumb } of PAGES) {
   ok(rowText.trim() === '', `${path}: collapsed row still paints its label ("${rowText}")`);
 
   ok(errs.length === 0, `${path}: page errors ${errs.join(' | ')}`);
-  await ctx.close();
+  await browserContext.close();
 }
 
 {
-  const ctx = await loggedInCtx(1280);
-  const page = await ctx.newPage();
+  const browserContext = await loggedInCtx(1280);
+  const page = await browserContext.newPage();
   await page.goto('http://127.0.0.1:4000/my-trips.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   await page.locator('button[aria-label="Collapse sidebar"]').click({ force: true, timeout: 8000 });
   await page.waitForTimeout(400);
   await page.goto('http://127.0.0.1:4000/settings.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
-  const w = await page.evaluate(() => document.querySelector('aside').getBoundingClientRect().width);
+  const asideWidth = await page.evaluate(() => document.querySelector('aside').getBoundingClientRect().width);
   ok(
-    w < 100,
-    `settings.html after collapsing on my-trips.html: rail is ${w}px, expected <100 (collapse should be a shared preference)`,
+    asideWidth < 100,
+    `settings.html after collapsing on my-trips.html: rail is ${asideWidth}px, expected <100 (collapse should be a shared preference)`,
   );
-  await ctx.close();
+  await browserContext.close();
 }
 
 {
-  const ctx = await loggedInCtx(1280);
-  const page = await ctx.newPage();
+  const browserContext = await loggedInCtx(1280);
+  const page = await browserContext.newPage();
   await page.goto('http://127.0.0.1:4000/our-company.html#terms', { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
   const headerCrumbCount = await page.locator('main > div > nav[aria-label="Breadcrumb"]:visible').count();
@@ -91,14 +91,14 @@ for (const { path, crumb } of PAGES) {
   ok(inlineCrumb === 0, 'terms tab: no breadcrumb should print inside the content anymore');
   const totalCrumbs = await page.locator('nav[aria-label="Breadcrumb"]:visible').count();
   ok(totalCrumbs === 1, `terms tab: exactly one breadcrumb should be visible on screen, found ${totalCrumbs}`);
-  await ctx.close();
+  await browserContext.close();
 }
 
 for (const { path } of PAGES) {
-  const ctx = await loggedInCtx(390);
-  const page = await ctx.newPage();
+  const browserContext = await loggedInCtx(390);
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
+  page.on('pageerror', (error) => errs.push(String(error)));
   await page.goto(`http://127.0.0.1:4000${path}`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   const trigger = await page.locator('button[aria-label="Collapse sidebar"]:visible').count();
@@ -106,12 +106,12 @@ for (const { path } of PAGES) {
   const crumbVisible = await page.locator('nav[aria-label="Breadcrumb"]:visible').count();
   ok(crumbVisible === 0, `${path} @390: header breadcrumb should not show on mobile`);
   ok(errs.length === 0, `${path} @390: page errors ${errs.join(' | ')}`);
-  await ctx.close();
+  await browserContext.close();
 }
 
 {
-  const ctx = await loggedInCtx(390);
-  const page = await ctx.newPage();
+  const browserContext = await loggedInCtx(390);
+  const page = await browserContext.newPage();
   await page.goto('http://127.0.0.1:4000/settings.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
   const bodyText = await page.locator('body').innerText();
@@ -124,9 +124,9 @@ for (const { path } of PAGES) {
     backBtn === 0,
     `@390 settings: found ${backBtn} "Account Settings" back/list button - mobileNav should have skipped it`,
   );
-  await ctx.close();
+  await browserContext.close();
 }
 
-await b.close();
+await browser.close();
 console.log(`${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

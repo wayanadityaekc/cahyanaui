@@ -79,10 +79,10 @@ export function promoFor(pathname) {
     hit = PROMO[path];
   } else {
     const key = Object.keys(PROMO)
-      .filter((k) => k.endsWith('/') && k.length > 1 && path.startsWith(k))
+      .filter((promoPath) => promoPath.endsWith('/') && promoPath.length > 1 && path.startsWith(promoPath))
       .sort((a, b) => b.length - a.length)[0];
     hit = key ? PROMO[key] : PROMO_DEFAULT;
   }
   if (!hit) return [];
-  return (Array.isArray(hit) ? hit : [hit]).filter((m) => m && m.text);
+  return (Array.isArray(hit) ? hit : [hit]).filter((message) => message && message.text);
 }

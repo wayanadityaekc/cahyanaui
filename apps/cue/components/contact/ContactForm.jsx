@@ -10,22 +10,24 @@ import { FIELD_LABEL } from '@/components/ui/formClasses';
 import { BTN_CTA } from '@/components/ui/btnClasses';
 
 export default function ContactForm({ company = false }) {
-  const [f, setF] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
 
-  function set(k) {
-    return (e) => {
-      const { value } = e.target;
-      setF((v) => ({ ...v, [k]: value }));
-      setErrors((v) => (v[k] ? { ...v, [k]: undefined } : v));
+  function set(fieldName) {
+    return (event) => {
+      const { value } = event.target;
+      setForm((previousForm) => ({ ...previousForm, [fieldName]: value }));
+      setErrors((previousErrors) =>
+        previousErrors[fieldName] ? { ...previousErrors, [fieldName]: undefined } : previousErrors,
+      );
     };
   }
 
   async function send() {
-    const { ok, errors: fieldErrors, data } = validateWith(contactSchema, f);
+    const { ok, errors: fieldErrors, data } = validateWith(contactSchema, form);
     setErrors(fieldErrors);
     if (!ok) {
       setError('');
@@ -34,8 +36,9 @@ export default function ContactForm({ company = false }) {
     setError('');
     setBusy(true);
     try {
-      const d = await submitContact(data);
-      if (!d || d.status !== 'saved') throw new Error((d && d.detail) || '');
+      const contactResult = await submitContact(data);
+      if (!contactResult || contactResult.status !== 'saved')
+        throw new Error((contactResult && contactResult.detail) || '');
       setSent(true);
     } catch (e) {
       setError(e.message || 'Sorry, your message could not be sent. Please try again, or reach us on WhatsApp.');
@@ -72,7 +75,7 @@ export default function ContactForm({ company = false }) {
             type="text"
             id="c-name"
             placeholder="Enter your name"
-            value={f.name}
+            value={form.name}
             onChange={set('name')}
             aria-invalid={!!errors.name}
           />
@@ -91,7 +94,7 @@ export default function ContactForm({ company = false }) {
             type="email"
             id="c-email"
             placeholder="you@email.com"
-            value={f.email}
+            value={form.email}
             onChange={set('email')}
             aria-invalid={!!errors.email}
           />
@@ -109,7 +112,7 @@ export default function ContactForm({ company = false }) {
             className={CONTACT_TEXTAREA}
             id="c-message"
             placeholder="Tell us what you need - dates, group size, custom requests..."
-            value={f.message}
+            value={form.message}
             onChange={set('message')}
             aria-invalid={!!errors.message}
           />

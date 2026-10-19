@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, LazyMotion, domAnimation, m as motionElement, useReducedMotion } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../lib/cn.js';
 import { canCheckIn, canCheckOut, isBookedNight, nightsBetween, stayLimits } from '../lib/stayRules.js';
@@ -49,7 +49,7 @@ function monthCells(year, month) {
   const lead = new Date(year, month, 1).getDay();
   const days = new Date(year, month + 1, 0).getDate();
   const cells = new Array(lead).fill(null);
-  Array.from({ length: days }, (_, index) => index + 1).forEach((day) =>
+  Array.from({ length: days }, (unusedValue, index) => index + 1).forEach((day) =>
     cells.push(localIso(new Date(year, month, day))),
   );
   return cells;
@@ -206,7 +206,7 @@ export default function AvailabilityCalendar({
       <LazyMotion features={domAnimation}>
         <div className="overflow-hidden">
           <AnimatePresence mode="popLayout" initial={false} custom={cursor.dir}>
-            <m.div
+            <motionElement.div
               key={current}
               custom={cursor.dir}
               variants={{
@@ -222,7 +222,7 @@ export default function AvailabilityCalendar({
             >
               {month(0)}
               {months === 2 ? month(1) : null}
-            </m.div>
+            </motionElement.div>
           </AnimatePresence>
         </div>
       </LazyMotion>

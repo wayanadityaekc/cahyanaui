@@ -38,36 +38,36 @@ export default function useDialog({ shown = false, onClose = null, escape = true
       });
     }
 
-    function onKey(e) {
+    function onKey(event) {
       if (stack[stack.length - 1] !== token) return;
 
-      if (e.key === 'Escape') {
-        if (!escape || e.defaultPrevented) return;
+      if (event.key === 'Escape') {
+        if (!escape || event.defaultPrevented) return;
         if (document.querySelector('[data-portal][data-open]')) return;
         closeRef.current?.();
         return;
       }
 
-      if (e.key !== 'Tab') return;
+      if (event.key !== 'Tab') return;
       const focused = document.activeElement;
       if (focused && !node.contains(focused) && focused.closest && focused.closest('[data-portal]')) return;
 
       const items = Array.from(node.querySelectorAll(FOCUSABLE)).filter(visible);
       if (!items.length) {
-        e.preventDefault();
+        event.preventDefault();
         node.focus({ preventScroll: true });
         return;
       }
       const first = items[0];
       const last = items[items.length - 1];
       if (!node.contains(focused) || focused === node) {
-        e.preventDefault();
-        (e.shiftKey ? last : first).focus();
-      } else if (e.shiftKey && focused === first) {
-        e.preventDefault();
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && focused === first) {
+        event.preventDefault();
         last.focus();
-      } else if (!e.shiftKey && focused === last) {
-        e.preventDefault();
+      } else if (!event.shiftKey && focused === last) {
+        event.preventDefault();
         first.focus();
       }
     }

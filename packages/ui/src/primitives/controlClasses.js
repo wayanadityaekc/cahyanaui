@@ -44,11 +44,11 @@ export const PANEL_CLOSE =
 export const PANEL_BODY =
   'max-h-none overflow-y-auto flex-[1_1_auto] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden';
 
-export function opt(sel, disabled) {
+export function opt(selector, disabled) {
   return `w-full flex items-center gap-[0.8rem] py-3 px-4 border-none text-left [&+&]:[border-top:1px_solid_var(--line)] ${
     disabled
       ? 'cursor-not-allowed opacity-40 bg-transparent'
-      : `cursor-pointer ${sel ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
+      : `cursor-pointer ${selector ? 'bg-[rgba(34,32,28,0.14)]' : 'bg-transparent hover:bg-[#faf8f3]'}`
   }`;
 }
 
@@ -84,9 +84,9 @@ export const CAL_CAP_BTN =
   'flex-[0_0_auto] w-8 h-8 inline-flex items-center justify-center [border:1px_solid_var(--line)] rounded-sm bg-surface-raised text-gold text-[1.3rem] leading-none cursor-pointer [transition:background_var(--dur-fast)_ease,border-color_var(--dur-fast)_ease,scale_var(--dur-fast)_var(--ease)] hover:bg-cream hover:[border-color:var(--color-gold)]';
 export const CAL_GRID = 'grid [grid-template-columns:repeat(7,1fr)] gap-[2px]';
 export const CAL_DOW = 'font-body font-medium text-label text-muted text-center py-1';
-export function calDay(off, sel) {
+export function calDay(off, selector) {
   return `aspect-square flex items-center justify-center font-body font-normal text-small border-none border-current rounded-sm ${
-    sel
+    selector
       ? 'bg-gold text-white cursor-pointer hover:bg-gold-d'
       : off
         ? 'bg-transparent text-[#cfccc4] cursor-default'

@@ -4,11 +4,11 @@ export default function Mosaic({ images = [] }) {
   if (!images.length) return <LoadFallback className="mt-4" />;
   return (
     <div className="grid grid-cols-3 gap-3 mt-4">
-      {images.map((img) => (
+      {images.map((image) => (
         <img
-          key={img.src}
-          src={img.src}
-          alt={img.alt}
+          key={image.src}
+          src={image.src}
+          alt={image.alt}
           width={500}
           height={360}
           loading="lazy"

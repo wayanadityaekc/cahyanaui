@@ -8,18 +8,18 @@ function StarIcon() {
 }
 
 export default function Rating({ name, className, minReviews = 1, withWord = false }) {
-  const ctx = useReviews();
-  const r = ctx && ctx.lookup ? ctx.lookup(name) : null;
-  const show = r && r.count >= minReviews;
+  const reviews = useReviews();
+  const ratingSummary = reviews && reviews.lookup ? reviews.lookup(name) : null;
+  const show = ratingSummary && ratingSummary.count >= minReviews;
   return (
     <span className={className} data-rating={name}>
       <StarIcon />
       {show ? (
         <>
-          {r.avg_rating.toFixed(1)}
+          {ratingSummary.avg_rating.toFixed(1)}
           <span className="ml-[1px] text-[0.8em] font-normal opacity-70">
-            ({r.count}
-            {withWord ? ` review${r.count === 1 ? '' : 's'}` : ''})
+            ({ratingSummary.count}
+            {withWord ? ` review${ratingSummary.count === 1 ? '' : 's'}` : ''})
           </span>
         </>
       ) : (

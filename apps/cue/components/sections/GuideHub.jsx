@@ -29,9 +29,9 @@ export default function GuideHub() {
     return GUIDE_HUB.cats
       .map((cat) => ({
         ...cat,
-        cards: cat.cards.filter((x) => x.title.toLowerCase().includes(term) || (x.kw || '').includes(term)),
+        cards: cat.cards.filter((card) => card.title.toLowerCase().includes(term) || (card.kw || '').includes(term)),
       }))
-      .filter((c) => c.cards.length);
+      .filter((category) => category.cards.length);
   }, [query]);
 
   return (
@@ -58,7 +58,7 @@ export default function GuideHub() {
                 type="button"
                 aria-haspopup="true"
                 aria-expanded={open}
-                onClick={() => setOpen((v) => !v)}
+                onClick={() => setOpen((wasOpen) => !wasOpen)}
               >
                 <Menu className="w-[var(--icon-md)] h-[var(--icon-md)]" aria-hidden="true" />
                 <span>Categories</span>
@@ -72,12 +72,12 @@ export default function GuideHub() {
               </button>
               <PopMenu open={open}>
                 <div className={GC_MENU}>
-                  {GUIDE_HUB.navItems.map((n) => (
-                    <a className={GC_MENU_A} href={`#${n.id}`} key={n.id} onClick={() => setOpen(false)}>
+                  {GUIDE_HUB.navItems.map((navItem) => (
+                    <a className={GC_MENU_A} href={`#${navItem.id}`} key={navItem.id} onClick={() => setOpen(false)}>
                       <span>
-                        <n.Icon strokeWidth={1.7} aria-hidden="true" />
+                        <navItem.Icon strokeWidth={1.7} aria-hidden="true" />
                       </span>
-                      {n.label}
+                      {navItem.label}
                     </a>
                   ))}
                 </div>
@@ -93,7 +93,7 @@ export default function GuideHub() {
                   aria-label="Search guides"
                   autoComplete="off"
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(event) => setQuery(event.target.value)}
                 />
               </div>
               <div
@@ -107,12 +107,12 @@ export default function GuideHub() {
       </section>
 
       <section className={GUIDE_HUB.wrapClass}>
-        {cats.map((c) => (
-          <div className={GC_SECTION} id={c.id} key={c.id}>
-            <h2 className={`${SECTION_TITLE} !text-left !mb-[1.1rem]`}>{c.title}</h2>
+        {cats.map((cat) => (
+          <div className={GC_SECTION} id={cat.id} key={cat.id}>
+            <h2 className={`${SECTION_TITLE} !text-left !mb-[1.1rem]`}>{cat.title}</h2>
             <Stagger className={GRID_GUIDEHUB}>
-              {c.cards.map((card, i) => (
-                <StaggerItem key={card.href} index={i}>
+              {cat.cards.map((card, index) => (
+                <StaggerItem key={card.href} index={index}>
                   <GuideCard
                     href={card.href}
                     img={card.img}

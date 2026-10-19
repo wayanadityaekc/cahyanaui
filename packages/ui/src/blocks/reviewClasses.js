@@ -28,6 +28,6 @@ export const REVIEW_CARD = {
 };
 
 export function starText(rating) {
-  const n = Math.max(1, Math.min(5, parseInt(rating, 10) || 0));
-  return { n, stars: '★'.repeat(n) + '☆'.repeat(5 - n) };
+  const starCount = Math.max(1, Math.min(5, parseInt(rating, 10) || 0));
+  return { n: starCount, stars: '★'.repeat(starCount) + '☆'.repeat(5 - starCount) };
 }

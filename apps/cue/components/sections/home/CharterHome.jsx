@@ -16,13 +16,13 @@ export default function CharterHome({ paired = false }) {
   const [dur, setDur] = useState(CHARTER.durations[0].dur);
 
   useEffect(() => {
-    const d = readCharterDraft();
-    if (d && CHARTER.durations.some((x) => x.dur === d.dur)) setDur(d.dur);
+    const draft = readCharterDraft();
+    if (draft && CHARTER.durations.some((duration) => duration.dur === draft.dur)) setDur(draft.dur);
   }, []);
 
-  function pick(d) {
-    setDur(d);
-    saveCharterDraft({ dur: d });
+  function pick(charterDraft) {
+    setDur(charterDraft);
+    saveCharterDraft({ dur: charterDraft });
   }
 
   return (

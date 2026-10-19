@@ -13,7 +13,7 @@ const GIVE_UP_MS = 120000;
 
 export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
   const [phase, setPhase] = useState('waiting');
-  const [idx, setIdx] = useState(0);
+  const [index, setIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timer = useRef(null);
 
@@ -24,8 +24,11 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
     if (typeof window === 'undefined') return;
     const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (still || WAIT_PHOTOS.length < 2) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % WAIT_PHOTOS.length), WAIT_SLIDE_MS);
-    return () => clearInterval(t);
+    const slideTimer = setInterval(
+      () => setIndex((previousIndex) => (previousIndex + 1) % WAIT_PHOTOS.length),
+      WAIT_SLIDE_MS,
+    );
+    return () => clearInterval(slideTimer);
   }, []);
 
   useEffect(() => {
@@ -122,14 +125,14 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[300] overflow-hidden" role="dialog" aria-modal="true" aria-live="polite">
-      {WAIT_PHOTOS.map((p, i) =>
-        i <= idx + 1 || i === WAIT_PHOTOS.length - 1 ? (
+      {WAIT_PHOTOS.map((photo, indexItem) =>
+        indexItem <= index + 1 || indexItem === WAIT_PHOTOS.length - 1 ? (
           <img
-            key={p.src}
-            src={p.src}
-            alt={i === idx ? p.alt : ''}
-            aria-hidden={i === idx ? undefined : 'true'}
-            className={`absolute inset-0 w-full h-full object-cover [transition:opacity_1.2s_var(--ease)] ${i === idx ? 'opacity-100' : 'opacity-0'}`}
+            key={photo.src}
+            src={photo.src}
+            alt={indexItem === index ? photo.alt : ''}
+            aria-hidden={indexItem === index ? undefined : 'true'}
+            className={`absolute inset-0 w-full h-full object-cover [transition:opacity_1.2s_var(--ease)] ${indexItem === index ? 'opacity-100' : 'opacity-0'}`}
           />
         ) : null,
       )}
@@ -144,9 +147,9 @@ export default function PayWaiting({ bookingRef, onClose, onConfirmed }) {
         )}
         <h2 className="mb-3 font-body text-h2 font-semibold text-white">{COPY.title}</h2>
         <div className="max-w-[420px]">
-          {COPY.lines.map((t, i) => (
-            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={i}>
-              {t}
+          {COPY.lines.map((line, indexItem) => (
+            <p className="mb-2 text-body leading-[var(--lh-body)] text-[rgba(255,255,255,0.86)]" key={indexItem}>
+              {line}
             </p>
           ))}
         </div>

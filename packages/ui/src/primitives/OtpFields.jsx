@@ -19,7 +19,7 @@ export default function OtpFields({
   autoFocus = false,
 }) {
   const refs = useRef([]);
-  const digits = Array.from({ length }, (_, index) => value[index] || '');
+  const digits = Array.from({ length }, (unusedValue, index) => value[index] || '');
 
   useEffect(() => {
     if (autoFocus) refs.current[0]?.focus();
@@ -42,8 +42,8 @@ export default function OtpFields({
   }
 
   function handleChange(index) {
-    return (e) => {
-      const raw = e.target.value.replace(/\D/g, '');
+    return (event) => {
+      const raw = event.target.value.replace(/\D/g, '');
       if (!raw) {
         const next = [...digits];
         next[index] = '';
@@ -62,27 +62,27 @@ export default function OtpFields({
   }
 
   function handleKeyDown(index) {
-    return (e) => {
-      if (e.key === 'Backspace' && !digits[index] && index > 0) {
+    return (event) => {
+      if (event.key === 'Backspace' && !digits[index] && index > 0) {
         const next = [...digits];
         next[index - 1] = '';
         commit(next);
         refs.current[index - 1]?.focus();
-      } else if (e.key === 'ArrowLeft' && index > 0) {
-        e.preventDefault();
+      } else if (event.key === 'ArrowLeft' && index > 0) {
+        event.preventDefault();
         refs.current[index - 1]?.focus();
-      } else if (e.key === 'ArrowRight' && index < length - 1) {
-        e.preventDefault();
+      } else if (event.key === 'ArrowRight' && index < length - 1) {
+        event.preventDefault();
         refs.current[index + 1]?.focus();
       }
     };
   }
 
   function handlePaste(index) {
-    return (e) => {
-      const raw = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+    return (event) => {
+      const raw = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
       if (!raw) return;
-      e.preventDefault();
+      event.preventDefault();
       spread(index, raw);
     };
   }

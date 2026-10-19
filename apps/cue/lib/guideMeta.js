@@ -17,7 +17,7 @@ export function guideCard(slug) {
 
 export function readMinutes(body = []) {
   const words = body
-    .map((b) => b.html || b.text || (Array.isArray(b.items) ? b.items.join(' ') : ''))
+    .map((block) => block.html || block.text || (Array.isArray(block.items) ? block.items.join(' ') : ''))
     .join(' ')
     .replace(/<[^>]*>/g, ' ')
     .split(/\s+/)
@@ -26,6 +26,6 @@ export function readMinutes(body = []) {
 }
 
 export function guideCategory(tabs = []) {
-  const hit = tabs.find((t) => t.active);
+  const hit = tabs.find((tab) => tab.active);
   return hit ? hit.label : null;
 }

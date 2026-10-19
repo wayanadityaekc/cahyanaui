@@ -46,8 +46,8 @@ function catalogForBuild() {
     buildCatalog = (async () => {
       try {
         const response = await fetch(`${API_BASE}/pricing/catalog?${query}`, { signal: AbortSignal.timeout(10000) });
-        const d = response.ok ? await response.json() : null;
-        return d && Array.isArray(d.items) ? d : null;
+        const catalog = response.ok ? await response.json() : null;
+        return catalog && Array.isArray(catalog.items) ? catalog : null;
       } catch (e) {
         return null;
       }

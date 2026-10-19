@@ -4,18 +4,18 @@ import { useRef, useState } from 'react';
 import { BTN_SM } from '../primitives/btnClasses.js';
 
 export default function PromoSlider({ slides = [], label = 'Other Cahyana programs', external = false }) {
-  const [cur, setCur] = useState(0);
+  const [current, setCurrent] = useState(0);
   const touch = useRef({ x: 0, y: 0 });
 
   const total = slides.length;
   if (!total) return null;
 
-  function goTo(n) {
-    setCur((n + total) % total);
+  function goTo(slideIndex) {
+    setCurrent((slideIndex + total) % total);
   }
 
-  function near(i) {
-    const gap = Math.abs(i - cur);
+  function near(slideIndex) {
+    const gap = Math.abs(slideIndex - current);
     return gap <= 1 || gap === total - 1;
   }
 
@@ -27,21 +27,21 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
       data-promo=""
       aria-roledescription="carousel"
       aria-label={label}
-      onTouchStart={(e) => {
-        touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      onTouchStart={(event) => {
+        touch.current = { x: event.touches[0].clientX, y: event.touches[0].clientY };
       }}
-      onTouchEnd={(e) => {
-        const deltaX = e.changedTouches[0].clientX - touch.current.x;
-        const deltaY = e.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(cur + (deltaX < 0 ? 1 : -1));
+      onTouchEnd={(event) => {
+        const deltaX = event.changedTouches[0].clientX - touch.current.x;
+        const deltaY = event.changedTouches[0].clientY - touch.current.y;
+        if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) goTo(current + (deltaX < 0 ? 1 : -1));
       }}
     >
-      {slides.map((slide, i) => (
+      {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ease-[ease] ${i === cur ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          style={near(i) ? { backgroundImage: `url(${slide.img})` } : undefined}
-          aria-hidden={i !== cur}
+          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-500 ease-[ease] ${index === current ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          style={near(index) ? { backgroundImage: `url(${slide.img})` } : undefined}
+          aria-hidden={index !== current}
         >
           <span
             aria-hidden="true"
@@ -58,7 +58,7 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
               <a
                 href={slide.href}
                 {...linkProps}
-                tabIndex={i === cur ? undefined : -1}
+                tabIndex={index === current ? undefined : -1}
                 className={`inline-flex ${BTN_SM} bg-cta text-white no-underline transition-[color,background-color,border-color,scale] duration-200 ease-in-out hover:bg-cta-d`}
               >
                 {slide.cta}
@@ -71,14 +71,14 @@ export default function PromoSlider({ slides = [], label = 'Other Cahyana progra
       {total > 1 && (
         <>
           <div className="absolute left-0 right-0 bottom-3 z-[2] flex justify-center items-center gap-[6px]">
-            {slides.map((slide, i) => (
+            {slides.map((slide, index) => (
               <button
                 key={slide.id}
                 type="button"
                 aria-label={`Go to ${slide.kicker}`}
-                aria-current={i === cur}
-                onClick={() => goTo(i)}
-                className={`w-[7px] h-[7px] rounded-[50%] transition-[background-color,scale] duration-200 ease-[ease] ${i === cur ? 'bg-white' : 'bg-[rgba(255,255,255,0.55)]'}`}
+                aria-current={index === current}
+                onClick={() => goTo(index)}
+                className={`w-[7px] h-[7px] rounded-[50%] transition-[background-color,scale] duration-200 ease-[ease] ${index === current ? 'bg-white' : 'bg-[rgba(255,255,255,0.55)]'}`}
               />
             ))}
           </div>

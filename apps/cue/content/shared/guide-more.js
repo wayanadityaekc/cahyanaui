@@ -3,7 +3,7 @@ import { EXPLORE_TOURS } from '@/content/shared/home';
 const PICK = ['Ubud Tour', 'Ubud Culture Day'];
 
 function byProgram(program) {
-  const card = EXPLORE_TOURS.find((c) => c.program === program);
+  const card = EXPLORE_TOURS.find((cardItem) => cardItem.program === program);
   if (!card) throw new Error(`guide-more: EXPLORE_TOURS has no program "${program}"`);
   return card;
 }

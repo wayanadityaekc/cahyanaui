@@ -23,7 +23,7 @@ export default function Modal({ open, onClose, title, children, className = '' }
         open ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none',
         className,
       )}
-      onClick={(e) => e.target === e.currentTarget && onClose && onClose()}
+      onClick={(event) => event.target === event.currentTarget && onClose && onClose()}
     >
       <div
         ref={boxRef}

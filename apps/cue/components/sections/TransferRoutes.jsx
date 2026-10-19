@@ -9,18 +9,18 @@ const CARD =
   'flex items-center gap-3 border border-line rounded-md py-[0.55rem] px-[0.85rem] bg-white cursor-pointer ' +
   'text-left font-body w-full no-underline transition-[border-color,scale] duration-[0.15s] hover:border-gold';
 
-function Face({ r }) {
+function Face({ r: route }) {
   return (
     <>
       <span
         className="w-[46px] h-[46px] rounded-md bg-cover bg-center shrink-0"
-        style={{ backgroundImage: `url(/assets/images/${r.bg})` }}
+        style={{ backgroundImage: `url(/assets/images/${route.bg})` }}
       />
       <span className="flex flex-col">
-        <span className="font-semibold text-green text-h3">{r.name}</span>
-        <span className="text-muted text-small mt-[0.1rem]">{r.meta}</span>
+        <span className="font-semibold text-green text-h3">{route.name}</span>
+        <span className="text-muted text-small mt-[0.1rem]">{route.meta}</span>
       </span>
-      <Price name={r.priceName} fallback={r.priceFallback} className="ml-auto text-amber font-semibold" />
+      <Price name={route.priceName} fallback={route.priceFallback} className="ml-auto text-amber font-semibold" />
     </>
   );
 }

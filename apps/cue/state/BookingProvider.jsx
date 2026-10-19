@@ -13,27 +13,27 @@ function here() {
   return window.location.pathname;
 }
 function readMarker() {
-  const m = readLocalJSON(KEY.resumeBook, null);
-  return m && m.path && Date.now() - (m.at || 0) < RESUME_MS ? m : null;
+  const marker = readLocalJSON(KEY.resumeBook, null);
+  return marker && marker.path && Date.now() - (marker.at || 0) < RESUME_MS ? marker : null;
 }
 
 export function BookingProvider({ children }) {
   const { account, hydrated, justSignedIn } = useAccount();
-  const [ctx, setCtx] = useState(null);
+  const [bookingContext, setBookingContext] = useState(null);
   const [gate, setGate] = useState(false);
   const held = useRef(null);
 
   const openBooking = useCallback(
-    (opts) => {
-      if (!opts) {
-        setCtx(null);
+    (options) => {
+      if (!options) {
+        setBookingContext(null);
         return;
       }
       if (hydrated && account) {
-        setCtx(opts);
+        setBookingContext(options);
         return;
       }
-      held.current = opts;
+      held.current = options;
       if (!hydrated) return;
       writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
       setGate(true);
@@ -41,7 +41,7 @@ export function BookingProvider({ children }) {
     [account, hydrated],
   );
 
-  const closeBooking = useCallback(() => setCtx(null), []);
+  const closeBooking = useCallback(() => setBookingContext(null), []);
 
   const cancelGate = useCallback(() => {
     setGate(false);
@@ -51,11 +51,11 @@ export function BookingProvider({ children }) {
   useEffect(() => {
     if (!hydrated || !held.current) return;
     if (account) {
-      const opts = held.current;
+      const options = held.current;
       held.current = null;
       removeLocal(KEY.resumeBook);
       setGate(false);
-      setCtx(opts);
+      setBookingContext(options);
     } else if (!gate) {
       writeLocal(KEY.resumeBook, { path: here(), at: Date.now() });
       setGate(true);
@@ -64,21 +64,21 @@ export function BookingProvider({ children }) {
 
   useEffect(() => {
     if (!hydrated || !account || !justSignedIn) return;
-    const m = readMarker();
-    if (m && m.path !== here()) window.location.replace(m.path);
+    const marker = readMarker();
+    if (marker && marker.path !== here()) window.location.replace(marker.path);
   }, [hydrated, account, justSignedIn]);
 
   return (
-    <BookingContext.Provider value={{ ctx, openBooking, closeBooking, gate, cancelGate }}>
+    <BookingContext.Provider value={{ ctx: bookingContext, openBooking, closeBooking, gate, cancelGate }}>
       {children}
     </BookingContext.Provider>
   );
 }
 
 export function useBooking() {
-  const c = useContext(BookingContext);
-  if (!c) throw new Error('useBooking must be used inside BookingProvider');
-  return c;
+  const bookingContext = useContext(BookingContext);
+  if (!bookingContext) throw new Error('useBooking must be used inside BookingProvider');
+  return bookingContext;
 }
 
 export function useResumeBooking(ready, run) {
@@ -86,8 +86,8 @@ export function useResumeBooking(ready, run) {
   const done = useRef(false);
   useEffect(() => {
     if (done.current || !hydrated || !account || !ready) return;
-    const m = readMarker();
-    if (!m || m.path !== here()) return;
+    const marker = readMarker();
+    if (!marker || marker.path !== here()) return;
     done.current = true;
     removeLocal(KEY.resumeBook);
     run();

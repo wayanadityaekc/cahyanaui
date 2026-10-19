@@ -24,7 +24,7 @@ const TABS = [
 function idFromHash() {
   if (typeof window === 'undefined') return null;
   const id = window.location.hash.replace('#', '');
-  return TABS.some((t) => t.id === id) ? id : null;
+  return TABS.some((tab) => tab.id === id) ? id : null;
 }
 
 const BODY_TEXT = '[&_p]:leading-[var(--lh-body)] [&_p]:m-0 [&_p]:mb-4 [&_p]:text-ink [&_p]:text-body';
@@ -33,7 +33,7 @@ function LegalBody({ data }) {
   return (
     <div className={BODY_TEXT}>
       <h1 className="font-head text-h2 font-bold text-gold mb-4">{data.title}</h1>
-      <Prose blocks={data.body.filter((b) => b.type !== 'crumb')} headingVariant="company" />
+      <Prose blocks={data.body.filter((block) => block.type !== 'crumb')} headingVariant="company" />
     </div>
   );
 }
@@ -63,8 +63,8 @@ function FAQBody() {
       {FAQ_CATS.map((cat) => (
         <div className="mb-[var(--space-4)]" key={cat}>
           <h2 className={FAQ_CAT}>{cat}</h2>
-          {FAQ.filter((item) => item.cat === cat).map((item, i) => (
-            <details className={FAQ_ROW} name="faq" key={i}>
+          {FAQ.filter((item) => item.cat === cat).map((item, index) => (
+            <details className={FAQ_ROW} name="faq" key={index}>
               <summary className={FAQ_Q}>
                 {item.q}
                 <ChevronDown className={FAQ_CHEV} strokeWidth={1.7} aria-hidden="true" />

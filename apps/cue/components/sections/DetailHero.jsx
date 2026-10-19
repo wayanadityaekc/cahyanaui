@@ -48,10 +48,10 @@ function HeroBody({ title, desc, hooks, cta, ctaHref, crumb }) {
       <h1 className={`${SUBHERO_TITLE} mb-3`}>{title}</h1>
       <p className={HERO_DESC}>{desc}</p>
       <ul className={HOOK_UL}>
-        {hooks.map((h) => (
-          <li key={h.label}>
-            <span className={HOOK_LABEL}>{h.label}</span>
-            <span className={HOOK_VALUE}>{h.value}</span>
+        {hooks.map((hook) => (
+          <li key={hook.label}>
+            <span className={HOOK_LABEL}>{hook.label}</span>
+            <span className={HOOK_VALUE}>{hook.value}</span>
           </li>
         ))}
       </ul>
@@ -80,9 +80,9 @@ export default function DetailHero({
 }) {
   if (gallery && gallery.length) {
     const chips = [];
-    hooks.forEach((h, i) => {
-      chips.push({ key: h.label, icon: CHIP_ICON[h.label] || Info, text: h.value });
-      if (i === 0 && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
+    hooks.forEach((hook, index) => {
+      chips.push({ key: hook.label, icon: CHIP_ICON[hook.label] || Info, text: hook.value });
+      if (index === 0 && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
     });
     if (!hooks.length && stops > 1) chips.push({ key: 'stops', icon: Route, text: `${stops} stops` });
     chips.push({ key: 'cancel', icon: ShieldCheck, text: 'Free cancellation', ok: true });

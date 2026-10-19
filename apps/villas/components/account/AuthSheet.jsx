@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X as CloseIcon } from 'lucide-react';
 import { Button, Field, Input, OtpFields } from '@cahyana/ui';
 import SheetPresence from '@/components/ui/SheetPresence';
 import { useAccount } from '@/components/providers/AccountProvider';
@@ -21,7 +21,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   const [code, setCode] = useState('');
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
   const [note, setNote] = useState('');
   const [cooldown, setCooldown] = useState(0);
 
@@ -32,15 +32,15 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
   }, [cooldown]);
 
   function set(field) {
-    return (e) => {
-      const { value } = e.target;
+    return (event) => {
+      const { value } = event.target;
       setForm((prev) => ({ ...prev, [field]: value }));
       setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
     };
   }
   function reset() {
     setErrors({});
-    setMsg('');
+    setMessage('');
     setNote('');
   }
   function close() {
@@ -75,7 +75,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
     const sent = await requestLogin(email);
     setBusy(false);
     if (!sent) {
-      setMsg('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
+      setMessage('Sorry, we could not send the code. Please try again, or reach us on WhatsApp.');
       return;
     }
     reset();
@@ -105,7 +105,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       setNote(`You already have an account as ${result.email}.`);
       return;
     }
-    setMsg(result.error || 'Sorry, we could not create your account. Please try again.');
+    setMessage(result.error || 'Sorry, we could not create your account. Please try again.');
   }
 
   async function doVerify(fullCode) {
@@ -118,7 +118,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
       return;
     }
     setCode('');
-    setMsg(result.error || 'Sorry, something went wrong. Please try again.');
+    setMessage(result.error || 'Sorry, something went wrong. Please try again.');
   }
 
   async function resend() {
@@ -155,7 +155,7 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
         aria-label="Close"
         className="absolute top-3 right-4 text-green bg-transparent border-none cursor-pointer"
       >
-        <X className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
+        <CloseIcon className="w-[var(--icon-md)] h-[var(--icon-md)]" strokeWidth={1.8} aria-hidden="true" />
       </button>
       <h3 className="mb-5 font-body text-h3 text-center font-semibold tracking-normal text-gold">{title}</h3>
 
@@ -166,10 +166,17 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
               We sent a 6-digit code to <b className="text-green">{codeEmail}</b>. Enter it below - it expires in 10
               minutes.
             </p>
-            <OtpFields value={code} onChange={setCode} onComplete={doVerify} error={!!msg} disabled={busy} autoFocus />
-            {msg && (
+            <OtpFields
+              value={code}
+              onChange={setCode}
+              onComplete={doVerify}
+              error={!!message}
+              disabled={busy}
+              autoFocus
+            />
+            {message && (
               <p role="alert" className="text-label text-err text-center">
-                {msg}
+                {message}
               </p>
             )}
             {note && (
@@ -212,9 +219,9 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 invalid={!!errors.email}
               />
             </Field>
-            {msg && (
+            {message && (
               <p role="alert" className="text-label text-err">
-                {msg}
+                {message}
               </p>
             )}
             <Button full onClick={doSignIn} disabled={busy}>
@@ -267,9 +274,9 @@ export default function AuthSheet({ open = false, onClose = () => {} }) {
                 invalid={!!errors.phone}
               />
             </Field>
-            {msg && (
+            {message && (
               <p role="alert" className="text-label text-err">
-                {msg}
+                {message}
               </p>
             )}
             <Button full onClick={doCreate} disabled={busy}>

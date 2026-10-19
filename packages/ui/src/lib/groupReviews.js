@@ -1,5 +1,7 @@
-function reviewKey(r) {
-  return [r.name, r.country, r.rating, r.message, r.source].map((v) => String(v ?? '').trim()).join('\u0001');
+function reviewKey(review) {
+  return [review.name, review.country, review.rating, review.message, review.source]
+    .map((field) => String(field ?? '').trim())
+    .join('\u0001');
 }
 
 export default function groupReviews(rows = []) {
@@ -12,8 +14,8 @@ export default function groupReviews(rows = []) {
   return [...groups.values()].map((copies) => {
     const services = [...copies]
       .sort((a, b) => String(a.created_at || '').localeCompare(String(b.created_at || '')))
-      .map((r) => r.service)
-      .filter((s, i, all) => s && all.indexOf(s) === i);
+      .map((review) => review.service)
+      .filter((service, index, all) => service && all.indexOf(service) === index);
     const label =
       services.length > 1 ? `${services[0]} + ${services.length - 1} more` : services[0] || copies[0].service;
     return { ...copies[0], service: label, services };

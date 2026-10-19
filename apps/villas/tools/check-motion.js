@@ -34,10 +34,10 @@ function tokenize(classes) {
 function baseOf(token) {
   let depth = 0;
   let last = -1;
-  token.split('').forEach((ch, i) => {
+  token.split('').forEach((ch, index) => {
     if (ch === '[') depth++;
     else if (ch === ']') depth--;
-    else if (ch === ':' && depth === 0) last = i;
+    else if (ch === ':' && depth === 0) last = index;
   });
   return {
     base: last === -1 ? token : token.slice(last + 1),

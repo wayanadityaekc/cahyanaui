@@ -10,12 +10,12 @@ export default function useDisclosure() {
 
   useEffect(() => {
     if (!open) return undefined;
-    function onDoc(e) {
-      if (e.target.closest && e.target.closest('[data-portal]')) return;
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (event.target.closest && event.target.closest('[data-portal]')) return;
+      if (boxRef.current && !boxRef.current.contains(event.target)) setOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function onKey(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setOpen(false);
       if (triggerRef.current) triggerRef.current.focus();

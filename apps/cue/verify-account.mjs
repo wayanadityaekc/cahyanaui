@@ -3,41 +3,41 @@ import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs'
 const BASE = 'http://127.0.0.1:4000';
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function ok(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 const DAY = new Date(Date.now() + 40 * 86400000).toISOString().slice(0, 10);
 
-async function ctxFor(w, api) {
-  const ctx = await b.newContext({ viewport: { width: w, height: 900 } });
-  await ctx.route('**/api/**', (route) => {
+async function ctxFor(viewportWidth, api) {
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
+  await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
-    const hit = Object.keys(api).find((k) => url.includes(k));
+    const hit = Object.keys(api).find((routeKey) => url.includes(routeKey));
     if (hit) return route.fulfill({ json: typeof api[hit] === 'function' ? api[hit](route.request()) : api[hit] });
     if (url.includes('/pricing/catalog')) return route.fulfill({ json: { currency: 'USD', symbol: '$', catalog: {} } });
     return route.fulfill({ json: {} });
   });
-  return ctx;
+  return browserContext;
 }
 
-for (const w of [390, 1280]) {
+for (const width of [390, 1280]) {
   for (const kind of ['existing', 'new']) {
-    const ctx = await ctxFor(w, {
+    const browserContext = await ctxFor(width, {
       '/account/session': { status: 'error' },
       '/api/account':
         kind === 'existing'
           ? { status: 'ok', signin_sent: true, email: 'andras@example.com' }
           : { status: 'ok', token: 'tok-new', account: { id: 9, name: 'New', email: 'fresh@example.com' } },
     });
-    const page = await ctx.newPage();
+    const page = await browserContext.newPage();
     const errs = [];
-    page.on('pageerror', (e) => errs.push(String(e)));
+    page.on('pageerror', (error) => errs.push(String(error)));
     await page.goto(`${BASE}/index.html`, { waitUntil: 'networkidle' });
     await page.locator('[data-account-slot="out"] > button').click();
-    if (w > 992) await page.locator('[data-account-slot="out"] div[id] button', { hasText: 'Log in' }).click();
+    if (width > 992) await page.locator('[data-account-slot="out"] div[id] button', { hasText: 'Log in' }).click();
     await page.locator('button:visible', { hasText: 'Create an account' }).click();
     await page.fill('#auth-name:visible', 'Someone');
     await page.fill('#auth-cemail:visible', kind === 'existing' ? 'andras@example.com' : 'fresh@example.com');
@@ -53,30 +53,30 @@ for (const w of [390, 1280]) {
         .catch(() => '');
       ok(
         /already have an account as/i.test(note) && note.includes('andras@example.com'),
-        `${w}/create-existing: the guest is not told which account this is (got "${note}")`,
+        `${width}/create-existing: the guest is not told which account this is (got "${note}")`,
       );
-      ok(!token, `${w}/create-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
+      ok(!token, `${width}/create-existing: THE BROWSER ENDED UP HOLDING A LOGIN`);
       ok(
         !(await page.locator('#auth-cemail:visible').count()),
-        `${w}/create-existing: sign-up form still showing instead of the code stage`,
+        `${width}/create-existing: sign-up form still showing instead of the code stage`,
       );
       ok(
         (await page.locator('input[inputmode="numeric"]:visible').count()) === 6,
-        `${w}/create-existing: did not land on the 6-box code entry`,
+        `${width}/create-existing: did not land on the 6-box code entry`,
       );
     } else {
-      ok(token === 'tok-new', `${w}/create-new: a new guest is no longer signed in (${token})`);
+      ok(token === 'tok-new', `${width}/create-new: a new guest is no longer signed in (${token})`);
       ok(
         !(await page.locator('#auth-cemail:visible').count()),
-        `${w}/create-new: the modal stayed open after a real sign-up`,
+        `${width}/create-new: the modal stayed open after a real sign-up`,
       );
     }
-    ok(errs.length === 0, `${w}/create-${kind}: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    ok(errs.length === 0, `${width}/create-${kind}: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
 
   for (const kind of ['existing', 'new']) {
-    const ctx = await ctxFor(w, {
+    const browserContext = await ctxFor(width, {
       '/account/session': { account: { id: 9, name: 'Signed In', email: 'fresh@example.com' } },
       '/inquiry': {
         status: 'saved',
@@ -86,9 +86,9 @@ for (const w of [390, 1280]) {
         signin_sent: false,
       },
     });
-    const page = await ctx.newPage();
+    const page = await browserContext.newPage();
     const errs = [];
-    page.on('pageerror', (e) => errs.push(String(e)));
+    page.on('pageerror', (error) => errs.push(String(error)));
     await page.addInitScript((day) => {
       localStorage.setItem('cue_token', 'tok-signed-in');
       localStorage.setItem(
@@ -123,15 +123,18 @@ for (const w of [390, 1280]) {
       .first()
       .innerText()
       .catch(() => '');
-    ok(!note, `${w}/book-${kind}: a signed-in guest was told to check an inbox`);
-    ok(token === 'tok-signed-in', `${w}/book-${kind}: the session was dropped or swapped (${token})`);
-    ok(await page.locator('text=Booking Received').isVisible(), `${w}/book-${kind}: never reached the success screen`);
+    ok(!note, `${width}/book-${kind}: a signed-in guest was told to check an inbox`);
+    ok(token === 'tok-signed-in', `${width}/book-${kind}: the session was dropped or swapped (${token})`);
+    ok(
+      await page.locator('text=Booking Received').isVisible(),
+      `${width}/book-${kind}: never reached the success screen`,
+    );
     const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    ok(over <= 0, `${w}/book-${kind}: page overflows by ${over}px`);
-    ok(errs.length === 0, `${w}/book-${kind}: page errors ${errs.join(' | ')}`);
-    await ctx.close();
+    ok(over <= 0, `${width}/book-${kind}: page overflows by ${over}px`);
+    ok(errs.length === 0, `${width}/book-${kind}: page errors ${errs.join(' | ')}`);
+    await browserContext.close();
   }
 }
-await b.close();
+await browser.close();
 console.log(`${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);

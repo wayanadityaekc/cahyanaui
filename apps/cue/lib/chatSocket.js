@@ -1,11 +1,11 @@
 import { API_BASE } from '@/lib/constants';
 
 export function chatSocketUrl(thread) {
-  const u = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
-  u.protocol = u.protocol === 'http:' ? 'ws:' : 'wss:';
-  u.pathname = '/ws/chat';
-  u.search = `?thread=${encodeURIComponent(thread)}`;
-  return u.toString();
+  const url = new URL(API_BASE, typeof window === 'undefined' ? 'https://localhost' : window.location.href);
+  url.protocol = url.protocol === 'http:' ? 'ws:' : 'wss:';
+  url.pathname = '/ws/chat';
+  url.search = `?thread=${encodeURIComponent(thread)}`;
+  return url.toString();
 }
 
 const PING_MS = 25000;
@@ -26,10 +26,10 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
   let pongTimer = null;
   let retryTimer = null;
 
-  function setLive(v) {
-    if (live === v) return;
-    live = v;
-    if (onLive) onLive(v);
+  function setLive(isLive) {
+    if (live === isLive) return;
+    live = isLive;
+    if (onLive) onLive(isLive);
   }
 
   function stopTimers() {
@@ -74,32 +74,32 @@ export function openChatSocket(thread, { onMessage, onTyping, onPresence, onOpen
       if (onOpen) onOpen();
     };
 
-    sock.onmessage = (ev) => {
-      let msg = null;
+    sock.onmessage = (event) => {
+      let message = null;
       try {
-        msg = JSON.parse(ev.data);
+        message = JSON.parse(event.data);
       } catch (e) {
         return;
       }
-      if (!msg || typeof msg.type !== 'string') return;
-      if (msg.type === 'pong') {
+      if (!message || typeof message.type !== 'string') return;
+      if (message.type === 'pong') {
         clearTimeout(pongTimer);
         pongTimer = null;
         return;
       }
-      if (msg.type === 'ready') {
-        if (onPresence) onPresence(!!msg.ownerHere);
+      if (message.type === 'ready') {
+        if (onPresence) onPresence(!!message.ownerHere);
         return;
       }
-      if (msg.type === 'presence') {
-        if (onPresence) onPresence(!!msg.ownerHere);
+      if (message.type === 'presence') {
+        if (onPresence) onPresence(!!message.ownerHere);
         return;
       }
-      if (msg.type === 'typing') {
-        if (onTyping) onTyping(msg.expiresIn || 4000);
+      if (message.type === 'typing') {
+        if (onTyping) onTyping(message.expiresIn || 4000);
         return;
       }
-      if (msg.type === 'message' && msg.message && onMessage) onMessage(msg.message);
+      if (message.type === 'message' && message.message && onMessage) onMessage(message.message);
     };
 
     sock.onerror = () => {};

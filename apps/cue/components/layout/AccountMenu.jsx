@@ -17,13 +17,13 @@ const ROW = `${MENU_ROW_BOX} text-small font-medium text-gold no-underline bg-tr
 export function initialsOf(name, email) {
   const src = (name || '').trim() || (email || '').split('@')[0] || '';
   const parts = src.split(/\s+/).filter(Boolean);
-  const s = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : src.slice(0, 2);
-  return s.toUpperCase() || '?';
+  const initials = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : src.slice(0, 2);
+  return initials.toUpperCase() || '?';
 }
 
 export function firstNameOf(name, email) {
-  const n = (name || '').trim().split(/\s+/)[0];
-  return n || (email || '').split('@')[0] || 'Account';
+  const firstName = (name || '').trim().split(/\s+/)[0];
+  return firstName || (email || '').split('@')[0] || 'Account';
 }
 
 export default function AccountMenu({ onLogin }) {
@@ -35,12 +35,12 @@ export default function AccountMenu({ onLogin }) {
 
   useEffect(() => {
     if (!open) return undefined;
-    function onDoc(e) {
-      if (e.target.closest && e.target.closest('[data-portal]')) return;
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+    function onDoc(event) {
+      if (event.target.closest && event.target.closest('[data-portal]')) return;
+      if (boxRef.current && !boxRef.current.contains(event.target)) setOpen(false);
     }
-    function onKey(e) {
-      if (e.key !== 'Escape') return;
+    function onKey(event) {
+      if (event.key !== 'Escape') return;
       if (document.querySelector('[data-portal="select"][data-open]')) return;
       setOpen(false);
       btnRef.current?.focus();
@@ -76,7 +76,7 @@ export default function AccountMenu({ onLogin }) {
           aria-expanded={open}
           aria-controls={panelId}
           aria-label="Log in"
-          onClick={() => (isDesktop() ? setOpen((v) => !v) : onLogin())}
+          onClick={() => (isDesktop() ? setOpen((wasOpen) => !wasOpen) : onLogin())}
           className={`inline-flex items-center h-[var(--btn-h)] px-3 rounded-sm border border-line bg-white text-small font-semibold font-body text-gold cursor-pointer whitespace-nowrap [transition:background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:bg-cream ${PHONE}`}
         >
           <span className="max-[992px]:hidden">Log in</span>
@@ -117,7 +117,7 @@ export default function AccountMenu({ onLogin }) {
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={`Account menu for ${first}`}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
         className={`inline-flex items-center gap-2 bg-transparent border-none p-0 cursor-pointer font-body text-small font-semibold text-gold [transition:color_var(--dur)_var(--ease),background-color_var(--dur)_var(--ease),scale_var(--dur-fast)_var(--ease)] hover:text-gold-d ${PHONE}`}
       >
         <span

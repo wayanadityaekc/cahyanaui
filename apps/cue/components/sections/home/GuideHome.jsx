@@ -15,7 +15,10 @@ export default function GuideHome() {
   const shown = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return GUIDE_CARDS;
-    return GUIDE_CARDS.filter((c) => c.more || c.title.toLowerCase().includes(term) || (c.kw || '').includes(term));
+    return GUIDE_CARDS.filter(
+      (guideCard) =>
+        guideCard.more || guideCard.title.toLowerCase().includes(term) || (guideCard.kw || '').includes(term),
+    );
   }, [query]);
 
   return (
@@ -37,7 +40,7 @@ export default function GuideHome() {
               aria-label="Search guides"
               autoComplete="off"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(event) => setQuery(event.target.value)}
             />
           </div>
           <div
@@ -48,14 +51,17 @@ export default function GuideHome() {
         </div>
 
         <Slider gridClassName={GRID_SLIDER}>
-          {shown.map((c) =>
-            c.more ? (
+          {shown.map((guideCard) =>
+            guideCard.more ? (
               <a
-                key={c.href}
-                href={c.href}
+                key={guideCard.href}
+                href={guideCard.href}
                 className={`${CARD_FRAME} group flex flex-col items-center justify-center min-h-[260px] bg-cover bg-center after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(rgba(40,36,30,0.55),rgba(40,36,30,0.72))]`}
-                aria-label={c.aria}
-                style={{ backgroundImage: `url(/assets/images/${c.bg})`, backgroundColor: 'var(--color-green)' }}
+                aria-label={guideCard.aria}
+                style={{
+                  backgroundImage: `url(/assets/images/${guideCard.bg})`,
+                  backgroundColor: 'var(--color-green)',
+                }}
               >
                 <span className="relative z-[1] flex flex-col items-center gap-[0.9rem] p-8 text-center">
                   <span
@@ -64,21 +70,21 @@ export default function GuideHome() {
                   >
                     &rarr;
                   </span>
-                  <span className="font-semibold text-h2">{c.title}</span>
-                  <span className="text-small opacity-90">{c.sub}</span>
+                  <span className="font-semibold text-h2">{guideCard.title}</span>
+                  <span className="text-small opacity-90">{guideCard.sub}</span>
                 </span>
               </a>
             ) : (
               <GuideCard
-                key={c.href}
-                href={c.href}
-                img={c.img}
-                alt={c.alt}
-                title={c.title}
-                tag={c.tag}
-                cat={c.cat}
-                w={c.w}
-                hgt={c.hgt}
+                key={guideCard.href}
+                href={guideCard.href}
+                img={guideCard.img}
+                alt={guideCard.alt}
+                title={guideCard.title}
+                tag={guideCard.tag}
+                cat={guideCard.cat}
+                w={guideCard.w}
+                hgt={guideCard.hgt}
               />
             ),
           )}

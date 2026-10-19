@@ -53,16 +53,16 @@ function isConvertiblePlacement(declaration, isModule) {
 function buildFunctionDeclaration(sourceCode, declaration) {
   const declarator = declaration.declarations[0];
   const name = declarator.id.name;
-  const fn = declarator.init;
-  const asyncPrefix = fn.async ? 'async ' : '';
-  const star = fn.generator ? '*' : '';
-  const tokens = sourceCode.getTokens(fn);
+  const functionNode = declarator.init;
+  const asyncPrefix = functionNode.async ? 'async ' : '';
+  const star = functionNode.generator ? '*' : '';
+  const tokens = sourceCode.getTokens(functionNode);
   let paramsText;
-  if (fn.params.length === 0) {
+  if (functionNode.params.length === 0) {
     paramsText = '()';
   } else {
-    const firstParam = fn.params[0];
-    const lastParam = fn.params[fn.params.length - 1];
+    const firstParam = functionNode.params[0];
+    const lastParam = functionNode.params[functionNode.params.length - 1];
     const before = sourceCode.getTokenBefore(firstParam);
     const after = sourceCode.getTokenAfter(lastParam, { filter: (token) => token.value !== ',' });
     const isParenthesized = before.value === '(' && after.value === ')';
@@ -72,8 +72,8 @@ function buildFunctionDeclaration(sourceCode, declaration) {
   }
   if (!tokens.length) return null;
   let bodyText;
-  if (fn.body.type === 'BlockStatement') bodyText = sourceCode.getText(fn.body);
-  else bodyText = `{\n  return (${sourceCode.getText(fn.body)});\n}`;
+  if (functionNode.body.type === 'BlockStatement') bodyText = sourceCode.getText(functionNode.body);
+  else bodyText = `{\n  return (${sourceCode.getText(functionNode.body)});\n}`;
   const exportPrefix = declaration.parent.type === 'ExportNamedDeclaration' ? 'export ' : '';
   return { text: `${exportPrefix}${asyncPrefix}function${star} ${name}${paramsText} ${bodyText}`, exportPrefix };
 }
@@ -89,17 +89,19 @@ const functionDeclarationRule = {
     const { sourceCode } = context;
     return {
       VariableDeclarator(declarator) {
-        const fn = declarator.init;
-        if (!fn || declarator.id.type !== 'Identifier') return;
-        const isArrow = fn.type === 'ArrowFunctionExpression';
-        const isAnonymousExpression = fn.type === 'FunctionExpression' && (!fn.id || fn.id.name === declarator.id.name);
+        const functionNode = declarator.init;
+        if (!functionNode || declarator.id.type !== 'Identifier') return;
+        const isArrow = functionNode.type === 'ArrowFunctionExpression';
+        const isAnonymousExpression =
+          functionNode.type === 'FunctionExpression' &&
+          (!functionNode.id || functionNode.id.name === declarator.id.name);
         if (!isArrow && !isAnonymousExpression) return;
         const declaration = declarator.parent;
         const canFix =
           declaration.kind === 'const' &&
           declaration.declarations.length === 1 &&
           isConvertiblePlacement(declaration, context.languageOptions.sourceType === 'module') &&
-          !(isArrow && containsLexicalThis(fn));
+          !(isArrow && containsLexicalThis(functionNode));
         const report = { node: declarator, message: `Use a function declaration for ${declarator.id.name}.` };
         if (canFix) {
           const built = buildFunctionDeclaration(sourceCode, declaration);
@@ -247,13 +249,13 @@ function suggestNameFor(variable) {
     return null;
   }
   if (definition.type !== 'Parameter') return null;
-  const fn = definition.node;
-  if (fn.params[0] !== definition.name) return null;
-  const call = fn.parent;
+  const functionNode = definition.node;
+  if (functionNode.params[0] !== definition.name) return null;
+  const call = functionNode.parent;
   const isArrayCallback =
     call &&
     call.type === 'CallExpression' &&
-    call.arguments[0] === fn &&
+    call.arguments[0] === functionNode &&
     call.callee.type === 'MemberExpression' &&
     !call.callee.computed &&
     ARRAY_CALLBACK_METHODS.has(call.callee.property.name);

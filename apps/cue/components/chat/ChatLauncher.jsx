@@ -19,7 +19,7 @@ export default function ChatLauncher({ className, label, iconClass = 'w-5 h-5' }
         aria-expanded={open}
         onClick={() => {
           setTouched(true);
-          setOpen((v) => !v);
+          setOpen((wasOpen) => !wasOpen);
         }}
       >
         <MessageCircle className={iconClass} strokeWidth={1.6} aria-hidden="true" />

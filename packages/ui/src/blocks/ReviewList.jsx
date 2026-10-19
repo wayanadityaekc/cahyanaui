@@ -35,8 +35,8 @@ export default function ReviewList({
     );
   }
 
-  const cards = list.map((r, i) => (
-    <ReviewCard key={i} {...r} logo={logo} mark={mark} onClick={() => setSelected(r)} />
+  const cards = list.map((review, index) => (
+    <ReviewCard key={index} {...review} logo={logo} mark={mark} onClick={() => setSelected(review)} />
   ));
 
   return (

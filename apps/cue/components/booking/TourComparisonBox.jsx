@@ -13,15 +13,15 @@ export default function TourComparisonBox({ tours }) {
     <div className="mb-[1.1rem] py-[0.8rem] px-[0.9rem] [border:1px_solid_var(--line)] [border-left:3px_solid_var(--color-cta)] rounded-md bg-cream">
       <p className="m-0 mb-[0.6rem] text-label font-medium tracking-[0.12em] uppercase text-muted">Also part of</p>
       <ul className="grid gap-[0.5rem] m-0 p-0 list-none">
-        {tours.map((t) => (
-          <li key={t.href}>
-            <a href={t.href} className={BTN}>
+        {tours.map((tour) => (
+          <li key={tour.href}>
+            <a href={tour.href} className={BTN}>
               <span className="flex-1 min-w-0">
-                <span className="block text-strong font-semibold text-gold group-hover:text-cta">{t.name}</span>
+                <span className="block text-strong font-semibold text-gold group-hover:text-cta">{tour.name}</span>
                 <span className="block mt-[0.1rem] text-small text-muted">
-                  {t.stops} stops · from{' '}
+                  {tour.stops} stops · from{' '}
                   <span className="font-semibold text-amber">
-                    <Price name={t.priceName} fallback={t.priceFallback || ''} />
+                    <Price name={tour.priceName} fallback={tour.priceFallback || ''} />
                   </span>
                 </span>
               </span>

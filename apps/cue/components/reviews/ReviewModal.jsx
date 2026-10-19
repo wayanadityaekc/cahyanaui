@@ -28,7 +28,7 @@ import { ROW_RULE } from '@/components/ui/separatorClasses';
 import useBodyLock from '@/components/ui/useBodyLock';
 import { useAccount } from '@/state/AccountProvider';
 
-const COUNTRY_OPTIONS = COUNTRIES.map((c) => ({ value: c.code, label: c.name, flag: c.code }));
+const COUNTRY_OPTIONS = COUNTRIES.map((country) => ({ value: country.code, label: country.name, flag: country.code }));
 
 function itemKey({ ref, service }) {
   return `${ref}::${service}`;
@@ -99,7 +99,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
     setPartial([]);
     setBusy(true);
     const token = readLocal(KEY.token, '');
-    const country = (COUNTRIES.find((c) => c.code === countryCode) || {}).name || '';
+    const country = (COUNTRIES.find((countryItem) => countryItem.code === countryCode) || {}).name || '';
     const results = [];
     for (const it of picked) {
       try {
@@ -132,7 +132,7 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
       setError(failed[0].reason);
       return;
     }
-    setPartial(failed.map((r) => ({ service: r.it.service, reason: r.reason })));
+    setPartial(failed.map((failure) => ({ service: failure.it.service, reason: failure.reason })));
     setDone(true);
   }
 
@@ -164,7 +164,13 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
             <label className={LABEL} htmlFor="rvm-name">
               Your name
             </label>
-            <input className={INPUT} type="text" id="rvm-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              className={INPUT}
+              type="text"
+              id="rvm-name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
           </div>
           <div className={GROUP}>
             <label className={LABEL} htmlFor="rvm-country">
@@ -192,9 +198,15 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
                         className={CHECK_INPUT}
                         type="checkbox"
                         checked={checked.includes(key)}
-                        onChange={(e) => {
-                          setChecked((c) => (e.target.checked ? [...c, key] : c.filter((x) => x !== key)));
-                          setErrors((v) => (v.picked ? { ...v, picked: undefined } : v));
+                        onChange={(event) => {
+                          setChecked((previousChecked) =>
+                            event.target.checked
+                              ? [...previousChecked, key]
+                              : previousChecked.filter((checkedKey) => checkedKey !== key),
+                          );
+                          setErrors((previousErrors) =>
+                            previousErrors.picked ? { ...previousErrors, picked: undefined } : previousErrors,
+                          );
                         }}
                       />
                       <span>
@@ -222,15 +234,17 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           <div className={GROUP}>
             <label className={LABEL}>Overall Experience</label>
             <div className="flex gap-[0.3rem]">
-              {[1, 2, 3, 4, 5].map((n) => (
+              {[1, 2, 3, 4, 5].map((starNumber) => (
                 <button
                   type="button"
-                  key={n}
-                  className={star(rating >= n)}
-                  aria-label={`${n} star${n > 1 ? 's' : ''}`}
+                  key={starNumber}
+                  className={star(rating >= starNumber)}
+                  aria-label={`${starNumber} star${starNumber > 1 ? 's' : ''}`}
                   onClick={() => {
-                    setRating(n);
-                    setErrors((v) => (v.rating ? { ...v, rating: undefined } : v));
+                    setRating(starNumber);
+                    setErrors((previousErrors) =>
+                      previousErrors.rating ? { ...previousErrors, rating: undefined } : previousErrors,
+                    );
                   }}
                 >
                   &#9733;
@@ -254,9 +268,11 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
               rows="4"
               placeholder="What would you like to share?"
               value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-                setErrors((v) => (v.message ? { ...v, message: undefined } : v));
+              onChange={(event) => {
+                setMessage(event.target.value);
+                setErrors((previousErrors) =>
+                  previousErrors.message ? { ...previousErrors, message: undefined } : previousErrors,
+                );
               }}
               aria-invalid={!!errors.message}
             />
@@ -283,9 +299,9 @@ export default function ReviewModal({ open = false, prefill = null, onClose = ()
           </p>
           {partial.length ? (
             <ul className="list-none text-left mx-auto mb-4 max-w-[22rem]">
-              {partial.map((p) => (
-                <li key={p.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
-                  <span className="font-semibold text-green">{p.service}</span> - {p.reason}
+              {partial.map((partialFailure) => (
+                <li key={partialFailure.service} className={`text-small text-muted py-[0.35rem] ${ROW_RULE}`}>
+                  <span className="font-semibold text-green">{partialFailure.service}</span> - {partialFailure.reason}
                 </li>
               ))}
             </ul>

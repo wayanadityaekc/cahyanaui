@@ -1,136 +1,154 @@
 import { chromium } from 'playwright-core';
 
 const SITE = process.env.BASE || 'http://127.0.0.1:4000';
-function review(i) {
+function review(reviewNumber) {
   return {
-    name: `Guest ${i}`,
+    name: `Guest ${reviewNumber}`,
     country: 'Spain',
     rating: 5,
-    message: `Review ${i}, on time and friendly.`,
+    message: `Review ${reviewNumber}, on time and friendly.`,
     service: 'Ubud Tour',
     source: 'cahyana',
-    created_at: `2026-09-${10 + i}`,
+    created_at: `2026-09-${10 + reviewNumber}`,
   };
 }
 
 let pass = 0,
   fail = 0;
-function ok(cond, msg) {
+function ok(cond, message) {
   if (cond) pass++;
   else {
     fail++;
-    process.stdout.write(`FAIL ${msg}\n`);
+    process.stdout.write(`FAIL ${message}\n`);
   }
 }
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 
-async function open(path, w, count) {
-  const ctx = await browser.newContext({ viewport: { width: w, height: 900 } });
-  await ctx.route('**/api/**', (r) => {
-    const u = new URL(r.request().url());
-    if (u.pathname.endsWith('/reviews/summary')) return r.fulfill({ json: [] });
-    if (u.pathname.endsWith('/reviews'))
-      return r.fulfill({ json: Array.from({ length: count }, (_, i) => review(i + 1)) });
-    return r.fulfill({ status: 503, body: '{}' });
+async function open(path, viewportWidth, count) {
+  const browserContext = await browser.newContext({ viewport: { width: viewportWidth, height: 900 } });
+  await browserContext.route('**/api/**', (route) => {
+    const requestUrl = new URL(route.request().url());
+    if (requestUrl.pathname.endsWith('/reviews/summary')) return route.fulfill({ json: [] });
+    if (requestUrl.pathname.endsWith('/reviews'))
+      return route.fulfill({ json: Array.from({ length: count }, (unusedValue, index) => review(index + 1)) });
+    return route.fulfill({ status: 503, body: '{}' });
   });
-  await ctx.routeWebSocket(/.*/, (ws) => ws.close());
-  const page = await ctx.newPage();
+  await browserContext.routeWebSocket(/.*/, (ws) => ws.close());
+  const page = await browserContext.newPage();
   const errors = [];
-  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('pageerror', (error) => errors.push(String(error)));
   await page.goto(SITE + path, { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
-  return { ctx, page, errors };
+  return { ctx: browserContext, page, errors };
 }
 
-async function arrows(page, sel) {
-  const track = page.locator(sel).first();
+async function arrows(page, selector) {
+  const track = page.locator(selector).first();
   await track.scrollIntoViewIfNeeded();
   await track.hover();
   await page.waitForTimeout(400);
-  return page.evaluate((s) => {
-    const t = document.querySelector(s);
-    const holder = t.parentElement;
+  return page.evaluate((selectorItem) => {
+    const trackItem = document.querySelector(selectorItem);
+    const holder = trackItem.parentElement;
     function shown(label) {
-      return [...holder.querySelectorAll(`:scope > button[aria-label="${label}"]`)].some((b) => {
-        const cs = getComputedStyle(b);
-        const r = b.getBoundingClientRect();
-        return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.5 && r.width > 0;
+      return [...holder.querySelectorAll(`:scope > button[aria-label="${label}"]`)].some((arrowButton) => {
+        const cs = getComputedStyle(arrowButton);
+        const box = arrowButton.getBoundingClientRect();
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && +cs.opacity > 0.5 && box.width > 0;
       });
     }
     return {
-      canPrev: t.scrollLeft > 4,
-      canNext: t.scrollLeft + t.clientWidth < t.scrollWidth - 4,
+      canPrev: trackItem.scrollLeft > 4,
+      canNext: trackItem.scrollLeft + trackItem.clientWidth < trackItem.scrollWidth - 4,
       prev: shown('Previous'),
       next: shown('Next'),
     };
-  }, sel);
+  }, selector);
 }
 
-for (const [path, sel] of [
+for (const [path, selector] of [
   ['/', '#reviews [class*="overflow-x-auto"]'],
   ['/ubud-tour.html', '#dsec-reviews [class*="overflow-x-auto"]'],
 ]) {
   for (const count of [2, 8]) {
-    const { ctx, page, errors } = await open(path, 1280, count);
-    const a = await arrows(page, sel);
-    ok(a.prev === a.canPrev, `${path} ${count} reviews: Previous shown=${a.prev} but can scroll back=${a.canPrev}`);
-    ok(a.next === a.canNext, `${path} ${count} reviews: Next shown=${a.next} but can scroll on=${a.canNext}`);
+    const { ctx: browserContext, page, errors } = await open(path, 1280, count);
+    const arrowsBefore = await arrows(page, selector);
+    ok(
+      arrowsBefore.prev === arrowsBefore.canPrev,
+      `${path} ${count} reviews: Previous shown=${arrowsBefore.prev} but can scroll back=${arrowsBefore.canPrev}`,
+    );
+    ok(
+      arrowsBefore.next === arrowsBefore.canNext,
+      `${path} ${count} reviews: Next shown=${arrowsBefore.next} but can scroll on=${arrowsBefore.canNext}`,
+    );
     if (count === 8) {
-      await page.evaluate((s) => {
-        const t = document.querySelector(s);
-        t.scrollLeft = t.scrollWidth;
-      }, sel);
+      await page.evaluate((selectorItem) => {
+        const track = document.querySelector(selectorItem);
+        track.scrollLeft = track.scrollWidth;
+      }, selector);
       await page.waitForTimeout(500);
-      const end = await arrows(page, sel);
+      const end = await arrows(page, selector);
       ok(!end.next && end.prev, `${path} at the end: next=${end.next} prev=${end.prev}`);
     }
     ok(errors.length === 0, `${path}: page errors ${errors}`);
-    await ctx.close();
+    await browserContext.close();
   }
 }
 
 for (const path of ['/', '/ubud-tour.html', '/attractions/atv-ride.html']) {
-  const { ctx, page, errors } = await open(path, 1280, 8);
-  const n = await page.evaluate(() => {
-    let k = 0;
-    document.querySelectorAll('.group.relative').forEach((h) => {
-      const t = [...h.children].find((c) => c.tagName === 'DIV' && /overflow-x-auto/.test(c.className));
-      if (t) t.setAttribute('data-sweep', String(k++));
+  const { ctx: browserContext, page, errors } = await open(path, 1280, 8);
+  const groupCount = await page.evaluate(() => {
+    let markedCount = 0;
+    document.querySelectorAll('.group.relative').forEach((holder) => {
+      const track = [...holder.children].find(
+        (child) => child.tagName === 'DIV' && /overflow-x-auto/.test(child.className),
+      );
+      if (track) track.setAttribute('data-sweep', String(markedCount++));
     });
     return document.querySelectorAll('[data-sweep]').length;
   });
-  ok(n > 0, `${path}: no sliders found`);
-  process.stdout.write(`${path}: ${n} sliders\n`);
-  for (let i = 0; i < n; i++) {
-    const sel = `[data-sweep="${i}"]`;
-    const visible = await page.evaluate((s) => document.querySelector(s).getBoundingClientRect().width > 0, sel);
+  ok(groupCount > 0, `${path}: no sliders found`);
+  process.stdout.write(`${path}: ${groupCount} sliders\n`);
+  for (let reviewNumber = 0; reviewNumber < groupCount; reviewNumber++) {
+    const selector = `[data-sweep="${reviewNumber}"]`;
+    const visible = await page.evaluate(
+      (selectorItem) => document.querySelector(selectorItem).getBoundingClientRect().width > 0,
+      selector,
+    );
     if (!visible) continue;
-    const a = await arrows(page, sel);
-    ok(a.prev === a.canPrev && a.next === a.canNext, `${path} slider ${i}: arrows ${JSON.stringify(a)}`);
-    if (a.next) {
-      const before = await page.evaluate((s) => document.querySelector(s).scrollLeft, sel);
-      await page.locator(sel).locator('xpath=..').locator(':scope > button[aria-label="Next"]').click();
+    const arrowsBefore = await arrows(page, selector);
+    ok(
+      arrowsBefore.prev === arrowsBefore.canPrev && arrowsBefore.next === arrowsBefore.canNext,
+      `${path} slider ${reviewNumber}: arrows ${JSON.stringify(arrowsBefore)}`,
+    );
+    if (arrowsBefore.next) {
+      const before = await page.evaluate((selectorItem) => document.querySelector(selectorItem).scrollLeft, selector);
+      await page.locator(selector).locator('xpath=..').locator(':scope > button[aria-label="Next"]').click();
       await page.waitForTimeout(700);
-      const after = await page.evaluate((s) => document.querySelector(s).scrollLeft, sel);
-      ok(after > before, `${path} slider ${i}: Next did not scroll (${before} -> ${after})`);
-      const b = await arrows(page, sel);
-      ok(b.prev === b.canPrev && b.next === b.canNext, `${path} slider ${i} after Next: arrows ${JSON.stringify(b)}`);
+      const after = await page.evaluate((selectorItem) => document.querySelector(selectorItem).scrollLeft, selector);
+      ok(after > before, `${path} slider ${reviewNumber}: Next did not scroll (${before} -> ${after})`);
+      const arrowsAfter = await arrows(page, selector);
+      ok(
+        arrowsAfter.prev === arrowsAfter.canPrev && arrowsAfter.next === arrowsAfter.canNext,
+        `${path} slider ${reviewNumber} after Next: arrows ${JSON.stringify(arrowsAfter)}`,
+      );
     }
   }
   ok(errors.length === 0, `${path}: page errors ${errors}`);
-  await ctx.close();
+  await browserContext.close();
 }
 
 {
-  const { ctx, page } = await open('/', 390, 8);
+  const { ctx: browserContext, page } = await open('/', 390, 8);
   const shown = await page.evaluate(() =>
     [...document.querySelectorAll('button[aria-label="Next"], button[aria-label="Previous"]')].some(
-      (b) => getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0,
+      (arrowButton) =>
+        getComputedStyle(arrowButton).display !== 'none' && arrowButton.getBoundingClientRect().width > 0,
     ),
   );
   ok(!shown, '390: an arrow is displayed on a phone');
-  await ctx.close();
+  await browserContext.close();
 }
 
 await browser.close();

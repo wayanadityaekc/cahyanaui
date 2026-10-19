@@ -5,11 +5,11 @@ import { API_BASE } from '@/lib/constants';
 import { chargeCurrency } from '@/lib/rails';
 import { CONTROL } from '@cahyana/ui';
 
-function sdkId(cur) {
-  return `paypal-sdk-${cur}`;
+function sdkId(current) {
+  return `paypal-sdk-${current}`;
 }
-function sdkNs(cur) {
-  return `paypal_${cur}`;
+function sdkNs(current) {
+  return `paypal_${current}`;
 }
 
 function loadSdk({ clientId, currency }) {
@@ -23,15 +23,15 @@ function loadSdk({ clientId, currency }) {
       existing.addEventListener('error', reject);
       return;
     }
-    const s = document.createElement('script');
-    s.id = id;
-    s.setAttribute('data-namespace', sdkNamespace);
-    s.src =
+    const script = document.createElement('script');
+    script.id = id;
+    script.setAttribute('data-namespace', sdkNamespace);
+    script.src =
       `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}` +
       `&currency=${encodeURIComponent(currency)}&components=buttons,card-fields&intent=capture`;
-    s.onload = () => resolve(window[sdkNamespace]);
-    s.onerror = () => reject(new Error('Could not load PayPal.'));
-    document.head.appendChild(s);
+    script.onload = () => resolve(window[sdkNamespace]);
+    script.onerror = () => reject(new Error('Could not load PayPal.'));
+    document.head.appendChild(script);
   });
 }
 
@@ -41,7 +41,7 @@ const NOTE = 'mt-[0.6rem] text-small leading-[var(--lh-body)]';
 
 export default function PayPalCheckout({ bookingRef, option, copy, currency = 'USD', onPaid, onError }) {
   const [state, setState] = useState('loading');
-  const [msg, setMsg] = useState('');
+  const [message, setMessage] = useState('');
   const [cardsOn, setCardsOn] = useState(false);
   const buttonsRef = useRef(null);
   const cardRef = useRef(null);
@@ -66,7 +66,9 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       const data = await response.json().catch(() => null);
       if (!response.ok || !data || !data.id) throw new Error((data && data.detail) || 'Could not start the payment.');
       if (data.converted && !cancelled) {
-        setMsg(`PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`);
+        setMessage(
+          `PayPal cannot charge ${data.converted.from}, so this is billed as ${data.currency} ${data.amount}.`,
+        );
       }
       return data.id;
     }
@@ -85,26 +87,26 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       return data;
     }
 
-    function fail(e) {
+    function fail(error) {
       if (cancelled || !mounted.current) return;
       setState('ready');
-      setMsg(e.message || copy.failed);
-      if (onError) onError(e);
+      setMessage(error.message || copy.failed);
+      if (onError) onError(error);
     }
 
-    function succeed(d) {
+    function succeed(captureResult) {
       if (cancelled || !mounted.current) return;
       setState('done');
-      setMsg('');
-      if (onPaid) onPaid(d);
+      setMessage('');
+      if (onPaid) onPaid(captureResult);
     }
 
     (async () => {
       try {
-        const cfg = await (await fetch(`${API_BASE}/paypal/config`)).json();
-        if (!cfg.ready) throw new Error(cfg.reason || 'Payments are not available right now.');
+        const config = await (await fetch(`${API_BASE}/paypal/config`)).json();
+        if (!config.ready) throw new Error(config.reason || 'Payments are not available right now.');
         const billCurrency = chargeCurrency(currency, 'paypal');
-        const sdk = await loadSdk({ clientId: cfg.clientId, currency: billCurrency });
+        const sdk = await loadSdk({ clientId: config.clientId, currency: billCurrency });
         if (cancelled) return;
 
         await sdk
@@ -121,10 +123,10 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
             onCancel: () => {
               if (!cancelled) {
                 setState('ready');
-                setMsg(copy.cancelled);
+                setMessage(copy.cancelled);
               }
             },
-            onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
+            onError: (error) => fail(error instanceof Error ? error : new Error(copy.failed)),
           })
           .render(buttonsRef.current);
 
@@ -138,7 +140,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
                   fail(e);
                 }
               },
-              onError: (e) => fail(e instanceof Error ? e : new Error(copy.failed)),
+              onError: (error) => fail(error instanceof Error ? error : new Error(copy.failed)),
             })
           : null;
 
@@ -153,7 +155,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       } catch (e) {
         if (!cancelled) {
           setState('error');
-          setMsg(e.message);
+          setMessage(e.message);
         }
       }
     })();
@@ -166,19 +168,19 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
   async function payByCard() {
     if (!cardRef.current) return;
     setState('paying');
-    setMsg('');
+    setMessage('');
     try {
       await cardRef.current.submit();
     } catch (e) {
       if (mounted.current) {
         setState('ready');
-        setMsg(copy.declined);
+        setMessage(copy.declined);
       }
     }
   }
 
   if (state === 'error') {
-    return <p className={`${NOTE} text-err`}>{msg}</p>;
+    return <p className={`${NOTE} text-err`}>{message}</p>;
   }
 
   return (
@@ -208,7 +210,7 @@ export default function PayPalCheckout({ bookingRef, option, copy, currency = 'U
       <div ref={buttonsRef} />
 
       {state === 'loading' && <p className={`${NOTE} text-muted`}>Loading secure payment...</p>}
-      {msg && <p className={`${NOTE} ${state === 'done' ? 'text-ok' : 'text-err'}`}>{msg}</p>}
+      {message && <p className={`${NOTE} ${state === 'done' ? 'text-ok' : 'text-err'}`}>{message}</p>}
       <p className={`${NOTE} text-muted`}>{copy.secure}</p>
     </div>
   );

@@ -32,11 +32,11 @@ export default function MenuList({
             </div>
           ) : null}
           <ul className={GRIDS[cols] || GRIDS[4]}>
-            {items.map(({ name, desc, img, alt }) => (
+            {items.map(({ name, desc, img: image, alt }) => (
               <li key={name} className="grid gap-2 content-start min-w-0" data-menu-item>
                 <div className={PHOTO}>
-                  {img ? (
-                    <img src={img} alt={alt || name} width={800} height={600} loading="lazy" />
+                  {image ? (
+                    <img src={image} alt={alt || name} width={800} height={600} loading="lazy" />
                   ) : (
                     <span className={EMPTY} data-menu-placeholder>
                       <ImageIcon className="w-5 h-5" strokeWidth={1.7} aria-hidden="true" />

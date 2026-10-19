@@ -167,7 +167,7 @@ export function AccountProvider({ children }) {
 }
 
 export function useAccount() {
-  const ctx = useContext(AccountContext);
-  if (!ctx) throw new Error('useAccount must be used within AccountProvider');
-  return ctx;
+  const context = useContext(AccountContext);
+  if (!context) throw new Error('useAccount must be used within AccountProvider');
+  return context;
 }

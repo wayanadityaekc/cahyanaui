@@ -39,7 +39,7 @@ export function ItineraryProvider({ children }) {
   }
 
   const count =
-    state.days.reduce((n, d) => n + ((d.items && d.items.length) || 0), 0) +
+    state.days.reduce((total, day) => total + ((day.items && day.items.length) || 0), 0) +
     state.transfers.length +
     state.charters.length;
 
@@ -47,7 +47,7 @@ export function ItineraryProvider({ children }) {
 }
 
 export function useItinerary() {
-  const ctx = useContext(ItineraryContext);
-  if (!ctx) throw new Error('useItinerary must be used inside ItineraryProvider');
-  return ctx;
+  const itineraryContext = useContext(ItineraryContext);
+  if (!itineraryContext) throw new Error('useItinerary must be used inside ItineraryProvider');
+  return itineraryContext;
 }

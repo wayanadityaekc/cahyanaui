@@ -1,84 +1,86 @@
 import { chromium } from '/home/user/CUE/node_modules/playwright-core/index.mjs';
-const b = await chromium.launch({
+const browser = await chromium.launch({
   executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell',
 });
 
-const REVIEWS = Array.from({ length: 8 }, (_, i) => ({
-  name: `Guest ${i + 1}`,
+const REVIEWS = Array.from({ length: 8 }, (unusedValue, index) => ({
+  name: `Guest ${index + 1}`,
   service: 'Ubud Tour',
-  rating: 5 - (i % 2),
+  rating: 5 - (index % 2),
   message:
-    i % 2 === 0
+    index % 2 === 0
       ? 'Great trip, our driver was on time and friendly.'
       : 'This trip was absolutely fantastic from start to finish. Our driver was on time, friendly, and knew all the best spots to stop for photos. The itinerary was well paced and never felt rushed. We saw waterfalls, rice terraces, and a beautiful temple. Highly recommend booking with Cahyana - communication was clear and pricing was upfront the whole way through, no surprises at the end of the day.',
   country: 'Australia',
-  created_at: `2026-09-${10 + i}`,
+  created_at: `2026-09-${10 + index}`,
 }));
 
 let pass = 0,
   fail = 0;
-function ok(c, m) {
-  c ? pass++ : (fail++, console.log('  FAIL:', m));
+function ok(isPassing, message) {
+  isPassing ? pass++ : (fail++, console.log('  FAIL:', message));
 }
 
-for (const w of [390, 1280]) {
-  const ctx = await b.newContext({ viewport: { width: w, height: 1000 } });
-  await ctx.route('**/api/**', (route) => {
+for (const width of [390, 1280]) {
+  const browserContext = await browser.newContext({ viewport: { width: width, height: 1000 } });
+  await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
     if (url.includes('/reviews/summary')) return route.fulfill({ json: [] });
     if (url.includes('/reviews')) return route.fulfill({ json: REVIEWS });
     if (url.includes('/pricing/catalog')) return route.fulfill({ json: { currency: 'USD', symbol: '$', catalog: {} } });
     return route.fulfill({ json: {} });
   });
-  const page = await ctx.newPage();
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
+  page.on('pageerror', (error) => errs.push(String(error)));
   await page.goto('http://127.0.0.1:4000/', { waitUntil: 'networkidle' });
   await page.locator('#reviews').scrollIntoViewIfNeeded();
   await page.waitForTimeout(500);
   const cards = page.locator('#reviews button:not([aria-label="Previous"]):not([aria-label="Next"])');
-  const n = await cards.count();
-  console.log(`${w}: cards rendered = ${n}`);
-  ok(n === 8, `${w}: expected 8 review cards, got ${n}`);
-  const heights = await cards.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().height)));
-  ok(new Set(heights).size === 1, `${w}: card heights not uniform: ${heights.join(',')}`);
-  await page.screenshot({ path: `shots/reviews-slider-${w}.png` });
+  const cardCount = await cards.count();
+  console.log(`${width}: cards rendered = ${cardCount}`);
+  ok(cardCount === 8, `${width}: expected 8 review cards, got ${cardCount}`);
+  const heights = await cards.evaluateAll((elements) =>
+    elements.map((event) => Math.round(event.getBoundingClientRect().height)),
+  );
+  ok(new Set(heights).size === 1, `${width}: card heights not uniform: ${heights.join(',')}`);
+  await page.screenshot({ path: `shots/reviews-slider-${width}.png` });
 
   const track = page.locator('#reviews .flex.overflow-x-auto').first();
   const overflowing = await track.evaluate((element) => element.scrollWidth > element.clientWidth);
-  ok(overflowing, `${w}: track does not overflow (not a slider)`);
+  ok(overflowing, `${width}: track does not overflow (not a slider)`);
 
   await cards.nth(2).click();
   await page.waitForTimeout(500);
   const reviewDialog = page.locator('[role="dialog"][aria-label="Guest review"]');
   const modalText = await reviewDialog.innerText();
-  ok(modalText.includes(REVIEWS[2].name), `${w}: modal missing clicked review's name`);
-  ok(modalText.length > REVIEWS[2].message.length / 2, `${w}: modal text looks truncated`);
-  await page.screenshot({ path: `shots/reviews-modal-${w}.png` });
+  ok(modalText.includes(REVIEWS[2].name), `${width}: modal missing clicked review's name`);
+  ok(modalText.length > REVIEWS[2].message.length / 2, `${width}: modal text looks truncated`);
+  await page.screenshot({ path: `shots/reviews-modal-${width}.png` });
 
   const href = await page.locator('#reviews a', { hasText: 'See all reviews' }).getAttribute('href');
-  ok(href === '/all-reviews.html', `${w}: See all reviews href is "${href}", not /all-reviews.html`);
+  ok(href === '/all-reviews.html', `${width}: See all reviews href is "${href}", not /all-reviews.html`);
 
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
-  ok(!(await reviewDialog.isVisible()), `${w}: modal did not close on Escape`);
+  ok(!(await reviewDialog.isVisible()), `${width}: modal did not close on Escape`);
 
-  ok(errs.length === 0, `${w}: page errors ${errs.join(' | ')}`);
-  await ctx.close();
+  ok(errs.length === 0, `${width}: page errors ${errs.join(' | ')}`);
+  await browserContext.close();
 }
 
 {
-  const ctx = await b.newContext({ viewport: { width: 1280, height: 1000 } });
-  await ctx.route('**/api/**', (route) => {
+  const browserContext = await browser.newContext({ viewport: { width: 1280, height: 1000 } });
+  await browserContext.route('**/api/**', (route) => {
     const url = route.request().url();
     if (url.includes('/reviews')) return route.fulfill({ json: REVIEWS });
     return route.fulfill({ json: {} });
   });
-  const page = await ctx.newPage();
+  const page = await browserContext.newPage();
   const errs = [];
-  page.on('pageerror', (e) => errs.push(String(e)));
-  const resp = await page.goto('http://127.0.0.1:4000/all-reviews.html', { waitUntil: 'networkidle' });
-  ok(resp.status() === 200, `all-reviews.html: status ${resp.status()}`);
+  page.on('pageerror', (error) => errs.push(String(error)));
+  const response = await page.goto('http://127.0.0.1:4000/all-reviews.html', { waitUntil: 'networkidle' });
+  ok(response.status() === 200, `all-reviews.html: status ${response.status()}`);
   const cards = page.locator('[data-reviews-track] button');
   ok((await cards.count()) === 8, `all-reviews.html: expected 8 cards, got ${await cards.count()}`);
   await cards.nth(0).click();
@@ -89,9 +91,9 @@ for (const w of [390, 1280]) {
   );
   await page.screenshot({ path: 'shots/all-reviews-page-1280.png', fullPage: true });
   ok(errs.length === 0, `all-reviews.html: page errors ${errs.join(' | ')}`);
-  await ctx.close();
+  await browserContext.close();
 }
 
-await b.close();
+await browser.close();
 console.log(`${pass}/${pass + fail}`);
 process.exit(fail ? 1 : 0);
